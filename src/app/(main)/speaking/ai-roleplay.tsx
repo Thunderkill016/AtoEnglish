@@ -353,12 +353,12 @@ export function AIRoleplay() {
   return (
     <div className="space-y-6">
       {/* Scenarios Header Tabs */}
-      <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-none">
+      <div className="flex gap-2 overflow-x-auto pb-2.5 scrollbar-none snap-x snap-mandatory">
         {ROLEPLAY_SCENARIOS.map((s) => (
           <button
             key={s.id}
             onClick={() => setSelectedScenarioId(s.id)}
-            className={`shrink-0 px-4 py-2.5 rounded-xl text-xs font-bold transition-all border ${
+            className={`shrink-0 snap-start px-5 h-11 rounded-2xl text-xs font-bold transition-all border flex items-center justify-center ${
               selectedScenarioId === s.id
                 ? "bg-violet-600 text-white border-violet-600 shadow-md"
                 : "bg-glass border-glass text-muted-foreground hover:text-foreground hover:bg-foreground/[0.03]"
@@ -494,14 +494,14 @@ export function AIRoleplay() {
               )}
 
               {/* Action buttons */}
-              <div className="flex items-center gap-3">
+              <div className="flex items-stretch sm:items-center gap-3">
                 <Button
                   onClick={isListening ? stopListening : startListening}
                   disabled={isAiSpeaking}
-                  className={`flex-1 h-12 rounded-xl font-bold transition-all duration-300 gap-2 flex items-center justify-center ${
+                  className={`flex-1 h-14 sm:h-12 rounded-2xl font-bold transition-all duration-300 gap-2 flex items-center justify-center ${
                     isListening
-                      ? "bg-red-500 hover:bg-red-600 text-white animate-pulse"
-                      : "bg-violet-600 hover:bg-violet-700 text-white shadow-md shadow-violet-500/10 active:scale-[0.98]"
+                      ? "bg-red-500 hover:bg-red-600 text-white animate-pulse shadow-lg"
+                      : "bg-violet-600 hover:bg-violet-700 text-white shadow-lg shadow-violet-500/20 active:scale-[0.98]"
                   }`}
                 >
                   {isListening ? (
@@ -521,7 +521,7 @@ export function AIRoleplay() {
                   onClick={startRoleplay}
                   variant="outline"
                   size="icon"
-                  className="size-12 rounded-xl border-glass shrink-0 active:scale-[0.98]"
+                  className="size-14 sm:size-12 rounded-2xl border-glass shrink-0 active:scale-[0.98] flex items-center justify-center"
                   title="Khởi động lại cuộc trò chuyện"
                 >
                   <RefreshCw className="size-4.5 text-muted-foreground" />

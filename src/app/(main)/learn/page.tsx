@@ -202,7 +202,7 @@ export default function LearnPage() {
       </motion.div>
 
       {/* IPOR Steps Stepper (Sliding Pill navigation) */}
-      <div className="bg-glass border border-glass p-2 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.01)] flex flex-wrap md:flex-nowrap gap-1">
+      <div className="bg-glass border border-glass p-1.5 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.01)] grid grid-cols-2 md:flex md:flex-nowrap gap-1">
         {iporSteps.map((step) => {
           const Icon = step.icon;
           const isActive = activePhase === step.id;
@@ -211,7 +211,7 @@ export default function LearnPage() {
             <button
               key={step.id}
               onClick={() => handleStepClick(step.id)}
-              className="flex-1 min-w-[120px] text-left p-3.5 rounded-xl transition-all relative overflow-hidden group select-none"
+              className="flex-1 min-w-0 text-left p-3 rounded-xl transition-all relative overflow-hidden group select-none"
             >
               {isActive && (
                 <motion.div
@@ -220,19 +220,19 @@ export default function LearnPage() {
                   transition={{ type: "spring", stiffness: 130, damping: 19 }}
                 />
               )}
-              <div className="relative z-10 flex items-center gap-3">
-                <span className={`flex size-8 items-center justify-center rounded-lg transition-all duration-300 ${
+              <div className="relative z-10 flex items-center gap-2 sm:gap-3">
+                <span className={`flex size-8 shrink-0 items-center justify-center rounded-lg transition-all duration-300 ${
                   isActive
                     ? "bg-primary text-primary-foreground"
                     : "bg-muted text-muted-foreground group-hover:bg-foreground/[0.05]"
                 }`}>
                   <Icon className="size-4" />
                 </span>
-                <div>
-                  <h3 className={`font-bold text-xs uppercase tracking-wider ${isActive ? "text-primary" : "text-foreground"}`}>
+                <div className="min-w-0">
+                  <h3 className={`font-bold text-[10px] sm:text-xs uppercase tracking-wider ${isActive ? "text-primary" : "text-foreground"} truncate`}>
                     {step.title}
                   </h3>
-                  <p className="text-[10px] text-muted-foreground font-normal line-clamp-1">
+                  <p className="text-[9px] sm:text-[10px] text-muted-foreground font-normal line-clamp-1">
                     {step.desc}
                   </p>
                 </div>
@@ -277,7 +277,7 @@ export default function LearnPage() {
                 </div>
 
                 <div className="pt-5 border-t border-foreground/[0.04] flex justify-end">
-                  <Button onClick={() => handleStepClick("processing")} className="bg-primary hover:bg-primary/95 text-primary-foreground rounded-xl gap-2 font-semibold shadow-md active:scale-[0.98] transition-all duration-200">
+                  <Button onClick={() => handleStepClick("processing")} className="w-full sm:w-auto bg-primary hover:bg-primary/95 text-primary-foreground rounded-xl gap-2 font-semibold shadow-md active:scale-[0.98] h-12 sm:h-11 px-6 transition-all duration-200">
                     <span>Tiếp tục bước Processing</span>
                     <ArrowRight className="size-4" />
                   </Button>
@@ -326,20 +326,20 @@ export default function LearnPage() {
                     {vocabularyList.map((vocab) => {
                       const isAdded = addedVocab.includes(vocab.word);
                       return (
-                        <div key={vocab.word} className="p-4 sm:p-5 flex items-center justify-between hover:bg-foreground/[0.02] transition-colors">
-                          <div>
-                            <div className="flex items-center gap-2.5">
-                              <span className="font-bold text-sm sm:text-base text-foreground">{vocab.word}</span>
+                        <div key={vocab.word} className="p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between hover:bg-foreground/[0.02] transition-colors gap-3.5 sm:gap-4">
+                          <div className="space-y-1">
+                            <div className="flex flex-wrap items-center gap-2">
+                              <span className="font-bold text-sm sm:text-base text-foreground leading-tight">{vocab.word}</span>
                               <span className="text-xs text-muted-foreground font-mono bg-muted px-2 py-0.5 rounded">{vocab.ipa}</span>
                             </div>
-                            <p className="text-xs sm:text-sm text-muted-foreground mt-1 font-normal">{vocab.meaning}</p>
+                            <p className="text-xs sm:text-sm text-muted-foreground font-normal leading-normal">{vocab.meaning}</p>
                           </div>
                           <Button
                             onClick={() => handleSaveToSRS(vocab.word, vocab.ipa, vocab.meaning, vocab.example)}
                             disabled={isAdded || savingVocab === vocab.word}
                             variant={isAdded ? "secondary" : "outline"}
                             size="sm"
-                            className={`rounded-xl text-xs gap-1.5 h-9 border-glass active:scale-[0.97] transition-all duration-200 ${
+                            className={`w-full sm:w-auto rounded-xl text-xs gap-1.5 h-12 sm:h-9 border-glass active:scale-[0.97] transition-all duration-200 shrink-0 ${
                               isAdded 
                                 ? "text-emerald-600 bg-emerald-500/10 border-emerald-500/30 shadow-sm font-semibold opacity-100" 
                                 : "hover:bg-primary/5 hover:text-primary font-semibold"
@@ -368,11 +368,11 @@ export default function LearnPage() {
                   </div>
                 </div>
 
-                <div className="pt-5 border-t border-foreground/[0.04] flex justify-end gap-3">
-                  <Button variant="ghost" onClick={() => handleStepClick("input")} className="rounded-xl h-11 px-5 hover:bg-muted font-bold text-xs uppercase tracking-wider">
+                <div className="pt-5 border-t border-foreground/[0.04] flex flex-col sm:flex-row justify-end gap-3">
+                  <Button variant="ghost" onClick={() => handleStepClick("input")} className="w-full sm:w-auto rounded-xl h-12 sm:h-11 px-5 hover:bg-muted font-bold text-xs uppercase tracking-wider">
                     Quay lại
                   </Button>
-                  <Button onClick={() => handleStepClick("output")} className="bg-primary hover:bg-primary/95 text-primary-foreground rounded-xl gap-2 font-semibold shadow-md active:scale-[0.98] transition-all duration-250">
+                  <Button onClick={() => handleStepClick("output")} className="w-full sm:w-auto bg-primary hover:bg-primary/95 text-primary-foreground rounded-xl gap-2 font-semibold shadow-md active:scale-[0.98] h-12 sm:h-11 px-6 transition-all duration-250">
                     <span>Thực hành Output</span>
                     <ArrowRight className="size-4" />
                   </Button>
@@ -432,7 +432,7 @@ export default function LearnPage() {
                           }
                         }}
                         disabled={!userSentence.trim()}
-                        className="bg-primary hover:bg-primary/95 text-primary-foreground rounded-xl font-semibold shadow-md active:scale-[0.98] h-11 px-6 transition-all duration-200 disabled:opacity-50"
+                        className="w-full sm:w-auto bg-primary hover:bg-primary/95 text-primary-foreground rounded-xl font-semibold shadow-md active:scale-[0.98] h-12 sm:h-11 px-6 transition-all duration-200 disabled:opacity-50"
                       >
                         Nộp câu trả lời
                       </Button>
@@ -440,11 +440,11 @@ export default function LearnPage() {
                   )}
                 </div>
 
-                <div className="pt-5 border-t border-foreground/[0.04] flex justify-end gap-3">
-                  <Button variant="ghost" onClick={() => handleStepClick("processing")} className="rounded-xl h-11 px-5 hover:bg-muted font-bold text-xs uppercase tracking-wider">
+                <div className="pt-5 border-t border-foreground/[0.04] flex flex-col sm:flex-row justify-end gap-3">
+                  <Button variant="ghost" onClick={() => handleStepClick("processing")} className="w-full sm:w-auto rounded-xl h-12 sm:h-11 px-5 hover:bg-muted font-bold text-xs uppercase tracking-wider">
                     Quay lại
                   </Button>
-                  <Button onClick={() => handleStepClick("review")} className="bg-primary hover:bg-primary/95 text-primary-foreground rounded-xl gap-2 font-semibold shadow-md active:scale-[0.98] h-11 px-6 transition-all duration-200">
+                  <Button onClick={() => handleStepClick("review")} className="w-full sm:w-auto bg-primary hover:bg-primary/95 text-primary-foreground rounded-xl gap-2 font-semibold shadow-md active:scale-[0.98] h-12 sm:h-11 px-6 transition-all duration-200">
                     <span>Đến bước Review</span>
                     <ArrowRight className="size-4" />
                   </Button>
@@ -523,20 +523,20 @@ export default function LearnPage() {
                     )}
                   </Button>
 
-                  <div className="flex flex-wrap justify-center gap-3 w-full">
+                  <div className="flex flex-col sm:flex-row justify-center gap-3 w-full">
                     {isUnitCompleted && (
                       <Button
                         onClick={() => window.location.href = "/speaking?id=tech-society"}
-                        className="bg-violet-600 hover:bg-violet-700 text-white rounded-xl font-bold h-11 px-5 active:scale-[0.98] transition-all duration-200 gap-1.5"
+                        className="w-full sm:w-auto bg-violet-600 hover:bg-violet-700 text-white rounded-xl font-bold h-12 sm:h-11 px-5 active:scale-[0.98] transition-all duration-200 gap-1.5"
                       >
                         <Mic className="size-4" />
                         <span>Luyện nói chủ đề này ngay</span>
                       </Button>
                     )}
-                    <Button variant="outline" onClick={() => handleStepClick("input")} className="rounded-xl border-glass h-11 px-5 hover:bg-muted font-bold text-xs uppercase tracking-wider">
+                    <Button variant="outline" onClick={() => handleStepClick("input")} className="w-full sm:w-auto rounded-xl border-glass h-12 sm:h-11 px-5 hover:bg-muted font-bold text-xs uppercase tracking-wider">
                       Học lại bài đọc
                     </Button>
-                    <Button onClick={() => window.location.href = "/flashcards"} className="bg-secondary hover:bg-secondary/95 text-secondary-foreground rounded-xl font-semibold border border-foreground/[0.05] h-11 px-5 transition-all duration-200">
+                    <Button onClick={() => window.location.href = "/flashcards"} className="w-full sm:w-auto bg-secondary hover:bg-secondary/95 text-secondary-foreground rounded-xl font-semibold border border-foreground/[0.05] h-12 sm:h-11 px-5 transition-all duration-200">
                       Mở Trình Ôn Tập Flashcard
                     </Button>
                   </div>

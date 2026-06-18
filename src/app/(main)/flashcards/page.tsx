@@ -422,7 +422,7 @@ export default function FlashcardsPage() {
                         setShowFinished(true);
                       }
                     }}
-                    className="text-xs text-muted-foreground hover:text-foreground hover:bg-transparent rounded-xl"
+                    className="text-xs text-muted-foreground hover:text-foreground hover:bg-transparent rounded-xl h-11 px-4"
                   >
                     Để sau / Bỏ qua thẻ này
                   </Button>
@@ -438,7 +438,7 @@ export default function FlashcardsPage() {
                   <p className="text-[10px] font-bold text-center uppercase tracking-widest text-muted-foreground">
                     Đánh giá mức độ nhớ (Phím tắt: 1 - 2 - 3 - 4):
                   </p>
-                  <div className="grid grid-cols-4 gap-3">
+                  <div className="grid grid-cols-4 gap-2.5 sm:gap-3">
                     {[
                       { label: "Again", code: "again", key: "1", desc: "Quên từ", color: "hover:bg-red-500 hover:text-white hover:shadow-red-500/25 text-red-600 bg-red-500/5 dark:bg-red-500/10 border-red-500/20 hover:border-red-500" },
                       { label: "Hard", code: "hard", key: "2", desc: "Mơ hồ", color: "hover:bg-orange-500 hover:text-white hover:shadow-orange-500/25 text-orange-600 bg-orange-500/5 dark:bg-orange-500/10 border-orange-500/20 hover:border-orange-500" },
@@ -449,7 +449,7 @@ export default function FlashcardsPage() {
                         key={btn.code}
                         disabled={isReviewing}
                         onClick={() => handleResponse(btn.label as "Again" | "Hard" | "Good" | "Easy")}
-                        className={`flex flex-col items-center justify-center p-3 rounded-2xl border text-xs sm:text-sm font-black transition-all duration-300 shadow-sm active:scale-[0.95] disabled:opacity-50 disabled:cursor-not-allowed ${btn.color}`}
+                        className={`flex flex-col items-center justify-center h-16 sm:h-20 rounded-2xl border text-xs sm:text-sm font-black transition-all duration-300 shadow-sm active:scale-[0.95] disabled:opacity-50 disabled:cursor-not-allowed ${btn.color}`}
                       >
                         <div className="flex items-center gap-1.5">
                           <span>{btn.label}</span>
@@ -497,18 +497,18 @@ export default function FlashcardsPage() {
             </div>
           </div>
 
-          <div className="flex gap-3 justify-center pt-2">
+          <div className="flex flex-col sm:flex-row gap-3 justify-center pt-2 w-full">
             <Button
               onClick={resetReview}
               variant="outline"
-              className="rounded-xl text-xs sm:text-sm font-semibold border-glass h-11 px-5 hover:bg-muted active:scale-[0.98]"
+              className="w-full sm:w-auto rounded-xl text-xs sm:text-sm font-semibold border-glass h-12 sm:h-11 px-5 hover:bg-muted active:scale-[0.98] flex items-center justify-center"
             >
               <RotateCcw className="size-4 mr-1.5" />
               Ôn tập lại
             </Button>
             <Button
               onClick={() => window.location.href = "/dashboard"}
-              className="bg-primary hover:bg-primary/95 text-primary-foreground rounded-xl text-xs sm:text-sm font-semibold h-11 px-5 shadow-lg shadow-primary/10 active:scale-[0.98]"
+              className="w-full sm:w-auto bg-primary hover:bg-primary/95 text-primary-foreground rounded-xl text-xs sm:text-sm font-semibold h-12 sm:h-11 px-5 shadow-lg shadow-primary/10 active:scale-[0.98]"
             >
               Quay về Dashboard
             </Button>

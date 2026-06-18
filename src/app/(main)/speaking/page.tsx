@@ -94,7 +94,7 @@ export default function SpeakingPage() {
       </motion.div>
 
       {/* Stepper Tabs (Sliding Pill navigation) */}
-      <div className="bg-glass border border-glass p-2 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.01)] flex flex-wrap md:flex-nowrap gap-1">
+      <div className="bg-glass border border-glass p-1.5 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.01)] grid grid-cols-3 md:flex md:flex-nowrap gap-1">
         {tabs.map((tab) => {
           const Icon = tab.icon;
           const isActive = activeTab === tab.id;
@@ -103,7 +103,7 @@ export default function SpeakingPage() {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className="flex-1 min-w-[140px] text-left p-3.5 rounded-xl transition-all relative overflow-hidden group select-none"
+              className="flex-1 min-w-0 text-left p-3 rounded-xl transition-all relative overflow-hidden group select-none"
             >
               {isActive && (
                 <motion.div
@@ -112,19 +112,19 @@ export default function SpeakingPage() {
                   transition={{ type: "spring", stiffness: 130, damping: 19 }}
                 />
               )}
-              <div className="relative z-10 flex items-center gap-3">
-                <span className={`flex size-8 items-center justify-center rounded-lg transition-all duration-300 ${
+              <div className="relative z-10 flex items-center gap-2 sm:gap-3">
+                <span className={`flex size-8 shrink-0 items-center justify-center rounded-lg transition-all duration-300 ${
                   isActive
                     ? "bg-primary text-primary-foreground"
                     : "bg-muted text-muted-foreground group-hover:bg-foreground/[0.05]"
                 }`}>
                   <Icon className="size-4" />
                 </span>
-                <div>
-                  <h3 className={`font-bold text-xs uppercase tracking-wider ${isActive ? "text-primary" : "text-foreground"}`}>
+                <div className="min-w-0">
+                  <h3 className={`font-bold text-[10px] sm:text-xs uppercase tracking-wider ${isActive ? "text-primary" : "text-foreground"} truncate`}>
                     {tab.title}
                   </h3>
-                  <p className="text-[10px] text-muted-foreground font-normal line-clamp-1">
+                  <p className="text-[9px] sm:text-[10px] text-muted-foreground font-normal line-clamp-1">
                     {tab.desc}
                   </p>
                 </div>
