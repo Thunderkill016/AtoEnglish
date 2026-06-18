@@ -218,32 +218,30 @@ export default function LandingPage() {
           >
             {/* Badge */}
             <motion.div variants={fadeInUp}>
-              <span className="inline-flex items-center gap-1.5 text-[11px] font-bold text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 px-3.5 py-1.5 rounded-full border border-emerald-200/60 dark:border-emerald-800/40 uppercase tracking-[0.12em]">
+              <span className="inline-flex items-center gap-1.5 text-[11px] font-bold text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 px-3.5 py-1.5 rounded-full border border-emerald-200/60 dark:border-emerald-800/40 uppercase tracking-[0.12em] shadow-sm">
                 <Sparkles className="size-3" />
                 Phương pháp học thế hệ mới
               </span>
             </motion.div>
 
-            {/* Headline — shorter, punchier */}
+            {/* Headline */}
             <motion.h1
               variants={fadeInUp}
-              className="text-[2.25rem] leading-[1.15] sm:text-5xl sm:leading-[1.1] lg:text-[3.75rem] lg:leading-[1.08] font-extrabold tracking-tight text-zinc-900 dark:text-zinc-50 max-w-3xl mx-auto"
+              className="text-[2.25rem] leading-[1.12] sm:text-5xl sm:leading-[1.1] lg:text-[3.75rem] lg:leading-[1.08] font-extrabold tracking-tight text-zinc-900 dark:text-zinc-50 max-w-3xl mx-auto"
             >
-              Nói tiếng Anh tự tin
+              Học tiếng Anh để <span className="bg-gradient-to-r from-emerald-600 to-teal-500 bg-clip-text text-transparent">nói được</span>,
               <br />
-              <span className="bg-gradient-to-r from-emerald-600 to-teal-500 bg-clip-text text-transparent">
-                từ bài học đầu tiên.
-              </span>
+              không chỉ để biết.
             </motion.h1>
 
-            {/* Subheadline — 3 short punches */}
+            {/* Subheadline */}
             <motion.p
               variants={fadeInUp}
-              className="text-base sm:text-lg lg:text-xl text-zinc-500 dark:text-zinc-400 max-w-xl mx-auto leading-relaxed font-normal"
+              className="text-base sm:text-lg lg:text-xl text-zinc-500 dark:text-zinc-400 max-w-2xl mx-auto leading-relaxed font-normal"
             >
-              Không cần học thuộc. Không cần ngữ pháp khô khan.
+              Phương pháp khoa học giúp bạn tự tin giao tiếp thực tế từ con số 0.
               <br className="hidden sm:block" />
-              Chỉ cần luyện nói đúng cách.
+              Luyện nói ngay từ những bài học đầu tiên.
             </motion.p>
 
             {/* CTAs */}
@@ -258,21 +256,21 @@ export default function LandingPage() {
                   href={user ? "/dashboard" : "/login"}
                   className="w-full sm:w-auto"
                 >
-                  <Button className="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700 text-white font-semibold h-[52px] px-9 rounded-full text-base shadow-lg shadow-emerald-600/25 hover:shadow-xl hover:shadow-emerald-600/30 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 gap-2">
+                  <Button className="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700 dark:bg-emerald-600 dark:hover:bg-emerald-700 text-white font-semibold h-[52px] px-9 rounded-full text-base shadow-lg shadow-emerald-600/20 hover:shadow-xl hover:shadow-emerald-600/25 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 gap-2">
                     {user ? "Vào Dashboard" : "Bắt đầu miễn phí"}
                     <ArrowRight className="size-4" />
                   </Button>
                 </Link>
               )}
               <Button
-                variant="ghost"
+                variant="outline"
                 onClick={(e) => {
                   e.preventDefault();
                   document
                     .getElementById("how-it-works")
                     ?.scrollIntoView({ behavior: "smooth" });
                 }}
-                className="w-full sm:w-auto text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 font-medium h-[52px] px-6 rounded-full text-base gap-1.5 hover:bg-zinc-100/60 dark:hover:bg-zinc-800/40 transition-all duration-200"
+                className="w-full sm:w-auto border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-900/40 text-zinc-700 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-zinc-100 font-semibold h-[52px] px-8 rounded-full text-base gap-1.5 transition-all duration-200"
               >
                 <span>Xem cách học</span>
                 <ChevronRight className="size-4" />
