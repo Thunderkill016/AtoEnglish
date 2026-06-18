@@ -66,8 +66,8 @@ export async function Header() {
           ) : (
             <Link href="/login" className="ml-1">
               <Button
-                variant="ghost"
-                className="text-xs font-semibold h-8 px-3 rounded-lg text-zinc-600 hover:text-zinc-900 hover:bg-zinc-50 dark:text-zinc-400 dark:hover:text-zinc-200 dark:hover:bg-zinc-800/50"
+                variant="outline"
+                className="text-xs font-semibold h-9 px-3.5 rounded-xl border-zinc-200 bg-zinc-50/10 hover:bg-zinc-50 dark:border-zinc-800/50 dark:text-zinc-300 dark:hover:bg-zinc-800/50 transition-all"
               >
                 Đăng nhập
               </Button>

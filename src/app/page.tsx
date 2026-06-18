@@ -88,7 +88,7 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen bg-white text-zinc-900 font-sans selection:bg-emerald-100 selection:text-emerald-900 overflow-x-hidden">
       {/* Navigation Bar */}
-      <nav className="sticky top-0 z-50 w-full bg-white/80 backdrop-blur-md border-b border-zinc-100 h-16 flex items-center justify-between px-6 sm:px-12 transition-all">
+      <nav className="sticky top-0 z-50 w-full bg-white/80 backdrop-blur-md border-b border-zinc-100 h-16 flex items-center justify-between px-4 sm:px-12 transition-all">
         <Link href="/" className="flex items-center gap-2 group">
           <span className="flex size-7 items-center justify-center rounded-lg bg-emerald-600 text-white font-bold text-sm shadow-sm">
             A
@@ -98,25 +98,28 @@ export default function LandingPage() {
           </span>
         </Link>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2.5 sm:gap-4">
           {isAuthLoading ? (
             <div className="h-9 w-20 bg-zinc-50 animate-pulse rounded-lg" />
           ) : user ? (
             <Link href="/dashboard">
-              <Button className="bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold h-9 px-5 rounded-lg active:scale-[0.98] transition-all">
+              <Button className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm font-semibold h-10 sm:h-9 px-4 sm:px-5 rounded-xl sm:rounded-lg active:scale-[0.98] transition-all shadow-sm">
                 Vào Dashboard
               </Button>
             </Link>
           ) : (
             <>
               <Link href="/login">
-                <Button variant="ghost" className="text-sm font-semibold text-zinc-600 hover:text-zinc-900 h-9 px-4 rounded-lg">
+                <Button 
+                  variant="outline" 
+                  className="text-xs sm:text-sm font-semibold text-zinc-700 hover:text-zinc-900 h-10 sm:h-9 px-3.5 sm:px-4 rounded-xl sm:rounded-lg border-zinc-200 bg-zinc-50/10 hover:bg-zinc-50 transition-all"
+                >
                   Đăng nhập
                 </Button>
               </Link>
               <Link href="/login">
-                <Button className="bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold h-9 px-5 rounded-lg active:scale-[0.98] transition-all">
-                  Bắt đầu miễn phí
+                <Button className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm font-semibold h-10 sm:h-9 px-4 sm:px-5 rounded-xl sm:rounded-lg active:scale-[0.98] transition-all shadow-sm">
+                  Bắt đầu <span className="hidden sm:inline">miễn phí</span>
                 </Button>
               </Link>
             </>
