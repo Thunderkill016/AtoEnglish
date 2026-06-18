@@ -4,6 +4,12 @@ import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 import { reviewCardFSRS } from "@/lib/srs/fsrs";
 import { Card } from "@/types/database";
+import { headers } from "next/headers";
+import { InMemoryRateLimiter } from "@/lib/security/rate-limit";
+import { SaveCardSchema, ReviewCardSchema } from "@/lib/security/validation";
+
+const saveCardLimiter = new InMemoryRateLimiter(60, 60 * 1000);
+const reviewCardLimiter = new InMemoryRateLimiter(60, 60 * 1000);
 
 interface SaveCardParams {
   word: string;
@@ -19,6 +25,27 @@ interface SaveCardParams {
  */
 export async function saveCardToSRS(params: SaveCardParams) {
   try {
+    // Rate Limiting
+    const reqHeaders = headers();
+    const ip = reqHeaders.get("x-forwarded-for")?.split(",")[0].trim() || "127.0.0.1";
+    const rateLimitCheck = saveCardLimiter.check(ip);
+    if (!rateLimitCheck.success) {
+      return {
+        success: false,
+        error: "Yêu cầu quá thường xuyên. Vui lòng thử lại sau."
+      };
+    }
+
+    // Input Validation
+    const validated = SaveCardSchema.safeParse(params);
+    if (!validated.success) {
+      return {
+        success: false,
+        error: `Dữ liệu không hợp lệ: ${validated.error.errors.map(e => e.message).join(", ")}`
+      };
+    }
+    const cleanParams = validated.data;
+
     const supabase = createClient();
     
     // 1. Kiểm tra trạng thái đăng nhập của người dùng
@@ -31,7 +58,7 @@ export async function saveCardToSRS(params: SaveCardParams) {
       };
     }
     
-    const formattedWord = params.word.toLowerCase().trim();
+    const formattedWord = cleanParams.word.toLowerCase().trim();
     
     // 2. Kiểm tra xem từ này đã tồn tại trong danh sách của user chưa
     const { data: existingCard, error: selectError } = await supabase
@@ -51,7 +78,7 @@ export async function saveCardToSRS(params: SaveCardParams) {
     if (existingCard) {
       return {
         success: true,
-        message: `Từ "${params.word}" đã được lưu trong tủ thẻ của bạn trước đây.`,
+        message: `Từ "${cleanParams.word}" đã được lưu trong tủ thẻ của bạn trước đây.`,
         existed: true
       };
     }
@@ -62,11 +89,11 @@ export async function saveCardToSRS(params: SaveCardParams) {
       .insert({
         user_id: user.id,
         word: formattedWord,
-        phonetic: params.phonetic || null,
-        meaning_vn: params.meaning_vn,
-        example_en: params.example_en || null,
-        topic: params.topic || "General",
-        level: params.level || "B1",
+        phonetic: cleanParams.phonetic || null,
+        meaning_vn: cleanParams.meaning_vn,
+        example_en: cleanParams.example_en || null,
+        topic: cleanParams.topic || "General",
+        level: cleanParams.level || "B1",
         interval: 0,
         ease_factor: 2.5,
         repetitions: 0,
@@ -157,6 +184,27 @@ export async function getDueCards() {
  */
 export async function reviewCard(cardId: string, rating: "Again" | "Hard" | "Good" | "Easy") {
   try {
+    // Rate Limiting
+    const reqHeaders = headers();
+    const ip = reqHeaders.get("x-forwarded-for")?.split(",")[0].trim() || "127.0.0.1";
+    const rateLimitCheck = reviewCardLimiter.check(ip);
+    if (!rateLimitCheck.success) {
+      return {
+        success: false,
+        error: "Yêu cầu quá thường xuyên. Vui lòng thử lại sau."
+      };
+    }
+
+    // Input Validation
+    const validated = ReviewCardSchema.safeParse({ cardId, rating });
+    if (!validated.success) {
+      return {
+        success: false,
+        error: `Dữ liệu không hợp lệ: ${validated.error.errors.map(e => e.message).join(", ")}`
+      };
+    }
+    const cleanParams = validated.data;
+
     const supabase = createClient();
     
     // 1. Kiểm tra trạng thái đăng nhập
@@ -172,7 +220,7 @@ export async function reviewCard(cardId: string, rating: "Again" | "Hard" | "Goo
     const { data: card, error: fetchError } = await supabase
       .from("cards")
       .select("id, interval, ease_factor, repetitions, state, difficulty, stability, last_review, next_review, due_date")
-      .eq("id", cardId)
+      .eq("id", cleanParams.cardId)
       .eq("user_id", user.id)
       .single();
       
@@ -184,7 +232,7 @@ export async function reviewCard(cardId: string, rating: "Again" | "Hard" | "Goo
     }
     
     // 3. Áp dụng thuật toán FSRS
-    const fsrsUpdates = reviewCardFSRS(card as unknown as Card, rating);
+    const fsrsUpdates = reviewCardFSRS(card as unknown as Card, cleanParams.rating);
     
     // 4. Cập nhật các chỉ số mới vào Database
     const { error: updateError } = await supabase
@@ -203,7 +251,7 @@ export async function reviewCard(cardId: string, rating: "Again" | "Hard" | "Goo
         due_date: fsrsUpdates.due_date,
         last_reviewed: fsrsUpdates.last_reviewed,
       })
-      .eq("id", cardId)
+      .eq("id", cleanParams.cardId)
       .eq("user_id", user.id);
       
     if (updateError) {
@@ -219,7 +267,7 @@ export async function reviewCard(cardId: string, rating: "Again" | "Hard" | "Goo
     
     return {
       success: true,
-      message: `Đã đánh giá "${rating}". Lên lịch ôn tiếp theo sau ${fsrsUpdates.interval} ngày.`,
+      message: `Đã đánh giá "${cleanParams.rating}". Lên lịch ôn tiếp theo sau ${fsrsUpdates.interval} ngày.`,
       next_interval: fsrsUpdates.interval,
       next_due_date: fsrsUpdates.next_review,
       debug: fsrsUpdates.debug,

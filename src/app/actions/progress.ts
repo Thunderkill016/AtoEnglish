@@ -3,6 +3,11 @@
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 import { UNIT_VOCABULARY } from "@/lib/constants/vocabulary";
+import { headers } from "next/headers";
+import { InMemoryRateLimiter } from "@/lib/security/rate-limit";
+import { CompleteUnitSchema } from "@/lib/security/validation";
+
+const completeUnitLimiter = new InMemoryRateLimiter(10, 60 * 1000); // 10 requests/min
 
 /**
  * Server Action xử lý khi người dùng hoàn thành một Unit học tập.
@@ -10,6 +15,27 @@ import { UNIT_VOCABULARY } from "@/lib/constants/vocabulary";
  */
 export async function completeUnit(unitId: string) {
   try {
+    // Rate Limiting
+    const reqHeaders = headers();
+    const ip = reqHeaders.get("x-forwarded-for")?.split(",")[0].trim() || "127.0.0.1";
+    const rateLimitCheck = completeUnitLimiter.check(ip);
+    if (!rateLimitCheck.success) {
+      return {
+        success: false,
+        error: "Yêu cầu quá thường xuyên. Vui lòng thử lại sau."
+      };
+    }
+
+    // Input Validation
+    const validated = CompleteUnitSchema.safeParse({ unitId });
+    if (!validated.success) {
+      return {
+        success: false,
+        error: `Dữ liệu không hợp lệ: ${validated.error.errors.map(e => e.message).join(", ")}`
+      };
+    }
+    const cleanParams = validated.data;
+
     const supabase = createClient();
     
     // 1. Kiểm tra trạng thái đăng nhập
@@ -29,7 +55,7 @@ export async function completeUnit(unitId: string) {
       .from("user_lesson_progress")
       .select("id")
       .eq("user_id", user.id)
-      .eq("unit_id", unitId)
+      .eq("unit_id", cleanParams.unitId)
       .maybeSingle();
 
     if (progressError) {
@@ -52,7 +78,7 @@ export async function completeUnit(unitId: string) {
       .from("user_lesson_progress")
       .insert({
         user_id: user.id,
-        unit_id: unitId,
+        unit_id: cleanParams.unitId,
         xp_earned: 80
       });
 
