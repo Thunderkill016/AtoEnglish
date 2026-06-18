@@ -93,6 +93,30 @@
     background-size: 200% 200%;
     animation: gradientShift 6s ease infinite;
   }
+
+  .animate-fade-in-up {
+    animation: fadeInUpAnimation 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+  }
+
+  .animation-delay-75 {
+    animation-delay: 75ms;
+  }
+
+  .animation-delay-150 {
+    animation-delay: 150ms;
+  }
+
+  .animation-delay-225 {
+    animation-delay: 225ms;
+  }
+
+  .animation-delay-300 {
+    animation-delay: 300ms;
+  }
+
+  .animation-delay-400 {
+    animation-delay: 400ms;
+  }
 }
 
 @keyframes flamePulse {
@@ -130,6 +154,17 @@
   }
   50% {
     background-position: 100% 50%;
+  }
+}
+
+@keyframes fadeInUpAnimation {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 

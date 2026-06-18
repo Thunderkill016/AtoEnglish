@@ -37,11 +37,11 @@ export default function LandingPage() {
   // --- Animation Variants ---
 
   const fadeInUp = {
-    hidden: { opacity: 0, y: 24 },
+    hidden: { opacity: 0, y: 16 },
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] as const },
+      transition: { duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] as const },
     },
   };
 
@@ -50,19 +50,19 @@ export default function LandingPage() {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.12,
-        delayChildren: 0.1,
+        staggerChildren: 0.06,
+        delayChildren: 0.05,
       },
     },
   };
 
   const cardReveal = {
-    hidden: { opacity: 0, y: 32, scale: 0.96 },
+    hidden: { opacity: 0, y: 16, scale: 0.98 },
     visible: {
       opacity: 1,
       y: 0,
       scale: 1,
-      transition: { duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] as const },
+      transition: { duration: 0.45, ease: [0.25, 0.46, 0.45, 0.94] as const },
     },
   };
 
@@ -190,45 +190,31 @@ export default function LandingPage() {
         />
 
         <div className="relative max-w-4xl mx-auto flex flex-col items-center text-center">
-          <m.div
-            initial="hidden"
-            animate="visible"
-            variants={staggerContainer}
-            className="space-y-6 sm:space-y-8"
-          >
+          <div className="space-y-6 sm:space-y-8">
             {/* Badge */}
-            <m.div variants={fadeInUp}>
+            <div className="animate-fade-in-up">
               <span className="inline-flex items-center gap-1.5 text-[11px] font-bold text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 px-3.5 py-1.5 rounded-full border border-emerald-200/60 dark:border-emerald-800/40 uppercase tracking-[0.12em] shadow-sm">
                 <Sparkles className="size-3" />
                 Phương pháp học thế hệ mới
               </span>
-            </m.div>
+            </div>
 
             {/* Headline */}
-            <m.h1
-              variants={fadeInUp}
-              className="text-[2.25rem] leading-[1.12] sm:text-5xl sm:leading-[1.1] lg:text-[3.75rem] lg:leading-[1.08] font-extrabold tracking-tight text-zinc-900 dark:text-zinc-50 max-w-3xl mx-auto"
-            >
+            <h1 className="animate-fade-in-up animation-delay-75 text-[2.25rem] leading-[1.12] sm:text-5xl sm:leading-[1.1] lg:text-[3.75rem] lg:leading-[1.08] font-extrabold tracking-tight text-zinc-900 dark:text-zinc-50 max-w-3xl mx-auto">
               Học tiếng Anh để <span className="bg-gradient-to-r from-emerald-600 to-teal-500 bg-clip-text text-transparent">nói được</span>,
               <br />
               không chỉ để biết.
-            </m.h1>
+            </h1>
 
             {/* Subheadline */}
-            <m.p
-              variants={fadeInUp}
-              className="text-base sm:text-lg lg:text-xl text-zinc-500 dark:text-zinc-400 max-w-2xl mx-auto leading-relaxed font-normal"
-            >
+            <p className="animate-fade-in-up animation-delay-150 text-base sm:text-lg lg:text-xl text-zinc-500 dark:text-zinc-400 max-w-2xl mx-auto leading-relaxed font-normal">
               Phương pháp khoa học giúp bạn tự tin giao tiếp thực tế từ con số 0.
               <br className="hidden sm:block" />
               Luyện nói ngay từ những bài học đầu tiên.
-            </m.p>
+            </p>
 
             {/* CTAs */}
-            <m.div
-              variants={fadeInUp}
-              className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 pt-2 w-full"
-            >
+            <div className="animate-fade-in-up animation-delay-225 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 pt-2 w-full">
               {isAuthLoading ? (
                 <div className="h-[52px] w-52 bg-zinc-100 dark:bg-zinc-800 animate-pulse rounded-full" />
               ) : (
@@ -255,17 +241,12 @@ export default function LandingPage() {
                 <span>Xem cách học</span>
                 <ChevronRight className="size-4" />
               </Button>
-            </m.div>
-          </m.div>
+            </div>
+          </div>
         </div>
 
         {/* Stats bar */}
-        <m.div
-          initial="hidden"
-          animate="visible"
-          variants={fadeInUp}
-          className="relative max-w-2xl mx-auto mt-16 sm:mt-20"
-        >
+        <div className="animate-fade-in-up animation-delay-300 relative max-w-2xl mx-auto mt-16 sm:mt-20">
           <div className="flex items-center justify-center divide-x divide-zinc-200 dark:divide-zinc-800">
             {stats.map((stat, index) => (
               <div
@@ -281,7 +262,7 @@ export default function LandingPage() {
               </div>
             ))}
           </div>
-        </m.div>
+        </div>
       </section>
 
       {/* ===== Problem Section — sharper, more empathetic ===== */}
