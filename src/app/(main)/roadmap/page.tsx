@@ -47,7 +47,7 @@ export default function RoadmapPage() {
     {
       code: "B1",
       name: "Intermediate (Trung cấp - HIỆN TẠI)",
-      desc: "Làm chủ các chủ đề học thuật và công việc: Diễn đạt ý kiến cá nhân, ước mơ, nói về công nghệ & xã hội (IPOR model). Học cách viết các đoạn văn luận ngắn mạch lạc.",
+      desc: "Làm chủ các chủ đề học thuật và công việc: Diễn đạt ý kiến cá nhân, ước mơ, nói về công nghệ & xã hội (IPOR model). Học cách viết các đoạn văn luận ngắn mạch luận.",
       lessonsCount: 24,
       completedPercent: 45,
       status: "active",
@@ -75,26 +75,26 @@ export default function RoadmapPage() {
 
   return (
     <div className="relative mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8 space-y-8">
-      {/* Background Ambient Glows */}
+      {/* Soft background ambient blurs */}
       <div className="absolute top-10 left-10 -z-10 h-96 w-96 rounded-full bg-primary/5 blur-3xl" />
       <div className="absolute bottom-20 right-10 -z-10 h-96 w-96 rounded-full bg-emerald-500/5 blur-3xl" />
 
       {/* Header */}
-      <div className="border-b border-border/40 pb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-primary px-2.5 py-1 rounded-full bg-primary/10">
+      <div className="pb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div className="space-y-1">
+          <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-primary px-3 py-0.5 rounded-full bg-primary/10 border border-primary/20">
             <Map className="size-3.5" />
             Lộ trình học chuẩn CEFR
           </span>
-          <h1 className="mt-2 text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
+          <h1 className="text-2xl font-extrabold tracking-tight text-foreground sm:text-3xl mt-1.5">
             Bản đồ lộ trình A1 → C1
           </h1>
-          <p className="text-sm text-muted-foreground mt-1">
-            Con đường học tập tiếng Anh cá nhân hóa rõ ràng, giúp bạn duy trì tính kỷ luật và kiên trì.
+          <p className="text-sm text-muted-foreground">
+            Con đường tự học tiếng Anh cá nhân hóa, duy trì tính kiên trì của bạn qua từng mốc CEFR.
           </p>
         </div>
-        <div className="shrink-0 flex items-center gap-2 rounded-xl bg-glass border border-glass px-4 py-2 text-xs font-semibold text-foreground">
-          <TrendingUp className="size-4 text-primary" />
+        <div className="shrink-0 flex items-center gap-2 rounded-2xl bg-glass border border-glass px-4 py-2.5 text-xs font-bold text-foreground">
+          <TrendingUp className="size-4 text-primary animate-pulse" />
           <span>Tổng tiến độ: 49% hoàn thành</span>
         </div>
       </div>
@@ -102,10 +102,10 @@ export default function RoadmapPage() {
       {/* Vertical Timeline Container */}
       <div className="relative pl-6 sm:pl-10 space-y-12">
         {/* Glowing Connected Timeline Line */}
-        <div className="absolute left-10 sm:left-14 top-4 bottom-4 w-0.5 bg-muted-foreground/20 -translate-x-1/2 -z-10" />
+        <div className="absolute left-10 sm:left-14 top-4 bottom-4 w-0.5 bg-muted-foreground/15 -translate-x-1/2 -z-10" />
         
         {/* Glow Active portion of line */}
-        <div className="absolute left-10 sm:left-14 top-4 h-[55%] w-0.5 bg-gradient-to-b from-primary via-primary to-emerald-400 -translate-x-1/2 -z-10 shadow-[0_0_10px_rgba(34,197,94,0.3)]" />
+        <div className="absolute left-10 sm:left-14 top-4 h-[55%] w-0.5 bg-gradient-to-b from-primary via-primary to-emerald-400 -translate-x-1/2 -z-10 shadow-[0_0_8px_rgba(34,197,94,0.25)]" />
 
         {/* Level List */}
         {levels.map((lvl) => {
@@ -123,7 +123,7 @@ export default function RoadmapPage() {
                   </span>
                 )}
                 {isActive && (
-                  <span className="flex size-9 sm:size-10 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-[0_0_15px_rgba(var(--primary),0.4)] border-4 border-background animate-pulse transition-transform duration-300 group-hover:scale-110">
+                  <span className="flex size-9 sm:size-10 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-[0_0_15px_rgba(var(--primary),0.35)] border-4 border-background animate-pulse transition-transform duration-300 group-hover:scale-110">
                     <Sparkles className="size-4.5 sm:size-5 animate-pulse" />
                   </span>
                 )}
@@ -135,15 +135,15 @@ export default function RoadmapPage() {
               </div>
 
               {/* Level Details Card */}
-              <div className={`rounded-3xl border p-6 bg-glass border-glass shadow-[0_4px_25px_rgba(0,0,0,0.01)] transition-all duration-300 ${
+              <div className={`rounded-3xl border p-6 bg-glass border-glass shadow-[0_8px_30px_rgb(0,0,0,0.01)] transition-all duration-300 ${
                 isActive
-                  ? "ring-1 ring-primary/40 border-primary/20 shadow-primary/5 hover:shadow-primary/10"
-                  : "hover:border-border/80"
+                  ? "ring-1 ring-primary/30 border-primary/20 hover:shadow-primary/5"
+                  : "hover:border-border/60"
               }`}>
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
                   <div className="space-y-1">
                     <div className="flex items-center gap-2">
-                      <span className={`text-xs font-black px-2.5 py-0.5 rounded-lg ${
+                      <span className={`text-[10px] font-black px-2.5 py-0.5 rounded-lg ${
                         isCompleted
                           ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/10"
                           : isActive
@@ -153,7 +153,7 @@ export default function RoadmapPage() {
                         LEVEL {lvl.code}
                       </span>
                       {isActive && (
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-primary animate-pulse">
+                        <span className="text-[9px] font-bold uppercase tracking-wider text-primary animate-pulse">
                           Đang học bài này
                         </span>
                       )}
@@ -165,9 +165,9 @@ export default function RoadmapPage() {
 
                   {/* Level Progress */}
                   <div className="w-full md:w-48 space-y-1.5 shrink-0">
-                    <div className="flex justify-between text-[11px] text-muted-foreground">
+                    <div className="flex justify-between text-[10px] font-semibold text-muted-foreground">
                       <span>Bài học: {lvl.lessonsCount} bài</span>
-                      <span className="font-semibold text-foreground">{lvl.completedPercent}% hoàn thành</span>
+                      <span className="text-foreground">{lvl.completedPercent}% hoàn thành</span>
                     </div>
                     <div className="h-1.5 w-full rounded-full bg-muted overflow-hidden">
                       <div
@@ -178,14 +178,14 @@ export default function RoadmapPage() {
                   </div>
                 </div>
 
-                <p className="text-sm text-muted-foreground leading-relaxed mb-4">
+                <p className="text-xs text-muted-foreground leading-relaxed mb-4">
                   {lvl.desc}
                 </p>
 
                 {/* Sub topics chips */}
                 <div className="flex flex-wrap gap-2 mb-6">
                   {lvl.topics.map((t) => (
-                    <span key={t} className="inline-flex items-center gap-1 text-[11px] font-medium text-foreground/70 bg-muted/50 px-2.5 py-1 rounded-lg border border-border/40">
+                    <span key={t} className="inline-flex items-center gap-1.5 text-[10px] font-bold text-foreground/75 bg-muted/65 px-2.5 py-1 rounded-xl border border-border/40">
                       <BookOpen className="size-3 text-muted-foreground" />
                       {t}
                     </span>
@@ -195,18 +195,18 @@ export default function RoadmapPage() {
                 {/* Action button */}
                 <div className="flex justify-end pt-3 border-t border-border/40">
                   {isCompleted ? (
-                    <Button variant="outline" className="rounded-xl text-xs gap-1.5">
+                    <Button variant="outline" className="rounded-xl text-xs gap-1.5 border-glass">
                       <Award className="size-4 text-yellow-500" />
                       Xem lại chứng chỉ Level {lvl.code}
                     </Button>
                   ) : isActive ? (
-                    <Button onClick={() => window.location.href = "/learn"} className="bg-primary hover:bg-primary/95 text-primary-foreground rounded-xl text-xs font-semibold gap-1.5 shadow-md shadow-primary/10">
+                    <Button onClick={() => window.location.href = "/learn"} className="bg-primary hover:bg-primary/95 text-primary-foreground rounded-xl text-xs font-semibold gap-1.5 shadow-md shadow-primary/5">
                       <Play className="size-3.5 fill-current" />
                       Học tiếp B1 ngay bây giờ
                       <ArrowRight className="size-3.5" />
                     </Button>
                   ) : (
-                    <Button disabled variant="outline" className="rounded-xl text-xs gap-1 opacity-60">
+                    <Button disabled variant="outline" className="rounded-xl text-xs gap-1 opacity-50 border-glass">
                       <Lock className="size-3.5" />
                       Cần hoàn thành B1 trước
                     </Button>

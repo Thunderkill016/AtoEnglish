@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Plus_Jakarta_Sans } from "next/font/google";
 
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { cn } from "@/lib/utils";
 
 import "./globals.css";
 
-const inter = Inter({
+const sansFont = Plus_Jakarta_Sans({
   subsets: ["latin", "vietnamese"],
   variable: "--font-sans",
 });
@@ -26,7 +26,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="vi" suppressHydrationWarning className={cn("font-sans", inter.variable)}>
+    <html lang="vi" suppressHydrationWarning className={cn("font-sans", sansFont.variable)}>
       <body className="min-h-screen">
         <ThemeProvider
           attribute="class"

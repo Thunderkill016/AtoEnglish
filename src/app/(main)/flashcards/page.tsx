@@ -80,13 +80,11 @@ export default function FlashcardsPage() {
   const handleResponse = (scoreLabel: string) => {
     const currentCard = mockCards[currentIndex];
     
-    // Log the user's assessment of their recall
     setResponseLog([...responseLog, { word: currentCard.word, score: scoreLabel }]);
     setAnsweredCount(answeredCount + 1);
 
     if (currentIndex < mockCards.length - 1) {
       setIsFlipped(false);
-      // Wait for flip transition back before changing content
       setTimeout(() => {
         setCurrentIndex(currentIndex + 1);
       }, 250);
@@ -108,23 +106,23 @@ export default function FlashcardsPage() {
 
   return (
     <div className="relative mx-auto max-w-4xl px-4 py-8 sm:px-6 space-y-8">
-      {/* Background Glow */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 -z-10 h-72 w-72 rounded-full bg-primary/5 blur-3xl" />
+      {/* Soft background ambient glow */}
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 -z-10 h-80 w-80 rounded-full bg-primary/5 blur-3xl" />
 
       {/* Header */}
       <div className="flex items-center justify-between border-b border-border/40 pb-4">
         <div>
-          <span className="inline-flex items-center gap-1 text-xs font-semibold text-primary px-2.5 py-0.5 rounded-full bg-primary/10">
+          <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-primary px-2.5 py-0.5 rounded-full bg-primary/10 border border-primary/20">
             <Layers className="size-3.5" />
             Spaced Repetition (SRS)
           </span>
-          <h1 className="mt-1.5 text-2xl font-bold tracking-tight text-foreground">
+          <h1 className="mt-2 text-2xl font-extrabold tracking-tight text-foreground">
             Thẻ ôn tập từ vựng
           </h1>
         </div>
         <div className="text-right">
-          <div className="text-xs text-muted-foreground">Tiến trình ôn tập</div>
-          <div className="text-sm font-bold text-foreground font-mono">
+          <div className="text-[10px] text-muted-foreground uppercase tracking-wider font-bold">Tiến trình ôn tập</div>
+          <div className="text-xs font-extrabold text-foreground font-mono mt-0.5">
             {currentIndex + 1} / {mockCards.length} thẻ
           </div>
         </div>
@@ -153,23 +151,23 @@ export default function FlashcardsPage() {
                 }`}
               >
                 {/* CARD FRONT */}
-                <div className="absolute w-full h-full backface-hidden rounded-3xl bg-glass border border-glass p-8 flex flex-col justify-between shadow-[0_8px_30px_rgb(0,0,0,0.03)] hover:shadow-primary/5 hover:border-primary/20 transition-all duration-300">
+                <div className="absolute w-full h-full backface-hidden rounded-3xl bg-gradient-to-br from-glass to-muted/10 border border-glass p-8 flex flex-col justify-between shadow-[0_8px_30px_rgb(0,0,0,0.015)] hover:shadow-primary/5 hover:border-primary/20 transition-all duration-300">
                   <div className="flex justify-between items-start">
-                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-lg text-xs font-medium bg-muted text-muted-foreground border border-border/40">
+                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-lg text-[10px] font-bold uppercase tracking-wider bg-muted text-muted-foreground border border-border/40">
                       <Folder className="size-3" />
                       {currentCard.topic}
                     </span>
-                    <span className="text-xs font-extrabold px-2 py-0.5 rounded-md bg-primary/20 text-primary border border-primary/20">
+                    <span className="text-[10px] font-black px-2 py-0.5 rounded-md bg-primary/20 text-primary border border-primary/20">
                       {currentCard.level}
                     </span>
                   </div>
 
                   <div className="text-center space-y-3">
-                    <h2 className="text-3xl font-extrabold tracking-tight text-foreground bg-gradient-to-r from-foreground to-foreground/85 bg-clip-text select-all">
+                    <h2 className="text-3xl font-extrabold tracking-tight text-foreground bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text select-all">
                       {currentCard.word}
                     </h2>
                     <div className="flex items-center justify-center gap-2">
-                      <span className="text-sm font-mono text-muted-foreground">{currentCard.phonetic}</span>
+                      <span className="text-xs font-mono text-muted-foreground">{currentCard.phonetic}</span>
                       <Button
                         onClick={(e) => handleAudioPlay(e, currentCard.word)}
                         variant="ghost"
@@ -180,24 +178,24 @@ export default function FlashcardsPage() {
                         <Volume2 className="size-4.5" />
                       </Button>
                     </div>
-                    <span className="inline-block text-[11px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-muted/65 text-muted-foreground font-mono">
+                    <span className="inline-block text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-muted/65 text-muted-foreground font-mono">
                       {currentCard.pos}
                     </span>
                   </div>
 
-                  <div className="text-center text-xs text-muted-foreground/60 flex items-center justify-center gap-1">
+                  <div className="text-center text-[10px] text-muted-foreground/60 flex items-center justify-center gap-1">
                     <HelpCircle className="size-3.5" />
                     <span>Click vào thẻ để xem mặt sau</span>
                   </div>
                 </div>
 
                 {/* CARD BACK */}
-                <div className="absolute w-full h-full backface-hidden rotate-y-180 rounded-3xl bg-gradient-to-br from-glass to-emerald-500/5 border border-glass p-8 flex flex-col justify-between shadow-[0_8px_30px_rgb(0,0,0,0.03)]">
+                <div className="absolute w-full h-full backface-hidden rotate-y-180 rounded-3xl bg-gradient-to-br from-glass to-emerald-500/5 border border-glass p-8 flex flex-col justify-between shadow-[0_8px_30px_rgb(0,0,0,0.015)]">
                   <div className="flex justify-between items-start">
-                    <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
+                    <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
                       Nghĩa từ vựng
                     </span>
-                    <span className="text-xs font-mono text-muted-foreground">Mặt sau</span>
+                    <span className="text-[10px] font-bold text-muted-foreground font-mono uppercase">Mặt sau</span>
                   </div>
 
                   <div className="space-y-4">
@@ -207,9 +205,9 @@ export default function FlashcardsPage() {
                       </p>
                     </div>
 
-                    <div className="p-3.5 rounded-2xl bg-muted/30 border border-border/40 space-y-1 text-left">
+                    <div className="p-3.5 rounded-2xl bg-muted/20 border border-border/40 space-y-1.5 text-left">
                       <div className="flex justify-between items-center">
-                        <span className="text-[10px] uppercase font-bold text-muted-foreground">Ví dụ thực tế</span>
+                        <span className="text-[9px] uppercase font-bold text-muted-foreground">Ví dụ thực tế</span>
                         <Button
                           onClick={(e) => handleAudioPlay(e, currentCard.example_en)}
                           variant="ghost"
@@ -228,7 +226,7 @@ export default function FlashcardsPage() {
                     </div>
                   </div>
 
-                  <div className="text-center text-xs text-muted-foreground/60 flex items-center justify-center gap-1">
+                  <div className="text-center text-[10px] text-muted-foreground/60 flex items-center justify-center gap-1">
                     <HelpCircle className="size-3.5" />
                     <span>Click vào thẻ để lật lại mặt trước</span>
                   </div>
@@ -248,7 +246,7 @@ export default function FlashcardsPage() {
               </Button>
             ) : (
               <div className="w-full max-w-md space-y-3">
-                <p className="text-xs font-bold text-center uppercase tracking-wider text-muted-foreground">
+                <p className="text-[10px] font-bold text-center uppercase tracking-wider text-muted-foreground">
                   Đánh giá độ nhớ của bạn để thuật toán xếp lịch:
                 </p>
                 <div className="grid grid-cols-4 gap-2">
@@ -261,10 +259,10 @@ export default function FlashcardsPage() {
                     <button
                       key={btn.code}
                       onClick={() => handleResponse(btn.label)}
-                      className={`flex flex-col items-center justify-center p-2.5 rounded-xl border text-xs font-semibold transition-all duration-200 ${btn.color}`}
+                      className={`flex flex-col items-center justify-center p-2.5 rounded-xl border text-[11px] font-bold transition-all duration-200 ${btn.color}`}
                     >
                       <span>{btn.label}</span>
-                      <span className="text-[9px] opacity-75 font-normal mt-0.5">{btn.desc}</span>
+                      <span className="text-[8px] opacity-75 font-normal mt-0.5">{btn.desc}</span>
                     </button>
                   ))}
                 </div>
@@ -274,25 +272,25 @@ export default function FlashcardsPage() {
         </div>
       ) : (
         /* Finished Arena */
-        <div className="rounded-3xl border border-glass bg-glass p-8 text-center max-w-md mx-auto space-y-6 shadow-md animate-float">
-          <div className="inline-flex size-16 items-center justify-center rounded-3xl bg-primary/10 text-primary">
-            <Award className="size-8" />
+        <div className="rounded-3xl border border-glass bg-glass p-8 text-center max-w-md mx-auto space-y-6 shadow-[0_8px_30px_rgb(0,0,0,0.01)] animate-float">
+          <div className="inline-flex size-14 items-center justify-center rounded-2xl bg-primary/10 text-primary">
+            <Award className="size-7" />
           </div>
           
           <div className="space-y-2">
-            <h2 className="text-2xl font-bold text-foreground">Tuyệt vời! Đã hoàn thành!</h2>
-            <p className="text-sm text-muted-foreground">
+            <h2 className="text-xl font-bold text-foreground">Tuyệt vời! Đã hoàn thành!</h2>
+            <p className="text-xs text-muted-foreground leading-relaxed">
               Bạn đã ôn tập xong tất cả {mockCards.length} từ vựng cần ôn trong ngày hôm nay. Thuật toán đã tự động tính toán lại lịch ôn tập tiếp theo cho bạn.
             </p>
           </div>
 
           {/* Log summaries */}
-          <div className="p-4 rounded-2xl bg-muted/40 border border-border/40 text-left space-y-2 text-xs">
-            <span className="font-bold text-muted-foreground uppercase tracking-wider">Tóm tắt kết quả:</span>
-            <div className="divide-y divide-border/30">
+          <div className="p-4 rounded-2xl bg-muted/20 border border-border/40 text-left space-y-2 text-xs">
+            <span className="font-bold text-[10px] text-muted-foreground uppercase tracking-wider">Tóm tắt kết quả:</span>
+            <div className="divide-y divide-border/20">
               {responseLog.map((log, idx) => (
-                <div key={idx} className="flex justify-between py-1.5 first:pt-0 last:pb-0">
-                  <span className="font-semibold text-foreground">{log.word}</span>
+                <div key={idx} className="flex justify-between py-1.5 first:pt-0 last:pb-0 font-medium">
+                  <span className="text-foreground">{log.word}</span>
                   <span className={`font-bold ${
                     log.score === "Easy" ? "text-emerald-500" : log.score === "Good" ? "text-blue-500" : log.score === "Hard" ? "text-orange-500" : "text-red-500"
                   }`}>{log.score}</span>
@@ -305,14 +303,14 @@ export default function FlashcardsPage() {
             <Button
               onClick={resetReview}
               variant="outline"
-              className="rounded-xl gap-2 font-medium"
+              className="rounded-xl text-xs font-semibold border-glass"
             >
-              <RotateCcw className="size-4" />
+              <RotateCcw className="size-4 mr-1.5" />
               Ôn lại
             </Button>
             <Button
               onClick={() => window.location.href = "/dashboard"}
-              className="bg-primary hover:bg-primary/95 text-primary-foreground rounded-xl font-medium"
+              className="bg-primary hover:bg-primary/95 text-primary-foreground rounded-xl text-xs font-semibold"
             >
               Về Dashboard
             </Button>
