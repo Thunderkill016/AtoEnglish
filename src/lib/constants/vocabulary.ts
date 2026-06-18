@@ -8,6 +8,56 @@ export interface VocabularyItem {
 }
 
 export const UNIT_VOCABULARY: Record<string, VocabularyItem[]> = {
+  "unit-1": [
+    {
+      word: "hello",
+      phonetic: "/həˈləʊ/",
+      meaning_vn: "Xin chào",
+      example_en: "Hello! How are you doing today?",
+      topic: "Greetings",
+      level: "A1",
+    },
+    {
+      word: "introduce",
+      phonetic: "/ˌɪn.trəˈdʒuːs/",
+      meaning_vn: "Giới thiệu",
+      example_en: "Let me introduce myself to the class.",
+      topic: "Self-Introduction",
+      level: "A1",
+    },
+    {
+      word: "myself",
+      phonetic: "/maɪˈself/",
+      meaning_vn: "Bản thân tôi",
+      example_en: "I will write a short text about myself.",
+      topic: "Self-Introduction",
+      level: "A1",
+    },
+    {
+      word: "name",
+      phonetic: "/neɪm/",
+      meaning_vn: "Tên",
+      example_en: "My name is Linh and I am from Vietnam.",
+      topic: "Self-Introduction",
+      level: "A1",
+    },
+    {
+      word: "nice",
+      phonetic: "/naɪs/",
+      meaning_vn: "Tốt, đẹp, dễ chịu",
+      example_en: "It is a nice day to study English.",
+      topic: "Greetings",
+      level: "A1",
+    },
+    {
+      word: "meet",
+      phonetic: "/miːt/",
+      meaning_vn: "Gặp gỡ",
+      example_en: "I am very happy to meet you.",
+      topic: "Greetings",
+      level: "A1",
+    },
+  ],
   "unit-4": [
     { 
       word: "artificial intelligence", 
