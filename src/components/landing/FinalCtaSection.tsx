@@ -3,19 +3,15 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import type { User } from "@supabase/supabase-js";
 import { Button } from "@/components/ui/button";
-import { createClient } from "@/lib/supabase/client";
 import ScrollReveal from "@/components/ui/scroll-reveal";
+import { checkHasSession } from "@/lib/auth-check";
 
 export default function FinalCtaSection() {
-  const [user, setUser] = useState<User | null>(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    const supabase = createClient();
-    supabase.auth.getUser().then(({ data: { user } }) => {
-      setUser(user);
-    });
+    setIsLoggedIn(checkHasSession());
   }, []);
 
   return (
@@ -41,11 +37,11 @@ export default function FinalCtaSection() {
 
         <ScrollReveal delayClass="delay-100" className="flex flex-col items-center gap-4">
           <Link
-            href={user ? "/dashboard" : "/login"}
+            href={isLoggedIn ? "/dashboard" : "/login"}
             className="w-full sm:w-auto"
           >
             <Button className="w-full sm:w-auto sm:min-w-[280px] justify-center bg-emerald-600 hover:bg-emerald-700 dark:bg-emerald-600 dark:hover:bg-emerald-700 text-white font-semibold h-14 px-10 rounded-full text-base shadow-lg shadow-emerald-600/20 hover:shadow-xl hover:shadow-emerald-600/25 hover:scale-[1.03] active:scale-[0.98] transition-all duration-300 gap-2.5">
-              {user
+              {isLoggedIn
                 ? "Vào Dashboard ngay"
                 : "Bắt đầu miễn phí ngay hôm nay"}
               <ArrowRight className="size-4.5" />

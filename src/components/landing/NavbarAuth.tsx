@@ -2,23 +2,19 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import type { User } from "@supabase/supabase-js";
 import { Button } from "@/components/ui/button";
-import { createClient } from "@/lib/supabase/client";
+import { checkHasSession } from "@/lib/auth-check";
 
 export default function NavbarAuth() {
-  const [user, setUser] = useState<User | null>(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    const supabase = createClient();
-    supabase.auth.getUser().then(({ data: { user } }) => {
-      setUser(user);
-    });
+    setIsLoggedIn(checkHasSession());
   }, []);
 
   return (
     <div className="flex items-center gap-3">
-      {user ? (
+      {isLoggedIn ? (
         <Link href="/dashboard">
           <Button className="bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold h-9 px-5 rounded-lg active:scale-[0.97] transition-all shadow-sm">
             Vào Dashboard
