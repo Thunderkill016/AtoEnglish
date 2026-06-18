@@ -2,6 +2,11 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
+import { headers } from "next/headers";
+import { InMemoryRateLimiter } from "@/lib/security/rate-limit";
+import { SpeakingSessionSchema } from "@/lib/security/validation";
+
+const speakingLimiter = new InMemoryRateLimiter(20, 60 * 1000); // 20 requests/min
 
 interface SaveSpeakingSessionParams {
   practiceType: "shadowing" | "roleplay" | "journal";
@@ -16,6 +21,27 @@ interface SaveSpeakingSessionParams {
  */
 export async function saveSpeakingSession(params: SaveSpeakingSessionParams) {
   try {
+    // Rate Limiting
+    const reqHeaders = headers();
+    const ip = reqHeaders.get("x-forwarded-for")?.split(",")[0].trim() || "127.0.0.1";
+    const rateLimitCheck = speakingLimiter.check(ip);
+    if (!rateLimitCheck.success) {
+      return {
+        success: false,
+        error: "Yêu cầu quá thường xuyên. Vui lòng thử lại sau."
+      };
+    }
+
+    // Input Validation
+    const validated = SpeakingSessionSchema.safeParse(params);
+    if (!validated.success) {
+      return {
+        success: false,
+        error: `Dữ liệu không hợp lệ: ${validated.error.errors.map(e => e.message).join(", ")}`
+      };
+    }
+    const cleanParams = validated.data;
+
     const supabase = createClient();
     
     // 1. Kiểm tra trạng thái đăng nhập
@@ -32,11 +58,11 @@ export async function saveSpeakingSession(params: SaveSpeakingSessionParams) {
       .from("speaking_sessions")
       .insert({
         user_id: user.id,
-        practice_type: params.practiceType,
-        duration: params.duration,
-        transcript: params.transcript || null,
-        accuracy_score: params.accuracyScore !== undefined ? params.accuracyScore : null,
-        scenario_id: params.scenarioId || null
+        practice_type: cleanParams.practiceType,
+        duration: cleanParams.duration,
+        transcript: cleanParams.transcript || null,
+        accuracy_score: cleanParams.accuracyScore !== undefined ? cleanParams.accuracyScore : null,
+        scenario_id: cleanParams.scenarioId || null
       });
 
     if (error) {

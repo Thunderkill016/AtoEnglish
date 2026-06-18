@@ -167,7 +167,7 @@ export async function completeUnit(unitId: string) {
     }
 
     // 5. Tự động thêm tất cả từ vựng trong unit này vào bảng cards (nếu chưa có)
-    const vocabList = UNIT_VOCABULARY[unitId] || [];
+    const vocabList = UNIT_VOCABULARY[cleanParams.unitId] || [];
     let addedCount = 0;
 
     if (vocabList.length > 0) {

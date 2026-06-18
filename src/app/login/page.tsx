@@ -8,6 +8,7 @@ import { Mail, Lock, Loader2, Sparkles, ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
+import { LoginSchema, SignUpSchema } from "@/lib/security/validation";
 
 function LoginContent() {
   const router = useRouter();
@@ -44,6 +45,13 @@ function LoginContent() {
     e.preventDefault();
     if (!email || !password) {
       toast.error("Vui lòng nhập đầy đủ Email và Mật khẩu.");
+      return;
+    }
+
+    const schema = isSignUp ? SignUpSchema : LoginSchema;
+    const validated = schema.safeParse({ email, password });
+    if (!validated.success) {
+      toast.error(validated.error.errors.map(err => err.message).join(", "));
       return;
     }
 
