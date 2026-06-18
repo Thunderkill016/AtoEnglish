@@ -37,11 +37,11 @@ export default function LandingPage() {
   // --- Animation Variants ---
 
   const fadeInUp = {
-    hidden: { opacity: 0, y: 16 },
+    hidden: { opacity: 0, y: 12 },
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] as const },
+      transition: { duration: 0.35, ease: [0.25, 0.46, 0.45, 0.94] as const },
     },
   };
 
@@ -50,19 +50,19 @@ export default function LandingPage() {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.06,
-        delayChildren: 0.05,
+        staggerChildren: 0.04,
+        delayChildren: 0.02,
       },
     },
   };
 
   const cardReveal = {
-    hidden: { opacity: 0, y: 16, scale: 0.98 },
+    hidden: { opacity: 0, y: 12, scale: 0.99 },
     visible: {
       opacity: 1,
       y: 0,
       scale: 1,
-      transition: { duration: 0.45, ease: [0.25, 0.46, 0.45, 0.94] as const },
+      transition: { duration: 0.35, ease: [0.25, 0.46, 0.45, 0.94] as const },
     },
   };
 
@@ -335,11 +335,7 @@ export default function LandingPage() {
           </m.div>
 
           {/* 4 Cards Grid — always shows all 4 */}
-          <m.div
-            variants={staggerContainer}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-60px" }}
+          <div
             className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5 lg:gap-6"
           >
             {steps.map((step) => {
@@ -348,6 +344,9 @@ export default function LandingPage() {
                 <m.div
                   key={step.id}
                   variants={cardReveal}
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true, margin: "-60px" }}
                   className={`group relative flex flex-col h-full bg-gradient-to-br ${step.gradient} border border-zinc-200/60 dark:border-zinc-800/60 hover:border-emerald-500/30 dark:hover:border-emerald-500/20 p-6 sm:p-7 lg:p-8 rounded-2xl space-y-5 hover:shadow-lg hover:shadow-zinc-900/[0.04] dark:hover:shadow-black/20 hover:-translate-y-1 transition-all duration-300`}
                 >
                   <div className="flex items-center justify-between">
@@ -371,7 +370,7 @@ export default function LandingPage() {
                 </m.div>
               );
             })}
-          </m.div>
+          </div>
         </div>
       </section>
 
@@ -392,11 +391,7 @@ export default function LandingPage() {
           </m.div>
 
           {/* Benefit Cards Grid */}
-          <m.div
-            variants={staggerContainer}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-60px" }}
+          <div
             className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8"
           >
             {benefits.map((benefit, index) => {
@@ -405,6 +400,9 @@ export default function LandingPage() {
                 <m.div
                   key={index}
                   variants={cardReveal}
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true, margin: "-60px" }}
                   className="flex flex-col items-start p-6 sm:p-8 rounded-3xl border border-zinc-200/60 dark:border-zinc-800/60 bg-white dark:bg-zinc-900/60 hover:border-emerald-500/30 dark:hover:border-emerald-500/20 hover:shadow-lg hover:shadow-zinc-900/[0.04] dark:hover:shadow-black/20 hover:-translate-y-1 transition-all duration-300 space-y-5"
                 >
                   <span className="flex size-12 items-center justify-center rounded-2xl bg-emerald-100 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-400 group-hover:scale-110 transition-transform duration-300">
@@ -421,7 +419,7 @@ export default function LandingPage() {
                 </m.div>
               );
             })}
-          </m.div>
+          </div>
         </div>
       </section>
 
@@ -442,16 +440,15 @@ export default function LandingPage() {
           </m.div>
 
           {/* Pillars Grid */}
-          <m.div
-            variants={staggerContainer}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-60px" }}
+          <div
             className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8"
           >
             {/* Pillar 1 */}
             <m.div
               variants={cardReveal}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-60px" }}
               className="flex flex-col items-start p-6 sm:p-8 rounded-3xl border border-zinc-200/60 dark:border-zinc-800/60 bg-white dark:bg-zinc-900/60 hover:border-emerald-500/30 dark:hover:border-emerald-500/20 hover:shadow-lg hover:shadow-zinc-900/[0.04] dark:hover:shadow-black/20 hover:-translate-y-1 transition-all duration-300 space-y-5"
             >
               <span className="flex size-12 items-center justify-center rounded-2xl bg-emerald-100 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-400 group-hover:scale-110 transition-transform duration-300">
@@ -470,6 +467,9 @@ export default function LandingPage() {
             {/* Pillar 2 */}
             <m.div
               variants={cardReveal}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-60px" }}
               className="flex flex-col items-start p-6 sm:p-8 rounded-3xl border border-zinc-200/60 dark:border-zinc-800/60 bg-white dark:bg-zinc-900/60 hover:border-emerald-500/30 dark:hover:border-emerald-500/20 hover:shadow-lg hover:shadow-zinc-900/[0.04] dark:hover:shadow-black/20 hover:-translate-y-1 transition-all duration-300 space-y-5"
             >
               <span className="flex size-12 items-center justify-center rounded-2xl bg-emerald-100 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-400 group-hover:scale-110 transition-transform duration-300">
@@ -488,6 +488,9 @@ export default function LandingPage() {
             {/* Pillar 3 */}
             <m.div
               variants={cardReveal}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-60px" }}
               className="flex flex-col items-start p-6 sm:p-8 rounded-3xl border border-zinc-200/60 dark:border-zinc-800/60 bg-white dark:bg-zinc-900/60 hover:border-emerald-500/30 dark:hover:border-emerald-500/20 hover:shadow-lg hover:shadow-zinc-900/[0.04] dark:hover:shadow-black/20 hover:-translate-y-1 transition-all duration-300 space-y-5"
             >
               <span className="flex size-12 items-center justify-center rounded-2xl bg-emerald-100 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-400 group-hover:scale-110 transition-transform duration-300">
@@ -502,7 +505,7 @@ export default function LandingPage() {
                 </p>
               </div>
             </m.div>
-          </m.div>
+          </div>
 
           {/* Honest bottom quote */}
           <m.p
