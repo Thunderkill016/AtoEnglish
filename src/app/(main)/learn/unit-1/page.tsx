@@ -28,7 +28,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { saveCardToSRS } from "@/app/actions/cards";
 import { completeUnit, getUnitCompletionStatus } from "@/app/actions/progress";
-import { UNIT_1_DATA } from "@/lib/data/unit1";
+import { unit1 } from "@/lib/data/units/unit1";
 import { toast } from "sonner";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -111,7 +111,7 @@ export default function Unit1Page() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const recognitionRef = useRef<any>(null);
 
-  const activeScenario = UNIT_1_DATA.dialogueScenarios[selectedScenarioIndex];
+  const activeScenario = unit1.dialogues[selectedScenarioIndex];
 
   // Initialize and check status
   useEffect(() => {
@@ -147,11 +147,11 @@ export default function Unit1Page() {
         // Calculate accuracy score
         let targetText = "";
         if (activePhase === "input" && inputSubStep === 1) {
-          targetText = UNIT_1_DATA.matchingGreetings[shadowBasicIndex].en;
+          targetText = unit1.matchingGreetings[shadowBasicIndex].en;
         } else if (activePhase === "output") {
           targetText = roleplayActive
-            ? activeScenario.lines[roleplayStep].text_en
-            : activeScenario.lines[shadowSentenceIndex].text_en;
+            ? activeScenario.lines[roleplayStep].text
+            : activeScenario.lines[shadowSentenceIndex].text;
         }
         
         if (targetText) {
@@ -202,7 +202,7 @@ export default function Unit1Page() {
 
   // Initialize / shuffle matching cards for Listen & Match (6 random greetings)
   const initializeMatchingGame = () => {
-    const selectedGreetings = [...UNIT_1_DATA.matchingGreetings]
+    const selectedGreetings = [...unit1.matchingGreetings]
       .sort(() => Math.random() - 0.5)
       .slice(0, 6);
 
@@ -276,8 +276,6 @@ export default function Unit1Page() {
       });
     }
   };
-
-  // Removed unused play dialogue automatically function
 
   // Matching game handler
   const handleMatchCardClick = (card: MatchCard) => {
@@ -432,7 +430,7 @@ export default function Unit1Page() {
     const firstLine = activeScenario.lines[0];
     if (firstLine.speaker !== role) {
       setTimeout(() => {
-        playTTS(firstLine.text_en, playbackSpeed);
+        playTTS(firstLine.text, playbackSpeed);
       }, 500);
     } else {
       toast.info(`Bạn vào vai ${role}. Click 'Nói câu này' để đọc câu đầu tiên.`);
@@ -462,7 +460,7 @@ export default function Unit1Page() {
 
     if (isBotTurn) {
       setTimeout(() => {
-        playTTS(nextLine.text_en, playbackSpeed);
+        playTTS(nextLine.text, playbackSpeed);
       }, 800);
     } else {
       toast.info(`Đến lượt bạn. Hãy đọc to câu của ${userRole}.`);
@@ -555,17 +553,17 @@ export default function Unit1Page() {
           </Link>
           <div className="flex items-center gap-2">
             <span className="inline-flex items-center gap-1 text-[10px] font-bold text-primary px-2.5 py-0.5 rounded-full bg-primary/10 border border-primary/20 uppercase">
-              Starter
+              {unit1.level}
             </span>
             <span className="text-xs text-muted-foreground font-semibold">
-              {UNIT_1_DATA.duration}
+              {unit1.estimatedTime} phút
             </span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-foreground leading-tight">
-            {UNIT_1_DATA.title}
+            Unit 1: {unit1.title}
           </h1>
           <p className="text-sm text-muted-foreground">
-            {UNIT_1_DATA.subtitle}
+            {unit1.description}
           </p>
         </div>
 
@@ -777,7 +775,7 @@ export default function Unit1Page() {
 
                     <div className="p-6 rounded-2xl bg-white border border-zinc-100 flex flex-col items-center gap-4 text-center shadow-sm">
                       <div className="flex border border-zinc-100 rounded-lg overflow-hidden text-[10px] mb-2">
-                        {UNIT_1_DATA.matchingGreetings.map((_, idx) => (
+                        {unit1.matchingGreetings.map((_, idx) => (
                           <button
                             key={idx}
                             onClick={() => {
@@ -798,20 +796,20 @@ export default function Unit1Page() {
 
                       <div className="space-y-1">
                         <h4 className="text-xl font-black text-foreground uppercase tracking-tight">
-                          {UNIT_1_DATA.matchingGreetings[shadowBasicIndex].en}
+                          {unit1.matchingGreetings[shadowBasicIndex].en}
                         </h4>
                         <p className="text-xs text-zinc-500 italic font-mono font-normal">
-                          {UNIT_1_DATA.matchingGreetings[shadowBasicIndex].en === "Hello" ? "/həˈləʊ/" :
-                           UNIT_1_DATA.matchingGreetings[shadowBasicIndex].en === "Hi" ? "/haɪ/" :
-                           UNIT_1_DATA.matchingGreetings[shadowBasicIndex].en === "Good morning" ? "/ɡʊd ˈmɔː.nɪŋ/" :
-                           UNIT_1_DATA.matchingGreetings[shadowBasicIndex].en === "Good afternoon" ? "/ɡʊd ˌɑːf.təˈnuːn/" :
-                           UNIT_1_DATA.matchingGreetings[shadowBasicIndex].en === "Good evening" ? "/ɡʊd ˈiːv.nɪŋ/" :
-                           UNIT_1_DATA.matchingGreetings[shadowBasicIndex].en === "Goodbye" ? "/ˌɡʊdˈbaɪ/" :
-                           UNIT_1_DATA.matchingGreetings[shadowBasicIndex].en === "Bye" ? "/baɪ/" :
+                          {unit1.matchingGreetings[shadowBasicIndex].en === "Hello" ? "/həˈləʊ/" :
+                           unit1.matchingGreetings[shadowBasicIndex].en === "Hi" ? "/haɪ/" :
+                           unit1.matchingGreetings[shadowBasicIndex].en === "Good morning" ? "/ɡʊd ˈmɔː.nɪŋ/" :
+                           unit1.matchingGreetings[shadowBasicIndex].en === "Good afternoon" ? "/ɡʊd ˌɑːf.təˈnuːn/" :
+                           unit1.matchingGreetings[shadowBasicIndex].en === "Good evening" ? "/ɡʊd ˈiːv.nɪŋ/" :
+                           unit1.matchingGreetings[shadowBasicIndex].en === "Goodbye" ? "/ˌɡʊdˈbaɪ/" :
+                           unit1.matchingGreetings[shadowBasicIndex].en === "Bye" ? "/baɪ/" :
                            "/siː juː ˈleɪ.tə/"}
                         </p>
                         <p className="text-xs text-muted-foreground font-semibold mt-1">
-                          {UNIT_1_DATA.matchingGreetings[shadowBasicIndex].emoji} {UNIT_1_DATA.matchingGreetings[shadowBasicIndex].vn}
+                          {unit1.matchingGreetings[shadowBasicIndex].emoji} {unit1.matchingGreetings[shadowBasicIndex].vn}
                         </p>
                       </div>
 
@@ -833,7 +831,7 @@ export default function Unit1Page() {
                         </div>
 
                         <Button
-                          onClick={() => playTTS(UNIT_1_DATA.matchingGreetings[shadowBasicIndex].en, playbackSpeed)}
+                          onClick={() => playTTS(unit1.matchingGreetings[shadowBasicIndex].en, playbackSpeed)}
                           variant="outline"
                           size="sm"
                           className="rounded-lg text-xs gap-1.5 h-8 font-semibold border-zinc-200"
@@ -906,7 +904,7 @@ export default function Unit1Page() {
                         }}
                         className="rounded-lg text-xs bg-emerald-600 hover:bg-emerald-700 text-white font-bold"
                       >
-                        {shadowBasicIndex < 7 ? "Tiếp theo" : "Bài tiếp theo"}
+                        {shadowBasicIndex < 7 ? "Tiếp theo" : "Bài tập tiếp theo"}
                       </Button>
                     </div>
                   </div>
@@ -927,7 +925,7 @@ export default function Unit1Page() {
 
                     <div className="p-6 rounded-2xl bg-muted/20 border border-zinc-100 flex flex-col items-center gap-4 text-center">
                       <Button
-                        onClick={() => playTTS(UNIT_1_DATA.listenAndChoose[lacIndex].audio_text, 1.0)}
+                        onClick={() => playTTS(unit1.listenAndChoose[lacIndex].audio_text, 1.0)}
                         className="size-16 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white flex items-center justify-center shadow-md active:scale-95 transition-all"
                       >
                         <Volume2 className="size-7" />
@@ -936,9 +934,9 @@ export default function Unit1Page() {
                     </div>
 
                     <div className="grid gap-2.5 sm:grid-cols-2">
-                      {UNIT_1_DATA.listenAndChoose[lacIndex].options.map((opt) => {
+                      {unit1.listenAndChoose[lacIndex].options.map((opt) => {
                         const isSelected = lacSelectedAnswers[lacIndex] === opt;
-                        const isCorrect = opt === UNIT_1_DATA.listenAndChoose[lacIndex].answer;
+                        const isCorrect = opt === unit1.listenAndChoose[lacIndex].answer;
                         const isSubmitted = lacChecked[lacIndex] === true;
 
                         let btnClass = "border-zinc-100 bg-white hover:bg-zinc-50/50 text-foreground";
@@ -982,7 +980,7 @@ export default function Unit1Page() {
                         <Button
                           disabled={!lacSelectedAnswers[lacIndex]}
                           onClick={() => {
-                            const isCorrect = lacSelectedAnswers[lacIndex] === UNIT_1_DATA.listenAndChoose[lacIndex].answer;
+                            const isCorrect = lacSelectedAnswers[lacIndex] === unit1.listenAndChoose[lacIndex].answer;
                             setLacChecked(prev => ({ ...prev, [lacIndex]: true }));
                             if (isCorrect) {
                               toast.success("Chính xác!");
@@ -1035,7 +1033,7 @@ export default function Unit1Page() {
                   <div className="pb-4 border-b border-zinc-100 flex items-center justify-between">
                     <h3 className="font-bold text-lg text-foreground flex items-center gap-2">
                       <Cpu className="size-5 text-emerald-600" />
-                      Bài tập 2.1: Flashcards từ vựng ({vocabIndex + 1}/{UNIT_1_DATA.vocab.length})
+                      Bài tập 2.1: Flashcards từ vựng ({vocabIndex + 1}/{unit1.vocab.length})
                     </h3>
                   </div>
                   
@@ -1049,13 +1047,13 @@ export default function Unit1Page() {
                         {/* Front Side */}
                         <div className="absolute inset-0 w-full h-full bg-muted/30 border border-zinc-100 rounded-2xl flex flex-col items-center justify-center p-6 [backface-visibility:hidden]">
                           <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-100 uppercase tracking-wider mb-2">
-                            {UNIT_1_DATA.vocab[vocabIndex].level} - {UNIT_1_DATA.vocab[vocabIndex].topic}
+                            {unit1.vocab[vocabIndex].word.toUpperCase()}
                           </span>
                           <h4 className="text-xl font-black text-foreground uppercase tracking-tight">
-                            {UNIT_1_DATA.vocab[vocabIndex].word}
+                            {unit1.vocab[vocabIndex].word}
                           </h4>
                           <p className="text-xs text-zinc-500 italic mt-1 font-mono font-normal">
-                            {UNIT_1_DATA.vocab[vocabIndex].phonetic}
+                            {unit1.vocab[vocabIndex].phonetic}
                           </p>
                           <span className="text-[10px] text-zinc-400 font-bold mt-6 uppercase tracking-wider">
                             Chạm để xem nghĩa tiếng Việt
@@ -1065,11 +1063,11 @@ export default function Unit1Page() {
                         <div className="absolute inset-0 w-full h-full bg-emerald-600 border border-emerald-700 text-white rounded-2xl flex flex-col items-center justify-center p-6 [backface-visibility:hidden] [transform:rotateY(180deg)]">
                           <h4 className="text-xs font-bold uppercase tracking-wider">Ý nghĩa:</h4>
                           <p className="text-lg font-black mt-1">
-                            {UNIT_1_DATA.vocab[vocabIndex].meaning_vn}
+                            {unit1.vocab[vocabIndex].meaning}
                           </p>
                           
                           <div className="mt-4 max-w-xs text-[11px] text-emerald-50 opacity-90 leading-relaxed italic bg-emerald-700/50 p-2 rounded-lg">
-                            Ex: {UNIT_1_DATA.vocab[vocabIndex].example_en}
+                            Ex: {unit1.vocab[vocabIndex].example}
                           </div>
                         </div>
                       </div>
@@ -1093,7 +1091,7 @@ export default function Unit1Page() {
                       <Button
                         onClick={(e) => {
                           e.stopPropagation();
-                          playTTS(UNIT_1_DATA.vocab[vocabIndex].word);
+                          playTTS(unit1.vocab[vocabIndex].word);
                         }}
                         variant="outline"
                         size="sm"
@@ -1104,7 +1102,7 @@ export default function Unit1Page() {
 
                       {/* Tôi đã thuộc button */}
                       {(() => {
-                        const item = UNIT_1_DATA.vocab[vocabIndex];
+                        const item = unit1.vocab[vocabIndex];
                         const isAdded = addedVocab.includes(item.word);
                         const isSaving = savingVocab === item.word;
 
@@ -1114,7 +1112,7 @@ export default function Unit1Page() {
                             disabled={isAdded || isSaving}
                             onClick={(e) => {
                               e.stopPropagation();
-                              handleSaveToSRS(item.word, item.phonetic, item.meaning_vn, item.example_en);
+                              handleSaveToSRS(item.word, item.phonetic, item.meaning, item.example);
                             }}
                             className={`rounded-lg h-9 gap-1 text-xs font-bold ${
                               isAdded 
@@ -1136,7 +1134,7 @@ export default function Unit1Page() {
                       <Button
                         variant="outline"
                         size="sm"
-                        disabled={vocabIndex === UNIT_1_DATA.vocab.length - 1}
+                        disabled={vocabIndex === unit1.vocab.length - 1}
                         onClick={() => {
                           setVocabIndex(prev => prev + 1);
                           setIsFlipped(false);
@@ -1161,7 +1159,7 @@ export default function Unit1Page() {
                   </div>
 
                   <div className="grid gap-3.5 sm:grid-cols-2">
-                    {UNIT_1_DATA.cloze.map((cloze, idx) => {
+                    {unit1.cloze.map((cloze, idx) => {
                       const result = clozeResults[cloze.id];
                       return (
                         <div key={cloze.id} className="p-4 rounded-2xl border border-zinc-100 bg-white shadow-xs flex flex-col justify-between gap-3">
@@ -1223,7 +1221,7 @@ export default function Unit1Page() {
                   </div>
 
                   <div className="grid gap-3.5 sm:grid-cols-2">
-                    {UNIT_1_DATA.toBeExercises.map((ex, idx) => {
+                    {unit1.toBeExercises.map((ex, idx) => {
                       const result = toBeResults[ex.id];
                       return (
                         <div key={ex.id} className="p-4 border border-zinc-100 rounded-2xl bg-zinc-50/30 flex flex-col justify-between gap-3 shadow-xs">
@@ -1298,7 +1296,7 @@ export default function Unit1Page() {
                 <div className="space-y-2">
                   <span className="text-xs font-bold text-zinc-500">Chọn tình huống hội thoại mẫu:</span>
                   <div className="grid gap-2 sm:grid-cols-3">
-                    {UNIT_1_DATA.dialogueScenarios.map((sc, idx) => (
+                    {unit1.dialogues.map((sc, idx) => (
                       <button
                         key={sc.id}
                         disabled={roleplayActive}
@@ -1367,13 +1365,13 @@ export default function Unit1Page() {
                                 setSpeechTranscript("");
                                 setAccuracyScore(null);
                               }}
-                              className={`px-2 py-1 font-bold ${
+                              className={`px-2.5 py-1 font-bold ${
                                 shadowSentenceIndex === idx
                                   ? "bg-emerald-600 text-white"
                                   : "bg-white text-zinc-500 hover:bg-zinc-50"
                               }`}
                             >
-                              {idx + 1}
+                                {idx + 1}
                             </button>
                           ))}
                         </div>
@@ -1381,10 +1379,10 @@ export default function Unit1Page() {
 
                       <div className="text-center py-2 space-y-1">
                         <p className="text-lg font-black text-foreground">
-                          &ldquo;{activeScenario.lines[shadowSentenceIndex].text_en}&rdquo;
+                          &ldquo;{activeScenario.lines[shadowSentenceIndex].text}&rdquo;
                         </p>
                         <p className="text-xs text-muted-foreground font-normal">
-                          {activeScenario.lines[shadowSentenceIndex].text_vn}
+                          {activeScenario.lines[shadowSentenceIndex].translation}
                         </p>
                       </div>
 
@@ -1392,7 +1390,7 @@ export default function Unit1Page() {
                         <Button
                           size="sm"
                           variant="outline"
-                          onClick={() => playTTS(activeScenario.lines[shadowSentenceIndex].text_en, playbackSpeed)}
+                          onClick={() => playTTS(activeScenario.lines[shadowSentenceIndex].text, playbackSpeed)}
                           className="rounded-lg h-9 gap-1.5 border-zinc-200 text-xs font-semibold"
                         >
                           <Volume2 className="size-4" /> Phát âm mẫu
@@ -1523,7 +1521,7 @@ export default function Unit1Page() {
                               } ${isCurrent ? "ring-2 ring-emerald-500/30" : ""}`}
                             >
                               <span className={`flex size-7 shrink-0 items-center justify-center rounded-full text-xs font-bold ${
-                                line.speaker === "Alex" || line.speaker === "Bob" || line.speaker === "Mr. Brown"
+                                line.speaker === "Alex" || line.speaker === "Bob" || line.speaker === "Mr. Brown" || line.speaker === "A"
                                   ? "bg-blue-100 text-blue-800" 
                                   : "bg-pink-100 text-pink-800"
                               }`}>
@@ -1537,7 +1535,7 @@ export default function Unit1Page() {
                                   </span>
                                   {!isUserTurn && isCurrent && (
                                     <button 
-                                      onClick={() => playTTS(line.text_en, playbackSpeed)}
+                                      onClick={() => playTTS(line.text, playbackSpeed)}
                                       className="size-5 rounded bg-muted border flex items-center justify-center text-zinc-500"
                                     >
                                       <Volume2 className="size-3" />
@@ -1545,11 +1543,11 @@ export default function Unit1Page() {
                                   )}
                                 </div>
                                 <p className="text-xs sm:text-sm font-semibold text-foreground">
-                                  {line.text_en}
+                                  {line.text}
                                 </p>
                                 {(!isCurrent || !isUserTurn) && (
                                   <p className="text-[10px] text-muted-foreground font-normal">
-                                    {line.text_vn}
+                                    {line.translation}
                                   </p>
                                 )}
                               </div>
@@ -1646,7 +1644,7 @@ export default function Unit1Page() {
                   </div>
 
                   <div className="space-y-5">
-                    {UNIT_1_DATA.quiz.map((q, qIdx) => {
+                    {unit1.quiz.map((q, qIdx) => {
                       const selectedOpt = quizAnswers[q.id];
                       const isCloze = q.type === "cloze";
 
@@ -1731,12 +1729,12 @@ export default function Unit1Page() {
                         onClick={() => {
                           setQuizSubmitted(true);
                           let score = 0;
-                          UNIT_1_DATA.quiz.forEach(q => {
+                          unit1.quiz.forEach(q => {
                             const userAns = (quizAnswers[q.id] || "").trim().toLowerCase();
                             const correctAns = q.answer.toLowerCase();
                             if (userAns === correctAns) score++;
                           });
-                          if (score === UNIT_1_DATA.quiz.length) {
+                          if (score === unit1.quiz.length) {
                             toast.success("Tuyệt vời! Bạn đã trả lời đúng tất cả 10 câu hỏi.");
                             confetti({
                               particleCount: 100,
@@ -1744,7 +1742,7 @@ export default function Unit1Page() {
                               origin: { y: 0.6 }
                             });
                           } else {
-                            toast.warning(`Bạn đúng ${score}/${UNIT_1_DATA.quiz.length} câu. Hãy ôn tập lại nhé.`);
+                            toast.warning(`Bạn đúng ${score}/${unit1.quiz.length} câu. Hãy ôn tập lại nhé.`);
                           }
                         }}
                         className="rounded-xl bg-zinc-900 hover:bg-zinc-800 text-white font-bold h-11 px-8 text-xs shadow-sm"
@@ -1836,7 +1834,7 @@ export default function Unit1Page() {
                   </p>
 
                   <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-3">
-                    {UNIT_1_DATA.vocab.map((item) => {
+                    {unit1.vocab.map((item) => {
                       const isAdded = addedVocab.includes(item.word);
                       const isSaving = savingVocab === item.word;
 
@@ -1847,14 +1845,14 @@ export default function Unit1Page() {
                               {item.word}
                             </p>
                             <p className="text-[10px] text-zinc-500 truncate">
-                              {item.meaning_vn}
+                              {item.meaning}
                             </p>
                           </div>
                           
                           <Button
                             size="sm"
                             disabled={isAdded || isSaving}
-                            onClick={() => handleSaveToSRS(item.word, item.phonetic, item.meaning_vn, item.example_en)}
+                            onClick={() => handleSaveToSRS(item.word, item.phonetic, item.meaning, item.example)}
                             className={`rounded-lg h-8 px-2.5 text-[10px] font-bold ${
                               isAdded 
                                 ? "bg-emerald-100 text-emerald-800 hover:bg-emerald-100" 
