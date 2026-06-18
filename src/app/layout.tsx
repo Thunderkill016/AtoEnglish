@@ -11,6 +11,7 @@ import "./globals.css";
 const sansFont = Plus_Jakarta_Sans({
   subsets: ["latin", "vietnamese"],
   variable: "--font-sans",
+  display: "swap",
 });
 
 export const metadata: Metadata = {

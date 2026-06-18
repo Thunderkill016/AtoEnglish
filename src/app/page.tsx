@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { LazyMotion, m } from "framer-motion";
 import {
   BookOpen,
   Cpu,
@@ -19,6 +19,8 @@ import {
 import type { User } from "@supabase/supabase-js";
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/lib/supabase/client";
+
+const loadFeatures = () => import("framer-motion").then((res) => res.domAnimation);
 
 export default function LandingPage() {
   const [user, setUser] = useState<User | null>(null);
@@ -132,7 +134,8 @@ export default function LandingPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-white text-zinc-900 dark:bg-zinc-950 dark:text-zinc-50 font-sans selection:bg-emerald-100 dark:selection:bg-emerald-900/40 selection:text-emerald-900 dark:selection:text-emerald-100 overflow-x-hidden">
+    <LazyMotion features={loadFeatures} strict>
+      <div className="min-h-screen bg-white text-zinc-900 dark:bg-zinc-950 dark:text-zinc-50 font-sans selection:bg-emerald-100 dark:selection:bg-emerald-900/40 selection:text-emerald-900 dark:selection:text-emerald-100 overflow-x-hidden">
       {/* ===== Navigation Bar ===== */}
       <nav className="sticky top-0 z-50 w-full bg-white/80 dark:bg-zinc-950/80 backdrop-blur-xl border-b border-zinc-200/60 dark:border-zinc-800/60">
         <div className="max-w-6xl mx-auto h-16 flex items-center justify-between px-5 sm:px-8">
@@ -187,42 +190,42 @@ export default function LandingPage() {
         />
 
         <div className="relative max-w-4xl mx-auto flex flex-col items-center text-center">
-          <motion.div
+          <m.div
             initial="hidden"
             animate="visible"
             variants={staggerContainer}
             className="space-y-6 sm:space-y-8"
           >
             {/* Badge */}
-            <motion.div variants={fadeInUp}>
+            <m.div variants={fadeInUp}>
               <span className="inline-flex items-center gap-1.5 text-[11px] font-bold text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 px-3.5 py-1.5 rounded-full border border-emerald-200/60 dark:border-emerald-800/40 uppercase tracking-[0.12em] shadow-sm">
                 <Sparkles className="size-3" />
                 Phương pháp học thế hệ mới
               </span>
-            </motion.div>
+            </m.div>
 
             {/* Headline */}
-            <motion.h1
+            <m.h1
               variants={fadeInUp}
               className="text-[2.25rem] leading-[1.12] sm:text-5xl sm:leading-[1.1] lg:text-[3.75rem] lg:leading-[1.08] font-extrabold tracking-tight text-zinc-900 dark:text-zinc-50 max-w-3xl mx-auto"
             >
               Học tiếng Anh để <span className="bg-gradient-to-r from-emerald-600 to-teal-500 bg-clip-text text-transparent">nói được</span>,
               <br />
               không chỉ để biết.
-            </motion.h1>
+            </m.h1>
 
             {/* Subheadline */}
-            <motion.p
+            <m.p
               variants={fadeInUp}
               className="text-base sm:text-lg lg:text-xl text-zinc-500 dark:text-zinc-400 max-w-2xl mx-auto leading-relaxed font-normal"
             >
               Phương pháp khoa học giúp bạn tự tin giao tiếp thực tế từ con số 0.
               <br className="hidden sm:block" />
               Luyện nói ngay từ những bài học đầu tiên.
-            </motion.p>
+            </m.p>
 
             {/* CTAs */}
-            <motion.div
+            <m.div
               variants={fadeInUp}
               className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 pt-2 w-full"
             >
@@ -252,12 +255,12 @@ export default function LandingPage() {
                 <span>Xem cách học</span>
                 <ChevronRight className="size-4" />
               </Button>
-            </motion.div>
-          </motion.div>
+            </m.div>
+          </m.div>
         </div>
 
         {/* Stats bar */}
-        <motion.div
+        <m.div
           initial="hidden"
           animate="visible"
           variants={fadeInUp}
@@ -278,11 +281,11 @@ export default function LandingPage() {
               </div>
             ))}
           </div>
-        </motion.div>
+        </m.div>
       </section>
 
       {/* ===== Problem Section — sharper, more empathetic ===== */}
-      <motion.section
+      <m.section
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, margin: "-80px" }}
@@ -291,23 +294,23 @@ export default function LandingPage() {
       >
         <div className="max-w-3xl mx-auto text-center space-y-8">
           {/* Empathetic silent icon */}
-          <motion.div 
+          <m.div 
             variants={fadeInUp}
             className="flex justify-center animate-float-slow"
           >
             <span className="flex size-14 items-center justify-center rounded-2xl bg-zinc-200/60 dark:bg-zinc-800/60 text-zinc-500 dark:text-zinc-400 shadow-inner">
               <MessageSquareOff className="size-6" />
             </span>
-          </motion.div>
+          </m.div>
 
-          <motion.h2
+          <m.h2
             variants={fadeInUp}
             className="text-[2rem] sm:text-4xl lg:text-5xl font-black tracking-tight text-zinc-900 dark:text-zinc-100 leading-tight max-w-3xl mx-auto"
           >
             Bạn đã học nhiều năm nhưng vẫn ngại nói?
-          </motion.h2>
+          </m.h2>
 
-          <motion.div
+          <m.div
             variants={fadeInUp}
             className="space-y-6 text-base sm:text-lg lg:text-xl text-zinc-600 dark:text-zinc-400 max-w-2xl mx-auto leading-relaxed font-normal"
           >
@@ -324,9 +327,9 @@ export default function LandingPage() {
             <p className="text-emerald-600 dark:text-emerald-400 font-bold">
               AtoEnglish được xây dựng để giải quyết đúng vấn đề này.
             </p>
-          </motion.div>
+          </m.div>
         </div>
-      </motion.section>
+      </m.section>
 
       {/* ===== IPOR Section (How it works) ===== */}
       <section
@@ -335,7 +338,7 @@ export default function LandingPage() {
       >
         <div className="max-w-6xl mx-auto space-y-14 sm:space-y-20">
           {/* Section Header */}
-          <motion.div
+          <m.div
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-80px" }}
@@ -348,10 +351,10 @@ export default function LandingPage() {
             <p className="text-[15px] sm:text-base lg:text-lg text-zinc-500 dark:text-zinc-400 max-w-lg mx-auto leading-relaxed">
               Chỉ 4 bước lặp lại mỗi ngày — giúp bạn chuyển từ “học thuộc” sang “nói tự tin”.
             </p>
-          </motion.div>
+          </m.div>
 
           {/* 4 Cards Grid — always shows all 4 */}
-          <motion.div
+          <m.div
             variants={staggerContainer}
             initial="hidden"
             whileInView="visible"
@@ -361,7 +364,7 @@ export default function LandingPage() {
             {steps.map((step) => {
               const Icon = step.icon;
               return (
-                <motion.div
+                <m.div
                   key={step.id}
                   variants={cardReveal}
                   className={`group relative flex flex-col h-full bg-gradient-to-br ${step.gradient} border border-zinc-200/60 dark:border-zinc-800/60 hover:border-emerald-500/30 dark:hover:border-emerald-500/20 p-6 sm:p-7 lg:p-8 rounded-2xl space-y-5 hover:shadow-lg hover:shadow-zinc-900/[0.04] dark:hover:shadow-black/20 hover:-translate-y-1 transition-all duration-300`}
@@ -384,10 +387,10 @@ export default function LandingPage() {
                       {step.desc}
                     </p>
                   </div>
-                </motion.div>
+                </m.div>
               );
             })}
-          </motion.div>
+          </m.div>
         </div>
       </section>
 
@@ -395,7 +398,7 @@ export default function LandingPage() {
       <section className="bg-zinc-50 dark:bg-zinc-900/30 py-20 sm:py-28 lg:py-36 px-5 sm:px-8 border-y border-zinc-200/50 dark:border-zinc-800/50">
         <div className="max-w-6xl mx-auto space-y-14 sm:space-y-16">
           {/* Section Header */}
-          <motion.div
+          <m.div
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-80px" }}
@@ -405,10 +408,10 @@ export default function LandingPage() {
             <h2 className="text-2xl sm:text-3xl lg:text-[2.75rem] font-bold tracking-tight text-zinc-900 dark:text-zinc-50 leading-tight">
               Bạn sẽ thay đổi như thế nào
             </h2>
-          </motion.div>
+          </m.div>
 
           {/* Benefit Cards Grid */}
-          <motion.div
+          <m.div
             variants={staggerContainer}
             initial="hidden"
             whileInView="visible"
@@ -418,7 +421,7 @@ export default function LandingPage() {
             {benefits.map((benefit, index) => {
               const BenefitIcon = benefit.icon;
               return (
-                <motion.div
+                <m.div
                   key={index}
                   variants={cardReveal}
                   className="flex flex-col items-start p-6 sm:p-8 rounded-3xl border border-zinc-200/60 dark:border-zinc-800/60 bg-white dark:bg-zinc-900/60 hover:border-emerald-500/30 dark:hover:border-emerald-500/20 hover:shadow-lg hover:shadow-zinc-900/[0.04] dark:hover:shadow-black/20 hover:-translate-y-1 transition-all duration-300 space-y-5"
@@ -434,10 +437,10 @@ export default function LandingPage() {
                       {benefit.desc}
                     </p>
                   </div>
-                </motion.div>
+                </m.div>
               );
             })}
-          </motion.div>
+          </m.div>
         </div>
       </section>
 
@@ -445,7 +448,7 @@ export default function LandingPage() {
       <section className="py-20 sm:py-28 lg:py-36 px-5 sm:px-8">
         <div className="max-w-5xl mx-auto space-y-14 sm:space-y-16">
           {/* Section Header */}
-          <motion.div
+          <m.div
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-80px" }}
@@ -455,10 +458,10 @@ export default function LandingPage() {
             <h2 className="text-2xl sm:text-3xl lg:text-[2.75rem] font-bold tracking-tight text-zinc-900 dark:text-zinc-50 leading-tight max-w-2xl mx-auto">
               Được xây dựng dựa trên khoa học, dành riêng cho người Việt
             </h2>
-          </motion.div>
+          </m.div>
 
           {/* Pillars Grid */}
-          <motion.div
+          <m.div
             variants={staggerContainer}
             initial="hidden"
             whileInView="visible"
@@ -466,7 +469,7 @@ export default function LandingPage() {
             className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8"
           >
             {/* Pillar 1 */}
-            <motion.div
+            <m.div
               variants={cardReveal}
               className="flex flex-col items-start p-6 sm:p-8 rounded-3xl border border-zinc-200/60 dark:border-zinc-800/60 bg-white dark:bg-zinc-900/60 hover:border-emerald-500/30 dark:hover:border-emerald-500/20 hover:shadow-lg hover:shadow-zinc-900/[0.04] dark:hover:shadow-black/20 hover:-translate-y-1 transition-all duration-300 space-y-5"
             >
@@ -481,10 +484,10 @@ export default function LandingPage() {
                   Phương pháp học IPOR (Input → Processing → Output → Review) kết hợp FSRS (hệ thống ôn tập thông minh) — được chứng minh hiệu quả trong việc học ngôn ngữ.
                 </p>
               </div>
-            </motion.div>
+            </m.div>
 
             {/* Pillar 2 */}
-            <motion.div
+            <m.div
               variants={cardReveal}
               className="flex flex-col items-start p-6 sm:p-8 rounded-3xl border border-zinc-200/60 dark:border-zinc-800/60 bg-white dark:bg-zinc-900/60 hover:border-emerald-500/30 dark:hover:border-emerald-500/20 hover:shadow-lg hover:shadow-zinc-900/[0.04] dark:hover:shadow-black/20 hover:-translate-y-1 transition-all duration-300 space-y-5"
             >
@@ -499,10 +502,10 @@ export default function LandingPage() {
                   Được thiết kế dành riêng cho người Việt bắt đầu từ con số 0, đặc biệt là những người từng học nhiều nhưng vẫn ngại nói.
                 </p>
               </div>
-            </motion.div>
+            </m.div>
 
             {/* Pillar 3 */}
-            <motion.div
+            <m.div
               variants={cardReveal}
               className="flex flex-col items-start p-6 sm:p-8 rounded-3xl border border-zinc-200/60 dark:border-zinc-800/60 bg-white dark:bg-zinc-900/60 hover:border-emerald-500/30 dark:hover:border-emerald-500/20 hover:shadow-lg hover:shadow-zinc-900/[0.04] dark:hover:shadow-black/20 hover:-translate-y-1 transition-all duration-300 space-y-5"
             >
@@ -517,11 +520,11 @@ export default function LandingPage() {
                   Hiện đang trong giai đoạn phát triển cùng những người dùng đầu tiên.
                 </p>
               </div>
-            </motion.div>
-          </motion.div>
+            </m.div>
+          </m.div>
 
           {/* Honest bottom quote */}
-          <motion.p
+          <m.p
             variants={fadeInUp}
             initial="hidden"
             whileInView="visible"
@@ -529,12 +532,12 @@ export default function LandingPage() {
             className="text-center text-xs sm:text-sm text-zinc-400 dark:text-zinc-500 max-w-2xl mx-auto leading-relaxed font-normal italic"
           >
             Chúng tôi đang xây dựng AtoEnglish cùng với những người học đầu tiên. Phản hồi của bạn sẽ giúp chúng tôi cải thiện sản phẩm tốt hơn.
-          </motion.p>
+          </m.p>
         </div>
       </section>
 
       {/* ===== Final CTA Section — bigger, bolder ===== */}
-      <motion.section
+      <m.section
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, margin: "-80px" }}
@@ -551,16 +554,16 @@ export default function LandingPage() {
         />
 
         <div className="relative max-w-3xl mx-auto text-center space-y-8 sm:space-y-10">
-          <motion.div variants={fadeInUp} className="space-y-4">
+          <m.div variants={fadeInUp} className="space-y-4">
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-zinc-900 dark:text-zinc-50 leading-tight">
               Sẵn sàng bắt đầu hành trình nói tiếng Anh tự tin?
             </h2>
             <p className="text-[15px] sm:text-base lg:text-lg text-zinc-500 dark:text-zinc-400 leading-relaxed max-w-lg mx-auto font-normal">
               Học miễn phí ngay hôm nay. Không cần thẻ tín dụng.
             </p>
-          </motion.div>
+          </m.div>
 
-          <motion.div
+          <m.div
             variants={fadeInUp}
             className="flex flex-col items-center gap-4"
           >
@@ -582,9 +585,9 @@ export default function LandingPage() {
             <div className="text-xs text-zinc-400 dark:text-zinc-500 font-medium tracking-wide">
               Miễn phí. Không cần thẻ tín dụng. Hủy bất cứ lúc nào.
             </div>
-          </motion.div>
+          </m.div>
         </div>
-      </motion.section>
+      </m.section>
 
       {/* ===== Footer ===== */}
       <footer className="border-t border-zinc-200/50 dark:border-zinc-800/50 py-10 sm:py-12 px-5 sm:px-8">
@@ -624,5 +627,6 @@ export default function LandingPage() {
         </div>
       </footer>
     </div>
+    </LazyMotion>
   );
 }
