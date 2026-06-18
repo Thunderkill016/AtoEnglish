@@ -1,6 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence, useMotionValue, useTransform, PanInfo } from "framer-motion";
+import confetti from "canvas-confetti";
 import {
   Volume2,
   Layers,
@@ -8,9 +10,13 @@ import {
   HelpCircle,
   Folder,
   Award,
+  Loader2,
+  CheckCircle,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { getDueCards, reviewCard } from "@/app/actions/cards";
+import { toast } from "sonner";
 
 interface Flashcard {
   id: string;
@@ -22,54 +28,68 @@ interface Flashcard {
   example_vn: string;
   topic: string;
   level: string;
+  stability?: number;
+  difficulty?: number;
+  state?: number;
 }
 
 export default function FlashcardsPage() {
+  const [cards, setCards] = useState<Flashcard[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isReviewing, setIsReviewing] = useState(false);
   const [isFlipped, setIsFlipped] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [answeredCount, setAnsweredCount] = useState(0);
   const [showFinished, setShowFinished] = useState(false);
   const [responseLog, setResponseLog] = useState<{ word: string; score: string }[]>([]);
 
-  const mockCards: Flashcard[] = [
-    {
-      id: "card-1",
-      word: "omnipresent",
-      phonetic: "/ˌɒm.nɪˈprez.ənt/",
-      pos: "adjective",
-      meaning_vn: "có mặt khắp mọi nơi, phổ biến rộng rãi",
-      example_en: "Smartphones have become omnipresent in modern society.",
-      example_vn: "Điện thoại thông minh đã trở nên phổ biến khắp mọi nơi trong xã hội hiện đại.",
-      topic: "Technology",
-      level: "B1",
-    },
-    {
-      id: "card-2",
-      word: "artificial intelligence",
-      phonetic: "/ˌɑː.tɪ.fɪʃ.əl ɪnˈtel.ɪ.dʒəns/",
-      pos: "noun",
-      meaning_vn: "trí tuệ nhân tạo (hệ thống mô phỏng trí tuệ con người)",
-      example_en: "Artificial intelligence is capable of translating complex documents.",
-      example_vn: "Trí tuệ nhân tạo có khả năng dịch thuật các tài liệu phức tạp.",
-      topic: "Technology",
-      level: "B1",
-    },
-    {
-      id: "card-3",
-      word: "revolutionize",
-      phonetic: "/ˌrev.əˈluː.ʃən.aɪz/",
-      pos: "verb",
-      meaning_vn: "cách mạng hóa, làm biến đổi hoàn toàn",
-      example_en: "The printing press revolutionized how knowledge was distributed.",
-      example_vn: "Máy in đã cách mạng hóa cách thức tri thức được phân phối.",
-      topic: "History & Tech",
-      level: "B2",
-    },
-  ];
+  // Drag state using Framer Motion
+  const x = useMotionValue(0);
+  const rotate = useTransform(x, [-200, 200], [-15, 15]);
+  const opacityLeft = useTransform(x, [-150, 0], [1, 0]);
+  const opacityRight = useTransform(x, [0, 150], [0, 1]);
 
-  const handleAudioPlay = (e: React.MouseEvent, text: string) => {
-    e.stopPropagation(); // Prevent flipping card when clicking audio button
+  // Fetch thẻ đến hạn từ Supabase
+  const fetchCards = async () => {
+    setIsLoading(true);
+    try {
+      const res = await getDueCards();
+      if (res.success && res.cards) {
+        // Map cấu trúc db sang giao diện thẻ Flashcard
+        const mappedCards: Flashcard[] = res.cards.map((c) => ({
+          id: c.id,
+          word: c.word,
+          phonetic: c.phonetic || "",
+          pos: "vocabulary",
+          meaning_vn: c.meaning_vn,
+          example_en: c.example_en || "",
+          example_vn: "", 
+          topic: c.topic || "General",
+          level: c.level || "B1",
+          stability: c.stability,
+          difficulty: c.difficulty,
+          state: c.state,
+        }));
+        setCards(mappedCards);
+      } else {
+        toast.error(res.error || "Không thể tải thẻ ôn tập.");
+      }
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : String(err);
+      toast.error(`Có lỗi xảy ra khi tải thẻ: ${errorMessage}`);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchCards();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const handleAudioPlay = (e: React.MouseEvent | null, text: string) => {
+    if (e) e.stopPropagation(); // Ngăn lật thẻ khi click nút âm thanh
     if (typeof window !== "undefined" && "speechSynthesis" in window) {
+      window.speechSynthesis.cancel();
       const utterance = new SpeechSynthesisUtterance(text);
       utterance.lang = "en-US";
       utterance.rate = 0.85;
@@ -77,221 +97,399 @@ export default function FlashcardsPage() {
     }
   };
 
-  const handleResponse = (scoreLabel: string) => {
-    const currentCard = mockCards[currentIndex];
+  const handleResponse = async (scoreLabel: "Again" | "Hard" | "Good" | "Easy") => {
+    if (isReviewing) return;
     
-    setResponseLog([...responseLog, { word: currentCard.word, score: scoreLabel }]);
-    setAnsweredCount(answeredCount + 1);
+    const currentCard = cards[currentIndex];
+    setIsReviewing(true);
+    
+    try {
+      const res = await reviewCard(currentCard.id, scoreLabel);
+      if (res.success) {
+        setResponseLog((prev) => [...prev, { word: currentCard.word, score: scoreLabel }]);
+        toast.success(res.message);
+        
+        if (currentIndex < cards.length - 1) {
+          setIsFlipped(false);
+          x.set(0); // Reset vị trí kéo
+          setCurrentIndex((prev) => prev + 1);
+        } else {
+          setShowFinished(true);
+          confetti({
+            particleCount: 150,
+            spread: 80,
+            origin: { y: 0.5 },
+            colors: ["#10b981", "#3b82f6", "#f59e0b"]
+          });
+        }
+      } else {
+        toast.error(res.error || "Không thể ghi nhận kết quả đánh giá.");
+      }
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : String(err);
+      toast.error(`Lỗi hệ thống khi đánh giá: ${errorMessage}`);
+    } finally {
+      setIsReviewing(false);
+    }
+  };
 
-    if (currentIndex < mockCards.length - 1) {
-      setIsFlipped(false);
-      setTimeout(() => {
-        setCurrentIndex(currentIndex + 1);
-      }, 250);
-    } else {
-      setShowFinished(true);
+  const handleDragEnd = (event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
+    const swipeThreshold = 140;
+    if (info.offset.x > swipeThreshold) {
+      handleResponse("Easy");
+    } else if (info.offset.x < -swipeThreshold) {
+      handleResponse("Again");
     }
   };
 
   const resetReview = () => {
     setCurrentIndex(0);
-    setAnsweredCount(0);
     setIsFlipped(false);
     setShowFinished(false);
     setResponseLog([]);
+    x.set(0);
+    fetchCards(); // Tải lại thẻ mới từ db sau khi hoàn thành
   };
 
-  const currentCard = mockCards[currentIndex];
-  const progressPercentage = ((currentIndex + (isFlipped ? 0.5 : 0)) / mockCards.length) * 100;
+  // Lắng nghe phím tắt bàn phím
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (showFinished || cards.length === 0 || isReviewing) return;
+      
+      if (e.code === "Space") {
+        e.preventDefault();
+        setIsFlipped((prev) => !prev);
+      } else if (isFlipped) {
+        if (e.key === "1") handleResponse("Again");
+        if (e.key === "2") handleResponse("Hard");
+        if (e.key === "3") handleResponse("Good");
+        if (e.key === "4") handleResponse("Easy");
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentIndex, isFlipped, showFinished, cards, isReviewing]);
+
+  // Loading state UI
+  if (isLoading) {
+    return (
+      <div className="relative mx-auto max-w-4xl px-4 py-8 sm:px-6 flex flex-col items-center justify-center min-h-[70vh] space-y-4">
+        <Loader2 className="size-10 text-primary animate-spin" />
+        <p className="text-sm text-muted-foreground font-semibold">Đang tải thẻ đến hạn từ Supabase...</p>
+      </div>
+    );
+  }
+
+  // Empty state UI (No due cards)
+  if (!isLoading && cards.length === 0) {
+    return (
+      <div className="relative mx-auto max-w-4xl px-4 py-8 sm:px-6 flex flex-col items-center justify-center min-h-[75vh] space-y-6 text-center bg-grid-pattern">
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 -z-10 h-80 w-80 rounded-full bg-primary/5 blur-3xl" />
+        <div className="inline-flex size-16 items-center justify-center rounded-2xl bg-emerald-500/10 text-emerald-600">
+          <CheckCircle className="size-8" />
+        </div>
+        <div className="space-y-2 max-w-md">
+          <h2 className="text-2xl font-black text-foreground">Hôm nay bạn đã ôn xong!</h2>
+          <p className="text-sm text-muted-foreground leading-relaxed font-normal">
+            Tuyệt vời! Hiện tại bạn không có từ vựng nào cần ôn tập hôm nay. Hãy học thêm bài mới để lưu thêm các từ vựng vào SRS.
+          </p>
+        </div>
+        <div className="flex gap-4 pt-2">
+          <Button
+            onClick={() => window.location.href = "/learn"}
+            className="bg-primary hover:bg-primary/95 text-primary-foreground rounded-xl text-xs sm:text-sm font-semibold h-11 px-5 shadow-lg shadow-primary/10 active:scale-[0.98]"
+          >
+            Học Unit Mới
+          </Button>
+          <Button
+            onClick={() => window.location.href = "/dashboard"}
+            variant="outline"
+            className="rounded-xl text-xs sm:text-sm font-semibold border-glass h-11 px-5 hover:bg-muted active:scale-[0.98]"
+          >
+            Về Dashboard
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  const currentCard = cards[currentIndex];
+  const progressPercentage = cards.length > 0 ? ((currentIndex + (isFlipped ? 0.5 : 0)) / cards.length) * 100 : 0;
 
   return (
-    <div className="relative mx-auto max-w-4xl px-4 py-8 sm:px-6 space-y-8">
-      {/* Soft background ambient glow */}
+    <div className="relative mx-auto max-w-4xl px-4 py-8 sm:px-6 space-y-8 bg-grid-pattern min-h-screen">
+      {/* Background decoration */}
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 -z-10 h-80 w-80 rounded-full bg-primary/5 blur-3xl" />
 
       {/* Header */}
-      <div className="flex items-center justify-between border-b border-border/40 pb-4">
-        <div>
-          <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-primary px-2.5 py-0.5 rounded-full bg-primary/10 border border-primary/20">
-            <Layers className="size-3.5" />
+      <motion.div 
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="flex items-center justify-between border-b border-foreground/[0.05] pb-4"
+      >
+        <div className="space-y-1">
+          <span className="inline-flex items-center gap-1.5 text-xs font-bold text-primary px-3 py-1 rounded-full bg-primary/10 border border-primary/20">
+            <Layers className="size-3.5 animate-pulse" />
             Spaced Repetition (SRS)
           </span>
-          <h1 className="mt-2 text-2xl font-extrabold tracking-tight text-foreground">
-            Thẻ ôn tập từ vựng
+          <h1 className="mt-1 text-3xl font-black tracking-tight text-foreground">
+            Thẻ ôn tập thông minh
           </h1>
         </div>
         <div className="text-right">
-          <div className="text-[10px] text-muted-foreground uppercase tracking-wider font-bold">Tiến trình ôn tập</div>
-          <div className="text-xs font-extrabold text-foreground font-mono mt-0.5">
-            {currentIndex + 1} / {mockCards.length} thẻ
+          <div className="text-[10px] text-muted-foreground uppercase tracking-widest font-extrabold">Đang ôn tập</div>
+          <div className="text-sm font-black text-foreground font-mono mt-0.5">
+            {currentIndex + 1} / {cards.length} thẻ
           </div>
         </div>
-      </div>
+      </motion.div>
 
-      {/* Main Review Arena */}
+      {/* Main Arena */}
       {!showFinished ? (
         <div className="space-y-8">
           {/* Progress bar */}
-          <div className="h-1.5 w-full rounded-full bg-muted overflow-hidden">
-            <div
-              className="h-full rounded-full bg-gradient-to-r from-primary to-emerald-400 transition-all duration-300"
-              style={{ width: `${progressPercentage}%` }}
+          <div className="h-2 w-full rounded-full bg-muted overflow-hidden relative">
+            <motion.div
+              className="h-full rounded-full bg-gradient-to-r from-primary to-emerald-400"
+              initial={{ width: 0 }}
+              animate={{ width: `${progressPercentage}%` }}
+              transition={{ duration: 0.3 }}
             />
           </div>
 
-          {/* 3D Flashcard Container */}
-          <div className="flex justify-center">
-            <div
-              onClick={() => setIsFlipped(!isFlipped)}
-              className="w-full max-w-md h-80 perspective-1000 cursor-pointer group"
-            >
-              <div
-                className={`relative w-full h-full duration-500 preserve-3d ${
-                  isFlipped ? "rotate-y-180" : ""
-                }`}
+          {/* Swipe Hint overlay */}
+          <div className="text-center text-xs text-muted-foreground/80 font-medium">
+            💡 <span className="font-bold">Mẹo:</span> Kéo thẻ sang <span className="text-emerald-500 font-bold">Phải (Đã thuộc)</span> hoặc sang <span className="text-red-500 font-bold">Trái (Quên)</span>. Nhấn <span className="bg-muted px-1.5 py-0.5 rounded font-mono border border-foreground/10 text-[11px]">Space</span> để lật.
+          </div>
+
+          {/* 3D Swipe Flashcard Arena */}
+          <div className="flex justify-center items-center py-4 relative overflow-visible">
+            <AnimatePresence mode="popLayout">
+              <motion.div
+                key={currentIndex}
+                style={{ x, rotate }}
+                drag="x"
+                dragConstraints={{ left: 0, right: 0 }}
+                onDragEnd={handleDragEnd}
+                whileDrag={{ scale: 1.02, cursor: "grabbing" }}
+                className="w-full max-w-md h-96 perspective-1000 cursor-grab relative z-10"
               >
-                {/* CARD FRONT */}
-                <div className="absolute w-full h-full backface-hidden rounded-3xl bg-gradient-to-br from-glass to-muted/10 border border-glass p-8 flex flex-col justify-between shadow-[0_8px_30px_rgb(0,0,0,0.015)] hover:shadow-primary/5 hover:border-primary/20 transition-all duration-300">
-                  <div className="flex justify-between items-start">
-                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-lg text-[10px] font-bold uppercase tracking-wider bg-muted text-muted-foreground border border-border/40">
-                      <Folder className="size-3" />
-                      {currentCard.topic}
-                    </span>
-                    <span className="text-[10px] font-black px-2 py-0.5 rounded-md bg-primary/20 text-primary border border-primary/20">
-                      {currentCard.level}
-                    </span>
-                  </div>
+                {/* Visual Feedback Overlays */}
+                <motion.div 
+                  style={{ opacity: opacityRight }} 
+                  className="absolute inset-0 bg-emerald-500/10 border-2 border-emerald-500 rounded-3xl z-20 pointer-events-none flex items-center justify-center"
+                >
+                  <span className="bg-emerald-500 text-white font-black px-6 py-3 rounded-2xl shadow-lg uppercase text-sm tracking-wider">Đã Thuộc</span>
+                </motion.div>
+                <motion.div 
+                  style={{ opacity: opacityLeft }} 
+                  className="absolute inset-0 bg-red-500/10 border-2 border-red-500 rounded-3xl z-20 pointer-events-none flex items-center justify-center"
+                >
+                  <span className="bg-red-500 text-white font-black px-6 py-3 rounded-2xl shadow-lg uppercase text-sm tracking-wider">Quên Từ</span>
+                </motion.div>
 
-                  <div className="text-center space-y-3">
-                    <h2 className="text-3xl font-extrabold tracking-tight text-foreground bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text select-all">
-                      {currentCard.word}
-                    </h2>
-                    <div className="flex items-center justify-center gap-2">
-                      <span className="text-xs font-mono text-muted-foreground">{currentCard.phonetic}</span>
-                      <Button
-                        onClick={(e) => handleAudioPlay(e, currentCard.word)}
-                        variant="ghost"
-                        size="icon"
-                        className="size-8 rounded-full hover:bg-primary/10 hover:text-primary transition-colors text-muted-foreground"
-                        aria-label="Phát âm tiếng Anh"
-                      >
-                        <Volume2 className="size-4.5" />
-                      </Button>
-                    </div>
-                    <span className="inline-block text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-muted/65 text-muted-foreground font-mono">
-                      {currentCard.pos}
-                    </span>
-                  </div>
-
-                  <div className="text-center text-[10px] text-muted-foreground/60 flex items-center justify-center gap-1">
-                    <HelpCircle className="size-3.5" />
-                    <span>Click vào thẻ để xem mặt sau</span>
-                  </div>
-                </div>
-
-                {/* CARD BACK */}
-                <div className="absolute w-full h-full backface-hidden rotate-y-180 rounded-3xl bg-gradient-to-br from-glass to-emerald-500/5 border border-glass p-8 flex flex-col justify-between shadow-[0_8px_30px_rgb(0,0,0,0.015)]">
-                  <div className="flex justify-between items-start">
-                    <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
-                      Nghĩa từ vựng
-                    </span>
-                    <span className="text-[10px] font-bold text-muted-foreground font-mono uppercase">Mặt sau</span>
-                  </div>
-
-                  <div className="space-y-4">
-                    <div className="text-center">
-                      <p className="text-xl font-bold text-foreground">
-                        {currentCard.meaning_vn}
-                      </p>
+                {/* 3D Flip Card Shell */}
+                <motion.div
+                  onClick={() => setIsFlipped((prev) => !prev)}
+                  animate={{ rotateY: isFlipped ? 180 : 0 }}
+                  transition={{ type: "spring", stiffness: 120, damping: 18 }}
+                  className="w-full h-full preserve-3d relative"
+                >
+                  {/* CARD FRONT */}
+                  <div className="absolute w-full h-full backface-hidden rounded-3xl bg-glass border border-glass p-8 flex flex-col justify-between shadow-[0_15px_40px_rgba(0,0,0,0.025)]">
+                    <div className="flex justify-between items-start">
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl text-[10px] font-bold uppercase tracking-wider bg-foreground/[0.04] text-muted-foreground border border-foreground/[0.05]">
+                        <Folder className="size-3.5" />
+                        {currentCard.topic}
+                      </span>
+                      <span className="text-[11px] font-black px-2.5 py-0.5 rounded-lg bg-primary/25 text-primary border border-primary/25">
+                        {currentCard.level}
+                      </span>
                     </div>
 
-                    <div className="p-3.5 rounded-2xl bg-muted/20 border border-border/40 space-y-1.5 text-left">
-                      <div className="flex justify-between items-center">
-                        <span className="text-[9px] uppercase font-bold text-muted-foreground">Ví dụ thực tế</span>
+                    <div className="text-center space-y-4">
+                      <h2 className="text-4xl sm:text-5xl font-black tracking-tight text-foreground bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text select-all leading-tight">
+                        {currentCard.word}
+                      </h2>
+                      <div className="flex items-center justify-center gap-2">
+                        <span className="text-sm font-mono text-muted-foreground">{currentCard.phonetic}</span>
                         <Button
-                          onClick={(e) => handleAudioPlay(e, currentCard.example_en)}
+                          onClick={(e) => handleAudioPlay(e, currentCard.word)}
                           variant="ghost"
                           size="icon"
-                          className="size-6 rounded-full hover:bg-muted text-muted-foreground"
+                          className="size-9 rounded-full hover:bg-primary/10 hover:text-primary transition-all duration-200 text-muted-foreground"
+                          aria-label="Phát âm tiếng Anh"
                         >
-                          <Volume2 className="size-3.5" />
+                          <Volume2 className="size-5" />
                         </Button>
                       </div>
-                      <p className="text-sm font-semibold text-foreground/90 italic">
-                        &quot;{currentCard.example_en}&quot;
-                      </p>
-                      <p className="text-xs text-muted-foreground leading-relaxed mt-1">
-                        {currentCard.example_vn}
-                      </p>
+                      <span className="inline-block text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-lg bg-foreground/[0.04] text-muted-foreground font-mono">
+                        {currentCard.pos}
+                      </span>
+                    </div>
+
+                    <div className="text-center text-[11px] text-muted-foreground/60 flex items-center justify-center gap-1.5 font-normal">
+                      <HelpCircle className="size-4 text-primary animate-pulse" />
+                      <span>Nhấp chuột để lật / Nhấn Space</span>
                     </div>
                   </div>
 
-                  <div className="text-center text-[10px] text-muted-foreground/60 flex items-center justify-center gap-1">
-                    <HelpCircle className="size-3.5" />
-                    <span>Click vào thẻ để lật lại mặt trước</span>
+                  {/* CARD BACK */}
+                  <div className="absolute w-full h-full backface-hidden rotate-y-180 rounded-3xl bg-glass border border-glass p-8 flex flex-col justify-between shadow-[0_15px_40px_rgba(0,0,0,0.025)]">
+                    <div className="flex justify-between items-start">
+                      <span className="text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+                        Nghĩa Tiếng Việt
+                      </span>
+                      <span className="text-[10px] font-bold text-muted-foreground font-mono uppercase tracking-widest">Mặt sau</span>
+                    </div>
+
+                    <div className="space-y-5">
+                      <div className="text-center">
+                        <p className="text-2xl font-black text-foreground leading-tight">
+                          {currentCard.meaning_vn}
+                        </p>
+                      </div>
+
+                      {currentCard.example_en && (
+                        <div className="p-4 rounded-2xl bg-primary/5 border border-primary/10 space-y-2 text-left shadow-sm">
+                          <div className="flex justify-between items-center">
+                            <span className="text-[10px] uppercase font-bold text-primary tracking-widest">Ví dụ thực tế</span>
+                            <Button
+                              onClick={(e) => handleAudioPlay(e, currentCard.example_en)}
+                              variant="ghost"
+                              size="icon"
+                              className="size-7 rounded-full hover:bg-primary/10 text-primary transition-all duration-200"
+                            >
+                              <Volume2 className="size-4" />
+                            </Button>
+                          </div>
+                          <p className="text-sm font-semibold text-foreground/90 italic leading-relaxed">
+                            &quot;{currentCard.example_en}&quot;
+                          </p>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Debug FSRS Info */}
+                    {(currentCard.stability !== undefined || currentCard.difficulty !== undefined) && (
+                      <div className="text-[9px] font-mono text-muted-foreground/40 text-center flex justify-center gap-3 border-t border-foreground/[0.04] pt-2 select-none">
+                        <span>FSRS Mode</span>
+                        <span>•</span>
+                        <span>Stability: {currentCard.stability?.toFixed(2) || "0.00"}d</span>
+                        <span>•</span>
+                        <span>Difficulty: {currentCard.difficulty?.toFixed(2) || "0.00"}</span>
+                        <span>•</span>
+                        <span>State: {currentCard.state === 0 ? "New" : currentCard.state === 1 ? "Learning" : currentCard.state === 2 ? "Review" : "Relearning"}</span>
+                      </div>
+                    )}
+ 
+                    <div className="text-center text-[11px] text-muted-foreground/60 flex items-center justify-center gap-1.5 font-normal">
+                      <HelpCircle className="size-4 text-primary animate-pulse" />
+                      <span>Nhấp chuột để lật lại mặt trước</span>
+                    </div>
                   </div>
-                </div>
-              </div>
-            </div>
+                </motion.div>
+              </motion.div>
+            </AnimatePresence>
           </div>
 
           {/* SRS Response Controls */}
           <div className="flex flex-col items-center gap-4">
-            {!isFlipped ? (
-              <Button
-                onClick={() => setIsFlipped(true)}
-                className="w-full max-w-xs h-11 bg-primary hover:bg-primary/95 text-primary-foreground font-semibold rounded-xl shadow-md transition-all duration-300"
-              >
-                Lật mặt sau (Show Answer)
-              </Button>
-            ) : (
-              <div className="w-full max-w-md space-y-3">
-                <p className="text-[10px] font-bold text-center uppercase tracking-wider text-muted-foreground">
-                  Đánh giá độ nhớ của bạn để thuật toán xếp lịch:
-                </p>
-                <div className="grid grid-cols-4 gap-2">
-                  {[
-                    { label: "Again", code: "again", desc: "Quên từ", color: "hover:bg-red-500 hover:text-white text-red-600 bg-red-500/5 dark:bg-red-500/10 border-red-500/20" },
-                    { label: "Hard", code: "hard", desc: "Nhớ mang máng", color: "hover:bg-orange-500 hover:text-white text-orange-600 bg-orange-500/5 dark:bg-orange-500/10 border-orange-500/20" },
-                    { label: "Good", code: "good", desc: "Nhớ tốt", color: "hover:bg-blue-500 hover:text-white text-blue-600 bg-blue-500/5 dark:bg-blue-500/10 border-blue-500/20" },
-                    { label: "Easy", code: "easy", desc: "Nhớ rất rõ", color: "hover:bg-emerald-500 hover:text-white text-emerald-600 bg-emerald-500/5 dark:bg-emerald-500/10 border-emerald-500/20" },
-                  ].map((btn) => (
-                    <button
-                      key={btn.code}
-                      onClick={() => handleResponse(btn.label)}
-                      className={`flex flex-col items-center justify-center p-2.5 rounded-xl border text-[11px] font-bold transition-all duration-200 ${btn.color}`}
-                    >
-                      <span>{btn.label}</span>
-                      <span className="text-[8px] opacity-75 font-normal mt-0.5">{btn.desc}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
+            <AnimatePresence mode="wait">
+              {!isFlipped ? (
+                <motion.div
+                  key="flip-btn"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="w-full max-w-xs flex flex-col items-center gap-2.5"
+                >
+                  <Button
+                    onClick={() => setIsFlipped(true)}
+                    className="w-full h-12 bg-primary hover:bg-primary/95 text-primary-foreground font-bold rounded-xl shadow-lg shadow-primary/10 transition-all duration-300 active:scale-[0.98] text-xs sm:text-sm"
+                  >
+                    Lật mặt sau (Xem đáp án)
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => {
+                      if (currentIndex < cards.length - 1) {
+                        setCurrentIndex((prev) => prev + 1);
+                      } else {
+                        setShowFinished(true);
+                      }
+                    }}
+                    className="text-xs text-muted-foreground hover:text-foreground hover:bg-transparent rounded-xl"
+                  >
+                    Để sau / Bỏ qua thẻ này
+                  </Button>
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="srs-btns"
+                  initial={{ opacity: 0, y: 15 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 15 }}
+                  className="w-full max-w-xl space-y-4"
+                >
+                  <p className="text-[10px] font-bold text-center uppercase tracking-widest text-muted-foreground">
+                    Đánh giá mức độ nhớ (Phím tắt: 1 - 2 - 3 - 4):
+                  </p>
+                  <div className="grid grid-cols-4 gap-3">
+                    {[
+                      { label: "Again", code: "again", key: "1", desc: "Quên từ", color: "hover:bg-red-500 hover:text-white hover:shadow-red-500/25 text-red-600 bg-red-500/5 dark:bg-red-500/10 border-red-500/20 hover:border-red-500" },
+                      { label: "Hard", code: "hard", key: "2", desc: "Mơ hồ", color: "hover:bg-orange-500 hover:text-white hover:shadow-orange-500/25 text-orange-600 bg-orange-500/5 dark:bg-orange-500/10 border-orange-500/20 hover:border-orange-500" },
+                      { label: "Good", code: "good", key: "3", desc: "Nhớ tốt", color: "hover:bg-blue-500 hover:text-white hover:shadow-blue-500/25 text-blue-600 bg-blue-500/5 dark:bg-blue-500/10 border-blue-500/20 hover:border-blue-500" },
+                      { label: "Easy", code: "easy", key: "4", desc: "Rất dễ", color: "hover:bg-emerald-500 hover:text-white hover:shadow-emerald-500/25 text-emerald-600 bg-emerald-500/5 dark:bg-emerald-500/10 border-emerald-500/20 hover:border-emerald-500" },
+                    ].map((btn) => (
+                      <button
+                        key={btn.code}
+                        disabled={isReviewing}
+                        onClick={() => handleResponse(btn.label as "Again" | "Hard" | "Good" | "Easy")}
+                        className={`flex flex-col items-center justify-center p-3 rounded-2xl border text-xs sm:text-sm font-black transition-all duration-300 shadow-sm active:scale-[0.95] disabled:opacity-50 disabled:cursor-not-allowed ${btn.color}`}
+                      >
+                        <div className="flex items-center gap-1.5">
+                          <span>{btn.label}</span>
+                          <span className="hidden sm:inline-block text-[9px] bg-foreground/5 px-1.5 py-0.2 rounded border border-foreground/10 font-mono font-normal">{btn.key}</span>
+                        </div>
+                        <span className="text-[10px] opacity-85 font-medium mt-1">{btn.desc}</span>
+                      </button>
+                    ))}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </div>
       ) : (
         /* Finished Arena */
-        <div className="rounded-3xl border border-glass bg-glass p-8 text-center max-w-md mx-auto space-y-6 shadow-[0_8px_30px_rgb(0,0,0,0.01)] animate-float">
-          <div className="inline-flex size-14 items-center justify-center rounded-2xl bg-primary/10 text-primary">
-            <Award className="size-7" />
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="rounded-3xl border border-glass bg-glass p-8 text-center max-w-md mx-auto space-y-6 shadow-[0_15px_40px_rgba(0,0,0,0.015)]"
+        >
+          <div className="inline-flex size-16 items-center justify-center rounded-2xl bg-primary/10 text-primary">
+            <Award className="size-8" />
           </div>
           
           <div className="space-y-2">
-            <h2 className="text-xl font-bold text-foreground">Tuyệt vời! Đã hoàn thành!</h2>
-            <p className="text-xs text-muted-foreground leading-relaxed">
-              Bạn đã ôn tập xong tất cả {mockCards.length} từ vựng cần ôn trong ngày hôm nay. Thuật toán đã tự động tính toán lại lịch ôn tập tiếp theo cho bạn.
+            <h2 className="text-xl sm:text-2xl font-black text-foreground">Học xong mục tiêu ngày!</h2>
+            <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed font-normal">
+              Bạn đã ôn tập xong tất cả {cards.length} từ vựng trong lịch hôm nay. Thuật toán Spaced Repetition đã lập trình lại thời điểm ôn tiếp theo.
             </p>
           </div>
 
           {/* Log summaries */}
-          <div className="p-4 rounded-2xl bg-muted/20 border border-border/40 text-left space-y-2 text-xs">
-            <span className="font-bold text-[10px] text-muted-foreground uppercase tracking-wider">Tóm tắt kết quả:</span>
-            <div className="divide-y divide-border/20">
+          <div className="p-5 rounded-2xl bg-foreground/[0.02] border border-foreground/[0.04] text-left space-y-3 text-xs sm:text-sm shadow-inner">
+            <span className="font-extrabold text-xs text-muted-foreground uppercase tracking-widest">Bảng tự đánh giá của bạn:</span>
+            <div className="divide-y divide-foreground/[0.04]">
               {responseLog.map((log, idx) => (
-                <div key={idx} className="flex justify-between py-1.5 first:pt-0 last:pb-0 font-medium">
+                <div key={idx} className="flex justify-between py-2.5 first:pt-0 last:pb-0 font-semibold">
                   <span className="text-foreground">{log.word}</span>
-                  <span className={`font-bold ${
+                  <span className={`font-black ${
                     log.score === "Easy" ? "text-emerald-500" : log.score === "Good" ? "text-blue-500" : log.score === "Hard" ? "text-orange-500" : "text-red-500"
                   }`}>{log.score}</span>
                 </div>
@@ -299,23 +497,23 @@ export default function FlashcardsPage() {
             </div>
           </div>
 
-          <div className="flex gap-3 justify-center">
+          <div className="flex gap-3 justify-center pt-2">
             <Button
               onClick={resetReview}
               variant="outline"
-              className="rounded-xl text-xs font-semibold border-glass"
+              className="rounded-xl text-xs sm:text-sm font-semibold border-glass h-11 px-5 hover:bg-muted active:scale-[0.98]"
             >
               <RotateCcw className="size-4 mr-1.5" />
-              Ôn lại
+              Ôn tập lại
             </Button>
             <Button
               onClick={() => window.location.href = "/dashboard"}
-              className="bg-primary hover:bg-primary/95 text-primary-foreground rounded-xl text-xs font-semibold"
+              className="bg-primary hover:bg-primary/95 text-primary-foreground rounded-xl text-xs sm:text-sm font-semibold h-11 px-5 shadow-lg shadow-primary/10 active:scale-[0.98]"
             >
-              Về Dashboard
+              Quay về Dashboard
             </Button>
           </div>
-        </div>
+        </motion.div>
       )}
     </div>
   );

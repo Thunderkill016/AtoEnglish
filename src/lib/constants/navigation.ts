@@ -4,6 +4,7 @@ import {
   Layers,
   Map,
   TrendingUp,
+  Mic,
   type LucideIcon,
 } from "lucide-react";
 
@@ -26,6 +27,12 @@ export const mainNavItems: NavItem[] = [
     href: "/learn",
     icon: BookOpen,
     description: "Bài học theo mô hình IPOR",
+  },
+  {
+    title: "Speaking",
+    href: "/speaking",
+    icon: Mic,
+    description: "Luyện phát âm Shadowing & AI Roleplay",
   },
   {
     title: "Flashcards",

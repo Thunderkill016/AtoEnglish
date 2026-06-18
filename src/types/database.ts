@@ -26,7 +26,7 @@ export type UserProgress = {
   current_level: CEFRLevel;
   streak: number;
   total_xp: number;
-  last_active: string;
+  last_active_date: string | null;
   created_at: string;
   updated_at: string;
 };
@@ -47,6 +47,11 @@ export type Card = {
   last_reviewed: string | null;
   created_at: string;
   updated_at: string;
+  state: number;
+  difficulty: number;
+  stability: number;
+  last_review: string | null;
+  next_review: string | null;
 };
 
 export type LessonHistory = {
@@ -68,6 +73,26 @@ export type UserSentence = {
   updated_at: string;
 };
 
+export type UserLessonProgress = {
+  id: string;
+  user_id: string;
+  unit_id: string;
+  completed_at: string;
+  xp_earned: number;
+  created_at: string;
+};
+
+export type SpeakingSession = {
+  id: string;
+  user_id: string;
+  practice_type: string;
+  duration: number;
+  transcript: string | null;
+  accuracy_score: number | null;
+  scenario_id: string | null;
+  created_at: string;
+};
+
 // ---------------------------------------------------------------------------
 // Insert types (omit auto-generated fields)
 // ---------------------------------------------------------------------------
@@ -86,7 +111,7 @@ export type UserProgressInsert = {
   current_level?: CEFRLevel;
   streak?: number;
   total_xp?: number;
-  last_active?: string;
+  last_active_date?: string | null;
   created_at?: string;
   updated_at?: string;
 };
@@ -107,6 +132,11 @@ export type CardInsert = {
   last_reviewed?: string | null;
   created_at?: string;
   updated_at?: string;
+  state?: number;
+  difficulty?: number;
+  stability?: number;
+  last_review?: string | null;
+  next_review?: string | null;
 };
 
 export type LessonHistoryInsert = {
@@ -126,6 +156,26 @@ export type UserSentenceInsert = {
   tags?: string[];
   created_at?: string;
   updated_at?: string;
+};
+
+export type UserLessonProgressInsert = {
+  id?: string;
+  user_id: string;
+  unit_id: string;
+  completed_at?: string;
+  xp_earned?: number;
+  created_at?: string;
+};
+
+export type SpeakingSessionInsert = {
+  id?: string;
+  user_id: string;
+  practice_type: string;
+  duration: number;
+  transcript?: string | null;
+  accuracy_score?: number | null;
+  scenario_id?: string | null;
+  created_at?: string;
 };
 
 // ---------------------------------------------------------------------------
@@ -150,6 +200,14 @@ export type LessonHistoryUpdate = Partial<
 
 export type UserSentenceUpdate = Partial<
   Omit<UserSentence, "id" | "user_id" | "created_at" | "updated_at">
+>;
+
+export type UserLessonProgressUpdate = Partial<
+  Omit<UserLessonProgress, "id" | "user_id" | "created_at">
+>;
+
+export type SpeakingSessionUpdate = Partial<
+  Omit<SpeakingSession, "id" | "user_id" | "created_at">
 >;
 
 // ---------------------------------------------------------------------------
@@ -214,6 +272,34 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "user_sentences_user_id_fkey";
+            columns: ["user_id"];
+            isOneToOne: false;
+            referencedRelation: "users";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      user_lesson_progress: {
+        Row: UserLessonProgress;
+        Insert: UserLessonProgressInsert;
+        Update: UserLessonProgressUpdate;
+        Relationships: [
+          {
+            foreignKeyName: "user_lesson_progress_user_id_fkey";
+            columns: ["user_id"];
+            isOneToOne: false;
+            referencedRelation: "users";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      speaking_sessions: {
+        Row: SpeakingSession;
+        Insert: SpeakingSessionInsert;
+        Update: SpeakingSessionUpdate;
+        Relationships: [
+          {
+            foreignKeyName: "speaking_sessions_user_id_fkey";
             columns: ["user_id"];
             isOneToOne: false;
             referencedRelation: "users";
