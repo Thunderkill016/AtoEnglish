@@ -322,12 +322,74 @@ export async function getCompletedUnitsCount() {
       .eq("user_id", user.id);
 
     if (error) {
-      return { success: false, count: 0 };
+      return { success: true, count: count || 0 };
     }
-
-    return { success: true, count: count || 0 };
+    return { success: false, count: 0 };
   } catch {
     return { success: false, count: 0 };
   }
 }
 
+/**
+ * Server Action reset toàn bộ tiến trình của một unit (xóa progress và cards SRS liên quan).
+ */
+export async function resetUnitProgress(unitId: string) {
+  try {
+    const supabase = createClient();
+    
+    // 1. Kiểm tra trạng thái đăng nhập
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    if (authError || !user) {
+      return {
+        success: false,
+        error: "Bạn cần đăng nhập để thực hiện reset bài học."
+      };
+    }
+
+    // 2. Xóa tiến trình bài học trong user_lesson_progress
+    const { error: deleteProgressError } = await supabase
+      .from("user_lesson_progress")
+      .delete()
+      .eq("user_id", user.id)
+      .eq("unit_id", unitId);
+
+    if (deleteProgressError) {
+      return {
+        success: false,
+        error: `Lỗi khi xóa tiến trình: ${deleteProgressError.message}`
+      };
+    }
+
+    // 3. Xóa các từ vựng thuộc Unit này trong bảng cards
+    const vocabList = UNIT_VOCABULARY[unitId] || [];
+    if (vocabList.length > 0) {
+      const wordList = vocabList.map(v => v.word.toLowerCase().trim());
+      const { error: deleteCardsError } = await supabase
+        .from("cards")
+        .delete()
+        .eq("user_id", user.id)
+        .in("word", wordList);
+
+      if (deleteCardsError) {
+        console.error("Lỗi khi xóa các thẻ từ vựng trong SRS:", deleteCardsError.message);
+      }
+    }
+
+    // 4. Revalidate cache
+    revalidatePath("/dashboard");
+    revalidatePath("/learn");
+    revalidatePath("/flashcards");
+
+    return {
+      success: true,
+      message: `Đã reset thành công toàn bộ tiến trình bài học ${unitId}.`
+    };
+
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    return {
+      success: false,
+      error: `Lỗi hệ thống: ${errorMessage}`
+    };
+  }
+}

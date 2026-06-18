@@ -22,7 +22,7 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { saveCardToSRS } from "@/app/actions/cards";
-import { completeUnit, getUnitCompletionStatus } from "@/app/actions/progress";
+import { completeUnit, getUnitCompletionStatus, resetUnitProgress } from "@/app/actions/progress";
 import { UNIT_VOCABULARY } from "@/lib/constants/vocabulary";
 import { toast } from "sonner";
 
@@ -66,6 +66,28 @@ export default function LearnPage() {
       toast.error(`Có lỗi xảy ra: ${errMsg}`);
     } finally {
       setIsCompleting(false);
+    }
+  };
+
+  const handleResetUnit = async () => {
+    if (!window.confirm("Bạn có chắc chắn muốn reset toàn bộ tiến trình học và xóa từ vựng đã lưu của Unit 4 này không?")) {
+      return;
+    }
+
+    try {
+      const res = await resetUnitProgress("unit-4");
+      if (res.success) {
+        setIsUnitCompleted(false);
+        setActivePhase("input");
+        setAddedVocab([]);
+        setUserSentence("");
+        setSavedSentences(false);
+        toast.success(res.message);
+      } else {
+        toast.error(res.error || "Không thể reset bài học.");
+      }
+    } catch {
+      toast.error("Lỗi khi reset bài học.");
     }
   };
 
@@ -186,9 +208,18 @@ export default function LearnPage() {
 
         {/* Lesson Progress Card */}
         <div className="w-full sm:w-72 space-y-2 bg-glass border border-glass p-4 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.015)]">
-          <div className="flex justify-between text-xs text-muted-foreground font-bold">
+          <div className="flex justify-between items-center text-xs text-muted-foreground font-bold">
             <span>Tiến độ chương học</span>
-            <span className="text-foreground">{unitInfo.progress}%</span>
+            <div className="flex items-center gap-2">
+              <span className="text-foreground">{unitInfo.progress}%</span>
+              <button
+                onClick={handleResetUnit}
+                className="hover:text-red-500 text-muted-foreground transition-colors p-0.5 rounded focus:outline-none focus:ring-1 focus:ring-red-200"
+                title="Reset bài học"
+              >
+                <RotateCcw className="size-3" />
+              </button>
+            </div>
           </div>
           <div className="h-2 w-full rounded-full bg-muted overflow-hidden relative">
             <motion.div

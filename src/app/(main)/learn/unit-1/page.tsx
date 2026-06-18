@@ -27,7 +27,7 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { saveCardToSRS } from "@/app/actions/cards";
-import { completeUnit, getUnitCompletionStatus } from "@/app/actions/progress";
+import { completeUnit, getUnitCompletionStatus, resetUnitProgress } from "@/app/actions/progress";
 import { unit1, type DialogueLine } from "@/lib/data/units/unit1";
 import { toast } from "sonner";
 
@@ -854,6 +854,72 @@ export default function Unit1Page() {
     }
   };
 
+  const handleResetUnit1 = async () => {
+    if (!window.confirm("Bạn có chắc chắn muốn reset toàn bộ tiến trình học và xóa từ vựng đã lưu của Unit 1 này không?")) {
+      return;
+    }
+
+    try {
+      const res = await resetUnitProgress("unit-1");
+      if (res.success) {
+        setIsUnitCompleted(false);
+        setActivePhase("input");
+        setInputSubStep(0);
+        setMatchCards([]);
+        setSelectedMatchCard(null);
+        setMatchedIds([]);
+        setMismatchedIds([]);
+        setShadowBasicIndex(0);
+        setShadowBasicScores({});
+        setShadowBasicTranscripts({});
+        setLacIndex(0);
+        setLacSelectedAnswers({});
+        setLacChecked({});
+        setVocabIndex(0);
+        setIsFlipped(false);
+        setVocabQueue(Array.from({ length: unit1.vocab.length }, (_, i) => i));
+        setToBeAnswers({});
+        setToBeResults({});
+        setClozeAnswers({});
+        setClozeResults({});
+        setSelectedScenarioIndex(0);
+        setShadowSentenceIndex(0);
+        setIsRecording(false);
+        setSpeechTranscript("");
+        setAccuracyScore(null);
+        setIsRecognizing(false);
+        setRoleplayActive(false);
+        setUserRole(null);
+        setRoleplayStep(0);
+        setOutputSubStep(0);
+        setIsPlayingModelAudio(false);
+        setIsPlayingShadowingUserAudio(false);
+        setRecordedShadowingAudioUrl(null);
+        setShadowingLineIdx(-1);
+        setShadowingSpeed(1.0);
+        setSelectedCompareLineIdx(0);
+        setCompareUserAudioUrl(null);
+        setCompareUserScore(null);
+        setCompareUserTranscript("");
+        setSpeechKeywordsMatched([]);
+        setQuizAnswers({});
+        setQuizSubmitted(false);
+        setAddedVocab([]);
+        setSavingVocab(null);
+        setSelfCheckValue(null);
+
+        // Re-initialize matching game
+        initializeMatchingGame();
+
+        toast.success(res.message);
+      } else {
+        toast.error(res.error || "Không thể reset bài học.");
+      }
+    } catch {
+      toast.error("Lỗi khi reset bài học.");
+    }
+  };
+
   // Progress percentage logic
   const calculateProgress = () => {
     switch (activePhase) {
@@ -898,9 +964,18 @@ export default function Unit1Page() {
 
         {/* Progress Card */}
         <div className="w-full sm:w-72 space-y-2 bg-white/40 border border-zinc-100 dark:border-zinc-800 backdrop-blur-md p-4 rounded-2xl shadow-sm">
-          <div className="flex justify-between text-xs text-muted-foreground font-bold">
+          <div className="flex justify-between items-center text-xs text-muted-foreground font-bold">
             <span>Tiến độ Unit 1</span>
-            <span className="text-foreground">{calculateProgress()}%</span>
+            <div className="flex items-center gap-2">
+              <span className="text-foreground">{calculateProgress()}%</span>
+              <button
+                onClick={handleResetUnit1}
+                className="hover:text-red-500 text-muted-foreground transition-colors p-0.5 rounded focus:outline-none focus:ring-1 focus:ring-red-200"
+                title="Reset bài học"
+              >
+                <RotateCcw className="size-3" />
+              </button>
+            </div>
           </div>
           <div className="h-2 w-full rounded-full bg-muted overflow-hidden relative">
             <motion.div
