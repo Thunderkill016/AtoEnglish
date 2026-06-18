@@ -10,7 +10,6 @@ import {
   Sparkles,
   Mic,
   ChevronRight,
-  Check,
   ArrowRight,
   Quote,
   Users,
@@ -545,14 +544,11 @@ export default function LandingPage() {
 
         <div className="relative max-w-3xl mx-auto text-center space-y-8 sm:space-y-10">
           <motion.div variants={fadeInUp} className="space-y-4">
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50 leading-tight">
-              Sẵn sàng nói tiếng Anh
-              <br className="sm:hidden" /> tự tin hơn?
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-zinc-900 dark:text-zinc-50 leading-tight">
+              Sẵn sàng bắt đầu hành trình nói tiếng Anh tự tin?
             </h2>
-            <p className="text-[15px] sm:text-base lg:text-lg text-zinc-500 dark:text-zinc-400 leading-relaxed max-w-md mx-auto">
-              Bắt đầu miễn phí. Không cần thẻ tín dụng.
-              <br />
-              15 phút mỗi ngày là đủ.
+            <p className="text-[15px] sm:text-base lg:text-lg text-zinc-500 dark:text-zinc-400 leading-relaxed max-w-lg mx-auto font-normal">
+              Học miễn phí ngay hôm nay. Không cần thẻ tín dụng.
             </p>
           </motion.div>
 
@@ -567,7 +563,7 @@ export default function LandingPage() {
                 href={user ? "/dashboard" : "/login"}
                 className="w-full sm:w-auto"
               >
-                <Button className="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700 text-white font-semibold h-14 px-10 rounded-full text-base shadow-lg shadow-emerald-600/25 hover:shadow-xl hover:shadow-emerald-600/30 hover:scale-[1.03] active:scale-[0.98] transition-all duration-300 gap-2.5">
+                <Button className="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700 dark:bg-emerald-600 dark:hover:bg-emerald-700 text-white font-semibold h-14 px-10 rounded-full text-base shadow-lg shadow-emerald-600/20 hover:shadow-xl hover:shadow-emerald-600/25 hover:scale-[1.03] active:scale-[0.98] transition-all duration-300 gap-2.5">
                   {user
                     ? "Vào Dashboard ngay"
                     : "Bắt đầu miễn phí ngay hôm nay"}
@@ -575,19 +571,8 @@ export default function LandingPage() {
                 </Button>
               </Link>
             )}
-            <div className="flex items-center gap-4 text-xs text-zinc-400 dark:text-zinc-500 font-medium">
-              <span className="flex items-center gap-1">
-                <Check className="size-3" />
-                Miễn phí mãi mãi
-              </span>
-              <span className="flex items-center gap-1">
-                <Check className="size-3" />
-                Không quảng cáo
-              </span>
-              <span className="flex items-center gap-1 hidden sm:flex">
-                <Check className="size-3" />
-                Mobile-first
-              </span>
+            <div className="text-xs text-zinc-400 dark:text-zinc-500 font-medium tracking-wide">
+              Miễn phí. Không cần thẻ tín dụng. Hủy bất cứ lúc nào.
             </div>
           </motion.div>
         </div>
