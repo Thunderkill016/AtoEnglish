@@ -288,14 +288,24 @@ export async function getUserProgress() {
       return { success: false, error: `Lỗi truy vấn: ${error.message}` };
     }
 
+    // Lấy display_name từ bảng users
+    const { data: profile } = await supabase
+      .from("users")
+      .select("display_name")
+      .eq("id", user.id)
+      .maybeSingle();
+
+    const displayName = profile?.display_name || user.user_metadata?.display_name || user.user_metadata?.full_name || user.email?.split("@")[0] || "Học viên";
+
     return {
       success: true,
-      progress: data || {
+      progress: {
         user_id: user.id,
-        current_level: "B1",
-        streak: 0,
-        total_xp: 0,
-        last_active_date: null
+        current_level: data?.current_level || "B1",
+        streak: data?.streak || 0,
+        total_xp: data?.total_xp || 0,
+        last_active_date: data?.last_active_date || null,
+        display_name: displayName
       }
     };
   } catch (error) {
@@ -322,9 +332,9 @@ export async function getCompletedUnitsCount() {
       .eq("user_id", user.id);
 
     if (error) {
-      return { success: true, count: count || 0 };
+      return { success: false, count: 0 };
     }
-    return { success: false, count: 0 };
+    return { success: true, count: count || 0 };
   } catch {
     return { success: false, count: 0 };
   }
@@ -383,6 +393,152 @@ export async function resetUnitProgress(unitId: string) {
     return {
       success: true,
       message: `Đã reset thành công toàn bộ tiến trình bài học ${unitId}.`
+    };
+
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    return {
+      success: false,
+      error: `Lỗi hệ thống: ${errorMessage}`
+    };
+  }
+}
+
+/**
+ * Server Action lấy thông tin Unit đang học hiện tại của người dùng.
+ */
+export async function getCurrentUnit() {
+  try {
+    const supabase = createClient();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+
+    // Đối với người dùng chưa đăng nhập, mặc định hiển thị Unit 1 với progress 0%
+    if (authError || !user) {
+      return {
+        success: true,
+        unitId: "unit-1",
+        title: "Unit 1: Greetings & Self-Introduction",
+        description: "Học cách chào hỏi cơ bản, tự giới thiệu bản thân bằng tiếng Anh và thực hành phản xạ nói Shadowing / Roleplay.",
+        currentPhase: "Pha 1: Input",
+        progress: 0,
+        completed: false,
+        route: "/learn/unit-1"
+      };
+    }
+
+    // 1. Lấy tất cả các unit đã hoàn thành của user
+    const { data: completedLessons, error: dbError } = await supabase
+      .from("user_lesson_progress")
+      .select("unit_id")
+      .eq("user_id", user.id);
+
+    if (dbError) {
+      return {
+        success: false,
+        error: `Lỗi truy vấn database: ${dbError.message}`
+      };
+    }
+
+    const completedUnitIds = completedLessons?.map(l => l.unit_id) || [];
+    const isUnit1Completed = completedUnitIds.includes("unit-1");
+    const isUnit4Completed = completedUnitIds.includes("unit-4");
+
+    // 2. Lấy danh sách từ vựng của tất cả các bài để so khớp xem thẻ nào đã được lưu
+    const allWords = [
+      ...(UNIT_VOCABULARY["unit-1"] || []).map(v => v.word.toLowerCase().trim()),
+      ...(UNIT_VOCABULARY["unit-4"] || []).map(v => v.word.toLowerCase().trim())
+    ];
+
+    const { data: userCards, error: cardsError } = await supabase
+      .from("cards")
+      .select("word")
+      .eq("user_id", user.id)
+      .in("word", allWords);
+
+    if (cardsError) {
+      console.error("Lỗi lấy danh sách thẻ:", cardsError.message);
+    }
+
+    const savedWords = new Set(userCards?.map(c => c.word.toLowerCase().trim()) || []);
+
+    // Tính toán trạng thái cho Unit 1
+    const vocab1 = UNIT_VOCABULARY["unit-1"] || [];
+    const savedCount1 = vocab1.filter(v => savedWords.has(v.word.toLowerCase().trim())).length;
+    let progress1 = 0;
+    let phase1 = "Pha 1: Input";
+    if (savedCount1 > 0) {
+      if (savedCount1 < vocab1.length) {
+        progress1 = 40;
+        phase1 = "Pha 2: Processing";
+      } else {
+        progress1 = 75;
+        phase1 = "Pha 3: Output";
+      }
+    }
+
+    const unit1Status = {
+      unitId: "unit-1",
+      title: "Unit 1: Greetings & Self-Introduction",
+      description: "Học cách chào hỏi cơ bản, tự giới thiệu bản thân bằng tiếng Anh và thực hành phản xạ nói Shadowing / Roleplay.",
+      currentPhase: isUnit1Completed ? "Hoàn thành" : phase1,
+      progress: isUnit1Completed ? 100 : progress1,
+      completed: isUnit1Completed,
+      route: "/learn/unit-1"
+    };
+
+    // Tính toán trạng thái cho Unit 4
+    const vocab4 = UNIT_VOCABULARY["unit-4"] || [];
+    const savedCount4 = vocab4.filter(v => savedWords.has(v.word.toLowerCase().trim())).length;
+    let progress4 = 0;
+    let phase4 = "Pha 1: Input";
+    if (savedCount4 > 0) {
+      if (savedCount4 < vocab4.length) {
+        progress4 = 40;
+        phase4 = "Pha 2: Processing";
+      } else {
+        progress4 = 75;
+        phase4 = "Pha 3: Output";
+      }
+    }
+
+    const unit4Status = {
+      unitId: "unit-4",
+      title: "Unit 4: Technology & Society",
+      description: "Phân tích cấu trúc câu nâng cao và ý nghĩa của động từ khuyết thiếu trong văn cảnh thời đại số. Thực hành diễn đạt ý kiến trái chiều về tiến bộ công nghệ.",
+      currentPhase: isUnit4Completed ? "Hoàn thành" : phase4,
+      progress: isUnit4Completed ? 100 : progress4,
+      completed: isUnit4Completed,
+      route: "/learn"
+    };
+
+    // 3. Quyết định unit đang học hiện tại
+    let activeUnit = unit1Status;
+
+    if (!unit1Status.completed && !unit4Status.completed) {
+      // Cả hai unit chưa hoàn thành
+      if (unit1Status.progress > 0 && unit4Status.progress > 0) {
+        // Cả hai đều đang học dở: ưu tiên cái có tiến độ thấp hơn
+        activeUnit = unit1Status.progress <= unit4Status.progress ? unit1Status : unit4Status;
+      } else if (unit1Status.progress > 0) {
+        activeUnit = unit1Status;
+      } else if (unit4Status.progress > 0) {
+        activeUnit = unit4Status;
+      } else {
+        // Cả hai đều chưa học gì: mặc định Unit 1
+        activeUnit = unit1Status;
+      }
+    } else if (!unit1Status.completed) {
+      activeUnit = unit1Status;
+    } else if (!unit4Status.completed) {
+      activeUnit = unit4Status;
+    } else {
+      // Cả hai đều đã hoàn thành: mặc định hiển thị Unit 4
+      activeUnit = unit4Status;
+    }
+
+    return {
+      success: true,
+      ...activeUnit
     };
 
   } catch (error) {
