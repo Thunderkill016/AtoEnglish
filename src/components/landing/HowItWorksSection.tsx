@@ -1,30 +1,9 @@
 "use client";
 
-import { LazyMotion, m } from "framer-motion";
 import { BookOpen, Cpu, Mic, RotateCcw } from "lucide-react";
-
-const loadFeatures = () => import("framer-motion").then((res) => res.domAnimation);
+import ScrollReveal from "@/components/ui/scroll-reveal";
 
 export default function HowItWorksSection() {
-  const fadeInUp = {
-    hidden: { opacity: 0, y: 8 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.25, ease: [0.25, 0.46, 0.45, 0.94] as const },
-    },
-  };
-
-  const cardReveal = {
-    hidden: { opacity: 0, y: 8, scale: 0.995 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      scale: 1,
-      transition: { duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] as const },
-    },
-  };
-
   const steps = [
     {
       id: "01",
@@ -64,42 +43,37 @@ export default function HowItWorksSection() {
     },
   ];
 
-  return (
-    <LazyMotion features={loadFeatures} strict>
-      <section
-        id="how-it-works"
-        className="py-20 sm:py-28 lg:py-36 px-5 sm:px-8"
-      >
-        <div className="max-w-6xl mx-auto space-y-14 sm:space-y-20">
-          {/* Section Header */}
-          <m.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "0px 0px -100px 0px" }}
-            variants={fadeInUp}
-            className="text-center space-y-4"
-          >
-            <h2 className="text-2xl sm:text-3xl lg:text-[2.75rem] font-bold tracking-tight text-zinc-900 dark:text-zinc-50 leading-tight">
-              Cách học giúp bạn nói được nhanh nhất
-            </h2>
-            <p className="text-[15px] sm:text-base lg:text-lg text-zinc-500 dark:text-zinc-400 max-w-lg mx-auto leading-relaxed">
-              Chỉ 4 bước lặp lại mỗi ngày — giúp bạn chuyển từ “học thuộc” sang “nói tự tin”.
-            </p>
-          </m.div>
+  const delays = ["", "delay-100", "delay-200", "delay-300"];
 
-          {/* 4 Cards Grid */}
-          <div
-            className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5 lg:gap-6"
-          >
-            {steps.map((step) => {
-              const Icon = step.icon;
-              return (
-                <m.div
-                  key={step.id}
-                  variants={cardReveal}
-                  initial="hidden"
-                  whileInView="visible"
-                  viewport={{ once: true, margin: "0px 0px -100px 0px" }}
+  return (
+    <section
+      id="how-it-works"
+      className="py-20 sm:py-28 lg:py-36 px-5 sm:px-8"
+    >
+      <div className="max-w-6xl mx-auto space-y-14 sm:space-y-20">
+        {/* Section Header */}
+        <ScrollReveal className="text-center space-y-4">
+          <h2 className="text-2xl sm:text-3xl lg:text-[2.75rem] font-bold tracking-tight text-zinc-900 dark:text-zinc-50 leading-tight">
+            Cách học giúp bạn nói được nhanh nhất
+          </h2>
+          <p className="text-[15px] sm:text-base lg:text-lg text-zinc-500 dark:text-zinc-400 max-w-lg mx-auto leading-relaxed">
+            Chỉ 4 bước lặp lại mỗi ngày — giúp bạn chuyển từ “học thuộc” sang “nói tự tin”.
+          </p>
+        </ScrollReveal>
+
+        {/* 4 Cards Grid */}
+        <div
+          className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5 lg:gap-6"
+        >
+          {steps.map((step, index) => {
+            const Icon = step.icon;
+            return (
+              <ScrollReveal
+                key={step.id}
+                delayClass={delays[index]}
+                className="h-full"
+              >
+                <div
                   className={`group relative flex flex-col h-full bg-gradient-to-br ${step.gradient} border border-zinc-200/60 dark:border-zinc-800/60 hover:border-emerald-500/30 dark:hover:border-emerald-500/20 p-6 sm:p-7 lg:p-8 rounded-2xl space-y-5 hover:shadow-lg hover:shadow-zinc-900/[0.04] dark:hover:shadow-black/20 hover:-translate-y-1 transition-all duration-300`}
                 >
                   <div className="flex items-center justify-between">
@@ -120,12 +94,12 @@ export default function HowItWorksSection() {
                       {step.desc}
                     </p>
                   </div>
-                </m.div>
-              );
-            })}
-          </div>
+                </div>
+              </ScrollReveal>
+            );
+          })}
         </div>
-      </section>
-    </LazyMotion>
+      </div>
+    </section>
   );
 }
