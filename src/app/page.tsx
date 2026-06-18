@@ -11,7 +11,6 @@ import {
   Mic,
   ChevronRight,
   ArrowRight,
-  Quote,
   Users,
   Target,
   Zap,
@@ -124,29 +123,7 @@ export default function LandingPage() {
     },
   ];
 
-  const testimonials = [
-    {
-      name: "Minh Anh",
-      role: "Nhân viên văn phòng, Hà Nội",
-      quote:
-        "Học 3 năm ở trung tâm mà không dám nói. Dùng AtoEnglish được 2 tuần, lần đầu tiên mình tự tin chào khách nước ngoài.",
-      avatar: "MA",
-    },
-    {
-      name: "Thanh Tùng",
-      role: "Sinh viên năm 3, TP.HCM",
-      quote:
-        "Phần Shadowing và Roleplay quá hay. Mình luyện mỗi ngày 15 phút, giờ phản xạ nói nhanh hơn hẳn.",
-      avatar: "TT",
-    },
-    {
-      name: "Hương Ly",
-      role: "Freelancer, Đà Nẵng",
-      quote:
-        "Mình thích cách app nhắc ôn từ vựng đúng lúc sắp quên. Sau 1 tháng, mình nhớ được gấp 3 lần so với trước.",
-      avatar: "HL",
-    },
-  ];
+
 
   const stats = [
     { value: "2,500+", label: "Người học" },
@@ -464,7 +441,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ===== Social Proof / Testimonials Section ===== */}
+      {/* ===== Social Proof / Science Section ===== */}
       <section className="py-20 sm:py-28 lg:py-36 px-5 sm:px-8">
         <div className="max-w-5xl mx-auto space-y-14 sm:space-y-16">
           {/* Section Header */}
@@ -473,55 +450,86 @@ export default function LandingPage() {
             whileInView="visible"
             viewport={{ once: true, margin: "-80px" }}
             variants={fadeInUp}
-            className="text-center space-y-3"
+            className="text-center space-y-4"
           >
-            <div className="flex items-center justify-center gap-2 text-emerald-600 dark:text-emerald-400 mb-2">
-              <Users className="size-5" />
-              <span className="text-sm font-semibold uppercase tracking-wider">
-                Từ cộng đồng
-              </span>
-            </div>
-            <h2 className="text-2xl sm:text-3xl lg:text-[2.75rem] font-bold tracking-tight text-zinc-900 dark:text-zinc-50 leading-tight">
-              Họ đã thay đổi cách học
+            <h2 className="text-2xl sm:text-3xl lg:text-[2.75rem] font-bold tracking-tight text-zinc-900 dark:text-zinc-50 leading-tight max-w-2xl mx-auto">
+              Được xây dựng dựa trên khoa học, dành riêng cho người Việt
             </h2>
           </motion.div>
 
-          {/* Testimonial Cards */}
+          {/* Pillars Grid */}
           <motion.div
             variants={staggerContainer}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-60px" }}
-            className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5 lg:gap-6"
+            className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8"
           >
-            {testimonials.map((t, index) => (
-              <motion.div
-                key={index}
-                variants={cardReveal}
-                className="relative flex flex-col p-6 sm:p-7 rounded-2xl border border-zinc-200/60 dark:border-zinc-800/60 bg-white dark:bg-zinc-900/60 hover:shadow-lg hover:shadow-zinc-900/[0.04] dark:hover:shadow-black/20 hover:-translate-y-1 transition-all duration-300"
-              >
-                <Quote className="size-6 text-emerald-500/30 dark:text-emerald-400/20 mb-4" />
-
-                <p className="text-sm sm:text-[15px] text-zinc-600 dark:text-zinc-300 leading-relaxed flex-1 italic">
-                  &ldquo;{t.quote}&rdquo;
+            {/* Pillar 1 */}
+            <motion.div
+              variants={cardReveal}
+              className="flex flex-col items-start p-6 sm:p-8 rounded-3xl border border-zinc-200/60 dark:border-zinc-800/60 bg-white dark:bg-zinc-900/60 hover:border-emerald-500/30 dark:hover:border-emerald-500/20 hover:shadow-lg hover:shadow-zinc-900/[0.04] dark:hover:shadow-black/20 hover:-translate-y-1 transition-all duration-300 space-y-5"
+            >
+              <span className="flex size-12 items-center justify-center rounded-2xl bg-emerald-100 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-400 group-hover:scale-110 transition-transform duration-300">
+                <Cpu className="size-6" strokeWidth={2} />
+              </span>
+              <div className="space-y-3 text-left">
+                <h3 className="text-lg font-bold text-zinc-900 dark:text-zinc-100 tracking-tight leading-snug">
+                  Phương pháp IPOR & FSRS
+                </h3>
+                <p className="text-sm sm:text-[15px] text-zinc-500 dark:text-zinc-400 leading-relaxed font-normal">
+                  Phương pháp học IPOR (Input → Processing → Output → Review) kết hợp FSRS (hệ thống ôn tập thông minh) — được chứng minh hiệu quả trong việc học ngôn ngữ.
                 </p>
+              </div>
+            </motion.div>
 
-                <div className="flex items-center gap-3 mt-5 pt-5 border-t border-zinc-100 dark:border-zinc-800/60">
-                  <span className="flex size-9 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-400 text-xs font-bold shrink-0">
-                    {t.avatar}
-                  </span>
-                  <div>
-                    <p className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 leading-tight">
-                      {t.name}
-                    </p>
-                    <p className="text-xs text-zinc-400 dark:text-zinc-500 mt-0.5">
-                      {t.role}
-                    </p>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
+            {/* Pillar 2 */}
+            <motion.div
+              variants={cardReveal}
+              className="flex flex-col items-start p-6 sm:p-8 rounded-3xl border border-zinc-200/60 dark:border-zinc-800/60 bg-white dark:bg-zinc-900/60 hover:border-emerald-500/30 dark:hover:border-emerald-500/20 hover:shadow-lg hover:shadow-zinc-900/[0.04] dark:hover:shadow-black/20 hover:-translate-y-1 transition-all duration-300 space-y-5"
+            >
+              <span className="flex size-12 items-center justify-center rounded-2xl bg-emerald-100 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-400 group-hover:scale-110 transition-transform duration-300">
+                <Users className="size-6" strokeWidth={2} />
+              </span>
+              <div className="space-y-3 text-left">
+                <h3 className="text-lg font-bold text-zinc-900 dark:text-zinc-100 tracking-tight leading-snug">
+                  Dành riêng cho người Việt
+                </h3>
+                <p className="text-sm sm:text-[15px] text-zinc-500 dark:text-zinc-400 leading-relaxed font-normal">
+                  Được thiết kế dành riêng cho người Việt bắt đầu từ con số 0, đặc biệt là những người từng học nhiều nhưng vẫn ngại nói.
+                </p>
+              </div>
+            </motion.div>
+
+            {/* Pillar 3 */}
+            <motion.div
+              variants={cardReveal}
+              className="flex flex-col items-start p-6 sm:p-8 rounded-3xl border border-zinc-200/60 dark:border-zinc-800/60 bg-white dark:bg-zinc-900/60 hover:border-emerald-500/30 dark:hover:border-emerald-500/20 hover:shadow-lg hover:shadow-zinc-900/[0.04] dark:hover:shadow-black/20 hover:-translate-y-1 transition-all duration-300 space-y-5"
+            >
+              <span className="flex size-12 items-center justify-center rounded-2xl bg-emerald-100 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-400 group-hover:scale-110 transition-transform duration-300">
+                <Sparkles className="size-6" strokeWidth={2} />
+              </span>
+              <div className="space-y-3 text-left">
+                <h3 className="text-lg font-bold text-zinc-900 dark:text-zinc-100 tracking-tight leading-snug">
+                  Đồng hành cùng phát triển
+                </h3>
+                <p className="text-sm sm:text-[15px] text-zinc-500 dark:text-zinc-400 leading-relaxed font-normal">
+                  Hiện đang trong giai đoạn phát triển cùng những người dùng đầu tiên.
+                </p>
+              </div>
+            </motion.div>
           </motion.div>
+
+          {/* Honest bottom quote */}
+          <motion.p
+            variants={fadeInUp}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-40px" }}
+            className="text-center text-xs sm:text-sm text-zinc-400 dark:text-zinc-500 max-w-2xl mx-auto leading-relaxed font-normal italic"
+          >
+            Chúng tôi đang xây dựng AtoEnglish cùng với những người học đầu tiên. Phản hồi của bạn sẽ giúp chúng tôi cải thiện sản phẩm tốt hơn.
+          </motion.p>
         </div>
       </section>
 
