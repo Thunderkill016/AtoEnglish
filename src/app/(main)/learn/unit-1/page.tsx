@@ -28,7 +28,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { saveCardToSRS } from "@/app/actions/cards";
 import { completeUnit, getUnitCompletionStatus } from "@/app/actions/progress";
-import { unit1 } from "@/lib/data/units/unit1";
+import { unit1, type DialogueLine } from "@/lib/data/units/unit1";
 import { toast } from "sonner";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -41,6 +41,16 @@ interface MatchCard {
   matchId: string;
   audioText?: string;
 }
+
+const roleplayKeywords: Record<string, string[]> = {
+  "d1-2": ["hi", "lan", "nice to meet you"],
+  "d1-4": ["vietnam", "and you"],
+  "d2-2": ["fine", "thank you", "and you"],
+  "d2-4": ["see you", "later"],
+  "d3-1": ["good morning", "teacher"],
+  "d3-3": ["my name is", "minh"],
+  "d3-5": ["nice to meet you", "too"]
+};
 
 export default function Unit1Page() {
   // Phases: input -> processing -> output -> review
@@ -73,6 +83,9 @@ export default function Unit1Page() {
   // Phase 2 (Processing) state
   const [vocabIndex, setVocabIndex] = useState<number>(0);
   const [isFlipped, setIsFlipped] = useState<boolean>(false);
+  const [vocabQueue, setVocabQueue] = useState<number[]>(() =>
+    Array.from({ length: unit1.vocab.length }, (_, i) => i)
+  );
   
   // To Be verb exercises state
   const [toBeAnswers, setToBeAnswers] = useState<Record<string, string>>({});
@@ -86,7 +99,7 @@ export default function Unit1Page() {
   const [selectedScenarioIndex, setSelectedScenarioIndex] = useState<number>(0);
   const [shadowSentenceIndex, setShadowSentenceIndex] = useState<number>(0);
   const [isRecording, setIsRecording] = useState<boolean>(false);
-  const [recordedAudioUrl, setRecordedAudioUrl] = useState<string | null>(null);
+
   const [speechTranscript, setSpeechTranscript] = useState<string>("");
   const [accuracyScore, setAccuracyScore] = useState<number | null>(null);
   const [isRecognizing, setIsRecognizing] = useState<boolean>(false);
@@ -95,6 +108,30 @@ export default function Unit1Page() {
   const [roleplayActive, setRoleplayActive] = useState<boolean>(false);
   const [userRole, setUserRole] = useState<string | null>(null);
   const [roleplayStep, setRoleplayStep] = useState<number>(0);
+
+  // Redesigned Step 3 (Output) sub-step states
+  const [outputSubStep, setOutputSubStep] = useState<number>(0); // 0: Shadowing, 1: Record & Compare, 2: Roleplay
+
+  // 1. Shadowing Practice states
+  const [isPlayingModelAudio, setIsPlayingModelAudio] = useState<boolean>(false);
+  const [isPlayingShadowingUserAudio, setIsPlayingShadowingUserAudio] = useState<boolean>(false);
+  const [recordedShadowingAudioUrl, setRecordedShadowingAudioUrl] = useState<string | null>(null);
+  const [shadowingLineIdx, setShadowingLineIdx] = useState<number>(-1);
+  const [shadowingSpeed, setShadowingSpeed] = useState<number>(1.0); // 0.8, 1.0, 1.2
+
+  // 2. Record & Compare states
+  const [selectedCompareLineIdx, setSelectedCompareLineIdx] = useState<number>(0);
+  const [compareUserAudioUrl, setCompareUserAudioUrl] = useState<string | null>(null);
+  const [isPlayingCompareModelAudio, setIsPlayingCompareModelAudio] = useState<boolean>(false);
+  const [isPlayingCompareUserAudio, setIsPlayingCompareUserAudio] = useState<boolean>(false);
+  const [compareUserScore, setCompareUserScore] = useState<number | null>(null);
+  const [compareUserTranscript, setCompareUserTranscript] = useState<string>("");
+
+  // 3. Simple Roleplay states
+  const [speechKeywordsMatched, setSpeechKeywordsMatched] = useState<string[]>([]);
+  const isPointerDownRef = useRef<boolean>(false);
+  const pointerStartRef = useRef<number>(0);
+
 
   // Phase 4 (Review) state
   const [quizAnswers, setQuizAnswers] = useState<Record<string, string>>({});
@@ -149,9 +186,13 @@ export default function Unit1Page() {
         if (activePhase === "input" && inputSubStep === 1) {
           targetText = unit1.matchingGreetings[shadowBasicIndex].en;
         } else if (activePhase === "output") {
-          targetText = roleplayActive
-            ? activeScenario.lines[roleplayStep].text
-            : activeScenario.lines[shadowSentenceIndex].text;
+          if (outputSubStep === 0) {
+            targetText = shadowingLineIdx >= 0 ? activeScenario.lines[shadowingLineIdx].text : "";
+          } else if (outputSubStep === 1) {
+            targetText = activeScenario.lines[selectedCompareLineIdx].text;
+          } else if (outputSubStep === 2) {
+            targetText = activeScenario.lines[roleplayStep].text;
+          }
         }
         
         if (targetText) {
@@ -161,6 +202,20 @@ export default function Unit1Page() {
           if (activePhase === "input" && inputSubStep === 1) {
             setShadowBasicScores(prev => ({ ...prev, [shadowBasicIndex]: score }));
             setShadowBasicTranscripts(prev => ({ ...prev, [shadowBasicIndex]: resultText }));
+          }
+
+          if (activePhase === "output") {
+            if (outputSubStep === 1) {
+              setCompareUserScore(score);
+              setCompareUserTranscript(resultText);
+            } else if (outputSubStep === 2) {
+              const lineId = activeScenario.lines[roleplayStep].id;
+              const expectedKeywords = roleplayKeywords[lineId] || [];
+              const matched = expectedKeywords.filter(kw => 
+                resultText.toLowerCase().includes(kw.toLowerCase())
+              );
+              setSpeechKeywordsMatched(matched);
+            }
           }
 
           if (score >= 80) {
@@ -189,7 +244,7 @@ export default function Unit1Page() {
 
       recognitionRef.current = rec;
     }
-  }, [shadowSentenceIndex, roleplayActive, roleplayStep, selectedScenarioIndex, activeScenario.lines, activePhase, inputSubStep, shadowBasicIndex]);
+  }, [shadowSentenceIndex, roleplayActive, roleplayStep, selectedScenarioIndex, activeScenario.lines, activePhase, inputSubStep, shadowBasicIndex, outputSubStep, shadowingLineIdx, selectedCompareLineIdx]);
 
   // Clean up timers on unmount
   useEffect(() => {
@@ -363,7 +418,6 @@ export default function Unit1Page() {
 
   // Recording audio logic
   const handleStartRecording = async () => {
-    setRecordedAudioUrl(null);
     audioChunksRef.current = [];
 
     try {
@@ -378,9 +432,8 @@ export default function Unit1Page() {
       };
 
       mediaRecorder.onstop = () => {
-        const audioBlob = new Blob(audioChunksRef.current, { type: "audio/webm" });
-        const audioUrl = URL.createObjectURL(audioBlob);
-        setRecordedAudioUrl(audioUrl);
+        const _audioBlob = new Blob(audioChunksRef.current, { type: "audio/webm" });
+        void _audioBlob; // blob constructed for potential future use
         // Stop stream tracks
         stream.getTracks().forEach((track) => track.stop());
       };
@@ -411,12 +464,7 @@ export default function Unit1Page() {
     }
   };
 
-  const handlePlayUserAudio = () => {
-    if (recordedAudioUrl) {
-      const audio = new Audio(recordedAudioUrl);
-      audio.play();
-    }
-  };
+
 
   // Roleplay logic
   const startRoleplay = (role: string) => {
@@ -466,6 +514,287 @@ export default function Unit1Page() {
       toast.info(`Đến lượt bạn. Hãy đọc to câu của ${userRole}.`);
     }
   };
+
+  // --- REDESIGNED PHASE 3 (OUTPUT) HELPER FUNCTIONS ---
+
+  const playFullDialogueTTS = (
+    lines: DialogueLine[],
+    speed: number,
+    onLineChange: (idx: number) => void,
+    onEnd: () => void
+  ) => {
+    if (typeof window === "undefined" || !window.speechSynthesis) {
+      toast.error("Trình duyệt không hỗ trợ phát âm âm thanh (TTS).");
+      onEnd();
+      return;
+    }
+    window.speechSynthesis.cancel();
+    let currentLine = 0;
+
+    const playNext = () => {
+      if (currentLine >= lines.length) {
+        onEnd();
+        return;
+      }
+      onLineChange(currentLine);
+      const line = lines[currentLine];
+      const utterance = new SpeechSynthesisUtterance(line.text);
+      utterance.lang = "en-US";
+      utterance.rate = speed;
+      utterance.onend = () => {
+        currentLine++;
+        setTimeout(playNext, 1000);
+      };
+      utterance.onerror = () => {
+        currentLine++;
+        setTimeout(playNext, 1000);
+      };
+      window.speechSynthesis.speak(utterance);
+    };
+
+    playNext();
+  };
+
+  const startShadowingSession = async () => {
+    setSpeechTranscript("");
+    setAccuracyScore(null);
+    setRecordedShadowingAudioUrl(null);
+    audioChunksRef.current = [];
+    setShadowingLineIdx(0);
+    setIsPlayingModelAudio(true);
+
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const mediaRecorder = new MediaRecorder(stream);
+      mediaRecorderRef.current = mediaRecorder;
+
+      mediaRecorder.ondataavailable = (event) => {
+        if (event.data.size > 0) {
+          audioChunksRef.current.push(event.data);
+        }
+      };
+
+      mediaRecorder.onstop = () => {
+        const audioBlob = new Blob(audioChunksRef.current, { type: "audio/webm" });
+        const audioUrl = URL.createObjectURL(audioBlob);
+        setRecordedShadowingAudioUrl(audioUrl);
+        stream.getTracks().forEach((track) => track.stop());
+      };
+
+      mediaRecorder.start();
+      setIsRecording(true);
+
+      if (recognitionRef.current) {
+        try {
+          recognitionRef.current.start();
+        } catch {}
+      }
+
+      playFullDialogueTTS(
+        activeScenario.lines,
+        shadowingSpeed,
+        (idx) => {
+          setShadowingLineIdx(idx);
+        },
+        () => {
+          setIsPlayingModelAudio(false);
+          setShadowingLineIdx(-1);
+          if (mediaRecorderRef.current && mediaRecorderRef.current.state !== "inactive") {
+            mediaRecorderRef.current.stop();
+          }
+          setIsRecording(false);
+          if (recognitionRef.current) {
+            recognitionRef.current.stop();
+          }
+          toast.success("Đã hoàn thành Shadowing! Bấm 'Nghe lại' hoặc 'Làm lại'.");
+        }
+      );
+    } catch {
+      toast.error("Không thể mở micro. Vui lòng kiểm tra cài đặt.");
+      setIsPlayingModelAudio(false);
+      setShadowingLineIdx(-1);
+    }
+  };
+
+  const stopShadowingSession = () => {
+    if (typeof window !== "undefined") {
+      window.speechSynthesis.cancel();
+    }
+    setIsPlayingModelAudio(false);
+    setShadowingLineIdx(-1);
+    if (mediaRecorderRef.current && mediaRecorderRef.current.state !== "inactive") {
+      mediaRecorderRef.current.stop();
+    }
+    setIsRecording(false);
+    if (recognitionRef.current) {
+      recognitionRef.current.stop();
+    }
+  };
+
+  const playShadowingOriginal = () => {
+    setIsPlayingModelAudio(true);
+    playFullDialogueTTS(
+      activeScenario.lines,
+      shadowingSpeed,
+      (idx) => {
+        setShadowingLineIdx(idx);
+      },
+      () => {
+        setIsPlayingModelAudio(false);
+        setShadowingLineIdx(-1);
+      }
+    );
+  };
+
+  const playShadowingUserAudio = () => {
+    if (recordedShadowingAudioUrl) {
+      setIsPlayingShadowingUserAudio(true);
+      const audio = new Audio(recordedShadowingAudioUrl);
+      audio.onended = () => setIsPlayingShadowingUserAudio(false);
+      audio.play();
+    }
+  };
+
+  const playCompareModelAudio = () => {
+    setIsPlayingCompareModelAudio(true);
+    const text = activeScenario.lines[selectedCompareLineIdx].text;
+    if (typeof window !== "undefined" && window.speechSynthesis) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = "en-US";
+      utterance.rate = playbackSpeed;
+      utterance.onend = () => setIsPlayingCompareModelAudio(false);
+      utterance.onerror = () => setIsPlayingCompareModelAudio(false);
+      window.speechSynthesis.speak(utterance);
+    } else {
+      setIsPlayingCompareModelAudio(false);
+    }
+  };
+
+  const startCompareRecording = async () => {
+    setCompareUserAudioUrl(null);
+    setCompareUserScore(null);
+    setCompareUserTranscript("");
+    audioChunksRef.current = [];
+
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const mediaRecorder = new MediaRecorder(stream);
+      mediaRecorderRef.current = mediaRecorder;
+
+      mediaRecorder.ondataavailable = (event) => {
+        if (event.data.size > 0) {
+          audioChunksRef.current.push(event.data);
+        }
+      };
+
+      mediaRecorder.onstop = () => {
+        const audioBlob = new Blob(audioChunksRef.current, { type: "audio/webm" });
+        const audioUrl = URL.createObjectURL(audioBlob);
+        setCompareUserAudioUrl(audioUrl);
+        stream.getTracks().forEach((track) => track.stop());
+      };
+
+      mediaRecorder.start();
+      setIsRecording(true);
+      toast.info("Đang ghi âm... Hãy đọc to câu mẫu.");
+
+      if (recognitionRef.current) {
+        try {
+          recognitionRef.current.start();
+        } catch {}
+      }
+    } catch {
+      toast.error("Không thể mở micro. Vui lòng kiểm tra cài đặt.");
+    }
+  };
+
+  const stopCompareRecording = () => {
+    if (mediaRecorderRef.current && isRecording) {
+      mediaRecorderRef.current.stop();
+      setIsRecording(false);
+      toast.success("Đã dừng ghi âm.");
+    }
+    if (recognitionRef.current && isRecognizing) {
+      recognitionRef.current.stop();
+    }
+  };
+
+  const playCompareUserAudio = () => {
+    if (compareUserAudioUrl) {
+      setIsPlayingCompareUserAudio(true);
+      const audio = new Audio(compareUserAudioUrl);
+      audio.onended = () => setIsPlayingCompareUserAudio(false);
+      audio.play();
+    }
+  };
+
+  const startRoleplayRecording = async () => {
+    setSpeechTranscript("");
+    setAccuracyScore(null);
+    setSpeechKeywordsMatched([]);
+    audioChunksRef.current = [];
+
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const mediaRecorder = new MediaRecorder(stream);
+      mediaRecorderRef.current = mediaRecorder;
+
+      mediaRecorder.ondataavailable = (event) => {
+        if (event.data.size > 0) {
+          audioChunksRef.current.push(event.data);
+        }
+      };
+
+      mediaRecorder.onstop = () => {
+        stream.getTracks().forEach((track) => track.stop());
+      };
+
+      mediaRecorder.start();
+      setIsRecording(true);
+
+      if (recognitionRef.current) {
+        try {
+          recognitionRef.current.start();
+        } catch {}
+      }
+    } catch {
+      toast.error("Không thể mở micro. Vui lòng kiểm tra cài đặt.");
+    }
+  };
+
+  const stopRoleplayRecording = () => {
+    if (mediaRecorderRef.current && isRecording) {
+      mediaRecorderRef.current.stop();
+      setIsRecording(false);
+    }
+    if (recognitionRef.current && isRecognizing) {
+      recognitionRef.current.stop();
+    }
+  };
+
+  const handleRoleplayMicDown = (e: React.PointerEvent) => {
+    e.preventDefault();
+    if (isRecording) {
+      stopRoleplayRecording();
+      isPointerDownRef.current = false;
+      return;
+    }
+    isPointerDownRef.current = true;
+    pointerStartRef.current = Date.now();
+    startRoleplayRecording();
+  };
+
+  const handleRoleplayMicUp = (e: React.PointerEvent) => {
+    e.preventDefault();
+    if (!isPointerDownRef.current) return;
+    isPointerDownRef.current = false;
+    const duration = Date.now() - pointerStartRef.current;
+    if (duration > 500) {
+      stopRoleplayRecording();
+    }
+  };
+
 
   // Review & Submit
   const handleSaveToSRS = async (word: string, phonetic: string, meaning: string, example: string) => {
@@ -1029,123 +1358,164 @@ export default function Unit1Page() {
                 className="rounded-3xl border border-zinc-100 dark:border-zinc-800 bg-white p-6 sm:p-8 space-y-8 shadow-sm"
               >
                 {/* Micro-Phase 2.1: Vocabulary Flashcard */}
-                <div className="space-y-4">
-                  <div className="pb-4 border-b border-zinc-100 flex items-center justify-between">
-                    <h3 className="font-bold text-lg text-foreground flex items-center gap-2">
-                      <Cpu className="size-5 text-emerald-600" />
-                      Bài tập 2.1: Flashcards từ vựng ({vocabIndex + 1}/{unit1.vocab.length})
-                    </h3>
-                  </div>
-                  
-                  <div className="flex flex-col items-center gap-4">
-                    {/* Flippable Card */}
-                    <div 
-                      onClick={() => setIsFlipped(!isFlipped)}
-                      className="w-full max-w-sm h-48 [perspective:1000px] cursor-pointer"
-                    >
-                      <div className={`relative w-full h-full text-center transition-transform duration-500 [transform-style:preserve-3d] ${isFlipped ? "[transform:rotateY(180deg)]" : ""}`}>
-                        {/* Front Side */}
-                        <div className="absolute inset-0 w-full h-full bg-muted/30 border border-zinc-100 rounded-2xl flex flex-col items-center justify-center p-6 [backface-visibility:hidden]">
-                          <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-100 uppercase tracking-wider mb-2">
-                            {unit1.vocab[vocabIndex].word.toUpperCase()}
-                          </span>
-                          <h4 className="text-xl font-black text-foreground uppercase tracking-tight">
-                            {unit1.vocab[vocabIndex].word}
-                          </h4>
-                          <p className="text-xs text-zinc-500 italic mt-1 font-mono font-normal">
-                            {unit1.vocab[vocabIndex].phonetic}
-                          </p>
-                          <span className="text-[10px] text-zinc-400 font-bold mt-6 uppercase tracking-wider">
-                            Chạm để xem nghĩa tiếng Việt
-                          </span>
-                        </div>
-                        {/* Back Side */}
-                        <div className="absolute inset-0 w-full h-full bg-emerald-600 border border-emerald-700 text-white rounded-2xl flex flex-col items-center justify-center p-6 [backface-visibility:hidden] [transform:rotateY(180deg)]">
-                          <h4 className="text-xs font-bold uppercase tracking-wider">Ý nghĩa:</h4>
-                          <p className="text-lg font-black mt-1">
-                            {unit1.vocab[vocabIndex].meaning}
-                          </p>
-                          
-                          <div className="mt-4 max-w-xs text-[11px] text-emerald-50 opacity-90 leading-relaxed italic bg-emerald-700/50 p-2 rounded-lg">
-                            Ex: {unit1.vocab[vocabIndex].example}
+                {(() => {
+                  const currentVocabItem = unit1.vocab[vocabQueue[vocabIndex]];
+                  if (!currentVocabItem) return null;
+
+                  return (
+                    <div className="space-y-4">
+                      <div className="pb-4 border-b border-zinc-100 dark:border-zinc-800 flex items-center justify-between">
+                        <h3 className="font-bold text-lg text-foreground flex items-center gap-2">
+                          <Cpu className="size-5 text-emerald-600 dark:text-emerald-400" />
+                          Bài tập 2.1: Flashcards từ vựng (Thẻ {vocabIndex + 1}/{vocabQueue.length})
+                        </h3>
+                      </div>
+                      
+                      <div className="flex flex-col items-center gap-4">
+                        {/* Flippable Card */}
+                        <div 
+                          onClick={() => setIsFlipped(!isFlipped)}
+                          className="w-full max-w-sm h-52 [perspective:1000px] cursor-pointer"
+                        >
+                          <div className={`relative w-full h-full text-center transition-transform duration-500 [transform-style:preserve-3d] ${isFlipped ? "[transform:rotateY(180deg)]" : ""}`}>
+                            {/* Front Side */}
+                            <div className="absolute inset-0 w-full h-full bg-zinc-50 dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800/80 rounded-2xl flex flex-col items-center justify-center p-6 [backface-visibility:hidden]">
+                              <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-100 dark:bg-emerald-950/20 dark:text-emerald-300 dark:border-emerald-800/50 uppercase tracking-wider mb-2">
+                                {currentVocabItem.word.toUpperCase()}
+                              </span>
+                              <h4 className="text-xl font-black text-foreground uppercase tracking-tight">
+                                {currentVocabItem.word}
+                              </h4>
+                              <p className="text-xs text-zinc-500 italic mt-1 font-mono font-normal">
+                                {currentVocabItem.phonetic}
+                              </p>
+                              
+                              {/* Audio button inside card front */}
+                              <Button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  playTTS(currentVocabItem.word);
+                                }}
+                                variant="outline"
+                                size="sm"
+                                className="mt-4 rounded-xl gap-1.5 h-9 font-semibold hover:text-emerald-600 hover:bg-emerald-50 dark:border-zinc-800 dark:hover:bg-zinc-800"
+                              >
+                                <Volume2 className="size-4" /> Phát âm
+                              </Button>
+                              
+                              <span className="text-[10px] text-zinc-400 font-bold mt-4 uppercase tracking-wider">
+                                Chạm để xem nghĩa tiếng Việt
+                              </span>
+                            </div>
+
+                            {/* Back Side */}
+                            <div className="absolute inset-0 w-full h-full bg-emerald-600 border border-emerald-700 text-white rounded-2xl flex flex-col items-center justify-center p-6 [backface-visibility:hidden] [transform:rotateY(180deg)]">
+                              <h4 className="text-xs font-bold uppercase tracking-wider opacity-85">Ý nghĩa:</h4>
+                              <p className="text-lg font-black mt-1">
+                                {currentVocabItem.meaning}
+                              </p>
+                              
+                              <div className="mt-4 max-w-xs text-[11px] text-emerald-50 opacity-95 leading-relaxed italic bg-emerald-700/50 p-2.5 rounded-lg border border-emerald-500/30">
+                                Ex: {currentVocabItem.example}
+                              </div>
+                              
+                              <span className="text-[10px] text-emerald-200 font-bold mt-4 uppercase tracking-wider">
+                                Chạm để quay lại mặt trước
+                              </span>
+                            </div>
                           </div>
+                        </div>
+
+                        {/* Nav controls & learning state buttons */}
+                        <div className="flex flex-wrap items-center justify-center gap-3">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            disabled={vocabIndex === 0}
+                            onClick={() => {
+                              setVocabIndex(prev => prev - 1);
+                              setIsFlipped(false);
+                            }}
+                            className="rounded-lg border-zinc-100 dark:border-zinc-850 h-9"
+                          >
+                            Trước
+                          </Button>
+
+                          {/* Chưa thuộc button */}
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              const currentItemIndex = vocabQueue[vocabIndex];
+                              setVocabQueue(prev => [...prev, currentItemIndex]);
+                              setIsFlipped(false);
+                              if (vocabIndex < vocabQueue.length - 1) {
+                                setVocabIndex(prev => prev + 1);
+                              }
+                              toast.info("Đã đưa từ này vào cuối để ôn lại.");
+                            }}
+                            className="rounded-lg h-9 border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700 dark:border-red-950 dark:text-red-400 dark:hover:bg-red-950/20 font-semibold"
+                          >
+                            Chưa thuộc
+                          </Button>
+
+                          {/* Tôi đã thuộc button */}
+                          {(() => {
+                            const item = currentVocabItem;
+                            const isAdded = addedVocab.includes(item.word);
+                            const isSaving = savingVocab === item.word;
+
+                            return (
+                              <Button
+                                size="sm"
+                                disabled={isAdded || isSaving}
+                                onClick={async (e) => {
+                                  e.stopPropagation();
+                                  await handleSaveToSRS(item.word, item.phonetic, item.meaning, item.example);
+                                  setTimeout(() => {
+                                    if (vocabIndex < vocabQueue.length - 1) {
+                                      setVocabIndex(prev => prev + 1);
+                                      setIsFlipped(false);
+                                    } else {
+                                      toast.success("Tuyệt vời! Bạn đã thuộc toàn bộ từ vựng.");
+                                    }
+                                  }, 1000);
+                                }}
+                                className={`rounded-lg h-9 gap-1 text-xs font-bold ${
+                                  isAdded 
+                                    ? "bg-emerald-100 text-emerald-800 hover:bg-emerald-100 dark:bg-emerald-950 dark:text-emerald-300" 
+                                    : "bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs"
+                                }`}
+                              >
+                                {isSaving ? (
+                                  <Loader2 className="size-3 animate-spin" />
+                                ) : isAdded ? (
+                                  <span className="flex items-center gap-0.5"><Check className="size-3.5" /> Đã thuộc</span>
+                                ) : (
+                                  "Tôi đã thuộc"
+                                )}
+                              </Button>
+                            );
+                          })()}
+
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            disabled={vocabIndex === vocabQueue.length - 1}
+                            onClick={() => {
+                              setVocabIndex(prev => prev + 1);
+                              setIsFlipped(false);
+                            }}
+                            className="rounded-lg border-zinc-100 dark:border-zinc-850 h-9"
+                          >
+                            Tiếp
+                          </Button>
                         </div>
                       </div>
                     </div>
-
-                    {/* Nav controls & Speak word */}
-                    <div className="flex flex-wrap items-center justify-center gap-3">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        disabled={vocabIndex === 0}
-                        onClick={() => {
-                          setVocabIndex(prev => prev - 1);
-                          setIsFlipped(false);
-                        }}
-                        className="rounded-lg border-zinc-100 h-9"
-                      >
-                        Trước
-                      </Button>
-
-                      <Button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          playTTS(unit1.vocab[vocabIndex].word);
-                        }}
-                        variant="outline"
-                        size="sm"
-                        className="rounded-lg gap-1.5 h-9 font-semibold hover:text-emerald-600 hover:bg-emerald-50 border-zinc-100"
-                      >
-                        <Volume2 className="size-4" /> Phát âm
-                      </Button>
-
-                      {/* Tôi đã thuộc button */}
-                      {(() => {
-                        const item = unit1.vocab[vocabIndex];
-                        const isAdded = addedVocab.includes(item.word);
-                        const isSaving = savingVocab === item.word;
-
-                        return (
-                          <Button
-                            size="sm"
-                            disabled={isAdded || isSaving}
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleSaveToSRS(item.word, item.phonetic, item.meaning, item.example);
-                            }}
-                            className={`rounded-lg h-9 gap-1 text-xs font-bold ${
-                              isAdded 
-                                ? "bg-emerald-100 text-emerald-800 hover:bg-emerald-100" 
-                                : "bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs"
-                            }`}
-                          >
-                            {isSaving ? (
-                              <Loader2 className="size-3 animate-spin" />
-                            ) : isAdded ? (
-                              <span className="flex items-center gap-0.5"><Check className="size-3.5" /> Đã thuộc</span>
-                            ) : (
-                              "Tôi đã thuộc"
-                            )}
-                          </Button>
-                        );
-                      })()}
-
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        disabled={vocabIndex === unit1.vocab.length - 1}
-                        onClick={() => {
-                          setVocabIndex(prev => prev + 1);
-                          setIsFlipped(false);
-                        }}
-                        className="rounded-lg border-zinc-100 h-9"
-                      >
-                        Tiếp
-                      </Button>
-                    </div>
-                  </div>
-                </div>
+                  );
+                })()}
 
                 {/* Micro-Phase 2.2: Fill in the Blank (Cloze Test) */}
                 <div className="space-y-4 pt-6 border-t border-zinc-100">
@@ -1303,14 +1673,18 @@ export default function Unit1Page() {
                         onClick={() => {
                           setSelectedScenarioIndex(idx);
                           setShadowSentenceIndex(0);
-                          setRecordedAudioUrl(null);
                           setSpeechTranscript("");
                           setAccuracyScore(null);
+                          setSelectedCompareLineIdx(0);
+                          setCompareUserAudioUrl(null);
+                          setCompareUserScore(null);
+                          setCompareUserTranscript("");
+                          setSpeechKeywordsMatched([]);
                         }}
                         className={`p-3 text-left border rounded-xl transition-all text-xs font-bold flex flex-col justify-between ${
                           selectedScenarioIndex === idx
-                            ? "bg-emerald-50/50 border-emerald-500 text-emerald-950"
-                            : "bg-white border-zinc-100 hover:bg-zinc-50/50"
+                            ? "bg-emerald-50/50 border-emerald-500 text-emerald-950 dark:bg-emerald-950/20 dark:border-emerald-800 dark:text-emerald-300"
+                            : "bg-white border-zinc-100 dark:bg-zinc-950 dark:border-zinc-800 hover:bg-zinc-50/50"
                         } ${roleplayActive ? "opacity-50 cursor-not-allowed" : ""}`}
                       >
                         <span className="font-bold truncate">{sc.title}</span>
@@ -1320,304 +1694,565 @@ export default function Unit1Page() {
                   </div>
                 </div>
 
-                {/* Part 1: Advanced Shadowing & Recording */}
-                {!roleplayActive ? (
-                  <div className="space-y-6">
-                    <div className="pb-4 border-b border-zinc-100 flex items-center justify-between">
-                      <div>
-                        <h3 className="font-bold text-base text-foreground flex items-center gap-2">
-                          <PenTool className="size-5 text-emerald-600" />
-                          Bài tập 3.1 & 3.2: Shadowing & Ghi âm so sánh
-                        </h3>
-                        <p className="text-xs text-muted-foreground mt-1">
-                          Nghe mẫu, đọc to để máy ghi nhận và chấm điểm, sau đó bấm &ldquo;Nghe lại&rdquo; để tự đánh giá giọng đọc:
-                        </p>
-                      </div>
+                {/* Sub-steps Selector */}
+                <div className="flex border border-zinc-100 dark:border-zinc-850 rounded-2xl p-1 bg-zinc-50 dark:bg-zinc-900/40 overflow-x-auto whitespace-nowrap scrollbar-none">
+                  {[
+                    { id: 0, label: "Shadowing Practice", icon: Play },
+                    { id: 1, label: "Record & Compare", icon: Mic },
+                    { id: 2, label: "Interactive Roleplay", icon: MessageCircle },
+                  ].map((sub) => {
+                    const Icon = sub.icon;
+                    return (
+                      <button
+                        key={sub.id}
+                        onClick={() => {
+                          setOutputSubStep(sub.id);
+                          stopShadowingSession();
+                          setRecordedShadowingAudioUrl(null);
+                          setCompareUserAudioUrl(null);
+                          setCompareUserScore(null);
+                          setCompareUserTranscript("");
+                          setSpeechKeywordsMatched([]);
+                        }}
+                        className={`flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-xl text-xs font-bold transition-all ${
+                          outputSubStep === sub.id
+                            ? "bg-white dark:bg-zinc-800 shadow-xs text-emerald-600 dark:text-emerald-400 border border-zinc-100/50 dark:border-zinc-700/50"
+                            : "text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 hover:bg-zinc-100/50"
+                        }`}
+                      >
+                        <Icon className="size-4 shrink-0" />
+                        <span>{sub.label}</span>
+                      </button>
+                    );
+                  })}
+                </div>
 
-                      <div className="flex items-center gap-1.5 border border-zinc-100 rounded-lg overflow-hidden text-xs">
-                        {[1.0, 0.8].map((s) => (
-                          <button
-                            key={s}
-                            onClick={() => setPlaybackSpeed(s)}
-                            className={`px-2 py-1 font-bold ${
-                              playbackSpeed === s ? "bg-emerald-600 text-white" : "bg-white text-zinc-500"
+                {/* Sub-step 3.1: Shadowing Practice */}
+                {outputSubStep === 0 && (
+                  <div className="space-y-6">
+                    <div className="bg-zinc-50 dark:bg-zinc-900/50 border border-zinc-100 dark:border-zinc-800/80 rounded-2xl p-4 flex flex-col gap-1">
+                      <h4 className="font-bold text-sm text-foreground">
+                        Shadowing Practice: {activeScenario.title}
+                      </h4>
+                      <p className="text-xs text-zinc-500 font-normal">
+                        {activeScenario.desc} — Hãy đọc đồng thời cùng với giọng nói của người bản xứ để luyện ngữ điệu, tốc độ.
+                      </p>
+                    </div>
+
+                    <div className="space-y-3 max-h-[300px] overflow-y-auto p-2 border border-zinc-100 dark:border-zinc-800/80 rounded-2xl scrollbar-thin">
+                      {activeScenario.lines.map((line: DialogueLine, idx: number) => {
+                        const isActive = shadowingLineIdx === idx;
+                        return (
+                          <div
+                            key={line.id}
+                            className={`p-3 rounded-xl border transition-all flex gap-3 ${
+                              isActive
+                                ? "bg-emerald-50/20 dark:bg-emerald-500/10 border-emerald-500 ring-2 ring-emerald-500/10"
+                                : "bg-white dark:bg-zinc-950 border-zinc-100 dark:border-zinc-800"
                             }`}
                           >
-                            {s}x
+                            <span className={`flex size-7 shrink-0 items-center justify-center rounded-full text-xs font-bold ${
+                              line.speaker === "Alex" || line.speaker === "Bob" || line.speaker === "Mr. Brown" || line.speaker === "A"
+                                ? "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300"
+                                : "bg-pink-100 text-pink-800 dark:bg-pink-900/30 dark:text-pink-300"
+                            }`}>
+                              {line.speaker[0]}
+                            </span>
+                            <div className="flex-1 min-w-0">
+                              <div className="flex justify-between items-center mb-0.5">
+                                <span className="font-bold text-[10px] text-zinc-400 dark:text-zinc-500">
+                                  {line.speaker}
+                                </span>
+                              </div>
+                              <p className={`text-xs sm:text-sm font-semibold ${
+                                isActive ? "text-emerald-700 dark:text-emerald-300" : "text-foreground"
+                              }`}>
+                                {line.text}
+                              </p>
+                              <p className="text-[10px] text-zinc-400 dark:text-zinc-500 mt-0.5">
+                                {line.translation}
+                              </p>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+
+                    {isRecording && (
+                      <div className="flex items-center justify-center gap-1 py-4 h-12">
+                        <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider mr-3 animate-pulse">
+                          Đang ghi âm và phát mẫu
+                        </span>
+                        {[...Array(6)].map((_, i) => (
+                          <div
+                            key={i}
+                            className={`w-1 rounded bg-emerald-500 animate-pulse`}
+                            style={{
+                              height: `${[16, 32, 24, 40, 20, 28][i]}px`,
+                              animationDelay: `${i * 150}ms`,
+                              animationDuration: "800ms"
+                            }}
+                          />
+                        ))}
+                      </div>
+                    )}
+
+                    <div className="flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-zinc-100 dark:border-zinc-800">
+                      <div className="flex items-center gap-1">
+                        <span className="text-[10px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider mr-2">Tốc độ:</span>
+                        {[0.8, 1.0, 1.2].map((sp) => (
+                          <button
+                            key={sp}
+                            disabled={isRecording}
+                            onClick={() => setShadowingSpeed(sp)}
+                            className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all ${
+                              shadowingSpeed === sp
+                                ? "bg-zinc-900 text-white dark:bg-zinc-800"
+                                : "bg-zinc-100 text-zinc-500 dark:bg-zinc-900 dark:text-zinc-400 hover:bg-zinc-200"
+                            } ${isRecording ? "opacity-50 cursor-not-allowed" : ""}`}
+                          >
+                            {sp}x
+                          </button>
+                        ))}
+                      </div>
+
+                      <div className="flex items-center gap-2">
+                        {!isRecording ? (
+                          <Button
+                            disabled={isPlayingModelAudio}
+                            onClick={startShadowingSession}
+                            className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-5 py-2.5 rounded-xl flex items-center gap-2 shadow-xs"
+                          >
+                            <Play className="size-4" /> Bắt đầu Shadowing
+                          </Button>
+                        ) : (
+                          <Button
+                            onClick={stopShadowingSession}
+                            variant="destructive"
+                            className="font-bold text-xs px-5 py-2.5 rounded-xl flex items-center gap-2 shadow-xs"
+                          >
+                            <Pause className="size-4" /> Dừng Shadowing
+                          </Button>
+                        )}
+                      </div>
+                    </div>
+
+                    {recordedShadowingAudioUrl && !isRecording && (
+                      <div className="bg-zinc-50 dark:bg-zinc-900/40 p-4 border border-zinc-100 dark:border-zinc-800/80 rounded-2xl flex flex-wrap items-center justify-center gap-3">
+                        <Button
+                          onClick={playShadowingOriginal}
+                          variant="outline"
+                          size="sm"
+                          className="rounded-xl border-zinc-200 text-xs font-bold gap-1.5 h-10 hover:bg-zinc-100"
+                        >
+                          <Volume2 className="size-4" /> Nghe lại Mẫu
+                        </Button>
+                        
+                        <Button
+                          onClick={playShadowingUserAudio}
+                          variant="outline"
+                          size="sm"
+                          className={`rounded-xl border-zinc-200 text-xs font-bold gap-1.5 h-10 hover:bg-zinc-100 ${
+                            isPlayingShadowingUserAudio ? "ring-2 ring-emerald-500 text-emerald-600 bg-emerald-50/10" : ""
+                          }`}
+                        >
+                          {isPlayingShadowingUserAudio ? (
+                            <>
+                              <Loader2 className="size-4 animate-spin text-emerald-600" />
+                              Đang phát...
+                            </>
+                          ) : (
+                            <>
+                              <Play className="size-4" /> Bản ghi của bạn
+                            </>
+                          )}
+                        </Button>
+
+                        <Button
+                          onClick={startShadowingSession}
+                          size="sm"
+                          className="rounded-xl bg-zinc-900 hover:bg-zinc-800 text-white text-xs font-bold h-10"
+                        >
+                          Làm lại
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* Sub-step 3.2: Record & Compare */}
+                {outputSubStep === 1 && (
+                  <div className="grid gap-6 md:grid-cols-[180px_1fr]">
+                    <div className="space-y-1.5 md:border-r md:border-zinc-100 md:dark:border-zinc-800 md:pr-4">
+                      <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider block mb-2">Chọn câu thoại:</span>
+                      <div className="flex md:flex-col gap-1.5 overflow-x-auto md:overflow-x-visible pb-2 md:pb-0 scrollbar-none">
+                        {activeScenario.lines.map((line: DialogueLine, idx: number) => (
+                          <button
+                            key={line.id}
+                            onClick={() => {
+                              setSelectedCompareLineIdx(idx);
+                              setCompareUserAudioUrl(null);
+                              setCompareUserScore(null);
+                              setCompareUserTranscript("");
+                              stopCompareRecording();
+                            }}
+                            className={`px-3 py-2 text-left rounded-xl text-xs font-bold transition-all shrink-0 md:shrink-1 truncate ${
+                              selectedCompareLineIdx === idx
+                                ? "bg-emerald-50/50 border border-emerald-500/30 text-emerald-950 dark:bg-emerald-950 dark:text-emerald-300"
+                                : "bg-white border border-zinc-100 dark:bg-zinc-950 dark:border-zinc-800 text-zinc-500 hover:bg-zinc-50"
+                            }`}
+                          >
+                            Câu {idx + 1}: {line.text}
                           </button>
                         ))}
                       </div>
                     </div>
 
-                    {/* Sentence selector & player */}
-                    <div className="p-5 rounded-2xl bg-muted/20 border border-zinc-100 space-y-4">
-                      <div className="flex justify-between items-center">
-                        <span className="text-xs font-bold text-zinc-500">
-                          Câu thoại {shadowSentenceIndex + 1}/{activeScenario.lines.length}
+                    <div className="space-y-6">
+                      <div className="bg-zinc-50 dark:bg-zinc-900/50 border border-zinc-100 dark:border-zinc-800/80 p-5 rounded-2xl text-center space-y-2">
+                        <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-100 uppercase tracking-wider">
+                          Câu {selectedCompareLineIdx + 1}
                         </span>
-                        <div className="flex border border-zinc-100 rounded-lg overflow-hidden text-[10px]">
-                          {activeScenario.lines.map((_, idx) => (
-                            <button
-                              key={idx}
-                              onClick={() => {
-                                setShadowSentenceIndex(idx);
-                                setRecordedAudioUrl(null);
-                                setSpeechTranscript("");
-                                setAccuracyScore(null);
-                              }}
-                              className={`px-2.5 py-1 font-bold ${
-                                shadowSentenceIndex === idx
-                                  ? "bg-emerald-600 text-white"
-                                  : "bg-white text-zinc-500 hover:bg-zinc-50"
-                              }`}
+                        <h4 className="text-lg font-black text-foreground">
+                          &ldquo;{activeScenario.lines[selectedCompareLineIdx].text}&rdquo;
+                        </h4>
+                        <p className="text-xs text-zinc-500 font-normal">
+                          {activeScenario.lines[selectedCompareLineIdx].translation}
+                        </p>
+                      </div>
+
+                      <div className="flex flex-col items-center justify-center p-6 border border-zinc-100 dark:border-zinc-800/80 rounded-2xl bg-white dark:bg-zinc-950 space-y-6">
+                        <div className="flex items-center gap-4">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={playCompareModelAudio}
+                            className={`rounded-xl h-10 gap-1.5 border-zinc-200 text-xs font-bold ${
+                              isPlayingCompareModelAudio ? "ring-2 ring-emerald-500 text-emerald-600 bg-emerald-50/10" : ""
+                            }`}
+                          >
+                            {isPlayingCompareModelAudio ? (
+                              <>
+                                <Loader2 className="size-4 animate-spin text-emerald-600" />
+                                Mẫu phát...
+                              </>
+                            ) : (
+                              <>
+                                <Volume2 className="size-4" /> Nghe Audio Mẫu
+                              </>
+                            )}
+                          </Button>
+
+                          {!isRecording ? (
+                            <Button
+                              onClick={startCompareRecording}
+                              className="size-14 rounded-full bg-red-500 hover:bg-red-600 text-white flex items-center justify-center shadow-md active:scale-95 transition-all shrink-0"
                             >
-                                {idx + 1}
+                              <Mic className="size-6" />
+                            </Button>
+                          ) : (
+                            <Button
+                              onClick={stopCompareRecording}
+                              className="size-14 rounded-full bg-zinc-950 hover:bg-zinc-900 text-white flex items-center justify-center shadow-md animate-pulse active:scale-95 transition-all shrink-0"
+                            >
+                              <div className="size-4 rounded bg-white" />
+                            </Button>
+                          )}
+                        </div>
+
+                        <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider">
+                          {isRecording ? "Đang lắng nghe... Hãy nói to câu trên" : "Ấn nút Mic đỏ để tự ghi âm so sánh"}
+                        </span>
+
+                        {compareUserAudioUrl && (
+                          <div className="w-full grid gap-4 sm:grid-cols-2 pt-4 border-t border-zinc-100 dark:border-zinc-800">
+                            <div className="p-4 border border-zinc-100 dark:border-zinc-800 rounded-xl space-y-3 bg-zinc-50/50 dark:bg-zinc-900/30">
+                              <div className="flex items-center justify-between">
+                                <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider">Giọng bản xứ (Mẫu)</span>
+                                <Button
+                                  size="sm"
+                                  variant="ghost"
+                                  onClick={playCompareModelAudio}
+                                  className="size-7 p-0 rounded-full hover:bg-zinc-200"
+                                >
+                                  <Volume2 className="size-4 text-emerald-600" />
+                                </Button>
+                              </div>
+                              <div className="flex items-end justify-center gap-0.5 h-10">
+                                {[...Array(15)].map((_, i) => (
+                                  <div
+                                    key={i}
+                                    className="w-1 bg-emerald-500 rounded-t"
+                                    style={{ height: `${[20, 35, 15, 25, 40, 10, 30, 20, 15, 35, 25, 10, 30, 15, 25][i]}%` }}
+                                  />
+                                ))}
+                              </div>
+                            </div>
+
+                            <div className="p-4 border border-zinc-100 dark:border-zinc-800 rounded-xl space-y-3 bg-zinc-50/50 dark:bg-zinc-900/30">
+                              <div className="flex items-center justify-between">
+                                <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider">Bản ghi của bạn</span>
+                                <Button
+                                  size="sm"
+                                  variant="ghost"
+                                  onClick={playCompareUserAudio}
+                                  className={`size-7 p-0 rounded-full hover:bg-zinc-200 ${
+                                    isPlayingCompareUserAudio ? "bg-zinc-100" : ""
+                                  }`}
+                                >
+                                  {isPlayingCompareUserAudio ? (
+                                    <Loader2 className="size-4 animate-spin text-emerald-600" />
+                                  ) : (
+                                    <Play className="size-4 text-blue-600" />
+                                  )}
+                                </Button>
+                              </div>
+                              <div className="flex items-end justify-center gap-0.5 h-10">
+                                {[...Array(15)].map((_, i) => (
+                                  <div
+                                    key={i}
+                                    className="w-1 bg-blue-500 rounded-t"
+                                    style={{ height: `${[15, 25, 30, 10, 35, 20, 15, 40, 25, 10, 30, 20, 15, 35, 20][i]}%` }}
+                                  />
+                                ))}
+                              </div>
+                            </div>
+                          </div>
+                        )}
+
+                        {compareUserTranscript && (
+                          <div className="w-full p-4 border border-zinc-100 dark:border-zinc-800 rounded-xl bg-zinc-50/30 space-y-2">
+                            <div className="flex justify-between items-center text-xs">
+                              <span className="font-bold text-zinc-400 uppercase tracking-wider text-[10px]">Máy nhận diện:</span>
+                              {compareUserScore !== null && (
+                                <span className={`font-black text-sm ${
+                                  compareUserScore >= 80 ? "text-emerald-600" : compareUserScore >= 50 ? "text-amber-500" : "text-red-500"
+                                }`}>
+                                  Độ khớp: {compareUserScore}%
+                                </span>
+                              )}
+                            </div>
+                            <p className="text-sm font-semibold italic text-foreground">
+                              &ldquo;{compareUserTranscript}&rdquo;
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Sub-step 3.3: Interactive Roleplay */}
+                {outputSubStep === 2 && (
+                  <div className="space-y-6">
+                    {!roleplayActive ? (
+                      <div className="text-center py-6 space-y-4">
+                        <div className="space-y-1">
+                          <h4 className="font-bold text-sm text-foreground">Chọn vai của bạn để nhập vai:</h4>
+                          <p className="text-xs text-zinc-500 max-w-sm mx-auto font-normal">
+                            Bạn sẽ hội thoại trực tiếp với Bot bằng cách đọc câu thoại tương ứng của nhân vật mình chọn.
+                          </p>
+                        </div>
+                        
+                        <div className="flex flex-wrap justify-center gap-3">
+                          {Array.from(new Set(activeScenario.lines.map((l: DialogueLine) => l.speaker))).map((sp: string) => (
+                            <button
+                              key={sp}
+                              onClick={() => startRoleplay(sp)}
+                              className="px-5 py-3 border border-zinc-200 hover:border-emerald-500 hover:bg-emerald-50/30 rounded-2xl text-xs font-bold transition-all flex flex-col items-center gap-2 min-w-[120px] bg-white dark:bg-zinc-950 dark:border-zinc-800"
+                            >
+                              <span className="flex size-10 items-center justify-center rounded-full bg-emerald-50 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300 font-bold text-sm uppercase">
+                                {sp[0]}
+                              </span>
+                              <span>Đóng vai {sp}</span>
                             </button>
                           ))}
                         </div>
                       </div>
-
-                      <div className="text-center py-2 space-y-1">
-                        <p className="text-lg font-black text-foreground">
-                          &ldquo;{activeScenario.lines[shadowSentenceIndex].text}&rdquo;
-                        </p>
-                        <p className="text-xs text-muted-foreground font-normal">
-                          {activeScenario.lines[shadowSentenceIndex].translation}
-                        </p>
-                      </div>
-
-                      <div className="flex justify-center gap-2">
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => playTTS(activeScenario.lines[shadowSentenceIndex].text, playbackSpeed)}
-                          className="rounded-lg h-9 gap-1.5 border-zinc-200 text-xs font-semibold"
-                        >
-                          <Volume2 className="size-4" /> Phát âm mẫu
-                        </Button>
-                      </div>
-                    </div>
-
-                    {/* Recording & Accuracy panel */}
-                    <div className="flex flex-col items-center justify-center p-6 border border-zinc-100 rounded-2xl bg-muted/10 space-y-5">
-                      <div className="flex items-center gap-4">
-                        {!isRecording ? (
-                          <Button
-                            onClick={handleStartRecording}
-                            className="size-16 rounded-full bg-red-500 hover:bg-red-600 text-white flex items-center justify-center shadow-md active:scale-95 transition-all"
-                          >
-                            <Mic className="size-7" />
-                          </Button>
-                        ) : (
-                          <Button
-                            onClick={handleStopRecording}
-                            className="size-16 rounded-full bg-zinc-950 hover:bg-zinc-900 text-white flex items-center justify-center shadow-md animate-pulse active:scale-95 transition-all"
-                          >
-                            <div className="size-5 rounded bg-white" />
-                          </Button>
-                        )}
-                      </div>
-
-                      <div className="text-center">
-                        <p className="text-xs text-muted-foreground font-semibold">
-                          {isRecording ? "Đang lắng nghe... Hãy nói đi!" : isRecognizing ? "Đang nhận diện..." : "Click nút Mic đỏ để bắt đầu ghi âm luyện nói"}
-                        </p>
-                      </div>
-
-                      {/* User audio playback */}
-                      {recordedAudioUrl && (
-                        <div className="flex items-center gap-2 p-2 rounded-xl bg-emerald-50 border border-emerald-100">
-                          <span className="text-xs font-bold text-emerald-800 px-2">Ghi âm của bạn:</span>
+                    ) : (
+                      <div className="space-y-4">
+                        <div className="pb-3 border-b border-zinc-100 dark:border-zinc-800 flex justify-between items-center">
+                          <div>
+                            <span className="text-[10px] font-bold text-emerald-700 uppercase tracking-wider bg-emerald-50 px-2 py-0.5 rounded border border-emerald-100">
+                              Hội thoại: {activeScenario.title}
+                            </span>
+                            <p className="text-xs text-zinc-500 mt-1">
+                              Bạn đang đóng vai **{userRole}**.
+                            </p>
+                          </div>
                           <Button
                             size="sm"
-                            onClick={handlePlayUserAudio}
-                            className="rounded-lg h-8 gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold"
+                            variant="ghost"
+                            onClick={() => {
+                              setRoleplayActive(false);
+                              setUserRole(null);
+                            }}
+                            className="text-xs text-red-500 hover:text-red-700 hover:bg-red-50 font-bold rounded-lg"
                           >
-                            <Play className="size-3.5" /> Nghe lại & So sánh
+                            Hủy/Đóng
                           </Button>
                         </div>
-                      )}
 
-                      {/* Web Speech Transcript & Accuracy Score */}
-                      {(speechTranscript || accuracyScore !== null) && (
-                        <div className="w-full max-w-md p-4 rounded-xl border border-zinc-100 bg-white space-y-3">
-                          {speechTranscript && (
-                            <div className="space-y-1">
-                              <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400">Từ nhận diện được:</span>
-                              <p className="text-sm font-semibold italic text-foreground">&ldquo;{speechTranscript}&rdquo;</p>
-                            </div>
-                          )}
-                          
-                          {accuracyScore !== null && (
-                            <div className="flex items-center justify-between pt-2 border-t border-zinc-50">
-                              <span className="text-xs font-bold text-zinc-500">Điểm phát âm chính xác:</span>
-                              <span className={`text-base font-black ${
-                                accuracyScore >= 80 
-                                  ? "text-emerald-600" 
-                                  : accuracyScore >= 50
-                                  ? "text-amber-500"
-                                  : "text-red-500"
-                              }`}>
-                                {accuracyScore}%
-                              </span>
-                            </div>
-                          )}
-                        </div>
-                      )}
-                    </div>
+                        <div className="space-y-3 bg-zinc-50/50 dark:bg-zinc-900/30 p-4 border border-zinc-100 dark:border-zinc-800/80 rounded-2xl max-h-[320px] overflow-y-auto scrollbar-thin">
+                          {activeScenario.lines.map((line: DialogueLine, idx: number) => {
+                            if (idx > roleplayStep) return null;
+                            const isUserTurn = line.speaker === userRole;
+                            const isCurrent = idx === roleplayStep;
 
-                    {/* Button trigger roleplay */}
-                    <div className="pt-4 flex justify-center">
-                      <Button
-                        onClick={() => {
-                          const playerRole = activeScenario.lines[1].speaker;
-                          startRoleplay(playerRole);
-                        }}
-                        variant="outline"
-                        className="rounded-xl border-emerald-200 text-emerald-700 hover:bg-emerald-50 h-11 px-5 font-bold gap-2"
-                      >
-                        <MessageCircle className="size-4.5" /> Bắt đầu bài tập 3.3: Nhập vai hội thoại này (Roleplay)
-                      </Button>
-                    </div>
-                  </div>
-                ) : (
-                  // Roleplay simulation mode
-                  <div className="space-y-6">
-                    <div className="pb-4 border-b border-zinc-100 flex justify-between items-center">
-                      <div>
-                        <h3 className="font-bold text-lg text-foreground flex items-center gap-2">
-                          <MessageCircle className="size-5 text-emerald-600" />
-                          Bài tập 3.3: Nhập vai đối thoại ({roleplayStep + 1}/{activeScenario.lines.length})
-                        </h3>
-                        <p className="text-xs text-muted-foreground mt-1">
-                          Bạn đóng vai **{userRole}**. Đọc to câu thoại của bạn để đối thoại với Bot.
-                        </p>
-                      </div>
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        onClick={() => setRoleplayActive(false)}
-                        className="text-xs text-red-500 hover:text-red-700 hover:bg-red-50 font-bold"
-                      >
-                        Thoát
-                      </Button>
-                    </div>
-
-                    {/* Active roleplay steps */}
-                    <div className="space-y-5">
-                      <div className="space-y-3 bg-muted/10 p-5 rounded-2xl border border-zinc-100">
-                        {activeScenario.lines.map((line, idx) => {
-                          if (idx > roleplayStep) return null;
-                          const isUserTurn = line.speaker === userRole;
-                          const isCurrent = idx === roleplayStep;
-
-                          return (
-                            <div
-                              key={line.id}
-                              className={`p-3.5 rounded-xl border flex gap-3 ${
-                                isUserTurn 
-                                  ? "bg-emerald-50/20 border-emerald-100 ml-6" 
-                                  : "bg-blue-50/20 border-blue-100 mr-6"
-                              } ${isCurrent ? "ring-2 ring-emerald-500/30" : ""}`}
-                            >
-                              <span className={`flex size-7 shrink-0 items-center justify-center rounded-full text-xs font-bold ${
-                                line.speaker === "Alex" || line.speaker === "Bob" || line.speaker === "Mr. Brown" || line.speaker === "A"
-                                  ? "bg-blue-100 text-blue-800" 
-                                  : "bg-pink-100 text-pink-800"
-                              }`}>
-                                {line.speaker[0]}
-                              </span>
-                              
-                              <div className="flex-1 min-w-0 space-y-1">
-                                <div className="flex justify-between items-center">
-                                  <span className="font-bold text-[10px] text-muted-foreground">
-                                    {line.speaker} {isUserTurn ? "(Bạn)" : "(Máy)"}
-                                  </span>
-                                  {!isUserTurn && isCurrent && (
-                                    <button 
-                                      onClick={() => playTTS(line.text, playbackSpeed)}
-                                      className="size-5 rounded bg-muted border flex items-center justify-center text-zinc-500"
-                                    >
-                                      <Volume2 className="size-3" />
-                                    </button>
+                            return (
+                              <div
+                                key={line.id}
+                                className={`p-3 rounded-xl border flex gap-3 transition-all ${
+                                  isUserTurn
+                                    ? "bg-emerald-50/30 border-emerald-200/50 dark:bg-emerald-950/20 dark:border-emerald-800/30 ml-6"
+                                    : "bg-blue-50/30 border-blue-200/50 dark:bg-blue-950/20 dark:border-blue-800/30 mr-6"
+                                } ${isCurrent ? "ring-2 ring-emerald-500/30" : ""}`}
+                              >
+                                <span className={`flex size-7 shrink-0 items-center justify-center rounded-full text-xs font-bold ${
+                                  isUserTurn
+                                    ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-300"
+                                    : "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300"
+                                }`}>
+                                  {line.speaker[0]}
+                                </span>
+                                
+                                <div className="flex-1 min-w-0">
+                                  <div className="flex justify-between items-center mb-0.5">
+                                    <span className="font-bold text-[10px] text-zinc-400">
+                                      {line.speaker} {isUserTurn ? "(Bạn)" : "(Bot)"}
+                                    </span>
+                                    {!isUserTurn && isCurrent && (
+                                      <button
+                                        onClick={() => playTTS(line.text, playbackSpeed)}
+                                        className="size-5 rounded hover:bg-zinc-200 flex items-center justify-center text-zinc-500 transition-colors"
+                                      >
+                                        <Volume2 className="size-3" />
+                                      </button>
+                                    )}
+                                  </div>
+                                  <p className="text-xs sm:text-sm font-semibold text-foreground">
+                                    {line.text}
+                                  </p>
+                                  {(!isCurrent || !isUserTurn) && (
+                                    <p className="text-[10px] text-zinc-400 dark:text-zinc-500 font-normal mt-0.5">
+                                      {line.translation}
+                                    </p>
                                   )}
                                 </div>
-                                <p className="text-xs sm:text-sm font-semibold text-foreground">
-                                  {line.text}
-                                </p>
-                                {(!isCurrent || !isUserTurn) && (
-                                  <p className="text-[10px] text-muted-foreground font-normal">
-                                    {line.translation}
-                                  </p>
-                                )}
                               </div>
-                            </div>
-                          );
-                        })}
-                      </div>
+                            );
+                          })}
+                        </div>
 
-                      {/* User speaking controller for current step */}
-                      {activeScenario.lines[roleplayStep].speaker === userRole ? (
-                        <div className="flex flex-col items-center p-4 border border-emerald-100 bg-emerald-50/10 rounded-xl space-y-4">
-                          <p className="text-xs font-bold text-emerald-800">
-                            Đọc câu của bạn ở trên, bấm mic để nói:
-                          </p>
-                          
-                          <div className="flex items-center gap-3">
-                            {!isRecording ? (
-                              <Button
-                                onClick={handleStartRecording}
-                                className="h-10 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs gap-1.5 px-4 shadow-sm"
-                              >
-                                <Mic className="size-4" /> Nói câu này
-                              </Button>
-                            ) : (
-                              <Button
-                                onClick={handleStopRecording}
-                                className="h-10 rounded-xl bg-zinc-900 hover:bg-zinc-950 text-white font-bold text-xs gap-1.5 px-4 animate-pulse"
-                              >
-                                <Pause className="size-4" /> Dừng & Check
-                              </Button>
-                            )}
+                        <div className="border border-zinc-100 dark:border-zinc-800 p-4 rounded-2xl bg-white dark:bg-zinc-950 space-y-4 shadow-xs">
+                          {activeScenario.lines[roleplayStep].speaker === userRole ? (
+                            <div className="space-y-4">
+                              {(() => {
+                                const currentLine = activeScenario.lines[roleplayStep];
+                                const expectedKws = roleplayKeywords[currentLine?.id] || [];
+                                
+                                if (expectedKws.length === 0) return null;
+                                
+                                return (
+                                  <div className="space-y-1.5">
+                                    <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider block">Từ khóa cần đọc:</span>
+                                    <div className="flex flex-wrap gap-1.5">
+                                      {expectedKws.map((kw) => {
+                                        const isMatched = speechKeywordsMatched.includes(kw);
+                                        return (
+                                          <span
+                                            key={kw}
+                                            className={`text-[10px] font-bold px-2 py-0.5 rounded-md border flex items-center gap-1 transition-all ${
+                                              isMatched
+                                                ? "bg-emerald-50 border-emerald-200 text-emerald-800 dark:bg-emerald-950 dark:border-emerald-850 dark:text-emerald-300"
+                                                : "bg-zinc-50 border-zinc-200 text-zinc-400 dark:bg-zinc-900 dark:border-zinc-800"
+                                            }`}
+                                          >
+                                            {isMatched ? <Check className="size-3" /> : null}
+                                            {kw}
+                                          </span>
+                                        );
+                                      })}
+                                    </div>
+                                  </div>
+                                );
+                              })()}
 
-                            {accuracyScore !== null && accuracyScore >= 50 && (
-                              <Button
-                                onClick={nextRoleplayStep}
-                                className="h-10 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-white font-bold text-xs gap-1 px-4"
-                              >
-                                Câu tiếp theo <ChevronRight className="size-3.5" />
-                              </Button>
-                            )}
-                          </div>
+                              <div className="flex flex-col items-center gap-3 py-2">
+                                <button
+                                  onPointerDown={handleRoleplayMicDown}
+                                  onPointerUp={handleRoleplayMicUp}
+                                  className={`size-16 rounded-full flex items-center justify-center text-white shadow-md active:scale-95 transition-all select-none cursor-pointer touch-none ${
+                                    isRecording
+                                      ? "bg-red-500 animate-pulse ring-4 ring-red-100 dark:ring-red-950/30"
+                                      : "bg-emerald-600 hover:bg-emerald-700"
+                                  }`}
+                                >
+                                  <Mic className="size-7" />
+                                </button>
+                                <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider text-center">
+                                  {isRecording ? "Đang ghi âm... Nhả chuột/nhấc tay để dừng" : "Nhấn giữ (hoặc click) Mic để nói"}
+                                </span>
+                              </div>
 
-                          {speechTranscript && (
-                            <div className="text-center space-y-1">
-                              <p className="text-xs italic text-zinc-500">
-                                Nhận diện: &ldquo;{speechTranscript}&rdquo;
-                              </p>
-                              {accuracyScore !== null && (
-                                <p className="text-xs font-bold text-emerald-800">
-                                  Độ chính xác: {accuracyScore}% {accuracyScore >= 50 ? "✅ Đạt" : "❌ Thử lại"}
-                                </p>
+                              {speechTranscript && (
+                                <div className="p-3 border border-zinc-100 dark:border-zinc-800 rounded-xl bg-zinc-50/50 dark:bg-zinc-900/30 text-center space-y-1">
+                                  <p className="text-xs italic text-zinc-500">
+                                    Nhận diện: &ldquo;{speechTranscript}&rdquo;
+                                  </p>
+                                  {accuracyScore !== null && (
+                                    <p className={`text-xs font-bold ${accuracyScore >= 50 ? "text-emerald-600" : "text-red-500"}`}>
+                                      Khớp {accuracyScore}% — {accuracyScore >= 50 ? "✅ Đạt yêu cầu!" : "❌ Thử nói lại nhé"}
+                                    </p>
+                                  )}
+                                </div>
                               )}
+
+                              {accuracyScore !== null && accuracyScore >= 50 && (
+                                <div className="flex justify-center">
+                                  <Button
+                                    onClick={nextRoleplayStep}
+                                    className="rounded-xl bg-zinc-900 hover:bg-zinc-800 text-white font-bold h-10 px-5 gap-1 text-xs"
+                                  >
+                                    <span>Câu tiếp theo</span>
+                                    <ChevronRight className="size-3.5" />
+                                  </Button>
+                                </div>
+                              )}
+                            </div>
+                          ) : (
+                            <div className="space-y-4 text-center py-2">
+                              <div className="flex items-center justify-center gap-1">
+                                <span className="text-xs text-zinc-500 font-semibold animate-pulse">Bot đang phản hồi...</span>
+                              </div>
+                              <div className="flex justify-center">
+                                <Button
+                                  onClick={nextRoleplayStep}
+                                  className="rounded-xl bg-zinc-900 hover:bg-zinc-800 text-white font-bold h-10 px-5 gap-1 text-xs"
+                                >
+                                  <span>Tiếp tục hội thoại</span>
+                                  <ChevronRight className="size-3.5" />
+                                </Button>
+                              </div>
                             </div>
                           )}
                         </div>
-                      ) : (
-                        // Bot turn display next button
-                        <div className="flex justify-center">
-                          <Button
-                            onClick={nextRoleplayStep}
-                            className="rounded-xl bg-zinc-900 hover:bg-zinc-800 text-white font-bold h-10 px-5 gap-1 text-xs"
-                          >
-                            <span>Tiếp tục hội thoại</span>
-                            <ChevronRight className="size-3.5" />
-                          </Button>
-                        </div>
-                      )}
-                    </div>
+                      </div>
+                    )}
                   </div>
                 )}
+
+                {/* Stepper Phase Navigation */}
+                <div className="pt-6 border-t border-zinc-100 dark:border-zinc-800 flex justify-between gap-4">
+                  <Button onClick={() => handlePhaseChange("processing")} variant="outline" className="rounded-xl h-11 px-5 gap-1.5 border-zinc-200">
+                    <ArrowLeft className="size-4" />
+                    <span>Quay lại Processing</span>
+                  </Button>
+                  <Button onClick={() => handlePhaseChange("review")} className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl gap-1.5 font-semibold h-11 px-5 shadow-sm">
+                    <span>Tiếp tục: Review</span>
+                    <ArrowRight className="size-4" />
+                  </Button>
+                </div>
               </motion.div>
             )}
 
