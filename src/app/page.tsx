@@ -37,11 +37,11 @@ export default function LandingPage() {
   // --- Animation Variants ---
 
   const fadeInUp = {
-    hidden: { opacity: 0, y: 12 },
+    hidden: { opacity: 0, y: 8 },
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.35, ease: [0.25, 0.46, 0.45, 0.94] as const },
+      transition: { duration: 0.25, ease: [0.25, 0.46, 0.45, 0.94] as const },
     },
   };
 
@@ -57,12 +57,12 @@ export default function LandingPage() {
   };
 
   const cardReveal = {
-    hidden: { opacity: 0, y: 12, scale: 0.99 },
+    hidden: { opacity: 0, y: 8, scale: 0.995 },
     visible: {
       opacity: 1,
       y: 0,
       scale: 1,
-      transition: { duration: 0.35, ease: [0.25, 0.46, 0.45, 0.94] as const },
+      transition: { duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] as const },
     },
   };
 
@@ -269,7 +269,7 @@ export default function LandingPage() {
       <m.section
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, margin: "-80px" }}
+        viewport={{ once: true, margin: "0px 0px -100px 0px" }}
         variants={staggerContainer}
         className="bg-zinc-50 dark:bg-zinc-900/10 border-y border-zinc-200/50 dark:border-zinc-800/50 py-24 sm:py-32 px-5 sm:px-8"
       >
@@ -322,7 +322,7 @@ export default function LandingPage() {
           <m.div
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true, margin: "-80px" }}
+            viewport={{ once: true, margin: "0px 0px -100px 0px" }}
             variants={fadeInUp}
             className="text-center space-y-4"
           >
@@ -346,7 +346,7 @@ export default function LandingPage() {
                   variants={cardReveal}
                   initial="hidden"
                   whileInView="visible"
-                  viewport={{ once: true, margin: "-60px" }}
+                  viewport={{ once: true, margin: "0px 0px -100px 0px" }}
                   className={`group relative flex flex-col h-full bg-gradient-to-br ${step.gradient} border border-zinc-200/60 dark:border-zinc-800/60 hover:border-emerald-500/30 dark:hover:border-emerald-500/20 p-6 sm:p-7 lg:p-8 rounded-2xl space-y-5 hover:shadow-lg hover:shadow-zinc-900/[0.04] dark:hover:shadow-black/20 hover:-translate-y-1 transition-all duration-300`}
                 >
                   <div className="flex items-center justify-between">
@@ -381,7 +381,7 @@ export default function LandingPage() {
           <m.div
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true, margin: "-80px" }}
+            viewport={{ once: true, margin: "0px 0px -100px 0px" }}
             variants={fadeInUp}
             className="text-center space-y-4"
           >
@@ -402,7 +402,7 @@ export default function LandingPage() {
                   variants={cardReveal}
                   initial="hidden"
                   whileInView="visible"
-                  viewport={{ once: true, margin: "-60px" }}
+                  viewport={{ once: true, margin: "0px 0px -100px 0px" }}
                   className="flex flex-col items-start p-6 sm:p-8 rounded-3xl border border-zinc-200/60 dark:border-zinc-800/60 bg-white dark:bg-zinc-900/60 hover:border-emerald-500/30 dark:hover:border-emerald-500/20 hover:shadow-lg hover:shadow-zinc-900/[0.04] dark:hover:shadow-black/20 hover:-translate-y-1 transition-all duration-300 space-y-5"
                 >
                   <span className="flex size-12 items-center justify-center rounded-2xl bg-emerald-100 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-400 group-hover:scale-110 transition-transform duration-300">
@@ -430,7 +430,7 @@ export default function LandingPage() {
           <m.div
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true, margin: "-80px" }}
+            viewport={{ once: true, margin: "0px 0px -100px 0px" }}
             variants={fadeInUp}
             className="text-center space-y-4"
           >
@@ -448,7 +448,7 @@ export default function LandingPage() {
               variants={cardReveal}
               initial="hidden"
               whileInView="visible"
-              viewport={{ once: true, margin: "-60px" }}
+              viewport={{ once: true, margin: "0px 0px -100px 0px" }}
               className="flex flex-col items-start p-6 sm:p-8 rounded-3xl border border-zinc-200/60 dark:border-zinc-800/60 bg-white dark:bg-zinc-900/60 hover:border-emerald-500/30 dark:hover:border-emerald-500/20 hover:shadow-lg hover:shadow-zinc-900/[0.04] dark:hover:shadow-black/20 hover:-translate-y-1 transition-all duration-300 space-y-5"
             >
               <span className="flex size-12 items-center justify-center rounded-2xl bg-emerald-100 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-400 group-hover:scale-110 transition-transform duration-300">
@@ -469,7 +469,7 @@ export default function LandingPage() {
               variants={cardReveal}
               initial="hidden"
               whileInView="visible"
-              viewport={{ once: true, margin: "-60px" }}
+              viewport={{ once: true, margin: "0px 0px -100px 0px" }}
               className="flex flex-col items-start p-6 sm:p-8 rounded-3xl border border-zinc-200/60 dark:border-zinc-800/60 bg-white dark:bg-zinc-900/60 hover:border-emerald-500/30 dark:hover:border-emerald-500/20 hover:shadow-lg hover:shadow-zinc-900/[0.04] dark:hover:shadow-black/20 hover:-translate-y-1 transition-all duration-300 space-y-5"
             >
               <span className="flex size-12 items-center justify-center rounded-2xl bg-emerald-100 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-400 group-hover:scale-110 transition-transform duration-300">
@@ -490,7 +490,7 @@ export default function LandingPage() {
               variants={cardReveal}
               initial="hidden"
               whileInView="visible"
-              viewport={{ once: true, margin: "-60px" }}
+              viewport={{ once: true, margin: "0px 0px -100px 0px" }}
               className="flex flex-col items-start p-6 sm:p-8 rounded-3xl border border-zinc-200/60 dark:border-zinc-800/60 bg-white dark:bg-zinc-900/60 hover:border-emerald-500/30 dark:hover:border-emerald-500/20 hover:shadow-lg hover:shadow-zinc-900/[0.04] dark:hover:shadow-black/20 hover:-translate-y-1 transition-all duration-300 space-y-5"
             >
               <span className="flex size-12 items-center justify-center rounded-2xl bg-emerald-100 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-400 group-hover:scale-110 transition-transform duration-300">
@@ -512,7 +512,7 @@ export default function LandingPage() {
             variants={fadeInUp}
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true, margin: "-40px" }}
+            viewport={{ once: true, margin: "0px 0px -100px 0px" }}
             className="text-center text-xs sm:text-sm text-zinc-400 dark:text-zinc-500 max-w-2xl mx-auto leading-relaxed font-normal italic"
           >
             Chúng tôi đang xây dựng AtoEnglish cùng với những người học đầu tiên. Phản hồi của bạn sẽ giúp chúng tôi cải thiện sản phẩm tốt hơn.
@@ -524,7 +524,7 @@ export default function LandingPage() {
       <m.section
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, margin: "-80px" }}
+        viewport={{ once: true, margin: "0px 0px -100px 0px" }}
         variants={staggerContainer}
         className="relative py-24 sm:py-32 lg:py-40 px-5 sm:px-8 overflow-hidden"
       >
