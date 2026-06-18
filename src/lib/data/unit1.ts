@@ -25,6 +25,7 @@ export interface MatchingGreeting {
   id: string;
   en: string;
   vn: string;
+  emoji: string;
 }
 
 export interface ToBeExercise {
@@ -43,11 +44,19 @@ export interface ClozeItem {
   full_sentence: string;
 }
 
+export interface ListenAndChooseItem {
+  id: string;
+  audio_text: string;
+  options: string[];
+  answer: string;
+}
+
 export interface QuizQuestion {
   id: string;
   question: string;
   options: string[];
   answer: string;
+  type: "multiple-choice" | "cloze";
 }
 
 export interface UnitData {
@@ -66,6 +75,7 @@ export interface UnitData {
   }[];
   toBeExercises: ToBeExercise[];
   cloze: ClozeItem[];
+  listenAndChoose: ListenAndChooseItem[];
   quiz: QuizQuestion[];
 }
 
@@ -174,14 +184,14 @@ export const UNIT_1_DATA: UnitData = {
     },
   ],
   matchingGreetings: [
-    { id: "m1", en: "Hello", vn: "Xin chào" },
-    { id: "m2", en: "Hi", vn: "Chào (thân mật)" },
-    { id: "m3", en: "Good morning", vn: "Chào buổi sáng" },
-    { id: "m4", en: "Good afternoon", vn: "Chào buổi chiều" },
-    { id: "m5", en: "Good evening", vn: "Chào buổi tối" },
-    { id: "m6", en: "Goodbye", vn: "Tạm biệt" },
-    { id: "m7", en: "Bye", vn: "Tạm biệt (thân mật)" },
-    { id: "m8", en: "See you later", vn: "Hẹn gặp lại sau" },
+    { id: "m1", en: "Hello", vn: "Xin chào", emoji: "👋" },
+    { id: "m2", en: "Hi", vn: "Chào (thân mật)", emoji: "😊" },
+    { id: "m3", en: "Good morning", vn: "Chào buổi sáng", emoji: "☀️" },
+    { id: "m4", en: "Good afternoon", vn: "Chào buổi chiều", emoji: "🌅" },
+    { id: "m5", en: "Good evening", vn: "Chào buổi tối", emoji: "🌙" },
+    { id: "m6", en: "Goodbye", vn: "Tạm biệt", emoji: "🚶‍♂️" },
+    { id: "m7", en: "Bye", vn: "Tạm biệt (thân mật)", emoji: "👋" },
+    { id: "m8", en: "See you later", vn: "Hẹn gặp lại sau", emoji: "⏰" },
   ],
   dialogueScenarios: [
     {
@@ -289,7 +299,7 @@ export const UNIT_1_DATA: UnitData = {
       ],
     },
     {
-      title: "2. Tính từ sở hữu (Possessive Adjectives)",
+      title: "2. Tính từ sở hữu (Possessive Acjectives)",
       explanation: "Dùng để chỉ sự sở hữu của một ai đó đối với người hoặc vật.",
       examples: [
         { en: "My name is Linh.", vn: "Tên của tôi là Linh." },
@@ -301,28 +311,42 @@ export const UNIT_1_DATA: UnitData = {
     {
       id: "tb1",
       sentence_before: "I ",
-      sentence_after: " a student.",
+      sentence_after: " Lan.",
       options: ["am", "is", "are"],
       answer: "am",
     },
     {
       id: "tb2",
       sentence_before: "She ",
-      sentence_after: " from Vietnam.",
+      sentence_after: " from Japan.",
       options: ["am", "is", "are"],
       answer: "is",
     },
     {
       id: "tb3",
       sentence_before: "They ",
-      sentence_after: " nice friends.",
+      sentence_after: " my friends.",
       options: ["am", "is", "are"],
       answer: "are",
     },
     {
       id: "tb4",
-      sentence_before: "It ",
-      sentence_after: " a good morning.",
+      sentence_before: "I ",
+      sentence_after: " a student.",
+      options: ["am", "is", "are"],
+      answer: "am",
+    },
+    {
+      id: "tb5",
+      sentence_before: "We ",
+      sentence_after: " from Vietnam.",
+      options: ["am", "is", "are"],
+      answer: "are",
+    },
+    {
+      id: "tb6",
+      sentence_before: "He ",
+      sentence_after: " a teacher.",
       options: ["am", "is", "are"],
       answer: "is",
     },
@@ -330,17 +354,17 @@ export const UNIT_1_DATA: UnitData = {
   cloze: [
     {
       id: "c1",
-      sentence_before: "Hello, my name ",
-      sentence_after: " Alex.",
-      answer: "is",
-      full_sentence: "Hello, my name is Alex.",
+      sentence_before: "Nice ",
+      sentence_after: " to meet you.",
+      answer: "meet",
+      full_sentence: "Nice to meet you.",
     },
     {
       id: "c2",
-      sentence_before: "Nice to ",
-      sentence_after: " you.",
-      answer: "meet",
-      full_sentence: "Nice to meet you.",
+      sentence_before: "My ",
+      sentence_after: " is Minh.",
+      answer: "name",
+      full_sentence: "My name is Minh.",
     },
     {
       id: "c3",
@@ -348,6 +372,73 @@ export const UNIT_1_DATA: UnitData = {
       sentence_after: " Vietnam.",
       answer: "from",
       full_sentence: "I am from Vietnam.",
+    },
+    {
+      id: "c4",
+      sentence_before: "Good ",
+      sentence_after: " , teacher! How are you?",
+      answer: "morning",
+      full_sentence: "Good morning, teacher! How are you?",
+    },
+    {
+      id: "c5",
+      sentence_before: "How ",
+      sentence_after: " you?",
+      answer: "are",
+      full_sentence: "How are you?",
+    },
+    {
+      id: "c6",
+      sentence_before: "I am fine, thank ",
+      sentence_after: " .",
+      answer: "you",
+      full_sentence: "I am fine, thank you.",
+    },
+    {
+      id: "c7",
+      sentence_before: "Please ",
+      sentence_after: " me.",
+      answer: "excuse",
+      full_sentence: "Please excuse me.",
+    },
+    {
+      id: "c8",
+      sentence_before: "See you ",
+      sentence_after: " .",
+      answer: "later",
+      full_sentence: "See you later.",
+    },
+  ],
+  listenAndChoose: [
+    {
+      id: "lac1",
+      audio_text: "Good morning",
+      options: ["Good morning", "Good afternoon", "Good evening", "Goodbye"],
+      answer: "Good morning",
+    },
+    {
+      id: "lac2",
+      audio_text: "Nice to meet you",
+      options: ["Hello", "Nice to meet you", "How are you", "Please"],
+      answer: "Nice to meet you",
+    },
+    {
+      id: "lac3",
+      audio_text: "I am from Vietnam",
+      options: ["I am fine thank you", "My name is Linh", "I am from Vietnam", "See you later"],
+      answer: "I am from Vietnam",
+    },
+    {
+      id: "lac4",
+      audio_text: "How are you",
+      options: ["And you", "How are you", "Thank you", "Goodbye"],
+      answer: "How are you",
+    },
+    {
+      id: "lac5",
+      audio_text: "See you later",
+      options: ["Good afternoon", "Goodbye", "Bye", "See you later"],
+      answer: "See you later",
     },
   ],
   quiz: [
@@ -361,60 +452,70 @@ export const UNIT_1_DATA: UnitData = {
         "Where are you from?",
       ],
       answer: "Nice to meet you",
+      type: "multiple-choice",
     },
     {
       id: "q2",
-      question: "Điền vào chỗ trống: 'I ___ from Vietnam.'",
-      options: ["is", "am", "are", "be"],
-      answer: "am",
-    },
-    {
-      id: "q3",
-      question: "Điền vào chỗ trống: 'What ___ your name?'",
-      options: ["is", "am", "are", "be"],
-      answer: "is",
-    },
-    {
-      id: "q4",
       question: "Cách chào hỏi trang trọng nhất vào buổi sáng là gì?",
       options: ["Hi!", "Good morning", "Goodbye", "See you later"],
       answer: "Good morning",
+      type: "multiple-choice",
     },
     {
-      id: "q5",
-      question: "Điền vào chỗ trống: 'They ___ nice friends.'",
-      options: ["am", "is", "are", "be"],
-      answer: "are",
-    },
-    {
-      id: "q6",
+      id: "q3",
       question: "Từ nào là cách nói tạm biệt thân mật?",
       options: ["Good morning", "Hello", "Bye", "Nice to meet you"],
       answer: "Bye",
+      type: "multiple-choice",
     },
     {
-      id: "q7",
+      id: "q4",
       question: "Phát âm phiên âm của từ 'meet' là gì?",
       options: ["/maɪˈself/", "/həˈləʊ/", "/neɪm/", "/miːt/"],
       answer: "/miːt/",
+      type: "multiple-choice",
     },
     {
-      id: "q8",
-      question: "Điền vào chỗ trống: 'Please excuse ___.'",
-      options: ["me", "I", "my", "you"],
-      answer: "me",
-    },
-    {
-      id: "q9",
+      id: "q5",
       question: "Cách lịch sự để nói lời cảm ơn bằng tiếng Anh là gì?",
       options: ["Please", "Hello", "Thank you", "Nice"],
       answer: "Thank you",
+      type: "multiple-choice",
+    },
+    {
+      id: "q6",
+      question: "Khi ai đó nói 'How are you?', câu trả lời phù hợp nhất là gì?",
+      options: ["Nice to meet you", "I am fine thank you", "My name is Linh", "Goodbye"],
+      answer: "I am fine thank you",
+      type: "multiple-choice",
+    },
+    {
+      id: "q7",
+      question: "Điền từ còn thiếu: 'I ___ from Vietnam.'",
+      options: [],
+      answer: "am",
+      type: "cloze",
+    },
+    {
+      id: "q8",
+      question: "Điền từ còn thiếu: 'What ___ your name?'",
+      options: [],
+      answer: "is",
+      type: "cloze",
+    },
+    {
+      id: "q9",
+      question: "Điền từ còn thiếu: 'They ___ nice friends.'",
+      options: [],
+      answer: "are",
+      type: "cloze",
     },
     {
       id: "q10",
-      question: "Điền vào chỗ trống: 'Nice to see you ___.'",
-      options: ["again", "from", "please", "am"],
-      answer: "again",
+      question: "Điền từ còn thiếu: 'Please excuse ___.'",
+      options: [],
+      answer: "me",
+      type: "cloze",
     },
   ],
 };
