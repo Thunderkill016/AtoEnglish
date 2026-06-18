@@ -32,11 +32,17 @@ export async function updateSession(request: NextRequest) {
     }
   );
 
-  const { data: { user } } = await supabase.auth.getUser();
-
   const pathname = request.nextUrl.pathname;
   const protectedRoutes = ["/dashboard", "/learn", "/flashcards", "/progress", "/speaking"];
   const isProtectedRoute = protectedRoutes.some(route => pathname.startsWith(route));
+  const isLoginRoute = pathname === "/login";
+
+  // Skip auth check for public routes (like the landing page) to minimize TTFB latency
+  if (!isProtectedRoute && !isLoginRoute) {
+    return supabaseResponse;
+  }
+
+  const { data: { user } } = await supabase.auth.getUser();
 
   // 1. Nếu truy cập trang bảo vệ mà chưa đăng nhập -> chuyển hướng về /login
   if (isProtectedRoute && !user) {
