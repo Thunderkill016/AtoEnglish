@@ -72,7 +72,7 @@ export default function LandingPage() {
     {
       id: "01",
       title: "Nghe & Đọc (Input)",
-      desc: "Nạp tiếng Anh qua ngữ cảnh thực tế, nghe và đọc theo người bản xứ.",
+      desc: "Tiếp xúc với tiếng Anh thực tế qua các tình huống gần gũi, nghe và đọc theo người bản xứ.",
       icon: BookOpen,
       gradient: "from-emerald-500/10 to-teal-500/10",
       iconBg: "bg-emerald-500/10 dark:bg-emerald-500/15",
@@ -81,7 +81,7 @@ export default function LandingPage() {
     {
       id: "02",
       title: "Xử lý sâu (Processing)",
-      desc: "Phân tích từ vựng và ngữ pháp qua bài tập tương tác, giúp bạn hiểu rõ và nhớ lâu.",
+      desc: "Hiểu rõ từ vựng và cấu trúc câu qua bài tập tương tác, thay vì chỉ học vẹt.",
       icon: Cpu,
       gradient: "from-blue-500/10 to-indigo-500/10",
       iconBg: "bg-blue-500/10 dark:bg-blue-500/15",
@@ -90,7 +90,7 @@ export default function LandingPage() {
     {
       id: "03",
       title: "Nói & Viết (Output)",
-      desc: "Thực hành nói ngay qua Shadowing và Roleplay. Ghi âm và nhận phản hồi.",
+      desc: "Luyện nói ngay từ bài học đầu tiên qua Shadowing và Roleplay. Ghi âm và so sánh với mẫu chuẩn.",
       icon: Mic,
       gradient: "from-violet-500/10 to-purple-500/10",
       iconBg: "bg-violet-500/10 dark:bg-violet-500/15",
@@ -99,7 +99,7 @@ export default function LandingPage() {
     {
       id: "04",
       title: "Ôn tập thông minh (Review)",
-      desc: "Hệ thống FSRS tự động nhắc nhở ôn đúng lúc, giúp kiến thức đi vào bộ nhớ dài hạn.",
+      desc: "Hệ thống FSRS tự động nhắc nhở ôn đúng lúc, giúp kiến thức thực sự đi vào bộ nhớ dài hạn.",
       icon: RotateCcw,
       gradient: "from-amber-500/10 to-orange-500/10",
       iconBg: "bg-amber-500/10 dark:bg-amber-500/15",
@@ -367,11 +367,10 @@ export default function LandingPage() {
             className="text-center space-y-4"
           >
             <h2 className="text-2xl sm:text-3xl lg:text-[2.75rem] font-bold tracking-tight text-zinc-900 dark:text-zinc-50 leading-tight">
-              Vòng lặp học tập toàn diện
+              Cách học giúp bạn nói được nhanh nhất
             </h2>
             <p className="text-[15px] sm:text-base lg:text-lg text-zinc-500 dark:text-zinc-400 max-w-lg mx-auto leading-relaxed">
-              Quy trình 4 bước khoa học giúp bạn chuyển từ &ldquo;học
-              thuộc&rdquo; sang &ldquo;nói được&rdquo; một cách tự nhiên.
+              Chỉ 4 bước lặp lại mỗi ngày — giúp bạn chuyển từ “học thuộc” sang “nói tự tin”.
             </p>
           </motion.div>
 
