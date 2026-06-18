@@ -37,7 +37,7 @@ export async function saveSpeakingSession(params: SaveSpeakingSessionParams) {
     if (!validated.success) {
       return {
         success: false,
-        error: `Dữ liệu không hợp lệ: ${validated.error.errors.map(e => e.message).join(", ")}`
+        error: `Dữ liệu không hợp lệ: ${validated.error.issues.map(e => e.message).join(", ")}`
       };
     }
     const cleanParams = validated.data;

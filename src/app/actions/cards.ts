@@ -41,7 +41,7 @@ export async function saveCardToSRS(params: SaveCardParams) {
     if (!validated.success) {
       return {
         success: false,
-        error: `Dữ liệu không hợp lệ: ${validated.error.errors.map(e => e.message).join(", ")}`
+        error: `Dữ liệu không hợp lệ: ${validated.error.issues.map(e => e.message).join(", ")}`
       };
     }
     const cleanParams = validated.data;
@@ -200,7 +200,7 @@ export async function reviewCard(cardId: string, rating: "Again" | "Hard" | "Goo
     if (!validated.success) {
       return {
         success: false,
-        error: `Dữ liệu không hợp lệ: ${validated.error.errors.map(e => e.message).join(", ")}`
+        error: `Dữ liệu không hợp lệ: ${validated.error.issues.map(e => e.message).join(", ")}`
       };
     }
     const cleanParams = validated.data;

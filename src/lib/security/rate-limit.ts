@@ -27,11 +27,11 @@ export class InMemoryRateLimiter {
     // Random cleanup of expired entries (1% probability on each check)
     if (Math.random() < 0.01) {
       const cacheNow = Date.now();
-      for (const [key, val] of cache.entries()) {
+      cache.forEach((val, key) => {
         if (cacheNow > val.resetTime) {
           cache.delete(key);
         }
-      }
+      });
     }
 
     if (!record || now > record.resetTime) {

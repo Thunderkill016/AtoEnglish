@@ -51,7 +51,7 @@ function LoginContent() {
     const schema = isSignUp ? SignUpSchema : LoginSchema;
     const validated = schema.safeParse({ email, password });
     if (!validated.success) {
-      toast.error(validated.error.errors.map(err => err.message).join(", "));
+      toast.error(validated.error.issues.map(err => err.message).join(", "));
       return;
     }
 
