@@ -32,8 +32,20 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseOrigin = supabaseUrl ? new URL(supabaseUrl).origin : null;
+
   return (
     <html lang="vi" suppressHydrationWarning className={cn("font-sans", sansFont.variable)}>
+      <head>
+        {/* Preconnect to Supabase — speeds up auth & data fetch */}
+        {supabaseOrigin && (
+          <>
+            <link rel="preconnect" href={supabaseOrigin} />
+            <link rel="dns-prefetch" href={supabaseOrigin} />
+          </>
+        )}
+      </head>
       <body className="min-h-screen">
         <ThemeProvider
           attribute="class"

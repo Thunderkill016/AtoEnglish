@@ -8,27 +8,15 @@ import { checkHasSession } from "@/lib/auth-check";
 
 export default function HeroCTA() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
     setIsLoggedIn(checkHasSession());
-    setIsMounted(true);
   }, []);
 
   const handleScrollToHowItWorks = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     document.getElementById("how-it-works")?.scrollIntoView({ behavior: "smooth" });
   };
-
-  // Render skeleton buttons before hydration to avoid flash
-  if (!isMounted) {
-    return (
-      <div className="animate-fade-in-up animation-delay-225 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 pt-4 w-full">
-        <div className="w-full sm:w-auto sm:min-w-[220px] h-14 rounded-2xl bg-zinc-100 dark:bg-zinc-800/50 animate-pulse" />
-        <div className="w-full sm:w-auto sm:min-w-[160px] h-14 rounded-2xl bg-zinc-100/60 dark:bg-zinc-800/30 animate-pulse" />
-      </div>
-    );
-  }
 
   return (
     <div className="animate-fade-in-up animation-delay-225 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 pt-4 w-full">

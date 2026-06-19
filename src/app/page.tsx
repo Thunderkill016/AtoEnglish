@@ -119,8 +119,10 @@ export default function LandingPage() {
       <main id="main-content">
         {/* ===== Hero Section ===== */}
         <section className="relative px-5 sm:px-8 pt-20 pb-16 sm:pt-32 sm:pb-24 lg:pt-36 lg:pb-28 overflow-hidden">
-          {/* Spotlight light beam effect */}
-          <Spotlight className="-top-40 left-0 md:left-60 md:-top-20" fill="rgb(16 185 129 / 0.15)" />
+          {/* Spotlight light beam — hidden on mobile to save GPU paint cost */}
+          <div className="hidden sm:block">
+            <Spotlight className="-top-40 left-0 md:left-60 md:-top-20" fill="rgb(16 185 129 / 0.15)" />
+          </div>
 
           {/* Mesh gradient backdrops — hidden on mobile to save GPU */}
           <div className="absolute inset-0 overflow-hidden pointer-events-none -z-10">
