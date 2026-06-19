@@ -24,7 +24,8 @@ export default async function DashboardPage() {
   let userName = "Học viên";
   let totalXp = 0;
   let currentStreak = 0;
-  let userLevel = "B1 Intermediate";
+  let userLevel = "A1 Beginner"; // Default for new/data-reset users
+
 
   if (progressRes.success && progressRes.progress) {
     const p = progressRes.progress;
