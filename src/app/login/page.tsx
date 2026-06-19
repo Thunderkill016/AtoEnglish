@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, Suspense, useEffect } from "react";
+import { useState, Suspense, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -38,11 +38,12 @@ function LoginContent() {
   const [isLoading, setIsLoading] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
 
-  // Onboarding Quiz state — 4 questions, loader=5, auth=6
-  const [onboardingStep, setOnboardingStep] = useState(1);
+  // Onboarding Quiz state — 0=welcome, 1-4=questions, 5=loader, 6=auth
+  const [onboardingStep, setOnboardingStep] = useState(0);
   const [answers, setAnswers] = useState<Record<number, string>>({});
   const [checklistIndex, setChecklistIndex] = useState(0);
   const [direction, setDirection] = useState(1);
+  const autoAdvanceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const supabase = createClient();
 
@@ -55,9 +56,12 @@ function LoginContent() {
       setOnboardingStep(6);
       setIsSignUp(false);
     } else {
-      setOnboardingStep(1);
+      setOnboardingStep(0); // Welcome screen first
     }
   }, [mode]);
+
+  // Cleanup timer on unmount
+  useEffect(() => () => { if (autoAdvanceTimer.current) clearTimeout(autoAdvanceTimer.current); }, []);
 
   // Loader animation (step 5)
   useEffect(() => {
@@ -132,14 +136,18 @@ function LoginContent() {
     },
   ];
 
+  // Duolingo-style: store answer immediately (visual feedback), auto-advance after 400ms
   const handleAnswerSelect = (qId: number, val: string) => {
     setAnswers((prev) => ({ ...prev, [qId]: val }));
-    setDirection(1);
-    if (qId < 4) {
-      setOnboardingStep(qId + 1);
-    } else {
-      setOnboardingStep(5); // Go to loader
-    }
+    if (autoAdvanceTimer.current) clearTimeout(autoAdvanceTimer.current);
+    autoAdvanceTimer.current = setTimeout(() => {
+      setDirection(1);
+      if (qId < 4) {
+        setOnboardingStep(qId + 1);
+      } else {
+        setOnboardingStep(5);
+      }
+    }, 400);
   };
 
   const handleGoogleLogin = async () => {
@@ -400,10 +408,11 @@ function LoginContent() {
           </Link>
           </div>
 
-          {onboardingStep > 1 && onboardingStep <= 4 ? (
+          {onboardingStep >= 1 && onboardingStep <= 4 ? (
             <Button
               variant="ghost"
               onClick={() => {
+                if (autoAdvanceTimer.current) clearTimeout(autoAdvanceTimer.current);
                 setDirection(-1);
                 setOnboardingStep(onboardingStep - 1);
               }}
@@ -441,8 +450,70 @@ function LoginContent() {
               }}
               className="flex flex-col space-y-6 text-left"
             >
-              {/* ── Steps 1-4: Quiz Questions ── */}
-              {onboardingStep <= 4 ? (
+              {/* ── Step 0: Welcome screen ── */}
+              {onboardingStep === 0 ? (
+                <div className="space-y-8 text-center flex flex-col items-center py-6">
+                  {/* Illustration */}
+                  <motion.div
+                    initial={{ scale: 0.6, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ type: "spring", stiffness: 300, damping: 24 }}
+                    className="relative"
+                  >
+                    <div className="size-24 rounded-3xl bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center text-5xl shadow-xl shadow-emerald-500/20">
+                      🌱
+                    </div>
+                    <motion.div
+                      animate={{ rotate: [0, 10, -10, 0] }}
+                      transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                      className="absolute -top-2 -right-2 text-2xl"
+                    >✨</motion.div>
+                  </motion.div>
+
+                  {/* Headline */}
+                  <div className="space-y-3">
+                    <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-zinc-900 dark:text-zinc-50 leading-tight">
+                      Tạo lộ trình học tiếng Anh{" "}
+                      <span className="bg-gradient-to-r from-emerald-600 to-teal-500 bg-clip-text text-transparent dark:from-emerald-400 dark:to-teal-400">
+                        riêng cho bạn
+                      </span>
+                    </h1>
+                    <p className="text-sm text-zinc-500 dark:text-zinc-400 max-w-xs mx-auto leading-relaxed">
+                      Chỉ cần <strong className="text-zinc-700 dark:text-zinc-300">4 câu hỏi nhanh</strong> — AtoEnglish sẽ cá nhân hóa lộ trình học phù hợp với bạn.
+                    </p>
+                  </div>
+
+                  {/* Feature pills */}
+                  <div className="flex flex-wrap justify-center gap-2">
+                    {["🎯 Lộ trình A1→C1", "⏱ 15 phút/ngày", "🔬 Thuật toán FSRS"].map((tag) => (
+                      <span key={tag} className="text-xs font-semibold text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-100 dark:border-emerald-900/30 px-3 py-1.5 rounded-full">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+
+                  {/* Primary CTA */}
+                  <motion.button
+                    onClick={() => { setDirection(1); setOnboardingStep(1); }}
+                    whileHover={{ scale: 1.02, y: -2 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="w-full max-w-xs bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-700 hover:to-emerald-600 text-white font-bold py-4 rounded-2xl text-base shadow-lg shadow-emerald-500/20 hover:shadow-xl hover:shadow-emerald-500/25 transition-all duration-300 border-t border-white/10"
+                  >
+                    Bắt đầu — Miễn phí 🚀
+                  </motion.button>
+
+                  {/* Already have account */}
+                  <button
+                    type="button"
+                    onClick={() => { setDirection(1); setOnboardingStep(6); setIsSignUp(false); }}
+                    className="text-xs text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300 font-medium transition-colors underline underline-offset-4"
+                  >
+                    Tôi đã có tài khoản. Đăng nhập →
+                  </button>
+                </div>
+
+              /* ── Steps 1-4: Quiz Questions ── */
+              ) : onboardingStep >= 1 && onboardingStep <= 4 ? (
                 <div className="space-y-6">
                   {/* Progress bar */}
                   <div className="space-y-2">
@@ -472,7 +543,7 @@ function LoginContent() {
                     </p>
                   </div>
 
-                  {/* Options */}
+                  {/* Options — tap to select, auto-advances after 400ms */}
                   <div className="flex flex-col gap-2.5 pt-1">
                     {questions[onboardingStep - 1].options.map((opt, idx) => {
                       const isSelected = answers[onboardingStep] === opt.val;
@@ -506,26 +577,16 @@ function LoginContent() {
                     })}
                   </div>
 
-                  {/* Already have account — prominent */}
-                  <div className="pt-2">
-                    <div className="flex items-center gap-3 mb-3">
-                      <div className="h-px flex-1 bg-zinc-100 dark:bg-zinc-800" />
-                      <span className="text-[10px] text-zinc-400 font-bold uppercase tracking-widest">hoặc</span>
-                      <div className="h-px flex-1 bg-zinc-100 dark:bg-zinc-800" />
-                    </div>
+                  {/* Small skip to login link */}
+                  <p className="text-center text-[11px] text-zinc-400 dark:text-zinc-500 pt-1">
                     <button
                       type="button"
-                      onClick={() => {
-                        setDirection(1);
-                        setOnboardingStep(6);
-                        setIsSignUp(false);
-                        setAnswers({});
-                      }}
-                      className="w-full rounded-xl border border-zinc-200 dark:border-zinc-800 py-3 text-sm font-semibold text-zinc-500 dark:text-zinc-400 hover:border-zinc-300 dark:hover:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-all duration-200"
+                      onClick={() => { if (autoAdvanceTimer.current) clearTimeout(autoAdvanceTimer.current); setDirection(1); setOnboardingStep(6); setIsSignUp(false); setAnswers({}); }}
+                      className="hover:text-zinc-600 dark:hover:text-zinc-300 underline underline-offset-4 transition-colors"
                     >
-                      Tôi đã có tài khoản — Đăng nhập ngay
+                      Tôi đã có tài khoản
                     </button>
-                  </div>
+                  </p>
                 </div>
 
               /* ── Step 5: Loader ── */
