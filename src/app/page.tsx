@@ -131,64 +131,72 @@ export default function LandingPage() {
             <div className="hidden md:block absolute top-[40%] left-[30%] w-[40%] h-[40%] rounded-full bg-indigo-500/5 dark:bg-indigo-500/3 blur-[100px]" />
           </div>
 
-          <div className="relative max-w-4xl mx-auto flex flex-col items-center text-center">
-            <div className="space-y-6 sm:space-y-8">
-              {/* Badge */}
-              <div className="animate-fade-in-up">
-                <span className="inline-flex items-center gap-1.5 text-[11px] font-bold text-emerald-800 dark:text-emerald-400 bg-emerald-500/10 dark:bg-emerald-500/15 backdrop-blur-sm border border-emerald-500/20 dark:border-emerald-400/25 px-4 py-1.5 rounded-full uppercase tracking-[0.12em] shadow-sm">
-                  <Sparkles className="size-3 text-emerald-600 dark:text-emerald-400 animate-pulse" />
-                  Phương pháp học thế hệ mới
-                </span>
-              </div>
+          <div className="relative max-w-7xl mx-auto">
+            {/* Desktop: 2-col split | Mobile: stacked */}
+            <div className="flex flex-col lg:grid lg:grid-cols-2 lg:gap-16 lg:items-center">
 
-              {/* Headline */}
-              <h1 className="animate-fade-in-up animation-delay-75 flex flex-col items-center gap-y-2 sm:gap-y-3 text-xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-zinc-900 dark:text-zinc-50 max-w-4xl mx-auto px-4">
-                <span className="block lg:whitespace-nowrap">
-                  Học tiếng Anh để{" "}
-                  <span className="bg-gradient-to-r from-emerald-600 via-teal-500 to-emerald-500 bg-clip-text text-transparent dark:from-emerald-400 dark:via-teal-400 dark:to-emerald-300">
-                    nói được
-                  </span>
-                </span>
-                <span className="block lg:whitespace-nowrap">
-                  không chỉ để biết.
-                </span>
-              </h1>
-
-              {/* Subheadline */}
-              <p className="animate-fade-in-up animation-delay-150 text-base sm:text-lg lg:text-xl text-zinc-600 dark:text-zinc-350 max-w-2xl mx-auto leading-relaxed font-normal">
-                Phương pháp khoa học giúp bạn tự tin giao tiếp thực tế từ con số 0.
-                <br className="hidden sm:block" />
-                Luyện nói chủ động ngay từ những bài học đầu tiên.
-              </p>
-
-              <HeroCTA />
-            </div>
-          </div>
-
-          {/* Product Preview Mockup */}
-          <ProductPreview />
-
-          {/* Stats bar */}
-          <div className="animate-fade-in-up animation-delay-300 relative max-w-3xl mx-auto mt-16 sm:mt-24">
-            <div className="p-6 sm:p-8 rounded-2xl bg-zinc-50/50 dark:bg-zinc-900/20 backdrop-blur-md border border-zinc-200/50 dark:border-zinc-800/40 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-6 sm:gap-0 divide-y sm:divide-y-0 sm:divide-x divide-zinc-200/60 dark:divide-zinc-800/60">
-              {stats.map((stat, index) => (
-                <div
-                  key={index}
-                  className="flex flex-col items-center flex-1 w-full pt-4 sm:pt-0 sm:px-6 first:pt-0"
-                >
-                  <span className="text-2xl sm:text-3xl font-black text-zinc-900 dark:text-zinc-50 tracking-tight">
-                    {stat.value}
-                  </span>
-                  <span className="text-[11px] sm:text-xs text-zinc-500 dark:text-zinc-400 font-semibold mt-1.5 uppercase tracking-wider text-center">
-                    {stat.label}
+              {/* ── LEFT: Text content ── */}
+              <div className="flex flex-col items-center text-center lg:items-start lg:text-left space-y-6 sm:space-y-8">
+                {/* Badge */}
+                <div className="animate-fade-in-up">
+                  <span className="inline-flex items-center gap-1.5 text-[11px] font-bold text-emerald-800 dark:text-emerald-400 bg-emerald-500/10 dark:bg-emerald-500/15 backdrop-blur-sm border border-emerald-500/20 dark:border-emerald-400/25 px-4 py-1.5 rounded-full uppercase tracking-[0.12em] shadow-sm">
+                    <Sparkles className="size-3 text-emerald-600 dark:text-emerald-400 animate-pulse" />
+                    Phương pháp học thế hệ mới
                   </span>
                 </div>
-              ))}
+
+                {/* Headline */}
+                <h1 className="animate-fade-in-up animation-delay-75 flex flex-col items-center lg:items-start gap-y-1 sm:gap-y-2 text-3xl sm:text-4xl md:text-5xl lg:text-5xl xl:text-6xl font-extrabold text-zinc-900 dark:text-zinc-50">
+                  <span className="block">
+                    Học tiếng Anh để{" "}
+                    <span className="bg-gradient-to-r from-emerald-600 via-teal-500 to-emerald-500 bg-clip-text text-transparent dark:from-emerald-400 dark:via-teal-400 dark:to-emerald-300">
+                      nói được
+                    </span>
+                  </span>
+                  <span className="block">không chỉ để biết.</span>
+                </h1>
+
+                {/* Subheadline */}
+                <p className="animate-fade-in-up animation-delay-150 text-base sm:text-lg text-zinc-600 dark:text-zinc-350 max-w-lg leading-relaxed font-normal">
+                  Phương pháp khoa học giúp bạn tự tin giao tiếp thực tế từ con số 0.
+                  Luyện nói chủ động ngay từ những bài học đầu tiên.
+                </p>
+
+                <HeroCTA />
+
+                {/* Stats — desktop only, shown inline with text */}
+                <div className="hidden lg:block w-full animate-fade-in-up animation-delay-300">
+                  <div className="flex items-center gap-0 divide-x divide-zinc-200/60 dark:divide-zinc-700/60 rounded-2xl border border-zinc-200/50 dark:border-zinc-800/40 bg-zinc-50/50 dark:bg-zinc-900/20 backdrop-blur-md shadow-sm overflow-hidden">
+                    {stats.map((stat) => (
+                      <div key={stat.label} className="flex flex-col items-center flex-1 py-4 px-4">
+                        <span className="text-xl font-black text-zinc-900 dark:text-zinc-50 tracking-tight">{stat.value}</span>
+                        <span className="text-[10px] text-zinc-500 dark:text-zinc-400 font-semibold mt-1 uppercase tracking-wider text-center leading-tight">{stat.label}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* ── RIGHT: Product Preview ── */}
+              <div className="mt-12 lg:mt-0 w-full">
+                <ProductPreview />
+              </div>
             </div>
-            {/* Footnote */}
-            <p className="text-[11px] text-zinc-450 dark:text-zinc-500 mt-5 text-center font-normal tracking-wide">
-              * Dự án đang trong giai đoạn thử nghiệm mở (Open Beta). Mọi bài học đều hoàn toàn miễn phí.
-            </p>
+
+            {/* Stats — mobile only, shown below ProductPreview */}
+            <div className="lg:hidden animate-fade-in-up animation-delay-300 mt-10">
+              <div className="p-6 rounded-2xl bg-zinc-50/50 dark:bg-zinc-900/20 backdrop-blur-md border border-zinc-200/50 dark:border-zinc-800/40 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-6 sm:gap-0 divide-y sm:divide-y-0 sm:divide-x divide-zinc-200/60 dark:divide-zinc-800/60">
+                {stats.map((stat) => (
+                  <div key={stat.label} className="flex flex-col items-center flex-1 w-full pt-4 sm:pt-0 sm:px-6 first:pt-0">
+                    <span className="text-2xl sm:text-3xl font-black text-zinc-900 dark:text-zinc-50 tracking-tight">{stat.value}</span>
+                    <span className="text-[11px] sm:text-xs text-zinc-500 dark:text-zinc-400 font-semibold mt-1.5 uppercase tracking-wider text-center">{stat.label}</span>
+                  </div>
+                ))}
+              </div>
+              <p className="text-[11px] text-zinc-450 dark:text-zinc-500 mt-4 text-center font-normal tracking-wide">
+                * Dự án đang trong giai đoạn thử nghiệm mở (Open Beta). Mọi bài học đều hoàn toàn miễn phí.
+              </p>
+            </div>
           </div>
 
           {/* Sentinel: StickyMobileCTA watches this to know when Hero is out of view */}
