@@ -1,6 +1,6 @@
 "use client";
 
-import { Cpu, Users, Brain } from "lucide-react";
+import { FlaskConical, MapPin, Lightbulb } from "lucide-react";
 import ScrollReveal from "@/components/ui/scroll-reveal";
 
 export default function ScienceSection() {
@@ -33,7 +33,7 @@ export default function ScienceSection() {
               <div className="absolute inset-0 rounded-[2rem] bg-white/95 dark:bg-zinc-950/95 -z-10 transition-colors duration-300" />
 
               <span className="flex size-12 items-center justify-center rounded-2xl bg-emerald-100 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 group-hover:scale-105 transition-transform duration-300 border border-emerald-200/50 dark:border-emerald-800/20 shadow-sm">
-                <Cpu className="size-6" strokeWidth={2.2} />
+                <FlaskConical className="size-6" strokeWidth={2.2} />
               </span>
               <div className="space-y-3.5 text-left flex-1 flex flex-col">
                 <h3 className="text-lg sm:text-xl font-bold text-zinc-900 dark:text-zinc-100 tracking-tight leading-normal">
@@ -56,7 +56,7 @@ export default function ScienceSection() {
               <div className="absolute inset-0 rounded-[2rem] bg-white/95 dark:bg-zinc-950/95 -z-10 transition-colors duration-300" />
 
               <span className="flex size-12 items-center justify-center rounded-2xl bg-emerald-100 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 group-hover:scale-105 transition-transform duration-300 border border-emerald-200/50 dark:border-emerald-800/20 shadow-sm">
-                <Users className="size-6" strokeWidth={2.2} />
+                <MapPin className="size-6" strokeWidth={2.2} />
               </span>
               <div className="space-y-3.5 text-left flex-1 flex flex-col">
                 <h3 className="text-lg sm:text-xl font-bold text-zinc-900 dark:text-zinc-100 tracking-tight leading-normal">
@@ -79,7 +79,7 @@ export default function ScienceSection() {
               <div className="absolute inset-0 rounded-[2rem] bg-white/95 dark:bg-zinc-950/95 -z-10 transition-colors duration-300" />
 
               <span className="flex size-12 items-center justify-center rounded-2xl bg-emerald-100 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 group-hover:scale-105 transition-transform duration-300 border border-emerald-200/50 dark:border-emerald-800/20 shadow-sm">
-                <Brain className="size-6" strokeWidth={2.2} />
+                <Lightbulb className="size-6" strokeWidth={2.2} />
               </span>
               <div className="space-y-3.5 text-left flex-1 flex flex-col">
                 <h3 className="text-lg sm:text-xl font-bold text-zinc-900 dark:text-zinc-100 tracking-tight leading-normal">

@@ -1,6 +1,6 @@
 "use client";
 
-import { BookOpen, Cpu, Mic, RotateCcw } from "lucide-react";
+import { Headphones, Layers, Mic2, RefreshCw } from "lucide-react";
 import ScrollReveal from "@/components/ui/scroll-reveal";
 
 export default function HowItWorksSection() {
@@ -9,7 +9,7 @@ export default function HowItWorksSection() {
       id: "01",
       title: "Nghe & Đọc (Input)",
       desc: "Tiếp xúc với tiếng Anh thực tế qua các tình huống giao tiếp gần gũi, nghe và đọc theo ngữ điệu người bản xứ.",
-      icon: BookOpen,
+      icon: Headphones,
       gradient: "from-emerald-500/5 to-teal-500/5 dark:from-emerald-500/10 dark:to-teal-500/5",
       iconBg: "bg-emerald-500/10 dark:bg-emerald-500/20",
       iconColor: "text-emerald-700 dark:text-emerald-400",
@@ -19,7 +19,7 @@ export default function HowItWorksSection() {
       id: "02",
       title: "Xử lý sâu (Processing)",
       desc: "Làm chủ từ vựng và cấu trúc qua bài tập viết câu phản xạ và ghép thẻ thông minh (SRS), chống học vẹt thụ động.",
-      icon: Cpu,
+      icon: Layers,
       gradient: "from-blue-500/5 to-indigo-500/5 dark:from-blue-500/10 dark:to-indigo-500/5",
       iconBg: "bg-blue-500/10 dark:bg-blue-500/20",
       iconColor: "text-blue-700 dark:text-blue-400",
@@ -29,7 +29,7 @@ export default function HowItWorksSection() {
       id: "03",
       title: "Nói & Viết (Output)",
       desc: "Luyện nói Shadowing và thực hành đóng vai (Roleplay) tình huống thực tế. Ghi âm và nhận phản hồi lỗi phát âm tức thì.",
-      icon: Mic,
+      icon: Mic2,
       gradient: "from-violet-500/5 to-purple-500/5 dark:from-violet-500/10 dark:to-purple-500/5",
       iconBg: "bg-violet-500/10 dark:bg-violet-500/20",
       iconColor: "text-violet-755 dark:text-violet-400",
@@ -39,7 +39,7 @@ export default function HowItWorksSection() {
       id: "04",
       title: "Ôn tập thông minh (Review)",
       desc: "Thuật toán ôn tập ngắt quãng (FSRS) tự động tính toán thời điểm vàng để nhắc nhở, đưa từ vựng vào trí nhớ vĩnh viễn.",
-      icon: RotateCcw,
+      icon: RefreshCw,
       gradient: "from-amber-500/5 to-orange-500/5 dark:from-amber-500/10 dark:to-orange-500/5",
       iconBg: "bg-amber-500/10 dark:bg-amber-500/20",
       iconColor: "text-amber-700 dark:text-amber-450",

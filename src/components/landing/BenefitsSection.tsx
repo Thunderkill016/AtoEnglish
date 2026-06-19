@@ -1,6 +1,6 @@
 "use client";
 
-import { Zap, Target, Mic } from "lucide-react";
+import { Zap, Clock, Wallet } from "lucide-react";
 import ScrollReveal from "@/components/ui/scroll-reveal";
 
 export default function BenefitsSection() {
@@ -11,12 +11,12 @@ export default function BenefitsSection() {
       desc: "Luyện nói chủ động giúp bạn bật ra câu trả lời lập tức, hoàn toàn loại bỏ thói quen dịch nhẩm ngữ pháp từ tiếng Việt sang tiếng Anh trong đầu.",
     },
     {
-      icon: Target,
+      icon: Clock,
       title: "15 phút mỗi ngày là đủ",
       desc: "Lộ trình học ngắn gọn, thiết kế tối ưu hóa trên mọi thiết bị di động giúp bạn dễ dàng duy trì thói quen học tập bền bỉ hàng ngày mà không bị quá tải.",
     },
     {
-      icon: Mic,
+      icon: Wallet,
       title: "Tiết kiệm 90% chi phí",
       desc: "Trải nghiệm luyện nói giao tiếp phản xạ chất lượng tương đương học 1-1 với giáo viên bản xứ, nhưng với mức học phí tối giản nhất.",
     },

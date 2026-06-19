@@ -1,6 +1,6 @@
 "use client";
 
-import { MessageSquareOff } from "lucide-react";
+import { XCircle } from "lucide-react";
 import ScrollReveal from "@/components/ui/scroll-reveal";
 
 export default function ProblemSection() {
@@ -28,7 +28,7 @@ export default function ProblemSection() {
         <div className="space-y-4">
           <div className="flex justify-center mb-4">
             <span className="flex size-14 items-center justify-center rounded-2xl bg-zinc-100 dark:bg-zinc-900 text-zinc-500 dark:text-zinc-400 border border-zinc-200/50 dark:border-zinc-800/50 shadow-inner">
-              <MessageSquareOff className="size-6 animate-pulse" />
+              <XCircle className="size-6 animate-pulse" />
             </span>
           </div>
 
