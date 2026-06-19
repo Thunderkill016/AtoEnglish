@@ -4,7 +4,7 @@ import { useState, Suspense, useEffect } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { Mail, Lock, Loader2, Sparkles, ArrowLeft, Sprout } from "lucide-react";
+import { Mail, Lock, Loader2, Sparkles, ArrowLeft, Sprout, Check } from "lucide-react";
 import { toast } from "sonner";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -329,20 +329,26 @@ function LoginContent() {
             Làm chủ tiếng Anh từ số 0 bằng khoa học ghi nhớ.
           </h2>
           <div className="space-y-4 text-sm text-zinc-300">
-            <div className="flex items-start gap-3.5 bg-white/5 backdrop-blur-sm border border-white/5 p-4 rounded-2xl hover:border-emerald-500/25 transition-all duration-300">
-              <div className="size-5.5 rounded-full bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400 text-xs mt-0.5 font-bold shrink-0">✓</div>
+            <div className="flex items-center gap-3.5 bg-white/5 backdrop-blur-sm border border-white/5 p-4 rounded-2xl hover:border-emerald-500/25 transition-all duration-300">
+              <div className="size-5.5 rounded-full bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shrink-0">
+                <Check className="size-3 text-emerald-400" strokeWidth={3} />
+              </div>
               <p className="text-zinc-300 leading-relaxed text-left">
                 <strong className="text-white">Luyện nói phản xạ:</strong> Thực hành hội thoại tự nhiên và tự sửa phát âm chuẩn xác ngay lập tức.
               </p>
             </div>
-            <div className="flex items-start gap-3.5 bg-white/5 backdrop-blur-sm border border-white/5 p-4 rounded-2xl hover:border-emerald-500/25 transition-all duration-300">
-              <div className="size-5.5 rounded-full bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400 text-xs mt-0.5 font-bold shrink-0">✓</div>
+            <div className="flex items-center gap-3.5 bg-white/5 backdrop-blur-sm border border-white/5 p-4 rounded-2xl hover:border-emerald-500/25 transition-all duration-300">
+              <div className="size-5.5 rounded-full bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shrink-0">
+                <Check className="size-3 text-emerald-400" strokeWidth={3} />
+              </div>
               <p className="text-zinc-300 leading-relaxed text-left">
                 <strong className="text-white">Thẻ học thông minh (SRS):</strong> Thuật toán FSRS tối ưu hóa chu kỳ lặp lại giúp ghi nhớ từ vựng vĩnh viễn.
               </p>
             </div>
-            <div className="flex items-start gap-3.5 bg-white/5 backdrop-blur-sm border border-white/5 p-4 rounded-2xl hover:border-emerald-500/25 transition-all duration-300">
-              <div className="size-5.5 rounded-full bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400 text-xs mt-0.5 font-bold shrink-0">✓</div>
+            <div className="flex items-center gap-3.5 bg-white/5 backdrop-blur-sm border border-white/5 p-4 rounded-2xl hover:border-emerald-500/25 transition-all duration-300">
+              <div className="size-5.5 rounded-full bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shrink-0">
+                <Check className="size-3 text-emerald-400" strokeWidth={3} />
+              </div>
               <p className="text-zinc-300 leading-relaxed text-left">
                 <strong className="text-white">Lộ trình cá nhân hóa:</strong> Bài học ngắn 15 phút mỗi ngày thiết kế riêng cho người Việt mất gốc.
               </p>
