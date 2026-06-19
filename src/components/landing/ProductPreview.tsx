@@ -453,19 +453,23 @@ export default function ProductPreview() {
                 <span className="text-[9px] font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full">Hàng ngày</span>
               </div>
               
-              <div className="relative size-24 flex items-center justify-center my-1">
+              <div className="relative size-20 flex items-center justify-center my-1">
                 <svg className="size-full transform -rotate-90" viewBox="0 0 100 100">
                   <circle cx="50" cy="50" r="40" className="stroke-zinc-100 dark:stroke-zinc-800 fill-none" strokeWidth="6" />
                   <circle cx="50" cy="50" r="40" className="stroke-emerald-600 fill-none" strokeWidth="7" strokeDasharray="251" strokeDashoffset="75" strokeLinecap="round" />
                 </svg>
-                <div className="absolute inset-0 flex flex-col items-center justify-center leading-none">
+                <div className="absolute inset-0 flex items-center justify-center">
                   <span className="text-xl font-black text-zinc-900 dark:text-zinc-50">70%</span>
-                  <span className="text-[9px] font-bold text-zinc-500 dark:text-zinc-400 uppercase font-mono mt-1 tracking-wider">50 / 80 XP</span>
                 </div>
               </div>
 
-              <div className="text-[11px] font-bold text-zinc-650 dark:text-zinc-350">
-                Luyện thêm 30 XP để hoàn thành!
+              <div className="space-y-0.5">
+                <div className="text-sm font-bold text-zinc-800 dark:text-zinc-250">
+                  50 / 80 XP
+                </div>
+                <div className="text-[10px] text-zinc-450 dark:text-zinc-500 font-medium">
+                  Luyện thêm 30 XP để hoàn thành!
+                </div>
               </div>
             </div>
 

@@ -30,7 +30,7 @@ export default function XpTracker({ xpCurrent, xpTarget, totalXp }: XpTrackerPro
       </div>
 
       {/* Circular progress ring */}
-      <div className="relative size-32 flex items-center justify-center my-3">
+      <div className="relative size-28 flex items-center justify-center my-3">
         <svg className="size-full transform -rotate-90" viewBox="0 0 128 128">
           <circle cx="64" cy="64" r={radius} className="stroke-muted/30 fill-none" strokeWidth="6" />
           <m.circle
@@ -46,20 +46,20 @@ export default function XpTracker({ xpCurrent, xpTarget, totalXp }: XpTrackerPro
             strokeLinecap="round"
           />
         </svg>
-        <div className="absolute inset-0 flex flex-col items-center justify-center leading-none">
+        <div className="absolute inset-0 flex items-center justify-center">
           <span className="text-2.5xl font-black text-foreground">{Math.round(xpPercentage)}%</span>
-          <span className="text-[9px] font-extrabold text-muted-foreground uppercase tracking-widest mt-1 font-mono">
-            {xpCurrent} / {xpTarget} XP
-          </span>
         </div>
       </div>
 
-      <div className="space-y-1 w-full border-t border-foreground/[0.04] pt-3 text-left sm:text-center">
-        <p className="text-xs font-bold text-foreground">Tổng điểm: {totalXp} XP tích lũy</p>
-        <p className="text-[10px] text-muted-foreground font-normal">
+      <div className="space-y-1 w-full border-t border-foreground/[0.04] pt-3 text-center">
+        <p className="text-sm font-bold text-foreground">{xpCurrent} / {xpTarget} XP</p>
+        <p className="text-xs text-muted-foreground font-semibold">
           {xpCurrent >= xpTarget
             ? "🎉 Đạt mục tiêu ngày!"
             : `Còn ${xpTarget - xpCurrent} XP để đạt đích`}
+        </p>
+        <p className="text-[10px] text-muted-foreground/60 font-normal mt-1">
+          Tổng điểm: {totalXp} XP tích lũy
         </p>
       </div>
     </m.div>
