@@ -1,6 +1,5 @@
 "use client";
 
-import { m } from "framer-motion";
 import { CheckCircle2, Circle } from "lucide-react";
 
 interface Quest {
@@ -16,60 +15,61 @@ interface DailyQuestsProps {
   completedCount: number;
 }
 
-const itemVariants = {
-  hidden: { opacity: 0, y: 12 },
-  show: { opacity: 1, y: 0, transition: { type: "spring" as const, stiffness: 100, damping: 15 } },
-} as const;
-
 export default function DailyQuests({ quests, handleToggleQuest, completedCount }: DailyQuestsProps) {
+  const allDone = completedCount === quests.length;
+
   return (
-    <m.div
-      variants={itemVariants}
-      initial="hidden"
-      animate="show"
-      className="rounded-3xl border border-glass bg-glass p-6 sm:p-7 shadow-sm space-y-5 text-left"
-    >
-      <div className="flex items-center justify-between pb-3 border-b border-foreground/[0.04]">
-        <div className="space-y-1">
-          <h3 className="text-lg font-black text-foreground tracking-tight">Nhiệm vụ hôm nay</h3>
-          <p className="text-xs text-muted-foreground font-normal">
-            Tự giác đánh dấu hoàn thành sau khi hoàn tất thử thách.
-          </p>
+    <div className="rounded-2xl border border-zinc-200/60 dark:border-zinc-800/60 bg-white/60 dark:bg-zinc-900/25 backdrop-blur-sm p-5 space-y-4">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h3 className="text-sm font-black text-zinc-900 dark:text-zinc-50 tracking-tight">Nhiệm vụ hôm nay</h3>
+          <p className="text-[10px] text-zinc-500 dark:text-zinc-400 font-normal mt-0.5">Tự đánh dấu sau khi hoàn thành.</p>
         </div>
-        <span className="text-xs font-bold px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/10 font-mono">
-          {completedCount} / {quests.length} hoàn thành
+        <span className={`text-xs font-bold px-2.5 py-1 rounded-full font-mono border ${
+          allDone
+            ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20"
+            : "bg-zinc-100 dark:bg-zinc-800/60 text-zinc-500 border-zinc-200/60 dark:border-zinc-700/40"
+        }`}>
+          {completedCount}/{quests.length}
         </span>
       </div>
 
-      <div className="space-y-3.5">
+      {/* Progress bar */}
+      <div className="h-1 w-full bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
+        <div
+          className="h-full bg-emerald-500 rounded-full transition-all duration-500"
+          style={{ width: `${(completedCount / quests.length) * 100}%` }}
+        />
+      </div>
+
+      {/* Quest items */}
+      <div className="space-y-1">
         {quests.map((quest) => (
-          <div
+          <button
             key={quest.id}
+            type="button"
             onClick={() => handleToggleQuest(quest.id)}
-            className="flex items-start gap-4 text-sm py-2.5 px-3 rounded-2xl hover:bg-foreground/[0.02] cursor-pointer transition-colors select-none border border-transparent hover:border-foreground/[0.03]"
+            className="w-full flex items-center gap-3 text-left py-2.5 px-3 rounded-xl hover:bg-zinc-50 dark:hover:bg-zinc-800/40 cursor-pointer transition-colors duration-150 select-none border border-transparent hover:border-zinc-200/50 dark:hover:border-zinc-700/40"
           >
-            <span className="shrink-0 text-primary mt-0.5">
+            <span className="shrink-0 text-emerald-600 dark:text-emerald-400">
               {quest.completed ? (
-                <CheckCircle2 className="size-5 fill-primary text-primary-foreground" />
+                <CheckCircle2 className="size-4.5 fill-emerald-600 dark:fill-emerald-500 text-white dark:text-zinc-950" />
               ) : (
-                <Circle className="size-5 text-muted-foreground hover:text-primary transition-all duration-200 hover:scale-110" />
+                <Circle className="size-4.5 text-zinc-300 dark:text-zinc-600 hover:text-emerald-500 transition-colors duration-150" />
               )}
             </span>
-            <div className="flex-1 leading-snug">
-              <p
-                className={
-                  quest.completed ? "text-muted-foreground line-through decoration-1" : "text-foreground font-bold"
-                }
-              >
-                {quest.text}
-              </p>
-            </div>
-            <span className="text-[10px] font-bold shrink-0 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 px-2.5 py-0.5 rounded-lg border border-emerald-500/10 font-mono">
+            <span className={`flex-1 text-xs font-semibold leading-snug ${
+              quest.completed ? "text-zinc-400 dark:text-zinc-500 line-through decoration-1" : "text-zinc-800 dark:text-zinc-200"
+            }`}>
+              {quest.text}
+            </span>
+            <span className="text-[10px] font-bold shrink-0 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 px-2 py-0.5 rounded-lg border border-emerald-500/15 font-mono">
               +{quest.xp} XP
             </span>
-          </div>
+          </button>
         ))}
       </div>
-    </m.div>
+    </div>
   );
 }

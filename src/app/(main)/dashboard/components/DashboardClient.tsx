@@ -1,11 +1,9 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { LazyMotion, m } from "framer-motion";
-import { Flame, Sparkles } from "lucide-react";
+import { Flame, Star, GraduationCap, BookOpen } from "lucide-react";
 
 import UnitCard from "./UnitCard";
-import XpTracker from "./XpTracker";
 import SrsCard from "./SrsCard";
 import DailyQuests from "./DailyQuests";
 import QuickActions from "./QuickActions";
@@ -34,8 +32,6 @@ interface DashboardClientProps {
     completed: boolean;
   }>;
 }
-
-const loadFeatures = () => import("framer-motion").then((res) => res.domAnimation);
 
 export default function DashboardClient({
   userName,
@@ -66,20 +62,17 @@ export default function DashboardClient({
         if (quest.id === id) {
           const nextState = !quest.completed;
           if (nextState) {
-            // Lazy load canvas-confetti only when completed
             import("canvas-confetti").then((module) => {
-              const confettiFn = module.default;
-              confettiFn({
-                particleCount: 100,
-                spread: 70,
+              module.default({
+                particleCount: 80,
+                spread: 60,
                 origin: { y: 0.8 },
                 colors: ["#10b981", "#3b82f6", "#f59e0b"],
               });
             });
-            // Update XP
-            setXpCurrent((prevXp) => Math.min(prevXp + quest.xp, xpTarget));
+            setXpCurrent((prev) => Math.min(prev + quest.xp, xpTarget));
           } else {
-            setXpCurrent((prevXp) => Math.max(prevXp - quest.xp, 0));
+            setXpCurrent((prev) => Math.max(prev - quest.xp, 0));
           }
           return { ...quest, completed: nextState };
         }
@@ -89,92 +82,109 @@ export default function DashboardClient({
   };
 
   const completedCount = quests.filter((q) => q.completed).length;
+  const xpPercent = Math.round((xpCurrent / xpTarget) * 100);
+
+  // Parse short level label (e.g. "B1 Intermediate" → "B1")
+  const shortLevel = userLevel.split(" ")[0] ?? userLevel;
 
   return (
-    <LazyMotion features={loadFeatures} strict>
-      <div className="relative mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8 space-y-10 bg-grid-pattern min-h-screen">
-        {/* Soft background ambient glow */}
-        <div className="absolute top-10 right-10 -z-10 h-[450px] w-[450px] rounded-full bg-emerald-500/8 dark:bg-emerald-500/4 blur-[130px] opacity-60 dark:opacity-40 animate-float" />
-        <div className="absolute bottom-20 left-10 -z-10 h-[450px] w-[450px] rounded-full bg-teal-500/8 dark:bg-teal-500/4 blur-[130px] opacity-50 dark:opacity-30" />
+    <div className="relative mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 min-h-screen">
+      {/* Ambient glow — CSS only, no JS */}
+      <div className="pointer-events-none absolute top-0 right-0 -z-10 h-[400px] w-[400px] rounded-full bg-emerald-500/6 dark:bg-emerald-500/4 blur-[120px]" />
+      <div className="pointer-events-none absolute bottom-0 left-0 -z-10 h-[300px] w-[300px] rounded-full bg-teal-500/5 dark:bg-teal-500/3 blur-[100px]" />
 
-        {/* Welcome Area - SSR populated layout */}
-        <m.div
-          initial={{ opacity: 0, y: -8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3 }}
-          className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between pb-6 border-b border-foreground/[0.05]"
-        >
-          <div className="space-y-1 text-left">
-            <div className="flex items-center gap-2 text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest">
-              <Sparkles className="size-3.5 text-emerald-600 dark:text-emerald-400 animate-pulse" />
-              <span>Chào mừng bạn trở lại</span>
-            </div>
-            <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-foreground">
+      <div className="space-y-6">
+        {/* ── 1. Greeting row ── */}
+        <div className="flex items-center justify-between gap-4">
+          <div>
+            <p className="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest mb-0.5">
+              Chào mừng bạn trở lại
+            </p>
+            <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-zinc-900 dark:text-zinc-50">
               {greeting},{" "}
               <span className="bg-gradient-to-r from-emerald-600 via-teal-500 to-emerald-500 bg-clip-text text-transparent dark:from-emerald-400 dark:via-teal-400 dark:to-emerald-300">
                 {userName}
               </span>
               !
             </h1>
-            <p className="text-sm sm:text-base text-muted-foreground font-normal">Hôm nay bạn muốn học gì?</p>
           </div>
-
-          {/* Streak Display Badge */}
-          <m.div
-            whileHover={{ scale: 1.03 }}
-            className="shrink-0 flex items-center gap-3 rounded-2xl bg-orange-500/10 border border-orange-500/20 px-5 py-3 shadow-lg shadow-orange-500/5 cursor-pointer"
-          >
-            <Flame className="size-6 text-orange-500 fill-orange-500 animate-pulse" />
-            <span className="text-sm font-black text-orange-600 dark:text-orange-400">
-              {currentStreak} ngày liên tục
+          {/* Streak badge */}
+          <div className="shrink-0 flex items-center gap-2 rounded-2xl bg-orange-500/10 border border-orange-500/20 px-4 py-2.5 hover:bg-orange-500/15 transition-colors duration-200">
+            <Flame className="size-5 text-orange-500 fill-orange-500" />
+            <span className="text-sm font-black text-orange-600 dark:text-orange-400 whitespace-nowrap">
+              {currentStreak} ngày
             </span>
-          </m.div>
-        </m.div>
-
-        {/* Main Grid layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          {/* Left Column (60-65%): Recommended Lesson Card */}
-          <div className="lg:col-span-8 space-y-6">
-            <UnitCard currentUnitData={currentUnitData} />
-          </div>
-
-          {/* Right Column (35-40%): Stats Panel */}
-          <div className="lg:col-span-4 space-y-6">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-6">
-              {/* XP circular tracker */}
-              <XpTracker
-                xpCurrent={xpCurrent}
-                xpTarget={xpTarget}
-                totalXp={totalXp}
-              />
-
-              {/* SrsCard */}
-              <SrsCard
-                completedUnits={completedUnits}
-                userLevel={userLevel}
-                dueCardsCount={dueCardsCount}
-              />
-            </div>
           </div>
         </div>
 
-        {/* Bottom area: Daily Quests and Quick Actions */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 pt-4">
-          {/* Daily Quests List */}
-          <div className="lg:col-span-7 space-y-4">
+        {/* ── 2. Stats strip ── */}
+        <div className="grid grid-cols-3 gap-3">
+          {/* XP today */}
+          <div className="rounded-2xl border border-zinc-200/60 dark:border-zinc-800/60 bg-white/60 dark:bg-zinc-900/30 backdrop-blur-sm p-4 space-y-2 hover:border-emerald-500/30 transition-colors duration-200">
+            <div className="flex items-center gap-2">
+              <span className="flex size-7 items-center justify-center rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
+                <Star className="size-3.5 fill-current" />
+              </span>
+              <span className="text-[10px] font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">XP hôm nay</span>
+            </div>
+            <p className="text-xl font-black text-zinc-900 dark:text-zinc-50 leading-none">
+              {xpCurrent}<span className="text-xs font-bold text-zinc-400 dark:text-zinc-500">/{xpTarget}</span>
+            </p>
+            {/* Mini progress bar */}
+            <div className="h-1.5 w-full bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
+              <div
+                className="h-full bg-emerald-500 rounded-full transition-all duration-500"
+                style={{ width: `${xpPercent}%` }}
+              />
+            </div>
+          </div>
+
+          {/* Level */}
+          <div className="rounded-2xl border border-zinc-200/60 dark:border-zinc-800/60 bg-white/60 dark:bg-zinc-900/30 backdrop-blur-sm p-4 space-y-2 hover:border-blue-500/30 transition-colors duration-200">
+            <div className="flex items-center gap-2">
+              <span className="flex size-7 items-center justify-center rounded-lg bg-blue-500/10 text-blue-600 dark:text-blue-400">
+                <GraduationCap className="size-3.5" />
+              </span>
+              <span className="text-[10px] font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">Trình độ</span>
+            </div>
+            <p className="text-xl font-black text-zinc-900 dark:text-zinc-50 leading-none">{shortLevel}</p>
+            <p className="text-[10px] text-zinc-500 dark:text-zinc-400 font-medium">{totalXp} XP tích lũy</p>
+          </div>
+
+          {/* Units completed */}
+          <div className="rounded-2xl border border-zinc-200/60 dark:border-zinc-800/60 bg-white/60 dark:bg-zinc-900/30 backdrop-blur-sm p-4 space-y-2 hover:border-purple-500/30 transition-colors duration-200">
+            <div className="flex items-center gap-2">
+              <span className="flex size-7 items-center justify-center rounded-lg bg-purple-500/10 text-purple-600 dark:text-purple-400">
+                <BookOpen className="size-3.5" />
+              </span>
+              <span className="text-[10px] font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">Units</span>
+            </div>
+            <p className="text-xl font-black text-zinc-900 dark:text-zinc-50 leading-none">{completedUnits}</p>
+            <p className="text-[10px] text-zinc-500 dark:text-zinc-400 font-medium">đã hoàn thành</p>
+          </div>
+        </div>
+
+        {/* ── 3. Main content: 2-column grid ── */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
+          {/* Left: Hero lesson card */}
+          <div className="lg:col-span-7">
+            <UnitCard currentUnitData={currentUnitData} />
+          </div>
+
+          {/* Right: SRS + Daily Quests */}
+          <div className="lg:col-span-5 space-y-5">
+            <SrsCard dueCardsCount={dueCardsCount} />
             <DailyQuests
               quests={quests}
               handleToggleQuest={handleToggleQuest}
               completedCount={completedCount}
             />
           </div>
-
-          {/* Quick Actions Panel */}
-          <div className="lg:col-span-5 space-y-4">
-            <QuickActions currentUnitRoute={currentUnitData.route} />
-          </div>
         </div>
+
+        {/* ── 4. Quick Actions row ── */}
+        <QuickActions currentUnitRoute={currentUnitData.route} />
       </div>
-    </LazyMotion>
+    </div>
   );
 }
