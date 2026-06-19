@@ -1,5 +1,5 @@
 
-import { XCircle } from "lucide-react";
+import { XCircle, Quote } from "lucide-react";
 import ScrollReveal from "@/components/ui/scroll-reveal";
 
 export default function ProblemSection() {
@@ -23,46 +23,67 @@ export default function ProblemSection() {
       {/* Soft background light */}
       <div className="absolute top-0 right-1/4 w-96 h-96 rounded-full bg-emerald-500/5 dark:bg-emerald-500/2 blur-[80px] pointer-events-none" />
 
-      <ScrollReveal className="max-w-5xl mx-auto text-center space-y-16">
-        <div className="space-y-4">
-          <div className="flex justify-center mb-4">
-            <span className="flex size-14 items-center justify-center rounded-2xl bg-zinc-100 dark:bg-zinc-900 text-zinc-500 dark:text-zinc-400 border border-zinc-200/50 dark:border-zinc-800/50 shadow-inner">
-              <XCircle className="size-6 animate-pulse" />
-            </span>
-          </div>
+      <div className="max-w-5xl mx-auto text-center space-y-16">
 
-          <h2 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-zinc-900 dark:text-zinc-50 leading-normal">
-            Bạn học tiếng Anh nhiều năm nhưng vẫn ngại nói?
-          </h2>
-          
-          <p className="text-base sm:text-lg text-zinc-650 dark:text-zinc-350 max-w-2xl mx-auto leading-relaxed font-normal">
-            Hàng trăm giờ học ngữ pháp, thuộc hàng nghìn từ vựng… nhưng khi cần mở miệng giao tiếp thực tế thì lại bế tắc. Bạn không thiếu kiến thức, bạn chỉ thiếu môi trường để luyện phản xạ nói tự nhiên.
-          </p>
-        </div>
+        {/* Emotional pull-quote — triggers immediate relatability */}
+        <ScrollReveal>
+          <figure className="max-w-2xl mx-auto">
+            <div className="relative px-8 py-6 rounded-2xl bg-zinc-100/70 dark:bg-zinc-900/40 border border-zinc-200/60 dark:border-zinc-800/50">
+              {/* Decorative quote icon */}
+              <Quote className="absolute top-4 left-4 size-5 text-zinc-300 dark:text-zinc-700" />
+              <blockquote className="text-lg sm:text-xl font-semibold text-zinc-800 dark:text-zinc-200 leading-relaxed italic">
+                &ldquo;Học 3 năm tiếng Anh. Vẫn không dám mở miệng nói.&rdquo;
+              </blockquote>
+              <figcaption className="mt-3 text-xs text-zinc-500 dark:text-zinc-500 font-normal not-italic">
+                — Tâm sự quen thuộc của hàng triệu người học tiếng Anh tại Việt Nam
+              </figcaption>
+            </div>
+          </figure>
+        </ScrollReveal>
+
+        <ScrollReveal>
+          <div className="space-y-4">
+            <div className="flex justify-center mb-4">
+              <span className="flex size-14 items-center justify-center rounded-2xl bg-zinc-100 dark:bg-zinc-900 text-zinc-500 dark:text-zinc-400 border border-zinc-200/50 dark:border-zinc-800/50 shadow-inner">
+                <XCircle className="size-6 animate-pulse" />
+              </span>
+            </div>
+
+            <h2 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-zinc-900 dark:text-zinc-50 leading-normal">
+              Bạn học tiếng Anh nhiều năm nhưng vẫn ngại nói?
+            </h2>
+
+            <p className="text-base sm:text-lg text-zinc-650 dark:text-zinc-350 max-w-2xl mx-auto leading-relaxed font-normal">
+              Hàng trăm giờ học ngữ pháp, thuộc hàng nghìn từ vựng… nhưng khi cần mở miệng giao tiếp thực tế thì lại bế tắc. Bạn không thiếu kiến thức, bạn chỉ thiếu môi trường để luyện phản xạ nói tự nhiên.
+            </p>
+          </div>
+        </ScrollReveal>
 
         {/* 3 Problems Row */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
           {problems.map((prob, idx) => (
-            <div 
-              key={idx} 
-              className="bg-white/60 dark:bg-zinc-900/25 backdrop-blur-sm p-7 rounded-2xl border border-zinc-200/60 dark:border-zinc-800/50 shadow-sm space-y-3.5 hover:border-emerald-500/30 dark:hover:border-emerald-500/20 hover:-translate-y-1 hover:shadow-md transition-all duration-300"
-            >
-              <div className="text-emerald-700 dark:text-emerald-400 font-bold text-sm sm:text-base">
-                0{idx + 1}. {prob.title}
+            <ScrollReveal key={idx} delayMs={idx * 100}>
+              <div className="bg-white/60 dark:bg-zinc-900/25 backdrop-blur-sm p-7 rounded-2xl border border-zinc-200/60 dark:border-zinc-800/50 shadow-sm space-y-3.5 hover:border-emerald-500/30 dark:hover:border-emerald-500/20 hover:-translate-y-1 hover:shadow-md transition-all duration-300 h-full">
+                <div className="text-emerald-700 dark:text-emerald-400 font-bold text-sm sm:text-base">
+                  0{idx + 1}. {prob.title}
+                </div>
+                <p className="text-xs sm:text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed font-normal">
+                  {prob.desc}
+                </p>
               </div>
-              <p className="text-xs sm:text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed font-normal">
-                {prob.desc}
-              </p>
-            </div>
+            </ScrollReveal>
           ))}
         </div>
 
-        <div className="space-y-2 pt-4">
-          <p className="text-emerald-700 dark:text-emerald-400 font-black text-lg sm:text-xl">
-            AtoEnglish được xây dựng để giải quyết đúng vấn đề này.
-          </p>
-        </div>
-      </ScrollReveal>
+        <ScrollReveal>
+          <div className="space-y-2 pt-4">
+            <p className="text-emerald-700 dark:text-emerald-400 font-black text-lg sm:text-xl">
+              AtoEnglish được xây dựng để giải quyết đúng vấn đề này.
+            </p>
+          </div>
+        </ScrollReveal>
+      </div>
     </section>
   );
 }
+
