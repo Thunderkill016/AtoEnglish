@@ -84,16 +84,15 @@ export default function LandingPage() {
               </div>
 
               {/* Headline */}
-              <h1 className="animate-fade-in-up animation-delay-75 text-2xl leading-normal sm:text-5xl sm:leading-normal lg:text-6xl lg:leading-normal font-extrabold text-zinc-900 dark:text-zinc-50 max-w-4xl mx-auto">
-                <span className="block sm:inline-block sm:whitespace-nowrap">
+              <h1 className="animate-fade-in-up animation-delay-75 text-xl sm:text-4xl md:text-5xl lg:text-6xl leading-normal sm:leading-normal lg:leading-normal font-extrabold text-zinc-900 dark:text-zinc-50 max-w-4xl mx-auto">
+                <span className="block whitespace-nowrap">
                   Học tiếng Anh để{" "}
                   <span className="bg-gradient-to-r from-emerald-600 via-teal-500 to-emerald-500 bg-clip-text text-transparent dark:from-emerald-400 dark:via-teal-400 dark:to-emerald-300">
                     nói được
                   </span>
                   ,
                 </span>
-                <br className="hidden sm:inline" />
-                <span className="block sm:inline-block sm:whitespace-nowrap">
+                <span className="block whitespace-nowrap">
                   không chỉ để biết.
                 </span>
               </h1>

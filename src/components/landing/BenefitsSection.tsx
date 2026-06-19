@@ -33,7 +33,7 @@ export default function BenefitsSection() {
       <div className="max-w-6xl mx-auto space-y-16 sm:space-y-20">
         {/* Section Header */}
         <ScrollReveal className="text-center space-y-4">
-          <h2 className="text-[2.25rem] sm:text-4xl lg:text-5xl font-black tracking-tight text-zinc-900 dark:text-zinc-50 leading-normal">
+          <h2 className="text-2xl sm:text-4xl lg:text-5xl font-black tracking-tight text-zinc-900 dark:text-zinc-50 leading-normal">
             Bạn sẽ thay đổi như thế nào?
           </h2>
         </ScrollReveal>
