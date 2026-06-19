@@ -1,5 +1,5 @@
 
-import { XCircle, Quote } from "lucide-react";
+import { XCircle } from "lucide-react";
 import ScrollReveal from "@/components/ui/scroll-reveal";
 
 export default function ProblemSection() {
