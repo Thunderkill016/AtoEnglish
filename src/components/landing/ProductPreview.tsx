@@ -234,30 +234,32 @@ export default function ProductPreview() {
         <div className="flex items-center gap-1 sm:gap-2">
           <button
             onClick={() => setActiveTab("speaking")}
-            className={`text-xs font-bold px-3 py-1.5 rounded-lg transition-all duration-200 ${
+            className={`text-xs font-bold px-2 sm:px-3 py-1.5 rounded-lg transition-all duration-200 ${
               activeTab === "speaking"
                 ? "bg-emerald-600 text-white shadow-sm shadow-emerald-600/10"
                 : "text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-900/50"
             }`}
           >
-            Luyện nói phản xạ
+            <span className="hidden sm:inline">Luyện nói phản xạ</span>
+            <span className="sm:hidden">Luyện nói</span>
           </button>
           <button
             onClick={() => {
               setActiveTab("srs");
               setIsFlipped(false);
             }}
-            className={`text-xs font-bold px-3 py-1.5 rounded-lg transition-all duration-200 ${
+            className={`text-xs font-bold px-2 sm:px-3 py-1.5 rounded-lg transition-all duration-200 ${
               activeTab === "srs"
                 ? "bg-emerald-600 text-white shadow-sm shadow-emerald-600/10"
                 : "text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-900/50"
             }`}
           >
-            Thẻ Từ Vựng (SRS)
+            <span className="hidden sm:inline">Thẻ Từ Vựng (SRS)</span>
+            <span className="sm:hidden">Thẻ SRS</span>
           </button>
           <button
             onClick={() => setActiveTab("dashboard")}
-            className={`text-xs font-bold px-3 py-1.5 rounded-lg transition-all duration-200 ${
+            className={`text-xs font-bold px-2 sm:px-3 py-1.5 rounded-lg transition-all duration-200 ${
               activeTab === "dashboard"
                 ? "bg-emerald-600 text-white shadow-sm shadow-emerald-600/10"
                 : "text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-900/50"

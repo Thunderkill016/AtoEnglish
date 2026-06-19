@@ -36,6 +36,33 @@ export default function FinalCtaSection() {
             </p>
           </ScrollReveal>
 
+          {/* Social proof */}
+          <ScrollReveal delayClass="delay-75">
+            <div className="flex flex-col items-center gap-3">
+              {/* Avatar stack */}
+              <div className="flex items-center gap-2">
+                <div className="flex -space-x-2.5">
+                  {["bg-emerald-500", "bg-teal-500", "bg-blue-500", "bg-violet-500", "bg-amber-500"].map((color, i) => (
+                    <div
+                      key={i}
+                      className={`size-8 rounded-full ${color} border-2 border-white dark:border-zinc-950 flex items-center justify-center text-white text-[10px] font-black shadow-sm`}
+                    >
+                      {["N", "L", "T", "H", "M"][i]}
+                    </div>
+                  ))}
+                </div>
+                <span className="text-xs font-semibold text-zinc-600 dark:text-zinc-400">
+                  +200 người đang học trong Open Beta
+                </span>
+              </div>
+              {/* Short testimonial */}
+              <p className="text-xs text-zinc-500 dark:text-zinc-400 italic max-w-sm text-center leading-relaxed">
+                &ldquo;Sau 2 tuần học, tôi đã có thể tự tin nói chuyện cơ bản với người nước ngoài mà không cần dịch nhẩm.&rdquo;
+                <span className="not-italic font-bold text-zinc-600 dark:text-zinc-300 ml-1">— Nguyễn Lan, HCM</span>
+              </p>
+            </div>
+          </ScrollReveal>
+
           <ScrollReveal delayClass="delay-100" className="flex flex-col items-center gap-4">
             <Link
               href={isLoggedIn ? "/dashboard" : "/login"}
