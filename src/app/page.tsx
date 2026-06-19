@@ -84,7 +84,7 @@ export default function LandingPage() {
               </div>
 
               {/* Headline */}
-              <h1 className="animate-fade-in-up animation-delay-75 text-xl sm:text-4xl md:text-5xl lg:text-6xl leading-relaxed font-extrabold text-zinc-900 dark:text-zinc-50 max-w-4xl mx-auto px-4">
+              <h1 className="animate-fade-in-up animation-delay-75 flex flex-col items-center gap-y-2 sm:gap-y-3 text-xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-zinc-900 dark:text-zinc-50 max-w-4xl mx-auto px-4">
                 <span className="block lg:whitespace-nowrap">
                   Học tiếng Anh để{" "}
                   <span className="bg-gradient-to-r from-emerald-600 via-teal-500 to-emerald-500 bg-clip-text text-transparent dark:from-emerald-400 dark:via-teal-400 dark:to-emerald-300">
