@@ -15,7 +15,7 @@ export default function ScienceSection() {
       <div className="max-w-6xl mx-auto space-y-16 sm:space-y-20">
         {/* Section Header */}
         <ScrollReveal className="text-center space-y-4">
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-zinc-900 dark:text-zinc-50 leading-snug max-w-2xl mx-auto">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-zinc-900 dark:text-zinc-50 leading-normal max-w-2xl mx-auto">
             Được xây dựng dựa trên khoa học, tối ưu cho người Việt
           </h2>
         </ScrollReveal>
@@ -31,7 +31,7 @@ export default function ScienceSection() {
                 <Cpu className="size-6" strokeWidth={2.2} />
               </span>
               <div className="space-y-3.5 text-left flex-1 flex flex-col">
-                <h3 className="text-lg sm:text-xl font-bold text-zinc-900 dark:text-zinc-100 tracking-tight leading-snug">
+                <h3 className="text-lg sm:text-xl font-bold text-zinc-900 dark:text-zinc-100 tracking-tight leading-normal">
                   Phương pháp IPOR & FSRS
                 </h3>
                 <p className="text-sm sm:text-[15px] text-zinc-650 dark:text-zinc-400 leading-relaxed font-normal flex-1">
@@ -50,7 +50,7 @@ export default function ScienceSection() {
                 <Users className="size-6" strokeWidth={2.2} />
               </span>
               <div className="space-y-3.5 text-left flex-1 flex flex-col">
-                <h3 className="text-lg sm:text-xl font-bold text-zinc-900 dark:text-zinc-100 tracking-tight leading-snug">
+                <h3 className="text-lg sm:text-xl font-bold text-zinc-900 dark:text-zinc-100 tracking-tight leading-normal">
                   Tối ưu cho người Việt
                 </h3>
                 <p className="text-sm sm:text-[15px] text-zinc-650 dark:text-zinc-400 leading-relaxed font-normal flex-1">
@@ -69,7 +69,7 @@ export default function ScienceSection() {
                 <Brain className="size-6" strokeWidth={2.2} />
               </span>
               <div className="space-y-3.5 text-left flex-1 flex flex-col">
-                <h3 className="text-lg sm:text-xl font-bold text-zinc-900 dark:text-zinc-100 tracking-tight leading-snug">
+                <h3 className="text-lg sm:text-xl font-bold text-zinc-900 dark:text-zinc-100 tracking-tight leading-normal">
                   Học chủ động (Active Recall)
                 </h3>
                 <p className="text-sm sm:text-[15px] text-zinc-650 dark:text-zinc-400 leading-relaxed font-normal flex-1">

@@ -33,7 +33,7 @@ export default function BenefitsSection() {
       <div className="max-w-6xl mx-auto space-y-16 sm:space-y-20">
         {/* Section Header */}
         <ScrollReveal className="text-center space-y-4">
-          <h2 className="text-[2.25rem] sm:text-4xl lg:text-5xl font-black tracking-tight text-zinc-900 dark:text-zinc-50 leading-tight">
+          <h2 className="text-[2.25rem] sm:text-4xl lg:text-5xl font-black tracking-tight text-zinc-900 dark:text-zinc-50 leading-normal">
             Bạn sẽ thay đổi như thế nào?
           </h2>
         </ScrollReveal>
@@ -55,7 +55,7 @@ export default function BenefitsSection() {
                     <BenefitIcon className="size-6" strokeWidth={2.2} />
                   </span>
                   <div className="space-y-3.5 text-left flex-1 flex flex-col">
-                    <h3 className="text-lg sm:text-xl font-bold text-zinc-900 dark:text-zinc-100 tracking-tight leading-snug">
+                    <h3 className="text-lg sm:text-xl font-bold text-zinc-900 dark:text-zinc-100 tracking-tight leading-normal">
                       {benefit.title}
                     </h3>
                     <p className="text-sm sm:text-[15px] text-zinc-650 dark:text-zinc-400 leading-relaxed font-normal flex-1">

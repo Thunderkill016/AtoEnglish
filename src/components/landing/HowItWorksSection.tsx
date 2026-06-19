@@ -61,7 +61,7 @@ export default function HowItWorksSection() {
       <div className="max-w-6xl mx-auto space-y-16 sm:space-y-24">
         {/* Section Header */}
         <ScrollReveal className="text-center space-y-4">
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-zinc-900 dark:text-zinc-50 leading-snug">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-zinc-900 dark:text-zinc-50 leading-normal">
             Cách học giúp bạn nói được nhanh nhất
           </h2>
           <p className="text-base sm:text-lg text-zinc-650 dark:text-zinc-350 max-w-xl mx-auto leading-relaxed font-normal">
@@ -93,7 +93,7 @@ export default function HowItWorksSection() {
                     </span>
                   </div>
                   <div className="space-y-3 flex-1 flex flex-col">
-                    <h3 className="text-lg sm:text-xl font-bold text-zinc-900 dark:text-zinc-100 tracking-tight leading-snug">
+                    <h3 className="text-lg sm:text-xl font-bold text-zinc-900 dark:text-zinc-100 tracking-tight leading-normal">
                       {step.title}
                     </h3>
                     <p className="text-sm sm:text-[15px] text-zinc-650 dark:text-zinc-400 leading-relaxed flex-1 font-normal">
