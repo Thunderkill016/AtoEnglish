@@ -11,6 +11,7 @@ import ProblemSection from "@/components/landing/ProblemSection";
 import HowItWorksSection from "@/components/landing/HowItWorksSection";
 import BenefitsSection from "@/components/landing/BenefitsSection";
 import ScienceSection from "@/components/landing/ScienceSection";
+import ComparisonSection from "@/components/landing/ComparisonSection";
 import StickyMobileCTA from "@/components/landing/StickyMobileCTA";
 
 // Lazy load heavy client components below the fold
@@ -205,6 +206,9 @@ export default function LandingPage() {
         </div>
         <div className="[content-visibility:auto] [contain-intrinsic-size:auto_700px]">
           <ScienceSection />
+        </div>
+        <div className="[content-visibility:auto] [contain-intrinsic-size:auto_600px]">
+          <ComparisonSection />
         </div>
 
         {/* Below-fold lazy sections — browser can defer rendering */}
