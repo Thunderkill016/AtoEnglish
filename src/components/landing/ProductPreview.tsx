@@ -59,7 +59,7 @@ export default function ProductPreview() {
                 : "text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-900/50"
             }`}
           >
-            Luyện nói AI
+            Luyện nói phản xạ
           </button>
           <button
             onClick={() => {
@@ -95,7 +95,7 @@ export default function ProductPreview() {
           <div className="w-full max-w-md space-y-6 text-left animate-fade-in">
             <div className="flex items-center gap-2 text-xs font-extrabold uppercase tracking-widest text-emerald-700 dark:text-emerald-400 bg-emerald-500/5 dark:bg-emerald-500/10 border border-emerald-500/10 px-3 py-1 rounded-full w-fit">
               <Sparkles className="size-3 text-emerald-600 dark:text-emerald-400 animate-pulse" />
-              <span>Shadowing & Phản hồi AI</span>
+              <span>Shadowing & Nhận diện giọng</span>
             </div>
             
             <div className="p-6 rounded-2xl border border-zinc-200/60 dark:border-zinc-800/50 bg-white/70 dark:bg-zinc-900/15 backdrop-blur-sm space-y-4">
@@ -149,7 +149,7 @@ export default function ProductPreview() {
                 <div className="flex flex-col items-center gap-3">
                   <RefreshCw className="size-6 text-emerald-600 dark:text-emerald-400 animate-spin" />
                   <span className="text-xs font-semibold text-zinc-500 dark:text-zinc-400">
-                    AI đang phân tích giọng nói của bạn...
+                    Hệ thống đang phân tích giọng nói của bạn...
                   </span>
                 </div>
               )}
