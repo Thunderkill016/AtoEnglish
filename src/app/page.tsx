@@ -11,6 +11,7 @@ import ProblemSection from "@/components/landing/ProblemSection";
 import HowItWorksSection from "@/components/landing/HowItWorksSection";
 import BenefitsSection from "@/components/landing/BenefitsSection";
 import ScienceSection from "@/components/landing/ScienceSection";
+import StickyMobileCTA from "@/components/landing/StickyMobileCTA";
 
 // Lazy load heavy client components below the fold
 const ProductPreview = dynamic(
@@ -188,6 +189,9 @@ export default function LandingPage() {
               * Dự án đang trong giai đoạn thử nghiệm mở (Open Beta). Mọi bài học đều hoàn toàn miễn phí.
             </p>
           </div>
+
+          {/* Sentinel: StickyMobileCTA watches this to know when Hero is out of view */}
+          <div id="hero-sentinel" aria-hidden="true" />
         </section>
 
         <div className="[content-visibility:auto] [contain-intrinsic-size:auto_600px]">
@@ -261,6 +265,8 @@ export default function LandingPage() {
           </div>
         </div>
       </footer>
+      {/* Sticky mobile CTA — appears after scrolling past hero, hidden on desktop */}
+      <StickyMobileCTA />
     </div>
   );
 }
