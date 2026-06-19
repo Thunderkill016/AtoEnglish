@@ -45,10 +45,12 @@ function LoginContent() {
 
   const supabase = createClient();
 
-  // Check if we should skip the onboarding quiz (only if explicitly requested via mode=login)
+  // Check if we should skip the onboarding quiz (only if explicitly requested via mode=login or already completed)
   useEffect(() => {
-    if (mode === "login") {
+    const hasCompletedOnboarding = typeof window !== "undefined" && localStorage.getItem("ato_onboarding_completed") === "true";
+    if (mode === "login" || hasCompletedOnboarding) {
       setOnboardingStep(5);
+      setIsSignUp(false);
     } else {
       setOnboardingStep(1);
     }
@@ -63,6 +65,10 @@ function LoginContent() {
       const t4 = setTimeout(() => {
         setDirection(1);
         setOnboardingStep(5);
+        setIsSignUp(true); // Default to signup screen to save newly created roadmap!
+        if (typeof window !== "undefined") {
+          localStorage.setItem("ato_onboarding_completed", "true");
+        }
       }, 3200);
 
       return () => {
@@ -259,6 +265,7 @@ function LoginContent() {
   };
 
   const recap = getRecapText();
+  const hasAnswers = !!answers[1];
 
   const checklistItems = [
     "Phân tích trình độ học tập...",
@@ -475,8 +482,10 @@ function LoginContent() {
                       onClick={() => {
                         setDirection(1);
                         setOnboardingStep(5);
+                        setIsSignUp(false);
+                        setAnswers({}); // Clear any partial answers since they decided to log in directly
                       }}
-                      className="text-xs text-zinc-400 hover:text-zinc-800 dark:text-zinc-500 dark:hover:text-zinc-300 font-bold transition-colors underline underline-offset-4"
+                      className="text-xs text-zinc-400 hover:text-zinc-800 dark:text-zinc-500 dark:hover:text-zinc-350 font-bold transition-colors underline underline-offset-4"
                     >
                       Tôi đã có tài khoản. Đăng nhập ngay
                     </button>
@@ -555,34 +564,44 @@ function LoginContent() {
                 <>
                   {/* Headline and introduction */}
                   <div className="space-y-3 text-left">
-                    <motion.div 
-                      initial={{ opacity: 0, y: 8 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.1 }}
-                      className="flex flex-col gap-3 p-4 rounded-2xl bg-emerald-500/5 dark:bg-emerald-500/5 border border-emerald-500/10 dark:border-emerald-500/10 backdrop-blur-sm"
-                    >
-                      <div className="flex items-center gap-2 text-xs font-bold text-emerald-600 dark:text-emerald-400">
-                        <Sparkles className="size-4" />
-                        <span>Đã thiết lập xong lộ trình tối ưu!</span>
-                      </div>
-                      <div className="flex flex-wrap gap-1.5">
-                        <span className="inline-flex items-center text-[10px] sm:text-xs font-bold text-emerald-700 dark:text-emerald-350 bg-emerald-100/50 dark:bg-emerald-950/40 px-2.5 py-0.5 rounded-lg border border-emerald-200/30 dark:border-emerald-900/30">
-                          Cấp độ: {recap.level}
-                        </span>
-                        <span className="inline-flex items-center text-[10px] sm:text-xs font-bold text-teal-700 dark:text-teal-350 bg-teal-100/50 dark:bg-teal-950/40 px-2.5 py-0.5 rounded-lg border border-teal-200/30 dark:border-teal-900/30">
-                          Mục tiêu: {recap.target}
-                        </span>
-                        <span className="inline-flex items-center text-[10px] sm:text-xs font-bold text-blue-700 dark:text-blue-355 bg-blue-100/50 dark:bg-blue-950/40 px-2.5 py-0.5 rounded-lg border border-blue-200/30 dark:border-blue-900/30">
-                          Học tập: {recap.time}
-                        </span>
-                      </div>
-                    </motion.div>
+                    {hasAnswers && (
+                      <motion.div 
+                        initial={{ opacity: 0, y: 8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.1 }}
+                        className="flex flex-col gap-3 p-4 rounded-2xl bg-emerald-500/5 dark:bg-emerald-500/5 border border-emerald-500/10 dark:border-emerald-500/10 backdrop-blur-sm"
+                      >
+                        <div className="flex items-center gap-2 text-xs font-bold text-emerald-600 dark:text-emerald-400">
+                          <Sparkles className="size-4" />
+                          <span>Đã thiết lập xong lộ trình tối ưu!</span>
+                        </div>
+                        <div className="flex flex-wrap gap-1.5">
+                          <span className="inline-flex items-center text-[10px] sm:text-xs font-bold text-emerald-700 dark:text-emerald-350 bg-emerald-100/50 dark:bg-emerald-950/40 px-2.5 py-0.5 rounded-lg border border-emerald-200/30 dark:border-emerald-900/30">
+                            Cấp độ: {recap.level}
+                          </span>
+                          <span className="inline-flex items-center text-[10px] sm:text-xs font-bold text-teal-700 dark:text-teal-350 bg-teal-100/50 dark:bg-teal-950/40 px-2.5 py-0.5 rounded-lg border border-teal-200/30 dark:border-teal-900/30">
+                            Mục tiêu: {recap.target}
+                          </span>
+                          <span className="inline-flex items-center text-[10px] sm:text-xs font-bold text-blue-700 dark:text-blue-355 bg-blue-100/50 dark:bg-blue-950/40 px-2.5 py-0.5 rounded-lg border border-blue-200/30 dark:border-blue-900/30">
+                            Học tập: {recap.time}
+                          </span>
+                        </div>
+                      </motion.div>
+                    )}
                     
                     <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-zinc-900 dark:text-zinc-50 leading-tight">
-                      Lộ trình của bạn đã sẵn sàng!
+                      {hasAnswers 
+                        ? "Lộ trình của bạn đã sẵn sàng!" 
+                        : isSignUp 
+                          ? "Tạo tài khoản mới" 
+                          : "Chào mừng quay trở lại"}
                     </h1>
                     <p className="text-xs sm:text-sm text-zinc-500 dark:text-zinc-400 font-medium leading-relaxed">
-                      Đăng nhập để bắt đầu bài học đầu tiên thiết kế riêng cho bạn.
+                      {hasAnswers 
+                        ? "Đăng ký hoặc đăng nhập để bắt đầu bài học đầu tiên thiết kế riêng cho bạn." 
+                        : isSignUp 
+                          ? "Đăng ký nhanh để bắt đầu hành trình học tiếng Anh ngay hôm nay." 
+                          : "Đăng nhập để tiếp tục tiến trình học tập của bạn."}
                     </p>
                   </div>
 
@@ -668,7 +687,7 @@ function LoginContent() {
                           className="w-full bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-700 hover:to-emerald-600 text-white font-bold h-12 rounded-xl text-sm gap-2 active:scale-[0.98] transition-all duration-300 shadow-md shadow-emerald-600/10 hover:shadow-lg hover:shadow-emerald-600/20 border-t border-white/10"
                         >
                           {isLoading && <Loader2 className="size-4 animate-spin" />}
-                          <span>{isSignUp ? "Kích hoạt tài khoản" : "Đăng nhập bằng Email"}</span>
+                          <span>{isSignUp ? (hasAnswers ? "Kích hoạt lộ trình học" : "Đăng ký tài khoản") : "Đăng nhập bằng Email"}</span>
                         </Button>
                       </motion.div>
                     </form>
@@ -688,10 +707,13 @@ function LoginContent() {
                           setDirection(-1);
                           setOnboardingStep(1);
                           setAnswers({});
+                          if (typeof window !== "undefined") {
+                            localStorage.removeItem("ato_onboarding_completed");
+                          }
                         }}
                         className="text-zinc-400 hover:text-zinc-800 dark:text-zinc-500 dark:hover:text-zinc-350 font-semibold transition-colors"
                       >
-                        Làm lại khảo sát định hướng
+                        {hasAnswers ? "Làm lại khảo sát định hướng" : "Làm khảo sát định hướng để nhận lộ trình riêng"}
                       </button>
                     </div>
                   </div>

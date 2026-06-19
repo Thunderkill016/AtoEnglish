@@ -46,7 +46,7 @@ export default function XpTracker({ xpCurrent, xpTarget, totalXp }: XpTrackerPro
             strokeLinecap="round"
           />
         </svg>
-        <div className="absolute flex flex-col items-center leading-none">
+        <div className="absolute inset-0 flex flex-col items-center justify-center leading-none">
           <span className="text-2.5xl font-black text-foreground">{Math.round(xpPercentage)}%</span>
           <span className="text-[9px] font-extrabold text-muted-foreground uppercase tracking-widest mt-1 font-mono">
             {xpCurrent} / {xpTarget} XP

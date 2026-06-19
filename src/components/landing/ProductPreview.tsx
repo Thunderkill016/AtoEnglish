@@ -453,14 +453,14 @@ export default function ProductPreview() {
                 <span className="text-[9px] font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full">Hàng ngày</span>
               </div>
               
-              <div className="relative size-20 flex items-center justify-center my-1.5">
+              <div className="relative size-24 flex items-center justify-center my-1">
                 <svg className="size-full transform -rotate-90" viewBox="0 0 100 100">
                   <circle cx="50" cy="50" r="40" className="stroke-zinc-100 dark:stroke-zinc-800 fill-none" strokeWidth="6" />
                   <circle cx="50" cy="50" r="40" className="stroke-emerald-600 fill-none" strokeWidth="7" strokeDasharray="251" strokeDashoffset="75" strokeLinecap="round" />
                 </svg>
-                <div className="absolute flex flex-col items-center leading-none">
-                  <span className="text-lg font-black text-zinc-900 dark:text-zinc-50">70%</span>
-                  <span className="text-[8px] font-extrabold text-zinc-400 uppercase font-mono mt-0.5">50 / 80 XP</span>
+                <div className="absolute inset-0 flex flex-col items-center justify-center leading-none">
+                  <span className="text-xl font-black text-zinc-900 dark:text-zinc-50">70%</span>
+                  <span className="text-[9px] font-bold text-zinc-500 dark:text-zinc-400 uppercase font-mono mt-1 tracking-wider">50 / 80 XP</span>
                 </div>
               </div>
 
