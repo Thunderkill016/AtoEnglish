@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Sparkles, Sprout } from "lucide-react";
 
+import { Spotlight } from "@/components/ui/spotlight";
 import NavbarAuth from "@/components/landing/NavbarAuth";
 import HeroCTA from "@/components/landing/HeroCTA";
 import ProductPreview from "@/components/landing/ProductPreview";
@@ -66,6 +67,9 @@ export default function LandingPage() {
       <main id="main-content">
         {/* ===== Hero Section ===== */}
         <section className="relative px-5 sm:px-8 pt-20 pb-16 sm:pt-32 sm:pb-24 lg:pt-36 lg:pb-28 overflow-hidden">
+          {/* Spotlight light beam effect */}
+          <Spotlight className="-top-40 left-0 md:left-60 md:-top-20" fill="rgb(16 185 129 / 0.15)" />
+
           {/* Advanced Apple-style mesh gradient backdrops */}
           <div className="absolute inset-0 overflow-hidden pointer-events-none -z-10">
             <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-emerald-500/8 dark:bg-emerald-500/4 blur-[120px]" />

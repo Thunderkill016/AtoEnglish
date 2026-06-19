@@ -92,10 +92,10 @@ export default function DashboardClient({
 
   return (
     <LazyMotion features={loadFeatures} strict>
-      <div className="relative mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-8 bg-grid-pattern min-h-screen">
+      <div className="relative mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8 space-y-10 bg-grid-pattern min-h-screen">
         {/* Soft background ambient glow */}
-        <div className="absolute top-10 right-10 -z-10 h-[400px] w-[400px] rounded-full bg-primary/10 blur-3xl opacity-60 dark:opacity-40 animate-float" />
-        <div className="absolute bottom-20 left-10 -z-10 h-[400px] w-[400px] rounded-full bg-emerald-500/10 blur-3xl opacity-50 dark:opacity-30" />
+        <div className="absolute top-10 right-10 -z-10 h-[450px] w-[450px] rounded-full bg-emerald-500/8 dark:bg-emerald-500/4 blur-[130px] opacity-60 dark:opacity-40 animate-float" />
+        <div className="absolute bottom-20 left-10 -z-10 h-[450px] w-[450px] rounded-full bg-teal-500/8 dark:bg-teal-500/4 blur-[130px] opacity-50 dark:opacity-30" />
 
         {/* Welcome Area - SSR populated layout */}
         <m.div
@@ -105,13 +105,13 @@ export default function DashboardClient({
           className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between pb-6 border-b border-foreground/[0.05]"
         >
           <div className="space-y-1 text-left">
-            <div className="flex items-center gap-2 text-xs font-bold text-primary uppercase tracking-widest">
-              <Sparkles className="size-3.5 text-primary animate-pulse" />
+            <div className="flex items-center gap-2 text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest">
+              <Sparkles className="size-3.5 text-emerald-600 dark:text-emerald-400 animate-pulse" />
               <span>Chào mừng bạn trở lại</span>
             </div>
             <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-foreground">
               {greeting},{" "}
-              <span className="bg-gradient-to-r from-primary to-emerald-600 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-emerald-600 via-teal-500 to-emerald-500 bg-clip-text text-transparent dark:from-emerald-400 dark:via-teal-400 dark:to-emerald-300">
                 {userName}
               </span>
               !

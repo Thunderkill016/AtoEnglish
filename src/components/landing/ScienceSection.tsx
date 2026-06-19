@@ -26,8 +26,12 @@ export default function ScienceSection() {
           {/* Pillar 1 */}
           <ScrollReveal delayClass={delays[0]} className="flex">
             <div
-              className="group flex flex-col items-start p-8 rounded-[2rem] border border-zinc-200/50 dark:border-zinc-800/40 bg-white/70 dark:bg-zinc-900/25 backdrop-blur-sm hover:border-emerald-500/30 dark:hover:border-emerald-500/20 hover:shadow-xl hover:shadow-zinc-900/[0.03] dark:hover:shadow-black/25 hover:-translate-y-1 transition-all duration-300 space-y-6 w-full"
+              className="group relative overflow-hidden z-0 flex flex-col items-start p-8 rounded-[2rem] border border-zinc-200/50 dark:border-zinc-800/40 bg-white/70 dark:bg-zinc-900/25 backdrop-blur-sm hover:shadow-xl hover:shadow-zinc-900/[0.03] dark:hover:shadow-black/25 hover:-translate-y-1 transition-all duration-300 space-y-6 w-full"
             >
+              {/* CSS-only Glowing Border Gradient */}
+              <div className="absolute -inset-px rounded-[2rem] bg-gradient-to-r from-emerald-500/25 to-teal-500/25 dark:from-emerald-500/35 dark:to-teal-500/35 opacity-0 group-hover:opacity-100 blur-[3px] transition duration-500 -z-10" />
+              <div className="absolute inset-0 rounded-[2rem] bg-white/95 dark:bg-zinc-950/95 -z-10 transition-colors duration-300" />
+
               <span className="flex size-12 items-center justify-center rounded-2xl bg-emerald-100 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 group-hover:scale-105 transition-transform duration-300 border border-emerald-200/50 dark:border-emerald-800/20 shadow-sm">
                 <Cpu className="size-6" strokeWidth={2.2} />
               </span>
@@ -45,8 +49,12 @@ export default function ScienceSection() {
           {/* Pillar 2 */}
           <ScrollReveal delayClass={delays[1]} className="flex">
             <div
-              className="group flex flex-col items-start p-8 rounded-[2rem] border border-zinc-200/50 dark:border-zinc-800/40 bg-white/70 dark:bg-zinc-900/25 backdrop-blur-sm hover:border-emerald-500/30 dark:hover:border-emerald-500/20 hover:shadow-xl hover:shadow-zinc-900/[0.03] dark:hover:shadow-black/25 hover:-translate-y-1 transition-all duration-300 space-y-6 w-full"
+              className="group relative overflow-hidden z-0 flex flex-col items-start p-8 rounded-[2rem] border border-zinc-200/50 dark:border-zinc-800/40 bg-white/70 dark:bg-zinc-900/25 backdrop-blur-sm hover:shadow-xl hover:shadow-zinc-900/[0.03] dark:hover:shadow-black/25 hover:-translate-y-1 transition-all duration-300 space-y-6 w-full"
             >
+              {/* CSS-only Glowing Border Gradient */}
+              <div className="absolute -inset-px rounded-[2rem] bg-gradient-to-r from-emerald-500/25 to-teal-500/25 dark:from-emerald-500/35 dark:to-teal-500/35 opacity-0 group-hover:opacity-100 blur-[3px] transition duration-500 -z-10" />
+              <div className="absolute inset-0 rounded-[2rem] bg-white/95 dark:bg-zinc-950/95 -z-10 transition-colors duration-300" />
+
               <span className="flex size-12 items-center justify-center rounded-2xl bg-emerald-100 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 group-hover:scale-105 transition-transform duration-300 border border-emerald-200/50 dark:border-emerald-800/20 shadow-sm">
                 <Users className="size-6" strokeWidth={2.2} />
               </span>
@@ -64,8 +72,12 @@ export default function ScienceSection() {
           {/* Pillar 3 */}
           <ScrollReveal delayClass={delays[2]} className="flex">
             <div
-              className="group flex flex-col items-start p-8 rounded-[2rem] border border-zinc-200/50 dark:border-zinc-800/40 bg-white/70 dark:bg-zinc-900/25 backdrop-blur-sm hover:border-emerald-500/30 dark:hover:border-emerald-500/20 hover:shadow-xl hover:shadow-zinc-900/[0.03] dark:hover:shadow-black/25 hover:-translate-y-1 transition-all duration-300 space-y-6 w-full"
+              className="group relative overflow-hidden z-0 flex flex-col items-start p-8 rounded-[2rem] border border-zinc-200/50 dark:border-zinc-800/40 bg-white/70 dark:bg-zinc-900/25 backdrop-blur-sm hover:shadow-xl hover:shadow-zinc-900/[0.03] dark:hover:shadow-black/25 hover:-translate-y-1 transition-all duration-300 space-y-6 w-full"
             >
+              {/* CSS-only Glowing Border Gradient */}
+              <div className="absolute -inset-px rounded-[2rem] bg-gradient-to-r from-emerald-500/25 to-teal-500/25 dark:from-emerald-500/35 dark:to-teal-500/35 opacity-0 group-hover:opacity-100 blur-[3px] transition duration-500 -z-10" />
+              <div className="absolute inset-0 rounded-[2rem] bg-white/95 dark:bg-zinc-950/95 -z-10 transition-colors duration-300" />
+
               <span className="flex size-12 items-center justify-center rounded-2xl bg-emerald-100 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 group-hover:scale-105 transition-transform duration-300 border border-emerald-200/50 dark:border-emerald-800/20 shadow-sm">
                 <Brain className="size-6" strokeWidth={2.2} />
               </span>
