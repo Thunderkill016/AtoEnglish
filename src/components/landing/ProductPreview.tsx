@@ -6,9 +6,13 @@ import { Mic, Volume2, Eye, Flame, CheckCircle, Sparkles, RefreshCw, Star } from
 export default function ProductPreview() {
   const [activeTab, setActiveTab] = useState<"speaking" | "srs" | "dashboard">("speaking");
 
-  // Speaking simulator states
+  // Speaking states
   const [speakingStatus, setSpeakingStatus] = useState<"idle" | "listening" | "analyzing" | "done">("idle");
   const [waveform, setWaveform] = useState<number[]>([10, 15, 20, 15, 10]);
+  const [recognizedText, setRecognizedText] = useState("");
+  const [accuracyScore, setAccuracyScore] = useState<number | null>(null);
+
+  const targetSentence = "Nice to meet you. My name is Nam.";
 
   // Flashcard states
   const [isFlipped, setIsFlipped] = useState(false);
@@ -24,18 +28,188 @@ export default function ProductPreview() {
     return () => clearInterval(interval);
   }, [speakingStatus]);
 
-  const startSpeakingSimulation = () => {
-    setSpeakingStatus("listening");
-    setTimeout(() => {
-      setSpeakingStatus("analyzing");
+  // Speech Recognition config
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const SpeechRecognition = typeof window !== "undefined"
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    ? ((window as any).SpeechRecognition || (window as any).webkitSpeechRecognition)
+    : null;
+
+  const calculateAccuracy = (original: string, recognized: string) => {
+    const cleanWord = (w: string) => w.toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?]/g, "").trim();
+    const origWords = original.split(/\s+/).map(cleanWord).filter(Boolean);
+    const recWords = recognized.split(/\s+/).map(cleanWord).filter(Boolean);
+
+    if (origWords.length === 0) return 0;
+    
+    let matches = 0;
+    const recSet = new Set(recWords);
+    origWords.forEach(word => {
+      if (recSet.has(word)) {
+        matches++;
+      }
+    });
+
+    return Math.round((matches / origWords.length) * 100);
+  };
+
+  const startSpeaking = async () => {
+    if (typeof window === "undefined") return;
+
+    if (!SpeechRecognition) {
+      // Fallback simulation if Speech Recognition is not supported
+      setSpeakingStatus("listening");
       setTimeout(() => {
-        setSpeakingStatus("done");
-      }, 1500);
-    }, 3000);
+        setSpeakingStatus("analyzing");
+        setTimeout(() => {
+          setRecognizedText("nice to meet you my name is nam");
+          setAccuracyScore(100);
+          setSpeakingStatus("done");
+        }, 1200);
+      }, 2500);
+      return;
+    }
+
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const recognition = new SpeechRecognition();
+      recognition.continuous = false;
+      recognition.interimResults = false;
+      recognition.lang = "en-US";
+
+      let fullTranscript = "";
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      recognition.onresult = (event: any) => {
+        if (event.results && event.results[0]) {
+          fullTranscript = event.results[0][0].transcript;
+        }
+      };
+
+      recognition.onstart = () => {
+        setSpeakingStatus("listening");
+        setRecognizedText("");
+        setAccuracyScore(null);
+      };
+
+      recognition.onend = () => {
+        stream.getTracks().forEach((track) => track.stop());
+        if (fullTranscript.trim()) {
+          setSpeakingStatus("analyzing");
+          setTimeout(() => {
+            const score = calculateAccuracy(targetSentence, fullTranscript);
+            setRecognizedText(fullTranscript);
+            setAccuracyScore(score);
+            setSpeakingStatus("done");
+          }, 1000);
+        } else {
+          setSpeakingStatus("idle");
+          alert("Không nhận diện được giọng nói. Bạn hãy thử nhấn nút nói lại, nói to và rõ hơn nhé!");
+        }
+      };
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      recognition.onerror = (e: any) => {
+        console.error("Speech Recognition Error:", e);
+        stream.getTracks().forEach((track) => track.stop());
+        setSpeakingStatus("idle");
+      };
+
+      recognition.start();
+    } catch (err) {
+      console.error("Mic Access Error:", err);
+      // Fallback simulation if mic is blocked
+      setSpeakingStatus("listening");
+      setTimeout(() => {
+        setSpeakingStatus("analyzing");
+        setTimeout(() => {
+          setRecognizedText("nice to meet you my name is nam");
+          setAccuracyScore(100);
+          setSpeakingStatus("done");
+        }, 1200);
+      }, 2500);
+    }
+  };
+
+  const handlePlayNative = () => {
+    if (typeof window === "undefined") return;
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(targetSentence);
+    utterance.lang = "en-US";
+    window.speechSynthesis.speak(utterance);
   };
 
   const resetSpeaking = () => {
     setSpeakingStatus("idle");
+    setRecognizedText("");
+    setAccuracyScore(null);
+  };
+
+  const renderHighlightedSentence = () => {
+    if (accuracyScore === null || !recognizedText) {
+      return targetSentence;
+    }
+
+    const cleanWord = (w: string) => w.toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?]/g, "").trim();
+    const recognizedWords = recognizedText.split(/\s+/).map(cleanWord).filter(Boolean);
+    const recognizedSet = new Set(recognizedWords);
+
+    const words = targetSentence.split(" ");
+    return (
+      <>
+        {words.map((word, idx) => {
+          const cleaned = cleanWord(word);
+          const isCorrect = recognizedSet.has(cleaned);
+          return (
+            <span
+              key={idx}
+              className={
+                isCorrect
+                  ? "text-emerald-600 dark:text-emerald-400 font-bold"
+                  : "text-red-500 dark:text-red-400 font-medium"
+              }
+            >
+              {word}{idx < words.length - 1 ? " " : ""}
+            </span>
+          );
+        })}
+      </>
+    );
+  };
+
+  const getFeedbackMessage = () => {
+    if (accuracyScore === null) return null;
+
+    const cleanWord = (w: string) => w.toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?]/g, "").trim();
+    const origWords = targetSentence.split(/\s+/).map(cleanWord).filter(Boolean);
+    const recWords = recognizedText.split(/\s+/).map(cleanWord).filter(Boolean);
+    const recSet = new Set(recWords);
+
+    const missed = origWords.filter(w => !recSet.has(w));
+
+    if (accuracyScore === 100) {
+      return (
+        <span>
+          Tuyệt vời! Bạn đã phát âm chính xác hoàn toàn câu này.
+        </span>
+      );
+    }
+
+    if (missed.length > 0) {
+      return (
+        <span>
+          Bạn phát âm đúng hầu hết các từ. Nhớ phát âm rõ hơn các từ:{" "}
+          <strong className="text-red-500 dark:text-red-400">
+            {missed.join(", ")}
+          </strong>.
+        </span>
+      );
+    }
+
+    return (
+      <span>
+        Phát âm khá ổn, hãy nói to rõ hơn để nâng cao độ chính xác nhé!
+      </span>
+    );
   };
 
   return (
@@ -101,14 +275,17 @@ export default function ProductPreview() {
             <div className="p-6 rounded-2xl border border-zinc-200/60 dark:border-zinc-800/50 bg-white/70 dark:bg-zinc-900/15 backdrop-blur-sm space-y-4">
               <div className="flex items-center justify-between">
                 <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-wide">Mẫu phát âm chuẩn:</span>
-                <button className="flex items-center gap-1 text-[11px] font-bold text-emerald-700 hover:text-emerald-600 dark:text-emerald-400 dark:hover:text-emerald-300">
+                <button 
+                  onClick={handlePlayNative}
+                  className="flex items-center gap-1 text-[11px] font-bold text-emerald-700 hover:text-emerald-600 dark:text-emerald-400 dark:hover:text-emerald-300"
+                >
                   <Volume2 className="size-4" />
                   <span>Nghe mẫu</span>
                 </button>
               </div>
               
               <h3 className="text-xl sm:text-2xl font-black text-zinc-900 dark:text-zinc-50 tracking-tight leading-tight">
-                Nice to meet you. My name is Nam.
+                {renderHighlightedSentence()}
               </h3>
               
               <p className="text-xs text-zinc-400 dark:text-zinc-500 font-mono">
@@ -120,7 +297,7 @@ export default function ProductPreview() {
             <div className="flex flex-col items-center gap-4 justify-center py-2">
               {speakingStatus === "idle" && (
                 <button
-                  onClick={startSpeakingSimulation}
+                  onClick={startSpeaking}
                   className="flex items-center gap-3 bg-emerald-600 hover:bg-emerald-500 dark:bg-emerald-600 dark:hover:bg-emerald-500 text-white font-bold h-14 px-8 rounded-2xl shadow-lg shadow-emerald-600/15 active:scale-95 transition-all duration-200 group"
                 >
                   <Mic className="size-5 animate-pulse text-emerald-100 group-hover:scale-110 transition-transform" />
@@ -158,15 +335,19 @@ export default function ProductPreview() {
                 <div className="w-full p-5 rounded-2xl bg-emerald-500/5 dark:bg-emerald-500/10 border border-emerald-500/20 text-center space-y-4 animate-scale-up">
                   <div className="flex items-center justify-center gap-2">
                     <div className="size-8 rounded-full bg-emerald-500 flex items-center justify-center text-white font-black text-sm">
-                      A
+                      {accuracyScore !== null && accuracyScore >= 90 ? "A" : accuracyScore !== null && accuracyScore >= 75 ? "B" : "C"}
                     </div>
                     <span className="text-lg font-black text-emerald-700 dark:text-emerald-400">
-                      Độ chính xác: 96% (Xuất sắc)
+                      Độ chính xác: {accuracyScore}% ({accuracyScore !== null && (accuracyScore >= 90 ? "Xuất sắc" : accuracyScore >= 75 ? "Khá tốt" : accuracyScore >= 50 ? "Tạm được" : "Cần cố gắng")})
                     </span>
                   </div>
                   
                   <p className="text-xs sm:text-sm text-zinc-650 dark:text-zinc-350">
-                    Bạn phát âm chuẩn âm cuối <strong className="text-emerald-700 dark:text-emerald-400">/s/</strong> trong từ &quot;is&quot; và âm <strong className="text-emerald-700 dark:text-emerald-400">/t/</strong> trong từ &quot;meet&quot;.
+                    {getFeedbackMessage()}
+                  </p>
+
+                  <p className="text-xs text-zinc-400 dark:text-zinc-500 italic mt-1">
+                    Bạn đã nói: &quot;{recognizedText}&quot;
                   </p>
 
                   <button
