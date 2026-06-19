@@ -21,16 +21,34 @@ export async function GET(request: Request) {
       };
       const mappedLevel = cefrMap[level] || "A1";
 
-      // Upsert: insert for new users, do nothing for existing users — 1 DB call instead of 2
-      await supabase.from("user_progress").upsert(
-        {
-          user_id: user.id,
-          current_level: mappedLevel,
-          streak: 0,
-          total_xp: 0,
-        },
-        { onConflict: "user_id", ignoreDuplicates: true }
-      );
+      // Extract display name from Google OAuth metadata
+      const displayName =
+        user.user_metadata?.full_name ||
+        user.user_metadata?.name ||
+        user.email?.split("@")[0] ||
+        "Học viên";
+
+      // Run both upserts in parallel — saves ~200ms vs sequential
+      await Promise.all([
+        // 1. user_progress: insert for new users, ignore for existing (preserves level/xp/streak)
+        supabase.from("user_progress").upsert(
+          {
+            user_id: user.id,
+            current_level: mappedLevel,
+            streak: 0,
+            total_xp: 0,
+          },
+          { onConflict: "user_id", ignoreDuplicates: true }
+        ),
+        // 2. users: always update display_name so it stays in sync with Google profile
+        supabase.from("users").upsert(
+          {
+            id: user.id,
+            display_name: displayName,
+          },
+          { onConflict: "id", ignoreDuplicates: false }
+        ),
+      ]);
     }
   }
 
