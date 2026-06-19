@@ -112,7 +112,7 @@ export async function completeUnit(unitId: string) {
         .from("user_progress")
         .insert({
           user_id: user.id,
-          current_level: "B1",
+          current_level: "A1", // Default level for new users
           streak: 1,
           total_xp: 80,
           last_active_date: today
@@ -301,7 +301,7 @@ export async function getUserProgress() {
       success: true,
       progress: {
         user_id: user.id,
-        current_level: data?.current_level || "B1",
+        current_level: data?.current_level || "A1",
         streak: data?.streak || 0,
         total_xp: data?.total_xp || 0,
         last_active_date: data?.last_active_date || null,
