@@ -222,52 +222,47 @@ export default function ProductPreview() {
   return (
     <div className="w-full max-w-4xl mx-auto mt-12 sm:mt-16 rounded-[2rem] border border-zinc-200/60 dark:border-zinc-800/60 bg-white/50 dark:bg-zinc-950/20 backdrop-blur-md overflow-hidden shadow-2xl shadow-zinc-900/[0.05] dark:shadow-black/30">
       {/* Window Title Bar */}
-      <div className="flex items-center justify-between px-5 py-4 border-b border-zinc-200/50 dark:border-zinc-800/40 bg-zinc-50/50 dark:bg-zinc-900/30">
-        <div className="flex items-center gap-1.5">
+      <div className="flex items-center gap-3 px-5 py-3 border-b border-zinc-200/50 dark:border-zinc-800/40 bg-zinc-50/50 dark:bg-zinc-900/30">
+        <div className="flex items-center gap-1.5 shrink-0">
           <div className="size-3 rounded-full bg-red-400" />
           <div className="size-3 rounded-full bg-yellow-400" />
           <div className="size-3 rounded-full bg-emerald-400" />
-          <span className="text-xs text-zinc-400 dark:text-zinc-500 font-mono ml-3">app.atoenglish.com/preview</span>
         </div>
-        
-        {/* Navigation Tabs inside the browser header */}
-        <div className="flex items-center gap-1 sm:gap-2">
-          <button
-            onClick={() => setActiveTab("speaking")}
-            className={`text-xs font-bold px-2 sm:px-3 py-1.5 rounded-lg transition-all duration-200 ${
-              activeTab === "speaking"
-                ? "bg-emerald-600 text-white shadow-sm shadow-emerald-600/10"
-                : "text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-900/50"
-            }`}
-          >
-            <span className="hidden sm:inline">Luyện nói phản xạ</span>
-            <span className="sm:hidden">Luyện nói</span>
-          </button>
-          <button
-            onClick={() => {
-              setActiveTab("srs");
-              setIsFlipped(false);
-            }}
-            className={`text-xs font-bold px-2 sm:px-3 py-1.5 rounded-lg transition-all duration-200 ${
-              activeTab === "srs"
-                ? "bg-emerald-600 text-white shadow-sm shadow-emerald-600/10"
-                : "text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-900/50"
-            }`}
-          >
-            <span className="hidden sm:inline">Thẻ Từ Vựng (SRS)</span>
-            <span className="sm:hidden">Thẻ SRS</span>
-          </button>
-          <button
-            onClick={() => setActiveTab("dashboard")}
-            className={`text-xs font-bold px-2 sm:px-3 py-1.5 rounded-lg transition-all duration-200 ${
-              activeTab === "dashboard"
-                ? "bg-emerald-600 text-white shadow-sm shadow-emerald-600/10"
-                : "text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-900/50"
-            }`}
-          >
-            Dashboard
-          </button>
-        </div>
+        <span className="text-xs text-zinc-400 dark:text-zinc-500 font-mono truncate">app.atoenglish.com/preview</span>
+      </div>
+
+      {/* Tab Navigation — separate row, scrollable on mobile */}
+      <div className="flex items-center gap-1 px-4 py-2 border-b border-zinc-200/50 dark:border-zinc-800/40 bg-zinc-50/30 dark:bg-zinc-900/20 overflow-x-auto scrollbar-none">
+        <button
+          onClick={() => setActiveTab("speaking")}
+          className={`text-xs font-bold px-3 py-1.5 rounded-lg whitespace-nowrap transition-all duration-200 ${
+            activeTab === "speaking"
+              ? "bg-emerald-600 text-white shadow-sm shadow-emerald-600/10"
+              : "text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-900/50"
+          }`}
+        >
+          Luyện nói phản xạ
+        </button>
+        <button
+          onClick={() => { setActiveTab("srs"); setIsFlipped(false); }}
+          className={`text-xs font-bold px-3 py-1.5 rounded-lg whitespace-nowrap transition-all duration-200 ${
+            activeTab === "srs"
+              ? "bg-emerald-600 text-white shadow-sm shadow-emerald-600/10"
+              : "text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-900/50"
+          }`}
+        >
+          Thẻ Từ Vựng (SRS)
+        </button>
+        <button
+          onClick={() => setActiveTab("dashboard")}
+          className={`text-xs font-bold px-3 py-1.5 rounded-lg whitespace-nowrap transition-all duration-200 ${
+            activeTab === "dashboard"
+              ? "bg-emerald-600 text-white shadow-sm shadow-emerald-600/10"
+              : "text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-900/50"
+          }`}
+        >
+          Dashboard
+        </button>
       </div>
 
       {/* Main Preview Container */}

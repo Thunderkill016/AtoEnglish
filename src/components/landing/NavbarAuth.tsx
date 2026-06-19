@@ -31,8 +31,9 @@ export default function NavbarAuth() {
             </Button>
           </Link>
           <Link href="/login" prefetch={false}>
-            <Button className="bg-emerald-600 hover:bg-emerald-500 dark:bg-emerald-600 dark:hover:bg-emerald-500 text-white text-sm font-bold h-9 px-5 rounded-xl active:scale-[0.96] transition-all duration-200 shadow-sm shadow-emerald-600/10 dark:shadow-emerald-500/5">
-              Bắt đầu học ngay
+            <Button className="bg-emerald-600 hover:bg-emerald-500 dark:bg-emerald-600 dark:hover:bg-emerald-500 text-white text-xs sm:text-sm font-bold h-8 sm:h-9 px-3 sm:px-5 rounded-xl active:scale-[0.96] transition-all duration-200 shadow-sm shadow-emerald-600/10 dark:shadow-emerald-500/5">
+              <span className="hidden sm:inline">Bắt đầu học ngay</span>
+              <span className="sm:hidden">Học ngay</span>
             </Button>
           </Link>
         </>

@@ -25,23 +25,7 @@ export default function ProblemSection() {
 
       <div className="max-w-5xl mx-auto text-center space-y-16">
 
-        {/* Emotional pull-quote — triggers immediate relatability */}
-        <ScrollReveal>
-          <figure className="max-w-2xl mx-auto">
-            <div className="relative px-8 py-6 rounded-2xl bg-zinc-100/70 dark:bg-zinc-900/40 border border-zinc-200/60 dark:border-zinc-800/50">
-              {/* Decorative quote icon */}
-              <Quote className="absolute top-4 left-4 size-5 text-zinc-300 dark:text-zinc-700" />
-              <blockquote className="text-lg sm:text-xl font-semibold text-zinc-800 dark:text-zinc-200 leading-relaxed italic">
-                &ldquo;Học 3 năm tiếng Anh. Vẫn không dám mở miệng nói.&rdquo;
-              </blockquote>
-              <figcaption className="mt-3 text-xs text-zinc-500 dark:text-zinc-500 font-normal not-italic">
-                — Tâm sự quen thuộc của hàng triệu người học tiếng Anh tại Việt Nam
-              </figcaption>
-            </div>
-          </figure>
-        </ScrollReveal>
-
-        <ScrollReveal>
+<ScrollReveal>
           <div className="space-y-4">
             <div className="flex justify-center mb-4">
               <span className="flex size-14 items-center justify-center rounded-2xl bg-zinc-100 dark:bg-zinc-900 text-zinc-500 dark:text-zinc-400 border border-zinc-200/50 dark:border-zinc-800/50 shadow-inner">

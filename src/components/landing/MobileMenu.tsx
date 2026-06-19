@@ -72,13 +72,6 @@ export function MobileMenu() {
         >
           Đăng nhập
         </Link>
-        <Link
-          href="/login"
-          onClick={() => setOpen(false)}
-          className="flex items-center justify-center h-11 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-bold transition-colors duration-200"
-        >
-          Bắt đầu học ngay →
-        </Link>
       </div>
     </div>
   );
