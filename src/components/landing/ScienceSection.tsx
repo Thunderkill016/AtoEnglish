@@ -1,4 +1,3 @@
-"use client";
 
 import { FlaskConical, MapPin, Lightbulb } from "lucide-react";
 import ScrollReveal from "@/components/ui/scroll-reveal";

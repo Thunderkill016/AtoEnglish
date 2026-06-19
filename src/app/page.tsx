@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { Sparkles, Sprout } from "lucide-react";
 
@@ -6,13 +7,31 @@ import { Spotlight } from "@/components/ui/spotlight";
 import NavbarAuth from "@/components/landing/NavbarAuth";
 import { MobileMenuButton, MobileMenu } from "@/components/landing/MobileMenu";
 import HeroCTA from "@/components/landing/HeroCTA";
-import ProductPreview from "@/components/landing/ProductPreview";
 import ProblemSection from "@/components/landing/ProblemSection";
 import HowItWorksSection from "@/components/landing/HowItWorksSection";
 import BenefitsSection from "@/components/landing/BenefitsSection";
 import ScienceSection from "@/components/landing/ScienceSection";
-import FaqSection from "@/components/landing/FaqSection";
-import FinalCtaSection from "@/components/landing/FinalCtaSection";
+
+// Lazy load heavy client components below the fold
+const ProductPreview = dynamic(
+  () => import("@/components/landing/ProductPreview"),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="w-full max-w-4xl mx-auto mt-12 sm:mt-16 h-[400px] rounded-[2rem] border border-zinc-200/60 dark:border-zinc-800/60 bg-zinc-50/50 dark:bg-zinc-900/20 animate-pulse" />
+    ),
+  }
+);
+
+const FaqSection = dynamic(
+  () => import("@/components/landing/FaqSection"),
+  { ssr: false }
+);
+
+const FinalCtaSection = dynamic(
+  () => import("@/components/landing/FinalCtaSection"),
+  { ssr: false }
+);
 
 export const metadata: Metadata = {
   title: "AtoEnglish — Học tiếng Anh để nói được, không chỉ để biết",
@@ -103,11 +122,11 @@ export default function LandingPage() {
           {/* Spotlight light beam effect */}
           <Spotlight className="-top-40 left-0 md:left-60 md:-top-20" fill="rgb(16 185 129 / 0.15)" />
 
-          {/* Advanced Apple-style mesh gradient backdrops */}
+          {/* Mesh gradient backdrops — hidden on mobile to save GPU */}
           <div className="absolute inset-0 overflow-hidden pointer-events-none -z-10">
-            <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-emerald-500/8 dark:bg-emerald-500/4 blur-[120px]" />
-            <div className="absolute bottom-[20%] right-[-10%] w-[60%] h-[60%] rounded-full bg-teal-500/8 dark:bg-teal-500/4 blur-[150px]" />
-            <div className="absolute top-[40%] left-[30%] w-[40%] h-[40%] rounded-full bg-indigo-500/5 dark:bg-indigo-500/3 blur-[100px]" />
+            <div className="hidden sm:block absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-emerald-500/8 dark:bg-emerald-500/4 blur-[120px]" />
+            <div className="hidden sm:block absolute bottom-[20%] right-[-10%] w-[60%] h-[60%] rounded-full bg-teal-500/8 dark:bg-teal-500/4 blur-[150px]" />
+            <div className="hidden md:block absolute top-[40%] left-[30%] w-[40%] h-[40%] rounded-full bg-indigo-500/5 dark:bg-indigo-500/3 blur-[100px]" />
           </div>
 
           <div className="relative max-w-4xl mx-auto flex flex-col items-center text-center">
@@ -171,12 +190,24 @@ export default function LandingPage() {
           </div>
         </section>
 
-        <ProblemSection />
-        <HowItWorksSection />
-        <BenefitsSection />
-        <ScienceSection />
-        <FaqSection />
-        <FinalCtaSection />
+        <div className="[content-visibility:auto] [contain-intrinsic-size:auto_600px]">
+          <ProblemSection />
+        </div>
+        <div className="[content-visibility:auto] [contain-intrinsic-size:auto_800px]">
+          <HowItWorksSection />
+        </div>
+        <div className="[content-visibility:auto] [contain-intrinsic-size:auto_600px]">
+          <BenefitsSection />
+        </div>
+        <div className="[content-visibility:auto] [contain-intrinsic-size:auto_700px]">
+          <ScienceSection />
+        </div>
+
+        {/* Below-fold lazy sections — browser can defer rendering */}
+        <div className="[content-visibility:auto] [contain-intrinsic-size:auto_800px]">
+          <FaqSection />
+          <FinalCtaSection />
+        </div>
       </main>
 
       {/* ===== Footer ===== */}
