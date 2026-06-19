@@ -7,7 +7,7 @@ export default function ScienceSection() {
   const delays = ["", "delay-100", "delay-200"];
 
   return (
-    <section className="py-24 sm:py-32 lg:py-40 px-5 sm:px-8 relative">
+    <section id="science" className="py-24 sm:py-32 lg:py-40 px-5 sm:px-8 relative">
       <div className="absolute inset-0 overflow-hidden pointer-events-none -z-10">
         <div className="absolute top-[30%] left-[10%] w-[50%] h-[50%] rounded-full bg-teal-500/3 dark:bg-teal-500/1 blur-[120px]" />
       </div>

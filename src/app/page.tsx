@@ -1,8 +1,10 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { Sparkles, Sprout } from "lucide-react";
 
 import { Spotlight } from "@/components/ui/spotlight";
 import NavbarAuth from "@/components/landing/NavbarAuth";
+import { MobileMenuButton, MobileMenu } from "@/components/landing/MobileMenu";
 import HeroCTA from "@/components/landing/HeroCTA";
 import ProductPreview from "@/components/landing/ProductPreview";
 import ProblemSection from "@/components/landing/ProblemSection";
@@ -11,6 +13,30 @@ import BenefitsSection from "@/components/landing/BenefitsSection";
 import ScienceSection from "@/components/landing/ScienceSection";
 import FaqSection from "@/components/landing/FaqSection";
 import FinalCtaSection from "@/components/landing/FinalCtaSection";
+
+export const metadata: Metadata = {
+  title: "AtoEnglish — Học tiếng Anh để nói được, không chỉ để biết",
+  description:
+    "Nền tảng tự học tiếng Anh cá nhân hóa với phương pháp IPOR, luyện nói phản xạ và ôn tập thông minh FSRS. Miễn phí hoàn toàn.",
+  openGraph: {
+    title: "AtoEnglish — Học tiếng Anh để nói được",
+    description:
+      "Phương pháp khoa học giúp bạn tự tin giao tiếp thực tế từ con số 0. Miễn phí hoàn toàn trong giai đoạn Open Beta.",
+    url: "https://atoenglish.vercel.app",
+    siteName: "AtoEnglish",
+    locale: "vi_VN",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "AtoEnglish — Học tiếng Anh để nói được",
+    description:
+      "Phương pháp khoa học giúp bạn tự tin giao tiếp thực tế từ con số 0.",
+  },
+  alternates: {
+    canonical: "https://atoenglish.vercel.app",
+  },
+};
 
 export default function LandingPage() {
   const stats = [
@@ -38,7 +64,7 @@ export default function LandingPage() {
             </div>
           </Link>
 
-          {/* Middle links - hidden on mobile */}
+          {/* Middle links - desktop only */}
           <div className="hidden md:flex items-center gap-8">
             <a
               href="#how-it-works"
@@ -60,8 +86,15 @@ export default function LandingPage() {
             </a>
           </div>
 
-          <NavbarAuth />
+          <div className="flex items-center gap-2">
+            <NavbarAuth />
+            {/* Hamburger button - mobile only */}
+            <MobileMenuButton />
+          </div>
         </div>
+
+        {/* Mobile drawer menu */}
+        <MobileMenu />
       </nav>
 
       <main id="main-content">

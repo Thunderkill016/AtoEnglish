@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Mic, Volume2, Eye, Flame, CheckCircle, Sparkles, RefreshCw, Star } from "lucide-react";
+import { Mic, Volume2, Eye, Flame, CheckCircle, Sparkles, RefreshCw, Star, AlertCircle } from "lucide-react";
 
 export default function ProductPreview() {
   const [activeTab, setActiveTab] = useState<"speaking" | "srs" | "dashboard">("speaking");
@@ -11,6 +11,7 @@ export default function ProductPreview() {
   const [waveform, setWaveform] = useState<number[]>([10, 15, 20, 15, 10]);
   const [recognizedText, setRecognizedText] = useState("");
   const [accuracyScore, setAccuracyScore] = useState<number | null>(null);
+  const [micError, setMicError] = useState<string | null>(null);
 
   const targetSentence = "Nice to meet you. My name is Nam.";
 
@@ -55,6 +56,7 @@ export default function ProductPreview() {
 
   const startSpeaking = async () => {
     if (typeof window === "undefined") return;
+    setMicError(null);
 
     if (!SpeechRecognition) {
       // Fallback simulation if Speech Recognition is not supported
@@ -103,21 +105,25 @@ export default function ProductPreview() {
           }, 1000);
         } else {
           setSpeakingStatus("idle");
-          alert("Không nhận diện được giọng nói. Bạn hãy thử nhấn nút nói lại, nói to và rõ hơn nhé!");
+          setMicError("Không nhận diện được giọng nói. Hãy nói to và rõ hơn rồi thử lại nhé!");
         }
       };
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       recognition.onerror = (e: any) => {
-        console.error("Speech Recognition Error:", e);
         stream.getTracks().forEach((track) => track.stop());
         setSpeakingStatus("idle");
+        if (e.error === "not-allowed") {
+          setMicError("Trình duyệt chưa được cấp quyền mic. Vui lòng cho phép trong cài đặt trình duyệt.");
+        } else {
+          setMicError("Có lỗi xảy ra. Vui lòng thử lại.");
+        }
       };
 
       recognition.start();
-    } catch (err) {
-      console.error("Mic Access Error:", err);
+    } catch {
       // Fallback simulation if mic is blocked
+      setMicError("Không truy cập được mic. Đang chạy chế độ demo.");
       setSpeakingStatus("listening");
       setTimeout(() => {
         setSpeakingStatus("analyzing");
@@ -142,6 +148,7 @@ export default function ProductPreview() {
     setSpeakingStatus("idle");
     setRecognizedText("");
     setAccuracyScore(null);
+    setMicError(null);
   };
 
   const renderHighlightedSentence = () => {
@@ -295,6 +302,14 @@ export default function ProductPreview() {
 
             {/* Speaking actions and feedback */}
             <div className="flex flex-col items-center gap-4 justify-center py-2">
+              {/* Inline mic error message */}
+              {micError && (
+                <div className="w-full flex items-start gap-2 p-3 rounded-xl bg-red-50 dark:bg-red-950/20 border border-red-200/60 dark:border-red-800/30 text-red-600 dark:text-red-400">
+                  <AlertCircle className="size-4 shrink-0 mt-0.5" />
+                  <p className="text-xs font-medium leading-relaxed">{micError}</p>
+                </div>
+              )}
+
               {speakingStatus === "idle" && (
                 <button
                   onClick={startSpeaking}
