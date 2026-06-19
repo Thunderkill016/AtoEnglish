@@ -21,9 +21,18 @@ export async function GET(request: Request) {
         
       if (progressError || !progress) {
         // Tự động khởi tạo bản ghi tiến trình học tập cho user mới đăng nhập lần đầu
+        const level = searchParams.get("level") ?? "A0-A1";
+        const cefrMap: Record<string, "A1" | "A2" | "B1" | "B2"> = {
+          "A0-A1": "A1",
+          "A2": "A2",
+          "B1": "B1",
+          "B2+": "B2"
+        };
+        const mappedLevel = cefrMap[level] || "A1";
+
         await supabase.from("user_progress").insert({
           user_id: user.id,
-          current_level: "A1",
+          current_level: mappedLevel,
           streak: 0,
           total_xp: 0,
         });

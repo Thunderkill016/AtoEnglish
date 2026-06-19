@@ -26,7 +26,7 @@ export default function HeroCTA() {
         className="w-full sm:w-auto"
       >
         <Button className="w-full sm:w-auto sm:min-w-[220px] justify-center bg-emerald-600 hover:bg-emerald-500 dark:bg-emerald-600 dark:hover:bg-emerald-500 text-white font-bold h-14 px-8 rounded-2xl shadow-lg shadow-emerald-600/15 dark:shadow-emerald-500/10 hover:shadow-emerald-500/25 hover:scale-[1.01] active:scale-[0.97] transition-all duration-300 gap-2">
-          {isLoggedIn ? "Vào Dashboard" : "Bắt đầu miễn phí"}
+          {isLoggedIn ? "Vào Dashboard" : "Bắt đầu học ngay"}
           <ArrowRight className="size-4.5" />
         </Button>
       </Link>
