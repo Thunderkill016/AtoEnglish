@@ -22,7 +22,7 @@ export default function NavbarAuth() {
         </Link>
       ) : (
         <>
-          <Link href="/login" prefetch={false} className="hidden sm:block">
+          <Link href="/login?mode=login" prefetch={false} className="hidden sm:block">
             <Button
               variant="ghost"
               className="text-sm font-semibold text-zinc-700 dark:text-zinc-350 hover:text-zinc-950 dark:hover:text-zinc-50 h-9 px-4 rounded-xl transition-colors duration-200"

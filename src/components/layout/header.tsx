@@ -64,7 +64,7 @@ export async function Header() {
               </form>
             </div>
           ) : (
-            <Link href="/login" className="ml-1">
+            <Link href="/login?mode=login" className="ml-1">
               <Button
                 variant="outline"
                 className="text-xs font-semibold h-9 px-3.5 rounded-xl border-zinc-200 bg-zinc-50/10 hover:bg-zinc-50 dark:border-zinc-800/50 dark:text-zinc-300 dark:hover:bg-zinc-800/50 transition-all"

@@ -29,6 +29,7 @@ function LoginContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const next = searchParams.get("next") ?? "/dashboard";
+  const mode = searchParams.get("mode");
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -43,6 +44,21 @@ function LoginContent() {
   const [direction, setDirection] = useState(1);
 
   const supabase = createClient();
+
+  // Check if we should skip the onboarding quiz
+  useEffect(() => {
+    const hasCompletedOnboarding = localStorage.getItem("ato_onboarding_completed") === "true";
+    if (mode === "login" || hasCompletedOnboarding) {
+      setOnboardingStep(5);
+    }
+  }, [mode]);
+
+  // Set onboarding completion when user reaches step 5
+  useEffect(() => {
+    if (onboardingStep === 5) {
+      localStorage.setItem("ato_onboarding_completed", "true");
+    }
+  }, [onboardingStep]);
 
   useEffect(() => {
     if (onboardingStep === 4) {
@@ -669,6 +685,7 @@ function LoginContent() {
                       <button
                         type="button"
                         onClick={() => {
+                          localStorage.removeItem("ato_onboarding_completed");
                           setDirection(-1);
                           setOnboardingStep(1);
                           setAnswers({});

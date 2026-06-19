@@ -185,7 +185,7 @@ export default function LandingPage() {
             </Link>
             <span className="text-zinc-300 dark:text-zinc-800">|</span>
             <Link
-              href="/login"
+              href="/login?mode=login"
               prefetch={false}
               className="text-xs text-zinc-700 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-zinc-100 font-bold transition-colors"
             >

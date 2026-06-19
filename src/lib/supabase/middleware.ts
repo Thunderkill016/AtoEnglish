@@ -49,6 +49,7 @@ export async function updateSession(request: NextRequest) {
     const url = request.nextUrl.clone();
     url.pathname = "/login";
     url.searchParams.set("next", pathname);
+    url.searchParams.set("mode", "login");
     
     const redirectResponse = NextResponse.redirect(url);
     // Đồng bộ cookies sang redirect response mới
