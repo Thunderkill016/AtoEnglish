@@ -310,7 +310,7 @@ function LoginContent() {
   ];
 
   return (
-    <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-50 font-sans flex flex-col lg:flex-row selection:bg-emerald-100 dark:selection:bg-emerald-950/30 selection:text-emerald-900 dark:selection:text-emerald-200">
+    <div className="min-h-screen min-h-[100dvh] bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-50 font-sans flex flex-col lg:flex-row selection:bg-emerald-100 dark:selection:bg-emerald-950/30 selection:text-emerald-900 dark:selection:text-emerald-200">
 
       {/* ── Left Column: Brand Showcase (Desktop only) ── */}
       <div className="hidden lg:flex w-[43%] bg-gradient-to-br from-zinc-900 via-emerald-950 to-zinc-950 p-16 text-white flex-col justify-between relative overflow-hidden select-none border-r border-zinc-800/30">
@@ -384,7 +384,7 @@ function LoginContent() {
       </div>
 
       {/* ── Right Column: Survey / Login ── */}
-      <div className="flex-1 flex flex-col justify-between py-12 px-6 sm:px-12 md:px-16 lg:px-24 bg-white dark:bg-zinc-950 relative overflow-hidden">
+      <div className="flex-1 flex flex-col justify-between py-8 sm:py-12 px-5 sm:px-12 md:px-16 lg:px-24 bg-white dark:bg-zinc-950 relative overflow-y-auto">
         {/* Background glow + dot grid */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div className="absolute -top-[40%] -left-[40%] w-[80%] h-[80%] rounded-full bg-emerald-500/5 blur-3xl" />
@@ -393,8 +393,7 @@ function LoginContent() {
         </div>
 
         {/* Top Navigation */}
-        <header className="max-w-md w-full mx-auto flex items-center justify-between mb-8 z-10">
-          <div className="lg:hidden">
+        <header className="max-w-md w-full mx-auto flex items-center justify-between mb-4 sm:mb-8 z-10">
           <Link href="/" className="lg:hidden flex items-center gap-2.5 group">
             <span className="flex size-8 items-center justify-center rounded-lg bg-emerald-600 text-white shadow-sm">
               <Sprout className="size-4.5" />
@@ -406,7 +405,6 @@ function LoginContent() {
               <span className="text-[9px] text-zinc-500 font-medium">Grow every day</span>
             </div>
           </Link>
-          </div>
 
           {onboardingStep >= 1 && onboardingStep <= 4 ? (
             <Button
@@ -416,7 +414,7 @@ function LoginContent() {
                 setDirection(-1);
                 setOnboardingStep(onboardingStep - 1);
               }}
-              className="ml-auto text-xs font-bold text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 h-9 gap-1.5 rounded-xl border border-zinc-100 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-all"
+              className="ml-auto text-xs font-bold text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 h-10 min-w-[80px] gap-1.5 rounded-xl border border-zinc-100 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-all"
             >
               <ArrowLeft className="size-3.5" />
               Quay lại
@@ -425,7 +423,7 @@ function LoginContent() {
             <Link href="/" className="ml-auto">
               <Button
                 variant="ghost"
-                className="text-xs font-bold text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 h-9 gap-1.5 rounded-xl border border-zinc-100 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-all"
+                className="text-xs font-bold text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 h-10 min-w-[80px] gap-1.5 rounded-xl border border-zinc-100 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-all"
               >
                 <ArrowLeft className="size-3.5" />
                 Về trang chủ
@@ -452,7 +450,7 @@ function LoginContent() {
             >
               {/* ── Step 0: Welcome screen ── */}
               {onboardingStep === 0 ? (
-                <div className="space-y-8 text-center flex flex-col items-center py-6">
+                <div className="space-y-5 sm:space-y-8 text-center flex flex-col items-center py-2 sm:py-6">
                   {/* Illustration */}
                   <motion.div
                     initial={{ scale: 0.6, opacity: 0 }}
@@ -745,22 +743,29 @@ function LoginContent() {
                         <div className="relative">
                           <Mail className="absolute left-3.5 top-3.5 size-4 text-zinc-400 dark:text-zinc-500" />
                           <input
+                            id="login-email"
                             type="email"
                             placeholder="Email của bạn"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            className="flex h-12 w-full rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/50 px-3.5 py-2 pl-11 text-sm text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-500 dark:placeholder:text-zinc-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:border-transparent transition-all duration-300 shadow-sm"
+                            autoComplete="email"
+                            inputMode="email"
+                            enterKeyHint="next"
+                            className="flex h-12 w-full rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/50 px-3.5 py-2 pl-11 text-base text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-500 dark:placeholder:text-zinc-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:border-transparent transition-all duration-300 shadow-sm"
                             required
                           />
                         </div>
                         <div className="relative">
                           <Lock className="absolute left-3.5 top-3.5 size-4 text-zinc-400 dark:text-zinc-500" />
                           <input
+                            id="login-password"
                             type="password"
                             placeholder="Mật khẩu"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            className="flex h-12 w-full rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/50 px-3.5 py-2 pl-11 text-sm text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-500 dark:placeholder:text-zinc-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:border-transparent transition-all duration-300 shadow-sm"
+                            autoComplete={isSignUp ? "new-password" : "current-password"}
+                            enterKeyHint="done"
+                            className="flex h-12 w-full rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/50 px-3.5 py-2 pl-11 text-base text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-500 dark:placeholder:text-zinc-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:border-transparent transition-all duration-300 shadow-sm"
                             required
                           />
                         </div>
