@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import dynamic from "next/dynamic";
 import Link from "next/link";
-import { Sparkles, Sprout } from "lucide-react";
+import { Sparkles } from "lucide-react";
+import Logo from "@/components/ui/logo";
 
 import { Spotlight } from "@/components/ui/spotlight";
 import NavbarAuth from "@/components/landing/NavbarAuth";
@@ -71,19 +72,7 @@ export default function LandingPage() {
       {/* ===== Navigation Bar ===== */}
       <nav className="sticky top-0 z-50 w-full bg-white/70 dark:bg-zinc-950/70 backdrop-blur-md border-b border-zinc-200/40 dark:border-zinc-800/40 transition-colors duration-300">
         <div className="max-w-6xl mx-auto h-16 flex items-center justify-between px-5 sm:px-8">
-          <Link href="/" className="flex items-center gap-2.5 group">
-            <span className="flex size-8 items-center justify-center rounded-lg bg-emerald-600 text-white shadow-md shadow-emerald-500/10 group-hover:scale-105 transition-transform duration-200">
-              <Sprout className="size-4.5" />
-            </span>
-            <div className="flex flex-col leading-none text-left">
-              <span className="text-sm font-bold tracking-tight text-zinc-900 dark:text-zinc-50 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors duration-200">
-                AtoEnglish
-              </span>
-              <span className="text-[9px] text-zinc-500 dark:text-zinc-400 font-medium">
-                Grow every day
-              </span>
-            </div>
-          </Link>
+          <Logo size="sm" />
 
           {/* Middle links - desktop only */}
           <div className="hidden md:flex items-center gap-8">
@@ -229,19 +218,7 @@ export default function LandingPage() {
       {/* ===== Footer ===== */}
       <footer className="border-t border-zinc-200/40 dark:border-zinc-800/40 py-10 sm:py-12 px-5 sm:px-8 bg-zinc-50/20 dark:bg-zinc-950/20">
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-5">
-          <div className="flex items-center gap-2.5">
-            <span className="flex size-8 items-center justify-center rounded-lg bg-emerald-600 text-white shadow-sm">
-              <Sprout className="size-4.5" />
-            </span>
-            <div className="flex flex-col leading-none text-left">
-              <span className="text-sm font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
-                AtoEnglish
-              </span>
-              <span className="text-[9px] text-zinc-500 dark:text-zinc-400 font-medium">
-                Grow every day
-              </span>
-            </div>
-          </div>
+          <Logo size="sm" />
 
           <span className="text-xs text-zinc-500 dark:text-zinc-400 font-normal">
             &copy; {new Date().getFullYear()} AtoEnglish. Bảo lưu mọi quyền.
