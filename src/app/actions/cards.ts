@@ -280,3 +280,54 @@ export async function reviewCard(cardId: string, rating: "Again" | "Hard" | "Goo
     };
   }
 }
+
+/**
+ * Lấy TẤT CẢ thẻ của user (Cram Mode - không lọc theo due_date).
+ */
+export async function getAllCards(topic?: string) {
+  try {
+    const supabase = createClient();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    if (authError || !user) {
+      return { success: false, error: "Bạn cần đăng nhập.", cards: [] };
+    }
+
+    let query = supabase
+      .from("cards")
+      .select("*")
+      .eq("user_id", user.id)
+      .order("word", { ascending: true });
+
+    if (topic) {
+      query = query.eq("topic", topic);
+    }
+
+    const { data: cards, error } = await query;
+    if (error) return { success: false, error: error.message, cards: [] };
+    return { success: true, cards: cards || [] };
+  } catch (err) {
+    return { success: false, error: String(err), cards: [] };
+  }
+}
+
+/**
+ * Lấy danh sách topics của user từ bảng cards.
+ */
+export async function getCardTopics() {
+  try {
+    const supabase = createClient();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    if (authError || !user) return { success: false, topics: [] };
+
+    const { data, error } = await supabase
+      .from("cards")
+      .select("topic")
+      .eq("user_id", user.id);
+
+    if (error) return { success: false, topics: [] };
+    const topics = Array.from(new Set((data || []).map(c => c.topic).filter((t): t is string => !!t)));
+    return { success: true, topics };
+  } catch {
+    return { success: false, topics: [] };
+  }
+}

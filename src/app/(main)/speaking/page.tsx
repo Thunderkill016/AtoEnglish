@@ -11,28 +11,11 @@ import {
   Calendar,
   TrendingUp,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { ShadowingPractice } from "./shadowing-practice";
 import { AIRoleplay } from "./ai-roleplay";
+import { JournalMode } from "./journal-mode";
 import { getRecentSpeakingSessions } from "@/app/actions/speaking";
 import { SpeakingSession } from "@/types/database";
-
-// Khung các chế độ (sẽ được implement chi tiết ở các bước sau)
-
-function JournalPlaceholder() {
-  return (
-    <div className="p-8 text-center bg-glass border border-glass rounded-3xl space-y-4 shadow-sm">
-      <div className="size-16 bg-emerald-500/10 text-emerald-500 flex items-center justify-center rounded-2xl mx-auto">
-        <Calendar className="size-8 animate-pulse" />
-      </div>
-      <h3 className="text-xl font-bold">Daily Speaking Journal</h3>
-      <p className="text-sm text-muted-foreground max-w-md mx-auto">
-        Ghi nhật ký nói hàng ngày. Chọn một chủ đề ngẫu nhiên, tự do trình bày suy nghĩ trong 1-2 phút để tăng phản xạ nói trôi chảy.
-      </p>
-      <Button className="rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white">Viết Nhật ký nói</Button>
-    </div>
-  );
-}
 
 export default function SpeakingPage() {
   const [activeTab, setActiveTab] = useState<"shadowing" | "roleplay" | "journal">("shadowing");
@@ -148,7 +131,7 @@ export default function SpeakingPage() {
             >
               {activeTab === "shadowing" && <ShadowingPractice />}
               {activeTab === "roleplay" && <AIRoleplay />}
-              {activeTab === "journal" && <JournalPlaceholder />}
+              {activeTab === "journal" && <JournalMode />}
             </motion.div>
           </AnimatePresence>
         </div>

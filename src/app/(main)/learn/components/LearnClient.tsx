@@ -15,6 +15,7 @@ interface UnitStatus {
   estimatedTime: number;
   completed: boolean;
   progress: number;
+  vocabCount?: number;
 }
 
 interface LearnClientProps {
@@ -160,7 +161,7 @@ export default function LearnClient({
                     </span>
                     <span className="flex items-center gap-1.5">
                       <BookOpen className="size-3.5" />
-                      {unit.vocab.length} từ vựng
+                      {unit.vocabCount ?? 0} từ vựng
                     </span>
                   </div>
 

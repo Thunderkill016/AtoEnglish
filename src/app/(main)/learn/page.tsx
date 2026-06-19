@@ -83,7 +83,7 @@ export default async function LearnPage() {
       estimatedTime: unit.estimatedTime,
       completed: isCompleted,
       progress,
-      vocab,
+      vocabCount: vocab.length,
     };
   });
 

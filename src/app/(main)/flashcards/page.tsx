@@ -12,10 +12,12 @@ import {
   Award,
   Loader2,
   CheckCircle,
+  Zap,
+  Filter,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { getDueCards, reviewCard } from "@/app/actions/cards";
+import { getDueCards, reviewCard, getAllCards, getCardTopics } from "@/app/actions/cards";
 import { toast } from "sonner";
 
 interface Flashcard {
@@ -41,6 +43,9 @@ export default function FlashcardsPage() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showFinished, setShowFinished] = useState(false);
   const [responseLog, setResponseLog] = useState<{ word: string; score: string }[]>([]);
+  const [cramMode, setCramMode] = useState(false);
+  const [topics, setTopics] = useState<string[]>([]);
+  const [selectedTopic, setSelectedTopic] = useState<string>("all");
 
   // Drag state using Framer Motion
   const x = useMotionValue(0);
@@ -48,13 +53,21 @@ export default function FlashcardsPage() {
   const opacityLeft = useTransform(x, [-150, 0], [1, 0]);
   const opacityRight = useTransform(x, [0, 150], [0, 1]);
 
+  // Fetch topics on mount
+  useEffect(() => {
+    getCardTopics().then(res => {
+      if (res.success) setTopics(res.topics);
+    });
+  }, []);
+
   // Fetch thẻ đến hạn từ Supabase
-  const fetchCards = async () => {
+  const fetchCards = async (cram = cramMode, topic = selectedTopic) => {
     setIsLoading(true);
     try {
-      const res = await getDueCards();
+      const res = cram
+        ? await getAllCards(topic !== "all" ? topic : undefined)
+        : await getDueCards();
       if (res.success && res.cards) {
-        // Map cấu trúc db sang giao diện thẻ Flashcard
         const mappedCards: Flashcard[] = res.cards.map((c) => ({
           id: c.id,
           word: c.word,
@@ -62,7 +75,7 @@ export default function FlashcardsPage() {
           pos: "vocabulary",
           meaning_vn: c.meaning_vn,
           example_en: c.example_en || "",
-          example_vn: "", 
+          example_vn: "",
           topic: c.topic || "General",
           level: c.level || "B1",
           stability: c.stability,
@@ -148,7 +161,28 @@ export default function FlashcardsPage() {
     setShowFinished(false);
     setResponseLog([]);
     x.set(0);
-    fetchCards(); // Tải lại thẻ mới từ db sau khi hoàn thành
+    fetchCards();
+  };
+
+  const handleToggleCram = () => {
+    const next = !cramMode;
+    setCramMode(next);
+    setCurrentIndex(0);
+    setIsFlipped(false);
+    setShowFinished(false);
+    setResponseLog([]);
+    x.set(0);
+    fetchCards(next, selectedTopic);
+  };
+
+  const handleTopicChange = (topic: string) => {
+    setSelectedTopic(topic);
+    setCurrentIndex(0);
+    setIsFlipped(false);
+    setShowFinished(false);
+    setResponseLog([]);
+    x.set(0);
+    fetchCards(cramMode, topic);
   };
 
   // Lắng nghe phím tắt bàn phím
@@ -227,23 +261,68 @@ export default function FlashcardsPage() {
       <motion.div 
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
-        className="flex items-center justify-between border-b border-foreground/[0.05] pb-4"
+        className="space-y-4 border-b border-foreground/[0.05] pb-4"
       >
-        <div className="space-y-1">
-          <span className="inline-flex items-center gap-1.5 text-xs font-bold text-primary px-3 py-1 rounded-full bg-primary/10 border border-primary/20">
-            <Layers className="size-3.5 animate-pulse" />
-            Spaced Repetition (SRS)
-          </span>
-          <h1 className="mt-1 text-3xl font-black tracking-tight text-foreground">
-            Thẻ ôn tập thông minh
-          </h1>
-        </div>
-        <div className="text-right">
-          <div className="text-[10px] text-muted-foreground uppercase tracking-widest font-extrabold">Đang ôn tập</div>
-          <div className="text-sm font-black text-foreground font-mono mt-0.5">
-            {currentIndex + 1} / {cards.length} thẻ
+        <div className="flex items-center justify-between">
+          <div className="space-y-1">
+            <span className="inline-flex items-center gap-1.5 text-xs font-bold text-primary px-3 py-1 rounded-full bg-primary/10 border border-primary/20">
+              <Layers className="size-3.5 animate-pulse" />
+              Spaced Repetition (SRS)
+            </span>
+            <h1 className="mt-1 text-3xl font-black tracking-tight text-foreground">
+              Thẻ ôn tập thông minh
+            </h1>
+          </div>
+          <div className="flex flex-col items-end gap-2">
+            {/* Cram Mode Toggle */}
+            <button
+              onClick={handleToggleCram}
+              className={`flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-xl border transition-all duration-200 ${
+                cramMode
+                  ? "bg-amber-500/10 border-amber-500/30 text-amber-600 dark:text-amber-400"
+                  : "bg-muted border-border/40 text-muted-foreground hover:border-amber-500/30"
+              }`}
+            >
+              <Zap className="size-3.5" />
+              {cramMode ? "Cram Mode: ON" : "Cram Mode"}
+            </button>
+            <div className="text-right">
+              <div className="text-[10px] text-muted-foreground uppercase tracking-widest font-extrabold">Đang ôn tập</div>
+              <div className="text-sm font-black text-foreground font-mono mt-0.5">
+                {currentIndex + 1} / {cards.length} thẻ
+              </div>
+            </div>
           </div>
         </div>
+
+        {/* Topic Filter — chỉ hiện khi Cram Mode */}
+        {cramMode && topics.length > 0 && (
+          <div className="flex flex-wrap gap-2">
+            <button
+              onClick={() => handleTopicChange("all")}
+              className={`flex items-center gap-1 text-[11px] font-bold px-3 py-1.5 rounded-xl border transition-all ${
+                selectedTopic === "all"
+                  ? "bg-primary/10 border-primary/30 text-primary"
+                  : "bg-muted border-border/40 text-muted-foreground hover:border-primary/20"
+              }`}
+            >
+              <Filter className="size-3" /> Tất cả
+            </button>
+            {topics.map(t => (
+              <button
+                key={t}
+                onClick={() => handleTopicChange(t)}
+                className={`text-[11px] font-bold px-3 py-1.5 rounded-xl border transition-all ${
+                  selectedTopic === t
+                    ? "bg-primary/10 border-primary/30 text-primary"
+                    : "bg-muted border-border/40 text-muted-foreground hover:border-primary/20"
+                }`}
+              >
+                {t}
+              </button>
+            ))}
+          </div>
+        )}
       </motion.div>
 
       {/* Main Arena */}

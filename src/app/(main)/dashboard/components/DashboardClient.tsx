@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { Flame, Star, GraduationCap, BookOpen } from "lucide-react";
+import { toast } from "sonner";
+import { updateDailyXpGoal } from "@/app/actions/progress";
 
 import UnitCard from "./UnitCard";
 import SrsCard from "./SrsCard";
@@ -31,6 +33,7 @@ interface DashboardClientProps {
     xp: number;
     completed: boolean;
   }>;
+  dailyXpGoal: number;
 }
 
 export default function DashboardClient({
@@ -43,11 +46,14 @@ export default function DashboardClient({
   currentUnitData,
   initialXpCurrent,
   initialQuests,
+  dailyXpGoal,
 }: DashboardClientProps) {
   const [xpCurrent, setXpCurrent] = useState(initialXpCurrent);
   const [quests, setQuests] = useState(initialQuests);
   const [greeting, setGreeting] = useState("Chào bạn");
-  const xpTarget = 80;
+  const [xpTarget, setXpTarget] = useState(dailyXpGoal);
+  const [showGoalSelector, setShowGoalSelector] = useState(false);
+  const [updatingGoal, setUpdatingGoal] = useState(false);
 
   useEffect(() => {
     const hour = new Date().getHours();
@@ -55,6 +61,24 @@ export default function DashboardClient({
     else if (hour < 18) setGreeting("Chào buổi chiều");
     else setGreeting("Chào buổi tối");
   }, []);
+
+  const handleUpdateGoal = async (newGoal: number) => {
+    setUpdatingGoal(true);
+    try {
+      const res = await updateDailyXpGoal(newGoal);
+      if (res.success) {
+        setXpTarget(newGoal);
+        toast.success(res.message);
+        setShowGoalSelector(false);
+      } else {
+        toast.error(res.error || "Không thể cập nhật mục tiêu.");
+      }
+    } catch {
+      toast.error("Có lỗi xảy ra khi cập nhật mục tiêu.");
+    } finally {
+      setUpdatingGoal(false);
+    }
+  };
 
   const handleToggleQuest = (id: number) => {
     setQuests((prev) =>
@@ -120,12 +144,50 @@ export default function DashboardClient({
         {/* ── 2. Stats strip ── */}
         <div className="grid grid-cols-3 gap-3">
           {/* XP today */}
-          <div className="rounded-2xl border border-zinc-200/60 dark:border-zinc-800/60 bg-white/60 dark:bg-zinc-900/30 backdrop-blur-sm p-4 space-y-2 hover:border-emerald-500/30 transition-colors duration-200">
+          <div
+            onClick={() => setShowGoalSelector(true)}
+            className="rounded-2xl border border-zinc-200/60 dark:border-zinc-800/60 bg-white/60 dark:bg-zinc-900/30 backdrop-blur-sm p-4 space-y-2 hover:border-emerald-500/30 transition-colors duration-200 cursor-pointer relative overflow-hidden group"
+            title="Nhấn để thay đổi mục tiêu daily XP"
+          >
+            {showGoalSelector && (
+              <div className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-zinc-950/95 border border-zinc-800 p-2.5 space-y-1.5 rounded-2xl">
+                <p className="text-[9px] font-black text-emerald-400 uppercase tracking-widest">Mục tiêu XP mới</p>
+                <div className="grid grid-cols-2 gap-1 w-full">
+                  {[30, 50, 80, 100].map((val) => (
+                    <button
+                      key={val}
+                      disabled={updatingGoal}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleUpdateGoal(val);
+                      }}
+                      className={`py-1 rounded-lg text-[9px] font-extrabold transition-all border ${
+                        xpTarget === val
+                          ? "bg-emerald-600 text-white border-emerald-500"
+                          : "bg-zinc-900 border-zinc-800 text-zinc-300 hover:border-emerald-500/30"
+                      }`}
+                    >
+                      {val} XP
+                    </button>
+                  ))}
+                </div>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setShowGoalSelector(false);
+                  }}
+                  className="text-[8px] text-zinc-500 hover:text-zinc-300 font-bold uppercase transition-colors"
+                >
+                  Đóng
+                </button>
+              </div>
+            )}
+
             <div className="flex items-center gap-2">
               <span className="flex size-7 items-center justify-center rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
                 <Star className="size-3.5 fill-current" />
               </span>
-              <span className="text-[10px] font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">XP hôm nay</span>
+              <span className="text-[10px] font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider group-hover:text-emerald-500 transition-colors">XP hôm nay ⚙️</span>
             </div>
             <p className="text-xl font-black text-zinc-900 dark:text-zinc-50 leading-none">
               {xpCurrent}<span className="text-xs font-bold text-zinc-400 dark:text-zinc-500">/{xpTarget}</span>
@@ -134,7 +196,7 @@ export default function DashboardClient({
             <div className="h-1.5 w-full bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
               <div
                 className="h-full bg-emerald-500 rounded-full transition-all duration-500"
-                style={{ width: `${xpPercent}%` }}
+                style={{ width: `${Math.min(xpPercent, 100)}%` }}
               />
             </div>
           </div>

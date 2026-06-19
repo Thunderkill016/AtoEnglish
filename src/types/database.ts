@@ -27,6 +27,7 @@ export type UserProgress = {
   streak: number;
   total_xp: number;
   last_active_date: string | null;
+  daily_xp_goal: number;
   created_at: string;
   updated_at: string;
 };
@@ -112,6 +113,7 @@ export type UserProgressInsert = {
   streak?: number;
   total_xp?: number;
   last_active_date?: string | null;
+  daily_xp_goal?: number;
   created_at?: string;
   updated_at?: string;
 };

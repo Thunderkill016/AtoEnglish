@@ -24,12 +24,14 @@ export default async function DashboardPage() {
   let totalXp = 0;
   let currentStreak = 0;
   let userLevel = "A1 Beginner"; // Default for new/data-reset users
+  let dailyXpGoal = 50;
 
   if (progressRes.success && progressRes.progress) {
     const p = progressRes.progress;
     userName = p.display_name || "Học viên";
     totalXp = p.total_xp || 0;
     currentStreak = p.streak || 0;
+    dailyXpGoal = p.daily_xp_goal || 50;
 
     const levelNames: Record<string, string> = {
       A1: "A1 Beginner",
@@ -79,7 +81,7 @@ export default async function DashboardPage() {
     }
   });
 
-  const initialXpCurrent = Math.min(todayXp, 80);
+  const initialXpCurrent = Math.min(todayXp, dailyXpGoal);
 
   const initialQuests = [
     { id: 1, text: "Học 1 bài mới (Input & Processing)", xp: 20, completed: false },
@@ -107,6 +109,7 @@ export default async function DashboardPage() {
       currentUnitData={currentUnitData}
       initialXpCurrent={initialXpCurrent}
       initialQuests={initialQuests}
+      dailyXpGoal={dailyXpGoal}
     />
   );
 }
