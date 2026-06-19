@@ -327,5 +327,45 @@ export const UNIT_VOCABULARY: Record<string, VocabularyItem[]> = {
       topic: "Technology",
       level: "B1"
     },
+    { 
+      word: "ethics", 
+      phonetic: "/ˈeθ.ɪks/", 
+      meaning_vn: "Đạo đức",
+      example_en: "We need to discuss the ethics of artificial intelligence.",
+      topic: "Technology",
+      level: "B1"
+    },
+    { 
+      word: "security", 
+      phonetic: "/sɪˈkjʊə.rə.ti/", 
+      meaning_vn: "Bảo mật / An ninh",
+      example_en: "Data security is very important online.",
+      topic: "Technology",
+      level: "B1"
+    },
+    { 
+      word: "algorithm", 
+      phonetic: "/ˈæl.ɡə.rɪ.ðəm/", 
+      meaning_vn: "Thuật toán",
+      example_en: "The search engine uses a complex algorithm.",
+      topic: "Technology",
+      level: "B1"
+    },
+    { 
+      word: "integrate", 
+      phonetic: "/ˈɪn.tɪ.ɡreɪt/", 
+      meaning_vn: "Tích hợp",
+      example_en: "We should integrate technology into our classroom.",
+      topic: "Technology",
+      level: "B1"
+    },
+    { 
+      word: "fabric", 
+      phonetic: "/ˈfæb.rɪk/", 
+      meaning_vn: "Cấu trúc / Sợi vải",
+      example_en: "Technology is woven into our social fabric.",
+      topic: "Technology",
+      level: "B1"
+    }
   ]
 };
