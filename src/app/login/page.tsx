@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, Suspense, useEffect, useRef } from "react";
+import { useState, Suspense, useEffect, useRef, useMemo } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -26,6 +26,54 @@ const slideVariants = {
   }),
 };
 
+// ── Module-level constants (never recreated on re-render) ──
+const QUESTIONS = [
+  {
+    id: 1,
+    title: "Trình độ tiếng Anh hiện tại của bạn?",
+    subtitle: "Hãy chọn mức gần nhất với bạn hiện tại.",
+    options: [
+      { emoji: "🆕", label: "Mất gốc / Chưa biết gì", val: "A0-A1" },
+      { emoji: "📚", label: "Biết từ vựng cơ bản, chưa nói được", val: "A2" },
+      { emoji: "💬", label: "Giao tiếp được, phản xạ còn chậm", val: "B1" },
+      { emoji: "🚀", label: "Tự tin nói tiếng Anh trôi chảy", val: "B2+" },
+    ],
+  },
+  {
+    id: 2,
+    title: "Mục tiêu học tiếng Anh của bạn?",
+    subtitle: "Chúng tôi sẽ cá nhân hóa lộ trình theo mục tiêu này.",
+    options: [
+      { emoji: "💼", label: "Đi làm, thăng tiến sự nghiệp", val: "work" },
+      { emoji: "✈️", label: "Tự tin du lịch nước ngoài", val: "travel" },
+      { emoji: "🎓", label: "Học tập, thi chứng chỉ quốc tế", val: "study" },
+      { emoji: "🗣️", label: "Luyện phản xạ nói tự tin hàng ngày", val: "daily" },
+    ],
+  },
+  {
+    id: 3,
+    title: "Khó khăn lớn nhất khi học tiếng Anh?",
+    subtitle: "Câu trả lời giúp chúng tôi hỗ trợ bạn tốt hơn.",
+    options: [
+      { emoji: "😰", label: "Sợ nói sai, ngại bị đánh giá", val: "fear" },
+      { emoji: "🧠", label: "Biết nhưng không nói ra được", val: "gap" },
+      { emoji: "⏰", label: "Không có thời gian luyện tập đều đặn", val: "time" },
+      { emoji: "💤", label: "Học mãi vẫn hay quên từ vựng", val: "forget" },
+    ],
+  },
+  {
+    id: 4,
+    title: "Bạn có thể dành bao nhiêu thời gian mỗi ngày?",
+    subtitle: "Chúng tôi tối ưu độ dài bài học theo thời gian bạn chọn.",
+    options: [
+      { emoji: "⚡", label: "5 phút/ngày — Bận rộn", val: "5min" },
+      { emoji: "⭐", label: "15 phút/ngày — Tiêu chuẩn", val: "15min" },
+      { emoji: "🔥", label: "30 phút/ngày — Nghiêm túc", val: "30min" },
+      { emoji: "💎", label: "60 phút/ngày — Tốc hành", val: "60min" },
+    ],
+  },
+];
+
 function LoginContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -43,9 +91,21 @@ function LoginContent() {
   const [answers, setAnswers] = useState<Record<number, string>>({});
   const [checklistIndex, setChecklistIndex] = useState(0);
   const [direction, setDirection] = useState(1);
+  const [isDesktop, setIsDesktop] = useState(false);
   const autoAdvanceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const supabase = createClient();
+  // Supabase client — useRef to create only once
+  const supabaseRef = useRef(createClient());
+  const supabase = supabaseRef.current;
+
+  // Detect desktop for conditional left-panel render (avoids mobile animation cost)
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 1024px)");
+    setIsDesktop(mq.matches);
+    const handler = (e: MediaQueryListEvent) => setIsDesktop(e.matches);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, []);
 
   // Skip survey if returning user or mode=login
   useEffect(() => {
@@ -88,53 +148,9 @@ function LoginContent() {
     }
   }, [onboardingStep]);
 
-  // 4 questions with emoji icons
-  const questions = [
-    {
-      id: 1,
-      title: "Trình độ tiếng Anh hiện tại của bạn?",
-      subtitle: "Hãy chọn mức gần nhất với bạn hiện tại.",
-      options: [
-        { emoji: "🆕", label: "Mất gốc / Chưa biết gì", val: "A0-A1" },
-        { emoji: "📚", label: "Biết từ vựng cơ bản, chưa nói được", val: "A2" },
-        { emoji: "💬", label: "Giao tiếp được, phản xạ còn chậm", val: "B1" },
-        { emoji: "🚀", label: "Tự tin nói tiếng Anh trôi chảy", val: "B2+" },
-      ],
-    },
-    {
-      id: 2,
-      title: "Mục tiêu học tiếng Anh của bạn?",
-      subtitle: "Chúng tôi sẽ cá nhân hóa lộ trình theo mục tiêu này.",
-      options: [
-        { emoji: "💼", label: "Đi làm, thăng tiến sự nghiệp", val: "work" },
-        { emoji: "✈️", label: "Tự tin du lịch nước ngoài", val: "travel" },
-        { emoji: "🎓", label: "Học tập, thi chứng chỉ quốc tế", val: "study" },
-        { emoji: "🗣️", label: "Luyện phản xạ nói tự tin hàng ngày", val: "daily" },
-      ],
-    },
-    {
-      id: 3,
-      title: "Khó khăn lớn nhất khi học tiếng Anh?",
-      subtitle: "Câu trả lời giúp chúng tôi hỗ trợ bạn tốt hơn.",
-      options: [
-        { emoji: "😰", label: "Sợ nói sai, ngại bị đánh giá", val: "fear" },
-        { emoji: "🧠", label: "Biết nhưng không nói ra được", val: "gap" },
-        { emoji: "⏰", label: "Không có thời gian luyện tập đều đặn", val: "time" },
-        { emoji: "💤", label: "Học mãi vẫn hay quên từ vựng", val: "forget" },
-      ],
-    },
-    {
-      id: 4,
-      title: "Bạn có thể dành bao nhiêu thời gian mỗi ngày?",
-      subtitle: "Chúng tôi tối ưu độ dài bài học theo thời gian bạn chọn.",
-      options: [
-        { emoji: "⚡", label: "5 phút/ngày — Bận rộn", val: "5min" },
-        { emoji: "⭐", label: "15 phút/ngày — Tiêu chuẩn", val: "15min" },
-        { emoji: "🔥", label: "30 phút/ngày — Nghiêm túc", val: "30min" },
-        { emoji: "💎", label: "60 phút/ngày — Tốc hành", val: "60min" },
-      ],
-    },
-  ];
+
+  // Reference module-level constant
+  const questions = QUESTIONS;
 
   // Duolingo-style: store answer immediately (visual feedback), auto-advance after 400ms
   const handleAnswerSelect = (qId: number, val: string) => {
@@ -296,23 +312,21 @@ function LoginContent() {
     };
   };
 
-  const recap = getRecapText();
+  const recap = useMemo(() => getRecapText(), [answers]); // eslint-disable-line react-hooks/exhaustive-deps
   const hasAnswers = !!answers[1];
 
   // Personalized checklist items for loader (Step 5)
-  const levelLabel = recap.level;
-  const timeLabel = recap.time;
-  const targetLabel = recap.target;
-  const checklistItems = [
-    `Phân tích trình độ ${levelLabel} của bạn...`,
-    `Thiết lập lộ trình ${targetLabel} — ${timeLabel}...`,
+  const checklistItems = useMemo(() => [
+    `Phân tích trình độ ${recap.level} của bạn...`,
+    `Thiết lập lộ trình ${recap.target} — ${recap.time}...`,
     "Cấu hình ôn tập thông minh FSRS...",
-  ];
+  ], [recap.level, recap.target, recap.time]);
 
   return (
     <div className="min-h-screen min-h-[100dvh] bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-50 font-sans flex flex-col lg:flex-row selection:bg-emerald-100 dark:selection:bg-emerald-950/30 selection:text-emerald-900 dark:selection:text-emerald-200">
 
-      {/* ── Left Column: Brand Showcase (Desktop only) ── */}
+      {/* ── Left Column: Desktop only — not mounted on mobile to save animation cost ── */}
+      {isDesktop && (
       <div className="hidden lg:flex w-[43%] bg-gradient-to-br from-zinc-900 via-emerald-950 to-zinc-950 p-16 text-white flex-col justify-between relative overflow-hidden select-none border-r border-zinc-800/30">
         {/* Animated ambient blobs */}
         <motion.div
@@ -382,6 +396,7 @@ function LoginContent() {
           Học tập hoàn toàn miễn phí. Tiến trình được tự động đồng bộ đám mây.
         </div>
       </div>
+      )} {/* end isDesktop left panel */}
 
       {/* ── Right Column: Survey / Login ── */}
       <div className="flex-1 flex flex-col justify-between py-8 sm:py-12 px-5 sm:px-12 md:px-16 lg:px-24 bg-white dark:bg-zinc-950 relative overflow-y-auto">
