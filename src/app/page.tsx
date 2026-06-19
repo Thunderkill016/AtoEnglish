@@ -90,7 +90,6 @@ export default function LandingPage() {
                   <span className="bg-gradient-to-r from-emerald-600 via-teal-500 to-emerald-500 bg-clip-text text-transparent dark:from-emerald-400 dark:via-teal-400 dark:to-emerald-300">
                     nói được
                   </span>
-                  ,
                 </span>
                 <span className="block lg:whitespace-nowrap">
                   không chỉ để biết.

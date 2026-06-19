@@ -16,7 +16,7 @@ export default function ScienceSection() {
         {/* Section Header */}
         <ScrollReveal className="text-center space-y-4">
           <h2 className="flex flex-col items-center gap-y-2 sm:gap-y-3 text-xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold text-zinc-900 dark:text-zinc-50 max-w-4xl mx-auto px-4">
-            <span className="block lg:whitespace-nowrap">Được xây dựng dựa trên khoa học,</span>
+            <span className="block lg:whitespace-nowrap">Được xây dựng dựa trên khoa học</span>
             <span className="block lg:whitespace-nowrap">tối ưu cho người Việt</span>
           </h2>
         </ScrollReveal>
