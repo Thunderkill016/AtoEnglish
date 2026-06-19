@@ -4,12 +4,12 @@ import { useState, Suspense, useEffect } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { Mail, Lock, Loader2, Sparkles, ArrowLeft, Check } from "lucide-react";
+import { Mail, Lock, Loader2, Sparkles, ArrowLeft, Sprout, Check } from "lucide-react";
 import { toast } from "sonner";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { LoginSchema, SignUpSchema } from "@/lib/security/validation";
-import Logo from "@/components/ui/logo";
+
 
 const slideVariants = {
   enter: (direction: number) => ({
@@ -318,7 +318,20 @@ function LoginContent() {
           className="absolute bottom-0 left-0 w-[450px] h-[450px] bg-emerald-600 rounded-full blur-3xl pointer-events-none"
         />
 
-        <Logo href="/" variant="light" size="md" className="z-10" />
+        <Link href="/" className="flex items-center gap-2.5 z-10 self-start group">
+          <motion.span
+            whileHover={{ scale: 1.05, rotate: 5 }}
+            className="flex size-9 items-center justify-center rounded-lg bg-emerald-600 text-white shadow-lg shadow-emerald-950/40"
+          >
+            <Sprout className="size-5" />
+          </motion.span>
+          <div className="flex flex-col leading-none text-left">
+            <span className="text-base font-bold tracking-tight text-white group-hover:text-emerald-400 transition-colors">
+              AtoEnglish
+            </span>
+            <span className="text-[10px] text-zinc-400 font-medium">Grow every day</span>
+          </div>
+        </Link>
 
         <div className="space-y-8 z-10 max-w-md my-auto">
           <div className="inline-flex items-center gap-1.5 text-[10px] font-bold text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-full border border-emerald-500/20 uppercase tracking-wider">
@@ -374,7 +387,17 @@ function LoginContent() {
         {/* Top Navigation */}
         <header className="max-w-md w-full mx-auto flex items-center justify-between mb-8 z-10">
           <div className="lg:hidden">
-            <Logo size="sm" />
+          <Link href="/" className="lg:hidden flex items-center gap-2.5 group">
+            <span className="flex size-8 items-center justify-center rounded-lg bg-emerald-600 text-white shadow-sm">
+              <Sprout className="size-4.5" />
+            </span>
+            <div className="flex flex-col leading-none text-left">
+              <span className="text-sm font-bold tracking-tight text-zinc-900 dark:text-zinc-50 group-hover:text-emerald-600 transition-colors">
+                AtoEnglish
+              </span>
+              <span className="text-[9px] text-zinc-500 font-medium">Grow every day</span>
+            </div>
+          </Link>
           </div>
 
           {onboardingStep > 1 && onboardingStep <= 4 ? (
