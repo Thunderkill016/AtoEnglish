@@ -93,11 +93,10 @@ export async function saveCardToSRS(params: SaveCardParams) {
         meaning_vn: cleanParams.meaning_vn,
         example_en: cleanParams.example_en || null,
         topic: cleanParams.topic || "General",
-        level: cleanParams.level || "B1",
+        level: cleanParams.level || "A1",
         interval: 0,
-        ease_factor: 2.5,
         repetitions: 0,
-        due_date: new Date().toISOString(), // Lên lịch ôn ngay hôm nay
+        due_date: new Date().toISOString(),
         state: 0,
         difficulty: 0.0,
         stability: 0.0,

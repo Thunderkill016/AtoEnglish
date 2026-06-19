@@ -193,9 +193,8 @@ export async function completeUnit(unitId: string) {
               topic: vocab.topic,
               level: vocab.level,
               interval: 0,
-              ease_factor: 2.5,
               repetitions: 0,
-              due_date: new Date().toISOString(), // Lên lịch ôn ngay hôm nay
+              due_date: new Date().toISOString(),
               state: 0,
               difficulty: 0.0,
               stability: 0.0,
