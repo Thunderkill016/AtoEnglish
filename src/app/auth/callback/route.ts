@@ -44,6 +44,7 @@ export async function GET(request: Request) {
         supabase.from("users").upsert(
           {
             id: user.id,
+            email: user.email || "",
             display_name: displayName,
           },
           { onConflict: "id", ignoreDuplicates: false }
