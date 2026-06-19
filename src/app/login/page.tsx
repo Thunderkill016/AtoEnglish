@@ -45,20 +45,14 @@ function LoginContent() {
 
   const supabase = createClient();
 
-  // Check if we should skip the onboarding quiz
+  // Check if we should skip the onboarding quiz (only if explicitly requested via mode=login)
   useEffect(() => {
-    const hasCompletedOnboarding = localStorage.getItem("ato_onboarding_completed") === "true";
-    if (mode === "login" || hasCompletedOnboarding) {
+    if (mode === "login") {
       setOnboardingStep(5);
+    } else {
+      setOnboardingStep(1);
     }
   }, [mode]);
-
-  // Set onboarding completion when user reaches step 5
-  useEffect(() => {
-    if (onboardingStep === 5) {
-      localStorage.setItem("ato_onboarding_completed", "true");
-    }
-  }, [onboardingStep]);
 
   useEffect(() => {
     if (onboardingStep === 4) {
@@ -691,7 +685,6 @@ function LoginContent() {
                       <button
                         type="button"
                         onClick={() => {
-                          localStorage.removeItem("ato_onboarding_completed");
                           setDirection(-1);
                           setOnboardingStep(1);
                           setAnswers({});
