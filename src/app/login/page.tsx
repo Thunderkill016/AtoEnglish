@@ -4,7 +4,7 @@ import { useState, Suspense } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { Mail, Lock, Loader2, Sparkles, ArrowLeft } from "lucide-react";
+import { Mail, Lock, Loader2, Sparkles, ArrowLeft, Sprout } from "lucide-react";
 import { toast } from "sonner";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -129,13 +129,18 @@ function LoginContent() {
     <div className="min-h-screen bg-white text-zinc-900 font-sans flex flex-col justify-between py-12 px-6 sm:px-12 selection:bg-emerald-100 selection:text-emerald-900">
       {/* Top Header Navigation */}
       <header className="max-w-7xl w-full mx-auto flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-2 group">
-          <span className="flex size-7 items-center justify-center rounded-lg bg-emerald-600 text-white font-bold text-sm shadow-sm">
-            A
+        <Link href="/" className="flex items-center gap-2.5 group">
+          <span className="flex size-8 items-center justify-center rounded-lg bg-emerald-600 text-white shadow-sm">
+            <Sprout className="size-4.5" />
           </span>
-          <span className="text-lg font-bold tracking-tight text-zinc-900 group-hover:text-emerald-600 transition-colors">
-            AtoEnglish
-          </span>
+          <div className="flex flex-col leading-none text-left">
+            <span className="text-sm font-bold tracking-tight text-zinc-900 group-hover:text-emerald-600 transition-colors">
+              AtoEnglish
+            </span>
+            <span className="text-[9px] text-zinc-500 font-medium">
+              Grow every day
+            </span>
+          </div>
         </Link>
         <Link href="/">
           <Button variant="ghost" className="text-sm font-semibold text-zinc-500 hover:text-zinc-900 h-9 gap-1 rounded-lg">
@@ -264,7 +269,7 @@ function LoginContent() {
                   <Button
                     type="submit"
                     disabled={isLoading}
-                    className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium h-12 rounded-xl text-sm gap-2 active:scale-[0.98] transition-all duration-300"
+                    className="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-medium h-12 rounded-xl text-sm gap-2 active:scale-[0.98] transition-all duration-300"
                   >
                     {isLoading && <Loader2 className="size-4 animate-spin" />}
                     <span>{isSignUp ? "Đăng ký" : "Đăng nhập"}</span>
@@ -274,7 +279,7 @@ function LoginContent() {
                     <button
                       type="button"
                       onClick={() => setIsSignUp(!isSignUp)}
-                      className="text-emerald-600 hover:text-emerald-700 font-semibold"
+                      className="text-emerald-700 hover:text-emerald-800 font-semibold"
                     >
                       {isSignUp ? "Đã có tài khoản? Đăng nhập" : "Chưa có tài khoản? Đăng ký ngay"}
                     </button>

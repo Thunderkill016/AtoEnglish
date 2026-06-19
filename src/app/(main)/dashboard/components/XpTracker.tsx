@@ -3,45 +3,17 @@
 import { m } from "framer-motion";
 
 interface XpTrackerProps {
-  isLoading: boolean;
   xpCurrent: number;
   xpTarget: number;
   totalXp: number;
 }
 
-export default function XpTracker({ isLoading, xpCurrent, xpTarget, totalXp }: XpTrackerProps) {
+export default function XpTracker({ xpCurrent, xpTarget, totalXp }: XpTrackerProps) {
   // SVG parameters for circular progress
   const radius = 50;
   const circumference = 2 * Math.PI * radius;
   const xpPercentage = (xpCurrent / xpTarget) * 100;
   const strokeDashoffset = circumference - (Math.min(xpPercentage, 100) / 100) * circumference;
-
-  if (isLoading) {
-    return (
-      <div className="rounded-3xl border border-glass bg-glass p-6 shadow-sm flex flex-col items-center justify-between text-center min-h-[260px] animate-pulse">
-        <div className="w-full flex items-center justify-between">
-          <div className="h-4 w-24 bg-foreground/10 rounded" />
-          <div className="h-4 w-12 bg-primary/10 rounded" />
-        </div>
-        
-        {/* Skeleton circle */}
-        <div className="relative size-32 flex items-center justify-center my-3">
-          <svg className="size-full transform -rotate-90" viewBox="0 0 128 128">
-            <circle cx="64" cy="64" r={radius} className="stroke-foreground/5 fill-none" strokeWidth="6" />
-          </svg>
-          <div className="absolute flex flex-col items-center leading-none">
-            <div className="h-7 w-12 bg-foreground/10 rounded mb-1.5" />
-            <div className="h-3 w-16 bg-foreground/10 rounded" />
-          </div>
-        </div>
-
-        <div className="space-y-1.5 w-full border-t border-foreground/[0.04] pt-3">
-          <div className="h-4 w-32 bg-foreground/10 rounded mx-auto" />
-          <div className="h-3 w-28 bg-foreground/5 rounded mx-auto" />
-        </div>
-      </div>
-    );
-  }
 
   return (
     <m.div

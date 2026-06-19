@@ -6,7 +6,6 @@ import { BookOpen, TrendingUp, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface UnitCardProps {
-  isLoading: boolean;
   currentUnitData: {
     unitId: string;
     title: string;
@@ -23,43 +22,7 @@ const itemVariants = {
   show: { opacity: 1, y: 0, transition: { type: "spring" as const, stiffness: 100, damping: 15 } },
 } as const;
 
-export default function UnitCard({ isLoading, currentUnitData }: UnitCardProps) {
-  if (isLoading) {
-    return (
-      <div className="rounded-3xl border border-glass bg-glass p-6 sm:p-8 shadow-sm min-h-[380px] flex flex-col justify-between animate-pulse">
-        <div className="space-y-6">
-          <div className="flex justify-between items-center">
-            <div className="h-5 w-24 bg-foreground/10 rounded-full" />
-            <div className="h-5 w-24 bg-primary/10 rounded-full" />
-          </div>
-          <div className="space-y-3">
-            <div className="h-8 w-3/4 bg-foreground/10 rounded-lg" />
-            <div className="h-4 w-5/6 bg-foreground/10 rounded" />
-            <div className="h-4 w-2/3 bg-foreground/10 rounded" />
-          </div>
-          <div className="flex gap-2">
-            <div className="h-6 w-20 bg-foreground/5 rounded-xl" />
-            <div className="h-6 w-20 bg-foreground/5 rounded-xl" />
-            <div className="h-6 w-20 bg-foreground/5 rounded-xl" />
-          </div>
-        </div>
-        <div className="space-y-4 pt-6 border-t border-foreground/[0.04]">
-          <div className="space-y-2">
-            <div className="flex justify-between">
-              <div className="h-3.5 w-28 bg-foreground/10 rounded" />
-              <div className="h-3.5 w-10 bg-foreground/10 rounded font-mono" />
-            </div>
-            <div className="h-3 w-full bg-secondary rounded-full" />
-          </div>
-          <div className="flex justify-between items-center gap-4">
-            <div className="h-4 w-48 bg-foreground/10 rounded" />
-            <div className="h-10 w-36 bg-foreground/10 rounded-2xl" />
-          </div>
-        </div>
-      </div>
-    );
-  }
-
+export default function UnitCard({ currentUnitData }: UnitCardProps) {
   return (
     <m.div
       variants={itemVariants}
