@@ -46,7 +46,7 @@ export default function HowItWorksSection() {
     },
   ];
 
-  const delays = ["", "delay-100", "delay-200", "delay-300"];
+  const delayMs = [0, 100, 200, 300];
 
   return (
     <section
@@ -75,7 +75,7 @@ export default function HowItWorksSection() {
             return (
               <ScrollReveal
                 key={step.id}
-                delayClass={delays[index]}
+                delayMs={delayMs[index]}
                 className="h-full"
               >
                 <div

@@ -21,7 +21,7 @@ export default function BenefitsSection() {
     },
   ];
 
-  const delays = ["", "delay-100", "delay-200"];
+  const delayMs = [0, 100, 200];
 
   return (
     <section className="bg-gradient-to-b from-zinc-50/20 to-zinc-50/50 dark:from-zinc-900/10 dark:to-zinc-950/20 py-24 sm:py-32 lg:py-40 px-5 sm:px-8 border-y border-zinc-200/40 dark:border-zinc-800/40 relative">
@@ -44,7 +44,7 @@ export default function BenefitsSection() {
             return (
               <ScrollReveal
                 key={index}
-                delayClass={delays[index]}
+                delayMs={delayMs[index]}
                 className="flex"
               >
                 <div

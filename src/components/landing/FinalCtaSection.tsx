@@ -37,7 +37,7 @@ export default function FinalCtaSection() {
           </ScrollReveal>
 
           {/* Open Beta badge */}
-          <ScrollReveal delayClass="delay-75">
+          <ScrollReveal delayMs={75}>
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-500/10 dark:bg-emerald-500/15 border border-emerald-500/20 dark:border-emerald-400/20">
               <span className="size-2 rounded-full bg-emerald-500 animate-pulse" />
               <span className="text-xs font-semibold text-emerald-700 dark:text-emerald-400 tracking-wide">
@@ -46,7 +46,7 @@ export default function FinalCtaSection() {
             </div>
           </ScrollReveal>
 
-          <ScrollReveal delayClass="delay-100" className="flex flex-col items-center gap-4">
+          <ScrollReveal delayMs={150} className="flex flex-col items-center gap-4">
             <Link
               href={isLoggedIn ? "/dashboard" : "/login"}
               prefetch={false}

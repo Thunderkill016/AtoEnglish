@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
 
@@ -15,10 +15,13 @@ function setOpen(val: boolean) {
 
 function useMenuOpen() {
   const [open, setOpenState] = useState(_isOpen);
-  // register listener
-  if (!listeners.includes(setOpenState)) {
+  useEffect(() => {
     listeners.push(setOpenState);
-  }
+    return () => {
+      const idx = listeners.indexOf(setOpenState);
+      if (idx > -1) listeners.splice(idx, 1);
+    };
+  }, []);
   return open;
 }
 

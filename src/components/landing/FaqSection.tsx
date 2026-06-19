@@ -20,7 +20,7 @@ export default function FaqSection() {
     },
     {
       q: "Thuật toán Ôn tập ngắt quãng (FSRS) là gì?",
-      a: "FSRS (Free Spaced Repetition Scheduler) là thuật toán khoa học ghi nhớ tiên tiến bậc nhất hiện nay. Thay vì cố gắng học vẹt, FSRS sẽ đo lường mức độ ghi nhớ của bạn đối với từng từ vựng và tự động lên lịch nhắc nhở ôn tập vào đúng 'thời điểm vàng' ngay trước khi bạn chuẩn bị quên. Nhờ đó, bạn ghi nhớ từ vựng sâu sắc hơn tới 80% với thời gian học ít hơn.",
+      a: "FSRS (Free Spaced Repetition Scheduler) là thuật toán khoa học ghi nhớ tiên tiến bậc nhất hiện nay. Thay vì cố gắng học vẹt, FSRS sẽ đo lường mức độ ghi nhớ của bạn đối với từng từ vựng và tự động lên lịch nhắc nhở ôn tập vào đúng 'thời điểm vàng' ngay trước khi bạn chuẩn bị quên. Nhờ đó, bạn ghi nhớ từ vựng lâu hơn đáng kể so với cách học vẹt truyền thống.",
     },
   ];
 
@@ -40,7 +40,8 @@ export default function FaqSection() {
         {/* Section Header */}
         <ScrollReveal className="text-center space-y-4">
           <div className="flex justify-center">
-            <span className="flex size-12 items-center justify-center rounded-2xl bg-emerald-100 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 border border-emerald-250/20 shadow-sm">
+            {/* Fix: border-emerald-250/20 → border-emerald-200/30 (emerald-250 doesn't exist) */}
+            <span className="flex size-12 items-center justify-center rounded-2xl bg-emerald-100 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 border border-emerald-200/30 shadow-sm">
               <HelpCircle className="size-5.5" />
             </span>
           </div>
@@ -57,10 +58,13 @@ export default function FaqSection() {
           {faqs.map((faq, idx) => {
             const isOpen = openIndex === idx;
             return (
-              <ScrollReveal key={idx} delayClass={idx > 0 ? "delay-75" : ""}>
+              <ScrollReveal key={idx} delayMs={idx * 75}>
                 <div className="rounded-2xl border border-zinc-200/60 dark:border-zinc-800/50 bg-white/70 dark:bg-zinc-900/15 backdrop-blur-sm shadow-sm overflow-hidden hover:border-emerald-500/20 dark:hover:border-emerald-500/10 transition-colors duration-200">
+                  {/* Fix: added aria-expanded + aria-controls for accessibility */}
                   <button
                     onClick={() => toggleFaq(idx)}
+                    aria-expanded={isOpen}
+                    aria-controls={`faq-answer-${idx}`}
                     className="w-full flex items-center justify-between p-5 sm:p-6 text-left select-none group"
                   >
                     <span className="font-bold text-sm sm:text-base text-zinc-900 dark:text-zinc-50 group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors duration-200">
@@ -73,14 +77,21 @@ export default function FaqSection() {
                     />
                   </button>
 
+                  {/* Fix: grid-rows technique instead of max-h hack for smooth animation */}
+                  {/* Fix: border-zinc-150 / zinc-850 → zinc-200 / zinc-800 (non-existent classes) */}
                   <div
-                    className={`transition-all duration-300 ease-in-out overflow-hidden ${
-                      isOpen ? "max-h-[600px] border-t border-zinc-150 dark:border-zinc-850" : "max-h-0"
+                    id={`faq-answer-${idx}`}
+                    className={`grid transition-all duration-300 ease-in-out ${
+                      isOpen
+                        ? "grid-rows-[1fr] border-t border-zinc-200 dark:border-zinc-800"
+                        : "grid-rows-[0fr]"
                     }`}
                   >
-                    <p className="p-5 sm:p-6 text-xs sm:text-sm text-zinc-650 dark:text-zinc-400 leading-relaxed font-normal bg-zinc-50/30 dark:bg-zinc-900/10">
-                      {faq.a}
-                    </p>
+                    <div className="overflow-hidden">
+                      <p className="p-5 sm:p-6 text-xs sm:text-sm text-zinc-650 dark:text-zinc-400 leading-relaxed font-normal bg-zinc-50/30 dark:bg-zinc-900/10">
+                        {faq.a}
+                      </p>
+                    </div>
                   </div>
                 </div>
               </ScrollReveal>

@@ -3,7 +3,7 @@ import { FlaskConical, MapPin, Lightbulb } from "lucide-react";
 import ScrollReveal from "@/components/ui/scroll-reveal";
 
 export default function ScienceSection() {
-  const delays = ["", "delay-100", "delay-200"];
+  const delayMs = [0, 100, 200];
 
   return (
     <section id="science" className="py-24 sm:py-32 lg:py-40 px-5 sm:px-8 relative">
@@ -23,7 +23,7 @@ export default function ScienceSection() {
         {/* Pillars Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
           {/* Pillar 1 */}
-          <ScrollReveal delayClass={delays[0]} className="flex">
+          <ScrollReveal delayMs={delayMs[0]} className="flex">
             <div
               className="group relative overflow-hidden z-0 flex flex-col items-start p-8 rounded-[2rem] border border-zinc-200/50 dark:border-zinc-800/40 bg-white/70 dark:bg-zinc-900/25 backdrop-blur-sm hover:shadow-xl hover:shadow-zinc-900/[0.03] dark:hover:shadow-black/25 hover:-translate-y-1 transition-all duration-300 space-y-6 w-full"
             >
@@ -46,7 +46,7 @@ export default function ScienceSection() {
           </ScrollReveal>
 
           {/* Pillar 2 */}
-          <ScrollReveal delayClass={delays[1]} className="flex">
+          <ScrollReveal delayMs={delayMs[1]} className="flex">
             <div
               className="group relative overflow-hidden z-0 flex flex-col items-start p-8 rounded-[2rem] border border-zinc-200/50 dark:border-zinc-800/40 bg-white/70 dark:bg-zinc-900/25 backdrop-blur-sm hover:shadow-xl hover:shadow-zinc-900/[0.03] dark:hover:shadow-black/25 hover:-translate-y-1 transition-all duration-300 space-y-6 w-full"
             >
@@ -69,7 +69,7 @@ export default function ScienceSection() {
           </ScrollReveal>
 
           {/* Pillar 3 */}
-          <ScrollReveal delayClass={delays[2]} className="flex">
+          <ScrollReveal delayMs={delayMs[2]} className="flex">
             <div
               className="group relative overflow-hidden z-0 flex flex-col items-start p-8 rounded-[2rem] border border-zinc-200/50 dark:border-zinc-800/40 bg-white/70 dark:bg-zinc-900/25 backdrop-blur-sm hover:shadow-xl hover:shadow-zinc-900/[0.03] dark:hover:shadow-black/25 hover:-translate-y-1 transition-all duration-300 space-y-6 w-full"
             >
