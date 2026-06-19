@@ -1,72 +1,68 @@
+
 import { Zap, Clock, Wallet } from "lucide-react";
 import ScrollReveal from "@/components/ui/scroll-reveal";
 
-const benefits = [
-  {
-    icon: Zap,
-    number: "01",
-    title: "Phản xạ nói tự nhiên",
-    desc: "Luyện nói chủ động giúp bạn bật ra câu trả lời lập tức, loại bỏ hoàn toàn thói quen dịch nhẩm từ tiếng Việt sang tiếng Anh trong đầu.",
-  },
-  {
-    icon: Clock,
-    number: "02",
-    title: "15 phút mỗi ngày là đủ",
-    desc: "Lộ trình học ngắn gọn, tối ưu trên mọi thiết bị di động giúp bạn duy trì thói quen học bền bỉ hàng ngày mà không bị quá tải.",
-  },
-  {
-    icon: Wallet,
-    number: "03",
-    title: "Chi phí tối giản",
-    desc: "Trải nghiệm luyện nói giao tiếp phản xạ chất lượng cao với mức học phí tối giản nhất — miễn phí hoàn toàn trong Open Beta.",
-  },
-];
-
 export default function BenefitsSection() {
+  const benefits = [
+    {
+      icon: Zap,
+      title: "Phản xạ nói tự nhiên",
+      desc: "Luyện nói chủ động giúp bạn bật ra câu trả lời lập tức, hoàn toàn loại bỏ thói quen dịch nhẩm ngữ pháp từ tiếng Việt sang tiếng Anh trong đầu.",
+    },
+    {
+      icon: Clock,
+      title: "15 phút mỗi ngày là đủ",
+      desc: "Lộ trình học ngắn gọn, thiết kế tối ưu hóa trên mọi thiết bị di động giúp bạn dễ dàng duy trì thói quen học tập bền bỉ hàng ngày mà không bị quá tải.",
+    },
+    {
+      icon: Wallet,
+      title: "Tiết kiệm 90% chi phí",
+      desc: "Trải nghiệm luyện nói giao tiếp phản xạ chất lượng tương đương học 1-1 với giáo viên bản xứ, nhưng với mức học phí tối giản nhất.",
+    },
+  ];
+
+  const delayMs = [0, 100, 200];
+
   return (
-    <section className="py-24 sm:py-32 lg:py-40 px-5 sm:px-8 relative overflow-hidden">
+    <section className="bg-gradient-to-b from-zinc-50/20 to-zinc-50/50 dark:from-zinc-900/10 dark:to-zinc-950/20 py-24 sm:py-32 lg:py-40 px-5 sm:px-8 border-y border-zinc-200/40 dark:border-zinc-800/40 relative">
       <div className="absolute inset-0 overflow-hidden pointer-events-none -z-10">
-        <div className="absolute bottom-0 left-1/4 w-[500px] h-[300px] rounded-full bg-emerald-500/4 dark:bg-emerald-500/2 blur-[100px]" />
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 rounded-full bg-emerald-500/5 dark:bg-emerald-500/1 blur-[100px]" />
       </div>
 
       <div className="max-w-6xl mx-auto space-y-16 sm:space-y-20">
-        {/* Header */}
+        {/* Section Header */}
         <ScrollReveal className="text-center space-y-4">
           <h2 className="text-2xl sm:text-4xl lg:text-5xl font-black tracking-tight text-zinc-900 dark:text-zinc-50 leading-normal">
             Bạn sẽ thay đổi như thế nào?
           </h2>
-          <p className="text-base sm:text-lg text-zinc-600 dark:text-zinc-400 max-w-xl mx-auto leading-relaxed font-normal">
-            Sau mỗi ngày 15 phút với AtoEnglish.
-          </p>
         </ScrollReveal>
 
-        {/* Benefits — typography-first, no card borders */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8 lg:gap-16">
-          {benefits.map((b, idx) => {
-            const Icon = b.icon;
+        {/* Benefit Cards Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+          {benefits.map((benefit, index) => {
+            const BenefitIcon = benefit.icon;
             return (
-              <ScrollReveal key={idx} delayMs={idx * 120}>
-                <div className="flex flex-col gap-5">
-                  {/* Large decorative number */}
-                  <span className="text-6xl sm:text-7xl font-black text-zinc-100 dark:text-zinc-800/80 leading-none select-none">
-                    {b.number}
+              <ScrollReveal
+                key={index}
+                delayMs={delayMs[index]}
+                className="flex"
+              >
+                <div
+                  className="group relative overflow-hidden z-0 flex flex-col items-start p-8 rounded-[2rem] border border-zinc-200/50 dark:border-zinc-800/40 bg-white/70 dark:bg-zinc-900/25 backdrop-blur-sm hover:shadow-xl hover:shadow-zinc-900/[0.03] dark:hover:shadow-black/25 hover:-translate-y-1 transition-all duration-300 space-y-6 w-full"
+                >
+                  {/* CSS-only Glowing Border Gradient */}
+                  <div className="absolute -inset-px rounded-[2rem] bg-gradient-to-r from-emerald-500/25 to-teal-500/25 dark:from-emerald-500/35 dark:to-teal-500/35 opacity-0 group-hover:opacity-100 blur-[3px] transition duration-500 -z-10" />
+                  <div className="absolute inset-0 rounded-[2rem] bg-white/95 dark:bg-zinc-950/95 -z-10 transition-colors duration-300" />
+
+                  <span className="flex size-12 items-center justify-center rounded-2xl bg-emerald-100 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 group-hover:scale-105 transition-transform duration-300 border border-emerald-200/50 dark:border-emerald-800/20 shadow-sm">
+                    <BenefitIcon className="size-6" strokeWidth={2.2} />
                   </span>
-
-                  {/* Icon */}
-                  <div className="flex items-center gap-3 -mt-2">
-                    <span className="flex size-10 items-center justify-center rounded-xl bg-emerald-100 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 border border-emerald-200/50 dark:border-emerald-800/20 shadow-sm">
-                      <Icon className="size-5" strokeWidth={2.2} />
-                    </span>
-                    <div className="h-px flex-1 bg-gradient-to-r from-emerald-200/60 to-transparent dark:from-emerald-800/40 dark:to-transparent" />
-                  </div>
-
-                  {/* Text */}
-                  <div className="space-y-2.5">
-                    <h3 className="text-lg sm:text-xl font-bold text-zinc-900 dark:text-zinc-100 tracking-tight leading-snug">
-                      {b.title}
+                  <div className="space-y-3.5 text-left flex-1 flex flex-col">
+                    <h3 className="text-lg sm:text-xl font-bold text-zinc-900 dark:text-zinc-100 tracking-tight leading-normal">
+                      {benefit.title}
                     </h3>
-                    <p className="text-sm sm:text-[15px] text-zinc-600 dark:text-zinc-400 leading-relaxed font-normal">
-                      {b.desc}
+                    <p className="text-sm sm:text-[15px] text-zinc-650 dark:text-zinc-400 leading-relaxed font-normal flex-1">
+                      {benefit.desc}
                     </p>
                   </div>
                 </div>
