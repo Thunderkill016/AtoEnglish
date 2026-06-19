@@ -10,13 +10,16 @@ import DashboardClient from "./components/DashboardClient";
 export const revalidate = 0; // Disable server component caching to ensure accurate dashboard data on request
 
 export default async function DashboardPage() {
-  // 1. Fetch main stats, progress, units and due cards in parallel on the server
-  const [progressRes, completedRes, cardsRes, unitRes] = await Promise.all([
-    getUserProgress(),
-    getCompletedUnitsCount(),
-    getDueCards(),
-    getCurrentUnit(),
-  ]);
+  // Fetch all base queries in a single parallel round (was previously 2 sequential rounds)
+  const [progressRes, completedRes, cardsRes, unitRes, status1Res, status4Res] =
+    await Promise.all([
+      getUserProgress(),
+      getCompletedUnitsCount(),
+      getDueCards(),
+      getCurrentUnit(),
+      getUnitCompletionStatus("unit-1"),
+      getUnitCompletionStatus("unit-4"),
+    ]);
 
   let userName = "Học viên";
   let totalXp = 0;
@@ -62,29 +65,29 @@ export default async function DashboardPage() {
     currentUnitData.route = unitRes.route || "/learn/unit-1";
   }
 
-  // 2. Fetch completion statuses for calculating daily quests & XP in parallel
+  // Resolve active unit completion status — reuse already-fetched results where possible
   const activeUnitId = currentUnitData.unitId;
-  const [status1Res, status4Res, activeStatusRes] = await Promise.all([
-    getUnitCompletionStatus("unit-1"),
-    getUnitCompletionStatus("unit-4"),
-    getUnitCompletionStatus(activeUnitId),
-  ]);
+  let activeStatusRes;
+  if (activeUnitId === "unit-1") {
+    activeStatusRes = status1Res;
+  } else if (activeUnitId === "unit-4") {
+    activeStatusRes = status4Res;
+  } else {
+    // Only fetch if active unit differs from unit-1 and unit-4
+    activeStatusRes = await getUnitCompletionStatus(activeUnitId);
+  }
 
   const todayStr = new Date().toLocaleDateString("sv-SE", { timeZone: "Asia/Ho_Chi_Minh" });
   let todayXp = 0;
 
   if (status1Res.success && status1Res.completed && status1Res.completedAt) {
     const completedDateStr = new Date(status1Res.completedAt).toLocaleDateString("sv-SE", { timeZone: "Asia/Ho_Chi_Minh" });
-    if (completedDateStr === todayStr) {
-      todayXp += 80;
-    }
+    if (completedDateStr === todayStr) todayXp += 80;
   }
 
   if (status4Res.success && status4Res.completed && status4Res.completedAt) {
     const completedDateStr = new Date(status4Res.completedAt).toLocaleDateString("sv-SE", { timeZone: "Asia/Ho_Chi_Minh" });
-    if (completedDateStr === todayStr) {
-      todayXp += 80;
-    }
+    if (completedDateStr === todayStr) todayXp += 80;
   }
 
   const initialXpCurrent = Math.min(todayXp, 80);
@@ -97,9 +100,7 @@ export default async function DashboardPage() {
 
   if (activeStatusRes.success && activeStatusRes.completed && activeStatusRes.completedAt) {
     const completedDateStr = new Date(activeStatusRes.completedAt).toLocaleDateString("sv-SE", { timeZone: "Asia/Ho_Chi_Minh" });
-    if (completedDateStr === todayStr) {
-      initialQuests[0].completed = true;
-    }
+    if (completedDateStr === todayStr) initialQuests[0].completed = true;
   }
 
   return (
