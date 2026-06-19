@@ -28,7 +28,7 @@ export default function FinalCtaSection() {
           </div>
 
           <ScrollReveal className="space-y-4">
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-zinc-900 dark:text-zinc-50 leading-tight">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-zinc-900 dark:text-zinc-50 leading-snug">
               Sẵn sàng bắt đầu hành trình nói tiếng Anh tự tin?
             </h2>
             <p className="text-base sm:text-lg text-zinc-650 dark:text-zinc-350 leading-relaxed max-w-lg mx-auto font-normal">

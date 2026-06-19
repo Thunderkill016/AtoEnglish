@@ -32,7 +32,7 @@ export default function ProblemSection() {
             </span>
           </div>
 
-          <h2 className="text-[2.25rem] sm:text-4xl lg:text-5xl font-black tracking-tight text-zinc-900 dark:text-zinc-50 leading-tight">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-zinc-900 dark:text-zinc-50 leading-snug">
             Bạn học tiếng Anh nhiều năm nhưng vẫn ngại nói?
           </h2>
           

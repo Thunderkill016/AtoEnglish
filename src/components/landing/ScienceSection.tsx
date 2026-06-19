@@ -15,7 +15,7 @@ export default function ScienceSection() {
       <div className="max-w-6xl mx-auto space-y-16 sm:space-y-20">
         {/* Section Header */}
         <ScrollReveal className="text-center space-y-4">
-          <h2 className="text-[2.25rem] sm:text-4xl lg:text-5xl font-black tracking-tight text-zinc-900 dark:text-zinc-50 leading-tight max-w-2xl mx-auto">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-zinc-900 dark:text-zinc-50 leading-snug max-w-2xl mx-auto">
             Được xây dựng dựa trên khoa học, tối ưu cho người Việt
           </h2>
         </ScrollReveal>

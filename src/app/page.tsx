@@ -84,7 +84,7 @@ export default function LandingPage() {
               </div>
 
               {/* Headline */}
-              <h1 className="animate-fade-in-up animation-delay-75 text-[2.5rem] leading-[1.1] sm:text-5xl sm:leading-[1.12] lg:text-[4.25rem] lg:leading-[1.08] font-black tracking-tight text-zinc-900 dark:text-zinc-50 max-w-3xl mx-auto">
+              <h1 className="animate-fade-in-up animation-delay-75 text-3xl leading-snug sm:text-5xl sm:leading-snug lg:text-6xl lg:leading-normal font-extrabold text-zinc-900 dark:text-zinc-50 max-w-3xl mx-auto">
                 Học tiếng Anh để{" "}
                 <span className="bg-gradient-to-r from-emerald-600 via-teal-500 to-emerald-500 bg-clip-text text-transparent dark:from-emerald-400 dark:via-teal-400 dark:to-emerald-300">
                   nói được
