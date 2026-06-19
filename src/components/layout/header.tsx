@@ -21,7 +21,7 @@ export async function Header() {
       <header className="w-full rounded-2xl border border-glass bg-glass shadow-[0_8px_30px_rgb(0,0,0,0.02)] dark:shadow-none h-14 flex items-center justify-between gap-4 px-4 sm:px-6 transition-all duration-300">
         <div className="flex items-center gap-6">
           <Link
-            href="/dashboard"
+            href="/"
             className="group flex items-center gap-2.5 transition-opacity hover:opacity-90"
           >
             <span className="flex size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-sm animate-float">
