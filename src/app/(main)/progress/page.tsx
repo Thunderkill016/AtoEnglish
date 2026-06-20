@@ -71,7 +71,7 @@ export default async function ProgressPage() {
   const totalSrs = Math.max(srsBoxes.reduce((s, b) => s + b.count, 0), 1);
 
   return (
-    <div className="relative mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-8 min-h-screen">
+    <div className="relative mx-auto max-w-7xl px-4 py-5 sm:py-8 sm:px-6 lg:px-8 space-y-5 sm:space-y-8 min-h-screen">
       {/* Ambient glow */}
       <div className="absolute top-1/3 left-1/4 -z-10 h-80 w-[60vw] max-w-80 rounded-full bg-primary/5 blur-3xl pointer-events-none" />
       <div className="absolute bottom-1/4 right-1/4 -z-10 h-80 w-[60vw] max-w-80 rounded-full bg-emerald-500/5 blur-3xl pointer-events-none" />
@@ -91,7 +91,7 @@ export default async function ProgressPage() {
       </div>
 
       {/* Stat cards */}
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
         {statCards.map((stat, idx) => {
           const Icon = stat.icon;
           return (
@@ -100,8 +100,8 @@ export default async function ProgressPage() {
               className="group relative overflow-hidden rounded-3xl bg-white/60 dark:bg-zinc-900/30 border border-zinc-200/60 dark:border-zinc-800/60 backdrop-blur-sm p-4 sm:p-6 space-y-2 sm:space-y-3 hover:-translate-y-1 transition-transform duration-300"
             >
               <div className="flex items-center justify-between">
-                <span className="text-xs font-extrabold text-muted-foreground uppercase tracking-widest">{stat.label}</span>
-                <span className={`flex size-10 items-center justify-center rounded-xl transition-transform duration-300 group-hover:scale-110 ${stat.color}`}>
+                <span className="text-[10px] sm:text-xs font-extrabold text-muted-foreground uppercase tracking-widest truncate">{stat.label}</span>
+                <span className={`flex size-8 sm:size-10 items-center justify-center rounded-xl transition-transform duration-300 group-hover:scale-110 ${stat.color}`}>
                   <Icon className="size-5" />
                 </span>
               </div>
@@ -115,7 +115,7 @@ export default async function ProgressPage() {
       </div>
 
       {/* Weekly Chart + SRS State */}
-      <div className="grid gap-6 lg:grid-cols-3">
+      <div className="grid gap-4 sm:gap-6 lg:grid-cols-3">
         {/* Weekly XP Chart */}
         <div className="lg:col-span-2 rounded-3xl border border-zinc-200/60 dark:border-zinc-800/60 bg-white/60 dark:bg-zinc-900/30 backdrop-blur-sm p-4 sm:p-8 space-y-4 sm:space-y-6">
           <div className="flex items-center justify-between">

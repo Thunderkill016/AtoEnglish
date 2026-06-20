@@ -97,8 +97,8 @@ export default function ProgressClient({ stats }: ProgressClientProps) {
 
   return (
     <div className="space-y-5">
-      <h3 className="font-bold text-lg sm:text-xl text-foreground">Huy chương thành tích</h3>
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+      <h3 className="font-bold text-base sm:text-xl text-foreground">Huy chương thành tích</h3>
+      <div className="grid grid-cols-2 gap-3 sm:gap-4 sm:grid-cols-3 xl:grid-cols-6">
         {achievements.map((ach, idx) => {
           const Icon = ach.icon;
           const tierKey = ach.unlocked ? ach.tier : "locked";
@@ -106,11 +106,11 @@ export default function ProgressClient({ stats }: ProgressClientProps) {
           return (
             <div
               key={idx}
-              className={`group rounded-3xl border p-5 flex flex-col justify-between transition-all duration-300 hover:-translate-y-1 ${tierColors[tierKey]}`}
+              className={`group rounded-3xl border p-3 sm:p-5 flex flex-col justify-between transition-all duration-300 hover:-translate-y-1 ${tierColors[tierKey]}`}
             >
               <div className="space-y-3">
                 <div className="flex justify-between items-start">
-                  <span className={`flex size-10 items-center justify-center rounded-xl transition-transform duration-300 group-hover:scale-110 ${tierIconColors[tierKey]}`}>
+                  <span className={`flex size-8 sm:size-10 items-center justify-center rounded-xl transition-transform duration-300 group-hover:scale-110 ${tierIconColors[tierKey]}`}>
                     {ach.unlocked ? <Icon className="size-5" /> : <Lock className="size-4" />}
                   </span>
                   {ach.unlocked ? (
@@ -124,12 +124,12 @@ export default function ProgressClient({ stats }: ProgressClientProps) {
                   )}
                 </div>
                 <div>
-                  <h4 className="font-bold text-sm text-foreground leading-tight">{ach.title}</h4>
-                  <p className="text-[11px] text-muted-foreground mt-0.5 leading-snug">{ach.desc}</p>
+                  <h4 className="font-bold text-xs sm:text-sm text-foreground leading-tight">{ach.title}</h4>
+                  <p className="text-[10px] sm:text-[11px] text-muted-foreground mt-0.5 leading-snug">{ach.desc}</p>
                 </div>
               </div>
 
-              <div className="mt-4 pt-3 border-t border-foreground/[0.05]">
+              <div className="mt-3 pt-2 sm:pt-3 border-t border-foreground/[0.05]">
                 {ach.unlocked ? (
                   <div className="text-xs font-bold text-muted-foreground flex items-center gap-1.5">
                     <CheckCircle2 className="size-3.5 text-emerald-500" />
