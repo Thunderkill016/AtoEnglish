@@ -237,10 +237,16 @@ export default function FlashcardsPage() {
         <div className="space-y-2 max-w-md">
           <h2 className="text-xl sm:text-2xl font-black text-foreground">Hôm nay bạn đã ôn xong!</h2>
           <p className="text-sm text-muted-foreground leading-relaxed font-normal">
-            Tuyệt vời! Hiện tại bạn không có từ vựng nào cần ôn tập hôm nay. Hãy học thêm bài mới để lưu thêm các từ vựng vào SRS.
+            Tuyệt vời! Không có thẻ nào cần ôn hôm nay. Hãy củng cố từ vựng bằng Quiz trắc nghiệm hoặc học thêm bài mới.
           </p>
         </div>
-        <div className="flex gap-4 pt-2">
+        <div className="flex flex-wrap gap-3 justify-center pt-2">
+          <Button
+            onClick={() => router.push("/quiz")}
+            className="bg-violet-600 hover:bg-violet-500 text-white rounded-xl text-xs sm:text-sm font-semibold h-11 px-5 shadow-lg shadow-violet-600/10 active:scale-[0.98]"
+          >
+            Quiz Từ vựng
+          </Button>
           <Button
             onClick={() => router.push("/learn")}
             className="bg-primary hover:bg-primary/95 text-primary-foreground rounded-xl text-xs sm:text-sm font-semibold h-11 px-5 shadow-lg shadow-primary/10 active:scale-[0.98]"
