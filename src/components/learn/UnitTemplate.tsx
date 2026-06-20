@@ -406,6 +406,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                     </div>
                     <button
                       onClick={() => playTTS(g.en)}
+                      aria-label={`Nghe phát âm: ${g.en}`}
                       className="p-2.5 rounded-xl bg-emerald-600/20 hover:bg-emerald-600/40 text-emerald-400 transition-colors"
                     >
                       <Volume2 size={18} />
