@@ -61,8 +61,48 @@ export default function LandingPage() {
     { value: "A1 - C1", label: "Lộ trình đầy đủ" },
   ];
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://atoenglish.vercel.app/#website",
+        "url": "https://atoenglish.vercel.app",
+        "name": "AtoEnglish",
+        "description": "Nền tảng tự học tiếng Anh cá nhân hóa với phương pháp IPOR và FSRS",
+        "inLanguage": "vi",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": "https://atoenglish.vercel.app/learn?q={search_term_string}",
+          "query-input": "required name=search_term_string",
+        },
+      },
+      {
+        "@type": "EducationalOrganization",
+        "@id": "https://atoenglish.vercel.app/#organization",
+        "name": "AtoEnglish",
+        "url": "https://atoenglish.vercel.app",
+        "logo": "https://atoenglish.vercel.app/icon-512.png",
+        "description": "Học tiếng Anh để nói được, không chỉ để biết",
+        "sameAs": [],
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "VND",
+          "availability": "https://schema.org/InStock",
+          "description": "Miễn phí hoàn toàn trong giai đoạn Open Beta",
+        },
+      },
+    ],
+  };
+
   return (
     <div className="min-h-screen bg-white text-zinc-900 dark:bg-zinc-950 dark:text-zinc-50 font-sans selection:bg-emerald-100 dark:selection:bg-emerald-900/40 selection:text-emerald-900 dark:selection:text-emerald-100 overflow-x-hidden antialiased">
+      {/* JSON-LD Structured Data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       {/* ===== Navigation Bar ===== */}
       <nav className="sticky top-0 z-50 w-full bg-white/70 dark:bg-zinc-950/70 backdrop-blur-md border-b border-zinc-200/40 dark:border-zinc-800/40 transition-colors duration-300">
         <div className="max-w-6xl mx-auto h-16 flex items-center justify-between px-5 sm:px-8">

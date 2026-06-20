@@ -17,7 +17,7 @@ export default function GlobalError({
   }, [error]);
 
   return (
-    <html>
+    <html lang="vi">
       <body className="flex min-h-screen items-center justify-center bg-zinc-950 text-white">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

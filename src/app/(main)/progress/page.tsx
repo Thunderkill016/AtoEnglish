@@ -1,9 +1,16 @@
+import type { Metadata } from "next";
 import { Suspense } from "react";
 import { Flame, Layers, BookOpen, TrendingUp, Trophy, Star } from "lucide-react";
 import { getProgressStats, getWeeklyXpData } from "@/app/actions/progress";
 import ProgressClient from "./ProgressClient";
 
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: "Tiến độ học tập",
+  description: "Xem tổng quan tiến độ học tiếng Anh: XP, streak, thẻ ôn tập và thành tích của bạn.",
+  robots: { index: false },
+};
 
 export default async function ProgressPage() {
   const [statsRes, weeklyRes] = await Promise.all([
@@ -185,7 +192,16 @@ export default async function ProgressPage() {
       </div>
 
       {/* Achievements */}
-      <Suspense fallback={null}>
+      <Suspense fallback={
+        <div className="space-y-3 animate-pulse">
+          <div className="h-5 w-32 bg-muted rounded-lg" />
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <div key={i} className="h-24 bg-muted/50 rounded-2xl" />
+            ))}
+          </div>
+        </div>
+      }>
         <ProgressClient stats={{
           totalCards: stats.totalCards,
           streak: stats.streak,

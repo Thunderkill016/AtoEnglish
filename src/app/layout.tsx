@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Plus_Jakarta_Sans } from "next/font/google";
 import { Toaster } from "sonner";
 import { SpeedInsights } from "@vercel/speed-insights/next";
@@ -14,13 +14,73 @@ const sansFont = Plus_Jakarta_Sans({
   display: "swap",
 });
 
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#09090b" },
+  ],
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+};
+
 export const metadata: Metadata = {
+  metadataBase: new URL("https://atoenglish.vercel.app"),
   title: {
-    default: "AtoEnglish",
+    default: "AtoEnglish — Học tiếng Anh để nói được",
     template: "%s | AtoEnglish",
   },
   description:
-    "Nền tảng tự học tiếng Anh cá nhân hóa với SRS, lộ trình A1–C1 và mô hình IPOR.",
+    "Nền tảng tự học tiếng Anh cá nhân hóa với phương pháp IPOR, luyện nói phản xạ và ôn tập thông minh FSRS. Miễn phí hoàn toàn.",
+  keywords: [
+    "học tiếng Anh",
+    "luyện nói tiếng Anh",
+    "FSRS",
+    "spaced repetition",
+    "CEFR",
+    "A1 B1 B2",
+    "tiếng Anh giao tiếp",
+    "AtoEnglish",
+  ],
+  authors: [{ name: "AtoEnglish Team" }],
+  creator: "AtoEnglish",
+  publisher: "AtoEnglish",
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "32x32" },
+      { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
+    ],
+    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180" }],
+    shortcut: "/favicon.ico",
+  },
+  manifest: "/manifest.webmanifest",
+  openGraph: {
+    type: "website",
+    locale: "vi_VN",
+    url: "https://atoenglish.vercel.app",
+    siteName: "AtoEnglish",
+    title: "AtoEnglish — Học tiếng Anh để nói được, không chỉ để biết",
+    description:
+      "Phương pháp khoa học giúp bạn tự tin giao tiếp thực tế từ con số 0. Miễn phí hoàn toàn.",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "AtoEnglish — Học tiếng Anh để nói được",
+    description:
+      "Phương pháp khoa học giúp bạn tự tin giao tiếp thực tế từ con số 0.",
+    creator: "@atoenglish",
+  },
 };
 
 export default function RootLayout({
@@ -34,7 +94,9 @@ export default function RootLayout({
   return (
     <html lang="vi" suppressHydrationWarning className={cn("font-sans", sansFont.variable)}>
       <head>
-        {/* Preconnect to Supabase — speeds up auth & data fetch */}
+        {/* Preconnect to external origins for faster resource loading */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         {supabaseOrigin && (
           <>
             <link rel="preconnect" href={supabaseOrigin} />
@@ -43,6 +105,13 @@ export default function RootLayout({
         )}
       </head>
       <body className="min-h-screen">
+        {/* Skip to main content — keyboard / screen reader accessibility */}
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[9999] focus:px-4 focus:py-2 focus:rounded-lg focus:bg-emerald-600 focus:text-white focus:font-bold focus:text-sm focus:shadow-lg"
+        >
+          Chuyển đến nội dung chính
+        </a>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

@@ -30,17 +30,17 @@ export default function NotFound() {
 
       <div className="flex flex-col sm:flex-row gap-3">
         <Link
-          href="/dashboard"
+          href="/"
           className="inline-flex items-center justify-center gap-2 h-12 px-6 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-bold transition-all active:scale-[0.98]"
         >
           <Home className="size-4" />
-          Về Dashboard
+          Trang chủ
         </Link>
         <Link
-          href="/learn"
+          href="/login"
           className="inline-flex items-center justify-center gap-2 h-12 px-6 rounded-xl border border-zinc-800 bg-zinc-900/50 text-zinc-300 text-sm font-bold hover:border-emerald-500/30 hover:text-white transition-all active:scale-[0.98]"
         >
-          Tiếp tục học
+          Đăng nhập
         </Link>
       </div>
     </div>
