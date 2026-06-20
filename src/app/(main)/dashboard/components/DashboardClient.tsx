@@ -73,6 +73,7 @@ export default function DashboardClient({
   const [xpTarget, setXpTarget] = useState(dailyXpGoal);
   const [showGoalSelector, setShowGoalSelector] = useState(false);
   const [updatingGoal, setUpdatingGoal] = useState(false);
+  const [hoursLeft, setHoursLeft] = useState<number | null>(null);
 
   // Level-up detection: check localStorage for pending level-up from UnitTemplate
   const [levelUpModal, setLevelUpModal] = useState<{ prev: string; next: string } | null>(null);
@@ -89,13 +90,20 @@ export default function DashboardClient({
   }, []);
 
   useEffect(() => {
-    const hour = new Date().getHours();
+    const now = new Date();
+    const hour = now.getHours();
     // eslint-disable-next-line react-hooks/set-state-in-effect
     if (hour < 12) setGreeting("Chào buổi sáng");
      
     else if (hour < 18) setGreeting("Chào buổi chiều");
      
     else setGreeting("Chào buổi tối");
+    // Hours left until midnight for streak countdown
+    const midnight = new Date(now);
+    midnight.setHours(24, 0, 0, 0);
+    const minsLeft = Math.round((midnight.getTime() - now.getTime()) / 60000);
+     
+    setHoursLeft(Math.ceil(minsLeft / 60));
   }, []);
 
   const handleUpdateGoal = async (newGoal: number) => {
@@ -198,9 +206,16 @@ export default function DashboardClient({
           <div className="flex items-center gap-2 shrink-0">
             <div className="flex items-center gap-2 rounded-2xl bg-orange-500/10 border border-orange-500/20 px-4 py-2.5 hover:bg-orange-500/15 transition-colors duration-200">
               <Flame className="size-5 text-orange-500 fill-orange-500" />
-              <span className="text-sm font-black text-orange-600 dark:text-orange-400 whitespace-nowrap">
-                {currentStreak} ngày
-              </span>
+              <div className="flex flex-col leading-none">
+                <span className="text-sm font-black text-orange-600 dark:text-orange-400 whitespace-nowrap">
+                  {currentStreak} ngày
+                </span>
+                {hoursLeft !== null && hoursLeft <= 8 && (
+                  <span className="text-[10px] font-bold text-orange-500/70 dark:text-orange-400/60">
+                    Còn {hoursLeft}h
+                  </span>
+                )}
+              </div>
             </div>
             <NotificationBell />
           </div>
