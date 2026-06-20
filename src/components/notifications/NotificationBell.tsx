@@ -90,10 +90,10 @@ export default function NotificationBell() {
         disabled={isPending || status === "denied"}
         className={`inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-xl border transition-all active:scale-[0.97] ${
           status === "denied"
-            ? "opacity-40 cursor-not-allowed border-zinc-700 text-zinc-500"
+            ? "opacity-50 cursor-not-allowed border-zinc-300 dark:border-zinc-700 bg-zinc-100 dark:bg-zinc-800/40 text-zinc-500 dark:text-zinc-500"
             : isSubscribed
-            ? "border-emerald-500/40 bg-emerald-500/10 text-emerald-400 hover:bg-red-500/10 hover:border-red-500/30 hover:text-red-400"
-            : "border-zinc-700/60 bg-zinc-800/40 text-zinc-400 hover:border-emerald-500/40 hover:text-emerald-400"
+            ? "border-emerald-500/50 bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 hover:bg-red-50 dark:hover:bg-red-500/10 hover:border-red-400 dark:hover:border-red-500/30 hover:text-red-600 dark:hover:text-red-400"
+            : "border-zinc-300 dark:border-zinc-700/60 bg-zinc-100 dark:bg-zinc-800/40 text-zinc-700 dark:text-zinc-300 hover:border-emerald-500/60 hover:bg-emerald-50 dark:hover:bg-emerald-500/10 hover:text-emerald-700 dark:hover:text-emerald-400"
         }`}
       >
         {isPending ? (
