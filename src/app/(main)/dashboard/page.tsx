@@ -93,8 +93,15 @@ export default async function DashboardPage() {
 
   const initialQuests = [
     { id: 1, text: "Học 1 bài mới (Input & Processing)", xp: 20, completed: false },
-    { id: 2, text: "Ôn tập 10 thẻ từ vựng SRS", xp: 15, completed: false },
-    { id: 3, text: "Đặt 3 câu thực tế (Output)", xp: 15, completed: false },
+    {
+      id: 2,
+      text: dueCardsCount > 0
+        ? `Ôn tập ${dueCardsCount} thẻ từ vựng SRS`
+        : "Ôn tập thẻ từ vựng SRS (đã xong hôm nay!)",
+      xp: 15,
+      completed: dueCardsCount === 0,
+    },
+    { id: 3, text: "Đặt 3 câu thực tế (Output / Speaking)", xp: 15, completed: false },
   ];
 
   // Resolve active unit completion status from fetched results
