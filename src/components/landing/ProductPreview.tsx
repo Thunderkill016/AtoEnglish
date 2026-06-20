@@ -33,7 +33,7 @@ export default function ProductPreview() {
    
   const SpeechRecognition = typeof window !== "undefined"
      
-    ? ((window as any).SpeechRecognition || (window as any).webkitSpeechRecognition)
+    ? ((window as SpeechWindow).SpeechRecognition || (window as SpeechWindow).webkitSpeechRecognition)
     : null;
 
   const calculateAccuracy = (original: string, recognized: string) => {
@@ -81,7 +81,7 @@ export default function ProductPreview() {
 
       let fullTranscript = "";
        
-      recognition.onresult = (event: any) => {
+      recognition.onresult = (event: SpeechRecognitionEvent) => {
         if (event.results && event.results[0]) {
           fullTranscript = event.results[0][0].transcript;
         }
@@ -110,7 +110,7 @@ export default function ProductPreview() {
       };
 
        
-      recognition.onerror = (e: any) => {
+      recognition.onerror = (e: SpeechRecognitionErrorEvent) => {
         stream.getTracks().forEach((track) => track.stop());
         setSpeakingStatus("idle");
         if (e.error === "not-allowed") {

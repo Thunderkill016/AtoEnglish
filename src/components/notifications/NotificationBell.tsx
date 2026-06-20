@@ -175,6 +175,7 @@ export default function NotificationBell() {
               </div>
               <button
                 onClick={() => setOpen(false)}
+                aria-label="Đóng"
                 className="size-8 flex items-center justify-center rounded-full hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-400 transition-colors shrink-0"
               >
                 <X className="size-4" />

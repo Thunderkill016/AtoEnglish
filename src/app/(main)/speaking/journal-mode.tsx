@@ -41,7 +41,7 @@ export function JournalMode() {
 
   const startListening = () => {
      
-    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    const SpeechRecognition = (window as SpeechWindow).SpeechRecognition || (window as SpeechWindow).webkitSpeechRecognition;
     if (!SpeechRecognition) {
       toast.error("Trình duyệt không hỗ trợ Web Speech API.");
       return;
