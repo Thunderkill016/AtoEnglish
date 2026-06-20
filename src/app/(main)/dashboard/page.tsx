@@ -6,6 +6,7 @@ import {
   getUnitCompletionStatus,
   getCurrentUnit,
 } from "@/app/actions/progress";
+import { getRecentSpeakingSessions } from "@/app/actions/speaking";
 import { UNITS } from "@/lib/constants/units";
 import { UNIT_VOCABULARY } from "@/lib/constants/vocabulary";
 import DashboardClient from "./components/DashboardClient";
@@ -19,12 +20,13 @@ export const revalidate = 0; // Disable server component caching to ensure accur
 
 export default async function DashboardPage() {
   // Fetch progress, completion count, cards, and active unit
-  const [progressRes, completedRes, cardsRes, unitRes] =
+  const [progressRes, completedRes, cardsRes, unitRes, speakingRes] =
     await Promise.all([
       getUserProgress(),
       getCompletedUnitsCount(),
       getDueCards(),
       getCurrentUnit(),
+      getRecentSpeakingSessions(5),
     ]);
 
   let userName = "Học viên";
@@ -86,9 +88,17 @@ export default async function DashboardPage() {
   statuses.forEach(status => {
     if (status.success && status.completed && status.completedAt) {
       const completedDateStr = new Date(status.completedAt).toLocaleDateString("sv-SE", { timeZone: "Asia/Ho_Chi_Minh" });
-      if (completedDateStr === todayStr) todayXp += 80;
+      if (completedDateStr === todayStr) todayXp += (status.xpEarned || 80);
     }
   });
+
+  // Check if user did any speaking session today
+  const hasSpeakingToday = (speakingRes.success && speakingRes.sessions
+    ? speakingRes.sessions.some(s => {
+        const sessionDate = new Date(s.created_at).toLocaleDateString("sv-SE", { timeZone: "Asia/Ho_Chi_Minh" });
+        return sessionDate === todayStr;
+      })
+    : false);
 
   const initialXpCurrent = Math.min(todayXp, dailyXpGoal);
 
@@ -102,7 +112,14 @@ export default async function DashboardPage() {
       xp: 15,
       completed: dueCardsCount === 0,
     },
-    { id: 3, text: "Đặt 3 câu thực tế (Output / Speaking)", xp: 15, completed: false },
+    {
+      id: 3,
+      text: hasSpeakingToday
+        ? "Luyện nói hôm nay (đã hoàn thành!)"
+        : "Đặt 3 câu thực tế (Output / Speaking)",
+      xp: 15,
+      completed: hasSpeakingToday,
+    },
   ];
 
   // Resolve active unit completion status from fetched results
