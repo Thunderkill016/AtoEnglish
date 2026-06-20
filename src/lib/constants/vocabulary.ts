@@ -309,9 +309,13 @@ export const UNIT_VOCABULARY: Record<string, VocabularyItem[]> = {
     { word: "price", phonetic: "/praɪs/", meaning_vn: "giá cả", example_en: "What is the price of this shirt?", topic: "Shopping", level: "A2" },
     { word: "cheap", phonetic: "/tʃiːp/", meaning_vn: "rẻ", example_en: "This market is cheap and fresh.", topic: "Shopping", level: "A2" },
     { word: "expensive", phonetic: "/ɪkˈspɛnsɪv/", meaning_vn: "đắt tiền", example_en: "That bag is too expensive for me.", topic: "Shopping", level: "A2" },
-    { word: "discount", phonetic: "/ˈdɪskaʊnt/", meaning_vn: "giảm giá", example_en: "Is there a discount for students?", topic: "Shopping", level: "A2" },
+    { word: "discount", phonetic: "/ˈdɪskɑʊnt/", meaning_vn: "giảm giá", example_en: "Is there a discount for students?", topic: "Shopping", level: "A2" },
     { word: "market", phonetic: "/ˈmɑːrkɪt/", meaning_vn: "chợ", example_en: "The night market opens at 6 PM.", topic: "Shopping", level: "A2" },
     { word: "money", phonetic: "/ˈmʌni/", meaning_vn: "tiền", example_en: "I don't have enough money today.", topic: "Shopping", level: "A2" },
+    { word: "receipt", phonetic: "/rɪˈsiːt/", meaning_vn: "hóa đơn / biên lai", example_en: "Please keep your receipt for a refund.", topic: "Shopping", level: "A2" },
+    { word: "cashier", phonetic: "/kæˈʃɪər/", meaning_vn: "thu ngân", example_en: "The cashier gave me the wrong change.", topic: "Shopping", level: "A2" },
+    { word: "refund", phonetic: "/ˈriːfʌnd/", meaning_vn: "hoàn tiền", example_en: "Can I get a refund for this broken item?", topic: "Shopping", level: "A2" },
+    { word: "exchange", phonetic: "/ɪksˈtʃeɪndʒ/", meaning_vn: "đổi hàng", example_en: "I would like to exchange this for a larger size.", topic: "Shopping", level: "A2" },
   ],
   // B1 Technology vocabulary — matches /learn/unit-5 content (unit4.ts data)
   "unit-5": [
@@ -376,6 +380,38 @@ export const UNIT_VOCABULARY: Record<string, VocabularyItem[]> = {
       phonetic: "/ˈfæb.rɪk/", 
       meaning_vn: "Cấu trúc / Sợi vải",
       example_en: "Technology is woven into our social fabric.",
+      topic: "Technology",
+      level: "B1"
+    },
+    { 
+      word: "innovation", 
+      phonetic: "/ˌɪn.əˈveɪ.ʃən/", 
+      meaning_vn: "Sự đổi mới / Đổi sáng tạo",
+      example_en: "Technological innovation is changing every industry.",
+      topic: "Technology",
+      level: "B1"
+    },
+    { 
+      word: "automation", 
+      phonetic: "/ˌɔː.təˈmeɪ.ʃən/", 
+      meaning_vn: "Tự động hóa",
+      example_en: "Automation may replace many factory jobs in the future.",
+      topic: "Technology",
+      level: "B1"
+    },
+    { 
+      word: "bandwidth", 
+      phonetic: "/ˈbænd.wɪdθ/", 
+      meaning_vn: "Băng thông",
+      example_en: "You need high bandwidth to stream 4K videos.",
+      topic: "Technology",
+      level: "B1"
+    },
+    { 
+      word: "privacy", 
+      phonetic: "/ˈprɪv.ə.si/", 
+      meaning_vn: "Quyền riêng tư",
+      example_en: "Online privacy is a major concern for internet users.",
       topic: "Technology",
       level: "B1"
     }

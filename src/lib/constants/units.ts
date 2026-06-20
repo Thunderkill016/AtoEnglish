@@ -51,7 +51,7 @@ export const UNITS: UnitMetadata[] = [
     route: "/learn/unit-4",
     xp: 90,
     estimatedTime: 45,
-    tags: ["Từ vựng +8", "Mua sắm", "Comparatives"],
+    tags: ["Từ vựng +12", "Mua sắm", "Comparatives"],
   },
   {
     // B1 level — correct CEFR progression (was A2, now B1)
@@ -62,6 +62,6 @@ export const UNITS: UnitMetadata[] = [
     route: "/learn/unit-5",
     xp: 80,
     estimatedTime: 50,
-    tags: ["Từ vựng +8", "Công nghệ", "Modal Verbs"],
+    tags: ["Từ vựng +12", "Công nghệ", "Modal Verbs"],
   },
 ];
