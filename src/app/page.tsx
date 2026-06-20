@@ -42,12 +42,21 @@ export const metadata: Metadata = {
     siteName: "AtoEnglish",
     locale: "vi_VN",
     type: "website",
+    images: [
+      {
+        url: "https://atoenglish.vercel.app/og-image.png",
+        width: 1024,
+        height: 1024,
+        alt: "AtoEnglish — Học tiếng Anh để nói được, không chỉ để biết",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "AtoEnglish — Học tiếng Anh để nói được",
     description:
       "Phương pháp khoa học giúp bạn tự tin giao tiếp thực tế từ con số 0.",
+    images: ["https://atoenglish.vercel.app/og-image.png"],
   },
   alternates: {
     canonical: "https://atoenglish.vercel.app",
@@ -106,7 +115,7 @@ export default function LandingPage() {
       {/* ===== Navigation Bar ===== */}
       <nav className="sticky top-0 z-50 w-full bg-white/70 dark:bg-zinc-950/70 backdrop-blur-md border-b border-zinc-200/40 dark:border-zinc-800/40 transition-colors duration-300">
         <div className="max-w-6xl mx-auto h-16 flex items-center justify-between px-5 sm:px-8">
-          <a href="/" className="flex items-center gap-2.5 group">
+          <Link href="/" className="flex items-center gap-2.5 group">
             <span className="flex size-8 items-center justify-center rounded-lg bg-emerald-600 text-white shadow-md shadow-emerald-500/10 group-hover:scale-105 transition-transform duration-200">
               <Sprout className="size-4.5" />
             </span>
@@ -118,7 +127,7 @@ export default function LandingPage() {
                 Grow every day
               </span>
             </div>
-          </a>
+          </Link>
 
           {/* Middle links - desktop only */}
           <div className="hidden md:flex items-center gap-8">
