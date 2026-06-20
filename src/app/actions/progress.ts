@@ -5,10 +5,10 @@ import { revalidatePath } from "next/cache";
 import { UNIT_VOCABULARY } from "@/lib/constants/vocabulary";
 import { UNITS } from "@/lib/constants/units";
 import { headers } from "next/headers";
-import { InMemoryRateLimiter } from "@/lib/security/rate-limit";
+import { createRateLimiter } from "@/lib/security/rate-limit";
 import { CompleteUnitSchema } from "@/lib/security/validation";
 
-const completeUnitLimiter = new InMemoryRateLimiter(10, 60 * 1000); // 10 requests/min
+const completeUnitLimiter = createRateLimiter(10, 60 * 1000, "complete-unit");
 
 /**
  * Server Action xử lý khi người dùng hoàn thành một Unit học tập.
@@ -19,7 +19,7 @@ export async function completeUnit(unitId: string) {
     // Rate Limiting
     const reqHeaders = headers();
     const ip = reqHeaders.get("x-forwarded-for")?.split(",")[0].trim() || "127.0.0.1";
-    const rateLimitCheck = completeUnitLimiter.check(ip);
+    const rateLimitCheck = await completeUnitLimiter.check(ip);
     if (!rateLimitCheck.success) {
       return {
         success: false,

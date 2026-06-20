@@ -67,6 +67,19 @@ export function reviewCardFSRS(
   // Tính toán interval mới từ FSRS
   const nextInterval = updatedCard.scheduled_days;
 
+  // ReviewLog — lưu lại để tối ưu hóa tham số FSRS theo từng người dùng
+  const reviewLog: ReviewLogEntry = {
+    rating: fsrsRating,
+    state: updatedCard.state,
+    due: fsrsCard.due.toISOString(),
+    stability: fsrsCard.stability,
+    difficulty: fsrsCard.difficulty,
+    elapsed_days: fsrsCard.elapsed_days,
+    last_elapsed_days: fsrsCard.elapsed_days,
+    scheduled_days: nextInterval,
+    review: now.toISOString(),
+  };
+
   return {
     // FSRS fields
     state: updatedCard.state,
@@ -80,7 +93,10 @@ export function reviewCardFSRS(
     repetitions: updatedCard.reps,
     due_date: updatedCard.due.toISOString(), // Đồng bộ due_date để query filter thẻ đến hạn
     last_reviewed: now.toISOString(),
-    
+
+    // ReviewLog cho FSRS optimization
+    reviewLog,
+
     // Thông tin debug để hiển thị lên UI
     debug: {
       rating,
@@ -90,4 +106,17 @@ export function reviewCardFSRS(
       interval: nextInterval,
     }
   };
+}
+
+/** Một bản ghi review event dùng cho FSRS parameter optimization */
+export interface ReviewLogEntry {
+  rating: Rating;
+  state: State;
+  due: string;
+  stability: number;
+  difficulty: number;
+  elapsed_days: number;
+  last_elapsed_days: number;
+  scheduled_days: number;
+  review: string;
 }

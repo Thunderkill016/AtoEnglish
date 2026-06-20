@@ -3,10 +3,10 @@
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
-import { InMemoryRateLimiter } from "@/lib/security/rate-limit";
+import { createRateLimiter } from "@/lib/security/rate-limit";
 import { SpeakingSessionSchema } from "@/lib/security/validation";
 
-const speakingLimiter = new InMemoryRateLimiter(20, 60 * 1000); // 20 requests/min
+const speakingLimiter = createRateLimiter(20, 60 * 1000, "speaking");
 
 interface SaveSpeakingSessionParams {
   practiceType: "shadowing" | "roleplay" | "journal";
@@ -24,7 +24,7 @@ export async function saveSpeakingSession(params: SaveSpeakingSessionParams) {
     // Rate Limiting
     const reqHeaders = headers();
     const ip = reqHeaders.get("x-forwarded-for")?.split(",")[0].trim() || "127.0.0.1";
-    const rateLimitCheck = speakingLimiter.check(ip);
+    const rateLimitCheck = await speakingLimiter.check(ip);
     if (!rateLimitCheck.success) {
       return {
         success: false,

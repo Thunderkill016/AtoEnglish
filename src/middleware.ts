@@ -1,17 +1,17 @@
 import { NextResponse, type NextRequest } from "next/server";
 
 import { updateSession } from "@/lib/supabase/middleware";
-import { InMemoryRateLimiter, getClientIp } from "@/lib/security/rate-limit";
+import { createRateLimiter, getClientIp } from "@/lib/security/rate-limit";
 
 // Rate limit auth routes (login, callback) to 30 requests per minute
-const authRateLimiter = new InMemoryRateLimiter(30, 60 * 1000);
+const authRateLimiter = createRateLimiter(30, 60 * 1000, "auth");
 
 export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
   if (pathname === "/login" || pathname.startsWith("/auth/")) {
     const ip = getClientIp(request);
-    const { success, limit, remaining, resetTime } = authRateLimiter.check(ip);
+    const { success, limit, remaining, resetTime } = await authRateLimiter.check(ip);
 
     if (!success) {
       return new NextResponse(

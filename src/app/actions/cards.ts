@@ -5,11 +5,11 @@ import { revalidatePath } from "next/cache";
 import { reviewCardFSRS } from "@/lib/srs/fsrs";
 import { Card } from "@/types/database";
 import { headers } from "next/headers";
-import { InMemoryRateLimiter } from "@/lib/security/rate-limit";
+import { createRateLimiter } from "@/lib/security/rate-limit";
 import { SaveCardSchema, ReviewCardSchema } from "@/lib/security/validation";
 
-const saveCardLimiter = new InMemoryRateLimiter(60, 60 * 1000);
-const reviewCardLimiter = new InMemoryRateLimiter(60, 60 * 1000);
+const saveCardLimiter = createRateLimiter(60, 60 * 1000, "save-card");
+const reviewCardLimiter = createRateLimiter(60, 60 * 1000, "review-card");
 
 interface SaveCardParams {
   word: string;
@@ -28,7 +28,7 @@ export async function saveCardToSRS(params: SaveCardParams) {
     // Rate Limiting
     const reqHeaders = headers();
     const ip = reqHeaders.get("x-forwarded-for")?.split(",")[0].trim() || "127.0.0.1";
-    const rateLimitCheck = saveCardLimiter.check(ip);
+    const rateLimitCheck = await saveCardLimiter.check(ip);
     if (!rateLimitCheck.success) {
       return {
         success: false,
@@ -186,7 +186,7 @@ export async function reviewCard(cardId: string, rating: "Again" | "Hard" | "Goo
     // Rate Limiting
     const reqHeaders = headers();
     const ip = reqHeaders.get("x-forwarded-for")?.split(",")[0].trim() || "127.0.0.1";
-    const rateLimitCheck = reviewCardLimiter.check(ip);
+    const rateLimitCheck = await reviewCardLimiter.check(ip);
     if (!rateLimitCheck.success) {
       return {
         success: false,
@@ -263,7 +263,27 @@ export async function reviewCard(cardId: string, rating: "Again" | "Hard" | "Goo
     // Refresh cache các route liên quan
     revalidatePath("/dashboard");
     revalidatePath("/flashcards");
-    
+
+    // 5. Lưu ReviewLog để tối ưu hóa tham số FSRS theo từng người dùng (best-effort)
+    // Không block kết quả nếu insert lỗi (bảng có thể chưa tồn tại)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (supabase as any)
+      .from("card_review_logs")
+      .insert({
+        user_id: user.id,
+        card_id: cleanParams.cardId,
+        rating: fsrsUpdates.reviewLog.rating,
+        state: fsrsUpdates.reviewLog.state,
+        due: fsrsUpdates.reviewLog.due,
+        stability: fsrsUpdates.reviewLog.stability,
+        difficulty: fsrsUpdates.reviewLog.difficulty,
+        elapsed_days: fsrsUpdates.reviewLog.elapsed_days,
+        scheduled_days: fsrsUpdates.reviewLog.scheduled_days,
+        review: fsrsUpdates.reviewLog.review,
+      })
+      .then(() => {}) // fire-and-forget
+      .catch(() => {}); // silent fail — table may not exist yet
+
     return {
       success: true,
       message: `Đã đánh giá "${cleanParams.rating}". Lên lịch ôn tiếp theo sau ${fsrsUpdates.interval} ngày.`,

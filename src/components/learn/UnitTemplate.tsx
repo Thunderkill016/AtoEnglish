@@ -22,6 +22,7 @@ import {
 
 import { completeUnit, getUnitCompletionStatus } from "@/app/actions/progress";
 import { toast } from "sonner";
+import { calcSpeechScore } from "@/lib/utils/speech";
 
 // Helper: get SpeechRecognition constructor safely (browser-only)
 function getSpeechRecognition(): typeof SpeechRecognition | null {
@@ -213,13 +214,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
     rec.start();
   };
 
-  // ── Accuracy ──────────────────────────────────────────
-  const calcScore = (target: string, spoken: string) => {
-    const clean = (s: string) => s.toLowerCase().replace(/[^a-z\s]/g, "").trim().split(/\s+/);
-    const tw = clean(target); const sw = clean(spoken);
-    const matches = tw.filter(w => sw.includes(w)).length;
-    return Math.round((matches / Math.max(tw.length, 1)) * 100);
-  };
+  const calcScore = calcSpeechScore;
 
   // ── Section 4: Shadowing ──────────────────────────────
   const handleShadowRecord = () => {
