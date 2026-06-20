@@ -218,7 +218,7 @@ export async function reviewCard(cardId: string, rating: "Again" | "Hard" | "Goo
     // 2. Lấy dữ liệu thẻ hiện tại của user
     const { data: card, error: fetchError } = await supabase
       .from("cards")
-      .select("id, interval, ease_factor, repetitions, state, difficulty, stability, last_review, next_review, due_date")
+      .select("id, interval, repetitions, state, difficulty, stability, last_review, next_review, due_date")
       .eq("id", cleanParams.cardId)
       .eq("user_id", user.id)
       .single();
@@ -248,7 +248,6 @@ export async function reviewCard(cardId: string, rating: "Again" | "Hard" | "Goo
         interval: fsrsUpdates.interval,
         repetitions: fsrsUpdates.repetitions,
         due_date: fsrsUpdates.due_date,
-        last_reviewed: fsrsUpdates.last_reviewed,
       })
       .eq("id", cleanParams.cardId)
       .eq("user_id", user.id);

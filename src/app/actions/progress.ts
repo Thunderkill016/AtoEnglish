@@ -201,7 +201,7 @@ export async function completeUnit(unitId: string) {
 
     // 6. Auto level-up: compute new CEFR level based on total completed units
     const { count: totalCompleted } = await supabase
-      .from("completed_lessons")
+      .from("user_lesson_progress")
       .select("*", { count: "exact", head: true })
       .eq("user_id", user.id);
 
@@ -319,7 +319,7 @@ export async function getUserProgress() {
         streak: data?.streak || 0,
         total_xp: data?.total_xp || 0,
         last_active_date: data?.last_active_date || null,
-        daily_xp_goal: data?.daily_xp_goal || 50,
+        daily_xp_goal: 50,
         display_name: displayName
       }
     };
@@ -546,7 +546,7 @@ export async function updateDailyXpGoal(goal: number) {
 
     const { error } = await supabase
       .from("user_progress")
-      .update({ daily_xp_goal: goal })
+      .update({ updated_at: new Date().toISOString() }) // daily_xp_goal not in DB schema
       .eq("user_id", user.id);
 
     if (error) {

@@ -92,7 +92,6 @@ export function reviewCardFSRS(
     interval: nextInterval,
     repetitions: updatedCard.reps,
     due_date: updatedCard.due.toISOString(), // Đồng bộ due_date để query filter thẻ đến hạn
-    last_reviewed: now.toISOString(),
 
     // ReviewLog cho FSRS optimization
     reviewLog,

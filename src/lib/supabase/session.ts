@@ -33,7 +33,7 @@ export async function updateSession(request: NextRequest) {
   );
 
   const pathname = request.nextUrl.pathname;
-  const protectedRoutes = ["/dashboard", "/learn", "/flashcards", "/progress", "/speaking"];
+  const protectedRoutes = ["/dashboard", "/learn", "/flashcards", "/progress", "/speaking", "/roadmap"];
   const isProtectedRoute = protectedRoutes.some(route => pathname.startsWith(route));
   const isLoginRoute = pathname === "/login";
 

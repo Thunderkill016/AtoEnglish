@@ -1,7 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 
-import type { Database } from "@/types/database";
+import type { Database } from "@/types/supabase";
 
 // Next.js 15+: cookies() is now async — must be awaited
 export async function createClient() {
