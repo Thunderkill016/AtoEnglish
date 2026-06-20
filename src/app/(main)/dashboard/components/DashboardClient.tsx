@@ -171,7 +171,7 @@ export default function DashboardClient({
 
       <div className="space-y-6">
         {/* ── 1. Greeting row ── */}
-        <div className="flex items-center justify-between gap-4">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-4">
           <div>
             <p className="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest mb-0.5 whitespace-nowrap">
               Chào mừng trở lại
@@ -185,7 +185,7 @@ export default function DashboardClient({
             </h1>
           </div>
           {/* Streak badge + Notification Bell */}
-          <div className="shrink-0 flex items-center gap-2">
+          <div className="flex items-center gap-2 shrink-0">
             <div className="flex items-center gap-2 rounded-2xl bg-orange-500/10 border border-orange-500/20 px-4 py-2.5 hover:bg-orange-500/15 transition-colors duration-200">
               <Flame className="size-5 text-orange-500 fill-orange-500" />
               <span className="text-sm font-black text-orange-600 dark:text-orange-400 whitespace-nowrap">
@@ -195,6 +195,7 @@ export default function DashboardClient({
             <NotificationBell />
           </div>
         </div>
+
 
         {/* ── 2. Stats strip ── */}
         <div className="grid grid-cols-3 gap-3">
