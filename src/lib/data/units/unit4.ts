@@ -263,6 +263,22 @@ export const unit4: UnitData = {
       answer: "AI may change our lives .",
     },
   ],
+  cumulativeReviewQuestions: [
+    {
+      id: "cr4-1",
+      question: "Chọn đại từ sở hữu đúng: '___ name is Lucy.' (của cô ấy) — Unit 3",
+      options: ["My", "His", "Her", "Their"],
+      answer: "Her",
+      type: "multiple-choice",
+    },
+    {
+      id: "cr4-2",
+      question: "Mẹ tôi là một giáo viên.",
+      options: [],
+      answer: "My mother is a teacher.",
+      type: "translate",
+    },
+  ],
 };
 
 export default unit4;

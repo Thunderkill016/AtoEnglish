@@ -307,6 +307,22 @@ export const unit2: UnitData = {
       answer: "He eats breakfast before work .",
     },
   ],
+  cumulativeReviewQuestions: [
+    {
+      id: "cr2-1",
+      question: "Câu nào đúng ngữ pháp với chủ ngữ 'She'? (Unit 1: To be)",
+      options: ["She am a teacher.", "She is a teacher.", "She are a teacher.", "She be a teacher."],
+      answer: "She is a teacher.",
+      type: "multiple-choice",
+    },
+    {
+      id: "cr2-2",
+      question: "Tôi đến từ Việt Nam.",
+      options: [],
+      answer: "I am from Vietnam.",
+      type: "translate",
+    },
+  ],
 };
 
 export default unit2;

@@ -246,5 +246,23 @@ export const unit5: UnitData = {
       answer: "Can you give me a discount ?",
     },
   ],
+
+  cumulativeReviewQuestions: [
+    {
+      id: "cr5-1",
+      question: "Câu nào dùng modal verb ĐÚNG? (Unit 4: Modal Verbs)",
+      options: ["She cans speak English.", "AI can changes the world.", "You must protect your data.", "We should protecting data."],
+      answer: "You must protect your data.",
+      type: "multiple-choice",
+    },
+    {
+      id: "cr5-2",
+      question: "Công nghệ có thể giúp ích cho con người.",
+      options: [],
+      answer: "Technology can help people.",
+      type: "translate",
+    },
+  ],
 };
+
 

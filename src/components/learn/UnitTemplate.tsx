@@ -177,6 +177,7 @@ export interface UnitData {
   listenAndChoose: ListenAndChooseItem[];
   speaking: SpeakingData;
   quiz: QuizQuestion[];            // Final review quiz
+  cumulativeReviewQuestions?: QuizQuestion[]; // Priority 5: spaced retrieval from prior units
 }
 
 interface UnitTemplateProps {
@@ -245,6 +246,10 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
   const [retryAnswers, setRetryAnswers] = useState<Record<string, string>>({});
   const [retryClozeInputs, setRetryClozeInputs] = useState<Record<string, string>>({});
   const [retrySubmitted, setRetrySubmitted] = useState(false);
+  // Cumulative review state — prior-unit spaced retrieval (Priority 5)
+  const [cumulativeAnswers, setCumulativeAnswers] = useState<Record<string, string>>({});
+  const [cumulativeClozeInputs, setCumulativeClozeInputs] = useState<Record<string, string>>({});
+  const [cumulativeSubmitted, setCumulativeSubmitted] = useState(false);
   // Grammar CCQ state
   const [ccqAnswer, setCcqAnswer] = useState("");
   const [ccqSubmitted, setCcqSubmitted] = useState(false);
@@ -1596,6 +1601,87 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                 <h1 className="text-xl sm:text-2xl font-black text-white">Ôn tập & Kết quả</h1>
                 <span className="text-xs text-zinc-500 ml-auto">~3 phút</span>
               </div>
+
+              {/* ── Cumulative Spaced Review (Priority 5) ── */}
+              {unit.cumulativeReviewQuestions && unit.cumulativeReviewQuestions.length > 0 && (
+                <div className="mb-6">
+                  {!cumulativeSubmitted ? (
+                    <div className="bg-amber-950/20 border border-amber-700/30 rounded-2xl p-5">
+                      <div className="flex items-center gap-2 mb-4">
+                        <span className="text-lg">🔁</span>
+                        <div>
+                          <p className="text-xs font-bold text-amber-400 uppercase tracking-widest">Ôn tập bài cũ</p>
+                          <p className="text-xs text-zinc-500">Trả lời để kích hoạt bộ nhớ dài hạn trước khi học tiếp</p>
+                        </div>
+                      </div>
+                      <div className="space-y-5">
+                        {unit.cumulativeReviewQuestions.map((q, qi) => {
+                          if (q.type === "cloze" || q.type === "translate") {
+                            return (
+                              <div key={q.id}>
+                                <p className="text-white text-sm mb-2"><span className="text-amber-500/70 mr-2">↺ {qi + 1}.</span>{q.question}</p>
+                                {q.type === "translate" && <p className="text-xs text-violet-400 mb-1">✍️ Dịch sang tiếng Anh</p>}
+                                <input type="text" value={cumulativeClozeInputs[q.id] ?? ""}
+                                  onChange={e => setCumulativeClozeInputs(p => ({ ...p, [q.id]: e.target.value }))}
+                                  placeholder={q.type === "translate" ? "Nhập câu tiếng Anh..." : "Điền từ còn thiếu..."}
+                                  className="w-full bg-zinc-800 border border-amber-700/30 rounded-xl px-4 py-2.5 text-white placeholder-zinc-500 focus:outline-none focus:border-amber-500 transition-colors text-sm"
+                                />
+                              </div>
+                            );
+                          }
+                          return (
+                            <div key={q.id}>
+                              <p className="text-white text-sm mb-2"><span className="text-amber-500/70 mr-2">↺ {qi + 1}.</span>{q.question}</p>
+                              <div className="grid grid-cols-2 gap-2">
+                                {q.options.map(opt => (
+                                  <button key={opt} onClick={() => setCumulativeAnswers(p => ({ ...p, [q.id]: opt }))}
+                                    className={`px-3 py-2 rounded-xl text-sm font-medium border transition-colors text-left ${cumulativeAnswers[q.id] === opt ? "bg-amber-600/30 border-amber-500 text-amber-300" : "bg-zinc-800 border-zinc-700 text-zinc-300 hover:border-amber-600/40"}`}
+                                  >{opt}</button>
+                                ))}
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                      <button
+                        disabled={unit.cumulativeReviewQuestions.some(q =>
+                          q.type === "multiple-choice" ? !cumulativeAnswers[q.id] : !(cumulativeClozeInputs[q.id] ?? "").trim()
+                        )}
+                        onClick={() => {
+                          setCumulativeSubmitted(true);
+                          const correct = unit.cumulativeReviewQuestions!.filter(q =>
+                            q.type === "multiple-choice"
+                              ? cumulativeAnswers[q.id] === q.answer
+                              : (cumulativeClozeInputs[q.id] ?? "").trim().toLowerCase() === q.answer.toLowerCase()
+                          ).length;
+                          if (correct === unit.cumulativeReviewQuestions!.length) playCorrectSound();
+                        }}
+                        className="mt-4 w-full bg-amber-600 hover:bg-amber-500 disabled:opacity-40 text-white font-bold rounded-xl py-2.5 text-sm transition-colors"
+                      >Kiểm tra ôn tập</button>
+                    </div>
+                  ) : (
+                    <div className="bg-amber-950/20 border border-amber-700/30 rounded-2xl p-4">
+                      <p className="text-xs font-bold text-amber-400 mb-2">🔁 Kết quả ôn tập bài cũ</p>
+                      <div className="space-y-2">
+                        {unit.cumulativeReviewQuestions.map((q, qi) => {
+                          const isCorrect = q.type === "multiple-choice"
+                            ? cumulativeAnswers[q.id] === q.answer
+                            : (cumulativeClozeInputs[q.id] ?? "").trim().toLowerCase() === q.answer.toLowerCase();
+                          return (
+                            <div key={q.id} className={`flex items-start gap-2 text-xs rounded-xl p-2 ${isCorrect ? "bg-emerald-950/30" : "bg-red-950/20"}`}>
+                              <span>{isCorrect ? "✓" : "✗"}</span>
+                              <div>
+                                <p className="text-zinc-300">{qi + 1}. {q.question}</p>
+                                {!isCorrect && <p className="text-emerald-400 mt-0.5">Đáp án: {q.answer}</p>}
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
 
               {/* Final Quiz */}
               {!quizSubmitted ? (

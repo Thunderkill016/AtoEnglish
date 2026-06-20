@@ -308,6 +308,22 @@ export const unit3: UnitData = {
       answer: "This is my best friend .",
     },
   ],
+  cumulativeReviewQuestions: [
+    {
+      id: "cr3-1",
+      question: "Chọn dạng đúng: 'She ___ to school every day.' (Unit 2: Present Simple)",
+      options: ["go", "goes", "going", "gone"],
+      answer: "goes",
+      type: "multiple-choice",
+    },
+    {
+      id: "cr3-2",
+      question: "Cô ấy đi làm bằng xe buýt mỗi ngày.",
+      options: [],
+      answer: "She goes to work by bus every day.",
+      type: "translate",
+    },
+  ],
 };
 
 export default unit3;
