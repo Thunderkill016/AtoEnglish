@@ -13,7 +13,8 @@
     "e2e": "playwright test",
     "e2e:ui": "playwright test --ui",
     "db:types": "npx supabase@2 gen types typescript --project-id vhpfskkredizeazlyzsh > src/types/supabase.ts",
-    "prepare": "husky"
+    "prepare": "husky",
+    "test:integration": "dotenv -e .env.local -- vitest run --config vitest.integration.config.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.5.0",
@@ -49,6 +50,7 @@
     "@types/react": "19.2.17",
     "@types/react-dom": "19.2.3",
     "@vitejs/plugin-react": "^6.0.2",
+    "dotenv-cli": "^11.0.0",
     "eslint": "^9",
     "eslint-config-next": "16.2.9",
     "husky": "^9.1.7",
