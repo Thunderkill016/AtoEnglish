@@ -7,6 +7,7 @@ import {
   getCurrentUnit,
 } from "@/app/actions/progress";
 import { UNITS } from "@/lib/constants/units";
+import { UNIT_VOCABULARY } from "@/lib/constants/vocabulary";
 import DashboardClient from "./components/DashboardClient";
 
 export const metadata: Metadata = {
@@ -113,6 +114,17 @@ export default async function DashboardPage() {
     if (completedDateStr === todayStr) initialQuests[0].completed = true;
   }
 
+  // ── Word of the Day: deterministic by date, from current unit vocab ────────
+  const allVocab = UNITS.flatMap(u => UNIT_VOCABULARY[u.id] ?? []);
+  const currentUnitVocab = UNIT_VOCABULARY[currentUnitData.unitId] ?? [];
+  const vocabPool = currentUnitVocab.length > 0 ? currentUnitVocab : allVocab;
+  // Stable daily index: rotates vocabulary once per UTC day, no impure Date.now()
+  const d = new Date();
+  const dayIndex = d.getUTCFullYear() * 1000 + d.getUTCMonth() * 32 + d.getUTCDate();
+  const wordOfDay = vocabPool.length > 0
+    ? vocabPool[dayIndex % vocabPool.length]
+    : null;
+
   return (
     <DashboardClient
       userName={userName}
@@ -125,6 +137,7 @@ export default async function DashboardPage() {
       initialXpCurrent={initialXpCurrent}
       initialQuests={initialQuests}
       dailyXpGoal={dailyXpGoal}
+      wordOfDay={wordOfDay}
     />
   );
 }

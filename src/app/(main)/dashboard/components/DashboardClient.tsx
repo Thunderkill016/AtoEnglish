@@ -10,6 +10,7 @@ import UnitCard from "./UnitCard";
 import SrsCard from "./SrsCard";
 import DailyQuests from "./DailyQuests";
 import QuickActions from "./QuickActions";
+import WordOfDayCard from "./WordOfDayCard";
 import LevelUpModal from "@/components/learn/LevelUpModal";
 
 // Dynamic import — NotificationBell uses browser APIs (navigator, ServiceWorker)
@@ -43,6 +44,14 @@ interface DashboardClientProps {
     completed: boolean;
   }>;
   dailyXpGoal: number;
+  wordOfDay: {
+    word: string;
+    phonetic: string;
+    meaning_vn: string;
+    example_en: string;
+    topic: string;
+    level: "A1" | "A2" | "B1" | "B2" | "C1";
+  } | null;
 }
 
 export default function DashboardClient({
@@ -56,6 +65,7 @@ export default function DashboardClient({
   initialXpCurrent,
   initialQuests,
   dailyXpGoal,
+  wordOfDay,
 }: DashboardClientProps) {
   const [xpCurrent, setXpCurrent] = useState(initialXpCurrent);
   const [quests, setQuests] = useState(initialQuests);
@@ -289,8 +299,18 @@ export default function DashboardClient({
             <UnitCard currentUnitData={currentUnitData} />
           </div>
 
-          {/* Right: SRS + Daily Quests */}
+          {/* Right: Word of Day + SRS + Daily Quests */}
           <div className="lg:col-span-5 space-y-5">
+            {wordOfDay && (
+              <WordOfDayCard
+                word={wordOfDay.word}
+                phonetic={wordOfDay.phonetic}
+                meaning_vn={wordOfDay.meaning_vn}
+                example_en={wordOfDay.example_en}
+                topic={wordOfDay.topic}
+                level={wordOfDay.level}
+              />
+            )}
             <SrsCard dueCardsCount={dueCardsCount} />
             <DailyQuests
               quests={quests}
