@@ -35,6 +35,7 @@ interface DashboardClientProps {
     completed: boolean;
     route: string;
     tags: string[];
+    xp: number;
   };
   initialXpCurrent: number;
   initialQuests: Array<{
