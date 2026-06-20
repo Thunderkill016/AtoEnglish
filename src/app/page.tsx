@@ -106,6 +106,68 @@ export default function LandingPage() {
           "description": "Miễn phí hoàn toàn trong giai đoạn Open Beta",
         },
       },
+      {
+        "@type": "FAQPage",
+        "@id": "https://atoenglish.vercel.app/#faq",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Người mất gốc hoặc mới bắt đầu từ con số 0 có học được không?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Hoàn toàn học được! Lộ trình của AtoEnglish được thiết kế đặc biệt từ cơ bản nhất (A1). Phương pháp 4 bước (IPOR) giúp chia nhỏ bài học: bạn sẽ tích lũy từ vựng qua hình ảnh/âm thanh, luyện tập viết câu phản xạ và thực hành nói nhại giọng (Shadowing) mà không bị áp lực ngữ pháp hàn lâm.",
+            },
+          },
+          {
+            "@type": "Question",
+            "name": "Mỗi ngày tôi cần học bao lâu?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Chỉ 15–20 phút mỗi ngày là đủ để tạo ra tiến bộ thực sự. Mỗi bài học được thiết kế hoàn chỉnh trong khoảng 40 phút, nhưng bạn hoàn toàn có thể học theo từng phần nhỏ. Hệ thống nhắc nhở thông minh và streak sẽ giúp bạn duy trì thói quen học hàng ngày một cách tự nhiên.",
+            },
+          },
+          {
+            "@type": "Question",
+            "name": "AtoEnglish khác gì so với Duolingo hay Babbel?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "AtoEnglish tập trung vào giao tiếp thực tế cho người Việt — không gamification hời hợt. Bạn học theo phương pháp khoa học PPP kết hợp FSRS, thực hành nói Shadowing thực sự và roleplay tình huống. Nội dung được thiết kế sát nhu cầu của người học Việt Nam.",
+            },
+          },
+          {
+            "@type": "Question",
+            "name": "Tôi có phải cài đặt ứng dụng vào điện thoại không?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Không cần. AtoEnglish là một nền tảng Web-App hiện đại, chạy trực tiếp trên trình duyệt web của bạn. Giao diện được tối ưu hóa mượt mà cho cả điện thoại di động, máy tính bảng lẫn máy tính cá nhân. Chỉ cần mở trình duyệt, đăng nhập nhanh bằng Google là học được ngay.",
+            },
+          },
+          {
+            "@type": "Question",
+            "name": "Sản phẩm có thực sự miễn phí không?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Có, hoàn toàn miễn phí! Hiện tại AtoEnglish đang trong giai đoạn thử nghiệm mở (Open Beta). Chúng tôi cam kết mở khóa toàn bộ các bài học giao tiếp, công cụ ôn tập lật thẻ SRS và bài tập luyện nói phản xạ cơ bản miễn phí 100% cho tất cả người học.",
+            },
+          },
+          {
+            "@type": "Question",
+            "name": "Thuật toán Ôn tập ngắt quãng (FSRS) là gì?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "FSRS (Free Spaced Repetition Scheduler) là thuật toán khoa học ghi nhớ tiên tiến bậc nhất hiện nay. FSRS đo lường mức độ ghi nhớ của bạn và tự động lên lịch nhắc nhở ôn tập vào đúng thời điểm vàng ngay trước khi bạn chuẩn bị quên. Nhờ đó, bạn ghi nhớ từ vựng lâu hơn đáng kể so với cách học vẹt truyền thống.",
+            },
+          },
+          {
+            "@type": "Question",
+            "name": "Dữ liệu và tiến độ học của tôi có được bảo mật không?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Hoàn toàn bảo mật. AtoEnglish sử dụng Supabase với Row Level Security (RLS) — dữ liệu của bạn chỉ có thể được truy cập bởi chính bạn. Đăng nhập qua Google OAuth 2.0 được mã hóa an toàn. Chúng tôi không bán hay chia sẻ dữ liệu cá nhân với bên thứ ba.",
+            },
+          },
+        ],
+      },
     ],
   };
 
