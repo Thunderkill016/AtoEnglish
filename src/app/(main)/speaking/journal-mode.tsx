@@ -119,7 +119,7 @@ export function JournalMode() {
         scenarioId: null,
       });
       if (res.success) {
-        toast.success("Đã lưu nhật ký nói!");
+        toast.success(res.xpEarned ? `Đã lưu nhật ký! +${res.xpEarned} XP` : "Đã lưu nhật ký nói!");
         setSavedCount(p => p + 1);
         setTranscript("");
         setState("idle");

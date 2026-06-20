@@ -426,12 +426,15 @@ export function AIRoleplay() {
           .join(" | ");
         const fullTranscript = userTexts ? `${userTexts} | ${text}` : text;
 
-        await saveSpeakingSession({
+        const saveRes = await saveSpeakingSession({
           practiceType: "roleplay",
           duration,
           transcript: fullTranscript,
           scenarioId: activeScenario.id
         });
+        if (saveRes.success && saveRes.xpEarned) {
+          toast.success(`+${saveRes.xpEarned} XP — buổi hội thoại đã được lưu!`);
+        }
       }
     }, 1500);
   };

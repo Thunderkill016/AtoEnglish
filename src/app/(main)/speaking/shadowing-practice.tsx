@@ -319,13 +319,16 @@ export function ShadowingPractice() {
 
             // Ghi nhận lịch sử luyện tập vào database
             const duration = Math.max(1, Math.round((Date.now() - startTimeRef.current) / 1000));
-            await saveSpeakingSession({
+            const saveRes = await saveSpeakingSession({
               practiceType: "shadowing",
               duration,
               transcript: fullTranscript,
               accuracyScore: score,
               scenarioId: activeItem.id
             });
+            if (saveRes.success && saveRes.xpEarned) {
+              toast.success(`+${saveRes.xpEarned} XP — tiếp tục luyện hàng ngày!`);
+            }
           } else {
             setAccuracyScore(0);
             toast.error("Không nhận diện được giọng nói của bạn. Hãy nói to và rõ hơn.");

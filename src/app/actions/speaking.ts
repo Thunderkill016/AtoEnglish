@@ -72,13 +72,52 @@ export async function saveSpeakingSession(params: SaveSpeakingSessionParams) {
       };
     }
 
-    // Revalidate trang speaking để cập nhật lịch sử trên sidebar
+    // 3. Award XP for speaking practice + update streak
+    const XP_BY_TYPE: Record<string, number> = {
+      shadowing: 5,
+      roleplay: 8,
+      journal: 5,
+    };
+    const xpEarned = XP_BY_TYPE[cleanParams.practiceType] ?? 5;
+    const today = new Date().toLocaleDateString("sv-SE", { timeZone: "Asia/Ho_Chi_Minh" });
+
+    const { data: userProgress } = await supabase
+      .from("user_progress")
+      .select("total_xp, streak, last_active_date")
+      .eq("user_id", user.id)
+      .maybeSingle();
+
+    if (userProgress) {
+      const lastActive = userProgress.last_active_date;
+      let nextStreak = 1;
+      if (lastActive === today) {
+        nextStreak = userProgress.streak;
+      } else {
+        const d = new Date(today);
+        d.setDate(d.getDate() - 1);
+        const yesterday = d.toLocaleDateString("sv-SE", { timeZone: "Asia/Ho_Chi_Minh" });
+        nextStreak = lastActive === yesterday ? userProgress.streak + 1 : 1;
+      }
+      await supabase
+        .from("user_progress")
+        .update({
+          total_xp: userProgress.total_xp + xpEarned,
+          streak: nextStreak,
+          last_active_date: today,
+        })
+        .eq("user_id", user.id);
+    }
+
+    // Revalidate speaking + dashboard so XP and streak update immediately
     revalidatePath("/speaking");
+    revalidatePath("/dashboard");
 
     return {
       success: true,
-      message: "Lưu lịch sử luyện nói thành công!"
+      xpEarned,
+      message: `Đã lưu! +${xpEarned} XP`,
     };
+
 
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
