@@ -19,15 +19,13 @@ function makeCard(overrides: Partial<Card> = {}): Card {
     stability: 0,
     interval: 0,
     repetitions: 0,
-    ease_factor: 2.5,
     due_date: new Date().toISOString(),
     last_review: null,
     next_review: null,
-    last_reviewed: null,
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
     ...overrides,
-  } as Card;
+  };
 }
 
 describe("reviewCardFSRS", () => {
