@@ -1585,7 +1585,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                   </div>
 
                   {/* Badge — performance-based stars */}
-                  <div className="bg-gradient-to-br from-emerald-950/60 to-teal-950/60 border border-emerald-700/40 rounded-2xl p-8 text-center">
+                  <div className="bg-gradient-to-br from-emerald-950/60 to-teal-950/60 border border-emerald-700/40 rounded-2xl p-5 sm:p-8 text-center">
                     <div className="text-7xl mb-3 animate-bounce">{unit.badgeEmoji}</div>
                     <div className="flex justify-center gap-1 mb-2">
                       {[...Array(3)].map((_, i) => (

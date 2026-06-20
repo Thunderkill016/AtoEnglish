@@ -81,7 +81,7 @@ export default function LevelUpModal({ isOpen, previousLevel, newLevel, onClose 
             {/* Gradient top band */}
             <div className={`h-2 w-full bg-gradient-to-r ${info.color}`} />
 
-            <div className="p-8 text-center space-y-5">
+            <div className="p-5 sm:p-8 text-center space-y-4 sm:space-y-5">
               {/* Stars animation */}
               <div className="relative flex justify-center">
                 {[...Array(3)].map((_, i) => (
@@ -120,7 +120,7 @@ export default function LevelUpModal({ isOpen, previousLevel, newLevel, onClose 
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.4 }}
-                  className={`text-4xl font-black bg-gradient-to-r ${info.color} bg-clip-text text-transparent`}
+                  className={`text-2xl sm:text-4xl font-black bg-gradient-to-r ${info.color} bg-clip-text text-transparent`}
                 >
                   {newLevel}
                 </motion.h2>
