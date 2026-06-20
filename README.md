@@ -1,36 +1,131 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# AtoEnglish 🇻🇳→🇬🇧
 
-## Getting Started
+> **Học tiếng Anh chuẩn phát âm — dành cho người Việt**
 
-First, run the development server:
+[![CI](https://github.com/Thunderkill016/AtoEnglish/actions/workflows/ci.yml/badge.svg)](https://github.com/Thunderkill016/AtoEnglish/actions/workflows/ci.yml)
+[![Tests](https://img.shields.io/badge/tests-49%20passed-brightgreen)](https://github.com/Thunderkill016/AtoEnglish/actions)
+[![Live](https://img.shields.io/badge/live-atoenglish.vercel.app-emerald)](https://atoenglish.vercel.app)
+
+AtoEnglish là web app học tiếng Anh hướng đến người Việt — tập trung vào **phản xạ nói**, **phát âm chuẩn** và **ghi nhớ từ vựng lâu dài** qua thuật toán SRS.
+
+## ✨ Tính năng
+
+| Tính năng | Mô tả |
+|---|---|
+| 🎯 **Lộ trình CEFR** | A1 → B2 theo chuẩn châu Âu, có roadmap trực quan |
+| 🗣️ **Shadowing Practice** | Luyện phát âm theo giọng native với Web Speech API |
+| 🤖 **AI Roleplay** | Hội thoại thực tế với AI (Context-aware scenarios) |
+| 📓 **Daily Journal** | Viết nhật ký và nhận feedback phát âm |
+| 🃏 **Flashcards SRS** | Ôn tập thông minh với thuật toán FSRS v6.0 |
+| 🏆 **XP & Streak** | Gamification: kinh nghiệm, chuỗi học, thành tích |
+| 🔔 **Push Notifications** | Nhắc nhở học hàng ngày qua Web Push (VAPID) |
+| 📊 **Progress Dashboard** | Biểu đồ XP tuần, thống kê SRS, CEFR level |
+
+## 🛠 Tech Stack
+
+- **Framework**: Next.js 16 (App Router, Turbopack)
+- **Language**: TypeScript 6 (strict mode)
+- **Styling**: TailwindCSS v4 + Framer Motion
+- **Backend**: Supabase (PostgreSQL + Auth + Edge Functions)
+- **SRS Algorithm**: [ts-fsrs](https://github.com/open-spaced-repetition/ts-fsrs) v6.0
+- **Testing**: Vitest (unit) + Playwright (E2E)
+- **Monitoring**: Sentry + Vercel Analytics + Speed Insights
+- **Security**: Upstash Redis rate limiting, CSP headers, HSTS
+
+## 🚀 Quick Start
 
 ```bash
+# 1. Clone
+git clone https://github.com/Thunderkill016/AtoEnglish.git
+cd AtoEnglish
+
+# 2. Install
+npm install
+
+# 3. Setup env
+cp .env.example .env.local
+# → Fill in NEXT_PUBLIC_SUPABASE_URL + NEXT_PUBLIC_SUPABASE_ANON_KEY
+
+# 4. Run
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+# → http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🔧 Environment Variables
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| Variable | Required | Description |
+|---|---|---|
+| `NEXT_PUBLIC_SUPABASE_URL` | ✅ | Supabase project URL |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | ✅ | Supabase anon/public key |
+| `UPSTASH_REDIS_REST_URL` | Production | Rate limiting (Upstash) |
+| `UPSTASH_REDIS_REST_TOKEN` | Production | Rate limiting token |
+| `NEXT_PUBLIC_SENTRY_DSN` | Production | Error monitoring |
+| `NEXT_PUBLIC_VAPID_PUBLIC_KEY` | Push notifications | VAPID public key |
+| `VAPID_PRIVATE_KEY` | Push notifications | VAPID private key |
+| `VAPID_SUBJECT` | Push notifications | `mailto:your@email.com` |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Generate VAPID keys: `npx web-push generate-vapid-keys`
 
-## Learn More
+## 🧪 Testing
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+npm run test          # Unit tests (Vitest) — 49 tests
+npm run test:watch    # Watch mode
+npm run test:coverage # Coverage report
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+npm run e2e           # E2E tests (Playwright)
+npm run e2e:ui        # Playwright UI mode
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 📁 Project Structure
 
-## Deploy on Vercel
+```
+src/
+├── app/
+│   ├── page.tsx              # Landing page (Server Component)
+│   ├── login/page.tsx        # Auth + onboarding quiz (5 bước)
+│   ├── auth/callback/        # OAuth redirect handler
+│   └── (main)/               # Protected routes (middleware-guarded)
+│       ├── dashboard/        # Dashboard với XP, streak, current unit
+│       ├── learn/            # Học bài — 5 units (A1→B1)
+│       ├── flashcards/       # SRS flashcard review (FSRS v6.0)
+│       ├── speaking/         # Shadowing / AI Roleplay / Journal
+│       ├── progress/         # Thống kê tuần, SRS heatmap
+│       └── roadmap/          # CEFR roadmap trực quan
+├── components/
+│   ├── landing/              # Hero, FAQ, BenefitsSection...
+│   ├── layout/               # Header, BottomNav, UserAvatar
+│   └── learn/                # UnitTemplate (1600+ lines)
+├── features/flashcards/      # FSRS scheduling logic
+├── lib/
+│   ├── supabase/             # Client, Server, Middleware clients
+│   ├── security/             # Rate limiting, Zod validation
+│   └── data/units/           # Lesson content (unit1-5.ts)
+└── types/                    # TypeScript type definitions
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 🗄 Database Schema (Supabase)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+| Table | Purpose |
+|---|---|
+| `user_progress` | CEFR level, XP, streak per user |
+| `user_lesson_progress` | Completed units + XP earned |
+| `cards` | SRS flashcard data (FSRS state) |
+| `user_flashcard_progress` | Session stats, daily streak |
+| `user_flashcard_progress` | Session history |
+
+All tables use RLS with `auth.uid() = user_id` policy.
+
+## 🚢 Deployment
+
+Auto-deploy qua Vercel khi push lên `main`:
+
+```bash
+git push origin main  # → auto deploy to atoenglish.vercel.app
+```
+
+CI pipeline: **Lint → TypeCheck → Unit Tests → Build → E2E Tests**
+
+## 📄 License
+
+Private project — © 2026 AtoEnglish
