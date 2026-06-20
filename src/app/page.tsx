@@ -45,8 +45,8 @@ export const metadata: Metadata = {
     images: [
       {
         url: "https://atoenglish.vercel.app/og-image.png",
-        width: 1024,
-        height: 1024,
+        width: 1200,
+        height: 630,
         alt: "AtoEnglish — Học tiếng Anh để nói được, không chỉ để biết",
       },
     ],
