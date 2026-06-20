@@ -5,6 +5,7 @@ import {
   Map,
   TrendingUp,
   Mic,
+  Sparkles,
   type LucideIcon,
 } from "lucide-react";
 
@@ -33,6 +34,12 @@ export const mainNavItems: NavItem[] = [
     href: "/speaking",
     icon: Mic,
     description: "Luyện phát âm Shadowing & AI Roleplay",
+  },
+  {
+    title: "AI Coach",
+    href: "/ai-coach",
+    icon: Sparkles,
+    description: "AI sửa lỗi & giải thích bằng tiếng Việt",
   },
   {
     title: "Flashcards",
