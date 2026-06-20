@@ -84,34 +84,44 @@ export default function NotificationBell() {
   if (status === "loading" || status === "unsupported") return null;
 
   return (
-    <button
-      onClick={isSubscribed ? handleDisable : handleEnable}
-      disabled={isPending || status === "denied"}
-      title={
-        status === "denied"
-          ? "Trình duyệt đã chặn thông báo. Vào cài đặt trình duyệt để bật lại."
-          : isSubscribed
-          ? "Tắt nhắc nhở học hàng ngày"
-          : "Bật nhắc nhở học lúc 20:00 mỗi ngày"
-      }
-      className={`inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-xl border transition-all active:scale-[0.97] ${
-        status === "denied"
-          ? "opacity-40 cursor-not-allowed border-zinc-700 text-zinc-500"
-          : isSubscribed
-          ? "border-emerald-500/40 bg-emerald-500/10 text-emerald-400 hover:bg-red-500/10 hover:border-red-500/30 hover:text-red-400"
-          : "border-zinc-700/60 bg-zinc-800/40 text-zinc-400 hover:border-emerald-500/40 hover:text-emerald-400"
-      }`}
-    >
-      {isPending ? (
-        <Loader2 className="size-3.5 animate-spin" />
-      ) : isSubscribed ? (
-        <BellRing className="size-3.5" />
-      ) : status === "denied" ? (
-        <BellOff className="size-3.5" />
-      ) : (
-        <Bell className="size-3.5" />
-      )}
-      {isSubscribed ? "Nhắc nhở: Bật" : status === "denied" ? "Bị chặn" : "Bật nhắc nhở"}
-    </button>
+    <div className="relative group">
+      <button
+        onClick={isSubscribed ? handleDisable : handleEnable}
+        disabled={isPending || status === "denied"}
+        className={`inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-xl border transition-all active:scale-[0.97] ${
+          status === "denied"
+            ? "opacity-40 cursor-not-allowed border-zinc-700 text-zinc-500"
+            : isSubscribed
+            ? "border-emerald-500/40 bg-emerald-500/10 text-emerald-400 hover:bg-red-500/10 hover:border-red-500/30 hover:text-red-400"
+            : "border-zinc-700/60 bg-zinc-800/40 text-zinc-400 hover:border-emerald-500/40 hover:text-emerald-400"
+        }`}
+      >
+        {isPending ? (
+          <Loader2 className="size-3.5 animate-spin" />
+        ) : isSubscribed ? (
+          <BellRing className="size-3.5" />
+        ) : status === "denied" ? (
+          <BellOff className="size-3.5" />
+        ) : (
+          <Bell className="size-3.5" />
+        )}
+        {isSubscribed ? "Nhắc nhở: Bật" : status === "denied" ? "Bị chặn" : "Bật nhắc nhở"}
+      </button>
+
+      {/* Custom tooltip — right-aligned to stay within viewport */}
+      <div className="pointer-events-none absolute right-0 top-full mt-2 z-50 opacity-0 group-hover:opacity-100 transition-opacity duration-150">
+        <div className="bg-zinc-800 border border-zinc-700 text-zinc-200 text-xs rounded-xl px-3 py-2 whitespace-nowrap shadow-xl">
+          {status === "denied"
+            ? "Trình duyệt đã chặn thông báo. Vào cài đặt để bật lại."
+            : isSubscribed
+            ? "Tắt nhắc nhở học hàng ngày"
+            : "Bật nhắc nhở học lúc 20:00 mỗi ngày"}
+          {/* Arrow */}
+          <div className="absolute right-4 -top-1.5 w-3 h-1.5 overflow-hidden">
+            <div className="w-2 h-2 bg-zinc-800 border-l border-t border-zinc-700 rotate-45 translate-x-0.5 translate-y-0.5" />
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
