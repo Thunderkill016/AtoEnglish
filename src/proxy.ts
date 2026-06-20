@@ -6,7 +6,7 @@ import { createRateLimiter, getClientIp } from "@/lib/security/rate-limit";
 // Rate limit auth routes (login, callback) to 30 requests per minute
 const authRateLimiter = createRateLimiter(30, 60 * 1000, "auth");
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
   if (pathname === "/login" || pathname.startsWith("/auth/")) {

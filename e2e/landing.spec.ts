@@ -23,7 +23,10 @@ test.describe("Landing Page", () => {
   });
 
   test("shows stats bar with Open Beta badge", async ({ page }) => {
-    await expect(page.getByText("Open Beta")).toBeVisible();
+    // Target the stats bar specifically (first exact match)
+    await expect(
+      page.locator("text=Open Beta").first()
+    ).toBeVisible();
   });
 
   test("footer has links to privacy and terms", async ({ page }) => {
