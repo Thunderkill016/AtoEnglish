@@ -323,7 +323,7 @@ export function ShadowingPractice() {
 
       toast.info("Đang ghi âm... Hãy nói đuổi theo transcript!");
     } catch (err) {
-      console.error("Lỗi Microphone:", err);
+      // Mic error surfaced to user via toast above
       toast.error("Không thể kết nối Microphone. Vui lòng kiểm tra quyền thiết bị.");
     }
   };

@@ -22,7 +22,7 @@ export async function registerServiceWorker(): Promise<ServiceWorkerRegistration
     const reg = await navigator.serviceWorker.register(SW_URL, { scope: "/" });
     return reg;
   } catch (err) {
-    console.error("[SW] Registration failed:", err);
+    // SW registration failed silently — browser may not support service workers
     return null;
   }
 }
@@ -49,12 +49,12 @@ export async function subscribeToPush(vapidPublicKey: string): Promise<PushSubsc
     const subscription = await reg.pushManager.subscribe({
       userVisibleOnly: true,
       // Cast needed: Uint8Array is BufferSource but TS lib.dom differs across versions
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+       
       applicationServerKey: urlBase64ToUint8Array(vapidPublicKey) as any,
     });
     return subscription;
   } catch (err) {
-    console.error("[Push] Subscription failed:", err);
+    // Push subscription failed silently — user can retry via NotificationBell
     return null;
   }
 }

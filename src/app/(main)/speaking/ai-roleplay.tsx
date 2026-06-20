@@ -272,7 +272,7 @@ export function AIRoleplay() {
       };
 
       recognition.onerror = (event: SpeechRecognitionErrorEventMock) => {
-        console.error("Listening Error:", event.error);
+        // Speech recognition error — UI state already handles this
         setIsListening(false);
         if (event.error === "no-speech") {
           toast.error("Không nghe thấy bạn nói gì. Hãy thử lại!");
@@ -286,7 +286,7 @@ export function AIRoleplay() {
       recognitionRef.current = recognition;
       recognition.start();
     } catch (err) {
-      console.error(err);
+      // Microphone access error — handled via UI state above
       setIsListening(false);
     }
   };

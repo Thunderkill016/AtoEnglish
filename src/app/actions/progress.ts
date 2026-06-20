@@ -401,7 +401,7 @@ export async function resetUnitProgress(unitId: string) {
         .in("word", wordList);
 
       if (deleteCardsError) {
-        console.error("Lỗi khi xóa các thẻ từ vựng trong SRS:", deleteCardsError.message);
+        // Non-critical: SRS card cleanup failed — unit progress still reset
       }
     }
 
