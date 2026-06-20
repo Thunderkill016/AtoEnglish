@@ -581,17 +581,37 @@ export async function getWeeklyXpData() {
     }
 
     const startDate = days[0].day;
-    const { data, error } = await supabase
-      .from("user_lesson_progress")
-      .select("xp_earned, completed_at")
-      .eq("user_id", user.id)
-      .gte("completed_at", startDate + "T00:00:00.000Z");
 
-    if (!error && data) {
-      for (const row of data) {
+    // Fetch lesson XP and speaking sessions in parallel
+    const [lessonsRes, speakingRes] = await Promise.all([
+      supabase
+        .from("user_lesson_progress")
+        .select("xp_earned, completed_at")
+        .eq("user_id", user.id)
+        .gte("completed_at", startDate + "T00:00:00.000Z"),
+      supabase
+        .from("speaking_sessions")
+        .select("practice_type, created_at")
+        .eq("user_id", user.id)
+        .gte("created_at", startDate + "T00:00:00.000Z"),
+    ]);
+
+    // Add lesson XP per day
+    if (!lessonsRes.error && lessonsRes.data) {
+      for (const row of lessonsRes.data) {
         const rowDate = new Date(row.completed_at).toLocaleDateString("sv-SE", { timeZone: "Asia/Ho_Chi_Minh" });
         const day = days.find(d => d.day === rowDate);
         if (day) day.xp += (row.xp_earned || 0);
+      }
+    }
+
+    // Add speaking XP per day (estimated from practice_type)
+    const SPEAKING_XP: Record<string, number> = { shadowing: 5, roleplay: 8, journal: 5 };
+    if (!speakingRes.error && speakingRes.data) {
+      for (const row of speakingRes.data) {
+        const rowDate = new Date(row.created_at).toLocaleDateString("sv-SE", { timeZone: "Asia/Ho_Chi_Minh" });
+        const day = days.find(d => d.day === rowDate);
+        if (day) day.xp += SPEAKING_XP[row.practice_type] ?? 5;
       }
     }
 
@@ -604,6 +624,7 @@ export async function getWeeklyXpData() {
     return { success: false, data: [] };
   }
 }
+
 
 /**
  * Lấy thống kê tổng hợp cho trang Progress.
