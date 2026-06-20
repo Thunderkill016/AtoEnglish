@@ -31,7 +31,7 @@ export default function HowItWorksSection() {
       icon: Mic2,
       gradient: "from-violet-500/5 to-purple-500/5 dark:from-violet-500/10 dark:to-purple-500/5",
       iconBg: "bg-violet-500/10 dark:bg-violet-500/20",
-      iconColor: "text-violet-755 dark:text-violet-400",
+      iconColor: "text-violet-700 dark:text-violet-400",
       borderColor: "hover:border-violet-500/30 dark:hover:border-violet-500/20",
     },
     {
