@@ -447,37 +447,33 @@ export async function getCurrentUnit() {
       };
     }
 
-    // 1. Lấy tất cả các unit đã hoàn thành của user
-    const { data: completedLessons, error: dbError } = await supabase
-      .from("user_lesson_progress")
-      .select("unit_id")
-      .eq("user_id", user.id);
-
-    if (dbError) {
-      return {
-        success: false,
-        error: `Lỗi truy vấn database: ${dbError.message}`
-      };
-    }
-
-    const completedUnitIds = completedLessons?.map(l => l.unit_id) || [];
-
     // 2. Lấy danh sách từ vựng của tất cả các bài để so khớp xem thẻ nào đã được lưu
     const allWords = UNITS.flatMap(unit =>
       (UNIT_VOCABULARY[unit.id] || []).map(v => v.word.toLowerCase().trim())
     );
 
-    const { data: userCards, error: cardsError } = await supabase
-      .from("cards")
-      .select("word")
-      .eq("user_id", user.id)
-      .in("word", allWords);
+    // Parallel: fetch completed lessons + user cards simultaneously
+    const [completedRes, cardsRes] = await Promise.all([
+      supabase
+        .from("user_lesson_progress")
+        .select("unit_id")
+        .eq("user_id", user.id),
+      supabase
+        .from("cards")
+        .select("word")
+        .eq("user_id", user.id)
+        .in("word", allWords),
+    ]);
 
-    if (cardsError) {
-      console.error("Lỗi lấy danh sách thẻ:", cardsError.message);
+    if (completedRes.error) {
+      return {
+        success: false,
+        error: `Lỗi truy vấn database: ${completedRes.error.message}`
+      };
     }
 
-    const savedWords = new Set(userCards?.map(c => c.word.toLowerCase().trim()) || []);
+    const completedUnitIds = completedRes.data?.map(l => l.unit_id) || [];
+    const savedWords = new Set(cardsRes.data?.map(c => c.word.toLowerCase().trim()) || []);
 
     // Tính toán trạng thái cho từng Unit
     const unitStatuses = UNITS.map(unit => {
