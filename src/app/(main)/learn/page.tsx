@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import {
   getUserProgress,
   getCurrentUnit,
@@ -6,6 +7,11 @@ import { UNITS } from "@/lib/constants/units";
 import { UNIT_VOCABULARY } from "@/lib/constants/vocabulary";
 import LearnClient from "./components/LearnClient";
 import { createClient } from "@/lib/supabase/server";
+
+export const metadata: Metadata = {
+  title: "Bài học",
+  description: "Khám phá lộ trình học tiếng Anh A1–B2 với các bài học tương tác, từ vựng và luyện nói.",
+};
 
 export const revalidate = 0; // Disable caching
 

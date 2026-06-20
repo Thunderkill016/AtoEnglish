@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { getDueCards } from "@/app/actions/cards";
 import {
   getUserProgress,
@@ -7,6 +8,11 @@ import {
 } from "@/app/actions/progress";
 import { UNITS } from "@/lib/constants/units";
 import DashboardClient from "./components/DashboardClient";
+
+export const metadata: Metadata = {
+  title: "Dashboard",
+  description: "Xem tiến độ học, streak, XP và tiếp tục bài học tiếng Anh của bạn.",
+};
 
 export const revalidate = 0; // Disable server component caching to ensure accurate dashboard data on request
 
