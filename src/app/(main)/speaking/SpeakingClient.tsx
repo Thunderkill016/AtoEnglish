@@ -118,7 +118,7 @@ export default function SpeakingPage() {
       </div>
 
       {/* Tab Contents Workspace */}
-      <div className="grid gap-8 lg:grid-cols-3 items-start">
+      <div className="grid gap-5 sm:gap-8 lg:grid-cols-3 items-start">
         {/* Main interactive area */}
         <div className="lg:col-span-2">
           <AnimatePresence mode="wait">

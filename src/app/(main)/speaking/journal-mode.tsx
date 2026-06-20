@@ -22,7 +22,7 @@ const JOURNAL_TOPICS = [
 
 type RecognitionState = "idle" | "listening" | "processing" | "done";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+ 
 type SpeechRecognitionInstance = any;
 
 export function JournalMode() {
@@ -40,7 +40,7 @@ export function JournalMode() {
   };
 
   const startListening = () => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+     
     const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
     if (!SpeechRecognition) {
       toast.error("Trình duyệt không hỗ trợ Web Speech API.");
@@ -117,13 +117,13 @@ export function JournalMode() {
   return (
     <div className="space-y-6">
       {/* Topic Card */}
-      <div className="rounded-3xl border border-zinc-200/60 dark:border-zinc-800/60 bg-white/60 dark:bg-zinc-900/30 backdrop-blur-sm p-6 space-y-4">
+      <div className="rounded-3xl border border-zinc-200/60 dark:border-zinc-800/60 bg-white/60 dark:bg-zinc-900/30 backdrop-blur-sm p-4 sm:p-6 space-y-3 sm:space-y-4">
         <div className="flex items-start justify-between gap-4">
           <div className="space-y-1 flex-1">
             <span className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest">
               <BookOpen className="size-3.5" /> Chủ đề hôm nay
             </span>
-            <p className="text-lg font-black text-foreground leading-snug">{topic}</p>
+            <p className="text-base sm:text-lg font-black text-foreground leading-snug">{topic}</p>
           </div>
           <button
             onClick={randomizeTopic}
@@ -141,7 +141,7 @@ export function JournalMode() {
       </div>
 
       {/* Recording Area */}
-      <div className="rounded-3xl border border-zinc-200/60 dark:border-zinc-800/60 bg-white/60 dark:bg-zinc-900/30 backdrop-blur-sm p-6 space-y-6">
+      <div className="rounded-3xl border border-zinc-200/60 dark:border-zinc-800/60 bg-white/60 dark:bg-zinc-900/30 backdrop-blur-sm p-4 sm:p-6 space-y-4 sm:space-y-6">
         {/* Mic button */}
         <div className="flex flex-col items-center gap-4">
           <div className="relative">
@@ -205,11 +205,11 @@ export function JournalMode() {
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="flex gap-3"
+            className="flex flex-col sm:flex-row gap-3"
           >
             <Button
               onClick={handleSave}
-              className="flex-1 h-11 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold text-sm"
+              className="w-full sm:flex-1 h-11 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold text-sm"
             >
               <Send className="size-4 mr-2" /> Lưu nhật ký
             </Button>

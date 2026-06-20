@@ -405,7 +405,7 @@ export function AIRoleplay() {
                 key={index}
                 initial={{ opacity: 0, y: 10, scale: 0.98 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
-                className={`flex gap-3 max-w-[85%] ${isAi ? "mr-auto" : "ml-auto flex-row-reverse"}`}
+                className={`flex gap-2 sm:gap-3 max-w-[90%] sm:max-w-[85%] ${isAi ? "mr-auto" : "ml-auto flex-row-reverse"}`}
               >
                 {/* Character avatar indicator */}
                 <span className={`flex size-8 shrink-0 items-center justify-center rounded-full text-xs font-bold ${
@@ -447,7 +447,7 @@ export function AIRoleplay() {
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="p-6 rounded-2xl bg-emerald-500/10 border border-emerald-500/25 text-center space-y-3.5"
+              className="p-4 sm:p-6 rounded-2xl bg-emerald-500/10 border border-emerald-500/25 text-center space-y-3"
             >
               <div className="inline-flex size-12 items-center justify-center bg-emerald-500 text-white rounded-full">
                 <CheckCircle className="size-6" />
