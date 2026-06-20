@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import { Flame, Layers, BookOpen, TrendingUp, Trophy, Star } from "lucide-react";
+import { Flame, Layers, BookOpen, TrendingUp, Trophy, Star, Mic } from "lucide-react";
 import { getProgressStats, getWeeklyXpData } from "@/app/actions/progress";
 import ProgressClient from "./ProgressClient";
 
@@ -25,6 +25,7 @@ export default async function ProgressPage() {
     totalCards: 0,
     cardsByState: { new: 0, learning: 0, review: 0, relearning: 0 },
     completedUnits: 0,
+    totalSpeakingSessions: 0,
   };
 
   const weeklyData = weeklyRes.data?.length
@@ -59,6 +60,13 @@ export default async function ProgressPage() {
       sub: "Đã học xong",
       icon: BookOpen,
       color: "text-emerald-500 bg-emerald-500/10",
+    },
+    {
+      label: "Buổi luyện nói",
+      value: `${stats.totalSpeakingSessions ?? 0} buổi`,
+      sub: "Shadowing, roleplay & nhật ký",
+      icon: Mic,
+      color: "text-violet-500 bg-violet-500/10",
     },
   ];
 

@@ -635,10 +635,11 @@ export async function getProgressStats() {
     const { data: { user }, error: authError } = await supabase.auth.getUser();
     if (authError || !user) return { success: false, stats: null };
 
-    const [progressRes, cardsRes, completedRes] = await Promise.all([
+    const [progressRes, cardsRes, completedRes, speakingRes] = await Promise.all([
       supabase.from("user_progress").select("*").eq("user_id", user.id).maybeSingle(),
       supabase.from("cards").select("state").eq("user_id", user.id),
       supabase.from("user_lesson_progress").select("unit_id", { count: "exact" }).eq("user_id", user.id),
+      supabase.from("speaking_sessions").select("id", { count: "exact" }).eq("user_id", user.id),
     ]);
 
     const progress = progressRes.data;
@@ -660,6 +661,7 @@ export async function getProgressStats() {
         totalCards,
         cardsByState,
         completedUnits: completedRes.count || 0,
+        totalSpeakingSessions: speakingRes.count || 0,
       }
     };
   } catch {
