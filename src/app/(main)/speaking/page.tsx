@@ -31,7 +31,7 @@ export default function SpeakingPage() {
       }
     }
     loadHistory();
-  }, [activeTab]);
+  }, []); // Chỉ fetch 1 lần khi mount, không refetch mỗi lần đổi tab
 
   const tabs = [
     { id: "shadowing", title: "Shadowing Practice", icon: Volume2, desc: "Nói đuổi theo audio" },
@@ -67,8 +67,8 @@ export default function SpeakingPage() {
         {/* Stats card */}
         <div className="w-full sm:w-72 bg-glass border border-glass p-4 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.01)] flex items-center justify-between">
           <div className="space-y-1">
-            <span className="text-xs text-muted-foreground font-bold">Lượt luyện nói</span>
-            <div className="text-xl font-bold text-foreground">{speakingCount} lượt nói</div>
+            <span className="text-xs text-muted-foreground font-bold">Lịch sử gần nhất</span>
+            <div className="text-xl font-bold text-foreground">{speakingCount} buổi luyện</div>
           </div>
           <span className="flex size-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
             <TrendingUp className="size-5" />

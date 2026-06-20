@@ -58,8 +58,8 @@ export default async function ProgressPage() {
   const srsBoxes = [
     { name: "Hộp 1 — Mới nạp", count: stats.cardsByState.new, color: "bg-red-500" },
     { name: "Hộp 2 — Đang học", count: stats.cardsByState.learning, color: "bg-orange-500" },
-    { name: "Hộp 3 — Ôn tập", count: stats.cardsByState.review, color: "bg-blue-500" },
-    { name: "Hộp 4 — Dài hạn", count: stats.cardsByState.relearning, color: "bg-emerald-500" },
+    { name: "Hộp 3 — Ôn tập dài hạn", count: stats.cardsByState.review, color: "bg-blue-500" },
+    { name: "Hộp 4 — Học lại", count: stats.cardsByState.relearning, color: "bg-emerald-500" },
   ];
   const totalSrs = Math.max(srsBoxes.reduce((s, b) => s + b.count, 0), 1);
 

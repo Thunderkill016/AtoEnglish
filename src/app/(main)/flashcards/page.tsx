@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { motion, AnimatePresence, useMotionValue, useTransform, PanInfo } from "framer-motion";
 import confetti from "canvas-confetti";
 import {
@@ -43,6 +44,7 @@ export default function FlashcardsPage() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showFinished, setShowFinished] = useState(false);
   const [responseLog, setResponseLog] = useState<{ word: string; score: string }[]>([]);
+  const router = useRouter();
   const [cramMode, setCramMode] = useState(false);
   const [topics, setTopics] = useState<string[]>([]);
   const [selectedTopic, setSelectedTopic] = useState<string>("all");
@@ -232,13 +234,13 @@ export default function FlashcardsPage() {
         </div>
         <div className="flex gap-4 pt-2">
           <Button
-            onClick={() => window.location.href = "/learn"}
+            onClick={() => router.push("/learn")}
             className="bg-primary hover:bg-primary/95 text-primary-foreground rounded-xl text-xs sm:text-sm font-semibold h-11 px-5 shadow-lg shadow-primary/10 active:scale-[0.98]"
           >
             Học Unit Mới
           </Button>
           <Button
-            onClick={() => window.location.href = "/dashboard"}
+            onClick={() => router.push("/dashboard")}
             variant="outline"
             className="rounded-xl text-xs sm:text-sm font-semibold border-glass h-11 px-5 hover:bg-muted active:scale-[0.98]"
           >
@@ -450,21 +452,8 @@ export default function FlashcardsPage() {
                         </div>
                       )}
                     </div>
-
-                    {/* Debug FSRS Info */}
-                    {(currentCard.stability !== undefined || currentCard.difficulty !== undefined) && (
-                      <div className="text-[9px] font-mono text-muted-foreground/40 text-center flex justify-center gap-3 border-t border-foreground/[0.04] pt-2 select-none">
-                        <span>FSRS Mode</span>
-                        <span>•</span>
-                        <span>Stability: {currentCard.stability?.toFixed(2) || "0.00"}d</span>
-                        <span>•</span>
-                        <span>Difficulty: {currentCard.difficulty?.toFixed(2) || "0.00"}</span>
-                        <span>•</span>
-                        <span>State: {currentCard.state === 0 ? "New" : currentCard.state === 1 ? "Learning" : currentCard.state === 2 ? "Review" : "Relearning"}</span>
-                      </div>
-                    )}
  
-                    <div className="text-center text-[11px] text-muted-foreground/60 flex items-center justify-center gap-1.5 font-normal">
+                    <div className="text-center text-[11px] text-muted-foreground/60 flex items-center justify-center gap-1.5 font-normal pt-4">
                       <HelpCircle className="size-4 text-primary animate-pulse" />
                       <span>Nhấp chuột để lật lại mặt trước</span>
                     </div>
@@ -586,7 +575,7 @@ export default function FlashcardsPage() {
               Ôn tập lại
             </Button>
             <Button
-              onClick={() => window.location.href = "/dashboard"}
+              onClick={() => router.push("/dashboard")}
               className="w-full sm:w-auto bg-primary hover:bg-primary/95 text-primary-foreground rounded-xl text-xs sm:text-sm font-semibold h-12 sm:h-11 px-5 shadow-lg shadow-primary/10 active:scale-[0.98]"
             >
               Quay về Dashboard

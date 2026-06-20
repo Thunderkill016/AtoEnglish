@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useRouter } from "next/navigation";
 import {
   Map,
   CheckCircle2,
@@ -26,6 +27,7 @@ interface RoadmapLevel {
 }
 
 export default function RoadmapPage() {
+  const router = useRouter();
   const levels: RoadmapLevel[] = [
     {
       code: "A1",
@@ -243,7 +245,7 @@ export default function RoadmapPage() {
                     </Button>
                   ) : isActive ? (
                     <Button 
-                      onClick={() => window.location.href = "/learn"} 
+                      onClick={() => router.push("/learn")} 
                       className="bg-primary hover:bg-primary/95 text-primary-foreground rounded-xl text-xs font-bold gap-2 shadow-md shadow-primary/10 active:scale-[0.98] h-11 px-5 flex items-center transition-all duration-200"
                     >
                       <Play className="size-3.5 fill-current" />
