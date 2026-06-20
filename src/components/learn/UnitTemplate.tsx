@@ -53,6 +53,7 @@ export interface VocabItem {
   meaning: string;
   example: string;
   audio?: string;
+  emoji?: string; // Visual mnemonic for Mayer Multimedia principle
 }
 
 export interface DialogueLine {
@@ -113,6 +114,11 @@ export interface GrammarPoint {
     vn: string;
   }>;
   tip?: string;            // Quick usage tip (Vietnamese)
+  ccq?: {                  // Concept Check Question — verifies understanding before practice
+    question: string;
+    options: string[];
+    answer: string;
+  };
 }
 
 /** Matching exercise: word ↔ meaning pairs */
@@ -200,6 +206,13 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
   const [quizAnswers, setQuizAnswers] = useState<Record<string, string>>({});
   const [quizClozeInputs, setQuizClozeInputs] = useState<Record<string, string>>({});
   const [quizSubmitted, setQuizSubmitted] = useState(false);
+  // Retry state — wrong answers re-attempted for bonus score
+  const [retryAnswers, setRetryAnswers] = useState<Record<string, string>>({});
+  const [retryClozeInputs, setRetryClozeInputs] = useState<Record<string, string>>({});
+  const [retrySubmitted, setRetrySubmitted] = useState(false);
+  // Grammar CCQ state
+  const [ccqAnswer, setCcqAnswer] = useState("");
+  const [ccqSubmitted, setCcqSubmitted] = useState(false);
 
   const recognitionRef = useRef<SpeechRecognition | null>(null);
 
@@ -398,10 +411,10 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
   const handleCompleteUnit = async () => {
     setIsSubmitting(true);
     confetti({ particleCount: 150, spread: 100, origin: { y: 0.5 } });
-    const res = await completeUnit(unit.unitId);
+    const res = await completeUnit(unit.unitId, effectiveStarCount);
     if (res.success) {
       setIsCompleted(true);
-      toast.success(`🎉 Chúc mừng! Bạn nhận được ${unit.xp} XP!`);
+      toast.success(`🎉 Chúc mừng! Bạn nhận được ${res.xpEarned ?? xpToEarn} XP!`);
       if (res.previousLevel && res.newLevel && res.previousLevel !== res.newLevel) {
         localStorage.setItem("pending-level-up", JSON.stringify({
           prev: res.previousLevel,
@@ -437,8 +450,36 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
   const quizPct = FINAL_QS.length > 0 ? (finalQuizScore / FINAL_QS.length) * 100 : 100;
   const overallScore = Math.round((lacPct * 0.3) + (shadowAvg * 0.3) + (quizPct * 0.4));
 
-  // Performance-based stars (1-3)
-  const starCount = overallScore >= 85 ? 3 : overallScore >= 60 ? 2 : 1;
+  // Wrong questions for retry panel (computed after quiz submission)
+  const wrongQuestions = quizSubmitted
+    ? FINAL_QS.filter(q =>
+        q.type === "cloze"
+          ? (quizClozeInputs[q.id] ?? "").trim().toLowerCase() !== q.answer.toLowerCase()
+          : quizAnswers[q.id] !== q.answer
+      )
+    : [];
+
+  // Retry score and bonus (up to +10 points)
+  const retryCorrectCount = retrySubmitted
+    ? wrongQuestions.filter(q =>
+        q.type === "cloze"
+          ? (retryClozeInputs[q.id] ?? "").trim().toLowerCase() === q.answer.toLowerCase()
+          : retryAnswers[q.id] === q.answer
+      ).length
+    : 0;
+  const retryBonusPct = wrongQuestions.length > 0 && retrySubmitted
+    ? Math.round((retryCorrectCount / wrongQuestions.length) * 10)
+    : 0;
+
+  // Effective score/stars (retry can boost by up to 10 pts)
+  const effectiveScore = Math.min(100, overallScore + retryBonusPct);
+  const effectiveStarCount: 1 | 2 | 3 = effectiveScore >= 85 ? 3 : effectiveScore >= 60 ? 2 : 1;
+
+  // XP to earn based on effective star count
+  const xpToEarn = effectiveStarCount === 3 ? unit.xp : effectiveStarCount === 2 ? Math.round(unit.xp * 0.85) : Math.round(unit.xp * 0.70);
+
+  // CCQ correct check
+  const ccqCorrect = !!(unit.grammar?.ccq && ccqAnswer === unit.grammar.ccq.answer);
 
   // ─── Progress bar ─────────────────────────────────────────────────────────
   const progress = Math.round(((section - 1) / (TOTAL_SECTIONS - 1)) * 100);
@@ -606,6 +647,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                       <div style={{ transition: "transform 0.5s", transformStyle: "preserve-3d", transform: isFlipped ? "rotateY(180deg)" : "rotateY(0deg)", position: "relative", minHeight: "120px" }}>
                         {/* Front */}
                         <div className="absolute inset-0 bg-white/5 border border-zinc-700/60 rounded-2xl p-4 flex flex-col justify-between" style={{ backfaceVisibility: "hidden" }}>
+                          {v.emoji && <p className="text-2xl mb-0.5">{v.emoji}</p>}
                           <p className="text-white font-bold text-base">{v.word}</p>
                           <p className="text-zinc-500 text-xs">{v.phonetic}</p>
                           <div className="flex justify-between items-center">
@@ -717,6 +759,39 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                         <p className="text-zinc-300 text-sm">{unit.grammar.tip}</p>
                       </div>
                     )}
+
+                    {/* CCQ — Concept Check Question (PPP standard) */}
+                    {unit.grammar.ccq && (
+                      <div className="mt-5 border-t border-teal-700/30 pt-5">
+                        <p className="text-xs font-bold text-teal-400 uppercase tracking-widest mb-3">✅ Kiểm tra nhanh (CCQ)</p>
+                        <p className="text-white font-semibold text-sm mb-3">{unit.grammar.ccq.question}</p>
+                        <div className="grid grid-cols-2 gap-2 mb-3">
+                          {unit.grammar.ccq.options.map(opt => {
+                            const isPicked = ccqAnswer === opt;
+                            const isRight = opt === unit.grammar!.ccq!.answer;
+                            let cls = "px-3 py-2 rounded-xl text-sm font-medium border transition-all duration-200 text-left ";
+                            if (!ccqSubmitted) {
+                              cls += isPicked ? "bg-teal-600/30 border-teal-500 text-teal-300" : "bg-zinc-800 border-zinc-700 text-zinc-300 hover:border-teal-600/50 hover:bg-zinc-700/50";
+                            } else {
+                              if (isRight) cls += "bg-emerald-900/40 border-emerald-500 text-emerald-300";
+                              else if (isPicked) cls += "bg-red-900/30 border-red-500 text-red-300";
+                              else cls += "bg-zinc-800 border-zinc-700/40 text-zinc-500";
+                            }
+                            return (<button key={opt} disabled={ccqSubmitted} onClick={() => setCcqAnswer(opt)} className={cls}>{opt}</button>);
+                          })}
+                        </div>
+                        {!ccqSubmitted ? (
+                          <button disabled={!ccqAnswer}
+                            onClick={() => { setCcqSubmitted(true); if (ccqCorrect) playCorrectSound(); else playWrongSound(); }}
+                            className="w-full bg-teal-600 hover:bg-teal-500 disabled:opacity-40 text-white font-bold rounded-xl py-2 text-sm transition-colors"
+                          >Kiểm tra</button>
+                        ) : (
+                          <p className={`text-sm font-bold ${ccqCorrect ? "text-emerald-400" : "text-red-400"}`}>
+                            {ccqCorrect ? "✓ Chính xác! Bạn đã hiểu cấu trúc ngữ pháp." : `✗ Đáp án đúng: "${unit.grammar.ccq.answer}"`}
+                          </p>
+                        )}
+                      </div>
+                    )}
                   </div>
                 </div>
               ) : (
@@ -725,8 +800,12 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                 </div>
               )}
 
-              <button onClick={goNext} className="mt-6 w-full bg-teal-600 hover:bg-teal-500 text-white font-bold rounded-xl px-6 py-4 flex items-center justify-center gap-2 transition-colors text-lg">
-                Luyện tập ngay <ChevronRight size={20} />
+              <button
+                onClick={goNext}
+                disabled={!!(unit.grammar?.ccq && !ccqSubmitted)}
+                className={`mt-6 w-full text-white font-bold rounded-xl px-6 py-4 flex items-center justify-center gap-2 transition-colors text-lg ${unit.grammar?.ccq && !ccqSubmitted ? "bg-zinc-700 opacity-50 cursor-not-allowed" : "bg-teal-600 hover:bg-teal-500"}`}
+              >
+                {unit.grammar?.ccq && !ccqSubmitted ? "Trả lời câu hỏi trước" : "Luyện tập ngay"} <ChevronRight size={20} />
               </button>
             </motion.div>
           )}
@@ -1364,6 +1443,56 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                     </p>
                   </div>
 
+
+                  {/* Retry panel — wrong answers re-attempted for bonus score */}
+                  {wrongQuestions.length > 0 && (
+                    <div className="bg-amber-950/30 border border-amber-700/40 rounded-2xl p-5">
+                      <p className="text-sm font-bold text-amber-400 mb-1">💡 Ôn lại câu sai ({wrongQuestions.length} câu)</p>
+                      <p className="text-xs text-zinc-500 mb-4">Trả lời đúng để nhận thêm điểm thưởng (tối đa +10%)!</p>
+                      {!retrySubmitted ? (
+                        <div className="space-y-4">
+                          {wrongQuestions.map((q, qi) => {
+                            if (q.type === "cloze") {
+                              return (
+                                <div key={q.id}>
+                                  <p className="text-white text-sm mb-2"><span className="text-amber-400 mr-2">↺ {qi + 1}.</span>{q.question}</p>
+                                  <input type="text" value={retryClozeInputs[q.id] ?? ""}
+                                    onChange={e => setRetryClozeInputs(p => ({ ...p, [q.id]: e.target.value }))}
+                                    placeholder="Điền từ còn thiếu..."
+                                    className="w-full bg-zinc-800 border border-zinc-700 rounded-xl px-4 py-2.5 text-white placeholder-zinc-500 focus:outline-none focus:border-amber-500 transition-colors text-sm"
+                                  />
+                                </div>
+                              );
+                            }
+                            return (
+                              <div key={q.id}>
+                                <p className="text-white text-sm mb-2"><span className="text-amber-400 mr-2">↺ {qi + 1}.</span>{q.question}</p>
+                                <div className="grid grid-cols-2 gap-2">
+                                  {q.options.map(opt => (
+                                    <button key={opt} onClick={() => setRetryAnswers(p => ({ ...p, [q.id]: opt }))}
+                                      className={`px-3 py-2 rounded-xl text-sm font-medium border transition-colors text-left ${retryAnswers[q.id] === opt ? "bg-amber-600/30 border-amber-500 text-amber-300" : "bg-zinc-800 border-zinc-700 text-zinc-300 hover:border-amber-600/50"}`}
+                                    >{opt}</button>
+                                  ))}
+                                </div>
+                              </div>
+                            );
+                          })}
+                          <button
+                            onClick={() => { setRetrySubmitted(true); if (retryCorrectCount > 0) playCorrectSound(); }}
+                            disabled={wrongQuestions.some(q => q.type === "multiple-choice" ? !retryAnswers[q.id] : !(retryClozeInputs[q.id] ?? "").trim())}
+                            className="w-full bg-amber-600 hover:bg-amber-500 disabled:opacity-40 text-white font-bold rounded-xl py-2.5 text-sm transition-colors"
+                          >Gửi câu trả lời</button>
+                        </div>
+                      ) : (
+                        <div className="text-center py-2">
+                          <p className="text-2xl mb-1">{retryCorrectCount === wrongQuestions.length ? "🎉" : "📖"}</p>
+                          <p className="font-bold text-white">{retryCorrectCount}/{wrongQuestions.length} câu đúng</p>
+                          {retryBonusPct > 0 && <p className="text-emerald-400 font-bold text-sm mt-1">+{retryBonusPct}% điểm thưởng! Tổng: {effectiveScore}%</p>}
+                        </div>
+                      )}
+                    </div>
+                  )}
+
                   {/* Progress Summary */}
                   <div className="bg-white/5 border border-zinc-800/60 rounded-2xl p-5">
                     <p className="text-sm font-bold text-white mb-3">📊 Kết quả học tập</p>
@@ -1392,11 +1521,11 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                         <Star
                           key={i}
                           size={20}
-                          className={i < starCount ? "text-yellow-400 fill-yellow-400" : "text-zinc-600"}
+                          className={i < effectiveStarCount ? "text-yellow-400 fill-yellow-400" : "text-zinc-600"}
                         />
                       ))}
                     </div>
-                    <p className="text-xs text-zinc-500 mb-2">{overallScore}% tổng điểm</p>
+                    <p className="text-xs text-zinc-500 mb-2">{effectiveScore}% tổng điểm{retryBonusPct > 0 ? <span className="text-emerald-400 ml-1">(+{retryBonusPct}% bonus)</span> : null}</p>
                     <p className="text-emerald-300 font-black text-xl mb-1">Huy hiệu: {unit.badgeName}</p>
                     <p className="text-zinc-400 text-sm">{unit.title}</p>
                   </div>
@@ -1418,7 +1547,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                       disabled={isSubmitting}
                       className="w-full bg-emerald-600 hover:bg-emerald-500 disabled:opacity-60 text-white font-black rounded-xl px-6 py-5 flex items-center justify-center gap-3 transition-colors text-lg"
                     >
-                      {isSubmitting ? "Đang lưu..." : `🎉 Hoàn thành bài học (+${unit.xp} XP)`}
+                      {isSubmitting ? "Đang lưu..." : `🎉 Hoàn thành bài học (+${xpToEarn} XP)`}
                     </button>
                   ) : (
                     <div className="text-center">

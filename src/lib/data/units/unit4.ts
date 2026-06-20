@@ -173,6 +173,11 @@ export const unit4: UnitData = {
       { en: "AI will revolutionize healthcare.", vn: "AI sẽ cách mạng hóa ngành y tế." },
     ],
     tip: "Sau modal verb, LUÔN dùng động từ nguyên thể (base form). Không nói 'can changes' — phải là 'can change'.",
+    ccq: {
+      question: "Câu nào dùng modal verb ĐÚNG?",
+      options: ["She cans speak English.", "AI can changes the world.", "We should protecting data.", "You must protect your data."],
+      answer: "You must protect your data.",
+    },
   },
 
   matchingExercise: {

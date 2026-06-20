@@ -218,6 +218,11 @@ export const unit3: UnitData = {
       { en: "Their house is big.", vn: "Nhà của họ rất to." },
     ],
     tip: "Đại từ sở hữu luôn đứng TRƯỚC danh từ. Không bao giờ nói 'name his is Ben' — phải là 'his name is Ben'.",
+    ccq: {
+      question: "Điền vào chỗ trống: '___ name is Lucy.' (của cô ấy)",
+      options: ["My", "His", "Her", "Their"],
+      answer: "Her",
+    },
   },
 
   matchingExercise: {

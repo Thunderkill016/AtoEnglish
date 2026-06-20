@@ -217,6 +217,11 @@ export const unit2: UnitData = {
       { en: "He goes to bed at 10 PM.", vn: "Anh ấy đi ngủ lúc 10 giờ tối." },
     ],
     tip: "Khi chủ ngữ là He/She/It, thêm -s vào cuối động từ (go → goes, watch → watches, brush → brushes).",
+    ccq: {
+      question: "Chọn câu đúng với chủ ngữ 'She':",
+      options: ["She go to school.", "She goes to school.", "She going to school.", "She goed to school."],
+      answer: "She goes to school.",
+    },
   },
 
   matchingExercise: {

@@ -14,7 +14,7 @@ const completeUnitLimiter = createRateLimiter(10, 60 * 1000, "complete-unit");
  * Server Action xử lý khi người dùng hoàn thành một Unit học tập.
  * Cộng 80 XP, cập nhật streak, lưu tất cả từ vựng trong unit vào SRS (nếu chưa có).
  */
-export async function completeUnit(unitId: string) {
+export async function completeUnit(unitId: string, starCount: number = 3) {
   try {
     // Rate Limiting
     const reqHeaders = await headers();
@@ -28,7 +28,7 @@ export async function completeUnit(unitId: string) {
     }
 
     // Input Validation
-    const validated = CompleteUnitSchema.safeParse({ unitId });
+    const validated = CompleteUnitSchema.safeParse({ unitId, starCount });
     if (!validated.success) {
       return {
         success: false,
@@ -75,12 +75,17 @@ export async function completeUnit(unitId: string) {
     }
 
     // 3. Tiến hành insert bản ghi hoàn thành vào user_lesson_progress
+    // Dynamic XP based on performance stars: 3★=100%, 2★=85%, 1★=70%
+    const BASE_XP = 80;
+    const xpMultiplier = cleanParams.starCount === 3 ? 1.0 : cleanParams.starCount === 2 ? 0.85 : 0.70;
+    const xpEarned = Math.round(BASE_XP * xpMultiplier);
+
     const { error: insertProgressError } = await supabase
       .from("user_lesson_progress")
       .insert({
         user_id: user.id,
         unit_id: cleanParams.unitId,
-        xp_earned: 80
+        xp_earned: xpEarned
       });
 
     if (insertProgressError) {
@@ -105,7 +110,7 @@ export async function completeUnit(unitId: string) {
     }
 
     let nextStreak = 1;
-    let totalXp = 80;
+    let totalXp = xpEarned;
 
     if (!userProgress) {
       // Nếu chưa có tiến trình người dùng, tạo bản ghi mới
@@ -115,7 +120,7 @@ export async function completeUnit(unitId: string) {
           user_id: user.id,
           current_level: "A1", // Default level for new users
           streak: 1,
-          total_xp: 80,
+          total_xp: xpEarned,
           last_active_date: today
         });
 
@@ -127,7 +132,7 @@ export async function completeUnit(unitId: string) {
       }
     } else {
       // Nếu đã có tiến trình, tính toán streak
-      totalXp = userProgress.total_xp + 80;
+      totalXp = userProgress.total_xp + xpEarned;
       const lastActive = userProgress.last_active_date;
 
       if (!lastActive) {
@@ -228,8 +233,8 @@ export async function completeUnit(unitId: string) {
 
     return {
       success: true,
-      message: `Hoàn thành bài học thành công! Bạn nhận được 80 XP.`,
-      xpEarned: 80,
+      message: `Hoàn thành bài học thành công! Bạn nhận được ${xpEarned} XP (${cleanParams.starCount}⭐).`,
+      xpEarned,
       newStreak: nextStreak,
       vocabAddedCount: addedCount,
       leveledUp: newLevel !== currentLevel ? newLevel : null,

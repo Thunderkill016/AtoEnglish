@@ -45,6 +45,7 @@ export const ReviewCardSchema = z.object({
  */
 export const CompleteUnitSchema = z.object({
   unitId: z.string().min(1, "ID bài học không được để trống"),
+  starCount: z.number().int().min(1).max(3).default(3),
 });
 
 /**
