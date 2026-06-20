@@ -8,22 +8,52 @@ import { saveSpeakingSession } from "@/app/actions/speaking";
 import { toast } from "sonner";
 
 const JOURNAL_TOPICS = [
+  // A1-A2 level — simple personal topics
   "Mô tả ngày hôm nay của bạn bằng tiếng Anh",
   "Kể về sở thích yêu thích nhất của bạn",
+  "Talk about your favorite food and why you like it",
+  "What is your daily routine on a weekday?",
+  "Describe your family in 5 sentences",
+  "What are you grateful for today?",
+  // B1 level — slightly more complex
   "Describe your hometown in 3 sentences",
   "What do you want to achieve this year?",
-  "Talk about your favorite food",
-  "Describe a person you admire",
-  "What is your daily routine?",
+  "Describe a person you admire and why",
   "Talk about a memorable trip you took",
-  "Describe your dream job",
-  "What are you grateful for today?",
+  "Describe your dream job and the skills it requires",
+  "What technology do you use every day and how does it help you?",
+  // B2 level — opinions and abstract thinking
+  "Do you think working from home is better than going to the office? Why?",
+  "How has social media changed the way people communicate?",
+  "What is one habit you would like to build and why?",
+  "Talk about a challenge you overcame and what you learned",
+  "If you could live in any country, where would you choose and why?",
+  "How important is it to learn a foreign language in today's world?",
 ];
 
 type RecognitionState = "idle" | "listening" | "processing" | "done";
 
- 
-type SpeechRecognitionInstance = any;
+interface SpeechRecognitionInstance {
+  lang: string;
+  continuous: boolean;
+  interimResults: boolean;
+  start: () => void;
+  stop: () => void;
+  onstart?: () => void;
+  onresult?: (event: {
+    results: {
+      [key: number]: { [key: number]: { transcript: string }; isFinal: boolean };
+      length: number;
+    };
+  }) => void;
+  onerror?: () => void;
+  onend?: () => void;
+}
+
+interface SpeechWindow extends Window {
+  SpeechRecognition?: new () => SpeechRecognitionInstance;
+  webkitSpeechRecognition?: new () => SpeechRecognitionInstance;
+}
 
 export function JournalMode() {
   const [topic, setTopic] = useState(JOURNAL_TOPICS[0]);
