@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 
-import { updateSession } from "@/lib/supabase/middleware";
+import { updateSession } from "@/lib/supabase/session";
 import { createRateLimiter, getClientIp } from "@/lib/security/rate-limit";
 
 // Rate limit auth routes (login, callback) to 30 requests per minute
