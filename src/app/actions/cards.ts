@@ -264,9 +264,7 @@ export async function reviewCard(cardId: string, rating: "Again" | "Hard" | "Goo
     revalidatePath("/flashcards");
 
     // 5. Lưu ReviewLog để tối ưu hóa tham số FSRS theo từng người dùng (best-effort)
-    // Không block kết quả nếu insert lỗi (bảng có thể chưa tồn tại)
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (supabase as any)
+    void supabase
       .from("card_review_logs")
       .insert({
         user_id: user.id,
@@ -279,9 +277,7 @@ export async function reviewCard(cardId: string, rating: "Again" | "Hard" | "Goo
         elapsed_days: fsrsUpdates.reviewLog.elapsed_days,
         scheduled_days: fsrsUpdates.reviewLog.scheduled_days,
         review: fsrsUpdates.reviewLog.review,
-      })
-      .then(() => {}) // fire-and-forget
-      .catch(() => {}); // silent fail — table may not exist yet
+      }); // fire-and-forget — non-blocking, silent fail OK
 
     return {
       success: true,

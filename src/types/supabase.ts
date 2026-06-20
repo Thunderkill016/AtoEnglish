@@ -14,6 +14,59 @@ export type Database = {
   }
   public: {
     Tables: {
+      card_review_logs: {
+        Row: {
+          card_id: string
+          created_at: string
+          difficulty: number
+          due: string
+          elapsed_days: number
+          id: string
+          rating: number
+          review: string
+          scheduled_days: number
+          stability: number
+          state: number
+          user_id: string
+        }
+        Insert: {
+          card_id: string
+          created_at?: string
+          difficulty?: number
+          due: string
+          elapsed_days?: number
+          id?: string
+          rating: number
+          review?: string
+          scheduled_days?: number
+          stability?: number
+          state: number
+          user_id: string
+        }
+        Update: {
+          card_id?: string
+          created_at?: string
+          difficulty?: number
+          due?: string
+          elapsed_days?: number
+          id?: string
+          rating?: number
+          review?: string
+          scheduled_days?: number
+          stability?: number
+          state?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "card_review_logs_card_id_fkey"
+            columns: ["card_id"]
+            isOneToOne: false
+            referencedRelation: "cards"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       cards: {
         Row: {
           created_at: string

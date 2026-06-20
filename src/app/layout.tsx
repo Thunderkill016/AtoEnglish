@@ -73,6 +73,14 @@ export const metadata: Metadata = {
     title: "AtoEnglish — Học tiếng Anh để nói được, không chỉ để biết",
     description:
       "Phương pháp khoa học giúp bạn tự tin giao tiếp thực tế từ con số 0. Miễn phí hoàn toàn.",
+    images: [
+      {
+        url: "https://atoenglish.vercel.app/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "AtoEnglish — Học tiếng Anh thông minh hơn",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
@@ -80,6 +88,7 @@ export const metadata: Metadata = {
     description:
       "Phương pháp khoa học giúp bạn tự tin giao tiếp thực tế từ con số 0.",
     creator: "@atoenglish",
+    images: ["https://atoenglish.vercel.app/og-image.png"],
   },
 };
 
