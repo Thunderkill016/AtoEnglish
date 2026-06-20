@@ -449,18 +449,18 @@ export function AIRoleplay() {
   return (
     <div className="space-y-6">
       {/* Scenarios Header Tabs */}
-      <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-none">
+      <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-none -mx-4 px-4 sm:mx-0 sm:px-0">
         {ROLEPLAY_SCENARIOS.map((s) => (
           <button
             key={s.id}
             onClick={() => setSelectedScenarioId(s.id)}
-            className={`shrink-0 snap-start px-5 h-11 rounded-2xl text-xs font-bold transition-all border flex items-center justify-center ${
+            className={`shrink-0 snap-start px-4 h-10 rounded-2xl text-xs font-bold transition-all border flex items-center justify-center max-w-[130px] sm:max-w-none ${
               selectedScenarioId === s.id
                 ? "bg-violet-600 text-white border-violet-600 shadow-md"
                 : "bg-glass border-glass text-muted-foreground hover:text-foreground hover:bg-foreground/[0.03]"
             }`}
           >
-            {s.title} ({s.difficulty})
+            <span className="truncate">{s.title}</span>
           </button>
         ))}
       </div>
@@ -483,7 +483,7 @@ export function AIRoleplay() {
             activeScenario.difficulty === "Easy"
               ? "bg-emerald-500/10 text-emerald-600 border-emerald-500/20"
               : activeScenario.difficulty === "Medium"
-              ? "bg-amber-500/10 text-amber-505 text-amber-600 border-amber-500/20"
+              ? "bg-amber-500/10 text-amber-600 border-amber-500/20"
               : "bg-red-500/10 text-red-600 border-red-500/20"
           }`}>
             {activeScenario.difficulty}

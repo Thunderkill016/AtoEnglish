@@ -501,7 +501,7 @@ export function ShadowingPractice() {
   return (
     <div className="space-y-6">
       {/* List selection */}
-      <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-none">
+      <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-none -mx-4 px-4 sm:mx-0 sm:px-0">
         {SHADOWING_ITEMS.map((item) => (
           <button
             key={item.id}
@@ -509,13 +509,13 @@ export function ShadowingPractice() {
               setSelectedId(item.id);
               setIsPlayingNative(false);
             }}
-            className={`shrink-0 snap-start px-5 h-11 rounded-2xl text-xs font-bold transition-all border flex items-center justify-center ${
+            className={`shrink-0 snap-start px-4 h-10 rounded-2xl text-xs font-bold transition-all border flex items-center justify-center max-w-[140px] sm:max-w-none truncate ${
               selectedId === item.id
                 ? "bg-primary text-primary-foreground border-primary shadow-md"
                 : "bg-glass border-glass text-muted-foreground hover:text-foreground hover:bg-foreground/[0.03]"
             }`}
           >
-            {item.title}
+            <span className="truncate">{item.title}</span>
           </button>
         ))}
       </div>
