@@ -56,21 +56,14 @@ const nextConfig = {
 };
 
 export default withSentryConfig(nextConfig, {
-  // Sentry organization & project (set in env for CI)
   org: process.env.SENTRY_ORG,
   project: process.env.SENTRY_PROJECT,
-
-  // Upload source maps to Sentry on production builds
-  silent: !process.env.CI, // suppress output locally, show in CI
+  silent: !process.env.CI,
   widenClientFileUpload: true,
-
-  // Automatically instrument Next.js data fetching methods
-  autoInstrumentServerFunctions: true,
-
-  // Hide source maps from client bundles (security)
   hideSourceMaps: true,
-
-  // Disable Sentry completely if DSN not set (local dev without Sentry)
   disableServerWebpackPlugin: !process.env.NEXT_PUBLIC_SENTRY_DSN,
   disableClientWebpackPlugin: !process.env.NEXT_PUBLIC_SENTRY_DSN,
+  webpack: {
+    autoInstrumentServerFunctions: true,
+  },
 });

@@ -3,8 +3,9 @@ import { cookies } from "next/headers";
 
 import type { Database } from "@/types/database";
 
-export function createClient() {
-  const cookieStore = cookies();
+// Next.js 15+: cookies() is now async — must be awaited
+export async function createClient() {
+  const cookieStore = await cookies();
 
   return createServerClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,

@@ -26,7 +26,7 @@ interface SaveCardParams {
 export async function saveCardToSRS(params: SaveCardParams) {
   try {
     // Rate Limiting
-    const reqHeaders = headers();
+    const reqHeaders = await headers();
     const ip = reqHeaders.get("x-forwarded-for")?.split(",")[0].trim() || "127.0.0.1";
     const rateLimitCheck = await saveCardLimiter.check(ip);
     if (!rateLimitCheck.success) {
@@ -46,7 +46,7 @@ export async function saveCardToSRS(params: SaveCardParams) {
     }
     const cleanParams = validated.data;
 
-    const supabase = createClient();
+    const supabase = await createClient();
     
     // 1. Kiểm tra trạng thái đăng nhập của người dùng
     const { data: { user }, error: authError } = await supabase.auth.getUser();
@@ -136,7 +136,7 @@ export async function saveCardToSRS(params: SaveCardParams) {
  */
 export async function getDueCards() {
   try {
-    const supabase = createClient();
+    const supabase = await createClient();
     
     // 1. Kiểm tra trạng thái đăng nhập
     const { data: { user }, error: authError } = await supabase.auth.getUser();
@@ -184,7 +184,7 @@ export async function getDueCards() {
 export async function reviewCard(cardId: string, rating: "Again" | "Hard" | "Good" | "Easy") {
   try {
     // Rate Limiting
-    const reqHeaders = headers();
+    const reqHeaders = await headers();
     const ip = reqHeaders.get("x-forwarded-for")?.split(",")[0].trim() || "127.0.0.1";
     const rateLimitCheck = await reviewCardLimiter.check(ip);
     if (!rateLimitCheck.success) {
@@ -204,7 +204,7 @@ export async function reviewCard(cardId: string, rating: "Again" | "Hard" | "Goo
     }
     const cleanParams = validated.data;
 
-    const supabase = createClient();
+    const supabase = await createClient();
     
     // 1. Kiểm tra trạng thái đăng nhập
     const { data: { user }, error: authError } = await supabase.auth.getUser();
@@ -306,7 +306,7 @@ export async function reviewCard(cardId: string, rating: "Again" | "Hard" | "Goo
  */
 export async function getAllCards(topic?: string) {
   try {
-    const supabase = createClient();
+    const supabase = await createClient();
     const { data: { user }, error: authError } = await supabase.auth.getUser();
     if (authError || !user) {
       return { success: false, error: "Bạn cần đăng nhập.", cards: [] };
@@ -335,7 +335,7 @@ export async function getAllCards(topic?: string) {
  */
 export async function getCardTopics() {
   try {
-    const supabase = createClient();
+    const supabase = await createClient();
     const { data: { user }, error: authError } = await supabase.auth.getUser();
     if (authError || !user) return { success: false, topics: [] };
 

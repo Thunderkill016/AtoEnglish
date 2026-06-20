@@ -16,7 +16,6 @@ import ScienceSection from "@/components/landing/ScienceSection";
 const ProductPreview = dynamic(
   () => import("@/components/landing/ProductPreview"),
   {
-    ssr: false,
     loading: () => (
       <div className="w-full max-w-4xl mx-auto mt-12 sm:mt-16 h-[400px] rounded-[2rem] border border-zinc-200/60 dark:border-zinc-800/60 bg-zinc-50/50 dark:bg-zinc-900/20 animate-pulse" />
     ),
@@ -24,13 +23,11 @@ const ProductPreview = dynamic(
 );
 
 const FaqSection = dynamic(
-  () => import("@/components/landing/FaqSection"),
-  { ssr: false }
+  () => import("@/components/landing/FaqSection")
 );
 
 const FinalCtaSection = dynamic(
-  () => import("@/components/landing/FinalCtaSection"),
-  { ssr: false }
+  () => import("@/components/landing/FinalCtaSection")
 );
 
 export const metadata: Metadata = {

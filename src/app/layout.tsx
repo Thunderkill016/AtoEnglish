@@ -1,11 +1,7 @@
 import type { Metadata } from "next";
 import { Plus_Jakarta_Sans } from "next/font/google";
-import dynamic from "next/dynamic";
+import { Toaster } from "sonner";
 import { SpeedInsights } from "@vercel/speed-insights/next";
-
-const Toaster = dynamic(() => import("sonner").then((mod) => mod.Toaster), {
-  ssr: false,
-});
 
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { cn } from "@/lib/utils";
