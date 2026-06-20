@@ -235,7 +235,7 @@ export default function FlashcardsPage() {
           <CheckCircle className="size-8" />
         </div>
         <div className="space-y-2 max-w-md">
-          <h2 className="text-2xl font-black text-foreground">Hôm nay bạn đã ôn xong!</h2>
+          <h2 className="text-xl sm:text-2xl font-black text-foreground">Hôm nay bạn đã ôn xong!</h2>
           <p className="text-sm text-muted-foreground leading-relaxed font-normal">
             Tuyệt vời! Hiện tại bạn không có từ vựng nào cần ôn tập hôm nay. Hãy học thêm bài mới để lưu thêm các từ vựng vào SRS.
           </p>
@@ -387,7 +387,7 @@ export default function FlashcardsPage() {
                   className="w-full h-full preserve-3d relative"
                 >
                   {/* CARD FRONT */}
-                  <div className="absolute w-full h-full backface-hidden rounded-3xl bg-glass border border-glass p-8 flex flex-col justify-between shadow-[0_15px_40px_rgba(0,0,0,0.025)]">
+                  <div className="absolute w-full h-full backface-hidden rounded-3xl bg-glass border border-glass p-5 sm:p-8 flex flex-col justify-between shadow-[0_15px_40px_rgba(0,0,0,0.025)]">
                     <div className="flex justify-between items-start">
                       <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl text-[10px] font-bold uppercase tracking-wider bg-foreground/[0.04] text-muted-foreground border border-foreground/[0.05]">
                         <Folder className="size-3.5" />
@@ -436,7 +436,7 @@ export default function FlashcardsPage() {
 
                     <div className="space-y-5">
                       <div className="text-center">
-                        <p className="text-2xl font-black text-foreground leading-tight">
+                        <p className="text-xl sm:text-2xl font-black text-foreground leading-tight">
                           {currentCard.meaning_vn}
                         </p>
                       </div>
@@ -545,7 +545,7 @@ export default function FlashcardsPage() {
         <motion.div 
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="rounded-3xl border border-glass bg-glass p-8 text-center max-w-md mx-auto space-y-6 shadow-[0_15px_40px_rgba(0,0,0,0.015)]"
+          className="rounded-3xl border border-glass bg-glass p-5 sm:p-8 text-center max-w-md mx-auto space-y-6 shadow-[0_15px_40px_rgba(0,0,0,0.015)]"
         >
           <div className="inline-flex size-16 items-center justify-center rounded-2xl bg-primary/10 text-primary">
             <Award className="size-8" />
@@ -562,15 +562,15 @@ export default function FlashcardsPage() {
           {sessionStats && (
             <div className="grid grid-cols-3 gap-3 w-full">
               <div className="flex flex-col items-center p-3 rounded-2xl bg-emerald-500/5 border border-emerald-500/15">
-                <span className="text-2xl font-black text-emerald-500">{sessionStats.cards_reviewed_today}</span>
+                <span className="text-xl sm:text-2xl font-black text-emerald-500">{sessionStats.cards_reviewed_today}</span>
                 <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mt-0.5">Hôm nay</span>
               </div>
               <div className="flex flex-col items-center p-3 rounded-2xl bg-orange-500/5 border border-orange-500/15">
-                <span className="text-2xl font-black text-orange-500">🔥 {sessionStats.streak_days}</span>
+                <span className="text-xl sm:text-2xl font-black text-orange-500">🔥 {sessionStats.streak_days}</span>
                 <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mt-0.5">Streak</span>
               </div>
               <div className="flex flex-col items-center p-3 rounded-2xl bg-blue-500/5 border border-blue-500/15">
-                <span className="text-2xl font-black text-blue-500">{sessionStats.total_cards_reviewed}</span>
+                <span className="text-xl sm:text-2xl font-black text-blue-500">{sessionStats.total_cards_reviewed}</span>
                 <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mt-0.5">Tổng cộng</span>
               </div>
             </div>

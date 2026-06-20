@@ -25,7 +25,7 @@ export default function ScienceSection() {
           {/* Pillar 1 */}
           <ScrollReveal delayMs={delayMs[0]} className="flex">
             <div
-              className="group relative overflow-hidden z-0 flex flex-col items-start p-8 rounded-[2rem] border border-zinc-200/50 dark:border-zinc-800/40 bg-white/70 dark:bg-zinc-900/25 backdrop-blur-sm hover:shadow-xl hover:shadow-zinc-900/[0.03] dark:hover:shadow-black/25 hover:-translate-y-1 transition-all duration-300 space-y-6 w-full"
+              className="group relative overflow-hidden z-0 flex flex-col items-start p-5 sm:p-8 rounded-[2rem] border border-zinc-200/50 dark:border-zinc-800/40 bg-white/70 dark:bg-zinc-900/25 backdrop-blur-sm hover:shadow-xl hover:shadow-zinc-900/[0.03] dark:hover:shadow-black/25 hover:-translate-y-1 transition-all duration-300 space-y-4 sm:space-y-6 w-full"
             >
               {/* CSS-only Glowing Border Gradient */}
               <div className="absolute -inset-px rounded-[2rem] bg-gradient-to-r from-emerald-500/25 to-teal-500/25 dark:from-emerald-500/35 dark:to-teal-500/35 opacity-0 group-hover:opacity-100 blur-[3px] transition duration-500 -z-10" />
@@ -48,7 +48,7 @@ export default function ScienceSection() {
           {/* Pillar 2 */}
           <ScrollReveal delayMs={delayMs[1]} className="flex">
             <div
-              className="group relative overflow-hidden z-0 flex flex-col items-start p-8 rounded-[2rem] border border-zinc-200/50 dark:border-zinc-800/40 bg-white/70 dark:bg-zinc-900/25 backdrop-blur-sm hover:shadow-xl hover:shadow-zinc-900/[0.03] dark:hover:shadow-black/25 hover:-translate-y-1 transition-all duration-300 space-y-6 w-full"
+              className="group relative overflow-hidden z-0 flex flex-col items-start p-5 sm:p-8 rounded-[2rem] border border-zinc-200/50 dark:border-zinc-800/40 bg-white/70 dark:bg-zinc-900/25 backdrop-blur-sm hover:shadow-xl hover:shadow-zinc-900/[0.03] dark:hover:shadow-black/25 hover:-translate-y-1 transition-all duration-300 space-y-4 sm:space-y-6 w-full"
             >
               {/* CSS-only Glowing Border Gradient */}
               <div className="absolute -inset-px rounded-[2rem] bg-gradient-to-r from-emerald-500/25 to-teal-500/25 dark:from-emerald-500/35 dark:to-teal-500/35 opacity-0 group-hover:opacity-100 blur-[3px] transition duration-500 -z-10" />
@@ -71,7 +71,7 @@ export default function ScienceSection() {
           {/* Pillar 3 */}
           <ScrollReveal delayMs={delayMs[2]} className="flex">
             <div
-              className="group relative overflow-hidden z-0 flex flex-col items-start p-8 rounded-[2rem] border border-zinc-200/50 dark:border-zinc-800/40 bg-white/70 dark:bg-zinc-900/25 backdrop-blur-sm hover:shadow-xl hover:shadow-zinc-900/[0.03] dark:hover:shadow-black/25 hover:-translate-y-1 transition-all duration-300 space-y-6 w-full"
+              className="group relative overflow-hidden z-0 flex flex-col items-start p-5 sm:p-8 rounded-[2rem] border border-zinc-200/50 dark:border-zinc-800/40 bg-white/70 dark:bg-zinc-900/25 backdrop-blur-sm hover:shadow-xl hover:shadow-zinc-900/[0.03] dark:hover:shadow-black/25 hover:-translate-y-1 transition-all duration-300 space-y-4 sm:space-y-6 w-full"
             >
               {/* CSS-only Glowing Border Gradient */}
               <div className="absolute -inset-px rounded-[2rem] bg-gradient-to-r from-emerald-500/25 to-teal-500/25 dark:from-emerald-500/35 dark:to-teal-500/35 opacity-0 group-hover:opacity-100 blur-[3px] transition duration-500 -z-10" />
