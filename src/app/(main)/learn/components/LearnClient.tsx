@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { Lock, Play, CheckCircle, Sparkles, BookOpen, Star, Clock, RotateCcw } from "lucide-react";
+import { Lock, Play, CheckCircle, Sparkles, BookOpen, Star, Clock, RotateCcw, BookOpenCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface UnitStatus {
@@ -184,15 +184,25 @@ export default function LearnClient({
                   {/* Action Button */}
                   <div className={`pt-2 flex ${isEven ? "sm:justify-end" : ""}`}>
                     {isCompleted ? (
-                      <Link href={unit.route} className="w-full sm:w-auto">
-                        <Button
-                          variant="secondary"
-                          size="sm"
-                          className="w-full rounded-xl border border-zinc-200 dark:border-zinc-800 text-xs font-bold gap-1"
-                        >
-                          <RotateCcw className="size-3" /> Học lại
-                        </Button>
-                      </Link>
+                      <div className={`flex flex-wrap gap-2 ${isEven ? "sm:justify-end" : ""}`}>
+                        <Link href={unit.route}>
+                          <Button
+                            variant="secondary"
+                            size="sm"
+                            className="rounded-xl border border-zinc-200 dark:border-zinc-800 text-xs font-bold gap-1"
+                          >
+                            <RotateCcw className="size-3" /> Học lại
+                          </Button>
+                        </Link>
+                        <Link href={`/quiz?unit=${unit.id}`}>
+                          <Button
+                            size="sm"
+                            className="rounded-xl bg-violet-600 hover:bg-violet-500 text-white text-xs font-bold gap-1"
+                          >
+                            <BookOpenCheck className="size-3" /> Quiz
+                          </Button>
+                        </Link>
+                      </div>
                     ) : isActive ? (
                       <Link href={unit.route} className="w-full sm:w-auto">
                         <Button

@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useCallback } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useCallback, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   CheckCircle2,
@@ -61,6 +61,7 @@ function buildQuestions(unitId: string, count = 10): Question[] {
 // ── Quiz component ────────────────────────────────────────────────────────────
 export default function VocabQuizClient() {
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   const [selectedUnit, setSelectedUnit] = useState<string | null>(null);
   const [questions, setQuestions] = useState<Question[]>([]);
@@ -82,6 +83,16 @@ export default function VocabQuizClient() {
     setAnswerState("unanswered");
     setFinished(false);
     setWrongAnswers([]);
+  }, []);
+
+  // Pre-select unit from ?unit= URL param (e.g. from learn page quiz shortcut)
+  useEffect(() => {
+    const unitParam = searchParams.get("unit");
+    if (unitParam && !selectedUnit) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      startQuiz(unitParam);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleAnswer = (option: string) => {
