@@ -367,5 +367,15 @@ export const UNIT_VOCABULARY: Record<string, VocabularyItem[]> = {
       topic: "Technology",
       level: "B1"
     }
-  ]
+  ],
+  "unit-5": [
+    { word: "buy", phonetic: "/baɪ/", meaning_vn: "mua", example_en: "I want to buy some fruit.", topic: "Shopping", level: "A2" },
+    { word: "sell", phonetic: "/sɛl/", meaning_vn: "bán", example_en: "They sell vegetables here.", topic: "Shopping", level: "A2" },
+    { word: "price", phonetic: "/praɪs/", meaning_vn: "giá cả", example_en: "What is the price of this shirt?", topic: "Shopping", level: "A2" },
+    { word: "cheap", phonetic: "/tʃiːp/", meaning_vn: "rẻ", example_en: "This market is cheap and fresh.", topic: "Shopping", level: "A2" },
+    { word: "expensive", phonetic: "/ɪkˈspɛnsɪv/", meaning_vn: "đắt tiền", example_en: "That bag is too expensive for me.", topic: "Shopping", level: "A2" },
+    { word: "discount", phonetic: "/ˈdɪskaʊnt/", meaning_vn: "giảm giá", example_en: "Is there a discount for students?", topic: "Shopping", level: "A2" },
+    { word: "market", phonetic: "/ˈmɑːrkɪt/", meaning_vn: "chợ", example_en: "The night market opens at 6 PM.", topic: "Shopping", level: "A2" },
+    { word: "money", phonetic: "/ˈmʌni/", meaning_vn: "tiền", example_en: "I don't have enough money today.", topic: "Shopping", level: "A2" },
+  ],
 };

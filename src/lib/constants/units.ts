@@ -50,4 +50,14 @@ export const UNITS: UnitMetadata[] = [
     estimatedTime: 50,
     tags: ["Từ vựng +15", "Công nghệ", "Modal Verbs"],
   },
+  {
+    id: "unit-5",
+    title: "Unit 5: Shopping & Prices",
+    description: "Học từ vựng mua sắm, cách hỏi giá và thương lượng. Sử dụng Comparatives để so sánh sản phẩm và giá cả trong tình huống thực tế.",
+    level: "A2",
+    route: "/learn/unit-5",
+    xp: 90,
+    estimatedTime: 45,
+    tags: ["Từ vựng +8", "Mua sắm", "Comparatives"],
+  },
 ];
