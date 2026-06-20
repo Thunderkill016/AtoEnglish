@@ -15,6 +15,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { UNIT_VOCABULARY, type VocabularyItem } from "@/lib/constants/vocabulary";
 import { UNITS } from "@/lib/constants/units";
+import { saveQuizResult } from "@/app/actions/quiz";
+import { toast } from "sonner";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 interface Question {
@@ -71,6 +73,7 @@ export default function VocabQuizClient() {
   const [answerState, setAnswerState] = useState<AnswerState>("unanswered");
   const [finished, setFinished] = useState(false);
   const [wrongAnswers, setWrongAnswers] = useState<string[]>([]);
+  const [xpEarned, setXpEarned] = useState(0);
 
   const startQuiz = useCallback((unitId: string) => {
     const qs = buildQuestions(unitId);
@@ -111,6 +114,17 @@ export default function VocabQuizClient() {
   const nextQuestion = () => {
     if (current + 1 >= questions.length) {
       setFinished(true);
+      // Award XP on quiz completion (fire-and-forget, non-blocking)
+      if (selectedUnit) {
+        saveQuizResult({ unitId: selectedUnit, score, total: questions.length })
+          .then((res) => {
+            if (res.success && res.xpEarned) {
+              setXpEarned(res.xpEarned);
+              toast.success(`+${res.xpEarned} XP — quiz hoàn thành!`);
+            }
+          })
+          .catch(() => { /* silent fail — XP is best-effort */ });
+      }
     } else {
       setCurrent((c) => c + 1);
       setSelected(null);
@@ -198,6 +212,11 @@ export default function VocabQuizClient() {
             {score}/{questions.length} đúng
           </h2>
           <p className="text-sm text-zinc-500 dark:text-zinc-400">{msg}</p>
+          {xpEarned > 0 && (
+            <p className="text-xs font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-3 py-1.5 rounded-xl border border-emerald-500/20 inline-block mt-1">
+              ✨ Nhận được +{xpEarned} XP
+            </p>
+          )}
         </div>
 
         {/* Score bar */}
