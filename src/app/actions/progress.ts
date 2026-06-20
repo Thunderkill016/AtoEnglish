@@ -167,60 +167,72 @@ export async function completeUnit(unitId: string) {
       }
     }
 
-    // 5. Tự động thêm tất cả từ vựng trong unit này vào bảng cards (nếu chưa có)
+    // 5. Bulk upsert tất cả từ vựng vào bảng cards (1 query thay vì N+1)
     const vocabList = UNIT_VOCABULARY[cleanParams.unitId] || [];
     let addedCount = 0;
 
     if (vocabList.length > 0) {
-      for (const vocab of vocabList) {
-        const formattedWord = vocab.word.toLowerCase().trim();
-        
-        const { data: existingCard, error: selectCardError } = await supabase
-          .from("cards")
-          .select("id")
-          .eq("user_id", user.id)
-          .eq("word", formattedWord)
-          .maybeSingle();
+      const now = new Date().toISOString();
+      const cardsToInsert = vocabList.map((vocab) => ({
+        user_id: user.id,
+        word: vocab.word.toLowerCase().trim(),
+        phonetic: vocab.phonetic,
+        meaning_vn: vocab.meaning_vn,
+        example_en: vocab.example_en,
+        topic: vocab.topic,
+        level: vocab.level,
+        interval: 0,
+        repetitions: 0,
+        due_date: now,
+        state: 0,
+        difficulty: 0.0,
+        stability: 0.0,
+        last_review: null,
+        next_review: now,
+      }));
 
-        if (!selectCardError && !existingCard) {
-          const { error: insertCardError } = await supabase
-            .from("cards")
-            .insert({
-              user_id: user.id,
-              word: formattedWord,
-              phonetic: vocab.phonetic,
-              meaning_vn: vocab.meaning_vn,
-              example_en: vocab.example_en,
-              topic: vocab.topic,
-              level: vocab.level,
-              interval: 0,
-              repetitions: 0,
-              due_date: new Date().toISOString(),
-              state: 0,
-              difficulty: 0.0,
-              stability: 0.0,
-              last_review: null,
-              next_review: new Date().toISOString(),
-            });
+      const { data: upserted, error: upsertError } = await supabase
+        .from("cards")
+        .upsert(cardsToInsert, { onConflict: "user_id,word", ignoreDuplicates: true })
+        .select("id");
 
-          if (!insertCardError) {
-            addedCount++;
-          }
-        }
-      }
+      if (!upsertError) addedCount = upserted?.length ?? 0;
     }
 
-    // 6. Revalidate cache
+    // 6. Auto level-up: compute new CEFR level based on total completed units
+    const { count: totalCompleted } = await supabase
+      .from("completed_lessons")
+      .select("*", { count: "exact", head: true })
+      .eq("user_id", user.id);
+
+    const completedCount = totalCompleted ?? 0;
+    // Level thresholds: A1 (0-2 units), A2 (3 units), B1 (4+ units)
+    type CEFRLevelLocal = "A1" | "A2" | "B1" | "B2" | "C1";
+    let newLevel: CEFRLevelLocal = "A1";
+    if (completedCount >= 4) newLevel = "B1";
+    else if (completedCount >= 3) newLevel = "A2";
+
+    const currentLevel = userProgress?.current_level ?? "A1";
+    if (newLevel && newLevel !== currentLevel) {
+      await supabase
+        .from("user_progress")
+        .update({ current_level: newLevel })
+        .eq("user_id", user.id);
+    }
+
+    // 7. Revalidate cache
     revalidatePath("/dashboard");
     revalidatePath("/learn");
     revalidatePath("/flashcards");
+    revalidatePath("/progress");
 
     return {
       success: true,
       message: `Hoàn thành bài học thành công! Bạn nhận được 80 XP.`,
       xpEarned: 80,
       newStreak: nextStreak,
-      vocabAddedCount: addedCount
+      vocabAddedCount: addedCount,
+      leveledUp: newLevel !== currentLevel ? newLevel : null,
     };
 
   } catch (error) {
