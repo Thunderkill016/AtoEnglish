@@ -7,6 +7,7 @@ interface AchievementStats {
   streak: number;
   completedUnits: number;
   totalXp: number;
+  totalSpeakingSessions: number;
 }
 
 interface ProgressClientProps {
@@ -37,7 +38,7 @@ const tierLabel: Record<string, string> = {
 };
 
 export default function ProgressClient({ stats }: ProgressClientProps) {
-  const { totalCards, streak, completedUnits, totalXp } = stats;
+  const { totalCards, streak, completedUnits, totalXp, totalSpeakingSessions } = stats;
 
   const achievements = [
     // ── Streak milestones ──────────────────────────────────────────────────
@@ -179,16 +180,54 @@ export default function ProgressClient({ stats }: ProgressClientProps) {
       current: Math.min(totalCards, 200),
       target: 200,
     },
+    // ── Speaking milestones ────────────────────────────────────────────────
+    {
+      title: "Người Kể Chuyện",
+      desc: "Luyện nói buổi đầu tiên",
+      icon: Mic,
+      tier: "bronze",
+      unlocked: totalSpeakingSessions >= 1,
+      current: Math.min(totalSpeakingSessions, 1),
+      target: 1,
+    },
+    {
+      title: "Giọng Nói Tự Tin",
+      desc: "Hoàn thành 5 buổi luyện nói",
+      icon: Mic,
+      tier: "silver",
+      unlocked: totalSpeakingSessions >= 5,
+      current: Math.min(totalSpeakingSessions, 5),
+      target: 5,
+    },
+    {
+      title: "Diễn Giả Chuyên Nghiệp",
+      desc: "Hoàn thành 15 buổi luyện nói",
+      icon: Mic,
+      tier: "gold",
+      unlocked: totalSpeakingSessions >= 15,
+      current: Math.min(totalSpeakingSessions, 15),
+      target: 15,
+    },
+    {
+      title: "Bậu Như Tiếng Mẹ Đẻ",
+      desc: "Hoàn thành 30 buổi luyện nói",
+      icon: Mic,
+      tier: "diamond",
+      unlocked: totalSpeakingSessions >= 30,
+      current: Math.min(totalSpeakingSessions, 30),
+      target: 30,
+    },
   ];
 
   const unlockedCount = achievements.filter(a => a.unlocked).length;
 
   // Group by tier for summary
   const groups = [
-    { key: "streak",  label: "🔥 Streak",     items: achievements.slice(0, 4) },
-    { key: "xp",      label: "⚡ XP",          items: achievements.slice(4, 8) },
-    { key: "units",   label: "📖 Units",       items: achievements.slice(8, 11) },
-    { key: "vocab",   label: "✨ Từ vựng",     items: achievements.slice(11) },
+    { key: "streak",   label: "🔥 Streak",     items: achievements.slice(0, 4) },
+    { key: "xp",       label: "⚡ XP",          items: achievements.slice(4, 8) },
+    { key: "units",    label: "📖 Units",       items: achievements.slice(8, 11) },
+    { key: "vocab",    label: "✨ Từ vựng",     items: achievements.slice(11, 15) },
+    { key: "speaking", label: "🎤 Luyện nói",  items: achievements.slice(15) },
   ];
 
   return (

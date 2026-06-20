@@ -215,6 +215,7 @@ export default async function ProgressPage() {
           streak: stats.streak,
           completedUnits: stats.completedUnits,
           totalXp: stats.totalXp,
+          totalSpeakingSessions: stats.totalSpeakingSessions ?? 0,
         }} />
       </Suspense>
     </div>
