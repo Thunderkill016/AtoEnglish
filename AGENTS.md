@@ -4,6 +4,33 @@ This file provides context and instructions for AI coding agents (Antigravity, C
 
 ---
 
+## 🧠 Memory System (Antigravity Only)
+
+This project has a **persistent vector memory system** backed by Supabase pgvector + gte-small embeddings.
+
+**Before starting any non-trivial task**, search memory for relevant context:
+```
+search_memory("<topic of task>")  // always do this first
+```
+
+**After completing significant work**, store key decisions:
+```
+store_memory(content="...", category="bug|decision|architecture|feature|rule", importance=8)
+```
+
+**Available MCP tools** (`atoenglish-memory` server):
+| Tool | Purpose |
+|------|---------|
+| `search_memory(query, category?)` | Semantic search — find context before starting work |
+| `store_memory(content, category, importance?, tags?)` | Save decisions, bug fixes, architecture notes |
+| `list_memories(category?, limit?)` | Browse all memories, find IDs for update/delete |
+| `delete_memory(id)` | Remove stale or wrong memories |
+| `update_memory(id, content, category?)` | Fix existing memory content (auto re-embeds) |
+
+Edge Functions: `store-memory`, `search-memories`, `manage-memory`, `list-memories` on Supabase project `vhpfskkredizeazlyzsh`.
+
+---
+
 ## 📌 Project Overview
 
 - **Stack**: Next.js 16 (App Router, Turbopack), TypeScript 6, TailwindCSS v4, Supabase (Auth + PostgreSQL), Framer Motion, shadcn/ui
@@ -151,7 +178,7 @@ Never commit `.env.local`.
 3. Returning users hit `/login` directly or via `?mode=login` — skips survey to Step 5.
 4. Google OAuth → Supabase → `/auth/callback` → saves CEFR level → `/dashboard`
 5. Email/password sign-up → email confirmation → `/dashboard`
-6. Middleware (`src/middleware.ts`) protects all `/(main)/*` routes — redirects unauthenticated users to `/login`.
+6. Middleware (`src/proxy.ts`) protects all `/(main)/*` routes — redirects unauthenticated users to `/login` (Next.js 16 proxy convention).
 
 ---
 
@@ -179,7 +206,7 @@ npm run test:watch    # watch mode
 npm run test:coverage # coverage report
 ```
 - Test files: `src/__tests__/*.test.ts`
-- Current coverage: 46 tests across speech scoring, Zod validation, rate limiting, FSRS scheduling
+- Current coverage: **64 tests** across auth-check, speech scoring, Zod validation, rate limiting, FSRS scheduling
 
 ### E2E Tests (Playwright)
 ```bash
@@ -223,7 +250,7 @@ npm run e2e:ui   # open Playwright UI mode
 ## ✅ Before Committing
 
 1. `npm run build` passes with **zero errors**.
-2. `npm run test` — all 46 unit tests pass.
+2. `npm run test` — all 64 unit tests pass.
 3. No `console.log` left in production code.
 4. No hardcoded user IDs, API keys, or secrets.
 5. All new Server Components use `await createClient()` (async).
