@@ -127,6 +127,7 @@ export function ShadowingPractice() {
       const params = new URLSearchParams(window.location.search);
       const idParam = params.get("id");
       if (idParam && SHADOWING_ITEMS.some((item) => item.id === idParam)) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setSelectedId(idParam);
       }
     }
@@ -178,9 +179,13 @@ export function ShadowingPractice() {
     if (recordedUrl) {
       URL.revokeObjectURL(recordedUrl);
     }
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setHasRecorded(false);
+     
     setRecordedUrl(null);
+     
     setRecognizedText("");
+     
     setAccuracyScore(null);
     setIsPlayingRecorded(false);
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -225,6 +230,7 @@ export function ShadowingPractice() {
 
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      // eslint-disable-next-line react-hooks/purity
       startTimeRef.current = Date.now();
       const mediaRecorder = new MediaRecorder(stream);
       mediaRecorderRef.current = mediaRecorder;
@@ -396,7 +402,7 @@ export function ShadowingPractice() {
       const parts = text.split(regex);
 
       return (
-        <p className="text-lg sm:text-xl font-medium leading-relaxed text-foreground tracking-wide font-sans">
+        <p className="text-sm sm:text-lg font-medium leading-relaxed text-foreground tracking-wide font-sans break-words overflow-wrap-anywhere">
           {parts.map((part, index) => {
             const isDifficult = words.some(w => w.toLowerCase() === part.toLowerCase());
             if (isDifficult) {
@@ -426,7 +432,7 @@ export function ShadowingPractice() {
     const origWordsRaw = text.split(/(\s+)/);
 
     return (
-      <p className="text-lg sm:text-xl font-medium leading-relaxed text-foreground tracking-wide font-sans">
+      <p className="text-sm sm:text-lg font-medium leading-relaxed text-foreground tracking-wide font-sans break-words overflow-wrap-anywhere">
         {origWordsRaw.map((part, index) => {
           // Nếu chỉ là khoảng trắng, render thẳng
           if (part.trim() === "") return <span key={index}>{part}</span>;
@@ -481,7 +487,7 @@ export function ShadowingPractice() {
       </div>
 
       {/* Main Workspace Card */}
-      <div className="rounded-3xl border border-glass bg-glass p-6 sm:p-8 space-y-6 shadow-sm relative overflow-hidden">
+      <div className="rounded-3xl border border-glass bg-glass p-4 sm:p-8 space-y-5 shadow-sm relative overflow-hidden">
         {/* Topic & Level Badges */}
         <div className="flex items-center justify-between">
           <span className="text-xs text-muted-foreground font-bold uppercase tracking-wider bg-foreground/[0.03] px-3 py-1 rounded-lg">
@@ -493,8 +499,8 @@ export function ShadowingPractice() {
         </div>
 
         {/* Transcript Box */}
-        <div className="p-6 rounded-2xl bg-foreground/[0.01] border border-foreground/[0.03] space-y-4">
-          <div className="flex items-center justify-between border-b border-foreground/[0.04] pb-3">
+        <div className="p-3 sm:p-6 rounded-2xl bg-foreground/[0.01] border border-foreground/[0.03] space-y-3 sm:space-y-4">
+          <div className="flex items-center justify-between gap-2 border-b border-foreground/[0.04] pb-3">
             <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest flex items-center gap-1.5">
               <Volume2 className="size-4 text-primary" />
               Audio & Transcript gốc
@@ -534,7 +540,7 @@ export function ShadowingPractice() {
         </div>
 
         {/* Playback Settings & Controller */}
-        <div className="flex flex-wrap items-center justify-between gap-4 pt-2">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pt-2">
           {/* Speed settings */}
           <div className="flex items-center gap-3">
             <span className="text-xs text-muted-foreground font-bold uppercase tracking-wider">Tốc độ phát:</span>
@@ -720,9 +726,11 @@ export function ShadowingPractice() {
                     key={bar}
                     className="w-1 bg-red-500 rounded-full"
                     animate={{
+                      // eslint-disable-next-line react-hooks/purity
                       height: [6, Math.random() * 20 + 6, 6],
                     }}
                     transition={{
+                      // eslint-disable-next-line react-hooks/purity
                       duration: 0.4 + Math.random() * 0.3,
                       repeat: Infinity,
                       ease: "easeInOut",

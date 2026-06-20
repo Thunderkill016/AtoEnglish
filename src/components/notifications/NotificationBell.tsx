@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Bell, BellOff, BellRing, Loader2 } from "lucide-react";
+import { Bell, BellOff, BellRing, Loader2, Clock, X } from "lucide-react";
 import { toast } from "sonner";
 import {
   subscribeToPush,
@@ -11,15 +11,23 @@ import {
 } from "@/lib/push-notifications";
 import { savePushSubscription, removePushSubscription, hasPushSubscription } from "@/app/actions/push";
 
-// VAPID public key — set in .env.local as NEXT_PUBLIC_VAPID_PUBLIC_KEY
 const VAPID_PUBLIC_KEY = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY ?? "";
+const STORAGE_KEY = "reminder-hour";
+const HOUR_OPTIONS = [7, 8, 12, 17, 18, 19, 20, 21, 22];
 
 export default function NotificationBell() {
   const [status, setStatus] = useState<"loading" | "unsupported" | "denied" | "granted" | "default">("loading");
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [isPending, setIsPending] = useState(false);
+  const [showTimePicker, setShowTimePicker] = useState(false);
+  const [selectedHour, setSelectedHour] = useState<number>(20);
 
   useEffect(() => {
+    // Load saved hour preference
+    const saved = localStorage.getItem(STORAGE_KEY);
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    if (saved) setSelectedHour(Number(saved));
+
     const init = async () => {
       const perm = getNotificationPermission();
       if (perm === "unsupported") { setStatus("unsupported"); return; }
@@ -34,7 +42,7 @@ export default function NotificationBell() {
 
   const handleEnable = async () => {
     if (!VAPID_PUBLIC_KEY) {
-      toast.error("VAPID key chưa được cấu hình. Thêm NEXT_PUBLIC_VAPID_PUBLIC_KEY vào .env.local");
+      toast.error("VAPID key chưa được cấu hình.");
       return;
     }
     setIsPending(true);
@@ -56,7 +64,9 @@ export default function NotificationBell() {
       if (res.success) {
         setIsSubscribed(true);
         setStatus("granted");
-        toast.success("🔔 Đã bật nhắc nhở! Mỗi tối 20:00 bạn sẽ được nhắc học.");
+        localStorage.setItem(STORAGE_KEY, String(selectedHour));
+        toast.success(`🔔 Đã bật nhắc nhở lúc ${selectedHour}:00 mỗi ngày!`);
+        setShowTimePicker(false);
       } else {
         toast.error("Không lưu được subscription: " + res.error);
       }
@@ -84,9 +94,17 @@ export default function NotificationBell() {
   if (status === "loading" || status === "unsupported") return null;
 
   return (
-    <div className="relative group">
+    <div className="relative">
+      {/* Main button */}
       <button
-        onClick={isSubscribed ? handleDisable : handleEnable}
+        onClick={() => {
+          if (status === "denied") return;
+          if (isSubscribed) {
+            handleDisable();
+          } else {
+            setShowTimePicker((v) => !v);
+          }
+        }}
         disabled={isPending || status === "denied"}
         className={`inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-xl border transition-all active:scale-[0.97] ${
           status === "denied"
@@ -105,23 +123,77 @@ export default function NotificationBell() {
         ) : (
           <Bell className="size-3.5" />
         )}
-        {isSubscribed ? "Nhắc nhở: Bật" : status === "denied" ? "Bị chặn" : "Bật nhắc nhở"}
+        {isSubscribed
+          ? `Nhắc ${selectedHour}:00 ✓`
+          : status === "denied"
+          ? "Bị chặn"
+          : "Bật nhắc nhở"}
       </button>
 
-      {/* Custom tooltip — right-aligned to stay within viewport */}
-      <div className="pointer-events-none absolute right-0 top-full mt-2 z-50 opacity-0 group-hover:opacity-100 transition-opacity duration-150">
-        <div className="bg-zinc-800 border border-zinc-700 text-zinc-200 text-xs rounded-xl px-3 py-2 whitespace-nowrap shadow-xl">
-          {status === "denied"
-            ? "Trình duyệt đã chặn thông báo. Vào cài đặt để bật lại."
-            : isSubscribed
-            ? "Tắt nhắc nhở học hàng ngày"
-            : "Bật nhắc nhở học lúc 20:00 mỗi ngày"}
-          {/* Arrow */}
-          <div className="absolute right-4 -top-1.5 w-3 h-1.5 overflow-hidden">
-            <div className="w-2 h-2 bg-zinc-800 border-l border-t border-zinc-700 rotate-45 translate-x-0.5 translate-y-0.5" />
+      {/* Time picker dropdown */}
+      {showTimePicker && !isSubscribed && status !== "denied" && (
+        <div className="absolute right-0 top-full mt-2 z-50 w-64 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 rounded-2xl shadow-xl p-4 space-y-3">
+          {/* Header */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-1.5 text-xs font-bold text-zinc-700 dark:text-zinc-300">
+              <Clock className="size-3.5 text-emerald-500" />
+              Chọn giờ nhắc nhở
+            </div>
+            <button
+              onClick={() => setShowTimePicker(false)}
+              className="size-5 flex items-center justify-center rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-400 transition-colors"
+            >
+              <X className="size-3" />
+            </button>
           </div>
+
+          {/* Hour buttons */}
+          <div className="grid grid-cols-3 gap-1.5">
+            {HOUR_OPTIONS.map((h) => (
+              <button
+                key={h}
+                onClick={() => {
+                  setSelectedHour(h);
+                  localStorage.setItem(STORAGE_KEY, String(h));
+                }}
+                className={`py-2 rounded-xl text-xs font-bold transition-all ${
+                  selectedHour === h
+                    ? "bg-emerald-500 text-white shadow-sm"
+                    : "bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 hover:bg-emerald-50 dark:hover:bg-emerald-500/10 hover:text-emerald-700 dark:hover:text-emerald-400"
+                }`}
+              >
+                {h}:00
+              </button>
+            ))}
+          </div>
+
+          {/* Confirm button */}
+          <button
+            onClick={handleEnable}
+            disabled={isPending}
+            className="w-full py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-white text-xs font-black transition-colors flex items-center justify-center gap-2 disabled:opacity-60"
+          >
+            {isPending ? (
+              <Loader2 className="size-3.5 animate-spin" />
+            ) : (
+              <BellRing className="size-3.5" />
+            )}
+            Bật nhắc lúc {selectedHour}:00 mỗi ngày
+          </button>
+
+          <p className="text-[10px] text-zinc-400 dark:text-zinc-500 text-center">
+            Nhắc nhở qua trình duyệt — cần mở ứng dụng trong nền
+          </p>
         </div>
-      </div>
+      )}
+
+      {/* Backdrop to close dropdown */}
+      {showTimePicker && (
+        <div
+          className="fixed inset-0 z-40"
+          onClick={() => setShowTimePicker(false)}
+        />
+      )}
     </div>
   );
 }
