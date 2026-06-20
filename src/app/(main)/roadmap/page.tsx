@@ -102,7 +102,7 @@ export default function RoadmapPage() {
         </div>
         <div className="shrink-0 flex items-center gap-2 rounded-2xl bg-glass border border-glass px-4.5 py-3 text-xs sm:text-sm font-bold text-foreground shadow-[0_8px_30px_rgb(0,0,0,0.01)]">
           <TrendingUp className="size-4.5 text-primary animate-pulse" />
-          <span>Tổng tiến độ: 49% hoàn thành</span>
+          <span>Tổng tiến độ: {Math.round(levels.reduce((sum, l) => sum + l.completedPercent, 0) / levels.length)}% hoàn thành</span>
         </div>
       </motion.div>
 
