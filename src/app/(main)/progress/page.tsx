@@ -73,8 +73,8 @@ export default async function ProgressPage() {
   return (
     <div className="relative mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-8 min-h-screen">
       {/* Ambient glow */}
-      <div className="absolute top-1/3 left-1/4 -z-10 h-80 w-80 rounded-full bg-primary/5 blur-3xl pointer-events-none" />
-      <div className="absolute bottom-1/4 right-1/4 -z-10 h-80 w-80 rounded-full bg-emerald-500/5 blur-3xl pointer-events-none" />
+      <div className="absolute top-1/3 left-1/4 -z-10 h-80 w-[60vw] max-w-80 rounded-full bg-primary/5 blur-3xl pointer-events-none" />
+      <div className="absolute bottom-1/4 right-1/4 -z-10 h-80 w-[60vw] max-w-80 rounded-full bg-emerald-500/5 blur-3xl pointer-events-none" />
 
       {/* Header */}
       <div className="pb-6 border-b border-foreground/[0.05]">
@@ -97,7 +97,7 @@ export default async function ProgressPage() {
           return (
             <div
               key={idx}
-              className="group relative overflow-hidden rounded-3xl bg-white/60 dark:bg-zinc-900/30 border border-zinc-200/60 dark:border-zinc-800/60 backdrop-blur-sm p-6 space-y-3 hover:-translate-y-1 transition-transform duration-300"
+              className="group relative overflow-hidden rounded-3xl bg-white/60 dark:bg-zinc-900/30 border border-zinc-200/60 dark:border-zinc-800/60 backdrop-blur-sm p-4 sm:p-6 space-y-2 sm:space-y-3 hover:-translate-y-1 transition-transform duration-300"
             >
               <div className="flex items-center justify-between">
                 <span className="text-xs font-extrabold text-muted-foreground uppercase tracking-widest">{stat.label}</span>
@@ -106,7 +106,7 @@ export default async function ProgressPage() {
                 </span>
               </div>
               <div>
-                <span className="text-3xl font-black tracking-tight text-foreground">{stat.value}</span>
+                <span className="text-2xl sm:text-3xl font-black tracking-tight text-foreground">{stat.value}</span>
                 <p className="text-xs text-muted-foreground mt-1 font-medium">{stat.sub}</p>
               </div>
             </div>
@@ -117,7 +117,7 @@ export default async function ProgressPage() {
       {/* Weekly Chart + SRS State */}
       <div className="grid gap-6 lg:grid-cols-3">
         {/* Weekly XP Chart */}
-        <div className="lg:col-span-2 rounded-3xl border border-zinc-200/60 dark:border-zinc-800/60 bg-white/60 dark:bg-zinc-900/30 backdrop-blur-sm p-6 sm:p-8 space-y-6">
+        <div className="lg:col-span-2 rounded-3xl border border-zinc-200/60 dark:border-zinc-800/60 bg-white/60 dark:bg-zinc-900/30 backdrop-blur-sm p-4 sm:p-8 space-y-4 sm:space-y-6">
           <div className="flex items-center justify-between">
             <div>
               <h3 className="font-bold text-xs text-foreground uppercase tracking-widest">XP hàng ngày</h3>
@@ -159,7 +159,7 @@ export default async function ProgressPage() {
         </div>
 
         {/* SRS State */}
-        <div className="rounded-3xl border border-zinc-200/60 dark:border-zinc-800/60 bg-white/60 dark:bg-zinc-900/30 backdrop-blur-sm p-6 sm:p-8 space-y-5 flex flex-col justify-between">
+        <div className="rounded-3xl border border-zinc-200/60 dark:border-zinc-800/60 bg-white/60 dark:bg-zinc-900/30 backdrop-blur-sm p-4 sm:p-8 space-y-4 sm:space-y-5 flex flex-col justify-between">
           <div>
             <h3 className="font-bold text-xs text-foreground uppercase tracking-widest">Trạng thái SRS</h3>
             <p className="text-[11px] text-muted-foreground mt-0.5">
@@ -172,7 +172,7 @@ export default async function ProgressPage() {
               return (
                 <div key={idx} className="space-y-1.5">
                   <div className="flex justify-between text-xs font-bold">
-                    <span className="text-foreground">{box.name}</span>
+                    <span className="text-foreground truncate max-w-[160px] sm:max-w-none">{box.name}</span>
                     <span className="text-muted-foreground font-mono">{box.count}</span>
                   </div>
                   <div className="h-2.5 w-full rounded-full bg-muted overflow-hidden">

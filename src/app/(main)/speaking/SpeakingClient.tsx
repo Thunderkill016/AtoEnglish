@@ -42,8 +42,8 @@ export default function SpeakingPage() {
   return (
     <div className="relative mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-8 bg-grid-pattern min-h-screen">
       {/* Background ambient blurs */}
-      <div className="absolute top-10 left-10 -z-10 h-96 w-96 rounded-full bg-primary/5 blur-3xl" />
-      <div className="absolute bottom-20 right-10 -z-10 h-96 w-96 rounded-full bg-violet-500/5 blur-3xl" />
+      <div className="absolute top-10 left-10 -z-10 h-96 w-[70vw] max-w-96 rounded-full bg-primary/5 blur-3xl" />
+      <div className="absolute bottom-20 right-10 -z-10 h-96 w-[70vw] max-w-96 rounded-full bg-violet-500/5 blur-3xl" />
 
       {/* Header */}
       <motion.div
@@ -65,7 +65,7 @@ export default function SpeakingPage() {
         </div>
 
         {/* Stats card */}
-        <div className="w-full sm:w-72 bg-glass border border-glass p-4 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.01)] flex items-center justify-between">
+        <div className="w-full sm:w-64 bg-glass border border-glass p-4 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.01)] flex items-center justify-between">
           <div className="space-y-1">
             <span className="text-xs text-muted-foreground font-bold">Lịch sử gần nhất</span>
             <div className="text-xl font-bold text-foreground">{speakingCount} buổi luyện</div>
@@ -86,7 +86,7 @@ export default function SpeakingPage() {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className="flex-1 min-w-0 text-left p-3 rounded-xl transition-all relative overflow-hidden group select-none"
+              className="flex-1 min-w-0 text-left p-2 sm:p-3 rounded-xl transition-all relative overflow-hidden group select-none"
             >
               {isActive && (
                 <motion.div
@@ -96,7 +96,7 @@ export default function SpeakingPage() {
                 />
               )}
               <div className="relative z-10 flex items-center gap-2 sm:gap-3">
-                <span className={`flex size-8 shrink-0 items-center justify-center rounded-lg transition-all duration-300 ${
+                <span className={`flex size-7 sm:size-8 shrink-0 items-center justify-center rounded-lg transition-all duration-300 ${
                   isActive
                     ? "bg-primary text-primary-foreground"
                     : "bg-muted text-muted-foreground group-hover:bg-foreground/[0.05]"
@@ -136,8 +136,8 @@ export default function SpeakingPage() {
           </AnimatePresence>
         </div>
 
-        {/* Sidebar details */}
-        <div className="space-y-6">
+        {/* Sidebar details — hidden on mobile to keep focus on main activity */}
+        <div className="hidden sm:block space-y-6">
           {/* Lợi ích của Shadowing */}
           <motion.div
             initial={{ opacity: 0, y: 10 }}
