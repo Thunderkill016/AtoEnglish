@@ -33,7 +33,7 @@ export const unit4: UnitData = {
   vocab: [
     {
       id: 1,
-      word: "artificial intelligence",
+      word: "artificial intelligence", emoji: "🤖",
       phonetic: "/ˌɑː.tɪ.fɪʃ.əl ɪnˈtel.ɪ.dʒəns/",
       meaning: "Trí tuệ nhân tạo",
       example: "AI has become a part of our daily lives.",
@@ -41,7 +41,7 @@ export const unit4: UnitData = {
     },
     {
       id: 2,
-      word: "omnipresent",
+      word: "omnipresent", emoji: "🌍",
       phonetic: "/ˌɒm.nɪˈprez.ənt/",
       meaning: "Có mặt ở khắp mọi nơi",
       example: "Smartphones have become omnipresent in modern society.",
@@ -49,7 +49,7 @@ export const unit4: UnitData = {
     },
     {
       id: 3,
-      word: "revolutionize",
+      word: "revolutionize", emoji: "🔄",
       phonetic: "/ˌrev.əˈluː.ʃən.aɪz/",
       meaning: "Cách mạng hóa",
       example: "AI will revolutionize how we learn languages.",
@@ -57,7 +57,7 @@ export const unit4: UnitData = {
     },
     {
       id: 4,
-      word: "ethics",
+      word: "ethics", emoji: "⚖️",
       phonetic: "/ˈeθ.ɪks/",
       meaning: "Đạo đức",
       example: "We need to discuss the ethics of artificial intelligence.",
@@ -65,7 +65,7 @@ export const unit4: UnitData = {
     },
     {
       id: 5,
-      word: "security",
+      word: "security", emoji: "🔐",
       phonetic: "/sɪˈkjʊə.rə.ti/",
       meaning: "Bảo mật / An ninh",
       example: "Data security is very important online.",
@@ -73,7 +73,7 @@ export const unit4: UnitData = {
     },
     {
       id: 6,
-      word: "algorithm",
+      word: "algorithm", emoji: "🧮",
       phonetic: "/ˈæl.ɡə.rɪ.ðəm/",
       meaning: "Thuật toán",
       example: "The search engine uses a complex algorithm.",
@@ -81,7 +81,7 @@ export const unit4: UnitData = {
     },
     {
       id: 7,
-      word: "integrate",
+      word: "integrate", emoji: "🔗",
       phonetic: "/ˈɪn.tɪ.ɡreɪt/",
       meaning: "Tích hợp",
       example: "We should integrate technology into our classroom.",
@@ -89,7 +89,7 @@ export const unit4: UnitData = {
     },
     {
       id: 8,
-      word: "fabric",
+      word: "fabric", emoji: "🧵",
       phonetic: "/ˈfæb.rɪk/",
       meaning: "Cấu trúc / Sợi vải",
       example: "Technology is woven into our social fabric.",

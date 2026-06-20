@@ -23,6 +23,7 @@ import {
 } from "lucide-react";
 
 import { completeUnit, getUnitCompletionStatus } from "@/app/actions/progress";
+import { getDueWarmupCards } from "@/app/actions/cards";
 import { toast } from "sonner";
 import { calcSpeechScore } from "@/lib/utils/speech";
 
@@ -54,6 +55,14 @@ export interface VocabItem {
   example: string;
   audio?: string;
   emoji?: string; // Visual mnemonic for Mayer Multimedia principle
+}
+
+export interface WarmupCard {
+  id: string;
+  word: string;
+  phonetic?: string | null;
+  meaning_vn: string;
+  example_en?: string | null;
 }
 
 export interface DialogueLine {
@@ -193,6 +202,11 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
   const [isRecognizing, setIsRecognizing] = useState(false);
   const [shadowDone, setShadowDone] = useState(false);
 
+  // SRS Warm-up state (Section 1)
+  const [warmupCards, setWarmupCards] = useState<WarmupCard[]>([]);
+  const [warmupFlipped, setWarmupFlipped] = useState<Set<number>>(new Set());
+  const [warmupDone, setWarmupDone] = useState(false);
+
   // Section 7 — Speaking
   const [nameInput, setNameInput] = useState("");
   const [level1Done, setLevel1Done] = useState(false);
@@ -237,6 +251,11 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
   }, [unit.matchingExercise]);
 
   useEffect(() => {
+    // Fetch SRS due cards for warm-up panel
+    getDueWarmupCards(5).then(res => {
+       
+      if (res.success && res.cards.length > 0) setWarmupCards(res.cards as WarmupCard[]);
+    });
     getUnitCompletionStatus(unit.unitId).then(res => {
       if (res.success && res.completed) setIsCompleted(true);
     });
@@ -587,7 +606,48 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                 ))}
               </div>
 
-              {/* Cultural Note */}
+              {/* SRS Warm-up — due cards from previous lessons */}
+              {warmupCards.length > 0 && !warmupDone && (
+                <div className="bg-amber-950/20 border border-amber-700/30 rounded-2xl p-5 mb-6">
+                  <div className="flex items-center justify-between mb-3">
+                    <div>
+                      <p className="text-sm font-bold text-amber-400">🔄 Ôn từ đến hạn hôm nay</p>
+                      <p className="text-xs text-zinc-500">{warmupCards.length} thẻ — nhấn để xem nghĩa</p>
+                    </div>
+                    <button onClick={() => setWarmupDone(true)} className="text-xs text-zinc-500 hover:text-zinc-300 transition-colors">Bỏ qua →</button>
+                  </div>
+                  <div className="flex gap-2 overflow-x-auto pb-1">
+                    {warmupCards.map((card, wi) => {
+                      const isWFlipped = warmupFlipped.has(wi);
+                      return (
+                        <div key={card.id}
+                          onClick={() => setWarmupFlipped(p => { const n = new Set(p); if (n.has(wi)) n.delete(wi); else n.add(wi); return n; })}
+                          className="shrink-0 w-36 cursor-pointer" style={{ perspective: "500px" }}
+                        >
+                          <div style={{ transition: "transform 0.4s", transformStyle: "preserve-3d", transform: isWFlipped ? "rotateY(180deg)" : "rotateY(0deg)", position: "relative", minHeight: "90px" }}>
+                            <div className="absolute inset-0 bg-amber-950/40 border border-amber-700/30 rounded-xl p-3 flex flex-col justify-between" style={{ backfaceVisibility: "hidden" }}>
+                              <p className="text-white font-bold text-sm">{card.word}</p>
+                              <p className="text-zinc-500 text-[10px]">{card.phonetic}</p>
+                              <p className="text-[9px] text-amber-600">Nhấn để xem nghĩa</p>
+                            </div>
+                            <div className="absolute inset-0 bg-emerald-950/40 border border-emerald-700/30 rounded-xl p-3 flex flex-col justify-between" style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}>
+                              <p className="text-emerald-300 font-bold text-xs">{card.meaning_vn}</p>
+                              {card.example_en && <p className="text-zinc-400 text-[10px] italic">&ldquo;{card.example_en}&rdquo;</p>}
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                  {warmupFlipped.size === warmupCards.length && (
+                    <button onClick={() => setWarmupDone(true)} className="mt-3 w-full bg-emerald-700/40 hover:bg-emerald-700/60 text-emerald-300 font-bold rounded-xl py-2 text-sm transition-colors">
+                      ✅ Đã ôn xong ({warmupCards.length} thẻ)
+                    </button>
+                  )}
+                </div>
+              )}
+
+            {/* Cultural Note */}
               {unit.culturalNote && (
                 <div className="border-l-4 border-emerald-500 bg-emerald-950/30 rounded-r-2xl p-5 mb-8">
                   <div className="flex items-center gap-2 mb-2">

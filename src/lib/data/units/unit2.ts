@@ -33,7 +33,7 @@ export const unit2: UnitData = {
   vocab: [
     {
       id: 1,
-      word: "wake up",
+      word: "wake up", emoji: "⏰",
       phonetic: "/weɪk ʌp/",
       meaning: "Thức dậy",
       example: "I usually wake up at 6 AM.",
@@ -41,7 +41,7 @@ export const unit2: UnitData = {
     },
     {
       id: 2,
-      word: "brush teeth",
+      word: "brush teeth", emoji: "🦷",
       phonetic: "/brʌʃ tiːθ/",
       meaning: "Đánh răng",
       example: "You should brush your teeth twice a day.",
@@ -49,7 +49,7 @@ export const unit2: UnitData = {
     },
     {
       id: 3,
-      word: "wash face",
+      word: "wash face", emoji: "🧼",
       phonetic: "/wɒʃ feɪs/",
       meaning: "Rửa mặt",
       example: "I wash my face with cold water.",
@@ -57,7 +57,7 @@ export const unit2: UnitData = {
     },
     {
       id: 4,
-      word: "eat breakfast",
+      word: "eat breakfast", emoji: "🍳",
       phonetic: "/iːt ˈbrek.fəst/",
       meaning: "Ăn sáng",
       example: "Do you eat breakfast every morning?",
@@ -65,7 +65,7 @@ export const unit2: UnitData = {
     },
     {
       id: 5,
-      word: "go to school",
+      word: "go to school", emoji: "🎒",
       phonetic: "/ɡəʊ tuː skuːl/",
       meaning: "Đi học",
       example: "We go to school by bus.",
@@ -73,7 +73,7 @@ export const unit2: UnitData = {
     },
     {
       id: 6,
-      word: "go to work",
+      word: "go to work", emoji: "🏢",
       phonetic: "/ɡəʊ tuː wɜːk/",
       meaning: "Đi làm",
       example: "My father goes to work at 8 o'clock.",
@@ -81,7 +81,7 @@ export const unit2: UnitData = {
     },
     {
       id: 7,
-      word: "watch TV",
+      word: "watch TV", emoji: "📺",
       phonetic: "/wɒtʃ ˌtiːˈviː/",
       meaning: "Xem tivi",
       example: "I watch TV for an hour after dinner.",
@@ -89,7 +89,7 @@ export const unit2: UnitData = {
     },
     {
       id: 8,
-      word: "go to bed",
+      word: "go to bed", emoji: "😴",
       phonetic: "/ɡəʊ tuː bed/",
       meaning: "Đi ngủ",
       example: "I go to bed at 10 PM.",
@@ -97,7 +97,7 @@ export const unit2: UnitData = {
     },
     {
       id: 9,
-      word: "what time is it?",
+      word: "what time is it?", emoji: "🕐",
       phonetic: "/wɒt taɪm ɪz ɪt/",
       meaning: "Mấy giờ rồi?",
       example: "Excuse me, what time is it?",
@@ -105,7 +105,7 @@ export const unit2: UnitData = {
     },
     {
       id: 10,
-      word: "o'clock",
+      word: "o'clock", emoji: "🕐",
       phonetic: "/əˈklɒk/",
       meaning: "Giờ đúng",
       example: "It is exactly 7 o'clock.",

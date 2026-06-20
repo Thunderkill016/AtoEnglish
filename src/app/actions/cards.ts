@@ -179,6 +179,33 @@ export async function getDueCards() {
 }
 
 /**
+ * Lấy tối đa N thẻ đến hạn ôn tập để hiển thị ở phần Khởi động (SRS warm-up).
+ * Chỉ lấy state >= 1 (đã từng học, không lấy thẻ mới hoàn toàn).
+ */
+export async function getDueWarmupCards(limit: number = 5) {
+  try {
+    const supabase = await createClient();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    if (authError || !user) return { success: false, cards: [] };
+
+    const now = new Date().toISOString();
+    const { data, error } = await supabase
+      .from("cards")
+      .select("id, word, phonetic, meaning_vn, example_en")
+      .eq("user_id", user.id)
+      .gte("state", 1)          // Only cards that have been seen before (not brand new)
+      .lte("due_date", now)     // Only cards that are due
+      .order("due_date", { ascending: true })
+      .limit(limit);
+
+    if (error) return { success: false, cards: [] };
+    return { success: true, cards: data || [] };
+  } catch {
+    return { success: false, cards: [] };
+  }
+}
+
+/**
  * Server Action chấm điểm độ nhớ của thẻ từ vựng và lên lịch ôn tập theo thuật toán SM-2 (SuperMemo-2)
  */
 export async function reviewCard(cardId: string, rating: "Again" | "Hard" | "Good" | "Easy") {

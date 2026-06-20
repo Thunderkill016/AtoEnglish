@@ -33,7 +33,7 @@ export const unit3: UnitData = {
   vocab: [
     {
       id: 1,
-      word: "mother",
+      word: "mother", emoji: "👩",
       phonetic: "/ˈmʌð.ər/",
       meaning: "Mẹ",
       example: "My mother is a teacher.",
@@ -41,7 +41,7 @@ export const unit3: UnitData = {
     },
     {
       id: 2,
-      word: "father",
+      word: "father", emoji: "👨",
       phonetic: "/ˈfɑː.ðər/",
       meaning: "Bố",
       example: "My father loves cooking.",
@@ -49,7 +49,7 @@ export const unit3: UnitData = {
     },
     {
       id: 3,
-      word: "brother",
+      word: "brother", emoji: "👦",
       phonetic: "/ˈbrʌð.ər/",
       meaning: "Anh/Em trai",
       example: "I have one older brother.",
@@ -57,7 +57,7 @@ export const unit3: UnitData = {
     },
     {
       id: 4,
-      word: "sister",
+      word: "sister", emoji: "👧",
       phonetic: "/ˈsɪs.tər/",
       meaning: "Chị/Em gái",
       example: "She is my younger sister.",
@@ -65,7 +65,7 @@ export const unit3: UnitData = {
     },
     {
       id: 5,
-      word: "parents",
+      word: "parents", emoji: "👨‍👩‍👧",
       phonetic: "/ˈpeə.rənts/",
       meaning: "Bố mẹ",
       example: "My parents live in Da Nang.",
@@ -73,7 +73,7 @@ export const unit3: UnitData = {
     },
     {
       id: 6,
-      word: "friend",
+      word: "friend", emoji: "🤝",
       phonetic: "/frend/",
       meaning: "Bạn bè",
       example: "We are good friends.",
@@ -81,7 +81,7 @@ export const unit3: UnitData = {
     },
     {
       id: 7,
-      word: "classmate",
+      word: "classmate", emoji: "🧑‍🎓",
       phonetic: "/ˈklɑːs.meɪt/",
       meaning: "Bạn cùng lớp",
       example: "Minh is my classmate.",
@@ -89,7 +89,7 @@ export const unit3: UnitData = {
     },
     {
       id: 8,
-      word: "happy",
+      word: "happy", emoji: "😊",
       phonetic: "/ˈhæp.i/",
       meaning: "Hạnh phúc",
       example: "They are a happy family.",
@@ -97,7 +97,7 @@ export const unit3: UnitData = {
     },
     {
       id: 9,
-      word: "my",
+      word: "my", emoji: "🏷️",
       phonetic: "/maɪ/",
       meaning: "Của tôi",
       example: "This is my book.",
@@ -105,7 +105,7 @@ export const unit3: UnitData = {
     },
     {
       id: 10,
-      word: "your",
+      word: "your", emoji: "👉",
       phonetic: "/jɔːr/",
       meaning: "Của bạn",
       example: "What is your phone number?",
@@ -113,7 +113,7 @@ export const unit3: UnitData = {
     },
     {
       id: 11,
-      word: "his",
+      word: "his", emoji: "👨",
       phonetic: "/hɪz/",
       meaning: "Của anh ấy",
       example: "His name is Peter.",
@@ -121,7 +121,7 @@ export const unit3: UnitData = {
     },
     {
       id: 12,
-      word: "her",
+      word: "her", emoji: "👩",
       phonetic: "/hɜːr/",
       meaning: "Của cô ấy",
       example: "Her hair is brown.",
