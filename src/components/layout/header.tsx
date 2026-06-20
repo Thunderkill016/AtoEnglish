@@ -58,6 +58,7 @@ export async function Header() {
                   size="icon"
                   className="size-8 rounded-lg text-zinc-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/20 transition-colors"
                   title="Đăng xuất"
+                  aria-label="Đăng xuất"
                 >
                   <LogOut className="size-4" />
                 </Button>
