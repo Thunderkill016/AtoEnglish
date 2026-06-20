@@ -582,18 +582,21 @@ export async function getWeeklyXpData() {
 
     const startDate = days[0].day;
 
+    // +07:00 so Postgres interprets startDate as VN midnight, not UTC midnight
+    const startUtc = startDate + "T00:00:00+07:00";
+
     // Fetch lesson XP and speaking sessions in parallel
     const [lessonsRes, speakingRes] = await Promise.all([
       supabase
         .from("user_lesson_progress")
         .select("xp_earned, completed_at")
         .eq("user_id", user.id)
-        .gte("completed_at", startDate + "T00:00:00.000Z"),
+        .gte("completed_at", startUtc),
       supabase
         .from("speaking_sessions")
         .select("practice_type, created_at")
         .eq("user_id", user.id)
-        .gte("created_at", startDate + "T00:00:00.000Z"),
+        .gte("created_at", startUtc),
     ]);
 
     // Add lesson XP per day
