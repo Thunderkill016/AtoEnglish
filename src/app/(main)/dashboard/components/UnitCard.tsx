@@ -11,14 +11,12 @@ interface UnitCardProps {
     progress: number;
     completed: boolean;
     route: string;
+    tags: string[];
   };
 }
 
 export default function UnitCard({ currentUnitData }: UnitCardProps) {
-  const tags =
-    currentUnitData.unitId === "unit-1"
-      ? ["Từ vựng +12", "Giao tiếp", "Phát âm"]
-      : ["Từ vựng +3", "Đọc hiểu", "Ngữ pháp"];
+  const tags = currentUnitData.tags ?? [];
 
   return (
     <div className="relative rounded-2xl border border-zinc-200/60 dark:border-zinc-800/60 bg-white/60 dark:bg-zinc-900/25 backdrop-blur-sm p-6 sm:p-8 flex flex-col justify-between overflow-hidden group hover:border-emerald-500/30 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-emerald-500/5 transition-all duration-300">

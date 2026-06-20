@@ -6,6 +6,7 @@ export interface UnitMetadata {
   route: string;
   xp: number;
   estimatedTime: number;
+  tags: string[];
 }
 
 export const UNITS: UnitMetadata[] = [
@@ -17,6 +18,7 @@ export const UNITS: UnitMetadata[] = [
     route: "/learn/unit-1",
     xp: 80,
     estimatedTime: 40,
+    tags: ["Từ vựng +12", "Giao tiếp", "Phát âm"],
   },
   {
     id: "unit-2",
@@ -26,6 +28,7 @@ export const UNITS: UnitMetadata[] = [
     route: "/learn/unit-2",
     xp: 80,
     estimatedTime: 40,
+    tags: ["Từ vựng +10", "Lịch trình", "Thì hiện tại"],
   },
   {
     id: "unit-3",
@@ -35,6 +38,7 @@ export const UNITS: UnitMetadata[] = [
     route: "/learn/unit-3",
     xp: 80,
     estimatedTime: 45,
+    tags: ["Từ vựng +10", "Gia đình", "Đại từ sở hữu"],
   },
   {
     id: "unit-4",
@@ -44,5 +48,6 @@ export const UNITS: UnitMetadata[] = [
     route: "/learn/unit-4",
     xp: 80,
     estimatedTime: 50,
+    tags: ["Từ vựng +15", "Công nghệ", "Modal Verbs"],
   },
 ];

@@ -186,7 +186,12 @@ export default async function ProgressPage() {
 
       {/* Achievements */}
       <Suspense fallback={null}>
-        <ProgressClient />
+        <ProgressClient stats={{
+          totalCards: stats.totalCards,
+          streak: stats.streak,
+          completedUnits: stats.completedUnits,
+          totalXp: stats.totalXp,
+        }} />
       </Suspense>
     </div>
   );

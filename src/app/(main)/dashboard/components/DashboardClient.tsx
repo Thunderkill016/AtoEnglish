@@ -25,6 +25,7 @@ interface DashboardClientProps {
     progress: number;
     completed: boolean;
     route: string;
+    tags: string[];
   };
   initialXpCurrent: number;
   initialQuests: Array<{
@@ -80,9 +81,28 @@ export default function DashboardClient({
     }
   };
 
+  // localStorage persistence — key by today's date so quests reset on new day
+  const todayKey = new Date().toLocaleDateString("sv-SE", { timeZone: "Asia/Ho_Chi_Minh" });
+  const storageKey = `quests-${todayKey}`;
+
+  // Load persisted quest state on mount
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(storageKey);
+      if (saved) {
+        const { quests: savedQuests, xp } = JSON.parse(saved);
+        if (Array.isArray(savedQuests)) setQuests(savedQuests);
+        if (typeof xp === "number") setXpCurrent(xp);
+      }
+    } catch {
+      // localStorage unavailable or corrupt — use server defaults
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const handleToggleQuest = (id: number) => {
-    setQuests((prev) =>
-      prev.map((quest) => {
+    setQuests((prev) => {
+      const next = prev.map((quest) => {
         if (quest.id === id) {
           const nextState = !quest.completed;
           if (nextState) {
@@ -94,15 +114,20 @@ export default function DashboardClient({
                 colors: ["#10b981", "#3b82f6", "#f59e0b"],
               });
             });
-            setXpCurrent((prev) => Math.min(prev + quest.xp, xpTarget));
-          } else {
-            setXpCurrent((prev) => Math.max(prev - quest.xp, 0));
           }
           return { ...quest, completed: nextState };
         }
         return quest;
-      })
-    );
+      });
+      // Persist to localStorage
+      const newXp = next.reduce((sum, q) => (q.completed ? sum + q.xp : sum), 0);
+      const clampedXp = Math.min(newXp, xpTarget);
+      setXpCurrent(clampedXp);
+      try {
+        localStorage.setItem(storageKey, JSON.stringify({ quests: next, xp: clampedXp }));
+      } catch { /* ignore */ }
+      return next;
+    });
   };
 
   const completedCount = quests.filter((q) => q.completed).length;
