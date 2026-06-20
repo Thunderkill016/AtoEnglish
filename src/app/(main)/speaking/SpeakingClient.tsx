@@ -40,7 +40,7 @@ export default function SpeakingPage() {
   ] as const;
 
   return (
-    <div className="relative mx-auto max-w-7xl px-4 py-6 sm:py-8 sm:px-6 lg:px-8 space-y-5 sm:space-y-8 bg-grid-pattern min-h-screen overflow-x-hidden">
+    <div className="relative mx-auto max-w-7xl px-4 py-6 sm:py-8 sm:px-6 lg:px-8 space-y-5 sm:space-y-8 bg-grid-pattern min-h-screen overflow-x-hidden pb-28 sm:pb-12">
       {/* Background ambient blurs */}
       <div className="absolute top-10 left-10 -z-10 h-96 w-[70vw] max-w-96 rounded-full bg-primary/5 blur-3xl" />
       <div className="absolute bottom-20 right-10 -z-10 h-96 w-[70vw] max-w-96 rounded-full bg-violet-500/5 blur-3xl" />
@@ -56,7 +56,7 @@ export default function SpeakingPage() {
             <Mic className="size-3.5" />
             Speaking Module
           </span>
-          <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-foreground mt-1 leading-tight">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-black tracking-tight text-foreground mt-1 leading-tight">
             Luyện Nói Phản Xạ
           </h1>
           <p className="text-sm sm:text-base text-muted-foreground font-normal">
@@ -104,10 +104,15 @@ export default function SpeakingPage() {
                   <Icon className="size-4" />
                 </span>
                 <div className="min-w-0">
+                  {/* Short label on mobile, full title on sm+ */}
                   <h3 className={`font-bold text-[10px] sm:text-xs uppercase tracking-wider ${isActive ? "text-primary" : "text-foreground"} truncate`}>
-                    {tab.title}
+                    <span className="sm:hidden">
+                      {tab.id === "shadowing" ? "Shadowing" : tab.id === "roleplay" ? "Roleplay" : "Journal"}
+                    </span>
+                    <span className="hidden sm:inline">{tab.title}</span>
                   </h3>
-                  <p className="text-[9px] sm:text-[10px] text-muted-foreground font-normal line-clamp-1">
+                  {/* Description: hidden on mobile to keep tabs compact */}
+                  <p className="hidden sm:block text-[10px] text-muted-foreground font-normal line-clamp-1">
                     {tab.desc}
                   </p>
                 </div>
