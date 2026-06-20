@@ -17,7 +17,7 @@
     "test:integration": "dotenv -e .env.local -- vitest run --config vitest.integration.config.ts"
   },
   "dependencies": {
-    "@base-ui/react": "^1.5.0",
+    "@base-ui/react": "^1.6.0",
     "@sentry/nextjs": "^10.59.0",
     "@supabase/ssr": "^0.12.0",
     "@supabase/supabase-js": "^2.108.2",
