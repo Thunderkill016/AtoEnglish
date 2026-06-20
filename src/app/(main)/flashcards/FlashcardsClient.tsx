@@ -19,6 +19,7 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { getDueCards, reviewCard, getAllCards, getCardTopics } from "@/app/actions/cards";
+import { recordFlashcardSession, type FlashcardStats } from "@/app/actions/flashcard-stats";
 import { toast } from "sonner";
 
 interface Flashcard {
@@ -44,6 +45,7 @@ export default function FlashcardsPage() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showFinished, setShowFinished] = useState(false);
   const [responseLog, setResponseLog] = useState<{ word: string; score: string }[]>([]);
+  const [sessionStats, setSessionStats] = useState<FlashcardStats | null>(null);
   const router = useRouter();
   const [cramMode, setCramMode] = useState(false);
   const [topics, setTopics] = useState<string[]>([]);
@@ -135,6 +137,11 @@ export default function FlashcardsPage() {
             spread: 80,
             origin: { y: 0.5 },
             colors: ["#10b981", "#3b82f6", "#f59e0b"]
+          });
+          // Record session stats
+          const finalLog = [...responseLog, { word: currentCard.word, score: scoreLabel }];
+          recordFlashcardSession(finalLog.length).then(res => {
+            if (res.success && res.stats) setSessionStats(res.stats);
           });
         }
       } else {
@@ -549,6 +556,24 @@ export default function FlashcardsPage() {
               Bạn đã ôn tập xong tất cả {cards.length} từ vựng trong lịch hôm nay. Thuật toán Spaced Repetition đã lập trình lại thời điểm ôn tiếp theo.
             </p>
           </div>
+
+          {/* Session Stats */}
+          {sessionStats && (
+            <div className="grid grid-cols-3 gap-3 w-full">
+              <div className="flex flex-col items-center p-3 rounded-2xl bg-emerald-500/5 border border-emerald-500/15">
+                <span className="text-2xl font-black text-emerald-500">{sessionStats.cards_reviewed_today}</span>
+                <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mt-0.5">Hôm nay</span>
+              </div>
+              <div className="flex flex-col items-center p-3 rounded-2xl bg-orange-500/5 border border-orange-500/15">
+                <span className="text-2xl font-black text-orange-500">🔥 {sessionStats.streak_days}</span>
+                <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mt-0.5">Streak</span>
+              </div>
+              <div className="flex flex-col items-center p-3 rounded-2xl bg-blue-500/5 border border-blue-500/15">
+                <span className="text-2xl font-black text-blue-500">{sessionStats.total_cards_reviewed}</span>
+                <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mt-0.5">Tổng cộng</span>
+              </div>
+            </div>
+          )}
 
           {/* Log summaries */}
           <div className="p-5 rounded-2xl bg-foreground/[0.02] border border-foreground/[0.04] text-left space-y-3 text-xs sm:text-sm shadow-inner">
