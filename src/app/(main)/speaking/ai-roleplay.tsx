@@ -151,8 +151,99 @@ export const ROLEPLAY_SCENARIOS: Scenario[] = [
         userSuggestionVi: "Tôi sẽ thanh toán bằng thẻ, làm ơn. Của bạn đây."
       }
     ]
+  },
+  {
+    id: "airport-security",
+    title: "Airport Security",
+    description: "Qua kiểm tra an ninh và cửa khẩu tại sân bay quốc tế.",
+    aiCharacter: "Border Officer (Nhân viên hải quan)",
+    difficulty: "Medium",
+    initialMessage: "Good afternoon. May I see your passport and boarding pass, please?",
+    steps: [
+      {
+        aiPrompt: "Thank you. What is the purpose of your visit to the United Kingdom?",
+        userSuggestion: "Of course. Here is my passport and boarding pass.",
+        userSuggestionVi: "Được chứ. Đây là hộ chiếu và thẻ lên máy bay của tôi."
+      },
+      {
+        aiPrompt: "How long do you plan to stay in the UK?",
+        userSuggestion: "I am visiting for tourism. I plan to explore London and Edinburgh.",
+        userSuggestionVi: "Tôi đến để du lịch. Tôi dự định khám phá London và Edinburgh."
+      },
+      {
+        aiPrompt: "Do you have a return ticket and proof of accommodation booked?",
+        userSuggestion: "I will be staying for two weeks.",
+        userSuggestionVi: "Tôi sẽ ở lại hai tuần."
+      },
+      {
+        aiPrompt: "Everything looks in order. Welcome to the United Kingdom. Have a wonderful trip!",
+        userSuggestion: "Yes, I have a return flight on the fifteenth and I am staying at a hotel in central London. Here is my booking confirmation.",
+        userSuggestionVi: "Vâng, tôi có chuyến bay về vào ngày 15 và tôi sẽ ở một khách sạn ở trung tâm London. Đây là xác nhận đặt phòng của tôi."
+      }
+    ]
+  },
+  {
+    id: "restaurant-dining",
+    title: "Restaurant Dining",
+    description: "Đặt bàn và gọi món tại nhà hàng tây.",
+    aiCharacter: "Waiter (Phục vụ nhà hàng)",
+    difficulty: "Easy",
+    initialMessage: "Good evening! Welcome to La Maison. Do you have a reservation tonight?",
+    steps: [
+      {
+        aiPrompt: "Perfect, a table for two. Right this way, please. Here are your menus. Can I start you off with something to drink while you look over the menu?",
+        userSuggestion: "Good evening! Yes, I have a reservation for two under the name Minh.",
+        userSuggestionVi: "Chào buổi tối! Vâng, tôi có đặt bàn cho hai người dưới tên Minh."
+      },
+      {
+        aiPrompt: "Sparkling water, of course. Are you ready to order, or do you need a few more minutes?",
+        userSuggestion: "We would like a bottle of sparkling water to start, please.",
+        userSuggestionVi: "Chúng tôi muốn một chai nước có gas trước nhé."
+      },
+      {
+        aiPrompt: "Excellent choices! The salmon is indeed very popular tonight. Would you like any starters or side dishes with your mains?",
+        userSuggestion: "I will have the grilled salmon and my friend will have the beef steak, medium rare, please.",
+        userSuggestionVi: "Tôi sẽ dùng cá hồi nướng còn bạn tôi sẽ dùng bít tết bò, chín tái, làm ơn."
+      },
+      {
+        aiPrompt: "Of course, I will bring that right out. Enjoy your meal!",
+        userSuggestion: "No starters, thank you. But could we get some extra bread on the side?",
+        userSuggestionVi: "Không cần món khai vị, cảm ơn. Nhưng chúng tôi có thể có thêm bánh mì đi kèm không?"
+      }
+    ]
+  },
+  {
+    id: "doctors-appointment",
+    title: "Doctor's Appointment",
+    description: "Khám bác sĩ tại phòng khám quốc tế.",
+    aiCharacter: "Doctor (Bác sĩ)",
+    difficulty: "Hard",
+    initialMessage: "Hello, please come in and have a seat. What brings you in today?",
+    steps: [
+      {
+        aiPrompt: "I see. How long have you been experiencing this headache and fever? And would you rate the pain from one to ten?",
+        userSuggestion: "Hello, Doctor. I have been having a severe headache and a fever since yesterday morning.",
+        userSuggestionVi: "Xin chào bác sĩ. Tôi bị đau đầu dữ dội và sốt từ sáng hôm qua."
+      },
+      {
+        aiPrompt: "Have you taken any medication for it? And do you have any known allergies to medicine?",
+        userSuggestion: "I would say the pain is about a seven. It gets worse when I stand up quickly.",
+        userSuggestionVi: "Tôi đánh giá cơn đau khoảng bảy. Nó trở nên tệ hơn khi tôi đứng dậy nhanh."
+      },
+      {
+        aiPrompt: "Alright, I am going to examine you. I think this might be a mild flu combined with dehydration. I will prescribe some paracetamol and recommend you rest and drink plenty of fluids. Can you come back in three days if you do not feel better?",
+        userSuggestion: "I took some paracetamol this morning but it did not help much. I have no known allergies.",
+        userSuggestionVi: "Tôi đã uống paracetamol sáng nay nhưng không giúp ích nhiều. Tôi không có dị ứng thuốc nào đã biết."
+      },
+      {
+        aiPrompt: "Great. Take care of yourself and do not hesitate to call if your symptoms worsen. I hope you feel better soon!",
+        userSuggestion: "Yes, of course. Thank you, Doctor. Should I do any blood tests?",
+        userSuggestionVi: "Vâng, tất nhiên rồi. Cảm ơn bác sĩ. Tôi có cần làm xét nghiệm máu không?"
+      }
+    ]
   }
 ];
+
 
 interface ChatMessage {
   sender: "ai" | "user";
