@@ -1,16 +1,17 @@
 # AGENTS.md — AtoEnglish
 
-This file provides context and instructions for AI coding agents (Antigravity, Cursor, Copilot, Gemini CLI, etc.) working on the **AtoEnglish** project — a Vietnamese-first English learning web app built with Next.js 14, Supabase, and TailwindCSS.
+This file provides context and instructions for AI coding agents (Antigravity, Cursor, Copilot, Gemini CLI, etc.) working on the **AtoEnglish** project — a Vietnamese-first English learning web app built with Next.js 16, Supabase, and TailwindCSS v4.
 
 ---
 
 ## 📌 Project Overview
 
-- **Stack**: Next.js 14 (App Router), TypeScript, TailwindCSS v3, Supabase (Auth + PostgreSQL), Framer Motion, shadcn/ui
+- **Stack**: Next.js 16 (App Router, Turbopack), TypeScript 6, TailwindCSS v4, Supabase (Auth + PostgreSQL), Framer Motion, shadcn/ui
 - **Deployment**: Vercel (auto-deploy from `main` branch via GitHub)
 - **Auth**: Supabase Auth — Google OAuth + Email/Password
 - **Database**: Supabase PostgreSQL with RLS policies
 - **Package Manager**: npm
+- **Testing**: Vitest (unit), Playwright (E2E)
 
 ---
 
@@ -38,6 +39,10 @@ src/
 ├── lib/                     # Utilities and Supabase helpers
 │   └── supabase/            # Client, Server, Middleware Supabase clients
 └── types/                   # TypeScript type definitions
+
+e2e/                         # Playwright E2E tests
+src/__tests__/               # Vitest unit tests
+supabase/migrations/         # SQL migration files
 ```
 
 ---
@@ -48,11 +53,14 @@ src/
 
 | Command | Description |
 |---|---|
-| `npm run dev` | Start dev server at `http://localhost:3000` |
+| `npm run dev` | Start dev server at `http://localhost:3000` (Turbopack) |
 | `npm run build` | Production build — **only run to verify compilation** |
 | `npm run lint` | ESLint check |
+| `npm run test` | Run unit tests (Vitest) |
+| `npm run test:watch` | Watch mode for unit tests |
+| `npm run e2e` | Run Playwright E2E tests |
 
-> ⚠️ **Do NOT run `npm run build` during iterative agent sessions.** Use `npm run dev` for all active development. The production build switches `.next/` to production assets which breaks HMR. Only run `npm run build` at the end to verify code compiles correctly before committing.
+> ⚠️ **Do NOT run `npm run build` during iterative agent sessions.** Use `npm run dev` for all active development. Only run `npm run build` at the end to verify code compiles correctly before committing.
 
 ### Environment Variables
 
@@ -60,34 +68,50 @@ Copy `.env.example` to `.env.local` and fill in:
 ```
 NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_ANON_KEY=
+UPSTASH_REDIS_REST_URL=       # Required for rate limiting in production
+UPSTASH_REDIS_REST_TOKEN=
+NEXT_PUBLIC_SENTRY_DSN=       # Required for error monitoring in production
 ```
 
-These are required for Supabase Auth and database queries. Never commit `.env.local`.
+Never commit `.env.local`.
 
 ---
 
 ## 🎨 Code Style & Conventions
 
 ### TypeScript
-- **Strict mode** is enabled — avoid using `any`. Use proper types or ESLint disable comments only when absolutely necessary (e.g., browser APIs like `SpeechRecognition`).
+- **TypeScript 6** with strict mode — avoid using `any`. Use proper types or ESLint disable comments only when absolutely necessary.
 - All components should be typed with explicit props interfaces.
 
-### React & Next.js
+### React & Next.js 16
 - **Prefer Server Components** (RSC) for data-fetching pages. Use `"use client"` only when hooks or browser APIs are required.
-- Data fetching on protected pages: use `Promise.all()` for parallel Supabase queries in server components.
-- Use `cookies()` from `next/headers` for server-side Supabase auth, **not** `createBrowserClient` in server context.
+- **CRITICAL: `cookies()`, `headers()`, `params`, `searchParams` are ALL async in Next.js 15+:**
+  ```ts
+  // ✅ Correct — must await
+  const cookieStore = await cookies();
+  const supabase = await createClient(); // createClient() is async
+  
+  // ❌ Wrong — will throw TypeScript error
+  const cookieStore = cookies();
+  ```
+- Data fetching on protected pages: use `Promise.all()` for parallel Supabase queries.
+- **Do NOT use `ssr: false` in `dynamic()` inside Server Components** — not supported by Turbopack.
 
-### Styling
-- Use **TailwindCSS v3** utility classes.
+### Styling (TailwindCSS v4)
+- Use **TailwindCSS v4** utility classes (CSS-first configuration).
+- Custom theme tokens are in `globals.css` under `@theme {}` — NOT in `tailwind.config.ts`.
 - Use `cn()` helper (from `lib/utils`) to merge class names conditionally.
 - Glassmorphism tokens: `bg-white/5`, `backdrop-blur-xl`, `border border-white/10`.
 - Color brand: `emerald-500` / `teal-500` as primary, `zinc-950` dark backgrounds.
-- Animations: use **Framer Motion** for page transitions and micro-interactions; use CSS `@keyframes` via `tailwind.config.ts` for static animations (spotlight, pulse, etc.).
+- Animations: use **Framer Motion** for page transitions; CSS `@keyframes` in `globals.css @theme` for static animations.
+- **Browser targets**: Chrome 111+, Safari 16.4+, Firefox 128+ (required by TailwindCSS v4).
 
 ### File Naming
 - Components: `PascalCase.tsx`
 - Utilities: `camelCase.ts`
 - Pages: `page.tsx` (Next.js convention)
+- E2E tests: `*.spec.ts` in `e2e/`
+- Unit tests: `*.test.ts` in `src/__tests__/`
 
 ---
 
@@ -102,10 +126,16 @@ These are required for Supabase Auth and database queries. Never commit `.env.lo
 | `lesson_items` | Vocabulary/grammar items inside lessons |
 | `completed_lessons` | Tracks which lessons a user finished |
 | `card_reviews` | FSRS flashcard review scheduling data |
+| `card_review_logs` | FSRS ReviewLog for per-user parameter optimization |
+
+### Migrations
+- Migration files are in `supabase/migrations/` with timestamp prefix `YYYYMMDDHHMMSS_name.sql`
+- To apply to production: open Supabase Dashboard → SQL Editor → paste and run the migration file
+- New migrations: create a new file with current timestamp prefix
 
 ### Supabase Client Selection
-- **Server Components / Route Handlers**: use `createServerClient()` from `@/lib/supabase/server`
-- **Client Components**: use `createBrowserClient()` from `@/lib/supabase/client`
+- **Server Components / Route Handlers / Server Actions**: use `await createClient()` from `@/lib/supabase/server` (async!)
+- **Client Components**: use `createClient()` from `@/lib/supabase/client` (sync, browser client)
 - **Middleware**: use `createMiddlewareClient()` from `@/lib/supabase/middleware`
 
 ### Row Level Security (RLS)
@@ -135,48 +165,69 @@ These are required for Supabase Auth and database queries. Never commit `.env.lo
 | Dashboard RSC data fetching | `src/app/(main)/dashboard/page.tsx` |
 | Hero spotlight animation | `src/components/ui/spotlight.tsx` |
 | Circular XP progress ring | `src/app/(main)/dashboard/components/XpTracker.tsx` |
+| Rate limiting | `src/lib/security/rate-limit.ts` (Upstash Redis in prod) |
+| Error monitoring | Sentry — `sentry.*.config.ts` files |
 
 ---
 
 ## 🧪 Testing & Verification
 
-There are currently no automated tests. To verify changes:
+### Unit Tests (Vitest)
+```bash
+npm run test          # run all unit tests
+npm run test:watch    # watch mode
+npm run test:coverage # coverage report
+```
+- Test files: `src/__tests__/*.test.ts`
+- Current coverage: 46 tests across speech scoring, Zod validation, rate limiting, FSRS scheduling
 
-1. Run `npm run dev` and test the affected pages manually in browser.
-2. Before committing, run `npm run build` to ensure zero TypeScript or ESLint errors.
-3. After push to `main`, Vercel automatically deploys — check deployment at `https://atoenglish.vercel.app`.
+### E2E Tests (Playwright)
+```bash
+npm run e2e      # run all E2E tests (requires running dev server)
+npm run e2e:ui   # open Playwright UI mode
+```
+- Test files: `e2e/*.spec.ts`
+- Tests: landing page, login flow, protected route redirects
 
 ### Common Issues to Watch
 - `"use client"` directive missing on components using hooks → Next.js server error.
 - Using `localStorage` in Server Components → will throw during SSR.
 - Supabase queries returning `null` data → check RLS policies and user session.
-- Missing `await` on Supabase async calls → silent data fetch failures.
+- Missing `await` on `createClient()`, `cookies()`, `headers()` in Server Components → TypeScript error + runtime failure.
+- `ssr: false` in `dynamic()` inside Server Components → Turbopack build error.
 
 ---
 
 ## 📦 Key Dependencies
 
-| Package | Usage |
-|---|---|
-| `next@14` | App Router, RSC, Server Actions |
-| `@supabase/ssr` | Auth + DB with SSR support |
-| `framer-motion` | Animations and transitions |
-| `ts-fsrs` | FSRS spaced repetition algorithm |
-| `lucide-react` | Icon library |
-| `tailwind-merge` + `clsx` | Conditional className merging |
-| `sonner` | Toast notifications |
-| `canvas-confetti` | Quest completion confetti |
-| `zod` | Form validation schemas |
+| Package | Version | Usage |
+|---|---|---|
+| `next` | 16.x | App Router, RSC, Server Actions, Turbopack |
+| `react` | 19.x | useActionState, useOptimistic, use() hook |
+| `typescript` | 6.x | Strict mode, ES2022 target |
+| `tailwindcss` | 4.x | CSS-first config via @theme in globals.css |
+| `@supabase/ssr` | 0.12.x | Auth + DB with SSR support |
+| `framer-motion` | 12.x | Animations and transitions |
+| `ts-fsrs` | 5.4.x | FSRS v6.0 spaced repetition algorithm |
+| `@upstash/ratelimit` | 2.x | Serverless-friendly rate limiting |
+| `@sentry/nextjs` | 10.x | Error monitoring + performance |
+| `lucide-react` | 1.x | Icon library |
+| `tailwind-merge` + `clsx` | latest | Conditional className merging |
+| `sonner` | 2.x | Toast notifications |
+| `vitest` | 4.x | Unit test runner |
+| `@playwright/test` | latest | E2E test runner |
+| `zod` | 4.x | Form validation schemas |
 
 ---
 
 ## ✅ Before Committing
 
 1. `npm run build` passes with **zero errors**.
-2. No `console.log` left in production code.
-3. No hardcoded user IDs, API keys, or secrets.
-4. All new Server Components use proper `createServerClient()`.
-5. Commit message format: `type(scope): description` (e.g., `feat(dashboard): add weekly XP chart`).
+2. `npm run test` — all 46 unit tests pass.
+3. No `console.log` left in production code.
+4. No hardcoded user IDs, API keys, or secrets.
+5. All new Server Components use `await createClient()` (async).
+6. Commit message format: `type(scope): description` (e.g., `feat(dashboard): add weekly XP chart`).
 
 ---
 
@@ -186,5 +237,6 @@ There are currently no automated tests. To verify changes:
 - **Trigger**: Push to `main` branch auto-deploys.
 - **Live URL**: `https://atoenglish.vercel.app`
 - **Preview URLs**: Every PR gets a preview deployment.
+- **CI**: GitHub Actions — lint → tsc → unit tests → build → E2E tests
 
 To deploy: `git push origin main` — Vercel picks it up automatically.

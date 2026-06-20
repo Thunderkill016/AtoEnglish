@@ -9,13 +9,16 @@
     "lint": "next lint",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "e2e": "playwright test",
+    "e2e:ui": "playwright test --ui"
   },
   "dependencies": {
     "@base-ui/react": "^1.5.0",
     "@sentry/nextjs": "^10.59.0",
     "@supabase/ssr": "^0.12.0",
     "@supabase/supabase-js": "^2.108.2",
+    "@tailwindcss/postcss": "^4.3.1",
     "@upstash/ratelimit": "^2.0.8",
     "@upstash/redis": "^1.38.0",
     "@vercel/speed-insights": "^2.0.0",
@@ -36,6 +39,7 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
+    "@playwright/test": "^1.61.0",
     "@testing-library/jest-dom": "^6.9.1",
     "@types/canvas-confetti": "^1.9.0",
     "@types/dom-speech-recognition": "^0.0.12",
@@ -47,17 +51,18 @@
     "eslint-config-next": "16.2.9",
     "jsdom": "^29.1.1",
     "postcss": "^8",
-    "tailwindcss": "^3.4.1",
-    "typescript": "^5",
-    "vitest": "^4.1.9"
+    "tailwindcss": "^4.3.1",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.9",
+    "wait-on": "^9.0.10"
   },
   "browserslist": {
     "production": [
-      "Chrome >= 90",
-      "Safari >= 14",
-      "Firefox >= 90",
-      "Edge >= 90",
-      "iOS >= 14"
+      "Chrome >= 111",
+      "Safari >= 16.4",
+      "Firefox >= 128",
+      "Edge >= 111",
+      "iOS >= 16.4"
     ],
     "development": [
       "last 1 Chrome version",
