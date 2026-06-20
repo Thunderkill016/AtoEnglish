@@ -2,309 +2,154 @@ import { UnitData } from "@/components/learn/UnitTemplate";
 
 export const unit2: UnitData = {
   unitId: "unit-2",
-  title: "Unit 2: Daily Routines & Time",
+  title: "Unit 2: Personal Information",
   level: "A1",
   xp: 80,
   estimatedTime: 40,
-  description: "Học cách nói về hoạt động thường nhật và hỏi/trả lời về giờ giấc bằng tiếng Anh.",
-  badgeName: "Người Chăm Chỉ",
-  badgeEmoji: "⏰",
+  description: "Học cách hỏi và trả lời về thông tin cá nhân: tên, tuổi, nghề nghiệp và nơi sống.",
+  badgeName: "Người Tự Giới Thiệu",
+  badgeEmoji: "🪪",
   warmupGreetings: [
     {
-      emoji: "🌅",
-      en: "I wake up at 6 AM every day.",
-      vn: "Tôi thức dậy lúc 6 giờ sáng mỗi ngày.",
-      context: "Nói về giờ thức dậy"
+      emoji: "❓",
+      en: "What's your name?",
+      vn: "Tên bạn là gì?",
+      context: "Câu hỏi cơ bản khi gặp người mới"
     },
     {
-      emoji: "🍳",
-      en: "What time do you have breakfast?",
-      vn: "Bạn ăn sáng lúc mấy giờ?",
-      context: "Hỏi về giờ ăn sáng"
+      emoji: "🎂",
+      en: "How old are you?",
+      vn: "Bạn bao nhiêu tuổi?",
+      context: "Hỏi tuổi một cách lịch sự"
     },
     {
-      emoji: "🏫",
-      en: "I go to school at 7:30.",
-      vn: "Tôi đi học lúc 7 giờ 30 phút.",
-      context: "Nói về giờ đi học"
+      emoji: "💼",
+      en: "What do you do?",
+      vn: "Bạn làm nghề gì?",
+      context: "Hỏi nghề nghiệp tự nhiên"
     }
   ],
-  culturalNote: "Trong tiếng Anh giao tiếp hàng ngày, người bản xứ thường nói <span class=\"text-emerald-400 font-semibold\">seven thirty</span> thay vì <span class=\"text-emerald-400 font-semibold\">half past seven</span> vì nó ngắn gọn và tự nhiên hơn trong hầu hết các ngữ cảnh hiện đại.",
+  culturalNote: "Người Anh và Mỹ thường hỏi <span class=\"text-emerald-400 font-semibold\">What do you do?</span> thay vì <span class=\"text-emerald-400 font-semibold\">What is your job?</span> — nghe tự nhiên hơn rất nhiều trong hội thoại thường ngày.",
   vocab: [
-    {
-      id: 1,
-      word: "wake up", emoji: "⏰",
-      phonetic: "/weɪk ʌp/",
-      meaning: "Thức dậy",
-      example: "I usually wake up at 6 AM.",
-      audio: "/audio/unit2/wake_up.mp3"
-    },
-    {
-      id: 2,
-      word: "brush teeth", emoji: "🦷",
-      phonetic: "/brʌʃ tiːθ/",
-      meaning: "Đánh răng",
-      example: "You should brush your teeth twice a day.",
-      audio: "/audio/unit2/brush_teeth.mp3"
-    },
-    {
-      id: 3,
-      word: "wash face", emoji: "🧼",
-      phonetic: "/wɒʃ feɪs/",
-      meaning: "Rửa mặt",
-      example: "I wash my face with cold water.",
-      audio: "/audio/unit2/wash_face.mp3"
-    },
-    {
-      id: 4,
-      word: "eat breakfast", emoji: "🍳",
-      phonetic: "/iːt ˈbrek.fəst/",
-      meaning: "Ăn sáng",
-      example: "Do you eat breakfast every morning?",
-      audio: "/audio/unit2/eat_breakfast.mp3"
-    },
-    {
-      id: 5,
-      word: "go to school", emoji: "🎒",
-      phonetic: "/ɡəʊ tuː skuːl/",
-      meaning: "Đi học",
-      example: "We go to school by bus.",
-      audio: "/audio/unit2/go_to_school.mp3"
-    },
-    {
-      id: 6,
-      word: "go to work", emoji: "🏢",
-      phonetic: "/ɡəʊ tuː wɜːk/",
-      meaning: "Đi làm",
-      example: "My father goes to work at 8 o'clock.",
-      audio: "/audio/unit2/go_to_work.mp3"
-    },
-    {
-      id: 7,
-      word: "watch TV", emoji: "📺",
-      phonetic: "/wɒtʃ ˌtiːˈviː/",
-      meaning: "Xem tivi",
-      example: "I watch TV for an hour after dinner.",
-      audio: "/audio/unit2/watch_tv.mp3"
-    },
-    {
-      id: 8,
-      word: "go to bed", emoji: "😴",
-      phonetic: "/ɡəʊ tuː bed/",
-      meaning: "Đi ngủ",
-      example: "I go to bed at 10 PM.",
-      audio: "/audio/unit2/go_to_bed.mp3"
-    },
-    {
-      id: 9,
-      word: "what time is it?", emoji: "🕐",
-      phonetic: "/wɒt taɪm ɪz ɪt/",
-      meaning: "Mấy giờ rồi?",
-      example: "Excuse me, what time is it?",
-      audio: "/audio/unit2/what_time_is_it.mp3"
-    },
-    {
-      id: 10,
-      word: "o'clock", emoji: "🕐",
-      phonetic: "/əˈklɒk/",
-      meaning: "Giờ đúng",
-      example: "It is exactly 7 o'clock.",
-      audio: "/audio/unit2/oclock.mp3"
-    },
-    {
-      id: 11,
-      word: "half past",
-      phonetic: "/hɑːf pɑːst/",
-      meaning: "Giờ rưỡi / Qua 30 phút",
-      example: "We meet at half past eight.",
-      audio: "/audio/unit2/half_past.mp3"
-    },
-    {
-      id: 12,
-      word: "quarter",
-      phonetic: "/ˈkwɔː.tər/",
-      meaning: "15 phút",
-      example: "It is a quarter past nine.",
-      audio: "/audio/unit2/quarter.mp3"
-    }
+    { id: 1, word: "name", emoji: "🏷️", phonetic: "/neɪm/", meaning: "tên", example: "What's your name?", example2: "My name is Minh.", collocation: "first name / last name", audio: "/audio/unit2/name.mp3" },
+    { id: 2, word: "age", emoji: "🎂", phonetic: "/eɪdʒ/", meaning: "tuổi", example: "What's your age?", example2: "She is 25 years old.", collocation: "at the age of", audio: "/audio/unit2/age.mp3" },
+    { id: 3, word: "job", emoji: "💼", phonetic: "/dʒɒb/", meaning: "nghề nghiệp / công việc", example: "What is your job?", example2: "My job is very interesting.", collocation: "full-time job", audio: "/audio/unit2/job.mp3" },
+    { id: 4, word: "student", emoji: "🎓", phonetic: "/ˈstjuːdənt/", meaning: "học sinh / sinh viên", example: "I am a student.", example2: "She is a university student.", collocation: "student ID", audio: "/audio/unit2/student.mp3" },
+    { id: 5, word: "teacher", emoji: "👩‍🏫", phonetic: "/ˈtiːtʃər/", meaning: "giáo viên", example: "He is an English teacher.", example2: "My teacher is very kind.", collocation: "English teacher", audio: "/audio/unit2/teacher.mp3" },
+    { id: 6, word: "doctor", emoji: "👨‍⚕️", phonetic: "/ˈdɒktər/", meaning: "bác sĩ", example: "She is a doctor.", example2: "The doctor helps sick people.", collocation: "see a doctor", audio: "/audio/unit2/doctor.mp3" },
+    { id: 7, word: "address", emoji: "🏠", phonetic: "/ˈædrɛs/", meaning: "địa chỉ", example: "What is your address?", example2: "My address is 12 Nguyen Hue Street.", collocation: "home address", audio: "/audio/unit2/address.mp3" },
+    { id: 8, word: "phone number", emoji: "📱", phonetic: "/fəʊn ˈnʌmbər/", meaning: "số điện thoại", example: "What's your phone number?", example2: "I'll give you my phone number.", collocation: "mobile phone number", audio: "/audio/unit2/phone_number.mp3" },
+    { id: 9, word: "nationality", emoji: "🌏", phonetic: "/ˌnæʃəˈnælɪti/", meaning: "quốc tịch", example: "What is your nationality?", example2: "My nationality is Vietnamese.", collocation: "Vietnamese nationality", audio: "/audio/unit2/nationality.mp3" },
+    { id: 10, word: "email", emoji: "📧", phonetic: "/ˈiːmeɪl/", meaning: "địa chỉ email", example: "What's your email address?", example2: "Send me an email, please.", collocation: "email address", audio: "/audio/unit2/email.mp3" },
+    { id: 11, word: "married", emoji: "💍", phonetic: "/ˈmærid/", meaning: "đã kết hôn", example: "Are you married?", example2: "He got married last year.", collocation: "get married", audio: "/audio/unit2/married.mp3" },
+    { id: 12, word: "single", emoji: "🙋", phonetic: "/ˈsɪŋɡəl/", meaning: "độc thân", example: "I am single.", example2: "Are you single or married?", collocation: "single person", audio: "/audio/unit2/single.mp3" },
   ],
   dialogues: [
     {
       id: 1,
-      title: "Hội thoại: Daily Schedule",
-      audio: "/audio/unit2/dialogue1.mp3",
-      desc: "Sarah và Alex thảo luận về thời gian biểu hàng ngày của mình.",
+      title: "Điền form đăng ký",
+      audio: "/audio/unit2/dialogue_1.mp3",
+      desc: "Nam đang giúp Lily điền vào mẫu đăng ký học tiếng Anh.",
       lines: [
-        {
-          id: "l1",
-          speaker: "Alex",
-          text: "What time do you wake up, Sarah?",
-          translation: "Cậu thức dậy lúc mấy giờ vậy Sarah?"
-        },
-        {
-          id: "l2",
-          speaker: "Sarah",
-          text: "I usually wake up at 6:30 AM.",
-          translation: "Tớ thường thức dậy lúc 6 giờ 30 sáng."
-        },
-        {
-          id: "l3",
-          speaker: "Alex",
-          text: "That is early! Do you eat breakfast at home?",
-          translation: "Sớm thật đấy! Cậu có ăn sáng ở nhà không?"
-        },
-        {
-          id: "l4",
-          speaker: "Sarah",
-          text: "Yes, I eat breakfast at 7 o'clock, and then I go to school.",
-          translation: "Có, tớ ăn sáng lúc 7 giờ đúng, rồi sau đó đi học."
-        },
-        {
-          id: "l5",
-          speaker: "Alex",
-          text: "What time do you go to bed?",
-          translation: "Mấy giờ thì cậu đi ngủ?"
-        },
-        {
-          id: "l6",
-          speaker: "Sarah",
-          text: "I go to bed at 10 PM. And you?",
-          translation: "Tớ đi ngủ lúc 10 giờ tối. Còn cậu thì sao?"
-        }
+        { id: "d1-1", speaker: "Nam", text: "What's your full name?", translation: "Họ và tên đầy đủ của bạn là gì?" },
+        { id: "d1-2", speaker: "Lily", text: "My name is Lily Chen.", translation: "Tên tôi là Lily Chen." },
+        { id: "d1-3", speaker: "Nam", text: "How old are you?", translation: "Bạn bao nhiêu tuổi?" },
+        { id: "d1-4", speaker: "Lily", text: "I'm twenty-two years old.", translation: "Tôi 22 tuổi." },
+        { id: "d1-5", speaker: "Nam", text: "What do you do?", translation: "Bạn làm nghề gì?" },
+        { id: "d1-6", speaker: "Lily", text: "I'm a student at Hanoi University.", translation: "Tôi là sinh viên Đại học Hà Nội." },
       ]
-    }
+    },
+    {
+      id: 2,
+      title: "Gặp đồng nghiệp mới",
+      audio: "/audio/unit2/dialogue_2.mp3",
+      desc: "Hoa gặp đồng nghiệp mới tên Tom trong ngày đầu đi làm.",
+      lines: [
+        { id: "d2-1", speaker: "Tom", text: "Hi! I'm Tom. Nice to meet you.", translation: "Chào! Mình là Tom. Rất vui được gặp bạn." },
+        { id: "d2-2", speaker: "Hoa", text: "Hi Tom! I'm Hoa. Where are you from?", translation: "Chào Tom! Mình là Hoa. Bạn đến từ đâu?" },
+        { id: "d2-3", speaker: "Tom", text: "I'm from Australia. And you?", translation: "Mình đến từ Úc. Còn bạn?" },
+        { id: "d2-4", speaker: "Hoa", text: "I'm Vietnamese. What do you do here?", translation: "Mình là người Việt Nam. Bạn làm gì ở đây?" },
+        { id: "d2-5", speaker: "Tom", text: "I'm an English teacher at this school.", translation: "Mình là giáo viên tiếng Anh tại trường này." },
+      ]
+    },
   ],
   listenAndChoose: [
-    {
-      id: "lc1",
-      audio_text: "I eat breakfast at seven o'clock.",
-      options: ["7:00 AM", "7:30 AM", "8:00 AM", "6:30 AM"],
-      answer: "7:00 AM"
-    },
-    {
-      id: "lc2",
-      audio_text: "What time do you go to bed? I go to bed at half past ten.",
-      options: ["10:00 PM", "10:30 PM", "11:00 PM", "9:30 PM"],
-      answer: "10:30 PM"
-    },
-    {
-      id: "lc3",
-      audio_text: "I go to work by bus at eight fifteen.",
-      options: ["8:00 AM", "8:15 AM", "8:30 AM", "8:45 AM"],
-      answer: "8:15 AM"
-    }
+    { id: "lac1", audio_text: "What is your name", options: ["How old are you", "What is your name", "Where are you from", "What do you do"], answer: "What is your name" },
+    { id: "lac2", audio_text: "I am a teacher", options: ["I am a student", "I am a teacher", "I am a doctor", "I am an engineer"], answer: "I am a teacher" },
+    { id: "lac3", audio_text: "I am twenty years old", options: ["I am twelve years old", "I am twenty years old", "I am thirty years old", "I am two years old"], answer: "I am twenty years old" },
+    { id: "lac4", audio_text: "What do you do", options: ["What is your name", "Where do you live", "What do you do", "How are you"], answer: "What do you do" },
+    { id: "lac5", audio_text: "I am from Vietnam", options: ["I am fine", "I am from Vietnam", "I am a student", "I am married"], answer: "I am from Vietnam" },
   ],
   speaking: {
-    level1Prompt: "I usually wake up at {input}.",
-    level1Placeholder: "Ví dụ: 6 AM",
-    level2Situation: "Hãy nói về thời gian biểu buổi sáng của bạn cho bạn học nghe.",
-    level2Hint: "I wake up at [giờ]. Then I brush my teeth, eat breakfast, and go to school at [giờ]."
+    level1Prompt: "My name is {input}. I am a student.",
+    level1Placeholder: "Ví dụ: Minh, Lan, Nam...",
+    level2Situation: "Bạn đang điền vào form đăng ký tại một trung tâm tiếng Anh. Nhân viên hỏi bạn về thông tin cá nhân.",
+    level2Hint: "My name is [tên]. I am [tuổi] years old. I am a [nghề nghiệp]. I am from [nơi].",
   },
-
   grammar: {
-    title: "Present Simple — Thì Hiện Tại Đơn",
-    rule: "I / You / We / They + V  |  He / She / It + V-s/-es",
-    conjugation: [
-      { subject: "I / You", form: "wake up", example: "I wake up at 6 AM." },
-      { subject: "He / She", form: "wakes up", example: "She wakes up at 7 AM." },
-      { subject: "We / They", form: "eat", example: "They eat breakfast together." },
-      { subject: "He / She", form: "eats", example: "He eats at 8 o'clock." },
-    ],
+    title: "Wh- Questions — Câu hỏi thông tin",
+    rule: "What / Who / Where / How old + am/is/are + chủ ngữ?",
     examples: [
-      { en: "I go to school every day.", vn: "Tôi đi học mỗi ngày." },
-      { en: "She brushes her teeth in the morning.", vn: "Cô ấy đánh răng vào buổi sáng." },
-      { en: "They watch TV at night.", vn: "Họ xem TV vào buổi tối." },
-      { en: "He goes to bed at 10 PM.", vn: "Anh ấy đi ngủ lúc 10 giờ tối." },
+      { en: "What is your name?", vn: "Tên bạn là gì?" },
+      { en: "Where are you from?", vn: "Bạn đến từ đâu?" },
+      { en: "How old are you?", vn: "Bạn bao nhiêu tuổi?" },
+      { en: "What do you do?", vn: "Bạn làm nghề gì?" },
     ],
-    tip: "Khi chủ ngữ là He/She/It, thêm -s vào cuối động từ (go → goes, watch → watches, brush → brushes).",
+    tip: "Wh- questions bắt đầu bằng từ hỏi (What/Where/Who/How), sau đó là trợ động từ (am/is/are/do/does), cuối cùng là chủ ngữ. Đừng quên dấu hỏi (?) ở cuối câu!",
     dialogueExample: {
-      speaker: "Sarah",
-      text: "She brushes her teeth and washes her face.",
-      translation: "Cô ấy đánh răng và rửa mặt.",
-      highlight: "brushes",
+      speaker: "Nam",
+      text: "What's your full name?",
+      translation: "Họ và tên đầy đủ của bạn là gì?",
+      highlight: "What's",
     },
     ccq: {
-      question: "Chọn câu đúng với chủ ngữ 'She':",
-      options: ["She go to school.", "She goes to school.", "She going to school.", "She goed to school."],
-      answer: "She goes to school.",
+      question: "Câu hỏi Wh- nào đúng cấu trúc?",
+      options: ["Name your what is?", "What is your name?", "Is what your name?", "Your name what?"],
+      answer: "What is your name?",
     },
   },
-
   matchingExercise: {
-    title: "Nối hoạt động với nghĩa tiếng Việt",
+    title: "Nối câu hỏi với câu trả lời",
     pairs: [
-      { left: "Wake up", right: "Thức dậy" },
-      { left: "Brush teeth", right: "Đánh răng" },
-      { left: "Eat breakfast", right: "Ăn sáng" },
-      { left: "Go to school", right: "Đi học" },
-      { left: "Go to bed", right: "Đi ngủ" },
+      { left: "What's your name?", right: "My name is Linh." },
+      { left: "How old are you?", right: "I'm 20 years old." },
+      { left: "What do you do?", right: "I'm a student." },
+      { left: "Where are you from?", right: "I'm from Vietnam." },
+      { left: "Are you married?", right: "No, I'm single." },
     ],
   },
-
   practiceQuiz: [
-    { id: "pq1", question: "She ___ to school every day. (Chọn dạng đúng)", options: ["go", "goes", "going", "gone"], answer: "goes", type: "multiple-choice" },
-    { id: "pq2", question: "Từ nào mô tả hành động 'Thức dậy'?", options: ["Go to bed", "Wake up", "Eat breakfast", "Wash face"], answer: "Wake up", type: "multiple-choice" },
-    { id: "pq3", question: "Điền từ còn thiếu: 'I ___ breakfast at 7 AM every day.'", options: [], answer: "eat", type: "cloze" },
+    { id: "pq1", question: "Chọn câu hỏi đúng: '___ your name?' ", options: ["What's", "Who's", "Where's", "How's"], answer: "What's", type: "multiple-choice" },
+    { id: "pq2", question: "'What do you do?' hỏi về điều gì?", options: ["Tên", "Tuổi", "Nghề nghiệp", "Địa chỉ"], answer: "Nghề nghiệp", type: "multiple-choice" },
+    { id: "pq3", question: "Điền vào chỗ trống: 'I ___ a doctor.'", options: [], answer: "am", type: "cloze" },
   ],
-
   quiz: [
-    {
-      id: "q1",
-      question: "Từ nào có nghĩa là 'Đi ngủ'?",
-      options: ["Go to school", "Go to bed", "Wake up", "Go to work"],
-      answer: "Go to bed",
-      type: "multiple-choice"
-    },
-    {
-      id: "q2",
-      question: "Cách nói '7 giờ 30 phút' là gì?",
-      options: ["Seven o'clock", "Half past seven", "Quarter past seven", "Seven fifteen"],
-      answer: "Half past seven",
-      type: "multiple-choice"
-    },
-    {
-      id: "q3",
-      question: "He ___ his teeth every morning. (Chọn dạng đúng)",
-      options: ["brush", "brushes", "brushing", "brushed"],
-      answer: "brushes",
-      type: "multiple-choice"
-    },
-    {
-      id: "q4",
-      question: "Điền từ còn thiếu: 'She ___ to bed at 10 PM.'",
-      options: [],
-      answer: "goes",
-      type: "cloze"
-    },
-    {
-      id: "q5",
-      question: "Từ nào KHÔNG phải hoạt động buổi sáng thông thường?",
-      options: ["Wake up", "Brush teeth", "Eat breakfast", "Watch TV all day"],
-      answer: "Watch TV all day",
-      type: "multiple-choice"
-    },
-    { id: "q6", question: "Tôi thức dậy lúc 7 giờ sáng.", options: [], answer: "I wake up at seven in the morning.", type: "translate" },
-    { id: "q7", question: "Cô ấy đi làm bằng xe buýt mỗi ngày.", options: [], answer: "She goes to work by bus every day.", type: "translate" },
+    { id: "q1", question: "Câu hỏi nào hỏi về nghề nghiệp?", options: ["What is your name?", "How old are you?", "What do you do?", "Where are you from?"], answer: "What do you do?", type: "multiple-choice" },
+    { id: "q2", question: "'I am a student at Hanoi University.' — từ nào chỉ nghề nghiệp?", options: ["Hanoi", "University", "student", "am"], answer: "student", type: "multiple-choice" },
+    { id: "q3", question: "Câu hỏi hỏi tuổi là gì?", options: ["What do you do?", "How old are you?", "Where are you from?", "What is your job?"], answer: "How old are you?", type: "multiple-choice" },
+    { id: "q4", question: "Điền từ còn thiếu: 'What ___ your phone number?'", options: [], answer: "is", type: "cloze" },
+    { id: "q5", question: "Điền từ còn thiếu: 'I am ___ student.'", options: [], answer: "a", type: "cloze" },
+    { id: "q6", question: "Tên tôi là Hoa và tôi là sinh viên.", options: [], answer: "My name is Hoa and I am a student.", type: "translate" },
+    { id: "q7", question: "Bạn đến từ đâu?", options: [], answer: "Where are you from?", type: "translate" },
   ],
-
   scrambleExercises: [
     {
       id: "s2-1",
-      prompt_vn: "Tôi thức dậy lúc 7 giờ.",
-      words: ["I", "wake", "up", "at", "seven", "."],
-      answer: "I wake up at seven .",
+      prompt_vn: "Tên bạn là gì?",
+      words: ["What", "is", "your", "name", "?"],
+      answer: "What is your name ?",
     },
     {
       id: "s2-2",
-      prompt_vn: "Cô ấy đánh răng mỗi buổi sáng.",
-      words: ["She", "brushes", "her", "teeth", "every", "morning", "."],
-      answer: "She brushes her teeth every morning .",
+      prompt_vn: "Tôi là giáo viên tiếng Anh.",
+      words: ["I", "am", "an", "English", "teacher", "."],
+      answer: "I am an English teacher .",
     },
     {
       id: "s2-3",
-      prompt_vn: "Anh ấy ăn sáng trước khi đi làm.",
-      words: ["He", "eats", "breakfast", "before", "work", "."],
-      answer: "He eats breakfast before work .",
+      prompt_vn: "Bạn bao nhiêu tuổi?",
+      words: ["How", "old", "are", "you", "?"],
+      answer: "How old are you ?",
     },
   ],
   cumulativeReviewQuestions: [
@@ -317,13 +162,12 @@ export const unit2: UnitData = {
     },
     {
       id: "cr2-2",
-      question: "Tôi đến từ Việt Nam.",
+      question: "Rất vui được gặp bạn. (Unit 1)",
       options: [],
-      answer: "I am from Vietnam.",
+      answer: "Nice to meet you.",
       type: "translate",
     },
   ],
 };
 
 export default unit2;
-

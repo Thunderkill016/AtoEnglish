@@ -1,0 +1,165 @@
+import { UnitData } from "@/components/learn/UnitTemplate";
+
+export const unit12: UnitData = {
+  unitId: "unit-12",
+  title: "Unit 12: Review & Real-life Application",
+  level: "A1",
+  xp: 120,
+  estimatedTime: 60,
+  description: "Ôn tập toàn bộ ngữ pháp và từ vựng A1, áp dụng vào các tình huống giao tiếp thực tế.",
+  badgeName: "Chinh Phục A1",
+  badgeEmoji: "🏆",
+  warmupGreetings: [
+    { emoji: "🎉", en: "Congratulations! You've reached Unit 12.", vn: "Chúc mừng! Bạn đã đến Unit 12.", context: "Tổng kết hành trình học" },
+    { emoji: "🔁", en: "Let's review everything you've learned.", vn: "Hãy ôn lại tất cả những gì bạn đã học.", context: "Mục tiêu ôn tập" },
+    { emoji: "💬", en: "Now you can have real conversations!", vn: "Bây giờ bạn có thể có những cuộc trò chuyện thực sự!", context: "Kết quả sau A1" }
+  ],
+  culturalNote: "Sau khi hoàn thành A1, bạn có thể: <span class=\"text-emerald-400 font-semibold\">tự giới thiệu</span>, <span class=\"text-emerald-400 font-semibold\">mua sắm</span>, <span class=\"text-emerald-400 font-semibold\">hỏi đường</span>, <span class=\"text-emerald-400 font-semibold\">nói về sức khỏe</span> và <span class=\"text-emerald-400 font-semibold\">chia sẻ sở thích</span>. Đây là nền tảng vững chắc để tiến lên A2!",
+  vocab: [
+    { id: 1, word: "introduce", emoji: "🤝", phonetic: "/ˌɪntrəˈdjuːs/", meaning: "giới thiệu", example: "Let me introduce myself.", example2: "I'd like to introduce my friend Tom.", collocation: "introduce yourself / introduce someone", audio: "/audio/unit12/introduce.mp3" },
+    { id: 2, word: "conversation", emoji: "💬", phonetic: "/ˌkɒnvəˈseɪʃən/", meaning: "cuộc trò chuyện", example: "I can have a conversation in English.", example2: "Let's have a conversation about hobbies.", collocation: "have a conversation", audio: "/audio/unit12/conversation.mp3" },
+    { id: 3, word: "describe", emoji: "📝", phonetic: "/dɪˈskraɪb/", meaning: "mô tả", example: "Can you describe your home?", example2: "She describes her daily routine.", collocation: "describe yourself", audio: "/audio/unit12/describe.mp3" },
+    { id: 4, word: "ask for help", emoji: "🙋", phonetic: "/ɑːsk fɔː hɛlp/", meaning: "nhờ giúp đỡ", example: "Don't be afraid to ask for help.", example2: "You can ask for help in English now.", collocation: "ask for help / ask for directions", audio: "/audio/unit12/ask_for_help.mp3" },
+    { id: 5, word: "understand", emoji: "💡", phonetic: "/ˌʌndəˈstænd/", meaning: "hiểu", example: "I can understand simple English.", example2: "Do you understand the question?", collocation: "understand English", audio: "/audio/unit12/understand.mp3" },
+    { id: 6, word: "practice", emoji: "🔄", phonetic: "/ˈpræktɪs/", meaning: "luyện tập", example: "Practice makes perfect!", example2: "I practice English every day.", collocation: "practice speaking / practice daily", audio: "/audio/unit12/practice.mp3" },
+    { id: 7, word: "improve", emoji: "📈", phonetic: "/ɪmˈpruːv/", meaning: "cải thiện", example: "My English is improving every day.", example2: "You can improve your speaking skills.", collocation: "improve your English", audio: "/audio/unit12/improve.mp3" },
+    { id: 8, word: "confident", emoji: "💪", phonetic: "/ˈkɒnfɪdənt/", meaning: "tự tin", example: "I feel confident speaking English now.", example2: "She is confident in her abilities.", collocation: "feel confident", audio: "/audio/unit12/confident.mp3" },
+    { id: 9, word: "goal", emoji: "🎯", phonetic: "/ɡəʊl/", meaning: "mục tiêu", example: "My goal is to speak English fluently.", example2: "What is your learning goal?", collocation: "set a goal / reach a goal", audio: "/audio/unit12/goal.mp3" },
+    { id: 10, word: "fluent", emoji: "🗣️", phonetic: "/ˈfluːənt/", meaning: "trôi chảy / thành thạo", example: "I want to be fluent in English.", example2: "She speaks French fluently.", collocation: "speak fluently / become fluent", audio: "/audio/unit12/fluent.mp3" },
+    { id: 11, word: "review", emoji: "🔁", phonetic: "/rɪˈvjuː/", meaning: "ôn tập", example: "Let's review what we learned.", example2: "It's important to review old lessons.", collocation: "review your notes", audio: "/audio/unit12/review.mp3" },
+    { id: 12, word: "achieve", emoji: "🏆", phonetic: "/əˈtʃiːv/", meaning: "đạt được", example: "You achieved your A1 goal!", example2: "She achieved great results.", collocation: "achieve a goal / achieve success", audio: "/audio/unit12/achieve.mp3" },
+  ],
+  dialogues: [
+    {
+      id: 1,
+      title: "Tổng hợp: Gặp người mới",
+      audio: "/audio/unit12/dialogue_1.mp3",
+      desc: "Bài hội thoại tổng hợp tất cả các chủ đề A1: giới thiệu, nghề nghiệp, sở thích, sức khỏe và hỏi đường.",
+      lines: [
+        { id: "d1-1", speaker: "Tom", text: "Excuse me, where is the nearest café?", translation: "Xin lỗi, quán cà phê gần nhất ở đâu?" },
+        { id: "d1-2", speaker: "Lan", text: "It's next to the bank. Go straight and turn left!", translation: "Nó ở cạnh ngân hàng. Đi thẳng và rẽ trái!" },
+        { id: "d1-3", speaker: "Tom", text: "Thank you! By the way, I'm Tom. Nice to meet you.", translation: "Cảm ơn bạn! Nhân tiện, tôi là Tom. Rất vui được gặp bạn." },
+        { id: "d1-4", speaker: "Lan", text: "I'm Lan. What do you do, Tom?", translation: "Tôi là Lan. Tom làm nghề gì vậy?" },
+        { id: "d1-5", speaker: "Tom", text: "I'm an English teacher. I like traveling and cooking.", translation: "Tôi là giáo viên tiếng Anh. Tôi thích du lịch và nấu ăn." },
+        { id: "d1-6", speaker: "Lan", text: "That's great! I can cook Vietnamese food too. Are you feeling OK? You look tired.", translation: "Tuyệt vời! Tôi cũng có thể nấu ăn Việt Nam. Bạn có ổn không? Trông bạn có vẻ mệt." },
+        { id: "d1-7", speaker: "Tom", text: "I feel a bit tired. I have a cold. But I feel better now, thank you!", translation: "Tôi cảm thấy hơi mệt. Tôi bị cảm lạnh. Nhưng bây giờ tôi cảm thấy khỏe hơn rồi, cảm ơn bạn!" },
+      ]
+    },
+    {
+      id: 2,
+      title: "Mô tả cuộc sống hàng ngày",
+      audio: "/audio/unit12/dialogue_2.mp3",
+      desc: "Minh mô tả một ngày bình thường của mình — ôn lại tất cả ngữ pháp A1.",
+      lines: [
+        { id: "d2-1", speaker: "Sarah", text: "Tell me about your typical day, Minh.", translation: "Kể cho tôi nghe về một ngày bình thường của bạn, Minh." },
+        { id: "d2-2", speaker: "Minh", text: "OK! I wake up at six. I have breakfast and go to work at eight.", translation: "OK! Tôi thức dậy lúc sáu giờ. Tôi ăn sáng và đi làm lúc tám giờ." },
+        { id: "d2-3", speaker: "Sarah", text: "What do you do in the evening?", translation: "Buổi tối bạn làm gì?" },
+        { id: "d2-4", speaker: "Minh", text: "I come home at six. I like cooking dinner and reading.", translation: "Tôi về nhà lúc sáu giờ. Tôi thích nấu bữa tối và đọc sách." },
+        { id: "d2-5", speaker: "Sarah", text: "Is there a park near your home?", translation: "Có công viên nào gần nhà bạn không?" },
+        { id: "d2-6", speaker: "Minh", text: "Yes! There is a park next to my house. I can walk there every morning.", translation: "Có! Có một công viên cạnh nhà tôi. Tôi có thể đi bộ đến đó mỗi buổi sáng." },
+      ]
+    },
+  ],
+  listenAndChoose: [
+    { id: "lac1", audio_text: "I can have a conversation in English", options: ["I can speak English well", "I can have a conversation in English", "She can have a conversation in English", "I can have a talk in English"], answer: "I can have a conversation in English" },
+    { id: "lac2", audio_text: "My goal is to speak English fluently", options: ["My goal is to speak English slowly", "My aim is to speak English fluently", "My goal is to speak English fluently", "Her goal is to speak English fluently"], answer: "My goal is to speak English fluently" },
+    { id: "lac3", audio_text: "Practice makes perfect", options: ["Practice makes better", "Practice is perfect", "Practice makes perfect", "Practicing makes perfect"], answer: "Practice makes perfect" },
+    { id: "lac4", audio_text: "I feel confident speaking English now", options: ["I feel confident speaking Vietnamese now", "She feels confident speaking English now", "I feel confident speaking English now", "I felt confident speaking English"], answer: "I feel confident speaking English now" },
+    { id: "lac5", audio_text: "You achieved your A1 goal", options: ["You achieved your A2 goal", "She achieved your A1 goal", "You achieved your A1 goal", "You can achieve your A1 goal"], answer: "You achieved your A1 goal" },
+  ],
+  speaking: {
+    level1Prompt: "I can {input} now. I am proud of myself!",
+    level1Placeholder: "Ví dụ: speak English, introduce myself, order food...",
+    level2Situation: "Tổng hợp A1: Bạn gặp một người bạn quốc tế lần đầu tiên. Tự giới thiệu, hỏi về nghề nghiệp, sở thích, mô tả nhà bạn, và chia sẻ cảm xúc của bạn hôm nay.",
+    level2Hint: "Hi! My name is [tên]. I am [tuổi] years old. I am a [nghề nghiệp]. I like [sở thích]. In my home, there is/are [mô tả nhà]. Today I feel [cảm xúc] because [lý do]. I can [kỹ năng]!",
+  },
+  grammar: {
+    title: "Ôn tập Ngữ pháp A1 — 11 Cấu trúc quan trọng",
+    rule: "To be | Wh- questions | Possessives | Present Simple | like+V-ing | There is/are | How much | some/any | Prepositions | Can/Can't | have/feel",
+    examples: [
+      { en: "I am a student. She is a teacher.", vn: "Unit 1-2: To be + nghề nghiệp" },
+      { en: "He goes to work. She brushes her teeth.", vn: "Unit 4: Present Simple + He/She/It" },
+      { en: "I like reading. She likes cooking.", vn: "Unit 5: like + V-ing" },
+      { en: "There are two chairs. Can I have some water?", vn: "Unit 6-8: There is/are + some/any" },
+    ],
+    tip: "Ôn lại 11 điểm ngữ pháp quan trọng nhất của A1. Mỗi cấu trúc đều được học trong context thực tế — đây là điểm mạnh của cách học của bạn!",
+    dialogueExample: {
+      speaker: "Minh",
+      text: "There is a park next to my house. I can walk there every morning.",
+      translation: "Có một công viên cạnh nhà tôi. Tôi có thể đi bộ đến đó mỗi buổi sáng.",
+      highlight: "There is / I can",
+    },
+    ccq: {
+      question: "Câu nào dùng đúng NHIỀU cấu trúc A1 nhất?",
+      options: [
+        "I am student and like swim.",
+        "She have a headache and can't goes to work.",
+        "I'm a teacher. I like cooking and I can speak English well.",
+        "There is chairs in kitchen and she feels happy.",
+      ],
+      answer: "I'm a teacher. I like cooking and I can speak English well.",
+    },
+  },
+  matchingExercise: {
+    title: "Nối ngữ pháp với ví dụ đúng",
+    pairs: [
+      { left: "To be (Unit 1)", right: "I am a student." },
+      { left: "Present Simple (Unit 4)", right: "She goes to work at 8." },
+      { left: "like + V-ing (Unit 5)", right: "I like swimming." },
+      { left: "There is/are (Unit 6)", right: "There are two chairs." },
+      { left: "Can/Can't (Unit 10)", right: "He can play guitar." },
+    ],
+  },
+  practiceQuiz: [
+    { id: "pq1", question: "Câu nào ÔN lại ngữ pháp Unit 4 đúng?", options: ["She go to work.", "She goes to work.", "She going to work.", "She is go to work."], answer: "She goes to work.", type: "multiple-choice" },
+    { id: "pq2", question: "Câu nào dùng đúng 'like + V-ing' (Unit 5)?", options: ["I like swim.", "I like to swimming.", "I like swimming.", "I like swims."], answer: "I like swimming.", type: "multiple-choice" },
+    { id: "pq3", question: "Điền vào: 'I ___ speak English now. I'm proud!' (Unit 10)", options: [], answer: "can", type: "cloze" },
+  ],
+  quiz: [
+    { id: "q1", question: "Câu nào ÔN đúng ngữ pháp 'There is/are' (Unit 6)?", options: ["There is two windows.", "There are two window.", "There are two windows.", "There have two windows."], answer: "There are two windows.", type: "multiple-choice" },
+    { id: "q2", question: "Câu nào ÔN đúng 'How much' (Unit 7)?", options: ["How much is these shoes?", "How much are this shoe?", "How much are these shoes?", "How many are these shoes?"], answer: "How much are these shoes?", type: "multiple-choice" },
+    { id: "q3", question: "Câu nào ÔN đúng 'have/feel' (Unit 11)?", options: ["I have tired.", "I feel a headache.", "I have a headache and feel tired.", "I am a headache."], answer: "I have a headache and feel tired.", type: "multiple-choice" },
+    { id: "q4", question: "Điền vào (Unit 5): 'She ___ cooking Vietnamese food.'", options: [], answer: "likes", type: "cloze" },
+    { id: "q5", question: "Điền vào (Unit 10): 'She ___ drive but she ___ ride a bike.'", options: [], answer: "can't / can", type: "cloze" },
+    { id: "q6", question: "Tôi thức dậy lúc 6 giờ và đi làm lúc 8 giờ. (Unit 4)", options: [], answer: "I wake up at six and go to work at eight.", type: "translate" },
+    { id: "q7", question: "Tôi cảm thấy tự tin khi nói tiếng Anh bây giờ. (Unit 11)", options: [], answer: "I feel confident speaking English now.", type: "translate" },
+  ],
+  scrambleExercises: [
+    {
+      id: "s12-1",
+      prompt_vn: "Tôi có thể tự giới thiệu bằng tiếng Anh.",
+      words: ["I", "can", "introduce", "myself", "in", "English", "."],
+      answer: "I can introduce myself in English .",
+    },
+    {
+      id: "s12-2",
+      prompt_vn: "Cô ấy thích nấu ăn và tôi có thể nói tiếng Anh.",
+      words: ["She", "likes", "cooking", "and", "I", "can", "speak", "English", "."],
+      answer: "She likes cooking and I can speak English .",
+    },
+    {
+      id: "s12-3",
+      prompt_vn: "Có một công viên cạnh nhà tôi.",
+      words: ["There", "is", "a", "park", "next", "to", "my", "house", "."],
+      answer: "There is a park next to my house .",
+    },
+  ],
+  cumulativeReviewQuestions: [
+    {
+      id: "cr12-1",
+      question: "Câu nào đúng về cảm xúc? (Unit 11: Health & Feelings)",
+      options: ["She have tired.", "She feel tired.", "She feels tired.", "She is feel tired."],
+      answer: "She feels tired.",
+      type: "multiple-choice",
+    },
+    {
+      id: "cr12-2",
+      question: "Tôi bị đau đầu và cảm thấy mệt. (Unit 11)",
+      options: [],
+      answer: "I have a headache and I feel tired.",
+      type: "translate",
+    },
+  ],
+};
+
+export default unit12;

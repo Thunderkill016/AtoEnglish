@@ -2,278 +2,172 @@ import { UnitData } from "@/components/learn/UnitTemplate";
 
 export const unit4: UnitData = {
   unitId: "unit-4",
-  title: "Unit 4: Technology & Society",
-  level: "B1",
+  title: "Unit 4: Daily Routines",
+  level: "A1",
   xp: 80,
-  estimatedTime: 50,
-  description: "Phân tích cấu trúc câu nâng cao và ý nghĩa của động từ khuyết thiếu trong văn cảnh thời đại số. Thực hành diễn đạt ý kiến trái chiều về tiến bộ công nghệ.",
-  badgeName: "Nhà Công Nghệ",
-  badgeEmoji: "💻",
+  estimatedTime: 45,
+  description: "Học từ vựng về hoạt động thường ngày và cách dùng thì Hiện Tại Đơn (Present Simple) để mô tả thói quen.",
+  badgeName: "Người Có Nề Nếp",
+  badgeEmoji: "⏰",
   warmupGreetings: [
     {
-      emoji: "🤖",
-      en: "Artificial intelligence is changing the world.",
-      vn: "Trí tuệ nhân tạo đang thay đổi thế giới.",
-      context: "Nói về công nghệ"
+      emoji: "🌅",
+      en: "I wake up at six every morning.",
+      vn: "Tôi thức dậy lúc sáu giờ mỗi buổi sáng.",
+      context: "Mô tả thói quen buổi sáng"
     },
     {
-      emoji: "📱",
-      en: "Smartphones are omnipresent nowadays.",
-      vn: "Điện thoại thông minh hiện nay có mặt ở khắp mọi nơi.",
-      context: "Sự phổ biến của điện thoại"
+      emoji: "🍳",
+      en: "She eats breakfast before work.",
+      vn: "Cô ấy ăn sáng trước khi đi làm.",
+      context: "Dùng Present Simple với She"
     },
     {
-      emoji: "🚀",
-      en: "New innovations revolutionize our lives.",
-      vn: "Những đổi mới mới cách mạng hóa cuộc sống của chúng ta.",
-      context: "Sự thay đổi của cuộc sống"
+      emoji: "🌙",
+      en: "He goes to bed at ten o'clock.",
+      vn: "Anh ấy đi ngủ lúc mười giờ.",
+      context: "Present Simple với He"
     }
   ],
-  culturalNote: "Trong văn hóa phương Tây, các cuộc thảo luận về công nghệ thường đi kèm với các câu hỏi về đạo đức (ethics) và bảo mật dữ liệu riêng tư (data privacy). Hãy học cách bày tỏ quan điểm cá nhân một cách cởi mở nhưng tôn trọng sự riêng tư của người khác nhé!",
+  culturalNote: "Người Việt thường nói giờ bằng cách thêm <span class=\"text-emerald-400 font-semibold\">o'clock</span> sau số (seven o'clock). Người bản xứ hay nói ngắn hơn: <span class=\"text-emerald-400 font-semibold\">at seven</span> thay vì 'at seven o'clock' trong hội thoại thường ngày.",
   vocab: [
-    {
-      id: 1,
-      word: "artificial intelligence", emoji: "🤖",
-      phonetic: "/ˌɑː.tɪ.fɪʃ.əl ɪnˈtel.ɪ.dʒəns/",
-      meaning: "Trí tuệ nhân tạo",
-      example: "AI has become a part of our daily lives.",
-      audio: "/audio/unit4/artificial_intelligence.mp3"
-    },
-    {
-      id: 2,
-      word: "omnipresent", emoji: "🌍",
-      phonetic: "/ˌɒm.nɪˈprez.ənt/",
-      meaning: "Có mặt ở khắp mọi nơi",
-      example: "Smartphones have become omnipresent in modern society.",
-      audio: "/audio/unit4/omnipresent.mp3"
-    },
-    {
-      id: 3,
-      word: "revolutionize", emoji: "🔄",
-      phonetic: "/ˌrev.əˈluː.ʃən.aɪz/",
-      meaning: "Cách mạng hóa",
-      example: "AI will revolutionize how we learn languages.",
-      audio: "/audio/unit4/revolutionize.mp3"
-    },
-    {
-      id: 4,
-      word: "ethics", emoji: "⚖️",
-      phonetic: "/ˈeθ.ɪks/",
-      meaning: "Đạo đức",
-      example: "We need to discuss the ethics of artificial intelligence.",
-      audio: "/audio/unit4/ethics.mp3"
-    },
-    {
-      id: 5,
-      word: "security", emoji: "🔐",
-      phonetic: "/sɪˈkjʊə.rə.ti/",
-      meaning: "Bảo mật / An ninh",
-      example: "Data security is very important online.",
-      audio: "/audio/unit4/security.mp3"
-    },
-    {
-      id: 6,
-      word: "algorithm", emoji: "🧮",
-      phonetic: "/ˈæl.ɡə.rɪ.ðəm/",
-      meaning: "Thuật toán",
-      example: "The search engine uses a complex algorithm.",
-      audio: "/audio/unit4/algorithm.mp3"
-    },
-    {
-      id: 7,
-      word: "integrate", emoji: "🔗",
-      phonetic: "/ˈɪn.tɪ.ɡreɪt/",
-      meaning: "Tích hợp",
-      example: "We should integrate technology into our classroom.",
-      audio: "/audio/unit4/integrate.mp3"
-    },
-    {
-      id: 8,
-      word: "fabric", emoji: "🧵",
-      phonetic: "/ˈfæb.rɪk/",
-      meaning: "Cấu trúc / Sợi vải",
-      example: "Technology is woven into our social fabric.",
-      audio: "/audio/unit4/fabric.mp3"
-    }
+    { id: 1, word: "wake up", emoji: "🌅", phonetic: "/weɪk ʌp/", meaning: "thức dậy", example: "I wake up at 6 am.", example2: "She wakes up early every day.", collocation: "wake up early", audio: "/audio/unit4/wake_up.mp3" },
+    { id: 2, word: "brush teeth", emoji: "🪥", phonetic: "/brʌʃ tiːθ/", meaning: "đánh răng", example: "I brush my teeth twice a day.", example2: "He brushes his teeth before bed.", collocation: "brush your teeth", audio: "/audio/unit4/brush_teeth.mp3" },
+    { id: 3, word: "have breakfast", emoji: "🍳", phonetic: "/hæv ˈbrekfəst/", meaning: "ăn sáng", example: "We have breakfast at 7.", example2: "She has breakfast with her family.", collocation: "have breakfast / skip breakfast", audio: "/audio/unit4/have_breakfast.mp3" },
+    { id: 4, word: "go to work", emoji: "💼", phonetic: "/ɡəʊ tə wɜːk/", meaning: "đi làm", example: "He goes to work by bus.", example2: "I go to work at 8 o'clock.", collocation: "go to work by bus/car", audio: "/audio/unit4/go_to_work.mp3" },
+    { id: 5, word: "have lunch", emoji: "🥗", phonetic: "/hæv lʌntʃ/", meaning: "ăn trưa", example: "We have lunch at noon.", example2: "She usually has lunch at the office.", collocation: "have lunch with", audio: "/audio/unit4/have_lunch.mp3" },
+    { id: 6, word: "come home", emoji: "🏠", phonetic: "/kʌm həʊm/", meaning: "về nhà", example: "I come home at 6 pm.", example2: "She comes home tired after work.", collocation: "come home from work", audio: "/audio/unit4/come_home.mp3" },
+    { id: 7, word: "cook dinner", emoji: "🍳", phonetic: "/kʊk ˈdɪnər/", meaning: "nấu bữa tối", example: "My mother cooks dinner every day.", example2: "I cook dinner for my family.", collocation: "cook dinner at home", audio: "/audio/unit4/cook_dinner.mp3" },
+    { id: 8, word: "watch TV", emoji: "📺", phonetic: "/wɒtʃ ˌtiːˈviː/", meaning: "xem tivi", example: "We watch TV in the evening.", example2: "He watches TV before going to bed.", collocation: "watch TV at night", audio: "/audio/unit4/watch_tv.mp3" },
+    { id: 9, word: "go to bed", emoji: "🛌", phonetic: "/ɡəʊ tə bɛd/", meaning: "đi ngủ", example: "I go to bed at 10 pm.", example2: "She goes to bed early on weekdays.", collocation: "go to bed early/late", audio: "/audio/unit4/go_to_bed.mp3" },
+    { id: 10, word: "exercise", emoji: "🏃", phonetic: "/ˈeksəsaɪz/", meaning: "tập thể dục", example: "She exercises in the morning.", example2: "I exercise three times a week.", collocation: "exercise regularly", audio: "/audio/unit4/exercise.mp3" },
+    { id: 11, word: "take a shower", emoji: "🚿", phonetic: "/teɪk ə ˈʃaʊər/", meaning: "tắm", example: "I take a shower every morning.", example2: "He takes a shower after exercise.", collocation: "take a hot/cold shower", audio: "/audio/unit4/take_a_shower.mp3" },
+    { id: 12, word: "study", emoji: "📚", phonetic: "/ˈstʌdi/", meaning: "học bài", example: "She studies English every evening.", example2: "I study for two hours before dinner.", collocation: "study hard / study English", audio: "/audio/unit4/study.mp3" },
   ],
   dialogues: [
     {
       id: 1,
-      title: "Hội thoại: The Rise of AI",
-      audio: "/audio/unit4/dialogue1.mp3",
-      desc: "Alex và Sarah tranh luận về lợi ích và thách thức của trí tuệ nhân tạo.",
+      title: "Hội thoại: A Day in My Life",
+      audio: "/audio/unit4/dialogue_1.mp3",
+      desc: "Sarah mô tả thói quen hàng ngày của cô ấy cho người bạn mới.",
       lines: [
-        {
-          id: "l1",
-          speaker: "Alex",
-          text: "AI is becoming omnipresent in our lives.",
-          translation: "AI đang trở nên phổ biến ở khắp mọi nơi trong cuộc sống chúng ta."
-        },
-        {
-          id: "l2",
-          speaker: "Sarah",
-          text: "Yes, it will revolutionize how we work.",
-          translation: "Đúng vậy, nó sẽ cách mạng hóa cách chúng ta làm việc."
-        },
-        {
-          id: "l3",
-          speaker: "Alex",
-          text: "But what about job security and ethics?",
-          translation: "Nhưng còn về bảo mật việc làm và đạo đức thì sao?"
-        },
-        {
-          id: "l4",
-          speaker: "Sarah",
-          text: "We need clear rules to guide technology.",
-          translation: "Chúng ta cần các quy tắc rõ ràng để định hướng công nghệ."
-        }
+        { id: "d1-1", speaker: "David", text: "What time do you wake up?", translation: "Bạn thức dậy lúc mấy giờ?" },
+        { id: "d1-2", speaker: "Sarah", text: "I wake up at six thirty every morning.", translation: "Tôi thức dậy lúc 6 giờ 30 mỗi buổi sáng." },
+        { id: "d1-3", speaker: "David", text: "Do you eat breakfast at home?", translation: "Bạn có ăn sáng ở nhà không?" },
+        { id: "d1-4", speaker: "Sarah", text: "Yes! I have breakfast with my family. She brushes her teeth and washes her face.", translation: "Có! Tôi ăn sáng cùng gia đình. Cô ấy đánh răng và rửa mặt." },
+        { id: "d1-5", speaker: "David", text: "When do you go to work?", translation: "Bạn đi làm lúc mấy giờ?" },
+        { id: "d1-6", speaker: "Sarah", text: "I go to work at eight o'clock by bus.", translation: "Tôi đi làm lúc 8 giờ bằng xe buýt." },
       ]
-    }
+    },
+    {
+      id: 2,
+      title: "Buổi tối của Minh",
+      audio: "/audio/unit4/dialogue_2.mp3",
+      desc: "Minh kể về thói quen buổi tối của mình.",
+      lines: [
+        { id: "d2-1", speaker: "Lan", text: "What do you do in the evening?", translation: "Bạn thường làm gì vào buổi tối?" },
+        { id: "d2-2", speaker: "Minh", text: "I come home at six. Then I cook dinner.", translation: "Tôi về nhà lúc 6 giờ. Sau đó tôi nấu bữa tối." },
+        { id: "d2-3", speaker: "Lan", text: "Do you watch TV after dinner?", translation: "Bạn có xem tivi sau bữa tối không?" },
+        { id: "d2-4", speaker: "Minh", text: "Yes, sometimes. I also study English for an hour.", translation: "Có, đôi khi. Tôi cũng học tiếng Anh một tiếng." },
+        { id: "d2-5", speaker: "Lan", text: "When do you go to bed?", translation: "Bạn đi ngủ lúc mấy giờ?" },
+        { id: "d2-6", speaker: "Minh", text: "I go to bed at ten thirty.", translation: "Tôi đi ngủ lúc 10 giờ 30." },
+      ]
+    },
   ],
   listenAndChoose: [
-    {
-      id: "lc1",
-      audio_text: "AI has become omnipresent in modern society.",
-      options: ["AI có mặt ở khắp mọi nơi", "AI chỉ dành cho chuyên gia", "AI là công nghệ tương lai", "AI chưa phổ biến"],
-      answer: "AI có mặt ở khắp mọi nơi"
-    },
-    {
-      id: "lc2",
-      audio_text: "We must protect our data security.",
-      options: ["Phải bảo vệ môi trường", "Phải bảo mật dữ liệu", "Phải phát triển thuật toán", "Phải học lập trình"],
-      answer: "Phải bảo mật dữ liệu"
-    },
-    {
-      id: "lc3",
-      audio_text: "Technology will revolutionize how we learn.",
-      options: ["Công nghệ thay đổi cách ta học", "Công nghệ làm giảm tương tác", "Ta phải học công nghệ", "Học tập không cần công nghệ"],
-      answer: "Công nghệ thay đổi cách ta học"
-    }
+    { id: "lac1", audio_text: "I wake up at six", options: ["I wake up at six", "I wake up at seven", "I wake up at eight", "I wake up at nine"], answer: "I wake up at six" },
+    { id: "lac2", audio_text: "She brushes her teeth", options: ["She brushes her teeth", "He brushes his teeth", "They brush their teeth", "I brush my teeth"], answer: "She brushes her teeth" },
+    { id: "lac3", audio_text: "He goes to work by bus", options: ["He goes to work by car", "He goes to work by bus", "She goes to work by bike", "He goes home by bus"], answer: "He goes to work by bus" },
+    { id: "lac4", audio_text: "I study English every evening", options: ["I study every morning", "I study English every evening", "She studies English every day", "I study at school"], answer: "I study English every evening" },
+    { id: "lac5", audio_text: "We have lunch at noon", options: ["We have dinner at noon", "We have breakfast at noon", "We have lunch at noon", "We have lunch at night"], answer: "We have lunch at noon" },
   ],
   speaking: {
-    level1Prompt: "Technology will revolutionize how we {input}.",
-    level1Placeholder: "Ví dụ: learn / work / communicate",
-    level2Situation: "Hãy chia sẻ quan điểm của bạn về lợi ích của trí tuệ nhân tạo đối với việc học tập.",
-    level2Hint: "AI is very useful. It helps me translate sentences and practice English speaking anytime."
+    level1Prompt: "I wake up at {input} every morning.",
+    level1Placeholder: "Ví dụ: six, seven thirty, eight o'clock...",
+    level2Situation: "Mô tả thói quen hàng ngày của bạn từ sáng đến tối cho một người bạn ngoại quốc. Dùng ít nhất 5 câu.",
+    level2Hint: "I wake up at [giờ]. I have breakfast at [giờ]. I go to [work/school] at [giờ]. In the evening, I [hoạt động]. I go to bed at [giờ].",
   },
-
   grammar: {
-    title: "Modal Verbs — Động từ khuyết thiếu",
-    rule: "Subject + modal (can/should/must/will) + verb (base form)",
+    title: "Present Simple — Thì Hiện Tại Đơn",
+    rule: "I/You/We/They + verb  |  He/She/It + verb + -s/-es",
     conjugation: [
-      { subject: "can", form: "khả năng / cho phép", example: "AI can translate languages instantly." },
-      { subject: "should", form: "lời khuyên", example: "We should protect our data." },
-      { subject: "must", form: "bắt buộc / mạnh", example: "Developers must consider ethics." },
-      { subject: "will", form: "tương lai", example: "Technology will change our lives." },
+      { subject: "I / You / We / They", form: "verb", example: "I wake up at 6." },
+      { subject: "He / She / It", form: "verb + s/es", example: "She brushes her teeth." },
     ],
     examples: [
-      { en: "You can use AI to learn faster.", vn: "Bạn có thể dùng AI để học nhanh hơn." },
-      { en: "We should discuss the ethics of AI.", vn: "Chúng ta nên thảo luận về đạo đức của AI." },
-      { en: "Companies must protect user data.", vn: "Các công ty phải bảo vệ dữ liệu người dùng." },
-      { en: "AI will revolutionize healthcare.", vn: "AI sẽ cách mạng hóa ngành y tế." },
+      { en: "I study English every day.", vn: "Tôi học tiếng Anh mỗi ngày." },
+      { en: "He goes to work at eight.", vn: "Anh ấy đi làm lúc tám giờ." },
+      { en: "She watches TV in the evening.", vn: "Cô ấy xem TV vào buổi tối." },
+      { en: "They have breakfast at seven.", vn: "Họ ăn sáng lúc bảy giờ." },
     ],
-    tip: "Sau modal verb, LUÔN dùng động từ nguyên thể (base form). Không nói 'can changes' — phải là 'can change'.",
+    tip: "Khi chủ ngữ là He/She/It, thêm -s vào cuối động từ (go → goes, watch → watches, brush → brushes). Với I/You/We/They: giữ nguyên động từ gốc.",
     dialogueExample: {
-      speaker: "Alex",
-      text: "AI can process data faster than any human.",
-      translation: "AI có thể xử lý dữ liệu nhanh hơn bất kỳ con người nào.",
-      highlight: "can process",
+      speaker: "Sarah",
+      text: "She brushes her teeth and washes her face.",
+      translation: "Cô ấy đánh răng và rửa mặt.",
+      highlight: "brushes",
     },
     ccq: {
-      question: "Câu nào dùng modal verb ĐÚNG?",
-      options: ["She cans speak English.", "AI can changes the world.", "We should protecting data.", "You must protect your data."],
-      answer: "You must protect your data.",
+      question: "Chọn dạng đúng: 'She ___ to work every day.'",
+      options: ["go", "goes", "going", "gone"],
+      answer: "goes",
     },
   },
-
   matchingExercise: {
-    title: "Nối từ công nghệ với nghĩa tiếng Việt",
+    title: "Nối hoạt động với thời gian",
     pairs: [
-      { left: "Algorithm", right: "Thuật toán" },
-      { left: "Security", right: "Bảo mật" },
-      { left: "Ethics", right: "Đạo đức" },
-      { left: "Integrate", right: "Tích hợp" },
-      { left: "Revolutionize", right: "Cách mạng hóa" },
+      { left: "wake up", right: "buổi sáng sớm" },
+      { left: "have lunch", right: "buổi trưa" },
+      { left: "go to work", right: "sáng sớm" },
+      { left: "cook dinner", right: "buổi tối" },
+      { left: "go to bed", right: "đêm" },
     ],
   },
-
   practiceQuiz: [
-    { id: "pq1", question: "Chọn modal verb đúng: 'We ___ discuss the ethics of AI.' (lời khuyên)", options: ["can", "should", "must", "will"], answer: "should", type: "multiple-choice" },
-    { id: "pq2", question: "Sau modal verb, động từ ở dạng nào?", options: ["V-ing", "V-ed", "Base form", "V-s"], answer: "Base form", type: "multiple-choice" },
-    { id: "pq3", question: "Điền từ còn thiếu: 'AI ___ translate any language.' (khả năng)", options: [], answer: "can", type: "cloze" },
+    { id: "pq1", question: "Chọn dạng đúng: 'He ___ at seven o'clock.'", options: ["wake up", "wakes up", "waking up", "waked up"], answer: "wakes up", type: "multiple-choice" },
+    { id: "pq2", question: "'She has breakfast at 7.' — Đây là thì gì?", options: ["Hiện tại tiếp diễn", "Quá khứ đơn", "Hiện tại đơn", "Tương lai"], answer: "Hiện tại đơn", type: "multiple-choice" },
+    { id: "pq3", question: "Điền từ còn thiếu: 'I ___ to bed at ten.'", options: [], answer: "go", type: "cloze" },
   ],
-
   quiz: [
-    {
-      id: "q1",
-      question: "Từ nào có nghĩa là 'Trí tuệ nhân tạo'?",
-      options: ["Artificial intelligence", "Social media", "Cybersecurity", "Virtual reality"],
-      answer: "Artificial intelligence",
-      type: "multiple-choice"
-    },
-    {
-      id: "q2",
-      question: "Từ 'omnipresent' có nghĩa là gì?",
-      options: ["Hiếm gặp", "Có mặt khắp nơi", "Tương lai", "Lỗi thời"],
-      answer: "Có mặt khắp nơi",
-      type: "multiple-choice"
-    },
-    {
-      id: "q3",
-      question: "Chọn câu đúng với modal verb:",
-      options: ["AI can changes our lives.", "AI can change our lives.", "AI cans change our lives.", "AI can changing our lives."],
-      answer: "AI can change our lives.",
-      type: "multiple-choice"
-    },
-    {
-      id: "q4",
-      question: "Điền từ còn thiếu: 'Companies ___ protect user data.' (bắt buộc)",
-      options: [],
-      answer: "must",
-      type: "cloze"
-    },
-    {
-      id: "q5",
-      question: "Alex: 'Do you support AI?' - Sarah: 'Yes, but we must discuss its ___.'",
-      options: ["ethics", "fabric", "phone", "cloth"],
-      answer: "ethics",
-      type: "multiple-choice"
-    },
-    { id: "q6", question: "Công nghệ có thể giúp ích cho con người.", options: [], answer: "Technology can help people.", type: "translate" },
-    { id: "q7", question: "Chúng ta nên bảo vệ quyền riêng tư trực tuyến.", options: [], answer: "We should protect our online privacy.", type: "translate" },
+    { id: "q1", question: "Chọn câu Present Simple đúng với 'He':", options: ["He go to school.", "He goes to school.", "He going to school.", "He goed to school."], answer: "He goes to school.", type: "multiple-choice" },
+    { id: "q2", question: "Hoạt động nào xảy ra vào buổi sáng?", options: ["go to bed", "cook dinner", "watch TV", "wake up"], answer: "wake up", type: "multiple-choice" },
+    { id: "q3", question: "'She ___ English every day.' — Điền đúng:", options: ["study", "studies", "studying", "studied"], answer: "studies", type: "multiple-choice" },
+    { id: "q4", question: "Điền từ còn thiếu: 'I ___ breakfast at seven.'", options: [], answer: "have", type: "cloze" },
+    { id: "q5", question: "Điền từ còn thiếu: 'He ___ home at six pm.'", options: [], answer: "comes", type: "cloze" },
+    { id: "q6", question: "Tôi thức dậy lúc 7 giờ sáng mỗi ngày.", options: [], answer: "I wake up at seven every morning.", type: "translate" },
+    { id: "q7", question: "Cô ấy đi làm bằng xe buýt.", options: [], answer: "She goes to work by bus.", type: "translate" },
   ],
-
   scrambleExercises: [
     {
       id: "s4-1",
-      prompt_vn: "Internet có thể kết nối mọi người.",
-      words: ["The", "internet", "can", "connect", "people", "."],
-      answer: "The internet can connect people .",
+      prompt_vn: "Tôi thức dậy lúc 7 giờ.",
+      words: ["I", "wake", "up", "at", "seven", "."],
+      answer: "I wake up at seven .",
     },
     {
       id: "s4-2",
-      prompt_vn: "Bạn nên tắt điện thoại đi.",
-      words: ["You", "should", "turn", "off", "your", "phone", "."],
-      answer: "You should turn off your phone .",
+      prompt_vn: "Cô ấy đánh răng mỗi buổi sáng.",
+      words: ["She", "brushes", "her", "teeth", "every", "morning", "."],
+      answer: "She brushes her teeth every morning .",
     },
     {
       id: "s4-3",
-      prompt_vn: "AI có thể thay đổi cuộc sống của chúng ta.",
-      words: ["AI", "may", "change", "our", "lives", "."],
-      answer: "AI may change our lives .",
+      prompt_vn: "Anh ấy ăn sáng trước khi đi làm.",
+      words: ["He", "eats", "breakfast", "before", "work", "."],
+      answer: "He eats breakfast before work .",
     },
   ],
   cumulativeReviewQuestions: [
     {
       id: "cr4-1",
-      question: "Chọn đại từ sở hữu đúng: '___ name is Lucy.' (của cô ấy) — Unit 3",
+      question: "Điền đại từ sở hữu đúng: '___ name is Lucy.' (của cô ấy) — Unit 3",
       options: ["My", "His", "Her", "Their"],
       answer: "Her",
       type: "multiple-choice",
     },
     {
       id: "cr4-2",
-      question: "Mẹ tôi là một giáo viên.",
+      question: "Mẹ tôi là một giáo viên. (Unit 3)",
       options: [],
       answer: "My mother is a teacher.",
       type: "translate",
@@ -282,4 +176,3 @@ export const unit4: UnitData = {
 };
 
 export default unit4;
-

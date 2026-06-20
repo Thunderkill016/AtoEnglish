@@ -1,0 +1,160 @@
+import { UnitData } from "@/components/learn/UnitTemplate";
+
+export const unit7: UnitData = {
+  unitId: "unit-7",
+  title: "Unit 7: Shopping & Prices",
+  level: "A1",
+  xp: 85,
+  estimatedTime: 45,
+  description: "Học từ vựng mua sắm, cách hỏi giá và mặc cả bằng tiếng Anh tự nhiên.",
+  badgeName: "Người Mua Sắm Thông Minh",
+  badgeEmoji: "🛍️",
+  warmupGreetings: [
+    { emoji: "💰", en: "How much is this shirt?", vn: "Chiếc áo này giá bao nhiêu?", context: "Hỏi giá đồ đơn lẻ" },
+    { emoji: "👟", en: "How much are these shoes?", vn: "Đôi giày này giá bao nhiêu?", context: "Hỏi giá đồ số nhiều" },
+    { emoji: "🏷️", en: "Can I have a discount?", vn: "Bạn có thể giảm giá cho tôi không?", context: "Mặc cả lịch sự" }
+  ],
+  culturalNote: "Ở chợ Việt Nam, mặc cả là bình thường. Nhưng ở siêu thị hoặc cửa hàng lớn, giá thường cố định. Khi nói tiếng Anh, <span class=\"text-emerald-400 font-semibold\">How much is/are...?</span> là cách hỏi giá tự nhiên nhất — không nói 'What is the price of...?' trong giao tiếp thường ngày.",
+  vocab: [
+    { id: 1, word: "price", emoji: "💰", phonetic: "/praɪs/", meaning: "giá cả", example: "What is the price of this bag?", example2: "The price is very reasonable.", collocation: "price tag / half price", audio: "/audio/unit7/price.mp3" },
+    { id: 2, word: "cheap", emoji: "✅", phonetic: "/tʃiːp/", meaning: "rẻ", example: "This shirt is very cheap.", example2: "I found a cheap flight to London.", collocation: "cheap price / dirt cheap", audio: "/audio/unit7/cheap.mp3" },
+    { id: 3, word: "expensive", emoji: "💎", phonetic: "/ɪkˈspensɪv/", meaning: "đắt tiền", example: "These shoes are too expensive.", example2: "Eating out every day is expensive.", collocation: "too expensive / very expensive", audio: "/audio/unit7/expensive.mp3" },
+    { id: 4, word: "discount", emoji: "🏷️", phonetic: "/ˈdɪskaʊnt/", meaning: "giảm giá", example: "Can I have a discount?", example2: "There is a 20% discount today.", collocation: "student discount / get a discount", audio: "/audio/unit7/discount.mp3" },
+    { id: 5, word: "receipt", emoji: "🧾", phonetic: "/rɪˈsiːt/", meaning: "hóa đơn", example: "Can I have a receipt, please?", example2: "Keep your receipt for returns.", collocation: "sales receipt", audio: "/audio/unit7/receipt.mp3" },
+    { id: 6, word: "size", emoji: "📏", phonetic: "/saɪz/", meaning: "kích cỡ", example: "What size do you need?", example2: "I wear a medium size.", collocation: "what size / size medium/large", audio: "/audio/unit7/size.mp3" },
+    { id: 7, word: "try on", emoji: "👗", phonetic: "/traɪ ɒn/", meaning: "thử đồ", example: "Can I try this on?", example2: "I want to try on the blue dress.", collocation: "try on clothes", audio: "/audio/unit7/try_on.mp3" },
+    { id: 8, word: "pay", emoji: "💳", phonetic: "/peɪ/", meaning: "trả tiền", example: "How would you like to pay?", example2: "I usually pay by card.", collocation: "pay by cash / pay by card", audio: "/audio/unit7/pay.mp3" },
+    { id: 9, word: "change", emoji: "🪙", phonetic: "/tʃeɪndʒ/", meaning: "tiền thối", example: "Here is your change.", example2: "I don't have any change.", collocation: "give change / keep the change", audio: "/audio/unit7/change.mp3" },
+    { id: 10, word: "shopping cart", emoji: "🛒", phonetic: "/ˈʃɒpɪŋ kɑːt/", meaning: "xe đẩy hàng", example: "Put it in the shopping cart.", example2: "The shopping cart is full.", collocation: "fill the shopping cart", audio: "/audio/unit7/shopping_cart.mp3" },
+    { id: 11, word: "cash", emoji: "💵", phonetic: "/kæʃ/", meaning: "tiền mặt", example: "Do you accept cash?", example2: "I only have cash today.", collocation: "pay in cash", audio: "/audio/unit7/cash.mp3" },
+    { id: 12, word: "sale", emoji: "📢", phonetic: "/seɪl/", meaning: "giảm giá / đợt sale", example: "The shop has a sale today.", example2: "I bought this on sale.", collocation: "on sale / end-of-season sale", audio: "/audio/unit7/sale.mp3" },
+  ],
+  dialogues: [
+    {
+      id: 1,
+      title: "Tại cửa hàng quần áo",
+      audio: "/audio/unit7/dialogue_1.mp3",
+      desc: "Linh đang mua sắm tại một cửa hàng quần áo.",
+      lines: [
+        { id: "d1-1", speaker: "Staff", text: "Hello! Can I help you?", translation: "Xin chào! Tôi có thể giúp gì cho bạn?" },
+        { id: "d1-2", speaker: "Linh", text: "Yes, please. How much is this dress?", translation: "Vâng ạ. Chiếc váy này giá bao nhiêu?" },
+        { id: "d1-3", speaker: "Staff", text: "It's three hundred thousand dong.", translation: "Là 300.000 đồng." },
+        { id: "d1-4", speaker: "Linh", text: "Can I try it on?", translation: "Tôi có thể thử không?" },
+        { id: "d1-5", speaker: "Staff", text: "Of course! The changing room is over there.", translation: "Dĩ nhiên! Phòng thử đồ ở đằng kia." },
+        { id: "d1-6", speaker: "Linh", text: "It fits well. Can I have a discount?", translation: "Vừa lắm. Tôi có được giảm giá không?" },
+        { id: "d1-7", speaker: "Staff", text: "We have a 10% discount today. You pay two hundred and seventy thousand dong.", translation: "Hôm nay có giảm 10%. Bạn trả 270.000 đồng." },
+      ]
+    },
+    {
+      id: 2,
+      title: "Tại chợ",
+      audio: "/audio/unit7/dialogue_2.mp3",
+      desc: "Tom đang mua hoa quả tại chợ địa phương.",
+      lines: [
+        { id: "d2-1", speaker: "Tom", text: "How much are these mangoes?", translation: "Những quả xoài này giá bao nhiêu?" },
+        { id: "d2-2", speaker: "Seller", text: "They are fifty thousand dong per kilogram.", translation: "Chúng giá 50.000 đồng một ký." },
+        { id: "d2-3", speaker: "Tom", text: "That's a bit expensive. Can you give me a discount?", translation: "Hơi đắt. Bạn có thể giảm giá không?" },
+        { id: "d2-4", speaker: "Seller", text: "OK, forty thousand. That's the best price.", translation: "Được, 40.000. Đó là giá tốt nhất rồi." },
+        { id: "d2-5", speaker: "Tom", text: "OK, I'll take two kilograms. Here is one hundred thousand.", translation: "OK, tôi lấy hai ký. Đây là 100.000." },
+        { id: "d2-6", speaker: "Seller", text: "And here is your change — twenty thousand dong.", translation: "Và đây là tiền thối — 20.000 đồng." },
+      ]
+    },
+  ],
+  listenAndChoose: [
+    { id: "lac1", audio_text: "How much is this shirt", options: ["How much are these shirts", "How much is this shirt", "How much is that dress", "How much does this cost"], answer: "How much is this shirt" },
+    { id: "lac2", audio_text: "It costs fifty thousand dong", options: ["It costs fifteen thousand dong", "It costs fifty thousand dong", "They cost fifty thousand dong", "It costs five thousand dong"], answer: "It costs fifty thousand dong" },
+    { id: "lac3", audio_text: "Can I try this on", options: ["Can I buy this", "Can I have this", "Can I try this on", "Can I pay for this"], answer: "Can I try this on" },
+    { id: "lac4", audio_text: "How much are these shoes", options: ["How much is this shoe", "How much are these shoes", "How much are those bags", "How much is a shoe"], answer: "How much are these shoes" },
+    { id: "lac5", audio_text: "I pay by card", options: ["I pay by cash", "I pay online", "I pay by card", "She pays by card"], answer: "I pay by card" },
+  ],
+  speaking: {
+    level1Prompt: "How much is this {input}?",
+    level1Placeholder: "Ví dụ: shirt, bag, dress, book...",
+    level2Situation: "Bạn đang mua sắm tại một cửa hàng quần áo ở Hà Nội. Hỏi giá, thử đồ và xem có được giảm giá không.",
+    level2Hint: "Excuse me, how much is this [đồ vật]? Can I try it on? That's [expensive/cheap]. Can I have a discount? I'll pay by [cash/card].",
+  },
+  grammar: {
+    title: "How much is/are...? — Hỏi giá",
+    rule: "How much is + singular noun? / How much are + plural nouns? / It costs / They cost...",
+    examples: [
+      { en: "How much is this bag?", vn: "Chiếc túi này giá bao nhiêu?" },
+      { en: "How much are these shoes?", vn: "Đôi giày này giá bao nhiêu?" },
+      { en: "It costs fifty thousand dong.", vn: "Nó giá 50.000 đồng." },
+      { en: "They cost one hundred thousand dong.", vn: "Chúng giá 100.000 đồng." },
+    ],
+    tip: "Dùng 'How much IS' với danh từ số ít (this shirt, this bag). Dùng 'How much ARE' với danh từ số nhiều (these shoes, those bags). Trả lời bằng 'It costs...' hoặc 'They cost...'",
+    dialogueExample: {
+      speaker: "Linh",
+      text: "How much is this dress?",
+      translation: "Chiếc váy này giá bao nhiêu?",
+      highlight: "How much is",
+    },
+    ccq: {
+      question: "Hỏi giá nhiều quyển sách: chọn câu đúng:",
+      options: ["How much is these books?", "How much are these books?", "How many are these books?", "How much these books are?"],
+      answer: "How much are these books?",
+    },
+  },
+  matchingExercise: {
+    title: "Nối từ vựng mua sắm với nghĩa",
+    pairs: [
+      { left: "cheap", right: "rẻ" },
+      { left: "discount", right: "giảm giá" },
+      { left: "receipt", right: "hóa đơn" },
+      { left: "try on", right: "thử đồ" },
+      { left: "change", right: "tiền thối" },
+    ],
+  },
+  practiceQuiz: [
+    { id: "pq1", question: "Hỏi giá một chiếc áo:", options: ["How much are this shirt?", "How much is this shirt?", "How many is this shirt?", "How much this shirt is?"], answer: "How much is this shirt?", type: "multiple-choice" },
+    { id: "pq2", question: "'Can I try this on?' — nghĩa là gì?", options: ["Có thể mua không?", "Có thể giảm giá không?", "Có thể thử đồ không?", "Có thể trả tiền không?"], answer: "Có thể thử đồ không?", type: "multiple-choice" },
+    { id: "pq3", question: "Điền từ còn thiếu: 'It ___ fifty thousand dong.'", options: [], answer: "costs", type: "cloze" },
+  ],
+  quiz: [
+    { id: "q1", question: "Câu hỏi giá đúng với 'these jeans':", options: ["How much is these jeans?", "How much are these jeans?", "How many are these jeans?", "How much these jeans?"], answer: "How much are these jeans?", type: "multiple-choice" },
+    { id: "q2", question: "Muốn trả bằng thẻ, bạn nói:", options: ["I pay by cash.", "I pay by card.", "I pay by check.", "I pay online."], answer: "I pay by card.", type: "multiple-choice" },
+    { id: "q3", question: "Từ nào có nghĩa là 'đắt tiền'?", options: ["cheap", "sale", "expensive", "discount"], answer: "expensive", type: "multiple-choice" },
+    { id: "q4", question: "Điền vào: 'How much ___ these shoes?'", options: [], answer: "are", type: "cloze" },
+    { id: "q5", question: "Điền vào: 'They ___ two hundred thousand dong.'", options: [], answer: "cost", type: "cloze" },
+    { id: "q6", question: "Tôi có thể thử chiếc váy này không?", options: [], answer: "Can I try this dress on?", type: "translate" },
+    { id: "q7", question: "Hôm nay có đợt giảm giá 20%.", options: [], answer: "There is a 20% discount today.", type: "translate" },
+  ],
+  scrambleExercises: [
+    {
+      id: "s7-1",
+      prompt_vn: "Chiếc áo này giá bao nhiêu?",
+      words: ["How", "much", "is", "this", "shirt", "?"],
+      answer: "How much is this shirt ?",
+    },
+    {
+      id: "s7-2",
+      prompt_vn: "Tôi có thể giảm giá không?",
+      words: ["Can", "I", "have", "a", "discount", "?"],
+      answer: "Can I have a discount ?",
+    },
+    {
+      id: "s7-3",
+      prompt_vn: "Những đôi giày này giá bao nhiêu?",
+      words: ["How", "much", "are", "these", "shoes", "?"],
+      answer: "How much are these shoes ?",
+    },
+  ],
+  cumulativeReviewQuestions: [
+    {
+      id: "cr7-1",
+      question: "Chọn câu đúng về đồ đạc trong phòng: (Unit 6: There is/are)",
+      options: ["There is two chairs.", "There are two chairs.", "There be two chairs.", "Two chairs there are."],
+      answer: "There are two chairs.",
+      type: "multiple-choice",
+    },
+    {
+      id: "cr7-2",
+      question: "Có phòng tắm nào ở tầng trên không? (Unit 6)",
+      options: [],
+      answer: "Is there a bathroom upstairs?",
+      type: "translate",
+    },
+  ],
+};
+
+export default unit7;
