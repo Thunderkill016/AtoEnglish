@@ -106,6 +106,26 @@ describe("CompleteUnitSchema", () => {
     const result = CompleteUnitSchema.safeParse({ unitId: "" });
     expect(result.success).toBe(false);
   });
+
+  it("accepts valid starCount values (1, 2, 3)", () => {
+    [1, 2, 3].forEach(starCount => {
+      const result = CompleteUnitSchema.safeParse({ unitId: "unit-1", starCount });
+      expect(result.success).toBe(true);
+    });
+  });
+
+  it("uses default starCount of 3 when omitted", () => {
+    const result = CompleteUnitSchema.safeParse({ unitId: "unit-1" });
+    expect(result.success).toBe(true);
+    if (result.success) expect(result.data.starCount).toBe(3);
+  });
+
+  it("rejects invalid starCount (0, 4, non-integer)", () => {
+    [0, 4, 1.5, -1].forEach(starCount => {
+      const result = CompleteUnitSchema.safeParse({ unitId: "unit-1", starCount });
+      expect(result.success).toBe(false);
+    });
+  });
 });
 
 // ─── SpeakingSessionSchema ───────────────────────────────────────────────────

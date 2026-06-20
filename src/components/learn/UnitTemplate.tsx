@@ -23,7 +23,7 @@ import {
 } from "lucide-react";
 
 import { completeUnit, getUnitCompletionStatus } from "@/app/actions/progress";
-import { getDueWarmupCards } from "@/app/actions/cards";
+import { getDueWarmupCards, reviewCard } from "@/app/actions/cards";
 import { toast } from "sonner";
 import { calcSpeechScore } from "@/lib/utils/speech";
 
@@ -640,7 +640,18 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                     })}
                   </div>
                   {warmupFlipped.size === warmupCards.length && (
-                    <button onClick={() => setWarmupDone(true)} className="mt-3 w-full bg-emerald-700/40 hover:bg-emerald-700/60 text-emerald-300 font-bold rounded-xl py-2 text-sm transition-colors">
+                    <button
+                      onClick={() => {
+                        setWarmupDone(true);
+                        // Silently mark flipped cards as "Good" in SRS (fire-and-forget)
+                        warmupCards.forEach((card, wi) => {
+                          if (warmupFlipped.has(wi)) {
+                            reviewCard(card.id, "Good").catch(() => {/* ignore */});
+                          }
+                        });
+                      }}
+                      className="mt-3 w-full bg-emerald-700/40 hover:bg-emerald-700/60 text-emerald-300 font-bold rounded-xl py-2 text-sm transition-colors"
+                    >
                       ✅ Đã ôn xong ({warmupCards.length} thẻ)
                     </button>
                   )}
