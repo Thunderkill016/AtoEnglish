@@ -607,6 +607,22 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  // ─── Keyboard shortcut: ArrowRight/Space advances on non-interactive sections ───
+  useEffect(() => {
+    const PASSIVE_SECTIONS: number[] = [1, 2, 3, 5];
+    const handler = (e: KeyboardEvent) => {
+      if (!PASSIVE_SECTIONS.includes(section)) return;
+      if (e.key !== "ArrowRight" && e.key !== " ") return;
+      const tag = (e.target as HTMLElement)?.tagName.toLowerCase();
+      if (tag === "input" || tag === "textarea" || tag === "button" || tag === "select") return;
+      e.preventDefault();
+      goNext();
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [section]);
+
   const sectionVariants = {
     initial: { opacity: 0, x: 40 },
     animate: { opacity: 1, x: 0 },
@@ -652,7 +668,14 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
             </div>
           </div>
           {/* Progress bar */}
-          <div className="w-full h-2 bg-zinc-800 rounded-full overflow-hidden">
+          <div
+            className="w-full h-2 bg-zinc-800 rounded-full overflow-hidden"
+            role="progressbar"
+            aria-valuenow={progress}
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-label={`Tiến độ bài học: phần ${sectionOrderIdx + 1} / ${TOTAL_SECTIONS}`}
+          >
             <motion.div
               className="h-full bg-gradient-to-r from-emerald-500 to-teal-400 rounded-full"
               animate={{ width: `${progress}%` }}
@@ -1782,15 +1805,31 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                         <div key={q.id}>
                           <p className="text-white text-sm mb-3"><span className="text-zinc-500 mr-2">Câu {qi + 1}.</span>{q.question}</p>
                           <div className="grid grid-cols-2 gap-2">
-                            {q.options.map((opt, oi) => (
-                              <button
-                                key={oi}
-                                onClick={() => setQuizAnswers(p => ({ ...p, [q.id]: opt }))}
-                                className={`px-3 py-2 rounded-xl text-sm font-medium border transition-colors text-left ${quizAnswers[q.id] === opt ? "bg-emerald-600/30 border-emerald-500 text-emerald-300" : "bg-zinc-800 border-zinc-700 text-zinc-300 hover:border-emerald-600/50"}`}
-                              >
-                                {opt}
-                              </button>
-                            ))}
+                            {q.options.map((opt, oi) => {
+                              const isSelected = quizAnswers[q.id] === opt;
+                              const isWrongAnswer = quizSubmitted && isSelected && opt !== q.answer;
+                              const isRightAnswer = quizSubmitted && opt === q.answer;
+                              let cls = "px-3 py-2 rounded-xl text-sm font-medium border transition-colors text-left ";
+                              if (quizSubmitted) {
+                                if (isRightAnswer) cls += "bg-emerald-600/30 border-emerald-500 text-emerald-300";
+                                else if (isWrongAnswer) cls += "bg-red-900/30 border-red-500 text-red-300 animate-shake";
+                                else cls += "bg-zinc-800/50 border-zinc-700/50 text-zinc-500 cursor-default";
+                              } else {
+                                cls += isSelected
+                                  ? "bg-emerald-600/30 border-emerald-500 text-emerald-300"
+                                  : "bg-zinc-800 border-zinc-700 text-zinc-300 hover:border-emerald-600/50";
+                              }
+                              return (
+                                <button
+                                  key={oi}
+                                  onClick={() => !quizSubmitted && setQuizAnswers(p => ({ ...p, [q.id]: opt }))}
+                                  disabled={quizSubmitted}
+                                  className={cls}
+                                >
+                                  {opt}
+                                </button>
+                              );
+                            })}
                           </div>
                         </div>
                       );
