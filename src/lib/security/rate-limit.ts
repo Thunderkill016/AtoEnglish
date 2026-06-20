@@ -140,7 +140,7 @@ export class InMemoryRateLimiter {
 // ─── IP Helper ───────────────────────────────────────────────────────────────
 
 export function getClientIp(req: Request | NextRequest): string {
-  if ("ip" in req && req.ip) return req.ip;
+  if ("ip" in req && typeof req.ip === "string" && req.ip) return req.ip;
   const xForwardedFor = req.headers.get("x-forwarded-for");
   if (xForwardedFor) return xForwardedFor.split(",")[0].trim();
   const realIp = req.headers.get("x-real-ip");

@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { signOut } from "@/app/actions/auth";
 
 export async function Header() {
-  const supabase = createClient();
+  const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
   const avatarUrl = user?.user_metadata?.avatar_url;

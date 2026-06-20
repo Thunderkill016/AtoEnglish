@@ -17,7 +17,7 @@ const completeUnitLimiter = createRateLimiter(10, 60 * 1000, "complete-unit");
 export async function completeUnit(unitId: string) {
   try {
     // Rate Limiting
-    const reqHeaders = headers();
+    const reqHeaders = await headers();
     const ip = reqHeaders.get("x-forwarded-for")?.split(",")[0].trim() || "127.0.0.1";
     const rateLimitCheck = await completeUnitLimiter.check(ip);
     if (!rateLimitCheck.success) {
@@ -37,7 +37,7 @@ export async function completeUnit(unitId: string) {
     }
     const cleanParams = validated.data;
 
-    const supabase = createClient();
+    const supabase = await createClient();
     
     // 1. Kiểm tra trạng thái đăng nhập
     const { data: { user }, error: authError } = await supabase.auth.getUser();
@@ -249,7 +249,7 @@ export async function completeUnit(unitId: string) {
  */
 export async function getUnitCompletionStatus(unitId: string) {
   try {
-    const supabase = createClient();
+    const supabase = await createClient();
     const { data: { user }, error: authError } = await supabase.auth.getUser();
     
     if (authError || !user) {
@@ -283,7 +283,7 @@ export async function getUnitCompletionStatus(unitId: string) {
  */
 export async function getUserProgress() {
   try {
-    const supabase = createClient();
+    const supabase = await createClient();
     const { data: { user }, error: authError } = await supabase.auth.getUser();
     
     if (authError || !user) {
@@ -332,7 +332,7 @@ export async function getUserProgress() {
  */
 export async function getCompletedUnitsCount() {
   try {
-    const supabase = createClient();
+    const supabase = await createClient();
     const { data: { user }, error: authError } = await supabase.auth.getUser();
     
     if (authError || !user) {
@@ -358,7 +358,7 @@ export async function getCompletedUnitsCount() {
  */
 export async function resetUnitProgress(unitId: string) {
   try {
-    const supabase = createClient();
+    const supabase = await createClient();
     
     // 1. Kiểm tra trạng thái đăng nhập
     const { data: { user }, error: authError } = await supabase.auth.getUser();
@@ -422,7 +422,7 @@ export async function resetUnitProgress(unitId: string) {
  */
 export async function getCurrentUnit() {
   try {
-    const supabase = createClient();
+    const supabase = await createClient();
     const { data: { user }, error: authError } = await supabase.auth.getUser();
 
     // Đối với người dùng chưa đăng nhập, mặc định hiển thị Unit 1 với progress 0%
@@ -532,7 +532,7 @@ export async function getCurrentUnit() {
  */
 export async function updateDailyXpGoal(goal: number) {
   try {
-    const supabase = createClient();
+    const supabase = await createClient();
     const { data: { user }, error: authError } = await supabase.auth.getUser();
     if (authError || !user) {
       return { success: false, error: "Bạn cần đăng nhập để cập nhật mục tiêu XP." };
@@ -564,7 +564,7 @@ export async function updateDailyXpGoal(goal: number) {
  */
 export async function getWeeklyXpData() {
   try {
-    const supabase = createClient();
+    const supabase = await createClient();
     const { data: { user }, error: authError } = await supabase.auth.getUser();
     if (authError || !user) return { success: false, data: [] };
 
@@ -607,7 +607,7 @@ export async function getWeeklyXpData() {
  */
 export async function getProgressStats() {
   try {
-    const supabase = createClient();
+    const supabase = await createClient();
     const { data: { user }, error: authError } = await supabase.auth.getUser();
     if (authError || !user) return { success: false, stats: null };
 

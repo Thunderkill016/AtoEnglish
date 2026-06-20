@@ -22,7 +22,7 @@ interface SaveSpeakingSessionParams {
 export async function saveSpeakingSession(params: SaveSpeakingSessionParams) {
   try {
     // Rate Limiting
-    const reqHeaders = headers();
+    const reqHeaders = await headers();
     const ip = reqHeaders.get("x-forwarded-for")?.split(",")[0].trim() || "127.0.0.1";
     const rateLimitCheck = await speakingLimiter.check(ip);
     if (!rateLimitCheck.success) {
@@ -42,7 +42,7 @@ export async function saveSpeakingSession(params: SaveSpeakingSessionParams) {
     }
     const cleanParams = validated.data;
 
-    const supabase = createClient();
+    const supabase = await createClient();
     
     // 1. Kiểm tra trạng thái đăng nhập
     const { data: { user }, error: authError } = await supabase.auth.getUser();
@@ -94,7 +94,7 @@ export async function saveSpeakingSession(params: SaveSpeakingSessionParams) {
  */
 export async function getRecentSpeakingSessions(limit: number = 5) {
   try {
-    const supabase = createClient();
+    const supabase = await createClient();
     
     // 1. Kiểm tra trạng thái đăng nhập
     const { data: { user }, error: authError } = await supabase.auth.getUser();
