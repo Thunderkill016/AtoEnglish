@@ -72,10 +72,11 @@ export async function recordFlashcardSession(
   } = await supabase.auth.getUser();
   if (!user) return { success: false, error: "Unauthenticated" };
 
-  const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
-  const yesterday = new Date(Date.now() - 86_400_000)
-    .toISOString()
-    .slice(0, 10);
+  // Use Vietnam timezone consistently — UTC dates cause off-by-one at night
+  const today = new Date().toLocaleDateString("sv-SE", { timeZone: "Asia/Ho_Chi_Minh" });
+  const d = new Date(today);
+  d.setDate(d.getDate() - 1);
+  const yesterday = d.toLocaleDateString("sv-SE", { timeZone: "Asia/Ho_Chi_Minh" });
 
   // Fetch existing row
   const { data: existing } = await supabase
@@ -122,5 +123,29 @@ export async function recordFlashcardSession(
     .single();
 
   if (error) return { success: false, error: error.message };
+
+  // Sync user_progress.last_active_date + streak so flashcard-only days
+  // count toward the dashboard streak (best-effort, fire-and-forget)
+  void (async () => {
+    const { data: up } = await supabase
+      .from("user_progress")
+      .select("total_xp, streak, last_active_date")
+      .eq("user_id", user.id)
+      .maybeSingle();
+    if (up) {
+      let nextStreak = 1;
+      if (up.last_active_date === today) {
+        nextStreak = up.streak;
+      } else if (up.last_active_date === yesterday) {
+        nextStreak = up.streak + 1;
+      }
+      await supabase
+        .from("user_progress")
+        .update({ streak: nextStreak, last_active_date: today })
+        .eq("user_id", user.id);
+    }
+  })();
+
   return { success: true, stats: data };
 }
+
