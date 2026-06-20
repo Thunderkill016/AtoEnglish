@@ -28,12 +28,13 @@ interface RoadmapLevel {
 
 interface RoadmapClientProps {
   userCefrLevel: string;
-  completedUnits: number;
+  unitCountByLevel: Record<string, number>;
+  completedByLevel: Record<string, number>;
 }
 
 const CEFR_ORDER = ["A1", "A2", "B1", "B2", "C1"] as const;
 
-export default function RoadmapClient({ userCefrLevel, completedUnits }: RoadmapClientProps) {
+export default function RoadmapClient({ userCefrLevel, unitCountByLevel, completedByLevel }: RoadmapClientProps) {
   const router = useRouter();
 
   // Derive real status from user's actual progress
@@ -44,8 +45,8 @@ export default function RoadmapClient({ userCefrLevel, completedUnits }: Roadmap
       code: "A1",
       name: "Elementary (Cơ bản)",
       desc: "Xây dựng nền tảng vững chắc: Học phát âm chuẩn IPA, chào hỏi cơ bản, tự giới thiệu bản thân và cấu trúc câu hiện tại đơn giản.",
-      lessonsCount: 12,
-      completedPercent: userLevelIndex > 0 ? 100 : Math.round((completedUnits / 12) * 100),
+      lessonsCount: unitCountByLevel["A1"] ?? 0,
+      completedPercent: userLevelIndex > 0 ? 100 : Math.round(((completedByLevel["A1"] ?? 0) / Math.max(unitCountByLevel["A1"] ?? 1, 1)) * 100),
       status: userLevelIndex > 0 ? "completed" : userLevelIndex === 0 ? "active" : "locked",
       topics: ["Bảng phiên âm IPA", "Chào hỏi & Bản thân", "Gia đình & Đời sống"],
     },
@@ -53,8 +54,8 @@ export default function RoadmapClient({ userCefrLevel, completedUnits }: Roadmap
       code: "A2",
       name: "Pre-Intermediate (Sơ trung cấp)",
       desc: "Mở rộng giao tiếp thường nhật: Mua sắm, mô tả trải nghiệm du lịch, nói về sở thích cá nhân. Thì quá khứ đơn và động từ khuyết thiếu.",
-      lessonsCount: 18,
-      completedPercent: userLevelIndex > 1 ? 100 : userLevelIndex === 1 ? Math.round((completedUnits / 18) * 100) : 0,
+      lessonsCount: unitCountByLevel["A2"] ?? 0,
+      completedPercent: userLevelIndex > 1 ? 100 : userLevelIndex === 1 ? Math.round(((completedByLevel["A2"] ?? 0) / Math.max(unitCountByLevel["A2"] ?? 1, 1)) * 100) : 0,
       status: userLevelIndex > 1 ? "completed" : userLevelIndex === 1 ? "active" : "locked",
       topics: ["Giao dịch & Mua sắm", "Kể chuyện quá khứ", "Lối sống & Sở thích"],
     },
@@ -62,8 +63,8 @@ export default function RoadmapClient({ userCefrLevel, completedUnits }: Roadmap
       code: "B1",
       name: "Intermediate (Trung cấp)",
       desc: "Làm chủ chủ đề học thuật và công việc: Diễn đạt ý kiến cá nhân, ước mơ, nói về công nghệ & xã hội. Viết các đoạn luận ngắn mạch lạc.",
-      lessonsCount: 24,
-      completedPercent: userLevelIndex > 2 ? 100 : userLevelIndex === 2 ? Math.round((completedUnits / 24) * 100) : 0,
+      lessonsCount: unitCountByLevel["B1"] ?? 0,
+      completedPercent: userLevelIndex > 2 ? 100 : userLevelIndex === 2 ? Math.round(((completedByLevel["B1"] ?? 0) / Math.max(unitCountByLevel["B1"] ?? 1, 1)) * 100) : 0,
       status: userLevelIndex > 2 ? "completed" : userLevelIndex === 2 ? "active" : "locked",
       topics: ["Công nghệ & Xã hội", "Môi trường học tập", "Giao tiếp công sở"],
     },
@@ -71,8 +72,8 @@ export default function RoadmapClient({ userCefrLevel, completedUnits }: Roadmap
       code: "B2",
       name: "Upper-Intermediate (Trên trung cấp)",
       desc: "Tranh luận tự tin: Trình bày ý kiến đa chiều về các vấn đề xã hội phức tạp, đọc hiểu báo chí quốc tế. Sử dụng câu điều kiện hỗn hợp.",
-      lessonsCount: 30,
-      completedPercent: userLevelIndex > 3 ? 100 : userLevelIndex === 3 ? Math.round((completedUnits / 30) * 100) : 0,
+      lessonsCount: unitCountByLevel["B2"] ?? 0,
+      completedPercent: userLevelIndex > 3 ? 100 : userLevelIndex === 3 ? Math.round(((completedByLevel["B2"] ?? 0) / Math.max(unitCountByLevel["B2"] ?? 1, 1)) * 100) : 0,
       status: userLevelIndex > 3 ? "completed" : userLevelIndex === 3 ? "active" : "locked",
       topics: ["Kinh tế & Đầu tư", "Văn hóa & Toàn cầu", "Tranh luận nâng cao"],
     },
@@ -80,8 +81,8 @@ export default function RoadmapClient({ userCefrLevel, completedUnits }: Roadmap
       code: "C1",
       name: "Advanced (Cao cấp)",
       desc: "Tiếng Anh học thuật & Chuyên sâu: Sử dụng từ vựng đa dạng, tự nhiên như người bản xứ. Sẵn sàng viết luận văn và nghiên cứu khoa học.",
-      lessonsCount: 36,
-      completedPercent: userLevelIndex === 4 ? Math.round((completedUnits / 36) * 100) : 0,
+      lessonsCount: unitCountByLevel["C1"] ?? 0,
+      completedPercent: userLevelIndex === 4 ? Math.round(((completedByLevel["C1"] ?? 0) / Math.max(unitCountByLevel["C1"] ?? 1, 1)) * 100) : 0,
       status: userLevelIndex >= 4 ? "active" : "locked",
       topics: ["Nghiên cứu khoa học", "Văn học nghệ thuật", "Lãnh đạo & Tổ chức"],
     },

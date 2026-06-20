@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
-import { getUserProgress, getCompletedUnitsCount } from "@/app/actions/progress";
+import { getUserProgress } from "@/app/actions/progress";
+import { createClient } from "@/lib/supabase/server";
+import { UNITS } from "@/lib/constants/units";
 import RoadmapClient from "./RoadmapClient";
 
 export const metadata: Metadata = {
@@ -9,9 +11,10 @@ export const metadata: Metadata = {
 };
 
 export default async function RoadmapPage() {
-  const [progressRes, completedRes] = await Promise.all([
+  const supabase = await createClient();
+  const [progressRes, { data: { user } }] = await Promise.all([
     getUserProgress(),
-    getCompletedUnitsCount(),
+    supabase.auth.getUser(),
   ]);
 
   const userCefrLevel =
@@ -19,14 +22,36 @@ export default async function RoadmapPage() {
       ? progressRes.progress.current_level
       : "A1";
 
-  const completedUnits =
-    completedRes.success && completedRes.count != null ? completedRes.count : 0;
+  // Per-level unit counts from actual UNITS constants
+  const unitCountByLevel: Record<string, number> = {};
+  for (const u of UNITS) {
+    unitCountByLevel[u.level] = (unitCountByLevel[u.level] ?? 0) + 1;
+  }
+
+  // Per-level completed counts from DB
+  const completedByLevel: Record<string, number> = {};
+  if (user) {
+    const { data: completedLessons } = await supabase
+      .from("user_lesson_progress")
+      .select("unit_id")
+      .eq("user_id", user.id);
+
+    if (completedLessons) {
+      for (const row of completedLessons) {
+        const unit = UNITS.find(u => u.id === row.unit_id);
+        if (unit) {
+          completedByLevel[unit.level] = (completedByLevel[unit.level] ?? 0) + 1;
+        }
+      }
+    }
+  }
 
   return (
     <main id="main-content">
       <RoadmapClient
         userCefrLevel={userCefrLevel}
-        completedUnits={completedUnits}
+        unitCountByLevel={unitCountByLevel}
+        completedByLevel={completedByLevel}
       />
     </main>
   );
