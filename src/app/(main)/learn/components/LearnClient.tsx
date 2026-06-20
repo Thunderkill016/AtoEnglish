@@ -34,13 +34,13 @@ export default function LearnClient({
   unitStatuses,
 }: LearnClientProps) {
   return (
-    <div className="relative mx-auto max-w-4xl px-4 py-12 sm:px-6 lg:px-8 min-h-screen">
+    <div className="relative mx-auto max-w-4xl px-4 py-6 sm:py-12 sm:px-6 lg:px-8 min-h-screen overflow-x-hidden">
       {/* Background blurs */}
-      <div className="pointer-events-none absolute top-10 left-1/2 -translate-x-1/2 -z-10 h-[400px] w-[500px] rounded-full bg-emerald-500/5 dark:bg-emerald-500/3 blur-[120px]" />
+      <div className="pointer-events-none absolute top-10 left-1/2 -translate-x-1/2 -z-10 h-[400px] w-[90vw] max-w-[500px] rounded-full bg-emerald-500/5 dark:bg-emerald-500/3 blur-[120px]" />
       <div className="pointer-events-none absolute bottom-10 left-10 -z-10 h-[300px] w-[300px] rounded-full bg-teal-500/4 dark:bg-teal-500/2 blur-[100px]" />
 
       {/* Roadmap Header */}
-      <div className="text-center space-y-4 mb-16">
+      <div className="text-center space-y-3 mb-8 sm:mb-16">
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -74,7 +74,7 @@ export default function LearnClient({
       </div>
 
       {/* Roadmap Path timeline */}
-      <div className="relative space-y-12 pb-16">
+      <div className="relative space-y-8 sm:space-y-12 pb-8 sm:pb-16">
         {/* Central connecting line */}
         <div className="absolute left-[39px] sm:left-1/2 top-4 bottom-4 w-1 bg-zinc-200 dark:bg-zinc-800 -translate-x-1/2 -z-20" />
 
