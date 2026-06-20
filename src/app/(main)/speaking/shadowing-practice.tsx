@@ -642,7 +642,7 @@ export function ShadowingPractice() {
                 </div>
 
                 <div className="flex flex-col items-center justify-center shrink-0">
-                  <span className={`text-3xl font-black ${
+                  <span className={`text-2xl sm:text-3xl font-black ${
                     accuracyScore >= 80
                       ? "text-emerald-600 dark:text-emerald-400"
                       : accuracyScore >= 50
