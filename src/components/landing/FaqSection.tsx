@@ -11,6 +11,14 @@ export default function FaqSection() {
       a: "Hoàn toàn học được! Lộ trình của AtoEnglish được thiết kế đặc biệt từ cơ bản nhất (A1). Phương pháp 4 bước (IPOR) giúp chia nhỏ bài học: bạn sẽ tích lũy từ vựng qua hình ảnh/âm thanh, luyện tập viết câu phản xạ và thực hành nói nhại giọng (Shadowing) mà không bị áp lực ngữ pháp hàn lâm.",
     },
     {
+      q: "Mỗi ngày tôi cần học bao lâu?",
+      a: "Chỉ 15–20 phút mỗi ngày là đủ để tạo ra tiến bộ thực sự. Mỗi bài học được thiết kế hoàn chỉnh trong khoảng 40 phút, nhưng bạn hoàn toàn có thể học theo từng phần nhỏ. Hệ thống nhắc nhở thông minh và streak sẽ giúp bạn duy trì thói quen học hàng ngày một cách tự nhiên.",
+    },
+    {
+      q: "AtoEnglish khác gì so với Duolingo hay Babbel?",
+      a: "AtoEnglish tập trung vào giao tiếp thực tế cho người Việt — không gamification hời hợt. Bạn học theo phương pháp khoa học PPP (Present–Practice–Produce) kết hợp FSRS, thực hành nói Shadowing thực sự và roleplay tình huống. Nội dung được thiết kế sát nhu cầu của người học Việt Nam, không phải bản dịch từ nước ngoài.",
+    },
+    {
       q: "Tôi có phải cài đặt ứng dụng vào điện thoại không?",
       a: "Không cần. AtoEnglish là một nền tảng Web-App hiện đại, chạy trực tiếp trên trình duyệt web của bạn. Giao diện được tối ưu hóa mượt mà cho cả điện thoại di động (iPhone, Android), máy tính bảng lẫn máy tính cá nhân. Chỉ cần mở trình duyệt, đăng nhập nhanh bằng Google là học được ngay.",
     },
@@ -21,6 +29,10 @@ export default function FaqSection() {
     {
       q: "Thuật toán Ôn tập ngắt quãng (FSRS) là gì?",
       a: "FSRS (Free Spaced Repetition Scheduler) là thuật toán khoa học ghi nhớ tiên tiến bậc nhất hiện nay. Thay vì cố gắng học vẹt, FSRS sẽ đo lường mức độ ghi nhớ của bạn đối với từng từ vựng và tự động lên lịch nhắc nhở ôn tập vào đúng 'thời điểm vàng' ngay trước khi bạn chuẩn bị quên. Nhờ đó, bạn ghi nhớ từ vựng lâu hơn đáng kể so với cách học vẹt truyền thống.",
+    },
+    {
+      q: "Dữ liệu và tiến độ học của tôi có được bảo mật không?",
+      a: "Hoàn toàn bảo mật. AtoEnglish sử dụng Supabase với Row Level Security (RLS) — dữ liệu của bạn chỉ có thể được truy cập bởi chính bạn. Đăng nhập qua Google OAuth 2.0 được mã hóa an toàn. Chúng tôi không bán hay chia sẻ dữ liệu cá nhân với bên thứ ba. Xem thêm tại Chính sách Bảo mật.",
     },
   ];
 
