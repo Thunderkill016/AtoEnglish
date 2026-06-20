@@ -1,5 +1,6 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useState, useEffect } from "react";
 import { Flame, Star, GraduationCap, BookOpen } from "lucide-react";
 import { toast } from "sonner";
@@ -9,6 +10,13 @@ import UnitCard from "./UnitCard";
 import SrsCard from "./SrsCard";
 import DailyQuests from "./DailyQuests";
 import QuickActions from "./QuickActions";
+import LevelUpModal from "@/components/learn/LevelUpModal";
+
+// Dynamic import — NotificationBell uses browser APIs (navigator, ServiceWorker)
+const NotificationBell = dynamic(
+  () => import("@/components/notifications/NotificationBell"),
+  { ssr: false }
+);
 
 interface DashboardClientProps {
   userName: string;
@@ -55,6 +63,19 @@ export default function DashboardClient({
   const [xpTarget, setXpTarget] = useState(dailyXpGoal);
   const [showGoalSelector, setShowGoalSelector] = useState(false);
   const [updatingGoal, setUpdatingGoal] = useState(false);
+
+  // Level-up detection: check localStorage for pending level-up from UnitTemplate
+  const [levelUpModal, setLevelUpModal] = useState<{ prev: string; next: string } | null>(null);
+  useEffect(() => {
+    const pending = localStorage.getItem("pending-level-up");
+    if (pending) {
+      try {
+        const { prev, next } = JSON.parse(pending) as { prev: string; next: string };
+        if (prev && next && prev !== next) setLevelUpModal({ prev, next });
+      } catch { /* ignore */ }
+      localStorage.removeItem("pending-level-up");
+    }
+  }, []);
 
   useEffect(() => {
     const hour = new Date().getHours();
@@ -157,12 +178,15 @@ export default function DashboardClient({
               !
             </h1>
           </div>
-          {/* Streak badge */}
-          <div className="shrink-0 flex items-center gap-2 rounded-2xl bg-orange-500/10 border border-orange-500/20 px-4 py-2.5 hover:bg-orange-500/15 transition-colors duration-200">
-            <Flame className="size-5 text-orange-500 fill-orange-500" />
-            <span className="text-sm font-black text-orange-600 dark:text-orange-400 whitespace-nowrap">
-              {currentStreak} ngày
-            </span>
+          {/* Streak badge + Notification Bell */}
+          <div className="shrink-0 flex items-center gap-2">
+            <div className="flex items-center gap-2 rounded-2xl bg-orange-500/10 border border-orange-500/20 px-4 py-2.5 hover:bg-orange-500/15 transition-colors duration-200">
+              <Flame className="size-5 text-orange-500 fill-orange-500" />
+              <span className="text-sm font-black text-orange-600 dark:text-orange-400 whitespace-nowrap">
+                {currentStreak} ngày
+              </span>
+            </div>
+            <NotificationBell />
           </div>
         </div>
 
@@ -269,9 +293,20 @@ export default function DashboardClient({
           </div>
         </div>
 
+
         {/* ── 4. Quick Actions row ── */}
         <QuickActions currentUnitRoute={currentUnitData.route} />
       </div>
+
+      {/* Level-Up Celebration Modal */}
+      {levelUpModal && (
+        <LevelUpModal
+          isOpen={!!levelUpModal}
+          previousLevel={levelUpModal.prev}
+          newLevel={levelUpModal.next}
+          onClose={() => setLevelUpModal(null)}
+        />
+      )}
     </div>
   );
 }

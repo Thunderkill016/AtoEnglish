@@ -33,6 +33,7 @@ function getSpeechRecognition(): typeof SpeechRecognition | null {
 const SECTION_LABELS = [
   "Khởi động",
   "Từ vựng",
+  "Luyện tập",
   "Nghe hiểu",
   "Shadowing",
   "Luyện nói",
@@ -116,7 +117,7 @@ interface UnitTemplateProps {
 }
 
 export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTemplateProps) {
-  const [section, setSection] = useState(1); // 1–6
+  const [section, setSection] = useState(1); // 1–7
   const [isCompleted, setIsCompleted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -124,14 +125,18 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
   const [flippedCards, setFlippedCards] = useState<Set<number>>(new Set());
   const [seenCards, setSeenCards] = useState<Set<number>>(new Set());
 
-  // Section 3 — Listening
+  // Section 3 — Practice (interleaved exercises)
+  const [practiceAnswers, setPracticeAnswers] = useState<Record<string, string>>({});
+  const [practiceSubmitted, setPracticeSubmitted] = useState(false);
+
+  // Section 4 — Listening
   const [selectedDialogue, setSelectedDialogue] = useState(0);
   const [showTranscript, setShowTranscript] = useState(false);
   const [isPlayingDialogue, setIsPlayingDialogue] = useState(false);
   const [lacAnswers, setLacAnswers] = useState<Record<number, string>>({});
   const [lacSubmitted, setLacSubmitted] = useState(false);
 
-  // Section 4 — Shadowing
+  // Section 5 — Shadowing
   const [shadowLineIdx, setShadowLineIdx] = useState(0);
   const [shadowSpeed, setShadowSpeed] = useState(1.0);
   const [shadowScores, setShadowScores] = useState<Record<number, number>>({});
@@ -140,7 +145,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
   const [isRecognizing, setIsRecognizing] = useState(false);
   const [shadowDone, setShadowDone] = useState(false);
 
-  // Section 5 — Speaking
+  // Section 6 — Speaking
   const [nameInput, setNameInput] = useState("");
   const [level1Done, setLevel1Done] = useState(false);
   const [level2Transcript, setLevel2Transcript] = useState("");
@@ -148,7 +153,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
   const [level2Done, setLevel2Done] = useState(false);
   const [showHint, setShowHint] = useState(false);
 
-  // Section 6 — Quiz
+  // Section 7 — Quiz
   const [quizAnswers, setQuizAnswers] = useState<Record<string, string>>({});
   const [quizSubmitted, setQuizSubmitted] = useState(false);
 
@@ -164,20 +169,68 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
     getUnitCompletionStatus(unit.unitId).then(res => {
       if (res.success && res.completed) setIsCompleted(true);
     });
+    // Restore lesson progress from localStorage
+    try {
+      const saved = localStorage.getItem(`lesson-progress-${unit.unitId}`);
+      if (saved) {
+        const { section: savedSection } = JSON.parse(saved) as { section: number };
+        if (savedSection > 1 && savedSection < 7) setSection(savedSection);
+      }
+    } catch { /* ignore */ }
   }, [unit.unitId]);
 
   useEffect(() => {
     return () => { window.speechSynthesis?.cancel(); };
   }, []);
 
+  // Persist lesson progress to localStorage
+  useEffect(() => {
+    if (section > 1 && section < 7) {
+      localStorage.setItem(`lesson-progress-${unit.unitId}`, JSON.stringify({ section }));
+    } else if (section >= 7) {
+      localStorage.removeItem(`lesson-progress-${unit.unitId}`);
+    }
+  }, [section, unit.unitId]);
+
   // ── TTS ──────────────────────────────────────────────
-  const playTTS = (text: string, rate = 1.0) => {
+  const playTTS = (text: string, rate = 0.85) => {
     if (!window.speechSynthesis) { toast.error("Trình duyệt không hỗ trợ TTS"); return; }
     window.speechSynthesis.cancel();
     const u = new SpeechSynthesisUtterance(text);
     u.lang = "en-US";
     u.rate = rate;
     window.speechSynthesis.speak(u);
+  };
+
+  // ── Sound feedback (Web Audio API) ────────────────────
+  const playCorrectSound = () => {
+    try {
+      const ctx = new AudioContext();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.frequency.setValueAtTime(523, ctx.currentTime);   // C5
+      osc.frequency.setValueAtTime(659, ctx.currentTime + 0.1); // E5
+      osc.frequency.setValueAtTime(784, ctx.currentTime + 0.2); // G5
+      gain.gain.setValueAtTime(0.3, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.5);
+      osc.start(); osc.stop(ctx.currentTime + 0.5);
+    } catch { /* browser may block */ }
+  };
+
+  const playWrongSound = () => {
+    try {
+      const ctx = new AudioContext();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.type = "sawtooth";
+      osc.frequency.setValueAtTime(200, ctx.currentTime);
+      osc.frequency.setValueAtTime(150, ctx.currentTime + 0.15);
+      gain.gain.setValueAtTime(0.2, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
+      osc.start(); osc.stop(ctx.currentTime + 0.4);
+    } catch { /* browser may block */ }
   };
 
   const playDialogueTTS = (dialogueIdx: number, speed: number) => {
@@ -259,6 +312,13 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
     if (res.success) {
       setIsCompleted(true);
       toast.success(`🎉 Chúc mừng! Bạn nhận được ${unit.xp} XP!`);
+      // If server promoted the user's CEFR level, store for dashboard modal
+      if (res.previousLevel && res.newLevel && res.previousLevel !== res.newLevel) {
+        localStorage.setItem("pending-level-up", JSON.stringify({
+          prev: res.previousLevel,
+          next: res.newLevel,
+        }));
+      }
     } else {
       toast.error(res.error || "Có lỗi xảy ra");
     }
@@ -269,12 +329,12 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
   const quizScore = QUIZ_QUESTIONS.filter(q => quizAnswers[q.id] === q.answer).length;
 
   // ── Progress bar % ────────────────────────────────────
-  const progress = Math.round(((section - 1) / 5) * 100);
+  const progress = Math.round(((section - 1) / 6) * 100);
 
   // ── Navigation ────────────────────────────────────────
   const goNext = () => {
     window.speechSynthesis?.cancel();
-    setSection(s => Math.min(s + 1, 6));
+    setSection(s => Math.min(s + 1, 7));
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
@@ -298,7 +358,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
             </div>
             <div className="text-right">
               <p className="text-xs text-zinc-500">Phần</p>
-              <p className="text-sm font-bold text-emerald-400">{section}/6</p>
+              <p className="text-sm font-bold text-emerald-400">{section}/7</p>
             </div>
           </div>
           {/* Progress bar */}
@@ -399,12 +459,15 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                     <div
                       key={i}
                       onClick={() => {
+                        const isNowFlipped = !flippedCards.has(i);
                         setFlippedCards(p => {
                           const n = new Set(p);
                           if (n.has(i)) n.delete(i); else n.add(i);
                           return n;
                         });
                         setSeenCards(p => { const n = new Set(p); n.add(i); return n; });
+                        // Auto-speak when flipping to front
+                        if (isNowFlipped) playTTS(v.word, 0.85);
                       }}
                       className="cursor-pointer"
                       style={{ perspective: "600px" }}
@@ -448,8 +511,110 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
             </motion.div>
           )}
 
-          {/* ══ SECTION 3: Listening ══ */}
-          {section === 3 && (
+          {/* ══ SECTION 3: Practice Exercises (interleaved) ══ */}
+          {section === 3 && (() => {
+            const PRACTICE_QS = QUIZ_QUESTIONS.slice(0, 3);
+            const practiceScore = PRACTICE_QS.filter(q => practiceAnswers[q.id] === q.answer).length;
+            const allAnswered = PRACTICE_QS.every(q => practiceAnswers[q.id]);
+            return (
+              <motion.div key="s3-practice" variants={sectionVariants} initial="initial" animate="animate" exit="exit" transition={{ duration: 0.3 }}>
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="text-2xl">⚡</span>
+                  <h1 className="text-2xl font-black text-white">Luyện tập nhanh</h1>
+                  <span className="text-xs text-zinc-500 ml-auto">~3 phút</span>
+                </div>
+                <p className="text-zinc-400 mb-6 text-sm">Kiểm tra nhanh những gì bạn vừa học. Chọn đáp án đúng cho mỗi câu.</p>
+
+                <div className="space-y-5 mb-8">
+                  {PRACTICE_QS.map((q, qi) => {
+                    const selected = practiceAnswers[q.id];
+                    const isCorrect = selected === q.answer;
+                    return (
+                      <div key={q.id} className={`rounded-2xl border p-5 transition-all duration-300 ${
+                        practiceSubmitted
+                          ? isCorrect
+                            ? "border-emerald-500/50 bg-emerald-950/30"
+                            : "border-red-500/40 bg-red-950/20"
+                          : "border-zinc-700/60 bg-white/5"
+                      }`}>
+                        <p className="text-white font-bold mb-3 text-sm">
+                          <span className="text-emerald-400 mr-2">{qi + 1}.</span>
+                          {q.question}
+                        </p>
+                        <div className="grid grid-cols-2 gap-2">
+                          {q.options.map(opt => {
+                            const isPicked = selected === opt;
+                            const isRight = opt === q.answer;
+                            let cls = "px-3 py-2 rounded-xl text-sm font-medium border transition-all duration-200 text-left ";
+                            if (!practiceSubmitted) {
+                              cls += isPicked
+                                ? "bg-emerald-600/30 border-emerald-500 text-emerald-300"
+                                : "bg-zinc-800 border-zinc-700 text-zinc-300 hover:border-emerald-600/50 hover:bg-zinc-700/50";
+                            } else {
+                              if (isRight) cls += "bg-emerald-600/30 border-emerald-500 text-emerald-200 font-bold";
+                              else if (isPicked && !isRight) cls += "bg-red-900/30 border-red-500/60 text-red-300 line-through";
+                              else cls += "bg-zinc-800/50 border-zinc-700/40 text-zinc-500";
+                            }
+                            return (
+                              <button
+                                key={opt}
+                                disabled={practiceSubmitted}
+                                className={cls}
+                                onClick={() => {
+                                  if (practiceSubmitted) return;
+                                  setPracticeAnswers(p => ({ ...p, [q.id]: opt }));
+                                }}
+                              >
+                                {opt}
+                              </button>
+                            );
+                          })}
+                        </div>
+                        {practiceSubmitted && (
+                          <p className={`text-xs mt-2 font-bold ${isCorrect ? "text-emerald-400" : "text-red-400"}`}>
+                            {isCorrect ? "✓ Chính xác!" : `✗ Đáp án đúng: ${q.answer}`}
+                          </p>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+
+                {!practiceSubmitted ? (
+                  <button
+                    disabled={!allAnswered}
+                    onClick={() => {
+                      setPracticeSubmitted(true);
+                      const score = PRACTICE_QS.filter(q => practiceAnswers[q.id] === q.answer).length;
+                      if (score >= 2) playCorrectSound(); else playWrongSound();
+                    }}
+                    className="w-full bg-emerald-600 hover:bg-emerald-500 disabled:opacity-40 disabled:cursor-not-allowed text-white font-bold rounded-xl px-6 py-4 flex items-center justify-center gap-2 transition-colors text-lg"
+                  >
+                    Kiểm tra đáp án <ChevronRight size={20} />
+                  </button>
+                ) : (
+                  <div className="space-y-4">
+                    <div className={`rounded-2xl p-4 text-center border ${
+                      practiceScore === PRACTICE_QS.length
+                        ? "bg-emerald-950/40 border-emerald-500/30"
+                        : "bg-zinc-900/40 border-zinc-700/40"
+                    }`}>
+                      <p className="text-2xl font-black text-white">{practiceScore}/{PRACTICE_QS.length} câu đúng</p>
+                      <p className="text-sm text-zinc-400 mt-1">
+                        {practiceScore === PRACTICE_QS.length ? "🏆 Xuất sắc! Bạn nắm vững từ vựng!" : practiceScore >= 2 ? "🎯 Khá tốt! Tiếp tục nhé!" : "💪 Ôn lại thẻ từ vựng sẽ giúp bạn nhớ lâu hơn!"}
+                      </p>
+                    </div>
+                    <button onClick={goNext} className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl px-6 py-4 flex items-center justify-center gap-2 transition-colors text-lg">
+                      Tiếp tục <ChevronRight size={20} />
+                    </button>
+                  </div>
+                )}
+              </motion.div>
+            );
+          })()}
+
+          {/* ══ SECTION 4: Listening ══ */}
+          {section === 4 && (
             <motion.div key="s3" variants={sectionVariants} initial="initial" animate="animate" exit="exit" transition={{ duration: 0.3 }}>
               <div className="flex items-center gap-2 mb-6">
                 <Headphones className="text-emerald-400" size={22} />
@@ -586,7 +751,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
           )}
 
           {/* ══ SECTION 4: Shadowing ══ */}
-          {section === 4 && (
+          {section === 5 && (
             <motion.div key="s4" variants={sectionVariants} initial="initial" animate="animate" exit="exit" transition={{ duration: 0.3 }}>
               <div className="flex items-center gap-2 mb-6">
                 <MessageCircle className="text-emerald-400" size={22} />
@@ -682,7 +847,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
           )}
 
           {/* ══ SECTION 5: Speaking Output ══ */}
-          {section === 5 && (
+          {section === 6 && (
             <motion.div key="s5" variants={sectionVariants} initial="initial" animate="animate" exit="exit" transition={{ duration: 0.3 }}>
               <div className="flex items-center gap-2 mb-6">
                 <Mic className="text-emerald-400" size={22} />
@@ -799,7 +964,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
           )}
 
           {/* ══ SECTION 6: Review + Badge ══ */}
-          {section === 6 && (
+          {section === 7 && (
             <motion.div key="s6" variants={sectionVariants} initial="initial" animate="animate" exit="exit" transition={{ duration: 0.3 }}>
               <div className="flex items-center gap-2 mb-6">
                 <Trophy className="text-emerald-400" size={22} />
@@ -830,7 +995,11 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                     ))}
                   </div>
                   <button
-                    onClick={() => setQuizSubmitted(true)}
+                    onClick={() => {
+                      setQuizSubmitted(true);
+                      const sc = QUIZ_QUESTIONS.filter(q => quizAnswers[q.id] === q.answer).length;
+                      if (sc >= 4) playCorrectSound(); else if (sc < 3) playWrongSound();
+                    }}
                     disabled={Object.keys(quizAnswers).length < QUIZ_QUESTIONS.length}
                     className="mt-6 w-full bg-emerald-600 hover:bg-emerald-500 disabled:opacity-40 text-white font-bold rounded-xl py-3 transition-colors"
                   >

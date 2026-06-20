@@ -233,6 +233,8 @@ export async function completeUnit(unitId: string) {
       newStreak: nextStreak,
       vocabAddedCount: addedCount,
       leveledUp: newLevel !== currentLevel ? newLevel : null,
+      previousLevel: currentLevel,
+      newLevel: newLevel,
     };
 
   } catch (error) {
