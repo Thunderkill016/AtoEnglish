@@ -173,6 +173,12 @@ export const unit4: UnitData = {
       { en: "AI will revolutionize healthcare.", vn: "AI sẽ cách mạng hóa ngành y tế." },
     ],
     tip: "Sau modal verb, LUÔN dùng động từ nguyên thể (base form). Không nói 'can changes' — phải là 'can change'.",
+    dialogueExample: {
+      speaker: "Alex",
+      text: "AI can process data faster than any human.",
+      translation: "AI có thể xử lý dữ liệu nhanh hơn bất kỳ con người nào.",
+      highlight: "can process",
+    },
     ccq: {
       question: "Câu nào dùng modal verb ĐÚNG?",
       options: ["She cans speak English.", "AI can changes the world.", "We should protecting data.", "You must protect your data."],
@@ -232,8 +238,32 @@ export const unit4: UnitData = {
       options: ["ethics", "fabric", "phone", "cloth"],
       answer: "ethics",
       type: "multiple-choice"
-    }
-  ]
+    },
+    { id: "q6", question: "Công nghệ có thể giúp ích cho con người.", options: [], answer: "Technology can help people.", type: "translate" },
+    { id: "q7", question: "Chúng ta nên bảo vệ quyền riêng tư trực tuyến.", options: [], answer: "We should protect our online privacy.", type: "translate" },
+  ],
+
+  scrambleExercises: [
+    {
+      id: "s4-1",
+      prompt_vn: "Internet có thể kết nối mọi người.",
+      words: ["The", "internet", "can", "connect", "people", "."],
+      answer: "The internet can connect people .",
+    },
+    {
+      id: "s4-2",
+      prompt_vn: "Bạn nên tắt điện thoại đi.",
+      words: ["You", "should", "turn", "off", "your", "phone", "."],
+      answer: "You should turn off your phone .",
+    },
+    {
+      id: "s4-3",
+      prompt_vn: "AI có thể thay đổi cuộc sống của chúng ta.",
+      words: ["AI", "may", "change", "our", "lives", "."],
+      answer: "AI may change our lives .",
+    },
+  ],
 };
 
 export default unit4;
+

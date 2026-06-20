@@ -53,6 +53,8 @@ export interface VocabItem {
   phonetic: string;
   meaning: string;
   example: string;
+  example2?: string;    // Second context sentence for richer encoding (Nation 2001)
+  collocation?: string; // Common word pairing shown as a usage chip
   audio?: string;
   emoji?: string; // Visual mnemonic for Mayer Multimedia principle
 }
@@ -99,7 +101,7 @@ export interface QuizQuestion {
   question: string;
   options: string[];
   answer: string;
-  type: "multiple-choice" | "cloze";
+  type: "multiple-choice" | "cloze" | "translate";
 }
 
 export interface SpeakingData {
@@ -123,6 +125,12 @@ export interface GrammarPoint {
     vn: string;
   }>;
   tip?: string;            // Quick usage tip (Vietnamese)
+  dialogueExample?: {      // Cross-reference: dialogue line showing grammar in authentic context
+    speaker: string;
+    text: string;
+    translation: string;
+    highlight: string;     // Substring to bold-highlight in the text
+  };
   ccq?: {                  // Concept Check Question — verifies understanding before practice
     question: string;
     options: string[];
@@ -141,6 +149,14 @@ export interface MatchingExercise {
   pairs: MatchingPair[]; // 4-6 pairs recommended
 }
 
+/** Sentence scrambling: tap word tiles to build the English sentence */
+export interface SentenceScramble {
+  id: string;
+  prompt_vn: string;  // Vietnamese cue shown to the learner
+  words: string[];    // All tiles — component shuffles on mount
+  answer: string;     // Expected sentence (normalized, case-insensitive)
+}
+
 export interface UnitData {
   unitId: string;
   title: string;
@@ -155,6 +171,7 @@ export interface UnitData {
   vocab: VocabItem[];
   grammar?: GrammarPoint;          // NEW: Grammar presentation (PPP stage 2)
   matchingExercise?: MatchingExercise; // NEW: Matching exercise in practice
+  scrambleExercises?: SentenceScramble[]; // Sentence-construction tiles (Priority 1)
   practiceQuiz?: QuizQuestion[];   // NEW: Separate quiz for practice section
   dialogues: Dialogue[];
   listenAndChoose: ListenAndChooseItem[];
@@ -185,6 +202,10 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
   const [matchedPairs, setMatchedPairs] = useState<Set<string>>(new Set());
   const [wrongMatch, setWrongMatch] = useState<string | null>(null);
   const [shuffledRight, setShuffledRight] = useState<string[]>([]);
+  // Scramble state
+  const [scrambleShuffled, setScrambleShuffled] = useState<Record<string, string[]>>({});
+  const [scrambleBuilt, setScrambleBuilt] = useState<Record<string, string[]>>({});
+  const [scrambleChecked, setScrambleChecked] = useState<Record<string, boolean>>({});
 
   // Section 5 — Listening
   const [selectedDialogue, setSelectedDialogue] = useState(0);
@@ -249,6 +270,17 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
       setShuffledRight([...rights].sort(() => Math.random() - 0.5));
     }
   }, [unit.matchingExercise]);
+
+  useEffect(() => {
+    if (unit.scrambleExercises?.length) {
+      const shuffled: Record<string, string[]> = {};
+      for (const ex of unit.scrambleExercises) {
+        shuffled[ex.id] = [...ex.words].sort(() => Math.random() - 0.5);
+      }
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setScrambleShuffled(shuffled);
+    }
+  }, [unit.scrambleExercises]);
 
   useEffect(() => {
     // Fetch SRS due cards for warm-up panel
@@ -447,9 +479,9 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
   };
 
   // ─── Score calculations ───────────────────────────────────────────────────
-  // Final quiz score (MC + cloze)
+  // Final quiz score (MC + cloze + translate)
   const finalQuizScore = FINAL_QS.filter(q => {
-    if (q.type === "cloze") {
+    if (q.type === "cloze" || q.type === "translate") {
       return (quizClozeInputs[q.id] ?? "").trim().toLowerCase() === q.answer.toLowerCase();
     }
     return quizAnswers[q.id] === q.answer;
@@ -472,7 +504,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
   // Wrong questions for retry panel (computed after quiz submission)
   const wrongQuestions = quizSubmitted
     ? FINAL_QS.filter(q =>
-        q.type === "cloze"
+        q.type === "cloze" || q.type === "translate"
           ? (quizClozeInputs[q.id] ?? "").trim().toLowerCase() !== q.answer.toLowerCase()
           : quizAnswers[q.id] !== q.answer
       )
@@ -534,6 +566,9 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
   const matchingDone = unit.matchingExercise
     ? matchedPairs.size === unit.matchingExercise.pairs.length * 2
     : true;
+
+  const allScrambleDone = !unit.scrambleExercises?.length ||
+    unit.scrambleExercises.every(ex => scrambleChecked[ex.id]);
 
   // ─── JSX ──────────────────────────────────────────────────────────────────
   return (
@@ -734,8 +769,18 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                         </div>
                         {/* Back */}
                         <div className="absolute inset-0 bg-emerald-950/40 border border-emerald-700/40 rounded-2xl p-4 flex flex-col justify-between" style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}>
-                          <p className="text-emerald-300 font-bold text-sm">{v.meaning}</p>
-                          <p className="text-zinc-400 text-xs italic">&ldquo;{v.example}&rdquo;</p>
+                          <div>
+                            <p className="text-emerald-300 font-bold text-sm mb-2">{v.meaning}</p>
+                            {v.collocation && (
+                              <span className="inline-block bg-teal-700/30 border border-teal-600/40 text-teal-300 text-[10px] font-bold px-2 py-0.5 rounded-full mb-2">
+                                💬 {v.collocation}
+                              </span>
+                            )}
+                            <p className="text-zinc-400 text-xs italic">&ldquo;{v.example}&rdquo;</p>
+                            {v.example2 && (
+                              <p className="text-zinc-500 text-xs italic mt-1">&ldquo;{v.example2}&rdquo;</p>
+                            )}
+                          </div>
                           <p className="text-[10px] text-emerald-600">Nhấn để lật lại</p>
                         </div>
                       </div>
@@ -828,6 +873,25 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                       <div className="border-l-4 border-teal-500 bg-teal-950/20 rounded-r-xl p-3">
                         <p className="text-xs font-bold text-teal-400 mb-1">💡 Mẹo nhớ</p>
                         <p className="text-zinc-300 text-sm">{unit.grammar.tip}</p>
+                      </div>
+                    )}
+
+                    {/* Grammar → Dialogue cross-reference */}
+                    {unit.grammar.dialogueExample && (
+                      <div className="mt-4 bg-violet-950/20 border border-violet-700/30 rounded-2xl p-4">
+                        <p className="text-xs font-bold text-violet-400 uppercase tracking-widest mb-3">🔍 Cấu trúc này xuất hiện trong hội thoại</p>
+                        <div className="bg-zinc-900/60 rounded-xl p-3">
+                          <p className="text-xs text-violet-300 font-bold mb-1">{unit.grammar.dialogueExample.speaker}:</p>
+                          <p className="text-white text-sm leading-relaxed">
+                            {(() => {
+                              const { text, highlight } = unit.grammar!.dialogueExample!;
+                              const idx = text.indexOf(highlight);
+                              if (idx < 0) return text;
+                              return (<>{text.slice(0, idx)}<mark className="bg-violet-500/30 text-violet-200 px-0.5 rounded font-bold not-italic">{highlight}</mark>{text.slice(idx + highlight.length)}</>);
+                            })()}
+                          </p>
+                          <p className="text-zinc-500 text-xs mt-1 italic">{unit.grammar.dialogueExample.translation}</p>
+                        </div>
                       </div>
                     )}
 
@@ -1044,6 +1108,90 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                   </div>
                 )}
 
+                {/* ── Sentence Scramble ── */}
+                {unit.scrambleExercises && unit.scrambleExercises.length > 0 && (
+                  <div className="space-y-4 mb-6">
+                    <div className="flex items-center gap-2">
+                      <span className="text-lg">🔀</span>
+                      <p className="text-sm font-bold text-white">Sắp xếp thành câu đúng</p>
+                      <span className="text-xs text-zinc-500 ml-auto">Sản xuất ngôn ngữ</span>
+                    </div>
+                    {unit.scrambleExercises.map(ex => {
+                      const built = scrambleBuilt[ex.id] ?? [];
+                      const pool = scrambleShuffled[ex.id] ?? [...ex.words].sort(() => Math.random() - 0.5);
+                      const isChecked = !!scrambleChecked[ex.id];
+                      const isCorrect = built.join(" ").toLowerCase().trim() === ex.answer.toLowerCase().trim();
+                      return (
+                        <div key={ex.id} className={`rounded-2xl border p-5 transition-all duration-300 ${
+                          isChecked
+                            ? isCorrect ? "border-emerald-500/50 bg-emerald-950/30" : "border-red-500/40 bg-red-950/20"
+                            : "border-zinc-700/60 bg-white/5"
+                        }`}>
+                          <p className="text-zinc-400 text-xs mb-3">🇻🇳 {ex.prompt_vn}</p>
+                          {/* Built sentence slot */}
+                          <div className="min-h-[44px] flex flex-wrap gap-2 mb-3 p-3 bg-zinc-900/60 rounded-xl border border-zinc-700/40">
+                            {built.length === 0
+                              ? <span className="text-zinc-600 text-xs self-center">Nhấn từ bên dưới để xây dựng câu...</span>
+                              : built.map((w, i) => (
+                                  <button key={i} disabled={isChecked}
+                                    onClick={() => {
+                                      if (isChecked) return;
+                                      setScrambleBuilt(p => {
+                                        const arr = [...(p[ex.id] ?? [])];
+                                        arr.splice(i, 1);
+                                        return { ...p, [ex.id]: arr };
+                                      });
+                                    }}
+                                    className="px-2.5 py-1 bg-emerald-700/40 border border-emerald-600/50 text-emerald-200 rounded-lg text-xs font-medium hover:bg-red-900/30 hover:border-red-500/40 transition-colors disabled:cursor-default"
+                                  >{w}</button>
+                                ))
+                            }
+                          </div>
+                          {/* Word tile pool */}
+                          {!isChecked && (
+                            <div className="flex flex-wrap gap-2 mb-3">
+                              {pool.map((w, i) => {
+                                const usedCount = built.filter(b => b === w).length;
+                                const totalCount = pool.filter(t => t === w).length;
+                                const disabled = usedCount >= totalCount;
+                                return (
+                                  <button key={i} disabled={disabled}
+                                    onClick={() => {
+                                      if (disabled) return;
+                                      setScrambleBuilt(p => ({ ...p, [ex.id]: [...(p[ex.id] ?? []), w] }));
+                                    }}
+                                    className={`px-2.5 py-1 rounded-lg text-xs font-medium border transition-colors ${
+                                      disabled
+                                        ? "opacity-25 bg-zinc-800 border-zinc-700 text-zinc-500 cursor-not-allowed"
+                                        : "bg-zinc-800 border-zinc-600 text-zinc-200 hover:border-teal-500/50 hover:bg-zinc-700/60 cursor-pointer"
+                                    }`}
+                                  >{w}</button>
+                                );
+                              })}
+                            </div>
+                          )}
+                          {/* Check / Result */}
+                          {!isChecked ? (
+                            <button
+                              disabled={built.length === 0}
+                              onClick={() => {
+                                setScrambleChecked(p => ({ ...p, [ex.id]: true }));
+                                if (built.join(" ").toLowerCase().trim() === ex.answer.toLowerCase().trim()) playCorrectSound();
+                                else playWrongSound();
+                              }}
+                              className="px-4 py-1.5 bg-teal-600/30 border border-teal-500/40 text-teal-300 rounded-xl text-xs font-bold hover:bg-teal-600/50 disabled:opacity-40 transition-colors"
+                            >Kiểm tra</button>
+                          ) : (
+                            <p className={`text-xs font-bold mt-1 ${isCorrect ? "text-emerald-400" : "text-red-400"}`}>
+                              {isCorrect ? "✓ Chính xác!" : `✗ Đáp án đúng: "${ex.answer}"`}
+                            </p>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+
                 {/* Submit/Continue */}
                 {!practiceSubmitted ? (
                   <button
@@ -1069,13 +1217,14 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                         {practiceScore === PRACTICE_QS.length ? "🏆 Xuất sắc! Bạn nắm vững bài học!" : practiceScore >= Math.ceil(PRACTICE_QS.length * 0.7) ? "🎯 Khá tốt! Tiếp tục nhé!" : "💪 Ôn lại thẻ từ vựng sẽ giúp bạn nhớ lâu hơn!"}
                       </p>
                     </div>
-                    {(matchingDone || !unit.matchingExercise) && (
+                    {matchingDone && allScrambleDone ? (
                       <button onClick={goNext} className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl px-6 py-4 flex items-center justify-center gap-2 transition-colors text-lg">
                         Tiếp tục <ChevronRight size={20} />
                       </button>
-                    )}
-                    {unit.matchingExercise && !matchingDone && (
-                      <p className="text-center text-zinc-500 text-sm">Hoàn thành phần nối từ để tiếp tục...</p>
+                    ) : (
+                      <p className="text-center text-zinc-500 text-sm">
+                        {!matchingDone ? "Hoàn thành phần nối từ để tiếp tục..." : "Hoàn thành phần sắp xếp câu để tiếp tục..."}
+                      </p>
                     )}
                   </div>
                 )}
@@ -1468,6 +1617,21 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                           </div>
                         );
                       }
+                      if (q.type === "translate") {
+                        return (
+                          <div key={q.id}>
+                            <p className="text-white text-sm mb-1"><span className="text-zinc-500 mr-2">Câu {qi + 1}.</span>{q.question}</p>
+                            <p className="text-xs text-violet-400 mb-2">✍️ Dịch sang tiếng Anh</p>
+                            <input
+                              type="text"
+                              value={quizClozeInputs[q.id] ?? ""}
+                              onChange={e => setQuizClozeInputs(p => ({ ...p, [q.id]: e.target.value }))}
+                              placeholder="Nhập câu tiếng Anh..."
+                              className="w-full bg-zinc-800 border border-violet-700/50 rounded-xl px-4 py-2.5 text-white placeholder-zinc-500 focus:outline-none focus:border-violet-500 transition-colors text-sm"
+                            />
+                          </div>
+                        );
+                      }
                       return (
                         <div key={q.id}>
                           <p className="text-white text-sm mb-3"><span className="text-zinc-500 mr-2">Câu {qi + 1}.</span>{q.question}</p>
@@ -1494,7 +1658,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                     }}
                     disabled={
                       FINAL_QS.filter(q => q.type === "multiple-choice").some(q => !quizAnswers[q.id]) ||
-                      FINAL_QS.filter(q => q.type === "cloze").some(q => !(quizClozeInputs[q.id] ?? "").trim())
+                      FINAL_QS.filter(q => q.type === "cloze" || q.type === "translate").some(q => !(quizClozeInputs[q.id] ?? "").trim())
                     }
                     className="mt-6 w-full bg-emerald-600 hover:bg-emerald-500 disabled:opacity-40 text-white font-bold rounded-xl py-3 transition-colors"
                   >

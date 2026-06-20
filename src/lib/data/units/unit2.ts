@@ -217,6 +217,12 @@ export const unit2: UnitData = {
       { en: "He goes to bed at 10 PM.", vn: "Anh ấy đi ngủ lúc 10 giờ tối." },
     ],
     tip: "Khi chủ ngữ là He/She/It, thêm -s vào cuối động từ (go → goes, watch → watches, brush → brushes).",
+    dialogueExample: {
+      speaker: "Sarah",
+      text: "She brushes her teeth and washes her face.",
+      translation: "Cô ấy đánh răng và rửa mặt.",
+      highlight: "brushes",
+    },
     ccq: {
       question: "Chọn câu đúng với chủ ngữ 'She':",
       options: ["She go to school.", "She goes to school.", "She going to school.", "She goed to school."],
@@ -276,8 +282,32 @@ export const unit2: UnitData = {
       options: ["Wake up", "Brush teeth", "Eat breakfast", "Watch TV all day"],
       answer: "Watch TV all day",
       type: "multiple-choice"
-    }
-  ]
+    },
+    { id: "q6", question: "Tôi thức dậy lúc 7 giờ sáng.", options: [], answer: "I wake up at seven in the morning.", type: "translate" },
+    { id: "q7", question: "Cô ấy đi làm bằng xe buýt mỗi ngày.", options: [], answer: "She goes to work by bus every day.", type: "translate" },
+  ],
+
+  scrambleExercises: [
+    {
+      id: "s2-1",
+      prompt_vn: "Tôi thức dậy lúc 7 giờ.",
+      words: ["I", "wake", "up", "at", "seven", "."],
+      answer: "I wake up at seven .",
+    },
+    {
+      id: "s2-2",
+      prompt_vn: "Cô ấy đánh răng mỗi buổi sáng.",
+      words: ["She", "brushes", "her", "teeth", "every", "morning", "."],
+      answer: "She brushes her teeth every morning .",
+    },
+    {
+      id: "s2-3",
+      prompt_vn: "Anh ấy ăn sáng trước khi đi làm.",
+      words: ["He", "eats", "breakfast", "before", "work", "."],
+      answer: "He eats breakfast before work .",
+    },
+  ],
 };
 
 export default unit2;
+

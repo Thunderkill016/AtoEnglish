@@ -71,6 +71,12 @@ export const unit5: UnitData = {
       { en: "Is this bag better than the other one?", vn: "Chiếc túi này có tốt hơn chiếc kia không?" },
     ],
     tip: "Với tính từ ngắn (1-2 âm tiết): thêm '-er' (cheap → cheaper). Với tính từ dài (3+ âm tiết): dùng 'more' phía trước (expensive → more expensive). Ngoại lệ: good → better, bad → worse.",
+    dialogueExample: {
+      speaker: "Customer",
+      text: "This market is cheaper than the mall.",
+      translation: "Chợ này rẻ hơn trung tâm thương mại.",
+      highlight: "cheaper than",
+    },
     ccq: {
       question: "Câu so sánh nào ĐÚNG ngữ pháp?",
       options: [
@@ -216,5 +222,29 @@ export const unit5: UnitData = {
       options: ["more expensive", "expensiver", "most expensive", "expensivest"],
       answer: "more expensive",
     },
+    { id: "q5-6", question: "Cái này đắt hơn cái kia.", options: [], answer: "This one is more expensive than that one.", type: "translate" },
+    { id: "q5-7", question: "Tôi muốn mua hai cái này.", options: [], answer: "I want to buy two of these.", type: "translate" },
+  ],
+
+  scrambleExercises: [
+    {
+      id: "s5-1",
+      prompt_vn: "Chiếc áo này rẻ hơn chiếc kia.",
+      words: ["This", "shirt", "is", "cheaper", "than", "that", "one", "."],
+      answer: "This shirt is cheaper than that one .",
+    },
+    {
+      id: "s5-2",
+      prompt_vn: "Cái này giá bao nhiêu?",
+      words: ["How", "much", "does", "this", "cost", "?"],
+      answer: "How much does this cost ?",
+    },
+    {
+      id: "s5-3",
+      prompt_vn: "Bạn có thể giảm giá cho tôi không?",
+      words: ["Can", "you", "give", "me", "a", "discount", "?"],
+      answer: "Can you give me a discount ?",
+    },
   ],
 };
+

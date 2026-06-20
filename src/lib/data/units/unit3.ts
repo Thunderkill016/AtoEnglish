@@ -218,6 +218,12 @@ export const unit3: UnitData = {
       { en: "Their house is big.", vn: "Nhà của họ rất to." },
     ],
     tip: "Đại từ sở hữu luôn đứng TRƯỚC danh từ. Không bao giờ nói 'name his is Ben' — phải là 'his name is Ben'.",
+    dialogueExample: {
+      speaker: "Anna",
+      text: "His name is Ben. He is my best friend.",
+      translation: "Tên anh ấy là Ben. Anh ấy là bạn thân nhất của mình.",
+      highlight: "my best friend",
+    },
     ccq: {
       question: "Điền vào chỗ trống: '___ name is Lucy.' (của cô ấy)",
       options: ["My", "His", "Her", "Their"],
@@ -277,8 +283,32 @@ export const unit3: UnitData = {
       options: ["my", "his", "her", "their"],
       answer: "my",
       type: "multiple-choice"
-    }
-  ]
+    },
+    { id: "q6", question: "Mẹ tôi là một giáo viên.", options: [], answer: "My mother is a teacher.", type: "translate" },
+    { id: "q7", question: "Anh trai của tôi là bác sĩ.", options: [], answer: "My brother is a doctor.", type: "translate" },
+  ],
+
+  scrambleExercises: [
+    {
+      id: "s3-1",
+      prompt_vn: "Mẹ tôi là giáo viên.",
+      words: ["My", "mother", "is", "a", "teacher", "."],
+      answer: "My mother is a teacher .",
+    },
+    {
+      id: "s3-2",
+      prompt_vn: "Anh ấy có hai em gái.",
+      words: ["He", "has", "two", "younger", "sisters", "."],
+      answer: "He has two younger sisters .",
+    },
+    {
+      id: "s3-3",
+      prompt_vn: "Đây là bạn thân nhất của tôi.",
+      words: ["This", "is", "my", "best", "friend", "."],
+      answer: "This is my best friend .",
+    },
+  ],
 };
 
 export default unit3;
+

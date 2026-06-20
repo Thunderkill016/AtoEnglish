@@ -31,18 +31,18 @@ export const unit1: UnitData = {
   ],
   culturalNote: "Người bản xứ thường nói <span class=\"text-emerald-400 font-semibold\">Hi!</span> thay vì <span class=\"text-emerald-400 font-semibold\">Hello!</span> trong giao tiếp thân mật hàng ngày. <span class=\"text-emerald-400 font-semibold\">Hello</span> nghe trang trọng hơn và thường dùng trong môi trường công sở hoặc khi gặp người lạ lần đầu.",
   vocab: [
-    { id: 1, word: "Hello", emoji: "👋", phonetic: "/həˈləʊ/", meaning: "Xin chào", example: "Hello, I'm Lan.", audio: "/audio/unit1/hello.mp3" },
-    { id: 2, word: "Hi", emoji: "😊", phonetic: "/haɪ/", meaning: "Chào (thân mật)", example: "Hi, how are you?", audio: "/audio/unit1/hi.mp3" },
-    { id: 3, word: "Good morning", emoji: "🌅", phonetic: "/ɡʊd ˈmɔːnɪŋ/", meaning: "Chào buổi sáng", example: "Good morning, teacher!", audio: "/audio/unit1/good_morning.mp3" },
-    { id: 4, word: "Goodbye", emoji: "👋", phonetic: "/ˌɡʊdˈbaɪ/", meaning: "Tạm biệt", example: "Goodbye, see you later.", audio: "/audio/unit1/goodbye.mp3" },
-    { id: 5, word: "Nice to meet you", emoji: "🤝", phonetic: "/naɪs tə miːt ju/", meaning: "Rất vui được gặp bạn", example: "Nice to meet you.", audio: "/audio/unit1/nice_to_meet_you.mp3" },
-    { id: 6, word: "My name is", emoji: "🏷️", phonetic: "/maɪ neɪm ɪz/", meaning: "Tên tôi là", example: "My name is Minh.", audio: "/audio/unit1/my_name_is.mp3" },
-    { id: 7, word: "I'm from", emoji: "🌍", phonetic: "/aɪm frɒm/", meaning: "Tôi đến từ", example: "I'm from Vietnam.", audio: "/audio/unit1/im_from.mp3" },
-    { id: 8, word: "How are you?", emoji: "❓", phonetic: "/haʊ ɑːr ju/", meaning: "Bạn khỏe không?", example: "How are you?", audio: "/audio/unit1/how_are_you.mp3" },
-    { id: 9, word: "I'm fine, thank you", emoji: "😄", phonetic: "/aɪm faɪn θæŋk ju/", meaning: "Tôi khỏe, cảm ơn", example: "I'm fine, thank you.", audio: "/audio/unit1/im_fine_thank_you.mp3" },
-    { id: 10, word: "And you?", emoji: "🔄", phonetic: "/ænd ju/", meaning: "Còn bạn?", example: "I'm good. And you?", audio: "/audio/unit1/and_you.mp3" },
-    { id: 11, word: "Thank you", emoji: "🙏", phonetic: "/θæŋk ju/", meaning: "Cảm ơn", example: "Thank you very much.", audio: "/audio/unit1/thank_you.mp3" },
-    { id: 12, word: "Please", emoji: "🤲", phonetic: "/pliːz/", meaning: "Làm ơn", example: "Please sit down.", audio: "/audio/unit1/please.mp3" }
+    { id: 1, word: "Hello", emoji: "👋", phonetic: "/həˈləʊ/", meaning: "Xin chào", example: "Hello, I'm Lan.", example2: "Hello! Is anyone home?", collocation: "Hello there!", audio: "/audio/unit1/hello.mp3" },
+    { id: 2, word: "Hi", emoji: "😊", phonetic: "/haɪ/", meaning: "Chào (thân mật)", example: "Hi, how are you?", example2: "Hi! Long time no see.", collocation: "Hi there!", audio: "/audio/unit1/hi.mp3" },
+    { id: 3, word: "Good morning", emoji: "🌅", phonetic: "/ɡʊd ˈmɔːnɪŋ/", meaning: "Chào buổi sáng", example: "Good morning, teacher!", example2: "Good morning! How did you sleep?", collocation: "Good morning, everyone!", audio: "/audio/unit1/good_morning.mp3" },
+    { id: 4, word: "Goodbye", emoji: "👋", phonetic: "/ˌɡʊdˈbaɪ/", meaning: "Tạm biệt", example: "Goodbye, see you later.", example2: "We said goodbye at the airport.", collocation: "say goodbye to", audio: "/audio/unit1/goodbye.mp3" },
+    { id: 5, word: "Nice to meet you", emoji: "🤝", phonetic: "/naɪs tə miːt ju/", meaning: "Rất vui được gặp bạn", example: "Nice to meet you.", example2: "Nice to meet you — I've heard so much about you!", collocation: "Nice to meet you too!", audio: "/audio/unit1/nice_to_meet_you.mp3" },
+    { id: 6, word: "My name is", emoji: "🏷️", phonetic: "/maɪ neɪm ɪz/", meaning: "Tên tôi là", example: "My name is Minh.", example2: "Hi! My name is Sarah. What's yours?", collocation: "My name is... I'm from...", audio: "/audio/unit1/my_name_is.mp3" },
+    { id: 7, word: "I'm from", emoji: "🌍", phonetic: "/aɪm frɒm/", meaning: "Tôi đến từ", example: "I'm from Vietnam.", example2: "I'm from a small town near Hanoi.", collocation: "originally from", audio: "/audio/unit1/im_from.mp3" },
+    { id: 8, word: "How are you?", emoji: "❓", phonetic: "/haʊ ɑːr ju/", meaning: "Bạn khỏe không?", example: "How are you?", example2: "Hi! How are you doing today?", collocation: "How are you doing?", audio: "/audio/unit1/how_are_you.mp3" },
+    { id: 9, word: "I'm fine, thank you", emoji: "😄", phonetic: "/aɪm faɪn θæŋk ju/", meaning: "Tôi khỏe, cảm ơn", example: "I'm fine, thank you.", example2: "I'm fine, thanks for asking!", collocation: "fine, thanks!", audio: "/audio/unit1/im_fine_thank_you.mp3" },
+    { id: 10, word: "And you?", emoji: "🔄", phonetic: "/ænd ju/", meaning: "Còn bạn?", example: "I'm good. And you?", example2: "I feel great today. How about you?", collocation: "What about you?", audio: "/audio/unit1/and_you.mp3" },
+    { id: 11, word: "Thank you", emoji: "🙏", phonetic: "/θæŋk ju/", meaning: "Cảm ơn", example: "Thank you very much.", example2: "Thank you for your help!", collocation: "thank you so much", audio: "/audio/unit1/thank_you.mp3" },
+    { id: 12, word: "Please", emoji: "🤲", phonetic: "/pliːz/", meaning: "Làm ơn", example: "Please sit down.", example2: "Could you help me, please?", collocation: "please + base verb", audio: "/audio/unit1/please.mp3" }
   ],
   dialogues: [
     {
@@ -114,6 +114,12 @@ export const unit1: UnitData = {
       { en: "We are happy to see you.", vn: "Chúng tôi rất vui được gặp bạn." },
     ],
     tip: "Người Việt hay nhầm 'I is' hoặc 'She are'. Nhớ: I → am, He/She/It → is, còn lại → are.",
+    dialogueExample: {
+      speaker: "Linh",
+      text: "I'm from Vietnam. And you?",
+      translation: "Mình đến từ Việt Nam. Còn bạn?",
+      highlight: "I'm",
+    },
     ccq: {
       question: "Câu nào đúng ngữ pháp?",
       options: ["She am a teacher.", "He are a student.", "They is friends.", "I am from Vietnam."],
@@ -144,7 +150,30 @@ export const unit1: UnitData = {
     { id: "q3", question: "Từ nào là cách nói tạm biệt thân mật?", options: ["Good morning", "Hello", "Bye", "Nice to meet you"], answer: "Bye", type: "multiple-choice" },
     { id: "q4", question: "Khi ai đó nói 'How are you?', câu trả lời phù hợp nhất là gì?", options: ["Nice to meet you", "I am fine thank you", "My name is Linh", "Goodbye"], answer: "I am fine thank you", type: "multiple-choice" },
     { id: "q5", question: "Điền từ còn thiếu: 'She ___ a teacher.'", options: [], answer: "is", type: "cloze" },
-  ]
+    { id: "q6", question: "Tên tôi là Minh.", options: [], answer: "My name is Minh.", type: "translate" },
+    { id: "q7", question: "Rất vui được gặp bạn.", options: [], answer: "Nice to meet you.", type: "translate" },
+  ],
+
+  scrambleExercises: [
+    {
+      id: "s1",
+      prompt_vn: "Tên tôi là Alex.",
+      words: ["My", "name", "is", "Alex", "."],
+      answer: "My name is Alex .",
+    },
+    {
+      id: "s2",
+      prompt_vn: "Cô ấy là giáo viên.",
+      words: ["She", "is", "a", "teacher", "."],
+      answer: "She is a teacher .",
+    },
+    {
+      id: "s3",
+      prompt_vn: "Tôi đến từ Việt Nam.",
+      words: ["I", "am", "from", "Vietnam", "."],
+      answer: "I am from Vietnam .",
+    },
+  ],
 };
 
 export default unit1;
