@@ -15,7 +15,7 @@ import LevelUpModal from "@/components/learn/LevelUpModal";
 // Dynamic import — NotificationBell uses browser APIs (navigator, ServiceWorker)
 const NotificationBell = dynamic(
   () => import("@/components/notifications/NotificationBell"),
-  { ssr: false }
+  { ssr: false, loading: () => null }
 );
 
 interface DashboardClientProps {
@@ -71,6 +71,7 @@ export default function DashboardClient({
     if (pending) {
       try {
         const { prev, next } = JSON.parse(pending) as { prev: string; next: string };
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         if (prev && next && prev !== next) setLevelUpModal({ prev, next });
       } catch { /* ignore */ }
       localStorage.removeItem("pending-level-up");
@@ -79,8 +80,11 @@ export default function DashboardClient({
 
   useEffect(() => {
     const hour = new Date().getHours();
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (hour < 12) setGreeting("Chào buổi sáng");
+     
     else if (hour < 18) setGreeting("Chào buổi chiều");
+     
     else setGreeting("Chào buổi tối");
   }, []);
 
@@ -112,7 +116,9 @@ export default function DashboardClient({
       const saved = localStorage.getItem(storageKey);
       if (saved) {
         const { quests: savedQuests, xp } = JSON.parse(saved);
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         if (Array.isArray(savedQuests)) setQuests(savedQuests);
+         
         if (typeof xp === "number") setXpCurrent(xp);
       }
     } catch {
@@ -167,8 +173,8 @@ export default function DashboardClient({
         {/* ── 1. Greeting row ── */}
         <div className="flex items-center justify-between gap-4">
           <div>
-            <p className="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest mb-0.5">
-              Chào mừng bạn trở lại
+            <p className="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest mb-0.5 whitespace-nowrap">
+              Chào mừng trở lại
             </p>
             <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-zinc-900 dark:text-zinc-50">
               {greeting},{" "}
