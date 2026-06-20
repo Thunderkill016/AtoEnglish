@@ -213,6 +213,30 @@ export type Database = {
         }
         Relationships: []
       }
+      unit_content: {
+        Row: {
+          content: Json
+          created_at: string
+          is_active: boolean
+          unit_id: string
+          updated_at: string
+        }
+        Insert: {
+          content: Json
+          created_at?: string
+          is_active?: boolean
+          unit_id: string
+          updated_at?: string
+        }
+        Update: {
+          content?: Json
+          created_at?: string
+          is_active?: boolean
+          unit_id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       user_flashcard_progress: {
         Row: {
           best_streak: number
