@@ -33,15 +33,19 @@ export default async function LearnPage() {
     totalXp = progressRes.progress.total_xp || 0;
   }
 
-  // Get completed unit list from database
+  // Get completed unit list + XP earned from database
+  const completedXpMap = new Map<string, number>();
   if (user) {
     const { data: completedLessons } = await supabase
       .from("user_lesson_progress")
-      .select("unit_id")
+      .select("unit_id, xp_earned")
       .eq("user_id", user.id);
     
     if (completedLessons) {
-      completedLessons.forEach(l => completedUnitIds.push(l.unit_id));
+      completedLessons.forEach(l => {
+        completedUnitIds.push(l.unit_id);
+        completedXpMap.set(l.unit_id, l.xp_earned || 0);
+      });
     }
   }
 
@@ -79,6 +83,11 @@ export default async function LearnPage() {
       }
     }
 
+    const xpEarned = completedXpMap.get(unit.id) ?? 0;
+    const starCount = isCompleted
+      ? xpEarned >= unit.xp ? 3 : xpEarned >= Math.round(unit.xp * 0.82) ? 2 : 1
+      : 0;
+
     return {
       id: unit.id,
       title: unit.title,
@@ -90,6 +99,7 @@ export default async function LearnPage() {
       completed: isCompleted,
       progress,
       vocabCount: vocab.length,
+      starCount,
     };
   });
 

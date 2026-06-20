@@ -16,6 +16,7 @@ interface UnitStatus {
   completed: boolean;
   progress: number;
   vocabCount?: number;
+  starCount?: number;
 }
 
 interface LearnClientProps {
@@ -178,6 +179,25 @@ export default function LearnClient({
                           style={{ width: `${unit.progress}%` }}
                         />
                       </div>
+                    </div>
+                  )}
+
+                  {/* Star rating for completed units */}
+                  {isCompleted && (unit.starCount ?? 0) > 0 && (
+                    <div className={`flex items-center gap-1 ${isEven ? "sm:justify-end" : ""}`}>
+                      {[1, 2, 3].map((s) => (
+                        <Star
+                          key={s}
+                          className={`size-4 ${
+                            s <= (unit.starCount ?? 0)
+                              ? "text-yellow-400 fill-yellow-400"
+                              : "text-zinc-300 dark:text-zinc-700 fill-zinc-300 dark:fill-zinc-700"
+                          }`}
+                        />
+                      ))}
+                      <span className="text-[10px] text-zinc-500 dark:text-zinc-400 font-semibold ml-0.5">
+                        {unit.starCount === 3 ? "Hoàn hảo!" : unit.starCount === 2 ? "Tốt" : "Hoàn thành"}
+                      </span>
                     </div>
                   )}
 
