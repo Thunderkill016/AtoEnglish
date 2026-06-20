@@ -488,6 +488,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
         }));
       }
       // ─ FSRS: auto-seed all unit vocab into the user's SRS deck (fire-and-forget) ─
+      const unitLevel = (unit.level?.match(/A[12]|B[12]|C1/) ?? ["A1"])[0] as "A1" | "A2" | "B1" | "B2" | "C1";
       void seedUnitVocabToSRS({
         vocab: unit.vocab.map(v => ({
           word: v.word,
@@ -496,8 +497,21 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
           example_en: v.example || null,
         })),
         topic: unit.unitId,
-        level: (unit.level?.match(/A[12]|B[12]|C1/) ?? ["A1"])[0] as "A1" | "A2" | "B1" | "B2" | "C1",
+        level: unitLevel,
       });
+      // ─ FSRS: also create a grammar pattern card so grammar rules get SRS-scheduled ─
+      if (unit.grammar) {
+        void seedUnitVocabToSRS({
+          vocab: [{
+            word: unit.grammar.title.slice(0, 100),
+            phonetic: null,
+            meaning_vn: unit.grammar.rule.slice(0, 300),
+            example_en: unit.grammar.examples[0]?.en?.slice(0, 500) ?? null,
+          }],
+          topic: "Grammar",
+          level: unitLevel,
+        });
+      }
     } else {
       toast.error(res.error || "Có lỗi xảy ra");
     }
