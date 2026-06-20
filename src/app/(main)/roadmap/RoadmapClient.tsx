@@ -31,14 +31,6 @@ interface RoadmapClientProps {
   completedUnits: number;
 }
 
-const LEVEL_UNITS: Record<string, number> = {
-  A1: 1,
-  A2: 2,
-  B1: 3,
-  B2: 4,
-  C1: 5,
-};
-
 const CEFR_ORDER = ["A1", "A2", "B1", "B2", "C1"] as const;
 
 export default function RoadmapClient({ userCefrLevel, completedUnits }: RoadmapClientProps) {
