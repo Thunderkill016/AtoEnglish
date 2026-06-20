@@ -12,7 +12,7 @@ export default function MainLayout({
       <LessonPageHider>
         <Header />
       </LessonPageHider>
-      <main className="flex-1">{children}</main>
+      <main id="main-content" className="flex-1">{children}</main>
       <LessonPageHider>
         <BottomNav />
       </LessonPageHider>
