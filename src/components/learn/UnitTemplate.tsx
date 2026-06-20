@@ -9,6 +9,7 @@ import {
   Mic,
   MicOff,
   ChevronRight,
+  ChevronLeft,
   CheckCircle,
   Lightbulb,
   BookOpen,
@@ -658,11 +659,20 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
       <div className="sticky top-0 z-40 bg-zinc-950/80 backdrop-blur-xl border-b border-zinc-800/60">
         <div className="max-w-3xl mx-auto px-4 py-3">
           <div className="flex items-center justify-between mb-2">
-            <div>
-              <p className="text-xs text-zinc-500">{unit.level}</p>
-              <p className="text-sm font-semibold text-white truncate max-w-[160px] sm:max-w-xs">{unit.title}</p>
+            <div className="flex items-center gap-2 min-w-0">
+              <Link
+                href="/dashboard"
+                aria-label="Về Dashboard"
+                className="shrink-0 flex items-center justify-center w-7 h-7 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-white transition-colors"
+              >
+                <ChevronLeft size={16} />
+              </Link>
+              <div className="min-w-0">
+                <p className="text-xs text-zinc-500">{unit.level}</p>
+                <p className="text-sm font-semibold text-white truncate max-w-[130px] sm:max-w-xs">{unit.title}</p>
+              </div>
             </div>
-            <div className="text-right">
+            <div className="text-right shrink-0">
               <p className="text-xs text-zinc-500">{SECTION_LABELS[section] ?? "Học"}</p>
               <p className="text-sm font-bold text-emerald-400">{sectionOrderIdx + 1}/{TOTAL_SECTIONS}</p>
             </div>
@@ -685,7 +695,13 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
           {/* Step labels */}
           <div className="flex justify-between mt-1.5">
             {SECTION_ORDER.map((secNum, i) => (
-              <span key={secNum} className={`text-[8px] hidden xs:block truncate max-w-[36px] text-center ${i === sectionOrderIdx ? "text-emerald-400 font-bold !block" : i < sectionOrderIdx ? "text-emerald-600 !block" : "text-zinc-600"}`}>
+              <span key={secNum} className={`text-[8px] truncate max-w-[36px] text-center ${
+                i === sectionOrderIdx
+                  ? "text-emerald-400 font-bold block"
+                  : i < sectionOrderIdx
+                  ? "text-emerald-600 block"
+                  : "hidden"
+              }`}>
                 {SECTION_LABELS[secNum]}
               </span>
             ))}
@@ -988,7 +1004,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                       <div className="mt-5 border-t border-teal-700/30 pt-5">
                         <p className="text-xs font-bold text-teal-400 uppercase tracking-widest mb-3">✅ Kiểm tra nhanh (CCQ)</p>
                         <p className="text-white font-semibold text-sm mb-3">{unit.grammar.ccq.question}</p>
-                        <div className="grid grid-cols-2 gap-2 mb-3">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-3">
                           {unit.grammar.ccq.options.map(opt => {
                             const isPicked = ccqAnswer === opt;
                             const isRight = opt === unit.grammar!.ccq!.answer;
@@ -1090,7 +1106,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                           <span className="text-emerald-400 mr-2">{qi + 1}.</span>
                           {q.question}
                         </p>
-                        <div className="grid grid-cols-2 gap-2">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                           {q.options.map(opt => {
                             const isPicked = selected === opt;
                             const isRight = opt === q.answer;
@@ -1177,7 +1193,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                                 isMatched
                                   ? "bg-emerald-600/20 border-emerald-500/50 text-emerald-300"
                                   : isWrong
-                                  ? "bg-red-900/30 border-red-500/60 text-red-300 animate-pulse"
+                                  ? "bg-red-900/30 border-red-500/60 text-red-300 animate-shake"
                                   : "bg-zinc-800 border-zinc-700 text-zinc-300 hover:border-teal-600/50"
                               }`}
                             >
@@ -1310,8 +1326,9 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                         Tiếp tục <ChevronRight size={20} />
                       </button>
                     ) : (
-                      <p className="text-center text-zinc-500 text-sm">
-                        {!matchingDone ? "Hoàn thành phần nối từ để tiếp tục..." : "Hoàn thành phần sắp xếp câu để tiếp tục..."}
+                      <p className="text-center text-zinc-500 text-sm flex items-center justify-center gap-1.5">
+                        <span>↑</span>
+                        {!matchingDone ? "Hoàn thành phần nối từ ở trên để tiếp tục" : "Hoàn thành phần sắp xếp câu ở trên để tiếp tục"}
                       </p>
                     )}
                   </div>
@@ -1406,7 +1423,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                             <Volume2 size={12} /> Nghe
                           </button>
                         </div>
-                        <div className="grid grid-cols-2 gap-2">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                           {item.options.map((opt, oi) => {
                             const isSelected = lacAnswers[qi] === opt;
                             const isCorrect = opt === item.answer;
@@ -1668,10 +1685,13 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                 <p className="text-zinc-600 text-xs mt-2 text-center">Không sao đâu, cứ thử — mình ở đây để luyện cùng bạn! 💪</p>
               </div>
 
-              {level1Done && (
+              {level1Done && (level2Done || level2Transcript !== "") && (
                 <button onClick={goNext} className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl px-6 py-4 flex items-center justify-center gap-2 transition-colors text-lg">
                   Xem kết quả <ChevronRight size={20} />
                 </button>
+              )}
+              {level1Done && !level2Done && level2Transcript === "" && (
+                <p className="text-center text-zinc-500 text-sm">Thử nói ở Cấp độ 2 trước khi tiếp tục 🎤</p>
               )}
             </motion.div>
           )}
@@ -1715,10 +1735,12 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                           return (
                             <div key={q.id}>
                               <p className="text-white text-sm mb-2"><span className="text-amber-500/70 mr-2">↺ {qi + 1}.</span>{q.question}</p>
-                              <div className="grid grid-cols-2 gap-2">
+                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                                 {q.options.map(opt => (
-                                  <button key={opt} onClick={() => setCumulativeAnswers(p => ({ ...p, [q.id]: opt }))}
-                                    className={`px-3 py-2 rounded-xl text-sm font-medium border transition-colors text-left ${cumulativeAnswers[q.id] === opt ? "bg-amber-600/30 border-amber-500 text-amber-300" : "bg-zinc-800 border-zinc-700 text-zinc-300 hover:border-amber-600/40"}`}
+                                  <button key={opt}
+                                    disabled={cumulativeSubmitted}
+                                    onClick={() => !cumulativeSubmitted && setCumulativeAnswers(p => ({ ...p, [q.id]: opt }))}
+                                    className={`px-3 py-2 rounded-xl text-sm font-medium border transition-colors text-left disabled:cursor-default ${cumulativeAnswers[q.id] === opt ? "bg-amber-600/30 border-amber-500 text-amber-300" : "bg-zinc-800 border-zinc-700 text-zinc-300 hover:border-amber-600/40"}`}
                                   >{opt}</button>
                                 ))}
                               </div>
@@ -1804,7 +1826,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                       return (
                         <div key={q.id}>
                           <p className="text-white text-sm mb-3"><span className="text-zinc-500 mr-2">Câu {qi + 1}.</span>{q.question}</p>
-                          <div className="grid grid-cols-2 gap-2">
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                             {q.options.map((opt, oi) => {
                               const isSelected = quizAnswers[q.id] === opt;
                               const isWrongAnswer = quizSubmitted && isSelected && opt !== q.answer;
@@ -2043,7 +2065,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
 
                   {!translateSubmitted ? (
                     <button
-                      disabled={Object.keys(translateInputs).length < unit.practiceTranslate.length}
+                      disabled={unit.practiceTranslate.some(item => !(translateInputs[item.id] ?? '').trim())}
                       onClick={() => { setTranslateSubmitted(true); }}
                       className="w-full bg-teal-600 hover:bg-teal-500 disabled:opacity-40 disabled:cursor-not-allowed text-white font-bold rounded-xl px-6 py-4 flex items-center justify-center gap-2 transition-colors text-lg"
                     >
