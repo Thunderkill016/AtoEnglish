@@ -30,9 +30,9 @@ export default function ProductPreview() {
   }, [speakingStatus]);
 
   // Speech Recognition config
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   
   const SpeechRecognition = typeof window !== "undefined"
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+     
     ? ((window as any).SpeechRecognition || (window as any).webkitSpeechRecognition)
     : null;
 
@@ -80,7 +80,7 @@ export default function ProductPreview() {
       recognition.lang = "en-US";
 
       let fullTranscript = "";
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+       
       recognition.onresult = (event: any) => {
         if (event.results && event.results[0]) {
           fullTranscript = event.results[0][0].transcript;
@@ -109,7 +109,7 @@ export default function ProductPreview() {
         }
       };
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+       
       recognition.onerror = (e: any) => {
         stream.getTracks().forEach((track) => track.stop());
         setSpeakingStatus("idle");
@@ -232,30 +232,32 @@ export default function ProductPreview() {
       </div>
 
       {/* Tab Navigation — separate row, scrollable on mobile */}
-      <div className="flex items-center gap-1 px-4 py-2 border-b border-zinc-200/50 dark:border-zinc-800/40 bg-zinc-50/30 dark:bg-zinc-900/20 overflow-x-auto scrollbar-none">
+      <div className="flex items-center gap-1 px-2 sm:px-4 py-2 border-b border-zinc-200/50 dark:border-zinc-800/40 bg-zinc-50/30 dark:bg-zinc-900/20">
         <button
           onClick={() => setActiveTab("speaking")}
-          className={`text-xs font-bold px-3 py-1.5 rounded-lg whitespace-nowrap transition-all duration-200 ${
+          className={`flex-1 text-center text-[10px] sm:text-xs font-bold px-2 sm:px-3 py-1.5 rounded-lg whitespace-nowrap transition-all duration-200 ${
             activeTab === "speaking"
               ? "bg-emerald-600 text-white shadow-sm shadow-emerald-600/10"
               : "text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-900/50"
           }`}
         >
-          Luyện nói phản xạ
+          <span className="hidden sm:inline">Luyện nói phản xạ</span>
+          <span className="sm:hidden">Luyện Nói</span>
         </button>
         <button
           onClick={() => { setActiveTab("srs"); setIsFlipped(false); }}
-          className={`text-xs font-bold px-3 py-1.5 rounded-lg whitespace-nowrap transition-all duration-200 ${
+          className={`flex-1 text-center text-[10px] sm:text-xs font-bold px-2 sm:px-3 py-1.5 rounded-lg whitespace-nowrap transition-all duration-200 ${
             activeTab === "srs"
               ? "bg-emerald-600 text-white shadow-sm shadow-emerald-600/10"
               : "text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-900/50"
           }`}
         >
-          Thẻ Từ Vựng (SRS)
+          <span className="hidden sm:inline">Thẻ Từ Vựng (SRS)</span>
+          <span className="sm:hidden">Thẻ SRS</span>
         </button>
         <button
           onClick={() => setActiveTab("dashboard")}
-          className={`text-xs font-bold px-3 py-1.5 rounded-lg whitespace-nowrap transition-all duration-200 ${
+          className={`flex-1 text-center text-[10px] sm:text-xs font-bold px-2 sm:px-3 py-1.5 rounded-lg whitespace-nowrap transition-all duration-200 ${
             activeTab === "dashboard"
               ? "bg-emerald-600 text-white shadow-sm shadow-emerald-600/10"
               : "text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-900/50"
@@ -266,7 +268,7 @@ export default function ProductPreview() {
       </div>
 
       {/* Main Preview Container */}
-      <div className="p-6 sm:p-10 min-h-[360px] flex items-center justify-center bg-grid-pattern bg-white dark:bg-zinc-950 transition-colors duration-300">
+      <div className="p-3 sm:p-10 min-h-[320px] sm:min-h-[360px] flex items-center justify-center bg-grid-pattern bg-white dark:bg-zinc-950 transition-colors duration-300">
         
         {/* TAB 1: AI SPEAKING SHADOWING */}
         {activeTab === "speaking" && (
@@ -276,7 +278,7 @@ export default function ProductPreview() {
               <span>Shadowing & Nhận diện giọng</span>
             </div>
             
-            <div className="p-6 rounded-2xl border border-zinc-200/60 dark:border-zinc-800/50 bg-white/70 dark:bg-zinc-900/15 backdrop-blur-sm space-y-4">
+            <div className="p-4 sm:p-6 rounded-2xl border border-zinc-200/60 dark:border-zinc-800/50 bg-white/70 dark:bg-zinc-900/15 backdrop-blur-sm space-y-3 sm:space-y-4">
               <div className="flex items-center justify-between">
                 <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-wide">Mẫu phát âm chuẩn:</span>
                 <button 
@@ -288,7 +290,7 @@ export default function ProductPreview() {
                 </button>
               </div>
               
-              <h3 className="text-xl sm:text-2xl font-black text-zinc-900 dark:text-zinc-50 tracking-tight leading-tight">
+              <h3 className="text-base sm:text-2xl font-black text-zinc-900 dark:text-zinc-50 tracking-tight leading-tight">
                 {renderHighlightedSentence()}
               </h3>
               
@@ -349,8 +351,8 @@ export default function ProductPreview() {
                     <div className="size-8 rounded-full bg-emerald-500 flex items-center justify-center text-white font-black text-sm">
                       {accuracyScore !== null && accuracyScore >= 90 ? "A" : accuracyScore !== null && accuracyScore >= 75 ? "B" : "C"}
                     </div>
-                    <span className="text-lg font-black text-emerald-700 dark:text-emerald-400">
-                      Độ chính xác: {accuracyScore}% ({accuracyScore !== null && (accuracyScore >= 90 ? "Xuất sắc" : accuracyScore >= 75 ? "Khá tốt" : accuracyScore >= 50 ? "Tạm được" : "Cần cố gắng")})
+                    <span className="text-sm sm:text-lg font-black text-emerald-700 dark:text-emerald-400">
+                      {accuracyScore}% · {accuracyScore !== null && (accuracyScore >= 90 ? "Xuất sắc" : accuracyScore >= 75 ? "Khá tốt" : accuracyScore >= 50 ? "Tạm được" : "Cần cố gắng")}
                     </span>
                   </div>
                   
