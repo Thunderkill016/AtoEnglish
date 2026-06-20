@@ -8,11 +8,9 @@ export default function MainLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="relative flex min-h-screen flex-col">
+    <div className="relative flex min-h-screen flex-col pb-16 sm:pb-0">
       <LessonPageHider>
-        <div className="pb-16 sm:pb-0">
-          <Header />
-        </div>
+        <Header />
       </LessonPageHider>
       <main className="flex-1">{children}</main>
       <LessonPageHider>
