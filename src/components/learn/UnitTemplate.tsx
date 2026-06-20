@@ -1625,9 +1625,14 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                       <div className="bg-emerald-600/20 border border-emerald-600/40 rounded-xl p-4 mb-4">
                         <p className="text-emerald-300 font-bold">✅ Bạn đã hoàn thành chương học này!</p>
                       </div>
-                      <Link href={nextRoute} className="inline-flex items-center gap-2 bg-zinc-700 hover:bg-zinc-600 text-white font-bold rounded-xl px-6 py-3 transition-colors">
-                        Về Dashboard <ChevronRight size={18} />
-                      </Link>
+                      <div className="flex flex-wrap gap-3 justify-center">
+                        <Link href="/quiz" className="inline-flex items-center gap-2 bg-violet-600 hover:bg-violet-500 text-white font-bold rounded-xl px-5 py-3 transition-colors text-sm">
+                          📝 Quiz từ vựng
+                        </Link>
+                        <Link href={nextRoute} className="inline-flex items-center gap-2 bg-zinc-700 hover:bg-zinc-600 text-white font-bold rounded-xl px-5 py-3 transition-colors text-sm">
+                          Tiếp tục <ChevronRight size={16} />
+                        </Link>
+                      </div>
                     </div>
                   )}
                 </div>
