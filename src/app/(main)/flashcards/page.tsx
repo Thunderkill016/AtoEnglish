@@ -74,7 +74,7 @@ export default function FlashcardsPage() {
           id: c.id,
           word: c.word,
           phonetic: c.phonetic || "",
-          pos: "vocabulary",
+          pos: c.topic || "Vocabulary",
           meaning_vn: c.meaning_vn,
           example_en: c.example_en || "",
           example_vn: "",

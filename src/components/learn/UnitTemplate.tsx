@@ -23,12 +23,11 @@ import {
 import { completeUnit, getUnitCompletionStatus } from "@/app/actions/progress";
 import { toast } from "sonner";
 
-// Speech Recognition API setup
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const SpeechRecognitionAPI = typeof window !== "undefined"
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  ? (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition
-  : null;
+// Helper: get SpeechRecognition constructor safely (browser-only)
+function getSpeechRecognition(): typeof SpeechRecognition | null {
+  if (typeof window === "undefined") return null;
+  return window.SpeechRecognition ?? window.webkitSpeechRecognition ?? null;
+}
 
 const SECTION_LABELS = [
   "Khởi động",
@@ -152,8 +151,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
   const [quizAnswers, setQuizAnswers] = useState<Record<string, string>>({});
   const [quizSubmitted, setQuizSubmitted] = useState(false);
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const recognitionRef = useRef<any>(null);
+  const recognitionRef = useRef<SpeechRecognition | null>(null);
 
   const VOCAB_LIMIT = Math.min(unit.vocab.length, 8);
   const VOCAB_DISPLAY = unit.vocab.slice(0, VOCAB_LIMIT);
@@ -201,13 +199,13 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
 
   // ── Speech Recognition ────────────────────────────────
   const startRecognition = (onResult: (text: string) => void) => {
+    const SpeechRecognitionAPI = getSpeechRecognition();
     if (!SpeechRecognitionAPI) { toast.error("Trình duyệt không hỗ trợ nhận diện giọng nói"); return; }
     const rec = new SpeechRecognitionAPI();
     rec.lang = "en-US";
     rec.interimResults = false;
     rec.maxAlternatives = 1;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    rec.onresult = (e: any) => { onResult(e.results[0][0].transcript); };
+    rec.onresult = (e: SpeechRecognitionEvent) => { onResult(e.results[0][0].transcript); };
     rec.onerror = () => { toast.error("Không nhận được giọng nói. Thử lại."); setIsRecognizing(false); setIsRecording(false); setLevel2Recording(false); };
     rec.onend = () => { setIsRecognizing(false); setIsRecording(false); setLevel2Recording(false); };
     rec.onstart = () => setIsRecognizing(true);
@@ -791,7 +789,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                   )}
                 </div>
 
-                {!SpeechRecognitionAPI && (
+                {!getSpeechRecognition() && (
                   <p className="text-yellow-400 text-xs mt-3 text-center">⚠️ Trình duyệt không hỗ trợ ghi âm. Thử Chrome hoặc Edge.</p>
                 )}
                 <p className="text-zinc-600 text-xs mt-2 text-center">Không sao đâu, cứ thử — mình ở đây để luyện cùng bạn! 💪</p>

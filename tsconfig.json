@@ -25,7 +25,8 @@
       "@/*": [
         "./src/*"
       ]
-    }
+    },
+    "types": ["dom-speech-recognition"]
   },
   "include": [
     "next-env.d.ts",
