@@ -21,6 +21,12 @@ export async function GET(request: Request) {
       };
       const mappedLevel = cefrMap[level] || "A1";
 
+      const time = searchParams.get("time") ?? "15min";
+      const xpGoalMap: Record<string, number> = {
+        "5min": 20, "15min": 50, "30min": 100, "60min": 200,
+      };
+      const dailyXpGoal = xpGoalMap[time] ?? 50;
+
       // Extract display name from Google OAuth metadata
       const displayName =
         user.user_metadata?.full_name ||
@@ -37,6 +43,7 @@ export async function GET(request: Request) {
             current_level: mappedLevel,
             streak: 0,
             total_xp: 0,
+            daily_xp_goal: dailyXpGoal,
           },
           { onConflict: "user_id", ignoreDuplicates: true }
         ),

@@ -213,6 +213,11 @@ function LoginContent() {
       "B2+": "B2",
     };
     const mappedLevel = cefrMap[level] || "A1";
+    const time = answers[4] || "15min";
+    const xpGoalMap: Record<string, number> = {
+      "5min": 20, "15min": 50, "30min": 100, "60min": 200,
+    };
+    const dailyXpGoal = xpGoalMap[time] ?? 50;
 
     setIsLoading(true);
     try {
@@ -239,6 +244,7 @@ function LoginContent() {
               current_level: mappedLevel,
               streak: 0,
               total_xp: 0,
+              daily_xp_goal: dailyXpGoal,
             });
           }
 
@@ -267,6 +273,7 @@ function LoginContent() {
               current_level: mappedLevel,
               streak: 0,
               total_xp: 0,
+              daily_xp_goal: dailyXpGoal,
             });
           }
         }
