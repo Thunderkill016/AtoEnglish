@@ -50,7 +50,7 @@ export async function subscribeToPush(vapidPublicKey: string): Promise<PushSubsc
       userVisibleOnly: true,
       // Cast needed: Uint8Array is BufferSource but TS lib.dom differs across versions
        
-      applicationServerKey: urlBase64ToUint8Array(vapidPublicKey) as any,
+      applicationServerKey: urlBase64ToUint8Array(vapidPublicKey) as BufferSource,
     });
     return subscription;
   } catch (err) {
