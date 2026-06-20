@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Play, Mic, Map } from "lucide-react";
+import { Play, Mic, Map, BookOpen } from "lucide-react";
 
 interface QuickActionsProps {
   currentUnitRoute: string;
@@ -21,6 +21,13 @@ const actions = (unitRoute: string) => [
     hover: "hover:border-blue-500/30 hover:bg-blue-500/5",
   },
   {
+    href: "/quiz",
+    icon: BookOpen,
+    label: "Quiz từ vựng",
+    iconBg: "bg-violet-500/10 text-violet-600 dark:text-violet-400",
+    hover: "hover:border-violet-500/30 hover:bg-violet-500/5",
+  },
+  {
     href: "/roadmap",
     icon: Map,
     label: "Xem Roadmap",
@@ -31,7 +38,7 @@ const actions = (unitRoute: string) => [
 
 export default function QuickActions({ currentUnitRoute }: QuickActionsProps) {
   return (
-    <div className="grid grid-cols-3 gap-3">
+    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
       {actions(currentUnitRoute).map(({ href, icon: Icon, label, iconBg, hover }) => (
         <Link key={href} href={href}>
           <div className={`flex items-center justify-center gap-2.5 rounded-2xl border border-zinc-200/60 dark:border-zinc-800/60 bg-white/60 dark:bg-zinc-900/25 backdrop-blur-sm px-4 py-3.5 transition-all duration-200 cursor-pointer active:scale-[0.97] ${hover}`}>

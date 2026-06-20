@@ -15,6 +15,7 @@ export default function robots(): MetadataRoute.Robots {
           "/speaking",
           "/progress",
           "/roadmap",
+          "/quiz",
           "/auth/",
           "/api/",
         ],
