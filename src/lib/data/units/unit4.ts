@@ -8,6 +8,12 @@ export const unit4: UnitData = {
   estimatedTime: 45,
   description: "Học từ vựng về hoạt động thường ngày và cách dùng thì Hiện Tại Đơn (Present Simple) để mô tả thói quen.",
   badgeName: "Người Có Nề Nếp",
+  situation: "Bạn kể cho người bạn nước ngoài mới quen nghe về một ngày bình thường của mình — từ sáng thức dậy đến tối đi ngủ.",
+  learningOutcomes: [
+    "Mô tả thói quen và lịch trình hàng ngày bằng tiếng Anh",
+    "Dùng thì Hiện Tại Đơn để nói về sự thật và thói quen",
+    "Hỏi về lịch trình ngày thường của người khác"
+  ],
   badgeEmoji: "⏰",
   warmupGreetings: [
     {

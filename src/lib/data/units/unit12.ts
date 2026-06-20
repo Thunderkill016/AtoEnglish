@@ -8,6 +8,12 @@ export const unit12: UnitData = {
   estimatedTime: 60,
   description: "Ôn tập toàn bộ ngữ pháp và từ vựng A1, áp dụng vào các tình huống giao tiếp thực tế.",
   badgeName: "Chinh Phục A1",
+  situation: "Bạn gặp người nước ngoài tại sân bay và họ muốn tìm hiểu về cuộc sống, con người và văn hóa Việt Nam từ chính bạn.",
+  learningOutcomes: [
+    "Kết hợp tất cả kỹ năng A1 trong hội thoại thực",
+    "Giới thiệu bản thân và cuộc sống hàng ngày tự tin",
+    "Sẵn sàng bước sang cấp độ A2 với nền tảng vững chắc"
+  ],
   badgeEmoji: "🏆",
   warmupGreetings: [
     { emoji: "🎉", en: "Congratulations! You've reached Unit 12.", vn: "Chúc mừng! Bạn đã đến Unit 12.", context: "Tổng kết hành trình học" },

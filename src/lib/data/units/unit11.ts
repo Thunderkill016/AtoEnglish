@@ -8,6 +8,12 @@ export const unit11: UnitData = {
   estimatedTime: 40,
   description: "Học từ vựng về sức khỏe, cảm xúc và cách diễn đạt tình trạng bản thân bằng tiếng Anh.",
   badgeName: "Người Khỏe Mạnh",
+  situation: "Bạn không khỏe và cần giải thích triệu chứng cho bác sĩ người nước ngoài, đồng thời nói về cảm xúc với bạn bè.",
+  learningOutcomes: [
+    "Mô tả triệu chứng bệnh và tình trạng sức khỏe bằng tiếng Anh",
+    "Nói về cảm xúc và trạng thái tinh thần hiện tại",
+    "Hỏi thăm sức khỏe và cảm xúc của người khác"
+  ],
   badgeEmoji: "💪",
   warmupGreetings: [
     { emoji: "🤒", en: "I have a headache.", vn: "Tôi bị đau đầu.", context: "Nói về triệu chứng bệnh" },

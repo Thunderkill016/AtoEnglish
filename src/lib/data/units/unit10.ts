@@ -8,6 +8,12 @@ export const unit10: UnitData = {
   estimatedTime: 40,
   description: "Học cách nói về khả năng bản thân bằng 'can/can't' và hỏi về kỹ năng của người khác.",
   badgeName: "Người Đa Tài",
+  situation: "Trong buổi phỏng vấn xin việc, nhà tuyển dụng hỏi bạn có thể làm gì và kỹ năng nào bạn giỏi nhất.",
+  learningOutcomes: [
+    "Nói về khả năng và kỹ năng của bản thân bằng can/can't",
+    "Hỏi người khác họ có thể làm gì",
+    "Mô tả điểm mạnh và điểm yếu trong tiếng Anh"
+  ],
   badgeEmoji: "⭐",
   warmupGreetings: [
     { emoji: "🏊", en: "I can swim very well.", vn: "Tôi có thể bơi rất giỏi.", context: "Nói về khả năng bản thân" },

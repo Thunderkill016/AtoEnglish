@@ -185,6 +185,9 @@ export interface UnitData {
   speaking: SpeakingData;
   quiz: QuizQuestion[];            // Final review quiz
   cumulativeReviewQuestions?: QuizQuestion[]; // Priority 5: spaced retrieval from prior units
+  // ── Situational Fluency (Phase 1) ──
+  situation?: string;              // Real-world situation context shown at lesson start
+  learningOutcomes?: string[];     // 3 things user can DO after completing this unit
 }
 
 interface UnitTemplateProps {
@@ -716,13 +719,32 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
           {/* ══ SECTION 1: Warm-up + Cultural Note ══ */}
           {section === 1 && (
             <motion.div key="s1" variants={sectionVariants} initial="initial" animate="animate" exit="exit" transition={{ duration: 0.3 }}>
-              <div className="flex items-center gap-2 mb-6">
+              <div className="flex items-center gap-2 mb-4">
                 <Lightbulb className="text-emerald-400" size={22} />
                 <h1 className="text-xl sm:text-2xl font-black text-white">Khởi động</h1>
                 <span className="text-xs text-zinc-500 ml-auto">~3 phút</span>
               </div>
 
-              <p className="text-zinc-400 mb-6">{unit.description}</p>
+              {/* ── Situation Banner ── */}
+              {unit.situation && (
+                <div className="mb-6 rounded-2xl bg-gradient-to-br from-teal-950/70 to-emerald-950/40 border border-teal-600/30 p-5">
+                  <p className="text-[10px] font-black text-teal-400 uppercase tracking-widest mb-2">📍 Tình huống hôm nay</p>
+                  <p className="text-white font-semibold text-sm leading-relaxed mb-4">{unit.situation}</p>
+                  {unit.learningOutcomes && unit.learningOutcomes.length > 0 && (
+                    <div className="space-y-1.5">
+                      <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2">Sau bài học bạn sẽ làm được:</p>
+                      {unit.learningOutcomes.map((outcome, i) => (
+                        <div key={i} className="flex items-start gap-2 text-sm text-zinc-300">
+                          <span className="text-emerald-400 font-bold shrink-0 mt-0.5">✓</span>
+                          <span>{outcome}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              <p className="text-zinc-400 mb-6 text-sm">{unit.description}</p>
 
               {/* Situation cards */}
               <div className="grid gap-4 mb-8">
@@ -1981,6 +2003,30 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                       Hãy tiếp tục phát huy tinh thần tự học mỗi ngày. Lặp lại ngắt quãng sẽ giúp bạn nhớ từ vựng lâu hơn!
                     </p>
                   </div>
+
+                  {/* ── Proof Moment ── */}
+                  {unit.situation && (
+                    <div className="bg-gradient-to-br from-violet-950/40 to-teal-950/40 border border-violet-600/30 rounded-2xl p-5">
+                      <p className="text-[10px] font-black text-violet-400 uppercase tracking-widest mb-1">🎤 Proof of Progress</p>
+                      <p className="text-white font-semibold text-sm mb-1">Hãy thử lại tình huống hôm nay!</p>
+                      <p className="text-zinc-400 text-xs mb-4">Nói to câu trả lời cho tình huống: <span className="text-zinc-300 italic">&ldquo;{unit.situation}&rdquo;</span></p>
+                      {unit.learningOutcomes && (
+                        <div className="space-y-1 mb-4">
+                          {unit.learningOutcomes.map((outcome, i) => (
+                            <div key={i} className="flex items-center gap-2 text-xs text-zinc-300">
+                              <span className="text-emerald-400">✓</span> {outcome}
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                      <button
+                        onClick={() => playTTS(`${unit.situation ?? ''} — ${unit.learningOutcomes?.join(', ') ?? ''}`)}
+                        className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-violet-600/20 border border-violet-500/30 text-violet-300 font-bold text-sm hover:bg-violet-600/30 transition-colors"
+                      >
+                        <Volume2 size={16} /> Nghe lại tình huống
+                      </button>
+                    </div>
+                  )}
 
                   {/* Complete / Dashboard */}
                   {!isCompleted ? (

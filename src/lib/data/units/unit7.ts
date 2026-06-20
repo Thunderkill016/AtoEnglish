@@ -8,6 +8,12 @@ export const unit7: UnitData = {
   estimatedTime: 45,
   description: "Học từ vựng mua sắm, cách hỏi giá và mặc cả bằng tiếng Anh tự nhiên.",
   badgeName: "Người Mua Sắm Thông Minh",
+  situation: "Bạn đang mua sắm tại cửa hàng ở nước ngoài — cần hỏi giá, so sánh sản phẩm và thanh toán bằng tiếng Anh.",
+  learningOutcomes: [
+    "Hỏi giá và mặc cả sản phẩm tự tin",
+    "So sánh và mô tả hàng hóa bạn muốn mua",
+    "Hoàn tất giao dịch mua bán bằng tiếng Anh"
+  ],
   badgeEmoji: "🛍️",
   warmupGreetings: [
     { emoji: "💰", en: "How much is this shirt?", vn: "Chiếc áo này giá bao nhiêu?", context: "Hỏi giá đồ đơn lẻ" },

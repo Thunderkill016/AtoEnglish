@@ -8,6 +8,12 @@ export const unit3: UnitData = {
   estimatedTime: 45,
   description: "Học từ vựng mô tả gia đình, bạn bè và cách sử dụng đại từ sở hữu cơ bản.",
   badgeName: "Người Thân Thiện",
+  situation: "Đồng nghiệp nước ngoài hỏi bạn về gia đình trong buổi teambuilding — bạn cần mô tả các thành viên và mối quan hệ.",
+  learningOutcomes: [
+    "Giới thiệu và mô tả các thành viên trong gia đình",
+    "Dùng đại từ sở hữu my/your/his/her/our/their đúng",
+    "Kể về bạn bè thân thiết một cách tự nhiên"
+  ],
   badgeEmoji: "👥",
   warmupGreetings: [
     {

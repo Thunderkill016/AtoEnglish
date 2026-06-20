@@ -8,6 +8,12 @@ export const unit8: UnitData = {
   estimatedTime: 40,
   description: "Học từ vựng đồ ăn, cách gọi món và phân biệt Countable/Uncountable nouns trong tiếng Anh.",
   badgeName: "Người Sành Ăn",
+  situation: "Bạn đi ăn tối tại nhà hàng nước ngoài và cần gọi món, hỏi về thành phần và thanh toán bằng tiếng Anh.",
+  learningOutcomes: [
+    "Gọi món ăn và thức uống tự tin tại nhà hàng",
+    "Mô tả khẩu vị và dị ứng thực phẩm của bạn",
+    "Hỏi về menu và thanh toán bằng tiếng Anh"
+  ],
   badgeEmoji: "🍜",
   warmupGreetings: [
     { emoji: "🍚", en: "I'd like some rice, please.", vn: "Cho tôi một ít cơm, làm ơn.", context: "Gọi món lịch sự" },

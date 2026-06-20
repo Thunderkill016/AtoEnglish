@@ -8,6 +8,12 @@ export const unit2: UnitData = {
   estimatedTime: 40,
   description: "Học cách hỏi và trả lời về thông tin cá nhân: tên, tuổi, nghề nghiệp và nơi sống.",
   badgeName: "Người Tự Giới Thiệu",
+  situation: "HR manager yêu cầu bạn điền form thông tin cá nhân và hỏi thêm về nghề nghiệp, tuổi tác và nơi sống của bạn.",
+  learningOutcomes: [
+    "Cung cấp thông tin cá nhân chính xác bằng tiếng Anh",
+    "Hỏi và trả lời câu hỏi Wh- về thông tin cơ bản",
+    "Điền form đăng ký tài khoản hoặc hồ sơ bằng tiếng Anh"
+  ],
   badgeEmoji: "🪪",
   warmupGreetings: [
     {

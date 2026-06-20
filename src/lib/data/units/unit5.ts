@@ -8,6 +8,12 @@ export const unit5: UnitData = {
   estimatedTime: 40,
   description: "Học cách nói về sở thích và hoạt động giải trí bằng cấu trúc 'like + V-ing'.",
   badgeName: "Người Năng Động",
+  situation: "Bạn tham gia networking event và cần bắt chuyện với người nước ngoài bằng cách nói về sở thích và thời gian rảnh.",
+  learningOutcomes: [
+    "Nói về sở thích và hoạt động yêu thích bằng tiếng Anh",
+    "Hỏi người khác họ thích làm gì khi rảnh",
+    "Đề xuất cùng nhau làm một hoạt động"
+  ],
   badgeEmoji: "🎮",
   warmupGreetings: [
     { emoji: "📚", en: "I like reading books.", vn: "Tôi thích đọc sách.", context: "Nói về sở thích cá nhân" },

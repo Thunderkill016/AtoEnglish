@@ -8,6 +8,12 @@ export const unit6: UnitData = {
   estimatedTime: 40,
   description: "Học từ vựng về nhà ở, đồ đạc và cách dùng 'There is/are' để mô tả không gian.",
   badgeName: "Người Giữ Nhà",
+  situation: "Bạn bè quốc tế đến thăm nhà lần đầu — bạn cần dẫn họ tham quan và mô tả các phòng, đồ vật trong nhà.",
+  learningOutcomes: [
+    "Mô tả các phòng và đồ dùng trong nhà bằng tiếng Anh",
+    "Dùng there is / there are để nói về không gian",
+    "Hỏi về nhà và chỗ ở của người khác"
+  ],
   badgeEmoji: "🏠",
   warmupGreetings: [
     { emoji: "🛋️", en: "There is a sofa in the living room.", vn: "Có một chiếc ghế sofa trong phòng khách.", context: "Mô tả đồ đạc trong nhà" },

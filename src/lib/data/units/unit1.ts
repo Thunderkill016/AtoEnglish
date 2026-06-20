@@ -8,6 +8,12 @@ export const unit1: UnitData = {
   estimatedTime: 40,
   description: "Học cách chào hỏi, giới thiệu bản thân và phản hồi lịch sự trong giao tiếp cơ bản.",
   badgeName: "Người Khởi Đầu",
+  situation: "Bạn vừa bắt đầu công việc mới và gặp đồng nghiệp người nước ngoài lần đầu tiên trong ngày làm việc đầu tiên.",
+  learningOutcomes: [
+    "Tự giới thiệu bản thân tự tin bằng tiếng Anh",
+    "Hỏi thăm và phản hồi chào hỏi tự nhiên",
+    "Tạm biệt lịch sự khi kết thúc cuộc trò chuyện"
+  ],
   badgeEmoji: "👋",
   warmupGreetings: [
     {

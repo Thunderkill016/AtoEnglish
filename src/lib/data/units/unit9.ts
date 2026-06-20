@@ -8,6 +8,12 @@ export const unit9: UnitData = {
   estimatedTime: 45,
   description: "Học từ vựng địa điểm, cách hỏi và chỉ đường bằng tiếng Anh sử dụng giới từ nơi chốn.",
   badgeName: "Người Dẫn Đường",
+  situation: "Khách du lịch nước ngoài hỏi bạn đường đến bưu điện — bạn cần hỏi lại và chỉ đường rõ ràng bằng tiếng Anh.",
+  learningOutcomes: [
+    "Hỏi đường và mô tả vị trí địa điểm bằng tiếng Anh",
+    "Chỉ đường rõ ràng với các hướng left/right/straight",
+    "Nói về các địa điểm quen thuộc gần chỗ bạn sống"
+  ],
   badgeEmoji: "🗺️",
   warmupGreetings: [
     { emoji: "📍", en: "The bank is next to the post office.", vn: "Ngân hàng ở cạnh bưu điện.", context: "Mô tả vị trí địa điểm" },
