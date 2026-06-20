@@ -64,6 +64,7 @@ export default async function DashboardPage() {
     completed: false,
     route: "/learn/unit-1",
     tags: UNITS.find(u => u.id === "unit-1")?.tags ?? [],
+    xp: UNITS.find(u => u.id === "unit-1")?.xp ?? 80,
   };
 
   if (unitRes.success && unitRes.unitId) {
@@ -75,6 +76,7 @@ export default async function DashboardPage() {
     currentUnitData.completed = !!unitRes.completed;
     currentUnitData.route = unitRes.route || "/learn/unit-1";
     currentUnitData.tags = UNITS.find(u => u.id === unitRes.unitId)?.tags ?? [];
+    currentUnitData.xp = UNITS.find(u => u.id === unitRes.unitId)?.xp ?? 80;
   }
 
   // Fetch completion status of all units dynamically to compute today's XP

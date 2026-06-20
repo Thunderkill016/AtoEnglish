@@ -12,6 +12,7 @@ interface UnitCardProps {
     completed: boolean;
     route: string;
     tags: string[];
+    xp: number;
   };
 }
 
@@ -82,7 +83,7 @@ export default function UnitCard({ currentUnitData }: UnitCardProps) {
 
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <p className="text-xs text-zinc-500 dark:text-zinc-400">
-            Hoàn thành để nhận <strong className="text-zinc-700 dark:text-zinc-300 font-bold">80 XP</strong>
+            Hoàn thành để nhận <strong className="text-zinc-700 dark:text-zinc-300 font-bold">{currentUnitData.xp} XP</strong>
           </p>
           <Link href={currentUnitData.route} className="shrink-0">
             <Button className="w-full sm:w-auto h-11 px-7 bg-emerald-600 hover:bg-emerald-500 dark:bg-emerald-600 dark:hover:bg-emerald-500 text-white font-extrabold rounded-xl flex items-center justify-center gap-2 transition-all duration-200 shadow-lg shadow-emerald-600/15 hover:shadow-emerald-500/25 active:scale-[0.97]">
