@@ -111,6 +111,12 @@ export const unit5: UnitData = {
     { id: "pq2", question: "'I like cooking.' — Từ 'cooking' là gì?", options: ["Tính từ", "Danh từ", "Động từ dạng -ing", "Trạng từ"], answer: "Động từ dạng -ing", type: "multiple-choice" },
     { id: "pq3", question: "Điền từ còn thiếu: 'She ___ dancing very much.'", options: [], answer: "likes", type: "cloze" },
   ],
+
+  practiceTranslate: [
+    { id: "pt5-1", prompt_vn: "Tôi thích đọc sách vào cuối tuần.", answer: "I like reading books at the weekend." },
+    { id: "pt5-2", prompt_vn: "Anh ấy không thích xem phim.", answer: "He doesn't like watching movies." },
+    { id: "pt5-3", prompt_vn: "Bạn thích làm gì vào thời gian rảnh?", answer: "What do you like doing in your free time?" },
+  ],
   quiz: [
     { id: "q1", question: "Câu nào đúng với chủ ngữ 'He'?", options: ["He like reading.", "He likes reading.", "He liking reading.", "He liked reading."], answer: "He likes reading.", type: "multiple-choice" },
     { id: "q2", question: "'Do you like swimming?' — Trả lời phủ định:", options: ["No, I don't like swim.", "No, I don't like swimming.", "No, I doesn't like swimming.", "No, I not like swimming."], answer: "No, I don't like swimming.", type: "multiple-choice" },

@@ -144,6 +144,13 @@ export const unit1: UnitData = {
     { id: "pq3", question: "Điền từ còn thiếu: 'I ___ from Vietnam.'", options: [], answer: "am", type: "cloze" },
   ],
 
+  practiceTranslate: [
+    { id: "pt1-1", prompt_vn: "Xin chào, tên tôi là Minh.", answer: "Hello, my name is Minh." },
+    { id: "pt1-2", prompt_vn: "Tôi đến từ Việt Nam.", answer: "I am from Vietnam." },
+    { id: "pt1-3", prompt_vn: "Rất vui được gặp bạn.", answer: "Nice to meet you." },
+  ],
+
+
   quiz: [
     { id: "q1", question: "Câu nào dùng để nói 'Rất vui được gặp bạn'?", options: ["Goodbye, see you later", "Nice to meet you", "How old are you?", "Where are you from?"], answer: "Nice to meet you", type: "multiple-choice" },
     { id: "q2", question: "Cách chào hỏi trang trọng nhất vào buổi sáng là gì?", options: ["Hi!", "Good morning", "Goodbye", "See you later"], answer: "Good morning", type: "multiple-choice" },

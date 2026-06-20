@@ -115,6 +115,12 @@ export const unit12: UnitData = {
     { id: "pq2", question: "Câu nào dùng đúng 'like + V-ing' (Unit 5)?", options: ["I like swim.", "I like to swimming.", "I like swimming.", "I like swims."], answer: "I like swimming.", type: "multiple-choice" },
     { id: "pq3", question: "Điền vào: 'I ___ speak English now. I'm proud!' (Unit 10)", options: [], answer: "can", type: "cloze" },
   ],
+
+  practiceTranslate: [
+    { id: "pt12-1", prompt_vn: "Tôi đã học tiếng Anh được ba tháng.", answer: "I have been learning English for three months." },
+    { id: "pt12-2", prompt_vn: "Bạn có thể giới thiệu bản thân bằng tiếng Anh không?", answer: "Can you introduce yourself in English?" },
+    { id: "pt12-3", prompt_vn: "Tôi muốn cải thiện kỹ năng nói của mình.", answer: "I want to improve my speaking skills." },
+  ],
   quiz: [
     { id: "q1", question: "Câu nào ÔN đúng ngữ pháp 'There is/are' (Unit 6)?", options: ["There is two windows.", "There are two window.", "There are two windows.", "There have two windows."], answer: "There are two windows.", type: "multiple-choice" },
     { id: "q2", question: "Câu nào ÔN đúng 'How much' (Unit 7)?", options: ["How much is these shoes?", "How much are this shoe?", "How much are these shoes?", "How many are these shoes?"], answer: "How much are these shoes?", type: "multiple-choice" },

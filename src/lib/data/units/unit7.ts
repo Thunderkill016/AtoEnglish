@@ -110,6 +110,12 @@ export const unit7: UnitData = {
     { id: "pq2", question: "'Can I try this on?' — nghĩa là gì?", options: ["Có thể mua không?", "Có thể giảm giá không?", "Có thể thử đồ không?", "Có thể trả tiền không?"], answer: "Có thể thử đồ không?", type: "multiple-choice" },
     { id: "pq3", question: "Điền từ còn thiếu: 'It ___ fifty thousand dong.'", options: [], answer: "costs", type: "cloze" },
   ],
+
+  practiceTranslate: [
+    { id: "pt7-1", prompt_vn: "Cái áo này giá bao nhiêu?", answer: "How much is this shirt?" },
+    { id: "pt7-2", prompt_vn: "Tôi muốn mua một đôi giày.", answer: "I want to buy a pair of shoes." },
+    { id: "pt7-3", prompt_vn: "Cái này quá đắt.", answer: "This is too expensive." },
+  ],
   quiz: [
     { id: "q1", question: "Câu hỏi giá đúng với 'these jeans':", options: ["How much is these jeans?", "How much are these jeans?", "How many are these jeans?", "How much these jeans?"], answer: "How much are these jeans?", type: "multiple-choice" },
     { id: "q2", question: "Muốn trả bằng thẻ, bạn nói:", options: ["I pay by cash.", "I pay by card.", "I pay by check.", "I pay online."], answer: "I pay by card.", type: "multiple-choice" },

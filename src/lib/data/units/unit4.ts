@@ -128,6 +128,12 @@ export const unit4: UnitData = {
     { id: "pq2", question: "'She has breakfast at 7.' — Đây là thì gì?", options: ["Hiện tại tiếp diễn", "Quá khứ đơn", "Hiện tại đơn", "Tương lai"], answer: "Hiện tại đơn", type: "multiple-choice" },
     { id: "pq3", question: "Điền từ còn thiếu: 'I ___ to bed at ten.'", options: [], answer: "go", type: "cloze" },
   ],
+
+  practiceTranslate: [
+    { id: "pt4-1", prompt_vn: "Tôi thường thức dậy lúc 6 giờ 30.", answer: "I usually wake up at 6:30." },
+    { id: "pt4-2", prompt_vn: "Cô ấy không đi làm sớm.", answer: "She doesn't go to work early." },
+    { id: "pt4-3", prompt_vn: "Chúng tôi xem TV vào buổi tối.", answer: "We watch TV in the evening." },
+  ],
   quiz: [
     { id: "q1", question: "Chọn câu Present Simple đúng với 'He':", options: ["He go to school.", "He goes to school.", "He going to school.", "He goed to school."], answer: "He goes to school.", type: "multiple-choice" },
     { id: "q2", question: "Hoạt động nào xảy ra vào buổi sáng?", options: ["go to bed", "cook dinner", "watch TV", "wake up"], answer: "wake up", type: "multiple-choice" },

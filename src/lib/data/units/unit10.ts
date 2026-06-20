@@ -112,6 +112,12 @@ export const unit10: UnitData = {
     { id: "pq2", question: "Phủ định của 'I can sing' là gì?", options: ["I don't can sing.", "I can't sing.", "I cannot to sing.", "I not can sing."], answer: "I can't sing.", type: "multiple-choice" },
     { id: "pq3", question: "Điền từ còn thiếu: 'He ___ play the guitar.'", options: [], answer: "can", type: "cloze" },
   ],
+
+  practiceTranslate: [
+    { id: "pt10-1", prompt_vn: "Tôi có thể nói tiếng Anh một chút.", answer: "I can speak a little English." },
+    { id: "pt10-2", prompt_vn: "Anh ấy không thể lái xe.", answer: "He can't drive a car." },
+    { id: "pt10-3", prompt_vn: "Bạn có thể giúp tôi không?", answer: "Can you help me?" },
+  ],
   quiz: [
     { id: "q1", question: "Câu hỏi đúng về khả năng:", options: ["Do you can cook?", "Are you can cook?", "Can you cook?", "You can cook?"], answer: "Can you cook?", type: "multiple-choice" },
     { id: "q2", question: "Lỗi nào SAI?", options: ["I can swim.", "She can't drive.", "He cans sing.", "Can you speak English?"], answer: "He cans sing.", type: "multiple-choice" },

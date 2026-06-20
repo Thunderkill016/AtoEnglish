@@ -123,6 +123,12 @@ export const unit2: UnitData = {
     { id: "pq2", question: "'What do you do?' hỏi về điều gì?", options: ["Tên", "Tuổi", "Nghề nghiệp", "Địa chỉ"], answer: "Nghề nghiệp", type: "multiple-choice" },
     { id: "pq3", question: "Điền vào chỗ trống: 'I ___ a doctor.'", options: [], answer: "am", type: "cloze" },
   ],
+
+  practiceTranslate: [
+    { id: "pt2-1", prompt_vn: "Bạn tên là gì?", answer: "What is your name?" },
+    { id: "pt2-2", prompt_vn: "Tôi 25 tuổi.", answer: "I am 25 years old." },
+    { id: "pt2-3", prompt_vn: "Số điện thoại của bạn là gì?", answer: "What is your phone number?" },
+  ],
   quiz: [
     { id: "q1", question: "Câu hỏi nào hỏi về nghề nghiệp?", options: ["What is your name?", "How old are you?", "What do you do?", "Where are you from?"], answer: "What do you do?", type: "multiple-choice" },
     { id: "q2", question: "'I am a student at Hanoi University.' — từ nào chỉ nghề nghiệp?", options: ["Hanoi", "University", "student", "am"], answer: "student", type: "multiple-choice" },

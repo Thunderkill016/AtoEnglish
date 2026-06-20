@@ -109,6 +109,12 @@ export const unit8: UnitData = {
     { id: "pq2", question: "Chọn câu đúng:", options: ["I'd like a rice.", "I'd like some rice.", "I'd like two rices.", "I'd like a rices."], answer: "I'd like some rice.", type: "multiple-choice" },
     { id: "pq3", question: "Điền từ đúng: 'Do you have ___ chicken?'", options: [], answer: "any", type: "cloze" },
   ],
+
+  practiceTranslate: [
+    { id: "pt8-1", prompt_vn: "Tôi muốn gọi một tô phở.", answer: "I would like to order a bowl of pho." },
+    { id: "pt8-2", prompt_vn: "Bạn có muốn uống gì không?", answer: "Would you like something to drink?" },
+    { id: "pt8-3", prompt_vn: "Mang hóa đơn cho tôi với.", answer: "Can I have the bill, please?" },
+  ],
   quiz: [
     { id: "q1", question: "Câu gọi món lịch sự nhất:", options: ["I want some soup.", "Give me some soup.", "I'd like some soup, please.", "Some soup for me."], answer: "I'd like some soup, please.", type: "multiple-choice" },
     { id: "q2", question: "'Egg' là countable. Chọn câu đúng:", options: ["some egg", "a eggs", "two eggs", "some eggs is"], answer: "two eggs", type: "multiple-choice" },

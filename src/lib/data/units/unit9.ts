@@ -109,6 +109,12 @@ export const unit9: UnitData = {
     { id: "pq2", question: "Để hỏi đường lịch sự, bạn bắt đầu bằng:", options: ["Where is...?", "Tell me where...!", "Excuse me, where is...?", "I need to know..."], answer: "Excuse me, where is...?", type: "multiple-choice" },
     { id: "pq3", question: "Điền từ còn thiếu: 'The bank is ___ the post office.'", options: [], answer: "next to", type: "cloze" },
   ],
+
+  practiceTranslate: [
+    { id: "pt9-1", prompt_vn: "Bưu điện ở đâu?", answer: "Where is the post office?" },
+    { id: "pt9-2", prompt_vn: "Đi thẳng rồi rẽ trái.", answer: "Go straight and then turn left." },
+    { id: "pt9-3", prompt_vn: "Siêu thị cách đây bao xa?", answer: "How far is the supermarket from here?" },
+  ],
   quiz: [
     { id: "q1", question: "Chọn câu mô tả đúng vị trí:", options: ["The hospital is next the park.", "The hospital is opposite the park.", "The hospital is between park.", "The park is next to hospital."], answer: "The hospital is opposite the park.", type: "multiple-choice" },
     { id: "q2", question: "'Between A and B' có nghĩa là:", options: ["Cạnh A", "Đối diện B", "Giữa A và B", "Gần A"], answer: "Giữa A và B", type: "multiple-choice" },

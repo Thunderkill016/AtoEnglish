@@ -109,6 +109,12 @@ export const unit11: UnitData = {
     { id: "pq2", question: "Dùng 'feel' để nói về điều gì?", options: ["Triệu chứng bệnh", "Cảm xúc / trạng thái", "Địa điểm", "Thời gian"], answer: "Cảm xúc / trạng thái", type: "multiple-choice" },
     { id: "pq3", question: "Điền từ còn thiếu: 'I ___ very tired today.'", options: [], answer: "feel", type: "cloze" },
   ],
+
+  practiceTranslate: [
+    { id: "pt11-1", prompt_vn: "Tôi bị đau đầu.", answer: "I have a headache." },
+    { id: "pt11-2", prompt_vn: "Bạn cảm thấy thế nào hôm nay?", answer: "How do you feel today?" },
+    { id: "pt11-3", prompt_vn: "Cô ấy bị cảm lạnh.", answer: "She has a cold." },
+  ],
   quiz: [
     { id: "q1", question: "Câu nào đúng về bệnh:", options: ["I have headache.", "I have a headache.", "I feel a headache.", "I am a headache."], answer: "I have a headache.", type: "multiple-choice" },
     { id: "q2", question: "Dùng từ gì cho cảm xúc?", options: ["have", "has", "feel", "am"], answer: "feel", type: "multiple-choice" },

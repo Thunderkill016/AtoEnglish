@@ -108,6 +108,12 @@ export const unit6: UnitData = {
     { id: "pq2", question: "Câu hỏi đúng về phòng ngủ:", options: ["Is there a bedroom?", "There is a bedroom?", "Are there a bedroom?", "Is a bedroom there?"], answer: "Is there a bedroom?", type: "multiple-choice" },
     { id: "pq3", question: "Điền vào chỗ trống: 'There ___ a lamp on the table.'", options: [], answer: "is", type: "cloze" },
   ],
+
+  practiceTranslate: [
+    { id: "pt6-1", prompt_vn: "Có một cái bàn trong phòng bếp.", answer: "There is a table in the kitchen." },
+    { id: "pt6-2", prompt_vn: "Không có ghế sofa trong phòng ngủ.", answer: "There isn't a sofa in the bedroom." },
+    { id: "pt6-3", prompt_vn: "Có hai phòng ngủ trong căn hộ của tôi.", answer: "There are two bedrooms in my apartment." },
+  ],
   quiz: [
     { id: "q1", question: "Chọn câu đúng với 'two windows':", options: ["There is two windows.", "There are two windows.", "There have two windows.", "There be two windows."], answer: "There are two windows.", type: "multiple-choice" },
     { id: "q2", question: "Cách nói phủ định của 'There is a garden':", options: ["There isn't a garden.", "There aren't a garden.", "There isn't any gardens.", "There are no garden."], answer: "There isn't a garden.", type: "multiple-choice" },

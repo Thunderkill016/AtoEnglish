@@ -33,18 +33,23 @@ function getSpeechRecognition(): typeof SpeechRecognition | null {
   return window.SpeechRecognition ?? window.webkitSpeechRecognition ?? null;
 }
 
-// ─── Section labels (8 steps) ───────────────────────────────────────────────
-const SECTION_LABELS = [
-  "Khởi động",
-  "Từ vựng",
-  "Ngữ pháp",
-  "Luyện tập",
-  "Nghe hiểu",
-  "Shadowing",
-  "Luyện nói",
-  "Hoàn thành",
-];
-const TOTAL_SECTIONS = 8;
+// ─── Section order & labels (9 steps, Hybrid pedagogical flow) ───────────────
+// Physical section numbers → user-facing labels
+const SECTION_LABELS: Record<number, string> = {
+  1: "Khởi động",
+  5: "Hội thoại",   // Dialogue first (Implicit Input)
+  2: "Từ vựng",    // Vocabulary after Dialogue
+  3: "Ngữ pháp",   // Grammar in Context
+  4: "Luyện tập",  // Practice (matching + MC + scramble)
+  9: "Dịch câu",   // VN→EN Translation (new dedicated section)
+  6: "Shadowing",
+  7: "Luyện nói",
+  8: "Hoàn thành",
+};
+// Navigation flow: Warmup → Dialogue → Vocab → Grammar → Practice → Translate → Shadowing → Speaking → Quiz
+const SECTION_ORDER = [1, 5, 2, 3, 4, 9, 6, 7, 8] as const;
+type SectionNumber = (typeof SECTION_ORDER)[number];
+const TOTAL_SECTIONS = SECTION_ORDER.length; // 9
 
 // ─── Interfaces ──────────────────────────────────────────────────────────────
 export interface VocabItem {
@@ -173,6 +178,7 @@ export interface UnitData {
   matchingExercise?: MatchingExercise; // NEW: Matching exercise in practice
   scrambleExercises?: SentenceScramble[]; // Sentence-construction tiles (Priority 1)
   practiceQuiz?: QuizQuestion[];   // NEW: Separate quiz for practice section
+  practiceTranslate?: { id: string; prompt_vn: string; answer: string }[]; // Section 9: VN→EN dedicated
   dialogues: Dialogue[];
   listenAndChoose: ListenAndChooseItem[];
   speaking: SpeakingData;
@@ -208,12 +214,16 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
   const [scrambleBuilt, setScrambleBuilt] = useState<Record<string, string[]>>({});
   const [scrambleChecked, setScrambleChecked] = useState<Record<string, boolean>>({});
 
-  // Section 5 — Listening
+  // Section 5 — Listening (dialogue + listen-and-choose)
   const [selectedDialogue, setSelectedDialogue] = useState(0);
   const [showTranscript, setShowTranscript] = useState(false);
   const [isPlayingDialogue, setIsPlayingDialogue] = useState(false);
   const [lacAnswers, setLacAnswers] = useState<Record<number, string>>({});
   const [lacSubmitted, setLacSubmitted] = useState(false);
+
+  // Section 9 — VN→EN Translation (new dedicated production section)
+  const [translateInputs, setTranslateInputs] = useState<Record<string, string>>({});
+  const [translateSubmitted, setTranslateSubmitted] = useState(false);
 
   // Section 6 — Shadowing
   const [shadowLineIdx, setShadowLineIdx] = useState(0);
@@ -537,13 +547,16 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
   // CCQ correct check
   const ccqCorrect = !!(unit.grammar?.ccq && ccqAnswer === unit.grammar.ccq.answer);
 
-  // ─── Progress bar ─────────────────────────────────────────────────────────
-  const progress = Math.round(((section - 1) / (TOTAL_SECTIONS - 1)) * 100);
+  // ─── Progress bar (uses position in SECTION_ORDER, not raw section number) ──
+  const sectionOrderIdx = SECTION_ORDER.indexOf(section as SectionNumber);
+  const progress = Math.round((sectionOrderIdx / (TOTAL_SECTIONS - 1)) * 100);
 
-  // ─── Navigation ───────────────────────────────────────────────────────────
+  // ─── Navigation (follows SECTION_ORDER flow) ─────────────────────────────
   const goNext = () => {
     window.speechSynthesis?.cancel();
-    setSection(s => Math.min(s + 1, TOTAL_SECTIONS));
+    const idx = SECTION_ORDER.indexOf(section as SectionNumber);
+    const nextSection = SECTION_ORDER[Math.min(idx + 1, SECTION_ORDER.length - 1)];
+    setSection(nextSection);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
@@ -587,8 +600,8 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
               <p className="text-sm font-semibold text-white truncate max-w-[160px] sm:max-w-xs">{unit.title}</p>
             </div>
             <div className="text-right">
-              <p className="text-xs text-zinc-500">Phần</p>
-              <p className="text-sm font-bold text-emerald-400">{section}/{TOTAL_SECTIONS}</p>
+              <p className="text-xs text-zinc-500">{SECTION_LABELS[section] ?? "Học"}</p>
+              <p className="text-sm font-bold text-emerald-400">{sectionOrderIdx + 1}/{TOTAL_SECTIONS}</p>
             </div>
           </div>
           {/* Progress bar */}
@@ -601,9 +614,9 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
           </div>
           {/* Step labels */}
           <div className="flex justify-between mt-1.5">
-            {SECTION_LABELS.map((label, i) => (
-              <span key={i} className={`text-[8px] hidden xs:block truncate max-w-[36px] text-center ${i + 1 === section ? "text-emerald-400 font-bold !block" : i + 1 < section ? "text-emerald-600 !block" : "text-zinc-600"}`}>
-                {label}
+            {SECTION_ORDER.map((secNum, i) => (
+              <span key={secNum} className={`text-[8px] hidden xs:block truncate max-w-[36px] text-center ${i === sectionOrderIdx ? "text-emerald-400 font-bold !block" : i < sectionOrderIdx ? "text-emerald-600 !block" : "text-zinc-600"}`}>
+                {SECTION_LABELS[secNum]}
               </span>
             ))}
           </div>
@@ -1885,6 +1898,91 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                       </div>
                     </div>
                   )}
+                </div>
+              )}
+            </motion.div>
+          )}
+
+          {/* ══ SECTION 9: VN → EN Translation (Dedicated Production Section) ══ */}
+          {section === 9 && (
+            <motion.div key="s9" variants={sectionVariants} initial="initial" animate="animate" exit="exit" transition={{ duration: 0.3 }}>
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-2xl">🇻🇳➡️🇺🇸</span>
+                <h1 className="text-xl sm:text-2xl font-black text-white">Dịch câu</h1>
+                <span className="text-xs text-zinc-500 ml-auto">~2 phút</span>
+              </div>
+              <p className="text-zinc-400 mb-6 text-sm">Đọc câu tiếng Việt và gõ bản dịch tiếng Anh của bạn. Đây là bước <span className="text-teal-400 font-semibold">sản xuất ngôn ngữ</span> — không nhìn gợi ý!</p>
+
+              {unit.practiceTranslate && unit.practiceTranslate.length > 0 ? (
+                <div className="space-y-5">
+                  {unit.practiceTranslate.map((item, i) => {
+                    const userAnswer = translateInputs[item.id] ?? "";
+                    const isCorrect = userAnswer.trim().toLowerCase() === item.answer.trim().toLowerCase();
+                    return (
+                      <div key={item.id} className={`rounded-2xl border p-5 transition-all duration-300 ${
+                        translateSubmitted
+                          ? isCorrect ? "border-emerald-500/50 bg-emerald-950/30" : "border-red-500/40 bg-red-950/20"
+                          : "border-zinc-700/60 bg-white/5"
+                      }`}>
+                        <div className="flex items-start gap-3 mb-4">
+                          <span className="bg-teal-600/20 text-teal-400 rounded-full w-7 h-7 flex items-center justify-center text-xs font-black shrink-0 mt-0.5">{i + 1}</span>
+                          <div className="flex-1">
+                            <p className="text-xs text-zinc-500 mb-1">🇻🇳 Tiếng Việt:</p>
+                            <p className="text-white font-semibold">{item.prompt_vn}</p>
+                          </div>
+                        </div>
+                        <div>
+                          <p className="text-xs text-zinc-500 mb-2">🇺🇸 Bản dịch tiếng Anh của bạn:</p>
+                          <input
+                            type="text"
+                            value={userAnswer}
+                            disabled={translateSubmitted}
+                            onChange={e => setTranslateInputs(p => ({ ...p, [item.id]: e.target.value }))}
+                            placeholder="Gõ câu tiếng Anh ở đây..."
+                            className="w-full bg-zinc-900/60 border border-zinc-700/60 rounded-xl px-4 py-3 text-white placeholder-zinc-600 text-sm focus:outline-none focus:border-teal-500/60 transition-colors disabled:opacity-60"
+                            onKeyDown={e => { if (e.key === "Enter" && !translateSubmitted) e.currentTarget.blur(); }}
+                          />
+                          {translateSubmitted && (
+                            <div className="mt-2">
+                              {isCorrect
+                                ? <p className="text-emerald-400 text-xs font-bold">✓ Chính xác!</p>
+                                : <p className="text-red-400 text-xs">✗ Đáp án tham khảo: <span className="font-semibold">{item.answer}</span></p>
+                              }
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+
+                  {!translateSubmitted ? (
+                    <button
+                      disabled={Object.keys(translateInputs).length < unit.practiceTranslate.length}
+                      onClick={() => { setTranslateSubmitted(true); }}
+                      className="w-full bg-teal-600 hover:bg-teal-500 disabled:opacity-40 disabled:cursor-not-allowed text-white font-bold rounded-xl px-6 py-4 flex items-center justify-center gap-2 transition-colors text-lg"
+                    >
+                      Kiểm tra bản dịch <ChevronRight size={20} />
+                    </button>
+                  ) : (
+                    <div className="space-y-3">
+                      <div className="bg-zinc-900/60 rounded-2xl p-4 text-center border border-zinc-700/40">
+                        <p className="text-lg font-black text-white">
+                          {unit.practiceTranslate.filter(item => (translateInputs[item.id] ?? "").trim().toLowerCase() === item.answer.trim().toLowerCase()).length}/{unit.practiceTranslate.length} câu chính xác
+                        </p>
+                        <p className="text-zinc-400 text-sm mt-1">Tiếp tục để luyện Shadowing và Luyện nói</p>
+                      </div>
+                      <button onClick={goNext} className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl px-6 py-4 flex items-center justify-center gap-2 transition-colors text-lg">
+                        Tiếp tục <ChevronRight size={20} />
+                      </button>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div className="text-center py-10">
+                  <p className="text-zinc-500 text-sm">Unit này chưa có bài dịch câu.</p>
+                  <button onClick={goNext} className="mt-4 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl px-6 py-3 transition-colors">
+                    Bỏ qua → Tiếp tục
+                  </button>
                 </div>
               )}
             </motion.div>

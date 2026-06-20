@@ -248,6 +248,13 @@ export const unit3: UnitData = {
     { id: "pq3", question: "Điền từ còn thiếu: 'His ___ is Tom.' (tên)", options: [], answer: "name", type: "cloze" },
   ],
 
+  practiceTranslate: [
+    { id: "pt3-1", prompt_vn: "Đây là em gái tôi.", answer: "This is my sister." },
+    { id: "pt3-2", prompt_vn: "Bố tôi là giáo viên.", answer: "My father is a teacher." },
+    { id: "pt3-3", prompt_vn: "Chúng tôi có một gia đình nhỏ.", answer: "We have a small family." },
+  ],
+
+
   quiz: [
     {
       id: "q1",
