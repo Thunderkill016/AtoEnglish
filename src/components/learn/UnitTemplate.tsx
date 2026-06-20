@@ -579,7 +579,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
             <motion.div key="s1" variants={sectionVariants} initial="initial" animate="animate" exit="exit" transition={{ duration: 0.3 }}>
               <div className="flex items-center gap-2 mb-6">
                 <Lightbulb className="text-emerald-400" size={22} />
-                <h1 className="text-2xl font-black text-white">Khởi động</h1>
+                <h1 className="text-xl sm:text-2xl font-black text-white">Khởi động</h1>
                 <span className="text-xs text-zinc-500 ml-auto">~3 phút</span>
               </div>
 
@@ -680,7 +680,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
             <motion.div key="s2" variants={sectionVariants} initial="initial" animate="animate" exit="exit" transition={{ duration: 0.3 }}>
               <div className="flex items-center gap-2 mb-2">
                 <BookOpen className="text-emerald-400" size={22} />
-                <h1 className="text-2xl font-black text-white">Từ vựng & Cụm từ</h1>
+                <h1 className="text-xl sm:text-2xl font-black text-white">Từ vựng & Cụm từ</h1>
                 <span className="text-xs text-zinc-500 ml-auto">~5 phút</span>
               </div>
               <p className="text-zinc-400 mb-2 text-sm">Nhấn vào thẻ để lật và xem nghĩa. Nghe phát âm chuẩn bằng nút loa.</p>
@@ -761,7 +761,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
             <motion.div key="s3" variants={sectionVariants} initial="initial" animate="animate" exit="exit" transition={{ duration: 0.3 }}>
               <div className="flex items-center gap-2 mb-2">
                 <BookMarked className="text-teal-400" size={22} />
-                <h1 className="text-2xl font-black text-white">Ngữ pháp</h1>
+                <h1 className="text-xl sm:text-2xl font-black text-white">Ngữ pháp</h1>
                 <span className="text-xs text-zinc-500 ml-auto">~4 phút</span>
               </div>
               <p className="text-zinc-400 mb-6 text-sm">Hiểu cấu trúc ngữ pháp giúp bạn dùng từ đúng trong ngữ cảnh thực tế.</p>
@@ -769,7 +769,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
               {unit.grammar ? (
                 <div className="space-y-5">
                   {/* Grammar card */}
-                  <div className="bg-teal-950/30 border border-teal-700/40 rounded-2xl p-6">
+                  <div className="bg-teal-950/30 border border-teal-700/40 rounded-2xl p-4 sm:p-6">
                     <div className="flex items-center gap-2 mb-4">
                       <span className="text-xl">📐</span>
                       <h2 className="text-lg font-black text-teal-300">{unit.grammar.title}</h2>
@@ -866,7 +866,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                   </div>
                 </div>
               ) : (
-                <div className="bg-zinc-800/40 border border-zinc-700/40 rounded-2xl p-8 text-center">
+                <div className="bg-zinc-800/40 border border-zinc-700/40 rounded-2xl p-5 sm:p-8 text-center">
                   <p className="text-zinc-500 text-sm">Bài học này không có phần ngữ pháp riêng.</p>
                 </div>
               )}
@@ -887,7 +887,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
               <motion.div key="s4-practice" variants={sectionVariants} initial="initial" animate="animate" exit="exit" transition={{ duration: 0.3 }}>
                 <div className="flex items-center gap-2 mb-2">
                   <span className="text-2xl">⚡</span>
-                  <h1 className="text-2xl font-black text-white">Luyện tập</h1>
+                  <h1 className="text-xl sm:text-2xl font-black text-white">Luyện tập</h1>
                   <span className="text-xs text-zinc-500 ml-auto">~4 phút</span>
                 </div>
                 <p className="text-zinc-400 mb-6 text-sm">Kiểm tra nhanh từ vựng và ngữ pháp vừa học. Chọn đáp án hoặc điền từ đúng.</p>
@@ -1064,7 +1064,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                         ? "bg-emerald-950/40 border-emerald-500/30"
                         : "bg-zinc-900/40 border-zinc-700/40"
                     }`}>
-                      <p className="text-2xl font-black text-white">{practiceScore}/{PRACTICE_QS.length} câu đúng</p>
+                      <p className="text-xl sm:text-2xl font-black text-white">{practiceScore}/{PRACTICE_QS.length} câu đúng</p>
                       <p className="text-sm text-zinc-400 mt-1">
                         {practiceScore === PRACTICE_QS.length ? "🏆 Xuất sắc! Bạn nắm vững bài học!" : practiceScore >= Math.ceil(PRACTICE_QS.length * 0.7) ? "🎯 Khá tốt! Tiếp tục nhé!" : "💪 Ôn lại thẻ từ vựng sẽ giúp bạn nhớ lâu hơn!"}
                       </p>
@@ -1088,7 +1088,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
             <motion.div key="s5" variants={sectionVariants} initial="initial" animate="animate" exit="exit" transition={{ duration: 0.3 }}>
               <div className="flex items-center gap-2 mb-6">
                 <Headphones className="text-emerald-400" size={22} />
-                <h1 className="text-2xl font-black text-white">Nghe hiểu</h1>
+                <h1 className="text-xl sm:text-2xl font-black text-white">Nghe hiểu</h1>
                 <span className="text-xs text-zinc-500 ml-auto">~5 phút</span>
               </div>
 
@@ -1223,12 +1223,12 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
             <motion.div key="s6" variants={sectionVariants} initial="initial" animate="animate" exit="exit" transition={{ duration: 0.3 }}>
               <div className="flex items-center gap-2 mb-6">
                 <MessageCircle className="text-emerald-400" size={22} />
-                <h1 className="text-2xl font-black text-white">Shadowing</h1>
+                <h1 className="text-xl sm:text-2xl font-black text-white">Shadowing</h1>
                 <span className="text-xs text-zinc-500 ml-auto">~5 phút</span>
               </div>
 
               {DIALOGUES.length > 0 && !shadowDone ? (
-                <div className="bg-white/5 border border-zinc-800/60 rounded-2xl p-6">
+                <div className="bg-white/5 border border-zinc-800/60 rounded-2xl p-4 sm:p-6">
                   <div className="flex justify-between text-xs text-zinc-500 mb-2 font-bold">
                     <span>Tiến độ dòng hội thoại</span>
                     <span>{shadowLineIdx + 1}/{DIALOGUES[0].lines.length}</span>
@@ -1245,7 +1245,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                       {DIALOGUES[0].lines[shadowLineIdx].speaker}
                     </span>
                     <p className="text-zinc-500 text-[10px] mb-2 uppercase tracking-widest font-black">Hãy nghe rồi nói lại</p>
-                    <p className="text-white text-xl font-bold mb-1 leading-snug">{DIALOGUES[0].lines[shadowLineIdx].text}</p>
+                    <p className="text-white text-base sm:text-xl font-bold mb-1 leading-snug">{DIALOGUES[0].lines[shadowLineIdx].text}</p>
                     <p className="text-zinc-400 text-sm">{DIALOGUES[0].lines[shadowLineIdx].translation}</p>
                   </div>
 
@@ -1296,7 +1296,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                   )}
                 </div>
               ) : (
-                <div className="text-center mb-6 bg-white/5 border border-zinc-800/60 rounded-2xl p-8">
+                <div className="text-center mb-4 sm:mb-6 bg-white/5 border border-zinc-800/60 rounded-2xl p-5 sm:p-8">
                   <div className="text-4xl mb-3">🎉</div>
                   <p className="text-emerald-400 font-bold text-lg mb-1">Hoàn thành Shadowing!</p>
                   <p className="text-zinc-400 text-sm mb-6">
@@ -1315,12 +1315,12 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
             <motion.div key="s7" variants={sectionVariants} initial="initial" animate="animate" exit="exit" transition={{ duration: 0.3 }}>
               <div className="flex items-center gap-2 mb-6">
                 <Mic className="text-emerald-400" size={22} />
-                <h1 className="text-2xl font-black text-white">Luyện nói</h1>
+                <h1 className="text-xl sm:text-2xl font-black text-white">Luyện nói</h1>
                 <span className="text-xs text-zinc-500 ml-auto">~5 phút</span>
               </div>
 
               {/* Level 1 */}
-              <div className="bg-white/5 border border-zinc-800/60 rounded-2xl p-6 mb-5">
+              <div className="bg-white/5 border border-zinc-800/60 rounded-2xl p-4 sm:p-6 mb-4 sm:mb-5">
                 <div className="flex items-center gap-2 mb-4">
                   <span className="px-2 py-0.5 text-xs font-bold bg-emerald-600/20 text-emerald-400 rounded-full">Cấp độ 1</span>
                   <p className="text-white font-semibold">Nói theo khung</p>
@@ -1329,7 +1329,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
 
                 <div className="bg-zinc-900/60 rounded-xl p-4 mb-4 text-center">
                   <p className="text-zinc-400 text-sm mb-1">Hãy nói to câu sau:</p>
-                  <p className="text-white text-xl font-bold">{formattedL1Prompt}</p>
+                  <p className="text-white text-base sm:text-xl font-bold">{formattedL1Prompt}</p>
                 </div>
 
                 <input
@@ -1444,7 +1444,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
             <motion.div key="s8" variants={sectionVariants} initial="initial" animate="animate" exit="exit" transition={{ duration: 0.3 }}>
               <div className="flex items-center gap-2 mb-6">
                 <Trophy className="text-emerald-400" size={22} />
-                <h1 className="text-2xl font-black text-white">Ôn tập & Kết quả</h1>
+                <h1 className="text-xl sm:text-2xl font-black text-white">Ôn tập & Kết quả</h1>
                 <span className="text-xs text-zinc-500 ml-auto">~3 phút</span>
               </div>
 
