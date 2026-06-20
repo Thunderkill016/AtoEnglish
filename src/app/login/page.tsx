@@ -244,9 +244,10 @@ function LoginContent() {
               current_level: mappedLevel,
               streak: 0,
               total_xp: 0,
-              daily_xp_goal: dailyXpGoal,
             });
           }
+          // Persist XP goal preference locally (no DB column yet)
+          localStorage.setItem("ato_daily_xp_goal", String(dailyXpGoal));
 
           toast.success("Đăng ký tài khoản thành công!");
           router.push(next);
@@ -273,9 +274,9 @@ function LoginContent() {
               current_level: mappedLevel,
               streak: 0,
               total_xp: 0,
-              daily_xp_goal: dailyXpGoal,
             });
           }
+          localStorage.setItem("ato_daily_xp_goal", String(dailyXpGoal));
         }
 
         toast.success("Đăng nhập thành công!");

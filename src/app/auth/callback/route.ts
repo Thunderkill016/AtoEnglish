@@ -43,7 +43,6 @@ export async function GET(request: Request) {
             current_level: mappedLevel,
             streak: 0,
             total_xp: 0,
-            daily_xp_goal: dailyXpGoal,
           },
           { onConflict: "user_id", ignoreDuplicates: true }
         ),

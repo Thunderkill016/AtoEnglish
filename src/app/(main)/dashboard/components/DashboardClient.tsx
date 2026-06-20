@@ -71,7 +71,15 @@ export default function DashboardClient({
   const [xpCurrent, setXpCurrent] = useState(initialXpCurrent);
   const [quests, setQuests] = useState(initialQuests);
   const [greeting, setGreeting] = useState("Chào bạn");
-  const [xpTarget, setXpTarget] = useState(dailyXpGoal);
+  const [xpTarget, setXpTarget] = useState(() => {
+    if (typeof window === "undefined") return dailyXpGoal;
+    const stored = localStorage.getItem("ato_daily_xp_goal");
+    if (stored) {
+      const parsed = parseInt(stored, 10);
+      if (!isNaN(parsed) && parsed > 0) return parsed;
+    }
+    return dailyXpGoal;
+  });
   const [showGoalSelector, setShowGoalSelector] = useState(false);
   const [updatingGoal, setUpdatingGoal] = useState(false);
   const [hoursLeft, setHoursLeft] = useState<number | null>(null);
