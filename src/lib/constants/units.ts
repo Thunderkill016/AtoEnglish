@@ -30,7 +30,7 @@ export const UNITS: UnitMetadata[] = [
     route: "/learn/unit-2",
     xp: 80,
     estimatedTime: 40,
-    tags: ["Từ vựng +10", "Lịch trình", "Thì hiện tại"],
+    tags: ["Từ vựng +12", "Lịch trình", "Thì hiện tại"],
   },
   {
     id: "unit-3",
@@ -40,7 +40,7 @@ export const UNITS: UnitMetadata[] = [
     route: "/learn/unit-3",
     xp: 80,
     estimatedTime: 45,
-    tags: ["Từ vựng +10", "Gia đình", "Đại từ sở hữu"],
+    tags: ["Từ vựng +12", "Gia đình", "Đại từ sở hữu"],
   },
   {
     // A2 level — correct CEFR progression (was B1, now A2)
@@ -62,6 +62,6 @@ export const UNITS: UnitMetadata[] = [
     route: "/learn/unit-5",
     xp: 80,
     estimatedTime: 50,
-    tags: ["Từ vựng +15", "Công nghệ", "Modal Verbs"],
+    tags: ["Từ vựng +8", "Công nghệ", "Modal Verbs"],
   },
 ];
