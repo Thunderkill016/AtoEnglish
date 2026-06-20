@@ -112,8 +112,39 @@ export const SHADOWING_ITEMS: ShadowingItem[] = [
     translation: "Cung cấp đủ nước và ngủ đủ giấc là những yếu tố quyết định để duy trì năng lượng suốt cả ngày.",
     difficultWords: ["hydrated", "sufficient", "critical factors"],
     tips: "Chữ 'sufficient' phát âm âm /ʃ/ ở giữa (/səˈfɪʃ.ənt/). Đọc liền mạch cụm 'throughout the day'."
+  },
+  {
+    id: "self-introduction",
+    title: "Simple Self Introduction",
+    topic: "Daily Life",
+    level: "A1",
+    transcript: "Hi, my name is Minh. I am twenty-five years old. I live in Ho Chi Minh City and I work as an engineer.",
+    translation: "Xin chào, tên tôi là Minh. Tôi 25 tuổi. Tôi sống ở Thành phố Hồ Chí Minh và làm việc như một kỹ sư.",
+    difficultWords: ["twenty-five", "engineer", "Ho Chi Minh City"],
+    tips: "Nhấn giọng vào danh từ riêng 'Ho Chi Minh City'. Phát âm 'engineer' với trọng âm ở âm tiết cuối: /ˌen.dʒɪˈnɪər/."
+  },
+  {
+    id: "describe-city",
+    title: "Describing Your City",
+    topic: "Travel",
+    level: "A2",
+    transcript: "My city is very busy and crowded. There are many restaurants, parks, and shopping centres. The public transport is cheap and convenient.",
+    translation: "Thành phố của tôi rất bận rộn và đông đúc. Có nhiều nhà hàng, công viên và trung tâm mua sắm. Phương tiện giao thông công cộng thì rẻ và tiện lợi.",
+    difficultWords: ["crowded", "shopping centres", "convenient"],
+    tips: "Nối âm 'very busy' thành /ˈver.i.ˈbɪz.i/. Chú ý 'convenient' phát âm /kənˈviː.ni.ənt/ — không được bỏ âm tiết giữa."
+  },
+  {
+    id: "climate-change",
+    title: "Climate Change Opinion",
+    topic: "Environment",
+    level: "B2",
+    transcript: "Climate change is one of the most pressing challenges of our generation. Governments and individuals must collaborate urgently to reduce carbon emissions and protect biodiversity.",
+    translation: "Biến đổi khí hậu là một trong những thách thức cấp bách nhất của thế hệ chúng ta. Các chính phủ và cá nhân phải hợp tác khẩn cấp để giảm lượng phát thải carbon và bảo vệ đa dạng sinh học.",
+    difficultWords: ["pressing challenges", "collaborate", "carbon emissions", "biodiversity"],
+    tips: "Nhấn âm 'most PRESS-ing'. Phát âm 'biodiversity' rõ 5 âm tiết: /ˌbaɪ.oʊ.daɪˈvɜː.sɪ.ti/. Đọc cả câu như một luồng liền mạch, không nghỉ sau mỗi từ."
   }
 ];
+
 
 export function ShadowingPractice() {
   const [selectedId, setSelectedId] = useState<string>(SHADOWING_ITEMS[0].id);
