@@ -102,8 +102,8 @@ export default function RoadmapClient({ userCefrLevel, completedUnits }: Roadmap
   return (
     <div className="relative mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8 space-y-8 bg-grid-pattern min-h-screen">
       {/* Soft background ambient blurs */}
-      <div className="absolute top-10 left-10 -z-10 h-96 w-96 rounded-full bg-primary/5 blur-3xl" />
-      <div className="absolute bottom-20 right-10 -z-10 h-96 w-96 rounded-full bg-emerald-500/5 blur-3xl" />
+      <div className="absolute top-10 left-10 -z-10 h-96 w-[70vw] max-w-96 rounded-full bg-primary/5 blur-3xl" />
+      <div className="absolute bottom-20 right-10 -z-10 h-96 w-[70vw] max-w-96 rounded-full bg-emerald-500/5 blur-3xl" />
 
       {/* Header */}
       <motion.div
@@ -130,7 +130,7 @@ export default function RoadmapClient({ userCefrLevel, completedUnits }: Roadmap
       </motion.div>
 
       {/* Alternating Timeline Layout (Snake Path) */}
-      <div className="relative space-y-16 py-8">
+      <div className="relative space-y-8 sm:space-y-16 py-6 sm:py-8">
         {/* Draw Line in Background (Desktop only) */}
         <div className="absolute left-8 lg:left-1/2 lg:-translate-x-1/2 top-10 bottom-10 w-1 bg-foreground/[0.04] -z-10 rounded-full" />
 

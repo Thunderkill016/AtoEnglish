@@ -544,7 +544,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
           <div className="flex items-center justify-between mb-2">
             <div>
               <p className="text-xs text-zinc-500">{unit.level}</p>
-              <p className="text-sm font-semibold text-white">{unit.title}</p>
+              <p className="text-sm font-semibold text-white truncate max-w-[160px] sm:max-w-xs">{unit.title}</p>
             </div>
             <div className="text-right">
               <p className="text-xs text-zinc-500">Phần</p>
@@ -562,7 +562,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
           {/* Step labels */}
           <div className="flex justify-between mt-1.5">
             {SECTION_LABELS.map((label, i) => (
-              <span key={i} className={`text-[9px] ${i + 1 === section ? "text-emerald-400 font-bold" : i + 1 < section ? "text-emerald-600" : "text-zinc-600"}`}>
+              <span key={i} className={`text-[8px] hidden xs:block truncate max-w-[36px] text-center ${i + 1 === section ? "text-emerald-400 font-bold !block" : i + 1 < section ? "text-emerald-600 !block" : "text-zinc-600"}`}>
                 {label}
               </span>
             ))}
@@ -571,7 +571,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
       </div>
 
       {/* Content */}
-      <div className="max-w-3xl mx-auto px-4 py-8">
+      <div className="max-w-3xl mx-auto px-4 py-4 sm:py-8 pb-24">
         <AnimatePresence mode="wait">
 
           {/* ══ SECTION 1: Warm-up + Cultural Note ══ */}
@@ -588,7 +588,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
               {/* Situation cards */}
               <div className="grid gap-4 mb-8">
                 {unit.warmupGreetings.map((g, i) => (
-                  <div key={i} className="bg-white/5 border border-zinc-800/60 rounded-2xl p-5 flex items-center gap-5">
+                  <div key={i} className="bg-white/5 border border-zinc-800/60 rounded-2xl p-4 flex items-start gap-3">
                     <div className="text-5xl">{g.emoji}</div>
                     <div className="flex-1">
                       <p className="text-xs text-zinc-500 mb-1">{g.context}</p>

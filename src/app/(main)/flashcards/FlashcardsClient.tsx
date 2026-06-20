@@ -99,6 +99,7 @@ export default function FlashcardsPage() {
   };
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchCards();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -278,7 +279,7 @@ export default function FlashcardsPage() {
               <Layers className="size-3.5 animate-pulse" />
               Spaced Repetition (SRS)
             </span>
-            <h1 className="mt-1 text-3xl font-black tracking-tight text-foreground">
+            <h1 className="mt-1 text-2xl sm:text-3xl font-black tracking-tight text-foreground">
               Thẻ ôn tập thông minh
             </h1>
           </div>
@@ -362,7 +363,7 @@ export default function FlashcardsPage() {
                 dragConstraints={{ left: 0, right: 0 }}
                 onDragEnd={handleDragEnd}
                 whileDrag={{ scale: 1.02, cursor: "grabbing" }}
-                className="w-full max-w-md h-96 perspective-1000 cursor-grab relative z-10"
+                className="w-full max-w-md h-72 sm:h-96 perspective-1000 cursor-grab relative z-10"
               >
                 {/* Visual Feedback Overlays */}
                 <motion.div 
