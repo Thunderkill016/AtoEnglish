@@ -26,6 +26,10 @@ const FaqSection = dynamic(
   () => import("@/components/landing/FaqSection")
 );
 
+const TestimonialsSection = dynamic(
+  () => import("@/components/landing/TestimonialsSection")
+);
+
 const FinalCtaSection = dynamic(
   () => import("@/components/landing/FinalCtaSection")
 );
@@ -253,6 +257,7 @@ export default function LandingPage() {
 
         {/* Below-fold lazy sections — browser can defer rendering */}
         <div className="[content-visibility:auto] [contain-intrinsic-size:auto_800px]">
+          <TestimonialsSection />
           <FaqSection />
           <FinalCtaSection />
         </div>
