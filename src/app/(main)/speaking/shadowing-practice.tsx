@@ -467,7 +467,7 @@ export function ShadowingPractice() {
   return (
     <div className="space-y-6">
       {/* List selection */}
-      <div className="flex gap-2 overflow-x-auto pb-2.5 scrollbar-none snap-x snap-mandatory">
+      <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-none">
         {SHADOWING_ITEMS.map((item) => (
           <button
             key={item.id}

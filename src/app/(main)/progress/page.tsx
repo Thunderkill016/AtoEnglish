@@ -71,7 +71,7 @@ export default async function ProgressPage() {
   const totalSrs = Math.max(srsBoxes.reduce((s, b) => s + b.count, 0), 1);
 
   return (
-    <div className="relative mx-auto max-w-7xl px-4 py-5 sm:py-8 sm:px-6 lg:px-8 space-y-5 sm:space-y-8 min-h-screen">
+    <div className="relative mx-auto max-w-7xl px-4 py-5 sm:py-8 sm:px-6 lg:px-8 space-y-5 sm:space-y-8 min-h-screen overflow-x-hidden">
       {/* Ambient glow */}
       <div className="absolute top-1/3 left-1/4 -z-10 h-80 w-[60vw] max-w-80 rounded-full bg-primary/5 blur-3xl pointer-events-none" />
       <div className="absolute bottom-1/4 right-1/4 -z-10 h-80 w-[60vw] max-w-80 rounded-full bg-emerald-500/5 blur-3xl pointer-events-none" />

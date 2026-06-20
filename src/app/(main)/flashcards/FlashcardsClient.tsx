@@ -219,7 +219,7 @@ export default function FlashcardsPage() {
   // Loading state UI
   if (isLoading) {
     return (
-      <div className="relative mx-auto max-w-4xl px-4 py-8 sm:px-6 flex flex-col items-center justify-center min-h-[70vh] space-y-4">
+      <div className="relative mx-auto max-w-4xl px-4 py-6 sm:py-8 sm:px-6 flex flex-col items-center justify-center min-h-[60vh] space-y-4 overflow-x-hidden">
         <Loader2 className="size-10 text-primary animate-spin" />
         <p className="text-sm text-muted-foreground font-semibold">Đang tải thẻ đến hạn từ Supabase...</p>
       </div>
@@ -229,7 +229,7 @@ export default function FlashcardsPage() {
   // Empty state UI (No due cards)
   if (!isLoading && cards.length === 0) {
     return (
-      <div className="relative mx-auto max-w-4xl px-4 py-8 sm:px-6 flex flex-col items-center justify-center min-h-[75vh] space-y-6 text-center bg-grid-pattern">
+      <div className="relative mx-auto max-w-4xl px-4 py-6 sm:py-8 sm:px-6 flex flex-col items-center justify-center min-h-[65vh] space-y-6 text-center bg-grid-pattern overflow-x-hidden">
         <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 -z-10 h-80 w-80 rounded-full bg-primary/5 blur-3xl" />
         <div className="inline-flex size-16 items-center justify-center rounded-2xl bg-emerald-500/10 text-emerald-600">
           <CheckCircle className="size-8" />
@@ -263,7 +263,7 @@ export default function FlashcardsPage() {
   const progressPercentage = cards.length > 0 ? ((currentIndex + (isFlipped ? 0.5 : 0)) / cards.length) * 100 : 0;
 
   return (
-    <div className="relative mx-auto max-w-4xl px-4 py-8 sm:px-6 space-y-8 bg-grid-pattern min-h-screen">
+    <div className="relative mx-auto max-w-4xl px-4 py-5 sm:py-8 sm:px-6 space-y-5 sm:space-y-8 bg-grid-pattern min-h-screen overflow-x-hidden">
       {/* Background decoration */}
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 -z-10 h-80 w-80 rounded-full bg-primary/5 blur-3xl" />
 

@@ -186,6 +186,7 @@ export function AIRoleplay() {
 
   // Khởi động cuộc trò chuyện khi chọn Scenario
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/immutability
     startRoleplay();
     return () => {
       if (typeof window !== "undefined") {
@@ -205,6 +206,7 @@ export function AIRoleplay() {
     setRecognizedText("");
     setIsAiSpeaking(false);
     setIsListening(false);
+    // eslint-disable-next-line react-hooks/purity
     startTimeRef.current = Date.now();
     
     // Tự động phát câu chào đầu tiên của AI
@@ -353,7 +355,7 @@ export function AIRoleplay() {
   return (
     <div className="space-y-6">
       {/* Scenarios Header Tabs */}
-      <div className="flex gap-2 overflow-x-auto pb-2.5 scrollbar-none snap-x snap-mandatory">
+      <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-none">
         {ROLEPLAY_SCENARIOS.map((s) => (
           <button
             key={s.id}
@@ -370,7 +372,7 @@ export function AIRoleplay() {
       </div>
 
       {/* Main Interactive Chat Box */}
-      <div className="rounded-3xl border border-glass bg-glass p-6 sm:p-8 space-y-6 shadow-sm relative overflow-hidden flex flex-col min-h-[500px] justify-between">
+      <div className="rounded-3xl border border-glass bg-glass p-4 sm:p-8 space-y-4 shadow-sm relative overflow-hidden flex flex-col min-h-[400px] sm:min-h-[500px] justify-between">
         
         {/* Chat Header info */}
         <div className="flex items-center justify-between border-b border-foreground/[0.04] pb-4">
