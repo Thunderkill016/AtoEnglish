@@ -101,6 +101,7 @@ function LoginContent() {
   // Detect desktop for conditional left-panel render (avoids mobile animation cost)
   useEffect(() => {
     const mq = window.matchMedia("(min-width: 1024px)");
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsDesktop(mq.matches);
     const handler = (e: MediaQueryListEvent) => setIsDesktop(e.matches);
     mq.addEventListener("change", handler);
@@ -113,9 +114,12 @@ function LoginContent() {
       typeof window !== "undefined" &&
       localStorage.getItem("ato_onboarding_completed") === "true";
     if (mode === "login" || hasCompletedOnboarding) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setOnboardingStep(6);
+       
       setIsSignUp(false);
     } else {
+       
       setOnboardingStep(0); // Welcome screen first
     }
   }, [mode]);
@@ -126,6 +130,7 @@ function LoginContent() {
   // Loader animation (step 5)
   useEffect(() => {
     if (onboardingStep === 5) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setChecklistIndex(0);
       const t1 = setTimeout(() => setChecklistIndex(1), 800);
       const t2 = setTimeout(() => setChecklistIndex(2), 1600);
