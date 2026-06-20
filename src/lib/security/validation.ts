@@ -63,3 +63,35 @@ export const SpeakingSessionSchema = z.object({
     .optional(),
   scenarioId: z.string().nullable().optional(),
 });
+
+/**
+ * Schema for bulk-seeding unit vocabulary into FSRS after lesson completion.
+ * Max 30 items per call to prevent abuse.
+ */
+export const SeedVocabSchema = z.object({
+  vocab: z
+    .array(
+      z.object({
+        word: z.string().min(1).max(100).trim(),
+        phonetic: z.string().max(100).nullable().optional(),
+        meaning_vn: z.string().min(1).max(300).trim(),
+        example_en: z.string().max(500).nullable().optional(),
+      })
+    )
+    .min(1, "Cần ít nhất 1 từ vựng")
+    .max(30, "Tối đa 30 từ vựng mỗi lần"),
+  topic: z.string().max(60).trim().default("General"),
+  level: z.enum(["A1", "A2", "B1", "B2", "C1"]).default("A1"),
+});
+
+/**
+ * Schema for scheduling wrong words for early FSRS review.
+ * Sends rated "Again" to bring them back to the front of the queue.
+ */
+export const WrongWordsSchema = z.object({
+  words: z
+    .array(z.string().min(1).max(100).trim())
+    .min(1)
+    .max(30),
+});
+

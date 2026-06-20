@@ -23,7 +23,7 @@ import {
 } from "lucide-react";
 
 import { completeUnit, getUnitCompletionStatus } from "@/app/actions/progress";
-import { getDueWarmupCards, reviewCard } from "@/app/actions/cards";
+import { getDueWarmupCards, reviewCard, seedUnitVocabToSRS, scheduleWrongWordsForReview } from "@/app/actions/cards";
 import { toast } from "sonner";
 import { calcSpeechScore } from "@/lib/utils/speech";
 
@@ -487,6 +487,17 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
           next: res.newLevel,
         }));
       }
+      // ─ FSRS: auto-seed all unit vocab into the user's SRS deck (fire-and-forget) ─
+      void seedUnitVocabToSRS({
+        vocab: unit.vocab.map(v => ({
+          word: v.word,
+          phonetic: v.phonetic || null,
+          meaning_vn: v.meaning,
+          example_en: v.example || null,
+        })),
+        topic: unit.unitId,
+        level: (unit.level?.match(/A[12]|B[12]|C1/) ?? ["A1"])[0] as "A1" | "A2" | "B1" | "B2" | "C1",
+      });
     } else {
       toast.error(res.error || "Có lỗi xảy ra");
     }
@@ -524,6 +535,28 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
           : quizAnswers[q.id] !== q.answer
       )
     : [];
+
+  // FSRS: schedule wrong words for early review (fire-and-forget, runs once on quiz submit)
+  const wrongWordsRef = useRef<string[]>([]);
+  useEffect(() => {
+    if (!quizSubmitted || wrongQuestions.length === 0) return;
+    const words = wrongQuestions
+      .map(q => {
+        // Extract vocab words from question text — look for matches in unit.vocab
+        const match = unit.vocab.find(v =>
+          q.question.toLowerCase().includes(v.word.toLowerCase()) ||
+          (q.options ?? []).some(o => o.toLowerCase() === v.word.toLowerCase()) ||
+          q.answer.toLowerCase() === v.word.toLowerCase()
+        );
+        return match?.word ?? null;
+      })
+      .filter((w): w is string => !!w);
+    const newWords = words.filter(w => !wrongWordsRef.current.includes(w));
+    if (!newWords.length) return;
+    wrongWordsRef.current = [...wrongWordsRef.current, ...newWords];
+    void scheduleWrongWordsForReview(newWords);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [quizSubmitted]);
 
   // Retry score and bonus (up to +10 points)
   const retryCorrectCount = retrySubmitted

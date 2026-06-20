@@ -6,10 +6,12 @@ import { reviewCardFSRS } from "@/lib/srs/fsrs";
 import { Card } from "@/types/database";
 import { headers } from "next/headers";
 import { createRateLimiter } from "@/lib/security/rate-limit";
-import { SaveCardSchema, ReviewCardSchema } from "@/lib/security/validation";
+import { SaveCardSchema, ReviewCardSchema, SeedVocabSchema, WrongWordsSchema } from "@/lib/security/validation";
 
 const saveCardLimiter = createRateLimiter(60, 60 * 1000, "save-card");
 const reviewCardLimiter = createRateLimiter(60, 60 * 1000, "review-card");
+const seedVocabLimiter = createRateLimiter(20, 60 * 1000, "seed-vocab");
+const wrongWordsLimiter = createRateLimiter(30, 60 * 1000, "wrong-words");
 
 interface SaveCardParams {
   word: string;
@@ -371,5 +373,160 @@ export async function getCardTopics() {
     return { success: true, topics };
   } catch {
     return { success: false, topics: [] };
+  }
+}
+
+/**
+ * Tự động thêm toàn bộ từ vựng của một unit vào FSRS sau khi hoàn thành bài học.
+ * Bỏ qua từ đã tồn tại (ON CONFLICT DO NOTHING). Fire-and-forget friendly.
+ */
+export async function seedUnitVocabToSRS(params: {
+  vocab: Array<{ word: string; phonetic?: string | null; meaning_vn: string; example_en?: string | null }>;
+  topic: string;
+  level?: "A1" | "A2" | "B1" | "B2" | "C1";
+}) {
+  try {
+    const reqHeaders = await headers();
+    const ip = reqHeaders.get("x-forwarded-for")?.split(",")[0].trim() || "127.0.0.1";
+    const rateLimitCheck = await seedVocabLimiter.check(ip);
+    if (!rateLimitCheck.success) return { success: false, added: 0 };
+
+    const validated = SeedVocabSchema.safeParse(params);
+    if (!validated.success) return { success: false, added: 0 };
+    const { vocab, topic, level } = validated.data;
+
+    const supabase = await createClient();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    if (authError || !user) return { success: false, added: 0 };
+
+    const now = new Date().toISOString();
+
+    // Build batch insert rows — unique per (user_id, word)
+    const rows = vocab.map(v => ({
+      user_id: user.id,
+      word: v.word.toLowerCase().trim(),
+      phonetic: v.phonetic ?? null,
+      meaning_vn: v.meaning_vn,
+      example_en: v.example_en ?? null,
+      topic,
+      level: level ?? "A1",
+      interval: 0,
+      repetitions: 0,
+      due_date: now,
+      state: 0,
+      difficulty: 0.0,
+      stability: 0.0,
+      last_review: null,
+      next_review: now,
+    }));
+
+    // upsert with ignoreDuplicates — skip words already in the user's deck
+    const { error } = await supabase
+      .from("cards")
+      .upsert(rows, { onConflict: "user_id,word", ignoreDuplicates: true });
+
+    if (error) return { success: false, added: 0 };
+
+    revalidatePath("/flashcards");
+    revalidatePath("/dashboard");
+    return { success: true, added: rows.length };
+  } catch {
+    return { success: false, added: 0 };
+  }
+}
+
+/**
+ * Khi người dùng trả lời sai trong quiz/scramble/translate,
+ * tìm card tương ứng và đánh giá lại với rating "Again" → đẩy lên đầu hàng ôn tập.
+ */
+export async function scheduleWrongWordsForReview(words: string[]) {
+  try {
+    if (!words.length) return { success: true, updated: 0 };
+
+    const reqHeaders = await headers();
+    const ip = reqHeaders.get("x-forwarded-for")?.split(",")[0].trim() || "127.0.0.1";
+    const rateLimitCheck = await wrongWordsLimiter.check(ip);
+    if (!rateLimitCheck.success) return { success: false, updated: 0 };
+
+    const validated = WrongWordsSchema.safeParse({ words });
+    if (!validated.success) return { success: false, updated: 0 };
+    const cleanWords = validated.data.words.map(w => w.toLowerCase().trim());
+
+    const supabase = await createClient();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    if (authError || !user) return { success: false, updated: 0 };
+
+    // Fetch matching cards from user's deck
+    const { data: cards, error: fetchErr } = await supabase
+      .from("cards")
+      .select("id, interval, repetitions, state, difficulty, stability, last_review, next_review, due_date")
+      .eq("user_id", user.id)
+      .in("word", cleanWords);
+
+    if (fetchErr || !cards?.length) return { success: true, updated: 0 };
+
+    // Apply FSRS "Again" rating to each card and bulk update
+    const now = new Date().toISOString();
+    const updates = cards.map(card => {
+      const fsrsResult = reviewCardFSRS(card as unknown as Card, "Again");
+      return {
+        id: card.id,
+        user_id: user.id,
+        state: fsrsResult.state,
+        difficulty: fsrsResult.difficulty,
+        stability: fsrsResult.stability,
+        last_review: fsrsResult.last_review,
+        next_review: fsrsResult.next_review,
+        interval: fsrsResult.interval,
+        repetitions: fsrsResult.repetitions,
+        due_date: now, // Due immediately for re-review
+      };
+    });
+
+    // Update each card's FSRS fields individually (update, not upsert, to avoid required-field violations)
+    const updateResults = await Promise.all(
+      updates.map(u =>
+        supabase
+          .from("cards")
+          .update({
+            state: u.state,
+            difficulty: u.difficulty,
+            stability: u.stability,
+            last_review: u.last_review,
+            next_review: u.next_review,
+            interval: u.interval,
+            repetitions: u.repetitions,
+            due_date: u.due_date,
+          })
+          .eq("id", u.id)
+          .eq("user_id", user.id)
+      )
+    );
+
+    if (updateResults.some(r => r.error)) return { success: false, updated: 0 };
+
+    // Fire-and-forget: insert review logs for each card (best-effort)
+    void supabase.from("card_review_logs").insert(
+      cards.map(card => {
+        const fsrsResult = reviewCardFSRS(card as unknown as Card, "Again");
+        return {
+          user_id: user.id,
+          card_id: card.id,
+          rating: fsrsResult.reviewLog.rating,
+          state: fsrsResult.reviewLog.state,
+          due: fsrsResult.reviewLog.due,
+          stability: fsrsResult.reviewLog.stability,
+          difficulty: fsrsResult.reviewLog.difficulty,
+          elapsed_days: fsrsResult.reviewLog.elapsed_days,
+          scheduled_days: fsrsResult.reviewLog.scheduled_days,
+          review: fsrsResult.reviewLog.review,
+        };
+      })
+    );
+
+    revalidatePath("/flashcards");
+    return { success: true, updated: updates.length };
+  } catch {
+    return { success: false, updated: 0 };
   }
 }
