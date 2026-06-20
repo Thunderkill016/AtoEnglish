@@ -156,6 +156,42 @@ export const unit4: UnitData = {
     level2Situation: "Hãy chia sẻ quan điểm của bạn về lợi ích của trí tuệ nhân tạo đối với việc học tập.",
     level2Hint: "AI is very useful. It helps me translate sentences and practice English speaking anytime."
   },
+
+  grammar: {
+    title: "Modal Verbs — Động từ khuyết thiếu",
+    rule: "Subject + modal (can/should/must/will) + verb (base form)",
+    conjugation: [
+      { subject: "can", form: "khả năng / cho phép", example: "AI can translate languages instantly." },
+      { subject: "should", form: "lời khuyên", example: "We should protect our data." },
+      { subject: "must", form: "bắt buộc / mạnh", example: "Developers must consider ethics." },
+      { subject: "will", form: "tương lai", example: "Technology will change our lives." },
+    ],
+    examples: [
+      { en: "You can use AI to learn faster.", vn: "Bạn có thể dùng AI để học nhanh hơn." },
+      { en: "We should discuss the ethics of AI.", vn: "Chúng ta nên thảo luận về đạo đức của AI." },
+      { en: "Companies must protect user data.", vn: "Các công ty phải bảo vệ dữ liệu người dùng." },
+      { en: "AI will revolutionize healthcare.", vn: "AI sẽ cách mạng hóa ngành y tế." },
+    ],
+    tip: "Sau modal verb, LUÔN dùng động từ nguyên thể (base form). Không nói 'can changes' — phải là 'can change'.",
+  },
+
+  matchingExercise: {
+    title: "Nối từ công nghệ với nghĩa tiếng Việt",
+    pairs: [
+      { left: "Algorithm", right: "Thuật toán" },
+      { left: "Security", right: "Bảo mật" },
+      { left: "Ethics", right: "Đạo đức" },
+      { left: "Integrate", right: "Tích hợp" },
+      { left: "Revolutionize", right: "Cách mạng hóa" },
+    ],
+  },
+
+  practiceQuiz: [
+    { id: "pq1", question: "Chọn modal verb đúng: 'We ___ discuss the ethics of AI.' (lời khuyên)", options: ["can", "should", "must", "will"], answer: "should", type: "multiple-choice" },
+    { id: "pq2", question: "Sau modal verb, động từ ở dạng nào?", options: ["V-ing", "V-ed", "Base form", "V-s"], answer: "Base form", type: "multiple-choice" },
+    { id: "pq3", question: "Điền từ còn thiếu: 'AI ___ translate any language.' (khả năng)", options: [], answer: "can", type: "cloze" },
+  ],
+
   quiz: [
     {
       id: "q1",
@@ -173,17 +209,17 @@ export const unit4: UnitData = {
     },
     {
       id: "q3",
-      question: "Từ nào có nghĩa là 'Cách mạng hóa'?",
-      options: ["Revolutionize", "Integrate", "Confine", "Discuss"],
-      answer: "Revolutionize",
+      question: "Chọn câu đúng với modal verb:",
+      options: ["AI can changes our lives.", "AI can change our lives.", "AI cans change our lives.", "AI can changing our lives."],
+      answer: "AI can change our lives.",
       type: "multiple-choice"
     },
     {
       id: "q4",
-      question: "Điền từ còn thiếu: 'Data ___ is crucial for internet users.'",
-      options: ["security", "ethics", "algorithm", "fabric"],
-      answer: "security",
-      type: "multiple-choice"
+      question: "Điền từ còn thiếu: 'Companies ___ protect user data.' (bắt buộc)",
+      options: [],
+      answer: "must",
+      type: "cloze"
     },
     {
       id: "q5",

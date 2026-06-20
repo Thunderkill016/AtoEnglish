@@ -18,6 +18,8 @@ import {
   Star,
   Eye,
   EyeOff,
+  BookMarked,
+  Shuffle,
 } from "lucide-react";
 
 import { completeUnit, getUnitCompletionStatus } from "@/app/actions/progress";
@@ -30,16 +32,20 @@ function getSpeechRecognition(): typeof SpeechRecognition | null {
   return window.SpeechRecognition ?? window.webkitSpeechRecognition ?? null;
 }
 
+// ─── Section labels (8 steps) ───────────────────────────────────────────────
 const SECTION_LABELS = [
   "Khởi động",
   "Từ vựng",
+  "Ngữ pháp",
   "Luyện tập",
   "Nghe hiểu",
   "Shadowing",
   "Luyện nói",
   "Hoàn thành",
 ];
+const TOTAL_SECTIONS = 8;
 
+// ─── Interfaces ──────────────────────────────────────────────────────────────
 export interface VocabItem {
   id: number;
   word: string;
@@ -87,10 +93,37 @@ export interface QuizQuestion {
 }
 
 export interface SpeakingData {
-  level1Prompt: string; // e.g. "Hello! My name is {input}."
-  level1Placeholder: string; // e.g. "Nhập tên của bạn..."
-  level2Situation: string; // e.g. "Bạn gặp một người nước ngoài lần đầu. Hãy chào và giới thiệu bản thân."
-  level2Hint: string; // e.g. "Hello! My name is [tên bạn]. I'm from Vietnam. Nice to meet you!"
+  level1Prompt: string;
+  level1Placeholder: string;
+  level2Situation: string;
+  level2Hint: string;
+}
+
+/** Grammar point for PPP Presentation stage */
+export interface GrammarPoint {
+  title: string;           // e.g. "To be — Động từ 'là'"
+  rule: string;            // e.g. "I am / You are / He/She/It is"
+  conjugation?: Array<{   // Optional: subject + verb conjugation table
+    subject: string;
+    form: string;
+    example: string;
+  }>;
+  examples: Array<{
+    en: string;
+    vn: string;
+  }>;
+  tip?: string;            // Quick usage tip (Vietnamese)
+}
+
+/** Matching exercise: word ↔ meaning pairs */
+export interface MatchingPair {
+  left: string;  // English word/phrase
+  right: string; // Vietnamese meaning
+}
+
+export interface MatchingExercise {
+  title?: string;
+  pairs: MatchingPair[]; // 4-6 pairs recommended
 }
 
 export interface UnitData {
@@ -105,10 +138,13 @@ export interface UnitData {
   warmupGreetings: WarmupGreeting[];
   culturalNote: string;
   vocab: VocabItem[];
+  grammar?: GrammarPoint;          // NEW: Grammar presentation (PPP stage 2)
+  matchingExercise?: MatchingExercise; // NEW: Matching exercise in practice
+  practiceQuiz?: QuizQuestion[];   // NEW: Separate quiz for practice section
   dialogues: Dialogue[];
   listenAndChoose: ListenAndChooseItem[];
   speaking: SpeakingData;
-  quiz: QuizQuestion[];
+  quiz: QuizQuestion[];            // Final review quiz
 }
 
 interface UnitTemplateProps {
@@ -117,7 +153,7 @@ interface UnitTemplateProps {
 }
 
 export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTemplateProps) {
-  const [section, setSection] = useState(1); // 1–7
+  const [section, setSection] = useState(1);
   const [isCompleted, setIsCompleted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -125,18 +161,24 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
   const [flippedCards, setFlippedCards] = useState<Set<number>>(new Set());
   const [seenCards, setSeenCards] = useState<Set<number>>(new Set());
 
-  // Section 3 — Practice (interleaved exercises)
+  // Section 4 — Practice (MC + cloze + matching)
   const [practiceAnswers, setPracticeAnswers] = useState<Record<string, string>>({});
+  const [clozeInputs, setClozeInputs] = useState<Record<string, string>>({});
   const [practiceSubmitted, setPracticeSubmitted] = useState(false);
+  // Matching state
+  const [matchLeft, setMatchLeft] = useState<string | null>(null);
+  const [matchedPairs, setMatchedPairs] = useState<Set<string>>(new Set());
+  const [wrongMatch, setWrongMatch] = useState<string | null>(null);
+  const [shuffledRight, setShuffledRight] = useState<string[]>([]);
 
-  // Section 4 — Listening
+  // Section 5 — Listening
   const [selectedDialogue, setSelectedDialogue] = useState(0);
   const [showTranscript, setShowTranscript] = useState(false);
   const [isPlayingDialogue, setIsPlayingDialogue] = useState(false);
   const [lacAnswers, setLacAnswers] = useState<Record<number, string>>({});
   const [lacSubmitted, setLacSubmitted] = useState(false);
 
-  // Section 5 — Shadowing
+  // Section 6 — Shadowing
   const [shadowLineIdx, setShadowLineIdx] = useState(0);
   const [shadowSpeed, setShadowSpeed] = useState(1.0);
   const [shadowScores, setShadowScores] = useState<Record<number, number>>({});
@@ -145,36 +187,52 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
   const [isRecognizing, setIsRecognizing] = useState(false);
   const [shadowDone, setShadowDone] = useState(false);
 
-  // Section 6 — Speaking
+  // Section 7 — Speaking
   const [nameInput, setNameInput] = useState("");
   const [level1Done, setLevel1Done] = useState(false);
   const [level2Transcript, setLevel2Transcript] = useState("");
   const [level2Recording, setLevel2Recording] = useState(false);
+  const [level2Score, setLevel2Score] = useState<number | null>(null);
   const [level2Done, setLevel2Done] = useState(false);
   const [showHint, setShowHint] = useState(false);
 
-  // Section 7 — Quiz
+  // Section 8 — Final Quiz
   const [quizAnswers, setQuizAnswers] = useState<Record<string, string>>({});
+  const [quizClozeInputs, setQuizClozeInputs] = useState<Record<string, string>>({});
   const [quizSubmitted, setQuizSubmitted] = useState(false);
 
   const recognitionRef = useRef<SpeechRecognition | null>(null);
 
+  // ─── Derived data ─────────────────────────────────────────────────────────
   const VOCAB_LIMIT = Math.min(unit.vocab.length, 8);
   const VOCAB_DISPLAY = unit.vocab.slice(0, VOCAB_LIMIT);
   const DIALOGUES = unit.dialogues;
   const LISTEN_CHOOSE = unit.listenAndChoose;
-  const QUIZ_QUESTIONS = unit.quiz.slice(0, 5).filter(q => q.type === "multiple-choice");
+
+  // Practice quiz: use dedicated practiceQuiz if provided, else first 3 of quiz
+  const PRACTICE_QS = unit.practiceQuiz ?? unit.quiz.slice(0, 3);
+  // Final quiz: all quiz questions (supports both MC and cloze)
+  const FINAL_QS = unit.quiz;
+
+  // Shuffle matching pairs when unit changes
+  useEffect(() => {
+    if (unit.matchingExercise) {
+      const rights = unit.matchingExercise.pairs.map(p => p.right);
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setShuffledRight([...rights].sort(() => Math.random() - 0.5));
+    }
+  }, [unit.matchingExercise]);
 
   useEffect(() => {
     getUnitCompletionStatus(unit.unitId).then(res => {
       if (res.success && res.completed) setIsCompleted(true);
     });
-    // Restore lesson progress from localStorage
     try {
       const saved = localStorage.getItem(`lesson-progress-${unit.unitId}`);
       if (saved) {
         const { section: savedSection } = JSON.parse(saved) as { section: number };
-        if (savedSection > 1 && savedSection < 7) setSection(savedSection);
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        if (savedSection > 1 && savedSection < TOTAL_SECTIONS) setSection(savedSection);
       }
     } catch { /* ignore */ }
   }, [unit.unitId]);
@@ -183,16 +241,15 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
     return () => { window.speechSynthesis?.cancel(); };
   }, []);
 
-  // Persist lesson progress to localStorage
   useEffect(() => {
-    if (section > 1 && section < 7) {
+    if (section > 1 && section < TOTAL_SECTIONS) {
       localStorage.setItem(`lesson-progress-${unit.unitId}`, JSON.stringify({ section }));
-    } else if (section >= 7) {
+    } else if (section >= TOTAL_SECTIONS) {
       localStorage.removeItem(`lesson-progress-${unit.unitId}`);
     }
   }, [section, unit.unitId]);
 
-  // ── TTS ──────────────────────────────────────────────
+  // ─── TTS ─────────────────────────────────────────────────────────────────
   const playTTS = (text: string, rate = 0.85) => {
     if (!window.speechSynthesis) { toast.error("Trình duyệt không hỗ trợ TTS"); return; }
     window.speechSynthesis.cancel();
@@ -202,16 +259,16 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
     window.speechSynthesis.speak(u);
   };
 
-  // ── Sound feedback (Web Audio API) ────────────────────
+  // ─── Sound feedback ───────────────────────────────────────────────────────
   const playCorrectSound = () => {
     try {
       const ctx = new AudioContext();
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
       osc.connect(gain); gain.connect(ctx.destination);
-      osc.frequency.setValueAtTime(523, ctx.currentTime);   // C5
-      osc.frequency.setValueAtTime(659, ctx.currentTime + 0.1); // E5
-      osc.frequency.setValueAtTime(784, ctx.currentTime + 0.2); // G5
+      osc.frequency.setValueAtTime(523, ctx.currentTime);
+      osc.frequency.setValueAtTime(659, ctx.currentTime + 0.1);
+      osc.frequency.setValueAtTime(784, ctx.currentTime + 0.2);
       gain.gain.setValueAtTime(0.3, ctx.currentTime);
       gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.5);
       osc.start(); osc.stop(ctx.currentTime + 0.5);
@@ -251,7 +308,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
     playNext();
   };
 
-  // ── Speech Recognition ────────────────────────────────
+  // ─── Speech Recognition ───────────────────────────────────────────────────
   const startRecognition = (onResult: (text: string) => void) => {
     const SpeechRecognitionAPI = getSpeechRecognition();
     if (!SpeechRecognitionAPI) { toast.error("Trình duyệt không hỗ trợ nhận diện giọng nói"); return; }
@@ -267,15 +324,13 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
     rec.start();
   };
 
-  const calcScore = calcSpeechScore;
-
-  // ── Section 4: Shadowing ──────────────────────────────
+  // ─── Shadowing handlers ───────────────────────────────────────────────────
   const handleShadowRecord = () => {
     if (DIALOGUES.length === 0) return;
     const targetLine = DIALOGUES[0].lines[shadowLineIdx];
     setIsRecording(true);
     startRecognition((text) => {
-      const score = calcScore(targetLine.text, text);
+      const score = calcSpeechScore(targetLine.text, text);
       setShadowScores(p => ({ ...p, [shadowLineIdx]: score }));
       setShadowTranscripts(p => ({ ...p, [shadowLineIdx]: text }));
       setIsRecording(false);
@@ -294,17 +349,52 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
     }
   };
 
-  // ── Section 5: Speaking ───────────────────────────────
+  // ─── Level 2 speaking handler ─────────────────────────────────────────────
   const handleLevel2Record = () => {
     setLevel2Recording(true);
     setLevel2Transcript("");
+    setLevel2Score(null);
     startRecognition((text) => {
       setLevel2Transcript(text);
       setLevel2Recording(false);
+      // Score against the hint text (strips HTML tags)
+      const hintText = unit.speaking.level2Hint.replace(/<[^>]*>/g, "");
+      const score = calcSpeechScore(hintText, text);
+      setLevel2Score(score);
     });
   };
 
-  // ── Section 6: Complete ───────────────────────────────
+  // ─── Matching handler ─────────────────────────────────────────────────────
+  const handleMatchSelect = (side: "left" | "right", value: string) => {
+    if (matchedPairs.has(value)) return;
+    if (side === "left") {
+      setMatchLeft(value);
+      setWrongMatch(null);
+    } else {
+      // right side selected — try to match
+      if (!matchLeft) return;
+      const pairs = unit.matchingExercise!.pairs;
+      const pair = pairs.find(p => p.left === matchLeft);
+      if (pair && pair.right === value) {
+        // Correct match
+        setMatchedPairs(prev => {
+          const next = new Set(prev);
+          next.add(matchLeft!);
+          next.add(value);
+          return next;
+        });
+        setMatchLeft(null);
+        playCorrectSound();
+      } else {
+        // Wrong match
+        setWrongMatch(value);
+        playWrongSound();
+        setTimeout(() => { setWrongMatch(null); setMatchLeft(null); }, 800);
+      }
+    }
+  };
+
+  // ─── Complete handler ──────────────────────────────────────────────────────
   const handleCompleteUnit = async () => {
     setIsSubmitting(true);
     confetti({ particleCount: 150, spread: 100, origin: { y: 0.5 } });
@@ -312,7 +402,6 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
     if (res.success) {
       setIsCompleted(true);
       toast.success(`🎉 Chúc mừng! Bạn nhận được ${unit.xp} XP!`);
-      // If server promoted the user's CEFR level, store for dashboard modal
       if (res.previousLevel && res.newLevel && res.previousLevel !== res.newLevel) {
         localStorage.setItem("pending-level-up", JSON.stringify({
           prev: res.previousLevel,
@@ -325,16 +414,39 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
     setIsSubmitting(false);
   };
 
-  // ── Quiz score ────────────────────────────────────────
-  const quizScore = QUIZ_QUESTIONS.filter(q => quizAnswers[q.id] === q.answer).length;
+  // ─── Score calculations ───────────────────────────────────────────────────
+  // Final quiz score (MC + cloze)
+  const finalQuizScore = FINAL_QS.filter(q => {
+    if (q.type === "cloze") {
+      return (quizClozeInputs[q.id] ?? "").trim().toLowerCase() === q.answer.toLowerCase();
+    }
+    return quizAnswers[q.id] === q.answer;
+  }).length;
 
-  // ── Progress bar % ────────────────────────────────────
-  const progress = Math.round(((section - 1) / 6) * 100);
+  // LAC score
+  const lacScore = LISTEN_CHOOSE.filter((item, i) => lacAnswers[i] === item.answer).length;
 
-  // ── Navigation ────────────────────────────────────────
+  // Shadowing average
+  const shadowValues = Object.values(shadowScores);
+  const shadowAvg = shadowValues.length > 0
+    ? Math.round(shadowValues.reduce((a, b) => a + b, 0) / shadowValues.length)
+    : 0;
+
+  // Weighted performance score (0-100)
+  const lacPct = LISTEN_CHOOSE.length > 0 ? (lacScore / LISTEN_CHOOSE.length) * 100 : 100;
+  const quizPct = FINAL_QS.length > 0 ? (finalQuizScore / FINAL_QS.length) * 100 : 100;
+  const overallScore = Math.round((lacPct * 0.3) + (shadowAvg * 0.3) + (quizPct * 0.4));
+
+  // Performance-based stars (1-3)
+  const starCount = overallScore >= 85 ? 3 : overallScore >= 60 ? 2 : 1;
+
+  // ─── Progress bar ─────────────────────────────────────────────────────────
+  const progress = Math.round(((section - 1) / (TOTAL_SECTIONS - 1)) * 100);
+
+  // ─── Navigation ───────────────────────────────────────────────────────────
   const goNext = () => {
     window.speechSynthesis?.cancel();
-    setSection(s => Math.min(s + 1, 7));
+    setSection(s => Math.min(s + 1, TOTAL_SECTIONS));
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
@@ -346,6 +458,24 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
 
   const formattedL1Prompt = unit.speaking.level1Prompt.replace("{input}", nameInput || "______");
 
+  // ─── Practice section helpers ─────────────────────────────────────────────
+  const practiceScore = PRACTICE_QS.filter(q => {
+    if (q.type === "cloze") {
+      return (clozeInputs[q.id] ?? "").trim().toLowerCase() === q.answer.toLowerCase();
+    }
+    return practiceAnswers[q.id] === q.answer;
+  }).length;
+
+  const allPracticeAnswered = PRACTICE_QS.every(q => {
+    if (q.type === "cloze") return (clozeInputs[q.id] ?? "").trim().length > 0;
+    return !!practiceAnswers[q.id];
+  });
+
+  const matchingDone = unit.matchingExercise
+    ? matchedPairs.size === unit.matchingExercise.pairs.length * 2
+    : true;
+
+  // ─── JSX ──────────────────────────────────────────────────────────────────
   return (
     <div className="min-h-screen bg-gradient-to-br from-zinc-950 via-zinc-900 to-emerald-950/20">
       {/* Header */}
@@ -358,7 +488,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
             </div>
             <div className="text-right">
               <p className="text-xs text-zinc-500">Phần</p>
-              <p className="text-sm font-bold text-emerald-400">{section}/7</p>
+              <p className="text-sm font-bold text-emerald-400">{section}/{TOTAL_SECTIONS}</p>
             </div>
           </div>
           {/* Progress bar */}
@@ -372,7 +502,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
           {/* Step labels */}
           <div className="flex justify-between mt-1.5">
             {SECTION_LABELS.map((label, i) => (
-              <span key={i} className={`text-[10px] ${i + 1 === section ? "text-emerald-400 font-bold" : i + 1 < section ? "text-emerald-600" : "text-zinc-600"}`}>
+              <span key={i} className={`text-[9px] ${i + 1 === section ? "text-emerald-400 font-bold" : i + 1 < section ? "text-emerald-600" : "text-zinc-600"}`}>
                 {label}
               </span>
             ))}
@@ -383,6 +513,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
       {/* Content */}
       <div className="max-w-3xl mx-auto px-4 py-8">
         <AnimatePresence mode="wait">
+
           {/* ══ SECTION 1: Warm-up + Cultural Note ══ */}
           {section === 1 && (
             <motion.div key="s1" variants={sectionVariants} initial="initial" animate="animate" exit="exit" transition={{ duration: 0.3 }}>
@@ -467,7 +598,6 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                           return n;
                         });
                         setSeenCards(p => { const n = new Set(p); n.add(i); return n; });
-                        // Auto-speak when flipping to front
                         if (isNowFlipped) playTTS(v.word, 0.85);
                       }}
                       className="cursor-pointer"
@@ -475,13 +605,14 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                     >
                       <div style={{ transition: "transform 0.5s", transformStyle: "preserve-3d", transform: isFlipped ? "rotateY(180deg)" : "rotateY(0deg)", position: "relative", minHeight: "120px" }}>
                         {/* Front */}
-                        <div className="absolute inset-0 bg-white/5 border border-zinc-700/60 rounded-2xl p-4 flex flex-col justify-between backface-hidden" style={{ backfaceVisibility: "hidden" }}>
+                        <div className="absolute inset-0 bg-white/5 border border-zinc-700/60 rounded-2xl p-4 flex flex-col justify-between" style={{ backfaceVisibility: "hidden" }}>
                           <p className="text-white font-bold text-base">{v.word}</p>
                           <p className="text-zinc-500 text-xs">{v.phonetic}</p>
                           <div className="flex justify-between items-center">
                             <p className="text-[10px] text-zinc-600">Nhấn để xem nghĩa</p>
                             <button
                               onClick={e => { e.stopPropagation(); playTTS(v.word); }}
+                              aria-label={`Nghe: ${v.word}`}
                               className="p-1.5 rounded-lg bg-emerald-600/20 hover:bg-emerald-600/40 text-emerald-400 transition-colors"
                             >
                               <Volume2 size={14} />
@@ -512,30 +643,145 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
             </motion.div>
           )}
 
-          {/* ══ SECTION 3: Practice Exercises (interleaved) ══ */}
-          {section === 3 && (() => {
-            const PRACTICE_QS = QUIZ_QUESTIONS.slice(0, 3);
-            const practiceScore = PRACTICE_QS.filter(q => practiceAnswers[q.id] === q.answer).length;
-            const allAnswered = PRACTICE_QS.every(q => practiceAnswers[q.id]);
+          {/* ══ SECTION 3: Grammar (PPP Presentation) ══ */}
+          {section === 3 && (
+            <motion.div key="s3" variants={sectionVariants} initial="initial" animate="animate" exit="exit" transition={{ duration: 0.3 }}>
+              <div className="flex items-center gap-2 mb-2">
+                <BookMarked className="text-teal-400" size={22} />
+                <h1 className="text-2xl font-black text-white">Ngữ pháp</h1>
+                <span className="text-xs text-zinc-500 ml-auto">~4 phút</span>
+              </div>
+              <p className="text-zinc-400 mb-6 text-sm">Hiểu cấu trúc ngữ pháp giúp bạn dùng từ đúng trong ngữ cảnh thực tế.</p>
+
+              {unit.grammar ? (
+                <div className="space-y-5">
+                  {/* Grammar card */}
+                  <div className="bg-teal-950/30 border border-teal-700/40 rounded-2xl p-6">
+                    <div className="flex items-center gap-2 mb-4">
+                      <span className="text-xl">📐</span>
+                      <h2 className="text-lg font-black text-teal-300">{unit.grammar.title}</h2>
+                    </div>
+
+                    {/* Rule box */}
+                    <div className="bg-zinc-900/60 border border-zinc-700/40 rounded-xl p-4 mb-5 font-mono">
+                      <p className="text-emerald-300 text-sm font-bold">{unit.grammar.rule}</p>
+                    </div>
+
+                    {/* Conjugation table (if provided) */}
+                    {unit.grammar.conjugation && (
+                      <div className="mb-5">
+                        <p className="text-xs text-zinc-500 font-bold uppercase tracking-widest mb-3">Chia động từ</p>
+                        <div className="grid gap-2">
+                          {unit.grammar.conjugation.map((row, i) => (
+                            <div key={i} className="flex items-center gap-3 bg-zinc-800/40 rounded-xl px-4 py-2.5">
+                              <span className="text-zinc-400 text-sm w-20 font-semibold">{row.subject}</span>
+                              <span className="text-emerald-400 font-bold text-sm w-16">{row.form}</span>
+                              <span className="text-zinc-300 text-sm italic flex-1">{row.example}</span>
+                              <button
+                                onClick={() => playTTS(row.example)}
+                                aria-label={`Nghe ví dụ: ${row.example}`}
+                                className="p-1.5 rounded-lg bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-400 transition-colors shrink-0"
+                              >
+                                <Volume2 size={13} />
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Examples */}
+                    <div className="space-y-3 mb-4">
+                      <p className="text-xs text-zinc-500 font-bold uppercase tracking-widest">Ví dụ</p>
+                      {unit.grammar.examples.map((ex, i) => (
+                        <div key={i} className="bg-zinc-800/40 rounded-xl px-4 py-3 flex items-start justify-between gap-3">
+                          <div>
+                            <p className="text-white font-semibold text-sm">{ex.en}</p>
+                            <p className="text-zinc-400 text-xs mt-0.5">{ex.vn}</p>
+                          </div>
+                          <button
+                            onClick={() => playTTS(ex.en)}
+                            aria-label={`Nghe ví dụ: ${ex.en}`}
+                            className="p-1.5 rounded-lg bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-400 transition-colors shrink-0"
+                          >
+                            <Volume2 size={13} />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Tip */}
+                    {unit.grammar.tip && (
+                      <div className="border-l-4 border-teal-500 bg-teal-950/20 rounded-r-xl p-3">
+                        <p className="text-xs font-bold text-teal-400 mb-1">💡 Mẹo nhớ</p>
+                        <p className="text-zinc-300 text-sm">{unit.grammar.tip}</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ) : (
+                <div className="bg-zinc-800/40 border border-zinc-700/40 rounded-2xl p-8 text-center">
+                  <p className="text-zinc-500 text-sm">Bài học này không có phần ngữ pháp riêng.</p>
+                </div>
+              )}
+
+              <button onClick={goNext} className="mt-6 w-full bg-teal-600 hover:bg-teal-500 text-white font-bold rounded-xl px-6 py-4 flex items-center justify-center gap-2 transition-colors text-lg">
+                Luyện tập ngay <ChevronRight size={20} />
+              </button>
+            </motion.div>
+          )}
+
+          {/* ══ SECTION 4: Practice (MC + cloze + matching) ══ */}
+          {section === 4 && (() => {
             return (
-              <motion.div key="s3-practice" variants={sectionVariants} initial="initial" animate="animate" exit="exit" transition={{ duration: 0.3 }}>
+              <motion.div key="s4-practice" variants={sectionVariants} initial="initial" animate="animate" exit="exit" transition={{ duration: 0.3 }}>
                 <div className="flex items-center gap-2 mb-2">
                   <span className="text-2xl">⚡</span>
-                  <h1 className="text-2xl font-black text-white">Luyện tập nhanh</h1>
-                  <span className="text-xs text-zinc-500 ml-auto">~3 phút</span>
+                  <h1 className="text-2xl font-black text-white">Luyện tập</h1>
+                  <span className="text-xs text-zinc-500 ml-auto">~4 phút</span>
                 </div>
-                <p className="text-zinc-400 mb-6 text-sm">Kiểm tra nhanh những gì bạn vừa học. Chọn đáp án đúng cho mỗi câu.</p>
+                <p className="text-zinc-400 mb-6 text-sm">Kiểm tra nhanh từ vựng và ngữ pháp vừa học. Chọn đáp án hoặc điền từ đúng.</p>
 
-                <div className="space-y-5 mb-8">
+                {/* ── Quiz questions (MC + cloze) ── */}
+                <div className="space-y-5 mb-6">
                   {PRACTICE_QS.map((q, qi) => {
+                    if (q.type === "cloze") {
+                      const userInput = clozeInputs[q.id] ?? "";
+                      const isCorrect = userInput.trim().toLowerCase() === q.answer.toLowerCase();
+                      return (
+                        <div key={q.id} className={`rounded-2xl border p-5 transition-all duration-300 ${
+                          practiceSubmitted
+                            ? isCorrect ? "border-emerald-500/50 bg-emerald-950/30" : "border-red-500/40 bg-red-950/20"
+                            : "border-zinc-700/60 bg-white/5"
+                        }`}>
+                          <p className="text-white font-bold mb-3 text-sm">
+                            <span className="text-emerald-400 mr-2">{qi + 1}.</span>
+                            {q.question}
+                          </p>
+                          <input
+                            type="text"
+                            disabled={practiceSubmitted}
+                            value={userInput}
+                            onChange={e => setClozeInputs(p => ({ ...p, [q.id]: e.target.value }))}
+                            placeholder="Điền từ còn thiếu..."
+                            className="w-full bg-zinc-800 border border-zinc-700 rounded-xl px-4 py-2.5 text-white placeholder-zinc-500 focus:outline-none focus:border-emerald-500 transition-colors text-sm"
+                          />
+                          {practiceSubmitted && (
+                            <p className={`text-xs mt-2 font-bold ${isCorrect ? "text-emerald-400" : "text-red-400"}`}>
+                              {isCorrect ? "✓ Chính xác!" : `✗ Đáp án đúng: "${q.answer}"`}
+                            </p>
+                          )}
+                        </div>
+                      );
+                    }
+
+                    // Multiple choice
                     const selected = practiceAnswers[q.id];
                     const isCorrect = selected === q.answer;
                     return (
                       <div key={q.id} className={`rounded-2xl border p-5 transition-all duration-300 ${
                         practiceSubmitted
-                          ? isCorrect
-                            ? "border-emerald-500/50 bg-emerald-950/30"
-                            : "border-red-500/40 bg-red-950/20"
+                          ? isCorrect ? "border-emerald-500/50 bg-emerald-950/30" : "border-red-500/40 bg-red-950/20"
                           : "border-zinc-700/60 bg-white/5"
                       }`}>
                         <p className="text-white font-bold mb-3 text-sm">
@@ -581,13 +827,81 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                   })}
                 </div>
 
+                {/* ── Matching Exercise ── */}
+                {unit.matchingExercise && (
+                  <div className="bg-white/5 border border-zinc-800/60 rounded-2xl p-5 mb-6">
+                    <div className="flex items-center gap-2 mb-4">
+                      <Shuffle size={16} className="text-teal-400" />
+                      <p className="text-sm font-bold text-white">
+                        {unit.matchingExercise.title ?? "Nối từ với nghĩa đúng"}
+                      </p>
+                      {matchingDone && <CheckCircle size={16} className="text-emerald-400 ml-auto" />}
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-3">
+                      {/* Left column — English */}
+                      <div className="space-y-2">
+                        {unit.matchingExercise.pairs.map((pair, i) => {
+                          const isMatched = matchedPairs.has(pair.left);
+                          const isSelected = matchLeft === pair.left;
+                          return (
+                            <button
+                              key={i}
+                              onClick={() => !isMatched && handleMatchSelect("left", pair.left)}
+                              className={`w-full px-3 py-2.5 rounded-xl text-sm font-medium border text-left transition-all duration-200 ${
+                                isMatched
+                                  ? "bg-emerald-600/20 border-emerald-500/50 text-emerald-300"
+                                  : isSelected
+                                  ? "bg-teal-600/30 border-teal-400 text-teal-200"
+                                  : "bg-zinc-800 border-zinc-700 text-zinc-300 hover:border-teal-600/50"
+                              }`}
+                            >
+                              {isMatched && "✓ "}{pair.left}
+                            </button>
+                          );
+                        })}
+                      </div>
+
+                      {/* Right column — Vietnamese (shuffled) */}
+                      <div className="space-y-2">
+                        {shuffledRight.map((right, i) => {
+                          const isMatched = matchedPairs.has(right);
+                          const isWrong = wrongMatch === right;
+                          return (
+                            <button
+                              key={i}
+                              onClick={() => !isMatched && handleMatchSelect("right", right)}
+                              className={`w-full px-3 py-2.5 rounded-xl text-sm font-medium border text-left transition-all duration-200 ${
+                                isMatched
+                                  ? "bg-emerald-600/20 border-emerald-500/50 text-emerald-300"
+                                  : isWrong
+                                  ? "bg-red-900/30 border-red-500/60 text-red-300 animate-pulse"
+                                  : "bg-zinc-800 border-zinc-700 text-zinc-300 hover:border-teal-600/50"
+                              }`}
+                            >
+                              {isMatched && "✓ "}{right}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+
+                    {matchingDone && (
+                      <div className="mt-3 text-center">
+                        <p className="text-emerald-400 font-bold text-sm">🎉 Hoàn thành! Bạn nối đúng tất cả!</p>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* Submit/Continue */}
                 {!practiceSubmitted ? (
                   <button
-                    disabled={!allAnswered}
+                    disabled={!allPracticeAnswered}
                     onClick={() => {
                       setPracticeSubmitted(true);
-                      const score = PRACTICE_QS.filter(q => practiceAnswers[q.id] === q.answer).length;
-                      if (score >= 2) playCorrectSound(); else playWrongSound();
+                      if (practiceScore >= Math.ceil(PRACTICE_QS.length * 0.7)) playCorrectSound();
+                      else playWrongSound();
                     }}
                     className="w-full bg-emerald-600 hover:bg-emerald-500 disabled:opacity-40 disabled:cursor-not-allowed text-white font-bold rounded-xl px-6 py-4 flex items-center justify-center gap-2 transition-colors text-lg"
                   >
@@ -602,21 +916,26 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                     }`}>
                       <p className="text-2xl font-black text-white">{practiceScore}/{PRACTICE_QS.length} câu đúng</p>
                       <p className="text-sm text-zinc-400 mt-1">
-                        {practiceScore === PRACTICE_QS.length ? "🏆 Xuất sắc! Bạn nắm vững từ vựng!" : practiceScore >= 2 ? "🎯 Khá tốt! Tiếp tục nhé!" : "💪 Ôn lại thẻ từ vựng sẽ giúp bạn nhớ lâu hơn!"}
+                        {practiceScore === PRACTICE_QS.length ? "🏆 Xuất sắc! Bạn nắm vững bài học!" : practiceScore >= Math.ceil(PRACTICE_QS.length * 0.7) ? "🎯 Khá tốt! Tiếp tục nhé!" : "💪 Ôn lại thẻ từ vựng sẽ giúp bạn nhớ lâu hơn!"}
                       </p>
                     </div>
-                    <button onClick={goNext} className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl px-6 py-4 flex items-center justify-center gap-2 transition-colors text-lg">
-                      Tiếp tục <ChevronRight size={20} />
-                    </button>
+                    {(matchingDone || !unit.matchingExercise) && (
+                      <button onClick={goNext} className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl px-6 py-4 flex items-center justify-center gap-2 transition-colors text-lg">
+                        Tiếp tục <ChevronRight size={20} />
+                      </button>
+                    )}
+                    {unit.matchingExercise && !matchingDone && (
+                      <p className="text-center text-zinc-500 text-sm">Hoàn thành phần nối từ để tiếp tục...</p>
+                    )}
                   </div>
                 )}
               </motion.div>
             );
           })()}
 
-          {/* ══ SECTION 4: Listening ══ */}
-          {section === 4 && (
-            <motion.div key="s3" variants={sectionVariants} initial="initial" animate="animate" exit="exit" transition={{ duration: 0.3 }}>
+          {/* ══ SECTION 5: Listening ══ */}
+          {section === 5 && (
+            <motion.div key="s5" variants={sectionVariants} initial="initial" animate="animate" exit="exit" transition={{ duration: 0.3 }}>
               <div className="flex items-center gap-2 mb-6">
                 <Headphones className="text-emerald-400" size={22} />
                 <h1 className="text-2xl font-black text-white">Nghe hiểu</h1>
@@ -638,12 +957,10 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                 </div>
               )}
 
-              {/* Dialogue info */}
+              {/* Dialogue player */}
               {DIALOGUES.length > 0 && (
                 <div className="bg-white/5 border border-zinc-800/60 rounded-2xl p-5 mb-4">
                   <p className="text-xs text-zinc-500 mb-2">{DIALOGUES[selectedDialogue].desc}</p>
-
-                  {/* Play button */}
                   <div className="flex gap-3 mb-4">
                     <button
                       onClick={() => isPlayingDialogue ? (window.speechSynthesis?.cancel(), setIsPlayingDialogue(false)) : playDialogueTTS(selectedDialogue, 1.0)}
@@ -667,7 +984,6 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                     </button>
                   </div>
 
-                  {/* Transcript */}
                   <AnimatePresence>
                     {showTranscript && (
                       <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="space-y-2 overflow-hidden">
@@ -686,7 +1002,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                 </div>
               )}
 
-              {/* Listen & Choose Quiz */}
+              {/* Listen & Choose */}
               {LISTEN_CHOOSE.length > 0 && (
                 <div className="bg-white/5 border border-zinc-800/60 rounded-2xl p-5 mb-6">
                   <p className="text-sm font-bold text-white mb-4">🎧 Nghe và chọn đáp án đúng</p>
@@ -697,6 +1013,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                           <span className="text-xs text-zinc-500">Câu {qi + 1}</span>
                           <button
                             onClick={() => playTTS(item.audio_text)}
+                            aria-label="Nghe câu"
                             className="flex items-center gap-1 px-2 py-1 rounded-lg bg-emerald-600/20 text-emerald-400 text-xs hover:bg-emerald-600/30 transition-colors"
                           >
                             <Volume2 size={12} /> Nghe
@@ -727,7 +1044,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
 
                   {!lacSubmitted ? (
                     <button
-                      onClick={() => setLacSubmitted(true)}
+                      onClick={() => { setLacSubmitted(true); }}
                       disabled={Object.keys(lacAnswers).length < LISTEN_CHOOSE.length}
                       className="mt-5 w-full bg-emerald-600 hover:bg-emerald-500 disabled:opacity-40 disabled:cursor-not-allowed text-white font-bold rounded-xl py-3 transition-colors"
                     >
@@ -736,7 +1053,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                   ) : (
                     <div className="mt-4 p-4 bg-emerald-950/40 border border-emerald-700/40 rounded-xl text-center">
                       <p className="text-emerald-300 font-bold text-lg">
-                        {LISTEN_CHOOSE.filter((item, i) => lacAnswers[i] === item.answer).length}/{LISTEN_CHOOSE.length} đúng 🎯
+                        {lacScore}/{LISTEN_CHOOSE.length} đúng 🎯
                       </p>
                     </div>
                   )}
@@ -751,9 +1068,9 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
             </motion.div>
           )}
 
-          {/* ══ SECTION 4: Shadowing ══ */}
-          {section === 5 && (
-            <motion.div key="s4" variants={sectionVariants} initial="initial" animate="animate" exit="exit" transition={{ duration: 0.3 }}>
+          {/* ══ SECTION 6: Shadowing ══ */}
+          {section === 6 && (
+            <motion.div key="s6" variants={sectionVariants} initial="initial" animate="animate" exit="exit" transition={{ duration: 0.3 }}>
               <div className="flex items-center gap-2 mb-6">
                 <MessageCircle className="text-emerald-400" size={22} />
                 <h1 className="text-2xl font-black text-white">Shadowing</h1>
@@ -762,7 +1079,6 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
 
               {DIALOGUES.length > 0 && !shadowDone ? (
                 <div className="bg-white/5 border border-zinc-800/60 rounded-2xl p-6">
-                  {/* Progress bar */}
                   <div className="flex justify-between text-xs text-zinc-500 mb-2 font-bold">
                     <span>Tiến độ dòng hội thoại</span>
                     <span>{shadowLineIdx + 1}/{DIALOGUES[0].lines.length}</span>
@@ -774,7 +1090,6 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                     />
                   </div>
 
-                  {/* Character card */}
                   <div className="bg-zinc-900/60 border border-zinc-850 rounded-xl p-5 mb-6 text-center relative overflow-hidden">
                     <span className="absolute top-3 left-3 text-[10px] font-bold text-zinc-600 bg-zinc-800 px-2 py-0.5 rounded uppercase">
                       {DIALOGUES[0].lines[shadowLineIdx].speaker}
@@ -784,12 +1099,11 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                     <p className="text-zinc-400 text-sm">{DIALOGUES[0].lines[shadowLineIdx].translation}</p>
                   </div>
 
-                  {/* Play & Record actions */}
                   <div className="flex items-center justify-center gap-4 mb-6">
                     <button
                       onClick={() => playTTS(DIALOGUES[0].lines[shadowLineIdx].text, shadowSpeed)}
+                      aria-label="Nghe mẫu"
                       className="w-14 h-14 rounded-full bg-zinc-800 hover:bg-zinc-700 text-white flex items-center justify-center transition-colors"
-                      title="Nghe mẫu"
                     >
                       <Volume2 size={24} />
                     </button>
@@ -797,6 +1111,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                     <button
                       onClick={isRecording ? () => { recognitionRef.current?.stop(); setIsRecording(false); } : handleShadowRecord}
                       disabled={isRecognizing && !isRecording}
+                      aria-label={isRecording ? "Dừng ghi âm" : "Bắt đầu ghi âm"}
                       className={`w-20 h-20 rounded-full flex items-center justify-center transition-all ${isRecording ? "bg-red-600 text-white animate-pulse" : "bg-emerald-600 hover:bg-emerald-500 hover:scale-105 text-white shadow-lg shadow-emerald-950/50"}`}
                     >
                       {isRecording ? <MicOff size={32} /> : <Mic size={32} />}
@@ -810,7 +1125,6 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                     </button>
                   </div>
 
-                  {/* Feedbacks */}
                   {shadowTranscripts[shadowLineIdx] && (
                     <div className="border border-zinc-800/80 bg-zinc-900/30 rounded-xl p-4 mb-6 text-center">
                       <p className="text-[10px] text-zinc-500 mb-1 font-bold">BẠN VỪA NÓI:</p>
@@ -821,7 +1135,6 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                     </div>
                   )}
 
-                  {/* Next / Finish */}
                   {shadowScores[shadowLineIdx] !== undefined && (
                     <button
                       onClick={handleShadowNext}
@@ -837,7 +1150,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                   <div className="text-4xl mb-3">🎉</div>
                   <p className="text-emerald-400 font-bold text-lg mb-1">Hoàn thành Shadowing!</p>
                   <p className="text-zinc-400 text-sm mb-6">
-                    Điểm trung bình: {Math.round(Object.values(shadowScores).reduce((a, b) => a + b, 0) / Math.max(Object.values(shadowScores).length, 1))}%
+                    Điểm trung bình: {shadowAvg}%
                   </p>
                   <button onClick={goNext} className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl px-6 py-4 flex items-center justify-center gap-2 transition-colors text-lg">
                     Tiếp tục luyện nói <ChevronRight size={20} />
@@ -847,9 +1160,9 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
             </motion.div>
           )}
 
-          {/* ══ SECTION 5: Speaking Output ══ */}
-          {section === 6 && (
-            <motion.div key="s5" variants={sectionVariants} initial="initial" animate="animate" exit="exit" transition={{ duration: 0.3 }}>
+          {/* ══ SECTION 7: Speaking Output ══ */}
+          {section === 7 && (
+            <motion.div key="s7" variants={sectionVariants} initial="initial" animate="animate" exit="exit" transition={{ duration: 0.3 }}>
               <div className="flex items-center gap-2 mb-6">
                 <Mic className="text-emerald-400" size={22} />
                 <h1 className="text-2xl font-black text-white">Luyện nói</h1>
@@ -866,9 +1179,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
 
                 <div className="bg-zinc-900/60 rounded-xl p-4 mb-4 text-center">
                   <p className="text-zinc-400 text-sm mb-1">Hãy nói to câu sau:</p>
-                  <p className="text-white text-xl font-bold">
-                    {formattedL1Prompt}
-                  </p>
+                  <p className="text-white text-xl font-bold">{formattedL1Prompt}</p>
                 </div>
 
                 <input
@@ -883,6 +1194,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                   <div className="flex gap-3">
                     <button
                       onClick={() => playTTS(formattedL1Prompt)}
+                      aria-label="Nghe mẫu"
                       className="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-zinc-700 hover:bg-zinc-600 text-white font-semibold text-sm transition-colors"
                     >
                       <Volume2 size={16} /> Nghe mẫu
@@ -929,15 +1241,28 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                 </AnimatePresence>
 
                 {level2Transcript && (
-                  <div className="bg-zinc-900/60 rounded-xl p-3 mb-4">
+                  <div className="bg-zinc-900/60 rounded-xl p-3 mb-3">
                     <p className="text-xs text-zinc-500 mb-1">Bạn vừa nói:</p>
                     <p className="text-white text-sm">&ldquo;{level2Transcript}&rdquo;</p>
+                    {level2Score !== null && (
+                      <div className="mt-2 flex items-center gap-2">
+                        <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border ${
+                          level2Score >= 70 ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20" : "bg-amber-500/10 text-amber-400 border-amber-500/20"
+                        }`}>
+                          Độ chính xác: {level2Score}%
+                        </div>
+                        <span className="text-xs text-zinc-500">
+                          {level2Score >= 70 ? "Tốt lắm! 🎉" : "Thử lại sẽ tốt hơn 💪"}
+                        </span>
+                      </div>
+                    )}
                   </div>
                 )}
 
                 <div className="flex gap-3">
                   <button
                     onClick={level2Recording ? () => { recognitionRef.current?.stop(); setLevel2Recording(false); } : handleLevel2Record}
+                    aria-label={level2Recording ? "Dừng ghi âm" : "Bắt đầu ghi âm"}
                     className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-bold text-sm transition-colors ${level2Recording ? "bg-red-600 text-white animate-pulse" : "bg-emerald-600 hover:bg-emerald-500 text-white"}`}
                   >
                     {level2Recording ? <MicOff size={16} /> : <Mic size={16} />}
@@ -964,44 +1289,63 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
             </motion.div>
           )}
 
-          {/* ══ SECTION 6: Review + Badge ══ */}
-          {section === 7 && (
-            <motion.div key="s6" variants={sectionVariants} initial="initial" animate="animate" exit="exit" transition={{ duration: 0.3 }}>
+          {/* ══ SECTION 8: Final Quiz + Badge + Stars ══ */}
+          {section === 8 && (
+            <motion.div key="s8" variants={sectionVariants} initial="initial" animate="animate" exit="exit" transition={{ duration: 0.3 }}>
               <div className="flex items-center gap-2 mb-6">
                 <Trophy className="text-emerald-400" size={22} />
                 <h1 className="text-2xl font-black text-white">Ôn tập & Kết quả</h1>
                 <span className="text-xs text-zinc-500 ml-auto">~3 phút</span>
               </div>
 
-              {/* Quiz */}
+              {/* Final Quiz */}
               {!quizSubmitted ? (
                 <div className="bg-white/5 border border-zinc-800/60 rounded-2xl p-6 mb-6">
-                  <p className="text-sm font-bold text-white mb-5">🧠 Quiz nhanh — {QUIZ_QUESTIONS.length} câu</p>
+                  <p className="text-sm font-bold text-white mb-5">🧠 Quiz tổng hợp — {FINAL_QS.length} câu</p>
                   <div className="space-y-6">
-                    {QUIZ_QUESTIONS.map((q, qi) => (
-                      <div key={q.id}>
-                        <p className="text-white text-sm mb-3"><span className="text-zinc-500 mr-2">Câu {qi + 1}.</span>{q.question}</p>
-                        <div className="grid grid-cols-2 gap-2">
-                          {q.options.map((opt, oi) => (
-                            <button
-                              key={oi}
-                              onClick={() => setQuizAnswers(p => ({ ...p, [q.id]: opt }))}
-                              className={`px-3 py-2 rounded-xl text-sm font-medium border transition-colors text-left ${quizAnswers[q.id] === opt ? "bg-emerald-600/30 border-emerald-500 text-emerald-300" : "bg-zinc-800 border-zinc-700 text-zinc-300 hover:border-emerald-600/50"}`}
-                            >
-                              {opt}
-                            </button>
-                          ))}
+                    {FINAL_QS.map((q, qi) => {
+                      if (q.type === "cloze") {
+                        return (
+                          <div key={q.id}>
+                            <p className="text-white text-sm mb-3"><span className="text-zinc-500 mr-2">Câu {qi + 1}.</span>{q.question}</p>
+                            <input
+                              type="text"
+                              value={quizClozeInputs[q.id] ?? ""}
+                              onChange={e => setQuizClozeInputs(p => ({ ...p, [q.id]: e.target.value }))}
+                              placeholder="Điền từ còn thiếu..."
+                              className="w-full bg-zinc-800 border border-zinc-700 rounded-xl px-4 py-2.5 text-white placeholder-zinc-500 focus:outline-none focus:border-emerald-500 transition-colors text-sm"
+                            />
+                          </div>
+                        );
+                      }
+                      return (
+                        <div key={q.id}>
+                          <p className="text-white text-sm mb-3"><span className="text-zinc-500 mr-2">Câu {qi + 1}.</span>{q.question}</p>
+                          <div className="grid grid-cols-2 gap-2">
+                            {q.options.map((opt, oi) => (
+                              <button
+                                key={oi}
+                                onClick={() => setQuizAnswers(p => ({ ...p, [q.id]: opt }))}
+                                className={`px-3 py-2 rounded-xl text-sm font-medium border transition-colors text-left ${quizAnswers[q.id] === opt ? "bg-emerald-600/30 border-emerald-500 text-emerald-300" : "bg-zinc-800 border-zinc-700 text-zinc-300 hover:border-emerald-600/50"}`}
+                              >
+                                {opt}
+                              </button>
+                            ))}
+                          </div>
                         </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                   <button
                     onClick={() => {
                       setQuizSubmitted(true);
-                      const sc = QUIZ_QUESTIONS.filter(q => quizAnswers[q.id] === q.answer).length;
-                      if (sc >= 4) playCorrectSound(); else if (sc < 3) playWrongSound();
+                      if (finalQuizScore >= Math.ceil(FINAL_QS.length * 0.8)) playCorrectSound();
+                      else if (finalQuizScore < Math.ceil(FINAL_QS.length * 0.5)) playWrongSound();
                     }}
-                    disabled={Object.keys(quizAnswers).length < QUIZ_QUESTIONS.length}
+                    disabled={
+                      FINAL_QS.filter(q => q.type === "multiple-choice").some(q => !quizAnswers[q.id]) ||
+                      FINAL_QS.filter(q => q.type === "cloze").some(q => !(quizClozeInputs[q.id] ?? "").trim())
+                    }
                     className="mt-6 w-full bg-emerald-600 hover:bg-emerald-500 disabled:opacity-40 text-white font-bold rounded-xl py-3 transition-colors"
                   >
                     Kiểm tra đáp án
@@ -1012,11 +1356,11 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                   {/* Score */}
                   <div className="bg-emerald-950/40 border border-emerald-700/40 rounded-2xl p-6 text-center">
                     <div className="text-5xl mb-3">
-                      {quizScore >= 4 ? "🏆" : quizScore >= 3 ? "🎯" : "💪"}
+                      {finalQuizScore >= Math.ceil(FINAL_QS.length * 0.8) ? "🏆" : finalQuizScore >= Math.ceil(FINAL_QS.length * 0.6) ? "🎯" : "💪"}
                     </div>
-                    <p className="text-emerald-300 font-black text-2xl mb-1">{quizScore}/{QUIZ_QUESTIONS.length} đúng</p>
+                    <p className="text-emerald-300 font-black text-2xl mb-1">{finalQuizScore}/{FINAL_QS.length} đúng</p>
                     <p className="text-zinc-400 text-sm">
-                      {quizScore >= 4 ? "Xuất sắc! Bạn đã nắm vững bài học!" : quizScore >= 3 ? "Khá tốt! Tiếp tục ôn tập nhé!" : "Cần luyện thêm một chút — bạn làm được!"}
+                      {finalQuizScore >= Math.ceil(FINAL_QS.length * 0.8) ? "Xuất sắc! Bạn đã nắm vững bài học!" : finalQuizScore >= Math.ceil(FINAL_QS.length * 0.6) ? "Khá tốt! Tiếp tục ôn tập nhé!" : "Cần luyện thêm một chút — bạn làm được!"}
                     </p>
                   </div>
 
@@ -1026,8 +1370,9 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                     <div className="space-y-2">
                       {[
                         { label: "Từ vựng đã học", value: `${seenCards.size}/${VOCAB_LIMIT} từ`, icon: "📚", done: seenCards.size >= VOCAB_LIMIT },
-                        { label: "Shadowing", value: `${DIALOGUES.length > 0 ? Object.keys(shadowScores).length : 0}/${DIALOGUES.length > 0 ? DIALOGUES[0].lines.length : 0} câu`, icon: "🎤", done: shadowDone || DIALOGUES.length === 0 },
-                        { label: "Quiz", value: `${quizScore}/${QUIZ_QUESTIONS.length} đúng`, icon: "🧠", done: quizScore >= 3 },
+                        { label: "Shadowing", value: `${shadowAvg}% trung bình`, icon: "🎤", done: shadowDone || DIALOGUES.length === 0 },
+                        { label: "Nghe hiểu", value: `${lacScore}/${LISTEN_CHOOSE.length} đúng`, icon: "🎧", done: lacScore >= Math.ceil(LISTEN_CHOOSE.length * 0.7) },
+                        { label: "Quiz", value: `${finalQuizScore}/${FINAL_QS.length} đúng`, icon: "🧠", done: finalQuizScore >= Math.ceil(FINAL_QS.length * 0.6) },
                       ].map((item, i) => (
                         <div key={i} className="flex items-center gap-3">
                           <span>{item.icon}</span>
@@ -1039,12 +1384,19 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                     </div>
                   </div>
 
-                  {/* Badge */}
+                  {/* Badge — performance-based stars */}
                   <div className="bg-gradient-to-br from-emerald-950/60 to-teal-950/60 border border-emerald-700/40 rounded-2xl p-8 text-center">
                     <div className="text-7xl mb-3 animate-bounce">{unit.badgeEmoji}</div>
                     <div className="flex justify-center gap-1 mb-2">
-                      {[...Array(3)].map((_, i) => <Star key={i} size={16} className="text-yellow-400 fill-yellow-400" />)}
+                      {[...Array(3)].map((_, i) => (
+                        <Star
+                          key={i}
+                          size={20}
+                          className={i < starCount ? "text-yellow-400 fill-yellow-400" : "text-zinc-600"}
+                        />
+                      ))}
                     </div>
+                    <p className="text-xs text-zinc-500 mb-2">{overallScore}% tổng điểm</p>
                     <p className="text-emerald-300 font-black text-xl mb-1">Huy hiệu: {unit.badgeName}</p>
                     <p className="text-zinc-400 text-sm">{unit.title}</p>
                   </div>
@@ -1082,6 +1434,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
               )}
             </motion.div>
           )}
+
         </AnimatePresence>
       </div>
     </div>

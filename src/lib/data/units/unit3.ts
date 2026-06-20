@@ -200,6 +200,43 @@ export const unit3: UnitData = {
     level2Situation: "Hãy giới thiệu một thành viên trong gia đình bạn (bố, mẹ, anh hoặc em) cho giáo viên nghe.",
     level2Hint: "This is my father. His name is [tên]. He is [tuổi] years old and he is very kind."
   },
+
+  grammar: {
+    title: "Đại từ sở hữu — Possessive Adjectives",
+    rule: "my / your / his / her / our / their + danh từ",
+    conjugation: [
+      { subject: "I", form: "my", example: "My name is Minh." },
+      { subject: "You", form: "your", example: "What is your brother's name?" },
+      { subject: "He", form: "his", example: "His sister is very kind." },
+      { subject: "She", form: "her", example: "Her mother is a doctor." },
+      { subject: "We / They", form: "our / their", example: "Their parents live in Hanoi." },
+    ],
+    examples: [
+      { en: "This is my family.", vn: "Đây là gia đình của tôi." },
+      { en: "His name is Ben.", vn: "Tên anh ấy là Ben." },
+      { en: "Her hair is beautiful.", vn: "Tóc của cô ấy rất đẹp." },
+      { en: "Their house is big.", vn: "Nhà của họ rất to." },
+    ],
+    tip: "Đại từ sở hữu luôn đứng TRƯỚC danh từ. Không bao giờ nói 'name his is Ben' — phải là 'his name is Ben'.",
+  },
+
+  matchingExercise: {
+    title: "Nối đại từ sở hữu với chủ ngữ tương ứng",
+    pairs: [
+      { left: "I → ___", right: "my" },
+      { left: "He → ___", right: "his" },
+      { left: "She → ___", right: "her" },
+      { left: "They → ___", right: "their" },
+      { left: "We → ___", right: "our" },
+    ],
+  },
+
+  practiceQuiz: [
+    { id: "pq1", question: "Điền đại từ đúng: 'This is ___ mother.' (của tôi)", options: ["my", "his", "her", "your"], answer: "my", type: "multiple-choice" },
+    { id: "pq2", question: "Đại từ sở hữu của 'She' là gì?", options: ["his", "my", "her", "their"], answer: "her", type: "multiple-choice" },
+    { id: "pq3", question: "Điền từ còn thiếu: 'His ___ is Tom.' (tên)", options: [], answer: "name", type: "cloze" },
+  ],
+
   quiz: [
     {
       id: "q1",
@@ -225,9 +262,9 @@ export const unit3: UnitData = {
     {
       id: "q4",
       question: "Điền từ còn thiếu: 'This is my brother. ___ name is Tom.'",
-      options: ["His", "Her", "My", "Your"],
+      options: [],
       answer: "His",
-      type: "multiple-choice"
+      type: "cloze"
     },
     {
       id: "q5",

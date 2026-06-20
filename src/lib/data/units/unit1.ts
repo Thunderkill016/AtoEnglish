@@ -98,12 +98,47 @@ export const unit1: UnitData = {
     level2Situation: "Bạn vừa gặp một người bạn mới tên là Alex. Hãy tự giới thiệu bản thân và hỏi thăm Alex.",
     level2Hint: "Hello! My name is [tên bạn]. Nice to meet you! Where are you from?"
   },
+  grammar: {
+    title: "To be — Động từ 'là / ở / thì'",
+    rule: "I am  |  You / We / They are  |  He / She / It is",
+    conjugation: [
+      { subject: "I", form: "am", example: "I am from Vietnam." },
+      { subject: "You", form: "are", example: "You are my friend." },
+      { subject: "He / She", form: "is", example: "She is a teacher." },
+      { subject: "We / They", form: "are", example: "They are students." },
+    ],
+    examples: [
+      { en: "My name is Minh.", vn: "Tên tôi là Minh." },
+      { en: "I am from Vietnam.", vn: "Tôi đến từ Việt Nam." },
+      { en: "She is nice to meet.", vn: "Cô ấy rất vui được gặp." },
+      { en: "We are happy to see you.", vn: "Chúng tôi rất vui được gặp bạn." },
+    ],
+    tip: "Người Việt hay nhầm 'I is' hoặc 'She are'. Nhớ: I → am, He/She/It → is, còn lại → are.",
+  },
+
+  matchingExercise: {
+    title: "Nối từ với nghĩa đúng",
+    pairs: [
+      { left: "Hello", right: "Xin chào" },
+      { left: "Goodbye", right: "Tạm biệt" },
+      { left: "Thank you", right: "Cảm ơn" },
+      { left: "Nice to meet you", right: "Rất vui được gặp bạn" },
+      { left: "How are you?", right: "Bạn khỏe không?" },
+    ],
+  },
+
+  practiceQuiz: [
+    { id: "pq1", question: "Chọn cách hoàn thành đúng: 'My name ___ Minh.'", options: ["am", "is", "are", "be"], answer: "is", type: "multiple-choice" },
+    { id: "pq2", question: "'Nice to meet you' nghĩa là gì?", options: ["Tạm biệt", "Cảm ơn", "Rất vui được gặp bạn", "Xin chào"], answer: "Rất vui được gặp bạn", type: "multiple-choice" },
+    { id: "pq3", question: "Điền từ còn thiếu: 'I ___ from Vietnam.'", options: [], answer: "am", type: "cloze" },
+  ],
+
   quiz: [
     { id: "q1", question: "Câu nào dùng để nói 'Rất vui được gặp bạn'?", options: ["Goodbye, see you later", "Nice to meet you", "How old are you?", "Where are you from?"], answer: "Nice to meet you", type: "multiple-choice" },
     { id: "q2", question: "Cách chào hỏi trang trọng nhất vào buổi sáng là gì?", options: ["Hi!", "Good morning", "Goodbye", "See you later"], answer: "Good morning", type: "multiple-choice" },
     { id: "q3", question: "Từ nào là cách nói tạm biệt thân mật?", options: ["Good morning", "Hello", "Bye", "Nice to meet you"], answer: "Bye", type: "multiple-choice" },
     { id: "q4", question: "Khi ai đó nói 'How are you?', câu trả lời phù hợp nhất là gì?", options: ["Nice to meet you", "I am fine thank you", "My name is Linh", "Goodbye"], answer: "I am fine thank you", type: "multiple-choice" },
-    { id: "q5", question: "Điền từ còn thiếu: 'I ___ from Vietnam.'", options: [], answer: "am", type: "cloze" }
+    { id: "q5", question: "Điền từ còn thiếu: 'She ___ a teacher.'", options: [], answer: "is", type: "cloze" },
   ]
 };
 

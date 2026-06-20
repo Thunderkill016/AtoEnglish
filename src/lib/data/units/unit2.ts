@@ -200,6 +200,42 @@ export const unit2: UnitData = {
     level2Situation: "Hãy nói về thời gian biểu buổi sáng của bạn cho bạn học nghe.",
     level2Hint: "I wake up at [giờ]. Then I brush my teeth, eat breakfast, and go to school at [giờ]."
   },
+
+  grammar: {
+    title: "Present Simple — Thì Hiện Tại Đơn",
+    rule: "I / You / We / They + V  |  He / She / It + V-s/-es",
+    conjugation: [
+      { subject: "I / You", form: "wake up", example: "I wake up at 6 AM." },
+      { subject: "He / She", form: "wakes up", example: "She wakes up at 7 AM." },
+      { subject: "We / They", form: "eat", example: "They eat breakfast together." },
+      { subject: "He / She", form: "eats", example: "He eats at 8 o'clock." },
+    ],
+    examples: [
+      { en: "I go to school every day.", vn: "Tôi đi học mỗi ngày." },
+      { en: "She brushes her teeth in the morning.", vn: "Cô ấy đánh răng vào buổi sáng." },
+      { en: "They watch TV at night.", vn: "Họ xem TV vào buổi tối." },
+      { en: "He goes to bed at 10 PM.", vn: "Anh ấy đi ngủ lúc 10 giờ tối." },
+    ],
+    tip: "Khi chủ ngữ là He/She/It, thêm -s vào cuối động từ (go → goes, watch → watches, brush → brushes).",
+  },
+
+  matchingExercise: {
+    title: "Nối hoạt động với nghĩa tiếng Việt",
+    pairs: [
+      { left: "Wake up", right: "Thức dậy" },
+      { left: "Brush teeth", right: "Đánh răng" },
+      { left: "Eat breakfast", right: "Ăn sáng" },
+      { left: "Go to school", right: "Đi học" },
+      { left: "Go to bed", right: "Đi ngủ" },
+    ],
+  },
+
+  practiceQuiz: [
+    { id: "pq1", question: "She ___ to school every day. (Chọn dạng đúng)", options: ["go", "goes", "going", "gone"], answer: "goes", type: "multiple-choice" },
+    { id: "pq2", question: "Từ nào mô tả hành động 'Thức dậy'?", options: ["Go to bed", "Wake up", "Eat breakfast", "Wash face"], answer: "Wake up", type: "multiple-choice" },
+    { id: "pq3", question: "Điền từ còn thiếu: 'I ___ breakfast at 7 AM every day.'", options: [], answer: "eat", type: "cloze" },
+  ],
+
   quiz: [
     {
       id: "q1",
@@ -217,23 +253,23 @@ export const unit2: UnitData = {
     },
     {
       id: "q3",
-      question: "Từ nào mô tả hành động 'Đánh răng'?",
-      options: ["Wash face", "Brush teeth", "Wake up", "Eat breakfast"],
-      answer: "Brush teeth",
+      question: "He ___ his teeth every morning. (Chọn dạng đúng)",
+      options: ["brush", "brushes", "brushing", "brushed"],
+      answer: "brushes",
       type: "multiple-choice"
     },
     {
       id: "q4",
-      question: "Điền từ còn thiếu: 'What ___ is it?'",
-      options: ["day", "time", "hour", "clock"],
-      answer: "time",
-      type: "multiple-choice"
+      question: "Điền từ còn thiếu: 'She ___ to bed at 10 PM.'",
+      options: [],
+      answer: "goes",
+      type: "cloze"
     },
     {
       id: "q5",
-      question: "Alex: 'Do you eat breakfast?' - Sarah: 'Yes, I ___ breakfast at 7 AM.'",
-      options: ["eat", "go", "brush", "watch"],
-      answer: "eat",
+      question: "Từ nào KHÔNG phải hoạt động buổi sáng thông thường?",
+      options: ["Wake up", "Brush teeth", "Eat breakfast", "Watch TV all day"],
+      answer: "Watch TV all day",
       type: "multiple-choice"
     }
   ]

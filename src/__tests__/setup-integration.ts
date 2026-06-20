@@ -53,9 +53,9 @@ export let testUserId: string;
 // globalThis bridge: vi.mock factory runs at import time (hoisted),
 // but createClient() is called at test runtime — AFTER beforeAll sets the client.
 declare global {
-  // eslint-disable-next-line no-var
+   
   var __testSupabaseClient: SupabaseClient<Database> | undefined;
-  // eslint-disable-next-line no-var
+   
   var __testUserId: string | undefined;
 }
 
@@ -136,7 +136,7 @@ beforeAll(async () => {
       current_level: "A1",
       total_xp: 0,
       streak: 0,
-      last_activity_date: new Date().toISOString().split("T")[0],
+      last_active_date: new Date().toISOString().split("T")[0],
     },
     { onConflict: "user_id" }
   );
