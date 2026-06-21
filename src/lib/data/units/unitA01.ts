@@ -28,16 +28,24 @@ export const unitA01: UnitData = {
 
   // ── CONTEXT: Real situation to create need-to-learn ───────────────────────
   situation:
-    "Bạn đến một công ty nước ngoài để nộp hồ sơ. Nhân viên lễ tân nhìn lên và hỏi: \"Can you spell your name, please?\" Bạn cần biết 26 chữ cái tiếng Anh để trả lời.",
+    "Bạn đến một công ty nước ngoài để nộp hồ sơ. Nhân viên lễ tân nhìn lên và hỏi: \"Can you spell your name, please?\" Bạn cần biết cách phát âm từng chữ cái tiếng Anh để đánh vần tên mình.",
 
   learningOutcomes: [
-    "Nhận biết và đọc được 26 chữ cái tiếng Anh",
-    "Đánh vần tên của mình bằng tiếng Anh",
-    "Nói câu giới thiệu đầu tiên: My name IS...",
+    "Đọc đúng 26 chữ cái tiếng Anh (A → Z) theo cách phát âm gần với tiếng Việt",
+    "Đánh vần tên Việt của mình cho người nước ngoài nghe",
+    "Giới thiệu bản thân bằng câu chuẩn: My name IS... / I AM from...",
   ],
 
   culturalNote:
-    'Người bản ngữ thường hỏi <span class="text-emerald-400 font-semibold">"How do you spell that?"</span> khi nghe tên lạ. Biết đánh vần tên mình là kỹ năng thiết yếu! Tên Việt Nam như Nguyễn, Phạm, Trần thường được người nước ngoài yêu cầu đánh vần để ghi chú đúng.',
+    '<strong class="text-emerald-400">Bảng 26 chữ cái tiếng Anh</strong> — cách đọc gần với tiếng Việt:<br/><br/>' +
+    '<span class="font-mono text-sm leading-loose">' +
+    'A <span class="text-zinc-400">(ây)</span> · B <span class="text-zinc-400">(bi)</span> · C <span class="text-zinc-400">(xi)</span> · D <span class="text-zinc-400">(đi)</span> · E <span class="text-zinc-400">(i)</span> · F <span class="text-zinc-400">(ép-phờ)</span> · G <span class="text-zinc-400">(gi)</span> · H <span class="text-zinc-400">(ây-chờ)</span>' +
+    ' · I <span class="text-zinc-400">(ai)</span> · J <span class="text-zinc-400">(giây)</span> · K <span class="text-zinc-400">(kây)</span> · L <span class="text-zinc-400">(eo)</span> · M <span class="text-zinc-400">(em)</span> · N <span class="text-zinc-400">(en)</span>' +
+    ' · O <span class="text-zinc-400">(âu)</span> · P <span class="text-zinc-400">(pi)</span> · Q <span class="text-zinc-400">(kiu)</span> · R <span class="text-zinc-400">(a-rờ)</span> · S <span class="text-zinc-400">(ét)</span> · T <span class="text-zinc-400">(ti)</span>' +
+    ' · U <span class="text-zinc-400">(iu)</span> · V <span class="text-zinc-400">(vi)</span> · W <span class="text-zinc-400">(đáp-bờ-liu)</span> · X <span class="text-zinc-400">(ét-xờ)</span> · Y <span class="text-zinc-400">(oai)</span> · Z <span class="text-zinc-400">(zi/zét)</span>' +
+    '</span><br/><br/>' +
+    '💡 <span class="text-emerald-400 font-semibold">Mẹo đánh vần tên Việt:</span> Người nước ngoài hay hỏi <span class="text-emerald-400">"How do you spell that?"</span> khi nghe tên lạ. Tên như Nguyễn, Phạm, Trần thường cần đánh vần chậm, rõ từng chữ.',
+
 
   // ── WARMUP: 3 cards to activate prior knowledge ───────────────────────────
   warmupGreetings: [
@@ -197,7 +205,9 @@ export const unitA01: UnitData = {
       { en: "I don't understand.",    vn: "Tôi không hiểu." },
     ],
 
-    tip: "Mẹo nhớ nhanh: Mỗi câu tiếng Anh cần ít nhất 1 động từ. IS và AM là 2 động từ nhỏ nhất — nhưng BẮT BUỘC phải có. 'I'm Minh' (viết tắt) cũng đúng và nghe tự nhiên hơn.",
+    tip: "Mẹo nhớ nhanh: Mỗi câu tiếng Anh cần ít nhất 1 động từ. IS và AM là 2 động từ nhỏ nhất — nhưng BẮT BUỘC phải có.\n\n" +
+      "📌 I AM = I'M (rút gọn): 'I am Minh.' và 'I'm Minh.' đều ĐÚNG — dạng rút gọn nghe tự nhiên hơn trong giao tiếp hàng ngày.\n" +
+      "📌 Tương tự: 'I am from Vietnam.' = 'I'm from Vietnam.' — nghĩa y hệt, chỉ khác cách viết.",
 
     // ✅ Ellis: Adult learners need explicit L1 contrast
     vnNote:
