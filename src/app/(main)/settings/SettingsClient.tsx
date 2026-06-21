@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTheme } from "next-themes";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Bell,
@@ -182,7 +183,8 @@ export default function SettingsClient({ userEmail }: { userEmail: string }) {
     return typeof s.dailyGoal === "string" ? s.dailyGoal : "10";
   });
 
-  // Display settings
+  // Display settings — theme via next-themes, fontSize local only
+  const { setTheme: applyTheme } = useTheme();
   const [theme, setTheme] = useState(() => {
     const s = getStoredSettings(); return typeof s.theme === "string" ? s.theme : "system";
   });
@@ -197,6 +199,8 @@ export default function SettingsClient({ userEmail }: { userEmail: string }) {
     };
     localStorage.setItem("ato_settings", JSON.stringify(settings));
     localStorage.setItem("ato_daily_xp_goal", dailyGoal);
+    // Apply theme immediately via next-themes
+    applyTheme(theme);
     // Dispatch event so Dashboard XP bar updates
     window.dispatchEvent(new CustomEvent("ato:settings-changed", { detail: settings }));
     setSaved(true);
