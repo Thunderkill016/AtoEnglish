@@ -88,6 +88,7 @@ export const unit11: UnitData = {
       { en: "He feels happy when he plays football.", vn: "Anh ấy cảm thấy vui khi chơi bóng đá." },
     ],
     tip: "Dùng 'have/has' + triệu chứng bệnh (a headache, a fever). Dùng 'feel/feels' + tính từ cảm xúc (happy, tired, stressed). He/She/It → 'has' và 'feels' (thêm -s).",
+    vnNote: "⚠️ Lưu ý: Thì hiện tại tiếp diễn (is/am/are + V-ing) dùng cho hành động ĐANG xảy ra lúc nói. Người Việt hay nhầm với thì hiện tại đơn. 'I work now' (SAI, đang làm) → 'I am working now' (ĐÚNG).",
     dialogueExample: {
       speaker: "Minh",
       text: "I have a fever and a headache.",
@@ -166,6 +167,19 @@ export const unit11: UnitData = {
       type: "translate",
     },
   ],
+
+  fluencyDrill: {
+    items: [
+      { en: "I am working", vn: "Tôi đang làm việc" },
+      { en: "She is talking", vn: "Cô ấy đang nói chuyện" },
+      { en: "We are having a meeting", vn: "Chúng tôi đang họp" },
+      { en: "He is sending an email", vn: "Anh ấy đang gửi email" },
+      { en: "Are you listening?", vn: "Bạn có đang nghe không?" },
+      { en: "They are not coming", vn: "Họ không đến" },
+      { en: "What are you doing?", vn: "Bạn đang làm gì?" },
+      { en: "I am not free now", vn: "Tôi không rảnh lúc này" },
+    ],
+  },
 };
 
 export default unit11;

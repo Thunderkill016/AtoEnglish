@@ -89,6 +89,7 @@ export const unit12: UnitData = {
       { en: "There are two chairs. Can I have some water?", vn: "Unit 6-8: There is/are + some/any" },
     ],
     tip: "Ôn lại 11 điểm ngữ pháp quan trọng nhất của A1. Mỗi cấu trúc đều được học trong context thực tế — đây là điểm mạnh của cách học của bạn!",
+    vnNote: "⚠️ Lưu ý: Comparatives trong tiếng Anh thay đổi dạng từ: good→better→best, bad→worse→worst. Không thể nói 'more good' (SAI) → 'better' (ĐÚNG). Người Việt hay thêm 'more' sai chỗ.",
     dialogueExample: {
       speaker: "Minh",
       text: "There is a park next to my house. I can walk there every morning.",
@@ -172,6 +173,19 @@ export const unit12: UnitData = {
       type: "translate",
     },
   ],
+
+  fluencyDrill: {
+    items: [
+      { en: "bigger", vn: "lớn hơn" },
+      { en: "the biggest", vn: "lớn nhất" },
+      { en: "better", vn: "tốt hơn" },
+      { en: "the best", vn: "tốt nhất" },
+      { en: "more expensive", vn: "đắt hơn" },
+      { en: "the most expensive", vn: "đắt nhất" },
+      { en: "faster", vn: "nhanh hơn" },
+      { en: "the fastest", vn: "nhanh nhất" },
+    ],
+  },
 };
 
 export default unit12;

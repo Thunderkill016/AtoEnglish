@@ -87,6 +87,7 @@ export const unit6: UnitData = {
       { en: "There aren't any windows in this room.", vn: "Phòng này không có cửa sổ nào." },
     ],
     tip: "Dùng 'There IS' với danh từ số ít và 'There ARE' với danh từ số nhiều. Phủ định: 'There ISN'T' và 'There AREN'T'. Câu hỏi: đảo 'Is/Are there...?'",
+    vnNote: "⚠️ Lưu ý: 'There is/There are' không có tương đương trực tiếp trong tiếng Việt. Lỗi phổ biến: dùng 'There is' với số nhiều — 'There is chairs' (SAI) → 'There are chairs' (ĐÚNG).",
     dialogueExample: {
       speaker: "Hoa",
       text: "There are two bedrooms and one bathroom.",
@@ -165,6 +166,19 @@ export const unit6: UnitData = {
       type: "translate",
     },
   ],
+
+  fluencyDrill: {
+    items: [
+      { en: "There is a meeting room", vn: "Có một phòng họp" },
+      { en: "There are 10 employees", vn: "Có 10 nhân viên" },
+      { en: "There isn't a printer", vn: "Không có máy in" },
+      { en: "There aren't any desks", vn: "Không có bàn làm việc" },
+      { en: "Is there a bathroom?", vn: "Có nhà vệ sinh không?" },
+      { en: "Are there any chairs?", vn: "Có ghế không?" },
+      { en: "There is a problem", vn: "Có một vấn đề" },
+      { en: "There are many options", vn: "Có nhiều lựa chọn" },
+    ],
+  },
 };
 
 export default unit6;

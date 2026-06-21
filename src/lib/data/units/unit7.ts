@@ -89,6 +89,7 @@ export const unit7: UnitData = {
       { en: "They cost one hundred thousand dong.", vn: "Chúng giá 100.000 đồng." },
     ],
     tip: "Dùng 'How much IS' với danh từ số ít (this shirt, this bag). Dùng 'How much ARE' với danh từ số nhiều (these shoes, those bags). Trả lời bằng 'It costs...' hoặc 'They cost...'",
+    vnNote: "⚠️ Lưu ý: Tiếng Việt không dùng mạo từ 'a/an/the'. Tiếng Anh BẮT BUỘC phải dùng. 'I want coffee' (sai khi chỉ định) → 'I want a coffee'. 'Give me report' (SAI) → 'Give me the report' (ĐÚNG). Đây là lỗi số 1 của người Việt học tiếng Anh!",
     dialogueExample: {
       speaker: "Linh",
       text: "How much is this dress?",
@@ -167,6 +168,19 @@ export const unit7: UnitData = {
       type: "translate",
     },
   ],
+
+  fluencyDrill: {
+    items: [
+      { en: "a coffee", vn: "một ly cà phê" },
+      { en: "the manager", vn: "người quản lý" },
+      { en: "an email", vn: "một cái email" },
+      { en: "the meeting", vn: "cuộc họp cụ thể" },
+      { en: "a report", vn: "một bản báo cáo" },
+      { en: "the office", vn: "văn phòng cụ thể" },
+      { en: "an idea", vn: "một ý tưởng" },
+      { en: "the deadline", vn: "hạn chót" },
+    ],
+  },
 };
 
 export default unit7;

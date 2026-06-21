@@ -224,6 +224,7 @@ export const unit3: UnitData = {
       { en: "Their house is big.", vn: "Nhà của họ rất to." },
     ],
     tip: "Đại từ sở hữu luôn đứng TRƯỚC danh từ. Không bao giờ nói 'name his is Ben' — phải là 'his name is Ben'.",
+    vnNote: "⚠️ Lưu ý: Tiếng Việt dùng từ sở hữu SAU danh từ ('bàn của tôi'). Tiếng Anh đặt TRƯỚC: 'my table'. Không bao giờ nói 'the book of me' — phải nói 'my book'.",
     dialogueExample: {
       speaker: "Anna",
       text: "His name is Ben. He is my best friend.",
@@ -337,7 +338,19 @@ export const unit3: UnitData = {
       type: "translate",
     },
   ],
+
+  fluencyDrill: {
+    items: [
+      { en: "my family", vn: "gia đình của tôi" },
+      { en: "his job", vn: "công việc của anh ấy" },
+      { en: "her name", vn: "tên của cô ấy" },
+      { en: "our team", vn: "đội của chúng tôi" },
+      { en: "their office", vn: "văn phòng của họ" },
+      { en: "my colleague", vn: "đồng nghiệp của tôi" },
+      { en: "your boss", vn: "sếp của bạn" },
+      { en: "our company", vn: "công ty của chúng tôi" },
+    ],
+  },
 };
 
 export default unit3;
-

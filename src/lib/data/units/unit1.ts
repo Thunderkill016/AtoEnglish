@@ -120,6 +120,7 @@ export const unit1: UnitData = {
       { en: "We are happy to see you.", vn: "Chúng tôi rất vui được gặp bạn." },
     ],
     tip: "Người Việt hay nhầm 'I is' hoặc 'She are'. Nhớ: I → am, He/She/It → is, còn lại → are.",
+    vnNote: "⚠️ Lỗi hay gặp: Tiếng Việt không chia động từ theo chủ ngữ (tôi/bạn/anh ấy đều dùng 'là'). Trong tiếng Anh bắt buộc phải dùng AM/IS/ARE đúng với từng chủ ngữ — đây là lỗi phổ biến nhất của người Việt!",
     dialogueExample: {
       speaker: "Linh",
       text: "I'm from Vietnam. And you?",
@@ -187,6 +188,20 @@ export const unit1: UnitData = {
       answer: "I am from Vietnam .",
     },
   ],
+
+  fluencyDrill: {
+    title: "Phản xạ chào hỏi",
+    items: [
+      { en: "Hello", vn: "Xin chào" },
+      { en: "Goodbye", vn: "Tạm biệt" },
+      { en: "Thank you", vn: "Cảm ơn" },
+      { en: "Nice to meet you", vn: "Rất vui được gặp bạn" },
+      { en: "How are you?", vn: "Bạ khỏe không?" },
+      { en: "I'm fine, thank you", vn: "Tôi khỏe, cảm ơn" },
+      { en: "My name is", vn: "Tên tôi là" },
+      { en: "I'm from Vietnam", vn: "Tôi đến từ Việt Nam" },
+    ],
+  },
 };
 
 export default unit1;

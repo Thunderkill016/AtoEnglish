@@ -88,6 +88,7 @@ export const unit9: UnitData = {
       { en: "Go straight and turn right at the traffic light.", vn: "Đi thẳng và rẽ phải tại đèn giao thông." },
     ],
     tip: "Giới từ nơi chốn giúp bạn mô tả vị trí rõ ràng. 'next to' = ngay cạnh, 'opposite' = đối diện (qua đường), 'between A and B' = giữa A và B (cần hai điểm tham chiếu).",
+    vnNote: "⚠️ Lưu ý: Tiếng Việt dùng từ chỉ thời gian (hôm qua, đã) thay vì chia động từ. Tiếng Anh chia động từ theo thì: không thể nói 'I work yesterday' (SAI) — phải chia: 'I worked yesterday' (ĐÚNG)!",
     dialogueExample: {
       speaker: "Local",
       text: "The hospital is opposite the park.",
@@ -166,6 +167,19 @@ export const unit9: UnitData = {
       type: "translate",
     },
   ],
+
+  fluencyDrill: {
+    items: [
+      { en: "I worked yesterday", vn: "Tôi đã làm việc hôm qua" },
+      { en: "She went to the office", vn: "Cô ấy đã đến văn phòng" },
+      { en: "We had a meeting", vn: "Chúng tôi đã có cuộc họp" },
+      { en: "He sent the email", vn: "Anh ấy đã gửi email" },
+      { en: "I didn't finish", vn: "Tôi đã không hoàn thành" },
+      { en: "Did you call him?", vn: "Bạn có gọi cho anh ấy không?" },
+      { en: "She wrote the report", vn: "Cô ấy đã viết báo cáo" },
+      { en: "They came on time", vn: "Họ đã đến đúng giờ" },
+    ],
+  },
 };
 
 export default unit9;

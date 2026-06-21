@@ -88,6 +88,7 @@ export const unit13: UnitData = {
       { en: "Did you enjoy the trip?", vn: "Bạn có thích chuyến đi không?" },
     ],
     tip: "Động từ bất quy tắc (irregular verbs) cần học thuộc: go→went, have→had, see→saw, meet→met, eat→ate. Đây là những động từ thông dụng nhất trong tiếng Anh!",
+    vnNote: "⚠️ Lưu ý: Past Simple - PHẢI chia động từ. Động từ bất quy tắc phải học thuộc: go→went, see→saw, have→had. Không thể nói 'I goed' hay 'I sawed' — tiếng Anh không đơn giản như tiếng Việt ở điểm này!",
     dialogueExample: {
       speaker: "Minh",
       text: "I went to Ha Long Bay. We stayed for two days and I enjoyed it so much!",
@@ -120,4 +121,19 @@ export const unit13: UnitData = {
     { id: "fq4", type: "translate", question: "Dịch sang tiếng Anh: 'Chúng tôi đã ăn hải sản tươi mỗi bữa.'", answer: "We had fresh seafood every meal." },
     { id: "fq5", type: "multiple-choice", question: "Điền: 'I ___ a movie last night. It was great!'", options: ["watch", "watches", "watched", "watching"], answer: "watched" },
   ],
+
+  fluencyDrill: {
+    items: [
+      { en: "I went", vn: "Tôi đã đi" },
+      { en: "She saw", vn: "Cô ấy đã thấy" },
+      { en: "We had", vn: "Chúng tôi đã có" },
+      { en: "He made", vn: "Anh ấy đã làm" },
+      { en: "They came", vn: "Họ đã đến" },
+      { en: "I didn't go", vn: "Tôi đã không đi" },
+      { en: "Did you see?", vn: "Bạn có thấy không?" },
+      { en: "She didn't know", vn: "Cô ấy đã không biết" },
+    ],
+  },
 };
+
+export default unit13;

@@ -88,6 +88,7 @@ export const unit16: UnitData = {
       { en: "Go straight for two blocks, then turn left.", vn: "Đi thẳng khoảng hai dãy nhà, sau đó rẽ trái." },
     ],
     tip: "Khi chỉ đường, hãy chia thành các bước nhỏ rõ ràng. Luôn dùng mốc nhà (landmark) để người nghe dễ xác định. Ví dụ: 'Turn left at the red building' thay vì chỉ nói 'Turn left'.",
+    vnNote: "⚠️ Lưu ý: Prepositions chỉ hướng và vị trí (to/from/at/in/on/by) thường không tương đương 1-1 với tiếng Việt. 'Đi đến' → 'go to' (không phải 'go at'). 'Ở ngã tư' → 'at the intersection' (dùng 'at' cho điểm cụ thể).",
     dialogueExample: {
       speaker: "Minh",
       text: "Turn right at the traffic lights. Our office is on the corner, opposite the Vietcombank.",
@@ -120,4 +121,19 @@ export const unit16: UnitData = {
     { id: "fq4", type: "translate", question: "Dịch sang tiếng Anh: 'Rẽ trái ở đèn giao thông, rồi đi thẳng hai dãy nhà.'", answer: "Turn left at the traffic lights, then go straight for two blocks." },
     { id: "fq5", type: "multiple-choice", question: "Thời gian nhận phòng tiêu chuẩn bằng tiếng Anh là gì?", options: ["Check-in time is 2 PM.", "Checking-in time is 2 PM.", "Check time is 2 PM.", "In-check time is 2 PM."], answer: "Check-in time is 2 PM." },
   ],
+
+  fluencyDrill: {
+    items: [
+      { en: "Turn left", vn: "Rẽ trái" },
+      { en: "Turn right", vn: "Rẽ phải" },
+      { en: "Go straight", vn: "Đi thẳng" },
+      { en: "At the corner", vn: "Ở góc đường" },
+      { en: "Next to the hotel", vn: "Cạnh khách sạn" },
+      { en: "Across from the bank", vn: "Đối diện ngân hàng" },
+      { en: "Take the first exit", vn: "Ra lối thoát đầu tiên" },
+      { en: "It's on the second floor", vn: "Nó ở tầng hai" },
+    ],
+  },
 };
+
+export default unit16;

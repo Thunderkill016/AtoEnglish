@@ -107,6 +107,7 @@ export const unit4: UnitData = {
       { en: "They have breakfast at seven.", vn: "Họ ăn sáng lúc bảy giờ." },
     ],
     tip: "Khi chủ ngữ là He/She/It, thêm -s vào cuối động từ (go → goes, watch → watches, brush → brushes). Với I/You/We/They: giữ nguyên động từ gốc.",
+    vnNote: "⚠️ Lưu ý: Tiếng Việt không chia động từ ('tôi đi / anh ấy đi'). Tiếng Anh BUỘC thêm -s/-es khi chủ ngữ là He/She/It: 'He go' (SAI) → 'He goes' (ĐÚNG). Đây là lỗi cực kỳ phổ biến!",
     dialogueExample: {
       speaker: "Sarah",
       text: "She brushes her teeth and washes her face.",
@@ -185,6 +186,19 @@ export const unit4: UnitData = {
       type: "translate",
     },
   ],
+
+  fluencyDrill: {
+    items: [
+      { en: "I work", vn: "Tôi làm việc" },
+      { en: "She works", vn: "Cô ấy làm việc" },
+      { en: "He starts at 8", vn: "Anh ấy bắt đầu lúc 8h" },
+      { en: "We have a meeting", vn: "Chúng tôi có cuộc họp" },
+      { en: "She sends emails", vn: "Cô ấy gửi email" },
+      { en: "He manages the team", vn: "Anh ấy quản lý đội" },
+      { en: "I finish at 5pm", vn: "Tôi kết thúc lúc 5 chiều" },
+      { en: "She doesn't work on Sunday", vn: "Cô ấy không làm việc ngày Chủ nhật" },
+    ],
+  },
 };
 
 export default unit4;

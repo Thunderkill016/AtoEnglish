@@ -91,6 +91,7 @@ export const unit10: UnitData = {
       { en: "He can play the guitar and sing.", vn: "Anh ấy có thể chơi guitar và hát." },
     ],
     tip: "Can là modal verb — KHÔNG thêm -s dù chủ ngữ là He/She/It. Sai: 'She cans swim'. Đúng: 'She can swim'. Phủ định: can't (= cannot). Câu hỏi: đảo 'Can' lên đầu câu.",
+    vnNote: "⚠️ Lưu ý: Prepositions (at/on/in) không có tương đương 1-1 với tiếng Việt. Người Việt thường dùng sai: 'at Monday' (SAI) → 'on Monday' (ĐÚNG). Quy tắc: at + giờ cụ thể, on + ngày/thứ, in + tháng/năm/buổi.",
     dialogueExample: {
       speaker: "Minh",
       text: "I can drive a motorbike but I can't drive a car yet.",
@@ -169,6 +170,19 @@ export const unit10: UnitData = {
       type: "translate",
     },
   ],
+
+  fluencyDrill: {
+    items: [
+      { en: "at 9 o'clock", vn: "lúc 9 giờ" },
+      { en: "on Monday", vn: "vào thứ Hai" },
+      { en: "in January", vn: "vào tháng Giêng" },
+      { en: "in the morning", vn: "vào buổi sáng" },
+      { en: "at the office", vn: "tại văn phòng" },
+      { en: "on time", vn: "đúng giờ" },
+      { en: "in 2024", vn: "vào năm 2024" },
+      { en: "at the meeting", vn: "tại cuộc họp" },
+    ],
+  },
 };
 
 export default unit10;

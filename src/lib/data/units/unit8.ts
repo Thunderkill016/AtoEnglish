@@ -88,6 +88,7 @@ export const unit8: UnitData = {
       { en: "Do you have any rice?", vn: "Bạn có cơm không?" },
     ],
     tip: "Countable nouns có thể đếm được (one apple, two eggs). Uncountable nouns không đếm được và không dùng 'a/an' (some rice, some water). Dùng 'some' cho khẳng định và 'any' cho câu hỏi/phủ định.",
+    vnNote: "⚠️ Lưu ý: Can/Can't dễ dùng nhưng người Việt hay thêm 'to' sau can: 'I can to swim' (SAI) → 'I can swim' (ĐÚNG). Sau modal verbs (can/will/should/must) KHÔNG BAO GIỜ dùng 'to'!",
     dialogueExample: {
       speaker: "Lan",
       text: "We say 'some pho', not 'a pho'.",
@@ -166,6 +167,19 @@ export const unit8: UnitData = {
       type: "translate",
     },
   ],
+
+  fluencyDrill: {
+    items: [
+      { en: "I can speak English", vn: "Tôi có thể nói tiếng Anh" },
+      { en: "She can't come today", vn: "Cô ấy không thể đến" },
+      { en: "Can you help me?", vn: "Bạn có thể giúp tôi không?" },
+      { en: "He can drive", vn: "Anh ấy có thể lái xe" },
+      { en: "We can't meet tomorrow", vn: "Chúng tôi không thể gặp" },
+      { en: "Can I use your phone?", vn: "Tôi có thể dùng điện thoại không?" },
+      { en: "She can write reports", vn: "Cô ấy có thể viết báo cáo" },
+      { en: "They can't attend", vn: "Họ không thể tham dự" },
+    ],
+  },
 };
 
 export default unit8;

@@ -88,6 +88,7 @@ export const unit18: UnitData = {
       { en: "I've worked here for 5 years. (Present Perfect)", vn: "Tôi đã làm việc ở đây 5 năm." },
     ],
     tip: "Bí quyết phân biệt 4 thì: (1) Past Simple = xong rồi, có thời điểm cụ thể. (2) Going to = đã lên kế hoạch. (3) Will = vừa quyết định / dự đoán. (4) Present Perfect = đã từng / vẫn còn liên quan hiện tại.",
+    vnNote: "⚠️ Lưu ý tổng hợp: Bốn thì chính — người Việt thường nhầm vì tiếng Việt không chia thì. Ghi nhớ: yesterday→Past Simple, now→Present Continuous, since/for→Present Perfect, always/every day→Present Simple.",
     dialogueExample: {
       speaker: "Minh",
       text: "Last year, we achieved 115%. We're going to launch new products. I've never been more confident!",
@@ -120,4 +121,19 @@ export const unit18: UnitData = {
     { id: "fq4", type: "translate", question: "Dịch sang tiếng Anh: 'Tôi đã học tiếng Anh được sáu tháng và tôi đang trở nên thành thạo hơn.'", answer: "I've studied English for six months and I'm becoming more fluent." },
     { id: "fq5", type: "multiple-choice", question: "Kết hợp đúng: Kể về kinh nghiệm + kế hoạch tương lai", options: ["I worked here for 5 years. I will going to expand next year.", "I've worked here for 5 years. I'm going to expand next year. ✅", "I've worked here since 5 years. I will expanding next year.", "I work here for 5 years. I'm going to expanding next year."], answer: "I've worked here for 5 years. I'm going to expand next year. ✅" },
   ],
+
+  fluencyDrill: {
+    items: [
+      { en: "I work every day", vn: "Tôi làm việc mỗi ngày" },
+      { en: "She is working now", vn: "Cô ấy đang làm việc" },
+      { en: "He worked yesterday", vn: "Anh ấy đã làm việc hôm qua" },
+      { en: "We have worked here for years", vn: "Chúng tôi đã làm việc nhiều năm" },
+      { en: "Did you finish?", vn: "Bạn đã hoàn thành chưa?" },
+      { en: "Have you ever done this?", vn: "Bạn đã bao giờ làm điều này chưa?" },
+      { en: "I am going to present", vn: "Tôi sẽ thuyết trình" },
+      { en: "They didn't attend", vn: "Họ đã không tham dự" },
+    ],
+  },
 };
+
+export default unit18;

@@ -90,6 +90,7 @@ export const unit5: UnitData = {
       { en: "She doesn't like watching TV.", vn: "Cô ấy không thích xem TV." },
     ],
     tip: "Sau 'like/likes' luôn dùng V-ing (không dùng động từ nguyên thể). Sai: 'I like swim'. Đúng: 'I like swimming'. Cũng có thể dùng 'enjoy + V-ing' với nghĩa tương tự.",
+    vnNote: "⚠️ Lưu ý: Sau 'like/enjoy/love', tiếng Anh dùng V-ing, KHÔNG dùng động từ nguyên thể. 'I like swim' (SAI) → 'I like swimming' (ĐÚNG). Tiếng Việt không có quy tắc này nên người Việt thường mắc lỗi.",
     dialogueExample: {
       speaker: "Mai",
       text: "I like reading and listening to music. And you?",
@@ -168,6 +169,19 @@ export const unit5: UnitData = {
       type: "translate",
     },
   ],
+
+  fluencyDrill: {
+    items: [
+      { en: "I like reading", vn: "Tôi thích đọc sách" },
+      { en: "She enjoys cooking", vn: "Cô ấy thích nấu ăn" },
+      { en: "He loves playing football", vn: "Anh ấy yêu bóng đá" },
+      { en: "We prefer working from home", vn: "Chúng tôi thích làm ở nhà" },
+      { en: "I hate being late", vn: "Tôi ghét đi trễ" },
+      { en: "She avoids eating sugar", vn: "Cô ấy tránh ăn đường" },
+      { en: "He enjoys listening to music", vn: "Anh ấy thích nghe nhạc" },
+      { en: "I don't mind overtime", vn: "Tôi không ngại làm thêm giờ" },
+    ],
+  },
 };
 
 export default unit5;

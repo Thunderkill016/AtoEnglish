@@ -102,6 +102,7 @@ export const unit2: UnitData = {
       { en: "What do you do?", vn: "Bạn làm nghề gì?" },
     ],
     tip: "Wh- questions bắt đầu bằng từ hỏi (What/Where/Who/How), sau đó là trợ động từ (am/is/are/do/does), cuối cùng là chủ ngữ. Đừng quên dấu hỏi (?) ở cuối câu!",
+    vnNote: "⚠️ Lưu ý: Tiếng Việt đặt từ hỏi ở cuối câu ('bạn tên là gì?'), nhưng tiếng Anh đặt Wh-word lên ĐẦU câu. Lỗi phổ biến: bỏ 'do/does' trong câu hỏi — 'Where you live?' (sai) → 'Where do you live?' (đúng).",
     dialogueExample: {
       speaker: "Nam",
       text: "What's your full name?",
@@ -180,6 +181,19 @@ export const unit2: UnitData = {
       type: "translate",
     },
   ],
+
+  fluencyDrill: {
+    items: [
+      { en: "What is your name?", vn: "Tên bạn là gì?" },
+      { en: "Where are you from?", vn: "Bạn đến từ đâu?" },
+      { en: "How old are you?", vn: "Bạn bao nhiêu tuổi?" },
+      { en: "What do you do?", vn: "Bạn làm gì?" },
+      { en: "Where do you work?", vn: "Bạn làm việc ở đâu?" },
+      { en: "Do you have children?", vn: "Bạn có con chưa?" },
+      { en: "What is your email?", vn: "Email của bạn là gì?" },
+      { en: "Are you married?", vn: "Bạn đã kết hôn chưa?" },
+    ],
+  },
 };
 
 export default unit2;

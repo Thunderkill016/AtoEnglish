@@ -34,7 +34,95 @@ function getSpeechRecognition(): typeof SpeechRecognition | null {
   return window.SpeechRecognition ?? window.webkitSpeechRecognition ?? null;
 }
 
-// ─── Section order & labels (9 steps, Hybrid pedagogical flow) ───────────────
+// ─── FluencyDrillPanel — Nation's Strand 4 (fast retrieval with KNOWN items) ──
+function FluencyDrillPanel({ items, onDone }: { items: Array<{en: string; vn: string}>; onDone: () => void }) {
+  const [idx, setIdx] = useState(0);
+  const [flipped, setFlipped] = useState(false);
+  const [score, setScore] = useState(0);
+  const [timeLeft, setTimeLeft] = useState(60);
+  const [done, setDone] = useState(false);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  useEffect(() => {
+    intervalRef.current = setInterval(() => {
+      setTimeLeft(t => {
+        if (t <= 1) { clearInterval(intervalRef.current!); setDone(true); return 0; }
+        return t - 1;
+      });
+    }, 1000);
+    return () => { if (intervalRef.current) clearInterval(intervalRef.current); };
+  }, []);
+
+  const handleAnswer = (correct: boolean) => {
+    if (correct) setScore(s => s + 1);
+    if (idx >= items.length - 1) { setDone(true); clearInterval(intervalRef.current!); }
+    else { setIdx(i => i + 1); setFlipped(false); }
+  };
+
+  if (done) {
+    const pct = Math.round((score / items.length) * 100);
+    return (
+      <div className="rounded-2xl bg-gradient-to-br from-amber-950/40 to-orange-950/20 border border-amber-700/30 p-8 text-center">
+        <div className="text-5xl mb-3">{pct >= 80 ? "🔥" : pct >= 50 ? "💪" : "📚"}</div>
+        <p className="text-white font-black text-2xl mb-1">{score}/{items.length}</p>
+        <p className="text-amber-400 font-semibold mb-1">{pct >= 80 ? "Phản xạ tuyệt vời!" : pct >= 50 ? "Đang tiến bộ!" : "Cần luyện thêm!"}</p>
+        <p className="text-zinc-500 text-xs mb-6">Nation (2007): Fluency = tốc độ + độ chính xác với từ đã biết</p>
+        <button onClick={onDone} className="bg-amber-500 hover:bg-amber-400 text-zinc-950 font-black rounded-xl px-8 py-3 transition-colors">
+          Tiếp tục →
+        </button>
+      </div>
+    );
+  }
+
+  const item = items[idx];
+  return (
+    <div>
+      {/* Timer + progress */}
+      <div className="flex items-center gap-3 mb-4">
+        <div className={`text-2xl font-black tabular-nums ${timeLeft <= 10 ? "text-red-400" : "text-amber-400"}`}>
+          {timeLeft}s
+        </div>
+        <div className="flex-1 h-2 bg-zinc-800 rounded-full overflow-hidden">
+          <div className="h-full bg-amber-500 rounded-full transition-all duration-1000" style={{ width: `${(timeLeft / 60) * 100}%` }} />
+        </div>
+        <span className="text-xs text-zinc-500 font-bold">{idx + 1}/{items.length}</span>
+      </div>
+
+      {/* Flashcard */}
+      <div className="cursor-pointer mb-4" onClick={() => setFlipped(f => !f)} style={{ perspective: "600px" }}>
+        <div style={{ transition: "transform 0.4s", transformStyle: "preserve-3d", transform: flipped ? "rotateY(180deg)" : "rotateY(0deg)", position: "relative", minHeight: "140px" }}>
+          <div className="absolute inset-0 bg-amber-950/30 border-2 border-amber-700/40 rounded-2xl p-6 flex flex-col items-center justify-center" style={{ backfaceVisibility: "hidden" }}>
+            <p className="text-zinc-400 text-xs mb-2 uppercase tracking-widest">Tiếng Việt</p>
+            <p className="text-white font-black text-2xl text-center">{item.vn}</p>
+            <p className="text-amber-600 text-xs mt-3">Nhấn để xem tiếng Anh</p>
+          </div>
+          <div className="absolute inset-0 bg-emerald-950/30 border-2 border-emerald-600/40 rounded-2xl p-6 flex flex-col items-center justify-center" style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}>
+            <p className="text-zinc-400 text-xs mb-2 uppercase tracking-widest">Tiếng Anh</p>
+            <p className="text-emerald-300 font-black text-2xl text-center">{item.en}</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Self-rate buttons */}
+      {flipped ? (
+        <div className="grid grid-cols-2 gap-3">
+          <button onClick={() => handleAnswer(false)} className="bg-red-900/30 hover:bg-red-900/50 border border-red-700/40 text-red-300 font-bold rounded-xl py-3 text-sm transition-colors">
+            ✗ Chưa nhớ
+          </button>
+          <button onClick={() => handleAnswer(true)} className="bg-emerald-900/30 hover:bg-emerald-900/50 border border-emerald-600/40 text-emerald-300 font-bold rounded-xl py-3 text-sm transition-colors">
+            ✓ Nhớ rồi!
+          </button>
+        </div>
+      ) : (
+        <p className="text-center text-zinc-600 text-sm">Nhớ chưa? Nhấn thẻ để kiểm tra →</p>
+      )}
+
+      <p className="text-center text-zinc-700 text-xs mt-3">✓ {score} từ nhớ được</p>
+    </div>
+  );
+}
+
+// ─── Section order & labels (10 steps, Hybrid pedagogical flow) ───────────────
 // Physical section numbers → user-facing labels
 const SECTION_LABELS: Record<number, string> = {
   1: "Khởi động",
@@ -42,15 +130,16 @@ const SECTION_LABELS: Record<number, string> = {
   2: "Từ vựng",    // Vocabulary after Dialogue
   3: "Ngữ pháp",   // Grammar in Context
   4: "Luyện tập",  // Practice (matching + MC + scramble)
+  10: "Phản xạ",   // Fluency Strand 4 — timed recall of known vocab
   9: "Dịch câu",   // VN→EN Translation (new dedicated section)
   6: "Shadowing",
   7: "Luyện nói",
   8: "Hoàn thành",
 };
-// Navigation flow: Warmup → Dialogue → Vocab → Grammar → Practice → Translate → Shadowing → Speaking → Quiz
-const SECTION_ORDER = [1, 5, 2, 3, 4, 9, 6, 7, 8] as const;
+// Navigation flow: Warmup → Dialogue → Vocab → Grammar → Practice → Fluency → Translate → Shadowing → Speaking → Quiz
+const SECTION_ORDER = [1, 5, 2, 3, 4, 10, 9, 6, 7, 8] as const;
 type SectionNumber = (typeof SECTION_ORDER)[number];
-const TOTAL_SECTIONS = SECTION_ORDER.length; // 9
+const TOTAL_SECTIONS = SECTION_ORDER.length; // 10
 
 // ─── Interfaces ──────────────────────────────────────────────────────────────
 export interface VocabItem {
@@ -131,6 +220,7 @@ export interface GrammarPoint {
     vn: string;
   }>;
   tip?: string;            // Quick usage tip (Vietnamese)
+  vnNote?: string;         // Vietnamese L1 interference warning (research-backed: Nation/Webb)
   dialogueExample?: {      // Cross-reference: dialogue line showing grammar in authentic context
     speaker: string;
     text: string;
@@ -143,6 +233,27 @@ export interface GrammarPoint {
     answer: string;
     explanation?: string; // Optional pedagogical note shown after answer
   };
+}
+
+/** Pronunciation focus for a unit — targets Vietnamese-specific phonology challenges */
+export interface PronunciationFocus {
+  phoneme: string;         // e.g. "/θ/" or "Final consonants"
+  description: string;     // Brief Vietnamese description
+  examples: Array<{
+    word: string;
+    ipa: string;
+    tip: string;           // Short articulation tip in Vietnamese
+  }>;
+  minimalPairs?: Array<[string, string]>; // e.g. [["think","sink"],["three","tree"]]
+}
+
+/** Fluency Drill — Nation's Strand 4: fast retrieval with KNOWN material only */
+export interface FluencyDrill {
+  title?: string;          // e.g. "Phản xạ 60 giây"
+  items: Array<{
+    en: string;            // English word/phrase
+    vn: string;            // Vietnamese meaning
+  }>;
 }
 
 /** Matching exercise: word ↔ meaning pairs */
@@ -189,6 +300,9 @@ export interface UnitData {
   // ── Situational Fluency (Phase 1) ──
   situation?: string;              // Real-world situation context shown at lesson start
   learningOutcomes?: string[];     // 3 things user can DO after completing this unit
+  // ── Research-backed additions ──
+  pronunciationFocus?: PronunciationFocus;  // Pronunciation guide for Vietnamese learners
+  fluencyDrill?: FluencyDrill;              // Nation's Strand 4: fast recall of known vocab
 }
 
 interface UnitTemplateProps {
@@ -225,6 +339,10 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
   const [isPlayingDialogue, setIsPlayingDialogue] = useState(false);
   const [lacAnswers, setLacAnswers] = useState<Record<number, string>>({});
   const [lacSubmitted, setLacSubmitted] = useState(false);
+
+  // Section 10 — Fluency Drill
+  const [fluencyActive, setFluencyActive] = useState(false);
+  const [fluencyTime, setFluencyTime] = useState(60);
 
   // Section 9 — VN→EN Translation (new dedicated production section)
   const [translateInputs, setTranslateInputs] = useState<Record<string, string>>({});
@@ -2176,6 +2294,44 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
               )}
             </motion.div>
           )}
+
+          {/* ══ SECTION 10: Fluency Drill — Nation's Strand 4 ══ */}
+          {section === 10 && (() => {
+            const drillItems = unit.fluencyDrill?.items ?? unit.vocab.slice(0, 8).map(v => ({ en: v.word, vn: v.meaning }));
+            return (
+              <motion.div key="s10" variants={sectionVariants} initial="initial" animate="animate" exit="exit" transition={{ duration: 0.3 }}>
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="text-2xl">⚡</span>
+                  <h1 className="text-xl sm:text-2xl font-black text-white">{unit.fluencyDrill?.title ?? "Luyện phản xạ"}</h1>
+                  <span className="text-xs text-zinc-500 ml-auto">~1 phút</span>
+                </div>
+                <p className="text-zinc-400 mb-1 text-sm">Nhìn tiếng Việt → nhớ ngay tiếng Anh. <span className="text-amber-400 font-semibold">Không dừng suy nghĩ!</span></p>
+                <p className="text-[11px] text-zinc-600 mb-5 italic">Mục tiêu: phản xạ tức thì với từ đã biết — đây là Fluency Strand (Nation, 2007)</p>
+
+                {!fluencyActive ? (
+                  <div className="rounded-2xl bg-gradient-to-br from-amber-950/40 to-orange-950/20 border border-amber-700/30 p-8 text-center">
+                    <div className="text-5xl mb-4">🏋️</div>
+                    <p className="text-white font-bold text-lg mb-2">Sẵn sàng luyện phản xạ?</p>
+                    <p className="text-zinc-400 text-sm mb-6">{drillItems.length} từ • Nhấn thẻ để lật • Chấm điểm bản thân</p>
+                    <button
+                      onClick={() => { setFluencyActive(true); setFluencyTime(60); }}
+                      className="bg-amber-500 hover:bg-amber-400 text-zinc-950 font-black rounded-xl px-8 py-3 text-base transition-colors"
+                    >
+                      Bắt đầu ⚡
+                    </button>
+                  </div>
+                ) : (
+                  <FluencyDrillPanel items={drillItems} onDone={goNext} />
+                )}
+
+                {!fluencyActive && (
+                  <button onClick={goNext} className="mt-4 w-full text-zinc-500 hover:text-zinc-300 text-sm transition-colors py-2">
+                    Bỏ qua →
+                  </button>
+                )}
+              </motion.div>
+            );
+          })()}
 
           {/* ══ SECTION 9: VN → EN Translation (Dedicated Production Section) ══ */}
           {section === 9 && (

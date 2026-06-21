@@ -88,6 +88,7 @@ export const unit15: UnitData = {
       { en: "This phone is more durable than that one.", vn: "Chiếc điện thoại này bền hơn chiếc kia." },
     ],
     tip: "Quy tắc nhanh: Tính từ 1-2 âm tiết → thêm -er/-est. Tính từ ≥3 âm tiết → dùng more/most. Lưu ý đặc biệt: good/better/best, bad/worse/worst, far/further/furthest.",
+    vnNote: "⚠️ Lưu ý: Comparatives có quy tắc phức tạp: tính từ ngắn thêm -er/est (fast→faster), tính từ dài dùng more/most (expensive→more expensive). Không thể nói 'more fast' hoặc 'expensiver'!",
     dialogueExample: {
       speaker: "Minh",
       text: "The camera is better than last year's model. It's the best option for your budget!",
@@ -120,4 +121,19 @@ export const unit15: UnitData = {
     { id: "fq4", type: "translate", question: "Dịch sang tiếng Anh: 'Tôi không đủ tiền mua cái này. Nó quá đắt.'", answer: "I can't afford this. It's too expensive." },
     { id: "fq5", type: "multiple-choice", question: "So sánh bất quy tắc: 'bad' → ___ → ___", options: ["badder / baddest", "more bad / most bad", "worse / worst", "badly / worst"], answer: "worse / worst" },
   ],
+
+  fluencyDrill: {
+    items: [
+      { en: "cheaper", vn: "rẻ hơn" },
+      { en: "more reliable", vn: "đáng tin hơn" },
+      { en: "the best quality", vn: "chất lượng tốt nhất" },
+      { en: "more convenient", vn: "tiện lợi hơn" },
+      { en: "the cheapest option", vn: "lựa chọn rẻ nhất" },
+      { en: "better value", vn: "giá trị tốt hơn" },
+      { en: "the most popular", vn: "phổ biến nhất" },
+      { en: "worse than expected", vn: "tệ hơn dự kiến" },
+    ],
+  },
 };
+
+export default unit15;

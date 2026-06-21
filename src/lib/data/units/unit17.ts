@@ -87,6 +87,7 @@ export const unit17: UnitData = {
       { en: "I've just finished the report.", vn: "Tôi vừa hoàn thành báo cáo. (just = vừa mới)" },
     ],
     tip: "Phân biệt FOR và SINCE: <strong>For</strong> + khoảng thời gian (for 3 years, for a week). <strong>Since</strong> + mốc thời điểm cụ thể (since 2020, since Monday). Cách nhớ: 'for a period, since a point'.",
+    vnNote: "⚠️ Lưu ý: Present Perfect (have/has + V3) không có tương đương trực tiếp trong tiếng Việt. Người Việt hay dùng Past Simple thay vì Present Perfect. 'I saw him before' (quá khứ đơn) vs 'I have seen him' (kinh nghiệm, thời điểm không xác định).",
     dialogueExample: {
       speaker: "Minh",
       text: "I've worked with foreign clients for three years. I've led a team since 2022.",
@@ -119,4 +120,19 @@ export const unit17: UnitData = {
     { id: "fq4", type: "translate", question: "Dịch sang tiếng Anh: 'Bạn đã hoàn thành báo cáo chưa?'", answer: "Have you finished the report yet?" },
     { id: "fq5", type: "multiple-choice", question: "Chọn câu ĐÚNG: Mô tả kinh nghiệm của bạn", options: ["I have never went abroad.", "I have never been abroad.", "I never have been abroad.", "I haven't never been abroad."], answer: "I have never been abroad." },
   ],
+
+  fluencyDrill: {
+    items: [
+      { en: "I have worked here for 2 years", vn: "Tôi đã làm việc ở đây 2 năm" },
+      { en: "She has never been to London", vn: "Cô ấy chưa bao giờ đến London" },
+      { en: "Have you ever tried?", vn: "Bạn đã bao giờ thử chưa?" },
+      { en: "He has just arrived", vn: "Anh ấy vừa mới đến" },
+      { en: "We have already finished", vn: "Chúng tôi đã hoàn thành rồi" },
+      { en: "I haven't eaten yet", vn: "Tôi chưa ăn" },
+      { en: "She has worked here since 2020", vn: "Cô ấy đã làm ở đây từ 2020" },
+      { en: "They have been friends for years", vn: "Họ đã là bạn bè nhiều năm" },
+    ],
+  },
 };
+
+export default unit17;

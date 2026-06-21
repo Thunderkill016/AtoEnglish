@@ -87,6 +87,7 @@ export const unit14: UnitData = {
       { en: "She will probably finish the project soon.", vn: "Cô ấy có thể sẽ hoàn thành dự án sớm." },
     ],
     tip: "Cách nhớ nhanh: <strong>Going to</strong> = bạn đã suy nghĩ về nó từ trước. <strong>Will</strong> = bạn vừa quyết định ngay lúc nói. Trong hội thoại thực tế, người bản xứ hay dùng 'I'll' thay vì 'I will'.",
+    vnNote: "⚠️ Lưu ý: 'Will' vs 'Going to' - cả hai đều chỉ tương lai. Will = quyết định tại chỗ hoặc dự đoán. Going to = kế hoạch đã có sẵn từ trước. Người Việt hay dùng nhầm hoặc bỏ qua sự khác biệt.",
     dialogueExample: {
       speaker: "Minh",
       text: "I'm going to prepare the presentation. I'll let you know soon.",
@@ -119,4 +120,19 @@ export const unit14: UnitData = {
     { id: "fq4", type: "translate", question: "Dịch sang tiếng Anh: 'Tôi hy vọng mọi thứ sẽ diễn ra suôn sẻ.'", answer: "I hope everything will go smoothly." },
     { id: "fq5", type: "multiple-choice", question: "Câu nào ĐÚNG về ngữ pháp?", options: ["I going to prepare a report.", "I'm going to prepare a report. ✅", "I will going to prepare a report.", "I'm go to prepare a report."], answer: "I'm going to prepare a report. ✅" },
   ],
+
+  fluencyDrill: {
+    items: [
+      { en: "I will call you", vn: "Tôi sẽ gọi cho bạn" },
+      { en: "She is going to meet the client", vn: "Cô ấy sẽ gặp khách hàng" },
+      { en: "It will be fine", vn: "Nó sẽ ổn" },
+      { en: "We are going to have a meeting", vn: "Chúng tôi sẽ họp" },
+      { en: "Will you help me?", vn: "Bạn có giúp tôi không?" },
+      { en: "I am going to resign", vn: "Tôi sẽ từ chức" },
+      { en: "It won't take long", vn: "Sẽ không mất lâu" },
+      { en: "They are going to launch", vn: "Họ sẽ ra mắt" },
+    ],
+  },
 };
+
+export default unit14;
