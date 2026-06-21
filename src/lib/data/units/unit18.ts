@@ -1,0 +1,123 @@
+import { UnitData } from "@/components/learn/UnitTemplate";
+
+export const unit18: UnitData = {
+  unitId: "unit-18",
+  title: "Unit 18: A2 Review & Real-life Communication",
+  level: "A2",
+  xp: 120,
+  estimatedTime: 55,
+  description: "Ôn tập toàn bộ ngữ pháp và từ vựng A2. Tổng hợp 4 kỹ năng: nói về quá khứ, tương lai, so sánh và kinh nghiệm.",
+  badgeName: "Chuyên Gia A2",
+  badgeEmoji: "🎓",
+  situation: "Buổi họp nhóm quốc tế cuối năm. Bạn cần báo cáo về những gì đã đạt được (Past Simple), những kế hoạch sắp tới (will/going to), so sánh kết quả với năm ngoái (comparative), và chia sẻ kinh nghiệm của bạn (Present Perfect).",
+  learningOutcomes: [
+    "Kết hợp thành thạo 4 thì quan trọng của A2",
+    "Giao tiếp tự tin trong cuộc họp quốc tế",
+    "Chia sẻ thành tích, kế hoạch và kinh nghiệm bằng tiếng Anh"
+  ],
+  warmupGreetings: [
+    { emoji: "📊", en: "Last year, we achieved excellent results.", vn: "Năm ngoái, chúng tôi đã đạt được kết quả xuất sắc.", context: "Báo cáo thành tích quá khứ" },
+    { emoji: "🚀", en: "Next quarter, we're going to launch three new products.", vn: "Quý tới, chúng tôi sẽ ra mắt ba sản phẩm mới.", context: "Kế hoạch tương lai" },
+    { emoji: "🌟", en: "I've worked in this industry for over five years.", vn: "Tôi đã làm trong ngành này hơn năm năm.", context: "Kinh nghiệm Present Perfect" }
+  ],
+  culturalNote: "Trong các cuộc họp quốc tế, người Việt thường khiêm tốn hơn so với văn hóa phương Tây. Tuy nhiên, khi nói tiếng Anh trong môi trường chuyên nghiệp quốc tế, hãy tự tin chia sẻ thành tích của mình. Sử dụng <span class=\"text-emerald-400 font-semibold\">'We achieved...'</span> thay vì <span class=\"text-emerald-400 font-semibold\">'I think we did OK...'</span> để thể hiện sự chuyên nghiệp.",
+  vocab: [
+    { id: 1, word: "achieved", emoji: "🏆", phonetic: "/əˈtʃiːvd/", meaning: "đã đạt được", example: "We achieved 120% of our sales target.", example2: "She achieved remarkable results.", collocation: "achieved our goal / achieved success", audio: "/audio/unit18/achieved.mp3" },
+    { id: 2, word: "report", emoji: "📋", phonetic: "/rɪˈpɔːrt/", meaning: "báo cáo", example: "I will present my annual report.", example2: "Have you finished the report yet?", collocation: "annual report / submit a report", audio: "/audio/unit18/report.mp3" },
+    { id: 3, word: "quarter", emoji: "📅", phonetic: "/ˈkwɔːrtər/", meaning: "quý (3 tháng)", example: "Sales increased in the third quarter.", example2: "Our targets for next quarter are higher.", collocation: "next quarter / quarterly review", audio: "/audio/unit18/quarter.mp3" },
+    { id: 4, word: "increased", emoji: "📈", phonetic: "/ɪnˈkriːst/", meaning: "đã tăng lên", example: "Revenue increased by 15% last year.", example2: "Our team's performance has increased.", collocation: "increased by / increased significantly", audio: "/audio/unit18/increased.mp3" },
+    { id: 5, word: "target", emoji: "🎯", phonetic: "/ˈtɑːrɡɪt/", meaning: "mục tiêu / chỉ tiêu", example: "We met our sales target this month.", example2: "My target is to finish by Friday.", collocation: "meet a target / set a target", audio: "/audio/unit18/target.mp3" },
+    { id: 6, word: "compared to", emoji: "⚖️", phonetic: "/kəmˈpeərd tuː/", meaning: "so với", example: "Sales are higher compared to last year.", example2: "Compared to my first job, this is much better.", collocation: "compared to last year / compared with", audio: "/audio/unit18/compared_to.mp3" },
+    { id: 7, word: "challenge", emoji: "💪", phonetic: "/ˈtʃælɪndʒ/", meaning: "thách thức", example: "The biggest challenge was the pandemic.", example2: "I enjoy a good challenge at work.", collocation: "face a challenge / overcome a challenge", audio: "/audio/unit18/challenge.mp3" },
+    { id: 8, word: "successful", emoji: "✅", phonetic: "/səkˈsesfəl/", meaning: "thành công", example: "The campaign was very successful.", example2: "She had a successful career.", collocation: "very successful / highly successful", audio: "/audio/unit18/successful.mp3" },
+    { id: 9, word: "strategy", emoji: "♟️", phonetic: "/ˈstrætɪdʒi/", meaning: "chiến lược", example: "We will change our marketing strategy.", example2: "A good strategy leads to success.", collocation: "business strategy / develop a strategy", audio: "/audio/unit18/strategy.mp3" },
+    { id: 10, word: "progress", emoji: "🔄", phonetic: "/ˈprɒɡres/", meaning: "tiến độ / tiến bộ", example: "How is the project progress?", example2: "I've made great progress in English.", collocation: "make progress / track progress", audio: "/audio/unit18/progress.mp3" },
+    { id: 11, word: "opportunity", emoji: "🌟", phonetic: "/ˌɒpərˈtjuːnɪti/", meaning: "cơ hội", example: "This is a great opportunity to grow.", example2: "I hope to get an opportunity to work abroad.", collocation: "take an opportunity / miss an opportunity", audio: "/audio/unit18/opportunity.mp3" },
+    { id: 12, word: "fluent", emoji: "🗣️", phonetic: "/ˈfluːənt/", meaning: "thành thạo / trôi chảy", example: "I'm becoming more fluent in English.", example2: "She speaks French fluently.", collocation: "speak fluently / become fluent", audio: "/audio/unit18/fluent.mp3" },
+  ],
+  dialogues: [
+    {
+      id: 1,
+      title: "Báo cáo cuối năm",
+      audio: "/audio/unit18/dialogue_1.mp3",
+      desc: "Minh trình bày báo cáo cuối năm kết hợp tất cả thì A2.",
+      lines: [
+        { id: "d1-1", speaker: "Manager", text: "Minh, can you give us a quick year-end report?", translation: "Minh, bạn có thể cho chúng tôi biết tóm tắt báo cáo cuối năm không?" },
+        { id: "d1-2", speaker: "Minh", text: "Of course! Last year, we achieved 115% of our annual target. Revenue increased by 20% compared to the previous year.", translation: "Được chứ! Năm ngoái, chúng tôi đã đạt 115% chỉ tiêu năm. Doanh thu tăng 20% so với năm trước." },
+        { id: "d1-3", speaker: "Manager", text: "Excellent! And what about challenges?", translation: "Tuyệt vời! Còn những thách thức thì sao?" },
+        { id: "d1-4", speaker: "Minh", text: "The biggest challenge was finding new clients. But we've already developed a new strategy for next year.", translation: "Thách thức lớn nhất là tìm khách hàng mới. Nhưng chúng tôi đã phát triển một chiến lược mới cho năm tới." },
+        { id: "d1-5", speaker: "Manager", text: "What are your plans for next quarter?", translation: "Kế hoạch của bạn cho quý tới là gì?" },
+        { id: "d1-6", speaker: "Minh", text: "We're going to launch two new products and expand to three new markets. I will personally lead the team. I've never been more confident!", translation: "Chúng tôi sẽ ra mắt hai sản phẩm mới và mở rộng sang ba thị trường mới. Cá nhân tôi sẽ dẫn dắt nhóm. Tôi chưa bao giờ tự tin đến vậy!" },
+      ]
+    },
+    {
+      id: 2,
+      title: "Chia sẻ kinh nghiệm và kế hoạch",
+      audio: "/audio/unit18/dialogue_2.mp3",
+      desc: "Tom và Lan nói chuyện về hành trình học tiếng Anh và kế hoạch tương lai.",
+      lines: [
+        { id: "d2-1", speaker: "Tom", text: "Lan, your English has improved so much! How long have you been studying?", translation: "Lan, tiếng Anh của bạn tiến bộ nhiều quá! Bạn đã học bao lâu rồi?" },
+        { id: "d2-2", speaker: "Lan", text: "I've studied with AtoEnglish for six months. It's much better than my old method!", translation: "Tôi đã học với AtoEnglish được sáu tháng. Tốt hơn rất nhiều so với phương pháp cũ của tôi!" },
+        { id: "d2-3", speaker: "Tom", text: "That's fantastic! What did you do differently?", translation: "Tuyệt vời! Bạn đã làm khác đi điều gì?" },
+        { id: "d2-4", speaker: "Lan", text: "I focused on real situations, not just grammar. I've already completed 18 units and I feel confident now.", translation: "Tôi tập trung vào tình huống thực tế, không chỉ học ngữ pháp. Tôi đã hoàn thành 18 unit và cảm thấy tự tin rồi." },
+        { id: "d2-5", speaker: "Tom", text: "That's impressive! Are you going to continue to B1?", translation: "Thật ấn tượng! Bạn có định tiếp tục lên B1 không?" },
+        { id: "d2-6", speaker: "Lan", text: "Yes! I'm going to start B1 next month. My goal is to become fluent enough to lead international meetings. I hope you'll be there to support me!", translation: "Có! Tôi định bắt đầu B1 tháng tới. Mục tiêu của tôi là đủ thành thạo để dẫn dắt các cuộc họp quốc tế. Tôi hy vọng bạn sẽ ủng hộ tôi nhé!" },
+      ]
+    },
+  ],
+  listenAndChoose: [
+    { id: "lac1", audio_text: "Revenue increased by twenty percent compared to last year", options: ["Revenue increased by twenty percent compared to last year", "Revenue increased twenty percent compared to last year", "Revenue increased by twenty percent compare to last year", "Revenue was increased by twenty percent compared to last year"], answer: "Revenue increased by twenty percent compared to last year" },
+    { id: "lac2", audio_text: "We're going to launch two new products next quarter", options: ["We going to launch two new products next quarter", "We're going to launch two new products next quarter", "We will going to launch two new products next quarter", "We're going launch two new products next quarter"], answer: "We're going to launch two new products next quarter" },
+    { id: "lac3", audio_text: "I've studied English for six months", options: ["I studied English for six months", "I've studied English for six months", "I've studied English since six months", "I have study English for six months"], answer: "I've studied English for six months" },
+    { id: "lac4", audio_text: "The campaign was more successful than last year", options: ["The campaign was more successful than last year", "The campaign was successful more than last year", "The campaign was more successfuler than last year", "The campaign was most successful than last year"], answer: "The campaign was more successful than last year" },
+    { id: "lac5", audio_text: "I've never been more confident", options: ["I've never been more confident", "I never been more confident", "I've never be more confident", "I haven't never been more confident"], answer: "I've never been more confident" },
+  ],
+  speaking: {
+    level1Prompt: "This year, I achieved {input}. Next year, I'm going to {input}.",
+    level1Placeholder: "Ví dụ: my sales target — expand to new markets...",
+    level2Situation: "Bạn đang thuyết trình trong cuộc họp tổng kết cuối năm với đội nhóm quốc tế. Báo cáo: (1) những gì đã đạt được năm vừa rồi, (2) kế hoạch năm tới, (3) so sánh kết quả với năm trước, (4) kinh nghiệm bạn đã có được.",
+    level2Hint: "Last year, we achieved [result]. Revenue [increased/decreased] by [%] compared to [time period]. I've [experience/accomplishment] since [time]. Next year, we're going to [plan]. I hope we will [prediction].",
+  },
+  grammar: {
+    title: "A2 Grammar Review — 4 thì quan trọng",
+    rule: "Past Simple: V-ed / irregular (yesterday, last...)\nFuture going to: am/is/are + going to + V (planned)\nFuture will: will + V (prediction/spontaneous)\nPresent Perfect: have/has + past participle (experience)",
+    examples: [
+      { en: "We achieved our target last year. (Past Simple)", vn: "Năm ngoái chúng tôi đã đạt chỉ tiêu." },
+      { en: "We're going to expand next quarter. (Future going to)", vn: "Quý tới chúng tôi sẽ mở rộng." },
+      { en: "Revenue will increase. (Future will)", vn: "Doanh thu sẽ tăng." },
+      { en: "I've worked here for 5 years. (Present Perfect)", vn: "Tôi đã làm việc ở đây 5 năm." },
+    ],
+    tip: "Bí quyết phân biệt 4 thì: (1) Past Simple = xong rồi, có thời điểm cụ thể. (2) Going to = đã lên kế hoạch. (3) Will = vừa quyết định / dự đoán. (4) Present Perfect = đã từng / vẫn còn liên quan hiện tại.",
+    dialogueExample: {
+      speaker: "Minh",
+      text: "Last year, we achieved 115%. We're going to launch new products. I've never been more confident!",
+      translation: "Năm ngoái chúng tôi đạt 115%. Chúng tôi sẽ ra mắt sản phẩm mới. Tôi chưa bao giờ tự tin đến vậy!",
+      highlight: "achieved (past) / going to launch (future plan) / 've never been (present perfect)",
+    },
+    ccq: {
+      question: "Câu nào dùng ĐÚNG TẤT CẢ các thì?",
+      options: [
+        "Last year I achieved my goal. Next year I will achieving more.",
+        "Last year I achieved my goal. I've been in this role since 2020. Next year I'm going to do better. ✅",
+        "Last year I have achieved my goal. Next year I'm going to do better.",
+        "Last year I achieved my goal. Since then I working harder.",
+      ],
+      answer: "Last year I achieved my goal. I've been in this role since 2020. Next year I'm going to do better. ✅",
+      explanation: "Past Simple (achieved - thời điểm cụ thể) + Present Perfect (since 2020 - tính đến hiện tại) + Going to (kế hoạch đã lên sẵn) — ba thì kết hợp đúng hoàn toàn.",
+    },
+  },
+  practiceQuiz: [
+    { id: "pq1", type: "multiple-choice", question: "Chọn đúng thì: 'We ___ our sales target last quarter.' (đã đạt - quá khứ cụ thể)", options: ["have achieved", "achieved", "are achieving", "achieve"], answer: "achieved" },
+    { id: "pq2", type: "multiple-choice", question: "Chọn đúng: 'She ___ (kế hoạch sẵn) study for the IELTS next year.'", options: ["will study", "is going to study", "studies", "was going to study"], answer: "is going to study" },
+    { id: "pq3", type: "cloze", question: "Điền: 'This year's result is better ___ last year's.' (so sánh)", answer: "than" },
+    { id: "pq4", type: "multiple-choice", question: "Câu Present Perfect đúng: 'I ___ in sales for 7 years.'", options: ["work", "worked", "have worked", "am working"], answer: "have worked" },
+    { id: "pq5", type: "cloze", question: "Điền: 'Revenue ___ (increase) by 20% compared to last year.'", answer: "increased" },
+  ],
+  quiz: [
+    { id: "fq1", type: "multiple-choice", question: "Dịch: 'Năm ngoái doanh thu tăng 20% so với năm trước.'", options: ["Last year revenue increases 20% compared previous year.", "Last year revenue increased by 20% compared to the previous year.", "Last year revenue has increased 20% compare to previous year.", "Revenue last year increased by 20% compare previous year."], answer: "Last year revenue increased by 20% compared to the previous year." },
+    { id: "fq2", type: "cloze", question: "Điền: 'I ___ (work) in this company since 2021.'", answer: "have worked" },
+    { id: "fq3", type: "multiple-choice", question: "Câu nào nói đúng về kế hoạch ĐÃ LÊN SẴN?", options: ["I will probably travel next month.", "I'm going to travel next month. ✅", "I travel next month.", "I travelled next month."], answer: "I'm going to travel next month. ✅" },
+    { id: "fq4", type: "translate", question: "Dịch sang tiếng Anh: 'Tôi đã học tiếng Anh được sáu tháng và tôi đang trở nên thành thạo hơn.'", answer: "I've studied English for six months and I'm becoming more fluent." },
+    { id: "fq5", type: "multiple-choice", question: "Kết hợp đúng: Kể về kinh nghiệm + kế hoạch tương lai", options: ["I worked here for 5 years. I will going to expand next year.", "I've worked here for 5 years. I'm going to expand next year. ✅", "I've worked here since 5 years. I will expanding next year.", "I work here for 5 years. I'm going to expanding next year."], answer: "I've worked here for 5 years. I'm going to expand next year. ✅" },
+  ],
+};

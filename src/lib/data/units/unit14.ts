@@ -1,0 +1,122 @@
+import { UnitData } from "@/components/learn/UnitTemplate";
+
+export const unit14: UnitData = {
+  unitId: "unit-14",
+  title: "Unit 14: Future Plans & Predictions",
+  level: "A2",
+  xp: 90,
+  estimatedTime: 45,
+  description: "Học cách nói về kế hoạch tương lai và dự đoán bằng 'will' và 'going to'.",
+  badgeName: "Người Lập Kế Hoạch",
+  badgeEmoji: "📋",
+  situation: "Sếp người nước ngoài hỏi về kế hoạch dự án tháng tới và định hướng sự nghiệp của bạn. Bạn cần trình bày kế hoạch bằng tiếng Anh một cách tự tin.",
+  learningOutcomes: [
+    "Nói về kế hoạch đã lên sẵn bằng 'going to'",
+    "Đưa ra dự đoán và quyết định tức thì bằng 'will'",
+    "Hỏi về kế hoạch tương lai của người khác"
+  ],
+  warmupGreetings: [
+    { emoji: "📋", en: "I'm going to attend a meeting tomorrow.", vn: "Ngày mai tôi sẽ tham dự một cuộc họp.", context: "Kế hoạch đã lên sẵn" },
+    { emoji: "🔮", en: "I think it will rain this afternoon.", vn: "Tôi nghĩ chiều nay trời sẽ mưa.", context: "Dự đoán" },
+    { emoji: "✈️", en: "We're going to launch a new product next month.", vn: "Tháng tới chúng tôi sẽ ra mắt sản phẩm mới.", context: "Kế hoạch công việc" }
+  ],
+  culturalNote: "Trong môi trường làm việc quốc tế, <span class=\"text-emerald-400 font-semibold\">'going to'</span> dùng cho kế hoạch đã lên sẵn và chắc chắn, còn <span class=\"text-emerald-400 font-semibold\">'will'</span> dùng cho dự đoán hoặc quyết định vừa nghĩ ra. Người bản xứ thường nói <span class=\"text-emerald-400 font-semibold\">'I'll'</span> (viết tắt của 'I will') trong văn nói thông thường.",
+  vocab: [
+    { id: 1, word: "plan", emoji: "📋", phonetic: "/plæn/", meaning: "kế hoạch / lên kế hoạch", example: "What are your plans for next week?", example2: "I have a plan to improve my English.", collocation: "make a plan / have a plan", audio: "/audio/unit14/plan.mp3" },
+    { id: 2, word: "meeting", emoji: "🤝", phonetic: "/ˈmiːtɪŋ/", meaning: "cuộc họp", example: "I have a meeting at 9 AM.", example2: "Let's schedule a meeting for Thursday.", collocation: "have a meeting / attend a meeting", audio: "/audio/unit14/meeting.mp3" },
+    { id: 3, word: "deadline", emoji: "⏰", phonetic: "/ˈdedlaɪn/", meaning: "hạn chót", example: "The deadline is next Friday.", example2: "We need to finish before the deadline.", collocation: "meet a deadline / before the deadline", audio: "/audio/unit14/deadline.mp3" },
+    { id: 4, word: "project", emoji: "💼", phonetic: "/ˈprɒdʒekt/", meaning: "dự án", example: "We are going to start a new project.", example2: "The project will take three months.", collocation: "work on a project / lead a project", audio: "/audio/unit14/project.mp3" },
+    { id: 5, word: "launch", emoji: "🚀", phonetic: "/lɔːntʃ/", meaning: "ra mắt / khởi chạy", example: "We will launch the new app next month.", example2: "The company launched a new product.", collocation: "launch a product / launch a campaign", audio: "/audio/unit14/launch.mp3" },
+    { id: 6, word: "probably", emoji: "🤔", phonetic: "/ˈprɒbəbli/", meaning: "có thể / chắc là", example: "I will probably finish by 5 PM.", example2: "It will probably be a busy week.", collocation: "will probably / probably not", audio: "/audio/unit14/probably.mp3" },
+    { id: 7, word: "next", emoji: "➡️", phonetic: "/nekst/", meaning: "tiếp theo / tới", example: "I'm going to travel next month.", example2: "See you next week!", collocation: "next week / next year / next time", audio: "/audio/unit14/next.mp3" },
+    { id: 8, word: "soon", emoji: "⚡", phonetic: "/suːn/", meaning: "sớm / chẳng bao lâu nữa", example: "I will call you soon.", example2: "The report will be ready soon.", collocation: "very soon / as soon as possible", audio: "/audio/unit14/soon.mp3" },
+    { id: 9, word: "hope", emoji: "🌟", phonetic: "/həʊp/", meaning: "hy vọng", example: "I hope to get promoted this year.", example2: "We hope the project will succeed.", collocation: "hope to / hope for the best", audio: "/audio/unit14/hope.mp3" },
+    { id: 10, word: "prepare", emoji: "📝", phonetic: "/prɪˈpeər/", meaning: "chuẩn bị", example: "I'm going to prepare a presentation.", example2: "She is preparing for the interview.", collocation: "prepare for / prepare a report", audio: "/audio/unit14/prepare.mp3" },
+    { id: 11, word: "improve", emoji: "📈", phonetic: "/ɪmˈpruːv/", meaning: "cải thiện / tiến bộ", example: "I'm going to improve my English skills.", example2: "Sales will improve next quarter.", collocation: "improve your skills / improve performance", audio: "/audio/unit14/improve.mp3" },
+    { id: 12, word: "schedule", emoji: "🗓️", phonetic: "/ˈʃedjuːl/", meaning: "lịch trình / lên lịch", example: "Let's schedule a call for Monday.", example2: "I have a busy schedule this week.", collocation: "follow a schedule / on schedule", audio: "/audio/unit14/schedule.mp3" },
+  ],
+  dialogues: [
+    {
+      id: 1,
+      title: "Kế hoạch tháng tới",
+      audio: "/audio/unit14/dialogue_1.mp3",
+      desc: "Minh và sếp thảo luận về kế hoạch dự án tháng tới.",
+      lines: [
+        { id: "d1-1", speaker: "Manager", text: "Minh, what are your plans for next month?", translation: "Minh, kế hoạch của bạn tháng tới là gì?" },
+        { id: "d1-2", speaker: "Minh", text: "I'm going to finish the market research report by next Friday.", translation: "Tôi sẽ hoàn thành báo cáo nghiên cứu thị trường vào thứ Sáu tới." },
+        { id: "d1-3", speaker: "Manager", text: "Good. And what about the new product launch?", translation: "Tốt. Còn việc ra mắt sản phẩm mới thì sao?" },
+        { id: "d1-4", speaker: "Minh", text: "We are going to launch it in the third week of next month. I will prepare the presentation this week.", translation: "Chúng tôi sẽ ra mắt vào tuần thứ ba của tháng tới. Tôi sẽ chuẩn bị bài thuyết trình trong tuần này." },
+        { id: "d1-5", speaker: "Manager", text: "Will you need any help?", translation: "Bạn có cần trợ giúp gì không?" },
+        { id: "d1-6", speaker: "Minh", text: "Probably. I'll let you know soon. I hope everything will go smoothly!", translation: "Có thể. Tôi sẽ báo bạn sớm. Tôi hy vọng mọi thứ sẽ diễn ra suôn sẻ!" },
+      ]
+    },
+    {
+      id: 2,
+      title: "Dự đoán và quyết định",
+      audio: "/audio/unit14/dialogue_2.mp3",
+      desc: "Sarah và Lan nói chuyện về kế hoạch cuối tuần và quyết định bất ngờ.",
+      lines: [
+        { id: "d2-1", speaker: "Sarah", text: "What are you going to do this weekend, Lan?", translation: "Cuối tuần này bạn định làm gì vậy, Lan?" },
+        { id: "d2-2", speaker: "Lan", text: "I'm going to visit my grandmother in the countryside.", translation: "Tôi định đi thăm bà nội ở quê." },
+        { id: "d2-3", speaker: "Sarah", text: "Oh nice! I think I will stay home. Maybe I will cook something special.", translation: "Hay đó! Tôi nghĩ tôi sẽ ở nhà. Có thể tôi sẽ nấu gì đó đặc biệt." },
+        { id: "d2-4", speaker: "Lan", text: "It will probably be hot this weekend. Maybe you should go swimming!", translation: "Cuối tuần này chắc sẽ nóng. Có lẽ bạn nên đi bơi!" },
+        { id: "d2-5", speaker: "Sarah", text: "Good idea! I will call my friend now. We can go to the pool together.", translation: "Ý hay đó! Tôi sẽ gọi bạn tôi ngay bây giờ. Chúng tôi có thể đi hồ bơi cùng nhau." },
+      ]
+    },
+  ],
+  listenAndChoose: [
+    { id: "lac1", audio_text: "I'm going to finish the report by Friday", options: ["I'm going to finish the report by Friday", "I finished the report by Friday", "I will finish the report by Friday", "She's going to finish the report by Friday"], answer: "I'm going to finish the report by Friday" },
+    { id: "lac2", audio_text: "We will launch the product next month", options: ["We launch the product next month", "We will launch the product next month", "We are launch the product next month", "They will launch the product next month"], answer: "We will launch the product next month" },
+    { id: "lac3", audio_text: "I hope everything will go smoothly", options: ["I hope everything goes smoothly", "I hope everything will go smoothly", "I hope everything went smoothly", "She hopes everything will go smoothly"], answer: "I hope everything will go smoothly" },
+    { id: "lac4", audio_text: "It will probably be hot this weekend", options: ["It is probably hot this weekend", "It will probably be hot this weekend", "It will probably hot this weekend", "It will be probably hot this weekend"], answer: "It will probably be hot this weekend" },
+    { id: "lac5", audio_text: "I'm going to prepare a presentation this week", options: ["I prepare a presentation this week", "I prepared a presentation this week", "I'm going to prepare a presentation this week", "I'm preparing a presentation this week"], answer: "I'm going to prepare a presentation this week" },
+  ],
+  speaking: {
+    level1Prompt: "Next month, I'm going to {input}.",
+    level1Placeholder: "Ví dụ: start a new project, travel to Da Nang, improve my English...",
+    level2Situation: "Sếp người nước ngoài hỏi về kế hoạch làm việc của bạn trong 3 tháng tới. Hãy mô tả ít nhất 3 kế hoạch cụ thể: dự án sẽ làm, kỹ năng sẽ phát triển, và mục tiêu cá nhân.",
+    level2Hint: "In the next three months, I'm going to [plan 1]. I will also [plan 2]. I hope to [goal]. Probably, I will [prediction]. My main deadline is [date].",
+  },
+  grammar: {
+    title: "Will vs Going To — Tương lai trong tiếng Anh",
+    rule: "'Going to' = kế hoạch đã lên sẵn (planned intention)\n'Will' = dự đoán hoặc quyết định tức thì (prediction/spontaneous decision)",
+    examples: [
+      { en: "I'm going to meet a client tomorrow. (planned)", vn: "Ngày mai tôi sẽ gặp khách hàng. (đã lên kế hoạch)" },
+      { en: "I think it will rain. (prediction)", vn: "Tôi nghĩ trời sẽ mưa. (dự đoán)" },
+      { en: "The phone is ringing. I'll answer it. (spontaneous)", vn: "Điện thoại đang reo. Tôi sẽ bắt máy. (quyết định ngay lúc đó)" },
+      { en: "She will probably finish the project soon.", vn: "Cô ấy có thể sẽ hoàn thành dự án sớm." },
+    ],
+    tip: "Cách nhớ nhanh: <strong>Going to</strong> = bạn đã suy nghĩ về nó từ trước. <strong>Will</strong> = bạn vừa quyết định ngay lúc nói. Trong hội thoại thực tế, người bản xứ hay dùng 'I'll' thay vì 'I will'.",
+    dialogueExample: {
+      speaker: "Minh",
+      text: "I'm going to prepare the presentation. I'll let you know soon.",
+      translation: "Tôi sẽ chuẩn bị bài thuyết trình. Tôi sẽ báo bạn sớm.",
+      highlight: "going to (planned) / will (spontaneous)",
+    },
+    ccq: {
+      question: "Câu nào dùng ĐÚNG ngữ pháp?",
+      options: [
+        "I will going to travel next week.",
+        "I'm going to travel next week. ✅",
+        "I going to travel next week.",
+        "I will to travel next week.",
+      ],
+      answer: "I'm going to travel next week. ✅",
+      explanation: "'Going to' cần có 'to be' phía trước: am/is/are + going to + base verb.",
+    },
+  },
+  practiceQuiz: [
+    { id: "pq1", type: "multiple-choice", question: "Chọn đúng: 'She ___ (kế hoạch sẵn) attend the conference next week.'", options: ["will attend", "is going to attend", "attends", "going to attend"], answer: "is going to attend" },
+    { id: "pq2", type: "multiple-choice", question: "Điền đúng: 'The deadline ___ next Friday.'", options: ["is", "was", "will be", "going to be"], answer: "will be" },
+    { id: "pq3", type: "cloze", question: "Điền: 'I ___ (go) to the gym after work. (đã lên kế hoạch)'", answer: "am going to go" },
+    { id: "pq4", type: "multiple-choice", question: "Câu dự đoán đúng: 'I think the project ___.'", options: ["is successful", "going to be successful", "will be successful", "is going to successful"], answer: "will be successful" },
+    { id: "pq5", type: "cloze", question: "Điền: 'We ___ (launch) the app in two months.'", answer: "are going to launch" },
+  ],
+  quiz: [
+    { id: "fq1", type: "multiple-choice", question: "Dịch: 'Tháng tới chúng tôi sẽ ra mắt sản phẩm mới.'", options: ["Next month we launch a new product.", "Next month we are going to launch a new product.", "Next month we will launching a new product.", "Next month we launched a new product."], answer: "Next month we are going to launch a new product." },
+    { id: "fq2", type: "cloze", question: "Điền: 'I ___ (probably / rain) this afternoon.'", answer: "will probably rain" },
+    { id: "fq3", type: "multiple-choice", question: "Chọn đúng: Bạn vừa quyết định mang ô đi vì thấy mây đen.", options: ["I'm going to bring an umbrella.", "I brought an umbrella.", "I will bring an umbrella.", "I bring an umbrella."], answer: "I will bring an umbrella." },
+    { id: "fq4", type: "translate", question: "Dịch sang tiếng Anh: 'Tôi hy vọng mọi thứ sẽ diễn ra suôn sẻ.'", answer: "I hope everything will go smoothly." },
+    { id: "fq5", type: "multiple-choice", question: "Câu nào ĐÚNG về ngữ pháp?", options: ["I going to prepare a report.", "I'm going to prepare a report. ✅", "I will going to prepare a report.", "I'm go to prepare a report."], answer: "I'm going to prepare a report. ✅" },
+  ],
+};

@@ -54,11 +54,16 @@ export default async function CertificatePage({ params }: Props) {
   const completedUnitIds = completedRes.data?.map((r: { unit_id: string }) => r.unit_id) ?? [];
   const requiredUnits = LEVEL_UNIT_COUNTS[certLevel];
 
-  // Count completed units for this level by checking unit IDs that belong to the level
-  // Unit IDs: unit-1 through unit-12 for A1, etc.
-  const levelPrefix = certLevel === "a1" ? ["unit-1", "unit-2", "unit-3", "unit-4", "unit-5", "unit-6", "unit-7", "unit-8", "unit-9", "unit-10", "unit-11", "unit-12"] : [];
+  // Unit IDs per level — defines which units count toward each certificate
+  const LEVEL_UNIT_IDS: Record<CertLevel, string[]> = {
+    a1: ["unit-1", "unit-2", "unit-3", "unit-4", "unit-5", "unit-6", "unit-7", "unit-8", "unit-9", "unit-10", "unit-11", "unit-12"],
+    a2: ["unit-13", "unit-14", "unit-15", "unit-16", "unit-17", "unit-18"],
+    b1: ["unit-19", "unit-20", "unit-21", "unit-22", "unit-23", "unit-24"],
+    b2: ["unit-25", "unit-26", "unit-27", "unit-28", "unit-29", "unit-30"],
+  };
+  const levelUnitIds = LEVEL_UNIT_IDS[certLevel];
   const completedForLevel = completedUnitIds.filter((id: string) =>
-    levelPrefix.length > 0 ? levelPrefix.includes(id) : false
+    levelUnitIds.includes(id)
   ).length;
 
   const isEligible = completedForLevel >= requiredUnits;

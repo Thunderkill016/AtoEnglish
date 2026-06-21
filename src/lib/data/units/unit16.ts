@@ -1,0 +1,123 @@
+import { UnitData } from "@/components/learn/UnitTemplate";
+
+export const unit16: UnitData = {
+  unitId: "unit-16",
+  title: "Unit 16: Travel & Directions",
+  level: "A2",
+  xp: 90,
+  estimatedTime: 45,
+  description: "Học cách hỏi và chỉ đường, mô tả địa điểm và đặt phòng khách sạn bằng tiếng Anh.",
+  badgeName: "Người Dẫn Đường",
+  badgeEmoji: "🗺️",
+  situation: "Đối tác người nước ngoài đến Hà Nội lần đầu tiên. Họ nhờ bạn chỉ đường đến văn phòng từ khách sạn và tư vấn phương tiện di chuyển.",
+  learningOutcomes: [
+    "Hỏi và chỉ đường bằng tiếng Anh rõ ràng",
+    "Mô tả vị trí địa điểm bằng prepositions of place",
+    "Đặt phòng và hỏi thông tin khách sạn"
+  ],
+  warmupGreetings: [
+    { emoji: "🗺️", en: "Excuse me, how do I get to the city center?", vn: "Xin lỗi, làm sao để đến trung tâm thành phố?", context: "Hỏi đường" },
+    { emoji: "↗️", en: "Go straight and turn right at the traffic lights.", vn: "Đi thẳng và rẽ phải ở đèn giao thông.", context: "Chỉ đường" },
+    { emoji: "🏨", en: "I'd like to book a room for two nights.", vn: "Tôi muốn đặt phòng hai đêm.", context: "Đặt phòng khách sạn" }
+  ],
+  culturalNote: "Ở Việt Nam, grab và taxi là phương tiện di chuyển phổ biến nhất cho người nước ngoài. Khi chỉ đường, người Việt thường dùng <span class=\"text-emerald-400 font-semibold\">landmark</span> (mốc nhà quen thuộc như cột điện, ngân hàng) thay vì tên đường. Hãy học cách kết hợp: tên đường + mốc nhà quen để chỉ đường hiệu quả.",
+  vocab: [
+    { id: 1, word: "straight", emoji: "⬆️", phonetic: "/streɪt/", meaning: "thẳng", example: "Go straight for two blocks.", example2: "The road goes straight ahead.", collocation: "go straight / straight ahead", audio: "/audio/unit16/straight.mp3" },
+    { id: 2, word: "turn", emoji: "↪️", phonetic: "/tɜːrn/", meaning: "rẽ / quay", example: "Turn left at the traffic lights.", example2: "Turn right at the corner.", collocation: "turn left / turn right / turn around", audio: "/audio/unit16/turn.mp3" },
+    { id: 3, word: "corner", emoji: "🔄", phonetic: "/ˈkɔːrnər/", meaning: "góc đường", example: "The café is on the corner.", example2: "Turn left at the corner.", collocation: "on the corner / around the corner", audio: "/audio/unit16/corner.mp3" },
+    { id: 4, word: "block", emoji: "🏙️", phonetic: "/blɒk/", meaning: "dãy nhà / block", example: "Walk three blocks north.", example2: "The station is two blocks away.", collocation: "a few blocks / blocks away", audio: "/audio/unit16/block.mp3" },
+    { id: 5, word: "traffic lights", emoji: "🚦", phonetic: "/ˈtræfɪk laɪts/", meaning: "đèn giao thông", example: "Turn left at the traffic lights.", example2: "Wait for the traffic lights to change.", collocation: "at the traffic lights / red/green light", audio: "/audio/unit16/traffic_lights.mp3" },
+    { id: 6, word: "opposite", emoji: "⇔", phonetic: "/ˈɒpəzɪt/", meaning: "đối diện", example: "The bank is opposite the post office.", example2: "I sit opposite my manager.", collocation: "opposite to / directly opposite", audio: "/audio/unit16/opposite.mp3" },
+    { id: 7, word: "nearby", emoji: "📍", phonetic: "/ˌnɪərˈbaɪ/", meaning: "gần đây", example: "Is there a pharmacy nearby?", example2: "We found a nearby restaurant.", collocation: "nearby shops / close by", audio: "/audio/unit16/nearby.mp3" },
+    { id: 8, word: "book", emoji: "📅", phonetic: "/bʊk/", meaning: "đặt trước", example: "I'd like to book a room.", example2: "Can I book a table for dinner?", collocation: "book a room / book in advance", audio: "/audio/unit16/book.mp3" },
+    { id: 9, word: "available", emoji: "✅", phonetic: "/əˈveɪləbəl/", meaning: "còn trống / có sẵn", example: "Is a double room available?", example2: "Are you available on Monday?", collocation: "available now / still available", audio: "/audio/unit16/available.mp3" },
+    { id: 10, word: "check in", emoji: "🏨", phonetic: "/tʃek ɪn/", meaning: "làm thủ tục nhận phòng", example: "Check-in is at 2 PM.", example2: "We checked in at the hotel.", collocation: "check in / check out", audio: "/audio/unit16/check_in.mp3" },
+    { id: 11, word: "distance", emoji: "📏", phonetic: "/ˈdɪstəns/", meaning: "khoảng cách", example: "It's a 10-minute walk from here.", example2: "What's the distance to the airport?", collocation: "walking distance / within distance", audio: "/audio/unit16/distance.mp3" },
+    { id: 12, word: "landmark", emoji: "🗼", phonetic: "/ˈlændmɑːrk/", meaning: "địa danh / mốc nhà", example: "Use Hoan Kiem Lake as a landmark.", example2: "The clock tower is a famous landmark.", collocation: "well-known landmark / use as a landmark", audio: "/audio/unit16/landmark.mp3" },
+  ],
+  dialogues: [
+    {
+      id: 1,
+      title: "Chỉ đường đến văn phòng",
+      audio: "/audio/unit16/dialogue_1.mp3",
+      desc: "Tom hỏi Minh cách đến văn phòng từ khách sạn.",
+      lines: [
+        { id: "d1-1", speaker: "Tom", text: "Minh, how do I get from my hotel to the office?", translation: "Minh, làm sao để từ khách sạn tôi đến văn phòng?" },
+        { id: "d1-2", speaker: "Minh", text: "It's easy! Go straight along Ly Thuong Kiet Street for two blocks.", translation: "Dễ lắm! Đi thẳng dọc theo phố Lý Thường Kiệt khoảng hai dãy nhà." },
+        { id: "d1-3", speaker: "Tom", text: "And then?", translation: "Và rồi?" },
+        { id: "d1-4", speaker: "Minh", text: "Turn right at the traffic lights. Our office is on the corner, opposite the Vietcombank.", translation: "Rẽ phải ở đèn giao thông. Văn phòng của chúng ta ở góc đường, đối diện với Vietcombank." },
+        { id: "d1-5", speaker: "Tom", text: "How far is it? Can I walk?", translation: "Xa không? Tôi có thể đi bộ không?" },
+        { id: "d1-6", speaker: "Minh", text: "Yes! It's only about 10 minutes on foot. Use the bank as a landmark — you can't miss it!", translation: "Được chứ! Chỉ khoảng 10 phút đi bộ thôi. Dùng ngân hàng làm mốc — bạn không thể lạc đường đâu!" },
+      ]
+    },
+    {
+      id: 2,
+      title: "Đặt phòng khách sạn",
+      audio: "/audio/unit16/dialogue_2.mp3",
+      desc: "Sarah gọi điện đặt phòng cho đối tác.",
+      lines: [
+        { id: "d2-1", speaker: "Receptionist", text: "Good morning! Lake View Hotel, how can I help you?", translation: "Chào buổi sáng! Khách sạn Lake View, tôi có thể giúp gì cho bạn?" },
+        { id: "d2-2", speaker: "Sarah", text: "Hi, I'd like to book a room for two nights — the 25th and 26th of this month.", translation: "Xin chào, tôi muốn đặt phòng hai đêm — ngày 25 và 26 tháng này." },
+        { id: "d2-3", speaker: "Receptionist", text: "Of course! Do you prefer a single or double room?", translation: "Được chứ! Bạn muốn phòng đơn hay phòng đôi?" },
+        { id: "d2-4", speaker: "Sarah", text: "A double room, please. Is breakfast available?", translation: "Phòng đôi ạ. Có bao gồm bữa sáng không?" },
+        { id: "d2-5", speaker: "Receptionist", text: "Yes, breakfast is included. Check-in is at 2 PM. Is there anything nearby you need — a pharmacy or ATM?", translation: "Có, bao gồm bữa sáng. Nhận phòng lúc 2 giờ chiều. Gần đây có cần gì không — nhà thuốc hay máy ATM?" },
+        { id: "d2-6", speaker: "Sarah", text: "Great, thank you! We'll take it. Can you confirm the booking by email?", translation: "Tuyệt, cảm ơn! Chúng tôi nhận phòng đó. Bạn có thể xác nhận đặt phòng qua email không?" },
+      ]
+    },
+  ],
+  listenAndChoose: [
+    { id: "lac1", audio_text: "Turn right at the traffic lights", options: ["Turn right at the traffic lights", "Turn left at the traffic lights", "Go right at the traffic lights", "Turn right in the traffic lights"], answer: "Turn right at the traffic lights" },
+    { id: "lac2", audio_text: "The office is opposite the bank", options: ["The office is opposite the bank", "The office is opposite to bank", "The office is in front of the bank", "The office is near the bank"], answer: "The office is opposite the bank" },
+    { id: "lac3", audio_text: "I'd like to book a double room for two nights", options: ["I like to book a double room for two nights", "I'd like to book a double room for two nights", "I'd like to book double room for two nights", "I like book a double room for two nights"], answer: "I'd like to book a double room for two nights" },
+    { id: "lac4", audio_text: "It's only ten minutes on foot", options: ["It's only ten minutes on foot", "It's only ten minutes by foot", "It's only ten minute on foot", "It's ten minutes only on foot"], answer: "It's only ten minutes on foot" },
+    { id: "lac5", audio_text: "Go straight for two blocks", options: ["Go straight for two blocks", "Go straight two blocks", "Goes straight for two blocks", "Go straight along two blocks"], answer: "Go straight for two blocks" },
+  ],
+  speaking: {
+    level1Prompt: "To get to {input}, go straight and turn {input}.",
+    level1Placeholder: "Ví dụ: the office, the café — right/left...",
+    level2Situation: "Đối tác nước ngoài nhờ bạn chỉ đường từ khách sạn Hilton Hanoi đến văn phòng của bạn. Mô tả đường đi rõ ràng bằng tiếng Anh, bao gồm: phương tiện di chuyển, số phút đi bộ, các mốc nhà quan trọng.",
+    level2Hint: "From the Hilton Hotel, [go straight / take a taxi / walk] along [street name]. At [landmark], turn [left/right]. Our office is [opposite/next to/near] [landmark]. It takes about [time] by [transport].",
+  },
+  grammar: {
+    title: "Prepositions of Place & Giving Directions",
+    rule: "Location prepositions: opposite, next to, near, in front of, behind, between\nDirections: go straight / turn left|right / take the first/second left",
+    examples: [
+      { en: "The café is next to the bank.", vn: "Quán cà phê ở cạnh ngân hàng." },
+      { en: "Turn right at the traffic lights.", vn: "Rẽ phải ở đèn giao thông." },
+      { en: "It's opposite the post office.", vn: "Nó đối diện với bưu điện." },
+      { en: "Go straight for two blocks, then turn left.", vn: "Đi thẳng khoảng hai dãy nhà, sau đó rẽ trái." },
+    ],
+    tip: "Khi chỉ đường, hãy chia thành các bước nhỏ rõ ràng. Luôn dùng mốc nhà (landmark) để người nghe dễ xác định. Ví dụ: 'Turn left at the red building' thay vì chỉ nói 'Turn left'.",
+    dialogueExample: {
+      speaker: "Minh",
+      text: "Turn right at the traffic lights. Our office is on the corner, opposite the Vietcombank.",
+      translation: "Rẽ phải ở đèn giao thông. Văn phòng chúng ta ở góc đường, đối diện với Vietcombank.",
+      highlight: "turn right / on the corner / opposite",
+    },
+    ccq: {
+      question: "Giới từ nào ĐÚNG trong câu: 'The bank is ___ the post office.'?",
+      options: [
+        "in front to",
+        "opposite ✅",
+        "in facing of",
+        "across to",
+      ],
+      answer: "opposite ✅",
+      explanation: "'Opposite' = ở phía đối diện. 'In front of' = ở trước mặt (không nhất thiết phải đối mặt nhau). Khi hai địa điểm đối mặt nhau qua đường, dùng 'opposite'.",
+    },
+  },
+  practiceQuiz: [
+    { id: "pq1", type: "multiple-choice", question: "Chọn đúng: 'The pharmacy is ___ the coffee shop.'", options: ["opposite to", "opposite", "in front to", "facing to"], answer: "opposite" },
+    { id: "pq2", type: "multiple-choice", question: "Điền đúng: 'Go ___ for three blocks, then turn left.'", options: ["straight", "forward", "ahead on", "direct"], answer: "straight" },
+    { id: "pq3", type: "cloze", question: "Điền: 'I'd like to ___ a room for tonight.'", answer: "book" },
+    { id: "pq4", type: "multiple-choice", question: "Câu hỏi đặt phòng đúng nhất:", options: ["Is a room available?", "Have room available?", "Room available is?", "Do you available room?"], answer: "Is a room available?" },
+    { id: "pq5", type: "cloze", question: "Điền: 'Turn ___ at the traffic lights, then go straight.'", answer: "right" },
+  ],
+  quiz: [
+    { id: "fq1", type: "multiple-choice", question: "Dịch: 'Văn phòng chúng tôi ở góc đường, đối diện với ngân hàng.'", options: ["Our office is at the corner, opposite bank.", "Our office is on the corner, opposite the bank.", "Our office is in the corner, opposite a bank.", "Our office at corner opposite the bank."], answer: "Our office is on the corner, opposite the bank." },
+    { id: "fq2", type: "cloze", question: "Điền: 'The hotel is ___ the train station — just across the road.'", answer: "opposite" },
+    { id: "fq3", type: "multiple-choice", question: "Câu đặt phòng lịch sự nhất:", options: ["Give me a room for two nights.", "I want room two nights.", "I'd like to book a room for two nights, please.", "Can booking room for two nights?"], answer: "I'd like to book a room for two nights, please." },
+    { id: "fq4", type: "translate", question: "Dịch sang tiếng Anh: 'Rẽ trái ở đèn giao thông, rồi đi thẳng hai dãy nhà.'", answer: "Turn left at the traffic lights, then go straight for two blocks." },
+    { id: "fq5", type: "multiple-choice", question: "Thời gian nhận phòng tiêu chuẩn bằng tiếng Anh là gì?", options: ["Check-in time is 2 PM.", "Checking-in time is 2 PM.", "Check time is 2 PM.", "In-check time is 2 PM."], answer: "Check-in time is 2 PM." },
+  ],
+};

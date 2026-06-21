@@ -105,7 +105,7 @@ export interface ListenAndChooseItem {
 export interface QuizQuestion {
   id: string;
   question: string;
-  options: string[];
+  options?: string[];  // Required for multiple-choice; optional for cloze/translate
   answer: string;
   type: "multiple-choice" | "cloze" | "translate";
 }
@@ -141,6 +141,7 @@ export interface GrammarPoint {
     question: string;
     options: string[];
     answer: string;
+    explanation?: string; // Optional pedagogical note shown after answer
   };
 }
 
@@ -1086,9 +1087,14 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                             className="w-full bg-teal-600 hover:bg-teal-500 disabled:opacity-40 text-white font-bold rounded-xl py-2 text-sm transition-colors"
                           >Kiểm tra</button>
                         ) : (
-                          <p className={`text-sm font-bold ${ccqCorrect ? "text-emerald-400" : "text-red-400"}`}>
-                            {ccqCorrect ? "✓ Chính xác! Bạn đã hiểu cấu trúc ngữ pháp." : `✗ Đáp án đúng: "${unit.grammar.ccq.answer}"`}
-                          </p>
+                          <div>
+                            <p className={`text-sm font-bold ${ccqCorrect ? "text-emerald-400" : "text-red-400"}`}>
+                              {ccqCorrect ? "✓ Chính xác! Bạn đã hiểu cấu trúc ngữ pháp." : `✗ Đáp án đúng: "${unit.grammar.ccq.answer}"`}
+                            </p>
+                            {unit.grammar.ccq.explanation && (
+                              <p className="text-xs text-zinc-400 mt-1.5 italic">{unit.grammar.ccq.explanation}</p>
+                            )}
+                          </div>
                         )}
                       </div>
                     )}
@@ -1168,7 +1174,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                           {q.question}
                         </p>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                          {q.options.map(opt => {
+                          {( q.options ?? [] ).map(opt => {
                             const isPicked = selected === opt;
                             const isRight = opt === q.answer;
                             let cls = "px-3 py-2 rounded-xl text-sm font-medium border transition-all duration-200 text-left ";
@@ -1872,7 +1878,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                             <div key={q.id}>
                               <p className="text-white text-sm mb-2"><span className="text-amber-500/70 mr-2">↺ {qi + 1}.</span>{q.question}</p>
                               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                                {q.options.map(opt => (
+                                {( q.options ?? [] ).map(opt => (
                                   <button key={opt}
                                     disabled={cumulativeSubmitted}
                                     onClick={() => !cumulativeSubmitted && setCumulativeAnswers(p => ({ ...p, [q.id]: opt }))}
@@ -1963,7 +1969,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                         <div key={q.id}>
                           <p className="text-white text-sm mb-3"><span className="text-zinc-500 mr-2">Câu {qi + 1}.</span>{q.question}</p>
                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                            {q.options.map((opt, oi) => {
+                            {(q.options ?? []).map((opt, oi) => {
                               const isSelected = quizAnswers[q.id] === opt;
                               const isWrongAnswer = quizSubmitted && isSelected && opt !== q.answer;
                               const isRightAnswer = quizSubmitted && opt === q.answer;
@@ -2046,7 +2052,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                               <div key={q.id}>
                                 <p className="text-white text-sm mb-2"><span className="text-amber-400 mr-2">↺ {qi + 1}.</span>{q.question}</p>
                                 <div className="grid grid-cols-2 gap-2">
-                                  {q.options.map(opt => (
+                                  {( q.options ?? [] ).map(opt => (
                                     <button key={opt} onClick={() => setRetryAnswers(p => ({ ...p, [q.id]: opt }))}
                                       className={`px-3 py-2 rounded-xl text-sm font-medium border transition-colors text-left ${retryAnswers[q.id] === opt ? "bg-amber-600/30 border-amber-500 text-amber-300" : "bg-zinc-800 border-zinc-700 text-zinc-300 hover:border-amber-600/50"}`}
                                     >{opt}</button>

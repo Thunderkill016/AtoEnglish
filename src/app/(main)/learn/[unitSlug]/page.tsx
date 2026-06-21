@@ -15,12 +15,19 @@ import { unit9 } from "@/lib/data/units/unit9";
 import { unit10 } from "@/lib/data/units/unit10";
 import { unit11 } from "@/lib/data/units/unit11";
 import { unit12 } from "@/lib/data/units/unit12";
+import { unit13 } from "@/lib/data/units/unit13";
+import { unit14 } from "@/lib/data/units/unit14";
+import { unit15 } from "@/lib/data/units/unit15";
+import { unit16 } from "@/lib/data/units/unit16";
+import { unit17 } from "@/lib/data/units/unit17";
+import { unit18 } from "@/lib/data/units/unit18";
 import { UNITS } from "@/lib/constants/units";
 
 // ─── Unit registry ───────────────────────────────────────────────────────────
-// Single source of truth: all 12 A1 units registered here.
+// Single source of truth: all A1 + A2 units registered here.
 // Add new units here to make them available at /learn/[unitSlug].
 const UNIT_DATA_MAP: Record<string, { data: UnitData; next: string }> = {
+  // A1 — 12 units
   "unit-1":  { data: unit1,  next: "/learn/unit-2" },
   "unit-2":  { data: unit2,  next: "/learn/unit-3" },
   "unit-3":  { data: unit3,  next: "/learn/unit-4" },
@@ -32,7 +39,14 @@ const UNIT_DATA_MAP: Record<string, { data: UnitData; next: string }> = {
   "unit-9":  { data: unit9,  next: "/learn/unit-10" },
   "unit-10": { data: unit10, next: "/learn/unit-11" },
   "unit-11": { data: unit11, next: "/learn/unit-12" },
-  "unit-12": { data: unit12, next: "/learn" },         // A1 complete → back to dashboard
+  "unit-12": { data: unit12, next: "/learn/unit-13" }, // A1 complete → start A2
+  // A2 — 6 units
+  "unit-13": { data: unit13, next: "/learn/unit-14" },
+  "unit-14": { data: unit14, next: "/learn/unit-15" },
+  "unit-15": { data: unit15, next: "/learn/unit-16" },
+  "unit-16": { data: unit16, next: "/learn/unit-17" },
+  "unit-17": { data: unit17, next: "/learn/unit-18" },
+  "unit-18": { data: unit18, next: "/roadmap" },        // A2 complete → roadmap
 };
 
 // Pre-build all known unit slugs at build time (SSG)
