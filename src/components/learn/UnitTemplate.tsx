@@ -977,7 +977,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
               {/* ── Vocab Self-Check (Schema Activation + Curiosity Gap) ── */}
               {/* DeKeyser 2015: pre-exposure → better retention */}
               {/* Loewenstein 1994: curiosity gap → intrinsic motivation */}
-              <div className="mb-6 rounded-2xl bg-white/[0.03] border border-zinc-800/60 p-4">
+              <div className="mb-6 rounded-2xl bg-gradient-to-b from-zinc-900/60 to-zinc-950/60 border border-zinc-700/50 p-4 shadow-md">
                 <div className="flex items-center justify-between mb-3">
                   <div>
                     <p className="text-sm font-bold text-white">🧠 Bạn đã biết những từ này chưa?</p>
@@ -992,9 +992,9 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                     const rated = warmupRated[i];
                     return (
                       <div key={i} className={`flex items-center justify-between gap-3 rounded-xl px-3 py-2.5 border transition-all duration-200 ${
-                        rated === "known" ? "bg-emerald-950/40 border-emerald-700/40" :
-                        rated === "unknown" ? "bg-zinc-900/60 border-zinc-700/40" :
-                        "bg-white/[0.02] border-zinc-800/40"
+                        rated === "known" ? "bg-emerald-950/40 border-emerald-600/50 shadow-sm" :
+                        rated === "unknown" ? "bg-zinc-900/60 border-zinc-700/40 opacity-60" :
+                        "bg-zinc-800/30 border-zinc-700/40 hover:border-zinc-600/60"
                       }`}>
                         <div className="flex items-center gap-2.5 min-w-0">
                           {v.emoji && <span className="text-xl shrink-0">{v.emoji}</span>}
@@ -1007,7 +1007,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                           <button
                             onClick={() => setWarmupRated(p => ({ ...p, [i]: "known" }))}
                             className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all ${
-                              rated === "known" ? "bg-emerald-600 text-white" : "bg-zinc-800 text-zinc-400 hover:text-emerald-400 hover:bg-emerald-950/40"
+                              rated === "known" ? "bg-gradient-to-r from-emerald-500 to-emerald-600 text-white shadow-sm scale-105" : "bg-zinc-800 text-zinc-400 hover:text-emerald-400 hover:bg-emerald-950/40 active:scale-95"
                             }`}
                           >✓ Biết</button>
                           <button
@@ -1060,7 +1060,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                           className="shrink-0 w-40 h-24 cursor-pointer" style={{ perspective: "500px" }}
                         >
                           <div style={{ transition: "transform 0.4s", transformStyle: "preserve-3d", transform: isWFlipped ? "rotateY(180deg)" : "rotateY(0deg)", position: "relative", height: "100%" }}>
-                            <div className="absolute inset-0 bg-zinc-800 border border-zinc-700 rounded-xl p-3 flex flex-col justify-center text-center" style={{ backfaceVisibility: "hidden" }}>
+                            <div className="absolute inset-0 bg-gradient-to-b from-zinc-700/90 to-zinc-800/90 border border-zinc-600/60 rounded-xl p-3 flex flex-col justify-center text-center shadow-md" style={{ backfaceVisibility: "hidden" }}>
                               <p className="text-white font-bold text-sm">{card.word}</p>
                               <p className="text-[10px] text-zinc-500">{card.phonetic}</p>
                             </div>
