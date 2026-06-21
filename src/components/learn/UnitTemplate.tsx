@@ -1410,8 +1410,15 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
               <motion.div key="s4-practice" variants={sectionVariants} initial="initial" animate="animate" exit="exit" transition={{ duration: 0.3 }}>
                 <div className="flex items-center gap-2 mb-2">
                   <span className="text-2xl">⚡</span>
-                  <h1 className="text-xl sm:text-2xl font-black text-white">Luyện tập</h1>
-                  <span className="text-xs text-zinc-500 ml-auto">~4 phút</span>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2">
+                      <h1 className="text-xl sm:text-2xl font-black bg-gradient-to-r from-amber-200 to-white bg-clip-text text-transparent">Luyện tập</h1>
+                      <span className="text-[10px] font-bold text-amber-600 bg-amber-950/60 border border-amber-800/50 px-2 py-0.5 rounded-full">
+                        Bước {sectionOrderIdx + 1}/{TOTAL_SECTIONS}
+                      </span>
+                    </div>
+                    <p className="text-xs text-zinc-500">~4 phút • Kiểm tra nhanh từ vựng và ngữ pháp</p>
+                  </div>
                 </div>
                 <p className="text-zinc-400 mb-6 text-sm">Kiểm tra nhanh từ vựng và ngữ pháp vừa học. Chọn đáp án hoặc điền từ đúng.</p>
 
@@ -1710,8 +1717,15 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
             <motion.div key="s5" variants={sectionVariants} initial="initial" animate="animate" exit="exit" transition={{ duration: 0.3 }}>
               <div className="flex items-center gap-2 mb-6">
                 <Headphones className="text-emerald-400" size={22} />
-                <h1 className="text-xl sm:text-2xl font-black text-white">Nghe hiểu</h1>
-                <span className="text-xs text-zinc-500 ml-auto">~5 phút</span>
+                <div className="flex-1">
+                  <div className="flex items-center gap-2">
+                    <h1 className="text-xl sm:text-2xl font-black bg-gradient-to-r from-blue-200 to-white bg-clip-text text-transparent">Nghe hiểu</h1>
+                    <span className="text-[10px] font-bold text-blue-600 bg-blue-950/60 border border-blue-800/50 px-2 py-0.5 rounded-full">
+                      Bước {sectionOrderIdx + 1}/{TOTAL_SECTIONS}
+                    </span>
+                  </div>
+                  <p className="text-xs text-zinc-500">~5 phút • Nghe & hiểu hội thoại thực tế</p>
+                </div>
               </div>
 
               {/* Dialogue selector */}
@@ -1844,9 +1858,15 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
           {section === 6 && (
             <motion.div key="s6" variants={sectionVariants} initial="initial" animate="animate" exit="exit" transition={{ duration: 0.3 }}>
               <div className="flex items-center gap-2 mb-6">
-                <MessageCircle className="text-emerald-400" size={22} />
-                <h1 className="text-xl sm:text-2xl font-black text-white">Shadowing</h1>
-                <span className="text-xs text-zinc-500 ml-auto">~5 phút</span>
+                <span className="text-2xl">🗣️</span>
+                <div className="flex-1">
+                  <div className="flex items-center gap-2">
+                    <h1 className="text-xl sm:text-2xl font-black bg-gradient-to-r from-violet-200 to-white bg-clip-text text-transparent">Shadowing</h1>
+                    <span className="text-[10px] font-bold text-violet-600 bg-violet-950/60 border border-violet-800/50 px-2 py-0.5 rounded-full">
+                      Bước {sectionOrderIdx + 1}/{TOTAL_SECTIONS}
+                    </span>
+                  </div>
+                </div>
               </div>
 
               {DIALOGUES.length > 0 && !shadowDone ? (
@@ -1961,9 +1981,15 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
           {section === 7 && (
             <motion.div key="s7" variants={sectionVariants} initial="initial" animate="animate" exit="exit" transition={{ duration: 0.3 }}>
               <div className="flex items-center gap-2 mb-6">
-                <Mic className="text-emerald-400" size={22} />
-                <h1 className="text-xl sm:text-2xl font-black text-white">Luyện nói</h1>
-                <span className="text-xs text-zinc-500 ml-auto">~5 phút</span>
+                <span className="text-2xl">🎙️</span>
+                <div className="flex-1">
+                  <div className="flex items-center gap-2">
+                    <h1 className="text-xl sm:text-2xl font-black bg-gradient-to-r from-pink-200 to-white bg-clip-text text-transparent">Luyện nói</h1>
+                    <span className="text-[10px] font-bold text-pink-600 bg-pink-950/60 border border-pink-800/50 px-2 py-0.5 rounded-full">
+                      Bước {sectionOrderIdx + 1}/{TOTAL_SECTIONS}
+                    </span>
+                  </div>
+                </div>
               </div>
 
               {/* Level 1 */}
@@ -2135,9 +2161,16 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
           {section === 8 && (
             <motion.div key="s8" variants={sectionVariants} initial="initial" animate="animate" exit="exit" transition={{ duration: 0.3 }}>
               <div className="flex items-center gap-2 mb-6">
-                <Trophy className="text-emerald-400" size={22} />
-                <h1 className="text-xl sm:text-2xl font-black text-white">Ôn tập & Kết quả</h1>
-                <span className="text-xs text-zinc-500 ml-auto">~3 phút</span>
+                <Trophy className="text-yellow-400" size={22} />
+                <div className="flex-1">
+                  <div className="flex items-center gap-2">
+                    <h1 className="text-xl sm:text-2xl font-black bg-gradient-to-r from-yellow-200 to-white bg-clip-text text-transparent">Ôn tập & Kết quả</h1>
+                    <span className="text-[10px] font-bold text-yellow-600 bg-yellow-950/60 border border-yellow-800/50 px-2 py-0.5 rounded-full">
+                      Bước {sectionOrderIdx + 1}/{TOTAL_SECTIONS}
+                    </span>
+                  </div>
+                  <p className="text-xs text-zinc-500">~3 phút • Hoàn thành để nhận XP</p>
+                </div>
               </div>
 
               {/* ── Cumulative Spaced Review (Priority 5) ── */}
@@ -2483,8 +2516,15 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
               <motion.div key="s10" variants={sectionVariants} initial="initial" animate="animate" exit="exit" transition={{ duration: 0.3 }}>
                 <div className="flex items-center gap-2 mb-2">
                   <span className="text-2xl">⚡</span>
-                  <h1 className="text-xl sm:text-2xl font-black text-white">{unit.fluencyDrill?.title ?? "Luyện phản xạ"}</h1>
-                  <span className="text-xs text-zinc-500 ml-auto">~1 phút</span>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2">
+                      <h1 className="text-xl sm:text-2xl font-black bg-gradient-to-r from-amber-200 to-orange-200 bg-clip-text text-transparent">{unit.fluencyDrill?.title ?? "Luyện phản xạ"}</h1>
+                      <span className="text-[10px] font-bold text-orange-600 bg-orange-950/60 border border-orange-800/50 px-2 py-0.5 rounded-full">
+                        Bước {sectionOrderIdx + 1}/{TOTAL_SECTIONS}
+                      </span>
+                    </div>
+                    <p className="text-xs text-zinc-500">~1 phút • Phản xạ tức thì</p>
+                  </div>
                 </div>
                 <p className="text-zinc-400 mb-1 text-sm">Nhìn tiếng Việt → nhớ ngay tiếng Anh. <span className="text-amber-400 font-semibold">Không dừng suy nghĩ!</span></p>
                 <p className="text-[11px] text-zinc-600 mb-5 italic">Mục tiêu: phản xạ tức thì với từ đã biết — đây là Fluency Strand (Nation, 2007)</p>
@@ -2519,8 +2559,15 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
             <motion.div key="s9" variants={sectionVariants} initial="initial" animate="animate" exit="exit" transition={{ duration: 0.3 }}>
               <div className="flex items-center gap-2 mb-2">
                 <span className="text-2xl">🇻🇳➡️🇺🇸</span>
-                <h1 className="text-xl sm:text-2xl font-black text-white">Dịch câu</h1>
-                <span className="text-xs text-zinc-500 ml-auto">~2 phút</span>
+                <div className="flex-1">
+                  <div className="flex items-center gap-2">
+                    <h1 className="text-xl sm:text-2xl font-black bg-gradient-to-r from-teal-200 to-emerald-200 bg-clip-text text-transparent">Dịch câu</h1>
+                    <span className="text-[10px] font-bold text-teal-600 bg-teal-950/60 border border-teal-800/50 px-2 py-0.5 rounded-full">
+                      Bước {sectionOrderIdx + 1}/{TOTAL_SECTIONS}
+                    </span>
+                  </div>
+                  <p className="text-xs text-zinc-500">~2 phút</p>
+                </div>
               </div>
               <p className="text-zinc-400 mb-6 text-sm">Đọc câu tiếng Việt và gõ bản dịch tiếng Anh của bạn. Đây là bước <span className="text-teal-400 font-semibold">sản xuất ngôn ngữ</span> — không nhìn gợi ý!</p>
 
