@@ -30,11 +30,12 @@ interface RoadmapClientProps {
   userCefrLevel: string;
   unitCountByLevel: Record<string, number>;
   completedByLevel: Record<string, number>;
+  nextUnitRoute: string;
 }
 
 const CEFR_ORDER = ["A1", "A2", "B1", "B2", "C1"] as const;
 
-export default function RoadmapClient({ userCefrLevel, unitCountByLevel, completedByLevel }: RoadmapClientProps) {
+export default function RoadmapClient({ userCefrLevel, unitCountByLevel, completedByLevel, nextUnitRoute }: RoadmapClientProps) {
   const router = useRouter();
 
   // Derive real status from user's actual progress
@@ -251,7 +252,7 @@ export default function RoadmapClient({ userCefrLevel, unitCountByLevel, complet
                     </Button>
                   ) : isActive ? (
                     <Button
-                      onClick={() => router.push("/learn")}
+                      onClick={() => router.push(nextUnitRoute)}
                       className="bg-primary hover:bg-primary/95 text-primary-foreground rounded-xl text-xs font-bold gap-2 shadow-md shadow-primary/10 active:scale-[0.98] h-11 px-5 flex items-center transition-all duration-200"
                     >
                       <Play className="size-3.5 fill-current" />

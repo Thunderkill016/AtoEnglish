@@ -46,12 +46,20 @@ export default async function RoadmapPage() {
     }
   }
 
+  // Find next uncompleted unit route for "Học tiếp ngay" CTA
+  const completedIds = new Set(
+    (await supabase.from("user_lesson_progress").select("unit_id").eq("user_id", user?.id ?? "")).data?.map(r => r.unit_id) ?? []
+  );
+  const nextUnit = UNITS.find(u => !completedIds.has(u.id));
+  const nextUnitRoute = nextUnit?.route ?? "/learn";
+
   return (
     <main id="main-content">
       <RoadmapClient
         userCefrLevel={userCefrLevel}
         unitCountByLevel={unitCountByLevel}
         completedByLevel={completedByLevel}
+        nextUnitRoute={nextUnitRoute}
       />
     </main>
   );

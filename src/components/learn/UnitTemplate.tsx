@@ -519,6 +519,13 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
           level: unitLevel,
         });
       }
+      // ─ Sync XP to Dashboard localStorage so the daily-XP bar updates immediately ─
+      const earnedXp = res.xpEarned ?? xpToEarn;
+      const xpSyncKey = `ato_xp_sync_${new Date().toDateString()}`;
+      const prev = Number(localStorage.getItem(xpSyncKey) ?? 0);
+      localStorage.setItem(xpSyncKey, String(prev + earnedXp));
+      // Dispatch event so any mounted Dashboard can react
+      window.dispatchEvent(new CustomEvent("ato:xp-earned", { detail: { xp: earnedXp } }));
     } else {
       toast.error(res.error || "Có lỗi xảy ra");
     }

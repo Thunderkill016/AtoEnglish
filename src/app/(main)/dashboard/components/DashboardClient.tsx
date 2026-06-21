@@ -115,6 +115,16 @@ export default function DashboardClient({
     setHoursLeft(Math.ceil(minsLeft / 60));
   }, []);
 
+  // ─── XP sync: listen for lesson-completion events from UnitTemplate ───────
+  useEffect(() => {
+    const handleXpEarned = (e: Event) => {
+      const xp = (e as CustomEvent<{ xp: number }>).detail.xp;
+      setXpCurrent(prev => Math.min(prev + xp, xpTarget));
+    };
+    window.addEventListener("ato:xp-earned", handleXpEarned);
+    return () => window.removeEventListener("ato:xp-earned", handleXpEarned);
+  }, [xpTarget]);
+
   const handleUpdateGoal = async (newGoal: number) => {
     setUpdatingGoal(true);
     try {
