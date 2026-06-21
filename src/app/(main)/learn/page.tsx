@@ -76,11 +76,10 @@ export default async function LearnPage() {
     if (isCompleted) {
       progress = 100;
     } else if (vocab.length > 0 && savedCount > 0) {
-      if (savedCount < vocab.length) {
-        progress = 40;
-      } else {
-        progress = 75;
-      }
+      // Proportional: 5%–70% based on how many vocab words are saved to SRS
+      // Cap at 70% — completion (100%) only happens when unit is fully done
+      const ratio = Math.min(savedCount / vocab.length, 1);
+      progress = Math.round(5 + ratio * 65); // 5%–70%
     }
 
     const xpEarned = completedXpMap.get(unit.id) ?? 0;
