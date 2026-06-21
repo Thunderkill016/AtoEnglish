@@ -1186,6 +1186,14 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                         {unit.matchingExercise.title ?? "Nối từ với nghĩa đúng"}
                       </p>
                       {matchingDone && <CheckCircle size={16} className="text-emerald-400 ml-auto" />}
+                      {!matchingDone && matchedPairs.size > 0 && (
+                        <button
+                          onClick={() => { setMatchedPairs(new Set()); setMatchLeft(null); setWrongMatch(null); }}
+                          className="ml-auto text-[10px] font-bold text-zinc-500 hover:text-zinc-300 px-2 py-1 rounded-lg bg-zinc-800/60 border border-zinc-700/40 transition-colors"
+                        >
+                          ↺ Làm lại
+                        </button>
+                      )}
                     </div>
 
                     <div className="grid grid-cols-2 gap-3">

@@ -216,7 +216,11 @@ export default function RoadmapClient({ userCefrLevel, unitCountByLevel, complet
 
                   <div className="w-full sm:w-48 space-y-1.5 shrink-0">
                     <div className="flex justify-between text-xs font-semibold text-muted-foreground">
-                      <span>{lvl.lessonsCount} bài học</span>
+                      <span>
+                        {isActive
+                          ? `${completedByLevel[lvl.code] ?? 0}/${lvl.lessonsCount} bài học`
+                          : `${lvl.lessonsCount} bài học`}
+                      </span>
                       <span className="text-foreground">{lvl.completedPercent}%</span>
                     </div>
                     <div className="h-2 w-full rounded-full bg-muted overflow-hidden relative">
