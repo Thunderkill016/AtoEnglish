@@ -86,7 +86,7 @@ export default function UnitCard({ currentUnitData }: UnitCardProps) {
             Hoàn thành để nhận <strong className="text-zinc-700 dark:text-zinc-300 font-bold">{currentUnitData.xp} XP</strong>
           </p>
           <Link href={currentUnitData.route} className="shrink-0">
-            <Button className="w-full sm:w-auto h-11 px-7 bg-emerald-600 hover:bg-emerald-500 dark:bg-emerald-600 dark:hover:bg-emerald-500 text-white font-extrabold rounded-xl flex items-center justify-center gap-2 transition-all duration-200 shadow-lg shadow-emerald-600/15 hover:shadow-emerald-500/25 active:scale-[0.97]">
+            <Button className="w-full sm:w-auto h-11 px-7 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-white font-extrabold rounded-xl flex items-center justify-center gap-2 transition-all duration-200 shadow-lg shadow-emerald-600/20 hover:shadow-emerald-500/30 active:scale-[0.97]">
               <span>Tiếp tục học ngay</span>
               <ArrowRight className="size-4 transition-transform duration-200 group-hover:translate-x-0.5" />
             </Button>

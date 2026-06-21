@@ -47,7 +47,7 @@ export default function SrsCard({ dueCardsCount }: SrsCardProps) {
         <Button
           className={`w-full h-10 font-bold rounded-xl text-xs flex items-center justify-between px-4 transition-all duration-200 active:scale-[0.98] ${
             hasDue
-              ? "bg-amber-500 hover:bg-amber-400 text-white shadow-md shadow-amber-500/15"
+              ? "bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-white shadow-md shadow-amber-500/20"
               : "bg-zinc-100 dark:bg-zinc-800/80 hover:bg-zinc-200 dark:hover:bg-zinc-700/80 text-zinc-700 dark:text-zinc-300"
           }`}
         >
