@@ -40,7 +40,7 @@ export default function SpeakingPage() {
   ] as const;
 
   return (
-    <div className="relative mx-auto max-w-7xl px-4 py-6 sm:py-8 sm:px-6 lg:px-8 space-y-5 sm:space-y-8 bg-grid-pattern min-h-screen pb-28 sm:pb-12">
+    <div className="relative mx-auto max-w-7xl px-4 py-6 sm:py-8 sm:px-6 lg:px-8 space-y-5 sm:space-y-8 bg-grid-pattern min-h-screen pb-28 sm:pb-12 overflow-x-hidden">
       {/* Background ambient blurs */}
       <div className="absolute top-10 left-10 -z-10 h-96 w-[70vw] max-w-96 rounded-full bg-primary/5 blur-3xl" />
       <div className="absolute bottom-20 right-10 -z-10 h-96 w-[70vw] max-w-96 rounded-full bg-violet-500/5 blur-3xl" />
@@ -124,7 +124,7 @@ export default function SpeakingPage() {
       {/* Tab Contents Workspace */}
       <div className="grid gap-5 sm:gap-8 lg:grid-cols-3 items-start">
         {/* Main interactive area */}
-        <div className="lg:col-span-2">
+        <div className="lg:col-span-2 min-w-0 overflow-hidden">
           <AnimatePresence mode="wait">
             <motion.div
               key={activeTab}

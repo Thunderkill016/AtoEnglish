@@ -499,7 +499,7 @@ export function ShadowingPractice() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 w-full">
       {/* List selection - scrollable chips */}
       <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-none">
         {SHADOWING_ITEMS.map((item) => (
