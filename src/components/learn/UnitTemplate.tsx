@@ -962,11 +962,14 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                   <button
                     key={i}
                     onClick={() => playTTS(g.en)}
-                    className="flex flex-col items-center text-center gap-3 p-5 bg-zinc-900/50 hover:bg-zinc-800 border border-zinc-800 hover:border-emerald-500/30 rounded-2xl transition-all group"
+                    className="flex flex-col items-center text-center gap-3 p-5 bg-gradient-to-b from-zinc-800/80 to-zinc-900/90 hover:from-zinc-700/80 hover:to-zinc-800/90 border border-zinc-700/60 hover:border-emerald-500/40 rounded-2xl transition-all duration-200 group active:scale-95 hover:shadow-lg hover:shadow-emerald-950/40"
                   >
-                    <span className="text-4xl">{g.emoji}</span>
-                    <p className="font-bold text-white text-sm">{g.en}</p>
-                    <p className="text-[11px] text-zinc-500">{g.vn}</p>
+                    <span className="text-4xl group-hover:scale-110 transition-transform duration-200">{g.emoji}</span>
+                    <div>
+                      <p className="font-bold text-white text-sm leading-tight">{g.en}</p>
+                      <p className="text-[11px] text-zinc-500 mt-0.5">{g.vn}</p>
+                    </div>
+                    <span className="text-[9px] text-emerald-600 font-bold opacity-0 group-hover:opacity-100 transition-opacity">▶ Nghe</span>
                   </button>
                 ))}
               </div>
@@ -1538,10 +1541,10 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                               onClick={() => !isMatched && handleMatchSelect("left", pair.left)}
                               className={`w-full px-3 py-2.5 rounded-xl text-sm font-medium border text-left transition-all duration-200 ${
                                 isMatched
-                                  ? "bg-emerald-600/20 border-emerald-500/50 text-emerald-300"
+                                  ? "bg-emerald-600/20 border-emerald-500/50 text-emerald-300 cursor-default"
                                   : isSelected
-                                  ? "bg-teal-600/30 border-teal-400 text-teal-200"
-                                  : "bg-zinc-800 border-zinc-700 text-zinc-300 hover:border-teal-600/50"
+                                  ? "bg-teal-600/30 border-teal-400 text-teal-200 ring-2 ring-teal-400/30 ring-offset-1 ring-offset-zinc-950 scale-[1.02]"
+                                  : "bg-zinc-800 border-zinc-700 text-zinc-300 hover:border-teal-500/60 hover:bg-zinc-700/60 active:scale-95"
                               }`}
                             >
                               {isMatched && "✓ "}{pair.left}
@@ -1561,10 +1564,10 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                               onClick={() => !isMatched && handleMatchSelect("right", right)}
                               className={`w-full px-3 py-2.5 rounded-xl text-sm font-medium border text-left transition-all duration-200 ${
                                 isMatched
-                                  ? "bg-emerald-600/20 border-emerald-500/50 text-emerald-300"
+                                  ? "bg-emerald-600/20 border-emerald-500/50 text-emerald-300 cursor-default"
                                   : isWrong
                                   ? "bg-red-900/30 border-red-500/60 text-red-300 animate-shake"
-                                  : "bg-zinc-800 border-zinc-700 text-zinc-300 hover:border-teal-600/50"
+                                  : "bg-zinc-800 border-zinc-700 text-zinc-300 hover:border-teal-500/60 hover:bg-zinc-700/60 active:scale-95"
                               }`}
                             >
                               {isMatched && "✓ "}{right}
@@ -1634,10 +1637,10 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                                       if (disabled) return;
                                       setScrambleBuilt(p => ({ ...p, [ex.id]: [...(p[ex.id] ?? []), w] }));
                                     }}
-                                    className={`px-2.5 py-1 rounded-lg text-xs font-medium border transition-colors ${
+                                    className={`px-2.5 py-1.5 rounded-lg text-xs font-bold border transition-all duration-150 ${
                                       disabled
-                                        ? "opacity-25 bg-zinc-800 border-zinc-700 text-zinc-500 cursor-not-allowed"
-                                        : "bg-zinc-800 border-zinc-600 text-zinc-200 hover:border-teal-500/50 hover:bg-zinc-700/60 cursor-pointer"
+                                        ? "opacity-20 bg-zinc-900 border-zinc-800 text-zinc-600 cursor-not-allowed"
+                                        : "bg-gradient-to-b from-zinc-600/90 to-zinc-700/90 border-zinc-500/80 text-white hover:border-teal-400/70 hover:from-zinc-500/90 hover:-translate-y-0.5 cursor-pointer active:scale-90 active:translate-y-0 shadow-sm"
                                     }`}
                                   >{w}</button>
                                 );
