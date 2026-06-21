@@ -1372,7 +1372,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                         {!ccqSubmitted ? (
                           <button disabled={!ccqAnswer}
                             onClick={() => { setCcqSubmitted(true); if (ccqCorrect) playCorrectSound(); else playWrongSound(); }}
-                            className="w-full bg-teal-600 hover:bg-teal-500 disabled:opacity-40 text-white font-bold rounded-xl py-2 text-sm transition-colors"
+                            className="w-full bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-400 hover:to-emerald-400 disabled:opacity-40 text-white font-bold rounded-2xl py-2 text-sm transition-all duration-200 active:scale-95"
                           >Kiểm tra</button>
                         ) : (
                           <div>
@@ -2229,7 +2229,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                           ).length;
                           if (correct === unit.cumulativeReviewQuestions!.length) playCorrectSound();
                         }}
-                        className="mt-4 w-full bg-amber-600 hover:bg-amber-500 disabled:opacity-40 text-white font-bold rounded-xl py-2.5 text-sm transition-colors"
+                        className="mt-4 w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 disabled:opacity-40 text-white font-bold rounded-2xl py-2.5 text-sm transition-all duration-200 active:scale-95"
                       >Kiểm tra ôn tập</button>
                     </div>
                   ) : (
@@ -2343,7 +2343,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
               ) : (
                 <div className="space-y-6">
                   {/* Score */}
-                  <div className="bg-emerald-950/40 border border-emerald-700/40 rounded-2xl p-6 text-center">
+                  <div className="bg-gradient-to-br from-emerald-950/60 to-teal-950/40 border border-emerald-600/40 rounded-2xl p-6 text-center shadow-lg shadow-emerald-950/60">
                     <div className="text-5xl mb-3">
                       {finalQuizScore >= Math.ceil(FINAL_QS.length * 0.8) ? "🏆" : finalQuizScore >= Math.ceil(FINAL_QS.length * 0.6) ? "🎯" : "💪"}
                     </div>
@@ -2390,7 +2390,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                           <button
                             onClick={() => { setRetrySubmitted(true); if (retryCorrectCount > 0) playCorrectSound(); }}
                             disabled={wrongQuestions.some(q => q.type === "multiple-choice" ? !retryAnswers[q.id] : !(retryClozeInputs[q.id] ?? "").trim())}
-                            className="w-full bg-amber-600 hover:bg-amber-500 disabled:opacity-40 text-white font-bold rounded-xl py-2.5 text-sm transition-colors"
+                            className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 disabled:opacity-40 text-white font-bold rounded-2xl py-2.5 text-sm transition-all duration-200 active:scale-95"
                           >Gửi câu trả lời</button>
                         </div>
                       ) : (
@@ -2498,7 +2498,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                         <Link href="/quiz" className="inline-flex items-center gap-2 bg-violet-600 hover:bg-violet-500 text-white font-bold rounded-xl px-5 py-3 transition-colors text-sm">
                           📝 Quiz từ vựng
                         </Link>
-                        <Link href={nextRoute} className="inline-flex items-center gap-2 bg-zinc-700 hover:bg-zinc-600 text-white font-bold rounded-xl px-5 py-3 transition-colors text-sm">
+                        <Link href={nextRoute} className="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-white font-bold rounded-xl px-5 py-3 transition-all duration-200 text-sm shadow-md shadow-emerald-900/40 active:scale-95">
                           Tiếp tục <ChevronRight size={16} />
                         </Link>
                       </div>
@@ -2632,7 +2632,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                     <button
                       disabled={unit.practiceTranslate.some(item => !(translateInputs[item.id] ?? '').trim())}
                       onClick={() => { setTranslateSubmitted(true); }}
-                      className="w-full bg-teal-600 hover:bg-teal-500 disabled:opacity-40 disabled:cursor-not-allowed text-white font-bold rounded-xl px-6 py-4 flex items-center justify-center gap-2 transition-colors text-lg"
+                      className="w-full bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-400 hover:to-emerald-400 disabled:opacity-40 disabled:cursor-not-allowed text-white font-bold rounded-2xl px-6 py-4 flex items-center justify-center gap-2 transition-all duration-200 text-lg shadow-lg shadow-teal-900/40 active:scale-95"
                     >
                       Kiểm tra bản dịch <ChevronRight size={20} />
                     </button>
