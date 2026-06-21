@@ -71,10 +71,10 @@ export default async function ProgressPage() {
   ];
 
   const srsBoxes = [
-    { name: "Hộp 1 — Mới nạp", count: stats.cardsByState.new, color: "bg-red-500" },
-    { name: "Hộp 2 — Đang học", count: stats.cardsByState.learning, color: "bg-orange-500" },
-    { name: "Hộp 3 — Ôn tập dài hạn", count: stats.cardsByState.review, color: "bg-blue-500" },
-    { name: "Hộp 4 — Học lại", count: stats.cardsByState.relearning, color: "bg-emerald-500" },
+    { name: "Hộp 1 — Mới nạp", count: stats.cardsByState.new, color: "bg-gradient-to-r from-red-500 to-orange-500" },
+    { name: "Hộp 2 — Đang học", count: stats.cardsByState.learning, color: "bg-gradient-to-r from-orange-500 to-amber-500" },
+    { name: "Hộp 3 — Ôn tập dài hạn", count: stats.cardsByState.review, color: "bg-gradient-to-r from-blue-500 to-indigo-500" },
+    { name: "Hộp 4 — Học lại", count: stats.cardsByState.relearning, color: "bg-gradient-to-r from-emerald-500 to-teal-500" },
   ];
   const totalSrs = Math.max(srsBoxes.reduce((s, b) => s + b.count, 0), 1);
 
@@ -105,7 +105,7 @@ export default async function ProgressPage() {
           return (
             <div
               key={idx}
-              className="group relative overflow-hidden rounded-3xl bg-white/60 dark:bg-zinc-900/30 border border-zinc-200/60 dark:border-zinc-800/60 backdrop-blur-sm p-4 sm:p-6 space-y-2 sm:space-y-3 hover:-translate-y-1 transition-transform duration-300"
+              className="group relative overflow-hidden rounded-3xl bg-white/60 dark:bg-zinc-900/30 border border-zinc-200/60 dark:border-zinc-800/60 backdrop-blur-sm p-4 sm:p-6 space-y-2 sm:space-y-3 hover:-translate-y-1 hover:shadow-lg transition-all duration-300"
             >
               <div className="flex items-center justify-between">
                 <span className="text-[10px] sm:text-xs font-extrabold text-muted-foreground uppercase tracking-widest truncate">{stat.label}</span>
