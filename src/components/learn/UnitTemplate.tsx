@@ -1363,7 +1363,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                             const isRight = opt === unit.grammar!.ccq!.answer;
                             let cls = "px-3 py-2 rounded-xl text-sm font-medium border transition-all duration-200 text-left ";
                             if (!ccqSubmitted) {
-                              cls += isPicked ? "bg-teal-600/30 border-teal-500 text-teal-300" : "bg-zinc-800 border-zinc-700 text-zinc-300 hover:border-teal-600/50 hover:bg-zinc-700/50";
+                              cls += isPicked ? "bg-teal-600/30 border-teal-500 text-teal-300 ring-2 ring-teal-500/20" : "bg-zinc-800 border-zinc-700 text-zinc-300 hover:border-teal-500/60 hover:bg-zinc-700/50 active:scale-95";
                             } else {
                               if (isRight) cls += "bg-emerald-900/40 border-emerald-500 text-emerald-300";
                               else if (isPicked) cls += "bg-red-900/30 border-red-500 text-red-300";
@@ -1400,7 +1400,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
               <button
                 onClick={goNext}
                 disabled={!!(unit.grammar?.ccq && !ccqSubmitted)}
-                className={`mt-6 w-full text-white font-bold rounded-xl px-6 py-4 flex items-center justify-center gap-2 transition-colors text-lg ${unit.grammar?.ccq && !ccqSubmitted ? "bg-zinc-700 opacity-50 cursor-not-allowed" : "bg-teal-600 hover:bg-teal-500"}`}
+                className={`mt-6 w-full text-white font-bold rounded-2xl px-6 py-4 flex items-center justify-center gap-2 transition-all duration-200 text-lg ${unit.grammar?.ccq && !ccqSubmitted ? "bg-zinc-800 opacity-50 cursor-not-allowed" : "bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-400 hover:to-emerald-400 shadow-lg shadow-teal-900/40 active:scale-95"}`}
               >
                 {unit.grammar?.ccq && !ccqSubmitted ? "Trả lời câu hỏi trước" : "Luyện tập ngay"} <ChevronRight size={20} />
               </button>
@@ -1694,7 +1694,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                         ? "bg-emerald-950/40 border-emerald-500/30"
                         : "bg-zinc-900/40 border-zinc-700/40"
                     }`}>
-                      <p className="text-xl sm:text-2xl font-black text-white">{practiceScore}/{PRACTICE_QS.length} câu đúng</p>
+                      <p className="text-2xl sm:text-3xl font-black bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent">{practiceScore}/{PRACTICE_QS.length} câu đúng</p>
                       <p className="text-sm text-zinc-400 mt-1">
                         {practiceScore === PRACTICE_QS.length ? "🏆 Xuất sắc! Bạn nắm vững bài học!" : practiceScore >= Math.ceil(PRACTICE_QS.length * 0.7) ? "🎯 Khá tốt! Tiếp tục nhé!" : "💪 Ôn lại thẻ từ vựng sẽ giúp bạn nhớ lâu hơn!"}
                       </p>
