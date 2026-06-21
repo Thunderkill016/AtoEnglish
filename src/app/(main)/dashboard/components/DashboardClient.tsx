@@ -75,6 +75,24 @@ export default function DashboardClient({
   const [xpCurrent, setXpCurrent] = useState(initialXpCurrent);
   const [quests, setQuests] = useState(initialQuests);
   const [greeting, setGreeting] = useState("Chào bạn");
+
+  // Animated count-up for total XP on mount
+  const [displayXp, setDisplayXp] = useState(0);
+  useEffect(() => {
+    if (totalXp === 0) return;
+    const steps = 40;
+    const duration = 900;
+    const increment = totalXp / steps;
+    let current = 0;
+    const timer = setInterval(() => {
+      current = Math.min(current + increment, totalXp);
+       
+      setDisplayXp(Math.round(current));
+      if (current >= totalXp) clearInterval(timer);
+    }, duration / steps);
+    return () => clearInterval(timer);
+  }, [totalXp]);
+
   const [xpTarget, setXpTarget] = useState(() => {
     if (typeof window === "undefined") return dailyXpGoal;
     const stored = localStorage.getItem("ato_daily_xp_goal");
@@ -226,22 +244,26 @@ export default function DashboardClient({
             </h1>
           </div>
           {/* Streak badge + Notification Bell */}
-          <div className="flex items-center gap-2 shrink-0">
-            <div className="flex items-center gap-2 rounded-2xl bg-orange-500/10 border border-orange-500/20 px-4 py-2.5 hover:bg-orange-500/15 transition-colors duration-200">
-              <Flame className="size-5 text-orange-500 fill-orange-500" />
-              <div className="flex flex-col leading-none">
-                <span className="text-sm font-black text-orange-600 dark:text-orange-400 whitespace-nowrap">
-                  {currentStreak} ngày
-                </span>
-                {hoursLeft !== null && hoursLeft <= 8 && (
-                  <span className="text-[10px] font-bold text-orange-500/70 dark:text-orange-400/60">
-                    Còn {hoursLeft}h
+            <div className="flex items-center gap-2 shrink-0">
+              <div className="flex items-center gap-2 rounded-2xl bg-orange-500/10 border border-orange-500/20 px-4 py-2.5 hover:bg-orange-500/15 transition-colors duration-200">
+                <Flame
+                  className={`size-5 text-orange-500 fill-orange-500 ${
+                    currentStreak >= 3 ? "animate-pulse" : ""
+                  }`}
+                />
+                <div className="flex flex-col leading-none">
+                  <span className="text-sm font-black text-orange-600 dark:text-orange-400 whitespace-nowrap">
+                    {currentStreak} ngày
                   </span>
-                )}
+                  {hoursLeft !== null && hoursLeft <= 8 && (
+                    <span className="text-[10px] font-bold text-orange-500/70 dark:text-orange-400/60">
+                      Còn {hoursLeft}h
+                    </span>
+                  )}
+                </div>
               </div>
+              <NotificationBell />
             </div>
-            <NotificationBell />
-          </div>
         </div>
 
 
@@ -306,16 +328,42 @@ export default function DashboardClient({
           </div>
 
           {/* Level */}
-          <div className="rounded-2xl border border-zinc-200/60 dark:border-zinc-800/60 bg-white/60 dark:bg-zinc-900/30 backdrop-blur-sm p-4 space-y-2 hover:border-blue-500/30 transition-colors duration-200">
-            <div className="flex items-center gap-2">
-              <span className="flex size-7 items-center justify-center rounded-lg bg-blue-500/10 text-blue-600 dark:text-blue-400">
-                <GraduationCap className="size-3.5" />
-              </span>
-              <span className="text-[10px] font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">Trình độ</span>
-            </div>
-            <p className="text-xl font-black text-zinc-900 dark:text-zinc-50 leading-none">{shortLevel}</p>
-            <p className="text-[10px] text-zinc-500 dark:text-zinc-400 font-medium">{totalXp} XP tích lũy</p>
-          </div>
+          {(() => {
+            const levelUnitsAll = allUnits.filter(u => u.level === shortLevel);
+            const levelUnitsDone = completedUnitIds.filter(id =>
+              allUnits.find(u => u.id === id)?.level === shortLevel
+            ).length;
+            const levelProgress = levelUnitsAll.length > 0
+              ? Math.round((levelUnitsDone / levelUnitsAll.length) * 100)
+              : 0;
+            const NEXT: Record<string, string> = { A1: "A2", A2: "B1", B1: "B2", B2: "C1" };
+            const nextLevel = NEXT[shortLevel] ?? "";
+            return (
+              <div className="rounded-2xl border border-zinc-200/60 dark:border-zinc-800/60 bg-white/60 dark:bg-zinc-900/30 backdrop-blur-sm p-4 space-y-2 hover:border-blue-500/30 transition-colors duration-200">
+                <div className="flex items-center gap-2">
+                  <span className="flex size-7 items-center justify-center rounded-lg bg-blue-500/10 text-blue-600 dark:text-blue-400">
+                    <GraduationCap className="size-3.5" />
+                  </span>
+                  <span className="text-[10px] font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">Trình độ</span>
+                </div>
+                <p className="text-xl font-black text-zinc-900 dark:text-zinc-50 leading-none">{shortLevel}</p>
+                <p className="text-[10px] text-zinc-500 dark:text-zinc-400 font-medium tabular-nums">{displayXp} XP tích lũy</p>
+                {nextLevel && (
+                  <>
+                    <div className="h-1 w-full bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
+                      <div
+                        className="h-full bg-blue-500 rounded-full transition-all duration-700"
+                        style={{ width: `${levelProgress}%` }}
+                      />
+                    </div>
+                    <p className="text-[9px] text-zinc-400 dark:text-zinc-500 font-semibold">
+                      {levelUnitsDone}/{levelUnitsAll.length} Đến {nextLevel}
+                    </p>
+                  </>
+                )}
+              </div>
+            );
+          })()}
 
           {/* Units completed */}
           <div className="rounded-2xl border border-zinc-200/60 dark:border-zinc-800/60 bg-white/60 dark:bg-zinc-900/30 backdrop-blur-sm p-4 space-y-2 hover:border-purple-500/30 transition-colors duration-200">
