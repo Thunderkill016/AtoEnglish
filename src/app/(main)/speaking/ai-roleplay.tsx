@@ -447,7 +447,7 @@ export function AIRoleplay() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 w-full">
       {/* Scenarios Header Tabs */}
       <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-none">
         {ROLEPLAY_SCENARIOS.map((s) => (

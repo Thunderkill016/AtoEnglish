@@ -145,7 +145,7 @@ export function JournalMode() {
   const wordCount = transcript.trim().split(/\s+/).filter(Boolean).length;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 w-full">
       {/* Topic Card */}
       <div className="rounded-3xl border border-zinc-200/60 dark:border-zinc-800/60 bg-white/60 dark:bg-zinc-900/30 backdrop-blur-sm p-4 sm:p-6 space-y-3 sm:space-y-4">
         <div className="flex items-start justify-between gap-4">
