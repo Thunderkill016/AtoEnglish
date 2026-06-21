@@ -35,6 +35,41 @@ function getSpeechRecognition(): typeof SpeechRecognition | null {
   return window.SpeechRecognition ?? window.webkitSpeechRecognition ?? null;
 }
 
+// Helper: detect specific missing English final consonants (codas) commonly deleted by Vietnamese learners
+function detectMissingCodas(expected: string, actual: string): string[] {
+  const missingWarnings: string[] = [];
+  const cleanExpected = expected.toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "").trim();
+  const cleanActual = actual.toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "").trim();
+
+  const expectedWords = cleanExpected.split(/\s+/);
+  const actualWords = cleanActual.split(/\s+/);
+
+  expectedWords.forEach((word) => {
+    // Check if the expected word ends in a target coda sound
+    if (word.endsWith("k") || word.endsWith("t") || word.endsWith("s") || word.endsWith("d") || word.endsWith("ce") || word.endsWith("se")) {
+      // Find matching word base in actual spoken phrase
+      const baseWordWithoutCoda = word.replace(/(k|t|s|d|ce|se)$/, "");
+      
+      // If user pronounced the base but omitted the ending
+      const foundOmission = actualWords.some(
+        (aWord) => aWord === baseWordWithoutCoda && aWord !== word
+      );
+
+      if (foundOmission) {
+        let soundExplanation = "";
+        if (word.endsWith("k")) soundExplanation = "âm /k/ (ví dụ: 'like' -> 'lai-kờ')";
+        else if (word.endsWith("t")) soundExplanation = "âm /t/ (ví dụ: 'cat' -> 'ca-tờ')";
+        else if (word.endsWith("s") || word.endsWith("ce") || word.endsWith("se")) soundExplanation = "âm /s/ (ví dụ: 'face' -> 'fây-sờ')";
+        else if (word.endsWith("d")) soundExplanation = "âm /d/ (ví dụ: 'red' -> 're-dờ')";
+
+        missingWarnings.push(`Từ "${word}" phát âm thiếu ${soundExplanation}`);
+      }
+    }
+  });
+
+  return missingWarnings;
+}
+
 // ─── FluencyDrillPanel — Nation's Strand 4 (fast retrieval with KNOWN items) ──
 function FluencyDrillPanel({ items, timeLimit = 60, onDone }: { items: Array<{en: string; vn: string}>; timeLimit?: number; onDone: () => void }) {
   const [idx, setIdx] = useState(0);
@@ -564,11 +599,23 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
     setIsRecording(true);
     startRecognition((text) => {
       const score = calcSpeechScore(targetLine.text, text);
+      const missingCodas = detectMissingCodas(targetLine.text, text);
       setShadowScores(p => ({ ...p, [shadowLineIdx]: score }));
       setShadowTranscripts(p => ({ ...p, [shadowLineIdx]: text }));
       setIsRecording(false);
-      if (score >= 70) toast.success(`Tốt lắm! ${score}%`);
-      else toast.info(`${score}% — Không sao, thử lại nhé!`);
+      if (score >= 70) {
+        if (missingCodas.length > 0) {
+          toast.warning(`Tốt! ${score}%. Lưu ý: ${missingCodas[0]}`);
+        } else {
+          toast.success(`Tốt lắm! ${score}%`);
+        }
+      } else {
+        if (missingCodas.length > 0) {
+          toast.error(`Chưa đạt (${score}%). Lỗi: ${missingCodas.join(", ")}`);
+        } else {
+          toast.info(`${score}% — Không sao, thử lại nhé!`);
+        }
+      }
     });
   };
 
@@ -596,7 +643,21 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
         .replace(/\[.*?\]/g, "")  // strip [tên bạn] and similar placeholders
         .trim();
       const score = calcSpeechScore(hintText, text);
+      const missingCodas = detectMissingCodas(hintText, text);
       setLevel2Score(score);
+      if (score >= 60) {
+        if (missingCodas.length > 0) {
+          toast.warning(`Tốt! ${score}%. Lưu ý: ${missingCodas[0]}`);
+        } else {
+          toast.success(`Tốt lắm! ${score}%`);
+        }
+      } else {
+        if (missingCodas.length > 0) {
+          toast.error(`Chưa đạt (${score}%). Lỗi: ${missingCodas.join(", ")}`);
+        } else {
+          toast.info(`${score}% — Không sao, thử lại nhé!`);
+        }
+      }
     });
   };
 
@@ -753,7 +814,19 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
     const newWords = words.filter(w => !wrongWordsRef.current.includes(w));
     if (!newWords.length) return;
     wrongWordsRef.current = [...wrongWordsRef.current, ...newWords];
-    void scheduleWrongWordsForReview(newWords);
+    toast.promise(
+      scheduleWrongWordsForReview(newWords),
+      {
+        loading: "Đang xếp lịch ôn lại các từ bạn trả lời sai...",
+        success: (res) => {
+          if (res?.success && res.updated > 0) {
+            return `Đã thêm ${res.updated} từ sai vào hàng chờ ôn tập ngay lập tức!`;
+          }
+          return "Tủ từ vựng đã được đồng bộ.";
+        },
+        error: "Không thể xếp lịch ôn tập lại từ vựng."
+      }
+    );
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [quizSubmitted]);
 
@@ -1327,9 +1400,39 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
 
                     {/* Vietnamese L1 Interference Warning — critical for VN learners */}
                     {unit.grammar.vnNote && (
-                      <div className="border-l-4 border-red-500 bg-red-950/20 rounded-r-xl p-3">
-                        <p className="text-xs font-bold text-red-400 mb-2">⚠️ Bẫy ngữ pháp của người Việt</p>
-                        <p className="text-zinc-300 text-sm leading-relaxed font-mono" style={{ whiteSpace: 'pre-wrap' }}>{unit.grammar.vnNote}</p>
+                      <div className="relative overflow-hidden rounded-2xl border border-amber-500/30 bg-gradient-to-br from-amber-950/20 to-zinc-900/40 p-5 shadow-lg backdrop-blur-xl transition-all duration-300 hover:border-amber-500/50">
+                        {/* Neon Amber Accent Line */}
+                        <div className="absolute left-0 top-0 h-full w-1.5 bg-gradient-to-b from-amber-500 to-orange-600" />
+                        
+                        <div className="flex gap-4">
+                          {/* Warning Icon Badge */}
+                          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/20">
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              strokeWidth={2}
+                              stroke="currentColor"
+                              className="h-5 w-5"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"
+                              />
+                            </svg>
+                          </div>
+                          
+                          {/* Message Content */}
+                          <div className="flex-1">
+                            <h4 className="text-sm font-black uppercase tracking-wider text-amber-400">
+                              Cảnh Báo Lỗi Người Việt (VN Learner Alert)
+                            </h4>
+                            <p className="mt-1.5 text-xs font-semibold leading-relaxed text-zinc-300 whitespace-pre-wrap" style={{ whiteSpace: 'pre-wrap' }}>
+                              {unit.grammar.vnNote}
+                            </p>
+                          </div>
+                        </div>
                       </div>
                     )}
 
@@ -2045,8 +2148,22 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                             setLevel1Transcript(text);
                             setIsLevel1Recording(false);
                             const score = calcSpeechScore(formattedL1Prompt, text);
+                            const missingCodas = detectMissingCodas(formattedL1Prompt, text);
                             setLevel1Score(score);
-                            if (score >= 60) setLevel1Done(true);
+                            if (score >= 60) {
+                              setLevel1Done(true);
+                              if (missingCodas.length > 0) {
+                                toast.warning(`Tốt! ${score}%. Lưu ý: ${missingCodas[0]}`);
+                              } else {
+                                toast.success(`Tốt lắm! ${score}%`);
+                              }
+                            } else {
+                              if (missingCodas.length > 0) {
+                                toast.error(`Chưa đạt (${score}%). Lỗi: ${missingCodas.join(", ")}`);
+                              } else {
+                                toast.info(`${score}% — Không sao, thử lại nhé!`);
+                              }
+                            }
                           });
                         }}
                         aria-label="Luyện nói"

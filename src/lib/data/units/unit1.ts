@@ -67,31 +67,8 @@ export const unit1: UnitData = {
   // (Nation & Webb 2011; Hu & Nation 2000: 98% coverage for comprehension)
   // 15 từ từ GSL top-2000 frequency list — đủ coverage cho A1 unit này
   vocab: [
-    // Core greetings (frequency rank 1-5)
     {
       id: 1,
-      word: "Hello",
-      emoji: "👋",
-      phonetic: "/həˈləʊ/",
-      meaning: "Xin chào (trang trọng)",
-      example: "Hello! My name is Minh.",
-      example2: "Hello! Is anyone home?",
-      collocation: "Hello there! / Hello everyone!",
-      audio: "/audio/unit1/hello.mp3",
-    },
-    {
-      id: 2,
-      word: "Hi",
-      emoji: "😊",
-      phonetic: "/haɪ/",
-      meaning: "Chào (thân mật, dùng hàng ngày)",
-      example: "Hi, how are you?",
-      example2: "Hi! Long time no see.",
-      collocation: "Hi there! / Hey!",
-      audio: "/audio/unit1/hi.mp3",
-    },
-    {
-      id: 3,
       word: "Good morning",
       emoji: "🌅",
       phonetic: "/ɡʊd ˈmɔːnɪŋ/",
@@ -102,7 +79,7 @@ export const unit1: UnitData = {
       audio: "/audio/unit1/good_morning.mp3",
     },
     {
-      id: 4,
+      id: 2,
       word: "Good afternoon",
       emoji: "🌤️",
       phonetic: "/ɡʊd ˌɑːftəˈnuːn/",
@@ -113,30 +90,7 @@ export const unit1: UnitData = {
       audio: "/audio/unit1/good_afternoon.mp3",
     },
     {
-      id: 5,
-      word: "Goodbye",
-      emoji: "👋",
-      phonetic: "/ˌɡʊdˈbaɪ/",
-      meaning: "Tạm biệt (trang trọng)",
-      example: "Goodbye, see you tomorrow!",
-      example2: "We said goodbye at the airport.",
-      collocation: "say goodbye to someone",
-      audio: "/audio/unit1/goodbye.mp3",
-    },
-    {
-      id: 6,
-      word: "Bye",
-      emoji: "✌️",
-      phonetic: "/baɪ/",
-      meaning: "Tạm biệt (thân mật)",
-      example: "Bye! Have a great weekend.",
-      example2: "Bye everyone, see you Monday!",
-      collocation: "Bye bye! / Bye for now!",
-      audio: "/audio/unit1/bye.mp3",
-    },
-    // Self-introduction (core A1 GSL)
-    {
-      id: 7,
+      id: 3,
       word: "My name is",
       emoji: "🏷️",
       phonetic: "/maɪ neɪm ɪz/",
@@ -147,7 +101,7 @@ export const unit1: UnitData = {
       audio: "/audio/unit1/my_name_is.mp3",
     },
     {
-      id: 8,
+      id: 4,
       word: "I'm from",
       emoji: "🌍",
       phonetic: "/aɪm frɒm/",
@@ -157,9 +111,8 @@ export const unit1: UnitData = {
       collocation: "originally from / come from",
       audio: "/audio/unit1/im_from.mp3",
     },
-    // Question phrases
     {
-      id: 9,
+      id: 5,
       word: "How are you?",
       emoji: "❓",
       phonetic: "/haʊ ɑːr juː/",
@@ -170,7 +123,7 @@ export const unit1: UnitData = {
       audio: "/audio/unit1/how_are_you.mp3",
     },
     {
-      id: 10,
+      id: 6,
       word: "What's your name?",
       emoji: "🙋",
       phonetic: "/wɒts jɔːr neɪm/",
@@ -180,9 +133,8 @@ export const unit1: UnitData = {
       collocation: "What's your name? / May I ask your name?",
       audio: "/audio/unit1/whats_your_name.mp3",
     },
-    // Response phrases
     {
-      id: 11,
+      id: 7,
       word: "I'm fine, thank you",
       emoji: "😄",
       phonetic: "/aɪm faɪn θæŋk juː/",
@@ -193,7 +145,7 @@ export const unit1: UnitData = {
       audio: "/audio/unit1/im_fine_thank_you.mp3",
     },
     {
-      id: 12,
+      id: 8,
       word: "And you?",
       emoji: "🔄",
       phonetic: "/ænd juː/",
@@ -204,7 +156,7 @@ export const unit1: UnitData = {
       audio: "/audio/unit1/and_you.mp3",
     },
     {
-      id: 13,
+      id: 9,
       word: "Nice to meet you",
       emoji: "🤝",
       phonetic: "/naɪs tə miːt juː/",
@@ -215,18 +167,7 @@ export const unit1: UnitData = {
       audio: "/audio/unit1/nice_to_meet_you.mp3",
     },
     {
-      id: 14,
-      word: "Thank you",
-      emoji: "🙏",
-      phonetic: "/θæŋk juː/",
-      meaning: "Cảm ơn",
-      example: "Thank you very much!",
-      example2: "Thank you for your help!",
-      collocation: "Thank you so much / Thanks a lot / Cheers (Anh)",
-      audio: "/audio/unit1/thank_you.mp3",
-    },
-    {
-      id: 15,
+      id: 10,
       word: "Please",
       emoji: "🤲",
       phonetic: "/pliːz/",
@@ -453,9 +394,9 @@ export const unit1: UnitData = {
   matchingExercise: {
     title: "Nối từ với nghĩa đúng",
     pairs: [
-      { left: "Hello", right: "Xin chào" },
-      { left: "Goodbye", right: "Tạm biệt" },
-      { left: "Thank you", right: "Cảm ơn" },
+      { left: "Good morning", right: "Chào buổi sáng" },
+      { left: "Please", right: "Làm ơn / Xin vui lòng" },
+      { left: "I'm from", right: "Tôi đến từ..." },
       { left: "Nice to meet you", right: "Rất vui được gặp bạn" },
       { left: "How are you?", right: "Bạn có khỏe không?" },
     ],
