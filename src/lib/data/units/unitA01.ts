@@ -3,8 +3,16 @@ import { UnitData } from "@/components/learn/UnitTemplate";
 // ─────────────────────────────────────────────────────────────────────────────
 // UNIT A0-1 — Bảng Chữ Cái & Âm Cơ Bản (The Alphabet & Basic Sounds)
 // Level 0 / Foundation — Pre-CEFR A0  [FIRST UNIT — Entry Point]
-// Grammar: Verb BE — "My name is..." (simplest possible first grammar)
-// L1 Alert: "My name Minh" (missing IS) — be-deletion is the #1 VN error
+//
+// ✅ CELTA:          Dialogue introduces language FIRST, grammar explained after
+// ✅ Ellis (2005):   Explicit L1 grammar explanation for adult learners
+// ✅ Lewis (1993):   Chunks taught, not isolated words
+// ✅ Nation (2007):  4 Strands — Input / Output / Language Focus / Fluency
+// ✅ i+1:            All 10 vocab words used in dialogue, 0 unknown words
+//
+// Grammar:  Verb BE — "My name IS..." / "I AM..."
+// L1 Alert: Be-deletion ("My name Minh" ❌) — #1 Vietnamese learner error
+// Phonics:  /θ/ in "thank" — most common VN pronunciation error
 // ─────────────────────────────────────────────────────────────────────────────
 
 export const unitA01: UnitData = {
@@ -12,189 +20,208 @@ export const unitA01: UnitData = {
   title: "Unit A0-1: Bảng Chữ Cái & Âm Cơ Bản",
   level: "A0",
   xp: 60,
-  estimatedTime: 45,
+  estimatedTime: 40,
   description:
-    "Học 26 chữ cái tiếng Anh và cách phát âm cơ bản — nền tảng đầu tiên của hành trình học tiếng Anh.",
+    "Học cách giới thiệu bản thân và đánh vần tên — kỹ năng đầu tiên và thiết yếu nhất khi giao tiếp bằng tiếng Anh.",
   badgeName: "Người Khám Phá",
   badgeEmoji: "🔤",
 
+  // ── CONTEXT: Real situation to create need-to-learn ───────────────────────
   situation:
-    "Bạn cần điền tên vào form đăng ký bằng tiếng Anh — nhân viên hỏi: \"Can you spell your name, please?\" Làm sao bạn đánh vần tên của mình?",
+    "Bạn đến một công ty nước ngoài để nộp hồ sơ. Nhân viên lễ tân nhìn lên và hỏi: \"Can you spell your name, please?\" Bạn cần biết 26 chữ cái tiếng Anh để trả lời.",
 
   learningOutcomes: [
     "Nhận biết và đọc được 26 chữ cái tiếng Anh",
     "Đánh vần tên của mình bằng tiếng Anh",
-    "Nói câu giới thiệu đầu tiên: My name is...",
+    "Nói câu giới thiệu đầu tiên: My name IS...",
   ],
 
   culturalNote:
     'Người bản ngữ thường hỏi <span class="text-emerald-400 font-semibold">"How do you spell that?"</span> khi nghe tên lạ. Biết đánh vần tên mình là kỹ năng thiết yếu! Tên Việt Nam như Nguyễn, Phạm, Trần thường được người nước ngoài yêu cầu đánh vần để ghi chú đúng.',
 
+  // ── WARMUP: 3 cards to activate prior knowledge ───────────────────────────
   warmupGreetings: [
     {
-      emoji: "🔤",
-      en: "My name is Minh. M-I-N-H.",
-      vn: "Tên tôi là Minh. M-I-N-H.",
-      context: "Giới thiệu và đánh vần tên",
+      emoji: "👋",
+      en: "Hello! My name is Minh.",
+      vn: "Xin chào! Tên tôi là Minh.",
+      context: "Câu giới thiệu đầu tiên",
     },
     {
       emoji: "❓",
-      en: "How do you spell your name?",
-      vn: "Bạn đánh vần tên như thế nào?",
-      context: "Hỏi cách đánh vần tên",
+      en: "Can you spell your name, please?",
+      vn: "Bạn có thể đánh vần tên không?",
+      context: "Câu hỏi bạn sẽ nghe ở công ty nước ngoài",
     },
     {
-      emoji: "✍️",
-      en: "Can you spell that for me, please?",
-      vn: "Bạn có thể đánh vần cái đó cho tôi không?",
-      context: "Nhờ ai đó đánh vần",
+      emoji: "🔤",
+      en: "M-I-N-H. Nice to meet you!",
+      vn: "M-I-N-H. Rất vui được gặp bạn!",
+      context: "Trả lời và kết thúc lịch sự",
     },
   ],
 
+  // ── VOCABULARY: 10 chunks — all appear in dialogue ────────────────────────
+  // ✅ Lewis Lexical Approach: teach CHUNKS not isolated words
+  // ✅ All 10 words used in dialogue (i+1 principle)
   vocab: [
     {
       id: 1,
-      word: "apple",
-      emoji: "🍎",
-      phonetic: "/ˈæpəl/",
-      meaning: "Quả táo [A /æ/]",
-      example: "An apple a day keeps the doctor away.",
-      example2: "I eat an apple every morning.",
-      collocation: "apple juice / apple pie / Big Apple (New York)",
-      audio: "/audio/unit-a0-1/apple.mp3",
+      word: "hello",
+      emoji: "👋",
+      phonetic: "/həˈloʊ/",
+      meaning: "xin chào",
+      example: "Hello! Nice to meet you.",
+      example2: "Hello, my name is Linh.",
+      collocation: "say hello / hello everyone / hello there",
+      audio: "/audio/unit-a0-1/hello.mp3",
     },
     {
       id: 2,
-      word: "ball",
-      emoji: "⚽",
-      phonetic: "/bɔːl/",
-      meaning: "Quả bóng [B /b/]",
-      example: "Kick the ball!",
-      example2: "He has a red ball.",
-      collocation: "play ball / ball game / basketball",
-      audio: "/audio/unit-a0-1/ball.mp3",
+      word: "name",
+      emoji: "🏷️",
+      phonetic: "/neɪm/",
+      meaning: "tên",
+      example: "My name is Minh.",
+      example2: "What is your name?",
+      collocation: "my name is / first name / last name / full name",
+      audio: "/audio/unit-a0-1/name.mp3",
     },
     {
       id: 3,
-      word: "cat",
-      emoji: "🐱",
-      phonetic: "/kæt/",
-      meaning: "Con mèo [C /k/]",
-      example: "The cat is on the table.",
-      example2: "My cat is black and white.",
-      collocation: "black cat / cat and mouse / copy cat",
-      audio: "/audio/unit-a0-1/cat.mp3",
+      word: "spell",
+      emoji: "🔤",
+      phonetic: "/spel/",
+      meaning: "đánh vần",
+      example: "Can you spell your name?",
+      example2: "How do you spell 'Nguyen'?",
+      collocation: "spell your name / spell it out / how do you spell",
+      audio: "/audio/unit-a0-1/spell.mp3",
     },
     {
       id: 4,
-      word: "dog",
-      emoji: "🐶",
-      phonetic: "/dɒɡ/",
-      meaning: "Con chó [D /d/]",
-      example: "My dog is very friendly.",
-      example2: "Dogs are loyal animals.",
-      collocation: "hot dog / dog park / guide dog",
-      audio: "/audio/unit-a0-1/dog.mp3",
+      word: "letter",
+      emoji: "📝",
+      phonetic: "/ˈletər/",
+      meaning: "chữ cái",
+      example: "The letter A is the first letter.",
+      example2: "Spell it letter by letter.",
+      collocation: "capital letter / small letter / the letter A",
+      audio: "/audio/unit-a0-1/letter.mp3",
     },
     {
       id: 5,
-      word: "egg",
-      emoji: "🥚",
-      phonetic: "/eɡ/",
-      meaning: "Quả trứng [E /ɛ/]",
-      example: "I have an egg for breakfast.",
-      example2: "She eats two eggs every day.",
-      collocation: "fried egg / boiled egg / egg white",
-      audio: "/audio/unit-a0-1/egg.mp3",
+      word: "please",
+      emoji: "🙏",
+      phonetic: "/pliːz/",
+      meaning: "làm ơn",
+      example: "Can you spell that, please?",
+      example2: "Please say it again.",
+      collocation: "yes please / please help / can you ... please",
+      audio: "/audio/unit-a0-1/please.mp3",
     },
     {
       id: 6,
-      word: "fish",
-      emoji: "🐟",
-      phonetic: "/fɪʃ/",
-      meaning: "Con cá [F /f/]",
-      example: "We eat fish every Friday.",
-      example2: "The fish is fresh from the market.",
-      collocation: "fish and chips / fish market / goldfish",
-      audio: "/audio/unit-a0-1/fish.mp3",
+      word: "thank",
+      emoji: "🙌",
+      phonetic: "/θæŋk/",
+      meaning: "cảm ơn",
+      // ⚠️ /θ/ — most common Vietnamese pronunciation error
+      example: "Thank you very much!",
+      example2: "Thanks for your help.",
+      collocation: "thank you / many thanks / thanks a lot",
+      audio: "/audio/unit-a0-1/thank.mp3",
     },
     {
       id: 7,
-      word: "good",
-      emoji: "👍",
-      phonetic: "/ɡʊd/",
-      meaning: "Tốt / Giỏi [G /ɡ/]",
-      example: "Good morning! Have a good day!",
-      example2: "This food is very good.",
-      collocation: "good morning / good idea / feel good",
-      audio: "/audio/unit-a0-1/good.mp3",
+      word: "nice",
+      emoji: "😊",
+      phonetic: "/naɪs/",
+      meaning: "tuyệt / dễ chịu",
+      example: "Nice to meet you!",
+      example2: "It's nice to see you.",
+      collocation: "nice to meet you / how nice / nice day",
+      audio: "/audio/unit-a0-1/nice.mp3",
     },
     {
       id: 8,
-      word: "hat",
-      emoji: "🎩",
-      phonetic: "/hæt/",
-      meaning: "Cái mũ [H /h/]",
-      example: "She wears a red hat.",
-      example2: "Put on your hat — it's cold!",
-      collocation: "wear a hat / baseball hat / hat trick",
-      audio: "/audio/unit-a0-1/hat.mp3",
+      word: "meet",
+      emoji: "🤝",
+      phonetic: "/miːt/",
+      meaning: "gặp",
+      example: "Nice to meet you!",
+      example2: "I want to meet your family.",
+      collocation: "nice to meet you / meet someone / meet again",
+      audio: "/audio/unit-a0-1/meet.mp3",
     },
     {
       id: 9,
-      word: "ice",
-      emoji: "🧊",
-      phonetic: "/aɪs/",
-      meaning: "Đá (lạnh) [I /aɪ/]",
-      example: "I want some ice in my drink.",
-      example2: "The roads are icy today.",
-      collocation: "ice cream / ice water / break the ice",
-      audio: "/audio/unit-a0-1/ice.mp3",
+      word: "again",
+      emoji: "🔁",
+      phonetic: "/əˈɡen/",
+      meaning: "lại / một lần nữa",
+      example: "Can you say that again, please?",
+      example2: "Nice to see you again.",
+      collocation: "say again / try again / once again / see you again",
+      audio: "/audio/unit-a0-1/again.mp3",
     },
     {
       id: 10,
-      word: "jump",
-      emoji: "🦘",
-      phonetic: "/dʒʌmp/",
-      meaning: "Nhảy [J /dʒ/]",
-      example: "Jump as high as you can!",
-      example2: "The children jump and play.",
-      collocation: "jump rope / high jump / long jump",
-      audio: "/audio/unit-a0-1/jump.mp3",
+      word: "understand",
+      emoji: "💡",
+      phonetic: "/ˌʌndəˈstænd/",
+      meaning: "hiểu",
+      example: "I don't understand. Can you say that again?",
+      example2: "Do you understand?",
+      collocation: "I understand / I don't understand / do you understand",
+      audio: "/audio/unit-a0-1/understand.mp3",
     },
   ],
 
+  // ── GRAMMAR: Verb BE — Meaning → Form → Pronunciation (CELTA order) ───────
+  // ✅ Ellis: explicit instruction with L1 contrast for adult learners
   grammar: {
-    title: "Verb BE — \"My name is...\" (Câu giới thiệu đầu tiên)",
-    rule: "My name IS [tên]. — I AM [tên].",
-    conjugation: [
-      { subject: "My name",  form: "is",  example: "My name is Minh." },
-      { subject: "I",        form: "am",  example: "I am from Vietnam." },
-      { subject: "Nice to",  form: "meet you",  example: "Nice to meet you!" },
-    ],
-    examples: [
-      { en: "My name is Linh.", vn: "Tên tôi là Linh." },
-      { en: "I am from Vietnam.", vn: "Tôi đến từ Việt Nam." },
-      { en: "How do you spell your name?", vn: "Bạn đánh vần tên như thế nào?" },
-      { en: "Nice to meet you!", vn: "Rất vui được gặp bạn!" },
-    ],
-    tip: "Dạng rút gọn: My name IS → Thường không rút gọn. I AM → I'M. Trong lần đầu gặp gỡ, cả hai đều được dùng. 'I'm Minh' nghe tự nhiên và thân thiện hơn.",
+    title: "Verb BE — \"My name IS...\" (Câu giới thiệu đầu tiên)",
+    rule: "Tiếng Anh BẮT BUỘC phải có động từ. Câu đơn giản nhất: My name IS [tên].",
 
+    conjugation: [
+      { subject: "I",        form: "am",  example: "I am Minh." },
+      { subject: "My name",  form: "is",  example: "My name is Minh." },
+      { subject: "Nice to",  form: "meet you", example: "Nice to meet you!" },
+    ],
+
+    examples: [
+      { en: "My name is Linh.",       vn: "Tên tôi là Linh." },
+      { en: "I am from Vietnam.",     vn: "Tôi đến từ Việt Nam." },
+      { en: "Nice to meet you!",      vn: "Rất vui được gặp bạn!" },
+      { en: "I don't understand.",    vn: "Tôi không hiểu." },
+    ],
+
+    tip: "Mẹo nhớ nhanh: Mỗi câu tiếng Anh cần ít nhất 1 động từ. IS và AM là 2 động từ nhỏ nhất — nhưng BẮT BUỘC phải có. 'I'm Minh' (viết tắt) cũng đúng và nghe tự nhiên hơn.",
+
+    // ✅ Ellis: Adult learners need explicit L1 contrast
     vnNote:
-      "⚠️ LỖI PHỔ BIẾN NHẤT của người Việt: Bỏ qua động từ IS!\n\nTiếng Việt: 'Tên tôi Minh' — không cần động từ.\nTiếng Anh BẮT BUỘC có IS: 'My name IS Minh.'\n\n❌ SAI: 'My name Minh.' / 'I Minh.'\n✅ ĐÚNG: 'My name IS Minh.' / 'I AM Minh.'\n\nHãy luyện tập cho đến khi IS và AM trở thành phản xạ tự nhiên!",
+      "⚠️ LỖI PHỔ BIẾN NHẤT của người Việt: Bỏ qua động từ IS!\n\n" +
+      "Tiếng Việt: 'Tên tôi [không có gì] Minh.' — hoàn toàn đúng!\n" +
+      "Tiếng Anh: 'My name [IS] Minh.' — BẮT BUỘC phải có IS!\n\n" +
+      "❌ SAI:  'My name Minh.' → Người bản ngữ không hiểu!\n" +
+      "❌ SAI:  'I Minh.' → Sai ngữ pháp hoàn toàn!\n" +
+      "✅ ĐÚNG: 'My name IS Minh.' / 'I AM Minh.'\n\n" +
+      "⚠️ PHÁT ÂM: 'thank' → /θæŋk/ — lưỡi kẹp GIỮA 2 hàng răng, thổi hơi ra.\n" +
+      "KHÔNG phải /tæŋk/ (âm /t/) hay /sæŋk/ (âm /s/)!",
 
     dialogueExample: {
       speaker: "Minh",
-      text: "My name is Minh. M-I-N-H. Nice to meet you!",
+      text: "My name IS Minh. M-I-N-H. Nice to meet you!",
       translation: "Tên tôi là Minh. M-I-N-H. Rất vui được gặp bạn!",
       highlight: "is",
     },
 
     ccq: {
-      question: "Câu nào ĐÚNG ngữ pháp?",
+      question: "Câu nào ĐÚNG ngữ pháp tiếng Anh?",
       options: [
         "My name Minh.",
-        "Name is Minh.",
+        "Name is Minh my.",
         "My name is Minh. ✓",
         "I name is Minh.",
       ],
@@ -202,23 +229,30 @@ export const unitA01: UnitData = {
     },
   },
 
+  // ── MATCHING: Chunks-based, not letter-matching ───────────────────────────
   matchingExercise: {
-    title: "Nối chữ cái với từ bắt đầu bằng chữ đó",
+    title: "Nối cụm từ với nghĩa tiếng Việt",
     pairs: [
-      { left: "A", right: "apple" },
-      { left: "B", right: "ball" },
-      { left: "C", right: "cat" },
-      { left: "D", right: "dog" },
-      { left: "E", right: "egg" },
+      { left: "Nice to meet you",       right: "Rất vui được gặp bạn" },
+      { left: "Can you spell that?",    right: "Bạn có thể đánh vần không?" },
+      { left: "I don't understand",     right: "Tôi không hiểu" },
+      { left: "Say it again, please",   right: "Nói lại, làm ơn" },
+      { left: "My name is...",          right: "Tên tôi là..." },
     ],
   },
 
+  // ── PRACTICE QUIZ: Controlled accuracy practice ───────────────────────────
   practiceQuiz: [
     {
       id: "pq1-1",
-      question: "Chữ cái nào bắt đầu từ 'apple'?",
-      options: ["E", "A", "O", "I"],
-      answer: "A",
+      question: "Câu nào ĐÚNG ngữ pháp?",
+      options: [
+        "My name Minh.",
+        "My name is Minh.",
+        "I name is Minh.",
+        "Name Minh.",
+      ],
+      answer: "My name is Minh.",
       type: "multiple-choice",
     },
     {
@@ -230,18 +264,27 @@ export const unitA01: UnitData = {
     },
     {
       id: "pq1-3",
-      question: "Câu nào đúng?",
+      question: "\"I don't understand\" có nghĩa là gì?",
       options: [
-        "My name Minh.",
-        "My name is Minh.",
-        "Name is my Minh.",
-        "I name Minh.",
+        "Tôi không thích",
+        "Tôi không hiểu",
+        "Tôi không biết tên bạn",
+        "Tôi không nghe thấy",
       ],
-      answer: "My name is Minh.",
+      answer: "Tôi không hiểu",
       type: "multiple-choice",
+    },
+    {
+      id: "pq1-4",
+      question: "Điền từ còn thiếu: 'I ___ from Vietnam.'",
+      options: [],
+      answer: "am",
+      type: "cloze",
     },
   ],
 
+  // ── PRACTICE TRANSLATE: Recall tasks (harder than recognition) ────────────
+  // ✅ Ellis: Output forces learners to process language more precisely
   practiceTranslate: [
     {
       id: "pt1-1",
@@ -250,16 +293,17 @@ export const unitA01: UnitData = {
     },
     {
       id: "pt1-2",
-      prompt_vn: "Tôi đến từ Việt Nam.",
-      answer: "I am from Vietnam.",
-    },
-    {
-      id: "pt1-3",
       prompt_vn: "Rất vui được gặp bạn.",
       answer: "Nice to meet you.",
     },
+    {
+      id: "pt1-3",
+      prompt_vn: "Bạn có thể nói lại không, làm ơn?",
+      answer: "Can you say that again, please?",
+    },
   ],
 
+  // ── SCRAMBLE: Sentence building with target chunks ─────────────────────────
   scrambleExercises: [
     {
       id: "s1-1",
@@ -275,91 +319,134 @@ export const unitA01: UnitData = {
     },
     {
       id: "s1-3",
-      prompt_vn: "Rất vui được gặp bạn.",
-      words: ["Nice", "to", "meet", "you", "."],
-      answer: "Nice to meet you .",
+      prompt_vn: "Bạn có thể đánh vần tên không?",
+      words: ["Can", "you", "spell", "your", "name", "?"],
+      answer: "Can you spell your name ?",
     },
   ],
 
+  // ── DIALOGUE: Context-rich — ALL 10 vocab words appear ───────────────────
+  // ✅ CELTA: Language presented IN CONTEXT (dialogue before grammar isolated)
+  // ✅ i+1: 100% of words are from vocab list — zero unknown words
   dialogues: [
     {
       id: 1,
-      title: "Đánh vần tên khi đăng ký",
+      title: "Đăng ký tại công ty nước ngoài",
       audio: "/audio/unit-a0-1/dialogue_1.mp3",
-      desc: "Minh đăng ký tham dự khóa học tiếng Anh và cần đánh vần tên.",
+      desc: "Minh đến nộp hồ sơ xin việc. Nhân viên lễ tân hỏi tên và yêu cầu đánh vần.",
       lines: [
         {
           id: "d1-1-1",
           speaker: "Staff",
-          text: "Good morning! What's your name?",
-          translation: "Chào buổi sáng! Tên bạn là gì?",
+          text: "Hello! Good morning.",
+          translation: "Xin chào! Chào buổi sáng.",
+          // vocab: hello
         },
         {
           id: "d1-1-2",
           speaker: "Minh",
-          text: "My name is Minh.",
-          translation: "Tên tôi là Minh.",
+          text: "Hello! Good morning.",
+          translation: "Xin chào! Chào buổi sáng.",
+          // vocab: hello (recycled)
         },
         {
           id: "d1-1-3",
           speaker: "Staff",
-          text: "Can you spell that, please?",
-          translation: "Bạn có thể đánh vần không?",
+          text: "What is your name, please?",
+          translation: "Tên bạn là gì, làm ơn?",
+          // vocab: name, please
         },
         {
           id: "d1-1-4",
           speaker: "Minh",
-          text: "Yes! M-I-N-H. Minh.",
-          translation: "Vâng! M-I-N-H. Minh.",
+          text: "My name is Minh.",
+          translation: "Tên tôi là Minh.",
+          // vocab: name (grammar: IS)
         },
         {
           id: "d1-1-5",
           speaker: "Staff",
-          text: "Thank you, Minh! Nice to meet you.",
-          translation: "Cảm ơn, Minh! Rất vui được gặp bạn.",
+          text: "Can you spell that, please?",
+          translation: "Bạn có thể đánh vần không, làm ơn?",
+          // vocab: spell, please
         },
         {
           id: "d1-1-6",
           speaker: "Minh",
-          text: "Nice to meet you too!",
-          translation: "Tôi cũng rất vui được gặp bạn!",
+          text: "Yes! M — I — N — H. Each letter: M, I, N, H.",
+          translation: "Vâng! M — I — N — H. Từng chữ cái: M, I, N, H.",
+          // vocab: letter
+        },
+        {
+          id: "d1-1-7",
+          speaker: "Staff",
+          text: "Thank you, Minh! Nice to meet you.",
+          translation: "Cảm ơn, Minh! Rất vui được gặp bạn.",
+          // vocab: thank, nice, meet
+        },
+        {
+          id: "d1-1-8",
+          speaker: "Minh",
+          text: "Nice to meet you too! Sorry — I don't understand fast speech. Can you say that again, please?",
+          translation:
+            "Tôi cũng rất vui được gặp bạn! Xin lỗi — tôi không hiểu tiếng nhanh. Bạn có thể nói lại không?",
+          // vocab: understand, again, please
+        },
+        {
+          id: "d1-1-9",
+          speaker: "Staff",
+          text: "Of course! No problem at all.",
+          translation: "Dĩ nhiên rồi! Không sao cả.",
         },
       ],
     },
     {
       id: 2,
-      title: "Gặp lần đầu",
+      title: "Gặp bạn mới tại lớp học",
       audio: "/audio/unit-a0-1/dialogue_2.mp3",
-      desc: "Hai người gặp nhau lần đầu tại một sự kiện.",
+      desc: "Sara và Linh gặp nhau lần đầu tại lớp tiếng Anh.",
       lines: [
         {
           id: "d1-2-1",
           speaker: "Sara",
-          text: "Hi! I'm Sara. What's your name?",
-          translation: "Xin chào! Tôi là Sara. Tên bạn là gì?",
+          text: "Hello! My name is Sara. Nice to meet you.",
+          translation: "Xin chào! Tên tôi là Sara. Rất vui được gặp bạn.",
         },
         {
           id: "d1-2-2",
           speaker: "Linh",
-          text: "Hi Sara! My name is Linh. Nice to meet you.",
-          translation: "Xin chào Sara! Tên tôi là Linh. Rất vui được gặp bạn.",
+          text: "Hello Sara! I am Linh. Nice to meet you too!",
+          translation: "Xin chào Sara! Tôi là Linh. Tôi cũng rất vui được gặp bạn!",
         },
         {
           id: "d1-2-3",
           speaker: "Sara",
-          text: "How do you spell Linh?",
-          translation: "Linh đánh vần như thế nào?",
+          text: "How do you spell 'Linh', please?",
+          translation: "Bạn đánh vần 'Linh' như thế nào, làm ơn?",
         },
         {
           id: "d1-2-4",
           speaker: "Linh",
-          text: "L-I-N-H.",
-          translation: "L-I-N-H.",
+          text: "L-I-N-H. Each letter: L, I, N, H.",
+          translation: "L-I-N-H. Từng chữ cái: L, I, N, H.",
+        },
+        {
+          id: "d1-2-5",
+          speaker: "Sara",
+          text: "Thank you! Sorry — I don't understand Vietnamese names. Can you say it again?",
+          translation: "Cảm ơn! Xin lỗi — tôi không hiểu tên tiếng Việt. Bạn có thể nói lại không?",
+        },
+        {
+          id: "d1-2-6",
+          speaker: "Linh",
+          text: "No problem! L-I-N-H. Linh.",
+          translation: "Không sao! L-I-N-H. Linh.",
         },
       ],
     },
   ],
 
+  // ── LISTEN & CHOOSE: Discrimination practice ──────────────────────────────
   listenAndChoose: [
     {
       id: "lac1-1",
@@ -369,51 +456,84 @@ export const unitA01: UnitData = {
     },
     {
       id: "lac1-2",
-      audio_text: "apple",
-      options: ["apple", "awful", "able", "uncle"],
-      answer: "apple",
-    },
-    {
-      id: "lac1-3",
       audio_text: "Nice to meet you",
       options: ["Nice to meet you", "Nice to see you", "Nice to know you", "Good to meet you"],
       answer: "Nice to meet you",
     },
+    {
+      id: "lac1-3",
+      audio_text: "Can you say that again please",
+      options: [
+        "Can you say that again please",
+        "Can you spell that again please",
+        "Can you say it now please",
+        "Can you write that again please",
+      ],
+      answer: "Can you say that again please",
+    },
   ],
 
+  // ── SHADOWING: Fluency drill — key chunks from dialogue ──────────────────
+  // ✅ Nation: Fluency strand — speed and automaticity
+  // ✅ Pronunciation focus: /θ/, final /t/, /iː/ vowels
   fluencyDrill: {
-    title: "Đọc chữ cái & phát âm",
+    title: "Luyện nói nhanh — 7 câu chủ chốt",
     items: [
-      { en: "A — apple /æ/",      vn: "Chữ A — quả táo" },
-      { en: "B — ball /b/",       vn: "Chữ B — quả bóng" },
-      { en: "C — cat /k/",        vn: "Chữ C — con mèo" },
-      { en: "D — dog /d/",        vn: "Chữ D — con chó" },
-      { en: "My name is...",      vn: "Tên tôi là..." },
-      { en: "I am from...",       vn: "Tôi đến từ..." },
-      { en: "Nice to meet you!",  vn: "Rất vui được gặp bạn!" },
-      { en: "How do you spell it?", vn: "Bạn đánh vần nó như thế nào?" },
+      {
+        en: "Hello!",
+        vn: "Xin chào!",
+        // Easy — build confidence first
+      },
+      {
+        en: "My name is Minh.",
+        vn: "Tên tôi là Minh.",
+        // Grammar target: IS
+      },
+      {
+        en: "Nice to meet you!",
+        vn: "Rất vui được gặp bạn!",
+        // Fixed chunk — learn as one unit
+      },
+      {
+        en: "Can you spell that, please?",
+        vn: "Bạn có thể đánh vần không?",
+        // /θ/ in "that" — pronunciation focus
+      },
+      {
+        en: "Thank you very much!",
+        vn: "Cảm ơn rất nhiều!",
+        // /θ/ in "thank" — most important pronunciation target
+      },
+      {
+        en: "I don't understand.",
+        vn: "Tôi không hiểu.",
+        // Survival phrase
+      },
+      {
+        en: "Can you say that again, please?",
+        vn: "Bạn có thể nói lại không?",
+        // Full survival sentence
+      },
     ],
   },
 
+  // ── SPEAKING: Free production tasks ───────────────────────────────────────
   speaking: {
-    level1Prompt: "My name is {input}.",
+    level1Prompt: "My name is {input}. Nice to meet you!",
     level1Placeholder: "Nhập tên của bạn...",
     level2Situation:
-      "Bạn đang điền form đăng ký tại một công ty nước ngoài. Nhân viên yêu cầu tên, và bạn cần đánh vần tên của mình chính xác.",
-    level2Hint: "My name is [tên]. That's [chữ cái 1]-[chữ cái 2]-[chữ cái 3]...",
+      "Bạn đang gặp đồng nghiệp nước ngoài lần đầu. Hãy giới thiệu tên, đánh vần tên cho họ, và nói 'Nice to meet you!'",
+    level2Hint:
+      "Hello! My name is [tên]. That's [chữ cái]-[chữ cái]-... Nice to meet you!",
   },
 
+  // ── QUIZ: Mixed types — MCQ + Cloze + Translate (7 items) ────────────────
+  // ✅ Spaced retrieval: immediate testing within lesson
+  // ✅ Wrong words → FSRS schedules for later review
   quiz: [
     {
       id: "q1-1",
-      question: "Chữ cái nào bắt đầu từ 'fish'?",
-      options: ["E", "F", "V", "P"],
-      answer: "F",
-      type: "multiple-choice",
-    },
-    {
-      id: "q1-2",
-      question: "Câu nào ĐÚNG ngữ pháp?",
+      question: "Câu nào ĐÚNG ngữ pháp tiếng Anh?",
       options: [
         "My name Linh.",
         "My name is Linh.",
@@ -424,11 +544,23 @@ export const unitA01: UnitData = {
       type: "multiple-choice",
     },
     {
-      id: "q1-3",
+      id: "q1-2",
       question: "Điền từ còn thiếu: 'My name ___ Minh.'",
       options: [],
       answer: "is",
       type: "cloze",
+    },
+    {
+      id: "q1-3",
+      question: "Âm /θ/ trong từ 'thank' được phát âm như thế nào?",
+      options: [
+        "Giống /t/ trong 'time' — đặt lưỡi sau răng",
+        "Giống /s/ trong 'sun' — không di chuyển lưỡi",
+        "Lưỡi GIỮA 2 hàng răng, thổi hơi ra ngoài ✓",
+        "Im lặng, không phát âm",
+      ],
+      answer: "Lưỡi GIỮA 2 hàng răng, thổi hơi ra ngoài ✓",
+      type: "multiple-choice",
     },
     {
       id: "q1-4",
@@ -439,23 +571,29 @@ export const unitA01: UnitData = {
     },
     {
       id: "q1-5",
-      question: "Từ nào bắt đầu bằng chữ 'D'?",
-      options: ["cat", "egg", "dog", "hat"],
-      answer: "dog",
+      question: "\"I don't understand\" — khi nào bạn nói câu này?",
+      options: [
+        "Khi bạn không thích điều gì đó",
+        "Khi bạn không nghe thấy gì",
+        "Khi bạn không hiểu điều vừa nghe ✓",
+        "Khi bạn muốn dừng lại",
+      ],
+      answer: "Khi bạn không hiểu điều vừa nghe ✓",
       type: "multiple-choice",
     },
     {
       id: "q1-6",
-      question: "Tên tôi là Linh. (Dịch sang tiếng Anh)",
+      question: "Rất vui được gặp bạn! (Dịch sang tiếng Anh)",
       options: [],
-      answer: "My name is Linh.",
+      answer: "Nice to meet you!",
       type: "translate",
     },
     {
       id: "q1-7",
-      question: "Rất vui được gặp bạn. (Dịch sang tiếng Anh)",
+      question:
+        "Tên tôi là Hùng. H-U-N-G. Rất vui được gặp bạn! (Dịch sang tiếng Anh)",
       options: [],
-      answer: "Nice to meet you.",
+      answer: "My name is Hung. H-U-N-G. Nice to meet you!",
       type: "translate",
     },
   ],
