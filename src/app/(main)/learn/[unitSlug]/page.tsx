@@ -3,6 +3,16 @@ import type { Metadata } from "next";
 
 import UnitTemplate from "@/components/learn/UnitTemplate";
 import type { UnitData } from "@/components/learn/UnitTemplate";
+// A0 Foundation units
+import unitA01 from "@/lib/data/units/unitA01";
+import unitA02 from "@/lib/data/units/unitA02";
+import unitA03 from "@/lib/data/units/unitA03";
+import unitA04 from "@/lib/data/units/unitA04";
+import unitA05 from "@/lib/data/units/unitA05";
+import unitA06 from "@/lib/data/units/unitA06";
+import unitA07 from "@/lib/data/units/unitA07";
+import unitA08 from "@/lib/data/units/unitA08";
+// A1 units
 import { unit1 } from "@/lib/data/units/unit1";
 import { unit2 } from "@/lib/data/units/unit2";
 import { unit3 } from "@/lib/data/units/unit3";
@@ -24,9 +34,18 @@ import { unit18 } from "@/lib/data/units/unit18";
 import { UNITS } from "@/lib/constants/units";
 
 // ─── Unit registry ───────────────────────────────────────────────────────────
-// Single source of truth: all A1 + A2 units registered here.
+// Single source of truth: all A0 + A1 + A2 units registered here.
 // Add new units here to make them available at /learn/[unitSlug].
 const UNIT_DATA_MAP: Record<string, { data: UnitData; next: string }> = {
+  // A0 Foundation — 8 units (pre-CEFR)
+  "unit-a0-1": { data: unitA01, next: "/learn/unit-a0-2" },
+  "unit-a0-2": { data: unitA02, next: "/learn/unit-a0-3" },
+  "unit-a0-3": { data: unitA03, next: "/learn/unit-a0-4" },
+  "unit-a0-4": { data: unitA04, next: "/learn/unit-a0-5" },
+  "unit-a0-5": { data: unitA05, next: "/learn/unit-a0-6" },
+  "unit-a0-6": { data: unitA06, next: "/learn/unit-a0-7" },
+  "unit-a0-7": { data: unitA07, next: "/learn/unit-a0-8" },
+  "unit-a0-8": { data: unitA08, next: "/learn/unit-1" }, // A0 complete → start A1
   // A1 — 12 units
   "unit-1":  { data: unit1,  next: "/learn/unit-2" },
   "unit-2":  { data: unit2,  next: "/learn/unit-3" },

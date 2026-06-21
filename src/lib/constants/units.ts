@@ -9,11 +9,97 @@ export interface UnitMetadata {
   tags: string[];
 }
 
+// A0 Foundation Curriculum — 8 units — Pre-CEFR / True Beginner
+// For Vietnamese adult learners with zero prior English exposure.
+// Grammar progression: Verb BE (name) → Numbers → Adjective order →
+//   Greetings → Personal info → Family pronouns → AT/ON/IN → Imperative
+//
 // A1 Curriculum — 12 units — CEFR-aligned progression
 // Grammar progression: To be → Wh-Q → Possessives → Present Simple →
 //   like+V-ing → There is/are → How much → Countable/Uncountable →
 //   Prepositions → Can/Can't → have/feel → Review
 export const UNITS: UnitMetadata[] = [
+  // ─── A0 Foundation — 8 units ─────────────────────────────────────────────────
+  {
+    id: "unit-a0-1",
+    title: "Unit A0-1: Bảng Chữ Cái & Âm Cơ Bản",
+    description: "Học 26 chữ cái tiếng Anh và cách phát âm cơ bản — nền tảng đầu tiên của hành trình học tiếng Anh.",
+    level: "A0",
+    route: "/learn/unit-a0-1",
+    xp: 60,
+    estimatedTime: 45,
+    tags: ["Từ vựng +10", "Bảng chữ cái", "My name is"],
+  },
+  {
+    id: "unit-a0-2",
+    title: "Unit A0-2: Số Đếm & Đếm Số",
+    description: "Học số từ 1–20 và cách hỏi giá tiền — từ vựng thiết yếu trong mọi giao dịch hàng ngày.",
+    level: "A0",
+    route: "/learn/unit-a0-2",
+    xp: 60,
+    estimatedTime: 40,
+    tags: ["Từ vựng +10", "Số đếm", "How much/many"],
+  },
+  {
+    id: "unit-a0-3",
+    title: "Unit A0-3: Màu Sắc & Mô Tả",
+    description: "Học từ vựng về màu sắc và kích thước — nền tảng để mô tả mọi thứ xung quanh bạn.",
+    level: "A0",
+    route: "/learn/unit-a0-3",
+    xp: 60,
+    estimatedTime: 40,
+    tags: ["Từ vựng +10", "Màu sắc", "Tính từ trước danh từ"],
+  },
+  {
+    id: "unit-a0-4",
+    title: "Unit A0-4: Chào Hỏi & Câu Xã Giao",
+    description: "Học cách chào hỏi lịch sự và những câu xã giao thiết yếu — ấn tượng đầu tiên là ấn tượng quan trọng nhất!",
+    level: "A0",
+    route: "/learn/unit-a0-4",
+    xp: 60,
+    estimatedTime: 40,
+    tags: ["Từ vựng +10", "Chào hỏi", "How are you?"],
+  },
+  {
+    id: "unit-a0-5",
+    title: "Unit A0-5: Thông Tin Cá Nhân",
+    description: "Học cách giới thiệu bản thân đầy đủ: tên, tuổi, quốc tịch và nơi sống — những thông tin cơ bản nhất.",
+    level: "A0",
+    route: "/learn/unit-a0-5",
+    xp: 60,
+    estimatedTime: 45,
+    tags: ["Từ vựng +10", "Giới thiệu", "Verb BE đầy đủ"],
+  },
+  {
+    id: "unit-a0-6",
+    title: "Unit A0-6: Gia Đình & Những Người Thân",
+    description: "Học từ vựng về gia đình và cách mô tả người thân — nội dung giao tiếp hàng ngày không thể thiếu.",
+    level: "A0",
+    route: "/learn/unit-a0-6",
+    xp: 60,
+    estimatedTime: 40,
+    tags: ["Từ vựng +10", "Gia đình", "He/She/They"],
+  },
+  {
+    id: "unit-a0-7",
+    title: "Unit A0-7: Thời Gian, Ngày & Tháng",
+    description: "Học cách nói giờ, ngày trong tuần và các buổi trong ngày — thiết yếu để đặt lịch và hẹn hò bằng tiếng Anh.",
+    level: "A0",
+    route: "/learn/unit-a0-7",
+    xp: 60,
+    estimatedTime: 40,
+    tags: ["Từ vựng +10", "Thời gian", "AT/ON/IN"],
+  },
+  {
+    id: "unit-a0-8",
+    title: "Unit A0-8: Khẩn Cấp & Cụm Từ Sinh Tồn",
+    description: "Học những câu tiếng Anh quan trọng nhất trong tình huống khẩn cấp — kiến thức có thể cứu mạng bạn!",
+    level: "A0",
+    route: "/learn/unit-a0-8",
+    xp: 80,
+    estimatedTime: 45,
+    tags: ["Từ vựng +10", "Khẩn cấp", "Imperative + Please"],
+  },
   {
     id: "unit-1",
     title: "Unit 1: Greetings & Self-Introduction",

@@ -93,10 +93,12 @@ export default function LearnClient({
           const isNewLevel = prevLevel !== null && unit.level !== prevLevel;
 
           const LEVEL_CONFIG: Record<string, { label: string; color: string; ring: string; bg: string }> = {
-            A2: { label: "Sơ trung cấp", color: "from-blue-500 to-indigo-500", ring: "ring-blue-500/30", bg: "from-blue-950/40 to-indigo-950/40" },
-            B1: { label: "Trung cấp", color: "from-purple-500 to-violet-500", ring: "ring-purple-500/30", bg: "from-purple-950/40 to-violet-950/40" },
-            B2: { label: "Trên trung cấp", color: "from-orange-500 to-amber-500", ring: "ring-orange-500/30", bg: "from-orange-950/40 to-amber-950/40" },
-            C1: { label: "Cao cấp", color: "from-rose-500 to-pink-500", ring: "ring-rose-500/30", bg: "from-rose-950/40 to-pink-950/40" },
+            A0: { label: "Nền Tảng",       color: "from-emerald-400 to-teal-500",   ring: "ring-emerald-500/30", bg: "from-emerald-950/40 to-teal-950/40" },
+            A1: { label: "Người Bắt Đầu",  color: "from-emerald-500 to-cyan-500",   ring: "ring-cyan-500/30",     bg: "from-emerald-950/40 to-cyan-950/40" },
+            A2: { label: "Sơ trung cấp",   color: "from-blue-500 to-indigo-500",    ring: "ring-blue-500/30",    bg: "from-blue-950/40 to-indigo-950/40" },
+            B1: { label: "Trung cấp",      color: "from-purple-500 to-violet-500",  ring: "ring-purple-500/30", bg: "from-purple-950/40 to-violet-950/40" },
+            B2: { label: "Trên trung cấp", color: "from-orange-500 to-amber-500",   ring: "ring-orange-500/30", bg: "from-orange-950/40 to-amber-950/40" },
+            C1: { label: "Cao cấp",        color: "from-rose-500 to-pink-500",      ring: "ring-rose-500/30",   bg: "from-rose-950/40 to-pink-950/40" },
           };
           const lvlCfg = LEVEL_CONFIG[unit.level];
 

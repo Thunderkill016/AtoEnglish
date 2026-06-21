@@ -19,7 +19,7 @@ interface SaveCardParams {
   meaning_vn: string;
   example_en?: string | null;
   topic?: string | null;
-  level?: "A1" | "A2" | "B1" | "B2" | "C1";
+  level?: "A0" | "A1" | "A2" | "B1" | "B2" | "C1";
 }
 
 /**
@@ -401,7 +401,7 @@ export async function getCardTopics() {
 export async function seedUnitVocabToSRS(params: {
   vocab: Array<{ word: string; phonetic?: string | null; meaning_vn: string; example_en?: string | null }>;
   topic: string;
-  level?: "A1" | "A2" | "B1" | "B2" | "C1";
+  level?: "A0" | "A1" | "A2" | "B1" | "B2" | "C1";
 }) {
   try {
     const reqHeaders = await headers();

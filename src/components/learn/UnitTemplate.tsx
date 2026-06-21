@@ -645,7 +645,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
         }));
       }
       // ─ FSRS: auto-seed all unit vocab into the user's SRS deck (fire-and-forget) ─
-      const unitLevel = (unit.level?.match(/A[12]|B[12]|C1/) ?? ["A1"])[0] as "A1" | "A2" | "B1" | "B2" | "C1";
+      const unitLevel = (unit.level?.match(/A[012]|B[12]|C1/) ?? ["A1"])[0] as "A0" | "A1" | "A2" | "B1" | "B2" | "C1";
       void seedUnitVocabToSRS({
         vocab: unit.vocab.map(v => ({
           word: v.word,

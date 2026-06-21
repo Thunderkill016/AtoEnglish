@@ -29,7 +29,7 @@ export const SaveCardSchema = z.object({
   meaning_vn: z.string().min(1, "Nghĩa tiếng Việt không được để trống").trim(),
   example_en: z.string().nullable().optional(),
   topic: z.string().max(50).nullable().optional(),
-  level: z.enum(["A1", "A2", "B1", "B2", "C1"]).optional(),
+  level: z.enum(["A0", "A1", "A2", "B1", "B2", "C1"]).optional(),
 });
 
 /**
@@ -81,7 +81,7 @@ export const SeedVocabSchema = z.object({
     .min(1, "Cần ít nhất 1 từ vựng")
     .max(30, "Tối đa 30 từ vựng mỗi lần"),
   topic: z.string().max(60).trim().default("General"),
-  level: z.enum(["A1", "A2", "B1", "B2", "C1"]).default("A1"),
+  level: z.enum(["A0", "A1", "A2", "B1", "B2", "C1"]).default("A1"),
 });
 
 /**
