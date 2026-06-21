@@ -1263,14 +1263,14 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
               {unit.grammar ? (
                 <div className="space-y-5">
                   {/* Grammar card */}
-                  <div className="bg-teal-950/30 border border-teal-700/40 rounded-2xl p-4 sm:p-6">
+                  <div className="bg-gradient-to-b from-teal-950/30 to-zinc-950/50 border border-teal-700/40 rounded-2xl p-4 sm:p-6 shadow-md">
                     <div className="flex items-center gap-2 mb-4">
                       <span className="text-xl">📐</span>
                       <h2 className="text-lg font-black text-teal-300">{unit.grammar.title}</h2>
                     </div>
 
                     {/* Rule box */}
-                    <div className="bg-zinc-900/60 border border-zinc-700/40 rounded-xl p-4 mb-5 font-mono">
+                    <div className="bg-zinc-900/70 border border-emerald-800/30 rounded-2xl p-4 mb-5 font-mono shadow-inner">
                       <p className="text-emerald-300 text-sm font-bold">{unit.grammar.rule}</p>
                     </div>
 
@@ -1280,7 +1280,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                         <p className="text-xs text-zinc-500 font-bold uppercase tracking-widest mb-3">Chia động từ</p>
                         <div className="grid gap-2">
                           {unit.grammar.conjugation.map((row, i) => (
-                            <div key={i} className="flex items-center gap-3 bg-zinc-800/40 rounded-xl px-4 py-2.5">
+                            <div key={i} className="flex items-center gap-3 bg-zinc-800/40 hover:bg-zinc-700/40 rounded-xl px-4 py-2.5 transition-colors">
                               <span className="text-zinc-400 text-sm w-20 font-semibold">{row.subject}</span>
                               <span className="text-emerald-400 font-bold text-sm w-16">{row.form}</span>
                               <span className="text-zinc-300 text-sm italic flex-1">{row.example}</span>
@@ -1301,7 +1301,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                     <div className="space-y-3 mb-4">
                       <p className="text-xs text-zinc-500 font-bold uppercase tracking-widest">Ví dụ</p>
                       {unit.grammar.examples.map((ex, i) => (
-                        <div key={i} className="bg-zinc-800/40 rounded-xl px-4 py-3 flex items-start justify-between gap-3">
+                        <div key={i} className="bg-zinc-800/40 hover:bg-zinc-700/40 rounded-xl px-4 py-3 flex items-start justify-between gap-3 transition-colors">
                           <div>
                             <p className="text-white font-semibold text-sm">{ex.en}</p>
                             <p className="text-zinc-400 text-xs mt-0.5">{ex.vn}</p>
@@ -1956,7 +1956,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                   </div>
 
                   {shadowTranscripts[shadowLineIdx] && (
-                    <div className="border border-zinc-800/80 bg-zinc-900/30 rounded-xl p-4 mb-6 text-center">
+                    <div className="bg-gradient-to-b from-zinc-800/60 to-zinc-900/70 border border-zinc-700/50 rounded-2xl p-4 mb-6 text-center shadow-sm">
                       <p className="text-[10px] text-zinc-500 mb-1 font-bold">BẠN VỪA NÓI:</p>
                       <p className="text-white text-sm font-semibold mb-2">&ldquo;{shadowTranscripts[shadowLineIdx]}&rdquo;</p>
                       <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-bold border border-emerald-500/10">
