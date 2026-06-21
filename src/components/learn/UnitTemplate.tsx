@@ -668,6 +668,17 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
     setIsSubmitting(false);
   };
 
+  // ─── Share handler (Web Share API → clipboard fallback) ──────────────────
+  const handleShare = async () => {
+    const text = `Tôi vừa hoàn thành "${unit.title}" trên AtoEnglish! 🎉\nCùng học tiếng Anh miễn phí: https://atoenglish.vercel.app`;
+    if (typeof navigator !== "undefined" && navigator.share) {
+      try { await navigator.share({ title: "AtoEnglish", text }); } catch { /* user cancelled */ }
+    } else {
+      await navigator.clipboard.writeText(text);
+      toast.success("Đã sao chép link chia sẻ!");
+    }
+  };
+
   // ─── Score calculations ───────────────────────────────────────────────────
   // Final quiz score (MC + cloze + translate)
   // Shared normalization for cloze/translate (strips punctuation, normalizes contractions)
@@ -2374,6 +2385,12 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                         <p className="text-emerald-300 font-bold">✅ Bạn đã hoàn thành chương học này!</p>
                       </div>
                       <div className="flex flex-wrap gap-3 justify-center">
+                        <button
+                          onClick={handleShare}
+                          className="inline-flex items-center gap-2 bg-emerald-600/20 hover:bg-emerald-600/30 border border-emerald-500/30 text-emerald-300 font-bold rounded-xl px-5 py-3 transition-colors text-sm"
+                        >
+                          🔗 Chia sẻ thành tích
+                        </button>
                         <Link href="/quiz" className="inline-flex items-center gap-2 bg-violet-600 hover:bg-violet-500 text-white font-bold rounded-xl px-5 py-3 transition-colors text-sm">
                           📝 Quiz từ vựng
                         </Link>
