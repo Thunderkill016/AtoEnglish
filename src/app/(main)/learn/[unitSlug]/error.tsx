@@ -32,7 +32,7 @@ export default function UnitError({ error, reset }: ErrorProps) {
       <div className="flex flex-wrap gap-3 justify-center">
         <Button
           onClick={reset}
-          className="gap-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl h-11 px-5"
+          className="gap-2 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-white rounded-xl h-11 px-5 active:scale-95 transition-all"
         >
           <RefreshCw className="size-4" />
           Thử lại

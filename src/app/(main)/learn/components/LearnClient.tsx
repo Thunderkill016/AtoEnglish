@@ -262,7 +262,7 @@ export default function LearnClient({
                         <Link href={`/quiz?unit=${unit.id}`}>
                           <Button
                             size="sm"
-                            className="rounded-xl bg-violet-600 hover:bg-violet-500 text-white text-xs font-bold gap-1"
+                            className="rounded-xl bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-500 hover:to-purple-500 text-white text-xs font-bold gap-1 active:scale-95 transition-all"
                           >
                             <BookOpenCheck className="size-3" /> Quiz
                           </Button>
@@ -272,7 +272,7 @@ export default function LearnClient({
                       <Link href={unit.route} className="w-full sm:w-auto">
                         <Button
                           size="sm"
-                          className="w-full rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold gap-1.5 shadow-md shadow-emerald-950/20"
+                          className="w-full rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-white text-xs font-bold gap-1.5 shadow-md shadow-emerald-900/20 active:scale-95 transition-all"
                         >
                           <Play className="size-3 fill-current" /> Học tiếp
                         </Button>
