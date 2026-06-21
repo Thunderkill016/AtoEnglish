@@ -920,8 +920,13 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                 <div className="p-2 bg-emerald-500/10 rounded-xl">
                   <Lightbulb className="text-emerald-400" size={24} />
                 </div>
-                <div>
-                  <h1 className="text-xl font-black text-white">Khởi động</h1>
+                <div className="flex-1">
+                  <div className="flex items-center gap-2">
+                    <h1 className="text-xl font-black bg-gradient-to-r from-white to-zinc-300 bg-clip-text text-transparent">Khởi động</h1>
+                    <span className="text-[10px] font-bold text-emerald-600 bg-emerald-950/60 border border-emerald-800/50 px-2 py-0.5 rounded-full">
+                      Bước {sectionOrderIdx + 1}/{TOTAL_SECTIONS}
+                    </span>
+                  </div>
                   <p className="text-xs text-zinc-500">~3 phút • Làm quen với ngữ cảnh</p>
                 </div>
               </div>
@@ -1105,8 +1110,15 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
             <motion.div key="s2" variants={sectionVariants} initial="initial" animate="animate" exit="exit" transition={{ duration: 0.3 }}>
               <div className="flex items-center gap-2 mb-2">
                 <BookOpen className="text-emerald-400" size={22} />
-                <h1 className="text-xl sm:text-2xl font-black text-white">Từ vựng & Cụm từ</h1>
-                <span className="text-xs text-zinc-500 ml-auto">~5 phút</span>
+                <div className="flex-1">
+                  <div className="flex items-center gap-2">
+                    <h1 className="text-xl sm:text-2xl font-black bg-gradient-to-r from-white to-zinc-300 bg-clip-text text-transparent">Từ vựng & Cụm từ</h1>
+                    <span className="text-[10px] font-bold text-emerald-600 bg-emerald-950/60 border border-emerald-800/50 px-2 py-0.5 rounded-full">
+                      Bước {sectionOrderIdx + 1}/{TOTAL_SECTIONS}
+                    </span>
+                  </div>
+                  <p className="text-xs text-zinc-500">~5 phút</p>
+                </div>
               </div>
               <p className="text-zinc-400 mb-2 text-sm">Nhấn vào thẻ để lật và xem nghĩa. Nghe phát âm chuẩn bằng nút loa.</p>
 
@@ -1234,10 +1246,16 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
             <motion.div key="s3" variants={sectionVariants} initial="initial" animate="animate" exit="exit" transition={{ duration: 0.3 }}>
               <div className="flex items-center gap-2 mb-2">
                 <BookMarked className="text-teal-400" size={22} />
-                <h1 className="text-xl sm:text-2xl font-black text-white">Ngữ pháp</h1>
-                <span className="text-xs text-zinc-500 ml-auto">~4 phút</span>
+                <div className="flex-1">
+                  <div className="flex items-center gap-2">
+                    <h1 className="text-xl sm:text-2xl font-black bg-gradient-to-r from-teal-200 to-white bg-clip-text text-transparent">Ngữ pháp</h1>
+                    <span className="text-[10px] font-bold text-teal-600 bg-teal-950/60 border border-teal-800/50 px-2 py-0.5 rounded-full">
+                      Bước {sectionOrderIdx + 1}/{TOTAL_SECTIONS}
+                    </span>
+                  </div>
+                  <p className="text-xs text-zinc-500">~4 phút • Dùng từ đúng trong thực tế</p>
+                </div>
               </div>
-              <p className="text-zinc-400 mb-6 text-sm">Hiểu cấu trúc ngữ pháp giúp bạn dùng từ đúng trong ngữ cảnh thực tế.</p>
 
               {unit.grammar ? (
                 <div className="space-y-5">
@@ -1300,15 +1318,15 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                     {unit.grammar.tip && (
                       <div className="border-l-4 border-teal-500 bg-teal-950/20 rounded-r-xl p-3 mb-3">
                         <p className="text-xs font-bold text-teal-400 mb-1">💡 Mẹo nhớ</p>
-                        <p className="text-zinc-300 text-sm">{unit.grammar.tip}</p>
+                        <p className="text-zinc-300 text-sm" style={{ whiteSpace: 'pre-wrap' }}>{unit.grammar.tip}</p>
                       </div>
                     )}
 
                     {/* Vietnamese L1 Interference Warning — critical for VN learners */}
                     {unit.grammar.vnNote && (
                       <div className="border-l-4 border-red-500 bg-red-950/20 rounded-r-xl p-3">
-                        <p className="text-xs font-bold text-red-400 mb-1">⚠️ Bẫy ngữ pháp của người Việt</p>
-                        <p className="text-zinc-300 text-sm leading-relaxed">{unit.grammar.vnNote}</p>
+                        <p className="text-xs font-bold text-red-400 mb-2">⚠️ Bẫy ngữ pháp của người Việt</p>
+                        <p className="text-zinc-300 text-sm leading-relaxed font-mono" style={{ whiteSpace: 'pre-wrap' }}>{unit.grammar.vnNote}</p>
                       </div>
                     )}
 
