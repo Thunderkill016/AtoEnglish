@@ -133,6 +133,11 @@ export default async function DashboardPage() {
     if (completedDateStr === todayStr) initialQuests[0].completed = true;
   }
 
+  // Completed unit IDs — for the unit progress grid on dashboard
+  const completedUnitIds = statuses
+    .map((s, i) => (s.success && s.completed ? UNITS[i].id : null))
+    .filter((id): id is string => id !== null);
+
   // ── Word of the Day: deterministic by date, from current unit vocab ────────
   const allVocab = UNITS.flatMap(u => UNIT_VOCABULARY[u.id] ?? []);
   const currentUnitVocab = UNIT_VOCABULARY[currentUnitData.unitId] ?? [];
@@ -157,6 +162,8 @@ export default async function DashboardPage() {
       initialQuests={initialQuests}
       dailyXpGoal={dailyXpGoal}
       wordOfDay={wordOfDay}
+      completedUnitIds={completedUnitIds}
+      allUnits={UNITS.map(u => ({ id: u.id, title: u.title, level: u.level, route: u.route, xp: u.xp }))}
     />
   );
 }

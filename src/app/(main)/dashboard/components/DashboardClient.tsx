@@ -53,6 +53,8 @@ interface DashboardClientProps {
     topic: string;
     level: "A1" | "A2" | "B1" | "B2" | "C1";
   } | null;
+  completedUnitIds: string[];
+  allUnits: Array<{ id: string; title: string; level: string; route: string; xp: number }>;
 }
 
 export default function DashboardClient({
@@ -67,6 +69,8 @@ export default function DashboardClient({
   initialQuests,
   dailyXpGoal,
   wordOfDay,
+  completedUnitIds,
+  allUnits,
 }: DashboardClientProps) {
   const [xpCurrent, setXpCurrent] = useState(initialXpCurrent);
   const [quests, setQuests] = useState(initialQuests);
@@ -357,6 +361,71 @@ export default function DashboardClient({
 
         {/* ── 4. Quick Actions row ── */}
         <QuickActions currentUnitRoute={currentUnitData.route} />
+
+        {/* ── 5. Curriculum Progress Grid ── */}
+        <div className="rounded-2xl border border-zinc-200/60 dark:border-zinc-800/60 bg-white/60 dark:bg-zinc-900/25 backdrop-blur-sm p-5 sm:p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-sm font-bold text-zinc-900 dark:text-zinc-50">Tiến độ khoá học</h2>
+            <span className="text-xs text-zinc-500 dark:text-zinc-400 font-semibold">{completedUnitIds.length}/{allUnits.length} units</span>
+          </div>
+
+          {/* Group by level */}
+          {["A1", "A2"].map(level => {
+            const levelUnits = allUnits.filter(u => u.level === level);
+            const levelDone = levelUnits.filter(u => completedUnitIds.includes(u.id)).length;
+            return (
+              <div key={level} className="mb-4 last:mb-0">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className={`text-[10px] font-black px-2 py-0.5 rounded-full ${
+                    level === "A1" ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400"
+                                   : "bg-blue-100 text-blue-700 dark:bg-blue-950/40 dark:text-blue-400"
+                  }`}>{level}</span>
+                  <span className="text-[10px] text-zinc-500 dark:text-zinc-400 font-semibold">{levelDone}/{levelUnits.length} hoàn thành</span>
+                  <div className="flex-1 h-1 bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
+                    <div
+                      className={`h-full rounded-full transition-all duration-500 ${
+                        level === "A1" ? "bg-emerald-500" : "bg-blue-500"
+                      }`}
+                      style={{ width: `${levelUnits.length ? (levelDone / levelUnits.length) * 100 : 0}%` }}
+                    />
+                  </div>
+                </div>
+                <div className="grid grid-cols-4 sm:grid-cols-6 lg:grid-cols-12 gap-1.5">
+                  {levelUnits.map((unit) => {
+                    const done = completedUnitIds.includes(unit.id);
+                    const isCurrent = unit.id === currentUnitData.unitId;
+                    const unitNum = parseInt(unit.id.replace("unit-", ""), 10);
+                    return (
+                      <a
+                        key={unit.id}
+                        href={unit.route}
+                        title={unit.title}
+                        className={`relative flex items-center justify-center h-9 rounded-xl text-xs font-black transition-all duration-200 border ${
+                          done
+                            ? "bg-emerald-500 text-white border-emerald-400 shadow-sm shadow-emerald-500/20 hover:bg-emerald-600"
+                            : isCurrent
+                              ? "bg-zinc-900 dark:bg-zinc-50 text-white dark:text-zinc-900 border-zinc-700 dark:border-zinc-200 shadow-sm"
+                              : "bg-zinc-50 dark:bg-zinc-800/50 text-zinc-500 dark:text-zinc-400 border-zinc-200 dark:border-zinc-700 hover:border-emerald-500/40 hover:text-emerald-600 dark:hover:text-emerald-400"
+                        }`}
+                      >
+                        {done ? (
+                          <svg className="size-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                          </svg>
+                        ) : (
+                          unitNum
+                        )}
+                        {isCurrent && !done && (
+                          <span className="absolute -top-1 -right-1 size-2.5 rounded-full bg-amber-400 border-2 border-white dark:border-zinc-900" />
+                        )}
+                      </a>
+                    );
+                  })}
+                </div>
+              </div>
+            );
+          })}
+        </div>
       </div>
 
       {/* Level-Up Celebration Modal */}
