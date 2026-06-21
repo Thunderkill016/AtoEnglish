@@ -452,6 +452,36 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
     return () => { window.speechSynthesis?.cancel(); };
   }, []);
 
+  // ─── User settings (from localStorage, read once) ───────────────────────
+  const userSettings = (() => {
+    if (typeof window === "undefined") return { soundEffects: true, autoPlayAudio: false };
+    try {
+      const s = localStorage.getItem("ato_settings");
+      return s ? (JSON.parse(s) as { soundEffects?: boolean; autoPlayAudio?: boolean }) : {};
+    } catch { return {}; }
+  })();
+  const sfxEnabled = userSettings.soundEffects !== false; // default true
+  const autoPlay  = userSettings.autoPlayAudio === true;  // default false
+
+  // ─── TTS ──────────────────────────────────────────────────────
+  const playTTS = (text: string, rate = 0.85) => {
+    if (!window.speechSynthesis) { toast.error("Trình duyệt không hỗ trợ TTS"); return; }
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = "en-US";
+    u.rate = rate;
+    window.speechSynthesis.speak(u);
+  };
+
+  // Auto-play vocab word TTS when card changes (if autoPlayAudio enabled)
+  useEffect(() => {
+    if (autoPlay && section === 2 && unit.vocab[vocabIdx]) {
+      const timer = setTimeout(() => playTTS(unit.vocab[vocabIdx].word), 400);
+      return () => clearTimeout(timer);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [vocabIdx, section, autoPlay]);
+
   useEffect(() => {
     // Use ORDER INDEX (not raw section number) to detect first/last section.
     // SECTION_ORDER = [1,5,2,3,4,10,9,6,7,8]: last section number is 8, but 8 < TOTAL_SECTIONS(10)
@@ -468,18 +498,9 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
     }
   }, [section, unit.unitId]);
 
-  // ─── TTS ─────────────────────────────────────────────────────────────────
-  const playTTS = (text: string, rate = 0.85) => {
-    if (!window.speechSynthesis) { toast.error("Trình duyệt không hỗ trợ TTS"); return; }
-    window.speechSynthesis.cancel();
-    const u = new SpeechSynthesisUtterance(text);
-    u.lang = "en-US";
-    u.rate = rate;
-    window.speechSynthesis.speak(u);
-  };
-
   // ─── Sound feedback ───────────────────────────────────────────────────────
   const playCorrectSound = () => {
+    if (!sfxEnabled) return;
     try {
       const ctx = new AudioContext();
       const osc = ctx.createOscillator();
@@ -495,6 +516,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
   };
 
   const playWrongSound = () => {
+    if (!sfxEnabled) return;
     try {
       const ctx = new AudioContext();
       const osc = ctx.createOscillator();
