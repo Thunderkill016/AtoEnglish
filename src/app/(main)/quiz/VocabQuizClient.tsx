@@ -251,7 +251,7 @@ export default function VocabQuizClient() {
         <div className="flex gap-3 justify-center pt-2">
           <Button
             onClick={() => startQuiz(selectedUnit)}
-            className="gap-2 bg-violet-600 hover:bg-violet-500 text-white rounded-xl h-11 px-5"
+            className="gap-2 bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-500 hover:to-purple-500 text-white rounded-xl h-11 px-5 active:scale-95 transition-all"
           >
             <RotateCcw className="size-4" />
             Làm lại
@@ -291,7 +291,7 @@ export default function VocabQuizClient() {
         </div>
         <div className="h-2 w-full rounded-full bg-zinc-100 dark:bg-zinc-800 overflow-hidden">
           <motion.div
-            className="h-full rounded-full bg-violet-500"
+            className="h-full rounded-full bg-gradient-to-r from-violet-500 to-purple-500"
             animate={{ width: `${progressPct}%` }}
             transition={{ duration: 0.3 }}
           />
@@ -360,7 +360,7 @@ export default function VocabQuizClient() {
         >
           <Button
             onClick={nextQuestion}
-            className="gap-2 bg-violet-600 hover:bg-violet-500 text-white rounded-xl h-11 px-8"
+            className="gap-2 bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-500 hover:to-purple-500 text-white rounded-xl h-11 px-8 active:scale-95 transition-all shadow-md shadow-violet-600/20"
           >
             {current + 1 >= questions.length ? (
               <>
