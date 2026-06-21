@@ -1435,7 +1435,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                         <div key={q.id} className={`rounded-2xl border p-5 transition-all duration-300 ${
                           practiceSubmitted
                             ? isCorrect ? "border-emerald-500/50 bg-emerald-950/30" : "border-red-500/40 bg-red-950/20"
-                            : "border-zinc-700/60 bg-white/5"
+                            : "border-zinc-700/60 bg-zinc-900/40"
                         }`}>
                           <p className="text-white font-bold mb-3 text-sm">
                             <span className="text-emerald-400 mr-2">{qi + 1}.</span>
@@ -1465,7 +1465,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                       <div key={q.id} className={`rounded-2xl border p-5 transition-all duration-300 ${
                         practiceSubmitted
                           ? isCorrect ? "border-emerald-500/50 bg-emerald-950/30" : "border-red-500/40 bg-red-950/20"
-                          : "border-zinc-700/60 bg-white/5"
+                          : "border-zinc-700/60 bg-zinc-900/40"
                       }`}>
                         <p className="text-white font-bold mb-3 text-sm">
                           <span className="text-emerald-400 mr-2">{qi + 1}.</span>
@@ -1512,7 +1512,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
 
                 {/* ── Matching Exercise ── */}
                 {unit.matchingExercise && (
-                  <div className="bg-white/5 border border-zinc-800/60 rounded-2xl p-5 mb-6">
+                  <div className="bg-gradient-to-b from-zinc-900/70 to-zinc-950/70 border border-zinc-700/50 rounded-2xl p-5 mb-6 shadow-md">
                     <div className="flex items-center gap-2 mb-4">
                       <Shuffle size={16} className="text-teal-400" />
                       <p className="text-sm font-bold text-white">
@@ -1602,7 +1602,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                         <div key={ex.id} className={`rounded-2xl border p-5 transition-all duration-300 ${
                           isChecked
                             ? isCorrect ? "border-emerald-500/50 bg-emerald-950/30" : "border-red-500/40 bg-red-950/20"
-                            : "border-zinc-700/60 bg-white/5"
+                            : "border-zinc-700/60 bg-zinc-900/40"
                         }`}>
                           <p className="text-zinc-400 text-xs mb-3">🇻🇳 {ex.prompt_vn}</p>
                           {/* Built sentence slot */}
@@ -1800,7 +1800,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
 
               {/* Listen & Choose */}
               {LISTEN_CHOOSE.length > 0 && (
-                <div className="bg-white/5 border border-zinc-800/60 rounded-2xl p-5 mb-6">
+                <div className="bg-gradient-to-b from-zinc-900/70 to-zinc-950/70 border border-zinc-700/50 rounded-2xl p-5 mb-6 shadow-md">
                   <p className="text-sm font-bold text-white mb-4">🎧 Nghe và chọn đáp án đúng</p>
                   <div className="space-y-5">
                     {LISTEN_CHOOSE.map((item, qi) => (
@@ -1976,7 +1976,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                   )}
                 </div>
               ) : (
-                <div className="text-center mb-4 sm:mb-6 bg-white/5 border border-zinc-800/60 rounded-2xl p-5 sm:p-8">
+                <div className="text-center mb-4 sm:mb-6 bg-gradient-to-b from-zinc-900/70 to-zinc-950/70 border border-zinc-700/50 rounded-2xl p-5 sm:p-8 shadow-md">
                   <div className="text-4xl mb-3">🎉</div>
                   <p className="text-emerald-400 font-bold text-lg mb-1">Hoàn thành Shadowing!</p>
                   <p className="text-zinc-400 text-sm mb-6">
@@ -2272,7 +2272,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
 
               {/* Final Quiz */}
               {!quizSubmitted ? (
-                <div className="bg-white/5 border border-zinc-800/60 rounded-2xl p-6 mb-6">
+                <div className="bg-gradient-to-b from-zinc-900/70 to-zinc-950/70 border border-zinc-700/50 rounded-2xl p-6 mb-6 shadow-md">
                   <p className="text-sm font-bold text-white mb-5">🧠 Quiz tổng hợp — {FINAL_QS.length} câu</p>
                   <div className="space-y-6">
                     {FINAL_QS.map((q, qi) => {
@@ -2418,7 +2418,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                   )}
 
                   {/* Progress Summary */}
-                  <div className="bg-white/5 border border-zinc-800/60 rounded-2xl p-5">
+                  <div className="bg-gradient-to-b from-zinc-900/70 to-zinc-950/70 border border-zinc-700/50 rounded-2xl p-5 shadow-md">
                     <p className="text-sm font-bold text-white mb-3">📊 Kết quả học tập</p>
                     <div className="space-y-2">
                       {[
@@ -2609,7 +2609,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                       <div key={item.id} className={`rounded-2xl border p-5 transition-all duration-300 ${
                         translateSubmitted
                           ? isCorrect ? "border-emerald-500/50 bg-emerald-950/30" : "border-red-500/40 bg-red-950/20"
-                          : "border-zinc-700/60 bg-white/5"
+                          : "border-zinc-700/60 bg-zinc-900/40"
                       }`}>
                         <div className="flex items-start gap-3 mb-4">
                           <span className="bg-teal-600/20 text-teal-400 rounded-full w-7 h-7 flex items-center justify-center text-xs font-black shrink-0 mt-0.5">{i + 1}</span>
