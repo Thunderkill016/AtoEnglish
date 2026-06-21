@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Sprout, LogOut } from "lucide-react";
+import { Sprout, LogOut, Settings } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 
 import { MainNav } from "@/components/layout/main-nav";
@@ -50,6 +50,15 @@ export async function Header() {
                   {fullName}
                 </span>
               </div>
+
+              <Link
+                href="/settings"
+                className="inline-flex items-center justify-center size-8 rounded-lg text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+                title="Cài đặt"
+                aria-label="Cài đặt"
+              >
+                <Settings className="size-4" />
+              </Link>
 
               <form action={signOut}>
                 <Button

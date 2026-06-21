@@ -1,0 +1,383 @@
+"use client";
+
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  Bell,
+  Volume2,
+  VolumeX,
+  Moon,
+  Sun,
+  Globe,
+  Target,
+  Shield,
+  ChevronRight,
+  Check,
+  Trash2,
+  Download,
+  Smartphone,
+} from "lucide-react";
+
+// ── Types ────────────────────────────────────────────────
+interface SettingToggleProps {
+  id: string;
+  label: string;
+  description: string;
+  checked: boolean;
+  onChange: (v: boolean) => void;
+}
+
+interface SettingSectionProps {
+  title: string;
+  children: React.ReactNode;
+}
+
+// ── Sub-components ───────────────────────────────────────
+function SettingSection({ title, children }: SettingSectionProps) {
+  return (
+    <div className="mb-6">
+      <h2 className="text-xs font-bold uppercase tracking-widest text-zinc-500 dark:text-zinc-400 px-1 mb-2">
+        {title}
+      </h2>
+      <div className="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/50 overflow-hidden divide-y divide-zinc-100 dark:divide-zinc-800">
+        {children}
+      </div>
+    </div>
+  );
+}
+
+function SettingToggle({ id, label, description, checked, onChange }: SettingToggleProps) {
+  return (
+    <div className="flex items-center justify-between px-4 py-3.5 gap-4">
+      <div className="flex-1 min-w-0">
+        <label htmlFor={id} className="block text-sm font-semibold text-zinc-800 dark:text-zinc-100 cursor-pointer">
+          {label}
+        </label>
+        <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">{description}</p>
+      </div>
+      <button
+        id={id}
+        role="switch"
+        aria-checked={checked}
+        onClick={() => onChange(!checked)}
+        className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 dark:focus:ring-offset-zinc-900 ${
+          checked ? "bg-emerald-500" : "bg-zinc-300 dark:bg-zinc-600"
+        }`}
+      >
+        <span
+          className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+            checked ? "translate-x-5" : "translate-x-0"
+          }`}
+        />
+      </button>
+    </div>
+  );
+}
+
+function SettingSelect({
+  label,
+  description,
+  value,
+  options,
+  onChange,
+}: {
+  label: string;
+  description: string;
+  value: string;
+  options: { value: string; label: string }[];
+  onChange: (v: string) => void;
+}) {
+  return (
+    <div className="flex items-center justify-between px-4 py-3.5 gap-4">
+      <div className="flex-1 min-w-0">
+        <p className="text-sm font-semibold text-zinc-800 dark:text-zinc-100">{label}</p>
+        <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">{description}</p>
+      </div>
+      <select
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className="text-xs font-semibold bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-700 rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+      >
+        {options.map((o) => (
+          <option key={o.value} value={o.value}>{o.label}</option>
+        ))}
+      </select>
+    </div>
+  );
+}
+
+function SettingAction({
+  label,
+  description,
+  icon: Icon,
+  onClick,
+  destructive = false,
+}: {
+  label: string;
+  description: string;
+  icon: React.ElementType;
+  onClick: () => void;
+  destructive?: boolean;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      className={`w-full flex items-center justify-between px-4 py-3.5 gap-4 text-left transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-800/50 ${
+        destructive ? "hover:bg-red-50 dark:hover:bg-red-950/20" : ""
+      }`}
+    >
+      <div className="flex items-center gap-3">
+        <span className={`p-2 rounded-lg ${destructive ? "bg-red-100 dark:bg-red-950/40 text-red-500" : "bg-zinc-100 dark:bg-zinc-800 text-zinc-500 dark:text-zinc-400"}`}>
+          <Icon className="size-4" />
+        </span>
+        <div>
+          <p className={`text-sm font-semibold ${destructive ? "text-red-500" : "text-zinc-800 dark:text-zinc-100"}`}>{label}</p>
+          <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">{description}</p>
+        </div>
+      </div>
+      <ChevronRight className="size-4 text-zinc-400 flex-shrink-0" />
+    </button>
+  );
+}
+
+// ── Helpers ─────────────────────────────────────────────
+function getStoredSettings() {
+  if (typeof window === "undefined") return {};
+  try {
+    const stored = localStorage.getItem("ato_settings");
+    return stored ? (JSON.parse(stored) as Record<string, unknown>) : {};
+  } catch {
+    return {};
+  }
+}
+
+// ── Main Component ───────────────────────────────────────
+export default function SettingsClient({ userEmail }: { userEmail: string }) {
+  const [saved, setSaved] = useState(false);
+
+  // Notification settings — initialised lazily from localStorage
+  const [streakReminders, setStreakReminders] = useState(() => {
+    const s = getStoredSettings(); return s.streakReminders !== undefined ? !!s.streakReminders : true;
+  });
+  const [weeklyReport, setWeeklyReport] = useState(() => {
+    const s = getStoredSettings(); return s.weeklyReport !== undefined ? !!s.weeklyReport : false;
+  });
+
+  // Learning settings
+  const [soundEffects, setSoundEffects] = useState(() => {
+    const s = getStoredSettings(); return s.soundEffects !== undefined ? !!s.soundEffects : true;
+  });
+  const [autoPlayAudio, setAutoPlayAudio] = useState(() => {
+    const s = getStoredSettings(); return s.autoPlayAudio !== undefined ? !!s.autoPlayAudio : false;
+  });
+  const [showPhonetics, setShowPhonetics] = useState(() => {
+    const s = getStoredSettings(); return s.showPhonetics !== undefined ? !!s.showPhonetics : true;
+  });
+  const [dailyGoal, setDailyGoal] = useState(() => {
+    if (typeof window !== "undefined") {
+      const g = localStorage.getItem("ato_daily_xp_goal");
+      if (g) return g;
+    }
+    const s = getStoredSettings();
+    return typeof s.dailyGoal === "string" ? s.dailyGoal : "10";
+  });
+
+  // Display settings
+  const [theme, setTheme] = useState(() => {
+    const s = getStoredSettings(); return typeof s.theme === "string" ? s.theme : "system";
+  });
+  const [fontSize, setFontSize] = useState(() => {
+    const s = getStoredSettings(); return typeof s.fontSize === "string" ? s.fontSize : "normal";
+  });
+
+  const saveSettings = () => {
+    const settings = {
+      streakReminders, weeklyReport, soundEffects, autoPlayAudio,
+      showPhonetics, dailyGoal, theme, fontSize,
+    };
+    localStorage.setItem("ato_settings", JSON.stringify(settings));
+    localStorage.setItem("ato_daily_xp_goal", dailyGoal);
+    // Dispatch event so Dashboard XP bar updates
+    window.dispatchEvent(new CustomEvent("ato:settings-changed", { detail: settings }));
+    setSaved(true);
+    setTimeout(() => setSaved(false), 2500);
+  };
+
+  const clearProgress = () => {
+    if (window.confirm("Bạn có chắc muốn xóa toàn bộ tiến độ học cục bộ (lưu trên thiết bị)? Dữ liệu trên server sẽ không bị xóa.")) {
+      const keep = ["ato_settings", "ato_daily_xp_goal", "sb-vhpfskkredizeazlyzsh-auth-token"];
+      const keys = Object.keys(localStorage);
+      keys.forEach(k => { if (!keep.some(p => k.includes(p))) localStorage.removeItem(k); });
+      window.location.reload();
+    }
+  };
+
+  const installPWA = () => {
+    // Trigger beforeinstallprompt if available
+    const promptEvent = (window as Window & { _pwaInstallPrompt?: BeforeInstallPromptEvent })._pwaInstallPrompt;
+    if (promptEvent) {
+      promptEvent.prompt();
+    } else {
+      alert("Để cài đặt ứng dụng: mở menu trình duyệt (⋮) → 'Thêm vào màn hình chính'");
+    }
+  };
+
+  return (
+    <div className="max-w-2xl mx-auto px-4 sm:px-6 py-6 pb-24">
+      {/* Header */}
+      <div className="mb-6">
+        <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">Cài đặt</h1>
+        <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1">{userEmail}</p>
+      </div>
+
+      {/* Notifications */}
+      <SettingSection title="Thông báo">
+        <SettingToggle
+          id="streak-reminders"
+          label="Nhắc học hàng ngày"
+          description="Nhận thông báo vào 8 PM nếu chưa học hôm nay"
+          checked={streakReminders}
+          onChange={setStreakReminders}
+        />
+        <SettingToggle
+          id="weekly-report"
+          label="Báo cáo tuần"
+          description="Tóm tắt tiến độ học tập mỗi Chủ Nhật"
+          checked={weeklyReport}
+          onChange={setWeeklyReport}
+        />
+      </SettingSection>
+
+      {/* Learning */}
+      <SettingSection title="Học tập">
+        <SettingSelect
+          label="Mục tiêu XP hàng ngày"
+          description="Số XP cần đạt mỗi ngày để duy trì streak"
+          value={dailyGoal}
+          options={[
+            { value: "5", label: "5 XP (Nhẹ nhàng)" },
+            { value: "10", label: "10 XP (Thường)" },
+            { value: "20", label: "20 XP (Tích cực)" },
+            { value: "50", label: "50 XP (Chuyên nghiệp)" },
+          ]}
+          onChange={setDailyGoal}
+        />
+        <SettingToggle
+          id="sound-effects"
+          label="Âm thanh phản hồi"
+          description="Phát âm thanh khi trả lời đúng/sai"
+          checked={soundEffects}
+          onChange={setSoundEffects}
+        />
+        <SettingToggle
+          id="auto-play-audio"
+          label="Tự động phát âm"
+          description="Tự động phát âm thanh từ vựng khi hiển thị thẻ"
+          checked={autoPlayAudio}
+          onChange={setAutoPlayAudio}
+        />
+        <SettingToggle
+          id="show-phonetics"
+          label="Hiển thị phiên âm IPA"
+          description="Hiện ký hiệu phiên âm quốc tế dưới mỗi từ"
+          checked={showPhonetics}
+          onChange={setShowPhonetics}
+        />
+      </SettingSection>
+
+      {/* Display */}
+      <SettingSection title="Giao diện">
+        <SettingSelect
+          label="Chủ đề"
+          description="Màu sắc giao diện ứng dụng"
+          value={theme}
+          options={[
+            { value: "system", label: "Theo hệ thống" },
+            { value: "dark", label: "Tối (Dark)" },
+            { value: "light", label: "Sáng (Light)" },
+          ]}
+          onChange={setTheme}
+        />
+        <SettingSelect
+          label="Cỡ chữ"
+          description="Kích thước chữ trong bài học"
+          value={fontSize}
+          options={[
+            { value: "small", label: "Nhỏ" },
+            { value: "normal", label: "Bình thường" },
+            { value: "large", label: "Lớn" },
+          ]}
+          onChange={setFontSize}
+        />
+      </SettingSection>
+
+      {/* App */}
+      <SettingSection title="Ứng dụng">
+        <SettingAction
+          label="Cài đặt ứng dụng (PWA)"
+          description="Thêm AtoEnglish vào màn hình chính"
+          icon={Smartphone}
+          onClick={installPWA}
+        />
+        <SettingAction
+          label="Xóa cache cục bộ"
+          description="Xóa dữ liệu tạm trên thiết bị (không ảnh hưởng server)"
+          icon={Trash2}
+          onClick={clearProgress}
+          destructive
+        />
+      </SettingSection>
+
+      {/* Privacy info */}
+      <div className="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/30 p-4 mb-6">
+        <div className="flex gap-3 items-start">
+          <Shield className="size-4 text-emerald-500 mt-0.5 flex-shrink-0" />
+          <div>
+            <p className="text-xs font-semibold text-zinc-700 dark:text-zinc-300">Quyền riêng tư</p>
+            <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1 leading-relaxed">
+              AtoEnglish không bán dữ liệu của bạn. Tiến độ học tập được lưu trên Supabase với bảo mật RLS. Cài đặt giao diện được lưu cục bộ trên thiết bị của bạn.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Save button — sticky */}
+      <div className="fixed bottom-20 sm:bottom-6 left-0 right-0 flex justify-center px-4 z-30 pointer-events-none">
+        <motion.button
+          onClick={saveSettings}
+          whileTap={{ scale: 0.96 }}
+          className="pointer-events-auto flex items-center gap-2 px-6 py-3 rounded-2xl bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-sm shadow-lg shadow-emerald-500/20 transition-colors"
+        >
+          <AnimatePresence mode="wait">
+            {saved ? (
+              <motion.span
+                key="saved"
+                initial={{ scale: 0.5, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.5, opacity: 0 }}
+                className="flex items-center gap-1.5"
+              >
+                <Check className="size-4" />
+                Đã lưu!
+              </motion.span>
+            ) : (
+              <motion.span
+                key="save"
+                initial={{ scale: 0.5, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.5, opacity: 0 }}
+              >
+                Lưu cài đặt
+              </motion.span>
+            )}
+          </AnimatePresence>
+        </motion.button>
+      </div>
+    </div>
+  );
+}
+
+// PWA install prompt type
+interface BeforeInstallPromptEvent extends Event {
+  prompt(): Promise<void>;
+}
