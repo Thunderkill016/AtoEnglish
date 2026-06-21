@@ -7,6 +7,7 @@ import confetti from "canvas-confetti";
 import {
   Volume2,
   Layers,
+  ArrowLeftRight,
   RotateCcw,
   HelpCircle,
   Folder,
@@ -48,6 +49,7 @@ export default function FlashcardsPage() {
   const [sessionStats, setSessionStats] = useState<FlashcardStats | null>(null);
   const router = useRouter();
   const [cramMode, setCramMode] = useState(false);
+  const [reverseMode, setReverseMode] = useState(false);
   const [topics, setTopics] = useState<string[]>([]);
   const [selectedTopic, setSelectedTopic] = useState<string>("all");
 
@@ -302,6 +304,18 @@ export default function FlashcardsPage() {
               <Zap className="size-3.5" />
               {cramMode ? "Cram Mode: ON" : "Cram Mode"}
             </button>
+            {/* Reverse Mode Toggle */}
+            <button
+              onClick={() => { setReverseMode(p => !p); setIsFlipped(false); }}
+              className={`flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-xl border transition-all duration-200 ${
+                reverseMode
+                  ? "bg-purple-500/10 border-purple-500/30 text-purple-600 dark:text-purple-400"
+                  : "bg-muted border-border/40 text-muted-foreground hover:border-purple-500/30"
+              }`}
+            >
+              <ArrowLeftRight className="size-3.5" />
+              {reverseMode ? "VN→EN" : "EN→VN"}
+            </button>
             <div className="text-right">
               <div className="text-[10px] text-muted-foreground uppercase tracking-widest font-extrabold">Đang ôn tập</div>
               <div className="text-sm font-black text-foreground font-mono mt-0.5">
@@ -405,24 +419,38 @@ export default function FlashcardsPage() {
                     </div>
 
                     <div className="text-center space-y-4">
-                      <h2 className="text-4xl sm:text-5xl font-black tracking-tight text-foreground bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text select-all leading-tight">
-                        {currentCard.word}
-                      </h2>
-                      <div className="flex items-center justify-center gap-2">
-                        <span className="text-sm font-mono text-muted-foreground">{currentCard.phonetic}</span>
-                        <Button
-                          onClick={(e) => handleAudioPlay(e, currentCard.word)}
-                          variant="ghost"
-                          size="icon"
-                          className="size-9 rounded-full hover:bg-primary/10 hover:text-primary transition-all duration-200 text-muted-foreground"
-                          aria-label="Phát âm tiếng Anh"
-                        >
-                          <Volume2 className="size-5" />
-                        </Button>
-                      </div>
-                      <span className="inline-block text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-lg bg-foreground/[0.04] text-muted-foreground font-mono">
-                        {currentCard.pos}
-                      </span>
+                      {reverseMode ? (
+                        <>
+                          <p className="text-[10px] font-bold uppercase tracking-widest text-purple-500 mb-2">Tiếng Việt → Tiếng Anh</p>
+                          <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-foreground leading-tight select-all">
+                            {currentCard.meaning_vn}
+                          </h2>
+                          <span className="inline-block text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-lg bg-foreground/[0.04] text-muted-foreground font-mono">
+                            {currentCard.pos}
+                          </span>
+                        </>
+                      ) : (
+                        <>
+                          <h2 className="text-4xl sm:text-5xl font-black tracking-tight text-foreground bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text select-all leading-tight">
+                            {currentCard.word}
+                          </h2>
+                          <div className="flex items-center justify-center gap-2">
+                            <span className="text-sm font-mono text-muted-foreground">{currentCard.phonetic}</span>
+                            <Button
+                              onClick={(e) => handleAudioPlay(e, currentCard.word)}
+                              variant="ghost"
+                              size="icon"
+                              className="size-9 rounded-full hover:bg-primary/10 hover:text-primary transition-all duration-200 text-muted-foreground"
+                              aria-label="Phát âm tiếng Anh"
+                            >
+                              <Volume2 className="size-5" />
+                            </Button>
+                          </div>
+                          <span className="inline-block text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-lg bg-foreground/[0.04] text-muted-foreground font-mono">
+                            {currentCard.pos}
+                          </span>
+                        </>
+                      )}
                     </div>
 
                     <div className="text-center text-[11px] text-muted-foreground/60 flex items-center justify-center gap-1.5 font-normal">
@@ -435,16 +463,28 @@ export default function FlashcardsPage() {
                   <div className="absolute w-full h-full backface-hidden rotate-y-180 rounded-3xl bg-glass border border-glass p-8 flex flex-col justify-between shadow-[0_15px_40px_rgba(0,0,0,0.025)]">
                     <div className="flex justify-between items-start">
                       <span className="text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
-                        Nghĩa Tiếng Việt
+                        {reverseMode ? "Từ Tiếng Anh" : "Nghĩa Tiếng Việt"}
                       </span>
                       <span className="text-[10px] font-bold text-muted-foreground font-mono uppercase tracking-widest">Mặt sau</span>
                     </div>
 
                     <div className="space-y-5">
                       <div className="text-center">
-                        <p className="text-xl sm:text-2xl font-black text-foreground leading-tight">
-                          {currentCard.meaning_vn}
-                        </p>
+                        {reverseMode ? (
+                          <>
+                            <p className="text-3xl sm:text-4xl font-black text-foreground leading-tight">{currentCard.word}</p>
+                            <div className="flex items-center justify-center gap-2 mt-2">
+                              <span className="text-sm font-mono text-muted-foreground">{currentCard.phonetic}</span>
+                              <Button onClick={(e) => handleAudioPlay(e, currentCard.word)} variant="ghost" size="icon" className="size-7 rounded-full hover:bg-primary/10 text-primary transition-all duration-200">
+                                <Volume2 className="size-4" />
+                              </Button>
+                            </div>
+                          </>
+                        ) : (
+                          <p className="text-xl sm:text-2xl font-black text-foreground leading-tight">
+                            {currentCard.meaning_vn}
+                          </p>
+                        )}
                       </div>
 
                       {currentCard.example_en && (

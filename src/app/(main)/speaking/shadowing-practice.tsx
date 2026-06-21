@@ -755,19 +755,16 @@ export function ShadowingPractice() {
             {/* Waveform Animation for Recording */}
             {isRecording && (
               <div className="flex items-center gap-1.5 h-6 px-3 bg-red-500/5 rounded-full border border-red-500/10">
-                {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((bar) => (
+                {([18, 10, 24, 8, 20, 14, 26, 12, 22, 16] as const).map((maxH, i) => (
                   <motion.div
-                    key={bar}
+                    key={i}
                     className="w-1 bg-red-500 rounded-full"
-                    animate={{
-                      // eslint-disable-next-line react-hooks/purity
-                      height: [6, Math.random() * 20 + 6, 6],
-                    }}
+                    animate={{ height: [6, maxH, 6] }}
                     transition={{
-                      // eslint-disable-next-line react-hooks/purity
-                      duration: 0.4 + Math.random() * 0.3,
+                      duration: 0.4 + (i % 5) * 0.06,
                       repeat: Infinity,
                       ease: "easeInOut",
+                      delay: i * 0.04,
                     }}
                   />
                 ))}

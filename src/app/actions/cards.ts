@@ -134,9 +134,11 @@ export async function saveCardToSRS(params: SaveCardParams) {
 }
 
 /**
- * Server Action lấy tất cả thẻ cần ôn tập hôm nay (due_date <= hiện tại) của user
+ * Server Action lấy tất cả thẻ cần ôn tập hôm nay (due_date <= hiện tại) của user.
+ * Giới hạn thẻ MỚI (state=0) tối đa MAX_NEW_PER_DAY để tránh bị ngập trong thẻ mới.
  */
 export async function getDueCards() {
+  const MAX_NEW_PER_DAY = 15; // Maximum new (unseen) cards per review session
   try {
     const supabase = await createClient();
     
@@ -152,24 +154,40 @@ export async function getDueCards() {
     
     const now = new Date().toISOString();
     
-    // 2. Query lấy thẻ của user hiện tại có due_date <= now, sắp xếp theo due_date tăng dần
-    const { data: cards, error } = await supabase
-      .from("cards")
-      .select("*")
-      .eq("user_id", user.id)
-      .lte("due_date", now)
-      .order("due_date", { ascending: true });
-      
-    if (error) {
+    // 2. Fetch review cards (state >= 1, due today) + new cards (state = 0) separately
+    const [reviewRes, newRes] = await Promise.all([
+      // Cards previously seen — always include when due
+      supabase
+        .from("cards")
+        .select("*")
+        .eq("user_id", user.id)
+        .gte("state", 1)
+        .lte("due_date", now)
+        .order("due_date", { ascending: true }),
+      // Unseen cards — cap at MAX_NEW_PER_DAY
+      supabase
+        .from("cards")
+        .select("*")
+        .eq("user_id", user.id)
+        .eq("state", 0)
+        .lte("due_date", now)
+        .order("due_date", { ascending: true })
+        .limit(MAX_NEW_PER_DAY),
+    ]);
+    
+    if (reviewRes.error) {
       return {
         success: false,
-        error: `Lỗi truy vấn thẻ đến hạn: ${error.message}`
+        error: `Lỗi truy vấn thẻ đến hạn: ${reviewRes.error.message}`
       };
     }
     
+    // Merge: review cards first (higher priority), then new cards
+    const cards = [...(reviewRes.data ?? []), ...(newRes.data ?? [])];
+    
     return {
       success: true,
-      cards: cards || []
+      cards
     };
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);

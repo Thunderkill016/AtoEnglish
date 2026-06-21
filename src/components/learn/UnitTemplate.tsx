@@ -247,6 +247,9 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
   // Section 7 — Speaking
   const [nameInput, setNameInput] = useState("");
   const [level1Done, setLevel1Done] = useState(false);
+  const [isLevel1Recording, setIsLevel1Recording] = useState(false);
+  const [level1Score, setLevel1Score] = useState<number | null>(null);
+  const [level1Transcript, setLevel1Transcript] = useState("");
   const [level2Transcript, setLevel2Transcript] = useState("");
   const [level2Recording, setLevel2Recording] = useState(false);
   const [level2Score, setLevel2Score] = useState<number | null>(null);
@@ -535,9 +538,19 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
 
   // ─── Score calculations ───────────────────────────────────────────────────
   // Final quiz score (MC + cloze + translate)
+  // Shared normalization for cloze/translate (strips punctuation, normalizes contractions)
+  const normalizeAnswer = (s: string) =>
+    s.trim().toLowerCase()
+      .replace(/[.,!?;:'"]/g, "").replace(/\s+/g, " ")
+      .replace(/\bi'm\b/g, "i am").replace(/\byou're\b/g, "you are")
+      .replace(/\bhe's\b/g, "he is").replace(/\bshe's\b/g, "she is")
+      .replace(/\bit's\b/g, "it is").replace(/\bwe're\b/g, "we are")
+      .replace(/\bthey're\b/g, "they are").replace(/\bdon't\b/g, "do not")
+      .replace(/\bdoesn't\b/g, "does not").trim();
+
   const finalQuizScore = FINAL_QS.filter(q => {
     if (q.type === "cloze" || q.type === "translate") {
-      return (quizClozeInputs[q.id] ?? "").trim().toLowerCase() === q.answer.toLowerCase();
+      return normalizeAnswer(quizClozeInputs[q.id] ?? "") === normalizeAnswer(q.answer);
     }
     return quizAnswers[q.id] === q.answer;
   }).length;
@@ -560,7 +573,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
   const wrongQuestions = quizSubmitted
     ? FINAL_QS.filter(q =>
         q.type === "cloze" || q.type === "translate"
-          ? (quizClozeInputs[q.id] ?? "").trim().toLowerCase() !== q.answer.toLowerCase()
+          ? normalizeAnswer(quizClozeInputs[q.id] ?? "") !== normalizeAnswer(q.answer)
           : quizAnswers[q.id] !== q.answer
       )
     : [];
@@ -649,7 +662,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
   // ─── Practice section helpers ─────────────────────────────────────────────
   const practiceScore = PRACTICE_QS.filter(q => {
     if (q.type === "cloze") {
-      return (clozeInputs[q.id] ?? "").trim().toLowerCase() === q.answer.toLowerCase();
+      return normalizeAnswer(clozeInputs[q.id] ?? "") === normalizeAnswer(q.answer);
     }
     return practiceAnswers[q.id] === q.answer;
   }).length;
@@ -1661,20 +1674,62 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                 />
 
                 {nameInput && (
-                  <div className="flex gap-3">
-                    <button
-                      onClick={() => playTTS(formattedL1Prompt)}
-                      aria-label="Nghe mẫu"
-                      className="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-zinc-700 hover:bg-zinc-600 text-white font-semibold text-sm transition-colors"
-                    >
-                      <Volume2 size={16} /> Nghe mẫu
-                    </button>
-                    <button
-                      onClick={() => setLevel1Done(true)}
-                      className="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl py-3 flex items-center justify-center gap-2 transition-colors"
-                    >
-                      <CheckCircle size={16} /> Xong!
-                    </button>
+                  <div className="space-y-3">
+                    <div className="flex gap-3">
+                      <button
+                        onClick={() => playTTS(formattedL1Prompt)}
+                        aria-label="Nghe mẫu"
+                        className="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-zinc-700 hover:bg-zinc-600 text-white font-semibold text-sm transition-colors"
+                      >
+                        <Volume2 size={16} /> Nghe mẫu
+                      </button>
+                      <button
+                        disabled={isLevel1Recording || isRecognizing}
+                        onClick={() => {
+                          setIsLevel1Recording(true);
+                          startRecognition((text) => {
+                            setLevel1Transcript(text);
+                            setIsLevel1Recording(false);
+                            const score = calcSpeechScore(formattedL1Prompt, text);
+                            setLevel1Score(score);
+                            if (score >= 60) setLevel1Done(true);
+                          });
+                        }}
+                        aria-label="Luyện nói"
+                        className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-bold text-sm transition-all ${isLevel1Recording ? "bg-red-600 text-white animate-pulse" : "bg-emerald-600 hover:bg-emerald-500 text-white"}`}
+                      >
+                        {isLevel1Recording ? <><MicOff size={16} /> Đang nghe...</> : <><Mic size={16} /> Luyện nói</>}
+                      </button>
+                    </div>
+                    {level1Transcript && (
+                      <div className="bg-zinc-900/60 rounded-xl px-4 py-3 text-sm">
+                        <p className="text-zinc-500 text-[10px] mb-1 font-bold">BẠN VỪA NÓI:</p>
+                        <p className="text-zinc-200">&ldquo;{level1Transcript}&rdquo;</p>
+                        {level1Score !== null && (
+                          <div className="flex items-center gap-2 mt-2">
+                            <span className={`text-xs font-bold px-2 py-0.5 rounded-lg ${level1Score >= 60 ? "bg-emerald-500/20 text-emerald-400" : "bg-amber-500/20 text-amber-400"}`}>
+                              {level1Score}% chính xác
+                            </span>
+                            {level1Score < 60 && (
+                              <button onClick={() => { setLevel1Score(null); setLevel1Transcript(""); }} className="text-[10px] text-zinc-500 hover:text-zinc-300 font-bold">Thử lại</button>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    )}
+                    {level1Done && (
+                      <div className="flex items-center gap-2 text-emerald-400 text-sm font-bold">
+                        <CheckCircle size={14} /> Hoàn thành cấp độ 1!
+                      </div>
+                    )}
+                    {!level1Done && level1Score !== null && level1Score < 60 && (
+                      <button
+                        onClick={() => setLevel1Done(true)}
+                        className="w-full text-zinc-500 hover:text-zinc-300 text-xs font-bold py-2 transition-colors"
+                      >
+                        Bỏ qua và tiếp tục →
+                      </button>
+                    )}
                   </div>
                 )}
               </div>

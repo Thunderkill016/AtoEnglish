@@ -250,7 +250,7 @@ export default function RoadmapClient({ userCefrLevel, unitCountByLevel, complet
 
                 <div className="flex justify-end pt-4 border-t border-foreground/[0.04]">
                   {isCompleted ? (
-                    <Button variant="outline" className="rounded-xl text-xs gap-1.5 border-glass h-11 px-5 hover:bg-muted font-bold active:scale-[0.98] transition-all duration-200">
+                    <Button variant="outline" onClick={() => router.push(`/certificate/${lvl.code.toLowerCase()}`)} className="rounded-xl text-xs gap-1.5 border-glass h-11 px-5 hover:bg-muted font-bold active:scale-[0.98] transition-all duration-200">
                       <Award className="size-4.5 text-yellow-500" />
                       <span>Xem chứng nhận chặng {lvl.code}</span>
                     </Button>
