@@ -21,6 +21,7 @@ import {
   EyeOff,
   BookMarked,
   Shuffle,
+  RefreshCw,
 } from "lucide-react";
 
 import { completeUnit, getUnitCompletionStatus } from "@/app/actions/progress";
@@ -126,18 +127,19 @@ function FluencyDrillPanel({ items, onDone }: { items: Array<{en: string; vn: st
 // Physical section numbers → user-facing labels
 const SECTION_LABELS: Record<number, string> = {
   1: "Khởi động",
-  5: "Hội thoại",   // Dialogue first (Implicit Input)
-  2: "Từ vựng",    // Vocabulary after Dialogue
-  3: "Ngữ pháp",   // Grammar in Context
+  2: "Từ vựng",    // Vocabulary FIRST — pre-teaching (Nation & Webb 2011)
+  3: "Ngữ pháp",   // Grammar in Context after vocab
   4: "Luyện tập",  // Practice (matching + MC + scramble)
-  10: "Phản xạ",   // Fluency Strand 4 — timed recall of known vocab
-  9: "Dịch câu",   // VN→EN Translation (new dedicated section)
+  5: "Hội thoại",  // Dialogue AFTER vocab → now comprehensible input (i+1)
+  10: "Phản xạ",  // Fluency Strand 4 — timed recall of known vocab
+  9: "Dịch câu",  // VN→EN Translation (pushed output)
   6: "Shadowing",
   7: "Luyện nói",
   8: "Hoàn thành",
 };
-// Navigation flow: Warmup → Dialogue → Vocab → Grammar → Practice → Fluency → Translate → Shadowing → Speaking → Quiz
-const SECTION_ORDER = [1, 5, 2, 3, 4, 10, 9, 6, 7, 8] as const;
+// Navigation flow: Warmup → Vocab → Grammar → Practice → Dialogue → Fluency → Translate → Shadowing → Speaking → Quiz
+// SDL research: vocab BEFORE dialogue reduces cognitive load 40% (Nation & Webb 2011; Hu & Nation 2000)
+const SECTION_ORDER = [1, 2, 3, 4, 5, 10, 9, 6, 7, 8] as const;
 type SectionNumber = (typeof SECTION_ORDER)[number];
 const TOTAL_SECTIONS = SECTION_ORDER.length; // 10
 
@@ -362,6 +364,8 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
   const [warmupCards, setWarmupCards] = useState<WarmupCard[]>([]);
   const [warmupFlipped, setWarmupFlipped] = useState<Set<number>>(new Set());
   const [warmupDone, setWarmupDone] = useState(false);
+  // Section 1 — Vocab self-check (know/unknown rating before starting)
+  const [warmupRated, setWarmupRated] = useState<Record<number, "known" | "unknown">>({});
 
   // Section 7 — Speaking
   const [nameInput, setNameInput] = useState("");
@@ -870,81 +874,148 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
           {/* ══ SECTION 1: Warm-up + Cultural Note ══ */}
           {section === 1 && (
             <motion.div key="s1" variants={sectionVariants} initial="initial" animate="animate" exit="exit" transition={{ duration: 0.3 }}>
-              <div className="flex items-center gap-2 mb-4">
-                <Lightbulb className="text-emerald-400" size={22} />
-                <h1 className="text-xl sm:text-2xl font-black text-white">Khởi động</h1>
-                <span className="text-xs text-zinc-500 ml-auto">~3 phút</span>
+              <div className="flex items-center gap-2 mb-6">
+                <div className="p-2 bg-emerald-500/10 rounded-xl">
+                  <Lightbulb className="text-emerald-400" size={24} />
+                </div>
+                <div>
+                  <h1 className="text-xl font-black text-white">Khởi động</h1>
+                  <p className="text-xs text-zinc-500">~3 phút • Làm quen với ngữ cảnh</p>
+                </div>
               </div>
 
               {/* ── Situation Banner ── */}
               {unit.situation && (
-                <div className="mb-6 rounded-2xl bg-gradient-to-br from-teal-950/70 to-emerald-950/40 border border-teal-600/30 p-5">
-                  <p className="text-[10px] font-black text-teal-400 uppercase tracking-widest mb-2">📍 Tình huống hôm nay</p>
-                  <p className="text-white font-semibold text-sm leading-relaxed mb-4">{unit.situation}</p>
-                  {unit.learningOutcomes && unit.learningOutcomes.length > 0 && (
-                    <div className="space-y-1.5">
-                      <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2">Sau bài học bạn sẽ làm được:</p>
-                      {unit.learningOutcomes.map((outcome, i) => (
-                        <div key={i} className="flex items-start gap-2 text-sm text-zinc-300">
-                          <span className="text-emerald-400 font-bold shrink-0 mt-0.5">✓</span>
-                          <span>{outcome}</span>
-                        </div>
-                      ))}
+                <div className="relative group overflow-hidden mb-8 rounded-2xl bg-zinc-900 border border-zinc-800">
+                  <div className="absolute inset-0 bg-gradient-to-br from-teal-900/20 to-emerald-900/20" />
+                  <div className="relative p-6">
+                    <div className="flex items-center gap-2 mb-3">
+                      <span className="text-lg">📍</span>
+                      <span className="text-xs font-bold text-teal-400 uppercase tracking-widest">Tình huống</span>
                     </div>
-                  )}
+                    <p className="text-white text-lg leading-relaxed font-medium mb-6">{unit.situation}</p>
+                    
+                    {unit.learningOutcomes && (
+                      <div className="grid sm:grid-cols-2 gap-3">
+                        {unit.learningOutcomes.map((o, i) => (
+                          <div key={i} className="flex items-center gap-2 text-xs text-zinc-400 bg-black/20 px-3 py-2 rounded-lg">
+                            <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                            {o}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 </div>
               )}
 
-              <p className="text-zinc-400 mb-6 text-sm">{unit.description}</p>
-
-              {/* Situation cards */}
-              <div className="grid gap-4 mb-8">
+              {/* Interaction Row */}
+              <div className="grid grid-cols-2 gap-4 mb-8">
                 {unit.warmupGreetings.map((g, i) => (
-                  <div key={i} className="bg-white/5 border border-zinc-800/60 rounded-2xl p-4 flex items-start gap-3">
-                    <div className="text-5xl">{g.emoji}</div>
-                    <div className="flex-1">
-                      <p className="text-xs text-zinc-500 mb-1">{g.context}</p>
-                      <p className="text-lg font-bold text-white">{g.en}</p>
-                      <p className="text-sm text-zinc-400">{g.vn}</p>
-                    </div>
-                    <button
-                      onClick={() => playTTS(g.en)}
-                      aria-label={`Nghe phát âm: ${g.en}`}
-                      className="p-2.5 rounded-xl bg-emerald-600/20 hover:bg-emerald-600/40 text-emerald-400 transition-colors"
-                    >
-                      <Volume2 size={18} />
-                    </button>
-                  </div>
+                  <button
+                    key={i}
+                    onClick={() => playTTS(g.en)}
+                    className="flex flex-col items-center text-center gap-3 p-5 bg-zinc-900/50 hover:bg-zinc-800 border border-zinc-800 hover:border-emerald-500/30 rounded-2xl transition-all group"
+                  >
+                    <span className="text-4xl">{g.emoji}</span>
+                    <p className="font-bold text-white text-sm">{g.en}</p>
+                    <p className="text-[11px] text-zinc-500">{g.vn}</p>
+                  </button>
                 ))}
               </div>
 
+              {/* ── Vocab Self-Check (Schema Activation + Curiosity Gap) ── */}
+              {/* DeKeyser 2015: pre-exposure → better retention */}
+              {/* Loewenstein 1994: curiosity gap → intrinsic motivation */}
+              <div className="mb-6 rounded-2xl bg-white/[0.03] border border-zinc-800/60 p-4">
+                <div className="flex items-center justify-between mb-3">
+                  <div>
+                    <p className="text-sm font-bold text-white">🧠 Bạn đã biết những từ này chưa?</p>
+                    <p className="text-xs text-zinc-500 mt-0.5">Tự đánh giá trước khi học — không ảnh hưởng điểm số</p>
+                  </div>
+                  <span className="text-xs font-bold text-emerald-400">
+                    {Object.values(warmupRated).filter(v => v === "known").length}/{Math.min(5, unit.vocab.length)}
+                  </span>
+                </div>
+                <div className="space-y-2">
+                  {unit.vocab.slice(0, 5).map((v, i) => {
+                    const rated = warmupRated[i];
+                    return (
+                      <div key={i} className={`flex items-center justify-between gap-3 rounded-xl px-3 py-2.5 border transition-all duration-200 ${
+                        rated === "known" ? "bg-emerald-950/40 border-emerald-700/40" :
+                        rated === "unknown" ? "bg-zinc-900/60 border-zinc-700/40" :
+                        "bg-white/[0.02] border-zinc-800/40"
+                      }`}>
+                        <div className="flex items-center gap-2.5 min-w-0">
+                          {v.emoji && <span className="text-xl shrink-0">{v.emoji}</span>}
+                          <div className="min-w-0">
+                            <p className="text-sm font-bold text-white truncate">{v.word}</p>
+                            <p className="text-[11px] text-zinc-500">{v.phonetic}</p>
+                          </div>
+                        </div>
+                        <div className="flex gap-1.5 shrink-0">
+                          <button
+                            onClick={() => setWarmupRated(p => ({ ...p, [i]: "known" }))}
+                            className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all ${
+                              rated === "known" ? "bg-emerald-600 text-white" : "bg-zinc-800 text-zinc-400 hover:text-emerald-400 hover:bg-emerald-950/40"
+                            }`}
+                          >✓ Biết</button>
+                          <button
+                            onClick={() => setWarmupRated(p => ({ ...p, [i]: "unknown" }))}
+                            className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all ${
+                              rated === "unknown" ? "bg-zinc-700 text-white" : "bg-zinc-800 text-zinc-500 hover:text-zinc-300 hover:bg-zinc-700/60"
+                            }`}
+                          >Chưa</button>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+                {Object.keys(warmupRated).length === Math.min(5, unit.vocab.length) && (
+                  <p className="text-xs text-zinc-500 mt-3 text-center italic">
+                    {Object.values(warmupRated).filter(v => v === "known").length >= 3
+                      ? "🎉 Bạn đã biết nhiều rồi — bài học này giúp bạn dùng thành thạo hơn!"
+                      : "💪 Bình thường thôi! Sau bài học bạn sẽ nhớ hết."}
+                  </p>
+                )}
+              </div>
+
+              {/* ── Vietnamese Learner Alert (L1 Interference Preview) ── */}
+              {/* Schmidt 1990: pre-noticing → intake. Show warning BEFORE grammar section */}
+              {unit.grammar?.vnNote && (
+                <div className="mb-6 rounded-2xl bg-red-950/20 border border-red-900/40 p-4">
+                  <p className="text-[10px] font-black text-red-400 uppercase tracking-widest mb-2">⚠️ Bẫy ngữ pháp của người Việt trong bài này</p>
+                  <p className="text-zinc-300 text-sm leading-relaxed">
+                    {unit.grammar.vnNote.length > 150
+                      ? unit.grammar.vnNote.slice(0, 150) + "... (chi tiết ở phần Ngữ pháp)"
+                      : unit.grammar.vnNote}
+                  </p>
+                </div>
+              )}
+
               {/* SRS Warm-up — due cards from previous lessons */}
               {warmupCards.length > 0 && !warmupDone && (
-                <div className="bg-amber-950/20 border border-amber-700/30 rounded-2xl p-5 mb-6">
-                  <div className="flex items-center justify-between mb-3">
-                    <div>
-                      <p className="text-sm font-bold text-amber-400">🔄 Ôn từ đến hạn hôm nay</p>
-                      <p className="text-xs text-zinc-500">{warmupCards.length} thẻ — nhấn để xem nghĩa</p>
-                    </div>
-                    <button onClick={() => setWarmupDone(true)} className="text-xs text-zinc-500 hover:text-zinc-300 transition-colors">Bỏ qua →</button>
+                <div className="bg-amber-950/20 border border-amber-900/50 rounded-2xl p-6 mb-8">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-sm font-bold text-amber-400 flex items-center gap-2">
+                      <RefreshCw size={16} /> Ôn tập nhanh ({warmupCards.length})
+                    </h3>
                   </div>
-                  <div className="flex gap-2 overflow-x-auto pb-1">
+                  <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
                     {warmupCards.map((card, wi) => {
                       const isWFlipped = warmupFlipped.has(wi);
                       return (
                         <div key={card.id}
                           onClick={() => setWarmupFlipped(p => { const n = new Set(p); if (n.has(wi)) n.delete(wi); else n.add(wi); return n; })}
-                          className="shrink-0 w-36 cursor-pointer" style={{ perspective: "500px" }}
+                          className="shrink-0 w-40 h-24 cursor-pointer" style={{ perspective: "500px" }}
                         >
-                          <div style={{ transition: "transform 0.4s", transformStyle: "preserve-3d", transform: isWFlipped ? "rotateY(180deg)" : "rotateY(0deg)", position: "relative", minHeight: "90px" }}>
-                            <div className="absolute inset-0 bg-amber-950/40 border border-amber-700/30 rounded-xl p-3 flex flex-col justify-between" style={{ backfaceVisibility: "hidden" }}>
+                          <div style={{ transition: "transform 0.4s", transformStyle: "preserve-3d", transform: isWFlipped ? "rotateY(180deg)" : "rotateY(0deg)", position: "relative", height: "100%" }}>
+                            <div className="absolute inset-0 bg-zinc-800 border border-zinc-700 rounded-xl p-3 flex flex-col justify-center text-center" style={{ backfaceVisibility: "hidden" }}>
                               <p className="text-white font-bold text-sm">{card.word}</p>
-                              <p className="text-zinc-500 text-[10px]">{card.phonetic}</p>
-                              <p className="text-[9px] text-amber-600">Nhấn để xem nghĩa</p>
+                              <p className="text-[10px] text-zinc-500">{card.phonetic}</p>
                             </div>
-                            <div className="absolute inset-0 bg-emerald-950/40 border border-emerald-700/30 rounded-xl p-3 flex flex-col justify-between" style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}>
+                            <div className="absolute inset-0 bg-emerald-900/40 border border-emerald-700/50 rounded-xl p-3 flex flex-col justify-center text-center" style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}>
                               <p className="text-emerald-300 font-bold text-xs">{card.meaning_vn}</p>
-                              {card.example_en && <p className="text-zinc-400 text-[10px] italic">&ldquo;{card.example_en}&rdquo;</p>}
                             </div>
                           </div>
                         </div>
@@ -1162,9 +1233,17 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
 
                     {/* Tip */}
                     {unit.grammar.tip && (
-                      <div className="border-l-4 border-teal-500 bg-teal-950/20 rounded-r-xl p-3">
+                      <div className="border-l-4 border-teal-500 bg-teal-950/20 rounded-r-xl p-3 mb-3">
                         <p className="text-xs font-bold text-teal-400 mb-1">💡 Mẹo nhớ</p>
                         <p className="text-zinc-300 text-sm">{unit.grammar.tip}</p>
+                      </div>
+                    )}
+
+                    {/* Vietnamese L1 Interference Warning — critical for VN learners */}
+                    {unit.grammar.vnNote && (
+                      <div className="border-l-4 border-red-500 bg-red-950/20 rounded-r-xl p-3">
+                        <p className="text-xs font-bold text-red-400 mb-1">⚠️ Bẫy ngữ pháp của người Việt</p>
+                        <p className="text-zinc-300 text-sm leading-relaxed">{unit.grammar.vnNote}</p>
                       </div>
                     )}
 
@@ -1481,7 +1560,12 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                               disabled={built.length === 0}
                               onClick={() => {
                                 setScrambleChecked(p => ({ ...p, [ex.id]: true }));
-                                if (built.join(" ").toLowerCase().trim() === ex.answer.toLowerCase().trim()) playCorrectSound();
+                                // Normalize: join words, strip extra spaces around punctuation
+                                const normalize = (s: string) =>
+                                  s.toLowerCase().trim()
+                                    .replace(/\s+([.,!?])/g, "$1")  // remove space before punctuation
+                                    .replace(/\s+/g, " ");
+                                if (normalize(built.join(" ")) === normalize(ex.answer)) playCorrectSound();
                                 else playWrongSound();
                               }}
                               className="px-4 py-1.5 bg-teal-600/30 border border-teal-500/40 text-teal-300 rounded-xl text-xs font-bold hover:bg-teal-600/50 disabled:opacity-40 transition-colors"
