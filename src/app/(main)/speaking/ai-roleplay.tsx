@@ -466,7 +466,7 @@ export function AIRoleplay() {
       </div>
 
       {/* Main Interactive Chat Box */}
-      <div className="rounded-3xl border border-glass bg-glass p-4 sm:p-8 space-y-4 shadow-sm relative overflow-hidden flex flex-col min-h-[400px] sm:min-h-[500px] justify-between">
+      <div className="rounded-3xl border border-glass bg-glass p-4 sm:p-8 space-y-4 shadow-sm relative overflow-hidden flex flex-col min-h-[350px] sm:min-h-[500px] justify-between">
         
         {/* Chat Header info */}
         <div className="flex items-center justify-between border-b border-foreground/[0.04] pb-4">
@@ -491,7 +491,7 @@ export function AIRoleplay() {
         </div>
 
         {/* Chat History Messages area */}
-        <div className="flex-1 overflow-y-auto space-y-4 max-h-[300px] pr-2 scrollbar-thin">
+        <div className="flex-1 overflow-y-auto space-y-4 max-h-[220px] sm:max-h-[300px] pr-2 scrollbar-thin">
           {chatHistory.map((msg, index) => {
             const isAi = msg.sender === "ai";
             return (

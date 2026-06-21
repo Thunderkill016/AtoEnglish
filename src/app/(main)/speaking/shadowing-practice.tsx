@@ -573,11 +573,10 @@ export function ShadowingPractice() {
           </AnimatePresence>
         </div>
 
-        {/* Playback Settings & Controller */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pt-2">
+        <div className="flex flex-wrap items-center gap-2 sm:gap-3 pt-2">
           {/* Speed settings */}
-          <div className="flex items-center gap-3">
-            <span className="text-xs text-muted-foreground font-bold uppercase tracking-wider">Tốc độ phát:</span>
+          <div className="flex items-center gap-2 sm:gap-3">
+            <span className="text-xs text-muted-foreground font-bold uppercase tracking-wider">Tốc độ:</span>
             <div className="bg-foreground/[0.03] border border-foreground/[0.05] p-1 rounded-xl flex gap-1">
               {[0.8, 1.0, 1.2].map((speed) => (
                 <button
@@ -590,7 +589,7 @@ export function ShadowingPractice() {
                       setTimeout(() => handlePlayNative(), 50);
                     }
                   }}
-                  className={`px-3.5 py-2 text-xs font-bold rounded-lg transition-colors ${
+                  className={`px-3 py-1.5 text-xs font-bold rounded-lg transition-colors ${
                     playbackSpeed === speed
                       ? "bg-primary text-primary-foreground"
                       : "text-muted-foreground hover:text-foreground"
@@ -606,7 +605,7 @@ export function ShadowingPractice() {
           <Button
             onClick={handlePlayNative}
             variant={isPlayingNative ? "secondary" : "outline"}
-            className="w-full sm:w-auto h-12 sm:h-11 px-5 rounded-2xl sm:rounded-xl font-bold text-xs uppercase tracking-wider gap-2 border-glass active:scale-[0.98] transition-all flex items-center justify-center"
+            className="h-10 sm:h-11 px-4 sm:px-5 rounded-2xl sm:rounded-xl font-bold text-xs uppercase tracking-wider gap-2 border-glass active:scale-[0.98] transition-all flex items-center justify-center"
           >
             {isPlayingNative ? (
               <>
@@ -697,7 +696,7 @@ export function ShadowingPractice() {
               <Button
                 disabled={isPlayingNative}
                 onClick={isRecording ? stopRecording : startRecording}
-                className={`w-full sm:w-auto h-14 sm:h-12 px-8 rounded-2xl font-bold transition-all duration-300 gap-2 flex items-center justify-center ${
+                className={`w-full sm:w-auto h-12 px-8 rounded-2xl font-bold transition-all duration-300 gap-2 flex items-center justify-center ${
                   isRecording
                     ? "bg-red-500 hover:bg-red-600 text-white animate-pulse shadow-lg"
                     : "bg-gradient-to-r from-red-500 to-rose-600 hover:from-red-600 hover:to-rose-700 text-white shadow-lg shadow-red-500/20 active:scale-[0.98]"
@@ -721,7 +720,7 @@ export function ShadowingPractice() {
                 <Button
                   onClick={handlePlayRecorded}
                   variant={isPlayingRecorded ? "secondary" : "outline"}
-                  className="w-full sm:w-auto h-14 sm:h-12 px-6 rounded-2xl font-bold text-xs uppercase tracking-wider gap-2 border-glass active:scale-[0.98] transition-all flex items-center justify-center"
+                  className="w-full sm:w-auto h-12 px-6 rounded-2xl font-bold text-xs uppercase tracking-wider gap-2 border-glass active:scale-[0.98] transition-all flex items-center justify-center"
                 >
                   {isPlayingRecorded ? (
                     <>
@@ -744,7 +743,7 @@ export function ShadowingPractice() {
                     setRecognizedText("");
                   }}
                   variant="ghost"
-                  className="w-full sm:w-auto h-14 sm:h-12 px-6 rounded-2xl font-bold text-xs uppercase tracking-wider gap-2 hover:bg-foreground/[0.03] active:scale-[0.98] transition-all flex items-center justify-center"
+                  className="w-full sm:w-auto h-12 px-6 rounded-2xl font-bold text-xs uppercase tracking-wider gap-2 hover:bg-foreground/[0.03] active:scale-[0.98] transition-all flex items-center justify-center"
                 >
                   <RefreshCw className="size-4" />
                   <span>Thu âm lại</span>

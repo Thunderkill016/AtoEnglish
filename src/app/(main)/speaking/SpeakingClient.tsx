@@ -76,8 +76,9 @@ export default function SpeakingPage() {
         </div>
       </motion.div>
 
-      {/* Stepper Tabs (Sliding Pill navigation) */}
-      <div className="bg-glass border border-glass p-1.5 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.01)] grid grid-cols-3 md:flex md:flex-nowrap gap-1">
+      {/* Stepper Tabs — horizontal scroll on mobile, grid on md+ */}
+      {/* Mobile: overflow-x-auto pill row (prevents 360px cramping) */}
+      <div className="flex gap-2 overflow-x-auto pb-1 -mx-4 px-4 scrollbar-none sm:mx-0 sm:px-0 md:overflow-visible md:bg-glass md:border md:border-glass md:p-1.5 md:rounded-2xl md:gap-1">
         {tabs.map((tab) => {
           const Icon = tab.icon;
           const isActive = activeTab === tab.id;
@@ -86,36 +87,35 @@ export default function SpeakingPage() {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className="flex-1 min-w-0 text-left p-2 sm:p-3 rounded-xl transition-all relative overflow-hidden group select-none"
+              className={`shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all relative overflow-hidden select-none
+                md:flex-1 md:min-w-0 md:text-left md:p-3
+                ${
+                  isActive
+                    ? "bg-primary/10 border border-primary/30 text-primary"
+                    : "bg-glass border border-glass text-muted-foreground hover:text-foreground"
+                }`}
             >
               {isActive && (
                 <motion.div
                   layoutId="activeSpeakingTab"
-                  className="absolute inset-0 bg-primary/10 border border-primary/30 rounded-xl"
+                  className="absolute inset-0 bg-primary/10 border border-primary/30 rounded-xl md:block hidden"
                   transition={{ type: "spring", stiffness: 130, damping: 19 }}
                 />
               )}
-              <div className="relative z-10 flex items-center gap-2 sm:gap-3">
-                <span className={`flex size-7 sm:size-8 shrink-0 items-center justify-center rounded-lg transition-all duration-300 ${
-                  isActive
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-muted text-muted-foreground group-hover:bg-foreground/[0.05]"
-                }`}>
-                  <Icon className="size-4" />
+              <span className={`relative z-10 flex size-7 shrink-0 items-center justify-center rounded-lg transition-all duration-300 ${
+                isActive
+                  ? "bg-primary text-primary-foreground"
+                  : "bg-muted text-muted-foreground"
+              }`}>
+                <Icon className="size-4" />
+              </span>
+              <div className="relative z-10 min-w-0">
+                <span className="block font-bold text-[11px] uppercase tracking-wider whitespace-nowrap">
+                  {tab.id === "shadowing" ? "Shadowing" : tab.id === "roleplay" ? "Roleplay" : "Journal"}
                 </span>
-                <div className="min-w-0">
-                  {/* Short label on mobile, full title on sm+ */}
-                  <h3 className={`font-bold text-[10px] sm:text-xs uppercase tracking-wider ${isActive ? "text-primary" : "text-foreground"} truncate`}>
-                    <span className="sm:hidden">
-                      {tab.id === "shadowing" ? "Shadowing" : tab.id === "roleplay" ? "Roleplay" : "Journal"}
-                    </span>
-                    <span className="hidden sm:inline">{tab.title}</span>
-                  </h3>
-                  {/* Description: hidden on mobile to keep tabs compact */}
-                  <p className="hidden sm:block text-[10px] text-muted-foreground font-normal line-clamp-1">
-                    {tab.desc}
-                  </p>
-                </div>
+                <span className="hidden md:block text-[10px] text-muted-foreground font-normal truncate">
+                  {tab.desc}
+                </span>
               </div>
             </button>
           );
