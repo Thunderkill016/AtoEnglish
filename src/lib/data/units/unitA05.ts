@@ -206,10 +206,10 @@ export const unitA05: UnitData = {
       options: [
         "She am a doctor.",
         "They is from Vietnam.",
-        "He is twenty-five years old. ✓",
+        "He is twenty-five years old.",
         "I are married.",
       ],
-      answer: "He is twenty-five years old. ✓",
+      answer: "He is twenty-five years old.",
     },
   },
 
@@ -467,11 +467,11 @@ export const unitA05: UnitData = {
       question: "Câu nào ĐÚNG ngữ pháp?",
       options: [
         "She am a nurse.",
-        "She is a nurse. ✓",
+        "She is a nurse.",
         "She are a nurse.",
         "She be a nurse.",
       ],
-      answer: "She is a nurse. ✓",
+      answer: "She is a nurse.",
       type: "multiple-choice",
     },
     {

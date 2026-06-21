@@ -207,10 +207,10 @@ export const unitA07: UnitData = {
       options: [
         "in Monday at 9 o'clock",
         "on Monday in 9 o'clock",
-        "on Monday at 9 o'clock ✓",
+        "on Monday at 9 o'clock",
         "at Monday on 9 o'clock",
       ],
-      answer: "on Monday at 9 o'clock ✓",
+      answer: "on Monday at 9 o'clock",
     },
   },
 
@@ -471,10 +471,10 @@ export const unitA07: UnitData = {
       options: [
         "The meeting is in Monday.",
         "The meeting is at Monday.",
-        "The meeting is on Monday. ✓",
+        "The meeting is on Monday.",
         "The meeting is for Monday.",
       ],
-      answer: "The meeting is on Monday. ✓",
+      answer: "The meeting is on Monday.",
       type: "multiple-choice",
     },
     {

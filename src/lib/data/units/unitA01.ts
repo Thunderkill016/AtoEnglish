@@ -232,10 +232,10 @@ export const unitA01: UnitData = {
       options: [
         "My name Minh.",
         "Name is Minh my.",
-        "My name is Minh. ✓",
+        "My name is Minh.",
         "I name is Minh.",
       ],
-      answer: "My name is Minh. ✓",
+      answer: "My name is Minh.",
     },
   },
 
@@ -566,10 +566,10 @@ export const unitA01: UnitData = {
       options: [
         "Giống /t/ trong 'time' — đặt lưỡi sau răng",
         "Giống /s/ trong 'sun' — không di chuyển lưỡi",
-        "Lưỡi GIỮA 2 hàng răng, thổi hơi ra ngoài ✓",
+        "Lưỡi GIỮA 2 hàng răng, thổi hơi ra ngoài",
         "Im lặng, không phát âm",
       ],
-      answer: "Lưỡi GIỮA 2 hàng răng, thổi hơi ra ngoài ✓",
+      answer: "Lưỡi GIỮA 2 hàng răng, thổi hơi ra ngoài",
       type: "multiple-choice",
     },
     {
@@ -585,10 +585,10 @@ export const unitA01: UnitData = {
       options: [
         "Khi bạn không thích điều gì đó",
         "Khi bạn không nghe thấy gì",
-        "Khi bạn không hiểu điều vừa nghe ✓",
+        "Khi bạn không hiểu điều vừa nghe",
         "Khi bạn muốn dừng lại",
       ],
-      answer: "Khi bạn không hiểu điều vừa nghe ✓",
+      answer: "Khi bạn không hiểu điều vừa nghe",
       type: "multiple-choice",
     },
     {

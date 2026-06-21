@@ -172,8 +172,8 @@ export const unitA03: UnitData = {
 
     conjugation: [
       { subject: "a RED",   form: "shirt",    example: "a red shirt ✓ (không phải 'a shirt red')" },
-      { subject: "a BIG",   form: "blue bag", example: "a big blue bag ✓" },
-      { subject: "a SMALL", form: "black car", example: "a small black car ✓" },
+      { subject: "a BIG",   form: "blue bag", example: "a big blue bag" },
+      { subject: "a SMALL", form: "black car", example: "a small black car" },
     ],
 
     examples: [
@@ -205,11 +205,11 @@ export const unitA03: UnitData = {
       question: "Câu nào ĐÚNG ngữ pháp tiếng Anh?",
       options: [
         "I want a shirt red.",
-        "I want a red shirt. ✓",
+        "I want a red shirt.",
         "I want a shirt is red.",
         "I want red a shirt.",
       ],
-      answer: "I want a red shirt. ✓",
+      answer: "I want a red shirt.",
     },
   },
 
@@ -448,11 +448,11 @@ export const unitA03: UnitData = {
       question: "Câu nào ĐÚNG ngữ pháp tiếng Anh?",
       options: [
         "a shirt red big",
-        "a big red shirt ✓",
+        "a big red shirt",
         "a red big shirt",
         "shirt big red a",
       ],
-      answer: "a big red shirt ✓",
+      answer: "a big red shirt",
       type: "multiple-choice",
     },
     {

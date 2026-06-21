@@ -205,11 +205,11 @@ export const unitA08: UnitData = {
       question: "Câu mệnh lệnh nào ĐÚNG?",
       options: [
         "You please call the police!",
-        "Please call the police! ✓",
+        "Please call the police!",
         "Please you call the police!",
         "Calling the police please!",
       ],
-      answer: "Please call the police! ✓",
+      answer: "Please call the police!",
     },
   },
 
@@ -467,11 +467,11 @@ export const unitA08: UnitData = {
       question: "Câu mệnh lệnh nào ĐÚNG?",
       options: [
         "You please call the police!",
-        "Please call the police! ✓",
+        "Please call the police!",
         "Please you call police!",
         "Calling the police now!",
       ],
-      answer: "Please call the police! ✓",
+      answer: "Please call the police!",
       type: "multiple-choice",
     },
     {

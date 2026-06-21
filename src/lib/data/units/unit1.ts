@@ -442,10 +442,10 @@ export const unit1: UnitData = {
       options: [
         "She am a teacher.",
         "He are a student.",
-        "I am from Vietnam. ✓",
+        "I am from Vietnam.",
         "They is friends.",
       ],
-      answer: "I am from Vietnam. ✓",
+      answer: "I am from Vietnam.",
     },
   },
 

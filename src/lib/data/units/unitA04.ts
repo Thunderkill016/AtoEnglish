@@ -204,11 +204,11 @@ export const unitA04: UnitData = {
       question: "Trả lời nào PHÙ HỢP nhất khi sếp hỏi 'How are you?'",
       options: [
         "I am very sick and tired today.",
-        "Fine, thank you. And you? ✓",
+        "Fine, thank you. And you?",
         "Not your business.",
         "I don't know.",
       ],
-      answer: "Fine, thank you. And you? ✓",
+      answer: "Fine, thank you. And you?",
     },
   },
 
@@ -447,11 +447,11 @@ export const unitA04: UnitData = {
       question: "Trả lời phù hợp nhất khi sếp hỏi 'How are you?'",
       options: [
         "I am sick and very tired.",
-        "Fine, thank you. And you? ✓",
+        "Fine, thank you. And you?",
         "None of your business.",
         "I don't know how I am.",
       ],
-      answer: "Fine, thank you. And you? ✓",
+      answer: "Fine, thank you. And you?",
       type: "multiple-choice",
     },
     {

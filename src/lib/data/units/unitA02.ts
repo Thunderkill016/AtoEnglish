@@ -208,10 +208,10 @@ export const unitA02: UnitData = {
       options: [
         "How much money is it?",
         "How much it is?",
-        "How much is it? ✓",
+        "How much is it?",
         "How many is it?",
       ],
-      answer: "How much is it? ✓",
+      answer: "How much is it?",
     },
   },
 

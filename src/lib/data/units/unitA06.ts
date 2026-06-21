@@ -205,10 +205,10 @@ export const unitA06: UnitData = {
       options: [
         "My mother... he is a teacher.",
         "My mother... it is a teacher.",
-        "My mother... she is a teacher. ✓",
+        "My mother... she is a teacher.",
         "My mother... they is a teacher.",
       ],
-      answer: "My mother... she is a teacher. ✓",
+      answer: "My mother... she is a teacher.",
     },
   },
 
@@ -467,11 +467,11 @@ export const unitA06: UnitData = {
       question: "Câu nào ĐÚNG?",
       options: [
         "My father... she is a doctor.",
-        "My father... he is a doctor. ✓",
+        "My father... he is a doctor.",
         "My father... they is a doctor.",
         "My father... it is a doctor.",
       ],
-      answer: "My father... he is a doctor. ✓",
+      answer: "My father... he is a doctor.",
       type: "multiple-choice",
     },
     {
