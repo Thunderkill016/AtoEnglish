@@ -251,13 +251,13 @@ export default function FlashcardsPage() {
         <div className="flex flex-wrap gap-3 justify-center pt-2">
           <Button
             onClick={() => router.push("/quiz")}
-            className="bg-violet-600 hover:bg-violet-500 text-white rounded-xl text-xs sm:text-sm font-semibold h-11 px-5 shadow-lg shadow-violet-600/10 active:scale-[0.98]"
+            className="bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-500 hover:to-purple-500 text-white rounded-xl text-xs sm:text-sm font-semibold h-11 px-5 shadow-lg shadow-violet-600/15 active:scale-[0.98]"
           >
             Quiz Từ vựng
           </Button>
           <Button
             onClick={() => router.push("/learn")}
-            className="bg-primary hover:bg-primary/95 text-primary-foreground rounded-xl text-xs sm:text-sm font-semibold h-11 px-5 shadow-lg shadow-primary/10 active:scale-[0.98]"
+            className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-white rounded-xl text-xs sm:text-sm font-semibold h-11 px-5 shadow-lg shadow-emerald-600/15 active:scale-[0.98]"
           >
             Học Unit Mới
           </Button>
@@ -536,7 +536,7 @@ export default function FlashcardsPage() {
                 >
                   <Button
                     onClick={() => setIsFlipped(true)}
-                    className="w-full h-12 bg-primary hover:bg-primary/95 text-primary-foreground font-bold rounded-xl shadow-lg shadow-primary/10 transition-all duration-300 active:scale-[0.98] text-xs sm:text-sm"
+                    className="w-full h-12 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-white font-bold rounded-xl shadow-lg shadow-emerald-600/20 transition-all duration-300 active:scale-[0.98] text-xs sm:text-sm"
                   >
                     Lật mặt sau (Xem đáp án)
                   </Button>
@@ -674,7 +674,7 @@ export default function FlashcardsPage() {
             </Button>
             <Button
               onClick={() => router.push("/dashboard")}
-              className="w-full sm:w-auto bg-primary hover:bg-primary/95 text-primary-foreground rounded-xl text-xs sm:text-sm font-semibold h-12 sm:h-11 px-5 shadow-lg shadow-primary/10 active:scale-[0.98]"
+              className="w-full sm:w-auto bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-white rounded-xl text-xs sm:text-sm font-semibold h-12 sm:h-11 px-5 shadow-lg shadow-emerald-600/15 active:scale-[0.98]"
             >
               Quay về Dashboard
             </Button>
