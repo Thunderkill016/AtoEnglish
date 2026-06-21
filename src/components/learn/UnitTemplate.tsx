@@ -861,34 +861,50 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
               <p className="text-sm font-bold text-emerald-400">{sectionOrderIdx + 1}/{TOTAL_SECTIONS}</p>
             </div>
           </div>
-          {/* Progress bar */}
+          {/* Step dots progress — replaces unreadable 8px text labels */}
           <div
-            className="w-full h-2 bg-zinc-800 rounded-full overflow-hidden"
+            className="flex items-center gap-0 mt-2"
             role="progressbar"
             aria-valuenow={progress}
             aria-valuemin={0}
             aria-valuemax={100}
-            aria-label={`Tiến độ bài học: phần ${sectionOrderIdx + 1} / ${TOTAL_SECTIONS}`}
+            aria-label={`Tiến độ bài học: bước ${sectionOrderIdx + 1} / ${TOTAL_SECTIONS}`}
           >
-            <motion.div
-              className="h-full bg-gradient-to-r from-emerald-500 to-teal-400 rounded-full"
-              animate={{ width: `${progress}%` }}
-              transition={{ duration: 0.5, ease: "easeOut" }}
-            />
-          </div>
-          {/* Step labels */}
-          <div className="flex justify-between mt-1.5">
-            {SECTION_ORDER.map((secNum, i) => (
-              <span key={secNum} className={`text-[8px] truncate max-w-[36px] text-center ${
-                i === sectionOrderIdx
-                  ? "text-emerald-400 font-bold block"
-                  : i < sectionOrderIdx
-                  ? "text-emerald-600 block"
-                  : "text-zinc-700 block opacity-60"
-              }`}>
-                {SECTION_LABELS[secNum]}
-              </span>
-            ))}
+            {SECTION_ORDER.map((secNum, i) => {
+              const isCompleted = i < sectionOrderIdx;
+              const isCurrent   = i === sectionOrderIdx;
+              return (
+                <div key={secNum} className="flex items-center flex-1 min-w-0">
+                  {/* Dot */}
+                  <div className={`relative flex items-center justify-center rounded-full shrink-0 transition-all duration-300 ${
+                    isCurrent
+                      ? "w-7 h-7 bg-emerald-500 ring-2 ring-emerald-400/50 ring-offset-1 ring-offset-zinc-950 shadow-lg shadow-emerald-900/60"
+                      : isCompleted
+                      ? "w-5 h-5 bg-emerald-800"
+                      : "w-5 h-5 bg-zinc-800"
+                  }`}>
+                    {isCompleted ? (
+                      <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+                        <path d="M2 5l2 2 4-4" stroke="#34d399" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    ) : (
+                      <span className={`font-bold tabular-nums leading-none select-none ${
+                        isCurrent ? "text-white text-[11px]" : "text-zinc-600 text-[9px]"
+                      }`}>{i + 1}</span>
+                    )}
+                    {isCurrent && (
+                      <span className="absolute inset-0 rounded-full bg-emerald-400/20 animate-ping" />
+                    )}
+                  </div>
+                  {/* Connector line — not after last dot */}
+                  {i < SECTION_ORDER.length - 1 && (
+                    <div className={`h-px flex-1 mx-0.5 transition-all duration-500 ${
+                      i < sectionOrderIdx ? "bg-emerald-700" : "bg-zinc-800"
+                    }`} />
+                  )}
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>
@@ -1078,8 +1094,8 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                 </div>
               )}
 
-              <button onClick={goNext} className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl px-6 py-4 flex items-center justify-center gap-2 transition-colors text-lg">
-                Bắt đầu học <ChevronRight size={20} />
+              <button onClick={goNext} className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-white font-bold rounded-2xl px-6 py-4 flex items-center justify-center gap-2 transition-all duration-200 text-lg shadow-lg shadow-emerald-900/40 active:scale-95">
+                Bắt đầu học <ChevronRight size={20} className="transition-transform group-hover:translate-x-1" />
               </button>
             </motion.div>
           )}
@@ -1130,47 +1146,70 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                       className="cursor-pointer"
                       style={{ perspective: "600px" }}
                     >
-                      <div style={{ transition: "transform 0.5s", transformStyle: "preserve-3d", transform: isFlipped ? "rotateY(180deg)" : "rotateY(0deg)", position: "relative", minHeight: "120px" }}>
+                      <div style={{ transition: "transform 0.55s cubic-bezier(.4,2,.6,1)", transformStyle: "preserve-3d", transform: isFlipped ? "rotateY(180deg)" : "rotateY(0deg)", position: "relative", minHeight: "150px" }}>
                         {/* Front */}
-                        <div className="absolute inset-0 bg-white/5 border border-zinc-700/60 rounded-2xl p-4 flex flex-col justify-between" style={{ backfaceVisibility: "hidden" }}>
-                          {v.emoji && <p className="text-2xl mb-0.5">{v.emoji}</p>}
-                          <p className="text-white font-bold text-base">{v.word}</p>
-                          <p className="text-zinc-500 text-xs">{v.phonetic}</p>
-                          <div className="flex justify-between items-center">
+                        <div
+                          className={`absolute inset-0 bg-gradient-to-b from-zinc-800/70 to-zinc-900/90 border rounded-2xl p-4 flex flex-col justify-between shadow-md transition-all duration-300 ${
+                            seenCards.has(i) ? "border-emerald-700/30" : "border-zinc-700/50 hover:border-zinc-600/70"
+                          }`}
+                          style={{ backfaceVisibility: "hidden" }}
+                        >
+                          {v.emoji && <p className="text-3xl mb-1 leading-none">{v.emoji}</p>}
+                          <div>
+                            <p className="text-white font-bold text-base tracking-wide">{v.word}</p>
+                            <p className="text-zinc-500 text-xs mt-0.5 font-mono">{v.phonetic}</p>
+                          </div>
+                          <div className="flex justify-between items-center mt-2">
                             <button
                               onClick={e => {
                                 e.stopPropagation();
                                 setSeenCards(p => { const n = new Set(p); n.add(i); return n; });
                               }}
                               aria-label="Đã biết từ này"
-                              className={`text-[10px] font-bold px-2 py-0.5 rounded-lg transition-colors ${seenCards.has(i) && !flippedCards.has(i) ? "bg-emerald-600/20 text-emerald-400" : "text-zinc-600 hover:text-zinc-400"}`}
+                              className={`text-[10px] font-bold px-2 py-0.5 rounded-lg transition-all ${
+                                seenCards.has(i) && !flippedCards.has(i)
+                                  ? "bg-emerald-600/20 text-emerald-400 border border-emerald-700/30"
+                                  : "text-zinc-600 hover:text-zinc-400"
+                              }`}
                             >
-                              {seenCards.has(i) && !flippedCards.has(i) ? "✓ Đã biết" : "Đã biết?"}
+                              {seenCards.has(i) && !flippedCards.has(i) ? "✓ Biết rồi" : "Biết rồi?"}
                             </button>
                             <button
                               onClick={e => { e.stopPropagation(); playTTS(v.word); }}
                               aria-label={`Nghe: ${v.word}`}
-                              className="p-1.5 rounded-lg bg-emerald-600/20 hover:bg-emerald-600/40 text-emerald-400 transition-colors"
+                              className="p-1.5 rounded-xl bg-emerald-600/15 hover:bg-emerald-600/35 text-emerald-400 transition-all active:scale-90"
                             >
                               <Volume2 size={14} />
                             </button>
                           </div>
                         </div>
                         {/* Back */}
-                        <div className="absolute inset-0 bg-emerald-950/40 border border-emerald-700/40 rounded-2xl p-4 flex flex-col justify-between" style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}>
-                          <div>
-                            <p className="text-emerald-300 font-bold text-sm mb-2">{v.meaning}</p>
+                        <div
+                          className="absolute inset-0 bg-gradient-to-b from-emerald-950/70 to-teal-950/50 border border-emerald-600/30 rounded-2xl p-4 flex flex-col justify-between shadow-md shadow-emerald-950/60"
+                          style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
+                        >
+                          <div className="space-y-2">
+                            <p className="text-emerald-300 font-black text-sm">{v.meaning}</p>
                             {v.collocation && (
-                              <span className="inline-block bg-teal-700/30 border border-teal-600/40 text-teal-300 text-[10px] font-bold px-2 py-0.5 rounded-full mb-2">
+                              <span className="inline-flex items-center gap-1 bg-teal-800/30 border border-teal-600/30 text-teal-300 text-[10px] font-bold px-2 py-0.5 rounded-full">
                                 💬 {v.collocation}
                               </span>
                             )}
-                            <p className="text-zinc-400 text-xs italic">&ldquo;{v.example}&rdquo;</p>
+                            <p className="text-zinc-300 text-xs italic leading-relaxed">&ldquo;{v.example}&rdquo;</p>
                             {v.example2 && (
-                              <p className="text-zinc-500 text-xs italic mt-1">&ldquo;{v.example2}&rdquo;</p>
+                              <p className="text-zinc-500 text-xs italic">&ldquo;{v.example2}&rdquo;</p>
                             )}
                           </div>
-                          <p className="text-[10px] text-emerald-600">Nhấn để lật lại</p>
+                          <div className="flex items-center justify-between">
+                            <p className="text-[10px] text-teal-600/80">Nhấn để lật lại ↩</p>
+                            <button
+                              onClick={e => { e.stopPropagation(); playTTS(v.word); }}
+                              aria-label={`Nghe: ${v.word}`}
+                              className="p-1.5 rounded-xl bg-emerald-600/15 hover:bg-emerald-600/35 text-emerald-400 transition-all active:scale-90"
+                            >
+                              <Volume2 size={14} />
+                            </button>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -1183,7 +1222,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                   Xem thêm {VOCAB_LIMIT - seenCards.size} thẻ để tiếp tục...
                 </div>
               ) : (
-                <button onClick={goNext} className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl px-6 py-4 flex items-center justify-center gap-2 transition-colors text-lg">
+                <button onClick={goNext} className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-white font-bold rounded-2xl px-6 py-4 flex items-center justify-center gap-2 transition-all duration-200 text-lg shadow-lg shadow-emerald-900/40 active:scale-95">
                   Hoàn thành từ vựng <ChevronRight size={20} />
                 </button>
               )}
@@ -1616,7 +1655,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                       if (practiceScore >= Math.ceil(PRACTICE_QS.length * 0.7)) playCorrectSound();
                       else playWrongSound();
                     }}
-                    className="w-full bg-emerald-600 hover:bg-emerald-500 disabled:opacity-40 disabled:cursor-not-allowed text-white font-bold rounded-xl px-6 py-4 flex items-center justify-center gap-2 transition-colors text-lg"
+                    className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 disabled:opacity-40 disabled:cursor-not-allowed text-white font-bold rounded-2xl px-6 py-4 flex items-center justify-center gap-2 transition-all duration-200 text-lg shadow-lg shadow-emerald-900/40 active:scale-95"
                   >
                     Kiểm tra đáp án <ChevronRight size={20} />
                   </button>
@@ -1633,7 +1672,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                       </p>
                     </div>
                     {matchingDone && allScrambleDone ? (
-                      <button onClick={goNext} className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl px-6 py-4 flex items-center justify-center gap-2 transition-colors text-lg">
+                      <button onClick={goNext} className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-white font-bold rounded-2xl px-6 py-4 flex items-center justify-center gap-2 transition-all duration-200 text-lg shadow-lg shadow-emerald-900/40 active:scale-95">
                         Tiếp tục <ChevronRight size={20} />
                       </button>
                     ) : (
@@ -1761,7 +1800,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                     <button
                       onClick={() => { setLacSubmitted(true); }}
                       disabled={Object.keys(lacAnswers).length < LISTEN_CHOOSE.length}
-                      className="mt-5 w-full bg-emerald-600 hover:bg-emerald-500 disabled:opacity-40 disabled:cursor-not-allowed text-white font-bold rounded-xl py-3 transition-colors"
+                      className="mt-5 w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 disabled:opacity-40 disabled:cursor-not-allowed text-white font-bold rounded-2xl py-3 transition-all duration-200 shadow-md shadow-emerald-900/40 active:scale-95"
                     >
                       Kiểm tra đáp án
                     </button>
@@ -1776,7 +1815,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
               )}
 
               {(!LISTEN_CHOOSE.length || lacSubmitted) && (
-                <button onClick={goNext} className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl px-6 py-4 flex items-center justify-center gap-2 transition-colors text-lg">
+                <button onClick={goNext} className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-white font-bold rounded-2xl px-6 py-4 flex items-center justify-center gap-2 transition-all duration-200 text-lg shadow-lg shadow-emerald-900/40 active:scale-95">
                   Tiếp tục <ChevronRight size={20} />
                 </button>
               )}
@@ -1892,7 +1931,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                   <p className="text-zinc-400 text-sm mb-6">
                     Điểm trung bình: {shadowAvg}%
                   </p>
-                  <button onClick={goNext} className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl px-6 py-4 flex items-center justify-center gap-2 transition-colors text-lg">
+                  <button onClick={goNext} className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-white font-bold rounded-2xl px-6 py-4 flex items-center justify-center gap-2 transition-all duration-200 text-lg shadow-lg shadow-emerald-900/40 active:scale-95">
                     Tiếp tục luyện nói <ChevronRight size={20} />
                   </button>
                 </div>
@@ -2064,7 +2103,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
               </div>
 
               {level1Done && (level2Done || level2Transcript !== "") && (
-                <button onClick={goNext} className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl px-6 py-4 flex items-center justify-center gap-2 transition-colors text-lg">
+                <button onClick={goNext} className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-white font-bold rounded-2xl px-6 py-4 flex items-center justify-center gap-2 transition-all duration-200 text-lg shadow-lg shadow-emerald-900/40 active:scale-95">
                   Xem kết quả <ChevronRight size={20} />
                 </button>
               )}
@@ -2245,7 +2284,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                       FINAL_QS.filter(q => q.type === "multiple-choice").some(q => !quizAnswers[q.id]) ||
                       FINAL_QS.filter(q => q.type === "cloze" || q.type === "translate").some(q => !(quizClozeInputs[q.id] ?? "").trim())
                     }
-                    className="mt-6 w-full bg-emerald-600 hover:bg-emerald-500 disabled:opacity-40 text-white font-bold rounded-xl py-3 transition-colors"
+                    className="mt-6 w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 disabled:opacity-40 text-white font-bold rounded-2xl py-3 transition-all duration-200 shadow-md shadow-emerald-900/40 active:scale-95"
                   >
                     Kiểm tra đáp án
                   </button>
@@ -2389,7 +2428,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                     <button
                       onClick={handleCompleteUnit}
                       disabled={isSubmitting}
-                      className="w-full bg-emerald-600 hover:bg-emerald-500 disabled:opacity-60 text-white font-black rounded-xl px-6 py-5 flex items-center justify-center gap-3 transition-colors text-lg"
+                      className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 disabled:opacity-60 text-white font-black rounded-2xl px-6 py-5 flex items-center justify-center gap-3 transition-all duration-200 text-lg shadow-lg shadow-emerald-900/40 active:scale-95"
                     >
                       {isSubmitting ? "Đang lưu..." : `🎉 Hoàn thành bài học (+${xpToEarn} XP)`}
                     </button>
@@ -2540,7 +2579,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                         </p>
                         <p className="text-zinc-400 text-sm mt-1">Tiếp tục để luyện Shadowing và Luyện nói</p>
                       </div>
-                      <button onClick={goNext} className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl px-6 py-4 flex items-center justify-center gap-2 transition-colors text-lg">
+                      <button onClick={goNext} className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-white font-bold rounded-2xl px-6 py-4 flex items-center justify-center gap-2 transition-all duration-200 text-lg shadow-lg shadow-emerald-900/40 active:scale-95">
                         Tiếp tục <ChevronRight size={20} />
                       </button>
                     </div>
@@ -2549,7 +2588,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
               ) : (
                 <div className="text-center py-10">
                   <p className="text-zinc-500 text-sm">Unit này chưa có bài dịch câu.</p>
-                  <button onClick={goNext} className="mt-4 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl px-6 py-3 transition-colors">
+                  <button onClick={goNext} className="mt-4 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-white font-bold rounded-2xl px-6 py-3 transition-all duration-200 shadow-md shadow-emerald-900/40 active:scale-95">
                     Bỏ qua → Tiếp tục
                   </button>
                 </div>
