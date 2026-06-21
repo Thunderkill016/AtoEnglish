@@ -473,14 +473,6 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
     window.speechSynthesis.speak(u);
   };
 
-  // Auto-play vocab word TTS when card changes (if autoPlayAudio enabled)
-  useEffect(() => {
-    if (autoPlay && section === 2 && unit.vocab[vocabIdx]) {
-      const timer = setTimeout(() => playTTS(unit.vocab[vocabIdx].word), 400);
-      return () => clearTimeout(timer);
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [vocabIdx, section, autoPlay]);
 
   useEffect(() => {
     // Use ORDER INDEX (not raw section number) to detect first/last section.
@@ -1133,7 +1125,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                           return n;
                         });
                         setSeenCards(p => { const n = new Set(p); n.add(i); return n; });
-                        if (isNowFlipped) playTTS(v.word, 0.85);
+                        if (isNowFlipped && autoPlay) playTTS(v.word, 0.85);
                       }}
                       className="cursor-pointer"
                       style={{ perspective: "600px" }}
