@@ -2006,16 +2006,17 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
               </div>
 
               {/* Level 1 */}
-              <div className="bg-white/5 border border-zinc-800/60 rounded-2xl p-4 sm:p-6 mb-4 sm:mb-5">
+              <div className="bg-gradient-to-b from-zinc-900/70 to-zinc-950/70 border border-zinc-700/50 rounded-2xl p-4 sm:p-6 mb-4 sm:mb-5 shadow-md">
                 <div className="flex items-center gap-2 mb-4">
                   <span className="px-2 py-0.5 text-xs font-bold bg-emerald-600/20 text-emerald-400 rounded-full">Cấp độ 1</span>
                   <p className="text-white font-semibold">Nói theo khung</p>
                   {level1Done && <CheckCircle size={16} className="text-emerald-400 ml-auto" />}
                 </div>
 
-                <div className="bg-zinc-900/60 rounded-xl p-4 mb-4 text-center">
-                  <p className="text-zinc-400 text-sm mb-1">Hãy nói to câu sau:</p>
-                  <p className="text-white text-base sm:text-xl font-bold">{formattedL1Prompt}</p>
+                <div className="bg-gradient-to-b from-zinc-800/80 to-zinc-900/90 border border-zinc-700/50 rounded-2xl p-4 mb-4 text-center relative overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-br from-pink-500/3 to-transparent pointer-events-none" />
+                  <p className="text-zinc-400 text-xs mb-2 uppercase tracking-widest font-bold">Hãy nói to câu sau:</p>
+                  <p className="text-white text-base sm:text-xl font-bold leading-snug">{formattedL1Prompt}</p>
                 </div>
 
                 <input
@@ -2032,7 +2033,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                       <button
                         onClick={() => playTTS(formattedL1Prompt)}
                         aria-label="Nghe mẫu"
-                        className="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-zinc-700 hover:bg-zinc-600 text-white font-semibold text-sm transition-colors"
+                        className="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-zinc-800 hover:bg-zinc-700 border border-zinc-700/60 text-white font-semibold text-sm transition-all duration-200 active:scale-95"
                       >
                         <Volume2 size={16} /> Nghe mẫu
                       </button>
@@ -2049,7 +2050,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                           });
                         }}
                         aria-label="Luyện nói"
-                        className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-bold text-sm transition-all ${isLevel1Recording ? "bg-red-600 text-white animate-pulse" : "bg-emerald-600 hover:bg-emerald-500 text-white"}`}
+                        className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-bold text-sm transition-all duration-200 ${isLevel1Recording ? "bg-red-600 text-white animate-pulse" : "bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-white shadow-md active:scale-95"}`}
                       >
                         {isLevel1Recording ? <><MicOff size={16} /> Đang nghe...</> : <><Mic size={16} /> Luyện nói</>}
                       </button>
@@ -2088,16 +2089,16 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
               </div>
 
               {/* Level 2 */}
-              <div className={`bg-white/5 border rounded-2xl p-6 mb-6 transition-all ${level1Done ? "border-zinc-700/60" : "border-zinc-800/30 opacity-50 pointer-events-none"}`}>
+              <div className={`bg-gradient-to-b from-zinc-900/70 to-zinc-950/70 border rounded-2xl p-6 mb-6 transition-all shadow-md ${level1Done ? "border-zinc-700/50" : "border-zinc-800/30 opacity-40 pointer-events-none"}`}>
                 <div className="flex items-center gap-2 mb-4">
                   <span className="px-2 py-0.5 text-xs font-bold bg-teal-600/20 text-teal-400 rounded-full">Cấp độ 2</span>
                   <p className="text-white font-semibold">Tự giới thiệu / Diễn đạt tự do</p>
                   {level2Done && <CheckCircle size={16} className="text-emerald-400 ml-auto" />}
                 </div>
 
-                <div className="bg-zinc-900/60 rounded-xl p-4 mb-4">
-                  <p className="text-zinc-400 text-sm mb-2">📍 Tình huống:</p>
-                  <p className="text-white text-sm">&ldquo;{unit.speaking.level2Situation}&rdquo;</p>
+                <div className="bg-gradient-to-b from-zinc-800/80 to-zinc-900/90 border border-zinc-700/50 rounded-2xl p-4 mb-4">
+                  <p className="text-xs font-bold text-teal-400 mb-2 uppercase tracking-widest">📍 Tình huống:</p>
+                  <p className="text-white text-sm italic">&ldquo;{unit.speaking.level2Situation}&rdquo;</p>
                 </div>
 
                 <div className="flex gap-2 mb-4">
