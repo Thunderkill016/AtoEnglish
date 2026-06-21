@@ -448,10 +448,18 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
   }, []);
 
   useEffect(() => {
-    if (section > 1 && section < TOTAL_SECTIONS) {
-      localStorage.setItem(`lesson-progress-${unit.unitId}`, JSON.stringify({ section }));
-    } else if (section >= TOTAL_SECTIONS) {
+    // Use ORDER INDEX (not raw section number) to detect first/last section.
+    // SECTION_ORDER = [1,5,2,3,4,10,9,6,7,8]: last section number is 8, but 8 < TOTAL_SECTIONS(10)
+    // so comparing section >= TOTAL_SECTIONS was always false — localStorage was never cleared!
+    const orderIdx = SECTION_ORDER.indexOf(section as SectionNumber);
+    const isFirstSection = orderIdx === 0;
+    const isLastSection = orderIdx === SECTION_ORDER.length - 1;
+
+    if (isLastSection) {
+      // Completed — clear progress so "Học lại" always starts from section 1
       localStorage.removeItem(`lesson-progress-${unit.unitId}`);
+    } else if (!isFirstSection && orderIdx > 0) {
+      localStorage.setItem(`lesson-progress-${unit.unitId}`, JSON.stringify({ section }));
     }
   }, [section, unit.unitId]);
 

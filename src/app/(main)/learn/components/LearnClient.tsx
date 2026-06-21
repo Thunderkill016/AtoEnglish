@@ -205,7 +205,13 @@ export default function LearnClient({
                   <div className={`pt-2 flex ${isEven ? "sm:justify-end" : ""}`}>
                     {isCompleted ? (
                       <div className={`flex flex-wrap gap-2 ${isEven ? "sm:justify-end" : ""}`}>
-                        <Link href={unit.route}>
+                        <Link
+                          href={unit.route}
+                          onClick={() => {
+                            // Clear saved progress so UnitTemplate resets to section 1
+                            localStorage.removeItem(`lesson-progress-${unit.id}`);
+                          }}
+                        >
                           <Button
                             variant="secondary"
                             size="sm"
