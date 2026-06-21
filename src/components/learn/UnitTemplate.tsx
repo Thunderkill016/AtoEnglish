@@ -230,6 +230,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
   const [translateSubmitted, setTranslateSubmitted] = useState(false);
 
   // Section 6 — Shadowing
+  const [shadowDialogueIdx, setShadowDialogueIdx] = useState(0);
   const [shadowLineIdx, setShadowLineIdx] = useState(0);
   const [shadowSpeed, setShadowSpeed] = useState(1.0);
   const [shadowScores, setShadowScores] = useState<Record<number, number>>({});
@@ -410,7 +411,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
   // ─── Shadowing handlers ───────────────────────────────────────────────────
   const handleShadowRecord = () => {
     if (DIALOGUES.length === 0) return;
-    const targetLine = DIALOGUES[0].lines[shadowLineIdx];
+    const targetLine = DIALOGUES[shadowDialogueIdx].lines[shadowLineIdx];
     setIsRecording(true);
     startRecognition((text) => {
       const score = calcSpeechScore(targetLine.text, text);
@@ -424,7 +425,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
 
   const handleShadowNext = () => {
     if (DIALOGUES.length === 0) return;
-    const lines = DIALOGUES[0].lines;
+    const lines = DIALOGUES[shadowDialogueIdx].lines;
     if (shadowLineIdx < lines.length - 1) {
       setShadowLineIdx(p => p + 1);
     } else {
@@ -1523,29 +1524,54 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
 
               {DIALOGUES.length > 0 && !shadowDone ? (
                 <div className="bg-white/5 border border-zinc-800/60 rounded-2xl p-4 sm:p-6">
+                  {/* Dialogue selector tabs — only shown when unit has multiple dialogues */}
+                  {DIALOGUES.length > 1 && (
+                    <div className="flex gap-2 mb-4 overflow-x-auto pb-1">
+                      {DIALOGUES.map((dlg, idx) => (
+                        <button
+                          key={idx}
+                          onClick={() => {
+                            if (idx === shadowDialogueIdx) return;
+                            setShadowDialogueIdx(idx);
+                            setShadowLineIdx(0);
+                            setShadowScores({});
+                            setShadowTranscripts({});
+                          }}
+                          className={`shrink-0 px-3 py-1.5 rounded-xl text-xs font-bold border transition-all duration-200 ${
+                            idx === shadowDialogueIdx
+                              ? "bg-emerald-600/20 border-emerald-500/50 text-emerald-300"
+                              : "bg-zinc-800 border-zinc-700 text-zinc-400 hover:border-teal-600/50 hover:text-zinc-200"
+                          }`}
+                        >
+                          Hội thoại {idx + 1}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+
                   <div className="flex justify-between text-xs text-zinc-500 mb-2 font-bold">
                     <span>Tiến độ dòng hội thoại</span>
-                    <span>{shadowLineIdx + 1}/{DIALOGUES[0].lines.length}</span>
+                    <span>{shadowLineIdx + 1}/{DIALOGUES[shadowDialogueIdx].lines.length}</span>
                   </div>
                   <div className="w-full h-1.5 bg-zinc-800 rounded-full overflow-hidden mb-6">
                     <div
                       className="h-full bg-emerald-500 rounded-full transition-all duration-300"
-                      style={{ width: `${((shadowLineIdx) / DIALOGUES[0].lines.length) * 100}%` }}
+                      style={{ width: `${((shadowLineIdx) / DIALOGUES[shadowDialogueIdx].lines.length) * 100}%` }}
                     />
                   </div>
 
                   <div className="bg-zinc-900/60 border border-zinc-850 rounded-xl p-5 mb-6 text-center relative overflow-hidden">
                     <span className="absolute top-3 left-3 text-[10px] font-bold text-zinc-600 bg-zinc-800 px-2 py-0.5 rounded uppercase">
-                      {DIALOGUES[0].lines[shadowLineIdx].speaker}
+                      {DIALOGUES[shadowDialogueIdx].lines[shadowLineIdx].speaker}
                     </span>
                     <p className="text-zinc-500 text-[10px] mb-2 uppercase tracking-widest font-black">Hãy nghe rồi nói lại</p>
-                    <p className="text-white text-base sm:text-xl font-bold mb-1 leading-snug">{DIALOGUES[0].lines[shadowLineIdx].text}</p>
-                    <p className="text-zinc-400 text-sm">{DIALOGUES[0].lines[shadowLineIdx].translation}</p>
+                    <p className="text-white text-base sm:text-xl font-bold mb-1 leading-snug">{DIALOGUES[shadowDialogueIdx].lines[shadowLineIdx].text}</p>
+                    <p className="text-zinc-400 text-sm">{DIALOGUES[shadowDialogueIdx].lines[shadowLineIdx].translation}</p>
                   </div>
 
                   <div className="flex items-center justify-center gap-4 mb-6">
                     <button
-                      onClick={() => playTTS(DIALOGUES[0].lines[shadowLineIdx].text, shadowSpeed)}
+                      onClick={() => playTTS(DIALOGUES[shadowDialogueIdx].lines[shadowLineIdx].text, shadowSpeed)}
                       aria-label="Nghe mẫu"
                       className="w-14 h-14 rounded-full bg-zinc-800 hover:bg-zinc-700 text-white flex items-center justify-center transition-colors"
                     >
@@ -1584,7 +1610,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                       onClick={handleShadowNext}
                       className="w-full bg-zinc-800 hover:bg-zinc-700 text-white font-bold rounded-xl py-3 flex items-center justify-center gap-2 transition-colors border border-zinc-750"
                     >
-                      {shadowLineIdx < DIALOGUES[0].lines.length - 1 ? "Dòng tiếp theo" : "Hoàn thành phần Shadowing"}
+                      {shadowLineIdx < DIALOGUES[shadowDialogueIdx].lines.length - 1 ? "Dòng tiếp theo" : "Hoàn thành phần Shadowing"}
                       <ChevronRight size={16} />
                     </button>
                   )}
