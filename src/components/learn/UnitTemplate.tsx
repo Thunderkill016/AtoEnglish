@@ -879,6 +879,12 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                   />
                 </div>
                 <span className="text-sm font-bold text-emerald-400">{seenCards.size}/{VOCAB_LIMIT} từ</span>
+                <button
+                  onClick={() => setSeenCards(new Set(VOCAB_DISPLAY.map((_, i) => i)))}
+                  className="text-xs text-zinc-500 hover:text-zinc-300 font-bold px-2 py-1 rounded-lg transition-colors border border-zinc-800/60 hover:border-zinc-700 ml-2"
+                >
+                  Tôi biết hết →
+                </button>
               </div>
 
               <div className="grid grid-cols-2 gap-3 mb-8">
@@ -907,7 +913,16 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                           <p className="text-white font-bold text-base">{v.word}</p>
                           <p className="text-zinc-500 text-xs">{v.phonetic}</p>
                           <div className="flex justify-between items-center">
-                            <p className="text-[10px] text-zinc-600">Nhấn để xem nghĩa</p>
+                            <button
+                              onClick={e => {
+                                e.stopPropagation();
+                                setSeenCards(p => { const n = new Set(p); n.add(i); return n; });
+                              }}
+                              aria-label="Đã biết từ này"
+                              className={`text-[10px] font-bold px-2 py-0.5 rounded-lg transition-colors ${seenCards.has(i) && !flippedCards.has(i) ? "bg-emerald-600/20 text-emerald-400" : "text-zinc-600 hover:text-zinc-400"}`}
+                            >
+                              {seenCards.has(i) && !flippedCards.has(i) ? "✓ Đã biết" : "Đã biết?"}
+                            </button>
                             <button
                               onClick={e => { e.stopPropagation(); playTTS(v.word); }}
                               aria-label={`Nghe: ${v.word}`}

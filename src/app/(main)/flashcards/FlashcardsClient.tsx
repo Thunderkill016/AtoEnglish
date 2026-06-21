@@ -50,6 +50,8 @@ export default function FlashcardsPage() {
   const router = useRouter();
   const [cramMode, setCramMode] = useState(false);
   const [reverseMode, setReverseMode] = useState(false);
+  // Track "Again" count per word to detect leeches (≥3 Agains in session)
+  const [againCounts, setAgainCounts] = useState<Record<string, number>>({});
   const [topics, setTopics] = useState<string[]>([]);
   const [selectedTopic, setSelectedTopic] = useState<string>("all");
 
@@ -127,6 +129,9 @@ export default function FlashcardsPage() {
       const res = await reviewCard(currentCard.id, scoreLabel);
       if (res.success) {
         setResponseLog((prev) => [...prev, { word: currentCard.word, score: scoreLabel }]);
+        if (scoreLabel === "Again") {
+          setAgainCounts(prev => ({ ...prev, [currentCard.word]: (prev[currentCard.word] ?? 0) + 1 }));
+        }
         toast.success(res.message);
         
         if (currentIndex < cards.length - 1) {
@@ -172,6 +177,7 @@ export default function FlashcardsPage() {
     setIsFlipped(false);
     setShowFinished(false);
     setResponseLog([]);
+    setAgainCounts({});
     x.set(0);
     fetchCards();
   };
@@ -628,7 +634,12 @@ export default function FlashcardsPage() {
             <div className="divide-y divide-foreground/[0.04]">
               {responseLog.map((log, idx) => (
                 <div key={idx} className="flex justify-between py-2.5 first:pt-0 last:pb-0 font-semibold">
-                  <span className="text-foreground">{log.word}</span>
+                  <span className="text-foreground flex items-center gap-1.5">
+                    {log.word}
+                    {(againCounts[log.word] ?? 0) >= 3 && (
+                      <span className="text-[9px] font-black bg-red-500/15 text-red-500 border border-red-500/20 px-1.5 py-0.5 rounded-md">⚠️ Từ khó</span>
+                    )}
+                  </span>
                   <span className={`font-black ${
                     log.score === "Easy" ? "text-emerald-500" : log.score === "Good" ? "text-blue-500" : log.score === "Hard" ? "text-orange-500" : "text-red-500"
                   }`}>{log.score}</span>
@@ -636,6 +647,21 @@ export default function FlashcardsPage() {
               ))}
             </div>
           </div>
+
+          {/* Leech summary — words rated Again ≥ 3 times */}
+          {Object.entries(againCounts).filter(([, count]) => count >= 3).length > 0 && (
+            <div className="rounded-2xl border border-red-500/20 bg-red-500/5 p-4 space-y-2 text-left">
+              <p className="text-xs font-black text-red-500 uppercase tracking-widest">⚠️ Từ cần chú ý đặc biệt</p>
+              <p className="text-[11px] text-muted-foreground">Bạn đã bấm &ldquo;Again&rdquo; 3+ lần cho những từ sau. Hãy dành thêm thời gian luyện tập chúng:</p>
+              <div className="flex flex-wrap gap-2 mt-2">
+                {Object.entries(againCounts).filter(([, count]) => count >= 3).map(([word, count]) => (
+                  <span key={word} className="text-xs font-bold px-2.5 py-1 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400">
+                    {word} <span className="opacity-60">({count}×)</span>
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
 
           <div className="flex flex-col sm:flex-row gap-3 justify-center pt-2 w-full">
             <Button
