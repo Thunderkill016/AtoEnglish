@@ -1882,7 +1882,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
               </div>
 
               {DIALOGUES.length > 0 && !shadowDone ? (
-                <div className="bg-white/5 border border-zinc-800/60 rounded-2xl p-4 sm:p-6">
+                <div className="bg-gradient-to-b from-zinc-900/80 to-zinc-950/80 border border-zinc-700/50 rounded-2xl p-4 sm:p-6 shadow-lg">
                   {/* Dialogue selector tabs — only shown when unit has multiple dialogues */}
                   {DIALOGUES.length > 1 && (
                     <div className="flex gap-2 mb-4 overflow-x-auto pb-1">
@@ -1912,29 +1912,30 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                     <span>Tiến độ dòng hội thoại</span>
                     <span>{shadowLineIdx + 1}/{DIALOGUES[shadowDialogueIdx].lines.length}</span>
                   </div>
-                  <div className="w-full h-1.5 bg-zinc-800 rounded-full overflow-hidden mb-6">
+                  <div className="w-full h-2 bg-zinc-800/80 rounded-full overflow-hidden mb-6">
                     <div
-                      className="h-full bg-emerald-500 rounded-full transition-all duration-300"
+                      className="h-full bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full transition-all duration-500"
                       style={{ width: `${((shadowLineIdx) / DIALOGUES[shadowDialogueIdx].lines.length) * 100}%` }}
                     />
                   </div>
 
-                  <div className="bg-zinc-900/60 border border-zinc-850 rounded-xl p-5 mb-6 text-center relative overflow-hidden">
-                    <span className="absolute top-3 left-3 text-[10px] font-bold text-zinc-600 bg-zinc-800 px-2 py-0.5 rounded uppercase">
+                  <div className="bg-gradient-to-b from-zinc-800/80 to-zinc-900/90 border border-zinc-700/50 rounded-2xl p-5 mb-6 text-center relative overflow-hidden">
+                    <div className="absolute inset-0 bg-gradient-to-br from-violet-500/3 to-transparent pointer-events-none" />
+                    <span className="absolute top-3 left-3 text-[10px] font-bold text-violet-400 bg-violet-950/60 border border-violet-800/40 px-2 py-0.5 rounded-full uppercase tracking-wide">
                       {DIALOGUES[shadowDialogueIdx].lines[shadowLineIdx].speaker}
                     </span>
-                    <p className="text-zinc-500 text-[10px] mb-2 uppercase tracking-widest font-black">Hãy nghe rồi nói lại</p>
-                    <p className="text-white text-base sm:text-xl font-bold mb-1 leading-snug">{DIALOGUES[shadowDialogueIdx].lines[shadowLineIdx].text}</p>
-                    <p className="text-zinc-400 text-sm">{DIALOGUES[shadowDialogueIdx].lines[shadowLineIdx].translation}</p>
+                    <p className="text-zinc-500 text-[10px] mb-3 uppercase tracking-widest font-black">Hãy nghe rồi nói lại</p>
+                    <p className="text-white text-base sm:text-xl font-bold mb-2 leading-snug">{DIALOGUES[shadowDialogueIdx].lines[shadowLineIdx].text}</p>
+                    <p className="text-zinc-400 text-sm italic">{DIALOGUES[shadowDialogueIdx].lines[shadowLineIdx].translation}</p>
                   </div>
 
                   <div className="flex items-center justify-center gap-4 mb-6">
                     <button
                       onClick={() => playTTS(DIALOGUES[shadowDialogueIdx].lines[shadowLineIdx].text, shadowSpeed)}
                       aria-label="Nghe mẫu"
-                      className="w-14 h-14 rounded-full bg-zinc-800 hover:bg-zinc-700 text-white flex items-center justify-center transition-colors"
+                      className="w-14 h-14 rounded-full bg-zinc-800 hover:bg-zinc-700 hover:scale-105 text-zinc-200 flex items-center justify-center transition-all duration-200 border border-zinc-700/60 shadow-md active:scale-95"
                     >
-                      <Volume2 size={24} />
+                      <Volume2 size={22} />
                     </button>
 
                     <button
