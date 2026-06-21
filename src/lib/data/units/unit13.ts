@@ -114,6 +114,39 @@ export const unit13: UnitData = {
     { id: "pq4", type: "multiple-choice", question: "Câu phủ định đúng: 'I ___ TV last night.'", options: ["didn't watched", "didn't watch", "not watched", "don't watch"], answer: "didn't watch" },
     { id: "pq5", type: "cloze", question: "Điền: 'She ___ (meet) her boss two days ago.'", answer: "met" },
   ],
+
+  matchingExercise: {
+    title: "Nối động từ quá khứ với nghĩa đúng",
+    pairs: [
+      { left: "went", right: "đã đi" },
+      { left: "visited", right: "đã thăm" },
+      { left: "traveled", right: "đã du lịch" },
+      { left: "stayed", right: "đã ở lại" },
+      { left: "enjoyed", right: "đã thích" },
+    ],
+  },
+
+  scrambleExercises: [
+    {
+      id: "s13-1",
+      prompt_vn: "Tôi đã đi biển cuối tuần trước.",
+      words: ["I", "went", "to", "the", "beach", "last", "weekend", "."],
+      answer: "I went to the beach last weekend .",
+    },
+    {
+      id: "s13-2",
+      prompt_vn: "Chúng tôi đã ở lại khách sạn hai ngày.",
+      words: ["We", "stayed", "at", "a", "hotel", "for", "two", "days", "."],
+      answer: "We stayed at a hotel for two days .",
+    },
+    {
+      id: "s13-3",
+      prompt_vn: "Cô ấy đã gặp bạn cũ hôm qua.",
+      words: ["She", "met", "an", "old", "friend", "yesterday", "."],
+      answer: "She met an old friend yesterday .",
+    },
+  ],
+
   quiz: [
     { id: "fq1", type: "multiple-choice", question: "Dịch: 'Tôi đã ghé thăm cha mẹ tôi tuần trước.'", options: ["I visit my parents last week.", "I visited my parents last week.", "I was visited my parents last week.", "I visits my parents last week."], answer: "I visited my parents last week." },
     { id: "fq2", type: "cloze", question: "Điền: 'She ___ (go) to Singapore three years ago.'", answer: "went" },

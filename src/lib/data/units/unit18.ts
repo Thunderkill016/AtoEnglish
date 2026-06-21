@@ -114,6 +114,39 @@ export const unit18: UnitData = {
     { id: "pq4", type: "multiple-choice", question: "Câu Present Perfect đúng: 'I ___ in sales for 7 years.'", options: ["work", "worked", "have worked", "am working"], answer: "have worked" },
     { id: "pq5", type: "cloze", question: "Điền: 'Revenue ___ (increase) by 20% compared to last year.'", answer: "increased" },
   ],
+
+  matchingExercise: {
+    title: "Nối từ với nghĩa đúng",
+    pairs: [
+      { left: "target", right: "mục tiêu" },
+      { left: "challenge", right: "thách thức" },
+      { left: "successful", right: "thành công" },
+      { left: "strategy", right: "chiến lược" },
+      { left: "opportunity", right: "cơ hội" },
+    ],
+  },
+
+  scrambleExercises: [
+    {
+      id: "s18-1",
+      prompt_vn: "Chúng tôi đã đạt 120% chỉ tiêu doanh số.",
+      words: ["We", "achieved", "120%", "of", "our", "sales", "target", "."],
+      answer: "We achieved 120% of our sales target .",
+    },
+    {
+      id: "s18-2",
+      prompt_vn: "Doanh thu tăng 15% so với năm ngoái.",
+      words: ["Revenue", "increased", "by", "15%", "compared", "to", "last", "year", "."],
+      answer: "Revenue increased by 15% compared to last year .",
+    },
+    {
+      id: "s18-3",
+      prompt_vn: "Tôi đang ngày càng trôi chảy hơn tiếng Anh.",
+      words: ["I", "am", "becoming", "more", "fluent", "in", "English", "."],
+      answer: "I am becoming more fluent in English .",
+    },
+  ],
+
   quiz: [
     { id: "fq1", type: "multiple-choice", question: "Dịch: 'Năm ngoái doanh thu tăng 20% so với năm trước.'", options: ["Last year revenue increases 20% compared previous year.", "Last year revenue increased by 20% compared to the previous year.", "Last year revenue has increased 20% compare to previous year.", "Revenue last year increased by 20% compare previous year."], answer: "Last year revenue increased by 20% compared to the previous year." },
     { id: "fq2", type: "cloze", question: "Điền: 'I ___ (work) in this company since 2021.'", answer: "have worked" },

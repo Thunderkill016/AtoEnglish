@@ -114,6 +114,39 @@ export const unit15: UnitData = {
     { id: "pq4", type: "multiple-choice", question: "Câu so sánh đúng: 'Toyota is ___ than BMW.'", options: ["more cheap", "cheapest", "cheaper", "cheap"], answer: "cheaper" },
     { id: "pq5", type: "cloze", question: "Điền: 'Samsung is ___ (affordable) than Apple.'", answer: "more affordable" },
   ],
+
+  matchingExercise: {
+    title: "Nối từ với nghĩa đúng",
+    pairs: [
+      { left: "cheap", right: "rẻ" },
+      { left: "discount", right: "giảm giá" },
+      { left: "refund", right: "hoàn tiền" },
+      { left: "warranty", right: "bảo hành" },
+      { left: "afford", right: "có khả năng chi trả" },
+    ],
+  },
+
+  scrambleExercises: [
+    {
+      id: "s15-1",
+      prompt_vn: "Tôi không đủ tiền mua laptop này.",
+      words: ["I", "can't", "afford", "this", "laptop", "."],
+      answer: "I can't afford this laptop .",
+    },
+    {
+      id: "s15-2",
+      prompt_vn: "Cho tôi xin hóa đơn được không?",
+      words: ["Can", "I", "have", "a", "receipt", "please", "?"],
+      answer: "Can I have a receipt please ?",
+    },
+    {
+      id: "s15-3",
+      prompt_vn: "Sản phẩm này tốt hơn sản phẩm kia.",
+      words: ["This", "product", "is", "better", "than", "that", "one", "."],
+      answer: "This product is better than that one .",
+    },
+  ],
+
   quiz: [
     { id: "fq1", type: "multiple-choice", question: "Dịch: 'Chiếc laptop này đắt hơn chiếc kia nhưng chất lượng tốt hơn.'", options: ["This laptop is expensive than that but quality good.", "This laptop is more expensive than that but the quality is better.", "This laptop is expensiver than that but the quality is more good.", "This laptop more expensive than that one."], answer: "This laptop is more expensive than that but the quality is better." },
     { id: "fq2", type: "cloze", question: "Điền: 'This is the ___ (cheap) option in the store.'", answer: "cheapest" },

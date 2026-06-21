@@ -113,6 +113,39 @@ export const unit14: UnitData = {
     { id: "pq4", type: "multiple-choice", question: "Câu dự đoán đúng: 'I think the project ___.'", options: ["is successful", "going to be successful", "will be successful", "is going to successful"], answer: "will be successful" },
     { id: "pq5", type: "cloze", question: "Điền: 'We ___ (launch) the app in two months.'", answer: "are going to launch" },
   ],
+
+  matchingExercise: {
+    title: "Nối từ với nghĩa đúng",
+    pairs: [
+      { left: "plan", right: "kế hoạch" },
+      { left: "deadline", right: "hạn chót" },
+      { left: "launch", right: "ra mắt" },
+      { left: "hope", right: "hy vọng" },
+      { left: "schedule", right: "lịch trình" },
+    ],
+  },
+
+  scrambleExercises: [
+    {
+      id: "s14-1",
+      prompt_vn: "Tôi sẽ chuẩn bị bài thuyết trình ngày mai.",
+      words: ["I", "am", "going", "to", "prepare", "a", "presentation", "tomorrow", "."],
+      answer: "I am going to prepare a presentation tomorrow .",
+    },
+    {
+      id: "s14-2",
+      prompt_vn: "Chúng tôi sẽ ra mắt sản phẩm mới tháng tới.",
+      words: ["We", "will", "launch", "the", "new", "product", "next", "month", "."],
+      answer: "We will launch the new product next month .",
+    },
+    {
+      id: "s14-3",
+      prompt_vn: "Hạn chót là thứ Sáu tới.",
+      words: ["The", "deadline", "is", "next", "Friday", "."],
+      answer: "The deadline is next Friday .",
+    },
+  ],
+
   quiz: [
     { id: "fq1", type: "multiple-choice", question: "Dịch: 'Tháng tới chúng tôi sẽ ra mắt sản phẩm mới.'", options: ["Next month we launch a new product.", "Next month we are going to launch a new product.", "Next month we will launching a new product.", "Next month we launched a new product."], answer: "Next month we are going to launch a new product." },
     { id: "fq2", type: "cloze", question: "Điền: 'I ___ (probably / rain) this afternoon.'", answer: "will probably rain" },

@@ -114,6 +114,39 @@ export const unit16: UnitData = {
     { id: "pq4", type: "multiple-choice", question: "Câu hỏi đặt phòng đúng nhất:", options: ["Is a room available?", "Have room available?", "Room available is?", "Do you available room?"], answer: "Is a room available?" },
     { id: "pq5", type: "cloze", question: "Điền: 'Turn ___ at the traffic lights, then go straight.'", answer: "right" },
   ],
+
+  matchingExercise: {
+    title: "Nối từ với nghĩa đúng",
+    pairs: [
+      { left: "straight", right: "thẳng" },
+      { left: "corner", right: "góc đường" },
+      { left: "opposite", right: "đối diện" },
+      { left: "available", right: "còn trống" },
+      { left: "landmark", right: "địa danh" },
+    ],
+  },
+
+  scrambleExercises: [
+    {
+      id: "s16-1",
+      prompt_vn: "Đi thẳng hai dãy nhà rồi rẽ trái.",
+      words: ["Go", "straight", "for", "two", "blocks", "then", "turn", "left", "."],
+      answer: "Go straight for two blocks then turn left .",
+    },
+    {
+      id: "s16-2",
+      prompt_vn: "Ngân hàng ở đối diện bưu điện.",
+      words: ["The", "bank", "is", "opposite", "the", "post", "office", "."],
+      answer: "The bank is opposite the post office .",
+    },
+    {
+      id: "s16-3",
+      prompt_vn: "Tôi muốn đặt một phòng đơn.",
+      words: ["I", "would", "like", "to", "book", "a", "single", "room", "."],
+      answer: "I would like to book a single room .",
+    },
+  ],
+
   quiz: [
     { id: "fq1", type: "multiple-choice", question: "Dịch: 'Văn phòng chúng tôi ở góc đường, đối diện với ngân hàng.'", options: ["Our office is at the corner, opposite bank.", "Our office is on the corner, opposite the bank.", "Our office is in the corner, opposite a bank.", "Our office at corner opposite the bank."], answer: "Our office is on the corner, opposite the bank." },
     { id: "fq2", type: "cloze", question: "Điền: 'The hotel is ___ the train station — just across the road.'", answer: "opposite" },

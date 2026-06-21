@@ -113,6 +113,39 @@ export const unit17: UnitData = {
     { id: "pq4", type: "multiple-choice", question: "Câu nào ĐÚNG? Bạn vừa gửi email xong.", options: ["I sent the email just.", "I just sent the email.", "I've just sent the email.", "I have just send the email."], answer: "I've just sent the email." },
     { id: "pq5", type: "cloze", question: "Điền: 'I have ___ been to Europe before. (chưa bao giờ)'", answer: "never" },
   ],
+
+  matchingExercise: {
+    title: "Nối từ với nghĩa đúng",
+    pairs: [
+      { left: "ever", right: "từng / bao giờ" },
+      { left: "never", right: "chưa bao giờ" },
+      { left: "already", right: "đã (rồi)" },
+      { left: "yet", right: "chưa / rồi chưa" },
+      { left: "just", right: "vừa mới" },
+    ],
+  },
+
+  scrambleExercises: [
+    {
+      id: "s17-1",
+      prompt_vn: "Bạn đã từng đến Nhật Bản chưa?",
+      words: ["Have", "you", "ever", "been", "to", "Japan", "?"],
+      answer: "Have you ever been to Japan ?",
+    },
+    {
+      id: "s17-2",
+      prompt_vn: "Tôi vừa mới gửi báo cáo xong.",
+      words: ["I", "have", "just", "sent", "the", "report", "."],
+      answer: "I have just sent the report .",
+    },
+    {
+      id: "s17-3",
+      prompt_vn: "Cô ấy đã làm việc ở đây từ năm 2020.",
+      words: ["She", "has", "worked", "here", "since", "2020", "."],
+      answer: "She has worked here since 2020 .",
+    },
+  ],
+
   quiz: [
     { id: "fq1", type: "multiple-choice", question: "Dịch: 'Tôi đã làm việc với khách hàng nước ngoài được ba năm.'", options: ["I worked with foreign clients for three years.", "I've worked with foreign clients for three years.", "I've worked with foreign clients since three years.", "I work with foreign clients for three years."], answer: "I've worked with foreign clients for three years." },
     { id: "fq2", type: "cloze", question: "Điền: 'Have you ___ tried Vietnamese pho? (từng)'", answer: "ever" },
