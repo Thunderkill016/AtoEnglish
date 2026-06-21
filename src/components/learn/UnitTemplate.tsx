@@ -36,11 +36,11 @@ function getSpeechRecognition(): typeof SpeechRecognition | null {
 }
 
 // ─── FluencyDrillPanel — Nation's Strand 4 (fast retrieval with KNOWN items) ──
-function FluencyDrillPanel({ items, onDone }: { items: Array<{en: string; vn: string}>; onDone: () => void }) {
+function FluencyDrillPanel({ items, timeLimit = 60, onDone }: { items: Array<{en: string; vn: string}>; timeLimit?: number; onDone: () => void }) {
   const [idx, setIdx] = useState(0);
   const [flipped, setFlipped] = useState(false);
   const [score, setScore] = useState(0);
-  const [timeLeft, setTimeLeft] = useState(60);
+  const [timeLeft, setTimeLeft] = useState(timeLimit);
   const [done, setDone] = useState(false);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
@@ -84,7 +84,7 @@ function FluencyDrillPanel({ items, onDone }: { items: Array<{en: string; vn: st
           {timeLeft}s
         </div>
         <div className="flex-1 h-2 bg-zinc-800 rounded-full overflow-hidden">
-          <div className="h-full bg-amber-500 rounded-full transition-all duration-1000" style={{ width: `${(timeLeft / 60) * 100}%` }} />
+          <div className="h-full bg-amber-500 rounded-full transition-all duration-1000" style={{ width: `${(timeLeft / timeLimit) * 100}%` }} />
         </div>
         <span className="text-xs text-zinc-500 font-bold">{idx + 1}/{items.length}</span>
       </div>
@@ -252,6 +252,7 @@ export interface PronunciationFocus {
 /** Fluency Drill — Nation's Strand 4: fast retrieval with KNOWN material only */
 export interface FluencyDrill {
   title?: string;          // e.g. "Phản xạ 60 giây"
+  timeLimit?: number;      // seconds, default 60
   items: Array<{
     en: string;            // English word/phrase
     vn: string;            // Vietnamese meaning
@@ -2413,7 +2414,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                     </button>
                   </div>
                 ) : (
-                  <FluencyDrillPanel items={drillItems} onDone={goNext} />
+                  <FluencyDrillPanel items={drillItems} timeLimit={unit.fluencyDrill?.timeLimit ?? 60} onDone={goNext} />
                 )}
 
                 {!fluencyActive && (
