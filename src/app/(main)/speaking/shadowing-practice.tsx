@@ -175,6 +175,7 @@ export function ShadowingPractice() {
   // States cho Speech Recognition & Chấm điểm
   const [recognizedText, setRecognizedText] = useState<string>("");
   const [accuracyScore, setAccuracyScore] = useState<number | null>(null);
+  const [missingCodas, setMissingCodas] = useState<string[]>([]);
 
   // Refs
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
@@ -218,6 +219,7 @@ export function ShadowingPractice() {
     setRecognizedText("");
      
     setAccuracyScore(null);
+    setMissingCodas([]);
     setIsPlayingRecorded(false);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedId]);
@@ -303,6 +305,8 @@ export function ShadowingPractice() {
           if (fullTranscript.trim()) {
             const score = calculateAccuracy(activeItem.transcript, fullTranscript);
             setAccuracyScore(score);
+            const omissions = detectMissingCodas(activeItem.transcript, fullTranscript);
+            setMissingCodas(omissions);
             
             if (score >= 80) {
               confetti({
@@ -310,11 +314,23 @@ export function ShadowingPractice() {
                 spread: 60,
                 origin: { y: 0.7 }
               });
-              toast.success(`Xuất sắc! Độ chính xác đạt ${score}%`);
+              if (omissions.length > 0) {
+                toast.warning(`Tuyệt vời! ${score}%. Lưu ý: ${omissions[0]}`);
+              } else {
+                toast.success(`Xuất sắc! Độ chính xác đạt ${score}%`);
+              }
             } else if (score >= 50) {
-              toast.info(`Khá tốt! Độ chính xác đạt ${score}%`);
+              if (omissions.length > 0) {
+                toast.warning(`Khá tốt! ${score}%. Cảnh báo: ${omissions[0]}`);
+              } else {
+                toast.info(`Khá tốt! Độ chính xác đạt ${score}%`);
+              }
             } else {
-              toast.warning(`Hãy cố gắng nói to, rõ ràng hơn. Độ chính xác: ${score}%`);
+              if (omissions.length > 0) {
+                toast.error(`Chưa đạt (${score}%). Lỗi: ${omissions.join(", ")}`);
+              } else {
+                toast.warning(`Hãy cố gắng nói to, rõ ràng hơn. Độ chính xác: ${score}%`);
+              }
             }
 
             // Ghi nhận lịch sử luyện tập vào database
@@ -331,6 +347,7 @@ export function ShadowingPractice() {
             }
           } else {
             setAccuracyScore(0);
+            setMissingCodas([]);
             toast.error("Không nhận diện được giọng nói của bạn. Hãy nói to và rõ hơn.");
           }
         };
@@ -423,6 +440,41 @@ export function ShadowingPractice() {
     });
 
     return Math.round((matches / origWords.length) * 100);
+  };
+
+  // Helper: detect specific missing English final consonants (codas) commonly deleted by Vietnamese learners
+  const detectMissingCodas = (expected: string, actual: string): string[] => {
+    const missingWarnings: string[] = [];
+    const cleanExpected = expected.toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "").trim();
+    const cleanActual = actual.toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "").trim();
+
+    const expectedWords = cleanExpected.split(/\s+/);
+    const actualWords = cleanActual.split(/\s+/);
+
+    expectedWords.forEach((word) => {
+      // Check if the expected word ends in a target coda sound
+      if (word.endsWith("k") || word.endsWith("t") || word.endsWith("s") || word.endsWith("d") || word.endsWith("ce") || word.endsWith("se")) {
+        // Find matching word base in actual spoken phrase
+        const baseWordWithoutCoda = word.replace(/(k|t|s|d|ce|se)$/, "");
+        
+        // If user pronounced the base but omitted the ending
+        const foundOmission = actualWords.some(
+          (aWord) => aWord === baseWordWithoutCoda && aWord !== word
+        );
+
+        if (foundOmission) {
+          let soundExplanation = "";
+          if (word.endsWith("k")) soundExplanation = "âm /k/ (ví dụ: 'like' -> 'lai-kờ')";
+          else if (word.endsWith("t")) soundExplanation = "âm /t/ (ví dụ: 'cat' -> 'ca-tờ')";
+          else if (word.endsWith("s") || word.endsWith("ce") || word.endsWith("se")) soundExplanation = "âm /s/ (ví dụ: 'face' -> 'fây-sờ')";
+          else if (word.endsWith("d")) soundExplanation = "âm /d/ (ví dụ: 'red' -> 're-dờ')";
+
+          missingWarnings.push(`Từ "${word}" phát âm thiếu ${soundExplanation}`);
+        }
+      }
+    });
+
+    return missingWarnings;
   };
 
   // Helper render transcript highlight chi tiết từ đúng/sai sau khi chấm điểm
@@ -606,11 +658,15 @@ export function ShadowingPractice() {
           <Button
             onClick={handlePlayNative}
             variant={isPlayingNative ? "secondary" : "outline"}
-            className="w-full sm:w-auto h-10 sm:h-11 px-4 sm:px-5 rounded-2xl sm:rounded-xl font-bold text-xs uppercase tracking-wider gap-2 border-glass active:scale-[0.98] transition-all flex items-center justify-center"
+            className={`w-full sm:w-auto h-10 sm:h-11 px-4 sm:px-5 rounded-2xl sm:rounded-xl font-bold text-xs uppercase tracking-wider gap-2 border-glass active:scale-[0.98] transition-all flex items-center justify-center ${
+              isPlayingNative
+                ? "bg-violet-600 text-white hover:bg-violet-700 hover:text-white"
+                : "bg-glass hover:bg-white/10 text-foreground"
+            }`}
           >
             {isPlayingNative ? (
               <>
-                <Square className="size-4 fill-foreground" />
+                <Square className="size-4 fill-white text-white" />
                 <span>Dừng Audio gốc</span>
               </>
             ) : (
@@ -673,6 +729,19 @@ export function ShadowingPractice() {
                       AI nhận diện: &quot;{recognizedText}&quot;
                     </div>
                   )}
+                  {missingCodas.length > 0 && (
+                    <div className="mt-3 p-4 rounded-2xl border border-amber-500/20 bg-amber-500/5 text-amber-600 dark:text-amber-400 text-xs space-y-1.5 shadow-sm">
+                      <div className="flex items-center gap-1.5 font-bold uppercase tracking-wider">
+                        <AlertTriangle className="size-4 animate-bounce text-amber-500" />
+                        Cảnh báo phát âm (Nhỡ âm đuôi)
+                      </div>
+                      <ul className="list-disc list-inside space-y-1 font-semibold pl-1">
+                        {missingCodas.map((warning, i) => (
+                          <li key={i} className="text-foreground/90 dark:text-zinc-200">{warning}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
                 </div>
 
                 <div className="flex flex-col items-center justify-center shrink-0">
@@ -699,8 +768,8 @@ export function ShadowingPractice() {
                 onClick={isRecording ? stopRecording : startRecording}
                 className={`w-full sm:w-auto h-12 px-8 rounded-2xl font-bold transition-all duration-300 gap-2 flex items-center justify-center ${
                   isRecording
-                    ? "bg-red-500 hover:bg-red-600 text-white animate-pulse shadow-lg"
-                    : "bg-gradient-to-r from-red-500 to-rose-600 hover:from-red-600 hover:to-rose-700 text-white shadow-lg shadow-red-500/20 active:scale-[0.98]"
+                    ? "bg-red-500 hover:bg-red-600 text-white animate-pulse shadow-lg shadow-red-500/20"
+                    : "bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white shadow-lg shadow-emerald-500/20 active:scale-[0.98]"
                 }`}
               >
                 {isRecording ? (
@@ -721,11 +790,15 @@ export function ShadowingPractice() {
                 <Button
                   onClick={handlePlayRecorded}
                   variant={isPlayingRecorded ? "secondary" : "outline"}
-                  className="w-full sm:w-auto h-12 px-6 rounded-2xl font-bold text-xs uppercase tracking-wider gap-2 border-glass active:scale-[0.98] transition-all flex items-center justify-center"
+                  className={`w-full sm:w-auto h-12 px-6 rounded-2xl font-bold text-xs uppercase tracking-wider gap-2 border-glass active:scale-[0.98] transition-all flex items-center justify-center ${
+                    isPlayingRecorded
+                      ? "bg-violet-600 text-white hover:bg-violet-700 hover:text-white"
+                      : "bg-glass hover:bg-white/10 text-foreground"
+                  }`}
                 >
                   {isPlayingRecorded ? (
                     <>
-                      <Square className="size-4 fill-foreground" />
+                      <Square className="size-4 fill-white text-white" />
                       <span>Dừng phát</span>
                     </>
                   ) : (
@@ -742,9 +815,10 @@ export function ShadowingPractice() {
                     setRecordedUrl(null);
                     setAccuracyScore(null);
                     setRecognizedText("");
+                    setMissingCodas([]);
                   }}
                   variant="ghost"
-                  className="w-full sm:w-auto h-12 px-6 rounded-2xl font-bold text-xs uppercase tracking-wider gap-2 hover:bg-foreground/[0.03] active:scale-[0.98] transition-all flex items-center justify-center"
+                  className="w-full sm:w-auto h-12 px-6 rounded-2xl font-bold text-xs uppercase tracking-wider gap-2 hover:bg-foreground/[0.03] hover:text-foreground active:scale-[0.98] transition-all flex items-center justify-center"
                 >
                   <RefreshCw className="size-4" />
                   <span>Thu âm lại</span>

@@ -86,25 +86,25 @@ export default function SpeakingPage() {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all relative overflow-hidden select-none
+              className={`shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all relative overflow-hidden select-none active:scale-[0.98]
                 md:flex-1 md:min-w-0 md:text-left md:p-3
                 ${
                   isActive
-                    ? "bg-primary/10 border border-primary/30 text-primary"
-                    : "bg-glass border border-glass text-muted-foreground hover:text-foreground"
+                    ? "bg-gradient-to-r from-emerald-500/10 to-teal-500/10 border border-emerald-500/20 text-emerald-500 dark:text-emerald-400"
+                    : "bg-glass border border-glass text-muted-foreground hover:text-foreground hover:bg-white/5"
                 }`}
             >
               {isActive && (
                 <motion.div
                   layoutId="activeSpeakingTab"
-                  className="absolute inset-0 bg-primary/10 border border-primary/30 rounded-xl md:block hidden"
+                  className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-teal-500/10 border border-emerald-500/20 rounded-xl md:block hidden"
                   transition={{ type: "spring", stiffness: 130, damping: 19 }}
                 />
               )}
               <span className={`relative z-10 flex size-7 shrink-0 items-center justify-center rounded-lg transition-all duration-300 ${
                 isActive
-                  ? "bg-primary text-primary-foreground"
-                  : "bg-muted text-muted-foreground"
+                  ? "bg-gradient-to-r from-emerald-500 to-teal-600 text-white shadow-md shadow-emerald-500/20"
+                  : "bg-zinc-100 dark:bg-zinc-800 text-muted-foreground"
               }`}>
                 <Icon className="size-4" />
               </span>

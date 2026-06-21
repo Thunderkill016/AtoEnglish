@@ -147,7 +147,7 @@ export function JournalMode() {
   return (
     <div className="space-y-6 w-full">
       {/* Topic Card */}
-      <div className="rounded-3xl border border-zinc-200/60 dark:border-zinc-800/60 bg-white/60 dark:bg-zinc-900/30 backdrop-blur-sm p-4 sm:p-6 space-y-3 sm:space-y-4">
+      <div className="rounded-3xl border border-glass bg-glass p-4 sm:p-6 space-y-3 sm:space-y-4 shadow-sm">
         <div className="flex items-start justify-between gap-4">
           <div className="space-y-1 flex-1">
             <span className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest">
@@ -157,7 +157,7 @@ export function JournalMode() {
           </div>
           <button
             onClick={randomizeTopic}
-            className="shrink-0 flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-xl border border-zinc-200/60 dark:border-zinc-800/60 bg-muted hover:border-primary/30 transition-all"
+            className="shrink-0 flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-xl border border-glass bg-glass hover:bg-white/10 hover:text-foreground text-muted-foreground transition-all duration-300"
           >
             <RotateCcw className="size-3.5" /> Đổi chủ đề
           </button>
@@ -171,7 +171,7 @@ export function JournalMode() {
       </div>
 
       {/* Recording Area */}
-      <div className="rounded-3xl border border-zinc-200/60 dark:border-zinc-800/60 bg-white/60 dark:bg-zinc-900/30 backdrop-blur-sm p-4 sm:p-6 space-y-4 sm:space-y-6">
+      <div className="rounded-3xl border border-glass bg-glass p-4 sm:p-6 space-y-4 sm:space-y-6 shadow-sm">
         {/* Mic button */}
         <div className="flex flex-col items-center gap-4">
           <div className="relative">
@@ -185,12 +185,12 @@ export function JournalMode() {
             <button
               onClick={state === "listening" ? stopListening : startListening}
               disabled={state === "processing"}
-              className={`relative flex size-20 items-center justify-center rounded-full border-2 transition-all duration-300 shadow-xl ${
+              className={`relative flex size-20 items-center justify-center rounded-full transition-all duration-300 shadow-xl ${
                 state === "listening"
-                  ? "bg-red-500 border-red-400 text-white"
+                  ? "bg-gradient-to-r from-red-500 to-rose-600 text-white border-none"
                   : state === "done"
-                  ? "bg-emerald-500 border-emerald-400 text-white"
-                  : "bg-primary border-primary/50 text-primary-foreground hover:scale-105"
+                  ? "bg-gradient-to-r from-emerald-500 to-teal-600 text-white border-none"
+                  : "bg-gradient-to-r from-emerald-500 to-teal-600 text-white border-none hover:scale-105 active:scale-95"
               }`}
             >
               {state === "listening" ? (
@@ -239,14 +239,14 @@ export function JournalMode() {
           >
             <Button
               onClick={handleSave}
-              className="w-full sm:flex-1 h-11 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold text-sm"
+              className="w-full sm:flex-1 h-11 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white rounded-xl font-bold text-sm shadow-md shadow-emerald-500/10 active:scale-[0.98]"
             >
               <Send className="size-4 mr-2" /> Lưu nhật ký
             </Button>
             <Button
               onClick={handleReset}
               variant="outline"
-              className="h-11 px-4 rounded-xl font-bold border-zinc-200/60 dark:border-zinc-800/60"
+              className="h-11 px-4 rounded-xl font-bold border-glass bg-glass hover:bg-white/5 active:scale-[0.98]"
             >
               <RotateCcw className="size-4" />
             </Button>

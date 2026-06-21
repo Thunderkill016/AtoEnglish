@@ -248,6 +248,8 @@ export const ROLEPLAY_SCENARIOS: Scenario[] = [
 interface ChatMessage {
   sender: "ai" | "user";
   text: string;
+  accuracyScore?: number | null;
+  missingCodas?: string[];
 }
 
 export function AIRoleplay() {
@@ -359,7 +361,7 @@ export function AIRoleplay() {
       recognition.onresult = (event: SpeechRecognitionEventMock) => {
         const text = event.results[0][0].transcript;
         setRecognizedText(text);
-        handleUserAnswer(text);
+        handleUserAnswer(text, true);
       };
 
       recognition.onerror = (event: SpeechRecognitionErrorEventMock) => {
@@ -389,12 +391,102 @@ export function AIRoleplay() {
     }
   };
 
+  // Hàm tính toán độ trùng khớp từ vựng
+  const calculateAccuracy = (original: string, recognized: string) => {
+    const cleanWord = (w: string) => w.toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?]/g, "").trim();
+    const origWords = original.split(/\s+/).map(cleanWord).filter(Boolean);
+    const recWords = recognized.split(/\s+/).map(cleanWord).filter(Boolean);
+
+    if (origWords.length === 0) return 0;
+    
+    let matches = 0;
+    const recSet = new Set(recWords);
+    origWords.forEach(word => {
+      if (recSet.has(word)) {
+        matches++;
+      }
+    });
+
+    return Math.round((matches / origWords.length) * 100);
+  };
+
+  // Helper: detect specific missing English final consonants (codas) commonly deleted by Vietnamese learners
+  const detectMissingCodas = (expected: string, actual: string): string[] => {
+    const missingWarnings: string[] = [];
+    const cleanExpected = expected.toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "").trim();
+    const cleanActual = actual.toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "").trim();
+
+    const expectedWords = cleanExpected.split(/\s+/);
+    const actualWords = cleanActual.split(/\s+/);
+
+    expectedWords.forEach((word) => {
+      // Check if the expected word ends in a target coda sound
+      if (word.endsWith("k") || word.endsWith("t") || word.endsWith("s") || word.endsWith("d") || word.endsWith("ce") || word.endsWith("se")) {
+        // Find matching word base in actual spoken phrase
+        const baseWordWithoutCoda = word.replace(/(k|t|s|d|ce|se)$/, "");
+        
+        // If user pronounced the base but omitted the ending
+        const foundOmission = actualWords.some(
+          (aWord) => aWord === baseWordWithoutCoda && aWord !== word
+        );
+
+        if (foundOmission) {
+          let soundExplanation = "";
+          if (word.endsWith("k")) soundExplanation = "âm /k/ (ví dụ: 'like' -> 'lai-kờ')";
+          else if (word.endsWith("t")) soundExplanation = "âm /t/ (ví dụ: 'cat' -> 'ca-tờ')";
+          else if (word.endsWith("s") || word.endsWith("ce") || word.endsWith("se")) soundExplanation = "âm /s/ (ví dụ: 'face' -> 'fây-sờ')";
+          else if (word.endsWith("d")) soundExplanation = "âm /d/ (ví dụ: 'red' -> 're-dờ')";
+
+          missingWarnings.push(`Từ "${word}" phát âm thiếu ${soundExplanation}`);
+        }
+      }
+    });
+
+    return missingWarnings;
+  };
+
   // Xử lý sau khi người học trả lời xong
-  const handleUserAnswer = (text: string) => {
+  const handleUserAnswer = (text: string, isSpoken: boolean = false) => {
     if (!text.trim()) return;
 
+    let score: number | null = null;
+    let omissions: string[] = [];
+
+    if (isSpoken && currentStep) {
+      score = calculateAccuracy(currentStep.userSuggestion, text);
+      omissions = detectMissingCodas(currentStep.userSuggestion, text);
+      
+      if (score >= 80) {
+        if (omissions.length > 0) {
+          toast.warning(`Tuyệt vời! ${score}%. Lưu ý: ${omissions[0]}`);
+        } else {
+          toast.success(`Tuyệt vời! ${score}%`);
+        }
+      } else if (score >= 50) {
+        if (omissions.length > 0) {
+          toast.warning(`Khá tốt! ${score}%. Cảnh báo: ${omissions[0]}`);
+        } else {
+          toast.info(`Khá tốt! ${score}%`);
+        }
+      } else {
+        if (omissions.length > 0) {
+          toast.error(`Chưa đạt (${score}%). Lỗi: ${omissions.join(", ")}`);
+        } else {
+          toast.warning(`Hãy cố gắng nói to, rõ ràng hơn. Độ chính xác: ${score}%`);
+        }
+      }
+    }
+
     // 1. Thêm tin nhắn của user vào history
-    setChatHistory(prev => [...prev, { sender: "user", text }]);
+    setChatHistory(prev => [
+      ...prev,
+      {
+        sender: "user",
+        text,
+        accuracyScore: score,
+        missingCodas: omissions
+      }
+    ]);
 
     // 2. Kích hoạt AI trả lời ở bước tiếp theo
     setTimeout(async () => {
@@ -443,7 +535,7 @@ export function AIRoleplay() {
   const handleUseSuggestion = () => {
     if (!currentStep) return;
     setRecognizedText(currentStep.userSuggestion);
-    handleUserAnswer(currentStep.userSuggestion);
+    handleUserAnswer(currentStep.userSuggestion, false);
   };
 
   return (
@@ -456,8 +548,8 @@ export function AIRoleplay() {
             onClick={() => setSelectedScenarioId(s.id)}
             className={`shrink-0 snap-start px-4 h-10 rounded-2xl text-xs font-bold transition-all border flex items-center justify-center max-w-[130px] sm:max-w-none ${
               selectedScenarioId === s.id
-                ? "bg-violet-600 text-white border-violet-600 shadow-md"
-                : "bg-glass border-glass text-muted-foreground hover:text-foreground hover:bg-foreground/[0.03]"
+                ? "bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-700 hover:to-indigo-700 text-white border-none shadow-lg shadow-violet-500/10"
+                : "bg-glass border-glass text-muted-foreground hover:text-foreground hover:bg-white/5"
             }`}
           >
             <span className="truncate">{s.title}</span>
@@ -508,7 +600,7 @@ export function AIRoleplay() {
                   {isAi ? "AI" : "ME"}
                 </span>
 
-                <div className="space-y-1">
+                <div className="space-y-1 max-w-[85%]">
                   <div className={`p-3.5 rounded-2xl text-xs sm:text-sm leading-relaxed ${
                     isAi
                       ? "bg-foreground/[0.03] text-foreground rounded-tl-none border border-foreground/[0.04]"
@@ -525,6 +617,25 @@ export function AIRoleplay() {
                       <Volume2 className="size-3" />
                       Nghe phát âm
                     </button>
+                  )}
+
+                  {!isAi && msg.accuracyScore !== null && msg.accuracyScore !== undefined && (
+                    <div className="flex flex-col gap-1 items-end mt-1">
+                      <span className={`inline-flex items-center gap-1 text-[9px] font-bold px-2 py-0.5 rounded-full border ${
+                        msg.accuracyScore >= 80
+                          ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20"
+                          : msg.accuracyScore >= 50
+                          ? "bg-amber-500/10 text-amber-600 dark:text-amber-500 border-amber-500/20"
+                          : "bg-red-500/10 text-red-500 border-red-500/20"
+                      }`}>
+                        Độ chính xác: {msg.accuracyScore}%
+                      </span>
+                      {msg.missingCodas && msg.missingCodas.length > 0 && (
+                        <div className="text-right text-[9px] text-amber-600 dark:text-amber-400 font-semibold bg-amber-500/5 border border-amber-500/15 px-2 py-1 rounded-xl max-w-[200px] leading-relaxed">
+                          ⚠️ Thiếu âm: {msg.missingCodas.map(w => w.replace(/^Từ\s+/, "")).join(", ")}
+                        </div>
+                      )}
+                    </div>
                   )}
                 </div>
               </motion.div>
@@ -596,8 +707,8 @@ export function AIRoleplay() {
                   disabled={isAiSpeaking}
                   className={`flex-1 h-14 sm:h-12 rounded-2xl font-bold transition-all duration-300 gap-2 flex items-center justify-center ${
                     isListening
-                      ? "bg-red-500 hover:bg-red-600 text-white animate-pulse shadow-lg"
-                      : "bg-violet-600 hover:bg-violet-700 text-white shadow-lg shadow-violet-500/20 active:scale-[0.98]"
+                      ? "bg-gradient-to-r from-red-500 to-rose-600 hover:from-red-600 hover:to-rose-700 text-white animate-pulse shadow-lg shadow-red-500/20"
+                      : "bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-700 hover:to-indigo-700 text-white shadow-lg shadow-violet-500/20 active:scale-[0.98]"
                   }`}
                 >
                   {isListening ? (
@@ -617,19 +728,38 @@ export function AIRoleplay() {
                   onClick={startRoleplay}
                   variant="outline"
                   size="icon"
-                  className="size-14 sm:size-12 rounded-2xl border-glass shrink-0 active:scale-[0.98] flex items-center justify-center"
+                  className="size-14 sm:size-12 rounded-2xl border-glass shrink-0 active:scale-[0.98] hover:bg-white/5 flex items-center justify-center"
                   title="Khởi động lại cuộc trò chuyện"
                 >
                   <RefreshCw className="size-4.5 text-muted-foreground" />
                 </Button>
               </div>
 
-              {/* Interim recognized text feedback */}
-              {isListening && recognizedText && (
-                <div className="p-3 bg-foreground/[0.02] border border-dashed border-foreground/10 rounded-xl text-xs font-mono text-muted-foreground italic text-center">
-                  Nhận diện: &quot;{recognizedText}...&quot;
-                </div>
-              )}
+              {/* Interim recognized text feedback & waveform */}
+              <div className="flex flex-col items-center justify-center gap-3">
+                {isListening && (
+                  <div className="flex items-center gap-1.5 h-6 px-3 bg-violet-500/5 rounded-full border border-violet-500/10">
+                    {([14, 22, 10, 26, 8, 18, 12, 20, 16, 24] as const).map((maxH, i) => (
+                      <motion.div
+                        key={i}
+                        className="w-1 bg-violet-500 rounded-full"
+                        animate={{ height: [6, maxH, 6] }}
+                        transition={{
+                          duration: 0.4 + (i % 5) * 0.05,
+                          repeat: Infinity,
+                          ease: "easeInOut",
+                          delay: i * 0.03,
+                        }}
+                      />
+                    ))}
+                  </div>
+                )}
+                {isListening && recognizedText && (
+                  <div className="p-3 bg-foreground/[0.02] border border-dashed border-foreground/10 rounded-xl text-xs font-mono text-muted-foreground italic text-center w-full">
+                    Nhận diện: &quot;{recognizedText}...&quot;
+                  </div>
+                )}
+              </div>
             </div>
           )}
         </div>
