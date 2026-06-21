@@ -31,10 +31,36 @@ import { unit15 } from "@/lib/data/units/unit15";
 import { unit16 } from "@/lib/data/units/unit16";
 import { unit17 } from "@/lib/data/units/unit17";
 import { unit18 } from "@/lib/data/units/unit18";
+// B1 units
+import unit19 from "@/lib/data/units/unit19";
+import unit20 from "@/lib/data/units/unit20";
+import unit21 from "@/lib/data/units/unit21";
+import unit22 from "@/lib/data/units/unit22";
+import unit23 from "@/lib/data/units/unit23";
+import unit24 from "@/lib/data/units/unit24";
+import unit25 from "@/lib/data/units/unit25";
+import unit26 from "@/lib/data/units/unit26";
+import unit27 from "@/lib/data/units/unit27";
+import unit28 from "@/lib/data/units/unit28";
+import unit29 from "@/lib/data/units/unit29";
+import unit30 from "@/lib/data/units/unit30";
+import unit31 from "@/lib/data/units/unit31";
+import unit32 from "@/lib/data/units/unit32";
+// B2 units
+import unit33 from "@/lib/data/units/unit33";
+import unit34 from "@/lib/data/units/unit34";
+import unit35 from "@/lib/data/units/unit35";
+import unit36 from "@/lib/data/units/unit36";
+import unit37 from "@/lib/data/units/unit37";
+import unit38 from "@/lib/data/units/unit38";
+import unit39 from "@/lib/data/units/unit39";
+import unit40 from "@/lib/data/units/unit40";
+import unit41 from "@/lib/data/units/unit41";
+import unit42 from "@/lib/data/units/unit42";
 import { UNITS } from "@/lib/constants/units";
 
 // ─── Unit registry ───────────────────────────────────────────────────────────
-// Single source of truth: all A0 + A1 + A2 units registered here.
+// Single source of truth: all A0 + A1 + A2 + B1 + B2 units registered here.
 // Add new units here to make them available at /learn/[unitSlug].
 const UNIT_DATA_MAP: Record<string, { data: UnitData; next: string }> = {
   // A0 Foundation — 8 units (pre-CEFR)
@@ -65,7 +91,33 @@ const UNIT_DATA_MAP: Record<string, { data: UnitData; next: string }> = {
   "unit-15": { data: unit15, next: "/learn/unit-16" },
   "unit-16": { data: unit16, next: "/learn/unit-17" },
   "unit-17": { data: unit17, next: "/learn/unit-18" },
-  "unit-18": { data: unit18, next: "/roadmap" },        // A2 complete → roadmap
+  "unit-18": { data: unit18, next: "/learn/unit-19" },  // A2 complete → start B1
+  // B1 — 14 units
+  "unit-19": { data: unit19, next: "/learn/unit-20" },
+  "unit-20": { data: unit20, next: "/learn/unit-21" },
+  "unit-21": { data: unit21, next: "/learn/unit-22" },
+  "unit-22": { data: unit22, next: "/learn/unit-23" },
+  "unit-23": { data: unit23, next: "/learn/unit-24" },
+  "unit-24": { data: unit24, next: "/learn/unit-25" },
+  "unit-25": { data: unit25, next: "/learn/unit-26" },
+  "unit-26": { data: unit26, next: "/learn/unit-27" },
+  "unit-27": { data: unit27, next: "/learn/unit-28" },
+  "unit-28": { data: unit28, next: "/learn/unit-29" },
+  "unit-29": { data: unit29, next: "/learn/unit-30" },
+  "unit-30": { data: unit30, next: "/learn/unit-31" },
+  "unit-31": { data: unit31, next: "/learn/unit-32" },
+  "unit-32": { data: unit32, next: "/learn/unit-33" },  // B1 complete → start B2
+  // B2 — 10 units
+  "unit-33": { data: unit33, next: "/learn/unit-34" },
+  "unit-34": { data: unit34, next: "/learn/unit-35" },
+  "unit-35": { data: unit35, next: "/learn/unit-36" },
+  "unit-36": { data: unit36, next: "/learn/unit-37" },
+  "unit-37": { data: unit37, next: "/learn/unit-38" },
+  "unit-38": { data: unit38, next: "/learn/unit-39" },
+  "unit-39": { data: unit39, next: "/learn/unit-40" },
+  "unit-40": { data: unit40, next: "/learn/unit-41" },
+  "unit-41": { data: unit41, next: "/learn/unit-42" },
+  "unit-42": { data: unit42, next: "/roadmap" },        // B2 complete → back to roadmap
 };
 
 // Pre-build all known unit slugs at build time (SSG)

@@ -51,11 +51,45 @@ interface DashboardClientProps {
     meaning_vn: string;
     example_en: string;
     topic: string;
-    level: "A1" | "A2" | "B1" | "B2" | "C1";
+    level: "A0" | "A1" | "A2" | "B1" | "B2" | "C1";
   } | null;
   completedUnitIds: string[];
   allUnits: Array<{ id: string; title: string; level: string; route: string; xp: number }>;
 }
+
+const getLevelBadgeStyles = (level: string) => {
+  switch (level) {
+    case "A0":
+      return "bg-zinc-100 text-zinc-700 dark:bg-zinc-800/60 dark:text-zinc-300";
+    case "A1":
+      return "bg-emerald-100 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400";
+    case "A2":
+      return "bg-blue-100 text-blue-700 dark:bg-blue-950/40 dark:text-blue-400";
+    case "B1":
+      return "bg-purple-100 text-purple-700 dark:bg-purple-950/40 dark:text-purple-400";
+    case "B2":
+      return "bg-amber-100 text-amber-700 dark:bg-amber-950/40 dark:text-amber-400";
+    default:
+      return "bg-zinc-100 text-zinc-700 dark:bg-zinc-800/60 dark:text-zinc-300";
+  }
+};
+
+const getLevelProgressStyles = (level: string) => {
+  switch (level) {
+    case "A0":
+      return "bg-gradient-to-r from-zinc-500 to-slate-500";
+    case "A1":
+      return "bg-gradient-to-r from-emerald-500 to-teal-500";
+    case "A2":
+      return "bg-gradient-to-r from-blue-500 to-violet-500";
+    case "B1":
+      return "bg-gradient-to-r from-purple-500 to-indigo-500";
+    case "B2":
+      return "bg-gradient-to-r from-amber-500 to-orange-500";
+    default:
+      return "bg-gradient-to-r from-zinc-500 to-slate-500";
+  }
+};
 
 export default function DashboardClient({
   userName,
@@ -336,7 +370,7 @@ export default function DashboardClient({
             const levelProgress = levelUnitsAll.length > 0
               ? Math.round((levelUnitsDone / levelUnitsAll.length) * 100)
               : 0;
-            const NEXT: Record<string, string> = { A1: "A2", A2: "B1", B1: "B2", B2: "C1" };
+            const NEXT: Record<string, string> = { A0: "A1", A1: "A2", A2: "B1", B1: "B2", B2: "C1" };
             const nextLevel = NEXT[shortLevel] ?? "";
             return (
               <div className="rounded-2xl border border-zinc-200/60 dark:border-zinc-800/60 bg-white/60 dark:bg-zinc-900/30 backdrop-blur-sm p-4 space-y-2 hover:border-blue-500/30 transition-colors duration-200">
@@ -418,22 +452,19 @@ export default function DashboardClient({
           </div>
 
           {/* Group by level */}
-          {["A1", "A2"].map(level => {
+          {["A0", "A1", "A2", "B1", "B2"].map(level => {
             const levelUnits = allUnits.filter(u => u.level === level);
             const levelDone = levelUnits.filter(u => completedUnitIds.includes(u.id)).length;
             return (
               <div key={level} className="mb-4 last:mb-0">
                 <div className="flex items-center gap-2 mb-2">
-                  <span className={`text-[10px] font-black px-2 py-0.5 rounded-full ${
-                    level === "A1" ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400"
-                                   : "bg-blue-100 text-blue-700 dark:bg-blue-950/40 dark:text-blue-400"
-                  }`}>{level}</span>
+                  <span className={`text-[10px] font-black px-2 py-0.5 rounded-full ${getLevelBadgeStyles(level)}`}>
+                    {level}
+                  </span>
                   <span className="text-[10px] text-zinc-500 dark:text-zinc-400 font-semibold">{levelDone}/{levelUnits.length} hoàn thành</span>
                   <div className="flex-1 h-1 bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
                     <div
-                      className={`h-full rounded-full transition-all duration-500 ${
-                        level === "A1" ? "bg-gradient-to-r from-emerald-500 to-teal-500" : "bg-gradient-to-r from-blue-500 to-violet-500"
-                      }`}
+                      className={`h-full rounded-full transition-all duration-500 ${getLevelProgressStyles(level)}`}
                       style={{ width: `${levelUnits.length ? (levelDone / levelUnits.length) * 100 : 0}%` }}
                     />
                   </div>
@@ -442,7 +473,7 @@ export default function DashboardClient({
                   {levelUnits.map((unit) => {
                     const done = completedUnitIds.includes(unit.id);
                     const isCurrent = unit.id === currentUnitData.unitId;
-                    const unitNum = parseInt(unit.id.replace("unit-", ""), 10);
+                    const displayNum = unit.id.split("-").pop();
                     return (
                       <a
                         key={unit.id}
@@ -461,7 +492,7 @@ export default function DashboardClient({
                             <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                           </svg>
                         ) : (
-                          unitNum
+                          displayNum
                         )}
                         {isCurrent && !done && (
                           <span className="absolute -top-1 -right-1 size-2.5 rounded-full bg-amber-400 border-2 border-white dark:border-zinc-900" />
