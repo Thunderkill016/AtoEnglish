@@ -271,8 +271,8 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
   const recognitionRef = useRef<SpeechRecognition | null>(null);
 
   // ─── Derived data ─────────────────────────────────────────────────────────
-  const VOCAB_LIMIT = Math.min(unit.vocab.length, 8);
-  const VOCAB_DISPLAY = unit.vocab.slice(0, VOCAB_LIMIT);
+  const VOCAB_LIMIT = unit.vocab.length; // Show ALL vocab, no arbitrary cap
+  const VOCAB_DISPLAY = unit.vocab;
   const DIALOGUES = unit.dialogues;
   const LISTEN_CHOOSE = unit.listenAndChoose;
 
@@ -441,7 +441,10 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
       setLevel2Transcript(text);
       setLevel2Recording(false);
       // Score against the hint text (strips HTML tags)
-      const hintText = unit.speaking.level2Hint.replace(/<[^>]*>/g, "");
+      const hintText = unit.speaking.level2Hint
+        .replace(/<[^>]*>/g, "")
+        .replace(/\[.*?\]/g, "")  // strip [tên bạn] and similar placeholders
+        .trim();
       const score = calcSpeechScore(hintText, text);
       setLevel2Score(score);
     });
@@ -703,7 +706,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                   ? "text-emerald-400 font-bold block"
                   : i < sectionOrderIdx
                   ? "text-emerald-600 block"
-                  : "hidden"
+                  : "text-zinc-700 block opacity-60"
               }`}>
                 {SECTION_LABELS[secNum]}
               </span>
@@ -2071,7 +2074,22 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                 <div className="space-y-5">
                   {unit.practiceTranslate.map((item, i) => {
                     const userAnswer = translateInputs[item.id] ?? "";
-                    const isCorrect = userAnswer.trim().toLowerCase() === item.answer.trim().toLowerCase();
+                    // Fuzzy match: normalize punctuation, whitespace, contractions
+                    const normalizeTranslation = (s: string) =>
+                      s.trim().toLowerCase()
+                        .replace(/[.,!?;:'"]/g, "")
+                        .replace(/\s+/g, " ")
+                        .replace(/\bi'm\b/g, "i am")
+                        .replace(/\byou're\b/g, "you are")
+                        .replace(/\bhe's\b/g, "he is")
+                        .replace(/\bshe's\b/g, "she is")
+                        .replace(/\bit's\b/g, "it is")
+                        .replace(/\bwe're\b/g, "we are")
+                        .replace(/\bthey're\b/g, "they are")
+                        .replace(/\bdon't\b/g, "do not")
+                        .replace(/\bdoesn't\b/g, "does not")
+                        .trim();
+                    const isCorrect = normalizeTranslation(userAnswer) === normalizeTranslation(item.answer);
                     return (
                       <div key={item.id} className={`rounded-2xl border p-5 transition-all duration-300 ${
                         translateSubmitted

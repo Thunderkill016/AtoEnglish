@@ -127,21 +127,30 @@ export default function ProgressClient({ stats }: ProgressClientProps) {
     },
     {
       title: "Học Giả Chuyên Cần",
-      desc: "Hoàn thành 3 units",
+      desc: "Hoàn thành 6 units",
       icon: BookOpen,
       tier: "silver",
-      unlocked: completedUnits >= 3,
-      current: Math.min(completedUnits, 3),
-      target: 3,
+      unlocked: completedUnits >= 6,
+      current: Math.min(completedUnits, 6),
+      target: 6,
     },
     {
-      title: "Chinh Phục Toàn Bộ",
-      desc: "Hoàn thành tất cả 5 units",
+      title: "Chiến Binh A1",
+      desc: "Hoàn thành 9 units",
       icon: Target,
       tier: "gold",
-      unlocked: completedUnits >= 5,
-      current: Math.min(completedUnits, 5),
-      target: 5,
+      unlocked: completedUnits >= 9,
+      current: Math.min(completedUnits, 9),
+      target: 9,
+    },
+    {
+      title: "Chinh Phục A1",
+      desc: "Hoàn thành tất cả 12 units A1",
+      icon: Trophy,
+      tier: "diamond",
+      unlocked: completedUnits >= 12,
+      current: Math.min(completedUnits, 12),
+      target: 12,
     },
     // ── Vocabulary milestones ──────────────────────────────────────────────
     {
@@ -225,9 +234,9 @@ export default function ProgressClient({ stats }: ProgressClientProps) {
   const groups = [
     { key: "streak",   label: "🔥 Streak",     items: achievements.slice(0, 4) },
     { key: "xp",       label: "⚡ XP",          items: achievements.slice(4, 8) },
-    { key: "units",    label: "📖 Units",       items: achievements.slice(8, 11) },
-    { key: "vocab",    label: "✨ Từ vựng",     items: achievements.slice(11, 15) },
-    { key: "speaking", label: "🎤 Luyện nói",  items: achievements.slice(15) },
+    { key: "units",    label: "📖 Units",       items: achievements.slice(8, 12) },
+    { key: "vocab",    label: "✨ Từ vựng",     items: achievements.slice(12, 16) },
+    { key: "speaking", label: "🎤 Luyện nói",  items: achievements.slice(16) },
   ];
 
   return (
