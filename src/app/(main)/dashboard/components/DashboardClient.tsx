@@ -289,7 +289,7 @@ export default function DashboardClient({
                       }}
                       className={`py-1 rounded-lg text-[9px] font-extrabold transition-all border ${
                         xpTarget === val
-                          ? "bg-emerald-600 text-white border-emerald-500"
+                          ? "bg-gradient-to-r from-emerald-500 to-teal-500 text-white border-emerald-400 shadow-sm"
                           : "bg-zinc-900 border-zinc-800 text-zinc-300 hover:border-emerald-500/30"
                       }`}
                     >
@@ -319,9 +319,9 @@ export default function DashboardClient({
               {xpCurrent}<span className="text-xs font-bold text-zinc-400 dark:text-zinc-500">/{xpTarget}</span>
             </p>
             {/* Mini progress bar */}
-            <div className="h-1.5 w-full bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
+            <div className="h-2 w-full bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
               <div
-                className="h-full bg-emerald-500 rounded-full transition-all duration-500"
+                className="h-full bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full transition-all duration-700"
                 style={{ width: `${Math.min(xpPercent, 100)}%` }}
               />
             </div>
@@ -350,9 +350,9 @@ export default function DashboardClient({
                 <p className="text-[10px] text-zinc-500 dark:text-zinc-400 font-medium tabular-nums">{displayXp} XP tích lũy</p>
                 {nextLevel && (
                   <>
-                    <div className="h-1 w-full bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
+                    <div className="h-1.5 w-full bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
                       <div
-                        className="h-full bg-blue-500 rounded-full transition-all duration-700"
+                        className="h-full bg-gradient-to-r from-blue-500 to-violet-500 rounded-full transition-all duration-700"
                         style={{ width: `${levelProgress}%` }}
                       />
                     </div>
@@ -432,7 +432,7 @@ export default function DashboardClient({
                   <div className="flex-1 h-1 bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
                     <div
                       className={`h-full rounded-full transition-all duration-500 ${
-                        level === "A1" ? "bg-emerald-500" : "bg-blue-500"
+                        level === "A1" ? "bg-gradient-to-r from-emerald-500 to-teal-500" : "bg-gradient-to-r from-blue-500 to-violet-500"
                       }`}
                       style={{ width: `${levelUnits.length ? (levelDone / levelUnits.length) * 100 : 0}%` }}
                     />
@@ -450,7 +450,7 @@ export default function DashboardClient({
                         title={unit.title}
                         className={`relative flex items-center justify-center h-9 rounded-xl text-xs font-black transition-all duration-200 border ${
                           done
-                            ? "bg-emerald-500 text-white border-emerald-400 shadow-sm shadow-emerald-500/20 hover:bg-emerald-600"
+                            ? "bg-gradient-to-br from-emerald-500 to-teal-600 text-white border-emerald-400/70 shadow-sm shadow-emerald-500/25 hover:from-emerald-400 hover:to-teal-500 active:scale-95"
                             : isCurrent
                               ? "bg-zinc-900 dark:bg-zinc-50 text-white dark:text-zinc-900 border-zinc-700 dark:border-zinc-200 shadow-sm"
                               : "bg-zinc-50 dark:bg-zinc-800/50 text-zinc-500 dark:text-zinc-400 border-zinc-200 dark:border-zinc-700 hover:border-emerald-500/40 hover:text-emerald-600 dark:hover:text-emerald-400"
