@@ -1748,25 +1748,25 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
 
               {/* Dialogue player */}
               {DIALOGUES.length > 0 && (
-                <div className="bg-white/5 border border-zinc-800/60 rounded-2xl p-5 mb-4">
+                <div className="bg-gradient-to-b from-zinc-900/80 to-zinc-950/80 border border-zinc-700/50 rounded-2xl p-5 mb-4 shadow-lg">
                   <p className="text-xs text-zinc-500 mb-2">{DIALOGUES[selectedDialogue].desc}</p>
                   <div className="flex gap-3 mb-4">
                     <button
                       onClick={() => isPlayingDialogue ? (window.speechSynthesis?.cancel(), setIsPlayingDialogue(false)) : playDialogueTTS(selectedDialogue, 1.0)}
-                      className={`flex items-center gap-2 px-4 py-2 rounded-xl font-semibold text-sm transition-colors ${isPlayingDialogue ? "bg-red-600/30 text-red-400 border border-red-600/30" : "bg-emerald-600 text-white hover:bg-emerald-500"}`}
+                      className={`flex items-center gap-2 px-4 py-2 rounded-xl font-semibold text-sm transition-all duration-200 ${ isPlayingDialogue ? "bg-red-600/30 text-red-400 border border-red-600/30" : "bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-white shadow-md shadow-emerald-900/40 active:scale-95"}`}
                     >
                       <Volume2 size={16} />
                       {isPlayingDialogue ? "Dừng" : "Nghe hội thoại"}
                     </button>
                     <button
                       onClick={() => isPlayingDialogue ? (window.speechSynthesis?.cancel(), setIsPlayingDialogue(false)) : playDialogueTTS(selectedDialogue, 0.75)}
-                      className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold bg-zinc-800 text-zinc-300 hover:bg-zinc-700 transition-colors"
+                      className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold bg-zinc-800/80 text-zinc-300 hover:bg-zinc-700 hover:text-white transition-colors active:scale-95"
                     >
                       🐢 Chậm
                     </button>
                     <button
                       onClick={() => setShowTranscript(p => !p)}
-                      className="ml-auto flex items-center gap-2 px-3 py-2 rounded-xl text-xs text-zinc-400 hover:text-white transition-colors"
+                      className="ml-auto flex items-center gap-2 px-3 py-2 rounded-xl text-xs text-zinc-400 hover:text-white hover:bg-zinc-800/60 transition-colors"
                     >
                       {showTranscript ? <EyeOff size={14} /> : <Eye size={14} />}
                       Transcript
@@ -1775,13 +1775,20 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
 
                   <AnimatePresence>
                     {showTranscript && (
-                      <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="space-y-2 overflow-hidden">
+                      <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="space-y-3 overflow-hidden">
                         {DIALOGUES[selectedDialogue].lines.map((line, i) => (
                           <div key={i} className={`flex gap-3 ${i % 2 === 0 ? "" : "flex-row-reverse"}`}>
-                            <div className={`max-w-[80%] rounded-xl p-3 ${i % 2 === 0 ? "bg-zinc-800" : "bg-emerald-900/40"}`}>
-                              <p className="text-[10px] text-zinc-500 mb-1">{line.speaker}</p>
-                              <p className="text-white text-sm">{line.text}</p>
-                              <p className="text-zinc-500 text-xs mt-1">{line.translation}</p>
+                            <div className="w-7 h-7 rounded-full flex items-center justify-center shrink-0 text-[10px] font-black mt-1 bg-zinc-700 text-zinc-300">
+                              {line.speaker.charAt(0).toUpperCase()}
+                            </div>
+                            <div className={`max-w-[78%] rounded-2xl px-4 py-3 border ${
+                              i % 2 === 0
+                                ? "bg-zinc-800/90 border-zinc-700/60"
+                                : "bg-emerald-950/60 border-emerald-700/30"
+                            }`}>
+                              <p className="text-[10px] font-bold text-zinc-500 mb-1 uppercase tracking-wide">{line.speaker}</p>
+                              <p className="text-white text-sm leading-relaxed">{line.text}</p>
+                              <p className="text-zinc-500 text-xs mt-1.5 italic">{line.translation}</p>
                             </div>
                           </div>
                         ))}
@@ -1812,13 +1819,15 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                           {item.options.map((opt, oi) => {
                             const isSelected = lacAnswers[qi] === opt;
                             const isCorrect = opt === item.answer;
-                            let cls = "px-3 py-2 rounded-xl text-sm font-medium border transition-colors cursor-pointer text-left ";
+                            let cls = "px-3 py-2 rounded-xl text-sm font-medium border transition-all duration-150 cursor-pointer text-left ";
                             if (lacSubmitted) {
                               if (isCorrect) cls += "bg-emerald-600/20 border-emerald-500 text-emerald-300";
                               else if (isSelected) cls += "bg-red-600/20 border-red-500 text-red-300";
                               else cls += "bg-zinc-800/50 border-zinc-700 text-zinc-500";
                             } else {
-                              cls += isSelected ? "bg-emerald-600/30 border-emerald-500 text-emerald-300" : "bg-zinc-800 border-zinc-700 text-zinc-300 hover:border-emerald-600/50";
+                              cls += isSelected
+                                ? "bg-emerald-600/30 border-emerald-500 text-emerald-300 ring-2 ring-emerald-500/20"
+                                : "bg-zinc-800 border-zinc-700 text-zinc-300 hover:border-emerald-500/50 hover:bg-zinc-700/60 active:scale-95";
                             }
                             return (
                               <button key={oi} onClick={() => !lacSubmitted && setLacAnswers(p => ({ ...p, [qi]: opt }))} className={cls}>
