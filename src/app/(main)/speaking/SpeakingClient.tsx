@@ -77,8 +77,7 @@ export default function SpeakingPage() {
       </motion.div>
 
       {/* Stepper Tabs — horizontal scroll on mobile, grid on md+ */}
-      {/* Mobile: overflow-x-auto pill row (prevents 360px cramping) */}
-      <div className="flex gap-2 overflow-x-auto pb-1 -mx-4 px-4 scrollbar-none sm:mx-0 sm:px-0 md:overflow-visible md:bg-glass md:border md:border-glass md:p-1.5 md:rounded-2xl md:gap-1">
+      <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-none md:overflow-visible md:bg-glass md:border md:border-glass md:p-1.5 md:rounded-2xl md:gap-1">
         {tabs.map((tab) => {
           const Icon = tab.icon;
           const isActive = activeTab === tab.id;

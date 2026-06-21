@@ -500,8 +500,8 @@ export function ShadowingPractice() {
 
   return (
     <div className="space-y-6">
-      {/* List selection */}
-      <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-none -mx-4 px-4 sm:mx-0 sm:px-0">
+      {/* List selection - scrollable chips */}
+      <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-none">
         {SHADOWING_ITEMS.map((item) => (
           <button
             key={item.id}
@@ -535,9 +535,9 @@ export function ShadowingPractice() {
         {/* Transcript Box */}
         <div className="p-3 sm:p-6 rounded-2xl bg-foreground/[0.01] border border-foreground/[0.03] space-y-3 sm:space-y-4">
           <div className="flex items-center justify-between gap-2 border-b border-foreground/[0.04] pb-3">
-            <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest flex items-center gap-1.5">
-              <Volume2 className="size-4 text-primary" />
-              Audio & Transcript gốc
+            <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest flex items-center gap-1.5 min-w-0 flex-1">
+              <Volume2 className="size-4 text-primary shrink-0" />
+              <span className="truncate">Audio &amp; Transcript gốc</span>
             </span>
             <Button
               variant="ghost"
@@ -573,10 +573,11 @@ export function ShadowingPractice() {
           </AnimatePresence>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2 sm:gap-3 pt-2">
+        {/* Playback Settings & Controller */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:flex-wrap gap-2 sm:gap-3 pt-2">
           {/* Speed settings */}
           <div className="flex items-center gap-2 sm:gap-3">
-            <span className="text-xs text-muted-foreground font-bold uppercase tracking-wider">Tốc độ:</span>
+            <span className="text-xs text-muted-foreground font-bold uppercase tracking-wider shrink-0">Tốc độ:</span>
             <div className="bg-foreground/[0.03] border border-foreground/[0.05] p-1 rounded-xl flex gap-1">
               {[0.8, 1.0, 1.2].map((speed) => (
                 <button
@@ -605,7 +606,7 @@ export function ShadowingPractice() {
           <Button
             onClick={handlePlayNative}
             variant={isPlayingNative ? "secondary" : "outline"}
-            className="h-10 sm:h-11 px-4 sm:px-5 rounded-2xl sm:rounded-xl font-bold text-xs uppercase tracking-wider gap-2 border-glass active:scale-[0.98] transition-all flex items-center justify-center"
+            className="w-full sm:w-auto h-10 sm:h-11 px-4 sm:px-5 rounded-2xl sm:rounded-xl font-bold text-xs uppercase tracking-wider gap-2 border-glass active:scale-[0.98] transition-all flex items-center justify-center"
           >
             {isPlayingNative ? (
               <>
