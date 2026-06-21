@@ -1,8 +1,9 @@
 "use client";
 
+import React from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { Lock, Play, CheckCircle, Sparkles, BookOpen, Star, Clock, RotateCcw, BookOpenCheck } from "lucide-react";
+import { Lock, Play, CheckCircle, Sparkles, BookOpen, Star, Clock, RotateCcw, BookOpenCheck, Trophy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface UnitStatus {
@@ -83,16 +84,52 @@ export default function LearnClient({
           const isCompleted = completedUnitIds.includes(unit.id);
           const isUnlocked = index === 0 || completedUnitIds.includes(unitStatuses[index - 1].id);
           const isActive = unit.id === activeUnitId && isUnlocked && !isCompleted;
-          
+
           // Layout styling helpers
           const isEven = index % 2 === 0;
 
+          // CEFR level separator: show milestone banner when level changes
+          const prevLevel = index > 0 ? unitStatuses[index - 1].level : null;
+          const isNewLevel = prevLevel !== null && unit.level !== prevLevel;
+
+          const LEVEL_CONFIG: Record<string, { label: string; color: string; ring: string; bg: string }> = {
+            A2: { label: "Sơ trung cấp", color: "from-blue-500 to-indigo-500", ring: "ring-blue-500/30", bg: "from-blue-950/40 to-indigo-950/40" },
+            B1: { label: "Trung cấp", color: "from-purple-500 to-violet-500", ring: "ring-purple-500/30", bg: "from-purple-950/40 to-violet-950/40" },
+            B2: { label: "Trên trung cấp", color: "from-orange-500 to-amber-500", ring: "ring-orange-500/30", bg: "from-orange-950/40 to-amber-950/40" },
+            C1: { label: "Cao cấp", color: "from-rose-500 to-pink-500", ring: "ring-rose-500/30", bg: "from-rose-950/40 to-pink-950/40" },
+          };
+          const lvlCfg = LEVEL_CONFIG[unit.level];
+
           return (
+            <React.Fragment key={unit.id}>
+              {/* CEFR Level Milestone Banner */}
+              {isNewLevel && lvlCfg && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.5, type: "spring", stiffness: 100 }}
+                  className={`w-full relative z-10 rounded-2xl border bg-gradient-to-br ${lvlCfg.bg} border-white/10 p-5 sm:p-6 text-center ring-1 ${lvlCfg.ring} sm:mx-auto sm:max-w-md`}
+                >
+                  <div className="flex justify-center mb-3">
+                    <span className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r ${lvlCfg.color} text-white text-xs font-black uppercase tracking-widest shadow-lg`}>
+                      <Trophy className="size-3.5" />
+                      Chặng mới — Level {unit.level}
+                    </span>
+                  </div>
+                  <p className="text-white font-black text-lg sm:text-xl mb-1">
+                    🎉 Bạn đã chinh phục {prevLevel}!
+                  </p>
+                  <p className="text-zinc-400 text-xs sm:text-sm">
+                    {unit.level} {lvlCfg.label} — tiếp tục mạch học nhé!
+                  </p>
+                  <div className={`mt-3 h-1 rounded-full bg-gradient-to-r ${lvlCfg.color} opacity-60 mx-auto w-24`} />
+                </motion.div>
+              )}
+
             <motion.div
-              key={unit.id}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
+              transition={{ duration: 0.5, delay: index * 0.05 }}
               className={`flex flex-col sm:flex-row items-start sm:items-center justify-start sm:justify-between w-full relative gap-6 sm:gap-0 ${
                 isEven ? "sm:flex-row-reverse" : ""
               }`}
@@ -265,6 +302,7 @@ export default function LearnClient({
               {/* Empty spacer for grid alignment */}
               <div className="hidden sm:block sm:w-[42%]" />
             </motion.div>
+            </React.Fragment>
           );
         })}
       </div>
