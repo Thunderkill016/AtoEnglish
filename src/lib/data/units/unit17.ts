@@ -121,6 +121,35 @@ export const unit17: UnitData = {
     { id: "fq5", type: "multiple-choice", question: "Chọn câu ĐÚNG: Mô tả kinh nghiệm của bạn", options: ["I have never went abroad.", "I have never been abroad.", "I never have been abroad.", "I haven't never been abroad."], answer: "I have never been abroad." },
   ],
 
+  cumulativeReviewQuestions: [
+    {
+      id: "cr17-1",
+      question: "Chọn câu đúng về vị trí: (Unit 16: Prepositions of Place)",
+      options: [
+        "The office is in the corner of Main Street.",
+        "The office is at the corner of Main Street.",
+        "The office is on the corner at Main Street.",
+        "The office is by of the corner.",
+      ],
+      answer: "The office is at the corner of Main Street.",
+      type: "multiple-choice",
+    },
+    {
+      id: "cr17-2",
+      question: "Điền từ: 'Turn ___ at the traffic lights.' (Unit 16: Directions)",
+      options: [],
+      answer: "left",
+      type: "cloze",
+    },
+    {
+      id: "cr17-3",
+      question: "Đi thẳng rồi rẽ phải ở ngã tư. (Unit 16)",
+      options: [],
+      answer: "Go straight and turn right at the intersection.",
+      type: "translate",
+    },
+  ],
+
   fluencyDrill: {
     items: [
       { en: "I have worked here for 2 years", vn: "Tôi đã làm việc ở đây 2 năm" },

@@ -121,6 +121,30 @@ export const unit14: UnitData = {
     { id: "fq5", type: "multiple-choice", question: "Câu nào ĐÚNG về ngữ pháp?", options: ["I going to prepare a report.", "I'm going to prepare a report. ✅", "I will going to prepare a report.", "I'm go to prepare a report."], answer: "I'm going to prepare a report. ✅" },
   ],
 
+  cumulativeReviewQuestions: [
+    {
+      id: "cr14-1",
+      question: "Chọn dạng đúng: 'I ___ to the office yesterday.' (Unit 13: Past Simple)",
+      options: ["go", "goes", "went", "going"],
+      answer: "went",
+      type: "multiple-choice",
+    },
+    {
+      id: "cr14-2",
+      question: "Điền từ: 'He ___ the report last night.' (Unit 13: Past Simple irregular)",
+      options: [],
+      answer: "wrote",
+      type: "cloze",
+    },
+    {
+      id: "cr14-3",
+      question: "Chúng tôi đã không tham dự cuộc họp. (Unit 13)",
+      options: [],
+      answer: "We didn't attend the meeting.",
+      type: "translate",
+    },
+  ],
+
   fluencyDrill: {
     items: [
       { en: "I will call you", vn: "Tôi sẽ gọi cho bạn" },

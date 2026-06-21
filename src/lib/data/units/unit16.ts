@@ -122,6 +122,35 @@ export const unit16: UnitData = {
     { id: "fq5", type: "multiple-choice", question: "Thời gian nhận phòng tiêu chuẩn bằng tiếng Anh là gì?", options: ["Check-in time is 2 PM.", "Checking-in time is 2 PM.", "Check time is 2 PM.", "In-check time is 2 PM."], answer: "Check-in time is 2 PM." },
   ],
 
+  cumulativeReviewQuestions: [
+    {
+      id: "cr16-1",
+      question: "Câu nào đúng? (Unit 15: Comparatives)",
+      options: [
+        "This route is more shorter.",
+        "This route is shorter.",
+        "This route is most short.",
+        "This route is more short.",
+      ],
+      answer: "This route is shorter.",
+      type: "multiple-choice",
+    },
+    {
+      id: "cr16-2",
+      question: "Điền từ: 'She ___ going to take the subway tomorrow.' (Unit 14: Going to)",
+      options: [],
+      answer: "is",
+      type: "cloze",
+    },
+    {
+      id: "cr16-3",
+      question: "Khách sạn đó đắt hơn cái này. (Unit 15)",
+      options: [],
+      answer: "That hotel is more expensive than this one.",
+      type: "translate",
+    },
+  ],
+
   fluencyDrill: {
     items: [
       { en: "Turn left", vn: "Rẽ trái" },

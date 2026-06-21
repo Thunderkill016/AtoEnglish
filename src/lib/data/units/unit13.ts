@@ -122,6 +122,30 @@ export const unit13: UnitData = {
     { id: "fq5", type: "multiple-choice", question: "Điền: 'I ___ a movie last night. It was great!'", options: ["watch", "watches", "watched", "watching"], answer: "watched" },
   ],
 
+  cumulativeReviewQuestions: [
+    {
+      id: "cr13-1",
+      question: "Chọn dạng đúng: 'This hotel is ___ than that one.' (Unit 12: Comparatives)",
+      options: ["more cheap", "cheaper", "cheapest", "cheap"],
+      answer: "cheaper",
+      type: "multiple-choice",
+    },
+    {
+      id: "cr13-2",
+      question: "Điền từ: 'She ___ emails right now.' (Unit 11: Present Continuous)",
+      options: [],
+      answer: "is writing",
+      type: "cloze",
+    },
+    {
+      id: "cr13-3",
+      question: "Sản phẩm này phổ biến nhất. (Unit 12: Superlative)",
+      options: [],
+      answer: "This product is the most popular.",
+      type: "translate",
+    },
+  ],
+
   fluencyDrill: {
     items: [
       { en: "I went", vn: "Tôi đã đi" },

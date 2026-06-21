@@ -122,6 +122,42 @@ export const unit18: UnitData = {
     { id: "fq5", type: "multiple-choice", question: "Kết hợp đúng: Kể về kinh nghiệm + kế hoạch tương lai", options: ["I worked here for 5 years. I will going to expand next year.", "I've worked here for 5 years. I'm going to expand next year. ✅", "I've worked here since 5 years. I will expanding next year.", "I work here for 5 years. I'm going to expanding next year."], answer: "I've worked here for 5 years. I'm going to expand next year. ✅" },
   ],
 
+  cumulativeReviewQuestions: [
+    {
+      id: "cr18-1",
+      question: "Câu nào dùng Present Perfect ĐÚNG? (Unit 17)",
+      options: [
+        "I have went to London last year.",
+        "I went to London last year.",
+        "I have been to London.",
+        "I am going to London before.",
+      ],
+      answer: "I have been to London.",
+      type: "multiple-choice",
+    },
+    {
+      id: "cr18-2",
+      question: "Điền từ: 'She has ___ finished the project.' (Unit 17: Present Perfect + adverb)",
+      options: [],
+      answer: "already",
+      type: "cloze",
+    },
+    {
+      id: "cr18-3",
+      question: "Bạn đã bao giờ làm việc ở nước ngoài chưa? (Unit 17)",
+      options: [],
+      answer: "Have you ever worked abroad?",
+      type: "translate",
+    },
+    {
+      id: "cr18-4",
+      question: "Chọn thì đúng: 'I ___ here since 2020.' (Unit 17: Present Perfect + since)",
+      options: ["work", "worked", "am working", "have worked"],
+      answer: "have worked",
+      type: "multiple-choice",
+    },
+  ],
+
   fluencyDrill: {
     items: [
       { en: "I work every day", vn: "Tôi làm việc mỗi ngày" },

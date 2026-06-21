@@ -122,6 +122,35 @@ export const unit15: UnitData = {
     { id: "fq5", type: "multiple-choice", question: "So sánh bất quy tắc: 'bad' → ___ → ___", options: ["badder / baddest", "more bad / most bad", "worse / worst", "badly / worst"], answer: "worse / worst" },
   ],
 
+  cumulativeReviewQuestions: [
+    {
+      id: "cr15-1",
+      question: "Chọn câu đúng về kế hoạch đã có sẵn: (Unit 14: Going to)",
+      options: [
+        "I will meet the client tomorrow (spontaneous)",
+        "I am going to meet the client tomorrow (planned)",
+        "Both are identical in meaning",
+        "Neither is correct",
+      ],
+      answer: "I am going to meet the client tomorrow (planned)",
+      type: "multiple-choice",
+    },
+    {
+      id: "cr15-2",
+      question: "Điền từ: 'She ___ present the results next Monday.' (Unit 14: Will)",
+      options: [],
+      answer: "will",
+      type: "cloze",
+    },
+    {
+      id: "cr15-3",
+      question: "Anh ấy đã gặp khách hàng hôm qua. (Unit 13)",
+      options: [],
+      answer: "He met the client yesterday.",
+      type: "translate",
+    },
+  ],
+
   fluencyDrill: {
     items: [
       { en: "cheaper", vn: "rẻ hơn" },
