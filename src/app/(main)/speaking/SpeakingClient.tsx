@@ -14,12 +14,11 @@ import {
 import { ShadowingPractice } from "./shadowing-practice";
 import { AIRoleplay } from "./ai-roleplay";
 import { JournalMode } from "./journal-mode";
-import { AIFreeTalk } from "./ai-free-talk";
 import { getRecentSpeakingSessions } from "@/app/actions/speaking";
 import { SpeakingSession } from "@/types/database";
 
 export default function SpeakingPage() {
-  const [activeTab, setActiveTab] = useState<"shadowing" | "roleplay" | "freetalk" | "journal">("shadowing");
+  const [activeTab, setActiveTab] = useState<"shadowing" | "roleplay" | "journal">("shadowing");
   const [historySessions, setHistorySessions] = useState<SpeakingSession[]>([]);
   const [speakingCount, setSpeakingCount] = useState<number>(0);
 
@@ -37,7 +36,6 @@ export default function SpeakingPage() {
   const tabs = [
     { id: "shadowing", title: "Shadowing Practice", icon: Volume2, desc: "Nói đuổi theo audio" },
     { id: "roleplay", title: "AI Roleplay", icon: MessageSquare, desc: "Hội thoại nhập vai" },
-    { id: "freetalk", title: "AI Free Talk", icon: Sparkles, desc: "Nói chuyện thực với AI" },
     { id: "journal", title: "Daily Journal", icon: Calendar, desc: "Nhật ký nói tự do" },
   ] as const;
 
@@ -138,7 +136,6 @@ export default function SpeakingPage() {
             >
               {activeTab === "shadowing" && <ShadowingPractice />}
               {activeTab === "roleplay" && <AIRoleplay />}
-              {activeTab === "freetalk" && <AIFreeTalk />}
               {activeTab === "journal" && <JournalMode />}
             </motion.div>
           </AnimatePresence>
