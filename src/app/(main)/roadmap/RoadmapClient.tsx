@@ -154,7 +154,7 @@ export default function RoadmapClient({ userCefrLevel, unitCountByLevel, complet
                 {isCompleted && (
                   <motion.span
                     whileHover={{ scale: 1.1 }}
-                    className="flex size-11 items-center justify-center rounded-full bg-emerald-500 text-white shadow-md border-4 border-background"
+                    className="flex size-11 items-center justify-center rounded-full bg-gradient-to-br from-emerald-500 to-teal-600 text-white shadow-md border-4 border-background"
                   >
                     <CheckCircle2 className="size-5" />
                   </motion.span>
@@ -225,7 +225,7 @@ export default function RoadmapClient({ userCefrLevel, unitCountByLevel, complet
                     </div>
                     <div className="h-2 w-full rounded-full bg-muted overflow-hidden relative">
                       <motion.div
-                        className={`h-full rounded-full ${isCompleted ? "bg-emerald-500" : "bg-primary"}`}
+                        className={`h-full rounded-full ${isCompleted ? "bg-gradient-to-r from-emerald-500 to-teal-500" : "bg-gradient-to-r from-emerald-500 to-teal-400"}`}
                         initial={{ width: 0 }}
                         whileInView={{ width: `${lvl.completedPercent}%` }}
                         viewport={{ once: true }}
@@ -257,7 +257,7 @@ export default function RoadmapClient({ userCefrLevel, unitCountByLevel, complet
                   ) : isActive ? (
                     <Button
                       onClick={() => router.push(nextUnitRoute)}
-                      className="bg-primary hover:bg-primary/95 text-primary-foreground rounded-xl text-xs font-bold gap-2 shadow-md shadow-primary/10 active:scale-[0.98] h-11 px-5 flex items-center transition-all duration-200"
+                      className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-white rounded-xl text-xs font-bold gap-2 shadow-md shadow-emerald-600/20 active:scale-[0.98] h-11 px-5 flex items-center transition-all duration-200"
                     >
                       <Play className="size-3.5 fill-current" />
                       <span>Học tiếp ngay</span>
