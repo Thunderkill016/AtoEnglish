@@ -1,152 +1,160 @@
-import { UnitData } from "@/components/learn/UnitTemplate";
+import type { UnitData } from "@/components/learn/UnitTemplate";
 
-export const unit42: UnitData = {
+// UNIT 42 — Tech English Capstone (B2 / Phase 4)
+const unit42: UnitData = {
   unitId: "unit-42",
-  title: "Unit 42: B2 Final Assessment",
+  title: "Unit 42: Tech English Capstone",
   level: "B2",
   xp: 200,
   estimatedTime: 90,
-  description: "B2 Complete — Bài đánh giá năng lực cuối cùng tổng hợp toàn bộ chương trình học từ A0 đến B2. Cấu trúc bài thi bao quát các dạng bài IELTS Reading, Listening và TOEIC Part 5/6/7. Cột mốc chứng nhận trình độ tương đương IELTS 6.5 / TOEIC 785+.",
-  badgeName: "Bậc Thầy Tiếng Anh",
+  description: "Ôn tập toàn diện Phase 4 qua case study thực tế: từ đọc spec đến deploy và báo cáo.",
+  badgeName: "Tech English Master",
   badgeEmoji: "🏆",
-  situation: "Bạn tham gia buổi phỏng vấn đánh giá năng lực cuối kỳ và hoàn thành bài thi chứng chỉ B2 của AtoEnglish. Bạn cần sử dụng kết hợp tất cả các kiến thức từ vựng học thuật, kỹ năng đàm phán, viết email, thuyết trình và các cấu trúc ngữ pháp nâng cao để khẳng định trình độ tiếng Anh của mình.",
+
+  situation:
+    "Bạn join một startup remote 100% có team ở Singapore và US. Tuần đầu tiên: đọc technical spec bằng tiếng Anh, tham gia standup, review code của đồng nghiệp, fix bug và tạo PR, xử lý production incident, viết post-mortem. Đây là tổng hợp tất cả Phase 4.",
+
   learningOutcomes: [
-    "Sử dụng thành thạo và linh hoạt toàn bộ hệ thống ngữ pháp A0-B2 trong mọi ngữ cảnh",
-    "Hoàn thành tốt các câu hỏi thi thử mô phỏng đề thi thực tế IELTS và TOEIC",
-    "Đạt trình độ độc lập hoàn toàn (CEFR B2), đủ điều kiện làm việc trong môi trường quốc tế",
+    "Áp dụng toàn bộ Tech English vocabulary từ unit 33-41 vào workflow thực tế",
+    "Tự tin giao tiếp trong mọi tình huống dev: meeting, review, incident, interview",
+    "Đọc và viết technical documentation chuẩn mực như một senior developer",
   ],
-  culturalNote: 'Chúc mừng bạn đã đi đến chặng đường cuối cùng! Đạt trình độ <span class="text-emerald-400 font-semibold">CEFR B2 (IELTS 6.5 / TOEIC 785+)</span> nghĩa là bạn đã có khả năng tự tin làm việc trong môi trường quốc tế, hiểu các văn bản chuyên ngành và giao tiếp tự nhiên không gặp trở ngại lớn. Đây là bệ phóng vững chắc để bạn tiếp tục phát triển sự nghiệp toàn cầu.',
+
+  culturalNote:
+    'Chúc mừng bạn đã hoàn thành toàn bộ hành trình A0 → B2 Tech English! 🎉 <span class="text-emerald-400 font-semibold">Bước tiếp theo thực tế:</span> (1) Đọc Hacker News hàng ngày, (2) Nghe Syntax.fm hoặc JS Party podcast, (3) Tham gia Discord servers của framework bạn đang dùng, (4) Comment trên GitHub issues. Ngôn ngữ học được qua use, không phải qua study.',
+
   warmupGreetings: [
-    { emoji: "🏆", en: "Having completed all forty-two units, I feel ready for the exam.", vn: "Sau khi hoàn thành tất cả bốn mươi hai bài học, tôi cảm thấy sẵn sàng cho kỳ thi.", context: "Having completed — Perfect Participle" },
-    { emoji: "🎓", en: "By next week, I will have received my B2 certificate.", vn: "Trước tuần tới, tôi sẽ đã nhận được chứng chỉ B2 của mình.", context: "will have received — Future Perfect" },
-    { emoji: "💪", en: "Rarely has anyone demonstrated such dedication to learning.", vn: "Hiếm khi có ai thể hiện sự cống hiến lớn lao như vậy đối với việc học.", context: "Rarely has anyone demonstrated — Inversion" },
+    { emoji: "🚀", en: "Excited to ship this feature — it's been a long sprint!", vn: "Hào hứng để ship tính năng này — sprint dài thật!", context: "Khi sắp release feature" },
+    { emoji: "🌏", en: "Working with a global team taught me more than any course.", vn: "Làm việc với team toàn cầu dạy tôi nhiều hơn bất kỳ khóa học nào.", context: "Chia sẻ kinh nghiệm remote work" },
+    { emoji: "🏆", en: "Fluency comes from using the language, not just studying it.", vn: "Sự thành thạo đến từ việc sử dụng ngôn ngữ, không chỉ học nó.", context: "Động lực tiếp tục học" },
   ],
+
   vocab: [
-    { id: 1, word: "expertise", emoji: "🎓", phonetic: "/ˌekspɜːˈtiːz/", meaning: "chuyên môn / kinh nghiệm chuyên sâu", example: "Her expertise in business administration is widely recognized.", example2: "We need to leverage our collective expertise.", collocation: "technical expertise / develop expertise / area of expertise", audio: "/audio/unit42/expertise.mp3" },
-    { id: 2, word: "sustainable", emoji: "♻️", phonetic: "/səˈsteɪnəbəl/", meaning: "bền vững", example: "A sustainable economy requires clean energy.", example2: "We must adopt sustainable business practices.", collocation: "sustainable energy / sustainable development / sustainable growth", audio: "/audio/unit42/sustainable.mp3" },
-    { id: 3, word: "implementation", emoji: "⚙️", phonetic: "/ˌɪmplɪmenˈteɪʃən/", meaning: "sự triển khai / thực hiện", example: "The successful implementation of the system took months.", example2: "We monitored the project implementation closely.", collocation: "project implementation / successful implementation", audio: "/audio/unit42/implementation.mp3" },
-    { id: 4, word: "collaborate", emoji: "🤝", phonetic: "/kəˈlæbəreɪt/", meaning: "cộng tác", example: "We collaborated with partners in Singapore to launch the app.", example2: "Let's collaborate on the next research paper.", collocation: "collaborate with / collaborate on", audio: "/audio/unit42/collaborate.mp3" },
-    { id: 5, word: "alternative", emoji: "🔄", phonetic: "/ɒlˈtɜːnətɪv/", meaning: "lựa chọn thay thế", example: "Is there a feasible alternative to this plan?", example2: "We had to find an alternative route.", collocation: "alternative solution / alternative energy / find an alternative", audio: "/audio/unit42/alternative.mp3" },
-    { id: 6, word: "resolution", emoji: "✅", phonetic: "/ˌrezəˈluːʃən/", meaning: "sự giải quyết / nghị quyết", example: "Conflict resolution is a crucial management skill.", example2: "The dispute was brought to a successful resolution.", collocation: "conflict resolution / final resolution", audio: "/audio/unit42/resolution.mp3" },
-    { id: 7, word: "compliance", emoji: "🛡️", phonetic: "/kənˈplaɪəns/", meaning: "sự tuân thủ quy định/pháp luật", example: "The factory is in compliance with all safety standards.", example2: "We must ensure compliance with corporate policies.", collocation: "in compliance with / ensure compliance / compliance officer", audio: "/audio/unit42/compliance.mp3" },
-    { id: 8, word: "environmental degradation", emoji: "🍂", phonetic: "/ɪnˌvaɪrənˈmentəl ˌdeɡrəˈdeɪʃən/", meaning: "sự suy thoái môi trường", example: "Deforestation is a major cause of environmental degradation.", example2: "We must act to slow down environmental degradation.", collocation: "prevent environmental degradation / cause environmental degradation", audio: "/audio/unit42/environmental_degradation.mp3" },
-    { id: 9, word: "artificial intelligence", emoji: "🤖", phonetic: "/ˌɑːtɪˈfɪʃəl ɪnˈtelɪdʒəns/", meaning: "trí tuệ nhân tạo (AI)", example: "Artificial intelligence is changing software development.", example2: "Many corporate tasks are now automated by artificial intelligence.", collocation: "development of artificial intelligence / artificial intelligence system", audio: "/audio/unit42/artificial_intelligence.mp3" },
-    { id: 10, word: "nevertheless", emoji: "⚖️", phonetic: "/ˌnevəðəˈles/", meaning: "tuy nhiên / mặc dù vậy", example: "The risk was high; nevertheless, we signed the contract.", example2: "He was tired; nevertheless, he completed the report.", collocation: "nevertheless, S + V / but nevertheless", audio: "/audio/unit42/nevertheless.mp3" },
-    { id: 11, word: "consequence", emoji: "💥", phonetic: "/ˈkɒnsɪkwəns/", meaning: "hậu quả / hệ quả", example: "Climate change has severe consequences for agriculture.", example2: "You must accept the consequences of your actions.", collocation: "severe consequences / negative consequence", audio: "/audio/unit42/consequence.mp3" },
-    { id: 12, word: "validate", emoji: "✔️", phonetic: "/ˈvælɪdeɪt/", meaning: "xác thực / phê chuẩn", example: "We gathered data to validate our business model.", example2: "The manager validated the signature on the contract.", collocation: "validate data / validate a contract / validate findings", audio: "/audio/unit42/validate.mp3" },
+    { id: 1, word: "specification (spec)", emoji: "📋", phonetic: "/ˌspesɪfɪˈkeɪʃən/", meaning: "tài liệu mô tả chi tiết yêu cầu kỹ thuật", example: "Read the technical spec before starting implementation.", example2: "The spec defines the API contract between frontend and backend.", collocation: "technical spec / product spec / follow the spec", audio: "/audio/unit42/specification.mp3" },
+    { id: 2, word: "ship", emoji: "🚢", phonetic: "/ʃɪp/", meaning: "phát hành feature/product cho người dùng", example: "We shipped the new payment flow to 100% of users last Friday.", example2: "Ship early, iterate fast — that's our engineering culture.", collocation: "ship a feature / ship it / ready to ship", audio: "/audio/unit42/ship.mp3" },
+    { id: 3, word: "iteration", emoji: "🔄", phonetic: "/ˌɪtəˈreɪʃən/", meaning: "vòng lặp cải tiến — build, measure, learn", example: "The first iteration was rough, but we improved with each release.", example2: "Agile is based on iterative development cycles.", collocation: "first iteration / iterate quickly / iterative development", audio: "/audio/unit42/iteration.mp3" },
+    { id: 4, word: "technical debt", emoji: "💳", phonetic: "/ˈteknɪkəl det/", meaning: "nợ kỹ thuật — shortcuts tích lũy thành vấn đề", example: "We need to allocate 20% of each sprint to pay off technical debt.", example2: "Skipping tests creates technical debt that slows future development.", collocation: "technical debt / pay off debt / accumulate debt", audio: "/audio/unit42/technical.mp3" },
+    { id: 5, word: "greenfield", emoji: "🌱", phonetic: "/ˈɡriːnfiːld/", meaning: "dự án mới hoàn toàn — không có legacy code", example: "This is a greenfield project — we get to choose the entire tech stack.", example2: "Greenfield projects are exciting but come with responsibility.", collocation: "greenfield project / greenfield development / start from scratch", audio: "/audio/unit42/greenfield.mp3" },
+    { id: 6, word: "legacy", emoji: "🏛️", phonetic: "/ˈleɡəsi/", meaning: "code/system cũ vẫn đang chạy (thường khó maintain)", example: "Migrating from the legacy PHP monolith to microservices took 2 years.", example2: "Legacy code needs tests before refactoring.", collocation: "legacy code / legacy system / legacy migration", audio: "/audio/unit42/legacy.mp3" },
+    { id: 7, word: "SLA (Service Level Agreement)", emoji: "📊", phonetic: "/es el eɪ/", meaning: "cam kết về uptime/performance (ví dụ: 99.9% uptime)", example: "Our SLA guarantees 99.9% uptime — that's 8.7 hours downtime per year.", example2: "We breached the SLA during last month's outage.", collocation: "SLA compliance / breach SLA / 99.9% SLA", audio: "/audio/unit42/sla.mp3" },
+    { id: 8, word: "linter", emoji: "🔍", phonetic: "/ˈlɪntər/", meaning: "tool tự động kiểm tra code style và lỗi phổ biến", example: "The linter caught a potential null reference before code review.", example2: "Configure ESLint as the linter for all JavaScript projects.", collocation: "run the linter / linter errors / linting rules", audio: "/audio/unit42/linter.mp3" },
+    { id: 9, word: "observability", emoji: "👁️", phonetic: "/əbˌzɜːvəˈbɪlɪti/", meaning: "khả năng quan sát hệ thống qua logs, metrics, traces", example: "We added observability tools to understand production behavior.", example2: "Good observability = faster incident resolution.", collocation: "system observability / observability stack / improve observability", audio: "/audio/unit42/observability.mp3" },
+    { id: 10, word: "pair programming", emoji: "👥", phonetic: "/peər ˈprəʊɡræmɪŋ/", meaning: "hai người cùng code trên một màn hình", example: "We do pair programming for complex features to share knowledge.", example2: "Pair programming catches bugs early but requires strong communication.", collocation: "pair program / pair with someone / driver and navigator", audio: "/audio/unit42/pair.mp3" },
+    { id: 11, word: "code freeze", emoji: "🧊", phonetic: "/kəʊd friːz/", meaning: "giai đoạn không cho thêm features mới trước release", example: "We're in code freeze — only critical bug fixes allowed until release.", example2: "Code freeze helps stabilize the codebase before shipping.", collocation: "code freeze / enter code freeze / lift the freeze", audio: "/audio/unit42/code.mp3" },
+    { id: 12, word: "rubber duck debugging", emoji: "🦆", phonetic: "/ˈrʌbər dʌk dɪˈbʌɡɪŋ/", meaning: "giải thích code cho 'con vịt cao su' để tự tìm ra bug", example: "I was stuck for hours — then I explained the bug to a rubber duck and found the issue!", example2: "Sometimes explaining your code to someone (or something) helps you debug.", collocation: "rubber duck debugging / talk through the problem / explain to a duck", audio: "/audio/unit42/rubber.mp3" },
   ],
+
+  grammar: {
+    title: "Capstone Review — Tech English Patterns tổng hợp",
+    rule: "Tổng hợp các patterns quan trọng nhất:\n\n1. Commit: feat(scope): add [feature]\n2. PR: 'This PR adds/fixes/refactors...'\n3. Standup: 'Yesterday... Today... Blocker:'\n4. Review: 'nit: / suggestion: / blocking:'\n5. Incident: '[URGENT] X is down — impact: Y users'\n6. Interview: 'I'm thinking of using... The time complexity...'\n7. OS: 'I believe I found a bug... Steps to reproduce...'",
+    examples: [
+      { en: "feat(auth): add JWT refresh token rotation", vn: "Thêm JWT refresh token rotation vào auth module" },
+      { en: "Blocking: This race condition will cause data corruption under high load.", vn: "Blocking: Race condition này sẽ gây corrupt data dưới load cao." },
+      { en: "I'm thinking of a two-pointer approach — O(n) time, O(1) space.", vn: "Tôi đang nghĩ đến two-pointer approach — O(n) time, O(1) space." },
+      { en: "I believe I found a regression in v4.2 — it worked in v4.1.", vn: "Tôi tin rằng tôi đã tìm thấy regression trong v4.2 — nó hoạt động trong v4.1." },
+    ],
+    tip: "Học ngôn ngữ tốt nhất: dùng nó mỗi ngày. Đặt commit messages bằng tiếng Anh. Comment code bằng tiếng Anh. Viết nhật ký dev bằng tiếng Anh. Sau 3 tháng, bạn sẽ ngạc nhiên sự tiến bộ.",
+    vnNote: "Hành trình A0→B2 Tech English của bạn: từ 'Hello, my name is...' đến 'This PR resolves a race condition by implementing optimistic locking.' Đây là một hành trình đáng tự hào.",
+    ccq: {
+      question: "Bạn đã học được điều gì quan trọng nhất từ hành trình A0→B2?",
+      options: [
+        "Ngữ pháp là quan trọng nhất",
+        "Từ vựng > ngữ pháp trong giao tiếp thực tế",
+        "Sử dụng ngôn ngữ trong context thực tế mỗi ngày là cách học nhanh nhất",
+        "Cần học 10,000 từ trước khi nói chuyện",
+      ],
+      answer: "Sử dụng ngôn ngữ trong context thực tế mỗi ngày là cách học nhanh nhất",
+      explanation: "Comprehensible input + real use = fluency. Bạn đã làm điều đó qua 42 units!",
+    },
+  },
+
+  matchingExercise: {
+    title: "Capstone review: Nối term với unit nguồn gốc",
+    pairs: [
+      { left: "feat(auth): add login", right: "Unit 33: Commit Messages" },
+      { left: "endpoint / payload", right: "Unit 34: API Docs" },
+      { left: "LGTM / nit:", right: "Unit 35: Code Review" },
+      { left: "blocker / sprint", right: "Unit 36: Standup" },
+      { left: "MRE / reproduce", right: "Unit 37: Stack Overflow" },
+    ],
+  },
+
+  scrambleExercises: [
+    { id: "s1", prompt_vn: "Chúng tôi đang trong code freeze — chỉ cho phép fix critical bugs.", words: ["We're", "in", "code", "freeze", "—", "only", "critical", "bug", "fixes", "are", "allowed."], answer: "We're in code freeze — only critical bug fixes are allowed." },
+    { id: "s2", prompt_vn: "Tôi đang nghĩ đến two-pointer approach — O(n) time complexity.", words: ["I'm", "thinking", "of", "a", "two-pointer", "approach", "—", "O(n)", "time", "complexity."], answer: "I'm thinking of a two-pointer approach — O(n) time complexity." },
+    { id: "s3", prompt_vn: "Ship early và iterate nhanh — đó là văn hóa engineering của chúng ta.", words: ["Ship", "early", "and", "iterate", "fast", "—", "that's", "our", "engineering", "culture."], answer: "Ship early and iterate fast — that's our engineering culture." },
+  ],
+
+  practiceQuiz: [
+    { id: "pq1", question: "What is 'technical debt'?", options: ["Tiền nợ vì mua laptop", "Shortcuts tích lũy thành vấn đề dài hạn trong codebase", "Database storage usage", "Số lượng bugs chưa fix"], answer: "Shortcuts tích lũy thành vấn đề dài hạn trong codebase", type: "multiple-choice" },
+    { id: "pq2", question: "When is 'code freeze' applied?", options: ["Khi team đi nghỉ", "Trước major release để ổn định codebase", "Khi hết budget", "Khi có production incident"], answer: "Trước major release để ổn định codebase", type: "multiple-choice" },
+    { id: "pq3", question: "What is 'observability' in software systems?", options: ["Xem code review", "Khả năng monitor hệ thống qua logs, metrics, traces", "Code documentation", "Security audit"], answer: "Khả năng monitor hệ thống qua logs, metrics, traces", type: "multiple-choice" },
+  ],
+
+  practiceTranslate: [
+    { id: "pt1", prompt_vn: "Chúng ta cần phân bổ 20% sprint để trả nợ kỹ thuật.", answer: "We need to allocate 20% of each sprint to pay off technical debt." },
+    { id: "pt2", prompt_vn: "SLA của chúng ta đảm bảo 99.9% uptime.", answer: "Our SLA guarantees 99.9% uptime." },
+    { id: "pt3", prompt_vn: "Ship early, iterate fast — đó là cách chúng ta xây dựng sản phẩm.", answer: "Ship early, iterate fast — that's how we build products." },
+  ],
+
   dialogues: [
     {
       id: 1,
-      title: "Buổi phỏng vấn tốt nghiệp và định hướng",
+      title: "Tuần đầu join team remote quốc tế",
       audio: "/audio/unit42/dialogue_1.mp3",
-      desc: "Trang thực hiện cuộc hội thoại tổng kết với giám khảo để nhận chứng chỉ B2.",
+      desc: "Phong join team Singapore — first week experience.",
       lines: [
-        { id: "d1-1", speaker: "Examiner", text: "Trang, congratulations on reaching the final unit! Reflecting on your journey, what has been your greatest achievement?", translation: "Trang, chúc mừng bạn đã đạt đến bài học cuối cùng! Nhìn lại hành trình của bạn, thành tựu lớn nhất là gì?" },
-        { id: "d1-2", speaker: "Trang", text: "Having completed the curriculum, I feel confident speaking English. Not only did I expand my vocabulary, but I also mastered B2 grammar.", translation: "Sau khi hoàn thành chương trình học, tôi cảm thấy tự tin nói tiếng Anh. Tôi không những mở rộng vốn từ vựng mà còn thành thạo ngữ pháp B2." },
-        { id: "d1-3", speaker: "Examiner", text: "Indeed. Your usage of inversion is impressive. What would you have done differently if you started again?", translation: "Thực sự vậy. Cách bạn sử dụng đảo ngữ rất ấn tượng. Bạn đã làm gì khác đi nếu bạn được bắt đầu lại?" },
-        { id: "d1-4", speaker: "Trang", text: "If I had started sooner, I would be even more fluent now. Nevertheless, I am proud of my progress. I can now collaborate globally.", translation: "Nếu tôi bắt đầu sớm hơn, bây giờ tôi đã có thể trôi chảy hơn nữa rồi. Tuy nhiên, tôi tự hào về sự tiến bộ của mình. Bây giờ tôi có thể cộng tác trên toàn cầu." },
-        { id: "d1-5", speaker: "Examiner", text: "You should be. Your B2 expertise is validated. You have officially completed the program!", translation: "Bạn nên tự hào. Chuyên môn B2 của bạn đã được xác thực. Bạn đã chính thức hoàn thành chương trình!" },
-      ],
-    },
-    {
-      id: 2,
-      title: "Thảo luận về cơ hội nghề nghiệp tương lai",
-      audio: "/audio/unit42/dialogue_2.mp3",
-      desc: "Huy và Sarah thảo luận về kế hoạch xin việc quốc tế sau khi đạt B2.",
-      lines: [
-        { id: "d2-1", speaker: "Sarah", text: "Huy, now that you've completed B2, are you going to apply for the multinational manager position?", translation: "Huy, bây giờ bạn đã hoàn thành B2, bạn có định nộp đơn vào vị trí quản lý tập đoàn đa quốc gia không?" },
-        { id: "d2-2", speaker: "Huy", text: "Yes. Unless I apply, I won't know if my expertise matches their criteria. I want to lead digital transformation projects.", translation: "Có chứ. Trừ khi tôi nộp đơn, tôi sẽ không biết chuyên môn của mình có khớp với tiêu chí của họ không. Tôi muốn dẫn dắt các dự án chuyển đổi số." },
-        { id: "d2-3", speaker: "Sarah", text: "I'm sure you will succeed, provided that you showcase your problem-solving skills in the interview.", translation: "Tôi chắc chắn bạn sẽ thành công, miễn là bạn thể hiện được kỹ năng giải quyết vấn đề của mình trong buổi phỏng vấn." },
-        { id: "d2-4", speaker: "Huy", text: "Thank you. What we need now is a celebration! Let's go to a cafe.", translation: "Cảm ơn bạn. Điều chúng ta cần bây giờ là một buổi ăn mừng! Chúng ta hãy đi cà phê thôi." },
+        { id: "d1-1", speaker: "Tech Lead", text: "Welcome to the team, Phong! First week will be light — read the technical spec for the upcoming feature, join our daily standups, and review a few PRs to get familiar with our codebase.", translation: "Chào mừng đến với team, Phong! Tuần đầu sẽ nhẹ nhàng — đọc technical spec cho feature sắp tới, tham gia daily standups, và review vài PRs để làm quen với codebase." },
+        { id: "d1-2", speaker: "Phong", text: "Sounds great! I've already read the CONTRIBUTING.md and set up my local environment. One question — what's our commit message convention?", translation: "Nghe tuyệt vời! Tôi đã đọc CONTRIBUTING.md và setup môi trường local. Một câu hỏi — convention commit message của chúng ta là gì?" },
+        { id: "d1-3", speaker: "Tech Lead", text: "We follow Conventional Commits — feat, fix, refactor, docs, and so on. All PRs need at least one approval before merging. We also have a 'no merge on Friday' rule.", translation: "Chúng ta theo Conventional Commits — feat, fix, refactor, docs, v.v. Tất cả PRs cần ít nhất một approval trước khi merge. Chúng ta cũng có quy tắc 'không merge vào thứ Sáu'." },
+        { id: "d1-4", speaker: "Phong", text: "Got it — no deploy on Fridays makes sense. When I review PRs, should I use the 'nit:' prefix for minor style comments?", translation: "Hiểu rồi — không deploy vào thứ Sáu là hợp lý. Khi tôi review PRs, tôi có nên dùng prefix 'nit:' cho minor style comments không?" },
+        { id: "d1-5", speaker: "Tech Lead", text: "Exactly right! You've done this before. We also use 'blocking:' for must-fix comments and 'suggestion:' for optional improvements. You'll fit in perfectly.", translation: "Chính xác! Bạn đã làm điều này trước đây. Chúng ta cũng dùng 'blocking:' cho must-fix comments và 'suggestion:' cho optional improvements. Bạn sẽ hòa nhập hoàn hảo." },
+        { id: "d1-6", speaker: "Phong", text: "I'm excited to contribute! I noticed a potential race condition in the auth module while reading the codebase — should I open a GitHub issue?", translation: "Tôi hào hứng được đóng góp! Tôi nhận thấy một potential race condition trong auth module khi đọc codebase — tôi có nên mở GitHub issue không?" },
+        { id: "d1-7", speaker: "Tech Lead", text: "Absolutely — great catch! Open an issue with the reproduction steps, and if you can fix it, a PR would be even better. You're already adding value on day one!", translation: "Dĩ nhiên — bắt được tốt lắm! Mở issue với reproduction steps, và nếu bạn có thể fix, một PR sẽ còn tốt hơn. Bạn đã tạo ra giá trị từ ngày đầu tiên!" },
       ],
     },
   ],
+
   listenAndChoose: [
-    { id: "lac1", audio_text: "Having completed the curriculum, I feel confident speaking.", options: ["I feel confident speaking before starting the curriculum.", "Having completed the curriculum, I feel confident speaking.", "I will start the curriculum to become confident.", "Speaking confidence is not related to the curriculum."], answer: "Having completed the curriculum, I feel confident speaking." },
-    { id: "lac2", audio_text: "If I had started sooner, I would be even more fluent now.", options: ["I started early so I am very fluent now.", "If I had started sooner, I would be even more fluent now.", "I will start early to be fluent now.", "Starting early did not help my fluency."], answer: "If I had started sooner, I would be even more fluent now." },
-    { id: "lac3", audio_text: "Rarely has anyone demonstrated such dedication to learning.", options: ["Everyone demonstrates dedication to learning in our class.", "Rarely has anyone demonstrated such dedication to learning.", "Dedicated learning is common in our school.", "Dedication to learning is not demonstrated here."], answer: "Rarely has anyone demonstrated such dedication to learning." },
-    { id: "lac4", audio_text: "The factory is in compliance with all safety standards.", options: ["The factory is in compliance with all safety standards.", "The factory violated the safety standards yesterday.", "Compliance is not required in the factory.", "We will ensure safety standards next year."], answer: "The factory is in compliance with all safety standards." },
-    { id: "lac5", audio_text: "We gathered data to validate our business model.", options: ["We validated the data before building the business model.", "We gathered data to validate our business model.", "Our business model failed despite the data.", "We will gather data next year to check our business model."], answer: "We gathered data to validate our business model." },
+    { id: "lac1", audio_text: "We're in code freeze — only P0 bugs can be fixed before the release.", options: ["Không có gì thay đổi", "Chỉ bug nghiêm trọng nhất được phép fix", "Tất cả features bị cancel", "Release bị hoãn"], answer: "Chỉ bug nghiêm trọng nhất được phép fix" },
+    { id: "lac2", audio_text: "This project has significant technical debt — we should allocate a sprint to clean it up.", options: ["Project thiếu tài liệu", "Codebase có nhiều shortcuts cần dọn dẹp", "Project cần thêm features", "Team cần thêm developer"], answer: "Codebase có nhiều shortcuts cần dọn dẹp" },
+    { id: "lac3", audio_text: "Good observability helped us identify the root cause within 10 minutes of the incident.", options: ["Team phản ứng chậm", "Monitoring system giúp tìm root cause nhanh", "Incident kéo dài 10 phút", "Team cần 10 người để debug"], answer: "Monitoring system giúp tìm root cause nhanh" },
   ],
+
   speaking: {
-    level1Prompt: "Having {input} the B2 level, I feel ready to {input} in a {input} environment.",
-    level1Placeholder: "Ví dụ: completed — collaborate — global...",
-    level2Situation: "Bạn phát biểu trong buổi lễ tốt nghiệp hoặc phỏng vấn đánh giá. Hãy: (1) Khẳng định rằng bạn đã tích lũy chuyên môn B2 thành công, (2) Giải thích rằng nếu không có phương pháp học tập đúng đắn, bạn đã không đạt kết quả hôm nay, (3) Bày tỏ quyết tâm tiếp tục hợp tác quốc tế.",
-    level2Hint: "Having completed the curriculum, I have accumulated valuable expertise. If I had not practiced daily with AtoEnglish, I would not be fluent today. Consequently, I am ready to collaborate with global partners and meet all professional criteria.",
+    level1Prompt: "Tổng hợp Phase 4: Giới thiệu bản thân như một developer đến team mới — dùng Tech English bạn đã học.",
+    level1Placeholder: "Hi everyone, I'm [name]. I work with [tech stack]. I'm comfortable with Agile/Scrum workflows, code reviews, and...",
+    level2Situation: "Mock final challenge: Tech lead hỏi 'Walk me through how you'd approach building a URL shortener service from scratch. Consider scalability to 1 million users.'",
+    level2Hint: "I'd start by clarifying requirements... For the data model, I'd use a key-value store... The main bottleneck would be the database reads, so I'd add Redis caching... For 1M users, horizontal scaling with load balancing... The SLA target would be 99.9% uptime...",
   },
-  grammar: {
-    title: "A0-B2 Grammar Review — Tổng Hợp Ngữ Pháp Toàn Diện",
-    rule: "Chúc mừng bạn đã hoàn thành toàn bộ hệ thống ngữ pháp A0-B2. Hãy xem lại bản đồ ngữ pháp cốt lõi của bạn:\n\n1. A0-A2: Verb BE, Thời gian, Số đếm, Hiện tại đơn, Quá khứ đơn, Tương lai đơn (will/going to), Hiện tại hoàn thành.\n2. B1: Quá khứ tiếp diễn, Quá khứ hoàn thành, Tương lai hoàn thành, Động từ khuyết thiếu mở rộng, Câu điều kiện loại 0 & 1, Thể bị động cơ bản, Mệnh đề quan hệ xác định, Danh động từ & Động từ nguyên mẫu.\n3. B2: Câu điều kiện loại 2 & 3, Câu điều kiện hỗn hợp, Bị động học thuật nâng cao, Mệnh đề phân từ rút gọn, Đảo ngữ, Câu chẻ nhấn mạnh, Động từ khuyết thiếu hoàn thành (Modal Perfect), Từ nối liên kết nâng cao.",
-    examples: [
-      { en: "Not only did she complete the assessment, but she also scored 100%. (Inversion)", vn: "Không những cô ấy hoàn thành bài đánh giá, mà cô ấy còn đạt điểm tuyệt đối 100%." },
-      { en: "If we had not negotiated, we would face a dispute now. (Mixed Conditional)", vn: "Nếu chúng ta không đàm phán, chúng ta đã đối mặt với tranh chấp bây giờ." },
-      { en: "It was the implementation of AI that enhanced our database. (Cleft sentence)", vn: "Chính sự triển khai trí tuệ nhân tạo đã nâng cao cơ sở dữ liệu của chúng ta." },
-    ],
-    tip: "Chìa khóa để giữ vững trình độ B2 và tiến lên C1 là tiếp tục đọc các tài liệu tiếng Anh thực tế (báo chí như The Economist, New Scientist) và thực hành nói phản xạ hàng ngày, áp dụng các từ nối chuyển tiếp nhuần nhuyễn.",
-    vnNote: "⚠️ Hãy luôn lưu ý sửa các lỗi phát âm đuôi (coda) mà người Việt hay mắc phải: /s/, /t/, /d/, /k/ để bài nói của bạn đạt chuẩn phát âm quốc tế IELTS 6.5+.",
-    dialogueExample: {
-      speaker: "Trang",
-      text: "Having completed the curriculum, I feel confident speaking English. Not only did I expand my vocabulary, but I also mastered B2 grammar.",
-      translation: "Sau khi hoàn thành chương trình học, tôi cảm thấy tự tin nói tiếng Anh. Tôi không những mở rộng vốn từ vựng mà còn thành thạo ngữ pháp B2.",
-      highlight: "Having completed (phân từ hoàn thành) | Not only did I expand (đảo ngữ) — sự tích hợp ngữ pháp B2 đỉnh cao",
-    },
-    ccq: {
-      question: "Câu nào là ví dụ chuẩn của câu điều kiện hỗn hợp (Quá khứ giả định ảnh hưởng đến hiện tại)?",
-      options: [
-        "If I had time, I would help you yesterday.",
-        "If I had had time yesterday, I would be helping you now.",
-        "If I had had time yesterday, I would have helped you.",
-        "If I have time now, I will help you.",
-      ],
-      answer: "If I had had time yesterday, I would be helping you now.",
-      explanation: "'If I had had' (Quá khứ hoàn thành - giả định quá khứ) kết hợp với 'would be V-ing' (giả định hiện tại) tạo thành câu điều kiện hỗn hợp.",
-    },
-  },
-  practiceQuiz: [
-    { id: "pq1", type: "multiple-choice", question: "Chọn dạng đúng: 'Rarely ___ our developers encountered such a server crash.'", options: ["do", "did", "have", "had"], answer: "have" },
-    { id: "pq2", type: "multiple-choice", question: "Chọn từ nối thích hợp: 'We worked hard; ___ (do đó) we achieved our target.'", options: ["consequently", "nevertheless", "furthermore", "whereas"], answer: "consequently" },
-    { id: "pq3", type: "cloze", question: "Điền dạng đúng của động từ: 'If he had not invested in AI, he ___ (be/phủ định) successful now.'", answer: "would not be" },
-    { id: "pq4", type: "multiple-choice", question: "Chọn từ điền: 'The company is in ___ with safety standards.'", options: ["compliance", "expertise", "resolution", "alternative"], answer: "compliance" },
-    { id: "pq5", type: "cloze", question: "Điền dạng phân từ hoàn thành: '___ (complete) the assessment, he celebrated.'", answer: "Having completed" },
-  ],
-  matchingExercise: {
-    title: "Nối từ vựng học thuật cấp độ B2 với nghĩa đúng",
-    pairs: [
-      { left: "expertise", right: "chuyên môn chuyên sâu" },
-      { left: "compliance", right: "sự tuân thủ quy định" },
-      { left: "resolution", right: "sự giải quyết" },
-      { left: "validate", right: "xác thực / phê duyệt" },
-      { left: "consequence", right: "hậu quả / hệ quả" },
-    ],
-  },
-  scrambleExercises: [
-    { id: "s42-1", prompt_vn: "Chính sự chuyển đổi số đã nâng cao hiệu suất của chúng tôi.", words: ["It", "was", "digital", "transformation", "that", "enhanced", "our", "performance", "."], answer: "It was digital transformation that enhanced our performance ." },
-    { id: "s42-2", prompt_vn: "Không những họ đạt chỉ tiêu, họ còn cắt giảm chi phí.", words: ["Not", "only", "did", "they", "meet", "targets", ",", "they", "also", "cut", "costs", "."], answer: "Not only did they meet targets , they also cut costs ." },
-    { id: "s42-3", prompt_vn: "Hiếm khi có học sinh nào đạt điểm tuyệt đối 100%.", words: ["Rarely", "does", "any", "student", "achieve", "a", "perfect", "score", "."], answer: "Rarely does any student achieve a perfect score ." },
-  ],
+
   quiz: [
-    { id: "fq1", type: "multiple-choice", question: "Chọn dạng đúng: 'The new system is claimed ___ performance by thirty percent.'", options: ["to enhance", "to have enhanced", "enhancing", "enhanced"], answer: "to have enhanced" },
-    { id: "fq2", type: "cloze", question: "Điền từ nối: 'He was tired; ___ (tuy nhiên), he kept studying.'", answer: "nevertheless" },
-    { id: "fq3", type: "multiple-choice", question: "Chọn câu đúng: '___ (trừ khi) you agree to our terms, we will terminate the contract.'", options: ["Unless", "As long as", "Provided that", "Even if"], answer: "Unless" },
-    { id: "fq4", type: "translate", question: "Dịch: 'Chúng tôi cần tiến hành đánh giá để xác thực kết quả.'", answer: "We need to conduct an evaluation to validate the results." },
-    { id: "fq5", type: "multiple-choice", question: "Từ nào mô tả việc 'tác động lên hành vi của ai đó'?", options: ["validate", "influence", "leverage", "assert"], answer: "influence" },
+    { id: "q1", question: "What is a 'greenfield project'?", options: ["Dự án về môi trường", "Dự án mới hoàn toàn không có legacy code", "Dự án ở Singapore", "Dự án có nhiều bugs"], answer: "Dự án mới hoàn toàn không có legacy code", type: "multiple-choice" },
+    { id: "q2", question: "What does 'ship early, iterate fast' mean?", options: ["Giao hàng nhanh", "Ra mắt sớm và cải thiện liên tục", "Viết code nhanh", "Fix bugs sớm"], answer: "Ra mắt sớm và cải thiện liên tục", type: "multiple-choice" },
+    { id: "q3", question: "What is 'pair programming'?", options: ["Lập trình một mình", "Hai người cùng code trên một màn hình", "Programming challenge", "Code review"], answer: "Hai người cùng code trên một màn hình", type: "multiple-choice" },
+    { id: "q4", question: "Điền từ: Good ___ helped us identify the root cause quickly during the outage.", options: ["testing", "observability", "documentation", "monitoring"], answer: "observability", type: "multiple-choice" },
+    { id: "q5", question: "Dịch sang tiếng Anh: Chúng ta cần cải thiện observability trước sprint tiếp theo.", answer: "We need to improve observability before the next sprint.", type: "translate" },
+    { id: "q6", question: "Từ nào KHÔNG phải là action verb chuẩn trong CV?", options: ["Built", "Reduced", "Responsible for", "Shipped"], answer: "Responsible for", type: "multiple-choice" },
+    { id: "q7", question: "Format standup chuẩn là gì?", options: ["Features / Bugs / Tests", "Yesterday / Today / Blockers", "Plan / Execute / Review", "Start / Stop / Continue"], answer: "Yesterday / Today / Blockers", type: "multiple-choice" },
+    { id: "q8", question: "Dịch: 'This is a blocking comment — must fix before merge.'", answer: "Đây là blocking comment — phải sửa trước khi merge.", type: "translate" },
   ],
-  cumulativeReviewQuestions: [
-    { id: "cr42-1", question: "Ôn tập Unit 41 — Chọn từ thích hợp: 'Urbanization has caused severe environmental ___.'", options: ["degradation", "wellbeing", "deforestation", "infrastructure"], answer: "degradation", type: "multiple-choice" },
-    { id: "cr42-2", question: "Ôn tập Unit 40 — Điền: 'She practices daily, ___ (nhờ đó) improving her fluency.'", options: [], answer: "thereby", type: "cloze" },
-    { id: "cr42-3", question: "Ôn tập Unit 39 — Chọn dạng đúng: 'He ___ (forget) his keys because the car is locked.'", options: ["must have forgotten", "can't have forgotten", "should have forgotten", "might forget"], answer: "must have forgotten", type: "multiple-choice" },
-  ],
+
   fluencyDrill: {
+    title: "Phase 4 Capstone — Final vocabulary review",
+    timeLimit: 90,
     items: [
-      { en: "Having completed B2, I feel ready", vn: "Sau khi hoàn thành B2, tôi thấy sẵn sàng" },
-      { en: "Not only did we hit our target", vn: "Chúng tôi không những đạt chỉ tiêu" },
-      { en: "If I had started sooner, I would be", vn: "Nếu tôi bắt đầu sớm hơn, giờ tôi đã..." },
-      { en: "We must ensure compliance with rules", vn: "Chúng ta phải đảm bảo tuân thủ quy tắc" },
-      { en: "AI is transforming digital transformation", vn: "AI đang thay đổi chuyển đổi số" },
-      { en: "We need to validate the research findings", vn: "Chúng ta cần xác thực phát hiện nghiên cứu" },
-      { en: "Urbanization causes environmental degradation", vn: "Đô thị hóa gây ra sự suy thoái môi trường" },
-      { en: "I am ready to collaborate globally", vn: "Tôi đã sẵn sàng cộng tác trên toàn cầu" },
+      { en: "ship a feature", vn: "phát hành tính năng" },
+      { en: "technical debt", vn: "nợ kỹ thuật" },
+      { en: "code freeze", vn: "không thêm feature trước release" },
+      { en: "observability", vn: "khả năng quan sát hệ thống" },
+      { en: "spec", vn: "tài liệu yêu cầu kỹ thuật" },
+      { en: "greenfield project", vn: "dự án mới hoàn toàn" },
+      { en: "legacy code", vn: "code cũ khó maintain" },
+      { en: "SLA", vn: "cam kết uptime/performance" },
+      { en: "pair programming", vn: "hai người cùng code" },
+      { en: "rubber duck debugging", vn: "giải thích bug cho 'vịt' để tự tìm ra" },
+      { en: "iterate", vn: "cải tiến liên tục qua vòng lặp" },
+      { en: "bottleneck", vn: "điểm chậm nhất trong hệ thống" },
     ],
   },
 };

@@ -1,151 +1,151 @@
-import { UnitData } from "@/components/learn/UnitTemplate";
+import type { UnitData } from "@/components/learn/UnitTemplate";
 
-export const unit39: UnitData = {
+// UNIT 39 — Technical Interview English (B2 / Phase 4)
+const unit39: UnitData = {
   unitId: "unit-39",
-  title: "Unit 39: Speculation & Deduction",
+  title: "Unit 39: Technical Interview English",
   level: "B2",
-  xp: 120,
-  estimatedTime: 60,
-  description: "Modal Perfect — Động từ khuyết thiếu hoàn thành (must have, can't have, might have, should have + V3). Suy đoán và lập luận logic về các sự kiện trong quá khứ. Cốt lõi của IELTS Listening và Speaking Part 3.",
-  badgeName: "Nhà Thám Tử",
-  badgeEmoji: "🕵️‍♂️",
-  situation: "Văn phòng xảy ra sự cố rò rỉ thông tin dự án mật cho đối thủ cạnh tranh. Nhóm quản lý đang điều tra nguyên nhân. Bạn cần sử dụng các cấu trúc suy đoán quá khứ ('must have leaked', 'can't have forgotten') dựa trên các bằng chứng và manh mối thực tế để tìm ra sự thật.",
+  xp: 130,
+  estimatedTime: 65,
+  description: "Luyện trả lời câu hỏi phỏng vấn kỹ thuật bằng tiếng Anh: coding, system design, behavioral.",
+  badgeName: "Interview Ready",
+  badgeEmoji: "🎯",
+
+  situation:
+    "Bạn được Google, Meta, hoặc một startup Singapore mời phỏng vấn. Vòng 1: coding interview với LeetCode-style questions. Vòng 2: System design. Vòng 3: Behavioral với format STAR. Bạn phải nói tiếng Anh trong suốt quá trình.",
+
   learningOutcomes: [
-    "Sử dụng các cấu trúc Modal Perfect để suy đoán mức độ chắc chắn về sự kiện quá khứ",
-    "Phân tích mâu thuẫn, bác bỏ giả thuyết sai lệch và rút ra kết luận logic trong công việc",
-    "Sử dụng từ vựng về lập luận, suy luận và chứng cứ ở cấp độ B2+",
+    "Giải thích giải thuật và code logic bằng tiếng Anh rõ ràng",
+    "Dùng STAR method trả lời behavioral questions",
+    "Hỏi ngược lại interviewer chuyên nghiệp (ask clarifying questions)",
   ],
-  culturalNote: 'Trong giao tiếp học thuật và chuyên nghiệp, khi đưa ra suy đoán (<span class="text-emerald-400">speculation</span>), việc dùng đúng động từ khuyết thiếu thể hiện độ chính xác khoa học. Dùng <span class="text-emerald-400">"must have"</span> chỉ khi có bằng chứng rõ ràng (<span class="text-emerald-400">proof</span>), dùng <span class="text-emerald-400">"might have"</span> khi chỉ là giả thuyết, và tránh bác bỏ (<span class="text-emerald-400">dismiss</span>) ý kiến của người khác một cách thiếu căn cứ.',
+
+  culturalNote:
+    'Phỏng vấn kỹ thuật phương Tây khác Việt Nam: họ muốn thấy <span class="text-emerald-400 font-semibold">thinking process</span>, không chỉ đáp án. "Think aloud" = nói to suy nghĩ trong khi giải: "I\'m thinking about a hash map approach because..." Silence trong 5 phút = red flag. <span class="text-emerald-400 font-semibold">Hỏi lại</span> trước khi code = professional, không phải yếu.',
+
   warmupGreetings: [
-    { emoji: "🔍", en: "She must have forgotten her password because the account is locked.", vn: "Cô ấy chắc chắn đã quên mật khẩu vì tài khoản đã bị khóa.", context: "must have + PP — chắc chắn đã xảy ra" },
-    { emoji: "❌", en: "He can't have leaked the document; he didn't have access.", vn: "Anh ấy chắc chắn đã không làm rò rỉ tài liệu; anh ấy không có quyền truy cập.", context: "can't have + PP — chắc chắn đã không xảy ra" },
-    { emoji: "💡", en: "They might have rescheduled the meeting without informing us.", vn: "Có lẽ họ đã lên lịch lại cuộc họp mà không thông báo cho chúng ta.", context: "might have + PP — có khả năng đã xảy ra" },
+    { emoji: "🎯", en: "Could you clarify the input constraints for this problem?", vn: "Bạn có thể làm rõ ràng constraints đầu vào của bài toán này không?", context: "Hỏi clarifying question trước khi code" },
+    { emoji: "🧠", en: "I'm thinking of a brute force approach first, then optimizing.", vn: "Tôi đang nghĩ đến cách brute force trước, sau đó optimize.", context: "Think aloud trong coding interview" },
+    { emoji: "📊", en: "The time complexity would be O(n log n) due to the sorting step.", vn: "Độ phức tạp thời gian sẽ là O(n log n) do bước sort.", context: "Phân tích complexity" },
   ],
+
   vocab: [
-    { id: 1, word: "speculation", emoji: "💭", phonetic: "/ˌspekjʊˈleɪʃən/", meaning: "sự suy đoán / giả thuyết", example: "There is a lot of speculation about who will be the next CEO.", example2: "The report is based on facts, not speculation.", collocation: "pure speculation / fuel speculation / speculation about", audio: "/audio/unit39/speculation.mp3" },
-    { id: 2, word: "deduction", emoji: "🧠", phonetic: "/dɪˈdʌkʃən/", meaning: "sự suy luận / kết luận rút ra", example: "His deduction turned out to be correct.", example2: "Through logical deduction, she identified the fault.", collocation: "logical deduction / deduction from / make a deduction", audio: "/audio/unit39/deduction.mp3" },
-    { id: 3, word: "proof", emoji: "📄", phonetic: "/pruːf/", meaning: "chứng cứ / bằng chứng xác thực", example: "Do you have any proof that he signed the contract?", example2: "The video is clear proof of the system failure.", collocation: "conclusive proof / proof of purchase / need proof", audio: "/audio/unit39/proof.mp3" },
-    { id: 4, word: "trace", emoji: "🐾", phonetic: "/treɪs/", meaning: "dấu vết / manh mối nhỏ", example: "The hackers left no trace of their activity in the system.", example2: "We found traces of water in the server room.", collocation: "leave a trace / find a trace / trace elements", audio: "/audio/unit39/trace.mp3" },
-    { id: 5, word: "credible", emoji: "📰", phonetic: "/ˈkredəbəl/", meaning: "đáng tin cậy", example: "We need to find a credible source for this information.", example2: "Her explanation was not very credible.", collocation: "credible source / highly credible / credible evidence", audio: "/audio/unit39/credible.mp3" },
-    { id: 6, word: "deduce", emoji: "🧐", phonetic: "/dɪˈdjuːs/", meaning: "suy ra / kết luận dựa trên thực tế", example: "From the data, we can deduce that sales will rise next quarter.", example2: "What did you deduce from the survey results?", collocation: "deduce from / manage to deduce", audio: "/audio/unit39/deduce.mp3" },
-    { id: 7, word: "imply", emoji: "💬", phonetic: "/ɪmˈplaɪ/", meaning: "ngụ ý / ám chỉ", example: "Are you implying that the error was my fault?", example2: "The report implies that the company is facing financial trouble.", collocation: "imply that / clearly imply / imply meaning", audio: "/audio/unit39/imply.mp3" },
-    { id: 8, word: "conclude", emoji: "🏁", phonetic: "/kənˈkluːd/", meaning: "kết luận", example: "The meeting concluded with a call for action.", example2: "The investigators concluded that the crash was due to human error.", collocation: "conclude that / conclude a meeting / final conclusion", audio: "/audio/unit39/conclude.mp3" },
-    { id: 9, word: "inference", emoji: "🧠", phonetic: "/ˈɪnfərəns/", meaning: "sự suy luận / kết luận rút ra từ bằng chứng", example: "The reader must make inferences based on the text.", example2: "Your inference is not supported by the data.", collocation: "draw an inference / logical inference / inference based on", audio: "/audio/unit39/inference.mp3" },
-    { id: 10, word: "apparent", emoji: "👁️", phonetic: "/əˈpærənt/", meaning: "rõ ràng / hiển nhiên", example: "It became apparent that the project would fail.", example2: "For no apparent reason, the server stopped working.", collocation: "apparent contradiction / apparent failure / become apparent", audio: "/audio/unit39/apparent.mp3" },
-    { id: 11, word: "dismiss", emoji: "🗑️", phonetic: "/dɪsˈmɪs/", meaning: "bác bỏ / giải tán / sa thải", example: "The manager dismissed our concerns as unimportant.", example2: "He was dismissed from his job for poor performance.", collocation: "dismiss an idea / dismiss a claim / dismiss from work", audio: "/audio/unit39/dismiss.mp3" },
-    { id: 12, word: "contradict", emoji: "🔄", phonetic: "/ˌkɒntrəˈdɪkt/", meaning: "mâu thuẫn / trái ngược với", example: "His statements contradict the evidence gathered.", example2: "The two reports completely contradict each other.", collocation: "completely contradict / contradict oneself / direct contradiction", audio: "/audio/unit39/contradict.mp3" },
+    { id: 1, word: "time complexity", emoji: "⏱️", phonetic: "/taɪm kəmˈpleksɪti/", meaning: "độ phức tạp thời gian — Big O notation", example: "The time complexity of this solution is O(n²) — can we optimize it?", example2: "Binary search has O(log n) time complexity.", collocation: "time complexity / O(n) / optimize time complexity", audio: "/audio/unit39/time.mp3" },
+    { id: 2, word: "brute force", emoji: "💪", phonetic: "/bruːt fɔːs/", meaning: "giải pháp đơn giản nhất, không optimize", example: "The brute force approach is O(n²) — let me think of something better.", example2: "Always start with brute force, then optimize.", collocation: "brute force approach / brute force solution / start with brute force", audio: "/audio/unit39/brute.mp3" },
+    { id: 3, word: "edge case", emoji: "⚡", phonetic: "/edʒ keɪs/", meaning: "trường hợp ngoại lệ cần xử lý đặc biệt", example: "What if the input array is empty? Let me handle that edge case.", example2: "Good candidates always ask about edge cases.", collocation: "handle edge cases / consider edge cases / edge case testing", audio: "/audio/unit39/edge.mp3" },
+    { id: 4, word: "trade-off", emoji: "⚖️", phonetic: "/treɪd ɒf/", meaning: "đánh đổi — cải thiện cái này = hy sinh cái khác", example: "There's a trade-off between time and space complexity here.", example2: "Using a hash map is a time-space trade-off.", collocation: "time-space trade-off / consider the trade-offs / trade-off between", audio: "/audio/unit39/trade_off.mp3" },
+    { id: 5, word: "STAR method", emoji: "⭐", phonetic: "/stɑːr ˈmeθəd/", meaning: "Situation, Task, Action, Result — format trả lời behavioral", example: "Use the STAR method: describe the Situation, your Task, Action taken, and the Result.", example2: "STAR format helps structure your answer clearly.", collocation: "STAR method / behavioral question / situation-action-result", audio: "/audio/unit39/star.mp3" },
+    { id: 6, word: "scalability", emoji: "📈", phonetic: "/ˌskeɪləˈbɪlɪti/", meaning: "khả năng scale hệ thống khi traffic tăng", example: "How would you ensure the system is scalable to 1 million users?", example2: "Horizontal scaling improves scalability by adding more servers.", collocation: "horizontal scalability / scalable architecture / scale to X users", audio: "/audio/unit39/scalability.mp3" },
+    { id: 7, word: "bottleneck", emoji: "🍾", phonetic: "/ˈbɒtlnek/", meaning: "điểm nghẽn cổ chai — phần chậm nhất trong hệ thống", example: "The database is the bottleneck — we need to add a caching layer.", example2: "Identify the bottleneck before optimizing.", collocation: "performance bottleneck / identify the bottleneck / remove bottleneck", audio: "/audio/unit39/bottleneck.mp3" },
+    { id: 8, word: "walk through", emoji: "🚶", phonetic: "/wɔːk θruː/", meaning: "giải thích từng bước một", example: "Let me walk you through my solution step by step.", example2: "Please walk me through your system design.", collocation: "walk through the solution / walk through your thinking / code walkthrough", audio: "/audio/unit39/walk.mp3" },
+    { id: 9, word: "clarifying question", emoji: "❓", phonetic: "/ˈklærɪfaɪɪŋ ˈkwestʃən/", meaning: "câu hỏi để hiểu rõ yêu cầu trước khi bắt đầu", example: "Before I start coding, I have a few clarifying questions.", example2: "Good engineers ask clarifying questions before designing.", collocation: "ask clarifying questions / clarify the requirements / clarifying question", audio: "/audio/unit39/clarifying.mp3" },
+    { id: 10, word: "throughput", emoji: "🔄", phonetic: "/ˈθruːpʊt/", meaning: "số lượng requests hệ thống xử lý được per second", example: "The system handles 10,000 requests per second — that's the throughput.", example2: "We need higher throughput to support peak traffic.", collocation: "system throughput / high throughput / requests per second", audio: "/audio/unit39/throughput.mp3" },
   ],
+
+  grammar: {
+    title: "Think-Aloud Language cho Coding Interview",
+    rule: "Những cụm từ quan trọng khi nói to suy nghĩ:\n• 'I'm thinking about...'\n• 'Let me start with... and then...'\n• 'The time complexity would be O(n) because...'\n• 'Before I code, I want to make sure I understand...'\n• 'One edge case I need to handle is...'\n• 'Could I use a [data structure] here?'",
+    examples: [
+      { en: "I'm thinking of using a hash map to reduce the lookup time to O(1).", vn: "Tôi đang nghĩ dùng hash map để giảm thời gian lookup xuống O(1)." },
+      { en: "Let me start with the brute force approach first, then we can optimize.", vn: "Hãy để tôi bắt đầu với brute force trước, rồi chúng ta có thể optimize." },
+      { en: "One edge case I need to handle is when the array is empty.", vn: "Một edge case tôi cần xử lý là khi mảng rỗng." },
+      { en: "The time complexity would be O(n log n) because of the sorting step.", vn: "Độ phức tạp thời gian sẽ là O(n log n) do bước sort." },
+    ],
+    tip: "Quy tắc vàng: Đừng im lặng. Nếu bạn không biết, nói 'I'm not sure about X, but I would approach it by...' = shows problem-solving mindset.",
+    vnNote: "Trong văn hóa Việt, im lặng = suy nghĩ. Trong phỏng vấn phương Tây, im lặng = không biết hoặc stuck. Luôn nói gì đó — dù chỉ là 'Let me think for a second...'",
+    ccq: {
+      question: "Câu nào tốt nhất khi bạn không chắc về giải pháp?",
+      options: [
+        "(im lặng 3 phút)",
+        "I don't know.",
+        "I'm not sure about the optimal approach, but I'd start with a hash map and see if we can optimize from there.",
+        "This is very hard.",
+      ],
+      answer: "I'm not sure about the optimal approach, but I'd start with a hash map and see if we can optimize from there.",
+      explanation: "Thừa nhận không chắc + đề xuất hướng giải quyết = professional. Silence hoàn toàn = red flag.",
+    },
+  },
+
+  matchingExercise: {
+    title: "Nối thuật ngữ interview với định nghĩa",
+    pairs: [
+      { left: "brute force", right: "Giải pháp đơn giản nhất chưa optimize" },
+      { left: "trade-off", right: "Đánh đổi giữa time và space" },
+      { left: "STAR method", right: "Situation, Task, Action, Result" },
+      { left: "bottleneck", right: "Điểm chậm nhất trong hệ thống" },
+      { left: "walk through", right: "Giải thích từng bước" },
+    ],
+  },
+
+  scrambleExercises: [
+    { id: "s1", prompt_vn: "Trước khi tôi code, hãy để tôi đảm bảo tôi hiểu requirements.", words: ["Before", "I", "code,", "let", "me", "make", "sure", "I", "understand", "the", "requirements."], answer: "Before I code, let me make sure I understand the requirements." },
+    { id: "s2", prompt_vn: "Độ phức tạp thời gian sẽ là O(n) vì chúng ta chỉ iterate qua array một lần.", words: ["The", "time", "complexity", "would", "be", "O(n)", "since", "we", "only", "iterate", "through", "the", "array", "once."], answer: "The time complexity would be O(n) since we only iterate through the array once." },
+    { id: "s3", prompt_vn: "Hãy để tôi walk bạn qua giải pháp của tôi từng bước.", words: ["Let", "me", "walk", "you", "through", "my", "solution", "step", "by", "step."], answer: "Let me walk you through my solution step by step." },
+  ],
+
+  practiceQuiz: [
+    { id: "pq1", question: "What does STAR stand for in behavioral interviews?", options: ["Speed, Task, Action, Result", "Situation, Task, Action, Result", "Skill, Target, Ability, Role", "Subject, Theory, Action, Response"], answer: "Situation, Task, Action, Result", type: "multiple-choice" },
+    { id: "pq2", question: "Why should you ask clarifying questions before coding?", options: ["To waste time", "Để show bạn hiểu problem và không assume sai", "Để impress interviewer", "Vì bạn không biết giải"], answer: "Để show bạn hiểu problem và không assume sai", type: "multiple-choice" },
+    { id: "pq3", question: "What is 'time complexity' O(n²)?", options: ["Code chạy 2 giây", "Số operations tăng theo bình phương của input size", "Code có 2 loops", "Memory dùng n*2 bytes"], answer: "Số operations tăng theo bình phương của input size", type: "multiple-choice" },
+  ],
+
+  practiceTranslate: [
+    { id: "pt1", prompt_vn: "Tôi đang suy nghĩ về cách dùng binary search để giảm time complexity.", answer: "I'm thinking of using binary search to reduce the time complexity." },
+    { id: "pt2", prompt_vn: "Trước khi tôi bắt đầu, tôi có một vài clarifying questions.", answer: "Before I start, I have a few clarifying questions." },
+    { id: "pt3", prompt_vn: "Database là bottleneck — chúng ta cần thêm caching layer.", answer: "The database is the bottleneck — we need to add a caching layer." },
+  ],
+
   dialogues: [
     {
       id: 1,
-      title: "Điều tra rò rỉ tài liệu mật",
+      title: "Coding Interview — LeetCode style",
       audio: "/audio/unit39/dialogue_1.mp3",
-      desc: "Linh và Huy thảo luận về nghi vấn rò rỉ dữ liệu khách hàng.",
+      desc: "Hùng phỏng vấn tại một startup Singapore — câu hỏi Two Sum.",
       lines: [
-        { id: "d1-1", speaker: "Linh", text: "The competitor launched a similar feature today. There is speculation that our plans were leaked.", translation: "Đối thủ đã ra mắt một tính năng tương tự hôm nay. Đang có sự suy đoán rằng các kế hoạch của chúng ta đã bị rò rỉ." },
-        { id: "d1-2", speaker: "Huy", text: "We need proof. The hackers must have accessed our server because there are traces of unauthorized login.", translation: "Chúng ta cần chứng cứ. Tin tặc chắc chắn đã truy cập máy chủ của chúng ta vì có những dấu vết đăng nhập trái phép." },
-        { id: "d1-3", speaker: "Linh", text: "But the security team asserts that the database is safe. Could a staff member have sent it?", translation: "Nhưng đội ngũ bảo mật khẳng định cơ sở dữ liệu an toàn. Liệu có thành viên nhân sự nào đã gửi nó đi không?" },
-        { id: "d1-4", speaker: "Huy", text: "No, we can dismiss that. The file is encrypted. An employee can't have decrypted it without the key.", translation: "Không, chúng ta có thể bác bỏ điều đó. Tệp tin đã được mã hóa. Một nhân viên chắc chắn không thể giải mã nó mà không có chìa khóa." },
-        { id: "d1-5", speaker: "Linh", text: "Right. From this logic, we can deduce that it was an external attack. The evidence does not contradict this inference.", translation: "Đúng vậy. Từ lập luận này, chúng ta có thể suy ra đó là một cuộc tấn công từ bên ngoài. Bằng chứng không mâu thuẫn với suy luận này." },
-      ],
-    },
-    {
-      id: 2,
-      title: "Giải thích cuộc họp bị lỡ",
-      audio: "/audio/unit39/dialogue_2.mp3",
-      desc: "Trọng hỏi Emma tại sao đối tác không đến họp.",
-      lines: [
-        { id: "d2-1", speaker: "Trong", text: "The client didn't show up. They should have arrived by nine o'clock.", translation: "Khách hàng đã không xuất hiện. Đáng lẽ họ phải đến trước chín giờ rồi." },
-        { id: "d2-2", speaker: "Emma", text: "They might have missed the train. It became apparent that there was a major delay on the line today.", translation: "Có lẽ họ đã bị lỡ chuyến tàu. Rõ ràng là có một sự chậm trễ lớn trên tuyến đường hôm nay." },
-        { id: "d2-3", speaker: "Trong", text: "True. But they could have called us. It implies they don't value our partnership.", translation: "Đúng thế. Nhưng đáng lẽ họ có thể gọi điện cho chúng ta. Điều đó ngụ ý họ không coi trọng sự hợp tác này." },
+        { id: "d1-1", speaker: "Interviewer", text: "Alright Hùng, let's start with a coding problem. Given an array of integers and a target, return the indices of two numbers that add up to the target.", translation: "Được rồi Hùng, hãy bắt đầu với bài toán lập trình. Cho một mảng số nguyên và một target, trả về chỉ số của hai số có tổng bằng target." },
+        { id: "d1-2", speaker: "Hung", text: "Before I code, a few clarifying questions. Can I assume there's always exactly one solution? And can I use the same element twice?", translation: "Trước khi code, tôi có một vài câu hỏi. Tôi có thể giả định luôn có đúng một giải pháp không? Và tôi có thể dùng cùng một phần tử hai lần không?" },
+        { id: "d1-3", speaker: "Interviewer", text: "Good questions! Yes, exactly one solution exists, and no — each element can only be used once.", translation: "Câu hỏi hay! Vâng, luôn có đúng một giải pháp, và không — mỗi phần tử chỉ được dùng một lần." },
+        { id: "d1-4", speaker: "Hung", text: "Got it. I'm thinking of a hash map approach. I'll store each number's complement as a key. The time complexity would be O(n) and space complexity O(n) as well.", translation: "Hiểu rồi. Tôi đang nghĩ đến cách dùng hash map. Tôi sẽ lưu complement của mỗi số làm key. Time complexity sẽ là O(n) và space complexity cũng O(n)." },
+        { id: "d1-5", speaker: "Interviewer", text: "That sounds good. Can you walk me through the code as you write it?", translation: "Nghe có vẻ tốt. Bạn có thể walk tôi qua code khi bạn viết không?" },
+        { id: "d1-6", speaker: "Hung", text: "Sure. I'll iterate through the array. For each number, I check if its complement exists in the map. If yes, I return the indices. If not, I add the current number to the map.", translation: "Được. Tôi sẽ iterate qua mảng. Với mỗi số, tôi kiểm tra xem complement của nó có trong map không. Nếu có, tôi trả về indices. Nếu không, tôi thêm số hiện tại vào map." },
       ],
     },
   ],
+
   listenAndChoose: [
-    { id: "lac1", audio_text: "She must have forgotten her password because the account is locked.", options: ["She remembers her password perfectly.", "She must have forgotten her password because the account is locked.", "She might forget her password tomorrow.", "The account is locked because she didn't login."], answer: "She must have forgotten her password because the account is locked." },
-    { id: "lac2", audio_text: "He can't have leaked the document; he didn't have access.", options: ["He leaked the document yesterday.", "He did not leak the document because he had no access.", "He can't have leaked the document; he didn't have access.", "He might have access to the document tomorrow."], answer: "He can't have leaked the document; he didn't have access." },
-    { id: "lac3", audio_text: "They should have arrived by nine o'clock.", options: ["They arrived exactly at nine o'clock.", "They should have arrived by nine o'clock.", "They will arrive before nine o'clock tomorrow.", "They didn't arrive because it was early."], answer: "They should have arrived by nine o'clock." },
-    { id: "lac4", audio_text: "The investigators concluded that the crash was due to human error.", options: ["The investigators concluded that the crash was due to human error.", "Human error did not cause the crash.", "The crash will be investigated next week.", "We dismiss the conclusion about human error."], answer: "The investigators concluded that the crash was due to human error." },
-    { id: "lac5", audio_text: "His statements contradict the evidence gathered.", options: ["His statements are in compliance with the evidence.", "His statements contradict the evidence gathered.", "The evidence was gathered to prove his statement.", "We found no contradictions in his words."], answer: "His statements contradict the evidence gathered." },
+    { id: "lac1", audio_text: "Let me start with a brute force approach and then optimize if time allows.", options: ["Không có giải pháp tốt", "Bắt đầu với giải pháp đơn giản rồi cải thiện", "Từ chối giải bài", "Đã có giải pháp optimal"], answer: "Bắt đầu với giải pháp đơn giản rồi cải thiện" },
+    { id: "lac2", audio_text: "The bottleneck in this system is the database — reads are too slow.", options: ["Database hoạt động tốt", "Database là điểm chậm nhất", "Cần thêm database", "Database bị hack"], answer: "Database là điểm chậm nhất" },
+    { id: "lac3", audio_text: "Using the STAR method — the situation was a production outage during peak hours.", options: ["STAR là viết tắt của 4 ngôi sao", "Bắt đầu kể câu chuyện bằng context/situation", "Người này bị trễ deadline", "Production đang hoạt động tốt"], answer: "Bắt đầu kể câu chuyện bằng context/situation" },
   ],
+
   speaking: {
-    level1Prompt: "The hackers must have {input} the data because we found {input} in the system.",
-    level1Placeholder: "Ví dụ: leaked — traces...",
-    level2Situation: "Bạn đang đóng vai trò điều tra viên báo cáo về vụ rò rỉ mật khẩu của khách hàng. Hãy: (1) Suy đoán rằng đối thủ chắc chắn đã biết trước kế hoạch của bạn, (2) Giải thích rằng đáng lẽ đội bảo mật phải kiểm tra hệ thống sớm hơn, (3) Bác bỏ giả thuyết đây là lỗi ngẫu nhiên.",
-    level2Hint: "The competitor must have obtained our plans beforehand. The security team should have updated the firewall last month. We can dismiss the claim that it was an accident because the trace of entry is apparent.",
+    level1Prompt: "Giải thích algorithm này bằng tiếng Anh: Binary Search — tìm kiếm trong sorted array.",
+    level1Placeholder: "Binary search works by... The time complexity is O(log n) because...",
+    level2Situation: "Behavioral question: 'Tell me about a time you had a conflict with a teammate and how you resolved it.'",
+    level2Hint: "Situation: We disagreed about the database schema design for a new feature. Task: I needed to reach consensus without delaying the sprint. Action: I proposed a meeting where each person presented their approach with pros and cons. Result: We chose a hybrid solution that both teams were happy with, and delivered on time.",
   },
-  grammar: {
-    title: "Modal Perfect — Động Từ Khuyết Thiếu Hoàn Thành (Suy Đoán Quá Khứ)",
-    rule: "Dùng để đưa ra suy đoán, suy luận logic hoặc thể hiện sự tiếc nuối về một hành động trong quá khứ.\n\nCấu trúc chung: Modal Verb + have + Past Participle (V3/V-ed)\n\n1. must have + V3: Chắc chắn đã xảy ra (dựa trên bằng chứng rõ ràng)\n   → 'He must have left. His coat is gone.'\n2. can't have + V3: Chắc chắn đã KHÔNG xảy ra\n   → 'She can't have finished yet. She only started 5 minutes ago.'\n3. might / could / may have + V3: Có lẽ đã xảy ra (không chắc chắn)\n   → 'They might have missed the train.'\n4. should / could have + V3: Đáng lẽ nên / đã có thể làm gì (nhưng thực tế đã không làm)\n   → 'You should have told me earlier.' (sự trách móc hoặc hối tiếc)",
-    examples: [
-      { en: "He must have passed the exam; he got a perfect score. (High certainty based on proof)", vn: "Anh ấy chắc chắn đã đỗ kỳ thi; anh ấy đạt điểm tuyệt đối." },
-      { en: "She can't have stolen the money; she was with me all day. (Negative certainty)", vn: "Cô ấy chắc chắn không thể đã trộm tiền; cô ấy đã ở bên tôi cả ngày." },
-      { en: "I should have checked the attachment before sending the email. (Past regret)", vn: "Đáng lẽ tôi nên kiểm tra tệp đính kèm trước khi gửi email." },
-    ],
-    tip: "Trong bài thi nghe IELTS Listening Section 3 hoặc 4, người nói thường không khẳng định trực tiếp mà dùng Modal Perfect để thảo luận: 'We could have analyzed this better...'. Việc nhận biết cấu trúc này giúp bạn chọn đúng đáp án nói về sự việc thực tế đã KHÔNG xảy ra.",
-    vnNote: "⚠️ Người Việt rất hay nhầm lẫn giữa 'must do' (phải làm ở hiện tại) và 'must have done' (chắc chắn đã làm trong quá khứ). Hãy nhớ 'must have + V3' KHÔNG CÓ NGHĨA LÀ 'phải làm gì trong quá khứ' (nghĩa đó phải dùng 'had to').",
-    dialogueExample: {
-      speaker: "Huy",
-      text: "The hackers must have accessed our server because there are traces of unauthorized login.",
-      translation: "Tin tặc chắc chắn đã truy cập máy chủ của chúng ta vì có những dấu vết đăng nhập trái phép.",
-      highlight: "must have accessed (suy đoán chắc chắn dựa trên bằng chứng 'traces')",
-    },
-    ccq: {
-      question: "Chọn câu diễn tả ý: 'Tôi khuyên bạn nên làm điều đó trong quá khứ, nhưng bạn đã không làm'?",
-      options: [
-        "You must have done it.",
-        "You should have done it.",
-        "You could do it.",
-        "You had to do it.",
-      ],
-      answer: "You should have done it.",
-      explanation: "'Should have + V3' dùng để diễn tả một hành động đáng lẽ nên làm trong quá khứ nhưng thực tế đã không làm.",
-    },
-  },
-  practiceQuiz: [
-    { id: "pq1", type: "multiple-choice", question: "Chọn dạng đúng: 'She ___ have left the office; her computer is still turned on.'", options: ["must", "can't", "should", "might"], answer: "can't" },
-    { id: "pq2", type: "multiple-choice", question: "Chọn động từ hoàn thành đúng: 'We ___ have double-checked the contract, but we forgot.'", options: ["must", "can't", "should", "might"], answer: "should" },
-    { id: "pq3", type: "cloze", question: "Điền dạng đúng của động từ: 'They might have ___ (reschedule) the meeting yesterday.'", answer: "rescheduled" },
-    { id: "pq4", type: "multiple-choice", question: "Từ nào mô tả việc 'không xem xét / loại bỏ một ý tưởng'?", options: ["dismiss", "contradict", "deduce", "conclude"], answer: "dismiss" },
-    { id: "pq5", type: "cloze", question: "Điền: 'He must ___ (have/has) forgotten the deadline.'", answer: "have" },
-  ],
-  matchingExercise: {
-    title: "Nối từ vựng suy luận B2 với nghĩa đúng",
-    pairs: [
-      { left: "speculation", right: "sự suy đoán" },
-      { left: "deduction", right: "sự suy luận" },
-      { left: "credible", right: "đáng tin cậy" },
-      { left: "dismiss", right: "bác bỏ" },
-      { left: "contradict", right: "mâu thuẫn / trái ngược" },
-    ],
-  },
-  scrambleExercises: [
-    { id: "s39-1", prompt_vn: "Họ chắc chắn đã quên khóa cửa văn phòng.", words: ["They", "must", "have", "forgotten", "to", "lock", "the", "office", "door", "."], answer: "They must have forgotten to lock the office door ." },
-    { id: "s39-2", prompt_vn: "Đáng lẽ bạn nên thông báo cho chúng tôi sớm hơn.", words: ["You", "should", "have", "informed", "us", "much", "earlier", "."], answer: "You should have informed us much earlier ." },
-    { id: "s39-3", prompt_vn: "Hai lời giải thích này mâu thuẫn hoàn toàn với nhau.", words: ["These", "two", "explanations", "completely", "contradict", "each", "other", "."], answer: "These two explanations completely contradict each other ." },
-  ],
+
   quiz: [
-    { id: "fq1", type: "multiple-choice", question: "Chọn vế đúng: 'If the light is on, he ___ have gone home yet.'", options: ["must", "can't", "should", "might"], answer: "can't" },
-    { id: "fq2", type: "cloze", question: "Điền từ: 'The police found no ___ (dấu vết) of the thief.'", answer: "trace" },
-    { id: "fq3", type: "multiple-choice", question: "Chọn dạng đúng: 'She ___ have arrived by now, but the flight is delayed.'", options: ["must", "can't", "should", "might"], answer: "should" },
-    { id: "fq4", type: "translate", question: "Dịch: 'Từ dữ liệu này, chúng ta có thể suy ra kết quả.'", answer: "From this data, we can deduce the outcome." },
-    { id: "fq5", type: "multiple-choice", question: "Từ nào trái nghĩa với 'credible'?", options: ["apparent", "dismissed", "incredible", "logical"], answer: "incredible" },
+    { id: "q1", question: "Why do you 'think aloud' in a coding interview?", options: ["To waste time", "Để interviewer follow được thinking process của bạn", "Vì bắt buộc phải nói", "Để impress bằng vocabulary"], answer: "Để interviewer follow được thinking process của bạn", type: "multiple-choice" },
+    { id: "q2", question: "What is O(n log n) time complexity?", options: ["Code chạy n*log(n) giây", "Số operations tăng theo n*log(n) — ví dụ: merge sort", "Code có log(n) loops", "Space dùng n log n bytes"], answer: "Số operations tăng theo n*log(n) — ví dụ: merge sort", type: "multiple-choice" },
+    { id: "q3", question: "What should you do if you don't know the optimal solution?", options: ["Im lặng và suy nghĩ", "Say 'I don't know' and stop", "Start with brute force và think aloud về optimization", "Ask interviewer for the answer"], answer: "Start with brute force và think aloud về optimization", type: "multiple-choice" },
+    { id: "q4", question: "Điền từ: There's a ___ between time and space complexity in this solution.", options: ["balance", "trade-off", "conflict", "difference"], answer: "trade-off", type: "multiple-choice" },
+    { id: "q5", question: "Dịch sang tiếng Anh: Trước khi tôi bắt đầu, tôi muốn xác nhận requirements.", answer: "Before I start, I want to confirm the requirements.", type: "translate" },
   ],
-  cumulativeReviewQuestions: [
-    { id: "cr39-1", question: "Ôn tập Unit 38 — Chọn cấu trúc đúng: '___ has our company faced such an issue.'", options: ["Rarely", "Seldom did", "Rarely did", "Rarely has"], answer: "Rarely has", type: "multiple-choice" },
-    { id: "cr39-2", question: "Ôn tập Unit 37 — Điền dạng đúng: '___ (synthesize) the reports, he wrote a summary.'", options: [], answer: "Having synthesized", type: "cloze" },
-    { id: "cr39-3", question: "Ôn tập Unit 36 — Chọn câu đúng:", options: ["The virus is claimed to have been isolated yesterday.", "The virus claimed to have isolated yesterday.", "It is claimed the virus to be isolated yesterday.", "The virus is claimed to isolate yesterday."], answer: "The virus is claimed to have been isolated yesterday.", type: "multiple-choice" },
-  ],
+
   fluencyDrill: {
+    title: "Interview vocabulary sprint",
+    timeLimit: 60,
     items: [
-      { en: "They must have forgotten the key", vn: "Họ chắc chắn đã quên chìa khóa" },
-      { en: "He can't have leaked the document", vn: "Anh ấy chắc chắn không thể làm rò rỉ" },
-      { en: "You should have told us earlier", vn: "Đáng lẽ bạn nên nói với chúng tôi sớm hơn" },
-      { en: "It became apparent that we failed", vn: "Rõ ràng là chúng ta đã thất bại" },
-      { en: "We can dismiss that hypothesis", vn: "Chúng ta có thể bác bỏ giả thuyết đó" },
-      { en: "The data contradicts your claim", vn: "Dữ liệu mâu thuẫn với tuyên bố của bạn" },
-      { en: "What did you deduce from the report?", vn: "Bạn đã suy ra điều gì từ báo cáo?" },
-      { en: "There is pure speculation about it", vn: "Đó hoàn toàn là sự suy đoán" },
+      { en: "time complexity", vn: "độ phức tạp thời gian" },
+      { en: "brute force", vn: "giải pháp chưa optimize" },
+      { en: "edge case", vn: "trường hợp ngoại lệ" },
+      { en: "trade-off", vn: "đánh đổi" },
+      { en: "STAR method", vn: "Situation, Task, Action, Result" },
+      { en: "bottleneck", vn: "điểm nghẽn cổ chai" },
+      { en: "walk through", vn: "giải thích từng bước" },
+      { en: "clarifying question", vn: "câu hỏi để hiểu rõ yêu cầu" },
+      { en: "scalability", vn: "khả năng scale hệ thống" },
     ],
   },
 };

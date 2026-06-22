@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Mic, MicOff, RotateCcw, BookOpen, Sparkles, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { saveSpeakingSession } from "@/app/actions/speaking";
+import { dispatchXpEarned } from "@/lib/dashboard/xp-events";
 import { toast } from "sonner";
 
 const JOURNAL_TOPICS = [
@@ -119,6 +120,7 @@ export function JournalMode() {
         scenarioId: null,
       });
       if (res.success) {
+        if (res.xpEarned) dispatchXpEarned(res.xpEarned);
         toast.success(res.xpEarned ? `Đã lưu nhật ký! +${res.xpEarned} XP` : "Đã lưu nhật ký nói!");
         setSavedCount(p => p + 1);
         setTranscript("");

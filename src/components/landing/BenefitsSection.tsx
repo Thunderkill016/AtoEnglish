@@ -11,13 +11,13 @@ export default function BenefitsSection() {
     },
     {
       icon: Clock,
-      title: "15 phút mỗi ngày là đủ",
-      desc: "Lộ trình học ngắn gọn, thiết kế tối ưu hóa trên mọi thiết bị di động giúp bạn dễ dàng duy trì thói quen học tập bền bỉ hàng ngày mà không bị quá tải.",
+      title: "15 phút mỗi ngày để giữ nhịp",
+      desc: "Bài học ngắn giúp bạn duy trì thói quen. Để lên IELTS 6.5, hệ thống vẫn yêu cầu nhiều giờ tích lũy, review và checkpoint đủ 4 kỹ năng.",
     },
     {
       icon: Wallet,
-      title: "Tiết kiệm 90% chi phí",
-      desc: "Trải nghiệm luyện nói giao tiếp phản xạ chất lượng tương đương học 1-1 với giáo viên bản xứ, nhưng với mức học phí tối giản nhất.",
+      title: "Tự học có kiểm soát",
+      desc: "Bạn luyện nói và viết trong môi trường riêng tư, có phản hồi tiếng Việt ngắn gọn, thay vì phải tự đoán lỗi hoặc học lan man.",
     },
   ];
 

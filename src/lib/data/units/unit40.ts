@@ -1,151 +1,150 @@
-import { UnitData } from "@/components/learn/UnitTemplate";
+import type { UnitData } from "@/components/learn/UnitTemplate";
 
-export const unit40: UnitData = {
+// UNIT 40 — LinkedIn & Dev Profile (B2 / Phase 4)
+const unit40: UnitData = {
   unitId: "unit-40",
-  title: "Unit 40: Linking & Cohesion",
+  title: "Unit 40: LinkedIn & Dev Profile",
   level: "B2",
   xp: 120,
-  estimatedTime: 60,
-  description: "Discourse Markers — Các từ nối và liên từ liên kết nâng cao (nevertheless, consequently, furthermore, thereby, whereas). Công cụ tối quan trọng để đạt điểm 6.5+ tiêu chí Coherence & Cohesion trong IELTS Writing Task 2.",
-  badgeName: "Nhà Hùng Biện",
-  badgeEmoji: "✒️",
-  situation: "Soạn thảo bài luận học thuật hoặc báo cáo phân tích chiến lược của công ty. Bạn cần liên kết các ý kiến tương phản, nguyên nhân - kết quả và bổ sung thông tin một cách mượt mà, logic bằng các liên từ chuyển tiếp nâng cao.",
+  estimatedTime: 55,
+  description: "Viết LinkedIn profile, GitHub README, và bio kỹ thuật thu hút recruiter quốc tế.",
+  badgeName: "Profile Builder",
+  badgeEmoji: "💼",
+
+  situation:
+    "Một recruiter từ Singapore nhìn thấy GitHub của bạn và muốn liên hệ trên LinkedIn. Profile của bạn viết bằng tiếng Việt, bio trống, và README chỉ có 2 dòng. Làm sao tối ưu profile trong 30 phút?",
+
   learningOutcomes: [
-    "Sử dụng các từ nối nâng cao để thể hiện sự đối lập, kết quả và bổ sung ý nghĩa",
-    "Đảm bảo sự mạch lạc (coherence) và tính liên kết (cohesion) trong văn bản dài",
-    "Sử dụng từ vựng về cấu trúc văn bản học thuật ở mức độ B2+",
+    "Viết LinkedIn headline và summary hấp dẫn bằng tiếng Anh",
+    "Viết GitHub profile README giới thiệu bản thân như một dev",
+    "Mô tả experience và projects chuyên nghiệp theo format chuẩn",
   ],
-  culturalNote: 'Trong viết học thuật tiếng Anh, việc lặp đi lặp lại các từ nối cơ bản như "but", "so", "and" hoặc "because" sẽ kéo băng điểm Cohesion xuống dưới 6.0. Sử dụng các từ thay thế trang trọng hơn như <span class="text-emerald-400">"nevertheless"</span> (tuy nhiên), <span class="text-emerald-400">"consequently"</span> (do đó), và <span class="text-emerald-400">"furthermore"</span> (hơn nữa) giúp văn bản mang sắc thái học thuật rõ nét.',
+
+  culturalNote:
+    'LinkedIn là <span class="text-emerald-400 font-semibold">CV online sống</span> — recruiters tìm theo keywords. Tối ưu headline: không chỉ viết "Software Engineer" mà viết "Full-Stack Developer | React · Node.js · PostgreSQL | Building scalable web apps". Keywords trong Skills section = searchable. GitHub README với contribution graph + tech stack badges = professional signal.',
+
   warmupGreetings: [
-    { emoji: "✒️", en: "Furthermore, the new policy will enhance workplace safety.", vn: "Hơn nữa, chính sách mới sẽ nâng cao an toàn nơi làm việc.", context: "Furthermore — bổ sung thông tin (in addition)" },
-    { emoji: "⚖️", en: "Sales increased; nevertheless, profits declined due to high costs.", vn: "Doanh số tăng; tuy nhiên, lợi nhuận lại giảm do chi phí cao.", context: "nevertheless = tuy nhiên (however)" },
-    { emoji: "📈", en: "We optimized the code, thereby reducing the loading time.", vn: "Chúng tôi đã tối ưu hóa mã nguồn, bằng cách đó giảm thời gian tải trang.", context: "thereby + V-ing = bằng cách đó" },
+    { emoji: "💼", en: "I just updated my LinkedIn profile — let me know your thoughts.", vn: "Tôi vừa cập nhật LinkedIn profile — cho tôi biết ý kiến của bạn.", context: "Nhờ đồng nghiệp review profile" },
+    { emoji: "🌐", en: "My GitHub profile shows my open source contributions.", vn: "GitHub profile của tôi hiển thị các đóng góp open source.", context: "Giới thiệu với recruiter" },
+    { emoji: "📫", en: "Feel free to reach out on LinkedIn for collaboration opportunities.", vn: "Hãy liên hệ trên LinkedIn cho các cơ hội hợp tác.", context: "Kêu gọi connect" },
   ],
+
   vocab: [
-    { id: 1, word: "nevertheless", emoji: "⚖️", phonetic: "/ˌnevəðəˈles/", meaning: "tuy nhiên / mặc dù vậy", example: "The match was wet; nevertheless, we enjoyed it.", example2: "Profits declined; nevertheless, the company expanded.", collocation: "nevertheless, S + V / but nevertheless / nevertheless true", audio: "/audio/unit40/nevertheless.mp3" },
-    { id: 2, word: "consequently", emoji: "💥", phonetic: "/ˈkɒnsɪkwəntli/", meaning: "do đó / kết quả là", example: "He forgot his passport; consequently, he missed the flight.", example2: "The system crashed; consequently, data was lost.", collocation: "consequently, S + V / and consequently", audio: "/audio/unit40/consequently.mp3" },
-    { id: 3, word: "furthermore", emoji: "➕", phonetic: "/ˌfɜːðəˈmɔːr/", meaning: "hơn nữa / vả lại", example: "The smartphone has a great camera; furthermore, it has long battery life.", example2: "He is highly qualified; furthermore, he has ten years of experience.", collocation: "furthermore, S + V / and furthermore", audio: "/audio/unit40/furthermore.mp3" },
-    { id: 4, word: "thereby", emoji: "🎯", phonetic: "/ˌðeəˈbaɪ/", meaning: "bằng cách đó / nhờ đó", example: "She practice daily, thereby improving her speaking skills.", example2: "He signed the contract, thereby securing the deal.", collocation: "thereby + V-ing / thereby obtaining", audio: "/audio/unit40/thereby.mp3" },
-    { id: 5, word: "whereas", emoji: "↔️", phonetic: "/weərˈæz/", meaning: "trong khi / ngược lại", example: "Some people prefer tea, whereas others prefer coffee.", example2: "In Vietnam, traffic keeps to the right, whereas in the UK it keeps to the left.", collocation: "whereas S + V / but whereas", audio: "/audio/unit40/whereas.mp3" },
-    { id: 6, word: "hence", emoji: "💡", phonetic: "/hens/", meaning: "vì thế / do đó", example: "The company lost capital; hence, the expansion was cancelled.", example2: "He was late, hence the manager was angry.", collocation: "hence, S + V / hence the name / ten years hence", audio: "/audio/unit40/hence.mp3" },
-    { id: 7, word: "likewise", emoji: "🤝", phonetic: "/ˈlaɪkwaɪz/", meaning: "tương tự như vậy", example: "Water the plants daily; likewise, ensure they get sunlight.", example2: "Just as you respect others, likewise you will be respected.", collocation: "likewise, S + V / do likewise / and likewise", audio: "/audio/unit40/likewise.mp3" },
-    { id: 8, word: "transition", emoji: "🔄", phonetic: "/trænˈzɪʃən/", meaning: "sự chuyển tiếp / chuyển đổi", example: "The transition from B1 to B2 is very challenging.", example2: "The company is undergoing a digital transition.", collocation: "smooth transition / transition period / digital transition", audio: "/audio/unit40/transition.mp3" },
-    { id: 9, word: "cohesion", emoji: "🔗", phonetic: "/kəʊˈhiːʒən/", meaning: "sự liên kết / sự gắn kết", example: "The essay lacks cohesion; the paragraphs are disconnected.", example2: "Social cohesion is vital for a peaceful community.", collocation: "cohesion and coherence / lack cohesion / social cohesion", audio: "/audio/unit40/cohesion.mp3" },
-    { id: 10, word: "coherent", emoji: "🧠", phonetic: "/kəʊˈhɪərənt/", meaning: "chặt chẽ / mạch lạc / rõ ràng", example: "You must present a coherent argument in your writing.", example2: "She was too tired to give a coherent explanation.", collocation: "coherent argument / coherent strategy / make coherent", audio: "/audio/unit40/coherent.mp3" },
-    { id: 11, word: "subsequent", emoji: "📅", phonetic: "/ˈsʌbsɪkwənt/", meaning: "xảy ra sau đó / theo sau", example: "The subsequent investigation proved our innocence.", example2: "Subsequent events showed that we were wrong.", collocation: "subsequent years / subsequent events / subsequent analysis", audio: "/audio/unit40/subsequent.mp3" },
-    { id: 12, word: "notwithstanding", emoji: "🛡️", phonetic: "/ˌnɒtwɪðˈstændɪŋ/", meaning: "mặc dù / bất kể", example: "Notwithstanding the rain, the soccer match continued.", example2: "His achievements, notwithstanding his poor background, are amazing.", collocation: "notwithstanding the fact that / notwithstanding the difficulties", audio: "/audio/unit40/notwithstanding.mp3" },
+    { id: 1, word: "headline", emoji: "📰", phonetic: "/ˈhedlaɪn/", meaning: "dòng tiêu đề ngay dưới tên trên LinkedIn", example: "Full-Stack Engineer | React · TypeScript · AWS | Open to remote roles", example2: "Your headline is the first thing recruiters see — make it keyword-rich.", collocation: "LinkedIn headline / profile headline / optimize headline", audio: "/audio/unit40/headline.mp3" },
+    { id: 2, word: "summary / about", emoji: "📝", phonetic: "/ˈsʌməri/", meaning: "phần giới thiệu bản thân (2-5 câu)", example: "I'm a backend developer with 3 years of experience building REST APIs in Node.js and Go.", example2: "Your summary should answer: who you are, what you do, what you're looking for.", collocation: "LinkedIn summary / about section / professional summary", audio: "/audio/unit40/summary.mp3" },
+    { id: 3, word: "tech stack", emoji: "🧱", phonetic: "/tek stæk/", meaning: "bộ công nghệ bạn dùng (languages, frameworks, tools)", example: "My tech stack: React, TypeScript, Node.js, PostgreSQL, Docker, AWS.", example2: "List your tech stack in both headline and skills section.", collocation: "current tech stack / full-stack / technology stack", audio: "/audio/unit40/tech.mp3" },
+    { id: 4, word: "open to opportunities", emoji: "🟢", phonetic: "/ˈəʊpən tuː/", meaning: "sẵn sàng nhận cơ hội việc làm mới", example: "I've set my profile to 'Open to Opportunities' so recruiters can reach out.", example2: "Use #OpenToWork privately so only recruiters can see.", collocation: "open to opportunities / open to work / actively looking", audio: "/audio/unit40/open.mp3" },
+    { id: 5, word: "endorsement", emoji: "👍", phonetic: "/ɪnˈdɔːrsmənt/", meaning: "xác nhận kỹ năng từ đồng nghiệp/managers", example: "Can you endorse my React and TypeScript skills on LinkedIn?", example2: "Skills with many endorsements appear higher in search results.", collocation: "skill endorsement / endorse a skill / LinkedIn endorsement", audio: "/audio/unit40/endorsement.mp3" },
+    { id: 6, word: "recommendation", emoji: "⭐", phonetic: "/ˌrekəmenˈdeɪʃən/", meaning: "lời nhận xét từ người đã làm việc cùng", example: "I'd love to write a recommendation for you on LinkedIn.", example2: "A recommendation from a senior engineer carries significant weight.", collocation: "LinkedIn recommendation / write a recommendation / request a recommendation", audio: "/audio/unit40/recommendation.mp3" },
+    { id: 7, word: "portfolio", emoji: "📁", phonetic: "/pɔːtˈfəʊliəʊ/", meaning: "bộ sưu tập dự án/công việc đã làm", example: "Check out my portfolio — I've built 3 SaaS products in the last 2 years.", example2: "GitHub is a developer's most important portfolio.", collocation: "project portfolio / portfolio website / showcase your portfolio", audio: "/audio/unit40/portfolio.mp3" },
+    { id: 8, word: "metrics", emoji: "📊", phonetic: "/ˈmetrɪks/", meaning: "số liệu cụ thể chứng minh impact", example: "Reduced API response time by 40% through query optimization.", example2: "Always quantify achievements: 'increased by X%', 'reduced by Y ms'.", collocation: "quantify with metrics / performance metrics / impact metrics", audio: "/audio/unit40/metrics.mp3" },
+    { id: 9, word: "remote-friendly", emoji: "🌍", phonetic: "/rɪˈməʊt ˈfrendli/", meaning: "có thể làm việc từ xa", example: "I'm a remote-friendly developer based in Ho Chi Minh City.", example2: "Many international companies hire remote-friendly Vietnamese developers.", collocation: "remote-friendly / remote-first / work remotely", audio: "/audio/unit40/remote_friendly.mp3" },
+    { id: 10, word: "call to action (CTA)", emoji: "📣", phonetic: "/kɔːl tuː ˈækʃən/", meaning: "kêu gọi hành động cuối summary", example: "Let's connect if you're hiring for React roles or want to collaborate on open source.", example2: "End your summary with a clear CTA.", collocation: "call to action / reach out / let's connect", audio: "/audio/unit40/call.mp3" },
   ],
+
+  grammar: {
+    title: "Quantifying Achievements — Động từ hành động + số liệu",
+    rule: "CV/LinkedIn chuẩn dùng: [Action verb] + [what] + [result with metrics]\n\nAction verbs mạnh:\nBuilt / Developed / Reduced / Increased / Optimized /\nLed / Shipped / Designed / Migrated / Automated\n\nAvoid: 'responsible for', 'helped with', 'worked on'",
+    examples: [
+      { en: "Built a real-time dashboard serving 10,000+ daily active users.", vn: "Xây dựng real-time dashboard phục vụ 10,000+ daily active users." },
+      { en: "Reduced API response time by 40% through PostgreSQL query optimization.", vn: "Giảm thời gian phản hồi API 40% bằng tối ưu hóa query PostgreSQL." },
+      { en: "Migrated legacy monolith to microservices, cutting deployment time by 60%.", vn: "Migrate legacy monolith sang microservices, giảm thời gian deploy 60%." },
+      { en: "Led a team of 4 engineers to deliver the v2.0 product on time.", vn: "Dẫn dắt team 4 engineers để deliver sản phẩm v2.0 đúng hạn." },
+    ],
+    tip: "Mọi achievement nên có số: 'improved performance' (yếu) → 'reduced load time by 35%' (mạnh). Không có số? Ước tính và ghi 'approximately'.",
+    vnNote: "Người Việt hay viết 'I am responsible for developing the backend'. Thay bằng 'Developed and maintained the backend API serving 50,000 users' — active voice + metrics = powerful.",
+    ccq: {
+      question: "Bullet point nào hay nhất cho CV?",
+      options: [
+        "Responsible for backend development",
+        "Helped with API work",
+        "Built REST APIs in Node.js that handled 1M+ daily requests",
+        "I worked on the API with my team",
+      ],
+      answer: "Built REST APIs in Node.js that handled 1M+ daily requests",
+      explanation: "Action verb (Built) + what (REST APIs in Node.js) + metrics (1M+ daily requests) = chuẩn CV quốc tế.",
+    },
+  },
+
+  matchingExercise: {
+    title: "Nối action verb với nghĩa",
+    pairs: [
+      { left: "Shipped", right: "Phát hành feature/product" },
+      { left: "Optimized", right: "Cải thiện hiệu suất" },
+      { left: "Migrated", right: "Chuyển từ system này sang system khác" },
+      { left: "Led", right: "Dẫn dắt team/project" },
+      { left: "Automated", right: "Tự động hóa quy trình" },
+    ],
+  },
+
+  scrambleExercises: [
+    { id: "s1", prompt_vn: "Xây dựng hệ thống authentication phục vụ 50,000 người dùng hàng ngày.", words: ["Built", "an", "authentication", "system", "serving", "50,000", "daily", "users."], answer: "Built an authentication system serving 50,000 daily users." },
+    { id: "s2", prompt_vn: "Giảm thời gian build CI/CD từ 15 phút xuống còn 4 phút.", words: ["Reduced", "CI/CD", "build", "time", "from", "15", "minutes", "to", "4", "minutes."], answer: "Reduced CI/CD build time from 15 minutes to 4 minutes." },
+    { id: "s3", prompt_vn: "Hãy liên hệ nếu bạn đang tuyển dụng cho các vị trí React.", words: ["Reach", "out", "if", "you're", "hiring", "for", "React", "roles."], answer: "Reach out if you're hiring for React roles." },
+  ],
+
+  practiceQuiz: [
+    { id: "pq1", question: "What makes a strong LinkedIn headline?", options: ["Chỉ tên công ty hiện tại", "Job title + key skills + value proposition", "Tên + email + số điện thoại", "Chỉ viết 'Software Engineer'"], answer: "Job title + key skills + value proposition", type: "multiple-choice" },
+    { id: "pq2", question: "What does 'Open to Opportunities' on LinkedIn mean?", options: ["Công ty đang tuyển dụng", "Profile cần update", "Dev sẵn sàng nhận job offer", "Profile được public"], answer: "Dev sẵn sàng nhận job offer", type: "multiple-choice" },
+    { id: "pq3", question: "Which bullet point is most effective for a CV?", options: ["Worked on frontend", "Was in charge of UI", "Built responsive UI with React, reducing bounce rate by 25%", "Did frontend work with the team"], answer: "Built responsive UI with React, reducing bounce rate by 25%", type: "multiple-choice" },
+  ],
+
+  practiceTranslate: [
+    { id: "pt1", prompt_vn: "Giảm thời gian load trang 40% bằng cách optimize images và lazy loading.", answer: "Reduced page load time by 40% through image optimization and lazy loading." },
+    { id: "pt2", prompt_vn: "3 năm kinh nghiệm xây dựng REST APIs với Node.js và PostgreSQL.", answer: "3 years of experience building REST APIs with Node.js and PostgreSQL." },
+    { id: "pt3", prompt_vn: "Hãy kết nối nếu bạn muốn hợp tác trên dự án open source.", answer: "Let's connect if you want to collaborate on open source projects." },
+  ],
+
   dialogues: [
     {
       id: 1,
-      title: "Biên tập bài luận IELTS Writing Task 2",
+      title: "LinkedIn profile review với mentor",
       audio: "/audio/unit40/dialogue_1.mp3",
-      desc: "Trang nhờ Linh sửa đổi từ nối để tăng điểm Cohesion cho bài viết.",
+      desc: "Tú nhờ mentor review LinkedIn profile trước khi apply jobs.",
       lines: [
-        { id: "d1-1", speaker: "Trang", text: "Linh, can you review my essay? I want to make sure the paragraphs are coherent.", translation: "Linh, bạn có thể xem bài luận của tôi không? Tôi muốn đảm bảo các đoạn văn mạch lạc." },
-        { id: "d1-2", speaker: "Linh", text: "Sure. The arguments are logical; however, you used 'but' and 'so' too many times. It lacks academic cohesion.", translation: "Chắc chắn rồi. Các lập luận logic; tuy nhiên, bạn đã dùng 'but' và 'so' quá nhiều lần. Nó thiếu tính liên kết học thuật." },
-        { id: "d1-3", speaker: "Trang", text: "What do you recommend? Should I substitute them with advanced discourse markers?", translation: "Bạn đề xuất gì? Tôi có nên thay thế chúng bằng các từ nối nâng cao không?" },
-        { id: "d1-4", speaker: "Linh", text: "Yes. For example, replace 'so' with 'consequently'. Furthermore, you can use 'whereas' to contrast ideas.", translation: "Đúng vậy. Ví dụ, hãy thay 'so' bằng 'consequently'. Hơn nữa, bạn có thể dùng 'whereas' để so sánh đối lập các ý." },
-        { id: "d1-5", speaker: "Trang", text: "Excellent. I will also use 'thereby' followed by a gerund. It will make the transition smoother.", translation: "Tuyệt quá. Tôi cũng sẽ dùng 'thereby' theo sau bởi danh động từ. Nó sẽ giúp sự chuyển tiếp mượt mà hơn." },
-      ],
-    },
-    {
-      id: 2,
-      title: "Báo cáo tài chính doanh nghiệp",
-      audio: "/audio/unit40/dialogue_2.mp3",
-      desc: "Huy và Sarah thảo luận về kết quả tài chính bất chấp khó khăn.",
-      lines: [
-        { id: "d2-1", speaker: "Sarah", text: "Notwithstanding the economic crisis, our division achieved a smooth transition to the new market.", translation: "Bất chấp cuộc khủng hoảng kinh tế, bộ phận của chúng ta đã đạt được sự chuyển tiếp suôn sẻ sang thị trường mới." },
-        { id: "d2-2", speaker: "Huy", text: "Indeed. Consequently, our market share increased, whereas our competitors faced a decline.", translation: "Thực sự vậy. Do đó, thị phần của chúng ta tăng lên, trong khi đối thủ của chúng ta phải đối mặt với sự sụt giảm." },
-        { id: "d2-3", speaker: "Sarah", text: "Likewise, our corporate reputation was enhanced. Hence, the board is pleased.", translation: "Tương tự như vậy, uy tín doanh nghiệp của chúng ta đã được nâng cao. Vì thế, ban giám đốc rất hài lòng." },
+        { id: "d1-1", speaker: "Mentor", text: "Tú, I looked at your LinkedIn profile. Your headline just says 'Software Engineer' — that's too generic. Recruiters search by specific skills.", translation: "Tú, tôi đã xem LinkedIn profile của bạn. Headline của bạn chỉ ghi 'Software Engineer' — quá chung chung. Recruiters tìm kiếm theo kỹ năng cụ thể." },
+        { id: "d1-2", speaker: "Tu", text: "What should I write instead? I work with React, Node.js, and AWS.", translation: "Tôi nên viết gì thay thế? Tôi làm việc với React, Node.js, và AWS." },
+        { id: "d1-3", speaker: "Mentor", text: "Try: 'Full-Stack Developer | React · Node.js · AWS | Building scalable web apps | Open to remote roles.' That's keyword-rich and tells recruiters exactly what you offer.", translation: "Thử: 'Full-Stack Developer | React · Node.js · AWS | Building scalable web apps | Open to remote roles.' Đó là keyword-rich và cho recruiters biết chính xác bạn offer gì." },
+        { id: "d1-4", speaker: "Tu", text: "Got it. What about the summary section? I wrote 'I love coding and I'm hardworking.'", translation: "Hiểu rồi. Còn phần summary thì sao? Tôi đã viết 'I love coding and I'm hardworking.'" },
+        { id: "d1-5", speaker: "Mentor", text: "That won't stand out. Try quantifying your experience: '3+ years building production apps with 50K+ users. I specialize in performance optimization and clean architecture. Let's connect if you're hiring for React roles.'", translation: "Như vậy không nổi bật. Thử quantify kinh nghiệm: '3+ years building production apps with 50K+ users. I specialize in performance optimization and clean architecture. Let's connect if you're hiring for React roles.'" },
       ],
     },
   ],
+
   listenAndChoose: [
-    { id: "lac1", audio_text: "He forgot his passport; consequently, he missed the flight.", options: ["He missed the flight despite having his passport.", "He forgot his passport; consequently, he missed the flight.", "He will buy a passport after he flies.", "Consequently, he forgot his passport on the flight."], answer: "He forgot his passport; consequently, he missed the flight." },
-    { id: "lac2", audio_text: "Notwithstanding the rain, the soccer match continued.", options: ["The soccer match was cancelled because of rain.", "Notwithstanding the rain, the soccer match continued.", "We played soccer yesterday before it rained.", "It rained but the soccer match was delayed."], answer: "Notwithstanding the rain, the soccer match continued." },
-    { id: "lac3", audio_text: "Furthermore, the new policy will enhance workplace safety.", options: ["Furthermore, the new policy will enhance workplace safety.", "The new policy will damage workplace safety.", "We need to write a proposal about safety.", "Furthermore, safety is not important in this corporate."], answer: "Furthermore, safety is not important in this corporate." },
-    { id: "lac4", audio_text: "She practice daily, thereby improving her speaking skills.", options: ["She does not practice but her speaking is good.", "She practice daily, thereby improving her speaking skills.", "She will improve her speaking tomorrow by practicing.", "Thereby, she practiced speaking skills daily."], answer: "She practice daily, thereby improving her speaking skills." },
-    { id: "lac5", audio_text: "The essay lacks cohesion; the paragraphs are disconnected.", options: ["The essay is very coherent and well-structured.", "The essay lacks cohesion; the paragraphs are disconnected.", "We need to connect the writer with the editor.", "The essay had no paragraphs yesterday."], answer: "The essay lacks cohesion; the paragraphs are disconnected." },
+    { id: "lac1", audio_text: "Reduced API response time by 40% through query optimization and caching.", options: ["Thêm 40% APIs mới", "Cải thiện tốc độ API 40% bằng optimization", "Mất 40% performance", "Cache bị lỗi 40%"], answer: "Cải thiện tốc độ API 40% bằng optimization" },
+    { id: "lac2", audio_text: "I've set my profile to Open to Opportunities so recruiters can find me.", options: ["Profile đang public", "Dev đang sẵn sàng nhận job offer", "Profile cần update", "Dev đã tìm được việc"], answer: "Dev đang sẵn sàng nhận job offer" },
+    { id: "lac3", audio_text: "My tech stack includes React, TypeScript, Node.js, and PostgreSQL.", options: ["Dev muốn học các công nghệ này", "Đây là list technology dev đang dùng", "Dev không biết các tech này", "Tech stack của công ty"], answer: "Đây là list technology dev đang dùng" },
   ],
+
   speaking: {
-    level1Prompt: "Sales increased; {input}, profits declined. {input}, we must cut costs.",
-    level1Placeholder: "Ví dụ: nevertheless — consequently...",
-    level2Situation: "Bạn đang viết phần kết luận của bài luận IELTS bàn về giao thông công cộng. Hãy: (1) Nói rằng bất chấp chi phí cao, tàu cao tốc mang lại lợi ích lớn, (2) Giải thích rằng nó giúp giảm ô nhiễm, nhờ đó nâng cao sức khỏe cộng đồng, (3) Tương tự như vậy, nó giúp tiết kiệm thời gian đi lại.",
-    level2Hint: "Notwithstanding the high construction costs, high-speed trains offer great benefits. They reduce air pollution, thereby enhancing public health. Likewise, they help commuters save travel time. Consequently, governments should fund these projects.",
+    level1Prompt: "Giới thiệu bản thân cho LinkedIn summary — 3-5 câu ngắn gọn, chuyên nghiệp.",
+    level1Placeholder: "I'm a [role] with [X] years of experience in [tech stack]. I specialize in... Let's connect if...",
+    level2Situation: "Recruiter hỏi bạn: 'Tell me about your most impactful project.' Describe một project với metrics cụ thể.",
+    level2Hint: "I built a real-time notification system for an e-commerce platform. It reduced customer support tickets by 30% and improved order completion rate by 15%. I used Node.js with WebSockets and Redis for pub/sub, serving 20,000 concurrent users.",
   },
-  grammar: {
-    title: "Advanced Discourse Markers — Các Từ Nối Chuyển Tiếp Nâng Cao",
-    rule: "Liên kết ý tưởng chặt chẽ giúp đạt điểm cao trong văn viết học thuật (IELTS Task 2) và giao tiếp doanh nghiệp:\n\n1. Contrast (Đối lập/Trái ngược):\n- nevertheless (tuy nhiên): Đứng đầu câu hoặc sau dấu chấm phẩy.\n  → 'Sales fell; nevertheless, we made profit.'\n- whereas (trong khi): Nối hai mệnh đề có tính chất so sánh đối lập.\n  → 'I love coding, whereas he prefers designing.'\n- notwithstanding (mặc dù / bất kể): Đứng trước danh từ.\n  → 'Notwithstanding the difficulties, we succeeded.'\n\n2. Cause & Effect (Nguyên nhân - Kết quả):\n- consequently (do đó/kết quả là): Diễn tả hệ quả logic.\n  → 'He broke the rules; consequently, he was dismissed.'\n- thereby + V-ing (bằng cách đó/nhờ đó): Nối mệnh đề chỉ phương thức và kết quả.\n  → 'We optimized the database, thereby saving storage.'\n- hence (vì thế): 'He studied hard, hence his success.'\n\n3. Addition (Bổ sung):\n- furthermore (hơn nữa): Thêm một ý kiến bổ trợ mạnh mẽ vào lập luận.",
-    examples: [
-      { en: "The technology is expensive; nevertheless, it is essential. (contrast with nevertheless)", vn: "Công nghệ đó rất đắt; tuy nhiên, nó rất thiết yếu." },
-      { en: "He worked late, thereby finishing the report. (result with thereby + V-ing)", vn: "Anh ấy làm việc muộn, nhờ đó đã hoàn thành báo cáo." },
-      { en: "She is highly skilled; furthermore, she speaks three languages. (addition with furthermore)", vn: "Cô ấy có kỹ năng rất cao; hơn nữa, cô ấy nói ba thứ tiếng." },
-    ],
-    tip: "Trong văn viết học thuật, tránh viết 'and' hoặc 'so' ở đầu câu. Hãy thay thế 'so' ở đầu câu bằng 'Consequently,' hoặc 'Hence,'. Cấu trúc này giúp bài viết của bạn trông trang trọng hơn hẳn.",
-    vnNote: "⚠️ Chú ý cấu trúc với 'thereby': Sau 'thereby', động từ bắt buộc phải ở dạng V-ing. Lỗi phổ biến của người Việt: 'thereby reduces' hoặc 'thereby we reduce'. Đúng phải là: 'thereby reducing'.",
-    dialogueExample: {
-      speaker: "Linh",
-      text: "Consequently, our market share increased, whereas our competitors faced a decline.",
-      translation: "Do đó, thị phần của chúng ta tăng lên, trong khi đối thủ của chúng ta phải đối mặt với sự sụt giảm.",
-      highlight: "Consequently (do đó) | whereas (trong khi) — sự kết hợp từ nối so sánh nguyên nhân hoàn hảo",
-    },
-    ccq: {
-      question: "Chọn câu viết ĐÚNG cấu trúc ngữ pháp với từ nối 'thereby':",
-      options: [
-        "We reduced prices, thereby we attracted more customers.",
-        "We reduced prices, thereby attracting more customers.",
-        "We reduced prices, thereby to attract more customers.",
-        "We reduced prices, thereby attracted more customers.",
-      ],
-      answer: "We reduced prices, thereby attracting more customers.",
-      explanation: "Sau 'thereby' bắt buộc phải dùng V-ing (attracting) để chỉ kết quả/hệ quả của hành động trước đó.",
-    },
-  },
-  practiceQuiz: [
-    { id: "pq1", type: "multiple-choice", question: "Chọn từ nối thích hợp: 'The company lost money; ___ it closed down.'", options: ["furthermore", "nevertheless", "consequently", "whereas"], answer: "consequently" },
-    { id: "pq2", type: "multiple-choice", question: "Chọn từ điền: 'Some countries invest in solar energy, ___ others rely on coal.'", options: ["nevertheless", "consequently", "whereas", "hence"], answer: "whereas" },
-    { id: "pq3", type: "cloze", question: "Điền dạng đúng của động từ: 'We digitized all files, thereby ___ (save) paper.'", answer: "saving" },
-    { id: "pq4", type: "multiple-choice", question: "Từ nào đồng nghĩa với 'in spite of':", options: ["nevertheless", "consequently", "furthermore", "notwithstanding"], answer: "notwithstanding" },
-    { id: "pq5", type: "cloze", question: "Điền từ nối: 'Just as water is essential to life, ___ (tương tự như vậy) oxygen is necessary.'", answer: "likewise" },
-  ],
-  matchingExercise: {
-    title: "Nối từ nối học thuật với nghĩa đúng",
-    pairs: [
-      { left: "nevertheless", right: "tuy nhiên / mặc dù vậy" },
-      { left: "consequently", right: "do đó / kết quả là" },
-      { left: "whereas", right: "trong khi / trái lại" },
-      { left: "thereby", right: "bằng cách đó / nhờ đó" },
-      { left: "furthermore", right: "hơn nữa" },
-    ],
-  },
-  scrambleExercises: [
-    { id: "s40-1", prompt_vn: "Hệ thống bị sập; do đó, dữ liệu đã bị mất.", words: ["The", "system", "crashed", ";", "consequently", ",", "data", "was", "lost", "."], answer: "The system crashed ; consequently , data was lost ." },
-    { id: "s40-2", prompt_vn: "Chúng tôi đã tối ưu hóa mã nguồn, nhờ đó nâng cao hiệu suất.", words: ["We", "optimized", "the", "code", ",", "thereby", "enhancing", "performance", "."], answer: "We optimized the code , thereby enhancing performance ." },
-    { id: "s40-3", prompt_vn: "Mặc dù gặp khó khăn, chúng tôi đã hoàn thành thời hạn.", words: ["Notwithstanding", "the", "difficulties", ",", "we", "met", "the", "deadline", "."], answer: "Notwithstanding the difficulties , we met the deadline ." },
-  ],
+
   quiz: [
-    { id: "fq1", type: "multiple-choice", question: "Chọn từ nối: 'He was late; ___ the meeting started without him.'", options: ["furthermore", "consequently", "whereas", "likewise"], answer: "consequently" },
-    { id: "fq2", type: "cloze", question: "Điền từ nối: 'The project was successful; ___ (tuy nhiên), the costs were too high.'", answer: "nevertheless" },
-    { id: "fq3", type: "multiple-choice", question: "Chọn dạng đúng của động từ: 'We hired a consultant, thereby ___ the conflict.'", options: ["resolves", "resolving", "to resolve", "resolved"], answer: "resolving" },
-    { id: "fq4", type: "translate", question: "Dịch: 'Một số người thích làm việc tại văn phòng, trong khi số khác thích làm việc từ xa.'", answer: "Some people prefer working at the office, whereas others prefer working remotely." },
-    { id: "fq5", type: "multiple-choice", question: "Từ nào mô tả một văn bản mạch lạc, các ý liên kết tốt?", options: ["transition", "cohesion", "coherent", "subsequent"], answer: "coherent" },
+    { id: "q1", question: "Which LinkedIn headline strategy is most effective?", options: ["Chỉ job title", "Job title + tech stack + value + availability", "Tên công ty + số điện thoại", "Chỉ viết 'Developer'"], answer: "Job title + tech stack + value + availability", type: "multiple-choice" },
+    { id: "q2", question: "What makes a CV bullet point strong?", options: ["Dài và chi tiết nhất có thể", "Action verb + what + measurable result", "Mô tả responsibility", "Liệt kê tất cả tasks đã làm"], answer: "Action verb + what + measurable result", type: "multiple-choice" },
+    { id: "q3", question: "What does a 'recommendation' on LinkedIn prove?", options: ["Bạn có nhiều followers", "Người khác đã xác nhận kỹ năng/công việc của bạn", "Bạn là premium user", "Bạn có nhiều connections"], answer: "Người khác đã xác nhận kỹ năng/công việc của bạn", type: "multiple-choice" },
+    { id: "q4", question: "Điền từ: Always ___ your achievements with numbers — 'increased by 30%'.", options: ["describe", "quantify", "explain", "add"], answer: "quantify", type: "multiple-choice" },
+    { id: "q5", question: "Dịch sang tiếng Anh: Tăng tốc độ tải trang 35% bằng cách thêm CDN.", answer: "Improved page load speed by 35% by adding a CDN.", type: "translate" },
   ],
-  cumulativeReviewQuestions: [
-    { id: "cr40-1", question: "Ôn tập Unit 39 — Chọn câu đúng: 'The password is encrypted. She ___ have decrypted it without the key.'", options: ["must", "can't", "should", "might"], answer: "can't", type: "multiple-choice" },
-    { id: "cr40-2", question: "Ôn tập Unit 38 — Điền: 'Not only ___ she design the code, but she also optimized it.'", options: [], answer: "did", type: "cloze" },
-    { id: "cr40-3", question: "Ôn tập Unit 37 — Chọn đúng: '___ (complete) the research, he published his findings.'", options: ["Having completed", "Completed", "Completing", "To complete"], answer: "Having completed", type: "multiple-choice" },
-  ],
+
   fluencyDrill: {
+    title: "Professional profile vocabulary",
+    timeLimit: 60,
     items: [
-      { en: "He missed the flight consequently", vn: "Do đó anh ấy đã bị lỡ chuyến bay" },
-      { en: "Notwithstanding the economic crisis", vn: "Bất chấp cuộc khủng hoảng kinh tế" },
-      { en: "Sales increased nevertheless", vn: "Tuy nhiên doanh số vẫn tăng" },
-      { en: "We optimized the code thereby enhancing", vn: "Chúng tôi tối ưu hóa code nhờ đó nâng cao" },
-      { en: "He likes coding whereas she prefers", vn: "Anh ấy thích code trong khi cô ấy thích" },
-      { en: "The essay lacks coherence and cohesion", vn: "Bài luận thiếu sự mạch lạc và liên kết" },
-      { en: "We made a smooth transition today", vn: "Hôm nay chúng tôi đã chuyển tiếp suôn sẻ" },
-      { en: "The subsequent investigation proved", vn: "Cuộc điều tra sau đó đã chứng minh" },
+      { en: "headline", vn: "dòng tiêu đề profile" },
+      { en: "tech stack", vn: "bộ công nghệ đang dùng" },
+      { en: "endorsement", vn: "xác nhận kỹ năng" },
+      { en: "recommendation", vn: "lời nhận xét từ đồng nghiệp" },
+      { en: "portfolio", vn: "bộ sưu tập dự án" },
+      { en: "metrics", vn: "số liệu chứng minh impact" },
+      { en: "open to opportunities", vn: "sẵn sàng nhận job mới" },
+      { en: "call to action", vn: "kêu gọi hành động" },
+      { en: "remote-friendly", vn: "có thể làm việc từ xa" },
     ],
   },
 };

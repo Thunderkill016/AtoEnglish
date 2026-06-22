@@ -13,9 +13,11 @@ import {
   Flame,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { UNIT_VOCABULARY, type VocabularyItem } from "@/lib/constants/vocabulary";
+import { getUnitVocabulary, type VocabularyItem } from "@/lib/constants/vocabulary";
+import { scheduleWrongWordsForReview } from "@/app/actions/cards";
 import { UNITS } from "@/lib/constants/units";
 import { saveQuizResult } from "@/app/actions/quiz";
+import { dispatchXpEarned } from "@/lib/dashboard/xp-events";
 import { toast } from "sonner";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
@@ -39,7 +41,7 @@ function shuffle<T>(arr: T[]): T[] {
 }
 
 function buildQuestions(unitId: string, count = 10): Question[] {
-  const vocab = UNIT_VOCABULARY[unitId] ?? [];
+  const vocab = getUnitVocabulary(unitId);
   if (vocab.length < 4) return [];
 
   // Use all distractors from same unit
@@ -114,16 +116,33 @@ export default function VocabQuizClient() {
   const nextQuestion = () => {
     if (current + 1 >= questions.length) {
       setFinished(true);
-      // Award XP on quiz completion (fire-and-forget, non-blocking)
+      const finalScore =
+        answerState === "correct" ? score + 1 : score;
+
       if (selectedUnit) {
-        saveQuizResult({ unitId: selectedUnit, score, total: questions.length })
+        saveQuizResult({
+          unitId: selectedUnit,
+          score: finalScore,
+          total: questions.length,
+        })
           .then((res) => {
-            if (res.success && res.xpEarned) {
-              setXpEarned(res.xpEarned);
-              toast.success(`+${res.xpEarned} XP — quiz hoàn thành!`);
+            if (res.success) {
+              const total = res.totalXpEarned ?? res.xpEarned ?? 0;
+              setXpEarned(total);
+              if (res.xpEarned && res.xpEarned > 0) {
+                dispatchXpEarned(res.xpEarned);
+                toast.success(`+${res.xpEarned} XP — quiz hoàn thành!`);
+              } else if (res.alreadyRecorded) {
+                toast.success(`Đã lưu kết quả (${res.pct}%) — XP tốt nhất hôm nay: ${total}`);
+              }
             }
           })
           .catch(() => { /* silent fail — XP is best-effort */ });
+
+        const uniqueWrong = [...new Set(wrongAnswers)];
+        if (uniqueWrong.length > 0) {
+          scheduleWrongWordsForReview(uniqueWrong).catch(() => {});
+        }
       }
     } else {
       setCurrent((c) => c + 1);
@@ -152,7 +171,7 @@ export default function VocabQuizClient() {
 
         <div className="space-y-3">
           {UNITS.map((unit) => {
-            const vocab = UNIT_VOCABULARY[unit.id] ?? [];
+            const vocab = getUnitVocabulary(unit.id);
             const hasEnough = vocab.length >= 4;
             return (
               <button

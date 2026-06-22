@@ -4781,3 +4781,16 @@ export const UNIT_VOCABULARY: Record<string, VocabularyItem[]> = {
     },
   ],
 } satisfies Record<string, VocabularyItem[]>;
+
+/** Map unit registry ids (unit-a0-1) to vocabulary keys (unit-A01). */
+export function resolveVocabularyKey(unitId: string): string {
+  const a0Match = unitId.match(/^unit-a0-(\d+)$/i);
+  if (a0Match) {
+    return `unit-A${a0Match[1].padStart(2, "0")}`;
+  }
+  return unitId;
+}
+
+export function getUnitVocabulary(unitId: string): VocabularyItem[] {
+  return UNIT_VOCABULARY[resolveVocabularyKey(unitId)] ?? [];
+}

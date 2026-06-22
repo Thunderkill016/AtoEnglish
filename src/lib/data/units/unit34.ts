@@ -1,151 +1,153 @@
-import { UnitData } from "@/components/learn/UnitTemplate";
+import type { UnitData } from "@/components/learn/UnitTemplate";
 
-export const unit34: UnitData = {
+// UNIT 34 — Reading API Documentation (B2 / Phase 4)
+const unit34: UnitData = {
   unitId: "unit-34",
-  title: "Unit 34: Past Regrets & What-ifs",
+  title: "Unit 34: Reading API Documentation",
   level: "B2",
   xp: 120,
   estimatedTime: 60,
-  description: "Third Conditional — Câu điều kiện loại 3. Diễn đạt sự hối tiếc về quá khứ, phân tích nguyên nhân sai lầm và rút ra bài học kinh nghiệm sau dự án. Cấu trúc ngữ pháp cực kỳ quan trọng cho IELTS Writing Task 2.",
-  badgeName: "Nhà Đánh Giá",
-  badgeEmoji: "🔍",
-  situation: "Cuộc họp rút kinh nghiệm (Post-mortem Meeting) sau khi dự án ra mắt sản phẩm bị trễ 2 tuần. Cả đội cùng phân tích xem những lỗi nào đã bị bỏ sót (overlooked) và thảo luận: 'Nếu chúng ta làm khác đi trong quá khứ thì kết quả đã thế nào?'.",
+  description: "Học đọc và hiểu API docs bằng tiếng Anh — endpoint, parameter, response, error codes.",
+  badgeName: "API Reader",
+  badgeEmoji: "📖",
+
+  situation:
+    "Bạn cần tích hợp một payment API vào dự án. Bạn mở tài liệu Stripe API bằng tiếng Anh. Làm sao để đọc hiểu nhanh mà không cần dịch từng chữ?",
+
   learningOutcomes: [
-    "Sử dụng thành thạo câu điều kiện loại 3 (Third Conditional) để nói về quá khứ giả định",
-    "Phân tích lỗi sai, sự cố dự án và đề xuất cách khắc phục (rectify) một cách chuyên nghiệp",
-    "Thể hiện sự hối tiếc và tự kiểm điểm (reflection) bằng tiếng Anh doanh nghiệp",
+    "Đọc hiểu API documentation bằng tiếng Anh không cần tra từ điển",
+    "Hiểu các thuật ngữ: endpoint, parameter, response, authentication",
+    "Đặt câu hỏi về API một cách rõ ràng với đồng nghiệp nước ngoài",
   ],
-  culturalNote: 'Trong văn hóa làm việc phương Tây, các buổi họp rút kinh nghiệm không nhằm mục đích đổ lỗi (<span class="text-zinc-400">blame</span>) mà tập trung vào phân tích khách quan (<span class="text-emerald-400">analysis</span>). Khi thảo luận về sai lầm của đồng nghiệp, hãy dùng câu điều kiện loại 3 dạng bị động như <span class="text-emerald-400">"If the error had been detected earlier, we would have prevented the delay"</span> để tránh chỉ trích cá nhân.',
+
+  culturalNote:
+    'MDN Web Docs và Stripe Docs là hai tài liệu kỹ thuật được coi là tiêu chuẩn vàng về cách viết documentation. <span class="text-emerald-400 font-semibold">Cấu trúc chuẩn</span>: Overview → Authentication → Endpoints → Parameters → Response → Errors → Examples. Đọc phần Examples trước nếu bạn cần hiểu nhanh.',
+
   warmupGreetings: [
-    { emoji: "🤦", en: "If we had double-checked the data, we would have avoided the error.", vn: "Nếu chúng ta kiểm tra kỹ dữ liệu, chúng ta đã tránh được lỗi sai.", context: "If we had + PP, we would have + PP" },
-    { emoji: "🔍", en: "If they had investigated the issue, they would have foreseen the risk.", vn: "Nếu họ tìm hiểu kỹ vấn đề, họ đã thấy trước được rủi ro.", context: "had investigated ... would have foreseen" },
-    { emoji: "🛠️", en: "We could have rectified the complication if you had informed us.", vn: "Chúng tôi đã có thể khắc phục rắc rối nếu bạn thông báo cho chúng tôi.", context: "could have rectified if you had informed" },
+    { emoji: "📡", en: "How do I authenticate with the API?", vn: "Tôi xác thực với API như thế nào?", context: "Hỏi trong team khi đọc docs" },
+    { emoji: "🔑", en: "The endpoint requires a Bearer token in the header.", vn: "Endpoint yêu cầu Bearer token trong header.", context: "Giải thích cách dùng API" },
+    { emoji: "📋", en: "Check the response schema in the documentation.", vn: "Kiểm tra response schema trong tài liệu.", context: "Hướng dẫn đồng nghiệp mới" },
   ],
+
   vocab: [
-    { id: 1, word: "regret", emoji: "😢", phonetic: "/rɪˈɡret/", meaning: "sự hối tiếc / hối tiếc", example: "I deeply regret not attending the training session last month.", example2: "My greatest regret is that we didn't launch the project earlier.", collocation: "express regret / deep regret / feel regret", audio: "/audio/unit34/regret.mp3" },
-    { id: 2, word: "reflection", emoji: "🧘", phonetic: "/rɪˈflekʃən/", meaning: "sự suy ngẫm / phản chiếu", example: "Upon reflection, I realize we made several wrong decisions.", example2: "The report is a clear reflection of our team's effort.", collocation: "upon reflection / self-reflection / written reflection", audio: "/audio/unit34/reflection.mp3" },
-    { id: 3, word: "evaluation", emoji: "📊", phonetic: "/ɪˌvæljuˈeɪʃən/", meaning: "sự đánh giá / nhận định", example: "The company conducted a thorough evaluation of the campaign.", example2: "Performance evaluation is done at the end of each year.", collocation: "project evaluation / performance evaluation / final evaluation", audio: "/audio/unit34/evaluation.mp3" },
-    { id: 4, word: "overlook", emoji: "🙈", phonetic: "/ˌəʊvəˈlʊk/", meaning: "bỏ sót / bỏ qua (lỗi)", example: "We cannot afford to overlook even the smallest error.", example2: "The manager overlooked her lateness because she worked hard.", collocation: "overlook a mistake / overlook an error / completely overlook", audio: "/audio/unit34/overlook.mp3" },
-    { id: 5, word: "foresee", emoji: "🔮", phonetic: "/fɔːˈsiː/", meaning: "nhìn thấy trước / dự đoán trước", example: "No one could foresee the economic crisis at that time.", example2: "If we had foreseen the delay, we would have changed the plan.", collocation: "foresee the future / foresee risks / foresee problems", audio: "/audio/unit34/foresee.mp3" },
-    { id: 6, word: "investigate", emoji: "🕵️", phonetic: "/ɪnˈvestɪɡeɪt/", meaning: "điều tra / tìm hiểu kỹ", example: "The IT team is investigating the server crash.", example2: "We must investigate the cause of the customer complaints.", collocation: "investigate the cause / thoroughly investigate / investigate the issue", audio: "/audio/unit34/investigate.mp3" },
-    { id: 7, word: "complication", emoji: "🌀", phonetic: "/ˌkɒmplɪˈkeɪʃən/", meaning: "sự rắc rối / phức tạp / biến chứng", example: "The project faced several complications during the testing phase.", example2: "We resolved the technical complications quickly.", collocation: "unexpected complication / cause complications / face complications", audio: "/audio/unit34/complication.mp3" },
-    { id: 8, word: "rectify", emoji: "🔧", phonetic: "/ˈrektɪfaɪ/", meaning: "khắc phục / sửa chữa (sai lầm)", example: "We must take immediate action to rectify this situation.", example2: "The error was rectified before the product launch.", collocation: "rectify a mistake / rectify the situation / rectify an error", audio: "/audio/unit34/rectify.mp3" },
-    { id: 9, word: "prevent", emoji: "🛑", phonetic: "/prɪˈvent/", meaning: "ngăn chặn / phòng ngừa", example: "Security measures were implemented to prevent data theft.", example2: "Nothing could prevent him from achieving his goals.", collocation: "prevent a problem / prevent damage / prevent from doing", audio: "/audio/unit34/prevent.mp3" },
-    { id: 10, word: "fault", emoji: "⚠️", phonetic: "/fɔːlt/", meaning: "lỗi / trách nhiệm sai sót", example: "It was not my fault that the shipment was delayed.", example2: "The system crash was due to a technical fault.", collocation: "technical fault / find fault / it's my fault", audio: "/audio/unit34/fault.mp3" },
-    { id: 11, word: "analysis", emoji: "📈", phonetic: "/əˈnæləsɪs/", meaning: "sự phân tích", example: "A detailed analysis of the market is required.", example2: "The team conducted a risk analysis before investing.", collocation: "data analysis / market analysis / conduct an analysis", audio: "/audio/unit34/analysis.mp3" },
-    { id: 12, word: "error", emoji: "❌", phonetic: "/ˈerər/", meaning: "sai sót / lỗi kỹ thuật", example: "The system displayed a system error code.", example2: "An error occurred during the file transfer.", collocation: "system error / human error / avoid errors", audio: "/audio/unit34/error.mp3" },
+    { id: 1, word: "endpoint", emoji: "🎯", phonetic: "/ˈendpɔɪnt/", meaning: "URL của một API resource cụ thể", example: "The endpoint for user data is GET /api/v1/users/:id.", example2: "Each endpoint handles a specific type of request.", collocation: "API endpoint / REST endpoint / call an endpoint", audio: "/audio/unit34/endpoint.mp3" },
+    { id: 2, word: "parameter", emoji: "🔢", phonetic: "/pəˈræmɪtər/", meaning: "tham số đầu vào (query, path, body)", example: "The 'limit' parameter controls how many results are returned.", example2: "Required parameters must be included in every request.", collocation: "query parameter / required parameter / optional parameter", audio: "/audio/unit34/parameter.mp3" },
+    { id: 3, word: "response", emoji: "📨", phonetic: "/rɪˈspɒns/", meaning: "dữ liệu API trả về", example: "A successful response returns a 200 status code with JSON data.", example2: "Parse the response body to extract the user ID.", collocation: "response body / response schema / status response", audio: "/audio/unit34/response.mp3" },
+    { id: 4, word: "authentication", emoji: "🔐", phonetic: "/ɔːˌθentɪˈkeɪʃən/", meaning: "xác thực — chứng minh danh tính", example: "All endpoints require authentication via API key.", example2: "OAuth 2.0 is the standard for API authentication.", collocation: "API authentication / Bearer token / authenticate a request", audio: "/audio/unit34/authentication.mp3" },
+    { id: 5, word: "payload", emoji: "📦", phonetic: "/ˈpeɪləʊd/", meaning: "dữ liệu gửi trong body của request", example: "Include the user data as a JSON payload in the request body.", example2: "The payload should not exceed 10MB.", collocation: "request payload / JSON payload / send a payload", audio: "/audio/unit34/payload.mp3" },
+    { id: 6, word: "status code", emoji: "🔢", phonetic: "/ˈsteɪtəs kəʊd/", meaning: "mã trạng thái HTTP (200, 404, 500...)", example: "A 404 status code means the resource was not found.", example2: "Always check the status code before processing the response.", collocation: "HTTP status code / 200 OK / 401 Unauthorized", audio: "/audio/unit34/status.mp3" },
+    { id: 7, word: "deprecate", emoji: "⚠️", phonetic: "/ˈdeprɪkeɪt/", meaning: "đánh dấu tính năng/API sẽ bị xóa trong tương lai", example: "This endpoint is deprecated — use v2/users instead.", example2: "Deprecated APIs still work but will be removed in a future version.", collocation: "deprecated API / deprecated method / deprecation notice", audio: "/audio/unit34/deprecate.mp3" },
+    { id: 8, word: "rate limit", emoji: "⏱️", phonetic: "/reɪt ˈlɪmɪt/", meaning: "giới hạn số request trong một khoảng thời gian", example: "The API allows 100 requests per minute — exceeding this returns 429.", example2: "Implement retry logic to handle rate limit errors.", collocation: "API rate limit / rate limiting / exceed the rate limit", audio: "/audio/unit34/rate.mp3" },
+    { id: 9, word: "schema", emoji: "📐", phonetic: "/ˈskiːmə/", meaning: "cấu trúc dữ liệu (format của request/response)", example: "Refer to the response schema to understand the JSON structure.", example2: "Validate your input against the request schema.", collocation: "JSON schema / response schema / request schema", audio: "/audio/unit34/schema.mp3" },
+    { id: 10, word: "pagination", emoji: "📄", phonetic: "/ˌpædʒɪˈneɪʃən/", meaning: "phân trang — chia dữ liệu thành nhiều trang", example: "Use cursor-based pagination for large datasets.", example2: "The 'next' field in the response contains the cursor for pagination.", collocation: "pagination cursor / paginated response / next page", audio: "/audio/unit34/pagination.mp3" },
+    { id: 11, word: "headers", emoji: "📋", phonetic: "/ˈhedərz/", meaning: "phần đầu của HTTP request chứa metadata", example: "Set the 'Content-Type: application/json' header on all POST requests.", example2: "The Authorization header contains your Bearer token.", collocation: "request headers / response headers / HTTP headers", audio: "/audio/unit34/headers.mp3" },
   ],
+
+  grammar: {
+    title: "Passive Voice trong Technical Documentation",
+    rule: "API docs thường dùng Passive Voice để mô tả quy trình:\n'is returned' / 'must be included' / 'will be deprecated'\nChủ thể thường bị ẩn vì không quan trọng (hệ thống làm tự động).",
+    examples: [
+      { en: "A token is returned after successful authentication.", vn: "Một token được trả về sau khi xác thực thành công." },
+      { en: "All requests must be authenticated using an API key.", vn: "Tất cả request phải được xác thực bằng API key." },
+      { en: "The endpoint will be deprecated in version 3.0.", vn: "Endpoint này sẽ bị ngừng hỗ trợ ở phiên bản 3.0." },
+      { en: "The response is paginated by default — 20 items per page.", vn: "Response mặc định được phân trang — 20 items mỗi trang." },
+    ],
+    tip: "Khi đọc docs, thấy 'is returned / is required / is deprecated' = hệ thống tự làm. Khi thấy 'you must / you should' = developer phải làm.",
+    vnNote: "Tiếng Anh kỹ thuật dùng Passive nhiều hơn văn nói thông thường. Đây là cách viết chuẩn trong documentation, không phải lỗi ngữ pháp.",
+    ccq: {
+      question: "Câu nào dùng đúng passive voice trong technical writing?",
+      options: [
+        "The system returns a 200 status code",
+        "A 200 status code is returned on success",
+        "You return 200 when success",
+        "We return 200 status",
+      ],
+      answer: "A 200 status code is returned on success",
+      explanation: "Technical docs ưu tiên passive voice — chủ thể (hệ thống) ẩn đi, tập trung vào kết quả.",
+    },
+  },
+
+  matchingExercise: {
+    title: "Nối thuật ngữ API với định nghĩa",
+    pairs: [
+      { left: "endpoint", right: "URL của API resource" },
+      { left: "payload", right: "Dữ liệu trong body request" },
+      { left: "rate limit", right: "Giới hạn số request/phút" },
+      { left: "deprecated", right: "Sẽ bị xóa trong tương lai" },
+      { left: "pagination", right: "Chia dữ liệu thành nhiều trang" },
+    ],
+  },
+
+  scrambleExercises: [
+    { id: "s1", prompt_vn: "Tất cả request phải bao gồm một API key hợp lệ.", words: ["All", "requests", "must", "include", "a", "valid", "API", "key."], answer: "All requests must include a valid API key." },
+    { id: "s2", prompt_vn: "Endpoint này trả về 404 nếu user không tồn tại.", words: ["This", "endpoint", "returns", "404", "if", "the", "user", "does", "not", "exist."], answer: "This endpoint returns 404 if the user does not exist." },
+    { id: "s3", prompt_vn: "Bearer token phải được gửi trong Authorization header.", words: ["The", "Bearer", "token", "must", "be", "sent", "in", "the", "Authorization", "header."], answer: "The Bearer token must be sent in the Authorization header." },
+  ],
+
+  practiceQuiz: [
+    { id: "pq1", question: "What does a 401 status code mean?", options: ["Resource not found", "Unauthorized — authentication required", "Server error", "Too many requests"], answer: "Unauthorized — authentication required", type: "multiple-choice" },
+    { id: "pq2", question: "Which parameter type is added to the URL path? (e.g. /users/:id)", options: ["Query parameter", "Body parameter", "Path parameter", "Header parameter"], answer: "Path parameter", type: "multiple-choice" },
+    { id: "pq3", question: "Điền từ: This API endpoint is ___. Use v2/payments instead.", options: ["deleted", "deprecated", "removed", "outdated"], answer: "deprecated", type: "multiple-choice" },
+  ],
+
+  practiceTranslate: [
+    { id: "pt1", prompt_vn: "Endpoint này yêu cầu authentication.", answer: "This endpoint requires authentication." },
+    { id: "pt2", prompt_vn: "Response trả về một mảng các objects JSON.", answer: "The response returns an array of JSON objects." },
+    { id: "pt3", prompt_vn: "Vượt quá rate limit sẽ trả về lỗi 429.", answer: "Exceeding the rate limit will return a 429 error." },
+  ],
+
   dialogues: [
     {
       id: 1,
-      title: "Họp rút kinh nghiệm dự án chậm trễ",
+      title: "Hỏi đồng nghiệp về API integration",
       audio: "/audio/unit34/dialogue_1.mp3",
-      desc: "Linh và Huy phân tích nguyên nhân dự án giao hàng trễ hạn chót.",
+      desc: "Hà hỏi senior dev về cách dùng payment API.",
       lines: [
-        { id: "d1-1", speaker: "Linh", text: "The client is unhappy about the delay. We need to conduct a thorough analysis of what went wrong.", translation: "Khách hàng không hài lòng về sự chậm trễ. Chúng ta cần tiến hành một phân tích kỹ lưỡng về những gì đã sai." },
-        { id: "d1-2", speaker: "Huy", text: "I agree. If we had investigated the database issue in January, we would have prevented the server crash.", translation: "Tôi đồng ý. Nếu chúng ta tìm hiểu kỹ vấn đề cơ sở dữ liệu vào tháng Một, chúng ta đã ngăn chặn được việc sập máy chủ." },
-        { id: "d1-3", speaker: "Linh", text: "Yes, we also overlooked a major security error. If we had hired a tester, that mistake would have been detected.", translation: "Đúng vậy, chúng ta cũng đã bỏ sót một lỗi bảo mật lớn. Nếu chúng ta thuê một kiểm thử viên, sai lầm đó đã được phát hiện." },
-        { id: "d1-4", speaker: "Huy", text: "It is my fault for not requesting more resources. I should have foreseen these complications.", translation: "Đó là lỗi của tôi vì đã không yêu cầu thêm nguồn lực. Đáng lẽ tôi phải nhìn thấy trước những rắc rối phức tạp này." },
-        { id: "d1-5", speaker: "Linh", text: "Let's not dwell on regrets. We have rectified the situation now, and we've learned a valuable lesson.", translation: "Chúng ta đừng chìm đắm trong hối tiếc. Chúng ta đã khắc phục tình hình bây giờ, và chúng ta đã học được một bài học quý giá." },
-      ],
-    },
-    {
-      id: 2,
-      title: "Nhìn lại chiến dịch marketing thất bại",
-      audio: "/audio/unit34/dialogue_2.mp3",
-      desc: "Trọng và Emma trao đổi về bài học marketing.",
-      lines: [
-        { id: "d2-1", speaker: "Trong", text: "Upon reflection, if we had spent more budget on social media, the campaign would have been successful.", translation: "Sau khi suy ngẫm, nếu chúng ta chi nhiều ngân sách hơn cho mạng xã hội, chiến dịch đã thành công." },
-        { id: "d2-2", speaker: "Emma", text: "Maybe, but our initial evaluation was wrong. We overlooked our competitor's new launch.", translation: "Có thể, nhưng đánh giá ban đầu của chúng ta đã sai. Chúng ta đã bỏ sót lần ra mắt mới của đối thủ cạnh tranh." },
-        { id: "d2-3", speaker: "Trong", text: "If we had monitored them closely, we could have changed our strategy in time.", translation: "Nếu chúng ta theo dõi họ chặt chẽ, chúng ta đã có thể thay đổi chiến lược kịp thời." },
+        { id: "d1-1", speaker: "Ha", text: "I'm trying to integrate the Stripe API but I'm confused about the authentication. Do I use an API key or a Bearer token?", translation: "Tôi đang cố tích hợp Stripe API nhưng bị confused về authentication. Tôi dùng API key hay Bearer token?" },
+        { id: "d1-2", speaker: "Tom", text: "For Stripe, you use a secret API key. It goes in the Authorization header as 'Bearer sk_test_...' — check the Authentication section in their docs.", translation: "Với Stripe, bạn dùng secret API key. Nó đặt trong Authorization header là 'Bearer sk_test_...' — kiểm tra phần Authentication trong docs của họ." },
+        { id: "d1-3", speaker: "Ha", text: "Got it. And the endpoint for creating a payment — is it POST to /v1/payment_intents?", translation: "Hiểu rồi. Và endpoint để tạo payment — là POST đến /v1/payment_intents?" },
+        { id: "d1-4", speaker: "Tom", text: "Exactly. Pass the amount and currency in the request payload. The response schema shows all the fields you'll get back.", translation: "Chính xác. Truyền amount và currency trong request payload. Response schema cho thấy tất cả các fields bạn sẽ nhận được." },
+        { id: "d1-5", speaker: "Ha", text: "What about error handling? What status code does it return on failure?", translation: "Còn error handling thì sao? Nó trả về status code gì khi thất bại?" },
+        { id: "d1-6", speaker: "Tom", text: "400 for invalid parameters, 401 for authentication errors, and 402 for card-specific issues. The error object includes a 'code' field with details.", translation: "400 cho invalid parameters, 401 cho authentication errors, và 402 cho các vấn đề thẻ cụ thể. Error object có trường 'code' kèm chi tiết." },
       ],
     },
   ],
+
   listenAndChoose: [
-    { id: "lac1", audio_text: "If we had double-checked the data, we would have avoided the error.", options: ["If we double-check the data, we avoid the error.", "If we had double-checked the data, we would have avoided the error.", "If we checked the data, we would avoid the error.", "We avoided the error because we checked the data."], answer: "If we had double-checked the data, we would have avoided the error." },
-    { id: "lac2", audio_text: "If we had foreseen the delay, we would have changed the plan.", options: ["If we foresee the delay, we will change the plan.", "If we had foreseen the delay, we would have changed the plan.", "If we had foreseen the delay, we would change the plan.", "We changed the plan because we foresaw the delay."], answer: "If we had foreseen the delay, we would have changed the plan." },
-    { id: "lac3", audio_text: "It was not my fault that the shipment was delayed.", options: ["It was not my fault that the shipment was delayed.", "It was my fault that the shipment was delayed.", "The shipment was not delayed yesterday.", "I apologized for delaying the shipment."], answer: "It was not my fault that the shipment was delayed." },
-    { id: "lac4", audio_text: "The error was rectified before the product launch.", options: ["We made a new error during the product launch.", "The error was overlooked after the product launch.", "The error was rectified before the product launch.", "We did not rectify any errors last week."], answer: "The error was rectified before the product launch." },
-    { id: "lac5", audio_text: "Upon reflection, I realize we made several wrong decisions.", options: ["Upon reflection, I realize we made several wrong decisions.", "I think we made all correct decisions.", "We will reflect on our decisions tomorrow.", "Reflecting is not necessary for this project."], answer: "Upon reflection, I realize we made several wrong decisions." },
+    { id: "lac1", audio_text: "The API returns a 429 status code when you exceed the rate limit.", options: ["API bị lỗi server", "Vượt quá giới hạn request", "Token hết hạn", "Request không hợp lệ"], answer: "Vượt quá giới hạn request" },
+    { id: "lac2", audio_text: "Include your API key as a Bearer token in the Authorization header.", options: ["API key đặt trong URL", "API key đặt trong body", "API key đặt trong header", "API key đặt trong query string"], answer: "API key đặt trong header" },
+    { id: "lac3", audio_text: "This endpoint is deprecated and will be removed in version 4.0.", options: ["Endpoint sẽ được nâng cấp", "Endpoint sẽ bị xóa trong v4.0", "Endpoint mới được thêm vào", "Endpoint bị lỗi tạm thời"], answer: "Endpoint sẽ bị xóa trong v4.0" },
   ],
+
   speaking: {
-    level1Prompt: "If we had {input} the issue earlier, we would have {input} the project {input}.",
-    level1Placeholder: "Ví dụ: investigated — prevented — delay...",
-    level2Situation: "Bạn thuyết trình đánh giá hiệu quả dự án cuối năm. Đóng vai trưởng nhóm thảo luận về sự cố máy chủ: (1) Nói rằng nếu đội ngũ IT phát hiện lỗi sớm hơn, sự cố đã không xảy ra, (2) Nhận lỗi vì đã bỏ sót khâu kiểm tra, (3) Nêu giải pháp đã khắc phục.",
-    level2Hint: "If the IT team had detected the system error earlier, the server crash would have been prevented. It was our fault for overlooking the security check. Fortunately, we have rectified the situation now through detailed analysis.",
+    level1Prompt: "Giải thích cho đồng nghiệp mới: API endpoint là gì và cách dùng nó.",
+    level1Placeholder: "An API endpoint is a URL that...",
+    level2Situation: "Bạn tìm thấy lỗi trong API docs của team. Viết message Slack để hỏi team lead.",
+    level2Hint: "Hey [name], I found a discrepancy in the API docs for the users endpoint. The documentation says it returns a 200 status, but I'm getting a 201. Should we update the docs or change the expected behavior?",
   },
-  grammar: {
-    title: "Third Conditional — Câu Điều Kiện Loại 3 (Giả Định Quá Khứ)",
-    rule: "Câu điều kiện loại 3 dùng để giả định một tình huống trái ngược với thực tế đã xảy ra trong quá khứ. Thường dùng để thể hiện sự hối tiếc hoặc phân tích bài học kinh nghiệm.\n\nCấu trúc:\nIf + S + had + Past Participle (Quá khứ hoàn thành), S + would / could / might + have + Past Participle\n\nVí dụ:\n- 'If I had studied harder, I would have passed the exam.' (Thực tế trong quá khứ: Tôi không học chăm chỉ và tôi đã trượt)\n- 'If we had launched earlier, we could have captured the market.'",
-    examples: [
-      { en: "If we had investigated the risk, we would have prevented the delay. (We didn't investigate, so delay happened)", vn: "Nếu chúng ta tìm hiểu rủi ro, chúng ta đã ngăn chặn được sự chậm trễ." },
-      { en: "She might have passed the evaluation if she had prepared better. (She didn't prepare well)", vn: "Cô ấy có thể đã vượt qua đánh giá nếu cô ấy chuẩn bị tốt hơn." },
-      { en: "If they had not overlooked the error, the system wouldn't have crashed. (They overlooked it)", vn: "Nếu họ không bỏ sót lỗi đó, hệ thống đã không bị sập." },
-    ],
-    tip: "Trong văn phong nói, cụm 'would have' thường được phát âm lướt nhanh thành 'would've' (/ˈwʊdəv/) hoặc thậm chí nghe giống như 'would of'. Trong bài thi nghe IELTS, hãy chú ý nghe kỹ âm này để xác định đúng thì quá khứ giả định.",
-    vnNote: "⚠️ Người Việt cực kỳ hay nhầm lẫn cách viết và đọc của câu điều kiện loại 3. Hãy nhớ động từ ở cả hai vế đều phải ở dạng Phân từ 2 (V3/V-ed), và luôn luôn có 'had' ở vế If và 'have' ở vế sau. Không dùng 'would had' hay 'if we would have'.",
-    dialogueExample: {
-      speaker: "Huy",
-      text: "If we had investigated the database issue in January, we would have prevented the server crash.",
-      translation: "Nếu chúng ta tìm hiểu kỹ vấn đề cơ sở dữ liệu vào tháng Một, chúng ta đã ngăn chặn được việc sập máy chủ.",
-      highlight: "had investigated (past perfect) | would have prevented (would have + V3) — đúng cấu trúc loại 3",
-    },
-    ccq: {
-      question: "Câu nào thể hiện một sự hối tiếc về điều ĐÃ XẢY RA trong quá khứ?",
-      options: [
-        "If we hire a tester, we will avoid errors.",
-        "If we hired a tester, we would avoid errors.",
-        "If we had hired a tester, we would have avoided errors.",
-        "If we had hired a tester, we would avoid errors.",
-      ],
-      answer: "If we had hired a tester, we would have avoided errors.",
-      explanation: "Chỉ có câu điều kiện loại 3 ('had hired' và 'would have avoided') mới diễn tả tình huống giả định trái ngược hoàn toàn với quá khứ thực tế (thực tế chúng ta đã không thuê tester và đã gặp lỗi).",
-    },
-  },
-  practiceQuiz: [
-    { id: "pq1", type: "multiple-choice", question: "Chọn dạng đúng: 'If you ___ me, I would have helped you rectify the mistake.'", options: ["tell", "told", "had told", "would have told"], answer: "had told" },
-    { id: "pq2", type: "multiple-choice", question: "Chọn vế sau đúng: 'If the team had worked together, we ___ the deadline.'", options: ["would meet", "will meet", "would have met", "had met"], answer: "would have met" },
-    { id: "pq3", type: "cloze", question: "Điền: 'If they ___ (foresee) the complications, they would have postponed the project.'", answer: "had foreseen" },
-    { id: "pq4", type: "multiple-choice", question: "Chọn từ điền: 'Upon ___, I realized we made a serious error.'", options: ["evaluation", "reflection", "fault", "analysis"], answer: "reflection" },
-    { id: "pq5", type: "cloze", question: "Điền: 'If the software had been tested, the crash ___ (prevent/bị động) .'", answer: "would have been prevented" },
-  ],
-  matchingExercise: {
-    title: "Nối từ vựng hối tiếc và đánh giá với nghĩa đúng",
-    pairs: [
-      { left: "overlook", right: "bỏ sót / bỏ qua" },
-      { left: "rectify", right: "khắc phục / sửa chữa" },
-      { left: "foresee", right: "nhìn thấy trước" },
-      { left: "evaluation", right: "sự đánh giá" },
-      { left: "complication", right: "sự rắc rối phức tạp" },
-    ],
-  },
-  scrambleExercises: [
-    { id: "s34-1", prompt_vn: "Nếu chúng ta phân tích rủi ro, chúng ta đã tránh được sai lầm.", words: ["If", "we", "had", "analyzed", "the", "risks", ",", "we", "would", "have", "avoided", "the", "mistake", "."], answer: "If we had analyzed the risks , we would have avoided the mistake ." },
-    { id: "s34-2", prompt_vn: "Đó không phải lỗi của tôi khi trang web bị sập.", words: ["It", "was", "not", "my", "fault", "that", "the", "website", "crashed", "."], answer: "It was not my fault that the website crashed ." },
-    { id: "s34-3", prompt_vn: "Chúng tôi đã có thể sửa lỗi đó sớm hơn.", words: ["We", "could", "have", "rectified", "that", "error", "much", "earlier", "."], answer: "We could have rectified that error much earlier ." },
-  ],
+
   quiz: [
-    { id: "fq1", type: "multiple-choice", question: "Chọn dạng đúng: 'He might have got the job if he ___ his speaking skills.'", options: ["improved", "had improved", "would improve", "has improved"], answer: "had improved" },
-    { id: "fq2", type: "cloze", question: "Điền từ: 'We apologize for the human ___ (sai sót) in this report.'", answer: "error" },
-    { id: "fq3", type: "multiple-choice", question: "Chọn từ điền: 'The IT department is ___ the cause of the database failure.'", options: ["overlooking", "investigating", "preventing", "rectifying"], answer: "investigating" },
-    { id: "fq4", type: "translate", question: "Dịch: 'Nếu bạn hỏi, tôi đã nói cho bạn biết rồi.'", answer: "If you had asked, I would have told you." },
-    { id: "fq5", type: "multiple-choice", question: "Từ nào đồng nghĩa với 'regret' hoặc 'deep thought'?", options: ["analysis", "reflection", "evaluation", "complication"], answer: "reflection" },
+    { id: "q1", question: "What does REST stand for in REST API?", options: ["Remote Execution System Transfer", "Representational State Transfer", "Request Execute Send Transfer", "Remote State Transfer"], answer: "Representational State Transfer", type: "multiple-choice" },
+    { id: "q2", question: "Which status code means 'resource not found'?", options: ["200", "401", "404", "500"], answer: "404", type: "multiple-choice" },
+    { id: "q3", question: "What is a 'payload' in API context?", options: ["Số lượng request tối đa", "Dữ liệu gửi trong body của request", "URL của endpoint", "Mã xác thực"], answer: "Dữ liệu gửi trong body của request", type: "multiple-choice" },
+    { id: "q4", question: "Điền từ: Use ___ parameters to filter results (added to the URL after '?').", options: ["path", "query", "body", "header"], answer: "query", type: "multiple-choice" },
+    { id: "q5", question: "Dịch sang tiếng Anh: API này yêu cầu authentication bằng Bearer token.", answer: "This API requires authentication using a Bearer token.", type: "translate" },
   ],
-  cumulativeReviewQuestions: [
-    { id: "cr34-1", question: "Ôn tập Unit 33 — Chọn dạng đúng: 'If I were you, I ___ in that business venture.'", options: ["will invest", "would invest", "invested", "would have invested"], answer: "would invest", type: "multiple-choice" },
-    { id: "cr34-2", question: "Ôn tập Unit 32 — Điền: 'By 2030, scientists ___ (develop) sustainable energy.'", options: [], answer: "will have developed", type: "cloze" },
-    { id: "cr34-3", question: "Ôn tập Unit 31 — Điền động từ: 'I recommend that he ___ (xác nhận) the scheduled meeting.'", options: ["confirms", "confirm", "confirming", "to confirm"], answer: "confirm", type: "multiple-choice" },
-  ],
+
   fluencyDrill: {
+    title: "API vocabulary sprint",
+    timeLimit: 60,
     items: [
-      { en: "If we had known, we would have helped", vn: "Nếu chúng tôi biết, chúng tôi đã giúp rồi" },
-      { en: "It was not my fault", vn: "Đó không phải lỗi của tôi" },
-      { en: "We overlooked a major system error", vn: "Chúng tôi đã bỏ sót một lỗi hệ thống lớn" },
-      { en: "We have rectified the situation now", vn: "Chúng tôi đã khắc phục tình hình bây giờ" },
-      { en: "No one could foresee the complication", vn: "Không ai có thể thấy trước sự phức tạp đó" },
-      { en: "Upon reflection, we made a mistake", vn: "Sau khi suy ngẫm, chúng tôi đã mắc sai lầm" },
-      { en: "The IT team is investigating the crash", vn: "Đội IT đang điều tra vụ sập hệ thống" },
-      { en: "We conducted a thorough project evaluation", vn: "Chúng tôi đã thực hiện đánh giá dự án kỹ lưỡng" },
+      { en: "endpoint", vn: "URL của API resource" },
+      { en: "parameter", vn: "tham số đầu vào" },
+      { en: "response", vn: "dữ liệu API trả về" },
+      { en: "payload", vn: "dữ liệu trong body request" },
+      { en: "status code", vn: "mã trạng thái HTTP" },
+      { en: "deprecated", vn: "sẽ bị xóa trong tương lai" },
+      { en: "rate limit", vn: "giới hạn số request/phút" },
+      { en: "schema", vn: "cấu trúc dữ liệu" },
+      { en: "authentication", vn: "xác thực danh tính" },
+      { en: "pagination", vn: "phân trang dữ liệu" },
     ],
   },
 };

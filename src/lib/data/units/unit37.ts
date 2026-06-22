@@ -1,152 +1,151 @@
-import { UnitData } from "@/components/learn/UnitTemplate";
+import type { UnitData } from "@/components/learn/UnitTemplate";
 
-export const unit37: UnitData = {
+// UNIT 37 — Stack Overflow English (B2 / Phase 4)
+const unit37: UnitData = {
   unitId: "unit-37",
-  title: "Unit 37: Concise & Precise Language",
+  title: "Unit 37: Stack Overflow English",
   level: "B2",
   xp: 120,
   estimatedTime: 60,
-  description: "Participle Clauses — Mệnh đề phân từ (V-ing, V-ed, Having + V3). Rút gọn câu để diễn đạt súc tích, chuyên nghiệp. Điểm mấu chốt để nâng băng điểm tiêu chí Coherence và Grammatical Range trong IELTS Writing Task 2.",
-  badgeName: "Nhà Biên Tập",
-  badgeEmoji: "✍️",
-  situation: "Soạn thảo tóm tắt dự án (Project Executive Summary) gửi cho Giám đốc điều hành. Bạn cần rút gọn các câu dài, lặp chủ ngữ bằng mệnh đề phân từ để văn bản trở nên súc tích, chuyên nghiệp và có tính thuyết phục cao.",
+  description: "Học đặt câu hỏi rõ ràng và viết câu trả lời kỹ thuật chuyên nghiệp trên Stack Overflow.",
+  badgeName: "Stack Pro",
+  badgeEmoji: "📚",
+
+  situation:
+    "Bạn gặp bug kỳ lạ với React hooks — tìm mãi không ra. Bạn muốn đặt câu hỏi trên Stack Overflow nhưng không biết cách viết sao cho rõ ràng để người khác có thể help. Và bạn cũng muốn trả lời câu hỏi của người khác để tích lũy reputation.",
+
   learningOutcomes: [
-    "Sử dụng mệnh đề phân từ chủ động (V-ing) và bị động (V-ed) để rút gọn câu",
-    "Sử dụng phân từ hoàn thành (Having + V3) để thể hiện trình tự thời gian súc tích",
-    "Áp dụng từ vựng phân tích và biên soạn báo cáo ở trình độ B2",
+    "Viết câu hỏi Stack Overflow rõ ràng: MCVE (Minimal Reproducible Example)",
+    "Mô tả bug chính xác: 'expected behavior' vs 'actual behavior'",
+    "Viết câu trả lời có cấu trúc, dễ hiểu cho cộng đồng",
   ],
-  culturalNote: 'Trong viết học thuật và báo cáo doanh nghiệp tiếng Anh, sự súc tích (<span class="text-emerald-400">conciseness</span>) là tiêu chuẩn vàng. Việc viết những câu quá dài kết nối bằng các từ như "and", "because", "after" làm văn bản bị rời rạc. Sử dụng mệnh đề phân từ giúp bạn truyền tải cùng một lượng thông tin nhưng với ít từ hơn và cấu trúc câu đa dạng hơn.',
+
+  culturalNote:
+    'Cộng đồng Stack Overflow có văn hóa rất cụ thể: câu hỏi phải <span class="text-emerald-400 font-semibold">minimal, reproducible, và self-contained</span>. Đừng post toàn bộ code project và hỏi "Why doesn\'t this work?". Thay vào đó, isolate vấn đề xuống 10-20 dòng. Một câu hỏi tốt = bạn tự giải được 50% vấn đề.',
+
   warmupGreetings: [
-    { emoji: "📝", en: "Having finished the draft, she sent it to the manager.", vn: "Sau khi hoàn thành bản nháp, cô ấy đã gửi nó cho quản lý.", context: "Having + PP — hành động trước hành động chính" },
-    { emoji: "⚙️", en: "Built in 2020, our system is highly integrated.", vn: "Được xây dựng vào năm 2020, hệ thống của chúng tôi tích hợp rất cao.", context: "Built (V-ed clause) — bị động rút gọn" },
-    { emoji: "💡", en: "Knowing the risks, we decided to modify the plan.", vn: "Biết rõ các rủi ro, chúng tôi đã quyết định điều chỉnh kế hoạch.", context: "Knowing (V-ing clause) — chủ động chỉ nguyên nhân" },
+    { emoji: "❓", en: "I have a question about React hooks — can anyone help?", vn: "Tôi có câu hỏi về React hooks — ai có thể giúp không?", context: "Hỏi trong team Slack trước khi post SO" },
+    { emoji: "🔍", en: "I searched Stack Overflow but couldn't find a solution.", vn: "Tôi đã tìm trên Stack Overflow nhưng không tìm ra giải pháp.", context: "Báo cáo khi đã search trước" },
+    { emoji: "✅", en: "Found the answer on Stack Overflow — sharing the link.", vn: "Tìm thấy câu trả lời trên Stack Overflow — chia sẻ link.", context: "Chia sẻ solution với team" },
   ],
+
   vocab: [
-    { id: 1, word: "summarize", emoji: "📝", phonetic: "/ˈsʌməraɪz/", meaning: "tóm tắt", example: "He summarized the main points of the report in three sentences.", example2: "To summarize, the campaign was a huge success.", collocation: "summarize a point / summarize findings / executive summary", audio: "/audio/unit37/summarize.mp3" },
-    { id: 2, word: "compile", emoji: "📚", phonetic: "/kəmˈpaɪl/", meaning: "thu thập / biên soạn (tài liệu)", example: "We compiled a list of customer feedback from last month.", example2: "It took two weeks to compile the annual financial report.", collocation: "compile a database / compile information / compile a report", audio: "/audio/unit37/compile.mp3" },
-    { id: 3, word: "construct", emoji: "🏗️", phonetic: "/kənˈstrʌkt/", meaning: "xây dựng / dựng lên (lập luận, hệ thống)", example: "You must construct a strong argument in your essay.", example2: "The factory was constructed in a rural area.", collocation: "construct an argument / construct a building / construct a theory", audio: "/audio/unit37/construct.mp3" },
-    { id: 4, word: "formulate", emoji: "🧪", phonetic: "/ˈfɔːmjʊleɪt/", meaning: "thiết lập / phát biểu rõ ràng / xây dựng chính sách", example: "The committee is formulating a new environmental policy.", example2: "We need to formulate a clear strategy for the launch.", collocation: "formulate a policy / formulate a strategy / formulate an answer", audio: "/audio/unit37/formulate.mp3" },
-    { id: 5, word: "modify", emoji: "🔧", phonetic: "/ˈmɒdɪfaɪ/", meaning: "sửa đổi / điều chỉnh nhẹ", example: "We had to modify the software to fit the new system.", example2: "The terms of the contract were slightly modified.", collocation: "modify a plan / modify code / modify behavior", audio: "/audio/unit37/modify.mp3" },
-    { id: 6, word: "integrate", emoji: "🧩", phonetic: "/ˈɪntɪɡreɪt/", meaning: "tích hợp / hợp nhất", example: "The new system integrates database and billing functions.", example2: "We must integrate the feedback into our design.", collocation: "highly integrated / integrate into / integrated system", audio: "/audio/unit37/integrate.mp3" },
-    { id: 7, word: "outline", emoji: "📌", phonetic: "/ˈaʊtlaɪn/", meaning: "phác thảo / vạch ra ý chính", example: "She outlined the project plan on the whiteboard.", example2: "The report outlines the main causes of the crisis.", collocation: "project outline / outline a plan / briefly outline", audio: "/audio/unit37/outline.mp3" },
-    { id: 8, word: "synthesize", emoji: "🧪", phonetic: "/ˈsɪnθəsaɪz/", meaning: "tổng hợp (thông tin, dữ liệu)", example: "The report synthesizes data from five different studies.", example2: "Students need to learn how to synthesize information.", collocation: "synthesize information / synthesize data / synthesize findings", audio: "/audio/unit37/synthesize.mp3" },
-    { id: 9, word: "simplify", emoji: "✂️", phonetic: "/ˈsɪmplɪfaɪ/", meaning: "đơn giản hóa", example: "We simplified the checkout process to improve sales.", example2: "Could you simplify this explanation for the client?", collocation: "simplify a process / simplify instructions / simplify code", audio: "/audio/unit37/simplify.mp3" },
-    { id: 10, word: "enhance", emoji: "✨", phonetic: "/ɪnˈhɑːns/", meaning: "nâng cao / cải thiện chất lượng", example: "The new features will enhance user experience.", example2: "We want to enhance our brand reputation.", collocation: "enhance performance / enhance quality / enhance customer satisfaction", audio: "/audio/unit37/enhance.mp3" },
-    { id: 11, word: "establish", emoji: "🏢", phonetic: "/ɪˈstæblɪʃ/", meaning: "thiết lập / thành lập / xác lập", example: "The company was established in Singapore in 2015.", example2: "We need to establish clear communication channels.", collocation: "establish a company / establish a relationship / establish a system", audio: "/audio/unit37/establish.mp3" },
-    { id: 12, word: "substitute", emoji: "🔄", phonetic: "/ˈsʌbstɪtjuːt/", meaning: "thay thế / vật thay thế", example: "You can substitute honey for sugar in this recipe.", example2: "There is no substitute for hard work.", collocation: "substitute A for B / close substitute / act as a substitute", audio: "/audio/unit37/substitute.mp3" },
+    { id: 1, word: "reproduce", emoji: "🔄", phonetic: "/ˌriːprəˈdjuːs/", meaning: "tái hiện lại bug/vấn đề", example: "I cannot reproduce the bug in a fresh environment.", example2: "Please provide steps to reproduce the issue.", collocation: "reproduce a bug / reproducible steps / minimal reproducible example", audio: "/audio/unit37/reproduce.mp3" },
+    { id: 2, word: "expected behavior", emoji: "✅", phonetic: "/ɪkˈspektɪd bɪˈheɪvjər/", meaning: "kết quả mong đợi (code nên làm gì)", example: "Expected behavior: the button should save the form data.", example2: "Describe what you expected to happen before posting.", collocation: "expected behavior / expected output / expected result", audio: "/audio/unit37/expected.mp3" },
+    { id: 3, word: "actual behavior", emoji: "❌", phonetic: "/ˈæktʃuəl bɪˈheɪvjər/", meaning: "kết quả thực tế xảy ra (thường khác expected)", example: "Actual behavior: the form data is cleared instead of saved.", example2: "The actual behavior differs from what the docs describe.", collocation: "actual behavior / actual output / actual result", audio: "/audio/unit37/actual.mp3" },
+    { id: 4, word: "workaround", emoji: "🔧", phonetic: "/ˈwɜːkəraʊnd/", meaning: "giải pháp tạm thời để bypass vấn đề", example: "I found a workaround using useRef instead of useState.", example2: "This is a temporary workaround — the underlying issue still needs fixing.", collocation: "temporary workaround / find a workaround / workaround solution", audio: "/audio/unit37/workaround.mp3" },
+    { id: 5, word: "minimal reproducible example (MRE)", emoji: "📋", phonetic: "/ˈmɪnɪməl/", meaning: "đoạn code tối giản nhất để tái hiện vấn đề", example: "Here is a minimal reproducible example: [10 lines of code]", example2: "Always include an MRE when posting on Stack Overflow.", collocation: "MRE / minimal example / reproducible example", audio: "/audio/unit37/minimal.mp3" },
+    { id: 6, word: "stack trace", emoji: "📜", phonetic: "/stæk treɪs/", meaning: "danh sách các function calls dẫn đến lỗi", example: "Please include the full stack trace in your question.", example2: "The stack trace shows the error originated in the auth middleware.", collocation: "full stack trace / error stack trace / paste the stack trace", audio: "/audio/unit37/stack.mp3" },
+    { id: 7, word: "environment", emoji: "🌐", phonetic: "/ɪnˈvaɪrənmənt/", meaning: "môi trường chạy code (OS, version, config)", example: "Please specify your environment: Node version, OS, and browser.", example2: "The bug only occurs in the Windows environment.", collocation: "runtime environment / development environment / environment variable", audio: "/audio/unit37/environment.mp3" },
+    { id: 8, word: "upvote / downvote", emoji: "👍", phonetic: "/ˈʌpvəʊt/", meaning: "vote tăng/giảm điểm cho câu hỏi hoặc câu trả lời", example: "If this answer helped you, please upvote it.", example2: "Questions that are unclear often get downvoted.", collocation: "upvote an answer / downvote a question / upvote count", audio: "/audio/unit37/upvote.mp3" },
+    { id: 9, word: "accepted answer", emoji: "☑️", phonetic: "/əkˈseptɪd ˈɑːnsər/", meaning: "câu trả lời được chọn là giải pháp đúng", example: "Please mark the answer as accepted if it solved your problem.", example2: "The accepted answer gets a green checkmark on Stack Overflow.", collocation: "mark as accepted / accepted answer / checkmark", audio: "/audio/unit37/accepted.mp3" },
+    { id: 10, word: "duplicate", emoji: "📄", phonetic: "/ˈdjuːplɪkɪt/", meaning: "câu hỏi đã được hỏi trước đó", example: "This question is a duplicate of SO post #12345.", example2: "Search before posting to avoid duplicates.", collocation: "marked as duplicate / duplicate question / close as duplicate", audio: "/audio/unit37/duplicate.mp3" },
   ],
+
+  grammar: {
+    title: "Câu hỏi kỹ thuật rõ ràng — Cấu trúc SO question",
+    rule: "Cấu trúc câu hỏi Stack Overflow chuẩn:\n1. Title: [Technology] [specific problem] (present tense)\n2. Context: 'I am trying to...' / 'I want to...'\n3. Problem: 'But when I... the result is...'\n4. Expected: 'I expected... to happen'\n5. Actual: 'But actually...'\n6. Code: Minimal Reproducible Example\n7. What I tried: 'I have tried... but...'",
+    examples: [
+      { en: "I am trying to fetch data on component mount using useEffect.", vn: "Tôi đang cố fetch dữ liệu khi component mount dùng useEffect." },
+      { en: "When I update state inside the callback, the component re-renders infinitely.", vn: "Khi tôi update state trong callback, component render vô hạn." },
+      { en: "I expected the effect to run only once, but it runs on every render.", vn: "Tôi mong đợi effect chỉ chạy một lần, nhưng nó chạy mỗi lần render." },
+      { en: "I have tried adding an empty dependency array but the issue persists.", vn: "Tôi đã thử thêm dependency array rỗng nhưng vẫn còn vấn đề." },
+    ],
+    tip: "Tránh: 'It doesn't work. Help!' ✗\nDùng: 'Expected: X. Actual: Y. I tried: Z.' ✓",
+    vnNote: "Người Việt hay hỏi quá chung chung: 'Tại sao code của tôi không chạy?' Trên SO, phải cụ thể: 'Why does useEffect run infinitely when state is updated inside the callback?'",
+    ccq: {
+      question: "Title nào tốt nhất cho Stack Overflow?",
+      options: [
+        "React bug please help",
+        "useEffect runs infinitely when updating state inside callback",
+        "My code doesn't work",
+        "React hook problem",
+      ],
+      answer: "useEffect runs infinitely when updating state inside callback",
+      explanation: "Title tốt = Technology (useEffect) + specific problem (runs infinitely) + context (inside callback). Rõ ràng và searchable.",
+    },
+  },
+
+  matchingExercise: {
+    title: "Nối thuật ngữ SO với định nghĩa",
+    pairs: [
+      { left: "MRE", right: "Code tối giản nhất để reproduce bug" },
+      { left: "stack trace", right: "Danh sách function calls dẫn đến lỗi" },
+      { left: "workaround", right: "Giải pháp tạm thời" },
+      { left: "accepted answer", right: "Câu trả lời được chọn là đúng" },
+      { left: "duplicate", right: "Câu hỏi đã được hỏi trước" },
+    ],
+  },
+
+  scrambleExercises: [
+    { id: "s1", prompt_vn: "Kết quả mong đợi: component chỉ render một lần.", words: ["Expected", "behavior:", "the", "component", "should", "render", "only", "once."], answer: "Expected behavior: the component should render only once." },
+    { id: "s2", prompt_vn: "Tôi đã thử thêm dependency array nhưng vấn đề vẫn còn.", words: ["I", "have", "tried", "adding", "a", "dependency", "array", "but", "the", "issue", "persists."], answer: "I have tried adding a dependency array but the issue persists." },
+    { id: "s3", prompt_vn: "Vui lòng cung cấp steps để reproduce vấn đề.", words: ["Please", "provide", "steps", "to", "reproduce", "the", "issue."], answer: "Please provide steps to reproduce the issue." },
+  ],
+
+  practiceQuiz: [
+    { id: "pq1", question: "What is an MRE on Stack Overflow?", options: ["Most Recent Edit", "Minimal Reproducible Example", "Module Reference Error", "My Runtime Environment"], answer: "Minimal Reproducible Example", type: "multiple-choice" },
+    { id: "pq2", question: "What should you include when posting a bug question?", options: ["Full project code", "Expected vs actual behavior + minimal code + environment", "Just the error message", "Screenshots only"], answer: "Expected vs actual behavior + minimal code + environment", type: "multiple-choice" },
+    { id: "pq3", question: "Điền từ: If my answer solved your problem, please mark it as ___.", options: ["correct", "accepted", "solved", "approved"], answer: "accepted", type: "multiple-choice" },
+  ],
+
+  practiceTranslate: [
+    { id: "pt1", prompt_vn: "Tôi đang cố kết nối đến database nhưng nhận được lỗi connection refused.", answer: "I am trying to connect to the database but I get a 'connection refused' error." },
+    { id: "pt2", prompt_vn: "Vui lòng bao gồm stack trace đầy đủ trong câu hỏi của bạn.", answer: "Please include the full stack trace in your question." },
+    { id: "pt3", prompt_vn: "Tôi đã tìm thấy giải pháp và sẽ post câu trả lời.", answer: "I found the solution and will post an answer." },
+  ],
+
   dialogues: [
     {
       id: 1,
-      title: "Viết tóm tắt báo cáo dự án",
+      title: "Review Stack Overflow question trong team",
       audio: "/audio/unit37/dialogue_1.mp3",
-      desc: "Trang hỗ trợ sếp biên soạn và sửa đổi tóm tắt dự án để gửi CEO.",
+      desc: "Lan nhờ senior dev review câu hỏi SO trước khi post.",
       lines: [
-        { id: "d1-1", speaker: "Manager", text: "Trang, have you compiled the feedback from our corporate clients?", translation: "Trang, em đã thu thập các phản hồi từ khách hàng doanh nghiệp chưa?" },
-        { id: "d1-2", speaker: "Trang", text: "Yes. Having synthesized all the comments, I drafted this summary. It outlines the key issues.", translation: "Rồi ạ. Sau khi tổng hợp toàn bộ bình luận, em đã phác thảo bản tóm tắt này. Nó vạch ra các vấn đề chính." },
-        { id: "d1-3", speaker: "Manager", text: "Good. But the sentences are a bit too long. We need to simplify the language to enhance readability.", translation: "Tốt. Nhưng các câu hơi dài quá. Chúng ta cần đơn giản hóa ngôn ngữ để nâng cao mức độ dễ đọc." },
-        { id: "d1-4", speaker: "Trang", text: "I understand. Knowing that the CEO is very busy, I will modify the layout to make it more concise.", translation: "Em hiểu. Biết rằng CEO rất bận, em sẽ điều chỉnh bố cục để làm nó súc tích hơn." },
-        { id: "d1-5", speaker: "Manager", text: "Perfect. Once established, this format will act as a standard template.", translation: "Hoàn hảo. Sau khi được thiết lập, định dạng này sẽ đóng vai trò như một mẫu tiêu chuẩn." },
-      ],
-    },
-    {
-      id: 2,
-      title: "Điều chỉnh hệ thống phần mềm",
-      audio: "/audio/unit37/dialogue_2.mp3",
-      desc: "Huy giải thích với đối tác về việc tích hợp hệ thống.",
-      lines: [
-        { id: "d2-1", speaker: "Partner", text: "Designed in Germany, this software should integrate easily with our database.", translation: "Được thiết kế ở Đức, phần mềm này đáng lẽ phải tích hợp dễ dàng với cơ sở dữ liệu của chúng ta." },
-        { id: "d2-2", speaker: "Huy", text: "Actually, facing compatibility issues, we had to substitute several old database components.", translation: "Thực tế thì, đối mặt với các vấn đề tương thích, chúng tôi đã phải thay thế một vài thành phần cơ sở dữ liệu cũ." },
-        { id: "d2-3", speaker: "Partner", text: "Having modified the code, is the system stable now?", translation: "Sau khi đã sửa đổi mã nguồn, hệ thống bây giờ ổn định chứ?" },
-        { id: "d2-4", speaker: "Huy", text: "Yes, we successfully enhanced the performance.", translation: "Vâng, chúng tôi đã nâng cao hiệu suất thành công." },
+        { id: "d1-1", speaker: "Lan", text: "Hey, I'm about to post on Stack Overflow. Can you quickly check if my question is clear?", translation: "Này, tôi sắp post lên Stack Overflow. Bạn có thể kiểm tra nhanh xem câu hỏi của tôi có rõ không?" },
+        { id: "d1-2", speaker: "Senior Dev", text: "Sure! Hmm, your title is too vague — 'React problem'. Be specific. What exactly is the problem?", translation: "Được! Hmm, title của bạn quá mơ hồ — 'React problem'. Hãy cụ thể. Vấn đề chính xác là gì?" },
+        { id: "d1-3", speaker: "Lan", text: "The useEffect runs infinitely when I update state inside the callback.", translation: "useEffect chạy vô hạn khi tôi update state bên trong callback." },
+        { id: "d1-4", speaker: "Senior Dev", text: "Perfect — that's your title. Now add: 1) expected behavior, 2) actual behavior, 3) your minimal code snippet, and 4) what you've already tried.", translation: "Hoàn hảo — đó là title của bạn. Bây giờ thêm: 1) expected behavior, 2) actual behavior, 3) code snippet tối giản, và 4) những gì bạn đã thử." },
+        { id: "d1-5", speaker: "Lan", text: "Got it. I also need to mention my environment — React 18 and Node 20?", translation: "Hiểu rồi. Tôi cũng cần đề cập môi trường — React 18 và Node 20?" },
+        { id: "d1-6", speaker: "Senior Dev", text: "Exactly. With all that, your question will be upvoted instead of closed. Good luck!", translation: "Chính xác. Với tất cả điều đó, câu hỏi của bạn sẽ được upvote thay vì bị đóng. Chúc may mắn!" },
       ],
     },
   ],
+
   listenAndChoose: [
-    { id: "lac1", audio_text: "Having finished the draft, she sent it to the manager.", options: ["She sent the draft before she finished it.", "Having finished the draft, she sent it to the manager.", "She will finish the draft and send it to the manager.", "She is writing the draft for the manager now."], answer: "Having finished the draft, she sent it to the manager." },
-    { id: "lac2", audio_text: "Built in twenty-twenty, our system is highly integrated.", options: ["Our system was built last year and integrated yesterday.", "Built in twenty-twenty, our system is highly integrated.", "We will build a highly integrated system in twenty-twenty.", "The system is not integrated because it was built in twenty-twenty."], answer: "Built in twenty-twenty, our system is highly integrated." },
-    { id: "lac3", audio_text: "Knowing the risks, we decided to modify the plan.", options: ["We modified the plan because we did not know the risks.", "Knowing the risks, we decided to modify the plan.", "We took the risks without modifying the plan.", "The modified plan had no risks."], answer: "Knowing the risks, we decided to modify the plan." },
-    { id: "lac4", audio_text: "The new features will enhance user experience.", options: ["The new features will enhance user experience.", "The user experience was damaged by new features.", "We will simplify the user experience tomorrow.", "We need to outline the new features."], answer: "The new features will enhance user experience." },
-    { id: "lac5", audio_text: "There is no substitute for hard work.", options: ["Hard work can be substituted easily.", "There is no substitute for hard work.", "We need a substitute worker today.", "Working hard is not necessary."], answer: "There is no substitute for hard work." },
+    { id: "lac1", audio_text: "This question has been marked as a duplicate of a previous post.", options: ["Câu hỏi được upvote", "Câu hỏi đã có người hỏi trước", "Câu hỏi cần thêm thông tin", "Câu hỏi có accepted answer"], answer: "Câu hỏi đã có người hỏi trước" },
+    { id: "lac2", audio_text: "Please provide a minimal reproducible example so we can help you.", options: ["Xóa toàn bộ code", "Cần thêm code tối giản nhất", "Câu hỏi quá dài", "Cần screenshot"], answer: "Cần thêm code tối giản nhất" },
+    { id: "lac3", audio_text: "If this answer solved your problem, please mark it as accepted.", options: ["Cần viết câu trả lời mới", "Nên upvote câu hỏi", "Nên mark câu trả lời là đúng", "Cần thêm comment"], answer: "Nên mark câu trả lời là đúng" },
   ],
+
   speaking: {
-    level1Prompt: "Having {input} the data, I {input} the summary to {input} readability.",
-    level1Placeholder: "Ví dụ: compiled — simplified — enhance...",
-    level2Situation: "Bạn viết một email gửi quản lý hoặc thuyết trình báo cáo. Hãy: (1) Nói rằng sau khi tổng hợp thông tin, bạn đã đề xuất chiến lược mới, (2) Giải thích rằng do được thành lập từ năm 2015, công ty có vị thế vững chắc, (3) Nhấn mạnh việc đơn giản hóa quy trình.",
-    level2Hint: "Having synthesized the feedback, we formulated a new marketing strategy. Established in 2015, our company enjoys a strong reputation. We will modify our methods to simplify the process and enhance performance.",
+    level1Prompt: "Mô tả một bug bạn đang gặp — dùng format: 'I am trying to... but... I expected... actually...'",
+    level1Placeholder: "I am trying to... but when I... the result is... I expected...",
+    level2Situation: "Viết tiêu đề Stack Overflow cho bug: Hàm async của bạn trong Node.js không đợi Promise resolve trước khi return.",
+    level2Hint: "Node.js async function returns undefined instead of resolved Promise value",
   },
-  grammar: {
-    title: "Participle Clauses — Mệnh Đề Phân Từ Rút Gọn",
-    rule: "Mệnh đề phân từ dùng để nối hai câu có cùng chủ ngữ, giúp câu văn ngắn gọn và học thuật hơn.\n\n1. Present Participle (V-ing clause) — Chủ động:\nDùng để chỉ hành động xảy ra cùng lúc hoặc chỉ nguyên nhân (tương đương because/as).\n  → 'Knowing the risks, we modified the plan.' (= Because we knew the risks...)\n\n2. Past Participle (V-ed clause) — Bị động:\nDùng để rút gọn câu bị động.\n  → 'Built in 2015, the company is successful.' (= The company, which was built in 2015, is...)\n\n3. Perfect Participle (Having + Past Participle) — Chủ động hoàn thành:\nNhấn mạnh hành động ở mệnh đề phân từ hoàn thành xong trước hành động chính.\n  → 'Having compiled the data, she wrote the report.' (= After she had compiled the data, she...)",
-    examples: [
-      { en: "Having finished the meeting, we went to lunch. (Perfect participle - time sequence)", vn: "Sau khi họp xong, chúng tôi đi ăn trưa." },
-      { en: "Facing financial problems, they terminated the project. (Present participle - cause/reason)", vn: "Đối mặt với các vấn đề tài chính, họ đã chấm dứt dự án." },
-      { en: "Published in a medical journal, the study became famous. (Past participle - passive description)", vn: "Được công bố trên tạp chí y khoa, nghiên cứu đã trở nên nổi tiếng." },
-    ],
-    tip: "Khi viết bài luận IELTS Writing Task 2, hãy dùng mệnh đề phân từ để rút gọn các câu dài lê thê. Ví dụ, thay vì viết 'After the company had established a new policy, they enhanced productivity', hãy viết: 'Having established a new policy, the company enhanced productivity'. Câu văn sẽ vô cùng cô đọng.",
-    vnNote: "⚠️ Lỗi nghiêm trọng nhất khi dùng mệnh đề phân từ là lỗi 'Dangling Participle' (Phân từ lơ lửng). Hai vế bắt buộc phải cùng chủ ngữ. Nếu bạn viết 'Having finished the report, the manager called me' → đúng. Nhưng viết 'Having finished the report, the phone rang' → sai, vì cái điện thoại không thể tự viết báo cáo.",
-    dialogueExample: {
-      speaker: "Trang",
-      text: "Having synthesized all the comments, I drafted this summary. It outlines the key issues.",
-      translation: "Sau khi tổng hợp toàn bộ bình luận, em đã phác thảo bản tóm tắt này. Nó vạch ra các vấn đề chính.",
-      highlight: "Having synthesized (Perfect Participle chỉ hành động hoàn thành trước hành động nháp)",
-    },
-    ccq: {
-      question: "Câu nào dùng ĐÚNG ngữ pháp mệnh đề phân từ (cùng chủ ngữ)?",
-      options: [
-        "Walking down the street, a dog bit him.",
-        "Walking down the street, he was bitten by a dog.",
-        "Having walked down the street, a dog bit him.",
-        "To walk down the street, a dog bit him.",
-      ],
-      answer: "Walking down the street, he was bitten by a dog.",
-      explanation: "Trong câu này, chủ ngữ của vế 'Walking' phải là 'he' (anh ấy đang đi bộ thì bị cắn). Câu 1 sai vì làm cho 'a dog' (con chó) thành chủ ngữ đi bộ.",
-    },
-  },
-  practiceQuiz: [
-    { id: "pq1", type: "multiple-choice", question: "Chọn dạng đúng: '___ the database, we found the missing error.'", options: ["Examine", "Examined", "Examining", "Having been examined"], answer: "Examining" },
-    { id: "pq2", type: "multiple-choice", question: "Chọn phân từ hoàn thành đúng: '___ the report, she shut down her computer.'", options: ["Finished", "Having finished", "Having finish", "Finishing"], answer: "Having finished" },
-    { id: "pq3", type: "cloze", question: "Điền dạng phân từ bị động: '___ (establish) in 2015, the company has grown rapidly.'", answer: "Established" },
-    { id: "pq4", type: "multiple-choice", question: "Điền từ thích hợp: 'We compiled a summary to ___ readability.'", options: ["summarize", "simplify", "enhance", "construct"], answer: "enhance" },
-    { id: "pq5", type: "cloze", question: "Điền dạng đúng của động từ: '___ (know) that the client was angry, he called immediately.'", answer: "Knowing" },
-  ],
-  matchingExercise: {
-    title: "Nối từ vựng viết học thuật với nghĩa đúng",
-    pairs: [
-      { left: "summarize", right: "tóm tắt" },
-      { left: "compile", right: "thu thập / biên soạn" },
-      { left: "synthesize", right: "tổng hợp" },
-      { left: "simplify", right: "đơn giản hóa" },
-      { left: "substitute", right: "thay thế" },
-    ],
-  },
-  scrambleExercises: [
-    { id: "s37-1", prompt_vn: "Sau khi hoàn thành bản báo cáo, cô ấy đã tắt máy tính.", words: ["Having", "completed", "the", "report", ",", "she", "turned", "off", "her", "computer", "."], answer: "Having completed the report , she turned off her computer ." },
-    { id: "s37-2", prompt_vn: "Được thành lập vào năm 2015, công ty có uy tín lớn.", words: ["Established", "in", "2015", ",", "the", "company", "has", "a", "great", "reputation", "."], answer: "Established in 2015 , the company has a great reputation ." },
-    { id: "s37-3", prompt_vn: "Biết rõ các quy định, chúng tôi luôn tuân thủ.", words: ["Knowing", "the", "regulations", ",", "we", "are", "always", "in", "compliance", "."], answer: "Knowing the regulations , we are always in compliance ." },
-  ],
+
   quiz: [
-    { id: "fq1", type: "multiple-choice", question: "Chọn dạng đúng: '___ the client's email, he prepared the attachment.'", options: ["Received", "Having received", "Receive", "To receive"], answer: "Having received" },
-    { id: "fq2", type: "cloze", question: "Điền từ: 'The software was ___ (điều chỉnh nhẹ) to resolve the error.'", answer: "modified" },
-    { id: "fq3", type: "multiple-choice", question: "Chọn từ điền: 'Let me ___ the main findings of our project.'", options: ["compile", "construct", "summarize", "integrate"], answer: "summarize" },
-    { id: "fq4", type: "translate", question: "Dịch: 'Đối mặt với các vấn đề tài chính, họ đã hoãn kế hoạch mở rộng.'", answer: "Facing financial problems, they postponed the expansion plan." },
-    { id: "fq5", type: "multiple-choice", question: "Từ nào đồng nghĩa với 'unite/combine'?", options: ["simplify", "substitute", "integrate", "compile"], answer: "integrate" },
+    { id: "q1", question: "What makes a good Stack Overflow question title?", options: ["'Help me!'", "'Specific technology + specific problem (present tense)'", "'Bug in my code'", "'Why doesn't it work?'"], answer: "'Specific technology + specific problem (present tense)'", type: "multiple-choice" },
+    { id: "q2", question: "What is a 'workaround'?", options: ["The correct solution", "A temporary fix to bypass a problem", "A code review comment", "A git branch name"], answer: "A temporary fix to bypass a problem", type: "multiple-choice" },
+    { id: "q3", question: "What should you always include in an SO question about a bug?", options: ["Your full name", "Expected vs actual behavior + minimal code", "Your GitHub profile", "A video recording"], answer: "Expected vs actual behavior + minimal code", type: "multiple-choice" },
+    { id: "q4", question: "Điền từ: I cannot ___ the bug in a clean environment.", options: ["create", "reproduce", "make", "find"], answer: "reproduce", type: "multiple-choice" },
+    { id: "q5", question: "Dịch sang tiếng Anh: Kết quả thực tế: component render vô hạn.", answer: "Actual behavior: the component re-renders infinitely.", type: "translate" },
   ],
-  cumulativeReviewQuestions: [
-    { id: "cr37-1", question: "Ôn tập Unit 36 — Chọn câu đúng: 'The company is reported ___ millions last year.'", options: ["to lose", "to have lost", "losing", "lost"], answer: "to have lost", type: "multiple-choice" },
-    { id: "cr37-2", question: "Ôn tập Unit 35 — Điền: 'We will not sign the trade contract ___ they reduce the penalty.'", options: [], answer: "unless", type: "cloze" },
-    { id: "cr37-3", question: "Ôn tập Unit 34 — Chọn đúng: 'If she ___ (investigate) the crash, she would have found the fault.'", options: ["investigated", "had investigated", "has investigated", "would investigate"], answer: "had investigated", type: "multiple-choice" },
-  ],
+
   fluencyDrill: {
+    title: "Stack Overflow vocabulary",
+    timeLimit: 60,
     items: [
-      { en: "Having finished the draft, she sent it", vn: "Sau khi làm xong bản nháp, cô ấy đã gửi" },
-      { en: "Built in 2015, the startup is successful", vn: "Được thành lập năm 2015, công ty đã thành công" },
-      { en: "Knowing the CEO was busy, she simplified", vn: "Biết CEO bận, cô ấy đã đơn giản hóa" },
-      { en: "We need to compile customer feedback", vn: "Chúng ta cần thu thập phản hồi khách hàng" },
-      { en: "The new features enhance performance", vn: "Các tính năng mới giúp nâng cao hiệu suất" },
-      { en: "Could you summarize the main findings?", vn: "Bạn có thể tóm tắt các phát hiện chính không?" },
-      { en: "There is no substitute for experience", vn: "Không có gì thay thế được kinh nghiệm" },
-      { en: "Facing issues, they modified the code", vn: "Đối mặt với sự cố, họ đã sửa đổi code" },
+      { en: "reproduce", vn: "tái hiện lại bug" },
+      { en: "expected behavior", vn: "kết quả mong đợi" },
+      { en: "actual behavior", vn: "kết quả thực tế" },
+      { en: "workaround", vn: "giải pháp tạm thời" },
+      { en: "stack trace", vn: "danh sách call dẫn đến lỗi" },
+      { en: "minimal reproducible example", vn: "code tối giản để reproduce" },
+      { en: "upvote", vn: "vote tăng điểm" },
+      { en: "accepted answer", vn: "câu trả lời được chọn" },
+      { en: "duplicate", vn: "câu hỏi đã được hỏi" },
     ],
   },
 };

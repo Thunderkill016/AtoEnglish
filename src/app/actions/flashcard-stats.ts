@@ -1,6 +1,8 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { awardXpAndUpdateStreak } from "@/lib/progress/award-xp";
+import { getVnDateKey, getVnYesterdayKey } from "@/lib/utils/vn-date";
 import type { Database } from "@/types/supabase";
 
 // Use auto-generated types — no more `as any` casts
@@ -72,11 +74,8 @@ export async function recordFlashcardSession(
   } = await supabase.auth.getUser();
   if (!user) return { success: false, error: "Unauthenticated" };
 
-  // Use Vietnam timezone consistently — UTC dates cause off-by-one at night
-  const today = new Date().toLocaleDateString("sv-SE", { timeZone: "Asia/Ho_Chi_Minh" });
-  const d = new Date(today);
-  d.setDate(d.getDate() - 1);
-  const yesterday = d.toLocaleDateString("sv-SE", { timeZone: "Asia/Ho_Chi_Minh" });
+  const today = getVnDateKey();
+  const yesterday = getVnYesterdayKey();
 
   // Fetch existing row
   const { data: existing } = await supabase
@@ -124,27 +123,8 @@ export async function recordFlashcardSession(
 
   if (error) return { success: false, error: error.message };
 
-  // Sync user_progress.last_active_date + streak so flashcard-only days
-  // count toward the dashboard streak (best-effort, fire-and-forget)
-  void (async () => {
-    const { data: up } = await supabase
-      .from("user_progress")
-      .select("total_xp, streak, last_active_date")
-      .eq("user_id", user.id)
-      .maybeSingle();
-    if (up) {
-      let nextStreak = 1;
-      if (up.last_active_date === today) {
-        nextStreak = up.streak;
-      } else if (up.last_active_date === yesterday) {
-        nextStreak = up.streak + 1;
-      }
-      await supabase
-        .from("user_progress")
-        .update({ streak: nextStreak, last_active_date: today })
-        .eq("user_id", user.id);
-    }
-  })();
+  // Sync dashboard streak for flashcard-only study days (atomic, no XP)
+  await awardXpAndUpdateStreak(supabase, user.id, 0);
 
   return { success: true, stats: data };
 }

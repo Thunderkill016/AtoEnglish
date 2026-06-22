@@ -1,151 +1,150 @@
-import { UnitData } from "@/components/learn/UnitTemplate";
+import type { UnitData } from "@/components/learn/UnitTemplate";
 
-export const unit38: UnitData = {
+// UNIT 38 — Tech Email & Slack (B2 / Phase 4)
+const unit38: UnitData = {
   unitId: "unit-38",
-  title: "Unit 38: Emphasis & Persuasion",
+  title: "Unit 38: Tech Email & Slack",
   level: "B2",
   xp: 120,
-  estimatedTime: 60,
-  description: "Emphasis & Persuasion — Các cấu trúc nhấn mạnh và thuyết phục: Đảo ngữ (Inversion) và Câu chẻ (Cleft sentences). Công cụ đắc lực để nâng cao sức thuyết phục trong thuyết trình, đàm phán và đạt điểm tối đa Grammatical Range của IELTS Writing/Speaking Band 7.0+.",
-  badgeName: "Nhà Thuyết Phục",
-  badgeEmoji: "🗣️",
-  situation: "Bạn đang thuyết trình trước hội đồng quản trị để bảo vệ phương án kinh doanh mới. Bạn cần nhấn mạnh tầm quan trọng của việc thay đổi chiến lược và thuyết phục các cổ đông bằng các cấu trúc đảo ngữ ('Not only did we...') và câu chẻ ('It was the marketing team that...').",
+  estimatedTime: 55,
+  description: "Viết email kỹ thuật và tin nhắn Slack chuyên nghiệp trong môi trường dev quốc tế.",
+  badgeName: "Tech Writer",
+  badgeEmoji: "✉️",
+
+  situation:
+    "Production đang bị lỗi lúc 2 giờ sáng. Bạn cần: (1) Notify team trên Slack ngay lập tức, (2) Gửi email update cho stakeholders, (3) Viết incident report sau khi fix xong.",
+
   learningOutcomes: [
-    "Sử dụng đảo ngữ với trạng từ phủ định (Not only, Rarely, Seldom) để tạo điểm nhấn mạnh mẽ",
-    "Sử dụng câu chẻ (It is... that / What I need is...) để làm nổi bật thông tin quan trọng nhất",
-    "Áp dụng từ vựng đàm phán, thuyết phục và hùng biện ở mức độ B2+",
+    "Viết incident notification Slack rõ ràng, nhanh chóng",
+    "Viết email technical update theo format Subject, Context, Action, ETA",
+    "Viết incident report sau khi giải quyết sự cố",
   ],
-  culturalNote: 'Trong hùng biện tiếng Anh, việc nhấn mạnh (<span class="text-emerald-400">emphasis</span>) không chỉ nằm ở tông giọng mà nằm ở việc sắp xếp lại trật tự từ. Cấu trúc đảo ngữ hoặc câu chẻ giúp người nói thu hút sự chú ý của người nghe vào thông tin quan trọng nhất mà không cần phải nói to hơn, thể hiện sự tinh tế và làm tăng tính chuyên nghiệp của lập luận.',
+
+  culturalNote:
+    'Trong tech, email và Slack có văn hóa rất khác nhau. <span class="text-emerald-400 font-semibold">Slack</span> = nhanh, không formal, có thể dùng emoji. <span class="text-emerald-400 font-semibold">Email</span> = permanent record, cần rõ ràng, subject line phải actionable. Rule of thumb: nếu cần response < 1 giờ → Slack. Nếu cần documentation → Email.',
+
   warmupGreetings: [
-    { emoji: "⚡", en: "Not only did they launch the product, but they also exceeded the target.", vn: "Không những họ đã ra mắt sản phẩm, mà họ còn vượt chỉ tiêu.", context: "Not only did + S + V-inf, but... also" },
-    { emoji: "🎯", en: "It was the marketing campaign that boosted our sales.", vn: "Chính chiến dịch tiếp thị đã thúc đẩy doanh số của chúng tôi.", context: "It was ... that — câu chẻ nhấn mạnh chủ ngữ" },
-    { emoji: "🧠", en: "What we need now is a clear risk assessment.", vn: "Điều chúng ta cần bây giờ là một bản đánh giá rủi ro rõ ràng.", context: "What + S + V + is + noun — câu chẻ với What" },
+    { emoji: "🚨", en: "🚨 Production alert: login service is returning 500 errors.", vn: "🚨 Production alert: dịch vụ login đang trả về lỗi 500.", context: "Slack alert khi incident xảy ra" },
+    { emoji: "📧", en: "Hi team, quick update on the deployment status.", vn: "Chào team, cập nhật nhanh về trạng thái deployment.", context: "Mở đầu email update" },
+    { emoji: "✅", en: "All clear — incident resolved. Post-mortem to follow.", vn: "Ổn rồi — incident đã được giải quyết. Post-mortem sẽ theo sau.", context: "Slack sau khi fix xong" },
   ],
+
   vocab: [
-    { id: 1, word: "persuasion", emoji: "🗣️", phonetic: "/pəˈsweɪʒən/", meaning: "sự thuyết phục", example: "She used all her powers of persuasion to convince the board.", example2: "The sales pitch was a masterclass in persuasion.", collocation: "powers of persuasion / gentle persuasion / political persuasion", audio: "/audio/unit38/persuasion.mp3" },
-    { id: 2, word: "emphasis", emoji: "📌", phonetic: "/ˈemfəsɪs/", meaning: "sự nhấn mạnh / trọng tâm", example: "The company places great emphasis on customer satisfaction.", example2: "There is an emphasis on teamwork in our corporate culture.", collocation: "place emphasis on / strong emphasis / add emphasis", audio: "/audio/unit38/emphasis.mp3" },
-    { id: 3, word: "debate", emoji: "🗣️", phonetic: "/dɪˈbeɪt/", meaning: "cuộc tranh luận / thảo luận công khai", example: "There has been a heated debate about the new tax policy.", example2: "We debated the issue for several hours before deciding.", collocation: "heated debate / debate about / public debate", audio: "/audio/unit38/debate.mp3" },
-    { id: 4, word: "convince", emoji: "🤝", phonetic: "/kənˈvɪns/", meaning: "thuyết phục (ai đó tin vào điều gì)", example: "I managed to convince him that our strategy was correct.", example2: "She was convinced of his innocence.", collocation: "convince someone / convince that / highly convincing", audio: "/audio/unit38/convince.mp3" },
-    { id: 5, word: "advocate", emoji: "📢", phonetic: "/ˈædvəkeɪt/", meaning: "ủng hộ / người ủng hộ / luật sư bào chữa", example: "The group advocates for the protection of human rights.", example2: "She is a strong advocate of renewable energy.", collocation: "advocate of / strongly advocate / patient advocate", audio: "/audio/unit38/advocate.mp3" },
-    { id: 6, word: "dominate", emoji: "👑", phonetic: "/ˈdɒmɪneɪt/", meaning: "thống trị / chiếm ưu thế / lấn át", example: "The multinational corporation dominates the local market.", example2: "Men continue to dominate the technology sector.", collocation: "dominate the market / dominate the conversation / dominant position", audio: "/audio/unit38/dominate.mp3" },
-    { id: 7, word: "leverage", emoji: "📈", phonetic: "/ˈliːvərɪdʒ/", meaning: "tận dụng / lực đòn bẩy", example: "We should leverage our brand reputation to enter new markets.", example2: "The company leveraged its assets to secure the loan.", collocation: "leverage technology / leverage resources / maximum leverage", audio: "/audio/unit38/leverage.mp3" },
-    { id: 8, word: "assert", emoji: "💪", phonetic: "/əˈsɜːt/", meaning: "khẳng định / quả quyết / xác lập quyền lực", example: "The report asserts that climate change is accelerating.", example2: "You need to assert your authority as the manager.", collocation: "assert authority / assert control / assert that", audio: "/audio/unit38/assert.mp3" },
-    { id: 9, word: "counter", emoji: "🛡️", phonetic: "/ˈkaʊntər/", meaning: "phản đối / chống lại / phản bác", example: "The minister counter-argued the opposition's claims.", example2: "We implemented measures to counter the decline in sales.", collocation: "counter-argument / counter-proposal / counter a threat", audio: "/audio/unit38/counter.mp3" },
-    { id: 10, word: "logic", emoji: "🧠", phonetic: "/ˈlɒdʒɪk/", meaning: "lập luận / logic", example: "I don't understand the logic behind this decision.", example2: "His argument lacks logical structure.", collocation: "business logic / lack logic / logical reasoning", audio: "/audio/unit38/logic.mp3" },
-    { id: 11, word: "validate", emoji: "✔️", phonetic: "/ˈvælɪdeɪt/", meaning: "xác thực / phê duyệt / hợp lệ hóa", example: "The survey results validated our research hypothesis.", example2: "You must validate your parking ticket before leaving.", collocation: "validate data / validate feelings / validate a contract", audio: "/audio/unit38/validate.mp3" },
-    { id: 12, word: "influence", emoji: "🌟", phonetic: "/ˈɪnfluəns/", meaning: "sự ảnh hưởng / ảnh hưởng đến", example: "His speech had a profound influence on the audience.", example2: "We want to influence consumer behavior through advertising.", collocation: "have an influence on / under the influence / positive influence", audio: "/audio/unit38/influence.mp3" },
+    { id: 1, word: "incident", emoji: "🚨", phonetic: "/ˈɪnsɪdənt/", meaning: "sự cố kỹ thuật — thường ảnh hưởng production", example: "We have an active incident — the payment service is down.", example2: "The incident was resolved within 2 hours.", collocation: "production incident / incident report / resolve an incident", audio: "/audio/unit38/incident.mp3" },
+    { id: 2, word: "postmortem / post-mortem", emoji: "📋", phonetic: "/pəʊst ˈmɔːrtəm/", meaning: "báo cáo phân tích sau sự cố", example: "We'll conduct a blameless post-mortem after the incident is resolved.", example2: "The post-mortem identified three root causes.", collocation: "blameless post-mortem / write a post-mortem / post-mortem report", audio: "/audio/unit38/postmortem.mp3" },
+    { id: 3, word: "root cause", emoji: "🌱", phonetic: "/ruːt kɔːz/", meaning: "nguyên nhân gốc rễ của vấn đề", example: "The root cause was a misconfigured environment variable in production.", example2: "We found the root cause: a race condition in the caching layer.", collocation: "root cause analysis (RCA) / identify root cause / root cause fix", audio: "/audio/unit38/root.mp3" },
+    { id: 4, word: "downtime", emoji: "⏸️", phonetic: "/ˈdaʊntaɪm/", meaning: "thời gian hệ thống không hoạt động", example: "The downtime lasted 47 minutes, affecting 2,000 users.", example2: "We aim for less than 1 hour of downtime per month.", collocation: "planned downtime / unexpected downtime / minimize downtime", audio: "/audio/unit38/downtime.mp3" },
+    { id: 5, word: "escalate", emoji: "📈", phonetic: "/ˈeskəleɪt/", meaning: "leo thang — báo cáo lên cấp trên khi không tự xử lý được", example: "If you can't fix it in 30 minutes, escalate to the on-call engineer.", example2: "We need to escalate this incident to the CTO.", collocation: "escalate an issue / escalate to management / incident escalation", audio: "/audio/unit38/escalate.mp3" },
+    { id: 6, word: "on-call", emoji: "📱", phonetic: "/ɒn kɔːl/", meaning: "người trực sự cố — sẵn sàng 24/7 để xử lý incidents", example: "Who is on-call this weekend?", example2: "Page the on-call engineer if the alert fires.", collocation: "on-call rotation / on-call engineer / on-call schedule", audio: "/audio/unit38/on_call.mp3" },
+    { id: 7, word: "mitigation", emoji: "🛡️", phonetic: "/ˌmɪtɪˈɡeɪʃən/", meaning: "giảm thiểu tác động trong khi tìm root cause fix", example: "As a mitigation, we've disabled the feature flag temporarily.", example2: "The mitigation brought the error rate from 80% back to 2%.", collocation: "immediate mitigation / mitigation step / mitigate impact", audio: "/audio/unit38/mitigation.mp3" },
+    { id: 8, word: "action item", emoji: "✅", phonetic: "/ˈækʃən ˈaɪtəm/", meaning: "việc cụ thể cần làm được giao cho người cụ thể", example: "Action item: update the load balancer config by Monday — assigned to Dev Ops team.", example2: "Every post-mortem should produce clear action items.", collocation: "assign action item / action item owner / follow up on action items", audio: "/audio/unit38/action.mp3" },
+    { id: 9, word: "status update", emoji: "📊", phonetic: "/ˈsteɪtəs ˈʌpdeɪt/", meaning: "cập nhật tiến độ/tình hình", example: "I'll send a status update every 30 minutes until the incident is resolved.", example2: "Can you send a status update to the stakeholders?", collocation: "send a status update / status update email / regular updates", audio: "/audio/unit38/status.mp3" },
+    { id: 10, word: "stakeholder", emoji: "👥", phonetic: "/ˈsteɪkhəʊldər/", meaning: "người có liên quan — có thể bị ảnh hưởng bởi quyết định", example: "Please inform all stakeholders about the planned maintenance window.", example2: "Stakeholders need to know the ETA for the fix.", collocation: "notify stakeholders / key stakeholders / stakeholder communication", audio: "/audio/unit38/stakeholder.mp3" },
   ],
+
+  grammar: {
+    title: "Email Structure & Tone trong Tech Context",
+    rule: "Format email kỹ thuật chuẩn:\n• Subject: [URGENT/INFO/ACTION] specific topic\n• Context: 'As of [time], [what happened]'\n• Impact: 'This affects [users/systems]'\n• Actions taken: 'We have [already done X]'\n• Next steps: 'We are [currently doing Y]'\n• ETA: 'We expect [resolution] by [time]'\n• Contact: 'Reach out to [name] with questions'",
+    examples: [
+      { en: "[URGENT] Production login service down — 500 errors since 14:32 UTC", vn: "[KHẨN] Dịch vụ login production bị lỗi — lỗi 500 từ 14:32 UTC" },
+      { en: "As of 14:32 UTC, the login service is returning 500 errors for all users.", vn: "Kể từ 14:32 UTC, dịch vụ login đang trả về lỗi 500 cho tất cả người dùng." },
+      { en: "We have reverted the last deployment as an immediate mitigation.", vn: "Chúng tôi đã revert deployment cuối như một biện pháp giảm thiểu tức thời." },
+      { id: "e4", en: "We expect full resolution by 16:00 UTC. Updates every 30 minutes.", vn: "Chúng tôi dự kiến giải quyết hoàn toàn trước 16:00 UTC. Cập nhật mỗi 30 phút." },
+    ] as { en: string; vn: string }[],
+    tip: "Subject line quyết định email có được đọc không. Dùng [URGENT], [INFO], [ACTION REQUIRED] ở đầu để người nhận biết ngay mức độ ưu tiên.",
+    vnNote: "Email tiếng Anh không cần 'Dear Sir/Madam' trong tech context. 'Hi team,' hoặc 'All,' là đủ. Kết thúc bằng 'Thanks,' hoặc 'Best,' thay vì 'Trân trọng kính chào'.",
+    ccq: {
+      question: "Email subject nào chuẩn nhất cho incident?",
+      options: [
+        "Problem with server",
+        "[URGENT] Production API down — affecting all users since 15:00 UTC",
+        "Hi team",
+        "Server is broken please help",
+      ],
+      answer: "[URGENT] Production API down — affecting all users since 15:00 UTC",
+      explanation: "[URGENT] tag + what + who affected + when. Người nhận đọc subject là hiểu ngay độ nghiêm trọng.",
+    },
+  },
+
+  matchingExercise: {
+    title: "Nối thuật ngữ incident response với định nghĩa",
+    pairs: [
+      { left: "post-mortem", right: "Báo cáo phân tích sau sự cố" },
+      { left: "root cause", right: "Nguyên nhân gốc rễ" },
+      { left: "mitigation", right: "Giảm thiểu tác động tạm thời" },
+      { left: "escalate", right: "Báo cáo lên cấp trên" },
+      { left: "action item", right: "Việc cần làm được assign" },
+    ],
+  },
+
+  scrambleExercises: [
+    { id: "s1", prompt_vn: "Chúng tôi đã revert deployment cuối như một biện pháp giảm thiểu.", words: ["We", "have", "reverted", "the", "last", "deployment", "as", "a", "mitigation."], answer: "We have reverted the last deployment as a mitigation." },
+    { id: "s2", prompt_vn: "Vui lòng escalate lên on-call engineer nếu bạn không thể fix trong 30 phút.", words: ["Please", "escalate", "to", "the", "on-call", "engineer", "if", "you", "can't", "fix", "it", "in", "30", "minutes."], answer: "Please escalate to the on-call engineer if you can't fix it in 30 minutes." },
+    { id: "s3", prompt_vn: "Root cause là một environment variable bị cấu hình sai trong production.", words: ["The", "root", "cause", "was", "a", "misconfigured", "environment", "variable", "in", "production."], answer: "The root cause was a misconfigured environment variable in production." },
+  ],
+
+  practiceQuiz: [
+    { id: "pq1", question: "When should you escalate an incident?", options: ["Sau khi fix xong", "Khi không tự xử lý được trong thời gian định", "Sau khi viết post-mortem", "Khi stakeholders hỏi"], answer: "Khi không tự xử lý được trong thời gian định", type: "multiple-choice" },
+    { id: "pq2", question: "What is a 'blameless post-mortem'?", options: ["Phân tích lỗi không blame cá nhân, tập trung vào process", "Báo cáo không đề cập root cause", "Họp sau sprint", "Email gửi CEO"], answer: "Phân tích lỗi không blame cá nhân, tập trung vào process", type: "multiple-choice" },
+    { id: "pq3", question: "Điền từ: The ___ lasted 2 hours, affecting 5,000 users.", options: ["incident", "downtime", "root cause", "mitigation"], answer: "downtime", type: "multiple-choice" },
+  ],
+
+  practiceTranslate: [
+    { id: "pt1", prompt_vn: "Nguyên nhân gốc rễ là một race condition trong caching layer.", answer: "The root cause was a race condition in the caching layer." },
+    { id: "pt2", prompt_vn: "Chúng tôi sẽ gửi status update mỗi 30 phút.", answer: "We will send a status update every 30 minutes." },
+    { id: "pt3", prompt_vn: "Action item: update firewall rules trước thứ Hai — giao cho DevOps team.", answer: "Action item: update firewall rules by Monday — assigned to the DevOps team." },
+  ],
+
   dialogues: [
     {
       id: 1,
-      title: "Thuyết trình bảo vệ chiến lược kinh doanh",
+      title: "Production Incident Slack Thread",
       audio: "/audio/unit38/dialogue_1.mp3",
-      desc: "Trang thuyết phục ban giám đốc về dự án mở rộng thị trường.",
+      desc: "Team xử lý production incident qua Slack.",
       lines: [
-        { id: "d1-1", speaker: "Trang", text: "Rarely has our company faced such an opportunity. If we expand now, we will dominate the market.", translation: "Hiếm khi công ty chúng ta đối mặt với cơ hội như vậy. Nếu chúng ta mở rộng bây giờ, chúng ta sẽ chiếm lĩnh thị trường." },
-        { id: "d1-2", speaker: "Director", text: "I understand, but the risk is high. How will you convince the shareholders?", translation: "Tôi hiểu, nhưng rủi ro cao. Cô sẽ thuyết phục các cổ đông bằng cách nào?" },
-        { id: "d1-3", speaker: "Trang", text: "It is our strong brand reputation that we should leverage. Not only did we achieve our targets last year, but we also cut operating costs.", translation: "Chính uy tín thương hiệu mạnh mẽ của chúng ta là thứ chúng ta nên tận dụng. Chúng ta không những đạt chỉ tiêu năm ngoái, mà còn cắt giảm được chi phí vận hành." },
-        { id: "d1-4", speaker: "Director", text: "Your logic is sound, but we need data to validate your claims.", translation: "Lập luận của cô rất hợp lý, nhưng chúng tôi cần dữ liệu để xác thực các tuyên bố của cô." },
-        { id: "d1-5", speaker: "Trang", text: "What I have prepared is a detailed risk analysis in the attachment. I strongly advocate this venture.", translation: "Điều tôi đã chuẩn bị là bản phân tích rủi ro chi tiết trong tệp đính kèm. Tôi mạnh mẽ ủng hộ dự án mạo hiểm này." },
-      ],
-    },
-    {
-      id: 2,
-      title: "Tranh luận về chiến dịch quảng cáo",
-      audio: "/audio/unit38/dialogue_2.mp3",
-      desc: "Huy và Sarah tranh luận về mức ảnh hưởng của chiến dịch.",
-      lines: [
-        { id: "d2-1", speaker: "Sarah", text: "It was the video ad that had the greatest influence on consumers.", translation: "Chính quảng cáo video đã có ảnh hưởng lớn nhất đối với người tiêu dùng." },
-        { id: "d2-2", speaker: "Huy", text: "I counter that. Rarely do video ads produce long-term loyalty without email marketing.", translation: "Tôi phản bác điều đó. Hiếm khi quảng cáo video tạo ra sự trung thành lâu dài mà không có tiếp thị qua email." },
-        { id: "d2-3", speaker: "Sarah", text: "Maybe, but what we need to focus on is immediate sales conversion.", translation: "Có thể, nhưng điều chúng ta cần tập trung vào là chuyển đổi doanh số bán hàng ngay lập tức." },
+        { id: "d1-1", speaker: "Monitoring Bot", text: "🚨 ALERT: Error rate on payment-service spiked to 85% — threshold exceeded.", translation: "🚨 CẢNH BÁO: Tỷ lệ lỗi trên payment-service tăng lên 85% — vượt ngưỡng." },
+        { id: "d1-2", speaker: "Minh (on-call)", text: "On it! Taking a look now. @team — we have a P1 incident. Payment service is down. I'll investigate and update every 15 mins.", translation: "Tôi đang xử lý! Đang kiểm tra. @team — chúng ta có P1 incident. Payment service bị down. Tôi sẽ điều tra và cập nhật mỗi 15 phút." },
+        { id: "d1-3", speaker: "Minh (on-call)", text: "Update 1 (15 min): Root cause identified — a bad config was deployed at 14:30. Reverting now as immediate mitigation.", translation: "Update 1 (15 phút): Đã xác định root cause — một config xấu được deploy lúc 14:30. Đang revert ngay như biện pháp giảm thiểu tức thời." },
+        { id: "d1-4", speaker: "Lead Dev", text: "Good work on the quick identification. Do you need to escalate to the infra team?", translation: "Tốt lắm khi phát hiện nhanh. Bạn có cần escalate lên infra team không?" },
+        { id: "d1-5", speaker: "Minh (on-call)", text: "Revert is done! Error rate back to 0.2%. Service is healthy. I'll write up the post-mortem and action items by EOD.", translation: "Revert xong! Tỷ lệ lỗi trở về 0.2%. Service đã khỏe. Tôi sẽ viết post-mortem và action items trước cuối ngày." },
       ],
     },
   ],
+
   listenAndChoose: [
-    { id: "lac1", audio_text: "Not only did they launch the product, but they also exceeded the target.", options: ["They launched the product but missed the target.", "They did not launch the product because of the target.", "Not only did they launch the product, but they also exceeded the target.", "They only exceeded the target after they launched."], answer: "Not only did they launch the product, but they also exceeded the target." },
-    { id: "lac2", audio_text: "It was the marketing campaign that boosted our sales.", options: ["The marketing campaign did not boost our sales.", "It was the marketing campaign that boosted our sales.", "We boosted our sales without any marketing campaign.", "They will boost the marketing campaign next month."], answer: "It was the marketing campaign that boosted our sales." },
-    { id: "lac3", audio_text: "Rarely has our company faced such an opportunity.", options: ["Our company often faces this kind of opportunity.", "Rarely has our company faced such an opportunity.", "We faced an opportunity last month in the company.", "It is easy to find opportunities in our company."], answer: "Rarely has our company faced such an opportunity." },
-    { id: "lac4", audio_text: "What we need now is a clear risk assessment.", options: ["We don't need any risk assessment now.", "We finished the risk assessment yesterday.", "What we need now is a clear risk assessment.", "The risk assessment is not clear enough."], answer: "What we need now is a clear risk assessment." },
-    { id: "lac5", audio_text: "The survey results validated our research hypothesis.", options: ["The survey results validated our research hypothesis.", "The hypothesis was proven wrong by the survey.", "We need to conduct a survey to find a hypothesis.", "There were no results from the survey yesterday."], answer: "The survey results validated our research hypothesis." },
+    { id: "lac1", audio_text: "We need to escalate this to the CTO — downtime is approaching 2 hours.", options: ["Báo cáo CEO về chi phí", "Báo cáo lên CTO vì downtime kéo dài", "Tắt hệ thống tạm thời", "Không cần làm gì"], answer: "Báo cáo lên CTO vì downtime kéo dài" },
+    { id: "lac2", audio_text: "The post-mortem identified a race condition as the root cause.", options: ["Tìm ra người gây lỗi", "Xác định nguyên nhân gốc là race condition", "Báo cáo đổ lỗi cho developer", "Lên kế hoạch sprint mới"], answer: "Xác định nguyên nhân gốc là race condition" },
+    { id: "lac3", audio_text: "As a mitigation, we've disabled the feature flag for all users.", options: ["Xóa feature vĩnh viễn", "Tắt feature tạm thời để giảm tác động", "Enable feature cho tất cả users", "Rollback toàn bộ version"], answer: "Tắt feature tạm thời để giảm tác động" },
   ],
+
   speaking: {
-    level1Prompt: "Not only did we {input} the project on time, but we also {input} our target.",
-    level1Placeholder: "Ví dụ: finish — exceeded...",
-    level2Situation: "Bạn đang phát biểu bảo vệ dự án của mình trước ban giám đốc. Hãy: (1) Khẳng định rằng hiếm khi đội nhóm của bạn mắc lỗi hệ thống, (2) Nhấn mạnh rằng chính nỗ lực của toàn đội đã cứu vãn dự án, (3) Thuyết phục họ duyệt ngân sách mới.",
-    level2Hint: "Rarely does our team overlook a major system error. It was the hard work of our developers that saved the project during the server crash. What we need now is your support to validate our new budget proposal.",
+    level1Prompt: "Viết Slack message thông báo production incident cho team.",
+    level1Placeholder: "🚨 Production alert: [service] is [issue]. Impact: [users]. Investigating now.",
+    level2Situation: "Sau khi fix incident, bạn cần gửi email tóm tắt cho stakeholders. Viết email với: root cause, downtime duration, mitigation, action items.",
+    level2Hint: "Subject: [RESOLVED] Payment service outage — post-mortem summary\n\nHi team,\n\nThe payment service outage (14:32-15:18 UTC, 46 min) has been resolved. Root cause: misconfigured env variable deployed at 14:30...",
   },
-  grammar: {
-    title: "Inversion & Cleft Sentences — Đảo Ngữ & Câu Chẻ Nhấn Mạnh",
-    rule: "Để nhấn mạnh thông tin hoặc làm lập luận trở nên trang trọng và thuyết phục hơn (đặc biệt trong IELTS Writing & Speaking):\n\n1. Inversion (Đảo ngữ với trạng từ phủ định/bán phủ định):\nKhi đặt các từ như Not only, Rarely, Seldom, Hardly, Scarcely ở đầu câu, ta đảo trợ động từ lên trước chủ ngữ.\n  Cấu trúc: Trạng từ phủ định + Trợ động từ + S + Verb-infinitive\n  → 'Rarely do we see such progress.' (= We rarely see such progress)\n  → 'Not only did we hit our target, but we also saved money.'\n\n2. Cleft Sentences (Câu chẻ):\n- IT cleft (Nhấn mạnh một thành phần cụ thể: chủ ngữ, tân ngữ, thời gian):\n  Cấu trúc: It + is/was + Thành phần nhấn mạnh + that/who + phần còn lại\n  → 'It was Huy who solved the problem.' (Chính là Huy chứ không phải ai khác)\n- WHAT cleft (Nhấn mạnh hành động hoặc nhu cầu):\n  Cấu trúc: What + S + V + is/was + Noun/Clause\n  → 'What we need is more capital.' (Điều chúng ta cần là thêm vốn)",
-    examples: [
-      { en: "Not only did he design the software, but he also integrated it. (Inversion with Not only)", vn: "Không những anh ấy thiết kế phần mềm, mà anh ấy còn tích hợp nó." },
-      { en: "It was the security error that caused the server crash. (IT cleft emphasizing the cause)", vn: "Chính lỗi bảo mật đã gây ra việc sập máy chủ." },
-      { en: "What they want to negotiate is the penalty clause. (WHAT cleft emphasizing the topic)", vn: "Điều họ muốn đàm phán là điều khoản phạt." },
-    ],
-    tip: "Trong tiêu chí chấm điểm IELTS Speaking Part 3 và Writing Task 2, việc sử dụng thành thạo ít nhất 1-2 câu đảo ngữ (ví dụ: 'Not only did...') hoặc câu chẻ là minh chứng rõ ràng giúp bài viết/nói đạt điểm Grammatical Range & Accuracy từ 7.0 trở lên.",
-    vnNote: "⚠️ Người Việt rất hay quên đảo trợ động từ (do/does/did/has/have) lên trước chủ ngữ khi dùng đảo ngữ. Lỗi phổ biến: 'Rarely we see...' thay vì 'Rarely do we see...'. Hãy nhớ cấu trúc đảo ngữ giống hệt cấu trúc đặt câu hỏi.",
-    dialogueExample: {
-      speaker: "Trang",
-      text: "Not only did we achieve our targets last year, but we also cut operating costs.",
-      translation: "Chúng ta không những đạt chỉ tiêu năm ngoái, mà còn cắt giảm được chi phí vận hành.",
-      highlight: "Not only did we achieve (Trợ động từ 'did' đứng trước chủ ngữ 'we' đúng cấu trúc đảo ngữ)",
-    },
-    ccq: {
-      question: "Viết lại câu sau sang dạng đảo ngữ bắt đầu bằng 'Seldom': 'We seldom see such a successful business venture.'",
-      options: [
-        "Seldom we see such a successful business venture.",
-        "Seldom do we see such a successful business venture.",
-        "Seldom we saw such a successful business venture.",
-        "Seldom did we see such a successful business venture.",
-      ],
-      answer: "Seldom do we see such a successful business venture.",
-      explanation: "Động từ 'see' ở hiện tại đơn, chủ ngữ 'we' → trợ động từ đảo ngữ tương ứng là 'do'.",
-    },
-  },
-  practiceQuiz: [
-    { id: "pq1", type: "multiple-choice", question: "Chọn dạng đúng: 'Rarely ___ a company dominate the market so completely.'", options: ["has", "does", "did", "is"], answer: "does" },
-    { id: "pq2", type: "multiple-choice", question: "Chọn câu chẻ đúng: 'It was the manager ___ approved the budget.'", options: ["which", "who", "whom", "what"], answer: "who" },
-    { id: "pq3", type: "cloze", question: "Điền trợ động từ đảo ngữ: 'Not only ___ he convince the board, but he also got a promotion.'", answer: "did" },
-    { id: "pq4", type: "multiple-choice", question: "Điền từ: 'You need data to ___ your claims during the debate.'", options: ["validate", "dominate", "leverage", "counter"], answer: "validate" },
-    { id: "pq5", type: "cloze", question: "Điền từ: 'What we need to place emphasis ___ is user safety.'", answer: "on" },
-  ],
-  matchingExercise: {
-    title: "Nối từ vựng thuyết phục và hùng biện với nghĩa đúng",
-    pairs: [
-      { left: "persuasion", right: "sự thuyết phục" },
-      { left: "leverage", right: "tận dụng / đòn bẩy" },
-      { left: "assert", right: "khẳng định / quả quyết" },
-      { left: "debate", right: "tranh luận" },
-      { left: "counter", right: "phản bác / chống lại" },
-    ],
-  },
-  scrambleExercises: [
-    { id: "s38-1", prompt_vn: "Chính là Huy đã giải quyết vụ sập máy chủ hôm qua.", words: ["It", "was", "Huy", "who", "resolved", "the", "server", "crash", "yesterday", "."], answer: "It was Huy who resolved the server crash yesterday ." },
-    { id: "s38-2", prompt_vn: "Hiếm khi chúng tôi thấy kết quả xuất sắc như vậy.", words: ["Rarely", "do", "we", "see", "such", "excellent", "results", "."], answer: "Rarely do we see such excellent results ." },
-    { id: "s38-3", prompt_vn: "Điều chúng tôi muốn thay đổi là chiến lược tiếp thị.", words: ["What", "we", "want", "to", "change", "is", "the", "marketing", "strategy", "."], answer: "What we want to change is the marketing strategy ." },
-  ],
+
   quiz: [
-    { id: "fq1", type: "multiple-choice", question: "Chọn dạng đúng: 'Seldom ___ they encountered such an obstacle.'", options: ["do", "did", "have", "had"], answer: "have" },
-    { id: "fq2", type: "cloze", question: "Điền từ: 'The sales pitch was a masterclass in ___ (sự thuyết phục).'", answer: "persuasion" },
-    { id: "fq3", type: "multiple-choice", question: "Chọn từ điền: 'The company decided to ___ its technological assets.'", options: ["assert", "leverage", "dominate", "counter"], answer: "leverage" },
-    { id: "fq4", type: "translate", question: "Dịch: 'Không những anh ấy nói trôi chảy, mà anh ấy còn viết rất giỏi.'", answer: "Not only does he speak fluently, but he also writes very well." },
-    { id: "fq5", type: "multiple-choice", question: "Từ nào đồng nghĩa với 'support/advocate'?", options: ["validate", "assert", "advocate", "convince"], answer: "advocate" },
+    { id: "q1", question: "What should a 'blameless post-mortem' focus on?", options: ["Who made the mistake", "Process improvements to prevent recurrence", "Punishing the on-call engineer", "Customer refunds"], answer: "Process improvements to prevent recurrence", type: "multiple-choice" },
+    { id: "q2", question: "What does 'on-call' mean?", options: ["Người gọi điện cho khách hàng", "Người trực sự cố 24/7", "Người gọi meeting", "Người trực điện thoại văn phòng"], answer: "Người trực sự cố 24/7", type: "multiple-choice" },
+    { id: "q3", question: "What format works best for incident email subjects?", options: ["Just 'Important'", "[URGENT/INFO] + what + impact + when", "Hi all, update", "EMERGENCY!!!"], answer: "[URGENT/INFO] + what + impact + when", type: "multiple-choice" },
+    { id: "q4", question: "Điền từ: We identified the ___ cause: a misconfigured load balancer.", options: ["root", "main", "core", "basic"], answer: "root", type: "multiple-choice" },
+    { id: "q5", question: "Dịch sang tiếng Anh: Incident đã được giải quyết — post-mortem sẽ theo sau.", answer: "Incident resolved — post-mortem to follow.", type: "translate" },
   ],
-  cumulativeReviewQuestions: [
-    { id: "cr38-1", question: "Ôn tập Unit 37 — Chọn dạng đúng: '___ the proposal, she presented it to the manager.'", options: ["Having finished", "Finished", "Finishing", "To finish"], answer: "Having finished", type: "multiple-choice" },
-    { id: "cr38-2", question: "Ôn tập Unit 36 — Điền: 'The drug is claimed ___ (have) no side effects.'", options: [], answer: "to have", type: "cloze" },
-    { id: "cr38-3", question: "Ôn tập Unit 35 — Chọn liên từ thích hợp: 'Miễn là bạn đồng ý ký hợp đồng...':", options: ["As long as", "Unless", "Even if", "Although"], answer: "As long as", type: "multiple-choice" },
-  ],
+
   fluencyDrill: {
+    title: "Incident response vocabulary",
+    timeLimit: 60,
     items: [
-      { en: "Not only did we hit our target", vn: "Chúng tôi không những đạt chỉ tiêu" },
-      { en: "It was the marketing team that won", vn: "Chính đội ngũ tiếp thị đã giành chiến thắng" },
-      { en: "What we need is more capital", vn: "Điều chúng ta cần là thêm vốn" },
-      { en: "Rarely has our company faced this", vn: "Hiếm khi công ty chúng tôi đối mặt với điều này" },
-      { en: "She has strong powers of persuasion", vn: "Cô ấy có khả năng thuyết phục mạnh mẽ" },
-      { en: "How did they validate the survey data?", vn: "Họ đã xác thực dữ liệu khảo sát như thế nào?" },
-      { en: "I strongly counter this proposal", vn: "Tôi mạnh mẽ phản bác đề xuất này" },
-      { en: "We must leverage our brand reputation", vn: "Chúng ta phải tận dụng uy tín thương hiệu" },
+      { en: "incident", vn: "sự cố kỹ thuật" },
+      { en: "post-mortem", vn: "báo cáo phân tích sau sự cố" },
+      { en: "root cause", vn: "nguyên nhân gốc rễ" },
+      { en: "downtime", vn: "thời gian hệ thống không hoạt động" },
+      { en: "escalate", vn: "báo cáo lên cấp trên" },
+      { en: "mitigation", vn: "giảm thiểu tác động tạm thời" },
+      { en: "on-call", vn: "người trực sự cố" },
+      { en: "action item", vn: "việc cần làm được assign" },
+      { en: "stakeholder", vn: "người có liên quan" },
     ],
   },
 };

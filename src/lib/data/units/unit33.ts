@@ -1,151 +1,150 @@
-import { UnitData } from "@/components/learn/UnitTemplate";
+import type { UnitData } from "@/components/learn/UnitTemplate";
 
-export const unit33: UnitData = {
+// UNIT 33 — GitHub Commit Messages & Version Control (B2 / Phase 4)
+// Phase 4: Tech English cho developer Việt Nam
+// Focus: Conventional Commits, git workflow vocabulary, PR English
+const unit33: UnitData = {
   unitId: "unit-33",
-  title: "Unit 33: Imagining & Hypothesizing",
+  title: "Unit 33: GitHub Commit Messages",
   level: "B2",
   xp: 120,
-  estimatedTime: 60,
-  description: "Second Conditional — Giả định các tình huống không có thật ở hiện tại hoặc tương lai. Thường xuyên được hỏi trong phỏng vấn tuyển dụng và đàm phán thương lượng.",
-  badgeName: "Nhà Hoạch Định",
-  badgeEmoji: "🔮",
-  situation: "Phỏng vấn xin việc vị trí Quản lý Dự án. Người phỏng vấn đặt câu hỏi giả định: 'What would you do if a key team member resigned in the middle of a project?' Bạn cần dùng câu điều kiện loại 2 (Second Conditional) để trả lời một cách tự tin và chuyên nghiệp.",
+  estimatedTime: 55,
+  description: "Học viết commit message chuẩn Conventional Commits và giao tiếp về code thay đổi trên GitHub.",
+  badgeName: "Git Communicator",
+  badgeEmoji: "🔀",
+
+  situation:
+    "Bạn vừa fix một bug quan trọng trong production. Senior developer yêu cầu bạn push code và viết commit message rõ ràng trước khi tạo Pull Request. Bạn sẽ viết gì?",
+
   learningOutcomes: [
-    "Sử dụng câu điều kiện loại 2 (Second Conditional) để giả định tình huống",
-    "Thảo luận về các rủi ro, kết quả giả định và đưa ra giải pháp trong công việc",
-    "Sử dụng từ vựng về quản lý rủi ro và đánh giá dự án ở cấp độ B2",
+    "Viết commit message chuẩn Conventional Commits (feat/fix/refactor)",
+    "Mô tả code thay đổi rõ ràng bằng tiếng Anh",
+    "Tạo PR description chuyên nghiệp cho team review",
   ],
-  culturalNote: 'Trong phỏng vấn hành vi (Behavioral Interview) của các tập đoàn đa quốc gia, câu hỏi giả định bắt đầu bằng <span class="text-emerald-400">"What would you do if..."</span> rất phổ biến. Bạn nên trả lời bằng <span class="text-emerald-400">"If that happened, I would..."</span> thay vì dùng <span class="text-zinc-400">"will"</span> để thể hiện tư duy phân tích sắc bén và khả năng xử lý tình huống giả định chuyên nghiệp.',
+
+  culturalNote:
+    'Trong team quốc tế, commit message được coi là <span class="text-emerald-400 font-semibold">tài liệu sống</span> của dự án. Quy tắc vàng: dùng <span class="text-emerald-400 font-semibold">động từ nguyên thể</span> ở đầu — "Add", "Fix", "Remove" — không phải "Added", "Fixing". Một commit tốt = ai đọc cũng hiểu bạn đã làm gì và tại sao.',
+
   warmupGreetings: [
-    { emoji: "💼", en: "If I were you, I would invest in that new venture.", vn: "Nếu tôi là bạn, tôi sẽ đầu tư vào dự án mạo hiểm mới đó.", context: "If I were you, I would — lời khuyên giả định" },
-    { emoji: "🔮", en: "Imagine what the outcome would be if we failed.", vn: "Hãy tưởng tượng kết quả sẽ thế nào nếu chúng ta thất bại.", context: "imagine ... if we failed — giả định tương lai" },
-    { emoji: "📈", en: "We would expand our business if we had more resources.", vn: "Chúng tôi sẽ mở rộng kinh doanh nếu có nhiều tài nguyên hơn.", context: "would expand if we had — giả định hiện tại" },
+    { emoji: "🔀", en: "I just pushed the fix to the feature branch.", vn: "Tôi vừa push bản fix lên branch feature.", context: "Thông báo với team trong Slack" },
+    { emoji: "✅", en: "The PR is ready for review.", vn: "PR đã sẵn sàng để review.", context: "Ping reviewer trên GitHub" },
+    { emoji: "🐛", en: "I found and fixed the bug in the auth module.", vn: "Tôi đã tìm và sửa bug trong module auth.", context: "Update trong standup" },
   ],
+
   vocab: [
-    { id: 1, word: "hypothetical", emoji: "💭", phonetic: "/ˌhaɪpəˈθetɪkəl/", meaning: "mang tính giả định / giả thuyết", example: "Let's look at a hypothetical situation to understand this rule.", example2: "This is a purely hypothetical question.", collocation: "hypothetical situation / hypothetical question / purely hypothetical", audio: "/audio/unit33/hypothetical.mp3" },
-    { id: 2, word: "scenario", emoji: "🎬", phonetic: "/sɪˈnɑːriəʊ/", meaning: "kịch bản / tình huống có thể xảy ra", example: "We must prepare for the worst-case scenario.", example2: "In this scenario, we would lose half of our users.", collocation: "worst-case scenario / likely scenario / best-case scenario", audio: "/audio/unit33/scenario.mp3" },
-    { id: 3, word: "assume", emoji: "🤔", phonetic: "/əˈsjuːm/", meaning: "giả định / tự cho là", example: "If we assume that the market is stable, this plan will work.", example2: "Do not assume that everyone agrees with you.", collocation: "assume responsibility / assume that / let's assume", audio: "/audio/unit33/assume.mp3" },
-    { id: 4, word: "imagine", emoji: "🎨", phonetic: "/ɪˈmædʒɪn/", meaning: "tưởng tượng", example: "Imagine what you would do if you won the lottery.", example2: "I can't imagine living in a cold country.", collocation: "imagine that / hard to imagine / imagine doing", audio: "/audio/unit33/imagine.mp3" },
-    { id: 5, word: "venture", emoji: "🚀", phonetic: "/ˈventʃər/", meaning: "dự án kinh doanh mạo hiểm / đầu tư mạo hiểm", example: "Their new business venture proved to be highly profitable.", example2: "They are seeking funding for a joint venture.", collocation: "business venture / joint venture / venture capital", audio: "/audio/unit33/venture.mp3" },
-    { id: 6, word: "invest", emoji: "💰", phonetic: "/ɪnˈvest/", meaning: "đầu tư", example: "If we had capital, we would invest in artificial intelligence.", example2: "The company invested heavily in research.", collocation: "invest in / invest money / invest time", audio: "/audio/unit33/invest.mp3" },
-    { id: 7, word: "expansion", emoji: "📈", phonetic: "/ɪkˈspænʃən/", meaning: "sự mở rộng / phát triển", example: "The corporate expansion created hundreds of new jobs.", example2: "We are planning our international expansion next year.", collocation: "business expansion / rapid expansion / global expansion", audio: "/audio/unit33/expansion.mp3" },
-    { id: 8, word: "outcome", emoji: "🎯", phonetic: "/ˈaʊtkʌm/", meaning: "kết quả / đầu ra", example: "What is the expected outcome of the negotiation?", example2: "We are very pleased with the final outcome.", collocation: "expected outcome / final outcome / positive outcome", audio: "/audio/unit33/outcome.mp3" },
-    { id: 9, word: "risk", emoji: "⚡", phonetic: "/rɪsk/", meaning: "rủi ro", example: "Starting a new venture always involves a high level of risk.", example2: "If we took that risk, we might lose our investment.", collocation: "take a risk / reduce risk / risk assessment", audio: "/audio/unit33/risk.mp3" },
-    { id: 10, word: "criteria", emoji: "📋", phonetic: "/kraɪˈtɪəriə/", meaning: "tiêu chí (số nhiều của criterion)", example: "What are the criteria for selecting the candidate?", example2: "The project met all the evaluation criteria.", collocation: "selection criteria / evaluation criteria / meet the criteria", audio: "/audio/unit33/criteria.mp3" },
-    { id: 11, word: "assess", emoji: "🔍", phonetic: "/əˈses/", meaning: "đánh giá / định giá", example: "We need to assess the risks before making a decision.", example2: "The teacher will assess the students' speaking skills.", collocation: "assess risks / assess performance / assess the situation", audio: "/audio/unit33/assess.mp3" },
-    { id: 12, word: "resources", emoji: "💎", phonetic: "/rɪˈzɔːsɪz/", meaning: "tài nguyên / nguồn lực", example: "Human resources are the most valuable asset of a company.", example2: "We don't have enough resources to start the expansion.", collocation: "natural resources / human resources / lack of resources", audio: "/audio/unit33/resources.mp3" },
+    { id: 1, word: "commit", emoji: "💾", phonetic: "/kəˈmɪt/", meaning: "commit code (lưu snapshot thay đổi vào git)", example: "Please commit your changes before switching branches.", example2: "I made three commits today: one fix and two features.", collocation: "make a commit / commit message / commit history", audio: "/audio/unit33/commit.mp3" },
+    { id: 2, word: "repository (repo)", emoji: "📦", phonetic: "/rɪˈpɒzɪtəri/", meaning: "kho lưu trữ code (repo)", example: "Fork the repository and clone it to your local machine.", example2: "The repo has over 500 commits from the team.", collocation: "clone a repo / fork a repo / private repository", audio: "/audio/unit33/repository.mp3" },
+    { id: 3, word: "branch", emoji: "🌿", phonetic: "/brɑːntʃ/", meaning: "nhánh code", example: "Create a new branch for each feature you work on.", example2: "Never commit directly to the main branch.", collocation: "feature branch / create a branch / switch branches", audio: "/audio/unit33/branch.mp3" },
+    { id: 4, word: "merge", emoji: "🔀", phonetic: "/mɜːrdʒ/", meaning: "gộp code từ branch này vào branch khác", example: "Merge the feature branch into main after approval.", example2: "There was a conflict when merging the two branches.", collocation: "merge request / merge conflict / merge into main", audio: "/audio/unit33/merge.mp3" },
+    { id: 5, word: "pull request (PR)", emoji: "📬", phonetic: "/pʊl rɪˈkwest/", meaning: "yêu cầu gộp code — gửi để team review", example: "Open a pull request when your feature is ready for review.", example2: "I left three comments on your PR.", collocation: "open a PR / review a PR / merge a PR", audio: "/audio/unit33/pull.mp3" },
+    { id: 6, word: "bug", emoji: "🐛", phonetic: "/bʌɡ/", meaning: "lỗi phần mềm", example: "fix: resolve null pointer bug in user authentication.", example2: "The bug only appears on mobile browsers.", collocation: "report a bug / fix a bug / reproduce a bug", audio: "/audio/unit33/bug.mp3" },
+    { id: 7, word: "feat (feature)", emoji: "✨", phonetic: "/fiːtʃər/", meaning: "tính năng mới", example: "feat(auth): add Google OAuth login", example2: "This feature was requested by 50+ users.", collocation: "add a feature / feature branch / ship a feature", audio: "/audio/unit33/feat.mp3" },
+    { id: 8, word: "refactor", emoji: "🔧", phonetic: "/ˌriːˈfæktər/", meaning: "tái cấu trúc code (không thay đổi chức năng)", example: "refactor: extract validateEmail() into utils module", example2: "Refactoring improves code readability without changing behavior.", collocation: "refactor code / code refactoring / refactor into", audio: "/audio/unit33/refactor.mp3" },
+    { id: 9, word: "revert", emoji: "↩️", phonetic: "/rɪˈvɜːrt/", meaning: "khôi phục lại commit trước", example: "revert: undo accidental deletion of config file", example2: "We had to revert the last deploy because of a critical bug.", collocation: "revert a commit / revert changes / revert to previous", audio: "/audio/unit33/revert.mp3" },
+    { id: 10, word: "deploy", emoji: "🚀", phonetic: "/dɪˈplɔɪ/", meaning: "triển khai code lên server/production", example: "Deploy to staging first, then production.", example2: "The CI/CD pipeline deploys automatically after merge.", collocation: "deploy to production / deployment pipeline / auto-deploy", audio: "/audio/unit33/deploy.mp3" },
+    { id: 11, word: "conflict", emoji: "⚡", phonetic: "/ˈkɒnflɪkt/", meaning: "xung đột code khi merge", example: "Resolve all conflicts before requesting a review.", example2: "There was a merge conflict in the package.json file.", collocation: "merge conflict / resolve a conflict / conflict resolution", audio: "/audio/unit33/conflict.mp3" },
+    { id: 12, word: "scope", emoji: "🎯", phonetic: "/skəʊp/", meaning: "phạm vi thay đổi (trong commit message)", example: "feat(auth): add refresh token support", example2: "The scope tells reviewers which module is affected.", collocation: "commit scope / module scope / in scope", audio: "/audio/unit33/scope.mp3" },
   ],
+
+  grammar: {
+    title: "Conventional Commits — Imperative Mood",
+    rule: "type(scope): short description\n• feat: new feature\n• fix: bug fix\n• refactor: code restructure\n• docs: documentation\n• style: formatting\n• test: add/update tests\n• chore: maintenance",
+    examples: [
+      { en: "feat(auth): add Google OAuth login", vn: "Thêm tính năng đăng nhập bằng Google" },
+      { en: "fix(api): resolve 401 error on token refresh", vn: "Sửa lỗi 401 khi refresh token" },
+      { en: "refactor(utils): extract date helpers into separate file", vn: "Tách date helpers thành file riêng" },
+      { en: "docs: update README with local setup guide", vn: "Cập nhật README hướng dẫn cài đặt local" },
+    ],
+    tip: "Dùng động từ nguyên thể: 'Add', 'Fix', 'Update' — không phải 'Added', 'Fixed', 'Updating'. Đọc to: 'This commit will...'",
+    vnNote: "Người Việt hay viết commit theo kiểu mô tả quá khứ ('Fixed bug', 'Added feature'). Trong tiếng Anh chuẩn, commit message dùng thì hiện tại đơn như lệnh: 'Fix bug', 'Add feature'.",
+    ccq: {
+      question: "Commit message nào đúng chuẩn Conventional Commits?",
+      options: ["Fixed the login bug", "fix(auth): resolve login redirect loop", "I fixed the auth bug today", "auth bug fix"],
+      answer: "fix(auth): resolve login redirect loop",
+      explanation: "Format chuẩn: type(scope): description — dùng động từ nguyên thể, không viết hoa chữ đầu description.",
+    },
+  },
+
+  matchingExercise: {
+    title: "Nối commit type với ý nghĩa",
+    pairs: [
+      { left: "feat", right: "Thêm tính năng mới" },
+      { left: "fix", right: "Sửa lỗi (bug fix)" },
+      { left: "refactor", right: "Tái cấu trúc code" },
+      { left: "docs", right: "Cập nhật tài liệu" },
+      { left: "chore", right: "Bảo trì, cập nhật dependencies" },
+    ],
+  },
+
+  scrambleExercises: [
+    { id: "s1", prompt_vn: "tính năng(auth): thêm xác thực hai yếu tố", words: ["feat(auth):", "add", "two-factor", "authentication"], answer: "feat(auth): add two-factor authentication" },
+    { id: "s2", prompt_vn: "sửa(api): xử lý lỗi timeout khi gọi API", words: ["fix(api):", "handle", "timeout", "error", "on", "API", "calls"], answer: "fix(api): handle timeout error on API calls" },
+    { id: "s3", prompt_vn: "tài liệu: thêm ví dụ vào README", words: ["docs:", "add", "examples", "to", "README"], answer: "docs: add examples to README" },
+  ],
+
+  practiceQuiz: [
+    { id: "pq1", question: "Which commit message follows Conventional Commits format?", options: ["I added a dark mode feature", "feat(ui): add dark mode toggle", "Added dark mode", "Dark mode feature added"], answer: "feat(ui): add dark mode toggle", type: "multiple-choice" },
+    { id: "pq2", question: "What type should you use when restructuring code without changing functionality?", options: ["fix", "feat", "refactor", "docs"], answer: "refactor", type: "multiple-choice" },
+    { id: "pq3", question: "Điền từ còn thiếu: ___(auth): add password reset flow", options: ["feature", "feat", "add", "new"], answer: "feat", type: "multiple-choice" },
+  ],
+
+  practiceTranslate: [
+    { id: "pt1", prompt_vn: "Sửa lỗi 404 trên trang hồ sơ người dùng.", answer: "fix(profile): resolve 404 error on user profile page" },
+    { id: "pt2", prompt_vn: "Thêm unit tests cho module thanh toán.", answer: "test(payment): add unit tests for payment module" },
+    { id: "pt3", prompt_vn: "Cập nhật dependencies lên phiên bản mới nhất.", answer: "chore: update dependencies to latest versions" },
+  ],
+
   dialogues: [
     {
       id: 1,
-      title: "Câu hỏi giả định trong phỏng vấn tuyển dụng",
+      title: "Code review trên GitHub",
       audio: "/audio/unit33/dialogue_1.mp3",
-      desc: "Lâm trả lời câu hỏi xử lý tình huống giả định của người phỏng vấn.",
+      desc: "Minh và Sarah thảo luận về commit message trong PR review.",
       lines: [
-        { id: "d1-1", speaker: "Interviewer", text: "Lâm, what would you do if a key team member resigned in the middle of a project?", translation: "Lâm, bạn sẽ làm gì nếu một thành viên chủ chốt trong nhóm nghỉ việc giữa chừng dự án?" },
-        { id: "d1-2", speaker: "Lam", text: "If that hypothetical scenario happened, I would first assess the impact on the timeline. Then, I would distribute the tasks to other members.", translation: "Nếu tình huống giả định đó xảy ra, trước tiên tôi sẽ đánh giá tác động lên tiến độ. Sau đó, tôi sẽ phân bổ nhiệm vụ cho các thành viên khác." },
-        { id: "d1-3", speaker: "Interviewer", text: "What if the remaining members were already overloaded with work?", translation: "Nếu các thành viên còn lại đã bị quá tải công việc thì sao?" },
-        { id: "d1-4", speaker: "Lam", text: "If we had no choice, I would request temporary resources from other teams, or hire a freelancer. I assume we would have some emergency budget.", translation: "Nếu không có lựa chọn nào khác, tôi sẽ yêu cầu nguồn lực tạm thời từ các nhóm khác, hoặc thuê freelancer. Tôi giả định chúng ta sẽ có một số ngân sách khẩn cấp." },
-        { id: "d1-5", speaker: "Interviewer", text: "Excellent answer. It shows you know how to manage risks.", translation: "Câu trả lời xuất sắc. Nó cho thấy bạn biết cách quản trị rủi ro." },
-      ],
-    },
-    {
-      id: 2,
-      title: "Thảo luận về dự án mạo hiểm mới",
-      audio: "/audio/unit33/dialogue_2.mp3",
-      desc: "Huy và Sarah thảo luận về kế hoạch đầu tư và mở rộng kinh doanh.",
-      lines: [
-        { id: "d2-1", speaker: "Huy", text: "If we invested all our capital in this new venture, the potential outcome would be huge.", translation: "Nếu chúng ta đầu tư toàn bộ vốn vào dự án mạo hiểm mới này, kết quả tiềm năng sẽ rất lớn." },
-        { id: "d2-2", speaker: "Sarah", text: "True, but the risk is also very high. Imagine if the product failed to meet the selection criteria of corporate clients.", translation: "Đúng thế, nhưng rủi ro cũng rất cao. Hãy tưởng tượng nếu sản phẩm không đáp ứng được tiêu chí lựa chọn của khách hàng doanh nghiệp." },
-        { id: "d2-3", speaker: "Huy", text: "If that occurred, we would need to redesign our expansion strategy completely. But I think it's a risk worth taking.", translation: "Nếu điều đó xảy ra, chúng ta sẽ cần thiết kế lại hoàn toàn chiến lược mở rộng của mình. Nhưng tôi nghĩ đó là rủi ro đáng chấp nhận." },
+        { id: "d1-1", speaker: "Sarah", text: "Hey Minh, I left some comments on your PR. The commit messages need to follow our Conventional Commits standard.", translation: "Này Minh, tôi đã để lại một số comment trên PR của bạn. Commit message cần theo chuẩn Conventional Commits của chúng ta." },
+        { id: "d1-2", speaker: "Minh", text: "Thanks for the feedback! I see you flagged the commit that says 'Fixed login bug.' Should I change it to 'fix(auth): resolve login redirect loop'?", translation: "Cảm ơn feedback! Tôi thấy bạn đánh dấu commit 'Fixed login bug.' Tôi có nên đổi thành 'fix(auth): resolve login redirect loop' không?" },
+        { id: "d1-3", speaker: "Sarah", text: "Exactly! And please use the imperative mood — 'Fix', not 'Fixed'. It reads like an instruction: 'This commit will fix...'", translation: "Chính xác! Và hãy dùng dạng mệnh lệnh — 'Fix', không phải 'Fixed'. Đọc như một lệnh: 'Commit này sẽ fix...'" },
+        { id: "d1-4", speaker: "Minh", text: "Got it. I'll amend those commits and force-push to clean up the history. Should I also update the PR description?", translation: "Hiểu rồi. Tôi sẽ sửa những commit đó và force-push để làm sạch lịch sử. Tôi có nên cập nhật PR description không?" },
+        { id: "d1-5", speaker: "Sarah", text: "Yes, please! Add a summary of changes and a link to the Jira ticket. Then I'll approve and we can merge.", translation: "Có, hãy làm vậy! Thêm tóm tắt các thay đổi và link đến Jira ticket. Sau đó tôi sẽ approve và chúng ta có thể merge." },
       ],
     },
   ],
+
   listenAndChoose: [
-    { id: "lac1", audio_text: "If I were you, I would invest in that new venture.", options: ["If I am you, I will invest in that new venture.", "If I were you, I would invest in that new venture.", "If I were you, I will invest in that new venture.", "If I was you, I invest in that new venture."], answer: "If I were you, I would invest in that new venture." },
-    { id: "lac2", audio_text: "We would expand our business if we had more resources.", options: ["We will expand our business if we have more resources.", "We would expand our business if we had more resources.", "We would expand our business if we have more resources.", "We expanded our business because we had more resources."], answer: "We would expand our business if we had more resources." },
-    { id: "lac3", audio_text: "Starting a new venture always involves a high level of risk.", options: ["Starting a new venture always involves a high level of risk.", "Starting a new venture never has any risks.", "The expected outcome of the venture is very small.", "We must assess the criteria before starting the venture."], answer: "Starting a new venture always involves a high level of risk." },
-    { id: "lac4", audio_text: "What would you do if a key member resigned?", options: ["What will you do if a key member resigns?", "What did you do when a key member resigned?", "What would you do if a key member resigned?", "What would you do if a key member resigns?"], answer: "What would you do if a key member resigned?" },
-    { id: "lac5", audio_text: "We need to assess the risks before making a decision.", options: ["We should ignore the risks before making a decision.", "We need to assess the risks before making a decision.", "We assessed the risks after the decision was made.", "It is easy to predict the outcome of the risk."], answer: "We need to assess the risks before making a decision." },
+    { id: "lac1", audio_text: "Please amend your last commit to follow the Conventional Commits format.", options: ["Xóa commit cuối cùng", "Sửa commit cuối để đúng format", "Tạo commit mới", "Revert commit cuối"], answer: "Sửa commit cuối để đúng format" },
+    { id: "lac2", audio_text: "There's a merge conflict in the package.json file. Can you resolve it?", options: ["File package.json bị lỗi cú pháp", "Có xung đột khi merge ở file package.json", "Package.json cần được cập nhật", "File package.json bị thiếu"], answer: "Có xung đột khi merge ở file package.json" },
+    { id: "lac3", audio_text: "The PR is ready for review — LGTM from my side if tests pass.", options: ["PR cần thêm tests", "Reviewer sẽ test code", "PR được approve nếu tests pass", "PR bị reject"], answer: "PR được approve nếu tests pass" },
   ],
+
   speaking: {
-    level1Prompt: "If we had more {input}, we would {input} in this new {input}.",
-    level1Placeholder: "Ví dụ: resources — invest — venture...",
-    level2Situation: "Bạn đang tham gia buổi phỏng vấn xin việc và được hỏi câu hỏi tình huống: 'Bạn sẽ làm gì nếu ngân sách dự án bị cắt giảm 30%?'. Hãy: (1) Nói rằng đó là một tình huống giả định khó khăn, (2) Đưa ra phương án cắt giảm chi phí không thiết yếu, (3) Nhấn mạnh tầm quan trọng của nguồn nhân lực.",
-    level2Hint: "If that hypothetical scenario happened, I would first assess the project budget to reduce non-essential costs. If we cut down on advertising, we would save some budget. However, I would protect our human resources because they are our most valuable asset.",
+    level1Prompt: "Bạn vừa thêm tính năng dark mode. Hãy nói commit message cho tính năng này.",
+    level1Placeholder: "feat(ui): add dark mode...",
+    level2Situation: "Team lead hỏi bạn: 'What did you work on yesterday and what's your plan for today?' (Standup question).",
+    level2Hint: "Yesterday I worked on the dark mode feature. I opened a PR and it's waiting for review. Today I'll fix the review comments and update the documentation.",
   },
-  grammar: {
-    title: "Second Conditional — Câu Điều Kiện Loại 2 (Giả Định Hiện Tại)",
-    rule: "Câu điều kiện loại 2 dùng để diễn tả các tình huống giả định, không có thật, hoặc trái với thực tế ở hiện tại hoặc tương lai.\n\nCấu trúc:\nIf + S + Past Simple (động từ chia ở quá khứ đơn), S + would / could / might + Verb-infinitive (động từ nguyên thể)\n\nLưu ý: Với động từ 'To be', ta dùng 'WERE' cho tất cả các ngôi (I/he/she/it/we/they) trong văn phong trang trọng.\n   → 'If I were the manager, I would change the policy.'",
-    examples: [
-      { en: "If we had more resources, we would start the expansion. (In reality, we don't have enough resources)", vn: "Nếu chúng tôi có nhiều nguồn lực hơn, chúng tôi đã bắt đầu mở rộng." },
-      { en: "What would you do if you lost your job? (Hypothetical question)", vn: "Bạn sẽ làm gì nếu bạn bị mất việc?" },
-      { en: "If she were here, she could help us assess the risks. (She is not here now)", vn: "Nếu cô ấy ở đây, cô ấy đã có thể giúp chúng ta đánh giá các rủi ro." },
-    ],
-    tip: "Trong giao tiếp trang trọng hoặc các bài luận B2, hãy dùng 'were' thay vì 'was' cho các chủ ngữ ngôi thứ ba số ít (he/she/it) và ngôi thứ nhất (I) sau từ 'If'. Ví dụ: 'If it were possible' thay vì 'If it was possible'.",
-    vnNote: "⚠️ Người Việt rất hay nhầm lẫn giữa câu điều kiện loại 1 (có thể xảy ra) và loại 2 (giả định không có thật). Hãy nhớ: nếu bạn coi đó là một tình huống hoàn toàn giả định hoặc rất khó xảy ra, hãy lùi thì sang quá khứ đơn ở vế If và dùng would/could ở vế sau.",
-    dialogueExample: {
-      speaker: "Lâm",
-      text: "If that hypothetical scenario happened, I would first assess the impact on the timeline.",
-      translation: "Nếu tình huống giả định đó xảy ra, trước tiên tôi sẽ đánh giá tác động lên tiến độ.",
-      highlight: "If ... happened (quá khứ đơn), I would assess (would + nguyên thể) — đúng cấu trúc loại 2",
-    },
-    ccq: {
-      question: "Câu nào diễn tả một tình huống KHÔNG CÓ THẬT ở hiện tại?",
-      options: [
-        "If I have time, I will help you.",
-        "If I had time, I would help you.",
-        "If I had had time, I would have helped you.",
-        "If I have time, I would help you.",
-      ],
-      answer: "If I had time, I would help you.",
-      explanation: "'If I had time, I would help you' dùng quá khứ đơn ở vế If và would ở vế sau, thể hiện hiện tại tôi không có thời gian và tôi không thể giúp bạn.",
-    },
-  },
-  practiceQuiz: [
-    { id: "pq1", type: "multiple-choice", question: "Chọn dạng đúng: 'If the company ___ more capital, it would invest in AI.'", options: ["has", "have", "had", "will have"], answer: "had" },
-    { id: "pq2", type: "multiple-choice", question: "Chọn động từ đúng: 'If he ___ the CEO, he would change the corporate structure.'", options: ["is", "was", "were", "be"], answer: "were" },
-    { id: "pq3", type: "cloze", question: "Điền: 'What would you do if a competitor ___ (launch) a similar product?'", answer: "launched" },
-    { id: "pq4", type: "multiple-choice", question: "Chọn từ điền: 'Starting a joint venture involves a high level of ___.'", options: ["outcome", "criteria", "risk", "expansion"], answer: "risk" },
-    { id: "pq5", type: "cloze", question: "Điền: 'If they took that risk, they ___ (might/will) lose their investment.'", answer: "might" },
-  ],
-  matchingExercise: {
-    title: "Nối từ vựng giả định với nghĩa đúng",
-    pairs: [
-      { left: "hypothetical", right: "mang tính giả định" },
-      { left: "scenario", right: "kịch bản / tình huống" },
-      { left: "assess", right: "đánh giá" },
-      { left: "venture", right: "dự án mạo hiểm" },
-      { left: "expansion", right: "sự mở rộng" },
-    ],
-  },
-  scrambleExercises: [
-    { id: "s33-1", prompt_vn: "Nếu tôi là bạn, tôi sẽ không chấp nhận rủi ro đó.", words: ["If", "I", "were", "you", ",", "I", "would", "not", "take", "that", "risk", "."], answer: "If I were you , I would not take that risk ." },
-    { id: "s33-2", prompt_vn: "Chúng tôi sẽ đầu tư nhiều hơn nếu chúng tôi có vốn.", words: ["We", "would", "invest", "more", "if", "we", "had", "capital", "."], answer: "We would invest more if we had capital ." },
-    { id: "s33-3", prompt_vn: "Hãy tưởng tượng kịch bản tệ nhất có thể xảy ra.", words: ["Imagine", "the", "worst-case", "scenario", "that", "could", "occur", "."], answer: "Imagine the worst-case scenario that could occur ." },
-  ],
+
   quiz: [
-    { id: "fq1", type: "multiple-choice", question: "Điền từ: 'If they ___ harder, they would meet the criteria.'", options: ["work", "worked", "working", "had worked"], answer: "worked" },
-    { id: "fq2", type: "cloze", question: "Điền từ: 'We need to ___ (đánh giá) the expected outcome of the project.'", answer: "assess" },
-    { id: "fq3", type: "multiple-choice", question: "Chọn dạng đúng của To Be: 'If she ___ here, she would clarify the problem.'", options: ["is", "was", "were", "been"], answer: "were" },
-    { id: "fq4", type: "translate", question: "Dịch: 'Nếu chúng tôi có nhiều nguồn lực hơn, chúng tôi sẽ mở rộng.'", answer: "If we had more resources, we would expand." },
-    { id: "fq5", type: "multiple-choice", question: "Từ nào mô tả kết quả cuối cùng?", options: ["criteria", "outcome", "venture", "scenario"], answer: "outcome" },
+    { id: "q1", question: "What verb form is used in Conventional Commits?", options: ["Past tense (Fixed)", "Present continuous (Fixing)", "Imperative / base form (Fix)", "Past participle (Fixed)"], answer: "Imperative / base form (Fix)", type: "multiple-choice" },
+    { id: "q2", question: "Which is a correct commit message format?", options: ["feature: Added new login page", "feat(auth): add OAuth login", "Added OAuth login feature", "New: oauth login"], answer: "feat(auth): add OAuth login", type: "multiple-choice" },
+    { id: "q3", question: "Điền từ: We need to ___ the conflict before we can merge.", options: ["solve", "resolve", "fix up", "clear"], answer: "resolve", type: "multiple-choice" },
+    { id: "q4", question: "What does 'LGTM' mean in a code review comment?", options: ["Let's Go To Meeting", "Looks Good To Me", "Logged Good Test Merge", "Last Git Tracked Merge"], answer: "Looks Good To Me", type: "multiple-choice" },
+    { id: "q5", question: "Dịch sang tiếng Anh: Tôi sẽ revert commit đó vì nó gây ra lỗi production.", answer: "I will revert that commit because it caused a production bug.", type: "translate" },
   ],
-  cumulativeReviewQuestions: [
-    { id: "cr33-1", question: "Ôn tập Unit 32 — Điền: 'By next month, I ___ (complete) the B1 level.'", options: ["will have completed", "completed", "have completed", "will complete"], answer: "will have completed", type: "multiple-choice" },
-    { id: "cr33-2", question: "Ôn tập Unit 31 — Điền: 'The corporate manager recommended that she ___ (inform) the client.'", options: [], answer: "inform", type: "cloze" },
-    { id: "cr33-3", question: "Ôn tập Unit 30 — Điền: 'Deforestation is damaging the local ___.'", options: ["prevention", "pollution", "ecosystem", "sustainable"], answer: "ecosystem", type: "multiple-choice" },
-  ],
+
   fluencyDrill: {
+    title: "Git vocabulary sprint",
+    timeLimit: 60,
     items: [
-      { en: "If I were you, I would invest", vn: "Nếu tôi là bạn, tôi sẽ đầu tư" },
-      { en: "What would you do if you failed?", vn: "Bạn sẽ làm gì nếu bạn thất bại?" },
-      { en: "That is a hypothetical scenario", vn: "Đó là một kịch bản giả định" },
-      { en: "We need to assess all risks", vn: "Chúng ta cần đánh giá mọi rủi ro" },
-      { en: "We would expand our business globally", vn: "Chúng tôi sẽ mở rộng kinh doanh toàn cầu" },
-      { en: "Imagine the worst-case scenario", vn: "Hãy tưởng tượng kịch bản tồi tệ nhất" },
-      { en: "What are the selection criteria?", vn: "Các tiêu chí tuyển chọn là gì?" },
-      { en: "If we had capital, we would start", vn: "Nếu có vốn, chúng tôi đã bắt đầu" },
+      { en: "commit", vn: "lưu snapshot code vào git" },
+      { en: "branch", vn: "nhánh code" },
+      { en: "merge", vn: "gộp code" },
+      { en: "pull request", vn: "yêu cầu gộp code để review" },
+      { en: "bug", vn: "lỗi phần mềm" },
+      { en: "refactor", vn: "tái cấu trúc code" },
+      { en: "deploy", vn: "triển khai lên server" },
+      { en: "revert", vn: "khôi phục lại commit trước" },
+      { en: "conflict", vn: "xung đột code khi merge" },
+      { en: "scope", vn: "phạm vi thay đổi trong commit" },
     ],
   },
 };

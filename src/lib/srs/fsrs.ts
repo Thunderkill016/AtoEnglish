@@ -15,8 +15,14 @@ export function mapDbCardToFSRSCard(dbCard: DbCard): FSRSCard {
     due: dbCard.next_review ? new Date(dbCard.next_review) : new Date(dbCard.due_date),
     stability: dbCard.stability || 0,
     difficulty: dbCard.difficulty || 0,
-    elapsed_days: dbCard.last_review && dbCard.next_review
-      ? Math.max(0, Math.round((new Date(dbCard.next_review).getTime() - new Date(dbCard.last_review).getTime()) / (1000 * 60 * 60 * 24)))
+    elapsed_days: dbCard.last_review
+      ? Math.max(
+          0,
+          Math.round(
+            (Date.now() - new Date(dbCard.last_review).getTime()) /
+              (1000 * 60 * 60 * 24),
+          ),
+        )
       : 0,
     scheduled_days: dbCard.interval || 0,
     reps: dbCard.repetitions || 0,

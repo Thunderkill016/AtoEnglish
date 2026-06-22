@@ -158,6 +158,15 @@ function FluencyDrillPanel({ items, timeLimit = 60, onDone }: { items: Array<{en
   );
 }
 
+// ─── Phase config — links each lesson to the 12-month self-study plan ─────────
+const PHASE_INFO: Record<string, { phase: number; name: string; color: string; resource: string; dailyTip: string }> = {
+  A0: { phase: 1, name: "Nền Tảng",    color: "#3b82f6", resource: "BBC Learning English – 6 Minute English",  dailyTip: "10' Anki · 15' bài học · 10' shadowing BBC" },
+  A1: { phase: 1, name: "Nền Tảng",    color: "#3b82f6", resource: "BBC Learning English – 6 Minute English",  dailyTip: "10' Anki · 15' bài học · 10' shadowing BBC" },
+  A2: { phase: 2, name: "Sơ Cấp",      color: "#8b5cf6", resource: "VOA Learning English – Special English",   dailyTip: "10' Anki · 15' bài học · 5' viết nhật ký 3 câu" },
+  B1: { phase: 3, name: "Trung Cấp",   color: "#f59e0b", resource: "TED Talks – no subtitles challenge",       dailyTip: "15' bài học · 15' TED Talk · viết commit EN" },
+  B2: { phase: 4, name: "Tech English", color: "#22c55e", resource: "Syntax.fm – Developer podcast",           dailyTip: "20' bài học · mock interview · Discord dev EN" },
+};
+
 // ─── Section order & labels (10 steps, Hybrid pedagogical flow) ───────────────
 // Physical section numbers → user-facing labels
 const SECTION_LABELS: Record<number, string> = {
@@ -730,12 +739,8 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
           level: unitLevel,
         });
       }
-      // ─ Sync XP to Dashboard localStorage so the daily-XP bar updates immediately ─
+      // Dispatch event so any mounted Dashboard can react immediately
       const earnedXp = res.xpEarned ?? xpToEarn;
-      const xpSyncKey = `ato_xp_sync_${new Date().toDateString()}`;
-      const prev = Number(localStorage.getItem(xpSyncKey) ?? 0);
-      localStorage.setItem(xpSyncKey, String(prev + earnedXp));
-      // Dispatch event so any mounted Dashboard can react
       window.dispatchEvent(new CustomEvent("ato:xp-earned", { detail: { xp: earnedXp } }));
     } else {
       toast.error(res.error || "Có lỗi xảy ra");
@@ -909,6 +914,10 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
   const allScrambleDone = !unit.scrambleExercises?.length ||
     unit.scrambleExercises.every(ex => scrambleChecked[ex.id]);
 
+  // ─── Phase info derived from unit.level ───────────────────────────────────
+  const levelKey = (unit.level?.match(/A0|A1|A2|B1|B2/) ?? ["A1"])[0];
+  const phaseInfo = PHASE_INFO[levelKey] || PHASE_INFO["A1"];
+
   // ─── JSX ──────────────────────────────────────────────────────────────────
   return (
     <div className="min-h-screen bg-gradient-to-br from-zinc-950 via-zinc-900 to-emerald-950/20">
@@ -984,6 +993,17 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
 
       {/* Content */}
       <div className="max-w-3xl mx-auto px-4 py-4 sm:py-8 pb-24">
+        {/* Phase banner — self-study plan */}
+        <div className="mb-4 rounded-xl p-3" style={{ background: phaseInfo.color + "0f", border: `1px solid ${phaseInfo.color}44` }}>
+          <div className="flex items-center gap-2 mb-1.5">
+            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full" style={{ background: phaseInfo.color + "22", color: phaseInfo.color }}>
+              PHASE {phaseInfo.phase} · {phaseInfo.name}
+            </span>
+            <span className="text-[11px] text-zinc-500">Self-study plan</span>
+          </div>
+          <p className="text-[12px] text-zinc-400">📋 {phaseInfo.dailyTip}</p>
+        </div>
+
         <AnimatePresence mode="wait">
 
           {/* ══ SECTION 1: Warm-up + Cultural Note ══ */}
@@ -1984,6 +2004,18 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                 </div>
               </div>
 
+              {/* Shadowing technique guide — from self-study plan */}
+              <div className="mb-5 rounded-xl border border-violet-700/30 bg-violet-950/20 p-4">
+                <p className="text-xs font-bold text-violet-300 mb-2">🎤 Kỹ thuật Shadowing</p>
+                <div className="space-y-1 text-[11px] text-zinc-400">
+                  <p>1️⃣ Nghe audio → <span className="text-zinc-200 font-semibold">dừng lại</span></p>
+                  <p>2️⃣ Lặp lại ngay (không cần hoàn hảo)</p>
+                  <p>3️⃣ Ghi âm → nghe lại → so sánh</p>
+                  <p>4️⃣ Thử lại: tốc độ 🐢 0.75x → 1.0x → ⚡ 1.25x</p>
+                </div>
+                <p className="text-[10px] text-zinc-600 mt-2 italic">Mục tiêu: dễ hiểu, không phải giọ ng bản ngữ</p>
+              </div>
+
               {DIALOGUES.length > 0 && !shadowDone ? (
                 <div className="bg-gradient-to-b from-zinc-900/80 to-zinc-950/80 border border-zinc-700/50 rounded-2xl p-4 sm:p-6 shadow-lg">
                   {/* Dialogue selector tabs — only shown when unit has multiple dialogues */}
@@ -2579,6 +2611,31 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                     <p className="text-zinc-400 text-sm mt-2">
                       Hãy tiếp tục phát huy tinh thần tự học mỗi ngày. Lặp lại ngắt quãng sẽ giúp bạn nhớ từ vựng lâu hơn!
                     </p>
+                  </div>
+
+                  {/* Tipếp theo hôm nay — from self-study plan */}
+                  <div className="rounded-2xl p-4" style={{ background: phaseInfo.color + "0d", border: `1px solid ${phaseInfo.color}33` }}>
+                    <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: phaseInfo.color }}>
+                      ✅ Tiếp theo hôm nay — {phaseInfo.name}
+                    </p>
+                    <div className="space-y-2 text-xs">
+                      <div className="flex items-start gap-2">
+                        <span style={{ color: phaseInfo.color }} className="shrink-0">→</span>
+                        <span className="text-zinc-300">{phaseInfo.resource}</span>
+                      </div>
+                      <div className="flex items-start gap-2">
+                        <span style={{ color: phaseInfo.color }} className="shrink-0">→</span>
+                        <span className="text-zinc-300">Anki: ôn 10–15 từ (đặc biệt các từ sai trong bài này)</span>
+                      </div>
+                      <div className="flex items-start gap-2">
+                        <span style={{ color: phaseInfo.color }} className="shrink-0">→</span>
+                        <span className="text-zinc-300">
+                          {unit.level?.includes("B")
+                            ? "Viết 1 commit message bằng tiếng Anh hôm nay"
+                            : "Viết 3–5 câu nhật ký dùng từ vựng trong bài"}
+                        </span>
+                      </div>
+                    </div>
                   </div>
 
                   {/* ── Proof Moment ── */}

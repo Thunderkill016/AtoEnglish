@@ -5,7 +5,7 @@ export type { Database } from "./supabase";
 // ─── App-level named types ───────────────────────────────────────────────────
 // Kept for convenience — imported directly in actions & components.
 
-export type CEFRLevel = "A1" | "A2" | "B1" | "B2" | "C1";
+export type CEFRLevel = "A0" | "A1" | "A2" | "B1" | "B2" | "C1";
 
 export type Json =
   | string
@@ -29,6 +29,7 @@ export type UserProgress = {
   current_level: string;
   streak: number;
   total_xp: number;
+  daily_xp_goal: number;
   last_active_date: string | null;
   created_at: string;
   updated_at: string;

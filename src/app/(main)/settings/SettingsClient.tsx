@@ -2,6 +2,9 @@
 
 import { useState } from "react";
 import { useTheme } from "next-themes";
+import { toast } from "sonner";
+import { updateDailyXpGoal } from "@/app/actions/progress";
+import { SETTINGS_XP_GOAL_OPTIONS } from "@/lib/constants/daily-xp-goal";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Bell,
@@ -153,8 +156,15 @@ function getStoredSettings() {
 }
 
 // ── Main Component ───────────────────────────────────────
-export default function SettingsClient({ userEmail }: { userEmail: string }) {
+export default function SettingsClient({
+  userEmail,
+  dailyXpGoal,
+}: {
+  userEmail: string;
+  dailyXpGoal: number;
+}) {
   const [saved, setSaved] = useState(false);
+  const [saving, setSaving] = useState(false);
 
   // Notification settings — initialised lazily from localStorage
   const [streakReminders, setStreakReminders] = useState(() => {
@@ -174,14 +184,7 @@ export default function SettingsClient({ userEmail }: { userEmail: string }) {
   const [showPhonetics, setShowPhonetics] = useState(() => {
     const s = getStoredSettings(); return s.showPhonetics !== undefined ? !!s.showPhonetics : true;
   });
-  const [dailyGoal, setDailyGoal] = useState(() => {
-    if (typeof window !== "undefined") {
-      const g = localStorage.getItem("ato_daily_xp_goal");
-      if (g) return g;
-    }
-    const s = getStoredSettings();
-    return typeof s.dailyGoal === "string" ? s.dailyGoal : "10";
-  });
+  const [dailyGoal, setDailyGoal] = useState(String(dailyXpGoal));
 
   // Display settings — theme via next-themes, fontSize local only
   const { setTheme: applyTheme } = useTheme();
@@ -192,26 +195,40 @@ export default function SettingsClient({ userEmail }: { userEmail: string }) {
     const s = getStoredSettings(); return typeof s.fontSize === "string" ? s.fontSize : "normal";
   });
 
-  const saveSettings = () => {
+  const saveSettings = async () => {
+    setSaving(true);
+    const parsedGoal = parseInt(dailyGoal, 10);
+
+    const goalResult = await updateDailyXpGoal(parsedGoal);
+    if (!goalResult.success) {
+      toast.error(goalResult.error || "Không thể lưu mục tiêu XP.");
+      setSaving(false);
+      return;
+    }
+
     const settings = {
       streakReminders, weeklyReport, soundEffects, autoPlayAudio,
       showPhonetics, dailyGoal, theme, fontSize,
     };
     localStorage.setItem("ato_settings", JSON.stringify(settings));
     localStorage.setItem("ato_daily_xp_goal", dailyGoal);
-    // Apply theme immediately via next-themes
     applyTheme(theme);
-    // Dispatch event so Dashboard XP bar updates
     window.dispatchEvent(new CustomEvent("ato:settings-changed", { detail: settings }));
     setSaved(true);
+    setSaving(false);
     setTimeout(() => setSaved(false), 2500);
   };
 
   const clearProgress = () => {
     if (window.confirm("Bạn có chắc muốn xóa toàn bộ tiến độ học cục bộ (lưu trên thiết bị)? Dữ liệu trên server sẽ không bị xóa.")) {
-      const keep = ["ato_settings", "ato_daily_xp_goal", "sb-vhpfskkredizeazlyzsh-auth-token"];
       const keys = Object.keys(localStorage);
-      keys.forEach(k => { if (!keep.some(p => k.includes(p))) localStorage.removeItem(k); });
+      keys.forEach((k) => {
+        const keep =
+          k === "ato_settings" ||
+          k === "ato_daily_xp_goal" ||
+          /^sb-.*-auth-token$/.test(k);
+        if (!keep) localStorage.removeItem(k);
+      });
       window.location.reload();
     }
   };
@@ -258,12 +275,10 @@ export default function SettingsClient({ userEmail }: { userEmail: string }) {
           label="Mục tiêu XP hàng ngày"
           description="Số XP cần đạt mỗi ngày để duy trì streak"
           value={dailyGoal}
-          options={[
-            { value: "5", label: "5 XP (Nhẹ nhàng)" },
-            { value: "10", label: "10 XP (Thường)" },
-            { value: "20", label: "20 XP (Tích cực)" },
-            { value: "50", label: "50 XP (Chuyên nghiệp)" },
-          ]}
+          options={SETTINGS_XP_GOAL_OPTIONS.map((val) => ({
+            value: String(val),
+            label: `${val} XP`,
+          }))}
           onChange={setDailyGoal}
         />
         <SettingToggle
@@ -349,11 +364,21 @@ export default function SettingsClient({ userEmail }: { userEmail: string }) {
       <div className="fixed bottom-20 sm:bottom-6 left-0 right-0 flex justify-center px-4 z-30 pointer-events-none">
         <motion.button
           onClick={saveSettings}
-          whileTap={{ scale: 0.96 }}
-          className="pointer-events-auto flex items-center gap-2 px-6 py-3 rounded-2xl bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-sm shadow-lg shadow-emerald-500/20 transition-colors"
+          disabled={saving}
+          whileTap={{ scale: saving ? 1 : 0.96 }}
+          className="pointer-events-auto flex items-center gap-2 px-6 py-3 rounded-2xl bg-emerald-500 hover:bg-emerald-600 disabled:opacity-60 disabled:cursor-not-allowed text-white font-bold text-sm shadow-lg shadow-emerald-500/20 transition-colors"
         >
           <AnimatePresence mode="wait">
-            {saved ? (
+            {saving ? (
+              <motion.span
+                key="saving"
+                initial={{ scale: 0.5, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.5, opacity: 0 }}
+              >
+                Đang lưu...
+              </motion.span>
+            ) : saved ? (
               <motion.span
                 key="saved"
                 initial={{ scale: 0.5, opacity: 0 }}

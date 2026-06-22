@@ -5,6 +5,7 @@ import {
   Map,
   TrendingUp,
   Mic,
+  FileCheck2,
   type LucideIcon,
 } from "lucide-react";
 
@@ -26,13 +27,13 @@ export const mainNavItems: NavItem[] = [
     title: "Learn",
     href: "/learn",
     icon: BookOpen,
-    description: "Bài học theo mô hình IPOR",
+    description: "Lộ trình A0 đến IELTS 6.5",
   },
   {
     title: "Speaking",
     href: "/speaking",
     icon: Mic,
-    description: "Luyện phát âm Shadowing & AI Roleplay",
+    description: "Repeat, read-aloud, shadowing và phản hồi riêng tư",
   },
   {
     title: "Flashcards",
@@ -44,12 +45,18 @@ export const mainNavItems: NavItem[] = [
     title: "Progress",
     href: "/progress",
     icon: TrendingUp,
-    description: "Thống kê và thành tích",
+    description: "Tiến độ kỹ năng, SRS và readiness IELTS",
+  },
+  {
+    title: "Quality",
+    href: "/quality",
+    icon: FileCheck2,
+    description: "Kiểm định chất lượng lesson",
   },
   {
     title: "Roadmap",
     href: "/roadmap",
     icon: Map,
-    description: "Lộ trình A1 → C1",
+    description: "Bản đồ từ mất gốc đến IELTS 6.5",
   },
 ];

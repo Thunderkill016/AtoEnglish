@@ -60,7 +60,7 @@ export default function SpeakingPage() {
             Luyện Nói Phản Xạ
           </h1>
           <p className="text-sm sm:text-base text-muted-foreground font-normal">
-            Làm chủ ngữ điệu bản xứ qua kỹ thuật Shadowing và hội thoại thông minh AI.
+            Luyện độ dễ hiểu bằng repeat, shadowing, câu trả lời ngắn và phản hồi riêng tư.
           </p>
         </div>
 
@@ -152,7 +152,7 @@ export default function SpeakingPage() {
               Kỹ thuật Shadowing là gì?
             </h3>
             <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed font-normal">
-              <strong>Shadowing (Nói đuổi)</strong> là kỹ thuật bắt chước y hệt giọng nói của người bản xứ ngay lập tức khi bạn nghe thấy họ nói. Bạn sẽ bắt chước từ ngữ âm, ngữ điệu, cách ngắt nghỉ đến tốc độ nói.
+              <strong>Shadowing (Nói đuổi)</strong> là kỹ thuật nghe rồi lặp lại ngay để tập nhịp, trọng âm, cách ngắt nghỉ và âm cuối. Mục tiêu là dễ hiểu và tự tin hơn, không phải đổi giọng thành người bản xứ.
             </p>
             <div className="text-xs text-primary bg-primary/5 border border-primary/10 p-4 rounded-2xl flex items-start gap-2.5 leading-relaxed font-normal">
               <Sparkles className="size-5 shrink-0 mt-0.5 text-primary animate-pulse" />

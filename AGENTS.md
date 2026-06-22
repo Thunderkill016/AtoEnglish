@@ -25,7 +25,7 @@ Categories: `bug` · `decision` · `architecture` · `feature` · `rule` · `tas
 
 ```bash
 npm run dev           # dev server :3000 (Turbopack)
-npm run test          # unit tests (Vitest, 64 tests)
+npm run test          # unit tests (Vitest, 122+ tests)
 npm run test:coverage # coverage with thresholds (≥70% lines)
 npm run lint          # ESLint
 npx tsc --noEmit      # type check
@@ -57,9 +57,8 @@ src/
 │   ├── landing/                 # Hero, FAQ, Preview, Science, Benefits
 │   ├── layout/                  # Header, BottomNav, MobileNav
 │   └── ui/                      # Button (@base-ui), Spotlight, Logo
-├── features/flashcards/         # FSRS scheduling logic (ts-fsrs v5)
 ├── lib/
-│   ├── supabase/                # client.ts · server.ts · middleware.ts · session.ts
+│   ├── supabase/                # client.ts · server.ts · session.ts
 │   ├── security/                # rate-limit.ts · validation.ts (Zod)
 │   ├── srs/fsrs.ts              # FSRS wrapper
 │   ├── queries/user.ts          # React.cache() deduped RSC queries

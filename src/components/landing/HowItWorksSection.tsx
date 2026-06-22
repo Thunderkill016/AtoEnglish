@@ -7,7 +7,7 @@ export default function HowItWorksSection() {
     {
       id: "01",
       title: "Nghe & Đọc (Input)",
-      desc: "Tiếp xúc với tiếng Anh thực tế qua các tình huống giao tiếp gần gũi, nghe và đọc theo ngữ điệu người bản xứ.",
+      desc: "Tiếp xúc với tiếng Anh vừa sức qua tình huống gần gũi, âm thanh rõ và hỗ trợ tiếng Việt khi cần.",
       icon: Headphones,
       gradient: "from-emerald-500/5 to-teal-500/5 dark:from-emerald-500/10 dark:to-teal-500/5",
       iconBg: "bg-emerald-500/10 dark:bg-emerald-500/20",
@@ -27,7 +27,7 @@ export default function HowItWorksSection() {
     {
       id: "03",
       title: "Nói & Viết (Output)",
-      desc: "Luyện nói Shadowing và thực hành đóng vai (Roleplay) tình huống thực tế. Ghi âm và nhận phản hồi lỗi phát âm tức thì.",
+      desc: "Bắt đầu bằng repeat, read-aloud, substitution và câu trả lời ngắn. Ghi âm riêng tư, nhận phản hồi sửa lỗi chính.",
       icon: Mic2,
       gradient: "from-violet-500/5 to-purple-500/5 dark:from-violet-500/10 dark:to-purple-500/5",
       iconBg: "bg-violet-500/10 dark:bg-violet-500/20",
@@ -61,10 +61,10 @@ export default function HowItWorksSection() {
         {/* Section Header */}
         <ScrollReveal className="text-center space-y-4">
           <h2 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-zinc-900 dark:text-zinc-50 leading-normal">
-            Cách học giúp bạn nói được nhanh nhất
+            Cách học giúp bạn tiến bộ bền hơn
           </h2>
           <p className="text-base sm:text-lg text-zinc-650 dark:text-zinc-350 max-w-xl mx-auto leading-relaxed font-normal">
-            Chỉ 4 bước lặp lại mỗi ngày — giúp bạn chuyển từ “thuộc lòng lý thuyết” sang “nói trôi chảy tự nhiên”.
+            4 bước lặp lại mỗi ngày: input vừa sức, gợi nhớ, output có kiểm soát và ôn tập đúng lúc.
           </p>
         </ScrollReveal>
 

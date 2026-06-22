@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import confetti from "canvas-confetti";
 import { saveSpeakingSession } from "@/app/actions/speaking";
+import { dispatchXpEarned } from "@/lib/dashboard/xp-events";
 
 interface SpeechRecognitionMock {
   continuous: boolean;
@@ -525,6 +526,7 @@ export function AIRoleplay() {
           scenarioId: activeScenario.id
         });
         if (saveRes.success && saveRes.xpEarned) {
+          dispatchXpEarned(saveRes.xpEarned);
           toast.success(`+${saveRes.xpEarned} XP — buổi hội thoại đã được lưu!`);
         }
       }

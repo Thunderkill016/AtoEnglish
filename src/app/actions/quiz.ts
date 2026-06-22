@@ -4,6 +4,9 @@ import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 import { createRateLimiter } from "@/lib/security/rate-limit";
+import { getQuizXp } from "@/lib/constants/xp-rewards";
+import { awardXpAndUpdateStreak } from "@/lib/progress/award-xp";
+import { getVnDateKey } from "@/lib/utils/vn-date";
 import { z } from "zod";
 
 const quizLimiter = createRateLimiter(30, 60 * 1000, "quiz");
@@ -17,6 +20,7 @@ const QuizResultSchema = z.object({
 /**
  * Server Action: lưu kết quả quiz từ vựng và thưởng XP theo điểm số.
  * XP scale: ≥80% → 15 XP | 50-79% → 10 XP | <50% → 5 XP
+ * Idempotent per (user, unit, VN day) — retry chỉ cộng thêm XP nếu điểm tốt hơn.
  */
 export async function saveQuizResult(params: {
   unitId: string;
@@ -24,7 +28,6 @@ export async function saveQuizResult(params: {
   total: number;
 }) {
   try {
-    // Rate Limiting
     const reqHeaders = await headers();
     const ip = reqHeaders.get("x-forwarded-for")?.split(",")[0].trim() || "127.0.0.1";
     const rateLimitCheck = await quizLimiter.check(ip);
@@ -32,7 +35,6 @@ export async function saveQuizResult(params: {
       return { success: false, error: "Yêu cầu quá thường xuyên." };
     }
 
-    // Input Validation
     const validated = QuizResultSchema.safeParse(params);
     if (!validated.success) {
       return { success: false, error: "Dữ liệu không hợp lệ." };
@@ -45,42 +47,77 @@ export async function saveQuizResult(params: {
       return { success: false, error: "Bạn cần đăng nhập." };
     }
 
-    // XP scales with performance
     const pct = Math.round((clean.score / clean.total) * 100);
-    const xpEarned = pct >= 80 ? 15 : pct >= 50 ? 10 : 5;
-    const today = new Date().toLocaleDateString("sv-SE", { timeZone: "Asia/Ho_Chi_Minh" });
+    const xpEarned = getQuizXp(pct);
+    const quizDate = getVnDateKey();
 
-    // Update user_progress: add XP + maintain streak (best-effort)
-    const { data: userProgress } = await supabase
-      .from("user_progress")
-      .select("total_xp, streak, last_active_date")
+    const { data: existing, error: fetchError } = await supabase
+      .from("quiz_results")
+      .select("id, xp_earned")
       .eq("user_id", user.id)
+      .eq("unit_id", clean.unitId)
+      .eq("quiz_date", quizDate)
       .maybeSingle();
 
-    if (userProgress) {
-      const lastActive = userProgress.last_active_date;
-      let nextStreak = 1;
-      if (lastActive === today) {
-        nextStreak = userProgress.streak;
-      } else {
-        const d = new Date(today);
-        d.setDate(d.getDate() - 1);
-        const yesterday = d.toLocaleDateString("sv-SE", { timeZone: "Asia/Ho_Chi_Minh" });
-        nextStreak = lastActive === yesterday ? userProgress.streak + 1 : 1;
+    if (fetchError) {
+      return { success: false, error: `Lỗi lưu kết quả: ${fetchError.message}` };
+    }
+
+    let xpDelta = 0;
+    let awardedXp = xpEarned;
+
+    if (!existing) {
+      xpDelta = xpEarned;
+      const { error: insertError } = await supabase.from("quiz_results").insert({
+        user_id: user.id,
+        unit_id: clean.unitId,
+        score: clean.score,
+        total: clean.total,
+        pct,
+        xp_earned: xpEarned,
+        quiz_date: quizDate,
+      });
+      if (insertError) {
+        return { success: false, error: `Lỗi lưu kết quả: ${insertError.message}` };
       }
-      await supabase
-        .from("user_progress")
+    } else {
+      awardedXp = Math.max(existing.xp_earned, xpEarned);
+      if (xpEarned > existing.xp_earned) {
+        xpDelta = xpEarned - existing.xp_earned;
+      }
+
+      const { error: updateError } = await supabase
+        .from("quiz_results")
         .update({
-          total_xp: userProgress.total_xp + xpEarned,
-          streak: nextStreak,
-          last_active_date: today,
+          score: clean.score,
+          total: clean.total,
+          pct,
+          xp_earned: awardedXp,
+          updated_at: new Date().toISOString(),
         })
+        .eq("id", existing.id)
         .eq("user_id", user.id);
+
+      if (updateError) {
+        return { success: false, error: `Lỗi cập nhật kết quả: ${updateError.message}` };
+      }
+    }
+
+    if (xpDelta > 0) {
+      await awardXpAndUpdateStreak(supabase, user.id, xpDelta);
     }
 
     revalidatePath("/dashboard");
+    revalidatePath("/progress");
 
-    return { success: true, xpEarned, pct };
+    return {
+      success: true,
+      xpEarned: xpDelta > 0 ? xpDelta : 0,
+      totalXpEarned: awardedXp,
+      pct,
+      improved: xpDelta > 0,
+      alreadyRecorded: !!existing && xpDelta === 0,
+    };
   } catch (err) {
     return { success: false, error: err instanceof Error ? err.message : String(err) };
   }

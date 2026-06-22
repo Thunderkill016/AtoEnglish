@@ -104,3 +104,37 @@ describe("completeUnit()", () => {
     expect(result.success).toBe(false);
   });
 });
+
+describe("getPredictiveScore()", () => {
+  beforeEach(async () => {
+    await cleanProgress();
+  });
+
+  it("returns default scores (1.0 IELTS, 10 TOEIC) for a new user with zero progress", async () => {
+    const { getPredictiveScore } = await getAction();
+    const result = await getPredictiveScore();
+    expect(result.success).toBe(true);
+    expect(result.score).toBeDefined();
+    const score = result.score;
+    expect(score?.ielts).toBe(1.0);
+    expect(score?.toeic).toBe(10);
+    expect(score?.completedUnitsCount).toBe(0);
+    expect(score?.recommendations.length).toBeGreaterThan(0);
+  });
+
+  it("calculates progress-adjusted scores when units are completed", async () => {
+    const { completeUnit, getPredictiveScore } = await getAction();
+    
+    // Complete 3 units of level A0
+    await completeUnit("unit-a0-1");
+    await completeUnit("unit-a0-2");
+    await completeUnit("unit-a0-3");
+
+    const result = await getPredictiveScore();
+    expect(result.success).toBe(true);
+    const score = result.score;
+    expect(score?.completedUnitsCount).toBe(3);
+    expect(score?.rawIelts).toBeGreaterThan(0);
+    expect(score?.rawToeic).toBeGreaterThan(10);
+  });
+});

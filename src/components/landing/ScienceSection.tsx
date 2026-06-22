@@ -85,7 +85,7 @@ export default function ScienceSection() {
                   Học chủ động (Active Recall)
                 </h3>
                 <p className="text-sm sm:text-[15px] text-zinc-650 dark:text-zinc-400 leading-relaxed font-normal flex-1">
-                  Bắt buộc não bộ phải chủ động truy xuất thông tin liên tục, giúp củng cố kết nối thần kinh mạnh mẽ hơn 80% so với phương pháp nghe đọc thụ động truyền thống.
+                  Buộc não bộ chủ động gợi nhớ thay vì chỉ đọc lại, giúp người học giữ kiến thức lâu hơn và phát hiện lỗ hổng sớm hơn.
                 </p>
               </div>
             </div>

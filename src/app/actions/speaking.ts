@@ -4,6 +4,8 @@ import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 import { createRateLimiter } from "@/lib/security/rate-limit";
+import { getSpeakingXp } from "@/lib/constants/xp-rewards";
+import { awardXpAndUpdateStreak } from "@/lib/progress/award-xp";
 import { SpeakingSessionSchema } from "@/lib/security/validation";
 
 const speakingLimiter = createRateLimiter(20, 60 * 1000, "speaking");
@@ -73,40 +75,8 @@ export async function saveSpeakingSession(params: SaveSpeakingSessionParams) {
     }
 
     // 3. Award XP for speaking practice + update streak
-    const XP_BY_TYPE: Record<string, number> = {
-      shadowing: 5,
-      roleplay: 8,
-      journal: 5,
-    };
-    const xpEarned = XP_BY_TYPE[cleanParams.practiceType] ?? 5;
-    const today = new Date().toLocaleDateString("sv-SE", { timeZone: "Asia/Ho_Chi_Minh" });
-
-    const { data: userProgress } = await supabase
-      .from("user_progress")
-      .select("total_xp, streak, last_active_date")
-      .eq("user_id", user.id)
-      .maybeSingle();
-
-    if (userProgress) {
-      const lastActive = userProgress.last_active_date;
-      let nextStreak = 1;
-      if (lastActive === today) {
-        nextStreak = userProgress.streak;
-      } else {
-        const d = new Date(today);
-        d.setDate(d.getDate() - 1);
-        const yesterday = d.toLocaleDateString("sv-SE", { timeZone: "Asia/Ho_Chi_Minh" });
-        nextStreak = lastActive === yesterday ? userProgress.streak + 1 : 1;
-      }
-      await supabase
-        .from("user_progress")
-        .update({
-          total_xp: userProgress.total_xp + xpEarned,
-          streak: nextStreak,
-          last_active_date: today,
-        })
-        .eq("user_id", user.id);
-    }
+    const xpEarned = getSpeakingXp(cleanParams.practiceType);
+    await awardXpAndUpdateStreak(supabase, user.id, xpEarned);
 
     // Revalidate speaking + dashboard so XP and streak update immediately
     revalidatePath("/speaking");

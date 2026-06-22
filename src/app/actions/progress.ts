@@ -2,10 +2,25 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
-import { UNIT_VOCABULARY } from "@/lib/constants/vocabulary";
+import { getUnitVocabulary } from "@/lib/constants/vocabulary";
+import { awardXpAndUpdateStreak } from "@/lib/progress/award-xp";
 import { UNITS } from "@/lib/constants/units";
 import { headers } from "next/headers";
 import { createRateLimiter } from "@/lib/security/rate-limit";
+import {
+  isValidDailyXpGoal,
+  resolveDailyXpGoal,
+} from "@/lib/constants/daily-xp-goal";
+import { getSpeakingXp } from "@/lib/constants/xp-rewards";
+import {
+  hasSpeakingOnDate,
+  sumLessonXpOnDate,
+  sumQuizXpOnDate,
+  sumSpeakingXpOnDate,
+  toVnDateKey,
+} from "@/lib/dashboard/today-xp";
+import { addVnDays, getVnDateKey, getVnWeekdayLabel, getVnYesterdayKey } from "@/lib/utils/vn-date";
+import { getUserSavedWords } from "@/lib/cards/saved-words";
 import { CompleteUnitSchema } from "@/lib/security/validation";
 
 const completeUnitLimiter = createRateLimiter(10, 60 * 1000, "complete-unit");
@@ -49,7 +64,7 @@ export async function completeUnit(unitId: string, starCount: number = 3) {
     }
 
     // Lấy ngày hôm nay dưới dạng YYYY-MM-DD theo múi giờ Việt Nam
-    const today = new Date().toLocaleDateString("sv-SE", { timeZone: "Asia/Ho_Chi_Minh" });
+    const today = getVnDateKey();
 
     // 2. Kiểm tra xem unit này đã được hoàn thành chưa (tránh cộng XP trùng)
     const { data: existingProgress, error: progressError } = await supabase
@@ -95,85 +110,26 @@ export async function completeUnit(unitId: string, starCount: number = 3) {
       };
     }
 
-    // 4. Cộng XP và cập nhật streak trong user_progress
-    const { data: userProgress, error: fetchProgressError } = await supabase
+    // 4. Cộng XP và cập nhật streak (atomic RPC — no read-then-write race)
+    const { data: userProgress } = await supabase
       .from("user_progress")
-      .select("*")
+      .select("current_level")
       .eq("user_id", user.id)
       .maybeSingle();
 
-    if (fetchProgressError) {
+    const awardResult = await awardXpAndUpdateStreak(supabase, user.id, xpEarned);
+    if (!awardResult) {
       return {
         success: false,
-        error: `Lỗi truy vấn tiến trình người dùng: ${fetchProgressError.message}`
+        error: "Lỗi cập nhật tiến trình người dùng.",
       };
     }
 
-    let nextStreak = 1;
-    let totalXp = xpEarned;
-
-    if (!userProgress) {
-      // Nếu chưa có tiến trình người dùng, tạo bản ghi mới
-      const { error: createProgressError } = await supabase
-        .from("user_progress")
-        .insert({
-          user_id: user.id,
-          current_level: "A1", // Default level for new users
-          streak: 1,
-          total_xp: xpEarned,
-          last_active_date: today
-        });
-
-      if (createProgressError) {
-        return {
-          success: false,
-          error: `Lỗi tạo mới tiến trình người dùng: ${createProgressError.message}`
-        };
-      }
-    } else {
-      // Nếu đã có tiến trình, tính toán streak
-      totalXp = userProgress.total_xp + xpEarned;
-      const lastActive = userProgress.last_active_date;
-
-      if (!lastActive) {
-        nextStreak = 1;
-      } else {
-        // Tính ngày hôm qua
-        const d = new Date(today);
-        d.setDate(d.getDate() - 1);
-        const yesterday = d.toLocaleDateString("sv-SE", { timeZone: "Asia/Ho_Chi_Minh" });
-
-        if (lastActive === today) {
-          // Làm nhiều bài trong cùng 1 ngày, giữ nguyên streak
-          nextStreak = userProgress.streak;
-        } else if (lastActive === yesterday) {
-          // Làm bài liên tiếp ngày tiếp theo, tăng streak
-          nextStreak = userProgress.streak + 1;
-        } else {
-          // Cách ngày không học, reset streak về 1
-          nextStreak = 1;
-        }
-      }
-
-      const { error: updateProgressError } = await supabase
-        .from("user_progress")
-        .update({
-          total_xp: totalXp,
-          streak: nextStreak,
-          last_active_date: today
-        })
-        .eq("user_id", user.id);
-
-      if (updateProgressError) {
-        return {
-          success: false,
-          error: `Lỗi cập nhật tiến trình người dùng: ${updateProgressError.message}`
-        };
-      }
-    }
+    const nextStreak = awardResult.streak;
+    const totalXp = awardResult.totalXp;
 
     // 5. Bulk upsert tất cả từ vựng vào bảng cards (1 query thay vì N+1)
-    const vocabList = UNIT_VOCABULARY[cleanParams.unitId] || [];
+    const vocabList = getUnitVocabulary(cleanParams.unitId);
     let addedCount = 0;
 
     if (vocabList.length > 0) {
@@ -204,20 +160,17 @@ export async function completeUnit(unitId: string, starCount: number = 3) {
       if (!upsertError) addedCount = upserted?.length ?? 0;
     }
 
-    // 6. Auto level-up: compute new CEFR level based on total completed units
-    const { count: totalCompleted } = await supabase
+    // 6. Auto level-up: compute new CEFR level based on completed units
+    const { data: completedData } = await supabase
       .from("user_lesson_progress")
-      .select("*", { count: "exact", head: true })
+      .select("unit_id")
       .eq("user_id", user.id);
 
-    const completedCount = totalCompleted ?? 0;
-    // Level thresholds: A1 (0-2 units), A2 (3 units), B1 (4+ units)
-    type CEFRLevelLocal = "A1" | "A2" | "B1" | "B2" | "C1";
-    let newLevel: CEFRLevelLocal = "A1";
-    if (completedCount >= 4) newLevel = "B1";
-    else if (completedCount >= 3) newLevel = "A2";
+    const completedUnitIdsNew = completedData?.map(c => c.unit_id) || [];
+    const nextUncompletedUnit = UNITS.find(u => !completedUnitIdsNew.includes(u.id)) || UNITS[UNITS.length - 1];
+    const newLevel = nextUncompletedUnit.level;
 
-    const currentLevel = userProgress?.current_level ?? "A1";
+    const currentLevel = userProgress?.current_level ?? "A0";
     if (newLevel && newLevel !== currentLevel) {
       await supabase
         .from("user_progress")
@@ -285,6 +238,140 @@ export async function getUnitCompletionStatus(unitId: string) {
   }
 }
 
+export interface UnitCompletionStatus {
+  unitId: string;
+  success: boolean;
+  completed: boolean;
+  completedAt: string | null;
+  xpEarned: number;
+}
+
+/**
+ * Batch-fetch completion status for all curriculum units (1 query instead of N).
+ */
+export async function getAllUnitCompletionStatuses(): Promise<{
+  success: boolean;
+  statuses: UnitCompletionStatus[];
+}> {
+  try {
+    const supabase = await createClient();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    if (authError || !user) {
+      return { success: false, statuses: [] };
+    }
+
+    const { data, error } = await supabase
+      .from("user_lesson_progress")
+      .select("unit_id, completed_at, xp_earned")
+      .eq("user_id", user.id);
+
+    if (error) {
+      return { success: false, statuses: [] };
+    }
+
+    const byUnit = new Map(
+      (data ?? []).map((row) => [row.unit_id, row]),
+    );
+
+    const statuses: UnitCompletionStatus[] = UNITS.map((unit) => {
+      const row = byUnit.get(unit.id);
+      return {
+        unitId: unit.id,
+        success: true,
+        completed: !!row,
+        completedAt: row?.completed_at ?? null,
+        xpEarned: row?.xp_earned ?? 0,
+      };
+    });
+
+    return { success: true, statuses };
+  } catch {
+    return { success: false, statuses: [] };
+  }
+}
+
+/**
+ * Today's XP from lessons + speaking, plus speaking quest flag.
+ */
+export async function getTodayActivitySummary() {
+  try {
+    const supabase = await createClient();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    if (authError || !user) {
+      return {
+        success: false,
+        lessonXp: 0,
+        speakingXp: 0,
+        quizXp: 0,
+        totalXp: 0,
+        hasSpeakingToday: false,
+        lessonCompletedToday: false,
+        hasFlashcardsReviewedToday: false,
+      };
+    }
+
+    const todayKey = getVnDateKey();
+    const startUtc = `${todayKey}T00:00:00+07:00`;
+
+    const [lessonsRes, speakingRes, flashcardRes, quizRes] = await Promise.all([
+      supabase
+        .from("user_lesson_progress")
+        .select("xp_earned, completed_at")
+        .eq("user_id", user.id)
+        .gte("completed_at", startUtc),
+      supabase
+        .from("speaking_sessions")
+        .select("practice_type, created_at")
+        .eq("user_id", user.id)
+        .gte("created_at", startUtc),
+      supabase
+        .from("user_flashcard_progress")
+        .select("last_session_date, cards_reviewed_today")
+        .eq("user_id", user.id)
+        .maybeSingle(),
+      supabase
+        .from("quiz_results")
+        .select("xp_earned, quiz_date")
+        .eq("user_id", user.id)
+        .eq("quiz_date", todayKey),
+    ]);
+
+    const lessons = lessonsRes.data ?? [];
+    const speaking = speakingRes.data ?? [];
+    const quizzes = quizRes.data ?? [];
+    const lessonXp = sumLessonXpOnDate(lessons, todayKey);
+    const speakingXp = sumSpeakingXpOnDate(speaking, todayKey);
+    const quizXp = sumQuizXpOnDate(quizzes, todayKey);
+    const flashcardProgress = flashcardRes.data;
+
+    return {
+      success: true,
+      lessonXp,
+      speakingXp,
+      quizXp,
+      totalXp: lessonXp + speakingXp + quizXp,
+      hasSpeakingToday: hasSpeakingOnDate(speaking, todayKey),
+      lessonCompletedToday: lessons.some(
+        (row) => toVnDateKey(row.completed_at) === todayKey,
+      ),
+      hasFlashcardsReviewedToday:
+        flashcardProgress?.last_session_date === todayKey &&
+        (flashcardProgress.cards_reviewed_today ?? 0) > 0,
+    };
+  } catch {
+    return {
+      success: false,
+      lessonXp: 0,
+      speakingXp: 0,
+      quizXp: 0,
+      totalXp: 0,
+      hasSpeakingToday: false,
+      lessonCompletedToday: false,
+      hasFlashcardsReviewedToday: false,
+    };
+  }
+}
+
 /**
  * Server Action lấy thông tin tiến trình tổng thể của người dùng (streak, XP, level).
  */
@@ -320,11 +407,11 @@ export async function getUserProgress() {
       success: true,
       progress: {
         user_id: user.id,
-        current_level: data?.current_level || "A1",
+        current_level: data?.current_level || "A0",
         streak: data?.streak || 0,
         total_xp: data?.total_xp || 0,
         last_active_date: data?.last_active_date || null,
-        daily_xp_goal: 50,
+        daily_xp_goal: resolveDailyXpGoal(data?.daily_xp_goal),
         display_name: displayName
       }
     };
@@ -391,7 +478,7 @@ export async function resetUnitProgress(unitId: string) {
     }
 
     // 3. Xóa các từ vựng thuộc Unit này trong bảng cards
-    const vocabList = UNIT_VOCABULARY[unitId] || [];
+    const vocabList = getUnitVocabulary(unitId);
     if (vocabList.length > 0) {
       const wordList = vocabList.map(v => v.word.toLowerCase().trim());
       const { error: deleteCardsError } = await supabase
@@ -447,22 +534,13 @@ export async function getCurrentUnit() {
       };
     }
 
-    // 2. Lấy danh sách từ vựng của tất cả các bài để so khớp xem thẻ nào đã được lưu
-    const allWords = UNITS.flatMap(unit =>
-      (UNIT_VOCABULARY[unit.id] || []).map(v => v.word.toLowerCase().trim())
-    );
-
-    // Parallel: fetch completed lessons + user cards simultaneously
-    const [completedRes, cardsRes] = await Promise.all([
+    // Parallel: fetch completed lessons + all saved card words (no 500+ word IN list)
+    const [completedRes, savedWords] = await Promise.all([
       supabase
         .from("user_lesson_progress")
         .select("unit_id")
         .eq("user_id", user.id),
-      supabase
-        .from("cards")
-        .select("word")
-        .eq("user_id", user.id)
-        .in("word", allWords),
+      getUserSavedWords(supabase, user.id),
     ]);
 
     if (completedRes.error) {
@@ -473,12 +551,11 @@ export async function getCurrentUnit() {
     }
 
     const completedUnitIds = completedRes.data?.map(l => l.unit_id) || [];
-    const savedWords = new Set(cardsRes.data?.map(c => c.word.toLowerCase().trim()) || []);
 
     // Tính toán trạng thái cho từng Unit
     const unitStatuses = UNITS.map(unit => {
       const isCompleted = completedUnitIds.includes(unit.id);
-      const vocab = UNIT_VOCABULARY[unit.id] || [];
+      const vocab = getUnitVocabulary(unit.id);
       const savedCount = vocab.filter(v => savedWords.has(v.word.toLowerCase().trim())).length;
       
       let progress = 0;
@@ -541,20 +618,45 @@ export async function updateDailyXpGoal(goal: number) {
       return { success: false, error: "Bạn cần đăng nhập để cập nhật mục tiêu XP." };
     }
 
-    if (![30, 50, 80, 100].includes(goal)) {
-      return { success: false, error: "Mục tiêu XP không hợp lệ." };
+    if (!isValidDailyXpGoal(goal)) {
+      return {
+        success: false,
+        error: `Mục tiêu XP phải từ 5 đến 200.`,
+      };
     }
 
-    const { error } = await supabase
+    const { data: existing, error: fetchError } = await supabase
       .from("user_progress")
-      .update({ updated_at: new Date().toISOString() }) // daily_xp_goal not in DB schema
-      .eq("user_id", user.id);
+      .select("user_id")
+      .eq("user_id", user.id)
+      .maybeSingle();
+
+    if (fetchError) {
+      return { success: false, error: `Lỗi khi kiểm tra tiến trình: ${fetchError.message}` };
+    }
+
+    const payload = {
+      daily_xp_goal: goal,
+      updated_at: new Date().toISOString(),
+    };
+
+    const { error } = existing
+      ? await supabase.from("user_progress").update(payload).eq("user_id", user.id)
+      : await supabase.from("user_progress").insert({
+          user_id: user.id,
+          current_level: "A0",
+          streak: 0,
+          total_xp: 0,
+          last_active_date: null,
+          ...payload,
+        });
 
     if (error) {
       return { success: false, error: `Lỗi khi cập nhật mục tiêu: ${error.message}` };
     }
 
     revalidatePath("/dashboard");
+    revalidatePath("/settings");
     return { success: true, message: `Đã cập nhật mục tiêu XP hàng ngày thành ${goal} XP.` };
   } catch (error) {
     const errMsg = error instanceof Error ? error.message : String(error);
@@ -571,13 +673,11 @@ export async function getWeeklyXpData() {
     const { data: { user }, error: authError } = await supabase.auth.getUser();
     if (authError || !user) return { success: false, data: [] };
 
-    const dayLabels = ["CN", "T2", "T3", "T4", "T5", "T6", "T7"];
+    const todayKey = getVnDateKey();
     const days: { day: string; label: string; xp: number; pct: number }[] = [];
     for (let i = 6; i >= 0; i--) {
-      const d = new Date();
-      d.setDate(d.getDate() - i);
-      const dateStr = d.toLocaleDateString("sv-SE", { timeZone: "Asia/Ho_Chi_Minh" });
-      days.push({ day: dateStr, label: dayLabels[d.getDay()], xp: 0, pct: 0 });
+      const dateStr = addVnDays(todayKey, -i);
+      days.push({ day: dateStr, label: getVnWeekdayLabel(dateStr), xp: 0, pct: 0 });
     }
 
     const startDate = days[0].day;
@@ -585,8 +685,7 @@ export async function getWeeklyXpData() {
     // +07:00 so Postgres interprets startDate as VN midnight, not UTC midnight
     const startUtc = startDate + "T00:00:00+07:00";
 
-    // Fetch lesson XP and speaking sessions in parallel
-    const [lessonsRes, speakingRes] = await Promise.all([
+    const [lessonsRes, speakingRes, quizRes] = await Promise.all([
       supabase
         .from("user_lesson_progress")
         .select("xp_earned, completed_at")
@@ -597,6 +696,11 @@ export async function getWeeklyXpData() {
         .select("practice_type, created_at")
         .eq("user_id", user.id)
         .gte("created_at", startUtc),
+      supabase
+        .from("quiz_results")
+        .select("xp_earned, quiz_date")
+        .eq("user_id", user.id)
+        .gte("quiz_date", startDate),
     ]);
 
     // Add lesson XP per day
@@ -608,13 +712,18 @@ export async function getWeeklyXpData() {
       }
     }
 
-    // Add speaking XP per day (estimated from practice_type)
-    const SPEAKING_XP: Record<string, number> = { shadowing: 5, roleplay: 8, journal: 5 };
     if (!speakingRes.error && speakingRes.data) {
       for (const row of speakingRes.data) {
         const rowDate = new Date(row.created_at).toLocaleDateString("sv-SE", { timeZone: "Asia/Ho_Chi_Minh" });
         const day = days.find(d => d.day === rowDate);
-        if (day) day.xp += SPEAKING_XP[row.practice_type] ?? 5;
+        if (day) day.xp += getSpeakingXp(row.practice_type);
+      }
+    }
+
+    if (!quizRes.error && quizRes.data) {
+      for (const row of quizRes.data) {
+        const day = days.find((d) => d.day === row.quiz_date);
+        if (day) day.xp += row.xp_earned;
       }
     }
 
@@ -660,7 +769,7 @@ export async function getProgressStats() {
       stats: {
         totalXp: progress?.total_xp || 0,
         streak: progress?.streak || 0,
-        currentLevel: progress?.current_level || "A1",
+        currentLevel: progress?.current_level || "A0",
         totalCards,
         cardsByState,
         completedUnits: completedRes.count || 0,
@@ -669,5 +778,167 @@ export async function getProgressStats() {
     };
   } catch {
     return { success: false, stats: null };
+  }
+}
+
+/**
+ * Server Action tính toán điểm số dự kiến IELTS và TOEIC dựa trên tiến độ thực tế,
+ * lịch sử luyện nói và hiệu năng ghi nhớ thẻ flashcard FSRS.
+ */
+export async function getPredictiveScore() {
+  try {
+    const supabase = await createClient();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    if (authError || !user) {
+      return { success: false, error: "Bạn cần đăng nhập để xem dự đoán điểm số." };
+    }
+
+    // Parallel fetch required data
+    const [completedRes, speakingRes, cardsRes] = await Promise.all([
+      supabase.from("user_lesson_progress").select("unit_id").eq("user_id", user.id),
+      supabase.from("speaking_sessions").select("accuracy_score").eq("user_id", user.id),
+      supabase.from("cards").select("state").eq("user_id", user.id),
+    ]);
+
+    if (completedRes.error) {
+      return { success: false, error: `Lỗi khi lấy tiến trình: ${completedRes.error.message}` };
+    }
+
+    const completedUnits = completedRes.data?.map(u => u.unit_id) || [];
+    const speakingSessions = speakingRes.data || [];
+    const cards = cardsRes.data || [];
+
+    // Group units by level
+    let a0Count = 0;
+    let a1Count = 0;
+    let a2Count = 0;
+    let b1Count = 0;
+    let b2Count = 0;
+
+    completedUnits.forEach(id => {
+      if (id.startsWith("unit-a0-")) {
+        a0Count++;
+      } else {
+        const num = parseInt(id.replace("unit-", ""), 10);
+        if (num >= 1 && num <= 12) a1Count++;
+        else if (num >= 13 && num <= 18) a2Count++;
+        else if (num >= 19 && num <= 32) b1Count++;
+        else if (num >= 33 && num <= 42) b2Count++;
+      }
+    });
+
+    // 1. Calculate Base IELTS and TOEIC based on CEFR level completion
+    let baseIelts = 0.0;
+    let baseToeic = 10.0;
+
+    // A0 (8 units) -> IELTS 0.0 to 2.0, TOEIC 10 to 100
+    baseIelts += a0Count * (2.0 / 8);
+    baseToeic += a0Count * (90 / 8);
+
+    // A1 (12 units) -> IELTS 2.0 to 3.0, TOEIC 100 to 250
+    if (a0Count >= 6) {
+      baseIelts += a1Count * (1.0 / 12);
+      baseToeic += a1Count * (150 / 12);
+    } else {
+      baseIelts += a1Count * (0.8 / 12);
+      baseToeic += a1Count * (120 / 12);
+    }
+
+    // A2 (6 units) -> IELTS 3.0 to 4.0, TOEIC 250 to 400
+    baseIelts += a2Count * (1.0 / 6);
+    baseToeic += a2Count * (150 / 6);
+
+    // B1 (14 units) -> IELTS 4.0 to 5.5, TOEIC 400 to 600
+    baseIelts += b1Count * (1.5 / 14);
+    baseToeic += b1Count * (200 / 14);
+
+    // B2 (10 units) -> IELTS 5.5 to 7.0, TOEIC 600 to 800
+    baseIelts += b2Count * (1.5 / 10);
+    baseToeic += b2Count * (200 / 10);
+
+    // 2. Adjust based on speaking accuracy
+    let speakingMultiplier = 0.90;
+    let avgSpeakingAccuracy = 0;
+    const scoredSpeakingSessions = speakingSessions.filter(s => s.accuracy_score !== null);
+    if (scoredSpeakingSessions.length > 0) {
+      const sum = scoredSpeakingSessions.reduce((acc, curr) => acc + (curr.accuracy_score || 0), 0);
+      avgSpeakingAccuracy = sum / scoredSpeakingSessions.length;
+      speakingMultiplier = 0.85 + (avgSpeakingAccuracy / 100) * 0.20;
+    }
+
+    // 3. Adjust based on SRS vocabulary retention (retained cards in state=2 or active in state=1)
+    let srsMultiplier = 0.90;
+    let retentionRate = 0;
+    if (cards.length > 0) {
+      const reviewCards = cards.filter(c => c.state === 2).length;
+      const learningCards = cards.filter(c => c.state === 1).length;
+      retentionRate = (reviewCards + learningCards * 0.5) / cards.length;
+      srsMultiplier = 0.85 + retentionRate * 0.20;
+    }
+
+    // Calculate final estimated scores
+    let finalIelts = baseIelts * speakingMultiplier * srsMultiplier;
+    let finalToeic = baseToeic * speakingMultiplier * srsMultiplier;
+
+    // Minimum constraints
+    if (finalIelts < 1.0) finalIelts = 1.0;
+    if (finalToeic < 10) finalToeic = 10;
+
+    // Cap at maximum curriculum potential (IELTS 7.5, TOEIC 850 for B2 assessment)
+    if (finalIelts > 7.5) finalIelts = 7.5;
+    if (finalToeic > 850) finalToeic = 850;
+
+    // Rounded scores for standardized presentation
+    const roundedIelts = Math.round(finalIelts * 2) / 2;
+    const roundedToeic = Math.round(finalToeic / 5) * 5;
+
+    // Calculate individual skills estimation
+    const listeningBand = Math.round(Math.min(finalIelts * 1.05 * srsMultiplier, 8.0) * 2) / 2;
+    const readingBand = Math.round(Math.min(finalIelts * 1.08 * srsMultiplier, 8.0) * 2) / 2;
+    const speakingBand = Math.round(Math.min(finalIelts * 0.95 * speakingMultiplier, 7.5) * 2) / 2;
+    const writingBand = Math.round(Math.min(finalIelts * 0.92, 7.5) * 2) / 2;
+
+    // Generate actionable recommendations
+    const recommendations: string[] = [];
+    if (completedUnits.length < 5) {
+      recommendations.push("Hãy học thêm ít nhất 5 bài học mới để mở khóa các chủ đề ngữ pháp và từ vựng cốt lõi.");
+    }
+    if (cards.length < 20) {
+      recommendations.push("Bạn có quá ít từ vựng trong hộp nhớ. Hoàn thành bài học và ôn tập thẻ ghi nhớ FSRS mỗi ngày.");
+    } else if (retentionRate < 0.4) {
+      recommendations.push("Tỷ lệ ghi nhớ từ vựng SRS của bạn hơi thấp. Hãy dành 10 phút ôn tập thẻ để củng cố bộ nhớ.");
+    }
+    if (speakingSessions.length < 3) {
+      recommendations.push("Luyện Nói chưa đủ. Hãy thực hành Shadowing hoặc AI Roleplay ít nhất 3 lần để kích hoạt phản xạ.");
+    } else if (avgSpeakingAccuracy < 70) {
+      recommendations.push("Phát âm của bạn cần cải thiện. Hãy chú ý hơn đến phụ âm cuối (codas) khi luyện Shadowing.");
+    }
+
+    if (recommendations.length === 0) {
+      recommendations.push("Tuyệt vời! Hãy tiếp tục duy trì thói quen học đều đặn mỗi ngày để sớm đạt mục tiêu.");
+    }
+
+    return {
+      success: true,
+      score: {
+        rawIelts: finalIelts,
+        rawToeic: finalToeic,
+        ielts: roundedIelts,
+        toeic: roundedToeic,
+        skills: {
+          listening: Math.max(listeningBand, 1.0),
+          reading: Math.max(readingBand, 1.0),
+          speaking: Math.max(speakingBand, 1.0),
+          writing: Math.max(writingBand, 1.0),
+        },
+        avgSpeakingAccuracy,
+        srsRetention: retentionRate * 100,
+        completedUnitsCount: completedUnits.length,
+        recommendations
+      }
+    };
+  } catch (error) {
+    const errMsg = error instanceof Error ? error.message : String(error);
+    return { success: false, error: errMsg };
   }
 }

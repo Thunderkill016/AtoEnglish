@@ -1,11 +1,20 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
+import { isProtectedRoute } from "@/lib/constants/protected-routes";
+
 export async function updateSession(request: NextRequest) {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  const pathname = request.nextUrl.pathname;
 
   if (!supabaseUrl || !supabaseAnonKey) {
+    if (process.env.NODE_ENV === "production" && isProtectedRoute(pathname)) {
+      const url = request.nextUrl.clone();
+      url.pathname = "/login";
+      url.searchParams.set("error", "config");
+      return NextResponse.redirect(url);
+    }
     return NextResponse.next({ request });
   }
 
@@ -32,20 +41,18 @@ export async function updateSession(request: NextRequest) {
     }
   );
 
-  const pathname = request.nextUrl.pathname;
-  const protectedRoutes = ["/dashboard", "/learn", "/flashcards", "/progress", "/speaking", "/roadmap"];
-  const isProtectedRoute = protectedRoutes.some(route => pathname.startsWith(route));
+  const requiresAuth = isProtectedRoute(pathname);
   const isLoginRoute = pathname === "/login";
 
   // Skip auth check for public routes (like the landing page) to minimize TTFB latency
-  if (!isProtectedRoute && !isLoginRoute) {
+  if (!requiresAuth && !isLoginRoute) {
     return supabaseResponse;
   }
 
   const { data: { user } } = await supabase.auth.getUser();
 
   // 1. Nếu truy cập trang bảo vệ mà chưa đăng nhập -> chuyển hướng về /login
-  if (isProtectedRoute && !user) {
+  if (requiresAuth && !user) {
     const url = request.nextUrl.clone();
     url.pathname = "/login";
     url.searchParams.set("next", pathname);

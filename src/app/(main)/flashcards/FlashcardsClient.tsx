@@ -72,9 +72,10 @@ export default function FlashcardsPage() {
   const fetchCards = async (cram = cramMode, topic = selectedTopic) => {
     setIsLoading(true);
     try {
+      const topicFilter = topic !== "all" ? topic : undefined;
       const res = cram
-        ? await getAllCards(topic !== "all" ? topic : undefined)
-        : await getDueCards();
+        ? await getAllCards(topicFilter)
+        : await getDueCards(topicFilter);
       if (res.success && res.cards) {
         const mappedCards: Flashcard[] = res.cards.map((c) => ({
           id: c.id,
@@ -543,13 +544,8 @@ export default function FlashcardsPage() {
                   <Button
                     variant="ghost"
                     size="sm"
-                    onClick={() => {
-                      if (currentIndex < cards.length - 1) {
-                        setCurrentIndex((prev) => prev + 1);
-                      } else {
-                        setShowFinished(true);
-                      }
-                    }}
+                    disabled={isReviewing}
+                    onClick={() => void handleResponse("Again")}
                     className="text-xs text-muted-foreground hover:text-foreground hover:bg-transparent rounded-xl h-11 px-4"
                   >
                     Để sau / Bỏ qua thẻ này

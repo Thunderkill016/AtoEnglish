@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
+import { resolveDailyXpGoal } from "@/lib/constants/daily-xp-goal";
 import SettingsClient from "./SettingsClient";
 
 export const metadata: Metadata = {
@@ -14,9 +15,19 @@ export default async function SettingsPage() {
 
   const userEmail = user?.email ?? "";
 
+  let dailyXpGoal = 50;
+  if (user) {
+    const { data } = await supabase
+      .from("user_progress")
+      .select("daily_xp_goal")
+      .eq("user_id", user.id)
+      .maybeSingle();
+    dailyXpGoal = resolveDailyXpGoal(data?.daily_xp_goal);
+  }
+
   return (
     <main id="main-content">
-      <SettingsClient userEmail={userEmail} />
+      <SettingsClient userEmail={userEmail} dailyXpGoal={dailyXpGoal} />
     </main>
   );
 }

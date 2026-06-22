@@ -38,7 +38,7 @@ export default function ProblemSection() {
             </h2>
 
             <p className="text-base sm:text-lg text-zinc-650 dark:text-zinc-350 max-w-2xl mx-auto leading-relaxed font-normal">
-              Hàng trăm giờ học ngữ pháp, thuộc hàng nghìn từ vựng… nhưng khi cần mở miệng giao tiếp thực tế thì lại bế tắc. Bạn không thiếu kiến thức, bạn chỉ thiếu môi trường để luyện phản xạ nói tự nhiên.
+              Nhiều người học thuộc quy tắc và từ vựng rời rạc, nhưng khi cần mở miệng giao tiếp thực tế thì lại bế tắc. Bạn không chỉ cần thêm kiến thức, bạn cần môi trường luyện output an toàn và đều đặn.
             </p>
           </div>
         </ScrollReveal>
@@ -70,4 +70,3 @@ export default function ProblemSection() {
     </section>
   );
 }
-
