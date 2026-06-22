@@ -142,6 +142,66 @@ export const SHADOWING_ITEMS: ShadowingItem[] = [
     translation: "Biến đổi khí hậu là một trong những thách thức cấp bách nhất của thế hệ chúng ta. Các chính phủ và cá nhân phải hợp tác khẩn cấp để giảm lượng phát thải carbon và bảo vệ đa dạng sinh học.",
     difficultWords: ["pressing challenges", "collaborate", "carbon emissions", "biodiversity"],
     tips: "Nhấn âm 'most PRESS-ing'. Phát âm 'biodiversity' rõ 5 âm tiết: /ˌbaɪ.oʊ.daɪˈvɜː.sɪ.ti/. Đọc cả câu như một luồng liền mạch, không nghỉ sau mỗi từ."
+  },
+  {
+    id: "saas-intro",
+    title: "Introducing Your SaaS Product",
+    topic: "Business English",
+    level: "B1",
+    transcript: "We built a software platform that helps Vietnamese learners reach English fluency faster using AI and spaced repetition.",
+    translation: "Chúng tôi đã xây dựng một nền tảng phần mềm giúp người học Việt Nam đạt được sự thành thạo tiếng Anh nhanh hơn bằng AI và lặp lại cách quãng.",
+    difficultWords: ["software platform", "fluency", "spaced repetition"],
+    tips: "Nhấn vào 'AI' và 'spaced repetition' vì đây là điểm bán hàng chính. Phát âm 'fluency' 3 âm tiết: /ˈfluː.ən.si/."
+  },
+  {
+    id: "email-opening",
+    title: "Professional Email Opening",
+    topic: "Business English",
+    level: "A2",
+    transcript: "I hope this email finds you well. I am writing to follow up on our previous conversation about the partnership proposal.",
+    translation: "Tôi hy vọng email này đến tay bạn trong tình trạng tốt. Tôi viết thư để theo dõi cuộc trò chuyện trước của chúng ta về đề xuất hợp tác.",
+    difficultWords: ["follow up", "previous conversation", "partnership proposal"],
+    tips: "Cụm 'finds you well' là thành ngữ xã giao — đọc liền /faɪndz.jʊ.wɛl/. Nhấn vào 'partnership' và 'proposal' cuối câu."
+  },
+  {
+    id: "startup-pitch",
+    title: "30-Second Startup Pitch",
+    topic: "Business English",
+    level: "B2",
+    transcript: "Our product solves a real pain point: Vietnamese professionals spend years learning English but never reach conversational fluency because existing tools are not designed for their specific needs.",
+    translation: "Sản phẩm của chúng tôi giải quyết một vấn đề thực sự: các chuyên gia Việt Nam dành nhiều năm học tiếng Anh nhưng không bao giờ đạt được sự thành thạo trong hội thoại vì các công cụ hiện có không được thiết kế cho nhu cầu cụ thể của họ.",
+    difficultWords: ["pain point", "conversational fluency", "specific needs"],
+    tips: "Đây là câu pitch — đọc chắc chắn, tự tin. Nhấn 'real pain point' và 'never reach'. Không được bỏ âm /t/ cuối 'point' và 'fluent'."
+  },
+  {
+    id: "meeting-facilitation",
+    title: "Facilitating a Team Meeting",
+    topic: "Business English",
+    level: "B1",
+    transcript: "Let us quickly go through today's agenda. First, I would like to get an update from each team on their current progress and blockers.",
+    translation: "Hãy nhanh chóng xem qua chương trình hôm nay. Đầu tiên, tôi muốn nhận thông tin cập nhật từ mỗi nhóm về tiến độ hiện tại và những trở ngại của họ.",
+    difficultWords: ["agenda", "update", "blockers"],
+    tips: "Phát âm 'agenda' /əˈdʒen.də/ — không nói 'a-gen-da'. Cụm 'let us' thường co lại thành 'let's' /lɛts/ trong văn nói tự nhiên."
+  },
+  {
+    id: "negotiation",
+    title: "Price Negotiation",
+    topic: "Business English",
+    level: "B2",
+    transcript: "I understand your budget constraints. However, given the value we deliver, I believe our pricing is competitive. Would you be open to a three-month trial at a discounted rate?",
+    translation: "Tôi hiểu những ràng buộc ngân sách của bạn. Tuy nhiên, với giá trị chúng tôi mang lại, tôi tin rằng giá của chúng tôi rất cạnh tranh. Bạn có sẵn sàng dùng thử ba tháng với mức giá ưu đãi không?",
+    difficultWords: ["budget constraints", "competitive", "discounted rate"],
+    tips: "Đọc 'However' với ngữ điệu lên nhẹ rồi hạ xuống. Nhấn 'value' và 'competitive'. Câu hỏi cuối phải lên giọng ở cuối."
+  },
+  {
+    id: "user-feedback",
+    title: "Responding to User Feedback",
+    topic: "Business English",
+    level: "B1",
+    transcript: "Thank you so much for taking the time to share your feedback. We really appreciate your insight and we will prioritize this feature in our next sprint.",
+    translation: "Cảm ơn bạn rất nhiều vì đã dành thời gian chia sẻ phản hồi. Chúng tôi thực sự đánh giá cao nhận xét của bạn và sẽ ưu tiên tính năng này trong sprint tiếp theo.",
+    difficultWords: ["taking the time", "insight", "prioritize", "sprint"],
+    tips: "Cụm 'taking the time' đọc liền nhau. 'Prioritize' phát âm 4 âm tiết: /praɪˈɒr.ɪ.taɪz/. 'Sprint' là từ kỹ thuật Agile — phát âm rõ âm /t/ cuối."
   }
 ];
 
