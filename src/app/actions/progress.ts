@@ -697,21 +697,36 @@ export async function savePlacementResult(level: string, score: number) {
       return { success: false, error: "Bạn cần đăng nhập." };
     }
 
-    const { error } = await supabase
+    const today = new Date().toLocaleDateString("sv-SE", { timeZone: "Asia/Ho_Chi_Minh" });
+
+    // Check if user already has a progress record
+    const { data: existing } = await supabase
       .from("user_progress")
-      .upsert(
-        {
+      .select("user_id, total_xp, streak")
+      .eq("user_id", user.id)
+      .maybeSingle();
+
+    if (existing) {
+      // Existing user: only update level, preserve XP + streak
+      const { error } = await supabase
+        .from("user_progress")
+        .update({ current_level: level, last_active_date: today })
+        .eq("user_id", user.id);
+
+      if (error) return { success: false, error: `Lỗi lưu kết quả: ${error.message}` };
+    } else {
+      // New user: create fresh record with placement score as seed XP
+      const { error } = await supabase
+        .from("user_progress")
+        .insert({
           user_id: user.id,
           current_level: level,
-          total_xp: score * 10,
-          streak: 1,
-          last_active_date: new Date().toLocaleDateString("sv-SE", { timeZone: "Asia/Ho_Chi_Minh" }),
-        },
-        { onConflict: "user_id" }
-      );
+          total_xp: score * 5, // 5 XP per correct — modest seed
+          streak: 0,
+          last_active_date: today,
+        });
 
-    if (error) {
-      return { success: false, error: `Lỗi lưu kết quả: ${error.message}` };
+      if (error) return { success: false, error: `Lỗi lưu kết quả: ${error.message}` };
     }
 
     revalidatePath("/dashboard");
@@ -723,4 +738,5 @@ export async function savePlacementResult(level: string, score: number) {
     return { success: false, error: msg };
   }
 }
+
 

@@ -423,7 +423,7 @@ export default function DashboardClient({
           <div className="flex-1 min-w-0">
             <p className="text-xs font-black text-violet-400 uppercase tracking-widest mb-0.5">CEFR Placement Test</p>
             <p className="text-sm font-bold text-foreground">Xác Định Trình Độ Chính Xác</p>
-            <p className="text-xs text-muted-foreground">40 câu · Grammar + Vocab + Reading · ~20 phút</p>
+            <p className="text-xs text-muted-foreground">40 câu · Reading + Vocab + Language Use · ~20 phút</p>
           </div>
           <ChevronRight className="size-5 text-violet-400/60 group-hover:text-violet-400 group-hover:translate-x-0.5 transition-all shrink-0" />
         </Link>
@@ -431,8 +431,7 @@ export default function DashboardClient({
         {/* ── 4. Today's Study Plan Widget ── */}
         <TodayPlanWidget userLevel={userLevel} />
 
-
-        {/* ── 4. Main content: 2-column grid ── */}
+        {/* ── 5. Main content: 2-column grid ── */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
           {/* Left: Hero lesson card */}
           <div className="lg:col-span-7">

@@ -3,17 +3,12 @@
 import { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import {
   ChevronRight,
   CheckCircle2,
   XCircle,
-  BookOpen,
-  GraduationCap,
-  BarChart3,
   Trophy,
   ArrowRight,
-  Clock,
 } from "lucide-react";
 import {
   PLACEMENT_QUESTIONS,
@@ -22,9 +17,9 @@ import {
   READING_COUNT,
   VOCAB_COUNT,
   LANG_USE_COUNT,
-  type PlacementQuestion,
 } from "@/lib/data/placement-test";
 import { savePlacementResult } from "@/app/actions/progress";
+
 
 type Stage = "intro" | "test" | "saving" | "results";
 
@@ -48,7 +43,6 @@ const SKILL_ICON: Record<string, string> = {
 };
 
 export default function PlacementTestClient() {
-  const router = useRouter();
   const [stage, setStage] = useState<Stage>("intro");
   const [currentIdx, setCurrentIdx] = useState(0);
   const [answers, setAnswers] = useState<Record<number, number>>({});
