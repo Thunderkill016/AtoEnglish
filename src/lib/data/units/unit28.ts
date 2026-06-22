@@ -24,7 +24,7 @@ export const unit28: UnitData = {
   vocab: [
     { id: 1, word: "progress", emoji: "📈", phonetic: "/ˈprəʊɡres/", meaning: "tiến triển / tiến bộ", example: "I've been making steady progress with my English.", example2: "The project has been progressing well.", collocation: "make progress / track progress / steady progress", audio: "/audio/unit28/progress.mp3" },
     { id: 2, word: "consistently", emoji: "🔁", phonetic: "/kənˈsɪstəntli/", meaning: "một cách nhất quán / đều đặn", example: "She has been consistently achieving high scores.", example2: "Our team has been consistently meeting targets.", collocation: "consistently good / consistently perform / maintain consistently", audio: "/audio/unit28/consistently.mp3" },
-    { id: 3, word: "dedicate", emoji: "💪", phonetic: "/ˈdedɪkeɪt/", meaning: "cống hiến / dành cho", example: "I've been dedicating two hours a day to IELTS preparation.", example2: "She has dedicated her career to education.", collocation: "dedicate time to / dedicated worker / highly dedicated", audio: "/audio/unit28/dedicate.mp3" },
+    { id: 3, word: "dedicate", emoji: "💪", phonetic: "/ˈdedɪkeɪt/", meaning: "cống hiến / dành cho", example: "I've been dedicating two hours a day to learning English.", example2: "She has dedicated her career to education.", collocation: "dedicate time to / dedicated worker / highly dedicated", audio: "/audio/unit28/dedicate.mp3" },
     { id: 4, word: "expertise", emoji: "🎓", phonetic: "/ˌekspɜːˈtiːz/", meaning: "chuyên môn / kinh nghiệm chuyên sâu", example: "I've been developing my expertise in data analysis.", example2: "Her expertise in marketing is widely recognized.", collocation: "develop expertise / technical expertise / area of expertise", audio: "/audio/unit28/expertise.mp3" },
     { id: 5, word: "duration", emoji: "⏱️", phonetic: "/djʊˈreɪʃən/", meaning: "thời gian / khoảng thời gian", example: "For the duration of the project, I've been leading the team.", example2: "The meeting was two hours in duration.", collocation: "for the duration / project duration / length and duration", audio: "/audio/unit28/duration.mp3" },
     { id: 6, word: "persistent", emoji: "🦁", phonetic: "/pəˈsɪstənt/", meaning: "kiên trì / bền bỉ", example: "She has been persistent in improving her communication skills.", example2: "His persistent efforts have led to great results.", collocation: "persistent effort / remain persistent / persistent problem", audio: "/audio/unit28/persistent.mp3" },
@@ -46,7 +46,7 @@ export const unit28: UnitData = {
         { id: "d1-2", speaker: "Minh", text: "I've been preparing for about a year. I've been studying English intensively, and I've been working on a research project since January.", translation: "Tôi đã chuẩn bị khoảng một năm. Tôi đã học tiếng Anh chuyên sâu, và tôi đã làm dự án nghiên cứu từ tháng Một." },
         { id: "d1-3", speaker: "Interviewer", text: "What have you been learning recently?", translation: "Gần đây bạn đã học được gì?" },
         { id: "d1-4", speaker: "Minh", text: "I've been developing my data analysis expertise. I've also been mentoring two junior colleagues, which has been a rewarding experience.", translation: "Tôi đã phát triển chuyên môn phân tích dữ liệu. Tôi cũng đã hướng dẫn hai đồng nghiệp trẻ, điều đó là một trải nghiệm đáng giá." },
-        { id: "d1-5", speaker: "Interviewer", text: "Have you been making progress with your IELTS?", translation: "Bạn có tiến triển với IELTS không?" },
+        { id: "d1-5", speaker: "Interviewer", text: "Have you been making progress with your English?", translation: "Bạn có tiến triển với tiếng Anh không?" },
         { id: "d1-6", speaker: "Minh", text: "Yes, consistently. I've been practicing every day for three months and my score has improved from 5.5 to 6.5.", translation: "Vâng, một cách nhất quán. Tôi đã luyện tập mỗi ngày trong ba tháng và điểm của tôi đã cải thiện từ 5.5 lên 6.5." },
       ],
     },
@@ -72,7 +72,7 @@ export const unit28: UnitData = {
   ],
   speaking: {
     level1Prompt: "I've been {input} for {input}. Since {input}, I've also been {input}.",
-    level1Placeholder: "Ví dụ: studying IELTS — 6 months — January — working on a research project...",
+    level1Placeholder: "Ví dụ: learning English — 6 months — January — working on a dev project...",
     level2Situation: "Phỏng vấn học bổng hoặc xin việc. Dùng Present Perfect Continuous để mô tả: (1) Bạn đã chuẩn bị cho vị trí này bao lâu và như thế nào? (2) Bạn đang phát triển kỹ năng gì? (3) Bạn đã đạt được tiến triển gì?",
     level2Hint: "I've been preparing for [period]. I've been [developing/studying/working on] [skill/project] since [date]. For the past [period], I've been consistently [action]. I've been making significant progress with [area].",
   },

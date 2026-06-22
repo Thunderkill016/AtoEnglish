@@ -3307,7 +3307,7 @@ export const UNIT_VOCABULARY: Record<string, VocabularyItem[]> = {
       word: "dedicate",
       phonetic: "/ˈdedɪkeɪt/",
       meaning_vn: "cống hiến / dành cho",
-      example_en: "I've been dedicating two hours a day to IELTS preparation.",
+      example_en: "I've been dedicating two hours a day to learning English.",
       topic: "How Long Have You Been...?",
       level: "B1",
     },
@@ -4558,7 +4558,7 @@ export const UNIT_VOCABULARY: Record<string, VocabularyItem[]> = {
       phonetic: "/ɪnˌvaɪrənˈmentəl ˌdeɡrəˈdeɪʃən/",
       meaning_vn: "sự suy thoái môi trường",
       example_en: "Urbanization has led to severe environmental degradation.",
-      topic: "IELTS & TOEIC Topics",
+      topic: "B1 Professional Topics",
       level: "B2",
     },
     {
@@ -4566,7 +4566,7 @@ export const UNIT_VOCABULARY: Record<string, VocabularyItem[]> = {
       phonetic: "/diːˌfɒrɪˈsteɪʃən/",
       meaning_vn: "nạn phá rừng",
       example_en: "Deforestation threatens the habitats of many endangered species.",
-      topic: "IELTS & TOEIC Topics",
+      topic: "B1 Professional Topics",
       level: "B2",
     },
     {
@@ -4574,7 +4574,7 @@ export const UNIT_VOCABULARY: Record<string, VocabularyItem[]> = {
       phonetic: "/rɪˈnjuːəbəl ˈenədʒi/",
       meaning_vn: "năng lượng tái tạo",
       example_en: "We should invest more in renewable energy sources like wind and solar.",
-      topic: "IELTS & TOEIC Topics",
+      topic: "B1 Professional Topics",
       level: "B2",
     },
     {
@@ -4582,7 +4582,7 @@ export const UNIT_VOCABULARY: Record<string, VocabularyItem[]> = {
       phonetic: "/ˌɑːtɪˈfɪʃəl ɪnˈtelɪdʒəns/",
       meaning_vn: "trí tuệ nhân tạo (AI)",
       example_en: "Artificial intelligence is transforming the medical industry.",
-      topic: "IELTS & TOEIC Topics",
+      topic: "B1 Professional Topics",
       level: "B2",
     },
     {
@@ -4590,7 +4590,7 @@ export const UNIT_VOCABULARY: Record<string, VocabularyItem[]> = {
       phonetic: "/ˈdɪdʒɪtəl ˌtrænsfəˈmeɪʃən/",
       meaning_vn: "chuyển đổi số",
       example_en: "The company's digital transformation was completed last year.",
-      topic: "IELTS & TOEIC Topics",
+      topic: "B1 Professional Topics",
       level: "B2",
     },
     {
@@ -4598,7 +4598,7 @@ export const UNIT_VOCABULARY: Record<string, VocabularyItem[]> = {
       phonetic: "/ˌɔːtəˈmeɪʃən/",
       meaning_vn: "sự tự động hóa",
       example_en: "Factory automation has increased production efficiency.",
-      topic: "IELTS & TOEIC Topics",
+      topic: "B1 Professional Topics",
       level: "B2",
     },
     {
@@ -4606,7 +4606,7 @@ export const UNIT_VOCABULARY: Record<string, VocabularyItem[]> = {
       phonetic: "/kəˈrɪkjʊləm/",
       meaning_vn: "chương trình học / chương trình giảng dạy",
       example_en: "The school is designing a new science curriculum.",
-      topic: "IELTS & TOEIC Topics",
+      topic: "B1 Professional Topics",
       level: "B2",
     },
     {
@@ -4614,7 +4614,7 @@ export const UNIT_VOCABULARY: Record<string, VocabularyItem[]> = {
       phonetic: "/ˈpedəɡɒdʒi/",
       meaning_vn: "phương pháp sư phạm / giảng dạy",
       example_en: "Modern pedagogy places the student at the center of learning.",
-      topic: "IELTS & TOEIC Topics",
+      topic: "B1 Professional Topics",
       level: "B2",
     },
     {
@@ -4622,7 +4622,7 @@ export const UNIT_VOCABULARY: Record<string, VocabularyItem[]> = {
       phonetic: "/ˌækəˈdemɪk pəˈfɔːməns/",
       meaning_vn: "kết quả học tập / học lực",
       example_en: "Regular attendance is directly linked to academic performance.",
-      topic: "IELTS & TOEIC Topics",
+      topic: "B1 Professional Topics",
       level: "B2",
     },
     {
@@ -4630,7 +4630,7 @@ export const UNIT_VOCABULARY: Record<string, VocabularyItem[]> = {
       phonetic: "/ˈkrɒnɪk dɪˈziːz/",
       meaning_vn: "bệnh mãn tính",
       example_en: "Diabetes and heart disease are common chronic diseases.",
-      topic: "IELTS & TOEIC Topics",
+      topic: "B1 Professional Topics",
       level: "B2",
     },
     {
@@ -4638,7 +4638,7 @@ export const UNIT_VOCABULARY: Record<string, VocabularyItem[]> = {
       phonetic: "/ɪˈmjuːn ˌsɪstəm/",
       meaning_vn: "hệ miễn dịch",
       example_en: "Vitamin C helps strengthen your immune system.",
-      topic: "IELTS & TOEIC Topics",
+      topic: "B1 Professional Topics",
       level: "B2",
     },
     {
@@ -4646,7 +4646,7 @@ export const UNIT_VOCABULARY: Record<string, VocabularyItem[]> = {
       phonetic: "/ˌwelˈbiːɪŋ/",
       meaning_vn: "sự khỏe mạnh, hạnh phúc / sự an yên",
       example_en: "Exercise is essential for physical and mental wellbeing.",
-      topic: "IELTS & TOEIC Topics",
+      topic: "B1 Professional Topics",
       level: "B2",
     },
     {
@@ -4654,7 +4654,7 @@ export const UNIT_VOCABULARY: Record<string, VocabularyItem[]> = {
       phonetic: "/ˌɜːbənaɪˈzeɪʃən/",
       meaning_vn: "sự đô thị hóa",
       example_en: "Rapid urbanization has put pressure on the city's infrastructure.",
-      topic: "IELTS & TOEIC Topics",
+      topic: "B1 Professional Topics",
       level: "B2",
     },
     {
@@ -4662,7 +4662,7 @@ export const UNIT_VOCABULARY: Record<string, VocabularyItem[]> = {
       phonetic: "/ˌdeməˈɡræfɪk/",
       meaning_vn: "thuộc nhân khẩu học / nhóm dân số",
       example_en: "The app targets the young corporate demographic.",
-      topic: "IELTS & TOEIC Topics",
+      topic: "B1 Professional Topics",
       level: "B2",
     },
     {
@@ -4670,7 +4670,7 @@ export const UNIT_VOCABULARY: Record<string, VocabularyItem[]> = {
       phonetic: "/ˌsəʊsiəʊˌiːkəˈnɒmɪk/",
       meaning_vn: "thuộc kinh tế xã hội",
       example_en: "Socio-economic background should not limit education opportunities.",
-      topic: "IELTS & TOEIC Topics",
+      topic: "B1 Professional Topics",
       level: "B2",
     },
     {
@@ -4678,7 +4678,7 @@ export const UNIT_VOCABULARY: Record<string, VocabularyItem[]> = {
       phonetic: "/ˈɪnfrəˌstrʌktʃər/",
       meaning_vn: "cơ sở hạ tầng",
       example_en: "The country needs to upgrade its transport infrastructure.",
-      topic: "IELTS & TOEIC Topics",
+      topic: "B1 Professional Topics",
       level: "B2",
     },
   ],

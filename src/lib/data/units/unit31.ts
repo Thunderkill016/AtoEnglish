@@ -6,7 +6,7 @@ export const unit31: UnitData = {
   level: "B1",
   xp: 100,
   estimatedTime: 55,
-  description: "Formal Writing — Làm quen với ngôn ngữ trang trọng trong công sở, viết email và báo cáo chuyên nghiệp. Bài học cốt lõi cho TOEIC Reading và IELTS Writing Task 1.",
+  description: "Formal Writing — Làm quen với ngôn ngữ trang trọng trong công sở, viết email và báo cáo chuyên nghiệp. Kỹ năng nền tảng cho môi trường làm việc quốc tế.",
   badgeName: "Chuyên Gia Công Sở",
   badgeEmoji: "💼",
   situation: "Soạn thảo email gửi đối tác quốc tế để giải thích về sự chậm trễ của dự án và đề xuất lịch họp mới. Bạn cần viết trang trọng, lịch sự và sử dụng các động từ báo cáo (suggest, recommend, advise) đúng ngữ pháp doanh nghiệp.",
@@ -82,7 +82,7 @@ export const unit31: UnitData = {
       { en: "The legal advisor recommended changing the terms. (recommend + V-ing)", vn: "Cố vấn pháp lý đã khuyến nghị thay đổi các điều khoản." },
       { en: "We advise our clients to confirm appointments in writing. (advise + object + to-V)", vn: "Chúng tôi khuyên khách hàng nên xác nhận cuộc hẹn bằng văn bản." },
     ],
-    tip: "Trong bài thi TOEIC Part 5, cấu trúc giả định rất hay xuất hiện: 'The manager recommends that employee [do/does/doing]...' Đáp án đúng luôn là động từ nguyên thể không chia (do).",
+    tip: "Trong email công sở và văn bản chính thức tiếng Anh, cấu trúc giả định rất phổ biến: 'The manager recommends that the employee [do]...' Động từ ở vế 'that' luôn giữ nguyên thể, không chia theo ngôi hay thì.",
     vnNote: "⚠️ Lỗi thường gặp của người Việt: Dùng 'suggest to do' (Ví dụ: 'I suggest to reschedule...'). Cấu trúc này SAI hoàn toàn. Phải dùng: 'I suggest rescheduling' hoặc 'I suggest that we reschedule'.",
     dialogueExample: {
       speaker: "Trong",

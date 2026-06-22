@@ -6,7 +6,7 @@ export const unit30: UnitData = {
   level: "B1",
   xp: 100,
   estimatedTime: 55,
-  description: "Abstract Topics — Thảo luận về các vấn đề sức khỏe cộng đồng và môi trường toàn cầu. Nền tảng từ vựng cực kỳ quan trọng cho IELTS Reading & Listening.",
+  description: "Abstract Topics — Thảo luận về các vấn đề sức khỏe cộng đồng và môi trường toàn cầu. Nền tảng từ vựng quan trọng cho giao tiếp B1 và đọc hiểu các bài viết học thuật.",
   badgeName: "Đại Sứ Xanh",
   badgeEmoji: "🌱",
   situation: "Thảo luận nhóm tại trường học hoặc câu lạc bộ về chủ đề bảo vệ môi trường. Các thành viên chia sẻ quan điểm về biến đổi khí hậu và lối sống bền vững. Sử dụng cấu trúc câu giả định 'It is important to...' hoặc 'It is crucial that...' để trình bày quan điểm mang tính học thuật.",
@@ -15,7 +15,7 @@ export const unit30: UnitData = {
     "Trình bày các quan điểm và lập luận về các vấn đề xã hội trừu tượng",
     "Sử dụng cấu trúc 'It is + adjective + to-V' để nhấn mạnh tầm quan trọng của hành động",
   ],
-  culturalNote: 'Khi thảo luận về môi trường và sức khỏe toàn cầu trong các kỳ thi IELTS/TOEIC, người học cần sử dụng từ vựng chuyên ngành cơ bản (collocations) như <span class="text-emerald-400">"sustainable development"</span> (phát triển bền vững) hoặc <span class="text-emerald-400">"protect the ecosystem"</span> (bảo vệ hệ sinh thái) thay vì các từ quá chung chung để đạt điểm tiêu chí Lexical Resource cao.',
+  culturalNote: 'Khi thảo luận về môi trường và sức khỏe toàn cầu bằng tiếng Anh, việc dùng từ vựng chuyên ngành (collocations) như <span class="text-emerald-400">"sustainable development"</span> (phát triển bền vững) hoặc <span class="text-emerald-400">"protect the ecosystem"</span> (bảo vệ hệ sinh thái) giúp câu văn tự nhiên và chính xác hơn so với các từ quá chung chung.',
   warmupGreetings: [
     { emoji: "🌍", en: "It is crucial to protect our planet for future generations.", vn: "Việc bảo vệ hành tinh của chúng ta cho các thế hệ tương lai là cực kỳ quan trọng.", context: "It is crucial to + V — cấu trúc nhấn mạnh" },
     { emoji: "🥦", en: "A healthy diet is key to disease prevention.", vn: "Chế độ ăn lành mạnh là chìa khóa để phòng ngừa bệnh tật.", context: "prevention — danh từ từ prevent" },
@@ -82,7 +82,7 @@ export const unit30: UnitData = {
       { en: "It is crucial that we take action immediately. (strong urgency)", vn: "Việc chúng ta hành động ngay lập tức là cực kỳ quan trọng." },
       { en: "It is not necessary to run medical scans every year. (opinion/advice)", vn: "Việc thực hiện các xét nghiệm quét y khoa mỗi năm là không cần thiết." },
     ],
-    tip: "Khi viết bài luận IELTS Task 2, hãy thay đổi cấu trúc câu bằng cách dùng câu giả định 'It is + adj + to-V' thay vì lặp đi lặp lại 'We should' hoặc 'We must'. Cách này giúp câu văn mang tính khách quan và học thuật hơn.",
+    tip: "Khi viết essay về môi trường hoặc thảo luận học thuật, hãy dùng câu giả định 'It is + adj + to-V' thay vì lặp đi lặp lại 'We should' hoặc 'We must'. Ví dụ: 'It is essential to reduce carbon emissions.' Giúp câu văn mang tính khách quan hơn.",
     vnNote: "⚠️ Chú ý ngữ pháp giả định: Trong cấu trúc 'It is crucial that S + V-inf', động từ ở vế 'that' luôn giữ nguyên thể (không chia theo thì hay theo ngôi chủ ngữ). Ví dụ: 'It is essential that he study' chứ không phải 'he studies'.",
     dialogueExample: {
       speaker: "Nam",

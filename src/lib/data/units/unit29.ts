@@ -6,7 +6,7 @@ export const unit29: UnitData = {
   level: "B1",
   xp: 100,
   estimatedTime: 55,
-  description: "Discussion Skills — Phát triển kỹ năng thảo luận vấn đề và đề xuất giải pháp. Nền tảng quan trọng cho IELTS Speaking Part 3 và TOEIC Part 3.",
+  description: "Discussion Skills — Phát triển kỹ năng thảo luận vấn đề và đề xuất giải pháp. Kỹ năng quan trọng cho giao tiếp B1 trong môi trường học thuật và công sở.",
   badgeName: "Nhà Giải Quyết",
   badgeEmoji: "🧩",
   situation: "Họp nhóm tìm giải pháp cho website bán hàng đang bị chậm. Trưởng nhóm yêu cầu mọi người đóng góp ý kiến. Sử dụng các cấu trúc thảo luận và đề xuất (should, could, we might want to, how about + V-ing) giúp trao đổi ý kiến một cách lịch sự, chuyên nghiệp.",

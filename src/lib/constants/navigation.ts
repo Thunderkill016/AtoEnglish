@@ -27,7 +27,7 @@ export const mainNavItems: NavItem[] = [
     title: "Learn",
     href: "/learn",
     icon: BookOpen,
-    description: "Lộ trình A0 đến IELTS 6.5",
+    description: "Lộ trình từ A0 đến B1+ Tech English",
   },
   {
     title: "Speaking",
@@ -45,7 +45,7 @@ export const mainNavItems: NavItem[] = [
     title: "Progress",
     href: "/progress",
     icon: TrendingUp,
-    description: "Tiến độ kỹ năng, SRS và readiness IELTS",
+    description: "Tiến độ học tập và SRS theo 4 phases",
   },
   {
     title: "Quality",
@@ -57,6 +57,6 @@ export const mainNavItems: NavItem[] = [
     title: "Roadmap",
     href: "/roadmap",
     icon: Map,
-    description: "Bản đồ từ mất gốc đến IELTS 6.5",
+    description: "Kế hoạch tự học 12 tháng từ A0 lên B1+",
   },
 ];

@@ -18,7 +18,7 @@ export const unit26: UnitData = {
   culturalNote: 'Trong tiếng Anh, <span class="text-emerald-400 font-semibold">Gerund (V-ing)</span> vs <span class="text-emerald-400 font-semibold">Infinitive (to V)</span> là một trong những điểm khó nhất với người Việt — vì tiếng Việt không phân biệt. Mẹo: Động từ liên quan đến <span class="text-emerald-400">quá khứ/thực tế</span> → Gerund. Động từ liên quan đến <span class="text-emerald-400">tương lai/mục tiêu</span> → Infinitive.',
   warmupGreetings: [
     { emoji: "😊", en: "I enjoy working with international teams.", vn: "Tôi thích làm việc với các nhóm quốc tế.", context: "enjoy + V-ing (KHÔNG enjoy to work)" },
-    { emoji: "🎯", en: "I want to improve my English before the IELTS exam.", vn: "Tôi muốn cải thiện tiếng Anh trước kỳ thi IELTS.", context: "want + to V (KHÔNG want improving)" },
+    { emoji: "🎯", en: "I want to improve my English before the job interview.", vn: "Tôi muốn cải thiện tiếng Anh trước buổi phỏng vấn.", context: "want + to V (KHÔNG want improving)" },
     { emoji: "💡", en: "I suggest using a new project management tool.", vn: "Tôi đề xuất sử dụng công cụ quản lý dự án mới.", context: "suggest + V-ing (KHÔNG suggest to use)" },
   ],
   vocab: [
@@ -73,7 +73,7 @@ export const unit26: UnitData = {
   speaking: {
     level1Prompt: "In my work, I enjoy {input}. I always try to avoid {input}. I plan to {input} this year.",
     level1Placeholder: "Ví dụ: collaborating with others — missing deadlines — improve my presentation skills...",
-    level2Situation: "Phỏng vấn IELTS Speaking Part 1 & 2: Mô tả phong cách làm việc và sở thích cá nhân. Dùng ít nhất 5 cấu trúc Gerund/Infinitive khác nhau. Trả lời: Bạn thích làm gì? Tránh điều gì? Kế hoạch tương lai là gì?",
+    level2Situation: "Phỏng vấn xin việc internship: Mô tả phong cách làm việc và sở thích cá nhân. Dùng ít nhất 5 cấu trúc Gerund/Infinitive khác nhau. Trả lời: Bạn thích làm gì? Tránh điều gì? Kế hoạch tương lai là gì?",
     level2Hint: "I enjoy [V-ing]. I avoid [V-ing]. I suggest [V-ing]. I plan to [V]. I decided to [V]. I recommend [V-ing] because [reason]. I consider [V-ing] to be important for [reason].",
   },
   grammar: {
@@ -81,7 +81,7 @@ export const unit26: UnitData = {
     rule: "VERB + GERUND (V-ing):\nenjoy / avoid / consider / suggest / recommend / mind / finish / keep / practice\n→ 'I enjoy working.' 'She suggests trying.'\n\nVERB + INFINITIVE (to V):\nwant / decide / hope / plan / agree / refuse / offer / intend / hesitate / promise\n→ 'I want to improve.' 'She decided to quit.'\n\nMẸO NHỚ:\n→ Gerund = hành động thực tế, hiện tại/quá khứ\n→ Infinitive = mục tiêu, tương lai, ý định\n\nĐẶC BIỆT (nghĩa KHÁC NHAU):\nstop + -ing = dừng việc đang làm: 'He stopped smoking.'\nstop + to = dừng lại để làm: 'He stopped to smoke.'",
     examples: [
       { en: "I suggest splitting the team. (suggest + -ing)", vn: "Tôi đề xuất chia nhóm." },
-      { en: "She decided to take the IELTS exam. (decide + to)", vn: "Cô ấy quyết định thi IELTS." },
+      { en: "She decided to take the coding challenge. (decide + to)", vn: "Cô ấy quyết định tham gia coding challenge." },
       { en: "I remember sending the email. (remember + -ing = nhớ lại đã làm)", vn: "Tôi nhớ là đã gửi email rồi." },
     ],
     tip: "Học thuộc nhóm: FRIES = Finish, Recommend, Imagine, Enjoy, Suggest → đều + Gerund. WDHARPO = Want, Decide, Hope, Agree, Refuse, Plan, Offer → đều + Infinitive.",
@@ -106,7 +106,7 @@ export const unit26: UnitData = {
   },
   practiceQuiz: [
     { id: "pq1", type: "multiple-choice", question: "Chọn đúng: 'She recommended ___ the contract before signing.'", options: ["to read", "reading", "read", "to reading"], answer: "reading" },
-    { id: "pq2", type: "multiple-choice", question: "Chọn đúng: 'I plan ___ the TOEIC exam next month.'", options: ["taking", "take", "to take", "to taking"], answer: "to take" },
+    { id: "pq2", type: "multiple-choice", question: "Chọn đúng: 'I plan ___ the coding bootcamp next month.'", options: ["taking", "take", "to take", "to taking"], answer: "to take" },
     { id: "pq3", type: "cloze", question: "Điền đúng dạng: 'Avoid ___ (make) the same mistakes.'", answer: "making" },
     { id: "pq4", type: "multiple-choice", question: "Phân biệt: 'I stopped ___ (quit the habit) vs 'I stopped ___ (paused to do)'.", options: ["to smoke / smoking", "smoking / to smoke", "smoking / smoking", "to smoke / to smoke"], answer: "smoking / to smoke" },
     { id: "pq5", type: "multiple-choice", question: "Câu ĐÚNG: Đề xuất phương án mới.", options: ["I suggest to try a different approach.", "I suggest trying a different approach.", "I suggest try a different approach.", "I suggesting a different approach."], answer: "I suggest trying a different approach." },
@@ -124,7 +124,7 @@ export const unit26: UnitData = {
   scrambleExercises: [
     { id: "s26-1", prompt_vn: "Tôi đề xuất chia dự án thành ba giai đoạn.", words: ["I", "suggest", "dividing", "the", "project", "into", "three", "phases", "."], answer: "I suggest dividing the project into three phases ." },
     { id: "s26-2", prompt_vn: "Cô ấy tránh đến muộn các cuộc họp.", words: ["She", "avoids", "arriving", "late", "to", "meetings", "."], answer: "She avoids arriving late to meetings ." },
-    { id: "s26-3", prompt_vn: "Tôi có kế hoạch thi IELTS vào năm tới.", words: ["I", "plan", "to", "take", "the", "IELTS", "exam", "next", "year", "."], answer: "I plan to take the IELTS exam next year ." },
+    { id: "s26-3", prompt_vn: "Tôi có kế hoạch tham gia công ty năm tới.", words: ["I", "plan", "to", "join", "the", "company", "next", "year", "."], answer: "I plan to join the company next year ." },
   ],
   quiz: [
     { id: "fq1", type: "multiple-choice", question: "Dịch: 'Tôi khuyến nghị thử phương pháp học mới.'", options: ["I recommend to try a new learning method.", "I recommend trying a new learning method.", "I recommend try a new learning method.", "I recommend tried a new learning method."], answer: "I recommend trying a new learning method." },
