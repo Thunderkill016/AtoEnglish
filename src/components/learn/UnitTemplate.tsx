@@ -499,12 +499,25 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
   const autoPlay  = userSettings.autoPlayAudio === true;  // default false
 
   // ─── TTS ──────────────────────────────────────────────────────
+  // Picks an explicit en-US voice to avoid browser defaulting to Vietnamese voice on VN devices
+  const pickEnglishVoice = () => {
+    const voices = window.speechSynthesis.getVoices();
+    return (
+      voices.find(v => v.lang === "en-US" && v.name.includes("Google")) ??
+      voices.find(v => v.lang === "en-US") ??
+      voices.find(v => v.lang.startsWith("en")) ??
+      null
+    );
+  };
+
   const playTTS = (text: string, rate = 0.85) => {
     if (!window.speechSynthesis) { toast.error("Trình duyệt không hỗ trợ TTS"); return; }
     window.speechSynthesis.cancel();
     const u = new SpeechSynthesisUtterance(text);
     u.lang = "en-US";
     u.rate = rate;
+    const voice = pickEnglishVoice();
+    if (voice) u.voice = voice;
     window.speechSynthesis.speak(u);
   };
 
@@ -564,11 +577,13 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
     if (!window.speechSynthesis) return;
     window.speechSynthesis.cancel();
     setIsPlayingDialogue(true);
+    const voice = pickEnglishVoice();
     let i = 0;
     const playNext = () => {
       if (i >= lines.length) { setIsPlayingDialogue(false); return; }
       const u = new SpeechSynthesisUtterance(lines[i].text);
       u.lang = "en-US"; u.rate = speed;
+      if (voice) u.voice = voice;
       u.onend = () => { i++; setTimeout(playNext, 800); };
       u.onerror = () => { i++; setTimeout(playNext, 800); };
       window.speechSynthesis.speak(u);

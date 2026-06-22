@@ -36,7 +36,7 @@ export default function LearnClient({
   unitStatuses,
 }: LearnClientProps) {
   return (
-    <div className="relative mx-auto max-w-4xl px-4 py-6 sm:py-12 sm:px-6 lg:px-8 min-h-screen overflow-x-hidden">
+    <div className="relative mx-auto max-w-4xl px-4 py-6 sm:py-12 sm:px-6 lg:px-8 min-h-screen overflow-x-hidden pb-20 sm:pb-0">
       {/* Background blurs */}
       <div className="pointer-events-none absolute top-10 left-1/2 -translate-x-1/2 -z-10 h-[400px] w-[90vw] max-w-[500px] rounded-full bg-emerald-500/5 dark:bg-emerald-500/3 blur-[120px]" />
       <div className="pointer-events-none absolute bottom-10 left-10 -z-10 h-[300px] w-[300px] rounded-full bg-teal-500/4 dark:bg-teal-500/2 blur-[100px]" />
