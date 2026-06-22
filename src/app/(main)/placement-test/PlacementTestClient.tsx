@@ -19,9 +19,9 @@ import {
   PLACEMENT_QUESTIONS,
   calculateResult,
   TOTAL_QUESTIONS,
-  GRAMMAR_COUNT,
-  VOCAB_COUNT,
   READING_COUNT,
+  VOCAB_COUNT,
+  LANG_USE_COUNT,
   type PlacementQuestion,
 } from "@/lib/data/placement-test";
 import { savePlacementResult } from "@/app/actions/progress";
@@ -36,13 +36,13 @@ const CEFR_COLORS: Record<string, string> = {
 };
 
 const SKILL_LABEL: Record<string, string> = {
-  grammar: "Ngữ pháp",
-  vocabulary: "Từ vựng",
-  reading: "Đọc hiểu",
+  "language-use": "Language Use",
+  vocabulary: "Vocabulary",
+  reading: "Reading",
 };
 
 const SKILL_ICON: Record<string, string> = {
-  grammar: "📐",
+  "language-use": "💬",
   vocabulary: "📝",
   reading: "📖",
 };
@@ -110,10 +110,10 @@ export default function PlacementTestClient() {
           {/* Stats grid */}
           <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 8, marginBottom: 24 }}>
             {[
-              { icon: "📐", label: "Ngữ pháp", count: GRAMMAR_COUNT },
-              { icon: "📝", label: "Từ vựng", count: VOCAB_COUNT },
-              { icon: "📖", label: "Đọc hiểu", count: READING_COUNT },
-            ].map((s) => (
+            { icon: "📖", label: "Reading", count: READING_COUNT },
+            { icon: "📝", label: "Vocabulary", count: VOCAB_COUNT },
+            { icon: "💬", label: "Language Use", count: LANG_USE_COUNT },
+          ].map((s) => (
               <div key={s.label} style={{ background: "#111118", border: "1px solid #27272a", borderRadius: 12, padding: "14px 10px", textAlign: "center" }}>
                 <div style={{ fontSize: 22, marginBottom: 4 }}>{s.icon}</div>
                 <div style={{ fontSize: 18, fontWeight: 800, color: "#fafafa" }}>{s.count}</div>
@@ -194,9 +194,6 @@ export default function PlacementTestClient() {
   // ── RESULTS SCREEN ──────────────────────────────────────────────────────────
   if (stage === "results" && result) {
     const color = CEFR_COLORS[result.cefrLevel] ?? "#10b981";
-    const grammarTotal = GRAMMAR_COUNT;
-    const vocabTotal = VOCAB_COUNT;
-    const readingTotal = READING_COUNT;
 
     return (
       <div style={{ minHeight: "100dvh", background: "#09090b", paddingBottom: 100 }}>
@@ -248,9 +245,9 @@ export default function PlacementTestClient() {
             {/* Skill breakdown */}
             <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 8, marginBottom: 16 }}>
               {[
-                { key: "grammar", score: result.grammarScore, total: grammarTotal },
-                { key: "vocabulary", score: result.vocabularyScore, total: vocabTotal },
-                { key: "reading", score: result.readingScore, total: readingTotal },
+                { key: "reading", score: result.readingScore, total: READING_COUNT },
+                { key: "vocabulary", score: result.vocabularyScore, total: VOCAB_COUNT },
+                { key: "language-use", score: result.languageUseScore, total: LANG_USE_COUNT },
               ].map((s) => (
                 <div key={s.key} style={{ background: "#111118", border: "1px solid #27272a", borderRadius: 12, padding: "12px 8px", textAlign: "center" }}>
                   <div style={{ fontSize: 18, marginBottom: 4 }}>{SKILL_ICON[s.key]}</div>

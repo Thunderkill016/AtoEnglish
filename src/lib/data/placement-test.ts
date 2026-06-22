@@ -1,453 +1,402 @@
-// ─── CEFR Placement Test — 40 Questions ─────────────────────────────────────
-// Grammar (20) + Vocabulary (12) + Reading (8)
+// ─── EF SET–style CEFR Placement Test — 40 Questions ────────────────────────
+// Format: Reading comprehension + Vocabulary in context (như EF SET Quick Check)
+// KHÔNG dùng isolated grammar drills — hiểu English in USE
 // Levels: A1 → A2 → B1 → B2
-// Based on Cambridge CEFR framework + common ESL test patterns
 
 export type CEFRLevel = "A1" | "A2" | "B1" | "B2";
-export type SkillType = "grammar" | "vocabulary" | "reading";
+export type SkillType = "reading" | "vocabulary" | "language-use";
 
 export interface PlacementQuestion {
   id: number;
   level: CEFRLevel;
   skill: SkillType;
-  context?: string;        // passage or situation (for reading/context questions)
+  context?: string;
   question: string;
   options: [string, string, string, string];
   correctAnswer: 0 | 1 | 2 | 3;
-  explanation: string;     // Vietnamese explanation
+  explanation: string;
 }
 
-// ─── READING PASSAGES ────────────────────────────────────────────────────────
+// ─── PASSAGES ────────────────────────────────────────────────────────────────
 
-const PASSAGE_A2 = `My name is Sarah. I work in a hospital as a nurse. I start work at 7 o'clock in the morning and finish at 3 o'clock in the afternoon. I live near the hospital, so I usually walk to work. I like my job because I help people every day.`;
+const P1 = `Tom is 8 years old. He lives with his mother, father, and sister. His sister's name is Amy. She is 5. Tom goes to school every day. He likes math and science. After school, he plays football with his friends.`;
 
-const PASSAGE_B1 = `Social media has changed the way people communicate. Many people now prefer to send messages online instead of calling or meeting in person. While this makes communication faster, some researchers believe it is reducing the quality of real friendships. A recent study found that people who spend more than three hours a day on social media feel lonelier than those who use it less.`;
+const P2 = `Maria works at a café near her home. She starts work at 8 a.m. and finishes at 4 p.m. She serves coffee and food to customers. The café is always busy on weekends. Maria enjoys her job because she meets many interesting people.`;
 
-// ─── QUESTIONS ───────────────────────────────────────────────────────────────
+const P3 = `Last summer, David and his family went on a camping trip. They drove to a national park and set up their tent near a river. Every morning, they went hiking in the forest. One evening, they saw a deer near their campsite. It was the best holiday David had ever had.`;
+
+const P4 = `Many cities around the world are trying to reduce air pollution. One way they do this is by encouraging people to use public transport instead of private cars. Some cities have introduced free bus services on certain days. Others have built more bicycle lanes. These changes have helped to improve air quality in several urban areas.`;
+
+const P5 = `The concept of remote work has changed significantly in recent years. While working from home was once seen as a privilege for a few, the COVID-19 pandemic forced millions of people worldwide to adopt this model. Studies show that many employees are more productive when working remotely, though others report feeling isolated. Companies are now exploring hybrid models that combine office days with remote working to balance these competing needs.`;
+
+const P6 = `Online shopping has transformed the way people buy goods. Rather than visiting physical stores, consumers can now browse thousands of products from their homes and have them delivered within days — or even hours. This convenience has led to the rise of large e-commerce platforms. However, critics point out that this trend has negative consequences for local businesses, which often cannot compete with the lower prices offered online.`;
 
 export const PLACEMENT_QUESTIONS: PlacementQuestion[] = [
 
-  // ══════════ GRAMMAR — A1 (câu 1–5) ══════════════════════════════════════════
+  // ══ A1 Reading — P1: Tom ══════════════════════════════════════════════════
   {
-    id: 1,
-    level: "A1",
-    skill: "grammar",
-    question: "She ___ a student.",
-    options: ["am", "is", "are", "be"],
-    correctAnswer: 1,
-    explanation: "Chủ ngữ 'She' (ngôi thứ 3 số ít) dùng 'is'. Am → I, Are → You/We/They.",
-  },
-  {
-    id: 2,
-    level: "A1",
-    skill: "grammar",
-    question: "I ___ coffee every morning.",
-    options: ["drinking", "drink", "drinks", "drank"],
-    correctAnswer: 1,
-    explanation: "Present Simple với 'I' → dùng động từ nguyên thể 'drink'. 'Drinks' dùng cho ngôi 3 số ít.",
-  },
-  {
-    id: 3,
-    level: "A1",
-    skill: "grammar",
-    question: "___ you like pizza?",
-    options: ["Do", "Does", "Are", "Is"],
-    correctAnswer: 0,
-    explanation: "Câu hỏi Yes/No với 'you' ở Present Simple → dùng 'Do'. 'Does' dùng cho He/She/It.",
-  },
-  {
-    id: 4,
-    level: "A1",
-    skill: "grammar",
-    question: "There ___ two chairs in the room.",
-    options: ["is", "are", "am", "be"],
-    correctAnswer: 1,
-    explanation: "'There are' dùng với danh từ số nhiều (two chairs). 'There is' dùng với số ít.",
-  },
-  {
-    id: 5,
-    level: "A1",
-    skill: "grammar",
-    question: "What time ___ you go to bed?",
-    options: ["does", "are", "do", "is"],
+    id: 1, level: "A1", skill: "reading", context: P1,
+    question: "How old is Tom?",
+    options: ["5 years old", "6 years old", "8 years old", "10 years old"],
     correctAnswer: 2,
-    explanation: "Câu hỏi với 'you' dùng 'do'. 'What time do you...?' là cấu trúc hỏi giờ chuẩn.",
+    explanation: "Câu đầu tiên: 'Tom is 8 years old.'",
+  },
+  {
+    id: 2, level: "A1", skill: "reading", context: P1,
+    question: "What is Tom's sister's name?",
+    options: ["Maria", "Amy", "Sara", "Lucy"],
+    correctAnswer: 1,
+    explanation: "'His sister's name is Amy.'",
+  },
+  {
+    id: 3, level: "A1", skill: "reading", context: P1,
+    question: "What does Tom do after school?",
+    options: ["He reads books.", "He watches TV.", "He plays football.", "He does homework."],
+    correctAnswer: 2,
+    explanation: "'After school, he plays football with his friends.'",
+  },
+  {
+    id: 4, level: "A1", skill: "reading", context: P1,
+    question: "What subjects does Tom like?",
+    options: ["English and art", "Math and science", "History and music", "PE and drama"],
+    correctAnswer: 1,
+    explanation: "'He likes math and science.'",
   },
 
-  // ══════════ GRAMMAR — A2 (câu 6–10) ═════════════════════════════════════════
+  // ══ A1 Vocabulary in context ══════════════════════════════════════════════
   {
-    id: 6,
-    level: "A2",
-    skill: "grammar",
-    question: "Yesterday, I ___ to the supermarket and ___ some food.",
-    options: ["go / buy", "went / bought", "went / buy", "go / bought"],
-    correctAnswer: 1,
-    explanation: "'Yesterday' → Past Simple. 'go → went', 'buy → bought'. Cả 2 động từ phải chia quá khứ.",
-  },
-  {
-    id: 7,
-    level: "A2",
-    skill: "grammar",
-    question: "She ___ TV when I called her.",
-    options: ["watched", "was watching", "watches", "is watching"],
-    correctAnswer: 1,
-    explanation: "Past Continuous (was watching) diễn tả hành động đang xảy ra khi có hành động khác xen vào (called).",
-  },
-  {
-    id: 8,
-    level: "A2",
-    skill: "grammar",
-    question: "I have lived in this city ___ ten years.",
-    options: ["since", "ago", "for", "from"],
+    id: 5, level: "A1", skill: "vocabulary",
+    question: "Choose the correct word: 'The weather is very ___. I need a coat.'",
+    options: ["hot", "windy", "cold", "sunny"],
     correctAnswer: 2,
-    explanation: "'For' + khoảng thời gian (ten years). 'Since' + mốc thời gian cụ thể (since 2014).",
+    explanation: "Cần áo khoác → trời lạnh (cold). Các lựa chọn khác không cần áo.",
   },
   {
-    id: 9,
-    level: "A2",
-    skill: "grammar",
-    question: "He is ___ than his brother.",
-    options: ["tall", "more tall", "tallest", "taller"],
+    id: 6, level: "A1", skill: "vocabulary",
+    question: "Choose the correct word: 'I am ___. I want to eat something.'",
+    options: ["tired", "thirsty", "hungry", "bored"],
+    correctAnswer: 2,
+    explanation: "Muốn ăn → đói (hungry). Thirsty = khát, Tired = mệt, Bored = chán.",
+  },
+  {
+    id: 7, level: "A1", skill: "vocabulary",
+    question: "Choose the correct word: 'She goes to the ___ to buy medicine.'",
+    options: ["bakery", "pharmacy", "library", "garage"],
+    correctAnswer: 1,
+    explanation: "Pharmacy = hiệu thuốc. Bakery = tiệm bánh, Library = thư viện.",
+  },
+
+  // ══ A1 Language use ═══════════════════════════════════════════════════════
+  {
+    id: 8, level: "A1", skill: "language-use",
+    question: "'___ your name?' 'My name is Peter.'",
+    options: ["What is", "Where is", "Who is", "How is"],
+    correctAnswer: 0,
+    explanation: "Hỏi tên dùng 'What is your name?' → đây là cụm từ chào hỏi cơ bản nhất.",
+  },
+  {
+    id: 9, level: "A1", skill: "language-use",
+    question: "'How many brothers ___ you have?' 'I have two.'",
+    options: ["is", "are", "do", "does"],
+    correctAnswer: 2,
+    explanation: "'How many + noun + do + subject + have?' Với 'you' dùng 'do'.",
+  },
+  {
+    id: 10, level: "A1", skill: "language-use",
+    question: "'___ is the bank?' 'It's on Main Street.'",
+    options: ["What", "Who", "Where", "When"],
+    correctAnswer: 2,
+    explanation: "Hỏi địa điểm (Main Street = địa chỉ) → 'Where'. What = cái gì, Who = ai, When = khi nào.",
+  },
+
+  // ══ A2 Reading — P2: Maria ════════════════════════════════════════════════
+  {
+    id: 11, level: "A2", skill: "reading", context: P2,
+    question: "Where does Maria work?",
+    options: ["At a hospital", "At a café", "At a school", "At a supermarket"],
+    correctAnswer: 1,
+    explanation: "'Maria works at a café near her home.'",
+  },
+  {
+    id: 12, level: "A2", skill: "reading", context: P2,
+    question: "What time does Maria finish work?",
+    options: ["At 8 a.m.", "At 12 p.m.", "At 4 p.m.", "At 6 p.m."],
+    correctAnswer: 2,
+    explanation: "'She starts work at 8 a.m. and finishes at 4 p.m.'",
+  },
+  {
+    id: 13, level: "A2", skill: "reading", context: P2,
+    question: "When is the café busiest?",
+    options: ["On Mondays", "Every morning", "On weekends", "On public holidays"],
+    correctAnswer: 2,
+    explanation: "'The café is always busy on weekends.'",
+  },
+  {
+    id: 14, level: "A2", skill: "reading", context: P3,
+    question: "Where did David's family go last summer?",
+    options: ["To the beach", "To a national park", "To another country", "To a hotel"],
+    correctAnswer: 1,
+    explanation: "'They drove to a national park and set up their tent near a river.'",
+  },
+  {
+    id: 15, level: "A2", skill: "reading", context: P3,
+    question: "What animal did they see near the campsite?",
+    options: ["A fox", "A rabbit", "A bear", "A deer"],
     correctAnswer: 3,
-    explanation: "So sánh hơn (comparative) với tính từ ngắn: thêm '-er'. tall → taller.",
-  },
-  {
-    id: 10,
-    level: "A2",
-    skill: "grammar",
-    question: "You ___ wear a seatbelt in a car. It's the law.",
-    options: ["should", "must", "can", "might"],
-    correctAnswer: 1,
-    explanation: "'Must' diễn tả nghĩa vụ bắt buộc (obligation). 'Should' là lời khuyên, nhẹ hơn.",
+    explanation: "'One evening, they saw a deer near their campsite.'",
   },
 
-  // ══════════ GRAMMAR — B1 (câu 11–16) ════════════════════════════════════════
+  // ══ A2 Vocabulary in context ══════════════════════════════════════════════
   {
-    id: 11,
-    level: "B1",
-    skill: "grammar",
-    question: "If I ___ more money, I would travel the world.",
-    options: ["have", "had", "would have", "will have"],
+    id: 16, level: "A2", skill: "vocabulary",
+    question: "The flight was ___. It arrived two hours after the scheduled time.",
+    options: ["on time", "delayed", "cancelled", "early"],
     correctAnswer: 1,
-    explanation: "Second Conditional: If + past simple, would + verb. Điều kiện không có thật ở hiện tại.",
+    explanation: "Đến trễ 2 tiếng so với lịch → delayed (bị hoãn/trễ).",
   },
   {
-    id: 12,
-    level: "B1",
-    skill: "grammar",
-    question: "The Eiffel Tower ___ in Paris in 1889.",
-    options: ["built", "was built", "has built", "is built"],
-    correctAnswer: 1,
-    explanation: "Câu bị động (Passive) ở Past Simple: was/were + past participle. 'Built' là V3 của 'build'.",
+    id: 17, level: "A2", skill: "vocabulary",
+    question: "I need to ___ some money from the ATM before we go shopping.",
+    options: ["spend", "borrow", "withdraw", "deposit"],
+    correctAnswer: 2,
+    explanation: "Rút tiền từ ATM = withdraw. Deposit = gửi tiền, Borrow = vay, Spend = tiêu.",
   },
   {
-    id: 13,
-    level: "B1",
-    skill: "grammar",
-    question: "I wish I ___ speak French fluently.",
-    options: ["can", "could", "will", "would"],
+    id: 18, level: "A2", skill: "vocabulary",
+    question: "She looked at the ___ to check when the next bus would arrive.",
+    options: ["receipt", "timetable", "menu", "invoice"],
     correctAnswer: 1,
-    explanation: "'Wish' + past simple/could → diễn tả mong muốn về điều không có thật hiện tại.",
-  },
-  {
-    id: 14,
-    level: "B1",
-    skill: "grammar",
-    question: "She told me that she ___ tired.",
-    options: ["is", "was", "were", "be"],
-    correctAnswer: 1,
-    explanation: "Reported Speech: hiện tại → quá khứ. 'is' → 'was' khi lùi thời (backshifting).",
-  },
-  {
-    id: 15,
-    level: "B1",
-    skill: "grammar",
-    question: "___ having breakfast, she went to work.",
-    options: ["Before", "After", "While", "During"],
-    correctAnswer: 1,
-    explanation: "'After + V-ing' diễn tả hành động xảy ra trước. Cả 'before' và 'after' đều dùng được với V-ing.",
-  },
-  {
-    id: 16,
-    level: "B1",
-    skill: "grammar",
-    question: "He ___ here for 3 hours. He looks exhausted.",
-    options: ["was waiting", "has been waiting", "waited", "is waiting"],
-    correctAnswer: 1,
-    explanation: "Present Perfect Continuous: has/have been + V-ing. Diễn tả hành động bắt đầu quá khứ, vẫn tiếp tục hoặc vừa kết thúc.",
+    explanation: "Lịch trình xe buýt = timetable (thời gian biểu). Receipt = hóa đơn, Menu = thực đơn.",
   },
 
-  // ══════════ GRAMMAR — B2 (câu 17–20) ════════════════════════════════════════
+  // ══ A2 Language use ═══════════════════════════════════════════════════════
   {
-    id: 17,
-    level: "B2",
-    skill: "grammar",
-    question: "Had she studied harder, she ___ the exam.",
-    options: ["would pass", "will have passed", "would have passed", "would have pass"],
-    correctAnswer: 2,
-    explanation: "Third Conditional: Had + V3, would have + V3. Điều kiện không có thật trong quá khứ.",
-  },
-  {
-    id: 18,
-    level: "B2",
-    skill: "grammar",
-    question: "The report needs ___ before the meeting.",
-    options: ["to finish", "finishing", "to be finished", "being finish"],
-    correctAnswer: 2,
-    explanation: "'Need to be + past participle' = bị động với 'need'. Báo cáo cần được hoàn thành (bởi ai đó).",
-  },
-  {
-    id: 19,
-    level: "B2",
-    skill: "grammar",
-    question: "Not until he arrived home ___ he realize he had lost his keys.",
-    options: ["he did", "did he", "does he", "had he"],
+    id: 19, level: "A2", skill: "language-use",
+    question: "I've lived in Hanoi ___ I was born.",
+    options: ["for", "since", "during", "ago"],
     correctAnswer: 1,
-    explanation: "Inversion sau 'Not until': Not until + clause, did + subject + verb. Cấu trúc nhấn mạnh.",
+    explanation: "'Since' + mốc thời gian cụ thể (when I was born). 'For' + khoảng thời gian (for 5 years).",
   },
   {
-    id: 20,
-    level: "B2",
-    skill: "grammar",
-    question: "I'd rather you ___ tell anyone about this.",
-    options: ["don't", "won't", "didn't", "wouldn't"],
+    id: 20, level: "A2", skill: "language-use",
+    question: "This is ___ restaurant I've ever been to. The food is amazing!",
+    options: ["good", "better", "the best", "more good"],
     correctAnswer: 2,
-    explanation: "'Would rather + subject + past simple' → diễn tả mong muốn người khác làm/không làm gì.",
+    explanation: "Superlative (tốt nhất trong tất cả) = 'the best'. 'Good → better → the best'.",
   },
 
-  // ══════════ VOCABULARY — A1 (câu 21–22) ══════════════════════════════════════
+  // ══ B1 Reading — P4: Air Pollution ═══════════════════════════════════════
   {
-    id: 21,
-    level: "A1",
-    skill: "vocabulary",
-    question: "Choose the word that means 'the meal you eat in the morning':",
-    options: ["lunch", "dinner", "breakfast", "snack"],
-    correctAnswer: 2,
-    explanation: "'Breakfast' = bữa sáng. Lunch = bữa trưa, Dinner = bữa tối, Snack = đồ ăn vặt.",
-  },
-  {
-    id: 22,
-    level: "A1",
-    skill: "vocabulary",
-    question: "Which word means the opposite of 'hot'?",
-    options: ["warm", "cold", "cool", "nice"],
-    correctAnswer: 1,
-    explanation: "'Cold' là từ trái nghĩa với 'hot'. Warm = ấm áp, Cool = mát mẻ.",
-  },
-
-  // ══════════ VOCABULARY — A2 (câu 23–25) ═════════════════════════════════════
-  {
-    id: 23,
-    level: "A2",
-    skill: "vocabulary",
-    question: "She works in a hospital. She is a ___.",
-    options: ["teacher", "engineer", "nurse", "lawyer"],
-    correctAnswer: 2,
-    explanation: "'Nurse' = y tá/điều dưỡng, làm việc trong bệnh viện (hospital). Teacher = giáo viên, Engineer = kỹ sư.",
-  },
-  {
-    id: 24,
-    level: "A2",
-    skill: "vocabulary",
-    question: "I need to ___ the bus at the next stop.",
-    options: ["take off", "get off", "go off", "turn off"],
-    correctAnswer: 1,
-    explanation: "'Get off' = xuống xe (bus/train). 'Get on' = lên xe. 'Take off' = cất cánh (máy bay) hoặc cởi ra.",
-  },
-  {
-    id: 25,
-    level: "A2",
-    skill: "vocabulary",
-    question: "The weather forecast says it will ___ tomorrow.",
-    options: ["rain", "rainy", "raining", "rained"],
-    correctAnswer: 0,
-    explanation: "'It will rain' — sau 'will' dùng động từ nguyên thể. 'Rain' là động từ ở đây.",
-  },
-
-  // ══════════ VOCABULARY — B1 (câu 26–29) ═════════════════════════════════════
-  {
-    id: 26,
-    level: "B1",
-    skill: "vocabulary",
-    question: "The company decided to ___ its plans to open a new office.",
-    options: ["abandon", "adopt", "achieve", "approve"],
-    correctAnswer: 0,
-    explanation: "'Abandon' = từ bỏ, hủy bỏ kế hoạch. Adopt = áp dụng/nhận nuôi, Achieve = đạt được, Approve = chấp thuận.",
-  },
-  {
-    id: 27,
-    level: "B1",
-    skill: "vocabulary",
-    question: "Working long hours can have a negative ___ on your health.",
-    options: ["affect", "effective", "effect", "effort"],
-    correctAnswer: 2,
-    explanation: "'Effect' (noun) = tác động, ảnh hưởng. 'Affect' (verb) = ảnh hưởng đến. 'Have an effect on' là collocation chuẩn.",
-  },
-  {
-    id: 28,
-    level: "B1",
-    skill: "vocabulary",
-    question: "She gave a very ___ speech — everyone was moved.",
-    options: ["powerful", "powerfully", "power", "powered"],
-    correctAnswer: 0,
-    explanation: "Trước noun ('speech') cần adjective. 'Powerful' = mạnh mẽ, cảm xúc.",
-  },
-  {
-    id: 29,
-    level: "B1",
-    skill: "vocabulary",
-    question: "The new policy will ___ all employees, regardless of their position.",
-    options: ["effect", "affect", "infect", "reflect"],
-    correctAnswer: 1,
-    explanation: "'Affect' (verb) = ảnh hưởng đến. Đây là lỗi affect/effect hay gặp nhất — 'affect' là động từ.",
-  },
-
-  // ══════════ VOCABULARY — B2 (câu 30–32) ═════════════════════════════════════
-  {
-    id: 30,
-    level: "B2",
-    skill: "vocabulary",
-    question: "The government needs to ___ the issue of rising unemployment immediately.",
-    options: ["ignore", "address", "access", "assess"],
-    correctAnswer: 1,
-    explanation: "'Address an issue' = giải quyết/đề cập đến vấn đề. Đây là collocation quan trọng trong business English.",
-  },
-  {
-    id: 31,
-    level: "B2",
-    skill: "vocabulary",
-    question: "Despite the economic ___, the company managed to grow.",
-    options: ["downturn", "download", "downfall", "drawback"],
-    correctAnswer: 0,
-    explanation: "'Economic downturn' = suy thoái kinh tế. Downfall = sụp đổ, Drawback = nhược điểm.",
-  },
-  {
-    id: 32,
-    level: "B2",
-    skill: "vocabulary",
-    question: "The study's findings are ___ with previous research in this field.",
-    options: ["consistent", "persistent", "resistant", "insistent"],
-    correctAnswer: 0,
-    explanation: "'Consistent with' = nhất quán với, phù hợp với. Academic/business English quan trọng.",
-  },
-
-  // ══════════ READING — A2 (câu 33–36) — Passage về Sarah ═════════════════════
-  {
-    id: 33,
-    level: "A2",
-    skill: "reading",
-    context: PASSAGE_A2,
-    question: "What is Sarah's job?",
-    options: ["She is a doctor.", "She is a teacher.", "She is a nurse.", "She is a receptionist."],
-    correctAnswer: 2,
-    explanation: "Bài đọc nói 'I work in a hospital as a nurse.' → Sarah là y tá.",
-  },
-  {
-    id: 34,
-    level: "A2",
-    skill: "reading",
-    context: PASSAGE_A2,
-    question: "What time does Sarah start work?",
-    options: ["At 3 o'clock.", "At 7 o'clock.", "At 8 o'clock.", "At 9 o'clock."],
-    correctAnswer: 1,
-    explanation: "'I start work at 7 o'clock in the morning.' → Sarah bắt đầu lúc 7 giờ sáng.",
-  },
-  {
-    id: 35,
-    level: "A2",
-    skill: "reading",
-    context: PASSAGE_A2,
-    question: "How does Sarah usually get to work?",
-    options: ["By bus.", "By car.", "By bicycle.", "On foot."],
-    correctAnswer: 3,
-    explanation: "'I usually walk to work.' → Sarah đi bộ đến chỗ làm.",
-  },
-  {
-    id: 36,
-    level: "A2",
-    skill: "reading",
-    context: PASSAGE_A2,
-    question: "Why does Sarah like her job?",
+    id: 21, level: "B1", skill: "reading", context: P4,
+    question: "What is the main topic of this text?",
     options: [
-      "Because the pay is good.",
-      "Because she helps people every day.",
-      "Because she works short hours.",
-      "Because the hospital is near her house.",
+      "The benefits of using private cars",
+      "Ways cities are trying to reduce air pollution",
+      "How bicycles are made",
+      "The history of public transport",
     ],
     correctAnswer: 1,
-    explanation: "'I like my job because I help people every day.' → Lý do Sarah thích việc là vì giúp đỡ mọi người.",
+    explanation: "Toàn bài nói về các cách thành phố giảm ô nhiễm không khí.",
+  },
+  {
+    id: 22, level: "B1", skill: "reading", context: P4,
+    question: "According to the text, what have some cities introduced?",
+    options: [
+      "Free taxi services",
+      "Free bus services on certain days",
+      "Electric cars for all citizens",
+      "New airports",
+    ],
+    correctAnswer: 1,
+    explanation: "'Some cities have introduced free bus services on certain days.'",
+  },
+  {
+    id: 23, level: "B1", skill: "reading", context: P4,
+    question: "What is the result of these changes, according to the text?",
+    options: [
+      "Traffic has increased.",
+      "Air quality has improved in some cities.",
+      "More people are buying cars.",
+      "Bicycle lanes have been removed.",
+    ],
+    correctAnswer: 1,
+    explanation: "'These changes have helped to improve air quality in several urban areas.'",
+  },
+  {
+    id: 24, level: "B1", skill: "reading", context: P4,
+    question: "The word 'urban' in the last sentence means:",
+    options: ["rural", "industrial", "relating to cities", "relating to nature"],
+    correctAnswer: 2,
+    explanation: "'Urban' = thuộc về thành phố (city). Opposite of rural = nông thôn.",
   },
 
-  // ══════════ READING — B1 (câu 37–40) — Passage về Social Media ══════════════
+  // ══ B1 Vocabulary in context ══════════════════════════════════════════════
   {
-    id: 37,
-    level: "B1",
-    skill: "reading",
-    context: PASSAGE_B1,
-    question: "According to the passage, what has social media changed?",
-    options: [
-      "The way people work.",
-      "The way people communicate.",
-      "The way people travel.",
-      "The way people study.",
-    ],
+    id: 25, level: "B1", skill: "vocabulary",
+    question: "The company needs to ___ its marketing strategy to attract younger customers.",
+    options: ["ignore", "revise", "avoid", "forget"],
     correctAnswer: 1,
-    explanation: "'Social media has changed the way people communicate.' — câu đầu của bài rõ ràng.",
+    explanation: "Revise = xem xét lại, chỉnh sửa. Đây là từ quan trọng trong business English.",
   },
   {
-    id: 38,
-    level: "B1",
-    skill: "reading",
-    context: PASSAGE_B1,
-    question: "What do some researchers believe about social media?",
-    options: [
-      "It helps people make more friends.",
-      "It is reducing the quality of real friendships.",
-      "It makes communication slower.",
-      "It improves people's mental health.",
-    ],
-    correctAnswer: 1,
-    explanation: "'some researchers believe it is reducing the quality of real friendships' — đây là lo ngại của các nhà nghiên cứu.",
+    id: 26, level: "B1", skill: "vocabulary",
+    question: "He was feeling very ___ after working 12 hours without a break.",
+    options: ["energetic", "enthusiastic", "exhausted", "excited"],
+    correctAnswer: 2,
+    explanation: "Exhausted = kiệt sức hoàn toàn. Làm 12 tiếng không nghỉ → mệt kiệt.",
   },
   {
-    id: 39,
-    level: "B1",
-    skill: "reading",
-    context: PASSAGE_B1,
-    question: "What did the study find about people who use social media a lot?",
-    options: [
-      "They have better friendships.",
-      "They feel lonelier.",
-      "They communicate better.",
-      "They have more free time.",
-    ],
-    correctAnswer: 1,
-    explanation: "'people who spend more than three hours a day on social media feel lonelier than those who use it less.'",
+    id: 27, level: "B1", skill: "vocabulary",
+    question: "The new law will ___ all citizens, not just businesses.",
+    options: ["ignore", "replace", "affect", "create"],
+    correctAnswer: 2,
+    explanation: "Affect = ảnh hưởng đến. 'The law affects everyone' = luật này tác động đến mọi người.",
   },
   {
-    id: 40,
-    level: "B1",
-    skill: "reading",
-    context: PASSAGE_B1,
-    question: "What is the main idea of this passage?",
+    id: 28, level: "B1", skill: "vocabulary",
+    question: "We need to find a ___ to the problem before the deadline.",
+    options: ["question", "solution", "problem", "confusion"],
+    correctAnswer: 1,
+    explanation: "Solution = giải pháp. 'Find a solution to a problem' là collocation chuẩn.",
+  },
+
+  // ══ B1 Language use ═══════════════════════════════════════════════════════
+  {
+    id: 29, level: "B1", skill: "language-use",
+    question: "If I ___ more time, I would learn a new language.",
+    options: ["have", "had", "will have", "would have"],
+    correctAnswer: 1,
+    explanation: "Second Conditional: If + past simple → điều không có thật hiện tại. 'If I had...'",
+  },
+  {
+    id: 30, level: "B1", skill: "language-use",
+    question: "She told me that she ___ finish the report by Friday.",
+    options: ["will", "would", "can", "is going to"],
+    correctAnswer: 1,
+    explanation: "Reported speech: will → would. 'She said she WOULD finish...' (backshift).",
+  },
+
+  // ══ B2 Reading — P5: Remote Work ═════════════════════════════════════════
+  {
+    id: 31, level: "B2", skill: "reading", context: P5,
+    question: "What does the text say about remote work before the pandemic?",
     options: [
-      "Social media should be banned.",
-      "Online communication is always better.",
-      "Social media has benefits but may harm real relationships.",
-      "Researchers support unlimited social media use.",
+      "It was the standard way of working.",
+      "It was seen as a privilege for a few.",
+      "It was illegal in most countries.",
+      "It was only used by technology companies.",
+    ],
+    correctAnswer: 1,
+    explanation: "'working from home was once seen as a privilege for a few' — trước dịch, làm việc từ nhà là đặc quyền.",
+  },
+  {
+    id: 32, level: "B2", skill: "reading", context: P5,
+    question: "Which of the following best describes the attitude of employees towards remote work, according to the text?",
+    options: [
+      "All employees prefer working from home.",
+      "No employees want to work from home.",
+      "Opinions are mixed — some are more productive, others feel isolated.",
+      "Employees prefer office work because of better salaries.",
     ],
     correctAnswer: 2,
-    explanation: "Bài viết đề cập cả 2 mặt: social media làm giao tiếp nhanh hơn NHƯNG có thể làm giảm chất lượng tình bạn thật.",
+    explanation: "'many employees are more productive... though others report feeling isolated.' → ý kiến trái chiều.",
+  },
+  {
+    id: 33, level: "B2", skill: "reading", context: P5,
+    question: "What is the 'hybrid model' mentioned in the text?",
+    options: [
+      "A new type of electric car",
+      "A combination of office days and remote working",
+      "A training programme for new employees",
+      "A type of company with both local and international offices",
+    ],
+    correctAnswer: 1,
+    explanation: "'hybrid models that combine office days with remote working' — kết hợp làm ở văn phòng và ở nhà.",
+  },
+  {
+    id: 34, level: "B2", skill: "reading", context: P5,
+    question: "The word 'competing' in the last sentence ('competing needs') suggests that the needs are:",
+    options: ["similar and easy to balance", "in conflict with each other", "unimportant", "temporary"],
+    correctAnswer: 1,
+    explanation: "'Competing needs' = những nhu cầu mâu thuẫn nhau, khó thỏa mãn cùng lúc.",
+  },
+
+  // ══ B2 Reading — P6: Online Shopping ════════════════════════════════════
+  {
+    id: 35, level: "B2", skill: "reading", context: P6,
+    question: "What is the main argument of critics mentioned in the text?",
+    options: [
+      "Online shopping is too slow.",
+      "Online shopping harms local businesses.",
+      "E-commerce platforms are unreliable.",
+      "Delivery services are too expensive.",
+    ],
+    correctAnswer: 1,
+    explanation: "'this trend has negative consequences for local businesses, which often cannot compete with lower prices.'",
+  },
+  {
+    id: 36, level: "B2", skill: "reading", context: P6,
+    question: "The phrase 'browse thousands of products' means:",
+    options: [
+      "to buy all available products",
+      "to look through many products without necessarily buying",
+      "to compare prices at different shops",
+      "to return unwanted products",
+    ],
+    correctAnswer: 1,
+    explanation: "Browse = lướt xem qua nhiều mục (không nhất thiết phải mua). Giống browse web.",
+  },
+
+  // ══ B2 Vocabulary in context ══════════════════════════════════════════════
+  {
+    id: 37, level: "B2", skill: "vocabulary",
+    question: "The government's decision to raise taxes was met with widespread ___.",
+    options: ["enthusiasm", "opposition", "support", "indifference"],
+    correctAnswer: 1,
+    explanation: "Opposition = sự phản đối. 'Met with opposition' = gặp phải sự phản đối — collocation quan trọng.",
+  },
+  {
+    id: 38, level: "B2", skill: "vocabulary",
+    question: "The new policy aims to ___ the gap between rich and poor.",
+    options: ["widen", "narrow", "ignore", "celebrate"],
+    correctAnswer: 1,
+    explanation: "Narrow the gap = thu hẹp khoảng cách. Collocation rất phổ biến trong academic/business English.",
+  },
+
+  // ══ B2 Language use ═══════════════════════════════════════════════════════
+  {
+    id: 39, level: "B2", skill: "language-use",
+    question: "Had she read the instructions carefully, she ___ the mistake.",
+    options: [
+      "would avoid",
+      "will have avoided",
+      "would have avoided",
+      "avoided",
+    ],
+    correctAnswer: 2,
+    explanation: "Third Conditional (inverted): Had + V3, would have + V3. Sai lầm trong quá khứ không thể thay đổi.",
+  },
+  {
+    id: 40, level: "B2", skill: "language-use",
+    question: "Not only ___ the project on time, but it also came in under budget.",
+    options: [
+      "they delivered",
+      "delivered they",
+      "did they deliver",
+      "they did deliver",
+    ],
+    correctAnswer: 2,
+    explanation: "Inversion sau 'Not only': Not only + auxiliary + subject + verb. Cấu trúc nhấn mạnh B2.",
   },
 ];
 
-// ─── Scoring Logic ─────────────────────────────────────────────────────────────
+// ─── Scoring Logic ────────────────────────────────────────────────────────────
 
 export interface TestResult {
   totalScore: number;
-  grammarScore: number;
-  vocabularyScore: number;
   readingScore: number;
+  vocabularyScore: number;
+  languageUseScore: number;
   cefrLevel: CEFRLevel;
   levelLabel: string;
   levelDescription: string;
@@ -456,21 +405,19 @@ export interface TestResult {
 
 export function calculateResult(answers: Record<number, number>): TestResult {
   let totalScore = 0;
-  let grammarScore = 0;
-  let vocabularyScore = 0;
   let readingScore = 0;
+  let vocabularyScore = 0;
+  let languageUseScore = 0;
 
   for (const q of PLACEMENT_QUESTIONS) {
-    const userAnswer = answers[q.id];
-    if (userAnswer === q.correctAnswer) {
+    if (answers[q.id] === q.correctAnswer) {
       totalScore++;
-      if (q.skill === "grammar") grammarScore++;
+      if (q.skill === "reading") readingScore++;
       else if (q.skill === "vocabulary") vocabularyScore++;
-      else if (q.skill === "reading") readingScore++;
+      else languageUseScore++;
     }
   }
 
-  // Score → CEFR level
   let cefrLevel: CEFRLevel;
   let levelLabel: string;
   let levelDescription: string;
@@ -479,59 +426,51 @@ export function calculateResult(answers: Record<number, number>): TestResult {
   if (totalScore <= 10) {
     cefrLevel = "A1";
     levelLabel = "A1 — Beginner";
-    levelDescription = "Mày đang ở mức khởi đầu. Đây là điểm xuất phát tốt — tất cả người giỏi tiếng Anh đều bắt đầu từ đây!";
+    levelDescription = "Mày đang ở mức khởi đầu — điểm xuất phát tốt! Mọi người giỏi tiếng Anh đều bắt đầu từ đây.";
     nextSteps = [
-      "Học 10 từ vựng/ngày theo theme: chào hỏi, gia đình, số đếm",
-      "Luyện phát âm IPA 44 âm cơ bản (vào trang Pronunciation)",
-      "Nghe BBC Learning English 15 phút/ngày (beginner level)",
-      "Học Present Simple và cách tự giới thiệu bản thân",
+      "Học 10 từ vựng/ngày: greetings, numbers, family, food",
+      "Luyện 44 âm IPA cơ bản (vào trang Pronunciation)",
+      "Nghe BBC Learning English 15 phút/ngày (beginner)",
+      "Mục tiêu ngắn hạn: Pass EF SET Quick Check A1",
     ];
   } else if (totalScore <= 20) {
     cefrLevel = "A2";
     levelLabel = "A2 — Elementary";
-    levelDescription = "Mày đã có nền tảng cơ bản tốt. Tiếp tục xây thêm vocab và grammar là mày sẽ vươn lên B1 nhanh thôi.";
+    levelDescription = "Mày có nền tảng cơ bản tốt! Xây thêm vocab và practice reading là lên B1 nhanh thôi.";
     nextSteps = [
-      "Mở rộng vocab: 1500–2000 từ theo chủ đề (du lịch, công việc, sức khoẻ)",
-      "Học Past Simple, Comparatives, Modal Verbs",
-      "Bắt đầu viết journal 3–5 câu tiếng Anh/ngày",
+      "Mở rộng vocab lên 1500–2000 từ (travel, work, health)",
+      "Đọc News in Levels — Level 1 & 2 mỗi ngày",
+      "Viết journal 3–5 câu tiếng Anh/ngày",
       "Language exchange HelloTalk 1–2 lần/tuần",
     ];
   } else if (totalScore <= 30) {
     cefrLevel = "B1";
     levelLabel = "B1 — Intermediate";
-    levelDescription = "Mày ở mức trung cấp khá tốt! Giao tiếp độc lập trong tình huống quen thuộc. Bây giờ focus vào fluency và business English.";
+    levelDescription = "Trung cấp vững! Giao tiếp độc lập được. Giờ focus vào fluency và business English.";
     nextSteps = [
-      "Nghe podcast tiếng Anh thường (News in Levels, TED Easy)",
-      "Học Conditionals, Passive Voice, Reported Speech",
-      "Luyện speaking với AI Roleplay trong app",
-      "Bắt đầu đọc tech blog, GitHub README bằng tiếng Anh",
+      "Nghe podcast thường: News in Levels 3, TED Easy",
+      "Luyện speaking với AI Roleplay",
+      "Đọc tech blog và GitHub README bằng tiếng Anh",
+      "Học business email + product description writing",
     ];
   } else {
     cefrLevel = "B2";
     levelLabel = "B2 — Upper Intermediate";
-    levelDescription = "Mày ở mức khá cao! Có thể giao tiếp tự tin với native speakers. Focus vào business English và pitch AtoEnglish ra thị trường Mỹ.";
+    levelDescription = "Mày ở level khá cao! Tự tin giao tiếp với native. Focus business English để pitch AtoEnglish ra US.";
     nextSteps = [
-      "Luyện business writing: cold email, product description",
-      "Nghe podcast thường tốc độ (Indie Hackers, How I Built This)",
-      "Book 1–2 buổi Italki/tháng để feedback pronunciation",
-      "Tham gia cộng đồng tech Mỹ (Discord, HackerNews comments)",
+      "Luyện cold email và product pitch bằng tiếng Anh",
+      "Nghe Indie Hackers, How I Built This (native speed)",
+      "Italki 1–2 buổi/tháng để feedback pronunciation",
+      "Tham gia cộng đồng tech Mỹ: Discord, HackerNews",
     ];
   }
 
-  return {
-    totalScore,
-    grammarScore,
-    vocabularyScore,
-    readingScore,
-    cefrLevel,
-    levelLabel,
-    levelDescription,
-    nextSteps,
-  };
+  return { totalScore, readingScore, vocabularyScore, languageUseScore, cefrLevel, levelLabel, levelDescription, nextSteps };
 }
 
-// ─── Helper ───────────────────────────────────────────────────────────────────
 export const TOTAL_QUESTIONS = PLACEMENT_QUESTIONS.length;
-export const GRAMMAR_COUNT = PLACEMENT_QUESTIONS.filter(q => q.skill === "grammar").length;
-export const VOCAB_COUNT = PLACEMENT_QUESTIONS.filter(q => q.skill === "vocabulary").length;
 export const READING_COUNT = PLACEMENT_QUESTIONS.filter(q => q.skill === "reading").length;
+export const VOCAB_COUNT = PLACEMENT_QUESTIONS.filter(q => q.skill === "vocabulary").length;
+export const LANG_USE_COUNT = PLACEMENT_QUESTIONS.filter(q => q.skill === "language-use").length;
+// Keep GRAMMAR_COUNT as alias for backwards compat
+export const GRAMMAR_COUNT = LANG_USE_COUNT;
