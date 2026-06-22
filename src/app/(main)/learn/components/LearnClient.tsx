@@ -3,7 +3,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { Lock, Play, CheckCircle, Sparkles, BookOpen, Star, Clock, RotateCcw, BookOpenCheck, Trophy } from "lucide-react";
+import { Lock, Play, CheckCircle, Sparkles, BookOpen, Star, Clock, RotateCcw, BookOpenCheck, Trophy, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface UnitStatus {
@@ -74,6 +74,29 @@ export default function LearnClient({
           Hoàn thành các chương học theo phương pháp IPOR (Input - Processing - Output - Review) để mở khóa các bài học nâng cao hơn.
         </motion.p>
       </div>
+
+      {/* New user: placement test CTA */}
+      {completedUnitIds.length === 0 && (
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.25 }}
+          className="mb-8"
+        >
+          <Link
+            href="/placement-test"
+            className="flex items-center gap-3 p-4 rounded-2xl border border-violet-500/25 bg-violet-500/5 hover:bg-violet-500/10 hover:border-violet-500/35 transition-all duration-200 group"
+          >
+            <span className="flex size-10 items-center justify-center rounded-xl bg-violet-500/15 text-xl shrink-0">🎯</span>
+            <div className="flex-1 min-w-0">
+              <p className="text-xs font-black text-violet-400 uppercase tracking-widest mb-0.5">Bước đầu tiên</p>
+              <p className="text-sm font-bold text-zinc-900 dark:text-zinc-50">Xác định trình độ CEFR của mày</p>
+              <p className="text-xs text-zinc-500 dark:text-zinc-400">40 câu · ~20 phút · Tự động set level phù hợp</p>
+            </div>
+            <ChevronRight className="size-5 text-violet-400/60 group-hover:text-violet-400 group-hover:translate-x-0.5 transition-all shrink-0" />
+          </Link>
+        </motion.div>
+      )}
 
       {/* Roadmap Path timeline */}
       <div className="relative space-y-8 sm:space-y-12 pb-8 sm:pb-16">

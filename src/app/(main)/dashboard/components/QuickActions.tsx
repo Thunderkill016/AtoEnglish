@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { Play, Mic, Map, BookOpen } from "lucide-react";
+import { Play, Mic, BookOpen, BookOpenCheck } from "lucide-react";
+
 
 interface QuickActionsProps {
   currentUnitRoute: string;
@@ -14,11 +15,18 @@ const actions = (unitRoute: string) => [
     hover: "hover:border-emerald-500/30 hover:bg-emerald-500/5",
   },
   {
-    href: "/speaking",
-    icon: Mic,
-    label: "Luyện phát âm",
+    href: "/grammar",
+    icon: BookOpenCheck,
+    label: "Ngữ pháp",
     iconBg: "bg-blue-500/10 text-blue-600 dark:text-blue-400",
     hover: "hover:border-blue-500/30 hover:bg-blue-500/5",
+  },
+  {
+    href: "/pronunciation",
+    icon: Mic,
+    label: "Phát âm IPA",
+    iconBg: "bg-teal-500/10 text-teal-600 dark:text-teal-400",
+    hover: "hover:border-teal-500/30 hover:bg-teal-500/5",
   },
   {
     href: "/quiz",
@@ -27,14 +35,8 @@ const actions = (unitRoute: string) => [
     iconBg: "bg-violet-500/10 text-violet-600 dark:text-violet-400",
     hover: "hover:border-violet-500/30 hover:bg-violet-500/5",
   },
-  {
-    href: "/roadmap",
-    icon: Map,
-    label: "Xem Roadmap",
-    iconBg: "bg-purple-500/10 text-purple-600 dark:text-purple-400",
-    hover: "hover:border-purple-500/30 hover:bg-purple-500/5",
-  },
 ];
+
 
 export default function QuickActions({ currentUnitRoute }: QuickActionsProps) {
   return (
