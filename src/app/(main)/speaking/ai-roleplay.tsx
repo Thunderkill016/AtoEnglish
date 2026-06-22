@@ -241,6 +241,96 @@ export const ROLEPLAY_SCENARIOS: Scenario[] = [
         userSuggestionVi: "Vâng, tất nhiên rồi. Cảm ơn bác sĩ. Tôi có cần làm xét nghiệm máu không?"
       }
     ]
+  },
+  {
+    id: "saas-product-demo",
+    title: "Product Demo",
+    description: "Giới thiệu sản phẩm SaaS cho khách hàng tiềm năng qua Zoom.",
+    aiCharacter: "Potential Customer (Khách hàng tiềm năng)",
+    difficulty: "Hard",
+    initialMessage: "Hi, thanks for jumping on this call! I checked out your website briefly. Can you give me a quick overview of what your product actually does?",
+    steps: [
+      {
+        aiPrompt: "Interesting. So it's like an AI tutor built into a learning app. What makes it different from Duolingo or other apps already on the market?",
+        userSuggestion: "Sure! AtoEnglish is an AI-powered English learning app designed specifically for Vietnamese speakers. It uses spaced repetition and comprehensible input to help users reach B1 level in 12 months.",
+        userSuggestionVi: "Chắc chắn! AtoEnglish là ứng dụng học tiếng Anh tích hợp AI được thiết kế đặc biệt cho người Việt Nam. Nó sử dụng SRS và comprehensible input để giúp người dùng đạt B1 trong 12 tháng."
+      },
+      {
+        aiPrompt: "Okay, that's a key differentiator. Can you show me how the placement test works? I want to understand the user onboarding flow.",
+        userSuggestion: "Great question. Unlike generic apps, we focus entirely on the Vietnamese market. Our explanations are in Vietnamese, and our content addresses the specific grammar mistakes Vietnamese learners make.",
+        userSuggestionVi: "Câu hỏi hay. Không giống các ứng dụng thông thường, chúng tôi tập trung hoàn toàn vào thị trường Việt Nam. Giải thích bằng tiếng Việt và nội dung giải quyết các lỗi ngữ pháp đặc trưng của người Việt."
+      },
+      {
+        aiPrompt: "That's smart. What's your pricing model? And do you have a free trial?",
+        userSuggestion: "When a new user signs up, they take a 40-question CEFR placement test. Based on the results, the app personalizes their learning roadmap from A0 all the way to B2.",
+        userSuggestionVi: "Khi người dùng mới đăng ký, họ làm bài kiểm tra CEFR 40 câu. Dựa trên kết quả, ứng dụng cá nhân hóa lộ trình học từ A0 đến B2."
+      },
+      {
+        aiPrompt: "Sounds reasonable. Let me discuss this with my team and I'll get back to you by Friday. Thanks for the demo!",
+        userSuggestion: "We offer a free tier with access to the first 10 units. The premium plan is fifteen dollars per month and unlocks all 50 units, AI roleplay, and the full flashcard SRS system.",
+        userSuggestionVi: "Chúng tôi có gói miễn phí với 10 unit đầu. Gói premium là 15 đô/tháng và mở khóa toàn bộ 50 unit, AI roleplay và hệ thống flashcard SRS đầy đủ."
+      }
+    ]
+  },
+  {
+    id: "investor-pitch",
+    title: "Investor Pitch",
+    description: "Pitch ý tưởng startup cho nhà đầu tư thiên thần.",
+    aiCharacter: "Angel Investor (Nhà đầu tư)",
+    difficulty: "Hard",
+    initialMessage: "Hi, I've got about 15 minutes. Impress me. What's the problem you're solving?",
+    steps: [
+      {
+        aiPrompt: "Okay, so there's a clear pain point. What's your proposed solution and why is now the right time?",
+        userSuggestion: "Most Vietnamese professionals want to learn English for career growth, but existing apps like Duolingo are not designed for their specific needs. They waste months on irrelevant content and never reach conversational fluency.",
+        userSuggestionVi: "Hầu hết các chuyên gia Việt Nam muốn học tiếng Anh để phát triển sự nghiệp, nhưng các ứng dụng hiện có không phù hợp với nhu cầu cụ thể của họ. Họ lãng phí nhiều tháng vào nội dung không liên quan."
+      },
+      {
+        aiPrompt: "Impressive traction for an early stage product. What's your business model and who's your target customer?",
+        userSuggestion: "We built AtoEnglish, a Vietnamese-first English learning platform powered by AI. The timing is perfect because Vietnam's middle class is growing fast and English is now the key skill for accessing global tech jobs.",
+        userSuggestionVi: "Chúng tôi xây dựng AtoEnglish, nền tảng học tiếng Anh ưu tiên tiếng Việt với AI. Thời điểm hoàn hảo vì tầng lớp trung lưu Việt Nam đang tăng trưởng nhanh và tiếng Anh là kỹ năng then chốt."
+      },
+      {
+        aiPrompt: "And what are you asking for, exactly? How will you use the investment?",
+        userSuggestion: "We target Vietnamese professionals aged 22 to 35 who want to work at international tech companies or grow a global business. Our freemium model converts at 8 percent, and we currently have 500 active monthly users with a 12 dollar average revenue per user.",
+        userSuggestionVi: "Chúng tôi nhắm đến các chuyên gia Việt Nam 22-35 tuổi muốn làm việc ở công ty tech quốc tế hoặc phát triển kinh doanh toàn cầu. Mô hình freemium chuyển đổi 8%, hiện có 500 MAU với ARPU 12 đô."
+      },
+      {
+        aiPrompt: "Okay, I like the vision. Send me your deck and financial projections and I'll schedule a follow-up meeting with my partner.",
+        userSuggestion: "We are raising 150 thousand dollars in pre-seed funding. The money will go toward content production, marketing in Vietnam, and hiring one full-time engineer to build the mobile app.",
+        userSuggestionVi: "Chúng tôi đang kêu gọi 150 nghìn đô pre-seed. Số tiền sẽ dùng để sản xuất nội dung, marketing tại Việt Nam và thuê một kỹ sư full-time để xây dựng ứng dụng mobile."
+      }
+    ]
+  },
+  {
+    id: "customer-support",
+    title: "Customer Support",
+    description: "Xử lý phản hồi và khiếu nại của khách hàng SaaS.",
+    aiCharacter: "Unhappy Customer (Khách hàng không hài lòng)",
+    difficulty: "Medium",
+    initialMessage: "Hi, I'm really frustrated right now. I've been a paying customer for 3 months and I'm not seeing any progress. I want a refund.",
+    steps: [
+      {
+        aiPrompt: "I open the app maybe three or four times a week, but the lessons feel repetitive. I feel like I'm just clicking through the same vocabulary cards over and over.",
+        userSuggestion: "Hi, I'm really sorry to hear you're frustrated. I completely understand and I want to help. Can you tell me a bit about how you've been using the app so far?",
+        userSuggestionVi: "Xin chào, tôi thực sự xin lỗi vì bạn đang thất vọng. Tôi hoàn toàn hiểu và muốn giúp đỡ. Bạn có thể cho tôi biết bạn đang sử dụng ứng dụng như thế nào không?"
+      },
+      {
+        aiPrompt: "Okay, that sounds more useful. But I still feel like I should have made more progress by now. Other apps promise fluency in 3 months.",
+        userSuggestion: "Thank you for sharing that. Based on what you're describing, I think the issue might be that the flashcard review is most effective when done daily. The app is actually designed around spaced repetition, so consistency is key. Have you tried the Grammar or Roleplay features?",
+        userSuggestionVi: "Cảm ơn bạn đã chia sẻ. Dựa vào những gì bạn mô tả, tôi nghĩ vấn đề có thể là flashcard hiệu quả nhất khi làm hàng ngày. Ứng dụng được thiết kế xung quanh SRS nên tính nhất quán là chìa khóa."
+      },
+      {
+        aiPrompt: "Alright, I'm willing to give it another month. But I want something in return for my patience.",
+        userSuggestion: "I hear you, and those promises are often misleading. Realistic progress takes consistent daily practice over 6 to 12 months. But I want to make this right for you. What if I gave you access to a 30-minute onboarding session to set up a personalised study plan?",
+        userSuggestionVi: "Tôi hiểu bạn và những lời hứa đó thường gây hiểu lầm. Tiến bộ thực sự cần thực hành nhất quán hàng ngày trong 6-12 tháng. Nhưng tôi muốn sửa đổi điều này. Bạn có muốn buổi onboarding 30 phút để lập kế hoạch học cá nhân không?"
+      },
+      {
+        aiPrompt: "Okay, that's actually really kind of you. I appreciate it. I'll stay for another month and see how it goes.",
+        userSuggestion: "Absolutely. I'm going to extend your premium subscription by one month for free as a thank you for your patience. I'll also send you a personalised study guide by email today. We genuinely want to see you succeed.",
+        userSuggestionVi: "Chắc chắn. Tôi sẽ gia hạn gói premium của bạn thêm một tháng miễn phí như lời cảm ơn vì sự kiên nhẫn. Tôi cũng sẽ gửi hướng dẫn học cá nhân qua email hôm nay. Chúng tôi thực sự muốn bạn thành công."
+      }
+    ]
   }
 ];
 
