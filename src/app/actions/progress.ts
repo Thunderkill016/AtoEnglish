@@ -671,3 +671,56 @@ export async function getProgressStats() {
     return { success: false, stats: null };
   }
 }
+
+const placementLimiter = createRateLimiter(3, 60 * 60 * 1000, "placement-test"); // 3/hour
+
+/**
+ * Server Action lưu kết quả Placement Test và cập nhật current_level của user.
+ */
+export async function savePlacementResult(level: string, score: number) {
+  try {
+    const reqHeaders = await headers();
+    const ip = reqHeaders.get("x-forwarded-for")?.split(",")[0].trim() || "127.0.0.1";
+    const rateLimitCheck = await placementLimiter.check(ip);
+    if (!rateLimitCheck.success) {
+      return { success: false, error: "Vui lòng chờ trước khi làm lại test." };
+    }
+
+    const validLevels = ["A1", "A2", "B1", "B2"];
+    if (!validLevels.includes(level) || typeof score !== "number" || score < 0 || score > 40) {
+      return { success: false, error: "Dữ liệu không hợp lệ." };
+    }
+
+    const supabase = await createClient();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    if (authError || !user) {
+      return { success: false, error: "Bạn cần đăng nhập." };
+    }
+
+    const { error } = await supabase
+      .from("user_progress")
+      .upsert(
+        {
+          user_id: user.id,
+          current_level: level,
+          total_xp: score * 10,
+          streak: 1,
+          last_active_date: new Date().toLocaleDateString("sv-SE", { timeZone: "Asia/Ho_Chi_Minh" }),
+        },
+        { onConflict: "user_id" }
+      );
+
+    if (error) {
+      return { success: false, error: `Lỗi lưu kết quả: ${error.message}` };
+    }
+
+    revalidatePath("/dashboard");
+    revalidatePath("/learn");
+    revalidatePath("/roadmap");
+    return { success: true, message: `Đã cập nhật level ${level} thành công!` };
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err);
+    return { success: false, error: msg };
+  }
+}
+

@@ -2,7 +2,8 @@
 
 import dynamic from "next/dynamic";
 import { useState, useEffect } from "react";
-import { Flame, Star, GraduationCap, BookOpen, Clock, ChevronDown, ChevronUp } from "lucide-react";
+import Link from "next/link";
+import { Flame, Star, GraduationCap, BookOpen, Clock, ChevronDown, ChevronUp, ChevronRight } from "lucide-react";
 import { toast } from "sonner";
 import { updateDailyXpGoal } from "@/app/actions/progress";
 import { getPhaseForLevel, DAILY_TIPS } from "@/lib/constants/study-plan";
@@ -413,8 +414,23 @@ export default function DashboardClient({
           </div>
         </div>
 
-        {/* ── 3. Today's Study Plan Widget ── */}
+        {/* ── 3. Placement Test Banner ── */}
+        <Link
+          href="/placement-test"
+          className="flex items-center gap-3 p-4 rounded-2xl border border-violet-500/20 bg-violet-500/5 hover:bg-violet-500/10 hover:border-violet-500/30 transition-all duration-200 group"
+        >
+          <span className="flex size-10 items-center justify-center rounded-xl bg-violet-500/15 text-xl shrink-0">🎯</span>
+          <div className="flex-1 min-w-0">
+            <p className="text-xs font-black text-violet-400 uppercase tracking-widest mb-0.5">CEFR Placement Test</p>
+            <p className="text-sm font-bold text-foreground">Xác Định Trình Độ Chính Xác</p>
+            <p className="text-xs text-muted-foreground">40 câu · Grammar + Vocab + Reading · ~20 phút</p>
+          </div>
+          <ChevronRight className="size-5 text-violet-400/60 group-hover:text-violet-400 group-hover:translate-x-0.5 transition-all shrink-0" />
+        </Link>
+
+        {/* ── 4. Today's Study Plan Widget ── */}
         <TodayPlanWidget userLevel={userLevel} />
+
 
         {/* ── 4. Main content: 2-column grid ── */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
