@@ -3,7 +3,7 @@
 import dynamic from "next/dynamic";
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Flame, Star, GraduationCap, BookOpen, Clock, ChevronDown, ChevronUp, ChevronRight } from "lucide-react";
+import { Flame, Star, GraduationCap, BookOpen, Clock, ChevronDown, ChevronUp, ChevronRight, ExternalLink, Target } from "lucide-react";
 import { toast } from "sonner";
 import { updateDailyXpGoal } from "@/app/actions/progress";
 import { getPhaseForLevel, DAILY_TIPS } from "@/lib/constants/study-plan";
@@ -431,6 +431,9 @@ export default function DashboardClient({
         {/* ── 4. Today's Study Plan Widget ── */}
         <TodayPlanWidget userLevel={userLevel} />
 
+        {/* ── 4b. EF SET A1 Goal Tracker ── */}
+        <EfSetGoalTracker userLevel={shortLevel} completedUnits={completedUnits} />
+
         {/* ── 5. Main content: 2-column grid ── */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
           {/* Left: Hero lesson card */}
@@ -534,6 +537,97 @@ export default function DashboardClient({
           newLevel={levelUpModal.next}
           onClose={() => setLevelUpModal(null)}
         />
+      )}
+    </div>
+  );
+}
+
+// ─── EF SET A1 Goal Tracker ──────────────────────────────────────────────────
+const CEFR_ORDER = ["A0", "A1", "A2", "B1", "B2", "C1", "C2"];
+
+const EFSET_MILESTONES: { id: string; label: string; done: (level: string, units: number) => boolean }[] = [
+  { id: "placement", label: "Làm placement test CEFR", done: () => true },
+  { id: "a0-units",  label: "Hoàn thành A0 foundation (8 units)", done: (_l, u) => u >= 8 },
+  { id: "a1-vocab",  label: "Học 200 từ vựng cơ bản A1", done: (_l, u) => u >= 12 },
+  { id: "grammar",   label: "Ôn ngữ pháp: Present Simple, To Be, There is/are", done: (l) => CEFR_ORDER.indexOf(l) >= 1 },
+  { id: "reading",   label: "Luyện 10 câu reading comprehension (Quiz)", done: (_l, u) => u >= 5 },
+  { id: "efset",     label: "Thi EF SET Quick Check → đạt A1", done: (l) => CEFR_ORDER.indexOf(l) >= 2 },
+];
+
+function EfSetGoalTracker({ userLevel, completedUnits }: { userLevel: string; completedUnits: number }) {
+  const [expanded, setExpanded] = useState(false);
+  const levelIdx = CEFR_ORDER.indexOf(userLevel);
+  const targetIdx = CEFR_ORDER.indexOf("A1");
+  const isPassed = levelIdx >= targetIdx + 1; // A2+ means likely passed A1
+  const doneCount = EFSET_MILESTONES.filter(m => m.done(userLevel, completedUnits)).length;
+  const pct = Math.round((doneCount / EFSET_MILESTONES.length) * 100);
+
+  return (
+    <div className="rounded-2xl border border-amber-500/20 bg-amber-500/5 overflow-hidden">
+      {/* Header row — always visible */}
+      <button
+        onClick={() => setExpanded(p => !p)}
+        className="w-full flex items-center gap-3 p-4 text-left"
+      >
+        <span className="flex size-10 items-center justify-center rounded-xl bg-amber-500/15 shrink-0">
+          <Target className="size-5 text-amber-500" />
+        </span>
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2 mb-1">
+            <p className="text-xs font-black text-amber-500 uppercase tracking-widest">Mục tiêu</p>
+            {isPassed && (
+              <span className="text-[10px] font-bold bg-emerald-500/15 text-emerald-500 border border-emerald-500/20 px-1.5 py-0.5 rounded-full">
+                ✓ Đã vượt A1
+              </span>
+            )}
+          </div>
+          <p className="text-sm font-bold text-zinc-900 dark:text-zinc-50">EF SET Quick Check — A1</p>
+          {/* progress bar */}
+          <div className="flex items-center gap-2 mt-1.5">
+            <div className="flex-1 h-1.5 bg-amber-500/15 rounded-full overflow-hidden">
+              <div
+                className="h-full bg-amber-500 rounded-full transition-all duration-700"
+                style={{ width: `${pct}%` }}
+              />
+            </div>
+            <span className="text-[10px] font-bold text-amber-500 shrink-0">{doneCount}/{EFSET_MILESTONES.length}</span>
+          </div>
+        </div>
+        <ChevronRight
+          className={`size-4 text-amber-400/60 shrink-0 transition-transform duration-200 ${expanded ? "rotate-90" : ""}`}
+        />
+      </button>
+
+      {/* Expanded checklist */}
+      {expanded && (
+        <div className="px-4 pb-4 space-y-2 border-t border-amber-500/10 pt-3">
+          {EFSET_MILESTONES.map(m => {
+            const done = m.done(userLevel, completedUnits);
+            return (
+              <div key={m.id} className="flex items-center gap-2.5">
+                <span className={`flex size-4 items-center justify-center rounded-full shrink-0 text-[9px] font-black ${
+                  done ? "bg-emerald-500 text-white" : "bg-zinc-200 dark:bg-zinc-800 text-zinc-400"
+                }`}>
+                  {done ? "✓" : "·"}
+                </span>
+                <span className={`text-xs font-medium ${done ? "line-through text-zinc-400 dark:text-zinc-600" : "text-zinc-700 dark:text-zinc-300"}`}>
+                  {m.label}
+                </span>
+              </div>
+            );
+          })}
+
+          {/* CTA link to EF SET */}
+          <a
+            href="https://www.efset.org/quick-check/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-3 flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/20 transition-colors"
+          >
+            <ExternalLink className="size-3.5 text-amber-500" />
+            <span className="text-xs font-bold text-amber-500">Thi EF SET Quick Check (miễn phí)</span>
+          </a>
+        </div>
       )}
     </div>
   );
