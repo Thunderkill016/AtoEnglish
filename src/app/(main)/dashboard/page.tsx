@@ -3,7 +3,7 @@ import { getDueCards } from "@/app/actions/cards";
 import {
   getUserProgress,
   getCompletedUnitsCount,
-  getUnitCompletionStatus,
+  getAllUnitCompletionStatuses,
   getCurrentUnit,
 } from "@/app/actions/progress";
 import { getRecentSpeakingSessions } from "@/app/actions/speaking";
@@ -79,20 +79,20 @@ export default async function DashboardPage() {
     currentUnitData.xp = UNITS.find(u => u.id === unitRes.unitId)?.xp ?? 80;
   }
 
-  // Fetch completion status of all units dynamically to compute today's XP
-  const statuses = await Promise.all(
-    UNITS.map(unit => getUnitCompletionStatus(unit.id))
-  );
+  // Single bulk query: 1 DB round-trip instead of 51
+  const bulkRes = await getAllUnitCompletionStatuses();
+  const completedMap = bulkRes.completedMap;
 
   const todayStr = new Date().toLocaleDateString("sv-SE", { timeZone: "Asia/Ho_Chi_Minh" });
   let todayXp = 0;
 
-  statuses.forEach(status => {
-    if (status.success && status.completed && status.completedAt) {
-      const completedDateStr = new Date(status.completedAt).toLocaleDateString("sv-SE", { timeZone: "Asia/Ho_Chi_Minh" });
-      if (completedDateStr === todayStr) todayXp += (status.xpEarned || 80);
+  for (const unit of UNITS) {
+    const entry = completedMap.get(unit.id);
+    if (entry?.completedAt) {
+      const completedDateStr = new Date(entry.completedAt).toLocaleDateString("sv-SE", { timeZone: "Asia/Ho_Chi_Minh" });
+      if (completedDateStr === todayStr) todayXp += (entry.xpEarned || 80);
     }
-  });
+  }
 
   // Check if user did any speaking session today
   const hasSpeakingToday = (speakingRes.success && speakingRes.sessions
@@ -124,19 +124,17 @@ export default async function DashboardPage() {
     },
   ];
 
-  // Resolve active unit completion status from fetched results
-  const activeUnitIdx = UNITS.findIndex(u => u.id === currentUnitData.unitId);
-  const activeStatusRes = activeUnitIdx !== -1 ? statuses[activeUnitIdx] : null;
-
-  if (activeStatusRes && activeStatusRes.success && activeStatusRes.completed && activeStatusRes.completedAt) {
-    const completedDateStr = new Date(activeStatusRes.completedAt).toLocaleDateString("sv-SE", { timeZone: "Asia/Ho_Chi_Minh" });
+  // Resolve active unit today completion from the map
+  const activeEntry = completedMap.get(currentUnitData.unitId);
+  if (activeEntry?.completedAt) {
+    const completedDateStr = new Date(activeEntry.completedAt).toLocaleDateString("sv-SE", { timeZone: "Asia/Ho_Chi_Minh" });
     if (completedDateStr === todayStr) initialQuests[0].completed = true;
   }
 
   // Completed unit IDs — for the unit progress grid on dashboard
-  const completedUnitIds = statuses
-    .map((s, i) => (s.success && s.completed ? UNITS[i].id : null))
-    .filter((id): id is string => id !== null);
+  const completedUnitIds = UNITS
+    .filter(u => completedMap.has(u.id))
+    .map(u => u.id);
 
   // ── Word of the Day: deterministic by date, from current unit vocab ────────
   const allVocab = UNITS.flatMap(u => UNIT_VOCABULARY[u.id] ?? []);

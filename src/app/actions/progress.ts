@@ -286,6 +286,43 @@ export async function getUnitCompletionStatus(unitId: string) {
 }
 
 /**
+ * Bulk version of getUnitCompletionStatus — fetches ALL completed units
+ * for the current user in a single DB query instead of N queries.
+ * Returns a Map<unitId, { completedAt, xpEarned }> for O(1) lookups.
+ */
+export async function getAllUnitCompletionStatuses(): Promise<{
+  success: boolean;
+  completedMap: Map<string, { completedAt: string | null; xpEarned: number }>;
+}> {
+  const emptyResult = { success: false, completedMap: new Map<string, { completedAt: string | null; xpEarned: number }>() };
+  try {
+    const supabase = await createClient();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    if (authError || !user) return emptyResult;
+
+    const { data, error } = await supabase
+      .from("user_lesson_progress")
+      .select("unit_id, completed_at, xp_earned")
+      .eq("user_id", user.id);
+
+    if (error) return emptyResult;
+
+    const completedMap = new Map<string, { completedAt: string | null; xpEarned: number }>();
+    for (const row of data ?? []) {
+      if (row.unit_id) {
+        completedMap.set(row.unit_id, {
+          completedAt: row.completed_at ?? null,
+          xpEarned: row.xp_earned ?? 0,
+        });
+      }
+    }
+    return { success: true, completedMap };
+  } catch {
+    return emptyResult;
+  }
+}
+
+/**
  * Server Action lấy thông tin tiến trình tổng thể của người dùng (streak, XP, level).
  */
 export async function getUserProgress() {
