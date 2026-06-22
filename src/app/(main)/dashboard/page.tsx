@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { getDueCards } from "@/app/actions/cards";
 import {
   getUserProgress,
-  getCompletedUnitsCount,
   getAllUnitCompletionStatuses,
   getCurrentUnit,
 } from "@/app/actions/progress";
@@ -19,11 +18,10 @@ export const metadata: Metadata = {
 export const revalidate = 0; // Disable server component caching to ensure accurate dashboard data on request
 
 export default async function DashboardPage() {
-  // Fetch progress, completion count, cards, and active unit
-  const [progressRes, completedRes, cardsRes, unitRes, speakingRes] =
+  // Fetch progress, cards, active unit, and speaking sessions in parallel
+  const [progressRes, cardsRes, unitRes, speakingRes] =
     await Promise.all([
       getUserProgress(),
-      getCompletedUnitsCount(),
       getDueCards(),
       getCurrentUnit(),
       getRecentSpeakingSessions(5),
@@ -52,7 +50,6 @@ export default async function DashboardPage() {
     userLevel = levelNames[p.current_level] || `${p.current_level} Learner`;
   }
 
-  const completedUnits = completedRes.success ? completedRes.count : 0;
   const dueCardsCount = cardsRes.success && cardsRes.cards ? cardsRes.cards.length : 0;
 
   const currentUnitData = {
@@ -82,6 +79,8 @@ export default async function DashboardPage() {
   // Single bulk query: 1 DB round-trip instead of 51
   const bulkRes = await getAllUnitCompletionStatuses();
   const completedMap = bulkRes.completedMap;
+  // Derive count from the map — no extra getCompletedUnitsCount() call needed
+  const completedUnits = completedMap.size;
 
   const todayStr = new Date().toLocaleDateString("sv-SE", { timeZone: "Asia/Ho_Chi_Minh" });
   let todayXp = 0;
