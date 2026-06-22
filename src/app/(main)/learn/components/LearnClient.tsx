@@ -1,10 +1,70 @@
 "use client";
 
-import React from "react";
-import { motion } from "framer-motion";
+import { useState } from "react";
 import Link from "next/link";
-import { Lock, Play, CheckCircle, Sparkles, BookOpen, Star, Clock, RotateCcw, BookOpenCheck, Trophy } from "lucide-react";
-import { Button } from "@/components/ui/button";
+
+// ─── Phase config (từ english-roadmap.jsx) ────────────────────────────────────
+
+interface PhaseConfig {
+  id: number;
+  label: string;
+  title: string;
+  months: string;
+  cefrLabel: string;
+  unitLevels: string[];
+  color: string;
+  goal: string;
+  tip: string;
+}
+
+const PHASES: PhaseConfig[] = [
+  {
+    id: 1,
+    label: "Phase 1",
+    title: "Nền Tảng",
+    months: "Tháng 1–2",
+    cefrLabel: "A0/A1",
+    unitLevels: ["A0", "A1"],
+    color: "#3b82f6",
+    goal: "Nắm phát âm, 500 từ vựng cơ bản, câu đơn giản",
+    tip: "🧠 Shadowing với BBC Learning English 10 phút/ngày + Anki deck 'Frequency 5000'",
+  },
+  {
+    id: 2,
+    label: "Phase 2",
+    title: "Sơ Cấp",
+    months: "Tháng 3–4",
+    cefrLabel: "A2",
+    unitLevels: ["A2"],
+    color: "#8b5cf6",
+    goal: "1500 từ, đọc hiểu đoạn ngắn, viết câu ghép",
+    tip: "📖 Viết nhật ký tiếng Anh 3–5 câu/ngày + VOA Learning English",
+  },
+  {
+    id: 3,
+    label: "Phase 3",
+    title: "Trung Cấp",
+    months: "Tháng 5–7",
+    cefrLabel: "B1",
+    unitLevels: ["B1"],
+    color: "#f59e0b",
+    goal: "3000 từ, đọc tech docs, viết đoạn văn rõ ý",
+    tip: "👂 TED Talks không sub + viết GitHub commit messages bằng tiếng Anh",
+  },
+  {
+    id: 4,
+    label: "Phase 4",
+    title: "Tech English",
+    months: "Tháng 8–12",
+    cefrLabel: "B1+",
+    unitLevels: ["B2"],
+    color: "#22c55e",
+    goal: "Dùng tiếng Anh tự nhiên trong công việc dev",
+    tip: "🎙️ Mock interview AI + tham gia Discord developer communities",
+  },
+];
+
+// ─── Props ────────────────────────────────────────────────────────────────────
 
 interface UnitStatus {
   id: string;
@@ -17,296 +77,553 @@ interface UnitStatus {
   completed: boolean;
   progress: number;
   vocabCount?: number;
-  starCount?: number;
 }
 
 interface LearnClientProps {
   userLevel: string;
-  totalXp: number;
   completedUnitIds: string[];
   activeUnitId: string;
   unitStatuses: UnitStatus[];
 }
 
+// ─── Component ────────────────────────────────────────────────────────────────
+
 export default function LearnClient({
   userLevel,
-  totalXp,
   completedUnitIds,
   activeUnitId,
   unitStatuses,
 }: LearnClientProps) {
+  const initialPhaseIdx = Math.max(
+    PHASES.findIndex((p) => p.unitLevels.includes(userLevel)),
+    0
+  );
+  const [activePhase, setActivePhase] = useState(initialPhaseIdx);
+
+  const phase = PHASES[activePhase];
+  const phaseUnits = unitStatuses.filter((u) =>
+    phase.unitLevels.includes(u.level)
+  );
+  const completedInPhase = phaseUnits.filter((u) => u.completed).length;
+  const totalCompleted = unitStatuses.filter((u) => u.completed).length;
+  const phaseProgressPct =
+    phaseUnits.length > 0
+      ? Math.round((completedInPhase / phaseUnits.length) * 100)
+      : 0;
+
   return (
-    <div className="relative mx-auto max-w-4xl px-4 py-6 sm:py-12 sm:px-6 lg:px-8 min-h-screen overflow-x-hidden">
-      {/* Background blurs */}
-      <div className="pointer-events-none absolute top-10 left-1/2 -translate-x-1/2 -z-10 h-[400px] w-[90vw] max-w-[500px] rounded-full bg-emerald-500/5 dark:bg-emerald-500/3 blur-[120px]" />
-      <div className="pointer-events-none absolute bottom-10 left-10 -z-10 h-[300px] w-[300px] rounded-full bg-teal-500/4 dark:bg-teal-500/2 blur-[100px]" />
-
-      {/* Roadmap Header */}
-      <div className="text-center space-y-3 mb-8 sm:mb-16">
-        <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4 }}
-          className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-bold uppercase tracking-wider"
+    <div
+      style={{
+        background: "#0d1117",
+        color: "#e2e8f0",
+        minHeight: "100vh",
+        fontFamily: "'Inter', system-ui, sans-serif",
+        padding: "0 0 60px 0",
+      }}
+    >
+      {/* ── Header ── */}
+      <div
+        style={{
+          background: "linear-gradient(135deg, #0d1117 0%, #1a1f2e 100%)",
+          borderBottom: "1px solid #21262d",
+          padding: "32px 20px 24px",
+          textAlign: "center",
+        }}
+      >
+        <div
+          style={{
+            fontSize: 13,
+            color: "#22c55e",
+            fontWeight: 700,
+            letterSpacing: "0.1em",
+            marginBottom: 8,
+            textTransform: "uppercase",
+          }}
         >
-          <Sparkles className="size-3.5 fill-current animate-pulse" />
-          Lộ trình {userLevel} • {totalXp} XP tích lũy
-        </motion.div>
-
-        <motion.h1
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: 0.1 }}
-          className="text-3xl sm:text-4xl font-black text-zinc-950 dark:text-zinc-50 tracking-tight"
+          Bài Học
+        </div>
+        <h1
+          style={{
+            margin: 0,
+            fontSize: 26,
+            fontWeight: 800,
+            color: "#f0f6fc",
+            lineHeight: 1.2,
+          }}
         >
-          Học tiếng Anh cùng{" "}
-          <span className="bg-gradient-to-r from-emerald-600 via-teal-500 to-emerald-500 bg-clip-text text-transparent dark:from-emerald-400 dark:via-teal-400 dark:to-emerald-300">
-            AtoEnglish
-          </span>
-        </motion.h1>
-
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.4, delay: 0.2 }}
-          className="text-zinc-500 dark:text-zinc-400 text-sm sm:text-base max-w-xl mx-auto"
+          English Từ Con Số 0
+        </h1>
+        <p
+          style={{
+            margin: "10px 0 0",
+            color: "#8b949e",
+            fontSize: 14,
+            lineHeight: 1.5,
+          }}
         >
-          Hoàn thành các chương học theo phương pháp IPOR (Input - Processing - Output - Review) để mở khóa các bài học nâng cao hơn.
-        </motion.p>
+          Lộ trình 12 tháng · Tự học · Hướng tới dùng English cho dev work
+        </p>
+
+        {/* Stats */}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            gap: 24,
+            marginTop: 20,
+          }}
+        >
+          {[
+            { val: String(totalCompleted), unit: "hoàn thành" },
+            { val: String(unitStatuses.length), unit: "bài học" },
+            { val: userLevel || "A0", unit: "cấp độ" },
+          ].map((s, i) => (
+            <div key={i} style={{ textAlign: "center" }}>
+              <div
+                style={{ fontSize: 22, fontWeight: 800, color: "#22c55e" }}
+              >
+                {s.val}
+              </div>
+              <div
+                style={{
+                  fontSize: 11,
+                  color: "#8b949e",
+                  textTransform: "uppercase",
+                  letterSpacing: "0.05em",
+                }}
+              >
+                {s.unit}
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
 
-      {/* Roadmap Path timeline */}
-      <div className="relative space-y-8 sm:space-y-12 pb-8 sm:pb-16">
-        {/* Central connecting line */}
-        <div className="absolute left-[39px] sm:left-1/2 top-4 bottom-4 w-1 bg-zinc-200 dark:bg-zinc-800 -translate-x-1/2 -z-20" />
+      {/* ── Phase tabs ── */}
+      <div
+        style={{
+          display: "flex",
+          overflowX: "auto",
+          padding: "16px 16px 0",
+          gap: 8,
+          borderBottom: "1px solid #21262d",
+          background: "#0d1117",
+          scrollbarWidth: "none",
+        }}
+      >
+        {PHASES.map((p, i) => (
+          <button
+            key={p.id}
+            id={`learn-phase-${p.id}`}
+            onClick={() => setActivePhase(i)}
+            style={{
+              flex: "0 0 auto",
+              padding: "8px 16px 12px",
+              borderRadius: "8px 8px 0 0",
+              border: "none",
+              cursor: "pointer",
+              background: activePhase === i ? "#161b22" : "transparent",
+              borderBottom:
+                activePhase === i
+                  ? `2px solid ${p.color}`
+                  : "2px solid transparent",
+              color: activePhase === i ? "#f0f6fc" : "#8b949e",
+              fontSize: 13,
+              fontWeight: activePhase === i ? 700 : 400,
+              transition: "all 0.2s",
+              whiteSpace: "nowrap",
+            }}
+          >
+            <span style={{ color: p.color, marginRight: 4 }}>●</span>
+            {p.label}
+          </button>
+        ))}
+      </div>
 
-        {unitStatuses.map((unit, index) => {
-          const isCompleted = completedUnitIds.includes(unit.id);
-          const isUnlocked = index === 0 || completedUnitIds.includes(unitStatuses[index - 1].id);
-          const isActive = unit.id === activeUnitId && isUnlocked && !isCompleted;
+      {/* ── Phase header ── */}
+      <div
+        style={{
+          padding: "20px 16px 0",
+          background: "#161b22",
+          borderBottom: "1px solid #21262d",
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 12,
+            marginBottom: 8,
+          }}
+        >
+          <span
+            style={{
+              background: phase.color + "22",
+              color: phase.color,
+              fontSize: 11,
+              fontWeight: 700,
+              padding: "3px 8px",
+              borderRadius: 4,
+              letterSpacing: "0.08em",
+            }}
+          >
+            CEFR {phase.cefrLabel}
+          </span>
+          <span style={{ color: "#8b949e", fontSize: 13 }}>{phase.months}</span>
+          <span style={{ color: "#8b949e", fontSize: 13, marginLeft: "auto" }}>
+            {completedInPhase}/{phaseUnits.length} bài
+          </span>
+        </div>
 
-          // Layout styling helpers
-          const isEven = index % 2 === 0;
+        <h2
+          style={{
+            margin: "0 0 6px",
+            fontSize: 20,
+            fontWeight: 800,
+            color: "#f0f6fc",
+          }}
+        >
+          {phase.title}
+        </h2>
+        <p style={{ margin: "0 0 12px", color: "#8b949e", fontSize: 14 }}>
+          🎯 {phase.goal}
+        </p>
 
-          // CEFR level separator: show milestone banner when level changes
-          const prevLevel = index > 0 ? unitStatuses[index - 1].level : null;
-          const isNewLevel = prevLevel !== null && unit.level !== prevLevel;
+        {/* Progress bar */}
+        <div style={{ marginBottom: 12 }}>
+          <div
+            style={{
+              height: 4,
+              background: "#21262d",
+              borderRadius: 2,
+              overflow: "hidden",
+            }}
+          >
+            <div
+              style={{
+                height: "100%",
+                background: phase.color,
+                width: `${phaseProgressPct}%`,
+                transition: "width 0.5s ease",
+              }}
+            />
+          </div>
+        </div>
 
-          const LEVEL_CONFIG: Record<string, { label: string; color: string; ring: string; bg: string }> = {
-            A0: { label: "Nền Tảng",       color: "from-emerald-400 to-teal-500",   ring: "ring-emerald-500/30", bg: "from-emerald-950/40 to-teal-950/40" },
-            A1: { label: "Người Bắt Đầu",  color: "from-emerald-500 to-cyan-500",   ring: "ring-cyan-500/30",     bg: "from-emerald-950/40 to-cyan-950/40" },
-            A2: { label: "Sơ trung cấp",   color: "from-blue-500 to-indigo-500",    ring: "ring-blue-500/30",    bg: "from-blue-950/40 to-indigo-950/40" },
-            B1: { label: "Trung cấp",      color: "from-purple-500 to-violet-500",  ring: "ring-purple-500/30", bg: "from-purple-950/40 to-violet-950/40" },
-            B2: { label: "Trên trung cấp", color: "from-orange-500 to-amber-500",   ring: "ring-orange-500/30", bg: "from-orange-950/40 to-amber-950/40" },
-            C1: { label: "Cao cấp",        color: "from-rose-500 to-pink-500",      ring: "ring-rose-500/30",   bg: "from-rose-950/40 to-pink-950/40" },
-          };
-          const lvlCfg = LEVEL_CONFIG[unit.level];
+        {/* Tip box */}
+        <div
+          style={{
+            background: phase.color + "11",
+            border: `1px solid ${phase.color}44`,
+            borderRadius: 8,
+            padding: "10px 14px",
+            marginBottom: 20,
+            fontSize: 13,
+            color: "#c9d1d9",
+            lineHeight: 1.5,
+          }}
+        >
+          {phase.tip}
+        </div>
+      </div>
 
-          return (
-            <React.Fragment key={unit.id}>
-              {/* CEFR Level Milestone Banner */}
-              {isNewLevel && lvlCfg && (
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.5, type: "spring", stiffness: 100 }}
-                  className={`w-full relative z-10 rounded-2xl border bg-gradient-to-br ${lvlCfg.bg} border-white/10 p-5 sm:p-6 text-center ring-1 ${lvlCfg.ring} sm:mx-auto sm:max-w-md`}
-                >
-                  <div className="flex justify-center mb-3">
-                    <span className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r ${lvlCfg.color} text-white text-xs font-black uppercase tracking-widest shadow-lg`}>
-                      <Trophy className="size-3.5" />
-                      Chặng mới — Level {unit.level}
-                    </span>
-                  </div>
-                  <p className="text-white font-black text-lg sm:text-xl mb-1">
-                    🎉 Bạn đã chinh phục {prevLevel}!
-                  </p>
-                  <p className="text-zinc-400 text-xs sm:text-sm">
-                    {unit.level} {lvlCfg.label} — tiếp tục mạch học nhé!
-                  </p>
-                  <div className={`mt-3 h-1 rounded-full bg-gradient-to-r ${lvlCfg.color} opacity-60 mx-auto w-24`} />
-                </motion.div>
-              )}
+      {/* ── Unit list ── */}
+      <div style={{ padding: "16px 16px 0" }}>
+        {phaseUnits.length === 0 ? (
+          <div
+            style={{
+              textAlign: "center",
+              padding: "40px 20px",
+              color: "#8b949e",
+            }}
+          >
+            <div style={{ fontSize: 32, marginBottom: 8 }}>📚</div>
+            <div style={{ fontSize: 14 }}>
+              Chưa có bài học nào cho phase này.
+            </div>
+          </div>
+        ) : (
+          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+            {phaseUnits.map((unit, idx) => {
+              const isCompleted = unit.completed;
+              const isActive = unit.id === activeUnitId && !isCompleted;
+              const prevUnit = phaseUnits[idx - 1];
+              const isUnlocked =
+                idx === 0 ||
+                (prevUnit !== undefined &&
+                  completedUnitIds.includes(prevUnit.id));
 
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: index * 0.05 }}
-              className={`flex flex-col sm:flex-row items-start sm:items-center justify-start sm:justify-between w-full relative gap-6 sm:gap-0 ${
-                isEven ? "sm:flex-row-reverse" : ""
-              }`}
-            >
-              {/* Connecting node dot */}
-              <div className="absolute left-[39px] sm:left-1/2 top-6 sm:top-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
-                <motion.div
-                  whileHover={{ scale: isUnlocked ? 1.15 : 1 }}
-                  className={`size-10 rounded-full flex items-center justify-center border-2 transition-all duration-300 shadow-md ${
-                    isCompleted
-                      ? "bg-emerald-500 border-emerald-400 text-white shadow-emerald-950/20"
-                      : isActive
-                      ? "bg-emerald-600 border-emerald-400 text-white animate-pulse shadow-emerald-500/30"
-                      : isUnlocked
-                      ? "bg-zinc-800 border-zinc-700 text-zinc-300"
-                      : "bg-zinc-900 border-zinc-800 text-zinc-600"
-                  }`}
-                >
-                  {isCompleted ? (
-                    <CheckCircle className="size-5 fill-current text-emerald-500" />
-                  ) : !isUnlocked ? (
-                    <Lock className="size-4" />
-                  ) : (
-                    <span className="text-xs font-black">{index + 1}</span>
-                  )}
-                </motion.div>
-              </div>
-
-              {/* Card Container */}
-              <div className={`w-full sm:w-[42%] pl-[75px] sm:pl-0 ${isEven ? "sm:text-right" : "sm:text-left"}`}>
+              return (
                 <div
-                  className={`group relative rounded-2xl border bg-white/60 dark:bg-zinc-900/30 backdrop-blur-sm p-5 space-y-4 hover:border-emerald-500/30 transition-all duration-300 shadow-sm ${
-                    isActive ? "border-emerald-500/40 ring-1 ring-emerald-500/10 shadow-emerald-950/5" : "border-zinc-200/60 dark:border-zinc-800/60"
-                  } ${!isUnlocked ? "opacity-60 grayscale-[40%]" : ""}`}
+                  key={unit.id}
+                  style={{
+                    background: "#161b22",
+                    borderRadius: 10,
+                    border: `1px solid ${
+                      isActive ? phase.color + "66" : "#21262d"
+                    }`,
+                    padding: "14px 16px",
+                    opacity: isUnlocked ? 1 : 0.55,
+                    transition: "border 0.2s",
+                  }}
                 >
-                  {/* Card Glow */}
-                  {isActive && (
-                    <div className="pointer-events-none absolute -inset-px rounded-2xl bg-gradient-to-r from-emerald-500/5 to-teal-500/5 opacity-100 transition duration-300" />
-                  )}
-
-                  {/* Level Tag & XP */}
-                  <div className={`flex items-center gap-2 text-xs font-semibold ${isEven ? "sm:justify-end" : ""}`}>
-                    <span className="px-2 py-0.5 rounded-md bg-zinc-100 dark:bg-zinc-800 text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
-                      {unit.level}
-                    </span>
-                    <span className="flex items-center gap-1 text-yellow-600 dark:text-yellow-400 font-bold">
-                      <Star className="size-3 fill-current" />
-                      +{unit.xp} XP
-                    </span>
-                  </div>
-
-                  {/* Title & Description */}
-                  <div className="space-y-1.5">
-                    <h3 className="text-base sm:text-lg font-black text-zinc-900 dark:text-zinc-50 group-hover:text-emerald-500 transition-colors">
-                      {unit.title}
-                    </h3>
-                    <p className="text-zinc-500 dark:text-zinc-400 text-xs sm:text-sm leading-relaxed">
-                      {unit.description}
-                    </p>
-                  </div>
-
-                  {/* Study specs & Progress */}
-                  <div className={`flex flex-wrap items-center gap-4 text-xs font-semibold text-zinc-500 dark:text-zinc-400 ${isEven ? "sm:justify-end" : ""}`}>
-                    <span className="flex items-center gap-1.5">
-                      <Clock className="size-3.5" />
-                      {unit.estimatedTime} phút
-                    </span>
-                    <span className="flex items-center gap-1.5">
-                      <BookOpen className="size-3.5" />
-                      {unit.vocabCount ?? 0} từ vựng
-                    </span>
-                  </div>
-
-                  {/* Progress bar */}
-                  {isUnlocked && (
-                    <div className="space-y-1">
-                      <div className="flex justify-between items-center text-[10px] text-zinc-500 dark:text-zinc-400 font-bold">
-                        <span>Tiến độ học</span>
-                        <span>{unit.progress}%</span>
-                      </div>
-                      <div className="h-1.5 w-full bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
-                        <div
-                          className="h-full bg-emerald-500 rounded-full transition-all duration-300"
-                          style={{ width: `${unit.progress}%` }}
-                        />
-                      </div>
+                  <div
+                    style={{ display: "flex", alignItems: "flex-start", gap: 12 }}
+                  >
+                    {/* Status node */}
+                    <div
+                      style={{
+                        width: 32,
+                        height: 32,
+                        borderRadius: "50%",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        flexShrink: 0,
+                        background: isCompleted
+                          ? "#22c55e22"
+                          : isActive
+                            ? phase.color + "22"
+                            : "#21262d",
+                        border: `2px solid ${
+                          isCompleted
+                            ? "#22c55e"
+                            : isActive
+                              ? phase.color
+                              : "#30363d"
+                        }`,
+                        fontSize: 12,
+                        fontWeight: 700,
+                        color: isCompleted
+                          ? "#22c55e"
+                          : isActive
+                            ? phase.color
+                            : "#8b949e",
+                      }}
+                    >
+                      {isCompleted ? "✓" : !isUnlocked ? "🔒" : String(idx + 1)}
                     </div>
-                  )}
 
-                  {/* Star rating for completed units */}
-                  {isCompleted && (unit.starCount ?? 0) > 0 && (
-                    <div className={`flex items-center gap-1 ${isEven ? "sm:justify-end" : ""}`}>
-                      {[1, 2, 3].map((s) => (
-                        <Star
-                          key={s}
-                          className={`size-4 ${
-                            s <= (unit.starCount ?? 0)
-                              ? "text-yellow-400 fill-yellow-400"
-                              : "text-zinc-300 dark:text-zinc-700 fill-zinc-300 dark:fill-zinc-700"
-                          }`}
-                        />
-                      ))}
-                      <span className="text-[10px] text-zinc-500 dark:text-zinc-400 font-semibold ml-0.5">
-                        {unit.starCount === 3 ? "Hoàn hảo!" : unit.starCount === 2 ? "Tốt" : "Hoàn thành"}
-                      </span>
-                    </div>
-                  )}
-
-                  {/* Action Button */}
-                  <div className={`pt-2 flex ${isEven ? "sm:justify-end" : ""}`}>
-                    {isCompleted ? (
-                      <div className={`flex flex-wrap gap-2 ${isEven ? "sm:justify-end" : ""}`}>
-                        <Link
-                          href={unit.route}
-                          onClick={() => {
-                            // Clear saved progress so UnitTemplate resets to section 1
-                            localStorage.removeItem(`lesson-progress-${unit.id}`);
+                    {/* Content */}
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      {/* Meta badges */}
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 8,
+                          marginBottom: 4,
+                          flexWrap: "wrap",
+                        }}
+                      >
+                        <span
+                          style={{
+                            background: phase.color + "22",
+                            color: phase.color,
+                            fontSize: 10,
+                            fontWeight: 700,
+                            padding: "2px 6px",
+                            borderRadius: 3,
+                            letterSpacing: "0.05em",
                           }}
                         >
-                          <Button
-                            variant="secondary"
-                            size="sm"
-                            className="rounded-xl border border-zinc-200 dark:border-zinc-800 text-xs font-bold gap-1"
+                          {unit.level}
+                        </span>
+                        <span style={{ fontSize: 11, color: "#8b949e" }}>
+                          {unit.estimatedTime} phút
+                        </span>
+                        {unit.vocabCount !== undefined &&
+                          unit.vocabCount > 0 && (
+                            <span style={{ fontSize: 11, color: "#8b949e" }}>
+                              {unit.vocabCount} từ
+                            </span>
+                          )}
+                        {unit.xp > 0 && (
+                          <span
+                            style={{
+                              fontSize: 11,
+                              color: "#f59e0b",
+                              fontWeight: 600,
+                            }}
                           >
-                            <RotateCcw className="size-3" /> Học lại
-                          </Button>
-                        </Link>
-                        <Link href={`/quiz?unit=${unit.id}`}>
-                          <Button
-                            size="sm"
-                            className="rounded-xl bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-500 hover:to-purple-500 text-white text-xs font-bold gap-1 active:scale-95 transition-all"
-                          >
-                            <BookOpenCheck className="size-3" /> Quiz
-                          </Button>
-                        </Link>
+                            +{unit.xp} XP
+                          </span>
+                        )}
                       </div>
-                    ) : isActive ? (
-                      <Link href={unit.route} className="w-full sm:w-auto">
-                        <Button
-                          size="sm"
-                          className="w-full rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-white text-xs font-bold gap-1.5 shadow-md shadow-emerald-900/20 active:scale-95 transition-all"
-                        >
-                          <Play className="size-3 fill-current" /> Học tiếp
-                        </Button>
-                      </Link>
-                    ) : isUnlocked ? (
-                      <Link href={unit.route} className="w-full sm:w-auto">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          className="w-full rounded-xl border-glass hover:bg-emerald-500/10 hover:text-emerald-500 transition-colors text-xs font-bold gap-1"
-                        >
-                          <Play className="size-3" /> Bắt đầu
-                        </Button>
-                      </Link>
-                    ) : (
-                      <Button
-                        disabled
-                        variant="ghost"
-                        size="sm"
-                        className="rounded-xl text-xs font-bold gap-1 cursor-not-allowed text-zinc-600"
+
+                      {/* Title */}
+                      <div
+                        style={{
+                          fontSize: 14,
+                          fontWeight: 600,
+                          color: "#f0f6fc",
+                          marginBottom: 4,
+                        }}
                       >
-                        <Lock className="size-3" /> Chưa mở khóa
-                      </Button>
-                    )}
+                        {unit.title}
+                      </div>
+
+                      {/* Description */}
+                      <div
+                        style={{
+                          fontSize: 12,
+                          color: "#8b949e",
+                          lineHeight: 1.4,
+                          marginBottom: 12,
+                        }}
+                      >
+                        {unit.description}
+                      </div>
+
+                      {/* In-progress bar */}
+                      {isUnlocked && !isCompleted && unit.progress > 0 && (
+                        <div style={{ marginBottom: 10 }}>
+                          <div
+                            style={{
+                              height: 3,
+                              background: "#21262d",
+                              borderRadius: 2,
+                              overflow: "hidden",
+                            }}
+                          >
+                            <div
+                              style={{
+                                height: "100%",
+                                background: phase.color,
+                                width: `${unit.progress}%`,
+                              }}
+                            />
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Action buttons */}
+                      {isCompleted ? (
+                        <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                          <Link
+                            href={unit.route}
+                            onClick={() =>
+                              localStorage.removeItem(
+                                `lesson-progress-${unit.id}`
+                              )
+                            }
+                          >
+                            <button
+                              style={{
+                                padding: "6px 12px",
+                                background: "transparent",
+                                border: "1px solid #30363d",
+                                borderRadius: 6,
+                                color: "#8b949e",
+                                fontSize: 12,
+                                fontWeight: 600,
+                                cursor: "pointer",
+                              }}
+                            >
+                              ↺ Học lại
+                            </button>
+                          </Link>
+                          <Link href={`/quiz?unit=${unit.id}`}>
+                            <button
+                              style={{
+                                padding: "6px 12px",
+                                background: "#8b5cf622",
+                                border: "1px solid #8b5cf644",
+                                borderRadius: 6,
+                                color: "#a78bfa",
+                                fontSize: 12,
+                                fontWeight: 600,
+                                cursor: "pointer",
+                              }}
+                            >
+                              Quiz
+                            </button>
+                          </Link>
+                        </div>
+                      ) : isActive ? (
+                        <Link href={unit.route}>
+                          <button
+                            style={{
+                              padding: "8px 16px",
+                              background: phase.color,
+                              border: "none",
+                              borderRadius: 6,
+                              color: "#fff",
+                              fontSize: 12,
+                              fontWeight: 700,
+                              cursor: "pointer",
+                            }}
+                          >
+                            ▶ Học tiếp
+                          </button>
+                        </Link>
+                      ) : isUnlocked ? (
+                        <Link href={unit.route}>
+                          <button
+                            style={{
+                              padding: "8px 16px",
+                              background: "transparent",
+                              border: `1px solid ${phase.color}66`,
+                              borderRadius: 6,
+                              color: phase.color,
+                              fontSize: 12,
+                              fontWeight: 700,
+                              cursor: "pointer",
+                            }}
+                          >
+                            ▶ Bắt đầu
+                          </button>
+                        </Link>
+                      ) : (
+                        <button
+                          disabled
+                          style={{
+                            padding: "6px 12px",
+                            background: "transparent",
+                            border: "1px solid #21262d",
+                            borderRadius: 6,
+                            color: "#484f58",
+                            fontSize: 12,
+                            fontWeight: 600,
+                            cursor: "not-allowed",
+                          }}
+                        >
+                          🔒 Chưa mở khóa
+                        </button>
+                      )}
+                    </div>
                   </div>
                 </div>
-              </div>
+              );
+            })}
+          </div>
+        )}
 
-              {/* Empty spacer for grid alignment */}
-              <div className="hidden sm:block sm:w-[42%]" />
-            </motion.div>
-            </React.Fragment>
-          );
-        })}
+        {/* Footer consistency note */}
+        <div
+          style={{
+            marginTop: 24,
+            background: "#161b22",
+            border: "1px solid #21262d",
+            borderRadius: 8,
+            padding: "12px 14px",
+          }}
+        >
+          <div
+            style={{
+              fontSize: 12,
+              color: "#f59e0b",
+              fontWeight: 700,
+              marginBottom: 6,
+            }}
+          >
+            ⚠️ QUAN TRỌNG HƠN NHIỀU THỨ KHÁC
+          </div>
+          <div style={{ fontSize: 13, color: "#c9d1d9", lineHeight: 1.6 }}>
+            Đều đặn 30 phút mỗi ngày &gt; học 3 tiếng 1 lần mỗi tuần. Không
+            có trick nào bypass được consistency.
+          </div>
+        </div>
       </div>
     </div>
   );
