@@ -2,551 +2,339 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useRouter } from "next/navigation";
-import { ChevronDown, ChevronUp, Play } from "lucide-react";
+import Link from "next/link";
+import {
+  ChevronDown,
+  ChevronUp,
+  Play,
+  Clock,
+  Target,
+  BookOpen,
+  Mic,
+  CheckCircle2,
+  Circle,
+  ExternalLink,
+  Lightbulb,
+  AlertTriangle,
+} from "lucide-react";
+import {
+  STUDY_PHASES,
+  DAILY_TIPS,
+  getPhaseForLevel,
+  getPhaseProgress,
+  type StudyPhase,
+} from "@/lib/constants/study-plan";
+import { UNITS } from "@/lib/constants/units";
 
-// ─── Data ──────────────────────────────────────────────────────────────────
-
-interface Skill {
-  icon: string;
-  name: string;
-  tasks: string[];
-}
-
-interface Phase {
-  id: number;
-  label: string;
-  title: string;
-  months: string;
-  level: string;
-  color: string;
-  goal: string;
-  skills: Skill[];
-  checkpoint: string;
-}
-
-const phases: Phase[] = [
-  {
-    id: 1,
-    label: "Phase 1",
-    title: "Nền Tảng",
-    months: "Tháng 1–2",
-    level: "A1",
-    color: "#3b82f6",
-    goal: "Nắm phát âm, 500 từ vựng cơ bản, câu đơn giản",
-    skills: [
-      {
-        icon: "👂",
-        name: "Listening",
-        tasks: [
-          "BBC Learning English – 6 Minute English (episodes beginner)",
-          "YouTube: Speak English With Vanessa (Playlist S1)",
-        ],
-      },
-      {
-        icon: "📖",
-        name: "Grammar",
-        tasks: [
-          "Essential Grammar in Use (Raymond Murphy) – Units 1–25",
-          "EngVid.com – beginner grammar videos",
-        ],
-      },
-      {
-        icon: "📝",
-        name: "Vocabulary",
-        tasks: [
-          "Anki – dùng deck 'English Vocabulary Frequency 5000'",
-          "Duolingo – dùng như daily warm-up (10 phút/ngày)",
-        ],
-      },
-      {
-        icon: "🗣️",
-        name: "Speaking",
-        tasks: [
-          "Shadowing: nghe câu → dừng → lặp lại to → ghi âm → nghe lại",
-          "Chưa cần nói với người thật",
-        ],
-      },
-    ],
-    checkpoint: "Pass EF SET Quick Check – target A1 (efset.org, miễn phí)",
-  },
-  {
-    id: 2,
-    label: "Phase 2",
-    title: "Sơ Cấp",
-    months: "Tháng 3–4",
-    level: "A2",
-    color: "#8b5cf6",
-    goal: "1500 từ, đọc hiểu đoạn ngắn, viết câu ghép",
-    skills: [
-      {
-        icon: "👂",
-        name: "Listening",
-        tasks: [
-          "VOA Learning English – level Special English",
-          "TED-Ed (bật phụ đề English, không dùng tiếng Việt)",
-        ],
-      },
-      {
-        icon: "📖",
-        name: "Grammar",
-        tasks: [
-          "Essential Grammar in Use – Units 26–60",
-          "Focus vào tenses (Simple/Continuous/Perfect) + prepositions",
-        ],
-      },
-      {
-        icon: "📝",
-        name: "Vocabulary",
-        tasks: [
-          "Tiếp tục Anki, target 10–15 từ mới/ngày",
-          "Đọc Simple English Wikipedia – chủ đề mày thích",
-        ],
-      },
-      {
-        icon: "✍️",
-        name: "Writing",
-        tasks: [
-          "Viết nhật ký tiếng Anh 3–5 câu/ngày (không cần hay, cần đều)",
-          "Dùng LanguageTool.org để check lỗi grammar",
-        ],
-      },
-    ],
-    checkpoint: "Đọc 1 bài BBC News Easy cho trẻ em mà hiểu 70%+",
-  },
-  {
-    id: 3,
-    label: "Phase 3",
-    title: "Trung Cấp",
-    months: "Tháng 5–7",
-    level: "B1",
-    color: "#f59e0b",
-    goal: "3000 từ, đọc tech docs, viết đoạn văn rõ ý",
-    skills: [
-      {
-        icon: "👂",
-        name: "Listening",
-        tasks: [
-          "Podcasts: 'English Learning for Curious Minds' (level intermediate)",
-          "YouTube: TED Talks – no subtitles lần đầu → check lần 2",
-        ],
-      },
-      {
-        icon: "📖",
-        name: "Reading",
-        tasks: [
-          "MDN Web Docs / dev.to – đọc ít nhất 1 bài/ngày",
-          "Medium technical articles liên quan đến JS/Web dev",
-        ],
-      },
-      {
-        icon: "✍️",
-        name: "Writing",
-        tasks: [
-          "Viết GitHub commit messages và README bằng tiếng Anh",
-          "Tăng lên 1 đoạn văn/ngày (~80–100 chữ)",
-        ],
-      },
-      {
-        icon: "🗣️",
-        name: "Speaking",
-        tasks: [
-          "HelloTalk hoặc Tandem – tìm language exchange partner",
-          "Shadowing với TED Talks 5–10 phút/ngày",
-        ],
-      },
-    ],
-    checkpoint:
-      "Tự viết README tiếng Anh cho 1 project portfolio không dùng Google Translate",
-  },
-  {
-    id: 4,
-    label: "Phase 4",
-    title: "Tech English",
-    months: "Tháng 8–12",
-    level: "B1+",
-    color: "#22c55e",
-    goal: "Dùng tiếng Anh tự nhiên trong công việc dev",
-    skills: [
-      {
-        icon: "👂",
-        name: "Listening",
-        tasks: [
-          "Podcast: Syntax.fm, JS Party, Darknet Diaries",
-          "Xem coding tutorials YouTube không dùng sub tiếng Việt",
-        ],
-      },
-      {
-        icon: "📖",
-        name: "Reading",
-        tasks: [
-          "Stack Overflow, GitHub Issues/Discussions",
-          "Tech blogs: CSS Tricks, Smashing Magazine, web.dev",
-        ],
-      },
-      {
-        icon: "✍️",
-        name: "Writing",
-        tasks: [
-          "Viết cover letter tiếng Anh cho internship application",
-          "Comment code bằng tiếng Anh, viết commit message rõ ràng",
-        ],
-      },
-      {
-        icon: "🗣️",
-        name: "Speaking",
-        tasks: [
-          "Mock interview tiếng Anh (dùng AI để practice Q&A)",
-          "Join Discord developer communities – chat bằng text trước",
-        ],
-      },
-    ],
-    checkpoint:
-      "Thử làm 1 mock interview tiếng Anh về web dev với AI hoặc người quen",
-  },
-];
-
-const dailyPlan = [
-  {
-    time: "10 phút",
-    emoji: "🧠",
-    activity: "Vocab review",
-    detail: "Anki hoặc Duolingo – đừng skip",
-  },
-  {
-    time: "10 phút",
-    emoji: "📖",
-    activity: "Grammar",
-    detail: "1 unit trong sách hoặc 1 video EngVid",
-  },
-  {
-    time: "15 phút",
-    emoji: "👂",
-    activity: "Listening/Reading",
-    detail: "Podcast, YouTube, hay bài đọc – passive input",
-  },
-  {
-    time: "10 phút",
-    emoji: "✍️",
-    activity: "Output",
-    detail: "Viết vài câu nhật ký, hay lặp lại (shadowing)",
-  },
-];
-
-interface ResourceGroup {
-  tag: string;
-  items: { name: string; url: string; note: string }[];
-}
-
-const resources: ResourceGroup[] = [
-  {
-    tag: "FREE",
-    items: [
-      {
-        name: "Duolingo",
-        url: "duolingo.com",
-        note: "Daily habit, warm-up thôi – đừng dựa hoàn toàn",
-      },
-      {
-        name: "BBC Learning English",
-        url: "bbc.co.uk/learningenglish",
-        note: "Structured nhất cho beginner, có audio",
-      },
-      {
-        name: "EngVid",
-        url: "engvid.com",
-        note: "Video grammar bởi native teachers, free",
-      },
-      {
-        name: "Anki",
-        url: "apps.ankiweb.net",
-        note: "SRS flashcards – cách hiệu quả nhất để nhớ từ",
-      },
-      {
-        name: "EF SET",
-        url: "efset.org",
-        note: "Test level free theo chuẩn CEFR (A1–C2)",
-      },
-      {
-        name: "LanguageTool",
-        url: "languagetool.org",
-        note: "Grammar checker tốt hơn Grammarly free tier",
-      },
-    ],
-  },
-  {
-    tag: "WORTH IT",
-    items: [
-      {
-        name: "Essential Grammar in Use",
-        url: "cambridge.org",
-        note: "Sách của Raymond Murphy – chuẩn nhất cho A1→A2",
-      },
-      {
-        name: "English Grammar in Use",
-        url: "cambridge.org",
-        note: "Cùng tác giả – dùng tiếp khi lên B1",
-      },
-    ],
-  },
-  {
-    tag: "YOUTUBE",
-    items: [
-      {
-        name: "Speak English With Vanessa",
-        url: "youtube.com",
-        note: "Beginner → Intermediate, rõ ràng, dễ nghe",
-      },
-      {
-        name: "EnglishClass101",
-        url: "youtube.com",
-        note: "Có nhiều series theo topic, free trên YT",
-      },
-      {
-        name: "TED-Ed",
-        url: "youtube.com",
-        note: "Phase 3+ – học nghe natural speech",
-      },
-    ],
-  },
-];
-
-const milestones = [
-  { m: "Tháng 1", goal: "Hoàn thành Duolingo basics, làm quen Anki", color: "#3b82f6" },
-  { m: "Tháng 2", goal: "Pass EF SET A1 (efset.org)", color: "#3b82f6" },
-  { m: "Tháng 4", goal: "Đọc Simple English Wikipedia không cần dict", color: "#8b5cf6" },
-  { m: "Tháng 6", goal: "Viết nhật ký tiếng Anh 50+ từ/ngày thoải mái", color: "#8b5cf6" },
-  { m: "Tháng 7", goal: "Tự viết README project bằng tiếng Anh", color: "#f59e0b" },
-  { m: "Tháng 9", goal: "Đọc MDN/dev.to hiểu 80% mà không dịch", color: "#f59e0b" },
-  { m: "Tháng 12", goal: "Mock interview tiếng Anh về web dev được", color: "#22c55e" },
-];
-
-// ─── Props ─────────────────────────────────────────────────────────────────
-
-interface RoadmapClientProps {
+interface Props {
   nextUnitRoute: string;
+  userLevel: string;
+  completedUnitIds: string[];
 }
 
-// ─── Component ─────────────────────────────────────────────────────────────
+type TabKey = "milestones" | "routine" | "resources" | "tips";
 
-export default function RoadmapClient({ nextUnitRoute }: RoadmapClientProps) {
-  const router = useRouter();
-  const [activePhase, setActivePhase] = useState(0);
-  const [expandedSkill, setExpandedSkill] = useState<number | null>(null);
-  const phase = phases[activePhase];
+const SKILL_COLORS: Record<string, string> = {
+  pronunciation: "#f59e0b",
+  vocabulary: "#8b5cf6",
+  grammar: "#3b82f6",
+  listening: "#10b981",
+  speaking: "#ef4444",
+  reading: "#06b6d4",
+  writing: "#ec4899",
+};
 
-  function getTagColor(tag: string) {
-    if (tag === "FREE") return "#22c55e";
-    if (tag === "WORTH IT") return "#f59e0b";
-    return "#3b82f6";
+const RESOURCE_TYPE_ICON: Record<string, string> = {
+  app: "📱",
+  website: "🌐",
+  book: "📚",
+  youtube: "▶️",
+  podcast: "🎧",
+};
+
+export default function RoadmapClient({
+  nextUnitRoute,
+  userLevel,
+  completedUnitIds,
+}: Props) {
+  const currentPhase = getPhaseForLevel(userLevel);
+  const [expandedPhase, setExpandedPhase] = useState<number>(currentPhase.id);
+  const [activeTab, setActiveTab] = useState<Record<number, TabKey>>({});
+  const todayTip = DAILY_TIPS[new Date().getDate() % DAILY_TIPS.length]!;
+
+  const allUnits = UNITS.map((u) => ({ id: u.id, level: u.level }));
+
+  function getTab(phaseId: number): TabKey {
+    return activeTab[phaseId] ?? "milestones";
   }
 
-  function getTagLabel(tag: string) {
-    if (tag === "FREE") return "✦ MIỄN PHÍ";
-    if (tag === "WORTH IT") return "✦ ĐÁNG MUA";
-    return "✦ YOUTUBE";
+  function setTab(phaseId: number, tab: TabKey) {
+    setActiveTab((prev) => ({ ...prev, [phaseId]: tab }));
   }
 
   return (
     <div
-      className="min-h-screen pb-16"
-      style={{ background: "#0d1117", color: "#e2e8f0", fontFamily: "'Inter', system-ui, sans-serif" }}
+      style={{
+        minHeight: "100dvh",
+        background: "#09090b",
+        paddingBottom: 100,
+      }}
     >
-      {/* ── Header ── */}
-      <motion.div
-        initial={{ opacity: 0, y: -12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4 }}
-        style={{
-          background: "linear-gradient(135deg, #0d1117 0%, #1a1f2e 100%)",
-          borderBottom: "1px solid #21262d",
-          padding: "32px 20px 24px",
-          textAlign: "center",
-        }}
-      >
-        <div
-          style={{
-            fontSize: 13,
-            color: "#22c55e",
-            fontWeight: 700,
-            letterSpacing: "0.1em",
-            marginBottom: 8,
-            textTransform: "uppercase",
-          }}
-        >
-          Self-Study Plan
-        </div>
-        <h1
-          style={{ margin: 0, fontSize: 26, fontWeight: 800, color: "#f0f6fc", lineHeight: 1.2 }}
-        >
-          English Từ Con Số 0
-        </h1>
-        <p style={{ margin: "10px 0 0", color: "#8b949e", fontSize: 14, lineHeight: 1.5 }}>
-          Lộ trình 12 tháng · Tự học · Hướng tới dùng English cho dev work
-        </p>
-
-        {/* Stats */}
-        <div style={{ display: "flex", justifyContent: "center", gap: 24, marginTop: 20 }}>
-          {[
-            { val: "12", unit: "tháng" },
-            { val: "45", unit: "phút/ngày" },
-            { val: "B1+", unit: "target" },
-          ].map((s, i) => (
-            <div key={i} style={{ textAlign: "center" }}>
-              <div style={{ fontSize: 22, fontWeight: 800, color: "#22c55e" }}>{s.val}</div>
-              <div
-                style={{
-                  fontSize: 11,
-                  color: "#8b949e",
-                  textTransform: "uppercase",
-                  letterSpacing: "0.05em",
-                }}
-              >
-                {s.unit}
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* CTA */}
-        <motion.button
-          whileHover={{ scale: 1.04 }}
-          whileTap={{ scale: 0.97 }}
-          onClick={() => router.push(nextUnitRoute)}
-          style={{
-            marginTop: 20,
-            padding: "10px 24px",
-            background: "linear-gradient(135deg, #22c55e, #16a34a)",
-            border: "none",
-            borderRadius: 10,
-            color: "#fff",
-            fontWeight: 700,
-            fontSize: 14,
-            cursor: "pointer",
-            display: "inline-flex",
-            alignItems: "center",
-            gap: 8,
-          }}
-        >
-          <Play style={{ width: 14, height: 14, fill: "currentColor" }} />
-          Bắt đầu học ngay
-        </motion.button>
-      </motion.div>
-
-      {/* ── Phase tabs ── */}
+      {/* ── Header ─────────────────────────────────────────────────────── */}
       <div
         style={{
-          display: "flex",
-          overflowX: "auto",
-          padding: "16px 16px 0",
-          gap: 8,
-          borderBottom: "1px solid #21262d",
-          background: "#0d1117",
-          scrollbarWidth: "none",
+          padding: "24px 16px 0",
+          maxWidth: 480,
+          margin: "0 auto",
         }}
       >
-        {phases.map((p, i) => (
-          <button
-            key={p.id}
-            id={`roadmap-phase-${p.id}`}
-            onClick={() => {
-              setActivePhase(i);
-              setExpandedSkill(null);
-            }}
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          style={{ marginBottom: 20 }}
+        >
+          <h1
             style={{
-              flex: "0 0 auto",
-              padding: "8px 16px 12px",
-              borderRadius: "8px 8px 0 0",
-              border: "none",
-              cursor: "pointer",
-              background: activePhase === i ? "#161b22" : "transparent",
-              borderBottom: activePhase === i ? `2px solid ${p.color}` : "2px solid transparent",
-              color: activePhase === i ? "#f0f6fc" : "#8b949e",
-              fontSize: 13,
-              fontWeight: activePhase === i ? 700 : 400,
-              transition: "all 0.2s",
-              whiteSpace: "nowrap",
+              fontSize: 22,
+              fontWeight: 800,
+              color: "#fafafa",
+              fontFamily: "'Space Grotesk', sans-serif",
+              marginBottom: 6,
             }}
           >
-            <span style={{ color: p.color, marginRight: 4 }}>●</span>
-            {p.label}
-          </button>
-        ))}
-      </div>
+            🗺️ Lộ Trình A0 → B2
+          </h1>
+          <p style={{ fontSize: 13, color: "#71717a", lineHeight: 1.5 }}>
+            4 giai đoạn · 12–18 tháng · Thiết kế cho người Việt mục tiêu SaaS &amp; business
+          </p>
+        </motion.div>
 
-      {/* ── Phase content ── */}
-      <AnimatePresence mode="wait">
+        {/* Current level badge */}
         <motion.div
-          key={activePhase}
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -8 }}
-          transition={{ duration: 0.25 }}
-          style={{ padding: "20px 16px 0", background: "#161b22", borderBottom: "1px solid #21262d" }}
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          style={{
+            background: "#111118",
+            border: `1px solid ${currentPhase.color}40`,
+            borderRadius: 14,
+            padding: "14px 16px",
+            marginBottom: 20,
+            display: "flex",
+            alignItems: "center",
+            gap: 12,
+          }}
         >
-          {/* Level badge + months */}
-          <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 8 }}>
-            <span
-              style={{
-                background: phase.color + "22",
-                color: phase.color,
-                fontSize: 11,
-                fontWeight: 700,
-                padding: "3px 8px",
-                borderRadius: 4,
-                letterSpacing: "0.08em",
-              }}
-            >
-              CEFR {phase.level}
-            </span>
-            <span style={{ color: "#8b949e", fontSize: 13 }}>{phase.months}</span>
+          <div
+            style={{
+              width: 44,
+              height: 44,
+              borderRadius: 12,
+              background: `${currentPhase.color}20`,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontSize: 22,
+              flexShrink: 0,
+            }}
+          >
+            {currentPhase.emoji}
           </div>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{ fontSize: 11, color: currentPhase.color, fontWeight: 700, marginBottom: 2 }}>
+              LEVEL HIỆN TẠI: {userLevel}
+            </div>
+            <div style={{ fontSize: 14, fontWeight: 700, color: "#fafafa" }}>
+              {currentPhase.title} — {currentPhase.months}
+            </div>
+            <div style={{ fontSize: 12, color: "#71717a", marginTop: 2 }}>
+              Mục tiêu: {currentPhase.cefrFrom} → {currentPhase.cefrTo}
+            </div>
+          </div>
+          <Link
+            href={nextUnitRoute}
+            style={{
+              background: currentPhase.color,
+              color: "#fff",
+              padding: "8px 14px",
+              borderRadius: 10,
+              fontSize: 12,
+              fontWeight: 700,
+              textDecoration: "none",
+              display: "flex",
+              alignItems: "center",
+              gap: 4,
+              flexShrink: 0,
+            }}
+          >
+            <Play size={12} />
+            Học
+          </Link>
+        </motion.div>
 
-          <h2 style={{ margin: "0 0 6px", fontSize: 20, fontWeight: 800, color: "#f0f6fc" }}>
-            {phase.title}
-          </h2>
-          <p style={{ margin: "0 0 16px", color: "#8b949e", fontSize: 14 }}>🎯 {phase.goal}</p>
+        {/* Daily tip */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          style={{
+            background: "#0d1117",
+            border: "1px solid #27272a",
+            borderRadius: 12,
+            padding: "12px 14px",
+            marginBottom: 24,
+            display: "flex",
+            gap: 10,
+            alignItems: "flex-start",
+          }}
+        >
+          <Lightbulb size={16} color="#f59e0b" style={{ flexShrink: 0, marginTop: 1 }} />
+          <p style={{ fontSize: 12, color: "#a1a1aa", lineHeight: 1.6, margin: 0 }}>
+            <span style={{ color: "#f59e0b", fontWeight: 700 }}>Tip hôm nay: </span>
+            {todayTip}
+          </p>
+        </motion.div>
 
-          {/* Skills accordion */}
-          <div style={{ display: "flex", flexDirection: "column", gap: 8, paddingBottom: 20 }}>
-            {phase.skills.map((skill, si) => (
-              <div
-                key={si}
+        {/* ── Phase Cards ────────────────────────────────────────────── */}
+        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+          {STUDY_PHASES.map((phase, idx) => {
+            const isExpanded = expandedPhase === phase.id;
+            const isCurrentPhase = phase.id === currentPhase.id;
+            const progress = getPhaseProgress(
+              phase.cefrTo,
+              completedUnitIds,
+              allUnits
+            );
+            const tab = getTab(phase.id);
+
+            return (
+              <motion.div
+                key={phase.id}
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: idx * 0.08 }}
                 style={{
-                  background: "#0d1117",
-                  borderRadius: 10,
-                  border: `1px solid ${expandedSkill === si ? phase.color + "66" : "#21262d"}`,
+                  background: "#111118",
+                  border: `1px solid ${isCurrentPhase ? phase.color + "60" : "#27272a"}`,
+                  borderRadius: 16,
                   overflow: "hidden",
-                  transition: "border 0.2s",
+                  boxShadow: isCurrentPhase ? `0 0 0 1px ${phase.color}30` : "none",
                 }}
               >
+                {/* Phase header */}
                 <button
-                  id={`roadmap-skill-${activePhase}-${si}`}
-                  onClick={() => setExpandedSkill(expandedSkill === si ? null : si)}
+                  onClick={() => setExpandedPhase(isExpanded ? 0 : phase.id)}
                   style={{
                     width: "100%",
-                    padding: "12px 16px",
-                    background: "transparent",
+                    background: "none",
                     border: "none",
                     cursor: "pointer",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    color: "#e2e8f0",
+                    padding: "16px",
+                    textAlign: "left",
                   }}
                 >
-                  <span style={{ fontSize: 14, fontWeight: 600 }}>
-                    {skill.icon} {skill.name}
-                  </span>
-                  {expandedSkill === si ? (
-                    <ChevronUp style={{ width: 16, height: 16, color: "#8b949e" }} />
-                  ) : (
-                    <ChevronDown style={{ width: 16, height: 16, color: "#8b949e" }} />
-                  )}
+                  <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                    {/* Emoji badge */}
+                    <div
+                      style={{
+                        width: 44,
+                        height: 44,
+                        borderRadius: 12,
+                        background: `${phase.color}20`,
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        fontSize: 20,
+                        flexShrink: 0,
+                        border: isCurrentPhase ? `1px solid ${phase.color}50` : "none",
+                      }}
+                    >
+                      {phase.emoji}
+                    </div>
+
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 2 }}>
+                        <span
+                          style={{
+                            fontSize: 10,
+                            fontWeight: 700,
+                            color: phase.color,
+                            background: `${phase.color}15`,
+                            padding: "2px 7px",
+                            borderRadius: 20,
+                          }}
+                        >
+                          Phase {phase.id} · {phase.months}
+                        </span>
+                        {isCurrentPhase && (
+                          <span
+                            style={{
+                              fontSize: 10,
+                              fontWeight: 700,
+                              color: "#10b981",
+                              background: "#10b98120",
+                              padding: "2px 7px",
+                              borderRadius: 20,
+                            }}
+                          >
+                            ← Đang ở đây
+                          </span>
+                        )}
+                      </div>
+                      <div
+                        style={{
+                          fontSize: 15,
+                          fontWeight: 800,
+                          color: "#fafafa",
+                          fontFamily: "'Space Grotesk', sans-serif",
+                        }}
+                      >
+                        {phase.title}
+                      </div>
+                      <div style={{ fontSize: 11, color: "#71717a", marginTop: 1 }}>
+                        {phase.cefrFrom} → {phase.cefrTo} · {phase.vocabTarget.toLocaleString()} từ · {phase.dailyMinutes} phút/ngày
+                      </div>
+                    </div>
+
+                    <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 4 }}>
+                      <div style={{ fontSize: 12, color: "#52525b" }}>
+                        {progress.completed}/{progress.total}
+                      </div>
+                      {isExpanded ? (
+                        <ChevronUp size={16} color="#52525b" />
+                      ) : (
+                        <ChevronDown size={16} color="#52525b" />
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Progress bar */}
+                  <div
+                    style={{
+                      marginTop: 12,
+                      height: 4,
+                      background: "#27272a",
+                      borderRadius: 99,
+                      overflow: "hidden",
+                    }}
+                  >
+                    <motion.div
+                      initial={{ width: 0 }}
+                      animate={{ width: `${progress.percent}%` }}
+                      transition={{ duration: 0.8, delay: idx * 0.1 }}
+                      style={{
+                        height: "100%",
+                        background: phase.color,
+                        borderRadius: 99,
+                      }}
+                    />
+                  </div>
+                  <div style={{ fontSize: 10, color: "#52525b", marginTop: 4, textAlign: "right" }}>
+                    {progress.percent}% hoàn thành
+                  </div>
                 </button>
 
+                {/* Expanded content */}
                 <AnimatePresence>
-                  {expandedSkill === si && (
+                  {isExpanded && (
                     <motion.div
                       initial={{ height: 0, opacity: 0 }}
                       animate={{ height: "auto", opacity: 1 }}
@@ -554,271 +342,389 @@ export default function RoadmapClient({ nextUnitRoute }: RoadmapClientProps) {
                       transition={{ duration: 0.2 }}
                       style={{ overflow: "hidden" }}
                     >
-                      <div style={{ padding: "0 16px 14px" }}>
-                        {skill.tasks.map((t, ti) => (
-                          <div
-                            key={ti}
-                            style={{
-                              display: "flex",
-                              gap: 8,
-                              marginBottom: 8,
-                              alignItems: "flex-start",
-                            }}
-                          >
-                            <span
+                      <div
+                        style={{
+                          borderTop: "1px solid #27272a",
+                          padding: "16px",
+                        }}
+                      >
+                        {/* Goal */}
+                        <div
+                          style={{
+                            background: `${phase.color}10`,
+                            border: `1px solid ${phase.color}30`,
+                            borderRadius: 10,
+                            padding: "10px 12px",
+                            marginBottom: 14,
+                          }}
+                        >
+                          <div style={{ fontSize: 11, color: phase.color, fontWeight: 700, marginBottom: 3 }}>
+                            🎯 MỤC TIÊU GIAI ĐOẠN
+                          </div>
+                          <div style={{ fontSize: 13, color: "#e4e4e7", lineHeight: 1.5 }}>
+                            {phase.goal}
+                          </div>
+                        </div>
+
+                        {/* Tab nav */}
+                        <div
+                          style={{
+                            display: "grid",
+                            gridTemplateColumns: "repeat(4, 1fr)",
+                            gap: 4,
+                            marginBottom: 16,
+                          }}
+                        >
+                          {(
+                            [
+                              { key: "milestones", label: "Milestones", icon: "🏆" },
+                              { key: "routine", label: "Daily Plan", icon: "⏱️" },
+                              { key: "resources", label: "Tài nguyên", icon: "📚" },
+                              { key: "tips", label: "Mẹo VN", icon: "🇻🇳" },
+                            ] as { key: TabKey; label: string; icon: string }[]
+                          ).map((t) => (
+                            <button
+                              key={t.key}
+                              onClick={() => setTab(phase.id, t.key)}
                               style={{
-                                color: phase.color,
-                                fontSize: 14,
-                                marginTop: 1,
-                                flexShrink: 0,
+                                background: tab === t.key ? phase.color : "#1c1c24",
+                                border: "none",
+                                borderRadius: 8,
+                                padding: "7px 4px",
+                                cursor: "pointer",
+                                display: "flex",
+                                flexDirection: "column",
+                                alignItems: "center",
+                                gap: 2,
                               }}
                             >
-                              →
-                            </span>
-                            <span style={{ color: "#c9d1d9", fontSize: 13, lineHeight: 1.5 }}>
-                              {t}
-                            </span>
-                          </div>
-                        ))}
+                              <span style={{ fontSize: 14 }}>{t.icon}</span>
+                              <span
+                                style={{
+                                  fontSize: 9,
+                                  fontWeight: 600,
+                                  color: tab === t.key ? "#fff" : "#71717a",
+                                }}
+                              >
+                                {t.label}
+                              </span>
+                            </button>
+                          ))}
+                        </div>
+
+                        {/* Tab content */}
+                        <AnimatePresence mode="wait">
+                          {/* MILESTONES TAB */}
+                          {tab === "milestones" && (
+                            <motion.div
+                              key="milestones"
+                              initial={{ opacity: 0, x: 10 }}
+                              animate={{ opacity: 1, x: 0 }}
+                              exit={{ opacity: 0, x: -10 }}
+                            >
+                              {phase.milestones.map((ms, i) => (
+                                <div
+                                  key={i}
+                                  style={{
+                                    background: "#0d1117",
+                                    borderRadius: 10,
+                                    padding: "12px",
+                                    marginBottom: 8,
+                                    border: "1px solid #1c1c24",
+                                  }}
+                                >
+                                  <div
+                                    style={{
+                                      fontSize: 11,
+                                      color: phase.color,
+                                      fontWeight: 700,
+                                      marginBottom: 6,
+                                    }}
+                                  >
+                                    Tháng {ms.month}: {ms.title}
+                                  </div>
+                                  {ms.canDo.map((item, j) => (
+                                    <div
+                                      key={j}
+                                      style={{
+                                        display: "flex",
+                                        gap: 8,
+                                        alignItems: "flex-start",
+                                        marginBottom: 4,
+                                      }}
+                                    >
+                                      <CheckCircle2
+                                        size={13}
+                                        color={phase.color}
+                                        style={{ flexShrink: 0, marginTop: 1 }}
+                                      />
+                                      <span style={{ fontSize: 12, color: "#a1a1aa", lineHeight: 1.4 }}>
+                                        {item}
+                                      </span>
+                                    </div>
+                                  ))}
+                                </div>
+                              ))}
+                            </motion.div>
+                          )}
+
+                          {/* ROUTINE TAB */}
+                          {tab === "routine" && (
+                            <motion.div
+                              key="routine"
+                              initial={{ opacity: 0, x: 10 }}
+                              animate={{ opacity: 1, x: 0 }}
+                              exit={{ opacity: 0, x: -10 }}
+                            >
+                              <div
+                                style={{
+                                  fontSize: 11,
+                                  color: "#52525b",
+                                  marginBottom: 10,
+                                  display: "flex",
+                                  alignItems: "center",
+                                  gap: 4,
+                                }}
+                              >
+                                <Clock size={11} />
+                                Tổng: {phase.dailyMinutes} phút/ngày
+                              </div>
+                              {phase.dailyRoutine.map((act, i) => (
+                                <div
+                                  key={i}
+                                  style={{
+                                    background: "#0d1117",
+                                    borderRadius: 10,
+                                    padding: "12px",
+                                    marginBottom: 8,
+                                    border: "1px solid #1c1c24",
+                                    display: "flex",
+                                    gap: 10,
+                                  }}
+                                >
+                                  <div
+                                    style={{
+                                      width: 36,
+                                      height: 36,
+                                      borderRadius: 10,
+                                      background: `${SKILL_COLORS[act.skill] ?? "#52525b"}20`,
+                                      display: "flex",
+                                      alignItems: "center",
+                                      justifyContent: "center",
+                                      fontSize: 16,
+                                      flexShrink: 0,
+                                    }}
+                                  >
+                                    {act.icon}
+                                  </div>
+                                  <div style={{ flex: 1, minWidth: 0 }}>
+                                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                                      <span style={{ fontSize: 13, fontWeight: 700, color: "#e4e4e7" }}>
+                                        {act.title}
+                                      </span>
+                                      <span
+                                        style={{
+                                          fontSize: 10,
+                                          color: SKILL_COLORS[act.skill] ?? "#52525b",
+                                          fontWeight: 700,
+                                          background: `${SKILL_COLORS[act.skill] ?? "#52525b"}15`,
+                                          padding: "2px 6px",
+                                          borderRadius: 6,
+                                        }}
+                                      >
+                                        {act.duration}&apos;
+                                      </span>
+                                    </div>
+                                    <p style={{ fontSize: 12, color: "#71717a", lineHeight: 1.5, margin: "4px 0 4px" }}>
+                                      {act.description}
+                                    </p>
+                                    {act.resource && (
+                                      <div style={{ fontSize: 10, color: "#52525b" }}>
+                                        📍 {act.resource}
+                                      </div>
+                                    )}
+                                  </div>
+                                </div>
+                              ))}
+                            </motion.div>
+                          )}
+
+                          {/* RESOURCES TAB */}
+                          {tab === "resources" && (
+                            <motion.div
+                              key="resources"
+                              initial={{ opacity: 0, x: 10 }}
+                              animate={{ opacity: 1, x: 0 }}
+                              exit={{ opacity: 0, x: -10 }}
+                            >
+                              {phase.resources.map((res, i) => (
+                                <div
+                                  key={i}
+                                  style={{
+                                    background: "#0d1117",
+                                    borderRadius: 10,
+                                    padding: "12px",
+                                    marginBottom: 8,
+                                    border: "1px solid #1c1c24",
+                                    display: "flex",
+                                    gap: 10,
+                                    alignItems: "flex-start",
+                                  }}
+                                >
+                                  <span style={{ fontSize: 18, flexShrink: 0 }}>
+                                    {RESOURCE_TYPE_ICON[res.type]}
+                                  </span>
+                                  <div style={{ flex: 1, minWidth: 0 }}>
+                                    <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 3 }}>
+                                      <span style={{ fontSize: 13, fontWeight: 700, color: "#e4e4e7" }}>
+                                        {res.name}
+                                      </span>
+                                      {res.free && (
+                                        <span
+                                          style={{
+                                            fontSize: 9,
+                                            color: "#10b981",
+                                            background: "#10b98115",
+                                            padding: "1px 5px",
+                                            borderRadius: 4,
+                                            fontWeight: 700,
+                                          }}
+                                        >
+                                          FREE
+                                        </span>
+                                      )}
+                                      {res.url && (
+                                        <a
+                                          href={res.url}
+                                          target="_blank"
+                                          rel="noopener noreferrer"
+                                          style={{ color: "#52525b", lineHeight: 0 }}
+                                        >
+                                          <ExternalLink size={11} />
+                                        </a>
+                                      )}
+                                    </div>
+                                    <p style={{ fontSize: 12, color: "#71717a", margin: 0, lineHeight: 1.5 }}>
+                                      {res.description}
+                                    </p>
+                                  </div>
+                                </div>
+                              ))}
+                            </motion.div>
+                          )}
+
+                          {/* VIETNAMESE TIPS TAB */}
+                          {tab === "tips" && (
+                            <motion.div
+                              key="tips"
+                              initial={{ opacity: 0, x: 10 }}
+                              animate={{ opacity: 1, x: 0 }}
+                              exit={{ opacity: 0, x: -10 }}
+                            >
+                              {phase.vietnameseTips.map((tip, i) => (
+                                <div
+                                  key={i}
+                                  style={{
+                                    background: "#0d1117",
+                                    borderRadius: 10,
+                                    padding: "12px",
+                                    marginBottom: 8,
+                                    border: "1px solid #1c1c24",
+                                  }}
+                                >
+                                  <div
+                                    style={{
+                                      display: "flex",
+                                      gap: 8,
+                                      marginBottom: 8,
+                                      alignItems: "flex-start",
+                                    }}
+                                  >
+                                    <AlertTriangle size={13} color="#f59e0b" style={{ flexShrink: 0, marginTop: 1 }} />
+                                    <div>
+                                      <div style={{ fontSize: 11, color: "#f59e0b", fontWeight: 700, marginBottom: 2 }}>
+                                        Lỗi hay gặp
+                                      </div>
+                                      <div style={{ fontSize: 12, color: "#a1a1aa", lineHeight: 1.4 }}>
+                                        {tip.problem}
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div style={{ display: "flex", gap: 8, alignItems: "flex-start" }}>
+                                    <CheckCircle2 size={13} color="#10b981" style={{ flexShrink: 0, marginTop: 1 }} />
+                                    <div>
+                                      <div style={{ fontSize: 11, color: "#10b981", fontWeight: 700, marginBottom: 2 }}>
+                                        Giải pháp
+                                      </div>
+                                      <div style={{ fontSize: 12, color: "#a1a1aa", lineHeight: 1.4 }}>
+                                        {tip.solution}
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              ))}
+
+                              {/* Weekly review */}
+                              <div
+                                style={{
+                                  background: `${phase.color}10`,
+                                  border: `1px solid ${phase.color}30`,
+                                  borderRadius: 10,
+                                  padding: "12px",
+                                  marginTop: 4,
+                                }}
+                              >
+                                <div style={{ fontSize: 11, color: phase.color, fontWeight: 700, marginBottom: 8 }}>
+                                  📋 Review Cuối Tuần
+                                </div>
+                                {phase.weeklyReview.map((item, i) => (
+                                  <div
+                                    key={i}
+                                    style={{
+                                      display: "flex",
+                                      gap: 8,
+                                      marginBottom: 6,
+                                      alignItems: "flex-start",
+                                    }}
+                                  >
+                                    <Circle size={10} color={phase.color} style={{ flexShrink: 0, marginTop: 3 }} />
+                                    <span style={{ fontSize: 12, color: "#a1a1aa", lineHeight: 1.4 }}>
+                                      {item}
+                                    </span>
+                                  </div>
+                                ))}
+                              </div>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
                       </div>
                     </motion.div>
                   )}
                 </AnimatePresence>
-              </div>
-            ))}
-          </div>
-
-          {/* Checkpoint */}
-          <div
-            style={{
-              background: phase.color + "11",
-              border: `1px solid ${phase.color}44`,
-              borderRadius: 8,
-              padding: "12px 14px",
-              marginBottom: 20,
-            }}
-          >
-            <div
-              style={{
-                fontSize: 11,
-                color: phase.color,
-                fontWeight: 700,
-                letterSpacing: "0.08em",
-                marginBottom: 4,
-              }}
-            >
-              ✓ CHECKPOINT
-            </div>
-            <div style={{ fontSize: 13, color: "#e2e8f0", lineHeight: 1.5 }}>
-              {phase.checkpoint}
-            </div>
-          </div>
-        </motion.div>
-      </AnimatePresence>
-
-      {/* ── Daily routine ── */}
-      <div style={{ padding: "20px 16px 0" }}>
-        <h3
-          style={{
-            margin: "0 0 12px",
-            fontSize: 15,
-            fontWeight: 700,
-            color: "#8b949e",
-            textTransform: "uppercase",
-            letterSpacing: "0.08em",
-          }}
-        >
-          ⏰ Lịch Học Mỗi Ngày
-        </h3>
-
-        <div style={{ display: "flex", flexDirection: "column", gap: 8, marginBottom: 20 }}>
-          {dailyPlan.map((item, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, x: -8 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.06 }}
-              style={{
-                background: "#161b22",
-                border: "1px solid #21262d",
-                borderRadius: 8,
-                padding: "12px 14px",
-                display: "flex",
-                alignItems: "center",
-                gap: 12,
-              }}
-            >
-              <span style={{ fontSize: 22 }}>{item.emoji}</span>
-              <div style={{ flex: 1 }}>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                  <span style={{ fontSize: 14, fontWeight: 600, color: "#f0f6fc" }}>
-                    {item.activity}
-                  </span>
-                  <span style={{ fontSize: 12, color: "#22c55e", fontWeight: 700 }}>
-                    {item.time}
-                  </span>
-                </div>
-                <div style={{ fontSize: 12, color: "#8b949e", marginTop: 2 }}>{item.detail}</div>
-              </div>
-            </motion.div>
-          ))}
+              </motion.div>
+            );
+          })}
         </div>
 
-        {/* Consistency note */}
-        <div
-          style={{
-            background: "#161b22",
-            border: "1px solid #21262d",
-            borderRadius: 8,
-            padding: "12px 14px",
-            marginBottom: 20,
-          }}
-        >
-          <div style={{ fontSize: 12, color: "#f59e0b", fontWeight: 700, marginBottom: 6 }}>
-            ⚠️ QUAN TRỌNG HƠN NHIỀU THỨ KHÁC
-          </div>
-          <div style={{ fontSize: 13, color: "#c9d1d9", lineHeight: 1.6 }}>
-            Đều đặn 30 phút mỗi ngày &gt; học 3 tiếng 1 lần mỗi tuần. Không có trick nào bypass
-            được consistency.
-          </div>
-        </div>
-
-        {/* ── Resources ── */}
-        <h3
-          style={{
-            margin: "0 0 12px",
-            fontSize: 15,
-            fontWeight: 700,
-            color: "#8b949e",
-            textTransform: "uppercase",
-            letterSpacing: "0.08em",
-          }}
-        >
-          🔗 Resources
-        </h3>
-
-        {resources.map((group, gi) => (
-          <div key={gi} style={{ marginBottom: 16 }}>
-            <div
-              style={{
-                fontSize: 11,
-                fontWeight: 700,
-                color: getTagColor(group.tag),
-                letterSpacing: "0.1em",
-                marginBottom: 8,
-              }}
-            >
-              {getTagLabel(group.tag)}
-            </div>
-            <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-              {group.items.map((r, ri) => (
-                <motion.div
-                  key={ri}
-                  whileHover={{ scale: 1.01 }}
-                  style={{
-                    background: "#161b22",
-                    border: "1px solid #21262d",
-                    borderRadius: 8,
-                    padding: "10px 14px",
-                    cursor: "default",
-                  }}
-                >
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                      marginBottom: 2,
-                    }}
-                  >
-                    <span style={{ fontSize: 14, fontWeight: 600, color: "#f0f6fc" }}>
-                      {r.name}
-                    </span>
-                    <span style={{ fontSize: 11, color: "#8b949e" }}>{r.url}</span>
-                  </div>
-                  <div style={{ fontSize: 12, color: "#8b949e", lineHeight: 1.4 }}>{r.note}</div>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        ))}
-
-        {/* ── Milestones ── */}
-        <h3
-          style={{
-            margin: "16px 0 12px",
-            fontSize: 15,
-            fontWeight: 700,
-            color: "#8b949e",
-            textTransform: "uppercase",
-            letterSpacing: "0.08em",
-          }}
-        >
-          🏁 Milestones
-        </h3>
-
-        <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
-          {milestones.map((ms, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, x: -12 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.06 }}
-              style={{ display: "flex", gap: 12, alignItems: "stretch" }}
-            >
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  width: 32,
-                  flexShrink: 0,
-                }}
-              >
-                <div
-                  style={{
-                    width: 12,
-                    height: 12,
-                    borderRadius: "50%",
-                    background: ms.color,
-                    flexShrink: 0,
-                    marginTop: 4,
-                  }}
-                />
-                {i < milestones.length - 1 && (
-                  <div
-                    style={{ width: 2, flex: 1, background: "#21262d", margin: "2px 0" }}
-                  />
-                )}
-              </div>
-              <div style={{ paddingBottom: 14 }}>
-                <div style={{ fontSize: 11, color: ms.color, fontWeight: 700 }}>{ms.m}</div>
-                <div style={{ fontSize: 13, color: "#c9d1d9", lineHeight: 1.4 }}>{ms.goal}</div>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-
-        {/* Footer tip */}
+        {/* Footer */}
         <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           style={{
             marginTop: 20,
-            background: "#161b22",
-            border: "1px solid #21262d",
-            borderRadius: 10,
+            background: "#0d1117",
+            border: "1px solid #27272a",
+            borderRadius: 12,
             padding: "16px",
             textAlign: "center",
           }}
         >
-          <div style={{ fontSize: 20, marginBottom: 6 }}>💡</div>
-          <div style={{ fontSize: 13, color: "#8b949e", lineHeight: 1.6 }}>
-            Tiếng Anh với dev không cần perfect. Cần đủ để đọc docs, viết code comments, hiểu
-            Stack Overflow, và communicate được. B1 là đủ để internship.
+          <div style={{ fontSize: 20, marginBottom: 6 }}>💪</div>
+          <div style={{ fontSize: 13, color: "#71717a", lineHeight: 1.6 }}>
+            Mày đã tự học web dev từ 0 để build AtoEnglish.{" "}
+            <span style={{ color: "#fafafa" }}>Cùng grit đó, áp đúng phương pháp</span>{" "}
+            → 12 tháng nữa mày đủ English để đưa sản phẩm ra thị trường Mỹ.
           </div>
         </motion.div>
       </div>
