@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { useTheme } from "next-themes";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -17,6 +18,8 @@ import {
   Trash2,
   Download,
   Smartphone,
+  GraduationCap,
+  BookOpenCheck,
 } from "lucide-react";
 
 // ── Types ────────────────────────────────────────────────
@@ -287,6 +290,32 @@ export default function SettingsClient({ userEmail }: { userEmail: string }) {
           checked={showPhonetics}
           onChange={setShowPhonetics}
         />
+        {/* Placement test link */}
+        <Link href="/placement-test" className="w-full flex items-center justify-between px-4 py-3.5 gap-4 text-left hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition-colors">
+          <div className="flex items-center gap-3">
+            <span className="p-2 rounded-lg bg-violet-100 dark:bg-violet-950/40 text-violet-500">
+              <GraduationCap className="size-4" />
+            </span>
+            <div>
+              <p className="text-sm font-semibold text-zinc-800 dark:text-zinc-100">Làm lại Placement Test</p>
+              <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">Cập nhật trình độ CEFR — 40 câu EF SET style</p>
+            </div>
+          </div>
+          <ChevronRight className="size-4 text-zinc-400 flex-shrink-0" />
+        </Link>
+        {/* Grammar reference link */}
+        <Link href="/grammar" className="w-full flex items-center justify-between px-4 py-3.5 gap-4 text-left hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition-colors">
+          <div className="flex items-center gap-3">
+            <span className="p-2 rounded-lg bg-blue-100 dark:bg-blue-950/40 text-blue-500">
+              <BookOpenCheck className="size-4" />
+            </span>
+            <div>
+              <p className="text-sm font-semibold text-zinc-800 dark:text-zinc-100">Ngữ pháp tham khảo</p>
+              <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">13 chủ đề A1→B2 với giải thích tiếng Việt</p>
+            </div>
+          </div>
+          <ChevronRight className="size-4 text-zinc-400 flex-shrink-0" />
+        </Link>
       </SettingSection>
 
       {/* Display */}
