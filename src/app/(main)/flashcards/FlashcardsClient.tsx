@@ -277,7 +277,7 @@ export default function FlashcardsPage() {
   const progressPercentage = cards.length > 0 ? ((currentIndex + (isFlipped ? 0.5 : 0)) / cards.length) * 100 : 0;
 
   return (
-    <div className="relative mx-auto max-w-4xl px-4 py-5 sm:py-8 sm:px-6 space-y-5 sm:space-y-8 bg-grid-pattern min-h-screen overflow-x-hidden">
+    <div className="relative mx-auto max-w-4xl px-4 py-5 sm:py-8 sm:px-6 space-y-5 sm:space-y-8 bg-grid-pattern min-h-screen overflow-x-hidden pb-20 sm:pb-0">
       {/* Background decoration */}
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 -z-10 h-80 w-80 rounded-full bg-primary/5 blur-3xl" />
 
