@@ -8,7 +8,7 @@ export interface VocabularyItem {
 }
 
 export const UNIT_VOCABULARY: Record<string, VocabularyItem[]> = {
-  "unit-A01": [
+  "unit-a0-1": [
     {
       word: "hello",
       phonetic: "/həˈloʊ/",
@@ -82,7 +82,7 @@ export const UNIT_VOCABULARY: Record<string, VocabularyItem[]> = {
       level: "A0",
     },
   ],
-  "unit-A02": [
+  "unit-a0-2": [
     {
       word: "price",
       phonetic: "/praɪs/",
@@ -164,7 +164,7 @@ export const UNIT_VOCABULARY: Record<string, VocabularyItem[]> = {
       level: "A0",
     },
   ],
-  "unit-A03": [
+  "unit-a0-3": [
     {
       word: "red",
       phonetic: "/red/",
@@ -246,7 +246,7 @@ export const UNIT_VOCABULARY: Record<string, VocabularyItem[]> = {
       level: "A0",
     },
   ],
-  "unit-A04": [
+  "unit-a0-4": [
     {
       word: "morning",
       phonetic: "/ˈmɔːrnɪŋ/",
@@ -328,7 +328,7 @@ export const UNIT_VOCABULARY: Record<string, VocabularyItem[]> = {
       level: "A0",
     },
   ],
-  "unit-A05": [
+  "unit-a0-5": [
     {
       word: "age",
       phonetic: "/eɪdʒ/",
@@ -410,7 +410,7 @@ export const UNIT_VOCABULARY: Record<string, VocabularyItem[]> = {
       level: "A0",
     },
   ],
-  "unit-A06": [
+  "unit-a0-6": [
     {
       word: "mother",
       phonetic: "/ˈmʌðər/",
@@ -492,7 +492,7 @@ export const UNIT_VOCABULARY: Record<string, VocabularyItem[]> = {
       level: "A0",
     },
   ],
-  "unit-A07": [
+  "unit-a0-7": [
     {
       word: "Monday",
       phonetic: "/ˈmʌndeɪ/",
@@ -574,7 +574,7 @@ export const UNIT_VOCABULARY: Record<string, VocabularyItem[]> = {
       level: "A0",
     },
   ],
-  "unit-A08": [
+  "unit-a0-8": [
     {
       word: "help",
       phonetic: "/help/",
