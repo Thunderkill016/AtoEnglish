@@ -1,9 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { useRouter } from "next/navigation";
-import { ChevronDown, ChevronUp, Play } from "lucide-react";
 
 // ─── Data ──────────────────────────────────────────────────────────────────
 
@@ -233,9 +230,15 @@ const dailyPlan = [
   },
 ];
 
+interface ResourceItem {
+  name: string;
+  url: string;
+  note: string;
+}
+
 interface ResourceGroup {
   tag: string;
-  items: { name: string; url: string; note: string }[];
+  items: ResourceItem[];
 }
 
 const resources: ResourceGroup[] = [
@@ -311,52 +314,25 @@ const resources: ResourceGroup[] = [
   },
 ];
 
-const milestones = [
-  { m: "Tháng 1", goal: "Hoàn thành Duolingo basics, làm quen Anki", color: "#3b82f6" },
-  { m: "Tháng 2", goal: "Pass EF SET A1 (efset.org)", color: "#3b82f6" },
-  { m: "Tháng 4", goal: "Đọc Simple English Wikipedia không cần dict", color: "#8b5cf6" },
-  { m: "Tháng 6", goal: "Viết nhật ký tiếng Anh 50+ từ/ngày thoải mái", color: "#8b5cf6" },
-  { m: "Tháng 7", goal: "Tự viết README project bằng tiếng Anh", color: "#f59e0b" },
-  { m: "Tháng 9", goal: "Đọc MDN/dev.to hiểu 80% mà không dịch", color: "#f59e0b" },
-  { m: "Tháng 12", goal: "Mock interview tiếng Anh về web dev được", color: "#22c55e" },
-];
-
-// ─── Props ─────────────────────────────────────────────────────────────────
-
-interface RoadmapClientProps {
-  nextUnitRoute: string;
-}
-
 // ─── Component ─────────────────────────────────────────────────────────────
 
-export default function RoadmapClient({ nextUnitRoute }: RoadmapClientProps) {
-  const router = useRouter();
+export default function RoadmapClient() {
   const [activePhase, setActivePhase] = useState(0);
   const [expandedSkill, setExpandedSkill] = useState<number | null>(null);
   const phase = phases[activePhase];
 
-  function getTagColor(tag: string) {
-    if (tag === "FREE") return "#22c55e";
-    if (tag === "WORTH IT") return "#f59e0b";
-    return "#3b82f6";
-  }
-
-  function getTagLabel(tag: string) {
-    if (tag === "FREE") return "✦ MIỄN PHÍ";
-    if (tag === "WORTH IT") return "✦ ĐÁNG MUA";
-    return "✦ YOUTUBE";
-  }
-
   return (
     <div
-      className="min-h-screen pb-16"
-      style={{ background: "#0d1117", color: "#e2e8f0", fontFamily: "'Inter', system-ui, sans-serif" }}
+      style={{
+        background: "#0d1117",
+        color: "#e2e8f0",
+        minHeight: "100vh",
+        fontFamily: "'Inter', system-ui, sans-serif",
+        padding: "0 0 60px 0",
+      }}
     >
-      {/* ── Header ── */}
-      <motion.div
-        initial={{ opacity: 0, y: -12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4 }}
+      {/* Header */}
+      <div
         style={{
           background: "linear-gradient(135deg, #0d1117 0%, #1a1f2e 100%)",
           borderBottom: "1px solid #21262d",
@@ -377,23 +353,45 @@ export default function RoadmapClient({ nextUnitRoute }: RoadmapClientProps) {
           Self-Study Plan
         </div>
         <h1
-          style={{ margin: 0, fontSize: 26, fontWeight: 800, color: "#f0f6fc", lineHeight: 1.2 }}
+          style={{
+            margin: 0,
+            fontSize: 26,
+            fontWeight: 800,
+            color: "#f0f6fc",
+            lineHeight: 1.2,
+          }}
         >
           English Từ Con Số 0
         </h1>
-        <p style={{ margin: "10px 0 0", color: "#8b949e", fontSize: 14, lineHeight: 1.5 }}>
+        <p
+          style={{
+            margin: "10px 0 0",
+            color: "#8b949e",
+            fontSize: 14,
+            lineHeight: 1.5,
+          }}
+        >
           Lộ trình 12 tháng · Tự học · Hướng tới dùng English cho dev work
         </p>
 
-        {/* Stats */}
-        <div style={{ display: "flex", justifyContent: "center", gap: 24, marginTop: 20 }}>
+        {/* Stats row */}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            gap: 24,
+            marginTop: 20,
+          }}
+        >
           {[
             { val: "12", unit: "tháng" },
             { val: "45", unit: "phút/ngày" },
             { val: "B1+", unit: "target" },
           ].map((s, i) => (
             <div key={i} style={{ textAlign: "center" }}>
-              <div style={{ fontSize: 22, fontWeight: 800, color: "#22c55e" }}>{s.val}</div>
+              <div style={{ fontSize: 22, fontWeight: 800, color: "#22c55e" }}>
+                {s.val}
+              </div>
               <div
                 style={{
                   fontSize: 11,
@@ -407,33 +405,9 @@ export default function RoadmapClient({ nextUnitRoute }: RoadmapClientProps) {
             </div>
           ))}
         </div>
+      </div>
 
-        {/* CTA */}
-        <motion.button
-          whileHover={{ scale: 1.04 }}
-          whileTap={{ scale: 0.97 }}
-          onClick={() => router.push(nextUnitRoute)}
-          style={{
-            marginTop: 20,
-            padding: "10px 24px",
-            background: "linear-gradient(135deg, #22c55e, #16a34a)",
-            border: "none",
-            borderRadius: 10,
-            color: "#fff",
-            fontWeight: 700,
-            fontSize: 14,
-            cursor: "pointer",
-            display: "inline-flex",
-            alignItems: "center",
-            gap: 8,
-          }}
-        >
-          <Play style={{ width: 14, height: 14, fill: "currentColor" }} />
-          Bắt đầu học ngay
-        </motion.button>
-      </motion.div>
-
-      {/* ── Phase tabs ── */}
+      {/* Phase tabs */}
       <div
         style={{
           display: "flex",
@@ -460,7 +434,10 @@ export default function RoadmapClient({ nextUnitRoute }: RoadmapClientProps) {
               border: "none",
               cursor: "pointer",
               background: activePhase === i ? "#161b22" : "transparent",
-              borderBottom: activePhase === i ? `2px solid ${p.color}` : "2px solid transparent",
+              borderBottom:
+                activePhase === i
+                  ? `2px solid ${p.color}`
+                  : "2px solid transparent",
               color: activePhase === i ? "#f0f6fc" : "#8b949e",
               fontSize: 13,
               fontWeight: activePhase === i ? 700 : 400,
@@ -474,149 +451,149 @@ export default function RoadmapClient({ nextUnitRoute }: RoadmapClientProps) {
         ))}
       </div>
 
-      {/* ── Phase content ── */}
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={activePhase}
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -8 }}
-          transition={{ duration: 0.25 }}
-          style={{ padding: "20px 16px 0", background: "#161b22", borderBottom: "1px solid #21262d" }}
+      {/* Phase content */}
+      <div
+        style={{
+          padding: "20px 16px 0",
+          background: "#161b22",
+          borderBottom: "1px solid #21262d",
+        }}
+      >
+        <div
+          style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 8 }}
         >
-          {/* Level badge + months */}
-          <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 8 }}>
-            <span
-              style={{
-                background: phase.color + "22",
-                color: phase.color,
-                fontSize: 11,
-                fontWeight: 700,
-                padding: "3px 8px",
-                borderRadius: 4,
-                letterSpacing: "0.08em",
-              }}
-            >
-              CEFR {phase.level}
-            </span>
-            <span style={{ color: "#8b949e", fontSize: 13 }}>{phase.months}</span>
-          </div>
-
-          <h2 style={{ margin: "0 0 6px", fontSize: 20, fontWeight: 800, color: "#f0f6fc" }}>
-            {phase.title}
-          </h2>
-          <p style={{ margin: "0 0 16px", color: "#8b949e", fontSize: 14 }}>🎯 {phase.goal}</p>
-
-          {/* Skills accordion */}
-          <div style={{ display: "flex", flexDirection: "column", gap: 8, paddingBottom: 20 }}>
-            {phase.skills.map((skill, si) => (
-              <div
-                key={si}
-                style={{
-                  background: "#0d1117",
-                  borderRadius: 10,
-                  border: `1px solid ${expandedSkill === si ? phase.color + "66" : "#21262d"}`,
-                  overflow: "hidden",
-                  transition: "border 0.2s",
-                }}
-              >
-                <button
-                  id={`roadmap-skill-${activePhase}-${si}`}
-                  onClick={() => setExpandedSkill(expandedSkill === si ? null : si)}
-                  style={{
-                    width: "100%",
-                    padding: "12px 16px",
-                    background: "transparent",
-                    border: "none",
-                    cursor: "pointer",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    color: "#e2e8f0",
-                  }}
-                >
-                  <span style={{ fontSize: 14, fontWeight: 600 }}>
-                    {skill.icon} {skill.name}
-                  </span>
-                  {expandedSkill === si ? (
-                    <ChevronUp style={{ width: 16, height: 16, color: "#8b949e" }} />
-                  ) : (
-                    <ChevronDown style={{ width: 16, height: 16, color: "#8b949e" }} />
-                  )}
-                </button>
-
-                <AnimatePresence>
-                  {expandedSkill === si && (
-                    <motion.div
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: "auto", opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.2 }}
-                      style={{ overflow: "hidden" }}
-                    >
-                      <div style={{ padding: "0 16px 14px" }}>
-                        {skill.tasks.map((t, ti) => (
-                          <div
-                            key={ti}
-                            style={{
-                              display: "flex",
-                              gap: 8,
-                              marginBottom: 8,
-                              alignItems: "flex-start",
-                            }}
-                          >
-                            <span
-                              style={{
-                                color: phase.color,
-                                fontSize: 14,
-                                marginTop: 1,
-                                flexShrink: 0,
-                              }}
-                            >
-                              →
-                            </span>
-                            <span style={{ color: "#c9d1d9", fontSize: 13, lineHeight: 1.5 }}>
-                              {t}
-                            </span>
-                          </div>
-                        ))}
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-            ))}
-          </div>
-
-          {/* Checkpoint */}
-          <div
+          <span
             style={{
-              background: phase.color + "11",
-              border: `1px solid ${phase.color}44`,
-              borderRadius: 8,
-              padding: "12px 14px",
-              marginBottom: 20,
+              background: phase.color + "22",
+              color: phase.color,
+              fontSize: 11,
+              fontWeight: 700,
+              padding: "3px 8px",
+              borderRadius: 4,
+              letterSpacing: "0.08em",
             }}
           >
+            CEFR {phase.level}
+          </span>
+          <span style={{ color: "#8b949e", fontSize: 13 }}>{phase.months}</span>
+        </div>
+        <h2
+          style={{ margin: "0 0 6px", fontSize: 20, fontWeight: 800, color: "#f0f6fc" }}
+        >
+          {phase.title}
+        </h2>
+        <p style={{ margin: "0 0 16px", color: "#8b949e", fontSize: 14 }}>
+          🎯 {phase.goal}
+        </p>
+
+        {/* Skills accordion */}
+        <div
+          style={{ display: "flex", flexDirection: "column", gap: 8, paddingBottom: 20 }}
+        >
+          {phase.skills.map((skill, si) => (
             <div
+              key={si}
               style={{
-                fontSize: 11,
-                color: phase.color,
-                fontWeight: 700,
-                letterSpacing: "0.08em",
-                marginBottom: 4,
+                background: "#0d1117",
+                borderRadius: 10,
+                border:
+                  "1px solid " +
+                  (expandedSkill === si ? phase.color + "66" : "#21262d"),
+                overflow: "hidden",
+                transition: "border 0.2s",
               }}
             >
-              ✓ CHECKPOINT
+              <button
+                id={`roadmap-skill-${activePhase}-${si}`}
+                onClick={() =>
+                  setExpandedSkill(expandedSkill === si ? null : si)
+                }
+                style={{
+                  width: "100%",
+                  padding: "12px 16px",
+                  background: "transparent",
+                  border: "none",
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  color: "#e2e8f0",
+                }}
+              >
+                <span style={{ fontSize: 14, fontWeight: 600 }}>
+                  {skill.icon} {skill.name}
+                </span>
+                <span style={{ color: "#8b949e", fontSize: 16 }}>
+                  {expandedSkill === si ? "−" : "+"}
+                </span>
+              </button>
+              {expandedSkill === si && (
+                <div style={{ padding: "0 16px 14px" }}>
+                  {skill.tasks.map((t, ti) => (
+                    <div
+                      key={ti}
+                      style={{
+                        display: "flex",
+                        gap: 8,
+                        marginBottom: 8,
+                        alignItems: "flex-start",
+                      }}
+                    >
+                      <span
+                        style={{
+                          color: phase.color,
+                          fontSize: 14,
+                          marginTop: 1,
+                          flexShrink: 0,
+                        }}
+                      >
+                        →
+                      </span>
+                      <span
+                        style={{
+                          color: "#c9d1d9",
+                          fontSize: 13,
+                          lineHeight: 1.5,
+                        }}
+                      >
+                        {t}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
-            <div style={{ fontSize: 13, color: "#e2e8f0", lineHeight: 1.5 }}>
-              {phase.checkpoint}
-            </div>
-          </div>
-        </motion.div>
-      </AnimatePresence>
+          ))}
+        </div>
 
-      {/* ── Daily routine ── */}
+        {/* Checkpoint */}
+        <div
+          style={{
+            background: phase.color + "11",
+            border: "1px solid " + phase.color + "44",
+            borderRadius: 8,
+            padding: "12px 14px",
+            marginBottom: 20,
+          }}
+        >
+          <div
+            style={{
+              fontSize: 11,
+              color: phase.color,
+              fontWeight: 700,
+              letterSpacing: "0.08em",
+              marginBottom: 4,
+            }}
+          >
+            ✓ CHECKPOINT
+          </div>
+          <div style={{ fontSize: 13, color: "#e2e8f0", lineHeight: 1.5 }}>
+            {phase.checkpoint}
+          </div>
+        </div>
+      </div>
+
+      {/* Daily routine */}
       <div style={{ padding: "20px 16px 0" }}>
         <h3
           style={{
@@ -630,15 +607,12 @@ export default function RoadmapClient({ nextUnitRoute }: RoadmapClientProps) {
         >
           ⏰ Lịch Học Mỗi Ngày
         </h3>
-
-        <div style={{ display: "flex", flexDirection: "column", gap: 8, marginBottom: 20 }}>
+        <div
+          style={{ display: "flex", flexDirection: "column", gap: 8, marginBottom: 20 }}
+        >
           {dailyPlan.map((item, i) => (
-            <motion.div
+            <div
               key={i}
-              initial={{ opacity: 0, x: -8 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.06 }}
               style={{
                 background: "#161b22",
                 border: "1px solid #21262d",
@@ -651,21 +625,32 @@ export default function RoadmapClient({ nextUnitRoute }: RoadmapClientProps) {
             >
               <span style={{ fontSize: 22 }}>{item.emoji}</span>
               <div style={{ flex: 1 }}>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                  <span style={{ fontSize: 14, fontWeight: 600, color: "#f0f6fc" }}>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
+                  <span
+                    style={{ fontSize: 14, fontWeight: 600, color: "#f0f6fc" }}
+                  >
                     {item.activity}
                   </span>
-                  <span style={{ fontSize: 12, color: "#22c55e", fontWeight: 700 }}>
+                  <span
+                    style={{ fontSize: 12, color: "#22c55e", fontWeight: 700 }}
+                  >
                     {item.time}
                   </span>
                 </div>
-                <div style={{ fontSize: 12, color: "#8b949e", marginTop: 2 }}>{item.detail}</div>
+                <div style={{ fontSize: 12, color: "#8b949e", marginTop: 2 }}>
+                  {item.detail}
+                </div>
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
 
-        {/* Consistency note */}
         <div
           style={{
             background: "#161b22",
@@ -675,16 +660,18 @@ export default function RoadmapClient({ nextUnitRoute }: RoadmapClientProps) {
             marginBottom: 20,
           }}
         >
-          <div style={{ fontSize: 12, color: "#f59e0b", fontWeight: 700, marginBottom: 6 }}>
+          <div
+            style={{ fontSize: 12, color: "#f59e0b", fontWeight: 700, marginBottom: 6 }}
+          >
             ⚠️ QUAN TRỌNG HƠN NHIỀU THỨ KHÁC
           </div>
           <div style={{ fontSize: 13, color: "#c9d1d9", lineHeight: 1.6 }}>
-            Đều đặn 30 phút mỗi ngày &gt; học 3 tiếng 1 lần mỗi tuần. Không có trick nào bypass
-            được consistency.
+            Đều đặn 30 phút mỗi ngày &gt; học 3 tiếng 1 lần mỗi tuần. Không có
+            trick nào bypass được consistency.
           </div>
         </div>
 
-        {/* ── Resources ── */}
+        {/* Resources */}
         <h3
           style={{
             margin: "0 0 12px",
@@ -704,24 +691,31 @@ export default function RoadmapClient({ nextUnitRoute }: RoadmapClientProps) {
               style={{
                 fontSize: 11,
                 fontWeight: 700,
-                color: getTagColor(group.tag),
+                color:
+                  group.tag === "FREE"
+                    ? "#22c55e"
+                    : group.tag === "WORTH IT"
+                      ? "#f59e0b"
+                      : "#3b82f6",
                 letterSpacing: "0.1em",
                 marginBottom: 8,
               }}
             >
-              {getTagLabel(group.tag)}
+              {group.tag === "FREE"
+                ? "✦ MIỄN PHÍ"
+                : group.tag === "WORTH IT"
+                  ? "✦ ĐÁNG MUA"
+                  : "✦ YOUTUBE"}
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
               {group.items.map((r, ri) => (
-                <motion.div
+                <div
                   key={ri}
-                  whileHover={{ scale: 1.01 }}
                   style={{
                     background: "#161b22",
                     border: "1px solid #21262d",
                     borderRadius: 8,
                     padding: "10px 14px",
-                    cursor: "default",
                   }}
                 >
                   <div
@@ -732,19 +726,27 @@ export default function RoadmapClient({ nextUnitRoute }: RoadmapClientProps) {
                       marginBottom: 2,
                     }}
                   >
-                    <span style={{ fontSize: 14, fontWeight: 600, color: "#f0f6fc" }}>
+                    <span
+                      style={{ fontSize: 14, fontWeight: 600, color: "#f0f6fc" }}
+                    >
                       {r.name}
                     </span>
-                    <span style={{ fontSize: 11, color: "#8b949e" }}>{r.url}</span>
+                    <span style={{ fontSize: 11, color: "#8b949e" }}>
+                      {r.url}
+                    </span>
                   </div>
-                  <div style={{ fontSize: 12, color: "#8b949e", lineHeight: 1.4 }}>{r.note}</div>
-                </motion.div>
+                  <div
+                    style={{ fontSize: 12, color: "#8b949e", lineHeight: 1.4 }}
+                  >
+                    {r.note}
+                  </div>
+                </div>
               ))}
             </div>
           </div>
         ))}
 
-        {/* ── Milestones ── */}
+        {/* Milestones */}
         <h3
           style={{
             margin: "16px 0 12px",
@@ -757,15 +759,42 @@ export default function RoadmapClient({ nextUnitRoute }: RoadmapClientProps) {
         >
           🏁 Milestones
         </h3>
-
         <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
-          {milestones.map((ms, i) => (
-            <motion.div
+          {[
+            {
+              m: "Tháng 1",
+              goal: "Hoàn thành Duolingo basics, làm quen Anki",
+              color: "#3b82f6",
+            },
+            { m: "Tháng 2", goal: "Pass EF SET A1 (efset.org)", color: "#3b82f6" },
+            {
+              m: "Tháng 4",
+              goal: "Đọc Simple English Wikipedia không cần dict",
+              color: "#8b5cf6",
+            },
+            {
+              m: "Tháng 6",
+              goal: "Viết nhật ký tiếng Anh 50+ từ/ngày thoải mái",
+              color: "#8b5cf6",
+            },
+            {
+              m: "Tháng 7",
+              goal: "Tự viết README project bằng tiếng Anh",
+              color: "#f59e0b",
+            },
+            {
+              m: "Tháng 9",
+              goal: "Đọc MDN/dev.to hiểu 80% mà không dịch",
+              color: "#f59e0b",
+            },
+            {
+              m: "Tháng 12",
+              goal: "Mock interview tiếng Anh về web dev được",
+              color: "#22c55e",
+            },
+          ].map((ms, i, arr) => (
+            <div
               key={i}
-              initial={{ opacity: 0, x: -12 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.06 }}
               style={{ display: "flex", gap: 12, alignItems: "stretch" }}
             >
               <div
@@ -787,25 +816,34 @@ export default function RoadmapClient({ nextUnitRoute }: RoadmapClientProps) {
                     marginTop: 4,
                   }}
                 />
-                {i < milestones.length - 1 && (
+                {i < arr.length - 1 && (
                   <div
-                    style={{ width: 2, flex: 1, background: "#21262d", margin: "2px 0" }}
+                    style={{
+                      width: 2,
+                      flex: 1,
+                      background: "#21262d",
+                      margin: "2px 0",
+                    }}
                   />
                 )}
               </div>
               <div style={{ paddingBottom: 14 }}>
-                <div style={{ fontSize: 11, color: ms.color, fontWeight: 700 }}>{ms.m}</div>
-                <div style={{ fontSize: 13, color: "#c9d1d9", lineHeight: 1.4 }}>{ms.goal}</div>
+                <div
+                  style={{ fontSize: 11, color: ms.color, fontWeight: 700 }}
+                >
+                  {ms.m}
+                </div>
+                <div
+                  style={{ fontSize: 13, color: "#c9d1d9", lineHeight: 1.4 }}
+                >
+                  {ms.goal}
+                </div>
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
 
-        {/* Footer tip */}
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+        <div
           style={{
             marginTop: 20,
             background: "#161b22",
@@ -817,10 +855,11 @@ export default function RoadmapClient({ nextUnitRoute }: RoadmapClientProps) {
         >
           <div style={{ fontSize: 20, marginBottom: 6 }}>💡</div>
           <div style={{ fontSize: 13, color: "#8b949e", lineHeight: 1.6 }}>
-            Tiếng Anh với dev không cần perfect. Cần đủ để đọc docs, viết code comments, hiểu
-            Stack Overflow, và communicate được. B1 là đủ để internship.
+            Tiếng Anh với dev không cần perfect. Cần đủ để đọc docs, viết code
+            comments, hiểu Stack Overflow, và communicate được. B1 là đủ để
+            internship.
           </div>
-        </motion.div>
+        </div>
       </div>
     </div>
   );
