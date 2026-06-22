@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import Link from "next/link";
 import {
   Mic,
   Sparkles,
@@ -10,6 +11,7 @@ import {
   History,
   Calendar,
   TrendingUp,
+  ChevronRight,
 } from "lucide-react";
 import { ShadowingPractice } from "./shadowing-practice";
 import { AIRoleplay } from "./ai-roleplay";
@@ -75,6 +77,20 @@ export default function SpeakingPage() {
           </span>
         </div>
       </motion.div>
+
+      {/* IPA Pronunciation quick-access banner */}
+      <Link
+        href="/pronunciation"
+        className="flex items-center gap-3 p-4 rounded-2xl border border-emerald-500/20 bg-emerald-500/5 hover:bg-emerald-500/10 hover:border-emerald-500/30 transition-all duration-200 group"
+      >
+        <span className="flex size-10 items-center justify-center rounded-xl bg-emerald-500/15 text-xl shrink-0">🔤</span>
+        <div className="flex-1 min-w-0">
+          <p className="text-xs font-black text-emerald-500 uppercase tracking-widest mb-0.5">Phase 1 · A0 → A1</p>
+          <p className="text-sm font-bold text-foreground">Luyện 44 Âm IPA</p>
+          <p className="text-xs text-muted-foreground">Nghe · Ghi âm · So sánh với native</p>
+        </div>
+        <ChevronRight className="size-5 text-emerald-500/60 group-hover:text-emerald-500 group-hover:translate-x-0.5 transition-all shrink-0" />
+      </Link>
 
       {/* Stepper Tabs — horizontal scroll on mobile, grid on md+ */}
       <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-none md:overflow-visible md:bg-glass md:border md:border-glass md:p-1.5 md:rounded-2xl md:gap-1">
