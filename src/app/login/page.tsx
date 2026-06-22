@@ -8,6 +8,7 @@ import { Mail, Lock, Loader2, Sparkles, ArrowLeft, Sprout, Check } from "lucide-
 import { toast } from "sonner";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
+import { goalFromOnboardingTime } from "@/lib/constants/daily-xp-goal";
 import { LoginSchema, SignUpSchema } from "@/lib/security/validation";
 
 
@@ -206,18 +207,15 @@ function LoginContent() {
     }
 
     const level = answers[1] || "A0-A1";
-    const cefrMap: Record<string, "A1" | "A2" | "B1" | "B2"> = {
-      "A0-A1": "A1",
+    const cefrMap: Record<string, "A0" | "A1" | "A2" | "B1" | "B2"> = {
+      "A0-A1": "A0",
       A2: "A2",
       B1: "B1",
       "B2+": "B2",
     };
-    const mappedLevel = cefrMap[level] || "A1";
+    const mappedLevel = cefrMap[level] || "A0";
     const time = answers[4] || "15min";
-    const xpGoalMap: Record<string, number> = {
-      "5min": 20, "15min": 50, "30min": 100, "60min": 200,
-    };
-    const dailyXpGoal = xpGoalMap[time] ?? 50;
+    const dailyXpGoal = goalFromOnboardingTime(time);
 
     setIsLoading(true);
     try {
@@ -226,7 +224,7 @@ function LoginContent() {
           email,
           password,
           options: {
-            emailRedirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(next)}&level=${encodeURIComponent(level)}`,
+            emailRedirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(next)}&level=${encodeURIComponent(level)}&time=${encodeURIComponent(time)}`,
           },
         });
         if (error) throw error;
@@ -244,9 +242,9 @@ function LoginContent() {
               current_level: mappedLevel,
               streak: 0,
               total_xp: 0,
+              daily_xp_goal: dailyXpGoal,
             });
           }
-          // Persist XP goal preference locally (no DB column yet)
           localStorage.setItem("ato_daily_xp_goal", String(dailyXpGoal));
 
           toast.success("Đăng ký tài khoản thành công!");
@@ -274,6 +272,7 @@ function LoginContent() {
               current_level: mappedLevel,
               streak: 0,
               total_xp: 0,
+              daily_xp_goal: dailyXpGoal,
             });
           }
           localStorage.setItem("ato_daily_xp_goal", String(dailyXpGoal));
@@ -511,7 +510,7 @@ function LoginContent() {
 
                   {/* Feature pills */}
                   <div className="flex flex-wrap justify-center gap-2">
-                    {["🎯 Lộ trình A1→C1", "⏱ 15 phút/ngày", "🔬 Thuật toán FSRS"].map((tag) => (
+                    {["🎯 A0→B1+", "⏱ 15 phút/ngày", "🔬 FSRS + output"].map((tag) => (
                       <span key={tag} className="text-xs font-semibold text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-100 dark:border-emerald-900/30 px-3 py-1.5 rounded-full">
                         {tag}
                       </span>

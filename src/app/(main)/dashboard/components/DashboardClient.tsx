@@ -5,6 +5,9 @@ import { useState, useEffect } from "react";
 import { Flame, Star, GraduationCap, BookOpen } from "lucide-react";
 import { toast } from "sonner";
 import { updateDailyXpGoal } from "@/app/actions/progress";
+import { DASHBOARD_XP_GOAL_OPTIONS } from "@/lib/constants/daily-xp-goal";
+import { mergeDashboardQuests } from "@/lib/dashboard/merge-quest-state";
+import { getHoursUntilVnMidnight, getVnDateKey } from "@/lib/utils/vn-date";
 
 import UnitCard from "./UnitCard";
 import SrsCard from "./SrsCard";
@@ -127,15 +130,7 @@ export default function DashboardClient({
     return () => clearInterval(timer);
   }, [totalXp]);
 
-  const [xpTarget, setXpTarget] = useState(() => {
-    if (typeof window === "undefined") return dailyXpGoal;
-    const stored = localStorage.getItem("ato_daily_xp_goal");
-    if (stored) {
-      const parsed = parseInt(stored, 10);
-      if (!isNaN(parsed) && parsed > 0) return parsed;
-    }
-    return dailyXpGoal;
-  });
+  const [xpTarget, setXpTarget] = useState(dailyXpGoal);
   const [showGoalSelector, setShowGoalSelector] = useState(false);
   const [updatingGoal, setUpdatingGoal] = useState(false);
   const [hoursLeft, setHoursLeft] = useState<number | null>(null);
@@ -156,19 +151,18 @@ export default function DashboardClient({
 
   useEffect(() => {
     const now = new Date();
-    const hour = now.getHours();
+    const vnHour = Number(
+      new Intl.DateTimeFormat("en-US", {
+        timeZone: "Asia/Ho_Chi_Minh",
+        hour: "numeric",
+        hour12: false,
+      }).format(now),
+    );
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    if (hour < 12) setGreeting("Chào buổi sáng");
-     
-    else if (hour < 18) setGreeting("Chào buổi chiều");
-     
+    if (vnHour < 12) setGreeting("Chào buổi sáng");
+    else if (vnHour < 18) setGreeting("Chào buổi chiều");
     else setGreeting("Chào buổi tối");
-    // Hours left until midnight for streak countdown
-    const midnight = new Date(now);
-    midnight.setHours(24, 0, 0, 0);
-    const minsLeft = Math.round((midnight.getTime() - now.getTime()) / 60000);
-     
-    setHoursLeft(Math.ceil(minsLeft / 60));
+    setHoursLeft(getHoursUntilVnMidnight(now));
   }, []);
 
   // ─── XP sync: listen for lesson-completion events from UnitTemplate ───────
@@ -181,12 +175,24 @@ export default function DashboardClient({
     return () => window.removeEventListener("ato:xp-earned", handleXpEarned);
   }, [xpTarget]);
 
+  useEffect(() => {
+    const handleSettingsChanged = (e: Event) => {
+      const goal = (e as CustomEvent<{ dailyGoal?: string }>).detail.dailyGoal;
+      const parsed = parseInt(goal ?? "", 10);
+      if (!isNaN(parsed) && parsed > 0) setXpTarget(parsed);
+    };
+    window.addEventListener("ato:settings-changed", handleSettingsChanged);
+    return () =>
+      window.removeEventListener("ato:settings-changed", handleSettingsChanged);
+  }, []);
+
   const handleUpdateGoal = async (newGoal: number) => {
     setUpdatingGoal(true);
     try {
       const res = await updateDailyXpGoal(newGoal);
       if (res.success) {
         setXpTarget(newGoal);
+        localStorage.setItem("ato_daily_xp_goal", String(newGoal));
         toast.success(res.message);
         setShowGoalSelector(false);
       } else {
@@ -199,21 +205,20 @@ export default function DashboardClient({
     }
   };
 
-  // localStorage persistence — key by today's date so quests reset on new day
-  const todayKey = new Date().toLocaleDateString("sv-SE", { timeZone: "Asia/Ho_Chi_Minh" });
-  const storageKey = `quests-${todayKey}`;
+  // localStorage persistence — key by VN date so quests reset on new day
+  const storageKey = `quests-${getVnDateKey()}`;
 
-  // Load persisted quest state on mount
+  // Merge manual quest toggles from localStorage; server XP stays source of truth
   useEffect(() => {
     try {
       const saved = localStorage.getItem(storageKey);
-      if (saved) {
-        const { quests: savedQuests, xp } = JSON.parse(saved);
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        if (Array.isArray(savedQuests)) setQuests(savedQuests);
-         
-        if (typeof xp === "number") setXpCurrent(xp);
-      }
+      if (!saved) return;
+      const { quests: savedQuests } = JSON.parse(saved) as {
+        quests?: Array<{ id: number; text: string; xp: number; completed: boolean }>;
+      };
+      if (!Array.isArray(savedQuests)) return;
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setQuests((prev) => mergeDashboardQuests(prev, savedQuests));
     } catch {
       // localStorage unavailable or corrupt — use server defaults
     }
@@ -239,12 +244,9 @@ export default function DashboardClient({
         }
         return quest;
       });
-      // Persist to localStorage
-      const newXp = next.reduce((sum, q) => (q.completed ? sum + q.xp : sum), 0);
-      const clampedXp = Math.min(newXp, xpTarget);
-      setXpCurrent(clampedXp);
+      // Persist quest checkboxes only — daily XP bar uses real earned XP from server
       try {
-        localStorage.setItem(storageKey, JSON.stringify({ quests: next, xp: clampedXp }));
+        localStorage.setItem(storageKey, JSON.stringify({ quests: next }));
       } catch { /* ignore */ }
       return next;
     });
@@ -313,7 +315,7 @@ export default function DashboardClient({
               <div className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-zinc-950/95 border border-zinc-800 p-2.5 space-y-1.5 rounded-2xl">
                 <p className="text-[9px] font-black text-emerald-400 uppercase tracking-widest">Mục tiêu XP mới</p>
                 <div className="grid grid-cols-2 gap-1 w-full">
-                  {[30, 50, 80, 100].map((val) => (
+                  {DASHBOARD_XP_GOAL_OPTIONS.map((val) => (
                     <button
                       key={val}
                       disabled={updatingGoal}
@@ -370,7 +372,7 @@ export default function DashboardClient({
             const levelProgress = levelUnitsAll.length > 0
               ? Math.round((levelUnitsDone / levelUnitsAll.length) * 100)
               : 0;
-            const NEXT: Record<string, string> = { A0: "A1", A1: "A2", A2: "B1", B1: "B2", B2: "C1" };
+            const NEXT: Record<string, string> = { A0: "A1", A1: "A2", A2: "B1", B1: "B2", B2: "B1+" };
             const nextLevel = NEXT[shortLevel] ?? "";
             return (
               <div className="rounded-2xl border border-zinc-200/60 dark:border-zinc-800/60 bg-white/60 dark:bg-zinc-900/30 backdrop-blur-sm p-4 space-y-2 hover:border-blue-500/30 transition-colors duration-200">

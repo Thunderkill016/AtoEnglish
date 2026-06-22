@@ -71,7 +71,7 @@ export default function LandingPage() {
   const stats = [
     { value: "Open Beta", label: "Thử nghiệm mở" },
     { value: "15 phút", label: "Mỗi bài học hàng ngày" },
-    { value: "A1 - C1", label: "Lộ trình đầy đủ" },
+    { value: "A0 → B1+", label: "Lộ trình thực tế" },
   ];
 
   const jsonLd = {
