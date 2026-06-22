@@ -1,8 +1,12 @@
 "use server";
 
 import { z } from "zod";
+import { headers } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
+import { createRateLimiter } from "@/lib/security/rate-limit";
 import type { Database } from "@/types/supabase";
+
+const pushLimiter = createRateLimiter(10, 60 * 1000, "push");
 
 // Zod schema for Web Push subscription
 const PushSubscriptionSchema = z.object({
@@ -23,6 +27,11 @@ type PushSubscriptionInsert =
 export async function savePushSubscription(
   subscription: z.infer<typeof PushSubscriptionSchema>
 ): Promise<{ success: boolean; error?: string }> {
+  // Rate limiting
+  const ip = (await headers()).get("x-forwarded-for") ?? "unknown";
+  const rateLimitCheck = await pushLimiter.check(ip);
+  if (!rateLimitCheck.success) return { success: false, error: "Tốc độ quá giới hạn. Thử lại sau." };
+
   // Input validation
   const validated = PushSubscriptionSchema.safeParse(subscription);
   if (!validated.success) {
@@ -60,6 +69,11 @@ export async function savePushSubscription(
 export async function removePushSubscription(
   endpoint: string
 ): Promise<{ success: boolean }> {
+  // Rate limiting
+  const ip = (await headers()).get("x-forwarded-for") ?? "unknown";
+  const rateLimitCheck = await pushLimiter.check(ip);
+  if (!rateLimitCheck.success) return { success: false };
+
   if (!endpoint || typeof endpoint !== "string") return { success: false };
 
   const supabase = await createClient();

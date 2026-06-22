@@ -1,7 +1,11 @@
 "use server";
 
+import { headers } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
+import { createRateLimiter } from "@/lib/security/rate-limit";
 import type { Database } from "@/types/supabase";
+
+const flashcardWriteLimiter = createRateLimiter(20, 60 * 1000, "flashcard-session");
 
 // Use auto-generated types — no more `as any` casts
 type FlashcardProgressRow =
@@ -64,6 +68,11 @@ export async function getFlashcardStats(): Promise<{
 export async function recordFlashcardSession(
   cardsReviewed: number
 ): Promise<{ success: boolean; stats?: FlashcardStats; error?: string }> {
+  // Rate limiting
+  const ip = (await headers()).get("x-forwarded-for") ?? "unknown";
+  const rateLimitCheck = await flashcardWriteLimiter.check(ip);
+  if (!rateLimitCheck.success) return { success: false, error: "Tốc độ quá giới hạn." };
+
   if (cardsReviewed <= 0) return { success: false, error: "No cards reviewed" };
 
   const supabase = await createClient();
