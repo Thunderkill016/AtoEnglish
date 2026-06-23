@@ -14,6 +14,7 @@ import DailyQuests from "./DailyQuests";
 import QuickActions from "./QuickActions";
 import WordOfDayCard from "./WordOfDayCard";
 import LevelUpModal from "@/components/learn/LevelUpModal";
+import { WidgetErrorBoundary } from "@/components/ui/widget-error-boundary";
 
 // Dynamic import — NotificationBell uses browser APIs (navigator, ServiceWorker)
 const NotificationBell = dynamic(
@@ -444,27 +445,35 @@ export default function DashboardClient({
           {/* Right: Word of Day + SRS + Daily Quests */}
           <div className="lg:col-span-5 space-y-5">
             {wordOfDay && (
-              <WordOfDayCard
-                word={wordOfDay.word}
-                phonetic={wordOfDay.phonetic}
-                meaning_vn={wordOfDay.meaning_vn}
-                example_en={wordOfDay.example_en}
-                topic={wordOfDay.topic}
-                level={wordOfDay.level}
-              />
+              <WidgetErrorBoundary name="WordOfDay">
+                <WordOfDayCard
+                  word={wordOfDay.word}
+                  phonetic={wordOfDay.phonetic}
+                  meaning_vn={wordOfDay.meaning_vn}
+                  example_en={wordOfDay.example_en}
+                  topic={wordOfDay.topic}
+                  level={wordOfDay.level}
+                />
+              </WidgetErrorBoundary>
             )}
-            <SrsCard dueCardsCount={dueCardsCount} />
-            <DailyQuests
-              quests={quests}
-              handleToggleQuest={handleToggleQuest}
-              completedCount={completedCount}
-            />
+            <WidgetErrorBoundary name="SrsCard">
+              <SrsCard dueCardsCount={dueCardsCount} />
+            </WidgetErrorBoundary>
+            <WidgetErrorBoundary name="DailyQuests">
+              <DailyQuests
+                quests={quests}
+                handleToggleQuest={handleToggleQuest}
+                completedCount={completedCount}
+              />
+            </WidgetErrorBoundary>
           </div>
         </div>
 
 
         {/* ── 5. Quick Actions row ── */}
-        <QuickActions currentUnitRoute={currentUnitData.route} />
+        <WidgetErrorBoundary name="QuickActions">
+          <QuickActions currentUnitRoute={currentUnitData.route} />
+        </WidgetErrorBoundary>
 
         {/* ── 6. Curriculum Progress Grid ── */}
         <div className="rounded-2xl border border-zinc-200/60 dark:border-zinc-800/60 bg-white/60 dark:bg-zinc-900/25 backdrop-blur-sm p-5 sm:p-6">

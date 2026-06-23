@@ -15,7 +15,10 @@ export const metadata: Metadata = {
   description: "Xem tiến độ học, streak, XP và tiếp tục bài học tiếng Anh của bạn.",
 };
 
-export const revalidate = 0; // Disable server component caching to ensure accurate dashboard data on request
+// P1-1 Fix: ISR 30s — fresh enough for daily dashboard use.
+// Eliminates full SSR on every navigation (was causing 200-400ms server latency per visit).
+// For real-time streak/XP after lesson completion, UnitTemplate calls router.refresh() directly.
+export const revalidate = 30;
 
 export default async function DashboardPage() {
   // Fetch all data in parallel — single round-trip batch

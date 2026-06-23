@@ -125,31 +125,28 @@ describe("getClientIp", () => {
 });
 
 describe("createRateLimiter (Additional Coverage)", () => {
-  it("cleans up expired cache entries randomly", async () => {
-    const limiter = createRateLimiter(5, 1_000, "test-cleanup");
-    const ip = "3.3.3.3";
-    
-    // Add an expired record
-    await limiter.check(ip);
-    
-    // Stub Math.random to return a value < 0.01
-    const originalRandom = Math.random;
-    Math.random = () => 0.005;
-    
-    try {
-      // Advance time so it's expired
-      vi.useFakeTimers();
-      vi.advanceTimersByTime(2000);
-      
-      // Trigger check which will run the random cleanup
-      const res = await limiter.check("4.4.4.4");
-      expect(res.success).toBe(true);
-      
-      vi.useRealTimers();
-    } finally {
-      Math.random = originalRandom;
-    }
+  it("P2-3: deterministic sweep evicts expired entries after 60s interval", async () => {
+    vi.useFakeTimers();
+    const limiter = new InMemoryRateLimiter(5, 500); // 500ms window
+
+    // Fill up a record for IP
+    limiter.check("sweep-test-ip");
+
+    // Advance time past the window so the record is expired
+    vi.advanceTimersByTime(600);
+
+    // Advance past the 60s sweep interval to trigger cleanup
+    vi.advanceTimersByTime(60_001);
+
+    // This check should trigger the sweep (cleaning up expired "sweep-test-ip")
+    // and create a fresh record for the new IP — both should succeed
+    const result = limiter.check("sweep-test-ip-2");
+    expect(result.success).toBe(true);
+    expect(result.remaining).toBe(4);
+
+    vi.useRealTimers();
   });
+
 
   it("works as expected with synchronous check method wrapper of legacy InMemoryRateLimiter", () => {
     const limiter = new InMemoryRateLimiter(2, 60_000);

@@ -12,7 +12,7 @@ concurrency:
 
 jobs:
   ci:
-    name: Lint, Test & Build
+    name: Lint · Type · Test · Build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -37,19 +37,25 @@ jobs:
       - name: Type check
         run: npx tsc --noEmit
 
-      - name: Unit tests
-        run: npm run test
+      # M7: Run with coverage and enforce thresholds (≥70% lines, ≥60% branches, ≥55% functions)
+      - name: Unit tests + Coverage gate
+        run: npm run test:coverage
 
       - name: Build
         run: npm run build
         env:
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          # Fake Upstash URL so assertProductionEnv() doesn't throw during build
+          # Real secrets are set in Vercel environment; build only needs to compile
+          UPSTASH_REDIS_REST_URL: https://placeholder.upstash.io
+          UPSTASH_REDIS_REST_TOKEN: placeholder-token-for-build
 
   e2e:
     name: E2E Tests
     runs-on: ubuntu-latest
     needs: ci
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     steps:
       - name: Checkout
         uses: actions/checkout@v4

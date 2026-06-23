@@ -1,10 +1,12 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi, afterEach } from "vitest";
 import {
   LoginSchema,
   SaveCardSchema,
   ReviewCardSchema,
   CompleteUnitSchema,
   SpeakingSessionSchema,
+  assertProductionEnv,
+  ProductionEnvSchema,
 } from "@/lib/security/validation";
 
 // ─── LoginSchema ─────────────────────────────────────────────────────────────
@@ -190,5 +192,133 @@ describe("SpeakingSessionSchema", () => {
   it("allows zero duration", () => {
     const result = SpeakingSessionSchema.safeParse({ practiceType: "journal", duration: 0 });
     expect(result.success).toBe(true);
+  });
+
+  // P0-2 fix: transcript length guard
+  it("accepts transcript up to 2000 chars", () => {
+    const result = SpeakingSessionSchema.safeParse({
+      practiceType: "shadowing",
+      duration: 60,
+      transcript: "a".repeat(2000),
+    });
+    expect(result.success).toBe(true);
+  });
+
+  it("rejects transcript exceeding 2000 chars", () => {
+    const result = SpeakingSessionSchema.safeParse({
+      practiceType: "shadowing",
+      duration: 60,
+      transcript: "a".repeat(2001),
+    });
+    expect(result.success).toBe(false);
+    expect(result.error?.issues[0].message).toContain("2000");
+  });
+
+  it("accepts scenarioId up to 60 chars", () => {
+    const result = SpeakingSessionSchema.safeParse({
+      practiceType: "roleplay",
+      duration: 120,
+      scenarioId: "sc-".padEnd(60, "x"),
+    });
+    expect(result.success).toBe(true);
+  });
+
+  it("rejects scenarioId exceeding 60 chars", () => {
+    const result = SpeakingSessionSchema.safeParse({
+      practiceType: "roleplay",
+      duration: 120,
+      scenarioId: "a".repeat(61),
+    });
+    expect(result.success).toBe(false);
+  });
+});
+
+// ─── ProductionEnvSchema ─────────────────────────────────────────────────────────────────
+describe("ProductionEnvSchema", () => {
+  it("accepts a fully valid production env", () => {
+    const result = ProductionEnvSchema.safeParse({
+      UPSTASH_REDIS_REST_URL: "https://valid-redis.upstash.io",
+      UPSTASH_REDIS_REST_TOKEN: "a".repeat(20),
+      NEXT_PUBLIC_SUPABASE_URL: "https://project.supabase.co",
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: "a".repeat(20),
+    });
+    expect(result.success).toBe(true);
+  });
+
+  it("rejects missing UPSTASH_REDIS_REST_URL", () => {
+    const result = ProductionEnvSchema.safeParse({
+      UPSTASH_REDIS_REST_TOKEN: "a".repeat(20),
+      NEXT_PUBLIC_SUPABASE_URL: "https://project.supabase.co",
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: "a".repeat(20),
+    });
+    expect(result.success).toBe(false);
+  });
+
+  it("rejects invalid URL for UPSTASH_REDIS_REST_URL", () => {
+    const result = ProductionEnvSchema.safeParse({
+      UPSTASH_REDIS_REST_URL: "not-a-url",
+      UPSTASH_REDIS_REST_TOKEN: "a".repeat(20),
+      NEXT_PUBLIC_SUPABASE_URL: "https://project.supabase.co",
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: "a".repeat(20),
+    });
+    expect(result.success).toBe(false);
+  });
+
+  it("rejects UPSTASH_REDIS_REST_TOKEN shorter than 10 chars", () => {
+    const result = ProductionEnvSchema.safeParse({
+      UPSTASH_REDIS_REST_URL: "https://valid.upstash.io",
+      UPSTASH_REDIS_REST_TOKEN: "short",
+      NEXT_PUBLIC_SUPABASE_URL: "https://project.supabase.co",
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: "a".repeat(20),
+    });
+    expect(result.success).toBe(false);
+  });
+});
+
+// ─── assertProductionEnv ─────────────────────────────────────────────────────────────────
+describe("assertProductionEnv", () => {
+  const originalEnv = process.env;
+
+  afterEach(() => {
+    // Restore original env after each test
+    process.env = originalEnv;
+    vi.unstubAllEnvs();
+  });
+
+  it("does NOT throw in development (NODE_ENV=test)", () => {
+    // In the test runner, NODE_ENV=test ≠ production — must not throw
+    expect(() => assertProductionEnv()).not.toThrow();
+  });
+
+  it("does NOT throw in production when all vars present", () => {
+    vi.stubEnv("NODE_ENV", "production");
+    vi.stubEnv("UPSTASH_REDIS_REST_URL", "https://valid.upstash.io");
+    vi.stubEnv("UPSTASH_REDIS_REST_TOKEN", "a".repeat(20));
+    vi.stubEnv("NEXT_PUBLIC_SUPABASE_URL", "https://project.supabase.co");
+    vi.stubEnv("NEXT_PUBLIC_SUPABASE_ANON_KEY", "a".repeat(20));
+    expect(() => assertProductionEnv()).not.toThrow();
+  });
+
+  it("throws in production when UPSTASH vars are missing", () => {
+    vi.stubEnv("NODE_ENV", "production");
+    vi.stubEnv("UPSTASH_REDIS_REST_URL", "");
+    vi.stubEnv("UPSTASH_REDIS_REST_TOKEN", "");
+    vi.stubEnv("NEXT_PUBLIC_SUPABASE_URL", "https://project.supabase.co");
+    vi.stubEnv("NEXT_PUBLIC_SUPABASE_ANON_KEY", "a".repeat(20));
+    expect(() => assertProductionEnv()).toThrow(/Missing required production environment variables/);
+  });
+
+  it("error message lists all missing variable names", () => {
+    vi.stubEnv("NODE_ENV", "production");
+    vi.stubEnv("UPSTASH_REDIS_REST_URL", "");
+    vi.stubEnv("UPSTASH_REDIS_REST_TOKEN", "");
+    vi.stubEnv("NEXT_PUBLIC_SUPABASE_URL", "");
+    vi.stubEnv("NEXT_PUBLIC_SUPABASE_ANON_KEY", "");
+    let errorMessage = "";
+    try { assertProductionEnv(); } catch (e) {
+      errorMessage = (e as Error).message;
+    }
+    expect(errorMessage).toContain("UPSTASH_REDIS_REST_URL");
+    expect(errorMessage).toContain("Rate limiting will be BYPASSED");
   });
 });
