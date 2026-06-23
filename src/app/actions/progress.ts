@@ -10,9 +10,13 @@ import { CompleteUnitSchema } from "@/lib/security/validation";
 
 const completeUnitLimiter = createRateLimiter(10, 60 * 1000, "complete-unit");
 
+// CEFR level order — used for no-regression check
+const CEFR_LEVEL_ORDER = ["A0", "A1", "A2", "B1", "B2", "C1"] as const;
+type CEFRAutoLevel = (typeof CEFR_LEVEL_ORDER)[number];
+
 /**
  * Server Action xử lý khi người dùng hoàn thành một Unit học tập.
- * Cộng 80 XP, cập nhật streak, lưu tất cả từ vựng trong unit vào SRS (nếu chưa có).
+ * Cộng XP (theo unit.xp), cập nhật streak, lưu từ vựng vào SRS.
  */
 export async function completeUnit(unitId: string, starCount: number = 3) {
   try {
@@ -75,8 +79,10 @@ export async function completeUnit(unitId: string, starCount: number = 3) {
     }
 
     // 3. Tiến hành insert bản ghi hoàn thành vào user_lesson_progress
-    // Dynamic XP based on performance stars: 3★=100%, 2★=85%, 1★=70%
-    const BASE_XP = 80;
+    // XP lấy từ unit definition (UNITS constant) thay vì hardcode
+    // để khớp với XP hiển thị phía client trong UnitTemplate
+    const unitDef = UNITS.find(u => u.id === cleanParams.unitId);
+    const BASE_XP = unitDef?.xp ?? 80; // fallback 80 nếu không tìm thấy unit
     const xpMultiplier = cleanParams.starCount === 3 ? 1.0 : cleanParams.starCount === 2 ? 0.85 : 0.70;
     const xpEarned = Math.round(BASE_XP * xpMultiplier);
 
@@ -118,7 +124,7 @@ export async function completeUnit(unitId: string, starCount: number = 3) {
         .from("user_progress")
         .insert({
           user_id: user.id,
-          current_level: "A1", // Default level for new users
+          current_level: "A0", // Bắt đầu ở A0, tự động tăng khi hoàn thành đủ units
           streak: 1,
           total_xp: xpEarned,
           last_active_date: today
@@ -204,24 +210,39 @@ export async function completeUnit(unitId: string, starCount: number = 3) {
       if (!upsertError) addedCount = upserted?.length ?? 0;
     }
 
-    // 6. Auto level-up: compute new CEFR level based on total completed units
+    // 6. Auto level-up: cập nhật CEFR level dựa trên số units đã hoàn thành
+    // Milestones (50 units total: 8 A0 + 12 A1 + 10 A2 + 10 B1 + 10 B2):
+    //   completedCount >= 1  → A0 (đang học nền tảng)
+    //   completedCount >= 8  → A1 (hoàn thành toàn bộ A0)
+    //   completedCount >= 20 → A2 (hoàn thành toàn bộ A0+A1)
+    //   completedCount >= 30 → B1 (hoàn thành toàn bộ A0+A1+A2)
+    //   completedCount >= 40 → B2 (hoàn thành toàn bộ A0+A1+A2+B1)
     const { count: totalCompleted } = await supabase
       .from("user_lesson_progress")
       .select("*", { count: "exact", head: true })
       .eq("user_id", user.id);
 
     const completedCount = totalCompleted ?? 0;
-    // Level thresholds: A1 (0-2 units), A2 (3 units), B1 (4+ units)
-    type CEFRLevelLocal = "A1" | "A2" | "B1" | "B2" | "C1";
-    let newLevel: CEFRLevelLocal = "A1";
-    if (completedCount >= 4) newLevel = "B1";
-    else if (completedCount >= 3) newLevel = "A2";
+    let calculatedLevel: CEFRAutoLevel = "A0";
+    if      (completedCount >= 40) calculatedLevel = "B2";
+    else if (completedCount >= 30) calculatedLevel = "B1";
+    else if (completedCount >= 20) calculatedLevel = "A2";
+    else if (completedCount >=  8) calculatedLevel = "A1";
+    else if (completedCount >=  1) calculatedLevel = "A0";
 
-    const currentLevel = userProgress?.current_level ?? "A1";
-    if (newLevel && newLevel !== currentLevel) {
+    // KHÔNG downgrade: chỉ cập nhật nếu level tính được CAO HƠN level hiện tại
+    // (bảo toàn kết quả placement test hoặc level người dùng đã đạt)
+    const currentLevel = userProgress?.current_level ?? "A0";
+    const currentLevelSafe = currentLevel as CEFRAutoLevel;
+    const currentIdx = CEFR_LEVEL_ORDER.indexOf(currentLevelSafe);
+    const calcIdx    = CEFR_LEVEL_ORDER.indexOf(calculatedLevel);
+    const levelDidChange = calcIdx > currentIdx;
+    const newLevel = levelDidChange ? calculatedLevel : currentLevelSafe;
+
+    if (levelDidChange) {
       await supabase
         .from("user_progress")
-        .update({ current_level: newLevel })
+        .update({ current_level: calculatedLevel })
         .eq("user_id", user.id);
     }
 
@@ -237,7 +258,7 @@ export async function completeUnit(unitId: string, starCount: number = 3) {
       xpEarned,
       newStreak: nextStreak,
       vocabAddedCount: addedCount,
-      leveledUp: newLevel !== currentLevel ? newLevel : null,
+      leveledUp: levelDidChange ? newLevel : null,
       previousLevel: currentLevel,
       newLevel: newLevel,
     };
