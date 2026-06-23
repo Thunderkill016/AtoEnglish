@@ -8,10 +8,10 @@ type CertLevel = (typeof VALID_LEVELS)[number];
 
 // Unit counts per level — used to verify completion
 const LEVEL_UNIT_COUNTS: Record<CertLevel, number> = {
-  a1: 12,
-  a2: 6,
-  b1: 6,
-  b2: 6,
+  a1: 12,  // unit-1  … unit-12
+  a2: 6,   // unit-13 … unit-18
+  b1: 14,  // unit-19 … unit-32
+  b2: 10,  // unit-33 … unit-42
 };
 
 const LEVEL_LABELS: Record<CertLevel, string> = {
@@ -54,12 +54,16 @@ export default async function CertificatePage({ params }: Props) {
   const completedUnitIds = completedRes.data?.map((r: { unit_id: string }) => r.unit_id) ?? [];
   const requiredUnits = LEVEL_UNIT_COUNTS[certLevel];
 
-  // Unit IDs per level — defines which units count toward each certificate
+  // Unit IDs per level — must match UNITS constant in src/lib/constants/units.ts
   const LEVEL_UNIT_IDS: Record<CertLevel, string[]> = {
-    a1: ["unit-1", "unit-2", "unit-3", "unit-4", "unit-5", "unit-6", "unit-7", "unit-8", "unit-9", "unit-10", "unit-11", "unit-12"],
-    a2: ["unit-13", "unit-14", "unit-15", "unit-16", "unit-17", "unit-18"],
-    b1: ["unit-19", "unit-20", "unit-21", "unit-22", "unit-23", "unit-24"],
-    b2: ["unit-25", "unit-26", "unit-27", "unit-28", "unit-29", "unit-30"],
+    a1: ["unit-1","unit-2","unit-3","unit-4","unit-5","unit-6",
+          "unit-7","unit-8","unit-9","unit-10","unit-11","unit-12"],
+    a2: ["unit-13","unit-14","unit-15","unit-16","unit-17","unit-18"],
+    b1: ["unit-19","unit-20","unit-21","unit-22","unit-23","unit-24",
+          "unit-25","unit-26","unit-27","unit-28","unit-29","unit-30",
+          "unit-31","unit-32"],
+    b2: ["unit-33","unit-34","unit-35","unit-36","unit-37",
+          "unit-38","unit-39","unit-40","unit-41","unit-42"],
   };
   const levelUnitIds = LEVEL_UNIT_IDS[certLevel];
   const completedForLevel = completedUnitIds.filter((id: string) =>

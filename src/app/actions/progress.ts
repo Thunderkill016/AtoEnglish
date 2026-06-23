@@ -211,12 +211,18 @@ export async function completeUnit(unitId: string, starCount: number = 3) {
     }
 
     // 6. Auto level-up: cập nhật CEFR level dựa trên số units đã hoàn thành
-    // Milestones (50 units total: 8 A0 + 12 A1 + 10 A2 + 10 B1 + 10 B2):
-    //   completedCount >= 1  → A0 (đang học nền tảng)
-    //   completedCount >= 8  → A1 (hoàn thành toàn bộ A0)
-    //   completedCount >= 20 → A2 (hoàn thành toàn bộ A0+A1)
-    //   completedCount >= 30 → B1 (hoàn thành toàn bộ A0+A1+A2)
-    //   completedCount >= 40 → B2 (hoàn thành toàn bộ A0+A1+A2+B1)
+    // Phân phối thực tế (50 units tổng):
+    //   A0: 8 units  (unit-a0-1..unit-a0-8)
+    //   A1: 12 units (unit-1..unit-12)
+    //   A2:  6 units (unit-13..unit-18)
+    //   B1: 14 units (unit-19..unit-32)
+    //   B2: 10 units (unit-33..unit-42)
+    // Milestones (cộng dồn):
+    //   completedCount >=  1 → A0 (đang học nền tảng)
+    //   completedCount >=  8 → A1 (xong tất cả A0)
+    //   completedCount >= 20 → A2 (xong A0+A1 = 8+12)
+    //   completedCount >= 26 → B1 (xong A0+A1+A2 = 8+12+6)
+    //   completedCount >= 40 → B2 (xong A0+A1+A2+B1 = 8+12+6+14)
     const { count: totalCompleted } = await supabase
       .from("user_lesson_progress")
       .select("*", { count: "exact", head: true })
@@ -225,7 +231,7 @@ export async function completeUnit(unitId: string, starCount: number = 3) {
     const completedCount = totalCompleted ?? 0;
     let calculatedLevel: CEFRAutoLevel = "A0";
     if      (completedCount >= 40) calculatedLevel = "B2";
-    else if (completedCount >= 30) calculatedLevel = "B1";
+    else if (completedCount >= 26) calculatedLevel = "B1";
     else if (completedCount >= 20) calculatedLevel = "A2";
     else if (completedCount >=  8) calculatedLevel = "A1";
     else if (completedCount >=  1) calculatedLevel = "A0";
@@ -365,20 +371,18 @@ export async function getUserProgress() {
       return { success: false, error: `Lỗi truy vấn: ${error.message}` };
     }
 
-    // Lấy display_name từ bảng users
-    const { data: profile } = await supabase
-      .from("users")
-      .select("display_name")
-      .eq("id", user.id)
-      .maybeSingle();
-
-    const displayName = profile?.display_name || user.user_metadata?.display_name || user.user_metadata?.full_name || user.email?.split("@")[0] || "Học viên";
+    // display_name: dùng user_metadata (Auth) — không query bảng users không tồn tại
+    const displayName =
+      user.user_metadata?.display_name ||
+      user.user_metadata?.full_name ||
+      user.email?.split("@")[0] ||
+      "Học viên";
 
     return {
       success: true,
       progress: {
         user_id: user.id,
-        current_level: data?.current_level || "A1",
+        current_level: data?.current_level || "A0",
         streak: data?.streak || 0,
         total_xp: data?.total_xp || 0,
         last_active_date: data?.last_active_date || null,
