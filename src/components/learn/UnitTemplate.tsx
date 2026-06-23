@@ -795,7 +795,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
   const shadowValues = Object.values(shadowScores);
   const shadowAvg = shadowValues.length > 0
     ? Math.round(shadowValues.reduce((a, b) => a + b, 0) / shadowValues.length)
-    : 0;
+    : 100; // Default 100 when no recordings — same pattern as lacPct (section not penalised if skipped)
 
   // Weighted performance score (0-100)
   const lacPct = LISTEN_CHOOSE.length > 0 ? (lacScore / LISTEN_CHOOSE.length) * 100 : 100;
