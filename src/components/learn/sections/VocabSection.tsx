@@ -1,7 +1,10 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { BookOpen, Volume2, ChevronRight } from "lucide-react";
+import { toast } from "sonner";
+import { saveCardToSRS } from "@/app/actions/cards";
 import type { UnitData } from "../UnitTemplate";
 
 interface VocabSectionProps {
@@ -35,6 +38,7 @@ export default function VocabSection({
   autoPlay,
   goNext,
 }: VocabSectionProps) {
+  const [savedCards, setSavedCards] = useState<Set<number>>(new Set());
   const VOCAB_LIMIT = unit.vocab.length;
   const VOCAB_DISPLAY = unit.vocab;
 
@@ -176,18 +180,57 @@ export default function VocabSection({
                     <p className="text-zinc-300 text-xs italic leading-relaxed">&ldquo;{v.example}&rdquo;</p>
                     {v.example2 && <p className="text-zinc-500 text-xs italic">&ldquo;{v.example2}&rdquo;</p>}
                   </div>
-                  <div className="flex items-center justify-between">
+                   <div className="flex items-center justify-between">
                     <p className="text-[10px] text-teal-600/80">Nhấn để lật lại ↩</p>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        playTTS(v.word);
-                      }}
-                      aria-label={`Nghe: ${v.word}`}
-                      className="p-1.5 rounded-xl bg-emerald-600/15 hover:bg-emerald-600/35 text-emerald-400 transition-all active:scale-90"
-                    >
-                      <Volume2 size={14} />
-                    </button>
+                    <div className="flex gap-2">
+                      <button
+                        onClick={async (e) => {
+                          e.stopPropagation();
+                          if (savedCards.has(i)) return;
+                          try {
+                            const unitLevel = (unit.level?.match(/A[012]|B[12]|C1/) ?? ["A1"])[0] as "A0" | "A1" | "A2" | "B1" | "B2" | "C1";
+                            const res = await saveCardToSRS({
+                              word: v.word,
+                              phonetic: v.phonetic,
+                              meaning_vn: v.meaning,
+                              example_en: v.example,
+                              topic: unit.title,
+                              level: unitLevel,
+                            });
+                            if (res.success) {
+                              toast.success(res.message);
+                              setSavedCards((prev) => {
+                                const next = new Set(prev);
+                                next.add(i);
+                                return next;
+                              });
+                            } else {
+                              toast.error(res.error);
+                            }
+                          } catch (err) {
+                            toast.error("Không thể lưu từ vựng.");
+                          }
+                        }}
+                        disabled={savedCards.has(i)}
+                        className={`text-[10px] font-bold px-2 py-1 rounded-lg transition-all active:scale-95 flex items-center gap-1 ${
+                          savedCards.has(i)
+                            ? "bg-emerald-600/20 text-emerald-400 border border-emerald-700/30 cursor-default"
+                            : "bg-zinc-800 text-zinc-300 border border-zinc-700/50 hover:bg-zinc-700"
+                        }`}
+                      >
+                        {savedCards.has(i) ? "✓ Đã lưu" : "+ SRS"}
+                      </button>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          playTTS(v.word);
+                        }}
+                        aria-label={`Nghe: ${v.word}`}
+                        className="p-1.5 rounded-xl bg-emerald-600/15 hover:bg-emerald-600/35 text-emerald-400 transition-all active:scale-90"
+                      >
+                        <Volume2 size={14} />
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
