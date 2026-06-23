@@ -55,14 +55,15 @@ export const CompleteUnitSchema = z.object({
 export const SpeakingSessionSchema = z.object({
   practiceType: z.enum(["shadowing", "roleplay", "journal"]),
   duration: z.number().nonnegative("Thời lượng không được âm"),
-  transcript: z.string().nullable().optional(),
+  // P0-2: Max 2000 chars to prevent prompt injection and unbounded Gemini API cost
+  transcript: z.string().max(2000, "Nội dung không được vượt quá 2000 ký tự").nullable().optional(),
   accuracyScore: z
     .number()
     .min(0, "Điểm chính xác không được nhỏ hơn 0")
     .max(100, "Điểm chính xác tối đa là 100")
     .nullable()
     .optional(),
-  scenarioId: z.string().nullable().optional(),
+  scenarioId: z.string().max(60).nullable().optional(),
 });
 
 /**
@@ -102,5 +103,31 @@ export const WrongWordsSchema = z.object({
 export const RecordFlashcardSessionSchema = z.object({
   cardsReviewed: z.number().int().positive("Số thẻ ôn tập phải lớn hơn 0"),
 });
+/**
+ * P0-3: Production environment validation.
+ * Call assertProductionEnv() at module init in any file that creates rate limiters.
+ * Throws at startup if critical env vars are missing in production.
+ */
+export const ProductionEnvSchema = z.object({
+  UPSTASH_REDIS_REST_URL: z.string().url("UPSTASH_REDIS_REST_URL must be a valid URL"),
+  UPSTASH_REDIS_REST_TOKEN: z.string().min(10, "UPSTASH_REDIS_REST_TOKEN is required"),
+  NEXT_PUBLIC_SUPABASE_URL: z.string().url("NEXT_PUBLIC_SUPABASE_URL must be a valid URL"),
+  NEXT_PUBLIC_SUPABASE_ANON_KEY: z.string().min(10, "NEXT_PUBLIC_SUPABASE_ANON_KEY is required"),
+});
 
-
+/**
+ * Validates critical production env vars.
+ * Safe to call at module level — only throws in production.
+ * In development, missing Upstash vars are expected (in-memory fallback is used).
+ */
+export function assertProductionEnv(): void {
+  if (process.env.NODE_ENV !== "production") return;
+  const result = ProductionEnvSchema.safeParse(process.env);
+  if (!result.success) {
+    const missing = result.error.issues.map(i => i.path.join(".")).join(", ");
+    throw new Error(
+      `[AtoEnglish] Missing required production environment variables: ${missing}. ` +
+      `Rate limiting will be BYPASSED. Fix immediately.`
+    );
+  }
+}

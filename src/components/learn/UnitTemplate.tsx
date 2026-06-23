@@ -484,11 +484,11 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
     if (res.success) {
       setIsCompleted(true);
       toast.success(`🎉 Chúc mừng! Bạn nhận được ${res.xpEarned ?? xpToEarn} XP!`);
-      if (res.previousLevel && res.newLevel && res.previousLevel !== res.newLevel) {
+      if (res.leveledUp && res.newLevel) {
         localStorage.setItem(
           "pending-level-up",
           JSON.stringify({
-            prev: res.previousLevel,
+            prev: null,
             next: res.newLevel,
           })
         );

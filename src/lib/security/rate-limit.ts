@@ -1,4 +1,5 @@
 import { type NextRequest } from "next/server";
+import { assertProductionEnv } from "@/lib/security/validation";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -22,16 +23,21 @@ interface RateLimitRecord {
 
 export class InMemoryRateLimiter {
   private cache = new Map<string, RateLimitRecord>();
+  private lastSweep = Date.now();
+  private static readonly SWEEP_INTERVAL_MS = 60_000; // Deterministic: sweep every 60s (P2-3 fix)
+
   constructor(private limit: number, private windowMs: number) {}
 
   check(ip: string): RateLimitResult {
     const now = Date.now();
     const record = this.cache.get(ip);
 
-    if (Math.random() < 0.01) {
-      this.cache.forEach((val, key) => {
-        if (Date.now() > val.resetTime) this.cache.delete(key);
-      });
+    // Deterministic cleanup — evict expired entries every 60s (not random %)
+    if (now - this.lastSweep > InMemoryRateLimiter.SWEEP_INTERVAL_MS) {
+      this.lastSweep = now;
+      for (const [key, val] of this.cache) {
+        if (now > val.resetTime) this.cache.delete(key);
+      }
     }
 
     if (!record || now > record.resetTime) {
@@ -119,6 +125,9 @@ export function createRateLimiter(
   windowMs: number,
   prefix = "rl"
 ): RateLimiter {
+  // P0-3: Validate production env vars — throws at startup if Upstash is misconfigured
+  assertProductionEnv();
+
   const isUpstashConfigured =
     typeof process !== "undefined" &&
     !!process.env.UPSTASH_REDIS_REST_URL &&

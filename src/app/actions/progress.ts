@@ -83,6 +83,8 @@ export async function completeUnit(unitId: string, starCount: number = 3) {
       new_streak?: number;
       new_total_xp?: number;
       current_level?: string;
+      completed_count?: number;
+      leveled_up?: boolean;
     }
     const resultData = txResult as unknown as TransactionResult;
 
@@ -94,10 +96,11 @@ export async function completeUnit(unitId: string, starCount: number = 3) {
       };
     }
 
-    const nextStreak = resultData.new_streak ?? 1;
-    const currentLevel = (resultData.current_level || "A0") as CEFRAutoLevel;
+    const nextStreak   = resultData.new_streak ?? 1;
+    const newLevel     = (resultData.current_level || "A0") as CEFRAutoLevel;
+    const leveledUp    = resultData.leveled_up ?? false;
 
-    // 5. Bulk upsert tất cả từ vựng vào bảng cards (1 query thay vì N+1)
+    // 3. Bulk upsert tất cả từ vựng vào bảng cards (1 query thay vì N+1)
     const vocabList = UNIT_VOCABULARY[cleanParams.unitId] || [];
     let addedCount = 0;
 
@@ -129,48 +132,7 @@ export async function completeUnit(unitId: string, starCount: number = 3) {
       if (!upsertError) addedCount = upserted?.length ?? 0;
     }
 
-    // 6. Auto level-up: cập nhật CEFR level dựa trên số units đã hoàn thành
-    // Phân phối thực tế (50 units tổng):
-    //   A0: 8 units  (unit-a0-1..unit-a0-8)
-    //   A1: 12 units (unit-1..unit-12)
-    //   A2:  6 units (unit-13..unit-18)
-    //   B1: 14 units (unit-19..unit-32)
-    //   B2: 10 units (unit-33..unit-42)
-    // Milestones (cộng dồn):
-    //   completedCount >=  1 → A0 (đang học nền tảng)
-    //   completedCount >=  8 → A1 (xong tất cả A0)
-    //   completedCount >= 20 → A2 (xong A0+A1 = 8+12)
-    //   completedCount >= 26 → B1 (xong A0+A1+A2 = 8+12+6)
-    //   completedCount >= 40 → B2 (xong A0+A1+A2+B1 = 8+12+6+14)
-    const { count: totalCompleted } = await supabase
-      .from("user_lesson_progress")
-      .select("*", { count: "exact", head: true })
-      .eq("user_id", user.id);
-
-    const completedCount = totalCompleted ?? 0;
-    let calculatedLevel: CEFRAutoLevel = "A0";
-    if      (completedCount >= 40) calculatedLevel = "B2";
-    else if (completedCount >= 26) calculatedLevel = "B1";
-    else if (completedCount >= 20) calculatedLevel = "A2";
-    else if (completedCount >=  8) calculatedLevel = "A1";
-    else if (completedCount >=  1) calculatedLevel = "A0";
-
-    // KHÔNG downgrade: chỉ cập nhật nếu level tính được CAO HƠN level hiện tại
-    // (bảo toàn kết quả placement test hoặc level người dùng đã đạt)
-    const currentLevelSafe = currentLevel as CEFRAutoLevel;
-    const currentIdx = CEFR_LEVEL_ORDER.indexOf(currentLevelSafe);
-    const calcIdx    = CEFR_LEVEL_ORDER.indexOf(calculatedLevel);
-    const levelDidChange = calcIdx > currentIdx;
-    const newLevel = levelDidChange ? calculatedLevel : currentLevelSafe;
-
-    if (levelDidChange) {
-      await supabase
-        .from("user_progress")
-        .update({ current_level: calculatedLevel })
-        .eq("user_id", user.id);
-    }
-
-    // 7. Revalidate cache
+    // 4. Revalidate cache
     revalidatePath("/dashboard");
     revalidatePath("/learn");
     revalidatePath("/flashcards");
@@ -182,9 +144,8 @@ export async function completeUnit(unitId: string, starCount: number = 3) {
       xpEarned,
       newStreak: nextStreak,
       vocabAddedCount: addedCount,
-      leveledUp: levelDidChange ? newLevel : null,
-      previousLevel: currentLevel,
-      newLevel: newLevel,
+      leveledUp: leveledUp ? newLevel : null,
+      newLevel,
     };
 
   } catch (error) {
@@ -195,6 +156,7 @@ export async function completeUnit(unitId: string, starCount: number = 3) {
     };
   }
 }
+
 
 /**
  * Server Action lấy trạng thái hoàn thành của một unit cụ thể.
