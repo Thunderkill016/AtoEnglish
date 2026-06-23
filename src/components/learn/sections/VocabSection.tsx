@@ -86,8 +86,11 @@ export default function VocabSection({
         {VOCAB_DISPLAY.map((v, i) => {
           const isFlipped = flippedCards.has(i);
           return (
-            <div
+            <motion.div
               key={i}
+              whileHover={{ scale: 1.02, y: -2 }}
+              whileTap={{ scale: 0.98 }}
+              transition={{ type: "spring", stiffness: 450, damping: 15 }}
               onClick={() => {
                 const isNowFlipped = !flippedCards.has(i);
                 setFlippedCards((p) => {
@@ -188,7 +191,7 @@ export default function VocabSection({
                   </div>
                 </div>
               </div>
-            </div>
+            </motion.div>
           );
         })}
       </div>

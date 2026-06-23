@@ -221,25 +221,28 @@ export default function GrammarSection({
                     const isPicked = ccqAnswer === opt;
                     const isRight = opt === unit.grammar!.ccq!.answer;
                     let cls =
-                      "px-3 py-2 rounded-xl text-sm font-medium border transition-all duration-200 text-left ";
+                      "px-3 py-2 rounded-xl text-sm font-medium border text-left ";
                     if (!ccqSubmitted) {
                       cls += isPicked
                         ? "bg-teal-600/30 border-teal-500 text-teal-300 ring-2 ring-teal-500/20"
-                        : "bg-zinc-800 border-zinc-700 text-zinc-300 hover:border-teal-500/60 hover:bg-zinc-700/50 active:scale-95";
+                        : "bg-zinc-800 border-zinc-700 text-zinc-300 hover:border-teal-500/60 hover:bg-zinc-700/50";
                     } else {
                       if (isRight) cls += "bg-emerald-900/40 border-emerald-500 text-emerald-300";
                       else if (isPicked) cls += "bg-red-900/30 border-red-500 text-red-300";
                       else cls += "bg-zinc-800 border-zinc-700/40 text-zinc-500";
                     }
                     return (
-                      <button
+                      <motion.button
                         key={opt}
                         disabled={ccqSubmitted}
                         onClick={() => setCcqAnswer(opt)}
+                        whileHover={!ccqSubmitted ? { y: -2, border: "1px solid #14b8a6", boxShadow: "0 4px 12px rgba(20, 184, 166, 0.15)" } : {}}
+                        whileTap={!ccqSubmitted ? { y: 1, scale: 0.98 } : {}}
+                        transition={{ type: "spring", stiffness: 450, damping: 15 }}
                         className={cls}
                       >
                         {opt}
-                      </button>
+                      </motion.button>
                     );
                   })}
                 </div>

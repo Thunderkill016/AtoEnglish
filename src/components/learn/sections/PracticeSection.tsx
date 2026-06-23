@@ -223,7 +223,7 @@ export default function PracticeSection({
                   const isPicked = selected === opt;
                   const isRight = opt === q.answer;
                   let cls =
-                    "px-3 py-2 rounded-xl text-sm font-medium border transition-all duration-200 text-left ";
+                    "px-3 py-2 rounded-xl text-sm font-medium border text-left ";
                   if (!practiceSubmitted) {
                     cls += isPicked
                       ? "bg-emerald-600/30 border-emerald-500 text-emerald-300"
@@ -235,9 +235,12 @@ export default function PracticeSection({
                     else cls += "bg-zinc-800/50 border-zinc-700/40 text-zinc-500";
                   }
                   return (
-                    <button
+                    <motion.button
                       key={opt}
                       disabled={practiceSubmitted}
+                      whileHover={!practiceSubmitted ? { y: -2, border: "1px solid #10b981", boxShadow: "0 4px 12px rgba(16, 185, 129, 0.15)" } : {}}
+                      whileTap={!practiceSubmitted ? { y: 1, scale: 0.98 } : {}}
+                      transition={{ type: "spring", stiffness: 450, damping: 15 }}
                       className={cls}
                       onClick={() => {
                         if (practiceSubmitted) return;
@@ -245,7 +248,7 @@ export default function PracticeSection({
                       }}
                     >
                       {opt}
-                    </button>
+                    </motion.button>
                   );
                 })}
               </div>

@@ -101,10 +101,13 @@ export default function WarmupSection({
       {/* Interaction Row */}
       <div className="grid grid-cols-2 gap-4 mb-8">
         {unit.warmupGreetings.map((g, i) => (
-          <button
+          <motion.button
             key={i}
             onClick={() => playTTS(g.en)}
-            className="flex flex-col items-center text-center gap-3 p-5 bg-gradient-to-b from-zinc-800/80 to-zinc-900/90 hover:from-zinc-700/80 hover:to-zinc-800/90 border border-zinc-700/60 hover:border-emerald-500/40 rounded-2xl transition-all duration-200 group active:scale-95 hover:shadow-lg hover:shadow-emerald-950/40"
+            whileHover={{ y: -3, border: "1px solid rgba(16, 185, 129, 0.4)", boxShadow: "0 10px 15px -3px rgba(16, 185, 129, 0.15)" }}
+            whileTap={{ scale: 0.98, y: 1 }}
+            transition={{ type: "spring", stiffness: 450, damping: 15 }}
+            className="flex flex-col items-center text-center gap-3 p-5 bg-gradient-to-b from-zinc-800/80 to-zinc-900/90 border border-zinc-700/60 rounded-2xl transition-all duration-200 group hover:shadow-lg"
           >
             <span className="text-4xl group-hover:scale-110 transition-transform duration-200">
               {g.emoji}
@@ -116,7 +119,7 @@ export default function WarmupSection({
             <span className="text-[9px] text-emerald-600 font-bold opacity-0 group-hover:opacity-100 transition-opacity">
               ▶ Nghe
             </span>
-          </button>
+          </motion.button>
         ))}
       </div>
 

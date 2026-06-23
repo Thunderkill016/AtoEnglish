@@ -246,21 +246,24 @@ export default function QuizSection({
                       </p>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                         {(q.options ?? []).map((opt: string) => (
-                          <button
+                          <motion.button
                             key={opt}
                             disabled={cumulativeSubmitted}
                             onClick={() =>
                               !cumulativeSubmitted &&
                               setCumulativeAnswers((p) => ({ ...p, [q.id]: opt }))
                             }
-                            className={`px-3 py-2 rounded-xl text-sm font-medium border transition-colors text-left disabled:cursor-default ${
+                            whileHover={!cumulativeSubmitted ? { y: -2, border: "1px solid #d97706", boxShadow: "0 4px 12px rgba(217, 119, 6, 0.15)" } : {}}
+                            whileTap={!cumulativeSubmitted ? { y: 1, scale: 0.98 } : {}}
+                            transition={{ type: "spring", stiffness: 450, damping: 15 }}
+                            className={`px-3 py-2 rounded-xl text-sm font-medium border text-left disabled:cursor-default ${
                               cumulativeAnswers[q.id] === opt
                                 ? "bg-amber-600/30 border-amber-500 text-amber-300"
                                 : "bg-zinc-800 border-zinc-700 text-zinc-300 hover:border-amber-600/40"
                             }`}
                           >
                             {opt}
-                          </button>
+                          </motion.button>
                         ))}
                       </div>
                     </div>
@@ -377,7 +380,7 @@ export default function QuizSection({
                       const isSelected = quizAnswers[q.id] === opt;
                       const isWrongAnswer = quizSubmitted && isSelected && opt !== q.answer;
                       const isRightAnswer = quizSubmitted && opt === q.answer;
-                      let cls = "px-3 py-2 rounded-xl text-sm font-medium border transition-colors text-left ";
+                      let cls = "px-3 py-2 rounded-xl text-sm font-medium border text-left ";
                       if (quizSubmitted) {
                         if (isRightAnswer) cls += "bg-emerald-600/30 border-emerald-500 text-emerald-300";
                         else if (isWrongAnswer) cls += "bg-red-900/30 border-red-500 text-red-300 animate-shake";
@@ -388,14 +391,17 @@ export default function QuizSection({
                           : "bg-zinc-800 border-zinc-700 text-zinc-300 hover:border-emerald-600/50";
                       }
                       return (
-                        <button
+                        <motion.button
                           key={oi}
                           onClick={() => !quizSubmitted && setQuizAnswers((p) => ({ ...p, [q.id]: opt }))}
                           disabled={quizSubmitted}
+                          whileHover={!quizSubmitted ? { y: -2, border: "1px solid #10b981", boxShadow: "0 4px 12px rgba(16, 185, 129, 0.15)" } : {}}
+                          whileTap={!quizSubmitted ? { y: 1, scale: 0.98 } : {}}
+                          transition={{ type: "spring", stiffness: 450, damping: 15 }}
                           className={cls}
                         >
                           {opt}
-                        </button>
+                        </motion.button>
                       );
                     })}
                   </div>
@@ -478,17 +484,21 @@ export default function QuizSection({
                         </p>
                         <div className="grid grid-cols-2 gap-2">
                           {(q.options ?? []).map((opt: string) => (
-                            <button
+                            <motion.button
                               key={opt}
                               onClick={() => setRetryAnswers((p) => ({ ...p, [q.id]: opt }))}
-                              className={`px-3 py-2 rounded-xl text-sm font-medium border transition-colors text-left ${
+                              disabled={retrySubmitted}
+                              whileHover={!retrySubmitted ? { y: -2, border: "1px solid #d97706", boxShadow: "0 4px 12px rgba(217, 119, 6, 0.15)" } : {}}
+                              whileTap={!retrySubmitted ? { y: 1, scale: 0.98 } : {}}
+                              transition={{ type: "spring", stiffness: 450, damping: 15 }}
+                              className={`px-3 py-2 rounded-xl text-sm font-medium border text-left ${
                                 retryAnswers[q.id] === opt
                                   ? "bg-amber-600/30 border-amber-500 text-amber-300"
                                   : "bg-zinc-800 border-zinc-700 text-zinc-300 hover:border-amber-600/50"
                               }`}
                             >
                               {opt}
-                            </button>
+                            </motion.button>
                           ))}
                         </div>
                       </div>
