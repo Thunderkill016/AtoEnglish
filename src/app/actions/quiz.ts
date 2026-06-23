@@ -76,6 +76,16 @@ export async function saveQuizResult(params: {
           last_active_date: today,
         })
         .eq("user_id", user.id);
+    } else {
+      await supabase
+        .from("user_progress")
+        .insert({
+          user_id: user.id,
+          current_level: "A0",
+          streak: 1,
+          total_xp: xpEarned,
+          last_active_date: today,
+        });
     }
 
     revalidatePath("/dashboard");

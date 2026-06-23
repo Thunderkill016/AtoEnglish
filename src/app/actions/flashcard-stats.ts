@@ -162,6 +162,16 @@ export async function recordFlashcardSession(
         .from("user_progress")
         .update({ streak: nextStreak, last_active_date: today })
         .eq("user_id", user.id);
+    } else {
+      await supabase
+        .from("user_progress")
+        .insert({
+          user_id: user.id,
+          current_level: "A0",
+          streak: 1,
+          total_xp: 0,
+          last_active_date: today,
+        });
     }
   })();
 
