@@ -55,22 +55,38 @@ export async function completeUnit(unitId: string, starCount: number = 3) {
     // Lấy ngày hôm nay dưới dạng YYYY-MM-DD theo múi giờ Việt Nam
     const today = new Date().toLocaleDateString("sv-SE", { timeZone: "Asia/Ho_Chi_Minh" });
 
-    // 2. Kiểm tra xem unit này đã được hoàn thành chưa (tránh cộng XP trùng)
-    const { data: existingProgress, error: progressError } = await supabase
-      .from("user_lesson_progress")
-      .select("id")
-      .eq("user_id", user.id)
-      .eq("unit_id", cleanParams.unitId)
-      .maybeSingle();
+    // 2. Chạy giao dịch hoàn thành unit thông qua RPC để đảm bảo tính nguyên tử (Atomicity) và hiệu năng tối ưu
+    const unitDef = UNITS.find(u => u.id === cleanParams.unitId);
+    const BASE_XP = unitDef?.xp ?? 80; // fallback 80 nếu không tìm thấy unit
+    const xpMultiplier = cleanParams.starCount === 3 ? 1.0 : cleanParams.starCount === 2 ? 0.85 : 0.70;
+    const xpEarned = Math.round(BASE_XP * xpMultiplier);
 
-    if (progressError) {
+    const { data: txResult, error: txError } = await supabase.rpc("complete_unit_transaction", {
+      p_user_id: user.id,
+      p_unit_id: cleanParams.unitId,
+      p_xp_earned: xpEarned,
+      p_stars: cleanParams.starCount,
+      p_today: today,
+    });
+
+    if (txError) {
       return {
         success: false,
-        error: `Lỗi kiểm tra lịch sử học tập: ${progressError.message}`
+        error: `Lỗi giao dịch hoàn thành bài học: ${txError.message}`
       };
     }
 
-    if (existingProgress) {
+    interface TransactionResult {
+      success: boolean;
+      already_completed?: boolean;
+      xp_earned?: number;
+      new_streak?: number;
+      new_total_xp?: number;
+      current_level?: string;
+    }
+    const resultData = txResult as unknown as TransactionResult;
+
+    if (resultData.already_completed) {
       return {
         success: true,
         message: "Unit này đã được bạn hoàn thành trước đó.",
@@ -78,105 +94,8 @@ export async function completeUnit(unitId: string, starCount: number = 3) {
       };
     }
 
-    // 3. Tiến hành insert bản ghi hoàn thành vào user_lesson_progress
-    // XP lấy từ unit definition (UNITS constant) thay vì hardcode
-    // để khớp với XP hiển thị phía client trong UnitTemplate
-    const unitDef = UNITS.find(u => u.id === cleanParams.unitId);
-    const BASE_XP = unitDef?.xp ?? 80; // fallback 80 nếu không tìm thấy unit
-    const xpMultiplier = cleanParams.starCount === 3 ? 1.0 : cleanParams.starCount === 2 ? 0.85 : 0.70;
-    const xpEarned = Math.round(BASE_XP * xpMultiplier);
-
-    const { error: insertProgressError } = await supabase
-      .from("user_lesson_progress")
-      .insert({
-        user_id: user.id,
-        unit_id: cleanParams.unitId,
-        xp_earned: xpEarned
-      });
-
-    if (insertProgressError) {
-      return {
-        success: false,
-        error: `Lỗi lưu tiến trình bài học: ${insertProgressError.message}`
-      };
-    }
-
-    // 4. Cộng XP và cập nhật streak trong user_progress
-    const { data: userProgress, error: fetchProgressError } = await supabase
-      .from("user_progress")
-      .select("*")
-      .eq("user_id", user.id)
-      .maybeSingle();
-
-    if (fetchProgressError) {
-      return {
-        success: false,
-        error: `Lỗi truy vấn tiến trình người dùng: ${fetchProgressError.message}`
-      };
-    }
-
-    let nextStreak = 1;
-    let totalXp = xpEarned;
-
-    if (!userProgress) {
-      // Nếu chưa có tiến trình người dùng, tạo bản ghi mới
-      const { error: createProgressError } = await supabase
-        .from("user_progress")
-        .insert({
-          user_id: user.id,
-          current_level: "A0", // Bắt đầu ở A0, tự động tăng khi hoàn thành đủ units
-          streak: 1,
-          total_xp: xpEarned,
-          last_active_date: today
-        });
-
-      if (createProgressError) {
-        return {
-          success: false,
-          error: `Lỗi tạo mới tiến trình người dùng: ${createProgressError.message}`
-        };
-      }
-    } else {
-      // Nếu đã có tiến trình, tính toán streak
-      totalXp = userProgress.total_xp + xpEarned;
-      const lastActive = userProgress.last_active_date;
-
-      if (!lastActive) {
-        nextStreak = 1;
-      } else {
-        // Tính ngày hôm qua
-        const d = new Date(today);
-        d.setDate(d.getDate() - 1);
-        const yesterday = d.toLocaleDateString("sv-SE", { timeZone: "Asia/Ho_Chi_Minh" });
-
-        if (lastActive === today) {
-          // Làm nhiều bài trong cùng 1 ngày, giữ nguyên streak
-          nextStreak = userProgress.streak;
-        } else if (lastActive === yesterday) {
-          // Làm bài liên tiếp ngày tiếp theo, tăng streak
-          nextStreak = userProgress.streak + 1;
-        } else {
-          // Cách ngày không học, reset streak về 1
-          nextStreak = 1;
-        }
-      }
-
-      const { error: updateProgressError } = await supabase
-        .from("user_progress")
-        .update({
-          total_xp: totalXp,
-          streak: nextStreak,
-          last_active_date: today
-        })
-        .eq("user_id", user.id);
-
-      if (updateProgressError) {
-        return {
-          success: false,
-          error: `Lỗi cập nhật tiến trình người dùng: ${updateProgressError.message}`
-        };
-      }
-    }
+    const nextStreak = resultData.new_streak ?? 1;
+    const currentLevel = (resultData.current_level || "A0") as CEFRAutoLevel;
 
     // 5. Bulk upsert tất cả từ vựng vào bảng cards (1 query thay vì N+1)
     const vocabList = UNIT_VOCABULARY[cleanParams.unitId] || [];
@@ -238,7 +157,6 @@ export async function completeUnit(unitId: string, starCount: number = 3) {
 
     // KHÔNG downgrade: chỉ cập nhật nếu level tính được CAO HƠN level hiện tại
     // (bảo toàn kết quả placement test hoặc level người dùng đã đạt)
-    const currentLevel = userProgress?.current_level ?? "A0";
     const currentLevelSafe = currentLevel as CEFRAutoLevel;
     const currentIdx = CEFR_LEVEL_ORDER.indexOf(currentLevelSafe);
     const calcIdx    = CEFR_LEVEL_ORDER.indexOf(calculatedLevel);

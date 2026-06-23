@@ -233,6 +233,45 @@ export type Database = {
         }
         Relationships: []
       }
+      quiz_results: {
+        Row: {
+          created_at: string
+          id: string
+          pct: number
+          quiz_date: string
+          score: number
+          total: number
+          unit_id: string
+          updated_at: string
+          user_id: string
+          xp_earned: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          pct: number
+          quiz_date: string
+          score: number
+          total: number
+          unit_id: string
+          updated_at?: string
+          user_id: string
+          xp_earned: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          pct?: number
+          quiz_date?: string
+          score?: number
+          total?: number
+          unit_id?: string
+          updated_at?: string
+          user_id?: string
+          xp_earned?: number
+        }
+        Relationships: []
+      }
       speaking_sessions: {
         Row: {
           accuracy_score: number | null
@@ -360,6 +399,7 @@ export type Database = {
         Row: {
           created_at: string
           current_level: string
+          daily_xp_goal: number
           last_active_date: string | null
           streak: number
           total_xp: number
@@ -369,6 +409,7 @@ export type Database = {
         Insert: {
           created_at?: string
           current_level?: string
+          daily_xp_goal?: number
           last_active_date?: string | null
           streak?: number
           total_xp?: number
@@ -378,6 +419,7 @@ export type Database = {
         Update: {
           created_at?: string
           current_level?: string
+          daily_xp_goal?: number
           last_active_date?: string | null
           streak?: number
           total_xp?: number
@@ -464,6 +506,29 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      award_user_xp: {
+        Args: {
+          p_today: string
+          p_user_id: string
+          p_xp_amount: number
+          p_yesterday: string
+        }
+        Returns: {
+          last_active_date: string
+          streak: number
+          total_xp: number
+        }[]
+      }
+      complete_unit_transaction: {
+        Args: {
+          p_stars: number
+          p_today: string
+          p_unit_id: string
+          p_user_id: string
+          p_xp_earned: number
+        }
+        Returns: Json
+      }
       match_memories: {
         Args: {
           filter_category?: string
