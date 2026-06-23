@@ -67,9 +67,6 @@ const nextConfig = {
       },
     ];
   },
-  // Tách biệt thư mục build của Dev Server (.next-dev) và Production Build (.next)
-  // để tránh xung đột làm lỗi Webpack cache dẫn đến mất CSS khi chạy build song song.
-  distDir: process.env.NODE_ENV === "development" ? ".next-dev" : ".next",
 };
 
 export default withSentryConfig(nextConfig, {

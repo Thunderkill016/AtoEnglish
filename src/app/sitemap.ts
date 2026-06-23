@@ -1,10 +1,13 @@
 import type { MetadataRoute } from "next";
+import { UNITS } from "@/lib/constants/units";
 
+// P3-1 Fix: Include all 50 dynamic unit routes in sitemap
+// Previously only static pages were indexed — units missed SEO entirely.
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = "https://atoenglish.vercel.app";
   const now = new Date();
 
-  return [
+  const staticRoutes: MetadataRoute.Sitemap = [
     {
       url: baseUrl,
       lastModified: now,
@@ -30,4 +33,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.3,
     },
   ];
+
+  // Dynamic unit routes — all 50 learn pages
+  const unitRoutes: MetadataRoute.Sitemap = UNITS.map((unit) => ({
+    url: `${baseUrl}${unit.route}`,
+    lastModified: now,
+    changeFrequency: "monthly" as const,
+    priority: 0.7,
+  }));
+
+  return [...staticRoutes, ...unitRoutes];
 }

@@ -136,16 +136,18 @@ export default async function DashboardPage() {
     .filter(u => completedMap.has(u.id))
     .map(u => u.id);
 
-  // ── Word of the Day: deterministic by date, from current unit vocab ────────
+  // ── Word of the Day: deterministic by VN date, from current unit vocab ──────
   const allVocab = UNITS.flatMap(u => UNIT_VOCABULARY[u.id] ?? []);
   const currentUnitVocab = UNIT_VOCABULARY[currentUnitData.unitId] ?? [];
   const vocabPool = currentUnitVocab.length > 0 ? currentUnitVocab : allVocab;
-  // Stable daily index: rotates vocabulary once per UTC day, no impure Date.now()
-  const d = new Date();
-  const dayIndex = d.getUTCFullYear() * 1000 + d.getUTCMonth() * 32 + d.getUTCDate();
+  // P3-6 Fix: Use VN timezone date so word rotates at VN midnight (not UTC midnight = 07:00 VN)
+  const vnDateStr = new Date().toLocaleDateString("sv-SE", { timeZone: "Asia/Ho_Chi_Minh" });
+  const [vyear, vmonth, vday] = vnDateStr.split("-").map(Number);
+  const dayIndex = vyear * 10000 + vmonth * 100 + (vday ?? 0);
   const wordOfDay = vocabPool.length > 0
     ? vocabPool[dayIndex % vocabPool.length]
     : null;
+
 
   return (
     <DashboardClient
