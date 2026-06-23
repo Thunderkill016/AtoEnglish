@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Mic, MicOff, RotateCcw, BookOpen, Sparkles, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { saveSpeakingSession } from "@/app/actions/speaking";
+import { saveSpeakingSession, evaluateSpeakingSession } from "@/app/actions/speaking";
 import { toast } from "sonner";
 import { SpeechRecognitionFallback } from "@/lib/utils/speech-fallback";
 
@@ -63,6 +63,8 @@ export function JournalMode() {
   const [state, setState] = useState<RecognitionState>("idle");
   const [transcript, setTranscript] = useState("");
   const [savedCount, setSavedCount] = useState(0);
+  const [aiEvaluation, setAiEvaluation] = useState<string | null>(null);
+  const [isEvaluating, setIsEvaluating] = useState<boolean>(false);
   const recognitionRef = useRef<SpeechRecognitionInstance | null>(null);
   const isMountedRef = useRef(true);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -76,6 +78,7 @@ export function JournalMode() {
     const remaining = JOURNAL_TOPICS.filter(t => t !== topic);
     setTopic(remaining[Math.floor(Math.random() * remaining.length)]);
     setTranscript("");
+    setAiEvaluation(null);
     setState("idle");
   };
 
@@ -151,10 +154,26 @@ export function JournalMode() {
 
   const handleSave = async () => {
     if (!transcript.trim()) return;
+    setIsEvaluating(true);
+    let savedTranscript = transcript.trim();
+    try {
+      const evalRes = await evaluateSpeakingSession("journal", transcript.trim());
+      if (evalRes.success && evalRes.feedback) {
+        setAiEvaluation(evalRes.feedback);
+        savedTranscript = `${transcript.trim()}\n\n=== ĐÁNH GIÁ CHI TIẾT TỪ AI ===\n${evalRes.feedback}`;
+      } else if (evalRes.error) {
+        toast.error(`Không thể lấy đánh giá AI: ${evalRes.error}`);
+      }
+    } catch (err) {
+      // Bỏ qua lỗi đánh giá, lưu transcript thô
+    } finally {
+      setIsEvaluating(false);
+    }
+
     try {
       const res = await saveSpeakingSession({
         practiceType: "journal",
-        transcript: transcript.trim(),
+        transcript: savedTranscript,
         accuracyScore: null,
         duration: wordCount * 0.5, // rough estimate
         scenarioId: null,
@@ -163,9 +182,6 @@ export function JournalMode() {
       if (res.success) {
         toast.success(res.xpEarned ? `Đã lưu nhật ký! +${res.xpEarned} XP` : "Đã lưu nhật ký nói!");
         setSavedCount(p => p + 1);
-        setTranscript("");
-        setState("idle");
-        randomizeTopic();
       } else {
         toast.error(res.error || "Không thể lưu.");
       }
@@ -179,6 +195,7 @@ export function JournalMode() {
   const handleReset = () => {
     recognitionRef.current?.stop();
     setTranscript("");
+    setAiEvaluation(null);
     setState("idle");
   };
 
@@ -304,6 +321,25 @@ export function JournalMode() {
           </motion.div>
         )}
       </div>
+
+      {isEvaluating && (
+        <div className="rounded-3xl border border-glass bg-glass p-5 text-center space-y-3 shadow-sm animate-pulse">
+          <div className="inline-block size-6 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+          <p className="text-xs text-muted-foreground">AI Tutor đang phân tích bài viết của bạn...</p>
+        </div>
+      )}
+
+      {aiEvaluation && (
+        <div className="rounded-3xl border border-glass bg-glass p-5 space-y-3 shadow-sm">
+          <h4 className="font-extrabold text-xs uppercase tracking-widest text-emerald-600 dark:text-emerald-400 flex items-center gap-1.5">
+            <Sparkles className="size-3.5" />
+            Nhận xét từ AI Tutor
+          </h4>
+          <div className="text-xs text-foreground/80 leading-relaxed font-sans prose prose-sm prose-invert whitespace-pre-wrap">
+            {aiEvaluation}
+          </div>
+        </div>
+      )}
 
       {/* Tips */}
       <div className="rounded-2xl bg-primary/5 border border-primary/10 p-4 text-xs text-muted-foreground space-y-1.5">

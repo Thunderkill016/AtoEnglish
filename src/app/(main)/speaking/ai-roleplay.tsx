@@ -15,7 +15,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import confetti from "canvas-confetti";
-import { saveSpeakingSession } from "@/app/actions/speaking";
+import { saveSpeakingSession, generateRoleplayTurn, evaluateSpeakingSession } from "@/app/actions/speaking";
 import { SpeechRecognitionFallback } from "@/lib/utils/speech-fallback";
 
 interface SpeechRecognitionMock {
@@ -354,8 +354,16 @@ export function AIRoleplay() {
   const [recognizedText, setRecognizedText] = useState<string>("");
   const [isCompleted, setIsCompleted] = useState<boolean>(false);
 
+  // AI-powered dynamic roleplay states
+  const [dynamicStep, setDynamicStep] = useState<{ userSuggestion: string; userSuggestionVi: string } | null>(null);
+  const [aiEvaluation, setAiEvaluation] = useState<string | null>(null);
+  const [isEvaluating, setIsEvaluating] = useState<boolean>(false);
+
   const activeScenario = ROLEPLAY_SCENARIOS.find(s => s.id === selectedScenarioId) || ROLEPLAY_SCENARIOS[0];
   const currentStep: DialogStep | undefined = activeScenario.steps[currentStepIndex];
+
+  const displaySuggestion = dynamicStep ? dynamicStep.userSuggestion : currentStep?.userSuggestion;
+  const displaySuggestionVi = dynamicStep ? dynamicStep.userSuggestionVi : currentStep?.userSuggestionVi;
 
   // Speech Recognition & Synthesis Setup
   const SpeechRecognition = typeof window !== "undefined"
@@ -417,6 +425,9 @@ export function AIRoleplay() {
     setRecognizedText("");
     setIsAiSpeaking(false);
     setIsListening(false);
+    setDynamicStep(null);
+    setAiEvaluation(null);
+    setIsEvaluating(false);
     // eslint-disable-next-line react-hooks/purity
     startTimeRef.current = Date.now();
     
@@ -475,7 +486,7 @@ export function AIRoleplay() {
     try {
       const recognition = new SpeechRecognition();
       if (SpeechRecognition === (SpeechRecognitionFallback as unknown as new () => SpeechRecognitionMock)) {
-        recognition.activeTranscript = currentStep?.userSuggestion || "";
+        recognition.activeTranscript = displaySuggestion || "";
       }
       recognition.continuous = false;
       recognition.interimResults = false;
@@ -578,6 +589,59 @@ export function AIRoleplay() {
     return missingWarnings;
   };
 
+  // Helper hoàn thành và đánh giá hội thoại bằng AI
+  const handleRoleplayCompletion = async (finalHistory: ChatMessage[], lastText: string) => {
+    setIsCompleted(true);
+    confetti({
+      particleCount: 100,
+      spread: 70,
+      origin: { y: 0.6 }
+    });
+    toast.success("Tuyệt vời! Bạn đã hoàn thành buổi hội thoại nhập vai này.");
+
+    // eslint-disable-next-line react-hooks/purity
+    const duration = Math.max(1, Math.round((Date.now() - startTimeRef.current) / 1000));
+    
+    // Nối toàn bộ câu thoại của user để lưu lại làm transcript
+    const userTexts = finalHistory
+      .filter(m => m.sender === "user")
+      .map(m => m.text)
+      .join(" | ");
+    const fullTranscript = userTexts ? `${userTexts} | ${lastText}` : lastText;
+
+    // Tạo chuỗi hội thoại hoàn chỉnh cho AI chấm điểm
+    const fullDialogueText = [...finalHistory, { sender: "user", text: lastText }]
+      .map(m => `${m.sender === "ai" ? "AI" : "User"}: ${m.text}`)
+      .join("\n");
+
+    let savedTranscript = fullDialogueText;
+    setIsEvaluating(true);
+    try {
+      const evalRes = await evaluateSpeakingSession("roleplay", fullDialogueText);
+      if (evalRes.success && evalRes.feedback) {
+        setAiEvaluation(evalRes.feedback);
+        savedTranscript = `${fullDialogueText}\n\n=== ĐÁNH GIÁ CHI TIẾT TỪ AI ===\n${evalRes.feedback}`;
+      } else if (evalRes.error) {
+        toast.error(`Không thể lấy đánh giá AI: ${evalRes.error}`);
+      }
+    } catch (err) {
+      // Bỏ qua lỗi đánh giá, lưu transcript thô
+    } finally {
+      setIsEvaluating(false);
+    }
+
+    const saveRes = await saveSpeakingSession({
+      practiceType: "roleplay",
+      duration,
+      transcript: savedTranscript,
+      scenarioId: activeScenario.id
+    });
+    if (!isMountedRef.current) return;
+    if (saveRes.success && saveRes.xpEarned) {
+      toast.success(`+${saveRes.xpEarned} XP — buổi hội thoại đã được lưu!`);
+    }
+  };
+
   // Xử lý sau khi người học trả lời xong
   const handleUserAnswer = (text: string, isSpoken: boolean = false) => {
     if (!text.trim()) return;
@@ -585,9 +649,9 @@ export function AIRoleplay() {
     let score: number | null = null;
     let omissions: string[] = [];
 
-    if (isSpoken && currentStep) {
-      score = calculateAccuracy(currentStep.userSuggestion, text);
-      omissions = detectMissingCodas(currentStep.userSuggestion, text);
+    if (isSpoken && displaySuggestion) {
+      score = calculateAccuracy(displaySuggestion, text);
+      omissions = detectMissingCodas(displaySuggestion, text);
       
       if (score >= 80) {
         if (omissions.length > 0) {
@@ -611,20 +675,51 @@ export function AIRoleplay() {
     }
 
     // 1. Thêm tin nhắn của user vào history
-    setChatHistory(prev => [
-      ...prev,
+    const updatedHistory = [
+      ...chatHistory,
       {
-        sender: "user",
+        sender: "user" as const,
         text,
         accuracyScore: score,
         missingCodas: omissions
       }
-    ]);
+    ];
+    setChatHistory(updatedHistory);
 
     // 2. Kích hoạt AI trả lời ở bước tiếp theo
     if (nextTurnTimeoutRef.current) clearTimeout(nextTurnTimeoutRef.current);
     nextTurnTimeoutRef.current = setTimeout(async () => {
       if (!isMountedRef.current) return;
+
+      // Thử gọi Gemini API để tạo phản hồi thực
+      try {
+        const historyParams = chatHistory.map(m => ({
+          sender: m.sender,
+          text: m.text
+        }));
+        historyParams.push({ sender: "user", text });
+
+        const response = await generateRoleplayTurn(activeScenario.id, historyParams, text);
+        if (response.success && response.aiPrompt) {
+          setChatHistory(prev => [...prev, { sender: "ai", text: response.aiPrompt }]);
+          speakText(response.aiPrompt);
+
+          if (response.isEnd) {
+            handleRoleplayCompletion(updatedHistory, response.aiPrompt);
+          } else {
+            setDynamicStep({
+              userSuggestion: response.userSuggestion,
+              userSuggestionVi: response.userSuggestionVi
+            });
+            setCurrentStepIndex(prev => prev + 1);
+          }
+          return;
+        }
+      } catch (err) {
+        // Fallback về hội thoại tĩnh dưới đây
+      }
+
+      // Fallback: Sử dụng kịch bản hội thoại tĩnh có sẵn
       if (currentStepIndex < activeScenario.steps.length) {
         const step = activeScenario.steps[currentStepIndex];
         
@@ -633,45 +728,20 @@ export function AIRoleplay() {
         speakText(step.aiPrompt);
 
         // Chuyển step tiếp theo
+        setDynamicStep(null); // Reset để sử dụng câu thoại tĩnh tiếp theo
         setCurrentStepIndex(prev => prev + 1);
       } else {
         // Hoàn thành đoạn hội thoại
-        setIsCompleted(true);
-        confetti({
-          particleCount: 100,
-          spread: 70,
-          origin: { y: 0.6 }
-        });
-        toast.success("Tuyệt vời! Bạn đã hoàn thành buổi hội thoại nhập vai này.");
-
-        // Lưu lịch sử luyện tập vào database
-        const duration = Math.max(1, Math.round((Date.now() - startTimeRef.current) / 1000));
-        // Nối toàn bộ câu thoại của user để lưu lại làm transcript
-        const userTexts = chatHistory
-          .filter(m => m.sender === "user")
-          .map(m => m.text)
-          .join(" | ");
-        const fullTranscript = userTexts ? `${userTexts} | ${text}` : text;
-
-        const saveRes = await saveSpeakingSession({
-          practiceType: "roleplay",
-          duration,
-          transcript: fullTranscript,
-          scenarioId: activeScenario.id
-        });
-        if (!isMountedRef.current) return;
-        if (saveRes.success && saveRes.xpEarned) {
-          toast.success(`+${saveRes.xpEarned} XP — buổi hội thoại đã được lưu!`);
-        }
+        handleRoleplayCompletion(chatHistory, text);
       }
     }, 1500);
   };
 
   // Bỏ qua bước nói và nộp trực tiếp bằng cách click vào Suggestion
   const handleUseSuggestion = () => {
-    if (!currentStep) return;
-    setRecognizedText(currentStep.userSuggestion);
-    handleUserAnswer(currentStep.userSuggestion, false);
+    if (!displaySuggestion) return;
+    setRecognizedText(displaySuggestion);
+    handleUserAnswer(displaySuggestion, false);
   };
 
   return (
@@ -797,10 +867,30 @@ export function AIRoleplay() {
               <p className="text-xs text-muted-foreground max-w-sm mx-auto font-normal">
                 Chúc mừng bạn đã luyện nói phản xạ thành công toàn bộ kịch bản giao tiếp &quot;{activeScenario.title}&quot;.
               </p>
+
+              {isEvaluating && (
+                <div className="p-4 bg-violet-500/5 rounded-2xl border border-dashed border-violet-500/20 text-center space-y-2 my-4">
+                  <div className="inline-block size-6 border-2 border-violet-500 border-t-transparent rounded-full animate-spin" />
+                  <p className="text-xs text-muted-foreground">AI đang phân tích và chuẩn bị phản hồi cho bạn...</p>
+                </div>
+              )}
+
+              {aiEvaluation && (
+                <div className="my-4 p-5 rounded-2xl bg-violet-500/[0.03] border border-violet-500/10 text-left space-y-3 max-h-[300px] overflow-y-auto scrollbar-thin">
+                  <h6 className="font-bold text-xs uppercase tracking-widest text-violet-500 flex items-center gap-1.5">
+                    <Sparkles className="size-3.5" />
+                    Nhận xét chi tiết từ AI Tutor
+                  </h6>
+                  <div className="text-xs text-foreground/80 leading-relaxed font-sans prose prose-sm prose-invert whitespace-pre-wrap">
+                    {aiEvaluation}
+                  </div>
+                </div>
+              )}
+
               <Button
                 onClick={startRoleplay}
                 variant="outline"
-                className="h-10 rounded-xl gap-2 font-bold text-xs uppercase border-emerald-500/30 text-emerald-600 hover:bg-emerald-500/10 hover:text-emerald-700 bg-transparent"
+                className="h-10 rounded-xl gap-2 font-bold text-xs uppercase border-emerald-500/30 text-emerald-600 hover:bg-emerald-500/10 hover:text-emerald-700 bg-transparent mt-2"
               >
                 <RefreshCw className="size-3.5" />
                 Luyện lại hội thoại
@@ -811,7 +901,7 @@ export function AIRoleplay() {
             <div className="space-y-4">
               
               {/* Suggestion Card for User */}
-              {currentStep && (
+              {displaySuggestion && (
                 <div className="p-4 rounded-2xl bg-primary/5 border border-primary/10 space-y-2">
                   <div className="flex items-center justify-between text-[10px] font-extrabold uppercase tracking-widest text-primary">
                     <span className="flex items-center gap-1.5">
@@ -827,11 +917,11 @@ export function AIRoleplay() {
                   </div>
                   
                   <p className="text-xs sm:text-sm font-semibold text-foreground font-sans">
-                    &quot;{currentStep.userSuggestion}&quot;
+                    &quot;{displaySuggestion}&quot;
                   </p>
                   
                   <p className="text-[11px] text-muted-foreground font-normal italic">
-                    Dịch nghĩa: {currentStep.userSuggestionVi}
+                    Dịch nghĩa: {displaySuggestionVi}
                   </p>
                 </div>
               )}

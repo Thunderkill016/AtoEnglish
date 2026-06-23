@@ -7,6 +7,24 @@ import { createRateLimiter } from "@/lib/security/rate-limit";
 import { SpeakingSessionSchema } from "@/lib/security/validation";
 
 const speakingLimiter = createRateLimiter(20, 60 * 1000, "speaking");
+const aiLimiter = createRateLimiter(30, 60 * 1000, "ai-gen");
+
+const SCENARIO_DETAILS: Record<string, { title: string; character: string; difficulty: string }> = {
+  "hotel-checkin": { title: "Hotel Check-in", character: "Receptionist (Lễ tân)", difficulty: "Easy" },
+  "job-interview": { title: "Job Interview", character: "Hiring Manager (Nhà tuyển dụng)", difficulty: "Medium" },
+  "coffee-shop": { title: "Ordering Coffee", character: "Barista (Nhân viên pha chế)", difficulty: "Easy" },
+  "airport-security": { title: "Airport Security", character: "Border Officer (Nhân viên hải quan)", difficulty: "Medium" },
+  "restaurant-dining": { title: "Restaurant Dining", character: "Waiter (Phục vụ nhà hàng)", difficulty: "Easy" },
+  "doctors-appointment": { title: "Doctor's Appointment", character: "Doctor (Bác sĩ)", difficulty: "Hard" },
+  "saas-product-demo": { title: "Product Demo", character: "Potential Customer (Khách hàng tiềm năng)", difficulty: "Hard" },
+  "investor-pitch": { title: "Investor Pitch", character: "Angel Investor (Nhà đầu tư)", difficulty: "Hard" },
+  "customer-support": { title: "Customer Support", character: "Unhappy Customer (Khách hàng không hài lòng)", difficulty: "Medium" }
+};
+
+interface ChatMessageParam {
+  sender: "ai" | "user";
+  text: string;
+}
 
 interface SaveSpeakingSessionParams {
   practiceType: "shadowing" | "roleplay" | "journal";
@@ -162,6 +180,231 @@ export async function getRecentSpeakingSessions(limit: number = 5) {
     return {
       success: true,
       sessions: data || []
+    };
+
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    return {
+      success: false,
+      error: `Lỗi hệ thống: ${errorMessage}`
+    };
+  }
+}
+
+/**
+ * Server Action gọi Gemini Flash tạo câu thoại tiếp theo của AI và gợi ý câu thoại cho User.
+ */
+export async function generateRoleplayTurn(
+  scenarioId: string,
+  history: ChatMessageParam[],
+  userMessage: string
+) {
+  try {
+    // 1. Rate Limiting
+    const reqHeaders = await headers();
+    const ip = reqHeaders.get("x-forwarded-for")?.split(",")[0].trim() || "127.0.0.1";
+    const rateLimitCheck = await aiLimiter.check(ip);
+    if (!rateLimitCheck.success) {
+      return {
+        success: false,
+        error: "Yêu cầu quá thường xuyên. Vui lòng thử lại sau."
+      };
+    }
+
+    // 2. Check Auth
+    const supabase = await createClient();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    if (authError || !user) {
+      return {
+        success: false,
+        error: "Bạn cần đăng nhập để thực hiện tác vụ này."
+      };
+    }
+
+    const scenario = SCENARIO_DETAILS[scenarioId];
+    if (!scenario) {
+      return {
+        success: false,
+        error: "Kịch bản không tồn tại."
+      };
+    }
+
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+      return {
+        success: false,
+        error: "Gemini API Key is not configured."
+      };
+    }
+
+    // 3. Xây dựng prompt
+    const conversationHistoryStr = history
+      .map(h => `${h.sender === "ai" ? "AI (" + scenario.character + ")" : "User"}: ${h.text}`)
+      .join("\n");
+
+    const prompt = `You are roleplaying as: ${scenario.character} in the scenario: "${scenario.title}" (Difficulty: ${scenario.difficulty}).
+Continue the conversation naturally in character. Limit your response to 1-3 sentences.
+Additionally, suggest a helpful reply that the user could say in the next turn (to guide them). Provide both the English suggestion and its Vietnamese translation.
+
+Conversation history:
+${conversationHistoryStr}
+User just said: "${userMessage}"
+
+Respond STRICTLY in JSON format with these exact keys:
+{
+  "aiPrompt": "your response in character",
+  "userSuggestion": "suggested response for user in English",
+  "userSuggestionVi": "Vietnamese translation of the suggestion",
+  "isEnd": true/false (true if the conversation has reached a natural conclusion)
+}
+`;
+
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          contents: [
+            {
+              role: "user",
+              parts: [{ text: prompt }],
+            },
+          ],
+          generationConfig: {
+            responseMimeType: "application/json",
+          },
+        }),
+      }
+    );
+
+    if (!response.ok) {
+      const errText = await response.text();
+      return {
+        success: false,
+        error: `Gemini API error: ${errText}`
+      };
+    }
+
+    const resData = await response.json();
+    const responseText = resData.candidates?.[0]?.content?.parts?.[0]?.text;
+
+    if (!responseText) {
+      return {
+        success: false,
+        error: "Gemini returned empty response."
+      };
+    }
+
+    const cleanJson = JSON.parse(responseText.trim());
+    return {
+      success: true,
+      aiPrompt: cleanJson.aiPrompt || "",
+      userSuggestion: cleanJson.userSuggestion || "",
+      userSuggestionVi: cleanJson.userSuggestionVi || "",
+      isEnd: !!cleanJson.isEnd
+    };
+
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    return {
+      success: false,
+      error: `Lỗi hệ thống: ${errorMessage}`
+    };
+  }
+}
+
+/**
+ * Server Action gọi Gemini Flash phân tích hội thoại/nhật ký nói và trả về đánh giá chi tiết.
+ */
+export async function evaluateSpeakingSession(
+  practiceType: "roleplay" | "journal",
+  transcript: string
+) {
+  try {
+    // 1. Rate Limiting
+    const reqHeaders = await headers();
+    const ip = reqHeaders.get("x-forwarded-for")?.split(",")[0].trim() || "127.0.0.1";
+    const rateLimitCheck = await aiLimiter.check(ip);
+    if (!rateLimitCheck.success) {
+      return {
+        success: false,
+        error: "Yêu cầu quá thường xuyên. Vui lòng thử lại sau."
+      };
+    }
+
+    // 2. Check Auth
+    const supabase = await createClient();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    if (authError || !user) {
+      return {
+        success: false,
+        error: "Bạn cần đăng nhập để thực hiện tác vụ này."
+      };
+    }
+
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+      return {
+        success: false,
+        error: "Gemini API Key is not configured."
+      };
+    }
+
+    const prompt = `You are an expert English language tutor. Analyze the following English speaking practice session transcript of a Vietnamese learner.
+Practice Type: ${practiceType}
+Transcript:
+"${transcript}"
+
+Please provide a detailed, encouraging, and highly constructive evaluation in Vietnamese.
+Break your response down into the following sections using Markdown:
+1. **Nhận xét chung**: General assessment of their speaking flow, vocabulary level, and progress.
+2. **Sửa lỗi Ngữ pháp & Từ vựng**: Point out any grammatical errors or unnatural word choices, and suggest the correct/more natural way to say them.
+3. **Gợi ý diễn đạt hay hơn (Alternative Phrases)**: Give 2-3 alternative phrases or expressions that would make their speech sound more native and premium.
+4. **Mẹo phát âm cho người Việt**: Based on typical pronunciation issues Vietnamese speakers face with these words (like final consonants /s/, /t/, /k/, /d/ or word stress), give 2 specific pronunciation tips.
+`;
+
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          contents: [
+            {
+              role: "user",
+              parts: [{ text: prompt }],
+            },
+          ],
+        }),
+      }
+    );
+
+    if (!response.ok) {
+      const errText = await response.text();
+      return {
+        success: false,
+        error: `Gemini API error: ${errText}`
+      };
+    }
+
+    const resData = await response.json();
+    const feedback = resData.candidates?.[0]?.content?.parts?.[0]?.text;
+
+    if (!feedback) {
+      return {
+        success: false,
+        error: "Gemini returned empty response."
+      };
+    }
+
+    return {
+      success: true,
+      feedback: feedback.trim()
     };
 
   } catch (error) {
