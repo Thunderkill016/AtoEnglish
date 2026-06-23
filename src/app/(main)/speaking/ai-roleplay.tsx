@@ -375,6 +375,9 @@ export function AIRoleplay() {
       if (typeof window !== "undefined") {
         window.speechSynthesis.cancel();
       }
+      // Stop microphone on unmount/scenario-switch to release browser mic lock
+      recognitionRef.current?.abort();
+      recognitionRef.current = null;
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedScenarioId]);

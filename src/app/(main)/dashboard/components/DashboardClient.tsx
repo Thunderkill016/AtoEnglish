@@ -551,7 +551,7 @@ const EFSET_MILESTONES: { id: string; label: string; done: (level: string, units
   { id: "a1-vocab",  label: "Học 200 từ vựng cơ bản A1", done: (_l, u) => u >= 12 },
   { id: "grammar",   label: "Ôn ngữ pháp: Present Simple, To Be, There is/are", done: (l) => CEFR_ORDER.indexOf(l) >= 1 },
   { id: "reading",   label: "Luyện 10 câu reading comprehension (Quiz)", done: (_l, u) => u >= 5 },
-  { id: "efset",     label: "Thi EF SET Quick Check → đạt A1", done: (l) => CEFR_ORDER.indexOf(l) >= 2 },
+  { id: "efset",     label: "Thi EF SET Quick Check → đạt A1", done: (l) => CEFR_ORDER.indexOf(l) >= 1 },
 ];
 
 function EfSetGoalTracker({ userLevel, completedUnits }: { userLevel: string; completedUnits: number }) {
