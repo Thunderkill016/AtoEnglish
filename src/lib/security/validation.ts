@@ -95,3 +95,11 @@ export const WrongWordsSchema = z.object({
     .max(30),
 });
 
+/**
+ * Schema for recording flashcard reviews session
+ */
+export const RecordFlashcardSessionSchema = z.object({
+  cardsReviewed: z.number().int().positive("Số thẻ ôn tập phải lớn hơn 0"),
+});
+
+

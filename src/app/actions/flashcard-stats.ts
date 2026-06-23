@@ -3,6 +3,7 @@
 import { headers } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 import { createRateLimiter } from "@/lib/security/rate-limit";
+import { RecordFlashcardSessionSchema } from "@/lib/security/validation";
 import type { Database } from "@/types/supabase";
 
 const flashcardWriteLimiter = createRateLimiter(20, 60 * 1000, "flashcard-session");
@@ -73,9 +74,18 @@ export async function recordFlashcardSession(
   const rateLimitCheck = await flashcardWriteLimiter.check(ip);
   if (!rateLimitCheck.success) return { success: false, error: "Tốc độ quá giới hạn." };
 
-  if (cardsReviewed <= 0) return { success: false, error: "No cards reviewed" };
+  // Input validation
+  const validated = RecordFlashcardSessionSchema.safeParse({ cardsReviewed });
+  if (!validated.success) {
+    return {
+      success: false,
+      error: `Dữ liệu không hợp lệ: ${validated.error.issues.map((e) => e.message).join(", ")}`,
+    };
+  }
+  const cleanParams = validated.data;
 
   const supabase = await createClient();
+
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -113,9 +123,9 @@ export async function recordFlashcardSession(
   const upsertData: FlashcardProgressInsert = {
     user_id: user.id,
     cards_reviewed_today: isNewDay
-      ? cardsReviewed
-      : (existing?.cards_reviewed_today ?? 0) + cardsReviewed,
-    total_cards_reviewed: (existing?.total_cards_reviewed ?? 0) + cardsReviewed,
+      ? cleanParams.cardsReviewed
+      : (existing?.cards_reviewed_today ?? 0) + cleanParams.cardsReviewed,
+    total_cards_reviewed: (existing?.total_cards_reviewed ?? 0) + cleanParams.cardsReviewed,
     total_sessions: (existing?.total_sessions ?? 0) + 1,
     streak_days: newStreak,
     best_streak: Math.max(newStreak, existing?.best_streak ?? 0),

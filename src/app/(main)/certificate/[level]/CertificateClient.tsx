@@ -102,7 +102,7 @@ export default function CertificateClient({
   const handlePrint = () => window.print();
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-4 sm:p-8 relative overflow-hidden">
+    <div className="min-h-screen flex flex-col items-center justify-center p-4 pb-28 sm:p-8 sm:pb-8 relative overflow-hidden">
       {/* Background glow */}
       <div className={`pointer-events-none absolute inset-0 -z-10 bg-gradient-to-br from-zinc-950 via-zinc-900 to-zinc-950`} />
       <div className={`pointer-events-none absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 -z-10 h-96 w-96 rounded-full bg-gradient-to-br ${theme.gradient} opacity-10 blur-[120px]`} />

@@ -137,7 +137,7 @@ export default function VocabQuizClient() {
   // ── Unit Selection Screen ────────────────────────────────────────────────
   if (!selectedUnit) {
     return (
-      <div className="mx-auto max-w-2xl px-4 py-8 sm:px-6 space-y-8">
+      <div className="mx-auto max-w-2xl px-4 py-8 pb-28 sm:px-6 space-y-8">
         <div className="text-center space-y-2">
           <div className="inline-flex size-14 items-center justify-center rounded-2xl bg-violet-500/10 text-violet-600 dark:text-violet-400 mb-2">
             <BookOpen className="size-7" />
@@ -204,7 +204,7 @@ export default function VocabQuizClient() {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="mx-auto max-w-md px-4 py-10 text-center space-y-6"
+        className="mx-auto max-w-md px-4 py-10 pb-28 text-center space-y-6"
       >
         <div className="text-6xl">{medal}</div>
         <div className="space-y-1">
@@ -282,7 +282,7 @@ export default function VocabQuizClient() {
   const progressPct = Math.round((current / questions.length) * 100);
 
   return (
-    <div className="mx-auto max-w-lg px-4 py-8 sm:px-6 space-y-6">
+    <div className="mx-auto max-w-lg px-4 py-8 pb-28 sm:px-6 space-y-6">
       {/* Progress */}
       <div className="space-y-2">
         <div className="flex justify-between text-xs font-bold text-zinc-500 dark:text-zinc-400">
