@@ -1,0 +1,210 @@
+"use client";
+
+import { motion } from "framer-motion";
+import { BookOpen, Volume2, ChevronRight } from "lucide-react";
+import type { UnitData } from "../UnitTemplate";
+
+interface VocabSectionProps {
+  unit: UnitData;
+  sectionOrderIdx: number;
+  TOTAL_SECTIONS: number;
+  seenCards: Set<number>;
+  setSeenCards: React.Dispatch<React.SetStateAction<Set<number>>>;
+  flippedCards: Set<number>;
+  setFlippedCards: React.Dispatch<React.SetStateAction<Set<number>>>;
+  playTTS: (text: string, rate?: number) => void;
+  autoPlay: boolean;
+  goNext: () => void;
+}
+
+const sectionVariants = {
+  initial: { opacity: 0, x: 20 },
+  animate: { opacity: 1, x: 0 },
+  exit: { opacity: 0, x: -20 },
+};
+
+export default function VocabSection({
+  unit,
+  sectionOrderIdx,
+  TOTAL_SECTIONS,
+  seenCards,
+  setSeenCards,
+  flippedCards,
+  setFlippedCards,
+  playTTS,
+  autoPlay,
+  goNext,
+}: VocabSectionProps) {
+  const VOCAB_LIMIT = unit.vocab.length;
+  const VOCAB_DISPLAY = unit.vocab;
+
+  return (
+    <motion.div
+      key="s2"
+      variants={sectionVariants}
+      initial="initial"
+      animate="animate"
+      exit="exit"
+      transition={{ duration: 0.3 }}
+    >
+      <div className="flex items-center gap-2 mb-2">
+        <BookOpen className="text-emerald-400" size={22} />
+        <div className="flex-1">
+          <div className="flex items-center gap-2">
+            <h1 className="text-xl sm:text-2xl font-black bg-gradient-to-r from-white to-zinc-300 bg-clip-text text-transparent">
+              Từ vựng & Cụm từ
+            </h1>
+            <span className="text-[10px] font-bold text-emerald-600 bg-emerald-950/60 border border-emerald-800/50 px-2 py-0.5 rounded-full">
+              Bước {sectionOrderIdx + 1}/{TOTAL_SECTIONS}
+            </span>
+          </div>
+          <p className="text-xs text-zinc-500">~5 phút</p>
+        </div>
+      </div>
+      <p className="text-zinc-400 mb-2 text-sm">
+        Nhấn vào thẻ để lật và xem nghĩa. Nghe phát âm chuẩn bằng nút loa.
+      </p>
+
+      {/* Counter */}
+      <div className="flex items-center gap-2 mb-6">
+        <div className="flex-1 h-2 bg-zinc-800 rounded-full overflow-hidden">
+          <div
+            className="h-full bg-emerald-500 rounded-full transition-all duration-500"
+            style={{ width: `${(seenCards.size / VOCAB_LIMIT) * 100}%` }}
+          />
+        </div>
+        <span className="text-sm font-bold text-emerald-400">{seenCards.size}/{VOCAB_LIMIT} từ</span>
+        <button
+          onClick={() => setSeenCards(new Set(VOCAB_DISPLAY.map((_, i) => i)))}
+          className="text-xs text-zinc-500 hover:text-zinc-300 font-bold px-2 py-1 rounded-lg transition-colors border border-zinc-800/60 hover:border-zinc-700 ml-2"
+        >
+          Tôi biết hết →
+        </button>
+      </div>
+
+      <div className="grid grid-cols-2 gap-3 mb-8">
+        {VOCAB_DISPLAY.map((v, i) => {
+          const isFlipped = flippedCards.has(i);
+          return (
+            <div
+              key={i}
+              onClick={() => {
+                const isNowFlipped = !flippedCards.has(i);
+                setFlippedCards((p) => {
+                  const n = new Set(p);
+                  if (n.has(i)) n.delete(i);
+                  else n.add(i);
+                  return n;
+                });
+                setSeenCards((p) => {
+                  const n = new Set(p);
+                  n.add(i);
+                  return n;
+                });
+                if (isNowFlipped && autoPlay) playTTS(v.word, 0.85);
+              }}
+              className="cursor-pointer"
+              style={{ perspective: "600px" }}
+            >
+              <div
+                style={{
+                  transition: "transform 0.55s cubic-bezier(.4,2,.6,1)",
+                  transformStyle: "preserve-3d",
+                  transform: isFlipped ? "rotateY(180deg)" : "rotateY(0deg)",
+                  position: "relative",
+                  minHeight: "150px",
+                }}
+              >
+                {/* Front */}
+                <div
+                  className={`absolute inset-0 bg-gradient-to-b from-zinc-800/70 to-zinc-900/90 border rounded-2xl p-4 flex flex-col justify-between shadow-md transition-all duration-300 ${
+                    seenCards.has(i) ? "border-emerald-700/30" : "border-zinc-700/50 hover:border-zinc-600/70"
+                  }`}
+                  style={{ backfaceVisibility: "hidden" }}
+                >
+                  {v.emoji && <p className="text-3xl mb-1 leading-none">{v.emoji}</p>}
+                  <div>
+                    <p className="text-white font-bold text-base tracking-wide">{v.word}</p>
+                    <p className="text-zinc-500 text-xs mt-0.5 font-mono">{v.phonetic}</p>
+                  </div>
+                  <div className="flex justify-between items-center mt-2">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setSeenCards((p) => {
+                          const n = new Set(p);
+                          n.add(i);
+                          return n;
+                        });
+                      }}
+                      aria-label="Đã biết từ này"
+                      className={`text-[10px] font-bold px-2 py-0.5 rounded-lg transition-all ${
+                        seenCards.has(i) && !flippedCards.has(i)
+                          ? "bg-emerald-600/20 text-emerald-400 border border-emerald-700/30"
+                          : "text-zinc-600 hover:text-zinc-400"
+                      }`}
+                    >
+                      {seenCards.has(i) && !flippedCards.has(i) ? "✓ Biết rồi" : "Biết rồi?"}
+                    </button>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        playTTS(v.word);
+                      }}
+                      aria-label={`Nghe: ${v.word}`}
+                      className="p-1.5 rounded-xl bg-emerald-600/15 hover:bg-emerald-600/35 text-emerald-400 transition-all active:scale-90"
+                    >
+                      <Volume2 size={14} />
+                    </button>
+                  </div>
+                </div>
+                {/* Back */}
+                <div
+                  className="absolute inset-0 bg-gradient-to-b from-emerald-950/70 to-teal-950/50 border border-emerald-600/30 rounded-2xl p-4 flex flex-col justify-between shadow-md shadow-emerald-950/60"
+                  style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
+                >
+                  <div className="space-y-2">
+                    <p className="text-emerald-300 font-black text-sm">{v.meaning}</p>
+                    {v.collocation && (
+                      <span className="inline-flex items-center gap-1 bg-teal-800/30 border border-teal-600/30 text-teal-300 text-[10px] font-bold px-2 py-0.5 rounded-full">
+                        💬 {v.collocation}
+                      </span>
+                    )}
+                    <p className="text-zinc-300 text-xs italic leading-relaxed">&ldquo;{v.example}&rdquo;</p>
+                    {v.example2 && <p className="text-zinc-500 text-xs italic">&ldquo;{v.example2}&rdquo;</p>}
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <p className="text-[10px] text-teal-600/80">Nhấn để lật lại ↩</p>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        playTTS(v.word);
+                      }}
+                      aria-label={`Nghe: ${v.word}`}
+                      className="p-1.5 rounded-xl bg-emerald-600/15 hover:bg-emerald-600/35 text-emerald-400 transition-all active:scale-90"
+                    >
+                      <Volume2 size={14} />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {seenCards.size < VOCAB_LIMIT ? (
+        <div className="text-center text-zinc-500 text-sm py-4">
+          Xem thêm {VOCAB_LIMIT - seenCards.size} thẻ để tiếp tục...
+        </div>
+      ) : (
+        <button
+          onClick={goNext}
+          className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-white font-bold rounded-2xl px-6 py-4 flex items-center justify-center gap-2 transition-all duration-200 text-lg shadow-lg shadow-emerald-900/40 active:scale-95"
+        >
+          Hoàn thành từ vựng <ChevronRight size={20} />
+        </button>
+      )}
+    </motion.div>
+  );
+}

@@ -1,0 +1,301 @@
+"use client";
+
+import { motion } from "framer-motion";
+import { Lightbulb, RefreshCw, ChevronRight } from "lucide-react";
+import { reviewCard } from "@/app/actions/cards";
+import type { UnitData, WarmupCard } from "../UnitTemplate";
+
+interface WarmupSectionProps {
+  unit: UnitData;
+  sectionOrderIdx: number;
+  TOTAL_SECTIONS: number;
+  playTTS: (text: string) => void;
+  warmupRated: Record<number, "known" | "unknown">;
+  setWarmupRated: React.Dispatch<React.SetStateAction<Record<number, "known" | "unknown">>>;
+  warmupCards: WarmupCard[];
+  warmupFlipped: Set<number>;
+  setWarmupFlipped: React.Dispatch<React.SetStateAction<Set<number>>>;
+  warmupDone: boolean;
+  setWarmupDone: React.Dispatch<React.SetStateAction<boolean>>;
+  goNext: () => void;
+}
+
+const sectionVariants = {
+  initial: { opacity: 0, x: 20 },
+  animate: { opacity: 1, x: 0 },
+  exit: { opacity: 0, x: -20 },
+};
+
+export default function WarmupSection({
+  unit,
+  sectionOrderIdx,
+  TOTAL_SECTIONS,
+  playTTS,
+  warmupRated,
+  setWarmupRated,
+  warmupCards,
+  warmupFlipped,
+  setWarmupFlipped,
+  warmupDone,
+  setWarmupDone,
+  goNext,
+}: WarmupSectionProps) {
+  return (
+    <motion.div
+      key="s1"
+      variants={sectionVariants}
+      initial="initial"
+      animate="animate"
+      exit="exit"
+      transition={{ duration: 0.3 }}
+    >
+      <div className="flex items-center gap-2 mb-6">
+        <div className="p-2 bg-emerald-500/10 rounded-xl">
+          <Lightbulb className="text-emerald-400" size={24} />
+        </div>
+        <div className="flex-1">
+          <div className="flex items-center gap-2">
+            <h1 className="text-xl font-black bg-gradient-to-r from-white to-zinc-300 bg-clip-text text-transparent">
+              Khởi động
+            </h1>
+            <span className="text-[10px] font-bold text-emerald-600 bg-emerald-950/60 border border-emerald-800/50 px-2 py-0.5 rounded-full">
+              Bước {sectionOrderIdx + 1}/{TOTAL_SECTIONS}
+            </span>
+          </div>
+          <p className="text-xs text-zinc-500">~3 phút • Làm quen với ngữ cảnh</p>
+        </div>
+      </div>
+
+      {/* ── Situation Banner ── */}
+      {unit.situation && (
+        <div className="relative group overflow-hidden mb-8 rounded-2xl bg-zinc-900 border border-zinc-800">
+          <div className="absolute inset-0 bg-gradient-to-br from-teal-900/20 to-emerald-900/20" />
+          <div className="relative p-6">
+            <div className="flex items-center gap-2 mb-3">
+              <span className="text-lg">📍</span>
+              <span className="text-xs font-bold text-teal-400 uppercase tracking-widest">
+                Tình huống
+              </span>
+            </div>
+            <p className="text-white text-lg leading-relaxed font-medium mb-6">
+              {unit.situation}
+            </p>
+
+            {unit.learningOutcomes && (
+              <div className="grid sm:grid-cols-2 gap-3">
+                {unit.learningOutcomes.map((o, i) => (
+                  <div
+                    key={i}
+                    className="flex items-center gap-2 text-xs text-zinc-400 bg-black/20 px-3 py-2 rounded-lg"
+                  >
+                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                    {o}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Interaction Row */}
+      <div className="grid grid-cols-2 gap-4 mb-8">
+        {unit.warmupGreetings.map((g, i) => (
+          <button
+            key={i}
+            onClick={() => playTTS(g.en)}
+            className="flex flex-col items-center text-center gap-3 p-5 bg-gradient-to-b from-zinc-800/80 to-zinc-900/90 hover:from-zinc-700/80 hover:to-zinc-800/90 border border-zinc-700/60 hover:border-emerald-500/40 rounded-2xl transition-all duration-200 group active:scale-95 hover:shadow-lg hover:shadow-emerald-950/40"
+          >
+            <span className="text-4xl group-hover:scale-110 transition-transform duration-200">
+              {g.emoji}
+            </span>
+            <div>
+              <p className="font-bold text-white text-sm leading-tight">{g.en}</p>
+              <p className="text-[11px] text-zinc-500 mt-0.5">{g.vn}</p>
+            </div>
+            <span className="text-[9px] text-emerald-600 font-bold opacity-0 group-hover:opacity-100 transition-opacity">
+              ▶ Nghe
+            </span>
+          </button>
+        ))}
+      </div>
+
+      {/* ── Vocab Self-Check ── */}
+      <div className="mb-6 rounded-2xl bg-gradient-to-b from-zinc-900/60 to-zinc-950/60 border border-zinc-700/50 p-4 shadow-md">
+        <div className="flex items-center justify-between mb-3">
+          <div>
+            <p className="text-sm font-bold text-white">🧠 Bạn đã biết những từ này chưa?</p>
+            <p className="text-xs text-zinc-500 mt-0.5">Tự đánh giá trước khi học — không ảnh hưởng điểm số</p>
+          </div>
+          <span className="text-xs font-bold text-emerald-400">
+            {Object.values(warmupRated).filter((v) => v === "known").length}/
+            {Math.min(5, unit.vocab.length)}
+          </span>
+        </div>
+        <div className="space-y-2">
+          {unit.vocab.slice(0, 5).map((v, i) => {
+            const rated = warmupRated[i];
+            return (
+              <div
+                key={i}
+                className={`flex items-center justify-between gap-3 rounded-xl px-3 py-2.5 border transition-all duration-200 ${
+                  rated === "known"
+                    ? "bg-emerald-950/40 border-emerald-600/50 shadow-sm"
+                    : rated === "unknown"
+                    ? "bg-zinc-900/60 border-zinc-700/40 opacity-60"
+                    : "bg-zinc-800/30 border-zinc-700/40 hover:border-zinc-600/60"
+                }`}
+              >
+                <div className="flex items-center gap-2.5 min-w-0">
+                  {v.emoji && <span className="text-xl shrink-0">{v.emoji}</span>}
+                  <div className="min-w-0">
+                    <p className="text-sm font-bold text-white truncate">{v.word}</p>
+                    <p className="text-[11px] text-zinc-500">{v.phonetic}</p>
+                  </div>
+                </div>
+                <div className="flex gap-1.5 shrink-0">
+                  <button
+                    onClick={() => setWarmupRated((p) => ({ ...p, [i]: "known" }))}
+                    className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all ${
+                      rated === "known"
+                        ? "bg-gradient-to-r from-emerald-500 to-emerald-600 text-white shadow-sm scale-105"
+                        : "bg-zinc-800 text-zinc-400 hover:text-emerald-400 hover:bg-emerald-950/40 active:scale-95"
+                    }`}
+                  >
+                    ✓ Biết
+                  </button>
+                  <button
+                    onClick={() => setWarmupRated((p) => ({ ...p, [i]: "unknown" }))}
+                    className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all ${
+                      rated === "unknown"
+                        ? "bg-zinc-700 text-white"
+                        : "bg-zinc-800 text-zinc-500 hover:text-zinc-300 hover:bg-zinc-700/60"
+                    }`}
+                  >
+                    Chưa
+                  </button>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+        {Object.keys(warmupRated).length === Math.min(5, unit.vocab.length) && (
+          <p className="text-xs text-zinc-500 mt-3 text-center italic">
+            {Object.values(warmupRated).filter((v) => v === "known").length >= 3
+              ? "🎉 Bạn đã biết nhiều rồi — bài học này giúp bạn dùng thành thạo hơn!"
+              : "💪 Bình thường thôi! Sau bài học bạn sẽ nhớ hết."}
+          </p>
+        )}
+      </div>
+
+      {/* ── Vietnamese Learner Alert ── */}
+      {unit.grammar?.vnNote && (
+        <div className="mb-6 rounded-2xl bg-red-950/20 border border-red-900/40 p-4">
+          <p className="text-[10px] font-black text-red-400 uppercase tracking-widest mb-2">
+            ⚠️ Bẫy ngữ pháp của người Việt trong bài này
+          </p>
+          <p className="text-zinc-300 text-sm leading-relaxed">
+            {unit.grammar.vnNote.length > 150
+              ? unit.grammar.vnNote.slice(0, 150) + "... (chi tiết ở phần Ngữ pháp)"
+              : unit.grammar.vnNote}
+          </p>
+        </div>
+      )}
+
+      {/* SRS Warm-up — due cards from previous lessons */}
+      {warmupCards.length > 0 && !warmupDone && (
+        <div className="bg-amber-950/20 border border-amber-900/50 rounded-2xl p-6 mb-8">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-sm font-bold text-amber-400 flex items-center gap-2">
+              <RefreshCw size={16} /> Ôn tập nhanh ({warmupCards.length})
+            </h3>
+          </div>
+          <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
+            {warmupCards.map((card, wi) => {
+              const isWFlipped = warmupFlipped.has(wi);
+              return (
+                <div
+                  key={card.id}
+                  onClick={() =>
+                    setWarmupFlipped((p) => {
+                      const n = new Set(p);
+                      if (n.has(wi)) n.delete(wi);
+                      else n.add(wi);
+                      return n;
+                    })
+                  }
+                  className="shrink-0 w-40 h-24 cursor-pointer"
+                  style={{ perspective: "500px" }}
+                >
+                  <div
+                    style={{
+                      transition: "transform 0.4s",
+                      transformStyle: "preserve-3d",
+                      transform: isWFlipped ? "rotateY(180deg)" : "rotateY(0deg)",
+                      position: "relative",
+                      height: "100%",
+                    }}
+                  >
+                    <div
+                      className="absolute inset-0 bg-gradient-to-b from-zinc-700/90 to-zinc-800/90 border border-zinc-600/60 rounded-xl p-3 flex flex-col justify-center text-center shadow-md"
+                      style={{ backfaceVisibility: "hidden" }}
+                    >
+                      <p className="text-white font-bold text-sm">{card.word}</p>
+                      <p className="text-[10px] text-zinc-500">{card.phonetic}</p>
+                    </div>
+                    <div
+                      className="absolute inset-0 bg-emerald-900/40 border border-emerald-700/50 rounded-xl p-3 flex flex-col justify-center text-center"
+                      style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
+                    >
+                      <p className="text-emerald-300 font-bold text-xs">{card.meaning_vn}</p>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+          {warmupFlipped.size === warmupCards.length && (
+            <button
+              onClick={() => {
+                setWarmupDone(true);
+                // Silently mark flipped cards as "Good" in SRS (fire-and-forget)
+                warmupCards.forEach((card, wi) => {
+                  if (warmupFlipped.has(wi)) {
+                    reviewCard(card.id, "Good").catch(() => {
+                      /* ignore */
+                    });
+                  }
+                });
+              }}
+              className="mt-3 w-full bg-emerald-700/40 hover:bg-emerald-700/60 text-emerald-300 font-bold rounded-xl py-2 text-sm transition-colors"
+            >
+              ✅ Đã ôn xong ({warmupCards.length} thẻ)
+            </button>
+          )}
+        </div>
+      )}
+
+      {/* Cultural Note */}
+      {unit.culturalNote && (
+        <div className="border-l-4 border-emerald-500 bg-emerald-950/30 rounded-r-2xl p-5 mb-8">
+          <div className="flex items-center gap-2 mb-2">
+            <span className="text-lg">🇻🇳</span>
+            <p className="text-sm font-bold text-emerald-400">Ghi chú văn hóa</p>
+          </div>
+          <p
+            className="text-zinc-300 text-sm leading-relaxed"
+            dangerouslySetInnerHTML={{ __html: unit.culturalNote }}
+          />
+        </div>
+      )}
+
+      <button
+        onClick={goNext}
+        className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-white font-bold rounded-2xl px-6 py-4 flex items-center justify-center gap-2 transition-all duration-200 text-lg shadow-lg shadow-emerald-900/40 active:scale-95"
+      >
+        Bắt đầu học{" "}
+        <ChevronRight size={20} className="transition-transform group-hover:translate-x-1" />
+      </button>
+    </motion.div>
+  );
+}
