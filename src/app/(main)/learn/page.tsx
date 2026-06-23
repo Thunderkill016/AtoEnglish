@@ -16,15 +16,25 @@ export const metadata: Metadata = {
 export const revalidate = 0; // Disable caching
 
 export default async function LearnPage() {
-  const [progressRes, activeUnitRes] = await Promise.all([
-    getUserProgress(),
-    getCurrentUnit(),
-  ]);
-
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
-  const completedUnitIds: string[] = [];
+  // Fetch user progress + active unit + completed lessons + saved vocab words in parallel
+  const allWords = user ? UNITS.flatMap(unit =>
+    (UNIT_VOCABULARY[unit.id] || []).map(v => v.word.toLowerCase().trim())
+  ) : [];
+
+  const [progressRes, activeUnitRes, completedLessonsRes, userCardsRes] = await Promise.all([
+    getUserProgress(),
+    getCurrentUnit(),
+    user
+      ? supabase.from("user_lesson_progress").select("unit_id, xp_earned").eq("user_id", user.id)
+      : Promise.resolve({ data: null }),
+    user && allWords.length > 0
+      ? supabase.from("cards").select("word").eq("user_id", user.id).in("word", allWords)
+      : Promise.resolve({ data: null }),
+  ]);
+
   let userLevel = "A1";
   let totalXp = 0;
 
@@ -33,39 +43,20 @@ export default async function LearnPage() {
     totalXp = progressRes.progress.total_xp || 0;
   }
 
-  // Get completed unit list + XP earned from database
+  // Build completed units and vocab maps from parallel results
+  const completedUnitIds: string[] = [];
   const completedXpMap = new Map<string, number>();
-  if (user) {
-    const { data: completedLessons } = await supabase
-      .from("user_lesson_progress")
-      .select("unit_id, xp_earned")
-      .eq("user_id", user.id);
-    
-    if (completedLessons) {
-      completedLessons.forEach(l => {
-        completedUnitIds.push(l.unit_id);
-        completedXpMap.set(l.unit_id, l.xp_earned || 0);
-      });
-    }
+  const completedLessons = completedLessonsRes.data;
+  if (completedLessons) {
+    completedLessons.forEach((l: { unit_id: string; xp_earned: number | null }) => {
+      completedUnitIds.push(l.unit_id);
+      completedXpMap.set(l.unit_id, l.xp_earned || 0);
+    });
   }
 
-  // Check how many cards have been saved in SRS for vocab progress calculation
-  let savedWords = new Set<string>();
-  if (user) {
-    const allWords = UNITS.flatMap(unit =>
-      (UNIT_VOCABULARY[unit.id] || []).map(v => v.word.toLowerCase().trim())
-    );
-
-    const { data: userCards } = await supabase
-      .from("cards")
-      .select("word")
-      .eq("user_id", user.id)
-      .in("word", allWords);
-
-    if (userCards) {
-      savedWords = new Set(userCards.map(c => c.word.toLowerCase().trim()));
-    }
-  }
+  const savedWords = new Set(
+    (userCardsRes.data || []).map((c: { word: string }) => c.word.toLowerCase().trim())
+  );
 
   const unitStatuses = UNITS.map((unit) => {
     const isCompleted = completedUnitIds.includes(unit.id);

@@ -23,6 +23,7 @@ interface SpeechRecognitionMock {
   lang: string;
   start: () => void;
   stop: () => void;
+  abort: () => void;
   onstart?: () => void;
   onresult?: (event: SpeechRecognitionEventMock) => void;
   onend?: () => void;
