@@ -35,7 +35,7 @@ export default async function LearnPage() {
       : Promise.resolve({ data: null }),
   ]);
 
-  let userLevel = "A1";
+  let userLevel = "A0";
   let totalXp = 0;
 
   if (progressRes.success && progressRes.progress) {
