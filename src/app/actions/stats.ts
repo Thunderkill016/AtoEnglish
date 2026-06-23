@@ -1,7 +1,6 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
-import { revalidatePath } from "next/cache";
 
 /**
  * Server Action lấy thông tin tiến trình tổng thể của người dùng (streak, XP, level).
@@ -51,6 +50,8 @@ export async function getUserProgress() {
 
 /**
  * Server Action cập nhật mục tiêu XP hàng ngày của người dùng.
+ * P3-5 Fix: daily_xp_goal is localStorage-only (no DB column) — validate + return.
+ * The client persists the goal in localStorage; no DB round-trip needed.
  */
 export async function updateDailyXpGoal(goal: number) {
   try {
@@ -60,20 +61,12 @@ export async function updateDailyXpGoal(goal: number) {
       return { success: false, error: "Bạn cần đăng nhập để cập nhật mục tiêu XP." };
     }
 
-    if (![30, 50, 80, 100].includes(goal)) {
+    const validGoals = [30, 50, 80, 100];
+    if (!validGoals.includes(goal)) {
       return { success: false, error: "Mục tiêu XP không hợp lệ." };
     }
 
-    const { error } = await supabase
-      .from("user_progress")
-      .update({ updated_at: new Date().toISOString() }) // daily_xp_goal not in DB schema
-      .eq("user_id", user.id);
-
-    if (error) {
-      return { success: false, error: `Lỗi khi cập nhật mục tiêu: ${error.message}` };
-    }
-
-    revalidatePath("/dashboard");
+    // Goal is stored in localStorage by the client — no DB write needed.
     return { success: true, message: `Đã cập nhật mục tiêu XP hàng ngày thành ${goal} XP.` };
   } catch (error) {
     const errMsg = error instanceof Error ? error.message : String(error);
