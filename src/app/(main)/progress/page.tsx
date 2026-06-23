@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { Flame, Layers, BookOpen, TrendingUp, Trophy, Star, Mic } from "lucide-react";
-import { getProgressStats, getWeeklyXpData } from "@/app/actions/progress";
+import { getProgressStats, getWeeklyXpData } from "@/app/actions/stats";
 import ProgressClient from "./ProgressClient";
 
 export const dynamic = "force-dynamic";

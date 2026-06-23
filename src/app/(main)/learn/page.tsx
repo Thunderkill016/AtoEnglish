@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
-import {
-  getUserProgress,
-  getCurrentUnit,
-} from "@/app/actions/progress";
+import { getUserProgress } from "@/app/actions/stats";
+import { getCurrentUnit } from "@/app/actions/unit";
 import { UNITS } from "@/lib/constants/units";
 import { UNIT_VOCABULARY } from "@/lib/constants/vocabulary";
 import LearnClient from "./components/LearnClient";

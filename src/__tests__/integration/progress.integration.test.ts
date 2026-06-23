@@ -6,7 +6,7 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { adminClient, testUserId } from "../setup-integration";
 
-const getAction = () => import("@/app/actions/progress");
+const getAction = () => import("@/app/actions/unit");
 
 async function cleanProgress() {
   await adminClient

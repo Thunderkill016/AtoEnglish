@@ -7,7 +7,7 @@ import { ChevronLeft } from "lucide-react";
 import { toast } from "sonner";
 import confetti from "canvas-confetti";
 
-import { completeUnit, getUnitCompletionStatus } from "@/app/actions/progress";
+import { completeUnit, getUnitCompletionStatus } from "@/app/actions/unit";
 import { getDueWarmupCards, seedUnitVocabToSRS, scheduleWrongWordsForReview } from "@/app/actions/cards";
 
 import WarmupSection from "./sections/WarmupSection";

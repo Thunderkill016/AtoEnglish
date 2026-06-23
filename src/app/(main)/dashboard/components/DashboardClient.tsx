@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Flame, Star, GraduationCap, BookOpen, Clock, ChevronDown, ChevronUp, ChevronRight, ExternalLink, Target } from "lucide-react";
 import { toast } from "sonner";
-import { updateDailyXpGoal } from "@/app/actions/progress";
+import { updateDailyXpGoal } from "@/app/actions/stats";
 import { getPhaseForLevel, DAILY_TIPS } from "@/lib/constants/study-plan";
 
 import UnitCard from "./UnitCard";

@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import { getDueCards } from "@/app/actions/cards";
+import { getUserProgress } from "@/app/actions/stats";
 import {
-  getUserProgress,
   getAllUnitCompletionStatuses,
   getCurrentUnit,
-} from "@/app/actions/progress";
+} from "@/app/actions/unit";
 import { getRecentSpeakingSessions } from "@/app/actions/speaking";
 import { UNITS } from "@/lib/constants/units";
 import { UNIT_VOCABULARY } from "@/lib/constants/vocabulary";

@@ -18,7 +18,7 @@ import {
   VOCAB_COUNT,
   LANG_USE_COUNT,
 } from "@/lib/data/placement-test";
-import { savePlacementResult } from "@/app/actions/progress";
+import { savePlacementResult } from "@/app/actions/placement";
 
 
 type Stage = "intro" | "test" | "saving" | "results";
