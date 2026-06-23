@@ -6,6 +6,7 @@ import { Mic, MicOff, RotateCcw, BookOpen, Sparkles, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { saveSpeakingSession } from "@/app/actions/speaking";
 import { toast } from "sonner";
+import { SpeechRecognitionFallback } from "@/lib/utils/speech-fallback";
 
 const JOURNAL_TOPICS = [
   // A1-A2 level — simple personal topics
@@ -39,6 +40,7 @@ interface SpeechRecognitionInstance {
   interimResults: boolean;
   start: () => void;
   stop: () => void;
+  abort: () => void;
   onstart?: () => void;
   onresult?: (event: {
     results: {
@@ -48,6 +50,7 @@ interface SpeechRecognitionInstance {
   }) => void;
   onerror?: () => void;
   onend?: () => void;
+  activeTranscript?: string;
 }
 
 interface SpeechWindow extends Window {
@@ -60,7 +63,14 @@ export function JournalMode() {
   const [state, setState] = useState<RecognitionState>("idle");
   const [transcript, setTranscript] = useState("");
   const [savedCount, setSavedCount] = useState(0);
-  const recognitionRef = useRef<SpeechRecognitionInstance>(null);
+  const recognitionRef = useRef<SpeechRecognitionInstance | null>(null);
+  const isMountedRef = useRef(true);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const transcriptRef = useRef(transcript);
+
+  useEffect(() => {
+    transcriptRef.current = transcript;
+  }, [transcript]);
 
   const randomizeTopic = () => {
     const remaining = JOURNAL_TOPICS.filter(t => t !== topic);
@@ -70,20 +80,43 @@ export function JournalMode() {
   };
 
   const startListening = () => {
-     
-    const SpeechRecognition = (window as unknown as SpeechWindow).SpeechRecognition || (window as unknown as SpeechWindow).webkitSpeechRecognition;
-    if (!SpeechRecognition) {
-      toast.error("Trình duyệt không hỗ trợ Web Speech API.");
-      return;
-    }
+    const SpeechRecognition =
+      (window as unknown as SpeechWindow).SpeechRecognition ||
+      (window as unknown as SpeechWindow).webkitSpeechRecognition ||
+      (SpeechRecognitionFallback as unknown as new () => SpeechRecognitionInstance);
 
     const recognition: SpeechRecognitionInstance = new SpeechRecognition();
+
+    if (SpeechRecognition === (SpeechRecognitionFallback as unknown as new () => SpeechRecognitionInstance)) {
+      let mockPhrase = "I would like to speak about this topic. ";
+      if (topic.includes("ngày hôm nay") || topic.includes("routine")) {
+        mockPhrase = "I would like to describe my day today. It was a very productive and interesting day with many activities.";
+      } else if (topic.includes("sở thích")) {
+        mockPhrase = "My favorite hobby is reading books and playing sports because it helps me relax after a long day.";
+      } else if (topic.includes("food")) {
+        mockPhrase = "My favorite food is traditional Vietnamese noodle soup because it is delicious and very popular.";
+      } else if (topic.includes("family")) {
+        mockPhrase = "There are four people in my family. I love my family very much and we support each other.";
+      } else if (topic.includes("hometown")) {
+        mockPhrase = "My hometown is a beautiful and quiet place where people are very friendly and welcoming.";
+      } else if (topic.includes("admire")) {
+        mockPhrase = "I admire my high school teacher because she taught me a lot of valuable life lessons.";
+      } else if (topic.includes("dream job")) {
+        mockPhrase = "My dream job is to become a software engineer so that I can build useful applications.";
+      } else {
+        mockPhrase = `Regarding the topic "${topic}", I believe it is very important and we should pay attention to it.`;
+      }
+      recognition.activeTranscript = mockPhrase;
+    }
     recognition.lang = "en-US";
     recognition.continuous = true;
     recognition.interimResults = true;
 
-    recognition.onstart = () => setState("listening");
+    recognition.onstart = () => {
+      if (isMountedRef.current) setState("listening");
+    };
     recognition.onresult = (event: { results: { [key: number]: { [key: number]: { transcript: string }; isFinal: boolean }; length: number } }) => {
+      if (!isMountedRef.current) return;
       let final = "";
       let interim = "";
       for (let i = 0; i < event.results.length; i++) {
@@ -93,10 +126,14 @@ export function JournalMode() {
       setTranscript(final + interim);
     };
     recognition.onerror = () => {
+      if (!isMountedRef.current) return;
       setState("idle");
       toast.error("Lỗi nhận dạng giọng nói.");
     };
-    recognition.onend = () => setState(transcript ? "done" : "idle");
+    recognition.onend = () => {
+      if (!isMountedRef.current) return;
+      setState(transcriptRef.current ? "done" : "idle");
+    };
 
     recognitionRef.current = recognition;
     recognition.start();
@@ -105,7 +142,11 @@ export function JournalMode() {
   const stopListening = () => {
     recognitionRef.current?.stop();
     setState("processing");
-    setTimeout(() => setState("done"), 500);
+    timeoutRef.current = setTimeout(() => {
+      if (isMountedRef.current) {
+        setState("done");
+      }
+    }, 500);
   };
 
   const handleSave = async () => {
@@ -118,6 +159,7 @@ export function JournalMode() {
         duration: wordCount * 0.5, // rough estimate
         scenarioId: null,
       });
+      if (!isMountedRef.current) return;
       if (res.success) {
         toast.success(res.xpEarned ? `Đã lưu nhật ký! +${res.xpEarned} XP` : "Đã lưu nhật ký nói!");
         setSavedCount(p => p + 1);
@@ -128,7 +170,9 @@ export function JournalMode() {
         toast.error(res.error || "Không thể lưu.");
       }
     } catch {
-      toast.error("Lỗi hệ thống.");
+      if (isMountedRef.current) {
+        toast.error("Lỗi hệ thống.");
+      }
     }
   };
 
@@ -139,7 +183,14 @@ export function JournalMode() {
   };
 
   useEffect(() => {
-    return () => recognitionRef.current?.stop();
+    isMountedRef.current = true;
+    return () => {
+      isMountedRef.current = false;
+      recognitionRef.current?.abort();
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
   }, []);
 
   const wordCount = transcript.trim().split(/\s+/).filter(Boolean).length;

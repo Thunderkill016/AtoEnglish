@@ -137,8 +137,8 @@ export async function saveCardToSRS(params: SaveCardParams) {
  * Server Action lấy tất cả thẻ cần ôn tập hôm nay (due_date <= hiện tại) của user.
  * Giới hạn thẻ MỚI (state=0) tối đa MAX_NEW_PER_DAY để tránh bị ngập trong thẻ mới.
  */
-export async function getDueCards() {
-  const MAX_NEW_PER_DAY = 15; // Maximum new (unseen) cards per review session
+export async function getDueCards(maxNewCards?: number) {
+  const MAX_NEW_PER_DAY = maxNewCards ?? 15; // Maximum new (unseen) cards per review session
   try {
     const supabase = await createClient();
     
@@ -228,7 +228,11 @@ export async function getDueWarmupCards(limit: number = 5) {
 /**
  * Server Action chấm điểm độ nhớ của thẻ từ vựng và lên lịch ôn tập theo thuật toán SM-2 (SuperMemo-2)
  */
-export async function reviewCard(cardId: string, rating: "Again" | "Hard" | "Good" | "Easy") {
+export async function reviewCard(
+  cardId: string,
+  rating: "Again" | "Hard" | "Good" | "Easy",
+  retentionRate?: number
+) {
   try {
     // Rate Limiting
     const reqHeaders = await headers();
@@ -242,7 +246,7 @@ export async function reviewCard(cardId: string, rating: "Again" | "Hard" | "Goo
     }
 
     // Input Validation
-    const validated = ReviewCardSchema.safeParse({ cardId, rating });
+    const validated = ReviewCardSchema.safeParse({ cardId, rating, retentionRate });
     if (!validated.success) {
       return {
         success: false,
@@ -278,7 +282,7 @@ export async function reviewCard(cardId: string, rating: "Again" | "Hard" | "Goo
     }
     
     // 3. Áp dụng thuật toán FSRS
-    const fsrsUpdates = reviewCardFSRS(card as unknown as Card, cleanParams.rating);
+    const fsrsUpdates = reviewCardFSRS(card as unknown as Card, cleanParams.rating, cleanParams.retentionRate);
     
     // 4. Cập nhật các chỉ số mới vào Database
     const { error: updateError } = await supabase

@@ -1,5 +1,6 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { calcSpeechScore } from "@/lib/utils/speech";
+import { SpeechRecognitionFallback } from "@/lib/utils/speech-fallback";
 
 describe("calcSpeechScore", () => {
   it("perfect match returns 100", () => {
@@ -45,3 +46,57 @@ describe("calcSpeechScore", () => {
     expect(calcSpeechScore("hello world", "hello  world")).toBe(100);
   });
 });
+
+describe("SpeechRecognitionFallback", () => {
+  it("should trigger onstart when start is called", async () => {
+    const recognition = new SpeechRecognitionFallback();
+    const onstartSpy = vi.fn();
+    recognition.onstart = onstartSpy;
+
+    recognition.start();
+
+    // Wait for the async setTimeout to trigger
+    await new Promise((resolve) => setTimeout(resolve, 100));
+
+    expect(onstartSpy).toHaveBeenCalled();
+  });
+
+  it("should trigger onresult and onend with expected transcript when stop is called", async () => {
+    SpeechRecognitionFallback.activeTranscript = "hello fallback world";
+    const recognition = new SpeechRecognitionFallback();
+    const onresultSpy = vi.fn();
+    const onendSpy = vi.fn();
+
+    recognition.onresult = onresultSpy;
+    recognition.onend = onendSpy;
+
+    recognition.start();
+    recognition.stop();
+
+    // Wait for the 1 second simulated processing
+    await new Promise((resolve) => setTimeout(resolve, 1100));
+
+    expect(onresultSpy).toHaveBeenCalled();
+    const event = onresultSpy.mock.calls[0][0];
+    expect(event.results[0][0].transcript).toBe("hello fallback world");
+    expect(onendSpy).toHaveBeenCalled();
+  });
+
+  it("should support fallback default transcript if activeTranscript is not set", async () => {
+    SpeechRecognitionFallback.activeTranscript = "";
+    const recognition = new SpeechRecognitionFallback();
+    const onresultSpy = vi.fn();
+
+    recognition.onresult = onresultSpy;
+
+    recognition.start();
+    recognition.stop();
+
+    await new Promise((resolve) => setTimeout(resolve, 1100));
+
+    expect(onresultSpy).toHaveBeenCalled();
+    const event = onresultSpy.mock.calls[0][0];
+    expect(event.results[0][0].transcript).toContain("I would like to describe my day today");
+  });
+});
+

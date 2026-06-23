@@ -72,9 +72,22 @@ export default function FlashcardsPage() {
   const fetchCards = async (cram = cramMode, topic = selectedTopic) => {
     setIsLoading(true);
     try {
+      let maxNewCards: number | undefined;
+      try {
+        const stored = localStorage.getItem("ato_settings");
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          if (typeof parsed.fsrsMaxNewCards === "number") {
+            maxNewCards = parsed.fsrsMaxNewCards;
+          }
+        }
+      } catch {
+        // ignore
+      }
+
       const res = cram
         ? await getAllCards(topic !== "all" ? topic : undefined)
-        : await getDueCards();
+        : await getDueCards(maxNewCards);
       if (res.success && res.cards) {
         const mappedCards: Flashcard[] = res.cards.map((c) => ({
           id: c.id,
@@ -126,7 +139,20 @@ export default function FlashcardsPage() {
     setIsReviewing(true);
     
     try {
-      const res = await reviewCard(currentCard.id, scoreLabel);
+      let retentionRate: number | undefined;
+      try {
+        const stored = localStorage.getItem("ato_settings");
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          if (typeof parsed.fsrsRetention === "number") {
+            retentionRate = parsed.fsrsRetention;
+          }
+        }
+      } catch {
+        // ignore
+      }
+
+      const res = await reviewCard(currentCard.id, scoreLabel, retentionRate);
       if (res.success) {
         setResponseLog((prev) => [...prev, { word: currentCard.word, score: scoreLabel }]);
         if (scoreLabel === "Again") {

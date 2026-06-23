@@ -88,6 +88,20 @@ describe("reviewCardFSRS", () => {
       interval: expect.any(Number),
     });
   });
+
+  it("handles default rating fallthrough", () => {
+    const card = makeCard();
+    // cast to any to test the default block
+    const result = reviewCardFSRS(card, "invalid-rating" as any);
+    expect(result.debug.rating).toBe("invalid-rating");
+  });
+
+  it("uses custom retentionRate when provided (lower retention yields longer intervals)", () => {
+    const card = makeCard({ state: State.Review, stability: 10, difficulty: 4 });
+    const resultLow = reviewCardFSRS(card, "Good", 0.8);
+    const resultHigh = reviewCardFSRS(card, "Good", 0.95);
+    expect(resultLow.interval).toBeGreaterThanOrEqual(resultHigh.interval);
+  });
 });
 
 describe("mapDbCardToFSRSCard", () => {

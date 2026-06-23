@@ -90,4 +90,15 @@ describe("checkHasSession", () => {
     expect(() => checkHasSession()).not.toThrow();
     expect(checkHasSession()).toBe(false);
   });
+
+  it("returns false early if window is undefined", () => {
+    const originalWindow = global.window;
+    // @ts-expect-error - overriding window for test
+    delete global.window;
+    try {
+      expect(checkHasSession()).toBe(false);
+    } finally {
+      global.window = originalWindow;
+    }
+  });
 });

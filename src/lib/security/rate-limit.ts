@@ -20,11 +20,11 @@ interface RateLimitRecord {
   resetTime: number;
 }
 
-class InMemoryRateLimiterImpl implements RateLimiter {
+export class InMemoryRateLimiter {
   private cache = new Map<string, RateLimitRecord>();
   constructor(private limit: number, private windowMs: number) {}
 
-  async check(ip: string): Promise<RateLimitResult> {
+  check(ip: string): RateLimitResult {
     const now = Date.now();
     const record = this.cache.get(ip);
 
@@ -46,6 +46,17 @@ class InMemoryRateLimiterImpl implements RateLimiter {
       return { success: false, limit: this.limit, remaining: 0, resetTime: record.resetTime };
     }
     return { success: true, limit: this.limit, remaining, resetTime: record.resetTime };
+  }
+}
+
+class InMemoryRateLimiterImpl implements RateLimiter {
+  private limiter: InMemoryRateLimiter;
+  constructor(limit: number, windowMs: number) {
+    this.limiter = new InMemoryRateLimiter(limit, windowMs);
+  }
+
+  async check(ip: string): Promise<RateLimitResult> {
+    return this.limiter.check(ip);
   }
 }
 
@@ -94,11 +105,6 @@ class UpstashRateLimiterImpl implements RateLimiter {
 
 // ─── Factory ─────────────────────────────────────────────────────────────────
 
-const isUpstashConfigured =
-  typeof process !== "undefined" &&
-  !!process.env.UPSTASH_REDIS_REST_URL &&
-  !!process.env.UPSTASH_REDIS_REST_TOKEN;
-
 /**
  * Create a rate limiter.
  * - Uses Upstash Redis in production when UPSTASH_REDIS_REST_URL + UPSTASH_REDIS_REST_TOKEN are set.
@@ -113,28 +119,16 @@ export function createRateLimiter(
   windowMs: number,
   prefix = "rl"
 ): RateLimiter {
+  const isUpstashConfigured =
+    typeof process !== "undefined" &&
+    !!process.env.UPSTASH_REDIS_REST_URL &&
+    !!process.env.UPSTASH_REDIS_REST_TOKEN;
+
   if (isUpstashConfigured) {
     const windowSeconds = Math.round(windowMs / 1000);
     return new UpstashRateLimiterImpl(requestsPerMinute, windowSeconds, prefix);
   }
   return new InMemoryRateLimiterImpl(requestsPerMinute, windowMs);
-}
-
-// ─── Backwards-compatible alias ───────────────────────────────────────────────
-
-/** @deprecated Use createRateLimiter() instead */
-export class InMemoryRateLimiter {
-  private impl: InMemoryRateLimiterImpl;
-  constructor(limit: number, windowMs: number) {
-    this.impl = new InMemoryRateLimiterImpl(limit, windowMs);
-  }
-  check(ip: string): RateLimitResult {
-    let result!: RateLimitResult;
-    // Synchronous wrapper — safe for existing callers that don't await
-    this.impl.check(ip).then((r) => { result = r; });
-    // The impl is synchronous under the hood for in-memory, so this is fine
-    return result ?? { success: true, limit: 0, remaining: 0, resetTime: 0 };
-  }
 }
 
 // ─── IP Helper ───────────────────────────────────────────────────────────────

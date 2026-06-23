@@ -1,5 +1,24 @@
 import { describe, it, expect, vi } from "vitest";
-import { createRateLimiter, getClientIp } from "@/lib/security/rate-limit";
+import { createRateLimiter, getClientIp, InMemoryRateLimiter } from "@/lib/security/rate-limit";
+
+const mockLimit = vi.fn();
+
+vi.mock("@upstash/ratelimit", () => {
+  return {
+    Ratelimit: class {
+      static slidingWindow = vi.fn().mockReturnValue({});
+      limit = (ip: string) => mockLimit(ip);
+    }
+  };
+});
+
+vi.mock("@upstash/redis", () => {
+  return {
+    Redis: {
+      fromEnv: vi.fn().mockReturnValue({}),
+    }
+  };
+});
 
 describe("createRateLimiter (InMemory fallback)", () => {
   it("allows requests under the limit", async () => {
@@ -102,5 +121,87 @@ describe("getClientIp", () => {
       headers: { "x-forwarded-for": "  192.168.1.1  , 10.0.0.1" },
     });
     expect(getClientIp(req)).toBe("192.168.1.1");
+  });
+});
+
+describe("createRateLimiter (Additional Coverage)", () => {
+  it("cleans up expired cache entries randomly", async () => {
+    const limiter = createRateLimiter(5, 1_000, "test-cleanup");
+    const ip = "3.3.3.3";
+    
+    // Add an expired record
+    await limiter.check(ip);
+    
+    // Stub Math.random to return a value < 0.01
+    const originalRandom = Math.random;
+    Math.random = () => 0.005;
+    
+    try {
+      // Advance time so it's expired
+      vi.useFakeTimers();
+      vi.advanceTimersByTime(2000);
+      
+      // Trigger check which will run the random cleanup
+      const res = await limiter.check("4.4.4.4");
+      expect(res.success).toBe(true);
+      
+      vi.useRealTimers();
+    } finally {
+      Math.random = originalRandom;
+    }
+  });
+
+  it("works as expected with synchronous check method wrapper of legacy InMemoryRateLimiter", () => {
+    const limiter = new InMemoryRateLimiter(2, 60_000);
+    const result1 = limiter.check("127.0.0.1");
+    expect(result1.success).toBe(true);
+    expect(result1.remaining).toBe(1);
+
+    const result2 = limiter.check("127.0.0.1");
+    expect(result2.success).toBe(true);
+    expect(result2.remaining).toBe(0);
+
+    const result3 = limiter.check("127.0.0.1");
+    expect(result3.success).toBe(false);
+  });
+
+  it("uses Upstash in production when configured", async () => {
+    process.env.UPSTASH_REDIS_REST_URL = "https://mock-redis.upstash.io";
+    process.env.UPSTASH_REDIS_REST_TOKEN = "mock-token";
+    
+    mockLimit.mockResolvedValue({
+      success: true,
+      limit: 10,
+      remaining: 9,
+      reset: 123456,
+    });
+
+    try {
+      const limiter = createRateLimiter(10, 60_000, "test-upstash");
+      const result = await limiter.check("1.1.1.1");
+      expect(result.success).toBe(true);
+      expect(result.remaining).toBe(9);
+      expect(result.limit).toBe(10);
+    } finally {
+      delete process.env.UPSTASH_REDIS_REST_URL;
+      delete process.env.UPSTASH_REDIS_REST_TOKEN;
+    }
+  });
+
+  it("fails open if Upstash throws an error", async () => {
+    process.env.UPSTASH_REDIS_REST_URL = "https://mock-redis.upstash.io";
+    process.env.UPSTASH_REDIS_REST_TOKEN = "mock-token";
+    
+    mockLimit.mockRejectedValue(new Error("Upstash connection failed"));
+
+    try {
+      const limiter = createRateLimiter(10, 60_000, "test-upstash-fail");
+      const result = await limiter.check("1.1.1.1");
+      expect(result.success).toBe(true); // fails open
+      expect(result.remaining).toBe(1);
+    } finally {
+      delete process.env.UPSTASH_REDIS_REST_URL;
+      delete process.env.UPSTASH_REDIS_REST_TOKEN;
+    }
   });
 });

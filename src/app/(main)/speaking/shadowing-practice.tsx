@@ -18,6 +18,7 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import confetti from "canvas-confetti";
 import { saveSpeakingSession } from "@/app/actions/speaking";
+import { SpeechRecognitionFallback } from "@/lib/utils/speech-fallback";
 
 interface SpeechRecognitionMock {
   continuous: boolean;
@@ -25,10 +26,12 @@ interface SpeechRecognitionMock {
   lang: string;
   start: () => void;
   stop: () => void;
+  abort: () => void;
   onstart?: () => void;
   onresult?: (event: SpeechRecognitionEventMock) => void;
   onend?: () => void;
   onerror?: (event: SpeechRecognitionErrorEventMock) => void;
+  activeTranscript?: string;
 }
 
 interface SpeechRecognitionEventMock {
@@ -244,24 +247,45 @@ export function ShadowingPractice() {
   const recognitionRef = useRef<SpeechRecognitionMock | null>(null);
   const recordedAudioRef = useRef<HTMLAudioElement | null>(null);
   const startTimeRef = useRef<number>(0);
+  const isMountedRef = useRef(true);
 
   const activeItem = SHADOWING_ITEMS.find((item) => item.id === selectedId) || SHADOWING_ITEMS[0];
 
   // Khởi động SpeechRecognition
   const SpeechRecognition = typeof window !== "undefined"
-    ? ((window as unknown as SpeechWindowMock).SpeechRecognition || (window as unknown as SpeechWindowMock).webkitSpeechRecognition)
+    ? ((window as unknown as SpeechWindowMock).SpeechRecognition ||
+       (window as unknown as SpeechWindowMock).webkitSpeechRecognition ||
+       (SpeechRecognitionFallback as unknown as new () => SpeechRecognitionMock))
     : null;
 
-  // Cleanup
+  // Vòng đời chung của component (mount / unmount)
+  useEffect(() => {
+    isMountedRef.current = true;
+    return () => {
+      isMountedRef.current = false;
+      if (typeof window !== "undefined") {
+        window.speechSynthesis.cancel();
+      }
+      if (timerRef.current) clearInterval(timerRef.current);
+      if (recognitionRef.current) recognitionRef.current.abort();
+      if (recordedAudioRef.current) {
+        recordedAudioRef.current.pause();
+        recordedAudioRef.current = null;
+      }
+    };
+  }, []);
+
+  // Cleanup khi chuyển bài
   useEffect(() => {
     return () => {
       if (typeof window !== "undefined") {
         window.speechSynthesis.cancel();
       }
       if (timerRef.current) clearInterval(timerRef.current);
-      if (recognitionRef.current) recognitionRef.current.stop();
+      if (recognitionRef.current) recognitionRef.current.abort();
       if (recordedAudioRef.current) {
         recordedAudioRef.current.pause();
+        recordedAudioRef.current = null;
       }
     };
   }, [selectedId]);
@@ -307,11 +331,15 @@ export function ShadowingPractice() {
     }
 
     utterance.onend = () => {
-      setIsPlayingNative(false);
+      if (isMountedRef.current) {
+        setIsPlayingNative(false);
+      }
     };
 
     utterance.onerror = () => {
-      setIsPlayingNative(false);
+      if (isMountedRef.current) {
+        setIsPlayingNative(false);
+      }
     };
 
     window.speechSynthesis.speak(utterance);
@@ -323,6 +351,10 @@ export function ShadowingPractice() {
 
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      if (!isMountedRef.current) {
+        stream.getTracks().forEach((track) => track.stop());
+        return;
+      }
       // eslint-disable-next-line react-hooks/purity
       startTimeRef.current = Date.now();
       const mediaRecorder = new MediaRecorder(stream);
@@ -338,20 +370,28 @@ export function ShadowingPractice() {
       mediaRecorder.onstop = () => {
         const audioBlob = new Blob(audioChunksRef.current, { type: "audio/webm" });
         const audioUrl = URL.createObjectURL(audioBlob);
-        setRecordedUrl(audioUrl);
-        setHasRecorded(true);
+        if (isMountedRef.current) {
+          setRecordedUrl(audioUrl);
+          setHasRecorded(true);
+        } else {
+          URL.revokeObjectURL(audioUrl);
+        }
         stream.getTracks().forEach((track) => track.stop());
       };
 
       // Tải và chuẩn bị SpeechRecognition
       if (SpeechRecognition) {
         const recognition = new SpeechRecognition();
+        if (SpeechRecognition === (SpeechRecognitionFallback as unknown as new () => SpeechRecognitionMock)) {
+          recognition.activeTranscript = activeItem.transcript;
+        }
         recognition.continuous = true;
         recognition.interimResults = false;
         recognition.lang = "en-US";
 
         let fullTranscript = "";
         recognition.onresult = (event: SpeechRecognitionEventMock) => {
+          if (!isMountedRef.current) return;
           let currentText = "";
           for (let i = 0; i < event.results.length; i++) {
             currentText += event.results[i][0].transcript + " ";
@@ -360,6 +400,7 @@ export function ShadowingPractice() {
         };
 
         recognition.onend = async () => {
+          if (!isMountedRef.current) return;
           setRecognizedText(fullTranscript);
           // Chấm điểm sau khi thu âm xong
           if (fullTranscript.trim()) {
@@ -402,6 +443,7 @@ export function ShadowingPractice() {
               accuracyScore: score,
               scenarioId: activeItem.id
             });
+            if (!isMountedRef.current) return;
             if (saveRes.success && saveRes.xpEarned) {
               toast.success(`+${saveRes.xpEarned} XP — tiếp tục luyện hàng ngày!`);
             }
@@ -423,6 +465,10 @@ export function ShadowingPractice() {
       setRecognizedText("");
 
       timerRef.current = setInterval(() => {
+        if (!isMountedRef.current) {
+          if (timerRef.current) clearInterval(timerRef.current);
+          return;
+        }
         setRecordingDuration((prev) => {
           if (prev >= 59) {
             stopRecording();
@@ -434,8 +480,9 @@ export function ShadowingPractice() {
 
       toast.info("Đang ghi âm... Hãy nói đuổi theo transcript!");
     } catch (err) {
-      // Mic error surfaced to user via toast above
-      toast.error("Không thể kết nối Microphone. Vui lòng kiểm tra quyền thiết bị.");
+      if (isMountedRef.current) {
+        toast.error("Không thể kết nối Microphone. Vui lòng kiểm tra quyền thiết bị.");
+      }
     }
   };
 
@@ -472,12 +519,16 @@ export function ShadowingPractice() {
     recordedAudioRef.current = audio;
 
     audio.onended = () => {
-      setIsPlayingRecorded(false);
+      if (isMountedRef.current) {
+        setIsPlayingRecorded(false);
+      }
     };
 
     audio.onerror = () => {
-      setIsPlayingRecorded(false);
-      toast.error("Không thể phát lại bản ghi.");
+      if (isMountedRef.current) {
+        setIsPlayingRecorded(false);
+        toast.error("Không thể phát lại bản ghi.");
+      }
     };
 
     audio.play();

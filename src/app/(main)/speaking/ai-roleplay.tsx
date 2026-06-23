@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import confetti from "canvas-confetti";
 import { saveSpeakingSession } from "@/app/actions/speaking";
+import { SpeechRecognitionFallback } from "@/lib/utils/speech-fallback";
 
 interface SpeechRecognitionMock {
   continuous: boolean;
@@ -28,6 +29,7 @@ interface SpeechRecognitionMock {
   onresult?: (event: SpeechRecognitionEventMock) => void;
   onend?: () => void;
   onerror?: (event: SpeechRecognitionErrorEventMock) => void;
+  activeTranscript?: string;
 }
 
 interface SpeechRecognitionEventMock {
@@ -357,16 +359,36 @@ export function AIRoleplay() {
 
   // Speech Recognition & Synthesis Setup
   const SpeechRecognition = typeof window !== "undefined"
-    ? ((window as unknown as SpeechWindowMock).SpeechRecognition || (window as unknown as SpeechWindowMock).webkitSpeechRecognition)
+    ? ((window as unknown as SpeechWindowMock).SpeechRecognition ||
+       (window as unknown as SpeechWindowMock).webkitSpeechRecognition ||
+       (SpeechRecognitionFallback as unknown as new () => SpeechRecognitionMock))
     : null;
   const recognitionRef = useRef<SpeechRecognitionMock | null>(null);
   const chatEndRef = useRef<HTMLDivElement | null>(null);
   const startTimeRef = useRef<number>(0);
+  const isMountedRef = useRef(true);
+  const greetingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const nextTurnTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Cuộn xuống cuối hội thoại
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [chatHistory]);
+
+  // Vòng đời chung của component (mount / unmount)
+  useEffect(() => {
+    isMountedRef.current = true;
+    return () => {
+      isMountedRef.current = false;
+      if (typeof window !== "undefined") {
+        window.speechSynthesis.cancel();
+      }
+      if (greetingTimeoutRef.current) clearTimeout(greetingTimeoutRef.current);
+      if (nextTurnTimeoutRef.current) clearTimeout(nextTurnTimeoutRef.current);
+      recognitionRef.current?.abort();
+      recognitionRef.current = null;
+    };
+  }, []);
 
   // Khởi động cuộc trò chuyện khi chọn Scenario
   useEffect(() => {
@@ -376,9 +398,11 @@ export function AIRoleplay() {
       if (typeof window !== "undefined") {
         window.speechSynthesis.cancel();
       }
-      // Stop microphone on unmount/scenario-switch to release browser mic lock
+      // Stop microphone on scenario-switch to release browser mic lock
       recognitionRef.current?.abort();
       recognitionRef.current = null;
+      if (greetingTimeoutRef.current) clearTimeout(greetingTimeoutRef.current);
+      if (nextTurnTimeoutRef.current) clearTimeout(nextTurnTimeoutRef.current);
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedScenarioId]);
@@ -397,8 +421,11 @@ export function AIRoleplay() {
     startTimeRef.current = Date.now();
     
     // Tự động phát câu chào đầu tiên của AI
-    setTimeout(() => {
-      speakText(activeScenario.initialMessage);
+    if (greetingTimeoutRef.current) clearTimeout(greetingTimeoutRef.current);
+    greetingTimeoutRef.current = setTimeout(() => {
+      if (isMountedRef.current) {
+        speakText(activeScenario.initialMessage);
+      }
     }, 300);
   };
 
@@ -421,11 +448,15 @@ export function AIRoleplay() {
     }
 
     utterance.onend = () => {
-      setIsAiSpeaking(false);
+      if (isMountedRef.current) {
+        setIsAiSpeaking(false);
+      }
     };
 
     utterance.onerror = () => {
-      setIsAiSpeaking(false);
+      if (isMountedRef.current) {
+        setIsAiSpeaking(false);
+      }
     };
 
     window.speechSynthesis.speak(utterance);
@@ -443,22 +474,28 @@ export function AIRoleplay() {
 
     try {
       const recognition = new SpeechRecognition();
+      if (SpeechRecognition === (SpeechRecognitionFallback as unknown as new () => SpeechRecognitionMock)) {
+        recognition.activeTranscript = currentStep?.userSuggestion || "";
+      }
       recognition.continuous = false;
       recognition.interimResults = false;
       recognition.lang = "en-US";
 
       recognition.onstart = () => {
+        if (!isMountedRef.current) return;
         setIsListening(true);
         setRecognizedText("");
       };
 
       recognition.onresult = (event: SpeechRecognitionEventMock) => {
+        if (!isMountedRef.current) return;
         const text = event.results[0][0].transcript;
         setRecognizedText(text);
         handleUserAnswer(text, true);
       };
 
       recognition.onerror = (event: SpeechRecognitionErrorEventMock) => {
+        if (!isMountedRef.current) return;
         // Speech recognition error — UI state already handles this
         setIsListening(false);
         if (event.error === "no-speech") {
@@ -467,14 +504,16 @@ export function AIRoleplay() {
       };
 
       recognition.onend = () => {
+        if (!isMountedRef.current) return;
         setIsListening(false);
       };
 
       recognitionRef.current = recognition;
       recognition.start();
     } catch (err) {
-      // Microphone access error — handled via UI state above
-      setIsListening(false);
+      if (isMountedRef.current) {
+        setIsListening(false);
+      }
     }
   };
 
@@ -583,7 +622,9 @@ export function AIRoleplay() {
     ]);
 
     // 2. Kích hoạt AI trả lời ở bước tiếp theo
-    setTimeout(async () => {
+    if (nextTurnTimeoutRef.current) clearTimeout(nextTurnTimeoutRef.current);
+    nextTurnTimeoutRef.current = setTimeout(async () => {
+      if (!isMountedRef.current) return;
       if (currentStepIndex < activeScenario.steps.length) {
         const step = activeScenario.steps[currentStepIndex];
         
@@ -618,6 +659,7 @@ export function AIRoleplay() {
           transcript: fullTranscript,
           scenarioId: activeScenario.id
         });
+        if (!isMountedRef.current) return;
         if (saveRes.success && saveRes.xpEarned) {
           toast.success(`+${saveRes.xpEarned} XP — buổi hội thoại đã được lưu!`);
         }

@@ -185,6 +185,15 @@ export default function SettingsClient({ userEmail }: { userEmail: string }) {
     const s = getStoredSettings();
     return typeof s.dailyGoal === "string" ? s.dailyGoal : "10";
   });
+  const [fsrsRetention, setFsrsRetention] = useState(() => {
+    const s = getStoredSettings();
+    return s.fsrsRetention !== undefined ? String(s.fsrsRetention) : "0.9";
+  });
+  const [fsrsMaxNewCards, setFsrsMaxNewCards] = useState(() => {
+    const s = getStoredSettings();
+    return s.fsrsMaxNewCards !== undefined ? String(s.fsrsMaxNewCards) : "15";
+  });
+
 
   // Display settings — theme via next-themes, fontSize local only
   const { setTheme: applyTheme } = useTheme();
@@ -199,6 +208,8 @@ export default function SettingsClient({ userEmail }: { userEmail: string }) {
     const settings = {
       streakReminders, weeklyReport, soundEffects, autoPlayAudio,
       showPhonetics, dailyGoal, theme, fontSize,
+      fsrsRetention: Number(fsrsRetention),
+      fsrsMaxNewCards: Number(fsrsMaxNewCards),
     };
     localStorage.setItem("ato_settings", JSON.stringify(settings));
     localStorage.setItem("ato_daily_xp_goal", dailyGoal);
@@ -268,6 +279,32 @@ export default function SettingsClient({ userEmail }: { userEmail: string }) {
             { value: "50", label: "50 XP (Chuyên nghiệp)" },
           ]}
           onChange={setDailyGoal}
+        />
+        <SettingSelect
+          label="Tỷ lệ nhớ mục tiêu (FSRS)"
+          description="Tỷ lệ ghi nhớ mong muốn (tỷ lệ cao hơn sẽ tăng số lần ôn tập)"
+          value={fsrsRetention}
+          options={[
+            { value: "0.8", label: "80% (Luyện tập ít hơn)" },
+            { value: "0.85", label: "85%" },
+            { value: "0.9", label: "90% (Khuyên dùng)" },
+            { value: "0.95", label: "95% (Nhớ lâu hơn)" },
+          ]}
+          onChange={setFsrsRetention}
+        />
+        <SettingSelect
+          label="Số từ mới tối đa mỗi ngày"
+          description="Giới hạn số lượng từ mới học tối đa trong ngày"
+          value={fsrsMaxNewCards}
+          options={[
+            { value: "5", label: "5 từ" },
+            { value: "10", label: "10 từ" },
+            { value: "15", label: "15 từ (Mặc định)" },
+            { value: "20", label: "20 từ" },
+            { value: "25", label: "25 từ" },
+            { value: "30", label: "30 từ" },
+          ]}
+          onChange={setFsrsMaxNewCards}
         />
         <SettingToggle
           id="sound-effects"

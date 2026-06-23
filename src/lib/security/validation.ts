@@ -38,6 +38,7 @@ export const SaveCardSchema = z.object({
 export const ReviewCardSchema = z.object({
   cardId: z.string().min(1, "ID thẻ không hợp lệ"),
   rating: z.enum(["Again", "Hard", "Good", "Easy"]),
+  retentionRate: z.number().min(0.5).max(0.99).optional(),
 });
 
 /**

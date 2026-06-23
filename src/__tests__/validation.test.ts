@@ -93,6 +93,26 @@ describe("ReviewCardSchema", () => {
     const result = ReviewCardSchema.safeParse({ cardId: "", rating: "Good" });
     expect(result.success).toBe(false);
   });
+
+  it("accepts valid retentionRate", () => {
+    const result = ReviewCardSchema.safeParse({ cardId: "uuid-123", rating: "Good", retentionRate: 0.85 });
+    expect(result.success).toBe(true);
+    expect(result.data?.retentionRate).toBe(0.85);
+  });
+
+  it("rejects invalid retentionRate (too low or too high)", () => {
+    const resultLow = ReviewCardSchema.safeParse({ cardId: "uuid-123", rating: "Good", retentionRate: 0.49 });
+    expect(resultLow.success).toBe(false);
+
+    const resultHigh = ReviewCardSchema.safeParse({ cardId: "uuid-123", rating: "Good", retentionRate: 1.0 });
+    expect(resultHigh.success).toBe(false);
+  });
+
+  it("allows omitted/undefined retentionRate", () => {
+    const result = ReviewCardSchema.safeParse({ cardId: "uuid-123", rating: "Good" });
+    expect(result.success).toBe(true);
+    expect(result.data?.retentionRate).toBeUndefined();
+  });
 });
 
 // ─── CompleteUnitSchema ──────────────────────────────────────────────────────

@@ -36,7 +36,8 @@ export function mapDbCardToFSRSCard(dbCard: DbCard): FSRSCard {
  */
 export function reviewCardFSRS(
   dbCard: DbCard,
-  rating: "Again" | "Hard" | "Good" | "Easy"
+  rating: "Again" | "Hard" | "Good" | "Easy",
+  retentionRate?: number
 ) {
   const fsrsCard = mapDbCardToFSRSCard(dbCard);
   const now = new Date();
@@ -61,7 +62,10 @@ export function reviewCardFSRS(
   }
 
   // Thực hiện lên lịch lại (repeat/review) bằng ts-fsrs
-  const schedulingCards = fsrsInstance.repeat(fsrsCard, now);
+  const customFsrs = retentionRate
+    ? fsrs({ request_retention: retentionRate, enable_fuzz: false })
+    : fsrsInstance;
+  const schedulingCards = customFsrs.repeat(fsrsCard, now);
   const updatedCard = schedulingCards[fsrsRating].card;
 
   // Tính toán interval mới từ FSRS
