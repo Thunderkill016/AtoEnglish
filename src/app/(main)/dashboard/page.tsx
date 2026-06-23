@@ -18,19 +18,20 @@ export const metadata: Metadata = {
 export const revalidate = 0; // Disable server component caching to ensure accurate dashboard data on request
 
 export default async function DashboardPage() {
-  // Fetch progress, cards, active unit, and speaking sessions in parallel
-  const [progressRes, cardsRes, unitRes, speakingRes] =
+  // Fetch all data in parallel — single round-trip batch
+  const [progressRes, cardsRes, unitRes, speakingRes, bulkRes] =
     await Promise.all([
       getUserProgress(),
       getDueCards(),
       getCurrentUnit(),
       getRecentSpeakingSessions(5),
+      getAllUnitCompletionStatuses(),
     ]);
 
   let userName = "Học viên";
   let totalXp = 0;
   let currentStreak = 0;
-  let userLevel = "A1 Beginner"; // Default for new/data-reset users
+  let userLevel = "A0 Learner"; // Default for new users starting at A0
   let dailyXpGoal = 50;
 
   if (progressRes.success && progressRes.progress) {
@@ -41,6 +42,7 @@ export default async function DashboardPage() {
     dailyXpGoal = p.daily_xp_goal || 50;
 
     const levelNames: Record<string, string> = {
+      A0: "A0 Nền tảng",
       A1: "A1 Beginner",
       A2: "A2 Elementary",
       B1: "B1 Intermediate",
@@ -76,8 +78,7 @@ export default async function DashboardPage() {
     currentUnitData.xp = UNITS.find(u => u.id === unitRes.unitId)?.xp ?? 80;
   }
 
-  // Single bulk query: 1 DB round-trip instead of 51
-  const bulkRes = await getAllUnitCompletionStatuses();
+  // Bulk unit completion data — already fetched in parallel above
   const completedMap = bulkRes.completedMap;
   // Derive count from the map — no extra getCompletedUnitsCount() call needed
   const completedUnits = completedMap.size;
