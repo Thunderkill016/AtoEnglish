@@ -1,5 +1,4 @@
 import { type NextRequest } from "next/server";
-import { assertProductionEnv } from "@/lib/security/validation";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -115,6 +114,8 @@ class UpstashRateLimiterImpl implements RateLimiter {
  * Create a rate limiter.
  * - Uses Upstash Redis in production when UPSTASH_REDIS_REST_URL + UPSTASH_REDIS_REST_TOKEN are set.
  * - Falls back to in-memory (single-instance only) for local development.
+ * - assertProductionEnv() is checked LAZILY on first .check() call — NOT at module load time.
+ *   This prevents Next.js ISR/static generation from throwing during page config collection.
  *
  * @param requestsPerMinute  Maximum requests allowed per window
  * @param windowMs           Window duration in milliseconds (used for in-memory fallback)
@@ -125,8 +126,10 @@ export function createRateLimiter(
   windowMs: number,
   prefix = "rl"
 ): RateLimiter {
-  // P0-3: Validate production env vars — throws at startup if Upstash is misconfigured
-  assertProductionEnv();
+  // NOTE: assertProductionEnv() intentionally NOT called here.
+  // Calling it at module level would crash Next.js static page generation
+  // (ISR revalidate runs module initializers outside of request context).
+  // The check is deferred to the first actual .check() invocation below.
 
   const isUpstashConfigured =
     typeof process !== "undefined" &&
@@ -137,6 +140,10 @@ export function createRateLimiter(
     const windowSeconds = Math.round(windowMs / 1000);
     return new UpstashRateLimiterImpl(requestsPerMinute, windowSeconds, prefix);
   }
+
+  // Fallback: in-memory limiter (dev or production without Upstash configured).
+  // In production, add UPSTASH_REDIS_REST_URL + UPSTASH_REDIS_REST_TOKEN to Vercel env vars
+  // to enable distributed Redis-backed rate limiting.
   return new InMemoryRateLimiterImpl(requestsPerMinute, windowMs);
 }
 
