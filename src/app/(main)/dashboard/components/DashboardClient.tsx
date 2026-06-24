@@ -417,7 +417,10 @@ export default function DashboardClient({
             const NEXT: Record<string, string> = { A0: "A1", A1: "A2", A2: "B1", B1: "B2", B2: "C1" };
             const nextLevel = NEXT[shortLevel] ?? "";
             return (
-              <div className="rounded-2xl border border-zinc-200/60 dark:border-zinc-800/60 bg-white/60 dark:bg-zinc-900/30 backdrop-blur-sm p-4 space-y-2 hover:border-blue-500/30 transition-colors duration-200">
+              <Link
+                href="/roadmap"
+                className="rounded-2xl border border-zinc-200/60 dark:border-zinc-800/60 bg-white/60 dark:bg-zinc-900/30 backdrop-blur-sm p-4 space-y-2 hover:border-blue-500/30 transition-colors duration-200 cursor-pointer block"
+              >
                 <div className="flex items-center gap-2">
                   <span className="flex size-7 items-center justify-center rounded-lg bg-blue-500/10 text-blue-600 dark:text-blue-400">
                     <GraduationCap className="size-3.5" />
@@ -439,12 +442,15 @@ export default function DashboardClient({
                     </p>
                   </>
                 )}
-              </div>
+              </Link>
             );
           })()}
 
           {/* Units completed */}
-          <div className="rounded-2xl border border-zinc-200/60 dark:border-zinc-800/60 bg-white/60 dark:bg-zinc-900/30 backdrop-blur-sm p-4 space-y-2 hover:border-purple-500/30 transition-colors duration-200">
+          <Link
+            href="/progress"
+            className="rounded-2xl border border-zinc-200/60 dark:border-zinc-800/60 bg-white/60 dark:bg-zinc-900/30 backdrop-blur-sm p-4 space-y-2 hover:border-purple-500/30 transition-colors duration-200 cursor-pointer block"
+          >
             <div className="flex items-center gap-2">
               <span className="flex size-7 items-center justify-center rounded-lg bg-purple-500/10 text-purple-600 dark:text-purple-400">
                 <BookOpen className="size-3.5" />
@@ -453,7 +459,7 @@ export default function DashboardClient({
             </div>
             <p className="text-xl font-black text-zinc-900 dark:text-zinc-50 leading-none">{completedUnits}</p>
             <p className="text-[10px] text-zinc-500 dark:text-zinc-400 font-medium">đã hoàn thành</p>
-          </div>
+          </Link>
         </div>
 
         {/* ── 2b. Weekly active streak calendar ── */}

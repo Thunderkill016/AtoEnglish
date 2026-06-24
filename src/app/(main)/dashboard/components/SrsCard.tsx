@@ -30,7 +30,7 @@ export default function SrsCard({ dueCardsCount }: SrsCardProps) {
         </div>
         <span className={`text-xs font-bold px-2.5 py-1 rounded-full font-mono border ${
           hasDue
-            ? "bg-amber-500/10 text-amber-700 dark:text-amber-400 border-amber-500/25"
+            ? "bg-amber-500/10 text-amber-700 dark:text-amber-400 border-amber-500/25 animate-pulse"
             : "bg-zinc-100 dark:bg-zinc-800/60 text-zinc-500 border-zinc-200/60 dark:border-zinc-700/40"
         }`}>
           {dueCardsCount} thẻ đến hạn
