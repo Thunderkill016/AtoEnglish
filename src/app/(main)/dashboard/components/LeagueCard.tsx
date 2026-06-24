@@ -42,7 +42,12 @@ function LeagueCard() {
                 {tier.emoji}
               </div>
               <div>
-                <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider">Giải đấu tuần này</p>
+                <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider flex items-center gap-1 select-none">
+                  Giải đấu tuần này
+                  <span className="cursor-help text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300 font-bold" title="Top 5 học viên nhiều XP nhất tuần sẽ được thăng cấp lên giải đấu cao hơn!">
+                    (ℹ)
+                  </span>
+                </p>
                 <p className={`text-base font-black bg-gradient-to-r ${tier.gradient} bg-clip-text text-transparent`}>
                   {tier.label} League
                 </p>
@@ -89,10 +94,10 @@ function LeagueCard() {
                 initial={{ opacity: 0, x: -8 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: i * 0.05 }}
-                className={`flex items-center gap-2.5 px-3 py-2 rounded-xl transition-colors border ${
+                className={`flex items-center gap-2.5 px-3 py-2 rounded-xl transition-colors border border-l-[3px] border-l-emerald-500 dark:border-l-emerald-500 ${
                   isMe
-                    ? "bg-emerald-50/50 dark:bg-emerald-950/40 border-emerald-200 dark:border-emerald-700/40"
-                    : "bg-zinc-50/50 dark:bg-zinc-800/40 border-zinc-200 dark:border-zinc-700/20"
+                    ? "bg-emerald-50/50 dark:bg-emerald-950/40 border-y-emerald-200 border-r-emerald-200 dark:border-y-emerald-700/40 dark:border-r-emerald-700/40"
+                    : "bg-zinc-50/50 dark:bg-zinc-800/40 border-y-zinc-200 border-r-zinc-200 dark:border-y-zinc-700/20 dark:border-r-zinc-700/20"
                 }`}
               >
                 <span className="text-sm w-5 text-center shrink-0">
@@ -117,7 +122,7 @@ function LeagueCard() {
               <span className="text-[10px] text-zinc-400 dark:text-zinc-500">···</span>
               <div className="flex-1 h-px bg-zinc-200 dark:bg-zinc-850" />
             </div>
-            <div className="flex items-center gap-2.5 px-3 py-2 rounded-xl border bg-emerald-50/50 dark:bg-emerald-950/40 border-emerald-200 dark:border-emerald-700/40">
+            <div className="flex items-center gap-2.5 px-3 py-2 rounded-xl border border-l-[3px] border-l-zinc-300 dark:border-l-zinc-600 bg-emerald-50/50 dark:bg-emerald-950/40 border-y-emerald-200 border-r-emerald-200 dark:border-y-emerald-700/40 dark:border-r-emerald-700/40">
               <span className="text-[11px] font-bold text-zinc-500 w-5 text-center shrink-0">#{data.myRank}</span>
               <p className="flex-1 text-sm font-semibold text-emerald-600 dark:text-emerald-300 truncate">Bạn</p>
               <p className="text-xs font-black tabular-nums text-emerald-600 dark:text-emerald-400">{data.myXp} XP</p>
