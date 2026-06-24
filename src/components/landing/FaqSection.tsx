@@ -34,6 +34,14 @@ export default function FaqSection() {
       q: "Dữ liệu và tiến độ học của tôi có được bảo mật không?",
       a: "Hoàn toàn bảo mật. AtoEnglish sử dụng Supabase với Row Level Security (RLS) — dữ liệu của bạn chỉ có thể được truy cập bởi chính bạn. Đăng nhập qua Google OAuth 2.0 được mã hóa an toàn. Chúng tôi không bán hay chia sẻ dữ liệu cá nhân với bên thứ ba. Xem thêm tại Chính sách Bảo mật.",
     },
+    {
+      q: "Tôi bận đi làm, không có nhiều thời gian — liệu có theo kịp không?",
+      a: "Hoàn toàn phù hợp với người bận rộn! AtoEnglish được thiết kế cho lịch học linh hoạt. Chỉ cần 15 phút mỗi ngày — tương đương một lần đi thang máy hoặc chờ cafe — là đủ để tiến bộ. Hệ thống FSRS tự động điều chỉnh lịch ôn tập, không cần học liên tục mới nhớ được. Nhiều học viên đang làm việc 8 tiếng/ngày vẫn duy trì streak 90+ ngày.",
+    },
+    {
+      q: "Tôi nên bắt đầu từ unit nào? Làm sao biết trình độ hiện tại?",
+      a: "Bạn có thể làm bài Kiểm tra đầu vào (Placement Test) chỉ trong 5 phút để hệ thống gợi ý unit phù hợp với trình độ hiện tại. Nếu mới bắt đầu hoàn toàn, hãy bắt đầu từ Unit A0-1 (Bảng chữ cái). Nếu đã biết căn bản, bạn có thể bắt đầu từ Unit 1 (A1 — Chào hỏi & Giới thiệu). Hệ thống sẽ tự điều chỉnh theo tốc độ học của bạn.",
+    },
   ];
 
   const [openIndex, setOpenIndex] = useState<number | null>(null);
