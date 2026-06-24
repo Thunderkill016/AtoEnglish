@@ -58,6 +58,7 @@ export const unit19: UnitData = {
     {
       id: 1,
       word: "incident",
+      l1_interference_vn: "⚠️ \'Incident\' (sự cố/vụ việc) đếm được: \'an incident\', \'incidents\'. Phân biệt \'accident\' (tai nạn ngoài ý muốn) và \'incident\' (sự kiện đáng chú ý).",
       emoji: "⚠️",
       phonetic: "/ˈɪnsɪdənt/",
       meaning: "sự cố / vụ việc",
@@ -69,6 +70,7 @@ export const unit19: UnitData = {
     {
       id: 2,
       word: "meanwhile",
+      l1_interference_vn: "⚠️ \'Meanwhile\' đứng đầu câu + dấu phẩy: \'Meanwhile, the team kept working.\' Hoặc giữa câu: \'I was cooking; meanwhile, she set the table.\'",
       emoji: "⏱️",
       phonetic: "/ˈmiːnwaɪl/",
       meaning: "trong lúc đó / đồng thời",
@@ -80,6 +82,7 @@ export const unit19: UnitData = {
     {
       id: 3,
       word: "suddenly",
+      l1_interference_vn: "⚠️ \'Suddenly\' đứng đầu câu hoặc trước động từ — KHÔNG đặt cuối câu như tiếng Việt: \'Suddenly, it rained.\' / \'It suddenly rained.\'",
       emoji: "⚡",
       phonetic: "/ˈsʌdənli/",
       meaning: "đột ngột / bỗng nhiên",
@@ -91,6 +94,7 @@ export const unit19: UnitData = {
     {
       id: 4,
       word: "interrupt",
+      l1_interference_vn: "⚠️ \'Interrupt\' + N trực tiếp: \'interrupt the meeting/someone\'. Không dùng \'interrupt to someone\'. Danh từ: \'interruption\'.",
       emoji: "✋",
       phonetic: "/ˌɪntəˈrʌpt/",
       meaning: "làm gián đoạn / ngắt lời",
@@ -102,6 +106,7 @@ export const unit19: UnitData = {
     {
       id: 5,
       word: "colleague",
+      l1_interference_vn: "⚠️ \'Colleague\' = đồng nghiệp cùng tổ chức. Phân biệt \'coworker\' (informal) và \'partner\' (đối tác bên ngoài).",
       emoji: "🤝",
       phonetic: "/ˈkɒliːɡ/",
       meaning: "đồng nghiệp",
@@ -113,6 +118,7 @@ export const unit19: UnitData = {
     {
       id: 6,
       word: "deadline",
+      l1_interference_vn: "⚠️ \'Meet a deadline\' (kịp hạn) hoặc \'miss a deadline\' (trễ hạn). KHÔNG dùng \'do/finish the deadline\'.",
       emoji: "⏰",
       phonetic: "/ˈdedlaɪn/",
       meaning: "hạn chót",
@@ -124,6 +130,7 @@ export const unit19: UnitData = {
     {
       id: 7,
       word: "resolve",
+      l1_interference_vn: "⚠️ \'Resolve\' formal hơn \'solve\'. \'Resolve a conflict/dispute/issue\' — thường dùng trong email kinh doanh.",
       emoji: "✅",
       phonetic: "/rɪˈzɒlv/",
       meaning: "giải quyết",
@@ -135,6 +142,7 @@ export const unit19: UnitData = {
     {
       id: 8,
       word: "urgent",
+      l1_interference_vn: "⚠️ Tính từ: \'urgent matter\'. Trạng từ: \'urgently\'. Danh từ: \'urgency\' — \'a matter of urgency\'. Không nhầm với \'emergency\'.",
       emoji: "🚨",
       phonetic: "/ˈɜːdʒənt/",
       meaning: "khẩn cấp",
@@ -146,6 +154,7 @@ export const unit19: UnitData = {
     {
       id: 9,
       word: "fortunately",
+      l1_interference_vn: "⚠️ \'Fortunately\' đứng đầu câu + dấu phẩy: \'Fortunately, no one was hurt.\' Ngược nghĩa: \'Unfortunately\'. Không nhầm với \'luckily\' (informal hơn).",
       emoji: "🍀",
       phonetic: "/ˈfɔːtʃənətli/",
       meaning: "may mắn thay / rất may",
@@ -157,6 +166,7 @@ export const unit19: UnitData = {
     {
       id: 10,
       word: "handle",
+      l1_interference_vn: "⚠️ \'Handle\' = xử lý/đối phó: \'handle the situation/problem\'. Informal: \'Can you handle this?\' = \'Can you deal with this?\'",
       emoji: "🛠️",
       phonetic: "/ˈhændəl/",
       meaning: "xử lý / đảm nhiệm",
@@ -168,6 +178,7 @@ export const unit19: UnitData = {
     {
       id: 11,
       word: "chaos",
+      l1_interference_vn: "⚠️ \'Chaos\' không đếm được: \'cause chaos\', \'in chaos\'. Không có \'a chaos\' hay \'chaoses\'. Tính từ: \'chaotic\'.",
       emoji: "🌀",
       phonetic: "/ˈkeɪɒs/",
       meaning: "sự hỗn loạn",
@@ -179,6 +190,7 @@ export const unit19: UnitData = {
     {
       id: 12,
       word: "recover",
+      l1_interference_vn: "⚠️ \'Recover FROM\': \'recover from an illness/setback\' — bắt buộc giới từ \'from\'. \'Recovery\' là danh từ tương ứng.",
       emoji: "🔄",
       phonetic: "/rɪˈkʌvər/",
       meaning: "khôi phục / hồi phục",
