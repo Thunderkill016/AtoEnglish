@@ -10,11 +10,11 @@ test.describe("Placement Test Flow", () => {
     await expect(startBtn).toBeVisible();
     await startBtn.click();
 
-    // Test Stage - Question 1
-    await expect(page.locator("span")).toContainText("1/40");
-    
-    // Choose Option A (the first option)
-    const firstOption = page.locator("button").first();
+    // Test Stage - Question 1 — use specific text matcher, not broad locator('span')
+    await expect(page.getByText("1/40")).toBeVisible();
+
+    // Choose Option A (the first answer option — skip logo/nav buttons)
+    const firstOption = page.getByRole("button", { name: /^A / }).first();
     await expect(firstOption).toBeVisible();
     await firstOption.click();
 
@@ -24,6 +24,6 @@ test.describe("Placement Test Flow", () => {
     await nextBtn.click();
 
     // Should transition to Question 2
-    await expect(page.locator("span")).toContainText("2/40");
+    await expect(page.getByText("2/40")).toBeVisible();
   });
 });
