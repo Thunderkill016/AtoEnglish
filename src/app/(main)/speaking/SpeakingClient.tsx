@@ -16,11 +16,12 @@ import {
 import { ShadowingPractice } from "./shadowing-practice";
 import { AIRoleplay } from "./ai-roleplay";
 import { JournalMode } from "./journal-mode";
+import PhonemeChecker from "./phoneme-checker";
 import { getRecentSpeakingSessions } from "@/app/actions/speaking";
 import { SpeakingSession } from "@/types/database";
 
 export default function SpeakingPage() {
-  const [activeTab, setActiveTab] = useState<"shadowing" | "roleplay" | "journal">("shadowing");
+  const [activeTab, setActiveTab] = useState<"shadowing" | "roleplay" | "journal" | "phoneme">("shadowing");
   const [historySessions, setHistorySessions] = useState<SpeakingSession[]>([]);
   const [speakingCount, setSpeakingCount] = useState<number>(0);
 
@@ -39,6 +40,7 @@ export default function SpeakingPage() {
     { id: "shadowing", title: "Shadowing Practice", icon: Volume2, desc: "Nói đuổi theo audio" },
     { id: "roleplay", title: "AI Roleplay", icon: MessageSquare, desc: "Hội thoại nhập vai" },
     { id: "journal", title: "Daily Journal", icon: Calendar, desc: "Nhật ký nói tự do" },
+    { id: "phoneme", title: "Phoneme Coach", icon: Sparkles, desc: "AI phân tích phát âm" },
   ] as const;
 
   return (
@@ -126,7 +128,10 @@ export default function SpeakingPage() {
               </span>
               <div className="relative z-10 min-w-0">
                 <span className="block font-bold text-[11px] uppercase tracking-wider whitespace-nowrap">
-                  {tab.id === "shadowing" ? "Shadowing" : tab.id === "roleplay" ? "Roleplay" : "Journal"}
+                  {tab.id === "shadowing" ? "Shadowing"
+                    : tab.id === "roleplay" ? "Roleplay"
+                    : tab.id === "journal" ? "Journal"
+                    : "Phoneme"}
                 </span>
                 <span className="hidden md:block text-[10px] text-muted-foreground font-normal truncate">
                   {tab.desc}
@@ -152,6 +157,7 @@ export default function SpeakingPage() {
               {activeTab === "shadowing" && <ShadowingPractice />}
               {activeTab === "roleplay" && <AIRoleplay />}
               {activeTab === "journal" && <JournalMode />}
+              {activeTab === "phoneme" && <PhonemeChecker />}
             </motion.div>
           </AnimatePresence>
         </div>
