@@ -437,6 +437,18 @@ export const unitA05: UnitData = {
       ],
       answer: "What is your nationality",
     },
+    {
+      id: "lac5-4",
+      audio_text: "I work as a teacher",
+      options: ["Tôi làm giáo viên", "Tôi làm bác sĩ", "Tôi làm kỹ sư", "Tôi làm y tá"],
+      answer: "Tôi làm giáo viên",
+    },
+    {
+      id: "lac5-5",
+      audio_text: "I am single and I live in Hanoi",
+      options: ["Tôi độc thân và tôi sống ở Hà Nội", "Tôi đã kết hôn và tôi sống ở Hà Nội", "Tôi độc thân và tôi sống ở Đà Nẵng", "Tôi độc thân và tôi sống ở Huế"],
+      answer: "Tôi độc thân và tôi sống ở Hà Nội",
+    },
   ],
 
   fluencyDrill: {

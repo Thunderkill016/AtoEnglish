@@ -435,6 +435,18 @@ export const unitA08: UnitData = {
       ],
       answer: "Are you safe and are you hurt",
     },
+    {
+      id: "lac8-4",
+      audio_text: "I feel sick I need a doctor",
+      options: ["Tôi cảm thấy ốm, tôi cần bác sĩ", "Tôi bị thương, tôi cần bác sĩ", "Tôi cảm thấy ốm, tôi cần cảnh sát", "Tôi bị lạc, tôi cần bác sĩ"],
+      answer: "Tôi cảm thấy ốm, tôi cần bác sĩ",
+    },
+    {
+      id: "lac8-5",
+      audio_text: "Be careful this road is dangerous",
+      options: ["Cẩn thận! Con đường này nguy hiểm.", "Cẩn thận! Con đường này rất dài.", "Cẩn thận! Khu vực này nguy hiểm.", "Dừng lại! Con đường này nguy hiểm."],
+      answer: "Cẩn thận! Con đường này nguy hiểm.",
+    },
   ],
 
   fluencyDrill: {

@@ -418,6 +418,18 @@ export const unitA03: UnitData = {
       ],
       answer: "I prefer the white one",
     },
+    {
+      id: "lac3-4",
+      audio_text: "Do you have this in green",
+      options: ["Bạn có cái này màu xanh lá không", "Bạn có cái này màu đỏ không", "Bạn có cái này màu đen không", "Bạn có cái này màu xanh dương không"],
+      answer: "Bạn có cái này màu xanh lá không",
+    },
+    {
+      id: "lac3-5",
+      audio_text: "The small black bag is beautiful",
+      options: ["Cái túi đen nhỏ rất đẹp", "Cái túi đen to rất đẹp", "Cái túi xanh nhỏ rất đẹp", "Cái áo đen nhỏ rất đẹp"],
+      answer: "Cái túi đen nhỏ rất đẹp",
+    },
   ],
 
   fluencyDrill: {

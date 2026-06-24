@@ -481,6 +481,18 @@ export const unitA01: UnitData = {
       ],
       answer: "Can you say that again please",
     },
+    {
+      id: "lac1-4",
+      audio_text: "I am from Vietnam",
+      options: ["Tôi đến từ Việt Nam", "Tôi đến từ Nhật Bản", "Tôi đến từ Hàn Quốc", "Tôi đến từ Thái Lan"],
+      answer: "Tôi đến từ Việt Nam",
+    },
+    {
+      id: "lac1-5",
+      audio_text: "I don't understand please say again",
+      options: ["Tôi không hiểu, làm ơn nói lại", "Tôi không thích, làm ơn nói lại", "Tôi không nghe thấy, làm ơn nói lại", "Tôi không biết, làm ơn hỏi lại"],
+      answer: "Tôi không hiểu, làm ơn nói lại",
+    },
   ],
 
   // ── SHADOWING: Fluency drill — key chunks from dialogue ──────────────────

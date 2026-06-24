@@ -417,6 +417,18 @@ export const unitA04: UnitData = {
       ],
       answer: "See you tomorrow take care",
     },
+    {
+      id: "lac4-4",
+      audio_text: "I am a little tired today",
+      options: ["Hôm nay tôi hơi mệt", "Hôm nay tôi rất bận", "Hôm nay tôi hơi buồn", "Hôm nay tôi rất vui"],
+      answer: "Hôm nay tôi hơi mệt",
+    },
+    {
+      id: "lac4-5",
+      audio_text: "Good morning how are you today",
+      options: ["Chào buổi sáng! Hôm nay bạn thế nào?", "Chào buổi chiều! Hôm nay bạn thế nào?", "Chào buổi tối! Hôm nay bạn thế nào?", "Chào buổi sáng! Tuần này bạn thế nào?"],
+      answer: "Chào buổi sáng! Hôm nay bạn thế nào?",
+    },
   ],
 
   fluencyDrill: {

@@ -428,6 +428,18 @@ export const unitA02: UnitData = {
       ],
       answer: "Can I pay by card",
     },
+    {
+      id: "lac2-4",
+      audio_text: "This is very cheap",
+      options: ["Cái này rất rẻ", "Cái này rất đắt", "Cái này rất đẹp", "Cái này rất to"],
+      answer: "Cái này rất rẻ",
+    },
+    {
+      id: "lac2-5",
+      audio_text: "Here is your change five dollars",
+      options: ["Đây là tiền thừa năm đô la", "Đây là tiền thừa mười đô la", "Đây là biên lai năm đô la", "Đây là tiền thừa mười lăm đô la"],
+      answer: "Đây là tiền thừa năm đô la",
+    },
   ],
 
   fluencyDrill: {

@@ -419,6 +419,18 @@ export const unitA07: UnitData = {
       ],
       answer: "Let me check my schedule",
     },
+    {
+      id: "lac7-4",
+      audio_text: "I am busy on Monday",
+      options: ["Tôi bận vào thứ Hai", "Tôi bận vào thứ Ba", "Tôi rảnh vào thứ Hai", "Tôi bận vào thứ Tư"],
+      answer: "Tôi bận vào thứ Hai",
+    },
+    {
+      id: "lac7-5",
+      audio_text: "Are you free in the afternoon on Friday",
+      options: ["Bạn rảnh chiều thứ Sáu không?", "Bạn rảnh sáng thứ Sáu không?", "Bạn rảnh chiều thứ Năm không?", "Bạn bận chiều thứ Sáu không?"],
+      answer: "Bạn rảnh chiều thứ Sáu không?",
+    },
   ],
 
   fluencyDrill: {

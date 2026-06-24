@@ -423,6 +423,18 @@ export const unitA06: UnitData = {
       ],
       answer: "I have one older brother",
     },
+    {
+      id: "lac6-4",
+      audio_text: "My sister is married her husband is a doctor",
+      options: ["Chị tôi đã kết hôn, chồng cô ấy là bác sĩ", "Chị tôi đã kết hôn, chồng cô ấy là giáo viên", "Em tôi đã kết hôn, chồng cô ấy là bác sĩ", "Chị tôi độc thân, bạn trai cô ấy là bác sĩ"],
+      answer: "Chị tôi đã kết hôn, chồng cô ấy là bác sĩ",
+    },
+    {
+      id: "lac6-5",
+      audio_text: "My family is very close we have four people",
+      options: ["Gia đình tôi rất thân thiết, chúng tôi có bốn người", "Gia đình tôi rất thân thiết, chúng tôi có ba người", "Gia đình tôi rất hạnh phúc, chúng tôi có bốn người", "Gia đình bạn rất thân thiết, chúng tôi có bốn người"],
+      answer: "Gia đình tôi rất thân thiết, chúng tôi có bốn người",
+    },
   ],
 
   fluencyDrill: {

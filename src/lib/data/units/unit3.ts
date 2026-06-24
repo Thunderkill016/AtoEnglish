@@ -198,6 +198,18 @@ export const unit3: UnitData = {
       audio_text: "This is her sister, Lucy.",
       options: ["Lucy là em trai cô ấy", "Lucy là chị gái cô ấy", "Lucy là bạn cô ấy", "Lucy là mẹ cô ấy"],
       answer: "Lucy là chị gái cô ấy"
+    },
+    {
+      id: "lc4",
+      audio_text: "My brother is a student.",
+      options: ["Anh trai tôi là học sinh", "Em trai tôi là bác sĩ", "Bố tôi là học sinh", "Anh trai tôi là giáo viên"],
+      answer: "Anh trai tôi là học sinh"
+    },
+    {
+      id: "lc5",
+      audio_text: "Her parents live in Ha Noi.",
+      options: ["Bố mẹ cô ấy sống ở Hà Nội", "Bố mẹ cô ấy sống ở Đà Nẵng", "Bạn bè cô ấy sống ở Hà Nội", "Bố mẹ anh ấy sống ở Hà Nội"],
+      answer: "Bố mẹ cô ấy sống ở Hà Nội"
     }
   ],
   speaking: {
