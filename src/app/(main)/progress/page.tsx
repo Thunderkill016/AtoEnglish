@@ -10,7 +10,7 @@ import ProgressClient from "./ProgressClient";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Tiến độ học tập",
+  title: "Tiến Độ Học Tập | AtoEnglish",
   description: "Xem tổng quan tiến độ học tiếng Anh: XP, streak, thẻ ôn tập và thành tích của bạn.",
   robots: { index: false },
 };

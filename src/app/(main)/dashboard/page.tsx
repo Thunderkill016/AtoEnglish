@@ -11,7 +11,7 @@ import { UNIT_VOCABULARY } from "@/lib/constants/vocabulary";
 import DashboardClient from "./components/DashboardClient";
 
 export const metadata: Metadata = {
-  title: "Dashboard",
+  title: "Dashboard | AtoEnglish",
   description: "Xem tiến độ học, streak, XP và tiếp tục bài học tiếng Anh của bạn.",
 };
 

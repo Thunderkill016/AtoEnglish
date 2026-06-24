@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import FlashcardsClient from "./FlashcardsClient";
 
 export const metadata: Metadata = {
-  title: "Ôn tập Flashcard",
+  title: "Ôn Tập Flashcard SRS | AtoEnglish",
   description: "Ôn tập từ vựng thông minh với thuật toán FSRS. Học đúng lúc, nhớ lâu hơn.",
   robots: { index: false },
 };

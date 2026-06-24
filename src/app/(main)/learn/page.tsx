@@ -7,7 +7,7 @@ import LearnClient from "./components/LearnClient";
 import { createClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = {
-  title: "Bài học",
+  title: "Bài Học | AtoEnglish",
   description: "Khám phá lộ trình học tiếng Anh A1–B2 với các bài học tương tác, từ vựng và luyện nói.",
 };
 
