@@ -50,6 +50,7 @@ export default function FlashcardsPage() {
   const router = useRouter();
   const [cramMode, setCramMode] = useState(false);
   const [reverseMode, setReverseMode] = useState(false);
+  const [difficultMode, setDifficultMode] = useState(false);
   // Track "Again" count per word to detect leeches (≥3 Agains in session)
   const [againCounts, setAgainCounts] = useState<Record<string, number>>({});
   const [topics, setTopics] = useState<string[]>([]);
@@ -69,7 +70,7 @@ export default function FlashcardsPage() {
   }, []);
 
   // Fetch thẻ đến hạn từ Supabase
-  const fetchCards = async (cram = cramMode, topic = selectedTopic) => {
+  const fetchCards = async (cram = cramMode, topic = selectedTopic, difficult = difficultMode) => {
     setIsLoading(true);
     try {
       let maxNewCards: number | undefined;
@@ -85,11 +86,11 @@ export default function FlashcardsPage() {
         // ignore
       }
 
-      const res = cram
+      const res = (cram || difficult)
         ? await getAllCards(topic !== "all" ? topic : undefined)
         : await getDueCards(maxNewCards);
       if (res.success && res.cards) {
-        const mappedCards: Flashcard[] = res.cards.map((c) => ({
+        let mappedCards: Flashcard[] = res.cards.map((c) => ({
           id: c.id,
           word: c.word,
           phonetic: c.phonetic || "",
@@ -103,6 +104,10 @@ export default function FlashcardsPage() {
           difficulty: c.difficulty,
           state: c.state,
         }));
+        // Difficult mode: filter cards with FSRS stability < 2 days
+        if (difficult) {
+          mappedCards = mappedCards.filter(c => (c.stability ?? 999) < 2);
+        }
         setCards(mappedCards);
       } else {
         toast.error(res.error || "Không thể tải thẻ ôn tập.");
@@ -211,12 +216,25 @@ export default function FlashcardsPage() {
   const handleToggleCram = () => {
     const next = !cramMode;
     setCramMode(next);
+    if (next) setDifficultMode(false); // mutually exclusive
     setCurrentIndex(0);
     setIsFlipped(false);
     setShowFinished(false);
     setResponseLog([]);
     x.set(0);
-    fetchCards(next, selectedTopic);
+    fetchCards(next, selectedTopic, false);
+  };
+
+  const handleToggleDifficult = () => {
+    const next = !difficultMode;
+    setDifficultMode(next);
+    if (next) setCramMode(false); // mutually exclusive
+    setCurrentIndex(0);
+    setIsFlipped(false);
+    setShowFinished(false);
+    setResponseLog([]);
+    x.set(0);
+    fetchCards(false, selectedTopic, next);
   };
 
   const handleTopicChange = (topic: string) => {
@@ -335,6 +353,18 @@ export default function FlashcardsPage() {
             >
               <Zap className="size-3.5" />
               {cramMode ? "Cram Mode: ON" : "Cram Mode"}
+            </button>
+            {/* Difficult Words Toggle */}
+            <button
+              onClick={handleToggleDifficult}
+              className={`flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-xl border transition-all duration-200 ${
+                difficultMode
+                  ? "bg-red-500/10 border-red-500/30 text-red-500"
+                  : "bg-muted border-border/40 text-muted-foreground hover:border-red-500/30"
+              }`}
+            >
+              <Filter className="size-3.5" />
+              {difficultMode ? "⚠️ Từ Khó: ON" : "Từ Khó"}
             </button>
             {/* Reverse Mode Toggle */}
             <button

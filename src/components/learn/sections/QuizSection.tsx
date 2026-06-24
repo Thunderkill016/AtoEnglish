@@ -1,11 +1,12 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { Trophy, Star, CheckCircle, Volume2, ChevronRight } from "lucide-react";
 import { toast } from "sonner";
 import type { UnitData, QuizQuestion } from "../UnitTemplate";
+import { ReadingComprehensionExercise } from "@/components/exercises/ReadingComprehensionExercise";
 
 interface QuizSectionProps {
   unit: UnitData;
@@ -111,6 +112,10 @@ export default function QuizSection({
   nextRoute,
 }: QuizSectionProps) {
   const FINAL_QS = unit.quiz;
+
+  // Reading comprehension state
+  const hasReading = !!unit.readingPassage;
+  const [readingDone, setReadingDone] = useState(!hasReading);
 
   const pickEnglishVoice = () => {
     if (typeof window === "undefined") return null;
@@ -537,6 +542,19 @@ export default function QuizSection({
             </div>
           )}
 
+          {/* Reading Comprehension — shown after quiz submitted */}
+          {hasReading && unit.readingPassage && (
+            <div className="bg-blue-950/20 border border-blue-700/30 rounded-2xl p-5">
+              <ReadingComprehensionExercise
+                passage={unit.readingPassage}
+                onComplete={(score, total) => {
+                  setReadingDone(true);
+                  if (score >= Math.ceil(total * 0.75)) playCorrectSound();
+                }}
+              />
+            </div>
+          )}
+
           {/* Progress Summary */}
           <div className="bg-gradient-to-b from-zinc-900/70 to-zinc-950/70 border border-zinc-700/50 rounded-2xl p-5 shadow-md">
             <p className="text-sm font-bold text-white mb-3">📊 Kết quả học tập</p>
@@ -651,10 +669,14 @@ export default function QuizSection({
           {!isCompleted ? (
             <button
               onClick={handleCompleteUnit}
-              disabled={isSubmitting}
+              disabled={isSubmitting || !readingDone}
               className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 disabled:opacity-60 text-white font-black rounded-2xl px-6 py-5 flex items-center justify-center gap-3 transition-all duration-200 text-lg shadow-lg shadow-emerald-900/40 active:scale-95"
             >
-              {isSubmitting ? "Đang lưu..." : `🎉 Hoàn thành bài học (+${xpToEarn} XP)`}
+              {isSubmitting
+                ? "Đang lưu..."
+                : !readingDone
+                ? "Hoàn thành Đọc hiểu để tiếp tục ↑"
+                : `🎉 Hoàn thành bài học (+${xpToEarn} XP)`}
             </button>
           ) : (
             <div className="text-center">

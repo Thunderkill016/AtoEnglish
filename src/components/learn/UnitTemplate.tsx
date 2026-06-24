@@ -20,6 +20,7 @@ import SpeakingSection from "./sections/SpeakingSection";
 import QuizSection from "./sections/QuizSection";
 import TranslateSection from "./sections/TranslateSection";
 import FluencySection from "./sections/FluencySection";
+import type { ReadingPassage } from "@/components/exercises/ReadingComprehensionExercise";
 
 // ─── Section order & labels (10 steps, Hybrid pedagogical flow) ───────────────
 const SECTION_LABELS: Record<number, string> = {
@@ -204,6 +205,7 @@ export interface UnitData {
   learningOutcomes?: string[];
   pronunciationFocus?: PronunciationFocus;
   fluencyDrill?: FluencyDrill;
+  readingPassage?: ReadingPassage; // Optional reading comprehension (A2+)
 }
 
 interface UnitTemplateProps {

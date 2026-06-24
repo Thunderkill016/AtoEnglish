@@ -219,6 +219,48 @@ export const unit2: UnitData = {
       { en: "Are you married?", vn: "Bạn đã kết hôn chưa?" },
     ],
   },
+
+  readingPassage: {
+    id: "unit2-reading-1",
+    title: "My Name is Lan",
+    title_vn: "Đọc đoạn giới thiệu bản thân",
+    level: "A1",
+    text:
+      "Hi! My name is Lan. I am twenty-five years old. I am from Hanoi, Vietnam. " +
+      "I am a teacher. I work at a school in the city. " +
+      "My friend is Nam. He is a doctor. He works at a hospital. " +
+      "We are happy to meet you!",
+    questions: [
+      {
+        id: "u2r-q1",
+        question_vn: "Lan bao nhiêu tuổi?",
+        options: ["Twenty years old", "Twenty-five years old", "Thirty years old", "Fifteen years old"],
+        answer: "Twenty-five years old",
+        explanation_vn: "Đoạn văn nói 'I am twenty-five years old.'",
+      },
+      {
+        id: "u2r-q2",
+        question_vn: "Lan làm nghề gì?",
+        options: ["A doctor", "A nurse", "A teacher", "An engineer"],
+        answer: "A teacher",
+        explanation_vn: "Đoạn văn nói 'I am a teacher. I work at a school.'",
+      },
+      {
+        id: "u2r-q3",
+        question_vn: "Nam làm việc ở đâu?",
+        options: ["At a school", "At a bank", "At a hospital", "At an office"],
+        answer: "At a hospital",
+        explanation_vn: "Đoạn văn nói 'He works at a hospital.'",
+      },
+      {
+        id: "u2r-q4",
+        question_vn: "Lan đến từ đâu?",
+        options: ["Ho Chi Minh City", "Hanoi", "Da Nang", "Hue"],
+        answer: "Hanoi",
+        explanation_vn: "Đoạn văn nói 'I am from Hanoi, Vietnam.'",
+      },
+    ],
+  },
 };
 
 export default unit2;
