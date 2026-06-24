@@ -282,6 +282,7 @@ export const unit40: UnitData = {
       },
     ],
   },
+  shadowingVideoId: "wBBJk2E8UYU",
 };
 
 export default unit40;

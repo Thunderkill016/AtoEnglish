@@ -297,6 +297,7 @@ export const unit6: UnitData = {
       },
     ],
   },
+  shadowingVideoId: "nVl6E0NRSA0",
 };
 
 export default unit6;

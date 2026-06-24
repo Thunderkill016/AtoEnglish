@@ -351,6 +351,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
   const [isCompleted, setIsCompleted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [miniSession, setMiniSession] = useState(false);
+  const [sessionBreak, setSessionBreak] = useState(false); // mid-lesson break after Practice
   const [completionData, setCompletionData] = useState<CompletionData | null>(null);
 
   // S2-3: Live in-lesson XP counter (Duolingo real-time reinforcement)
@@ -496,27 +497,35 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
 
   const pickEnglishVoice = () => {
     const voices = window.speechSynthesis.getVoices();
+    // Prefer high-quality voices: Google UK Female > Microsoft Aria > Google US > any en
     return (
+      voices.find((v) => v.lang === "en-GB" && v.name.toLowerCase().includes("female")) ??
+      voices.find((v) => v.name.includes("Google UK English Female")) ??
+      voices.find((v) => v.name.includes("Microsoft Aria")) ??
+      voices.find((v) => v.name.includes("Microsoft Zira")) ??
       voices.find((v) => v.lang === "en-US" && v.name.includes("Google")) ??
+      voices.find((v) => v.lang === "en-US" && v.name.toLowerCase().includes("female")) ??
       voices.find((v) => v.lang === "en-US") ??
       voices.find((v) => v.lang.startsWith("en")) ??
       null
     );
   };
 
+  // Standard TTS (sentences, phrases — rate 0.85)
   const playTTS = (text: string, rate = 0.85) => {
-    if (!window.speechSynthesis) {
-      toast.error("Trình duyệt không hỗ trợ TTS");
-      return;
-    }
+    if (!window.speechSynthesis) return;
     window.speechSynthesis.cancel();
     const u = new SpeechSynthesisUtterance(text);
     u.lang = "en-US";
     u.rate = rate;
+    u.pitch = 1.05; // slight lift — clearer for non-native listeners
     const voice = pickEnglishVoice();
     if (voice) u.voice = voice;
     window.speechSynthesis.speak(u);
   };
+
+  // Slow TTS for individual vocabulary words (rate 0.7 — matches ELSA model speed)
+  const playTTSSlow = (word: string) => playTTS(word, 0.7);
 
   const goNext = () => {
     window.speechSynthesis?.cancel();
@@ -526,6 +535,13 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
       window.scrollTo({ top: 0, behavior: "smooth" });
       return;
     }
+    // Session-break checkpoint — show break card after Practice before Dialogue
+    if (section === 4 && !sessionBreak) {
+      setSessionBreak(true);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+    setSessionBreak(false);
     const idx = SECTION_ORDER.indexOf(section as SectionNumber);
     const nextSection = SECTION_ORDER[Math.min(idx + 1, SECTION_ORDER.length - 1)];
     setSection(nextSection);
@@ -890,7 +906,67 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
       {/* Main Content Area */}
       <div className="max-w-3xl mx-auto px-4 py-4 sm:py-8 pb-24">
         <AnimatePresence mode="wait">
-          {section === 1 && (
+
+          {/* ── Session Break Card (between Practice and Dialogue) ── */}
+          {sessionBreak && (
+            <motion.div
+              key="session-break"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0 }}
+              className="rounded-3xl border border-emerald-500/20 bg-gradient-to-b from-emerald-500/8 to-teal-500/5 p-6 sm:p-8 space-y-6 text-center"
+            >
+              {/* Congrats badge */}
+              <div className="flex size-16 mx-auto items-center justify-center rounded-2xl bg-emerald-500/10 text-3xl">
+                ☕
+              </div>
+              <div>
+                <p className="text-xs font-black text-emerald-500 uppercase tracking-widest mb-1">Phần 1 hoàn thành!</p>
+                <h3 className="text-lg sm:text-xl font-black text-zinc-900 dark:text-zinc-50 leading-tight">
+                  Bạn đã học xong ~15 phút đầu tiên
+                </h3>
+                <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1.5 max-w-sm mx-auto">
+                  Nghỉ ngơi hoặc tiếp tục ngay Phần 2 — Hội thoại, Shadowing, Luyện nói và Hoàn thành.
+                </p>
+              </div>
+
+              {/* Part 1 recap */}
+              <div className="flex flex-wrap justify-center gap-2">
+                {["✅ Khởi động", "✅ Từ vựng", "✅ Ngữ pháp", "✅ Luyện tập"].map((s) => (
+                  <span key={s} className="text-xs font-bold px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-700 dark:text-emerald-400">
+                    {s}
+                  </span>
+                ))}
+              </div>
+              {/* Part 2 preview */}
+              <div className="flex flex-wrap justify-center gap-2">
+                {["⏳ Hội thoại", "⏳ Phản xạ", "⏳ Dịch câu", "⏳ Shadowing", "⏳ Luyện nói", "⏳ Quiz"].map((s) => (
+                  <span key={s} className="text-xs font-bold px-3 py-1.5 rounded-full bg-zinc-100 dark:bg-zinc-800/60 border border-zinc-200/60 dark:border-zinc-700/40 text-zinc-500">
+                    {s}
+                  </span>
+                ))}
+              </div>
+
+              {/* CTAs */}
+              <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                <button
+                  onClick={goNext}
+                  className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-6 py-3 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-black text-sm shadow-lg shadow-emerald-900/20 transition-all"
+                >
+                  Tiếp tục Phần 2 →
+                </button>
+                <a
+                  href="/dashboard"
+                  className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-6 py-3 rounded-2xl border border-zinc-200/60 dark:border-zinc-700/60 text-zinc-600 dark:text-zinc-400 font-bold text-sm hover:border-zinc-300 dark:hover:border-zinc-600 transition-all"
+                >
+                  💾 Lưu và nghỉ ngơi
+                </a>
+              </div>
+              <p className="text-[11px] text-zinc-400">Tiến độ tự động được lưu — quay lại lúc nào cũng được</p>
+            </motion.div>
+          )}
+
+          {section === 1 && !sessionBreak && (
             <WarmupSection
               unit={normalizedUnit}
               sectionOrderIdx={sectionOrderIdx}
@@ -907,12 +983,12 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
             />
           )}
 
-          {section === 2 && (
+          {section === 2 && !sessionBreak && (
             <VocabSection
               unit={normalizedUnit}
               sectionOrderIdx={sectionOrderIdx}
               TOTAL_SECTIONS={TOTAL_SECTIONS}
-              playTTS={playTTS}
+              playTTS={playTTSSlow}
               seenCards={seenCards}
               setSeenCards={setSeenCards}
               flippedCards={flippedCards}
@@ -922,7 +998,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
             />
           )}
 
-          {section === 3 && (
+          {section === 3 && !sessionBreak && (
             <GrammarSection
               unit={normalizedUnit}
               sectionOrderIdx={sectionOrderIdx}
@@ -938,7 +1014,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
             />
           )}
 
-          {section === 4 && (
+          {section === 4 && !sessionBreak && (
             <PracticeSection
               unit={normalizedUnit}
               sectionOrderIdx={sectionOrderIdx}
@@ -950,7 +1026,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
             />
           )}
 
-          {section === 5 && (
+          {section === 5 && !sessionBreak && (
             <DialogueSection
               unit={normalizedUnit}
               sectionOrderIdx={sectionOrderIdx}
@@ -964,7 +1040,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
             />
           )}
 
-          {section === 10 && (
+          {section === 10 && !sessionBreak && (
             <FluencySection
               unit={normalizedUnit}
               sectionOrderIdx={sectionOrderIdx}
@@ -973,7 +1049,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
             />
           )}
 
-          {section === 9 && (
+          {section === 9 && !sessionBreak && (
             <TranslateSection
               unit={normalizedUnit}
               sectionOrderIdx={sectionOrderIdx}
@@ -982,7 +1058,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
             />
           )}
 
-          {section === 6 && (
+          {section === 6 && !sessionBreak && (
             <>
               {normalizedUnit.shadowingVideoId && (
                 <VideoShadowingCard videoId={normalizedUnit.shadowingVideoId} />
@@ -1001,7 +1077,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
             </>
           )}
 
-          {section === 7 && (
+          {section === 7 && !sessionBreak && (
             <SpeakingSection
               unit={normalizedUnit}
               sectionOrderIdx={sectionOrderIdx}
@@ -1011,7 +1087,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
             />
           )}
 
-          {section === 8 && (
+          {section === 8 && !sessionBreak && (
             <QuizSection
               unit={normalizedUnit}
               sectionOrderIdx={sectionOrderIdx}
