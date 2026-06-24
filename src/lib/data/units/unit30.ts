@@ -119,6 +119,35 @@ export const unit30: UnitData = {
       { left: "sustainable", right: "bền vững" },
     ],
   },
+  practiceTranslate: [
+    {
+      id: "pt-1",
+      prompt_vn: "Việc giảm thiểu lượng khí thải nhà kính là cực kỳ quan trọng.",
+      answer: "It is crucial to reduce greenhouse gas emissions.",
+    },
+  ],
+
+  wordBankExercises: [
+    {
+      id: "wb1",
+      prompt_vn: "Bảo vệ tài nguyên thiên nhiên là vô cùng thiết yếu.",
+      words: ["It", "is", "essential", "to", "protect", "natural", "resources", ".", "would", "could"],
+      answer: "It is essential to protect natural resources .",
+    },
+    {
+      id: "wb2",
+      prompt_vn: "Biến đổi khí hậu đang đe dọa hệ sinh thái biển.",
+      words: ["Climate", "change", "is", "threatening", "the", "marine", "ecosystem", ".", "would", "could"],
+      answer: "Climate change is threatening the marine ecosystem .",
+    },
+    {
+      id: "wb3",
+      prompt_vn: "Thực phẩm hữu cơ ngày càng trở nên phổ biến.",
+      words: ["Organic", "food", "is", "becoming", "more", "popular", "nowadays", ".", "would", "could"],
+      answer: "Organic food is becoming more popular nowadays .",
+    },
+  ],
+
   scrambleExercises: [
     { id: "s30-1", prompt_vn: "Bảo vệ tài nguyên thiên nhiên là vô cùng thiết yếu.", words: ["It", "is", "essential", "to", "protect", "natural", "resources", "."], answer: "It is essential to protect natural resources ." },
     { id: "s30-2", prompt_vn: "Biến đổi khí hậu đang đe dọa hệ sinh thái biển.", words: ["Climate", "change", "is", "threatening", "the", "marine", "ecosystem", "."], answer: "Climate change is threatening the marine ecosystem ." },

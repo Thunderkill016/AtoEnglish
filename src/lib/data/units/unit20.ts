@@ -141,6 +141,35 @@ export const unit20: UnitData = {
     ],
   },
 
+  practiceTranslate: [
+    {
+      id: "pt-1",
+      prompt_vn: "Khi chúng tôi nghe tin, thỏa thuận đã được ký rồi.",
+      answer: "When we heard the news, the deal had already been signed.",
+    },
+  ],
+
+  wordBankExercises: [
+    {
+      id: "wb1",
+      prompt_vn: "Khi tôi đến, cuộc họp đã bắt đầu rồi.",
+      words: ["When", "I", "arrived", ",", "the", "meeting", "had", "already", "started", ".", "would", "could"],
+      answer: "When I arrived , the meeting had already started .",
+    },
+    {
+      id: "wb2",
+      prompt_vn: "Công ty đã công bố kết quả trước khi thị trường mở cửa.",
+      words: ["The", "company", "had", "announced", "the", "results", "before", "the", "market", "opened", ".", "would", "could"],
+      answer: "The company had announced the results before the market opened .",
+    },
+    {
+      id: "wb3",
+      prompt_vn: "Đến năm 2024, họ đã mua lại ba công ty nhỏ hơn.",
+      words: ["By", "2024", ",", "they", "had", "acquired", "three", "smaller", "companies", ".", "would", "could"],
+      answer: "By 2024 , they had acquired three smaller companies .",
+    },
+  ],
+
   scrambleExercises: [
     { id: "s20-1", prompt_vn: "Khi tôi đến, cuộc họp đã bắt đầu rồi.", words: ["When", "I", "arrived", ",", "the", "meeting", "had", "already", "started", "."], answer: "When I arrived , the meeting had already started ." },
     { id: "s20-2", prompt_vn: "Công ty đã công bố kết quả trước khi thị trường mở cửa.", words: ["The", "company", "had", "announced", "the", "results", "before", "the", "market", "opened", "."], answer: "The company had announced the results before the market opened ." },

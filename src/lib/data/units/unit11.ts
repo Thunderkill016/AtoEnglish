@@ -131,6 +131,27 @@ export const unit11: UnitData = {
     { id: "q6", question: "Tôi bị đau đầu và cảm thấy mệt.", options: [], answer: "I have a headache and I feel tired.", type: "translate" },
     { id: "q7", question: "Bạn nên nghỉ ngơi khi bạn bị ốm.", options: [], answer: "You should rest when you are sick.", type: "translate" },
   ],
+  wordBankExercises: [
+    {
+      id: "wb1",
+      prompt_vn: "Tôi bị sốt và đau đầu.",
+      words: ["I", "have", "a", "fever", "and", "a", "headache", ".", "was", "were"],
+      answer: "I have a fever and a headache .",
+    },
+    {
+      id: "wb2",
+      prompt_vn: "Cô ấy cảm thấy mệt sau khi làm việc.",
+      words: ["She", "feels", "tired", "after", "work", ".", "was", "were"],
+      answer: "She feels tired after work .",
+    },
+    {
+      id: "wb3",
+      prompt_vn: "Bạn nên uống thuốc và nghỉ ngơi.",
+      words: ["You", "should", "take", "medicine", "and", "rest", ".", "was", "were"],
+      answer: "You should take medicine and rest .",
+    },
+  ],
+
   scrambleExercises: [
     {
       id: "s11-1",

@@ -125,6 +125,35 @@ export const unit17: UnitData = {
     ],
   },
 
+  practiceTranslate: [
+    {
+      id: "pt-1",
+      prompt_vn: "Tôi đã làm việc với khách hàng nước ngoài được ba năm.",
+      answer: "I've worked with foreign clients for three years.",
+    },
+  ],
+
+  wordBankExercises: [
+    {
+      id: "wb1",
+      prompt_vn: "Bạn đã từng đến Nhật Bản chưa?",
+      words: ["Have", "you", "ever", "been", "to", "Japan", "?", "have", "has"],
+      answer: "Have you ever been to Japan ?",
+    },
+    {
+      id: "wb2",
+      prompt_vn: "Tôi vừa mới gửi báo cáo xong.",
+      words: ["I", "have", "just", "sent", "the", "report", ".", "has"],
+      answer: "I have just sent the report .",
+    },
+    {
+      id: "wb3",
+      prompt_vn: "Cô ấy đã làm việc ở đây từ năm 2020.",
+      words: ["She", "has", "worked", "here", "since", "2020", ".", "have"],
+      answer: "She has worked here since 2020 .",
+    },
+  ],
+
   scrambleExercises: [
     {
       id: "s17-1",

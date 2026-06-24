@@ -119,6 +119,27 @@ export const unit38: UnitData = {
       { left: "counter", right: "phản bác / chống lại" },
     ],
   },
+  wordBankExercises: [
+    {
+      id: "wb1",
+      prompt_vn: "Chính là Huy đã giải quyết vụ sập máy chủ hôm qua.",
+      words: ["It", "was", "Huy", "who", "resolved", "the", "server", "crash", "yesterday", ".", "might", "should"],
+      answer: "It was Huy who resolved the server crash yesterday .",
+    },
+    {
+      id: "wb2",
+      prompt_vn: "Hiếm khi chúng tôi thấy kết quả xuất sắc như vậy.",
+      words: ["Rarely", "do", "we", "see", "such", "excellent", "results", ".", "might", "should"],
+      answer: "Rarely do we see such excellent results .",
+    },
+    {
+      id: "wb3",
+      prompt_vn: "Điều chúng tôi muốn thay đổi là chiến lược tiếp thị.",
+      words: ["What", "we", "want", "to", "change", "is", "the", "marketing", "strategy", ".", "might", "should"],
+      answer: "What we want to change is the marketing strategy .",
+    },
+  ],
+
   scrambleExercises: [
     { id: "s38-1", prompt_vn: "Chính là Huy đã giải quyết vụ sập máy chủ hôm qua.", words: ["It", "was", "Huy", "who", "resolved", "the", "server", "crash", "yesterday", "."], answer: "It was Huy who resolved the server crash yesterday ." },
     { id: "s38-2", prompt_vn: "Hiếm khi chúng tôi thấy kết quả xuất sắc như vậy.", words: ["Rarely", "do", "we", "see", "such", "excellent", "results", "."], answer: "Rarely do we see such excellent results ." },

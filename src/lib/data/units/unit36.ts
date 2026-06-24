@@ -119,6 +119,27 @@ export const unit36: UnitData = {
       { left: "conduct", right: "tiến hành / thực hiện" },
     ],
   },
+  wordBankExercises: [
+    {
+      id: "wb1",
+      prompt_vn: "Thí nghiệm được khẳng định là đã thành công.",
+      words: ["The", "experiment", "is", "claimed", "to", "have", "been", "successful", ".", "might", "should"],
+      answer: "The experiment is claimed to have been successful .",
+    },
+    {
+      id: "wb2",
+      prompt_vn: "Biểu đồ minh họa sự tăng trưởng trong doanh thu.",
+      words: ["The", "chart", "illustrates", "the", "growth", "in", "revenue", ".", "might", "should"],
+      answer: "The chart illustrates the growth in revenue .",
+    },
+    {
+      id: "wb3",
+      prompt_vn: "Các nhà khoa học đã tiến hành một nghiên cứu về giấc ngủ.",
+      words: ["Scientists", "conducted", "a", "study", "on", "sleep", "deprivation", ".", "might", "should"],
+      answer: "Scientists conducted a study on sleep deprivation .",
+    },
+  ],
+
   scrambleExercises: [
     { id: "s36-1", prompt_vn: "Thí nghiệm được khẳng định là đã thành công.", words: ["The", "experiment", "is", "claimed", "to", "have", "been", "successful", "."], answer: "The experiment is claimed to have been successful ." },
     { id: "s36-2", prompt_vn: "Biểu đồ minh họa sự tăng trưởng trong doanh thu.", words: ["The", "chart", "illustrates", "the", "growth", "in", "revenue", "."], answer: "The chart illustrates the growth in revenue ." },

@@ -120,6 +120,27 @@ export const unit35: UnitData = {
       { left: "negotiate", right: "đàm phán" },
     ],
   },
+  wordBankExercises: [
+    {
+      id: "wb1",
+      prompt_vn: "Chúng tôi sẽ không ký hợp đồng trừ khi họ giảm phạt.",
+      words: ["We", "will", "not", "sign", "the", "contract", "unless", "they", "reduce", "the", "penalty", ".", "might", "should"],
+      answer: "We will not sign the contract unless they reduce the penalty .",
+    },
+    {
+      id: "wb2",
+      prompt_vn: "Miễn là bạn tuân thủ luật pháp, bạn sẽ an toàn.",
+      words: ["As", "long", "as", "you", "are", "in", "compliance", "with", "the", "law", ",", "you", "will", "be", "safe", ".", "might", "should"],
+      answer: "As long as you are in compliance with the law , you will be safe .",
+    },
+    {
+      id: "wb3",
+      prompt_vn: "Nếu tôi đã nhận công việc đó, giờ tôi đang ở Luân Đôn.",
+      words: ["If", "I", "had", "taken", "that", "job", ",", "I", "would", "be", "in", "London", "now", ".", "might", "should"],
+      answer: "If I had taken that job , I would be in London now .",
+    },
+  ],
+
   scrambleExercises: [
     { id: "s35-1", prompt_vn: "Chúng tôi sẽ không ký hợp đồng trừ khi họ giảm phạt.", words: ["We", "will", "not", "sign", "the", "contract", "unless", "they", "reduce", "the", "penalty", "."], answer: "We will not sign the contract unless they reduce the penalty ." },
     { id: "s35-2", prompt_vn: "Miễn là bạn tuân thủ luật pháp, bạn sẽ an toàn.", words: ["As", "long", "as", "you", "are", "in", "compliance", "with", "the", "law", ",", "you", "will", "be", "safe", "."], answer: "As long as you are in compliance with the law , you will be safe ." },

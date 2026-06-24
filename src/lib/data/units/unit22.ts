@@ -121,6 +121,35 @@ export const unit22: UnitData = {
       { left: "don't have to", right: "không bắt buộc" },
     ],
   },
+  practiceTranslate: [
+    {
+      id: "pt-1",
+      prompt_vn: "Nhân viên phải tuân thủ chính sách bảo mật của công ty.",
+      answer: "Employees must comply with the company's data policy.",
+    },
+  ],
+
+  wordBankExercises: [
+    {
+      id: "wb1",
+      prompt_vn: "Bạn phải đeo thẻ ID mọi lúc trong tòa nhà.",
+      words: ["You", "must", "wear", "your", "ID", "badge", "at", "all", "times", "in", "the", "building", ".", "would", "could"],
+      answer: "You must wear your ID badge at all times in the building .",
+    },
+    {
+      id: "wb2",
+      prompt_vn: "Bạn không được chia sẻ mật khẩu với ai.",
+      words: ["You", "mustn't", "share", "your", "password", "with", "anyone", ".", "would", "could"],
+      answer: "You mustn't share your password with anyone .",
+    },
+    {
+      id: "wb3",
+      prompt_vn: "Bạn không cần làm thêm giờ trừ khi có deadline gấp.",
+      words: ["You", "don't", "have", "to", "work", "overtime", "unless", "there", "is", "an", "urgent", "deadline", ".", "would", "could"],
+      answer: "You don't have to work overtime unless there is an urgent deadline .",
+    },
+  ],
+
   scrambleExercises: [
     { id: "s22-1", prompt_vn: "Bạn phải đeo thẻ ID mọi lúc trong tòa nhà.", words: ["You", "must", "wear", "your", "ID", "badge", "at", "all", "times", "in", "the", "building", "."], answer: "You must wear your ID badge at all times in the building ." },
     { id: "s22-2", prompt_vn: "Bạn không được chia sẻ mật khẩu với ai.", words: ["You", "mustn't", "share", "your", "password", "with", "anyone", "."], answer: "You mustn't share your password with anyone ." },

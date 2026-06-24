@@ -121,6 +121,35 @@ export const unit23: UnitData = {
       { left: "proposal", right: "đề xuất" },
     ],
   },
+  practiceTranslate: [
+    {
+      id: "pt-1",
+      prompt_vn: "Nếu bạn đặt hàng trước thứ Sáu, chúng tôi sẽ giao hàng miễn phí.",
+      answer: "If you order before Friday, we will deliver for free.",
+    },
+  ],
+
+  wordBankExercises: [
+    {
+      id: "wb1",
+      prompt_vn: "Nếu bạn tăng đơn hàng, chúng tôi sẽ đưa ra giá tốt hơn.",
+      words: ["If", "you", "increase", "the", "order", ",", "we", "will", "offer", "a", "better", "price", ".", "would", "could"],
+      answer: "If you increase the order , we will offer a better price .",
+    },
+    {
+      id: "wb2",
+      prompt_vn: "Trừ khi bạn xác nhận trước thứ Năm, chúng tôi không thể tiến hành.",
+      words: ["Unless", "you", "confirm", "by", "Thursday", ",", "we", "cannot", "proceed", ".", "would", "could"],
+      answer: "Unless you confirm by Thursday , we cannot proceed .",
+    },
+    {
+      id: "wb3",
+      prompt_vn: "Nếu bạn ký hôm nay, tôi sẽ gửi hợp đồng tối nay.",
+      words: ["If", "you", "sign", "today", ",", "I", "will", "send", "the", "contract", "tonight", ".", "would", "could"],
+      answer: "If you sign today , I will send the contract tonight .",
+    },
+  ],
+
   scrambleExercises: [
     { id: "s23-1", prompt_vn: "Nếu bạn tăng đơn hàng, chúng tôi sẽ đưa ra giá tốt hơn.", words: ["If", "you", "increase", "the", "order", ",", "we", "will", "offer", "a", "better", "price", "."], answer: "If you increase the order , we will offer a better price ." },
     { id: "s23-2", prompt_vn: "Trừ khi bạn xác nhận trước thứ Năm, chúng tôi không thể tiến hành.", words: ["Unless", "you", "confirm", "by", "Thursday", ",", "we", "cannot", "proceed", "."], answer: "Unless you confirm by Thursday , we cannot proceed ." },

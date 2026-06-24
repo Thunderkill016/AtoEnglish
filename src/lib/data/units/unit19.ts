@@ -453,6 +453,35 @@ export const unit19: UnitData = {
     ],
   },
 
+  practiceTranslate: [
+    {
+      id: "pt-1",
+      prompt_vn: "Trong khi tôi đang thuyết trình, sếp bước vào phòng.",
+      answer: "While I was presenting, the boss walked into the room.",
+    },
+  ],
+
+  wordBankExercises: [
+    {
+      id: "wb1",
+      prompt_vn: "Tôi đang viết báo cáo thì máy tính bị sập.",
+      words: ["I", "was", "writing", "the", "report", "when", "my", "computer", "crashed", ".", "would", "could"],
+      answer: "I was writing the report when my computer crashed .",
+    },
+    {
+      id: "wb2",
+      prompt_vn: "Trong khi nhóm IT đang sửa server, tôi đang gọi điện.",
+      words: ["While", "the", "IT", "team", "was", "fixing", "the", "server", ",", "I", "was", "calling", "the", "client", ".", "would", "could"],
+      answer: "While the IT team was fixing the server , I was calling the client .",
+    },
+    {
+      id: "wb3",
+      prompt_vn: "May mắn thay, chúng tôi khôi phục được mọi dữ liệu.",
+      words: ["Fortunately", ",", "we", "managed", "to", "recover", "all", "the", "data", ".", "would", "could"],
+      answer: "Fortunately , we managed to recover all the data .",
+    },
+  ],
+
   scrambleExercises: [
     {
       id: "s19-1",

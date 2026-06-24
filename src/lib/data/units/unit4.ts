@@ -150,6 +150,27 @@ export const unit4: UnitData = {
     { id: "q6", question: "Tôi thức dậy lúc 7 giờ sáng mỗi ngày.", options: [], answer: "I wake up at seven every morning.", type: "translate" },
     { id: "q7", question: "Cô ấy đi làm bằng xe buýt.", options: [], answer: "She goes to work by bus.", type: "translate" },
   ],
+  wordBankExercises: [
+    {
+      id: "wb1",
+      prompt_vn: "Tôi thức dậy lúc 7 giờ.",
+      words: ["I", "wake", "up", "at", "seven", ".", "was", "were"],
+      answer: "I wake up at seven .",
+    },
+    {
+      id: "wb2",
+      prompt_vn: "Cô ấy đánh răng mỗi buổi sáng.",
+      words: ["She", "brushes", "her", "teeth", "every", "morning", ".", "was", "were"],
+      answer: "She brushes her teeth every morning .",
+    },
+    {
+      id: "wb3",
+      prompt_vn: "Anh ấy ăn sáng trước khi đi làm.",
+      words: ["He", "eats", "breakfast", "before", "work", ".", "was", "were"],
+      answer: "He eats breakfast before work .",
+    },
+  ],
+
   scrambleExercises: [
     {
       id: "s4-1",

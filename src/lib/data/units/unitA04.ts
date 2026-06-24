@@ -282,6 +282,27 @@ export const unitA04: UnitData = {
     },
   ],
 
+  wordBankExercises: [
+    {
+      id: "wb1",
+      prompt_vn: "Hôm nay bạn thế nào?",
+      words: ["How", "are", "you", "today", "?", "is"],
+      answer: "How are you today ?",
+    },
+    {
+      id: "wb2",
+      prompt_vn: "Tôi tuyệt lắm, cảm ơn! Còn bạn?",
+      words: ["I'm", "great,", "thanks!", "And", "you", "?", "is", "are"],
+      answer: "I'm great, thanks! And you ?",
+    },
+    {
+      id: "wb3",
+      prompt_vn: "Bảo trọng! Hẹn gặp ngày mai!",
+      words: ["Take", "care!", "See", "you", "tomorrow", "!", "is", "are"],
+      answer: "Take care! See you tomorrow !",
+    },
+  ],
+
   scrambleExercises: [
     {
       id: "s4-1",

@@ -277,6 +277,27 @@ export const unitA06: UnitData = {
     },
   ],
 
+  wordBankExercises: [
+    {
+      id: "wb1",
+      prompt_vn: "Đây là mẹ tôi. Bà ấy là giáo viên.",
+      words: ["This", "is", "my", "mother.", "She", "is", "a", "teacher", ".", "are"],
+      answer: "This is my mother. She is a teacher .",
+    },
+    {
+      id: "wb2",
+      prompt_vn: "Họ là bố mẹ tôi. Họ rất thân thiết.",
+      words: ["They", "are", "my", "parents.", "They", "are", "very", "close", ".", "is"],
+      answer: "They are my parents. They are very close .",
+    },
+    {
+      id: "wb3",
+      prompt_vn: "Tôi có một anh trai và một em gái.",
+      words: ["I", "have", "one", "brother", "and", "one", "sister", ".", "is", "are"],
+      answer: "I have one brother and one sister .",
+    },
+  ],
+
   scrambleExercises: [
     {
       id: "s6-1",

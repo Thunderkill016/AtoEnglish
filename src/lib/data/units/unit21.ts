@@ -121,6 +121,35 @@ export const unit21: UnitData = {
       { left: "projection", right: "dự đoán" },
     ],
   },
+  practiceTranslate: [
+    {
+      id: "pt-1",
+      prompt_vn: "Đến cuối năm tới, chúng tôi sẽ mở rộng sang 5 thị trường.",
+      answer: "By the end of next year, we will have expanded to 5 markets.",
+    },
+  ],
+
+  wordBankExercises: [
+    {
+      id: "wb1",
+      prompt_vn: "Đến năm 2028, doanh thu sẽ tăng gấp đôi.",
+      words: ["By", "2028", ",", "revenue", "will", "have", "doubled", ".", "would", "could"],
+      answer: "By 2028 , revenue will have doubled .",
+    },
+    {
+      id: "wb2",
+      prompt_vn: "Vào thời điểm này năm tới, chúng tôi sẽ đang hoạt động ở châu Á.",
+      words: ["This", "time", "next", "year", ",", "we", "will", "be", "operating", "in", "Asia", ".", "would", "could"],
+      answer: "This time next year , we will be operating in Asia .",
+    },
+    {
+      id: "wb3",
+      prompt_vn: "AI sẽ chuyển đổi hầu hết các ngành vào năm 2030.",
+      words: ["By", "2030", ",", "AI", "will", "have", "transformed", "most", "industries", ".", "would", "could"],
+      answer: "By 2030 , AI will have transformed most industries .",
+    },
+  ],
+
   scrambleExercises: [
     { id: "s21-1", prompt_vn: "Đến năm 2028, doanh thu sẽ tăng gấp đôi.", words: ["By", "2028", ",", "revenue", "will", "have", "doubled", "."], answer: "By 2028 , revenue will have doubled ." },
     { id: "s21-2", prompt_vn: "Vào thời điểm này năm tới, chúng tôi sẽ đang hoạt động ở châu Á.", words: ["This", "time", "next", "year", ",", "we", "will", "be", "operating", "in", "Asia", "."], answer: "This time next year , we will be operating in Asia ." },

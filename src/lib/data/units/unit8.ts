@@ -131,6 +131,27 @@ export const unit8: UnitData = {
     { id: "q6", question: "Cho tôi một tô phở, làm ơn.", options: [], answer: "I'd like some noodle soup, please.", type: "translate" },
     { id: "q7", question: "Bạn có muốn thêm rau không?", options: [], answer: "Would you like any vegetables?", type: "translate" },
   ],
+  wordBankExercises: [
+    {
+      id: "wb1",
+      prompt_vn: "Cho tôi một ít cơm, làm ơn.",
+      words: ["I'd", "like", "some", "rice", "please", ".", "was", "were"],
+      answer: "I'd like some rice please .",
+    },
+    {
+      id: "wb2",
+      prompt_vn: "Bạn có thịt gà không?",
+      words: ["Do", "you", "have", "any", "chicken", "?", "was", "were"],
+      answer: "Do you have any chicken ?",
+    },
+    {
+      id: "wb3",
+      prompt_vn: "Cho chúng tôi tính tiền nhé?",
+      words: ["Can", "we", "have", "the", "bill", "please", "?", "was", "were"],
+      answer: "Can we have the bill please ?",
+    },
+  ],
+
   scrambleExercises: [
     {
       id: "s8-1",

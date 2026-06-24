@@ -314,6 +314,27 @@ export const unitA01: UnitData = {
   ],
 
   // ── SCRAMBLE: Sentence building with target chunks ─────────────────────────
+  wordBankExercises: [
+    {
+      id: "wb1",
+      prompt_vn: "Tên tôi là Alex.",
+      words: ["My", "name", "is", "Alex", ".", "are"],
+      answer: "My name is Alex .",
+    },
+    {
+      id: "wb2",
+      prompt_vn: "Tôi đến từ Việt Nam.",
+      words: ["I", "am", "from", "Vietnam", ".", "is", "are"],
+      answer: "I am from Vietnam .",
+    },
+    {
+      id: "wb3",
+      prompt_vn: "Bạn có thể đánh vần tên không?",
+      words: ["Can", "you", "spell", "your", "name", "?", "is", "are"],
+      answer: "Can you spell your name ?",
+    },
+  ],
+
   scrambleExercises: [
     {
       id: "s1-1",

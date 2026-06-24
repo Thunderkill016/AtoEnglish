@@ -137,6 +137,27 @@ export const unit12: UnitData = {
     { id: "q6", question: "Tôi thức dậy lúc 6 giờ và đi làm lúc 8 giờ. (Unit 4)", options: [], answer: "I wake up at six and go to work at eight.", type: "translate" },
     { id: "q7", question: "Tôi cảm thấy tự tin khi nói tiếng Anh bây giờ. (Unit 11)", options: [], answer: "I feel confident speaking English now.", type: "translate" },
   ],
+  wordBankExercises: [
+    {
+      id: "wb1",
+      prompt_vn: "Tôi có thể tự giới thiệu bằng tiếng Anh.",
+      words: ["I", "can", "introduce", "myself", "in", "English", ".", "was", "were"],
+      answer: "I can introduce myself in English .",
+    },
+    {
+      id: "wb2",
+      prompt_vn: "Cô ấy thích nấu ăn và tôi có thể nói tiếng Anh.",
+      words: ["She", "likes", "cooking", "and", "I", "can", "speak", "English", ".", "was", "were"],
+      answer: "She likes cooking and I can speak English .",
+    },
+    {
+      id: "wb3",
+      prompt_vn: "Có một công viên cạnh nhà tôi.",
+      words: ["There", "is", "a", "park", "next", "to", "my", "house", ".", "was", "were"],
+      answer: "There is a park next to my house .",
+    },
+  ],
+
   scrambleExercises: [
     {
       id: "s12-1",

@@ -121,6 +121,35 @@ export const unit29: UnitData = {
       { left: "alternative", right: "lựa chọn thay thế" },
     ],
   },
+  practiceTranslate: [
+    {
+      id: "pt-1",
+      prompt_vn: "Chúng ta có thể cân nhắc việc hoàn tiền phí vận chuyển.",
+      answer: "We could consider refunding the shipping fee.",
+    },
+  ],
+
+  wordBankExercises: [
+    {
+      id: "wb1",
+      prompt_vn: "Tôi đề xuất chúng ta tối ưu hóa các hình ảnh trước.",
+      words: ["I", "propose", "we", "optimize", "the", "images", "first", ".", "would", "could"],
+      answer: "I propose we optimize the images first .",
+    },
+    {
+      id: "wb2",
+      prompt_vn: "Chúng ta nên giải quyết vấn đề này càng sớm càng tốt.",
+      words: ["We", "should", "address", "this", "issue", "as", "soon", "as", "possible", ".", "would", "could"],
+      answer: "We should address this issue as soon as possible .",
+    },
+    {
+      id: "wb3",
+      prompt_vn: "Đó là một giải pháp khả thi cho vấn đề kỹ thuật.",
+      words: ["That", "is", "a", "feasible", "solution", "to", "the", "technical", "problem", ".", "would", "could"],
+      answer: "That is a feasible solution to the technical problem .",
+    },
+  ],
+
   scrambleExercises: [
     { id: "s29-1", prompt_vn: "Tôi đề xuất chúng ta tối ưu hóa các hình ảnh trước.", words: ["I", "propose", "we", "optimize", "the", "images", "first", "."], answer: "I propose we optimize the images first ." },
     { id: "s29-2", prompt_vn: "Chúng ta nên giải quyết vấn đề này càng sớm càng tốt.", words: ["We", "should", "address", "this", "issue", "as", "soon", "as", "possible", "."], answer: "We should address this issue as soon as possible ." },

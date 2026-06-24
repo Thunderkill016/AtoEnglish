@@ -121,6 +121,27 @@ export const unit25: UnitData = {
       { left: "that", right: "người hoặc vật (informal)" },
     ],
   },
+  wordBankExercises: [
+    {
+      id: "wb1",
+      prompt_vn: "Đây là Lan, người dẫn dắt bộ phận kỹ thuật của chúng tôi.",
+      words: ["This", "is", "Lan", ",", "who", "leads", "our", "engineering", "department", ".", "would", "could"],
+      answer: "This is Lan , who leads our engineering department .",
+    },
+    {
+      id: "wb2",
+      prompt_vn: "Đây là văn phòng nơi nhóm R&D làm việc.",
+      words: ["This", "is", "the", "office", "where", "the", "R&D", "team", "works", ".", "would", "could"],
+      answer: "This is the office where the R&D team works .",
+    },
+    {
+      id: "wb3",
+      prompt_vn: "Phần mềm mà chúng tôi phát triển đã giành giải thưởng quốc gia.",
+      words: ["The", "software", "that", "we", "developed", "won", "a", "national", "award", ".", "would", "could"],
+      answer: "The software that we developed won a national award .",
+    },
+  ],
+
   scrambleExercises: [
     { id: "s25-1", prompt_vn: "Đây là Lan, người dẫn dắt bộ phận kỹ thuật của chúng tôi.", words: ["This", "is", "Lan", ",", "who", "leads", "our", "engineering", "department", "."], answer: "This is Lan , who leads our engineering department ." },
     { id: "s25-2", prompt_vn: "Đây là văn phòng nơi nhóm R&D làm việc.", words: ["This", "is", "the", "office", "where", "the", "R&D", "team", "works", "."], answer: "This is the office where the R&D team works ." },

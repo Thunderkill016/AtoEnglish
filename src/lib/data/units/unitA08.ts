@@ -283,6 +283,27 @@ export const unitA08: UnitData = {
     },
   ],
 
+  wordBankExercises: [
+    {
+      id: "wb1",
+      prompt_vn: "Tôi bị lạc. Làm ơn giúp tôi!",
+      words: ["I'm", "lost.", "Please", "help", "me", "!", "is", "are"],
+      answer: "I'm lost. Please help me !",
+    },
+    {
+      id: "wb2",
+      prompt_vn: "Làm ơn gọi cảnh sát! Đây là tình huống khẩn cấp!",
+      words: ["Please", "call", "the", "police!", "This", "is", "an", "emergency", "!", "are"],
+      answer: "Please call the police! This is an emergency !",
+    },
+    {
+      id: "wb3",
+      prompt_vn: "Cẩn thận! Con đường này nguy hiểm.",
+      words: ["Be", "careful!", "This", "road", "is", "dangerous", ".", "are"],
+      answer: "Be careful! This road is dangerous .",
+    },
+  ],
+
   scrambleExercises: [
     {
       id: "s8-1",

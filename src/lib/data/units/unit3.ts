@@ -314,6 +314,27 @@ export const unit3: UnitData = {
     { id: "q7", question: "Anh trai của tôi là bác sĩ.", options: [], answer: "My brother is a doctor.", type: "translate" },
   ],
 
+  wordBankExercises: [
+    {
+      id: "wb1",
+      prompt_vn: "Mẹ tôi là giáo viên.",
+      words: ["My", "mother", "is", "a", "teacher", ".", "was", "were"],
+      answer: "My mother is a teacher .",
+    },
+    {
+      id: "wb2",
+      prompt_vn: "Anh ấy có hai em gái.",
+      words: ["He", "has", "two", "younger", "sisters", ".", "was", "were"],
+      answer: "He has two younger sisters .",
+    },
+    {
+      id: "wb3",
+      prompt_vn: "Đây là bạn thân nhất của tôi.",
+      words: ["This", "is", "my", "best", "friend", ".", "was", "were"],
+      answer: "This is my best friend .",
+    },
+  ],
+
   scrambleExercises: [
     {
       id: "s3-1",

@@ -130,6 +130,27 @@ export const unit6: UnitData = {
     { id: "q6", question: "Có hai phòng ngủ trong ngôi nhà của tôi.", options: [], answer: "There are two bedrooms in my house.", type: "translate" },
     { id: "q7", question: "Có phòng tắm nào ở tầng dưới không?", options: [], answer: "Is there a bathroom downstairs?", type: "translate" },
   ],
+  wordBankExercises: [
+    {
+      id: "wb1",
+      prompt_vn: "Có một chiếc bàn trong bếp.",
+      words: ["There", "is", "a", "table", "in", "the", "kitchen", ".", "was", "were"],
+      answer: "There is a table in the kitchen .",
+    },
+    {
+      id: "wb2",
+      prompt_vn: "Có hai chiếc ghế trong phòng.",
+      words: ["There", "are", "two", "chairs", "in", "the", "room", ".", "was", "were"],
+      answer: "There are two chairs in the room .",
+    },
+    {
+      id: "wb3",
+      prompt_vn: "Có phòng tắm ở tầng trên không?",
+      words: ["Is", "there", "a", "bathroom", "upstairs", "?", "was", "were"],
+      answer: "Is there a bathroom upstairs ?",
+    },
+  ],
+
   scrambleExercises: [
     {
       id: "s6-1",

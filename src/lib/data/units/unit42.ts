@@ -120,6 +120,27 @@ export const unit42: UnitData = {
       { left: "consequence", right: "hậu quả / hệ quả" },
     ],
   },
+  wordBankExercises: [
+    {
+      id: "wb1",
+      prompt_vn: "Chính sự chuyển đổi số đã nâng cao hiệu suất của chúng tôi.",
+      words: ["It", "was", "digital", "transformation", "that", "enhanced", "our", "performance", ".", "might", "should"],
+      answer: "It was digital transformation that enhanced our performance .",
+    },
+    {
+      id: "wb2",
+      prompt_vn: "Không những họ đạt chỉ tiêu, họ còn cắt giảm chi phí.",
+      words: ["Not", "only", "did", "they", "meet", "targets", ",", "they", "also", "cut", "costs", ".", "might", "should"],
+      answer: "Not only did they meet targets , they also cut costs .",
+    },
+    {
+      id: "wb3",
+      prompt_vn: "Hiếm khi có học sinh nào đạt điểm tuyệt đối 100%.",
+      words: ["Rarely", "does", "any", "student", "achieve", "a", "perfect", "score", ".", "might", "should"],
+      answer: "Rarely does any student achieve a perfect score .",
+    },
+  ],
+
   scrambleExercises: [
     { id: "s42-1", prompt_vn: "Chính sự chuyển đổi số đã nâng cao hiệu suất của chúng tôi.", words: ["It", "was", "digital", "transformation", "that", "enhanced", "our", "performance", "."], answer: "It was digital transformation that enhanced our performance ." },
     { id: "s42-2", prompt_vn: "Không những họ đạt chỉ tiêu, họ còn cắt giảm chi phí.", words: ["Not", "only", "did", "they", "meet", "targets", ",", "they", "also", "cut", "costs", "."], answer: "Not only did they meet targets , they also cut costs ." },

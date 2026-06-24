@@ -121,6 +121,35 @@ export const unit28: UnitData = {
       { left: "achievement", right: "thành tích" },
     ],
   },
+  practiceTranslate: [
+    {
+      id: "pt-1",
+      prompt_vn: "Bạn đã làm dự án này bao lâu rồi?",
+      answer: "How long have you been working on this project?",
+    },
+  ],
+
+  wordBankExercises: [
+    {
+      id: "wb1",
+      prompt_vn: "Tôi đã học tiếng Anh được sáu tháng.",
+      words: ["I've", "been", "studying", "English", "for", "six", "months", ".", "would", "could"],
+      answer: "I've been studying English for six months .",
+    },
+    {
+      id: "wb2",
+      prompt_vn: "Cô ấy đã hướng dẫn nhân viên trẻ được ba năm.",
+      words: ["She", "has", "been", "mentoring", "junior", "staff", "for", "three", "years", ".", "would", "could"],
+      answer: "She has been mentoring junior staff for three years .",
+    },
+    {
+      id: "wb3",
+      prompt_vn: "Nhóm đã phát triển hệ thống mới từ tháng Ba.",
+      words: ["The", "team", "has", "been", "developing", "the", "new", "system", "since", "March", ".", "would", "could"],
+      answer: "The team has been developing the new system since March .",
+    },
+  ],
+
   scrambleExercises: [
     { id: "s28-1", prompt_vn: "Tôi đã học tiếng Anh được sáu tháng.", words: ["I've", "been", "studying", "English", "for", "six", "months", "."], answer: "I've been studying English for six months ." },
     { id: "s28-2", prompt_vn: "Cô ấy đã hướng dẫn nhân viên trẻ được ba năm.", words: ["She", "has", "been", "mentoring", "junior", "staff", "for", "three", "years", "."], answer: "She has been mentoring junior staff for three years ." },

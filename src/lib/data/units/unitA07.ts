@@ -279,6 +279,27 @@ export const unitA07: UnitData = {
     },
   ],
 
+  wordBankExercises: [
+    {
+      id: "wb1",
+      prompt_vn: "Cuộc họp là vào thứ Hai lúc chín giờ.",
+      words: ["The", "meeting", "is", "on", "Monday", "at", "nine", "o'clock", ".", "are"],
+      answer: "The meeting is on Monday at nine o'clock .",
+    },
+    {
+      id: "wb2",
+      prompt_vn: "Tôi rảnh buổi sáng. Bạn rảnh khi nào?",
+      words: ["I'm", "free", "in", "the", "morning.", "When", "are", "you", "free", "?", "is"],
+      answer: "I'm free in the morning. When are you free ?",
+    },
+    {
+      id: "wb3",
+      prompt_vn: "Hãy để tôi kiểm tra lịch trình của tôi.",
+      words: ["Let", "me", "check", "my", "schedule", ".", "is", "are"],
+      answer: "Let me check my schedule .",
+    },
+  ],
+
   scrambleExercises: [
     {
       id: "s7-1",

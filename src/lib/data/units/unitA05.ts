@@ -283,6 +283,27 @@ export const unitA05: UnitData = {
     },
   ],
 
+  wordBankExercises: [
+    {
+      id: "wb1",
+      prompt_vn: "Tôi đến từ Việt Nam.",
+      words: ["I", "am", "from", "Vietnam", ".", "is", "are"],
+      answer: "I am from Vietnam .",
+    },
+    {
+      id: "wb2",
+      prompt_vn: "Cô ấy là bác sĩ và cô ấy đã kết hôn.",
+      words: ["She", "is", "a", "doctor", "and", "she", "is", "married", ".", "are"],
+      answer: "She is a doctor and she is married .",
+    },
+    {
+      id: "wb3",
+      prompt_vn: "Quốc tịch của bạn là gì?",
+      words: ["What", "is", "your", "nationality", "?", "are"],
+      answer: "What is your nationality ?",
+    },
+  ],
+
   scrambleExercises: [
     {
       id: "s5-1",

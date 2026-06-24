@@ -119,6 +119,27 @@ export const unit31: UnitData = {
       { left: "corporate", right: "thuộc doanh nghiệp" },
     ],
   },
+  wordBankExercises: [
+    {
+      id: "wb1",
+      prompt_vn: "Tôi khuyên bạn nên xem tệp đính kèm hợp đồng.",
+      words: ["I", "advise", "you", "to", "review", "the", "contract", "attachment", ".", "would", "could"],
+      answer: "I advise you to review the contract attachment .",
+    },
+    {
+      id: "wb2",
+      prompt_vn: "Vui lòng xác nhận sự có mặt của bạn trước thứ Năm.",
+      words: ["Please", "confirm", "your", "availability", "before", "Thursday", ".", "would", "could"],
+      answer: "Please confirm your availability before Thursday .",
+    },
+    {
+      id: "wb3",
+      prompt_vn: "Chúng tôi xin lỗi vì sự chậm trễ trong dự án này.",
+      words: ["We", "apologize", "for", "the", "delay", "in", "this", "project", ".", "would", "could"],
+      answer: "We apologize for the delay in this project .",
+    },
+  ],
+
   scrambleExercises: [
     { id: "s31-1", prompt_vn: "Tôi khuyên bạn nên xem tệp đính kèm hợp đồng.", words: ["I", "advise", "you", "to", "review", "the", "contract", "attachment", "."], answer: "I advise you to review the contract attachment ." },
     { id: "s31-2", prompt_vn: "Vui lòng xác nhận sự có mặt của bạn trước thứ Năm.", words: ["Please", "confirm", "your", "availability", "before", "Thursday", "."], answer: "Please confirm your availability before Thursday ." },

@@ -134,6 +134,27 @@ export const unit10: UnitData = {
     { id: "q6", question: "Anh ấy có thể hát và chơi guitar.", options: [], answer: "He can sing and play the guitar.", type: "translate" },
     { id: "q7", question: "Bạn có thể nói tiếng Anh không?", options: [], answer: "Can you speak English?", type: "translate" },
   ],
+  wordBankExercises: [
+    {
+      id: "wb1",
+      prompt_vn: "Tôi có thể nói tiếng Anh rất tốt.",
+      words: ["I", "can", "speak", "English", "very", "well", ".", "was", "were"],
+      answer: "I can speak English very well .",
+    },
+    {
+      id: "wb2",
+      prompt_vn: "Cô ấy không thể lái xe ô tô.",
+      words: ["She", "can't", "drive", "a", "car", ".", "was", "were"],
+      answer: "She can't drive a car .",
+    },
+    {
+      id: "wb3",
+      prompt_vn: "Bạn có thể nấu ăn Việt Nam không?",
+      words: ["Can", "you", "cook", "Vietnamese", "food", "?", "was", "were"],
+      answer: "Can you cook Vietnamese food ?",
+    },
+  ],
+
   scrambleExercises: [
     {
       id: "s10-1",

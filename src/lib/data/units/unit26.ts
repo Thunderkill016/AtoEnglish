@@ -121,6 +121,35 @@ export const unit26: UnitData = {
       { left: "avoid", right: "+ V-ing" },
     ],
   },
+  practiceTranslate: [
+    {
+      id: "pt-1",
+      prompt_vn: "Tôi khuyến nghị thử phương pháp học mới.",
+      answer: "I recommend trying a new learning method.",
+    },
+  ],
+
+  wordBankExercises: [
+    {
+      id: "wb1",
+      prompt_vn: "Tôi đề xuất chia dự án thành ba giai đoạn.",
+      words: ["I", "suggest", "dividing", "the", "project", "into", "three", "phases", ".", "would", "could"],
+      answer: "I suggest dividing the project into three phases .",
+    },
+    {
+      id: "wb2",
+      prompt_vn: "Cô ấy tránh đến muộn các cuộc họp.",
+      words: ["She", "avoids", "arriving", "late", "to", "meetings", ".", "would", "could"],
+      answer: "She avoids arriving late to meetings .",
+    },
+    {
+      id: "wb3",
+      prompt_vn: "Tôi có kế hoạch thi IELTS vào năm tới.",
+      words: ["I", "plan", "to", "take", "the", "IELTS", "exam", "next", "year", ".", "would", "could"],
+      answer: "I plan to take the IELTS exam next year .",
+    },
+  ],
+
   scrambleExercises: [
     { id: "s26-1", prompt_vn: "Tôi đề xuất chia dự án thành ba giai đoạn.", words: ["I", "suggest", "dividing", "the", "project", "into", "three", "phases", "."], answer: "I suggest dividing the project into three phases ." },
     { id: "s26-2", prompt_vn: "Cô ấy tránh đến muộn các cuộc họp.", words: ["She", "avoids", "arriving", "late", "to", "meetings", "."], answer: "She avoids arriving late to meetings ." },

@@ -280,6 +280,27 @@ export const unitA02: UnitData = {
     },
   ],
 
+  wordBankExercises: [
+    {
+      id: "wb1",
+      prompt_vn: "Cái này giá bao nhiêu?",
+      words: ["How", "much", "is", "it", "?", "are"],
+      answer: "How much is it ?",
+    },
+    {
+      id: "wb2",
+      prompt_vn: "Tổng cộng là hai mươi đô la.",
+      words: ["The", "total", "is", "twenty", "dollars", ".", "are"],
+      answer: "The total is twenty dollars .",
+    },
+    {
+      id: "wb3",
+      prompt_vn: "Tôi có thể giữ tiền thừa không?",
+      words: ["Can", "I", "keep", "the", "change", "?", "is", "are"],
+      answer: "Can I keep the change ?",
+    },
+  ],
+
   scrambleExercises: [
     {
       id: "s2-1",

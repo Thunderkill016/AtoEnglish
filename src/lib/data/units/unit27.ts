@@ -121,6 +121,35 @@ export const unit27: UnitData = {
       { left: "find out", right: "tìm hiểu / phát hiện" },
     ],
   },
+  practiceTranslate: [
+    {
+      id: "pt-1",
+      prompt_vn: "Tôi sẽ theo dõi với khách hàng và tìm hiểu tiến độ của họ.",
+      answer: "I'll follow up with the client and find out their timeline.",
+    },
+  ],
+
+  wordBankExercises: [
+    {
+      id: "wb1",
+      prompt_vn: "Bạn có thể điều tra vấn đề này không?",
+      words: ["Can", "you", "look", "into", "this", "issue", "?", "would", "could"],
+      answer: "Can you look into this issue ?",
+    },
+    {
+      id: "wb2",
+      prompt_vn: "Tôi sẽ thiết lập cuộc họp và không hoãn nó lại.",
+      words: ["I", "will", "set", "up", "the", "meeting", "and", "not", "put", "it", "off", ".", "would", "could"],
+      answer: "I will set up the meeting and not put it off .",
+    },
+    {
+      id: "wb3",
+      prompt_vn: "Cô ấy đảm nhận dự án và nộp báo cáo trước thứ Năm.",
+      words: ["She", "took", "on", "the", "project", "and", "handed", "in", "the", "report", "by", "Thursday", ".", "would", "could"],
+      answer: "She took on the project and handed in the report by Thursday .",
+    },
+  ],
+
   scrambleExercises: [
     { id: "s27-1", prompt_vn: "Bạn có thể điều tra vấn đề này không?", words: ["Can", "you", "look", "into", "this", "issue", "?"], answer: "Can you look into this issue ?" },
     { id: "s27-2", prompt_vn: "Tôi sẽ thiết lập cuộc họp và không hoãn nó lại.", words: ["I", "will", "set", "up", "the", "meeting", "and", "not", "put", "it", "off", "."], answer: "I will set up the meeting and not put it off ." },

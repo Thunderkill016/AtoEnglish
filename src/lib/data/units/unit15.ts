@@ -126,6 +126,35 @@ export const unit15: UnitData = {
     ],
   },
 
+  practiceTranslate: [
+    {
+      id: "pt-1",
+      prompt_vn: "Chiếc laptop này đắt hơn chiếc kia nhưng chất lượng tốt hơn.",
+      answer: "This laptop is more expensive than that but the quality is better.",
+    },
+  ],
+
+  wordBankExercises: [
+    {
+      id: "wb1",
+      prompt_vn: "Tôi không đủ tiền mua laptop này.",
+      words: ["I", "can't", "afford", "this", "laptop", ".", "have", "has"],
+      answer: "I can't afford this laptop .",
+    },
+    {
+      id: "wb2",
+      prompt_vn: "Cho tôi xin hóa đơn được không?",
+      words: ["Can", "I", "have", "a", "receipt", "please", "?", "has"],
+      answer: "Can I have a receipt please ?",
+    },
+    {
+      id: "wb3",
+      prompt_vn: "Sản phẩm này tốt hơn sản phẩm kia.",
+      words: ["This", "product", "is", "better", "than", "that", "one", ".", "have", "has"],
+      answer: "This product is better than that one .",
+    },
+  ],
+
   scrambleExercises: [
     {
       id: "s15-1",

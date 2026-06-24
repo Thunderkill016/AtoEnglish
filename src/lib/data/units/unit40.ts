@@ -119,6 +119,27 @@ export const unit40: UnitData = {
       { left: "furthermore", right: "hơn nữa" },
     ],
   },
+  wordBankExercises: [
+    {
+      id: "wb1",
+      prompt_vn: "Hệ thống bị sập; do đó, dữ liệu đã bị mất.",
+      words: ["The", "system", "crashed", ";", "consequently", ",", "data", "was", "lost", ".", "might", "should"],
+      answer: "The system crashed ; consequently , data was lost .",
+    },
+    {
+      id: "wb2",
+      prompt_vn: "Chúng tôi đã tối ưu hóa mã nguồn, nhờ đó nâng cao hiệu suất.",
+      words: ["We", "optimized", "the", "code", ",", "thereby", "enhancing", "performance", ".", "might", "should"],
+      answer: "We optimized the code , thereby enhancing performance .",
+    },
+    {
+      id: "wb3",
+      prompt_vn: "Mặc dù gặp khó khăn, chúng tôi đã hoàn thành thời hạn.",
+      words: ["Notwithstanding", "the", "difficulties", ",", "we", "met", "the", "deadline", ".", "might", "should"],
+      answer: "Notwithstanding the difficulties , we met the deadline .",
+    },
+  ],
+
   scrambleExercises: [
     { id: "s40-1", prompt_vn: "Hệ thống bị sập; do đó, dữ liệu đã bị mất.", words: ["The", "system", "crashed", ";", "consequently", ",", "data", "was", "lost", "."], answer: "The system crashed ; consequently , data was lost ." },
     { id: "s40-2", prompt_vn: "Chúng tôi đã tối ưu hóa mã nguồn, nhờ đó nâng cao hiệu suất.", words: ["We", "optimized", "the", "code", ",", "thereby", "enhancing", "performance", "."], answer: "We optimized the code , thereby enhancing performance ." },

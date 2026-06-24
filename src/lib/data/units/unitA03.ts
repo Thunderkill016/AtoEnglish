@@ -283,6 +283,27 @@ export const unitA03: UnitData = {
     },
   ],
 
+  wordBankExercises: [
+    {
+      id: "wb1",
+      prompt_vn: "Tôi đang tìm một cái túi màu xanh to.",
+      words: ["I'm", "looking", "for", "a", "big", "blue", "bag", ".", "is", "are"],
+      answer: "I'm looking for a big blue bag .",
+    },
+    {
+      id: "wb2",
+      prompt_vn: "Bạn có màu trắng không?",
+      words: ["Do", "you", "have", "this", "in", "white", "?", "is", "are"],
+      answer: "Do you have this in white ?",
+    },
+    {
+      id: "wb3",
+      prompt_vn: "Cái áo đỏ nhỏ rất đẹp.",
+      words: ["The", "small", "red", "shirt", "is", "beautiful", ".", "are"],
+      answer: "The small red shirt is beautiful .",
+    },
+  ],
+
   scrambleExercises: [
     {
       id: "s3-1",

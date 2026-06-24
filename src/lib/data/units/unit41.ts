@@ -123,6 +123,27 @@ export const unit41: UnitData = {
       { left: "degradation", right: "sự suy thoái" },
     ],
   },
+  wordBankExercises: [
+    {
+      id: "wb1",
+      prompt_vn: "Năng lượng tái tạo là cực kỳ quan trọng cho tương lai.",
+      words: ["Renewable", "energy", "is", "extremely", "important", "for", "the", "future", ".", "might", "should"],
+      answer: "Renewable energy is extremely important for the future .",
+    },
+    {
+      id: "wb2",
+      prompt_vn: "Chính sự đô thị hóa nhanh chóng đã làm suy thoái môi trường.",
+      words: ["It", "was", "rapid", "urbanization", "that", "caused", "environmental", "degradation", ".", "might", "should"],
+      answer: "It was rapid urbanization that caused environmental degradation .",
+    },
+    {
+      id: "wb3",
+      prompt_vn: "Không những tự động hóa giúp tăng sản lượng, nó còn giảm lỗi.",
+      words: ["Not", "only", "did", "automation", "increase", "output", ",", "it", "also", "reduced", "errors", ".", "might", "should"],
+      answer: "Not only did automation increase output , it also reduced errors .",
+    },
+  ],
+
   scrambleExercises: [
     { id: "s41-1", prompt_vn: "Năng lượng tái tạo là cực kỳ quan trọng cho tương lai.", words: ["Renewable", "energy", "is", "extremely", "important", "for", "the", "future", "."], answer: "Renewable energy is extremely important for the future ." },
     { id: "s41-2", prompt_vn: "Chính sự đô thị hóa nhanh chóng đã làm suy thoái môi trường.", words: ["It", "was", "rapid", "urbanization", "that", "caused", "environmental", "degradation", "."], answer: "It was rapid urbanization that caused environmental degradation ." },

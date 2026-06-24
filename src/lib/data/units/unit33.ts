@@ -119,6 +119,27 @@ export const unit33: UnitData = {
       { left: "expansion", right: "sự mở rộng" },
     ],
   },
+  wordBankExercises: [
+    {
+      id: "wb1",
+      prompt_vn: "Nếu tôi là bạn, tôi sẽ không chấp nhận rủi ro đó.",
+      words: ["If", "I", "were", "you", ",", "I", "would", "not", "take", "that", "risk", ".", "might", "should"],
+      answer: "If I were you , I would not take that risk .",
+    },
+    {
+      id: "wb2",
+      prompt_vn: "Chúng tôi sẽ đầu tư nhiều hơn nếu chúng tôi có vốn.",
+      words: ["We", "would", "invest", "more", "if", "we", "had", "capital", ".", "might", "should"],
+      answer: "We would invest more if we had capital .",
+    },
+    {
+      id: "wb3",
+      prompt_vn: "Hãy tưởng tượng kịch bản tệ nhất có thể xảy ra.",
+      words: ["Imagine", "the", "worst-case", "scenario", "that", "could", "occur", ".", "might", "should"],
+      answer: "Imagine the worst-case scenario that could occur .",
+    },
+  ],
+
   scrambleExercises: [
     { id: "s33-1", prompt_vn: "Nếu tôi là bạn, tôi sẽ không chấp nhận rủi ro đó.", words: ["If", "I", "were", "you", ",", "I", "would", "not", "take", "that", "risk", "."], answer: "If I were you , I would not take that risk ." },
     { id: "s33-2", prompt_vn: "Chúng tôi sẽ đầu tư nhiều hơn nếu chúng tôi có vốn.", words: ["We", "would", "invest", "more", "if", "we", "had", "capital", "."], answer: "We would invest more if we had capital ." },

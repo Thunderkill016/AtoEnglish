@@ -133,6 +133,27 @@ export const unit5: UnitData = {
     { id: "q6", question: "Tôi thích chụp ảnh vào cuối tuần.", options: [], answer: "I like taking photos on weekends.", type: "translate" },
     { id: "q7", question: "Bạn có thích du lịch không?", options: [], answer: "Do you like traveling?", type: "translate" },
   ],
+  wordBankExercises: [
+    {
+      id: "wb1",
+      prompt_vn: "Tôi thích chơi bóng đá.",
+      words: ["I", "like", "playing", "football", ".", "was", "were"],
+      answer: "I like playing football .",
+    },
+    {
+      id: "wb2",
+      prompt_vn: "Cô ấy thích đọc sách mỗi tối.",
+      words: ["She", "likes", "reading", "books", "every", "evening", ".", "was", "were"],
+      answer: "She likes reading books every evening .",
+    },
+    {
+      id: "wb3",
+      prompt_vn: "Chúng tôi thích nghe nhạc.",
+      words: ["We", "like", "listening", "to", "music", ".", "was", "were"],
+      answer: "We like listening to music .",
+    },
+  ],
+
   scrambleExercises: [
     {
       id: "s5-1",

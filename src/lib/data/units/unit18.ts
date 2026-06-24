@@ -126,6 +126,35 @@ export const unit18: UnitData = {
     ],
   },
 
+  practiceTranslate: [
+    {
+      id: "pt-1",
+      prompt_vn: "Năm ngoái doanh thu tăng 20% so với năm trước.",
+      answer: "Last year revenue increased by 20% compared to the previous year.",
+    },
+  ],
+
+  wordBankExercises: [
+    {
+      id: "wb1",
+      prompt_vn: "Chúng tôi đã đạt 120% chỉ tiêu doanh số.",
+      words: ["We", "achieved", "120%", "of", "our", "sales", "target", ".", "have", "has"],
+      answer: "We achieved 120% of our sales target .",
+    },
+    {
+      id: "wb2",
+      prompt_vn: "Doanh thu tăng 15% so với năm ngoái.",
+      words: ["Revenue", "increased", "by", "15%", "compared", "to", "last", "year", ".", "have", "has"],
+      answer: "Revenue increased by 15% compared to last year .",
+    },
+    {
+      id: "wb3",
+      prompt_vn: "Tôi đang ngày càng trôi chảy hơn tiếng Anh.",
+      words: ["I", "am", "becoming", "more", "fluent", "in", "English", ".", "have", "has"],
+      answer: "I am becoming more fluent in English .",
+    },
+  ],
+
   scrambleExercises: [
     {
       id: "s18-1",

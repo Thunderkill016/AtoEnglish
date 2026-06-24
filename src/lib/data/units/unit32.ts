@@ -121,6 +121,27 @@ export const unit32: UnitData = {
       { left: "resolution", right: "sự giải quyết" },
     ],
   },
+  wordBankExercises: [
+    {
+      id: "wb1",
+      prompt_vn: "Trước khi tôi bắt đầu, tôi chưa bao giờ nói tiếng Anh.",
+      words: ["Before", "I", "started", ",", "I", "had", "never", "spoken", "English", ".", "would", "could"],
+      answer: "Before I started , I had never spoken English .",
+    },
+    {
+      id: "wb2",
+      prompt_vn: "Đến cuối năm, tôi sẽ hoàn thành cấp độ B2.",
+      words: ["By", "the", "end", "of", "the", "year", ",", "I", "will", "have", "completed", "B2", ".", "would", "could"],
+      answer: "By the end of the year , I will have completed B2 .",
+    },
+    {
+      id: "wb3",
+      prompt_vn: "Tôi đã và đang học tiếng Anh chuyên sâu trong sáu tháng.",
+      words: ["I", "have", "been", "studying", "English", "intensively", "for", "six", "months", ".", "would", "could"],
+      answer: "I have been studying English intensively for six months .",
+    },
+  ],
+
   scrambleExercises: [
     { id: "s32-1", prompt_vn: "Trước khi tôi bắt đầu, tôi chưa bao giờ nói tiếng Anh.", words: ["Before", "I", "started", ",", "I", "had", "never", "spoken", "English", "."], answer: "Before I started , I had never spoken English ." },
     { id: "s32-2", prompt_vn: "Đến cuối năm, tôi sẽ hoàn thành cấp độ B2.", words: ["By", "the", "end", "of", "the", "year", ",", "I", "will", "have", "completed", "B2", "."], answer: "By the end of the year , I will have completed B2 ." },

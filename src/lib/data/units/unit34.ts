@@ -119,6 +119,27 @@ export const unit34: UnitData = {
       { left: "complication", right: "sự rắc rối phức tạp" },
     ],
   },
+  wordBankExercises: [
+    {
+      id: "wb1",
+      prompt_vn: "Nếu chúng ta phân tích rủi ro, chúng ta đã tránh được sai lầm.",
+      words: ["If", "we", "had", "analyzed", "the", "risks", ",", "we", "would", "have", "avoided", "the", "mistake", ".", "might", "should"],
+      answer: "If we had analyzed the risks , we would have avoided the mistake .",
+    },
+    {
+      id: "wb2",
+      prompt_vn: "Đó không phải lỗi của tôi khi trang web bị sập.",
+      words: ["It", "was", "not", "my", "fault", "that", "the", "website", "crashed", ".", "might", "should"],
+      answer: "It was not my fault that the website crashed .",
+    },
+    {
+      id: "wb3",
+      prompt_vn: "Chúng tôi đã có thể sửa lỗi đó sớm hơn.",
+      words: ["We", "could", "have", "rectified", "that", "error", "much", "earlier", ".", "might", "should"],
+      answer: "We could have rectified that error much earlier .",
+    },
+  ],
+
   scrambleExercises: [
     { id: "s34-1", prompt_vn: "Nếu chúng ta phân tích rủi ro, chúng ta đã tránh được sai lầm.", words: ["If", "we", "had", "analyzed", "the", "risks", ",", "we", "would", "have", "avoided", "the", "mistake", "."], answer: "If we had analyzed the risks , we would have avoided the mistake ." },
     { id: "s34-2", prompt_vn: "Đó không phải lỗi của tôi khi trang web bị sập.", words: ["It", "was", "not", "my", "fault", "that", "the", "website", "crashed", "."], answer: "It was not my fault that the website crashed ." },

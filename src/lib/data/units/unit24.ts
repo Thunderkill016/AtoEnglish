@@ -121,6 +121,35 @@ export const unit24: UnitData = {
       { left: "distribute", right: "phân phối" },
     ],
   },
+  practiceTranslate: [
+    {
+      id: "pt-1",
+      prompt_vn: "Mỗi sản phẩm được kiểm tra ba lần trước khi vận chuyển.",
+      answer: "Each product is inspected three times before shipping.",
+    },
+  ],
+
+  wordBankExercises: [
+    {
+      id: "wb1",
+      prompt_vn: "Các linh kiện được sản xuất tại cơ sở chính của chúng tôi.",
+      words: ["The", "components", "are", "manufactured", "at", "our", "main", "facility", ".", "would", "could"],
+      answer: "The components are manufactured at our main facility .",
+    },
+    {
+      id: "wb2",
+      prompt_vn: "Nhà máy đã được chứng nhận ISO 9001 từ năm 2020.",
+      words: ["The", "factory", "has", "been", "certified", "by", "ISO", "9001", "since", "2020", ".", "would", "could"],
+      answer: "The factory has been certified by ISO 9001 since 2020 .",
+    },
+    {
+      id: "wb3",
+      prompt_vn: "Tất cả vật liệu đóng gói được tái chế.",
+      words: ["All", "packaging", "materials", "are", "recycled", ".", "would", "could"],
+      answer: "All packaging materials are recycled .",
+    },
+  ],
+
   scrambleExercises: [
     { id: "s24-1", prompt_vn: "Các linh kiện được sản xuất tại cơ sở chính của chúng tôi.", words: ["The", "components", "are", "manufactured", "at", "our", "main", "facility", "."], answer: "The components are manufactured at our main facility ." },
     { id: "s24-2", prompt_vn: "Nhà máy đã được chứng nhận ISO 9001 từ năm 2020.", words: ["The", "factory", "has", "been", "certified", "by", "ISO", "9001", "since", "2020", "."], answer: "The factory has been certified by ISO 9001 since 2020 ." },

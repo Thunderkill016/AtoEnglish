@@ -119,6 +119,27 @@ export const unit39: UnitData = {
       { left: "contradict", right: "mâu thuẫn / trái ngược" },
     ],
   },
+  wordBankExercises: [
+    {
+      id: "wb1",
+      prompt_vn: "Họ chắc chắn đã quên khóa cửa văn phòng.",
+      words: ["They", "must", "have", "forgotten", "to", "lock", "the", "office", "door", ".", "might", "should"],
+      answer: "They must have forgotten to lock the office door .",
+    },
+    {
+      id: "wb2",
+      prompt_vn: "Đáng lẽ bạn nên thông báo cho chúng tôi sớm hơn.",
+      words: ["You", "should", "have", "informed", "us", "much", "earlier", ".", "might"],
+      answer: "You should have informed us much earlier .",
+    },
+    {
+      id: "wb3",
+      prompt_vn: "Hai lời giải thích này mâu thuẫn hoàn toàn với nhau.",
+      words: ["These", "two", "explanations", "completely", "contradict", "each", "other", ".", "might", "should"],
+      answer: "These two explanations completely contradict each other .",
+    },
+  ],
+
   scrambleExercises: [
     { id: "s39-1", prompt_vn: "Họ chắc chắn đã quên khóa cửa văn phòng.", words: ["They", "must", "have", "forgotten", "to", "lock", "the", "office", "door", "."], answer: "They must have forgotten to lock the office door ." },
     { id: "s39-2", prompt_vn: "Đáng lẽ bạn nên thông báo cho chúng tôi sớm hơn.", words: ["You", "should", "have", "informed", "us", "much", "earlier", "."], answer: "You should have informed us much earlier ." },

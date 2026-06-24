@@ -132,6 +132,27 @@ export const unit7: UnitData = {
     { id: "q6", question: "Tôi có thể thử chiếc váy này không?", options: [], answer: "Can I try this dress on?", type: "translate" },
     { id: "q7", question: "Hôm nay có đợt giảm giá 20%.", options: [], answer: "There is a 20% discount today.", type: "translate" },
   ],
+  wordBankExercises: [
+    {
+      id: "wb1",
+      prompt_vn: "Chiếc áo này giá bao nhiêu?",
+      words: ["How", "much", "is", "this", "shirt", "?", "was", "were"],
+      answer: "How much is this shirt ?",
+    },
+    {
+      id: "wb2",
+      prompt_vn: "Tôi có thể giảm giá không?",
+      words: ["Can", "I", "have", "a", "discount", "?", "was", "were"],
+      answer: "Can I have a discount ?",
+    },
+    {
+      id: "wb3",
+      prompt_vn: "Những đôi giày này giá bao nhiêu?",
+      words: ["How", "much", "are", "these", "shoes", "?", "was", "were"],
+      answer: "How much are these shoes ?",
+    },
+  ],
+
   scrambleExercises: [
     {
       id: "s7-1",

@@ -126,6 +126,35 @@ export const unit16: UnitData = {
     ],
   },
 
+  practiceTranslate: [
+    {
+      id: "pt-1",
+      prompt_vn: "Văn phòng chúng tôi ở góc đường, đối diện với ngân hàng.",
+      answer: "Our office is on the corner, opposite the bank.",
+    },
+  ],
+
+  wordBankExercises: [
+    {
+      id: "wb1",
+      prompt_vn: "Đi thẳng hai dãy nhà rồi rẽ trái.",
+      words: ["Go", "straight", "for", "two", "blocks", "then", "turn", "left", ".", "have", "has"],
+      answer: "Go straight for two blocks then turn left .",
+    },
+    {
+      id: "wb2",
+      prompt_vn: "Ngân hàng ở đối diện bưu điện.",
+      words: ["The", "bank", "is", "opposite", "the", "post", "office", ".", "have", "has"],
+      answer: "The bank is opposite the post office .",
+    },
+    {
+      id: "wb3",
+      prompt_vn: "Tôi muốn đặt một phòng đơn.",
+      words: ["I", "would", "like", "to", "book", "a", "single", "room", ".", "have", "has"],
+      answer: "I would like to book a single room .",
+    },
+  ],
+
   scrambleExercises: [
     {
       id: "s16-1",

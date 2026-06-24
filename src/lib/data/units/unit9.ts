@@ -131,6 +131,27 @@ export const unit9: UnitData = {
     { id: "q6", question: "Ngân hàng đối diện bưu điện.", options: [], answer: "The bank is opposite the post office.", type: "translate" },
     { id: "q7", question: "Xin lỗi, siêu thị gần nhất ở đâu?", options: [], answer: "Excuse me, where is the nearest supermarket?", type: "translate" },
   ],
+  wordBankExercises: [
+    {
+      id: "wb1",
+      prompt_vn: "Ngân hàng ở cạnh bưu điện.",
+      words: ["The", "bank", "is", "next", "to", "the", "post", "office", ".", "was", "were"],
+      answer: "The bank is next to the post office .",
+    },
+    {
+      id: "wb2",
+      prompt_vn: "Đi thẳng và rẽ trái.",
+      words: ["Go", "straight", "and", "turn", "left", ".", "was", "were"],
+      answer: "Go straight and turn left .",
+    },
+    {
+      id: "wb3",
+      prompt_vn: "Siêu thị nằm giữa ngân hàng và trường học.",
+      words: ["The", "supermarket", "is", "between", "the", "bank", "and", "the", "school", ".", "was", "were"],
+      answer: "The supermarket is between the bank and the school .",
+    },
+  ],
+
   scrambleExercises: [
     {
       id: "s9-1",

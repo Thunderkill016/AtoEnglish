@@ -120,6 +120,27 @@ export const unit37: UnitData = {
       { left: "substitute", right: "thay thế" },
     ],
   },
+  wordBankExercises: [
+    {
+      id: "wb1",
+      prompt_vn: "Sau khi hoàn thành bản báo cáo, cô ấy đã tắt máy tính.",
+      words: ["Having", "completed", "the", "report", ",", "she", "turned", "off", "her", "computer", ".", "might", "should"],
+      answer: "Having completed the report , she turned off her computer .",
+    },
+    {
+      id: "wb2",
+      prompt_vn: "Được thành lập vào năm 2015, công ty có uy tín lớn.",
+      words: ["Established", "in", "2015", ",", "the", "company", "has", "a", "great", "reputation", ".", "might", "should"],
+      answer: "Established in 2015 , the company has a great reputation .",
+    },
+    {
+      id: "wb3",
+      prompt_vn: "Biết rõ các quy định, chúng tôi luôn tuân thủ.",
+      words: ["Knowing", "the", "regulations", ",", "we", "are", "always", "in", "compliance", ".", "might", "should"],
+      answer: "Knowing the regulations , we are always in compliance .",
+    },
+  ],
+
   scrambleExercises: [
     { id: "s37-1", prompt_vn: "Sau khi hoàn thành bản báo cáo, cô ấy đã tắt máy tính.", words: ["Having", "completed", "the", "report", ",", "she", "turned", "off", "her", "computer", "."], answer: "Having completed the report , she turned off her computer ." },
     { id: "s37-2", prompt_vn: "Được thành lập vào năm 2015, công ty có uy tín lớn.", words: ["Established", "in", "2015", ",", "the", "company", "has", "a", "great", "reputation", "."], answer: "Established in 2015 , the company has a great reputation ." },

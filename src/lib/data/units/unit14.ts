@@ -125,6 +125,35 @@ export const unit14: UnitData = {
     ],
   },
 
+  practiceTranslate: [
+    {
+      id: "pt-1",
+      prompt_vn: "Tháng tới chúng tôi sẽ ra mắt sản phẩm mới.",
+      answer: "Next month we are going to launch a new product.",
+    },
+  ],
+
+  wordBankExercises: [
+    {
+      id: "wb1",
+      prompt_vn: "Tôi sẽ chuẩn bị bài thuyết trình ngày mai.",
+      words: ["I", "am", "going", "to", "prepare", "a", "presentation", "tomorrow", ".", "have", "has"],
+      answer: "I am going to prepare a presentation tomorrow .",
+    },
+    {
+      id: "wb2",
+      prompt_vn: "Chúng tôi sẽ ra mắt sản phẩm mới tháng tới.",
+      words: ["We", "will", "launch", "the", "new", "product", "next", "month", ".", "have", "has"],
+      answer: "We will launch the new product next month .",
+    },
+    {
+      id: "wb3",
+      prompt_vn: "Hạn chót là thứ Sáu tới.",
+      words: ["The", "deadline", "is", "next", "Friday", ".", "have", "has"],
+      answer: "The deadline is next Friday .",
+    },
+  ],
+
   scrambleExercises: [
     {
       id: "s14-1",

@@ -126,6 +126,35 @@ export const unit13: UnitData = {
     ],
   },
 
+  practiceTranslate: [
+    {
+      id: "pt-1",
+      prompt_vn: "Tôi đã ghé thăm cha mẹ tôi tuần trước.",
+      answer: "I visited my parents last week.",
+    },
+  ],
+
+  wordBankExercises: [
+    {
+      id: "wb1",
+      prompt_vn: "Tôi đã đi biển cuối tuần trước.",
+      words: ["I", "went", "to", "the", "beach", "last", "weekend", ".", "have", "has"],
+      answer: "I went to the beach last weekend .",
+    },
+    {
+      id: "wb2",
+      prompt_vn: "Chúng tôi đã ở lại khách sạn hai ngày.",
+      words: ["We", "stayed", "at", "a", "hotel", "for", "two", "days", ".", "have", "has"],
+      answer: "We stayed at a hotel for two days .",
+    },
+    {
+      id: "wb3",
+      prompt_vn: "Cô ấy đã gặp bạn cũ hôm qua.",
+      words: ["She", "met", "an", "old", "friend", "yesterday", ".", "have", "has"],
+      answer: "She met an old friend yesterday .",
+    },
+  ],
+
   scrambleExercises: [
     {
       id: "s13-1",
