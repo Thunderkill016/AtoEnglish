@@ -3,7 +3,7 @@
 import dynamic from "next/dynamic";
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Flame, Star, GraduationCap, BookOpen, Clock, ChevronDown, ChevronUp, ChevronRight, ExternalLink, Target } from "lucide-react";
+import { Flame, Star, GraduationCap, BookOpen, Clock, ChevronDown, ChevronUp, ChevronRight, ExternalLink, Target, Zap } from "lucide-react";
 import { toast } from "sonner";
 import { updateDailyXpGoal } from "@/app/actions/stats";
 import { useStreakFreeze as freezeStreakAction } from "@/app/actions/gamification";
@@ -483,6 +483,50 @@ export default function DashboardClient({
             <ChevronRight className="size-6 text-white group-hover:translate-x-0.5 transition-transform" />
           </div>
         </Link>
+
+        {/* ── 4c-2. Micro Session — ⋯ Học nhanh 10 phút ── */}
+        <div className="rounded-2xl border border-zinc-200/60 dark:border-zinc-800/50 bg-white/50 dark:bg-zinc-900/20 backdrop-blur-sm p-4">
+          <div className="flex items-center gap-2 mb-3">
+            <span className="flex size-7 items-center justify-center rounded-lg bg-amber-500/10">
+              <Zap className="size-4 text-amber-500 fill-amber-500" />
+            </span>
+            <div className="flex-1">
+              <p className="text-xs font-black text-zinc-900 dark:text-zinc-50">⚡ Học nhanh 10 phút</p>
+              <p className="text-[10px] text-zinc-500 dark:text-zinc-400">Không có nhiều thời gian? Chọn 1 hoạt động ngắn</p>
+            </div>
+          </div>
+          <div className="grid grid-cols-3 gap-2">
+            <Link
+              id="micro-session-srs"
+              href="/flashcards"
+              className="flex flex-col items-center gap-1.5 p-3 rounded-xl bg-purple-500/5 border border-purple-500/15 hover:bg-purple-500/10 hover:border-purple-500/30 transition-all duration-150 group"
+            >
+              <span className="text-lg">🃏</span>
+              <span className="text-[10px] font-black text-zinc-700 dark:text-zinc-300 text-center leading-tight group-hover:text-purple-600 dark:group-hover:text-purple-400">Ôn từ SRS</span>
+              {dueCardsCount > 0 && (
+                <span className="text-[9px] font-bold text-purple-500 bg-purple-500/10 px-1.5 py-0.5 rounded-full">{dueCardsCount} thẻ</span>
+              )}
+            </Link>
+            <Link
+              id="micro-session-speaking"
+              href="/pronunciation"
+              className="flex flex-col items-center gap-1.5 p-3 rounded-xl bg-red-500/5 border border-red-500/15 hover:bg-red-500/10 hover:border-red-500/30 transition-all duration-150 group"
+            >
+              <span className="text-lg">🎙️</span>
+              <span className="text-[10px] font-black text-zinc-700 dark:text-zinc-300 text-center leading-tight group-hover:text-red-600 dark:group-hover:text-red-400">Luyện phát âm</span>
+              <span className="text-[9px] font-bold text-red-500 bg-red-500/10 px-1.5 py-0.5 rounded-full">5 phút</span>
+            </Link>
+            <Link
+              id="micro-session-quiz"
+              href={currentUnitData.route}
+              className="flex flex-col items-center gap-1.5 p-3 rounded-xl bg-emerald-500/5 border border-emerald-500/15 hover:bg-emerald-500/10 hover:border-emerald-500/30 transition-all duration-150 group"
+            >
+              <span className="text-lg">📝</span>
+              <span className="text-[10px] font-black text-zinc-700 dark:text-zinc-300 text-center leading-tight group-hover:text-emerald-600 dark:group-hover:text-emerald-400">Quiz bài học</span>
+              <span className="text-[9px] font-bold text-emerald-500 bg-emerald-500/10 px-1.5 py-0.5 rounded-full">5 câu</span>
+            </Link>
+          </div>
+        </div>
 
         {/* ── 4d. Daily Quests — promoted above lesson grid (research: primary retention driver) ── */}
         <WidgetErrorBoundary name="DailyQuests">
