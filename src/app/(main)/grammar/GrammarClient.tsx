@@ -47,7 +47,7 @@ export default function GrammarClient() {
   const filtered = GRAMMAR_TOPICS.filter(t => t.level === activeLevel);
 
   return (
-    <div className="min-h-dvh bg-zinc-950 pb-24">
+    <div className="min-h-dvh bg-background pb-24">
       <div className="max-w-lg mx-auto px-4 pt-5">
 
         {/* Header */}

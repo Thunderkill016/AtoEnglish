@@ -5,7 +5,7 @@
  */
 export default function Loading() {
   return (
-    <div className="min-h-screen bg-zinc-950 animate-pulse">
+    <div className="min-h-screen bg-background animate-pulse">
       {/* Header skeleton */}
       <div className="sticky top-0 z-40 bg-zinc-950/95 backdrop-blur-xl border-b border-white/5 px-4 py-3">
         <div className="max-w-2xl mx-auto flex items-center gap-3">
