@@ -141,6 +141,81 @@ export async function completeUnit(unitId: string, starCount: number = 3) {
     revalidatePath("/flashcards");
     revalidatePath("/progress");
 
+    // 5. Fire-and-forget: check and award achievements (non-blocking)
+    // We do NOT await — achievement failure must never break lesson completion
+    void (async () => {
+      try {
+        const totalCompleted = (resultData.completed_count ?? 1);
+        const totalXp = resultData.new_total_xp ?? 0;
+        const streak = nextStreak;
+
+        // Run all achievement checks in parallel
+        await Promise.allSettled([
+          // Lesson count achievements
+          (supabase as unknown as { from: (t: string) => { select: (c: string) => { order: (c: string, o: Record<string, boolean>) => Promise<{ data: Array<{ id: string; threshold: number | null }> | null }> } } })
+            .from("achievements").select("id, threshold").order("threshold", { ascending: true })
+            .then(async () => {
+              // Simplified: upsert lesson milestone achievements
+              const lessonMilestones: Record<number, string> = { 1: "first_lesson", 5: "lessons_5", 10: "lessons_10", 25: "lessons_25", 50: "lessons_50" };
+              const toAward = Object.entries(lessonMilestones)
+                .filter(([threshold]) => totalCompleted >= Number(threshold))
+                .map(([, id]) => ({ user_id: user.id, achievement_id: id }));
+              if (toAward.length > 0) {
+                await (supabase as unknown as { from: (t: string) => { upsert: (d: unknown[], o: Record<string, unknown>) => Promise<unknown> } })
+                  .from("user_achievements").upsert(toAward, { onConflict: "user_id,achievement_id", ignoreDuplicates: true });
+              }
+            }),
+
+          // XP achievements
+          (async () => {
+            const xpMilestones: Record<number, string> = { 100: "xp_100", 500: "xp_500", 1000: "xp_1000", 5000: "xp_5000" };
+            const toAward = Object.entries(xpMilestones)
+              .filter(([threshold]) => totalXp >= Number(threshold))
+              .map(([, id]) => ({ user_id: user.id, achievement_id: id }));
+            if (toAward.length > 0) {
+              await (supabase as unknown as { from: (t: string) => { upsert: (d: unknown[], o: Record<string, unknown>) => Promise<unknown> } })
+                .from("user_achievements").upsert(toAward, { onConflict: "user_id,achievement_id", ignoreDuplicates: true });
+            }
+          })(),
+
+          // Streak achievements + freeze grant
+          (async () => {
+            if (streak <= 0) return;
+            const streakMilestones: Record<number, string> = { 3: "streak_3", 7: "streak_7", 14: "streak_14", 30: "streak_30", 100: "streak_100" };
+            const toAward = Object.entries(streakMilestones)
+              .filter(([threshold]) => streak >= Number(threshold))
+              .map(([, id]) => ({ user_id: user.id, achievement_id: id }));
+            if (toAward.length > 0) {
+              await (supabase as unknown as { from: (t: string) => { upsert: (d: unknown[], o: Record<string, unknown>) => Promise<unknown> } })
+                .from("user_achievements").upsert(toAward, { onConflict: "user_id,achievement_id", ignoreDuplicates: true });
+            }
+            // Grant a streak freeze on milestone streaks (7, 14, 30 days)
+            if ([7, 14, 30].includes(streak)) {
+              type RpcFn = (name: string, args: Record<string, unknown>) => Promise<{ data: unknown; error: unknown }>;
+              await (supabase.rpc as unknown as RpcFn)("grant_streak_freeze", { p_user_id: user.id, p_count: 1 });
+            }
+          })(),
+
+          // CEFR level-up achievement
+          leveledUp
+            ? (async () => {
+                const levelAchievements: Record<string, string> = { A1: "level_a1", A2: "level_a2", B1: "level_b1" };
+                const achievementId = levelAchievements[newLevel];
+                if (achievementId) {
+                  await (supabase as unknown as { from: (t: string) => { upsert: (d: unknown[], o: Record<string, unknown>) => Promise<unknown> } })
+                    .from("user_achievements").upsert(
+                      [{ user_id: user.id, achievement_id: achievementId }],
+                      { onConflict: "user_id,achievement_id", ignoreDuplicates: true }
+                    );
+                }
+              })()
+            : Promise.resolve(),
+        ]);
+      } catch {
+        // Achievement failure is completely non-blocking — lesson is already saved
+      }
+    })();
+
     return {
       success: true,
       message: `Hoàn thành bài học thành công! Bạn nhận được ${xpEarned} XP (${cleanParams.starCount}⭐).`,

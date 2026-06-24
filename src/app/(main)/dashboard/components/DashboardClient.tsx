@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Flame, Star, GraduationCap, BookOpen, Clock, ChevronDown, ChevronUp, ChevronRight, ExternalLink, Target } from "lucide-react";
 import { toast } from "sonner";
 import { updateDailyXpGoal } from "@/app/actions/stats";
+import { useStreakFreeze as freezeStreakAction } from "@/app/actions/gamification";
 import { getPhaseForLevel, DAILY_TIPS } from "@/lib/constants/study-plan";
 
 import UnitCard from "./UnitCard";
@@ -15,6 +16,7 @@ import QuickActions from "./QuickActions";
 import WordOfDayCard from "./WordOfDayCard";
 import LevelUpModal from "@/components/learn/LevelUpModal";
 import { WidgetErrorBoundary } from "@/components/ui/widget-error-boundary";
+import { StreakShieldWidget } from "@/components/gamification/StreakShieldWidget";
 
 // Dynamic import — NotificationBell uses browser APIs (navigator, ServiceWorker)
 const NotificationBell = dynamic(
@@ -57,6 +59,7 @@ interface DashboardClientProps {
     level: "A0" | "A1" | "A2" | "B1" | "B2" | "C1";
   } | null;
   completedUnitIds: string[];
+  streakFreezeCount: number;
   allUnits: Array<{ id: string; title: string; level: string; route: string; xp: number }>;
 }
 
@@ -108,6 +111,7 @@ export default function DashboardClient({
   wordOfDay,
   completedUnitIds,
   allUnits,
+  streakFreezeCount,
 }: DashboardClientProps) {
   const [xpCurrent, setXpCurrent] = useState(initialXpCurrent);
   const [quests, setQuests] = useState(initialQuests);
@@ -302,6 +306,21 @@ export default function DashboardClient({
               <NotificationBell />
             </div>
         </div>
+
+        {/* Streak Shield Widget — shown when user has freeze charges or streak ≥ 5 */}
+        {(streakFreezeCount > 0 || currentStreak >= 5) && (
+          <WidgetErrorBoundary name="StreakShield">
+            <StreakShieldWidget
+              currentStreak={currentStreak}
+              freezeCount={streakFreezeCount}
+              onUseFreeze={async () => {
+                const result = await freezeStreakAction();
+                if (!result.success) throw new Error(result.error ?? 'Failed');
+                toast.success('🛡️ Lá chắn streak đã được dùng!', { description: `Còn lại ${result.freezesRemaining} lá chắn.` });
+              }}
+            />
+          </WidgetErrorBoundary>
+        )}
 
 
         {/* ── 2. Stats strip ── */}

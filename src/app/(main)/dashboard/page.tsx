@@ -36,6 +36,7 @@ export default async function DashboardPage() {
   let currentStreak = 0;
   let userLevel = "A0 Learner"; // Default for new users starting at A0
   let dailyXpGoal = 50;
+  let streakFreezeCount = 0;
 
   if (progressRes.success && progressRes.progress) {
     const p = progressRes.progress;
@@ -43,6 +44,8 @@ export default async function DashboardPage() {
     totalXp = p.total_xp || 0;
     currentStreak = p.streak || 0;
     dailyXpGoal = p.daily_xp_goal || 50;
+    // streak_freeze_count added by migration 20260624020000 — cast via unknown
+    streakFreezeCount = (p as unknown as { streak_freeze_count?: number }).streak_freeze_count ?? 0;
 
     const levelNames: Record<string, string> = {
       A0: "A0 Nền tảng",
@@ -166,6 +169,7 @@ export default async function DashboardPage() {
       dailyXpGoal={dailyXpGoal}
       wordOfDay={wordOfDay}
       completedUnitIds={completedUnitIds}
+      streakFreezeCount={streakFreezeCount}
       allUnits={UNITS.map(u => ({ id: u.id, title: u.title, level: u.level, route: u.route, xp: u.xp }))}
     />
   );
