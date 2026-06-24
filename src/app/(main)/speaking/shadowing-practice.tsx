@@ -58,7 +58,7 @@ export interface ShadowingItem {
   id: string;
   title: string;
   topic: string;
-  level: "A1" | "A2" | "B1" | "B2" | "C1";
+  level: "A0" | "A1" | "A2" | "B1" | "B2" | "C1";
   transcript: string;
   translation: string;
   difficultWords: string[];
