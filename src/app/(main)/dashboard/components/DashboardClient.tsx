@@ -249,12 +249,30 @@ export default function DashboardClient({
   useEffect(() => {
     try {
       const saved = localStorage.getItem(storageKey);
+      const challengeKey = `ato_challenge_${todayKey}`;
+      const challengeDone = !!localStorage.getItem(challengeKey);
+
       if (saved) {
-        const { quests: savedQuests, xp } = JSON.parse(saved);
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        if (Array.isArray(savedQuests)) setQuests(savedQuests);
+        const { quests: savedQuests, xp } = JSON.parse(saved) as {
+          quests: Array<{ id: number; text: string; xp: number; completed: boolean }>;
+          xp: number;
+        };
+        if (Array.isArray(savedQuests)) {
+          // Auto-sync quest #4 (Daily Challenge) with challenge completion state
+          const synced = savedQuests.map((q) =>
+            q.id === 4 ? { ...q, completed: challengeDone || q.completed } : q
+          );
+          // eslint-disable-next-line react-hooks/set-state-in-effect
+          setQuests(synced);
+        }
          
         if (typeof xp === "number") setXpCurrent(xp);
+      } else if (challengeDone) {
+        // No saved quest state yet, but challenge is done — mark quest 4
+         
+        setQuests((prev) =>
+          prev.map((q) => (q.id === 4 ? { ...q, completed: true } : q))
+        );
       }
     } catch {
       // localStorage unavailable or corrupt — use server defaults

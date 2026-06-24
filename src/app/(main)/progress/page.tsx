@@ -161,6 +161,20 @@ export default async function ProgressPage() {
         <Trophy className="size-5 text-yellow-500/60 group-hover:text-yellow-500 group-hover:translate-x-0.5 transition-all shrink-0" />
       </a>
 
+      {/* Weekly Report CTA */}
+      <a
+        href="/progress/weekly"
+        className="flex items-center gap-4 p-4 rounded-2xl border border-blue-500/20 bg-blue-500/5 hover:bg-blue-500/8 hover:border-blue-500/35 transition-all duration-200 group"
+      >
+        <span className="flex size-10 items-center justify-center rounded-xl bg-blue-500/15 text-2xl shrink-0">📊</span>
+        <div className="flex-1 min-w-0">
+          <p className="text-xs font-black text-blue-400 uppercase tracking-widest mb-0.5">Tổng kết 7 ngày</p>
+          <p className="text-sm font-bold text-foreground">Báo Cáo Tuần Này</p>
+          <p className="text-xs text-muted-foreground">Bài học, thẻ ôn, ngày hoạt động — so sánh với tuần trước</p>
+        </div>
+        <TrendingUp className="size-5 text-blue-500/60 group-hover:text-blue-500 group-hover:translate-x-0.5 transition-all shrink-0" />
+      </a>
+
       <div className="grid gap-4 sm:gap-6 lg:grid-cols-3">
         {/* Weekly XP Chart */}
         <div className="lg:col-span-2 rounded-3xl border border-zinc-200/60 dark:border-zinc-800/60 bg-white/60 dark:bg-zinc-900/30 backdrop-blur-sm p-4 sm:p-8 space-y-4 sm:space-y-6">
