@@ -16,6 +16,7 @@ import {
   ExternalLink,
   Lightbulb,
   AlertTriangle,
+  Trophy,
 } from "lucide-react";
 import {
   STUDY_PHASES,
@@ -697,6 +698,55 @@ export default function RoadmapClient({
                             </motion.div>
                           )}
                         </AnimatePresence>
+
+                        {/* Checkpoint CTA */}
+                        <div style={{ marginTop: 14, display: "flex", flexDirection: "column", gap: 8 }}>
+                          <div style={{ fontSize: 10, color: "#52525b", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 2 }}>
+                            🏁 Kiểm tra tổng hợp giai đoạn
+                          </div>
+                          {phase.unitLevels.map((lvl) => {
+                            const lvlSlug = lvl.toLowerCase();
+                            const lvlUnits = allUnits.filter(u => u.level === lvl);
+                            const lvlCompleted = lvlUnits.filter(u => completedUnitIds.includes(u.id)).length;
+                            const lvlTotal = lvlUnits.length;
+                            const lvlUnlocked = lvlCompleted === lvlTotal && lvlTotal > 0;
+                            return (
+                              <Link
+                                key={lvl}
+                                href={`/checkpoint/${lvlSlug}`}
+                                style={{
+                                  display: "flex",
+                                  alignItems: "center",
+                                  gap: 10,
+                                  background: lvlUnlocked ? `${phase.color}15` : "#0d1117",
+                                  border: `1px solid ${lvlUnlocked ? phase.color + "50" : "#27272a"}`,
+                                  borderRadius: 10,
+                                  padding: "10px 14px",
+                                  textDecoration: "none",
+                                  transition: "all 0.15s",
+                                }}
+                              >
+                                <Trophy size={15} color={lvlUnlocked ? phase.color : "#52525b"} />
+                                <div style={{ flex: 1 }}>
+                                  <div style={{ fontSize: 12, fontWeight: 700, color: lvlUnlocked ? "#fafafa" : "#71717a" }}>
+                                    Checkpoint {lvl}
+                                    {!lvlUnlocked && (
+                                      <span style={{ fontSize: 10, color: "#52525b", marginLeft: 6 }}>
+                                        ({lvlCompleted}/{lvlTotal} bài)
+                                      </span>
+                                    )}
+                                  </div>
+                                  <div style={{ fontSize: 10, color: "#52525b", marginTop: 1 }}>
+                                    {lvlUnlocked ? "✓ Mở khoá — Bắt đầu kiểm tra" : "Hoàn thành tất cả bài để mở khoá"}
+                                  </div>
+                                </div>
+                                <span style={{ fontSize: 10, color: lvlUnlocked ? phase.color : "#3f3f46", fontWeight: 700 }}>
+                                  {lvlUnlocked ? "→" : "🔒"}
+                                </span>
+                              </Link>
+                            );
+                          })}
+                        </div>
                       </div>
                     </motion.div>
                   )}

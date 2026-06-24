@@ -2,8 +2,9 @@
 
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { Award, Download, ArrowLeft, BookOpen, Star, Lock } from "lucide-react";
+import { Award, Download, ArrowLeft, BookOpen, Star, Lock, Share2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 interface Props {
   level: string;
@@ -53,6 +54,39 @@ export default function CertificateClient({
   const router = useRouter();
   const theme = LEVEL_THEMES[level] ?? LEVEL_THEMES.a1;
 
+  const certUrl = typeof window !== "undefined"
+    ? `${window.location.origin}/certificate/${level}`
+    : `https://atoenglish.vercel.app/certificate/${level}`;
+
+  const shareText = `🎓 Tôi vừa hoàn thành chứng nhận ${level.toUpperCase()} tiếng Anh trên AtoEnglish!\n\n📚 Hoàn thành ${requiredUnits} bài học · ${totalXp.toLocaleString()} XP tích lũy\n\nHọc tiếng Anh miễn phí 100% tại AtoEnglish 👇`;
+
+  const handleShareLinkedIn = () => {
+    const params = new URLSearchParams({
+      mini: "true",
+      url: certUrl,
+      title: `AtoEnglish ${level.toUpperCase()} Certificate`,
+      summary: shareText,
+      source: "AtoEnglish",
+    });
+    window.open(`https://www.linkedin.com/shareArticle?${params.toString()}`, "_blank", "width=600,height=500");
+  };
+
+  const handleShareFacebook = () => {
+    const params = new URLSearchParams({ u: certUrl });
+    window.open(`https://www.facebook.com/sharer/sharer.php?${params.toString()}`, "_blank", "width=600,height=400");
+  };
+
+  const handleCopyLink = async () => {
+    try {
+      await navigator.clipboard.writeText(`${shareText}\n\n${certUrl}`);
+      toast.success("Đã sao chép nội dung chia sẻ!");
+    } catch {
+      toast.error("Không thể sao chép. Thử lại nhé!");
+    }
+  };
+
+  const handlePrint = () => window.print();
+
   if (!isEligible) {
     return (
       <div className="min-h-screen flex items-center justify-center p-6">
@@ -98,8 +132,6 @@ export default function CertificateClient({
       </div>
     );
   }
-
-  const handlePrint = () => window.print();
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-4 pb-28 sm:p-8 sm:pb-8 relative overflow-hidden">
@@ -233,14 +265,56 @@ export default function CertificateClient({
         <div className={`h-1 w-full bg-gradient-to-r ${theme.gradient} opacity-40`} />
       </motion.div>
 
+      {/* Share Section */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.4 }}
+        className="w-full max-w-2xl mt-6 rounded-2xl border border-zinc-800 bg-zinc-900/40 p-4 print:hidden"
+      >
+        <p className="text-xs font-black text-zinc-400 uppercase tracking-wider text-center mb-3">
+          🎉 Chia sẻ thành tích với mọi người
+        </p>
+        <div className="grid grid-cols-3 gap-2">
+          <button
+            id="share-linkedin"
+            onClick={handleShareLinkedIn}
+            className="flex flex-col items-center gap-1.5 p-3 rounded-xl bg-[#0077b5]/10 border border-[#0077b5]/20 hover:bg-[#0077b5]/20 transition-all duration-200 group"
+          >
+            {/* LinkedIn inline SVG — lucide-react doesn't export Linkedin */}
+            <svg className="size-5" viewBox="0 0 24 24" fill="#0077b5" aria-hidden="true">
+              <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+            </svg>
+            <span className="text-[10px] font-bold text-zinc-400 group-hover:text-zinc-200">LinkedIn</span>
+          </button>
+          <button
+            id="share-facebook"
+            onClick={handleShareFacebook}
+            className="flex flex-col items-center gap-1.5 p-3 rounded-xl bg-[#1877f2]/10 border border-[#1877f2]/20 hover:bg-[#1877f2]/20 transition-all duration-200 group"
+          >
+            <Share2 className="size-5 text-[#1877f2]" />
+            <span className="text-[10px] font-bold text-zinc-400 group-hover:text-zinc-200">Facebook</span>
+          </button>
+          <button
+            id="share-copy-link"
+            onClick={handleCopyLink}
+            className="flex flex-col items-center gap-1.5 p-3 rounded-xl bg-zinc-800/60 border border-zinc-700/40 hover:bg-zinc-700/60 transition-all duration-200 group"
+          >
+            <Share2 className="size-5 text-zinc-400" />
+            <span className="text-[10px] font-bold text-zinc-400 group-hover:text-zinc-200">Sao chép</span>
+          </button>
+        </div>
+      </motion.div>
+
       {/* Action buttons */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.5 }}
-        className="flex flex-col sm:flex-row gap-3 mt-8 w-full max-w-2xl print:hidden"
+        className="flex flex-col sm:flex-row gap-3 mt-4 w-full max-w-2xl print:hidden"
       >
         <Button
+          id="print-certificate"
           onClick={handlePrint}
           variant="outline"
           className="flex-1 h-12 rounded-xl font-bold border-zinc-700 hover:bg-zinc-800 text-zinc-300 gap-2"
@@ -249,6 +323,7 @@ export default function CertificateClient({
           Lưu / In chứng nhận
         </Button>
         <Button
+          id="back-to-dashboard"
           onClick={() => router.push("/dashboard")}
           className={`flex-1 h-12 bg-gradient-to-r ${theme.gradient} text-white font-bold rounded-xl shadow-lg`}
         >
