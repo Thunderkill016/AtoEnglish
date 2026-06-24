@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Play, Mic, BookOpen, BookOpenCheck } from "lucide-react";
+import { Play, Mic, BookOpen, Trophy } from "lucide-react";
 
 
 interface QuickActionsProps {
@@ -15,9 +15,9 @@ const actions = (unitRoute: string) => [
     hover: "hover:border-emerald-500/30 hover:bg-emerald-500/5",
   },
   {
-    href: "/grammar",
-    icon: BookOpenCheck,
-    label: "Ngữ pháp",
+    href: "/writing",
+    icon: BookOpen,
+    label: "Viết & Cải thiện",
     iconBg: "bg-blue-500/10 text-blue-600 dark:text-blue-400",
     hover: "hover:border-blue-500/30 hover:bg-blue-500/5",
   },
@@ -29,11 +29,11 @@ const actions = (unitRoute: string) => [
     hover: "hover:border-teal-500/30 hover:bg-teal-500/5",
   },
   {
-    href: "/quiz",
-    icon: BookOpen,
-    label: "Quiz từ vựng",
-    iconBg: "bg-violet-500/10 text-violet-600 dark:text-violet-400",
-    hover: "hover:border-violet-500/30 hover:bg-violet-500/5",
+    href: "/leaderboard",
+    icon: Trophy,
+    label: "Bảng xếp hạng",
+    iconBg: "bg-yellow-500/10 text-yellow-600 dark:text-yellow-400",
+    hover: "hover:border-yellow-500/30 hover:bg-yellow-500/5",
   },
 ];
 

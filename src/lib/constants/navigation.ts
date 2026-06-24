@@ -6,6 +6,7 @@ import {
   TrendingUp,
   Mic,
   PenLine,
+  Trophy,
   type LucideIcon,
 } from "lucide-react";
 
@@ -52,6 +53,12 @@ export const mainNavItems: NavItem[] = [
     href: "/progress",
     icon: TrendingUp,
     description: "Thống kê và thành tích",
+  },
+  {
+    title: "Leaderboard",
+    href: "/leaderboard",
+    icon: Trophy,
+    description: "Top học viên theo XP",
   },
   {
     title: "Roadmap",
