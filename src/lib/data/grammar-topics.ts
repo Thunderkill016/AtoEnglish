@@ -2,7 +2,7 @@
 // Each topic: CEFR level, title, explanation (Vietnamese), key rules, examples,
 // common mistakes Vietnamese learners make, quick practice sentence
 
-export type GrammarLevel = "A1" | "A2" | "B1" | "B2";
+export type GrammarLevel = "A0" | "A1" | "A2" | "B1" | "B2";
 
 export interface GrammarExample {
   en: string;
@@ -24,6 +24,95 @@ export interface GrammarTopic {
 }
 
 export const GRAMMAR_TOPICS: GrammarTopic[] = [
+
+  // ══ A0 ════════════════════════════════════════════════════════════════════
+
+  {
+    id: "a0-greetings",
+    level: "A0",
+    title: "Câu Chào Hỏi Cơ Bản",
+    subtitleEn: "Basic Greetings & Introductions",
+    emoji: "👋",
+    explanation: "Những câu chào hỏi và giới thiệu bản thân thiết yếu nhất. Đây là điều đầu tiên cần học khi bắt đầu học tiếng Anh.",
+    structure: "Hello / Hi | Good morning/afternoon/evening | My name is... | I am...",
+    rules: [
+      "Hello / Hi = xin chào (bất kỳ thời điểm nào)",
+      "Good morning (sáng) | Good afternoon (chiều) | Good evening (tối)",
+      "My name is [Name]. = Tên tôi là...",
+      "I am from Vietnam. = Tôi đến từ Việt Nam.",
+      "Nice to meet you! = Rất vui được gặp bạn!",
+    ],
+    examples: [
+      { en: "Hello! My name is Lan.", vn: "Xin chào! Tên tôi là Lan." },
+      { en: "Good morning! How are you?", vn: "Chào buổi sáng! Bạn có khỏe không?" },
+      { en: "I'm fine, thank you.", vn: "Tôi khỏe, cảm ơn." },
+      { en: "Nice to meet you!", vn: "Rất vui được gặp bạn!" },
+    ],
+    mistakes: [
+      "❌ Good morning, how you? → ✅ How ARE you? (không bỏ 'are')",
+      "❌ My name Lan → ✅ My name IS Lan (cần động từ 'is')",
+      "❌ You're welcome (khi chưa được cảm ơn) → chỉ dùng khi ai đó nói 'thank you'",
+    ],
+    tip: "Luôn dùng 'I AM' (không phải 'I IS' hay 'I ARE'). 'AM' chỉ dùng cho 'I'!",
+  },
+
+  {
+    id: "a0-numbers",
+    level: "A0",
+    title: "Số Đếm & Giá Tiền",
+    subtitleEn: "Numbers & Prices",
+    emoji: "🔢",
+    explanation: "Học cách đọc số và hỏi giá — kỹ năng sinh tồn khi mua sắm hoặc giao dịch bằng tiếng Anh.",
+    structure: "How much is this? | It costs... | That's... dollars",
+    rules: [
+      "1-10: one, two, three, four, five, six, seven, eight, nine, ten",
+      "11-20: eleven, twelve, thirteen... twenty",
+      "Chục: twenty, thirty, forty, fifty, sixty, seventy, eighty, ninety",
+      "How much is this/that? = Cái này/kia giá bao nhiêu?",
+      "Sau số > 1: danh từ số nhiều → 'two dollars', 'five chairs'",
+    ],
+    examples: [
+      { en: "How much is this shirt?", vn: "Cái áo này giá bao nhiêu?" },
+      { en: "It costs fifty thousand dong.", vn: "Nó giá năm mươi nghìn đồng." },
+      { en: "That's twenty-five dollars.", vn: "Đó là hai mươi lăm đô la." },
+      { en: "I have ten apples.", vn: "Tôi có mười quả táo." },
+    ],
+    mistakes: [
+      "❌ How many is this? → ✅ How MUCH is this? (giá tiền dùng 'much')",
+      "❌ It cost five dollar → ✅ It costs five dollars (số nhiều!)",
+      "❌ I have ten apple → ✅ I have ten apples (sau số > 1 phải có -s)",
+    ],
+    tip: "'How MUCH' hỏi giá (không đếm được). 'How MANY' hỏi số lượng (đếm được).",
+  },
+
+  {
+    id: "a0-articles",
+    level: "A0",
+    title: "Mạo Từ A / An / The",
+    subtitleEn: "Articles: A, An, The",
+    emoji: "🔤",
+    explanation: "Tiếng Anh có 3 mạo từ quan trọng. Đây là lỗi số 1 của người Việt học tiếng Anh vì tiếng Việt không có mạo từ!",
+    structure: "A + phụ âm | An + nguyên âm | The + đã biết/cụ thể",
+    rules: [
+      "A = một cái (phụ âm): a book, a car, a dog",
+      "An = một cái (nguyên âm a,e,i,o,u): an apple, an hour, an egg",
+      "The = cái đã được đề cập, cụ thể, duy nhất: the sun, the president",
+      "Không dùng mạo từ: tên người, thành phố, quốc gia, danh từ chung chung",
+      "I am a teacher. (nghề nghiệp cần 'a'!)",
+    ],
+    examples: [
+      { en: "I have a dog. The dog is very cute.", vn: "Tôi có một con chó. Con chó đó rất dễ thương." },
+      { en: "She is an engineer.", vn: "Cô ấy là kỹ sư." },
+      { en: "The sky is blue.", vn: "Bầu trời màu xanh." },
+      { en: "I am a student at University.", vn: "Tôi là sinh viên đại học." },
+    ],
+    mistakes: [
+      "❌ I am teacher → ✅ I am A teacher (nghề nghiệp cần mạo từ!)",
+      "❌ She has a umbrella → ✅ She has AN umbrella ('u' là nguyên âm)",
+      "❌ I go to the school every day → ✅ I go to school (trường học nói chung, không cần 'the')",
+    ],
+    tip: "'An' trước nguyên âm ÂM THANH (không phải chữ cái): 'an hour' (âm /aʊ/) nhưng 'a university' (âm /juː/)!",
+  },
 
   // ══ A1 ════════════════════════════════════════════════════════════════════
 
@@ -110,6 +199,36 @@ export const GRAMMAR_TOPICS: GrammarTopic[] = [
       "❌ Is there a books? → ✅ Are there any books?",
     ],
     tip: "'There is/are' = 'Có...' trong tiếng Việt. Số nhiều nhớ dùng 'are'!",
+  },
+
+  {
+    id: "question-words",
+    level: "A1",
+    title: "Từ Hỏi (Wh-)",
+    subtitleEn: "Question Words (What/Who/Where/When/Why/How)",
+    emoji: "❓",
+    explanation: "6 từ hỏi quan trọng nhất giúp bạn tạo được hàng trăm câu hỏi. Nền tảng của giao tiếp hàng ngày.",
+    structure: "Wh- word + auxiliary + subject + verb?",
+    rules: [
+      "What = cái gì (What is your name?)",
+      "Who = ai (Who is that?)",
+      "Where = ở đâu (Where do you live?)",
+      "When = khi nào (When is the meeting?)",
+      "Why = tại sao (Why are you late?)",
+      "How = như thế nào (How are you? / How much?)",
+    ],
+    examples: [
+      { en: "What do you do for a living?", vn: "Bạn làm nghề gì?" },
+      { en: "Where is the nearest hospital?", vn: "Bệnh viện gần nhất ở đâu?" },
+      { en: "When does the bus arrive?", vn: "Xe buýt đến lúc mấy giờ?" },
+      { en: "How much does this cost?", vn: "Cái này giá bao nhiêu?" },
+    ],
+    mistakes: [
+      "❌ What you do? → ✅ What do you DO? (cần auxiliary 'do')",
+      "❌ Where you live? → ✅ Where DO you live?",
+      "❌ How you are? → ✅ How ARE you? (đảo auxiliary)",
+    ],
+    tip: "Câu hỏi với Wh-: Wh- + TRỢĐỘNG TỪ + Chủ ngữ + Động từ. Không bao giờ bỏ 'do/does/is/are'!",
   },
 
   // ══ A2 ════════════════════════════════════════════════════════════════════
@@ -230,6 +349,63 @@ export const GRAMMAR_TOPICS: GrammarTopic[] = [
     tip: "Modal + VERB BASE — không bao giờ có 'to' hay thêm -s/-ed sau modal!",
   },
 
+  {
+    id: "future-will-going-to",
+    level: "A2",
+    title: "Tương Lai: Will & Going To",
+    subtitleEn: "Future: Will vs Going To",
+    emoji: "🔮",
+    explanation: "Hai cách nói về tương lai phổ biến nhất. 'Will' cho quyết định tức thì & dự đoán. 'Going to' cho kế hoạch đã có sẵn.",
+    structure: "will + V (bare) | am/is/are + going to + V",
+    rules: [
+      "Will: quyết định ngay lúc nói → 'I'll help you!' (vừa quyết định)",
+      "Will: dự đoán không có bằng chứng → 'It will rain tomorrow.'",
+      "Going to: kế hoạch đã lên trước → 'I'm going to study tonight.' (đã chuẩn bị)",
+      "Going to: dự đoán có bằng chứng → 'Look at those clouds — it's going to rain!'",
+      "Phủ định: won't | isn't/aren't going to",
+    ],
+    examples: [
+      { en: "I'll have the steak, please.", vn: "Tôi sẽ dùng bít tết, làm ơn. (quyết định tức thì)" },
+      { en: "She's going to study medicine next year.", vn: "Năm tới cô ấy sẽ học y (kế hoạch sẵn)." },
+      { en: "It's going to rain — look at those clouds!", vn: "Sắp mưa rồi — nhìn đám mây kia!" },
+      { en: "I won't tell anyone your secret.", vn: "Tôi sẽ không nói bí mật của bạn với ai." },
+    ],
+    mistakes: [
+      "❌ I will going to meet her → ✅ Chỉ dùng MỘT trong hai: will MEET hoặc going to MEET",
+      "❌ She is going to studies → ✅ going to STUDY (bare infinitive sau 'to')",
+      "❌ I going to eat → ✅ I AM going to eat (cần 'am/is/are')",
+    ],
+    tip: "Trick: Will = QUYẾT ĐỊNH (ý chí). Going to = KẾ HOẠCH (đã vạch sẵn). Phone rings → 'I'll answer it!' (will, không phải going to)",
+  },
+
+  {
+    id: "first-conditional",
+    level: "A2",
+    title: "Câu Điều Kiện Loại 1",
+    subtitleEn: "First Conditional",
+    emoji: "✅",
+    explanation: "Diễn tả tình huống có thể xảy ra trong thực tế — điều kiện thực tế và kết quả có thể xảy ra ở tương lai.",
+    structure: "If + present simple, will + V",
+    rules: [
+      "Mệnh đề 'if': dùng Present Simple (KHÔNG dùng will)",
+      "Mệnh đề chính: will/won't + V nguyên thể",
+      "'If it rains, I will stay home.' (có thể mưa thật)",
+      "Có thể đảo: 'I will stay home if it rains.'",
+      "Thay 'if' bằng 'when' khi chắc chắn sẽ xảy ra: 'When I get home, I'll call you.'",
+    ],
+    examples: [
+      { en: "If you study hard, you will pass the exam.", vn: "Nếu bạn học chăm, bạn sẽ vượt qua kỳ thi." },
+      { en: "I'll be late if I miss the bus.", vn: "Tôi sẽ trễ nếu lỡ xe buýt." },
+      { en: "If she calls, tell her I'm busy.", vn: "Nếu cô ấy gọi, báo là tôi đang bận." },
+      { en: "When I finish work, I'll go to the gym.", vn: "Khi tôi xong việc, tôi sẽ đến phòng gym." },
+    ],
+    mistakes: [
+      "❌ If it will rain, I will stay → ✅ If it RAINS, I will stay (mệnh đề if KHÔNG dùng will)",
+      "❌ If you will study, you will pass → ✅ If you STUDY, you will pass",
+    ],
+    tip: "Mệnh đề IF + Hiện tại đơn. Mệnh đề chính + will. KHÔNG BAO GIỜ dùng 'will' trong mệnh đề 'if'!",
+  },
+
   // ══ B1 ════════════════════════════════════════════════════════════════════
 
   {
@@ -348,6 +524,64 @@ export const GRAMMAR_TOPICS: GrammarTopic[] = [
     tip: "told = nói với ai đó (told ME) | said = nói chung chung (said that). Đừng nhầm!",
   },
 
+  {
+    id: "present-perfect-continuous",
+    level: "B1",
+    title: "Thì Hiện Tại Hoàn Thành Tiếp Diễn",
+    subtitleEn: "Present Perfect Continuous",
+    emoji: "⏳",
+    explanation: "Nhấn mạnh QUÃNG THỜI GIAN của hành động đang kéo dài từ quá khứ đến hiện tại. Thường trả lời 'How long...?'",
+    structure: "Subject + have/has + been + V-ing",
+    rules: [
+      "have/has been + V-ing: I have been studying for 2 hours.",
+      "Nhấn mạnh quá trình, không phải kết quả",
+      "'How long have you been working here?' → 'I've been working here for 5 years.'",
+      "State verbs (know, like, want) KHÔNG dùng continuous",
+      "Dấu hiệu: for, since, all day, lately, recently",
+    ],
+    examples: [
+      { en: "I've been waiting for you for an hour!", vn: "Tôi đã chờ bạn một tiếng rồi!" },
+      { en: "She has been studying medicine since 2020.", vn: "Cô ấy đã học y từ năm 2020." },
+      { en: "How long have you been learning English?", vn: "Bạn đã học tiếng Anh được bao lâu?" },
+      { en: "He's been working all day — he must be exhausted.", vn: "Anh ấy làm cả ngày rồi — chắc kiệt sức lắm." },
+    ],
+    mistakes: [
+      "❌ I have been study → ✅ I have been studying (cần -ing)",
+      "❌ I have been knowing her since 2020 → ✅ I have known her (know = state verb)",
+      "❌ She has been working here since 3 years → ✅ for 3 years (for + khoảng thời gian)",
+    ],
+    tip: "PPC nhấn mạnh MỆT MỎI / HIỆU QUẢ: 'I've been cooking for 2 hours!' (mệt) vs 'I've cooked dinner.' (xong rồi)",
+  },
+
+  {
+    id: "gerunds-infinitives",
+    level: "B1",
+    title: "Danh Động Từ vs Động Từ Nguyên Thể",
+    subtitleEn: "Gerunds vs Infinitives",
+    emoji: "⚖️",
+    explanation: "Sau một số động từ dùng V-ing (gerund), sau một số khác dùng to+V (infinitive). Đây là lỗi cực phổ biến!",
+    structure: "enjoy/avoid/suggest + V-ing | want/need/decide + to V",
+    rules: [
+      "Gerund (V-ing): enjoy, avoid, finish, suggest, recommend, consider, mind",
+      "Infinitive (to+V): want, need, decide, plan, hope, agree, promise, refuse",
+      "Cả hai (nghĩa thay đổi): stop, remember, forget, try",
+      "'stop smoking' = bỏ hút thuốc | 'stop to smoke' = dừng lại để hút",
+      "Sau preposition luôn dùng V-ing: 'interested in learning'",
+    ],
+    examples: [
+      { en: "I enjoy swimming in the sea.", vn: "Tôi thích bơi ở biển. (enjoy + V-ing)" },
+      { en: "She decided to change careers.", vn: "Cô ấy quyết định đổi nghề. (decide + to V)" },
+      { en: "He stopped smoking last year.", vn: "Anh ấy bỏ thuốc lá năm ngoái." },
+      { en: "I'm thinking about moving to Saigon.", vn: "Tôi đang nghĩ đến việc chuyển vào Sài Gòn." },
+    ],
+    mistakes: [
+      "❌ I enjoy to swim → ✅ I enjoy swimming",
+      "❌ She wants studying → ✅ She wants TO study",
+      "❌ I suggest to go there → ✅ I suggest GOING there",
+    ],
+    tip: "ENJOY, AVOID, SUGGEST, FINISH → luôn dùng V-ING. WANT, NEED, HOPE, DECIDE → luôn dùng TO V.",
+  },
+
   // ══ B2 ════════════════════════════════════════════════════════════════════
 
   {
@@ -435,6 +669,62 @@ export const GRAMMAR_TOPICS: GrammarTopic[] = [
     ],
     tip: "Wish + PAST SIMPLE = ước hiện tại | Wish + PAST PERFECT = tiếc quá khứ. Luôn lùi 1 thì!",
   },
+
+  {
+    id: "mixed-conditionals",
+    level: "B2",
+    title: "Điều Kiện Hỗn Hợp",
+    subtitleEn: "Mixed Conditionals",
+    emoji: "🔀",
+    explanation: "Kết hợp quá khứ và hiện tại trong cùng một câu điều kiện. Thể hiện tác động của quá khứ đối với hiện tại, hoặc trạng thái hiện tại đến kết quả quá khứ.",
+    structure: "If + Past Perfect → would + V (past→present) | If + Past Simple → would have + V3 (present→past)",
+    rules: [
+      "Type A (quá khứ → hiện tại): If + had V3, would + V",
+      "'If I had studied medicine, I would be a doctor now.'",
+      "Type B (hiện tại → quá khứ): If + past simple, would have + V3",
+      "'If I were braver, I would have asked for a raise.'",
+      "Phổ biến trong IELTS writing và business English",
+    ],
+    examples: [
+      { en: "If I had taken that job, I would be living in London now.", vn: "Nếu tôi nhận việc đó, giờ tôi đang sống ở London rồi." },
+      { en: "If she were more confident, she would have spoken at the conference.", vn: "Nếu cô ấy tự tin hơn, cô ấy đã phát biểu ở hội nghị rồi." },
+      { en: "If he hadn't overslept, he would be at work now.", vn: "Nếu anh ấy không ngủ quên, giờ anh ấy đã ở chỗ làm rồi." },
+      { en: "If I were a morning person, I would have joined the 6am run.", vn: "Nếu tôi quen dậy sớm, tôi đã tham gia chạy bộ 6 giờ sáng rồi." },
+    ],
+    mistakes: [
+      "❌ If I had more time, I would have went → ✅ would have GONE (V3)",
+      "❌ If I would have studied... → ✅ If I HAD studied (không dùng would trong mệnh đề if)",
+    ],
+    tip: "Mixed = trộn 2 loại conditional. Hỏi: 'Cái gì là quá khứ? Cái gì là hiện tại?' rồi ghép đúng phần của mỗi loại.",
+  },
+
+  {
+    id: "participial-clauses",
+    level: "B2",
+    title: "Mệnh Đề Phân Từ",
+    subtitleEn: "Participial Clauses",
+    emoji: "✂️",
+    explanation: "Rút gọn mệnh đề trạng ngữ bằng cách dùng V-ing hoặc V3. Làm cho văn viết súc tích, chuyên nghiệp hơn.",
+    structure: "V-ing / V3 + ... , main clause",
+    rules: [
+      "Chủ ngữ mệnh đề rút gọn PHẢI giống chủ ngữ mệnh đề chính!",
+      "Active: 'Seeing the problem, he fixed it.' (= Because he saw...)",
+      "Passive: 'Written in 1984, the book is still popular.'",
+      "Perfect participle: 'Having finished the report, she went home.'",
+      "Sai chủ ngữ = dangling modifier: ❌ 'Walking home, it started to rain.'",
+    ],
+    examples: [
+      { en: "Feeling tired, she went to bed early.", vn: "Cảm thấy mệt, cô ấy đi ngủ sớm." },
+      { en: "Located in the city centre, the hotel is very convenient.", vn: "Nằm ở trung tâm thành phố, khách sạn rất thuận tiện." },
+      { en: "Having read the report, he made his decision.", vn: "Sau khi đọc báo cáo, anh ấy đưa ra quyết định." },
+      { en: "Not knowing what to do, she asked for help.", vn: "Không biết phải làm gì, cô ấy nhờ giúp đỡ." },
+    ],
+    mistakes: [
+      "❌ Walking home, it started to rain → ✅ Walking home, I got caught in the rain. (sửa lại chủ ngữ)",
+      "❌ Finished the work, he left → ✅ Having finished the work / After finishing the work",
+    ],
+    tip: "Quy tắc vàng: Chủ ngữ mệnh đề phân từ = Chủ ngữ mệnh đề chính. Nếu sai → dangling modifier!",
+  },
 ];
 
 // Helpers
@@ -442,6 +732,7 @@ export const TOPICS_BY_LEVEL = (level: GrammarLevel) =>
   GRAMMAR_TOPICS.filter(t => t.level === level);
 
 export const LEVEL_COLORS: Record<GrammarLevel, string> = {
+  A0: "#06b6d4",
   A1: "#3b82f6",
   A2: "#8b5cf6",
   B1: "#f59e0b",
@@ -449,6 +740,7 @@ export const LEVEL_COLORS: Record<GrammarLevel, string> = {
 };
 
 export const LEVEL_BG: Record<GrammarLevel, string> = {
+  A0: "#06b6d410",
   A1: "#3b82f610",
   A2: "#8b5cf610",
   B1: "#f59e0b10",

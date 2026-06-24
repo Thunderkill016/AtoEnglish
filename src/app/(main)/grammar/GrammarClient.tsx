@@ -11,9 +11,10 @@ import {
   type GrammarTopic,
 } from "@/lib/data/grammar-topics";
 
-const LEVELS: GrammarLevel[] = ["A1", "A2", "B1", "B2"];
+const LEVELS: GrammarLevel[] = ["A0", "A1", "A2", "B1", "B2"];
 
 const LEVEL_LABEL: Record<GrammarLevel, string> = {
+  A0: "A0 · Starter",
   A1: "A1 · Beginner",
   A2: "A2 · Elementary",
   B1: "B1 · Intermediate",
@@ -22,6 +23,7 @@ const LEVEL_LABEL: Record<GrammarLevel, string> = {
 
 // Tailwind-safe class maps (avoids dynamic class generation issues)
 const LEVEL_TAB_ACTIVE: Record<GrammarLevel, string> = {
+  A0: "border-cyan-500 bg-cyan-500/10 text-cyan-400",
   A1: "border-emerald-500 bg-emerald-500/10 text-emerald-400",
   A2: "border-blue-500 bg-blue-500/10 text-blue-400",
   B1: "border-violet-500 bg-violet-500/10 text-violet-400",
@@ -31,6 +33,7 @@ const LEVEL_TAB_ACTIVE: Record<GrammarLevel, string> = {
 const LEVEL_TAB_INACTIVE = "border-zinc-800 bg-transparent text-zinc-500 hover:border-zinc-600 hover:text-zinc-400";
 
 const LEVEL_TEXT: Record<GrammarLevel, string> = {
+  A0: "text-cyan-400",
   A1: "text-emerald-400",
   A2: "text-blue-400",
   B1: "text-violet-400",
@@ -38,7 +41,7 @@ const LEVEL_TEXT: Record<GrammarLevel, string> = {
 };
 
 export default function GrammarClient() {
-  const [activeLevel, setActiveLevel] = useState<GrammarLevel>("A1");
+  const [activeLevel, setActiveLevel] = useState<GrammarLevel>("A0");
   const [openTopic, setOpenTopic] = useState<string | null>(null);
 
   const filtered = GRAMMAR_TOPICS.filter(t => t.level === activeLevel);
@@ -52,7 +55,7 @@ export default function GrammarClient() {
           <span className="inline-flex items-center gap-1.5 bg-emerald-500/10 border border-emerald-500/20 rounded-full px-3 py-1 text-[11px] font-black text-emerald-400 uppercase tracking-widest mb-3">
             <BookOpen className="w-3 h-3" /> Grammar Reference
           </span>
-          <h1 className="text-2xl font-black text-zinc-50 mb-1.5">Ngữ Pháp A1 → B2</h1>
+          <h1 className="text-2xl font-black text-zinc-50 mb-1.5">Ngữ Pháp A0 → B2</h1>
           <p className="text-sm text-zinc-500 leading-relaxed">
             Giải thích tiếng Việt · Ví dụ thực tế · Lỗi hay gặp · Mẹo nhớ
           </p>
