@@ -725,6 +725,64 @@ export const GRAMMAR_TOPICS: GrammarTopic[] = [
     ],
     tip: "Quy tắc vàng: Chủ ngữ mệnh đề phân từ = Chủ ngữ mệnh đề chính. Nếu sai → dangling modifier!",
   },
+
+  {
+    id: "nominal-clauses",
+    level: "B2",
+    title: "Mệnh Đề Danh Từ",
+    subtitleEn: "Nominal Clauses (That / Wh- Clauses)",
+    emoji: "📋",
+    explanation: "Mệnh đề đóng vai trò như một danh từ — làm chủ ngữ, tân ngữ, hoặc vị ngữ. Cực kỳ phổ biến trong văn học thuật và business English.",
+    structure: "That + clause | What/Whether/How + clause",
+    rules: [
+      "That-clause làm tân ngữ: 'I believe THAT the report is accurate.'",
+      "What-clause làm chủ ngữ: 'What he said surprised everyone.'",
+      "Whether-clause (câu hỏi gián tiếp Yes/No): 'I don't know WHETHER she is coming.'",
+      "How-clause: 'The question is HOW we can reduce costs.'",
+      "Sau suggest/recommend: 'It is suggested THAT all staff attend.'",
+    ],
+    examples: [
+      { en: "What matters most is the quality of the work.", vn: "Điều quan trọng nhất là chất lượng công việc." },
+      { en: "I believe that the project will succeed.", vn: "Tôi tin rằng dự án sẽ thành công." },
+      { en: "The issue is whether we have enough budget.", vn: "Vấn đề là liệu chúng ta có đủ ngân sách không." },
+      { en: "It is important that all staff attend the meeting.", vn: "Điều quan trọng là tất cả nhân viên tham dự cuộc họp." },
+    ],
+    mistakes: [
+      "❌ I know how to do it or not → ✅ I know WHETHER I can do it",
+      "❌ What he said it was wrong → ✅ What he said was wrong (không thêm 'it' thừa)",
+      "❌ I think that that is wrong → ✅ I think that is wrong (tránh lặp 'that')",
+    ],
+    tip: "'That' sau động từ suy nghĩ (think, believe, know) có thể bỏ trong văn nói. Trong văn viết trang trọng nên giữ lại!",
+  },
+
+  {
+    id: "discourse-markers",
+    level: "B2",
+    title: "Từ Nối và Discourse Markers",
+    subtitleEn: "Discourse Markers for Coherent Writing",
+    emoji: "🔗",
+    explanation: "Từ nối giúp văn viết mạch lạc, logic. Đây là điểm then chốt để đạt band 6.5+ IELTS Writing — người Việt thường chỉ dùng 'but', 'and', 'so' lặp lại.",
+    structure: "Marker + comma + main clause | Main clause; marker, clause",
+    rules: [
+      "Tương phản: however, nevertheless, in contrast, on the other hand",
+      "Nguyên nhân/kết quả: therefore, consequently, as a result, hence, thus",
+      "Bổ sung: furthermore, moreover, in addition, what is more",
+      "Ví dụ: for instance, for example, such as, namely",
+      "Tổng kết: in conclusion, to sum up, overall, in summary",
+    ],
+    examples: [
+      { en: "The plan was expensive; nevertheless, it proved effective.", vn: "Kế hoạch tốn kém; tuy nhiên, nó được chứng minh là hiệu quả." },
+      { en: "Sales declined in Q1. Consequently, the board revised the forecast.", vn: "Doanh số giảm Q1. Do đó, hội đồng sửa lại dự báo." },
+      { en: "The product is innovative. Furthermore, it is cost-effective.", vn: "Sản phẩm có tính đổi mới. Hơn nữa, nó còn tiết kiệm chi phí." },
+      { en: "Despite the challenges, the team delivered on time.", vn: "Bất chấp những khó khăn, nhóm vẫn hoàn thành đúng hạn." },
+    ],
+    mistakes: [
+      "❌ Despite of the rain → ✅ Despite the rain (không có 'of' sau despite)",
+      "❌ However she was tired, she finished → ✅ Although she was tired / She was tired; however, she finished",
+      "❌ Furthermore, but I disagree → ✅ Chỉ dùng MỘT từ nối cho mỗi câu",
+    ],
+    tip: "HOWEVER ≠ BUT. 'However' là trạng từ — đứng đầu câu + dấu phẩy: 'She was tired. However, she continued.' KHÔNG viết: 'However she tried,...' (phải là: 'However hard she tried,...')",
+  },
 ];
 
 // Helpers
