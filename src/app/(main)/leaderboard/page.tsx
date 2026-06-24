@@ -45,28 +45,28 @@ function EntryRow({ entry, xpLabel }: { entry: LeaderboardEntry; xpLabel: string
           ? "bg-emerald-950/40 border-emerald-500/40 ring-1 ring-emerald-500/20"
           : rankStyle
           ? `${rankStyle.bg} ${rankStyle.border}`
-          : "bg-white/4 border-white/8"
+          : "bg-white/60 dark:bg-white/4 border-zinc-200/60 dark:border-white/8"
       }`}
     >
       <div className="w-8 text-center shrink-0">
         {rankStyle ? (
           <span className="text-xl">{rankStyle.medal}</span>
         ) : (
-          <span className="text-zinc-500 font-mono text-sm font-bold">#{entry.rank}</span>
+          <span className="text-zinc-400 dark:text-zinc-500 font-mono text-sm font-bold">#{entry.rank}</span>
         )}
       </div>
       <div className={`w-9 h-9 rounded-full flex items-center justify-center text-sm font-black shrink-0 ${
-        isMe ? "bg-emerald-500 text-white" : "bg-zinc-800 text-zinc-400"
+        isMe ? "bg-emerald-500 text-white" : "bg-zinc-100 dark:bg-zinc-800 text-zinc-500 dark:text-zinc-400"
       }`}>
         {entry.display_name.slice(0, 1).toUpperCase()}
       </div>
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 flex-wrap">
-          <p className={`font-bold text-sm truncate ${isMe ? "text-emerald-300" : "text-white"}`}>
+          <p className={`font-bold text-sm truncate ${isMe ? "text-emerald-600 dark:text-emerald-300" : "text-zinc-900 dark:text-white"}`}>
             {isMe ? "Bạn" : entry.display_name}
           </p>
           {isMe && (
-            <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">bạn</span>
+            <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30">bạn</span>
           )}
           <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded border ${levelColor}`}>
             {entry.current_level}
@@ -82,11 +82,11 @@ function EntryRow({ entry, xpLabel }: { entry: LeaderboardEntry; xpLabel: string
       <div className="text-right shrink-0">
         <div className="flex items-center gap-1 justify-end">
           <Zap className="w-3.5 h-3.5 text-amber-400" />
-          <span className={`font-black text-sm ${rankStyle ? rankStyle.text : "text-zinc-300"}`}>
+          <span className={`font-black text-sm ${rankStyle ? rankStyle.text : "text-zinc-700 dark:text-zinc-300"}`}>
             {entry.total_xp.toLocaleString()}
           </span>
         </div>
-        <p className="text-[10px] text-zinc-600">{xpLabel}</p>
+        <p className="text-[10px] text-zinc-400 dark:text-zinc-600">{xpLabel}</p>
       </div>
     </motion.div>
   );
@@ -117,23 +117,23 @@ function LeagueRow({ member, rank, isPromotionZone, isRelegationZone, totalMembe
           ? "bg-emerald-900/10 border-emerald-800/30"
           : isRelegationZone && totalMembers >= 10
           ? "bg-red-900/10 border-red-800/30"
-          : "bg-white/4 border-white/8"
+          : "bg-white/60 dark:bg-white/4 border-zinc-200/60 dark:border-white/8"
       }`}
     >
       <div className="w-8 text-center shrink-0">
         {rankStyle ? (
           <span className="text-xl">{rankStyle.medal}</span>
         ) : (
-          <span className="text-zinc-500 font-mono text-sm font-bold">#{rank}</span>
+          <span className="text-zinc-400 dark:text-zinc-500 font-mono text-sm font-bold">#{rank}</span>
         )}
       </div>
       <div className={`w-9 h-9 rounded-full flex items-center justify-center text-sm font-black shrink-0 ${
-        member.isMe ? "bg-emerald-500 text-white" : "bg-zinc-800 text-zinc-400"
+        member.isMe ? "bg-emerald-500 text-white" : "bg-zinc-100 dark:bg-zinc-800 text-zinc-500 dark:text-zinc-400"
       }`}>
         {(member.display_name ?? "?").slice(0, 1).toUpperCase()}
       </div>
       <div className="flex-1 min-w-0">
-        <p className={`font-bold text-sm truncate ${member.isMe ? "text-emerald-300" : "text-white"}`}>
+        <p className={`font-bold text-sm truncate ${member.isMe ? "text-emerald-600 dark:text-emerald-300" : "text-zinc-900 dark:text-white"}`}>
           {member.isMe ? "Bạn" : member.display_name}
         </p>
         <div className="flex items-center gap-2 mt-0.5">
@@ -152,11 +152,11 @@ function LeagueRow({ member, rank, isPromotionZone, isRelegationZone, totalMembe
       <div className="text-right shrink-0">
         <div className="flex items-center gap-1 justify-end">
           <Zap className="w-3.5 h-3.5 text-amber-400" />
-          <span className={`font-black text-sm ${rankStyle ? rankStyle.text : member.isMe ? "text-emerald-300" : "text-zinc-300"}`}>
+          <span className={`font-black text-sm ${rankStyle ? rankStyle.text : member.isMe ? "text-emerald-600 dark:text-emerald-300" : "text-zinc-700 dark:text-zinc-300"}`}>
             {member.xp_this_week.toLocaleString()}
           </span>
         </div>
-        <p className="text-[10px] text-zinc-600">XP tuần</p>
+        <p className="text-[10px] text-zinc-400 dark:text-zinc-600">XP tuần</p>
       </div>
     </motion.div>
   );
@@ -167,7 +167,7 @@ function SkeletonList() {
   return (
     <div className="space-y-2">
       {Array.from({ length: 8 }).map((_, i) => (
-        <div key={i} className="h-16 rounded-2xl bg-white/4 border border-white/8 animate-pulse" />
+        <div key={i} className="h-16 rounded-2xl bg-zinc-100 dark:bg-white/4 border border-zinc-200/60 dark:border-white/8 animate-pulse" />
       ))}
     </div>
   );
@@ -238,14 +238,14 @@ function LeaderboardContent() {
 
       {/* Header */}
       <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="space-y-2">
-        <span className="inline-flex items-center gap-1.5 text-xs font-bold text-yellow-400 px-3 py-1 rounded-full bg-yellow-500/10 border border-yellow-500/20">
+        <span className="inline-flex items-center gap-1.5 text-xs font-bold text-yellow-600 dark:text-yellow-400 px-3 py-1 rounded-full bg-yellow-500/10 border border-yellow-500/20">
           <Trophy className="w-3.5 h-3.5" />
           Bảng xếp hạng
         </span>
-        <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
+        <h1 className="text-2xl sm:text-3xl font-black text-zinc-900 dark:text-white tracking-tight">
           Top Học Viên
         </h1>
-        <p className="text-zinc-400 text-sm">
+        <p className="text-zinc-500 dark:text-zinc-400 text-sm">
           Cạnh tranh lành mạnh để duy trì động lực học tiếng Anh mỗi ngày.
         </p>
       </motion.div>
@@ -256,8 +256,8 @@ function LeaderboardContent() {
           onClick={() => handleTab("weekly")}
           className={`flex items-center gap-2 px-4 py-2 rounded-xl border text-xs font-bold transition-all ${
             activeTab === "weekly"
-              ? "bg-emerald-500/15 border-emerald-500/50 text-emerald-300"
-              : "bg-white/5 border-white/10 text-zinc-400 hover:border-white/25"
+              ? "bg-emerald-500/15 border-emerald-500/50 text-emerald-600 dark:text-emerald-300"
+              : "bg-white/60 dark:bg-white/5 border-zinc-200/60 dark:border-white/10 text-zinc-500 dark:text-zinc-400 hover:border-zinc-300 dark:hover:border-white/25"
           }`}
         >
           <Calendar className="w-3.5 h-3.5" />
@@ -267,8 +267,8 @@ function LeaderboardContent() {
           onClick={() => handleTab("alltime")}
           className={`flex items-center gap-2 px-4 py-2 rounded-xl border text-xs font-bold transition-all ${
             activeTab === "alltime"
-              ? "bg-yellow-500/15 border-yellow-500/50 text-yellow-300"
-              : "bg-white/5 border-white/10 text-zinc-400 hover:border-white/25"
+              ? "bg-yellow-500/15 border-yellow-500/50 text-yellow-600 dark:text-yellow-300"
+              : "bg-white/60 dark:bg-white/5 border-zinc-200/60 dark:border-white/10 text-zinc-500 dark:text-zinc-400 hover:border-zinc-300 dark:hover:border-white/25"
           }`}
         >
           <Star className="w-3.5 h-3.5" />
@@ -279,8 +279,8 @@ function LeaderboardContent() {
           onClick={() => handleTab("league")}
           className={`flex items-center gap-2 px-4 py-2 rounded-xl border text-xs font-bold transition-all ${
             activeTab === "league"
-              ? "bg-violet-500/15 border-violet-500/50 text-violet-300"
-              : "bg-white/5 border-white/10 text-zinc-400 hover:border-white/25"
+              ? "bg-violet-500/15 border-violet-500/50 text-violet-600 dark:text-violet-300"
+              : "bg-white/60 dark:bg-white/5 border-zinc-200/60 dark:border-white/10 text-zinc-500 dark:text-zinc-400 hover:border-zinc-300 dark:hover:border-white/25"
           }`}
         >
           <Shield className="w-3.5 h-3.5" />
@@ -309,7 +309,7 @@ function LeaderboardContent() {
               </div>
               <div className="text-right shrink-0">
                 <p className="text-xs text-zinc-500">Hạng của bạn</p>
-                <p className="text-xl font-black text-white">#{leagueData.myRank}</p>
+                <p className="text-xl font-black text-zinc-900 dark:text-white">#{leagueData.myRank}</p>
                 <p className="text-xs text-emerald-400 font-bold">{leagueData.myXp} XP</p>
               </div>
             </div>
@@ -411,7 +411,7 @@ export default function LeaderboardPage() {
       <div className="min-h-screen flex items-center justify-center">
         <div className="space-y-2 w-full max-w-2xl px-4">
           {Array.from({ length: 8 }).map((_, i) => (
-            <div key={i} className="h-16 rounded-2xl bg-white/4 border border-white/8 animate-pulse" />
+            <div key={i} className="h-16 rounded-2xl bg-zinc-100 dark:bg-white/4 border border-zinc-200/60 dark:border-white/8 animate-pulse" />
           ))}
         </div>
       </div>

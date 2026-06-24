@@ -73,7 +73,7 @@ function SentenceCard({
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.95 }}
       transition={{ duration: 0.2 }}
-      className="bg-white/4 border border-white/8 rounded-2xl p-4 space-y-3 group hover:border-white/15 transition-colors"
+      className="bg-white/60 dark:bg-white/4 border border-zinc-200/60 dark:border-white/8 rounded-2xl p-4 space-y-3 group hover:border-zinc-300 dark:hover:border-white/15 transition-colors"
     >
       {/* Header row */}
       <div className="flex items-center justify-between gap-2">
@@ -99,7 +99,7 @@ function SentenceCard({
       {/* Corrected English sentence */}
       <div className="space-y-1">
         <div className="flex items-start gap-2">
-          <p className="flex-1 text-sm font-semibold text-white leading-relaxed">
+          <p className="flex-1 text-sm font-semibold text-zinc-900 dark:text-white leading-relaxed">
             {sentence.sentence_en}
           </p>
           <button
@@ -169,14 +169,14 @@ export default function WritingHistoryPage() {
         </Link>
 
         <div className="space-y-1">
-          <span className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-400 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20">
+          <span className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-600 dark:text-emerald-400 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20">
             <BookmarkCheck className="w-3.5 h-3.5" />
             Bộ sưu tập câu
           </span>
-          <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-black text-zinc-900 dark:text-white tracking-tight">
             Câu Đã Lưu
           </h1>
-          <p className="text-zinc-400 text-sm">
+          <p className="text-zinc-500 dark:text-zinc-400 text-sm">
             Những câu đã được AI sửa — luyện lại bằng cách nghe và so sánh.
           </p>
         </div>
@@ -191,8 +191,8 @@ export default function WritingHistoryPage() {
             onClick={() => setFilter(f)}
             className={`px-3 py-1.5 rounded-xl border text-xs font-bold transition-all ${
               filter === f
-                ? "bg-emerald-500/15 border-emerald-500/50 text-emerald-300"
-                : "bg-white/5 border-white/10 text-zinc-400 hover:border-white/25"
+                ? "bg-emerald-500/15 border-emerald-500/50 text-emerald-600 dark:text-emerald-300"
+                : "bg-white/60 dark:bg-white/5 border-zinc-200/60 dark:border-white/10 text-zinc-500 dark:text-zinc-400 hover:border-zinc-300 dark:hover:border-white/25"
             }`}
           >
             {f === "all" ? "Tất cả" : f}
@@ -210,7 +210,7 @@ export default function WritingHistoryPage() {
         {loading ? (
           <motion.div key="loading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-2">
             {Array.from({ length: 4 }).map((_, i) => (
-              <div key={i} className="h-24 rounded-2xl bg-white/4 border border-white/8 animate-pulse" />
+              <div key={i} className="h-24 rounded-2xl bg-zinc-100 dark:bg-white/4 border border-zinc-200/60 dark:border-white/8 animate-pulse" />
             ))}
           </motion.div>
         ) : error ? (
