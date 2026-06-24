@@ -10,8 +10,10 @@ import {
   RotateCcw,
   ChevronRight,
   BookOpen,
+  BookmarkPlus,
+  BookmarkCheck,
 } from "lucide-react";
-import { analyzeWriting, type WritingFeedback } from "@/app/actions/writing";
+import { analyzeWriting, saveWritingSentence, type WritingFeedback } from "@/app/actions/writing";
 
 // ─── Level selector ────────────────────────────────────────────────────────────
 const LEVELS = [
@@ -82,6 +84,8 @@ export default function WriteImprovePage() {
   const [feedback, setFeedback] = useState<WritingFeedback | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
+  const [savedId, setSavedId] = useState<string | null>(null);
+  const [isSaving, setIsSaving] = useState(false);
 
   const handleAnalyze = () => {
     if (!text.trim() || isPending) return;
@@ -101,6 +105,19 @@ export default function WriteImprovePage() {
     setText("");
     setFeedback(null);
     setError(null);
+    setSavedId(null);
+  };
+
+  const handleSave = async () => {
+    if (!feedback || !text || isSaving) return;
+    setIsSaving(true);
+    const res = await saveWritingSentence({
+      sentence_en: feedback.corrected,
+      meaning_vn: text.trim(),
+      level,
+    });
+    if (res.success) setSavedId(res.id);
+    setIsSaving(false);
   };
 
   const handlePrompt = (p: string) => {
@@ -279,11 +296,31 @@ export default function WriteImprovePage() {
               </div>
             )}
 
-            {/* Improved version */}
+            {/* Improved version + Save */}
             <div className="bg-blue-950/30 border border-blue-500/20 rounded-2xl p-4 space-y-1">
-              <div className="flex items-center gap-2 mb-2">
-                <Sparkles className="w-4 h-4 text-blue-400" />
-                <p className="text-xs font-bold text-blue-400 uppercase tracking-wider">Cách viết hay hơn</p>
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center gap-2">
+                  <Sparkles className="w-4 h-4 text-blue-400" />
+                  <p className="text-xs font-bold text-blue-400 uppercase tracking-wider">Cách viết hay hơn</p>
+                </div>
+                {/* Save to My Sentences */}
+                <button
+                  onClick={() => void handleSave()}
+                  disabled={isSaving || !!savedId}
+                  className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl border text-xs font-bold transition-all ${
+                    savedId
+                      ? "bg-emerald-500/15 border-emerald-500/40 text-emerald-400 cursor-default"
+                      : "bg-white/5 border-white/15 text-zinc-400 hover:text-white hover:border-white/30"
+                  }`}
+                >
+                  {savedId ? (
+                    <><BookmarkCheck className="w-3.5 h-3.5" /> Đã lưu</>
+                  ) : isSaving ? (
+                    <><Zap className="w-3.5 h-3.5 animate-pulse" /> Đang lưu...</>
+                  ) : (
+                    <><BookmarkPlus className="w-3.5 h-3.5" /> Lưu vào bộ sưu tập</>
+                  )}
+                </button>
               </div>
               <p className="text-white text-sm leading-relaxed italic">&ldquo;{feedback.improved}&rdquo;</p>
             </div>

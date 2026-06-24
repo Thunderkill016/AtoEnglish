@@ -142,3 +142,65 @@ Rules:
     return { success: false as const, error: `Lỗi hệ thống: ${msg}` };
   }
 }
+
+// ─── Save writing sentence ─────────────────────────────────────────────────────
+
+const saveLimiter = createRateLimiter(30, 60_000, "writing-save");
+
+const saveSchema = z.object({
+  sentence_en: z.string().min(1).max(500),
+  meaning_vn: z.string().min(1).max(500),
+  level: z.enum(["A1", "A2", "B1"]),
+});
+
+/**
+ * saveWritingSentence — saves a corrected sentence to user_sentences.
+ * sentence_en = AI corrected version, meaning_vn = original learner text.
+ * tags includes ['writing-practice', level] for filtering later.
+ */
+export async function saveWritingSentence(params: {
+  sentence_en: string;  // corrected English sentence
+  meaning_vn: string;   // original learner text (saved as "meaning" for reference)
+  level: "A1" | "A2" | "B1";
+}) {
+  try {
+    const reqHeaders = await headers();
+    const ip = reqHeaders.get("x-forwarded-for")?.split(",")[0].trim() ?? "127.0.0.1";
+    const rateCheck = await saveLimiter.check(ip);
+    if (!rateCheck.success) {
+      return { success: false as const, error: "Quá nhiều yêu cầu." };
+    }
+
+    const supabase = await createClient();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    if (authError || !user) {
+      return { success: false as const, error: "Bạn cần đăng nhập." };
+    }
+
+    const parsed = saveSchema.safeParse(params);
+    if (!parsed.success) {
+      return { success: false as const, error: "Dữ liệu không hợp lệ." };
+    }
+    const { sentence_en, meaning_vn, level } = parsed.data;
+
+    const { data, error } = await supabase
+      .from("user_sentences")
+      .insert({
+        user_id: user.id,
+        sentence_en,
+        meaning_vn,
+        tags: ["writing-practice", level],
+      })
+      .select("id")
+      .single();
+
+    if (error) {
+      return { success: false as const, error: error.message };
+    }
+
+    return { success: true as const, id: data.id };
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err);
+    return { success: false as const, error: `Lỗi hệ thống: ${msg}` };
+  }
+}
