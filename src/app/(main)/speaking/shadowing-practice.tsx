@@ -66,6 +66,58 @@ export interface ShadowingItem {
 }
 
 export const SHADOWING_ITEMS: ShadowingItem[] = [
+  // ── A0 — Absolute Beginner ───────────────────────────────────────────────
+  {
+    id: "basic-greeting",
+    title: "Basic Greeting & Introduction",
+    topic: "Greetings",
+    level: "A0",
+    transcript: "Hello! My name is Lan. Nice to meet you. I am from Vietnam.",
+    translation: "Xin chào! Tên tôi là Lan. Rất vui được gặp bạn. Tôi đến từ Việt Nam.",
+    difficultWords: ["Hello", "Nice to meet you", "from"],
+    tips: "Nói chậm và rõ ràng. Chú ý: 'Nice to meet you' nối âm như 'nice-tuh-meet-you'. Ngữ điệu lên ở 'hello', xuống ở câu cuối."
+  },
+  {
+    id: "numbers-shopping",
+    title: "Shopping — Asking the Price",
+    topic: "Shopping",
+    level: "A0",
+    transcript: "Excuse me. How much is this? It is twenty dollars. Thank you very much!",
+    translation: "Xin lỗi. Cái này giá bao nhiêu? Nó là hai mươi đô la. Cảm ơn rất nhiều!",
+    difficultWords: ["Excuse me", "How much", "twenty"],
+    tips: "'Excuse me' phát âm /ɪkˈskjuːz miː/ — chữ 's' ở giữa phát /z/ (hữu thanh). 'Twenty' nhấn âm đầu: TW-en-ty."
+  },
+  // ── A1 — Elementary ───────────────────────────────────────────────────────
+  {
+    id: "daily-routine",
+    title: "Describing a Daily Routine",
+    topic: "Daily Life",
+    level: "A1",
+    transcript: "I wake up at seven every morning. I have breakfast and then go to work by bus.",
+    translation: "Tôi thức dậy lúc bảy giờ mỗi sáng. Tôi ăn sáng rồi đi làm bằng xe buýt.",
+    difficultWords: ["wake up", "breakfast", "by bus"],
+    tips: "'Wake up' nối âm: /weɪk ʌp/. 'Breakfast' phát âm /ˈbrekfəst/ — chữ 'a' câm. Nhấn trọng âm: 'BREAKfast'."
+  },
+  {
+    id: "family-description",
+    title: "Talking About Your Family",
+    topic: "Family",
+    level: "A1",
+    transcript: "I have a small family. There are four people: my parents, my sister, and me.",
+    translation: "Tôi có một gia đình nhỏ. Có bốn người: bố mẹ tôi, chị gái tôi và tôi.",
+    difficultWords: ["small", "parents", "sister"],
+    tips: "'There are' nối âm tự nhiên: /ðer ər/. 'Parents' phát âm /ˈpeər.ənts/ — nhấn âm đầu. Đọc cả câu liền mạch, không ngắt."
+  },
+  {
+    id: "likes-dislikes",
+    title: "Talking About Likes & Dislikes",
+    topic: "Personal Preferences",
+    level: "A1",
+    transcript: "I really love learning English. It is challenging but very rewarding.",
+    translation: "Tôi thực sự yêu thích học tiếng Anh. Nó thách thức nhưng rất bổ ích.",
+    difficultWords: ["really", "challenging", "rewarding"],
+    tips: "'Really' nhấn âm ở: REAl-ly. 'Challenging' có 3 âm tiết: CHAL-len-ging. 'Rewarding' nhấn âm giữa: re-WARD-ing."
+  },
   {
     id: "tech-society",
     title: "Technology & Society (Unit 4 Focus)",
