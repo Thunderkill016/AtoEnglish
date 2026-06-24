@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Shuffle, CheckCircle, ChevronRight } from "lucide-react";
 import type { UnitData, QuizQuestion } from "../UnitTemplate";
+import { WordBankExercise } from "@/components/exercises/WordBankExercise";
 
 interface PracticeSectionProps {
   unit: UnitData;
@@ -46,6 +47,11 @@ export default function PracticeSection({
   const [scrambleShuffled, setScrambleShuffled] = useState<Record<string, string[]>>({});
   const [scrambleBuilt, setScrambleBuilt] = useState<Record<string, string[]>>({});
   const [scrambleChecked, setScrambleChecked] = useState<Record<string, boolean>>({});
+
+  // Word-bank state: tracks current question index and per-question results
+  const [wordBankIndex, setWordBankIndex] = useState(0);
+  const [wordBankDone, setWordBankDone] = useState(false);
+  const [wordBankScore, setWordBankScore] = useState(0);
 
   // Shuffle matching pairs when unit/exercise changes
   useEffect(() => {
@@ -105,6 +111,8 @@ export default function PracticeSection({
   const allScrambleDone =
     !unit.scrambleExercises?.length ||
     unit.scrambleExercises.every((ex) => scrambleChecked[ex.id]);
+
+  const allWordBankDone = !unit.wordBankExercises?.length || wordBankDone;
 
   const handleMatchSelect = (side: "left" | "right", value: string) => {
     if (matchedPairs.has(value)) return;
@@ -456,7 +464,43 @@ export default function PracticeSection({
         </div>
       )}
 
-      {/* Submit/Continue */}
+      {/* ── Word Bank Exercises ── */}
+      {unit.wordBankExercises && unit.wordBankExercises.length > 0 && !wordBankDone && practiceSubmitted && (
+        <div className="space-y-3">
+          <div className="flex items-center gap-2">
+            <span className="text-lg">🧩</span>
+            <p className="text-sm font-bold text-white">Xây dựng câu tiếng Anh</p>
+            <span className="text-xs text-zinc-500 ml-auto">
+              {wordBankIndex + 1}/{unit.wordBankExercises.length}
+            </span>
+          </div>
+          <WordBankExercise
+            key={unit.wordBankExercises[wordBankIndex]?.id}
+            question={unit.wordBankExercises[wordBankIndex]!}
+            onAnswer={(correct) => {
+              if (correct) playCorrectSound();
+              else playWrongSound();
+              setWordBankScore(s => s + (correct ? 1 : 0));
+              const next = wordBankIndex + 1;
+              if (next >= (unit.wordBankExercises?.length ?? 0)) {
+                setWordBankDone(true);
+              } else {
+                setWordBankIndex(next);
+              }
+            }}
+          />
+        </div>
+      )}
+
+      {unit.wordBankExercises && unit.wordBankExercises.length > 0 && wordBankDone && (
+        <div className="flex items-center gap-2 rounded-xl bg-emerald-950/40 border border-emerald-500/20 p-3">
+          <CheckCircle size={16} className="text-emerald-400 shrink-0" />
+          <p className="text-sm text-emerald-300 font-semibold">
+            Xây dựng câu: {wordBankScore}/{unit.wordBankExercises.length} chính xác
+          </p>
+        </div>
+      )}
+
       {!practiceSubmitted ? (
         <button
           disabled={!allPracticeAnswered}
@@ -489,7 +533,7 @@ export default function PracticeSection({
                 : "💪 Ôn lại thẻ từ vựng sẽ giúp bạn nhớ lâu hơn!"}
             </p>
           </div>
-          {matchingDone && allScrambleDone ? (
+          {matchingDone && allScrambleDone && allWordBankDone ? (
             <button
               onClick={goNext}
               className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-white font-bold rounded-2xl px-6 py-4 flex items-center justify-center gap-2 transition-all duration-200 text-lg shadow-lg shadow-emerald-900/40 active:scale-95"
@@ -501,7 +545,9 @@ export default function PracticeSection({
               <span>↑</span>
               {!matchingDone
                 ? "Hoàn thành phần nối từ ở trên để tiếp tục"
-                : "Hoàn thành phần sắp xếp câu ở trên để tiếp tục"}
+                : !allScrambleDone
+                ? "Hoàn thành phần sắp xếp câu ở trên để tiếp tục"
+                : "Hoàn thành phần xây dựng câu ở trên để tiếp tục"}
             </p>
           )}
         </div>

@@ -168,6 +168,14 @@ export interface SentenceScramble {
   answer: string;
 }
 
+export interface WordBankQuestion {
+  id: string;
+  prompt_vn: string;
+  words: string[];
+  answer: string;
+  hint?: string;
+}
+
 export interface UnitData {
   unitId: string;
   title: string;
@@ -183,6 +191,7 @@ export interface UnitData {
   grammar?: GrammarPoint;
   matchingExercise?: MatchingExercise;
   scrambleExercises?: SentenceScramble[];
+  wordBankExercises?: WordBankQuestion[];
   practiceQuiz?: QuizQuestion[];
   practiceTranslate?: { id: string; prompt_vn: string; answer: string }[];
   dialogues: Dialogue[];
