@@ -193,6 +193,13 @@ export const unit31: UnitData = {
     { id: "fq3", type: "multiple-choice", question: "Tìm từ đồng nghĩa với 'make clear':", options: ["confirm", "clarify", "request", "inform"], answer: "clarify" },
     { id: "fq4", type: "translate", question: "Dịch: 'Hạn chót cho bản đề xuất là ngày mai.'", answer: "The deadline for the proposal is tomorrow." },
     { id: "fq5", type: "multiple-choice", question: "Từ nào dùng để nói về nội dung cuộc họp?", options: ["attachment", "agenda", "corporate", "delay"], answer: "agenda" },
+    { id: "q-ex1", type: "multiple-choice", question: "Email kinh doanh trang trọng bắt đầu bằng:", options: ["Hey!", "Hi there,", "Dear Mr./Ms. [Last name],", "Hello everyone,"], answer: "Dear Mr./Ms. [Last name]," },
+    { id: "q-ex2", type: "multiple-choice", question: "'I am writing with regard to...' dùng để:", options: ["Kết thúc email", "Giới thiệu chủ đề email", "Yêu cầu thông tin", "Xin lỗi"], answer: "Giới thiệu chủ đề email" },
+    { id: "q-ex3", type: "cloze", question: "Điền kết thúc email trang trọng: '___ sincerely, ...'", answer: "Yours" },
+    { id: "q-ex4", type: "multiple-choice", question: "'I would appreciate it if you could...' dùng để:", options: ["Ra lệnh", "Đưa ra yêu cầu lịch sự", "Từ chối đề nghị", "Xác nhận thông tin"], answer: "Đưa ra yêu cầu lịch sự" },
+    { id: "q-ex5", type: "translate", question: "Dịch: 'Tôi mong nhận được phản hồi từ bạn.'", answer: "I look forward to hearing from you." },
+    { id: "q-ex6", type: "multiple-choice", question: "Trong cuộc họp, 'I'd like to add that...' dùng để:", options: ["Ngắt lời", "Bổ sung thêm ý kiến", "Kết thúc cuộc họp", "Bác bỏ ý kiến"], answer: "Bổ sung thêm ý kiến" },
+    { id: "q-ex7", type: "multiple-choice", question: "'Action points' trong meeting có nghĩa là:", options: ["Điểm tranh luận", "Các việc cần làm sau họp", "Chương trình họp", "Kết luận cuộc họp"], answer: "Các việc cần làm sau họp" },
   ],
   cumulativeReviewQuestions: [
     { id: "cr31-1", question: "Ôn tập Unit 30 — Điền: 'It is essential to protect the local ___.'", options: ["ecosystem", "prevention", "medical", "pollution"], answer: "ecosystem", type: "multiple-choice" },

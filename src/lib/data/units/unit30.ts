@@ -196,6 +196,13 @@ export const unit30: UnitData = {
     { id: "fq4", type: "translate", question: "Dịch: 'Tập thể dục giúp phòng ngừa nhiều bệnh tật.'", answer: "Exercise helps in the prevention of many diseases." },
     { id: "fq5", type: "multiple-choice", question: "Điền động từ đúng: 'It is recommended that he ___ smoking.'", options: ["stops", "stop", "stopped", "to stop"], answer: "stop",
       explanation_vn: "Sau 'It is recommended that S + ...' dùng subjunctive (ngưyên thể): 'he stop', không phải 'he stops' hay 'he stopped'." },
+    { id: "q-ex1", type: "multiple-choice", question: "'Should have done' diễn tả:", options: ["Kế hoạch tương lai", "Tiếc về quá khứ — đã không làm điều nên làm", "Lời khuyên hiện tại", "Khả năng"], answer: "Tiếc về quá khứ — đã không làm điều nên làm" },
+    { id: "q-ex2", type: "multiple-choice", question: "Câu đúng:", options: ["You should have told me.", "You should told me.", "You should have tell me.", "You should have been telling me."], answer: "You should have told me." },
+    { id: "q-ex3", type: "cloze", question: "Điền: 'We ___ reduce plastic waste.' (cần phải)", answer: "need to" },
+    { id: "q-ex4", type: "multiple-choice", question: "'Carbon footprint' nghĩa là:", options: ["Dấu chân trên carbon", "Lượng khí CO2 thải ra", "Loại nhiên liệu", "Loại cây trồng"], answer: "Lượng khí CO2 thải ra" },
+    { id: "q-ex5", type: "translate", question: "Dịch: 'Chúng ta nên tái chế rác.'", answer: "We should recycle waste." },
+    { id: "q-ex6", type: "multiple-choice", question: "'Renewable energy' là:", options: ["Năng lượng hóa thạch", "Năng lượng tái tạo", "Năng lượng hạt nhân", "Năng lượng tiêu thụ"], answer: "Năng lượng tái tạo" },
+    { id: "q-ex7", type: "multiple-choice", question: "'Unless we act now, it ___ too late.'", options: ["will be", "would be", "is", "was"], answer: "will be" },
   ],
   cumulativeReviewQuestions: [
     { id: "cr30-1", question: "Ôn tập Unit 29 — Chọn từ: 'I propose that we ___ our website photos.'", options: ["optimize", "optimizes", "optimized", "optimizing"], answer: "optimize", type: "multiple-choice" },

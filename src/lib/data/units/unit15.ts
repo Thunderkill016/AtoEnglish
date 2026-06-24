@@ -218,6 +218,13 @@ export const unit15: UnitData = {
     { id: "fq3", type: "multiple-choice", question: "Câu nào ĐÚNG ngữ pháp?", options: ["Is there a discount for students?", "Is there discounts for students?", "There is discount for students?", "Do there a discount for students?"], answer: "Is there a discount for students?" },
     { id: "fq4", type: "translate", question: "Dịch sang tiếng Anh: 'Tôi không đủ tiền mua cái này. Nó quá đắt.'", answer: "I can't afford this. It's too expensive." },
     { id: "fq5", type: "multiple-choice", question: "So sánh bất quy tắc: 'bad' → ___ → ___", options: ["badder / baddest", "more bad / most bad", "worse / worst", "badly / worst"], answer: "worse / worst" },
+    { id: "q-ex1", type: "multiple-choice", question: "So sánh hơn của 'expensive':", options: ["expensiver", "more expensive", "most expensive", "expensiveer"], answer: "more expensive" },
+    { id: "q-ex2", type: "multiple-choice", question: "Câu so sánh hơn đúng:", options: ["This is gooder.", "This is more good.", "This is better.", "This is more better."], answer: "This is better." },
+    { id: "q-ex3", type: "cloze", question: "Điền: 'This shop is ___ than that one.' (cheap)", answer: "cheaper" },
+    { id: "q-ex4", type: "multiple-choice", question: "'Prefer A to B' nghĩa là:", options: ["A bằng B", "Thích A hơn B", "Thích B hơn A", "Vừa thích A vừa B"], answer: "Thích A hơn B" },
+    { id: "q-ex5", type: "multiple-choice", question: "Câu so sánh đúng nhất:", options: ["I prefer coffee than tea.", "I prefer coffee to tea.", "I prefer coffee more than tea.", "I prefer coffee instead tea."], answer: "I prefer coffee to tea." },
+    { id: "q-ex6", type: "multiple-choice", question: "'Can I exchange this for a larger size?' — giới từ:", options: ["for", "with", "to", "by"], answer: "for" },
+    { id: "q-ex7", type: "translate", question: "Dịch: 'Chất lượng của cái này tốt hơn.'", answer: "The quality of this one is better." },
   ],
 
   cumulativeReviewQuestions: [

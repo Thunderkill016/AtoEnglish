@@ -219,6 +219,13 @@ export const unit13: UnitData = {
     { id: "fq4", type: "translate", question: "Dịch sang tiếng Anh: 'Chúng tôi đã ăn hải sản tươi mỗi bữa.'", answer: "We had fresh seafood every meal." },
     { id: "fq5", type: "multiple-choice", question: "Điền: 'I ___ a movie last night. It was great!'", options: ["watch", "watches", "watched", "watching"], answer: "watched",
       explanation_vn: "'Last night' là dấu hiệu thì quá khứ → 'watch' động từ đều thêm -ed → 'watched'. 'Watch' (hiện tại) không đúng." },
+    { id: "q-ex1", type: "multiple-choice", question: "Chọn câu Quá khứ đơn đúng:", options: ["I go to the market yesterday.", "I went to the market yesterday.", "I goed to the market yesterday.", "I was go to the market yesterday."], answer: "I went to the market yesterday." },
+    { id: "q-ex2", type: "multiple-choice", question: "Đâu là dạng quá khứ của 'meet'?", options: ["meeted", "met", "meeting", "meets"], answer: "met" },
+    { id: "q-ex3", type: "cloze", question: "Điền vào: 'She ___ a movie last night.'", answer: "watched" },
+    { id: "q-ex4", type: "multiple-choice", question: "Âm -ed trong 'cooked' đọc như thế nào?", options: ["/ɪd/", "/d/", "/t/", "/ed/"], answer: "/t/" },
+    { id: "q-ex5", type: "multiple-choice", question: "Câu phủ định Quá khứ đơn đúng:", options: ["I not went.", "I didn't went.", "I didn't go.", "I don't went."], answer: "I didn't go." },
+    { id: "q-ex6", type: "multiple-choice", question: "'Two years ago' — 'ago' đặt ở vị trí nào?", options: ["Trước khoảng thời gian", "Sau khoảng thời gian", "Đầu câu", "Sau chủ ngữ"], answer: "Sau khoảng thời gian" },
+    { id: "q-ex7", type: "translate", question: "Dịch: 'Tôi đã ở lại khách sạn 3 đêm.'", answer: "I stayed at the hotel for 3 nights." },
   ],
 
   cumulativeReviewQuestions: [

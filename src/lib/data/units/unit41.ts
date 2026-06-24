@@ -199,6 +199,13 @@ export const unit41: UnitData = {
     { id: "fq3", type: "multiple-choice", question: "Chọn dạng đúng: 'Having ___ (integrate) AI, the system became highly efficient.'", options: ["integrated", "integrates", "integrating", "integrate"], answer: "integrated" },
     { id: "fq4", type: "translate", question: "Dịch: 'Học lực của cô ấy đã được cải thiện rõ rệt.'", answer: "Her academic performance has improved significantly." },
     { id: "fq5", type: "multiple-choice", question: "Từ nào liên quan đến 'hệ thống phòng vệ cơ thể'?", options: ["infrastructure", "immune system", "wellbeing", "deforestation"], answer: "immune system" },
+    { id: "q-ex1", type: "multiple-choice", question: "IELTS Task 2 — cấu trúc đoạn body chuẩn:", options: ["Ý kiến + Ví dụ + Phân tích", "Topic sentence + Detail + Example + Concluding", "Chỉ cần ví dụ", "Kết luận trước, ví dụ sau"], answer: "Topic sentence + Detail + Example + Concluding" },
+    { id: "q-ex2", type: "multiple-choice", question: "Từ học thuật thay cho 'big':", options: ["large", "significant", "substantial", "Cả B và C đều đúng"], answer: "Cả B và C đều đúng" },
+    { id: "q-ex3", type: "cloze", question: "Điền: 'The data ___ that urban populations are growing.'", answer: "suggests" },
+    { id: "q-ex4", type: "multiple-choice", question: "'Paraphrase' câu hỏi IELTS có nghĩa là:", options: ["Copy nguyên văn câu hỏi", "Dùng từ đồng nghĩa để viết lại câu hỏi", "Không nhắc đến câu hỏi", "Trả lời bằng câu đơn"], answer: "Dùng từ đồng nghĩa để viết lại câu hỏi" },
+    { id: "q-ex5", type: "translate", question: "Dịch học thuật: 'Vấn đề này đang ngày càng phổ biến.'", answer: "This issue is becoming increasingly prevalent." },
+    { id: "q-ex6", type: "multiple-choice", question: "TOEIC Part 7 — Reading Comprehension: kỹ năng chính cần:", options: ["Đọc từng từ một", "Skimming và scanning", "Dịch từng câu", "Học thuộc lòng đoạn văn"], answer: "Skimming và scanning" },
+    { id: "q-ex7", type: "multiple-choice", question: "'Coherence' trong bài viết nghĩa là:", options: ["Dùng từ vựng phong phú", "Ý tưởng liên kết logic, rõ ràng", "Không có lỗi ngữ pháp", "Dùng nhiều câu dài"], answer: "Ý tưởng liên kết logic, rõ ràng" },
   ],
   cumulativeReviewQuestions: [
     { id: "cr41-1", question: "Ôn tập Unit 40 — Chọn từ nối: 'He was late; ___ (do đó) the meeting was delayed.'", options: ["consequently", "nevertheless", "furthermore", "whereas"], answer: "consequently", type: "multiple-choice" },

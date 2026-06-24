@@ -197,6 +197,13 @@ export const unit25: UnitData = {
     { id: "fq3", type: "multiple-choice", question: "Chọn câu B1+ tự nhiên nhất:", options: ["Lan works here. Lan leads the marketing team.", "Here works Lan who the marketing team leads.", "This is Lan, who leads our marketing team.", "Lan is leading the marketing team here."], answer: "This is Lan, who leads our marketing team." },
     { id: "fq4", type: "translate", question: "Dịch: 'Đây là văn phòng nơi toàn bộ nhóm R&D làm việc hàng ngày.'", answer: "This is the office where the entire R&D team works every day." },
     { id: "fq5", type: "multiple-choice", question: "Câu nào dùng WHOSE đúng?", options: ["The manager whose won the award is being promoted.", "The manager whose team won the award is being promoted.", "The manager who's team won the award is being promoted.", "The manager which team won the award is being promoted."], answer: "The manager whose team won the award is being promoted." },
+    { id: "q-ex1", type: "multiple-choice", question: "'Who' trong mệnh đề quan hệ dùng cho:", options: ["Vật", "Người", "Địa điểm", "Thời gian"], answer: "Người" },
+    { id: "q-ex2", type: "multiple-choice", question: "Mệnh đề quan hệ đúng:", options: ["The girl which is singing is my sister.", "The girl who is singing is my sister.", "The girl whom is singing is my sister.", "The girl what is singing is my sister."], answer: "The girl who is singing is my sister." },
+    { id: "q-ex3", type: "cloze", question: "Điền: 'The city ___ I was born is beautiful.'", answer: "where" },
+    { id: "q-ex4", type: "multiple-choice", question: "'Which' dùng cho:", options: ["Người", "Địa điểm", "Vật/sự việc", "Thời gian"], answer: "Vật/sự việc" },
+    { id: "q-ex5", type: "multiple-choice", question: "Mệnh đề quan hệ không xác định — dấu hiệu:", options: ["Không có dấu phẩy", "Có dấu phẩy", "Dùng 'that'", "Đứng đầu câu"], answer: "Có dấu phẩy" },
+    { id: "q-ex6", type: "translate", question: "Dịch: 'Người đàn ông đang nói chuyện với sếp tôi là anh trai tôi.'", answer: "The man who is talking to my boss is my brother." },
+    { id: "q-ex7", type: "multiple-choice", question: "'Where' dùng trong mệnh đề quan hệ cho:", options: ["Người", "Vật", "Địa điểm", "Lý do"], answer: "Địa điểm" },
   ],
   cumulativeReviewQuestions: [
     { id: "cr25-1", question: "Ôn tập Unit 24 — Passive Present đúng: 'The products ___ (test) before shipping.'", options: ["test", "are tested", "were tested", "have tested"], answer: "are tested", type: "multiple-choice" },

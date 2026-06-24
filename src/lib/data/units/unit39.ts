@@ -195,6 +195,13 @@ export const unit39: UnitData = {
     { id: "fq3", type: "multiple-choice", question: "Chọn dạng đúng: 'She ___ have arrived by now, but the flight is delayed.'", options: ["must", "can't", "should", "might"], answer: "should" },
     { id: "fq4", type: "translate", question: "Dịch: 'Từ dữ liệu này, chúng ta có thể suy ra kết quả.'", answer: "From this data, we can deduce the outcome." },
     { id: "fq5", type: "multiple-choice", question: "Từ nào trái nghĩa với 'credible'?", options: ["apparent", "dismissed", "incredible", "logical"], answer: "incredible" },
+    { id: "q-ex1", type: "multiple-choice", question: "'Must have been' diễn tả:", options: ["Nghĩa vụ trong quá khứ", "Suy luận chắc chắn về quá khứ", "Khả năng trong tương lai", "Điều kiện quá khứ"], answer: "Suy luận chắc chắn về quá khứ" },
+    { id: "q-ex2", type: "multiple-choice", question: "'She might have forgotten.' nghĩa là:", options: ["Cô ấy chắc chắn quên rồi", "Cô ấy có thể đã quên", "Cô ấy không quên", "Cô ấy sẽ quên"], answer: "Cô ấy có thể đã quên" },
+    { id: "q-ex3", type: "cloze", question: "Điền: 'He ___ have left already — his car is gone.'", answer: "must" },
+    { id: "q-ex4", type: "multiple-choice", question: "'Can't have done' diễn tả:", options: ["Không có khả năng đã làm (quá khứ)", "Có khả năng đã làm", "Bắt buộc đã làm", "Có thể đã làm"], answer: "Không có khả năng đã làm (quá khứ)" },
+    { id: "q-ex5", type: "translate", question: "Dịch: 'Anh ấy chắc hẳn đã làm việc rất chăm chỉ.'", answer: "He must have worked very hard." },
+    { id: "q-ex6", type: "multiple-choice", question: "'I wonder if she passed the exam.' — loại câu:", options: ["Trực tiếp", "Gián tiếp/tường thuật", "Điều kiện", "Mệnh đề quan hệ"], answer: "Gián tiếp/tường thuật" },
+    { id: "q-ex7", type: "multiple-choice", question: "'Could have' (khả năng trong QK) vs 'should have' (tiếc nuối):", options: ["Giống nhau", "'Could have' = khả năng, 'should have' = lẽ ra phải làm", "'Should have' = khả năng, 'could have' = lẽ ra phải", "Cả hai đều là tiếc nuối"], answer: "'Could have' = khả năng, 'should have' = lẽ ra phải làm" },
   ],
   cumulativeReviewQuestions: [
     { id: "cr39-1", question: "Ôn tập Unit 38 — Chọn cấu trúc đúng: '___ has our company faced such an issue.'", options: ["Rarely", "Seldom did", "Rarely did", "Rarely has"], answer: "Rarely has", type: "multiple-choice" },

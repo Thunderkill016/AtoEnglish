@@ -196,6 +196,13 @@ export const unit35: UnitData = {
     { id: "fq3", type: "multiple-choice", question: "Chọn dạng đúng của điều kiện hỗn hợp: 'If she had studied law, she ___ a corporate lawyer now.'", options: ["is", "would be", "would have been", "will be"], answer: "would be" },
     { id: "fq4", type: "translate", question: "Dịch: 'Chúng tôi sẽ chấm dứt thỏa thuận trừ khi họ sửa lỗi.'", answer: "We will terminate the agreement unless they rectify the error." },
     { id: "fq5", type: "multiple-choice", question: "Từ nào đồng nghĩa với 'written requirement/section'?", options: ["dispute", "clause", "penalty", "negotiation"], answer: "clause" },
+    { id: "q-ex1", type: "multiple-choice", question: "Mixed conditional kết hợp điều kiện QK với kết quả:", options: ["QK + HT", "HT + QK", "QK + TL", "HT + TL"], answer: "QK + HT" },
+    { id: "q-ex2", type: "multiple-choice", question: "Mixed conditional đúng:", options: ["If I had saved money, I would be rich now.", "If I saved money, I would have been rich.", "If I had saved money, I was rich now.", "If I save money, I would be rich now."], answer: "If I had saved money, I would be rich now." },
+    { id: "q-ex3", type: "cloze", question: "Điền: 'If I were taller, I ___ become a basketball player.' (QK+HT)", answer: "could have" },
+    { id: "q-ex4", type: "multiple-choice", question: "'Unless' trong advanced conditional = 'if not': câu đúng:", options: ["Unless you study, you will fail.", "Unless you study, you would fail.", "Unless you don't study, you will fail.", "Unless you studied, you will fail."], answer: "Unless you study, you will fail." },
+    { id: "q-ex5", type: "translate", question: "Dịch: 'Nếu tôi không lười hồi nhỏ, tôi sẽ giỏi tiếng Anh rồi.'", answer: "If I hadn't been lazy as a child, I would be fluent in English now." },
+    { id: "q-ex6", type: "multiple-choice", question: "Đảo ngữ điều kiện (inversion): 'Had I known...' = :", options: ["If I know...", "If I had known...", "If I knew...", "If I would know..."], answer: "If I had known..." },
+    { id: "q-ex7", type: "multiple-choice", question: "'Were it not for your help...' là dạng:", options: ["First conditional", "Second conditional đảo ngữ", "Third conditional", "Zero conditional"], answer: "Second conditional đảo ngữ" },
   ],
   cumulativeReviewQuestions: [
     { id: "cr35-1", question: "Ôn tập Unit 34 — Điền: 'If we had investigated the risk, we ___ (prevent) the delay.'", options: ["would prevent", "would have prevented", "had prevented", "prevented"], answer: "would have prevented", type: "multiple-choice" },

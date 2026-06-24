@@ -195,6 +195,13 @@ export const unit33: UnitData = {
     { id: "fq3", type: "multiple-choice", question: "Chọn dạng đúng của To Be: 'If she ___ here, she would clarify the problem.'", options: ["is", "was", "were", "been"], answer: "were" },
     { id: "fq4", type: "translate", question: "Dịch: 'Nếu chúng tôi có nhiều nguồn lực hơn, chúng tôi sẽ mở rộng.'", answer: "If we had more resources, we would expand." },
     { id: "fq5", type: "multiple-choice", question: "Từ nào mô tả kết quả cuối cùng?", options: ["criteria", "outcome", "venture", "scenario"], answer: "outcome" },
+    { id: "q-ex1", type: "multiple-choice", question: "Second Conditional dùng cho:", options: ["Điều kiện thật ở hiện tại/tương lai", "Điều kiện giả định không thật ở hiện tại", "Điều kiện không thật trong quá khứ", "Sự thật chung"], answer: "Điều kiện giả định không thật ở hiện tại" },
+    { id: "q-ex2", type: "multiple-choice", question: "'If I were you, I would...' — 'were' ở đây là:", options: ["Lỗi ngữ pháp", "Subjunctive mood (giả định)", "Past simple của 'be'", "Past continuous"], answer: "Subjunctive mood (giả định)" },
+    { id: "q-ex3", type: "cloze", question: "Điền: 'I'd go abroad if I ___ more money.'", answer: "had" },
+    { id: "q-ex4", type: "multiple-choice", question: "'Imagine if...' dùng để:", options: ["Mô tả thực tế", "Đặt ra tình huống giả định", "Hỏi thông tin", "Đưa ra lời khuyên"], answer: "Đặt ra tình huống giả định" },
+    { id: "q-ex5", type: "translate", question: "Dịch: 'Nếu tôi là tổng thống, tôi sẽ giảm thuế.'", answer: "If I were president, I would lower taxes." },
+    { id: "q-ex6", type: "multiple-choice", question: "'What would you do if you won the lottery?' — câu hỏi về điều gì?", options: ["Kế hoạch thực tế", "Tình huống giả định", "Lời khuyên", "Hành động đã xảy ra"], answer: "Tình huống giả định" },
+    { id: "q-ex7", type: "multiple-choice", question: "'Supposing you could fly...' = 'Giả sử bạn có thể bay...' — cấu trúc tương đương:", options: ["Even if you could fly", "If you could fly", "When you can fly", "Unless you can fly"], answer: "If you could fly" },
   ],
   cumulativeReviewQuestions: [
     { id: "cr33-1", question: "Ôn tập Unit 32 — Điền: 'By next month, I ___ (complete) the B1 level.'", options: ["will have completed", "completed", "have completed", "will complete"], answer: "will have completed", type: "multiple-choice" },

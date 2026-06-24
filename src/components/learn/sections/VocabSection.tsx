@@ -190,6 +190,11 @@ export default function VocabSection({
                     )}
                     <p className="text-zinc-300 text-xs italic leading-relaxed">&ldquo;{v.example}&rdquo;</p>
                     {v.example2 && <p className="text-zinc-500 text-xs italic">&ldquo;{v.example2}&rdquo;</p>}
+                    {v.l1_interference_vn && (
+                      <div className="mt-1 bg-amber-950/40 border border-amber-700/30 rounded-xl px-2.5 py-1.5">
+                        <p className="text-amber-300/90 text-[10px] leading-relaxed">{v.l1_interference_vn}</p>
+                      </div>
+                    )}
                   </div>
                    <div className="flex items-center justify-between">
                     <p className="text-[10px] text-teal-600/80">Nhấn để lật lại ↩</p>

@@ -197,6 +197,13 @@ export const unit32: UnitData = {
     { id: "fq3", type: "multiple-choice", question: "Chọn dạng đúng: 'It is recommended that everyone ___ the policy.'", options: ["read", "reads", "reading", "to read"], answer: "read" },
     { id: "fq4", type: "translate", question: "Dịch: 'Chúng tôi đã hợp tác để tìm giải pháp thay thế.'", answer: "We collaborated to find an alternative solution." },
     { id: "fq5", type: "multiple-choice", question: "Chọn từ điền: 'We need to ___ the corporate deadline.'", options: ["meet", "miss", "propose", "delay"], answer: "meet" },
+    { id: "q-ex1", type: "multiple-choice", question: "Second Conditional: cấu trúc đúng:", options: ["If + present, will + inf", "If + past simple, would + inf", "If + past perfect, would have + V3", "If + present, would + inf"], answer: "If + past simple, would + inf" },
+    { id: "q-ex2", type: "multiple-choice", question: "Câu Second Conditional đúng:", options: ["If I am rich, I will travel.", "If I were rich, I would travel.", "If I was rich, I would traveled.", "If I were rich, I will travel."], answer: "If I were rich, I would travel." },
+    { id: "q-ex3", type: "cloze", question: "Điền: 'If she ___ harder, she would pass.'", answer: "worked" },
+    { id: "q-ex4", type: "multiple-choice", question: "'Passive voice' bị động hiện tại hoàn thành:", options: ["has/have + been + V3", "was/were + V3", "is/are + V3", "had + been + V3"], answer: "has/have + been + V3" },
+    { id: "q-ex5", type: "translate", question: "Dịch: 'Nếu tôi biết câu trả lời, tôi sẽ nói cho bạn biết.'", answer: "If I knew the answer, I would tell you." },
+    { id: "q-ex6", type: "multiple-choice", question: "'Wish + past simple' diễn tả:", options: ["Điều kiện thật", "Mong ước về hiện tại không thật", "Tiếc về quá khứ", "Kế hoạch tương lai"], answer: "Mong ước về hiện tại không thật" },
+    { id: "q-ex7", type: "multiple-choice", question: "'It's time you went to bed.' — cấu trúc này dùng:", options: ["Thì hiện tại đơn", "Thì quá khứ đơn (subjunctive)", "Thì hiện tại hoàn thành", "Modal verb"], answer: "Thì quá khứ đơn (subjunctive)" },
   ],
   cumulativeReviewQuestions: [
     { id: "cr32-1", question: "Ôn tập Unit 31 — Điền: 'The corporate client requested the ___ (tệp đính kèm).'", options: ["attachment", "agenda", "proposal", "delay"], answer: "attachment", type: "multiple-choice" },

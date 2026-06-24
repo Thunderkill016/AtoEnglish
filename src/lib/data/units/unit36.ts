@@ -188,6 +188,13 @@ export const unit36: UnitData = {
     { id: "fq3", type: "multiple-choice", question: "Chọn từ điền: 'Please ___ your database credentials before logging in.'", options: ["verify", "claim", "examine", "illustrate"], answer: "verify" },
     { id: "fq4", type: "translate", question: "Dịch: 'Người ta tin rằng biến đổi khí hậu đang đẩy nhanh.'", answer: "It is believed that climate change is accelerating." },
     { id: "fq5", type: "multiple-choice", question: "Từ nào đồng nghĩa với 'carry out'?", options: ["examine", "conduct", "verify", "identify"], answer: "conduct" },
+    { id: "q-ex1", type: "multiple-choice", question: "Bị động phức (complex passive) với modal: cấu trúc đúng:", options: ["must + V3", "must + be + V3", "must + been + V3", "must + being + V3"], answer: "must + be + V3" },
+    { id: "q-ex2", type: "multiple-choice", question: "Câu bị động trang trọng đúng:", options: ["The report is being written.", "The report being written.", "The report is been written.", "The report are being written."], answer: "The report is being written." },
+    { id: "q-ex3", type: "cloze", question: "Điền: 'The decision has ___ made by the board.'", answer: "been" },
+    { id: "q-ex4", type: "multiple-choice", question: "'It is believed that...' là cấu trúc:", options: ["Active voice", "Impersonal passive", "Causative", "Reported speech"], answer: "Impersonal passive" },
+    { id: "q-ex5", type: "translate", question: "Dịch trang trọng: 'Vấn đề này cần được xem xét.'", answer: "This issue needs to be addressed." },
+    { id: "q-ex6", type: "multiple-choice", question: "'It is said that he is wealthy.' = :", options: ["He is said to be wealthy.", "He said to be wealthy.", "He is saying to be wealthy.", "He was said being wealthy."], answer: "He is said to be wealthy." },
+    { id: "q-ex7", type: "multiple-choice", question: "Trong văn bản học thuật/khoa học, tại sao hay dùng bị động?", options: ["Để câu ngắn hơn", "Để tập trung vào hành động, không phải tác nhân", "Vì luôn chính xác hơn chủ động", "Vì dễ viết hơn"], answer: "Để tập trung vào hành động, không phải tác nhân" },
   ],
   cumulativeReviewQuestions: [
     { id: "cr36-1", question: "Ôn tập Unit 35 — Chọn liên từ: 'We will not sign the contract ___ you pay the penalty.'", options: ["provided that", "as long as", "unless", "even if"], answer: "unless", type: "multiple-choice" },

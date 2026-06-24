@@ -197,6 +197,13 @@ export const unit21: UnitData = {
     { id: "fq3", type: "multiple-choice", question: "Chọn câu phân tích xu hướng chuyên nghiệp nhất:", options: ["Technology will change everything.", "Technology will be disrupting traditional sectors throughout the decade.", "Technology changes everything soon.", "Technology changed the industry."], answer: "Technology will be disrupting traditional sectors throughout the decade." },
     { id: "fq4", type: "translate", question: "Dịch: 'Đến năm 2027, nhóm R&D của chúng tôi sẽ phát triển được các sản phẩm đột phá.'", answer: "By 2027, our R&D team will have developed several disruptive products." },
     { id: "fq5", type: "multiple-choice", question: "Phân biệt: Câu nào nói về hành động hoàn thành TRƯỚC một mốc?", options: ["We will be launching the product next year.", "We will launch the product next year.", "By next year, we will have launched the product.", "Next year, we are launching the product."], answer: "By next year, we will have launched the product." },
+    { id: "q-ex1", type: "multiple-choice", question: "'Might' thể hiện mức độ chắc chắn:", options: ["100% chắc chắn", "90% chắc chắn", "50% không chắc", "0% không thể"], answer: "50% không chắc" },
+    { id: "q-ex2", type: "multiple-choice", question: "Câu dự đoán đúng:", options: ["It might rains tomorrow.", "It might rain tomorrow.", "It mights rain tomorrow.", "It might to rain tomorrow."], answer: "It might rain tomorrow." },
+    { id: "q-ex3", type: "cloze", question: "Điền: 'Technology ___ change our lives.' (chắc chắn)", answer: "will" },
+    { id: "q-ex4", type: "multiple-choice", question: "'In the long run' nghĩa là:", options: ["Trong thời gian ngắn", "Về lâu dài", "Ngay bây giờ", "Trong cuộc đua"], answer: "Về lâu dài" },
+    { id: "q-ex5", type: "translate", question: "Dịch: 'Tôi có thể sẽ đến trễ.'", answer: "I might be late." },
+    { id: "q-ex6", type: "multiple-choice", question: "Câu nào thể hiện dự đoán CÓ BẰNG CHỨNG?", options: ["She might win.", "She will probably win.", "Look — it's going to rain.", "It may rain later."], answer: "Look — it's going to rain." },
+    { id: "q-ex7", type: "multiple-choice", question: "'Trend' nghĩa là:", options: ["Tình trạng khẩn cấp", "Xu hướng", "Báo cáo", "Quyết định"], answer: "Xu hướng" },
   ],
   cumulativeReviewQuestions: [
     { id: "cr21-1", question: "Ôn tập Unit 20 — Chọn Past Perfect đúng: 'By the time we arrived, they ___ the deal.'", options: ["signed", "had signed", "have signed", "were signing"], answer: "had signed", type: "multiple-choice" },

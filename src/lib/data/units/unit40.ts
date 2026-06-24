@@ -195,6 +195,13 @@ export const unit40: UnitData = {
     { id: "fq3", type: "multiple-choice", question: "Chọn dạng đúng của động từ: 'We hired a consultant, thereby ___ the conflict.'", options: ["resolves", "resolving", "to resolve", "resolved"], answer: "resolving" },
     { id: "fq4", type: "translate", question: "Dịch: 'Một số người thích làm việc tại văn phòng, trong khi số khác thích làm việc từ xa.'", answer: "Some people prefer working at the office, whereas others prefer working remotely." },
     { id: "fq5", type: "multiple-choice", question: "Từ nào mô tả một văn bản mạch lạc, các ý liên kết tốt?", options: ["transition", "cohesion", "coherent", "subsequent"], answer: "coherent" },
+    { id: "q-ex1", type: "multiple-choice", question: "'Furthermore' dùng để:", options: ["Tương phản", "Bổ sung ý kiến thêm", "Đưa ra ví dụ", "Kết luận"], answer: "Bổ sung ý kiến thêm" },
+    { id: "q-ex2", type: "multiple-choice", question: "'Nevertheless' = :", options: ["Thêm vào đó", "Tuy nhiên/mặc dù vậy", "Ví dụ như", "Do đó"], answer: "Tuy nhiên/mặc dù vậy" },
+    { id: "q-ex3", type: "cloze", question: "Điền: '___ to conclude, I believe this approach is effective.'", answer: "In order" },
+    { id: "q-ex4", type: "multiple-choice", question: "'As a result' chỉ mối quan hệ:", options: ["Tương phản", "Thêm thông tin", "Nguyên nhân-kết quả", "Ví dụ"], answer: "Nguyên nhân-kết quả" },
+    { id: "q-ex5", type: "translate", question: "Dịch: 'Mặt khác, có nhiều bằng chứng ủng hộ quan điểm này.'", answer: "On the other hand, there is much evidence supporting this view." },
+    { id: "q-ex6", type: "multiple-choice", question: "'For instance' = :", options: ["Tuy nhiên", "Ví dụ như", "Hơn nữa", "Do đó"], answer: "Ví dụ như" },
+    { id: "q-ex7", type: "multiple-choice", question: "Discourse marker kết luận trang trọng nhất:", options: ["So", "Anyway", "In conclusion", "Well"], answer: "In conclusion" },
   ],
   cumulativeReviewQuestions: [
     { id: "cr40-1", question: "Ôn tập Unit 39 — Chọn câu đúng: 'The password is encrypted. She ___ have decrypted it without the key.'", options: ["must", "can't", "should", "might"], answer: "can't", type: "multiple-choice" },

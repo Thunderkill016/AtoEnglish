@@ -218,6 +218,13 @@ export const unit16: UnitData = {
     { id: "fq3", type: "multiple-choice", question: "Câu đặt phòng lịch sự nhất:", options: ["Give me a room for two nights.", "I want room two nights.", "I'd like to book a room for two nights, please.", "Can booking room for two nights?"], answer: "I'd like to book a room for two nights, please." },
     { id: "fq4", type: "translate", question: "Dịch sang tiếng Anh: 'Rẽ trái ở đèn giao thông, rồi đi thẳng hai dãy nhà.'", answer: "Turn left at the traffic lights, then go straight for two blocks." },
     { id: "fq5", type: "multiple-choice", question: "Thời gian nhận phòng tiêu chuẩn bằng tiếng Anh là gì?", options: ["Check-in time is 2 PM.", "Checking-in time is 2 PM.", "Check time is 2 PM.", "In-check time is 2 PM."], answer: "Check-in time is 2 PM." },
+    { id: "q-ex1", type: "multiple-choice", question: "'Luggage' là loại danh từ gì?", options: ["Countable", "Uncountable", "Cả hai", "Proper noun"], answer: "Uncountable" },
+    { id: "q-ex2", type: "multiple-choice", question: "Cách nói đúng khi đặt phòng:", options: ["I want make a reservation.", "I'd like to make a reservation.", "I like to reserve.", "Can I doing a reservation?"], answer: "I'd like to make a reservation." },
+    { id: "q-ex3", type: "cloze", question: "Điền: 'The flight is ___ by 2 hours.' (hoãn)", answer: "delayed" },
+    { id: "q-ex4", type: "multiple-choice", question: "'Go through customs' nghĩa là:", options: ["Mua đồ lưu niệm", "Qua cửa hải quan", "Lên máy bay", "Nhận hành lý"], answer: "Qua cửa hải quan" },
+    { id: "q-ex5", type: "multiple-choice", question: "'On arrival' nghĩa là:", options: ["Khi khởi hành", "Khi đến nơi", "Trong chuyến đi", "Trước khi đặt vé"], answer: "Khi đến nơi" },
+    { id: "q-ex6", type: "multiple-choice", question: "'Stay ___ a hotel' — giới từ đúng:", options: ["in", "at", "on", "with"], answer: "at" },
+    { id: "q-ex7", type: "translate", question: "Dịch: 'Cho tôi xem hộ chiếu của bạn.'", answer: "May I see your passport, please?" },
   ],
 
   cumulativeReviewQuestions: [

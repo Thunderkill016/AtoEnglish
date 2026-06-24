@@ -217,6 +217,13 @@ export const unit17: UnitData = {
     { id: "fq3", type: "multiple-choice", question: "Câu nào ĐÚNG về FOR và SINCE?", options: ["I've lived here since five years.", "I've lived here for five years.", "I've lived here since five years ago.", "I've lived here for since 2019."], answer: "I've lived here for five years." },
     { id: "fq4", type: "translate", question: "Dịch sang tiếng Anh: 'Bạn đã hoàn thành báo cáo chưa?'", answer: "Have you finished the report yet?" },
     { id: "fq5", type: "multiple-choice", question: "Chọn câu ĐÚNG: Mô tả kinh nghiệm của bạn", options: ["I have never went abroad.", "I have never been abroad.", "I never have been abroad.", "I haven't never been abroad."], answer: "I have never been abroad." },
+    { id: "q-ex1", type: "multiple-choice", question: "Khi nào dùng Present Perfect?", options: ["Hành động xác định trong quá khứ", "Kinh nghiệm/kết quả liên quan hiện tại", "Hành động đang xảy ra", "Kế hoạch tương lai"], answer: "Kinh nghiệm/kết quả liên quan hiện tại" },
+    { id: "q-ex2", type: "multiple-choice", question: "Chọn câu Present Perfect đúng:", options: ["I have saw that movie.", "I have seen that movie.", "I have see that movie.", "I seen that movie."], answer: "I have seen that movie." },
+    { id: "q-ex3", type: "cloze", question: "Điền: 'She ___ never been to London.'", answer: "has" },
+    { id: "q-ex4", type: "multiple-choice", question: "Chọn đúng: 'Since' hay 'for'?", options: ["I've lived here since 5 years.", "I've lived here for 2020.", "I've lived here for 5 years.", "I've lived here since 5 years ago."], answer: "I've lived here for 5 years." },
+    { id: "q-ex5", type: "multiple-choice", question: "'Yet' đứng ở đâu trong câu phủ định?", options: ["Đầu câu", "Sau have", "Cuối câu", "Trước V3"], answer: "Cuối câu" },
+    { id: "q-ex6", type: "multiple-choice", question: "'I've just arrived.' — 'just' nghĩa là:", options: ["Chưa bao giờ", "Vừa mới", "Đã từ lâu", "Luôn luôn"], answer: "Vừa mới" },
+    { id: "q-ex7", type: "translate", question: "Dịch: 'Tôi chưa ăn sáng.'", answer: "I haven't had breakfast yet." },
   ],
 
   cumulativeReviewQuestions: [

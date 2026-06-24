@@ -195,6 +195,13 @@ export const unit34: UnitData = {
     { id: "fq3", type: "multiple-choice", question: "Chọn từ điền: 'The IT department is ___ the cause of the database failure.'", options: ["overlooking", "investigating", "preventing", "rectifying"], answer: "investigating" },
     { id: "fq4", type: "translate", question: "Dịch: 'Nếu bạn hỏi, tôi đã nói cho bạn biết rồi.'", answer: "If you had asked, I would have told you." },
     { id: "fq5", type: "multiple-choice", question: "Từ nào đồng nghĩa với 'regret' hoặc 'deep thought'?", options: ["analysis", "reflection", "evaluation", "complication"], answer: "reflection" },
+    { id: "q-ex1", type: "multiple-choice", question: "Third Conditional dùng cho:", options: ["Tình huống hiện tại giả định", "Điều không thật trong quá khứ và kết quả của nó", "Sự thật chung", "Kế hoạch tương lai"], answer: "Điều không thật trong quá khứ và kết quả của nó" },
+    { id: "q-ex2", type: "multiple-choice", question: "Third Conditional đúng:", options: ["If I studied, I would pass.", "If I had studied, I would have passed.", "If I studied, I would have passed.", "If I had studied, I would pass."], answer: "If I had studied, I would have passed." },
+    { id: "q-ex3", type: "cloze", question: "Điền: 'I wish I ___ harder last year.'", answer: "had worked" },
+    { id: "q-ex4", type: "multiple-choice", question: "'Should have + V3' diễn tả:", options: ["Lời khuyên hiện tại", "Tiếc về điều đã không làm trong quá khứ", "Kế hoạch tương lai", "Điều kiện giả định"], answer: "Tiếc về điều đã không làm trong quá khứ" },
+    { id: "q-ex5", type: "translate", question: "Dịch: 'Nếu tôi học chăm hơn, tôi đã đỗ kỳ thi.'", answer: "If I had studied harder, I would have passed the exam." },
+    { id: "q-ex6", type: "multiple-choice", question: "'I shouldn't have said that.' nghĩa là:", options: ["Tôi không nên nói điều đó (tương lai)", "Tôi hối tiếc đã nói điều đó", "Tôi sẽ không nói điều đó", "Tôi không biết nói gì"], answer: "Tôi hối tiếc đã nói điều đó" },
+    { id: "q-ex7", type: "multiple-choice", question: "'If only I hadn't missed the bus!' — cảm xúc chính:", options: ["Vui mừng", "Tiếc nuối về quá khứ", "Hy vọng tương lai", "Lo lắng"], answer: "Tiếc nuối về quá khứ" },
   ],
   cumulativeReviewQuestions: [
     { id: "cr34-1", question: "Ôn tập Unit 33 — Chọn dạng đúng: 'If I were you, I ___ in that business venture.'", options: ["will invest", "would invest", "invested", "would have invested"], answer: "would invest", type: "multiple-choice" },

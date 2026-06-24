@@ -218,6 +218,13 @@ export const unit14: UnitData = {
     { id: "fq4", type: "translate", question: "Dịch sang tiếng Anh: 'Tôi hy vọng mọi thứ sẽ diễn ra suôn sẻ.'", answer: "I hope everything will go smoothly." },
     { id: "fq5", type: "multiple-choice", question: "Câu nào ĐÚNG về ngữ pháp?", options: ["I going to prepare a report.", "I'm going to prepare a report. ✅", "I will going to prepare a report.", "I'm go to prepare a report."], answer: "I'm going to prepare a report. ✅",
       explanation_vn: "'Going to' cần có 'to be' phía trước: 'am/is/are + going to + V nguyên mẫu'. 'Will going to' là lỗi không được." },
+    { id: "q-ex1", type: "multiple-choice", question: "Dùng 'going to' khi nào?", options: ["Quyết định tức thì", "Kế hoạch đã có sẵn", "Dự đoán không có bằng chứng", "Hành động đang xảy ra"], answer: "Kế hoạch đã có sẵn" },
+    { id: "q-ex2", type: "multiple-choice", question: "Chọn câu đúng:", options: ["I will going to study.", "I am going to study.", "I going to study.", "I am go to study."], answer: "I am going to study." },
+    { id: "q-ex3", type: "cloze", question: "Điền: 'It's cloudy. It ___ rain.' (going to)", answer: "is going to" },
+    { id: "q-ex4", type: "multiple-choice", question: "'Will' dùng để:", options: ["Nói về quá khứ", "Quyết định ngay lúc nói", "Hành động đang xảy ra", "Kế hoạch định sẵn"], answer: "Quyết định ngay lúc nói" },
+    { id: "q-ex5", type: "multiple-choice", question: "Câu hỏi tương lai đúng:", options: ["What you will do?", "What will you do?", "What will you doing?", "What do you will do?"], answer: "What will you do?" },
+    { id: "q-ex6", type: "multiple-choice", question: "Phủ định của 'She is going to travel':", options: ["She isn't going to travel.", "She won't going to travel.", "She doesn't going to travel.", "She not going to travel."], answer: "She isn't going to travel." },
+    { id: "q-ex7", type: "translate", question: "Dịch: 'Tôi sẽ giúp bạn!' (quyết định tức thì)", answer: "I'll help you!" },
   ],
 
   cumulativeReviewQuestions: [

@@ -198,6 +198,13 @@ export const unit29: UnitData = {
     { id: "fq4", type: "translate", question: "Dịch: 'Chúng ta cần tìm một giải pháp thay thế.'", answer: "We need to find an alternative solution." },
     { id: "fq5", type: "multiple-choice", question: "Điền giới từ: 'We need to reach a consensus ___ the new budget.'", options: ["on", "with", "at", "for"], answer: "on",
       explanation_vn: "'reach a consensus ON sth' là collocation đúng. 'agree on', 'decide on' cũng theo quy tắc này." },
+    { id: "q-ex1", type: "multiple-choice", question: "'I wish I had more time.' — diễn tả điều gì?", options: ["Điều kiện thật sẽ xảy ra", "Tiếc về hiện tại (điều không thật)", "Kế hoạch tương lai", "Yêu cầu lịch sự"], answer: "Tiếc về hiện tại (điều không thật)" },
+    { id: "q-ex2", type: "multiple-choice", question: "Câu 'wish' hiện tại đúng:", options: ["I wish I have a car.", "I wish I had a car.", "I wish I will have a car.", "I wish I have had a car."], answer: "I wish I had a car." },
+    { id: "q-ex3", type: "cloze", question: "Điền: 'If only I ___ harder at school.'", answer: "had studied" },
+    { id: "q-ex4", type: "multiple-choice", question: "'The problem is that...' dùng để:", options: ["Đưa ra giải pháp", "Nêu vấn đề", "Đồng ý với ai", "Hỏi thông tin"], answer: "Nêu vấn đề" },
+    { id: "q-ex5", type: "translate", question: "Dịch: 'Tôi ước gì mình biết câu trả lời.'", answer: "I wish I knew the answer." },
+    { id: "q-ex6", type: "multiple-choice", question: "'Have you considered...?' + dạng nào?", options: ["to-infinitive", "V-ing", "bare infinitive", "V3"], answer: "V-ing" },
+    { id: "q-ex7", type: "multiple-choice", question: "Giải pháp lịch sự nhất khi đề xuất:", options: ["You must do this.", "Why don't you try...?", "Do this now.", "I want you to do this."], answer: "Why don't you try...?" },
   ],
   cumulativeReviewQuestions: [
     { id: "cr29-1", question: "Ôn tập Unit 28 — Điền: 'I ___ (study) English for six months now.'", options: ["have studied", "have been studying", "am studying", "studied"], answer: "have been studying", type: "multiple-choice" },

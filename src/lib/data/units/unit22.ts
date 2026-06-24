@@ -197,6 +197,13 @@ export const unit22: UnitData = {
     { id: "fq3", type: "multiple-choice", question: "Chọn đúng — Quy định từ BÊN NGOÀI đặt ra:", options: ["I must submit this — I feel it's important.", "I have to submit this — the deadline is tomorrow.", "I should submit this — it would be good.", "I needn't submit this yet."], answer: "I have to submit this — the deadline is tomorrow." },
     { id: "fq4", type: "translate", question: "Dịch: 'Bạn không cần xin duyệt cho những khoản dưới 50 đô.'", answer: "You don't have to get approval for amounts under $50." },
     { id: "fq5", type: "multiple-choice", question: "Câu nào đúng cho tình huống: hành vi tùy chọn, không bắt buộc?", options: ["Staff must attend the Friday meeting.", "Staff mustn't attend the Friday meeting.", "Staff don't have to attend the optional Friday meeting.", "Staff have to attend the Friday meeting."], answer: "Staff don't have to attend the optional Friday meeting." },
+    { id: "q-ex1", type: "multiple-choice", question: "'Must' vs 'have to': 'must' thường dùng khi:", options: ["Quy tắc bên ngoài bắt buộc", "Nghĩa vụ cá nhân/tự đặt ra", "Khuyên bảo nhẹ", "Khả năng"], answer: "Nghĩa vụ cá nhân/tự đặt ra" },
+    { id: "q-ex2", type: "multiple-choice", question: "Câu bắt buộc đúng:", options: ["You must to wear a seatbelt.", "You must wear a seatbelt.", "You musts wear a seatbelt.", "You must wearing a seatbelt."], answer: "You must wear a seatbelt." },
+    { id: "q-ex3", type: "cloze", question: "Điền: 'You ___ smoke here. It's forbidden.'", answer: "mustn't" },
+    { id: "q-ex4", type: "multiple-choice", question: "'Should' dùng để:", options: ["Ra lệnh bắt buộc", "Đưa ra lời khuyên/gợi ý", "Hành động trong quá khứ", "Kế hoạch tương lai"], answer: "Đưa ra lời khuyên/gợi ý" },
+    { id: "q-ex5", type: "multiple-choice", question: "'Don't have to' nghĩa là:", options: ["Cấm làm", "Không cần phải làm", "Không muốn làm", "Không thể làm"], answer: "Không cần phải làm" },
+    { id: "q-ex6", type: "translate", question: "Dịch: 'Bạn nên ngủ đủ giấc.'", answer: "You should get enough sleep." },
+    { id: "q-ex7", type: "multiple-choice", question: "'Mustn't' vs 'don't have to': khác nhau chính?", options: ["Giống nhau hoàn toàn", "'Mustn't' = cấm, 'don't have to' = không bắt buộc", "'Don't have to' = cấm, 'mustn't' = không bắt buộc", "Cả hai đều là cấm"], answer: "'Mustn't' = cấm, 'don't have to' = không bắt buộc" },
   ],
   cumulativeReviewQuestions: [
     { id: "cr22-1", question: "Ôn tập Unit 21 — Chọn đúng: 'By next year, we ___ into Asia.'", options: ["will expand", "will have expanded", "will be expanded", "expand"], answer: "will have expanded", type: "multiple-choice" },

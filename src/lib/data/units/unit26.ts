@@ -197,6 +197,13 @@ export const unit26: UnitData = {
     { id: "fq3", type: "multiple-choice", question: "Câu nào diễn đạt đề xuất B1+ tự nhiên nhất?", options: ["I suggest that we try the new approach.", "I suggest trying the new approach.", "I suggest to try the new approach.", "Both A and B are correct."], answer: "Both A and B are correct." },
     { id: "fq4", type: "translate", question: "Dịch: 'Anh ấy do dự khi chia sẻ ý kiến nhưng quyết định nói lên.'", answer: "He hesitated to share his opinion but decided to speak up." },
     { id: "fq5", type: "multiple-choice", question: "Nghĩa khác nhau — chọn đúng: 'I stopped ___ (đã dừng hẳn thói quen)'", options: ["to smoke", "smoking", "smoke", "to smoking"], answer: "smoking" },
+    { id: "q-ex1", type: "multiple-choice", question: "'Would rather' + dạng động từ nào?", options: ["to-infinitive", "bare infinitive", "V-ing", "past participle"], answer: "bare infinitive" },
+    { id: "q-ex2", type: "multiple-choice", question: "Câu đúng với 'would rather':", options: ["I'd rather to stay home.", "I'd rather staying home.", "I'd rather stay home.", "I'd rather stayed home."], answer: "I'd rather stay home." },
+    { id: "q-ex3", type: "cloze", question: "Điền: 'I'd rather ___ tea than coffee.'", answer: "have" },
+    { id: "q-ex4", type: "multiple-choice", question: "'Prefer + V-ing to V-ing': câu đúng:", options: ["I prefer swim to run.", "I prefer swimming to running.", "I prefer swimming than running.", "I prefer to swim than to run."], answer: "I prefer swimming to running." },
+    { id: "q-ex5", type: "translate", question: "Dịch: 'Tôi thích ở nhà hơn là đi ra ngoài.'", answer: "I'd rather stay home than go out." },
+    { id: "q-ex6", type: "multiple-choice", question: "'It's up to you' nghĩa là:", options: ["Đó là lỗi của bạn", "Tùy bạn quyết định", "Trên bạn", "Bạn không thể làm"], answer: "Tùy bạn quyết định" },
+    { id: "q-ex7", type: "multiple-choice", question: "'I'd rather you didn't smoke here.' — cấu trúc này dùng khi:", options: ["Nói về bản thân", "Bày tỏ sở thích về hành động của người khác", "Ra lệnh", "Xin phép"], answer: "Bày tỏ sở thích về hành động của người khác" },
   ],
   cumulativeReviewQuestions: [
     { id: "cr26-1", question: "Ôn tập Unit 25 — Relative pronoun đúng: 'This is the room ___ we hold meetings.'", options: ["who", "which", "that", "where"], answer: "where", type: "multiple-choice" },

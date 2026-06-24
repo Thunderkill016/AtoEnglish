@@ -198,6 +198,13 @@ export const unit28: UnitData = {
     { id: "fq4", type: "translate", question: "Dịch: 'Chúng tôi đã hợp tác với đối tác quốc tế từ năm 2022.'", answer: "We have been collaborating with international partners since 2022." },
     { id: "fq5", type: "multiple-choice", question: "Phân biệt: 'I've finished the report' vs 'I've been finishing the report' — câu nào đúng hơn khi báo cáo đã hoàn thành?", options: ["I've been finishing the report", "I've finished the report", "Both are equal", "Neither is correct"], answer: "I've finished the report",
       explanation_vn: "'I've finished' (PPS) nhấn mạnh KẾT QUẢ (xong rồi). 'I've been finishing' nhấn mạnh quá trình — không phù hợp khi đã hoàn thành." },
+    { id: "q-ex1", type: "multiple-choice", question: "'How long have you lived here?' dùng thì gì?", options: ["Simple Present", "Simple Past", "Present Perfect", "Past Continuous"], answer: "Present Perfect" },
+    { id: "q-ex2", type: "cloze", question: "Điền: 'I've worked here ___ 3 years.'", answer: "for" },
+    { id: "q-ex3", type: "multiple-choice", question: "'Since' dùng với:", options: ["Khoảng thời gian", "Mốc thời gian cụ thể", "Thì quá khứ đơn", "Thì hiện tại đơn"], answer: "Mốc thời gian cụ thể" },
+    { id: "q-ex4", type: "multiple-choice", question: "Câu đúng:", options: ["I've known her since 5 years.", "I've known her for 5 years.", "I've known her for 2019.", "I've known her since 5 years ago."], answer: "I've known her for 5 years." },
+    { id: "q-ex5", type: "translate", question: "Dịch: 'Tôi đã học tiếng Anh được 2 năm.'", answer: "I have been learning English for 2 years." },
+    { id: "q-ex6", type: "multiple-choice", question: "'It's been ages since I saw him.' nghĩa là:", options: ["Tôi vừa gặp anh ấy", "Đã rất lâu tôi không gặp anh ấy", "Tôi thường xuyên gặp anh ấy", "Tôi chưa bao giờ gặp anh ấy"], answer: "Đã rất lâu tôi không gặp anh ấy" },
+    { id: "q-ex7", type: "multiple-choice", question: "'For a long time' đi với thì nào nhất?", options: ["Simple Past chỉ", "Present Perfect", "Simple Present chỉ", "Future Simple chỉ"], answer: "Present Perfect" },
   ],
   cumulativeReviewQuestions: [
     { id: "cr28-1", question: "Ôn tập Unit 27 — 'She ___ the problem in the meeting.' (đề cập)", options: ["brought up", "brought on", "set up", "looked into"], answer: "brought up", type: "multiple-choice" },

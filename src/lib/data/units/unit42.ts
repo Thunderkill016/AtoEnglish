@@ -196,6 +196,13 @@ export const unit42: UnitData = {
     { id: "fq3", type: "multiple-choice", question: "Chọn câu đúng: '___ (trừ khi) you agree to our terms, we will terminate the contract.'", options: ["Unless", "As long as", "Provided that", "Even if"], answer: "Unless" },
     { id: "fq4", type: "translate", question: "Dịch: 'Chúng tôi cần tiến hành đánh giá để xác thực kết quả.'", answer: "We need to conduct an evaluation to validate the results." },
     { id: "fq5", type: "multiple-choice", question: "Từ nào mô tả việc 'tác động lên hành vi của ai đó'?", options: ["validate", "influence", "leverage", "assert"], answer: "influence" },
+    { id: "q-ex1", type: "multiple-choice", question: "B2 Review — Mixed Conditional đúng:", options: ["If I had known, I would tell you.", "If I had known, I would have told you.", "If I knew, I would have told you.", "If I know, I would tell you."], answer: "If I had known, I would have told you." },
+    { id: "q-ex2", type: "multiple-choice", question: "Bị động hoàn thành đúng:", options: ["The work has done.", "The work has been done.", "The work had done.", "The work is been done."], answer: "The work has been done." },
+    { id: "q-ex3", type: "cloze", question: "Điền: 'Despite ___ tired, she continued working.'", answer: "being" },
+    { id: "q-ex4", type: "multiple-choice", question: "Câu nhấn mạnh (cleft) đúng:", options: ["It is you who are right.", "It is you that is right.", "It was you who are right.", "It is you which is right."], answer: "It is you who are right." },
+    { id: "q-ex5", type: "translate", question: "Dịch: 'Lẽ ra anh ấy không nên nói như vậy.'", answer: "He shouldn't have said that." },
+    { id: "q-ex6", type: "multiple-choice", question: "Modal perfect 'must have + V3' diễn tả:", options: ["Nghĩa vụ trong QK", "Suy luận chắc chắn về QK", "Khả năng trong TL", "Điều kiện QK"], answer: "Suy luận chắc chắn về QK" },
+    { id: "q-ex7", type: "multiple-choice", question: "Từ nối học thuật tốt nhất để tương phản:", options: ["but", "however", "and", "so"], answer: "however" },
   ],
   cumulativeReviewQuestions: [
     { id: "cr42-1", question: "Ôn tập Unit 41 — Chọn từ thích hợp: 'Urbanization has caused severe environmental ___.'", options: ["degradation", "wellbeing", "deforestation", "infrastructure"], answer: "degradation", type: "multiple-choice" },

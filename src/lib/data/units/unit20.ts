@@ -218,6 +218,13 @@ export const unit20: UnitData = {
     { id: "fq3", type: "multiple-choice", question: "Câu nào kết hợp Past Perfect + Past Simple ĐÚNG nhất?", options: ["By the time the report was due, she finished it.", "By the time the report was due, she had finished it.", "By the time the report was due, she has finished it.", "By the time the report was due, she was finishing it."], answer: "By the time the report was due, she had finished it." },
     { id: "fq4", type: "translate", question: "Dịch: 'CEO đã từ chức trước khi vụ bê bối trở nên công khai.'", answer: "The CEO had resigned before the scandal became public." },
     { id: "fq5", type: "multiple-choice", question: "Chọn câu diễn đạt đúng thứ tự: (1) investigated → (2) revealed", options: ["They revealed the results and then investigated.", "After they investigated, they revealed the results.", "They had revealed the results before investigating.", "They revealed the results before they had investigated."], answer: "After they investigated, they revealed the results." },
+    { id: "q-ex1", type: "multiple-choice", question: "Bị động hiện tại đơn: cấu trúc đúng:", options: ["is + V3", "are + Ving", "was + V3", "be + V-ing"], answer: "is + V3" },
+    { id: "q-ex2", type: "multiple-choice", question: "Chuyển sang bị động: 'Reporters write the news.'", options: ["The news is written by reporters.", "The news was written by reporters.", "The news are written by reporters.", "The news write by reporters."], answer: "The news is written by reporters." },
+    { id: "q-ex3", type: "cloze", question: "Điền: 'The building ___ constructed last year.' (bị động QK)", answer: "was" },
+    { id: "q-ex4", type: "multiple-choice", question: "'According to the report' nghĩa là:", options: ["Mặc dù có báo cáo", "Theo báo cáo", "Trái với báo cáo", "Ngoài báo cáo"], answer: "Theo báo cáo" },
+    { id: "q-ex5", type: "multiple-choice", question: "Headline tin tức viết theo kiểu nào?", options: ["Câu đầy đủ mọi từ", "Rút gọn: bỏ articles và to be", "Chỉ dùng quá khứ đơn", "Luôn dùng bị động"], answer: "Rút gọn: bỏ articles và to be" },
+    { id: "q-ex6", type: "multiple-choice", question: "'Deny' nghĩa là:", options: ["Xác nhận", "Phủ nhận", "Báo cáo", "Đề xuất"], answer: "Phủ nhận" },
+    { id: "q-ex7", type: "translate", question: "Dịch: 'Bệnh viện mới sẽ được xây dựng.'", answer: "A new hospital will be built." },
   ],
 
   cumulativeReviewQuestions: [

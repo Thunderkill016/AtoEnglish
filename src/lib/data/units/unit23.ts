@@ -197,6 +197,13 @@ export const unit23: UnitData = {
     { id: "fq3", type: "multiple-choice", question: "Zero Conditional cho quy luật công ty:", options: ["If a client complains, we will offer a refund.", "If a client complains, we offer a refund.", "If a client will complain, we offer a refund.", "If a client complained, we offer a refund."], answer: "If a client complains, we offer a refund." },
     { id: "fq4", type: "translate", question: "Dịch: 'Trừ khi bạn hủy trước 14 ngày, sẽ có tiền phạt.'", answer: "Unless you cancel more than 14 days in advance, there will be a penalty." },
     { id: "fq5", type: "multiple-choice", question: "Câu nào dùng UNLESS đúng?", options: ["Unless you don't confirm, we will wait.", "Unless you confirm, we will proceed anyway.", "Unless you confirm, we will not proceed.", "Unless if you confirm, we will proceed."], answer: "Unless you confirm, we will not proceed." },
+    { id: "q-ex1", type: "multiple-choice", question: "Zero conditional dùng cho:", options: ["Điều kiện giả định", "Sự thật chung/quy luật", "Điều kiện không thể xảy ra", "Tiếc nuối quá khứ"], answer: "Sự thật chung/quy luật" },
+    { id: "q-ex2", type: "multiple-choice", question: "First conditional đúng:", options: ["If it rains, I will stay home.", "If it rained, I will stay home.", "If it rains, I would stay home.", "If it will rain, I stay home."], answer: "If it rains, I will stay home." },
+    { id: "q-ex3", type: "cloze", question: "Điền: 'If you study hard, you ___ pass the exam.'", answer: "will" },
+    { id: "q-ex4", type: "multiple-choice", question: "'Unless' nghĩa là:", options: ["Nếu", "Trừ khi không", "Mặc dù", "Kể cả khi"], answer: "Trừ khi không" },
+    { id: "q-ex5", type: "multiple-choice", question: "'When' vs 'if': khi nào dùng 'when'?", options: ["Điều không chắc xảy ra", "Điều chắc chắn xảy ra", "Câu hỏi trực tiếp", "Điều giả định"], answer: "Điều chắc chắn xảy ra" },
+    { id: "q-ex6", type: "translate", question: "Dịch: 'Nếu bạn cần giúp đỡ, hãy gọi cho tôi.'", answer: "If you need help, call me." },
+    { id: "q-ex7", type: "multiple-choice", question: "Zero conditional: 'If you heat water to 100°C, it ___'", options: ["boils", "will boil", "would boil", "boiled"], answer: "boils" },
   ],
   cumulativeReviewQuestions: [
     { id: "cr23-1", question: "Ôn tập Unit 22 — 'You ___ share passwords' (BỊ CẤM).", options: ["should not", "don't have to", "mustn't", "needn't"], answer: "mustn't", type: "multiple-choice" },

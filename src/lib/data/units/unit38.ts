@@ -195,6 +195,13 @@ export const unit38: UnitData = {
     { id: "fq3", type: "multiple-choice", question: "Chọn từ điền: 'The company decided to ___ its technological assets.'", options: ["assert", "leverage", "dominate", "counter"], answer: "leverage" },
     { id: "fq4", type: "translate", question: "Dịch: 'Không những anh ấy nói trôi chảy, mà anh ấy còn viết rất giỏi.'", answer: "Not only does he speak fluently, but he also writes very well." },
     { id: "fq5", type: "multiple-choice", question: "Từ nào đồng nghĩa với 'support/advocate'?", options: ["validate", "assert", "advocate", "convince"], answer: "advocate" },
+    { id: "q-ex1", type: "multiple-choice", question: "Cleft sentence 'It is X that...' dùng để:", options: ["Rút ngắn câu", "Nhấn mạnh thành phần của câu", "Hỏi thông tin", "Tường thuật"], answer: "Nhấn mạnh thành phần của câu" },
+    { id: "q-ex2", type: "multiple-choice", question: "Cleft sentence đúng:", options: ["It is hard work what makes you successful.", "It is hard work that makes you successful.", "It is hard work which makes you successful.", "It was hard work makes you successful."], answer: "It is hard work that makes you successful." },
+    { id: "q-ex3", type: "cloze", question: "Điền: '___ I really need is more time.'", answer: "What" },
+    { id: "q-ex4", type: "multiple-choice", question: "Nhấn mạnh bằng đảo ngữ: 'Never have I seen...' — ý nghĩa:", options: ["Thỉnh thoảng thấy", "Chưa bao giờ thấy (nhấn mạnh)", "Đã từng thấy", "Luôn luôn thấy"], answer: "Chưa bao giờ thấy (nhấn mạnh)" },
+    { id: "q-ex5", type: "translate", question: "Dịch có nhấn mạnh: 'Chính sự kiên nhẫn mới là chìa khóa.'", answer: "It is patience that is the key." },
+    { id: "q-ex6", type: "multiple-choice", question: "'Not only did he apologize, but he also...' — cấu trúc:", options: ["Thêm thông tin đơn giản", "Đảo ngữ để nhấn mạnh hai điều", "Điều kiện", "Tương phản"], answer: "Đảo ngữ để nhấn mạnh hai điều" },
+    { id: "q-ex7", type: "multiple-choice", question: "'Hedging language' (ngôn ngữ giảm nhẹ) dùng để:", options: ["Khẳng định chắc chắn 100%", "Làm mềm quan điểm, tránh quá tuyệt đối", "Ra lệnh", "Phủ nhận"], answer: "Làm mềm quan điểm, tránh quá tuyệt đối" },
   ],
   cumulativeReviewQuestions: [
     { id: "cr38-1", question: "Ôn tập Unit 37 — Chọn dạng đúng: '___ the proposal, she presented it to the manager.'", options: ["Having finished", "Finished", "Finishing", "To finish"], answer: "Having finished", type: "multiple-choice" },

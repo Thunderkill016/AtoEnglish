@@ -218,6 +218,13 @@ export const unit18: UnitData = {
     { id: "fq3", type: "multiple-choice", question: "Câu nào nói đúng về kế hoạch ĐÃ LÊN SẴN?", options: ["I will probably travel next month.", "I'm going to travel next month. ✅", "I travel next month.", "I travelled next month."], answer: "I'm going to travel next month. ✅" },
     { id: "fq4", type: "translate", question: "Dịch sang tiếng Anh: 'Tôi đã học tiếng Anh được sáu tháng và tôi đang trở nên thành thạo hơn.'", answer: "I've studied English for six months and I'm becoming more fluent." },
     { id: "fq5", type: "multiple-choice", question: "Kết hợp đúng: Kể về kinh nghiệm + kế hoạch tương lai", options: ["I worked here for 5 years. I will going to expand next year.", "I've worked here for 5 years. I'm going to expand next year. ✅", "I've worked here since 5 years. I will expanding next year.", "I work here for 5 years. I'm going to expanding next year."], answer: "I've worked here for 5 years. I'm going to expand next year. ✅" },
+    { id: "q-ex1", type: "multiple-choice", question: "Đâu là câu Present Perfect đúng?", options: ["She have been to Paris.", "She has been to Paris.", "She was been to Paris.", "She did been to Paris."], answer: "She has been to Paris." },
+    { id: "q-ex2", type: "multiple-choice", question: "Câu tương lai với kế hoạch định sẵn:", options: ["I will go shopping (kế hoạch).", "I'm going to go shopping tomorrow.", "I go shopping tomorrow.", "I am going shopping was planned."], answer: "I'm going to go shopping tomorrow." },
+    { id: "q-ex3", type: "cloze", question: "Điền: 'It's the ___ film I've ever seen!'", answer: "best" },
+    { id: "q-ex4", type: "multiple-choice", question: "Câu Quá khứ đơn đúng:", options: ["She goed to work.", "She gone to work.", "She went to work.", "She going to work."], answer: "She went to work." },
+    { id: "q-ex5", type: "multiple-choice", question: "'Make a decision' hay 'do a decision'?", options: ["do a decision", "make a decision", "have a decision", "take a decision"], answer: "make a decision" },
+    { id: "q-ex6", type: "multiple-choice", question: "Câu so sánh nhất đúng:", options: ["This is the more expensive.", "This is the most expensive.", "This is most expensive.", "This is expensivest."], answer: "This is the most expensive." },
+    { id: "q-ex7", type: "translate", question: "Dịch: 'Kế hoạch của bạn là gì?'", answer: "What are your plans?" },
   ],
 
   cumulativeReviewQuestions: [

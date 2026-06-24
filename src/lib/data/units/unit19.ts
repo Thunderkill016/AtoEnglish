@@ -594,6 +594,13 @@ export const unit19: UnitData = {
       ],
       answer: "was missing / offered",
     },
+    { id: "q-ex1", type: "multiple-choice", question: "Past Continuous dùng khi nào?", options: ["Hành động hoàn thành trong QK", "Hành động đang diễn ra ở một thời điểm QK", "Thói quen trong QK", "Kết quả còn đến hiện tại"], answer: "Hành động đang diễn ra ở một thời điểm QK" },
+    { id: "q-ex2", type: "multiple-choice", question: "Câu Past Continuous đúng:", options: ["She was reading when I called.", "She reading when I called.", "She were reading when I called.", "She was read when I called."], answer: "She was reading when I called." },
+    { id: "q-ex3", type: "cloze", question: "Điền: 'It ___ raining when we left.'", answer: "was" },
+    { id: "q-ex4", type: "multiple-choice", question: "'While' + Past Continuous + 'when' + Past Simple — đúng:", options: ["While I was cooking, the phone rang.", "While I cooked, the phone was ringing.", "While I was cook, the phone rang.", "While I cooked, the phone ring."], answer: "While I was cooking, the phone rang." },
+    { id: "q-ex5", type: "multiple-choice", question: "Từ nối để bắt đầu câu chuyện:", options: ["Therefore", "First of all", "In addition", "However"], answer: "First of all" },
+    { id: "q-ex6", type: "translate", question: "Dịch: 'Tôi đang ngủ thì điện thoại reo.'", answer: "I was sleeping when the phone rang." },
+    { id: "q-ex7", type: "multiple-choice", question: "Từ nối nào thể hiện tương phản?", options: ["and", "because", "however", "therefore"], answer: "however" },
   ],
 
   cumulativeReviewQuestions: [

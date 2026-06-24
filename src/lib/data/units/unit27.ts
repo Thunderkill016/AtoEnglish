@@ -198,6 +198,13 @@ export const unit27: UnitData = {
     { id: "fq4", type: "translate", question: "Dịch: 'Cô ấy đề cập vấn đề ngân sách và đề xuất hoãn dự án.'", answer: "She brought up the budget issue and suggested putting off the project." },
     { id: "fq5", type: "multiple-choice", question: "Separable phrasal verb với pronoun ĐÚNG:", options: ["Please sort out it.", "Please sort it out.", "Please look the issue into.", "Please find out it."], answer: "Please sort it out.",
       explanation_vn: "Với separable phrasal verb + pronoun, pronoun PHẢI đứng giữa: 'sort IT out'. 'Sort out it' và 'find out it' sai; 'look into' inseparable." },
+    { id: "q-ex1", type: "multiple-choice", question: "Causative 'have + object + V3' nghĩa là:", options: ["Tự làm", "Nhờ/thuê người khác làm", "Sắp làm", "Vừa làm xong"], answer: "Nhờ/thuê người khác làm" },
+    { id: "q-ex2", type: "multiple-choice", question: "Câu causative đúng:", options: ["I had cut my hair.", "I had my hair cut.", "I had my hair cutting.", "I had my hair to cut."], answer: "I had my hair cut." },
+    { id: "q-ex3", type: "cloze", question: "Điền: 'She got her car ___.'", answer: "repaired" },
+    { id: "q-ex4", type: "multiple-choice", question: "'Have' vs 'get' trong causative:", options: ["'Have' trang trọng hơn 'get'", "'Get' trang trọng hơn 'have'", "Giống nhau hoàn toàn", "'Get' chỉ dùng với người"], answer: "'Have' trang trọng hơn 'get'" },
+    { id: "q-ex5", type: "translate", question: "Dịch: 'Tôi sẽ nhờ thợ sửa máy lạnh.'", answer: "I'll have the technician fix the air conditioner." },
+    { id: "q-ex6", type: "multiple-choice", question: "'Make someone do': cấu trúc đúng:", options: ["make + obj + to-inf", "make + obj + V-ing", "make + obj + bare inf", "make + obj + V3"], answer: "make + obj + bare inf" },
+    { id: "q-ex7", type: "multiple-choice", question: "'I got my phone stolen.' nghĩa là:", options: ["Tôi đã lấy cắp điện thoại", "Điện thoại của tôi bị lấy cắp", "Tôi đã mua điện thoại", "Tôi tìm được điện thoại"], answer: "Điện thoại của tôi bị lấy cắp" },
   ],
   cumulativeReviewQuestions: [
     { id: "cr27-1", question: "Ôn tập Unit 26 — Đúng: 'I suggest ___ a new approach.'", options: ["to try", "trying", "try", "to trying"], answer: "trying", type: "multiple-choice" },

@@ -197,6 +197,13 @@ export const unit24: UnitData = {
     { id: "fq3", type: "multiple-choice", question: "Câu Passive chuyên nghiệp nhất để mô tả quy trình:", options: ["Our team makes the products by hand.", "The products are handmade in our facility.", "We are making the products.", "Products made here."], answer: "The products are handmade in our facility." },
     { id: "fq4", type: "translate", question: "Dịch: 'Các đơn vị bị lỗi đã được loại bỏ và đang được kiểm tra.'", answer: "The defective units have been removed and are being inspected." },
     { id: "fq5", type: "multiple-choice", question: "Future Passive: 'Solar panels ___ next year to power our facility.'", options: ["install", "are installed", "will be installed", "were installed"], answer: "will be installed" },
+    { id: "q-ex1", type: "multiple-choice", question: "Bị động hiện tại đơn: cấu trúc:", options: ["am/is/are + V3", "am/is/are + Ving", "was/were + V3", "will + be + V3"], answer: "am/is/are + V3" },
+    { id: "q-ex2", type: "multiple-choice", question: "Câu bị động đúng:", options: ["The cake is baking by Mary.", "The cake baked by Mary.", "The cake is baked by Mary.", "The cake are baked by Mary."], answer: "The cake is baked by Mary." },
+    { id: "q-ex3", type: "cloze", question: "Điền: 'English ___ spoken in many countries.'", answer: "is" },
+    { id: "q-ex4", type: "multiple-choice", question: "Khi nào nên dùng bị động?", options: ["Khi tác nhân quan trọng và đã biết", "Khi tác nhân không quan trọng hoặc không biết", "Khi muốn viết ngắn hơn", "Chỉ trong văn viết trang trọng"], answer: "Khi tác nhân không quan trọng hoặc không biết" },
+    { id: "q-ex5", type: "multiple-choice", question: "'They built this bridge in 1990.' → bị động:", options: ["This bridge was built in 1990.", "This bridge is built in 1990.", "This bridge built in 1990.", "This bridge were built in 1990."], answer: "This bridge was built in 1990." },
+    { id: "q-ex6", type: "translate", question: "Dịch: 'Xe máy của tôi đã được sửa.'", answer: "My motorbike has been repaired." },
+    { id: "q-ex7", type: "multiple-choice", question: "'By' trong câu bị động dùng để:", options: ["Chỉ thời gian", "Chỉ tác nhân thực hiện hành động", "Chỉ địa điểm", "Chỉ cách thức"], answer: "Chỉ tác nhân thực hiện hành động" },
   ],
   cumulativeReviewQuestions: [
     { id: "cr24-1", question: "Ôn tập Unit 23 — First Conditional đúng:", options: ["If you will confirm, we will proceed.", "If you confirm, we will proceed.", "If you confirmed, we will proceed.", "If you confirm, we proceed."], answer: "If you confirm, we will proceed.", type: "multiple-choice" },

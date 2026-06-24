@@ -196,6 +196,13 @@ export const unit37: UnitData = {
     { id: "fq3", type: "multiple-choice", question: "Chọn từ điền: 'Let me ___ the main findings of our project.'", options: ["compile", "construct", "summarize", "integrate"], answer: "summarize" },
     { id: "fq4", type: "translate", question: "Dịch: 'Đối mặt với các vấn đề tài chính, họ đã hoãn kế hoạch mở rộng.'", answer: "Facing financial problems, they postponed the expansion plan." },
     { id: "fq5", type: "multiple-choice", question: "Từ nào đồng nghĩa với 'unite/combine'?", options: ["simplify", "substitute", "integrate", "compile"], answer: "integrate" },
+    { id: "q-ex1", type: "multiple-choice", question: "Participle clause rút gọn từ:", options: ["Relative clause", "Conditional clause", "Both relative and adverbial clauses", "Noun clause"], answer: "Both relative and adverbial clauses" },
+    { id: "q-ex2", type: "multiple-choice", question: "'The man sitting in the corner is my boss.' Rút gọn từ:", options: ["The man who sits...", "The man who is sitting...", "The man that sat...", "The man who was sitting..."], answer: "The man who is sitting..." },
+    { id: "q-ex3", type: "cloze", question: "Rút gọn: 'Having finished the report, she left.' = 'After she ___ the report, she left.'", answer: "finished" },
+    { id: "q-ex4", type: "multiple-choice", question: "'Written in 1984, the book is still popular.' — participle clause chỉ:", options: ["Thời gian", "Điều kiện", "Nguyên nhân/mô tả", "Mục đích"], answer: "Nguyên nhân/mô tả" },
+    { id: "q-ex5", type: "translate", question: "Dịch ngắn gọn: 'Khi nhìn ra cửa sổ, tôi thấy tuyết rơi.'", answer: "Looking out of the window, I saw snow falling." },
+    { id: "q-ex6", type: "multiple-choice", question: "Nominalisation: 'decide' → danh từ:", options: ["decision", "deciding", "decided", "decisive"], answer: "decision" },
+    { id: "q-ex7", type: "multiple-choice", question: "Trong cụm 'The increasing demand for energy,' từ 'increasing' là loại từ gì?", options: ["Động từ", "Danh từ", "Tính từ (participle)", "Trạng từ"], answer: "Tính từ (participle)" },
   ],
   cumulativeReviewQuestions: [
     { id: "cr37-1", question: "Ôn tập Unit 36 — Chọn câu đúng: 'The company is reported ___ millions last year.'", options: ["to lose", "to have lost", "losing", "lost"], answer: "to have lost", type: "multiple-choice" },
