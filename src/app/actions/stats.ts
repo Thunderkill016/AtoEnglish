@@ -182,3 +182,85 @@ export async function getProgressStats() {
     return { success: false, stats: null };
   }
 }
+
+export interface DayActivity {
+  date: string;   // YYYY-MM-DD (VN timezone)
+  xp: number;
+  level: 0 | 1 | 2 | 3 | 4; // 0=none, 1-4=intensity
+}
+
+/**
+ * S5-2: Activity Heatmap — returns 364 days of XP data (52 complete weeks)
+ * aggregated per day, in VN timezone.
+ */
+export async function getDailyActivity(): Promise<{ success: boolean; days: DayActivity[] }> {
+  try {
+    const supabase = await createClient();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    if (authError || !user) return { success: false, days: [] };
+
+    // Build 364-day window (52 weeks, starting on the Monday 51 weeks ago)
+    const today = new Date();
+    const todayVN = today.toLocaleDateString("sv-SE", { timeZone: "Asia/Ho_Chi_Minh" });
+    // Start from 363 days ago
+    const startD = new Date(today);
+    startD.setDate(startD.getDate() - 363);
+    const startDate = startD.toLocaleDateString("sv-SE", { timeZone: "Asia/Ho_Chi_Minh" });
+    const startUtc = startDate + "T00:00:00+07:00";
+
+    // Fetch lessons + speaking in parallel
+    const [lessonsRes, speakingRes] = await Promise.all([
+      supabase
+        .from("user_lesson_progress")
+        .select("xp_earned, completed_at")
+        .eq("user_id", user.id)
+        .gte("completed_at", startUtc),
+      supabase
+        .from("speaking_sessions")
+        .select("practice_type, created_at")
+        .eq("user_id", user.id)
+        .gte("created_at", startUtc),
+    ]);
+
+    // Aggregate XP per day
+    const xpMap: Record<string, number> = {};
+    const SPEAKING_XP: Record<string, number> = { shadowing: 5, roleplay: 8, journal: 5 };
+
+    if (!lessonsRes.error && lessonsRes.data) {
+      for (const row of lessonsRes.data) {
+        const d = new Date(row.completed_at).toLocaleDateString("sv-SE", { timeZone: "Asia/Ho_Chi_Minh" });
+        xpMap[d] = (xpMap[d] ?? 0) + (row.xp_earned || 0);
+      }
+    }
+    if (!speakingRes.error && speakingRes.data) {
+      for (const row of speakingRes.data) {
+        const d = new Date(row.created_at).toLocaleDateString("sv-SE", { timeZone: "Asia/Ho_Chi_Minh" });
+        xpMap[d] = (xpMap[d] ?? 0) + (SPEAKING_XP[row.practice_type] ?? 5);
+      }
+    }
+
+    // Compute intensity thresholds from non-zero days
+    const xpValues = Object.values(xpMap).filter(x => x > 0);
+    const p25 = xpValues.length ? xpValues.sort((a,b)=>a-b)[Math.floor(xpValues.length*0.25)] ?? 1 : 30;
+    const p50 = xpValues.length ? xpValues[Math.floor(xpValues.length*0.50)] ?? 1 : 60;
+    const p75 = xpValues.length ? xpValues[Math.floor(xpValues.length*0.75)] ?? 1 : 100;
+
+    // Build 364-day array
+    const days: DayActivity[] = [];
+    for (let i = 363; i >= 0; i--) {
+      const d = new Date(today);
+      d.setDate(d.getDate() - i);
+      const dateStr = d.toLocaleDateString("sv-SE", { timeZone: "Asia/Ho_Chi_Minh" });
+      if (dateStr > todayVN) continue;
+      const xp = xpMap[dateStr] ?? 0;
+      const level = xp === 0 ? 0 : xp <= p25 ? 1 : xp <= p50 ? 2 : xp <= p75 ? 3 : 4;
+      days.push({ date: dateStr, xp, level: level as DayActivity["level"] });
+    }
+
+    return { success: true, days };
+  } catch {
+    return { success: false, days: [] };
+  }
+}
+
+

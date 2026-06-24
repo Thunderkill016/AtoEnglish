@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { Flame, Layers, BookOpen, TrendingUp, Trophy, Star, Mic } from "lucide-react";
-import { getProgressStats, getWeeklyXpData } from "@/app/actions/stats";
+import { getProgressStats, getWeeklyXpData, getDailyActivity } from "@/app/actions/stats";
 import { getAchievements } from "@/app/actions/gamification";
 import { AchievementsPanel } from "@/components/gamification/AchievementsPanel";
+import { ActivityHeatmap } from "@/components/progress/ActivityHeatmap";
 import ProgressClient from "./ProgressClient";
 
 export const dynamic = "force-dynamic";
@@ -15,11 +16,21 @@ export const metadata: Metadata = {
 };
 
 export default async function ProgressPage() {
-  const [statsRes, weeklyRes, achievementsRes] = await Promise.all([
+  const [statsRes, weeklyRes, achievementsRes, activityRes] = await Promise.all([
     getProgressStats(),
     getWeeklyXpData(),
     getAchievements().catch(() => ({ success: false, achievements: [], unlockedIds: [] as string[] })),
+    getDailyActivity(),
   ]);
+
+  const activityDays = activityRes.days ?? [];
+  const totalActiveDays = activityDays.filter(d => d.xp > 0).length;
+  // Compute longest streak from activity data
+  let longestStreak = 0, curStreak = 0;
+  for (const d of activityDays) {
+    if (d.xp > 0) { curStreak++; longestStreak = Math.max(longestStreak, curStreak); }
+    else curStreak = 0;
+  }
 
   const stats = statsRes.stats ?? {
     totalXp: 0,
@@ -127,6 +138,13 @@ export default async function ProgressPage() {
           );
         })}
       </div>
+
+      {/* Activity Heatmap */}
+      <ActivityHeatmap
+        days={activityDays}
+        totalActiveDays={totalActiveDays}
+        longestStreak={longestStreak}
+      />
 
       {/* Weekly Chart + SRS State */}
       {/* Leaderboard CTA banner */}
