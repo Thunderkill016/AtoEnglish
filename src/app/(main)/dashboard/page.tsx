@@ -147,6 +147,13 @@ export default async function DashboardPage() {
       completed: hasSpeakingToday,
       href: "/speaking",
     },
+    {
+      id: 4,
+      text: "Thử Thách Hàng Ngày — 5 câu từ vựng",
+      xp: 50,
+      completed: false, // Client syncs from localStorage (ato_challenge_YYYY-MM-DD)
+      href: "/challenge",
+    },
   ];
 
   // Resolve active unit today completion from the map
