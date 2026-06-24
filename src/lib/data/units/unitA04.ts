@@ -431,6 +431,37 @@ export const unitA04: UnitData = {
     },
   ],
 
+  cumulativeReviewQuestions: [
+    {
+      id: "crA04-1",
+      question: "'Màu xanh lá' trong tiếng Anh là gì? (unitA03 - Màu sắc)",
+      options: ["Red", "Blue", "Green", "Yellow"],
+      answer: "Green",
+      type: "multiple-choice",
+    },
+    {
+      id: "crA04-2",
+      question: "'Màu đỏ' trong tiếng Anh là gì? (unitA03 - Màu sắc)",
+      options: ["Red", "Green", "Blue", "Black"],
+      answer: "Red",
+      type: "multiple-choice",
+    },
+    {
+      id: "crA04-3",
+      question: "Dịch sang tiếng Anh: 'Màu trắng' (unitA03)",
+      options: [],
+      answer: "White",
+      type: "translate",
+    },
+    {
+      id: "crA04-4",
+      question: "Dịch sang tiếng Anh: 'Màu đen' (unitA03)",
+      options: [],
+      answer: "Black",
+      type: "translate",
+    },
+  ],
+
   fluencyDrill: {
     title: "Luyện nhanh: Chào hỏi đầy đủ",
     items: [

@@ -432,6 +432,37 @@ export const unitA03: UnitData = {
     },
   ],
 
+  cumulativeReviewQuestions: [
+    {
+      id: "crA03-1",
+      question: "Số 5 trong tiếng Anh là gì? (unitA02 - Mua sắm/Số đếm)",
+      options: ["Four", "Five", "Six", "Seven"],
+      answer: "Five",
+      type: "multiple-choice",
+    },
+    {
+      id: "crA03-2",
+      question: "'Bao nhiêu tiền?' nghĩa là gì trong tiếng Anh? (unitA02 - Mua sắm)",
+      options: ["How much is it?", "I want this", "Do you have", "Where is"],
+      answer: "How much is it?",
+      type: "multiple-choice",
+    },
+    {
+      id: "crA03-3",
+      question: "Dịch sang tiếng Anh: 'Mười lăm' (unitA02)",
+      options: [],
+      answer: "Fifteen",
+      type: "translate",
+    },
+    {
+      id: "crA03-4",
+      question: "Dịch sang tiếng Anh: 'Xin lỗi' (unitA01)",
+      options: [],
+      answer: "Sorry/Excuse me",
+      type: "translate",
+    },
+  ],
+
   fluencyDrill: {
     title: "Luyện nói: Màu sắc + Mô tả",
     items: [

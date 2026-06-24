@@ -433,6 +433,37 @@ export const unitA07: UnitData = {
     },
   ],
 
+  cumulativeReviewQuestions: [
+    {
+      id: "crA07-1",
+      question: "'Mẹ' trong tiếng Anh là gì? (unitA06 - Gia đình)",
+      options: ["Father", "Mother", "Sister", "Brother"],
+      answer: "Mother",
+      type: "multiple-choice",
+    },
+    {
+      id: "crA07-2",
+      question: "'Bố' trong tiếng Anh là gì? (unitA06 - Gia đình)",
+      options: ["Mother", "Father", "Daughter", "Son"],
+      answer: "Father",
+      type: "multiple-choice",
+    },
+    {
+      id: "crA07-3",
+      question: "Dịch sang tiếng Anh: 'Anh trai tôi' (unitA06)",
+      options: [],
+      answer: "My brother",
+      type: "translate",
+    },
+    {
+      id: "crA07-4",
+      question: "Dịch sang tiếng Anh: 'Chị gái tôi' (unitA06)",
+      options: [],
+      answer: "My sister",
+      type: "translate",
+    },
+  ],
+
   fluencyDrill: {
     title: "Luyện nhanh: Thời gian & Lịch hẹn",
     items: [

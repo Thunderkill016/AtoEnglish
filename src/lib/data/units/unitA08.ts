@@ -449,6 +449,38 @@ export const unitA08: UnitData = {
     },
   ],
 
+  // ── CUMULATIVE REVIEW: Ôn lại unitA01-A07 (Thời gian + Ngày) ────────────
+  cumulativeReviewQuestions: [
+    {
+      id: "crA08-1",
+      question: "'Buổi sáng' trong tiếng Anh là gì? (unitA07)",
+      options: ["Morning", "Afternoon", "Evening", "Night"],
+      answer: "Morning",
+      type: "multiple-choice",
+    },
+    {
+      id: "crA08-2",
+      question: "'Thứ Hai' trong tiếng Anh là gì? (unitA07)",
+      options: ["Sunday", "Monday", "Tuesday", "Wednesday"],
+      answer: "Monday",
+      type: "multiple-choice",
+    },
+    {
+      id: "crA08-3",
+      question: "Dịch sang tiếng Anh: 'Hôm nay là thứ Mấy?' (unitA07)",
+      options: [],
+      answer: "What day is it today?",
+      type: "translate",
+    },
+    {
+      id: "crA08-4",
+      question: "Dịch sang tiếng Anh: 'Lúc mấy giờ?' (unitA07)",
+      options: [],
+      answer: "What time is it?",
+      type: "translate",
+    },
+  ],
+
   fluencyDrill: {
     title: "Luyện nhanh: Cụm từ sống còn",
     items: [

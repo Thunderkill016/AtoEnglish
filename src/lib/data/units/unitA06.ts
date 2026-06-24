@@ -437,6 +437,37 @@ export const unitA06: UnitData = {
     },
   ],
 
+  cumulativeReviewQuestions: [
+    {
+      id: "crA06-1",
+      question: "Nghề 'bác sĩ' trong tiếng Anh là gì? (unitA05 - Nghề nghiệp)",
+      options: ["Teacher", "Doctor", "Student", "Engineer"],
+      answer: "Doctor",
+      type: "multiple-choice",
+    },
+    {
+      id: "crA06-2",
+      question: "Nghề 'giáo viên' trong tiếng Anh là gì? (unitA05 - Nghề nghiệp)",
+      options: ["Doctor", "Nurse", "Teacher", "Student"],
+      answer: "Teacher",
+      type: "multiple-choice",
+    },
+    {
+      id: "crA06-3",
+      question: "Dịch sang tiếng Anh: 'Tôi làm việc tại đây' (unitA05)",
+      options: [],
+      answer: "I work here",
+      type: "translate",
+    },
+    {
+      id: "crA06-4",
+      question: "Dịch sang tiếng Anh: 'Ông ấy là bác sĩ' (unitA05)",
+      options: [],
+      answer: "He is a doctor",
+      type: "translate",
+    },
+  ],
+
   fluencyDrill: {
     title: "Luyện nhanh: Kể về gia đình",
     items: [

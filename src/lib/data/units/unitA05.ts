@@ -451,6 +451,37 @@ export const unitA05: UnitData = {
     },
   ],
 
+  cumulativeReviewQuestions: [
+    {
+      id: "crA05-1",
+      question: "'Tôi cảm thấy mệt' nghĩa là gì trong tiếng Anh? (unitA04 - Cảm xúc)",
+      options: ["I feel tired", "I am happy", "I am fine", "I feel sick"],
+      answer: "I feel tired",
+      type: "multiple-choice",
+    },
+    {
+      id: "crA05-2",
+      question: "'Tốt' nghĩa là gì trong tiếng Anh? (unitA04 - Cảm xúc)",
+      options: ["Bad", "Good", "Tired", "Happy"],
+      answer: "Good",
+      type: "multiple-choice",
+    },
+    {
+      id: "crA05-3",
+      question: "Dịch sang tiếng Anh: 'Tôi khỏe' (unitA04)",
+      options: [],
+      answer: "I am fine",
+      type: "translate",
+    },
+    {
+      id: "crA05-4",
+      question: "Dịch sang tiếng Anh: 'Bạn có khỏe không?' (unitA04)",
+      options: [],
+      answer: "How are you?",
+      type: "translate",
+    },
+  ],
+
   fluencyDrill: {
     title: "Luyện nhanh: Verb BE theo ngôi",
     items: [

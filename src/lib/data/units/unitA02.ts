@@ -442,6 +442,37 @@ export const unitA02: UnitData = {
     },
   ],
 
+  cumulativeReviewQuestions: [
+    {
+      id: "crA02-1",
+      question: "'Xin chào' nghĩa là gì trong tiếng Anh? (unitA01 - Chào hỏi)",
+      options: ["Hello", "Goodbye", "Sorry", "Thank you"],
+      answer: "Hello",
+      type: "multiple-choice",
+    },
+    {
+      id: "crA02-2",
+      question: "'Tạm biệt' nghĩa là gì trong tiếng Anh? (unitA01 - Chào hỏi)",
+      options: ["Hello", "Goodbye", "Please", "Yes"],
+      answer: "Goodbye",
+      type: "multiple-choice",
+    },
+    {
+      id: "crA02-3",
+      question: "Dịch sang tiếng Anh: 'Rất vui được gặp bạn.' (unitA01)",
+      options: [],
+      answer: "Nice to meet you.",
+      type: "translate",
+    },
+    {
+      id: "crA02-4",
+      question: "Dịch sang tiếng Anh: 'Cảm ơn!' (unitA01)",
+      options: [],
+      answer: "Thank you!",
+      type: "translate",
+    },
+  ],
+
   fluencyDrill: {
     title: "Số từ 1–20 + Cụm câu mua sắm",
     items: [
