@@ -2,8 +2,8 @@
 
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import { AnimatePresence } from "framer-motion";
-import { ChevronLeft } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
+import { ChevronLeft, Star, BookOpen, Zap, Flame, ChevronRight } from "lucide-react";
 import { toast } from "sonner";
 import confetti from "canvas-confetti";
 
@@ -95,6 +95,7 @@ export interface QuizQuestion {
   options?: string[];
   answer: string;
   type: "multiple-choice" | "cloze" | "translate";
+  explanation_vn?: string; // Vietnamese grammar/vocab note shown on wrong answer (Babbel pattern)
 }
 
 export interface SpeakingData {
@@ -213,11 +214,43 @@ interface UnitTemplateProps {
   nextRoute?: string;
 }
 
+interface CompletionData {
+  xpEarned: number;
+  starCount: 1 | 2 | 3;
+  effectiveScore: number;
+  newStreak: number;
+  vocabPreview: Array<{ word: string; meaning: string }>;
+  nextRoute: string;
+}
+
+// ── Animated XP counter (counts 0 → target in 1.2 s) ──────────────────────
+function XpCounter({ target }: { target: number }) {
+  const [value, setValue] = useState(0);
+  useEffect(() => {
+    const duration = 1200;
+    const start = performance.now();
+    const step = (now: number) => {
+      const elapsed = Math.min(now - start, duration);
+      const progress = 1 - Math.pow(1 - elapsed / duration, 3); // ease-out cubic
+      setValue(Math.round(progress * target));
+      if (elapsed < duration) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }, [target]);
+  return (
+    <p className="text-2xl font-black text-emerald-300 tabular-nums leading-none">
+      +{value}
+      <span className="text-sm font-bold text-emerald-500 ml-0.5">XP</span>
+    </p>
+  );
+}
+
 export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTemplateProps) {
   const [section, setSection] = useState<number>(1);
   const [isCompleted, setIsCompleted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [miniSession, setMiniSession] = useState(false);
+  const [completionData, setCompletionData] = useState<CompletionData | null>(null);
 
   // Shared orchestrator states needed for results calculations
   const [seenCards, setSeenCards] = useState<Set<number>>(new Set());
@@ -496,6 +529,16 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
     if (res.success) {
       setIsCompleted(true);
       toast.success(`🎉 Chúc mừng! Bạn nhận được ${res.xpEarned ?? xpToEarn} XP!`);
+
+      // ── Rich completion overlay data ──
+      setCompletionData({
+        xpEarned: res.xpEarned ?? xpToEarn,
+        starCount: effectiveStarCount,
+        effectiveScore,
+        newStreak: res.newStreak ?? 0,
+        vocabPreview: normalizedUnit.vocab.slice(0, 5).map(v => ({ word: v.word, meaning: v.meaning })),
+        nextRoute,
+      });
 
       // ── Achievement milestone toasts (staggered, zero extra DB queries) ──
       const totalCompleted = res.completedCount ?? 0;
@@ -871,6 +914,167 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
           )}
         </AnimatePresence>
       </div>
+
+      {/* ── Animated Lesson Completion Overlay ── */}
+      <AnimatePresence>
+        {completionData && (
+          <motion.div
+            key="completion-overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.35 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-zinc-950/90 backdrop-blur-md"
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.88, y: 32 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              transition={{ type: "spring", stiffness: 260, damping: 22, delay: 0.1 }}
+              className="w-full max-w-md bg-gradient-to-b from-zinc-900 to-zinc-950 border border-white/10 rounded-3xl overflow-hidden shadow-2xl"
+            >
+              {/* Top gradient bar */}
+              <div className="h-1.5 w-full bg-gradient-to-r from-emerald-500 via-teal-400 to-emerald-600" />
+
+              <div className="p-6 sm:p-8 space-y-6">
+                {/* Badge + Stars */}
+                <div className="text-center space-y-3">
+                  <motion.div
+                    initial={{ scale: 0, rotate: -15 }}
+                    animate={{ scale: 1, rotate: 0 }}
+                    transition={{ type: "spring", stiffness: 300, damping: 18, delay: 0.25 }}
+                    className="text-6xl sm:text-7xl"
+                  >
+                    {normalizedUnit.badgeEmoji}
+                  </motion.div>
+
+                  <div className="flex justify-center gap-1.5">
+                    {[0, 1, 2].map((i) => (
+                      <motion.div
+                        key={i}
+                        initial={{ opacity: 0, y: 8, scale: 0.5 }}
+                        animate={{
+                          opacity: i < completionData.starCount ? 1 : 0.25,
+                          y: 0,
+                          scale: 1,
+                        }}
+                        transition={{ delay: 0.35 + i * 0.12, type: "spring", stiffness: 400 }}
+                      >
+                        <Star
+                          size={26}
+                          className={i < completionData.starCount ? "text-yellow-400 fill-yellow-400 drop-shadow-[0_0_6px_rgba(250,204,21,0.8)]" : "text-zinc-700 fill-zinc-700"}
+                        />
+                      </motion.div>
+                    ))}
+                  </div>
+
+                  <motion.p
+                    initial={{ opacity: 0, y: 6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.6 }}
+                    className="text-white font-black text-xl tracking-tight"
+                  >
+                    {completionData.starCount === 3
+                      ? "Xuất sắc! 🏆"
+                      : completionData.starCount === 2
+                      ? "Khá tốt! 🎯"
+                      : "Hoàn thành! 💪"}
+                  </motion.p>
+                  <p className="text-zinc-400 text-sm">{normalizedUnit.title}</p>
+                </div>
+
+                {/* XP + Streak stats row */}
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.55 }}
+                  className="grid grid-cols-2 gap-3"
+                >
+                  {/* XP Card */}
+                  <div className="bg-emerald-950/50 border border-emerald-700/40 rounded-2xl p-4 text-center">
+                    <div className="flex items-center justify-center gap-1.5 mb-1">
+                      <Zap size={14} className="text-emerald-400" />
+                      <span className="text-xs font-bold text-emerald-400 uppercase tracking-widest">XP kiếm được</span>
+                    </div>
+                    <XpCounter target={completionData.xpEarned} />
+                  </div>
+
+                  {/* Streak Card */}
+                  <div className="bg-orange-950/40 border border-orange-700/40 rounded-2xl p-4 text-center">
+                    <div className="flex items-center justify-center gap-1.5 mb-1">
+                      <Flame size={14} className="text-orange-400" />
+                      <span className="text-xs font-bold text-orange-400 uppercase tracking-widest">Streak</span>
+                    </div>
+                    <p className="text-2xl font-black text-white tabular-nums">
+                      {completionData.newStreak}
+                    </p>
+                    <p className="text-xs text-orange-300/70 mt-0.5">ngày liên tiếp</p>
+                  </div>
+                </motion.div>
+
+                {/* Vocab recap */}
+                {completionData.vocabPreview.length > 0 && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.7 }}
+                    className="bg-white/5 border border-white/8 rounded-2xl p-4"
+                  >
+                    <div className="flex items-center gap-2 mb-3">
+                      <BookOpen size={14} className="text-teal-400" />
+                      <p className="text-xs font-bold text-teal-400 uppercase tracking-widest">
+                        Từ vựng hôm nay
+                      </p>
+                    </div>
+                    <div className="space-y-1.5">
+                      {completionData.vocabPreview.map((v, i) => (
+                        <motion.div
+                          key={v.word}
+                          initial={{ opacity: 0, x: -8 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: 0.72 + i * 0.07 }}
+                          className="flex items-center justify-between gap-3"
+                        >
+                          <span className="text-sm font-semibold text-white truncate">{v.word}</span>
+                          <span className="text-xs text-zinc-400 truncate max-w-[55%] text-right">{v.meaning}</span>
+                        </motion.div>
+                      ))}
+                    </div>
+                  </motion.div>
+                )}
+
+                {/* CTAs */}
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.82 }}
+                  className="flex flex-col gap-3"
+                >
+                  <Link
+                    href={completionData.nextRoute}
+                    className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-white font-black rounded-2xl py-4 text-base transition-all duration-200 shadow-lg shadow-emerald-900/50 active:scale-95"
+                  >
+                    Bài tiếp theo <ChevronRight size={18} />
+                  </Link>
+                  <div className="flex gap-3">
+                    <Link
+                      href="/flashcards"
+                      className="flex-1 flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 border border-white/10 text-zinc-300 font-bold rounded-2xl py-3 text-sm transition-colors"
+                    >
+                      <BookOpen size={14} /> Ôn flashcard
+                    </Link>
+                    <button
+                      onClick={() => setCompletionData(null)}
+                      className="flex-1 flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 border border-white/10 text-zinc-400 font-bold rounded-2xl py-3 text-sm transition-colors"
+                    >
+                      Xem lại bài
+                    </button>
+                  </div>
+                </motion.div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

@@ -410,6 +410,13 @@ export default function QuizSection({
                       );
                     })}
                   </div>
+                  {/* Grammar explanation — shown when user answered wrong (Babbel pattern) */}
+                  {quizSubmitted && quizAnswers[q.id] !== q.answer && q.explanation_vn && (
+                    <div className="mt-2 flex items-start gap-2 bg-amber-950/30 border border-amber-700/40 rounded-xl px-3 py-2.5">
+                      <span className="text-amber-400 text-sm shrink-0">💡</span>
+                      <p className="text-amber-200 text-xs leading-relaxed">{q.explanation_vn}</p>
+                    </div>
+                  )}
                 </div>
               );
             })}

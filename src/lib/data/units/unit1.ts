@@ -507,6 +507,7 @@ export const unit1: UnitData = {
       options: ["Goodbye", "Nice to meet you", "How old are you?", "Where are you from?"],
       answer: "Nice to meet you",
       type: "multiple-choice",
+      explanation_vn: "'Nice to meet you' = lời chào khi lần đầu gặp mặt. 'Goodbye' = tạm biệt, không dùng khi gặp nhau.",
     },
     {
       id: "q2",
@@ -514,6 +515,7 @@ export const unit1: UnitData = {
       options: ["Good morning", "Hi!", "Goodbye", "Please"],
       answer: "Hi!",
       type: "multiple-choice",
+      explanation_vn: "'Hi!' là lời chào thân mật, dùng hàng ngày. 'Good morning' trang trọng hơn, chỉ dùng buổi sáng.",
     },
     // Medium
     {
@@ -522,6 +524,7 @@ export const unit1: UnitData = {
       options: ["She am a teacher.", "He are my friend.", "She is a teacher.", "They is nice."],
       answer: "She is a teacher.",
       type: "multiple-choice",
+      explanation_vn: "Động từ 'to be': I am / You are / He·She·It IS / They are. 'She' → dùng 'is', không dùng 'am' hay 'are'.",
     },
     {
       id: "q4",
@@ -529,6 +532,7 @@ export const unit1: UnitData = {
       options: ["Nice to meet you", "I am fine, thank you", "My name is Linh", "Goodbye"],
       answer: "I am fine, thank you",
       type: "multiple-choice",
+      explanation_vn: "'How are you?' hỏi về tình trạng. Đáp: 'I am fine / I'm good / I'm well'. 'Nice to meet you' chỉ dùng khi lần đầu gặp mặt.",
     },
     // Hard — productive
     {
