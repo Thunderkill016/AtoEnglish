@@ -61,6 +61,7 @@ interface DashboardClientProps {
   } | null;
   completedUnitIds: string[];
   streakFreezeCount: number;
+  weeklyData: Array<{ day: string; label: string; xp: number; pct: number }>;
   allUnits: Array<{ id: string; title: string; level: string; route: string; xp: number }>;
 }
 
@@ -113,6 +114,7 @@ export default function DashboardClient({
   completedUnitIds,
   allUnits,
   streakFreezeCount,
+  weeklyData,
 }: DashboardClientProps) {
   const [xpCurrent, setXpCurrent] = useState(initialXpCurrent);
   const [quests, setQuests] = useState(initialQuests);
@@ -453,6 +455,47 @@ export default function DashboardClient({
             <p className="text-[10px] text-zinc-500 dark:text-zinc-400 font-medium">đã hoàn thành</p>
           </div>
         </div>
+
+        {/* ── 2b. Weekly active streak calendar ── */}
+        {weeklyData && weeklyData.length > 0 && (
+          <div className="rounded-2xl border border-zinc-200/60 dark:border-zinc-800/60 bg-white/60 dark:bg-zinc-900/30 backdrop-blur-sm p-4 space-y-3">
+            <div className="flex items-center justify-between">
+              <p className="text-[10px] font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">Lịch chuỗi học tuần này</p>
+              <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold">Luyện tập đều đặn để giữ streak!</span>
+            </div>
+            <div className="flex justify-between items-center gap-1">
+              {weeklyData.map((d, idx) => {
+                const isToday = d.day === todayKey;
+                const hasLearned = d.xp > 0;
+                return (
+                  <div key={idx} className="flex-1 flex flex-col items-center gap-1.5">
+                    <div className={`relative flex size-8 sm:size-10 items-center justify-center rounded-full border transition-all ${
+                      hasLearned
+                        ? "bg-gradient-to-br from-orange-500 to-amber-500 border-orange-400 text-white shadow-sm shadow-orange-500/20"
+                        : isToday
+                          ? "bg-zinc-100 dark:bg-zinc-800 border-emerald-500/50 text-zinc-400 dark:text-zinc-500 ring-2 ring-emerald-500/20"
+                          : "bg-zinc-50 dark:bg-zinc-950/40 border-zinc-200 dark:border-zinc-800/60 text-zinc-300 dark:text-zinc-700"
+                    }`}>
+                      {hasLearned ? (
+                        <Flame className="size-4 fill-current animate-pulse text-orange-200" />
+                      ) : (
+                        <span className="text-xs font-black">·</span>
+                      )}
+                      {isToday && !hasLearned && (
+                        <span className="absolute -top-0.5 -right-0.5 size-2 rounded-full bg-emerald-500 animate-ping" />
+                      )}
+                    </div>
+                    <span className={`text-[10px] font-bold ${
+                      isToday ? "text-emerald-600 dark:text-emerald-400 font-black" : "text-zinc-400 dark:text-zinc-500"
+                    }`}>
+                      {d.label}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
 
         {/* ── 3. Placement Test Banner ── */}
         {showPlacementBanner && (

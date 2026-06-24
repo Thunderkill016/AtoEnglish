@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { getDueCards } from "@/app/actions/cards";
-import { getUserProgress } from "@/app/actions/stats";
+import { getUserProgress, getWeeklyXpData } from "@/app/actions/stats";
 import {
   getAllUnitCompletionStatuses,
   getCurrentUnit,
@@ -22,13 +22,14 @@ export const revalidate = 30;
 
 export default async function DashboardPage() {
   // Fetch all data in parallel — single round-trip batch
-  const [progressRes, cardsRes, unitRes, speakingRes, bulkRes] =
+  const [progressRes, cardsRes, unitRes, speakingRes, bulkRes, weeklyRes] =
     await Promise.all([
       getUserProgress(),
       getDueCards(),
       getCurrentUnit(),
       getRecentSpeakingSessions(5),
       getAllUnitCompletionStatuses(),
+      getWeeklyXpData(),
     ]);
 
   let userName = "Học viên";
@@ -157,6 +158,8 @@ export default async function DashboardPage() {
     : null;
 
 
+  const weeklyData = weeklyRes.success && weeklyRes.data ? weeklyRes.data : [];
+
   return (
     <DashboardClient
       userName={userName}
@@ -172,6 +175,7 @@ export default async function DashboardPage() {
       wordOfDay={wordOfDay}
       completedUnitIds={completedUnitIds}
       streakFreezeCount={streakFreezeCount}
+      weeklyData={weeklyData}
       allUnits={UNITS.map(u => ({ id: u.id, title: u.title, level: u.level, route: u.route, xp: u.xp }))}
     />
   );
