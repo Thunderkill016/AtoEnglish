@@ -169,6 +169,24 @@ export const unit2: UnitData = {
     },
   ],
 
+  listenAndArrangeExercises: [
+    {
+      id: "la2-1",
+      audio_text: "This is my mother she is a teacher.",
+      prompt_vn: "Đây là mẹ tôi cô ấy là giáo viên.",
+      words: ["This", "is", "my", "mother", "she", "is", "a", "teacher", ".", "father", "he"],
+      answer: "This is my mother she is a teacher .",
+    },
+    {
+      id: "la2-2",
+      audio_text: "I have one brother and one sister.",
+      prompt_vn: "Tôi có một anh trai và một em gái.",
+      words: ["I", "have", "one", "brother", "and", "one", "sister", ".", "two", "father"],
+      answer: "I have one brother and one sister .",
+    },
+  ],
+
+
   wordBankExercises: [
     {
       id: "wb2-1",

@@ -136,6 +136,24 @@ export const unit5: UnitData = {
     { id: "q6", question: "Tôi thích chụp ảnh vào cuối tuần.", options: [], answer: "I like taking photos on weekends.", type: "translate" },
     { id: "q7", question: "Bạn có thích du lịch không?", options: [], answer: "Do you like traveling?", type: "translate" },
   ],
+  listenAndArrangeExercises: [
+    {
+      id: "la5-1",
+      audio_text: "I love listening to music in my free time.",
+      prompt_vn: "Tôi thích nghe nhạc vào thời gian rảnh.",
+      words: ["I", "love", "listening", "to", "music", "in", "my", "free", "time", ".", "hear", "liked"],
+      answer: "I love listening to music in my free time .",
+    },
+    {
+      id: "la5-2",
+      audio_text: "She enjoys cooking and reading books.",
+      prompt_vn: "Cô ấy thích nấu ăn và đọc sách.",
+      words: ["She", "enjoys", "cooking", "and", "reading", "books", ".", "enjoy", "cooks"],
+      answer: "She enjoys cooking and reading books .",
+    },
+  ],
+
+
   wordBankExercises: [
     {
       id: "wb1",

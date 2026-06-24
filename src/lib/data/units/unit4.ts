@@ -153,6 +153,24 @@ export const unit4: UnitData = {
     { id: "q6", question: "Tôi thức dậy lúc 7 giờ sáng mỗi ngày.", options: [], answer: "I wake up at seven every morning.", type: "translate" },
     { id: "q7", question: "Cô ấy đi làm bằng xe buýt.", options: [], answer: "She goes to work by bus.", type: "translate" },
   ],
+  listenAndArrangeExercises: [
+    {
+      id: "la4-1",
+      audio_text: "She plays tennis every weekend with her friends.",
+      prompt_vn: "Cô ấy chơi tennis mỗi cuối tuần với bạn bè.",
+      words: ["She", "plays", "tennis", "every", "weekend", "with", "her", "friends", ".", "play", "he"],
+      answer: "She plays tennis every weekend with her friends .",
+    },
+    {
+      id: "la4-2",
+      audio_text: "He does not drink coffee in the morning.",
+      prompt_vn: "Anh ấy không uống cà phê vào buổi sáng.",
+      words: ["He", "does", "not", "drink", "coffee", "in", "the", "morning", ".", "do not", "drinks"],
+      answer: "He does not drink coffee in the morning .",
+    },
+  ],
+
+
   wordBankExercises: [
     {
       id: "wb1",

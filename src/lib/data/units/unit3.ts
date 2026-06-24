@@ -318,6 +318,24 @@ export const unit3: UnitData = {
     { id: "q7", question: "Anh trai của tôi là bác sĩ.", options: [], answer: "My brother is a doctor.", type: "translate" },
   ],
 
+  listenAndArrangeExercises: [
+    {
+      id: "la3-1",
+      audio_text: "She is a nurse and she works at a hospital.",
+      prompt_vn: "Cô ấy là y tá và làm việc ở bệnh viện.",
+      words: ["She", "is", "a", "nurse", "and", "she", "works", "at", "a", "hospital", ".", "doctor", "he"],
+      answer: "She is a nurse and she works at a hospital .",
+    },
+    {
+      id: "la3-2",
+      audio_text: "What do you do for a living?",
+      prompt_vn: "Bạn làm nghề gì?",
+      words: ["What", "do", "you", "do", "for", "a", "living", "?", "does", "work"],
+      answer: "What do you do for a living ?",
+    },
+  ],
+
+
   wordBankExercises: [
     {
       id: "wb1",
