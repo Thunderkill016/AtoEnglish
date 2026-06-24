@@ -50,6 +50,7 @@ export interface VocabItem {
   collocation?: string;
   audio?: string;
   emoji?: string;
+  image_url?: string; // S2-2: optional image for concrete nouns (Paivio dual coding)
 }
 
 export interface WarmupCard {
@@ -94,7 +95,7 @@ export interface QuizQuestion {
   question: string;
   options?: string[];
   answer: string;
-  type: "multiple-choice" | "cloze" | "translate";
+  type: "multiple-choice" | "cloze" | "translate" | "true-false"; // S2-4: true-false added
   explanation_vn?: string; // Vietnamese grammar/vocab note shown on wrong answer (Babbel pattern)
 }
 
@@ -251,6 +252,16 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [miniSession, setMiniSession] = useState(false);
   const [completionData, setCompletionData] = useState<CompletionData | null>(null);
+
+  // S2-3: Live in-lesson XP counter (Duolingo real-time reinforcement)
+  const [sessionXp, setSessionXp] = useState(0);
+  const [xpPopup, setXpPopup] = useState<{ id: number; value: number } | null>(null);
+  const addSessionXp = (amount = 5) => {
+    setSessionXp(p => p + amount);
+    const id = Date.now();
+    setXpPopup({ id, value: amount });
+    setTimeout(() => setXpPopup(p => p?.id === id ? null : p), 1200);
+  };
 
   // Shared orchestrator states needed for results calculations
   const [seenCards, setSeenCards] = useState<Set<number>>(new Set());
@@ -663,6 +674,20 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
               </div>
             </div>
             <div className="text-right shrink-0 flex items-center gap-2">
+              {/* S2-3: Live session XP counter */}
+              {sessionXp > 0 && (
+                <div className="relative flex items-center gap-1 text-[11px] font-black px-2.5 py-1 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
+                  ⚡ {sessionXp} XP
+                  {xpPopup && (
+                    <span
+                      key={xpPopup.id}
+                      className="absolute -top-5 left-1/2 -translate-x-1/2 text-[10px] font-black text-emerald-300 animate-bounce pointer-events-none"
+                    >
+                      +{xpPopup.value}
+                    </span>
+                  )}
+                </div>
+              )}
               {/* Mini-session toggle — jump to Quiz for quick 5-min review */}
               {!miniSession && section < 8 && (
                 <button
@@ -811,6 +836,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
               playCorrectSound={playCorrectSound}
               playWrongSound={playWrongSound}
               goNext={goNext}
+              addSessionXp={addSessionXp}
             />
           )}
 

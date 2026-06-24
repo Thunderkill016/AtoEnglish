@@ -5,6 +5,7 @@ export interface VocabularyItem {
   example_en: string;
   topic: string;
   level: "A0" | "A1" | "A2" | "B1" | "B2" | "C1";
+  image_url?: string; // S2-2: optional image for concrete nouns (Paivio dual coding)
 }
 
 export const UNIT_VOCABULARY: Record<string, VocabularyItem[]> = {

@@ -14,6 +14,7 @@ interface PracticeSectionProps {
   playCorrectSound: () => void;
   playWrongSound: () => void;
   goNext: () => void;
+  addSessionXp?: (amount?: number) => void; // S2-3: live XP counter
 }
 
 const sectionVariants = {
@@ -29,6 +30,7 @@ export default function PracticeSection({
   playCorrectSound,
   playWrongSound,
   goNext,
+  addSessionXp,
 }: PracticeSectionProps) {
   // Practice quiz: use dedicated practiceQuiz if provided, else first 3 of quiz
   const PRACTICE_QS: QuizQuestion[] = unit.practiceQuiz ?? unit.quiz.slice(0, 3);
@@ -140,6 +142,7 @@ export default function PracticeSection({
         });
         setMatchLeft(null);
         playCorrectSound();
+        addSessionXp?.(3); // S2-3: +3 XP per matched pair
       } else {
         setWrongMatch(value);
         playWrongSound();
@@ -454,8 +457,10 @@ export default function PracticeSection({
                           .trim()
                           .replace(/\s+([.,!?])/g, "$1")
                           .replace(/\s+/g, " ");
-                      if (normalize(built.join(" ")) === normalize(ex.answer)) playCorrectSound();
-                      else playWrongSound();
+                      if (normalize(built.join(" ")) === normalize(ex.answer)) {
+                        playCorrectSound();
+                        addSessionXp?.(5); // S2-3: +5 XP for correct scramble
+                      } else playWrongSound();
                     }}
                     className="px-4 py-1.5 bg-teal-600/30 border border-teal-500/40 text-teal-300 rounded-xl text-xs font-bold hover:bg-teal-600/50 disabled:opacity-40 transition-colors"
                   >
@@ -486,7 +491,7 @@ export default function PracticeSection({
             key={unit.wordBankExercises[wordBankIndex]?.id}
             question={unit.wordBankExercises[wordBankIndex]!}
             onAnswer={(correct) => {
-              if (correct) playCorrectSound();
+              if (correct) { playCorrectSound(); addSessionXp?.(5); } // S2-3
               else playWrongSound();
               setWordBankScore(s => s + (correct ? 1 : 0));
               const next = wordBankIndex + 1;
@@ -527,7 +532,7 @@ export default function PracticeSection({
               hint_vn: "Nghe thật kỹ từng từ!",
             }}
             onAnswer={(correct) => {
-              if (correct) playCorrectSound();
+              if (correct) { playCorrectSound(); addSessionXp?.(5); } // S2-3
               else playWrongSound();
               setDictationScore((s) => s + (correct ? 1 : 0));
               const next = dictationIndex + 1;
@@ -555,8 +560,10 @@ export default function PracticeSection({
           disabled={!allPracticeAnswered}
           onClick={() => {
             setPracticeSubmitted(true);
-            if (practiceScore >= Math.ceil(PRACTICE_QS.length * 0.7)) playCorrectSound();
-            else playWrongSound();
+            if (practiceScore >= Math.ceil(PRACTICE_QS.length * 0.7)) {
+              playCorrectSound();
+              addSessionXp?.(10); // S2-3: +10 XP for passing quiz
+            } else playWrongSound();
           }}
           className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 disabled:opacity-40 disabled:cursor-not-allowed text-white font-bold rounded-2xl px-6 py-4 flex items-center justify-center gap-2 transition-all duration-200 text-lg shadow-lg shadow-emerald-900/40 active:scale-95"
         >

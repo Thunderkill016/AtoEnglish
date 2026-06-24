@@ -129,7 +129,18 @@ export default function VocabSection({
                   }`}
                   style={{ backfaceVisibility: "hidden" }}
                 >
-                  {v.emoji && <p className="text-3xl mb-1 leading-none">{v.emoji}</p>}
+                  {/* S2-2: Image flashcard (Paivio dual coding) */}
+                  {v.image_url ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={v.image_url}
+                      alt={v.word}
+                      className="w-16 h-16 object-cover rounded-xl mb-1 border border-zinc-700/40"
+                      loading="lazy"
+                    />
+                  ) : v.emoji && (
+                    <p className="text-3xl mb-1 leading-none">{v.emoji}</p>
+                  )}
                   <div>
                     <p className="text-white font-bold text-base tracking-wide">{v.word}</p>
                     <p className="text-zinc-500 text-xs mt-0.5 font-mono">{v.phonetic}</p>

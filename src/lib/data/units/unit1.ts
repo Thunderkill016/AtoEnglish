@@ -77,6 +77,7 @@ export const unit1: UnitData = {
       example2: "Good morning! Ready for the meeting?",
       collocation: "Good morning, sir/ma'am",
       audio: "/audio/unit1/good_morning.mp3",
+      image_url: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=200&h=200&fit=crop&auto=format",
     },
     {
       id: 2,
@@ -165,6 +166,7 @@ export const unit1: UnitData = {
       example2: "Nice to meet you — I've heard so much about you!",
       collocation: "Nice to meet you! / Pleased to meet you! (trang trọng hơn)",
       audio: "/audio/unit1/nice_to_meet_you.mp3",
+      image_url: "https://images.unsplash.com/photo-1521791136064-7986c2920216?w=200&h=200&fit=crop&auto=format",
     },
     {
       id: 10,
@@ -555,6 +557,15 @@ export const unit1: UnitData = {
       options: [],
       answer: "Nice to meet you.",
       type: "translate",
+    },
+    // S2-4 True/False/Not Given demo
+    {
+      id: "q8",
+      question: "Theo đoạn hội thoại, Linh đến từ Việt Nam và Alex đến từ Mỹ.",
+      options: ["Đúng", "Sai", "Không đề cập"],
+      answer: "Đúng",
+      type: "true-false",
+      explanation_vn: "Trong hội thoại: Linh nói 'I'm from Vietnam' và Alex nói 'I'm from the USA' — cả hai đều đúng.",
     },
   ],
 

@@ -241,7 +241,7 @@ describe("Curriculum Quality Rigorous Assessment Suite", () => {
             expect(q.id, `${desc}: missing id`).toBeDefined();
             expect(q.question, `${desc}: missing question`).toBeDefined();
             expect(q.type, `${desc}: missing type`).toBeDefined();
-            expect(["multiple-choice", "cloze", "translate"]).toContain(q.type);
+            expect(["multiple-choice", "cloze", "translate", "true-false"]).toContain(q.type); // S2-4: true-false added
             expect(q.answer, `${desc}: missing answer`).toBeDefined();
             expect(q.answer).not.toMatch(leakRegex);
 
@@ -251,6 +251,13 @@ describe("Curriculum Quality Rigorous Assessment Suite", () => {
               expect(q.options.length).toBe(4);
               expect(q.options).toContain(q.answer);
               q.options.forEach((opt: string) => expect(opt).not.toMatch(leakRegex));
+            } else if (q.type === "true-false") {
+              // S2-4: true-false has 2-3 options (Đúng/Sai or Đúng/Sai/Không đề cập)
+              expect(q.options, `${desc}: missing options for true-false`).toBeDefined();
+              expect(Array.isArray(q.options)).toBe(true);
+              expect(q.options.length, `${desc}: true-false must have 2-3 options`).toBeGreaterThanOrEqual(2);
+              expect(q.options.length, `${desc}: true-false must have 2-3 options`).toBeLessThanOrEqual(3);
+              expect(q.options).toContain(q.answer);
             } else {
               // cloze or translate
               expect(q.options === undefined || q.options.length === 0, `${desc}: cloze/translate should not have options`).toBe(true);

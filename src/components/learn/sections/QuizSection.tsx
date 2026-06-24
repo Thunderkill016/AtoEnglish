@@ -385,6 +385,54 @@ export default function QuizSection({
                   </div>
                 );
               }
+              // S2-4: True/False/Not Given
+              if (q.type === "true-false") {
+                const tfOptions = q.options ?? ["Đúng", "Sai", "Không đề cập"];
+                return (
+                  <div key={q.id}>
+                    <p className="text-white text-sm mb-3">
+                      <span className="text-zinc-500 mr-2">Câu {qi + 1}.</span>
+                      {q.question}
+                    </p>
+                    <div className="flex gap-2">
+                      {tfOptions.map((opt, oi) => {
+                        const isSelected = quizAnswers[q.id] === opt;
+                        const isWrongAnswer = quizSubmitted && isSelected && opt !== q.answer;
+                        const isRightAnswer = quizSubmitted && opt === q.answer;
+                        let cls = "flex-1 px-3 py-2.5 rounded-xl text-sm font-bold border text-center ";
+                        if (quizSubmitted) {
+                          if (isRightAnswer) cls += "bg-emerald-600/30 border-emerald-500 text-emerald-300";
+                          else if (isWrongAnswer) cls += "bg-red-900/30 border-red-500 text-red-300 animate-shake";
+                          else cls += "bg-zinc-800/50 border-zinc-700/50 text-zinc-500 cursor-default";
+                        } else {
+                          cls += isSelected
+                            ? "bg-emerald-600/30 border-emerald-500 text-emerald-300"
+                            : "bg-zinc-800 border-zinc-700 text-zinc-300 hover:border-emerald-600/50";
+                        }
+                        return (
+                          <motion.button
+                            key={oi}
+                            onClick={() => !quizSubmitted && setQuizAnswers(p => ({ ...p, [q.id]: opt }))}
+                            disabled={quizSubmitted}
+                            whileHover={!quizSubmitted ? { y: -2 } : {}}
+                            whileTap={!quizSubmitted ? { scale: 0.97 } : {}}
+                            transition={{ type: "spring", stiffness: 450, damping: 15 }}
+                            className={cls}
+                          >
+                            {opt}
+                          </motion.button>
+                        );
+                      })}
+                    </div>
+                    {quizSubmitted && quizAnswers[q.id] !== q.answer && q.explanation_vn && (
+                      <div className="mt-2 flex items-start gap-2 bg-amber-950/30 border border-amber-700/40 rounded-xl px-3 py-2.5">
+                        <span className="text-amber-400 text-sm shrink-0">💡</span>
+                        <p className="text-amber-200 text-xs leading-relaxed">{q.explanation_vn}</p>
+                      </div>
+                    )}
+                  </div>
+                );
+              }
               return (
                 <div key={q.id}>
                   <p className="text-white text-sm mb-3">
@@ -474,7 +522,7 @@ export default function QuizSection({
               }
             }}
             disabled={
-              FINAL_QS.filter((q) => q.type === "multiple-choice").some((q) => !quizAnswers[q.id]) ||
+              FINAL_QS.filter((q) => q.type === "multiple-choice" || q.type === "true-false").some((q) => !quizAnswers[q.id]) ||
               FINAL_QS.filter((q) => q.type === "cloze" || q.type === "translate").some(
                 (q) => !(quizClozeInputs[q.id] ?? "").trim()
               )
