@@ -3,7 +3,7 @@
 // KHÔNG dùng isolated grammar drills — hiểu English in USE
 // Levels: A1 → A2 → B1 → B2
 
-export type CEFRLevel = "A1" | "A2" | "B1" | "B2";
+export type CEFRLevel = "A0" | "A1" | "A2" | "B1" | "B2";
 export type SkillType = "reading" | "vocabulary" | "language-use";
 
 export interface PlacementQuestion {
@@ -19,6 +19,8 @@ export interface PlacementQuestion {
 
 // ─── PASSAGES ────────────────────────────────────────────────────────────────
 
+const P0 = `Hi. I am Lisa. I am from England. I am twenty-five years old. I live in London. I have a cat. Her name is Mimi. I like coffee and music.`;
+
 const P1 = `Tom is 8 years old. He lives with his mother, father, and sister. His sister's name is Amy. She is 5. Tom goes to school every day. He likes math and science. After school, he plays football with his friends.`;
 
 const P2 = `Maria works at a café near her home. She starts work at 8 a.m. and finishes at 4 p.m. She serves coffee and food to customers. The café is always busy on weekends. Maria enjoys her job because she meets many interesting people.`;
@@ -32,6 +34,48 @@ const P5 = `The concept of remote work has changed significantly in recent years
 const P6 = `Online shopping has transformed the way people buy goods. Rather than visiting physical stores, consumers can now browse thousands of products from their homes and have them delivered within days — or even hours. This convenience has led to the rise of large e-commerce platforms. However, critics point out that this trend has negative consequences for local businesses, which often cannot compete with the lower prices offered online.`;
 
 export const PLACEMENT_QUESTIONS: PlacementQuestion[] = [
+
+  // ══ A0 Reading — P0: Lisa (Pre-CEFR Foundation) ══════════════════════════
+  {
+    id: 41, level: "A0", skill: "reading", context: P0,
+    question: "Where is Lisa from?",
+    options: ["France", "England", "Vietnam", "Japan"],
+    correctAnswer: 1,
+    explanation: "'I am from England.'",
+  },
+  {
+    id: 42, level: "A0", skill: "reading", context: P0,
+    question: "How old is Lisa?",
+    options: ["22 years old", "25 years old", "30 years old", "18 years old"],
+    correctAnswer: 1,
+    explanation: "'I am twenty-five years old.'",
+  },
+  {
+    id: 43, level: "A0", skill: "vocabulary",
+    question: "What does 'cat' mean in Vietnamese?",
+    options: ["Con chó", "Con mèo", "Con cá", "Con chim"],
+    correctAnswer: 1,
+    explanation: "'Cat' = con mèo. Lisa có một con mèo tên là Mimi.",
+  },
+  {
+    id: 44, level: "A0", skill: "vocabulary",
+    question: "Complete: 'My ___ is Lan.' (tên của tôi là Lan)",
+    options: ["age", "city", "name", "job"],
+    correctAnswer: 2,
+    explanation: "'My name is Lan.' — 'name' = tên.",
+  },
+  {
+    id: 45, level: "A0", skill: "language-use",
+    question: "Which sentence is correct?",
+    options: [
+      "I am from Vietnam.",
+      "I from Vietnam.",
+      "I are from Vietnam.",
+      "I be from Vietnam.",
+    ],
+    correctAnswer: 0,
+    explanation: "'I AM from Vietnam.' — động từ BE bắt buộc. Bỏ 'am' là lỗi #1 của người Việt.",
+  },
 
   // ══ A1 Reading — P1: Tom ══════════════════════════════════════════════════
   {
@@ -423,17 +467,27 @@ export function calculateResult(answers: Record<number, number>): TestResult {
   let levelDescription: string;
   let nextSteps: string[];
 
-  if (totalScore <= 10) {
+  if (totalScore <= 5) {
+    cefrLevel = "A0";
+    levelLabel = "A0 — Foundation";
+    levelDescription = "Mày đang ở điểm xuất phát — đây là cơ hội tuyệt vời! Mọi người giỏi tiếng Anh đều bắt đầu từ zero.";
+    nextSteps = [
+      "Bắt đầu với 26 chữ cái và âm cơ bản (Unit A0-1)",
+      "Học 5 câu giao tiếp cơ bản: Hello, My name is, Thank you",
+      "Nghe BBC Learning English — Everyday Grammar (A1)",
+      "Mục tiêu 30 ngày: hoàn thành 8 unit A0",
+    ];
+  } else if (totalScore <= 15) {
     cefrLevel = "A1";
     levelLabel = "A1 — Beginner";
     levelDescription = "Mày đang ở mức khởi đầu — điểm xuất phát tốt! Mọi người giỏi tiếng Anh đều bắt đầu từ đây.";
     nextSteps = [
       "Học 10 từ vựng/ngày: greetings, numbers, family, food",
-      "Luyện 44 âm IPA cơ bản (vào trang Pronunciation)",
+      "Luyện 50 âm IPA cơ bản (vào trang Pronunciation)",
       "Nghe BBC Learning English 15 phút/ngày (beginner)",
       "Mục tiêu ngắn hạn: Pass EF SET Quick Check A1",
     ];
-  } else if (totalScore <= 20) {
+  } else if (totalScore <= 25) {
     cefrLevel = "A2";
     levelLabel = "A2 — Elementary";
     levelDescription = "Mày có nền tảng cơ bản tốt! Xây thêm vocab và practice reading là lên B1 nhanh thôi.";
@@ -443,7 +497,7 @@ export function calculateResult(answers: Record<number, number>): TestResult {
       "Viết journal 3–5 câu tiếng Anh/ngày",
       "Language exchange HelloTalk 1–2 lần/tuần",
     ];
-  } else if (totalScore <= 30) {
+  } else if (totalScore <= 35) {
     cefrLevel = "B1";
     levelLabel = "B1 — Intermediate";
     levelDescription = "Trung cấp vững! Giao tiếp độc lập được. Giờ focus vào fluency và business English.";
