@@ -635,6 +635,7 @@ export default function DashboardClient({
           completedUnits={completedUnits}
           userLevel={shortLevel}
           dueCardsCount={dueCardsCount}
+          weeklyData={weeklyData}
         />
 
         {/* ── 9. Collapsible Curriculum Progress Grid ── */}
@@ -734,12 +735,14 @@ function WeeklyRecapCard({
   completedUnits,
   userLevel,
   dueCardsCount,
+  weeklyData,
 }: {
   currentStreak: number;
   totalXp: number;
   completedUnits: number;
   userLevel: string;
   dueCardsCount: number;
+  weeklyData: Array<{ day: string; label: string; xp: number; pct: number }>;
 }) {
   const [collapsed, setCollapsed] = useState(true);
 
@@ -762,6 +765,8 @@ function WeeklyRecapCard({
     { icon: "🃏", label: "Thẻ ôn tập", value: dueCardsCount > 0 ? `${dueCardsCount} thẻ` : "✓ Xong", sub: dueCardsCount > 0 ? "Cần ôn hôm nay" : "SRS hoàn thành" },
   ];
 
+  const todayKey = new Date().toLocaleDateString("sv-SE", { timeZone: "Asia/Ho_Chi_Minh" });
+
   return (
     <div className="rounded-2xl border border-blue-500/15 bg-blue-500/3 dark:bg-blue-500/5 overflow-hidden">
       <button
@@ -779,16 +784,63 @@ function WeeklyRecapCard({
       </button>
 
       {!collapsed && (
-        <div className="px-4 pb-4 border-t border-blue-500/10 pt-3">
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-            {stats.map(({ icon, label, value, sub }) => (
-              <div key={label} className="flex flex-col gap-1 p-3 rounded-xl bg-white/40 dark:bg-zinc-800/30 border border-zinc-200/50 dark:border-zinc-700/30">
-                <span className="text-xl">{icon}</span>
-                <p className="text-[10px] font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider leading-tight">{label}</p>
-                <p className="text-base font-black text-zinc-900 dark:text-zinc-50 leading-tight">{value}</p>
-                <p className="text-[10px] text-zinc-400 dark:text-zinc-500 font-medium">{sub}</p>
+        <div className="px-4 pb-4 border-t border-blue-500/10 pt-3 space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Left: Stats grid */}
+            <div className="grid grid-cols-2 gap-2">
+              {stats.map(({ icon, label, value, sub }) => (
+                <div key={label} className="flex flex-col gap-1 p-3 rounded-xl bg-white/40 dark:bg-zinc-800/30 border border-zinc-200/50 dark:border-zinc-700/30">
+                  <span className="text-xl">{icon}</span>
+                  <p className="text-[10px] font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider leading-tight">{label}</p>
+                  <p className="text-base font-black text-zinc-900 dark:text-zinc-50 leading-tight">{value}</p>
+                  <p className="text-[10px] text-zinc-400 dark:text-zinc-500 font-medium">{sub}</p>
+                </div>
+              ))}
+            </div>
+
+            {/* Right: Daily XP Bar Chart */}
+            {weeklyData && weeklyData.length > 0 && (
+              <div className="flex flex-col justify-between p-4 rounded-xl bg-white/40 dark:bg-zinc-800/30 border border-zinc-200/50 dark:border-zinc-700/30 min-h-[160px]">
+                <div className="flex justify-between items-center mb-2">
+                  <p className="text-[10px] font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">XP 7 ngày qua</p>
+                  <span className="text-[10px] text-zinc-400 dark:text-zinc-500 font-bold">Biểu đồ tuần</span>
+                </div>
+                <div className="relative h-28 flex items-end justify-between gap-1 pb-1 border-b border-zinc-200 dark:border-zinc-800/60">
+                  {/* Grid background lines */}
+                  <div className="absolute inset-x-0 top-0 bottom-4 flex flex-col justify-between pointer-events-none">
+                    {[0, 1, 2].map(i => (
+                      <div key={i} className="border-t border-dashed border-zinc-300 dark:border-zinc-800/60 w-full" />
+                    ))}
+                  </div>
+                  {/* Bars */}
+                  {weeklyData.map((d, idx) => {
+                    const isToday = d.day === todayKey;
+                    return (
+                      <div key={idx} className="flex-1 flex flex-col items-center gap-1 h-full justify-end group relative z-10">
+                        {d.xp > 0 && (
+                          <span className="opacity-0 group-hover:opacity-100 transition-opacity duration-150 text-[9px] font-bold bg-zinc-900 dark:bg-zinc-100 text-zinc-100 dark:text-zinc-950 px-1.5 py-0.5 rounded-md absolute bottom-full mb-1 whitespace-nowrap shadow-md">
+                            {d.xp} XP
+                          </span>
+                        )}
+                        <div
+                          className={`w-full max-w-[20px] rounded-t-md transition-all duration-500 ${
+                            isToday
+                              ? "bg-gradient-to-t from-emerald-600 to-teal-400 ring-2 ring-emerald-500/25"
+                              : d.xp > 0
+                                ? "bg-gradient-to-t from-emerald-500/80 to-teal-400/80 hover:from-emerald-500 hover:to-teal-400"
+                                : "bg-zinc-200 dark:bg-zinc-850"
+                          }`}
+                          style={{ height: d.pct > 0 ? `${Math.max(d.pct, 12)}%` : "6px" }}
+                        />
+                        <span className={`text-[8px] font-bold mt-1 ${isToday ? "text-emerald-500" : "text-zinc-400 dark:text-zinc-500"}`}>
+                          {d.label}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
-            ))}
+            )}
           </div>
 
           {/* Share nudge */}
