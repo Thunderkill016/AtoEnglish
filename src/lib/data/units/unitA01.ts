@@ -555,6 +555,18 @@ export const unitA01: UnitData = {
   // ── SHADOWING: Fluency drill — key chunks from dialogue ──────────────────
   // ✅ Nation: Fluency strand — speed and automaticity
   // ✅ Pronunciation focus: /θ/, final /t/, /iː/ vowels
+  pronunciationFocus: {
+    targetPhoneme: "/θ/",
+    description: "Âm TH vô thanh — lưỡi nhô ra",
+    examples: [
+      { word: "thank", ipa: "/θæŋk/", vnTip: "Lưỡi ra ngoài hàng răng, thổi hơi — KHÔNG phát 't' hay 'f'" },
+    ],
+    minimalPairs: [
+      { a: "thank", b: "tank", note: "/θ/ vs /t/" },
+    ],
+    commonMistake: "Người Việt phát 'thank' thành 'tank' hoặc 'fank' — phải đưa lưỡi ra ngoài",
+  },
+
   fluencyDrill: {
     title: "Luyện nói nhanh — 7 câu chủ chốt",
     items: [

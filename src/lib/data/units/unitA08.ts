@@ -538,6 +538,19 @@ export const unitA08: UnitData = {
     },
   ],
 
+  pronunciationFocus: {
+    targetPhoneme: "/ŋ/ cuối từ",
+    description: "Âm NG cuối — sing, ring, long",
+    examples: [
+      { word: "morning", ipa: "/ˈmɔːnɪŋ/", vnTip: "Cuối âm mũi mềm từ vòm — không bật thêm /g/" },
+      { word: "working", ipa: "/ˈwɜːkɪŋ/", vnTip: "'-ing' kết thúc bằng /ŋ/, không phải /ng/" },
+    ],
+    minimalPairs: [
+      { a: "sing /ŋ/", b: "singer /ŋ/", note: "cả hai đều KHÔNG có /g/ cuối" },
+    ],
+    commonMistake: "Người Việt phát '-ing' thành '-ing-g' vì tiếng Việt không có /ŋ/ cuối",
+  },
+
   fluencyDrill: {
     title: "Luyện nhanh: Cụm từ sống còn",
     items: [

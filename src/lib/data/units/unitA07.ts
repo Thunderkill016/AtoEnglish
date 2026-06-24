@@ -521,6 +521,19 @@ export const unitA07: UnitData = {
     },
   ],
 
+  pronunciationFocus: {
+    targetPhoneme: "/p/ /t/ /k/ cuối từ",
+    description: "Ba phụ âm nổ cuối từ — không bật hơi",
+    examples: [
+      { word: "stop", ipa: "/stɒp/", vnTip: "Khép môi, KHÔNG bật hơi — 'stop-uh' là sai" },
+      { word: "what", ipa: "/wɒt/", vnTip: "Lưỡi chạm nướu, KHÔNG bật hơi" },
+    ],
+    minimalPairs: [
+      { a: "stop (đúng)", b: "stop-uh (sai)", note: "không thêm nguyên âm cuối" },
+    ],
+    commonMistake: "Người Việt thêm nguyên âm sau phụ âm cuối: 'book-uh', 'stop-uh', 'back-uh'",
+  },
+
   fluencyDrill: {
     title: "Luyện nhanh: Thời gian & Lịch hẹn",
     items: [

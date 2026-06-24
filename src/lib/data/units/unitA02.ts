@@ -530,6 +530,19 @@ export const unitA02: UnitData = {
     },
   ],
 
+  pronunciationFocus: {
+    targetPhoneme: "/s/ & /z/ cuối từ",
+    description: "Số nhiều: khi nào thêm /s/ và khi nào /z/",
+    examples: [
+      { word: "books", ipa: "/bʊks/", vnTip: "/s/ sau phụ âm vô thanh (k,p,t,f)" },
+      { word: "bags", ipa: "/bægz/", vnTip: "/z/ sau phụ âm hữu thanh và nguyên âm" },
+    ],
+    minimalPairs: [
+      { a: "books /s/", b: "bags /z/", note: "cùng -s nhưng phát khác" },
+    ],
+    commonMistake: "Người Việt thường phát đều /s/ cho mọi từ — nhưng 'dogs' phải là /dɒgz/",
+  },
+
   fluencyDrill: {
     title: "Số từ 1–20 + Cụm câu mua sắm",
     items: [

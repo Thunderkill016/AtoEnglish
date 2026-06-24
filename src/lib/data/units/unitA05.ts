@@ -539,6 +539,19 @@ export const unitA05: UnitData = {
     },
   ],
 
+  pronunciationFocus: {
+    targetPhoneme: "/ɪ/ vs /iː/",
+    description: "Phân biệt SIT /ɪ/ và SEE /iː/",
+    examples: [
+      { word: "sit", ipa: "/sɪt/", vnTip: "Ngắn, thư giãn — KHÔNG kéo dài như 'seat'" },
+      { word: "seat", ipa: "/siːt/", vnTip: "Kéo dài, môi mỉm cười rộng hơn /ɪ/" },
+    ],
+    minimalPairs: [
+      { a: "sit /ɪ/", b: "seat /iː/", note: "ngắn vs dài" },
+    ],
+    commonMistake: "Người Việt kéo dài /ɪ/ thành /iː/ — 'ship' thành 'sheep'",
+  },
+
   fluencyDrill: {
     title: "Luyện nhanh: Verb BE theo ngôi",
     items: [

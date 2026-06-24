@@ -520,6 +520,18 @@ export const unitA03: UnitData = {
     },
   ],
 
+  pronunciationFocus: {
+    targetPhoneme: "/ɜː/",
+    description: "Âm 'ER' dài — bird, word, learn",
+    examples: [
+      { word: "colour", ipa: "/ˈkʌlə/", vnTip: "Âm cuối '-our' = schwa /ə/, không phát 'o-u-r'" },
+    ],
+    minimalPairs: [
+      { a: "bird /ɜː/", b: "bead /iː/", note: "âm ER vs âm EE" },
+    ],
+    commonMistake: "Người Việt đọc '-er/-or/-our' cuối từ theo mặt chữ — phải dùng schwa /ə/",
+  },
+
   fluencyDrill: {
     title: "Luyện nói: Màu sắc + Mô tả",
     items: [
