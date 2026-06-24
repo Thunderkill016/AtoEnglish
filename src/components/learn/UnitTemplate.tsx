@@ -676,9 +676,11 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                       );
                     } catch { /* ignore */ }
                   }}
-                  className="text-[10px] font-bold px-2 py-1 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-400 hover:bg-amber-500/20 transition-colors whitespace-nowrap"
+                  className="flex items-center gap-1.5 text-[11px] font-bold px-3 py-1.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-400 hover:bg-amber-500/20 hover:border-amber-500/50 transition-all whitespace-nowrap active:scale-95"
+                  title="Bỏ qua các phần đầu, chỉ làm quiz nhanh ~5 phút"
                 >
-                  ⚡ Ôn nhanh
+                  ⚡ <span>Ôn nhanh</span>
+                  <span className="text-amber-500/60 text-[9px] font-bold">~5p</span>
                 </button>
               )}
               <div>

@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import {
   LayoutDashboard,
   BookOpen,
-  Mic,
+  Trophy,
   Layers,
   TrendingUp,
 } from "lucide-react";
@@ -21,26 +21,30 @@ export function BottomNav() {
       icon: LayoutDashboard,
     },
     {
-      title: "Learn",
+      title: "Học",
       href: "/learn",
       icon: BookOpen,
     },
     {
-      title: "Speaking",
-      href: "/speaking",
-      icon: Mic,
+      title: "Bảng xếp",
+      href: "/leaderboard",
+      icon: Trophy,
     },
     {
-      title: "Flashcards",
+      title: "Ôn tập",
       href: "/flashcards",
       icon: Layers,
     },
     {
-      title: "Progress",
+      title: "Tiến độ",
       href: "/progress",
       icon: TrendingUp,
     },
   ];
+
+  // Fix #3: Hide bottom nav during lessons (distraction-free learning)
+  const isInLesson = pathname.startsWith("/learn/");
+  if (isInLesson) return null;
 
   return (
     <nav

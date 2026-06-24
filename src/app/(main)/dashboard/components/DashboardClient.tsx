@@ -454,6 +454,44 @@ export default function DashboardClient({
         {/* ── 4b. EF SET A1 Goal Tracker ── */}
         <EfSetGoalTracker userLevel={shortLevel} completedUnits={completedUnits} />
 
+        {/* ── 4c. Hero CTA — "Continue Learning" (Fix #4: primary 1-tap shortcut, Memrise/ELSA pattern) ── */}
+        <Link
+          href={currentUnitData.route}
+          className="group flex items-center gap-4 p-5 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 shadow-lg shadow-emerald-900/30 active:scale-[0.98] transition-all duration-200"
+        >
+          <div className="flex-1 min-w-0">
+            <p className="text-xs font-bold text-emerald-100/80 uppercase tracking-widest mb-1">
+              {currentUnitData.completed ? "Ôn lại bài học" : "Tiếp tục học"}
+            </p>
+            <p className="text-white font-black text-lg leading-tight truncate">
+              {currentUnitData.title}
+            </p>
+            <div className="flex items-center gap-2 mt-2">
+              <div className="flex-1 h-1.5 bg-white/25 rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-white rounded-full transition-all duration-500"
+                  style={{ width: `${currentUnitData.progress}%` }}
+                />
+              </div>
+              <span className="text-white/80 text-xs font-bold shrink-0">
+                {currentUnitData.progress}%
+              </span>
+            </div>
+          </div>
+          <div className="shrink-0 flex size-12 items-center justify-center rounded-xl bg-white/20 group-hover:bg-white/30 transition-colors">
+            <ChevronRight className="size-6 text-white group-hover:translate-x-0.5 transition-transform" />
+          </div>
+        </Link>
+
+        {/* ── 4d. Daily Quests — promoted above lesson grid (research: primary retention driver) ── */}
+        <WidgetErrorBoundary name="DailyQuests">
+          <DailyQuests
+            quests={quests}
+            handleToggleQuest={handleToggleQuest}
+            completedCount={completedCount}
+          />
+        </WidgetErrorBoundary>
+
         {/* ── 5. Main content: 2-column grid ── */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
           {/* Left: Hero lesson card */}
@@ -461,8 +499,11 @@ export default function DashboardClient({
             <UnitCard currentUnitData={currentUnitData} />
           </div>
 
-          {/* Right: Word of Day + SRS + Daily Quests */}
+          {/* Right: Word of Day + SRS */}
           <div className="lg:col-span-5 space-y-5">
+            <WidgetErrorBoundary name="SrsCard">
+              <SrsCard dueCardsCount={dueCardsCount} />
+            </WidgetErrorBoundary>
             {wordOfDay && (
               <WidgetErrorBoundary name="WordOfDay">
                 <WordOfDayCard
@@ -475,16 +516,6 @@ export default function DashboardClient({
                 />
               </WidgetErrorBoundary>
             )}
-            <WidgetErrorBoundary name="SrsCard">
-              <SrsCard dueCardsCount={dueCardsCount} />
-            </WidgetErrorBoundary>
-            <WidgetErrorBoundary name="DailyQuests">
-              <DailyQuests
-                quests={quests}
-                handleToggleQuest={handleToggleQuest}
-                completedCount={completedCount}
-              />
-            </WidgetErrorBoundary>
           </div>
         </div>
 
