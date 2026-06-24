@@ -872,25 +872,104 @@ function WeeklyRecapCard({
   );
 }
 
-// ─── EF SET A1 Goal Tracker ──────────────────────────────────────────────────
+// ─── Adaptive Goal Tracker ──────────────────────────────────────────────────
 const CEFR_ORDER = ["A0", "A1", "A2", "B1", "B2", "C1", "C2"];
 
-const EFSET_MILESTONES: { id: string; label: string; done: (level: string, units: number) => boolean }[] = [
-  { id: "placement", label: "Làm placement test CEFR", done: () => true },
-  { id: "a0-units",  label: "Hoàn thành A0 foundation (8 units)", done: (_l, u) => u >= 8 },
-  { id: "a1-vocab",  label: "Học 200 từ vựng cơ bản A1", done: (_l, u) => u >= 12 },
-  { id: "grammar",   label: "Ôn ngữ pháp: Present Simple, To Be, There is/are", done: (l) => CEFR_ORDER.indexOf(l) >= 1 },
-  { id: "reading",   label: "Luyện 10 câu reading comprehension (Quiz)", done: (_l, u) => u >= 5 },
-  { id: "efset",     label: "Thi EF SET Quick Check → đạt A1", done: (l) => CEFR_ORDER.indexOf(l) >= 1 },
-];
+interface Milestone {
+  id: string;
+  label: string;
+  done: (level: string, units: number) => boolean;
+}
+
+interface GoalConfig {
+  title: string;
+  targetLevel: string;
+  link: string;
+  linkText: string;
+  milestones: Milestone[];
+}
+
+const GOAL_CONFIG: Record<string, GoalConfig> = {
+  A0: {
+    title: "Chứng chỉ CEFR A1",
+    targetLevel: "A1",
+    link: "https://www.efset.org/quick-check/",
+    linkText: "Thi EF SET Quick Check (miễn phí)",
+    milestones: [
+      { id: "placement", label: "Làm placement test CEFR", done: () => true },
+      { id: "a0-units", label: "Hoàn thành A0 foundation (8 units)", done: (_l, u) => u >= 8 },
+      { id: "a1-vocab", label: "Học 200 từ vựng cơ bản A1", done: (_l, u) => u >= 12 },
+      { id: "grammar", label: "Ôn ngữ pháp: Present Simple, To Be, There is/are", done: (l) => CEFR_ORDER.indexOf(l) >= 1 },
+      { id: "reading", label: "Luyện 10 câu reading comprehension (Quiz)", done: (_l, u) => u >= 5 },
+      { id: "efset", label: "Thi EF SET Quick Check → đạt A1", done: (l) => CEFR_ORDER.indexOf(l) >= 1 },
+    ],
+  },
+  A1: {
+    title: "Chứng chỉ CEFR A2",
+    targetLevel: "A2",
+    link: "https://www.efset.org/cefr/a2/",
+    linkText: "Tìm hiểu tiêu chuẩn CEFR A2",
+    milestones: [
+      { id: "past-simple", label: "Làm quen với các thì quá khứ (Past Simple)", done: (_l, u) => u >= 13 },
+      { id: "reading-a2", label: "Đọc hiểu 15 đoạn văn tiếng Anh cơ bản", done: (_l, u) => u >= 14 },
+      { id: "comparatives", label: "Học so sánh hơn & so sánh nhất (Comparatives)", done: (_l, u) => u >= 15 },
+      { id: "travel-a2", label: "Luyện phát âm & chỉ đường du lịch (A2 Travel)", done: (_l, u) => u >= 16 },
+      { id: "shadowing", label: "Luyện 30 bài nói phản xạ Shadowing/Roleplay", done: (_l, u) => u >= 17 },
+      { id: "a2-complete", label: "Hoàn thành toàn bộ lộ trình A2 (18 units)", done: (l, u) => u >= 18 || CEFR_ORDER.indexOf(l) >= 2 },
+    ],
+  },
+  A2: {
+    title: "Chứng chỉ CEFR B1 (IELTS 4.5+)",
+    targetLevel: "B1",
+    link: "https://www.efset.org/cefr/b1/",
+    linkText: "Kiểm tra kỹ năng tiếng Anh B1",
+    milestones: [
+      { id: "past-continuous", label: "Học thì Quá khứ Tiếp diễn & Hoàn thành", done: (_l, u) => u >= 20 },
+      { id: "phrasal-verbs", label: "Nắm vững 20 Phrasal Verbs công sở thiết yếu", done: (_l, u) => u >= 27 },
+      { id: "reading-b1", label: "Đọc hiểu chủ đề tin tức, sức khỏe & môi trường", done: (_l, u) => u >= 30 },
+      { id: "business-email", label: "Soạn thảo email công việc & giao tiếp kinh doanh", done: (_l, u) => u >= 31 },
+      { id: "speaking-discussion", label: "Luyện nói đàm thoại và thảo luận (Discussion)", done: (_l, u) => u >= 29 },
+      { id: "b1-complete", label: "Thi đạt mục tiêu B1 (IELTS 4.5+)", done: (l, u) => u >= 32 || CEFR_ORDER.indexOf(l) >= 3 },
+    ],
+  },
+  B1: {
+    title: "Chứng chỉ CEFR B2 (IELTS 6.5+)",
+    targetLevel: "B2",
+    link: "https://www.efset.org/cefr/b2/",
+    linkText: "Tìm hiểu bài thi EF SET B2",
+    milestones: [
+      { id: "conditionals", label: "Sử dụng câu điều kiện loại 2 & 3", done: (_l, u) => u >= 34 },
+      { id: "academic-passive", label: "Dùng câu bị động học thuật nâng cao", done: (_l, u) => u >= 36 },
+      { id: "inversion", label: "Nắm vững cấu trúc đảo ngữ (Inversion)", done: (_l, u) => u >= 38 },
+      { id: "presentation-speaking", label: "Luyện thuyết trình & đàm phán nâng cao", done: (_l, u) => u >= 40 },
+      { id: "ielts-vocab", label: "Học 60 từ vựng học thuật IELTS 6.5+", done: (_l, u) => u >= 41 },
+      { id: "b2-complete", label: "Thi đạt mục tiêu B2 (IELTS 6.5+)", done: (l, u) => u >= 42 || CEFR_ORDER.indexOf(l) >= 4 },
+    ],
+  },
+  B2: {
+    title: "Mục tiêu: Đạt C1 / Fluency",
+    targetLevel: "C1",
+    link: "https://www.efset.org/cefr/c1/",
+    linkText: "Tìm hiểu chứng chỉ CEFR C1",
+    milestones: [
+      { id: "full-curriculum", label: "Hoàn thành toàn bộ lộ trình B2 (42 units)", done: (_l, u) => u >= 42 },
+      { id: "academic-srs", label: "Ôn luyện 500 thẻ từ vựng học thuật SRS", done: (_l, u) => u >= 42 },
+      { id: "speaking-recordings", label: "Thực hiện 50 phiên luyện nói ghi âm", done: (_l, u) => u >= 42 },
+      { id: "advanced-reading", label: "Đọc hiểu tài liệu chuyên ngành & tin tức", done: (_l, u) => u >= 42 },
+      { id: "advanced-writing", label: "Viết luận & báo cáo học thuật chuyên sâu", done: (_l, u) => u >= 42 },
+      { id: "c1-mock", label: "Thi thử IELTS đạt 7.0+ hoặc EF SET C1", done: (_l, u) => u >= 42 },
+    ],
+  },
+};
 
 function EfSetGoalTracker({ userLevel, completedUnits }: { userLevel: string; completedUnits: number }) {
   const [expanded, setExpanded] = useState(false);
+  const config = GOAL_CONFIG[userLevel] || GOAL_CONFIG.B2;
   const levelIdx = CEFR_ORDER.indexOf(userLevel);
-  const targetIdx = CEFR_ORDER.indexOf("A1");
-  const isPassed = levelIdx >= targetIdx + 1; // A2+ means likely passed A1
-  const doneCount = EFSET_MILESTONES.filter(m => m.done(userLevel, completedUnits)).length;
-  const pct = Math.round((doneCount / EFSET_MILESTONES.length) * 100);
+  const targetIdx = CEFR_ORDER.indexOf(config.targetLevel);
+  const isPassed = levelIdx >= targetIdx;
+  const doneCount = config.milestones.filter(m => m.done(userLevel, completedUnits)).length;
+  const pct = Math.round((doneCount / config.milestones.length) * 100);
 
   return (
     <div className="rounded-2xl border border-amber-500/20 bg-amber-500/5 overflow-hidden">
@@ -907,11 +986,11 @@ function EfSetGoalTracker({ userLevel, completedUnits }: { userLevel: string; co
             <p className="text-xs font-black text-amber-500 uppercase tracking-widest">Mục tiêu</p>
             {isPassed && (
               <span className="text-[10px] font-bold bg-emerald-500/15 text-emerald-500 border border-emerald-500/20 px-1.5 py-0.5 rounded-full">
-                ✓ Đã vượt A1
+                ✓ Đạt {config.targetLevel}
               </span>
             )}
           </div>
-          <p className="text-sm font-bold text-zinc-900 dark:text-zinc-50">EF SET Quick Check — A1</p>
+          <p className="text-sm font-bold text-zinc-900 dark:text-zinc-50">{config.title}</p>
           {/* progress bar */}
           <div className="flex items-center gap-2 mt-1.5">
             <div className="flex-1 h-1.5 bg-amber-500/15 rounded-full overflow-hidden">
@@ -920,7 +999,7 @@ function EfSetGoalTracker({ userLevel, completedUnits }: { userLevel: string; co
                 style={{ width: `${pct}%` }}
               />
             </div>
-            <span className="text-[10px] font-bold text-amber-500 shrink-0">{doneCount}/{EFSET_MILESTONES.length}</span>
+            <span className="text-[10px] font-bold text-amber-500 shrink-0">{doneCount}/{config.milestones.length}</span>
           </div>
         </div>
         <ChevronRight
@@ -931,7 +1010,7 @@ function EfSetGoalTracker({ userLevel, completedUnits }: { userLevel: string; co
       {/* Expanded checklist */}
       {expanded && (
         <div className="px-4 pb-4 space-y-2 border-t border-amber-500/10 pt-3">
-          {EFSET_MILESTONES.map(m => {
+          {config.milestones.map(m => {
             const done = m.done(userLevel, completedUnits);
             return (
               <div key={m.id} className="flex items-center gap-2.5">
@@ -949,13 +1028,13 @@ function EfSetGoalTracker({ userLevel, completedUnits }: { userLevel: string; co
 
           {/* CTA link to EF SET */}
           <a
-            href="https://www.efset.org/quick-check/"
+            href={config.link}
             target="_blank"
             rel="noopener noreferrer"
             className="mt-3 flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/20 transition-colors"
           >
             <ExternalLink className="size-3.5 text-amber-500" />
-            <span className="text-xs font-bold text-amber-500">Thi EF SET Quick Check (miễn phí)</span>
+            <span className="text-xs font-bold text-amber-500">{config.linkText}</span>
           </a>
         </div>
       )}

@@ -52,8 +52,8 @@ export default function WordOfDayCard({ word, phonetic, meaning_vn, example_en, 
             title={slowMode ? "Đang ở chế độ chậm — nhấn để bình thường" : "Nghe chậm 0.5×"}
             className={`flex items-center gap-1 px-2 py-1 rounded-lg border text-[10px] font-bold transition-all ${
               slowMode
-                ? "bg-amber-500/15 border-amber-500/40 text-amber-400"
-                : "bg-white/5 border-zinc-700/50 text-zinc-500 hover:border-zinc-500 hover:text-zinc-300"
+                ? "bg-amber-500/15 border-amber-500/40 text-amber-600 dark:text-amber-400"
+                : "bg-zinc-50 dark:bg-white/5 border-zinc-200 dark:border-zinc-700 text-zinc-500 hover:border-zinc-400 dark:hover:border-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300"
             }`}
           >
             <Turtle className="size-3" />
@@ -102,7 +102,7 @@ export default function WordOfDayCard({ word, phonetic, meaning_vn, example_en, 
             onClick={handleSpeakExample}
             aria-label="Nghe câu ví dụ"
             title="Nghe câu ví dụ"
-            className="shrink-0 flex size-6 items-center justify-center rounded-lg bg-zinc-800/60 text-zinc-500 hover:text-zinc-300 hover:bg-zinc-700/60 transition-all border border-zinc-700/40"
+            className="shrink-0 flex size-6 items-center justify-center rounded-lg bg-zinc-100 dark:bg-zinc-800/60 text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 hover:bg-zinc-200 dark:hover:bg-zinc-700/60 transition-all border border-zinc-200 dark:border-zinc-700/40"
           >
             <Volume2 className="size-3" />
           </button>
