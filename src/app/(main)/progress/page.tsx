@@ -257,36 +257,38 @@ export default async function ProgressPage() {
         }} />
       </Suspense>
 
-      {/* Achievements — full panel with category filters and locked/unlocked states */}
-      {achievementsRes.success && achievementsRes.achievements.length > 0 ? (
-        <AchievementsPanel
-          achievements={achievementsRes.achievements}
-          unlockedIds={new Set(achievementsRes.unlockedIds)}
-        />
-      ) : (
-        <div className="rounded-3xl border border-zinc-200/60 dark:border-zinc-800/60 bg-white/60 dark:bg-zinc-900/30 backdrop-blur-sm p-4 sm:p-8 space-y-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <h3 className="font-bold text-xs text-foreground uppercase tracking-widest">Thành tích</h3>
-              <p className="text-[11px] text-muted-foreground mt-0.5">Tính năng sắp ra mắt</p>
-            </div>
-            <span className="flex size-10 items-center justify-center rounded-xl bg-yellow-500/10 text-yellow-500">
-              <Trophy className="size-5" />
-            </span>
-          </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-            {["🔥", "⭐", "📚", "🎯", "💬", "🏆", "🎤", "💡"].map((emoji, i) => (
-              <div
-                key={i}
-                className="flex flex-col items-center gap-2 rounded-2xl border border-foreground/[0.06] bg-muted/30 p-3 text-center opacity-40"
-              >
-                <span className="text-3xl blur-sm">{emoji}</span>
-                <span className="text-xs font-semibold text-muted-foreground">Sắp ra mắt</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
+      {/* Achievements — always show catalog; unlocked states come from DB */}
+      <AchievementsPanel
+        achievements={achievementsRes.achievements.length > 0
+          ? achievementsRes.achievements
+          : STATIC_ACHIEVEMENTS}
+        unlockedIds={new Set(achievementsRes.unlockedIds)}
+      />
     </div>
   );
 }
+
+// Static fallback catalog — mirrors the DB seed in 20260624020000_streak_shield_and_achievements.sql
+// Shown when DB query fails or achievements table is empty (pre-migration).
+const STATIC_ACHIEVEMENTS = [
+  { id: "first_lesson",    title_vn: "Bước Đầu Tiên",      title_en: "First Step",         description_vn: "Hoàn thành bài học đầu tiên!",                 emoji: "🎯",  category: "lesson"    as const, xp_reward: 10,  threshold: 1 },
+  { id: "lessons_5",       title_vn: "Học Viên Nhiệt Tình", title_en: "Eager Learner",      description_vn: "Hoàn thành 5 bài học.",                        emoji: "📚",  category: "lesson"    as const, xp_reward: 20,  threshold: 5 },
+  { id: "lessons_10",      title_vn: "Học Viên Chăm Chỉ",  title_en: "Dedicated Student",  description_vn: "Hoàn thành 10 bài học.",                       emoji: "🎓",  category: "lesson"    as const, xp_reward: 30,  threshold: 10 },
+  { id: "lessons_25",      title_vn: "Chuyên Gia Tiến Bộ", title_en: "Progress Expert",    description_vn: "Hoàn thành 25 bài học.",                       emoji: "⭐",  category: "lesson"    as const, xp_reward: 50,  threshold: 25 },
+  { id: "lessons_50",      title_vn: "Học Giả",            title_en: "Scholar",            description_vn: "Hoàn thành 50 bài học!",                       emoji: "🏅",  category: "lesson"    as const, xp_reward: 100, threshold: 50 },
+  { id: "streak_3",        title_vn: "Bắt Đầu Chuỗi",     title_en: "On a Roll",          description_vn: "Duy trì chuỗi học 3 ngày liên tiếp!",          emoji: "🔥",  category: "streak"    as const, xp_reward: 15,  threshold: 3 },
+  { id: "streak_7",        title_vn: "Một Tuần Kiên Trì",  title_en: "Week Warrior",       description_vn: "Duy trì chuỗi học 7 ngày liên tiếp!",          emoji: "🔥🔥", category: "streak"   as const, xp_reward: 30,  threshold: 7 },
+  { id: "streak_14",       title_vn: "Hai Tuần Bất Bại",   title_en: "Fortnight Fighter",  description_vn: "14 ngày học liên tiếp!",                       emoji: "💪",  category: "streak"    as const, xp_reward: 50,  threshold: 14 },
+  { id: "streak_30",       title_vn: "Học Viên Tháng",     title_en: "Monthly Master",     description_vn: "30 ngày học liên tiếp — xuất sắc!",            emoji: "🏆",  category: "streak"    as const, xp_reward: 100, threshold: 30 },
+  { id: "streak_100",      title_vn: "Huyền Thoại",        title_en: "Legend",             description_vn: "100 ngày học liên tiếp! Bạn là huyền thoại!",  emoji: "👑",  category: "streak"    as const, xp_reward: 300, threshold: 100 },
+  { id: "xp_100",          title_vn: "Tích Lũy XP",        title_en: "XP Collector",       description_vn: "Kiếm được 100 XP.",                            emoji: "✨",  category: "xp"        as const, xp_reward: 0,   threshold: 100 },
+  { id: "xp_500",          title_vn: "XP Hunter",          title_en: "XP Hunter",          description_vn: "Kiếm được 500 XP.",                            emoji: "💎",  category: "xp"        as const, xp_reward: 20,  threshold: 500 },
+  { id: "xp_1000",         title_vn: "Nghìn Điểm",         title_en: "Thousand Points",    description_vn: "Kiếm được 1,000 XP!",                          emoji: "🌟",  category: "xp"        as const, xp_reward: 50,  threshold: 1000 },
+  { id: "xp_5000",         title_vn: "Bậc Thầy XP",        title_en: "XP Master",          description_vn: "Kiếm được 5,000 XP!",                          emoji: "🎖️",  category: "xp"       as const, xp_reward: 150, threshold: 5000 },
+  { id: "first_speak",     title_vn: "Cất Tiếng Nói",      title_en: "First Words",        description_vn: "Hoàn thành bài luyện nói đầu tiên!",           emoji: "🎤",  category: "speaking"  as const, xp_reward: 15,  threshold: 1 },
+  { id: "speak_10",        title_vn: "Người Nói Chuyện",   title_en: "Conversationalist",  description_vn: "Hoàn thành 10 buổi luyện nói.",                emoji: "🗣️",  category: "speaking"  as const, xp_reward: 30,  threshold: 10 },
+  { id: "speak_50",        title_vn: "Diễn Giả",           title_en: "Speaker",            description_vn: "Hoàn thành 50 buổi luyện nói!",               emoji: "🎙️",  category: "speaking"  as const, xp_reward: 100, threshold: 50 },
+  { id: "first_flashcard", title_vn: "Thẻ Đầu Tiên",       title_en: "First Flashcard",    description_vn: "Ôn tập thẻ flashcard lần đầu!",                emoji: "🃏",  category: "flashcard" as const, xp_reward: 10,  threshold: 1 },
+  { id: "flashcards_50",   title_vn: "Người Ôn Luyện",     title_en: "Review Champ",       description_vn: "Ôn tập 50 thẻ flashcard.",                     emoji: "📝",  category: "flashcard" as const, xp_reward: 25,  threshold: 50 },
+  { id: "flashcards_200",  title_vn: "Thẻ Bài Cao Thủ",    title_en: "Card Master",        description_vn: "Ôn tập 200 thẻ flashcard!",                    emoji: "🏅",  category: "flashcard" as const, xp_reward: 75,  threshold: 200 },
+];
