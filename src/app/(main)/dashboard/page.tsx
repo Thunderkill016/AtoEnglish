@@ -111,7 +111,7 @@ export default async function DashboardPage() {
   const initialXpCurrent = Math.min(todayXp, dailyXpGoal);
 
   const initialQuests = [
-    { id: 1, text: "Học 1 bài mới (Input & Processing)", xp: 20, completed: false },
+    { id: 1, text: "Học 1 bài mới (Input & Processing)", xp: 20, completed: false, href: currentUnitData.route },
     {
       id: 2,
       text: dueCardsCount > 0
@@ -119,6 +119,7 @@ export default async function DashboardPage() {
         : "Ôn tập thẻ từ vựng SRS (đã xong hôm nay!)",
       xp: 15,
       completed: dueCardsCount === 0,
+      href: "/flashcards",
     },
     {
       id: 3,
@@ -127,6 +128,7 @@ export default async function DashboardPage() {
         : "Đặt 3 câu thực tế (Output / Speaking)",
       xp: 15,
       completed: hasSpeakingToday,
+      href: "/speaking",
     },
   ];
 
