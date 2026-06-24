@@ -125,6 +125,20 @@ export default async function ProgressPage() {
       </div>
 
       {/* Weekly Chart + SRS State */}
+      {/* Leaderboard CTA banner */}
+      <a
+        href="/leaderboard"
+        className="flex items-center gap-4 p-4 rounded-2xl border border-yellow-500/20 bg-yellow-500/5 hover:bg-yellow-500/8 hover:border-yellow-500/35 transition-all duration-200 group"
+      >
+        <span className="flex size-10 items-center justify-center rounded-xl bg-yellow-500/15 text-2xl shrink-0">🏆</span>
+        <div className="flex-1 min-w-0">
+          <p className="text-xs font-black text-yellow-400 uppercase tracking-widest mb-0.5">Bảng xếp hạng</p>
+          <p className="text-sm font-bold text-foreground">Xem vị trí của bạn trong tuần này</p>
+          <p className="text-xs text-muted-foreground">Top học viên theo XP — reset mỗi thứ Hai</p>
+        </div>
+        <Trophy className="size-5 text-yellow-500/60 group-hover:text-yellow-500 group-hover:translate-x-0.5 transition-all shrink-0" />
+      </a>
+
       <div className="grid gap-4 sm:gap-6 lg:grid-cols-3">
         {/* Weekly XP Chart */}
         <div className="lg:col-span-2 rounded-3xl border border-zinc-200/60 dark:border-zinc-800/60 bg-white/60 dark:bg-zinc-900/30 backdrop-blur-sm p-4 sm:p-8 space-y-4 sm:space-y-6">
