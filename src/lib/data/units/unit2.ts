@@ -165,6 +165,31 @@ export const unit2: UnitData = {
       answer: "How old are you ?",
     },
   ],
+
+  wordBankExercises: [
+    {
+      id: "wb2-1",
+      prompt_vn: "Tên bạn là gì?",
+      words: ["What", "is", "your", "name", "are", "old", "?"],
+      answer: "What is your name ?",
+      hint: "What is your...?",
+    },
+    {
+      id: "wb2-2",
+      prompt_vn: "Tôi là sinh viên.",
+      words: ["I", "am", "a", "student", "is", "teacher", "."],
+      answer: "I am a student .",
+      hint: "I am a...",
+    },
+    {
+      id: "wb2-3",
+      prompt_vn: "Bạn làm nghề gì?",
+      words: ["What", "do", "you", "do", "are", "how", "?"],
+      answer: "What do you do ?",
+      hint: "What do you do?",
+    },
+  ],
+
   cumulativeReviewQuestions: [
     {
       id: "cr2-1",
