@@ -343,6 +343,8 @@ interface ChatMessage {
   text: string;
   accuracyScore?: number | null;
   missingCodas?: string[];
+  grammarFeedback?: string;
+  grammarCorrection?: string;
 }
 
 export function AIRoleplay() {
@@ -701,6 +703,16 @@ export function AIRoleplay() {
 
         const response = await generateRoleplayTurn(activeScenario.id, historyParams, text);
         if (response.success && response.aiPrompt) {
+          // Show grammar correction on the user's last message if AI caught an error
+          if (response.grammarFeedback) {
+            setChatHistory(prev =>
+              prev.map((m, i) =>
+                i === prev.length - 1
+                  ? { ...m, grammarFeedback: response.grammarFeedback, grammarCorrection: response.grammarCorrection }
+                  : m
+              )
+            );
+          }
           setChatHistory(prev => [...prev, { sender: "ai", text: response.aiPrompt }]);
           speakText(response.aiPrompt);
 
@@ -839,6 +851,17 @@ export function AIRoleplay() {
                       {msg.missingCodas && msg.missingCodas.length > 0 && (
                         <div className="text-right text-[9px] text-amber-600 dark:text-amber-400 font-semibold bg-amber-500/5 border border-amber-500/15 px-2 py-1 rounded-xl max-w-[200px] leading-relaxed">
                           ⚠️ Thiếu âm: {msg.missingCodas.map(w => w.replace(/^Từ\s+/, "")).join(", ")}
+                        </div>
+                      )}
+                      {!isAi && msg.grammarFeedback && (
+                        <div className="mt-1.5 text-right">
+                          <div className="inline-flex flex-col gap-0.5 text-[10px] font-semibold bg-amber-500/8 border border-amber-500/20 px-2.5 py-1.5 rounded-xl text-left max-w-[220px]">
+                            <span className="text-amber-600 dark:text-amber-400 font-black text-[9px] uppercase tracking-wider">✏️ Sửa lỗi</span>
+                            <span className="text-zinc-600 dark:text-zinc-400 leading-snug">{msg.grammarFeedback}</span>
+                            {msg.grammarCorrection && (
+                              <span className="text-emerald-600 dark:text-emerald-400 font-bold">&quot;{msg.grammarCorrection}&quot;</span>
+                            )}
+                          </div>
                         </div>
                       )}
                     </div>

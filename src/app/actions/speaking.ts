@@ -203,6 +203,7 @@ export async function getRecentSpeakingSessions(limit: number = 5) {
 
 /**
  * Server Action gọi Gemini Flash tạo câu thoại tiếp theo của AI và gợi ý câu thoại cho User.
+ * v2: Native multi-turn contents array + systemInstruction + grammar feedback (Speak.com pattern)
  */
 export async function generateRoleplayTurn(
   scenarioId: string,
@@ -215,76 +216,85 @@ export async function generateRoleplayTurn(
     const ip = reqHeaders.get("x-forwarded-for")?.split(",")[0].trim() || "127.0.0.1";
     const rateLimitCheck = await aiLimiter.check(ip);
     if (!rateLimitCheck.success) {
-      return {
-        success: false,
-        error: "Yêu cầu quá thường xuyên. Vui lòng thử lại sau."
-      };
+      return { success: false, error: "Yêu cầu quá thường xuyên. Vui lòng thử lại sau." };
     }
 
     // 2. Check Auth
     const supabase = await createClient();
     const { data: { user }, error: authError } = await supabase.auth.getUser();
     if (authError || !user) {
-      return {
-        success: false,
-        error: "Bạn cần đăng nhập để thực hiện tác vụ này."
-      };
+      return { success: false, error: "Bạn cần đăng nhập để thực hiện tác vụ này." };
     }
 
     const scenario = SCENARIO_DETAILS[scenarioId];
-    if (!scenario) {
-      return {
-        success: false,
-        error: "Kịch bản không tồn tại."
-      };
-    }
+    if (!scenario) return { success: false, error: "Kịch bản không tồn tại." };
 
     const apiKey = process.env.GEMINI_API_KEY;
-    if (!apiKey) {
-      return {
-        success: false,
-        error: "Gemini API Key is not configured."
-      };
+    if (!apiKey) return { success: false, error: "Gemini API Key is not configured." };
+
+    // 3. Build native multi-turn contents array (Gemini multi-turn format)
+    // History alternates user → model. Gemini requires this strict alternation.
+    const turnNumber = Math.floor(history.length / 2) + 1;
+    const difficultyNote =
+      turnNumber <= 2 ? "Use simple vocabulary (A1-A2 CEFR). Short sentences." :
+      turnNumber <= 5 ? "Use natural conversational English (A2-B1 CEFR)." :
+      "Use richer vocabulary and more complex structures (B1-B2 CEFR). Challenge the learner.";
+
+    // System instruction sets persistent AI behavior across all turns
+    const systemInstruction = `You are roleplaying as "${scenario.character}" in the scenario: "${scenario.title}" (${scenario.difficulty}).
+You are talking to a Vietnamese English learner at approximately A1-B1 level.
+RULES:
+- Stay fully in character. Never break the roleplay.
+- Keep AI responses to 1-3 sentences max.
+- ${difficultyNote}
+- After each user message, provide inline grammar/naturalness feedback if there is an error (max 1 correction per turn).
+- Always suggest a helpful next reply the user could give (in English + Vietnamese translation).
+- Reply in strict JSON only.`;
+
+    // Convert history to Gemini multi-turn contents format
+    // Gemini requires strict user→model→user→model alternation
+    const contents: Array<{ role: string; parts: Array<{ text: string }> }> = [];
+    for (const msg of history) {
+      contents.push({
+        role: msg.sender === "user" ? "user" : "model",
+        parts: [{ text: msg.text }],
+      });
     }
+    // Add current user message as the final turn
+    contents.push({ role: "user", parts: [{ text: userMessage }] });
 
-    // 3. Xây dựng prompt
-    const conversationHistoryStr = history
-      .map(h => `${h.sender === "ai" ? "AI (" + scenario.character + ")" : "User"}: ${h.text}`)
-      .join("\n");
-
-    const prompt = `You are roleplaying as: ${scenario.character} in the scenario: "${scenario.title}" (Difficulty: ${scenario.difficulty}).
-Continue the conversation naturally in character. Limit your response to 1-3 sentences.
-Additionally, suggest a helpful reply that the user could say in the next turn (to guide them). Provide both the English suggestion and its Vietnamese translation.
-
-Conversation history:
-${conversationHistoryStr}
-User just said: "${userMessage}"
-
-Respond STRICTLY in JSON format with these exact keys:
+    // JSON schema embedded in the final user turn for reliable structured output
+    const schemaInstruction = `\n\nRespond ONLY with valid JSON matching this schema exactly:
 {
-  "aiPrompt": "your response in character",
-  "userSuggestion": "suggested response for user in English",
-  "userSuggestionVi": "Vietnamese translation of the suggestion",
-  "isEnd": true/false (true if the conversation has reached a natural conclusion)
+  "aiPrompt": "your in-character response (1-3 sentences)",
+  "userSuggestion": "suggested English reply for next turn",
+  "userSuggestionVi": "Vietnamese translation of suggestion",
+  "grammarFeedback": "brief correction if user made an error, or empty string if correct",
+  "grammarCorrection": "the corrected sentence, or empty string if no error",
+  "isEnd": false
 }
-`;
+Set isEnd=true only if the conversation reached a natural conclusion.`;
+
+    // Inject schema hint into the last user message
+    if (contents.length > 0) {
+      const last = contents[contents.length - 1];
+      if (last) {
+        last.parts = [{ text: (last.parts[0]?.text ?? "") + schemaInstruction }];
+      }
+    }
 
     const response = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
       {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          contents: [
-            {
-              role: "user",
-              parts: [{ text: prompt }],
-            },
-          ],
+          systemInstruction: { parts: [{ text: systemInstruction }] },
+          contents,
           generationConfig: {
             responseMimeType: "application/json",
+            temperature: 0.85,
+            maxOutputTokens: 512,
           },
         }),
       }
@@ -292,21 +302,13 @@ Respond STRICTLY in JSON format with these exact keys:
 
     if (!response.ok) {
       const errText = await response.text();
-      return {
-        success: false,
-        error: `Gemini API error: ${errText}`
-      };
+      return { success: false, error: `Gemini API error: ${errText}` };
     }
 
     const resData = await response.json();
     const responseText = resData.candidates?.[0]?.content?.parts?.[0]?.text;
 
-    if (!responseText) {
-      return {
-        success: false,
-        error: "Gemini returned empty response."
-      };
-    }
+    if (!responseText) return { success: false, error: "Gemini returned empty response." };
 
     const cleanJson = JSON.parse(responseText.trim());
     return {
@@ -314,15 +316,14 @@ Respond STRICTLY in JSON format with these exact keys:
       aiPrompt: cleanJson.aiPrompt || "",
       userSuggestion: cleanJson.userSuggestion || "",
       userSuggestionVi: cleanJson.userSuggestionVi || "",
-      isEnd: !!cleanJson.isEnd
+      grammarFeedback: cleanJson.grammarFeedback || "",
+      grammarCorrection: cleanJson.grammarCorrection || "",
+      isEnd: !!cleanJson.isEnd,
     };
 
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
-    return {
-      success: false,
-      error: `Lỗi hệ thống: ${errorMessage}`
-    };
+    return { success: false, error: `Lỗi hệ thống: ${errorMessage}` };
   }
 }
 
