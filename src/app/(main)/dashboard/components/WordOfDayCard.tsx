@@ -1,6 +1,7 @@
 "use client";
 
-import { Volume2, BookOpen } from "lucide-react";
+import { useState } from "react";
+import { Volume2, BookOpen, Turtle } from "lucide-react";
 
 interface WordOfDayProps {
   word: string;
@@ -12,15 +13,20 @@ interface WordOfDayProps {
 }
 
 export default function WordOfDayCard({ word, phonetic, meaning_vn, example_en, topic, level }: WordOfDayProps) {
-  const speak = () => {
+  const [slowMode, setSlowMode] = useState(false);
+
+  const speak = (text: string, rate: number) => {
     if (typeof window !== "undefined" && "speechSynthesis" in window) {
-      const utt = new SpeechSynthesisUtterance(word);
+      const utt = new SpeechSynthesisUtterance(text);
       utt.lang = "en-US";
-      utt.rate = 0.85;
+      utt.rate = rate;
       window.speechSynthesis.cancel();
       window.speechSynthesis.speak(utt);
     }
   };
+
+  const handleSpeak = () => speak(word, slowMode ? 0.5 : 0.85);
+  const handleSpeakExample = () => speak(example_en, slowMode ? 0.5 : 0.75);
 
   const levelColor: Record<string, string> = {
     A1: "text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 border-emerald-500/20",
@@ -38,6 +44,21 @@ export default function WordOfDayCard({ word, phonetic, meaning_vn, example_en, 
           <span className="text-xs font-black text-zinc-900 dark:text-zinc-50 tracking-tight uppercase">Từ hôm nay</span>
         </div>
         <div className="flex items-center gap-2">
+          {/* Speed toggle */}
+          <button
+            type="button"
+            onClick={() => setSlowMode((s) => !s)}
+            aria-label={slowMode ? "Tốc độ bình thường" : "Tốc độ chậm"}
+            title={slowMode ? "Đang ở chế độ chậm — nhấn để bình thường" : "Nghe chậm 0.5×"}
+            className={`flex items-center gap-1 px-2 py-1 rounded-lg border text-[10px] font-bold transition-all ${
+              slowMode
+                ? "bg-amber-500/15 border-amber-500/40 text-amber-400"
+                : "bg-white/5 border-zinc-700/50 text-zinc-500 hover:border-zinc-500 hover:text-zinc-300"
+            }`}
+          >
+            <Turtle className="size-3" />
+            {slowMode ? "0.5×" : "1×"}
+          </button>
           <span className={`text-[10px] font-bold px-2 py-0.5 rounded-lg border ${levelColor[level] ?? levelColor.A1}`}>
             {level}
           </span>
@@ -55,8 +76,8 @@ export default function WordOfDayCard({ word, phonetic, meaning_vn, example_en, 
         </div>
         <button
           type="button"
-          onClick={speak}
-          aria-label={`Phát âm từ ${word}`}
+          onClick={handleSpeak}
+          aria-label={`Phát âm từ ${word}${slowMode ? " (chậm)" : ""}`}
           className="ml-auto flex size-9 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/20 active:scale-95 transition-all duration-150 border border-emerald-500/20"
         >
           <Volume2 className="size-4" />
@@ -71,9 +92,21 @@ export default function WordOfDayCard({ word, phonetic, meaning_vn, example_en, 
         <p className="text-sm font-bold text-zinc-800 dark:text-zinc-200">
           🇻🇳 {meaning_vn}
         </p>
-        <p className="text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed italic">
-          &ldquo;{example_en}&rdquo;
-        </p>
+        <div className="flex items-start gap-2">
+          <p className="text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed italic flex-1">
+            &ldquo;{example_en}&rdquo;
+          </p>
+          {/* Speak example button */}
+          <button
+            type="button"
+            onClick={handleSpeakExample}
+            aria-label="Nghe câu ví dụ"
+            title="Nghe câu ví dụ"
+            className="shrink-0 flex size-6 items-center justify-center rounded-lg bg-zinc-800/60 text-zinc-500 hover:text-zinc-300 hover:bg-zinc-700/60 transition-all border border-zinc-700/40"
+          >
+            <Volume2 className="size-3" />
+          </button>
+        </div>
       </div>
     </div>
   );
