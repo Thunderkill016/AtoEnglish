@@ -15,6 +15,12 @@ const nextConfig = {
         port: "",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "i.ytimg.com",
+        port: "",
+        pathname: "/**",
+      },
     ],
   },
   async headers() {
@@ -29,7 +35,8 @@ const nextConfig = {
       "default-src 'self'; ",
       scriptSrc,
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; ",
-      "img-src 'self' blob: data: https://lh3.googleusercontent.com https://*.supabase.co; ",
+      "img-src 'self' blob: data: https://lh3.googleusercontent.com https://*.supabase.co https://i.ytimg.com; ",
+      "frame-src https://www.youtube-nocookie.com; ",
       "font-src 'self' data: https://fonts.gstatic.com; ",
       "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://*.sentry.io https://*.upstash.io https://vitals.vercel-insights.com; ",
       "media-src 'self' blob: data:; ",

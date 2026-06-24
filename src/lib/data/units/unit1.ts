@@ -706,6 +706,7 @@ export const unit1: UnitData = {
       },
     ],
   },
+  shadowingVideoId: "sNvmqN2MBBo", // BBC Learning English — How to Greet People in English
 };
 
 export default unit1;

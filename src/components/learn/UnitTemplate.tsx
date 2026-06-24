@@ -229,6 +229,7 @@ export interface UnitData {
   pronunciationFocus?: PronunciationFocus;
   fluencyDrill?: FluencyDrill;
   readingPassage?: ReadingPassage; // Optional reading comprehension (A2+)
+  shadowingVideoId?: string;       // Optional YouTube video ID for Video Shadowing section
 }
 
 interface UnitTemplateProps {
@@ -264,6 +265,84 @@ function XpCounter({ target }: { target: number }) {
       +{value}
       <span className="text-sm font-bold text-emerald-500 ml-0.5">XP</span>
     </p>
+  );
+}
+
+// ── Video Shadowing Card (lite-embed: thumbnail click → iframe) ──────────────
+function VideoShadowingCard({ videoId }: { videoId: string }) {
+  const [playing, setPlaying] = useState(false);
+  const thumb = `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`;
+
+  return (
+    <div className="max-w-3xl mx-auto px-4 mb-6">
+      <div className="rounded-2xl border border-zinc-800/60 bg-zinc-900/60 overflow-hidden">
+        {/* Header */}
+        <div className="flex items-center gap-3 px-5 py-4 border-b border-zinc-800/50">
+          <div className="flex size-9 items-center justify-center rounded-xl bg-red-500/10 shrink-0">
+            <svg className="size-5 text-red-500" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M23.5 6.19a3.02 3.02 0 0 0-2.12-2.14C19.54 3.5 12 3.5 12 3.5s-7.54 0-9.38.55A3.02 3.02 0 0 0 .5 6.19C0 8.04 0 12 0 12s0 3.96.5 5.81a3.02 3.02 0 0 0 2.12 2.14C4.46 20.5 12 20.5 12 20.5s7.54 0 9.38-.55a3.02 3.02 0 0 0 2.12-2.14C24 15.96 24 12 24 12s0-3.96-.5-5.81zM9.75 15.02V8.98L15.5 12l-5.75 3.02z" />
+            </svg>
+          </div>
+          <div>
+            <p className="text-xs font-black text-zinc-400 uppercase tracking-widest">🎬 Video Shadowing</p>
+            <p className="text-sm font-bold text-zinc-100">Xem → Nói theo → Shadow</p>
+          </div>
+        </div>
+
+        {/* Video area */}
+        <div className="relative aspect-video bg-zinc-950">
+          {playing ? (
+            <iframe
+              className="absolute inset-0 w-full h-full"
+              src={`https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1`}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope"
+              allowFullScreen
+              title="Shadowing video"
+            />
+          ) : (
+            <button
+              onClick={() => setPlaying(true)}
+              className="absolute inset-0 w-full h-full group"
+              aria-label="Phát video"
+            >
+              {/* Thumbnail */}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={thumb}
+                alt="Video thumbnail"
+                className="absolute inset-0 w-full h-full object-cover"
+              />
+              {/* Play overlay */}
+              <div className="absolute inset-0 bg-zinc-950/40 group-hover:bg-zinc-950/20 transition-colors" />
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="flex size-16 items-center justify-center rounded-full bg-red-500 shadow-xl shadow-red-900/40 group-hover:scale-110 transition-transform">
+                  <svg className="size-7 text-white ml-1" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M8 5v14l11-7z" />
+                  </svg>
+                </div>
+              </div>
+            </button>
+          )}
+        </div>
+
+        {/* Instructions */}
+        <div className="px-5 py-4">
+          <div className="grid grid-cols-3 gap-3">
+            {[
+              { step: "1", icon: "👀", label: "Xem 1 lần", desc: "Nghe + đọc phụ đề" },
+              { step: "2", icon: "🔁", label: "Xem lại", desc: "Nói theo từng câu" },
+              { step: "3", icon: "🎙️", label: "Shadow", desc: "Nói cùng lúc với video" },
+            ].map(({ step, icon, label, desc }) => (
+              <div key={step} className="flex flex-col items-center gap-1 text-center p-2 rounded-xl bg-zinc-800/40">
+                <span className="text-lg">{icon}</span>
+                <span className="text-[10px] font-black text-zinc-300">{label}</span>
+                <span className="text-[9px] text-zinc-500">{desc}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -904,17 +983,22 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
           )}
 
           {section === 6 && (
-            <ShadowingSection
-              unit={normalizedUnit}
-              sectionOrderIdx={sectionOrderIdx}
-              TOTAL_SECTIONS={TOTAL_SECTIONS}
-              shadowScores={shadowScores}
-              setShadowScores={setShadowScores}
-              shadowDone={shadowDone}
-              setShadowDone={setShadowDone}
-              playTTS={playTTS}
-              goNext={goNext}
-            />
+            <>
+              {normalizedUnit.shadowingVideoId && (
+                <VideoShadowingCard videoId={normalizedUnit.shadowingVideoId} />
+              )}
+              <ShadowingSection
+                unit={normalizedUnit}
+                sectionOrderIdx={sectionOrderIdx}
+                TOTAL_SECTIONS={TOTAL_SECTIONS}
+                shadowScores={shadowScores}
+                setShadowScores={setShadowScores}
+                shadowDone={shadowDone}
+                setShadowDone={setShadowDone}
+                playTTS={playTTS}
+                goNext={goNext}
+              />
+            </>
           )}
 
           {section === 7 && (

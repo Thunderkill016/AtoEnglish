@@ -299,6 +299,7 @@ export const unit2: UnitData = {
       },
     ],
   },
+  shadowingVideoId: "XeZbFQUoHq8", // BBC Learning English — Family vocabulary A1
 };
 
 export default unit2;
