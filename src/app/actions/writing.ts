@@ -9,7 +9,7 @@ const writingLimiter = createRateLimiter(15, 60_000, "writing");
 
 const improveSchema = z.object({
   text: z.string().min(5, "Câu quá ngắn").max(500, "Tối đa 500 ký tự"),
-  level: z.enum(["A1", "A2", "B1"]),
+  level: z.enum(["A1", "A2", "B1", "B2"]),
 });
 
 export interface WritingFeedback {
@@ -32,7 +32,7 @@ export interface WritingFeedback {
  */
 export async function analyzeWriting(formData: {
   text: string;
-  level: "A1" | "A2" | "B1";
+  level: "A1" | "A2" | "B1" | "B2";
 }) {
   try {
     // Rate limit
@@ -150,7 +150,7 @@ const saveLimiter = createRateLimiter(30, 60_000, "writing-save");
 const saveSchema = z.object({
   sentence_en: z.string().min(1).max(500),
   meaning_vn: z.string().min(1).max(500),
-  level: z.enum(["A1", "A2", "B1"]),
+  level: z.enum(["A1", "A2", "B1", "B2"]),
 });
 
 /**
@@ -161,7 +161,7 @@ const saveSchema = z.object({
 export async function saveWritingSentence(params: {
   sentence_en: string;  // corrected English sentence
   meaning_vn: string;   // original learner text (saved as "meaning" for reference)
-  level: "A1" | "A2" | "B1";
+  level: "A1" | "A2" | "B1" | "B2";
 }) {
   try {
     const reqHeaders = await headers();
