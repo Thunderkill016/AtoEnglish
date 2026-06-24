@@ -516,7 +516,9 @@ export type Database = {
           created_at: string
           current_level: string
           daily_xp_goal: number
+          email_notifications: boolean | null
           last_active_date: string | null
+          notification_hour: number | null
           streak: number
           streak_freeze_count: number
           total_xp: number
@@ -528,7 +530,9 @@ export type Database = {
           created_at?: string
           current_level?: string
           daily_xp_goal?: number
+          email_notifications?: boolean | null
           last_active_date?: string | null
+          notification_hour?: number | null
           streak?: number
           streak_freeze_count?: number
           total_xp?: number
@@ -540,7 +544,9 @@ export type Database = {
           created_at?: string
           current_level?: string
           daily_xp_goal?: number
+          email_notifications?: boolean | null
           last_active_date?: string | null
+          notification_hour?: number | null
           streak?: number
           streak_freeze_count?: number
           total_xp?: number

@@ -31,12 +31,10 @@ export async function saveNotificationPreferences(
 
   const { error } = await supabase
     .from("user_progress")
-    // `as never` bypasses strict generated types for columns added by migration
-    // 20260625000000_notification_preferences.sql. Remove after `npm run db:types`.
     .update({
       notification_hour: validated.data.notificationHour,
       email_notifications: validated.data.emailNotifications,
-    } as never)
+    })
     .eq("user_id", user.id);
 
   if (error) return { success: false, error: error.message };
@@ -61,11 +59,9 @@ export async function getNotificationPreferences(): Promise<{
     .eq("user_id", user.id)
     .maybeSingle();
 
-  // Cast through unknown until migration types are generated
-  const row = data as unknown as { notification_hour?: number; email_notifications?: boolean } | null;
   return {
-    notificationHour: row?.notification_hour ?? 20,
-    emailNotifications: row?.email_notifications ?? true,
+    notificationHour: data?.notification_hour ?? 20,
+    emailNotifications: data?.email_notifications ?? true,
   };
 
 }
