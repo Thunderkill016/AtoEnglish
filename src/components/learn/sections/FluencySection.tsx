@@ -1,8 +1,9 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { motion } from "framer-motion";
-import type { UnitData } from "../UnitTemplate";
+import { motion, AnimatePresence } from "framer-motion";
+import { Volume2, ChevronDown, ChevronUp } from "lucide-react";
+import type { UnitData, PronunciationFocus } from "../UnitTemplate";
 
 // ─── FluencyDrillPanel — Nation's Strand 4 (fast retrieval with KNOWN items) ──
 function FluencyDrillPanel({
@@ -149,6 +150,89 @@ function FluencyDrillPanel({
   );
 }
 
+// ─── PronunciationFocusCard ─────────────────────────────────────────────────
+function PronunciationFocusCard({
+  focus,
+  playTTS,
+}: {
+  focus: PronunciationFocus;
+  playTTS?: (text: string) => void;
+}) {
+  const [expanded, setExpanded] = useState(false);
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: -8 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="mb-5 bg-teal-950/40 border border-teal-600/30 rounded-2xl overflow-hidden"
+    >
+      <button
+        onClick={() => setExpanded((e) => !e)}
+        className="w-full flex items-center gap-3 px-4 py-3 text-left"
+      >
+        <span className="text-2xl">🗣️</span>
+        <div className="flex-1 min-w-0">
+          <p className="text-teal-300 font-black text-sm tracking-wide">Phát âm trọng tâm</p>
+          <p className="text-teal-400/80 font-mono text-xs truncate">{focus.phoneme}</p>
+        </div>
+        {expanded ? (
+          <ChevronUp size={16} className="text-teal-500 shrink-0" />
+        ) : (
+          <ChevronDown size={16} className="text-teal-500 shrink-0" />
+        )}
+      </button>
+      <AnimatePresence>
+        {expanded && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.25 }}
+            className="overflow-hidden"
+          >
+            <div className="px-4 pb-4 space-y-3">
+              <p className="text-zinc-300 text-xs leading-relaxed">{focus.description}</p>
+              <div className="space-y-2">
+                {focus.examples.map((ex, i) => (
+                  <div key={i} className="flex items-start gap-2 bg-teal-900/20 rounded-xl p-2.5">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-1.5 mb-0.5">
+                        <span className="text-white font-bold text-sm">{ex.word}</span>
+                        <span className="text-teal-400 font-mono text-xs">{ex.ipa}</span>
+                      </div>
+                      <p className="text-zinc-400 text-[11px] leading-relaxed">{ex.tip}</p>
+                    </div>
+                    {playTTS && (
+                      <button
+                        onClick={() => playTTS(ex.word)}
+                        aria-label={`Nghe: ${ex.word}`}
+                        className="p-1.5 rounded-lg bg-teal-600/20 hover:bg-teal-600/40 text-teal-400 transition-all shrink-0 active:scale-90"
+                      >
+                        <Volume2 size={12} />
+                      </button>
+                    )}
+                  </div>
+                ))}
+              </div>
+              {focus.minimalPairs && focus.minimalPairs.length > 0 && (
+                <div>
+                  <p className="text-zinc-500 text-[10px] font-bold uppercase tracking-wider mb-1.5">Minimal Pairs</p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {focus.minimalPairs.map(([a, b], i) => (
+                      <span key={i} className="text-[11px] bg-zinc-800/60 border border-zinc-700/40 rounded-lg px-2 py-0.5 text-zinc-300">
+                        {a} <span className="text-zinc-500">↔</span> {b}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
+  );
+}
+
 interface FluencySectionProps {
   unit: UnitData;
   sectionOrderIdx: number;
@@ -173,6 +257,8 @@ export default function FluencySection({
   const drillItems =
     unit.fluencyDrill?.items ??
     unit.vocab.slice(0, 8).map((v) => ({ en: v.word, vn: v.meaning }));
+
+  const pron = unit.pronunciationFocus;
 
   return (
     <motion.div
@@ -204,6 +290,10 @@ export default function FluencySection({
       <p className="text-[11px] text-zinc-600 mb-5 italic">
         Mục tiêu: phản xạ tức thì với từ đã biết — đây là Fluency Strand (Nation, 2007)
       </p>
+
+      {pron && !fluencyActive && (
+        <PronunciationFocusCard focus={pron} />
+      )}
 
       {!fluencyActive ? (
         <div className="rounded-2xl bg-gradient-to-br from-amber-950/40 to-orange-950/20 border border-amber-700/30 p-8 text-center">
