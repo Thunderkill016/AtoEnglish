@@ -142,9 +142,12 @@ export const unit4: UnitData = {
     { id: "pt4-3", prompt_vn: "Chúng tôi xem TV vào buổi tối.", answer: "We watch TV in the evening." },
   ],
   quiz: [
-    { id: "q1", question: "Chọn câu Present Simple đúng với 'He':", options: ["He go to school.", "He goes to school.", "He going to school.", "He goed to school."], answer: "He goes to school.", type: "multiple-choice" },
-    { id: "q2", question: "Hoạt động nào xảy ra vào buổi sáng?", options: ["go to bed", "cook dinner", "watch TV", "wake up"], answer: "wake up", type: "multiple-choice" },
-    { id: "q3", question: "'She ___ English every day.' — Điền đúng:", options: ["study", "studies", "studying", "studied"], answer: "studies", type: "multiple-choice" },
+    { id: "q1", question: "Chọn câu Present Simple đúng với 'He':", options: ["He go to school.", "He goes to school.", "He going to school.", "He goed to school."], answer: "He goes to school.", type: "multiple-choice",
+      explanation_vn: "Với 'He/She/It' → thêm '-s/-es'. 'Go' → 'goes'. 'He going' sai vì thiếu động từ 'to be'." },
+    { id: "q2", question: "Hoạt động nào xảy ra vào buổi sáng?", options: ["go to bed", "cook dinner", "watch TV", "wake up"], answer: "wake up", type: "multiple-choice",
+      explanation_vn: "'Wake up' = thức dậy (buổi sáng). 'Go to bed' = đi ngủ (tối), 'cook dinner' = nấu tối." },
+    { id: "q3", question: "'She ___ English every day.' — Điền đúng:", options: ["study", "studies", "studying", "studied"], answer: "studies", type: "multiple-choice",
+      explanation_vn: "'She' → thêm '-es' cho động từ tận '-y': study → studies. 'Studying' cần 'is' đứng trước." },
     { id: "q4", question: "Điền từ còn thiếu: 'I ___ breakfast at seven.'", options: [], answer: "have", type: "cloze" },
     { id: "q5", question: "Điền từ còn thiếu: 'He ___ home at six pm.'", options: [], answer: "comes", type: "cloze" },
     { id: "q6", question: "Tôi thức dậy lúc 7 giờ sáng mỗi ngày.", options: [], answer: "I wake up at seven every morning.", type: "translate" },
@@ -168,6 +171,23 @@ export const unit4: UnitData = {
       prompt_vn: "Anh ấy ăn sáng trước khi đi làm.",
       words: ["He", "eats", "breakfast", "before", "work", ".", "was", "were"],
       answer: "He eats breakfast before work .",
+    },
+  ],
+
+  sentenceCorrectionExercises: [
+    {
+      id: "sc4-1",
+      sentence: "He go to school every day.",
+      errorWord: "go",
+      correction: "goes",
+      explanation_vn: "Với chủ ngữ 'He/She/It' → động từ thêm '-s'. 'go' → 'goes'. Lỗi phổ biến nhất của người Việt.",
+    },
+    {
+      id: "sc4-2",
+      sentence: "She studys English every morning.",
+      errorWord: "studys",
+      correction: "studies",
+      explanation_vn: "'Study' tận '-y' → bỏ 'y', thêm '-ies': 'studies'. Không viết 'studys'.",
     },
   ],
 

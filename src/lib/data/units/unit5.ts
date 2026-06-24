@@ -125,9 +125,12 @@ export const unit5: UnitData = {
     { id: "pt5-3", prompt_vn: "Bạn thích làm gì vào thời gian rảnh?", answer: "What do you like doing in your free time?" },
   ],
   quiz: [
-    { id: "q1", question: "Câu nào đúng với chủ ngữ 'He'?", options: ["He like reading.", "He likes reading.", "He liking reading.", "He liked reading."], answer: "He likes reading.", type: "multiple-choice" },
-    { id: "q2", question: "'Do you like swimming?' — Trả lời phủ định:", options: ["No, I don't like swim.", "No, I don't like swimming.", "No, I doesn't like swimming.", "No, I not like swimming."], answer: "No, I don't like swimming.", type: "multiple-choice" },
-    { id: "q3", question: "Sở thích nào KHÔNG phải là thể thao?", options: ["swimming", "cycling", "playing football", "reading"], answer: "reading", type: "multiple-choice" },
+    { id: "q1", question: "Câu nào đúng với chủ ngữ 'He'?", options: ["He like reading.", "He likes reading.", "He liking reading.", "He liked reading."], answer: "He likes reading.", type: "multiple-choice",
+      explanation_vn: "'He' → thêm '-s': 'likes'. Sau 'like/likes' dùng V-ing: 'likes reading'. 'He liking' thiếu động từ 'to be'." },
+    { id: "q2", question: "'Do you like swimming?' — Trả lời phủ định:", options: ["No, I don't like swim.", "No, I don't like swimming.", "No, I doesn't like swimming.", "No, I not like swimming."], answer: "No, I don't like swimming.", type: "multiple-choice",
+      explanation_vn: "'I' dùng 'don't' (không dùng 'doesn't'). Sau 'like' vẫn giữ V-ing: 'don't like swimming'." },
+    { id: "q3", question: "Sở thích nào KHÔNG phải là thể thao?", options: ["swimming", "cycling", "playing football", "reading"], answer: "reading", type: "multiple-choice",
+      explanation_vn: "'Reading' (đọc sách) không phải thể thao. Swimming/cycling/football là hoạt động thể chất." },
     { id: "q4", question: "Điền vào chỗ trống: 'They like ___ to music every evening.'", options: [], answer: "listening", type: "cloze" },
     { id: "q5", question: "Điền vào chỗ trống: 'She ___ playing chess.'", options: [], answer: "likes", type: "cloze" },
     { id: "q6", question: "Tôi thích chụp ảnh vào cuối tuần.", options: [], answer: "I like taking photos on weekends.", type: "translate" },
@@ -151,6 +154,23 @@ export const unit5: UnitData = {
       prompt_vn: "Chúng tôi thích nghe nhạc.",
       words: ["We", "like", "listening", "to", "music", ".", "was", "were"],
       answer: "We like listening to music .",
+    },
+  ],
+
+  sentenceCorrectionExercises: [
+    {
+      id: "sc5-1",
+      sentence: "I like swim every morning.",
+      errorWord: "swim",
+      correction: "swimming",
+      explanation_vn: "Sau 'like' luôn dùng V-ing: 'like swimming'. Không dùng động từ nguyên mẫu trực tiếp sau 'like'.",
+    },
+    {
+      id: "sc5-2",
+      sentence: "She don't like cooking.",
+      errorWord: "don't",
+      correction: "doesn't",
+      explanation_vn: "'She' (ngôi 3 số ít) → dùng 'doesn't'. 'Don't' dùng cho I/you/we/they.",
     },
   ],
 
