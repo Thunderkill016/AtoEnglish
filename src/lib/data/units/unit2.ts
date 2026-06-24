@@ -137,9 +137,12 @@ export const unit2: UnitData = {
     { id: "pt2-3", prompt_vn: "Số điện thoại của bạn là gì?", answer: "What is your phone number?" },
   ],
   quiz: [
-    { id: "q1", question: "Câu hỏi nào hỏi về nghề nghiệp?", options: ["What is your name?", "How old are you?", "What do you do?", "Where are you from?"], answer: "What do you do?", type: "multiple-choice" },
-    { id: "q2", question: "'I am a student at Hanoi University.' — từ nào chỉ nghề nghiệp?", options: ["Hanoi", "University", "student", "am"], answer: "student", type: "multiple-choice" },
-    { id: "q3", question: "Câu hỏi hỏi tuổi là gì?", options: ["What do you do?", "How old are you?", "Where are you from?", "What is your job?"], answer: "How old are you?", type: "multiple-choice" },
+    { id: "q1", question: "Câu hỏi nào hỏi về nghề nghiệp?", options: ["What is your name?", "How old are you?", "What do you do?", "Where are you from?"], answer: "What do you do?", type: "multiple-choice",
+      explanation_vn: "'What do you do?' hỏi nghề nghiệp. 'What is your name?' hỏi tên, 'How old' hỏi tuổi." },
+    { id: "q2", question: "'I am a student at Hanoi University.' — từ nào chỉ nghề nghiệp?", options: ["Hanoi", "University", "student", "am"], answer: "student", type: "multiple-choice",
+      explanation_vn: "'Student' là danh từ nghề nghiệp. 'Hanoi/University' là địa danh, 'am' là động từ." },
+    { id: "q3", question: "Câu hỏi hỏi tuổi là gì?", options: ["What do you do?", "How old are you?", "Where are you from?", "What is your job?"], answer: "How old are you?", type: "multiple-choice",
+      explanation_vn: "'How old are you?' hỏi tuổi. Không dùng 'What age are you?' trong tiếng Anh tự nhiên." },
     { id: "q4", question: "Điền từ còn thiếu: 'What ___ your phone number?'", options: [], answer: "is", type: "cloze" },
     { id: "q5", question: "Điền từ còn thiếu: 'I am ___ student.'", options: [], answer: "a", type: "cloze" },
     { id: "q6", question: "Tên tôi là Hoa và tôi là sinh viên.", options: [], answer: "My name is Hoa and I am a student.", type: "translate" },
@@ -187,6 +190,23 @@ export const unit2: UnitData = {
       words: ["What", "do", "you", "do", "are", "how", "?"],
       answer: "What do you do ?",
       hint: "What do you do?",
+    },
+  ],
+
+  sentenceCorrectionExercises: [
+    {
+      id: "sc2-1",
+      sentence: "I am a engineer.",
+      errorWord: "a",
+      correction: "an",
+      explanation_vn: "'Engineer' bắt đầu bằng nguyên âm /e/ → dùng 'AN engineer', không dùng 'a engineer'.",
+    },
+    {
+      id: "sc2-2",
+      sentence: "How old are your?",
+      errorWord: "your",
+      correction: "you",
+      explanation_vn: "'How old are YOU?' (chủ ngữ), không dùng 'your' (sở hữu). 'Your name' = của bạn, nhưng hỏi tuổi dùng 'you'.",
     },
   ],
 

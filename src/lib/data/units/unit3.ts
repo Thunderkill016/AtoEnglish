@@ -280,21 +280,24 @@ export const unit3: UnitData = {
       question: "Từ nào có nghĩa là 'Bố mẹ'?",
       options: ["Brothers", "Sisters", "Parents", "Classmates"],
       answer: "Parents",
-      type: "multiple-choice"
+      type: "multiple-choice",
+      explanation_vn: "'Parents' = bố mẹ. Brothers = anh/em trai, Sisters = chị/em gái, Classmates = bạn cùng lớp.",
     },
     {
       id: "q2",
       question: "Đại từ sở hữu 'Của cô ấy' là gì?",
       options: ["His", "Her", "My", "Your"],
       answer: "Her",
-      type: "multiple-choice"
+      type: "multiple-choice",
+      explanation_vn: "'Của cô ấy' = 'her' (nữ). His = của anh ấy, My = của tôi, Your = của bạn.",
     },
     {
       id: "q3",
       question: "Từ nào có nghĩa là 'Bạn cùng lớp'?",
       options: ["Friend", "Classmate", "Brother", "Sister"],
       answer: "Classmate",
-      type: "multiple-choice"
+      type: "multiple-choice",
+      explanation_vn: "'Classmate' = bạn cùng lớp. 'Friend' là bạn bè nói chung, không nhất thiết cùng lớp.",
     },
     {
       id: "q4",
@@ -308,7 +311,8 @@ export const unit3: UnitData = {
       question: "Tom: 'Who is that?' - Anna: 'That is ___ best friend, Lucy.'",
       options: ["my", "his", "her", "their"],
       answer: "my",
-      type: "multiple-choice"
+      type: "multiple-choice",
+      explanation_vn: "Anna nói về bạn CỦA MÌNH → dùng 'my'. 'Her' là bạn của người khác.",
     },
     { id: "q6", question: "Mẹ tôi là một giáo viên.", options: [], answer: "My mother is a teacher.", type: "translate" },
     { id: "q7", question: "Anh trai của tôi là bác sĩ.", options: [], answer: "My brother is a doctor.", type: "translate" },
@@ -355,6 +359,24 @@ export const unit3: UnitData = {
       answer: "This is my best friend .",
     },
   ],
+
+  sentenceCorrectionExercises: [
+    {
+      id: "sc3-1",
+      sentence: "His name are Tom.",
+      errorWord: "are",
+      correction: "is",
+      explanation_vn: "'His name' là chủ ngữ số ít → dùng 'IS'. 'Are' dùng cho you/we/they (số nhiều).",
+    },
+    {
+      id: "sc3-2",
+      sentence: "I have two younger sister.",
+      errorWord: "sister",
+      correction: "sisters",
+      explanation_vn: "'Two' (số nhiều) → danh từ phải thêm 's': 'two sisters'. 'Sister' là số ít (chỉ 1 người).",
+    },
+  ],
+
   cumulativeReviewQuestions: [
     {
       id: "cr3-1",

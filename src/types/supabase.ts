@@ -174,6 +174,56 @@ export type Database = {
           },
         ]
       }
+      league_memberships: {
+        Row: {
+          joined_at: string
+          league_id: string
+          user_id: string
+          xp_this_week: number
+        }
+        Insert: {
+          joined_at?: string
+          league_id: string
+          user_id: string
+          xp_this_week?: number
+        }
+        Update: {
+          joined_at?: string
+          league_id?: string
+          user_id?: string
+          xp_this_week?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "league_memberships_league_id_fkey"
+            columns: ["league_id"]
+            isOneToOne: false
+            referencedRelation: "leagues"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      leagues: {
+        Row: {
+          created_at: string
+          id: string
+          tier: Database["public"]["Enums"]["league_tier"]
+          week_start: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          tier: Database["public"]["Enums"]["league_tier"]
+          week_start: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          tier?: Database["public"]["Enums"]["league_tier"]
+          week_start?: string
+        }
+        Relationships: []
+      }
       lesson_history: {
         Row: {
           completed_at: string
@@ -577,6 +627,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      assign_league_for_user: { Args: { p_user_id: string }; Returns: string }
       award_user_xp: {
         Args: {
           p_today: string
@@ -589,6 +640,10 @@ export type Database = {
           streak: number
           total_xp: number
         }[]
+      }
+      bump_league_xp: {
+        Args: { p_user_id: string; p_xp_delta: number }
+        Returns: undefined
       }
       complete_unit_transaction: {
         Args: {
@@ -628,6 +683,7 @@ export type Database = {
     }
     Enums: {
       cefr_level: "A1" | "A2" | "B1" | "B2" | "C1"
+      league_tier: "bronze" | "silver" | "gold" | "emerald" | "diamond"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -756,6 +812,7 @@ export const Constants = {
   public: {
     Enums: {
       cefr_level: ["A1", "A2", "B1", "B2", "C1"],
+      league_tier: ["bronze", "silver", "gold", "emerald", "diamond"],
     },
   },
 } as const

@@ -7,6 +7,7 @@ import { UNITS } from "@/lib/constants/units";
 import { headers } from "next/headers";
 import { createRateLimiter } from "@/lib/security/rate-limit";
 import { CompleteUnitSchema } from "@/lib/security/validation";
+import { updateLeagueXp } from "@/app/actions/leagues";
 
 const completeUnitLimiter = createRateLimiter(10, 60 * 1000, "complete-unit");
 
@@ -143,6 +144,7 @@ export async function completeUnit(unitId: string, starCount: number = 3) {
 
     // 5. Fire-and-forget: check and award achievements (non-blocking)
     // We do NOT await — achievement failure must never break lesson completion
+    void updateLeagueXp(xpEarned); // S2-1: bump weekly league XP (fire-and-forget)
     void (async () => {
       try {
         const totalCompleted = (resultData.completed_count ?? 1);

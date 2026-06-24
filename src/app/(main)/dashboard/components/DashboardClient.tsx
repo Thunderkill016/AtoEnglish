@@ -14,6 +14,7 @@ import SrsCard from "./SrsCard";
 import DailyQuests from "./DailyQuests";
 import QuickActions from "./QuickActions";
 import WordOfDayCard from "./WordOfDayCard";
+import LeagueCard from "./LeagueCard";
 import LevelUpModal from "@/components/learn/LevelUpModal";
 import { WidgetErrorBoundary } from "@/components/ui/widget-error-boundary";
 import { StreakShieldWidget } from "@/components/gamification/StreakShieldWidget";
@@ -499,10 +500,14 @@ export default function DashboardClient({
             <UnitCard currentUnitData={currentUnitData} />
           </div>
 
-          {/* Right: Word of Day + SRS */}
+          {/* Right: SRS + League + Word of Day */}
           <div className="lg:col-span-5 space-y-5">
             <WidgetErrorBoundary name="SrsCard">
               <SrsCard dueCardsCount={dueCardsCount} />
+            </WidgetErrorBoundary>
+            {/* S2-1: Weekly League Card */}
+            <WidgetErrorBoundary name="LeagueCard">
+              <LeagueCard />
             </WidgetErrorBoundary>
             {wordOfDay && (
               <WidgetErrorBoundary name="WordOfDay">
@@ -518,7 +523,6 @@ export default function DashboardClient({
             )}
           </div>
         </div>
-
 
         {/* ── 5. Quick Actions row ── */}
         <WidgetErrorBoundary name="QuickActions">
