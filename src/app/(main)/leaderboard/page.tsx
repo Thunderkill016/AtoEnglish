@@ -5,7 +5,10 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Trophy, Zap, Flame, Calendar, Star, Shield } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { getLeaderboard, getWeeklyLeaderboard, type LeaderboardEntry } from "@/app/actions/leaderboard";
-import { getMyLeague, TIER_CONFIG, type LeagueData, type LeagueTier } from "@/app/actions/leagues";
+import { getMyLeague } from "@/app/actions/leagues";
+import { TIER_CONFIG } from "@/lib/leagues";
+import type { LeagueData, LeagueTier } from "@/lib/leagues";
+
 
 export const dynamic = "force-dynamic";
 

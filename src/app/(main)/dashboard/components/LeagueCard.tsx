@@ -5,8 +5,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Trophy, TrendingUp, TrendingDown, Minus, ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { memo } from "react";
-import { getMyLeague, TIER_CONFIG } from "@/app/actions/leagues";
-import type { LeagueData, LeagueTier } from "@/app/actions/leagues";
+import { getMyLeague } from "@/app/actions/leagues";
+import { TIER_CONFIG } from "@/lib/leagues";
+import type { LeagueData, LeagueTier } from "@/lib/leagues";
 
 function LeagueCard() {
   const [data, setData] = useState<LeagueData | null>(null);
