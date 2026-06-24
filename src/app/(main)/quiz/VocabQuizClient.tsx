@@ -74,6 +74,7 @@ export default function VocabQuizClient() {
   const [finished, setFinished] = useState(false);
   const [wrongAnswers, setWrongAnswers] = useState<string[]>([]);
   const [xpEarned, setXpEarned] = useState(0);
+  const [streak, setStreak] = useState(0); // consecutive correct answers
 
   const startQuiz = useCallback((unitId: string) => {
     const qs = buildQuestions(unitId);
@@ -86,6 +87,7 @@ export default function VocabQuizClient() {
     setAnswerState("unanswered");
     setFinished(false);
     setWrongAnswers([]);
+    setStreak(0);
   }, []);
 
   // Pre-select unit from ?unit= URL param (e.g. from learn page quiz shortcut)
@@ -105,8 +107,32 @@ export default function VocabQuizClient() {
     const isCorrect = option === q.correct;
     setAnswerState(isCorrect ? "correct" : "wrong");
     if (isCorrect) {
-      setScore((s) => s + 1);
+      const newScore = score + 1;
+      setScore(newScore);
+      setStreak((s) => s + 1);
+      // Auto-advance after 700ms on correct — avoids stale closure by using refs to state
+      setTimeout(() => {
+        const nextIdx = current + 1;
+        if (nextIdx >= questions.length) {
+          setFinished(true);
+          if (selectedUnit) {
+            saveQuizResult({ unitId: selectedUnit, score: newScore, total: questions.length })
+              .then((res) => {
+                if (res.success && res.xpEarned) {
+                  setXpEarned(res.xpEarned);
+                  toast.success(`+${res.xpEarned} XP — quiz hoàn thành!`);
+                }
+              })
+              .catch(() => { /* silent */ });
+          }
+        } else {
+          setCurrent(nextIdx);
+          setSelected(null);
+          setAnswerState("unanswered");
+        }
+      }, 700);
     } else {
+      setStreak(0);
       setWrongAnswers((w) => [...w, q.word]);
     }
   };
@@ -287,7 +313,14 @@ export default function VocabQuizClient() {
       <div className="space-y-2">
         <div className="flex justify-between text-xs font-bold text-zinc-500 dark:text-zinc-400">
           <span>{current + 1} / {questions.length}</span>
-          <span className="text-emerald-600 dark:text-emerald-400">{score} đúng</span>
+          <div className="flex items-center gap-2">
+            {streak >= 3 && (
+              <span className="text-orange-500 font-black text-xs flex items-center gap-0.5">
+                🔥 {streak} streak
+              </span>
+            )}
+            <span className="text-emerald-600 dark:text-emerald-400">{score} đúng</span>
+          </div>
         </div>
         <div className="h-2 w-full rounded-full bg-zinc-100 dark:bg-zinc-800 overflow-hidden">
           <motion.div

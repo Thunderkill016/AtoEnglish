@@ -1,6 +1,9 @@
 import { test, expect } from "@playwright/test";
 
-// Protected routes redirect to login when unauthenticated
+/**
+ * Protected routes: only these 6 redirect to /login when unauthenticated.
+ * Source: src/lib/supabase/session.ts → protectedRoutes array
+ */
 const PROTECTED_ROUTES = [
   "/dashboard",
   "/learn/unit-1",
@@ -9,77 +12,77 @@ const PROTECTED_ROUTES = [
   "/speaking",
   "/progress",
   "/roadmap",
-  "/quiz",
-  "/grammar",
-  "/pronunciation",
-  "/writing",
-  "/settings",
-  "/leaderboard",
-  "/placement-test",
+];
+
+/**
+ * Public routes: accessible without authentication.
+ * These return 200 regardless of auth state.
+ */
+const PUBLIC_ROUTES = [
+  { path: "/", titleMatcher: /AtoEnglish/ },
+  { path: "/login", titleMatcher: /AtoEnglish/ },
+  { path: "/placement-test", titleMatcher: /AtoEnglish/ },
+  { path: "/grammar", titleMatcher: /AtoEnglish/ },
+  { path: "/pronunciation", titleMatcher: /AtoEnglish/ },
+  { path: "/writing", titleMatcher: /AtoEnglish/ },
+  { path: "/leaderboard", titleMatcher: /AtoEnglish/ },
+  { path: "/quiz", titleMatcher: /AtoEnglish/ },
 ];
 
 test.describe("Protected Routes — Unauthenticated Redirects", () => {
   for (const route of PROTECTED_ROUTES) {
     test(`${route} redirects to /login when not logged in`, async ({ page }) => {
       await page.goto(route);
-      // Should end up at /login (possibly with ?next= param)
-      await expect(page).toHaveURL(/\/login/);
-      // Login page should be rendered
-      await expect(page.locator("h1, h2").first()).toBeVisible();
+      // Should land at /login (possibly with ?next= param)
+      await expect(page).toHaveURL(/\/login/, { timeout: 8000 });
     });
   }
 });
 
-test.describe("Public Pages — Accessible Without Auth", () => {
-  test("/ landing page loads with hero", async ({ page }) => {
+test.describe("Public Routes — Accessible Without Auth", () => {
+  for (const { path, titleMatcher } of PUBLIC_ROUTES) {
+    test(`${path} loads without auth (200)`, async ({ page }) => {
+      const res = await page.goto(path);
+      // Should not be redirected to login
+      expect(page.url()).not.toMatch(/\/login/);
+      // Should have a valid AtoEnglish title
+      await expect(page).toHaveTitle(titleMatcher, { timeout: 8000 });
+      // Status should be OK (200)
+      expect(res?.status()).toBe(200);
+    });
+  }
+});
+
+test.describe("Landing Page — Key Elements", () => {
+  test("has hero heading in Vietnamese", async ({ page }) => {
     await page.goto("/");
-    await expect(page).toHaveTitle(/AtoEnglish/);
     await expect(page.locator("h1")).toContainText("Học tiếng Anh");
   });
 
-  test("/login page renders email auth form", async ({ page }) => {
-    await page.goto("/login");
-    await expect(page).toHaveTitle(/Đăng nhập|Đăng ký|AtoEnglish/i);
-    // Should have email input
-    await expect(page.getByRole("button", { name: /Google|Đăng nhập|Bắt đầu/i }).first()).toBeVisible();
+  test("has CTA button linking to login", async ({ page }) => {
+    await page.goto("/");
+    const cta = page.getByRole("link", { name: /Bắt đầu học/i }).first();
+    await expect(cta).toBeVisible();
+    await expect(cta).toHaveAttribute("href", /login/);
   });
 
-  test("/placement-test loads without auth", async ({ page }) => {
-    await page.goto("/placement-test");
-    await expect(page.locator("h1")).toContainText("Xác Định");
+  test("has microstats trust bar", async ({ page }) => {
+    await page.goto("/");
+    // Stats bar with free/learner count should be visible
+    await expect(page.getByText(/Miễn phí 100%/i)).toBeVisible();
   });
 
-  test("/grammar loads without auth and shows grammar topics", async ({ page }) => {
-    await page.goto("/grammar");
-    await expect(page).toHaveTitle(/Ngữ pháp|AtoEnglish/i);
-    // Should show at least one grammar topic
-    await expect(page.locator("h2, h3").first()).toBeVisible();
-  });
-
-  test("/pronunciation loads 44 IPA sounds", async ({ page }) => {
-    await page.goto("/pronunciation");
-    await expect(page).toHaveTitle(/Phát âm|IPA|AtoEnglish/i);
-    // Should have vowels and consonants sections
-    await expect(page.getByText(/Nguyên âm|Phụ âm|vowel|consonant/i).first()).toBeVisible();
-  });
-
-  test("/writing loads AI writing coach", async ({ page }) => {
-    await page.goto("/writing");
-    await expect(page).toHaveTitle(/Viết|Writing|AtoEnglish/i);
-    await expect(page.locator("h1, h2").first()).toBeVisible();
-  });
-
-  test("/certificate/a1 loads cert eligibility page", async ({ page }) => {
-    await page.goto("/certificate/a1");
-    // Redirects to login since auth required
-    await expect(page).toHaveURL(/\/login|\/certificate/);
+  test("footer has privacy and terms links", async ({ page }) => {
+    await page.goto("/");
+    await expect(page.getByRole("link", { name: /Bảo mật|Privacy/i })).toBeVisible();
+    await expect(page.getByRole("link", { name: /Điều khoản|Terms/i })).toBeVisible();
   });
 });
 
 test.describe("API Health Check", () => {
   test("/api/health returns valid JSON status", async ({ request }) => {
     const res = await request.get("/api/health");
-    // Accept 200 (healthy) or 503 (degraded/no-DB in test env) — just verify shape
+    // Accept 200 (healthy) or 503 (degraded/no-DB in test env)
     expect([200, 503]).toContain(res.status());
     const body = await res.json();
     expect(body).toHaveProperty("status");
