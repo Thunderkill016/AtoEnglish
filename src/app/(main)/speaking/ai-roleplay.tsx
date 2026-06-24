@@ -334,6 +334,116 @@ export const ROLEPLAY_SCENARIOS: Scenario[] = [
         userSuggestionVi: "Chắc chắn. Tôi sẽ gia hạn gói premium của bạn thêm một tháng miễn phí như lời cảm ơn vì sự kiên nhẫn. Tôi cũng sẽ gửi hướng dẫn học cá nhân qua email hôm nay. Chúng tôi thực sự muốn bạn thành công."
       }
     ]
+  },
+  {
+    id: "online-meeting",
+    title: "Online Meeting",
+    description: "Tham gia cuộc họp video call tiếng Anh — đặt câu hỏi, bày tỏ ý kiến, xin phát biểu.",
+    aiCharacter: "Meeting Facilitator (Người điều hành)",
+    difficulty: "Medium",
+    initialMessage: "Good morning everyone, let's get started. We have three agenda items today: the Q3 review, the new product launch, and resource planning. First, could someone give a quick update on Q3?",
+    steps: [
+      {
+        aiPrompt: "Thank you for that update. Numbers look solid! Does anyone have questions or comments on the Q3 results before we move on to the product launch?",
+        userSuggestion: "Sure, I can take that. Q3 revenue came in at 1.2 million, which is 15% above our target. Churn stayed low at 2.3% and we added 340 new enterprise accounts.",
+        userSuggestionVi: "Được, tôi sẽ cập nhật. Doanh thu Q3 đạt 1,2 triệu, tức là vượt 15% mục tiêu. Tỷ lệ hủy vẫn thấp ở mức 2,3% và chúng tôi có thêm 340 tài khoản doanh nghiệp mới."
+      },
+      {
+        aiPrompt: "Good point on the regional split. We'll dig into that next week. Now, for the product launch — the team has proposed moving the date to November 1st. What does everyone think?",
+        userSuggestion: "I just want to flag one thing — the growth in Southeast Asia was particularly strong. Could we get a regional breakdown before next week so we can double down on that market?",
+        userSuggestionVi: "Tôi chỉ muốn lưu ý một điều — tăng trưởng ở Đông Nam Á đặc biệt mạnh. Chúng ta có thể có phân tích theo khu vực trước tuần tới để tập trung vào thị trường đó không?"
+      },
+      {
+        aiPrompt: "Perfect. November 1st it is. Let's wrap up with resource planning. We're two engineers short for Q4 — any suggestions on how we bridge the gap?",
+        userSuggestion: "I'm supportive of November 1st, but I'd suggest we add a soft launch in beta first — maybe October 15th. That gives us two weeks of real user feedback before the full rollout.",
+        userSuggestionVi: "Tôi ủng hộ ngày 1 tháng 11, nhưng tôi đề xuất chúng ta thêm giai đoạn ra mắt mềm ở beta trước — có thể là 15 tháng 10. Điều đó cho chúng ta hai tuần thu thập phản hồi thực tế trước khi triển khai toàn diện."
+      },
+      {
+        aiPrompt: "Great ideas everyone. I'll circulate the notes by EOD. Thanks for a productive meeting — talk soon!",
+        userSuggestion: "We could consider bringing in two contractors for Q4 — it's faster than full-time hiring. I know a couple of strong React developers who are available. I can send you their portfolios.",
+        userSuggestionVi: "Chúng ta có thể xem xét thuê hai nhà thầu cho Q4 — nhanh hơn tuyển dụng toàn thời gian. Tôi biết một vài lập trình viên React giỏi đang rảnh. Tôi có thể gửi portfolio của họ cho bạn."
+      }
+    ]
+  },
+  {
+    id: "salary-negotiation",
+    title: "Salary Negotiation",
+    description: "Thương lượng lương với nhà tuyển dụng sau khi nhận offer — tự tin, chuyên nghiệp.",
+    aiCharacter: "HR Manager (Quản lý nhân sự)",
+    difficulty: "Hard",
+    initialMessage: "Congratulations! We'd like to offer you the senior developer position. The package includes a base salary of 2,500 USD per month, plus health insurance and 14 days annual leave. What do you think?",
+    steps: [
+      {
+        aiPrompt: "I understand your research shows a higher range. I have to be transparent — our budget for this role is firm at 2,500. However, we do offer a performance review after 6 months with potential for adjustment. Does that work for you?",
+        userSuggestion: "Thank you so much — I'm really excited about this opportunity. I've done some market research and for a senior developer with my level of experience in this industry, the typical range in Ho Chi Minh City is between 2,800 and 3,200 USD. Would you be able to meet me somewhere in that range?",
+        userSuggestionVi: "Cảm ơn rất nhiều — tôi thực sự hào hứng về cơ hội này. Tôi đã nghiên cứu thị trường và mức lương phổ biến cho senior developer với kinh nghiệm của tôi trong ngành này ở TP.HCM là từ 2.800 đến 3.200 đô. Bạn có thể đáp ứng mức đó không?"
+      },
+      {
+        aiPrompt: "That's a fair point. I can offer a signing bonus of 1,000 USD and an extra 3 days of annual leave — bringing it to 17 days. We could also add a 500 USD training budget per year. Would that package work for you?",
+        userSuggestion: "I appreciate the transparency. Could we perhaps structure it differently — keep the base at 2,500 but include a guaranteed 6-month review with a minimum 10% increase if targets are met? That would give me the income trajectory I'm looking for.",
+        userSuggestionVi: "Tôi đánh giá cao sự minh bạch đó. Chúng ta có thể cơ cấu khác được không — giữ mức cơ bản 2.500 nhưng thêm đánh giá 6 tháng được đảm bảo với mức tăng tối thiểu 10% nếu đạt mục tiêu? Điều đó sẽ cho tôi lộ trình thu nhập tôi đang tìm kiếm."
+      },
+      {
+        aiPrompt: "Excellent! Welcome to the team. HR will send over the formal offer letter by tomorrow with all the agreed terms. We're looking forward to having you on board!",
+        userSuggestion: "That sounds like a great package. I'm happy to accept on those terms. Could I have the full offer in writing by Friday so I can review it before signing?",
+        userSuggestionVi: "Nghe có vẻ là một gói tuyệt vời. Tôi vui lòng chấp nhận với những điều khoản đó. Tôi có thể nhận offer đầy đủ bằng văn bản trước thứ Sáu để xem lại trước khi ký không?"
+      }
+    ]
+  },
+  {
+    id: "networking-event",
+    title: "Networking Event",
+    description: "Giao lưu và xây dựng quan hệ tại sự kiện nghề nghiệp — small talk chuyên nghiệp.",
+    aiCharacter: "Industry Professional (Chuyên gia ngành)",
+    difficulty: "Easy",
+    initialMessage: "Hi there! Great turnout tonight, isn't it? I don't think we've met — I'm David from Techvify. What brings you to this event?",
+    steps: [
+      {
+        aiPrompt: "EdTech is booming right now! What kind of product are you building — more B2C or enterprise?",
+        userSuggestion: "Hi David, nice to meet you! I'm Lan, a product manager at a startup called AtoEnglish. We're building an AI-powered English learning app for Vietnamese professionals. I came here hoping to connect with people in the EdTech and SaaS space.",
+        userSuggestionVi: "Chào David, rất vui được gặp bạn! Tôi là Lan, product manager tại một startup tên AtoEnglish. Chúng tôi đang xây dựng ứng dụng học tiếng Anh bằng AI cho các chuyên gia Việt Nam. Tôi đến đây để kết nối với mọi người trong lĩnh vực EdTech và SaaS."
+      },
+      {
+        aiPrompt: "That's a smart angle — the B2B market is much more predictable. I actually know a few HR managers at multinationals who complain about this exact problem. Would it be useful if I connected you with them?",
+        userSuggestion: "Primarily B2C right now, but we're exploring B2B — selling to companies who want to upskill their employees' business English. The ROI is clearer for enterprise buyers.",
+        userSuggestionVi: "Chủ yếu là B2C lúc này, nhưng chúng tôi đang khám phá B2B — bán cho các công ty muốn nâng cao tiếng Anh kinh doanh cho nhân viên. ROI rõ ràng hơn cho người mua doanh nghiệp."
+      },
+      {
+        aiPrompt: "Perfect, I'll send you a LinkedIn message tonight. Let me grab another drink — enjoy the rest of the evening and looking forward to seeing where AtoEnglish goes!",
+        userSuggestion: "That would be incredibly helpful, thank you! Here's my business card. It would be great to stay in touch — maybe we could grab a coffee next week to discuss further?",
+        userSuggestionVi: "Điều đó thực sự hữu ích, cảm ơn bạn! Đây là danh thiếp của tôi. Sẽ tuyệt nếu chúng ta giữ liên lạc — có thể chúng ta có thể uống cà phê tuần tới để thảo luận thêm?"
+      }
+    ]
+  },
+  {
+    id: "performance-review",
+    title: "Performance Review",
+    description: "Buổi đánh giá hiệu suất với quản lý — thảo luận thành tích, mục tiêu và phát triển.",
+    aiCharacter: "Direct Manager (Quản lý trực tiếp)",
+    difficulty: "Medium",
+    initialMessage: "Thanks for coming in. So, it's been six months since your last review. Overall I'd say it's been a strong period. How do you feel you've been performing?",
+    steps: [
+      {
+        aiPrompt: "Those are great examples. I agree — your technical output has been excellent. One area I'd like to see growth in is cross-team communication. Some stakeholders mentioned they sometimes feel out of the loop on your projects. How do you see that?",
+        userSuggestion: "Overall, I feel this has been one of my stronger periods. I led the API migration that reduced load times by 40%, mentored two junior developers, and shipped the mobile dashboard feature two weeks ahead of schedule.",
+        userSuggestionVi: "Nhìn chung, tôi cảm thấy đây là một trong những giai đoạn mạnh mẽ nhất của tôi. Tôi đã dẫn dắt việc di chuyển API giúp giảm thời gian tải 40%, hướng dẫn hai lập trình viên junior và hoàn thành tính năng mobile dashboard sớm hai tuần so với kế hoạch."
+      },
+      {
+        aiPrompt: "That's a mature way to look at it. A bi-weekly stakeholder update email could work well. Now, for your development goals next quarter — what areas would you like to focus on?",
+        userSuggestion: "I take that feedback seriously. Looking back, I think I focused too much on execution and not enough on keeping stakeholders informed. I'd like to set up a bi-weekly project update email and make myself more available for quick syncs.",
+        userSuggestionVi: "Tôi coi trọng phản hồi đó. Nhìn lại, tôi nghĩ tôi tập trung quá nhiều vào thực thi mà không đủ vào việc thông báo cho các bên liên quan. Tôi muốn thiết lập email cập nhật dự án hai tuần một lần và sẵn sàng hơn cho các cuộc họp nhanh."
+      },
+      {
+        aiPrompt: "I love that ambition. I'll support you for the tech lead role. Let's set a 90-day plan — I'll send you a template. One last thing: is there anything you need from me to perform even better?",
+        userSuggestion: "I'd really like to grow into a tech lead role by end of year. To get there, I want to take on more system design responsibilities and run at least two cross-team projects. I'd also like to attend one technical conference this year.",
+        userSuggestionVi: "Tôi thực sự muốn phát triển lên vai trò tech lead vào cuối năm. Để đạt được điều đó, tôi muốn đảm nhận nhiều trách nhiệm thiết kế hệ thống hơn và dẫn dắt ít nhất hai dự án liên nhóm. Tôi cũng muốn tham dự một hội nghị kỹ thuật trong năm nay."
+      },
+      {
+        aiPrompt: "Noted. I'll block time for us to meet every two weeks. This was a great conversation — I'm really pleased with your trajectory. Keep it up!",
+        userSuggestion: "It would really help to have clearer priorities when multiple urgent tasks come in at the same time. Sometimes I'm not sure which fires to fight first. A quick daily or weekly check-in to align on priorities would make a big difference.",
+        userSuggestionVi: "Sẽ thực sự hữu ích nếu có thứ tự ưu tiên rõ ràng hơn khi nhiều công việc khẩn cấp đến cùng lúc. Đôi khi tôi không chắc nên xử lý việc gì trước. Một cuộc kiểm tra nhanh hàng ngày hoặc hàng tuần để căn chỉnh ưu tiên sẽ tạo ra sự khác biệt lớn."
+      }
+    ]
   }
 ];
 
