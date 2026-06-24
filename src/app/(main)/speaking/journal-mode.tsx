@@ -30,6 +30,19 @@ const JOURNAL_TOPICS = [
   "Talk about a challenge you overcame and what you learned",
   "If you could live in any country, where would you choose and why?",
   "How important is it to learn a foreign language in today's world?",
+  // B2+ level — professional and critical thinking
+  "Describe a difficult decision you made at work and how you handled it",
+  "What are the pros and cons of AI in education? Give your opinion",
+  "Talk about a skill you recently learned and how you applied it",
+  "If you were a manager, how would you motivate your team?",
+  "Describe a time you had to give someone difficult feedback",
+  "What does success mean to you professionally and personally?",
+  "How do you manage stress during busy work periods?",
+  "What advice would you give someone starting their career?",
+  "Describe a product or service you think could be improved and how",
+  "Talk about a book, podcast, or course that changed your perspective",
+  "What is your strategy for continuous learning in your field?",
+  "Describe a cross-cultural experience and what you learned from it",
 ];
 
 type RecognitionState = "idle" | "listening" | "processing" | "done";
