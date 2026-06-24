@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
-import { motion } from "framer-motion";
-import { ChevronRight } from "lucide-react";
+import { useState, useTransition } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { ChevronRight, Loader2 } from "lucide-react";
 import type { UnitData } from "../UnitTemplate";
+import { gradeTranslation, type TranslationGrade } from "@/app/actions/translate";
 
 interface TranslateSectionProps {
   unit: UnitData;
@@ -18,6 +19,14 @@ const sectionVariants = {
   exit: { opacity: 0, x: -20 },
 };
 
+// Error type badge labels in Vietnamese
+const ERROR_LABELS: Record<string, string> = {
+  grammar: "🔴 Ngữ pháp",
+  "word-choice": "🟡 Chọn từ",
+  "missing-word": "🟠 Thiếu từ",
+  "word-order": "🔵 Trật tự từ",
+};
+
 export default function TranslateSection({
   unit,
   sectionOrderIdx,
@@ -26,6 +35,8 @@ export default function TranslateSection({
 }: TranslateSectionProps) {
   const [translateInputs, setTranslateInputs] = useState<Record<string, string>>({});
   const [translateSubmitted, setTranslateSubmitted] = useState(false);
+  const [aiGrades, setAiGrades] = useState<Record<string, TranslationGrade | null>>({});
+  const [isPending, startTransition] = useTransition();
 
   // Fuzzy match: normalize punctuation, whitespace, contractions
   const normalizeTranslation = (s: string) =>
@@ -44,6 +55,34 @@ export default function TranslateSection({
       .replace(/\bdon't\b/g, "do not")
       .replace(/\bdoesn't\b/g, "does not")
       .trim();
+
+  const handleSubmit = () => {
+    setTranslateSubmitted(true);
+    if (!unit.practiceTranslate) return;
+
+    // Call AI grader for each item in parallel
+    startTransition(async () => {
+      const grades = await Promise.all(
+        unit.practiceTranslate!.map(async (item) => {
+          const userAnswer = translateInputs[item.id] ?? "";
+          if (!userAnswer.trim()) return [item.id, null] as const;
+          const result = await gradeTranslation(item.prompt_vn, item.answer, userAnswer);
+          return [item.id, result.success ? (result.grade ?? null) : null] as const;
+        })
+      );
+      setAiGrades(Object.fromEntries(grades));
+    });
+  };
+
+  const correctCount = unit.practiceTranslate?.filter((item) => {
+    const grade = aiGrades[item.id];
+    // If AI graded, use AI verdict; otherwise fall back to fuzzy match
+    if (grade !== undefined && grade !== null) return grade.correct;
+    const userAnswer = translateInputs[item.id] ?? "";
+    return normalizeTranslation(userAnswer) === normalizeTranslation(item.answer);
+  }).length ?? 0;
+
+  const totalItems = unit.practiceTranslate?.length ?? 0;
 
   return (
     <motion.div
@@ -77,8 +116,15 @@ export default function TranslateSection({
         <div className="space-y-5">
           {unit.practiceTranslate.map((item, i) => {
             const userAnswer = translateInputs[item.id] ?? "";
-            const isCorrect =
-              normalizeTranslation(userAnswer) === normalizeTranslation(item.answer);
+            const grade = aiGrades[item.id];
+            // Determine correctness: AI grade if available, fuzzy match otherwise
+            const isCorrect = translateSubmitted
+              ? grade !== undefined && grade !== null
+                ? grade.correct
+                : normalizeTranslation(userAnswer) === normalizeTranslation(item.answer)
+              : false;
+            const isGraded = grade !== undefined && grade !== null;
+
             return (
               <div
                 key={item.id}
@@ -114,16 +160,77 @@ export default function TranslateSection({
                       if (e.key === "Enter" && !translateSubmitted) e.currentTarget.blur();
                     }}
                   />
+
+                  {/* Feedback area */}
                   {translateSubmitted && (
-                    <div className="mt-2">
-                      {isCorrect ? (
-                        <p className="text-emerald-400 text-xs font-bold">✓ Chính xác!</p>
-                      ) : (
-                        <p className="text-red-400 text-xs">
-                          ✗ Đáp án tham khảo: <span className="font-semibold">{item.answer}</span>
-                        </p>
-                      )}
-                    </div>
+                    <AnimatePresence>
+                      <motion.div
+                        key={`feedback-${item.id}`}
+                        initial={{ opacity: 0, y: 4 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="mt-3 space-y-2"
+                      >
+                        {/* Loading shimmer while AI grades */}
+                        {isPending && !isGraded && (
+                          <div className="flex items-center gap-2 text-xs text-zinc-500">
+                            <Loader2 className="size-3 animate-spin" />
+                            AI đang chấm bài...
+                          </div>
+                        )}
+
+                        {/* AI grade result */}
+                        {isGraded && grade && (
+                          <>
+                            {/* Verdict line */}
+                            <div className="flex items-center gap-2 flex-wrap">
+                              {isCorrect ? (
+                                <span className="text-xs font-black text-emerald-400">✓ Chính xác!</span>
+                              ) : (
+                                <span className="text-xs font-black text-red-400">✗ Chưa đúng</span>
+                              )}
+                              {grade.errorType && ERROR_LABELS[grade.errorType] && (
+                                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-zinc-800/60 border border-zinc-700/40 text-zinc-400">
+                                  {ERROR_LABELS[grade.errorType]}
+                                </span>
+                              )}
+                            </div>
+
+                            {/* AI Vietnamese feedback */}
+                            <p className="text-xs text-zinc-300 leading-relaxed bg-zinc-900/40 rounded-lg px-3 py-2 border border-zinc-800/60">
+                              💬 {grade.feedbackVn}
+                            </p>
+
+                            {/* Natural alternative (if provided) */}
+                            {grade.naturalAlternative && (
+                              <p className="text-xs text-teal-400 leading-relaxed">
+                                ✨ Cách nói tự nhiên hơn:{" "}
+                                <span className="font-semibold italic">{grade.naturalAlternative}</span>
+                              </p>
+                            )}
+
+                            {/* Reference answer for wrong answers */}
+                            {!isCorrect && (
+                              <p className="text-xs text-zinc-400">
+                                📖 Đáp án tham khảo:{" "}
+                                <span className="font-semibold text-zinc-200">{item.answer}</span>
+                              </p>
+                            )}
+                          </>
+                        )}
+
+                        {/* Fallback fuzzy match (no AI grade) */}
+                        {!isPending && !isGraded && (
+                          isCorrect ? (
+                            <p className="text-emerald-400 text-xs font-bold">✓ Chính xác!</p>
+                          ) : (
+                            <p className="text-red-400 text-xs">
+                              ✗ Đáp án tham khảo:{" "}
+                              <span className="font-semibold">{item.answer}</span>
+                            </p>
+                          )
+                        )}
+                      </motion.div>
+                    </AnimatePresence>
                   )}
                 </div>
               </div>
@@ -135,9 +242,7 @@ export default function TranslateSection({
               disabled={unit.practiceTranslate.some(
                 (item) => !(translateInputs[item.id] ?? "").trim()
               )}
-              onClick={() => {
-                setTranslateSubmitted(true);
-              }}
+              onClick={handleSubmit}
               className="w-full bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-400 hover:to-emerald-400 disabled:opacity-40 disabled:cursor-not-allowed text-white font-bold rounded-2xl px-6 py-4 flex items-center justify-center gap-2 transition-all duration-200 text-lg shadow-lg shadow-teal-900/40 active:scale-95"
             >
               Kiểm tra bản dịch <ChevronRight size={20} />
@@ -146,22 +251,25 @@ export default function TranslateSection({
             <div className="space-y-3">
               <div className="bg-zinc-900/60 rounded-2xl p-4 text-center border border-zinc-700/40">
                 <p className="text-lg font-black text-white">
-                  {
-                    unit.practiceTranslate.filter(
-                      (item) =>
-                        (translateInputs[item.id] ?? "").trim().toLowerCase() ===
-                        item.answer.trim().toLowerCase()
-                    ).length
-                  }
-                  /{unit.practiceTranslate.length} câu chính xác
+                  {correctCount}/{totalItems} câu chính xác
                 </p>
                 <p className="text-zinc-400 text-sm mt-1">
-                  Tiếp tục để luyện Shadowing và Luyện nói
+                  {correctCount === totalItems
+                    ? "🎉 Hoàn hảo! Kỹ năng dịch xuất sắc."
+                    : correctCount >= Math.ceil(totalItems / 2)
+                    ? "👍 Tốt! Xem lại các câu chưa đúng nhé."
+                    : "💪 Cần luyện thêm — đọc lại giải thích của AI."}
                 </p>
+                {isPending && (
+                  <p className="text-xs text-zinc-500 mt-2 flex items-center justify-center gap-1">
+                    <Loader2 className="size-3 animate-spin" /> AI đang phân tích...
+                  </p>
+                )}
               </div>
               <button
                 onClick={goNext}
-                className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-white font-bold rounded-2xl px-6 py-4 flex items-center justify-center gap-2 transition-all duration-200 text-lg shadow-lg shadow-emerald-900/40 active:scale-95"
+                disabled={isPending}
+                className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 disabled:opacity-50 text-white font-bold rounded-2xl px-6 py-4 flex items-center justify-center gap-2 transition-all duration-200 text-lg shadow-lg shadow-emerald-900/40 active:scale-95"
               >
                 Tiếp tục <ChevronRight size={20} />
               </button>
