@@ -1,6 +1,6 @@
 // AtoEnglish Service Worker — Web Push + offline caching
-// v3: network-first for API/auth, stale-while-revalidate for app shell + assets
-const CACHE_NAME = "atoenglish-v3";
+// v4: network-first for API/auth, stale-while-revalidate for app shell + assets
+const CACHE_NAME = "atoenglish-v4";
 const APP_SHELL = [
   "/",
   "/dashboard",
@@ -8,6 +8,7 @@ const APP_SHELL = [
   "/speaking",
   "/progress",
   "/roadmap",
+  "/business",
   "/manifest.webmanifest",
   "/favicon.ico",
   "/icon-192.png",

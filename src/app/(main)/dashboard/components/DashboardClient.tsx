@@ -751,6 +751,14 @@ function WeeklyRecapCard({
               Xem chứng chỉ →
             </Link>
           </div>
+          {/* Invite nudge */}
+          <div className="mt-2 flex items-center gap-2 p-3 rounded-xl bg-purple-500/5 border border-purple-500/15">
+            <span className="text-base shrink-0">👥</span>
+            <div className="flex-1 min-w-0">
+              <p className="text-[11px] font-bold text-zinc-700 dark:text-zinc-300">Học cùng bạn bè hiệu quả hơn 40%!</p>
+            </div>
+            <Link href="/invite" className="shrink-0 text-[10px] font-black text-purple-600 dark:text-purple-400 hover:underline whitespace-nowrap">Mời bạn →</Link>
+          </div>
         </div>
       )}
     </div>
