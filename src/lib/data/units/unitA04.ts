@@ -76,6 +76,7 @@ export const unitA04: UnitData = {
     {
       id: 3,
       word: "tired",
+      l1_interference_vn: "⚠️ \'Tired\' /ˈtaɪəd/ — 2 âm tiết: \'TI-red\'. Không phát 3 âm tiết \'tai-ơ-rét\' như đọc theo chữ.",
       emoji: "😴",
       phonetic: "/ˈtaɪərd/",
       meaning: "mệt",
@@ -520,16 +521,15 @@ export const unitA04: UnitData = {
   ],
 
   pronunciationFocus: {
-    targetPhoneme: "/æ/ vs /e/",
+    phoneme: "/æ/ vs /e/",
     description: "Phân biệt CAT /æ/ và BED /e/",
     examples: [
-      { word: "bad", ipa: "/bæd/", vnTip: "Hạ hàm thấp nhất, kéo góc miệng ra — khác với 'bed'" },
-      { word: "bed", ipa: "/bed/", vnTip: "Miệng mở vừa, không kéo căng như /æ/" },
+      { word: "bad", ipa: "/bæd/", tip: "Hạ hàm thấp nhất, kéo góc miệng ra — khác với 'bed'" },
+      { word: "bed", ipa: "/bed/", tip: "Miệng mở vừa, không kéo căng như /æ/" },
     ],
     minimalPairs: [
-      { a: "bad /æ/", b: "bed /e/", note: "lỗi phổ biến: nhầm hai âm này" },
+      ["bad /æ/", "bed /e/"],
     ],
-    commonMistake: "Người Việt không phân biệt /æ/ và /e/ — 'man' và 'men' nghe như nhau",
   },
 
   fluencyDrill: {

@@ -526,16 +526,15 @@ export const unitA06: UnitData = {
   ],
 
   pronunciationFocus: {
-    targetPhoneme: "/ʌ/ vs /ɑː/",
+    phoneme: "/ʌ/ vs /ɑː/",
     description: "Phân biệt CUP /ʌ/ và CAR /ɑː/",
     examples: [
-      { word: "sun", ipa: "/sʌn/", vnTip: "Ngắn, miệng nửa mở, không tròn môi" },
-      { word: "father", ipa: "/ˈfɑːðə/", vnTip: "Dài, miệng mở rộng nhất, hàm xuống thấp" },
+      { word: "sun", ipa: "/sʌn/", tip: "Ngắn, miệng nửa mở, không tròn môi" },
+      { word: "father", ipa: "/ˈfɑːðə/", tip: "Dài, miệng mở rộng nhất, hàm xuống thấp" },
     ],
     minimalPairs: [
-      { a: "cup /ʌ/", b: "carp /ɑː/", note: "ngắn-trung tâm vs dài-sau" },
+      ["cup /ʌ/", "carp /ɑː/"],
     ],
-    commonMistake: "Người Việt dùng âm /a/ tiếng Việt cho cả hai — nhưng /ʌ/ ngắn hơn nhiều",
   },
 
   fluencyDrill: {

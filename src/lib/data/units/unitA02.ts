@@ -58,6 +58,7 @@ export const unitA02: UnitData = {
     {
       id: 1,
       word: "price",
+      l1_interference_vn: "⚠️ \'Price\' vs \'prize\': /praɪs/ vô thanh. Đừng rung dây thanh ở cuối — sẽ thành \'prize\'.",
       emoji: "🏷️",
       phonetic: "/praɪs/",
       meaning: "giá, giá tiền",
@@ -113,6 +114,7 @@ export const unitA02: UnitData = {
     {
       id: 6,
       word: "cheap",
+      l1_interference_vn: "⚠️ \'Cheap\' /tʃiːp/ — bắt đầu bằng /tʃ/ như \'ch\' miền Nam. Không phát \'chip\' (âm khác!).",
       emoji: "😊",
       phonetic: "/tʃiːp/",
       meaning: "rẻ",
@@ -124,6 +126,7 @@ export const unitA02: UnitData = {
     {
       id: 7,
       word: "expensive",
+      l1_interference_vn: "⚠️ \'Expensive\' — 3 âm tiết: ex-PEN-sive. Nhấn âm giữa. Danh từ: \'expense\' (không có \'-ive\').",
       emoji: "😬",
       phonetic: "/ɪkˈspensɪv/",
       meaning: "đắt (tiền)",
@@ -531,16 +534,15 @@ export const unitA02: UnitData = {
   ],
 
   pronunciationFocus: {
-    targetPhoneme: "/s/ & /z/ cuối từ",
+    phoneme: "/s/ & /z/ cuối từ",
     description: "Số nhiều: khi nào thêm /s/ và khi nào /z/",
     examples: [
-      { word: "books", ipa: "/bʊks/", vnTip: "/s/ sau phụ âm vô thanh (k,p,t,f)" },
-      { word: "bags", ipa: "/bægz/", vnTip: "/z/ sau phụ âm hữu thanh và nguyên âm" },
+      { word: "books", ipa: "/bʊks/", tip: "/s/ sau phụ âm vô thanh (k,p,t,f)" },
+      { word: "bags", ipa: "/bægz/", tip: "/z/ sau phụ âm hữu thanh và nguyên âm" },
     ],
     minimalPairs: [
-      { a: "books /s/", b: "bags /z/", note: "cùng -s nhưng phát khác" },
+      ["books /s/", "bags /z/"],
     ],
-    commonMistake: "Người Việt thường phát đều /s/ cho mọi từ — nhưng 'dogs' phải là /dɒgz/",
   },
 
   fluencyDrill: {

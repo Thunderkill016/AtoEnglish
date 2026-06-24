@@ -110,6 +110,7 @@ export const unitA08: UnitData = {
     {
       id: 6,
       word: "sick",
+      l1_interference_vn: "⚠️ \'Sick\' /sɪk/ — âm /ɪ/ ngắn. Phân biệt với \'seek\' /siːk/ (dài). \'I\'m sick\' ≠ \'I\'m seek\'.",
       emoji: "🤒",
       phonetic: "/sɪk/",
       meaning: "ốm, bệnh",
@@ -539,16 +540,15 @@ export const unitA08: UnitData = {
   ],
 
   pronunciationFocus: {
-    targetPhoneme: "/ŋ/ cuối từ",
+    phoneme: "/ŋ/ cuối từ",
     description: "Âm NG cuối — sing, ring, long",
     examples: [
-      { word: "morning", ipa: "/ˈmɔːnɪŋ/", vnTip: "Cuối âm mũi mềm từ vòm — không bật thêm /g/" },
-      { word: "working", ipa: "/ˈwɜːkɪŋ/", vnTip: "'-ing' kết thúc bằng /ŋ/, không phải /ng/" },
+      { word: "morning", ipa: "/ˈmɔːnɪŋ/", tip: "Cuối âm mũi mềm từ vòm — không bật thêm /g/" },
+      { word: "working", ipa: "/ˈwɜːkɪŋ/", tip: "'-ing' kết thúc bằng /ŋ/, không phải /ng/" },
     ],
     minimalPairs: [
-      { a: "sing /ŋ/", b: "singer /ŋ/", note: "cả hai đều KHÔNG có /g/ cuối" },
+      ["sing /ŋ/", "singer /ŋ/"],
     ],
-    commonMistake: "Người Việt phát '-ing' thành '-ing-g' vì tiếng Việt không có /ŋ/ cuối",
   },
 
   fluencyDrill: {

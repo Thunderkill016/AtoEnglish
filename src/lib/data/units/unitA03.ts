@@ -57,6 +57,7 @@ export const unitA03: UnitData = {
     {
       id: 1,
       word: "red",
+      l1_interference_vn: "⚠️ \'Red\' /red/ — phân biệt với \'read\' /riːd/ (đọc, hiện tại) và \'read\' /red/ (đọc, quá khứ). Đồng âm!",
       emoji: "🔴",
       phonetic: "/red/",
       meaning: "màu đỏ",
@@ -68,6 +69,7 @@ export const unitA03: UnitData = {
     {
       id: 2,
       word: "blue",
+      l1_interference_vn: "⚠️ \'Blue\' /bluː/ — /l/ trước /uː/ tạo âm \'dark L\'. Không phát \'boo\' — phải có âm /l/.",
       emoji: "🔵",
       phonetic: "/bluː/",
       meaning: "màu xanh dương",
@@ -79,6 +81,7 @@ export const unitA03: UnitData = {
     {
       id: 3,
       word: "green",
+      l1_interference_vn: "⚠️ \'Green\' /ɡriːn/ — /r/ Anh-Mỹ: lưỡi cong không chạm. KHÔNG rung lưỡi như \'r\' tiếng Việt.",
       emoji: "🟢",
       phonetic: "/ɡriːn/",
       meaning: "màu xanh lá",
@@ -521,15 +524,14 @@ export const unitA03: UnitData = {
   ],
 
   pronunciationFocus: {
-    targetPhoneme: "/ɜː/",
+    phoneme: "/ɜː/",
     description: "Âm 'ER' dài — bird, word, learn",
     examples: [
-      { word: "colour", ipa: "/ˈkʌlə/", vnTip: "Âm cuối '-our' = schwa /ə/, không phát 'o-u-r'" },
+      { word: "colour", ipa: "/ˈkʌlə/", tip: "Âm cuối '-our' = schwa /ə/, không phát 'o-u-r'" },
     ],
     minimalPairs: [
-      { a: "bird /ɜː/", b: "bead /iː/", note: "âm ER vs âm EE" },
+      ["bird /ɜː/", "bead /iː/"],
     ],
-    commonMistake: "Người Việt đọc '-er/-or/-our' cuối từ theo mặt chữ — phải dùng schwa /ə/",
   },
 
   fluencyDrill: {

@@ -76,6 +76,7 @@ export const unitA01: UnitData = {
     {
       id: 1,
       word: "hello",
+      l1_interference_vn: "⚠️ \'Hello\' phát âm /həˈloʊ/ — nhấn âm thứ 2 \'LO\'. Không phát đều: \'HEL-lo\' (sai nhấn).",
       emoji: "👋",
       phonetic: "/həˈloʊ/",
       meaning: "xin chào",
@@ -87,6 +88,7 @@ export const unitA01: UnitData = {
     {
       id: 2,
       word: "name",
+      l1_interference_vn: "⚠️ \'My name IS Lan\' — KHÔNG bỏ \'is\': \'My name Lan\' là lỗi #1 của người Việt học tiếng Anh.",
       emoji: "🏷️",
       phonetic: "/neɪm/",
       meaning: "tên",
@@ -98,6 +100,7 @@ export const unitA01: UnitData = {
     {
       id: 3,
       word: "spell",
+      l1_interference_vn: "⚠️ \'Spell\' = đánh vần từng chữ cái. \'How do you spell that?\' — không nhầm với \'say\'.",
       emoji: "🔤",
       phonetic: "/spel/",
       meaning: "đánh vần",
@@ -131,6 +134,7 @@ export const unitA01: UnitData = {
     {
       id: 6,
       word: "thank",
+      l1_interference_vn: "⚠️ \'Thank\' bắt đầu bằng /θ/ — lưỡi phải ra ngoài hàng răng. KHÔNG phát \'tank\' hay \'fank\'.",
       emoji: "🙌",
       phonetic: "/θæŋk/",
       meaning: "cảm ơn",
@@ -556,15 +560,14 @@ export const unitA01: UnitData = {
   // ✅ Nation: Fluency strand — speed and automaticity
   // ✅ Pronunciation focus: /θ/, final /t/, /iː/ vowels
   pronunciationFocus: {
-    targetPhoneme: "/θ/",
+    phoneme: "/θ/",
     description: "Âm TH vô thanh — lưỡi nhô ra",
     examples: [
-      { word: "thank", ipa: "/θæŋk/", vnTip: "Lưỡi ra ngoài hàng răng, thổi hơi — KHÔNG phát 't' hay 'f'" },
+      { word: "thank", ipa: "/θæŋk/", tip: "Lưỡi ra ngoài hàng răng, thổi hơi — KHÔNG phát 't' hay 'f'" },
     ],
     minimalPairs: [
-      { a: "thank", b: "tank", note: "/θ/ vs /t/" },
+      ["thank", "tank"],
     ],
-    commonMistake: "Người Việt phát 'thank' thành 'tank' hoặc 'fank' — phải đưa lưỡi ra ngoài",
   },
 
   fluencyDrill: {

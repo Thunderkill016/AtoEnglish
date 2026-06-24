@@ -76,6 +76,7 @@ export const unitA07: UnitData = {
     {
       id: 3,
       word: "today",
+      l1_interference_vn: "⚠️ \'Today\' /təˈdeɪ/ — nhấn âm cuối: \'to-DAY\'. Âm đầu /tə/ là schwa nhẹ, không nhấn.",
       emoji: "🔴",
       phonetic: "/təˈdeɪ/",
       meaning: "hôm nay",
@@ -87,6 +88,7 @@ export const unitA07: UnitData = {
     {
       id: 4,
       word: "tomorrow",
+      l1_interference_vn: "⚠️ \'Tomorrow\' /təˈmɒrəʊ/ — nhấn âm giữa: \'to-MOR-row\'. 3 âm tiết. Không phát đủ \'t-o-m-o-r-r-o-w\'.",
       emoji: "🟡",
       phonetic: "/təˈmɒroʊ/",
       meaning: "ngày mai",
@@ -98,6 +100,7 @@ export const unitA07: UnitData = {
     {
       id: 5,
       word: "morning",
+      l1_interference_vn: "⚠️ \'Morning\' /ˈmɔːnɪŋ/ — \'-ing\' kết thúc bằng /ŋ/, KHÔNG phải /ŋg/. Nhấn MOR-ning.",
       emoji: "🌅",
       phonetic: "/ˈmɔːrnɪŋ/",
       meaning: "buổi sáng",
@@ -522,16 +525,15 @@ export const unitA07: UnitData = {
   ],
 
   pronunciationFocus: {
-    targetPhoneme: "/p/ /t/ /k/ cuối từ",
+    phoneme: "/p/ /t/ /k/ cuối từ",
     description: "Ba phụ âm nổ cuối từ — không bật hơi",
     examples: [
-      { word: "stop", ipa: "/stɒp/", vnTip: "Khép môi, KHÔNG bật hơi — 'stop-uh' là sai" },
-      { word: "what", ipa: "/wɒt/", vnTip: "Lưỡi chạm nướu, KHÔNG bật hơi" },
+      { word: "stop", ipa: "/stɒp/", tip: "Khép môi, KHÔNG bật hơi — 'stop-uh' là sai" },
+      { word: "what", ipa: "/wɒt/", tip: "Lưỡi chạm nướu, KHÔNG bật hơi" },
     ],
     minimalPairs: [
-      { a: "stop (đúng)", b: "stop-uh (sai)", note: "không thêm nguyên âm cuối" },
+      ["stop (đúng)", "stop-uh (sai)"],
     ],
-    commonMistake: "Người Việt thêm nguyên âm sau phụ âm cuối: 'book-uh', 'stop-uh', 'back-uh'",
   },
 
   fluencyDrill: {
