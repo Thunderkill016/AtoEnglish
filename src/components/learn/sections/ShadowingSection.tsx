@@ -2,10 +2,12 @@
 
 import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Volume2, Mic, MicOff, ChevronRight, CheckCircle } from "lucide-react";
+import { Volume2, Mic, MicOff, ChevronRight, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 import { calcSpeechScore } from "@/lib/utils/speech";
 import { SpeechRecognitionFallback } from "@/lib/utils/speech-fallback";
+import { assessPronunciation } from "@/app/actions/phoneme";
+import type { PhonemeError } from "@/app/actions/phoneme";
 import type { UnitData } from "../UnitTemplate";
 
 interface SpeechRecognitionEvent {
@@ -112,6 +114,10 @@ export default function ShadowingSection({
   const recognitionRef = useRef<SpeechRecognitionObj | null>(null);
   const DIALOGUES = unit.dialogues;
 
+  // S4-3: Phoneme-level feedback state — per line index
+  const [phonemeData, setPhonemeData] = useState<Record<number, PhonemeError[]>>({});
+  const [phonemeLoading, setPhonemeLoading] = useState<Record<number, boolean>>({});
+
   // Shadowing average
   const shadowValues = Object.values(shadowScores);
   const shadowAvg = shadowValues.length > 0
@@ -199,6 +205,16 @@ export default function ShadowingSection({
           toast.info(`${score}% — Không sao, thử lại nhé!`);
         }
       }
+      // S4-3: Request AI phoneme breakdown (non-blocking)
+      setPhonemeLoading(p => ({ ...p, [shadowLineIdx]: true }));
+      assessPronunciation({ target: targetLine.text, spoken: text })
+        .then(res => {
+          if (res.success && res.result.phoneme_errors.length > 0) {
+            setPhonemeData(p => ({ ...p, [shadowLineIdx]: res.result.phoneme_errors }));
+          }
+        })
+        .catch(() => { /* silent */ })
+        .finally(() => setPhonemeLoading(p => ({ ...p, [shadowLineIdx]: false })));
     });
   };
 
@@ -340,9 +356,32 @@ export default function ShadowingSection({
               <p className="text-white text-sm font-semibold mb-2">
                 &ldquo;{shadowTranscripts[shadowLineIdx]}&rdquo;
               </p>
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-bold border border-emerald-500/10">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-bold border border-emerald-500/10 mb-3">
                 Độ chính xác: {shadowScores[shadowLineIdx]}%
               </div>
+              {/* S4-3: Phoneme feedback cards */}
+              {phonemeLoading[shadowLineIdx] ? (
+                <div className="flex items-center justify-center gap-2 mt-2 text-violet-400">
+                  <Sparkles size={12} className="animate-pulse" />
+                  <span className="text-xs">AI đang phân tích phát âm...</span>
+                </div>
+              ) : phonemeData[shadowLineIdx]?.length ? (
+                <div className="space-y-2 mt-3 text-left">
+                  <p className="text-[10px] font-bold text-violet-400 uppercase tracking-wider flex items-center gap-1">
+                    <Sparkles size={10} /> Phân tích phát âm chi tiết
+                  </p>
+                  {phonemeData[shadowLineIdx].map((err, i) => (
+                    <div key={i} className="bg-violet-950/30 border border-violet-700/40 rounded-xl px-3 py-2.5 text-left">
+                      <p className="text-xs font-bold text-violet-200 mb-0.5">
+                        Từ: <span className="text-white">&ldquo;{err.word}&rdquo;</span>
+                        <span className="ml-2 text-violet-400 font-mono text-[11px]">{err.ipa_target}</span>
+                      </p>
+                      <p className="text-[11px] text-zinc-400 mb-0.5">{err.common_mistake_vn}</p>
+                      <p className="text-[11px] text-amber-300">💡 {err.tip_vn}</p>
+                    </div>
+                  ))}
+                </div>
+              ) : null}
             </div>
           )}
 

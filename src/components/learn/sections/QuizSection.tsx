@@ -1,12 +1,13 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Trophy, Star, CheckCircle, Volume2, ChevronRight } from "lucide-react";
+import { Trophy, Star, CheckCircle, Volume2, ChevronRight, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 import type { UnitData, QuizQuestion } from "../UnitTemplate";
 import { ReadingComprehensionExercise } from "@/components/exercises/ReadingComprehensionExercise";
+import { generateGrammarNote } from "@/app/actions/grammar-notes";
 
 interface QuizSectionProps {
   unit: UnitData;
@@ -120,6 +121,39 @@ export default function QuizSection({
   // S1-3: Mandatory recall state — track per-question recall typing
   const [recallInputs, setRecallInputs] = useState<Record<string, string>>({});
   const [recallChecked, setRecallChecked] = useState<Record<string, boolean>>({});
+
+  // S4-2: AI Grammar Note state — per question-id, stores generated note
+  const [aiNotes, setAiNotes] = useState<Record<string, string | null>>({});
+  const [aiLoading, setAiLoading] = useState<Record<string, boolean>>({});
+
+  // S4-2: When quiz is submitted, auto-fetch AI notes for wrong answers without explanation_vn
+  useEffect(() => {
+    if (!quizSubmitted) return;
+    const wrongWithoutNote = FINAL_QS.filter(
+      q => !q.explanation_vn &&
+        (q.type === "multiple-choice" || q.type === "true-false") &&
+        quizAnswers[q.id] !== undefined &&
+        quizAnswers[q.id] !== q.answer
+    );
+    wrongWithoutNote.forEach(async (q) => {
+      const wrongAns = quizAnswers[q.id];
+      if (!wrongAns) return;
+      setAiLoading(p => ({ ...p, [q.id]: true }));
+      try {
+        const res = await generateGrammarNote({
+          question: q.question,
+          answer: q.answer,
+          wrong_answer: wrongAns,
+          cefr_level: (unit.level as "A0" | "A1" | "A2" | "B1" | "B2") ?? "A1",
+        });
+        if (res.success) {
+          setAiNotes(p => ({ ...p, [q.id]: res.result.explanation_vn }));
+        }
+      } catch { /* silent — not critical */ }
+      finally { setAiLoading(p => ({ ...p, [q.id]: false })); }
+    });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [quizSubmitted]);
 
   const normalizeAnswer = (s: string) =>
     s
@@ -469,14 +503,28 @@ export default function QuizSection({
                       );
                     })}
                   </div>
-                  {/* S1-2: Grammar explanation on wrong answer (Babbel pattern) */}
+                  {/* S1-2: Static grammar explanation */}
                   {quizSubmitted && quizAnswers[q.id] !== q.answer && q.explanation_vn && (
                     <div className="mt-2 flex items-start gap-2 bg-amber-950/30 border border-amber-700/40 rounded-xl px-3 py-2.5">
                       <span className="text-amber-400 text-sm shrink-0">💡</span>
                       <p className="text-amber-200 text-xs leading-relaxed">{q.explanation_vn}</p>
                     </div>
                   )}
-                  {/* S1-3: Mandatory recall — type correct answer after wrong MC */}
+                  {/* S4-2: AI grammar note — shown when no static explanation exists */}
+                  {quizSubmitted && quizAnswers[q.id] !== q.answer && !q.explanation_vn && (
+                    aiLoading[q.id] ? (
+                      <div className="mt-2 flex items-center gap-2 bg-violet-950/30 border border-violet-700/40 rounded-xl px-3 py-2.5">
+                        <Sparkles size={13} className="text-violet-400 shrink-0 animate-pulse" />
+                        <p className="text-violet-300 text-xs">AI đang phân tích lỗi ngữ pháp...</p>
+                      </div>
+                    ) : aiNotes[q.id] ? (
+                      <div className="mt-2 flex items-start gap-2 bg-violet-950/30 border border-violet-700/40 rounded-xl px-3 py-2.5">
+                        <Sparkles size={13} className="text-violet-400 shrink-0 mt-0.5" />
+                        <p className="text-violet-200 text-xs leading-relaxed">{aiNotes[q.id]}</p>
+                      </div>
+                    ) : null
+                  )}
+                  {/* S1-3: Mandatory recall */}
                   {quizSubmitted && quizAnswers[q.id] !== q.answer && (
                     <div className="mt-2">
                       <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider mb-1.5">
