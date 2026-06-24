@@ -7,6 +7,7 @@ import type { UnitData, QuizQuestion } from "../UnitTemplate";
 import { WordBankExercise } from "@/components/exercises/WordBankExercise";
 import { DictationExercise } from "@/components/exercises/DictationExercise";
 import { SentenceCorrectionExercise } from "@/components/exercises/SentenceCorrectionExercise";
+import { ListenAndArrangeExercise } from "@/components/exercises/ListenAndArrangeExercise";
 import { recordAttempt, getWeakTypes, TYPE_LABELS } from "@/lib/adaptive-difficulty";
 
 interface PracticeSectionProps {
@@ -66,6 +67,12 @@ export default function PracticeSection({
 
   // S3-1: Sentence correction state — track which exercises are complete
   const [correctionsDone, setCorrectionsDone] = useState<Set<string>>(new Set());
+
+  // S4-1: Listen+Arrange state
+  const arrangeItems = unit.listenAndArrangeExercises ?? [];
+  const [arrangeIndex, setArrangeIndex] = useState(0);
+  const [arrangeScore, setArrangeScore] = useState(0);
+  const [arrangeDone, setArrangeDone] = useState(!arrangeItems.length);
 
   // Shuffle matching pairs when unit/exercise changes
   useEffect(() => {
@@ -132,6 +139,7 @@ export default function PracticeSection({
   const allCorrectionsDone =
     !unit.sentenceCorrectionExercises?.length ||
     unit.sentenceCorrectionExercises.every((ex) => correctionsDone.has(ex.id));
+  const allArrangeDone = !arrangeItems.length || arrangeDone;
 
   // S3-3: Adaptive weak-type tip
   const weakTypes = getWeakTypes(unit.unitId);
@@ -527,7 +535,48 @@ export default function PracticeSection({
         </div>
       )}
 
-      {/* ── Word Bank Exercises ── */}
+      {/* ── S4-1: Listen + Arrange Exercises ── */}
+      {arrangeItems.length > 0 && !arrangeDone && practiceSubmitted && (
+        <div className="space-y-4 mb-6">
+          <div className="flex items-center gap-2">
+            <span className="text-lg">🎧</span>
+            <p className="text-sm font-bold text-white">Nghe và sắp xếp từ</p>
+            <span className="text-xs text-zinc-500 ml-auto">
+              {arrangeIndex + 1}/{arrangeItems.length}
+            </span>
+          </div>
+          <ListenAndArrangeExercise
+            key={arrangeItems[arrangeIndex]?.id}
+            item={arrangeItems[arrangeIndex]!}
+            playCorrectSound={playCorrectSound}
+            playWrongSound={playWrongSound}
+            onCorrect={() => {
+              setArrangeScore(s => s + 1);
+              addSessionXp?.(8); // S2-3: +8 XP per audio arrangement
+              recordAttempt(unit.unitId, "listen-arrange", true);
+              const next = arrangeIndex + 1;
+              if (next >= arrangeItems.length) setArrangeDone(true);
+              else setArrangeIndex(next);
+            }}
+            onWrong={() => {
+              recordAttempt(unit.unitId, "listen-arrange", false);
+              const next = arrangeIndex + 1;
+              if (next >= arrangeItems.length) setArrangeDone(true);
+              else setArrangeIndex(next);
+            }}
+          />
+        </div>
+      )}
+
+      {arrangeDone && arrangeItems.length > 0 && practiceSubmitted && (
+        <div className="flex items-center gap-2 rounded-xl bg-violet-950/40 border border-violet-500/20 p-3">
+          <CheckCircle size={16} className="text-violet-400 shrink-0" />
+          <p className="text-sm text-violet-300 font-semibold">
+            Nghe & sắp xếp: {arrangeScore}/{arrangeItems.length} chính xác
+          </p>
+        </div>
+      )}
+
       {unit.wordBankExercises && unit.wordBankExercises.length > 0 && !wordBankDone && practiceSubmitted && (
         <div className="space-y-3">
           <div className="flex items-center gap-2">
@@ -641,7 +690,7 @@ export default function PracticeSection({
                 : "💪 Ôn lại thẻ từ vựng sẽ giúp bạn nhớ lâu hơn!"}
             </p>
           </div>
-          {matchingDone && allScrambleDone && allCorrectionsDone && allWordBankDone && allDictationDone ? (
+          {matchingDone && allScrambleDone && allCorrectionsDone && allArrangeDone && allWordBankDone && allDictationDone ? (
             <button
               onClick={goNext}
               className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-white font-bold rounded-2xl px-6 py-4 flex items-center justify-center gap-2 transition-all duration-200 text-lg shadow-lg shadow-emerald-900/40 active:scale-95"
@@ -657,6 +706,8 @@ export default function PracticeSection({
                 ? "Hoàn thành phần sắp xếp câu ở trên để tiếp tục"
                 : !allCorrectionsDone
                 ? "Hoàn thành phần tìm lỗi sai ở trên để tiếp tục"
+                : !allArrangeDone
+                ? "Hoàn thành phần nghe & sắp xếp ở trên để tiếp tục"
                 : !allWordBankDone
                 ? "Hoàn thành phần xây dựng câu ở trên để tiếp tục"
                 : "Hoàn thành phần chính tả ở trên để tiếp tục"}

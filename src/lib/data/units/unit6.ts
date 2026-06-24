@@ -122,14 +122,52 @@ export const unit6: UnitData = {
     { id: "pt6-3", prompt_vn: "Có hai phòng ngủ trong căn hộ của tôi.", answer: "There are two bedrooms in my apartment." },
   ],
   quiz: [
-    { id: "q1", question: "Chọn câu đúng với 'two windows':", options: ["There is two windows.", "There are two windows.", "There have two windows.", "There be two windows."], answer: "There are two windows.", type: "multiple-choice" },
-    { id: "q2", question: "Cách nói phủ định của 'There is a garden':", options: ["There isn't a garden.", "There aren't a garden.", "There isn't any gardens.", "There are no garden."], answer: "There isn't a garden.", type: "multiple-choice" },
-    { id: "q3", question: "Phòng nào thường có sofa?", options: ["bedroom", "kitchen", "living room", "bathroom"], answer: "living room", type: "multiple-choice" },
+    { id: "q1", question: "Chọn câu đúng với 'two windows':", options: ["There is two windows.", "There are two windows.", "There have two windows.", "There be two windows."], answer: "There are two windows.", type: "multiple-choice",
+      explanation_vn: "'Two windows' là số nhiều → dùng 'There ARE'. 'There IS' chỉ dùng cho số ít." },
+    { id: "q2", question: "Cách nói phủ định của 'There is a garden':", options: ["There isn't a garden.", "There aren't a garden.", "There isn't any gardens.", "There are no garden."], answer: "There isn't a garden.", type: "multiple-choice",
+      explanation_vn: "'There is' → phủ định là 'There isn't' (viết tắt của 'is not'). 'Aren't' dùng cho số nhiều." },
+    { id: "q3", question: "Phòng nào thường có sofa?", options: ["bedroom", "kitchen", "living room", "bathroom"], answer: "living room", type: "multiple-choice",
+      explanation_vn: "'Living room' = phòng khách, nơi đặt sofa và tự TV. Bedroom = phòng ngủ, kitchen = bếp." },
     { id: "q4", question: "Điền từ còn thiếu: 'There ___ a wardrobe in the corner.'", options: [], answer: "is", type: "cloze" },
     { id: "q5", question: "Điền từ còn thiếu: 'Are there ___ chairs in the room?'", options: [], answer: "any", type: "cloze" },
     { id: "q6", question: "Có hai phòng ngủ trong ngôi nhà của tôi.", options: [], answer: "There are two bedrooms in my house.", type: "translate" },
     { id: "q7", question: "Có phòng tắm nào ở tầng dưới không?", options: [], answer: "Is there a bathroom downstairs?", type: "translate" },
   ],
+
+  sentenceCorrectionExercises: [
+    {
+      id: "sc6-1",
+      sentence: "There is three windows in this room.",
+      errorWord: "is",
+      correction: "are",
+      explanation_vn: "'Three windows' là số nhiều → 'There ARE three windows'. 'Is' chỉ dùng cho số ít.",
+    },
+    {
+      id: "sc6-2",
+      sentence: "There isn't some milk in the fridge.",
+      errorWord: "some",
+      correction: "any",
+      explanation_vn: "Trong câu phủ định/nghi vấn dùng 'ANY': 'There isn't any milk.' 'Some' dùng trong câu khẳng định.",
+    },
+  ],
+
+  listenAndArrangeExercises: [
+    {
+      id: "la6-1",
+      audio_text: "There is a table in the kitchen.",
+      prompt_vn: "Có một chiếc bàn trong bếp.",
+      words: ["There", "is", "a", "table", "in", "the", "kitchen", ".", "are", "on"],
+      answer: "There is a table in the kitchen .",
+    },
+    {
+      id: "la6-2",
+      audio_text: "There are two bedrooms in my house.",
+      prompt_vn: "Có hai phòng ngủ trong nhà tôi.",
+      words: ["There", "are", "two", "bedrooms", "in", "my", "house", ".", "is", "three"],
+      answer: "There are two bedrooms in my house .",
+    },
+  ],
+
   wordBankExercises: [
     {
       id: "wb1",

@@ -123,14 +123,52 @@ export const unit9: UnitData = {
     { id: "pt9-3", prompt_vn: "Siêu thị cách đây bao xa?", answer: "How far is the supermarket from here?" },
   ],
   quiz: [
-    { id: "q1", question: "Chọn câu mô tả đúng vị trí:", options: ["The hospital is next the park.", "The hospital is opposite the park.", "The hospital is between park.", "The park is next to hospital."], answer: "The hospital is opposite the park.", type: "multiple-choice" },
-    { id: "q2", question: "'Between A and B' có nghĩa là:", options: ["Cạnh A", "Đối diện B", "Giữa A và B", "Gần A"], answer: "Giữa A và B", type: "multiple-choice" },
-    { id: "q3", question: "Chỉ đường: bạn nói gì khi muốn người ta rẽ phải?", options: ["Go straight ahead.", "Turn left.", "Turn right.", "Go back."], answer: "Turn right.", type: "multiple-choice" },
+    { id: "q1", question: "Chọn câu mô tả đúng vị trí:", options: ["The hospital is next the park.", "The hospital is opposite the park.", "The hospital is between park.", "The park is next to hospital."], answer: "The hospital is opposite the park.", type: "multiple-choice",
+      explanation_vn: "'Opposite' = đối diện. 'Next to' cần từ 'to' (không nói 'next the'). 'Between' cần hai đối tượng." },
+    { id: "q2", question: "'Between A and B' có nghĩa là:", options: ["Cạnh A", "Đối diện B", "Giữa A và B", "Gần A"], answer: "Giữa A và B", type: "multiple-choice",
+      explanation_vn: "'Between A and B' = giữa hai thứ. 'Next to' = kế bên. 'Opposite' = đối diện." },
+    { id: "q3", question: "Chỉ đường: bạn nói gì khi muốn người ta rẽ phải?", options: ["Go straight ahead.", "Turn left.", "Turn right.", "Go back."], answer: "Turn right.", type: "multiple-choice",
+      explanation_vn: "'Turn right' = rẽ phải. 'Turn left' = rẽ trái. 'Go straight' = đi thẳng. 'Go back' = quay lại." },
     { id: "q4", question: "Điền từ: 'Go ___ ahead for two blocks.'", options: [], answer: "straight", type: "cloze" },
     { id: "q5", question: "Điền từ: 'Turn ___ at the traffic light.'", options: [], answer: "left", type: "cloze" },
     { id: "q6", question: "Ngân hàng đối diện bưu điện.", options: [], answer: "The bank is opposite the post office.", type: "translate" },
     { id: "q7", question: "Xin lỗi, siêu thị gần nhất ở đâu?", options: [], answer: "Excuse me, where is the nearest supermarket?", type: "translate" },
   ],
+
+  sentenceCorrectionExercises: [
+    {
+      id: "sc9-1",
+      sentence: "The cafe is next the bank.",
+      errorWord: "next",
+      correction: "next to",
+      explanation_vn: "'Next to' = kế bên (luôn có 'to'). Không nói 'next the bank' — thiếu giới từ 'to'.",
+    },
+    {
+      id: "sc9-2",
+      sentence: "Go straight and turn left at end of the street.",
+      errorWord: "at end",
+      correction: "at the end",
+      explanation_vn: "'At the end of' = ở cuối. Luôn dùng 'mạo từ the' trước 'end' khi có 'of + danh từ'.",
+    },
+  ],
+
+  listenAndArrangeExercises: [
+    {
+      id: "la9-1",
+      audio_text: "Turn left at the traffic light.",
+      prompt_vn: "Rẽ trái tại đèn giao thông.",
+      words: ["Turn", "left", "at", "the", "traffic", "light", ".", "right", "straight"],
+      answer: "Turn left at the traffic light .",
+    },
+    {
+      id: "la9-2",
+      audio_text: "The bank is next to the post office.",
+      prompt_vn: "Ngân hàng kế bên bưu điện.",
+      words: ["The", "bank", "is", "next", "to", "the", "post", "office", ".", "opposite", "near"],
+      answer: "The bank is next to the post office .",
+    },
+  ],
+
   wordBankExercises: [
     {
       id: "wb1",

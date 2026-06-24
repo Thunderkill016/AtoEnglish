@@ -15,7 +15,7 @@
  *   }
  */
 
-export type ExerciseType = "matching" | "scramble" | "wordbank" | "correction" | "dictation" | "quiz";
+export type ExerciseType = "matching" | "scramble" | "wordbank" | "correction" | "dictation" | "quiz" | "listen-arrange";
 
 interface TypeStat { attempts: number; errors: number }
 type DifficultyStore = Partial<Record<ExerciseType, TypeStat>>;
@@ -69,7 +69,8 @@ export const TYPE_LABELS: Record<ExerciseType, string> = {
   matching:   "Nối từ",
   scramble:   "Sắp xếp câu",
   wordbank:   "Xây dựng câu",
-  correction: "Tìm lỗi sai",
-  dictation:  "Chính tả",
-  quiz:       "Trắc nghiệm",
+  correction:        "Tìm lỗi sai",
+  dictation:         "Chính tả",
+  quiz:              "Trắc nghiệm",
+  "listen-arrange":  "Nghe & sắp xếp",
 };

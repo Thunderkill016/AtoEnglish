@@ -124,14 +124,52 @@ export const unit7: UnitData = {
     { id: "pt7-3", prompt_vn: "Cái này quá đắt.", answer: "This is too expensive." },
   ],
   quiz: [
-    { id: "q1", question: "Câu hỏi giá đúng với 'these jeans':", options: ["How much is these jeans?", "How much are these jeans?", "How many are these jeans?", "How much these jeans?"], answer: "How much are these jeans?", type: "multiple-choice" },
-    { id: "q2", question: "Muốn trả bằng thẻ, bạn nói:", options: ["I pay by cash.", "I pay by card.", "I pay by check.", "I pay online."], answer: "I pay by card.", type: "multiple-choice" },
-    { id: "q3", question: "Từ nào có nghĩa là 'đắt tiền'?", options: ["cheap", "sale", "expensive", "discount"], answer: "expensive", type: "multiple-choice" },
+    { id: "q1", question: "Câu hỏi giá đúng với 'these jeans':", options: ["How much is these jeans?", "How much are these jeans?", "How many are these jeans?", "How much these jeans?"], answer: "How much are these jeans?", type: "multiple-choice",
+      explanation_vn: "'These jeans' là số nhiều → 'How much ARE'. Không dùng 'How many' cho hàng không đếm được theo cái." },
+    { id: "q2", question: "Muốn trả bằng thẻ, bạn nói:", options: ["I pay by cash.", "I pay by card.", "I pay by check.", "I pay online."], answer: "I pay by card.", type: "multiple-choice",
+      explanation_vn: "'Pay by card' = trả bằng thẻ. 'Pay by cash' = trả tiền mặt. Cầu trúc: 'pay by + phương tiện thanh toán'." },
+    { id: "q3", question: "Từ nào có nghĩa là 'đắt tiền'?", options: ["cheap", "sale", "expensive", "discount"], answer: "expensive", type: "multiple-choice",
+      explanation_vn: "'Expensive' = đắt. 'Cheap' = rẻ. 'Discount' = giảm giá. 'Sale' = đợt bán hàng giảm giá." },
     { id: "q4", question: "Điền vào: 'How much ___ these shoes?'", options: [], answer: "are", type: "cloze" },
     { id: "q5", question: "Điền vào: 'They ___ two hundred thousand dong.'", options: [], answer: "cost", type: "cloze" },
     { id: "q6", question: "Tôi có thể thử chiếc váy này không?", options: [], answer: "Can I try this dress on?", type: "translate" },
     { id: "q7", question: "Hôm nay có đợt giảm giá 20%.", options: [], answer: "There is a 20% discount today.", type: "translate" },
   ],
+
+  sentenceCorrectionExercises: [
+    {
+      id: "sc7-1",
+      sentence: "How much is these jeans?",
+      errorWord: "is",
+      correction: "are",
+      explanation_vn: "'These jeans' (số nhiều) → 'How much ARE'. Tương tự: 'How much are these shoes/trousers?'",
+    },
+    {
+      id: "sc7-2",
+      sentence: "This shirt costed fifty dollars.",
+      errorWord: "costed",
+      correction: "cost",
+      explanation_vn: "'Cost' không đổi ở quá khứ: cost → cost (không có '-ed'). Lỗi rất phổ biến!",
+    },
+  ],
+
+  listenAndArrangeExercises: [
+    {
+      id: "la7-1",
+      audio_text: "How much is this shirt?",
+      prompt_vn: "Chiếc áo này giá bao nhiêu?",
+      words: ["How", "much", "is", "this", "shirt", "?", "many", "cost"],
+      answer: "How much is this shirt ?",
+    },
+    {
+      id: "la7-2",
+      audio_text: "I pay by card.",
+      prompt_vn: "Tôi trả bằng thẻ.",
+      words: ["I", "pay", "by", "card", ".", "cash", "with"],
+      answer: "I pay by card .",
+    },
+  ],
+
   wordBankExercises: [
     {
       id: "wb1",

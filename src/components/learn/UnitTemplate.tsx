@@ -189,6 +189,15 @@ export interface SentenceCorrectionExercise {
   distractors?: string[];  // Wrong replacement options (if MCQ style)
 }
 
+// S4-1: Listen+Arrange Exercise (Duolingo tap-words-in-order audio-first pattern)
+export interface ListenArrangeItem {
+  id: string;
+  audio_text: string;    // English sentence spoken via TTS
+  prompt_vn: string;     // Vietnamese hint shown below speaker
+  words: string[];       // Shuffled word pool (may include 1-2 distractors)
+  answer: string;        // Correct space-joined answer
+}
+
 export interface UnitData {
   unitId: string;
   title: string;
@@ -206,6 +215,7 @@ export interface UnitData {
   scrambleExercises?: SentenceScramble[];
   wordBankExercises?: WordBankQuestion[];
   sentenceCorrectionExercises?: SentenceCorrectionExercise[]; // S3-1
+  listenAndArrangeExercises?: ListenArrangeItem[];            // S4-1
   practiceQuiz?: QuizQuestion[];
   practiceTranslate?: { id: string; prompt_vn: string; answer: string }[];
   dialogues: Dialogue[];

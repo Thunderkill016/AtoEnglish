@@ -126,14 +126,52 @@ export const unit10: UnitData = {
     { id: "pt10-3", prompt_vn: "Bạn có thể giúp tôi không?", answer: "Can you help me?" },
   ],
   quiz: [
-    { id: "q1", question: "Câu hỏi đúng về khả năng:", options: ["Do you can cook?", "Are you can cook?", "Can you cook?", "You can cook?"], answer: "Can you cook?", type: "multiple-choice" },
-    { id: "q2", question: "Lỗi nào SAI?", options: ["I can swim.", "She can't drive.", "He cans sing.", "Can you speak English?"], answer: "He cans sing.", type: "multiple-choice" },
-    { id: "q3", question: "Câu nào ĐÚNG?", options: ["She can speaks French.", "She can speak French.", "She cans speak French.", "She is can speak French."], answer: "She can speak French.", type: "multiple-choice" },
+    { id: "q1", question: "Câu hỏi đúng về khả năng:", options: ["Do you can cook?", "Are you can cook?", "Can you cook?", "You can cook?"], answer: "Can you cook?", type: "multiple-choice",
+      explanation_vn: "'Can' là động từ khiếm khuyết, câu hỏi đảo 'Can' lên đầu. Không dùng 'Do/Does/Are' với 'can'." },
+    { id: "q2", question: "Lỗi nào SAI?", options: ["I can swim.", "She can't drive.", "He cans sing.", "Can you speak English?"], answer: "He cans sing.", type: "multiple-choice",
+      explanation_vn: "'Can' không bao giờ thêm '-s/-es' dù chủ ngữ là 'He/She/It'. Đúng: 'He CAN sing'." },
+    { id: "q3", question: "Câu nào ĐÚNG?", options: ["She can speaks French.", "She can speak French.", "She cans speak French.", "She is can speak French."], answer: "She can speak French.", type: "multiple-choice",
+      explanation_vn: "Sau 'can/can't' dùng động từ nguyên mẫu (bare infinitive): 'can speak', không phải 'can speaks'." },
     { id: "q4", question: "Điền từ: 'I ___ drive a car but I can ride a bike.'", options: [], answer: "can't", type: "cloze" },
     { id: "q5", question: "Điền từ: '___ you speak any other languages?'", options: [], answer: "Can", type: "cloze" },
     { id: "q6", question: "Anh ấy có thể hát và chơi guitar.", options: [], answer: "He can sing and play the guitar.", type: "translate" },
     { id: "q7", question: "Bạn có thể nói tiếng Anh không?", options: [], answer: "Can you speak English?", type: "translate" },
   ],
+
+  sentenceCorrectionExercises: [
+    {
+      id: "sc10-1",
+      sentence: "She cans play the piano very well.",
+      errorWord: "cans",
+      correction: "can",
+      explanation_vn: "'Can' không đổi dạng: I/you/he/she/it/we/they đều dùng 'can'. Không có 'cans'.",
+    },
+    {
+      id: "sc10-2",
+      sentence: "He can swims very fast.",
+      errorWord: "swims",
+      correction: "swim",
+      explanation_vn: "Sau 'can' dùng bare infinitive (không '-s'): 'can swim'. 'Swims' chỉ dùng trong Present Simple.",
+    },
+  ],
+
+  listenAndArrangeExercises: [
+    {
+      id: "la10-1",
+      audio_text: "Can you speak English?",
+      prompt_vn: "Bạn có thể nói tiếng Anh không?",
+      words: ["Can", "you", "speak", "English", "?", "Do", "speaks"],
+      answer: "Can you speak English ?",
+    },
+    {
+      id: "la10-2",
+      audio_text: "I can swim but I can't drive.",
+      prompt_vn: "Tôi biết bơi nhưng không biết lái xe.",
+      words: ["I", "can", "swim", "but", "I", "can't", "drive", ".", "cannot", "ride"],
+      answer: "I can swim but I can't drive .",
+    },
+  ],
+
   wordBankExercises: [
     {
       id: "wb1",

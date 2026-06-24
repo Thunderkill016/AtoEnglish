@@ -468,6 +468,24 @@ export const unit1: UnitData = {
     },
   ],
 
+  // ── S4-1: Listen + Arrange ───────────────────────────────────────────────
+  listenAndArrangeExercises: [
+    {
+      id: "la1-1",
+      audio_text: "Nice to meet you.",
+      prompt_vn: "Rất vui được gặp bạn.",
+      words: ["Nice", "to", "meet", "you", ".", "Hello", "sorry"],
+      answer: "Nice to meet you .",
+    },
+    {
+      id: "la1-2",
+      audio_text: "I am from Vietnam.",
+      prompt_vn: "Tôi đến từ Việt Nam.",
+      words: ["I", "am", "from", "Vietnam", ".", "in", "come"],
+      answer: "I am from Vietnam .",
+    },
+  ],
+
   // ── SCRAMBLE: Productive recall ──────────────────────────────────────────
   scrambleExercises: [
     {

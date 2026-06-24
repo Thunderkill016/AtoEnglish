@@ -123,14 +123,52 @@ export const unit8: UnitData = {
     { id: "pt8-3", prompt_vn: "Mang hóa đơn cho tôi với.", answer: "Can I have the bill, please?" },
   ],
   quiz: [
-    { id: "q1", question: "Câu gọi món lịch sự nhất:", options: ["I want some soup.", "Give me some soup.", "I'd like some soup, please.", "Some soup for me."], answer: "I'd like some soup, please.", type: "multiple-choice" },
-    { id: "q2", question: "'Egg' là countable. Chọn câu đúng:", options: ["some egg", "a eggs", "two eggs", "some eggs is"], answer: "two eggs", type: "multiple-choice" },
-    { id: "q3", question: "Muốn tính tiền, bạn nói gì?", options: ["Can we have the bill, please?", "I want to pay now.", "Give me the money.", "The bill, now."], answer: "Can we have the bill, please?", type: "multiple-choice" },
+    { id: "q1", question: "Câu gọi món lịch sự nhất:", options: ["I want some soup.", "Give me some soup.", "I'd like some soup, please.", "Some soup for me."], answer: "I'd like some soup, please.", type: "multiple-choice",
+      explanation_vn: "'I'd like' = cấu trúc lịch sự (= I would like). 'I want' đúng ngữ pháp nhưng kém lịch sự hơn khi gọi món." },
+    { id: "q2", question: "'Egg' là countable. Chọn câu đúng:", options: ["some egg", "a eggs", "two eggs", "some eggs is"], answer: "two eggs", type: "multiple-choice",
+      explanation_vn: "'Egg' là danh từ đếm được → 'two eggs'. Không nói 'a eggs' (số nhiều không dùng 'a/an')." },
+    { id: "q3", question: "Muốn tính tiền, bạn nói gì?", options: ["Can we have the bill, please?", "I want to pay now.", "Give me the money.", "The bill, now."], answer: "Can we have the bill, please?", type: "multiple-choice",
+      explanation_vn: "'Can we have the bill?' = cho chúng tôi tính tiền. Ngày nay có thể nói 'Can I get the check?' (Mỹ)." },
     { id: "q4", question: "Điền từ vào: 'Can I have ___ bread, please?'", options: [], answer: "some", type: "cloze" },
     { id: "q5", question: "Điền từ vào: 'There isn't ___ coffee left.'", options: [], answer: "any", type: "cloze" },
     { id: "q6", question: "Cho tôi một tô phở, làm ơn.", options: [], answer: "I'd like some noodle soup, please.", type: "translate" },
     { id: "q7", question: "Bạn có muốn thêm rau không?", options: [], answer: "Would you like any vegetables?", type: "translate" },
   ],
+
+  sentenceCorrectionExercises: [
+    {
+      id: "sc8-1",
+      sentence: "Can I have some water, please? No, there isn't some water.",
+      errorWord: "some",
+      correction: "any",
+      explanation_vn: "Trong câu phủ định 'there isn't' → dùng 'ANY'. 'Some' dùng trong câu khẳng định.",
+    },
+    {
+      id: "sc8-2",
+      sentence: "I want some rice, please — it's more polite this way.",
+      errorWord: "want",
+      correction: "would like",
+      explanation_vn: "Khi gọi món dùng 'I would like / I'd like' lịch sự hơn 'I want' trong ngữ cảnh nhà hàng.",
+    },
+  ],
+
+  listenAndArrangeExercises: [
+    {
+      id: "la8-1",
+      audio_text: "I'd like some noodle soup, please.",
+      prompt_vn: "Tôi muốn một tô phở, làm ơn.",
+      words: ["I'd", "like", "some", "noodle", "soup", "please", ".", "want", "any"],
+      answer: "I'd like some noodle soup please .",
+    },
+    {
+      id: "la8-2",
+      audio_text: "Can we have the bill, please?",
+      prompt_vn: "Cho chúng tôi tính tiền, làm ơn.",
+      words: ["Can", "we", "have", "the", "bill", "please", "?", "I", "check"],
+      answer: "Can we have the bill please ?",
+    },
+  ],
+
   wordBankExercises: [
     {
       id: "wb1",
