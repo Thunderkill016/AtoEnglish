@@ -152,6 +152,66 @@ export const unit41: UnitData = {
       { en: "Exercise boosts the immune system", vn: "Tập thể dục giúp tăng cường hệ miễn dịch" },
     ],
   },
+  readingPassage: {
+    id: "unit41-reading-1",
+    title: "Understanding IELTS Band Scores",
+    title_vn: "Đọc đoạn về điểm IELTS và kỹ năng thi",
+    level: "B2" as const,
+    text:
+      "The International English Language Testing System (IELTS) is widely recognised " +
+      "by universities, employers, and immigration authorities worldwide. " +
+      "The test assesses four skills: Listening, Reading, Writing, and Speaking. " +
+      "Each section is scored on a scale from 0 to 9, and an overall Band Score is calculated. " +
+      "A Band 6 corresponds approximately to B2 level, while Band 7 indicates C1. " +
+      "Many prestigious universities require a minimum Band 6.5 or 7 for admission. " +
+      "In the Writing section, candidates are assessed on task achievement, " +
+      "coherence and cohesion, lexical resource, and grammatical range and accuracy. " +
+      "In the Speaking section, fluency, vocabulary, pronunciation, and grammatical accuracy are evaluated. " +
+      "Vietnamese candidates often score lower in Speaking and Writing due to less exposure " +
+      "to productive language use. " +
+      "Regular practice with authentic materials and feedback from qualified teachers " +
+      "can significantly improve your score within three to six months.",
+    questions: [
+      {
+        id: "u41r-q1",
+        question_vn: "IELTS đánh giá bao nhiêu kỹ năng?",
+        options: ["Two", "Three", "Four", "Five"],
+        answer: "Four",
+        explanation_vn: "'The test assesses four skills: Listening, Reading, Writing, and Speaking.'",
+      },
+      {
+        id: "u41r-q2",
+        question_vn: "Band 6 tương đương với trình độ CEFR nào?",
+        options: ["A2", "B1", "B2", "C1"],
+        answer: "B2",
+        explanation_vn: "'A Band 6 corresponds approximately to B2 level.'",
+      },
+      {
+        id: "u41r-q3",
+        question_vn: "Trong phần Writing, thí sinh được đánh giá theo những tiêu chí nào?",
+        options: [
+          "Speed and accuracy",
+          "Task achievement, coherence, lexical resource, and grammatical range",
+          "Spelling and punctuation only",
+          "Length and topic relevance",
+        ],
+        answer: "Task achievement, coherence, lexical resource, and grammatical range",
+        explanation_vn: "'candidates are assessed on task achievement, coherence and cohesion, lexical resource, and grammatical range and accuracy.'",
+      },
+      {
+        id: "u41r-q4",
+        question_vn: "Thí sinh Việt Nam thường gặp khó khăn ở phần nào?",
+        options: [
+          "Listening and Reading",
+          "Reading and Speaking",
+          "Speaking and Writing",
+          "Listening and Writing",
+        ],
+        answer: "Speaking and Writing",
+        explanation_vn: "'Vietnamese candidates often score lower in Speaking and Writing.'",
+      },
+    ],
+  },
 };
 
 export default unit41;

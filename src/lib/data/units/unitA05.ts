@@ -522,6 +522,49 @@ export const unitA05: UnitData = {
       type: "translate",
     },
   ],
+  readingPassage: {
+    id: "unitA05-reading-1",
+    title: "About Me",
+    title_vn: "Đọc đoạn về thông tin cá nhân",
+    level: "A0" as const,
+    text:
+      "My name is Minh. I am 25 years old. " +
+      "I am Vietnamese. I am a student. " +
+      "I live in Ho Chi Minh City. " +
+      "My phone number is 0901 234 567. " +
+      "My email is minh@email.com. " +
+      "Nice to meet you!",
+    questions: [
+      {
+        id: "uA05r-q1",
+        question_vn: "Minh bao nhiêu tuổi?",
+        options: ["20", "23", "25", "30"],
+        answer: "25",
+        explanation_vn: "'I am 25 years old.'",
+      },
+      {
+        id: "uA05r-q2",
+        question_vn: "Minh là người nước nào?",
+        options: ["Japanese", "Chinese", "Vietnamese", "Korean"],
+        answer: "Vietnamese",
+        explanation_vn: "'I am Vietnamese.'",
+      },
+      {
+        id: "uA05r-q3",
+        question_vn: "Minh sống ở đâu?",
+        options: ["Hanoi", "Da Nang", "Hue", "Ho Chi Minh City"],
+        answer: "Ho Chi Minh City",
+        explanation_vn: "'I live in Ho Chi Minh City.'",
+      },
+      {
+        id: "uA05r-q4",
+        question_vn: "Minh làm nghề gì?",
+        options: ["Teacher", "Doctor", "Student", "Engineer"],
+        answer: "Student",
+        explanation_vn: "'I am a student.'",
+      },
+    ],
+  },
 };
 
 export default unitA05;

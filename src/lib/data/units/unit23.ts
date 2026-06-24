@@ -150,6 +150,73 @@ export const unit23: UnitData = {
       { en: "Unless we act now, we will miss the opportunity", vn: "Trừ khi chúng ta hành động ngay, chúng ta sẽ bỏ lỡ cơ hội" },
     ],
   },
+  readingPassage: {
+    id: "unit23-reading-1",
+    title: "Planning for Success",
+    title_vn: "Đọc đoạn về lập kế hoạch thành công",
+    level: "B1" as const,
+    text:
+      "Success doesn't happen by accident. If you set clear goals, you will achieve better results. " +
+      "When you plan your week on Sunday evening, you feel more organised on Monday morning. " +
+      "If you break a big project into small tasks, it becomes much easier to manage. " +
+      "If you don't prioritise your work, you will waste time on unimportant things. " +
+      "When I finish a difficult task, I always reward myself with a short break. " +
+      "This helps me stay motivated throughout the day. " +
+      "If you sleep less than seven hours, your concentration will suffer the next day. " +
+      "When you work in a team, communication is essential. " +
+      "If everyone understands their role, the project will run smoothly. " +
+      "Remember: good habits lead to great outcomes!",
+    questions: [
+      {
+        id: "u23r-q1",
+        question_vn: "Điều gì xảy ra nếu bạn đặt mục tiêu rõ ràng?",
+        options: [
+          "You will feel stressed",
+          "You will achieve better results",
+          "You will work longer hours",
+          "You will need less sleep",
+        ],
+        answer: "You will achieve better results",
+        explanation_vn: "'If you set clear goals, you will achieve better results.'",
+      },
+      {
+        id: "u23r-q2",
+        question_vn: "Tại sao người viết lập kế hoạch tuần vào tối Chủ nhật?",
+        options: [
+          "To impress their manager",
+          "To feel more organised on Monday",
+          "To avoid working overtime",
+          "To finish work earlier",
+        ],
+        answer: "To feel more organised on Monday",
+        explanation_vn: "'When you plan your week on Sunday evening, you feel more organised on Monday morning.'",
+      },
+      {
+        id: "u23r-q3",
+        question_vn: "Điều gì xảy ra nếu bạn ngủ ít hơn bảy tiếng?",
+        options: [
+          "You will be more creative",
+          "Your concentration will suffer",
+          "You will finish work faster",
+          "You will feel more motivated",
+        ],
+        answer: "Your concentration will suffer",
+        explanation_vn: "'If you sleep less than seven hours, your concentration will suffer the next day.'",
+      },
+      {
+        id: "u23r-q4",
+        question_vn: "Khi nào dự án nhóm sẽ chạy suôn sẻ?",
+        options: [
+          "When the manager controls everything",
+          "When everyone works extra hours",
+          "When everyone understands their role",
+          "When the deadline is extended",
+        ],
+        answer: "When everyone understands their role",
+        explanation_vn: "'If everyone understands their role, the project will run smoothly.'",
+      },
+    ],
+  },
 };
 
 export default unit23;

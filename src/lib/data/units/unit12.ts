@@ -186,6 +186,67 @@ export const unit12: UnitData = {
       { en: "the fastest", vn: "nhanh nhất" },
     ],
   },
+  readingPassage: {
+    id: "unit12-reading-1",
+    title: "My English Journey",
+    title_vn: "Đọc đoạn về hành trình học tiếng Anh",
+    level: "A1" as const,
+    text:
+      "My name is Hoa. Six months ago, I could not speak English at all. " +
+      "I was too shy to have a conversation with foreign colleagues. " +
+      "But I decided to practice every day. " +
+      "I watch English videos, read short texts, and practice speaking. " +
+      "Now I can introduce myself and describe my daily routine. " +
+      "I can ask for help and I can understand simple sentences. " +
+      "My colleagues are very kind. They help me when I make mistakes. " +
+      "Learning English is not easy, but I am happy with my progress. " +
+      "My goal is to have a confident conversation in English by next year!",
+    questions: [
+      {
+        id: "u12r-q1",
+        question_vn: "Hoa bắt đầu học tiếng Anh bao lâu trước?",
+        options: ["One month ago", "Three months ago", "Six months ago", "One year ago"],
+        answer: "Six months ago",
+        explanation_vn: "'Six months ago, I could not speak English at all.'",
+      },
+      {
+        id: "u12r-q2",
+        question_vn: "Hoa làm gì để luyện tập tiếng Anh?",
+        options: [
+          "Only watches videos",
+          "Only reads books",
+          "Watches videos, reads texts, and practices speaking",
+          "Goes to English classes",
+        ],
+        answer: "Watches videos, reads texts, and practices speaking",
+        explanation_vn: "'I watch English videos, read short texts, and practice speaking.'",
+      },
+      {
+        id: "u12r-q3",
+        question_vn: "Bây giờ Hoa có thể làm gì?",
+        options: [
+          "Speak very fluently",
+          "Introduce herself and describe her daily routine",
+          "Write long essays in English",
+          "Teach English to others",
+        ],
+        answer: "Introduce herself and describe her daily routine",
+        explanation_vn: "'Now I can introduce myself and describe my daily routine.'",
+      },
+      {
+        id: "u12r-q4",
+        question_vn: "Mục tiêu của Hoa là gì?",
+        options: [
+          "Move to an English-speaking country",
+          "Have a confident conversation in English by next year",
+          "Become an English teacher",
+          "Stop learning English",
+        ],
+        answer: "Have a confident conversation in English by next year",
+        explanation_vn: "'My goal is to have a confident conversation in English by next year!'",
+      },
+    ],
+  },
 };
 
 export default unit12;

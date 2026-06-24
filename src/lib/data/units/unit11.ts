@@ -180,6 +180,72 @@ export const unit11: UnitData = {
       { en: "I am not free now", vn: "Tôi không rảnh lúc này" },
     ],
   },
+  readingPassage: {
+    id: "unit11-reading-1",
+    title: "How Are You Feeling?",
+    title_vn: "Đọc đoạn về cảm xúc và sức khỏe",
+    level: "A1" as const,
+    text:
+      "My friend Lan is not well today. She has a headache and a cold. " +
+      "She also has a fever — her temperature is 38 degrees! " +
+      "Her mum says she needs to drink water and rest. " +
+      "Lan feels very tired. She cannot go to work today. " +
+      "Her boss is not happy about this, but he says, 'Don't worry — get better soon!' " +
+      "Lan takes some medicine and sleeps. " +
+      "In the afternoon, she feels a little better. " +
+      "She is happy because the headache is gone. " +
+      "Tomorrow she hopes to feel well again.",
+    questions: [
+      {
+        id: "u11r-q1",
+        question_vn: "Lan đang bị bệnh gì?",
+        options: [
+          "Stomachache and fever",
+          "Headache and cold",
+          "Tired and unhappy",
+          "Cold and stomachache",
+        ],
+        answer: "Headache and cold",
+        explanation_vn: "'She has a headache and a cold.'",
+      },
+      {
+        id: "u11r-q2",
+        question_vn: "Mẹ của Lan nói cô ấy cần làm gì?",
+        options: [
+          "Go to work",
+          "Take medicine and exercise",
+          "Drink water and rest",
+          "Eat food and study",
+        ],
+        answer: "Drink water and rest",
+        explanation_vn: "'Her mum says she needs to drink water and rest.'",
+      },
+      {
+        id: "u11r-q3",
+        question_vn: "Sếp của Lan nói gì?",
+        options: [
+          "'You must come to work!'",
+          "'I am very angry.'",
+          "'Don't worry — get better soon!'",
+          "'Take a week off!'",
+        ],
+        answer: "'Don't worry — get better soon!'",
+        explanation_vn: "Her boss says 'Don't worry — get better soon!'",
+      },
+      {
+        id: "u11r-q4",
+        question_vn: "Lan cảm thấy thế nào vào buổi chiều?",
+        options: [
+          "Still very sick",
+          "A little better",
+          "Completely well",
+          "Very happy",
+        ],
+        answer: "A little better",
+        explanation_vn: "'In the afternoon, she feels a little better.'",
+      },
+    ],
+  },
 };
 
 export default unit11;

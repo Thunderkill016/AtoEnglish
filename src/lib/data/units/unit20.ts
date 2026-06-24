@@ -173,6 +173,64 @@ export const unit20: UnitData = {
       { en: "The decision had been made before we were consulted", vn: "Quyết định đã được đưa ra trước khi chúng tôi được tham khảo" },
     ],
   },
+  readingPassage: {
+    id: "unit20-reading-1",
+    title: "This Week in Tech News",
+    title_vn: "Đọc đoạn tin tức công nghệ",
+    level: "B1" as const,
+    text:
+      "This week, several major tech companies announced significant changes. " +
+      "A leading smartphone manufacturer has just launched a new foldable phone. " +
+      "According to early reviews, it is thinner and lighter than previous models. " +
+      "Meanwhile, a social media platform has reportedly introduced new privacy settings " +
+      "following pressure from regulators in Europe. " +
+      "In economic news, a major e-commerce company announced that it is planning to hire " +
+      "50,000 new employees across Southeast Asia. " +
+      "Analysts say this reflects the rapid growth of online shopping in the region. " +
+      "In Vietnam, technology investment has increased by 40% this year, " +
+      "according to a report published yesterday. " +
+      "Experts believe this trend will continue into next year.",
+    questions: [
+      {
+        id: "u20r-q1",
+        question_vn: "Nhà sản xuất điện thoại thông minh vừa ra mắt loại điện thoại gì?",
+        options: [
+          "A new tablet",
+          "A new smartwatch",
+          "A new foldable phone",
+          "A new laptop",
+        ],
+        answer: "A new foldable phone",
+        explanation_vn: "'A leading smartphone manufacturer has just launched a new foldable phone.'",
+      },
+      {
+        id: "u20r-q2",
+        question_vn: "Tại sao mạng xã hội phải thay đổi cài đặt quyền riêng tư?",
+        options: [
+          "To attract more users",
+          "Following pressure from regulators in Europe",
+          "To compete with rivals",
+          "Because of a data breach",
+        ],
+        answer: "Following pressure from regulators in Europe",
+        explanation_vn: "'following pressure from regulators in Europe.'",
+      },
+      {
+        id: "u20r-q3",
+        question_vn: "Công ty thương mại điện tử có kế hoạch tuyển dụng bao nhiêu nhân viên?",
+        options: ["10,000", "20,000", "50,000", "100,000"],
+        answer: "50,000",
+        explanation_vn: "'it is planning to hire 50,000 new employees across Southeast Asia.'",
+      },
+      {
+        id: "u20r-q4",
+        question_vn: "Đầu tư công nghệ ở Việt Nam tăng bao nhiêu % trong năm nay?",
+        options: ["20%", "30%", "40%", "50%"],
+        answer: "40%",
+        explanation_vn: "'technology investment has increased by 40% this year.'",
+      },
+    ],
+  },
 };
 
 export default unit20;

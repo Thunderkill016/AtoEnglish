@@ -191,6 +191,64 @@ export const unit13: UnitData = {
       { en: "She didn't know", vn: "Cô ấy đã không biết" },
     ],
   },
+
+  readingPassage: {
+    id: "unit13-reading-1",
+    title: "A Weekend in Ha Long Bay",
+    title_vn: "Một Cuối Tuần Tại Vịnh Hạ Long",
+    level: "A2" as const,
+    text: `Last weekend, Minh and his family traveled to Ha Long Bay. They stayed at a small hotel near the beach for two nights. On the first day, they visited many beautiful islands and enjoyed the stunning scenery. Minh met a friendly local guide who showed them the best spots. In the evening, they had fresh seafood for dinner and cooked some traditional dishes together. On the second day, they watched the sunrise from the boat. It was amazing! They went back home yesterday afternoon. Minh enjoyed the trip very much and took many photos. His family had a wonderful time and felt very happy.`,
+    questions: [
+      {
+        id: "unit13-q1",
+        question_vn: "Minh và gia đình đã đi đâu cuối tuần trước?",
+        options: [
+          "They went to Da Nang.",
+          "They went to Ha Long Bay.",
+          "They traveled to Ho Chi Minh City.",
+          "They visited Hoi An.",
+        ],
+        answer: "They went to Ha Long Bay.",
+        explanation_vn: "Đoạn văn nói 'Minh and his family traveled to Ha Long Bay' — họ đã đi Vịnh Hạ Long.",
+      },
+      {
+        id: "unit13-q2",
+        question_vn: "Họ đã ở lại bao nhiêu đêm?",
+        options: [
+          "They stayed for one night.",
+          "They stayed for two nights.",
+          "They stayed for three nights.",
+          "They stayed for a week.",
+        ],
+        answer: "They stayed for two nights.",
+        explanation_vn: "Đoạn văn ghi 'stayed at a small hotel near the beach for two nights' — hai đêm.",
+      },
+      {
+        id: "unit13-q3",
+        question_vn: "Họ đã làm gì vào buổi tối ngày đầu tiên?",
+        options: [
+          "They watched a movie.",
+          "They cooked rice and vegetables only.",
+          "They had fresh seafood and cooked traditional dishes.",
+          "They visited the market.",
+        ],
+        answer: "They had fresh seafood and cooked traditional dishes.",
+        explanation_vn: "'had fresh seafood for dinner and cooked some traditional dishes together' — ăn hải sản và nấu các món truyền thống.",
+      },
+      {
+        id: "unit13-q4",
+        question_vn: "Minh cảm thấy thế nào về chuyến đi?",
+        options: [
+          "He was bored and tired.",
+          "He enjoyed the trip very much.",
+          "He did not like the food.",
+          "He wanted to go home early.",
+        ],
+        answer: "He enjoyed the trip very much.",
+        explanation_vn: "'Minh enjoyed the trip very much' — anh ấy rất thích chuyến đi.",
+      },
+    ],
+  },
 };
 
 export default unit13;

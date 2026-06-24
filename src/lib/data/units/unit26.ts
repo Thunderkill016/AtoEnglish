@@ -150,6 +150,67 @@ export const unit26: UnitData = {
       { en: "She refused to sign the contract without legal advice", vn: "Cô ấy từ chối ký hợp đồng khi chưa có tư vấn pháp lý" },
     ],
   },
+  readingPassage: {
+    id: "unit26-reading-1",
+    title: "Coffee Culture in Vietnam",
+    title_vn: "Đọc đoạn về văn hoá cà phê Việt Nam",
+    level: "B1" as const,
+    text:
+      "Vietnam is one of the world's largest coffee producers, and Vietnamese people are passionate about their coffee. " +
+      "Unlike many Western countries, where people prefer drinking coffee quickly on the go, " +
+      "Vietnamese people tend to enjoy coffee slowly, sitting in a café with friends. " +
+      "Cà phê trứng — egg coffee — is a Hanoi speciality that tourists love trying. " +
+      "Many locals would rather have cà phê sữa đá (iced milk coffee) than any other drink. " +
+      "Coffee shops in Vietnam range from small pavement stalls, which serve simple black coffee, " +
+      "to trendy multi-storey cafés with stunning city views. " +
+      "Young Vietnamese people prefer socialising in cafés over going to bars. " +
+      "Whether you like strong espresso or sweet iced coffee, Vietnam has something for every taste.",
+    questions: [
+      {
+        id: "u26r-q1",
+        question_vn: "Người Việt Nam thường thưởng thức cà phê như thế nào?",
+        options: [
+          "Quickly, on the way to work",
+          "Slowly, sitting in a café with friends",
+          "Only in the morning",
+          "While working at their desk",
+        ],
+        answer: "Slowly, sitting in a café with friends",
+        explanation_vn: "'Vietnamese people tend to enjoy coffee slowly, sitting in a café with friends.'",
+      },
+      {
+        id: "u26r-q2",
+        question_vn: "Cà phê trứng là đặc sản của thành phố nào?",
+        options: ["Ho Chi Minh City", "Da Nang", "Hue", "Hanoi"],
+        answer: "Hanoi",
+        explanation_vn: "'Cà phê trứng — egg coffee — is a Hanoi speciality.'",
+      },
+      {
+        id: "u26r-q3",
+        question_vn: "Nhiều người địa phương thích uống gì nhất?",
+        options: [
+          "Cà phê đen (black coffee)",
+          "Cà phê sữa đá (iced milk coffee)",
+          "Cà phê trứng (egg coffee)",
+          "Espresso",
+        ],
+        answer: "Cà phê sữa đá (iced milk coffee)",
+        explanation_vn: "'Many locals would rather have cà phê sữa đá (iced milk coffee) than any other drink.'",
+      },
+      {
+        id: "u26r-q4",
+        question_vn: "Người trẻ Việt Nam thích làm gì hơn là đi quán bar?",
+        options: [
+          "Staying at home",
+          "Going to restaurants",
+          "Socialising in cafés",
+          "Watching movies",
+        ],
+        answer: "Socialising in cafés",
+        explanation_vn: "'Young Vietnamese people prefer socialising in cafés over going to bars.'",
+      },
+    ],
+  },
 };
 
 export default unit26;

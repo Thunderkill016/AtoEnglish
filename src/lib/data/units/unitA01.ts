@@ -607,6 +607,50 @@ export const unitA01: UnitData = {
       type: "translate",
     },
   ],
+  readingPassage: {
+    id: "unitA01-reading-1",
+    title: "My Name",
+    title_vn: "Đọc đoạn giới thiệu bản thân",
+    level: "A0" as const,
+    text:
+      "Hello! My name is Nam. " +
+      "I am from Vietnam. " +
+      "My name has 3 letters: N-A-M. " +
+      "My teacher's name is Mary. " +
+      "Mary is from England. " +
+      "Her name has 4 letters: M-A-R-Y. " +
+      "Nice to meet you!",
+    questions: [
+      {
+        id: "uA01r-q1",
+        question_vn: "Tên của người kể chuyện là gì?",
+        options: ["Mary", "Nam", "Lan", "Tom"],
+        answer: "Nam",
+        explanation_vn: "'My name is Nam.'",
+      },
+      {
+        id: "uA01r-q2",
+        question_vn: "Người kể chuyện đến từ đâu?",
+        options: ["England", "Japan", "Vietnam", "America"],
+        answer: "Vietnam",
+        explanation_vn: "'I am from Vietnam.'",
+      },
+      {
+        id: "uA01r-q3",
+        question_vn: "Tên của giáo viên là gì?",
+        options: ["Nam", "Linda", "Mary", "Anna"],
+        answer: "Mary",
+        explanation_vn: "'My teacher's name is Mary.'",
+      },
+      {
+        id: "uA01r-q4",
+        question_vn: "Tên Mary có bao nhiêu chữ cái?",
+        options: ["3", "4", "5", "6"],
+        answer: "4",
+        explanation_vn: "'Her name has 4 letters: M-A-R-Y.'",
+      },
+    ],
+  },
 };
 
 export default unitA01;

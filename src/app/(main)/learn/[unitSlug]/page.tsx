@@ -3,60 +3,61 @@ import type { Metadata } from "next";
 
 import UnitTemplate from "@/components/learn/UnitTemplate";
 import type { UnitData } from "@/components/learn/UnitTemplate";
-// A0 Foundation units
-import unitA01 from "@/lib/data/units/unitA01";
-import unitA02 from "@/lib/data/units/unitA02";
-import unitA03 from "@/lib/data/units/unitA03";
-import unitA04 from "@/lib/data/units/unitA04";
-import unitA05 from "@/lib/data/units/unitA05";
-import unitA06 from "@/lib/data/units/unitA06";
-import unitA07 from "@/lib/data/units/unitA07";
-import unitA08 from "@/lib/data/units/unitA08";
-// A1 units
-import { unit1 } from "@/lib/data/units/unit1";
-import { unit2 } from "@/lib/data/units/unit2";
-import { unit3 } from "@/lib/data/units/unit3";
-import { unit4 } from "@/lib/data/units/unit4";
-import { unit5 } from "@/lib/data/units/unit5";
-import { unit6 } from "@/lib/data/units/unit6";
-import { unit7 } from "@/lib/data/units/unit7";
-import { unit8 } from "@/lib/data/units/unit8";
-import { unit9 } from "@/lib/data/units/unit9";
+// ── A0 Foundation units (Pre-CEFR) ─────────────────────────────────────────
+import { unitA01 } from "@/lib/data/units/unitA01";
+import { unitA02 } from "@/lib/data/units/unitA02";
+import { unitA03 } from "@/lib/data/units/unitA03";
+import { unitA04 } from "@/lib/data/units/unitA04";
+import { unitA05 } from "@/lib/data/units/unitA05";
+import { unitA06 } from "@/lib/data/units/unitA06";
+import { unitA07 } from "@/lib/data/units/unitA07";
+import { unitA08 } from "@/lib/data/units/unitA08";
+// ── A1 — 12 units ───────────────────────────────────────────────────────────
+import { unit1 }  from "@/lib/data/units/unit1";
+import { unit2 }  from "@/lib/data/units/unit2";
+import { unit3 }  from "@/lib/data/units/unit3";
+import { unit4 }  from "@/lib/data/units/unit4";
+import { unit5 }  from "@/lib/data/units/unit5";
+import { unit6 }  from "@/lib/data/units/unit6";
+import { unit7 }  from "@/lib/data/units/unit7";
+import { unit8 }  from "@/lib/data/units/unit8";
+import { unit9 }  from "@/lib/data/units/unit9";
 import { unit10 } from "@/lib/data/units/unit10";
 import { unit11 } from "@/lib/data/units/unit11";
 import { unit12 } from "@/lib/data/units/unit12";
+// ── A2 — 6 units ────────────────────────────────────────────────────────────
 import { unit13 } from "@/lib/data/units/unit13";
 import { unit14 } from "@/lib/data/units/unit14";
 import { unit15 } from "@/lib/data/units/unit15";
 import { unit16 } from "@/lib/data/units/unit16";
 import { unit17 } from "@/lib/data/units/unit17";
 import { unit18 } from "@/lib/data/units/unit18";
-// B1 units
-import unit19 from "@/lib/data/units/unit19";
-import unit20 from "@/lib/data/units/unit20";
-import unit21 from "@/lib/data/units/unit21";
-import unit22 from "@/lib/data/units/unit22";
-import unit23 from "@/lib/data/units/unit23";
-import unit24 from "@/lib/data/units/unit24";
-import unit25 from "@/lib/data/units/unit25";
-import unit26 from "@/lib/data/units/unit26";
-import unit27 from "@/lib/data/units/unit27";
-import unit28 from "@/lib/data/units/unit28";
-import unit29 from "@/lib/data/units/unit29";
-import unit30 from "@/lib/data/units/unit30";
-import unit31 from "@/lib/data/units/unit31";
-import unit32 from "@/lib/data/units/unit32";
-// B2 units
-import unit33 from "@/lib/data/units/unit33";
-import unit34 from "@/lib/data/units/unit34";
-import unit35 from "@/lib/data/units/unit35";
-import unit36 from "@/lib/data/units/unit36";
-import unit37 from "@/lib/data/units/unit37";
-import unit38 from "@/lib/data/units/unit38";
-import unit39 from "@/lib/data/units/unit39";
-import unit40 from "@/lib/data/units/unit40";
-import unit41 from "@/lib/data/units/unit41";
-import unit42 from "@/lib/data/units/unit42";
+// ── B1 — 14 units ───────────────────────────────────────────────────────────
+import { unit19 } from "@/lib/data/units/unit19";
+import { unit20 } from "@/lib/data/units/unit20";
+import { unit21 } from "@/lib/data/units/unit21";
+import { unit22 } from "@/lib/data/units/unit22";
+import { unit23 } from "@/lib/data/units/unit23";
+import { unit24 } from "@/lib/data/units/unit24";
+import { unit25 } from "@/lib/data/units/unit25";
+import { unit26 } from "@/lib/data/units/unit26";
+import { unit27 } from "@/lib/data/units/unit27";
+import { unit28 } from "@/lib/data/units/unit28";
+import { unit29 } from "@/lib/data/units/unit29";
+import { unit30 } from "@/lib/data/units/unit30";
+import { unit31 } from "@/lib/data/units/unit31";
+import { unit32 } from "@/lib/data/units/unit32";
+// ── B2 — 10 units ───────────────────────────────────────────────────────────
+import { unit33 } from "@/lib/data/units/unit33";
+import { unit34 } from "@/lib/data/units/unit34";
+import { unit35 } from "@/lib/data/units/unit35";
+import { unit36 } from "@/lib/data/units/unit36";
+import { unit37 } from "@/lib/data/units/unit37";
+import { unit38 } from "@/lib/data/units/unit38";
+import { unit39 } from "@/lib/data/units/unit39";
+import { unit40 } from "@/lib/data/units/unit40";
+import { unit41 } from "@/lib/data/units/unit41";
+import { unit42 } from "@/lib/data/units/unit42";
 import { UNITS } from "@/lib/constants/units";
 
 // ─── Unit registry ───────────────────────────────────────────────────────────

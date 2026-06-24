@@ -502,6 +502,54 @@ export const unitA04: UnitData = {
       type: "translate",
     },
   ],
+  readingPassage: {
+    id: "unitA04-reading-1",
+    title: "Good Morning!",
+    title_vn: "Đọc đoạn chào hỏi buổi sáng",
+    level: "A0" as const,
+    text:
+      "Good morning! My name is Lan. " +
+      "How are you? " +
+      "I am fine, thank you! " +
+      "This is my friend Tom. " +
+      "Nice to meet you, Tom! " +
+      "Goodbye! See you tomorrow!",
+    questions: [
+      {
+        id: "uA04r-q1",
+        question_vn: "Tên của người kể chuyện là gì?",
+        options: ["Tom", "Mai", "Lan", "Nam"],
+        answer: "Lan",
+        explanation_vn: "'My name is Lan.'",
+      },
+      {
+        id: "uA04r-q2",
+        question_vn: "Người kể chuyện cảm thấy thế nào?",
+        options: ["Tired", "Sad", "Fine", "Happy"],
+        answer: "Fine",
+        explanation_vn: "'I am fine, thank you!'",
+      },
+      {
+        id: "uA04r-q3",
+        question_vn: "Bạn của người kể chuyện tên là gì?",
+        options: ["Nam", "Tom", "Mai", "Hoa"],
+        answer: "Tom",
+        explanation_vn: "'This is my friend Tom.'",
+      },
+      {
+        id: "uA04r-q4",
+        question_vn: "Người kể chuyện sẽ gặp Tom lại khi nào?",
+        options: [
+          "This afternoon",
+          "Next week",
+          "Tomorrow",
+          "Next Monday",
+        ],
+        answer: "Tomorrow",
+        explanation_vn: "'See you tomorrow!'",
+      },
+    ],
+  },
 };
 
 export default unitA04;

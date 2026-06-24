@@ -577,6 +577,72 @@ export const unit19: UnitData = {
       { en: "Fortunately, we managed to resolve the issue", vn: "May mắn thay, chúng tôi đã giải quyết được vấn đề" },
     ],
   },
+  readingPassage: {
+    id: "unit19-reading-1",
+    title: "The Day Everything Went Wrong",
+    title_vn: "Đọc đoạn kể chuyện quá khứ",
+    level: "B1" as const,
+    text:
+      "It was a Monday morning. I was running late for an important presentation. " +
+      "While I was driving to work, it started raining heavily. " +
+      "Suddenly, a motorbike cut in front of me and I had to brake hard. " +
+      "My coffee spilled all over my shirt! I was still wearing my stained shirt when I arrived. " +
+      "When I entered the meeting room, the projector wasn't working. " +
+      "While my colleague was trying to fix it, I quickly changed into a spare shirt from my drawer. " +
+      "Eventually, the presentation went well. " +
+      "Afterwards, my boss said it was the best presentation of the year. " +
+      "Sometimes the most stressful days have the best endings!",
+    questions: [
+      {
+        id: "u19r-q1",
+        question_vn: "Tại sao người kể chuyện bị trễ giờ?",
+        options: [
+          "The train was late",
+          "He was running late that morning",
+          "His car broke down",
+          "He forgot his presentation",
+        ],
+        answer: "He was running late that morning",
+        explanation_vn: "'It was a Monday morning. I was running late for an important presentation.'",
+      },
+      {
+        id: "u19r-q2",
+        question_vn: "Điều gì xảy ra với cà phê của anh ấy?",
+        options: [
+          "He dropped it on the floor",
+          "He forgot it at home",
+          "It spilled all over his shirt",
+          "It broke the projector",
+        ],
+        answer: "It spilled all over his shirt",
+        explanation_vn: "'My coffee spilled all over my shirt!'",
+      },
+      {
+        id: "u19r-q3",
+        question_vn: "Vấn đề gì xảy ra trong phòng họp?",
+        options: [
+          "The air conditioning broke",
+          "The projector wasn't working",
+          "The presentation files were missing",
+          "The manager was absent",
+        ],
+        answer: "The projector wasn't working",
+        explanation_vn: "'When I entered the meeting room, the projector wasn't working.'",
+      },
+      {
+        id: "u19r-q4",
+        question_vn: "Sếp của anh ấy nói gì sau bài thuyết trình?",
+        options: [
+          "He was disappointed",
+          "It was the best presentation of the year",
+          "They needed to redo the presentation",
+          "He should be more prepared next time",
+        ],
+        answer: "It was the best presentation of the year",
+        explanation_vn: "'My boss said it was the best presentation of the year.'",
+      },
+    ],
+  },
 };
 
 export default unit19;

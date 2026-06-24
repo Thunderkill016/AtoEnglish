@@ -149,6 +149,66 @@ export const unit37: UnitData = {
       { en: "Facing issues, they modified the code", vn: "Đối mặt với sự cố, họ đã sửa đổi code" },
     ],
   },
+  readingPassage: {
+    id: "unit37-reading-1",
+    title: "The Art of Concise Writing",
+    title_vn: "Đọc đoạn về viết súc tích và chính xác",
+    level: "B2" as const,
+    text:
+      "In professional communication, clarity and conciseness are paramount. " +
+      "Wordy writing obscures your message and wastes the reader's time. " +
+      "Compare: 'Due to the fact that the project was behind schedule, " +
+      "we were unable to meet the deadline.' " +
+      "With: 'Because the project was delayed, we missed the deadline.' " +
+      "The second version uses 10 fewer words and is far clearer. " +
+      "Redundant phrases such as 'past history', 'future plans', and 'new innovation' " +
+      "should be eliminated. History is always past; plans are future; innovations are new. " +
+      "Passive constructions, while sometimes necessary, often add unnecessary length. " +
+      "'The report was written by our team' becomes 'Our team wrote the report'. " +
+      "Strong verbs replace weak noun phrases: 'make a decision' becomes 'decide'; " +
+      "'give assistance to' becomes 'help'. " +
+      "Precision in language signals intellectual rigour and respect for the reader.",
+    questions: [
+      {
+        id: "u37r-q1",
+        question_vn: "Theo đoạn văn, điều gì là quan trọng nhất trong giao tiếp chuyên nghiệp?",
+        options: [
+          "Using many technical terms",
+          "Clarity and conciseness",
+          "Writing long detailed sentences",
+          "Using formal passive structures",
+        ],
+        answer: "Clarity and conciseness",
+        explanation_vn: "'In professional communication, clarity and conciseness are paramount.'",
+      },
+      {
+        id: "u37r-q2",
+        question_vn: "Phiên bản ngắn hơn của câu ví dụ ngắn hơn bao nhiêu từ?",
+        options: ["5 words", "8 words", "10 words", "15 words"],
+        answer: "10 words",
+        explanation_vn: "'The second version uses 10 fewer words and is far clearer.'",
+      },
+      {
+        id: "u37r-q3",
+        question_vn: "Ví dụ nào sau đây là cụm từ dư thừa theo đoạn văn?",
+        options: [
+          "'annual report'",
+          "'past history'",
+          "'team meeting'",
+          "'quarterly review'",
+        ],
+        answer: "'past history'",
+        explanation_vn: "'Redundant phrases such as past history, future plans, and new innovation should be eliminated.'",
+      },
+      {
+        id: "u37r-q4",
+        question_vn: "Cụm từ 'give assistance to' nên được thay bằng từ gì?",
+        options: ["Support", "Aid", "Help", "Assist"],
+        answer: "Help",
+        explanation_vn: "'give assistance to' becomes 'help'.",
+      },
+    ],
+  },
 };
 
 export default unit37;

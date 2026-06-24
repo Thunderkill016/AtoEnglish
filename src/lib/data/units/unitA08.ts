@@ -522,6 +522,60 @@ export const unitA08: UnitData = {
       type: "translate",
     },
   ],
+  readingPassage: {
+    id: "unitA08-reading-1",
+    title: "Help!",
+    title_vn: "Đọc đoạn về các câu khẩn cấp và sinh tồn",
+    level: "A0" as const,
+    text:
+      "Oh no! I am lost. " +
+      "Excuse me! Can you help me, please? " +
+      "I need a doctor! " +
+      "Please call 115! " +
+      "Thank you very much! " +
+      "I am okay now. " +
+      "Thank you!",
+    questions: [
+      {
+        id: "uA08r-q1",
+        question_vn: "Người kể chuyện gặp vấn đề gì?",
+        options: [
+          "They are hungry",
+          "They are lost",
+          "They are tired",
+          "They are late",
+        ],
+        answer: "They are lost",
+        explanation_vn: "'I am lost.'",
+      },
+      {
+        id: "uA08r-q2",
+        question_vn: "Câu lịch sự để nhờ giúp đỡ là gì?",
+        options: [
+          "'Help me!'",
+          "'I need help!'",
+          "'Can you help me, please?'",
+          "'Where am I?'",
+        ],
+        answer: "'Can you help me, please?'",
+        explanation_vn: "'Can you help me, please?'",
+      },
+      {
+        id: "uA08r-q3",
+        question_vn: "Người kể chuyện cần gọi số điện thoại nào?",
+        options: ["111", "113", "115", "119"],
+        answer: "115",
+        explanation_vn: "'Please call 115!'",
+      },
+      {
+        id: "uA08r-q4",
+        question_vn: "Kết thúc câu chuyện, người kể chuyện cảm thấy thế nào?",
+        options: ["Still lost", "Sad", "Okay", "Scared"],
+        answer: "Okay",
+        explanation_vn: "'I am okay now.'",
+      },
+    ],
+  },
 };
 
 export default unitA08;

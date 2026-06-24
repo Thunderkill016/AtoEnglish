@@ -150,6 +150,68 @@ export const unit22: UnitData = {
       { en: "You should always follow the correct procedure", vn: "Bạn luôn nên tuân theo quy trình đúng" },
     ],
   },
+  readingPassage: {
+    id: "unit22-reading-1",
+    title: "Office Rules and Policies",
+    title_vn: "Đọc đoạn về quy định văn phòng",
+    level: "B1" as const,
+    text:
+      "Welcome to TechViet! Before you start work, please read our office policies carefully. " +
+      "All employees must wear their ID badge at all times in the building. " +
+      "You must not share your login password with anyone, including colleagues. " +
+      "Employees have to attend the Monday morning briefing unless they are on leave. " +
+      "You don't have to work overtime, but you should inform your manager if you cannot finish your tasks on time. " +
+      "Staff should respond to emails within 24 hours. " +
+      "You must not use company computers for personal activities. " +
+      "If you need to take sick leave, you have to notify HR before 9 AM. " +
+      "All employees ought to complete the annual safety training by December 31st. " +
+      "We hope you enjoy working here!",
+    questions: [
+      {
+        id: "u22r-q1",
+        question_vn: "Nhân viên phải đeo gì mọi lúc trong tòa nhà?",
+        options: [
+          "A uniform",
+          "A helmet",
+          "Their ID badge",
+          "A visitor pass",
+        ],
+        answer: "Their ID badge",
+        explanation_vn: "'All employees must wear their ID badge at all times in the building.'",
+      },
+      {
+        id: "u22r-q2",
+        question_vn: "Nhân viên phải họp vào khi nào?",
+        options: [
+          "Every Friday afternoon",
+          "Monday morning briefing",
+          "Every Wednesday",
+          "Monthly team meetings",
+        ],
+        answer: "Monday morning briefing",
+        explanation_vn: "'Employees have to attend the Monday morning briefing.'",
+      },
+      {
+        id: "u22r-q3",
+        question_vn: "Nhân viên nên trả lời email trong bao lâu?",
+        options: ["12 hours", "24 hours", "48 hours", "72 hours"],
+        answer: "24 hours",
+        explanation_vn: "'Staff should respond to emails within 24 hours.'",
+      },
+      {
+        id: "u22r-q4",
+        question_vn: "Nếu cần nghỉ ốm, nhân viên phải thông báo cho ai và trước mấy giờ?",
+        options: [
+          "Their manager, before 8 AM",
+          "HR, before 9 AM",
+          "Their team, before 10 AM",
+          "The director, before 8:30 AM",
+        ],
+        answer: "HR, before 9 AM",
+        explanation_vn: "'you have to notify HR before 9 AM.'",
+      },
+    ],
+  },
 };
 
 export default unit22;

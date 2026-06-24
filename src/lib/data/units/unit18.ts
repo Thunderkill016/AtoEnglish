@@ -203,6 +203,63 @@ export const unit18: UnitData = {
       { en: "They didn't attend", vn: "Họ đã không tham dự" },
     ],
   },
+  readingPassage: {
+    id: "unit18-reading-1",
+    title: "The Year-End Review",
+    title_vn: "Buổi Đánh Giá Cuối Năm",
+    level: "A2" as const,
+    text: `Last year, Minh's team achieved 120% of their sales target. Revenue increased by 18% compared to the previous year, which was very successful. The biggest challenge was the new market strategy, but they overcame it. Minh has worked in this role for three years and has made great progress. He has already prepared the annual report for next quarter's review. Next year, the team is going to launch two new products and explore new opportunities abroad. Minh will probably lead the project himself. He says, "I've never been more motivated. Our progress shows that hard work and the right strategy always bring good results."`,
+    questions: [
+      {
+        id: "unit18-q1",
+        question_vn: "Nhóm của Minh đã đạt bao nhiêu phần trăm chỉ tiêu doanh số?",
+        options: [
+          "They achieved 100% of their target.",
+          "They achieved 115% of their target.",
+          "They achieved 120% of their target.",
+          "They achieved 80% of their target.",
+        ],
+        answer: "They achieved 120% of their target.",
+        explanation_vn: "'Minh's team achieved 120% of their sales target' — đạt 120% chỉ tiêu.",
+      },
+      {
+        id: "unit18-q2",
+        question_vn: "Doanh thu tăng bao nhiêu phần trăm so với năm trước?",
+        options: [
+          "Revenue increased by 15%.",
+          "Revenue increased by 18%.",
+          "Revenue increased by 20%.",
+          "Revenue increased by 25%.",
+        ],
+        answer: "Revenue increased by 18%.",
+        explanation_vn: "'Revenue increased by 18% compared to the previous year' — tăng 18%.",
+      },
+      {
+        id: "unit18-q3",
+        question_vn: "Minh đã chuẩn bị gì cho đợt đánh giá quý tới?",
+        options: [
+          "He has prepared a new marketing strategy.",
+          "He has already prepared the annual report.",
+          "He is going to prepare a presentation tomorrow.",
+          "He will prepare the report next week.",
+        ],
+        answer: "He has already prepared the annual report.",
+        explanation_vn: "'He has already prepared the annual report for next quarter's review' — đã chuẩn bị xong báo cáo thường niên.",
+      },
+      {
+        id: "unit18-q4",
+        question_vn: "Kế hoạch của nhóm cho năm tới là gì?",
+        options: [
+          "They are going to reduce their target.",
+          "They are going to launch two new products and explore opportunities abroad.",
+          "They will change their team strategy only.",
+          "They plan to focus on the existing market.",
+        ],
+        answer: "They are going to launch two new products and explore opportunities abroad.",
+        explanation_vn: "'the team is going to launch two new products and explore new opportunities abroad' — ra mắt sản phẩm mới và khám phá cơ hội ở nước ngoài.",
+      },
+    ],
+  },
 };
 
 export default unit18;

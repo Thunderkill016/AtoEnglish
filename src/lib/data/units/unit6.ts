@@ -179,6 +179,65 @@ export const unit6: UnitData = {
       { en: "There are many options", vn: "Có nhiều lựa chọn" },
     ],
   },
+  readingPassage: {
+    id: "unit6-reading-1",
+    title: "My New Apartment",
+    title_vn: "Đọc đoạn về căn hộ mới",
+    level: "A1" as const,
+    text:
+      "My name is Linh. I have a new apartment in Ho Chi Minh City. " +
+      "There are three rooms: a bedroom, a kitchen, and a living room. " +
+      "In the living room, there is a big sofa and two chairs. " +
+      "There is also a lamp on the table near the window. " +
+      "My bedroom has a wardrobe and a door to the balcony. " +
+      "There is no garden, but I put flowers on the balcony. " +
+      "I love my new home!",
+    questions: [
+      {
+        id: "u6r-q1",
+        question_vn: "Linh có bao nhiêu phòng trong căn hộ?",
+        options: ["Two rooms", "Three rooms", "Four rooms", "Five rooms"],
+        answer: "Three rooms",
+        explanation_vn: "Đoạn văn nói 'There are three rooms: a bedroom, a kitchen, and a living room.'",
+      },
+      {
+        id: "u6r-q2",
+        question_vn: "Trong phòng khách có gì?",
+        options: [
+          "A wardrobe and a lamp",
+          "A big sofa and two chairs",
+          "A table and four chairs",
+          "A garden and a balcony",
+        ],
+        answer: "A big sofa and two chairs",
+        explanation_vn: "'In the living room, there is a big sofa and two chairs.'",
+      },
+      {
+        id: "u6r-q3",
+        question_vn: "Căn hộ của Linh có vườn không?",
+        options: [
+          "Yes, there is a big garden",
+          "Yes, there is a small garden",
+          "No, but there is a balcony",
+          "No, and there is no balcony either",
+        ],
+        answer: "No, but there is a balcony",
+        explanation_vn: "'There is no garden, but I put flowers on the balcony.'",
+      },
+      {
+        id: "u6r-q4",
+        question_vn: "Đèn (lamp) ở đâu?",
+        options: [
+          "On the sofa",
+          "In the bedroom",
+          "On the table near the window",
+          "On the balcony",
+        ],
+        answer: "On the table near the window",
+        explanation_vn: "'There is also a lamp on the table near the window.'",
+      },
+    ],
+  },
 };
 
 export default unit6;

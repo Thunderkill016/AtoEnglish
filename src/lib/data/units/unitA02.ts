@@ -509,6 +509,50 @@ export const unitA02: UnitData = {
       type: "translate",
     },
   ],
+  readingPassage: {
+    id: "unitA02-reading-1",
+    title: "At the Market",
+    title_vn: "Đọc đoạn về mua hàng ở chợ",
+    level: "A0" as const,
+    text:
+      "I am at the market. " +
+      "I have 50,000 dong. " +
+      "An apple is 5,000 dong. " +
+      "I buy ten apples. " +
+      "How much is that? " +
+      "That is 50,000 dong. " +
+      "I have zero dong now!",
+    questions: [
+      {
+        id: "uA02r-q1",
+        question_vn: "Người kể chuyện có bao nhiêu tiền?",
+        options: ["10,000 dong", "20,000 dong", "50,000 dong", "100,000 dong"],
+        answer: "50,000 dong",
+        explanation_vn: "'I have 50,000 dong.'",
+      },
+      {
+        id: "uA02r-q2",
+        question_vn: "Một quả táo giá bao nhiêu?",
+        options: ["1,000 dong", "5,000 dong", "10,000 dong", "20,000 dong"],
+        answer: "5,000 dong",
+        explanation_vn: "'An apple is 5,000 dong.'",
+      },
+      {
+        id: "uA02r-q3",
+        question_vn: "Người kể chuyện mua bao nhiêu quả táo?",
+        options: ["Five", "Eight", "Ten", "Twenty"],
+        answer: "Ten",
+        explanation_vn: "'I buy ten apples.'",
+      },
+      {
+        id: "uA02r-q4",
+        question_vn: "Sau khi mua hàng, người kể chuyện còn lại bao nhiêu tiền?",
+        options: ["10,000 dong", "5,000 dong", "1,000 dong", "Zero dong"],
+        answer: "Zero dong",
+        explanation_vn: "'I have zero dong now!'",
+      },
+    ],
+  },
 };
 
 export default unitA02;

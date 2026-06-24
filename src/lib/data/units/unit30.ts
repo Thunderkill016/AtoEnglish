@@ -148,6 +148,75 @@ export const unit30: UnitData = {
       { en: "Organic farming is good for soil", vn: "Canh tác hữu cơ tốt cho đất" },
     ],
   },
+  readingPassage: {
+    id: "unit30-reading-1",
+    title: "Living Sustainably",
+    title_vn: "Đọc đoạn về lối sống bền vững",
+    level: "B1" as const,
+    text:
+      "Climate change is one of the most urgent challenges of our time. " +
+      "Scientists warn that it is essential to reduce greenhouse gas emissions significantly. " +
+      "It is crucial that governments, businesses, and individuals all take action together. " +
+      "It is recommended that households reduce plastic usage by switching to reusable bags and bottles. " +
+      "Conservation of natural resources such as water and energy is also vital. " +
+      "In Vietnam, biodiversity loss is a growing concern, particularly in coastal areas. " +
+      "Air pollution in major cities has been increasing due to rapid urbanisation and traffic. " +
+      "However, there are reasons for optimism. " +
+      "Organic farming is becoming more popular, reducing the use of harmful pesticides. " +
+      "Solar energy investment is rising. " +
+      "It is important that we all adopt more sustainable habits in our daily lives. " +
+      "Prevention is always better than cure when it comes to environmental damage.",
+    questions: [
+      {
+        id: "u30r-q1",
+        question_vn: "Theo các nhà khoa học, điều gì là thiết yếu?",
+        options: [
+          "To increase production",
+          "To reduce greenhouse gas emissions",
+          "To build more factories",
+          "To increase air travel",
+        ],
+        answer: "To reduce greenhouse gas emissions",
+        explanation_vn: "'it is essential to reduce greenhouse gas emissions significantly.'",
+      },
+      {
+        id: "u30r-q2",
+        question_vn: "Các hộ gia đình được khuyến nghị làm gì?",
+        options: [
+          "Move to the countryside",
+          "Use more electricity",
+          "Reduce plastic usage by switching to reusable bags and bottles",
+          "Stop using cars",
+        ],
+        answer: "Reduce plastic usage by switching to reusable bags and bottles",
+        explanation_vn: "'It is recommended that households reduce plastic usage by switching to reusable bags and bottles.'",
+      },
+      {
+        id: "u30r-q3",
+        question_vn: "Tại sao ô nhiễm không khí đang gia tăng ở các thành phố lớn?",
+        options: [
+          "Due to industrial farming",
+          "Due to rapid urbanisation and traffic",
+          "Due to deforestation",
+          "Due to ocean pollution",
+        ],
+        answer: "Due to rapid urbanisation and traffic",
+        explanation_vn: "'Air pollution in major cities has been increasing due to rapid urbanisation and traffic.'",
+      },
+      {
+        id: "u30r-q4",
+        question_vn: "Lý do nào để lạc quan được đề cập trong đoạn văn?",
+        options: [
+          "Climate change has stopped",
+          "Organic farming and solar energy are growing",
+          "Air pollution is decreasing",
+          "Biodiversity is recovering",
+        ],
+        answer: "Organic farming and solar energy are growing",
+        explanation_vn: "'Organic farming is becoming more popular... Solar energy investment is rising.'",
+      },
+    ],
+  },
 };
 
 export default unit30;

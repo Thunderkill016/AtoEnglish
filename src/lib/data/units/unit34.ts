@@ -148,6 +148,73 @@ export const unit34: UnitData = {
       { en: "We conducted a thorough project evaluation", vn: "Chúng tôi đã thực hiện đánh giá dự án kỹ lưỡng" },
     ],
   },
+  readingPassage: {
+    id: "unit34-reading-1",
+    title: "Lessons Learned",
+    title_vn: "Đọc đoạn về câu điều kiện loại 3 và sự hối tiếc",
+    level: "B2" as const,
+    text:
+      "Looking back, there are several decisions I wish I had made differently. " +
+      "If I had studied harder in my first year at university, I would have graduated with honours. " +
+      "If I hadn't left my previous job so hastily, I would have received a full year-end bonus. " +
+      "However, if I hadn't made those mistakes, I wouldn't have learned such valuable lessons. " +
+      "My mentor once told me: 'If you had never failed, you would never have grown.' " +
+      "She was right. The biggest mistake I made was not investing in my own development earlier. " +
+      "If I had attended that leadership training five years ago, I might have been promoted sooner. " +
+      "But regret is only useful if it teaches you something. " +
+      "Now, I make sure to say yes to every learning opportunity. " +
+      "What would you have done differently if you could go back ten years?",
+    questions: [
+      {
+        id: "u34r-q1",
+        question_vn: "Nếu người viết học chăm chỉ hơn ở năm nhất đại học, điều gì đã xảy ra?",
+        options: [
+          "They would have changed careers",
+          "They would have graduated with honours",
+          "They would have studied abroad",
+          "They would have started a business",
+        ],
+        answer: "They would have graduated with honours",
+        explanation_vn: "'If I had studied harder in my first year at university, I would have graduated with honours.'",
+      },
+      {
+        id: "u34r-q2",
+        question_vn: "Người cố vấn (mentor) đã nói gì với người viết?",
+        options: [
+          "'Always be careful with your decisions.'",
+          "'If you had never failed, you would never have grown.'",
+          "'Success requires sacrifice.'",
+          "'Mistakes are unacceptable in business.'",
+        ],
+        answer: "'If you had never failed, you would never have grown.'",
+        explanation_vn: "'If you had never failed, you would never have grown.'",
+      },
+      {
+        id: "u34r-q3",
+        question_vn: "Sai lầm lớn nhất của người viết là gì?",
+        options: [
+          "Leaving their job too early",
+          "Not investing in their own development earlier",
+          "Not attending university",
+          "Not saving money",
+        ],
+        answer: "Not investing in their own development earlier",
+        explanation_vn: "'The biggest mistake I made was not investing in my own development earlier.'",
+      },
+      {
+        id: "u34r-q4",
+        question_vn: "Bây giờ người viết đảm bảo làm điều gì?",
+        options: [
+          "Avoid all risks",
+          "Work longer hours",
+          "Say yes to every learning opportunity",
+          "Change careers regularly",
+        ],
+        answer: "Say yes to every learning opportunity",
+        explanation_vn: "'Now, I make sure to say yes to every learning opportunity.'",
+      },
+    ],
+  },
 };
 
 export default unit34;

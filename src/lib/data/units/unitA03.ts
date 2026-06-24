@@ -503,6 +503,59 @@ export const unitA03: UnitData = {
       type: "multiple-choice",
     },
   ],
+  readingPassage: {
+    id: "unitA03-reading-1",
+    title: "My Bag",
+    title_vn: "Đọc đoạn mô tả màu sắc và đồ vật",
+    level: "A0" as const,
+    text:
+      "This is my bag. " +
+      "It is blue and big. " +
+      "My pen is red. " +
+      "My book is white and yellow. " +
+      "My phone is black and small. " +
+      "I love my bag!",
+    questions: [
+      {
+        id: "uA03r-q1",
+        question_vn: "Chiếc túi có màu gì?",
+        options: ["Red", "Green", "Blue", "Black"],
+        answer: "Blue",
+        explanation_vn: "'It is blue and big.'",
+      },
+      {
+        id: "uA03r-q2",
+        question_vn: "Cây bút có màu gì?",
+        options: ["Blue", "Red", "Yellow", "White"],
+        answer: "Red",
+        explanation_vn: "'My pen is red.'",
+      },
+      {
+        id: "uA03r-q3",
+        question_vn: "Điện thoại có màu gì và kích thước như thế nào?",
+        options: [
+          "Blue and big",
+          "Red and small",
+          "Black and small",
+          "White and big",
+        ],
+        answer: "Black and small",
+        explanation_vn: "'My phone is black and small.'",
+      },
+      {
+        id: "uA03r-q4",
+        question_vn: "Quyển sách có màu gì?",
+        options: [
+          "Red and blue",
+          "White and yellow",
+          "Black and green",
+          "Blue and white",
+        ],
+        answer: "White and yellow",
+        explanation_vn: "'My book is white and yellow.'",
+      },
+    ],
+  },
 };
 
 export default unitA03;

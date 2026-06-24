@@ -148,6 +148,75 @@ export const unit31: UnitData = {
       { en: "Here is the meeting agenda", vn: "Đây là chương trình cuộc họp" },
     ],
   },
+  readingPassage: {
+    id: "unit31-reading-1",
+    title: "Writing Professional Emails",
+    title_vn: "Đọc đoạn về giao tiếp kinh doanh chuyên nghiệp",
+    level: "B1" as const,
+    text:
+      "Professional communication is a key skill in any workplace. " +
+      "When writing a business email, you should always use a clear subject line. " +
+      "Begin with a formal greeting such as 'Dear Mr. Smith' or 'Dear Team'. " +
+      "State your purpose in the first sentence: 'I am writing to follow up on our meeting.' " +
+      "Use polite, direct language and avoid slang or very informal expressions. " +
+      "Always proofread your email before sending — spelling mistakes look unprofessional. " +
+      "If you need to attach a document, mention it in the email body: 'Please find attached the report.' " +
+      "Close with a professional sign-off: 'Best regards', 'Kind regards', or 'Yours sincerely'. " +
+      "Response time matters too. " +
+      "Aim to reply to business emails within 24 hours. " +
+      "In Vietnamese work culture, it is also common to add a brief personal touch, " +
+      "such as asking about the recipient's health or family, before getting to the main point.",
+    questions: [
+      {
+        id: "u31r-q1",
+        question_vn: "Điều gì nên xuất hiện đầu tiên trong email kinh doanh?",
+        options: [
+          "The attachment",
+          "A clear subject line",
+          "The closing sign-off",
+          "Your phone number",
+        ],
+        answer: "A clear subject line",
+        explanation_vn: "'you should always use a clear subject line.'",
+      },
+      {
+        id: "u31r-q2",
+        question_vn: "Tại sao cần đọc lại email trước khi gửi?",
+        options: [
+          "To make it longer",
+          "To add more attachments",
+          "Because spelling mistakes look unprofessional",
+          "To translate it to Vietnamese",
+        ],
+        answer: "Because spelling mistakes look unprofessional",
+        explanation_vn: "'Always proofread your email before sending — spelling mistakes look unprofessional.'",
+      },
+      {
+        id: "u31r-q3",
+        question_vn: "Nên trả lời email kinh doanh trong bao lâu?",
+        options: [
+          "Within 6 hours",
+          "Within 12 hours",
+          "Within 24 hours",
+          "Within 48 hours",
+        ],
+        answer: "Within 24 hours",
+        explanation_vn: "'Aim to reply to business emails within 24 hours.'",
+      },
+      {
+        id: "u31r-q4",
+        question_vn: "Điều gì phổ biến trong văn hoá làm việc của người Việt khi viết email?",
+        options: [
+          "Writing very short emails",
+          "Using English slang",
+          "Adding a brief personal touch before the main point",
+          "Only using formal language",
+        ],
+        answer: "Adding a brief personal touch before the main point",
+        explanation_vn: "'it is also common to add a brief personal touch... before getting to the main point.'",
+      },
+    ],
+  },
 };
 
 export default unit31;

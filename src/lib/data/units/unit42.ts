@@ -149,6 +149,76 @@ export const unit42: UnitData = {
       { en: "I am ready to collaborate globally", vn: "Tôi đã sẵn sàng cộng tác trên toàn cầu" },
     ],
   },
+  readingPassage: {
+    id: "unit42-reading-1",
+    title: "Your B2 Achievement",
+    title_vn: "Đọc đoạn ôn tập tổng hợp B2 — Chặng đường bạn đã đi qua",
+    level: "B2" as const,
+    text:
+      "Reaching B2 level in English is a remarkable achievement that opens significant doors. " +
+      "At this level, you can understand the main ideas of complex texts on both concrete and abstract topics. " +
+      "You can interact with a degree of fluency and spontaneity that makes regular interaction " +
+      "with native speakers quite possible without strain for either party. " +
+      "You can produce clear, detailed text on a wide range of subjects. " +
+      "You can explain a viewpoint on a topical issue giving the advantages and disadvantages. " +
+      "In a professional context, B2 allows you to participate confidently in negotiations, " +
+      "deliver polished presentations, and write detailed reports and proposals. " +
+      "You have mastered conditionals, advanced passives, modal verbs for deduction, " +
+      "cohesive devices, and academic writing conventions. " +
+      "The journey from A0 to B2 requires dedication, consistency, and courage. " +
+      "Whatever your next goal — C1, IELTS, or simply better workplace communication — " +
+      "the foundation you have built here will serve you for life.",
+    questions: [
+      {
+        id: "u42r-q1",
+        question_vn: "Ở trình độ B2, bạn có thể hiểu loại văn bản nào?",
+        options: [
+          "Only simple texts on familiar topics",
+          "The main ideas of complex texts on concrete and abstract topics",
+          "Only spoken English from native speakers",
+          "Technical manuals and scientific papers",
+        ],
+        answer: "The main ideas of complex texts on concrete and abstract topics",
+        explanation_vn: "'you can understand the main ideas of complex texts on both concrete and abstract topics.'",
+      },
+      {
+        id: "u42r-q2",
+        question_vn: "Điều gì giúp giao tiếp với người bản ngữ trở nên dễ dàng hơn ở B2?",
+        options: [
+          "Perfect pronunciation",
+          "A degree of fluency and spontaneity",
+          "Knowing every grammar rule",
+          "Having a large vocabulary only",
+        ],
+        answer: "A degree of fluency and spontaneity",
+        explanation_vn: "'You can interact with a degree of fluency and spontaneity.'",
+      },
+      {
+        id: "u42r-q3",
+        question_vn: "Điều gì cần thiết cho hành trình từ A0 đến B2?",
+        options: [
+          "A language school certificate",
+          "Dedication, consistency, and courage",
+          "Living abroad",
+          "Native speaker friends",
+        ],
+        answer: "Dedication, consistency, and courage",
+        explanation_vn: "'The journey from A0 to B2 requires dedication, consistency, and courage.'",
+      },
+      {
+        id: "u42r-q4",
+        question_vn: "Theo đoạn văn, những gì bạn đã học sẽ có ích trong bao lâu?",
+        options: [
+          "Until you reach C1",
+          "For the next five years",
+          "Only for IELTS preparation",
+          "For life",
+        ],
+        answer: "For life",
+        explanation_vn: "'the foundation you have built here will serve you for life.'",
+      },
+    ],
+  },
 };
 
 export default unit42;

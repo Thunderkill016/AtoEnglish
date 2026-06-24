@@ -150,6 +150,69 @@ export const unit32: UnitData = {
       { en: "Let's work towards a quick resolution", vn: "Hãy cùng hướng tới sự giải quyết nhanh chóng" },
     ],
   },
+  readingPassage: {
+    id: "unit32-reading-1",
+    title: "B1 Achievement Review",
+    title_vn: "Đọc đoạn ôn tập tổng hợp B1",
+    level: "B1" as const,
+    text:
+      "Congratulations on reaching B1 level! This is a significant milestone in your English journey. " +
+      "At B1, you can understand the main points of clear standard speech on familiar matters. " +
+      "You are able to deal with most situations likely to arise whilst travelling in an English-speaking area. " +
+      "You can produce simple connected text on topics that are familiar or of personal interest. " +
+      "You can describe experiences, events, dreams, hopes and ambitions " +
+      "and briefly give reasons and explanations for opinions and plans. " +
+      "In a professional context, you can participate in meetings, write emails, and give short presentations. " +
+      "You have mastered key grammar: past tenses, conditionals, passives, modal verbs, and relative clauses. " +
+      "The next step is B2, where language becomes more fluent and precise. " +
+      "Keep reviewing what you have learned and practise speaking every day. " +
+      "Your consistency is what will take you to the next level!",
+    questions: [
+      {
+        id: "u32r-q1",
+        question_vn: "Ở trình độ B1, bạn có thể hiểu được loại lời nói nào?",
+        options: [
+          "Only simple, very slow speech",
+          "The main points of clear standard speech on familiar matters",
+          "All native speaker speech perfectly",
+          "Only written English",
+        ],
+        answer: "The main points of clear standard speech on familiar matters",
+        explanation_vn: "'you can understand the main points of clear standard speech on familiar matters.'",
+      },
+      {
+        id: "u32r-q2",
+        question_vn: "Bạn có thể làm gì trong bối cảnh chuyên nghiệp ở trình độ B1?",
+        options: [
+          "Only read documents",
+          "Participate in meetings, write emails, and give short presentations",
+          "Write academic research papers",
+          "Translate complex legal documents",
+        ],
+        answer: "Participate in meetings, write emails, and give short presentations",
+        explanation_vn: "'you can participate in meetings, write emails, and give short presentations.'",
+      },
+      {
+        id: "u32r-q3",
+        question_vn: "Bước tiếp theo sau B1 là gì?",
+        options: ["A1", "A2", "B2", "C1"],
+        answer: "B2",
+        explanation_vn: "'The next step is B2, where language becomes more fluent and precise.'",
+      },
+      {
+        id: "u32r-q4",
+        question_vn: "Điều gì sẽ đưa bạn lên trình độ tiếp theo?",
+        options: [
+          "Studying only grammar",
+          "Taking many tests",
+          "Your consistency and daily practice",
+          "Moving to an English-speaking country",
+        ],
+        answer: "Your consistency and daily practice",
+        explanation_vn: "'Your consistency is what will take you to the next level!'",
+      },
+    ],
+  },
 };
 
 export default unit32;

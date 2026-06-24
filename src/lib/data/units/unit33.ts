@@ -148,6 +148,74 @@ export const unit33: UnitData = {
       { en: "If we had capital, we would start", vn: "Nếu có vốn, chúng tôi đã bắt đầu" },
     ],
   },
+  readingPassage: {
+    id: "unit33-reading-1",
+    title: "If I Could Change One Thing",
+    title_vn: "Đọc đoạn về câu điều kiện loại 2 (Second Conditional)",
+    level: "B2" as const,
+    text:
+      "If I could change one thing about modern life, I would reduce our dependence on smartphones. " +
+      "If people spent less time on social media, they would have more meaningful conversations. " +
+      "If I were the CEO of a tech company, I would introduce mandatory phone-free hours at work. " +
+      "Research suggests that if employees took regular digital breaks, their productivity would increase by 20%. " +
+      "Of course, technology also brings enormous benefits. " +
+      "If we didn't have the internet, remote work wouldn't be possible, " +
+      "and millions of people would have lost their jobs during the pandemic. " +
+      "If I had unlimited funding, I would invest in digital literacy programmes for older generations " +
+      "who struggle to adapt to rapid technological change. " +
+      "The key is balance. If we used technology more mindfully, " +
+      "it would enrich our lives without controlling them.",
+    questions: [
+      {
+        id: "u33r-q1",
+        question_vn: "Nếu người viết có thể thay đổi một điều về cuộc sống hiện đại, họ sẽ thay đổi điều gì?",
+        options: [
+          "Reduce pollution",
+          "Reduce dependence on smartphones",
+          "Improve public transport",
+          "Reform the education system",
+        ],
+        answer: "Reduce dependence on smartphones",
+        explanation_vn: "'If I could change one thing about modern life, I would reduce our dependence on smartphones.'",
+      },
+      {
+        id: "u33r-q2",
+        question_vn: "Nghiên cứu cho thấy điều gì sẽ xảy ra nếu nhân viên nghỉ ngơi kỹ thuật số thường xuyên hơn?",
+        options: [
+          "Their salaries would increase",
+          "Their productivity would increase by 20%",
+          "They would work fewer hours",
+          "They would use more technology",
+        ],
+        answer: "Their productivity would increase by 20%",
+        explanation_vn: "'if employees took regular digital breaks, their productivity would increase by 20%.'",
+      },
+      {
+        id: "u33r-q3",
+        question_vn: "Điều gì sẽ không thể xảy ra nếu không có internet?",
+        options: [
+          "Social media",
+          "Remote work",
+          "Online shopping",
+          "Video calls",
+        ],
+        answer: "Remote work",
+        explanation_vn: "'If we didn't have the internet, remote work wouldn't be possible.'",
+      },
+      {
+        id: "u33r-q4",
+        question_vn: "Điều gì người viết muốn đầu tư nếu có nguồn tài trợ vô hạn?",
+        options: [
+          "New smartphone apps",
+          "Better internet infrastructure",
+          "Digital literacy programmes for older generations",
+          "More powerful computers",
+        ],
+        answer: "Digital literacy programmes for older generations",
+        explanation_vn: "'I would invest in digital literacy programmes for older generations.'",
+      },
+    ],
+  },
 };
 
 export default unit33;

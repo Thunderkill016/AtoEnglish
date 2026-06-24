@@ -148,6 +148,70 @@ export const unit39: UnitData = {
       { en: "There is pure speculation about it", vn: "Đó hoàn toàn là sự suy đoán" },
     ],
   },
+  readingPassage: {
+    id: "unit39-reading-1",
+    title: "Deduction and Speculation",
+    title_vn: "Đọc đoạn về suy luận và phỏng đoán với modal verbs",
+    level: "B2" as const,
+    text:
+      "When we don't have all the facts, we use modal verbs to speculate and deduce. " +
+      "Consider this situation: You arrive at the office and your colleague's desk is empty. " +
+      "Their coat is gone, their computer is off, and there are no personal items visible. " +
+      "What can you conclude? They must have left for the day. " +
+      "Or, perhaps: They might have gone to a meeting in another building. " +
+      "They could have taken the afternoon off. " +
+      "If their schedule showed an external appointment, they may have left early. " +
+      "However, if their access card is still at the desk, they can't have left the building entirely. " +
+      "This is deductive reasoning using modal verbs: " +
+      "must (strong certainty), might/could/may (possibility), can't (strong impossibility). " +
+      "In everyday conversation, these structures allow you to discuss situations " +
+      "with nuance and intellectual confidence.",
+    questions: [
+      {
+        id: "u39r-q1",
+        question_vn: "Chúng ta sử dụng modal verbs khi nào?",
+        options: [
+          "When we know all the facts",
+          "When we don't have all the facts and need to speculate",
+          "Only in formal writing",
+          "Only in past tense sentences",
+        ],
+        answer: "When we don't have all the facts and need to speculate",
+        explanation_vn: "'When we don't have all the facts, we use modal verbs to speculate and deduce.'",
+      },
+      {
+        id: "u39r-q2",
+        question_vn: "Modal verb nào biểu thị sự chắc chắn cao?",
+        options: ["Could", "Might", "May", "Must"],
+        answer: "Must",
+        explanation_vn: "'must (strong certainty)'",
+      },
+      {
+        id: "u39r-q3",
+        question_vn: "Nếu thẻ ra vào của đồng nghiệp vẫn còn trên bàn, điều gì có thể được suy ra?",
+        options: [
+          "They must have left for the day",
+          "They can't have left the building entirely",
+          "They might be in a meeting",
+          "They could have taken the afternoon off",
+        ],
+        answer: "They can't have left the building entirely",
+        explanation_vn: "'if their access card is still at the desk, they can't have left the building entirely.'",
+      },
+      {
+        id: "u39r-q4",
+        question_vn: "'Can't' trong ngữ cảnh suy luận biểu thị điều gì?",
+        options: [
+          "Possibility",
+          "Weak certainty",
+          "Strong impossibility",
+          "Permission",
+        ],
+        answer: "Strong impossibility",
+        explanation_vn: "'can't (strong impossibility)'",
+      },
+    ],
+  },
 };
 
 export default unit39;

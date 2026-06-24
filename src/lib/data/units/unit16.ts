@@ -196,6 +196,64 @@ export const unit16: UnitData = {
       { en: "It's on the second floor", vn: "Nó ở tầng hai" },
     ],
   },
+
+  readingPassage: {
+    id: "unit16-reading-1",
+    title: "Finding the Hotel",
+    title_vn: "Tìm Đường Đến Khách Sạn",
+    level: "A2" as const,
+    text: `Tom arrives in Hanoi for the first time. He needs to find his hotel from the airport. A friendly local helps him. She says, "Go straight along this road for three blocks. At the traffic lights, turn left. You will see a large landmark — the central post office. The hotel is on the corner, opposite the post office. It is only about fifteen minutes on foot." Tom books a double room and checks in at 2 PM. The receptionist tells him there is a pharmacy nearby and an ATM available at the corner. The hotel is in a great location, close to many restaurants and shopping streets. Tom is very happy with the distance from all the main attractions.`,
+    questions: [
+      {
+        id: "unit16-q1",
+        question_vn: "Tom phải rẽ đâu khi đến đèn giao thông?",
+        options: [
+          "He should turn right.",
+          "He should go straight.",
+          "He should turn left.",
+          "He should turn around.",
+        ],
+        answer: "He should turn left.",
+        explanation_vn: "'At the traffic lights, turn left' — rẽ trái tại đèn giao thông.",
+      },
+      {
+        id: "unit16-q2",
+        question_vn: "Khách sạn ở đâu so với bưu điện?",
+        options: [
+          "It is behind the post office.",
+          "It is opposite the post office.",
+          "It is next to the post office.",
+          "It is nearby the traffic lights.",
+        ],
+        answer: "It is opposite the post office.",
+        explanation_vn: "'The hotel is on the corner, opposite the post office' — đối diện với bưu điện.",
+      },
+      {
+        id: "unit16-q3",
+        question_vn: "Tom đặt loại phòng gì và nhận phòng lúc mấy giờ?",
+        options: [
+          "A single room at 12 PM.",
+          "A double room at 2 PM.",
+          "A double room at 3 PM.",
+          "A single room at 2 PM.",
+        ],
+        answer: "A double room at 2 PM.",
+        explanation_vn: "'Tom books a double room and checks in at 2 PM' — phòng đôi, nhận phòng lúc 2 giờ chiều.",
+      },
+      {
+        id: "unit16-q4",
+        question_vn: "Tiện ích gì có sẵn gần khách sạn?",
+        options: [
+          "A supermarket and a gym.",
+          "A pharmacy and an ATM.",
+          "A swimming pool and a restaurant.",
+          "A cinema and a park.",
+        ],
+        answer: "A pharmacy and an ATM.",
+        explanation_vn: "'there is a pharmacy nearby and an ATM available at the corner' — nhà thuốc gần đó và máy ATM ở góc đường.",
+      },
+    ],
+  },
 };
 
 export default unit16;

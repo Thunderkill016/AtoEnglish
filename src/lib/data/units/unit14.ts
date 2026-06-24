@@ -190,6 +190,64 @@ export const unit14: UnitData = {
       { en: "They are going to launch", vn: "Họ sẽ ra mắt" },
     ],
   },
+
+  readingPassage: {
+    id: "unit14-reading-1",
+    title: "Big Plans for Next Month",
+    title_vn: "Kế Hoạch Lớn Cho Tháng Tới",
+    level: "A2" as const,
+    text: `Minh has many plans for next month. He is going to prepare a presentation for an important meeting on Monday. His team will launch a new product at the end of the month, so the deadline is very tight. He will probably work late this week to improve the project report. Minh hopes everything will go smoothly. He is also going to schedule a call with overseas clients soon. His manager believes the launch will be successful. Next month is going to be very busy, but Minh feels ready. He says, "I will do my best and I hope the team will support me!"`,
+    questions: [
+      {
+        id: "unit14-q1",
+        question_vn: "Minh đang chuẩn bị điều gì cho ngày thứ Hai?",
+        options: [
+          "He is going to prepare a report.",
+          "He is going to prepare a presentation.",
+          "He will launch a product on Monday.",
+          "He plans to attend a training course.",
+        ],
+        answer: "He is going to prepare a presentation.",
+        explanation_vn: "'He is going to prepare a presentation for an important meeting on Monday' — chuẩn bị bài thuyết trình cho cuộc họp.",
+      },
+      {
+        id: "unit14-q2",
+        question_vn: "Tại sao deadline lại rất gấp?",
+        options: [
+          "Because the meeting is cancelled.",
+          "Because the team will launch a new product at the end of the month.",
+          "Because the manager set a new schedule.",
+          "Because Minh is going on vacation.",
+        ],
+        answer: "Because the team will launch a new product at the end of the month.",
+        explanation_vn: "'His team will launch a new product at the end of the month, so the deadline is very tight' — ra mắt sản phẩm mới nên deadline rất gấp.",
+      },
+      {
+        id: "unit14-q3",
+        question_vn: "Minh sẽ làm gì với khách hàng nước ngoài?",
+        options: [
+          "He will visit them in person.",
+          "He will send a report by email.",
+          "He is going to schedule a call with them soon.",
+          "He will probably cancel the meeting.",
+        ],
+        answer: "He is going to schedule a call with them soon.",
+        explanation_vn: "'He is also going to schedule a call with overseas clients soon' — lên lịch cuộc gọi với khách hàng nước ngoài.",
+      },
+      {
+        id: "unit14-q4",
+        question_vn: "Minh cảm thấy thế nào về tháng tới?",
+        options: [
+          "He feels nervous and unprepared.",
+          "He feels ready despite the busy schedule.",
+          "He hopes to take a holiday.",
+          "He probably wants to change his job.",
+        ],
+        answer: "He feels ready despite the busy schedule.",
+        explanation_vn: "'Next month is going to be very busy, but Minh feels ready' — bận rộn nhưng anh ấy cảm thấy sẵn sàng.",
+      },
+    ],
+  },
 };
 
 export default unit14;

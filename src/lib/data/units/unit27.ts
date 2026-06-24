@@ -150,6 +150,74 @@ export const unit27: UnitData = {
       { en: "I'll bring up the budget issue in tomorrow's meeting", vn: "Tôi sẽ đề cập vấn đề ngân sách trong cuộc họp ngày mai" },
     ],
   },
+  readingPassage: {
+    id: "unit27-reading-1",
+    title: "Getting Things Done at Work",
+    title_vn: "Đọc đoạn về phrasal verbs nơi làm việc",
+    level: "B1" as const,
+    text:
+      "Managing a busy workload requires strong organisational skills. " +
+      "Every Monday, I set up my priorities for the week and write them in my planner. " +
+      "I always try to carry out the most important tasks first thing in the morning. " +
+      "When I come across a problem I can't solve alone, I ask a colleague for support. " +
+      "Last week, I had to deal with a difficult client complaint. " +
+      "I called the client and sorted it out within two hours. " +
+      "Sometimes, projects don't go according to plan. " +
+      "When that happens, you need to figure out what went wrong and come up with a solution quickly. " +
+      "I also make sure to follow up on any emails I send so nothing gets forgotten. " +
+      "At the end of each day, I write down what I have achieved. " +
+      "This helps me feel accomplished and ready to take on the next day.",
+    questions: [
+      {
+        id: "u27r-q1",
+        question_vn: "Người kể chuyện làm gì đầu tiên vào mỗi sáng thứ Hai?",
+        options: [
+          "Check emails",
+          "Set up priorities for the week",
+          "Have a team meeting",
+          "Call clients",
+        ],
+        answer: "Set up priorities for the week",
+        explanation_vn: "'Every Monday, I set up my priorities for the week.'",
+      },
+      {
+        id: "u27r-q2",
+        question_vn: "Tuần trước, người kể chuyện phải giải quyết vấn đề gì?",
+        options: [
+          "A technical computer issue",
+          "A difficult client complaint",
+          "A budget problem",
+          "A project deadline",
+        ],
+        answer: "A difficult client complaint",
+        explanation_vn: "'Last week, I had to deal with a difficult client complaint.'",
+      },
+      {
+        id: "u27r-q3",
+        question_vn: "Người kể chuyện giải quyết khiếu nại của khách hàng trong bao lâu?",
+        options: [
+          "30 minutes",
+          "One hour",
+          "Two hours",
+          "One day",
+        ],
+        answer: "Two hours",
+        explanation_vn: "'I called the client and sorted it out within two hours.'",
+      },
+      {
+        id: "u27r-q4",
+        question_vn: "Tại sao người kể chuyện viết ra những gì họ đã hoàn thành cuối ngày?",
+        options: [
+          "To send to their manager",
+          "To feel accomplished and ready for the next day",
+          "To update the company database",
+          "To calculate overtime hours",
+        ],
+        answer: "To feel accomplished and ready for the next day",
+        explanation_vn: "'This helps me feel accomplished and ready to take on the next day.'",
+      },
+    ],
+  },
 };
 
 export default unit27;

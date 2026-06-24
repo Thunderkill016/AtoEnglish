@@ -181,6 +181,66 @@ export const unit7: UnitData = {
       { en: "the deadline", vn: "hạn chót" },
     ],
   },
+  readingPassage: {
+    id: "unit7-reading-1",
+    title: "My Favourite Clothes",
+    title_vn: "Đọc đoạn về trang phục yêu thích",
+    level: "A1" as const,
+    text:
+      "My name is Nam. I love clothes! For work, I usually wear a white shirt and black trousers. " +
+      "My favourite colour is blue, so I have many blue shirts. " +
+      "In the summer, I like to wear a T-shirt and jeans. " +
+      "My sister loves wearing dresses and skirts. " +
+      "She always looks very stylish! " +
+      "On cold days, I wear a jacket and boots. " +
+      "I always check the size before I buy clothes. " +
+      "Shopping for clothes is my favourite weekend activity!",
+    questions: [
+      {
+        id: "u7r-q1",
+        question_vn: "Nam thường mặc gì khi đi làm?",
+        options: [
+          "A T-shirt and jeans",
+          "A dress and boots",
+          "A white shirt and black trousers",
+          "A jacket and skirt",
+        ],
+        answer: "A white shirt and black trousers",
+        explanation_vn: "'For work, I usually wear a white shirt and black trousers.'",
+      },
+      {
+        id: "u7r-q2",
+        question_vn: "Màu sắc yêu thích của Nam là gì?",
+        options: ["Red", "Black", "White", "Blue"],
+        answer: "Blue",
+        explanation_vn: "'My favourite colour is blue, so I have many blue shirts.'",
+      },
+      {
+        id: "u7r-q3",
+        question_vn: "Nam mặc gì vào ngày lạnh?",
+        options: [
+          "A T-shirt and jeans",
+          "A jacket and boots",
+          "A dress and skirt",
+          "A shirt and trousers",
+        ],
+        answer: "A jacket and boots",
+        explanation_vn: "'On cold days, I wear a jacket and boots.'",
+      },
+      {
+        id: "u7r-q4",
+        question_vn: "Em gái của Nam thích mặc gì?",
+        options: [
+          "Jeans and T-shirts",
+          "Shirts and trousers",
+          "Dresses and skirts",
+          "Jackets and boots",
+        ],
+        answer: "Dresses and skirts",
+        explanation_vn: "'My sister loves wearing dresses and skirts.'",
+      },
+    ],
+  },
 };
 
 export default unit7;

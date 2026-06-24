@@ -183,6 +183,51 @@ export const unit10: UnitData = {
       { en: "at the meeting", vn: "tại cuộc họp" },
     ],
   },
+  readingPassage: {
+    id: "unit10-reading-1",
+    title: "My New Colleague",
+    title_vn: "Đọc đoạn về đồng nghiệp mới",
+    level: "A1" as const,
+    text:
+      "My new colleague is named Minh. He is very talented! " +
+      "He can speak three languages: Vietnamese, English, and Japanese. " +
+      "He can also use computers very well and he can cook amazing Vietnamese food. " +
+      "At the weekend, Minh likes to swim in the river near his house. " +
+      "He can drive a car, but he usually rides his motorbike to work. " +
+      "He can sing and play the guitar too! " +
+      "He cannot draw very well, but he is learning. " +
+      "I want to learn many things from Minh!",
+    questions: [
+      {
+        id: "u10r-q1",
+        question_vn: "Minh có thể nói bao nhiêu ngôn ngữ?",
+        options: ["One", "Two", "Three", "Four"],
+        answer: "Three",
+        explanation_vn: "'He can speak three languages: Vietnamese, English, and Japanese.'",
+      },
+      {
+        id: "u10r-q2",
+        question_vn: "Minh thích làm gì vào cuối tuần?",
+        options: ["Cook", "Drive a car", "Swim", "Play the guitar"],
+        answer: "Swim",
+        explanation_vn: "'At the weekend, Minh likes to swim in the river near his house.'",
+      },
+      {
+        id: "u10r-q3",
+        question_vn: "Minh thường đi làm bằng gì?",
+        options: ["A car", "A bus", "A motorbike", "On foot"],
+        answer: "A motorbike",
+        explanation_vn: "'He usually rides his motorbike to work.'",
+      },
+      {
+        id: "u10r-q4",
+        question_vn: "Minh không thể làm tốt điều gì?",
+        options: ["Sing", "Cook", "Draw", "Speak English"],
+        answer: "Draw",
+        explanation_vn: "'He cannot draw very well, but he is learning.'",
+      },
+    ],
+  },
 };
 
 export default unit10;

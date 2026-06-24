@@ -150,6 +150,75 @@ export const unit29: UnitData = {
       { en: "We need an alternative plan", vn: "Chúng ta cần một kế hoạch thay thế" },
     ],
   },
+  readingPassage: {
+    id: "unit29-reading-1",
+    title: "Solving a Supply Chain Problem",
+    title_vn: "Đọc đoạn về giải quyết vấn đề kinh doanh",
+    level: "B1" as const,
+    text:
+      "Last quarter, our company faced a major supply chain problem. " +
+      "Our main supplier in Thailand could not deliver materials on time due to flooding. " +
+      "This caused significant delays in our production schedule. " +
+      "First, we identified the root cause: the supplier's factory was flooded. " +
+      "Then, we brainstormed possible solutions with our operations team. " +
+      "We proposed using an alternative supplier in Malaysia as a temporary measure. " +
+      "We also negotiated with our key clients to extend their deadlines by two weeks. " +
+      "Fortunately, most clients were understanding and agreed. " +
+      "As a result, we minimised losses and maintained most of our contracts. " +
+      "We have since developed a contingency plan with two backup suppliers " +
+      "to prevent similar problems in the future. " +
+      "This experience taught us the importance of supply chain resilience.",
+    questions: [
+      {
+        id: "u29r-q1",
+        question_vn: "Vấn đề chính của công ty là gì?",
+        options: [
+          "A client cancelled their contract",
+          "A supplier could not deliver materials on time",
+          "The factory equipment broke down",
+          "Staff went on strike",
+        ],
+        answer: "A supplier could not deliver materials on time",
+        explanation_vn: "'Our main supplier in Thailand could not deliver materials on time due to flooding.'",
+      },
+      {
+        id: "u29r-q2",
+        question_vn: "Giải pháp ngắn hạn của họ là gì?",
+        options: [
+          "Stop production temporarily",
+          "Cancel all client contracts",
+          "Use an alternative supplier in Malaysia",
+          "Hire more employees",
+        ],
+        answer: "Use an alternative supplier in Malaysia",
+        explanation_vn: "'We proposed using an alternative supplier in Malaysia as a temporary measure.'",
+      },
+      {
+        id: "u29r-q3",
+        question_vn: "Họ đã đàm phán gì với khách hàng?",
+        options: [
+          "A price reduction",
+          "A deadline extension of two weeks",
+          "A full refund",
+          "A new contract",
+        ],
+        answer: "A deadline extension of two weeks",
+        explanation_vn: "'We also negotiated with our key clients to extend their deadlines by two weeks.'",
+      },
+      {
+        id: "u29r-q4",
+        question_vn: "Họ đã làm gì để ngăn chặn vấn đề tương tự trong tương lai?",
+        options: [
+          "Changed their main product",
+          "Stopped working with foreign suppliers",
+          "Developed a contingency plan with two backup suppliers",
+          "Reduced the size of the company",
+        ],
+        answer: "Developed a contingency plan with two backup suppliers",
+        explanation_vn: "'We have since developed a contingency plan with two backup suppliers to prevent similar problems in the future.'",
+      },
+    ],
+  },
 };
 
 export default unit29;

@@ -148,6 +148,65 @@ export const unit36: UnitData = {
       { en: "We conducted a detailed risk analysis", vn: "Chúng tôi đã tiến hành phân tích rủi ro chi tiết" },
     ],
   },
+  readingPassage: {
+    id: "unit36-reading-1",
+    title: "A Study on Remote Work",
+    title_vn: "Đọc đoạn Academic Passive — nghiên cứu về làm việc từ xa",
+    level: "B2" as const,
+    text:
+      "A comprehensive study on remote work practices was conducted by researchers at a leading university. " +
+      "Over 5,000 employees from 12 countries were surveyed between 2022 and 2024. " +
+      "The research was funded by a major technology foundation. " +
+      "Participants were selected from diverse industries, including finance, education, and healthcare. " +
+      "Data were collected through online questionnaires and structured interviews. " +
+      "The findings were published in the Journal of Workplace Management in January 2025. " +
+      "It was found that employees who worked remotely reported 23% higher job satisfaction. " +
+      "However, it was also noted that remote workers experienced greater difficulty maintaining " +
+      "work-life boundaries. " +
+      "It is recommended that companies implement clear remote work policies " +
+      "to address these challenges. " +
+      "The study is expected to influence workplace legislation in several countries.",
+    questions: [
+      {
+        id: "u36r-q1",
+        question_vn: "Nghiên cứu được thực hiện bởi ai?",
+        options: [
+          "A government agency",
+          "Researchers at a leading university",
+          "A private consulting firm",
+          "A technology company",
+        ],
+        answer: "Researchers at a leading university",
+        explanation_vn: "'A comprehensive study...was conducted by researchers at a leading university.'",
+      },
+      {
+        id: "u36r-q2",
+        question_vn: "Bao nhiêu nhân viên đã được khảo sát?",
+        options: ["500", "1,000", "5,000", "10,000"],
+        answer: "5,000",
+        explanation_vn: "'Over 5,000 employees from 12 countries were surveyed.'",
+      },
+      {
+        id: "u36r-q3",
+        question_vn: "Những nhân viên làm việc từ xa báo cáo mức độ hài lòng công việc cao hơn bao nhiêu?",
+        options: ["10%", "15%", "23%", "30%"],
+        answer: "23%",
+        explanation_vn: "'employees who worked remotely reported 23% higher job satisfaction.'",
+      },
+      {
+        id: "u36r-q4",
+        question_vn: "Khuyến nghị của nghiên cứu là gì?",
+        options: [
+          "All companies should ban remote work",
+          "Companies should implement clear remote work policies",
+          "Employees should work longer hours",
+          "Governments should regulate all workplaces",
+        ],
+        answer: "Companies should implement clear remote work policies",
+        explanation_vn: "'It is recommended that companies implement clear remote work policies.'",
+      },
+    ],
+  },
 };
 
 export default unit36;

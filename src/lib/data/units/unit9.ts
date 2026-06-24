@@ -180,6 +180,67 @@ export const unit9: UnitData = {
       { en: "They came on time", vn: "Họ đã đến đúng giờ" },
     ],
   },
+  readingPassage: {
+    id: "unit9-reading-1",
+    title: "My Neighbourhood",
+    title_vn: "Đọc đoạn về khu phố của tôi",
+    level: "A1" as const,
+    text:
+      "I live in a busy neighbourhood in Hanoi. " +
+      "Near my house, there is a supermarket and a park. " +
+      "The park is between the supermarket and the school. " +
+      "There is also a hospital opposite the bank. " +
+      "The post office is next to the bank, on the main street. " +
+      "I go to the supermarket every Saturday morning. " +
+      "My children go to the school near the park. " +
+      "Our neighbourhood has everything we need. " +
+      "I love living here!",
+    questions: [
+      {
+        id: "u9r-q1",
+        question_vn: "Công viên nằm ở đâu?",
+        options: [
+          "Next to the hospital",
+          "Between the supermarket and the school",
+          "Opposite the bank",
+          "Near the post office",
+        ],
+        answer: "Between the supermarket and the school",
+        explanation_vn: "'The park is between the supermarket and the school.'",
+      },
+      {
+        id: "u9r-q2",
+        question_vn: "Bệnh viện nằm đối diện với gì?",
+        options: ["The school", "The park", "The bank", "The post office"],
+        answer: "The bank",
+        explanation_vn: "'There is also a hospital opposite the bank.'",
+      },
+      {
+        id: "u9r-q3",
+        question_vn: "Người kể chuyện đi siêu thị vào khi nào?",
+        options: [
+          "Every day",
+          "Every Saturday morning",
+          "Every Sunday",
+          "Every Friday afternoon",
+        ],
+        answer: "Every Saturday morning",
+        explanation_vn: "'I go to the supermarket every Saturday morning.'",
+      },
+      {
+        id: "u9r-q4",
+        question_vn: "Bưu điện ở đâu?",
+        options: [
+          "Next to the park",
+          "Opposite the school",
+          "Between the bank and the hospital",
+          "Next to the bank, on the main street",
+        ],
+        answer: "Next to the bank, on the main street",
+        explanation_vn: "'The post office is next to the bank, on the main street.'",
+      },
+    ],
+  },
 };
 
 export default unit9;

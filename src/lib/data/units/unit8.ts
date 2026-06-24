@@ -180,6 +180,71 @@ export const unit8: UnitData = {
       { en: "They can't attend", vn: "Họ không thể tham dự" },
     ],
   },
+  readingPassage: {
+    id: "unit8-reading-1",
+    title: "A Vietnamese Lunch",
+    title_vn: "Đọc đoạn về bữa trưa Việt Nam",
+    level: "A1" as const,
+    text:
+      "Every day at noon, I have lunch with my family. " +
+      "I usually eat rice and vegetables. " +
+      "My mum cooks grilled chicken and noodle soup for us. " +
+      "I love noodles! Vietnamese noodles are my favourite food. " +
+      "My dad likes eating bread with butter in the morning, but at lunch he eats rice. " +
+      "After lunch, we always eat fruit. Today we have mangoes and bananas. " +
+      "We also drink green tea. " +
+      "Lunchtime is my favourite time of the day!",
+    questions: [
+      {
+        id: "u8r-q1",
+        question_vn: "Người kể chuyện thường ăn gì vào buổi trưa?",
+        options: [
+          "Bread and butter",
+          "Rice and vegetables",
+          "Noodles and fruit",
+          "Chicken and bread",
+        ],
+        answer: "Rice and vegetables",
+        explanation_vn: "'I usually eat rice and vegetables.'",
+      },
+      {
+        id: "u8r-q2",
+        question_vn: "Mẹ của người kể chuyện nấu gì?",
+        options: [
+          "Rice and mangoes",
+          "Bread and butter",
+          "Grilled chicken and noodle soup",
+          "Fruit and green tea",
+        ],
+        answer: "Grilled chicken and noodle soup",
+        explanation_vn: "'My mum cooks grilled chicken and noodle soup for us.'",
+      },
+      {
+        id: "u8r-q3",
+        question_vn: "Bố thích ăn gì vào buổi sáng?",
+        options: [
+          "Rice and noodles",
+          "Bread with butter",
+          "Fruit and tea",
+          "Chicken and vegetables",
+        ],
+        answer: "Bread with butter",
+        explanation_vn: "'My dad likes eating bread with butter in the morning.'",
+      },
+      {
+        id: "u8r-q4",
+        question_vn: "Họ ăn gì sau bữa trưa?",
+        options: [
+          "Noodles and rice",
+          "Bread and butter",
+          "Fruit",
+          "More chicken",
+        ],
+        answer: "Fruit",
+        explanation_vn: "'After lunch, we always eat fruit.'",
+      },
+    ],
+  },
 };
 
 export default unit8;

@@ -150,6 +150,73 @@ export const unit25: UnitData = {
       { en: "The city where our headquarters is located is Hanoi", vn: "Thành phố nơi trụ sở của chúng tôi đặt là Hà Nội" },
     ],
   },
+  readingPassage: {
+    id: "unit25-reading-1",
+    title: "My Dream City",
+    title_vn: "Đọc đoạn mô tả thành phố bằng mệnh đề quan hệ",
+    level: "B1" as const,
+    text:
+      "The city where I grew up is a small coastal town in central Vietnam. " +
+      "It's the kind of place that makes you feel calm the moment you arrive. " +
+      "The beach, which stretches for miles, is one of the cleanest in Southeast Asia. " +
+      "The local market, where farmers sell fresh produce every morning, is full of colour and life. " +
+      "There is an ancient temple that was built over 400 years ago. " +
+      "The people who live there are known for their warmth and hospitality. " +
+      "The food, which uses fresh seafood from the ocean, is absolutely delicious. " +
+      "The streets, which are lined with ancient trees, are perfect for evening walks. " +
+      "I moved to Hanoi five years ago, but the town where I was born is still the place " +
+      "that holds my heart. I go back every Tet holiday.",
+    questions: [
+      {
+        id: "u25r-q1",
+        question_vn: "Bãi biển của thành phố như thế nào?",
+        options: [
+          "It is very crowded",
+          "It stretches for miles and is one of the cleanest in Southeast Asia",
+          "It is only open in summer",
+          "It was recently built",
+        ],
+        answer: "It stretches for miles and is one of the cleanest in Southeast Asia",
+        explanation_vn: "'The beach, which stretches for miles, is one of the cleanest in Southeast Asia.'",
+      },
+      {
+        id: "u25r-q2",
+        question_vn: "Ngôi đền cổ được xây dựng khi nào?",
+        options: [
+          "100 years ago",
+          "200 years ago",
+          "Over 400 years ago",
+          "Over 500 years ago",
+        ],
+        answer: "Over 400 years ago",
+        explanation_vn: "'There is an ancient temple that was built over 400 years ago.'",
+      },
+      {
+        id: "u25r-q3",
+        question_vn: "Người kể chuyện đã chuyển đến Hà Nội khi nào?",
+        options: [
+          "Two years ago",
+          "Three years ago",
+          "Five years ago",
+          "Ten years ago",
+        ],
+        answer: "Five years ago",
+        explanation_vn: "'I moved to Hanoi five years ago.'",
+      },
+      {
+        id: "u25r-q4",
+        question_vn: "Người kể chuyện trở về quê nhà vào dịp nào?",
+        options: [
+          "Every summer",
+          "Every weekend",
+          "Every Tet holiday",
+          "Every Christmas",
+        ],
+        answer: "Every Tet holiday",
+        explanation_vn: "'I go back every Tet holiday.'",
+      },
+    ],
+  },
 };
 
 export default unit25;

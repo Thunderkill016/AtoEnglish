@@ -150,6 +150,74 @@ export const unit28: UnitData = {
       { en: "She's been consistently achieving high scores", vn: "Cô ấy đã đạt điểm cao một cách nhất quán" },
     ],
   },
+  readingPassage: {
+    id: "unit28-reading-1",
+    title: "A Passion for Teaching",
+    title_vn: "Đọc đoạn về Present Perfect Continuous",
+    level: "B1" as const,
+    text:
+      "My name is Mai and I have been teaching English for twelve years. " +
+      "I started at a small language centre in Da Nang, and I have been working there ever since. " +
+      "Over the years, my teaching style has changed a lot. " +
+      "For the past three years, I have been using more technology in my lessons. " +
+      "My students have been making excellent progress since we switched to online platforms. " +
+      "I have been developing new materials for Vietnamese adult learners recently. " +
+      "It has taken a lot of time and research, but the results are very rewarding. " +
+      "How long have you been learning English? " +
+      "Whether you have been studying for six months or six years, " +
+      "the important thing is to keep practising consistently. " +
+      "I have been dreaming of writing a teaching book for years — and I am finally starting this month!",
+    questions: [
+      {
+        id: "u28r-q1",
+        question_vn: "Mai đã dạy tiếng Anh được bao lâu?",
+        options: [
+          "Five years",
+          "Eight years",
+          "Twelve years",
+          "Fifteen years",
+        ],
+        answer: "Twelve years",
+        explanation_vn: "'I have been teaching English for twelve years.'",
+      },
+      {
+        id: "u28r-q2",
+        question_vn: "Mai đã sử dụng công nghệ nhiều hơn trong giảng dạy từ khi nào?",
+        options: [
+          "For the past one year",
+          "For the past three years",
+          "For the past five years",
+          "Since she started teaching",
+        ],
+        answer: "For the past three years",
+        explanation_vn: "'For the past three years, I have been using more technology in my lessons.'",
+      },
+      {
+        id: "u28r-q3",
+        question_vn: "Theo Mai, điều quan trọng nhất khi học tiếng Anh là gì?",
+        options: [
+          "Studying with a native teacher",
+          "Using only online platforms",
+          "Keeping practising consistently",
+          "Learning grammar rules first",
+        ],
+        answer: "Keeping practising consistently",
+        explanation_vn: "'the important thing is to keep practising consistently.'",
+      },
+      {
+        id: "u28r-q4",
+        question_vn: "Mai có kế hoạch làm gì trong tháng này?",
+        options: [
+          "Start a new language centre",
+          "Travel abroad",
+          "Finally start writing a teaching book",
+          "Retire from teaching",
+        ],
+        answer: "Finally start writing a teaching book",
+        explanation_vn: "'I have been dreaming of writing a teaching book for years — and I am finally starting this month!'",
+      },
+    ],
+  },
 };
 
 export default unit28;

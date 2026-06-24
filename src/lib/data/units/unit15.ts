@@ -196,6 +196,64 @@ export const unit15: UnitData = {
       { en: "worse than expected", vn: "tệ hơn dự kiến" },
     ],
   },
+
+  readingPassage: {
+    id: "unit15-reading-1",
+    title: "Choosing the Best Laptop",
+    title_vn: "Chọn Chiếc Laptop Tốt Nhất",
+    level: "A2" as const,
+    text: `Lan wants to buy a new laptop. She visits an electronics shop and compares three different models. The first laptop is cheap but the quality is not very good. The second one is more expensive, but it has the best battery life in the shop. The third brand is the most popular and comes with a two-year warranty. Lan cannot afford the most expensive model, so she asks for a discount. The seller offers her 15% off the third laptop. Lan checks the receipt and sees the final price is very reasonable. In the end, she chooses the third laptop because it is better value and the quality is excellent.`,
+    questions: [
+      {
+        id: "unit15-q1",
+        question_vn: "Tại sao Lan không mua laptop đầu tiên?",
+        options: [
+          "It is too expensive for her.",
+          "The quality is not very good.",
+          "It does not have a warranty.",
+          "The brand is not popular.",
+        ],
+        answer: "The quality is not very good.",
+        explanation_vn: "'The first laptop is cheap but the quality is not very good' — chất lượng không tốt.",
+      },
+      {
+        id: "unit15-q2",
+        question_vn: "Laptop thứ ba có đặc điểm gì nổi bật?",
+        options: [
+          "It is the cheapest model in the shop.",
+          "It has the longest warranty and is the most popular brand.",
+          "It is the most expensive model.",
+          "It has the best battery life.",
+        ],
+        answer: "It has the longest warranty and is the most popular brand.",
+        explanation_vn: "'The third brand is the most popular and comes with a two-year warranty' — phổ biến nhất và có bảo hành hai năm.",
+      },
+      {
+        id: "unit15-q3",
+        question_vn: "Lan đã nhận được ưu đãi gì từ người bán?",
+        options: [
+          "She got a free receipt.",
+          "She received a 15% discount.",
+          "She got a full refund.",
+          "She was offered a cheaper brand.",
+        ],
+        answer: "She received a 15% discount.",
+        explanation_vn: "'The seller offers her 15% off the third laptop' — giảm 15% cho laptop thứ ba.",
+      },
+      {
+        id: "unit15-q4",
+        question_vn: "Tại sao Lan cuối cùng chọn laptop thứ ba?",
+        options: [
+          "Because it is the cheapest option.",
+          "Because it is better value and the quality is excellent.",
+          "Because she could not afford the others.",
+          "Because it is the most expensive one.",
+        ],
+        answer: "Because it is better value and the quality is excellent.",
+        explanation_vn: "'she chooses the third laptop because it is better value and the quality is excellent' — giá trị tốt hơn và chất lượng xuất sắc.",
+      },
+    ],
+  },
 };
 
 export default unit15;

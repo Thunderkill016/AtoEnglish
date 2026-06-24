@@ -150,6 +150,73 @@ export const unit24: UnitData = {
       { en: "The report must be approved before submission", vn: "Báo cáo phải được duyệt trước khi nộp" },
     ],
   },
+  readingPassage: {
+    id: "unit24-reading-1",
+    title: "How Bánh Mì Is Made",
+    title_vn: "Đọc đoạn về quy trình thụ động (Passive Voice)",
+    level: "B1" as const,
+    text:
+      "Bánh mì is one of Vietnam's most famous foods. It is eaten by millions of people every day. " +
+      "The bread is baked fresh every morning in small bakeries across the country. " +
+      "First, flour, water, yeast, and salt are mixed together to form a dough. " +
+      "Then, the dough is shaped into long baguettes and placed in a hot oven. " +
+      "After baking, the bread is cooled and sliced open. " +
+      "Fresh ingredients such as pâté, Vietnamese cold cuts, cucumber, and coriander are added. " +
+      "Finally, a special chilli sauce is spread inside the bread. " +
+      "The sandwich is then wrapped in paper and sold for just a few thousand dong. " +
+      "Today, bánh mì is also sold in food trucks and restaurants around the world. " +
+      "It has been recognised by Merriam-Webster as an official English word.",
+    questions: [
+      {
+        id: "u24r-q1",
+        question_vn: "Bánh mì được nướng vào lúc nào?",
+        options: [
+          "Every afternoon",
+          "Every morning",
+          "Every evening",
+          "Only on weekends",
+        ],
+        answer: "Every morning",
+        explanation_vn: "'The bread is baked fresh every morning in small bakeries.'",
+      },
+      {
+        id: "u24r-q2",
+        question_vn: "Bước đầu tiên trong quy trình làm bánh mì là gì?",
+        options: [
+          "The bread is shaped into baguettes",
+          "Flour, water, yeast, and salt are mixed together",
+          "The bread is placed in the oven",
+          "Fresh ingredients are added",
+        ],
+        answer: "Flour, water, yeast, and salt are mixed together",
+        explanation_vn: "'flour, water, yeast, and salt are mixed together to form a dough.'",
+      },
+      {
+        id: "u24r-q3",
+        question_vn: "Từ điển nào đã công nhận 'bánh mì' là từ tiếng Anh chính thức?",
+        options: [
+          "Oxford Dictionary",
+          "Cambridge Dictionary",
+          "Merriam-Webster",
+          "Collins Dictionary",
+        ],
+        answer: "Merriam-Webster",
+        explanation_vn: "'It has been recognised by Merriam-Webster as an official English word.'",
+      },
+      {
+        id: "u24r-q4",
+        question_vn: "Bánh mì được bán với giá bao nhiêu?",
+        options: [
+          "Tens of thousands of dong",
+          "Hundreds of thousands of dong",
+          "Just a few thousand dong",
+          "Free at local bakeries",
+        ],
+        answer: "Just a few thousand dong",
+        explanation_vn: "'The sandwich is then wrapped in paper and sold for just a few thousand dong.'",
+      },
+    ],
+  },
 };
 
 export default unit24;

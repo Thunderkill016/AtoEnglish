@@ -149,6 +149,75 @@ export const unit35: UnitData = {
       { en: "If we had signed, we would be safe", vn: "Nếu chúng ta đã ký, giờ ta đã an toàn" },
     ],
   },
+  readingPassage: {
+    id: "unit35-reading-1",
+    title: "Real and Unreal: Conditionals in Context",
+    title_vn: "Đọc đoạn về mixed conditionals trong ngữ cảnh thực",
+    level: "B2" as const,
+    text:
+      "Advanced conditional structures allow us to express nuanced ideas about cause and effect. " +
+      "A mixed conditional combines different time frames to link past actions with present consequences. " +
+      "For example: 'If I had taken the marketing job last year, I would be managing a team now.' " +
+      "This suggests a past decision is affecting the current situation. " +
+      "Another common pattern links present states to past consequences: " +
+      "'If she weren't so ambitious, she wouldn't have applied for the director position.' " +
+      "In business writing, conditional structures add sophistication and precision. " +
+      "Compare these two sentences: 'We should expand.' " +
+      "Versus: 'If we were to expand into new markets, provided that demand remains strong, " +
+      "we would potentially see a 30% increase in revenue within two years.' " +
+      "The second sentence is far more professional and analytical. " +
+      "Mastering conditionals elevates your English to a truly advanced level.",
+    questions: [
+      {
+        id: "u35r-q1",
+        question_vn: "Mixed conditional kết hợp điều gì?",
+        options: [
+          "Two present tenses",
+          "Two past tenses",
+          "Different time frames",
+          "Two future possibilities",
+        ],
+        answer: "Different time frames",
+        explanation_vn: "'A mixed conditional combines different time frames to link past actions with present consequences.'",
+      },
+      {
+        id: "u35r-q2",
+        question_vn: "Câu ví dụ trong đoạn văn nói về điều gì?",
+        options: [
+          "A past decision affecting the current situation",
+          "A future plan for a new job",
+          "A current job that was always planned",
+          "A regret about not taking a job",
+        ],
+        answer: "A past decision affecting the current situation",
+        explanation_vn: "'This suggests a past decision is affecting the current situation.'",
+      },
+      {
+        id: "u35r-q3",
+        question_vn: "Theo đoạn văn, câu điều kiện mang lại điều gì cho văn phong kinh doanh?",
+        options: [
+          "Shorter sentences",
+          "Simpler grammar",
+          "Sophistication and precision",
+          "More informal tone",
+        ],
+        answer: "Sophistication and precision",
+        explanation_vn: "'In business writing, conditional structures add sophistication and precision.'",
+      },
+      {
+        id: "u35r-q4",
+        question_vn: "Điều kiện gì được đề cập để đạt mức tăng doanh thu 30%?",
+        options: [
+          "Hiring more staff",
+          "Reducing costs",
+          "Provided that demand remains strong",
+          "Opening new offices",
+        ],
+        answer: "Provided that demand remains strong",
+        explanation_vn: "'provided that demand remains strong, we would potentially see a 30% increase in revenue.'",
+      },
+    ],
+  },
 };
 
 export default unit35;

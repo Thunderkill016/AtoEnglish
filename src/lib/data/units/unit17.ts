@@ -195,6 +195,64 @@ export const unit17: UnitData = {
       { en: "They have been friends for years", vn: "Họ đã là bạn bè nhiều năm" },
     ],
   },
+
+  readingPassage: {
+    id: "unit17-reading-1",
+    title: "An Interview to Remember",
+    title_vn: "Buổi Phỏng Vấn Đáng Nhớ",
+    level: "A2" as const,
+    text: `Lan has just finished her job interview at an international company. She has five years of work experience in marketing and has recently received a project management certificate. During the interview, the manager asked, "Have you ever worked with foreign clients?" Lan answered, "Yes, I have worked with overseas clients since 2021 and I have already led three successful campaigns." She has never felt so confident in an interview before. The manager was impressed. He said, "You are a very accomplished candidate. We have never seen such great results." Lan has not heard the final decision yet, but she feels very hopeful about this opportunity.`,
+    questions: [
+      {
+        id: "unit17-q1",
+        question_vn: "Lan đã làm việc với khách hàng nước ngoài từ khi nào?",
+        options: [
+          "Since 2019.",
+          "Since 2021.",
+          "For three months.",
+          "Since she got her certificate.",
+        ],
+        answer: "Since 2021.",
+        explanation_vn: "'I have worked with overseas clients since 2021' — từ năm 2021.",
+      },
+      {
+        id: "unit17-q2",
+        question_vn: "Lan đã hoàn thành bao nhiêu chiến dịch thành công?",
+        options: [
+          "She has led two campaigns.",
+          "She has led three successful campaigns.",
+          "She has achieved five campaign targets.",
+          "She has never led a campaign before.",
+        ],
+        answer: "She has led three successful campaigns.",
+        explanation_vn: "'I have already led three successful campaigns' — đã dẫn dắt ba chiến dịch thành công.",
+      },
+      {
+        id: "unit17-q3",
+        question_vn: "Điều gì mà Lan chưa từng cảm thấy trước đây trong phỏng vấn?",
+        options: [
+          "She has never felt nervous before.",
+          "She has never felt so confident before.",
+          "She has never answered questions before.",
+          "She has never been to an interview before.",
+        ],
+        answer: "She has never felt so confident before.",
+        explanation_vn: "'She has never felt so confident in an interview before' — chưa bao giờ tự tin đến vậy.",
+      },
+      {
+        id: "unit17-q4",
+        question_vn: "Lan đã nhận được kết quả phỏng vấn chưa?",
+        options: [
+          "Yes, she has already received the decision.",
+          "No, she has not heard the final decision yet.",
+          "Yes, she just got a job offer.",
+          "No, she recently withdrew her application.",
+        ],
+        answer: "No, she has not heard the final decision yet.",
+        explanation_vn: "'Lan has not heard the final decision yet' — chưa nhận được quyết định cuối cùng.",
+      },
+    ],
+  },
 };
 
 export default unit17;

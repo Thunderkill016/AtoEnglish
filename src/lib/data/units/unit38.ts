@@ -148,6 +148,75 @@ export const unit38: UnitData = {
       { en: "We must leverage our brand reputation", vn: "Chúng ta phải tận dụng uy tín thương hiệu" },
     ],
   },
+  readingPassage: {
+    id: "unit38-reading-1",
+    title: "The Power of Persuasion",
+    title_vn: "Đọc đoạn về kỹ năng thuyết phục và nhấn mạnh",
+    level: "B2" as const,
+    text:
+      "Effective persuasion is one of the most valuable skills in business and public life. " +
+      "It is not manipulation — it is the art of presenting ideas compellingly and logically. " +
+      "What makes a persuasive argument? First, you must understand your audience deeply. " +
+      "It is only when you know what they value that you can frame your argument effectively. " +
+      "Emphasis is crucial. Notice the difference: 'Our product is good.' " +
+      "Versus: 'What sets our product apart is its unmatched reliability.' " +
+      "The second uses cleft sentence structure for emphasis. " +
+      "Strong persuaders use the rule of three: 'This solution is fast, affordable, and effective.' " +
+      "They also use contrast: 'While competitors cut corners, we invest in quality.' " +
+      "Emotional appeal, combined with evidence, creates the most persuasive message. " +
+      "The next time you prepare a proposal or presentation, ask yourself: " +
+      "What do I want the audience to think, feel, and do?",
+    questions: [
+      {
+        id: "u38r-q1",
+        question_vn: "Theo đoạn văn, thuyết phục không phải là gì?",
+        options: [
+          "Presenting ideas logically",
+          "Manipulation",
+          "Understanding your audience",
+          "Using emphasis",
+        ],
+        answer: "Manipulation",
+        explanation_vn: "'It is not manipulation — it is the art of presenting ideas compellingly and logically.'",
+      },
+      {
+        id: "u38r-q2",
+        question_vn: "Điều gì tạo ra thông điệp thuyết phục nhất?",
+        options: [
+          "Long, detailed explanations",
+          "Emotional appeal combined with evidence",
+          "Using many technical terms",
+          "Repeating the same point many times",
+        ],
+        answer: "Emotional appeal combined with evidence",
+        explanation_vn: "'Emotional appeal, combined with evidence, creates the most persuasive message.'",
+      },
+      {
+        id: "u38r-q3",
+        question_vn: "Quy tắc ba (rule of three) trong ví dụ là gì?",
+        options: [
+          "'Fast, affordable, and effective'",
+          "'Good, better, best'",
+          "'Think, feel, and do'",
+          "'First, second, and third'",
+        ],
+        answer: "'Fast, affordable, and effective'",
+        explanation_vn: "'This solution is fast, affordable, and effective.'",
+      },
+      {
+        id: "u38r-q4",
+        question_vn: "Khi chuẩn bị bài thuyết trình, bạn nên tự hỏi điều gì?",
+        options: [
+          "How long should it be?",
+          "What slides should I use?",
+          "What do I want the audience to think, feel, and do?",
+          "How much time do I have?",
+        ],
+        answer: "What do I want the audience to think, feel, and do?",
+        explanation_vn: "'ask yourself: What do I want the audience to think, feel, and do?'",
+      },
+    ],
+  },
 };
 
 export default unit38;

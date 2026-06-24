@@ -19,7 +19,7 @@ export interface ReadingPassage {
   title: string;
   title_vn?: string;    // Vietnamese title/topic hint
   text: string;         // Short English passage (4-8 sentences)
-  level: 'A1' | 'A2' | 'B1';
+  level: 'A0' | 'A1' | 'A2' | 'B1' | 'B2';
   questions: ReadingQuestion[];
 }
 

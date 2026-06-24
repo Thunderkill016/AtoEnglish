@@ -148,6 +148,75 @@ export const unit40: UnitData = {
       { en: "The subsequent investigation proved", vn: "Cuộc điều tra sau đó đã chứng minh" },
     ],
   },
+  readingPassage: {
+    id: "unit40-reading-1",
+    title: "The Importance of Cohesion in Writing",
+    title_vn: "Đọc đoạn về liên kết và mạch lạc trong văn viết",
+    level: "B2" as const,
+    text:
+      "Cohesion is what makes a piece of writing feel unified rather than fragmented. " +
+      "It is achieved through a variety of linking devices. " +
+      "Firstly, pronouns replace repeated nouns: instead of 'The report was long. " +
+      "The report was detailed.' we write 'The report was long and detailed, and it covered all key areas.' " +
+      "Secondly, discourse markers guide the reader: 'Furthermore', 'Nevertheless', 'As a result', " +
+      "'In contrast', and 'To summarise' signal transitions between ideas. " +
+      "Thirdly, lexical cohesion is created through synonyms and related words. " +
+      "Instead of repeating 'problem', use 'issue', 'challenge', or 'difficulty'. " +
+      "Finally, sentence variety — mixing short punchy sentences with longer analytical ones — " +
+      "maintains the reader's interest and controls the pace of the writing. " +
+      "Academic and professional writing that lacks cohesion feels disjointed and unconvincing. " +
+      "With practice, cohesive writing becomes second nature.",
+    questions: [
+      {
+        id: "u40r-q1",
+        question_vn: "Cohesion (sự liên kết) giúp văn bản trở nên như thế nào?",
+        options: [
+          "Longer and more detailed",
+          "Unified rather than fragmented",
+          "More technical and complex",
+          "Easier to translate",
+        ],
+        answer: "Unified rather than fragmented",
+        explanation_vn: "'Cohesion is what makes a piece of writing feel unified rather than fragmented.'",
+      },
+      {
+        id: "u40r-q2",
+        question_vn: "Đại từ (pronouns) được sử dụng để làm gì trong văn bản có liên kết?",
+        options: [
+          "To make sentences shorter",
+          "To replace repeated nouns",
+          "To add emphasis",
+          "To introduce new ideas",
+        ],
+        answer: "To replace repeated nouns",
+        explanation_vn: "'pronouns replace repeated nouns'",
+      },
+      {
+        id: "u40r-q3",
+        question_vn: "Thay vì lặp từ 'problem', nên dùng từ nào để tạo liên kết từ vựng?",
+        options: [
+          "'Question'",
+          "'Topic'",
+          "'Challenge' or 'difficulty'",
+          "'Point'",
+        ],
+        answer: "'Challenge' or 'difficulty'",
+        explanation_vn: "'Instead of repeating problem, use issue, challenge, or difficulty.'",
+      },
+      {
+        id: "u40r-q4",
+        question_vn: "Sự đa dạng câu (sentence variety) giúp ích điều gì?",
+        options: [
+          "Makes writing longer",
+          "Maintains the reader's interest and controls the pace",
+          "Makes grammar simpler",
+          "Reduces the need for punctuation",
+        ],
+        answer: "Maintains the reader's interest and controls the pace",
+        explanation_vn: "'sentence variety...maintains the reader's interest and controls the pace of the writing.'",
+      },
+    ],
+  },
 };
 
 export default unit40;

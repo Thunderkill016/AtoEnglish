@@ -503,6 +503,49 @@ export const unitA06: UnitData = {
       type: "translate",
     },
   ],
+  readingPassage: {
+    id: "unitA06-reading-1",
+    title: "My Family",
+    title_vn: "Đọc đoạn giới thiệu gia đình",
+    level: "A0" as const,
+    text:
+      "This is my family. " +
+      "My father is 50 years old. He is a doctor. " +
+      "My mother is 48 years old. She is a teacher. " +
+      "I have one brother. His name is Long. " +
+      "I have one sister. Her name is Mai. " +
+      "I love my family!",
+    questions: [
+      {
+        id: "uA06r-q1",
+        question_vn: "Bố làm nghề gì?",
+        options: ["Teacher", "Engineer", "Doctor", "Police"],
+        answer: "Doctor",
+        explanation_vn: "'He is a doctor.'",
+      },
+      {
+        id: "uA06r-q2",
+        question_vn: "Mẹ bao nhiêu tuổi?",
+        options: ["45", "46", "48", "50"],
+        answer: "48",
+        explanation_vn: "'My mother is 48 years old.'",
+      },
+      {
+        id: "uA06r-q3",
+        question_vn: "Tên của người anh/em trai là gì?",
+        options: ["Nam", "Minh", "Long", "Hùng"],
+        answer: "Long",
+        explanation_vn: "'His name is Long.'",
+      },
+      {
+        id: "uA06r-q4",
+        question_vn: "Tên của người chị/em gái là gì?",
+        options: ["Lan", "Mai", "Hoa", "Thu"],
+        answer: "Mai",
+        explanation_vn: "'Her name is Mai.'",
+      },
+    ],
+  },
 };
 
 export default unitA06;

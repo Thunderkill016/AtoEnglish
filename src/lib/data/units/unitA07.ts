@@ -499,6 +499,50 @@ export const unitA07: UnitData = {
       type: "translate",
     },
   ],
+  readingPassage: {
+    id: "unitA07-reading-1",
+    title: "My Day",
+    title_vn: "Đọc đoạn về thời gian trong ngày",
+    level: "A0" as const,
+    text:
+      "I wake up at 6 o'clock in the morning. " +
+      "I go to work at 8 AM. " +
+      "I have lunch at 12 o'clock. " +
+      "I finish work at 5 PM. " +
+      "I watch TV at 7 o'clock in the evening. " +
+      "I go to bed at 10 PM. " +
+      "Goodnight!",
+    questions: [
+      {
+        id: "uA07r-q1",
+        question_vn: "Người kể chuyện thức dậy lúc mấy giờ?",
+        options: ["5 AM", "6 AM", "7 AM", "8 AM"],
+        answer: "6 AM",
+        explanation_vn: "'I wake up at 6 o'clock in the morning.'",
+      },
+      {
+        id: "uA07r-q2",
+        question_vn: "Người kể chuyện ăn trưa lúc mấy giờ?",
+        options: ["11 AM", "12 o'clock", "1 PM", "2 PM"],
+        answer: "12 o'clock",
+        explanation_vn: "'I have lunch at 12 o'clock.'",
+      },
+      {
+        id: "uA07r-q3",
+        question_vn: "Người kể chuyện tan làm lúc mấy giờ?",
+        options: ["4 PM", "5 PM", "6 PM", "7 PM"],
+        answer: "5 PM",
+        explanation_vn: "'I finish work at 5 PM.'",
+      },
+      {
+        id: "uA07r-q4",
+        question_vn: "Người kể chuyện đi ngủ lúc mấy giờ?",
+        options: ["9 PM", "10 PM", "11 PM", "12 AM"],
+        answer: "10 PM",
+        explanation_vn: "'I go to bed at 10 PM.'",
+      },
+    ],
+  },
 };
 
 export default unitA07;

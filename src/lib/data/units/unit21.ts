@@ -150,6 +150,73 @@ export const unit21: UnitData = {
       { en: "This time next year, the team will be working on phase two", vn: "Thời điểm này năm tới, nhóm sẽ đang làm giai đoạn hai" },
     ],
   },
+  readingPassage: {
+    id: "unit21-reading-1",
+    title: "The Future of Work",
+    title_vn: "Đọc đoạn về tương lai của công việc",
+    level: "B1" as const,
+    text:
+      "The workplace is changing rapidly. By 2030, analysts forecast that artificial intelligence " +
+      "will have transformed most office jobs. " +
+      "Many routine tasks that humans do today will be automated. " +
+      "However, experts also predict that new types of jobs will emerge. " +
+      "Skills such as creativity, leadership, and emotional intelligence will become more valuable. " +
+      "The tech sector will be leading this transformation throughout the decade. " +
+      "By 2028, revenue from AI-driven products is estimated to double globally. " +
+      "In Vietnam, the trend towards digital transformation is already visible. " +
+      "Companies that invest in innovation now will be competing successfully in the future. " +
+      "Workers who adapt to new technologies will have the best career prospects.",
+    questions: [
+      {
+        id: "u21r-q1",
+        question_vn: "Theo các nhà phân tích, AI sẽ làm gì vào năm 2030?",
+        options: [
+          "Replace all human workers",
+          "Transform most office jobs",
+          "Create fewer jobs",
+          "Slow down economic growth",
+        ],
+        answer: "Transform most office jobs",
+        explanation_vn: "'analysts forecast that artificial intelligence will have transformed most office jobs.'",
+      },
+      {
+        id: "u21r-q2",
+        question_vn: "Những kỹ năng nào sẽ trở nên có giá trị hơn?",
+        options: [
+          "Data entry and typing",
+          "Creativity, leadership, and emotional intelligence",
+          "Manual and physical skills",
+          "Accounting and bookkeeping",
+        ],
+        answer: "Creativity, leadership, and emotional intelligence",
+        explanation_vn: "'Skills such as creativity, leadership, and emotional intelligence will become more valuable.'",
+      },
+      {
+        id: "u21r-q3",
+        question_vn: "Doanh thu từ sản phẩm AI được ước tính sẽ thay đổi như thế nào vào năm 2028?",
+        options: [
+          "Increase by 50%",
+          "Stay the same",
+          "Double globally",
+          "Decrease significantly",
+        ],
+        answer: "Double globally",
+        explanation_vn: "'revenue from AI-driven products is estimated to double globally.'",
+      },
+      {
+        id: "u21r-q4",
+        question_vn: "Theo đoạn văn, ai sẽ có triển vọng nghề nghiệp tốt nhất?",
+        options: [
+          "Workers who avoid technology",
+          "Workers who adapt to new technologies",
+          "Workers in traditional industries",
+          "Workers who retire early",
+        ],
+        answer: "Workers who adapt to new technologies",
+        explanation_vn: "'Workers who adapt to new technologies will have the best career prospects.'",
+      },
+    ],
+  },
 };
 
 export default unit21;
