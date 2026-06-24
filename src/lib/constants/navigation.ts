@@ -7,6 +7,7 @@ import {
   Mic,
   PenLine,
   Trophy,
+  Briefcase,
   type LucideIcon,
 } from "lucide-react";
 
@@ -59,6 +60,12 @@ export const mainNavItems: NavItem[] = [
     href: "/leaderboard",
     icon: Trophy,
     description: "Top học viên theo XP",
+  },
+  {
+    title: "Business",
+    href: "/business",
+    icon: Briefcase,
+    description: "Tiếng Anh công sở & sự nghiệp",
   },
   {
     title: "Roadmap",

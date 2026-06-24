@@ -528,6 +528,20 @@ export default function DashboardClient({
           </div>
         </div>
 
+        {/* ── 4c-3. Business English Track CTA ── */}
+        <Link
+          href="/business"
+          id="business-track-cta"
+          className="flex items-center gap-3 p-4 rounded-2xl border border-blue-500/15 bg-blue-500/3 dark:bg-blue-500/5 hover:bg-blue-500/8 hover:border-blue-500/25 transition-all group"
+        >
+          <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-blue-500/10 text-lg">💼</span>
+          <div className="flex-1 min-w-0">
+            <p className="text-xs font-black text-zinc-900 dark:text-zinc-50 leading-tight">Business English Track</p>
+            <p className="text-[10px] text-zinc-500 dark:text-zinc-400">10 bài thiết yếu cho sự nghiệp — email, họp, thuyết trình</p>
+          </div>
+          <ChevronRight className="size-4 text-blue-400/60 shrink-0 group-hover:text-blue-500 group-hover:translate-x-0.5 transition-all" />
+        </Link>
+
         {/* ── 4d. Daily Quests — promoted above lesson grid (research: primary retention driver) ── */}
         <WidgetErrorBoundary name="DailyQuests">
           <DailyQuests
