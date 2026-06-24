@@ -118,6 +118,28 @@ export default function DashboardClient({
   const [quests, setQuests] = useState(initialQuests);
   const [greeting, setGreeting] = useState("Chào bạn");
 
+  // Parse short level label (e.g. "B1 Intermediate" → "B1")
+  const shortLevel = userLevel.split(" ")[0] ?? userLevel;
+
+  const [showPlacementBanner, setShowPlacementBanner] = useState(true);
+  const [expandProgressGrid, setExpandProgressGrid] = useState(false);
+
+  useEffect(() => {
+    const hidden = localStorage.getItem("ato_hide_placement_banner") === "true";
+    const isNotA0 = shortLevel !== "A0";
+    if (hidden || isNotA0) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setShowPlacementBanner(false);
+    }
+  }, [shortLevel]);
+
+  const handleDismissPlacementBanner = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    localStorage.setItem("ato_hide_placement_banner", "true");
+    setShowPlacementBanner(false);
+  };
+
   // Animated count-up for total XP on mount
   const [displayXp, setDisplayXp] = useState(0);
   useEffect(() => {
@@ -260,9 +282,6 @@ export default function DashboardClient({
 
   const completedCount = quests.filter((q) => q.completed).length;
   const xpPercent = Math.round((xpCurrent / xpTarget) * 100);
-
-  // Parse short level label (e.g. "B1 Intermediate" → "B1")
-  const shortLevel = userLevel.split(" ")[0] ?? userLevel;
 
   return (
     <div className="relative mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 min-h-screen overflow-x-hidden pb-20 sm:pb-0">
@@ -436,55 +455,36 @@ export default function DashboardClient({
         </div>
 
         {/* ── 3. Placement Test Banner ── */}
-        <Link
-          href="/placement-test"
-          className="flex items-center gap-3 p-4 rounded-2xl border border-violet-500/20 bg-violet-500/5 hover:bg-violet-500/10 hover:border-violet-500/30 transition-all duration-200 group"
-        >
-          <span className="flex size-10 items-center justify-center rounded-xl bg-violet-500/15 text-xl shrink-0">🎯</span>
-          <div className="flex-1 min-w-0">
-            <p className="text-xs font-black text-violet-400 uppercase tracking-widest mb-0.5">CEFR Placement Test</p>
-            <p className="text-sm font-bold text-foreground">Xác Định Trình Độ Chính Xác</p>
-            <p className="text-xs text-muted-foreground">40 câu · Reading + Vocab + Language Use · ~20 phút</p>
-          </div>
-          <ChevronRight className="size-5 text-violet-400/60 group-hover:text-violet-400 group-hover:translate-x-0.5 transition-all shrink-0" />
-        </Link>
-
-        {/* ── 4. Today's Study Plan Widget ── */}
-        <TodayPlanWidget userLevel={userLevel} />
-
-        {/* ── 4b. EF SET A1 Goal Tracker ── */}
-        <EfSetGoalTracker userLevel={shortLevel} completedUnits={completedUnits} />
-
-        {/* ── 4c. Hero CTA — "Continue Learning" (Fix #4: primary 1-tap shortcut, Memrise/ELSA pattern) ── */}
-        <Link
-          href={currentUnitData.route}
-          className="group flex items-center gap-4 p-5 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 shadow-lg shadow-emerald-900/30 active:scale-[0.98] transition-all duration-200"
-        >
-          <div className="flex-1 min-w-0">
-            <p className="text-xs font-bold text-emerald-100/80 uppercase tracking-widest mb-1">
-              {currentUnitData.completed ? "Ôn lại bài học" : "Tiếp tục học"}
-            </p>
-            <p className="text-white font-black text-lg leading-tight truncate">
-              {currentUnitData.title}
-            </p>
-            <div className="flex items-center gap-2 mt-2">
-              <div className="flex-1 h-1.5 bg-white/25 rounded-full overflow-hidden">
-                <div
-                  className="h-full bg-white rounded-full transition-all duration-500"
-                  style={{ width: `${currentUnitData.progress}%` }}
-                />
+        {showPlacementBanner && (
+          <div className="relative group">
+            <Link
+              href="/placement-test"
+              className="flex items-center gap-3 p-4 rounded-2xl border border-violet-500/20 bg-violet-500/5 hover:bg-violet-500/10 hover:border-violet-500/30 transition-all duration-200"
+            >
+              <span className="flex size-10 items-center justify-center rounded-xl bg-violet-500/15 text-xl shrink-0">🎯</span>
+              <div className="flex-1 min-w-0 pr-6">
+                <p className="text-xs font-black text-violet-400 uppercase tracking-widest mb-0.5">CEFR Placement Test</p>
+                <p className="text-sm font-bold text-foreground">Xác Định Trình Độ Chính Xác</p>
+                <p className="text-xs text-muted-foreground">40 câu · Reading + Vocab + Language Use · ~20 phút</p>
               </div>
-              <span className="text-white/80 text-xs font-bold shrink-0">
-                {currentUnitData.progress}%
-              </span>
-            </div>
+              <ChevronRight className="size-5 text-violet-400/60 group-hover:text-violet-400 group-hover:translate-x-0.5 transition-all shrink-0" />
+            </Link>
+            <button
+              onClick={handleDismissPlacementBanner}
+              className="absolute top-3 right-3 p-1 rounded-full text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/40 transition-colors"
+              title="Đóng banner"
+            >
+              <svg className="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
           </div>
-          <div className="shrink-0 flex size-12 items-center justify-center rounded-xl bg-white/20 group-hover:bg-white/30 transition-colors">
-            <ChevronRight className="size-6 text-white group-hover:translate-x-0.5 transition-transform" />
-          </div>
-        </Link>
+        )}
 
-        {/* ── 4c-2. Micro Session — ⋯ Học nhanh 10 phút ── */}
+        {/* ── 4. Hero Continue Learning UnitCard (Promoted to Top) ── */}
+        <UnitCard currentUnitData={currentUnitData} />
+
+        {/* ── 5. Micro Session — ⋯ Học nhanh 10 phút ── */}
         <div className="rounded-2xl border border-zinc-200/60 dark:border-zinc-800/50 bg-white/50 dark:bg-zinc-900/20 backdrop-blur-sm p-4">
           <div className="flex items-center gap-2 mb-3">
             <span className="flex size-7 items-center justify-center rounded-lg bg-amber-500/10">
@@ -528,21 +528,7 @@ export default function DashboardClient({
           </div>
         </div>
 
-        {/* ── 4c-3. Business English Track CTA ── */}
-        <Link
-          href="/business"
-          id="business-track-cta"
-          className="flex items-center gap-3 p-4 rounded-2xl border border-blue-500/15 bg-blue-500/3 dark:bg-blue-500/5 hover:bg-blue-500/8 hover:border-blue-500/25 transition-all group"
-        >
-          <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-blue-500/10 text-lg">💼</span>
-          <div className="flex-1 min-w-0">
-            <p className="text-xs font-black text-zinc-900 dark:text-zinc-50 leading-tight">Business English Track</p>
-            <p className="text-[10px] text-zinc-500 dark:text-zinc-400">10 bài thiết yếu cho sự nghiệp — email, họp, thuyết trình</p>
-          </div>
-          <ChevronRight className="size-4 text-blue-400/60 shrink-0 group-hover:text-blue-500 group-hover:translate-x-0.5 transition-all" />
-        </Link>
-
-        {/* ── 4d. Daily Quests — promoted above lesson grid (research: primary retention driver) ── */}
+        {/* ── 6. Daily Quests — promoted above lesson grid ── */}
         <WidgetErrorBoundary name="DailyQuests">
           <DailyQuests
             quests={quests}
@@ -551,19 +537,19 @@ export default function DashboardClient({
           />
         </WidgetErrorBoundary>
 
-        {/* ── 5. Main content: 2-column grid ── */}
+        {/* ── 7. Bento grid for study plan, progress card, and secondary details ── */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
-          {/* Left: Hero lesson card */}
-          <div className="lg:col-span-7">
-            <UnitCard currentUnitData={currentUnitData} />
+          {/* Left: Study Plan Checklist and EF SET Goal Tracker */}
+          <div className="lg:col-span-7 space-y-5">
+            <TodayPlanWidget userLevel={userLevel} />
+            <EfSetGoalTracker userLevel={shortLevel} completedUnits={completedUnits} />
           </div>
 
-          {/* Right: SRS + League + Word of Day */}
+          {/* Right: SRS review card, Weekly League Card, Word of Day */}
           <div className="lg:col-span-5 space-y-5">
             <WidgetErrorBoundary name="SrsCard">
               <SrsCard dueCardsCount={dueCardsCount} />
             </WidgetErrorBoundary>
-            {/* S2-1: Weekly League Card */}
             <WidgetErrorBoundary name="LeagueCard">
               <LeagueCard />
             </WidgetErrorBoundary>
@@ -582,12 +568,24 @@ export default function DashboardClient({
           </div>
         </div>
 
-        {/* ── 5. Quick Actions row ── */}
+        {/* ── 8. Bottom utility sections ── */}
+        <Link
+          href="/business"
+          id="business-track-cta"
+          className="flex items-center gap-3 p-4 rounded-2xl border border-blue-500/15 bg-blue-500/3 dark:bg-blue-500/5 hover:bg-blue-500/8 hover:border-blue-500/25 transition-all group"
+        >
+          <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-blue-500/10 text-lg">💼</span>
+          <div className="flex-1 min-w-0">
+            <p className="text-xs font-black text-zinc-900 dark:text-zinc-50 leading-tight">Business English Track</p>
+            <p className="text-[10px] text-zinc-500 dark:text-zinc-400">10 bài thiết yếu cho sự nghiệp — email, họp, thuyết trình</p>
+          </div>
+          <ChevronRight className="size-4 text-blue-400/60 shrink-0 group-hover:text-blue-500 group-hover:translate-x-0.5 transition-all" />
+        </Link>
+
         <WidgetErrorBoundary name="QuickActions">
           <QuickActions currentUnitRoute={currentUnitData.route} />
         </WidgetErrorBoundary>
 
-        {/* ── 5b. Weekly Recap Card ── */}
         <WeeklyRecapCard
           currentStreak={currentStreak}
           totalXp={totalXp}
@@ -596,7 +594,7 @@ export default function DashboardClient({
           dueCardsCount={dueCardsCount}
         />
 
-        {/* ── 6. Curriculum Progress Grid ── */}
+        {/* ── 9. Collapsible Curriculum Progress Grid ── */}
         <div className="rounded-2xl border border-zinc-200/60 dark:border-zinc-800/60 bg-white/60 dark:bg-zinc-900/25 backdrop-blur-sm p-5 sm:p-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-sm font-bold text-zinc-900 dark:text-zinc-50">Tiến độ khoá học</h2>
@@ -604,9 +602,10 @@ export default function DashboardClient({
           </div>
 
           {/* Group by level */}
-          {["A0", "A1", "A2", "B1", "B2"].map(level => {
+          {(expandProgressGrid ? ["A0", "A1", "A2", "B1", "B2"] : [shortLevel]).map(level => {
             const levelUnits = allUnits.filter(u => u.level === level);
             const levelDone = levelUnits.filter(u => completedUnitIds.includes(u.id)).length;
+            if (levelUnits.length === 0) return null;
             return (
               <div key={level} className="mb-4 last:mb-0">
                 <div className="flex items-center gap-2 mb-2">
@@ -656,6 +655,19 @@ export default function DashboardClient({
               </div>
             );
           })}
+
+          <div className="mt-4 pt-3 border-t border-zinc-100 dark:border-zinc-800/60 flex justify-center">
+            <button
+              onClick={() => setExpandProgressGrid(prev => !prev)}
+              className="text-xs font-bold text-emerald-600 dark:text-emerald-400 hover:underline flex items-center gap-1"
+            >
+              {expandProgressGrid ? (
+                <>Thu gọn lộ trình</>
+              ) : (
+                <>Xem toàn bộ lộ trình (A0–B2)</>
+              )}
+            </button>
+          </div>
         </div>
       </div>
 
