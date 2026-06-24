@@ -720,6 +720,44 @@ export const unitA01: UnitData = {
       },
     ],
   },
+  cumulativeReviewQuestions: [
+    {
+      id: "uA01-cr-1",
+      type: "multiple-choice" as const,
+      question: "What is the correct greeting for the morning?",
+      question_vn: "Câu chào buổi sáng đúng là gì?",
+      options: ["Good morning", "Good night", "Good evening", "Goodbye"],
+      answer: "Good morning",
+      explanation_vn: "'Good morning' dùng để chào vào buổi sáng. 'Good evening' là buổi tối, 'Good night' là khi đi ngủ.",
+    },
+    {
+      id: "uA01-cr-2",
+      type: "multiple-choice" as const,
+      question: "How do you say your name in English? (Tên bạn: Linh)",
+      question_vn: "Bạn giới thiệu tên mình như thế nào?",
+      options: ["My name is Linh.", "I am name Linh.", "Name I Linh.", "Linh is my."],
+      answer: "My name is Linh.",
+      explanation_vn: "Cấu trúc đúng: 'My name is [tên].' — Đây là câu giới thiệu tên cơ bản nhất.",
+    },
+    {
+      id: "uA01-cr-3",
+      type: "multiple-choice" as const,
+      question: "Which response is correct for 'How are you?'",
+      question_vn: "Câu trả lời đúng cho 'How are you?' là gì?",
+      options: ["I am fine, thank you.", "My name is Tom.", "Nice to meet you.", "Good morning."],
+      answer: "I am fine, thank you.",
+      explanation_vn: "'I am fine, thank you.' là câu trả lời chuẩn cho 'How are you?'. Các câu khác đúng ngữ pháp nhưng không phù hợp văn cảnh.",
+    },
+    {
+      id: "uA01-cr-4",
+      type: "multiple-choice" as const,
+      question: "What do you say when you leave?",
+      question_vn: "Bạn nói gì khi tạm biệt?",
+      options: ["Goodbye!", "Hello!", "How are you?", "What is your name?"],
+      answer: "Goodbye!",
+      explanation_vn: "'Goodbye!' là lời tạm biệt phổ biến. Bạn cũng có thể nói 'Bye!' hay 'See you later!'",
+    },
+  ],
 };
 
 export default unitA01;
