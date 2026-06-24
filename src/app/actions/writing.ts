@@ -204,3 +204,86 @@ export async function saveWritingSentence(params: {
     return { success: false as const, error: `Lỗi hệ thống: ${msg}` };
   }
 }
+
+// ─── Get saved sentences ───────────────────────────────────────────────────────
+
+export interface SavedSentence {
+  id: string;
+  sentence_en: string;
+  meaning_vn: string;
+  tags: string[];
+  created_at: string;
+}
+
+/**
+ * getUserSentences — fetches the user's saved writing-practice sentences.
+ * Read-only, auth-gated. Ordered newest first, capped at 50.
+ */
+export async function getUserSentences(tag?: string): Promise<{
+  success: boolean;
+  sentences?: SavedSentence[];
+  error?: string;
+}> {
+  try {
+    const supabase = await createClient();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    if (authError || !user) return { success: false, error: "Bạn cần đăng nhập." };
+
+    let query = supabase
+      .from("user_sentences")
+      .select("id, sentence_en, meaning_vn, tags, created_at")
+      .eq("user_id", user.id)
+      .order("created_at", { ascending: false })
+      .limit(50);
+
+    if (tag) {
+      query = query.contains("tags", [tag]);
+    }
+
+    const { data, error } = await query;
+    if (error) return { success: false, error: error.message };
+
+    return { success: true, sentences: (data ?? []) as SavedSentence[] };
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err);
+    return { success: false, error: `Lỗi hệ thống: ${msg}` };
+  }
+}
+
+// ─── Delete saved sentence ─────────────────────────────────────────────────────
+
+const deleteLimiter = createRateLimiter(20, 60_000, "writing-delete");
+
+/**
+ * deleteUserSentence — soft-deletes a saved sentence by ID.
+ * RLS ensures users can only delete their own rows.
+ */
+export async function deleteUserSentence(id: string): Promise<{
+  success: boolean;
+  error?: string;
+}> {
+  try {
+    const reqHeaders = await headers();
+    const ip = reqHeaders.get("x-forwarded-for")?.split(",")[0].trim() ?? "127.0.0.1";
+    const rateCheck = await deleteLimiter.check(ip);
+    if (!rateCheck.success) return { success: false, error: "Quá nhiều yêu cầu." };
+
+    if (!id || typeof id !== "string") return { success: false, error: "ID không hợp lệ." };
+
+    const supabase = await createClient();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    if (authError || !user) return { success: false, error: "Bạn cần đăng nhập." };
+
+    const { error } = await supabase
+      .from("user_sentences")
+      .delete()
+      .eq("id", id)
+      .eq("user_id", user.id); // RLS double-check
+
+    if (error) return { success: false, error: error.message };
+    return { success: true };
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err);
+    return { success: false, error: `Lỗi hệ thống: ${msg}` };
+  }
+}

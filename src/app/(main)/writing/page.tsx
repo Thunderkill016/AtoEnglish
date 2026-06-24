@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import Link from "next/link";
 import {
   Sparkles,
   CheckCircle,
@@ -133,10 +134,19 @@ export default function WriteImprovePage() {
 
       {/* Header */}
       <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="space-y-2">
-        <span className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-400 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20">
-          <Sparkles className="w-3.5 h-3.5" />
-          AI Writing Coach
-        </span>
+        <div className="flex items-center justify-between">
+          <span className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-400 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20">
+            <Sparkles className="w-3.5 h-3.5" />
+            AI Writing Coach
+          </span>
+          <Link
+            href="/writing/history"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-white/10 bg-white/5 text-xs font-bold text-zinc-400 hover:text-emerald-400 hover:border-emerald-500/30 transition-all"
+          >
+            <BookmarkCheck className="w-3.5 h-3.5" />
+            Câu đã lưu
+          </Link>
+        </div>
         <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
           Viết &amp; Cải thiện
         </h1>
