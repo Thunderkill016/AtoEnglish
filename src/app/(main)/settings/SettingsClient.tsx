@@ -1,26 +1,35 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import Link from "next/link";
 import { useTheme } from "next-themes";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Bell,
-  Volume2,
-  VolumeX,
-  Moon,
-  Sun,
-  Globe,
-  Target,
+  BellOff,
+  BellRing,
+  Mail,
+  Clock,
   Shield,
   ChevronRight,
   Check,
   Trash2,
-  Download,
   Smartphone,
   GraduationCap,
   BookOpenCheck,
+  Loader2,
 } from "lucide-react";
+import { toast } from "sonner";
+import {
+  subscribeToPush,
+  unsubscribeFromPush,
+  getNotificationPermission,
+  registerServiceWorker,
+} from "@/lib/push-notifications";
+import { savePushSubscription, removePushSubscription } from "@/app/actions/push";
+import { saveNotificationPreferences } from "@/app/actions/notifications";
+
+const VAPID_PUBLIC_KEY = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY ?? "";
 
 // ── Types ────────────────────────────────────────────────
 interface SettingToggleProps {
@@ -155,17 +164,92 @@ function getStoredSettings() {
   }
 }
 
-// ── Main Component ───────────────────────────────────────
-export default function SettingsClient({ userEmail }: { userEmail: string }) {
-  const [saved, setSaved] = useState(false);
+// ── Notification Hour Picker ─────────────────────────────
+function HourPicker({ value, onChange }: { value: number; onChange: (h: number) => void }) {
+  const HOURS = Array.from({ length: 16 }, (_, i) => i + 7); // 07:00–22:00
+  return (
+    <div className="flex items-center justify-between px-4 py-3.5 gap-4">
+      <div className="flex items-center gap-3">
+        <span className="p-2 rounded-lg bg-blue-100 dark:bg-blue-950/40 text-blue-500">
+          <Clock className="size-4" />
+        </span>
+        <div>
+          <p className="text-sm font-semibold text-zinc-800 dark:text-zinc-100">Giờ nhắc nhở</p>
+          <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">Nhận push notification vào đúng giờ này</p>
+        </div>
+      </div>
+      <select
+        value={value}
+        onChange={e => onChange(Number(e.target.value))}
+        className="text-xs font-bold bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-700 rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+      >
+        {HOURS.map(h => (
+          <option key={h} value={h}>{h.toString().padStart(2,"0")}:00</option>
+        ))}
+      </select>
+    </div>
+  );
+}
 
-  // Notification settings — initialised lazily from localStorage
-  const [streakReminders, setStreakReminders] = useState(() => {
-    const s = getStoredSettings(); return s.streakReminders !== undefined ? !!s.streakReminders : true;
+// ── Main Component ───────────────────────────────────────
+export default function SettingsClient({
+  userEmail,
+  initialNotifHour = 20,
+  initialEmailNotifs = true,
+}: {
+  userEmail: string;
+  initialNotifHour?: number;
+  initialEmailNotifs?: boolean;
+}) {
+  const [saved, setSaved] = useState(false);
+  const [isPushPending, startPushTransition] = useTransition();
+
+  // Push notification state
+  const [pushEnabled, setPushEnabled] = useState(false);
+  const [notifHour, setNotifHour] = useState(initialNotifHour);
+  const [emailNotifs, setEmailNotifs] = useState(initialEmailNotifs);
+
+  // Init push status on mount
+  useState(() => {
+    if (typeof window === "undefined") return;
+    const perm = getNotificationPermission();
+    if (perm === "granted") {
+      navigator.serviceWorker?.ready
+        .then(reg => reg.pushManager.getSubscription())
+        .then(sub => setPushEnabled(!!sub))
+        .catch(() => {});
+    }
   });
-  const [weeklyReport, setWeeklyReport] = useState(() => {
-    const s = getStoredSettings(); return s.weeklyReport !== undefined ? !!s.weeklyReport : false;
-  });
+
+  const handlePushToggle = (enabled: boolean) => {
+    startPushTransition(async () => {
+      if (enabled) {
+        if (!VAPID_PUBLIC_KEY) { toast.error("VAPID key chưa cấu hình."); return; }
+        await registerServiceWorker();
+        const sub = await subscribeToPush(VAPID_PUBLIC_KEY);
+        if (!sub) {
+          toast.error("Không thể bật thông báo. Kiểm tra quyền trình duyệt.");
+          return;
+        }
+        const keys = sub.toJSON().keys as { p256dh: string; auth: string };
+        const res = await savePushSubscription({ endpoint: sub.endpoint, keys, userAgent: navigator.userAgent });
+        if (res.success) {
+          setPushEnabled(true);
+          await saveNotificationPreferences({ notificationHour: notifHour, emailNotifications: emailNotifs });
+          toast.success(`🔔 Đã bật nhắc nhở lúc ${notifHour.toString().padStart(2,"0")}:00 mỗi ngày!`);
+        } else {
+          toast.error("Lỗi kết nối: " + res.error);
+        }
+      } else {
+        const reg = await navigator.serviceWorker?.ready;
+        const sub = await reg?.pushManager?.getSubscription();
+        if (sub) { await removePushSubscription(sub.endpoint); await unsubscribeFromPush(); }
+        setPushEnabled(false);
+        toast.success("🔕 Đã tắt nhắc nhở.");
+      }
+    });
+  };
+
 
   // Learning settings
   const [soundEffects, setSoundEffects] = useState(() => {
@@ -206,7 +290,7 @@ export default function SettingsClient({ userEmail }: { userEmail: string }) {
 
   const saveSettings = () => {
     const settings = {
-      streakReminders, weeklyReport, soundEffects, autoPlayAudio,
+      soundEffects, autoPlayAudio,
       showPhonetics, dailyGoal, theme, fontSize,
       fsrsRetention: Number(fsrsRetention),
       fsrsMaxNewCards: Number(fsrsMaxNewCards),
@@ -250,20 +334,81 @@ export default function SettingsClient({ userEmail }: { userEmail: string }) {
 
       {/* Notifications */}
       <SettingSection title="Thông báo">
-        <SettingToggle
-          id="streak-reminders"
-          label="Nhắc học hàng ngày"
-          description="Nhận thông báo vào 8 PM nếu chưa học hôm nay"
-          checked={streakReminders}
-          onChange={setStreakReminders}
-        />
-        <SettingToggle
-          id="weekly-report"
-          label="Báo cáo tuần"
-          description="Tóm tắt tiến độ học tập mỗi Chủ Nhật"
-          checked={weeklyReport}
-          onChange={setWeeklyReport}
-        />
+        {/* Push toggle */}
+        <div className="flex items-center justify-between px-4 py-3.5 gap-4">
+          <div className="flex items-center gap-3">
+            <span className={`p-2 rounded-lg ${pushEnabled ? "bg-emerald-100 dark:bg-emerald-950/40 text-emerald-600" : "bg-zinc-100 dark:bg-zinc-800 text-zinc-500"}`}>
+              {pushEnabled ? <BellRing className="size-4" /> : <Bell className="size-4" />}
+            </span>
+            <div>
+              <p className="text-sm font-semibold text-zinc-800 dark:text-zinc-100">Nhắc học hàng ngày</p>
+              <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">
+                {pushEnabled ? `Đang bật — nhắc lúc ${notifHour.toString().padStart(2,"0")}:00` : "Nhận push nếu chưa học hôm nay"}
+              </p>
+            </div>
+          </div>
+          <button
+            role="switch"
+            aria-checked={pushEnabled}
+            onClick={() => handlePushToggle(!pushEnabled)}
+            disabled={isPushPending}
+            className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 dark:focus:ring-offset-zinc-900 disabled:opacity-60 ${
+              pushEnabled ? "bg-emerald-500" : "bg-zinc-300 dark:bg-zinc-600"
+            }`}
+          >
+            {isPushPending
+              ? <Loader2 className="absolute inset-0 m-auto size-3.5 animate-spin text-white" />
+              : <span className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${pushEnabled ? "translate-x-5" : "translate-x-0"}`} />}
+          </button>
+        </div>
+
+        {/* Hour picker — only shown when push enabled */}
+        {pushEnabled && (
+          <HourPicker
+            value={notifHour}
+            onChange={async (h) => {
+              setNotifHour(h);
+              await saveNotificationPreferences({ notificationHour: h, emailNotifications: emailNotifs });
+              toast.success(`⏰ Đã đổi giờ nhắc sang ${h.toString().padStart(2,"0")}:00`);
+            }}
+          />
+        )}
+
+        {/* Email notifications */}
+        <div className="flex items-center justify-between px-4 py-3.5 gap-4">
+          <div className="flex items-center gap-3">
+            <span className={`p-2 rounded-lg ${emailNotifs ? "bg-blue-100 dark:bg-blue-950/40 text-blue-600" : "bg-zinc-100 dark:bg-zinc-800 text-zinc-500"}`}>
+              <Mail className="size-4" />
+            </span>
+            <div>
+              <p className="text-sm font-semibold text-zinc-800 dark:text-zinc-100">Email tổng kết tuần</p>
+              <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">Nhận email mỗi thứ Hai với báo cáo 7 ngày</p>
+            </div>
+          </div>
+          <button
+            role="switch"
+            aria-checked={emailNotifs}
+            onClick={async () => {
+              const next = !emailNotifs;
+              setEmailNotifs(next);
+              await saveNotificationPreferences({ notificationHour: notifHour, emailNotifications: next });
+              toast.success(next ? "📧 Đã bật email tổng kết tuần" : "Đã tắt email tổng kết tuần");
+            }}
+            className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 dark:focus:ring-offset-zinc-900 ${
+              emailNotifs ? "bg-emerald-500" : "bg-zinc-300 dark:bg-zinc-600"
+            }`}
+          >
+            <span className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${emailNotifs ? "translate-x-5" : "translate-x-0"}`} />
+          </button>
+        </div>
+
+        {/* Denied state hint */}
+        {getNotificationPermission() === "denied" && (
+          <div className="px-4 py-3 flex items-center gap-2 text-xs text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/20">
+            <BellOff className="size-3.5 shrink-0" />
+            Trình duyệt đã chặn thông báo. Vào Settings → Site Settings → Notifications để bật lại.
+          </div>
+        )}
       </SettingSection>
 
       {/* Learning */}

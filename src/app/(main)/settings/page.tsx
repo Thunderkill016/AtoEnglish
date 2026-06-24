@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
+import { getNotificationPreferences } from "@/app/actions/notifications";
 import SettingsClient from "./SettingsClient";
 
 export const metadata: Metadata = {
@@ -14,9 +15,16 @@ export default async function SettingsPage() {
 
   const userEmail = user?.email ?? "";
 
+  // Load notification preferences from DB (parallel with page render)
+  const notifPrefs = await getNotificationPreferences();
+
   return (
     <main id="main-content">
-      <SettingsClient userEmail={userEmail} />
+      <SettingsClient
+        userEmail={userEmail}
+        initialNotifHour={notifPrefs?.notificationHour ?? 20}
+        initialEmailNotifs={notifPrefs?.emailNotifications ?? true}
+      />
     </main>
   );
 }
