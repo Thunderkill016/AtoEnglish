@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useState, useCallback } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { Trophy, Star, CheckCircle, Volume2, ChevronRight } from "lucide-react";
@@ -117,44 +117,9 @@ export default function QuizSection({
   const hasReading = !!unit.readingPassage;
   const [readingDone, setReadingDone] = useState(!hasReading);
 
-  const pickEnglishVoice = () => {
-    if (typeof window === "undefined") return null;
-    const voices = window.speechSynthesis.getVoices();
-    return (
-      voices.find(v => v.lang === "en-US" && v.name.includes("Google")) ??
-      voices.find(v => v.lang === "en-US") ??
-      voices.find(v => v.lang.startsWith("en")) ??
-      null
-    );
-  };
-
-  const playTTS = (text: string) => {
-    if (!window.speechSynthesis) {
-      toast.error("Trình duyệt không hỗ trợ TTS");
-      return;
-    }
-    window.speechSynthesis.cancel();
-    const u = new SpeechSynthesisUtterance(text);
-    u.lang = "en-US";
-    u.rate = 0.85;
-    const voice = pickEnglishVoice();
-    if (voice) u.voice = voice;
-    window.speechSynthesis.speak(u);
-  };
-
-  const handleShare = async () => {
-    const text = `Tôi vừa hoàn thành "${unit.title}" trên AtoEnglish! 🎉\nCùng học tiếng Anh miễn phí: https://atoenglish.vercel.app`;
-    if (typeof navigator !== "undefined" && navigator.share) {
-      try {
-        await navigator.share({ title: "AtoEnglish", text });
-      } catch {
-        /* user cancelled */
-      }
-    } else {
-      await navigator.clipboard.writeText(text);
-      toast.success("Đã sao chép link chia sẻ!");
-    }
-  };
+  // S1-3: Mandatory recall state — track per-question recall typing
+  const [recallInputs, setRecallInputs] = useState<Record<string, string>>({});
+  const [recallChecked, setRecallChecked] = useState<Record<string, boolean>>({});
 
   const normalizeAnswer = (s: string) =>
     s
@@ -172,6 +137,52 @@ export default function QuizSection({
       .replace(/\bdon't\b/g, "do not")
       .replace(/\bdoesn't\b/g, "does not")
       .trim();
+
+  const pickEnglishVoice = () => {
+    if (typeof window === "undefined") return null;
+    const voices = window.speechSynthesis.getVoices();
+    return (
+      voices.find(v => v.lang === "en-US" && v.name.includes("Google")) ??
+      voices.find(v => v.lang === "en-US") ??
+      voices.find(v => v.lang.startsWith("en")) ??
+      null
+    );
+  };
+
+  const playTTS = useCallback((text: string) => {
+    if (!window.speechSynthesis) {
+      toast.error("Trình duyệt không hỗ trợ TTS");
+      return;
+    }
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = "en-US";
+    u.rate = 0.85;
+    const voice = pickEnglishVoice();
+    if (voice) u.voice = voice;
+    window.speechSynthesis.speak(u);
+  }, []);
+
+  // S1-3: check recall answer
+  const checkRecall = useCallback((qId: string, correctAnswer: string) => {
+    const typed = normalizeAnswer(recallInputs[qId] ?? "");
+    const correct = normalizeAnswer(correctAnswer);
+    setRecallChecked(p => ({ ...p, [qId]: typed === correct }));
+  }, [recallInputs]);
+
+  const handleShare = async () => {
+    const text = `Tôi vừa hoàn thành "${unit.title}" trên AtoEnglish! 🎉\nCùng học tiếng Anh miễn phí: https://atoenglish.vercel.app`;
+    if (typeof navigator !== "undefined" && navigator.share) {
+      try {
+        await navigator.share({ title: "AtoEnglish", text });
+      } catch {
+        /* user cancelled */
+      }
+    } else {
+      await navigator.clipboard.writeText(text);
+      toast.success("Đã sao chép link chia sẻ!");
+    }
+  };
 
   return (
     <motion.div
@@ -410,11 +421,39 @@ export default function QuizSection({
                       );
                     })}
                   </div>
-                  {/* Grammar explanation — shown when user answered wrong (Babbel pattern) */}
+                  {/* S1-2: Grammar explanation on wrong answer (Babbel pattern) */}
                   {quizSubmitted && quizAnswers[q.id] !== q.answer && q.explanation_vn && (
                     <div className="mt-2 flex items-start gap-2 bg-amber-950/30 border border-amber-700/40 rounded-xl px-3 py-2.5">
                       <span className="text-amber-400 text-sm shrink-0">💡</span>
                       <p className="text-amber-200 text-xs leading-relaxed">{q.explanation_vn}</p>
+                    </div>
+                  )}
+                  {/* S1-3: Mandatory recall — type correct answer after wrong MC */}
+                  {quizSubmitted && quizAnswers[q.id] !== q.answer && (
+                    <div className="mt-2">
+                      <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider mb-1.5">
+                        ✏️ Gõ lại đáp án đúng:
+                      </p>
+                      <div className="flex items-center gap-2">
+                        <input
+                          type="text"
+                          value={recallInputs[q.id] ?? ""}
+                          onChange={e => setRecallInputs(p => ({ ...p, [q.id]: e.target.value }))}
+                          onBlur={() => checkRecall(q.id, q.answer)}
+                          onKeyDown={e => e.key === "Enter" && checkRecall(q.id, q.answer)}
+                          placeholder={q.answer}
+                          className={`flex-1 bg-zinc-800/80 border rounded-xl px-3 py-2 text-sm text-white placeholder-zinc-600 focus:outline-none transition-colors ${
+                            recallChecked[q.id] === true
+                              ? "border-emerald-500 bg-emerald-950/20"
+                              : recallChecked[q.id] === false
+                              ? "border-red-500/60"
+                              : "border-zinc-700 focus:border-amber-500/60"
+                          }`}
+                        />
+                        {recallChecked[q.id] === true && (
+                          <span className="text-emerald-400 text-lg shrink-0">✓</span>
+                        )}
+                      </div>
                     </div>
                   )}
                 </div>
@@ -426,6 +465,13 @@ export default function QuizSection({
               setQuizSubmitted(true);
               if (finalQuizScore >= Math.ceil(FINAL_QS.length * 0.8)) playCorrectSound();
               else if (finalQuizScore < Math.ceil(FINAL_QS.length * 0.5)) playWrongSound();
+              // S1-4: Auto-play TTS of first wrong MC answer's correct option
+              const firstWrong = FINAL_QS.find(
+                q => q.type === "multiple-choice" && quizAnswers[q.id] !== q.answer
+              );
+              if (firstWrong) {
+                setTimeout(() => playTTS(firstWrong.answer), 500);
+              }
             }}
             disabled={
               FINAL_QS.filter((q) => q.type === "multiple-choice").some((q) => !quizAnswers[q.id]) ||
