@@ -21,6 +21,7 @@ const LEVELS = [
   { value: "A1" as const, label: "A1 — Cơ bản", desc: "Câu đơn giản" },
   { value: "A2" as const, label: "A2 — Sơ cấp", desc: "Câu phức đơn giản" },
   { value: "B1" as const, label: "B1 — Trung cấp", desc: "Câu phức, từ vựng rộng hơn" },
+  { value: "B2" as const, label: "B2 — Nâng cao", desc: "Văn phức tạp, học thuật" },
 ];
 
 // ─── Prompt suggestions by level ───────────────────────────────────────────────
@@ -29,16 +30,41 @@ const PROMPTS: Record<string, string[]> = {
     "My name is Lan. I am student. I like reading book.",
     "She go to school every day. She have many friends.",
     "I am from Vietnam. I lives in Hanoi.",
+    "He is a engineer. He work in office every day.",
+    "I have 25 years old. I live with my family.",
+    "They are very happy because they win the game.",
+    "My mother is teacher. She teach English in school.",
+    "I no understand this question. Please explain again.",
   ],
   A2: [
     "Yesterday I go to the market and buyed vegetables.",
     "He can speaks three language fluently.",
     "I am agree with you. This idea is very good.",
+    "We discussed about the new plan for one hour.",
+    "She is more taller than her sister by five centimeters.",
+    "I was very boring in the meeting this afternoon.",
+    "He didn't went to work because he felt sick.",
+    "They have lived here since five years ago.",
   ],
   B1: [
     "I have been working here since three years.",
     "Despite of the rain, we decided to go for a walk.",
     "She is looking forward to meet you next week.",
+    "The manager suggested to reorganize the whole department.",
+    "He told me that he will finish the report tomorrow.",
+    "This is the most important information that I need to tell you about it.",
+    "By the time we arrived, the meeting already started.",
+    "She has been waiting for you since two hours.",
+  ],
+  B2: [
+    "The new policy will effect all employees from next month.",
+    "Despite the fact that he worked hard, but he didn't get the promotion.",
+    "The report, which was written by the intern, it contains several errors.",
+    "If I would have known about the meeting, I would have attended it.",
+    "The company has made a significant progress in reducing carbon emissions.",
+    "She is very concerning about the impact of automation on employment.",
+    "The data suggests that there are a strong correlation between stress and productivity.",
+    "We need to take into account all the factors before to make a final decision.",
   ],
 };
 
@@ -81,7 +107,7 @@ function ScoreRing({ score }: { score: number }) {
 // ─── Main page ─────────────────────────────────────────────────────────────────
 export default function WriteImprovePage() {
   const [text, setText] = useState("");
-  const [level, setLevel] = useState<"A1" | "A2" | "B1">("A1");
+  const [level, setLevel] = useState<"A1" | "A2" | "B1" | "B2">("A1");
   const [feedback, setFeedback] = useState<WritingFeedback | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
