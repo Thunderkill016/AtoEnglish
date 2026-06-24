@@ -162,6 +162,23 @@ describe("Curriculum Quality Rigorous Assessment Suite", () => {
           }
         }
 
+        // 3b. ListenAndChoose Validation — all units must have ≥5 items
+        expect(unit.listenAndChoose, `${file}: missing listenAndChoose`).toBeDefined();
+        expect(Array.isArray(unit.listenAndChoose)).toBe(true);
+        expect(unit.listenAndChoose.length, `${file}: listenAndChoose must have ≥5 items`).toBeGreaterThanOrEqual(5);
+
+        unit.listenAndChoose.forEach((item: any, idx: number) => {
+          const lacDesc = `${file} listenAndChoose item #${idx + 1}`;
+          expect(item.id, `${lacDesc}: missing id`).toBeDefined();
+          expect(item.audio_text, `${lacDesc}: missing audio_text`).toBeDefined();
+          expect(item.audio_text.length).toBeGreaterThan(0);
+          expect(item.options, `${lacDesc}: missing options`).toBeDefined();
+          expect(Array.isArray(item.options)).toBe(true);
+          expect(item.options.length, `${lacDesc}: must have exactly 4 options`).toBe(4);
+          expect(item.answer, `${lacDesc}: missing answer`).toBeDefined();
+          expect(item.options, `${lacDesc}: answer must be one of the options`).toContain(item.answer);
+        });
+
         // 5. Exercises Integrity & Matching pairs
         if (unit.matchingExercise) {
           expect(unit.matchingExercise.pairs).toBeDefined();
