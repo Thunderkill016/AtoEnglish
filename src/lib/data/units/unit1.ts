@@ -602,7 +602,7 @@ export const unit1: UnitData = {
       {
         id: "u1r-q3",
         question_vn: "Tom nói gì khi gặp Mai?",
-        options: ["How are you?'", "'Nice to meet you, Mai!''", "'Good morning!'", "'See you later!'"],
+        options: ["How are you?'", "'Nice to meet you, Mai!'", "'Good morning!'", "'See you later!'"],
         answer: "'Nice to meet you, Mai!'",
         explanation_vn: "Đoạn văn nói Tom says: 'Nice to meet you, Mai!'",
       },

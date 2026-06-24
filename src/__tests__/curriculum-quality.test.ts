@@ -250,6 +250,37 @@ describe("Curriculum Quality Rigorous Assessment Suite", () => {
         if (unit.practiceQuiz) checkUniqueness(unit.practiceQuiz, "practiceQuiz");
         if (unit.quiz) checkUniqueness(unit.quiz, "quiz");
         if (unit.cumulativeReviewQuestions) checkUniqueness(unit.cumulativeReviewQuestions, "cumulativeReviewQuestions");
+
+        // 9. Reading Passage Validation — all units must have a readingPassage
+        expect(unit.readingPassage, `${file}: missing readingPassage (all 50 units must have one)`).toBeDefined();
+        if (unit.readingPassage) {
+          const rp = unit.readingPassage;
+          expect(rp.id, "readingPassage missing id").toBeDefined();
+          expect(rp.id).toMatch(/^u[A-Za-z0-9]+-?[A-Za-z0-9]+-reading-/);
+          expect(rp.title, "readingPassage missing title").toBeDefined();
+          expect(rp.title.length).toBeGreaterThan(0);
+          expect(rp.title_vn, "readingPassage missing title_vn").toBeDefined();
+          expect(rp.text, "readingPassage missing text").toBeDefined();
+          expect(rp.text.length).toBeGreaterThan(30);
+          expect(rp.level, "readingPassage missing level").toBeDefined();
+          expect(["A0", "A1", "A2", "B1", "B2"]).toContain(rp.level);
+          expect(rp.questions, "readingPassage missing questions").toBeDefined();
+          expect(Array.isArray(rp.questions)).toBe(true);
+          expect(rp.questions.length, "readingPassage must have at least 4 questions").toBeGreaterThanOrEqual(4);
+
+          rp.questions.forEach((q: any, qIdx: number) => {
+            const qDesc = `readingPassage question #${qIdx + 1}`;
+            expect(q.id, `${qDesc}: missing id`).toBeDefined();
+            expect(q.question_vn, `${qDesc}: missing question_vn`).toBeDefined();
+            expect(q.question_vn.length).toBeGreaterThan(0);
+            expect(q.options, `${qDesc}: missing options`).toBeDefined();
+            expect(Array.isArray(q.options)).toBe(true);
+            expect(q.options.length).toBe(4);
+            expect(q.answer, `${qDesc}: missing answer`).toBeDefined();
+            expect(q.options).toContain(q.answer);
+            expect(q.explanation_vn, `${qDesc}: missing explanation_vn`).toBeDefined();
+          });
+        }
       });
     });
   }
