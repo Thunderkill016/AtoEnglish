@@ -13,6 +13,8 @@ import {
   BookOpen,
   BookmarkPlus,
   BookmarkCheck,
+  History,
+  PenLine,
 } from "lucide-react";
 import { analyzeWriting, saveWritingSentence, type WritingFeedback } from "@/app/actions/writing";
 
@@ -69,10 +71,10 @@ const PROMPTS: Record<string, string[]> = {
 };
 
 const ERROR_TYPE_LABEL: Record<string, { label: string; color: string }> = {
-  grammar:    { label: "Ngữ pháp",   color: "text-red-400 bg-red-500/10 border-red-500/30" },
-  vocabulary: { label: "Từ vựng",    color: "text-amber-400 bg-amber-500/10 border-amber-500/30" },
-  spelling:   { label: "Chính tả",   color: "text-orange-400 bg-orange-500/10 border-orange-500/30" },
-  word_order: { label: "Trật tự từ", color: "text-purple-400 bg-purple-500/10 border-purple-500/30" },
+  grammar:    { label: "Ngữ pháp",   color: "text-red-600 dark:text-red-400 bg-red-500/10 border-red-500/30" },
+  vocabulary: { label: "Từ vựng",    color: "text-amber-600 dark:text-amber-400 bg-amber-500/10 border-amber-500/30" },
+  spelling:   { label: "Chính tả",   color: "text-orange-600 dark:text-orange-400 bg-orange-500/10 border-orange-500/30" },
+  word_order: { label: "Trật tự từ", color: "text-purple-600 dark:text-purple-400 bg-purple-500/10 border-purple-500/30" },
 };
 
 // ─── Score ring ────────────────────────────────────────────────────────────────
@@ -85,7 +87,7 @@ function ScoreRing({ score }: { score: number }) {
   return (
     <div className="relative w-24 h-24 flex items-center justify-center">
       <svg className="w-24 h-24 -rotate-90" viewBox="0 0 84 84">
-        <circle cx="42" cy="42" r={r} strokeWidth="6" stroke="rgba(255,255,255,0.08)" fill="none" />
+        <circle cx="42" cy="42" r={r} strokeWidth="6" className="stroke-zinc-200 dark:stroke-zinc-800" fill="none" />
         <motion.circle
           cx="42" cy="42" r={r} strokeWidth="6"
           stroke={color} fill="none"
@@ -97,8 +99,8 @@ function ScoreRing({ score }: { score: number }) {
         />
       </svg>
       <div className="absolute text-center">
-        <p className="text-2xl font-black text-white">{score}</p>
-        <p className="text-[10px] text-zinc-500 font-bold">/ 100</p>
+        <p className="text-2xl font-black text-zinc-900 dark:text-white">{score}</p>
+        <p className="text-[10px] text-zinc-400 font-bold">/ 100</p>
       </div>
     </div>
   );
@@ -160,23 +162,23 @@ export default function WriteImprovePage() {
 
       {/* Header */}
       <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="space-y-2">
-        <div className="flex items-center justify-between">
-          <span className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-400 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20">
-            <Sparkles className="w-3.5 h-3.5" />
+        <div className="flex items-center justify-between gap-3">
+          <span className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-600 dark:text-emerald-400 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20">
+            <PenLine className="w-3.5 h-3.5" />
             AI Writing Coach
           </span>
           <Link
             href="/writing/history"
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-white/10 bg-white/5 text-xs font-bold text-zinc-400 hover:text-emerald-400 hover:border-emerald-500/30 transition-all"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-zinc-200/60 dark:border-white/10 bg-white/60 dark:bg-white/5 text-xs font-bold text-zinc-500 dark:text-zinc-400 hover:text-emerald-600 dark:hover:text-emerald-400 hover:border-emerald-500/30 transition-all"
           >
-            <BookmarkCheck className="w-3.5 h-3.5" />
-            Câu đã lưu
+            <History className="w-3.5 h-3.5" />
+            Lịch sử
           </Link>
         </div>
-        <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
+        <h1 className="text-2xl sm:text-3xl font-black text-zinc-900 dark:text-white tracking-tight">
           Viết &amp; Cải thiện
         </h1>
-        <p className="text-zinc-400 text-sm">
+        <p className="text-zinc-500 dark:text-zinc-400 text-sm">
           Nhập câu tiếng Anh — AI sẽ sửa lỗi, giải thích bằng tiếng Việt, và gợi ý cách viết hay hơn.
         </p>
       </motion.div>
@@ -189,12 +191,16 @@ export default function WriteImprovePage() {
             onClick={() => { setLevel(l.value); setFeedback(null); }}
             className={`px-3 py-2 rounded-xl border text-xs font-bold transition-all ${
               level === l.value
-                ? "bg-emerald-500/15 border-emerald-500/50 text-emerald-300"
-                : "bg-white/5 border-white/10 text-zinc-400 hover:border-white/25"
+                ? "bg-emerald-500/15 border-emerald-500/50 text-emerald-600 dark:text-emerald-300"
+                : "bg-white/60 dark:bg-white/5 border-zinc-200/60 dark:border-white/10 text-zinc-500 dark:text-zinc-400 hover:border-zinc-300 dark:hover:border-white/25"
             }`}
           >
             <span className="block">{l.label}</span>
-            <span className={`block font-normal ${level === l.value ? "text-emerald-400/70" : "text-zinc-600"}`}>
+            <span className={`block font-normal ${
+              level === l.value
+                ? "text-emerald-500 dark:text-emerald-400/70"
+                : "text-zinc-400 dark:text-zinc-600"
+            }`}>
               {l.desc}
             </span>
           </button>
@@ -203,7 +209,7 @@ export default function WriteImprovePage() {
 
       {/* Prompt suggestions */}
       <div className="space-y-2">
-        <p className="text-xs text-zinc-500 font-medium uppercase tracking-wider flex items-center gap-1.5">
+        <p className="text-xs text-zinc-500 dark:text-zinc-500 font-medium uppercase tracking-wider flex items-center gap-1.5">
           <BookOpen className="w-3.5 h-3.5" /> Câu mẫu để luyện tập
         </p>
         <div className="space-y-1.5">
@@ -211,9 +217,9 @@ export default function WriteImprovePage() {
             <button
               key={i}
               onClick={() => handlePrompt(p)}
-              className="w-full text-left px-3 py-2 rounded-xl bg-white/4 border border-white/8 text-zinc-300 text-sm hover:bg-white/8 hover:border-white/15 transition-colors flex items-center gap-2 group"
+              className="w-full text-left px-3 py-2 rounded-xl bg-white/60 dark:bg-white/4 border border-zinc-200/60 dark:border-white/8 text-zinc-700 dark:text-zinc-300 text-sm hover:bg-zinc-50 dark:hover:bg-white/8 hover:border-zinc-300 dark:hover:border-white/15 transition-colors flex items-center gap-2 group"
             >
-              <ChevronRight className="w-3.5 h-3.5 text-zinc-600 group-hover:text-emerald-400 transition-colors shrink-0" />
+              <ChevronRight className="w-3.5 h-3.5 text-zinc-400 dark:text-zinc-600 group-hover:text-emerald-500 transition-colors shrink-0" />
               <span className="italic">&ldquo;{p}&rdquo;</span>
             </button>
           ))}
@@ -228,15 +234,26 @@ export default function WriteImprovePage() {
           placeholder="Nhập câu hoặc đoạn văn tiếng Anh của bạn tại đây..."
           rows={4}
           maxLength={500}
-          className="w-full bg-white/5 border border-white/10 rounded-2xl px-4 py-3 text-white placeholder-zinc-600 focus:outline-none focus:border-emerald-500/50 transition-colors text-sm resize-none"
+          className="w-full bg-white/70 dark:bg-white/5 border border-zinc-200/60 dark:border-white/10 rounded-2xl px-4 py-3 text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-zinc-600 focus:outline-none focus:border-emerald-500/50 transition-colors text-sm resize-none"
         />
-        <div className="flex items-center justify-between">
-          <span className="text-xs text-zinc-600">{text.length}/500 ký tự</span>
-          <div className="flex gap-2">
+        <div className="flex items-center justify-between gap-3">
+          {/* Character count bar */}
+          <div className="flex-1 flex items-center gap-2">
+            <div className="flex-1 h-1 bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
+              <div
+                className={`h-full rounded-full transition-all duration-300 ${
+                  text.length > 400 ? "bg-red-500" : text.length > 250 ? "bg-amber-500" : "bg-emerald-500"
+                }`}
+                style={{ width: `${Math.min((text.length / 500) * 100, 100)}%` }}
+              />
+            </div>
+            <span className="text-xs text-zinc-400 dark:text-zinc-500 font-mono shrink-0">{text.length}/500</span>
+          </div>
+          <div className="flex gap-2 shrink-0">
             {(feedback || text) && (
               <button
                 onClick={handleReset}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 text-zinc-400 hover:text-white text-xs transition-colors"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/60 dark:bg-white/5 border border-zinc-200/60 dark:border-white/10 text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white text-xs transition-colors"
               >
                 <RotateCcw className="w-3.5 h-3.5" /> Làm lại
               </button>
@@ -244,7 +261,7 @@ export default function WriteImprovePage() {
             <button
               onClick={handleAnalyze}
               disabled={!text.trim() || isPending}
-              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 disabled:bg-zinc-700 disabled:text-zinc-500 text-white font-bold text-sm transition-colors"
+              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 disabled:from-zinc-300 disabled:to-zinc-300 dark:disabled:from-zinc-700 dark:disabled:to-zinc-700 disabled:text-zinc-400 text-white font-bold text-sm transition-all active:scale-95 shadow-sm"
             >
               {isPending ? (
                 <><Zap className="w-4 h-4 animate-pulse" /> Đang phân tích...</>
@@ -280,11 +297,11 @@ export default function WriteImprovePage() {
             className="space-y-4"
           >
             {/* Score + encouragement */}
-            <div className="bg-white/5 border border-white/10 rounded-2xl p-5 flex items-center gap-5">
+            <div className="bg-white/60 dark:bg-white/5 border border-zinc-200/60 dark:border-white/10 rounded-2xl p-5 flex items-center gap-5">
               <ScoreRing score={feedback.score} />
               <div className="flex-1">
                 <p className="text-xs text-zinc-500 uppercase tracking-wider font-bold mb-1">Độ chính xác</p>
-                <p className="text-white font-semibold text-sm leading-relaxed">
+                <p className="text-zinc-900 dark:text-white font-semibold text-sm leading-relaxed">
                   {feedback.encouragement_vn}
                 </p>
               </div>
@@ -302,22 +319,22 @@ export default function WriteImprovePage() {
             {/* Errors */}
             {feedback.errors.length > 0 && (
               <div className="space-y-2">
-                <p className="text-xs font-bold text-zinc-400 uppercase tracking-wider flex items-center gap-1.5">
+                <p className="text-xs font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider flex items-center gap-1.5">
                   <AlertTriangle className="w-3.5 h-3.5" /> Lỗi cần sửa ({feedback.errors.length})
                 </p>
                 {feedback.errors.map((err, i) => {
                   const typeInfo = ERROR_TYPE_LABEL[err.type] ?? ERROR_TYPE_LABEL.grammar;
                   return (
-                    <div key={i} className="bg-white/4 border border-white/8 rounded-xl p-3.5 space-y-1.5">
+                    <div key={i} className="bg-white/60 dark:bg-white/4 border border-zinc-200/60 dark:border-white/8 rounded-xl p-3.5 space-y-1.5">
                       <div className="flex items-center gap-2 flex-wrap">
                         <span className={`text-[10px] font-bold px-2 py-0.5 rounded-md border ${typeInfo.color}`}>
                           {typeInfo.label}
                         </span>
-                        <span className="text-red-400 text-sm line-through opacity-70">{err.original}</span>
-                        <ChevronRight className="w-3.5 h-3.5 text-zinc-600" />
-                        <span className="text-emerald-400 text-sm font-semibold">{err.correction}</span>
+                        <span className="text-red-500 dark:text-red-400 text-sm line-through opacity-70">{err.original}</span>
+                        <ChevronRight className="w-3.5 h-3.5 text-zinc-400" />
+                        <span className="text-emerald-600 dark:text-emerald-400 text-sm font-semibold">{err.correction}</span>
                       </div>
-                      <p className="text-zinc-400 text-xs">{err.explanation_vn}</p>
+                      <p className="text-zinc-500 dark:text-zinc-400 text-xs">{err.explanation_vn}</p>
                     </div>
                   );
                 })}
@@ -333,11 +350,11 @@ export default function WriteImprovePage() {
             )}
 
             {/* Improved version + Save */}
-            <div className="bg-blue-950/30 border border-blue-500/20 rounded-2xl p-4 space-y-1">
+            <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200/60 dark:border-blue-500/20 rounded-2xl p-4 space-y-1">
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-2">
-                  <Sparkles className="w-4 h-4 text-blue-400" />
-                  <p className="text-xs font-bold text-blue-400 uppercase tracking-wider">Cách viết hay hơn</p>
+                  <Sparkles className="w-4 h-4 text-blue-500 dark:text-blue-400" />
+                  <p className="text-xs font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider">Cách viết hay hơn</p>
                 </div>
                 {/* Save to My Sentences */}
                 <button
@@ -345,8 +362,8 @@ export default function WriteImprovePage() {
                   disabled={isSaving || !!savedId}
                   className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl border text-xs font-bold transition-all ${
                     savedId
-                      ? "bg-emerald-500/15 border-emerald-500/40 text-emerald-400 cursor-default"
-                      : "bg-white/5 border-white/15 text-zinc-400 hover:text-white hover:border-white/30"
+                      ? "bg-emerald-500/15 border-emerald-500/40 text-emerald-600 dark:text-emerald-400 cursor-default"
+                      : "bg-white/60 dark:bg-white/5 border-zinc-200/60 dark:border-white/15 text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:border-zinc-300 dark:hover:border-white/30"
                   }`}
                 >
                   {savedId ? (
@@ -358,7 +375,7 @@ export default function WriteImprovePage() {
                   )}
                 </button>
               </div>
-              <p className="text-white text-sm leading-relaxed italic">&ldquo;{feedback.improved}&rdquo;</p>
+              <p className="text-zinc-800 dark:text-white text-sm leading-relaxed italic">&ldquo;{feedback.improved}&rdquo;</p>
             </div>
           </motion.div>
         )}
