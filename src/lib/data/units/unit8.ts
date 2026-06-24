@@ -32,8 +32,8 @@ export const unit8: UnitData = {
     { id: 8, word: "coffee", emoji: "☕", phonetic: "/ˈkɒfi/", meaning: "cà phê", example: "I drink coffee in the morning.", example2: "Do you want some coffee?", collocation: "black coffee / iced coffee", audio: "/audio/unit8/coffee.mp3" },
     { id: 9, word: "soup", emoji: "🍲", phonetic: "/suːp/", meaning: "súp", example: "This soup is delicious.", example2: "I'd like a bowl of soup.", collocation: "bowl of soup / chicken soup", audio: "/audio/unit8/soup.mp3" },
     { id: 10, word: "dessert", emoji: "🍮", phonetic: "/dɪˈzɜːt/", meaning: "món tráng miệng", example: "What would you like for dessert?", example2: "I love chocolate dessert.", collocation: "for dessert", audio: "/audio/unit8/dessert.mp3" },
-    { id: 11, word: "menu", emoji: "📋", phonetic: "/ˈmenjuː/", meaning: "thực đơn", example: "Can I see the menu, please?", example2: "The menu has many Vietnamese dishes.", collocation: "look at the menu", audio: "/audio/unit8/menu.mp3" },
-    { id: 12, word: "bill", emoji: "🧾", phonetic: "/bɪl/", meaning: "hóa đơn tiền ăn", example: "Can we have the bill, please?", example2: "The bill comes to fifty dollars.", collocation: "pay the bill / ask for the bill", audio: "/audio/unit8/bill.mp3" },
+    { id: 11, word: "menu", emoji: "📋", phonetic: "/ˈmenjuː/", meaning: "thực đơn", example: "Can I see the menu, please?", example2: "The menu has many Vietnamese dishes.", collocation: "look at the menu", audio: "/audio/unit8/menu.mp3" , l1_interference_vn: "⚠️ Âm /ˈmenjuː/ — 'u' cuối đọc /juː/. Không đọc 'men-nu' — đúng: 'MEN-yoo'." },
+    { id: 12, word: "bill", emoji: "🧾", phonetic: "/bɪl/", meaning: "hóa đơn tiền ăn", example: "Can we have the bill, please?", example2: "The bill comes to fifty dollars.", collocation: "pay the bill / ask for the bill", audio: "/audio/unit8/bill.mp3" , l1_interference_vn: "⚠️ 'The bill, please' (Anh) hoặc 'Check, please' (Mỹ) khi kêu tính tiền." },
   ],
   dialogues: [
     {

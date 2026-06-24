@@ -44,7 +44,7 @@ export const unit3: UnitData = {
       meaning: "Mẹ",
       example: "My mother is a teacher.",
       audio: "/audio/unit3/mother.mp3"
-    },
+    , l1_interference_vn: "⚠️ Âm /ð/ trong 'mo-THER' — lưỡi chạm răng có rung. Người Việt hay đọc thành /mɒdər/." },
     {
       id: 2,
       word: "father", emoji: "👨",
@@ -52,7 +52,7 @@ export const unit3: UnitData = {
       meaning: "Bố",
       example: "My father loves cooking.",
       audio: "/audio/unit3/father.mp3"
-    },
+    , l1_interference_vn: "⚠️ Âm /ð/ trong 'fa-THER'. Âm /f/ đầu cũng hay bị đọc thành /ph/ như tiếng Việt." },
     {
       id: 3,
       word: "brother", emoji: "👦",
@@ -60,7 +60,7 @@ export const unit3: UnitData = {
       meaning: "Anh/Em trai",
       example: "I have one older brother.",
       audio: "/audio/unit3/brother.mp3"
-    },
+    , l1_interference_vn: "⚠️ 'Brother' = cả anh lẫn em trai. Cần 'older/younger brother' để phân biệt như tiếng Việt." },
     {
       id: 4,
       word: "sister", emoji: "👧",
@@ -68,7 +68,7 @@ export const unit3: UnitData = {
       meaning: "Chị/Em gái",
       example: "She is my younger sister.",
       audio: "/audio/unit3/sister.mp3"
-    },
+    , l1_interference_vn: "⚠️ 'Sister' = cả chị lẫn em gái. Thêm 'older/younger sister' khi cần phân biệt." },
     {
       id: 5,
       word: "parents", emoji: "👨‍👩‍👧",
@@ -76,7 +76,7 @@ export const unit3: UnitData = {
       meaning: "Bố mẹ",
       example: "My parents live in Da Nang.",
       audio: "/audio/unit3/parents.mp3"
-    },
+    , l1_interference_vn: "⚠️ 'Parents' luôn số nhiều — không nói 'my parent' để chỉ cả bố và mẹ." },
     {
       id: 6,
       word: "friend", emoji: "🤝",

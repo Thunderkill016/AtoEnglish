@@ -51,6 +51,7 @@ export interface VocabItem {
   audio?: string;
   emoji?: string;
   image_url?: string; // S2-2: optional image for concrete nouns (Paivio dual coding)
+  l1_interference_vn?: string; // Vietnamese L1 interference note — specific error Vietnamese speakers make with this word
 }
 
 export interface WarmupCard {
