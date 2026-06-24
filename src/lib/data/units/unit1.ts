@@ -554,6 +554,46 @@ export const unit1: UnitData = {
     },
   ],
 
+  // ── CUMULATIVE REVIEW: Ôn lại A0 trước khi bắt đầu A1 ──────────────────
+  // Research: Spaced retrieval of A0 material consolidates before new input
+  cumulativeReviewQuestions: [
+    {
+      id: "cr1-1",
+      question: "Màu đỏ trong tiếng Anh là gì? (A0 — Màu sắc)",
+      options: ["Blue", "Red", "Green", "Yellow"],
+      answer: "Red",
+      type: "multiple-choice",
+    },
+    {
+      id: "cr1-2",
+      question: "Số 10 trong tiếng Anh là gì? (A0 — Con số)",
+      options: ["Eleven", "Twelve", "Ten", "Eight"],
+      answer: "Ten",
+      type: "multiple-choice",
+    },
+    {
+      id: "cr1-3",
+      question: "Dịch sang tiếng Anh: 'Mẹ tôi' (A0 — Gia đình)",
+      options: [],
+      answer: "My mother",
+      type: "translate",
+    },
+    {
+      id: "cr1-4",
+      question: "Từ nào có nghĩa là 'Cảm ơn'? (A0 — Chào hỏi)",
+      options: ["Sorry", "Please", "Thank you", "Hello"],
+      answer: "Thank you",
+      type: "multiple-choice",
+    },
+    {
+      id: "cr1-5",
+      question: "Dịch sang tiếng Anh: 'Tôi hiểu.' (A0 — Giao tiếp cơ bản)",
+      options: [],
+      answer: "I understand.",
+      type: "translate",
+    },
+  ],
+
   // ── FLUENCY DRILL: Nation Strand 4 — Automaticity ───────────────────────
   // Research: Nation (2007) — Fluency = tốc độ + độ chính xác với material đã biết
   // 8 cặp từ QUAN TRỌNG NHẤT của unit — phản xạ trong 60 giây
