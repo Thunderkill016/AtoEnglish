@@ -120,6 +120,14 @@ export const unit37: UnitData = {
       { left: "substitute", right: "thay thế" },
     ],
   },
+  practiceTranslate: [
+    {
+      id: "pt-1",
+      prompt_vn: "Đối mặt với các vấn đề tài chính, họ đã hoãn kế hoạch mở rộng.",
+      answer: "Facing financial problems, they postponed the expansion plan.",
+    },
+  ],
+
   wordBankExercises: [
     {
       id: "wb1",

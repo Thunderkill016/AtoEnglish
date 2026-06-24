@@ -123,6 +123,14 @@ export const unit41: UnitData = {
       { left: "degradation", right: "sự suy thoái" },
     ],
   },
+  practiceTranslate: [
+    {
+      id: "pt-1",
+      prompt_vn: "Học lực của cô ấy đã được cải thiện rõ rệt.",
+      answer: "Her academic performance has improved significantly.",
+    },
+  ],
+
   wordBankExercises: [
     {
       id: "wb1",

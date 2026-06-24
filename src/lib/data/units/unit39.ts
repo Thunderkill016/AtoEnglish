@@ -119,6 +119,14 @@ export const unit39: UnitData = {
       { left: "contradict", right: "mâu thuẫn / trái ngược" },
     ],
   },
+  practiceTranslate: [
+    {
+      id: "pt-1",
+      prompt_vn: "Từ dữ liệu này, chúng ta có thể suy ra kết quả.",
+      answer: "From this data, we can deduce the outcome.",
+    },
+  ],
+
   wordBankExercises: [
     {
       id: "wb1",

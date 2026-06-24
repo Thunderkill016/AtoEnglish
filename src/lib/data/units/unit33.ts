@@ -119,6 +119,14 @@ export const unit33: UnitData = {
       { left: "expansion", right: "sự mở rộng" },
     ],
   },
+  practiceTranslate: [
+    {
+      id: "pt-1",
+      prompt_vn: "Nếu chúng tôi có nhiều nguồn lực hơn, chúng tôi sẽ mở rộng.",
+      answer: "If we had more resources, we would expand.",
+    },
+  ],
+
   wordBankExercises: [
     {
       id: "wb1",

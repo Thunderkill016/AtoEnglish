@@ -119,6 +119,14 @@ export const unit40: UnitData = {
       { left: "furthermore", right: "hơn nữa" },
     ],
   },
+  practiceTranslate: [
+    {
+      id: "pt-1",
+      prompt_vn: "Một số người thích làm việc tại văn phòng, trong khi số khác thích làm việc từ xa.",
+      answer: "Some people prefer working at the office, whereas others prefer working remotely.",
+    },
+  ],
+
   wordBankExercises: [
     {
       id: "wb1",

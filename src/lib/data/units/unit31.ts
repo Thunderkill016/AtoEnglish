@@ -119,6 +119,14 @@ export const unit31: UnitData = {
       { left: "corporate", right: "thuộc doanh nghiệp" },
     ],
   },
+  practiceTranslate: [
+    {
+      id: "pt-1",
+      prompt_vn: "Hạn chót cho bản đề xuất là ngày mai.",
+      answer: "The deadline for the proposal is tomorrow.",
+    },
+  ],
+
   wordBankExercises: [
     {
       id: "wb1",

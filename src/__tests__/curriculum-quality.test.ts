@@ -216,6 +216,22 @@ describe("Curriculum Quality Rigorous Assessment Suite", () => {
           });
         }
 
+        // 5b. WordBank Exercises — all units must have ≥3 exercises
+        expect(unit.wordBankExercises, `${file}: missing wordBankExercises`).toBeDefined();
+        expect(Array.isArray(unit.wordBankExercises)).toBe(true);
+        expect(unit.wordBankExercises.length, `${file}: wordBankExercises must have ≥3 items`).toBeGreaterThanOrEqual(3);
+
+        unit.wordBankExercises.forEach((wb: any, idx: number) => {
+          const wbDesc = `${file} wordBankExercises #${idx + 1}`;
+          expect(wb.id, `${wbDesc}: missing id`).toBeDefined();
+          expect(wb.prompt_vn, `${wbDesc}: missing prompt_vn`).toBeDefined();
+          expect(wb.prompt_vn).not.toMatch(leakRegex);
+          expect(wb.words, `${wbDesc}: missing words`).toBeDefined();
+          expect(Array.isArray(wb.words)).toBe(true);
+          expect(wb.words.length, `${wbDesc}: must have ≥4 words`).toBeGreaterThanOrEqual(4);
+          expect(wb.answer, `${wbDesc}: missing answer`).toBeDefined();
+        });
+
         // 6. Practice Quiz & Final Quiz validation
         const validateQuizList = (list: any[], name: string) => {
           if (!list) return;

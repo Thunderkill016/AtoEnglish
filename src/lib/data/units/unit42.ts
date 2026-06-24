@@ -120,6 +120,14 @@ export const unit42: UnitData = {
       { left: "consequence", right: "hậu quả / hệ quả" },
     ],
   },
+  practiceTranslate: [
+    {
+      id: "pt-1",
+      prompt_vn: "Chúng tôi cần tiến hành đánh giá để xác thực kết quả.",
+      answer: "We need to conduct an evaluation to validate the results.",
+    },
+  ],
+
   wordBankExercises: [
     {
       id: "wb1",

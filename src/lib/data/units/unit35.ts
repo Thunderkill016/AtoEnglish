@@ -120,6 +120,14 @@ export const unit35: UnitData = {
       { left: "negotiate", right: "đàm phán" },
     ],
   },
+  practiceTranslate: [
+    {
+      id: "pt-1",
+      prompt_vn: "Chúng tôi sẽ chấm dứt thỏa thuận trừ khi họ sửa lỗi.",
+      answer: "We will terminate the agreement unless they rectify the error.",
+    },
+  ],
+
   wordBankExercises: [
     {
       id: "wb1",

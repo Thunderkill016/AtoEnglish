@@ -119,6 +119,14 @@ export const unit38: UnitData = {
       { left: "counter", right: "phản bác / chống lại" },
     ],
   },
+  practiceTranslate: [
+    {
+      id: "pt-1",
+      prompt_vn: "Không những anh ấy nói trôi chảy, mà anh ấy còn viết rất giỏi.",
+      answer: "Not only does he speak fluently, but he also writes very well.",
+    },
+  ],
+
   wordBankExercises: [
     {
       id: "wb1",

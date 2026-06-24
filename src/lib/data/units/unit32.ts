@@ -121,6 +121,14 @@ export const unit32: UnitData = {
       { left: "resolution", right: "sự giải quyết" },
     ],
   },
+  practiceTranslate: [
+    {
+      id: "pt-1",
+      prompt_vn: "Chúng tôi đã hợp tác để tìm giải pháp thay thế.",
+      answer: "We collaborated to find an alternative solution.",
+    },
+  ],
+
   wordBankExercises: [
     {
       id: "wb1",

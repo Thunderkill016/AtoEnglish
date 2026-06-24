@@ -119,6 +119,14 @@ export const unit34: UnitData = {
       { left: "complication", right: "sự rắc rối phức tạp" },
     ],
   },
+  practiceTranslate: [
+    {
+      id: "pt-1",
+      prompt_vn: "Nếu bạn hỏi, tôi đã nói cho bạn biết rồi.",
+      answer: "If you had asked, I would have told you.",
+    },
+  ],
+
   wordBankExercises: [
     {
       id: "wb1",

@@ -121,6 +121,14 @@ export const unit25: UnitData = {
       { left: "that", right: "người hoặc vật (informal)" },
     ],
   },
+  practiceTranslate: [
+    {
+      id: "pt-1",
+      prompt_vn: "Đây là văn phòng nơi toàn bộ nhóm R&D làm việc hàng ngày.",
+      answer: "This is the office where the entire R&D team works every day.",
+    },
+  ],
+
   wordBankExercises: [
     {
       id: "wb1",

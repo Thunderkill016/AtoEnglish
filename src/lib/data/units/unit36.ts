@@ -119,6 +119,14 @@ export const unit36: UnitData = {
       { left: "conduct", right: "tiến hành / thực hiện" },
     ],
   },
+  practiceTranslate: [
+    {
+      id: "pt-1",
+      prompt_vn: "Người ta tin rằng biến đổi khí hậu đang đẩy nhanh.",
+      answer: "It is believed that climate change is accelerating.",
+    },
+  ],
+
   wordBankExercises: [
     {
       id: "wb1",
