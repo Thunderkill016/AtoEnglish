@@ -470,6 +470,32 @@ export const unit1: UnitData = {
     },
   ],
 
+  // ── WORD BANK: Duolingo-style tap-to-build sentences ─────────────────────
+  // Research: Pushed output (Swain 1985) — production beats recognition alone
+  wordBankExercises: [
+    {
+      id: "wb1",
+      prompt_vn: "Tên tôi là Minh.",
+      words: ["My", "name", "is", "Minh", "am", "are", "."],
+      answer: "My name is Minh .",
+      hint: "My name is...",
+    },
+    {
+      id: "wb2",
+      prompt_vn: "Tôi đến từ Việt Nam.",
+      words: ["I", "am", "from", "Vietnam", "is", "are", "."],
+      answer: "I am from Vietnam .",
+      hint: "I am from...",
+    },
+    {
+      id: "wb3",
+      prompt_vn: "Rất vui được gặp bạn!",
+      words: ["Nice", "to", "meet", "you", "see", "hello", "!"],
+      answer: "Nice to meet you !",
+      hint: "Nice to meet you",
+    },
+  ],
+
   // ── FINAL QUIZ: Retrieval Practice (Testing Effect) ─────────────────────
   // Research: Testing effect d≈0.5-1.0 — quiz SAU học > đọc lại
   // Mix types: MC (easy) → cloze (medium) → translate (hard) = graded difficulty
