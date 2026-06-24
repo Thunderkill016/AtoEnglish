@@ -496,6 +496,54 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
     if (res.success) {
       setIsCompleted(true);
       toast.success(`🎉 Chúc mừng! Bạn nhận được ${res.xpEarned ?? xpToEarn} XP!`);
+
+      // ── Achievement milestone toasts (staggered, zero extra DB queries) ──
+      const totalCompleted = res.completedCount ?? 0;
+      const streak = res.newStreak ?? 0;
+      const totalXp = res.newTotalXp ?? 0;
+      const prevXp = totalXp - (res.xpEarned ?? 0);
+      let delay = 1200;
+
+      // Lesson count milestones
+      const lessonToasts: Record<number, string> = {
+        1:  "🎯 Thành tích: Bước Đầu Tiên — Hoàn thành bài học đầu tiên!",
+        5:  "📚 Thành tích: Học Viên Nhiệt Tình — 5 bài học hoàn thành!",
+        10: "🎓 Thành tích: Học Viên Chăm Chỉ — 10 bài học!",
+        25: "⭐ Thành tích: Chuyên Gia Tiến Bộ — 25 bài học!",
+        50: "🏅 Thành tích: Học Giả — Hoàn thành tất cả 50 bài học!",
+      };
+      if (lessonToasts[totalCompleted]) {
+        setTimeout(() => toast.success(lessonToasts[totalCompleted]!), delay);
+        delay += 1200;
+      }
+
+      // Streak milestones
+      const streakToasts: Record<number, string> = {
+        3:  "🔥 Thành tích: Bắt Đầu Chuỗi — 3 ngày học liên tiếp!",
+        7:  "🔥🔥 Thành tích: Một Tuần Kiên Trì — 7 ngày!",
+        14: "💪 Thành tích: Hai Tuần Bất Bại — 14 ngày!",
+        30: "🏆 Thành tích: Học Viên Tháng — 30 ngày!",
+        100:"👑 Thành tích: Huyền Thoại — 100 ngày streak!",
+      };
+      if (streakToasts[streak]) {
+        setTimeout(() => toast.success(streakToasts[streak]!), delay);
+        delay += 1200;
+      }
+
+      // XP milestones (check if we crossed a threshold this session)
+      const xpThresholds: [number, string][] = [
+        [100,  "✨ Thành tích: Tích Lũy XP — 100 XP!"],
+        [500,  "💎 Thành tích: XP Hunter — 500 XP!"],
+        [1000, "🌟 Thành tích: Nghìn Điểm — 1,000 XP!"],
+        [5000, "🎖️ Thành tích: Bậc Thầy XP — 5,000 XP!"],
+      ];
+      for (const [threshold, msg] of xpThresholds) {
+        if (prevXp < threshold && totalXp >= threshold) {
+          setTimeout(() => toast.success(msg), delay);
+          delay += 1200;
+        }
+      }
+
       if (res.leveledUp && res.newLevel) {
         localStorage.setItem(
           "pending-level-up",

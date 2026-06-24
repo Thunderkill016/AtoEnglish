@@ -221,6 +221,8 @@ export async function completeUnit(unitId: string, starCount: number = 3) {
       message: `Hoàn thành bài học thành công! Bạn nhận được ${xpEarned} XP (${cleanParams.starCount}⭐).`,
       xpEarned,
       newStreak: nextStreak,
+      newTotalXp: resultData.new_total_xp ?? 0,
+      completedCount: resultData.completed_count ?? 1,
       vocabAddedCount: addedCount,
       leveledUp: leveledUp ? newLevel : null,
       newLevel,
