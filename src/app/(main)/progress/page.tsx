@@ -3,6 +3,7 @@ import { Suspense } from "react";
 import { Flame, Layers, BookOpen, TrendingUp, Trophy, Star, Mic } from "lucide-react";
 import { getProgressStats, getWeeklyXpData } from "@/app/actions/stats";
 import { getAchievements } from "@/app/actions/gamification";
+import { AchievementsPanel } from "@/components/gamification/AchievementsPanel";
 import ProgressClient from "./ProgressClient";
 
 export const dynamic = "force-dynamic";
@@ -235,39 +236,23 @@ export default async function ProgressPage() {
         }} />
       </Suspense>
 
-      {/* Achievements section */}
-      <div className="rounded-3xl border border-zinc-200/60 dark:border-zinc-800/60 bg-white/60 dark:bg-zinc-900/30 backdrop-blur-sm p-4 sm:p-8 space-y-4">
-        <div className="flex items-center justify-between">
-          <div>
-            <h3 className="font-bold text-xs text-foreground uppercase tracking-widest">Thành tích</h3>
-            <p className="text-[11px] text-muted-foreground mt-0.5">
-              {achievementsRes.success
-                ? `${achievementsRes.unlockedIds.length} / ${achievementsRes.achievements.length} đã mở khóa`
-                : 'Tính năng sắp ra mắt'}
-            </p>
+      {/* Achievements — full panel with category filters and locked/unlocked states */}
+      {achievementsRes.success && achievementsRes.achievements.length > 0 ? (
+        <AchievementsPanel
+          achievements={achievementsRes.achievements}
+          unlockedIds={new Set(achievementsRes.unlockedIds)}
+        />
+      ) : (
+        <div className="rounded-3xl border border-zinc-200/60 dark:border-zinc-800/60 bg-white/60 dark:bg-zinc-900/30 backdrop-blur-sm p-4 sm:p-8 space-y-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="font-bold text-xs text-foreground uppercase tracking-widest">Thành tích</h3>
+              <p className="text-[11px] text-muted-foreground mt-0.5">Tính năng sắp ra mắt</p>
+            </div>
+            <span className="flex size-10 items-center justify-center rounded-xl bg-yellow-500/10 text-yellow-500">
+              <Trophy className="size-5" />
+            </span>
           </div>
-          <span className="flex size-10 items-center justify-center rounded-xl bg-yellow-500/10 text-yellow-500">
-            <Trophy className="size-5" />
-          </span>
-        </div>
-
-        {achievementsRes.success && achievementsRes.achievements.length > 0 ? (
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-            {achievementsRes.achievements
-              .filter(a => achievementsRes.unlockedIds.includes(a.id))
-              .map(a => (
-                <div
-                  key={a.id}
-                  className="flex flex-col items-center gap-2 rounded-2xl border border-yellow-500/20 bg-yellow-500/5 p-3 text-center"
-                >
-                  <span className="text-3xl" role="img" aria-label={a.title_en}>{a.emoji}</span>
-                  <span className="text-xs font-semibold text-foreground leading-tight">{a.title_vn}</span>
-                </div>
-              ))}
-          </div>
-        ) : achievementsRes.success && achievementsRes.achievements.length === 0 ? (
-          <p className="text-sm text-muted-foreground text-center py-4">Chưa có thành tích nào. Hãy tiếp tục học! 💪</p>
-        ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
             {["🔥", "⭐", "📚", "🎯", "💬", "🏆", "🎤", "💡"].map((emoji, i) => (
               <div
@@ -279,8 +264,8 @@ export default async function ProgressPage() {
               </div>
             ))}
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 }

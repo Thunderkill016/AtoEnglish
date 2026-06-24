@@ -14,6 +14,42 @@ export type Database = {
   }
   public: {
     Tables: {
+      achievements: {
+        Row: {
+          category: string
+          created_at: string
+          description_vn: string
+          emoji: string
+          id: string
+          threshold: number | null
+          title_en: string
+          title_vn: string
+          xp_reward: number
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          description_vn: string
+          emoji?: string
+          id: string
+          threshold?: number | null
+          title_en: string
+          title_vn: string
+          xp_reward?: number
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          description_vn?: string
+          emoji?: string
+          id?: string
+          threshold?: number | null
+          title_en?: string
+          title_vn?: string
+          xp_reward?: number
+        }
+        Relationships: []
+      }
       card_review_logs: {
         Row: {
           card_id: string
@@ -329,6 +365,35 @@ export type Database = {
         }
         Relationships: []
       }
+      user_achievements: {
+        Row: {
+          achievement_id: string
+          notified: boolean
+          unlocked_at: string
+          user_id: string
+        }
+        Insert: {
+          achievement_id: string
+          notified?: boolean
+          unlocked_at?: string
+          user_id: string
+        }
+        Update: {
+          achievement_id?: string
+          notified?: boolean
+          unlocked_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_achievements_achievement_id_fkey"
+            columns: ["achievement_id"]
+            isOneToOne: false
+            referencedRelation: "achievements"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_flashcard_progress: {
         Row: {
           best_streak: number
@@ -397,31 +462,37 @@ export type Database = {
       }
       user_progress: {
         Row: {
+          best_streak: number
           created_at: string
           current_level: string
           daily_xp_goal: number
           last_active_date: string | null
           streak: number
+          streak_freeze_count: number
           total_xp: number
           updated_at: string
           user_id: string
         }
         Insert: {
+          best_streak?: number
           created_at?: string
           current_level?: string
           daily_xp_goal?: number
           last_active_date?: string | null
           streak?: number
+          streak_freeze_count?: number
           total_xp?: number
           updated_at?: string
           user_id: string
         }
         Update: {
+          best_streak?: number
           created_at?: string
           current_level?: string
           daily_xp_goal?: number
           last_active_date?: string | null
           streak?: number
+          streak_freeze_count?: number
           total_xp?: number
           updated_at?: string
           user_id?: string
@@ -529,6 +600,10 @@ export type Database = {
         }
         Returns: Json
       }
+      grant_streak_freeze: {
+        Args: { p_count?: number; p_user_id: string }
+        Returns: undefined
+      }
       match_memories: {
         Args: {
           filter_category?: string
@@ -549,6 +624,7 @@ export type Database = {
       }
       next_cefr_level: { Args: { level: string }; Returns: string }
       units_required_for_level: { Args: { level: string }; Returns: number }
+      use_streak_freeze: { Args: { p_user_id: string }; Returns: Json }
     }
     Enums: {
       cefr_level: "A1" | "A2" | "B1" | "B2" | "C1"
