@@ -404,6 +404,24 @@ export const unit1: UnitData = {
     ],
   },
 
+  // S3-1: Sentence Correction — "to be" verb agreement errors (most common VN learner mistakes)
+  sentenceCorrectionExercises: [
+    {
+      id: "sc1-1",
+      sentence: "She am a teacher.",
+      errorWord: "am",
+      correction: "is",
+      explanation_vn: "Chủ ngữ 'She' (ngôi 3 số ít) → dùng 'IS', không dùng 'am'. Quy tắc: I AM / You·We·They ARE / He·She·It IS.",
+    },
+    {
+      id: "sc1-2",
+      sentence: "My name are Linh.",
+      errorWord: "are",
+      correction: "is",
+      explanation_vn: "'My name' là số ít → dùng 'IS'. 'Are' dùng cho 'you, we, they'. Ví dụ đúng: 'My name IS Linh.'",
+    },
+  ],
+
   // ── PRACTICE QUIZ: Thiết kế ~80% success rate ───────────────────────────
   // Research: Quá dễ → bored; Quá khó → dropout; 80% correct = Flow state
   practiceQuiz: [

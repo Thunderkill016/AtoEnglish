@@ -179,6 +179,16 @@ export interface WordBankQuestion {
   hint?: string;
 }
 
+// S3-1: Sentence Correction Exercise (British Council "find the error" pattern)
+export interface SentenceCorrectionExercise {
+  id: string;
+  sentence: string;        // Sentence with exactly one grammatical error
+  errorWord: string;       // The wrong word/phrase (shown highlighted)
+  correction: string;      // Correct replacement
+  explanation_vn: string;  // Vietnamese explanation shown after answer
+  distractors?: string[];  // Wrong replacement options (if MCQ style)
+}
+
 export interface UnitData {
   unitId: string;
   title: string;
@@ -195,6 +205,7 @@ export interface UnitData {
   matchingExercise?: MatchingExercise;
   scrambleExercises?: SentenceScramble[];
   wordBankExercises?: WordBankQuestion[];
+  sentenceCorrectionExercises?: SentenceCorrectionExercise[]; // S3-1
   practiceQuiz?: QuizQuestion[];
   practiceTranslate?: { id: string; prompt_vn: string; answer: string }[];
   dialogues: Dialogue[];
@@ -420,6 +431,12 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
 
   const goNext = () => {
     window.speechSynthesis?.cancel();
+    // S3-2: Micro-session mode — after Practice (4) jump straight to Quiz (8)
+    if (miniSession && section === 4) {
+      setSection(8);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
     const idx = SECTION_ORDER.indexOf(section as SectionNumber);
     const nextSection = SECTION_ORDER[Math.min(idx + 1, SECTION_ORDER.length - 1)];
     setSection(nextSection);
@@ -688,21 +705,25 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                   )}
                 </div>
               )}
-              {/* Mini-session toggle — jump to Quiz for quick 5-min review */}
-              {!miniSession && section < 8 && (
+              {/* S3-2: Mini-session toggle / active indicator */}
+              {miniSession ? (
+                <div className="flex items-center gap-1 text-[11px] font-black px-2.5 py-1 rounded-xl bg-amber-500/15 border border-amber-500/40 text-amber-300">
+                  ⚡ <span>5 phút</span>
+                </div>
+              ) : section < 8 && (
                 <button
                   onClick={() => {
                     setMiniSession(true);
-                    setSection(8);
+                    setSection(4);
                     try {
                       localStorage.setItem(
                         `lesson-progress-${normalizedUnit.unitId}`,
-                        JSON.stringify({ section: 8 })
+                        JSON.stringify({ section: 4 })
                       );
                     } catch { /* ignore */ }
                   }}
                   className="flex items-center gap-1.5 text-[11px] font-bold px-3 py-1.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-400 hover:bg-amber-500/20 hover:border-amber-500/50 transition-all whitespace-nowrap active:scale-95"
-                  title="Bỏ qua các phần đầu, chỉ làm quiz nhanh ~5 phút"
+                  title="Bỏ qua các phần đầu, chỉ làm luyện tập + quiz ~5 phút"
                 >
                   ⚡ <span>Ôn nhanh</span>
                   <span className="text-amber-500/60 text-[9px] font-bold">~5p</span>

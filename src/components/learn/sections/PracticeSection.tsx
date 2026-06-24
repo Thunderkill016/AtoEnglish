@@ -6,6 +6,8 @@ import { Shuffle, CheckCircle, ChevronRight } from "lucide-react";
 import type { UnitData, QuizQuestion } from "../UnitTemplate";
 import { WordBankExercise } from "@/components/exercises/WordBankExercise";
 import { DictationExercise } from "@/components/exercises/DictationExercise";
+import { SentenceCorrectionExercise } from "@/components/exercises/SentenceCorrectionExercise";
+import { recordAttempt, getWeakTypes, TYPE_LABELS } from "@/lib/adaptive-difficulty";
 
 interface PracticeSectionProps {
   unit: UnitData;
@@ -61,6 +63,9 @@ export default function PracticeSection({
   const [dictationIndex, setDictationIndex] = useState(0);
   const [dictationDone, setDictationDone] = useState(!dictationItems.length);
   const [dictationScore, setDictationScore] = useState(0);
+
+  // S3-1: Sentence correction state — track which exercises are complete
+  const [correctionsDone, setCorrectionsDone] = useState<Set<string>>(new Set());
 
   // Shuffle matching pairs when unit/exercise changes
   useEffect(() => {
@@ -123,6 +128,16 @@ export default function PracticeSection({
 
   const allWordBankDone = !unit.wordBankExercises?.length || wordBankDone;
   const allDictationDone = dictationDone;
+  // S3-1: all sentence corrections must be attempted
+  const allCorrectionsDone =
+    !unit.sentenceCorrectionExercises?.length ||
+    unit.sentenceCorrectionExercises.every((ex) => correctionsDone.has(ex.id));
+
+  // S3-3: Adaptive weak-type tip
+  const weakTypes = getWeakTypes(unit.unitId);
+  const weakTip = weakTypes.length > 0
+    ? `💡 Bạn hay sai phần "${TYPE_LABELS[weakTypes[0]]}" — hãy chú ý lần này nhé!`
+    : null;
 
   const handleMatchSelect = (side: "left" | "right", value: string) => {
     if (matchedPairs.has(value)) return;
@@ -143,9 +158,11 @@ export default function PracticeSection({
         setMatchLeft(null);
         playCorrectSound();
         addSessionXp?.(3); // S2-3: +3 XP per matched pair
+        recordAttempt(unit.unitId, "matching", true); // S3-3
       } else {
         setWrongMatch(value);
         playWrongSound();
+        recordAttempt(unit.unitId, "matching", false); // S3-3
         setTimeout(() => {
           setWrongMatch(null);
           setMatchLeft(null);
@@ -177,9 +194,15 @@ export default function PracticeSection({
           <p className="text-xs text-zinc-500">~4 phút • Kiểm tra nhanh từ vựng và ngữ pháp</p>
         </div>
       </div>
-      <p className="text-zinc-400 mb-6 text-sm">
+      <p className="text-zinc-400 mb-3 text-sm">
         Kiểm tra nhanh từ vựng và ngữ pháp vừa học. Chọn đáp án hoặc điền từ đúng.
       </p>
+      {/* S3-3: Adaptive weak-type tip */}
+      {weakTip && (
+        <div className="flex items-start gap-2 bg-blue-950/30 border border-blue-700/40 rounded-xl px-3 py-2.5 mb-5">
+          <p className="text-blue-200 text-xs leading-relaxed">{weakTip}</p>
+        </div>
+      )}
 
       {/* ── Quiz questions (MC + cloze) ── */}
       <div className="space-y-5 mb-6">
@@ -460,7 +483,11 @@ export default function PracticeSection({
                       if (normalize(built.join(" ")) === normalize(ex.answer)) {
                         playCorrectSound();
                         addSessionXp?.(5); // S2-3: +5 XP for correct scramble
-                      } else playWrongSound();
+                        recordAttempt(unit.unitId, "scramble", true); // S3-3
+                      } else {
+                        playWrongSound();
+                        recordAttempt(unit.unitId, "scramble", false); // S3-3
+                      }
                     }}
                     className="px-4 py-1.5 bg-teal-600/30 border border-teal-500/40 text-teal-300 rounded-xl text-xs font-bold hover:bg-teal-600/50 disabled:opacity-40 transition-colors"
                   >
@@ -474,6 +501,29 @@ export default function PracticeSection({
               </div>
             );
           })}
+        </div>
+      )}
+
+      {/* ── S3-1: Sentence Correction Exercises ── */}
+      {unit.sentenceCorrectionExercises && unit.sentenceCorrectionExercises.length > 0 && (
+        <div className="space-y-4 mb-6">
+          <div className="flex items-center gap-2">
+            <span className="text-lg">🔍</span>
+            <p className="text-sm font-bold text-white">Tìm và sửa lỗi ngữ pháp</p>
+            <span className="text-xs text-zinc-500 ml-auto">Nhận biết lỗi sai</span>
+          </div>
+          {unit.sentenceCorrectionExercises.map((ex) => (
+            <SentenceCorrectionExercise
+              key={ex.id}
+              exercise={ex}
+              onComplete={(correct) => {
+                if (correct) { playCorrectSound(); addSessionXp?.(5); }
+                else playWrongSound();
+                recordAttempt(unit.unitId, "correction", correct); // S3-3
+                setCorrectionsDone(p => { const n = new Set(p); n.add(ex.id); return n; });
+              }}
+            />
+          ))}
         </div>
       )}
 
@@ -493,6 +543,7 @@ export default function PracticeSection({
             onAnswer={(correct) => {
               if (correct) { playCorrectSound(); addSessionXp?.(5); } // S2-3
               else playWrongSound();
+              recordAttempt(unit.unitId, "wordbank", correct); // S3-3
               setWordBankScore(s => s + (correct ? 1 : 0));
               const next = wordBankIndex + 1;
               if (next >= (unit.wordBankExercises?.length ?? 0)) {
@@ -534,6 +585,7 @@ export default function PracticeSection({
             onAnswer={(correct) => {
               if (correct) { playCorrectSound(); addSessionXp?.(5); } // S2-3
               else playWrongSound();
+              recordAttempt(unit.unitId, "dictation", correct); // S3-3
               setDictationScore((s) => s + (correct ? 1 : 0));
               const next = dictationIndex + 1;
               if (next >= dictationItems.length) {
@@ -589,7 +641,7 @@ export default function PracticeSection({
                 : "💪 Ôn lại thẻ từ vựng sẽ giúp bạn nhớ lâu hơn!"}
             </p>
           </div>
-          {matchingDone && allScrambleDone && allWordBankDone && allDictationDone ? (
+          {matchingDone && allScrambleDone && allCorrectionsDone && allWordBankDone && allDictationDone ? (
             <button
               onClick={goNext}
               className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-white font-bold rounded-2xl px-6 py-4 flex items-center justify-center gap-2 transition-all duration-200 text-lg shadow-lg shadow-emerald-900/40 active:scale-95"
@@ -603,6 +655,8 @@ export default function PracticeSection({
                 ? "Hoàn thành phần nối từ ở trên để tiếp tục"
                 : !allScrambleDone
                 ? "Hoàn thành phần sắp xếp câu ở trên để tiếp tục"
+                : !allCorrectionsDone
+                ? "Hoàn thành phần tìm lỗi sai ở trên để tiếp tục"
                 : !allWordBankDone
                 ? "Hoàn thành phần xây dựng câu ở trên để tiếp tục"
                 : "Hoàn thành phần chính tả ở trên để tiếp tục"}
