@@ -16,9 +16,11 @@ import {
   CheckCircle,
   Zap,
   Filter,
+  AlertTriangle,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 import { getDueCards, reviewCard, getAllCards, getCardTopics } from "@/app/actions/cards";
 import { recordFlashcardSession, type FlashcardStats } from "@/app/actions/flashcard-stats";
 import { toast } from "sonner";
@@ -306,6 +308,14 @@ export default function FlashcardsPage() {
             Học Unit Mới
           </Button>
           <Button
+            onClick={() => router.push("/flashcards/hard")}
+            variant="outline"
+            className="rounded-xl text-xs sm:text-sm font-semibold border-red-500/20 text-red-600 dark:text-red-400 h-11 px-5 hover:bg-red-500/5 active:scale-[0.98] flex items-center gap-1.5"
+          >
+            <AlertTriangle className="size-4" />
+            Từ Khó Nhất
+          </Button>
+          <Button
             onClick={() => router.push("/dashboard")}
             variant="outline"
             className="rounded-xl text-xs sm:text-sm font-semibold border-glass h-11 px-5 hover:bg-muted active:scale-[0.98]"
@@ -385,6 +395,14 @@ export default function FlashcardsPage() {
               </div>
             </div>
           </div>
+          {/* Hard Words link */}
+          <Link
+            href="/flashcards/hard"
+            className="flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-xl border transition-all duration-200 bg-red-500/5 border-red-500/20 text-red-600 dark:text-red-400 hover:border-red-500/40"
+          >
+            <AlertTriangle className="size-3.5" />
+            Từ Khó
+          </Link>
         </div>
 
         {/* Topic Filter — chỉ hiện khi Cram Mode */}

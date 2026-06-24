@@ -552,3 +552,87 @@ export async function scheduleWrongWordsForReview(words: string[]) {
     return { success: false, updated: 0 };
   }
 }
+/**
+ * Lấy top N từ khó nhất của user dựa trên số lần bấm "Again" (rating=1) trong card_review_logs.
+ * Kết quả được sắp xếp từ khó nhất → dễ hơn.
+ * Không cần migration DB mới — chỉ đọc card_review_logs + cards.
+ */
+export async function getHardWords(limit: number = 20): Promise<{
+  success: boolean;
+  words?: Array<{
+    id: string;
+    word: string;
+    phonetic: string | null;
+    meaning_vn: string;
+    level: string;
+    example_en: string | null;
+    again_count: number;
+    total_reviews: number;
+    mastery_pct: number;
+  }>;
+  error?: string;
+}> {
+  try {
+    const supabase = await createClient();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    if (authError || !user) return { success: false, error: "Unauthenticated" };
+
+    // 1. Fetch all "Again" (rating=1) logs for this user
+    const { data: againLogs, error: logErr } = await supabase
+      .from("card_review_logs")
+      .select("card_id")
+      .eq("user_id", user.id)
+      .eq("rating", 1);
+
+    if (logErr) return { success: false, error: logErr.message };
+    if (!againLogs || againLogs.length === 0) return { success: true, words: [] };
+
+    // 2. Count Again per card_id in JS
+    const againMap = new Map<string, number>();
+    for (const log of againLogs) {
+      againMap.set(log.card_id, (againMap.get(log.card_id) ?? 0) + 1);
+    }
+
+    // 3. Sort by again count descending, take top N IDs
+    const topIds = [...againMap.entries()]
+      .sort(([, a], [, b]) => b - a)
+      .slice(0, limit)
+      .map(([id]) => id);
+
+    // 4. Fetch card details (word, phonetic, meaning, level, example, repetitions)
+    const { data: cards, error: cardErr } = await supabase
+      .from("cards")
+      .select("id, word, phonetic, meaning_vn, level, example_en, repetitions")
+      .eq("user_id", user.id)
+      .in("id", topIds);
+
+    if (cardErr) return { success: false, error: cardErr.message };
+    if (!cards || cards.length === 0) return { success: true, words: [] };
+
+    // 5. Merge and compute mastery %
+    const words = topIds
+      .map(id => {
+        const card = cards.find(c => c.id === id);
+        if (!card) return null;
+        const again_count = againMap.get(id) ?? 0;
+        const total_reviews = Math.max(card.repetitions ?? 1, again_count);
+        const mastery_pct = Math.round(Math.max(0, (1 - again_count / total_reviews) * 100));
+        return {
+          id: card.id,
+          word: card.word,
+          phonetic: card.phonetic ?? null,
+          meaning_vn: card.meaning_vn,
+          level: card.level ?? "A1",
+          example_en: card.example_en ?? null,
+          again_count,
+          total_reviews,
+          mastery_pct,
+        };
+      })
+      .filter((w): w is NonNullable<typeof w> => w !== null);
+
+    return { success: true, words };
+  } catch (err) {
+    return { success: false, error: String(err) };
+  }
+}
