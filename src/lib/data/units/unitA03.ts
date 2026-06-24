@@ -283,6 +283,42 @@ export const unitA03: UnitData = {
     },
   ],
 
+  sentenceCorrectionExercises: [
+    {
+      id: "sc-A03-1",
+      sentence: "The apples is red and sweet.",
+      errorWord: "is",
+      correction: "are",
+      explanation_vn: "'Apples' số nhiều → 'The apples ARE red'. 'Is' chỉ dùng cho số ít.",
+    },
+    {
+      id: "sc-A03-2",
+      sentence: "She wearing a blue dress today.",
+      errorWord: "wearing",
+      correction: "is wearing",
+      explanation_vn: "Present Continuous cần 'to be': 'She IS WEARING'. Không bỏ 'is' — lỗi phổ biến khi dịch thẳng từ tiếng Việt.",
+    },
+  ],
+
+
+  listenAndArrangeExercises: [
+    {
+      id: "laA03-1",
+      audio_text: "The bag is red and the dress is blue.",
+      prompt_vn: "Túi màu đỏ và váy màu xanh.",
+      words: ["The", "bag", "is", "red", "and", "the", "dress", "is", "blue", ".", "are", "was"],
+      answer: "The bag is red and the dress is blue .",
+    },
+    {
+      id: "laA03-2",
+      audio_text: "She is wearing a white shirt today.",
+      prompt_vn: "Hôm nay cô ấy mặc áo trắng.",
+      words: ["She", "is", "wearing", "a", "white", "shirt", "today", ".", "wearing", "wears"],
+      answer: "She is wearing a white shirt today .",
+    },
+  ],
+
+
   wordBankExercises: [
     {
       id: "wb1",

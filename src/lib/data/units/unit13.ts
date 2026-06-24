@@ -134,6 +134,40 @@ export const unit13: UnitData = {
     },
   ],
 
+  sentenceCorrectionExercises: [
+    {
+      id: "sc13-1",
+      sentence: "He goed to school early yesterday morning.",
+      errorWord: "goed",
+      correction: "went",
+      explanation_vn: "'Go' là động từ bất quy tắc → quá khứ là 'went', không phải 'goed'. Cần học thuộc irregular verbs.",
+    },
+    {
+      id: "sc13-2",
+      sentence: "I buyed a new book at the market yesterday.",
+      errorWord: "buyed",
+      correction: "bought",
+      explanation_vn: "'Buy' là động từ bất quy tắc → quá khứ là 'bought', không thêm -ed.",
+    },
+  ],
+
+  listenAndArrangeExercises: [
+    {
+      id: "la13-1",
+      audio_text: "She went to the market yesterday.",
+      prompt_vn: "Hôm qua cô ấy đã đi chợ.",
+      words: ["She", "went", "to", "the", "market", "yesterday", ".", "go", "last"],
+      answer: "She went to the market yesterday .",
+    },
+    {
+      id: "la13-2",
+      audio_text: "I ate breakfast at seven.",
+      prompt_vn: "Tôi đã ăn sáng lúc bảy giờ.",
+      words: ["I", "ate", "breakfast", "at", "seven", ".", "eat", "had"],
+      answer: "I ate breakfast at seven .",
+    },
+  ],
+
   wordBankExercises: [
     {
       id: "wb1",
@@ -177,11 +211,14 @@ export const unit13: UnitData = {
   ],
 
   quiz: [
-    { id: "fq1", type: "multiple-choice", question: "Dịch: 'Tôi đã ghé thăm cha mẹ tôi tuần trước.'", options: ["I visit my parents last week.", "I visited my parents last week.", "I was visited my parents last week.", "I visits my parents last week."], answer: "I visited my parents last week." },
+    { id: "fq1", type: "multiple-choice", question: "Dịch: 'Tôi đã ghé thăm cha mẹ tôi tuần trước.'", options: ["I visit my parents last week.", "I visited my parents last week.", "I was visited my parents last week.", "I visits my parents last week."], answer: "I visited my parents last week.",
+      explanation_vn: "'Động từ đều' (regular) thêm -ed ở quá khứ: visit → visited. 'I was visited' là bị động, sai ngữ cảnh." },
     { id: "fq2", type: "cloze", question: "Điền: 'She ___ (go) to Singapore three years ago.'", answer: "went" },
-    { id: "fq3", type: "multiple-choice", question: "Chọn câu hỏi đúng: 'Bạn có thích chuyến đi không?'", options: ["Did you enjoyed the trip?", "Did you enjoy the trip?", "Do you enjoyed the trip?", "Were you enjoy the trip?"], answer: "Did you enjoy the trip?" },
+    { id: "fq3", type: "multiple-choice", question: "Chọn câu hỏi đúng: 'Bạn có thích chuyến đi không?'", options: ["Did you enjoyed the trip?", "Did you enjoy the trip?", "Do you enjoyed the trip?", "Were you enjoy the trip?"], answer: "Did you enjoy the trip?",
+      explanation_vn: "Câu hỏi quá khứ: Did + S + V nguyên mẫu. Không dùng 'enjoyed' sau 'Did' vì 'Did' đã chỉ thì quá khứ." },
     { id: "fq4", type: "translate", question: "Dịch sang tiếng Anh: 'Chúng tôi đã ăn hải sản tươi mỗi bữa.'", answer: "We had fresh seafood every meal." },
-    { id: "fq5", type: "multiple-choice", question: "Điền: 'I ___ a movie last night. It was great!'", options: ["watch", "watches", "watched", "watching"], answer: "watched" },
+    { id: "fq5", type: "multiple-choice", question: "Điền: 'I ___ a movie last night. It was great!'", options: ["watch", "watches", "watched", "watching"], answer: "watched",
+      explanation_vn: "'Last night' là dấu hiệu thì quá khứ → 'watch' động từ đều thêm -ed → 'watched'. 'Watch' (hiện tại) không đúng." },
   ],
 
   cumulativeReviewQuestions: [

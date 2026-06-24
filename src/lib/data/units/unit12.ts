@@ -129,14 +129,51 @@ export const unit12: UnitData = {
     { id: "pt12-3", prompt_vn: "Tôi muốn cải thiện kỹ năng nói của mình.", answer: "I want to improve my speaking skills." },
   ],
   quiz: [
-    { id: "q1", question: "Câu nào ÔN đúng ngữ pháp 'There is/are' (Unit 6)?", options: ["There is two windows.", "There are two window.", "There are two windows.", "There have two windows."], answer: "There are two windows.", type: "multiple-choice" },
-    { id: "q2", question: "Câu nào ÔN đúng 'How much' (Unit 7)?", options: ["How much is these shoes?", "How much are this shoe?", "How much are these shoes?", "How many are these shoes?"], answer: "How much are these shoes?", type: "multiple-choice" },
-    { id: "q3", question: "Câu nào ÔN đúng 'have/feel' (Unit 11)?", options: ["I have tired.", "I feel a headache.", "I have a headache and feel tired.", "I am a headache."], answer: "I have a headache and feel tired.", type: "multiple-choice" },
+    { id: "q1", question: "Câu nào ÔN đúng ngữ pháp 'There is/are' (Unit 6)?", options: ["There is two windows.", "There are two window.", "There are two windows.", "There have two windows."], answer: "There are two windows.", type: "multiple-choice",
+      explanation_vn: "'Two windows' là số nhiều → 'There ARE'. Danh từ cũng phải số nhiều: 'windows', không phải 'window'." },
+    { id: "q2", question: "Câu nào ÔN đúng 'How much' (Unit 7)?", options: ["How much is these shoes?", "How much are this shoe?", "How much are these shoes?", "How many are these shoes?"], answer: "How much are these shoes?", type: "multiple-choice",
+      explanation_vn: "'These shoes' là số nhiều → trợ động từ 'ARE'. 'This shoe' số ít mới dùng 'is'. 'How much' hỏi giá." },
+    { id: "q3", question: "Câu nào ÔN đúng 'have/feel' (Unit 11)?", options: ["I have tired.", "I feel a headache.", "I have a headache and feel tired.", "I am a headache."], answer: "I have a headache and feel tired.", type: "multiple-choice",
+      explanation_vn: "'Have' + danh từ bệnh (a headache), 'feel' + tính từ (tired). Không thể nói 'have tired' hay 'feel a headache'." },
     { id: "q4", question: "Điền vào (Unit 5): 'She ___ cooking Vietnamese food.'", options: [], answer: "likes", type: "cloze" },
     { id: "q5", question: "Điền vào (Unit 10): 'She ___ drive but she ___ ride a bike.'", options: [], answer: "can't / can", type: "cloze" },
     { id: "q6", question: "Tôi thức dậy lúc 6 giờ và đi làm lúc 8 giờ. (Unit 4)", options: [], answer: "I wake up at six and go to work at eight.", type: "translate" },
     { id: "q7", question: "Tôi cảm thấy tự tin khi nói tiếng Anh bây giờ. (Unit 11)", options: [], answer: "I feel confident speaking English now.", type: "translate" },
   ],
+  sentenceCorrectionExercises: [
+    {
+      id: "sc12-1",
+      sentence: "There is three people in the meeting room.",
+      errorWord: "is",
+      correction: "are",
+      explanation_vn: "'Three people' là số nhiều → 'There ARE three people'. 'There IS' chỉ dùng với danh từ số ít.",
+    },
+    {
+      id: "sc12-2",
+      sentence: "How much is these shoes?",
+      errorWord: "is",
+      correction: "are",
+      explanation_vn: "'These shoes' là số nhiều → trợ động từ phải là 'are': 'How much ARE these shoes?'",
+    },
+  ],
+
+  listenAndArrangeExercises: [
+    {
+      id: "la12-1",
+      audio_text: "There are two chairs in the room.",
+      prompt_vn: "Có hai chiếc ghế trong phòng.",
+      words: ["There", "are", "two", "chairs", "in", "the", "room", ".", "is", "three"],
+      answer: "There are two chairs in the room .",
+    },
+    {
+      id: "la12-2",
+      audio_text: "How much are these shoes?",
+      prompt_vn: "Những đôi giày này giá bao nhiêu?",
+      words: ["How", "much", "are", "these", "shoes", "?", "is", "many"],
+      answer: "How much are these shoes ?",
+    },
+  ],
+
   wordBankExercises: [
     {
       id: "wb1",

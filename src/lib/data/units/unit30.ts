@@ -127,6 +127,40 @@ export const unit30: UnitData = {
     },
   ],
 
+  sentenceCorrectionExercises: [
+    {
+      id: "sc30-1",
+      sentence: "Plastic should recycle to save the planet.",
+      errorWord: "recycle",
+      correction: "be recycled",
+      explanation_vn: "Bi dạng bị động với modal: 'should BE recycled'. 'Should recycle' là chủ động, sai ngữ nghĩa.",
+    },
+    {
+      id: "sc30-2",
+      sentence: "Trees are cut everyday to make furniture.",
+      errorWord: "everyday",
+      correction: "every day",
+      explanation_vn: "'Every day' (mỗi ngày) viết tách hai từ; 'everyday' (tính từ) nghĩa là hằng ngày/bình thường.",
+    },
+  ],
+
+  listenAndArrangeExercises: [
+    {
+      id: "la30-1",
+      audio_text: "Plastic should be recycled to protect the environment.",
+      prompt_vn: "Nhựa phải được tái chế để bảo vệ môi trường.",
+      words: ["Plastic", "should", "be", "recycled", "to", "protect", "the", "environment", ".", "recycle", "reduce"],
+      answer: "Plastic should be recycled to protect the environment .",
+    },
+    {
+      id: "la30-2",
+      audio_text: "We must reduce our use of fossil fuels.",
+      prompt_vn: "Chúng ta phải giảm sử dụng nhiên liệu hóa thạch.",
+      words: ["We", "must", "reduce", "our", "use", "of", "fossil", "fuels", ".", "should", "stop"],
+      answer: "We must reduce our use of fossil fuels .",
+    },
+  ],
+
   wordBankExercises: [
     {
       id: "wb1",
@@ -154,11 +188,14 @@ export const unit30: UnitData = {
     { id: "s30-3", prompt_vn: "Thực phẩm hữu cơ ngày càng trở nên phổ biến.", words: ["Organic", "food", "is", "becoming", "more", "popular", "nowadays", "."], answer: "Organic food is becoming more popular nowadays ." },
   ],
   quiz: [
-    { id: "fq1", type: "multiple-choice", question: "Dịch câu: 'Việc giảm thiểu lượng khí thải nhà kính là cực kỳ quan trọng.'", options: ["It is crucial to reduce greenhouse gas emissions.", "It is easy to reduce greenhouse gas emissions.", "We should not reduce greenhouse gas emissions.", "Greenhouse gases are crucial to reduce."], answer: "It is crucial to reduce greenhouse gas emissions." },
+    { id: "fq1", type: "multiple-choice", question: "Dịch câu: 'Việc giảm thiểu lượng khí thải nhà kính là cực kỳ quan trọng.'", options: ["It is crucial to reduce greenhouse gas emissions.", "It is easy to reduce greenhouse gas emissions.", "We should not reduce greenhouse gas emissions.", "Greenhouse gases are crucial to reduce."], answer: "It is crucial to reduce greenhouse gas emissions.",
+      explanation_vn: "'It is crucial to + V' = cấu trúc giả định nhấn mạnh tầm quan trọng. 'It is easy' sai nghĩa; 'Greenhouse gases are crucial to reduce' lộn cấu trúc." },
     { id: "fq2", type: "cloze", question: "Điền từ: 'Wildlife ___ (sự bảo tồn) requires global cooperation.'", answer: "conservation" },
-    { id: "fq3", type: "multiple-choice", question: "Từ nào mô tả việc giữ cho môi trường bền vững?", options: ["polluted", "sustainable", "medical", "limited"], answer: "sustainable" },
+    { id: "fq3", type: "multiple-choice", question: "Từ nào mô tả việc giữ cho môi trường bền vững?", options: ["polluted", "sustainable", "medical", "limited"], answer: "sustainable",
+      explanation_vn: "'Sustainable' = bền vững, không gây hại môi trường lâu dài. 'Polluted' = ô nhiễm; 'medical' = y tế — không liên quan." },
     { id: "fq4", type: "translate", question: "Dịch: 'Tập thể dục giúp phòng ngừa nhiều bệnh tật.'", answer: "Exercise helps in the prevention of many diseases." },
-    { id: "fq5", type: "multiple-choice", question: "Điền động từ đúng: 'It is recommended that he ___ smoking.'", options: ["stops", "stop", "stopped", "to stop"], answer: "stop" },
+    { id: "fq5", type: "multiple-choice", question: "Điền động từ đúng: 'It is recommended that he ___ smoking.'", options: ["stops", "stop", "stopped", "to stop"], answer: "stop",
+      explanation_vn: "Sau 'It is recommended that S + ...' dùng subjunctive (ngưyên thể): 'he stop', không phải 'he stops' hay 'he stopped'." },
   ],
   cumulativeReviewQuestions: [
     { id: "cr30-1", question: "Ôn tập Unit 29 — Chọn từ: 'I propose that we ___ our website photos.'", options: ["optimize", "optimizes", "optimized", "optimizing"], answer: "optimize", type: "multiple-choice" },

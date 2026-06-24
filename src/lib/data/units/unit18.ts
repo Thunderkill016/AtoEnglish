@@ -134,6 +134,42 @@ export const unit18: UnitData = {
     },
   ],
 
+  sentenceCorrectionExercises: [
+    {
+      id: "sc18-1",
+      sentence: "I'd like order a coffee, please.",
+      errorWord: "order",
+      correction: "to order",
+      explanation_vn: "'I'd like TO + infinitive'. Sau 'would like' cần 'to': 'I'd like TO order'. Khác với 'enjoy + V-ing'.",
+    },
+    {
+      id: "sc18-2",
+      sentence: "Can I have some informations about the flight?",
+      errorWord: "informations",
+      correction: "information",
+      explanation_vn: "'Information' là danh từ không đếm được — không có dạng số nhiều. Không nói 'informations'.",
+    },
+  ],
+
+
+  listenAndArrangeExercises: [
+    {
+      id: "la18-1",
+      audio_text: "I would like to order a large coffee please.",
+      prompt_vn: "Tôi muốn gọi một cốc cà phê lớn.",
+      words: ["I", "would", "like", "to", "order", "a", "large", "coffee", "please", ".", "want", "ordering"],
+      answer: "I would like to order a large coffee please .",
+    },
+    {
+      id: "la18-2",
+      audio_text: "She is going to take the IELTS exam next month.",
+      prompt_vn: "Cô ấy sẽ thi IELTS vào tháng tới.",
+      words: ["She", "is", "going", "to", "take", "the", "IELTS", "exam", "next", "month", ".", "will", "takes"],
+      answer: "She is going to take the IELTS exam next month .",
+    },
+  ],
+
+
   wordBankExercises: [
     {
       id: "wb1",

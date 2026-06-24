@@ -127,6 +127,42 @@ export const unit33: UnitData = {
     },
   ],
 
+  sentenceCorrectionExercises: [
+    {
+      id: "sc33-1",
+      sentence: "If I have more time, I would travel the world.",
+      errorWord: "have",
+      correction: "had",
+      explanation_vn: "Second Conditional: 'If I HAD more time' (Past Simple trong mệnh đề if). Không dùng hiện tại.",
+    },
+    {
+      id: "sc33-2",
+      sentence: "She would went abroad if she had more money.",
+      errorWord: "would went",
+      correction: "would go",
+      explanation_vn: "'Would + bare infinitive': 'would GO'. 'Went' là quá khứ đơn, không đi với 'would'.",
+    },
+  ],
+
+
+  listenAndArrangeExercises: [
+    {
+      id: "la33-1",
+      audio_text: "If I had more money I would travel the world.",
+      prompt_vn: "Nếu tôi có nhiều tiền hơn tôi sẽ đi du lịch khắp nơi.",
+      words: ["If", "I", "had", "more", "money", "I", "would", "travel", "the", "world", ".", "have", "travelled"],
+      answer: "If I had more money I would travel the world .",
+    },
+    {
+      id: "la33-2",
+      audio_text: "She would move to the city if she could find a job.",
+      prompt_vn: "Cô ấy sẽ chuyển lên thành phố nếu tìm được việc.",
+      words: ["She", "would", "move", "to", "the", "city", "if", "she", "could", "find", "a", "job", ".", "moved", "can"],
+      answer: "She would move to the city if she could find a job .",
+    },
+  ],
+
+
   wordBankExercises: [
     {
       id: "wb1",

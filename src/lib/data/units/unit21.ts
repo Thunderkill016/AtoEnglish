@@ -129,6 +129,42 @@ export const unit21: UnitData = {
     },
   ],
 
+  sentenceCorrectionExercises: [
+    {
+      id: "sc21-1",
+      sentence: "By next year, I will finished my degree.",
+      errorWord: "will finished",
+      correction: "will have finished",
+      explanation_vn: "Future Perfect: 'will HAVE + past participle'. Diễn tả việc hoàn thành trước mốc tương lai.",
+    },
+    {
+      id: "sc21-2",
+      sentence: "In the future, people will flying cars.",
+      errorWord: "will flying",
+      correction: "will fly",
+      explanation_vn: "'Will + bare infinitive': 'will FLY'. Không dùng V-ing trực tiếp sau 'will'.",
+    },
+  ],
+
+
+  listenAndArrangeExercises: [
+    {
+      id: "la21-1",
+      audio_text: "By next year I will have finished my degree.",
+      prompt_vn: "Đến năm sau tôi sẽ hoàn thành bằng cấp.",
+      words: ["By", "next", "year", "I", "will", "have", "finished", "my", "degree", ".", "finish", "had"],
+      answer: "By next year I will have finished my degree .",
+    },
+    {
+      id: "la21-2",
+      audio_text: "In the future people will use electric cars.",
+      prompt_vn: "Trong tương lai mọi người sẽ dùng xe điện.",
+      words: ["In", "the", "future", "people", "will", "use", "electric", "cars", ".", "using", "drives"],
+      answer: "In the future people will use electric cars .",
+    },
+  ],
+
+
   wordBankExercises: [
     {
       id: "wb1",

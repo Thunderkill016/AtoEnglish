@@ -129,6 +129,42 @@ export const unit26: UnitData = {
     },
   ],
 
+  sentenceCorrectionExercises: [
+    {
+      id: "sc26-1",
+      sentence: "I prefer tea than coffee in the morning.",
+      errorWord: "than",
+      correction: "to",
+      explanation_vn: "Cấu trúc: 'prefer A TO B'. Không dùng 'than' sau 'prefer'. Ví dụ: 'prefer tea TO coffee'.",
+    },
+    {
+      id: "sc26-2",
+      sentence: "She would rather to stay home than go out.",
+      errorWord: "to stay",
+      correction: "stay",
+      explanation_vn: "'Would rather + bare infinitive' (không có 'to'). Đúng: 'would rather STAY home'.",
+    },
+  ],
+
+
+  listenAndArrangeExercises: [
+    {
+      id: "la26-1",
+      audio_text: "I prefer tea to coffee in the morning.",
+      prompt_vn: "Tôi thích trà hơn cà phê vào buổi sáng.",
+      words: ["I", "prefer", "tea", "to", "coffee", "in", "the", "morning", ".", "than", "over"],
+      answer: "I prefer tea to coffee in the morning .",
+    },
+    {
+      id: "la26-2",
+      audio_text: "She would rather stay home than go out tonight.",
+      prompt_vn: "Cô ấy thích ở nhà hơn là ra ngoài tối nay.",
+      words: ["She", "would", "rather", "stay", "home", "than", "go", "out", "tonight", ".", "to stay", "going"],
+      answer: "She would rather stay home than go out tonight .",
+    },
+  ],
+
+
   wordBankExercises: [
     {
       id: "wb1",

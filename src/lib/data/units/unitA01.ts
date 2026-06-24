@@ -314,6 +314,42 @@ export const unitA01: UnitData = {
   ],
 
   // ── SCRAMBLE: Sentence building with target chunks ─────────────────────────
+  sentenceCorrectionExercises: [
+    {
+      id: "sc-A01-1",
+      sentence: "My name are Lan.",
+      errorWord: "are",
+      correction: "is",
+      explanation_vn: "'Name' là danh từ số ít → 'My name IS Lan'. 'Are' dùng cho số nhiều hoặc you/we/they.",
+    },
+    {
+      id: "sc-A01-2",
+      sentence: "I have eight years old.",
+      errorWord: "have",
+      correction: "am",
+      explanation_vn: "Nói tuổi bằng 'to be': 'I AM eight years old'. Không dùng 'have' cho tuổi trong tiếng Anh.",
+    },
+  ],
+
+
+  listenAndArrangeExercises: [
+    {
+      id: "laA01-1",
+      audio_text: "My name is Lan and I am from Hanoi.",
+      prompt_vn: "Tên tôi là Lan và tôi đến từ Hà Nội.",
+      words: ["My", "name", "is", "Lan", "and", "I", "am", "from", "Hanoi", ".", "are", "be"],
+      answer: "My name is Lan and I am from Hanoi .",
+    },
+    {
+      id: "laA01-2",
+      audio_text: "Nice to meet you my name is Nam.",
+      prompt_vn: "Rất vui được gặp bạn tên tôi là Nam.",
+      words: ["Nice", "to", "meet", "you", "my", "name", "is", "Nam", ".", "are", "Nice meeting"],
+      answer: "Nice to meet you my name is Nam .",
+    },
+  ],
+
+
   wordBankExercises: [
     {
       id: "wb1",

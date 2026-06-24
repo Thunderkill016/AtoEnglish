@@ -129,6 +129,42 @@ export const unit23: UnitData = {
     },
   ],
 
+  sentenceCorrectionExercises: [
+    {
+      id: "sc23-1",
+      sentence: "If it will rain tomorrow, I will stay home.",
+      errorWord: "will rain",
+      correction: "rains",
+      explanation_vn: "First Conditional: mệnh đề 'If' dùng Present Simple (không dùng 'will'). 'If it RAINS, I will stay.'",
+    },
+    {
+      id: "sc23-2",
+      sentence: "She will call when she will arrive.",
+      errorWord: "will arrive",
+      correction: "arrives",
+      explanation_vn: "Sau 'when' (time clause) dùng Present Simple: 'when she ARRIVES'. Không dùng 'will' trong time clause.",
+    },
+  ],
+
+
+  listenAndArrangeExercises: [
+    {
+      id: "la23-1",
+      audio_text: "If it rains tomorrow I will stay at home.",
+      prompt_vn: "Nếu ngày mai trời mưa tôi sẽ ở nhà.",
+      words: ["If", "it", "rains", "tomorrow", "I", "will", "stay", "at", "home", ".", "will rain", "staying"],
+      answer: "If it rains tomorrow I will stay at home .",
+    },
+    {
+      id: "la23-2",
+      audio_text: "I will call you when I arrive at the airport.",
+      prompt_vn: "Tôi sẽ gọi cho bạn khi tôi đến sân bay.",
+      words: ["I", "will", "call", "you", "when", "I", "arrive", "at", "the", "airport", ".", "arrives", "will arrive"],
+      answer: "I will call you when I arrive at the airport .",
+    },
+  ],
+
+
   wordBankExercises: [
     {
       id: "wb1",

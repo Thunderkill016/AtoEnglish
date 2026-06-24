@@ -128,6 +128,42 @@ export const unit42: UnitData = {
     },
   ],
 
+  sentenceCorrectionExercises: [
+    {
+      id: "sc42-1",
+      sentence: "Had I known, I would of helped you immediately.",
+      errorWord: "would of helped",
+      correction: "would have helped",
+      explanation_vn: "'Would HAVE helped' — 'of' là lỗi phát âm của 'have'. Luôn viết 'would have', không 'would of'.",
+    },
+    {
+      id: "sc42-2",
+      sentence: "The man whom I spoke with him was very helpful.",
+      errorWord: "with him",
+      correction: "with",
+      explanation_vn: "'Whom I spoke with' — 'whom' đã thay thế 'him'. Không cần lặp lại 'him'. 'Spoke with whom' = 'spoke with him'.",
+    },
+  ],
+
+
+  listenAndArrangeExercises: [
+    {
+      id: "la42-1",
+      audio_text: "Had I known I would have helped you right away.",
+      prompt_vn: "Nếu tôi biết tôi đã giúp bạn ngay.",
+      words: ["Had", "I", "known", "I", "would", "have", "helped", "you", "right", "away", ".", "would of", "knew"],
+      answer: "Had I known I would have helped you right away .",
+    },
+    {
+      id: "la42-2",
+      audio_text: "The results were far better than we expected.",
+      prompt_vn: "Kết quả tốt hơn nhiều so với chúng tôi mong đợi.",
+      words: ["The", "results", "were", "far", "better", "than", "we", "expected", ".", "was", "good"],
+      answer: "The results were far better than we expected .",
+    },
+  ],
+
+
   wordBankExercises: [
     {
       id: "wb1",

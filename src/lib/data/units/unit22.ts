@@ -129,6 +129,42 @@ export const unit22: UnitData = {
     },
   ],
 
+  sentenceCorrectionExercises: [
+    {
+      id: "sc22-1",
+      sentence: "You must to wear a seatbelt when driving.",
+      errorWord: "must to",
+      correction: "must",
+      explanation_vn: "'Must' là động từ khiếm khuyết — KHÔNG dùng 'to' sau 'must'. Đúng: 'must wear' (bare infinitive).",
+    },
+    {
+      id: "sc22-2",
+      sentence: "He don't have to works on weekends.",
+      errorWord: "don't have to works",
+      correction: "doesn't have to work",
+      explanation_vn: "'He' → 'doesn't' + bare infinitive: 'doesn't have to WORK'. Không thêm '-s' sau 'to'.",
+    },
+  ],
+
+
+  listenAndArrangeExercises: [
+    {
+      id: "la22-1",
+      audio_text: "You must wear a helmet when riding a motorbike.",
+      prompt_vn: "Bạn phải đội mũ bảo hiểm khi đi xe máy.",
+      words: ["You", "must", "wear", "a", "helmet", "when", "riding", "a", "motorbike", ".", "have", "to"],
+      answer: "You must wear a helmet when riding a motorbike .",
+    },
+    {
+      id: "la22-2",
+      audio_text: "She doesn't have to work on Saturdays.",
+      prompt_vn: "Cô ấy không phải làm việc vào thứ Bảy.",
+      words: ["She", "doesn't", "have", "to", "work", "on", "Saturdays", ".", "don't", "works"],
+      answer: "She doesn't have to work on Saturdays .",
+    },
+  ],
+
+
   wordBankExercises: [
     {
       id: "wb1",

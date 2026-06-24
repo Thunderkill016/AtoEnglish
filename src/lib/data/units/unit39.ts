@@ -127,6 +127,42 @@ export const unit39: UnitData = {
     },
   ],
 
+  sentenceCorrectionExercises: [
+    {
+      id: "sc39-1",
+      sentence: "She must be tiredly after the long conference.",
+      errorWord: "tiredly",
+      correction: "tired",
+      explanation_vn: "Sau 'be' (linking verb) dùng tính từ: 'must be TIRED'. 'Tiredly' là trạng từ, không đứng sau 'be'.",
+    },
+    {
+      id: "sc39-2",
+      sentence: "He could been at the office this morning.",
+      errorWord: "could been",
+      correction: "could have been",
+      explanation_vn: "Modal deduction về quá khứ: 'could HAVE BEEN'. Không bỏ 'have' giữa modal và past participle.",
+    },
+  ],
+
+
+  listenAndArrangeExercises: [
+    {
+      id: "la39-1",
+      audio_text: "She must be very tired after the long trip.",
+      prompt_vn: "Cô ấy chắc rất mệt sau chuyến đi dài.",
+      words: ["She", "must", "be", "very", "tired", "after", "the", "long", "trip", ".", "tiredly", "is"],
+      answer: "She must be very tired after the long trip .",
+    },
+    {
+      id: "la39-2",
+      audio_text: "He might have been at the office this morning.",
+      prompt_vn: "Anh ấy có thể đã ở văn phòng sáng nay.",
+      words: ["He", "might", "have", "been", "at", "the", "office", "this", "morning", ".", "could been", "maybe"],
+      answer: "He might have been at the office this morning .",
+    },
+  ],
+
+
   wordBankExercises: [
     {
       id: "wb1",

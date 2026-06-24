@@ -128,6 +128,42 @@ export const unit35: UnitData = {
     },
   ],
 
+  sentenceCorrectionExercises: [
+    {
+      id: "sc35-1",
+      sentence: "Unless you won't study, you will fail the test.",
+      errorWord: "won't study",
+      correction: "study",
+      explanation_vn: "'Unless = if...not' — không thêm 'not/won't' sau 'unless'. 'Unless you STUDY' = 'if you don't study'.",
+    },
+    {
+      id: "sc35-2",
+      sentence: "As long as you will try, you can succeed.",
+      errorWord: "will try",
+      correction: "try",
+      explanation_vn: "Trong mệnh đề điều kiện (as long as/unless/if), dùng Present Simple: 'as long as you TRY'.",
+    },
+  ],
+
+
+  listenAndArrangeExercises: [
+    {
+      id: "la35-1",
+      audio_text: "Unless you study you will fail the exam.",
+      prompt_vn: "Trừ khi bạn học bạn sẽ trượt kỳ thi.",
+      words: ["Unless", "you", "study", "you", "will", "fail", "the", "exam", ".", "won't study", "don't"],
+      answer: "Unless you study you will fail the exam .",
+    },
+    {
+      id: "la35-2",
+      audio_text: "As long as you keep trying you can improve.",
+      prompt_vn: "Miễn là bạn tiếp tục cố gắng bạn sẽ tiến bộ.",
+      words: ["As", "long", "as", "you", "keep", "trying", "you", "can", "improve", ".", "will", "tries"],
+      answer: "As long as you keep trying you can improve .",
+    },
+  ],
+
+
   wordBankExercises: [
     {
       id: "wb1",

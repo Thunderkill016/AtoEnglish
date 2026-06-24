@@ -133,6 +133,40 @@ export const unit14: UnitData = {
     },
   ],
 
+  sentenceCorrectionExercises: [
+    {
+      id: "sc14-1",
+      sentence: "I will going to visit my friend tomorrow.",
+      errorWord: "going",
+      correction: "go",
+      explanation_vn: "'Will' + V nguyên mẫu: 'I will GO'. Không dùng 'will going to' — đó là lỗi kết hợp sai hai cấu trúc.",
+    },
+    {
+      id: "sc14-2",
+      sentence: "She is going to studies English next month.",
+      errorWord: "studies",
+      correction: "study",
+      explanation_vn: "'Going to' + V nguyên mẫu (không chia): 'going to STUDY'. 'Studies' chỉ dùng ở hiện tại đơn ngôi 3 số ít.",
+    },
+  ],
+
+  listenAndArrangeExercises: [
+    {
+      id: "la14-1",
+      audio_text: "I will visit my friend tomorrow.",
+      prompt_vn: "Ngày mai tôi sẽ đến thăm bạn.",
+      words: ["I", "will", "visit", "my", "friend", "tomorrow", ".", "going", "visited"],
+      answer: "I will visit my friend tomorrow .",
+    },
+    {
+      id: "la14-2",
+      audio_text: "She is going to study English.",
+      prompt_vn: "Cô ấy sẽ học tiếng Anh.",
+      words: ["She", "is", "going", "to", "study", "English", ".", "will", "studies"],
+      answer: "She is going to study English .",
+    },
+  ],
+
   wordBankExercises: [
     {
       id: "wb1",
@@ -176,11 +210,14 @@ export const unit14: UnitData = {
   ],
 
   quiz: [
-    { id: "fq1", type: "multiple-choice", question: "Dịch: 'Tháng tới chúng tôi sẽ ra mắt sản phẩm mới.'", options: ["Next month we launch a new product.", "Next month we are going to launch a new product.", "Next month we will launching a new product.", "Next month we launched a new product."], answer: "Next month we are going to launch a new product." },
+    { id: "fq1", type: "multiple-choice", question: "Dịch: 'Tháng tới chúng tôi sẽ ra mắt sản phẩm mới.'", options: ["Next month we launch a new product.", "Next month we are going to launch a new product.", "Next month we will launching a new product.", "Next month we launched a new product."], answer: "Next month we are going to launch a new product.",
+      explanation_vn: "Kế hoạch đã lên sẵn → 'going to'. 'Will launching' sai vì 'will' + V nguyên mẫu, không dùng -ing." },
     { id: "fq2", type: "cloze", question: "Điền: 'I ___ (probably / rain) this afternoon.'", answer: "will probably rain" },
-    { id: "fq3", type: "multiple-choice", question: "Chọn đúng: Bạn vừa quyết định mang ô đi vì thấy mây đen.", options: ["I'm going to bring an umbrella.", "I brought an umbrella.", "I will bring an umbrella.", "I bring an umbrella."], answer: "I will bring an umbrella." },
+    { id: "fq3", type: "multiple-choice", question: "Chọn đúng: Bạn vừa quyết định mang ô đi vì thấy mây đen.", options: ["I'm going to bring an umbrella.", "I brought an umbrella.", "I will bring an umbrella.", "I bring an umbrella."], answer: "I will bring an umbrella.",
+      explanation_vn: "Quyết định tức thì ngay lúc nói → dùng 'will'. 'Going to' dùng khi đã lên kế hoạch từ trước." },
     { id: "fq4", type: "translate", question: "Dịch sang tiếng Anh: 'Tôi hy vọng mọi thứ sẽ diễn ra suôn sẻ.'", answer: "I hope everything will go smoothly." },
-    { id: "fq5", type: "multiple-choice", question: "Câu nào ĐÚNG về ngữ pháp?", options: ["I going to prepare a report.", "I'm going to prepare a report. ✅", "I will going to prepare a report.", "I'm go to prepare a report."], answer: "I'm going to prepare a report. ✅" },
+    { id: "fq5", type: "multiple-choice", question: "Câu nào ĐÚNG về ngữ pháp?", options: ["I going to prepare a report.", "I'm going to prepare a report. ✅", "I will going to prepare a report.", "I'm go to prepare a report."], answer: "I'm going to prepare a report. ✅",
+      explanation_vn: "'Going to' cần có 'to be' phía trước: 'am/is/are + going to + V nguyên mẫu'. 'Will going to' là lỗi không được." },
   ],
 
   cumulativeReviewQuestions: [

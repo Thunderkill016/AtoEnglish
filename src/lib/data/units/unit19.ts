@@ -461,6 +461,42 @@ export const unit19: UnitData = {
     },
   ],
 
+  sentenceCorrectionExercises: [
+    {
+      id: "sc19-1",
+      sentence: "First, she go to the market and buy some vegetables.",
+      errorWord: "go",
+      correction: "went",
+      explanation_vn: "Kể chuyện quá khứ dùng Simple Past: 'go → went', 'buy → bought'. Thì phải nhất quán.",
+    },
+    {
+      id: "sc19-2",
+      sentence: "While I was cook dinner, the phone rang.",
+      errorWord: "cook",
+      correction: "cooking",
+      explanation_vn: "Past Continuous: 'was/were + V-ing'. 'Was COOKING' mô tả hành động đang diễn ra khi có sự kiện khác.",
+    },
+  ],
+
+
+  listenAndArrangeExercises: [
+    {
+      id: "la19-1",
+      audio_text: "She went to the market and bought some fruit.",
+      prompt_vn: "Cô ấy đi chợ và mua một ít trái cây.",
+      words: ["She", "went", "to", "the", "market", "and", "bought", "some", "fruit", ".", "go", "buyed"],
+      answer: "She went to the market and bought some fruit .",
+    },
+    {
+      id: "la19-2",
+      audio_text: "While I was reading the phone rang.",
+      prompt_vn: "Trong khi tôi đang đọc thì điện thoại reo.",
+      words: ["While", "I", "was", "reading", "the", "phone", "rang", ".", "read", "ringing"],
+      answer: "While I was reading the phone rang .",
+    },
+  ],
+
+
   wordBankExercises: [
     {
       id: "wb1",

@@ -277,6 +277,42 @@ export const unitA06: UnitData = {
     },
   ],
 
+  sentenceCorrectionExercises: [
+    {
+      id: "sc-A06-1",
+      sentence: "He has three child.",
+      errorWord: "child",
+      correction: "children",
+      explanation_vn: "'Child' số nhiều bất quy tắc: 'CHILDREN'. Không dùng 'childs'. Tương tự: man→men, woman→women.",
+    },
+    {
+      id: "sc-A06-2",
+      sentence: "She is my sister's.",
+      errorWord: "sister's",
+      correction: "sister",
+      explanation_vn: "'She is my sister' — không thêm '\\'s\" vào đây. '\\'s\" chỉ dùng cho sở hữu cách: 'my sister\\'s bag'.",
+    },
+  ],
+
+
+  listenAndArrangeExercises: [
+    {
+      id: "laA06-1",
+      audio_text: "She is my mother and he is my father.",
+      prompt_vn: "Đây là mẹ tôi và đây là bố tôi.",
+      words: ["She", "is", "my", "mother", "and", "he", "is", "my", "father", ".", "He is my mother", "They are"],
+      answer: "She is my mother and he is my father .",
+    },
+    {
+      id: "laA06-2",
+      audio_text: "My family has four people.",
+      prompt_vn: "Gia đình tôi có bốn người.",
+      words: ["My", "family", "has", "four", "people", ".", "have", "person"],
+      answer: "My family has four people .",
+    },
+  ],
+
+
   wordBankExercises: [
     {
       id: "wb1",

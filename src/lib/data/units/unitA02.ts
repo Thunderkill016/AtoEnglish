@@ -280,6 +280,42 @@ export const unitA02: UnitData = {
     },
   ],
 
+  sentenceCorrectionExercises: [
+    {
+      id: "sc-A02-1",
+      sentence: "How many is this pen?",
+      errorWord: "many",
+      correction: "much",
+      explanation_vn: "'How MUCH' hỏi giá tiền (không đếm theo số lượng rời). 'How many' hỏi số lượng: 'How many pens?'",
+    },
+    {
+      id: "sc-A02-2",
+      sentence: "It cost five dollar.",
+      errorWord: "five dollar",
+      correction: "five dollars",
+      explanation_vn: "Sau số lớn hơn 1, danh từ phải ở dạng số nhiều: 'five DOLLARS'. Không dùng 'dollar' sau số đếm.",
+    },
+  ],
+
+
+  listenAndArrangeExercises: [
+    {
+      id: "laA02-1",
+      audio_text: "How much is this pen?",
+      prompt_vn: "Cái bút này giá bao nhiêu?",
+      words: ["How", "much", "is", "this", "pen", "?", "many", "costs"],
+      answer: "How much is this pen ?",
+    },
+    {
+      id: "laA02-2",
+      audio_text: "It costs twenty thousand dong.",
+      prompt_vn: "Nó giá hai mươi nghìn đồng.",
+      words: ["It", "costs", "twenty", "thousand", "dong", ".", "cost", "is"],
+      answer: "It costs twenty thousand dong .",
+    },
+  ],
+
+
   wordBankExercises: [
     {
       id: "wb1",

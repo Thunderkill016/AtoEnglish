@@ -123,14 +123,51 @@ export const unit11: UnitData = {
     { id: "pt11-3", prompt_vn: "Cô ấy bị cảm lạnh.", answer: "She has a cold." },
   ],
   quiz: [
-    { id: "q1", question: "Câu nào đúng về bệnh:", options: ["I have headache.", "I have a headache.", "I feel a headache.", "I am a headache."], answer: "I have a headache.", type: "multiple-choice" },
-    { id: "q2", question: "Dùng từ gì cho cảm xúc?", options: ["have", "has", "feel", "am"], answer: "feel", type: "multiple-choice" },
-    { id: "q3", question: "'She ___ tired after the long meeting.' — điền đúng:", options: ["have", "has", "feel", "feels"], answer: "feels", type: "multiple-choice" },
+    { id: "q1", question: "Câu nào đúng về bệnh:", options: ["I have headache.", "I have a headache.", "I feel a headache.", "I am a headache."], answer: "I have a headache.", type: "multiple-choice",
+      explanation_vn: "Tên bệnh (headache, cold, fever) là danh từ đếm được số ít → bắt buộc có mạo từ 'a': 'I have A headache'." },
+    { id: "q2", question: "Dùng từ gì cho cảm xúc?", options: ["have", "has", "feel", "am"], answer: "feel", type: "multiple-choice",
+      explanation_vn: "Dùng 'feel' + tính từ cảm xúc (tired, happy, sad). 'Have/has' + danh từ bệnh (a headache)." },
+    { id: "q3", question: "'She ___ tired after the long meeting.' — điền đúng:", options: ["have", "has", "feel", "feels"], answer: "feels", type: "multiple-choice",
+      explanation_vn: "Chủ ngữ 'She' (ngôi thứ 3 số ít) → 'feel' thêm -s thành 'feels'. 'Have/has' không dùng với tính từ." },
     { id: "q4", question: "Điền vào: 'He ___ a cold and a fever.'", options: [], answer: "has", type: "cloze" },
     { id: "q5", question: "Điền vào: 'I feel ___ when I see my family.'", options: [], answer: "happy", type: "cloze" },
     { id: "q6", question: "Tôi bị đau đầu và cảm thấy mệt.", options: [], answer: "I have a headache and I feel tired.", type: "translate" },
     { id: "q7", question: "Bạn nên nghỉ ngơi khi bạn bị ốm.", options: [], answer: "You should rest when you are sick.", type: "translate" },
   ],
+  sentenceCorrectionExercises: [
+    {
+      id: "sc11-1",
+      sentence: "I have headache and I feel tired.",
+      errorWord: "headache",
+      correction: "a headache",
+      explanation_vn: "Danh từ bệnh số ít (headache, fever, cold) cần mạo từ 'a' phía trước: 'have A headache'.",
+    },
+    {
+      id: "sc11-2",
+      sentence: "She feel sick today and cannot go to work.",
+      errorWord: "feel",
+      correction: "feels",
+      explanation_vn: "Chủ ngữ 'She' → động từ thêm -s: 'feels'. Quy tắc ngôi thứ 3 số ít trong hiện tại đơn.",
+    },
+  ],
+
+  listenAndArrangeExercises: [
+    {
+      id: "la11-1",
+      audio_text: "I have a headache today.",
+      prompt_vn: "Hôm nay tôi bị đau đầu.",
+      words: ["I", "have", "a", "headache", "today", ".", "feel", "fever"],
+      answer: "I have a headache today .",
+    },
+    {
+      id: "la11-2",
+      audio_text: "She feels tired and sick.",
+      prompt_vn: "Cô ấy cảm thấy mệt và ốm.",
+      words: ["She", "feels", "tired", "and", "sick", ".", "feel", "happy"],
+      answer: "She feels tired and sick .",
+    },
+  ],
+
   wordBankExercises: [
     {
       id: "wb1",

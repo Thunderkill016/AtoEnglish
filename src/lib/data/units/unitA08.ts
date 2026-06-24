@@ -283,6 +283,42 @@ export const unitA08: UnitData = {
     },
   ],
 
+  sentenceCorrectionExercises: [
+    {
+      id: "sc-A08-1",
+      sentence: "Call a ambulance right now!",
+      errorWord: "a ambulance",
+      correction: "an ambulance",
+      explanation_vn: "Trước nguyên âm (a, e, i, o, u) dùng 'AN': 'AN ambulance'. 'A' dùng trước phụ âm.",
+    },
+    {
+      id: "sc-A08-2",
+      sentence: "I need a help please.",
+      errorWord: "a help",
+      correction: "help",
+      explanation_vn: "'Help' là danh từ không đếm được — không dùng 'a' trước 'help'. Đúng: 'I need HELP'.",
+    },
+  ],
+
+
+  listenAndArrangeExercises: [
+    {
+      id: "laA08-1",
+      audio_text: "Please call an ambulance right away.",
+      prompt_vn: "Vui lòng gọi xe cấp cứu ngay.",
+      words: ["Please", "call", "an", "ambulance", "right", "away", ".", "a ambulance", "calling"],
+      answer: "Please call an ambulance right away .",
+    },
+    {
+      id: "laA08-2",
+      audio_text: "I need help this is an emergency.",
+      prompt_vn: "Tôi cần giúp đỡ đây là tình huống khẩn cấp.",
+      words: ["I", "need", "help", "this", "is", "an", "emergency", ".", "a help", "needs"],
+      answer: "I need help this is an emergency .",
+    },
+  ],
+
+
   wordBankExercises: [
     {
       id: "wb1",

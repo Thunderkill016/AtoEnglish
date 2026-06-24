@@ -129,6 +129,42 @@ export const unit25: UnitData = {
     },
   ],
 
+  sentenceCorrectionExercises: [
+    {
+      id: "sc25-1",
+      sentence: "The man who he works here is my manager.",
+      errorWord: "who he",
+      correction: "who",
+      explanation_vn: "'Who' đã thay thế chủ ngữ 'he' — không viết cả hai. 'The man who works here' (không có 'he').",
+    },
+    {
+      id: "sc25-2",
+      sentence: "That is the city where I was born in.",
+      errorWord: "born in",
+      correction: "born",
+      explanation_vn: "'Where' đã bao gồm nghĩa giới từ 'in'. Không viết thêm 'in' sau 'where I was born'.",
+    },
+  ],
+
+
+  listenAndArrangeExercises: [
+    {
+      id: "la25-1",
+      audio_text: "She is the person who helped me with the project.",
+      prompt_vn: "Cô ấy là người đã giúp tôi trong dự án.",
+      words: ["She", "is", "the", "person", "who", "helped", "me", "with", "the", "project", ".", "which", "whom"],
+      answer: "She is the person who helped me with the project .",
+    },
+    {
+      id: "la25-2",
+      audio_text: "That is the city where I was born.",
+      prompt_vn: "Đó là thành phố nơi tôi sinh ra.",
+      words: ["That", "is", "the", "city", "where", "I", "was", "born", ".", "which", "in"],
+      answer: "That is the city where I was born .",
+    },
+  ],
+
+
   wordBankExercises: [
     {
       id: "wb1",

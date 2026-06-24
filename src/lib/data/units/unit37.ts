@@ -128,6 +128,42 @@ export const unit37: UnitData = {
     },
   ],
 
+  sentenceCorrectionExercises: [
+    {
+      id: "sc37-1",
+      sentence: "The reason is because I was late for the meeting.",
+      errorWord: "is because",
+      correction: "is that",
+      explanation_vn: "'The reason is THAT...' (chuẩn văn viết). 'The reason is because' là lỗi redundancy phổ biến.",
+    },
+    {
+      id: "sc37-2",
+      sentence: "Despite of the rain she walked to work.",
+      errorWord: "Despite of",
+      correction: "Despite",
+      explanation_vn: "'Despite + noun/V-ing' (không có 'of'). 'In spite OF' mới có 'of'. Lỗi phổ biến trong IELTS.",
+    },
+  ],
+
+
+  listenAndArrangeExercises: [
+    {
+      id: "la37-1",
+      audio_text: "Despite the rain she walked to work this morning.",
+      prompt_vn: "Dù trời mưa cô ấy vẫn đi bộ đến công ty.",
+      words: ["Despite", "the", "rain", "she", "walked", "to", "work", "this", "morning", ".", "Despite of", "In spite"],
+      answer: "Despite the rain she walked to work this morning .",
+    },
+    {
+      id: "la37-2",
+      audio_text: "Although he was tired he continued working.",
+      prompt_vn: "Dù mệt anh ấy vẫn tiếp tục làm việc.",
+      words: ["Although", "he", "was", "tired", "he", "continued", "working", ".", "Despite", "Even"],
+      answer: "Although he was tired he continued working .",
+    },
+  ],
+
+
   wordBankExercises: [
     {
       id: "wb1",

@@ -133,6 +133,42 @@ export const unit17: UnitData = {
     },
   ],
 
+  sentenceCorrectionExercises: [
+    {
+      id: "sc17-1",
+      sentence: "I have went to London twice.",
+      errorWord: "went",
+      correction: "gone",
+      explanation_vn: "Present Perfect dùng past participle: 'go → GONE'. 'Went' là Simple Past, không dùng với 'have'.",
+    },
+    {
+      id: "sc17-2",
+      sentence: "She has already leave the office.",
+      errorWord: "leave",
+      correction: "left",
+      explanation_vn: "'Leave' → 'left' (bất quy tắc). Sau 'has/have' luôn dùng past participle, không nguyên mẫu.",
+    },
+  ],
+
+
+  listenAndArrangeExercises: [
+    {
+      id: "la17-1",
+      audio_text: "I have never been to Paris before.",
+      prompt_vn: "Tôi chưa bao giờ đến Paris.",
+      words: ["I", "have", "never", "been", "to", "Paris", "before", ".", "went", "gone"],
+      answer: "I have never been to Paris before .",
+    },
+    {
+      id: "la17-2",
+      audio_text: "She has already finished her report.",
+      prompt_vn: "Cô ấy đã hoàn thành báo cáo rồi.",
+      words: ["She", "has", "already", "finished", "her", "report", ".", "have", "finish"],
+      answer: "She has already finished her report .",
+    },
+  ],
+
+
   wordBankExercises: [
     {
       id: "wb1",

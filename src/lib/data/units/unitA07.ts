@@ -279,6 +279,42 @@ export const unitA07: UnitData = {
     },
   ],
 
+  sentenceCorrectionExercises: [
+    {
+      id: "sc-A07-1",
+      sentence: "The meeting is in Monday in nine o'clock.",
+      errorWord: "in Monday in nine",
+      correction: "on Monday at nine",
+      explanation_vn: "Giới từ thời gian: ON + ngày, AT + giờ. 'IN' dùng cho tháng/năm/mùa. 'ON Monday AT nine'.",
+    },
+    {
+      id: "sc-A07-2",
+      sentence: "Today is Monday, march five.",
+      errorWord: "march five",
+      correction: "March fifth",
+      explanation_vn: "Tên tháng viết hoa: 'MARCH'. Ngày dùng ordinal number: 'fifth' (không phải 'five').",
+    },
+  ],
+
+
+  listenAndArrangeExercises: [
+    {
+      id: "laA07-1",
+      audio_text: "The meeting is on Monday at nine o clock.",
+      prompt_vn: "Cuộc họp vào thứ Hai lúc chín giờ.",
+      words: ["The", "meeting", "is", "on", "Monday", "at", "nine", "o", "clock", ".", "in", "at Monday"],
+      answer: "The meeting is on Monday at nine o clock .",
+    },
+    {
+      id: "laA07-2",
+      audio_text: "Today is Tuesday the third of June.",
+      prompt_vn: "Hôm nay là thứ Ba ngày ba tháng Sáu.",
+      words: ["Today", "is", "Tuesday", "the", "third", "of", "June", ".", "third June", "on Tuesday"],
+      answer: "Today is Tuesday the third of June .",
+    },
+  ],
+
+
   wordBankExercises: [
     {
       id: "wb1",

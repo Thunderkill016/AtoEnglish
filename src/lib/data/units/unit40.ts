@@ -127,6 +127,42 @@ export const unit40: UnitData = {
     },
   ],
 
+  sentenceCorrectionExercises: [
+    {
+      id: "sc40-1",
+      sentence: "However, he went. But he didn't stay long.",
+      errorWord: "However, he went. But",
+      correction: "However, he went, but",
+      explanation_vn: "'However' và 'but' đều là từ tương phản — dùng một trong hai, không cả hai trong cùng ý.",
+    },
+    {
+      id: "sc40-2",
+      sentence: "In addition of that, we need more resources.",
+      errorWord: "In addition of",
+      correction: "In addition to",
+      explanation_vn: "'In addition TO + noun'. 'In addition of' không tồn tại trong tiếng Anh chuẩn.",
+    },
+  ],
+
+
+  listenAndArrangeExercises: [
+    {
+      id: "la40-1",
+      audio_text: "Moreover the study shows very positive results.",
+      prompt_vn: "Hơn nữa nghiên cứu cho thấy kết quả rất tích cực.",
+      words: ["Moreover", "the", "study", "shows", "very", "positive", "results", ".", "Furthermore", "However"],
+      answer: "Moreover the study shows very positive results .",
+    },
+    {
+      id: "la40-2",
+      audio_text: "However we need more evidence to confirm this finding.",
+      prompt_vn: "Tuy nhiên chúng ta cần thêm bằng chứng để xác nhận điều này.",
+      words: ["However", "we", "need", "more", "evidence", "to", "confirm", "this", "finding", ".", "Therefore", "Despite"],
+      answer: "However we need more evidence to confirm this finding .",
+    },
+  ],
+
+
   wordBankExercises: [
     {
       id: "wb1",

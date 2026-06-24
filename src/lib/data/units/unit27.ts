@@ -129,6 +129,40 @@ export const unit27: UnitData = {
     },
   ],
 
+  sentenceCorrectionExercises: [
+    {
+      id: "sc27-1",
+      sentence: "I have my hair cut yesterday.",
+      errorWord: "have",
+      correction: "had",
+      explanation_vn: "Causative với thời gian quá khứ phải dùng 'had': 'I had my hair cut yesterday'.",
+    },
+    {
+      id: "sc27-2",
+      sentence: "She get her car repaired every month.",
+      errorWord: "get",
+      correction: "gets",
+      explanation_vn: "Chủ ngữ 'She' (ngôi 3 số ít) cần thêm '-s': 'gets her car repaired'.",
+    },
+  ],
+
+  listenAndArrangeExercises: [
+    {
+      id: "la27-1",
+      audio_text: "I had my hair cut at the salon.",
+      prompt_vn: "Tôi đã cắt tóc tại tiệm.",
+      words: ["I", "had", "my", "hair", "cut", "at", "the", "salon", ".", "get", "done"],
+      answer: "I had my hair cut at the salon .",
+    },
+    {
+      id: "la27-2",
+      audio_text: "She got her car repaired last week.",
+      prompt_vn: "Cô ấy đã sửa xe tuần trước.",
+      words: ["She", "got", "her", "car", "repaired", "last", "week", ".", "had", "fixed"],
+      answer: "She got her car repaired last week .",
+    },
+  ],
+
   wordBankExercises: [
     {
       id: "wb1",
@@ -156,11 +190,14 @@ export const unit27: UnitData = {
     { id: "s27-3", prompt_vn: "Cô ấy đảm nhận dự án và nộp báo cáo trước thứ Năm.", words: ["She", "took", "on", "the", "project", "and", "handed", "in", "the", "report", "by", "Thursday", "."], answer: "She took on the project and handed in the report by Thursday ." },
   ],
   quiz: [
-    { id: "fq1", type: "multiple-choice", question: "Dịch: 'Tôi sẽ theo dõi với khách hàng và tìm hiểu tiến độ của họ.'", options: ["I'll follow with the client and find their timeline.", "I'll follow up with the client and find out their timeline.", "I'll follow up with the client and find their timeline out.", "I'll follow the client and find out their timeline."], answer: "I'll follow up with the client and find out their timeline." },
+    { id: "fq1", type: "multiple-choice", question: "Dịch: 'Tôi sẽ theo dõi với khách hàng và tìm hiểu tiến độ của họ.'", options: ["I'll follow with the client and find their timeline.", "I'll follow up with the client and find out their timeline.", "I'll follow up with the client and find their timeline out.", "I'll follow the client and find out their timeline."], answer: "I'll follow up with the client and find out their timeline.",
+      explanation_vn: "'follow up with' = theo dõi; 'find out' = tìm hiểu — cả hai là phrasal verb inseparable đúng chuẩn." },
     { id: "fq2", type: "cloze", question: "Điền: 'Don't ___ the decision. We need to ___ it ___ today.' (đừng hoãn / giải quyết)", answer: "put off / sort / out" },
-    { id: "fq3", type: "multiple-choice", question: "Câu nào dùng phrasal verb tự nhiên nhất trong email công việc?", options: ["Please investigate the matter and contact me.", "Please look into the matter and get back to me.", "Please check the matter and reply to me.", "Please see the matter and answer me."], answer: "Please look into the matter and get back to me." },
+    { id: "fq3", type: "multiple-choice", question: "Câu nào dùng phrasal verb tự nhiên nhất trong email công việc?", options: ["Please investigate the matter and contact me.", "Please look into the matter and get back to me.", "Please check the matter and reply to me.", "Please see the matter and answer me."], answer: "Please look into the matter and get back to me.",
+      explanation_vn: "'look into' (điều tra) và 'get back to' (phản hồi) là phrasal verb chuẩn trong email; 'investigate/contact/check/reply' quá formal hoặc ít tự nhiên hơn." },
     { id: "fq4", type: "translate", question: "Dịch: 'Cô ấy đề cập vấn đề ngân sách và đề xuất hoãn dự án.'", answer: "She brought up the budget issue and suggested putting off the project." },
-    { id: "fq5", type: "multiple-choice", question: "Separable phrasal verb với pronoun ĐÚNG:", options: ["Please sort out it.", "Please sort it out.", "Please look the issue into.", "Please find out it."], answer: "Please sort it out." },
+    { id: "fq5", type: "multiple-choice", question: "Separable phrasal verb với pronoun ĐÚNG:", options: ["Please sort out it.", "Please sort it out.", "Please look the issue into.", "Please find out it."], answer: "Please sort it out.",
+      explanation_vn: "Với separable phrasal verb + pronoun, pronoun PHẢI đứng giữa: 'sort IT out'. 'Sort out it' và 'find out it' sai; 'look into' inseparable." },
   ],
   cumulativeReviewQuestions: [
     { id: "cr27-1", question: "Ôn tập Unit 26 — Đúng: 'I suggest ___ a new approach.'", options: ["to try", "trying", "try", "to trying"], answer: "trying", type: "multiple-choice" },

@@ -134,6 +134,42 @@ export const unit16: UnitData = {
     },
   ],
 
+  sentenceCorrectionExercises: [
+    {
+      id: "sc16-1",
+      sentence: "I travel to work by the bus every day.",
+      errorWord: "by the bus",
+      correction: "by bus",
+      explanation_vn: "Phương tiện giao thông: 'by bus/car/train/taxi' — không dùng 'the' sau 'by'.",
+    },
+    {
+      id: "sc16-2",
+      sentence: "The plane arrives to the airport at noon.",
+      errorWord: "arrives to",
+      correction: "arrives at",
+      explanation_vn: "'Arrive AT' một địa điểm cụ thể. 'Arrive IN' thành phố/quốc gia. Không dùng 'arrive to'.",
+    },
+  ],
+
+
+  listenAndArrangeExercises: [
+    {
+      id: "la16-1",
+      audio_text: "I travel to work by bus every morning.",
+      prompt_vn: "Tôi đi làm bằng xe buýt mỗi sáng.",
+      words: ["I", "travel", "to", "work", "by", "bus", "every", "morning", ".", "the", "car"],
+      answer: "I travel to work by bus every morning .",
+    },
+    {
+      id: "la16-2",
+      audio_text: "The hotel is next to the train station.",
+      prompt_vn: "Khách sạn kế bên ga tàu.",
+      words: ["The", "hotel", "is", "next", "to", "the", "train", "station", ".", "near", "opposite"],
+      answer: "The hotel is next to the train station .",
+    },
+  ],
+
+
   wordBankExercises: [
     {
       id: "wb1",

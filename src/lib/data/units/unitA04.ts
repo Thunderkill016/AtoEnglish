@@ -282,6 +282,42 @@ export const unitA04: UnitData = {
     },
   ],
 
+  sentenceCorrectionExercises: [
+    {
+      id: "sc-A04-1",
+      sentence: "Thank you. You welcome.",
+      errorWord: "You welcome",
+      correction: "You're welcome",
+      explanation_vn: "Đáp lại lời cảm ơn: 'You're welcome' (viết tắt của 'You are welcome'). Không nói 'You welcome'.",
+    },
+    {
+      id: "sc-A04-2",
+      sentence: "Good morning! How you?",
+      errorWord: "How you",
+      correction: "How are you",
+      explanation_vn: "Câu hỏi thăm cần 'to be': 'How ARE you?' — không bỏ 'are'. Lỗi phổ biến khi dịch từ tiếng Việt.",
+    },
+  ],
+
+
+  listenAndArrangeExercises: [
+    {
+      id: "laA04-1",
+      audio_text: "Good morning how are you today?",
+      prompt_vn: "Chào buổi sáng bạn có khỏe không?",
+      words: ["Good", "morning", "how", "are", "you", "today", "?", "How you", "Good day"],
+      answer: "Good morning how are you today ?",
+    },
+    {
+      id: "laA04-2",
+      audio_text: "I am fine thank you very much.",
+      prompt_vn: "Tôi khỏe cảm ơn bạn rất nhiều.",
+      words: ["I", "am", "fine", "thank", "you", "very", "much", ".", "I fine", "Thanks"],
+      answer: "I am fine thank you very much .",
+    },
+  ],
+
+
   wordBankExercises: [
     {
       id: "wb1",

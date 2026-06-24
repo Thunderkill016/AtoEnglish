@@ -129,6 +129,42 @@ export const unit24: UnitData = {
     },
   ],
 
+  sentenceCorrectionExercises: [
+    {
+      id: "sc24-1",
+      sentence: "Coffee is grew in Vietnam and Brazil.",
+      errorWord: "grew",
+      correction: "grown",
+      explanation_vn: "Passive dùng past participle: 'grow → GROWN'. 'Grew' là Simple Past, không dùng trong passive.",
+    },
+    {
+      id: "sc24-2",
+      sentence: "The book was writed by a famous author.",
+      errorWord: "writed",
+      correction: "written",
+      explanation_vn: "'Write → written' (bất quy tắc). Không có 'writed'. Passive: was/were + PAST PARTICIPLE.",
+    },
+  ],
+
+
+  listenAndArrangeExercises: [
+    {
+      id: "la24-1",
+      audio_text: "Coffee is grown in Vietnam and Brazil.",
+      prompt_vn: "Cà phê được trồng ở Việt Nam và Brazil.",
+      words: ["Coffee", "is", "grown", "in", "Vietnam", "and", "Brazil", ".", "grew", "grows"],
+      answer: "Coffee is grown in Vietnam and Brazil .",
+    },
+    {
+      id: "la24-2",
+      audio_text: "This bridge was built in two thousand and ten.",
+      prompt_vn: "Cây cầu này được xây dựng năm 2010.",
+      words: ["This", "bridge", "was", "built", "in", "two", "thousand", "and", "ten", ".", "build", "builded"],
+      answer: "This bridge was built in two thousand and ten .",
+    },
+  ],
+
+
   wordBankExercises: [
     {
       id: "wb1",

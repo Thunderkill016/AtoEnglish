@@ -127,6 +127,42 @@ export const unit38: UnitData = {
     },
   ],
 
+  sentenceCorrectionExercises: [
+    {
+      id: "sc38-1",
+      sentence: "It was him who done it first.",
+      errorWord: "done",
+      correction: "did",
+      explanation_vn: "Sau 'who' trong relative clause dùng động từ đúng ngôi: 'who DID it'. 'Done' cần 'had/has'.",
+    },
+    {
+      id: "sc38-2",
+      sentence: "What I need it is more practice every day.",
+      errorWord: "need it",
+      correction: "need",
+      explanation_vn: "Cleft sentence: 'What I need IS...' — 'what' đã là chủ ngữ, không thêm 'it'. 'What I need IT is' thừa 'it'.",
+    },
+  ],
+
+
+  listenAndArrangeExercises: [
+    {
+      id: "la38-1",
+      audio_text: "It was the teacher who inspired me the most.",
+      prompt_vn: "Chính người thầy đó đã truyền cảm hứng cho tôi nhất.",
+      words: ["It", "was", "the", "teacher", "who", "inspired", "me", "the", "most", ".", "whom", "which"],
+      answer: "It was the teacher who inspired me the most .",
+    },
+    {
+      id: "la38-2",
+      audio_text: "Rarely does a company succeed without teamwork.",
+      prompt_vn: "Hiếm khi một công ty thành công mà thiếu tinh thần đồng đội.",
+      words: ["Rarely", "does", "a", "company", "succeed", "without", "teamwork", ".", "do", "Rarely a"],
+      answer: "Rarely does a company succeed without teamwork .",
+    },
+  ],
+
+
   wordBankExercises: [
     {
       id: "wb1",

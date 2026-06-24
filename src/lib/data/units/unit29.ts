@@ -129,6 +129,40 @@ export const unit29: UnitData = {
     },
   ],
 
+  sentenceCorrectionExercises: [
+    {
+      id: "sc29-1",
+      sentence: "I suggest to go to the doctor right away.",
+      errorWord: "to go",
+      correction: "going",
+      explanation_vn: "Sau 'suggest' dùng V-ing, không dùng 'to + V': 'I suggest going to the doctor'.",
+    },
+    {
+      id: "sc29-2",
+      sentence: "He recommend that we leaving early.",
+      errorWord: "leaving",
+      correction: "leave",
+      explanation_vn: "Sau 'recommend that S + ...' dùng động từ nguyên mẫu (subjunctive): 'we leave', không phải 'we leaving'.",
+    },
+  ],
+
+  listenAndArrangeExercises: [
+    {
+      id: "la29-1",
+      audio_text: "I suggest going to the doctor right away.",
+      prompt_vn: "Tôi đề nghị đi khám bác sĩ ngay bây giở.",
+      words: ["I", "suggest", "going", "to", "the", "doctor", "right", "away", ".", "propose", "visit"],
+      answer: "I suggest going to the doctor right away .",
+    },
+    {
+      id: "la29-2",
+      audio_text: "He recommends eating more vegetables.",
+      prompt_vn: "Anh ấy khưyến nghị ăn nhiều rau hơn.",
+      words: ["He", "recommends", "eating", "more", "vegetables", ".", "suggest", "to eat"],
+      answer: "He recommends eating more vegetables .",
+    },
+  ],
+
   wordBankExercises: [
     {
       id: "wb1",
@@ -156,11 +190,14 @@ export const unit29: UnitData = {
     { id: "s29-3", prompt_vn: "Đó là một giải pháp khả thi cho vấn đề kỹ thuật.", words: ["That", "is", "a", "feasible", "solution", "to", "the", "technical", "problem", "."], answer: "That is a feasible solution to the technical problem ." },
   ],
   quiz: [
-    { id: "fq1", type: "multiple-choice", question: "Dịch đề xuất lịch sự: 'Chúng ta có thể cân nhắc việc hoàn tiền phí vận chuyển.'", options: ["We must refund the shipping fee.", "We could consider refunding the shipping fee.", "Refund the shipping fee now.", "We did refund the shipping fee."], answer: "We could consider refunding the shipping fee." },
+    { id: "fq1", type: "multiple-choice", question: "Dịch đề xuất lịch sự: 'Chúng ta có thể cân nhắc việc hoàn tiền phí vận chuyển.'", options: ["We must refund the shipping fee.", "We could consider refunding the shipping fee.", "Refund the shipping fee now.", "We did refund the shipping fee."], answer: "We could consider refunding the shipping fee.",
+      explanation_vn: "'could consider + V-ing' — đề xuất nhẹ nhàng, lịch sự. 'must refund' quá trực tiếp; 'could' phù hợp gữa các bên." },
     { id: "fq2", type: "cloze", question: "Điền từ: 'The team reached a ___ (sự đồng thuận) after three hours.'", answer: "consensus" },
-    { id: "fq3", type: "multiple-choice", question: "Chọn câu hỏi phản hồi phù hợp nhất:", options: ["What do you propose?", "Have you requested their feedback?", "Is it feasible?", "Can we overcome this obstacle?"], answer: "Have you requested their feedback?" },
+    { id: "fq3", type: "multiple-choice", question: "Chọn câu hỏi phản hồi phù hợp nhất:", options: ["What do you propose?", "Have you requested their feedback?", "Is it feasible?", "Can we overcome this obstacle?"], answer: "Have you requested their feedback?",
+      explanation_vn: "'Đã hỏi phản hồi chưa?' — đây là bước quan trọ ng bảy trước khi ra quyết định giải quyết khiếu nại. Các đáp án khác đặt vấn đề không đúng ngữ cảnh." },
     { id: "fq4", type: "translate", question: "Dịch: 'Chúng ta cần tìm một giải pháp thay thế.'", answer: "We need to find an alternative solution." },
-    { id: "fq5", type: "multiple-choice", question: "Điền giới từ: 'We need to reach a consensus ___ the new budget.'", options: ["on", "with", "at", "for"], answer: "on" },
+    { id: "fq5", type: "multiple-choice", question: "Điền giới từ: 'We need to reach a consensus ___ the new budget.'", options: ["on", "with", "at", "for"], answer: "on",
+      explanation_vn: "'reach a consensus ON sth' là collocation đúng. 'agree on', 'decide on' cũng theo quy tắc này." },
   ],
   cumulativeReviewQuestions: [
     { id: "cr29-1", question: "Ôn tập Unit 28 — Điền: 'I ___ (study) English for six months now.'", options: ["have studied", "have been studying", "am studying", "studied"], answer: "have been studying", type: "multiple-choice" },

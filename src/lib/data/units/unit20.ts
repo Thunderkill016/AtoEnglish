@@ -149,6 +149,42 @@ export const unit20: UnitData = {
     },
   ],
 
+  sentenceCorrectionExercises: [
+    {
+      id: "sc20-1",
+      sentence: "By the time he arrived, she already left.",
+      errorWord: "already left",
+      correction: "had already left",
+      explanation_vn: "Past Perfect: hành động xảy ra TRƯỚC → 'had + past participle'. 'Had already left' = đã rời đi rồi.",
+    },
+    {
+      id: "sc20-2",
+      sentence: "When I got home, I realized I forgot my keys.",
+      errorWord: "forgot",
+      correction: "had forgotten",
+      explanation_vn: "'Realized' (quá khứ đơn) xảy ra sau → 'forgetting' xảy ra trước → cần Past Perfect 'had forgotten'.",
+    },
+  ],
+
+
+  listenAndArrangeExercises: [
+    {
+      id: "la20-1",
+      audio_text: "By the time she called I had already left.",
+      prompt_vn: "Khi cô ấy gọi tôi đã rời đi rồi.",
+      words: ["By", "the", "time", "she", "called", "I", "had", "already", "left", ".", "left", "gone"],
+      answer: "By the time she called I had already left .",
+    },
+    {
+      id: "la20-2",
+      audio_text: "When we arrived the meeting had already started.",
+      prompt_vn: "Khi chúng tôi đến cuộc họp đã bắt đầu rồi.",
+      words: ["When", "we", "arrived", "the", "meeting", "had", "already", "started", ".", "began", "start"],
+      answer: "When we arrived the meeting had already started .",
+    },
+  ],
+
+
   wordBankExercises: [
     {
       id: "wb1",

@@ -131,6 +131,42 @@ export const unit41: UnitData = {
     },
   ],
 
+  sentenceCorrectionExercises: [
+    {
+      id: "sc41-1",
+      sentence: "Regarding to the graph, sales increased by 20%.",
+      errorWord: "Regarding to",
+      correction: "Regarding",
+      explanation_vn: "'Regarding + noun' (không có 'to'). 'With regard TO' mới có 'to'. Lỗi phổ biến trong IELTS Task 1.",
+    },
+    {
+      id: "sc41-2",
+      sentence: "The data show that temperatures have risen sharply.",
+      errorWord: "show",
+      correction: "shows",
+      explanation_vn: "Trong văn học thuật tiếng Anh, 'data' thường đi với động từ số ít: 'the data SHOWS'. (Hoặc chấp nhận 'show' trong British).",
+    },
+  ],
+
+
+  listenAndArrangeExercises: [
+    {
+      id: "la41-1",
+      audio_text: "The graph shows a significant increase in sales.",
+      prompt_vn: "Biểu đồ cho thấy mức tăng đáng kể trong doanh số.",
+      words: ["The", "graph", "shows", "a", "significant", "increase", "in", "sales", ".", "show", "indicating"],
+      answer: "The graph shows a significant increase in sales .",
+    },
+    {
+      id: "la41-2",
+      audio_text: "In conclusion further research is needed in this area.",
+      prompt_vn: "Tóm lại cần có thêm nghiên cứu trong lĩnh vực này.",
+      words: ["In", "conclusion", "further", "research", "is", "needed", "in", "this", "area", ".", "To conclude", "needs"],
+      answer: "In conclusion further research is needed in this area .",
+    },
+  ],
+
+
   wordBankExercises: [
     {
       id: "wb1",

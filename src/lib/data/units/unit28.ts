@@ -129,6 +129,40 @@ export const unit28: UnitData = {
     },
   ],
 
+  sentenceCorrectionExercises: [
+    {
+      id: "sc28-1",
+      sentence: "I have been study for three hours.",
+      errorWord: "study",
+      correction: "studying",
+      explanation_vn: "Present Perfect Continuous: 'have been + V-ing'. Phải dùng 'have been studying', không phải 'have been study'.",
+    },
+    {
+      id: "sc28-2",
+      sentence: "She has lived here since five years.",
+      errorWord: "since",
+      correction: "for",
+      explanation_vn: "Dùng 'for' trước khoảng thời gian ('five years'); 'since' chỉ dùng trước thời điểm cụ thể ('2020').",
+    },
+  ],
+
+  listenAndArrangeExercises: [
+    {
+      id: "la28-1",
+      audio_text: "I have been studying English for three years.",
+      prompt_vn: "Tôi đã học tiếng Anh được ba năm.",
+      words: ["I", "have", "been", "studying", "English", "for", "three", "years", ".", "since", "learned"],
+      answer: "I have been studying English for three years .",
+    },
+    {
+      id: "la28-2",
+      audio_text: "She has lived here since two thousand and twenty.",
+      prompt_vn: "Cô ấy đã sống ở đây từ năm 2020.",
+      words: ["She", "has", "lived", "here", "since", "two", "thousand", "and", "twenty", ".", "for", "been"],
+      answer: "She has lived here since two thousand and twenty .",
+    },
+  ],
+
   wordBankExercises: [
     {
       id: "wb1",
@@ -156,11 +190,14 @@ export const unit28: UnitData = {
     { id: "s28-3", prompt_vn: "Nhóm đã phát triển hệ thống mới từ tháng Ba.", words: ["The", "team", "has", "been", "developing", "the", "new", "system", "since", "March", "."], answer: "The team has been developing the new system since March ." },
   ],
   quiz: [
-    { id: "fq1", type: "multiple-choice", question: "Dịch: 'Bạn đã làm dự án này bao lâu rồi?'", options: ["How long did you work on this project?", "How long have you been working on this project?", "How long are you working on this project?", "How long were you working on this project?"], answer: "How long have you been working on this project?" },
+    { id: "fq1", type: "multiple-choice", question: "Dịch: 'Bạn đã làm dự án này bao lâu rồi?'", options: ["How long did you work on this project?", "How long have you been working on this project?", "How long are you working on this project?", "How long were you working on this project?"], answer: "How long have you been working on this project?",
+      explanation_vn: "Present Perfect Continuous: 'have been working' nhấn mạnh tiến trình đang tiếp diễn, không phải 'did work' hay 'are working'." },
     { id: "fq2", type: "cloze", question: "Điền: 'I ___ (practice) every day for three months and my score has improved.'", answer: "have been practicing" },
-    { id: "fq3", type: "multiple-choice", question: "Câu nào chuyên nghiệp nhất trong phỏng vấn?", options: ["I study English for one year.", "I've been studying English for one year.", "I was studying English for one year.", "I studied English for one year."], answer: "I've been studying English for one year." },
+    { id: "fq3", type: "multiple-choice", question: "Câu nào chuyên nghiệp nhất trong phỏng vấn?", options: ["I study English for one year.", "I've been studying English for one year.", "I was studying English for one year.", "I studied English for one year."], answer: "I've been studying English for one year.",
+      explanation_vn: "'I've been studying' (PPC) cho thấy quá trình liên tục đến hiện tại — lựa chọn tốt nhất cho phỏng vấn. 'I study/studied' chỉ đơn giản thực tế." },
     { id: "fq4", type: "translate", question: "Dịch: 'Chúng tôi đã hợp tác với đối tác quốc tế từ năm 2022.'", answer: "We have been collaborating with international partners since 2022." },
-    { id: "fq5", type: "multiple-choice", question: "Phân biệt: 'I've finished the report' vs 'I've been finishing the report' — câu nào đúng hơn khi báo cáo đã hoàn thành?", options: ["I've been finishing the report", "I've finished the report", "Both are equal", "Neither is correct"], answer: "I've finished the report" },
+    { id: "fq5", type: "multiple-choice", question: "Phân biệt: 'I've finished the report' vs 'I've been finishing the report' — câu nào đúng hơn khi báo cáo đã hoàn thành?", options: ["I've been finishing the report", "I've finished the report", "Both are equal", "Neither is correct"], answer: "I've finished the report",
+      explanation_vn: "'I've finished' (PPS) nhấn mạnh KẾT QUẢ (xong rồi). 'I've been finishing' nhấn mạnh quá trình — không phù hợp khi đã hoàn thành." },
   ],
   cumulativeReviewQuestions: [
     { id: "cr28-1", question: "Ôn tập Unit 27 — 'She ___ the problem in the meeting.' (đề cập)", options: ["brought up", "brought on", "set up", "looked into"], answer: "brought up", type: "multiple-choice" },

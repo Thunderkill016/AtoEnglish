@@ -129,6 +129,42 @@ export const unit32: UnitData = {
     },
   ],
 
+  sentenceCorrectionExercises: [
+    {
+      id: "sc32-1",
+      sentence: "If I would be you, I would study harder.",
+      errorWord: "would be",
+      correction: "were",
+      explanation_vn: "Second Conditional: 'If I WERE you' (subjunctive). Không dùng 'would' trong mệnh đề 'if'.",
+    },
+    {
+      id: "sc32-2",
+      sentence: "She has went to Paris many times.",
+      errorWord: "went",
+      correction: "gone",
+      explanation_vn: "Present Perfect: 'has GONE' (past participle của 'go'). 'Went' là Simple Past, không dùng với 'has'.",
+    },
+  ],
+
+
+  listenAndArrangeExercises: [
+    {
+      id: "la32-1",
+      audio_text: "If I were you I would study harder every day.",
+      prompt_vn: "Nếu tôi là bạn tôi sẽ học chăm hơn mỗi ngày.",
+      words: ["If", "I", "were", "you", "I", "would", "study", "harder", "every", "day", ".", "would be", "am"],
+      answer: "If I were you I would study harder every day .",
+    },
+    {
+      id: "la32-2",
+      audio_text: "She has gone to Paris three times already.",
+      prompt_vn: "Cô ấy đã đến Paris ba lần rồi.",
+      words: ["She", "has", "gone", "to", "Paris", "three", "times", "already", ".", "went", "been"],
+      answer: "She has gone to Paris three times already .",
+    },
+  ],
+
+
   wordBankExercises: [
     {
       id: "wb1",

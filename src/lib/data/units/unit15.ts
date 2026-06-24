@@ -134,6 +134,42 @@ export const unit15: UnitData = {
     },
   ],
 
+  sentenceCorrectionExercises: [
+    {
+      id: "sc15-1",
+      sentence: "This hotel is more cheaper than that one.",
+      errorWord: "more cheaper",
+      correction: "cheaper",
+      explanation_vn: "'Cheap' ngắn → chỉ thêm '-er': 'cheaper'. 'More cheaper' là lỗi double comparative.",
+    },
+    {
+      id: "sc15-2",
+      sentence: "She is more taller than her sister.",
+      errorWord: "more taller",
+      correction: "taller",
+      explanation_vn: "'Tall' ngắn (1 âm tiết) → 'taller'. Không dùng 'more' với tính từ ngắn.",
+    },
+  ],
+
+
+  listenAndArrangeExercises: [
+    {
+      id: "la15-1",
+      audio_text: "This phone is cheaper than that one.",
+      prompt_vn: "Chiếc điện thoại này rẻ hơn chiếc kia.",
+      words: ["This", "phone", "is", "cheaper", "than", "that", "one", ".", "more", "cheap"],
+      answer: "This phone is cheaper than that one .",
+    },
+    {
+      id: "la15-2",
+      audio_text: "She is the smartest student in the class.",
+      prompt_vn: "Cô ấy là học sinh giỏi nhất trong lớp.",
+      words: ["She", "is", "the", "smartest", "student", "in", "the", "class", ".", "most", "smart"],
+      answer: "She is the smartest student in the class .",
+    },
+  ],
+
+
   wordBankExercises: [
     {
       id: "wb1",

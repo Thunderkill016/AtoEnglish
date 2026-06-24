@@ -283,6 +283,42 @@ export const unitA05: UnitData = {
     },
   ],
 
+  sentenceCorrectionExercises: [
+    {
+      id: "sc-A05-1",
+      sentence: "What is your name's?",
+      errorWord: "name's",
+      correction: "name",
+      explanation_vn: "'What is your NAME?' — không thêm sở hữu cách 's' vào đây. 'Name's' là lỗi phổ biến.",
+    },
+    {
+      id: "sc-A05-2",
+      sentence: "I am come from Vietnam.",
+      errorWord: "am come",
+      correction: "come",
+      explanation_vn: "'I COME from Vietnam' (Simple Present). 'Am come' sai — 'come' không phải present continuous ở đây.",
+    },
+  ],
+
+
+  listenAndArrangeExercises: [
+    {
+      id: "laA05-1",
+      audio_text: "My name is Linh and I am twenty years old.",
+      prompt_vn: "Tên tôi là Linh và tôi hai mươi tuổi.",
+      words: ["My", "name", "is", "Linh", "and", "I", "am", "twenty", "years", "old", ".", "are", "have"],
+      answer: "My name is Linh and I am twenty years old .",
+    },
+    {
+      id: "laA05-2",
+      audio_text: "I come from Vietnam and I live in Hanoi.",
+      prompt_vn: "Tôi đến từ Việt Nam và tôi sống ở Hà Nội.",
+      words: ["I", "come", "from", "Vietnam", "and", "I", "live", "in", "Hanoi", ".", "am come", "lives"],
+      answer: "I come from Vietnam and I live in Hanoi .",
+    },
+  ],
+
+
   wordBankExercises: [
     {
       id: "wb1",

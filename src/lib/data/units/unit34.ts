@@ -127,6 +127,42 @@ export const unit34: UnitData = {
     },
   ],
 
+  sentenceCorrectionExercises: [
+    {
+      id: "sc34-1",
+      sentence: "If she studied harder she would have passed the exam.",
+      errorWord: "studied",
+      correction: "had studied",
+      explanation_vn: "Third Conditional: 'If + Past Perfect (had studied)'. Không dùng Simple Past trong mệnh đề if của 3rd conditional.",
+    },
+    {
+      id: "sc34-2",
+      sentence: "I would of gone if I had known about it.",
+      errorWord: "would of gone",
+      correction: "would have gone",
+      explanation_vn: "'Would HAVE gone' — không bao giờ viết 'would OF'. 'Of' là lỗi phát âm của 'have'.",
+    },
+  ],
+
+
+  listenAndArrangeExercises: [
+    {
+      id: "la34-1",
+      audio_text: "If she had studied harder she would have passed.",
+      prompt_vn: "Nếu cô ấy học chăm hơn cô ấy đã đỗ rồi.",
+      words: ["If", "she", "had", "studied", "harder", "she", "would", "have", "passed", ".", "studied", "would of"],
+      answer: "If she had studied harder she would have passed .",
+    },
+    {
+      id: "la34-2",
+      audio_text: "I would have helped you if I had known.",
+      prompt_vn: "Tôi đã giúp bạn nếu tôi biết.",
+      words: ["I", "would", "have", "helped", "you", "if", "I", "had", "known", ".", "would of", "knew"],
+      answer: "I would have helped you if I had known .",
+    },
+  ],
+
+
   wordBankExercises: [
     {
       id: "wb1",

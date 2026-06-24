@@ -127,6 +127,35 @@ export const unit36: UnitData = {
     },
   ],
 
+  sentenceCorrectionExercises: [
+    {
+      id: "sc36-1",
+      sentence: "The results was analyzed by the research team.",
+      errorWord: "was",
+      correction: "were",
+      explanation_vn: "'Results' số nhiều → 'WERE analyzed'. Passive: was (số ít) / were (số nhiều) + past participle.",
+    },
+  ],
+
+
+  listenAndArrangeExercises: [
+    {
+      id: "la36-1",
+      audio_text: "The results were analyzed by the research team.",
+      prompt_vn: "Kết quả được phân tích bởi nhóm nghiên cứu.",
+      words: ["The", "results", "were", "analyzed", "by", "the", "research", "team", ".", "was", "analyse"],
+      answer: "The results were analyzed by the research team .",
+    },
+    {
+      id: "la36-2",
+      audio_text: "It is believed that renewable energy is the future.",
+      prompt_vn: "Người ta tin rằng năng lượng tái tạo là tương lai.",
+      words: ["It", "is", "believed", "that", "renewable", "energy", "is", "the", "future", ".", "was", "believes"],
+      answer: "It is believed that renewable energy is the future .",
+    },
+  ],
+
+
   wordBankExercises: [
     {
       id: "wb1",

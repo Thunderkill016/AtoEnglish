@@ -127,6 +127,40 @@ export const unit31: UnitData = {
     },
   ],
 
+  sentenceCorrectionExercises: [
+    {
+      id: "sc31-1",
+      sentence: "I am writing to you about the meeting which was held on yesterday.",
+      errorWord: "on yesterday",
+      correction: "yesterday",
+      explanation_vn: "Không dùng giới từ 'on' trước 'yesterday/today/tomorrow'. Đúng: 'held yesterday'.",
+    },
+    {
+      id: "sc31-2",
+      sentence: "Please be advise that the meeting is cancelled.",
+      errorWord: "advise",
+      correction: "advised",
+      explanation_vn: "Dạng bị động đúng: 'Please be advised' (quá khứ phân từ). 'Advise' là động từ nguyên thể, sai cấu trúc.",
+    },
+  ],
+
+  listenAndArrangeExercises: [
+    {
+      id: "la31-1",
+      audio_text: "I am writing to inquire about the job position.",
+      prompt_vn: "Tôi viết để hỏi thêm về vị trí công việc.",
+      words: ["I", "am", "writing", "to", "inquire", "about", "the", "job", "position", ".", "inform", "confirm"],
+      answer: "I am writing to inquire about the job position .",
+    },
+    {
+      id: "la31-2",
+      audio_text: "Please find the report attached to this email.",
+      prompt_vn: "Vui lòng xem báo cáo đính kèm trong email này.",
+      words: ["Please", "find", "the", "report", "attached", "to", "this", "email", ".", "confirm", "review"],
+      answer: "Please find the report attached to this email .",
+    },
+  ],
+
   wordBankExercises: [
     {
       id: "wb1",
@@ -154,7 +188,7 @@ export const unit31: UnitData = {
     { id: "s31-3", prompt_vn: "Chúng tôi xin lỗi vì sự chậm trễ trong dự án này.", words: ["We", "apologize", "for", "the", "delay", "in", "this", "project", "."], answer: "We apologize for the delay in this project ." },
   ],
   quiz: [
-    { id: "fq1", type: "multiple-choice", question: "Điền động từ: 'The legal team advised us ___ the contract.'", options: ["not sign", "not to sign", "not signing", "don't sign"], answer: "not to sign" },
+    { id: "fq1", type: "multiple-choice", question: "Điền động từ: 'The legal team advised us ___ the contract.'", options: ["not sign", "not to sign", "not signing", "don't sign"], answer: "not to sign", explanation_vn: "'Advise + object + to-V': 'advised us NOT TO sign'. 'Not signing' không dùng sau 'advise + object'." },
     { id: "fq2", type: "cloze", question: "Điền: 'I am writing to ___ (thông báo) you of our decisions.'", answer: "inform" },
     { id: "fq3", type: "multiple-choice", question: "Tìm từ đồng nghĩa với 'make clear':", options: ["confirm", "clarify", "request", "inform"], answer: "clarify" },
     { id: "fq4", type: "translate", question: "Dịch: 'Hạn chót cho bản đề xuất là ngày mai.'", answer: "The deadline for the proposal is tomorrow." },
