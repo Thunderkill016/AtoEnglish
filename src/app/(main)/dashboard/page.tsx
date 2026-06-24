@@ -32,6 +32,22 @@ export default async function DashboardPage() {
       getWeeklyXpData(),
     ]);
 
+  // Extract speaking sessions for the dashboard feed (narrow practice_type string → union literal)
+  const VALID_TYPES = ["shadowing", "roleplay", "journal"] as const;
+  type SpeakingPracticeType = typeof VALID_TYPES[number];
+  const recentSpeakingSessions = (
+    speakingRes.success && speakingRes.sessions ? speakingRes.sessions : []
+  )
+    .filter((s) => VALID_TYPES.includes(s.practice_type as SpeakingPracticeType))
+    .map((s) => ({
+      id: s.id,
+      practice_type: s.practice_type as SpeakingPracticeType,
+      duration: s.duration,
+      accuracy_score: s.accuracy_score,
+      scenario_id: s.scenario_id,
+      created_at: s.created_at,
+    }));
+
   let userName = "Học viên";
   let totalXp = 0;
   let currentStreak = 0;
@@ -177,6 +193,7 @@ export default async function DashboardPage() {
       streakFreezeCount={streakFreezeCount}
       weeklyData={weeklyData}
       allUnits={UNITS.map(u => ({ id: u.id, title: u.title, level: u.level, route: u.route, xp: u.xp }))}
+      recentSpeakingSessions={recentSpeakingSessions}
     />
   );
 }

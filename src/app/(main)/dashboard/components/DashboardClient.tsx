@@ -3,7 +3,7 @@
 import dynamic from "next/dynamic";
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Flame, Star, GraduationCap, BookOpen, Clock, ChevronDown, ChevronUp, ChevronRight, ExternalLink, Target, Zap, TrendingUp } from "lucide-react";
+import { Flame, Star, GraduationCap, BookOpen, Clock, ChevronDown, ChevronUp, ChevronRight, ExternalLink, Target, Zap, TrendingUp, Mic } from "lucide-react";
 import { toast } from "sonner";
 import { updateDailyXpGoal } from "@/app/actions/stats";
 import { useStreakFreeze as freezeStreakAction } from "@/app/actions/gamification";
@@ -15,6 +15,7 @@ import DailyQuests from "./DailyQuests";
 import QuickActions from "./QuickActions";
 import WordOfDayCard from "./WordOfDayCard";
 import LeagueCard from "./LeagueCard";
+import SpeakingFeedCard from "./SpeakingFeedCard";
 import LevelUpModal from "@/components/learn/LevelUpModal";
 import { WidgetErrorBoundary } from "@/components/ui/widget-error-boundary";
 import { StreakShieldWidget } from "@/components/gamification/StreakShieldWidget";
@@ -63,6 +64,14 @@ interface DashboardClientProps {
   streakFreezeCount: number;
   weeklyData: Array<{ day: string; label: string; xp: number; pct: number }>;
   allUnits: Array<{ id: string; title: string; level: string; route: string; xp: number }>;
+  recentSpeakingSessions: Array<{
+    id: string;
+    practice_type: "shadowing" | "roleplay" | "journal";
+    duration: number;
+    accuracy_score: number | null;
+    scenario_id: string | null;
+    created_at: string;
+  }>;
 }
 
 const getLevelBadgeStyles = (level: string) => {
@@ -115,6 +124,7 @@ export default function DashboardClient({
   allUnits,
   streakFreezeCount,
   weeklyData,
+  recentSpeakingSessions,
 }: DashboardClientProps) {
   const [xpCurrent, setXpCurrent] = useState(initialXpCurrent);
   const [quests, setQuests] = useState(initialQuests);
@@ -634,6 +644,34 @@ export default function DashboardClient({
         <WidgetErrorBoundary name="QuickActions">
           <QuickActions currentUnitRoute={currentUnitData.route} />
         </WidgetErrorBoundary>
+
+        {/* ── Speaking Activity Feed ── */}
+        {recentSpeakingSessions.length > 0 && (
+          <WidgetErrorBoundary name="SpeakingFeed">
+            <SpeakingFeedCard sessions={recentSpeakingSessions} />
+          </WidgetErrorBoundary>
+        )}
+
+        {/* ── Checkpoint Test CTA — appears at 5/10/15/20 unit milestones ── */}
+        {[5, 10, 15, 20].includes(completedUnits) && (
+          <Link
+            href="/placement-test"
+            id="checkpoint-test-cta"
+            className="flex items-center gap-3 p-4 rounded-2xl border border-violet-500/20 bg-gradient-to-r from-violet-500/5 to-purple-500/5 hover:from-violet-500/10 hover:to-purple-500/10 hover:border-violet-500/30 transition-all group"
+          >
+            <span className="flex size-10 items-center justify-center rounded-xl bg-violet-500/15 text-xl shrink-0">🏆</span>
+            <div className="flex-1 min-w-0">
+              <p className="text-xs font-black text-violet-400 uppercase tracking-widest mb-0.5">Kiểm tra đột phá!</p>
+              <p className="text-sm font-bold text-zinc-900 dark:text-zinc-50">
+                Checkpoint Test — {completedUnits} units hoàn thành!
+              </p>
+              <p className="text-[11px] text-zinc-500 dark:text-zinc-400">
+                Đánh giá trình độ của bạn sau {completedUnits} bài học · ~10 phút
+              </p>
+            </div>
+            <Mic className="size-5 text-violet-400/60 group-hover:text-violet-400 group-hover:scale-110 transition-all shrink-0" />
+          </Link>
+        )}
 
         <WeeklyRecapCard
           currentStreak={currentStreak}
