@@ -217,6 +217,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
   const [section, setSection] = useState<number>(1);
   const [isCompleted, setIsCompleted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [miniSession, setMiniSession] = useState(false);
 
   // Shared orchestrator states needed for results calculations
   const [seenCards, setSeenCards] = useState<Set<number>>(new Set());
@@ -570,11 +571,31 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                 </p>
               </div>
             </div>
-            <div className="text-right shrink-0">
-              <p className="text-xs text-zinc-500">{SECTION_LABELS[section] ?? "Học"}</p>
-              <p className="text-sm font-bold text-emerald-400">
-                {sectionOrderIdx + 1}/{TOTAL_SECTIONS}
-              </p>
+            <div className="text-right shrink-0 flex items-center gap-2">
+              {/* Mini-session toggle — jump to Quiz for quick 5-min review */}
+              {!miniSession && section < 8 && (
+                <button
+                  onClick={() => {
+                    setMiniSession(true);
+                    setSection(8);
+                    try {
+                      localStorage.setItem(
+                        `lesson-progress-${normalizedUnit.unitId}`,
+                        JSON.stringify({ section: 8 })
+                      );
+                    } catch { /* ignore */ }
+                  }}
+                  className="text-[10px] font-bold px-2 py-1 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-400 hover:bg-amber-500/20 transition-colors whitespace-nowrap"
+                >
+                  ⚡ Ôn nhanh
+                </button>
+              )}
+              <div>
+                <p className="text-xs text-zinc-500">{SECTION_LABELS[section] ?? "Học"}</p>
+                <p className="text-sm font-bold text-emerald-400">
+                  {sectionOrderIdx + 1}/{TOTAL_SECTIONS}
+                </p>
+              </div>
             </div>
           </div>
 

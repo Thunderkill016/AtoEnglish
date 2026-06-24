@@ -351,6 +351,50 @@ export const unit3: UnitData = {
       { en: "our company", vn: "công ty của chúng tôi" },
     ],
   },
+
+  readingPassage: {
+    id: "unit3-reading-1",
+    title: "My Family",
+    title_vn: "Đọc đoạn giới thiệu về gia đình",
+    level: "A1" as const,
+    text:
+      "My name is Hoa. I have a small family. " +
+      "My father is a doctor. His name is Minh. " +
+      "My mother is a teacher. Her name is Lan. " +
+      "I have one brother. His name is Nam. He is a student. " +
+      "We live together in a house in Da Nang. " +
+      "We are a happy family!",
+    questions: [
+      {
+        id: "u3r-q1",
+        question_vn: "Bố của Hoa làm nghề gì?",
+        options: ["A teacher", "A doctor", "An engineer", "A student"],
+        answer: "A doctor",
+        explanation_vn: "Đoạn văn nói 'My father is a doctor.'",
+      },
+      {
+        id: "u3r-q2",
+        question_vn: "Tên của mẹ Hoa là gì?",
+        options: ["Minh", "Nam", "Hoa", "Lan"],
+        answer: "Lan",
+        explanation_vn: "Đoạn văn nói 'My mother\'s name is Lan.'",
+      },
+      {
+        id: "u3r-q3",
+        question_vn: "Nam đang làm gì?",
+        options: ["Working at a hospital", "Teaching at a school", "Studying as a student", "Living in Hanoi"],
+        answer: "Studying as a student",
+        explanation_vn: "Đoạn văn nói 'He is a student.'",
+      },
+      {
+        id: "u3r-q4",
+        question_vn: "Gia đình Hoa sống ở đâu?",
+        options: ["Hanoi", "Ho Chi Minh City", "Hue", "Da Nang"],
+        answer: "Da Nang",
+        explanation_vn: "Đoạn văn nói 'We live together in a house in Da Nang.'",
+      },
+    ],
+  },
 };
 
 export default unit3;

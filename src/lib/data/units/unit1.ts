@@ -570,6 +570,51 @@ export const unit1: UnitData = {
       { en: "My name is...", vn: "Tên tôi là..." },
     ],
   },
+
+  readingPassage: {
+    id: "unit1-reading-1",
+    title: "Hello! Nice to Meet You!",
+    title_vn: "Đọc đoạn hội thoại chào hỏi",
+    level: "A1" as const,
+    text:
+      "Hello! My name is Mai. I am from Vietnam. " +
+      "This is my friend, Tom. He is from England. " +
+      "We work together at a company in Hanoi. " +
+      "Tom says: 'Nice to meet you, Mai!' " +
+      "Mai says: 'Nice to meet you too, Tom! How are you?' " +
+      "Tom says: 'I am fine, thank you. And you?' " +
+      "Mai says: 'I am very well, thanks!'",
+    questions: [
+      {
+        id: "u1r-q1",
+        question_vn: "Mai đến từ đâu?",
+        options: ["England", "Vietnam", "Australia", "America"],
+        answer: "Vietnam",
+        explanation_vn: "Đoạn văn nói 'I am from Vietnam.'",
+      },
+      {
+        id: "u1r-q2",
+        question_vn: "Tom và Mai làm việc ở đâu?",
+        options: ["A school in England", "A hospital in Vietnam", "A company in Hanoi", "A bank in Saigon"],
+        answer: "A company in Hanoi",
+        explanation_vn: "Đoạn văn nói 'We work together at a company in Hanoi.'",
+      },
+      {
+        id: "u1r-q3",
+        question_vn: "Tom nói gì khi gặp Mai?",
+        options: ["How are you?'", "'Nice to meet you, Mai!''", "'Good morning!'", "'See you later!'"],
+        answer: "'Nice to meet you, Mai!'",
+        explanation_vn: "Đoạn văn nói Tom says: 'Nice to meet you, Mai!'",
+      },
+      {
+        id: "u1r-q4",
+        question_vn: "Mai cảm thấy thế nào?",
+        options: ["Tired", "Sad", "Very well", "Sick"],
+        answer: "Very well",
+        explanation_vn: "Mai nói 'I am very well, thanks!'",
+      },
+    ],
+  },
 };
 
 export default unit1;

@@ -182,6 +182,66 @@ export const unit5: UnitData = {
       { en: "I don't mind overtime", vn: "Tôi không ngại làm thêm giờ" },
     ],
   },
+
+  readingPassage: {
+    id: "unit5-reading-1",
+    title: "My Hobbies",
+    title_vn: "Đọc đoạn về sở thích",
+    level: "A1" as const,
+    text:
+      "Hi! My name is Lan. I have many hobbies. " +
+      "I like reading books and listening to music. " +
+      "My friend Nam likes playing football and swimming. " +
+      "On weekends, we like cycling together in the park. " +
+      "My sister likes cooking Vietnamese food. " +
+      "She also enjoys watching movies at home. " +
+      "We all have different hobbies, but we love spending time together!",
+    questions: [
+      {
+        id: "u5r-q1",
+        question_vn: "Lan thích làm gì?",
+        options: [
+          "Playing football and swimming",
+          "Reading books and listening to music",
+          "Cooking and dancing",
+          "Drawing and photography",
+        ],
+        answer: "Reading books and listening to music",
+        explanation_vn: "Đoạn văn nói 'I like reading books and listening to music.'",
+      },
+      {
+        id: "u5r-q2",
+        question_vn: "Nam thích làm gì vào cuối tuần?",
+        options: [
+          "Cooking and watching movies",
+          "Reading and cycling",
+          "Playing football and swimming",
+          "Drawing and gaming",
+        ],
+        answer: "Playing football and swimming",
+        explanation_vn: "Đoạn văn nói 'Nam likes playing football and swimming.'",
+      },
+      {
+        id: "u5r-q3",
+        question_vn: "Lan và Nam thích làm gì cùng nhau vào cuối tuần?",
+        options: ["Swimming", "Cycling in the park", "Watching movies", "Cooking"],
+        answer: "Cycling in the park",
+        explanation_vn: "Đoạn văn nói 'we like cycling together in the park.'",
+      },
+      {
+        id: "u5r-q4",
+        question_vn: "Em gái của Lan thích làm gì?",
+        options: [
+          "Playing football",
+          "Reading books",
+          "Cooking Vietnamese food and watching movies",
+          "Listening to music",
+        ],
+        answer: "Cooking Vietnamese food and watching movies",
+        explanation_vn: "Đoạn văn nói 'My sister likes cooking Vietnamese food. She also enjoys watching movies.'",
+      },
+    ],
+  },
 };
 
 export default unit5;

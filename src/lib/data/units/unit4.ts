@@ -199,6 +199,50 @@ export const unit4: UnitData = {
       { en: "She doesn't work on Sunday", vn: "Cô ấy không làm việc ngày Chủ nhật" },
     ],
   },
+
+  readingPassage: {
+    id: "unit4-reading-1",
+    title: "A Day in My Life",
+    title_vn: "Đọc về lịch trình hàng ngày",
+    level: "A1" as const,
+    text:
+      "My name is Minh. I wake up at six o'clock every morning. " +
+      "I have breakfast at seven. I eat rice and drink tea. " +
+      "I go to work by motorbike. I start work at eight o'clock. " +
+      "I have lunch at twelve. I finish work at five o'clock. " +
+      "In the evening, I watch TV and read books. " +
+      "I go to bed at ten o'clock. I sleep eight hours every night.",
+    questions: [
+      {
+        id: "u4r-q1",
+        question_vn: "Minh thức dậy lúc mấy giờ?",
+        options: ["Five o'clock", "Six o'clock", "Seven o'clock", "Eight o'clock"],
+        answer: "Six o'clock",
+        explanation_vn: "Đoạn văn nói 'I wake up at six o'clock every morning.'",
+      },
+      {
+        id: "u4r-q2",
+        question_vn: "Minh ăn gì vào buổi sáng?",
+        options: ["Bread and coffee", "Noodles and milk", "Rice and tea", "Eggs and juice"],
+        answer: "Rice and tea",
+        explanation_vn: "Đoạn văn nói 'I eat rice and drink tea.'",
+      },
+      {
+        id: "u4r-q3",
+        question_vn: "Minh đi làm bằng phương tiện gì?",
+        options: ["By bus", "By car", "By bicycle", "By motorbike"],
+        answer: "By motorbike",
+        explanation_vn: "Đoạn văn nói 'I go to work by motorbike.'",
+      },
+      {
+        id: "u4r-q4",
+        question_vn: "Buổi tối Minh làm gì?",
+        options: ["Goes to the gym", "Cooks dinner", "Watches TV and reads books", "Plays football"],
+        answer: "Watches TV and reads books",
+        explanation_vn: "Đoạn văn nói 'I watch TV and read books.'",
+      },
+    ],
+  },
 };
 
 export default unit4;
