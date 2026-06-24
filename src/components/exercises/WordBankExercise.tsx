@@ -96,6 +96,11 @@ export function WordBankExercise({ question, onAnswer, showFeedback = true }: Wo
   const { bank, assembled, submitted, isCorrect } = state;
   const canSubmit = assembled.length > 0 && !submitted;
 
+  // Shake assembly zone on wrong answer
+  const shakeControls = submitted && !isCorrect
+    ? { x: [0, -8, 8, -6, 6, -3, 3, 0] }
+    : {};
+
   return (
     <div className="w-full space-y-5">
       {/* Prompt */}
@@ -107,8 +112,10 @@ export function WordBankExercise({ question, onAnswer, showFeedback = true }: Wo
         )}
       </div>
 
-      {/* Assembly zone */}
-      <div
+      {/* Assembly zone — shakes on wrong answer (Duolingo UX pattern) */}
+      <motion.div
+        animate={shakeControls}
+        transition={{ duration: 0.45, ease: 'easeInOut' }}
         className={`min-h-[64px] rounded-2xl border-2 border-dashed p-3 flex flex-wrap gap-2 items-center transition-colors duration-200 ${
           submitted
             ? isCorrect
@@ -152,7 +159,7 @@ export function WordBankExercise({ question, onAnswer, showFeedback = true }: Wo
             </motion.button>
           ))}
         </AnimatePresence>
-      </div>
+      </motion.div>
 
       {/* Feedback */}
       <AnimatePresence>

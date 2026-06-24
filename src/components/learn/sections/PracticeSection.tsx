@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { Shuffle, CheckCircle, ChevronRight } from "lucide-react";
 import type { UnitData, QuizQuestion } from "../UnitTemplate";
 import { WordBankExercise } from "@/components/exercises/WordBankExercise";
+import { DictationExercise } from "@/components/exercises/DictationExercise";
 
 interface PracticeSectionProps {
   unit: UnitData;
@@ -52,6 +53,12 @@ export default function PracticeSection({
   const [wordBankIndex, setWordBankIndex] = useState(0);
   const [wordBankDone, setWordBankDone] = useState(false);
   const [wordBankScore, setWordBankScore] = useState(0);
+
+  // Dictation state: uses listenAndChoose items as dictation source
+  const dictationItems = unit.listenAndChoose?.slice(0, 2) ?? [];
+  const [dictationIndex, setDictationIndex] = useState(0);
+  const [dictationDone, setDictationDone] = useState(!dictationItems.length);
+  const [dictationScore, setDictationScore] = useState(0);
 
   // Shuffle matching pairs when unit/exercise changes
   useEffect(() => {
@@ -113,6 +120,7 @@ export default function PracticeSection({
     unit.scrambleExercises.every((ex) => scrambleChecked[ex.id]);
 
   const allWordBankDone = !unit.wordBankExercises?.length || wordBankDone;
+  const allDictationDone = dictationDone;
 
   const handleMatchSelect = (side: "left" | "right", value: string) => {
     if (matchedPairs.has(value)) return;
@@ -501,6 +509,47 @@ export default function PracticeSection({
         </div>
       )}
 
+      {/* ── Dictation Exercises (after WordBank) ── */}
+      {dictationItems.length > 0 && wordBankDone && !dictationDone && (
+        <div className="space-y-3">
+          <div className="flex items-center gap-2">
+            <span className="text-lg">🎧</span>
+            <p className="text-sm font-bold text-white">Nghe và gõ lại câu</p>
+            <span className="text-xs text-zinc-500 ml-auto">
+              {dictationIndex + 1}/{dictationItems.length}
+            </span>
+          </div>
+          <DictationExercise
+            key={dictationItems[dictationIndex]?.id}
+            question={{
+              id: dictationItems[dictationIndex]!.id,
+              text: dictationItems[dictationIndex]!.audio_text,
+              hint_vn: "Nghe thật kỹ từng từ!",
+            }}
+            onAnswer={(correct) => {
+              if (correct) playCorrectSound();
+              else playWrongSound();
+              setDictationScore((s) => s + (correct ? 1 : 0));
+              const next = dictationIndex + 1;
+              if (next >= dictationItems.length) {
+                setDictationDone(true);
+              } else {
+                setDictationIndex(next);
+              }
+            }}
+          />
+        </div>
+      )}
+
+      {dictationDone && dictationItems.length > 0 && wordBankDone && (
+        <div className="flex items-center gap-2 rounded-xl bg-blue-950/40 border border-blue-500/20 p-3">
+          <CheckCircle size={16} className="text-blue-400 shrink-0" />
+          <p className="text-sm text-blue-300 font-semibold">
+            Chính tả: {dictationScore}/{dictationItems.length} chính xác
+          </p>
+        </div>
+      )}
+
       {!practiceSubmitted ? (
         <button
           disabled={!allPracticeAnswered}
@@ -533,7 +582,7 @@ export default function PracticeSection({
                 : "💪 Ôn lại thẻ từ vựng sẽ giúp bạn nhớ lâu hơn!"}
             </p>
           </div>
-          {matchingDone && allScrambleDone && allWordBankDone ? (
+          {matchingDone && allScrambleDone && allWordBankDone && allDictationDone ? (
             <button
               onClick={goNext}
               className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-white font-bold rounded-2xl px-6 py-4 flex items-center justify-center gap-2 transition-all duration-200 text-lg shadow-lg shadow-emerald-900/40 active:scale-95"
@@ -547,7 +596,9 @@ export default function PracticeSection({
                 ? "Hoàn thành phần nối từ ở trên để tiếp tục"
                 : !allScrambleDone
                 ? "Hoàn thành phần sắp xếp câu ở trên để tiếp tục"
-                : "Hoàn thành phần xây dựng câu ở trên để tiếp tục"}
+                : !allWordBankDone
+                ? "Hoàn thành phần xây dựng câu ở trên để tiếp tục"
+                : "Hoàn thành phần chính tả ở trên để tiếp tục"}
             </p>
           )}
         </div>

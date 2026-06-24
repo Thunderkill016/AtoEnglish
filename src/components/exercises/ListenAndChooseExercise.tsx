@@ -24,13 +24,13 @@ export function ListenAndChooseExercise({ question, onAnswer }: ListenAndChooseP
   const [submitted, setSubmitted] = useState(false);
   const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
 
-  const playAudio = useCallback(() => {
+  const playAudio = useCallback((rate = 0.85) => {
     if (!('speechSynthesis' in window)) return;
     if (playing) { window.speechSynthesis.cancel(); setPlaying(false); return; }
     window.speechSynthesis.cancel();
     const utt = new SpeechSynthesisUtterance(question.audioText);
     utt.lang = 'en-US';
-    utt.rate = 0.85;
+    utt.rate = rate;
     utt.pitch = 1;
     utt.onstart = () => setPlaying(true);
     utt.onend = () => { setPlaying(false); setPlayed(true); };
@@ -61,10 +61,10 @@ export function ListenAndChooseExercise({ question, onAnswer }: ListenAndChooseP
         <p className="text-zinc-500 text-xs">{played ? 'Chọn nghĩa phù hợp với từ vừa nghe' : 'Nhấn nút loa để nghe'}</p>
       </div>
 
-      {/* Audio button */}
-      <div className="flex justify-center">
+      {/* Audio controls */}
+      <div className="flex flex-col items-center gap-3">
         <motion.button
-          onClick={playAudio}
+          onClick={() => playAudio(0.85)}
           whileTap={{ scale: 0.95 }}
           className={`relative w-24 h-24 rounded-full flex items-center justify-center transition-all ${
             playing
@@ -87,6 +87,17 @@ export function ListenAndChooseExercise({ question, onAnswer }: ListenAndChooseP
             />
           )}
         </motion.button>
+
+        {/* Slow speed button — shown after first listen */}
+        {played && !playing && (
+          <button
+            onClick={() => playAudio(0.55)}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-zinc-400 hover:text-zinc-200 hover:bg-white/10 transition-colors text-xs font-medium"
+          >
+            <Volume2 className="w-3.5 h-3.5" />
+            Nghe chậm hơn
+          </button>
+        )}
       </div>
 
       {/* Hint (shown after playing) */}

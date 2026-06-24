@@ -247,3 +247,42 @@ html {
 @utility animation-delay-400 {
   animation-delay: 400ms;
 }
+
+/* ─── Exercise feedback utilities ────────────────────────────────────────────── */
+@utility animate-shake {
+  animation: var(--animate-shake);
+}
+
+/* Wrong answer flash — red border pulse */
+@utility answer-wrong {
+  animation: var(--animate-shake);
+  border-color: theme(colors.red.500) !important;
+  background-color: rgb(239 68 68 / 0.1) !important;
+}
+
+/* Correct answer flash — green pulse */
+@utility answer-correct {
+  border-color: theme(colors.emerald.500) !important;
+  background-color: rgb(16 185 129 / 0.1) !important;
+}
+
+/* Step progress dot — used in lesson phase indicator */
+@utility step-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 9999px;
+  background-color: oklch(1 0 0 / 0.18);
+  transition: all 0.3s ease;
+}
+
+@utility step-dot-active {
+  width: 24px;
+  height: 8px;
+  border-radius: 9999px;
+  background: linear-gradient(90deg, theme(colors.emerald.400), theme(colors.teal.400));
+}
+
+@utility step-dot-done {
+  background-color: theme(colors.emerald.500);
+  opacity: 0.6;
+}
