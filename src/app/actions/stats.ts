@@ -170,6 +170,7 @@ export async function getProgressStats() {
       stats: {
         totalXp: progress?.total_xp || 0,
         streak: progress?.streak || 0,
+        bestStreak: progress?.best_streak || 0,
         currentLevel: progress?.current_level || "A0",
         totalCards,
         cardsByState,

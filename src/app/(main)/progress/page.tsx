@@ -24,6 +24,7 @@ export default async function ProgressPage() {
   const stats = statsRes.stats ?? {
     totalXp: 0,
     streak: 0,
+    bestStreak: 0,
     currentLevel: "A1",
     totalCards: 0,
     cardsByState: { new: 0, learning: 0, review: 0, relearning: 0 },
@@ -46,7 +47,9 @@ export default async function ProgressPage() {
     {
       label: "Streak hiện tại",
       value: `${stats.streak} ngày`,
-      sub: "Chuỗi học liên tiếp",
+      sub: stats.bestStreak > stats.streak
+        ? `🏅 Kỷ lục: ${stats.bestStreak} ngày`
+        : "🏅 Đang ở kỷ lục!",
       icon: Flame,
       color: "text-orange-500 bg-orange-500/10",
     },
