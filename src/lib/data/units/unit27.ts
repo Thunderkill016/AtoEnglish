@@ -211,6 +211,18 @@ export const unit27: UnitData = {
     { id: "cr27-2", question: "Ôn tập Unit 25 — Điền: 'She is the specialist ___ designed our system.'", options: [], answer: "who", type: "cloze" },
     { id: "cr27-3", question: "Ôn tập Unit 24 — Passive đúng: 'The report ___ (submit) before 5pm.'", options: ["was submitted", "submitted", "is submitting", "submits"], answer: "was submitted", type: "multiple-choice" },
   ],
+  pronunciationFocus: {
+    phoneme: "causative tone",
+    description: "Causative have — stress pattern khi là causative khác với have thông thường",
+    examples: [
+        { word: "have (causative)", ipa: "/hæv/", tip: "I'll HAVE it fixed — have nhấn mạnh hơn khi là causative" },
+        { word: "get", ipa: "/ɡɛt/", tip: "Get it done — get thường nhẹ hơn have trong causative" },
+    ],
+    minimalPairs: [
+        ["have it fixed (nhờ)", "fix it yourself (tự làm)"],
+    ],
+  },
+
   fluencyDrill: {
     items: [
       { en: "Can you look into this and get back to me?", vn: "Bạn có thể điều tra cái này và phản hồi lại tôi không?" },

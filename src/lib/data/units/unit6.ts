@@ -226,6 +226,19 @@ export const unit6: UnitData = {
     },
   ],
 
+  pronunciationFocus: {
+    phoneme: "/ɪ/ vs /iː/",
+    description: "Nguyên âm ngắn /ɪ/ (bit) vs dài /iː/ (beat) — người Việt thường đọc cả hai thành /i/ dài",
+    examples: [
+        { word: "living", ipa: "/ˈlɪvɪŋ/", tip: "/ɪ/ ngắn — miệng hơi mở, môi không căng, lưỡi thấp hơn /iː/" },
+        { word: "kitchen", ipa: "/ˈkɪtʃɪn/", tip: "/tʃ/ trong kitchen — không phải /ch/ như tiếng Việt" },
+    ],
+    minimalPairs: [
+        ["bit", "beat"],
+        ["fill", "feel"],
+    ],
+  },
+
   fluencyDrill: {
     items: [
       { en: "There is a meeting room", vn: "Có một phòng họp" },

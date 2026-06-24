@@ -208,6 +208,18 @@ export const unit33: UnitData = {
     { id: "cr33-2", question: "Ôn tập Unit 31 — Điền: 'The corporate manager recommended that she ___ (inform) the client.'", options: [], answer: "inform", type: "cloze" },
     { id: "cr33-3", question: "Ôn tập Unit 30 — Điền: 'Deforestation is damaging the local ___.'", options: ["prevention", "pollution", "ecosystem", "sustainable"], answer: "ecosystem", type: "multiple-choice" },
   ],
+  pronunciationFocus: {
+    phoneme: "subjunctive were /wɜːr/",
+    description: "Subjunctive were — If I were you — âm /ɜː/ khó nhất",
+    examples: [
+        { word: "were (subjunctive)", ipa: "/wɜːr/", tip: "If I WERE rich — âm /ɜː/ dài, tròn, giữa — giống her, bird, word" },
+        { word: "suppose", ipa: "/səˈpəʊz/", tip: "Stress âm 2: su-POSE — âm /z/ cuối, không phải /s/" },
+    ],
+    minimalPairs: [
+        ["were /wɜːr/", "was /wɒz/ (không dùng trong subjunctive)"],
+    ],
+  },
+
   fluencyDrill: {
     items: [
       { en: "If I were you, I would invest", vn: "Nếu tôi là bạn, tôi sẽ đầu tư" },

@@ -229,6 +229,19 @@ export const unit5: UnitData = {
     },
   ],
 
+  pronunciationFocus: {
+    phoneme: "/r/",
+    description: "Âm /r/ tiếng Anh — không cuộn lưỡi, phát âm từ cuống họng",
+    examples: [
+        { word: "reading", ipa: "/ˈriːdɪŋ/", tip: "Lưỡi không chạm đâu cả, hơi cong nhẹ về sau — không như /r/ cuộn tiếng Việt" },
+        { word: "right", ipa: "/raɪt/", tip: "Bắt đầu từ cuống họng, không có âm r cuộn" },
+    ],
+    minimalPairs: [
+        ["rock", "lock"],
+        ["red", "led"],
+    ],
+  },
+
   fluencyDrill: {
     items: [
       { en: "I like reading", vn: "Tôi thích đọc sách" },

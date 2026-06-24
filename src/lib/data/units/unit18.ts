@@ -263,6 +263,19 @@ export const unit18: UnitData = {
     },
   ],
 
+  pronunciationFocus: {
+    phoneme: "noun vs verb stress",
+    description: "Ôn tập: stress thay đổi nghĩa — noun vs verb pairs rất phổ biến trong A2",
+    examples: [
+        { word: "progress (n)", ipa: "/ˈprɒɡrəs/", tip: "Danh từ: PRO-gress — stress âm 1" },
+        { word: "progress (v)", ipa: "/prəˈɡrɛs/", tip: "Động từ: pro-GRESS — stress âm 2" },
+    ],
+    minimalPairs: [
+        ["REcord (n)", "reCORD (v)"],
+        ["PROtest (n)", "proTEST (v)"],
+    ],
+  },
+
   fluencyDrill: {
     items: [
       { en: "I work every day", vn: "Tôi làm việc mỗi ngày" },

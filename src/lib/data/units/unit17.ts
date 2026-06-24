@@ -255,6 +255,18 @@ export const unit17: UnitData = {
     },
   ],
 
+  pronunciationFocus: {
+    phoneme: "have /hæv/ vs /həv/",
+    description: "Have trong Present Perfect — dạng mạnh và yếu",
+    examples: [
+        { word: "have (mạnh)", ipa: "/hæv/", tip: "Khi nhấn: I HAVE done it! — âm /æ/ rõ ràng" },
+        { word: "I've", ipa: "/aɪv/", tip: "Trong câu: I've done it /aɪv/ — kết hợp nhanh với I" },
+    ],
+    minimalPairs: [
+        ["I've /aɪv/", "I have /aɪ həv/"],
+    ],
+  },
+
   fluencyDrill: {
     items: [
       { en: "I have worked here for 2 years", vn: "Tôi đã làm việc ở đây 2 năm" },

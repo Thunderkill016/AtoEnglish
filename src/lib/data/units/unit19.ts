@@ -637,6 +637,19 @@ export const unit19: UnitData = {
     },
   ],
 
+  pronunciationFocus: {
+    phoneme: "was /wɒz/ vs were /wɜːr/",
+    description: "Was/were — âm /ɜː/ trong were rất khó với người Việt",
+    examples: [
+        { word: "was", ipa: "/wɒz/", tip: "Âm /ɒ/ ngắn, tròn — giống hot. Dạng yếu trong câu: /wəz/" },
+        { word: "were", ipa: "/wɜːr/", tip: "Âm /ɜː/ dài — giống her, bird — miệng tròn, lưỡi giữa" },
+    ],
+    minimalPairs: [
+        ["was /wɒz/", "were /wɜːr/"],
+        ["hot /ɒ/", "heard /ɜː/"],
+    ],
+  },
+
   fluencyDrill: {
     items: [
       { en: "I was working when he called", vn: "Tôi đang làm việc thì anh ấy gọi" },

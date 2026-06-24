@@ -212,6 +212,18 @@ export const unit41: UnitData = {
     { id: "cr41-2", question: "Ôn tập Unit 39 — Điền: 'She ___ have left the office because her keys are here.'", options: [], answer: "can't", type: "cloze" },
     { id: "cr41-3", question: "Ôn tập Unit 38 — Chọn câu chẻ đúng:", options: ["It was the marketing campaign that boosted sales.", "It was the marketing campaign who boosted sales.", "What we need that boosted sales is marketing.", "The marketing campaign it was boosted sales."], answer: "It was the marketing campaign that boosted sales.", type: "multiple-choice" },
   ],
+  pronunciationFocus: {
+    phoneme: "academic /ˌækəˈdɛmɪk/",
+    description: "IELTS/academic vocabulary — stress đặc trưng của từ học thuật",
+    examples: [
+        { word: "academic", ipa: "/ˌækəˈdɛmɪk/", tip: "Stress âm 3: ac-a-DEM-ic — 4 âm tiết. Âm đầu /æ/ ngắn" },
+        { word: "significant", ipa: "/sɪɡˈnɪfɪkənt/", tip: "Stress âm 2: sig-NIF-i-cant — 4 âm tiết. Âm cuối /kənt/ schwa" },
+    ],
+    minimalPairs: [
+        ["ac-a-DEM-ic (đúng)", "A-ca-dem-ic (sai)"],
+    ],
+  },
+
   fluencyDrill: {
     items: [
       { en: "Urbanization causes environmental degradation", vn: "Đô thị hóa gây ra sự suy thoái môi trường" },

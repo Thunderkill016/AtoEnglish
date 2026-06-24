@@ -252,6 +252,20 @@ export const unit13: UnitData = {
     },
   ],
 
+  pronunciationFocus: {
+    phoneme: "-ed endings /t/ /d/ /ɪd/",
+    description: "Quy tắc đọc đuôi -ed: 3 cách đọc — người Việt thường bỏ âm cuối",
+    examples: [
+        { word: "watched", ipa: "/wɒtʃt/", tip: "Sau âm vô thanh /tʃ/ → -ed đọc /t/: watched, walked, cooked" },
+        { word: "enjoyed", ipa: "/ɪnˈdʒɔɪd/", tip: "Sau âm hữu thanh → -ed đọc /d/: enjoyed, called, lived" },
+        { word: "visited", ipa: "/ˈvɪzɪtɪd/", tip: "Sau /t,d/ → -ed đọc /ɪd/: visited, waited, needed" },
+    ],
+    minimalPairs: [
+        ["walked /t/", "called /d/"],
+        ["needed /ɪd/", "walked /t/"],
+    ],
+  },
+
   fluencyDrill: {
     items: [
       { en: "I went", vn: "Tôi đã đi" },

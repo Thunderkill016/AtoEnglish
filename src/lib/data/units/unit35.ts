@@ -209,6 +209,18 @@ export const unit35: UnitData = {
     { id: "cr35-2", question: "Ôn tập Unit 33 — Điền: 'If I ___ (be) you, I would invest in this venture.'", options: [], answer: "were", type: "cloze" },
     { id: "cr35-3", question: "Ôn tập Unit 32 — Điền: 'By next December, she ___ (graduate) from university.'", options: ["will have graduated", "graduated", "has graduated", "will graduate"], answer: "will have graduated", type: "multiple-choice" },
   ],
+  pronunciationFocus: {
+    phoneme: "inversion stress",
+    description: "Đảo ngữ nhấn mạnh — Had I known... — stress thay đổi hoàn toàn",
+    examples: [
+        { word: "Had I known", ipa: "/hæd aɪ nəʊn/", tip: "Đảo ngữ: HAD I known... — had đứng đầu được nhấn hơn" },
+        { word: "Never have I", ipa: "/ˈnɛvər hæv aɪ/", tip: "NEVER have I seen... — never nhấn rất mạnh" },
+    ],
+    minimalPairs: [
+        ["Had I known (đảo ngữ)", "If I had known (thường)"],
+    ],
+  },
+
   fluencyDrill: {
     items: [
       { en: "Provided that you deliver on time", vn: "Với điều kiện là bạn giao đúng hạn" },

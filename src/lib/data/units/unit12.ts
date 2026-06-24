@@ -232,6 +232,19 @@ export const unit12: UnitData = {
     },
   ],
 
+  pronunciationFocus: {
+    phoneme: "word stress",
+    description: "Stress từ — sai stress khiến người bản ngữ không hiểu dù phát âm từng âm đúng",
+    examples: [
+        { word: "vocabulary", ipa: "/vəˈkæbjʊleri/", tip: "Stress âm 2: vo-CAB-u-la-ry — không phải VO-ca-bu-la-ry" },
+        { word: "pronunciation", ipa: "/prəˌnʌnsiˈeɪʃən/", tip: "Stress âm 4: pro-nun-ci-A-tion" },
+    ],
+    minimalPairs: [
+        ["REcord (n)", "reCORD (v)"],
+        ["PREsent (n)", "preSENT (v)"],
+    ],
+  },
+
   fluencyDrill: {
     items: [
       { en: "bigger", vn: "lớn hơn" },

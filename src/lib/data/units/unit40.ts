@@ -208,6 +208,18 @@ export const unit40: UnitData = {
     { id: "cr40-2", question: "Ôn tập Unit 38 — Điền: 'Not only ___ she design the code, but she also optimized it.'", options: [], answer: "did", type: "cloze" },
     { id: "cr40-3", question: "Ôn tập Unit 37 — Chọn đúng: '___ (complete) the research, he published his findings.'", options: ["Having completed", "Completed", "Completing", "To complete"], answer: "Having completed", type: "multiple-choice" },
   ],
+  pronunciationFocus: {
+    phoneme: "discourse marker tone",
+    description: "Discourse markers — however, furthermore — luôn có pause sau",
+    examples: [
+        { word: "however", ipa: "/haʊˈɛvər/", tip: "However, [pause]... — luôn ngừng nhẹ sau however. Stress âm 2: how-EV-er" },
+        { word: "furthermore", ipa: "/ˈfɜːðəmɔːr/", tip: "Stress âm 1: FUR-ther-more — 3 âm tiết. Âm /ð/ giữa rõ ràng" },
+    ],
+    minimalPairs: [
+        ["however [,] (có pause)", "however không pause (sai tone)"],
+    ],
+  },
+
   fluencyDrill: {
     items: [
       { en: "He missed the flight consequently", vn: "Do đó anh ấy đã bị lỡ chuyến bay" },

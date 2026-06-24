@@ -256,6 +256,20 @@ export const unit15: UnitData = {
     },
   ],
 
+
+  pronunciationFocus: {
+    phoneme: "comparative stress",
+    description: "So sánh hơn: stress thay đổi trong more + adj vs tính từ + -er",
+    examples: [
+        { word: "cheaper", ipa: "/ˈtʃiːpər/", tip: "Stress âm 1: CHEAP-er — âm /-ər/ schwa, không nhấn" },
+        { word: "more expensive", ipa: "/mɔːr ɪkˈspɛnsɪv/", tip: "Stress ở adjective: more EX-PEN-sive — more không nhấn mạnh" },
+    ],
+    minimalPairs: [
+        ["cheap", "cheaper"],
+        ["good", "better"],
+    ],
+  },
+
   fluencyDrill: {
     items: [
       { en: "cheaper", vn: "rẻ hơn" },

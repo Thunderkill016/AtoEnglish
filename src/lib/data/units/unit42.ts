@@ -209,6 +209,19 @@ export const unit42: UnitData = {
     { id: "cr42-2", question: "Ôn tập Unit 40 — Điền: 'She practices daily, ___ (nhờ đó) improving her fluency.'", options: [], answer: "thereby", type: "cloze" },
     { id: "cr42-3", question: "Ôn tập Unit 39 — Chọn dạng đúng: 'He ___ (forget) his keys because the car is locked.'", options: ["must have forgotten", "can't have forgotten", "should have forgotten", "might forget"], answer: "must have forgotten", type: "multiple-choice" },
   ],
+  pronunciationFocus: {
+    phoneme: "final consonants",
+    description: "Ôn tập toàn bộ — focus vào 5 lỗi phổ biến nhất người Việt B2",
+    examples: [
+        { word: "final consonants", ipa: "/t, d, k, p/", tip: "Âm cuối /t,d,k,p/ hay bị bỏ — walked /wɔːkt/ không phải /wɔːk/" },
+        { word: "long word stress", ipa: "/ˌɛnˌvaɪrənˈmɛntl/", tip: "environmental — stress âm 4: en-vi-ron-MEN-tal" },
+    ],
+    minimalPairs: [
+        ["walked /t/", "walk (bỏ /t/ — sai)"],
+        ["must've", "must have (formal)"],
+    ],
+  },
+
   fluencyDrill: {
     items: [
       { en: "Having completed B2, I feel ready", vn: "Sau khi hoàn thành B2, tôi thấy sẵn sàng" },

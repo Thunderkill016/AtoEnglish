@@ -245,6 +245,19 @@ export const unit2: UnitData = {
     },
   ],
 
+  pronunciationFocus: {
+    phoneme: "/w/",
+    description: "Âm /w/ — tiếng Việt không có, hay bị đọc thành /v/ hoặc /u/",
+    examples: [
+        { word: "what", ipa: "/wɒt/", tip: "Mở miệng tròn như nói \"ồ\", không chạm răng — khác /v/ hoàn toàn" },
+        { word: "where", ipa: "/weər/", tip: "Môi tròn, không có rung dây thanh quản" },
+    ],
+    minimalPairs: [
+        ["wine", "vine"],
+        ["west", "vest"],
+    ],
+  },
+
   fluencyDrill: {
     items: [
       { en: "What is your name?", vn: "Tên bạn là gì?" },

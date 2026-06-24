@@ -211,6 +211,18 @@ export const unit28: UnitData = {
     { id: "cr28-2", question: "Ôn tập Unit 26 — Điền: 'I ___ (consider) changing my approach.'", options: [], answer: "am considering", type: "cloze" },
     { id: "cr28-3", question: "Ôn tập Unit 25 — Relative pronoun đúng: 'Tom, ___ portfolio includes Fortune 500 clients, works remotely.'", options: ["who", "which", "whose", "where"], answer: "whose", type: "multiple-choice" },
   ],
+  pronunciationFocus: {
+    phoneme: "for /fɔːr/ vs /fər/",
+    description: "For trong present perfect — dạng mạnh /fɔːr/ và yếu /fər/",
+    examples: [
+        { word: "for (mạnh)", ipa: "/fɔːr/", tip: "Khi nhấn: FOR three years! — âm /ɔː/ dài, rõ" },
+        { word: "for (yếu)", ipa: "/fər/", tip: "Trong câu: I've lived here for 5 years — /fər/ schwa, rất nhẹ" },
+    ],
+    minimalPairs: [
+        ["for /fɔːr/ (mạnh)", "for /fər/ (yếu trong câu)"],
+    ],
+  },
+
   fluencyDrill: {
     items: [
       { en: "I've been studying English for six months", vn: "Tôi đã học tiếng Anh được sáu tháng" },

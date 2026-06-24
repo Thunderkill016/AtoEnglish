@@ -210,6 +210,18 @@ export const unit24: UnitData = {
     { id: "cr24-2", question: "Ôn tập Unit 22 — Điền modal: 'You ___ share passwords — it's prohibited.'", options: [], answer: "mustn't", type: "cloze" },
     { id: "cr24-3", question: "Ôn tập Unit 21 — Câu Future Perfect đúng:", options: ["By 2030, we will expand globally.", "By 2030, we will be expanding globally.", "By 2030, we will have expanded globally.", "By 2030, we expand globally."], answer: "By 2030, we will have expanded globally.", type: "multiple-choice" },
   ],
+  pronunciationFocus: {
+    phoneme: "been /biːn/",
+    description: "Passive been — âm /iː/ dài, không phải /ɪ/ ngắn",
+    examples: [
+        { word: "been", ipa: "/biːn/", tip: "Âm /iː/ dài: has BEEN done — không phải /bɪn/ ngắn" },
+        { word: "passive be-forms", ipa: "/ɪz, ɑːr, wɒz, wɜːr/", tip: "is/are/was/were + V3 — các be-forms hay bị bỏ qua trong nói nhanh" },
+    ],
+    minimalPairs: [
+        ["been /biːn/", "bin /bɪn/ (sai)"],
+    ],
+  },
+
   fluencyDrill: {
     items: [
       { en: "The product is tested before shipping", vn: "Sản phẩm được kiểm tra trước khi vận chuyển" },

@@ -227,6 +227,19 @@ export const unit9: UnitData = {
     },
   ],
 
+  pronunciationFocus: {
+    phoneme: "/θ/ (cuối từ)",
+    description: "Âm /θ/ trong các từ chỉ hướng: north, south, both, path — hay bị đọc thành /t/ hoặc /s/",
+    examples: [
+        { word: "north", ipa: "/nɔːrθ/", tip: "Âm cuối /θ/ — lưỡi ra nhẹ chạm răng, thổi hơi yếu, không bật mạnh" },
+        { word: "south", ipa: "/saʊθ/", tip: "Giữ lưỡi ở răng đến hết hơi — không bỏ sớm" },
+    ],
+    minimalPairs: [
+        ["north", "Norse"],
+        ["south", "mouse"],
+    ],
+  },
+
   fluencyDrill: {
     items: [
       { en: "I worked yesterday", vn: "Tôi đã làm việc hôm qua" },

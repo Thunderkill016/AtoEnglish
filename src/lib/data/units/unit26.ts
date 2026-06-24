@@ -210,6 +210,18 @@ export const unit26: UnitData = {
     { id: "cr26-2", question: "Ôn tập Unit 24 — Điền Passive: 'The report ___ (submit) yesterday.'", options: [], answer: "was submitted", type: "cloze" },
     { id: "cr26-3", question: "Ôn tập Unit 23 — First Conditional đúng:", options: ["If you will sign, we will start.", "If you sign, we will start.", "If you signed, we will start.", "If you sign, we start."], answer: "If you sign, we will start.", type: "multiple-choice" },
   ],
+  pronunciationFocus: {
+    phoneme: "rather /ˈrɑːðər/",
+    description: "Would rather — âm /ð/ trong rather và stress",
+    examples: [
+        { word: "rather", ipa: "/ˈrɑːðər/", tip: "Âm /ð/ giữa — có rung, không phải /d/ hay /z/. Stress âm 1: RA-ther" },
+        { word: "prefer", ipa: "/prɪˈfɜːr/", tip: "Stress âm 2: pre-FER — âm /ɜː/ dài trong fer" },
+    ],
+    minimalPairs: [
+        ["rather /ˈrɑːðər/", "razor /ˈreɪzər/ (âm /z/ khác /ð/)"],
+    ],
+  },
+
   fluencyDrill: {
     items: [
       { en: "I enjoy working with international teams", vn: "Tôi thích làm việc với các nhóm quốc tế" },

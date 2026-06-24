@@ -210,6 +210,18 @@ export const unit22: UnitData = {
     { id: "cr22-2", question: "Ôn tập Unit 20 — Điền: 'By the time I arrived, they ___ (sign) the deal.'", options: [], answer: "had signed", type: "cloze" },
     { id: "cr22-3", question: "Ôn tập Unit 19 — Câu kể chuyện tự nhiên nhất:", options: ["The server crashed. I fixed it.", "I was fixing the server when the power went out.", "I fix the server when power goes out.", "The server was crashed."], answer: "I was fixing the server when the power went out.", type: "multiple-choice" },
   ],
+  pronunciationFocus: {
+    phoneme: "must /mʌst/ vs /məst/",
+    description: "Must — dạng mạnh /mʌst/ và yếu /məst/ trong câu",
+    examples: [
+        { word: "must (mạnh)", ipa: "/mʌst/", tip: "Khi nhấn: You MUST leave now! — âm /ʌ/ rõ ràng" },
+        { word: "mustn't", ipa: "/ˈmʌsənt/", tip: "Âm /t/ giữa thường bị bỏ trong tiếng nói: mus-nt không phải must-not" },
+    ],
+    minimalPairs: [
+        ["must (nhấn)", "must (không nhấn /məst/)"],
+    ],
+  },
+
   fluencyDrill: {
     items: [
       { en: "You must wear your ID badge at all times", vn: "Bạn phải đeo thẻ ID mọi lúc" },

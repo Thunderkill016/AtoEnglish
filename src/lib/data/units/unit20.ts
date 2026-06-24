@@ -233,6 +233,19 @@ export const unit20: UnitData = {
     { id: "cr20-3", question: "Ôn tập A2 — Câu nào dùng Present Perfect đúng?", options: ["I worked here since 2020.", "I've worked here since 2020.", "I was working here since 2020.", "I work here since 2020."], answer: "I've worked here since 2020.", type: "multiple-choice" },
   ],
 
+  pronunciationFocus: {
+    phoneme: "politics /ˈpɒlɪtɪks/",
+    description: "Stress trong từ tin tức/chính trị — hay bị stress sai",
+    examples: [
+        { word: "politics", ipa: "/ˈpɒlɪtɪks/", tip: "Stress âm 1: POL-i-tics — 3 âm tiết" },
+        { word: "economy", ipa: "/ɪˈkɒnəmi/", tip: "Stress âm 2: e-CON-o-my — 4 âm tiết, âm 3 là schwa" },
+    ],
+    minimalPairs: [
+        ["POL-i-tics (đúng)", "po-LIT-ics (sai)"],
+        ["e-CON-o-my (đúng)", "e-co-NO-my (sai)"],
+    ],
+  },
+
   fluencyDrill: {
     items: [
       { en: "By the time I arrived, it had already started", vn: "Khi tôi đến, nó đã bắt đầu rồi" },

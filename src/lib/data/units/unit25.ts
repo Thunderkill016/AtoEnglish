@@ -210,6 +210,19 @@ export const unit25: UnitData = {
     { id: "cr25-2", question: "Ôn tập Unit 23 — Điền First Conditional: 'If you ___ (confirm) today, we ___ (start) immediately.'", options: [], answer: "confirm / will start", type: "cloze" },
     { id: "cr25-3", question: "Ôn tập Unit 22 — 'You ___ (không bắt buộc) stay past 6pm.'", options: ["mustn't", "must not", "don't have to", "should not"], answer: "don't have to", type: "multiple-choice" },
   ],
+  pronunciationFocus: {
+    phoneme: "who /huː/ which /wɪtʃ/ where /weər/",
+    description: "Relative pronouns — phát âm và stress",
+    examples: [
+        { word: "who", ipa: "/huː/", tip: "Âm /h/ đầu rõ ràng — không bỏ /h/. The man WHO is... không phải oo is" },
+        { word: "which", ipa: "/wɪtʃ/", tip: "Âm /tʃ/ cuối rõ — which /wɪtʃ/ không phải /wɪk/" },
+    ],
+    minimalPairs: [
+        ["who /huː/", "oo (thiếu /h/)"],
+        ["which /wɪtʃ/", "witch /wɪtʃ/ (đồng âm!)"],
+    ],
+  },
+
   fluencyDrill: {
     items: [
       { en: "This is Lan, who leads our marketing team", vn: "Đây là Lan, người dẫn dắt nhóm marketing" },

@@ -208,6 +208,18 @@ export const unit39: UnitData = {
     { id: "cr39-2", question: "Ôn tập Unit 37 — Điền dạng đúng: '___ (synthesize) the reports, he wrote a summary.'", options: [], answer: "Having synthesized", type: "cloze" },
     { id: "cr39-3", question: "Ôn tập Unit 36 — Chọn câu đúng:", options: ["The virus is claimed to have been isolated yesterday.", "The virus claimed to have isolated yesterday.", "It is claimed the virus to be isolated yesterday.", "The virus is claimed to isolate yesterday."], answer: "The virus is claimed to have been isolated yesterday.", type: "multiple-choice" },
   ],
+  pronunciationFocus: {
+    phoneme: "must've /ˈmʌstəv/",
+    description: "Modal perfect — must have, might have, could have — giảm âm cực phổ biến",
+    examples: [
+        { word: "must have", ipa: "/mʌst həv/", tip: "He must've left /ˈmʌstəv/ — have thu thành /əv/ hoàn toàn" },
+        { word: "might have", ipa: "/maɪt həv/", tip: "might've /ˈmaɪtəv/ — âm /t/ cuối might thường rất yếu" },
+    ],
+    minimalPairs: [
+        ["must've /ˈmʌstəv/ (spoken)", "must have /mʌst hæv/ (formal)"],
+    ],
+  },
+
   fluencyDrill: {
     items: [
       { en: "They must have forgotten the key", vn: "Họ chắc chắn đã quên chìa khóa" },

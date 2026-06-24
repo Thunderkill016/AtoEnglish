@@ -251,6 +251,18 @@ export const unit14: UnitData = {
     },
   ],
 
+  pronunciationFocus: {
+    phoneme: "going to → gonna",
+    description: "Phát âm going to nhanh: /ˈɡɒɪŋ tə/ → gonna /ˈɡɒnə/ trong nói nhanh",
+    examples: [
+        { word: "going to", ipa: "/ˈɡɒɪŋ tə/", tip: "Văn nói chậm/rõ: going to rõ từng âm" },
+        { word: "gonna", ipa: "/ˈɡɒnə/", tip: "Văn nói nhanh: I am gonna go — KHÔNG viết gonna trong văn viết" },
+    ],
+    minimalPairs: [
+        ["going to (chính thức)", "gonna (không chính thức)"],
+    ],
+  },
+
   fluencyDrill: {
     items: [
       { en: "I will call you", vn: "Tôi sẽ gọi cho bạn" },

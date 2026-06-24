@@ -211,6 +211,18 @@ export const unit29: UnitData = {
     { id: "cr29-2", question: "Ôn tập Unit 27 — Điền phrasal verb: 'We need to ___ (giải quyết/xử lý) this problem immediately.'", options: [], answer: "deal with", type: "cloze" },
     { id: "cr29-3", question: "Ôn tập Unit 26 — Dịch: 'Tôi thích đọc sách hơn chơi game.'", options: ["I prefer reading books to playing games.", "I like read books than play games.", "I enjoy to read books than gaming.", "I prefer to read books rather play games."], answer: "I prefer reading books to playing games.", type: "multiple-choice" },
   ],
+  pronunciationFocus: {
+    phoneme: "wish /wɪʃ/",
+    description: "Wish và subjunctive mood — âm /ʃ/ cuối và stress",
+    examples: [
+        { word: "wish", ipa: "/wɪʃ/", tip: "Âm /ʃ/ cuối rõ — không phải /s/ hay bỏ hẳn. I wish I... không phải I wis I" },
+        { word: "if only", ipa: "/ɪf ˈəʊnli/", tip: "Stress vào only: if ONLY I had... — nhấn sự tiếc nuối" },
+    ],
+    minimalPairs: [
+        ["wish /wɪʃ/", "wis (bỏ /ʃ/ — sai)"],
+    ],
+  },
+
   fluencyDrill: {
     items: [
       { en: "We have a serious issue", vn: "Chúng ta đang gặp vấn đề nghiêm trọng" },

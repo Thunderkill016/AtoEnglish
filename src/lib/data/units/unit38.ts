@@ -208,6 +208,18 @@ export const unit38: UnitData = {
     { id: "cr38-2", question: "Ôn tập Unit 36 — Điền: 'The drug is claimed ___ (have) no side effects.'", options: [], answer: "to have", type: "cloze" },
     { id: "cr38-3", question: "Ôn tập Unit 35 — Chọn liên từ thích hợp: 'Miễn là bạn đồng ý ký hợp đồng...':", options: ["As long as", "Unless", "Even if", "Although"], answer: "As long as", type: "multiple-choice" },
   ],
+  pronunciationFocus: {
+    phoneme: "cleft sentence stress",
+    description: "It is X that... — nhấn mạnh bằng cách thay đổi stress",
+    examples: [
+        { word: "It is WORK that...", ipa: "/ɪt ɪz wɜːrk ðæt/", tip: "Phần được nhấn mạnh (X) đọc to, rõ hơn hẳn" },
+        { word: "What I need is...", ipa: "/wɒt aɪ niːd ɪz/", tip: "What trong cleft câu — không nhấn, nhấn vào phần sau" },
+    ],
+    minimalPairs: [
+        ["It is WORK that matters (cleft)", "Work matters (thường)"],
+    ],
+  },
+
   fluencyDrill: {
     items: [
       { en: "Not only did we hit our target", vn: "Chúng tôi không những đạt chỉ tiêu" },

@@ -210,6 +210,18 @@ export const unit21: UnitData = {
     { id: "cr21-2", question: "Ôn tập Unit 19 — Điền: 'She ___ (present) when the projector ___ (stop) working.'", options: [], answer: "was presenting / stopped", type: "cloze" },
     { id: "cr21-3", question: "Ôn tập A2 — Câu nào dùng going to ĐÚNG cho kế hoạch đã lên sẵn?", options: ["I will travel to Paris next month.", "I'm going to travel to Paris next month — I have the tickets.", "I travel to Paris next month.", "I was going to travel to Paris."], answer: "I'm going to travel to Paris next month — I have the tickets.", type: "multiple-choice" },
   ],
+  pronunciationFocus: {
+    phoneme: "might /maɪt/ tone",
+    description: "Modal verbs nhẹ: might, could, would — hay bị đọc quá nặng",
+    examples: [
+        { word: "might", ipa: "/maɪt/", tip: "Đọc nhẹ trong câu — không nhấn mạnh: It might rain /ɪt maɪt reɪn/" },
+        { word: "predict", ipa: "/prɪˈdɪkt/", tip: "Stress âm 2: pre-DICT — âm cuối /t/ đừng bỏ" },
+    ],
+    minimalPairs: [
+        ["might /maɪt/", "must /mʌst/ (chắc hơn)"],
+    ],
+  },
+
   fluencyDrill: {
     items: [
       { en: "By next year, we will have reached our target", vn: "Đến năm tới, chúng tôi sẽ đạt được mục tiêu" },

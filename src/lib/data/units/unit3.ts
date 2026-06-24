@@ -412,6 +412,19 @@ export const unit3: UnitData = {
     },
   ],
 
+  pronunciationFocus: {
+    phoneme: "/ð/",
+    description: "Âm \"th\" hữu thanh — lưỡi chạm răng, CÓ rung (the, they, this)",
+    examples: [
+        { word: "the", ipa: "/ðə/", tip: "Rung cổ họng khi lưỡi chạm răng — cảm nhận rung bằng tay đặt ở cổ" },
+        { word: "they", ipa: "/ðeɪ/", tip: "Khác /θ/ (thank) ở chỗ có rung — tập phân biệt: think/this" },
+    ],
+    minimalPairs: [
+        ["they", "day"],
+        ["this", "dis"],
+    ],
+  },
+
   fluencyDrill: {
     items: [
       { en: "my family", vn: "gia đình của tôi" },

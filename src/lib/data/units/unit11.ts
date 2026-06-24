@@ -226,6 +226,19 @@ export const unit11: UnitData = {
     },
   ],
 
+  pronunciationFocus: {
+    phoneme: "/θ/ (health words)",
+    description: "Âm /θ/ trong các từ y tế: health, teeth, breath, mouth",
+    examples: [
+        { word: "health", ipa: "/hɛlθ/", tip: "Âm cuối /lθ/ — /l/ trước rồi lưỡi ra răng /θ/. Đừng bỏ /θ/!" },
+        { word: "teeth", ipa: "/tiːθ/", tip: "Âm cuối /θ/ — giữ lưỡi ở răng cho đến cuối" },
+    ],
+    minimalPairs: [
+        ["health", "hell"],
+        ["teeth", "tease"],
+    ],
+  },
+
   fluencyDrill: {
     items: [
       { en: "I am working", vn: "Tôi đang làm việc" },

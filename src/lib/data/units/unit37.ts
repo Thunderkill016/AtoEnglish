@@ -209,6 +209,18 @@ export const unit37: UnitData = {
     { id: "cr37-2", question: "Ôn tập Unit 35 — Điền: 'We will not sign the trade contract ___ they reduce the penalty.'", options: [], answer: "unless", type: "cloze" },
     { id: "cr37-3", question: "Ôn tập Unit 34 — Chọn đúng: 'If she ___ (investigate) the crash, she would have found the fault.'", options: ["investigated", "had investigated", "has investigated", "would investigate"], answer: "had investigated", type: "multiple-choice" },
   ],
+  pronunciationFocus: {
+    phoneme: "having /ˈhævɪŋ/",
+    description: "Having + V3 — participle clause âm nối phức tạp",
+    examples: [
+        { word: "Having finished", ipa: "/ˈhævɪŋ ˈfɪnɪʃt/", tip: "Having FINISHED the work... — having không nhấn, finished nhấn" },
+        { word: "Written in...", ipa: "/ˈrɪtən ɪn/", tip: "WRITTEN in 1984... — V3 đứng đầu nhấn mạnh" },
+    ],
+    minimalPairs: [
+        ["Having done (chủ động)", "Having been done (bị động)"],
+    ],
+  },
+
   fluencyDrill: {
     items: [
       { en: "Having finished the draft, she sent it", vn: "Sau khi làm xong bản nháp, cô ấy đã gửi" },

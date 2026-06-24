@@ -206,6 +206,18 @@ export const unit31: UnitData = {
     { id: "cr31-2", question: "Ôn tập Unit 29 — Điền từ: 'The team reached a ___ (sự đồng nhất) after discussion.'", options: [], answer: "consensus", type: "cloze" },
     { id: "cr31-3", question: "Ôn tập Unit 28 — Chọn thì đúng: 'She ___ on this corporate project since January.'", options: ["is working", "has been working", "was working", "worked"], answer: "has been working", type: "multiple-choice" },
   ],
+  pronunciationFocus: {
+    phoneme: "professional /prəˈfɛʃənl/",
+    description: "Business vocabulary stress — professional, collaboration, agenda",
+    examples: [
+        { word: "professional", ipa: "/prəˈfɛʃənl/", tip: "Stress âm 2: pro-FES-sion-al — 4 âm tiết" },
+        { word: "agenda", ipa: "/əˈdʒɛndə/", tip: "Stress âm 2: a-GEN-da — âm /dʒ/ không phải /g/ hay /j/" },
+    ],
+    minimalPairs: [
+        ["pro-FES-sion-al", "PRO-fes-sion-al (sai)"],
+    ],
+  },
+
   fluencyDrill: {
     items: [
       { en: "Please see the attached file", vn: "Vui lòng xem tệp đính kèm" },

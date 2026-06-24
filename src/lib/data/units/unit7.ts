@@ -228,6 +228,19 @@ export const unit7: UnitData = {
     },
   ],
 
+  pronunciationFocus: {
+    phoneme: "/æ/",
+    description: "Nguyên âm /æ/ (cat, can, map) — miệng mở rộng, lưỡi thấp và ra trước",
+    examples: [
+        { word: "can", ipa: "/kæn/", tip: "Miệng mở rộng theo chiều ngang như cười gượng, lưỡi thấp nhất" },
+        { word: "cash", ipa: "/kæʃ/", tip: "So sánh: cash /æ/ vs fresh /ɛ/ — cash mở hơn nhiều" },
+    ],
+    minimalPairs: [
+        ["can", "ken"],
+        ["bad", "bed"],
+    ],
+  },
+
   fluencyDrill: {
     items: [
       { en: "a coffee", vn: "một ly cà phê" },

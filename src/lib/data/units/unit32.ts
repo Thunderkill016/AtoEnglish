@@ -210,6 +210,18 @@ export const unit32: UnitData = {
     { id: "cr32-2", question: "Ôn tập Unit 30 — Điền: 'Deforestation causes severe loss of ___ (đa dạng sinh học).'", options: [], answer: "biodiversity", type: "cloze" },
     { id: "cr32-3", question: "Ôn tập Unit 29 — Chọn dạng: 'What if we ___ (offer) them a refund yesterday?'", options: ["offered", "offer", "offering", "to offer"], answer: "offered", type: "multiple-choice" },
   ],
+  pronunciationFocus: {
+    phoneme: "would've /ˈwʊdəv/",
+    description: "Would have — second/third conditional giảm âm",
+    examples: [
+        { word: "would have", ipa: "/wʊd həv/", tip: "Nói nhanh: would've /ˈwʊdəv/ — rất phổ biến trong văn nói" },
+        { word: "could have", ipa: "/kʊd həv/", tip: "could've /ˈkʊdəv/ — âm /d/ cuối thường rất yếu hoặc bị bỏ" },
+    ],
+    minimalPairs: [
+        ["would've /ˈwʊdəv/", "would have (đầy đủ)"],
+    ],
+  },
+
   fluencyDrill: {
     items: [
       { en: "I've been preparing for this assessment", vn: "Tôi đã chuẩn bị cho buổi đánh giá này" },

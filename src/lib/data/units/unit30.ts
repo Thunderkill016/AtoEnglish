@@ -209,6 +209,18 @@ export const unit30: UnitData = {
     { id: "cr30-2", question: "Ôn tập Unit 28 — Điền: 'How long ___ they ___ (work) on this environment project?'", options: [], answer: "have they been working", type: "cloze" },
     { id: "cr30-3", question: "Ôn tập Unit 27 — Chọn phrasal verb có nghĩa là 'thực hiện':", options: ["carry out", "give up", "look up", "deal with"], answer: "carry out", type: "multiple-choice" },
   ],
+  pronunciationFocus: {
+    phoneme: "should've /ˈʃʊdəv/",
+    description: "Should have — nối âm và giảm âm trong văn nói",
+    examples: [
+        { word: "should have", ipa: "/ʃʊd həv/", tip: "Nối âm nhanh: should've /ˈʃʊdəv/ — phổ biến hơn should have đầy đủ" },
+        { word: "shouldn't have", ipa: "/ˈʃʊdənt əv/", tip: "Âm /t/ giữa thường yếu: shouldn't've trong văn nói" },
+    ],
+    minimalPairs: [
+        ["should've /ˈʃʊdəv/", "should have (đầy đủ)"],
+    ],
+  },
+
   fluencyDrill: {
     items: [
       { en: "It is important to protect the environment", vn: "Việc bảo vệ môi trường là rất quan trọng" },

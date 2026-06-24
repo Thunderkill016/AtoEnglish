@@ -256,6 +256,19 @@ export const unit16: UnitData = {
     },
   ],
 
+  pronunciationFocus: {
+    phoneme: "travel word stress",
+    description: "Stress và âm trong từ du lịch: passport, departure, arrival",
+    examples: [
+        { word: "passport", ipa: "/ˈpɑːspɔːrt/", tip: "Stress âm 1: PASS-port. Âm /pɑː/ dài — không phải /pæs/ ngắn" },
+        { word: "departure", ipa: "/dɪˈpɑːrtʃər/", tip: "Stress âm 2: de-PAR-ture. -ture đọc /tʃər/ không phải /ture/" },
+    ],
+    minimalPairs: [
+        ["PASS-port", "pass-PORT (sai)"],
+        ["de-PAR-ture", "DE-par-ture (sai)"],
+    ],
+  },
+
   fluencyDrill: {
     items: [
       { en: "Turn left", vn: "Rẽ trái" },

@@ -246,6 +246,19 @@ export const unit4: UnitData = {
     },
   ],
 
+  pronunciationFocus: {
+    phoneme: "-s cuối /s/ /z/ /ɪz/",
+    description: "Quy tắc đọc -s cuối: sau vô thanh → /s/, sau hữu thanh → /z/, sau /s,z,ʃ/ → /ɪz/",
+    examples: [
+        { word: "works", ipa: "/wɜːrks/", tip: "Sau /k/ vô thanh → -s đọc /s/" },
+        { word: "lives", ipa: "/lɪvz/", tip: "Sau /v/ hữu thanh → -s đọc /z/" },
+    ],
+    minimalPairs: [
+        ["cats /s/", "dogs /z/"],
+        ["bus /s/", "lives /z/"],
+    ],
+  },
+
   fluencyDrill: {
     items: [
       { en: "I work", vn: "Tôi làm việc" },

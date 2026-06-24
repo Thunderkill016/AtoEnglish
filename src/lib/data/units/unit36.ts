@@ -201,6 +201,18 @@ export const unit36: UnitData = {
     { id: "cr36-2", question: "Ôn tập Unit 34 — Điền: 'If we had foreseen the risk, we ___ (avoid) the complication.'", options: [], answer: "would have avoided", type: "cloze" },
     { id: "cr36-3", question: "Ôn tập Unit 33 — Chọn dạng đúng: 'If she ___ more time, she would invest in our startup.'", options: ["has", "had", "have", "would have"], answer: "had", type: "multiple-choice" },
   ],
+  pronunciationFocus: {
+    phoneme: "impersonal passive",
+    description: "Impersonal passive — It is said that — linking và stress",
+    examples: [
+        { word: "It is said", ipa: "/ɪt ɪz sɛd/", tip: "It is SAID that... — said nhấn, it is nói nhanh/nhẹ" },
+        { word: "It is believed", ipa: "/ɪt ɪz bɪˈliːvd/", tip: "Stress vào V3: it is be-LIEVED that — âm /d/ cuối nhẹ" },
+    ],
+    minimalPairs: [
+        ["It's said (spoken)", "It is said (formal)"],
+    ],
+  },
+
   fluencyDrill: {
     items: [
       { en: "It is believed that habits are changing", vn: "Người ta tin rằng thói quen đang thay đổi" },

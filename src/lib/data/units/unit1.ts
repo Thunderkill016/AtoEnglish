@@ -648,6 +648,19 @@ export const unit1: UnitData = {
   // ── FLUENCY DRILL: Nation Strand 4 — Automaticity ───────────────────────
   // Research: Nation (2007) — Fluency = tốc độ + độ chính xác với material đã biết
   // 8 cặp từ QUAN TRỌNG NHẤT của unit — phản xạ trong 60 giây
+  pronunciationFocus: {
+    phoneme: "/θ/",
+    description: "Âm \"th\" vô thanh — lưỡi chạm nhẹ răng trên, thổi hơi (thank, think)",
+    examples: [
+        { word: "thank", ipa: "/θæŋk/", tip: "Đặt lưỡi giữa hai hàm răng, thổi hơi — KHÔNG cuộn lưỡi" },
+        { word: "three", ipa: "/θriː/", tip: "Giữ lưỡi ở răng, hơi ra đều" },
+    ],
+    minimalPairs: [
+        ["thank", "tank"],
+        ["think", "tink"],
+    ],
+  },
+
   fluencyDrill: {
     title: "Phản xạ chào hỏi",
     items: [

@@ -208,6 +208,18 @@ export const unit34: UnitData = {
     { id: "cr34-2", question: "Ôn tập Unit 32 — Điền: 'By 2030, scientists ___ (develop) sustainable energy.'", options: [], answer: "will have developed", type: "cloze" },
     { id: "cr34-3", question: "Ôn tập Unit 31 — Điền động từ: 'I recommend that he ___ (xác nhận) the scheduled meeting.'", options: ["confirms", "confirm", "confirming", "to confirm"], answer: "confirm", type: "multiple-choice" },
   ],
+  pronunciationFocus: {
+    phoneme: "had've /hæd.əv/",
+    description: "Had have (third conditional) — nối âm phức tạp nhất",
+    examples: [
+        { word: "had have", ipa: "/hæd həv/", tip: "If I had've known /hæd.əv/ — nối âm rất phổ biến trong spoken English" },
+        { word: "should've", ipa: "/ˈʃʊdəv/", tip: "I shouldn't have done it → I shouldn't've done it trong văn nói" },
+    ],
+    minimalPairs: [
+        ["had've known (spoken)", "had have known (formal)"],
+    ],
+  },
+
   fluencyDrill: {
     items: [
       { en: "If we had known, we would have helped", vn: "Nếu chúng tôi biết, chúng tôi đã giúp rồi" },

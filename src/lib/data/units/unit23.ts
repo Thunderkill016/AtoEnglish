@@ -210,6 +210,18 @@ export const unit23: UnitData = {
     { id: "cr23-2", question: "Ôn tập Unit 21 — Điền: 'By 2030, we ___ (expand) into 10 countries.'", options: [], answer: "will have expanded", type: "cloze" },
     { id: "cr23-3", question: "Ôn tập Unit 20 — Câu Past Perfect đúng:", options: ["When I arrived, the meeting started.", "When I arrived, the meeting has started.", "When I arrived, the meeting had already started.", "When I arrived, the meeting was starting."], answer: "When I arrived, the meeting had already started.", type: "multiple-choice" },
   ],
+  pronunciationFocus: {
+    phoneme: "if + linking",
+    description: "Conditional nối âm — if it → /ɪ fɪt/, if I → /ɪ faɪ/",
+    examples: [
+        { word: "if it rains", ipa: "/ɪf ɪt reɪnz/", tip: "Nối âm: if it → /ɪ.fɪt/ — âm /f/ nối với it" },
+        { word: "if you", ipa: "/ɪf juː/", tip: "Nối âm: if you → /ɪ.fjuː/ — âm /f/ + /j/ tạo /fj/" },
+    ],
+    minimalPairs: [
+        ["if it /ɪf.ɪt/", "if I /ɪ.faɪ/"],
+    ],
+  },
+
   fluencyDrill: {
     items: [
       { en: "If you sign today, we will start immediately", vn: "Nếu bạn ký hôm nay, chúng tôi sẽ bắt đầu ngay" },

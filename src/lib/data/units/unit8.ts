@@ -227,6 +227,19 @@ export const unit8: UnitData = {
     },
   ],
 
+  pronunciationFocus: {
+    phoneme: "/ɔː/",
+    description: "Nguyên âm /ɔː/ dài tròn — trong fork, order, morning hay bị thu ngắn",
+    examples: [
+        { word: "order", ipa: "/ˈɔːrdər/", tip: "Môi tròn hết cỡ, âm dài — không phải /o/ ngắn như tiếng Việt" },
+        { word: "fork", ipa: "/fɔːrk/", tip: "Âm /ɔː/ trước /r/ — giữ độ dài và độ tròn của môi" },
+    ],
+    minimalPairs: [
+        ["caught", "cot"],
+        ["fork", "flock"],
+    ],
+  },
+
   fluencyDrill: {
     items: [
       { en: "I can speak English", vn: "Tôi có thể nói tiếng Anh" },

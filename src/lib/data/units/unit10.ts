@@ -230,6 +230,18 @@ export const unit10: UnitData = {
     },
   ],
 
+  pronunciationFocus: {
+    phoneme: "can /kæn/ vs /kən/",
+    description: "Modal \"can\" — dạng mạnh /kæn/ (nhấn mạnh) và dạng yếu /kən/ (thông thường)",
+    examples: [
+        { word: "can (mạnh)", ipa: "/kæn/", tip: "Khi nhấn mạnh: Yes, I CAN! — âm /æ/ rõ ràng, dài" },
+        { word: "can (yếu)", ipa: "/kən/", tip: "Trong câu bình thường: I can swim → /aɪ kən swɪm/ — schwa, rất ngắn" },
+    ],
+    minimalPairs: [
+        ["I CAN (nhấn)", "I can (thường /kən/)"],
+    ],
+  },
+
   fluencyDrill: {
     items: [
       { en: "at 9 o'clock", vn: "lúc 9 giờ" },
