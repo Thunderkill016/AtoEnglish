@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Trophy, Zap, Flame, Calendar, Star, Shield } from "lucide-react";
 import { useSearchParams } from "next/navigation";
@@ -176,7 +176,7 @@ function SkeletonList() {
 // ─── Main page ────────────────────────────────────────────────────────────────
 type TabId = "alltime" | "weekly" | "league";
 
-export default function LeaderboardPage() {
+function LeaderboardContent() {
   const searchParams = useSearchParams();
   const initialTab = (searchParams.get("tab") as TabId) ?? "weekly";
 
@@ -401,5 +401,22 @@ export default function LeaderboardPage() {
           : "Top 20 theo tổng XP tích lũy 🏆"}
       </p>
     </div>
+  );
+}
+
+// Wrap in Suspense — required by Next.js 16 for useSearchParams() during build
+export default function LeaderboardPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="space-y-2 w-full max-w-2xl px-4">
+          {Array.from({ length: 8 }).map((_, i) => (
+            <div key={i} className="h-16 rounded-2xl bg-white/4 border border-white/8 animate-pulse" />
+          ))}
+        </div>
+      </div>
+    }>
+      <LeaderboardContent />
+    </Suspense>
   );
 }
