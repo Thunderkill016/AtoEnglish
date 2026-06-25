@@ -3,6 +3,7 @@
 import dynamic from "next/dynamic";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { motion, AnimatePresence } from "framer-motion";
 import { Flame, Star, GraduationCap, BookOpen, Clock, ChevronDown, ChevronUp, ChevronRight, ExternalLink, Target, Zap, TrendingUp, Mic } from "lucide-react";
 import { toast } from "sonner";
 import { updateDailyXpGoal } from "@/app/actions/stats";
@@ -188,6 +189,7 @@ export default function DashboardClient({
 
   const [showPlacementBanner, setShowPlacementBanner] = useState(true);
   const [expandProgressGrid, setExpandProgressGrid] = useState(false);
+  const [showDetailedStats, setShowDetailedStats] = useState(false);
 
   useEffect(() => {
     const hidden = localStorage.getItem("ato_hide_placement_banner") === "true";
@@ -578,71 +580,142 @@ export default function DashboardClient({
           </Link>
         </div>
 
-        {/* ── 2b. Weekly active streak calendar ── */}
-        {weeklyData && weeklyData.length > 0 && (
-          <div className="rounded-2xl border border-zinc-200/60 dark:border-zinc-800/60 bg-white/60 dark:bg-zinc-900/30 backdrop-blur-sm p-4 space-y-3">
-            <div className="flex items-center justify-between">
-              <p className="text-[10px] font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">Lịch chuỗi học tuần này</p>
-              <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold">Luyện tập đều đặn để giữ streak!</span>
-            </div>
-            <div className="flex justify-between items-center gap-1">
-              {weeklyData.map((d, idx) => {
-                const isToday = d.day === todayKey;
-                const hasLearned = d.xp > 0;
-                return (
-                  <div key={idx} className="flex-1 flex flex-col items-center gap-1.5">
-                    <div className={`relative flex size-8 sm:size-10 items-center justify-center rounded-full border transition-all ${
-                      hasLearned
-                        ? "bg-gradient-to-br from-orange-500 to-amber-500 border-orange-400 text-white shadow-sm shadow-orange-500/20"
-                        : isToday
-                          ? "bg-zinc-100 dark:bg-zinc-800 border-emerald-500/50 text-zinc-400 dark:text-zinc-500 ring-2 ring-emerald-500/20"
-                          : "bg-zinc-50 dark:bg-zinc-950/40 border-zinc-200 dark:border-zinc-800/60 text-zinc-300 dark:text-zinc-700"
-                    }`}>
-                      {hasLearned ? (
-                        <Flame className="size-4 fill-current animate-pulse text-orange-200" />
-                      ) : (
-                        <span className="text-xs font-black">·</span>
-                      )}
-                      {isToday && !hasLearned && (
-                        <span className="absolute -top-0.5 -right-0.5 size-2 rounded-full bg-emerald-500 animate-ping" />
-                      )}
+        {/* ── 4. Hero Continue Learning UnitCard (Promoted to Top) ── */}
+        <UnitCard currentUnitData={currentUnitData} />
+
+        {/* ── 5. TODAY'S MISSION — Unified daily task hub (replaces "Học nhanh 10 phút") ── */}
+        <TodayMission
+          currentUnit={{
+            title: currentUnitData.title,
+            progress: currentUnitData.progress,
+            route: currentUnitData.route,
+            xp: currentUnitData.xp,
+          }}
+          dueCardsCount={dueCardsCount}
+          xpToday={xpCurrent}
+          xpTarget={xpTarget}
+          completedQuickWins={quests.filter((q) => q.completed).length}
+        />
+
+        {/* ── 6. Daily Quests — promoted above lesson grid ── */}
+        <WidgetErrorBoundary name="DailyQuests">
+          <DailyQuests
+            quests={quests}
+            handleToggleQuest={handleToggleQuest}
+            completedCount={completedCount}
+          />
+        </WidgetErrorBoundary>
+
+        {/* ── 2e. Collapsible Detailed Stats Panel ── */}
+        <div className="rounded-2xl border border-zinc-200/60 dark:border-zinc-800/60 bg-white/60 dark:bg-zinc-900/30 backdrop-blur-sm overflow-hidden">
+          <button
+            onClick={() => setShowDetailedStats((prev) => !prev)}
+            className="w-full flex items-center justify-between px-5 py-4 text-sm font-bold text-zinc-800 dark:text-zinc-100 hover:bg-zinc-100/50 dark:hover:bg-zinc-800/30 transition-colors"
+          >
+            <span className="flex items-center gap-2">
+              📊 Thống kê chi tiết & Lịch sử học
+            </span>
+            <span className="text-zinc-500 dark:text-zinc-400">
+              {showDetailedStats ? (
+                <ChevronUp className="size-4" />
+              ) : (
+                <ChevronDown className="size-4" />
+              )}
+            </span>
+          </button>
+          
+          <AnimatePresence initial={false}>
+            {showDetailedStats && (
+              <motion.div
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: "auto", opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{ duration: 0.25, ease: "easeInOut" }}
+                className="border-t border-zinc-200/40 dark:border-zinc-800/40 divide-y divide-zinc-200/40 dark:divide-zinc-800/40"
+              >
+                {/* 2b. Weekly active streak calendar */}
+                {weeklyData && weeklyData.length > 0 && (
+                  <div className="p-4 space-y-3">
+                    <div className="flex items-center justify-between">
+                      <p className="text-[10px] font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">Lịch chuỗi học tuần này</p>
+                      <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold">Luyện tập đều đặn để giữ streak!</span>
                     </div>
-                    <span className={`text-[10px] font-bold ${
-                      isToday ? "text-emerald-600 dark:text-emerald-400 font-black" : "text-zinc-400 dark:text-zinc-500"
-                    }`}>
-                      {d.label}
-                    </span>
+                    <div className="flex justify-between items-center gap-1">
+                      {weeklyData.map((d, idx) => {
+                        const isToday = d.day === todayKey;
+                        const hasLearned = d.xp > 0;
+                        return (
+                          <div key={idx} className="flex-1 flex flex-col items-center gap-1.5">
+                            <div className={`relative flex size-8 sm:size-10 items-center justify-center rounded-full border transition-all ${
+                              hasLearned
+                                ? "bg-gradient-to-br from-orange-500 to-amber-500 border-orange-400 text-white shadow-sm shadow-orange-500/20"
+                                : isToday
+                                  ? "bg-zinc-100 dark:bg-zinc-800 border-emerald-500/50 text-zinc-400 dark:text-zinc-500 ring-2 ring-emerald-500/20"
+                                  : "bg-zinc-50 dark:bg-zinc-950/40 border-zinc-200 dark:border-zinc-800/60 text-zinc-300 dark:text-zinc-700"
+                            }`}>
+                              {hasLearned ? (
+                                <Flame className="size-4 fill-current animate-pulse text-orange-200" />
+                              ) : (
+                                <span className="text-xs font-black">·</span>
+                              )}
+                              {isToday && !hasLearned && (
+                                <span className="absolute -top-0.5 -right-0.5 size-2 rounded-full bg-emerald-500 animate-ping" />
+                              )}
+                            </div>
+                            <span className={`text-[10px] font-bold ${
+                              isToday ? "text-emerald-600 dark:text-emerald-400 font-black" : "text-zinc-400 dark:text-zinc-500"
+                            }`}>
+                              {d.label}
+                            </span>
+                          </div>
+                        );
+                      })}
+                    </div>
                   </div>
-                );
-              })}
-            </div>
-          </div>
-        )}
+                )}
 
-        {/* ── 2c. 7-week Streak Calendar Heatmap ── */}
-        {calendarData.length > 0 && (
-          <div className="rounded-2xl border border-zinc-200/60 dark:border-zinc-800/60 bg-white/60 dark:bg-zinc-900/30 backdrop-blur-sm p-4">
-            <StreakCalendar
-              dailyXp={calendarData}
-              currentStreak={currentStreak}
-            />
-          </div>
-        )}
+                {/* 2c. 7-week Streak Calendar Heatmap */}
+                {calendarData.length > 0 && (
+                  <div className="p-4">
+                    <StreakCalendar
+                      dailyXp={calendarData}
+                      currentStreak={currentStreak}
+                    />
+                  </div>
+                )}
 
-        {/* ── 2d. CEFR Level Progress Ladder ── */}
-        {(() => {
-          const levelUnitsAll = allUnits.filter(u => u.level === shortLevel);
-          const levelUnitsDone = completedUnitIds.filter(id =>
-            allUnits.find(u => u.id === id)?.level === shortLevel
-          ).length;
-          return (
-            <LevelProgressBar
-              userLevel={shortLevel}
-              levelUnitsDone={levelUnitsDone}
-              levelUnitsTotal={levelUnitsAll.length}
-            />
-          );
-        })()}
+                {/* 2d. CEFR Level Progress Ladder */}
+                {(() => {
+                  const levelUnitsAll = allUnits.filter(u => u.level === shortLevel);
+                  const levelUnitsDone = completedUnitIds.filter(id =>
+                    allUnits.find(u => u.id === id)?.level === shortLevel
+                  ).length;
+                  return (
+                    <div className="p-4">
+                      <LevelProgressBar
+                        userLevel={shortLevel}
+                        levelUnitsDone={levelUnitsDone}
+                        levelUnitsTotal={levelUnitsAll.length}
+                      />
+                    </div>
+                  );
+                })()}
+
+                {/* WeeklyRecapCard inside collapsible stats */}
+                <div className="p-4 bg-zinc-50/50 dark:bg-zinc-900/10">
+                  <WeeklyRecapCard
+                    currentStreak={currentStreak}
+                    totalXp={totalXp}
+                    completedUnits={completedUnits}
+                    userLevel={shortLevel}
+                    dueCardsCount={dueCardsCount}
+                    weeklyData={weeklyData}
+                  />
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
 
         {/* ── 3. Placement Test Banner ── */}
         {showPlacementBanner && (
@@ -670,32 +743,6 @@ export default function DashboardClient({
             </button>
           </div>
         )}
-
-        {/* ── 4. Hero Continue Learning UnitCard (Promoted to Top) ── */}
-        <UnitCard currentUnitData={currentUnitData} />
-
-        {/* ── 5. TODAY'S MISSION — Unified daily task hub (replaces "Học nhanh 10 phút") ── */}
-        <TodayMission
-          currentUnit={{
-            title: currentUnitData.title,
-            progress: currentUnitData.progress,
-            route: currentUnitData.route,
-            xp: currentUnitData.xp,
-          }}
-          dueCardsCount={dueCardsCount}
-          xpToday={xpCurrent}
-          xpTarget={xpTarget}
-          completedQuickWins={quests.filter((q) => q.completed).length}
-        />
-
-        {/* ── 6. Daily Quests — promoted above lesson grid ── */}
-        <WidgetErrorBoundary name="DailyQuests">
-          <DailyQuests
-            quests={quests}
-            handleToggleQuest={handleToggleQuest}
-            completedCount={completedCount}
-          />
-        </WidgetErrorBoundary>
 
         {/* ── 7. Bento grid for study plan, progress card, and secondary details ── */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
@@ -794,14 +841,7 @@ export default function DashboardClient({
           </Link>
         )}
 
-        <WeeklyRecapCard
-          currentStreak={currentStreak}
-          totalXp={totalXp}
-          completedUnits={completedUnits}
-          userLevel={shortLevel}
-          dueCardsCount={dueCardsCount}
-          weeklyData={weeklyData}
-        />
+        {/* WeeklyRecapCard moved to Collapsible Detailed Stats Panel */}
 
         {/* ── 9. Collapsible Curriculum Progress Grid ── */}
         <div className="rounded-2xl border border-zinc-200/60 dark:border-zinc-800/60 bg-white/60 dark:bg-zinc-900/25 backdrop-blur-sm p-5 sm:p-6">
