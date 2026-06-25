@@ -2,6 +2,7 @@ import { Header } from "@/components/layout/header";
 import { BottomNav } from "@/components/layout/bottom-nav";
 import { LessonPageHider } from "@/components/layout/lesson-page-hider";
 import { HeaderScrollWrapper } from "@/components/layout/header-scroll-wrapper";
+import CommandPaletteLoader from "@/components/layout/command-palette-loader";
 import { getCachedUser, getCachedDueCardsCount } from "@/lib/queries/user";
 
 export default async function MainLayout({
@@ -31,6 +32,8 @@ export default async function MainLayout({
       <LessonPageHider>
         <BottomNav dueCardsCount={dueCardsCount} />
       </LessonPageHider>
+
+      <CommandPaletteLoader />
     </div>
   );
 }

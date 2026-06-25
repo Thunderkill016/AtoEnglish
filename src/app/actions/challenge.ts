@@ -12,13 +12,61 @@ const challengeLimiter = createRateLimiter(10, 60 * 1000, "daily-challenge");
 const ChallengeResultSchema = z.object({
   score: z.number().int().min(0).max(5),
   total: z.number().int().min(1).max(5),
-  date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/), // YYYY-MM-DD
+  date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
 });
+
+function vnToday(): string {
+  return new Date().toLocaleDateString("sv-SE", { timeZone: "Asia/Ho_Chi_Minh" });
+}
+
+function challengeXp(score: number): number {
+  return 10 + score * 8;
+}
+
+export type TodayChallengeResult = {
+  done: boolean;
+  score?: number;
+  total?: number;
+  xpEarned?: number;
+  date: string;
+};
+
+/**
+ * Lấy kết quả challenge hôm nay từ DB (sync đa thiết bị).
+ */
+export async function getTodayChallengeResult(): Promise<TodayChallengeResult> {
+  const today = vnToday();
+  try {
+    const supabase = await createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) return { done: false, date: today };
+
+    const { data } = await supabase
+      .from("challenge_results")
+      .select("score, total, xp_earned")
+      .eq("user_id", user.id)
+      .eq("challenge_date", today)
+      .maybeSingle();
+
+    if (!data) return { done: false, date: today };
+
+    return {
+      done: true,
+      score: data.score,
+      total: data.total,
+      xpEarned: data.xp_earned,
+      date: today,
+    };
+  } catch {
+    return { done: false, date: today };
+  }
+}
 
 /**
  * Lưu kết quả Daily Challenge và thưởng XP.
- * XP: 10 base + 8 per correct answer = max 50 XP (5 correct).
- * Chỉ thưởng 1 lần mỗi ngày — date được validate server-side.
+ * XP: 10 base + 8 per correct = max 50 XP. Một lần mỗi ngày (idempotent).
  */
 export async function saveChallengeResult(params: {
   score: number;
@@ -39,20 +87,63 @@ export async function saveChallengeResult(params: {
     }
     const clean = validated.data;
 
-    // Server-side date check — must match today (Vietnam time)
-    const today = new Date().toLocaleDateString("sv-SE", { timeZone: "Asia/Ho_Chi_Minh" });
+    const today = vnToday();
     if (clean.date !== today) {
       return { success: false, error: "Ngày không hợp lệ." };
     }
 
     const supabase = await createClient();
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
     if (authError || !user) {
       return { success: false, error: "Bạn cần đăng nhập." };
     }
 
-    // XP formula: 10 base + 8 per correct = 10–50 XP
-    const xpEarned = 10 + clean.score * 8;
+    const { data: existing } = await supabase
+      .from("challenge_results")
+      .select("score, total, xp_earned")
+      .eq("user_id", user.id)
+      .eq("challenge_date", today)
+      .maybeSingle();
+
+    if (existing) {
+      return {
+        success: true,
+        xpEarned: existing.xp_earned,
+        alreadyCompleted: true,
+        score: existing.score,
+      };
+    }
+
+    const xpEarned = challengeXp(clean.score);
+
+    const { error: insertError } = await supabase.from("challenge_results").insert({
+      user_id: user.id,
+      score: clean.score,
+      total: clean.total,
+      xp_earned: xpEarned,
+      challenge_date: today,
+    });
+
+    if (insertError) {
+      if (insertError.code === "23505") {
+        const { data: raced } = await supabase
+          .from("challenge_results")
+          .select("score, xp_earned")
+          .eq("user_id", user.id)
+          .eq("challenge_date", today)
+          .maybeSingle();
+        return {
+          success: true,
+          xpEarned: raced?.xp_earned ?? xpEarned,
+          alreadyCompleted: true,
+          score: raced?.score ?? clean.score,
+        };
+      }
+      return { success: false, error: insertError.message };
+    }
 
     const { data: userProgress } = await supabase
       .from("user_progress")
@@ -88,25 +179,24 @@ export async function saveChallengeResult(params: {
       });
     }
 
-    // Bump weekly league XP (fire-and-forget)
     void updateLeagueXp(xpEarned);
 
     revalidatePath("/dashboard");
     revalidatePath("/progress");
+    revalidatePath("/challenge");
 
-    return { success: true, xpEarned };
+    return { success: true, xpEarned, score: clean.score };
   } catch (err) {
     return { success: false, error: err instanceof Error ? err.message : String(err) };
   }
 }
 
-/**
- * Lấy trình độ hiện tại của user để xây daily challenge đúng level.
- */
 export async function getChallengeLevel(): Promise<string> {
   try {
     const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
     if (!user) return "A1";
     const { data } = await supabase
       .from("user_progress")

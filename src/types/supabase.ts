@@ -174,6 +174,36 @@ export type Database = {
           },
         ]
       }
+      challenge_results: {
+        Row: {
+          challenge_date: string
+          created_at: string
+          id: string
+          score: number
+          total: number
+          user_id: string
+          xp_earned: number
+        }
+        Insert: {
+          challenge_date: string
+          created_at?: string
+          id?: string
+          score: number
+          total: number
+          user_id: string
+          xp_earned: number
+        }
+        Update: {
+          challenge_date?: string
+          created_at?: string
+          id?: string
+          score?: number
+          total?: number
+          user_id?: string
+          xp_earned?: number
+        }
+        Relationships: []
+      }
       league_memberships: {
         Row: {
           joined_at: string

@@ -145,13 +145,22 @@ export async function generateMetadata({
 
 export default async function UnitPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ unitSlug: string }>;
+  searchParams: Promise<{ mini?: string }>;
 }) {
   const { unitSlug } = await params;
+  const { mini } = await searchParams;
   const entry = UNIT_DATA_MAP[unitSlug];
 
   if (!entry) notFound();
 
-  return <UnitTemplate unit={entry.data} nextRoute={entry.next} />;
+  return (
+    <UnitTemplate
+      unit={entry.data}
+      nextRoute={entry.next}
+      startMiniSession={mini === "1"}
+    />
+  );
 }

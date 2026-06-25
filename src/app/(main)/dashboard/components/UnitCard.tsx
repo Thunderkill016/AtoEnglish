@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { BookOpen, TrendingUp, ArrowRight } from "lucide-react";
+import { BookOpen, TrendingUp, ArrowRight, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface UnitCardProps {
@@ -100,12 +100,23 @@ export default function UnitCard({ currentUnitData }: UnitCardProps) {
               );
             })()}
           </div>
-          <Link href={currentUnitData.route} className="shrink-0">
-            <Button className="w-full sm:w-auto h-11 px-7 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-white font-extrabold rounded-xl flex items-center justify-center gap-2 transition-all duration-200 shadow-lg shadow-emerald-600/20 hover:shadow-emerald-500/30 active:scale-[0.97]">
-              <span>Tiếp tục học ngay</span>
-              <ArrowRight className="size-4 transition-transform duration-200 group-hover:translate-x-0.5" />
-            </Button>
-          </Link>
+          <div className="flex flex-col sm:flex-row gap-2 shrink-0 w-full sm:w-auto">
+            <Link href={`${currentUnitData.route}?mini=1`} className="w-full sm:w-auto">
+              <Button
+                variant="outline"
+                className="w-full h-11 px-5 border-amber-500/30 bg-amber-500/5 hover:bg-amber-500/10 text-amber-700 dark:text-amber-400 font-bold rounded-xl gap-1.5"
+              >
+                <Zap className="size-4" />
+                Học nhanh ~15 phút
+              </Button>
+            </Link>
+            <Link href={currentUnitData.route} className="w-full sm:w-auto">
+              <Button className="w-full sm:w-auto h-11 px-7 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-white font-extrabold rounded-xl flex items-center justify-center gap-2 transition-all duration-200 shadow-lg shadow-emerald-600/20 hover:shadow-emerald-500/30 active:scale-[0.97]">
+                <span>Tiếp tục học ngay</span>
+                <ArrowRight className="size-4" />
+              </Button>
+            </Link>
+          </div>
         </div>
       </div>
     </div>

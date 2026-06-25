@@ -3,7 +3,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { Lock, Play, CheckCircle, Sparkles, BookOpen, Star, Clock, RotateCcw, BookOpenCheck, Trophy, ChevronRight } from "lucide-react";
+import { Lock, Play, CheckCircle, Sparkles, BookOpen, Star, Clock, RotateCcw, BookOpenCheck, Trophy, ChevronRight, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface UnitStatus {
@@ -35,6 +35,8 @@ export default function LearnClient({
   activeUnitId,
   unitStatuses,
 }: LearnClientProps) {
+  const activeUnit = unitStatuses.find((u) => u.id === activeUnitId);
+
   return (
     <div className="relative mx-auto max-w-4xl px-4 py-6 sm:py-12 sm:px-6 lg:px-8 min-h-screen overflow-x-hidden pb-20 sm:pb-0">
       {/* Background blurs */}
@@ -74,6 +76,30 @@ export default function LearnClient({
           Hoàn thành các chương học theo phương pháp IPOR (Input - Processing - Output - Review) để mở khóa các bài học nâng cao hơn.
         </motion.p>
       </div>
+
+      {activeUnit && !activeUnit.completed && (
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-6 rounded-2xl border border-amber-500/25 bg-gradient-to-r from-amber-500/8 to-orange-500/5 p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
+        >
+          <div className="space-y-1">
+            <p className="text-xs font-black uppercase tracking-wider text-amber-600 dark:text-amber-400 flex items-center gap-1.5">
+              <Zap className="size-3.5" />
+              Chế độ học nhanh
+            </p>
+            <p className="text-sm text-zinc-700 dark:text-zinc-300 font-medium">
+              Chỉ ~15 phút: luyện tập + quiz — bỏ qua phần input dài.
+            </p>
+          </div>
+          <Link href={`${activeUnit.route}?mini=1`}>
+            <Button className="w-full sm:w-auto h-10 px-5 bg-amber-500 hover:bg-amber-400 text-white font-bold rounded-xl gap-1.5">
+              <Zap className="size-4" />
+              Bắt đầu ôn nhanh
+            </Button>
+          </Link>
+        </motion.div>
+      )}
 
       {/* New user: placement test CTA */}
       {completedUnitIds.length === 0 && (

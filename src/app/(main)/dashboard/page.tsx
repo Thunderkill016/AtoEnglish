@@ -144,6 +144,7 @@ export default async function DashboardPage() {
     srsReviewedToday: flags.srsReviewedToday,
     quizDoneToday: flags.quizDoneToday,
     speakingDoneToday: flags.speakingDoneToday,
+    challengeDoneToday: flags.challengeDoneToday,
   });
 
   // Completed unit IDs — for the unit progress grid on dashboard

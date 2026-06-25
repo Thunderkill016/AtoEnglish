@@ -1,6 +1,5 @@
 "use client";
 
-import { useMemo, useState } from "react";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -22,30 +21,9 @@ interface TodayMissionProps {
 }
 
 /**
- * Unified daily mission hub — primary lesson + server-synced task list.
- * Challenge completion overlays from localStorage (no DB row yet).
+ * Unified daily mission hub — all completion flags synced from server.
  */
-export default function TodayMission({ missions: initialMissions }: TodayMissionProps) {
-  const todayKey = new Date().toLocaleDateString("sv-SE", {
-    timeZone: "Asia/Ho_Chi_Minh",
-  });
-  const [challengeDone] = useState(() => {
-    if (typeof window === "undefined") return false;
-    try {
-      return !!localStorage.getItem(`ato_challenge_${todayKey}`);
-    } catch {
-      return false;
-    }
-  });
-
-  const missions = useMemo(
-    () =>
-      initialMissions.map((m) =>
-        m.id === "challenge" && challengeDone ? { ...m, completed: true } : m,
-      ),
-    [initialMissions, challengeDone],
-  );
-
+export default function TodayMission({ missions }: TodayMissionProps) {
   const primary = missions.find((m) => m.kind === "primary");
   const tasks = missions.filter((m) => m.kind !== "primary");
   const completedCount = countCompletedMissions(missions);

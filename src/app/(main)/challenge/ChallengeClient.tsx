@@ -17,7 +17,7 @@ import {
   Target,
 } from "lucide-react";
 import { UNIT_VOCABULARY, type VocabularyItem } from "@/lib/constants/vocabulary";
-import { saveChallengeResult } from "@/app/actions/challenge";
+import { getTodayChallengeResult, saveChallengeResult } from "@/app/actions/challenge";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 interface Question {
@@ -107,41 +107,8 @@ function buildDailyQuestions(level: string, dateSeed: string): Question[] {
   });
 }
 
-// ─── Storage helpers ──────────────────────────────────────────────────────────
-const STORAGE_KEY_PREFIX = "ato_challenge_";
-
-function getTodayKey() {
-  return (
-    STORAGE_KEY_PREFIX +
-    new Date().toLocaleDateString("sv-SE", { timeZone: "Asia/Ho_Chi_Minh" })
-  );
-}
-
 function getTodayDate() {
   return new Date().toLocaleDateString("sv-SE", { timeZone: "Asia/Ho_Chi_Minh" });
-}
-
-interface StoredResult {
-  score: number;
-  xpEarned: number;
-  date: string;
-}
-
-function getStoredResult(): StoredResult | null {
-  try {
-    const raw = localStorage.getItem(getTodayKey());
-    return raw ? (JSON.parse(raw) as StoredResult) : null;
-  } catch {
-    return null;
-  }
-}
-
-function storeResult(result: StoredResult) {
-  try {
-    localStorage.setItem(getTodayKey(), JSON.stringify(result));
-  } catch {
-    // ignore
-  }
 }
 
 // ─── XP Badge component ───────────────────────────────────────────────────────
@@ -191,8 +158,8 @@ export default function ChallengeClient({ level }: { level: string }) {
   const [answerState, setAnswerState] = useState<AnswerState>("idle");
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const [xpEarned, setXpEarned] = useState(0);
-  const [alreadyDone, setAlreadyDone] = useState<StoredResult | null>(null);
   const [saving, setSaving] = useState(false);
+  const [loadingPrior, setLoadingPrior] = useState(true);
 
   const dateSeed = getTodayDate();
 
@@ -201,19 +168,21 @@ export default function ChallengeClient({ level }: { level: string }) {
     [level, dateSeed]
   );
 
-  // Check if already completed today
   useEffect(() => {
-    const stored = getStoredResult();
-    if (stored) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setAlreadyDone(stored);
-       
-      setScore(stored.score);
-       
-      setXpEarned(stored.xpEarned);
-       
+    let cancelled = false;
+    getTodayChallengeResult().then((result) => {
+      if (cancelled || !result.done) {
+        setLoadingPrior(false);
+        return;
+      }
+      setScore(result.score ?? 0);
+      setXpEarned(result.xpEarned ?? 0);
       setPhase("result");
-    }
+      setLoadingPrior(false);
+    });
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const handleAnswer = useCallback(
@@ -243,8 +212,6 @@ export default function ChallengeClient({ level }: { level: string }) {
               const earned = res.success ? (res.xpEarned ?? 10) : 10;
               setXpEarned(earned);
               setSaving(false);
-              const result: StoredResult = { score: finalScore, xpEarned: earned, date: today };
-              storeResult(result);
               setScore(finalScore);
               setPhase("result");
 
@@ -265,6 +232,14 @@ export default function ChallengeClient({ level }: { level: string }) {
   );
 
   const q = questions[current];
+
+  if (loadingPrior) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="size-8 rounded-full border-2 border-emerald-500 border-t-transparent animate-spin" />
+      </div>
+    );
+  }
 
   // ── Intro screen ─────────────────────────────────────────────────────────────
   if (phase === "intro") {
@@ -398,11 +373,9 @@ export default function ChallengeClient({ level }: { level: string }) {
 
           <div className="flex items-center justify-center gap-3">
             <XPBadge xp={xpEarned} />
-            {alreadyDone && (
-              <span className="text-xs text-zinc-400 font-medium">
-                ✓ Đã hoàn thành hôm nay
-              </span>
-            )}
+            <span className="text-xs text-zinc-400 font-medium">
+              ✓ Đã hoàn thành hôm nay
+            </span>
           </div>
 
           {/* Score card */}

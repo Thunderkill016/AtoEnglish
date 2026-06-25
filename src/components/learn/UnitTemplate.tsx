@@ -238,6 +238,8 @@ export interface UnitData {
 interface UnitTemplateProps {
   unit: UnitData;
   nextRoute?: string;
+  /** Deep-link ?mini=1 — skip to practice + quiz (~15 phút) */
+  startMiniSession?: boolean;
 }
 
 interface CompletionData {
@@ -349,11 +351,15 @@ function VideoShadowingCard({ videoId }: { videoId: string }) {
   );
 }
 
-export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTemplateProps) {
-  const [section, setSection] = useState<number>(1);
+export default function UnitTemplate({
+  unit,
+  nextRoute = "/dashboard",
+  startMiniSession = false,
+}: UnitTemplateProps) {
+  const [section, setSection] = useState<number>(startMiniSession ? 4 : 1);
   const [isCompleted, setIsCompleted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [miniSession, setMiniSession] = useState(false);
+  const [miniSession, setMiniSession] = useState(startMiniSession);
   const [sessionBreak, setSessionBreak] = useState(false); // mid-lesson break after Practice
   const [completionData, setCompletionData] = useState<CompletionData | null>(null);
 

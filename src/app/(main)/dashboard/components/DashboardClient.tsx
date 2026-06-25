@@ -31,7 +31,10 @@ import WeeklyRecapCard from "./WeeklyRecapCard";
 import EfSetGoalTracker from "./EfSetGoalTracker";
 import TodayPlanWidget from "./TodayPlanWidget";
 import TodayMission from "./TodayMission";
-import type { DailyMission } from "@/lib/dashboard/daily-missions";
+import {
+  countCompletedMissions,
+  type DailyMission,
+} from "@/lib/dashboard/daily-missions";
 import DashboardHubNav from "./DashboardHubNav";
 import LevelProgressBar from "./LevelProgressBar";
 import StreakFreezeCard from "@/features/streak/components/StreakFreezeCard";
@@ -294,6 +297,13 @@ export default function DashboardClient({
 
   const todayKey = new Date().toLocaleDateString("sv-SE", { timeZone: "Asia/Ho_Chi_Minh" });
   const xpPercent = Math.round((xpCurrent / xpTarget) * 100);
+  const pendingMissions = dailyMissions.length - countCompletedMissions(dailyMissions);
+  const xpRemaining = Math.max(0, xpTarget - xpCurrent);
+  const hubBadges = {
+    "dash-today": pendingMissions,
+    "dash-practice": dueCardsCount,
+    "dash-progress": xpRemaining > 0 ? xpRemaining : 0,
+  };
 
   return (
     <div className="relative mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 min-h-screen overflow-x-hidden pb-20 sm:pb-0">
@@ -343,7 +353,7 @@ export default function DashboardClient({
             </div>
         </div>
 
-        <DashboardHubNav />
+        <DashboardHubNav badges={hubBadges} />
 
         {/* ── Section: Hôm nay ── */}
         <div id="dash-today" className="space-y-6 scroll-mt-28">

@@ -5,11 +5,17 @@ import { useEffect, useState } from "react";
 import { dashboardSections } from "@/lib/constants/navigation";
 import { cn } from "@/lib/utils";
 
+export type HubSectionBadges = Partial<Record<string, number>>;
+
+type DashboardHubNavProps = {
+  badges?: HubSectionBadges;
+};
+
 /**
  * Sticky in-page navigation for the dashboard hub.
- * Scrolls to #dash-today | #dash-practice | #dash-progress sections.
+ * Optional numeric badges per section (pending missions, due SRS, etc.).
  */
-export default function DashboardHubNav() {
+export default function DashboardHubNav({ badges = {} }: DashboardHubNavProps) {
   const [activeId, setActiveId] = useState(dashboardSections[0]?.id ?? "");
 
   useEffect(() => {
@@ -50,13 +56,16 @@ export default function DashboardHubNav() {
         {dashboardSections.map((section) => {
           const Icon = section.icon;
           const isActive = activeId === section.id;
+          const badge = badges[section.id];
+          const showBadge = typeof badge === "number" && badge > 0;
+
           return (
             <button
               key={section.id}
               type="button"
               onClick={() => scrollTo(section.id)}
               className={cn(
-                "inline-flex shrink-0 items-center gap-1.5 rounded-xl px-3.5 py-2 text-xs font-bold transition-all duration-150",
+                "relative inline-flex shrink-0 items-center gap-1.5 rounded-xl px-3.5 py-2 text-xs font-bold transition-all duration-150",
                 isActive
                   ? "bg-primary/10 text-primary shadow-sm"
                   : "text-muted-foreground hover:bg-muted hover:text-foreground",
@@ -64,6 +73,18 @@ export default function DashboardHubNav() {
             >
               <Icon className="size-3.5" />
               {section.label}
+              {showBadge && (
+                <span
+                  className={cn(
+                    "min-w-[1.125rem] h-[1.125rem] px-1 flex items-center justify-center rounded-full text-[10px] font-black leading-none",
+                    section.id === "dash-practice"
+                      ? "bg-amber-500 text-white"
+                      : "bg-emerald-600 text-white",
+                  )}
+                >
+                  {badge > 99 ? "99+" : badge}
+                </span>
+              )}
             </button>
           );
         })}
