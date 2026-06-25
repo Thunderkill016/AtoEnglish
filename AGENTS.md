@@ -55,7 +55,7 @@ src/
 │       ├── progress/
 │       └── roadmap/
 ├── components/
-│   ├── landing/                 # Hero, FAQ, Preview, Science, Benefits
+│   ├── landing/                 # Hero, Problem, HowItWorks, Outcomes, FAQ
 │   ├── layout/                  # Header, BottomNav, MobileNav
 │   └── ui/                      # Button (@base-ui), Spotlight, Logo
 ├── features/flashcards/         # FSRS scheduling logic (ts-fsrs v5)

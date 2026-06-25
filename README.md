@@ -94,7 +94,7 @@ src/
 │       ├── progress/         # Thống kê tuần, SRS heatmap
 │       └── roadmap/          # CEFR roadmap trực quan
 ├── components/
-│   ├── landing/              # Hero, FAQ, BenefitsSection...
+│   ├── landing/              # Hero, Problem, Outcomes, FAQ, ProductPreview
 │   ├── layout/               # Header, BottomNav, UserAvatar
 │   └── learn/                # UnitTemplate (1600+ lines)
 ├── features/flashcards/      # FSRS scheduling logic
