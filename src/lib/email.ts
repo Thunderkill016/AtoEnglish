@@ -8,7 +8,17 @@
 
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+// Lazy init — do NOT instantiate at module level.
+// process.env.RESEND_API_KEY is unavailable during `next build`, causing a
+// Turbopack "Missing API key" error when the module is statically analysed.
+let _resend: Resend | null = null;
+function getResend(): Resend {
+  if (!_resend) {
+    _resend = new Resend(process.env.RESEND_API_KEY ?? "");
+  }
+  return _resend;
+}
+
 const FROM = "AtoEnglish <remind@atoenglish.vercel.app>";
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://atoenglish.vercel.app";
 
@@ -44,7 +54,7 @@ export async function sendWeeklyDigest(data: WeeklyDigestData) {
   const html = weeklyDigestHTML(data);
 
   try {
-    await resend.emails.send({ from: FROM, to: data.email, subject, html });
+    await getResend().emails.send({ from: FROM, to: data.email, subject, html });
     return { success: true };
   } catch (err) {
     return { success: false, error: err instanceof Error ? err.message : "Unknown" };
@@ -65,7 +75,7 @@ export async function sendWinBackEmail(data: WinBackData) {
   const html = winBackHTML(data);
 
   try {
-    await resend.emails.send({ from: FROM, to: data.email, subject, html });
+    await getResend().emails.send({ from: FROM, to: data.email, subject, html });
     return { success: true };
   } catch (err) {
     return { success: false, error: err instanceof Error ? err.message : "Unknown" };
