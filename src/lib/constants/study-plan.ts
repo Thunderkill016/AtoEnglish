@@ -490,7 +490,8 @@ export const STUDY_PHASES: StudyPhase[] = [
 // ─── Helper functions ────────────────────────────────────────────────────────
 
 export function getPhaseForLevel(cefrLevel: string): StudyPhase {
-  const level = cefrLevel.toUpperCase();
+  // Strip any trailing description text (e.g. "A1 · Nền Tảng" → "A1")
+  const level = (cefrLevel.split(/[\s·\-]/)[0] ?? cefrLevel).toUpperCase();
   if (level === "A0" || level === "A1") return STUDY_PHASES[0]!;
   if (level === "A2" || level === "B1") return STUDY_PHASES[1]!;
   if (level === "B1+" || level === "B2") return STUDY_PHASES[2]!;

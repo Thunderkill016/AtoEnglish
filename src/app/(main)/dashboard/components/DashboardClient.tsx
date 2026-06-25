@@ -462,22 +462,41 @@ export default function DashboardClient({
               </div>
             )}
 
+            {/* Label — changes based on mode */}
             <div className="flex items-center gap-2">
               <span className="flex size-7 items-center justify-center rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
                 <Star className="size-3.5 fill-current" />
               </span>
-              <span className="text-[10px] font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider group-hover:text-emerald-500 transition-colors">XP hôm nay ⚙️</span>
+              <span className="text-[10px] font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider group-hover:text-emerald-500 transition-colors">
+                {xpCurrent === 0 ? "Mục tiêu hôm nay ⚙️" : "XP hôm nay ⚙️"}
+              </span>
             </div>
-            <p className="text-xl font-black text-zinc-900 dark:text-zinc-50 leading-none">
-              {xpCurrent}<span className="text-xs font-bold text-zinc-400 dark:text-zinc-500">/{xpTarget}</span>
-            </p>
-            {/* Mini progress bar */}
-            <div className="h-2 w-full bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
-              <div
-                className="h-full bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full transition-all duration-700"
-                style={{ width: `${Math.min(xpPercent, 100)}%` }}
-              />
-            </div>
+
+            {xpCurrent === 0 ? (
+              /* ── Opportunity mode: no XP yet today ── */
+              <div className="space-y-1.5">
+                <p className="text-xl font-black text-zinc-900 dark:text-zinc-50 leading-none">
+                  {xpTarget} <span className="text-xs font-bold text-zinc-400 dark:text-zinc-500">XP</span>
+                </p>
+                <p className="text-[10px] font-semibold text-emerald-600 dark:text-emerald-400 leading-tight">
+                  Học bài đầu tiên →
+                </p>
+              </div>
+            ) : (
+              /* ── Progress mode: already earned XP today ── */
+              <div className="space-y-1.5">
+                <p className="text-xl font-black text-zinc-900 dark:text-zinc-50 leading-none">
+                  {xpCurrent}<span className="text-xs font-bold text-zinc-400 dark:text-zinc-500">/{xpTarget}</span>
+                </p>
+                {/* Mini progress bar — only shown when progress > 0 */}
+                <div className="h-2 w-full bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
+                  <div
+                    className="h-full bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full transition-all duration-700"
+                    style={{ width: `${Math.min(xpPercent, 100)}%` }}
+                  />
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Level */}
@@ -690,7 +709,7 @@ export default function DashboardClient({
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
           {/* Left: Study Plan Checklist and EF SET Goal Tracker */}
           <div className="lg:col-span-7 space-y-5">
-            <TodayPlanWidget userLevel={userLevel} />
+            <TodayPlanWidget userLevel={shortLevel} />
             <EfSetGoalTracker userLevel={shortLevel} completedUnits={completedUnits} />
           </div>
 
