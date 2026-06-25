@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import CertificateClient from "./CertificateClient";
@@ -23,6 +24,15 @@ const LEVEL_LABELS: Record<CertLevel, string> = {
 
 interface Props {
   params: Promise<{ level: string }>;
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { level } = await params;
+  const upper = level.toUpperCase();
+  return {
+    title: `Chứng Chỉ ${upper} | AtoEnglish`,
+    description: `Chứng chỉ hoàn thành cấp độ ${upper} của AtoEnglish. Xác nhận trình độ tiếng Anh của bạn sau khi hoàn tất lộ trình học.`,
+  };
 }
 
 export default async function CertificatePage({ params }: Props) {
