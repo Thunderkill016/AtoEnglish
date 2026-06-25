@@ -100,6 +100,7 @@ export const unitA03: UnitData = {
       example2: "Black coffee, please.",
       collocation: "black shirt / black coffee / in black and white",
       audio: "/audio/unit-a0-3/black.mp3",
+      l1_interference_vn: "⚠️ 'Black coffee' = cà phê đen (không sữa). 'In black and white' = rõ ràng bằng văn bản. Màu sắc không cần 'the'.",
     },
     {
       id: 5,
@@ -111,6 +112,7 @@ export const unitA03: UnitData = {
       example2: "The walls are white.",
       collocation: "snow white / white shirt / black and white",
       audio: "/audio/unit-a0-3/white.mp3",
+      l1_interference_vn: "⚠️ 'White' /waɪt/ — đọc rõ âm /w/. 'White-collar' = văn phòng. Màu trắng dùng trực tiếp: 'a white shirt'.",
     },
     {
       id: 6,
@@ -122,6 +124,7 @@ export const unitA03: UnitData = {
       example2: "This bag is too big.",
       collocation: "big size / big deal / too big / big city",
       audio: "/audio/unit-a0-3/big.mp3",
+      l1_interference_vn: "⚠️ 'Big' (informal) = 'large' (formal). 'A big mistake' vs 'a large order'. Tính từ đứng TRƯỚC danh từ trong tiếng Anh.",
     },
     {
       id: 7,
@@ -133,6 +136,7 @@ export const unitA03: UnitData = {
       example2: "Do you have a smaller size?",
       collocation: "too small / small size / small talk / small change",
       audio: "/audio/unit-a0-3/small.mp3",
+      l1_interference_vn: "⚠️ 'Small' vs 'little': 'small' = kích thước, 'little' = ít + cảm xúc ('a little dog' — dễ thương). Cả hai đứng trước danh từ.",
     },
     {
       id: 8,
@@ -144,6 +148,7 @@ export const unitA03: UnitData = {
       example2: "I love bright colors.",
       collocation: "what color / favorite color / bright color",
       audio: "/audio/unit-a0-3/color.mp3",
+      l1_interference_vn: "⚠️ 'Color' (Anh-Mỹ) = 'colour' (Anh-Anh). 'What color is it?' KHÔNG 'What is the color of it?' — câu hỏi ngắn gọn hơn.",
     },
     {
       id: 9,

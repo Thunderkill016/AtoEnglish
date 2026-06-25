@@ -62,6 +62,7 @@ export const unitA08: UnitData = {
       example2: "Can you help me, please?",
       collocation: "I need help / call for help / help me / please help",
       audio: "/audio/unit-a0-8/help.mp3",
+      l1_interference_vn: "⚠️ 'Help someone (to) do something': 'Help me carry this'. 'Can you help me?' KHÔNG 'Can you help to me?'",
     },
     {
       id: 2,
@@ -73,6 +74,7 @@ export const unitA08: UnitData = {
       example2: "Call an ambulance now!",
       collocation: "call the police / call 911 / call for help / make a call",
       audio: "/audio/unit-a0-8/call.mp3",
+      l1_interference_vn: "⚠️ 'Call someone' (gọi điện): 'Call me at 9'. 'Call' cũng = gọi tên: 'They call him Bob'. KHÔNG 'call to someone'.",
     },
     {
       id: 3,
@@ -84,6 +86,7 @@ export const unitA08: UnitData = {
       example2: "I need the police.",
       collocation: "call the police / the police are here / police station",
       audio: "/audio/unit-a0-8/police.mp3",
+      l1_interference_vn: "⚠️ 'Police' = số nhiều (danh từ tập hợp): 'The police ARE coming'. KHÔNG 'The police IS'. 'Call the police!' không có 's'.",
     },
     {
       id: 4,
@@ -95,6 +98,7 @@ export const unitA08: UnitData = {
       example2: "Is there a hospital nearby?",
       collocation: "go to hospital / take to hospital / nearest hospital",
       audio: "/audio/unit-a0-8/hospital.mp3",
+      l1_interference_vn: "⚠️ 'In hospital' (Anh-Anh, đang điều trị) vs 'in the hospital' (Anh-Mỹ, ở tòa nhà). 'Go to hospital' = nhập viện.",
     },
     {
       id: 5,
@@ -129,6 +133,7 @@ export const unitA08: UnitData = {
       example2: "Are you hurt?",
       collocation: "I'm hurt / get hurt / my [body part] hurts / are you hurt",
       audio: "/audio/unit-a0-8/hurt.mp3",
+      l1_interference_vn: "⚠️ 'Hurt' bất quy tắc: hurt-hurt-hurt (ba dạng giống nhau). 'I hurt my arm' vs 'My arm hurts' — hai cách diễn đạt khác nhau.",
     },
     {
       id: 8,

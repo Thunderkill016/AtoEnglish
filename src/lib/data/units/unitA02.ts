@@ -77,6 +77,7 @@ export const unitA02: UnitData = {
       example2: "This shirt costs twenty dollars.",
       collocation: "how much does it cost / cost a lot / total cost",
       audio: "/audio/unit-a0-2/cost.mp3",
+      l1_interference_vn: "⚠️ 'Cost' (v) bất quy tắc: cost-cost-cost (không thêm -ed). 'How much does it cost?' KHÔNG 'How much is it costing?'",
     },
     {
       id: 3,
@@ -88,6 +89,7 @@ export const unitA02: UnitData = {
       example2: "I want to pay in cash.",
       collocation: "pay by card / pay in cash / pay the bill",
       audio: "/audio/unit-a0-2/pay.mp3",
+      l1_interference_vn: "⚠️ 'Pay FOR something': 'I paid for the book'. 'Pay' (v) bất quy tắc: pay-paid-paid. KHÔNG 'I payed'.",
     },
     {
       id: 4,
@@ -99,6 +101,7 @@ export const unitA02: UnitData = {
       example2: "Keep the change!",
       collocation: "keep the change / here's your change / no change",
       audio: "/audio/unit-a0-2/change.mp3",
+      l1_interference_vn: "⚠️ 'Change' = tiền thừa (danh từ) HOẶC thay đổi (động từ). 'Keep the change' = giữ tiền thừa lại.",
     },
     {
       id: 5,
@@ -145,6 +148,7 @@ export const unitA02: UnitData = {
       example2: "I only have ten dollars.",
       collocation: "five dollars / US dollar / dollar bill",
       audio: "/audio/unit-a0-2/dollar.mp3",
+      l1_interference_vn: "⚠️ Tiền tệ KHÔNG dùng số nhiều khi sau số: '5 dollar' (SAI) vs '5 dollars' (ĐÚNG). Nhưng '$5' đứng trước số.",
     },
     {
       id: 9,
@@ -156,6 +160,7 @@ export const unitA02: UnitData = {
       example2: "Keep your receipt for returns.",
       collocation: "a receipt / print the receipt / need a receipt",
       audio: "/audio/unit-a0-2/receipt.mp3",
+      l1_interference_vn: "⚠️ 'Receipt' /rɪˈsiːt/ — 'p' HOÀN TOÀN CÂM. KHÔNG đọc 're-cept'. Tương tự: 'debt' (/det/, b câm).",
     },
     {
       id: 10,

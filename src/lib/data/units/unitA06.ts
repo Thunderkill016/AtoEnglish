@@ -62,6 +62,7 @@ export const unitA06: UnitData = {
       example2: "She is my mother.",
       collocation: "my mother / mother's day / working mother",
       audio: "/audio/unit-a0-6/mother.mp3",
+      l1_interference_vn: "⚠️ 'My mother' (không viết hoa trừ đầu câu). 'Mom/Mum' (informal). KHÔNG dùng 'the mother' để chỉ mẹ của bạn.",
     },
     {
       id: 2,
@@ -73,6 +74,7 @@ export const unitA06: UnitData = {
       example2: "He is my father.",
       collocation: "my father / father's day / single father",
       audio: "/audio/unit-a0-6/father.mp3",
+      l1_interference_vn: "⚠️ 'My father' = formal. 'Dad/Papa' = informal. Trong câu: 'My father is a doctor' — KHÔNG 'The father of me'.",
     },
     {
       id: 3,
@@ -84,6 +86,7 @@ export const unitA06: UnitData = {
       example2: "My brother is twenty years old.",
       collocation: "older brother / younger brother / big brother",
       audio: "/audio/unit-a0-6/brother.mp3",
+      l1_interference_vn: "⚠️ 'Brother' không phân biệt anh/em trai. Phải nói rõ: 'older brother' (anh) vs 'younger brother' (em trai).",
     },
     {
       id: 4,
@@ -95,6 +98,7 @@ export const unitA06: UnitData = {
       example2: "She is my younger sister.",
       collocation: "older sister / younger sister / big sister",
       audio: "/audio/unit-a0-6/sister.mp3",
+      l1_interference_vn: "⚠️ 'Sister' không phân biệt chị/em gái. 'Older sister' (chị) vs 'younger sister' (em gái). Tiếng Việt có nhưng tiếng Anh không.",
     },
     {
       id: 5,
@@ -106,6 +110,7 @@ export const unitA06: UnitData = {
       example2: "Her husband is very kind.",
       collocation: "my husband / her husband / future husband",
       audio: "/audio/unit-a0-6/husband.mp3",
+      l1_interference_vn: "⚠️ 'Husband' (đã kết hôn) vs 'boyfriend' (đang hẹn hò). KHÔNG nhầm. 'My husband' — KHÔNG 'my man' trong tiếng Anh chuẩn.",
     },
     {
       id: 6,

@@ -119,6 +119,7 @@ export const unitA01: UnitData = {
       example2: "Spell it letter by letter.",
       collocation: "capital letter / small letter / the letter A",
       audio: "/audio/unit-a0-1/letter.mp3",
+      l1_interference_vn: "⚠️ 'Letter' = chữ cái (A,B,C) HOẶC thư. 'Write a letter' = viết thư. Phân biệt qua ngữ cảnh.",
     },
     {
       id: 5,
@@ -154,6 +155,7 @@ export const unitA01: UnitData = {
       example2: "It's nice to see you.",
       collocation: "nice to meet you / how nice / nice day",
       audio: "/audio/unit-a0-1/nice.mp3",
+      l1_interference_vn: "⚠️ 'Nice to meet you' (gặp lần đầu). 'Nice' = pleasant. KHÔNG nhầm với 'good' — 'nice' thường nói về trải nghiệm/cảm giác.",
     },
     {
       id: 8,
@@ -165,6 +167,7 @@ export const unitA01: UnitData = {
       example2: "I want to meet your family.",
       collocation: "nice to meet you / meet someone / meet again",
       audio: "/audio/unit-a0-1/meet.mp3",
+      l1_interference_vn: "⚠️ 'Meet' (lần đầu gặp) vs 'see' (gặp người đã biết). 'Nice to meet you' (lần đầu) vs 'Great to see you again!'",
     },
     {
       id: 9,
@@ -176,6 +179,7 @@ export const unitA01: UnitData = {
       example2: "Nice to see you again.",
       collocation: "say again / try again / once again / see you again",
       audio: "/audio/unit-a0-1/again.mp3",
+      l1_interference_vn: "⚠️ 'Again' đứng cuối câu: 'Say that again, please.' KHÔNG 'Again say that.' Phó từ luôn đặt sau động từ.",
     },
     {
       id: 10,
@@ -187,6 +191,7 @@ export const unitA01: UnitData = {
       example2: "Do you understand?",
       collocation: "I understand / I don't understand / do you understand",
       audio: "/audio/unit-a0-1/understand.mp3",
+      l1_interference_vn: "⚠️ 'I understand' (không tiến hành từ đang xảy ra). KHÔNG 'I'm understanding' — stative verb không dùng continuous.",
     },
   ],
 

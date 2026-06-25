@@ -61,6 +61,7 @@ export const unitA07: UnitData = {
       example2: "The meeting is on Monday morning.",
       collocation: "on Monday / Monday morning / every Monday / next Monday",
       audio: "/audio/unit-a0-7/monday.mp3",
+      l1_interference_vn: "⚠️ Thứ trong tiếng Anh LUÔN viết hoa: Monday, Tuesday... KHÔNG 'monday'. 'On Monday' (dùng 'on' với thứ).",
     },
     {
       id: 2,
@@ -119,6 +120,7 @@ export const unitA07: UnitData = {
       example2: "Can you come at nine o'clock?",
       collocation: "at nine o'clock / at ten o'clock / sharp at eight o'clock",
       audio: "/audio/unit-a0-7/oclock.mp3",
+      l1_interference_vn: "⚠️ 'O'clock' chỉ dùng cho giờ đúng: '3 o'clock'. KHÔNG '3:30 o'clock'. 'Half past three' hoặc '3:30' cho giờ rưỡi.",
     },
     {
       id: 7,
@@ -130,6 +132,7 @@ export const unitA07: UnitData = {
       example2: "Are you busy this week?",
       collocation: "too busy / very busy / busy day / busy schedule",
       audio: "/audio/unit-a0-7/busy.mp3",
+      l1_interference_vn: "⚠️ 'Too busy TO do something': 'I'm too busy to meet'. KHÔNG 'too busy for do'. Sau 'too busy' dùng 'to + infinitive'.",
     },
     {
       id: 8,
@@ -141,6 +144,7 @@ export const unitA07: UnitData = {
       example2: "I'm free in the afternoon.",
       collocation: "are you free / feel free / free time / free afternoon",
       audio: "/audio/unit-a0-7/free.mp3",
+      l1_interference_vn: "⚠️ 'Free' = rảnh (thời gian) HOẶC miễn phí (tiền). 'Are you free tomorrow?' vs 'It's free of charge'. Ngữ cảnh quyết định.",
     },
     {
       id: 9,
@@ -152,6 +156,7 @@ export const unitA07: UnitData = {
       example2: "What's on your schedule today?",
       collocation: "my schedule / check the schedule / busy schedule / schedule a meeting",
       audio: "/audio/unit-a0-7/schedule.mp3",
+      l1_interference_vn: "⚠️ Phát âm: /ˈskedʒuːl/ (Anh-Mỹ) vs /ˈʃedjuːl/ (Anh-Anh). 'Check your schedule' = xem lịch. 'Schedule a meeting' = sắp xếp.",
     },
     {
       id: 10,

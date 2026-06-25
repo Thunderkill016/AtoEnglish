@@ -61,6 +61,7 @@ export const unitA05: UnitData = {
       example2: "What is your age?",
       collocation: "my age is / what age / same age / age group",
       audio: "/audio/unit-a0-5/age.mp3",
+      l1_interference_vn: "⚠️ Hỏi tuổi: 'How old are you?' KHÔNG 'How many years do you have?' (dịch thẳng từ tiếng Việt). Trả lời: 'I'm 25.'",
     },
     {
       id: 2,
@@ -72,6 +73,7 @@ export const unitA05: UnitData = {
       example2: "Where do you live?",
       collocation: "I live in / live with / live alone / where do you live",
       audio: "/audio/unit-a0-5/live.mp3",
+      l1_interference_vn: "⚠️ 'Live' /lɪv/ (động từ, sống/ở) vs 'live' /laɪv/ (tính từ, trực tiếp). 'I live in Hanoi' vs 'a live show'.",
     },
     {
       id: 3,
@@ -83,6 +85,7 @@ export const unitA05: UnitData = {
       example2: "What do you work as?",
       collocation: "I work as / work in / work for / go to work",
       audio: "/audio/unit-a0-5/work.mp3",
+      l1_interference_vn: "⚠️ 'Work' (v, không đếm được) HOẶC 'a job' (n, đếm được). 'I have work to do' vs 'I have a job'. KHÔNG 'I have a work'.",
     },
     {
       id: 4,
@@ -94,6 +97,7 @@ export const unitA05: UnitData = {
       example2: "My job is teacher.",
       collocation: "my job is / what's your job / full-time job",
       audio: "/audio/unit-a0-5/job.mp3",
+      l1_interference_vn: "⚠️ 'Job' (đếm được): 'a job', 'two jobs'. 'Work' (không đếm được). 'What's your job?' = 'What do you do (for work)?'",
     },
     {
       id: 5,
@@ -105,6 +109,7 @@ export const unitA05: UnitData = {
       example2: "Where are you from?",
       collocation: "I'm from / where are you from / come from",
       audio: "/audio/unit-a0-5/from.mp3",
+      l1_interference_vn: "⚠️ 'I'm from Vietnam' KHÔNG 'I'm from of Vietnam'. 'From' không cần thêm 'of'. 'Where are you from?' = câu hỏi chuẩn.",
     },
     {
       id: 6,

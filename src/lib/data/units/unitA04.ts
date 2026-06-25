@@ -61,6 +61,7 @@ export const unitA04: UnitData = {
       example2: "I work every morning.",
       collocation: "good morning / this morning / Monday morning",
       audio: "/audio/unit-a0-4/morning.mp3",
+      l1_interference_vn: "⚠️ 'In the morning' (buổi sáng nói chung). 'This morning' (sáng nay, không có 'in the'). 'On Monday morning' (thứ Hai sáng).",
     },
     {
       id: 2,
@@ -95,6 +96,7 @@ export const unitA04: UnitData = {
       example2: "Are you busy right now?",
       collocation: "very busy / too busy / busy day / busy week",
       audio: "/audio/unit-a0-4/busy.mp3",
+      l1_interference_vn: "⚠️ 'Busy WITH something': 'I'm busy with work'. 'Busy doing something': 'I'm busy studying'. KHÔNG 'busy for' hay 'busy in'.",
     },
     {
       id: 5,
@@ -106,6 +108,7 @@ export const unitA04: UnitData = {
       example2: "That's great news!",
       collocation: "great job / feel great / that's great",
       audio: "/audio/unit-a0-4/great.mp3",
+      l1_interference_vn: "⚠️ 'Great!' = tuyệt vời (informal). 'Great' cũng = vĩ đại: 'Alexander the Great'. 'Sounds great!' = câu phổ biến khi đồng ý.",
     },
     {
       id: 6,
@@ -117,6 +120,7 @@ export const unitA04: UnitData = {
       example2: "I'm feeling much better.",
       collocation: "how are you feeling / feeling good / feeling tired",
       audio: "/audio/unit-a0-4/feeling.mp3",
+      l1_interference_vn: "⚠️ 'Feel' là stative verb — KHÔNG 'I'm feeling sick' (thường). 'I feel sick' (đúng hơn trong hầu hết ngữ cảnh).",
     },
     {
       id: 7,
@@ -128,6 +132,7 @@ export const unitA04: UnitData = {
       example2: "I'm busy today.",
       collocation: "today is / how are you today / later today",
       audio: "/audio/unit-a0-4/today.mp3",
+      l1_interference_vn: "⚠️ 'Today' không cần giới từ: 'I have a meeting today'. KHÔNG 'in today' hay 'on today'. Tương tự: 'tomorrow', 'yesterday'.",
     },
     {
       id: 8,
