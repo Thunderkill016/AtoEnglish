@@ -83,7 +83,8 @@ export const unit3: UnitData = {
       phonetic: "/frend/",
       meaning: "Bạn bè",
       example: "We are good friends.",
-      audio: "/audio/unit3/friend.mp3"
+      audio: "/audio/unit3/friend.mp3",
+      l1_interference_vn: "⚠️ 'Friend' vs 'boyfriend/girlfriend'. 'My friend' = bạn bè. 'My boyfriend/girlfriend' = người yêu. KHÔNG dùng 'friend' cho người yêu.",
     },
     {
       id: 7,
@@ -91,7 +92,8 @@ export const unit3: UnitData = {
       phonetic: "/ˈklɑːs.meɪt/",
       meaning: "Bạn cùng lớp",
       example: "Minh is my classmate.",
-      audio: "/audio/unit3/classmate.mp3"
+      audio: "/audio/unit3/classmate.mp3",
+      l1_interference_vn: "⚠️ 'Classmate' = bạn cùng lớp. 'Colleague/coworker' = đồng nghiệp. 'Teammate' = đồng đội. Không thể dùng thay thế.",
     },
     {
       id: 8,
@@ -99,7 +101,8 @@ export const unit3: UnitData = {
       phonetic: "/ˈhæp.i/",
       meaning: "Hạnh phúc",
       example: "They are a happy family.",
-      audio: "/audio/unit3/happy.mp3"
+      audio: "/audio/unit3/happy.mp3",
+      l1_interference_vn: "⚠️ 'Happy about/with': 'I'm happy with the result'. 'Happy to do': 'I'm happy to help'. KHÔNG 'happy of'.",
     },
     {
       id: 9,
@@ -107,7 +110,8 @@ export const unit3: UnitData = {
       phonetic: "/maɪ/",
       meaning: "Của tôi",
       example: "This is my book.",
-      audio: "/audio/unit3/my.mp3"
+      audio: "/audio/unit3/my.mp3",
+      l1_interference_vn: "⚠️ 'My' luôn đứng trước danh từ: 'my book', 'my friend'. KHÔNG dùng sau danh từ như tiếng Việt ('sách của tôi' ≠ 'book my').",
     },
     {
       id: 10,
@@ -115,7 +119,8 @@ export const unit3: UnitData = {
       phonetic: "/jɔːr/",
       meaning: "Của bạn",
       example: "What is your phone number?",
-      audio: "/audio/unit3/your.mp3"
+      audio: "/audio/unit3/your.mp3",
+      l1_interference_vn: "⚠️ 'Your' = của bạn (số ít/nhiều đều dùng 'your'). KHÔNG nhầm 'your' (sở hữu) với 'you're' (you are).",
     },
     {
       id: 11,
@@ -123,7 +128,8 @@ export const unit3: UnitData = {
       phonetic: "/hɪz/",
       meaning: "Của anh ấy",
       example: "His name is Peter.",
-      audio: "/audio/unit3/his.mp3"
+      audio: "/audio/unit3/his.mp3",
+      l1_interference_vn: "⚠️ 'His' = của anh ấy (sở hữu) VÀ là đại từ tân ngữ: 'That's his book' / 'That book is his'. Cả hai đều đúng.",
     },
     {
       id: 12,
@@ -131,7 +137,8 @@ export const unit3: UnitData = {
       phonetic: "/hɜːr/",
       meaning: "Của cô ấy",
       example: "Her hair is brown.",
-      audio: "/audio/unit3/her.mp3"
+      audio: "/audio/unit3/her.mp3",
+      l1_interference_vn: "⚠️ 'Her' = của cô ấy (sở hữu) VÀ tân ngữ: 'I like her' / 'her book'. Phân biệt: 'She likes him' vs 'He likes her'."
     }
   ],
   dialogues: [
