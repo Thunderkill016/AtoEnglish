@@ -144,6 +144,7 @@ export const unitA04: UnitData = {
       example2: "I relax on weekends.",
       collocation: "have a great weekend / last weekend / this weekend",
       audio: "/audio/unit-a0-4/weekend.mp3",
+      l1_interference_vn: "⚠️ 'At/on the weekend'. 'This weekend' không cần giới từ. 'On weekends' = thứ Bảy và Chủ Nhật nói chung.",
     },
     {
       id: 9,
@@ -155,6 +156,7 @@ export const unitA04: UnitData = {
       example2: "See you later!",
       collocation: "see you later / see you tomorrow / see you soon / nice to see you",
       audio: "/audio/unit-a0-4/seeyou.mp3",
+      l1_interference_vn: "⚠️ 'See you later/tomorrow/soon' — KHÔNG thêm giới từ: 'See you at tomorrow' (SAI). Dùng trực tiếp: 'See you Monday!'",
     },
     {
       id: 10,
@@ -166,6 +168,7 @@ export const unitA04: UnitData = {
       example2: "Take care of yourself.",
       collocation: "take care / take care of / take good care",
       audio: "/audio/unit-a0-4/takecare.mp3",
+      l1_interference_vn: "⚠️ 'Take care' = lời chào tạm biệt HOẶC 'cẩn thận'. 'Take care OF' = chăm sóc. Ba nghĩa rất khác nhau!",
     },
   ],
 

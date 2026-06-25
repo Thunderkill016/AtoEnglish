@@ -122,6 +122,7 @@ export const unitA06: UnitData = {
       example2: "My wife is from Hue.",
       collocation: "my wife / his wife / wife and kids",
       audio: "/audio/unit-a0-6/wife.mp3",
+      l1_interference_vn: "⚠️ Số nhiều bất quy tắc: wife → wives (không phải wifes). Tương tự: life/lives, knife/knives.",
     },
     {
       id: 7,
@@ -133,6 +134,7 @@ export const unitA06: UnitData = {
       example2: "My child is five years old.",
       collocation: "my child / have children / only child",
       audio: "/audio/unit-a0-6/child.mp3",
+      l1_interference_vn: "⚠️ Số nhiều bất quy tắc: child → children (không phải childs). 'Two children', not 'two childs'. Cực kỳ phổ biến.",
     },
     {
       id: 8,
@@ -144,6 +146,7 @@ export const unitA06: UnitData = {
       example2: "She has only one sister.",
       collocation: "only child / only one / the only / only a little",
       audio: "/audio/unit-a0-6/only.mp3",
+      l1_interference_vn: "⚠️ Vị trí 'only' ảnh hưởng nghĩa: 'Only I love her' vs 'I only love her' vs 'I love only her' — ba nghĩa khác nhau.",
     },
     {
       id: 9,
@@ -155,6 +158,7 @@ export const unitA06: UnitData = {
       example2: "I am close to my sister.",
       collocation: "close family / very close / close friend",
       audio: "/audio/unit-a0-6/close.mp3",
+      l1_interference_vn: "⚠️ 'Close' /kloʊs/ (adj=gần/thân) vs /kloʊz/ (v=đóng). Cùng viết, đọc khác. 'A close friend' vs 'Close the door'.",
     },
     {
       id: 10,
@@ -166,6 +170,7 @@ export const unitA06: UnitData = {
       example2: "How many people are in your family?",
       collocation: "my family / family photo / close family / big family",
       audio: "/audio/unit-a0-6/family.mp3",
+      l1_interference_vn: "⚠️ 'My family is/are well' — cả hai đúng. Family = tập thể, có thể dùng singular hoặc plural verb tùy vùng.",
     },
   ],
 

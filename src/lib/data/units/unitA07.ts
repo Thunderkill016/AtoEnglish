@@ -168,6 +168,7 @@ export const unitA07: UnitData = {
       example2: "Can we schedule a meeting?",
       collocation: "have a meeting / schedule a meeting / team meeting / meeting room",
       audio: "/audio/unit-a0-7/meeting.mp3",
+      l1_interference_vn: "⚠️ 'Have/attend a meeting'. KHÔNG 'do' hay 'make a meeting'. 'The meeting is at 2PM' — giới từ 'at' với giờ.",
     },
   ],
 

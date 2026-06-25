@@ -162,6 +162,7 @@ export const unit1: UnitData = {
       example2: "I feel great! And you?",
       collocation: "And you? / How about you? / What about you?",
       audio: "/audio/unit1/and_you.mp3",
+      l1_interference_vn: "⚠️ 'And you?' = hỏi lại. Cũng nói 'What about you?' hay 'How about you?' Tất cả đều tự nhiên trong hội thoại.",
     },
     {
       id: 9,

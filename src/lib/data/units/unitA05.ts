@@ -121,6 +121,7 @@ export const unitA05: UnitData = {
       example2: "Can I have your phone number?",
       collocation: "phone number / my phone / call my phone / phone call",
       audio: "/audio/unit-a0-5/phone.mp3",
+      l1_interference_vn: "⚠️ 'Call/phone someone' — KHÔNG 'phone to someone'. 'My phone number is...' Cả 'call' và 'phone' đều là động từ.",
     },
     {
       id: 7,
@@ -132,6 +133,7 @@ export const unitA05: UnitData = {
       example2: "What is your home address?",
       collocation: "home address / email address / what's your address",
       audio: "/audio/unit-a0-5/address.mp3",
+      l1_interference_vn: "⚠️ 'What's your address?' KHÔNG 'Where is your address?' — địa chỉ là thông tin, không phải vị trí.",
     },
     {
       id: 8,
@@ -143,6 +145,7 @@ export const unitA05: UnitData = {
       example2: "Are you single or married?",
       collocation: "I'm single / single person / stay single",
       audio: "/audio/unit-a0-5/single.mp3",
+      l1_interference_vn: "⚠️ 'Single' = độc thân / phòng đơn / một chiều. Ngữ cảnh quyết định nghĩa. 'Are you single?' = bạn có người yêu chưa?",
     },
     {
       id: 9,
@@ -154,6 +157,7 @@ export const unitA05: UnitData = {
       example2: "Are you married?",
       collocation: "I'm married / get married / married life",
       audio: "/audio/unit-a0-5/married.mp3",
+      l1_interference_vn: "⚠️ 'Married TO someone': 'She's married to a doctor'. KHÔNG 'married with'. 'Get married' = kết hôn (sự kiện).",
     },
     {
       id: 10,
@@ -165,6 +169,7 @@ export const unitA05: UnitData = {
       example2: "What is your nationality?",
       collocation: "what nationality / my nationality is / dual nationality",
       audio: "/audio/unit-a0-5/nationality.mp3",
+      l1_interference_vn: "⚠️ Hỏi quốc tịch: 'What nationality are you?' hoặc 'Where are you from?' KHÔNG 'What is your nation?'",
     },
   ],
 

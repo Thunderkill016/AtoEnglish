@@ -145,6 +145,7 @@ export const unitA08: UnitData = {
       example2: "Call 911 — it's an emergency!",
       collocation: "this is an emergency / emergency room / in an emergency / emergency number",
       audio: "/audio/unit-a0-8/emergency.mp3",
+      l1_interference_vn: "⚠️ 'In an emergency'. 'Emergency services' = dịch vụ khẩn cấp. 'Emergency exit' = lối thoát hiểm.",
     },
     {
       id: 9,
@@ -156,6 +157,7 @@ export const unitA08: UnitData = {
       example2: "Please be careful.",
       collocation: "be careful / very careful / careful please / drive carefully",
       audio: "/audio/unit-a0-8/careful.mp3",
+      l1_interference_vn: "⚠️ 'Be careful!' / 'Careful OF': 'Be careful of the dog'. 'Carefully' là adverb. 'A careful driver' = adj.",
     },
     {
       id: 10,
@@ -167,6 +169,7 @@ export const unitA08: UnitData = {
       example2: "Stay safe!",
       collocation: "stay safe / are you safe / feel safe / safe place",
       audio: "/audio/unit-a0-8/safe.mp3",
+      l1_interference_vn: "⚠️ Safe (adj) → safety (n) → safely (adv). 'Stay safe!' rất thông dụng. 'Is it safe to...?' = liệu có an toàn không?",
     },
   ],
 

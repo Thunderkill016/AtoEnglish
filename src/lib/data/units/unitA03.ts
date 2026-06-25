@@ -160,6 +160,7 @@ export const unitA03: UnitData = {
       example2: "Which color do you prefer?",
       collocation: "I prefer / prefer to / which do you prefer",
       audio: "/audio/unit-a0-3/prefer.mp3",
+      l1_interference_vn: "⚠️ 'Prefer A TO B': 'I prefer coffee to tea'. KHÔNG 'prefer than'. 'Prefer doing' hay 'prefer to do' — cả hai đều đúng.",
     },
     {
       id: 10,
@@ -171,6 +172,7 @@ export const unitA03: UnitData = {
       example2: "What are you looking for?",
       collocation: "looking for something / I'm looking for / what are you looking for",
       audio: "/audio/unit-a0-3/lookingfor.mp3",
+      l1_interference_vn: "⚠️ 'Look FOR' = tìm. 'Look AT' = nhìn. 'Look AFTER' = chăm sóc. Ba phrasal verbs khác nghĩa hoàn toàn!",
     },
   ],
 

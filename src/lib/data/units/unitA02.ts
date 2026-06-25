@@ -172,6 +172,7 @@ export const unitA02: UnitData = {
       example2: "How much does this cost?",
       collocation: "how much is / how much does it cost / how much do you have",
       audio: "/audio/unit-a0-2/howmuch.mp3",
+      l1_interference_vn: "⚠️ 'How much' (không đếm được) vs 'how many' (đếm được). 'How much is it?' — KHÔNG 'How many does it cost?'",
     },
   ],
 
