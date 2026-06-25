@@ -213,19 +213,20 @@ export const unit16: UnitData = {
   ],
 
   quiz: [
-    { id: "fq1", type: "multiple-choice", question: "Dịch: 'Văn phòng chúng tôi ở góc đường, đối diện với ngân hàng.'", options: ["Our office is at the corner, opposite bank.", "Our office is on the corner, opposite the bank.", "Our office is in the corner, opposite a bank.", "Our office at corner opposite the bank."], answer: "Our office is on the corner, opposite the bank." },
+    { id: "fq1", type: "multiple-choice", question: "Dịch: 'Văn phòng chúng tôi ở góc đường, đối diện với ngân hàng.'", options: ["Our office is at the corner, opposite bank.", "Our office is on the corner, opposite the bank.", "Our office is in the corner, opposite a bank.", "Our office at corner opposite the bank."], answer: "Our office is on the corner, opposite the bank.", explanation_vn: "'On the corner' (góc đường, ngoài trời). 'In the corner' = trong góc phòng. 'Opposite the bank' = đối diện ngân hàng (cần 'the')." },
     { id: "fq2", type: "cloze", question: "Điền: 'The hotel is ___ the train station — just across the road.'", answer: "opposite" },
-    { id: "fq3", type: "multiple-choice", question: "Câu đặt phòng lịch sự nhất:", options: ["Give me a room for two nights.", "I want room two nights.", "I'd like to book a room for two nights, please.", "Can booking room for two nights?"], answer: "I'd like to book a room for two nights, please." },
+    { id: "fq3", type: "multiple-choice", question: "Câu đặt phòng lịch sự nhất:", options: ["Give me a room for two nights.", "I want room two nights.", "I'd like to book a room for two nights, please.", "Can booking room for two nights?"], answer: "I'd like to book a room for two nights, please.", explanation_vn: "'I'd like to + infinitive' = muốn làm gì (lịch sự). 'Give me' nghe thô. 'Can booking' không đúng ngữ pháp — phải 'Can I book'." },
     { id: "fq4", type: "translate", question: "Dịch sang tiếng Anh: 'Rẽ trái ở đèn giao thông, rồi đi thẳng hai dãy nhà.'", answer: "Turn left at the traffic lights, then go straight for two blocks." },
-    { id: "fq5", type: "multiple-choice", question: "Thời gian nhận phòng tiêu chuẩn bằng tiếng Anh là gì?", options: ["Check-in time is 2 PM.", "Checking-in time is 2 PM.", "Check time is 2 PM.", "In-check time is 2 PM."], answer: "Check-in time is 2 PM." },
-    { id: "q-ex1", type: "multiple-choice", question: "'Luggage' là loại danh từ gì?", options: ["Countable", "Uncountable", "Cả hai", "Proper noun"], answer: "Uncountable" },
-    { id: "q-ex2", type: "multiple-choice", question: "Cách nói đúng khi đặt phòng:", options: ["I want make a reservation.", "I'd like to make a reservation.", "I like to reserve.", "Can I doing a reservation?"], answer: "I'd like to make a reservation." },
+    { id: "fq5", type: "multiple-choice", question: "Thời gian nhận phòng tiêu chuẩn bằng tiếng Anh là gì?", options: ["Check-in time is 2 PM.", "Checking-in time is 2 PM.", "Check time is 2 PM.", "In-check time is 2 PM."], answer: "Check-in time is 2 PM.", explanation_vn: "'Check-in' (gạch ngang) là danh từ ghép cố định trong khách sạn. KHÔNG dùng 'checking-in time' hay 'check time'." },
+    { id: "q-ex1", type: "multiple-choice", question: "'Luggage' là loại danh từ gì?", options: ["Countable", "Uncountable", "Cả hai", "Proper noun"], answer: "Uncountable", explanation_vn: "'Luggage' là danh từ không đếm được — KHÔNG nói 'a luggage' hay 'luggages'. Tương tự: 'information', 'furniture', 'advice'." },
+    { id: "q-ex2", type: "multiple-choice", question: "Cách nói đúng khi đặt phòng:", options: ["I want make a reservation.", "I'd like to make a reservation.", "I like to reserve.", "Can I doing a reservation?"], answer: "I'd like to make a reservation.", explanation_vn: "'Make a reservation' là collocation đúng. 'I'd like to' lịch sự hơn 'I want to'. KHÔNG 'do a reservation'." },
     { id: "q-ex3", type: "cloze", question: "Điền: 'The flight is ___ by 2 hours.' (hoãn)", answer: "delayed" },
-    { id: "q-ex4", type: "multiple-choice", question: "'Go through customs' nghĩa là:", options: ["Mua đồ lưu niệm", "Qua cửa hải quan", "Lên máy bay", "Nhận hành lý"], answer: "Qua cửa hải quan" },
-    { id: "q-ex5", type: "multiple-choice", question: "'On arrival' nghĩa là:", options: ["Khi khởi hành", "Khi đến nơi", "Trong chuyến đi", "Trước khi đặt vé"], answer: "Khi đến nơi" },
-    { id: "q-ex6", type: "multiple-choice", question: "'Stay ___ a hotel' — giới từ đúng:", options: ["in", "at", "on", "with"], answer: "at" },
+    { id: "q-ex4", type: "multiple-choice", question: "'Go through customs' nghĩa là:", options: ["Mua đồ lưu niệm", "Qua cửa hải quan", "Lên máy bay", "Nhận hành lý"], answer: "Qua cửa hải quan", explanation_vn: "'Go through customs' = qua cửa hải quan kiểm tra hành lý/giấy tờ. 'Go through security' = qua cổng an ninh. Cụm từ cố định." },
+    { id: "q-ex5", type: "multiple-choice", question: "'On arrival' nghĩa là:", options: ["Khi khởi hành", "Khi đến nơi", "Trong chuyến đi", "Trước khi đặt vé"], answer: "Khi đến nơi", explanation_vn: "'On + noun' = ngay khi. 'On arrival' = khi đến nơi. 'On departure' = khi khởi hành. Dùng trong ngữ cảnh sân bay/khách sạn." },
+    { id: "q-ex6", type: "multiple-choice", question: "'Stay ___ a hotel' — giới từ đúng:", options: ["in", "at", "on", "with"], answer: "at", explanation_vn: "'Stay at + nơi lưu trú' (hotel, hostel, Airbnb). 'Stay in + thành phố/quốc gia' (stay in London). Đây là giới từ cố định." },
     { id: "q-ex7", type: "translate", question: "Dịch: 'Cho tôi xem hộ chiếu của bạn.'", answer: "May I see your passport, please?" },
   ],
+
 
   cumulativeReviewQuestions: [
     {
