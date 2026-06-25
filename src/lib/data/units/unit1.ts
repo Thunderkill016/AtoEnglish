@@ -441,6 +441,7 @@ export const unit1: UnitData = {
       options: ["am", "is", "are", "be"],
       answer: "is",
       type: "multiple-choice",
+      explanation_vn: "'My name' là số ít (singular) → dùng 'IS'. Quy tắc: I AM / You·We·They ARE / He·She·It·My name IS.",
     },
     {
       id: "pq2",
@@ -448,6 +449,7 @@ export const unit1: UnitData = {
       options: ["Tạm biệt", "Cảm ơn", "Rất vui được gặp bạn", "Xin chào"],
       answer: "Rất vui được gặp bạn",
       type: "multiple-choice",
+      explanation_vn: "'Nice to meet you' = Rất vui được gặp bạn — dùng khi gặp lần đầu. Trả lời: 'Nice to meet you TOO!' (phải có 'too').",
     },
     {
       id: "pq3",
@@ -624,6 +626,7 @@ export const unit1: UnitData = {
       options: ["Blue", "Red", "Green", "Yellow"],
       answer: "Red",
       type: "multiple-choice",
+      explanation_vn: "Red = đỏ. Blue = xanh dương. Green = xanh lá. Yellow = vàng. Đây là 4 màu cơ bản nhất.",
     },
     {
       id: "cr1-2",
@@ -631,6 +634,7 @@ export const unit1: UnitData = {
       options: ["Eleven", "Twelve", "Ten", "Eight"],
       answer: "Ten",
       type: "multiple-choice",
+      explanation_vn: "Ten = 10. Eight = 8. Eleven = 11. Twelve = 12. Nhớ: Eleven và Twelve là 2 số bất quy tắc (không theo quy luật -teen).",
     },
     {
       id: "cr1-3",
@@ -645,6 +649,7 @@ export const unit1: UnitData = {
       options: ["Sorry", "Please", "Thank you", "Hello"],
       answer: "Thank you",
       type: "multiple-choice",
+      explanation_vn: "Thank you = Cảm ơn. Sorry = Xin lỗi. Please = Xin / Làm ơn. Hello = Xin chào. Bốn từ lịch sự thiết yếu nhất.",
     },
     {
       id: "cr1-5",
