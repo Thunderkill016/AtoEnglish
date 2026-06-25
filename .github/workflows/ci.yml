@@ -50,6 +50,10 @@ jobs:
           # Real secrets are set in Vercel environment; build only needs to compile
           UPSTASH_REDIS_REST_URL: https://placeholder.upstash.io
           UPSTASH_REDIS_REST_TOKEN: placeholder-token-for-build
+          # Fake VAPID keys (format must be valid base64url for web-push to not throw at import)
+          NEXT_PUBLIC_VAPID_PUBLIC_KEY: BEl62iUYgUivxIkv69yViEuiBIa40TAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+          VAPID_PRIVATE_KEY: placeholder-vapid-private-key-for-build-only
+          VAPID_SUBJECT: mailto:build@atoenglish.vercel.app
 
   e2e:
     name: E2E Tests

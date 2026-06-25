@@ -15,7 +15,9 @@
     "e2e:ui": "playwright test --ui",
     "db:types": "npx supabase@2 gen types typescript --project-id vhpfskkredizeazlyzsh > src/types/supabase.ts",
     "prepare": "husky",
-    "test:integration": "dotenv -e .env.local -- vitest run --config vitest.integration.config.ts"
+    "test:integration": "dotenv -e .env.local -- vitest run --config vitest.integration.config.ts",
+    "check-deploy": "bash scripts/check-vercel-deploy.sh",
+    "check-deploy:wait": "sleep 30 && bash scripts/check-vercel-deploy.sh"
   },
   "dependencies": {
     "@base-ui/react": "^1.6.0",
