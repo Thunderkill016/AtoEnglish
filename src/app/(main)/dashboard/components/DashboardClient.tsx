@@ -19,6 +19,10 @@ import SpeakingFeedCard from "./SpeakingFeedCard";
 import LevelUpModal from "@/components/learn/LevelUpModal";
 import { WidgetErrorBoundary } from "@/components/ui/widget-error-boundary";
 import { StreakShieldWidget } from "@/components/gamification/StreakShieldWidget";
+import StreakCounter from "@/features/streak/components/StreakCounter";
+import StreakAtRiskBanner from "@/features/streak/components/StreakAtRiskBanner";
+import StreakMilestoneOverlay from "@/features/streak/components/StreakMilestoneOverlay";
+import { useStreakStatus } from "@/features/streak/hooks/useStreakStatus";
 
 // Dynamic import — NotificationBell uses browser APIs (navigator, ServiceWorker)
 const NotificationBell = dynamic(
@@ -29,6 +33,8 @@ const NotificationBell = dynamic(
 interface DashboardClientProps {
   userName: string;
   currentStreak: number;
+  bestStreak: number;
+  lastActiveDate: string | null;
   totalXp: number;
   userLevel: string;
   completedUnits: number;
@@ -111,6 +117,8 @@ const getLevelProgressStyles = (level: string) => {
 export default function DashboardClient({
   userName,
   currentStreak,
+  bestStreak,
+  lastActiveDate,
   totalXp,
   userLevel,
   completedUnits,
@@ -132,6 +140,16 @@ export default function DashboardClient({
 
   // Parse short level label (e.g. "B1 Intermediate" → "B1")
   const shortLevel = userLevel.split(" ")[0] ?? userLevel;
+
+  // — Streak state machine (psychology-driven) —
+  const streakState = useStreakStatus({
+    streak: currentStreak,
+    bestStreak,
+    lastActiveDate,
+    freezeCount: streakFreezeCount,
+  });
+  const [bannerDismissed, setBannerDismissed] = useState(false);
+  const [milestoneDismissed, setMilestoneDismissed] = useState(false);
 
   const [showPlacementBanner, setShowPlacementBanner] = useState(true);
   const [expandProgressGrid, setExpandProgressGrid] = useState(false);
@@ -319,6 +337,26 @@ export default function DashboardClient({
       <div className="pointer-events-none absolute top-0 right-0 -z-10 h-[300px] w-[50vw] max-w-[400px] rounded-full bg-emerald-500/6 dark:bg-emerald-500/4 blur-[120px]" />
       <div className="pointer-events-none absolute bottom-0 left-0 -z-10 h-[300px] w-[300px] rounded-full bg-teal-500/5 dark:bg-teal-500/3 blur-[100px]" />
 
+      {/* — Streak at-risk fixed banner — */}
+      {!bannerDismissed && (
+        <StreakAtRiskBanner
+          state={streakState}
+          onActivateFreeze={async () => {
+            const result = await freezeStreakAction();
+            if (!result.success) throw new Error(result.error ?? "Failed");
+          }}
+          onDismiss={() => setBannerDismissed(true)}
+        />
+      )}
+
+      {/* — Milestone celebration overlay — */}
+      {!milestoneDismissed && (
+        <StreakMilestoneOverlay
+          state={streakState}
+          onDismiss={() => setMilestoneDismissed(true)}
+        />
+      )}
+
       <div className="space-y-6">
         {/* ── 1. Greeting row ── */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-4">
@@ -334,25 +372,9 @@ export default function DashboardClient({
               !
             </h1>
           </div>
-          {/* Streak badge + Notification Bell */}
+          {/* Streak badge (new StreakCounter) + Notification Bell */}
             <div className="flex items-center gap-2 shrink-0">
-              <div className="flex items-center gap-2 rounded-2xl bg-orange-500/10 border border-orange-500/20 px-4 py-2.5 hover:bg-orange-500/15 transition-colors duration-200">
-                <Flame
-                  className={`size-5 text-orange-500 fill-orange-500 ${
-                    currentStreak >= 3 ? "animate-pulse" : ""
-                  }`}
-                />
-                <div className="flex flex-col leading-none">
-                  <span className="text-sm font-black text-orange-600 dark:text-orange-400 whitespace-nowrap">
-                    {currentStreak} ngày
-                  </span>
-                  {hoursLeft !== null && hoursLeft <= 8 && (
-                    <span className="text-[10px] font-bold text-orange-500/70 dark:text-orange-400/60">
-                      Còn {hoursLeft}h
-                    </span>
-                  )}
-                </div>
-              </div>
+              <StreakCounter state={streakState} compact />
               <NotificationBell />
             </div>
         </div>

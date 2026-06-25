@@ -51,7 +51,9 @@ export default async function DashboardPage() {
   let userName = "Học viên";
   let totalXp = 0;
   let currentStreak = 0;
-  let userLevel = "A0 Learner"; // Default for new users starting at A0
+  let bestStreak = 0;
+  let lastActiveDate: string | null = null;
+  let userLevel = "A0 Learner";
   let dailyXpGoal = 50;
   let streakFreezeCount = 0;
 
@@ -60,8 +62,9 @@ export default async function DashboardPage() {
     userName = p.display_name || "Học viên";
     totalXp = p.total_xp || 0;
     currentStreak = p.streak || 0;
+    bestStreak = (p as unknown as { best_streak?: number }).best_streak ?? 0;
+    lastActiveDate = (p as unknown as { last_active_date?: string | null }).last_active_date ?? null;
     dailyXpGoal = p.daily_xp_goal || 50;
-    // streak_freeze_count added by migration 20260624020000 — cast via unknown
     streakFreezeCount = (p as unknown as { streak_freeze_count?: number }).streak_freeze_count ?? 0;
 
     const levelNames: Record<string, string> = {
@@ -187,6 +190,8 @@ export default async function DashboardPage() {
     <DashboardClient
       userName={userName}
       currentStreak={currentStreak}
+      bestStreak={bestStreak}
+      lastActiveDate={lastActiveDate}
       totalXp={totalXp}
       userLevel={userLevel}
       completedUnits={completedUnits}

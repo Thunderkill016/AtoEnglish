@@ -4,45 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { createRateLimiter } from "@/lib/security/rate-limit";
 import { getTodayVN, MILESTONE_REWARDS, STREAK_MILESTONES } from "@/features/streak/utils/streakCalculator";
 
-const freezeRateLimiter = createRateLimiter(10, 60_000, "streak-freeze");
 const repairRateLimiter = createRateLimiter(5, 60_000, "streak-repair");
-
-/** Activate a streak freeze for today. Costs 1 freeze from inventory. */
-export async function activateStreakFreeze(): Promise<{ success: boolean; error?: string; freezesRemaining?: number }> {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return { success: false, error: "Không có quyền truy cập" };
-
-  const rl = await freezeRateLimiter.check(user.id);
-  if (!rl.success) return { success: false, error: "Thao tác quá nhanh, thử lại sau." };
-
-  const { data: progress } = await supabase
-    .from("user_progress")
-    .select("streak, streak_freeze_count, last_active_date")
-    .eq("user_id", user.id)
-    .maybeSingle();
-
-  if (!progress) return { success: false, error: "Không tìm thấy dữ liệu." };
-  if (progress.streak_freeze_count <= 0) return { success: false, error: "Không còn streak freeze nào." };
-
-  const todayVN = getTodayVN();
-  if (progress.last_active_date === todayVN) {
-    return { success: false, error: "Bạn đã học hôm nay rồi — không cần dùng freeze!" };
-  }
-
-  // Use the freeze: decrement count, set last_active_date to today so streak isn't broken
-  const { error } = await supabase
-    .from("user_progress")
-    .update({
-      streak_freeze_count: progress.streak_freeze_count - 1,
-      last_active_date: todayVN,
-      updated_at: new Date().toISOString(),
-    })
-    .eq("user_id", user.id);
-
-  if (error) return { success: false, error: error.message };
-  return { success: true, freezesRemaining: progress.streak_freeze_count - 1 };
-}
 
 /** Repair a broken streak. Costs 200 XP. Only within 24h of break. */
 export async function repairStreak(): Promise<{ success: boolean; error?: string; newStreak?: number }> {
