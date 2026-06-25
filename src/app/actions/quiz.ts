@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 import { createRateLimiter } from "@/lib/security/rate-limit";
 import { z } from "zod";
+import { quizXpFromPct } from "@/lib/quiz-scoring";
 
 const quizLimiter = createRateLimiter(30, 60 * 1000, "quiz");
 
@@ -14,9 +15,56 @@ const QuizResultSchema = z.object({
   total: z.number().int().min(1).max(50),
 });
 
+function vnToday(): string {
+  return new Date().toLocaleDateString("sv-SE", { timeZone: "Asia/Ho_Chi_Minh" });
+}
+
+async function awardQuizXp(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  userId: string,
+  xpDelta: number,
+  today: string
+) {
+  if (xpDelta <= 0) return;
+
+  const { data: userProgress } = await supabase
+    .from("user_progress")
+    .select("total_xp, streak, last_active_date")
+    .eq("user_id", userId)
+    .maybeSingle();
+
+  if (userProgress) {
+    const d = new Date(today);
+    d.setDate(d.getDate() - 1);
+    const yesterday = d.toLocaleDateString("sv-SE", { timeZone: "Asia/Ho_Chi_Minh" });
+    let nextStreak = 1;
+    if (userProgress.last_active_date === today) {
+      nextStreak = userProgress.streak;
+    } else if (userProgress.last_active_date === yesterday) {
+      nextStreak = userProgress.streak + 1;
+    }
+    await supabase
+      .from("user_progress")
+      .update({
+        total_xp: userProgress.total_xp + xpDelta,
+        streak: nextStreak,
+        last_active_date: today,
+      })
+      .eq("user_id", userId);
+  } else {
+    await supabase.from("user_progress").insert({
+      user_id: userId,
+      current_level: "A0",
+      streak: 1,
+      total_xp: xpDelta,
+      last_active_date: today,
+    });
+  }
+}
+
 /**
  * Server Action: lưu kết quả quiz từ vựng và thưởng XP theo điểm số.
- * XP scale: ≥80% → 15 XP | 50-79% → 10 XP | <50% → 5 XP
+ * Một dòng mỗi (user, unit, VN-day); làm lại có thể cải thiện điểm/XP.
  */
 export async function saveQuizResult(params: {
   unitId: string;
@@ -24,7 +72,6 @@ export async function saveQuizResult(params: {
   total: number;
 }) {
   try {
-    // Rate Limiting
     const reqHeaders = await headers();
     const ip = reqHeaders.get("x-forwarded-for")?.split(",")[0].trim() || "127.0.0.1";
     const rateLimitCheck = await quizLimiter.check(ip);
@@ -32,7 +79,6 @@ export async function saveQuizResult(params: {
       return { success: false, error: "Yêu cầu quá thường xuyên." };
     }
 
-    // Input Validation
     const validated = QuizResultSchema.safeParse(params);
     if (!validated.success) {
       return { success: false, error: "Dữ liệu không hợp lệ." };
@@ -40,57 +86,105 @@ export async function saveQuizResult(params: {
     const clean = validated.data;
 
     const supabase = await createClient();
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
     if (authError || !user) {
       return { success: false, error: "Bạn cần đăng nhập." };
     }
 
-    // XP scales with performance
     const pct = Math.round((clean.score / clean.total) * 100);
-    const xpEarned = pct >= 80 ? 15 : pct >= 50 ? 10 : 5;
-    const today = new Date().toLocaleDateString("sv-SE", { timeZone: "Asia/Ho_Chi_Minh" });
+    const xpForAttempt = quizXpFromPct(pct);
+    const today = vnToday();
 
-    // Update user_progress: add XP + maintain streak (best-effort)
-    const { data: userProgress } = await supabase
-      .from("user_progress")
-      .select("total_xp, streak, last_active_date")
+    const { data: existing } = await supabase
+      .from("quiz_results")
+      .select("score, total, pct, xp_earned")
       .eq("user_id", user.id)
+      .eq("unit_id", clean.unitId)
+      .eq("quiz_date", today)
       .maybeSingle();
 
-    if (userProgress) {
-      const lastActive = userProgress.last_active_date;
-      let nextStreak = 1;
-      if (lastActive === today) {
-        nextStreak = userProgress.streak;
-      } else {
-        const d = new Date(today);
-        d.setDate(d.getDate() - 1);
-        const yesterday = d.toLocaleDateString("sv-SE", { timeZone: "Asia/Ho_Chi_Minh" });
-        nextStreak = lastActive === yesterday ? userProgress.streak + 1 : 1;
+    if (existing) {
+      const bestScore = Math.max(existing.score, clean.score);
+      const bestPct = Math.round((bestScore / clean.total) * 100);
+      const bestXp = Math.max(existing.xp_earned, quizXpFromPct(bestPct));
+      const xpDelta = bestXp - existing.xp_earned;
+      const improved = bestScore > existing.score || xpDelta > 0;
+
+      if (!improved) {
+        return {
+          success: true,
+          xpEarned: 0,
+          pct: existing.pct,
+          alreadyRecorded: true,
+        };
       }
-      await supabase
-        .from("user_progress")
+
+      const { error: updateError } = await supabase
+        .from("quiz_results")
         .update({
-          total_xp: userProgress.total_xp + xpEarned,
-          streak: nextStreak,
-          last_active_date: today,
+          score: bestScore,
+          total: clean.total,
+          pct: bestPct,
+          xp_earned: bestXp,
+          updated_at: new Date().toISOString(),
         })
-        .eq("user_id", user.id);
-    } else {
-      await supabase
-        .from("user_progress")
-        .insert({
-          user_id: user.id,
-          current_level: "A0",
-          streak: 1,
-          total_xp: xpEarned,
-          last_active_date: today,
-        });
+        .eq("user_id", user.id)
+        .eq("unit_id", clean.unitId)
+        .eq("quiz_date", today);
+
+      if (updateError) {
+        return { success: false, error: updateError.message };
+      }
+
+      await awardQuizXp(supabase, user.id, xpDelta, today);
+
+      revalidatePath("/dashboard");
+      revalidatePath("/quiz");
+      revalidatePath("/progress");
+
+      return { success: true, xpEarned: xpDelta, pct: bestPct };
     }
 
-    revalidatePath("/dashboard");
+    const { error: insertError } = await supabase.from("quiz_results").insert({
+      user_id: user.id,
+      unit_id: clean.unitId,
+      score: clean.score,
+      total: clean.total,
+      pct,
+      xp_earned: xpForAttempt,
+      quiz_date: today,
+    });
 
-    return { success: true, xpEarned, pct };
+    if (insertError) {
+      if (insertError.code === "23505") {
+        const { data: raced } = await supabase
+          .from("quiz_results")
+          .select("score, pct, xp_earned")
+          .eq("user_id", user.id)
+          .eq("unit_id", clean.unitId)
+          .eq("quiz_date", today)
+          .maybeSingle();
+
+        return {
+          success: true,
+          xpEarned: 0,
+          pct: raced?.pct ?? pct,
+          alreadyRecorded: true,
+        };
+      }
+      return { success: false, error: insertError.message };
+    }
+
+    await awardQuizXp(supabase, user.id, xpForAttempt, today);
+
+    revalidatePath("/dashboard");
+    revalidatePath("/quiz");
+    revalidatePath("/progress");
+
+    return { success: true, xpEarned: xpForAttempt, pct };
   } catch (err) {
     return { success: false, error: err instanceof Error ? err.message : String(err) };
   }

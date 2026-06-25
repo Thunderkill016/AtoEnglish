@@ -147,5 +147,6 @@ afterAll(async () => {
   await adminClient.from("speaking_sessions").delete().eq("user_id", testUserId);
   await adminClient.from("card_review_logs").delete().eq("user_id", testUserId);
   await adminClient.from("challenge_results").delete().eq("user_id", testUserId);
+  await adminClient.from("quiz_results").delete().eq("user_id", testUserId);
   globalThis.__testSupabaseClient = undefined;
 });

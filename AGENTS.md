@@ -25,7 +25,8 @@ Categories: `bug` · `decision` · `architecture` · `feature` · `rule` · `tas
 
 ```bash
 npm run dev           # dev server :3000 (Turbopack)
-npm run test          # unit tests (Vitest, 64 tests)
+npm run test          # unit tests (Vitest, 146 tests)
+npm run test:integration  # Supabase integration tests
 npm run test:coverage # coverage with thresholds (≥70% lines)
 npm run lint          # ESLint
 npx tsc --noEmit      # type check
@@ -71,7 +72,7 @@ src/
 └── proxy.ts                     # Next.js 16 middleware (auth guard + rate limit)
 ```
 
-**Auth flow**: Landing → `/login?mode=signup` → 5-step onboarding quiz → Supabase Auth → `/dashboard`
+**Auth flow**: Landing → `/login?mode=signup` → 5-step onboarding quiz → Supabase Auth → first unit `?mini=1` (returning users → `/dashboard`)
 
 **Route protection**: `src/proxy.ts` exports `proxy()` (Next.js 16 convention, replaces `middleware.ts`)
 
