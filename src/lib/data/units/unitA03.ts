@@ -246,6 +246,7 @@ export const unitA03: UnitData = {
       ],
       answer: "I want a blue shirt.",
       type: "multiple-choice",
+      explanation_vn: "Tiếng Anh: Số + Tính từ + Danh từ. 'A blue shirt' (số trước, tính từ trước danh từ). KHÔNG 'a shirt blue' hay 'blue a shirt'.",
     },
     {
       id: "pq3-2",
@@ -265,6 +266,7 @@ export const unitA03: UnitData = {
       ],
       answer: "I prefer the blue one.",
       type: "multiple-choice",
+      explanation_vn: "'Prefer' = thích hơn. 'I prefer the blue one' = Tôi thích cái xanh hơn. 'One' thay cho danh từ đã nói trước (ở đây = shirt/bag).",
     },
     {
       id: "pq3-4",

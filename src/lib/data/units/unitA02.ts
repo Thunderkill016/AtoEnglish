@@ -247,6 +247,7 @@ export const unitA02: UnitData = {
       ],
       answer: "How much is it?",
       type: "multiple-choice",
+      explanation_vn: "'How much' dùng cho thứ KHÔNG đếm được (tiền, giá). 'How many' dùng cho thứ ĐẾM ĐƯỢC (apples, people). Hỏi giá → How much.",
     },
     {
       id: "pq2-2",
@@ -261,6 +262,7 @@ export const unitA02: UnitData = {
       options: ["Rẻ", "Đắt", "Miễn phí", "Giảm giá"],
       answer: "Đắt",
       type: "multiple-choice",
+      explanation_vn: "Expensive = đắt (giá cao). Cheap/Inexpensive = rẻ. Free = miễn phí. On sale = đang giảm giá. Bốn khái niệm giá cả cần nhớ.",
     },
     {
       id: "pq2-4",
