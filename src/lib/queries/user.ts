@@ -62,3 +62,30 @@ export const getCachedFlashcardStats = cache(async (userId: string) => {
     .maybeSingle();
   return data;
 });
+
+/**
+ * Lightweight due-cards COUNT for BottomNav badge.
+ * Only counts — does not fetch full card rows (much cheaper).
+ * Called from layout.tsx so the badge appears on every page.
+ */
+export const getCachedDueCardsCount = cache(async (userId: string): Promise<number> => {
+  const supabase = await createClient();
+  const now = new Date().toISOString();
+
+  const [reviewCount, newCount] = await Promise.all([
+    supabase
+      .from("cards")
+      .select("id", { count: "exact", head: true })
+      .eq("user_id", userId)
+      .gte("state", 1)
+      .lte("due_date", now),
+    supabase
+      .from("cards")
+      .select("id", { count: "exact", head: true })
+      .eq("user_id", userId)
+      .eq("state", 0)
+      .lte("due_date", now),
+  ]);
+
+  return (reviewCount.count ?? 0) + Math.min(newCount.count ?? 0, 15);
+});

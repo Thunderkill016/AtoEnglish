@@ -8,6 +8,7 @@ import {
   PenLine,
   Trophy,
   Briefcase,
+  User,
   type LucideIcon,
 } from "lucide-react";
 
@@ -18,7 +19,44 @@ export type NavItem = {
   description?: string;
 };
 
-export const mainNavItems: NavItem[] = [
+// ─── Tier 1 — Bottom Nav (mobile, always visible) ────────────────────────────
+// 5 tabs: optimal per Apple HIG + Google Material guidelines
+// Priority: Home → Learn → SRS habit → Speaking (was hidden!) → Profile
+export const bottomNavItems: NavItem[] = [
+  {
+    title: "Home",
+    href: "/dashboard",
+    icon: LayoutDashboard,
+    description: "Tổng quan học tập",
+  },
+  {
+    title: "Học",
+    href: "/learn",
+    icon: BookOpen,
+    description: "Bài học theo IPOR",
+  },
+  {
+    title: "SRS",
+    href: "/flashcards",
+    icon: Layers,
+    description: "Ôn tập flashcard thông minh",
+  },
+  {
+    title: "Nói",
+    href: "/speaking",
+    icon: Mic,
+    description: "Luyện phát âm & AI roleplay",
+  },
+  {
+    title: "Tôi",
+    href: "/progress",
+    icon: User,
+    description: "Tiến độ & thành tích",
+  },
+];
+
+// ─── Tier 2 — Desktop Primary Nav (md+, visible in header) ───────────────────
+export const desktopPrimaryNav: NavItem[] = [
   {
     title: "Dashboard",
     href: "/dashboard",
@@ -26,22 +64,16 @@ export const mainNavItems: NavItem[] = [
     description: "Tổng quan tiến độ học tập",
   },
   {
-    title: "Learn",
+    title: "Học",
     href: "/learn",
     icon: BookOpen,
     description: "Bài học theo mô hình IPOR",
   },
   {
-    title: "Speaking",
+    title: "Luyện nói",
     href: "/speaking",
     icon: Mic,
-    description: "Luyện phát âm Shadowing & AI Roleplay",
-  },
-  {
-    title: "Writing",
-    href: "/writing",
-    icon: PenLine,
-    description: "Viết & Cải thiện với AI feedback",
+    description: "Shadowing & AI Roleplay",
   },
   {
     title: "Flashcards",
@@ -50,13 +82,23 @@ export const mainNavItems: NavItem[] = [
     description: "Ôn tập SRS thông minh",
   },
   {
-    title: "Progress",
+    title: "Viết",
+    href: "/writing",
+    icon: PenLine,
+    description: "Viết & cải thiện với AI",
+  },
+  {
+    title: "Tiến độ",
     href: "/progress",
     icon: TrendingUp,
     description: "Thống kê và thành tích",
   },
+];
+
+// ─── Tier 3 — Desktop "More" dropdown ────────────────────────────────────────
+export const desktopMoreItems: NavItem[] = [
   {
-    title: "Leaderboard",
+    title: "Bảng xếp hạng",
     href: "/leaderboard",
     icon: Trophy,
     description: "Top học viên theo XP",
@@ -65,12 +107,18 @@ export const mainNavItems: NavItem[] = [
     title: "Business",
     href: "/business",
     icon: Briefcase,
-    description: "Tiếng Anh công sở & sự nghiệp",
+    description: "Tiếng Anh công sở",
   },
   {
-    title: "Roadmap",
+    title: "Lộ trình",
     href: "/roadmap",
     icon: Map,
-    description: "Lộ trình A1 → C1",
+    description: "A1 → C1 study path",
   },
+];
+
+// ─── Legacy export — backward compat for components importing mainNavItems ────
+export const mainNavItems: NavItem[] = [
+  ...desktopPrimaryNav,
+  ...desktopMoreItems,
 ];
