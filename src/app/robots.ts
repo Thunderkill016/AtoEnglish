@@ -16,6 +16,17 @@ export default function robots(): MetadataRoute.Robots {
           "/progress",
           "/roadmap",
           "/quiz",
+          "/writing",
+          "/leaderboard",
+          "/grammar",
+          "/business",
+          "/challenge",
+          "/pronunciation",
+          "/placement-test",
+          "/invite",
+          "/certificate",
+          "/settings",
+          "/checkpoint",
           "/auth/",
           "/api/",
         ],
@@ -25,3 +36,4 @@ export default function robots(): MetadataRoute.Robots {
     host: baseUrl,
   };
 }
+
