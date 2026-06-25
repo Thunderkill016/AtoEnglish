@@ -1,8 +1,9 @@
 import { test, expect } from "@playwright/test";
 
 /**
- * Protected routes: only these 6 redirect to /login when unauthenticated.
- * Source: src/lib/supabase/session.ts → protectedRoutes array
+ * Protected routes: redirect to /login when unauthenticated.
+ * Source of truth: src/lib/supabase/session.ts → protectedRoutes array
+ * Keep this list in sync whenever new routes are added to app/(main)/
  */
 const PROTECTED_ROUTES = [
   "/dashboard",
@@ -12,21 +13,24 @@ const PROTECTED_ROUTES = [
   "/speaking",
   "/progress",
   "/roadmap",
+  "/writing",
+  "/leaderboard",
+  "/grammar",
+  "/business",
+  "/challenge",
+  "/pronunciation",
+  "/placement-test",
+  "/invite",
+  "/settings",
+  "/quiz",
 ];
 
 /**
- * Public routes: accessible without authentication.
- * These return 200 regardless of auth state.
+ * Public routes: accessible without authentication (return 200).
  */
 const PUBLIC_ROUTES = [
   { path: "/", titleMatcher: /AtoEnglish/ },
   { path: "/login", titleMatcher: /AtoEnglish/ },
-  { path: "/placement-test", titleMatcher: /AtoEnglish/ },
-  { path: "/grammar", titleMatcher: /AtoEnglish/ },
-  { path: "/pronunciation", titleMatcher: /AtoEnglish/ },
-  { path: "/writing", titleMatcher: /AtoEnglish/ },
-  { path: "/leaderboard", titleMatcher: /AtoEnglish/ },
-  { path: "/quiz", titleMatcher: /AtoEnglish/ },
 ];
 
 test.describe("Protected Routes — Unauthenticated Redirects", () => {
