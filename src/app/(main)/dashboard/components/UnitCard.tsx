@@ -82,9 +82,24 @@ export default function UnitCard({ currentUnitData }: UnitCardProps) {
         </div>
 
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-          <p className="text-xs text-zinc-500 dark:text-zinc-400">
-            Hoàn thành để nhận <strong className="text-zinc-700 dark:text-zinc-300 font-bold">{currentUnitData.xp} XP</strong>
-          </p>
+          <div className="flex flex-col gap-0.5">
+            <p className="text-xs text-zinc-500 dark:text-zinc-400">
+              Hoàn thành để nhận <strong className="text-zinc-700 dark:text-zinc-300 font-bold">{currentUnitData.xp} XP</strong>
+            </p>
+            {/* FutureStateHint — forward-looking progress nudge */}
+            {currentUnitData.progress < 100 && (() => {
+              const next = currentUnitData.progress >= 75
+                ? "sắp hoàn thành unit này! 🎉"
+                : currentUnitData.progress >= 50
+                  ? `${Math.min(currentUnitData.progress + 25, 100)}% qua bài này sau hôm nay ✨`
+                  : `${currentUnitData.progress + 20}% sau bài học hôm nay 🚀`;
+              return (
+                <p className="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold">
+                  Tiếp tục → {next}
+                </p>
+              );
+            })()}
+          </div>
           <Link href={currentUnitData.route} className="shrink-0">
             <Button className="w-full sm:w-auto h-11 px-7 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-white font-extrabold rounded-xl flex items-center justify-center gap-2 transition-all duration-200 shadow-lg shadow-emerald-600/20 hover:shadow-emerald-500/30 active:scale-[0.97]">
               <span>Tiếp tục học ngay</span>
