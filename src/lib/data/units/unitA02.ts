@@ -676,6 +676,7 @@ export const unitA02: UnitData = {
       },
     ],
   },
+  shadowingVideoId: "EDFWbC74Sdc", // BBC Learning English — Numbers 1-100
 };
 
 export default unitA02;

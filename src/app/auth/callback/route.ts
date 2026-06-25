@@ -1,10 +1,15 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import {
+  getOnboardingRedirectPath,
+  mapQuizLevelToCefr,
+} from "@/lib/onboarding";
 
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
   const code = searchParams.get("code");
   const next = searchParams.get("next") ?? "/dashboard";
+  let destination = next;
 
   if (code) {
     const supabase = await createClient();
@@ -13,26 +18,18 @@ export async function GET(request: Request) {
     if (!error && data?.user) {
       const user = data.user;
       const level = searchParams.get("level") ?? "A0-A1";
+      const mappedLevel = mapQuizLevelToCefr(level);
 
-      // Map onboarding quiz answer to CEFR level
-      // "A0-A1" → "A0" (true beginner — learns from scratch)
-      const cefrMap: Record<string, "A0" | "A1" | "A2" | "B1" | "B2"> = {
-        "A0-A1": "A0",
-        "A2":    "A2",
-        "B1":    "B1",
-        "B2+":   "B2",
-      };
-      const mappedLevel = cefrMap[level] || "A0";
+      const { data: existingProgress } = await supabase
+        .from("user_progress")
+        .select("user_id")
+        .eq("user_id", user.id)
+        .maybeSingle();
 
-      const time = searchParams.get("time") ?? "15min";
-      const xpGoalMap: Record<string, number> = {
-        "5min": 20, "15min": 50, "30min": 100, "60min": 200,
-      };
-      const dailyXpGoal = xpGoalMap[time] ?? 50;
+      const isNewUser = !existingProgress;
 
       // Upsert user_progress — insert for new users, skip for returning users
       // (ignoreDuplicates preserves existing level/xp/streak on re-login)
-      // display_name is NOT stored in a separate table — read from user_metadata
       await supabase.from("user_progress").upsert(
         {
           user_id: user.id,
@@ -42,8 +39,14 @@ export async function GET(request: Request) {
         },
         { onConflict: "user_id", ignoreDuplicates: true }
       );
+
+      // New signups with onboarding survey → first lesson micro-session (~3 min)
+      if (isNewUser && searchParams.has("level")) {
+        const time = searchParams.get("time") ?? "15min";
+        destination = getOnboardingRedirectPath(level, time);
+      }
     }
   }
 
-  return NextResponse.redirect(`${origin}${next}`);
+  return NextResponse.redirect(`${origin}${destination}`);
 }

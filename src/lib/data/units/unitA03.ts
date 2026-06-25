@@ -679,6 +679,7 @@ export const unitA03: UnitData = {
       },
     ],
   },
+  shadowingVideoId: "48MDYwdwMvY", // BBC Learning English — Easy English: Colours
 };
 
 export default unitA03;

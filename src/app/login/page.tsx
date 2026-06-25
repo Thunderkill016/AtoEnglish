@@ -9,6 +9,10 @@ import { toast } from "sonner";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { LoginSchema, SignUpSchema } from "@/lib/security/validation";
+import {
+  getOnboardingRedirectPath,
+  mapQuizLevelToCefr,
+} from "@/lib/onboarding";
 
 
 const slideVariants = {
@@ -177,7 +181,10 @@ function LoginContent() {
       const level = answers[1] || "A0-A1";
       const target = answers[2] || "work";
       const time = answers[4] || "15min";
-      const redirectUrl = `${window.location.origin}/auth/callback?next=${encodeURIComponent(next)}&level=${encodeURIComponent(level)}&target=${encodeURIComponent(target)}&time=${encodeURIComponent(time)}`;
+      const postAuthPath = hasAnswers
+        ? getOnboardingRedirectPath(level, time)
+        : next;
+      const redirectUrl = `${window.location.origin}/auth/callback?next=${encodeURIComponent(postAuthPath)}&level=${encodeURIComponent(level)}&target=${encodeURIComponent(target)}&time=${encodeURIComponent(time)}`;
 
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
@@ -206,14 +213,11 @@ function LoginContent() {
     }
 
     const level = answers[1] || "A0-A1";
-    const cefrMap: Record<string, "A1" | "A2" | "B1" | "B2"> = {
-      "A0-A1": "A1",
-      A2: "A2",
-      B1: "B1",
-      "B2+": "B2",
-    };
-    const mappedLevel = cefrMap[level] || "A1";
+    const mappedLevel = mapQuizLevelToCefr(level);
     const time = answers[4] || "15min";
+    const postAuthPath = hasAnswers
+      ? getOnboardingRedirectPath(level, time)
+      : next;
     const xpGoalMap: Record<string, number> = {
       "5min": 20, "15min": 50, "30min": 100, "60min": 200,
     };
@@ -226,7 +230,7 @@ function LoginContent() {
           email,
           password,
           options: {
-            emailRedirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(next)}&level=${encodeURIComponent(level)}`,
+            emailRedirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(postAuthPath)}&level=${encodeURIComponent(level)}&time=${encodeURIComponent(time)}`,
           },
         });
         if (error) throw error;
@@ -250,7 +254,7 @@ function LoginContent() {
           localStorage.setItem("ato_daily_xp_goal", String(dailyXpGoal));
 
           toast.success("Đăng ký tài khoản thành công!");
-          router.push(next);
+          router.push(postAuthPath);
         } else {
           toast.success("Đăng ký thành công! Vui lòng kiểm tra email xác nhận.");
         }

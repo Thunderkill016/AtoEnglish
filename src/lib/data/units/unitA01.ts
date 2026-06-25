@@ -774,6 +774,7 @@ export const unitA01: UnitData = {
       explanation_vn: "'Goodbye!' là lời tạm biệt phổ biến. Bạn cũng có thể nói 'Bye!' hay 'See you later!'",
     },
   ],
+  shadowingVideoId: "sNvmqN2MBBo", // BBC Learning English — How to Greet People in English
 };
 
 export default unitA01;

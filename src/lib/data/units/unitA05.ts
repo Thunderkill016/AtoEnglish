@@ -687,6 +687,7 @@ export const unitA05: UnitData = {
       },
     ],
   },
+  shadowingVideoId: "sNvmqN2MBBo", // BBC Learning English — Introducing yourself
 };
 
 export default unitA05;

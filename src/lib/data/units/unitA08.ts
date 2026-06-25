@@ -698,6 +698,7 @@ export const unitA08: UnitData = {
       },
     ],
   },
+  shadowingVideoId: "mA-MK2bJA4I", // BBC Learning English — Travel & asking for help
 };
 
 export default unitA08;

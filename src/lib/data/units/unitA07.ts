@@ -664,6 +664,7 @@ export const unitA07: UnitData = {
       },
     ],
   },
+  shadowingVideoId: "8U40yQ7IVqY", // BBC Learning English — Daily Routines & time
 };
 
 export default unitA07;
