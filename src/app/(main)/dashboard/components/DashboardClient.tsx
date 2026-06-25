@@ -165,7 +165,16 @@ export default function DashboardClient({
     lastActiveDate,
     freezeCount: streakFreezeCount,
   });
-  const [bannerDismissed, setBannerDismissed] = useState(false);
+  // Banner dismiss persists until midnight (sessionStorage keyed on today's VN date)
+  const todayBannerKey = `ato_streak_banner_dismissed_${new Date().toLocaleDateString("sv-SE", { timeZone: "Asia/Ho_Chi_Minh" })}`;
+  const [bannerDismissed, setBannerDismissed] = useState(() => {
+    if (typeof window === "undefined") return false;
+    return sessionStorage.getItem(todayBannerKey) === "1";
+  });
+  const handleBannerDismiss = () => {
+    sessionStorage.setItem(todayBannerKey, "1");
+    setBannerDismissed(true);
+  };
   const [milestoneDismissed, setMilestoneDismissed] = useState(false);
   // StreakBrokenModal: only shown once per session using sessionStorage
   const [brokenModalDismissed, setBrokenModalDismissed] = useState(() => {
@@ -371,7 +380,7 @@ export default function DashboardClient({
             const result = await freezeStreakAction();
             if (!result.success) throw new Error(result.error ?? "Failed");
           }}
-          onDismiss={() => setBannerDismissed(true)}
+          onDismiss={handleBannerDismiss}
         />
       )}
 
@@ -511,6 +520,7 @@ export default function DashboardClient({
               : 0;
             const NEXT: Record<string, string> = { A0: "A1", A1: "A2", A2: "B1", B1: "B2", B2: "C1" };
             const nextLevel = NEXT[shortLevel] ?? "";
+            const unitsLeft = Math.max(0, levelUnitsAll.length - levelUnitsDone);
             return (
               <Link
                 href="/roadmap"
@@ -523,8 +533,7 @@ export default function DashboardClient({
                   <span className="text-[10px] font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">Trình độ</span>
                 </div>
                 <p className="text-xl font-black text-zinc-900 dark:text-zinc-50 leading-none">{shortLevel}</p>
-                <p className="text-[10px] text-zinc-500 dark:text-zinc-400 font-medium tabular-nums">{displayXp} XP tích lũy</p>
-                {nextLevel && (
+                {nextLevel && levelUnitsAll.length > 0 ? (
                   <>
                     <div className="h-1.5 w-full bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
                       <div
@@ -532,28 +541,40 @@ export default function DashboardClient({
                         style={{ width: `${levelProgress}%` }}
                       />
                     </div>
-                    <p className="text-[9px] text-zinc-400 dark:text-zinc-500 font-semibold">
-                      {levelUnitsDone}/{levelUnitsAll.length} Đến {nextLevel}
+                    <p className="text-[9px] text-blue-500 dark:text-blue-400 font-bold">
+                      {unitsLeft > 0 ? `Còn ${unitsLeft} bài → ${nextLevel}` : `Sẵn sàng lên ${nextLevel}! 🎉`}
                     </p>
                   </>
+                ) : (
+                  <p className="text-[10px] text-zinc-500 dark:text-zinc-400 font-medium tabular-nums">{displayXp} XP tích lũy</p>
                 )}
               </Link>
             );
           })()}
 
-          {/* Units completed */}
+          {/* Card 3: Chuỗi học (streak days) — more motivating than raw unit count */}
           <Link
             href="/progress"
-            className="rounded-2xl border border-zinc-200/60 dark:border-zinc-800/60 bg-white/60 dark:bg-zinc-900/30 backdrop-blur-sm p-4 space-y-2 hover:border-purple-500/30 transition-colors duration-200 cursor-pointer block"
+            className="rounded-2xl border border-zinc-200/60 dark:border-zinc-800/60 bg-white/60 dark:bg-zinc-900/30 backdrop-blur-sm p-4 space-y-2 hover:border-orange-500/30 transition-colors duration-200 cursor-pointer block"
           >
             <div className="flex items-center gap-2">
-              <span className="flex size-7 items-center justify-center rounded-lg bg-purple-500/10 text-purple-600 dark:text-purple-400">
-                <BookOpen className="size-3.5" />
+              <span className="flex size-7 items-center justify-center rounded-lg bg-orange-500/10 text-orange-600 dark:text-orange-400">
+                <Flame className="size-3.5" />
               </span>
-              <span className="text-[10px] font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">Units</span>
+              <span className="text-[10px] font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">Chuỗi học</span>
             </div>
-            <p className="text-xl font-black text-zinc-900 dark:text-zinc-50 leading-none">{completedUnits}</p>
-            <p className="text-[10px] text-zinc-500 dark:text-zinc-400 font-medium">đã hoàn thành</p>
+            <p className="text-xl font-black text-zinc-900 dark:text-zinc-50 leading-none">
+              {currentStreak}<span className="text-xs font-bold text-zinc-400 dark:text-zinc-500"> ngày</span>
+            </p>
+            <p className="text-[10px] text-zinc-500 dark:text-zinc-400 font-medium">
+              {currentStreak === 0
+                ? "Bắt đầu hôm nay →"
+                : currentStreak < 7
+                ? "🌱 Đang xây dựng!"
+                : currentStreak < 30
+                ? "🔥 Giữ vững nhé!"
+                : "⚡ Siêu kiên trì!"}
+            </p>
           </Link>
         </div>
 
