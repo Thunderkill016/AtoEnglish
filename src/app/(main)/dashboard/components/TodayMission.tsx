@@ -1,87 +1,61 @@
 "use client";
 
+import { useMemo, useState } from "react";
 import Link from "next/link";
-import { ArrowRight, Zap, BookOpen, Mic, Star } from "lucide-react";
+import {
+  ArrowRight,
+  Zap,
+  BookOpen,
+  Star,
+  CheckCircle2,
+  Circle,
+} from "lucide-react";
+
+import {
+  countCompletedMissions,
+  type DailyMission,
+} from "@/lib/dashboard/daily-missions";
+import { cn } from "@/lib/utils";
 
 interface TodayMissionProps {
-  /** Current unit being studied */
-  currentUnit: {
-    title: string;
-    progress: number; // 0–100
-    route: string;
-    xp: number;
-  };
-  /** Number of SRS cards due for review */
-  dueCardsCount: number;
-  /** XP earned today */
-  xpToday: number;
-  /** Daily XP target */
-  xpTarget: number;
-  /** How many quick wins completed today (SRS, quiz, speaking) */
-  completedQuickWins?: number;
+  missions: DailyMission[];
 }
 
 /**
- * TodayMission — single unified daily task hub (FIX 4).
- * Merges "Học nhanh 10 phút", "Nhiệm vụ hôm nay", "Kế hoạch Phase" into 1 clear CTA.
- *
- * Layout:
- *   PRIMARY  — current lesson (always 1 item)
- *   QUICK WINS — SRS, Quiz, Speaking (< 10 min each)
- *   BONUS — speaking challenge
- *
- * Psychology: single clear "what to do next" removes decision fatigue.
+ * Unified daily mission hub — primary lesson + server-synced task list.
+ * Challenge completion overlays from localStorage (no DB row yet).
  */
-export default function TodayMission({
-  currentUnit,
-  dueCardsCount,
-  xpToday,
-  xpTarget,
-  completedQuickWins = 0,
-}: TodayMissionProps) {
-  // Tổng số nhiệm vụ: 1 primary + 3 quick wins
-  const totalTasks = 4;
-  // Đánh dấu primary hoàn thành nếu đạt XP đủ trong ngày
-  const primaryDone = xpToday >= Math.min(xpTarget * 0.4, 20);
-  const totalDone = (primaryDone ? 1 : 0) + Math.min(completedQuickWins, 3);
-  const progressPct = Math.round((totalDone / totalTasks) * 100);
+export default function TodayMission({ missions: initialMissions }: TodayMissionProps) {
+  const todayKey = new Date().toLocaleDateString("sv-SE", {
+    timeZone: "Asia/Ho_Chi_Minh",
+  });
+  const [challengeDone] = useState(() => {
+    if (typeof window === "undefined") return false;
+    try {
+      return !!localStorage.getItem(`ato_challenge_${todayKey}`);
+    } catch {
+      return false;
+    }
+  });
 
-  const quickWins = [
-    {
-      id: "qw-srs",
-      icon: "🃏",
-      label: "Ôn từ SRS",
-      time: dueCardsCount > 0 ? `${dueCardsCount} thẻ` : "5 phút",
-      xp: 15,
-      href: "/flashcards",
-      color: "purple",
-      done: completedQuickWins >= 1,
-    },
-    {
-      id: "qw-quiz",
-      icon: "📝",
-      label: "Quiz bài học",
-      time: "5 câu",
-      xp: 15,
-      href: currentUnit.route,
-      color: "emerald",
-      done: completedQuickWins >= 2,
-    },
-    {
-      id: "qw-speaking",
-      icon: "🎙️",
-      label: "Luyện phát âm",
-      time: "5 phút",
-      xp: 10,
-      href: "/pronunciation",
-      color: "red",
-      done: completedQuickWins >= 3,
-    },
-  ] as const;
+  const missions = useMemo(
+    () =>
+      initialMissions.map((m) =>
+        m.id === "challenge" && challengeDone ? { ...m, completed: true } : m,
+      ),
+    [initialMissions, challengeDone],
+  );
+
+  const primary = missions.find((m) => m.kind === "primary");
+  const tasks = missions.filter((m) => m.kind !== "primary");
+  const completedCount = countCompletedMissions(missions);
+  const progressPct = missions.length
+    ? Math.round((completedCount / missions.length) * 100)
+    : 0;
+  const allDone = completedCount === missions.length;
 
   return (
     <div className="rounded-2xl border border-zinc-200/60 dark:border-zinc-800/60 bg-white/60 dark:bg-zinc-900/30 backdrop-blur-sm overflow-hidden">
-      {/* Header */}
       <div className="px-4 sm:px-5 pt-4 sm:pt-5 pb-3">
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center gap-2">
@@ -93,11 +67,9 @@ export default function TodayMission({
             </p>
           </div>
           <span className="text-xs font-bold text-zinc-500 dark:text-zinc-400">
-            {totalDone}/{totalTasks} hoàn thành
+            {completedCount}/{missions.length} hoàn thành
           </span>
         </div>
-
-        {/* Progress bar */}
         <div className="h-1.5 w-full bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
           <div
             className="h-full bg-gradient-to-r from-amber-500 to-emerald-500 rounded-full transition-all duration-700"
@@ -107,119 +79,121 @@ export default function TodayMission({
       </div>
 
       <div className="px-4 sm:px-5 pb-4 sm:pb-5 space-y-3">
-
-        {/* ── PRIMARY TASK — current lesson ── */}
-        <div>
-          <p className="text-[10px] font-black text-zinc-400 dark:text-zinc-500 uppercase tracking-widest mb-1.5">
-            Ưu tiên — làm trước
-          </p>
-          <Link
-            href={currentUnit.route}
-            id="today-mission-primary"
-            className={`flex items-center gap-3 p-3 rounded-xl border transition-all duration-150 group ${
-              primaryDone
-                ? "border-emerald-500/30 bg-emerald-500/5"
-                : "border-emerald-500/20 bg-emerald-500/5 hover:bg-emerald-500/10 hover:border-emerald-500/30"
-            }`}
-          >
-            {/* Check circle */}
-            <div
-              className={`size-8 rounded-full border-2 flex items-center justify-center shrink-0 transition-all ${
-                primaryDone
-                  ? "border-emerald-500 bg-emerald-500"
-                  : "border-emerald-400 dark:border-emerald-600"
-              }`}
+        {primary && (
+          <div>
+            <p className="text-[10px] font-black text-zinc-400 dark:text-zinc-500 uppercase tracking-widest mb-1.5">
+              Ưu tiên — làm trước
+            </p>
+            <Link
+              href={primary.href}
+              id="today-mission-primary"
+              className={cn(
+                "flex items-center gap-3 p-3 rounded-xl border transition-all duration-150 group",
+                primary.completed
+                  ? "border-emerald-500/30 bg-emerald-500/5"
+                  : "border-emerald-500/20 bg-emerald-500/5 hover:bg-emerald-500/10 hover:border-emerald-500/30",
+              )}
             >
-              {primaryDone ? (
-                <svg className="size-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                </svg>
-              ) : (
-                <BookOpen className="size-3.5 text-emerald-500" />
-              )}
-            </div>
-
-            {/* Text */}
-            <div className="flex-1 min-w-0">
-              <p className={`text-xs font-bold truncate ${primaryDone ? "line-through text-zinc-400" : "text-zinc-900 dark:text-zinc-50"}`}>
-                {currentUnit.title}
-              </p>
-              <div className="flex items-center gap-2 mt-0.5">
-                {/* Mini progress */}
-                <div className="flex-1 h-1 bg-zinc-200 dark:bg-zinc-700 rounded-full overflow-hidden max-w-[80px]">
-                  <div
-                    className="h-full bg-emerald-500 rounded-full"
-                    style={{ width: `${currentUnit.progress}%` }}
-                  />
-                </div>
-                <span className="text-[10px] text-zinc-500 dark:text-zinc-400">{currentUnit.progress}%</span>
+              <div
+                className={cn(
+                  "size-8 rounded-full border-2 flex items-center justify-center shrink-0 transition-all",
+                  primary.completed
+                    ? "border-emerald-500 bg-emerald-500"
+                    : "border-emerald-400 dark:border-emerald-600",
+                )}
+              >
+                {primary.completed ? (
+                  <CheckCircle2 className="size-4 text-white" />
+                ) : (
+                  <BookOpen className="size-3.5 text-emerald-500" />
+                )}
               </div>
-            </div>
+              <div className="flex-1 min-w-0">
+                <p
+                  className={cn(
+                    "text-xs font-bold truncate",
+                    primary.completed
+                      ? "line-through text-zinc-400"
+                      : "text-zinc-900 dark:text-zinc-50",
+                  )}
+                >
+                  {primary.label}
+                </p>
+                {primary.detail && (
+                  <p className="text-[10px] text-zinc-500 dark:text-zinc-400 mt-0.5">
+                    {primary.detail}
+                  </p>
+                )}
+              </div>
+              <div className="flex items-center gap-1.5 shrink-0">
+                <span className="flex items-center gap-0.5 text-[10px] font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded-full">
+                  <Star className="size-2.5 fill-current" />
+                  +{primary.xp} XP
+                </span>
+                {!primary.completed && (
+                  <ArrowRight className="size-3.5 text-zinc-400 group-hover:text-emerald-500 transition-colors" />
+                )}
+              </div>
+            </Link>
+          </div>
+        )}
 
-            {/* XP badge + arrow */}
-            <div className="flex items-center gap-1.5 shrink-0">
-              <span className="flex items-center gap-0.5 text-[10px] font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded-full">
-                <Star className="size-2.5 fill-current" />
-                +{currentUnit.xp} XP
-              </span>
-              {!primaryDone && (
-                <ArrowRight className="size-3.5 text-zinc-400 group-hover:text-emerald-500 transition-colors" />
-              )}
-            </div>
-          </Link>
-        </div>
-
-        {/* ── QUICK WINS ── */}
         <div>
           <p className="text-[10px] font-black text-zinc-400 dark:text-zinc-500 uppercase tracking-widest mb-1.5">
-            Nhanh gọn — dưới 10 phút
+            Danh sách — tự động cập nhật từ tiến độ
           </p>
-          <div className="grid grid-cols-3 gap-2">
-            {quickWins.map((win) => (
+          <div className="space-y-1">
+            {tasks.map((mission) => (
               <Link
-                key={win.id}
-                id={win.id}
-                href={win.href}
-                className={`flex flex-col items-center gap-1.5 p-2.5 rounded-xl border transition-all duration-150 group ${
-                  win.done
-                    ? `border-${win.color}-500/30 bg-${win.color}-500/5 opacity-60`
-                    : `border-${win.color}-500/15 bg-${win.color}-500/5 hover:bg-${win.color}-500/10 hover:border-${win.color}-500/30`
-                }`}
+                key={mission.id}
+                href={mission.href}
+                id={`today-mission-${mission.id}`}
+                className={cn(
+                  "flex items-center gap-3 py-2.5 px-3 rounded-xl border transition-all duration-150",
+                  mission.completed
+                    ? "border-zinc-200/40 dark:border-zinc-800/40 bg-zinc-50/50 dark:bg-zinc-900/20 opacity-80"
+                    : mission.kind === "bonus"
+                      ? "border-amber-500/20 bg-amber-500/5 hover:bg-amber-500/8 hover:border-amber-500/30"
+                      : "border-zinc-200/50 dark:border-zinc-800/50 hover:bg-zinc-50 dark:hover:bg-zinc-800/40",
+                )}
               >
-                <span className={`text-base ${win.done ? "opacity-50" : ""}`}>{win.icon}</span>
-                <span className={`text-[10px] font-black text-center leading-tight ${
-                  win.done ? "line-through text-zinc-400" : "text-zinc-700 dark:text-zinc-300"
-                }`}>
-                  {win.label}
+                <span className="shrink-0 text-emerald-600 dark:text-emerald-400">
+                  {mission.completed ? (
+                    <CheckCircle2 className="size-4.5 fill-emerald-600 dark:fill-emerald-500 text-white dark:text-zinc-950" />
+                  ) : (
+                    <Circle className="size-4.5 text-zinc-300 dark:text-zinc-600" />
+                  )}
                 </span>
-                <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded-full ${
-                  win.color === "purple" ? "text-purple-500 bg-purple-500/10" :
-                  win.color === "emerald" ? "text-emerald-500 bg-emerald-500/10" :
-                  "text-red-500 bg-red-500/10"
-                }`}>
-                  {win.done ? `✓ +${win.xp} XP` : win.time}
+                <div className="flex-1 min-w-0">
+                  <p
+                    className={cn(
+                      "text-xs font-semibold leading-snug",
+                      mission.completed
+                        ? "text-zinc-400 dark:text-zinc-500 line-through"
+                        : "text-zinc-800 dark:text-zinc-200",
+                    )}
+                  >
+                    {mission.label}
+                  </p>
+                  {mission.detail && !mission.completed && (
+                    <p className="text-[10px] text-zinc-500 dark:text-zinc-400 mt-0.5">
+                      {mission.detail}
+                    </p>
+                  )}
+                </div>
+                <span className="text-[10px] font-bold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 px-2 py-0.5 rounded-lg border border-emerald-500/15 font-mono shrink-0">
+                  +{mission.xp} XP
                 </span>
               </Link>
             ))}
           </div>
         </div>
 
-        {/* ── BONUS ── */}
-        <Link
-          href="/speaking"
-          id="today-mission-bonus"
-          className="flex items-center gap-3 p-3 rounded-xl border border-amber-500/20 bg-amber-500/5 hover:bg-amber-500/8 hover:border-amber-500/30 transition-all duration-150 group"
-        >
-          <span className="text-lg shrink-0">⭐</span>
-          <div className="flex-1 min-w-0">
-            <p className="text-xs font-bold text-zinc-900 dark:text-zinc-50 truncate">Thử Thách Hàng Ngày</p>
-            <p className="text-[10px] text-zinc-500 dark:text-zinc-400">Nói tiếng Anh 2 phút liên tục</p>
-          </div>
-          <span className="text-[10px] font-bold text-amber-600 dark:text-amber-400 bg-amber-500/10 px-1.5 py-0.5 rounded-full shrink-0">
-            +50 XP
-          </span>
-          <ArrowRight className="size-3.5 text-zinc-400 group-hover:text-amber-500 transition-colors shrink-0" />
-        </Link>
+        {allDone && (
+          <p className="text-center text-xs font-bold text-emerald-600 dark:text-emerald-400 pt-1">
+            Tuyệt vời! Đã hoàn thành mọi nhiệm vụ hôm nay.
+          </p>
+        )}
       </div>
     </div>
   );

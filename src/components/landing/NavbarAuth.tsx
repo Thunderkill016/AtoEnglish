@@ -18,7 +18,7 @@ export default function NavbarAuth() {
       {isLoggedIn ? (
         <Link href="/dashboard" prefetch={false}>
           <Button className="bg-emerald-600 hover:bg-emerald-500 dark:bg-emerald-600 dark:hover:bg-emerald-500 text-white text-sm font-bold h-9 px-5 rounded-xl active:scale-[0.96] transition-all duration-200 shadow-sm shadow-emerald-600/10 dark:shadow-emerald-500/5">
-            Vào Dashboard
+            Vào Trang chủ
           </Button>
         </Link>
       ) : (

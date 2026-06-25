@@ -2,39 +2,12 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, X, BookOpen, Layers, Mic, PenLine, TrendingUp, Trophy, Map, Briefcase, Settings } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
+import { mobilePanelGroups } from "@/lib/constants/navigation";
 import { cn } from "@/lib/utils";
-
-/** Grouped navigation for the slide panel */
-const panelGroups = [
-  {
-    label: "HỌC TẬP",
-    items: [
-      { title: "Bài học", href: "/learn", icon: BookOpen, description: "IPOR lessons" },
-      { title: "Luyện nói", href: "/speaking", icon: Mic, description: "Shadowing & AI" },
-      { title: "Viết văn", href: "/writing", icon: PenLine, description: "AI feedback" },
-      { title: "Flashcards", href: "/flashcards", icon: Layers, description: "SRS ôn tập" },
-    ],
-  },
-  {
-    label: "THEO DÕI",
-    items: [
-      { title: "Tiến độ", href: "/progress", icon: TrendingUp, description: "Stats & XP" },
-      { title: "Bảng xếp hạng", href: "/leaderboard", icon: Trophy, description: "Top learners" },
-      { title: "Lộ trình", href: "/roadmap", icon: Map, description: "A1 → C1" },
-    ],
-  },
-  {
-    label: "KHÁC",
-    items: [
-      { title: "Business English", href: "/business", icon: Briefcase, description: "Công sở & sự nghiệp" },
-      { title: "Cài đặt", href: "/settings", icon: Settings, description: "Tài khoản" },
-    ],
-  },
-];
 
 /**
  * MobileNav — Slide-from-right panel (md: and below).
@@ -141,7 +114,7 @@ export function MobileNav() {
 
               {/* Scrollable nav groups */}
               <div className="flex-1 overflow-y-auto py-3 px-3 space-y-5">
-                {panelGroups.map((group) => (
+                {mobilePanelGroups.map((group) => (
                   <div key={group.label}>
                     <p className="text-[9px] font-black text-zinc-400 dark:text-zinc-600 uppercase tracking-[0.12em] px-2 mb-1.5">
                       {group.label}

@@ -3,7 +3,12 @@
 import { useState, useEffect } from "react";
 import { Mic, Volume2, Eye, Flame, CheckCircle, Sparkles, RefreshCw, Star, AlertCircle } from "lucide-react";
 
-export default function ProductPreview() {
+type ProductPreviewProps = {
+  variant?: "default" | "hero";
+};
+
+export default function ProductPreview({ variant = "default" }: ProductPreviewProps) {
+  const isHero = variant === "hero";
   const [activeTab, setActiveTab] = useState<"speaking" | "srs" | "dashboard">("speaking");
 
   // Speaking states
@@ -220,7 +225,13 @@ export default function ProductPreview() {
   };
 
   return (
-    <div className="w-full max-w-4xl mx-auto mt-12 sm:mt-16 rounded-[2rem] border border-zinc-200/60 dark:border-zinc-800/60 bg-white/50 dark:bg-zinc-950/20 backdrop-blur-md overflow-hidden shadow-2xl shadow-zinc-900/[0.05] dark:shadow-black/30">
+    <div
+      className={`w-full rounded-[2rem] border border-zinc-200/60 dark:border-zinc-800/60 bg-white/50 dark:bg-zinc-950/20 backdrop-blur-md overflow-hidden shadow-2xl shadow-zinc-900/[0.05] dark:shadow-black/30 ${
+        isHero
+          ? "max-w-none mx-0 mt-8 lg:mt-0 shadow-xl shadow-emerald-900/[0.06] dark:shadow-emerald-950/20"
+          : "max-w-4xl mx-auto mt-12 sm:mt-16"
+      }`}
+    >
       {/* Window Title Bar */}
       <div className="flex items-center gap-3 px-5 py-3 border-b border-zinc-200/50 dark:border-zinc-800/40 bg-zinc-50/50 dark:bg-zinc-900/30">
         <div className="flex items-center gap-1.5 shrink-0">

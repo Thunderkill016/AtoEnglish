@@ -9,8 +9,7 @@ import { MobileMenuButton, MobileMenu } from "@/components/landing/MobileMenu";
 import HeroCTA from "@/components/landing/HeroCTA";
 import ProblemSection from "@/components/landing/ProblemSection";
 import HowItWorksSection from "@/components/landing/HowItWorksSection";
-import BenefitsSection from "@/components/landing/BenefitsSection";
-import ScienceSection from "@/components/landing/ScienceSection";
+import OutcomesSection from "@/components/landing/OutcomesSection";
 
 // Lazy load heavy client components below the fold
 const ProductPreview = dynamic(
@@ -70,8 +69,8 @@ export const metadata: Metadata = {
 export default function LandingPage() {
   const stats = [
     { value: "Open Beta", label: "Thử nghiệm mở" },
-    { value: "15 phút", label: "Mỗi bài học hàng ngày" },
-    { value: "A1 - C1", label: "Lộ trình đầy đủ" },
+    { value: "50 unit", label: "Lộ trình A0 → B2" },
+    { value: "15 phút", label: "Mỗi ngày là đủ" },
   ];
 
   const jsonLd = {
@@ -204,10 +203,10 @@ export default function LandingPage() {
               Cách học
             </a>
             <a
-              href="#science"
+              href="#outcomes"
               className="text-sm font-bold text-zinc-650 hover:text-emerald-600 dark:text-zinc-400 dark:hover:text-emerald-400 transition-colors duration-200"
             >
-              Phương pháp
+              Kết quả
             </a>
             <a
               href="#faq"
@@ -229,78 +228,69 @@ export default function LandingPage() {
       </nav>
 
       <main id="main-content">
-        {/* ===== Hero Section ===== */}
-        <section className="relative px-5 sm:px-8 pt-20 pb-16 sm:pt-32 sm:pb-24 lg:pt-36 lg:pb-28 overflow-hidden">
-          {/* Spotlight light beam — hidden on mobile to save GPU paint cost */}
+        {/* ===== Hero Section — split layout (EdTech pattern) ===== */}
+        <section className="relative px-5 sm:px-8 pt-16 pb-12 sm:pt-24 sm:pb-20 lg:pt-28 lg:pb-24 overflow-hidden">
           <div className="hidden sm:block">
-            <Spotlight className="-top-40 left-0 md:left-60 md:-top-20" fill="rgb(16 185 129 / 0.15)" />
+            <Spotlight className="-top-40 left-0 md:left-20 md:-top-20" fill="rgb(16 185 129 / 0.12)" />
           </div>
 
-          {/* Mesh gradient backdrops — hidden on mobile to save GPU */}
           <div className="absolute inset-0 overflow-hidden pointer-events-none -z-10">
-            <div className="hidden sm:block absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-emerald-500/8 dark:bg-emerald-500/4 blur-[120px]" />
-            <div className="hidden sm:block absolute bottom-[20%] right-[-10%] w-[60%] h-[60%] rounded-full bg-teal-500/8 dark:bg-teal-500/4 blur-[150px]" />
-            <div className="hidden md:block absolute top-[40%] left-[30%] w-[40%] h-[40%] rounded-full bg-indigo-500/5 dark:bg-indigo-500/3 blur-[100px]" />
+            <div className="hidden sm:block absolute top-[-10%] left-[-5%] w-[45%] h-[45%] rounded-full bg-emerald-500/8 dark:bg-emerald-500/4 blur-[120px]" />
+            <div className="hidden sm:block absolute bottom-[10%] right-[-5%] w-[50%] h-[50%] rounded-full bg-teal-500/8 dark:bg-teal-500/4 blur-[140px]" />
           </div>
 
-          <div className="relative max-w-4xl mx-auto flex flex-col items-center text-center">
-            <div className="space-y-6 sm:space-y-8">
-              {/* Badge */}
-              <div className="animate-fade-in-up">
-                <span className="inline-flex items-center gap-1.5 text-[11px] font-bold text-emerald-800 dark:text-emerald-400 bg-emerald-500/10 dark:bg-emerald-500/15 backdrop-blur-sm border border-emerald-500/20 dark:border-emerald-400/25 px-4 py-1.5 rounded-full uppercase tracking-[0.12em] shadow-sm">
-                  <Sparkles className="size-3 text-emerald-600 dark:text-emerald-400 animate-pulse" />
-                  Phương pháp học thế hệ mới
-                </span>
-              </div>
+          <div className="relative max-w-6xl mx-auto">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-14 items-center">
+              <div className="flex flex-col items-center lg:items-start text-center lg:text-left space-y-6 sm:space-y-7">
+                <div className="animate-fade-in-up">
+                  <span className="inline-flex items-center gap-1.5 text-[11px] font-bold text-emerald-800 dark:text-emerald-400 bg-emerald-500/10 dark:bg-emerald-500/15 backdrop-blur-sm border border-emerald-500/20 dark:border-emerald-400/25 px-4 py-1.5 rounded-full uppercase tracking-[0.12em] shadow-sm">
+                    <Sparkles className="size-3 text-emerald-600 dark:text-emerald-400 animate-pulse" />
+                    Open Beta · Miễn phí 100%
+                  </span>
+                </div>
 
-              {/* Headline */}
-              <h1 className="animate-fade-in-up animation-delay-75 flex flex-col items-center gap-y-2 sm:gap-y-3 text-xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-zinc-900 dark:text-zinc-50 max-w-4xl mx-auto px-4">
-                <span className="block lg:whitespace-nowrap">
+                <h1 className="animate-fade-in-up animation-delay-75 text-3xl sm:text-4xl md:text-5xl lg:text-[3.25rem] font-extrabold text-zinc-900 dark:text-zinc-50 leading-[1.1] tracking-tight">
                   Học tiếng Anh để{" "}
                   <span className="bg-gradient-to-r from-emerald-600 via-teal-500 to-emerald-500 bg-clip-text text-transparent dark:from-emerald-400 dark:via-teal-400 dark:to-emerald-300">
                     nói được
                   </span>
-                </span>
-                <span className="block lg:whitespace-nowrap">
-                  không chỉ để biết.
-                </span>
-              </h1>
+                  , không chỉ để biết.
+                </h1>
 
-              {/* Subheadline */}
-              <p className="animate-fade-in-up animation-delay-150 text-base sm:text-lg lg:text-xl text-zinc-600 dark:text-zinc-350 max-w-2xl mx-auto leading-relaxed font-normal">
-                Phương pháp khoa học giúp bạn tự tin giao tiếp thực tế từ con số 0.
-                <br className="hidden sm:block" />
-                Luyện nói chủ động ngay từ những bài học đầu tiên.
-              </p>
+                <p className="animate-fade-in-up animation-delay-150 text-base sm:text-lg text-zinc-600 dark:text-zinc-400 max-w-xl leading-relaxed">
+                  IPOR + FSRS + luyện nói Shadowing — thiết kế cho người Việt bận rộn. Thử nói ngay trên demo bên cạnh, không cần đăng ký.
+                </p>
 
-              <HeroCTA />
-            </div>
-          </div>
-
-          {/* Product Preview Mockup */}
-          <ProductPreview />
-
-          {/* Stats bar */}
-          <div className="animate-fade-in-up animation-delay-300 relative max-w-3xl mx-auto mt-16 sm:mt-24">
-            <div className="p-6 sm:p-8 rounded-2xl bg-zinc-50/50 dark:bg-zinc-900/20 backdrop-blur-md border border-zinc-200/50 dark:border-zinc-800/40 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-6 sm:gap-0 divide-y sm:divide-y-0 sm:divide-x divide-zinc-200/60 dark:divide-zinc-800/60">
-              {stats.map((stat, index) => (
-                <div
-                  key={index}
-                  className="flex flex-col items-center flex-1 w-full pt-4 sm:pt-0 sm:px-6 first:pt-0"
-                >
-                  <span className="text-2xl sm:text-3xl font-black text-zinc-900 dark:text-zinc-50 tracking-tight">
-                    {stat.value}
-                  </span>
-                  <span className="text-[11px] sm:text-xs text-zinc-500 dark:text-zinc-400 font-semibold mt-1.5 uppercase tracking-wider text-center">
-                    {stat.label}
-                  </span>
+                <div className="w-full max-w-xl">
+                  <HeroCTA align="left" />
                 </div>
-              ))}
+              </div>
+
+              <div className="animate-fade-in-up animation-delay-225 w-full lg:max-w-none">
+                <ProductPreview variant="hero" />
+              </div>
             </div>
-            {/* Footnote */}
-            <p className="text-[11px] text-zinc-450 dark:text-zinc-500 mt-5 text-center font-normal tracking-wide">
-              * Dự án đang trong giai đoạn thử nghiệm mở (Open Beta). Mọi bài học đều hoàn toàn miễn phí.
-            </p>
+
+            <div className="animate-fade-in-up animation-delay-300 relative max-w-3xl mx-auto mt-14 sm:mt-16 lg:mt-20">
+              <div className="p-5 sm:p-7 rounded-2xl bg-zinc-50/60 dark:bg-zinc-900/25 backdrop-blur-md border border-zinc-200/50 dark:border-zinc-800/40 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-5 sm:gap-0 divide-y sm:divide-y-0 sm:divide-x divide-zinc-200/60 dark:divide-zinc-800/60">
+                {stats.map((stat, index) => (
+                  <div
+                    key={index}
+                    className="flex flex-col items-center flex-1 w-full pt-4 sm:pt-0 sm:px-6 first:pt-0"
+                  >
+                    <span className="text-xl sm:text-2xl font-black text-zinc-900 dark:text-zinc-50 tracking-tight">
+                      {stat.value}
+                    </span>
+                    <span className="text-[11px] sm:text-xs text-zinc-500 dark:text-zinc-400 font-semibold mt-1 uppercase tracking-wider text-center">
+                      {stat.label}
+                    </span>
+                  </div>
+                ))}
+              </div>
+              <p className="text-[11px] text-zinc-500 dark:text-zinc-500 mt-4 text-center">
+                Mọi bài học, SRS và luyện nói đều miễn phí trong giai đoạn Open Beta.
+              </p>
+            </div>
           </div>
         </section>
 
@@ -310,11 +300,8 @@ export default function LandingPage() {
         <div className="[content-visibility:auto] [contain-intrinsic-size:auto_800px]">
           <HowItWorksSection />
         </div>
-        <div className="[content-visibility:auto] [contain-intrinsic-size:auto_600px]">
-          <BenefitsSection />
-        </div>
-        <div className="[content-visibility:auto] [contain-intrinsic-size:auto_700px]">
-          <ScienceSection />
+        <div className="[content-visibility:auto] [contain-intrinsic-size:auto_900px]">
+          <OutcomesSection />
         </div>
 
         {/* Below-fold lazy sections — browser can defer rendering */}

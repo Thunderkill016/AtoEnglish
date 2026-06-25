@@ -11,11 +11,9 @@ import { cn } from "@/lib/utils";
 /**
  * MainNav — Desktop navigation (md+).
  *
- * Layout: [Dashboard] [Học] [Luyện nói] [Flashcards] [Viết] [Tiến độ] [More ▾]
+ * Layout: [Trang chủ] [Học] [Luyện] [Ôn] [Thêm ▾]
  *
- * "More" dropdown reveals: Bảng xếp hạng, Business, Lộ trình
- * Active states: bg-primary/10 pill
- * Hover: bg-muted smooth transition
+ * "Thêm" dropdown: Viết, Tiến độ, Bảng xếp hạng, Lộ trình, Business
  */
 export function MainNav() {
   const pathname = usePathname();
@@ -95,7 +93,7 @@ export function MainNav() {
         {moreOpen && (
           <div
             role="menu"
-            className="absolute left-0 top-full mt-1.5 w-48 rounded-xl border border-zinc-200/60 dark:border-zinc-800/60 bg-background/95 dark:bg-zinc-900/95 backdrop-blur-xl shadow-lg shadow-black/5 dark:shadow-black/30 overflow-hidden z-50 animate-in fade-in-0 zoom-in-95 slide-in-from-top-2 duration-150"
+            className="absolute left-0 top-full mt-1.5 w-52 rounded-xl border border-zinc-200/60 dark:border-zinc-800/60 bg-background/95 dark:bg-zinc-900/95 backdrop-blur-xl shadow-lg shadow-black/5 dark:shadow-black/30 overflow-hidden z-50 animate-in fade-in-0 zoom-in-95 slide-in-from-top-2 duration-150"
           >
             {desktopMoreItems.map((item) => {
               const isActive =

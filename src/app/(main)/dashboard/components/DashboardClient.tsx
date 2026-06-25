@@ -12,7 +12,7 @@ import { getPhaseForLevel, DAILY_TIPS } from "@/lib/constants/study-plan";
 
 import UnitCard from "./UnitCard";
 import SrsCard from "./SrsCard";
-import DailyQuests from "./DailyQuests";
+
 import QuickActions from "./QuickActions";
 import WordOfDayCard from "./WordOfDayCard";
 import LeagueCard from "./LeagueCard";
@@ -31,6 +31,8 @@ import WeeklyRecapCard from "./WeeklyRecapCard";
 import EfSetGoalTracker from "./EfSetGoalTracker";
 import TodayPlanWidget from "./TodayPlanWidget";
 import TodayMission from "./TodayMission";
+import type { DailyMission } from "@/lib/dashboard/daily-missions";
+import DashboardHubNav from "./DashboardHubNav";
 import LevelProgressBar from "./LevelProgressBar";
 import StreakFreezeCard from "@/features/streak/components/StreakFreezeCard";
 
@@ -67,12 +69,7 @@ interface DashboardClientProps {
     xp: number;
   };
   initialXpCurrent: number;
-  initialQuests: Array<{
-    id: number;
-    text: string;
-    xp: number;
-    completed: boolean;
-  }>;
+  dailyMissions: DailyMission[];
   dailyXpGoal: number;
   wordOfDay: {
     word: string;
@@ -142,7 +139,7 @@ export default function DashboardClient({
   dueCardsCount,
   currentUnitData,
   initialXpCurrent,
-  initialQuests,
+  dailyMissions,
   dailyXpGoal,
   wordOfDay,
   completedUnitIds,
@@ -153,7 +150,6 @@ export default function DashboardClient({
   recentSpeakingSessions,
 }: DashboardClientProps) {
   const [xpCurrent, setXpCurrent] = useState(initialXpCurrent);
-  const [quests, setQuests] = useState(initialQuests);
   const [greeting, setGreeting] = useState("Chào bạn");
 
   // Parse short level label (e.g. "B1 Intermediate" → "B1")
@@ -296,76 +292,7 @@ export default function DashboardClient({
     }
   };
 
-  // localStorage persistence — key by today's date so quests reset on new day
   const todayKey = new Date().toLocaleDateString("sv-SE", { timeZone: "Asia/Ho_Chi_Minh" });
-  const storageKey = `quests-${todayKey}`;
-
-  // Load persisted quest state on mount
-  useEffect(() => {
-    try {
-      const saved = localStorage.getItem(storageKey);
-      const challengeKey = `ato_challenge_${todayKey}`;
-      const challengeDone = !!localStorage.getItem(challengeKey);
-
-      if (saved) {
-        const { quests: savedQuests, xp } = JSON.parse(saved) as {
-          quests: Array<{ id: number; text: string; xp: number; completed: boolean }>;
-          xp: number;
-        };
-        if (Array.isArray(savedQuests)) {
-          // Auto-sync quest #4 (Daily Challenge) with challenge completion state
-          const synced = savedQuests.map((q) =>
-            q.id === 4 ? { ...q, completed: challengeDone || q.completed } : q
-          );
-          // eslint-disable-next-line react-hooks/set-state-in-effect
-          setQuests(synced);
-        }
-         
-        if (typeof xp === "number") setXpCurrent(xp);
-      } else if (challengeDone) {
-        // No saved quest state yet, but challenge is done — mark quest 4
-         
-        setQuests((prev) =>
-          prev.map((q) => (q.id === 4 ? { ...q, completed: true } : q))
-        );
-      }
-    } catch {
-      // localStorage unavailable or corrupt — use server defaults
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const handleToggleQuest = (id: number) => {
-    setQuests((prev) => {
-      const next = prev.map((quest) => {
-        if (quest.id === id) {
-          const nextState = !quest.completed;
-          if (nextState) {
-            import("canvas-confetti").then((module) => {
-              module.default({
-                particleCount: 80,
-                spread: 60,
-                origin: { y: 0.8 },
-                colors: ["#10b981", "#3b82f6", "#f59e0b"],
-              });
-            });
-          }
-          return { ...quest, completed: nextState };
-        }
-        return quest;
-      });
-      // Persist to localStorage
-      const newXp = next.reduce((sum, q) => (q.completed ? sum + q.xp : sum), 0);
-      const clampedXp = Math.min(newXp, xpTarget);
-      setXpCurrent(clampedXp);
-      try {
-        localStorage.setItem(storageKey, JSON.stringify({ quests: next, xp: clampedXp }));
-      } catch { /* ignore */ }
-      return next;
-    });
-  };
-
-  const completedCount = quests.filter((q) => q.completed).length;
   const xpPercent = Math.round((xpCurrent / xpTarget) * 100);
 
   return (
@@ -416,6 +343,10 @@ export default function DashboardClient({
             </div>
         </div>
 
+        <DashboardHubNav />
+
+        {/* ── Section: Hôm nay ── */}
+        <div id="dash-today" className="space-y-6 scroll-mt-28">
         {/* Streak Shield Widget — shown when user has freeze charges or streak ≥ 5 */}
         {(streakFreezeCount > 0 || currentStreak >= 5) && (
           <WidgetErrorBoundary name="StreakShield">
@@ -584,139 +515,11 @@ export default function DashboardClient({
         <UnitCard currentUnitData={currentUnitData} />
 
         {/* ── 5. TODAY'S MISSION — Unified daily task hub (replaces "Học nhanh 10 phút") ── */}
-        <TodayMission
-          currentUnit={{
-            title: currentUnitData.title,
-            progress: currentUnitData.progress,
-            route: currentUnitData.route,
-            xp: currentUnitData.xp,
-          }}
-          dueCardsCount={dueCardsCount}
-          xpToday={xpCurrent}
-          xpTarget={xpTarget}
-          completedQuickWins={quests.filter((q) => q.completed).length}
-        />
-
-        {/* ── 6. Daily Quests — promoted above lesson grid ── */}
-        <WidgetErrorBoundary name="DailyQuests">
-          <DailyQuests
-            quests={quests}
-            handleToggleQuest={handleToggleQuest}
-            completedCount={completedCount}
-          />
-        </WidgetErrorBoundary>
-
-        {/* ── 2e. Collapsible Detailed Stats Panel ── */}
-        <div className="rounded-2xl border border-zinc-200/60 dark:border-zinc-800/60 bg-white/60 dark:bg-zinc-900/30 backdrop-blur-sm overflow-hidden">
-          <button
-            onClick={() => setShowDetailedStats((prev) => !prev)}
-            className="w-full flex items-center justify-between px-5 py-4 text-sm font-bold text-zinc-800 dark:text-zinc-100 hover:bg-zinc-100/50 dark:hover:bg-zinc-800/30 transition-colors"
-          >
-            <span className="flex items-center gap-2">
-              📊 Thống kê chi tiết & Lịch sử học
-            </span>
-            <span className="text-zinc-500 dark:text-zinc-400">
-              {showDetailedStats ? (
-                <ChevronUp className="size-4" />
-              ) : (
-                <ChevronDown className="size-4" />
-              )}
-            </span>
-          </button>
-          
-          <AnimatePresence initial={false}>
-            {showDetailedStats && (
-              <motion.div
-                initial={{ height: 0, opacity: 0 }}
-                animate={{ height: "auto", opacity: 1 }}
-                exit={{ height: 0, opacity: 0 }}
-                transition={{ duration: 0.25, ease: "easeInOut" }}
-                className="border-t border-zinc-200/40 dark:border-zinc-800/40 divide-y divide-zinc-200/40 dark:divide-zinc-800/40"
-              >
-                {/* 2b. Weekly active streak calendar */}
-                {weeklyData && weeklyData.length > 0 && (
-                  <div className="p-4 space-y-3">
-                    <div className="flex items-center justify-between">
-                      <p className="text-[10px] font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">Lịch chuỗi học tuần này</p>
-                      <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold">Luyện tập đều đặn để giữ streak!</span>
-                    </div>
-                    <div className="flex justify-between items-center gap-1">
-                      {weeklyData.map((d, idx) => {
-                        const isToday = d.day === todayKey;
-                        const hasLearned = d.xp > 0;
-                        return (
-                          <div key={idx} className="flex-1 flex flex-col items-center gap-1.5">
-                            <div className={`relative flex size-8 sm:size-10 items-center justify-center rounded-full border transition-all ${
-                              hasLearned
-                                ? "bg-gradient-to-br from-orange-500 to-amber-500 border-orange-400 text-white shadow-sm shadow-orange-500/20"
-                                : isToday
-                                  ? "bg-zinc-100 dark:bg-zinc-800 border-emerald-500/50 text-zinc-400 dark:text-zinc-500 ring-2 ring-emerald-500/20"
-                                  : "bg-zinc-50 dark:bg-zinc-950/40 border-zinc-200 dark:border-zinc-800/60 text-zinc-300 dark:text-zinc-700"
-                            }`}>
-                              {hasLearned ? (
-                                <Flame className="size-4 fill-current animate-pulse text-orange-200" />
-                              ) : (
-                                <span className="text-xs font-black">·</span>
-                              )}
-                              {isToday && !hasLearned && (
-                                <span className="absolute -top-0.5 -right-0.5 size-2 rounded-full bg-emerald-500 animate-ping" />
-                              )}
-                            </div>
-                            <span className={`text-[10px] font-bold ${
-                              isToday ? "text-emerald-600 dark:text-emerald-400 font-black" : "text-zinc-400 dark:text-zinc-500"
-                            }`}>
-                              {d.label}
-                            </span>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                )}
-
-                {/* 2c. 7-week Streak Calendar Heatmap */}
-                {calendarData.length > 0 && (
-                  <div className="p-4">
-                    <StreakCalendar
-                      dailyXp={calendarData}
-                      currentStreak={currentStreak}
-                    />
-                  </div>
-                )}
-
-                {/* 2d. CEFR Level Progress Ladder */}
-                {(() => {
-                  const levelUnitsAll = allUnits.filter(u => u.level === shortLevel);
-                  const levelUnitsDone = completedUnitIds.filter(id =>
-                    allUnits.find(u => u.id === id)?.level === shortLevel
-                  ).length;
-                  return (
-                    <div className="p-4">
-                      <LevelProgressBar
-                        userLevel={shortLevel}
-                        levelUnitsDone={levelUnitsDone}
-                        levelUnitsTotal={levelUnitsAll.length}
-                      />
-                    </div>
-                  );
-                })()}
-
-                {/* WeeklyRecapCard inside collapsible stats */}
-                <div className="p-4 bg-zinc-50/50 dark:bg-zinc-900/10">
-                  <WeeklyRecapCard
-                    currentStreak={currentStreak}
-                    totalXp={totalXp}
-                    completedUnits={completedUnits}
-                    userLevel={shortLevel}
-                    dueCardsCount={dueCardsCount}
-                    weeklyData={weeklyData}
-                  />
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
+        <TodayMission missions={dailyMissions} />
         </div>
 
+        {/* ── Section: Luyện tập ── */}
+        <div id="dash-practice" className="space-y-6 scroll-mt-28">
         {/* ── 3. Placement Test Banner ── */}
         {showPlacementBanner && (
           <div className="relative group">
@@ -795,6 +598,120 @@ export default function DashboardClient({
           </div>
         </div>
 
+        <WidgetErrorBoundary name="QuickActions">
+          <QuickActions currentUnitRoute={currentUnitData.route} />
+        </WidgetErrorBoundary>
+        </div>
+
+        {/* ── Section: Tiến độ ── */}
+        <div id="dash-progress" className="space-y-6 scroll-mt-28">
+        {/* Collapsible Detailed Stats Panel */}
+        <div className="rounded-2xl border border-zinc-200/60 dark:border-zinc-800/60 bg-white/60 dark:bg-zinc-900/30 backdrop-blur-sm overflow-hidden">
+          <button
+            onClick={() => setShowDetailedStats((prev) => !prev)}
+            className="w-full flex items-center justify-between px-5 py-4 text-sm font-bold text-zinc-800 dark:text-zinc-100 hover:bg-zinc-100/50 dark:hover:bg-zinc-800/30 transition-colors"
+          >
+            <span className="flex items-center gap-2">
+              📊 Thống kê chi tiết & Lịch sử học
+            </span>
+            <span className="text-zinc-500 dark:text-zinc-400">
+              {showDetailedStats ? (
+                <ChevronUp className="size-4" />
+              ) : (
+                <ChevronDown className="size-4" />
+              )}
+            </span>
+          </button>
+
+          <AnimatePresence initial={false}>
+            {showDetailedStats && (
+              <motion.div
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: "auto", opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{ duration: 0.25, ease: "easeInOut" }}
+                className="border-t border-zinc-200/40 dark:border-zinc-800/40 divide-y divide-zinc-200/40 dark:divide-zinc-800/40"
+              >
+                {weeklyData && weeklyData.length > 0 && (
+                  <div className="p-4 space-y-3">
+                    <div className="flex items-center justify-between">
+                      <p className="text-[10px] font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">Lịch chuỗi học tuần này</p>
+                      <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold">Luyện tập đều đặn để giữ streak!</span>
+                    </div>
+                    <div className="flex justify-between items-center gap-1">
+                      {weeklyData.map((d, idx) => {
+                        const isToday = d.day === todayKey;
+                        const hasLearned = d.xp > 0;
+                        return (
+                          <div key={idx} className="flex-1 flex flex-col items-center gap-1.5">
+                            <div className={`relative flex size-8 sm:size-10 items-center justify-center rounded-full border transition-all ${
+                              hasLearned
+                                ? "bg-gradient-to-br from-orange-500 to-amber-500 border-orange-400 text-white shadow-sm shadow-orange-500/20"
+                                : isToday
+                                  ? "bg-zinc-100 dark:bg-zinc-800 border-emerald-500/50 text-zinc-400 dark:text-zinc-500 ring-2 ring-emerald-500/20"
+                                  : "bg-zinc-50 dark:bg-zinc-950/40 border-zinc-200 dark:border-zinc-800/60 text-zinc-300 dark:text-zinc-700"
+                            }`}>
+                              {hasLearned ? (
+                                <Flame className="size-4 fill-current animate-pulse text-orange-200" />
+                              ) : (
+                                <span className="text-xs font-black">·</span>
+                              )}
+                              {isToday && !hasLearned && (
+                                <span className="absolute -top-0.5 -right-0.5 size-2 rounded-full bg-emerald-500 animate-ping" />
+                              )}
+                            </div>
+                            <span className={`text-[10px] font-bold ${
+                              isToday ? "text-emerald-600 dark:text-emerald-400 font-black" : "text-zinc-400 dark:text-zinc-500"
+                            }`}>
+                              {d.label}
+                            </span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+
+                {calendarData.length > 0 && (
+                  <div className="p-4">
+                    <StreakCalendar
+                      dailyXp={calendarData}
+                      currentStreak={currentStreak}
+                    />
+                  </div>
+                )}
+
+                {(() => {
+                  const levelUnitsAll = allUnits.filter(u => u.level === shortLevel);
+                  const levelUnitsDone = completedUnitIds.filter(id =>
+                    allUnits.find(u => u.id === id)?.level === shortLevel
+                  ).length;
+                  return (
+                    <div className="p-4">
+                      <LevelProgressBar
+                        userLevel={shortLevel}
+                        levelUnitsDone={levelUnitsDone}
+                        levelUnitsTotal={levelUnitsAll.length}
+                      />
+                    </div>
+                  );
+                })()}
+
+                <div className="p-4 bg-zinc-50/50 dark:bg-zinc-900/10">
+                  <WeeklyRecapCard
+                    currentStreak={currentStreak}
+                    totalXp={totalXp}
+                    completedUnits={completedUnits}
+                    userLevel={shortLevel}
+                    dueCardsCount={dueCardsCount}
+                    weeklyData={weeklyData}
+                  />
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+
         {/* ── 8. Bottom utility sections ── */}
         <Link
           href="/business"
@@ -808,10 +725,6 @@ export default function DashboardClient({
           </div>
           <ChevronRight className="size-4 text-blue-400/60 shrink-0 group-hover:text-blue-500 group-hover:translate-x-0.5 transition-all" />
         </Link>
-
-        <WidgetErrorBoundary name="QuickActions">
-          <QuickActions currentUnitRoute={currentUnitData.route} />
-        </WidgetErrorBoundary>
 
         {/* ── Speaking Activity Feed ── */}
         {recentSpeakingSessions.length > 0 && (
@@ -917,6 +830,7 @@ export default function DashboardClient({
               )}
             </button>
           </div>
+        </div>
         </div>
       </div>
 

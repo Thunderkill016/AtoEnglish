@@ -264,4 +264,84 @@ export async function getDailyActivity(): Promise<{ success: boolean; days: DayA
   }
 }
 
+export type TodayMissionFlags = {
+  srsReviewedToday: boolean;
+  quizDoneToday: boolean;
+  speakingDoneToday: boolean;
+  lessonCompletedToday: boolean;
+  lessonCompletedOnCurrentUnit: boolean;
+};
+
+/**
+ * Server-side completion flags for daily missions (no localStorage).
+ */
+export async function getTodayMissionFlags(
+  currentUnitId: string,
+): Promise<{ success: boolean; flags: TodayMissionFlags }> {
+  const empty: TodayMissionFlags = {
+    srsReviewedToday: false,
+    quizDoneToday: false,
+    speakingDoneToday: false,
+    lessonCompletedToday: false,
+    lessonCompletedOnCurrentUnit: false,
+  };
+
+  try {
+    const supabase = await createClient();
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
+    if (authError || !user) return { success: false, flags: empty };
+
+    const today = new Date().toLocaleDateString("sv-SE", {
+      timeZone: "Asia/Ho_Chi_Minh",
+    });
+    const startUtc = `${today}T00:00:00+07:00`;
+
+    const [flashcardRes, quizRes, speakingRes, lessonsRes] = await Promise.all([
+      supabase
+        .from("user_flashcard_progress")
+        .select("last_session_date, cards_reviewed_today")
+        .eq("user_id", user.id)
+        .maybeSingle(),
+      supabase
+        .from("quiz_results")
+        .select("id", { count: "exact", head: true })
+        .eq("user_id", user.id)
+        .eq("quiz_date", today),
+      supabase
+        .from("speaking_sessions")
+        .select("id", { count: "exact", head: true })
+        .eq("user_id", user.id)
+        .gte("created_at", startUtc),
+      supabase
+        .from("user_lesson_progress")
+        .select("unit_id, completed_at")
+        .eq("user_id", user.id)
+        .gte("completed_at", startUtc),
+    ]);
+
+    const flashcard = flashcardRes.data;
+    const lessonsToday = lessonsRes.data ?? [];
+
+    return {
+      success: true,
+      flags: {
+        srsReviewedToday:
+          flashcard?.last_session_date === today &&
+          (flashcard.cards_reviewed_today ?? 0) > 0,
+        quizDoneToday: (quizRes.count ?? 0) > 0,
+        speakingDoneToday: (speakingRes.count ?? 0) > 0,
+        lessonCompletedToday: lessonsToday.length > 0,
+        lessonCompletedOnCurrentUnit: lessonsToday.some(
+          (row) => row.unit_id === currentUnitId,
+        ),
+      },
+    };
+  } catch {
+    return { success: false, flags: empty };
+  }
+}
+
 

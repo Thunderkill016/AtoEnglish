@@ -2,52 +2,69 @@
 import { Headphones, Layers, Mic2, RefreshCw } from "lucide-react";
 import ScrollReveal from "@/components/ui/scroll-reveal";
 
+const STEPS = [
+  {
+    id: "01",
+    title: "Nghe & Đọc",
+    tag: "Input",
+    desc: "Tiếp xúc tiếng Anh thực tế qua tình huống gần gũi, nghe ngữ điệu người bản xứ.",
+    icon: Headphones,
+    color: "emerald",
+  },
+  {
+    id: "02",
+    title: "Xử lý sâu",
+    tag: "Processing",
+    desc: "Làm chủ từ vựng qua viết câu phản xạ và thẻ SRS — chống học vẹt thụ động.",
+    icon: Layers,
+    color: "blue",
+  },
+  {
+    id: "03",
+    title: "Nói & Viết",
+    tag: "Output",
+    desc: "Shadowing, roleplay tình huống thực tế. Ghi âm và nhận phản hồi phát âm tức thì.",
+    icon: Mic2,
+    color: "violet",
+  },
+  {
+    id: "04",
+    title: "Ôn tập thông minh",
+    tag: "Review",
+    desc: "FSRS tính thời điểm vàng nhắc ôn — đưa từ vựng vào trí nhớ dài hạn.",
+    icon: RefreshCw,
+    color: "amber",
+  },
+] as const;
+
+const COLOR_MAP = {
+  emerald: {
+    iconBg: "bg-emerald-500/10 dark:bg-emerald-500/20",
+    iconText: "text-emerald-700 dark:text-emerald-400",
+    ring: "ring-emerald-500/20",
+    line: "from-emerald-500/40",
+  },
+  blue: {
+    iconBg: "bg-blue-500/10 dark:bg-blue-500/20",
+    iconText: "text-blue-700 dark:text-blue-400",
+    ring: "ring-blue-500/20",
+    line: "from-blue-500/40",
+  },
+  violet: {
+    iconBg: "bg-violet-500/10 dark:bg-violet-500/20",
+    iconText: "text-violet-700 dark:text-violet-400",
+    ring: "ring-violet-500/20",
+    line: "from-violet-500/40",
+  },
+  amber: {
+    iconBg: "bg-amber-500/10 dark:bg-amber-500/20",
+    iconText: "text-amber-700 dark:text-amber-400",
+    ring: "ring-amber-500/20",
+    line: "from-amber-500/40",
+  },
+};
+
 export default function HowItWorksSection() {
-  const steps = [
-    {
-      id: "01",
-      title: "Nghe & Đọc (Input)",
-      desc: "Tiếp xúc với tiếng Anh thực tế qua các tình huống giao tiếp gần gũi, nghe và đọc theo ngữ điệu người bản xứ.",
-      icon: Headphones,
-      gradient: "from-emerald-500/5 to-teal-500/5 dark:from-emerald-500/10 dark:to-teal-500/5",
-      iconBg: "bg-emerald-500/10 dark:bg-emerald-500/20",
-      iconColor: "text-emerald-700 dark:text-emerald-400",
-      borderColor: "hover:border-emerald-500/30 dark:hover:border-emerald-500/20",
-    },
-    {
-      id: "02",
-      title: "Xử lý sâu (Processing)",
-      desc: "Làm chủ từ vựng và cấu trúc qua bài tập viết câu phản xạ và ghép thẻ thông minh (SRS), chống học vẹt thụ động.",
-      icon: Layers,
-      gradient: "from-blue-500/5 to-indigo-500/5 dark:from-blue-500/10 dark:to-indigo-500/5",
-      iconBg: "bg-blue-500/10 dark:bg-blue-500/20",
-      iconColor: "text-blue-700 dark:text-blue-400",
-      borderColor: "hover:border-blue-500/30 dark:hover:border-blue-500/20",
-    },
-    {
-      id: "03",
-      title: "Nói & Viết (Output)",
-      desc: "Luyện nói Shadowing và thực hành đóng vai (Roleplay) tình huống thực tế. Ghi âm và nhận phản hồi lỗi phát âm tức thì.",
-      icon: Mic2,
-      gradient: "from-violet-500/5 to-purple-500/5 dark:from-violet-500/10 dark:to-purple-500/5",
-      iconBg: "bg-violet-500/10 dark:bg-violet-500/20",
-      iconColor: "text-violet-700 dark:text-violet-400",
-      borderColor: "hover:border-violet-500/30 dark:hover:border-violet-500/20",
-    },
-    {
-      id: "04",
-      title: "Ôn tập thông minh (Review)",
-      desc: "Thuật toán ôn tập ngắt quãng (FSRS) tự động tính toán thời điểm vàng để nhắc nhở, đưa từ vựng vào trí nhớ vĩnh viễn.",
-      icon: RefreshCw,
-      gradient: "from-amber-500/5 to-orange-500/5 dark:from-amber-500/10 dark:to-orange-500/5",
-      iconBg: "bg-amber-500/10 dark:bg-amber-500/20",
-      iconColor: "text-amber-700 dark:text-amber-450",
-      borderColor: "hover:border-amber-500/30 dark:hover:border-amber-500/20",
-    },
-  ];
-
-  const delayMs = [0, 100, 200, 300];
-
   return (
     <section
       id="how-it-works"
@@ -57,52 +74,53 @@ export default function HowItWorksSection() {
         <div className="absolute top-[20%] left-[-10%] w-[45%] h-[45%] rounded-full bg-emerald-500/4 dark:bg-emerald-500/2 blur-[100px]" />
       </div>
 
-      <div className="max-w-6xl mx-auto space-y-16 sm:space-y-24">
-        {/* Section Header */}
-        <ScrollReveal className="text-center space-y-4">
-          <h2 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-zinc-900 dark:text-zinc-50 leading-normal">
-            Cách học giúp bạn nói được nhanh nhất
+      <div className="max-w-6xl mx-auto space-y-14 sm:space-y-20">
+        <ScrollReveal className="text-center space-y-4 max-w-2xl mx-auto">
+          <h2 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-zinc-900 dark:text-zinc-50 leading-tight">
+            4 bước IPOR — lặp lại mỗi ngày
           </h2>
-          <p className="text-base sm:text-lg text-zinc-650 dark:text-zinc-350 max-w-xl mx-auto leading-relaxed font-normal">
-            Chỉ 4 bước lặp lại mỗi ngày — giúp bạn chuyển từ “thuộc lòng lý thuyết” sang “nói trôi chảy tự nhiên”.
+          <p className="text-base sm:text-lg text-zinc-600 dark:text-zinc-400 leading-relaxed">
+            Từ “thuộc lòng lý thuyết” sang “nói trôi chảy tự nhiên” trong ~15 phút mỗi ngày.
           </p>
         </ScrollReveal>
 
-        {/* 4 Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
-          {steps.map((step, index) => {
-            const Icon = step.icon;
-            return (
-              <ScrollReveal
-                key={step.id}
-                delayMs={delayMs[index]}
-                className="h-full"
-              >
-                <div
-                  className={`group relative flex flex-col h-full bg-gradient-to-br ${step.gradient} border border-zinc-200/50 dark:border-zinc-800/40 ${step.borderColor} p-8 sm:p-9 rounded-3xl space-y-6 hover:shadow-xl hover:shadow-zinc-900/[0.03] dark:hover:shadow-black/25 hover:-translate-y-1 transition-all duration-300`}
-                >
-                  <div className="flex items-center justify-between">
-                    <span
-                      className={`flex size-12 items-center justify-center rounded-xl ${step.iconBg} ${step.iconColor} group-hover:scale-110 transition-transform duration-300`}
-                    >
-                      <Icon className="size-5.5" />
+        <div className="relative">
+          <div
+            className="hidden lg:block absolute top-12 left-[12.5%] right-[12.5%] h-px bg-gradient-to-r from-emerald-500/30 via-blue-500/30 via-violet-500/30 to-amber-500/30"
+            aria-hidden="true"
+          />
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-5">
+            {STEPS.map((step, index) => {
+              const Icon = step.icon;
+              const colors = COLOR_MAP[step.color];
+              return (
+                <ScrollReveal key={step.id} delayMs={index * 100} className="relative">
+                  <div className="flex flex-col items-center text-center lg:items-start lg:text-left h-full p-6 sm:p-7 rounded-2xl border border-zinc-200/60 dark:border-zinc-800/50 bg-white/60 dark:bg-zinc-900/25 backdrop-blur-sm hover:border-emerald-500/20 hover:-translate-y-0.5 hover:shadow-md transition-all duration-300">
+                    <div className="relative mb-5">
+                      <span
+                        className={`flex size-14 items-center justify-center rounded-2xl ${colors.iconBg} ${colors.iconText} ring-4 ${colors.ring}`}
+                      >
+                        <Icon className="size-6" />
+                      </span>
+                      <span className="absolute -top-2 -right-2 text-[10px] font-black text-zinc-400 dark:text-zinc-500 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 rounded-full size-6 flex items-center justify-center">
+                        {step.id}
+                      </span>
+                    </div>
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-zinc-400 dark:text-zinc-500 mb-1">
+                      {step.tag}
                     </span>
-                    <span className="text-3xl font-mono font-bold text-zinc-350 dark:text-zinc-700/80 group-hover:text-emerald-500/40 dark:group-hover:text-emerald-400/30 transition-colors duration-300">
-                      {step.id}
-                    </span>
-                  </div>
-                  <div className="space-y-3 flex-1 flex flex-col">
-                    <h3 className="text-lg sm:text-xl font-bold text-zinc-900 dark:text-zinc-100 tracking-tight leading-normal">
+                    <h3 className="text-lg font-bold text-zinc-900 dark:text-zinc-100 mb-2">
                       {step.title}
                     </h3>
-                    <p className="text-sm sm:text-[15px] text-zinc-650 dark:text-zinc-400 leading-relaxed flex-1 font-normal">
+                    <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
                       {step.desc}
                     </p>
                   </div>
-                </div>
-              </ScrollReveal>
-            );
-          })}
+                </ScrollReveal>
+              );
+            })}
+          </div>
         </div>
       </div>
     </section>

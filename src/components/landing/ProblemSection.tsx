@@ -1,73 +1,92 @@
 
-import { XCircle } from "lucide-react";
+import { X, Check, ArrowRight } from "lucide-react";
 import ScrollReveal from "@/components/ui/scroll-reveal";
 
-export default function ProblemSection() {
-  const problems = [
-    {
-      title: "Học nhiều nhưng phản xạ chậm",
-      desc: "Mất từ 5 đến 10 giây để dịch nhẩm cấu trúc ngữ pháp trong đầu trước khi nói.",
-    },
-    {
-      title: "Nỗi sợ nói sai & bị phán xét",
-      desc: "E ngại phát âm chưa chuẩn, lo sợ người đối diện không hiểu hoặc đánh giá năng lực.",
-    },
-    {
-      title: "Thiếu môi trường thực hành",
-      desc: "Không có bạn đồng hành luyện tập phản xạ giao tiếp mỗi ngày trong môi trường an toàn.",
-    },
-  ];
+const BEFORE_ITEMS = [
+  "Mất 5–10 giây dịch nhẩm trước khi nói",
+  "Ngại phát âm sai, sợ bị đánh giá",
+  "Học nhiều ngữ pháp nhưng không có ai để luyện nói",
+  "App gamification — vui nhưng không nói được",
+];
 
+const AFTER_ITEMS = [
+  "Nói theo mẫu Shadowing ngay từ bài đầu",
+  "Luyện trong môi trường an toàn, không áp lực",
+  "IPOR: Input → Output mỗi ngày, có phản hồi tức thì",
+  "FSRS nhắc ôn đúng lúc — nhớ lâu, không học vẹt",
+];
+
+export default function ProblemSection() {
   return (
-    <section className="bg-gradient-to-b from-zinc-50/50 to-white dark:from-zinc-900/10 dark:to-zinc-950/20 border-y border-zinc-200/40 dark:border-zinc-800/40 py-24 sm:py-32 px-5 sm:px-8 relative overflow-hidden">
-      {/* Soft background light */}
+    <section className="bg-gradient-to-b from-white to-zinc-50/60 dark:from-zinc-950 dark:to-zinc-900/10 py-24 sm:py-32 px-5 sm:px-8 relative overflow-hidden">
       <div className="absolute top-0 right-1/4 w-96 h-96 rounded-full bg-emerald-500/5 dark:bg-emerald-500/2 blur-[80px] pointer-events-none" />
 
-      <div className="max-w-5xl mx-auto text-center space-y-16">
-
-<ScrollReveal>
-          <div className="space-y-4">
-            <div className="flex justify-center mb-4">
-              <span className="flex size-14 items-center justify-center rounded-2xl bg-zinc-100 dark:bg-zinc-900 text-zinc-500 dark:text-zinc-400 border border-zinc-200/50 dark:border-zinc-800/50 shadow-inner">
-                <XCircle className="size-6 animate-pulse" />
-              </span>
-            </div>
-
-            <h2 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-zinc-900 dark:text-zinc-50 leading-normal">
-              Bạn học tiếng Anh nhiều năm nhưng vẫn ngại nói?
-            </h2>
-
-            <p className="text-base sm:text-lg text-zinc-650 dark:text-zinc-350 max-w-2xl mx-auto leading-relaxed font-normal">
-              Hàng trăm giờ học ngữ pháp, thuộc hàng nghìn từ vựng… nhưng khi cần mở miệng giao tiếp thực tế thì lại bế tắc. Bạn không thiếu kiến thức, bạn chỉ thiếu môi trường để luyện phản xạ nói tự nhiên.
-            </p>
-          </div>
+      <div className="max-w-6xl mx-auto space-y-14 sm:space-y-16">
+        <ScrollReveal className="text-center space-y-4 max-w-3xl mx-auto">
+          <h2 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-zinc-900 dark:text-zinc-50 leading-tight">
+            Học nhiều năm mà vẫn ngại mở miệng?
+          </h2>
+          <p className="text-base sm:text-lg text-zinc-600 dark:text-zinc-400 leading-relaxed">
+            Bạn không thiếu kiến thức — bạn thiếu môi trường để biến kiến thức thành phản xạ nói tự nhiên.
+          </p>
         </ScrollReveal>
 
-        {/* 3 Problems Row */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
-          {problems.map((prob, idx) => (
-            <ScrollReveal key={idx} delayMs={idx * 100}>
-              <div className="bg-white/60 dark:bg-zinc-900/25 backdrop-blur-sm p-7 rounded-2xl border border-zinc-200/60 dark:border-zinc-800/50 shadow-sm space-y-3.5 hover:border-emerald-500/30 dark:hover:border-emerald-500/20 hover:-translate-y-1 hover:shadow-md transition-all duration-300 h-full">
-                <div className="text-emerald-700 dark:text-emerald-400 font-bold text-sm sm:text-base">
-                  0{idx + 1}. {prob.title}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
+          <ScrollReveal delayMs={0}>
+            <div className="h-full rounded-[2rem] border border-zinc-200/70 dark:border-zinc-800/60 bg-zinc-50/80 dark:bg-zinc-900/30 p-7 sm:p-9 space-y-6">
+              <div className="flex items-center gap-3">
+                <span className="flex size-10 items-center justify-center rounded-xl bg-zinc-200/80 dark:bg-zinc-800 text-zinc-500 dark:text-zinc-400">
+                  <X className="size-5" />
+                </span>
+                <div>
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">Trước đây</p>
+                  <h3 className="text-lg font-bold text-zinc-800 dark:text-zinc-200">Học truyền thống / app giải trí</h3>
                 </div>
-                <p className="text-xs sm:text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed font-normal">
-                  {prob.desc}
-                </p>
               </div>
-            </ScrollReveal>
-          ))}
+              <ul className="space-y-4">
+                {BEFORE_ITEMS.map((item) => (
+                  <li key={item} className="flex items-start gap-3 text-sm text-zinc-600 dark:text-zinc-400">
+                    <X className="size-4 shrink-0 mt-0.5 text-red-400" />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </ScrollReveal>
+
+          <ScrollReveal delayMs={100}>
+            <div className="h-full rounded-[2rem] border border-emerald-500/25 dark:border-emerald-500/20 bg-gradient-to-br from-emerald-500/5 to-teal-500/5 dark:from-emerald-500/10 dark:to-teal-500/5 p-7 sm:p-9 space-y-6 shadow-sm shadow-emerald-500/5">
+              <div className="flex items-center gap-3">
+                <span className="flex size-10 items-center justify-center rounded-xl bg-emerald-500/15 text-emerald-700 dark:text-emerald-400">
+                  <Check className="size-5" />
+                </span>
+                <div>
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-emerald-600 dark:text-emerald-400">Với AtoEnglish</p>
+                  <h3 className="text-lg font-bold text-zinc-900 dark:text-zinc-50">Luyện nói có hệ thống</h3>
+                </div>
+              </div>
+              <ul className="space-y-4">
+                {AFTER_ITEMS.map((item) => (
+                  <li key={item} className="flex items-start gap-3 text-sm text-zinc-700 dark:text-zinc-300">
+                    <Check className="size-4 shrink-0 mt-0.5 text-emerald-600 dark:text-emerald-400" />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </ScrollReveal>
         </div>
 
-        <ScrollReveal>
-          <div className="space-y-2 pt-4">
-            <p className="text-emerald-700 dark:text-emerald-400 font-black text-lg sm:text-xl">
-              AtoEnglish được xây dựng để giải quyết đúng vấn đề này.
-            </p>
-          </div>
+        <ScrollReveal delayMs={150} className="flex justify-center">
+          <a
+            href="#how-it-works"
+            className="inline-flex items-center gap-2 text-sm font-bold text-emerald-700 dark:text-emerald-400 hover:text-emerald-600 dark:hover:text-emerald-300 transition-colors"
+          >
+            Xem 4 bước học IPOR
+            <ArrowRight className="size-4" />
+          </a>
         </ScrollReveal>
       </div>
     </section>
   );
 }
-

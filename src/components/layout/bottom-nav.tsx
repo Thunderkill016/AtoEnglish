@@ -15,7 +15,7 @@ interface BottomNavProps {
  * BottomNav — Mobile-first persistent tab bar (sm: and below).
  *
  * Tabs (Tier 1):
- *   Home | Học | SRS 🃏 | Nói 🎤 | Tôi
+ *   Trang chủ | Học | Ôn tập | Nói | Tôi
  *
  * Key improvements vs old nav:
  * - Speaking now in Tier 1 (was completely hidden on mobile)
@@ -41,8 +41,8 @@ export function BottomNav({ dueCardsCount = 0 }: BottomNavProps) {
         const Icon = item.icon;
         const isActive =
           pathname === item.href || pathname.startsWith(item.href + "/");
-        const isSRS = item.href === "/flashcards";
-        const showBadge = isSRS && dueCardsCount > 0;
+        const isFlashcards = item.href === "/flashcards";
+        const showBadge = isFlashcards && dueCardsCount > 0;
 
         return (
           <Link

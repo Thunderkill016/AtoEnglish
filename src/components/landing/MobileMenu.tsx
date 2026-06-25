@@ -43,7 +43,7 @@ export function MobileMenu() {
 
   const links = [
     { href: "#how-it-works", label: "Cách học" },
-    { href: "#science", label: "Phương pháp" },
+    { href: "#outcomes", label: "Kết quả" },
     { href: "#faq", label: "Hỏi đáp" },
   ];
 

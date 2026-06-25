@@ -6,15 +6,26 @@ import { ArrowRight, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { checkHasSession } from "@/lib/auth-check";
 
-const QUICK_STATS = [
-  { icon: "🔥", text: "2,400+ học viên active" },
-  { icon: "📚", text: "50 bài học A0 → B2" },
-  { icon: "⭐", text: "4.9/5 đánh giá" },
-  { icon: "🎁", text: "Miễn phí 100%" },
+const TRUST_PILLS = [
+  { icon: "🎁", text: "Miễn phí Open Beta" },
+  { icon: "📚", text: "50 unit A0 → B2" },
+  { icon: "⏱️", text: "~15 phút/ngày" },
+  { icon: "🧠", text: "IPOR + FSRS" },
 ];
 
-export default function HeroCTA() {
+type HeroCTAProps = {
+  align?: "center" | "left";
+};
+
+export default function HeroCTA({ align = "left" }: HeroCTAProps) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const isCentered = align === "center";
+  const alignClass = isCentered
+    ? "items-center"
+    : "items-center lg:items-start";
+  const justifyClass = isCentered
+    ? "justify-center"
+    : "justify-center lg:justify-start";
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -27,16 +38,19 @@ export default function HeroCTA() {
   };
 
   return (
-    <div className="animate-fade-in-up animation-delay-225 flex flex-col items-center gap-4 pt-4 w-full">
-      {/* CTA Buttons */}
-      <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 w-full">
+    <div
+      className={`animate-fade-in-up animation-delay-225 flex flex-col gap-5 pt-2 w-full ${alignClass}`}
+    >
+      <div
+        className={`flex flex-col sm:flex-row gap-3 sm:gap-4 w-full items-stretch sm:items-center ${justifyClass}`}
+      >
         <Link
           href={isLoggedIn ? "/dashboard" : "/login"}
           prefetch={false}
           className="w-full sm:w-auto"
         >
           <Button className="w-full sm:w-auto sm:min-w-[220px] justify-center bg-emerald-600 hover:bg-emerald-500 dark:bg-emerald-600 dark:hover:bg-emerald-500 text-white font-bold h-14 px-8 rounded-2xl shadow-lg shadow-emerald-600/15 dark:shadow-emerald-500/10 hover:shadow-emerald-500/25 hover:scale-[1.01] active:scale-[0.97] transition-all duration-300 gap-2">
-            {isLoggedIn ? "Vào Dashboard" : "Bắt đầu học ngay"}
+            {isLoggedIn ? "Vào Trang chủ" : "Bắt đầu học ngay"}
             <ArrowRight className="size-4.5" />
           </Button>
         </Link>
@@ -50,19 +64,17 @@ export default function HeroCTA() {
         </Button>
       </div>
 
-      {/* Social proof microstats */}
-      <div className="flex flex-wrap items-center justify-center gap-2">
-        {QUICK_STATS.map((stat) => (
+      <div className={`flex flex-wrap gap-2 ${justifyClass}`}>
+        {TRUST_PILLS.map((pill) => (
           <div
-            key={stat.text}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-zinc-100 dark:bg-zinc-800/60 border border-zinc-200/80 dark:border-white/8 text-xs font-medium text-zinc-600 dark:text-zinc-400"
+            key={pill.text}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-zinc-100/80 dark:bg-zinc-800/50 border border-zinc-200/80 dark:border-white/8 text-xs font-medium text-zinc-600 dark:text-zinc-400"
           >
-            <span>{stat.icon}</span>
-            <span>{stat.text}</span>
+            <span aria-hidden="true">{pill.icon}</span>
+            <span>{pill.text}</span>
           </div>
         ))}
       </div>
     </div>
   );
 }
-

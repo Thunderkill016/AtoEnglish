@@ -1,6 +1,12 @@
 import type { Metadata } from "next";
 import { getDueCards } from "@/app/actions/cards";
-import { getUserProgress, getWeeklyXpData, getDailyActivity } from "@/app/actions/stats";
+import {
+  getUserProgress,
+  getWeeklyXpData,
+  getDailyActivity,
+  getTodayMissionFlags,
+} from "@/app/actions/stats";
+import { buildDailyMissions } from "@/lib/dashboard/daily-missions";
 import {
   getAllUnitCompletionStatuses,
   getCurrentUnit,
@@ -121,51 +127,24 @@ export default async function DashboardPage() {
     }
   }
 
-  // Check if user did any speaking session today
-  const hasSpeakingToday = (speakingRes.success && speakingRes.sessions
-    ? speakingRes.sessions.some(s => {
-        const sessionDate = new Date(s.created_at).toLocaleDateString("sv-SE", { timeZone: "Asia/Ho_Chi_Minh" });
-        return sessionDate === todayStr;
-      })
-    : false);
-
   const initialXpCurrent = Math.min(todayXp, dailyXpGoal);
 
-  const initialQuests = [
-    { id: 1, text: "Học 1 bài mới (Input & Processing)", xp: 20, completed: false, href: currentUnitData.route },
-    {
-      id: 2,
-      text: dueCardsCount > 0
-        ? `Ôn tập ${dueCardsCount} thẻ từ vựng SRS`
-        : "Ôn tập thẻ từ vựng SRS (đã xong hôm nay!)",
-      xp: 15,
-      completed: dueCardsCount === 0,
-      href: "/flashcards",
-    },
-    {
-      id: 3,
-      text: hasSpeakingToday
-        ? "Luyện nói hôm nay (đã hoàn thành!)"
-        : "Đặt 3 câu thực tế (Output / Speaking)",
-      xp: 15,
-      completed: hasSpeakingToday,
-      href: "/speaking",
-    },
-    {
-      id: 4,
-      text: "Thử Thách Hàng Ngày — 5 câu từ vựng",
-      xp: 50,
-      completed: false, // Client syncs from localStorage (ato_challenge_YYYY-MM-DD)
-      href: "/challenge",
-    },
-  ];
+  const missionFlagsRes = await getTodayMissionFlags(currentUnitData.unitId);
+  const flags = missionFlagsRes.flags;
 
-  // Resolve active unit today completion from the map
-  const activeEntry = completedMap.get(currentUnitData.unitId);
-  if (activeEntry?.completedAt) {
-    const completedDateStr = new Date(activeEntry.completedAt).toLocaleDateString("sv-SE", { timeZone: "Asia/Ho_Chi_Minh" });
-    if (completedDateStr === todayStr) initialQuests[0].completed = true;
-  }
+  const dailyMissions = buildDailyMissions({
+    currentUnit: {
+      title: currentUnitData.title,
+      progress: currentUnitData.progress,
+      route: currentUnitData.route,
+      xp: currentUnitData.xp,
+    },
+    dueCardsCount,
+    lessonCompletedToday: flags.lessonCompletedOnCurrentUnit,
+    srsReviewedToday: flags.srsReviewedToday,
+    quizDoneToday: flags.quizDoneToday,
+    speakingDoneToday: flags.speakingDoneToday,
+  });
 
   // Completed unit IDs — for the unit progress grid on dashboard
   const completedUnitIds = UNITS
@@ -205,7 +184,7 @@ export default async function DashboardPage() {
       dueCardsCount={dueCardsCount}
       currentUnitData={currentUnitData}
       initialXpCurrent={initialXpCurrent}
-      initialQuests={initialQuests}
+      dailyMissions={dailyMissions}
       dailyXpGoal={dailyXpGoal}
       wordOfDay={wordOfDay}
       completedUnitIds={completedUnitIds}
