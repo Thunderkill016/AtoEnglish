@@ -88,7 +88,7 @@ export default function StreakCalendar({ dailyXp, currentStreak = 0 }: StreakCal
   return (
     <div className="w-full">
       {/* Header */}
-      <div className="flex items-center justify-between mb-3">
+      <div className="flex items-center justify-between mb-1.5">
         <div className="flex items-center gap-2">
           <span className="text-[10px] font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
             Lịch học 7 tuần
@@ -103,6 +103,21 @@ export default function StreakCalendar({ dailyXp, currentStreak = 0 }: StreakCal
           {firstMonth} – {lastMonth}
         </span>
       </div>
+
+      {/* FIX 5: Streak-length-aware motivational message */}
+      <p className="text-[10px] font-semibold mb-2.5 leading-tight">
+        {currentStreak === 0 ? (
+          <span className="text-zinc-400 dark:text-zinc-500">Học hôm nay để bắt đầu chuỗi học tập ✨</span>
+        ) : currentStreak < 7 ? (
+          <span className="text-emerald-600 dark:text-emerald-400">🌱 Bắt đầu rồi! Mỗi ngày học là 1 viên gạch — tiếp tục nhé</span>
+        ) : currentStreak < 30 ? (
+          <span className="text-emerald-600 dark:text-emerald-400">🔥 {currentStreak} ngày liên tiếp — đừng để chuỗi này đứt!</span>
+        ) : currentStreak < 100 ? (
+          <span className="text-orange-500">⚡ {currentStreak} ngày — bạn đang ở top 5% người học!</span>
+        ) : (
+          <span className="text-amber-500">👑 {currentStreak} ngày — HUYỀN THOẠI! Tiếp tục chinh phục!</span>
+        )}
+      </p>
 
       {/* Day-of-week labels */}
       <div className="flex gap-1 mb-1 pl-0">

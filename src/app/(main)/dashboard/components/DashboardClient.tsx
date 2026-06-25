@@ -29,6 +29,7 @@ import { useStreakStatus } from "@/features/streak/hooks/useStreakStatus";
 import WeeklyRecapCard from "./WeeklyRecapCard";
 import EfSetGoalTracker from "./EfSetGoalTracker";
 import TodayPlanWidget from "./TodayPlanWidget";
+import TodayMission from "./TodayMission";
 import LevelProgressBar from "./LevelProgressBar";
 import StreakFreezeCard from "@/features/streak/components/StreakFreezeCard";
 
@@ -652,49 +653,19 @@ export default function DashboardClient({
         {/* ── 4. Hero Continue Learning UnitCard (Promoted to Top) ── */}
         <UnitCard currentUnitData={currentUnitData} />
 
-        {/* ── 5. Micro Session — ⋯ Học nhanh 10 phút ── */}
-        <div className="rounded-2xl border border-zinc-200/60 dark:border-zinc-800/50 bg-white/50 dark:bg-zinc-900/20 backdrop-blur-sm p-4">
-          <div className="flex items-center gap-2 mb-3">
-            <span className="flex size-7 items-center justify-center rounded-lg bg-amber-500/10">
-              <Zap className="size-4 text-amber-500 fill-amber-500" />
-            </span>
-            <div className="flex-1">
-              <p className="text-xs font-black text-zinc-900 dark:text-zinc-50">⚡ Học nhanh 10 phút</p>
-              <p className="text-[10px] text-zinc-500 dark:text-zinc-400">Không có nhiều thời gian? Chọn 1 hoạt động ngắn</p>
-            </div>
-          </div>
-          <div className="grid grid-cols-3 gap-2">
-            <Link
-              id="micro-session-srs"
-              href="/flashcards"
-              className="flex flex-col items-center gap-1.5 p-3 rounded-xl bg-purple-500/5 border border-purple-500/15 hover:bg-purple-500/10 hover:border-purple-500/30 transition-all duration-150 group"
-            >
-              <span className="text-lg">🃏</span>
-              <span className="text-[10px] font-black text-zinc-700 dark:text-zinc-300 text-center leading-tight group-hover:text-purple-600 dark:group-hover:text-purple-400">Ôn từ SRS</span>
-              {dueCardsCount > 0 && (
-                <span className="text-[9px] font-bold text-purple-500 bg-purple-500/10 px-1.5 py-0.5 rounded-full">{dueCardsCount} thẻ</span>
-              )}
-            </Link>
-            <Link
-              id="micro-session-speaking"
-              href="/pronunciation"
-              className="flex flex-col items-center gap-1.5 p-3 rounded-xl bg-red-500/5 border border-red-500/15 hover:bg-red-500/10 hover:border-red-500/30 transition-all duration-150 group"
-            >
-              <span className="text-lg">🎙️</span>
-              <span className="text-[10px] font-black text-zinc-700 dark:text-zinc-300 text-center leading-tight group-hover:text-red-600 dark:group-hover:text-red-400">Luyện phát âm</span>
-              <span className="text-[9px] font-bold text-red-500 bg-red-500/10 px-1.5 py-0.5 rounded-full">5 phút</span>
-            </Link>
-            <Link
-              id="micro-session-quiz"
-              href={currentUnitData.route}
-              className="flex flex-col items-center gap-1.5 p-3 rounded-xl bg-emerald-500/5 border border-emerald-500/15 hover:bg-emerald-500/10 hover:border-emerald-500/30 transition-all duration-150 group"
-            >
-              <span className="text-lg">📝</span>
-              <span className="text-[10px] font-black text-zinc-700 dark:text-zinc-300 text-center leading-tight group-hover:text-emerald-600 dark:group-hover:text-emerald-400">Quiz bài học</span>
-              <span className="text-[9px] font-bold text-emerald-500 bg-emerald-500/10 px-1.5 py-0.5 rounded-full">5 câu</span>
-            </Link>
-          </div>
-        </div>
+        {/* ── 5. TODAY'S MISSION — Unified daily task hub (replaces "Học nhanh 10 phút") ── */}
+        <TodayMission
+          currentUnit={{
+            title: currentUnitData.title,
+            progress: currentUnitData.progress,
+            route: currentUnitData.route,
+            xp: currentUnitData.xp,
+          }}
+          dueCardsCount={dueCardsCount}
+          xpToday={xpCurrent}
+          xpTarget={xpTarget}
+          completedQuickWins={quests.filter((q) => q.completed).length}
+        />
 
         {/* ── 6. Daily Quests — promoted above lesson grid ── */}
         <WidgetErrorBoundary name="DailyQuests">
