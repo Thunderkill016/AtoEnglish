@@ -29,6 +29,7 @@ import { useStreakStatus } from "@/features/streak/hooks/useStreakStatus";
 import WeeklyRecapCard from "./WeeklyRecapCard";
 import EfSetGoalTracker from "./EfSetGoalTracker";
 import TodayPlanWidget from "./TodayPlanWidget";
+import LevelProgressBar from "./LevelProgressBar";
 
 // Dynamic import — NotificationBell uses browser APIs (navigator, ServiceWorker)
 const NotificationBell = dynamic(
@@ -579,6 +580,21 @@ export default function DashboardClient({
             />
           </div>
         )}
+
+        {/* ── 2d. CEFR Level Progress Ladder ── */}
+        {(() => {
+          const levelUnitsAll = allUnits.filter(u => u.level === shortLevel);
+          const levelUnitsDone = completedUnitIds.filter(id =>
+            allUnits.find(u => u.id === id)?.level === shortLevel
+          ).length;
+          return (
+            <LevelProgressBar
+              userLevel={shortLevel}
+              levelUnitsDone={levelUnitsDone}
+              levelUnitsTotal={levelUnitsAll.length}
+            />
+          );
+        })()}
 
         {/* ── 3. Placement Test Banner ── */}
         {showPlacementBanner && (
