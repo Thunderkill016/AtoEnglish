@@ -30,6 +30,13 @@ import WeeklyRecapCard from "./WeeklyRecapCard";
 import EfSetGoalTracker from "./EfSetGoalTracker";
 import TodayPlanWidget from "./TodayPlanWidget";
 import LevelProgressBar from "./LevelProgressBar";
+import StreakFreezeCard from "@/features/streak/components/StreakFreezeCard";
+
+// Dynamic import — PushPermissionCard uses browser APIs (Notification, PushManager)
+const PushPermissionCard = dynamic(
+  () => import("@/features/notifications/components/PushPermissionCard"),
+  { ssr: false }
+);
 
 // Dynamic import — NotificationBell uses browser APIs (navigator, ServiceWorker)
 const NotificationBell = dynamic(
@@ -692,6 +699,20 @@ export default function DashboardClient({
             <WidgetErrorBoundary name="SrsCard">
               <SrsCard dueCardsCount={dueCardsCount} />
             </WidgetErrorBoundary>
+
+            {/* Streak Freeze Card — shown when streak ≥ 3 (worth protecting) or has freezes */}
+            {(currentStreak >= 3 || streakFreezeCount > 0) && (
+              <WidgetErrorBoundary name="StreakFreezeCard">
+                <StreakFreezeCard
+                  freezesAvailable={streakFreezeCount}
+                  isAtRisk={streakState.status === "at_risk"}
+                  onFreezeActivated={() => {
+                    void freezeStreakAction();
+                  }}
+                />
+              </WidgetErrorBoundary>
+            )}
+
             <WidgetErrorBoundary name="LeagueCard">
               <LeagueCard />
             </WidgetErrorBoundary>
@@ -707,6 +728,12 @@ export default function DashboardClient({
                 />
               </WidgetErrorBoundary>
             )}
+
+            {/* Push Permission soft-ask — fires after first lesson completion */}
+            <PushPermissionCard
+              completedLessons={completedUnits}
+              showAfterLessons={1}
+            />
           </div>
         </div>
 

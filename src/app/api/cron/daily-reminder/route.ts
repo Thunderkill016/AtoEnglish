@@ -99,6 +99,15 @@ export async function GET(request: Request) {
   let skipped = 0;
   const expired: string[] = [];
 
+  // Collect notification log entries to batch-insert after the loop
+  const notifLogs: Array<{
+    user_id: string;
+    type: string;
+    title: string;
+    body: string;
+    url: string;
+  }> = [];
+
   for (const row of rows) {
     // Skip users who already studied today (no nagging)
     // Exception: 10% variable reward chance for encouragement even after studying
@@ -134,10 +143,17 @@ export async function GET(request: Request) {
       keys: row.keys as { p256dh: string; auth: string },
     };
 
+    const notifUrl = streakAtRisk ? "/dashboard" : "/dashboard";
+    const notifType = hasStudied
+      ? "daily_reminder"
+      : streakAtRisk
+        ? isUrgent ? "streak_at_risk" : "streak_at_risk"
+        : "daily_reminder";
+
     const payload = JSON.stringify({
       title,
       body,
-      url: "/dashboard",
+      url: notifUrl,
       icon: "/icon-192.png",
       badge: "/icon-192.png",
       tag: "streak-reminder", // Replaces previous notification (no spam)
@@ -152,10 +168,24 @@ export async function GET(request: Request) {
         urgency,
       });
       sent++;
+
+      // Queue notification log entry
+      notifLogs.push({
+        user_id: row.user_id,
+        type: notifType,
+        title,
+        body,
+        url: notifUrl,
+      });
     } catch (err) {
       const code = (err as { statusCode?: number }).statusCode;
       if (code === 410 || code === 404) expired.push(row.endpoint);
     }
+  }
+
+  // Batch-insert notification logs (non-blocking, best-effort)
+  if (notifLogs.length > 0) {
+    await supabase.from("notification_logs").insert(notifLogs);
   }
 
   // Clean up expired subscriptions (410/404 = endpoint invalidated)

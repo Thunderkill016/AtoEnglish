@@ -1,4 +1,5 @@
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { Sprout, LogOut, Settings } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 
@@ -8,6 +9,12 @@ import { MobileNav } from "@/components/layout/mobile-nav";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
 import { Button } from "@/components/ui/button";
 import { signOut } from "@/app/actions/auth";
+
+// Dynamic import — NotificationCenter uses browser fetch and event listeners
+const NotificationCenter = dynamic(
+  () => import("@/features/notifications/components/NotificationCenter"),
+  { ssr: false }
+);
 
 export async function Header() {
   const supabase = await createClient();
@@ -41,6 +48,9 @@ export async function Header() {
 
         <div className="flex items-center gap-1.5">
           <ThemeToggle />
+
+          {/* Notification Center — in-app history bell */}
+          {user && <NotificationCenter />}
 
           {user ? (
             <div className="flex items-center gap-2.5 ml-1 sm:ml-2">

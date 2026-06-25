@@ -176,6 +176,7 @@ export async function getProgressStats() {
         cardsByState,
         completedUnits: completedRes.count || 0,
         totalSpeakingSessions: speakingRes.count || 0,
+        streakFreezeCount: (progress as { streak_freeze_count?: number } | null)?.streak_freeze_count ?? 0,
       }
     };
   } catch {

@@ -6,6 +6,7 @@ import { getAchievements } from "@/app/actions/gamification";
 import { AchievementsPanel } from "@/components/gamification/AchievementsPanel";
 import { ActivityHeatmap } from "@/components/progress/ActivityHeatmap";
 import ProgressClient from "./ProgressClient";
+import StreakStats from "@/features/streak/components/StreakStats";
 
 export const dynamic = "force-dynamic";
 
@@ -25,6 +26,9 @@ export default async function ProgressPage() {
 
   const activityDays = activityRes.days ?? [];
   const totalActiveDays = activityDays.filter(d => d.xp > 0).length;
+  // Weekly active days: last 7 entries in activityDays
+  const last7Days = activityDays.slice(-7);
+  const weeklyActiveDays = last7Days.filter(d => d.xp > 0).length;
   // Compute longest streak from activity data
   let longestStreak = 0, curStreak = 0;
   for (const d of activityDays) {
@@ -41,6 +45,7 @@ export default async function ProgressPage() {
     cardsByState: { new: 0, learning: 0, review: 0, relearning: 0 },
     completedUnits: 0,
     totalSpeakingSessions: 0,
+    streakFreezeCount: 0,
   };
 
   const weeklyData = weeklyRes.data?.length
@@ -146,7 +151,24 @@ export default async function ProgressPage() {
         longestStreak={longestStreak}
       />
 
-      {/* Weekly Chart + SRS State */}
+      {/* Streak Stats — milestone roadmap, freeze inventory, share card */}
+      <div className="rounded-3xl border border-zinc-200/60 dark:border-zinc-800/60 bg-white/60 dark:bg-zinc-900/30 backdrop-blur-sm p-4 sm:p-6 space-y-1">
+        <div className="flex items-center gap-2 mb-4">
+          <Flame className="size-4 text-orange-500" />
+          <h2 className="text-xs font-black text-foreground uppercase tracking-widest">Streak &amp; Milestones</h2>
+        </div>
+        <StreakStats
+          currentStreak={stats.streak}
+          bestStreak={stats.bestStreak}
+          freezesAvailable={stats.streakFreezeCount ?? 0}
+          totalStudyDays={totalActiveDays}
+          milestonesAchieved={[3,7,14,30,66,100,365].filter(m => stats.streak >= m).length}
+          userLevel={stats.currentLevel}
+          completedLessons={stats.completedUnits}
+          weeklyActiveDays={weeklyActiveDays}
+        />
+      </div>
+
       {/* Leaderboard CTA banner */}
       <a
         href="/leaderboard"

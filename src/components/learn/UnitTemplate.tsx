@@ -9,6 +9,8 @@ import confetti from "canvas-confetti";
 
 import { completeUnit, getUnitCompletionStatus } from "@/app/actions/unit";
 import { getDueWarmupCards, seedUnitVocabToSRS, scheduleWrongWordsForReview } from "@/app/actions/cards";
+import { useStreakMilestone } from "@/features/streak/hooks/useStreakMilestone";
+import StreakMilestoneOverlay from "@/features/streak/components/StreakMilestoneOverlay";
 
 import WarmupSection from "./sections/WarmupSection";
 import VocabSection from "./sections/VocabSection";
@@ -354,6 +356,9 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
   const [miniSession, setMiniSession] = useState(false);
   const [sessionBreak, setSessionBreak] = useState(false); // mid-lesson break after Practice
   const [completionData, setCompletionData] = useState<CompletionData | null>(null);
+
+  // Streak milestone checker (Phase B — research doc)
+  const streakMilestoneCheck = useStreakMilestone();
 
   // S2-3: Live in-lesson XP counter (Duolingo real-time reinforcement)
   const [sessionXp, setSessionXp] = useState(0);
@@ -705,6 +710,11 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
       if (streakToasts[streak]) {
         setTimeout(() => toast.success(streakToasts[streak]!), delay);
         delay += 1200;
+      }
+
+      // Check streak milestone — triggers full-screen overlay if this is a milestone day
+      if (streak > 0) {
+        streakMilestoneCheck.checkMilestone(streak);
       }
 
       // XP milestones (check if we crossed a threshold this session)
@@ -1295,6 +1305,24 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Streak Milestone Overlay — fires after lesson completes on milestone days */}
+      {streakMilestoneCheck.showOverlay && streakMilestoneCheck.pendingMilestone && (
+        <StreakMilestoneOverlay
+          state={{
+            status: "growing",
+            current: streakMilestoneCheck.pendingMilestone,
+            best: streakMilestoneCheck.pendingMilestone,
+            freezesAvailable: 0,
+            hoursUntilMidnight: 12,
+            studiedToday: true,
+            daysSinceLastStudy: 0,
+            isMilestoneDay: true,
+            milestone: streakMilestoneCheck.pendingMilestone,
+          }}
+          onDismiss={() => { void streakMilestoneCheck.dismissMilestone(); }}
+        />
+      )}
     </div>
   );
 }
