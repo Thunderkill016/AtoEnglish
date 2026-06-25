@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { getDueCards } from "@/app/actions/cards";
-import { getUserProgress, getWeeklyXpData } from "@/app/actions/stats";
+import { getUserProgress, getWeeklyXpData, getDailyActivity } from "@/app/actions/stats";
 import {
   getAllUnitCompletionStatuses,
   getCurrentUnit,
@@ -22,7 +22,7 @@ export const revalidate = 30;
 
 export default async function DashboardPage() {
   // Fetch all data in parallel — single round-trip batch
-  const [progressRes, cardsRes, unitRes, speakingRes, bulkRes, weeklyRes] =
+  const [progressRes, cardsRes, unitRes, speakingRes, bulkRes, weeklyRes, activityRes] =
     await Promise.all([
       getUserProgress(),
       getDueCards(),
@@ -30,6 +30,7 @@ export default async function DashboardPage() {
       getRecentSpeakingSessions(5),
       getAllUnitCompletionStatuses(),
       getWeeklyXpData(),
+      getDailyActivity(),
     ]);
 
   // Extract speaking sessions for the dashboard feed (narrow practice_type string → union literal)
@@ -186,6 +187,12 @@ export default async function DashboardPage() {
 
   const weeklyData = weeklyRes.success && weeklyRes.data ? weeklyRes.data : [];
 
+  // 49-day calendar data (last 7 weeks) from getDailyActivity
+  const calendarData = (activityRes.success && activityRes.days
+    ? activityRes.days
+    : []
+  ).slice(-49).map(d => ({ date: d.date, xp: d.xp }));
+
   return (
     <DashboardClient
       userName={userName}
@@ -204,6 +211,7 @@ export default async function DashboardPage() {
       completedUnitIds={completedUnitIds}
       streakFreezeCount={streakFreezeCount}
       weeklyData={weeklyData}
+      calendarData={calendarData}
       allUnits={UNITS.map(u => ({ id: u.id, title: u.title, level: u.level, route: u.route, xp: u.xp }))}
       recentSpeakingSessions={recentSpeakingSessions}
     />

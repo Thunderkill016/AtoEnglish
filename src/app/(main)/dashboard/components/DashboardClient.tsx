@@ -22,6 +22,9 @@ import { StreakShieldWidget } from "@/components/gamification/StreakShieldWidget
 import StreakCounter from "@/features/streak/components/StreakCounter";
 import StreakAtRiskBanner from "@/features/streak/components/StreakAtRiskBanner";
 import StreakMilestoneOverlay from "@/features/streak/components/StreakMilestoneOverlay";
+import StreakBrokenModal from "@/features/streak/components/StreakBrokenModal";
+import WeeklyActivityChart from "@/features/streak/components/WeeklyActivityChart";
+import StreakCalendar from "@/features/streak/components/StreakCalendar";
 import { useStreakStatus } from "@/features/streak/hooks/useStreakStatus";
 
 // Dynamic import — NotificationBell uses browser APIs (navigator, ServiceWorker)
@@ -69,6 +72,7 @@ interface DashboardClientProps {
   completedUnitIds: string[];
   streakFreezeCount: number;
   weeklyData: Array<{ day: string; label: string; xp: number; pct: number }>;
+  calendarData: Array<{ date: string; xp: number }>;
   allUnits: Array<{ id: string; title: string; level: string; route: string; xp: number }>;
   recentSpeakingSessions: Array<{
     id: string;
@@ -132,6 +136,7 @@ export default function DashboardClient({
   allUnits,
   streakFreezeCount,
   weeklyData,
+  calendarData,
   recentSpeakingSessions,
 }: DashboardClientProps) {
   const [xpCurrent, setXpCurrent] = useState(initialXpCurrent);
@@ -150,6 +155,15 @@ export default function DashboardClient({
   });
   const [bannerDismissed, setBannerDismissed] = useState(false);
   const [milestoneDismissed, setMilestoneDismissed] = useState(false);
+  // StreakBrokenModal: only shown once per session using sessionStorage
+  const [brokenModalDismissed, setBrokenModalDismissed] = useState(() => {
+    if (typeof window === "undefined") return false;
+    return sessionStorage.getItem("ato_broken_modal_dismissed") === "1";
+  });
+  const handleBrokenModalDismiss = () => {
+    sessionStorage.setItem("ato_broken_modal_dismissed", "1");
+    setBrokenModalDismissed(true);
+  };
 
   const [showPlacementBanner, setShowPlacementBanner] = useState(true);
   const [expandProgressGrid, setExpandProgressGrid] = useState(false);
@@ -553,6 +567,16 @@ export default function DashboardClient({
           </div>
         )}
 
+        {/* ── 2c. 7-week Streak Calendar Heatmap ── */}
+        {calendarData.length > 0 && (
+          <div className="rounded-2xl border border-zinc-200/60 dark:border-zinc-800/60 bg-white/60 dark:bg-zinc-900/30 backdrop-blur-sm p-4">
+            <StreakCalendar
+              dailyXp={calendarData}
+              currentStreak={currentStreak}
+            />
+          </div>
+        )}
+
         {/* ── 3. Placement Test Banner ── */}
         {showPlacementBanner && (
           <div className="relative group">
@@ -808,6 +832,16 @@ export default function DashboardClient({
           onClose={() => setLevelUpModal(null)}
         />
       )}
+
+      {/* Streak Broken / Comeback Modal */}
+      {!brokenModalDismissed && (
+        <StreakBrokenModal
+          state={streakState}
+          totalXp={totalXp}
+          onDismiss={handleBrokenModalDismiss}
+          onRepaired={handleBrokenModalDismiss}
+        />
+      )}
     </div>
   );
 }
@@ -882,47 +916,14 @@ function WeeklyRecapCard({
               ))}
             </div>
 
-            {/* Right: Daily XP Bar Chart */}
+            {/* Right: Daily XP Bar Chart — Recharts */}
             {weeklyData && weeklyData.length > 0 && (
-              <div className="flex flex-col justify-between p-4 rounded-xl bg-white/40 dark:bg-zinc-800/30 border border-zinc-200/50 dark:border-zinc-700/30 min-h-[160px]">
+              <div className="p-4 rounded-xl bg-white/40 dark:bg-zinc-800/30 border border-zinc-200/50 dark:border-zinc-700/30">
                 <div className="flex justify-between items-center mb-2">
                   <p className="text-[10px] font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">XP 7 ngày qua</p>
                   <span className="text-[10px] text-zinc-400 dark:text-zinc-500 font-bold">Biểu đồ tuần</span>
                 </div>
-                <div className="relative h-28 flex items-end justify-between gap-1 pb-1 border-b border-zinc-200 dark:border-zinc-800/60">
-                  {/* Grid background lines */}
-                  <div className="absolute inset-x-0 top-0 bottom-4 flex flex-col justify-between pointer-events-none">
-                    {[0, 1, 2].map(i => (
-                      <div key={i} className="border-t border-dashed border-zinc-300 dark:border-zinc-800/60 w-full" />
-                    ))}
-                  </div>
-                  {/* Bars */}
-                  {weeklyData.map((d, idx) => {
-                    const isToday = d.day === todayKey;
-                    return (
-                      <div key={idx} className="flex-1 flex flex-col items-center gap-1 h-full justify-end group relative z-10">
-                        {d.xp > 0 && (
-                          <span className="opacity-0 group-hover:opacity-100 transition-opacity duration-150 text-[9px] font-bold bg-zinc-900 dark:bg-zinc-100 text-zinc-100 dark:text-zinc-950 px-1.5 py-0.5 rounded-md absolute bottom-full mb-1 whitespace-nowrap shadow-md">
-                            {d.xp} XP
-                          </span>
-                        )}
-                        <div
-                          className={`w-full max-w-[20px] rounded-t-md transition-all duration-500 ${
-                            isToday
-                              ? "bg-gradient-to-t from-emerald-600 to-teal-400 ring-2 ring-emerald-500/25"
-                              : d.xp > 0
-                                ? "bg-gradient-to-t from-emerald-500/80 to-teal-400/80 hover:from-emerald-500 hover:to-teal-400"
-                                : "bg-zinc-200 dark:bg-zinc-850"
-                          }`}
-                          style={{ height: d.pct > 0 ? `${Math.max(d.pct, 12)}%` : "6px" }}
-                        />
-                        <span className={`text-[8px] font-bold mt-1 ${isToday ? "text-emerald-500" : "text-zinc-400 dark:text-zinc-500"}`}>
-                          {d.label}
-                        </span>
-                      </div>
-                    );
-                  })}
-                </div>
+                <WeeklyActivityChart data={weeklyData} />
               </div>
             )}
           </div>
