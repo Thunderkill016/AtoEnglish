@@ -964,7 +964,7 @@
 - Fail 2 lần liên tiếp → blocked + ghi lý do.
 **Done khi**: lint+test (all gates) pass; nếu fix thì 1 minimal change; AGENT_PLAN/BACKLOG updated with PHASE log + SHA; 1 commit + push via git-push.sh main (or blocked noted); BACKLOG status=done; no feature; no ask user; autonomous.
 
-**Completed TASK-078 (post exec sync)**: gates clean (lint0+170t+tsc0+cs50/50+audit50/50) no fix needed (stale tsbuildinfo was cause of phantom tsc errs); log written 20260626T154926Z_TASK-078.log; BACKLOG+PLAN updated + pushed; main commit [SHA] via git-push.sh; autonomous.
+**Completed TASK-078 (post exec sync)**: gates clean (lint0+170t+tsc0+cs50/50+audit50/50) no fix needed (stale tsbuildinfo was cause of phantom tsc errs); log written 20260626T154926Z_TASK-078.log; BACKLOG+PLAN updated + pushed; main commit 1879565 via git-push.sh; autonomous.
 
 **Completed TASK-077 (post exec sync)**: gates clean (lint0+170t+tsc0+cs50/50+audit50/50) no fix needed; log written 20260626T154100Z_TASK-077.log; BACKLOG+PLAN updated + pushed; main commit ff52cbe via git-push.sh; autonomous.
 
