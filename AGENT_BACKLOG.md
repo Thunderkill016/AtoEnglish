@@ -68,7 +68,7 @@
 - **Status:** `done`
 - **Mô tả:** Cập nhật placement flow, 50 units, header shell, autopilot docs.
 - **Done khi:** Doc khớp code hiện tại
-- **Completed:** 2026-06-26 — docs sync only; lint+159 tests pass; 3d36d2f
+- **Completed:** 2026-06-26 — docs sync only; lint+159 tests pass; 3d36d2f (main) + f9f21a1 (status)
 
 ---
 
@@ -97,4 +97,4 @@
 | 2026-06-26 | TASK-011 | Placement E2E B1 → unit-19 | done — e2e/helpers/auth |
 | 2026-06-26 | TASK-012 | Roadmap starting_unit_index | done — getNextUnitRoute |
 | 2026-06-26 | TASK-020 | progress integration flakes | done — RPC date cast + schema |
-| 2026-06-26 | TASK-021 | Sync PAGE_SPECIFICATIONS (placement,50u,header,autopilot) | done — 3d36d2f |
+| 2026-06-26 | TASK-021 | Sync PAGE_SPECIFICATIONS (placement,50u,header,autopilot) | done — 3d36d2f (docs) |
