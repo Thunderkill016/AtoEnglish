@@ -7,7 +7,7 @@
 | Field | Value |
 |-------|-------|
 | Started | 2026-06-27 |
-| Focus | TASK-097: V2 audit lesson sections (Dialogue/Practice/Speaking/Shadowing/Quiz + LessonCard) — no zinc-950, no gradient CTA; fix sót dark tints/dark: ; no content change. |
+| Focus | TASK-098: login/page.tsx — bỏ/giảm desktop marketing panel; mobile-first single column; keep 3-step + MinimalButton. |
 | Owner | Autopilot (no human) |
 
 ### TASK-079 — V2 Minimal Redesign: research + kế hoạch autopilot
@@ -1449,3 +1449,31 @@
 - No secrets needed (UI only).
 **Done khi**: grep in the 6 files clean for zinc-950 and CTA-gradients; 0 dark: left in targeted classes for these files; all UX identical; lint+170t+tsc0 pass; 1 commit + push; BACKLOG done + SHA; autonomous.
 **Started:** 2026-06-27 — autopilot (PHASE1: sim search_memory via logs/grep + full read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6-7 + center-ref/blueprint/flow/unit1 std + grep files + dark patterns in 5+card; PHASE2 plan+backlog; PHASE3: targeted fixes)
+**Completed:** 2026-06-27 — grep clean on 6 files (0 zinc-950, 0 CTA grad); fixed 4 sections dark remnants to light tokens (Practice chips/tips, Shadow violet badge+dark, Quiz amber+dark tints+buttons, Dialogue cls); gates tsc0+lint0+170t; commit 074037c + push via git-push.sh (origin); BACKLOG done; autonomous.
+
+### TASK-098 — Login visual: thu gọn desktop chrome
+**Mục tiêu**: `login/page.tsx` — bỏ/giảm desktop marketing panel (xóa hoàn toàn cột trái w-[36%] marketing chrome: beta badge, headline "Làm chủ...", 2 feature rows, footer text); giữ 3-step flow (0 welcome/1 level/2 auth) + MinimalButton; mobile-first (auth form full-width, max-w-md centered, experience đồng nhất desktop=mobile, focus vào form đăng ký/đăng nhập). Giữ 100%: logic (onboardingStep, answers, applyDefaultSurvey, handle*, supabase signUp/signIn, recap banner, redirect, Google, email form, motion/slide, hasAnswers, localStorage), texts, selectors E2E (h1 "Tạo lộ trình", "Bắt đầu", level options, recap), isDesktop hook (xóa nếu chỉ dùng cho panel). Xóa: left panel JSX + comment + useEffect/setIsDesktop. Right column flex-1 tự chiếm full. **Done khi:** Không còn panel marketing (width=0 cho desktop chrome marketing); e2e onboarding pass; lint+test pass.
+**Bước thực hiện**:
+1. Search memory("TASK-098" + "login" + "desktop panel" + "marketing") via logs/grep (prior 085 compact only) + read AGENTS.md (ALWAYS), AGENT_BACKLOG/PLAN/ROADMAP, CONTENT_STYLE.md §6–7 (blueprint context only), MINIMAL_REDESIGN_V2.md (login panel note, mobile-first), src/app/login/page.tsx, src/components/design-system/MinimalButton.tsx, e2e/onboarding.spec.ts (text selectors + flow).
+2. Grep codebase: confirm panel at lg:flex w-[36%], isDesktop useEffect+state only for it, no other references to the marketing copy in tests.
+3. Update BACKLOG: TASK-098 status `in_progress` (already executed).
+4. Update AGENT_PLAN.md với mục tiêu + bước + rủi ro cho TASK-098 (this section) + update Phiên hiện tại focus.
+5. ready=2 (098,099) >=2 → skip `bash scripts/agent-refill-backlog.sh` (đã chạy, confirmed OK).
+6. Edit src/app/login/page.tsx (minimal purge):
+   - Remove: const [isDesktop, setIsDesktop] = ... and the entire useEffect for matchMedia.
+   - Remove: the whole block {/* ── Left Column: Desktop only — compact minimal (V2) ... */} {isDesktop && ( <div ... full marketing content ...> )}
+   - Keep parent <div className="... flex flex-col lg:flex-row ..."> — now only right child remains → full width.
+   - Keep all inside right (header with lg:hidden logo ok, main max-w-md mx-auto, footer) unchanged.
+   - Preserve every other line/logic/text/attr.
+7. `npm run lint && npm run test`; npx tsc --noEmit.
+8. Pass → update BACKLOG done + Nhật ký + SHA; PLAN log + write logs/agent/2026..._TASK-098.log; BACKLOG table update.
+9. git pull --rebase; git add src/app/login/page.tsx AGENT_BACKLOG.md AGENT_PLAN.md logs/agent/*; commit "refactor(login): remove desktop marketing panel; mobile-first full-width auth form; keep 3-step + MinimalButton (TASK-098)"; `bash scripts/git-push.sh main`.
+**Rủi ro**:
+- Desktop now single-col (no split) — by design (mobile-first per mandate); logo on top always via header (lg:hidden still hides the small one? but now desktop will see "Về trang chủ" or we keep as-is minimal); E2E uses no desktop-specific assert.
+- Layout: right side had py-8 px-5 sm:px-12... on full now may look wider but max-w-md centers the content; fine for minimal.
+- Visual empty space on ultra-wide desktop — acceptable per V2 reduce chrome.
+- If any hidden test relies on two-col — but onboarding.spec only checks h1/button text + flow, viewport mobile default.
+- No secret/ DB change; pure UI reduction.
+- Fail 2 lần → set blocked + lý do.
+**Done khi**: w-[36%] marketing panel and isDesktop desktop-panel code gone (grep confirm 0); 3-step + MinimalButton + full flow intact; e2e "completes the 3-step survey" pass; lint0 +170t +tsc0; 1 commit + push via git-push.sh; BACKLOG=done + entry SHA; autonomous.
+**Started:** 2026-06-27 — autopilot

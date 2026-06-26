@@ -636,10 +636,10 @@
 - **Completed:** 2026-06-27 — 5 sections + LessonCard audited (no zinc-950, no CTA gradients); fixed sót dark: + violet-950 badge + amber-200 + legacy emerald-7xx/text-200 tints in Practice/Shadowing/Quiz/Dialogue to light tokens (bg-emerald-500/10 etc); Speaking clean; LessonCard clean; 170t+lint+tsc0 pass; commit + push via git-push.sh main; autonomous.
 
 ### TASK-098 — Login visual: thu gọn desktop chrome
-- **Status:** `ready`
+- **Status:** `in_progress`
 - **Mô tả:** `login/page.tsx` — bỏ/giảm desktop marketing panel; giữ 3-step + MinimalButton; mobile-first.
 - **Done khi:** Không panel >40% width desktop; e2e onboarding pass.
-- **Started:** auto-refill
+- **Started:** 2026-06-27 — autopilot (PHASE1: read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6-7 + MINIMAL_V2 + login/page + grep panel + run refill (2ready>=2 skip); PHASE2: PLAN+BACKLOG in_p; PHASE3: remove desktop marketing panel for mobile-first single-col auth)
 
 ### TASK-099 — MINIMAL_REDESIGN_V2 doc sync
 - **Status:** `ready`
@@ -657,8 +657,8 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
-| 2026-06-27 | TASK-097 | PHASE1: sim search_memory via logs/grep + read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6–7 + blueprint+center+flow+grep sections+dark; 3 ready>=2 skip refill; PHASE2 PLAN update + BACKLOG in_p; PHASE3: audit+purge dark remnants (violet-950, dark:, emerald-7xx tints, amber-200) in 5 sections+LessonCard to light tokens; no zinc/CTA-grad; gates+commit+push | done — [SHA] |
-| 2026-06-27 | TASK-098 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-06-27 | TASK-097 | PHASE1: sim search_memory via logs/grep + read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6–7 + blueprint+center+flow+grep sections+dark; 3 ready>=2 skip refill; PHASE2 PLAN update + BACKLOG in_p; PHASE3: audit+purge dark remnants (violet-950, dark:, emerald-7xx tints, amber-200) in 5 sections+LessonCard to light tokens; no zinc/CTA-grad; gates+commit+push via git-push.sh | done — 074037c |
+| 2026-06-27 | TASK-098 | PHASE1 research (AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6–7 + V2 + login + panel grep + refill skip); PHASE2 PLAN update + BACKLOG in_p; | in_progress |
 | 2026-06-27 | TASK-099 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-06-27 | TASK-094 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-06-27 | TASK-095 | PHASE1: sim search_memory via logs/grep + read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6-7 + grep; 2 ready >=2 skip refill; PHASE2 PLAN update + BACKLOG in_p; PHASE3: gates clean (lint0+170t+tsc0+cs50/50+audit50/50) no fix + sync; commit cfcf37b + final eca1e7b via git-push.sh main | done — cfcf37b |

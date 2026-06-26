@@ -98,22 +98,11 @@ function LoginContent() {
   const [onboardingStep, setOnboardingStep] = useState(0);
   const [answers, setAnswers] = useState<Record<number, string>>({});
   const [direction, setDirection] = useState(1);
-  const [isDesktop, setIsDesktop] = useState(false);
   const autoAdvanceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Supabase client — useRef to create only once
   const supabaseRef = useRef(createClient());
   const supabase = supabaseRef.current;
-
-  // Detect desktop for conditional left-panel render (avoids mobile animation cost)
-  useEffect(() => {
-    const mq = window.matchMedia("(min-width: 1024px)");
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setIsDesktop(mq.matches);
-    const handler = (e: MediaQueryListEvent) => setIsDesktop(e.matches);
-    mq.addEventListener("change", handler);
-    return () => mq.removeEventListener("change", handler);
-  }, []);
 
   // Skip survey if returning user or mode=login
   useEffect(() => {
@@ -325,64 +314,7 @@ function LoginContent() {
   return (
     <div className="min-h-screen min-h-[100dvh] bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-50 font-sans flex flex-col lg:flex-row selection:bg-emerald-100 dark:selection:bg-emerald-950/30 selection:text-emerald-900 dark:selection:text-emerald-200">
 
-      {/* ── Left Column: Desktop only — compact minimal (V2) — not mounted on mobile ── */}
-      {isDesktop && (
-      <div className="hidden lg:flex w-[36%] bg-zinc-950 p-8 text-white flex-col justify-between relative overflow-hidden select-none border-r border-zinc-800/30">
-        <Link href="/" className="flex items-center gap-2.5 z-10 self-start group">
-          <motion.span
-            whileHover={{ scale: 1.05, rotate: 5 }}
-            className="flex size-9 items-center justify-center rounded-lg bg-emerald-600 text-white shadow-lg shadow-emerald-950/40"
-          >
-            <Sprout className="size-5" />
-          </motion.span>
-          <div className="flex flex-col leading-none text-left">
-            <span className="text-base font-bold tracking-tight text-white group-hover:text-emerald-400 transition-colors">
-              AtoEnglish
-            </span>
-            <span className="text-[10px] text-zinc-400 font-medium">Grow every day</span>
-          </div>
-        </Link>
-
-        <div className="space-y-6 z-10 max-w-md my-auto">
-          <div className="inline-flex items-center gap-1.5 text-[10px] font-bold text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-full border border-emerald-500/20 uppercase tracking-wider">
-            Giai đoạn thử nghiệm mở (Open Beta)
-          </div>
-          <h2 className="text-2xl xl:text-3xl font-extrabold tracking-tight leading-tight">
-            Làm chủ tiếng Anh từ số 0 bằng khoa học ghi nhớ.
-          </h2>
-          <div className="space-y-3 text-sm text-zinc-300">
-            {[
-              {
-                title: "Luyện nói phản xạ:",
-                desc: "Hội thoại tự nhiên + tự sửa phát âm ngay.",
-              },
-              {
-                title: "Thẻ học thông minh (SRS):",
-                desc: "FSRS tối ưu lặp lại — ghi nhớ vĩnh viễn.",
-              },
-            ].map((item) => (
-              <div
-                key={item.title}
-                className="flex items-center gap-3 bg-white/5 border border-white/5 p-3 rounded-xl"
-              >
-                <div className="size-5 rounded-full bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center shrink-0">
-                  <Check className="size-3 text-emerald-400" strokeWidth={3} />
-                </div>
-                <p className="text-zinc-300 leading-relaxed text-left text-sm">
-                  <strong className="text-white">{item.title}</strong> {item.desc}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="z-10 text-xs text-zinc-400 border-t border-zinc-800/80 pt-4 text-left">
-          Miễn phí. Tiến trình đồng bộ đám mây.
-        </div>
-      </div>
-      )} {/* end isDesktop left panel */}
-
-      {/* ── Right Column: Survey / Login ── */}
+      {/* ── Right Column: Survey / Login (mobile-first, full width; desktop chrome removed) ── */}
       <div className="flex-1 flex flex-col justify-between py-8 sm:py-12 px-5 sm:px-12 md:px-16 lg:px-24 bg-white dark:bg-zinc-950 relative overflow-y-auto">
         {/* Background glow + dot grid */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
