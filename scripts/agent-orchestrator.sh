@@ -110,4 +110,6 @@ if [[ "$STASHED" == 1 ]]; then
   log "📦 Local stash giữ nguyên (git stash list) — không auto-pop để tránh conflict với agent"
 fi
 
+bash "$ROOT/scripts/agent-report.sh" 2>&1 | tail -1 || true
+
 log "🏁 Orchestrator cycle done"
