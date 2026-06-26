@@ -61,7 +61,18 @@ if [[ "$BRANCH" != "main" ]]; then
 fi
 
 STASHED=0
+# Detect if dirty files are ONLY agent meta (AGENT_*.md + logs/agent/*) — skip stash to reduce pile-up
+ONLY_AGENT_CHANGES=0
 if ! git diff --quiet 2>/dev/null || ! git diff --cached --quiet 2>/dev/null; then
+  DIRTY=$( (git diff --name-only 2>/dev/null; git diff --cached --name-only 2>/dev/null) | sort -u )
+  NON_AGENT=$(echo "$DIRTY" | grep -v -E '^(AGENT_.*\.md|logs/agent/.*)$' | head -1 || true)
+  if [[ -z "$NON_AGENT" ]]; then
+    ONLY_AGENT_CHANGES=1
+    log "ℹ️ Chỉ thay đổi AGENT_*.md + logs/agent/* — skip stash (agent meta files)"
+  fi
+fi
+
+if [[ "$ONLY_AGENT_CHANGES" == 0 ]] && ( ! git diff --quiet 2>/dev/null || ! git diff --cached --quiet 2>/dev/null ); then
   STASH_COUNT=$(git stash list 2>/dev/null | wc -l)
   STASH_COUNT=${STASH_COUNT// /}
   if [[ "${STASH_COUNT:-0}" -ge 15 ]]; then
@@ -74,6 +85,27 @@ if ! git diff --quiet 2>/dev/null || ! git diff --cached --quiet 2>/dev/null; th
   else
     log "⚠️  Stash failed — thử pull anyway"
   fi
+fi
+
+# Auto-pop (restore) very old stashes (>7 days) to prevent pile-up of autopilot stashes
+MAX_STASH_AGE_DAYS=7
+STASH_LIST=$(git stash list 2>/dev/null || true)
+if [[ -n "$STASH_LIST" ]]; then
+  NOW=$(date +%s)
+  echo "$STASH_LIST" | while IFS= read -r line; do
+    # stash@{N}: ...
+    IDX=$(echo "$line" | sed -n 's/stash@{\([0-9]*\)}.*/\1/p')
+    [[ -z "$IDX" ]] && continue
+    CT=$(git -C "$ROOT" log -1 --format=%ct "stash@{$IDX}" 2>/dev/null || echo "$NOW")
+    AGE_DAYS=$(( (NOW - CT) / 86400 ))
+    if [[ "$AGE_DAYS" -gt "$MAX_STASH_AGE_DAYS" ]]; then
+      MSG=$(echo "$line" | sed 's/.*: //')
+      if echo "$MSG" | grep -q 'autopilot-'; then
+        log "🗑️  Popping old autopilot stash (age ${AGE_DAYS}d >7): stash@{$IDX}"
+        git stash pop "stash@{$IDX}" --quiet 2>/dev/null || git stash drop "stash@{$IDX}" --quiet 2>/dev/null || true
+      fi
+    fi
+  done || true
 fi
 
 git pull --rebase "$GIT_REMOTE" main --quiet 2>/dev/null || {
@@ -120,7 +152,8 @@ if [[ "${ORCHESTRATOR_SKIP_DEPLOY:-0}" != "1" ]]; then
 fi
 
 if [[ "$STASHED" == 1 ]]; then
-  log "📦 Local stash giữ nguyên (git stash list) — không auto-pop để tránh conflict với agent"
+  log "📦 Popping local stash (restoring WIP after agent cycle)..."
+  git stash pop --quiet 2>/dev/null || log "⚠️  stash pop skipped (empty or conflict left for dev)"
 fi
 
 bash "$ROOT/scripts/agent-report.sh" 2>&1 | tail -1 || true

@@ -13,7 +13,7 @@ BACKLOG="$ROOT/AGENT_BACKLOG.md"
 STATE_FILE="$LOG_DIR/.orchestrator-state"
 STALE_MINUTES="${STALE_MINUTES:-45}"
 MAX_STASHES="${MAX_STASHES:-15}"
-MAX_STASH_AGE_DAYS="${MAX_STASH_AGE_DAYS:-3}"
+MAX_STASH_AGE_DAYS="${MAX_STASH_AGE_DAYS:-7}"
 
 mkdir -p "$LOG_DIR"
 
@@ -85,14 +85,33 @@ if [[ "$READY_COUNT" -lt 1 ]] && [[ "$IN_PROGRESS" -lt 1 ]]; then
   fi
 fi
 
-# ── 5. Stash cleanup (autopilot-* entries) ───────────────────────
+# ── 5. Stash cleanup (autopilot-* entries) — age >7d + count ───────────────────────
 STASH_COUNT=$(git -C "$ROOT" stash list 2>/dev/null | wc -l)
 STASH_COUNT=${STASH_COUNT// /}
-if [[ "$STASH_COUNT" -gt "$MAX_STASHES" ]]; then
-  log "🧹 Stash quá nhiều ($STASH_COUNT > $MAX_STASHES) — dọn autopilot cũ..."
-  DROPPED=0
+NOW_S=$(date +%s)
+DROPPED=0
+# Age-based: drop autopilot stashes older than MAX_STASH_AGE_DAYS (TASK-043)
+while IFS= read -r line; do
+  [[ -z "$line" ]] && continue
+  IDX=$(echo "$line" | sed -n 's/stash@{\([0-9]*\)}.*/\1/p')
+  [[ -z "$IDX" ]] && continue
+  CT=$(git -C "$ROOT" log -1 --format=%ct "stash@{$IDX}" 2>/dev/null || echo "$NOW_S")
+  AGE_D=$(( (NOW_S - CT) / 86400 ))
+  MSG=$(echo "$line" | sed 's/.*: //')
+  if echo "$MSG" | grep -q 'autopilot-' && [[ "$AGE_D" -gt "$MAX_STASH_AGE_DAYS" ]]; then
+    git -C "$ROOT" stash drop "stash@{$IDX}" --quiet 2>/dev/null || true
+    DROPPED=$((DROPPED + 1))
+  fi
+done < <(git -C "$ROOT" stash list 2>/dev/null || true)
+
+if [[ "$DROPPED" -gt 0 ]]; then
+  log "🗑️  Dropped $DROPPED old (> ${MAX_STASH_AGE_DAYS}d) autopilot stashes"
+  FIXED=$((FIXED + 1))
+fi
+
+if [[ "$(git -C "$ROOT" stash list 2>/dev/null | wc -l)" -gt "$MAX_STASHES" ]]; then
+  log "🧹 Stash quá nhiều (> $MAX_STASHES) — dọn thêm autopilot cũ..."
   while [[ "$(git -C "$ROOT" stash list 2>/dev/null | wc -l)" -gt "$MAX_STASHES" ]]; do
-    # Tìm autopilot stash có index cao nhất (cũ nhất trong nhóm autopilot)
     LINE=$(git -C "$ROOT" stash list 2>/dev/null | grep -n 'autopilot-' | tail -1 | cut -d: -f1 || true)
     [[ -z "$LINE" ]] && break
     IDX=$((LINE - 1))
@@ -100,9 +119,12 @@ if [[ "$STASH_COUNT" -gt "$MAX_STASHES" ]]; then
     DROPPED=$((DROPPED + 1))
   done
   NEW_COUNT=$(git -C "$ROOT" stash list 2>/dev/null | wc -l)
-  log "✅ Stash: $STASH_COUNT → $NEW_COUNT (dropped $DROPPED autopilot)"
+  log "✅ Stash count trim: dropped more → now $(git -C "$ROOT" stash list 2>/dev/null | wc -l)"
   FIXED=$((FIXED + 1))
 fi
+# Update STASH_COUNT for later report
+STASH_COUNT=$(git -C "$ROOT" stash list 2>/dev/null | wc -l)
+STASH_COUNT=${STASH_COUNT// /}
 
 # ── 6. Lock file stale ───────────────────────────────────────────
 LOCKFILE="$LOG_DIR/.daemon.lock"

@@ -169,10 +169,10 @@
 - **Started:** 2026-06-26 — autopilot (no human)
 
 ### TASK-043 — Reduce agent stash pile-up
-- **Status:** `ready`
+- **Status:** `in_progress`
 - **Mô tả:** Orchestrator: nếu chỉ thay đổi `AGENT_*.md` + `logs/agent/*` thì không stash; auto-pop stash cũ >7 ngày.
 - **Done khi:** Daemon không stash mất work-in-progress; test script dry-run.
-- **Started:** auto-refill
+- **Started:** 2026-06-26 — autopilot (no human)
 
 
 ### TASK-044 — Placement test retry stability
