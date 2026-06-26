@@ -322,33 +322,33 @@
 - **Mô tả:** `LessonHeader.tsx`: dùng `ThinProgress` từ design-system; ẩn/bỏ `LessonPhaseBar` 4 màu; header ≤2 hàng mobile; giữ back + title + section label. **Không** đổi `SECTION_ORDER`.
 - **Done khi:** Header gọn; lint+test pass; `e2e:time-to-lesson` pass.
 - **Started:** user mandate — kế hoạch tối giản P3
-- **Completed:** 2026-06-26 — ThinProgress header; bỏ phase bar + sectionGoal props; lint+169t+tsc+content50/50 pass
+- **Completed:** 2026-06-26 — ThinProgress header; bỏ phase bar + sectionGoal props; lint+169t+tsc+content50/50 pass; 905cb61
 
 ### UI-008 — P3b: Dialogue + Quiz → lesson-ui kit
 - **Status:** `done`
 - **Mô tả:** `DialogueSection.tsx` + `QuizSection.tsx` dùng `LessonSectionHeader`, `LessonContinueButton`, `lessonSectionMotion` (giống WarmupSection). Không đổi logic học.
 - **Done khi:** 2 file dùng kit; lint+test pass.
 - **Started:** user mandate — kế hoạch tối giản P3
-- **Completed:** 2026-06-26 — Dialogue+Quiz migrated to lesson-ui kit; gates pass
+- **Completed:** 2026-06-26 — Dialogue+Quiz migrated to lesson-ui kit; gates pass; 905cb61
 
 ### UI-009 — P3c: Shadowing + Speaking → lesson-ui kit
 - **Status:** `done`
 - **Mô tả:** `ShadowingSection.tsx` + `SpeakingSection.tsx` migrate lesson-ui kit; motion + continue button thống nhất.
 - **Done khi:** 2 file dùng kit; lint+test pass.
 - **Started:** user mandate — kế hoạch tối giản P3
-- **Completed:** 2026-06-26 — Shadowing+Speaking kit migration; gates pass
+- **Completed:** 2026-06-26 — Shadowing+Speaking kit migration; gates pass; 905cb61
 
 ### UI-006 — P4: Secondary pages grouped list
 - **Status:** `done`
 - **Mô tả:** Flashcards, Progress, Settings, Roadmap — PrimaryRow pattern.
 - **Done khi:** Consistent kit; lint pass.
-- **Completed:** 2026-06-26 — SecondaryPageShell + PrimaryRow on Settings/Flashcards/Progress/Roadmap; lint+169t+tsc pass
+- **Completed:** 2026-06-26 — SecondaryPageShell + PrimaryRow on Settings/Flashcards/Progress/Roadmap; lint+169t+tsc pass; 905cb61
 
 ### UI-007 — P5–P6: Landing minimal + measure iterate
 - **Status:** `done`
 - **Mô tả:** Landing 1 headline 1 CTA; so sánh metrics vs P0 baseline.
 - **Done khi:** time-to-lesson ≤10s documented.
-- **Completed:** 2026-06-26 — Landing trimmed to headline+HeroCTA; below-fold sections removed; metric baseline via e2e:time-to-lesson (P0)
+- **Completed:** 2026-06-26 — Landing trimmed to headline+HeroCTA; below-fold sections removed; metric baseline via e2e:time-to-lesson (P0); 905cb61
 
 ### TASK-045 — Sync AGENT_AUTOPILOT.md với auto-refill
 - **Status:** `ready`
