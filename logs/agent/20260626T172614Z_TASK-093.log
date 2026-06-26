@@ -10,4 +10,4 @@ PHASE3: gates run:
 No failure (first or any) → no fix, no src edit, pure doc sync.
 Wrote log ${LOG}; BACKLOG done + Nhật ký; PLAN log + Completed note.
 No feature. Self autonomous.
-Gates clean; commit 36555e2; ready for push via script.
+Gates clean; commit 295aef9; ready for push via script.
