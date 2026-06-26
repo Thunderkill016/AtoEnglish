@@ -29,6 +29,12 @@ import { unit9 } from "../src/lib/data/units/unit9";
 import { unit10 } from "../src/lib/data/units/unit10";
 import { unit11 } from "../src/lib/data/units/unit11";
 import { unit12 } from "../src/lib/data/units/unit12";
+import { unit13 } from "../src/lib/data/units/unit13";
+import { unit14 } from "../src/lib/data/units/unit14";
+import { unit15 } from "../src/lib/data/units/unit15";
+import { unit16 } from "../src/lib/data/units/unit16";
+import { unit17 } from "../src/lib/data/units/unit17";
+import { unit18 } from "../src/lib/data/units/unit18";
 import type { UnitData } from "../src/components/learn/UnitTemplate";
 
 const UNITS: Record<string, UnitData> = {
@@ -52,6 +58,12 @@ const UNITS: Record<string, UnitData> = {
   "unit-10": unit10,
   "unit-11": unit11,
   "unit-12": unit12,
+  "unit-13": unit13,
+  "unit-14": unit14,
+  "unit-15": unit15,
+  "unit-16": unit16,
+  "unit-17": unit17,
+  "unit-18": unit18,
 };
 
 function saveMp3(text: string, outPath: string): Promise<void> {

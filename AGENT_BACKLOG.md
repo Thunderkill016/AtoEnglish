@@ -75,7 +75,9 @@
 ## P3 — Mở rộng (khi P0–P1 xong)
 
 ### TASK-030 — Native audio A2 (unit-13 → unit-18)
-- **Status:** `ready`
+- **Status:** `in_progress`
+- **Mô tả:** Extend generate-unit-audio.ts for A2 units; run batch `audio:generate` for unit-13..18; commit native MP3s. Verify with lint/test. Follow pattern of TASK-010.
+- **Note (autopilot):** Generator + package script already extended prior; 13-16 have clips; focus generate unit-17 + unit-18 (and verify 16 had 1 gap filled).
 
 ### TASK-031 — Native audio B1 (unit-19 → unit-32)
 - **Status:** `ready`

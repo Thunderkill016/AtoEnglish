@@ -7,7 +7,7 @@
 | Field | Value |
 |-------|-------|
 | Started | 2026-06-26 |
-| Focus | P0 ops → P1 audio A1 → P1 placement polish → TASK-021 doc sync |
+| Focus | P0 ops → P1 audio A1 → P1 placement polish → TASK-021 doc sync → TASK-030 A2 audio |
 | Owner | Autopilot (no human) |
 
 ### TASK-021 — Sync placement flow, 50 units, header shell, autopilot docs (PAGE_SPECIFICATIONS.md + AGENT_*)
@@ -23,6 +23,22 @@
 - Over-update ngoài scope (giữ minimal: PAGE_SPECS + agent plan/backlog).
 - Placement details (A0 support, 40Q test) phải chính xác.
 **Done khi**: PAGE_SPECIFICATIONS.md mô tả đúng 50 units + placement + header; plan updated; tests pass; commit.
+
+### TASK-030 — Native audio A2 (unit-13 → unit-18)
+**Mục tiêu**: Generate native MP3 audio assets (gTTS "en") cho units A2 13-18. Generator + a2 script already extended in prior (imports, UNITS map, package.json audio:generate:a2). Run batch for missing (17-18 + any gaps); commit clips (~14 per unit). Follow TASK-010 pattern.
+**Bước thực hiện**:
+1. Search memory + read AGENTS/BACKLOG/PLAN, units.ts, generate-unit-audio.ts (note: A2 support pre-added), unit13-18 data files (audio paths), unit-audio.ts, public/audio/* counts, prior logs.
+2. (No code change to gen — already done.) Run generation for remaining: tsx scripts/generate-unit-audio.ts unit-17 && ... unit-18. Verify exact file counts match declared audios in data/*.ts (use ls + grep).
+3. `npm run lint && npm run test` (audio tests are mocked, curriculum checks declarations only).
+4. Update AGENT_PLAN.md + BACKLOG.md (status, nhật ký + SHA).
+5. git pull --rebase; git add public/audio/unit-1{7,8}; commit; push.
+**Rủi ro**:
+- gTTS network/rate limit (esp on repeated runs) — rerun per unit if partial; if blocked by google → set blocked.
+- Some filenames special (check_in.mp3, compared_to.mp3, traffic_lights.mp3) — generator derives from data.audio basename, must match.
+- Prior partial runs (13-16) may leave dirty; use clean counts.
+- No secrets; pure devDep + net. If net fail in env → blocked, advance to next if possible.
+- Tests don't cover actual MP3 files (intentional).
+**Done khi**: unit-13..18 each have correct #MP3s (14 typically); lint+test pass (0 errors); pushed with 1 commit; backlog done + log entry.
 
 ## Roadmap tự động (7 ngày)
 
@@ -41,7 +57,8 @@
 
 ### Ngày 5+ — Chất lượng & mở rộng
 - [x] TASK-020 integration test flakes
-- [ ] TASK-030 A2 audio
+- [ ] TASK-030 A2 audio (13-16 complete; 17-18 pending gen)
+- [ ] TASK-031 B1 audio
 - [ ] TASK-032 onboarding profile DB
 
 ## Nguyên tắc tự quyết
@@ -58,3 +75,4 @@
 | 2026-06-26T01:36Z | TASK-001/002 | P0 ops: migration blocked, deploy OK | autopilot armed |
 | 2026-06-26T08:55Z | TASK-001/011 | db push migration + E2E B1 unlock | 2 e2e pass |
 | 2026-06-26 | TASK-021 | Sync docs: placement, 50u, header, autopilot | done — 3d36d2f (docs commit); f9f21a1 (status) |
+| 2026-06-26 | TASK-030 | Research: gen already supports A2 (imports+map+a2 script); 13-16 done, generate 17+18 | in_progress |

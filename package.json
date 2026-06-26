@@ -19,6 +19,7 @@
     "audio:generate": "tsx scripts/generate-unit-audio.ts",
     "audio:generate:a0": "tsx scripts/generate-unit-audio.ts unit-a0-1 && tsx scripts/generate-unit-audio.ts unit-a0-2 && tsx scripts/generate-unit-audio.ts unit-a0-3 && tsx scripts/generate-unit-audio.ts unit-a0-4 && tsx scripts/generate-unit-audio.ts unit-a0-5 && tsx scripts/generate-unit-audio.ts unit-a0-6 && tsx scripts/generate-unit-audio.ts unit-a0-7 && tsx scripts/generate-unit-audio.ts unit-a0-8",
     "audio:generate:a1": "for u in unit-1 unit-2 unit-3 unit-4 unit-5 unit-6 unit-7 unit-8 unit-9 unit-10 unit-11 unit-12; do tsx scripts/generate-unit-audio.ts $u; done",
+    "audio:generate:a2": "for u in unit-13 unit-14 unit-15 unit-16 unit-17 unit-18; do tsx scripts/generate-unit-audio.ts $u; done",
     "check-deploy": "bash scripts/check-vercel-deploy.sh",
     "check-deploy:wait": "sleep 30 && bash scripts/check-vercel-deploy.sh"
   },
