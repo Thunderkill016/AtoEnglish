@@ -7,7 +7,7 @@
 | Field | Value |
 |-------|-------|
 | Started | 2026-06-26 |
-| Focus | TASK-033 B2 audio (unit-33..42) → TASK-034 db:types → TASK-035 E2E onboarding → TASK-036 audio path fix |
+| Focus | TASK-034 db:types (onboarding) → TASK-035 E2E onboarding → TASK-036 audio path fix |
 | Owner | Autopilot (no human) |
 
 ### TASK-021 — Sync placement flow, 50 units, header shell, autopilot docs (PAGE_SPECIFICATIONS.md + AGENT_*)
@@ -130,3 +130,21 @@
 **Done khi**: All unit-33..42 folders have correct MP3 counts; lint+test pass; pushed.
 
 | 2026-06-26 | TASK-033 | B2 audio batch unit-33..42 (144 clips), extend gen+b2 script, lint+159 pass | done — cff5faa |
+
+### TASK-034 — Regenerate Supabase types after onboarding migration
+**Mục tiêu**: Chạy `npm run db:types` (sau khi migration `user_onboarding_profile` đã apply trên prod). So sánh output với patch tạm thời (từ TASK-032); nếu khác (table order, Relationships: [] vs FK, generated header) thì overwrite `src/types/supabase.ts` bằng generated chính thức từ prod schema. Commit nếu có thay đổi. Đảm bảo tsc/lint/test pass, types khớp live.
+**Bước thực hiện**:
+1. Search memory (search_memory "TASK-034" + "db:types") + read AGENTS.md (ALWAYS rule), AGENT_BACKLOG/PLAN, migration 20260626140000_user_onboarding_profile.sql, current src/types/supabase.ts (patch section), src/types/database.ts, usages in login/page.tsx + auth/callback/route.ts.
+2. Verify migration applied: use service role client to select from user_onboarding_profile (confirm no table error).
+3. Setup PATH for supabase bin if needed + use SUPABASE_ACCESS_TOKEN; run `npx supabase@2 gen types typescript --project-id vhpfskkredizeazlyzsh > /tmp/new-supabase.ts` (or npm run db:types to backup+replace).
+4. Diff vs current: if differs (observed: ~78 lines, onboarding moved before user_progress, Relationships:[] vs detailed fkey, shorter overall) then `cp /tmp/new... src/types/supabase.ts`.
+5. Run `npm run lint && npm run test`; `npx tsc --noEmit`.
+6. Update AGENT_PLAN.md + BACKLOG.md (status done, add Nhật ký entry + SHA).
+7. git pull --rebase; git add src/types/supabase.ts AGENT_BACKLOG.md AGENT_PLAN.md; git commit -m "chore(types): regenerate supabase.ts post user_onboarding_profile prod apply"; git push.
+**Rủi ro**:
+- CLI gen fails (no token, network, supabase@2 version mismatch) — but npx + token succeeded in research; if fails on run → status blocked.
+- Generated types strip the manual FK Relationships (CLI produces [] for this table) — treat as correct, since auto-gen is source of truth per AGENTS.
+- Patch was to allow compile before apply; now replace to keep in sync.
+- Diff may include other schema changes since last gen (enums, other tables); accept full fresh file.
+- No code logic change; only types file.
+**Done khi**: src/types/supabase.ts == fresh prod gen (or no-op if identical); lint+test+tsc pass 0 errors; if changed: committed + pushed; backlog status=done + nhật ký SHA; no user interaction.

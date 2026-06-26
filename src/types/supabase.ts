@@ -573,6 +573,33 @@ export type Database = {
         }
         Relationships: []
       }
+      user_onboarding_profile: {
+        Row: {
+          created_at: string
+          daily_minutes: number
+          goal: string
+          obstacle: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          daily_minutes: number
+          goal: string
+          obstacle: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          daily_minutes?: number
+          goal?: string
+          obstacle?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_progress: {
         Row: {
           best_streak: number
@@ -625,41 +652,6 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "user_progress_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: true
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      user_onboarding_profile: {
-        Row: {
-          created_at: string
-          daily_minutes: number
-          goal: string
-          obstacle: string
-          updated_at: string
-          user_id: string
-        }
-        Insert: {
-          created_at?: string
-          daily_minutes: number
-          goal: string
-          obstacle: string
-          updated_at?: string
-          user_id: string
-        }
-        Update: {
-          created_at?: string
-          daily_minutes?: number
-          goal?: string
-          obstacle?: string
-          updated_at?: string
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "user_onboarding_profile_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: true
             referencedRelation: "users"

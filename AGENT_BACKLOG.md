@@ -105,9 +105,10 @@
 - **Completed:** 2026-06-26 — generator extended + b2 npm script; full batch gTTS (144 clips); lint+159 tests pass.
 
 ### TASK-034 — Regenerate Supabase types after onboarding migration
-- **Status:** `ready`
+- **Status:** `in_progress`
 - **Mô tả:** Chạy `npm run db:types` sau khi migration `user_onboarding_profile` đã apply prod. Commit updated `src/types/supabase.ts` nếu khác patch tạm.
 - **Done khi:** Types khớp live schema; tsc pass.
+- **Started:** 2026-06-26 — autopilot (prod table confirmed, gen types succeeded)
 
 ### TASK-035 — E2E onboarding profile persist
 - **Status:** `ready`
