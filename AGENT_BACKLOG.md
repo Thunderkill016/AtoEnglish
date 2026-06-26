@@ -422,6 +422,25 @@
 - **Started:** auto-refill
 
 
+### TASK-069 — Autopilot maintenance sweep #69
+- **Status:** `ready`
+- **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
+- **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
+- **Started:** auto-refill
+
+### TASK-070 — Autopilot maintenance sweep #70
+- **Status:** `ready`
+- **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
+- **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
+- **Started:** auto-refill
+
+### TASK-071 — Autopilot maintenance sweep #71
+- **Status:** `ready`
+- **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
+- **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
+- **Started:** auto-refill
+
+
 ---
 
 ## Nhật ký agent
@@ -431,6 +450,9 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
+| 2026-06-26 | TASK-069 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-06-26 | TASK-070 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-06-26 | TASK-071 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-06-26 | TASK-066 | PHASE1 research (AGENTS+BACKLOG+PLAN+CONTENT§6-7+grep+logs); PHASE2 PLAN+BACKLOG in_progress (3ready skip refill); PHASE3 gates clean (lint0+170t+tsc0+cs50/50+audit50/50) no fix + sync log/PLAN/BACKLOG | done — a208a51 |
 | 2026-06-26 | TASK-067 | PHASE1 research (AGENTS+BACKLOG+PLAN+CONTENT§6-7+grep+logs); PHASE2 PLAN+BACKLOG in_progress (2ready skip refill); PHASE3 gates clean (lint0+170t+tsc0+cs50/50+audit50/50) no fix + sync log/PLAN/BACKLOG | done — 9be9ce9 |
 | 2026-06-26 | TASK-068 | auto-refill từ AGENT_ROADMAP.md | ready |
