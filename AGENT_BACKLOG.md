@@ -627,6 +627,25 @@
 - **Started:** auto-refill
 
 
+### TASK-097 — V2 audit: lesson sections no dark islands
+- **Status:** `ready`
+- **Mô tả:** `grep` 5 section files (Dialogue/Practice/Speaking/Shadowing/Quiz) + `LessonCard.tsx` — không `zinc-950`, không gradient CTA; fix sót nếu có.
+- **Done khi:** grep clean; lint+test pass.
+- **Started:** auto-refill
+
+### TASK-098 — Login visual: thu gọn desktop chrome
+- **Status:** `ready`
+- **Mô tả:** `login/page.tsx` — bỏ/giảm desktop marketing panel; giữ 3-step + MinimalButton; mobile-first.
+- **Done khi:** Không panel >40% width desktop; e2e onboarding pass.
+- **Started:** auto-refill
+
+### TASK-099 — MINIMAL_REDESIGN_V2 doc sync
+- **Status:** `ready`
+- **Mô tả:** Cập nhật `MINIMAL_REDESIGN_V2.md` §2 hiện trạng + §9 success criteria theo code thực tế post-V2.
+- **Done khi:** Doc khớp shipped; không claim task undone đã done.
+- **Started:** auto-refill
+
+
 ---
 
 ## Nhật ký agent
@@ -636,6 +655,9 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
+| 2026-06-27 | TASK-097 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-06-27 | TASK-098 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-06-27 | TASK-099 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-06-27 | TASK-094 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-06-27 | TASK-095 | PHASE1: sim search_memory via logs/grep + read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6-7 + grep; 2 ready >=2 skip refill; PHASE2 PLAN update + BACKLOG in_p; PHASE3: gates clean (lint0+170t+tsc0+cs50/50+audit50/50) no fix + sync; commit cfcf37b + final eca1e7b via git-push.sh main | done — cfcf37b |
 | 2026-06-27 | TASK-096 | auto-refill từ AGENT_ROADMAP.md | ready |
