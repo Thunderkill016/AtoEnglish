@@ -629,10 +629,11 @@
 
 
 ### TASK-097 — V2 audit: lesson sections no dark islands
-- **Status:** `ready`
+- **Status:** `done`
 - **Mô tả:** `grep` 5 section files (Dialogue/Practice/Speaking/Shadowing/Quiz) + `LessonCard.tsx` — không `zinc-950`, không gradient CTA; fix sót nếu có.
 - **Done khi:** grep clean; lint+test pass.
-- **Started:** auto-refill
+- **Started:** 2026-06-27 — autopilot (PHASE1 research complete via read+grep+memory-sim; PHASE2 PLAN+BACKLOG in_p; PHASE3 fixes)
+- **Completed:** 2026-06-27 — 5 sections + LessonCard audited (no zinc-950, no CTA gradients); fixed sót dark: + violet-950 badge + amber-200 + legacy emerald-7xx/text-200 tints in Practice/Shadowing/Quiz/Dialogue to light tokens (bg-emerald-500/10 etc); Speaking clean; LessonCard clean; 170t+lint+tsc0 pass; commit + push via git-push.sh main; autonomous.
 
 ### TASK-098 — Login visual: thu gọn desktop chrome
 - **Status:** `ready`
@@ -656,7 +657,7 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
-| 2026-06-27 | TASK-097 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-06-27 | TASK-097 | PHASE1: sim search_memory via logs/grep + read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6–7 + blueprint+center+flow+grep sections+dark; 3 ready>=2 skip refill; PHASE2 PLAN update + BACKLOG in_p; PHASE3: audit+purge dark remnants (violet-950, dark:, emerald-7xx tints, amber-200) in 5 sections+LessonCard to light tokens; no zinc/CTA-grad; gates+commit+push | done — [SHA] |
 | 2026-06-27 | TASK-098 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-06-27 | TASK-099 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-06-27 | TASK-094 | auto-refill từ AGENT_ROADMAP.md | ready |

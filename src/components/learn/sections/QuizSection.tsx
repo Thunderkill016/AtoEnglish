@@ -450,7 +450,7 @@ export default function QuizSection({
                     {quizSubmitted && quizAnswers[q.id] !== q.answer && q.explanation_vn && (
                       <div className="mt-2 flex items-start gap-2 bg-amber-500/10 border border-amber-500/30 rounded-xl px-3 py-2.5">
                         <span className="text-amber-400 text-sm shrink-0">💡</span>
-                        <p className="text-amber-200 text-xs leading-relaxed">{q.explanation_vn}</p>
+                        <p className="text-amber-600 text-xs leading-relaxed">{q.explanation_vn}</p>
                       </div>
                     )}
                   </div>
@@ -496,7 +496,7 @@ export default function QuizSection({
                   {quizSubmitted && quizAnswers[q.id] !== q.answer && q.explanation_vn && (
                     <div className="mt-2 flex items-start gap-2 bg-amber-500/10 border border-amber-500/30 rounded-xl px-3 py-2.5">
                       <span className="text-amber-400 text-sm shrink-0">💡</span>
-                      <p className="text-amber-200 text-xs leading-relaxed">{q.explanation_vn}</p>
+                      <p className="text-amber-600 text-xs leading-relaxed">{q.explanation_vn}</p>
                     </div>
                   )}
                   {/* S4-2: AI grammar note — shown when no static explanation exists */}
@@ -504,12 +504,12 @@ export default function QuizSection({
                     aiLoading[q.id] ? (
                       <div className="mt-2 flex items-center gap-2 bg-violet-500/10 border border-violet-500/30 rounded-xl px-3 py-2.5">
                         <Sparkles size={13} className="text-violet-400 shrink-0 animate-pulse" />
-                        <p className="text-violet-700 dark:text-violet-300 text-xs">AI đang phân tích lỗi ngữ pháp...</p>
+                        <p className="text-violet-700 text-xs">AI đang phân tích lỗi ngữ pháp...</p>
                       </div>
                     ) : aiNotes[q.id] ? (
                       <div className="mt-2 flex items-start gap-2 bg-violet-500/10 border border-violet-500/30 rounded-xl px-3 py-2.5">
                         <Sparkles size={13} className="text-violet-400 shrink-0 mt-0.5" />
-                        <p className="text-violet-700 dark:text-violet-200 text-xs leading-relaxed">{aiNotes[q.id]}</p>
+                        <p className="text-violet-700 text-xs leading-relaxed">{aiNotes[q.id]}</p>
                       </div>
                     ) : null
                   )}
@@ -581,7 +581,7 @@ export default function QuizSection({
                 ? "🎯"
                 : "💪"}
             </div>
-            <p className="text-emerald-600 dark:text-emerald-400 font-black text-2xl mb-1">{finalQuizScore}/{FINAL_QS.length} đúng</p>
+            <p className="text-emerald-600 font-black text-2xl mb-1">{finalQuizScore}/{FINAL_QS.length} đúng</p>
             <p className="text-muted-foreground text-sm">
               {finalQuizScore >= Math.ceil(FINAL_QS.length * 0.8)
                 ? "Xuất sắc! Bạn đã nắm vững bài học!"
@@ -758,7 +758,7 @@ export default function QuizSection({
                 <span className="text-emerald-400 ml-1">(+{retryBonusPct}% bonus)</span>
               ) : null}
             </p>
-            <p className="text-emerald-600 dark:text-emerald-400 font-black text-xl mb-1">
+            <p className="text-emerald-600 font-black text-xl mb-1">
               Huy hiệu: {unit.badgeName}
             </p>
             <p className="text-muted-foreground text-sm">{unit.title}</p>
@@ -766,7 +766,7 @@ export default function QuizSection({
 
           {/* Motivation */}
           <div className="border-l-4 border-emerald-500 bg-emerald-500/10 rounded-r-2xl p-5">
-            <p className="text-emerald-600 dark:text-emerald-400 font-bold text-lg leading-relaxed">
+            <p className="text-emerald-600 font-bold text-lg leading-relaxed">
               Tuyệt vời! Bạn đã hoàn thành xuất sắc chương học này. 🌟
             </p>
             <p className="text-muted-foreground text-sm mt-2">
@@ -799,7 +799,7 @@ export default function QuizSection({
                 onClick={() =>
                   playTTS(`${unit.situation ?? ""} — ${unit.learningOutcomes?.join(", ") ?? ""}`)
                 }
-                className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-violet-600/20 border border-violet-500/30 text-violet-700 dark:text-violet-300 font-bold text-sm hover:bg-violet-600/30 transition-colors"
+                className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-violet-500/10 border border-violet-500/30 text-violet-700 font-bold text-sm hover:bg-violet-500/20 transition-colors"
               >
                 <Volume2 size={16} /> Nghe lại tình huống
               </button>
@@ -822,12 +822,12 @@ export default function QuizSection({
           ) : (
             <div className="text-center">
               <div className="bg-emerald-600/20 border border-emerald-600/40 rounded-xl p-4 mb-4">
-                <p className="text-emerald-600 dark:text-emerald-400 font-bold">✅ Bạn đã hoàn thành chương học này!</p>
+                <p className="text-emerald-600 font-bold">✅ Bạn đã hoàn thành chương học này!</p>
               </div>
               <div className="flex flex-wrap gap-3 justify-center">
                 <button
                   onClick={handleShare}
-                  className="inline-flex items-center gap-2 bg-emerald-600/20 hover:bg-emerald-600/30 border border-emerald-500/30 text-emerald-600 dark:text-emerald-400 font-bold rounded-xl px-5 py-3 transition-colors text-sm"
+                  className="inline-flex items-center gap-2 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-600 font-bold rounded-xl px-5 py-3 transition-colors text-sm"
                 >
                   🔗 Chia sẻ thành tích
                 </button>

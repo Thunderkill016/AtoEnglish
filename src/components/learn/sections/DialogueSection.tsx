@@ -243,8 +243,8 @@ export default function DialogueSection({
                     let cls =
                       "px-3 py-2 rounded-xl text-sm font-medium border transition-all duration-150 cursor-pointer text-left ";
                     if (lacSubmitted) {
-                      if (isCorrect) cls += "bg-emerald-500/10 border-emerald-500 text-emerald-600 dark:text-emerald-400";
-                      else if (isSelected) cls += "bg-red-500/10 border-red-500 text-red-600 dark:text-red-400";
+                      if (isCorrect) cls += "bg-emerald-500/10 border-emerald-500 text-emerald-600";
+                      else if (isSelected) cls += "bg-red-500/10 border-red-500 text-red-600";
                       else cls += "bg-card border-border/60 text-muted-foreground";
                     } else {
                       cls += isSelected
@@ -280,7 +280,7 @@ export default function DialogueSection({
             </MinimalButton>
           ) : (
             <div className="mt-4 p-4 bg-emerald-500/10 border border-emerald-500/40 rounded-xl text-center">
-              <p className="text-emerald-600 dark:text-emerald-400 font-bold text-lg">
+              <p className="text-emerald-600 font-bold text-lg">
                 {lacScore}/{LISTEN_CHOOSE.length} đúng 🎯
               </p>
             </div>

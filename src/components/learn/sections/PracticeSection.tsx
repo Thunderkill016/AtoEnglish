@@ -194,7 +194,7 @@ export default function PracticeSection({
       {/* S3-3: Adaptive weak-type tip */}
       {weakTip && (
         <div className="flex items-start gap-2 bg-blue-500/10 border border-blue-500/30 rounded-xl px-3 py-2.5 mb-5">
-          <p className="text-blue-700 dark:text-blue-200 text-xs leading-relaxed">{weakTip}</p>
+          <p className="text-blue-700 text-xs leading-relaxed">{weakTip}</p>
         </div>
       )}
 
@@ -265,7 +265,7 @@ export default function PracticeSection({
                       ? "bg-primary/10 border-primary text-primary"
                       : "bg-card border-border/60 text-foreground hover:border-primary/60 hover:bg-muted/40";
                   } else {
-                    if (isRight) cls += "bg-emerald-500/10 border-emerald-500 text-emerald-600 dark:text-emerald-400 font-bold";
+                    if (isRight) cls += "bg-emerald-500/10 border-emerald-500 text-emerald-600 font-bold";
                     else if (isPicked && !isRight)
                       cls += "bg-red-900/30 border-red-500/60 text-red-300 line-through";
                     else cls += "bg-card border-border/60 text-muted-foreground";
@@ -333,7 +333,7 @@ export default function PracticeSection({
                     onClick={() => !isMatched && handleMatchSelect("left", pair.left)}
                     className={`w-full px-3 py-2.5 rounded-xl text-sm font-medium border text-left transition-all duration-200 ${
                       isMatched
-                        ? "bg-emerald-500/10 border-emerald-500/50 text-emerald-600 dark:text-emerald-400 cursor-default"
+                        ? "bg-emerald-500/10 border-emerald-500/50 text-emerald-600 cursor-default"
                         : isSelected
                         ? "bg-primary/10 border-primary text-primary ring-2 ring-primary/20 scale-[1.02]"
                         : "bg-card border-border/60 text-foreground hover:border-primary/60 hover:bg-muted/40 active:scale-95"
@@ -356,7 +356,7 @@ export default function PracticeSection({
                     onClick={() => !isMatched && handleMatchSelect("right", right)}
                     className={`w-full px-3 py-2.5 rounded-xl text-sm font-medium border text-left transition-all duration-200 ${
                       isMatched
-                        ? "bg-emerald-500/10 border-emerald-500/50 text-emerald-600 dark:text-emerald-400 cursor-default"
+                        ? "bg-emerald-500/10 border-emerald-500/50 text-emerald-600 cursor-default"
                         : isWrong
                         ? "bg-red-900/30 border-red-500/60 text-red-300 animate-shake"
                         : "bg-card border-border/60 text-foreground hover:border-primary/60 hover:bg-muted/40 active:scale-95"
@@ -425,7 +425,7 @@ export default function PracticeSection({
                             return { ...p, [ex.id]: arr };
                           });
                         }}
-                        className="px-2.5 py-1 bg-emerald-700/40 border border-emerald-600/50 text-emerald-200 rounded-lg text-xs font-medium hover:bg-red-900/30 hover:border-red-500/40 transition-colors disabled:cursor-default"
+                        className="px-2.5 py-1 bg-emerald-500/10 border border-emerald-500/40 text-emerald-600 rounded-lg text-xs font-medium hover:bg-emerald-500/20 hover:border-emerald-500/50 transition-colors disabled:cursor-default"
                       >
                         {w}
                       </button>
@@ -483,7 +483,7 @@ export default function PracticeSection({
                         recordAttempt(unit.unitId, "scramble", false); // S3-3
                       }
                     }}
-                    className="px-4 py-1.5 bg-teal-600/30 border border-teal-500/40 text-teal-300 rounded-xl text-xs font-bold hover:bg-teal-600/50 disabled:opacity-40 transition-colors"
+                    className="px-4 py-1.5 bg-teal-500/10 border border-teal-500/40 text-teal-600 rounded-xl text-xs font-bold hover:bg-teal-500/20 disabled:opacity-40 transition-colors"
                   >
                     Kiểm tra
                   </button>
@@ -557,7 +557,7 @@ export default function PracticeSection({
       {arrangeDone && arrangeItems.length > 0 && practiceSubmitted && (
         <div className="flex items-center gap-2 rounded-xl bg-violet-500/10 border border-violet-500/20 p-3">
           <CheckCircle size={16} className="text-violet-400 shrink-0" />
-          <p className="text-sm text-violet-700 dark:text-violet-300 font-semibold">
+          <p className="text-sm text-violet-700 font-semibold">
             Nghe & sắp xếp: {arrangeScore}/{arrangeItems.length} chính xác
           </p>
         </div>
@@ -594,7 +594,7 @@ export default function PracticeSection({
       {unit.wordBankExercises && unit.wordBankExercises.length > 0 && wordBankDone && (
         <div className="flex items-center gap-2 rounded-xl bg-emerald-500/10 border border-emerald-500/20 p-3">
           <CheckCircle size={16} className="text-emerald-400 shrink-0" />
-          <p className="text-sm text-emerald-600 dark:text-emerald-400 font-semibold">
+          <p className="text-sm text-emerald-600 font-semibold">
             Xây dựng câu: {wordBankScore}/{unit.wordBankExercises.length} chính xác
           </p>
         </div>
@@ -636,7 +636,7 @@ export default function PracticeSection({
       {dictationDone && dictationItems.length > 0 && wordBankDone && (
         <div className="flex items-center gap-2 rounded-xl bg-blue-500/10 border border-blue-500/20 p-3">
           <CheckCircle size={16} className="text-blue-400 shrink-0" />
-          <p className="text-sm text-blue-700 dark:text-blue-300 font-semibold">
+          <p className="text-sm text-blue-700 font-semibold">
             Chính tả: {dictationScore}/{dictationItems.length} chính xác
           </p>
         </div>

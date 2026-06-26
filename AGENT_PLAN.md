@@ -7,7 +7,7 @@
 | Field | Value |
 |-------|-------|
 | Started | 2026-06-27 |
-| Focus | TASK-096: Autopilot maintenance sweep #96 — Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới. |
+| Focus | TASK-097: V2 audit lesson sections (Dialogue/Practice/Speaking/Shadowing/Quiz + LessonCard) — no zinc-950, no gradient CTA; fix sót dark tints/dark: ; no content change. |
 | Owner | Autopilot (no human) |
 
 ### TASK-079 — V2 Minimal Redesign: research + kế hoạch autopilot
@@ -1419,3 +1419,33 @@
 **Started:** 2026-06-27 — autopilot
 
 **Completed TASK-096 (post exec sync)**: gates clean (lint0+170t+tsc0+cs50/50+audit50/50) no fix needed; log written 20260627T175000Z_TASK-096.log; BACKLOG+PLAN updated + pushed 6151286 via git-push.sh main; no source edit; autonomous.
+
+### TASK-097 — V2 audit: lesson sections no dark islands
+**Mục tiêu**: Audit + fix `DialogueSection.tsx`, `PracticeSection.tsx`, `SpeakingSection.tsx`, `ShadowingSection.tsx`, `QuizSection.tsx` + `LessonCard.tsx` — đảm bảo 0 `zinc-950` (hoặc zinc-9xx dark cards), 0 gradient trên CTA buttons (primary dùng bg-primary / MinimalButton flat). Fix sót (nếu còn): dark: variants, bg-*-950/800 tints (e.g. violet-950 badge), legacy dark tints text-*-200 / bg-emerald-700/40 text-emerald-200 trong Practice/Shadowing/Quiz/Dialogue (thay bằng light tokens như bg-emerald-500/10 text-emerald-600, bg-card border-border/60, bg-muted/30, text-foreground/muted-foreground). Giữ nguyên: tất cả logic học, state, handlers, texts, motion, audio, Lesson*Header/ContinueButton/LessonCard usage, exercise behavior, IPOR. Chỉ style purge theo V2 light minimal (đã làm Grammar/Vocab/Warmup/Fluency/Translate trước). Không sửa UnitTemplate/LessonShell (canvas ok), không đổi content. **Done khi:** grep zinc-950|gradient-.*(to-|from-amber) trên 6 files = clean (no zinc card, no CTA grad); lint+test pass.
+**Bước thực hiện**:
+1. Search memory("TASK-097" + "lesson sections" + "no dark islands" + "zinc-950") sim via logs/grep (prompt existed, no prior code exec) + read AGENTS.md (ALWAYS), AGENT_BACKLOG/PLAN/ROADMAP, CONTENT_STYLE.md §6–7, MINIMAL_REDESIGN_V2.md, src/components/learn/sections/{DialogueSection,PracticeSection,SpeakingSection,ShadowingSection,QuizSection}.tsx + lesson-ui/LessonCard.tsx + recent light sections (Fluency/Translate pattern), design-system/MinimalButton.tsx, UnitTemplate (for context).
+2. Grep 5 sections + LessonCard cho zinc-950 / bg-zinc / gradient on buttons / dark: / bg-violet-950 / text-emerald-200 / bg-emerald-700 ; xác định sót cần fix (Practice chip+text dark, Shadowing badge violet-950, dynamic cls dark: in Dialogue/Quiz/Practice/Speaking, Quiz amber-200 + dark tints).
+3. Update BACKLOG: TASK-097 status `in_progress`.
+4. Update AGENT_PLAN.md với mục tiêu + bước + rủi ro cho TASK-097 (this section) + update Phiên hiện tại focus.
+5. Backlog ready >=2 (097-099) → skip `bash scripts/agent-refill-backlog.sh` (KHÔNG hỏi user).
+6. Edit 6 files (minimal targeted className swaps, use replace_all for repeated patterns):
+   - Remove all ` dark:text-xxx` and `dark:xxx` suffixes in class strings.
+   - Shadowing: bg-violet-950/60 border-violet-800/40 → bg-violet-500/10 border-violet-500/30 + text-violet-600 (or text-violet-700); keep accent semantic.
+   - Practice: bg-emerald-700/40 border-emerald-600/50 text-emerald-200 → bg-emerald-500/10 border-emerald-500/40 text-emerald-600 ; teal check btn → bg-emerald-500/10 or teal-500/10 + text-emerald-600 (or keep teal-500/10 text-teal-600); update matched states remove dark: (already has some light+dark, unify to light).
+   - Update tip p: text-blue-700 etc remove dark: keep base + consistent.
+   - Dialogue/Quiz: dynamic cls strings: replace dark: parts e.g. text-emerald-600 (drop dark); amber-200 → text-amber-600 or amber-700; violet dark tints clean; keep feedback emerald/red.
+   - Speaking: check for any missed (subtle grad ok if not CTA); use bg-card etc already good.
+   - LessonCard.tsx: verify already uses bg-card / border-border/60 / bg-primary/5 ; no change if clean.
+   - Preserve every onClick, state, text, conditional, aria, exercise render 100%.
+7. `npm run lint && npm run test`; npx tsc --noEmit.
+8. Pass → update BACKLOG done + Nhật ký + SHA; PLAN log + write logs/agent/ timestamp_TASK-097.log .
+9. git pull --rebase; git add src/components/learn/sections/*Section.tsx src/components/learn/lesson-ui/LessonCard.tsx AGENT_BACKLOG.md AGENT_PLAN.md logs/agent/* ; commit "refactor(lesson): audit+purge dark islands in Dialogue/Practice/Speaking/Shadowing/Quiz + LessonCard (no zinc-950, no CTA grad, light tokens) (TASK-097)"; `bash scripts/git-push.sh main`.
+**Rủi ro**:
+- Visual shift on selected/matched/feedback (emerald text contrast) → use proven light like text-emerald-600 bg-emerald-500/10 (already used in matching); verify by running dev if needed but gates only.
+- Subtle decorative gradients remain ( /3 overlays) — allowed, task targets no zinc + no gradient *CTA*.
+- Repeated class strings → use precise unique old_string or multiple targeted replaces.
+- Scope creep → only the 6 named files; no other sections or components.
+- Fail 2x consecutive → blocked + lý do; advance next if possible.
+- No secrets needed (UI only).
+**Done khi**: grep in the 6 files clean for zinc-950 and CTA-gradients; 0 dark: left in targeted classes for these files; all UX identical; lint+170t+tsc0 pass; 1 commit + push; BACKLOG done + SHA; autonomous.
+**Started:** 2026-06-27 — autopilot (PHASE1: sim search_memory via logs/grep + full read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6-7 + center-ref/blueprint/flow/unit1 std + grep files + dark patterns in 5+card; PHASE2 plan+backlog; PHASE3: targeted fixes)

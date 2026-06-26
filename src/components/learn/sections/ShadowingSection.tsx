@@ -257,7 +257,7 @@ export default function ShadowingSection({
                   }}
                   className={`shrink-0 px-3 py-1.5 rounded-xl text-xs font-bold border transition-all duration-200 ${
                     idx === shadowDialogueIdx
-                      ? "bg-emerald-500/10 border-emerald-500/50 text-emerald-600 dark:text-emerald-400"
+                      ? "bg-emerald-500/10 border-emerald-500/50 text-emerald-600"
                       : "bg-muted border-border/60 text-muted-foreground hover:border-primary/60 hover:text-foreground"
                   }`}
                 >
@@ -286,7 +286,7 @@ export default function ShadowingSection({
 
           <div className="border border-border/60 bg-muted/40 rounded-2xl p-5 mb-6 text-center relative overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-br from-violet-500/3 to-transparent pointer-events-none" />
-            <span className="absolute top-3 left-3 text-[10px] font-bold text-violet-400 bg-violet-950/60 border border-violet-800/40 px-2 py-0.5 rounded-full uppercase tracking-wide">
+            <span className="absolute top-3 left-3 text-[10px] font-bold text-violet-600 bg-violet-500/10 border border-violet-500/30 px-2 py-0.5 rounded-full uppercase tracking-wide">
               {DIALOGUES[shadowDialogueIdx].lines[shadowLineIdx].speaker}
             </span>
             <p className="text-muted-foreground text-[10px] mb-3 uppercase tracking-widest font-black">
@@ -361,7 +361,7 @@ export default function ShadowingSection({
                   </p>
                   {phonemeData[shadowLineIdx].map((err, i) => (
                     <div key={i} className="bg-violet-500/10 border border-violet-500/30 rounded-xl px-3 py-2.5 text-left">
-                      <p className="text-xs font-bold text-violet-700 dark:text-violet-200 mb-0.5">
+                      <p className="text-xs font-bold text-violet-700 mb-0.5">
                         Từ: <span className="text-white">&ldquo;{err.word}&rdquo;</span>
                         <span className="ml-2 text-violet-400 font-mono text-[11px]">{err.ipa_target}</span>
                       </p>
