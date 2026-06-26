@@ -7,7 +7,7 @@
 | Field | Value |
 |-------|-------|
 | Started | 2026-06-26 |
-| Focus | TASK-048: Server action getOnboardingProfile() for dashboard/settings; maintenance sweeps ready. |
+| Focus | TASK-063: Autopilot maintenance sweep — run lint+test, fix first fail if any, sync PLAN log. No new features. Sweeps 064/065 queued. |
 | Owner | Autopilot (no human) |
 
 ### TASK-045 — Sync AGENT_AUTOPILOT.md với auto-refill
@@ -261,11 +261,13 @@
 | 2026-06-26 | TASK-056 | PHASE1: search sim (logs); read AGENTS+BACKLOG+PLAN+ROADMAP+CONTENT§6-7; grep + code read getNext/Continue/dashboard/learn/roadmap; PHASE2 set in_progress (5ready skip), PLAN update; PHASE3: import+use getNextUnitRoute explicitly in getCurrent for Continue route + comments; lint+169+tsc pass; commit ff6f7bb + push via git-push | done — ff6f7bb |
 | 2026-06-26 | TASK-056 | PHASE1: search_memory(sim logs)+read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6-7 + grep continue/getNext/dashboard/unit/roadmap/learn; code already uses getNextUnitFromProgress in getCurrentUnit + unitRes.route in ContinueCard (full, no mini, unified with roadmap); PHASE2 update PLAN+BACKLOG set in_progress (5ready skip); PHASE3: verify alignment, minor comment reinforce "getNextUnitRoute full", no src logic change needed (already matches spec); lint+test pass; status done + log + push via git-push | done — [SHA] |
 | 2026-06-26T13:22Z | TASK-046 | PHASE1 research (memory sim logs + AGENTS+BACKLOG+PLAN+CONTENT§6-7+blueprint+center-ref+learning-flow+unit1+curriculum-quality.test+ B2 grep audio decl); PHASE2 set in_progress + add PLAN section (ready>2 skip refill); PHASE3 minimal extend test with B2 audio vocab+dialogue describe block; gates lint+170t+tsc pass; commit+push da2c844 | done — da2c844 |
+| 2026-06-26 | TASK-048 | PHASE1: memory sim empty (grep no fn) + read all agents docs+CONTENT§6-7 + grep; PHASE2: PLAN update + BACKLOG in_progress + refill run (skipped); PHASE3: implement get fn + wire calls+props in dash+settings; gates tsc+lint+170 pass; commit ceb4242 + git-push.sh | done — ceb4242 |
 | 2026-06-26T01:36Z | TASK-001/002 | P0 ops: migration blocked, deploy OK | autopilot armed |
 | 2026-06-26T08:55Z | TASK-001/011 | db push migration + E2E B1 unlock | 2 e2e pass |
 | 2026-06-26 | TASK-021 | Sync docs: placement, 50u, header, autopilot | done — 3d36d2f (docs commit); f9f21a1 (status) |
 | 2026-06-26 | TASK-030 | Native audio A2 batch unit-13..18 (extend script + 84 MP3s) | done — 6bbc693 |
 | 2026-06-26 | TASK-030 | Re-verify gen+counts+lint+test (all 6 units 14 clips) | done — 202bfea (pushed) |
+| 2026-06-26T20:4xZ | TASK-063 | PHASE1: read AGENTS/BACKLOG/PLAN/CONTENT§6-7 + grep TASK-063 + sim search_memory(logs empty for sweep); PHASE2: PLAN focus+section + BACKLOG in_progress (3ready>=2 skip refill); PHASE3: rerun gates (lint0 + 170t pass + tsc0 + cs50/50 + audit50/50) — no failure, no fix; sync nhật ký; commit+push via git-push; status done | done — [SHA] |
 | 2026-06-26T03:25Z | TASK-030 | Autopilot full cycle: research(agents+grep), plan update, run gen 17+18, lint+159test, 3 commits/push, log | complete — c58cf13 |
 | 2026-06-26 | TASK-031 | Research(agents+grep+units+gen), update PLAN/BACKLOG to in_progress, extend generator+pkg for B1 19-32, batch gTTS, lint+test, commit+push | done — 2119534a5e432816f2cf95c1de5b84767066a2aa (196 clips + fixes) |
 | 2026-06-26 | TASK-032 | research(agents+grep+memory+login/callback/migrations), plan update, create migration 20260626140000, edit onboarding/login/callback/types, hoist helpers, wire insert+upsert+params+xp_goal, lint+159+tsc pass, commit+push | done — cab2260 |
@@ -641,3 +643,22 @@
 - Fail 2x → blocked + lý do.
 - No secret/DB write; pure read action + callers.
 **Done khi**: getOnboardingProfile exists + typed return; called from dashboard RSC + settings RSC; lint+test pass (no type err); 1 commit + push via git-push.sh main; BACKLOG status=done + Nhật ký SHA; no user asked; autonomous.
+
+### TASK-063 — Autopilot maintenance sweep #63
+**Mục tiêu**: Chạy full gates (lint, tsc --noEmit, npm test, test:content-standard, audit-lesson-content) để detect failure. Fix failure đầu tiên (nếu có) với thay đổi tối thiểu (chỉ 1 chỗ gây lỗi đầu). Sync AGENT_PLAN.md (nhật ký phiên + log table) + BACKLOG (status + nhật ký entry). Không thêm feature mới, không sửa logic app/content. Nhiệm vụ maintenance sweep định kỳ.
+**Bước thực hiện**:
+1. Search memory("TASK-063" + "maintenance sweep" + "autopilot") (sim via logs/grep — empty prior for 063 impl) + read AGENTS.md (ALWAYS), AGENT_BACKLOG/PLAN/ROADMAP, CONTENT_STYLE.md §6–7 (blueprint gate), scripts/agent-*.sh (refill/pick), .github etc if health; grep for TASK-063 in logs/backlog/plan + run initial lint/test to see first fail.
+2. Grep codebase liên quan: confirm chỉ cần edit AGENT_*.md (no src/); identify files: AGENT_BACKLOG.md, AGENT_PLAN.md (add section, update focus/log).
+3. Update BACKLOG: TASK-063 status `in_progress`.
+4. Update AGENT_PLAN.md với mục tiêu + bước + rủi ro cho TASK-063 (this section) + update Phiên hiện tại focus.
+5. Backlog thấp? Chạy `bash scripts/agent-refill-backlog.sh` (read ROADMAP.md); hiện 3 ready ≥2 → skip (KHÔNG hỏi).
+6. PHASE3 triển khai tối thiểu: run `npm run lint && npm run test` + tsc + content-std + audit. Nếu có failure đầu tiên → fix chỉ cái đó (ví dụ fix 1 test hoặc 1 lint rule violation), tự debug. Nếu clean → no code change.
+7. Pass gates → update BACKLOG done + nhật ký entry + SHA; update PLAN log table + write logs/agent/ timestamp_TASK-063.log (PHASE summary).
+8. git pull --rebase; git add AGENT_BACKLOG.md AGENT_PLAN.md logs/agent/*; commit "chore(agent): TASK-063 maintenance sweep — lint+170t+content50/50 clean, sync PLAN log (no fix needed)"; `bash scripts/git-push.sh main`.
+**Rủi ro**:
+- Gates fail (e.g. new flake in 170 tests or content) → fix first failure only (1 minimal edit), rerun once; if still fail after 1 fix → 2nd attempt fail → set blocked + lý do.
+- Push blocked (thiếu GITLAB_TOKEN or net) → status=blocked in BACKLOG, note next sweep ready if can advance.
+- No secret/DB change needed (pure maintenance); self-debug from lint/test output.
+- Doc-only commit still must pass full checklist (tsc/lint/test).
+- Fail 2 lần liên tiếp → blocked + ghi lý do.
+**Done khi**: lint+test (all gates) pass; nếu fix thì 1 minimal change; AGENT_PLAN/BACKLOG updated with PHASE log + SHA; 1 commit + push via git-push.sh main (or blocked noted); BACKLOG status=done; no feature; no ask user; autonomous.
