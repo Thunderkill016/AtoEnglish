@@ -60,7 +60,7 @@
 ## P2 — Chất lượng
 
 ### TASK-020 — Fix progress.integration.test flakes
-- **Status:** `ready`
+- **Status:** `done`
 - **Mô tả:** Ổn định test integration progress (retry hoặc isolate DB state).
 - **Done khi:** 3 run liên tiếp pass
 
@@ -95,3 +95,4 @@
 | 2026-06-26 | TASK-001 | Supabase placement migration | done — db push |
 | 2026-06-26 | TASK-011 | Placement E2E B1 → unit-19 | done — e2e/helpers/auth |
 | 2026-06-26 | TASK-012 | Roadmap starting_unit_index | done — getNextUnitRoute |
+| 2026-06-26 | TASK-020 | progress integration flakes | done — RPC date cast + schema |

@@ -26,7 +26,7 @@
 - [x] TASK-012 Roadmap starting_unit_index
 
 ### Ngày 5+ — Chất lượng & mở rộng
-- [ ] TASK-020 integration test flakes
+- [x] TASK-020 integration test flakes
 - [ ] TASK-030 A2 audio
 - [ ] TASK-032 onboarding profile DB
 

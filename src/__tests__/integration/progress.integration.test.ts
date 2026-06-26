@@ -14,10 +14,18 @@ async function cleanProgress() {
     .delete()
     .eq("user_id", testUserId);
 
-  // Reset XP
+  const today = new Date().toISOString().split("T")[0];
+
   await adminClient
     .from("user_progress")
-    .update({ total_xp: 0, streak: 0 })
+    .update({
+      total_xp: 0,
+      streak: 0,
+      current_level: "A0",
+      starting_unit_index: 0,
+      placement_completed_at: null,
+      last_active_date: today,
+    })
     .eq("user_id", testUserId);
 }
 
@@ -38,7 +46,7 @@ describe("completeUnit()", () => {
     const xpBefore = before?.total_xp ?? 0;
 
     const result = await completeUnit("unit-1");
-    expect(result.success).toBe(true);
+    expect(result.success, "error" in result ? result.error : "").toBe(true);
     expect(result.alreadyCompleted).not.toBe(true);
 
     const { data: after } = await adminClient

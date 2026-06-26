@@ -19,8 +19,9 @@ try {
   /* CI provides env vars directly */
 }
 
+/** Separate from integration-test@ to avoid cross-polluting DB state. */
 export const E2E_TEST_EMAIL =
-  process.env.E2E_TEST_EMAIL ?? "integration-test@atoenglish.test";
+  process.env.E2E_TEST_EMAIL ?? "e2e-test@atoenglish.test";
 export const E2E_TEST_PASSWORD =
   process.env.E2E_TEST_PASSWORD ?? "TestPassword!2026";
 

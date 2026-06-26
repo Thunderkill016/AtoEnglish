@@ -44,8 +44,13 @@ export const ReviewCardSchema = z.object({
 /**
  * Schema for completing a unit
  */
+const UNIT_ID_PATTERN = /^unit-(a0-\d+|\d+)$/;
+
 export const CompleteUnitSchema = z.object({
-  unitId: z.string().min(1, "ID bài học không được để trống"),
+  unitId: z
+    .string()
+    .min(1, "ID bài học không được để trống")
+    .regex(UNIT_ID_PATTERN, "ID bài học không hợp lệ"),
   starCount: z.number().int().min(1).max(3).default(3),
 });
 

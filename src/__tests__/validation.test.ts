@@ -129,6 +129,18 @@ describe("CompleteUnitSchema", () => {
     expect(result.success).toBe(false);
   });
 
+  it("accepts A0 unit ids", () => {
+    const result = CompleteUnitSchema.safeParse({ unitId: "unit-a0-1" });
+    expect(result.success).toBe(true);
+  });
+
+  it("rejects SQL injection in unitId", () => {
+    const result = CompleteUnitSchema.safeParse({
+      unitId: "'; DROP TABLE user_progress; --",
+    });
+    expect(result.success).toBe(false);
+  });
+
   it("accepts valid starCount values (1, 2, 3)", () => {
     [1, 2, 3].forEach(starCount => {
       const result = CompleteUnitSchema.safeParse({ unitId: "unit-1", starCount });
