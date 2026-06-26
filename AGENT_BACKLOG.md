@@ -446,10 +446,11 @@
 
 
 ### TASK-072 — Autopilot maintenance sweep #72
-- **Status:** `ready`
+- **Status:** `done`
 - **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
 - **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
-- **Started:** auto-refill
+- **Started:** 2026-06-26 — autopilot (PHASE1 research complete: read AGENTS/BACKLOG/PLAN/CONTENT§6-7 + sim search_memory via logs/grep (prior 071 clean); grep TASK-072; 3 ready (072-074) >=2 skip refill; PHASE2 PLAN update + BACKLOG in_progress; PHASE3: run gates)
+- **Completed:** 2026-06-26 — gates clean (lint0+170t+tsc0+cs50/50+audit50/50) no fix; sync log/PLAN/BACKLOG; commit + push via git-push.sh main; autonomous
 
 ### TASK-073 — Autopilot maintenance sweep #73
 - **Status:** `ready`
@@ -473,7 +474,7 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
-| 2026-06-26 | TASK-072 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-06-26 | TASK-072 | PHASE1 research (AGENTS/BACKLOG/PLAN/CONTENT§6-7 + sim search_memory via logs/grep (prior 071 clean)); PHASE2: PLAN update + BACKLOG in_progress (3ready>=2 skip refill); PHASE3: gates clean (lint0+170t+tsc0+cs50/50+audit50/50) no fix + sync log/PLAN/BACKLOG; commit+push via git-push.sh main | done — (see git log) |
 | 2026-06-26 | TASK-073 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-06-26 | TASK-074 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-06-26 | TASK-069 | PHASE1 research (AGENTS+BACKLOG+PLAN+CONTENT§6-7+grep+logs); PHASE2 PLAN+BACKLOG in_progress (3ready skip refill); PHASE3 gates clean (lint0+170t+tsc0+cs50/50+audit50/50) no fix + sync log/PLAN/BACKLOG | done — b79f9ab |
