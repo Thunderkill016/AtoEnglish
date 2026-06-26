@@ -162,10 +162,10 @@
 - **Started:** 2026-06-26 — autopilot (TASK-041)
 
 ### TASK-042 — Roadmap highlight B2 phase
-- **Status:** `ready`
+- **Status:** `in_progress`
 - **Mô tả:** `RoadmapClient` group B2 units 33-42 với badge level; respect `starting_unit_index` cho B2 user.
 - **Done khi:** Roadmap render đúng; unit test hoặc snapshot pass.
-- **Started:** auto-refill
+- **Started:** 2026-06-26 — autopilot (no human)
 
 ### TASK-043 — Reduce agent stash pile-up
 - **Status:** `ready`

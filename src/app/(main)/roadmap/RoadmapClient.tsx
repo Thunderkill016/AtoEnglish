@@ -764,6 +764,66 @@ export default function RoadmapClient({
                             );
                           })}
                         </div>
+
+                        {/* B2 units group (33-42) with level badge — respects starting_unit_index for B2 users (TASK-042) */}
+                        {phase.unitLevels.includes("B2") && (
+                          <div style={{ marginTop: 16 }}>
+                            <div style={{ fontSize: 10, color: "#52525b", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 6 }}>
+                              📚 B2 UNITS (33–42)
+                            </div>
+                            <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                              {UNITS.filter(u => u.level === "B2").map((u) => {
+                                const globalIdx = UNITS.findIndex((uu) => uu.id === u.id);
+                                const isEntry = globalIdx === startingUnitIndex;
+                                const isReview = globalIdx < startingUnitIndex;
+                                const isDone = completedUnitIds.includes(u.id);
+                                return (
+                                  <Link
+                                    key={u.id}
+                                    href={u.route}
+                                    style={{
+                                      display: "flex",
+                                      alignItems: "center",
+                                      gap: 8,
+                                      background: isEntry ? "#052e16" : (isReview ? "#0a0a0c" : "#0d1117"),
+                                      border: `1px solid ${isEntry ? "#10b981" : (isReview ? "#27272a" : "#27272a")}`,
+                                      borderRadius: 8,
+                                      padding: "6px 10px",
+                                      textDecoration: "none",
+                                      opacity: isReview ? 0.65 : 1,
+                                    }}
+                                  >
+                                    <span
+                                      style={{
+                                        fontSize: 9,
+                                        fontWeight: 800,
+                                        color: "#fff",
+                                        background: "#10b981",
+                                        padding: "1px 5px",
+                                        borderRadius: 4,
+                                        flexShrink: 0,
+                                      }}
+                                    >
+                                      B2
+                                    </span>
+                                    <span style={{ fontSize: 12, color: isEntry ? "#4ade80" : "#e4e4e7", fontWeight: isEntry ? 700 : 500, flex: 1, minWidth: 0 }}>
+                                      {u.title.replace(/^Unit \d+: /, "")}
+                                    </span>
+                                    {isEntry && (
+                                      <span style={{ fontSize: 9, color: "#10b981", fontWeight: 700, whiteSpace: "nowrap" }}>← Bắt đầu từ đây</span>
+                                    )}
+                                    {isReview && !isDone && (
+                                      <span style={{ fontSize: 9, color: "#52525b", whiteSpace: "nowrap" }}>(review)</span>
+                                    )}
+                                    {isDone && (
+                                      <CheckCircle2 size={14} color="#10b981" style={{ flexShrink: 0 }} />
+                                    )}
+                                  </Link>
+                                );
+                              })}
+                            </div>
+                          </div>
+                        )}
                       </div>
                     </motion.div>
                   )}

@@ -7,7 +7,7 @@
 | Field | Value |
 |-------|-------|
 | Started | 2026-06-26 |
-| Focus | TASK-041 (audio:generate:all npm script that runs a0+a1+a2+b1+b2 + dry-run list of 50 folders; README doc) |
+| Focus | TASK-042 (RoadmapClient group B2 units 33-42 with level badge; respect starting_unit_index for B2 users) |
 | Owner | Autopilot (no human) |
 
 ### TASK-021 — Sync placement flow, 50 units, header shell, autopilot docs (PAGE_SPECIFICATIONS.md + AGENT_*)
@@ -304,3 +304,32 @@
 - If lint/test fail after edit → debug once (typo etc); 2x → blocked.
 - Dry list must output exactly the keys that match public/audio subdirs (unit-a0-N and unit-N).
 **Done khi**: "audio:generate:all" script in package.json; "audio:generate:list" works and lists exactly 50 folders (verified in run); README updated with usage; `npm run lint && npm run test` pass; 1 commit pushed; backlog done + SHA; no user asked; autonomous.
+
+### TASK-042 — Roadmap highlight B2 phase
+**Mục tiêu**: Trong `RoadmapClient`, hiển thị group các B2 units (unit-33 đến unit-42) với badge level "B2"; respect `starting_unit_index` để B2 user (bắt đầu từ unit-33 index ~40) thấy đúng entry point, highlight "bắt đầu từ đây", và đánh dấu review cho units trước placement. Giữ minimal — thêm list units B2 bên trong phase card (milestones tab) hoặc dưới progress; tái sử dụng UNITS + starting prop đã pass từ page. Không đổi study-plan phases.
+**Bước thực hiện**:
+1. Search memory (done) + read AGENTS.md, AGENT_BACKLOG/PLAN/ROADMAP, RoadmapClient.tsx, roadmap/page.tsx, lib/constants/units.ts (B2 33-42), lib/placement/starting-unit.ts (get indices), study-plan.ts (phase unitLevels), prior TASK-012 notes.
+2. Cập nhật AGENT_PLAN.md (header focus + this section) + BACKLOG (status `in_progress`).
+3. (ready count==2, skip refill per <2 rule).
+4. Implement minimal in RoadmapClient.tsx:
+   - Compute B2 start index (UNITS.findIndex(u => u.level==="B2") || 40).
+   - Import if needed.
+   - Inside the phase expansion (after milestones or in a "Units" block when phase covers B2 or userLevel B2), render:
+     - Header "B2 Units (33–42)" + badge style "B2".
+     - List or grid of the 10 B2 units (short title): Link to route; small "B2" pill badge per item (emerald/teal for B2).
+     - Respect starting: if unitGlobalIndex < startingUnitIndex → muted + "(review)" ; === starting → highlight + "← Bắt đầu từ đây" (using entry logic); >= and completed mark ✓ ; use similar to isPlacedOutUnit logic inline (no new dep if possible).
+   - Ensure when B2 user, the relevant phase (id=3) expands and shows B2 group.
+   - Use existing allUnits, completed, starting prop.
+5. `npm run lint && npm run test && npx tsc --noEmit`.
+6. Update BACKLOG (in_progress→done + Nhật ký + SHA), PLAN log table.
+7. git pull --rebase; git add src/app/(main)/roadmap/RoadmapClient.tsx AGENT_BACKLOG.md AGENT_PLAN.md; git commit -m "feat(roadmap): group B2 units 33-42 with level badge in RoadmapClient; respect starting_unit_index (TASK-042)"; bash scripts/git-push.sh main.
+**Rủi ro**:
+- Scope creep: do NOT add full 50 unit timeline if not needed — only B2 group as per task desc.
+- startingUnitIndex logic: reuse patterns from LearnClient / starting-unit.ts (isPlacedOutUnit, unlocked) but inline minimal; index calc off-by-one (A0 8 +A1 12=20 +A2 6=26 +B1 14=40 for unit33) — verify with findIndex.
+- No visual in current roadmap for units (only phases) — adding list keeps simple, no big UI refactor.
+- Phase mapping: B2 maps to phase 3 (B1/B2) , ok to show B2 subgroup there.
+- If no unit test for RoadmapClient (client comp, covered by e2e), ok per "unit test hoặc snapshot pass" — run full test + lint.
+- If B2 user current_level=B2 but starting low? respect the index passed.
+- Fail 2x → blocked.
+- Pure UI + props already wired; no secret/DB.
+**Done khi**: B2 units 33-42 appear grouped in RoadmapClient with visible "B2" level badges; B2-placed user sees entry unit highlighted + pre-start marked review; `npm run lint && npm run test` pass; 1 commit pushed; backlog done + SHA; autonomous.
