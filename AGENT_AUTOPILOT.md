@@ -56,13 +56,23 @@ Hoặc durable scheduler (persist session):
 scheduler_create interval=3h prompt="Autopilot AtoEnglish: 1 task từ AGENT_BACKLOG.md" durable=true
 ```
 
-## Quản lý backlog
+## Quản lý backlog (tự động)
 
-Chỉnh `AGENT_BACKLOG.md`:
+**User không cần nhắc agent tạo task.**
 
-- Thêm task mới với `Status: ready`
+| File | Vai trò |
+|------|---------|
+| `AGENT_BACKLOG.md` | Task đang chạy (`ready` / `in_progress` / `done`) |
+| `AGENT_ROADMAP.md` | Pool task tương lai — daemon tự chèn khi `ready` < 2 |
+
+```bash
+bash scripts/agent-refill-backlog.sh --dry-run   # xem sẽ thêm task nào
+bash scripts/agent-refill-backlog.sh             # refill + commit + push
+```
+
 - Ưu tiên: P0 → P1 → P2 → P3
-- Agent chỉ nhận task `ready` đầu tiên
+- Agent nhận task `ready` đầu tiên
+- Muốn ưu tiên feature cụ thể: thêm vào `AGENT_ROADMAP.md` (không cần sửa backlog tay)
 
 ## Giám sát
 

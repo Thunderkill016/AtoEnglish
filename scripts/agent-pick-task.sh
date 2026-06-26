@@ -14,6 +14,13 @@ if [[ ! -f "$BACKLOG" ]]; then
   exit 1
 fi
 
+# Tự refill trước khi pick — không cần user nhắc
+READY_PRE=$(grep -c '\*\*Status:\*\* `ready`' "$BACKLOG" 2>/dev/null || true)
+READY_PRE=${READY_PRE:-0}
+if [[ "$READY_PRE" -lt 2 ]]; then
+  bash "$(dirname "$0")/agent-refill-backlog.sh" >/dev/null 2>&1 || true
+fi
+
 python3 - "$BACKLOG" "$OUT" <<'PY'
 import json, re, sys
 

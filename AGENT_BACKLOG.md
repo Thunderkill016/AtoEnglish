@@ -3,6 +3,12 @@
 > Agent đọc file này trước mỗi phiên. Chỉ làm task `ready`, một task mỗi phiên.
 > Sau khi xong: đổi status → `done`, ghi `Completed` + commit SHA, chạy test, push nếu pass.
 
+## Tự động — không cần user nhắc
+
+1. Khi `ready` < 2 → `scripts/agent-refill-backlog.sh` tự lấy task từ `AGENT_ROADMAP.md`
+2. Daemon **không** chờ 5 phút khi backlog trống — refill rồi làm ngay
+3. User không cần gõ "tạo task" — agent tự quản lý backlog
+
 ## Quy tắc an toàn
 
 1. Một task / một phiên — không gộp nhiều feature

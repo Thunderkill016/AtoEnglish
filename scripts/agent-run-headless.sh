@@ -37,7 +37,7 @@ PHASE 1 — NGHIÊN CỨU (5 phút):
 
 PHASE 2 — LẬP KẾ HOẠCH:
 - Cập nhật AGENT_PLAN.md: mục tiêu, bước, rủi ro cho {task_id}
-- Nếu backlog trống: tự thêm 1–2 task P1 hợp lý vào AGENT_BACKLOG.md rồi làm task đầu
+- Backlog thấp: chạy `bash scripts/agent-refill-backlog.sh` (đọc AGENT_ROADMAP.md) — KHÔNG hỏi user
 
 PHASE 3 — TRIỂN KHAI (task duy nhất): {task_id}
 {task_desc}

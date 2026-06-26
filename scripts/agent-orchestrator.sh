@@ -81,6 +81,9 @@ if ! npm run lint --silent 2>&1 | tail -5; then
   log "❌ Lint fail — agent vẫn chạy nhưng ưu tiên fix"
 fi
 
+log "📋 Auto-refill backlog nếu cần..."
+bash "$ROOT/scripts/agent-refill-backlog.sh" 2>&1 | tail -3 || true
+
 log "🚀 Starting headless agent..."
 if bash "$ROOT/scripts/agent-run-headless.sh"; then
   log "✅ Agent session completed"

@@ -35,11 +35,11 @@ while true; do
   READY_COUNT=$(grep -c '\*\*Status:\*\* `ready`' "$ROOT/AGENT_BACKLOG.md" 2>/dev/null || true)
   READY_COUNT=${READY_COUNT:-0}
 
-  if [[ "$READY_COUNT" -eq 0 ]]; then
-    EMPTY_STREAK=$((EMPTY_STREAK + 1))
-    log "📭 Không còn task ready ($EMPTY_STREAK) — chờ 5 phút rồi kiểm tra lại..."
-    sleep 300
-    continue
+  if [[ "$READY_COUNT" -lt 2 ]]; then
+    log "📭 Backlog thấp ($READY_COUNT ready) — auto-refill từ AGENT_ROADMAP.md..."
+    bash "$ROOT/scripts/agent-refill-backlog.sh" 2>&1 | tee -a "$LOGFILE" || true
+    READY_COUNT=$(grep -c '\*\*Status:\*\* `ready`' "$ROOT/AGENT_BACKLOG.md" 2>/dev/null || true)
+    READY_COUNT=${READY_COUNT:-0}
   fi
   EMPTY_STREAK=0
 
