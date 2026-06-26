@@ -119,9 +119,10 @@
 - **Started:** 2026-06-26 — autopilot (no human)
 
 ### TASK-036 — Fix audio path mismatch (unitN vs unit-N folders)
-- **Status:** `ready`
+- **Status:** `in_progress`
 - **Mô tả:** Data dùng `/audio/unit19/` nhưng files ở `public/audio/unit-19/`. Symlink hoặc rewrite để native MP3 probe 200. Verify playUnitAudio trên sample B1/B2.
 - **Done khi:** `/audio/unit19/foo.mp3` serve 200 trên production.
+- **Started:** 2026-06-26 — autopilot (no human)
 
 ---
 
