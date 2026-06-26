@@ -175,12 +175,34 @@
 - **Started:** auto-refill
 
 
+### TASK-044 — Placement test retry stability
+- **Status:** `ready`
+- **Mô tả:** Ổn định E2E placement nếu flake (wait for network idle, isolate test user).
+- **Done khi:** 3 E2E run liên tiếp pass.
+- **Started:** auto-refill
+
+### TASK-045 — Sync AGENT_AUTOPILOT.md với auto-refill
+- **Status:** `ready`
+- **Mô tả:** Doc mô tả AGENT_ROADMAP.md + refill script; xóa hướng dẫn "user thêm task thủ công".
+- **Done khi:** Doc khớp scripts hiện tại.
+- **Started:** auto-refill
+
+### TASK-046 — Curriculum quality B2 audio declarations
+- **Status:** `ready`
+- **Mô tả:** Extend `curriculum-quality.test.ts` verify mọi B2 unit có `audio` path declared cho vocab+dialogue.
+- **Done khi:** Test pass; 0 missing audio fields.
+- **Started:** auto-refill
+
+
 ---
 
 ## Nhật ký agent
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
+| 2026-06-26 | TASK-044 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-06-26 | TASK-045 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-06-26 | TASK-046 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-06-26 | TASK-042 | research(agents+memory+grep+roadmap+units+placement), update PLAN+BACKLOG in_progress, minimal add B2 units(33-42) group + "B2" badge pill + startingUnitIndex respect (entry highlight + review dim) inside phase-3 card in RoadmapClient, lint+159+tsc pass, commit 473f514 + git-push.sh main | done — 473f514 |
 | 2026-06-26 | TASK-041 | research(agents+memory+grep+pkg+gen+readme), set in_progress, add audio:generate:all (chain a0-a1-a2-b1-b2) + audio:generate:list (dry-run prints 50 folders exactly), doc in README, lint+159+tsc pass, commit+push via git-push.sh main | done — 242328e |
 | 2026-06-26 | TASK-042 | auto-refill từ AGENT_ROADMAP.md | ready |
