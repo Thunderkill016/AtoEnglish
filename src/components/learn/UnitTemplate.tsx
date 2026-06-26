@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
-import { ChevronLeft, Star, BookOpen, Zap, Flame, ChevronRight } from "lucide-react";
+import { Star, BookOpen, Zap, Flame, ChevronRight } from "lucide-react";
 import { toast } from "sonner";
 import confetti from "canvas-confetti";
 
@@ -22,11 +22,10 @@ import SpeakingSection from "./sections/SpeakingSection";
 import QuizSection from "./sections/QuizSection";
 import TranslateSection from "./sections/TranslateSection";
 import FluencySection from "./sections/FluencySection";
-import LessonPhaseBar from "./LessonPhaseBar";
+import LessonHeader from "./lesson-ui/LessonHeader";
 import type { ReadingPassage } from "@/components/exercises/ReadingComprehensionExercise";
 import {
   SECTION_ORDER,
-  SECTION_LABELS,
   TOTAL_SECTIONS,
   MINI_SESSION_START,
   MINI_SESSION_QUIZ,
@@ -798,156 +797,46 @@ export default function UnitTemplate({
   };
 
   const sectionOrderIdx = SECTION_ORDER.indexOf(section as SectionNumber);
-  const progress = Math.round((sectionOrderIdx / (TOTAL_SECTIONS - 1)) * 100);
   const currentPhase = getSectionPhase(section);
   const sectionGoal = getSectionGoalVi(section);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-zinc-950 via-zinc-900 to-emerald-950/20">
-      {/* Sticky Header */}
-      <div className="sticky top-0 z-40 bg-zinc-950/80 backdrop-blur-xl border-b border-zinc-800/60">
-        <div className="max-w-3xl mx-auto px-4 py-3">
-          <div className="flex items-center justify-between mb-2">
-            <div className="flex items-center gap-2 min-w-0">
-              <Link
-                href="/dashboard"
-                aria-label="Về Dashboard"
-                className="shrink-0 flex items-center justify-center w-7 h-7 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-white transition-colors"
-              >
-                <ChevronLeft size={16} />
-              </Link>
-              <div className="min-w-0">
-                <p className="text-xs text-zinc-500">{normalizedUnit.level}</p>
-                <p className="text-sm font-semibold text-white truncate max-w-[130px] sm:max-w-xs">
-                  {normalizedUnit.title}
-                </p>
-              </div>
-            </div>
-            <div className="text-right shrink-0 flex items-center gap-2">
-              {/* S2-3: Live session XP counter */}
-              {sessionXp > 0 && (
-                <div className="relative flex items-center gap-1 text-[11px] font-black px-2.5 py-1 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
-                  ⚡ {sessionXp} XP
-                  {xpPopup && (
-                    <span
-                      key={xpPopup.id}
-                      className="absolute -top-5 left-1/2 -translate-x-1/2 text-[10px] font-black text-emerald-300 animate-bounce pointer-events-none"
-                    >
-                      +{xpPopup.value}
-                    </span>
-                  )}
-                </div>
-              )}
-              {/* S3-2: Mini-session toggle / active indicator */}
-              {miniSession ? (
-                <div className="flex items-center gap-2">
-                  <div className="flex items-center gap-1 text-[11px] font-black px-2.5 py-1 rounded-xl bg-amber-500/15 border border-amber-500/40 text-amber-300">
-                    ⚡ <span>Ôn nhanh</span>
-                  </div>
-                  <Link
-                    href={`/learn/${normalizedUnit.unitId}`}
-                    onClick={() => {
-                      try {
-                        localStorage.removeItem(`lesson-progress-${normalizedUnit.unitId}`);
-                      } catch { /* ignore */ }
-                    }}
-                    className="text-[10px] font-bold text-zinc-500 hover:text-emerald-400 transition-colors whitespace-nowrap"
-                  >
-                    Bài đầy đủ →
-                  </Link>
-                </div>
-              ) : section < 8 && (
-                <button
-                  onClick={() => {
-                    setMiniSession(true);
-                    setSection(4);
-                    try {
-                      localStorage.setItem(
-                        `lesson-progress-${normalizedUnit.unitId}`,
-                        JSON.stringify({ section: 4, mini: true })
-                      );
-                    } catch { /* ignore */ }
-                  }}
-                  className="flex items-center gap-1.5 text-[11px] font-bold px-3 py-1.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-400 hover:bg-amber-500/20 hover:border-amber-500/50 transition-all whitespace-nowrap active:scale-95"
-                  title="Bỏ qua các phần đầu, chỉ làm luyện tập + quiz ~5 phút"
-                >
-                  ⚡ <span>Ôn nhanh</span>
-                  <span className="text-amber-500/60 text-[9px] font-bold">~5p</span>
-                </button>
-              )}
-              <div>
-                <p className="text-xs text-zinc-500">{SECTION_LABELS[section] ?? "Học"}</p>
-                <p className="text-sm font-bold text-emerald-400">
-                  {sectionOrderIdx + 1}/{TOTAL_SECTIONS}
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <LessonPhaseBar currentPhase={currentPhase} goalVi={sectionGoal} />
-
-          {/* Step dots progress */}
-          <div
-            className="flex items-center gap-0 mt-2"
-            role="progressbar"
-            aria-valuenow={progress}
-            aria-valuemin={0}
-            aria-valuemax={100}
-            aria-label={`Tiến độ bài học: bước ${sectionOrderIdx + 1} / ${TOTAL_SECTIONS}`}
-          >
-            {SECTION_ORDER.map((secNum, i) => {
-              const isSecCompleted = i < sectionOrderIdx;
-              const isSecCurrent = i === sectionOrderIdx;
-              return (
-                <div key={secNum} className="flex items-center flex-1 min-w-0">
-                  <div
-                    className={`relative flex items-center justify-center rounded-full shrink-0 transition-all duration-300 ${
-                      isSecCurrent
-                        ? "w-7 h-7 bg-emerald-500 ring-2 ring-emerald-400/50 ring-offset-1 ring-offset-zinc-950 shadow-lg shadow-emerald-900/60"
-                        : isSecCompleted
-                        ? "w-5 h-5 bg-emerald-800"
-                        : "w-5 h-5 bg-zinc-800"
-                    }`}
-                  >
-                    {isSecCompleted ? (
-                      <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-                        <path
-                          d="M2 5l2 2 4-4"
-                          stroke="#34d399"
-                          strokeWidth="1.5"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                    ) : (
-                      <span
-                        className={`font-bold tabular-nums leading-none select-none ${
-                          isSecCurrent ? "text-white text-[11px]" : "text-zinc-600 text-[9px]"
-                        }`}
-                      >
-                        {i + 1}
-                      </span>
-                    )}
-                    {isSecCurrent && (
-                      <span className="absolute inset-0 rounded-full bg-emerald-400/20 animate-ping" />
-                    )}
-                  </div>
-                  {i < SECTION_ORDER.length - 1 && (
-                    <div
-                      className={`h-px flex-1 mx-0.5 transition-all duration-500 ${
-                        i < sectionOrderIdx ? "bg-emerald-700" : "bg-zinc-800"
-                      }`}
-                    />
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        </div>
+    <div className="relative min-h-screen bg-zinc-950">
+      <div className="pointer-events-none fixed inset-0 overflow-hidden" aria-hidden>
+        <div className="absolute -top-24 right-0 size-96 rounded-full bg-emerald-500/8 blur-[100px]" />
+        <div className="absolute bottom-0 left-0 size-72 rounded-full bg-teal-500/6 blur-[80px]" />
       </div>
 
-      {/* Main Content Area */}
-      <div className="max-w-3xl mx-auto px-4 py-4 sm:py-8 pb-24">
+      <LessonHeader
+        level={normalizedUnit.level}
+        title={normalizedUnit.title}
+        unitId={normalizedUnit.unitId}
+        section={section}
+        sectionOrderIdx={sectionOrderIdx}
+        totalSections={TOTAL_SECTIONS}
+        currentPhase={currentPhase}
+        sectionGoal={sectionGoal}
+        sessionXp={sessionXp}
+        xpPopup={xpPopup}
+        miniSession={miniSession}
+        onStartMiniSession={() => {
+          setMiniSession(true);
+          setSection(4);
+          try {
+            localStorage.setItem(
+              `lesson-progress-${normalizedUnit.unitId}`,
+              JSON.stringify({ section: 4, mini: true })
+            );
+          } catch { /* ignore */ }
+        }}
+        onClearProgress={() => {
+          try {
+            localStorage.removeItem(`lesson-progress-${normalizedUnit.unitId}`);
+          } catch { /* ignore */ }
+        }}
+      />
+
+      <div className="relative z-10 max-w-3xl mx-auto px-4 py-5 sm:py-8 pb-28">
         <AnimatePresence mode="wait">
 
           {/* ── Session Break Card (between Practice and Dialogue) ── */}
@@ -957,7 +846,7 @@ export default function UnitTemplate({
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0 }}
-              className="rounded-3xl border border-emerald-500/20 bg-gradient-to-b from-emerald-500/8 to-teal-500/5 p-6 sm:p-8 space-y-6 text-center"
+              className="rounded-3xl border border-emerald-500/25 bg-zinc-900/80 backdrop-blur-sm p-6 sm:p-8 space-y-6 text-center"
             >
               {/* Congrats badge */}
               <div className="flex size-16 mx-auto items-center justify-center rounded-2xl bg-emerald-500/10 text-3xl">
@@ -965,10 +854,10 @@ export default function UnitTemplate({
               </div>
               <div>
                 <p className="text-xs font-black text-emerald-500 uppercase tracking-widest mb-1">Phần 1 hoàn thành!</p>
-                <h3 className="text-lg sm:text-xl font-black text-zinc-900 dark:text-zinc-50 leading-tight">
+                <h3 className="text-lg sm:text-xl font-black text-white leading-tight">
                   Bạn đã học xong ~15 phút đầu tiên
                 </h3>
-                <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1.5 max-w-sm mx-auto">
+                <p className="text-sm text-zinc-400 mt-1.5 max-w-sm mx-auto">
                   Nghỉ ngơi hoặc tiếp tục ngay Phần 2 — Hội thoại, Shadowing, Luyện nói và Hoàn thành.
                 </p>
               </div>

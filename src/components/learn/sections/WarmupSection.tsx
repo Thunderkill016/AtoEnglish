@@ -1,9 +1,13 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Lightbulb, RefreshCw, ChevronRight } from "lucide-react";
+import { RefreshCw } from "lucide-react";
 import { reviewCard } from "@/app/actions/cards";
 import type { UnitData, WarmupCard } from "../UnitTemplate";
+import LessonSectionHeader from "../lesson-ui/LessonSectionHeader";
+import SituationCard from "../lesson-ui/SituationCard";
+import LessonContinueButton from "../lesson-ui/LessonContinueButton";
+import { lessonSectionMotion } from "../lesson-ui/motion";
 
 interface WarmupSectionProps {
   unit: UnitData;
@@ -19,12 +23,6 @@ interface WarmupSectionProps {
   setWarmupDone: React.Dispatch<React.SetStateAction<boolean>>;
   goNext: () => void;
 }
-
-const sectionVariants = {
-  initial: { opacity: 0, x: 20 },
-  animate: { opacity: 1, x: 0 },
-  exit: { opacity: 0, x: -20 },
-};
 
 export default function WarmupSection({
   unit,
@@ -43,59 +41,20 @@ export default function WarmupSection({
   return (
     <motion.div
       key="s1"
-      variants={sectionVariants}
-      initial="initial"
-      animate="animate"
-      exit="exit"
-      transition={{ duration: 0.3 }}
+      initial={lessonSectionMotion.initial}
+      animate={lessonSectionMotion.animate}
+      exit={lessonSectionMotion.exit}
+      transition={lessonSectionMotion.transition}
     >
-      <div className="flex items-center gap-2 mb-6">
-        <div className="p-2 bg-emerald-500/10 rounded-xl">
-          <Lightbulb className="text-emerald-400" size={24} />
-        </div>
-        <div className="flex-1">
-          <div className="flex items-center gap-2">
-            <h1 className="text-xl font-black bg-gradient-to-r from-white to-zinc-300 bg-clip-text text-transparent">
-              Khởi động
-            </h1>
-            <span className="text-[10px] font-bold text-emerald-600 bg-emerald-950/60 border border-emerald-800/50 px-2 py-0.5 rounded-full">
-              Bước {sectionOrderIdx + 1}/{TOTAL_SECTIONS}
-            </span>
-          </div>
-          <p className="text-xs text-zinc-500">~3 phút • Làm quen với ngữ cảnh</p>
-        </div>
-      </div>
+      <LessonSectionHeader
+        sectionId={1}
+        sectionOrderIdx={sectionOrderIdx}
+        totalSections={TOTAL_SECTIONS}
+        subtitle="Làm quen ngữ cảnh + ôn SRS"
+      />
 
-      {/* ── Situation Banner ── */}
       {unit.situation && (
-        <div className="relative group overflow-hidden mb-8 rounded-2xl bg-zinc-900 border border-zinc-800">
-          <div className="absolute inset-0 bg-gradient-to-br from-teal-900/20 to-emerald-900/20" />
-          <div className="relative p-6">
-            <div className="flex items-center gap-2 mb-3">
-              <span className="text-lg">📍</span>
-              <span className="text-xs font-bold text-teal-400 uppercase tracking-widest">
-                Tình huống
-              </span>
-            </div>
-            <p className="text-white text-lg leading-relaxed font-medium mb-6">
-              {unit.situation}
-            </p>
-
-            {unit.learningOutcomes && (
-              <div className="grid sm:grid-cols-2 gap-3">
-                {unit.learningOutcomes.map((o, i) => (
-                  <div
-                    key={i}
-                    className="flex items-center gap-2 text-xs text-zinc-400 bg-black/20 px-3 py-2 rounded-lg"
-                  >
-                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                    {o}
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
+        <SituationCard situation={unit.situation} outcomes={unit.learningOutcomes} />
       )}
 
       {/* Interaction Row */}
@@ -292,13 +251,7 @@ export default function WarmupSection({
         </div>
       )}
 
-      <button
-        onClick={goNext}
-        className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-white font-bold rounded-2xl px-6 py-4 flex items-center justify-center gap-2 transition-all duration-200 text-lg shadow-lg shadow-emerald-900/40 active:scale-95"
-      >
-        Bắt đầu học{" "}
-        <ChevronRight size={20} className="transition-transform group-hover:translate-x-1" />
-      </button>
+      <LessonContinueButton onClick={goNext}>Bắt đầu học</LessonContinueButton>
     </motion.div>
   );
 }

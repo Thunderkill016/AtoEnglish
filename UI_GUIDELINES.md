@@ -169,8 +169,9 @@ mainNavItems = [Dashboard, Learn, Speaking, Flashcards, Progress, Roadmap]
 ### Lesson Pages (UnitTemplate)
 
 - Full-screen takeover — Header/BottomNav hidden via `LessonPageHider`
-- Custom top progress bar with section name
-- `SECTION_ORDER = [1, 5, 2, 3, 4, 9, 6, 7, 8]` — Hybrid pedagogical flow
+- `LessonHeader` — IPOR phase bar + segmented progress (`lesson-ui/`)
+- `SECTION_ORDER` — see `src/lib/lessons/learning-flow.ts` (10 steps, vocab before dialogue)
+- Shared: `LessonSectionHeader`, `LessonContinueButton`, `SituationCard`, `LessonCard`
 - Back button top-left, always visible
 - Section transitions via Framer Motion `AnimatePresence`
 

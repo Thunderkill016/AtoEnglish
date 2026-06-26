@@ -3,6 +3,9 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Shuffle, CheckCircle, ChevronRight } from "lucide-react";
+import LessonSectionHeader from "../lesson-ui/LessonSectionHeader";
+import LessonContinueButton from "../lesson-ui/LessonContinueButton";
+import { lessonSectionMotion } from "../lesson-ui/motion";
 import type { UnitData, QuizQuestion } from "../UnitTemplate";
 import { WordBankExercise } from "@/components/exercises/WordBankExercise";
 import { DictationExercise } from "@/components/exercises/DictationExercise";
@@ -19,12 +22,6 @@ interface PracticeSectionProps {
   goNext: () => void;
   addSessionXp?: (amount?: number) => void; // S2-3: live XP counter
 }
-
-const sectionVariants = {
-  initial: { opacity: 0, x: 20 },
-  animate: { opacity: 1, x: 0 },
-  exit: { opacity: 0, x: -20 },
-};
 
 export default function PracticeSection({
   unit,
@@ -182,29 +179,17 @@ export default function PracticeSection({
   return (
     <motion.div
       key="s4-practice"
-      variants={sectionVariants}
-      initial="initial"
-      animate="animate"
-      exit="exit"
-      transition={{ duration: 0.3 }}
+      initial={lessonSectionMotion.initial}
+      animate={lessonSectionMotion.animate}
+      exit={lessonSectionMotion.exit}
+      transition={lessonSectionMotion.transition}
     >
-      <div className="flex items-center gap-2 mb-2">
-        <span className="text-2xl">⚡</span>
-        <div className="flex-1">
-          <div className="flex items-center gap-2">
-            <h1 className="text-xl sm:text-2xl font-black bg-gradient-to-r from-amber-200 to-white bg-clip-text text-transparent">
-              Luyện tập
-            </h1>
-            <span className="text-[10px] font-bold text-amber-600 bg-amber-950/60 border border-amber-800/50 px-2 py-0.5 rounded-full">
-              Bước {sectionOrderIdx + 1}/{TOTAL_SECTIONS}
-            </span>
-          </div>
-          <p className="text-xs text-zinc-500">~4 phút • Kiểm tra nhanh từ vựng và ngữ pháp</p>
-        </div>
-      </div>
-      <p className="text-zinc-400 mb-3 text-sm">
-        Kiểm tra nhanh từ vựng và ngữ pháp vừa học. Chọn đáp án hoặc điền từ đúng.
-      </p>
+      <LessonSectionHeader
+        sectionId={4}
+        sectionOrderIdx={sectionOrderIdx}
+        totalSections={TOTAL_SECTIONS}
+        subtitle="Kiểm tra nhanh — chọn hoặc điền đáp án"
+      />
       {/* S3-3: Adaptive weak-type tip */}
       {weakTip && (
         <div className="flex items-start gap-2 bg-blue-950/30 border border-blue-700/40 rounded-xl px-3 py-2.5 mb-5">
@@ -691,12 +676,7 @@ export default function PracticeSection({
             </p>
           </div>
           {matchingDone && allScrambleDone && allCorrectionsDone && allArrangeDone && allWordBankDone && allDictationDone ? (
-            <button
-              onClick={goNext}
-              className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-white font-bold rounded-2xl px-6 py-4 flex items-center justify-center gap-2 transition-all duration-200 text-lg shadow-lg shadow-emerald-900/40 active:scale-95"
-            >
-              Tiếp tục <ChevronRight size={20} />
-            </button>
+            <LessonContinueButton onClick={goNext}>Tiếp tục</LessonContinueButton>
           ) : (
             <p className="text-center text-zinc-500 text-sm flex items-center justify-center gap-1.5">
               <span>↑</span>

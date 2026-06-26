@@ -2,12 +2,16 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { BookOpen, Volume2, ChevronRight } from "lucide-react";
+import { Volume2 } from "lucide-react";
 import { toast } from "sonner";
 import { saveCardToSRS } from "@/app/actions/cards";
 import type { UnitData } from "../UnitTemplate";
 import { playUnitAudio } from "@/lib/utils/unit-audio";
 import { VOCAB_ACTIVE_RECALL_HINT } from "@/lib/lessons/learning-flow";
+import LessonSectionHeader from "../lesson-ui/LessonSectionHeader";
+import LessonContinueButton from "../lesson-ui/LessonContinueButton";
+import LessonCard from "../lesson-ui/LessonCard";
+import { lessonSectionMotion } from "../lesson-ui/motion";
 
 interface VocabSectionProps {
   unit: UnitData;
@@ -21,12 +25,6 @@ interface VocabSectionProps {
   autoPlay: boolean;
   goNext: () => void;
 }
-
-const sectionVariants = {
-  initial: { opacity: 0, x: 20 },
-  animate: { opacity: 1, x: 0 },
-  exit: { opacity: 0, x: -20 },
-};
 
 export default function VocabSection({
   unit,
@@ -47,30 +45,22 @@ export default function VocabSection({
   return (
     <motion.div
       key="s2"
-      variants={sectionVariants}
-      initial="initial"
-      animate="animate"
-      exit="exit"
-      transition={{ duration: 0.3 }}
+      initial={lessonSectionMotion.initial}
+      animate={lessonSectionMotion.animate}
+      exit={lessonSectionMotion.exit}
+      transition={lessonSectionMotion.transition}
     >
-      <div className="flex items-center gap-2 mb-2">
-        <BookOpen className="text-emerald-400" size={22} />
-        <div className="flex-1">
-          <div className="flex items-center gap-2">
-            <h1 className="text-xl sm:text-2xl font-black bg-gradient-to-r from-white to-zinc-300 bg-clip-text text-transparent">
-              Từ vựng & Cụm từ
-            </h1>
-            <span className="text-[10px] font-bold text-emerald-600 bg-emerald-950/60 border border-emerald-800/50 px-2 py-0.5 rounded-full">
-              Bước {sectionOrderIdx + 1}/{TOTAL_SECTIONS}
-            </span>
-          </div>
-          <p className="text-xs text-zinc-500">~5 phút</p>
-        </div>
-      </div>
-      <p className="text-zinc-400 mb-2 text-sm leading-relaxed">
-        <span className="text-emerald-500/90 font-semibold">Active recall: </span>
-        {VOCAB_ACTIVE_RECALL_HINT}
-      </p>
+      <LessonSectionHeader
+        sectionId={2}
+        sectionOrderIdx={sectionOrderIdx}
+        totalSections={TOTAL_SECTIONS}
+      />
+      <LessonCard variant="muted" className="mb-5">
+        <p className="text-sm text-zinc-400 leading-relaxed">
+          <span className="text-emerald-400 font-semibold">Active recall — </span>
+          {VOCAB_ACTIVE_RECALL_HINT}
+        </p>
+      </LessonCard>
 
       {/* Counter */}
       <div className="flex items-center gap-2 mb-6">
@@ -265,12 +255,7 @@ export default function VocabSection({
           Xem thêm {VOCAB_LIMIT - seenCards.size} thẻ để tiếp tục...
         </div>
       ) : (
-        <button
-          onClick={goNext}
-          className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-white font-bold rounded-2xl px-6 py-4 flex items-center justify-center gap-2 transition-all duration-200 text-lg shadow-lg shadow-emerald-900/40 active:scale-95"
-        >
-          Hoàn thành từ vựng <ChevronRight size={20} />
-        </button>
+        <LessonContinueButton onClick={goNext}>Hoàn thành từ vựng</LessonContinueButton>
       )}
     </motion.div>
   );

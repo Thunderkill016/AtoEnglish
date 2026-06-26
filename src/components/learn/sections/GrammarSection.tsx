@@ -1,8 +1,11 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { BookMarked, Volume2, ChevronRight } from "lucide-react";
+import { Volume2 } from "lucide-react";
 import type { UnitData } from "../UnitTemplate";
+import LessonSectionHeader from "../lesson-ui/LessonSectionHeader";
+import LessonContinueButton from "../lesson-ui/LessonContinueButton";
+import { lessonSectionMotion } from "../lesson-ui/motion";
 
 interface GrammarSectionProps {
   unit: UnitData;
@@ -17,12 +20,6 @@ interface GrammarSectionProps {
   playWrongSound: () => void;
   goNext: () => void;
 }
-
-const sectionVariants = {
-  initial: { opacity: 0, x: 20 },
-  animate: { opacity: 1, x: 0 },
-  exit: { opacity: 0, x: -20 },
-};
 
 export default function GrammarSection({
   unit,
@@ -42,26 +39,17 @@ export default function GrammarSection({
   return (
     <motion.div
       key="s3"
-      variants={sectionVariants}
-      initial="initial"
-      animate="animate"
-      exit="exit"
-      transition={{ duration: 0.3 }}
+      initial={lessonSectionMotion.initial}
+      animate={lessonSectionMotion.animate}
+      exit={lessonSectionMotion.exit}
+      transition={lessonSectionMotion.transition}
     >
-      <div className="flex items-center gap-2 mb-2">
-        <BookMarked className="text-teal-400" size={22} />
-        <div className="flex-1">
-          <div className="flex items-center gap-2">
-            <h1 className="text-xl sm:text-2xl font-black bg-gradient-to-r from-teal-200 to-white bg-clip-text text-transparent">
-              Ngữ pháp
-            </h1>
-            <span className="text-[10px] font-bold text-teal-600 bg-teal-950/60 border border-teal-800/50 px-2 py-0.5 rounded-full">
-              Bước {sectionOrderIdx + 1}/{TOTAL_SECTIONS}
-            </span>
-          </div>
-          <p className="text-xs text-zinc-500">~4 phút • Dùng từ đúng trong thực tế</p>
-        </div>
-      </div>
+      <LessonSectionHeader
+        sectionId={3}
+        sectionOrderIdx={sectionOrderIdx}
+        totalSections={TOTAL_SECTIONS}
+        subtitle="Nhận diện mẫu → quy tắc"
+      />
 
       {unit.grammar ? (
         <div className="space-y-5">
@@ -282,18 +270,14 @@ export default function GrammarSection({
         </div>
       )}
 
-      <button
-        onClick={goNext}
-        disabled={!!(unit.grammar?.ccq && !ccqSubmitted)}
-        className={`mt-6 w-full text-white font-bold rounded-2xl px-6 py-4 flex items-center justify-center gap-2 transition-all duration-200 text-lg ${
-          unit.grammar?.ccq && !ccqSubmitted
-            ? "bg-zinc-800 opacity-50 cursor-not-allowed"
-            : "bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-400 hover:to-emerald-400 shadow-lg shadow-teal-900/40 active:scale-95"
-        }`}
-      >
-        {unit.grammar?.ccq && !ccqSubmitted ? "Trả lời câu hỏi trước" : "Luyện tập ngay"}{" "}
-        <ChevronRight size={20} />
-      </button>
+      <div className="mt-6">
+        <LessonContinueButton
+          onClick={goNext}
+          disabled={!!(unit.grammar?.ccq && !ccqSubmitted)}
+        >
+          {unit.grammar?.ccq && !ccqSubmitted ? "Trả lời câu hỏi trước" : "Luyện tập ngay"}
+        </LessonContinueButton>
+      </div>
     </motion.div>
   );
 }
