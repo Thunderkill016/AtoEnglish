@@ -57,7 +57,7 @@ export default function GrammarSection({
           <div className="border border-border/60 bg-card rounded-2xl p-4 sm:p-6 shadow-md">
             <div className="flex items-center gap-2 mb-4">
               <span className="text-xl">📐</span>
-              <h2 className="text-lg font-black text-teal-300">{unit.grammar.title}</h2>
+              <h2 className="text-lg font-black text-foreground">{unit.grammar.title}</h2>
             </div>
 
             {/* Rule box */}
@@ -83,7 +83,7 @@ export default function GrammarSection({
                       <button
                         onClick={() => playTTS(row.example)}
                         aria-label={`Nghe ví dụ: ${row.example}`}
-                        className="p-1.5 rounded-lg bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-400 transition-colors shrink-0"
+                        className="p-1.5 rounded-lg bg-primary/10 hover:bg-primary/20 text-primary transition-colors shrink-0"
                       >
                         <Volume2 size={13} />
                       </button>
@@ -102,8 +102,8 @@ export default function GrammarSection({
                   className="bg-card border border-border/60 hover:bg-muted/40 rounded-xl px-4 py-3 flex items-start justify-between gap-3 transition-colors"
                 >
                   <div>
-                    <p className="text-white font-semibold text-sm">{ex.en}</p>
-                    <p className="text-zinc-400 text-xs mt-0.5">{ex.vn}</p>
+                    <p className="text-foreground font-semibold text-sm">{ex.en}</p>
+                    <p className="text-muted-foreground text-xs mt-0.5">{ex.vn}</p>
                   </div>
                   <button
                     onClick={() => playTTS(ex.en)}
@@ -197,11 +197,11 @@ export default function GrammarSection({
 
             {/* CCQ — Concept Check Question */}
             {unit.grammar.ccq && (
-              <div className="mt-5 border-t border-teal-700/30 pt-5">
-                <p className="text-xs font-bold text-teal-400 uppercase tracking-widest mb-3">
-                  ✅ Kiểm tra nhanh (CCQ)
+              <div className="mt-5 border-t border-border/60 pt-5">
+                <p className="text-xs font-bold text-primary uppercase tracking-widest mb-3">
+                  Kiểm tra nhanh (CCQ)
                 </p>
-                <p className="text-white font-semibold text-sm mb-3">
+                <p className="text-foreground font-semibold text-sm mb-3">
                   {unit.grammar.ccq.question}
                 </p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-3">

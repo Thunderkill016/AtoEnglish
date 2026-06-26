@@ -165,7 +165,7 @@ export default function VocabSection({
                         void playUnitAudio({ src: v.audio, text: v.word, rate: 0.7 }, playTTS);
                       }}
                       aria-label={`Nghe: ${v.word}`}
-                      className="p-1.5 rounded-xl bg-emerald-600/15 hover:bg-emerald-600/35 text-emerald-400 transition-all active:scale-90"
+                      className="p-1.5 rounded-xl bg-primary/10 hover:bg-primary/20 text-primary transition-all active:scale-90"
                     >
                       <Volume2 size={14} />
                     </button>
@@ -237,7 +237,7 @@ export default function VocabSection({
                           void playUnitAudio({ src: v.audio, text: v.word, rate: 0.7 }, playTTS);
                         }}
                         aria-label={`Nghe: ${v.word}`}
-                        className="p-1.5 rounded-xl bg-emerald-600/15 hover:bg-emerald-600/35 text-emerald-400 transition-all active:scale-90"
+                        className="p-1.5 rounded-xl bg-primary/10 hover:bg-primary/20 text-primary transition-all active:scale-90"
                       >
                         <Volume2 size={14} />
                       </button>
