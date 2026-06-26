@@ -41,7 +41,7 @@
 ## P1 — Sản phẩm (theo roadmap)
 
 ### TASK-010 — Native audio batch A1 (unit-1 → unit-12)
-- **Status:** `in_progress`
+- **Status:** `done`
 - **Mô tả:** `npm run audio:generate -- unit-1` … `unit-12`. Commit MP3 vào `public/audio/`. Verify `playUnitAudio` probe 200 trên sample file.
 - **Done khi:** 12 unit folders có MP3; tests pass
 - **Ước tính:** ~150 clips, cần network cho gtts
@@ -92,3 +92,4 @@
 |------|------|--------|--------|
 | 2026-06-26 | TASK-001 | Supabase migration | blocked — no CLI/token |
 | 2026-06-26 | TASK-002 | Vercel deploy check | done — 334ca23 READY |
+| 2026-06-26 | TASK-010 | A1 audio unit-1..12 | done — autopilot batch |
