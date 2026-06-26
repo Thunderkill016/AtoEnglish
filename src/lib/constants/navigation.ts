@@ -41,62 +41,14 @@ export const dashboardSections: DashboardSection[] = [
   { id: "dash-progress", label: "Tiến độ", icon: TrendingUp },
 ];
 
-// ─── Tier 1 — Bottom Nav (mobile, always visible) ────────────────────────────
-// 5 tabs — nhãn tiếng Việt ngắn gọn (Apple HIG: ≤5 tabs, label ≤10 ký tự)
-// Trang chủ → Học → Ôn tập → Nói → Tôi
+// ─── Tier 1 — Bottom Nav (mobile) — 3-tab Hick-compliant shell (P1) ────────
+// Học (home + continue) · Ôn (SRS) · Tôi (settings/profile)
 export const bottomNavItems: NavItem[] = [
   {
-    title: "Trang chủ",
-    href: "/dashboard",
-    icon: LayoutDashboard,
-    description: "Tổng quan học tập",
-  },
-  {
     title: "Học",
-    href: "/learn",
-    icon: BookOpen,
-    description: "Bài học theo IPOR",
-  },
-  {
-    title: "Ôn tập",
-    href: "/flashcards",
-    icon: Layers,
-    description: "Ôn tập flashcard SRS",
-  },
-  {
-    title: "Nói",
-    href: "/speaking",
-    icon: Mic,
-    description: "Luyện phát âm & AI roleplay",
-  },
-  {
-    title: "Tôi",
-    href: "/progress",
-    icon: User,
-    description: "Tiến độ & thành tích",
-  },
-];
-
-// ─── Tier 2 — Desktop Primary Nav (md+, 4 tabs + Thêm) ──────────────────────
-// Trang chủ · Học · Luyện · Ôn — gọn header, khớp bottom nav
-export const desktopPrimaryNav: NavItem[] = [
-  {
-    title: "Trang chủ",
     href: "/dashboard",
-    icon: LayoutDashboard,
-    description: "Tổng quan tiến độ học tập",
-  },
-  {
-    title: "Học",
-    href: "/learn",
     icon: BookOpen,
-    description: "Bài học theo mô hình IPOR",
-  },
-  {
-    title: "Luyện",
-    href: "/speaking",
-    icon: Mic,
-    description: "Shadowing & AI Roleplay",
+    description: "Tiếp tục bài học",
   },
   {
     title: "Ôn",
@@ -104,10 +56,50 @@ export const desktopPrimaryNav: NavItem[] = [
     icon: Layers,
     description: "Ôn tập flashcard SRS",
   },
+  {
+    title: "Tôi",
+    href: "/settings",
+    icon: User,
+    description: "Cài đặt & tiến độ",
+  },
 ];
 
-// ─── Tier 3 — Desktop "Thêm" dropdown ───────────────────────────────────────
+// ─── Tier 2 — Desktop Primary Nav — matches 3-tab shell ─────────────────────
+export const desktopPrimaryNav: NavItem[] = [
+  {
+    title: "Học",
+    href: "/dashboard",
+    icon: BookOpen,
+    description: "Tiếp tục bài học",
+  },
+  {
+    title: "Ôn",
+    href: "/flashcards",
+    icon: Layers,
+    description: "Ôn tập flashcard SRS",
+  },
+  {
+    title: "Tôi",
+    href: "/settings",
+    icon: User,
+    description: "Cài đặt & tiến độ",
+  },
+];
+
+// ─── Tier 3 — Desktop "Thêm" dropdown (secondary paths, not primary Hick) ────
 export const desktopMoreItems: NavItem[] = [
+  {
+    title: "Bài học",
+    href: "/learn",
+    icon: BookOpen,
+    description: "Danh sách 50 unit",
+  },
+  {
+    title: "Luyện nói",
+    href: "/speaking",
+    icon: Mic,
+    description: "Shadowing & AI Roleplay",
+  },
   {
     title: "Viết",
     href: "/writing",

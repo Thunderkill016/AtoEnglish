@@ -112,6 +112,17 @@
   --sidebar-accent-foreground: oklch(0.28 0.06 160);
   --sidebar-border: oklch(0.91 0.02 155);
   --sidebar-ring: oklch(0.52 0.14 160);
+
+  /* Minimal redesign tokens (P0) — research-backed, parallel to legacy theme */
+  --minimal-canvas: #f5f5f7;
+  --minimal-canvas-dark: #000000;
+  --minimal-title-size: 2.125rem;   /* 34px */
+  --minimal-headline-size: 1.75rem; /* 28px */
+  --minimal-body-size: 1.0625rem;   /* 17px */
+  --minimal-caption-size: 0.8125rem; /* 13px */
+  --minimal-touch: 2.75rem;         /* 44px */
+  --minimal-content-max: 680px;
+  --minimal-motion-ms: 200ms;
 }
 
 .dark {
@@ -147,6 +158,9 @@
   --sidebar-accent-foreground: oklch(0.96 0.01 155);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.68 0.14 160);
+
+  --minimal-canvas: #000000;
+  --minimal-canvas-dark: #000000;
 }
 
 /* ─── Base Styles ────────────────────────────────────────────────────────────── */

@@ -198,10 +198,10 @@
 - **Started:** 2026-06-26 — autopilot (no human) — PHASE1 research complete (memory search empty for topic, refs read, 30 units need +2 translates)
 
 ### TASK-058 — B2 L1 interference ≥50%
-- **Status:** `ready`
+- **Status:** `in_progress`
 - **Mô tả:** unit33–42 thêm l1_interference_vn; B2 ratio 0.5.
 - **Done khi:** test:content-standard pass.
-- **Started:** user mandate — chuẩn nội dung
+- **Started:** 2026-06-26 — autopilot (PHASE1 research complete: memory search, refs read, counts: most 0/14 L1)
 
 ### TASK-059 — cumulativeReview ≥3
 - **Status:** `ready`
@@ -276,6 +276,46 @@
 - **Done khi:** 1 CTA rõ; lint+test pass.
 - **Blocked:** 2026-06-26 — pause UI; ưu tiên content 058–062
 - **Started:** user mandate — bài học P1
+
+### UI-001 — P0: minimal tokens + design-system primitives
+- **Status:** `done`
+- **Mô tả:** `globals.css` minimal-* tokens; `src/components/design-system/` Screen, LargeTitle, PrimaryRow, ContinueCard, ThinProgress.
+- **Done khi:** Primitives render; lint pass.
+- **Completed:** 2026-06-26 — P0 tokens + 5 primitives shipped
+
+### UI-002 — P0: baseline time-to-lesson E2E
+- **Status:** `done`
+- **Mô tả:** `e2e/time-to-lesson.spec.ts` đo taps + elapsedMs; `npm run e2e:time-to-lesson`.
+- **Done khi:** E2E pass; log JSON baseline.
+- **Completed:** 2026-06-26 — baseline spec + data-testid warmup/continue
+
+### UI-003 — P1: shell 3-tab Học/Ôn/Tôi
+- **Status:** `done`
+- **Mô tả:** `navigation.ts` bottom + desktop primary = 3 tab; speaking/learn → Thêm.
+- **Done khi:** Mobile 3 tab; E2E verify.
+- **Completed:** 2026-06-26 — Hick shell deployed
+
+### UI-004 — P2: Dashboard minimal (1 CTA)
+- **Status:** `done`
+- **Mô tả:** `DashboardMinimalClient` thay widget pile; ContinueCard primary only.
+- **Done khi:** ≤1 primary CTA; time-to-lesson ≤2 tap.
+- **Completed:** 2026-06-26 — minimal home live
+
+### UI-005 — P3: Lesson chrome thin progress + unified kit
+- **Status:** `ready`
+- **Mô tả:** Gộp lesson-ui; header title + thin progress; bỏ 4-color IPOR bar (giữ flow).
+- **Done khi:** 6 section dùng kit; completion rate không giảm.
+- **Blocked:** Chờ content gate 058–062 xong
+
+### UI-006 — P4: Secondary pages grouped list
+- **Status:** `ready`
+- **Mô tả:** Flashcards, Progress, Settings, Roadmap — PrimaryRow pattern.
+- **Done khi:** Consistent kit; lint pass.
+
+### UI-007 — P5–P6: Landing minimal + measure iterate
+- **Status:** `ready`
+- **Mô tả:** Landing 1 headline 1 CTA; so sánh metrics vs P0 baseline.
+- **Done khi:** time-to-lesson ≤10s documented.
 
 ### TASK-045 — Sync AGENT_AUTOPILOT.md với auto-refill
 - **Status:** `ready`

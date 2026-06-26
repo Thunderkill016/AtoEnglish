@@ -14,8 +14,8 @@ interface BottomNavProps {
 /**
  * BottomNav — Mobile-first persistent tab bar (sm: and below).
  *
- * Tabs (Tier 1):
- *   Trang chủ | Học | Ôn tập | Nói | Tôi
+ * Tabs (3-tab shell — Hick-compliant):
+ *   Học | Ôn | Tôi
  *
  * Key improvements vs old nav:
  * - Speaking now in Tier 1 (was completely hidden on mobile)

@@ -25,7 +25,10 @@ export default function LessonSectionHeader({
   const Icon = theme.icon;
 
   return (
-    <header className={cn("mb-6", className)}>
+    <header
+      className={cn("mb-6", className)}
+      {...(sectionId === 1 ? { "data-testid": "lesson-section-warmup" } : {})}
+    >
       <div className="flex items-start gap-3">
         <div
           className={cn(
