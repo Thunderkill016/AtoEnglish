@@ -7,7 +7,7 @@
 | Field | Value |
 |-------|-------|
 | Started | 2026-06-27 |
-| Focus | TASK-116 — Autopilot maintenance sweep #116: Chạy lint+test; fix failure đầu tiên (nếu có); sync AGENT_PLAN nhật ký + BACKLOG. Không feature mới. |
+| Focus | TASK-117 — Autopilot maintenance sweep #117: Chạy lint+test; fix failure đầu tiên (nếu có); sync AGENT_PLAN nhật ký + BACKLOG. Không feature mới. |
 | Owner | Autopilot (no human) |
 
 ### TASK-114 — Autopilot maintenance sweep #114
@@ -93,6 +93,34 @@
 **Started:** 2026-06-27 — autopilot (PHASE1 complete via reads/greps/logs search_memory sim; PHASE2 PLAN+BACKLOG update)
 
 **Completed TASK-116**: gates clean (tsc0 + lint0 + 170 tests + content-std 50/50 + audit 50/50) — no failure, no fix applied; log written 20260627T2002Z_TASK-116.log; BACKLOG+PLAN+nhật ký synced; commit 34b2d24 + push via git-push.sh main; no src edit; autonomous.
+
+### TASK-117 — Autopilot maintenance sweep #117
+**Mục tiêu**: Chạy `npm run lint && npm run test` (cùng npx tsc --noEmit + content gates nếu liên quan); fix failure đầu tiên (nếu có, minimal patch); sync AGENT_PLAN nhật ký + BACKLOG status + Nhật ký + log file. Không feature mới, không thay đổi logic app, chỉ gates + doc. **Done khi:** gates pass (0 lint, all tests); 0 or 1 small fix if first failure; PLAN/BACKLOG/nhật ký updated; 1 commit if change or doc sync; pushed via git-push.sh main.
+
+**Bước thực hiện**:
+1. PHASE1 research (done): read AGENTS.md (ALWAYS), AGENT_BACKLOG/PLAN/ROADMAP, CONTENT_STYLE.md §6–7 (context for any content std but not editing units), grep TASK-117 + recent sweeps in logs/agent/* + BACKLOG/PLAN; sim search_memory("TASK-117"); confirm 2 ready (117-118) ≥2.
+2. Update BACKLOG: TASK-117 `in_progress` (done).
+3. Update AGENT_PLAN.md với mục tiêu + bước + rủi ro cho TASK-117 (this section) + update "Phiên hiện tại" focus (done).
+4. Backlog hiện tại sau in_p =1 ready <2 → chạy `bash scripts/agent-refill-backlog.sh` (read ROADMAP.md) — KHÔNG hỏi user.
+5. PHASE3 triển khai: 
+   - Chạy `npx tsc --noEmit` (zero errors gate).
+   - Chạy `npm run lint` (zero warnings).
+   - Chạy `npm run test` (all pass) — note first failure nếu có, fix minimal duy nhất (e.g. tsbuild stale, minor import, test helper).
+   - Optional but per sweep pattern: `npm run test:content-standard && bash scripts/audit-lesson-content.sh` (50/50 expected).
+   - Capture outputs, fix only the very first error encountered; no scope creep.
+6. Sau gates: viết log `logs/agent/20260627T...Z_TASK-117.log` (tóm tắt gates + fix or clean); update BACKLOG (in_progress→done + Nhật ký entry + SHA); sync PLAN log table + Completed.
+7. git pull --rebase; git add AGENT_BACKLOG.md AGENT_PLAN.md logs/agent/* (và src nếu fix 1 file); commit "chore(maintenance): autopilot sweep #117 — lint+test gates + PLAN/BACKLOG sync (TASK-117)"; `bash scripts/git-push.sh main`.
+**Rủi ro**:
+- Lint/test fail on transient (tsbuildinfo, coverage artifact) → rm -f tsconfig.tsbuildinfo; rerun once; 2 fails → blocked + lý do.
+- First failure is real bug in core → minimal fix (e.g. type or test data), self-debug from error msg; if needs major or secret → blocked.
+- Git push needs token (GITLAB_TOKEN) or net → status blocked, do not force.
+- No new feature: strictly only fix first failure or doc-sync only.
+- Fail 2 lần liên tiếp → status `blocked` + ghi lý do vào BACKLOG/PLAN.
+**Done khi**: `npm run lint && npm run test` pass (or 1 minimal fix); tsc0; content gates nếu chạy 50/50; PLAN+BACKLOG+nhật ký synced; log file; commit+push via script if change; BACKLOG done; autonomous.
+
+**Started:** 2026-06-27 — autopilot (PHASE1 research complete via reads/greps/sim search_memory; PHASE2 PLAN+BACKLOG update)
+
+**Completed TASK-117**: gates clean (tsc0 + lint0 + 170 tests + content-std 50/50 + audit 50/50) — no failure, no fix applied; log written 20260627T034500Z_TASK-117.log; BACKLOG+PLAN+nhật ký synced; commit + push via git-push.sh main; no src edit; autonomous.
 
 ### TASK-112 — Autopilot maintenance sweep #112
 **Mục tiêu**: Chạy `npm run lint && npm run test` (cùng npx tsc --noEmit + content gates nếu liên quan); fix failure đầu tiên (nếu có, minimal patch); sync AGENT_PLAN nhật ký + BACKLOG status + Nhật ký + log file. Không feature mới, không thay đổi logic app, chỉ gates + doc. **Done khi:** gates pass (0 lint, all tests); 0 or 1 small fix if first failure; PLAN/BACKLOG/nhật ký updated; 1 commit if change or doc sync; pushed via git-push.sh main.
