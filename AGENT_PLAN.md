@@ -258,7 +258,7 @@
 - No secrets; pure style purge. Self-debug.
 **Done khi**: 0 matches for the 3 classes in src/ (post-edit grep); defs removed from globals.css; only 1 minimal edit; lint0 + tests pass + tsc0; 1 commit + push via git-push.sh main; BACKLOG=done + SHA; autonomous (no human).
 
-**Completed:** 2026-06-26 — 0 matches post-purge in src/; 3 @utility removed; gates lint0+test170+tsc0 pass; commit + push via git-push.sh main; BACKLOG done; autonomous (no human)
+**Completed:** 2026-06-26 — 0 matches post-purge in src/; 3 @utility removed; gates lint0+test170+tsc0 pass; commit 8d1cb7b + push via git-push.sh main; BACKLOG done; autonomous (no human)
 
 ### TASK-045 — Sync AGENT_AUTOPILOT.md với auto-refill
 **Mục tiêu**: Làm cho AGENT_AUTOPILOT.md mô tả chính xác cơ chế tự động: daemon/orchestrator/pick-task tự gọi refill từ AGENT_ROADMAP.md khi ready < 2 (MIN_READY), script agent-refill-backlog.sh parse roadmap pool, chèn tối đa 4 task `ready` vào BACKLOG, commit+push (chore, skip ci). Xóa mọi hướng dẫn gợi ý "user thêm task thủ công" vào backlog (user chỉ thêm vào ROADMAP nếu muốn ưu tiên). Giữ phần "Việc cần làm thủ công 1 lần (P0)" vì là setup secrets/migration (khác task hàng ngày). Doc khớp scripts hiện tại (refill, pick, orchestrator, roadmap format). Chỉ sửa doc; không code/logic.

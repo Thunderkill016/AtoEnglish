@@ -567,7 +567,7 @@
 - **Mô tả:** Xóa `bg-glass`, `bg-grid-pattern`, `border-glass` khỏi `globals.css` nếu không còn dùng trong `src/`.
 - **Done khi:** grep src/ không match; lint+test pass.
 - **Started:** 2026-06-26 — autopilot (PHASE1: search_memory sim via logs/grep + read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6-7 + MINIMAL_V2 + grep no-usage in src; PHASE2 plan+backlog in_progress (3ready>=2 skip refill); PHASE3: purge defs)
-- **Completed:** 2026-06-26 — 0 uses in src/ (grep clean); removed 3 @utility blocks from globals.css; tsc0 + lint0 + 170 tests pass; commit + push via git-push.sh main; autonomous
+- **Completed:** 2026-06-26 — 0 uses in src/ (grep clean); removed 3 @utility blocks from globals.css; tsc0 + lint0 + 170 tests pass; commit 8d1cb7b + push via git-push.sh main; autonomous
 
 ### TASK-089 — Speaking: tab → sub-routes
 - **Status:** `ready`
@@ -591,7 +591,7 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
-| 2026-06-26 | TASK-088 | PHASE1 search_memory sim + read agents+backlog+plan+roadmap+content+minimalv2+grep (0 uses src/); PHASE2 PLAN+BACKLOG in_progress (3r>=2 skip); PHASE3 purge 3 utils from globals.css; gates 0+170+0; commit+push via git-push main | done — [SHA] |
+| 2026-06-26 | TASK-088 | PHASE1 search_memory sim + read agents+backlog+plan+roadmap+content+minimalv2+grep (0 uses src/); PHASE2 PLAN+BACKLOG in_progress (3r>=2 skip); PHASE3 purge 3 utils from globals.css; gates 0+170+0; commit+push via git-push main | done — 8d1cb7b |
 | 2026-06-26 | TASK-089 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-06-26 | TASK-090 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-06-26 | TASK-085 | auto-refill từ AGENT_ROADMAP.md | ready |
