@@ -131,4 +131,4 @@
 | 2026-06-26 | TASK-030 | Re-verify: ran gTTS for 17/18, all 14/14 clips, lint clean, 159 tests pass | done — 202bfea (final log+push) |
 | 2026-06-26 | TASK-031 | Native audio B1 (extend gen+pkg, 196 MP3s unit19-32, test fix for env, lint+159+tsc pass) | done — 2119534 |
 | 2026-06-26 | TASK-032 | Persist onboarding Q2-Q4: new migration user_onboarding_profile, pass all params in login+callback, insert profile + daily_xp_goal, patch types, helpers; lint+159+tsc pass | done — cab2260 |
-| 2026-06-26 | TASK-033 | Native audio B2 (unit-33..42) — generator+b2 script, 144 MP3s, lint+159 pass | done — (pending SHA) |
+| 2026-06-26 | TASK-033 | Native audio B2 (unit-33..42) — generator+b2 script, 144 MP3s, lint+159 pass | done — cff5faa |

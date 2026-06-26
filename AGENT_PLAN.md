@@ -129,4 +129,4 @@
 **Rủi ro**: gTTS rate limit on 144 calls; unit-41 has 18 clips; path mismatch unit33 vs unit-33 (TASK-036).
 **Done khi**: All unit-33..42 folders have correct MP3 counts; lint+test pass; pushed.
 
-| 2026-06-26 | TASK-033 | B2 audio batch unit-33..42 (144 clips), extend gen+b2 script, lint+159 pass | done — (SHA) |
+| 2026-06-26 | TASK-033 | B2 audio batch unit-33..42 (144 clips), extend gen+b2 script, lint+159 pass | done — cff5faa |
