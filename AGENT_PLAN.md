@@ -7,7 +7,7 @@
 | Field | Value |
 |-------|-------|
 | Started | 2026-06-26 |
-| Focus | TASK-035 E2E onboarding profile persist (TASK-034 types already committed) |
+| Focus | TASK-036 Fix audio path mismatch (unitN vs unit-N) + refill if low |
 | Owner | Autopilot (no human) |
 
 ### TASK-021 — Sync placement flow, 50 units, header shell, autopilot docs (PAGE_SPECIFICATIONS.md + AGENT_*)
@@ -131,6 +131,7 @@
 
 | 2026-06-26 | TASK-033 | B2 audio batch unit-33..42 (144 clips), extend gen+b2 script, lint+159 pass | done — cff5faa |
 | 2026-06-26 | TASK-035 | research(memory+agents+e2e files), plan update, extend helpers/auth + onboarding.spec for DB verify of profile+xp_goal on quiz+signup, cleanup, lint+159+tsc pass, commit+push | done — b23d945 |
+| 2026-06-26 | TASK-036 | research(agents+grep+data+unit-audio+config), set in_progress, update PLAN, run refill (low ready), add rewrite next.config, verify probe map 200 for unit19(B1)/unit36(B2), lint+159+tsc pass, commit+push | done — PENDING_SHA |
 
 ### TASK-034 — Regenerate Supabase types after onboarding migration
 **Mục tiêu**: Chạy `npm run db:types` (sau khi migration `user_onboarding_profile` đã apply trên prod). So sánh output với patch tạm thời (từ TASK-032); nếu khác (table order, Relationships: [] vs FK, generated header) thì overwrite `src/types/supabase.ts` bằng generated chính thức từ prod schema. Commit nếu có thay đổi. Đảm bảo tsc/lint/test pass, types khớp live.
@@ -169,3 +170,26 @@
 - Admin key required for verify/clean — test.skip if !hasE2EAdminCredentials (pattern from placement).
 - If signup push happens before DB visible → poll query with retry.
 **Done khi**: Test mới thêm, chạy qua flow quiz+signup, DB assert đúng (goal=work, obstacle=fear, daily_minutes=15, daily_xp_goal=50); lint + all unit tests pass; 1 commit pushed; backlog done + log SHA; no user asked; tự debug nếu fail.
+
+### TASK-036 — Fix audio path mismatch (unitN vs unit-N folders)
+**Mục tiêu**: Data hardcodes `/audio/unit19/...` (no hyphen) for vocab/dialogue audio (and all unit1-42), but actual files generated live in `public/audio/unit-19/` (hyphen). This causes playUnitAudio's probeAudio to always get error (404), so native MP3 never used, always TTS fallback. Fix by adding rewrite rule so `/audio/unit19/foo.mp3` serves 200 from the hyphen folder. Verify probe succeeds for B1 (unit-19 sample) and B2. Minimal change, no edit to 50+ data files.
+**Bước thực hiện**:
+1. Search memory (simulated safe) + read AGENTS.md, AGENT_BACKLOG/PLAN/ROADMAP, unit-audio.ts (probe), sample data unit19.ts + unit1.ts + unit36.ts (confirm /audio/unitN/ paths), scripts/generate-unit-audio.ts (uses hyphen slug for outDir), next.config.mjs, public/audio/unit-*/ ls (confirm hyphen folders), unit-audio.test.ts, prior audio logs.
+2. Set BACKLOG TASK-036 Status to `in_progress`; update PLAN header + add this section.
+3. Since ready==1 <2, run `bash scripts/agent-refill-backlog.sh` (non-dry) — it auto adds ready from ROADMAP (e.g. 037+), commits+pushes the refill if any.
+4. Minimal implement: add `async rewrites()` to next.config.mjs that maps `/audio/unit(\d+)/:file*` → `/audio/unit-$1/:file*` (covers unit1-unit42; A0 paths already match their folders).
+5. Verify paths serve 200: use background dev or python -m http but for rewrite use `npm run dev` bg + curl -I http://localhost:3000/audio/unit19/incident.mp3 (should 200 OK mp3); repeat for unit1 sample + unit36 (B2). Also simulate probe logic.
+6. Run `npm run lint && npm run test` (and npx tsc --noEmit). Fix any issue (expect clean).
+7. Update BACKLOG (in_progress → done + Nhật ký + SHA), PLAN log table; git pull --rebase.
+8. git add next.config.mjs AGENT_BACKLOG.md AGENT_PLAN.md ; commit "fix(audio): add rewrite /audio/unitN/ → /audio/unit-N/ so native MP3 probe 200 (TASK-036)"; push.
+9. (Optional post) if refill ran, note the new readies in log.
+**Rủi ro**:
+- Rewrite regex syntax in next.config: must use correct :param(regexp) or source pattern that Next accepts (tested patterns: /audio/unit: n(\\d+)/... ); wrong = 404 still or build err → debug, use working form.
+- Affects only numeric unitN, A0-a0 already hyphenated in data+folder. Good.
+- Dev server vs prod (vercel) rewrite behavior; static files served with correct content-type for .mp3.
+- No secret needed; pure config + static.
+- If multiple rewrites later, order; put early.
+- Tests pass because they use stub or missing; real browser probe will now succeed.
+- If git push conflict after refill (which also pushes), use pull --rebase.
+- Fail 2x → blocked.
+**Done khi**: `/audio/unit19/incident.mp3` (and unit1, unit36) returns HTTP 200 when requested; playUnitAudio can return true (native) for valid B1/B2 samples; `npm run lint && npm run test` 0 issues; 1 commit (or with refill) pushed; backlog status=done + entry; no user asked; autonomous.

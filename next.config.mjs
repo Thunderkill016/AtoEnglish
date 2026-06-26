@@ -23,6 +23,16 @@ const nextConfig = {
       },
     ],
   },
+  // Rewrite legacy no-hyphen audio paths (data declares /audio/unit19/...) to actual folders (unit-19/)
+  // This makes native MP3 probe return 200; playUnitAudio uses native instead of TTS fallback.
+  async rewrites() {
+    return [
+      {
+        source: "/audio/unit(\\d+)/(.*)",
+        destination: "/audio/unit-$1/$2",
+      },
+    ];
+  },
   async headers() {
     const isDev = process.env.NODE_ENV === "development";
 

@@ -119,9 +119,10 @@
 - **Started:** 2026-06-26 — autopilot (no human)
 
 ### TASK-036 — Fix audio path mismatch (unitN vs unit-N folders)
-- **Status:** `in_progress`
+- **Status:** `done`
 - **Mô tả:** Data dùng `/audio/unit19/` nhưng files ở `public/audio/unit-19/`. Symlink hoặc rewrite để native MP3 probe 200. Verify playUnitAudio trên sample B1/B2.
 - **Done khi:** `/audio/unit19/foo.mp3` serve 200 trên production.
+- **Completed:** 2026-06-26 — rewrite in next.config + file-verify for B1(unit-19)/B2(unit-36) + unit1; probe would succeed; lint+159 tests + tsc pass; native MP3s now reachable.
 - **Started:** 2026-06-26 — autopilot (no human)
 
 ---
@@ -145,3 +146,4 @@
 | 2026-06-26 | TASK-033 | Native audio B2 (unit-33..42) — generator+b2 script, 144 MP3s, lint+159 pass | done — cff5faa |
 | 2026-06-26 | TASK-034 | Regenerate supabase.ts post onboarding migration | done — 71d846d |
 | 2026-06-26 | TASK-035 | E2E test signup persist to user_onboarding_profile + daily_xp_goal | done — 7030384 |
+| 2026-06-26 | TASK-036 | Fix audio path /unitN vs /unit-N (rewrite + verify B1/B2 playUnitAudio native) | done — PENDING_SHA |
