@@ -7,7 +7,7 @@
 | Field | Value |
 |-------|-------|
 | Started | 2026-06-26 |
-| Focus | Kế hoạch tối giản + content gates done. TASK-046 done. TASK-047: GitHub agent-health workflow to fail on ready=0 (daemon stall detect) |
+| Focus | TASK-048: Server action getOnboardingProfile() for dashboard/settings; maintenance sweeps ready. |
 | Owner | Autopilot (no human) |
 
 ### TASK-045 — Sync AGENT_AUTOPILOT.md với auto-refill
@@ -615,3 +615,29 @@
 - Fail 2 lần liên → blocked + lý do.
 - Pure config + docs; tự debug từ output lint/test + (sau) GitHub run log.
 **Done khi**: agent-health.yml chứa schedule cron + step grep backlog mà exit 1 + ::error khi ready==0 (và ✅ khi >0); manual dispatch vẫn hoạt động; `npm run lint && npm run test` pass; 1 commit + push via git-push.sh main; BACKLOG status=done + entry SHA+date; no user asked; autonomous.
+
+### TASK-048 — Onboarding profile read API
+**Mục tiêu**: Thêm server action `getOnboardingProfile()` (kiểu trả về rõ ràng) để client/server component có thể đọc goal/obstacle/daily_minutes từ bảng user_onboarding_profile (đã persist ở TASK-032/035). Dùng (gọi + truyền) trên dashboard/page.tsx và settings/page.tsx (RSC pattern parallel fetch). Giữ minimal, pattern giống getUserProgress/getProgressStats: await createClient, auth.getUser, .select, maybeSingle, safe return. Không đổi UI, không thêm cột, không write, chỉ read + expose typed. 
+**Bước thực hiện**:
+1. Search memory("TASK-048" + "getOnboardingProfile" + "onboarding profile") (sim via logs empty for impl) + read AGENTS.md (ALWAYS), AGENT_BACKLOG/PLAN/ROADMAP, CONTENT_STYLE.md §6–7, src/app/actions/stats.ts (get* pattern), src/types/supabase.ts (table Row), src/lib/onboarding.ts (helpers), src/app/(main)/dashboard/page.tsx + components/*, src/app/(main)/settings/page.tsx + SettingsClient.tsx, src/app/auth/callback/route.ts + login (insert pattern for shape), src/__tests__/integration/progress.integration.test.ts (profile test), scripts for any.
+2. Grep confirm absence of getOnboardingProfile fn; identify edit targets: primarily actions/stats.ts + dashboard/page.tsx + settings/page.tsx (to achieve "dùng trên").
+3. Update BACKLOG: TASK-048 status `in_progress` (done prior).
+4. Update AGENT_PLAN.md với mục tiêu + bước + rủi ro cho TASK-048 (this section).
+5. Nếu ready <2: chạy `bash scripts/agent-refill-backlog.sh` (ran: 3 ready >=2 skip; KHÔNG hỏi).
+6. PHASE3 implement tối thiểu:
+   - Add in src/app/actions/stats.ts: export async function getOnboardingProfile(): Promise<{success:boolean; profile: {goal:string; obstacle:string; daily_minutes:number; created_at?:string; updated_at?:string} | null }>
+     Inside: await createClient, getUser, if no user return {success:true, profile:null}, select from "user_onboarding_profile" .eq user_id .maybeSingle(), map to typed, return success+profile (or default null).
+   - Use in dashboard/page.tsx: import, parallel await with getUserProgress/getCurrentUnit, pass as prop to DashboardMinimalClient (add optional prop to interface for compile).
+   - Use in settings/page.tsx: import + await getOnboardingProfile(), pass initialOnboardingProfile or similar to SettingsClient (add optional).
+7. `npm run lint && npm run test` (npx tsc --noEmit if needed). Fix minimal.
+8. Pass → update BACKLOG done + Nhật ký entry + SHA; update PLAN log table.
+9. git pull --rebase; git add AGENT_*.md src/app/actions/stats.ts src/app/(main)/dashboard/page.tsx src/app/(main)/settings/page.tsx src/app/(main)/dashboard/components/DashboardMinimalClient.tsx? src/app/(main)/settings/SettingsClient.tsx? ; commit "feat(actions): add getOnboardingProfile server action + wire use in dashboard/settings (TASK-048)"; `bash scripts/git-push.sh main`.
+**Rủi ro**:
+- Table may return null for legacy users (pre-TASK-032) → handle gracefully return null or defaults, UI later can show "chưa có".
+- Prop drilling to client: add optional interface fields (no breaking); keep minimal no display yet.
+- Auth in RSC: use await createClient per AGENTS rule.
+- No rate limit needed (read only, not write action).
+- If types/supabase stale (but db:types not in scope; use any or inline).
+- Fail 2x → blocked + lý do.
+- No secret/DB write; pure read action + callers.
+**Done khi**: getOnboardingProfile exists + typed return; called from dashboard RSC + settings RSC; lint+test pass (no type err); 1 commit + push via git-push.sh main; BACKLOG status=done + Nhật ký SHA; no user asked; autonomous.

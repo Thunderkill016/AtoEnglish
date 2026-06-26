@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getUserProgress } from "@/app/actions/stats";
+import { getUserProgress, getOnboardingProfile } from "@/app/actions/stats";
 import { getCurrentUnit } from "@/app/actions/unit";
 import { UNITS } from "@/lib/constants/units";
 import DashboardMinimalClient from "./components/DashboardMinimalClient";
@@ -12,9 +12,10 @@ export const metadata: Metadata = {
 export const revalidate = 30;
 
 export default async function DashboardPage() {
-  const [progressRes, unitRes] = await Promise.all([
+  const [progressRes, unitRes, profileRes] = await Promise.all([
     getUserProgress(),
     getCurrentUnit(),
+    getOnboardingProfile(),
   ]);
 
   let userName = "Học viên";
@@ -50,6 +51,7 @@ export default async function DashboardPage() {
       userName={userName}
       currentStreak={currentStreak}
       currentUnitData={currentUnitData}
+      onboardingProfile={profileRes.success ? profileRes.profile : null}
     />
   );
 }

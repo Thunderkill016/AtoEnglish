@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import { getNotificationPreferences } from "@/app/actions/notifications";
+import { getOnboardingProfile } from "@/app/actions/stats";
 import SettingsClient from "./SettingsClient";
 
 export const metadata: Metadata = {
@@ -15,8 +16,11 @@ export default async function SettingsPage() {
 
   const userEmail = user?.email ?? "";
 
-  // Load notification preferences from DB (parallel with page render)
-  const notifPrefs = await getNotificationPreferences();
+  // Load notification preferences + onboarding profile (parallel)
+  const [notifPrefs, profileRes] = await Promise.all([
+    getNotificationPreferences(),
+    getOnboardingProfile(),
+  ]);
 
   return (
     <main id="main-content">
@@ -24,6 +28,7 @@ export default async function SettingsPage() {
         userEmail={userEmail}
         initialNotifHour={notifPrefs?.notificationHour ?? 20}
         initialEmailNotifs={notifPrefs?.emailNotifications ?? true}
+        initialOnboardingProfile={profileRes.success ? profileRes.profile : null}
       />
     </main>
   );

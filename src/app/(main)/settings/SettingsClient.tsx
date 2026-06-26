@@ -197,10 +197,12 @@ export default function SettingsClient({
   userEmail,
   initialNotifHour = 20,
   initialEmailNotifs = true,
+  initialOnboardingProfile: _initialOnboardingProfile, // fetched via getOnboardingProfile() in page (TASK-048)
 }: {
   userEmail: string;
   initialNotifHour?: number;
   initialEmailNotifs?: boolean;
+  initialOnboardingProfile?: { goal: string; obstacle: string; daily_minutes: number } | null;
 }) {
   const [saved, setSaved] = useState(false);
   const [isPushPending, startPushTransition] = useTransition();

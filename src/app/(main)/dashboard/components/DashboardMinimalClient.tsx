@@ -19,6 +19,7 @@ interface DashboardMinimalClientProps {
     route: string;
     xp: number;
   };
+  onboardingProfile?: { goal: string; obstacle: string; daily_minutes: number } | null;
 }
 
 /**
@@ -29,6 +30,7 @@ export default function DashboardMinimalClient({
   userName,
   currentStreak,
   currentUnitData,
+  onboardingProfile: _onboardingProfile, // used via server action in page (for dashboard/settings)
 }: DashboardMinimalClientProps) {
   useEffect(() => {
     if (typeof performance !== "undefined") {

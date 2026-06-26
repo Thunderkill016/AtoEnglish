@@ -354,4 +354,56 @@ export async function getTodayMissionFlags(
   }
 }
 
+/**
+ * Server Action đọc hồ sơ onboarding (goal, obstacle, daily_minutes) từ user_onboarding_profile.
+ * Dùng cho dashboard/settings personalization. Null nếu chưa có (legacy user).
+ * Pattern: getUserProgress.
+ */
+export async function getOnboardingProfile() {
+  try {
+    const supabase = await createClient();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+
+    if (authError || !user) {
+      return { success: true, profile: null };
+    }
+
+    const { data, error } = await supabase
+      .from("user_onboarding_profile")
+      .select("goal, obstacle, daily_minutes, created_at, updated_at")
+      .eq("user_id", user.id)
+      .maybeSingle();
+
+    if (error) {
+      return { success: false, error: `Lỗi truy vấn: ${error.message}` };
+    }
+
+    if (!data) {
+      return { success: true, profile: null };
+    }
+
+    return {
+      success: true,
+      profile: {
+        goal: data.goal,
+        obstacle: data.obstacle,
+        daily_minutes: data.daily_minutes,
+        created_at: data.created_at,
+        updated_at: data.updated_at,
+      }
+    };
+  } catch (error) {
+    const errMsg = error instanceof Error ? error.message : String(error);
+    return { success: false, error: errMsg };
+  }
+}
+
+export type OnboardingProfile = {
+  goal: string;
+  obstacle: string;
+  daily_minutes: number;
+  created_at?: string;
+  updated_at?: string;
+};
+
 
