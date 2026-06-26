@@ -171,25 +171,27 @@ Promise.all([getUserProgress(), getCompletedUnitsCount(), getDueCards(), getCurr
 **File**: `src/app/(main)/learn/[unitSlug]/page.tsx`  
 **Component**: `src/components/learn/UnitTemplate.tsx` (main engine)
 
-**Mục tiêu**: Dạy 1 unit theo Hybrid Model — 9 sections. Hỗ trợ 50 units từ A0 foundation (bảng chữ cái) → B2 (advanced conditionals, IELTS 6.5+).
+**Mục tiêu**: Dạy 1 unit theo **IPOR Hybrid Model** — 10 sections. Config tập trung tại `src/lib/lessons/learning-flow.ts`. Hỗ trợ 50 units A0 → B2.
 
-**Section flow** (`SECTION_ORDER = [1, 5, 2, 3, 4, 9, 6, 7, 8]`):
+**Section flow** (`SECTION_ORDER` — vocab **trước** dialogue, Nation & Webb 2011):
 
-| Step | Section # | Tên | Mô tả |
-|------|-----------|-----|-------|
-| 1 | 1 | Khởi động | SRS warmup cards + cultural note |
-| 2 | 5 | Hội thoại | Real-life dialogue (Implicit Input) |
-| 3 | 2 | Từ vựng | Vocab cards + collocation + audio |
-| 4 | 3 | Ngữ pháp | Grammar rule + CCQ |
-| 5 | 4 | Luyện tập | Sentence scramble tiles |
-| 6 | 9 | Dịch câu | VN→EN translation (NEW) |
-| 7 | 6 | Shadowing | Listen + repeat + score |
-| 8 | 7 | Luyện nói | Free speaking + recording |
-| 9 | 8 | Hoàn thành | Final quiz + cumulative review |
+| Step | § | Tên | IPOR | Mô tả |
+|------|---|-----|------|-------|
+| 1 | 1 | Khởi động | Input | SRS warmup + situation hook + cultural note |
+| 2 | 2 | Từ vựng | Input | Pre-teach vocab + active recall flip cards |
+| 3 | 3 | Ngữ pháp | Processing | Inductive grammar + CCQ |
+| 4 | 4 | Luyện tập | Processing | Scramble, matching, dictation… |
+| 5 | 5 | Hội thoại | Input | Dialogue sau khi đã có vocab coverage |
+| 6 | 10 | Phản xạ | Processing | Fluency drill (automaticity) |
+| 7 | 9 | Dịch câu | Output | VN→EN production |
+| 8 | 6 | Shadowing | Output | Listen + repeat + score |
+| 9 | 7 | Luyện nói | Output | Free speaking |
+| 10 | 8 | Hoàn thành | Review | Quiz + cumulative review + FSRS seed |
 
 **UI features**:
-- Top progress bar (section-based)
-- Section name label below progress bar
+- IPOR phase bar (Tiếp nhận → Xử lý → Sản xuất → Ôn tập)
+- Step dots progress bar (section-based)
+- Section name label + mục tiêu giai đoạn
 - Back button (left) — exits lesson
 - Sound effects on correct/wrong answers
 - Confetti on unit completion

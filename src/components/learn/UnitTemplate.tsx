@@ -22,24 +22,19 @@ import SpeakingSection from "./sections/SpeakingSection";
 import QuizSection from "./sections/QuizSection";
 import TranslateSection from "./sections/TranslateSection";
 import FluencySection from "./sections/FluencySection";
+import LessonPhaseBar from "./LessonPhaseBar";
 import type { ReadingPassage } from "@/components/exercises/ReadingComprehensionExercise";
-
-// ─── Section order & labels (10 steps, Hybrid pedagogical flow) ───────────────
-const SECTION_LABELS: Record<number, string> = {
-  1: "Khởi động",
-  2: "Từ vựng",
-  3: "Ngữ pháp",
-  4: "Luyện tập",
-  5: "Hội thoại",
-  10: "Phản xạ",
-  9: "Dịch câu",
-  6: "Shadowing",
-  7: "Luyện nói",
-  8: "Hoàn thành",
-};
-const SECTION_ORDER = [1, 2, 3, 4, 5, 10, 9, 6, 7, 8] as const;
-type SectionNumber = (typeof SECTION_ORDER)[number];
-const TOTAL_SECTIONS = SECTION_ORDER.length;
+import {
+  SECTION_ORDER,
+  SECTION_LABELS,
+  TOTAL_SECTIONS,
+  MINI_SESSION_START,
+  MINI_SESSION_QUIZ,
+  getSectionPhase,
+  getSectionGoalVi,
+  type SectionNumber,
+} from "@/lib/lessons/learning-flow";
+import { enrichUnitForLearning } from "@/lib/lessons/enrich-unit";
 
 // ─── Interfaces ──────────────────────────────────────────────────────────────
 export interface VocabItem {
@@ -352,11 +347,12 @@ function VideoShadowingCard({ videoId }: { videoId: string }) {
 }
 
 export default function UnitTemplate({
-  unit,
+  unit: rawUnit,
   nextRoute = "/dashboard",
   startMiniSession = false,
 }: UnitTemplateProps) {
-  const [section, setSection] = useState<number>(startMiniSession ? 4 : 1);
+  const unit = enrichUnitForLearning(rawUnit);
+  const [section, setSection] = useState<number>(startMiniSession ? MINI_SESSION_START : 1);
   const [isCompleted, setIsCompleted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [miniSession, setMiniSession] = useState(startMiniSession);
@@ -555,8 +551,8 @@ export default function UnitTemplate({
   const goNext = () => {
     window.speechSynthesis?.cancel();
     // S3-2: Micro-session mode — after Practice (4) jump straight to Quiz (8)
-    if (miniSession && section === 4) {
-      setSection(8);
+    if (miniSession && section === MINI_SESSION_START) {
+      setSection(MINI_SESSION_QUIZ);
       window.scrollTo({ top: 0, behavior: "smooth" });
       return;
     }
@@ -803,6 +799,8 @@ export default function UnitTemplate({
 
   const sectionOrderIdx = SECTION_ORDER.indexOf(section as SectionNumber);
   const progress = Math.round((sectionOrderIdx / (TOTAL_SECTIONS - 1)) * 100);
+  const currentPhase = getSectionPhase(section);
+  const sectionGoal = getSectionGoalVi(section);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-zinc-950 via-zinc-900 to-emerald-950/20">
@@ -885,6 +883,8 @@ export default function UnitTemplate({
               </div>
             </div>
           </div>
+
+          <LessonPhaseBar currentPhase={currentPhase} goalVi={sectionGoal} />
 
           {/* Step dots progress */}
           <div

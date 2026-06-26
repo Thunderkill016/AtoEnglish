@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { saveCardToSRS } from "@/app/actions/cards";
 import type { UnitData } from "../UnitTemplate";
 import { playUnitAudio } from "@/lib/utils/unit-audio";
+import { VOCAB_ACTIVE_RECALL_HINT } from "@/lib/lessons/learning-flow";
 
 interface VocabSectionProps {
   unit: UnitData;
@@ -66,8 +67,9 @@ export default function VocabSection({
           <p className="text-xs text-zinc-500">~5 phút</p>
         </div>
       </div>
-      <p className="text-zinc-400 mb-2 text-sm">
-        Nhấn vào thẻ để lật và xem nghĩa. Nghe phát âm chuẩn bằng nút loa.
+      <p className="text-zinc-400 mb-2 text-sm leading-relaxed">
+        <span className="text-emerald-500/90 font-semibold">Active recall: </span>
+        {VOCAB_ACTIVE_RECALL_HINT}
       </p>
 
       {/* Counter */}
