@@ -267,7 +267,7 @@
 | 2026-06-26 | TASK-021 | Sync docs: placement, 50u, header, autopilot | done — 3d36d2f (docs commit); f9f21a1 (status) |
 | 2026-06-26 | TASK-030 | Native audio A2 batch unit-13..18 (extend script + 84 MP3s) | done — 6bbc693 |
 | 2026-06-26 | TASK-030 | Re-verify gen+counts+lint+test (all 6 units 14 clips) | done — 202bfea (pushed) |
-| 2026-06-26T20:4xZ | TASK-063 | PHASE1: read AGENTS/BACKLOG/PLAN/CONTENT§6-7 + grep TASK-063 + sim search_memory(logs empty for sweep); PHASE2: PLAN focus+section + BACKLOG in_progress (3ready>=2 skip refill); PHASE3: rerun gates (lint0 + 170t pass + tsc0 + cs50/50 + audit50/50) — no failure, no fix; sync nhật ký; commit+push via git-push; status done | done — fb4c049 |
+| 2026-06-26T20:4xZ | TASK-063 | PHASE1: read AGENTS/BACKLOG/PLAN/CONTENT§6-7 + grep TASK-063 + sim search_memory(logs empty for sweep); PHASE2: PLAN focus+section + BACKLOG in_progress (3ready>=2 skip refill); PHASE3: rerun gates (lint0 + 170t pass + tsc0 + cs50/50 + audit50/50) — no failure, no fix; sync nhật ký; commit+push via git-push; status done | done — 6d7a2c3 (fb4c049) |
 | 2026-06-26T03:25Z | TASK-030 | Autopilot full cycle: research(agents+grep), plan update, run gen 17+18, lint+159test, 3 commits/push, log | complete — c58cf13 |
 | 2026-06-26 | TASK-031 | Research(agents+grep+units+gen), update PLAN/BACKLOG to in_progress, extend generator+pkg for B1 19-32, batch gTTS, lint+test, commit+push | done — 2119534a5e432816f2cf95c1de5b84767066a2aa (196 clips + fixes) |
 | 2026-06-26 | TASK-032 | research(agents+grep+memory+login/callback/migrations), plan update, create migration 20260626140000, edit onboarding/login/callback/types, hoist helpers, wire insert+upsert+params+xp_goal, lint+159+tsc pass, commit+push | done — cab2260 |
