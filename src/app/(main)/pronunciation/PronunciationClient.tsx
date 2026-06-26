@@ -141,81 +141,65 @@ export default function PronunciationClient() {
   const masteredCount = ALL_SOUNDS.filter((s) => mastered.has(s.id)).length;
   const totalCount = ALL_SOUNDS.length;
 
-  const DIFFICULTY_COLOR = {
-    easy: "#10b981",
-    medium: "#f59e0b",
-    hard: "#ef4444",
-  };
-
   const DIFFICULTY_LABEL = {
     easy: "Dễ",
     medium: "Vừa",
     hard: "Khó",
   };
 
+  // V2 design-system colors (no inline styles)
+  const DIFF = {
+    easy: {
+      border: "border-emerald-500",
+      bg: "bg-emerald-500/10",
+      text: "text-emerald-500",
+      dot: "bg-emerald-500",
+      ring: "ring-emerald-500/50",
+    },
+    medium: {
+      border: "border-amber-500",
+      bg: "bg-amber-500/10",
+      text: "text-amber-500",
+      dot: "bg-amber-500",
+      ring: "ring-amber-500/50",
+    },
+    hard: {
+      border: "border-red-500",
+      bg: "bg-red-500/10",
+      text: "text-red-500",
+      dot: "bg-red-500",
+      ring: "ring-red-500/50",
+    },
+  } as const;
+
   function SoundCard({ sound }: { sound: IpaSound }) {
     const isMastered = mastered.has(sound.id);
     const isSelected = selected?.id === sound.id;
+    const d = DIFF[sound.difficulty];
+    const baseCard = "rounded-xl p-2.5 flex flex-col items-center gap-0.5 border-2 relative transition-all active:scale-[0.985]";
+    const cardCls = `${baseCard} ${isSelected ? `${d.border} ${d.bg}` : isMastered ? "border-emerald-500/50 bg-emerald-500/5" : "border-border/60 bg-card"}`;
+    const symCls = `text-[22px] font-mono font-bold leading-none ${isSelected ? d.text : isMastered ? "text-emerald-400" : "text-foreground"}`;
     return (
       <motion.button
-        whileHover={{ scale: 1.06 }}
+        whileHover={{ scale: 1.04 }}
         whileTap={{ scale: 0.96 }}
         onClick={() => {
           setSelected(isSelected ? null : sound);
           setHasRecording(false);
           setIsRecording(false);
         }}
-        style={{
-          background: isSelected
-            ? `${DIFFICULTY_COLOR[sound.difficulty]}20`
-            : isMastered
-              ? "#10b98110"
-              : "#111118",
-          border: `1.5px solid ${isSelected
-            ? DIFFICULTY_COLOR[sound.difficulty]
-            : isMastered
-              ? "#10b98150"
-              : "#27272a"}`,
-          borderRadius: 12,
-          padding: "10px 6px",
-          cursor: "pointer",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          gap: 4,
-          position: "relative",
-        }}
+        className={cardCls}
       >
         {isMastered && (
-          <CheckCircle2
-            size={10}
-            color="#10b981"
-            style={{ position: "absolute", top: 4, right: 4 }}
-          />
+          <CheckCircle2 size={10} className="absolute top-1 right-1 text-emerald-500" />
         )}
-        <span
-          style={{
-            fontSize: 22,
-            fontFamily: "monospace",
-            fontWeight: 700,
-            color: isSelected ? DIFFICULTY_COLOR[sound.difficulty] : "#fafafa",
-            lineHeight: 1,
-          }}
-        >
+        <span className={symCls}>
           {sound.symbol}
         </span>
-        <span style={{ fontSize: 9, color: "#52525b", fontWeight: 600 }}>
+        <span className="text-[9px] text-muted-foreground font-semibold">
           {sound.exampleWord}
         </span>
-        <div
-          style={{
-            width: 6,
-            height: 6,
-            borderRadius: "50%",
-            background: DIFFICULTY_COLOR[sound.difficulty],
-            marginTop: 2,
-          }}
-        />
+        <div className={`w-1.5 h-1.5 rounded-full mt-0.5 ${d.dot}`} />
       </motion.button>
     );
   }
@@ -225,55 +209,37 @@ export default function PronunciationClient() {
       title="44 Âm IPA Tiếng Anh"
       subtitle="Nhấn vào âm để xem hướng dẫn · Nghe audio · Luyện giọng"
     >
-      <div style={{ maxWidth: 520, margin: "0 auto" }} className="pb-16">
+      <div className="max-w-[520px] mx-auto pb-16">
 
         {/* Progress bar */}
-        <div
-          style={{
-            background: "#111118",
-            border: "1px solid #27272a",
-            borderRadius: 12,
-            padding: "12px 14px",
-            marginBottom: 14,
-            display: "flex",
-            alignItems: "center",
-            gap: 12,
-          }}
-        >
-          <div style={{ flex: 1 }}>
-            <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
-              <span style={{ fontSize: 11, color: "#a1a1aa", fontWeight: 600 }}>Đã thuộc</span>
-              <span style={{ fontSize: 11, color: "#10b981", fontWeight: 700 }}>
+        <div className="flex items-center gap-3 rounded-xl border border-border/60 bg-card p-3 mb-3.5">
+          <div className="flex-1">
+            <div className="flex justify-between mb-1.5">
+              <span className="text-[11px] text-muted-foreground font-semibold">Đã thuộc</span>
+              <span className="text-[11px] text-emerald-500 font-bold">
                 {masteredCount}/{totalCount}
               </span>
             </div>
-            <div style={{ height: 6, background: "#27272a", borderRadius: 99, overflow: "hidden" }}>
+            <div className="h-1.5 bg-muted rounded-full overflow-hidden">
               <motion.div
                 initial={{ width: 0 }}
                 animate={{ width: `${(masteredCount / totalCount) * 100}%` }}
                 transition={{ duration: 0.6 }}
-                style={{ height: "100%", background: "#10b981", borderRadius: 99 }}
+                className="h-full bg-emerald-500 rounded-full"
               />
             </div>
           </div>
           <button
             onClick={() => saveMastered(new Set())}
             title="Reset tiến độ"
-            style={{ background: "none", border: "none", cursor: "pointer", padding: 4 }}
+            className="p-1 text-muted-foreground hover:text-foreground"
           >
-            <RotateCcw size={14} color="#52525b" />
+            <RotateCcw size={14} />
           </button>
         </div>
 
         {/* Filter tabs */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(4, 1fr)",
-            gap: 6,
-            marginBottom: 18,
-          }}
-        >
+        <div className="grid grid-cols-4 gap-1.5 mb-4">
           {(
             [
               { key: "all", label: "Tất cả", count: ALL_SOUNDS.length },
@@ -281,49 +247,38 @@ export default function PronunciationClient() {
               { key: "consonant", label: "Consonants", count: CONSONANTS.length },
               { key: "hard", label: "🇻🇳 Khó", count: ALL_SOUNDS.filter(s => s.difficulty === "hard").length },
             ] as { key: FilterMode; label: string; count: number }[]
-          ).map((f) => (
-            <button
-              key={f.key}
-              onClick={() => setFilter(f.key)}
-              style={{
-                background: filter === f.key ? "#10b981" : "#111118",
-                border: `1px solid ${filter === f.key ? "#10b981" : "#27272a"}`,
-                borderRadius: 10,
-                padding: "8px 4px",
-                cursor: "pointer",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                gap: 2,
-              }}
-            >
-              <span style={{ fontSize: 11, fontWeight: 700, color: filter === f.key ? "#fff" : "#a1a1aa" }}>
-                {f.label}
-              </span>
-              <span style={{ fontSize: 10, color: filter === f.key ? "rgba(255,255,255,0.7)" : "#52525b" }}>
-                {f.count}
-              </span>
-            </button>
-          ))}
+          ).map((f) => {
+            const active = filter === f.key;
+            return (
+              <button
+                key={f.key}
+                onClick={() => setFilter(f.key)}
+                className={`flex flex-col items-center gap-0.5 rounded-xl border py-2 px-1 text-[11px] font-bold transition-colors ${active ? "bg-primary border-primary text-primary-foreground" : "bg-card border-border/60 text-muted-foreground"}`}
+              >
+                <span className={active ? "text-[11px] font-bold" : "text-[11px] font-bold text-muted-foreground"}>{f.label}</span>
+                <span className={`text-[10px] ${active ? "text-primary-foreground/70" : "text-muted-foreground"}`}>{f.count}</span>
+              </button>
+            );
+          })}
         </div>
 
         {/* Difficulty legend */}
-        <div style={{ display: "flex", gap: 14, marginBottom: 14 }}>
+        <div className="flex gap-4 mb-4 text-xs">
           {(["easy", "medium", "hard"] as const).map((d) => (
-            <div key={d} style={{ display: "flex", alignItems: "center", gap: 5 }}>
-              <div style={{ width: 8, height: 8, borderRadius: "50%", background: DIFFICULTY_COLOR[d] }} />
-              <span style={{ fontSize: 10, color: "#71717a" }}>{DIFFICULTY_LABEL[d]}</span>
+            <div key={d} className="flex items-center gap-1.5 text-muted-foreground">
+              <div className={`w-2 h-2 rounded-full ${DIFF[d].dot}`} />
+              <span>{DIFFICULTY_LABEL[d]}</span>
             </div>
           ))}
         </div>
 
         {/* Vowels section */}
         {filteredVowels.length > 0 && (
-          <div style={{ marginBottom: 20 }}>
-            <div style={{ fontSize: 11, color: "#71717a", fontWeight: 700, marginBottom: 10, textTransform: "uppercase", letterSpacing: "0.08em" }}>
+          <div className="mb-5">
+            <div className="text-[11px] text-muted-foreground font-bold mb-2.5 uppercase tracking-[0.08em]">
               Nguyên âm (Vowels) — {filteredVowels.length} âm
             </div>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 6 }}>
+            <div className="grid grid-cols-5 gap-1.5">
               {filteredVowels.map((s) => (
                 <SoundCard key={s.id} sound={s} />
               ))}
@@ -333,11 +288,11 @@ export default function PronunciationClient() {
 
         {/* Consonants section */}
         {filteredConsonants.length > 0 && (
-          <div style={{ marginBottom: 20 }}>
-            <div style={{ fontSize: 11, color: "#71717a", fontWeight: 700, marginBottom: 10, textTransform: "uppercase", letterSpacing: "0.08em" }}>
+          <div className="mb-5">
+            <div className="text-[11px] text-muted-foreground font-bold mb-2.5 uppercase tracking-[0.08em]">
               Phụ âm (Consonants) — {filteredConsonants.length} âm
             </div>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 6 }}>
+            <div className="grid grid-cols-5 gap-1.5">
               {filteredConsonants.map((s) => (
                 <SoundCard key={s.id} sound={s} />
               ))}
@@ -355,12 +310,7 @@ export default function PronunciationClient() {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 onClick={() => setSelected(null)}
-                style={{
-                  position: "fixed",
-                  inset: 0,
-                  background: "rgba(0,0,0,0.6)",
-                  zIndex: 40,
-                }}
+                className="fixed inset-0 bg-black/60 z-40"
               />
 
               {/* Panel */}
@@ -369,102 +319,49 @@ export default function PronunciationClient() {
                 animate={{ y: 0, opacity: 1 }}
                 exit={{ y: "100%", opacity: 0 }}
                 transition={{ type: "spring", damping: 28, stiffness: 350 }}
-                style={{
-                  position: "fixed",
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  background: "#111118",
-                  borderTop: `2px solid ${DIFFICULTY_COLOR[selected.difficulty]}`,
-                  borderRadius: "20px 20px 0 0",
-                  padding: "20px 20px 40px",
-                  zIndex: 50,
-                  maxHeight: "85dvh",
-                  overflowY: "auto",
-                  maxWidth: 520,
-                  margin: "0 auto",
-                }}
+                className={`fixed bottom-0 left-0 right-0 z-50 max-h-[85dvh] overflow-y-auto max-w-[520px] mx-auto rounded-t-3xl border-t-2 bg-card p-5 pb-10 ${DIFF[selected.difficulty].border}`}
               >
                 {/* Handle bar */}
-                <div style={{ display: "flex", justifyContent: "center", marginBottom: 16 }}>
-                  <div style={{ width: 40, height: 4, borderRadius: 99, background: "#27272a" }} />
+                <div className="flex justify-center mb-4">
+                  <div className="w-10 h-1 rounded-full bg-border" />
                 </div>
 
                 {/* Close */}
                 <button
                   onClick={() => setSelected(null)}
-                  style={{
-                    position: "absolute",
-                    top: 20,
-                    right: 20,
-                    background: "#1c1c24",
-                    border: "1px solid #27272a",
-                    borderRadius: 8,
-                    padding: 6,
-                    cursor: "pointer",
-                  }}
+                  className="absolute top-5 right-5 rounded-lg border border-border/70 bg-muted/60 p-1.5"
                 >
-                  <X size={14} color="#71717a" />
+                  <X size={14} className="text-muted-foreground" />
                 </button>
 
                 {/* Sound header */}
-                <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 16 }}>
-                  <div
-                    style={{
-                      width: 72,
-                      height: 72,
-                      borderRadius: 16,
-                      background: `${DIFFICULTY_COLOR[selected.difficulty]}15`,
-                      border: `2px solid ${DIFFICULTY_COLOR[selected.difficulty]}50`,
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      fontSize: 36,
-                      fontFamily: "monospace",
-                      fontWeight: 700,
-                      color: DIFFICULTY_COLOR[selected.difficulty],
-                      flexShrink: 0,
-                    }}
-                  >
+                <div className="flex items-center gap-4 mb-4">
+                  <div className={`w-16 h-16 rounded-2xl flex items-center justify-center text-3xl font-mono font-bold flex-shrink-0 border-2 ${DIFF[selected.difficulty].bg} ${DIFF[selected.difficulty].border} ${DIFF[selected.difficulty].text}`}>
                     {selected.symbol}
                   </div>
                   <div>
-                    <div style={{ fontSize: 11, color: DIFFICULTY_COLOR[selected.difficulty], fontWeight: 700, marginBottom: 2 }}>
+                    <div className={`text-xs font-bold mb-0.5 ${DIFF[selected.difficulty].text}`}>
                       {selected.subtype} · {DIFFICULTY_LABEL[selected.difficulty]}
                     </div>
-                    <div style={{ fontSize: 20, fontWeight: 800, color: "#fafafa", marginBottom: 2 }}>
+                    <div className="text-xl font-extrabold text-foreground mb-0.5">
                       {selected.exampleWord}
                     </div>
-                    <div style={{ fontSize: 14, color: "#71717a", fontFamily: "monospace" }}>
+                    <div className="text-sm text-muted-foreground font-mono">
                       {selected.exampleIpa}
                     </div>
-                    <div style={{ fontSize: 12, color: "#52525b" }}>
+                    <div className="text-xs text-muted-foreground">
                       {selected.exampleVn}
                     </div>
                   </div>
                 </div>
 
                 {/* Action buttons */}
-                <div style={{ display: "flex", gap: 8, marginBottom: 16 }}>
+                <div className="flex gap-2 mb-4">
                   {/* Listen */}
                   <button
                     onClick={() => speak(selected)}
                     disabled={isPlaying}
-                    style={{
-                      flex: 1,
-                      background: isPlaying ? "#27272a" : "#10b98120",
-                      border: "1px solid #10b98140",
-                      borderRadius: 10,
-                      padding: "10px",
-                      cursor: isPlaying ? "not-allowed" : "pointer",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      gap: 6,
-                      color: "#10b981",
-                      fontSize: 12,
-                      fontWeight: 700,
-                    }}
+                    className={`flex-1 flex items-center justify-center gap-1.5 rounded-xl border py-2.5 text-xs font-bold transition ${isPlaying ? "bg-muted border-border text-muted-foreground cursor-not-allowed" : "bg-emerald-500/10 border-emerald-500/40 text-emerald-500"}`}
                   >
                     <Volume2 size={15} />
                     {isPlaying ? "Đang phát..." : "Nghe"}
@@ -473,21 +370,7 @@ export default function PronunciationClient() {
                   {/* Record */}
                   <button
                     onClick={isRecording ? stopRecording : startRecording}
-                    style={{
-                      flex: 1,
-                      background: isRecording ? "#ef444420" : "#3b82f620",
-                      border: `1px solid ${isRecording ? "#ef444440" : "#3b82f640"}`,
-                      borderRadius: 10,
-                      padding: "10px",
-                      cursor: "pointer",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      gap: 6,
-                      color: isRecording ? "#ef4444" : "#3b82f6",
-                      fontSize: 12,
-                      fontWeight: 700,
-                    }}
+                    className={`flex-1 flex items-center justify-center gap-1.5 rounded-xl border py-2.5 text-xs font-bold ${isRecording ? "bg-red-500/10 border-red-500/40 text-red-500" : "bg-blue-500/10 border-blue-500/40 text-blue-500"}`}
                   >
                     {isRecording ? <Square size={15} /> : <Mic size={15} />}
                     {isRecording ? "Dừng" : "Ghi âm"}
@@ -498,21 +381,7 @@ export default function PronunciationClient() {
                     <button
                       onClick={playRecording}
                       disabled={isPlayingBack}
-                      style={{
-                        flex: 1,
-                        background: "#8b5cf620",
-                        border: "1px solid #8b5cf640",
-                        borderRadius: 10,
-                        padding: "10px",
-                        cursor: isPlayingBack ? "not-allowed" : "pointer",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        gap: 6,
-                        color: "#8b5cf6",
-                        fontSize: 12,
-                        fontWeight: 700,
-                      }}
+                      className={`flex-1 flex items-center justify-center gap-1.5 rounded-xl border py-2.5 text-xs font-bold ${isPlayingBack ? "bg-muted border-border text-muted-foreground cursor-not-allowed" : "bg-violet-500/10 border-violet-500/40 text-violet-500"}`}
                     >
                       <Play size={15} />
                       {isPlayingBack ? "..." : "Nghe lại"}
@@ -525,64 +394,38 @@ export default function PronunciationClient() {
                   <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    style={{
-                      background: "#ef444410",
-                      border: "1px solid #ef444430",
-                      borderRadius: 10,
-                      padding: "10px 12px",
-                      marginBottom: 12,
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 8,
-                    }}
+                    className="flex items-center gap-2 rounded-xl border border-red-500/30 bg-red-500/5 p-3 mb-3"
                   >
                     <motion.div
                       animate={{ scale: [1, 1.3, 1] }}
                       transition={{ repeat: Infinity, duration: 0.8 }}
-                      style={{ width: 10, height: 10, borderRadius: "50%", background: "#ef4444", flexShrink: 0 }}
+                      className="w-2.5 h-2.5 rounded-full bg-red-500 flex-shrink-0"
                     />
-                    <span style={{ fontSize: 12, color: "#ef4444" }}>
+                    <span className="text-xs text-red-500">
                       Đang ghi âm... Phát âm &quot;{selected.exampleWord}&quot; rồi nhấn Dừng
                     </span>
                   </motion.div>
                 )}
 
                 {/* How to pronounce */}
-                <div
-                  style={{
-                    background: "#0d1117",
-                    borderRadius: 12,
-                    padding: "12px",
-                    marginBottom: 10,
-                  }}
-                >
-                  <div style={{ fontSize: 11, color: "#71717a", fontWeight: 700, marginBottom: 6 }}>
+                <div className="rounded-xl bg-muted/40 p-3 mb-3">
+                  <div className="text-[11px] text-muted-foreground font-bold mb-1.5">
                     🗣️ CÁCH PHÁT ÂM
                   </div>
-                  <p style={{ fontSize: 13, color: "#a1a1aa", lineHeight: 1.6, margin: 0 }}>
+                  <p className="text-sm text-muted-foreground leading-relaxed m-0">
                     {selected.howTo}
                   </p>
                 </div>
 
                 {/* Vietnamese tip */}
                 {selected.vietnameseTip && (
-                  <div
-                    style={{
-                      background: "#f59e0b10",
-                      border: "1px solid #f59e0b30",
-                      borderRadius: 12,
-                      padding: "12px",
-                      marginBottom: 10,
-                      display: "flex",
-                      gap: 10,
-                    }}
-                  >
-                    <AlertTriangle size={15} color="#f59e0b" style={{ flexShrink: 0, marginTop: 1 }} />
+                  <div className="flex gap-2.5 rounded-xl border border-amber-500/30 bg-amber-500/5 p-3 mb-3">
+                    <AlertTriangle size={15} className="text-amber-500 flex-shrink-0 mt-0.5" />
                     <div>
-                      <div style={{ fontSize: 11, color: "#f59e0b", fontWeight: 700, marginBottom: 3 }}>
+                      <div className="text-[11px] text-amber-500 font-bold mb-1">
                         ⚠️ LỖI HAY GẶP (người Việt)
                       </div>
-                      <p style={{ fontSize: 12, color: "#a1a1aa", lineHeight: 1.5, margin: 0 }}>
+                      <p className="text-xs text-muted-foreground leading-snug m-0">
                         {selected.vietnameseTip}
                       </p>
                     </div>
@@ -590,11 +433,11 @@ export default function PronunciationClient() {
                 )}
 
                 {/* More examples */}
-                <div style={{ marginBottom: 14 }}>
-                  <div style={{ fontSize: 11, color: "#71717a", fontWeight: 700, marginBottom: 8 }}>
+                <div className="mb-4">
+                  <div className="text-[11px] text-muted-foreground font-bold mb-2">
                     📝 THÊM VÍ DỤ
                   </div>
-                  <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                  <div className="flex flex-wrap gap-1.5">
                     {[selected.exampleWord, ...selected.moreExamples].map((word) => (
                       <button
                         key={word}
@@ -605,21 +448,9 @@ export default function PronunciationClient() {
                           utt.rate = 0.85;
                           window.speechSynthesis.speak(utt);
                         }}
-                        style={{
-                          background: "#1c1c24",
-                          border: "1px solid #27272a",
-                          borderRadius: 8,
-                          padding: "5px 10px",
-                          cursor: "pointer",
-                          display: "flex",
-                          alignItems: "center",
-                          gap: 4,
-                          color: "#e4e4e7",
-                          fontSize: 12,
-                          fontWeight: 600,
-                        }}
+                        className="flex items-center gap-1 rounded-lg border border-border/60 bg-muted/60 px-2.5 py-1 text-xs font-semibold text-foreground"
                       >
-                        <Volume2 size={10} color="#52525b" />
+                        <Volume2 size={10} className="text-muted-foreground" />
                         {word}
                       </button>
                     ))}
@@ -627,7 +458,7 @@ export default function PronunciationClient() {
                 </div>
 
                 {/* Navigation: prev/next */}
-                <div style={{ display: "flex", gap: 8, marginBottom: 14 }}>
+                <div className="flex gap-2 mb-4">
                   {(() => {
                     const all = ALL_SOUNDS;
                     const idx = all.findIndex((s) => s.id === selected.id);
@@ -638,44 +469,17 @@ export default function PronunciationClient() {
                         {prev && (
                           <button
                             onClick={() => { setSelected(prev); setHasRecording(false); }}
-                            style={{
-                              flex: 1,
-                              background: "#1c1c24",
-                              border: "1px solid #27272a",
-                              borderRadius: 10,
-                              padding: "8px 12px",
-                              cursor: "pointer",
-                              color: "#a1a1aa",
-                              fontSize: 11,
-                              fontWeight: 600,
-                              display: "flex",
-                              alignItems: "center",
-                              gap: 6,
-                            }}
+                            className="flex-1 flex items-center gap-1.5 rounded-xl border border-border/70 bg-muted/40 px-3 py-2 text-xs font-semibold text-muted-foreground"
                           >
-                            ← <span style={{ fontFamily: "monospace" }}>{prev.symbol}</span> {prev.exampleWord}
+                            ← <span className="font-mono">{prev.symbol}</span> {prev.exampleWord}
                           </button>
                         )}
                         {next && (
                           <button
                             onClick={() => { setSelected(next); setHasRecording(false); }}
-                            style={{
-                              flex: 1,
-                              background: "#1c1c24",
-                              border: "1px solid #27272a",
-                              borderRadius: 10,
-                              padding: "8px 12px",
-                              cursor: "pointer",
-                              color: "#a1a1aa",
-                              fontSize: 11,
-                              fontWeight: 600,
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "flex-end",
-                              gap: 6,
-                            }}
+                            className="flex-1 flex items-center justify-end gap-1.5 rounded-xl border border-border/70 bg-muted/40 px-3 py-2 text-xs font-semibold text-muted-foreground"
                           >
-                            <span style={{ fontFamily: "monospace" }}>{next.symbol}</span> {next.exampleWord} →
+                            <span className="font-mono">{next.symbol}</span> {next.exampleWord} →
                           </button>
                         )}
                       </>
@@ -686,22 +490,7 @@ export default function PronunciationClient() {
                 {/* Mark as mastered */}
                 <button
                   onClick={() => toggleMastered(selected.id)}
-                  style={{
-                    width: "100%",
-                    background: mastered.has(selected.id) ? "#10b98120" : "#27272a",
-                    border: `1.5px solid ${mastered.has(selected.id) ? "#10b981" : "#3f3f46"}`,
-                    borderRadius: 12,
-                    padding: "12px",
-                    cursor: "pointer",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    gap: 8,
-                    color: mastered.has(selected.id) ? "#10b981" : "#a1a1aa",
-                    fontSize: 13,
-                    fontWeight: 700,
-                    transition: "all 0.15s",
-                  }}
+                  className={`w-full flex items-center justify-center gap-2 rounded-xl border py-3 text-sm font-bold transition ${mastered.has(selected.id) ? "bg-emerald-500/10 border-emerald-500 text-emerald-500" : "bg-muted border-border/70 text-muted-foreground"}`}
                 >
                   <CheckCircle2 size={16} />
                   {mastered.has(selected.id) ? "✓ Đã thuộc — bỏ đánh dấu" : "Đánh dấu đã thuộc"}

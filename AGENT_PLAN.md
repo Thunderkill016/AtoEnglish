@@ -7,7 +7,7 @@
 | Field | Value |
 |-------|-------|
 | Started | 2026-06-26 |
-| Focus | TASK-081: PlacementTestClient — migrate test/saving/results + purge inline styles |
+| Focus | TASK-082: PronunciationClient — SecondaryPageShell + purge ~63 inline styles |
 | Owner | Autopilot (no human) |
 
 ### TASK-079 — V2 Minimal Redesign: research + kế hoạch autopilot
@@ -44,6 +44,43 @@
 - No secrets (pure client UI); self-debug from lint/test.
 **Done khi**: 0 `style={{` (grep verify) trong PlacementTestClient.tsx; E2E paths text ok; lint+test pass; 1 commit + push via git-push.sh main; BACKLOG=done + SHA; no ask user.
 **Completed:** 2026-06-26 — tsc/lint/170t clean; 0 styles; Screen+card+MinimalButton migration for saving/results/test stages; aca1618; BACKLOG done.
+
+### TASK-082 — Pronunciation module minimal
+**Mục tiêu**: `PronunciationClient.tsx` — wrap/maintain SecondaryPageShell (already present) + migrate all inner UI (SoundCard grid, progress, filter tabs 4col, difficulty legend, sections, bottom detail panel/sheet, action btns, record hint, howto/tip/examples/nav/mastered) sang Tailwind + design-system tokens (bg-card, border-border/60, bg-primary, text-foreground, text-muted-foreground, rounded-xl etc). Xóa hết ~63 inline `style={{}}`. Giữ nguyên: full logic (record/play/speak/mastered localStorage/filter/AnimatePresence/motion), framer, all Vietnamese/English texts, DIFFICULTY semantics (use emerald/amber/red Tailwind equiv), IPA data, pronunciation behavior, no change to audio/record/web speech API. Dùng primary accent + card for main surfaces (V2). **Done khi:** 0 inline style; lint+test pass.
+**Bước thực hiện**:
+1. Search memory("TASK-082" + "PronunciationClient" + "inline style" + "ipa") sim via logs/grep + read AGENTS.md (ALWAYS), AGENT_BACKLOG/PLAN/ROADMAP, CONTENT_STYLE.md §6–7 (blueprint context only), MINIMAL_REDESIGN_V2.md, src/app/(main)/pronunciation/PronunciationClient.tsx + page.tsx, components/design-system/* (SecondaryPageShell, Screen, MinimalButton), src/lib/data/ipa-sounds.ts.
+2. Grep confirm 63 style={{}} in PronunciationClient; xác định targets (SoundCard, progress, filters, legend, sections, panel+backdrop, buttons, hints); preserve all text/content/clicks exactly.
+3. Update BACKLOG: TASK-082 status `in_progress`.
+4. Update AGENT_PLAN.md với mục tiêu + bước + rủi ro cho TASK-082 (this section).
+5. ready >=2 (082-084) → skip `bash scripts/agent-refill-backlog.sh` (KHÔNG hỏi user).
+6. Edit src/app/(main)/pronunciation/PronunciationClient.tsx:
+   - Ensure import { SecondaryPageShell, MinimalButton, Screen? } from design-system (keep motion).
+   - Outer: remove <div style max-w 520>, use className="max-w-[520px] mx-auto pb-16" inside shell; rely on Screen from shell.
+   - Progress bar: Tailwind classes for bg-card-like (border border-border/60 bg-card), flex etc; progress fill bg-emerald-500; reset btn keep icon + onClick.
+   - Filter tabs: grid grid-cols-4 gap-1.5; conditional classes bg-primary vs bg-card border-primary etc, text-white vs muted.
+   - Difficulty legend: flex gap + small colored dots via inline? no — use span with class bg-emerald-500 etc + text.
+   - Vowels/Consonants sections: remove style, use div mb-5 + header text-xs font-bold uppercase tracking-widest text-muted-foreground; inner grid grid-cols-5 gap-1.5 (or 4 on sm).
+   - SoundCard: convert all style to className with cn/conditional: e.g. `rounded-xl p-2 flex flex-col items-center gap-0.5 border-2 transition ${isSelected ? 'border-emerald-500 bg-emerald-500/10' : isMastered ? 'border-emerald-500/40 bg-emerald-500/5' : 'border-border/70 bg-card'}`; symbol span text-2xl font-mono font-bold (color via class selected? use text-primary or keep difficulty via data/hardcode class map); small dot with bg-* ; mastered check absolute.
+   - AnimatePresence + backdrop: convert to Tailwind fixed inset-0 bg-black/60 z-40.
+   - Detail panel: fixed bottom-0 inset-x-0 + max-w-[520px] mx-auto bg-card border-t-2 (use dynamic class or border-emerald etc per diff), rounded-t-3xl p-5 pb-10 etc; handle, close btn use classes + absolute; header flex with symbol big card using difficulty tint classes; action buttons: convert to flex gap, use <MinimalButton> where possible or keep button+class for record colors (primary tint, red tint, violet tint); use bg-emerald-500/10 border-emerald etc.
+   - Record hint, howto box, VN tip box, examples chips, prev/next nav, mastered toggle btn: all to Tailwind rounded-xl border bg-card text-sm etc. For dynamic color accents use Tailwind color classes matching difficulty (emerald/amber/red-500).
+   - Define const DIFF_CLASSES = { easy: { border:'border-emerald-500', bg:'bg-emerald-500/10', text:'text-emerald-500', dot:'bg-emerald-500' }, ... } use in JSX.
+   - Keep ALL hooks, callbacks, states, speak/record/playback logic, filtered lists, count, toggleMastered 100% unchanged.
+7. `npm run lint && npm run test`; npx tsc --noEmit.
+8. Pass → update BACKLOG done + Nhật ký + SHA; PLAN log.
+9. git pull --rebase; git add src/app/(main)/pronunciation/PronunciationClient.tsx AGENT_BACKLOG.md AGENT_PLAN.md; commit "refactor(pronunciation): migrate to Tailwind design-system cards + remove all inline styles (TASK-082)"; `bash scripts/git-push.sh main`.
+**Rủi ro**:
+- Bottom sheet layout / mobile scroll / fixed panel visual shift → match paddings, max-w, use dvh if needed; keep spring transition.
+- Dynamic color accents (per difficulty) for panel border/symbol — use Tailwind mapped classes not style (emerald/amber/red match the hex intent).
+- Buttons (listen/record/play) color semantics (green for listen, blue record, violet play) — approximate with emerald/ blue-500 / violet-500 tint classes; keep accessible.
+- Grid 5-col on small screen cramped → ok as-is, or responsive grid-cols-4 sm:5 if needed but preserve original density.
+- Mastered progress bar + reset interaction same; filter active states same.
+- Framer motion + AnimatePresence keep; no change behavior.
+- Self-debug: run after edits, use grep style={{ to verify zero.
+- Fail 2 lần → set blocked + lý do, next ready possible.
+- No secrets (pure client UI); self-debug from lint/test.
+**Done khi**: 0 `style={{` (grep verify) trong PronunciationClient.tsx; all texts/flows identical; lint+test pass; 1 commit + push via git-push.sh main; BACKLOG=done + SHA; no ask user.
+**Completed:** 2026-06-26 — 
 
 ### TASK-045 — Sync AGENT_AUTOPILOT.md với auto-refill
 **Mục tiêu**: Làm cho AGENT_AUTOPILOT.md mô tả chính xác cơ chế tự động: daemon/orchestrator/pick-task tự gọi refill từ AGENT_ROADMAP.md khi ready < 2 (MIN_READY), script agent-refill-backlog.sh parse roadmap pool, chèn tối đa 4 task `ready` vào BACKLOG, commit+push (chore, skip ci). Xóa mọi hướng dẫn gợi ý "user thêm task thủ công" vào backlog (user chỉ thêm vào ROADMAP nếu muốn ưu tiên). Giữ phần "Việc cần làm thủ công 1 lần (P0)" vì là setup secrets/migration (khác task hàng ngày). Doc khớp scripts hiện tại (refill, pick, orchestrator, roadmap format). Chỉ sửa doc; không code/logic.
