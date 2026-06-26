@@ -111,9 +111,10 @@
 - **Started:** 2026-06-26 — autopilot (prod table confirmed, gen types succeeded)
 
 ### TASK-035 — E2E onboarding profile persist
-- **Status:** `ready`
+- **Status:** `in_progress`
 - **Mô tả:** E2E test: signup flow lưu goal/obstacle/daily_minutes vào `user_onboarding_profile` và `daily_xp_goal` trên `user_progress`.
 - **Done khi:** E2E pass; không flake.
+- **Started:** 2026-06-26 — autopilot (no human)
 
 ### TASK-036 — Fix audio path mismatch (unitN vs unit-N folders)
 - **Status:** `ready`

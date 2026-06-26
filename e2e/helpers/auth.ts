@@ -104,3 +104,77 @@ export async function loginAsE2ETestUser(page: Page): Promise<void> {
     .click();
   await page.waitForURL(/\/(dashboard|learn)/, { timeout: 20_000 });
 }
+
+/** Find user id by email (for post-signup verification). */
+export async function getE2EUserIdByEmail(email: string): Promise<string | null> {
+  const admin = getAdminClient();
+  const { data: users, error } = await admin.auth.admin.listUsers();
+  if (error) {
+    throw new Error(`listUsers failed: ${error.message}`);
+  }
+  const match = users.users.find((u) => u.email === email);
+  return match?.id ?? null;
+}
+
+/** Force email confirm so signUp flow can proceed in E2E without mailbox. */
+export async function forceConfirmE2EUserEmail(userId: string): Promise<void> {
+  const admin = getAdminClient();
+  const { error } = await admin.auth.admin.updateUserById(userId, {
+    email_confirm: true,
+  });
+  if (error) {
+    // non-fatal in some flows; log but continue
+    console.warn(`[e2e] forceConfirm warning for ${userId}: ${error.message}`);
+  }
+}
+
+/** Delete a temp E2E signup user (and let RLS/cascade handle profile rows). */
+export async function deleteE2EUserByEmail(email: string): Promise<void> {
+  const admin = getAdminClient();
+  const { data: users } = await admin.auth.admin.listUsers();
+  const user = users.users.find((u) => u.email === email);
+  if (!user?.id) return;
+  // Best effort delete profile/progress first (admin bypasses RLS)
+  await admin.from("user_onboarding_profile").delete().eq("user_id", user.id);
+  await admin.from("user_progress").delete().eq("user_id", user.id);
+  await admin.auth.admin.deleteUser(user.id);
+}
+
+/** Verify the persisted values from signup flow. */
+export async function verifyOnboardingPersistence(
+  userId: string,
+  expected: { goal: string; obstacle: string; daily_minutes: number; daily_xp_goal: number },
+): Promise<void> {
+  const admin = getAdminClient();
+  const { data: profile, error: pErr } = await admin
+    .from("user_onboarding_profile")
+    .select("goal, obstacle, daily_minutes")
+    .eq("user_id", userId)
+    .single();
+  if (pErr || !profile) {
+    throw new Error(`user_onboarding_profile not found or error: ${pErr?.message}`);
+  }
+  if (
+    profile.goal !== expected.goal ||
+    profile.obstacle !== expected.obstacle ||
+    profile.daily_minutes !== expected.daily_minutes
+  ) {
+    throw new Error(
+      `profile mismatch: got ${JSON.stringify(profile)} want ${JSON.stringify(expected)}`,
+    );
+  }
+
+  const { data: progress, error: prErr } = await admin
+    .from("user_progress")
+    .select("daily_xp_goal")
+    .eq("user_id", userId)
+    .single();
+  if (prErr || !progress) {
+    throw new Error(`user_progress not found: ${prErr?.message}`);
+  }
+  if (progress.daily_xp_goal !== expected.daily_xp_goal) {
+    throw new Error(
+      `daily_xp_goal mismatch: got ${progress.daily_xp_goal} want ${expected.daily_xp_goal}`,
+    );
+  }
+}

@@ -7,7 +7,7 @@
 | Field | Value |
 |-------|-------|
 | Started | 2026-06-26 |
-| Focus | TASK-034 db:types (onboarding) → TASK-035 E2E onboarding → TASK-036 audio path fix |
+| Focus | TASK-035 E2E onboarding profile persist (TASK-034 types already committed) |
 | Owner | Autopilot (no human) |
 
 ### TASK-021 — Sync placement flow, 50 units, header shell, autopilot docs (PAGE_SPECIFICATIONS.md + AGENT_*)
@@ -148,3 +148,23 @@
 - Diff may include other schema changes since last gen (enums, other tables); accept full fresh file.
 - No code logic change; only types file.
 **Done khi**: src/types/supabase.ts == fresh prod gen (or no-op if identical); lint+test+tsc pass 0 errors; if changed: committed + pushed; backlog status=done + nhật ký SHA; no user interaction.
+
+### TASK-035 — E2E onboarding profile persist
+**Mục tiêu**: Thêm E2E Playwright test để verify toàn bộ signup flow (quiz chọn goal/obstacle/time → email signup) thực sự ghi đúng dữ liệu vào `user_onboarding_profile` (goal, obstacle, daily_minutes) và `user_progress.daily_xp_goal`. Test phải chọn cụ thể để map value rõ ràng, dùng temp unique email, admin verify DB post-flow, cleanup.
+**Bước thực hiện**:
+1. Search memory (search_memory for TASK-035 + onboarding e2e) + đọc AGENTS.md (memory rule), BACKLOG, PLAN, e2e/onboarding.spec.ts, e2e/helpers/auth.ts, e2e/auth.spec.ts, placement-test.spec.ts (pattern), src/app/login/page.tsx, src/app/auth/callback/route.ts, src/lib/onboarding.ts, playwright.config.ts.
+2. Cập nhật AGENT_PLAN + BACKLOG (set 035 in_progress).
+3. Extend e2e/helpers/auth.ts: thêm hàm `getE2EUserIdByEmail(email)`, `deleteE2EUserByEmail(email)`, `confirmE2EUserEmail(userId)` (admin), và `verifyUserOnboardingProfile(userId, expected)` để query/assert profile + progress.daily_xp_goal. Giữ cleanup safe.
+4. Mở rộng e2e/onboarding.spec.ts: thêm test "signup flow persists goal/obstacle/daily_minutes + daily_xp_goal" (skip nếu thiếu admin cred); generate unique email+pass; goto /login, click survey steps chọn cụ thể: goal="Đi làm, thăng tiến"(work), obstacle="Sợ nói sai"(fear), time="15 phút/ngày"(15, xp=50); fill form + click activate button; wait redirect; use admin verify inserted values match; cleanup user+rows.
+5. Chạy `npm run lint && npm run test`; npx tsc --noEmit. Fix nếu cần (chỉ unit, e2e chạy riêng).
+6. Update BACKLOG (in_progress→done), add Nhật ký entry + SHA; update PLAN log.
+7. git pull --rebase; git add e2e/helpers/auth.ts e2e/onboarding.spec.ts AGENT_BACKLOG.md AGENT_PLAN.md; git commit -m "test(e2e): signup flow saves goal/obstacle/daily_minutes to user_onboarding_profile + daily_xp_goal (TASK-035)"; git push.
+**Rủi ro**:
+- Supabase email confirmation: signUp response may not give immediate data.user or session if confirm on → add confirm via admin after submit + extra wait or use loginAs after. (Common; previous flows handle by direct insert on data.user).
+- Selector brittle on Vietnamese labels → dùng getByText(/Đi làm.../).first() + generous timeout.
+- Unique email collision / test leak → always timestamped email + deleteUser + delete profile/progress rows in after.
+- E2E not executed by "npm test" (unit only) — verify manually via `npm run e2e` if needed; CI will catch.
+- Dev server timing (webServer) or redirect to /learn?mini=1 — waitURL with long timeout, check toast success if needed.
+- Admin key required for verify/clean — test.skip if !hasE2EAdminCredentials (pattern from placement).
+- If signup push happens before DB visible → poll query with retry.
+**Done khi**: Test mới thêm, chạy qua flow quiz+signup, DB assert đúng (goal=work, obstacle=fear, daily_minutes=15, daily_xp_goal=50); lint + all unit tests pass; 1 commit pushed; backlog done + log SHA; no user asked; tự debug nếu fail.
