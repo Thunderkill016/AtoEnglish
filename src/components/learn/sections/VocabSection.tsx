@@ -56,24 +56,24 @@ export default function VocabSection({
         totalSections={TOTAL_SECTIONS}
       />
       <LessonCard variant="muted" className="mb-5">
-        <p className="text-sm text-zinc-400 leading-relaxed">
-          <span className="text-emerald-400 font-semibold">Active recall — </span>
+        <p className="text-sm text-muted-foreground leading-relaxed">
+          <span className="text-primary font-semibold">Active recall — </span>
           {VOCAB_ACTIVE_RECALL_HINT}
         </p>
       </LessonCard>
 
       {/* Counter */}
       <div className="flex items-center gap-2 mb-6">
-        <div className="flex-1 h-2 bg-zinc-800 rounded-full overflow-hidden">
+        <div className="flex-1 h-2 bg-muted rounded-full overflow-hidden">
           <div
-            className="h-full bg-emerald-500 rounded-full transition-all duration-500"
+            className="h-full bg-primary rounded-full transition-all duration-500"
             style={{ width: `${(seenCards.size / VOCAB_LIMIT) * 100}%` }}
           />
         </div>
-        <span className="text-sm font-bold text-emerald-400">{seenCards.size}/{VOCAB_LIMIT} từ</span>
+        <span className="text-sm font-bold text-primary">{seenCards.size}/{VOCAB_LIMIT} từ</span>
         <button
           onClick={() => setSeenCards(new Set(VOCAB_DISPLAY.map((_, i) => i)))}
-          className="text-xs text-zinc-500 hover:text-zinc-300 font-bold px-2 py-1 rounded-lg transition-colors border border-zinc-800/60 hover:border-zinc-700 ml-2"
+          className="text-xs text-muted-foreground hover:text-foreground font-bold px-2 py-1 rounded-lg transition-colors border border-border/60 hover:border-border ml-2"
         >
           Tôi biết hết →
         </button>
@@ -119,8 +119,8 @@ export default function VocabSection({
               >
                 {/* Front */}
                 <div
-                  className={`absolute inset-0 bg-gradient-to-b from-zinc-800/70 to-zinc-900/90 border rounded-2xl p-4 flex flex-col justify-between shadow-md transition-all duration-300 ${
-                    seenCards.has(i) ? "border-emerald-700/30" : "border-zinc-700/50 hover:border-zinc-600/70"
+                  className={`absolute inset-0 border border-border/60 bg-card rounded-2xl p-4 flex flex-col justify-between shadow-md transition-all duration-300 ${
+                    seenCards.has(i) ? "border-primary/30" : "border-border/60 hover:border-primary/40"
                   }`}
                   style={{ backfaceVisibility: "hidden" }}
                 >
@@ -130,15 +130,15 @@ export default function VocabSection({
                     <img
                       src={v.image_url}
                       alt={v.word}
-                      className="w-16 h-16 object-cover rounded-xl mb-1 border border-zinc-700/40"
+                      className="w-16 h-16 object-cover rounded-xl mb-1 border border-border/40"
                       loading="lazy"
                     />
                   ) : v.emoji && (
                     <p className="text-3xl mb-1 leading-none">{v.emoji}</p>
                   )}
                   <div>
-                    <p className="text-white font-bold text-base tracking-wide">{v.word}</p>
-                    <p className="text-zinc-500 text-xs mt-0.5 font-mono">{v.phonetic}</p>
+                    <p className="text-foreground font-bold text-base tracking-wide">{v.word}</p>
+                    <p className="text-muted-foreground text-xs mt-0.5 font-mono">{v.phonetic}</p>
                   </div>
                   <div className="flex justify-between items-center mt-2">
                     <button
@@ -153,8 +153,8 @@ export default function VocabSection({
                       aria-label="Đã biết từ này"
                       className={`text-[10px] font-bold px-2 py-0.5 rounded-lg transition-all ${
                         seenCards.has(i) && !flippedCards.has(i)
-                          ? "bg-emerald-600/20 text-emerald-400 border border-emerald-700/30"
-                          : "text-zinc-600 hover:text-zinc-400"
+                          ? "bg-primary/10 text-primary border border-primary/30"
+                          : "text-muted-foreground hover:text-foreground"
                       }`}
                     >
                       {seenCards.has(i) && !flippedCards.has(i) ? "✓ Biết rồi" : "Biết rồi?"}
@@ -173,21 +173,21 @@ export default function VocabSection({
                 </div>
                 {/* Back */}
                 <div
-                  className="absolute inset-0 bg-gradient-to-b from-emerald-950/70 to-teal-950/50 border border-emerald-600/30 rounded-2xl p-4 flex flex-col justify-between shadow-md shadow-emerald-950/60"
+                  className="absolute inset-0 border border-primary/30 bg-card rounded-2xl p-4 flex flex-col justify-between shadow-md"
                   style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
                 >
                   <div className="space-y-2">
-                    <p className="text-emerald-300 font-black text-sm">{v.meaning}</p>
+                    <p className="text-primary font-black text-sm">{v.meaning}</p>
                     {v.collocation && (
-                      <span className="inline-flex items-center gap-1 bg-teal-800/30 border border-teal-600/30 text-teal-300 text-[10px] font-bold px-2 py-0.5 rounded-full">
+                      <span className="inline-flex items-center gap-1 bg-primary/10 border border-primary/30 text-primary text-[10px] font-bold px-2 py-0.5 rounded-full">
                         💬 {v.collocation}
                       </span>
                     )}
-                    <p className="text-zinc-300 text-xs italic leading-relaxed">&ldquo;{v.example}&rdquo;</p>
-                    {v.example2 && <p className="text-zinc-500 text-xs italic">&ldquo;{v.example2}&rdquo;</p>}
+                    <p className="text-foreground text-xs italic leading-relaxed">&ldquo;{v.example}&rdquo;</p>
+                    {v.example2 && <p className="text-muted-foreground text-xs italic">&ldquo;{v.example2}&rdquo;</p>}
                     {v.l1_interference_vn && (
-                      <div className="mt-1 bg-amber-950/40 border border-amber-700/30 rounded-xl px-2.5 py-1.5">
-                        <p className="text-amber-300/90 text-[10px] leading-relaxed">{v.l1_interference_vn}</p>
+                      <div className="mt-1 bg-amber-500/10 border border-amber-500/30 rounded-xl px-2.5 py-1.5">
+                        <p className="text-amber-400 text-[10px] leading-relaxed">{v.l1_interference_vn}</p>
                       </div>
                     )}
                   </div>
@@ -225,8 +225,8 @@ export default function VocabSection({
                         disabled={savedCards.has(i)}
                         className={`text-[10px] font-bold px-2 py-1 rounded-lg transition-all active:scale-95 flex items-center gap-1 ${
                           savedCards.has(i)
-                            ? "bg-emerald-600/20 text-emerald-400 border border-emerald-700/30 cursor-default"
-                            : "bg-zinc-800 text-zinc-300 border border-zinc-700/50 hover:bg-zinc-700"
+                            ? "bg-primary/10 text-primary border border-primary/30 cursor-default"
+                            : "bg-muted text-foreground border border-border/60 hover:bg-muted/60"
                         }`}
                       >
                         {savedCards.has(i) ? "✓ Đã lưu" : "+ SRS"}
@@ -251,7 +251,7 @@ export default function VocabSection({
       </div>
 
       {seenCards.size < VOCAB_LIMIT ? (
-        <div className="text-center text-zinc-500 text-sm py-4">
+        <div className="text-center text-muted-foreground text-sm py-4">
           Xem thêm {VOCAB_LIMIT - seenCards.size} thẻ để tiếp tục...
         </div>
       ) : (

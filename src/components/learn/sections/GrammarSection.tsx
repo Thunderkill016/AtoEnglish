@@ -54,32 +54,32 @@ export default function GrammarSection({
       {unit.grammar ? (
         <div className="space-y-5">
           {/* Grammar card */}
-          <div className="bg-gradient-to-b from-teal-950/30 to-zinc-950/50 border border-teal-700/40 rounded-2xl p-4 sm:p-6 shadow-md">
+          <div className="border border-border/60 bg-card rounded-2xl p-4 sm:p-6 shadow-md">
             <div className="flex items-center gap-2 mb-4">
               <span className="text-xl">📐</span>
               <h2 className="text-lg font-black text-teal-300">{unit.grammar.title}</h2>
             </div>
 
             {/* Rule box */}
-            <div className="bg-zinc-900/70 border border-emerald-800/30 rounded-2xl p-4 mb-5 font-mono shadow-inner">
-              <p className="text-emerald-300 text-sm font-bold">{unit.grammar.rule}</p>
+            <div className="bg-muted/40 border border-border/60 rounded-2xl p-4 mb-5 font-mono shadow-inner">
+              <p className="text-primary text-sm font-bold">{unit.grammar.rule}</p>
             </div>
 
             {/* Conjugation table (if provided) */}
             {unit.grammar.conjugation && (
               <div className="mb-5">
-                <p className="text-xs text-zinc-500 font-bold uppercase tracking-widest mb-3">
+                <p className="text-xs text-muted-foreground font-bold uppercase tracking-widest mb-3">
                   Chia động từ
                 </p>
                 <div className="grid gap-2">
                   {unit.grammar.conjugation.map((row, i) => (
                     <div
                       key={i}
-                      className="flex items-center gap-3 bg-zinc-800/40 hover:bg-zinc-700/40 rounded-xl px-4 py-2.5 transition-colors"
+                      className="flex items-center gap-3 bg-card border border-border/60 hover:bg-muted/40 rounded-xl px-4 py-2.5 transition-colors"
                     >
-                      <span className="text-zinc-400 text-sm w-20 font-semibold">{row.subject}</span>
-                      <span className="text-emerald-400 font-bold text-sm w-16">{row.form}</span>
-                      <span className="text-zinc-300 text-sm italic flex-1">{row.example}</span>
+                      <span className="text-muted-foreground text-sm w-20 font-semibold">{row.subject}</span>
+                      <span className="text-primary font-bold text-sm w-16">{row.form}</span>
+                      <span className="text-foreground text-sm italic flex-1">{row.example}</span>
                       <button
                         onClick={() => playTTS(row.example)}
                         aria-label={`Nghe ví dụ: ${row.example}`}
@@ -95,11 +95,11 @@ export default function GrammarSection({
 
             {/* Examples */}
             <div className="space-y-3 mb-4">
-              <p className="text-xs text-zinc-500 font-bold uppercase tracking-widest">Ví dụ</p>
+              <p className="text-xs text-muted-foreground font-bold uppercase tracking-widest">Ví dụ</p>
               {unit.grammar.examples.map((ex, i) => (
                 <div
                   key={i}
-                  className="bg-zinc-800/40 hover:bg-zinc-700/40 rounded-xl px-4 py-3 flex items-start justify-between gap-3 transition-colors"
+                  className="bg-card border border-border/60 hover:bg-muted/40 rounded-xl px-4 py-3 flex items-start justify-between gap-3 transition-colors"
                 >
                   <div>
                     <p className="text-white font-semibold text-sm">{ex.en}</p>
@@ -118,9 +118,9 @@ export default function GrammarSection({
 
             {/* Tip */}
             {unit.grammar.tip && (
-              <div className="border-l-4 border-teal-500 bg-teal-950/20 rounded-r-xl p-3 mb-3">
-                <p className="text-xs font-bold text-teal-400 mb-1">💡 Mẹo nhớ</p>
-                <p className="text-zinc-300 text-sm" style={{ whiteSpace: "pre-wrap" }}>
+              <div className="border-l-4 border-primary bg-muted/30 rounded-r-xl p-3 mb-3">
+                <p className="text-xs font-bold text-primary mb-1">💡 Mẹo nhớ</p>
+                <p className="text-muted-foreground text-sm" style={{ whiteSpace: "pre-wrap" }}>
                   {unit.grammar.tip}
                 </p>
               </div>
@@ -128,7 +128,7 @@ export default function GrammarSection({
 
             {/* Vietnamese L1 Interference Warning */}
             {unit.grammar.vnNote && (
-              <div className="relative overflow-hidden rounded-2xl border border-amber-500/30 bg-gradient-to-br from-amber-950/20 to-zinc-900/40 p-5 shadow-lg backdrop-blur-xl transition-all duration-300 hover:border-amber-500/50">
+              <div className="relative overflow-hidden rounded-2xl border border-amber-500/30 bg-card p-5 shadow-lg transition-all duration-300 hover:border-amber-500/50">
                 <div className="absolute left-0 top-0 h-full w-1.5 bg-gradient-to-b from-amber-500 to-orange-600" />
                 <div className="flex gap-4">
                   <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/20">
@@ -152,7 +152,7 @@ export default function GrammarSection({
                       Cảnh Báo Lỗi Người Việt (VN Learner Alert)
                     </h4>
                     <p
-                      className="mt-1.5 text-xs font-semibold leading-relaxed text-zinc-300 whitespace-pre-wrap"
+                      className="mt-1.5 text-xs font-semibold leading-relaxed text-muted-foreground whitespace-pre-wrap"
                       style={{ whiteSpace: "pre-wrap" }}
                     >
                       {unit.grammar.vnNote}
@@ -164,15 +164,15 @@ export default function GrammarSection({
 
             {/* Grammar → Dialogue cross-reference */}
             {unit.grammar.dialogueExample && (
-              <div className="mt-4 bg-violet-950/20 border border-violet-700/30 rounded-2xl p-4">
-                <p className="text-xs font-bold text-violet-400 uppercase tracking-widest mb-3">
+              <div className="mt-4 bg-card border border-border/60 rounded-2xl p-4">
+                <p className="text-xs font-bold text-primary uppercase tracking-widest mb-3">
                   🔍 Cấu trúc này xuất hiện trong hội thoại
                 </p>
-                <div className="bg-zinc-900/60 rounded-xl p-3">
-                  <p className="text-xs text-violet-300 font-bold mb-1">
+                <div className="bg-muted/40 rounded-xl p-3">
+                  <p className="text-xs text-primary font-bold mb-1">
                     {unit.grammar.dialogueExample.speaker}:
                   </p>
-                  <p className="text-white text-sm leading-relaxed">
+                  <p className="text-foreground text-sm leading-relaxed">
                     {(() => {
                       const { text, highlight } = unit.grammar!.dialogueExample!;
                       const idx = text.indexOf(highlight);
@@ -188,7 +188,7 @@ export default function GrammarSection({
                       );
                     })()}
                   </p>
-                  <p className="text-zinc-500 text-xs mt-1 italic">
+                  <p className="text-muted-foreground text-xs mt-1 italic">
                     {unit.grammar.dialogueExample.translation}
                   </p>
                 </div>
@@ -212,12 +212,12 @@ export default function GrammarSection({
                       "px-3 py-2 rounded-xl text-sm font-medium border text-left ";
                     if (!ccqSubmitted) {
                       cls += isPicked
-                        ? "bg-teal-600/30 border-teal-500 text-teal-300 ring-2 ring-teal-500/20"
-                        : "bg-zinc-800 border-zinc-700 text-zinc-300 hover:border-teal-500/60 hover:bg-zinc-700/50";
+                        ? "bg-primary/10 border-primary text-primary ring-2 ring-primary/20"
+                        : "bg-card border-border/60 text-foreground hover:border-primary/60 hover:bg-muted/40";
                     } else {
-                      if (isRight) cls += "bg-emerald-900/40 border-emerald-500 text-emerald-300";
-                      else if (isPicked) cls += "bg-red-900/30 border-red-500 text-red-300";
-                      else cls += "bg-zinc-800 border-zinc-700/40 text-zinc-500";
+                      if (isRight) cls += "bg-emerald-500/10 border-emerald-500 text-emerald-400";
+                      else if (isPicked) cls += "bg-red-500/10 border-red-500 text-red-400";
+                      else cls += "bg-card border-border/60 text-muted-foreground";
                     }
                     return (
                       <motion.button
@@ -265,8 +265,8 @@ export default function GrammarSection({
           </div>
         </div>
       ) : (
-        <div className="bg-zinc-800/40 border border-zinc-700/40 rounded-2xl p-5 sm:p-8 text-center">
-          <p className="text-zinc-500 text-sm">Bài học này không có phần ngữ pháp riêng.</p>
+        <div className="border border-border/60 bg-card rounded-2xl p-5 sm:p-8 text-center">
+          <p className="text-muted-foreground text-sm">Bài học này không có phần ngữ pháp riêng.</p>
         </div>
       )}
 

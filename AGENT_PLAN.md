@@ -7,7 +7,7 @@
 | Field | Value |
 |-------|-------|
 | Started | 2026-06-26 |
-| Focus | TASK-082: PronunciationClient — SecondaryPageShell + purge ~63 inline styles |
+| Focus | TASK-083: Lesson sections light theme (Grammar/Vocab/Warmup) — bg-card tokens per Fluency/Translate |
 | Owner | Autopilot (no human) |
 
 ### TASK-079 — V2 Minimal Redesign: research + kế hoạch autopilot
@@ -80,7 +80,35 @@
 - Fail 2 lần → set blocked + lý do, next ready possible.
 - No secrets (pure client UI); self-debug from lint/test.
 **Done khi**: 0 `style={{` (grep verify) trong PronunciationClient.tsx; all texts/flows identical; lint+test pass; 1 commit + push via git-push.sh main; BACKLOG=done + SHA; no ask user.
-**Completed:** 2026-06-26 — 
+**Completed:** 2026-06-26 — 0 styles; Tailwind + DIFF map migration for grid/panel/buttons; lint+170t+tsc pass; bdef932; BACKLOG done.
+
+### TASK-083 — Lesson sections light theme (Grammar/Vocab/Warmup)
+**Mục tiêu**: `GrammarSection.tsx` + `VocabSection.tsx` + `WarmupSection.tsx` — migrate card surfaces (grammar rule box, ex rows, tip, vnNote, ccq, dialogue cross-ref; vocab flip front/back, counter bar, lessoncard area, l1 notes; warmup greeting btns, self-check rows, SRS flip cards, alerts, cultural) sang light tokens theo pattern Fluency/Translate (border border-border/60 bg-card, text-foreground, text-muted-foreground, bg-muted/40, bg-primary/10). Xóa zinc-950/900/800 hard dark cards + nhiều gradient zinc. Giữ nguyên: all logic, flip 3D (keep style for perspective/transform), TTS buttons, SRS save, CCQ state, rated states, motion, texts, audio, LessonSectionHeader/LessonContinueButton/LessonCard (if used) calls, no data change. Dùng primary tint cho accents; feedback emerald/red giữ semantics. **Done khi:** Không zinc-950 cards trong 3 files (grep); lint+test pass.
+**Bước thực hiện**:
+1. Search memory("TASK-083" + "GrammarSection" + "VocabSection" + "WarmupSection" + "light card" + "bg-card") sim via logs/grep + read AGENTS.md (ALWAYS), AGENT_BACKLOG/PLAN/ROADMAP, CONTENT_STYLE.md §6–7 (blueprint only), MINIMAL_REDESIGN_V2.md, src/components/learn/sections/{GrammarSection,VocabSection,WarmupSection}.tsx , FluencySection.tsx + TranslateSection.tsx (pattern), src/components/learn/lesson-ui/* (LessonCard still zinc but sections use direct), components/design-system/* , UnitTemplate.tsx.
+2. Grep zinc-950 / bg-zinc-9 / text-white in the 3 sections (and confirm Fluency/Translate use tokens); xác định edit targets (main card divs, rows, flip faces, inputs not, buttons keep accent); preserve JSX text/clicks/props exactly.
+3. Update BACKLOG: TASK-083 status `in_progress`.
+4. Update AGENT_PLAN.md với mục tiêu + bước + rủi ro cho TASK-083 (this section).
+5. ready >=2 (083-084) → skip `bash scripts/agent-refill-backlog.sh` (KHÔNG hỏi user).
+6. Edit the 3 section files (minimal targeted class swaps):
+   - GrammarSection: main grammar card → border-border/60 bg-card (drop gradient teal-zinc); rule box → bg-muted/40 border-border/60; rows ex/conj → bg-card or bg-muted/40 border-border/60 text-foreground/muted; tip → border-primary/30 or teal tint keep; vnNote amber keep semantics; dialogue cross violet keep; CCQ options: use bg-card border-border + selected primary/10 ring-primary or emerald; no zinc; final no-grammar box to card.
+   - VocabSection: LessonCard usage keep (or direct if needed); progress → bg-muted fill-primary; flip front: border-border/60 bg-card (drop zinc grad); back: border-primary/30 bg-card or emerald tint ok; labels text-muted/foreground; l1 note amber keep; buttons use bg-muted or primary tint classes; "Biết rồi" text use muted.
+   - WarmupSection: greeting cards → bg-card border-border/60 (drop zinc grad + whileHover inline border ok or minimal); self-check rows → bg-card / border-border/60 + rated emerald/amber tint; SRS warmup flip cards: front bg-card border-border , back emerald tint card; alerts/cultural keep amber/emerald tint boxes but base surface card or muted; text → foreground/muted.
+   - Keep all style={{ perspective, transform, backface }} for flip (functional, not color); keep whileHover/tap motion; use cn() where helpful.
+   - Preserve every Vietnamese/English string, aria, onClick, disabled, count logic 100%.
+7. `npm run lint && npm run test`; npx tsc --noEmit.
+8. Pass → update BACKLOG done + Nhật ký + SHA; PLAN log.
+9. git pull --rebase; git add src/components/learn/sections/{GrammarSection,VocabSection,WarmupSection}.tsx AGENT_BACKLOG.md AGENT_PLAN.md; commit "refactor(lesson): light card tokens in Grammar/Vocab/Warmup sections (bg-card, border-border/60 per Fluency/Translate) (TASK-083)"; `bash scripts/git-push.sh main`.
+**Rủi ro**:
+- Flip card visual (front/back color/contrast) → use bg-card + primary/30 or emerald/30 border for back; test flip in mind + run.
+- Accent loss (teal for grammar) → use primary (emerald-ish) for rule/CCQ active; amber/red feedback keep for warning/error.
+- LessonCard inside Vocab still zinc (by design, TASK-084 header separate) → direct classes on content or accept for this scope; sections surfaces clean.
+- CCQ whileHover inline → leave or map to class; no behavior change.
+- 3 files → targeted unique replace to avoid dup strings; self verify post edit with grep zinc in files.
+- Self-debug from lint/test/grep after each; no secret (pure UI client).
+- Fail 2x → blocked + lý do, next ready.
+**Done khi**: 0 `zinc-950|to-zinc-950|from-zinc-9` card containers in 3 files (grep); all interactive same; texts preserved; lint+test pass; 1 commit + push via git-push.sh main; BACKLOG=done + SHA; no ask user.
+**Completed:** (pending impl)
 
 ### TASK-045 — Sync AGENT_AUTOPILOT.md với auto-refill
 **Mục tiêu**: Làm cho AGENT_AUTOPILOT.md mô tả chính xác cơ chế tự động: daemon/orchestrator/pick-task tự gọi refill từ AGENT_ROADMAP.md khi ready < 2 (MIN_READY), script agent-refill-backlog.sh parse roadmap pool, chèn tối đa 4 task `ready` vào BACKLOG, commit+push (chore, skip ci). Xóa mọi hướng dẫn gợi ý "user thêm task thủ công" vào backlog (user chỉ thêm vào ROADMAP nếu muốn ưu tiên). Giữ phần "Việc cần làm thủ công 1 lần (P0)" vì là setup secrets/migration (khác task hàng ngày). Doc khớp scripts hiện tại (refill, pick, orchestrator, roadmap format). Chỉ sửa doc; không code/logic.
@@ -322,6 +350,7 @@
 
 | Time (UTC) | Task | Plan summary | Outcome |
 |------------|------|--------------|---------|
+| 2026-06-26 | TASK-082 | PHASE1 (grep+read AGENTS/BACKLOG/PLAN/ROADMAP/MINIMAL_V2/CONTENT + design-system + PronunciationClient + ipa-sounds); PHASE2 set in_progress (2ready skip refill) + full PLAN section; PHASE3: all 63 style= purged, Tailwind equivs + DIFF map for accents, SecondaryPageShell kept + inner max-w; logic identical; lint0+170t+tsc pass; bdef932 + push; done | done — bdef932 |
 | 2026-06-26 | TASK-045 | PHASE1 research(memory+AGENTS+BACKLOG+PLAN+ROADMAP+AUTOPILOT+CONTENT§6-7 + grep "thủ công"); PHASE2 update PLAN+BACKLOG set in_progress (refill run, 2ready>=2 skip), add full TASK-045 section; PHASE3: set in_progress, minimal edit AUTOPILOT "Quản lý backlog" describe ROADMAP+refill auto + explicit "KHÔNG thêm thủ công", update Nhật ký; gates tsc+lint+169 pass; commit 75b72b3 + git-push.sh main; BACKLOG done + log | done — 75b72b3 |
 | 2026-06-26 | TASK-044 | PHASE1: search_memory + read AGENTS/BACKLOG/PLAN/ROADMAP + grep e2e/placement/helpers/global/playwright; PHASE2 update PLAN+BACKLOG in_progress; PHASE3 minimal stabilize: networkidle + reset isolate in placement-test.spec; lint+test | in_progress |
 | 2026-06-26 | TASK-059 | PHASE1: search_memory + read AGENTS+BACKLOG+PLAN+ROADMAP+CONTENT§6-7+lesson-blueprint+center-ref+learning-flow+content-std+unit1(gold)+count low units(2-12); PHASE2 update PLAN+BACKLOG in_progress, refill skip (>=2 ready); PHASE3 min=3 + add 1 spiral cr each for unit2-12; lint+tsc+169u+50 content-std+audit pass; commit+push | done — 81e06b4 |

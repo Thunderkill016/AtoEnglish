@@ -526,9 +526,10 @@
 - **Completed:** 2026-06-26 — 0 inline styles (63 purged); used Tailwind card/border/primary/muted + DIFF class map for difficulty accents (emerald/amber/red); SecondaryPageShell kept; all logic/motion/texts preserved; lint0 + 170t + tsc0 pass; commit + push via git-push.sh; autonomous
 
 ### TASK-083 — Lesson sections light theme (Grammar/Vocab/Warmup)
-- **Status:** `ready`
+- **Status:** `in_progress`
 - **Mô tả:** Light card tokens trong 3 section files (theo Fluency/Translate pattern).
 - **Done khi:** Không zinc-950 cards; lint+test pass
+- **Started:** 2026-06-26 — autopilot (PHASE1: read AGENTS/BACKLOG/PLAN/CONTENT§6-7 + grep sections+Fluency/Translate+design + sim search_memory via logs; PHASE2: BACKLOG in_progress + PLAN section + skip refill >=2r; PHASE3: light tokens 3 files)
 
 ### TASK-084 — LessonSectionHeader light tokens
 - **Status:** `ready`
@@ -550,7 +551,7 @@
 | 2026-06-26 | TASK-080 | cancelled — replaced by V2 queue | cancelled |
 | 2026-06-26 | TASK-081..084 | V2 pool ready (placement, pronunciation, lesson, header) | ready |
 | 2026-06-26 | TASK-081 | PHASE1: sim search_memory via logs/grep + read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6-7 + V2 + grep Placement+design-system+e2e; PHASE2: PLAN update + BACKLOG in_progress (ready>=2 skip refill); PHASE3: migrate saving/results/test to Screen+Tailwind (MinimalButton, cards, primary accents), remove 63 style={{}}; gates lint0+170t+tsc0 pass; main commit aca1618 + push (polish 5f1e57c); done | done — aca1618 |
-| 2026-06-26 | TASK-082 | PHASE1: read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT + grep Pronunciation/Secondary + ipa + design; PHASE2: BACKLOG in_progress + PLAN full section (ready=2 skip refill); PHASE3: purge 63 styles → Tailwind cards/filters/panel + DIFF class map + keep shell; 0 style={{}}; all text/logic same; lint0+170t+tsc0; commit + git-push.sh; done | done — [SHA] |
+| 2026-06-26 | TASK-082 | PHASE1: read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT + grep Pronunciation/Secondary + ipa + design; PHASE2: BACKLOG in_progress + PLAN full section (ready=2 skip refill); PHASE3: purge 63 styles → Tailwind cards/filters/panel + DIFF class map + keep shell; 0 style={{}}; all text/logic same; lint0+170t+tsc0; commit + git-push.sh; done | done — bdef932 |
 | 2026-06-26 | TASK-075 | PHASE1: search_memory + read AGENTS/BACKLOG/PLAN/CONTENT§6-7 + grep; PHASE2: PLAN+BACKLOG in_progress (3r>=2 skip); PHASE3: gates clean no fix + sync; commit+push via git-push.sh main | done — 3afba82 |
 | 2026-06-26 | TASK-076 | PHASE1 research (agents+backlog+plan+content§6-7 + sim search_memory via logs/grep prior clean); PHASE2 PLAN+BACKLOG in_progress (2r>=2 skip); PHASE3: gates clean no fix + sync; commit+push via git-push.sh main | done — ae4aab5 |
 | 2026-06-26 | TASK-077 | PHASE1 research (AGENTS/BACKLOG/PLAN/CONTENT§6-7 + sim search_memory via logs/grep (prior clean)); PHASE2 PLAN update + BACKLOG in_progress (5r>=2 skip); PHASE3: gates clean (lint0+170t+tsc0+cs50/50+audit50/50) no fix + sync log/PLAN/BACKLOG; commit+push via git-push.sh main | done — ff52cbe |

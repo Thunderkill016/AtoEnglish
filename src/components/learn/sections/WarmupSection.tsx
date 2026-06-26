@@ -69,14 +69,14 @@ export default function WarmupSection({
             whileHover={{ y: -3, border: "1px solid rgba(16, 185, 129, 0.4)", boxShadow: "0 10px 15px -3px rgba(16, 185, 129, 0.15)" }}
             whileTap={{ scale: 0.98, y: 1 }}
             transition={{ type: "spring", stiffness: 450, damping: 15 }}
-            className="flex flex-col items-center text-center gap-3 p-5 bg-gradient-to-b from-zinc-800/80 to-zinc-900/90 border border-zinc-700/60 rounded-2xl transition-all duration-200 group hover:shadow-lg"
+            className="flex flex-col items-center text-center gap-3 p-5 border border-border/60 bg-card rounded-2xl transition-all duration-200 group hover:shadow-lg"
           >
             <span className="text-4xl group-hover:scale-110 transition-transform duration-200">
               {g.emoji}
             </span>
             <div>
-              <p className="font-bold text-white text-sm leading-tight">{g.en}</p>
-              <p className="text-[11px] text-zinc-500 mt-0.5">{g.vn}</p>
+              <p className="font-bold text-foreground text-sm leading-tight">{g.en}</p>
+              <p className="text-[11px] text-muted-foreground mt-0.5">{g.vn}</p>
             </div>
             <span className="text-[9px] text-emerald-600 font-bold opacity-0 group-hover:opacity-100 transition-opacity">
               ▶ Nghe
@@ -86,11 +86,11 @@ export default function WarmupSection({
       </div>
 
       {/* ── Vocab Self-Check ── */}
-      <div className="mb-6 rounded-2xl bg-gradient-to-b from-zinc-900/60 to-zinc-950/60 border border-zinc-700/50 p-4 shadow-md">
+      <div className="mb-6 rounded-2xl border border-border/60 bg-card p-4 shadow-md">
         <div className="flex items-center justify-between mb-3">
           <div>
-            <p className="text-sm font-bold text-white">🧠 Bạn đã biết những từ này chưa?</p>
-            <p className="text-xs text-zinc-500 mt-0.5">Tự đánh giá trước khi học — không ảnh hưởng điểm số</p>
+            <p className="text-sm font-bold text-foreground">🧠 Bạn đã biết những từ này chưa?</p>
+            <p className="text-xs text-muted-foreground mt-0.5">Tự đánh giá trước khi học — không ảnh hưởng điểm số</p>
           </div>
           <span className="text-xs font-bold text-emerald-400">
             {Object.values(warmupRated).filter((v) => v === "known").length}/
@@ -105,17 +105,17 @@ export default function WarmupSection({
                 key={i}
                 className={`flex items-center justify-between gap-3 rounded-xl px-3 py-2.5 border transition-all duration-200 ${
                   rated === "known"
-                    ? "bg-emerald-950/40 border-emerald-600/50 shadow-sm"
+                    ? "bg-emerald-500/10 border-emerald-500/50 shadow-sm"
                     : rated === "unknown"
-                    ? "bg-zinc-900/60 border-zinc-700/40 opacity-60"
-                    : "bg-zinc-800/30 border-zinc-700/40 hover:border-zinc-600/60"
+                    ? "bg-card border-border/60 opacity-60"
+                    : "bg-card border-border/60 hover:border-primary/40"
                 }`}
               >
                 <div className="flex items-center gap-2.5 min-w-0">
                   {v.emoji && <span className="text-xl shrink-0">{v.emoji}</span>}
                   <div className="min-w-0">
-                    <p className="text-sm font-bold text-white truncate">{v.word}</p>
-                    <p className="text-[11px] text-zinc-500">{v.phonetic}</p>
+                    <p className="text-sm font-bold text-foreground truncate">{v.word}</p>
+                    <p className="text-[11px] text-muted-foreground">{v.phonetic}</p>
                   </div>
                 </div>
                 <div className="flex gap-1.5 shrink-0">
@@ -123,8 +123,8 @@ export default function WarmupSection({
                     onClick={() => setWarmupRated((p) => ({ ...p, [i]: "known" }))}
                     className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all ${
                       rated === "known"
-                        ? "bg-gradient-to-r from-emerald-500 to-emerald-600 text-white shadow-sm scale-105"
-                        : "bg-zinc-800 text-zinc-400 hover:text-emerald-400 hover:bg-emerald-950/40 active:scale-95"
+                        ? "bg-emerald-500 text-white shadow-sm scale-105"
+                        : "bg-muted text-muted-foreground hover:text-primary hover:bg-primary/10 active:scale-95"
                     }`}
                   >
                     ✓ Biết
@@ -133,8 +133,8 @@ export default function WarmupSection({
                     onClick={() => setWarmupRated((p) => ({ ...p, [i]: "unknown" }))}
                     className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all ${
                       rated === "unknown"
-                        ? "bg-zinc-700 text-white"
-                        : "bg-zinc-800 text-zinc-500 hover:text-zinc-300 hover:bg-zinc-700/60"
+                        ? "bg-muted text-foreground"
+                        : "bg-muted text-muted-foreground hover:text-foreground hover:bg-muted/60"
                     }`}
                   >
                     Chưa
@@ -145,7 +145,7 @@ export default function WarmupSection({
           })}
         </div>
         {Object.keys(warmupRated).length === Math.min(5, unit.vocab.length) && (
-          <p className="text-xs text-zinc-500 mt-3 text-center italic">
+          <p className="text-xs text-muted-foreground mt-3 text-center italic">
             {Object.values(warmupRated).filter((v) => v === "known").length >= 3
               ? "🎉 Bạn đã biết nhiều rồi — bài học này giúp bạn dùng thành thạo hơn!"
               : "💪 Bình thường thôi! Sau bài học bạn sẽ nhớ hết."}
@@ -155,11 +155,11 @@ export default function WarmupSection({
 
       {/* ── Vietnamese Learner Alert ── */}
       {unit.grammar?.vnNote && (
-        <div className="mb-6 rounded-2xl bg-red-950/20 border border-red-900/40 p-4">
+        <div className="mb-6 rounded-2xl bg-red-500/10 border border-red-500/40 p-4">
           <p className="text-[10px] font-black text-red-400 uppercase tracking-widest mb-2">
             ⚠️ Bẫy ngữ pháp của người Việt trong bài này
           </p>
-          <p className="text-zinc-300 text-sm leading-relaxed">
+          <p className="text-muted-foreground text-sm leading-relaxed">
             {unit.grammar.vnNote.length > 150
               ? unit.grammar.vnNote.slice(0, 150) + "... (chi tiết ở phần Ngữ pháp)"
               : unit.grammar.vnNote}
@@ -202,17 +202,17 @@ export default function WarmupSection({
                     }}
                   >
                     <div
-                      className="absolute inset-0 bg-gradient-to-b from-zinc-700/90 to-zinc-800/90 border border-zinc-600/60 rounded-xl p-3 flex flex-col justify-center text-center shadow-md"
+                      className="absolute inset-0 border border-border/60 bg-card rounded-xl p-3 flex flex-col justify-center text-center shadow-md"
                       style={{ backfaceVisibility: "hidden" }}
                     >
-                      <p className="text-white font-bold text-sm">{card.word}</p>
-                      <p className="text-[10px] text-zinc-500">{card.phonetic}</p>
+                      <p className="text-foreground font-bold text-sm">{card.word}</p>
+                      <p className="text-[10px] text-muted-foreground">{card.phonetic}</p>
                     </div>
                     <div
-                      className="absolute inset-0 bg-emerald-900/40 border border-emerald-700/50 rounded-xl p-3 flex flex-col justify-center text-center"
+                      className="absolute inset-0 border border-primary/40 bg-card rounded-xl p-3 flex flex-col justify-center text-center"
                       style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
                     >
-                      <p className="text-emerald-300 font-bold text-xs">{card.meaning_vn}</p>
+                      <p className="text-primary font-bold text-xs">{card.meaning_vn}</p>
                     </div>
                   </div>
                 </div>
@@ -232,7 +232,7 @@ export default function WarmupSection({
                   }
                 });
               }}
-              className="mt-3 w-full bg-emerald-700/40 hover:bg-emerald-700/60 text-emerald-300 font-bold rounded-xl py-2 text-sm transition-colors"
+              className="mt-3 w-full bg-primary/10 hover:bg-primary/20 text-primary font-bold rounded-xl py-2 text-sm transition-colors border border-primary/30"
             >
               ✅ Đã ôn xong ({warmupCards.length} thẻ)
             </button>
@@ -242,13 +242,13 @@ export default function WarmupSection({
 
       {/* Cultural Note */}
       {unit.culturalNote && (
-        <div className="border-l-4 border-emerald-500 bg-emerald-950/30 rounded-r-2xl p-5 mb-8">
+        <div className="border-l-4 border-primary bg-muted/30 rounded-r-2xl p-5 mb-8">
           <div className="flex items-center gap-2 mb-2">
             <span className="text-lg">🇻🇳</span>
-            <p className="text-sm font-bold text-emerald-400">Ghi chú văn hóa</p>
+            <p className="text-sm font-bold text-primary">Ghi chú văn hóa</p>
           </div>
           <p
-            className="text-zinc-300 text-sm leading-relaxed"
+            className="text-muted-foreground text-sm leading-relaxed"
             dangerouslySetInnerHTML={{ __html: unit.culturalNote }}
           />
         </div>
