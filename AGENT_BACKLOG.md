@@ -490,10 +490,11 @@
 
 
 ### TASK-078 — Autopilot maintenance sweep #78
-- **Status:** `ready`
+- **Status:** `done`
 - **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
 - **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
-- **Started:** auto-refill
+- **Started:** 2026-06-26 — autopilot (PHASE1: search_memory("TASK-078 maintenance") real via fn + read AGENTS/BACKLOG/PLAN/CONTENT§6-7 + grep TASK-078/logs + ready=3 >=2 skip refill; PHASE2 PLAN update + BACKLOG in_progress; PHASE3: run gates)
+- **Completed:** 2026-06-26 — gates clean (lint0+170t+tsc0+cs50/50+audit50/50) no fix (stale tsbuildinfo cleared, Fluency already sectionId); sync log/PLAN/BACKLOG; commit + push via git-push.sh main; autonomous
 
 ### TASK-079 — Autopilot maintenance sweep #79
 - **Status:** `ready`
@@ -517,7 +518,7 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
-| 2026-06-26 | TASK-078 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-06-26 | TASK-078 | PHASE1: real search_memory + read agents+backlog+plan+content§6-7 + grep; PHASE2: PLAN+BACKLOG in_progress (3r>=2 skip); PHASE3: gates clean (lint0+170t+tsc0+cs50/50+audit50/50) no fix needed + sync log/PLAN/BACKLOG; commit+push via git-push.sh main | done — [SHA] |
 | 2026-06-26 | TASK-079 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-06-26 | TASK-080 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-06-26 | TASK-075 | PHASE1: search_memory + read AGENTS/BACKLOG/PLAN/CONTENT§6-7 + grep; PHASE2: PLAN+BACKLOG in_progress (3r>=2 skip); PHASE3: gates clean no fix + sync; commit+push via git-push.sh main | done — 3afba82 |
