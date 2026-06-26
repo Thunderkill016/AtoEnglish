@@ -228,7 +228,7 @@ export function JournalMode() {
   return (
     <div className="space-y-6 w-full">
       {/* Topic Card */}
-      <div className="rounded-3xl border border-glass bg-glass p-4 sm:p-6 space-y-3 sm:space-y-4 shadow-sm">
+      <div className="rounded-3xl border border-border/60 bg-card p-4 sm:p-6 space-y-3 sm:space-y-4 shadow-sm">
         <div className="flex items-start justify-between gap-4">
           <div className="space-y-1 flex-1">
             <span className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest">
@@ -238,7 +238,7 @@ export function JournalMode() {
           </div>
           <button
             onClick={randomizeTopic}
-            className="shrink-0 flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-xl border border-glass bg-glass hover:bg-white/10 hover:text-foreground text-muted-foreground transition-all duration-300"
+            className="shrink-0 flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-xl border border-border/60 bg-card hover:bg-white/10 hover:text-foreground text-muted-foreground transition-all duration-300"
           >
             <RotateCcw className="size-3.5" /> Đổi chủ đề
           </button>
@@ -252,7 +252,7 @@ export function JournalMode() {
       </div>
 
       {/* Recording Area */}
-      <div className="rounded-3xl border border-glass bg-glass p-4 sm:p-6 space-y-4 sm:space-y-6 shadow-sm">
+      <div className="rounded-3xl border border-border/60 bg-card p-4 sm:p-6 space-y-4 sm:space-y-6 shadow-sm">
         {/* Mic button */}
         <div className="flex flex-col items-center gap-4">
           <div className="relative">
@@ -327,7 +327,7 @@ export function JournalMode() {
             <Button
               onClick={handleReset}
               variant="outline"
-              className="h-11 px-4 rounded-xl font-bold border-glass bg-glass hover:bg-white/5 active:scale-[0.98]"
+              className="h-11 px-4 rounded-xl font-bold border-border/60 bg-card hover:bg-white/5 active:scale-[0.98]"
             >
               <RotateCcw className="size-4" />
             </Button>
@@ -336,14 +336,14 @@ export function JournalMode() {
       </div>
 
       {isEvaluating && (
-        <div className="rounded-3xl border border-glass bg-glass p-5 text-center space-y-3 shadow-sm animate-pulse">
+        <div className="rounded-3xl border border-border/60 bg-card p-5 text-center space-y-3 shadow-sm animate-pulse">
           <div className="inline-block size-6 border-2 border-primary border-t-transparent rounded-full animate-spin" />
           <p className="text-xs text-muted-foreground">AI Tutor đang phân tích bài viết của bạn...</p>
         </div>
       )}
 
       {aiEvaluation && (
-        <div className="rounded-3xl border border-glass bg-glass p-5 space-y-3 shadow-sm">
+        <div className="rounded-3xl border border-border/60 bg-card p-5 space-y-3 shadow-sm">
           <h4 className="font-extrabold text-xs uppercase tracking-widest text-emerald-600 dark:text-emerald-400 flex items-center gap-1.5">
             <Sparkles className="size-3.5" />
             Nhận xét từ AI Tutor

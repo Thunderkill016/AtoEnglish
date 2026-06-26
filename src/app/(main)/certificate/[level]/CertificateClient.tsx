@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { Award, Download, ArrowLeft, BookOpen, Star, Lock, Share2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { SecondaryPageShell, MinimalButton } from "@/components/design-system";
 import { toast } from "sonner";
 
 interface Props {
@@ -94,24 +95,19 @@ export default function CertificateClient({
 
   if (!isEligible) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-6">
+      <SecondaryPageShell title="Chứng nhận chưa mở khoá" subtitle={`${level.toUpperCase()} · ${completedForLevel}/${requiredUnits} bài`}>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="max-w-md w-full text-center space-y-6"
+          className="text-center space-y-6 py-8"
         >
-          <div className="inline-flex size-20 items-center justify-center rounded-3xl bg-zinc-800 border border-zinc-700">
-            <Lock className="size-10 text-zinc-500" />
+          <div className="inline-flex size-20 items-center justify-center rounded-3xl bg-muted border border-border">
+            <Lock className="size-10 text-muted-foreground" />
           </div>
-          <div className="space-y-3">
-            <h1 className="text-2xl font-black text-zinc-100">Chứng nhận chưa mở khoá</h1>
-            <p className="text-zinc-400 text-sm leading-relaxed">
-              Bạn đã hoàn thành <span className="font-bold text-zinc-200">{completedForLevel}/{requiredUnits}</span> bài học của chặng{" "}
-              <span className="font-bold text-zinc-200">{level.toUpperCase()}</span>.
-              Hoàn thành tất cả để nhận chứng nhận!
-            </p>
-          </div>
-          <div className="w-full h-3 bg-zinc-800 rounded-full overflow-hidden">
+          <p className="text-muted-foreground text-sm leading-relaxed">
+            Hoàn thành tất cả {requiredUnits} bài học của chặng {level.toUpperCase()} để nhận chứng nhận.
+          </p>
+          <div className="w-full h-3 bg-muted rounded-full overflow-hidden">
             <motion.div
               initial={{ width: 0 }}
               animate={{ width: `${Math.round((completedForLevel / requiredUnits) * 100)}%` }}
@@ -123,18 +119,15 @@ export default function CertificateClient({
             {Math.round((completedForLevel / requiredUnits) * 100)}% hoàn thành
           </p>
           <div className="flex flex-col gap-3">
-            <Button
-              onClick={() => router.push("/learn")}
-              className={`w-full h-12 bg-gradient-to-r ${theme.gradient} text-white font-bold rounded-xl`}
-            >
-              <BookOpen className="size-4 mr-2" /> Tiếp tục học
-            </Button>
-            <Button variant="ghost" onClick={() => router.back()} className="text-zinc-500 hover:text-zinc-300">
-              <ArrowLeft className="size-4 mr-1" /> Quay lại
-            </Button>
+            <MinimalButton fullWidth onClick={() => router.push("/learn")}>
+              <BookOpen className="size-4" /> Tiếp tục học
+            </MinimalButton>
+            <MinimalButton variant="ghost" fullWidth onClick={() => router.back()}>
+              <ArrowLeft className="size-4" /> Quay lại
+            </MinimalButton>
           </div>
         </motion.div>
-      </div>
+      </SecondaryPageShell>
     );
   }
 

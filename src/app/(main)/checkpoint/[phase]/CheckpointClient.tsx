@@ -8,7 +8,7 @@ import {
   Trophy, Lock, BookOpen, CheckCircle2, XCircle,
   ArrowRight, RotateCcw, Zap, Star
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { SecondaryPageShell, MinimalButton } from "@/components/design-system";
 import { toast } from "sonner";
 
 interface Props {
@@ -98,6 +98,7 @@ const PASS_THRESHOLD = 7; // 7/10 to pass
 export default function CheckpointClient({
   phase,
   phaseLabel,
+  description,
   completedCount,
   totalCount,
   isUnlocked,
@@ -171,8 +172,8 @@ export default function CheckpointClient({
   if (!isUnlocked) {
     const pct = Math.round((completedCount / totalCount) * 100);
     return (
-      <div className="min-h-screen flex items-center justify-center p-6 bg-grid-pattern">
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="max-w-md w-full text-center space-y-6">
+      <SecondaryPageShell title={`Checkpoint ${phaseLabel}`} subtitle="Chưa mở khoá">
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center space-y-6 py-8">
           <div className="inline-flex size-20 items-center justify-center rounded-3xl bg-muted border border-border">
             <Lock className="size-10 text-muted-foreground" />
           </div>
@@ -186,19 +187,19 @@ export default function CheckpointClient({
           <div className="w-full h-3 bg-muted rounded-full overflow-hidden">
             <motion.div initial={{ width: 0 }} animate={{ width: `${pct}%` }} transition={{ duration: 1, ease: "easeOut", delay: 0.3 }} className="h-full rounded-full bg-gradient-to-r from-primary to-emerald-400" />
           </div>
-          <Button onClick={() => router.push("/learn")} className="w-full h-12 bg-gradient-to-r from-emerald-500 to-teal-500 text-white font-bold rounded-xl">
-            <BookOpen className="size-4 mr-2" /> Tiếp tục học
-          </Button>
+          <MinimalButton fullWidth onClick={() => router.push("/learn")}>
+            <BookOpen className="size-4" /> Tiếp tục học
+          </MinimalButton>
         </motion.div>
-      </div>
+      </SecondaryPageShell>
     );
   }
 
   // START SCREEN
   if (!started) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-6 bg-grid-pattern">
-        <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="max-w-lg w-full space-y-6">
+      <SecondaryPageShell title={`Kiểm tra ${phaseLabel}`} subtitle={description}>
+        <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="space-y-6 py-4">
           <div className="text-center space-y-4">
             <div className="inline-flex size-20 items-center justify-center rounded-3xl bg-primary/10 border border-primary/20">
               <Trophy className="size-10 text-primary" />
@@ -219,22 +220,22 @@ export default function CheckpointClient({
             </ul>
           </div>
 
-          <Button id="start-checkpoint" onClick={() => setStarted(true)} className="w-full h-14 bg-gradient-to-r from-primary to-emerald-400 text-white font-black rounded-2xl shadow-lg shadow-primary/20 text-base">
-            Bắt đầu kiểm tra <ArrowRight className="size-5 ml-2" />
-          </Button>
-          <Button variant="ghost" onClick={() => router.push("/learn")} className="w-full text-muted-foreground hover:text-foreground">
+          <MinimalButton data-testid="start-checkpoint" fullWidth onClick={() => setStarted(true)}>
+            Bắt đầu kiểm tra <ArrowRight className="size-5" />
+          </MinimalButton>
+          <MinimalButton variant="ghost" fullWidth onClick={() => router.push("/learn")}>
             Ôn lại bài học trước
-          </Button>
+          </MinimalButton>
         </motion.div>
-      </div>
+      </SecondaryPageShell>
     );
   }
 
   // FINISHED SCREEN
   if (finished) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-6 bg-grid-pattern">
-        <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="max-w-md w-full text-center space-y-6">
+      <SecondaryPageShell title={passed ? "Đã pass!" : "Cần ôn thêm"} subtitle={`${score}/${questions.length} câu đúng`}>
+        <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="text-center space-y-6 py-4">
           <div className={`inline-flex size-20 items-center justify-center rounded-3xl ${passed ? "bg-emerald-500/10 border border-emerald-500/20" : "bg-red-500/10 border border-red-500/20"}`}>
             {passed ? <Trophy className="size-10 text-emerald-500" /> : <XCircle className="size-10 text-red-500" />}
           </div>
@@ -264,36 +265,33 @@ export default function CheckpointClient({
 
           <div className="flex flex-col gap-3">
             {passed && nextPhase && (
-              <Button
-                id="continue-to-next-phase"
+              <MinimalButton
+                data-testid="continue-to-next-phase"
+                fullWidth
                 onClick={() => router.push(`/checkpoint/${nextPhase}`)}
-                className="w-full h-12 bg-gradient-to-r from-emerald-500 to-teal-500 text-white font-bold rounded-xl shadow-lg"
               >
-                Xem checkpoint {nextPhase.toUpperCase()} <ArrowRight className="size-4 ml-1" />
-              </Button>
+                Xem checkpoint {nextPhase.toUpperCase()} <ArrowRight className="size-4" />
+              </MinimalButton>
             )}
             {passed && (
-              <Button
-                onClick={() => router.push("/learn")}
-                className="w-full h-12 bg-gradient-to-r from-primary to-emerald-400 text-white font-bold rounded-xl"
-              >
-                <BookOpen className="size-4 mr-2" /> Học tiếp bài mới
-              </Button>
+              <MinimalButton fullWidth onClick={() => router.push("/learn")}>
+                <BookOpen className="size-4" /> Học tiếp bài mới
+              </MinimalButton>
             )}
-            <Button
-              id="retry-checkpoint"
-              variant="outline"
+            <MinimalButton
+              data-testid="retry-checkpoint"
+              variant="secondary"
+              fullWidth
               onClick={() => { setCurrent(0); setSelected(null); setConfirmed(false); setScore(0); setWrongAnswers([]); setFinished(false); setShowExplanation(false); setStarted(true); }}
-              className="w-full h-12 rounded-xl font-bold border-border hover:bg-muted"
             >
-              <RotateCcw className="size-4 mr-2" /> Làm lại
-            </Button>
-            <Button variant="ghost" onClick={() => router.push("/dashboard")} className="text-muted-foreground">
+              <RotateCcw className="size-4" /> Làm lại
+            </MinimalButton>
+            <MinimalButton variant="ghost" fullWidth onClick={() => router.push("/dashboard")}>
               Về Dashboard
-            </Button>
+            </MinimalButton>
           </div>
         </motion.div>
-      </div>
+      </SecondaryPageShell>
     );
   }
 
@@ -301,16 +299,8 @@ export default function CheckpointClient({
   const progress = ((current + (confirmed ? 1 : 0)) / questions.length) * 100;
 
   return (
-    <div className="min-h-screen bg-grid-pattern flex flex-col items-center justify-center px-4 py-6 pb-24 sm:pb-6">
-      <div className="w-full max-w-xl space-y-5">
-        {/* Header */}
-        <div className="flex items-center justify-between">
-          <span className="text-xs font-black text-muted-foreground uppercase tracking-wider">
-            {phaseLabel} · Câu {current + 1}/{questions.length}
-          </span>
-          <span className="text-xs font-bold text-emerald-500">✓ {score} đúng</span>
-        </div>
-
+    <SecondaryPageShell title={`${phaseLabel} · Câu ${current + 1}/${questions.length}`} subtitle={`✓ ${score} đúng`}>
+      <div className="space-y-5 pb-16">
         {/* Progress bar */}
         <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
           <motion.div
@@ -381,24 +371,24 @@ export default function CheckpointClient({
 
         {/* Action button */}
         {!confirmed ? (
-          <Button
-            id="confirm-checkpoint-answer"
+          <MinimalButton
+            data-testid="confirm-checkpoint-answer"
+            fullWidth
             disabled={!selected}
             onClick={handleConfirm}
-            className="w-full h-12 bg-gradient-to-r from-primary to-emerald-400 text-white font-bold rounded-xl shadow-lg disabled:opacity-40"
           >
             Xác nhận
-          </Button>
+          </MinimalButton>
         ) : (
-          <Button
-            id="next-checkpoint-question"
+          <MinimalButton
+            data-testid="next-checkpoint-question"
+            fullWidth
             onClick={handleNext}
-            className="w-full h-12 bg-gradient-to-r from-primary to-emerald-400 text-white font-bold rounded-xl shadow-lg"
           >
-            {current < questions.length - 1 ? "Câu tiếp theo" : "Xem kết quả"} <ArrowRight className="size-4 ml-1" />
-          </Button>
+            {current < questions.length - 1 ? "Câu tiếp theo" : "Xem kết quả"} <ArrowRight className="size-4" />
+          </MinimalButton>
         )}
       </div>
-    </div>
+    </SecondaryPageShell>
   );
 }

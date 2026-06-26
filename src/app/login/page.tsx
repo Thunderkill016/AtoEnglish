@@ -93,10 +93,9 @@ function LoginContent() {
   const [isLoading, setIsLoading] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
 
-  // Onboarding Quiz state — 0=welcome, 1-4=questions, 5=loader, 6=auth
+  // Onboarding — 0=welcome, 1=level, 2=auth (V2: 3-step max)
   const [onboardingStep, setOnboardingStep] = useState(0);
   const [answers, setAnswers] = useState<Record<number, string>>({});
-  const [checklistIndex, setChecklistIndex] = useState(0);
   const [direction, setDirection] = useState(1);
   const [isDesktop, setIsDesktop] = useState(false);
   const autoAdvanceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -122,7 +121,7 @@ function LoginContent() {
       localStorage.getItem("ato_onboarding_completed") === "true";
     if (mode === "login" || hasCompletedOnboarding) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
-      setOnboardingStep(6);
+      setOnboardingStep(2);
        
       setIsSignUp(false);
     } else {
@@ -134,47 +133,23 @@ function LoginContent() {
   // Cleanup timer on unmount
   useEffect(() => () => { if (autoAdvanceTimer.current) clearTimeout(autoAdvanceTimer.current); }, []);
 
-  // Loader animation (step 5)
-  useEffect(() => {
-    if (onboardingStep === 5) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setChecklistIndex(0);
-      const t1 = setTimeout(() => setChecklistIndex(1), 800);
-      const t2 = setTimeout(() => setChecklistIndex(2), 1600);
-      const t3 = setTimeout(() => setChecklistIndex(3), 2400);
-      const t4 = setTimeout(() => {
-        setDirection(1);
-        setOnboardingStep(6);
-        setIsSignUp(true);
-        if (typeof window !== "undefined") {
-          localStorage.setItem("ato_onboarding_completed", "true");
-        }
-      }, 3200);
+  const levelQuestion = QUESTIONS[0]!;
 
-      return () => {
-        clearTimeout(t1);
-        clearTimeout(t2);
-        clearTimeout(t3);
-        clearTimeout(t4);
-      };
-    }
-  }, [onboardingStep]);
+  const applyDefaultSurveyAnswers = (level: string) => ({
+    1: level,
+    2: "work",
+    3: "fear",
+    4: "15min",
+  });
 
-
-  // Reference module-level constant
-  const questions = QUESTIONS;
-
-  // Duolingo-style: store answer immediately (visual feedback), auto-advance after 400ms
-  const handleAnswerSelect = (qId: number, val: string) => {
-    setAnswers((prev) => ({ ...prev, [qId]: val }));
+  const handleAnswerSelect = (val: string) => {
+    const nextAnswers = applyDefaultSurveyAnswers(val);
+    setAnswers(nextAnswers);
     if (autoAdvanceTimer.current) clearTimeout(autoAdvanceTimer.current);
     autoAdvanceTimer.current = setTimeout(() => {
       setDirection(1);
-      if (qId < 4) {
-        setOnboardingStep(qId + 1);
-      } else {
-        setOnboardingStep(5);
-      }
+      setOnboardingStep(2);
+      setIsSignUp(true);
     }, 400);
   };
 
@@ -346,13 +321,6 @@ function LoginContent() {
   const recap = useMemo(() => getRecapText(), [answers]); // eslint-disable-line react-hooks/exhaustive-deps
   const hasAnswers = !!answers[1];
 
-  // Personalized checklist items for loader (Step 5)
-  const checklistItems = useMemo(() => [
-    `Phân tích trình độ ${recap.level} của bạn...`,
-    `Thiết lập lộ trình ${recap.target} — ${recap.time}...`,
-    "Cấu hình ôn tập thông minh FSRS...",
-  ], [recap.level, recap.target, recap.time]);
-
   return (
     <div className="min-h-screen min-h-[100dvh] bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-50 font-sans flex flex-col lg:flex-row selection:bg-emerald-100 dark:selection:bg-emerald-950/30 selection:text-emerald-900 dark:selection:text-emerald-200">
 
@@ -452,13 +420,13 @@ function LoginContent() {
             </div>
           </Link>
 
-          {onboardingStep >= 1 && onboardingStep <= 4 ? (
+          {onboardingStep === 1 ? (
             <Button
               variant="ghost"
               onClick={() => {
                 if (autoAdvanceTimer.current) clearTimeout(autoAdvanceTimer.current);
                 setDirection(-1);
-                setOnboardingStep(onboardingStep - 1);
+                setOnboardingStep(0);
               }}
               className="ml-auto text-xs font-bold text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 h-10 min-w-[80px] gap-1.5 rounded-xl border border-zinc-100 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-all"
             >
@@ -523,7 +491,7 @@ function LoginContent() {
                       </span>
                     </h1>
                     <p className="text-sm text-zinc-500 dark:text-zinc-400 max-w-xs mx-auto leading-relaxed">
-                      Chỉ cần <strong className="text-zinc-700 dark:text-zinc-300">4 câu hỏi nhanh</strong> — AtoEnglish sẽ cá nhân hóa lộ trình học phù hợp với bạn.
+                      Chỉ <strong className="text-zinc-700 dark:text-zinc-300">1 câu hỏi</strong> về trình độ — AtoEnglish sẽ gợi lộ trình phù hợp.
                     </p>
                   </div>
 
@@ -549,53 +517,33 @@ function LoginContent() {
                   {/* Already have account */}
                   <button
                     type="button"
-                    onClick={() => { setDirection(1); setOnboardingStep(6); setIsSignUp(false); }}
+                    onClick={() => { setDirection(1); setOnboardingStep(2); setIsSignUp(false); }}
                     className="text-xs text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300 font-medium transition-colors underline underline-offset-4"
                   >
                     Tôi đã có tài khoản. Đăng nhập →
                   </button>
                 </div>
 
-              /* ── Steps 1-4: Quiz Questions ── */
-              ) : onboardingStep >= 1 && onboardingStep <= 4 ? (
+              /* ── Step 1: Level question ── */
+              ) : onboardingStep === 1 ? (
                 <div className="space-y-6">
-                  {/* Progress bar */}
-                  <div className="space-y-2">
-                    <div className="flex justify-between items-center text-[10px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider">
-                      <span>Khảo sát định hướng</span>
-                      <span className="text-emerald-600 dark:text-emerald-400 font-extrabold bg-emerald-50 dark:bg-emerald-950/40 px-2 py-0.5 rounded-full border border-emerald-100/50 dark:border-emerald-900/30">
-                        Câu {onboardingStep} / 4
-                      </span>
-                    </div>
-                    <div className="h-1.5 w-full bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
-                      <motion.div
-                        className="h-full bg-gradient-to-r from-emerald-500 to-teal-600 rounded-full"
-                        initial={{ width: 0 }}
-                        animate={{ width: `${(onboardingStep / 4) * 100}%` }}
-                        transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-                      />
-                    </div>
-                  </div>
-
-                  {/* Question */}
                   <div className="space-y-1">
                     <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight text-zinc-900 dark:text-zinc-50 leading-tight">
-                      {questions[onboardingStep - 1].title}
+                      {levelQuestion.title}
                     </h1>
                     <p className="text-xs text-zinc-400 dark:text-zinc-500 font-normal">
-                      {questions[onboardingStep - 1].subtitle}
+                      {levelQuestion.subtitle}
                     </p>
                   </div>
 
-                  {/* Options — tap to select, auto-advances after 400ms */}
                   <div className="flex flex-col gap-2.5 pt-1">
-                    {questions[onboardingStep - 1].options.map((opt, idx) => {
-                      const isSelected = answers[onboardingStep] === opt.val;
+                    {levelQuestion.options.map((opt, idx) => {
+                      const isSelected = answers[1] === opt.val;
                       return (
                         <motion.button
                           key={idx}
                           type="button"
-                          onClick={() => handleAnswerSelect(onboardingStep, opt.val)}
+                          onClick={() => handleAnswerSelect(opt.val)}
                           whileHover={{ scale: 1.012, y: -1 }}
                           whileTap={{ scale: 0.995 }}
                           className={`w-full text-left p-4 rounded-2xl border-2 transition-all duration-200 font-semibold text-sm flex items-center gap-4 shadow-sm group ${
@@ -621,11 +569,10 @@ function LoginContent() {
                     })}
                   </div>
 
-                  {/* Small skip to login link */}
                   <p className="text-center text-[11px] text-zinc-400 dark:text-zinc-500 pt-1">
                     <button
                       type="button"
-                      onClick={() => { if (autoAdvanceTimer.current) clearTimeout(autoAdvanceTimer.current); setDirection(1); setOnboardingStep(6); setIsSignUp(false); setAnswers({}); }}
+                      onClick={() => { if (autoAdvanceTimer.current) clearTimeout(autoAdvanceTimer.current); setDirection(1); setOnboardingStep(2); setIsSignUp(false); setAnswers({}); }}
                       className="hover:text-zinc-600 dark:hover:text-zinc-300 underline underline-offset-4 transition-colors"
                     >
                       Tôi đã có tài khoản
@@ -633,76 +580,7 @@ function LoginContent() {
                   </p>
                 </div>
 
-              /* ── Step 5: Loader ── */
-              ) : onboardingStep === 5 ? (
-                <div className="text-center space-y-6 py-6 flex flex-col items-center">
-                  {/* Spinner */}
-                  <div className="relative flex justify-center py-4">
-                    <div className="relative size-24 flex items-center justify-center">
-                      <div className="absolute inset-0 rounded-full border-4 border-zinc-100 dark:border-zinc-800" />
-                      <motion.div
-                        className="absolute inset-0 rounded-full border-4 border-emerald-500 border-t-transparent border-r-transparent"
-                        animate={{ rotate: 360 }}
-                        transition={{ duration: 1.2, repeat: Infinity, ease: "linear" }}
-                      />
-                      <motion.div
-                        animate={{ scale: [0.95, 1.05, 0.95] }}
-                        transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
-                        className="absolute size-16 flex items-center justify-center rounded-full bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400 shadow-inner text-2xl"
-                      >
-                        🌱
-                      </motion.div>
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight text-zinc-900 dark:text-zinc-50 leading-tight">
-                      Đang thiết lập lộ trình tối ưu...
-                    </h1>
-                    <p className="text-xs text-zinc-400 dark:text-zinc-500 font-normal leading-relaxed">
-                      Cá nhân hóa theo câu trả lời của bạn.
-                    </p>
-                  </div>
-
-                  {/* Personalized checklist */}
-                  <div className="w-full space-y-4 py-4 px-6 text-left max-w-sm mx-auto bg-zinc-50/50 dark:bg-zinc-900/30 border border-zinc-100 dark:border-zinc-800 rounded-2xl backdrop-blur-md shadow-sm">
-                    {checklistItems.map((item, idx) => {
-                      const isDone = checklistIndex > idx;
-                      const isLoadingState = checklistIndex === idx;
-                      return (
-                        <div key={idx} className="flex items-center gap-3 transition-all duration-300">
-                          {isDone ? (
-                            <motion.span
-                              initial={{ scale: 0 }}
-                              animate={{ scale: 1 }}
-                              transition={{ type: "spring", stiffness: 500, damping: 25 }}
-                              className="flex size-5 items-center justify-center rounded-full bg-emerald-500 text-white text-xs font-bold shrink-0 shadow-sm shadow-emerald-500/10"
-                            >
-                              ✓
-                            </motion.span>
-                          ) : isLoadingState ? (
-                            <Loader2 className="size-5 text-emerald-600 dark:text-emerald-400 animate-spin shrink-0" />
-                          ) : (
-                            <div className="size-5 rounded-full border border-zinc-200 dark:border-zinc-800 shrink-0 bg-white dark:bg-zinc-900" />
-                          )}
-                          <span
-                            className={`text-sm transition-colors duration-300 ${
-                              isDone
-                                ? "text-zinc-800 dark:text-zinc-200 font-semibold"
-                                : isLoadingState
-                                ? "text-emerald-600 dark:text-emerald-400 font-semibold"
-                                : "text-zinc-400 dark:text-zinc-600 font-normal"
-                            }`}
-                          >
-                            {item}
-                          </span>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-
-              /* ── Step 6: Auth Form ── */
+              /* ── Step 2: Auth Form ── */
               ) : (
                 <>
                   {/* Recap banner */}
@@ -722,14 +600,8 @@ function LoginContent() {
                           <span className="inline-flex items-center text-[10px] sm:text-xs font-bold text-emerald-700 dark:text-emerald-400 bg-emerald-100/50 dark:bg-emerald-950/40 px-2.5 py-0.5 rounded-lg border border-emerald-200/30 dark:border-emerald-900/30">
                             Cấp độ: {recap.level}
                           </span>
-                          <span className="inline-flex items-center text-[10px] sm:text-xs font-bold text-teal-700 dark:text-teal-400 bg-teal-100/50 dark:bg-teal-950/40 px-2.5 py-0.5 rounded-lg border border-teal-200/30 dark:border-teal-900/30">
-                            Mục tiêu: {recap.target}
-                          </span>
                           <span className="inline-flex items-center text-[10px] sm:text-xs font-bold text-blue-700 dark:text-blue-400 bg-blue-100/50 dark:bg-blue-950/40 px-2.5 py-0.5 rounded-lg border border-blue-200/30 dark:border-blue-900/30">
                             Học tập: {recap.time}
-                          </span>
-                          <span className="inline-flex items-center text-[10px] sm:text-xs font-bold text-violet-700 dark:text-violet-400 bg-violet-100/50 dark:bg-violet-950/40 px-2.5 py-0.5 rounded-lg border border-violet-200/30 dark:border-violet-900/30">
-                            Tập trung: {recap.obstacle}
                           </span>
                         </div>
                       </motion.div>

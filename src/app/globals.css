@@ -242,6 +242,31 @@ html {
   transform: rotateY(180deg);
 }
 
+.lesson-flip-scene {
+  perspective: 600px;
+}
+
+.lesson-flip-inner {
+  position: relative;
+  min-height: 140px;
+  transform-style: preserve-3d;
+  transition: transform 0.4s;
+}
+
+.lesson-flip-inner.is-flipped {
+  transform: rotateY(180deg);
+}
+
+.lesson-flip-face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+}
+
+.lesson-flip-back {
+  transform: rotateY(180deg);
+}
+
 @utility bg-grid-pattern {
   background-size: 40px 40px;
   background-image:

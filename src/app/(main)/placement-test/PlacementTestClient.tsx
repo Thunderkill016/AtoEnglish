@@ -22,6 +22,7 @@ import {
 } from "@/lib/data/placement-test";
 import { savePlacementResult, setPlacementLevel } from "@/app/actions/placement";
 import { PLACEMENT_LEVEL_OPTIONS } from "@/lib/placement/starting-unit";
+import { SecondaryPageShell, MinimalButton, ListSection } from "@/components/design-system";
 
 
 type Stage = "pick" | "test" | "saving" | "results";
@@ -107,108 +108,71 @@ export default function PlacementTestClient() {
   // ── PICK LEVEL OR TAKE TEST ──────────────────────────────────────────────────
   if (stage === "pick") {
     return (
-      <div style={{ minHeight: "100dvh", background: "#09090b", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "24px 16px 100px" }}>
+      <SecondaryPageShell
+        title="Chọn điểm bắt đầu"
+        subtitle="CEFR Placement · Không cần học lại từ đầu"
+      >
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          style={{ maxWidth: 460, width: "100%" }}
+          className="space-y-5 pb-16"
         >
-          {/* Badge */}
-          <div style={{ display: "flex", justifyContent: "center", marginBottom: 20 }}>
-            <span style={{ background: "#10b98120", border: "1px solid #10b98140", borderRadius: 20, padding: "6px 14px", fontSize: 12, fontWeight: 700, color: "#10b981" }}>
-              CEFR Placement Test
-            </span>
-          </div>
-
-          <h1 style={{ fontSize: 26, fontWeight: 800, color: "#fafafa", fontFamily: "'Space Grotesk', sans-serif", textAlign: "center", marginBottom: 10 }}>
-            Chọn Điểm Bắt Đầu Học
-          </h1>
-          <p style={{ fontSize: 13, color: "#71717a", textAlign: "center", lineHeight: 1.6, marginBottom: 20 }}>
-            Không cần học lại từ đầu. Chọn trình độ phù hợp hoặc làm bài test để xác định chính xác hơn.
-          </p>
-
-          <div style={{ fontSize: 11, color: "#52525b", fontWeight: 700, marginBottom: 10, textTransform: "uppercase", letterSpacing: "0.08em" }}>
-            Tôi biết trình độ của mình
-          </div>
-          <div style={{ display: "flex", flexDirection: "column", gap: 8, marginBottom: 20 }}>
+          <ListSection title="Tôi biết trình độ của mình">
             {PLACEMENT_LEVEL_OPTIONS.map((opt) => (
               <button
                 key={opt.level}
                 type="button"
                 onClick={() => handleSelfSelect(opt.level)}
-                style={{
-                  width: "100%",
-                  textAlign: "left",
-                  background: "#111118",
-                  border: `1px solid ${CEFR_COLORS[opt.level]}35`,
-                  borderRadius: 12,
-                  padding: "12px 14px",
-                  cursor: "pointer",
-                }}
+                className="w-full text-left rounded-xl border border-border/60 bg-card p-3.5 hover:bg-muted/40 transition-colors"
               >
-                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                  <span style={{ fontSize: 22 }}>{opt.emoji}</span>
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 2 }}>
-                      <span style={{ fontSize: 13, fontWeight: 800, color: CEFR_COLORS[opt.level] }}>{opt.level}</span>
-                      <span style={{ fontSize: 13, fontWeight: 700, color: "#fafafa" }}>{opt.title}</span>
+                <div className="flex items-center gap-3">
+                  <span className="text-xl">{opt.emoji}</span>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-0.5">
+                      <span className="text-xs font-black text-primary">{opt.level}</span>
+                      <span className="text-sm font-bold text-foreground">{opt.title}</span>
                     </div>
-                    <div style={{ fontSize: 11, color: "#71717a", lineHeight: 1.4 }}>{opt.description}</div>
-                    <div style={{ fontSize: 10, color: "#52525b", marginTop: 4 }}>Bắt đầu: {opt.startLabel}</div>
+                    <p className="text-xs text-muted-foreground leading-relaxed">{opt.description}</p>
+                    <p className="text-[10px] text-muted-foreground mt-1">Bắt đầu: {opt.startLabel}</p>
                   </div>
-                  <ChevronRight size={16} color="#52525b" />
+                  <ChevronRight size={16} className="text-muted-foreground shrink-0" />
                 </div>
               </button>
             ))}
-          </div>
+          </ListSection>
 
-          <div style={{ background: "#111118", border: "1px solid #27272a", borderRadius: 12, padding: "14px", marginBottom: 16 }}>
-            <div style={{ fontSize: 11, color: "#52525b", fontWeight: 700, marginBottom: 8, textTransform: "uppercase", letterSpacing: "0.08em" }}>
+          <div className="rounded-xl border border-border/60 bg-card p-4 space-y-3">
+            <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
               Hoặc làm bài test đầy đủ
-            </div>
-            <p style={{ fontSize: 12, color: "#a1a1aa", lineHeight: 1.5, marginBottom: 10 }}>
-              {TOTAL_QUESTIONS} câu Reading · Vocabulary · Language Use · ~15–25 phút · không giới hạn thời gian
             </p>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 6 }}>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              {TOTAL_QUESTIONS} câu Reading · Vocabulary · Language Use · ~15–25 phút
+            </p>
+            <div className="grid grid-cols-3 gap-2">
               {[
-                { icon: "📖", label: "Reading", count: READING_COUNT },
-                { icon: "📝", label: "Vocab", count: VOCAB_COUNT },
-                { icon: "💬", label: "Grammar", count: LANG_USE_COUNT },
+                { label: "Reading", count: READING_COUNT },
+                { label: "Vocab", count: VOCAB_COUNT },
+                { label: "Grammar", count: LANG_USE_COUNT },
               ].map((s) => (
-                <div key={s.label} style={{ background: "#0c0c10", borderRadius: 8, padding: "8px 6px", textAlign: "center" }}>
-                  <div style={{ fontSize: 14, fontWeight: 800, color: "#fafafa" }}>{s.count}</div>
-                  <div style={{ fontSize: 9, color: "#52525b" }}>{s.label}</div>
+                <div key={s.label} className="rounded-lg bg-muted/50 p-2 text-center">
+                  <div className="text-sm font-black text-foreground">{s.count}</div>
+                  <div className="text-[10px] text-muted-foreground">{s.label}</div>
                 </div>
               ))}
             </div>
           </div>
 
-          <button
+          <MinimalButton
+            fullWidth
             onClick={() => {
               setIsSelfSelect(false);
               setStage("test");
             }}
-            style={{
-              width: "100%",
-              background: "linear-gradient(135deg, #10b981, #14b8a6)",
-              border: "none",
-              borderRadius: 14,
-              padding: "16px",
-              fontSize: 15,
-              fontWeight: 800,
-              color: "#fff",
-              cursor: "pointer",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: 8,
-              boxShadow: "0 4px 20px #10b98130",
-            }}
           >
-            Làm Bài Test Đầy Đủ <ArrowRight size={18} />
-          </button>
+            Làm bài test đầy đủ <ArrowRight size={18} />
+          </MinimalButton>
         </motion.div>
-      </div>
+      </SecondaryPageShell>
     );
   }
 

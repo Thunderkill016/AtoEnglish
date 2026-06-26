@@ -12,9 +12,8 @@ test.describe("Login Page", () => {
     await expect(page.locator("body")).not.toContainText("Application error");
   });
 
-  test("shows onboarding survey step 1 by default", async ({ page }) => {
-    // Step 1 asks about learning goals
-    await expect(page.locator("body")).toContainText(/mục tiêu|học tiếng Anh|goal/i);
+  test("shows welcome screen by default", async ({ page }) => {
+    await expect(page.locator("h1")).toContainText("Tạo lộ trình học tiếng Anh");
   });
 
   test("?mode=login skips survey to auth form", async ({ page }) => {

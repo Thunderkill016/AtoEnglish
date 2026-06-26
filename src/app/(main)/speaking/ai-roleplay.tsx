@@ -877,7 +877,7 @@ export function AIRoleplay() {
             className={`shrink-0 snap-start px-4 h-10 rounded-2xl text-xs font-bold transition-all border flex items-center justify-center max-w-[130px] sm:max-w-none ${
               selectedScenarioId === s.id
                 ? "bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-700 hover:to-indigo-700 text-white border-none shadow-lg shadow-violet-500/10"
-                : "bg-glass border-glass text-muted-foreground hover:text-foreground hover:bg-white/5"
+                : "border-border/60 bg-card text-muted-foreground hover:text-foreground hover:bg-white/5"
             }`}
           >
             <span className="truncate">{s.title}</span>
@@ -886,7 +886,7 @@ export function AIRoleplay() {
       </div>
 
       {/* Main Interactive Chat Box */}
-      <div className="rounded-3xl border border-glass bg-glass p-4 sm:p-8 space-y-4 shadow-sm relative overflow-hidden flex flex-col min-h-[350px] sm:min-h-[500px] justify-between">
+      <div className="rounded-3xl border border-border/60 bg-card p-4 sm:p-8 space-y-4 shadow-sm relative overflow-hidden flex flex-col min-h-[350px] sm:min-h-[500px] justify-between">
         
         {/* Chat Header info */}
         <div className="flex items-center justify-between border-b border-foreground/[0.04] pb-4">
@@ -1087,7 +1087,7 @@ export function AIRoleplay() {
                   onClick={startRoleplay}
                   variant="outline"
                   size="icon"
-                  className="size-14 sm:size-12 rounded-2xl border-glass shrink-0 active:scale-[0.98] hover:bg-white/5 flex items-center justify-center"
+                  className="size-14 sm:size-12 rounded-2xl border-border/60 shrink-0 active:scale-[0.98] hover:bg-white/5 flex items-center justify-center"
                   title="Khởi động lại cuộc trò chuyện"
                 >
                   <RefreshCw className="size-4.5 text-muted-foreground" />

@@ -727,7 +727,7 @@ export function ShadowingPractice() {
             className={`shrink-0 snap-start px-4 h-10 rounded-2xl text-xs font-bold transition-all border flex items-center justify-center max-w-[140px] sm:max-w-none truncate ${
               selectedId === item.id
                 ? "bg-primary text-primary-foreground border-primary shadow-md"
-                : "bg-glass border-glass text-muted-foreground hover:text-foreground hover:bg-foreground/[0.03]"
+                : "border-border/60 bg-card text-muted-foreground hover:text-foreground hover:bg-foreground/[0.03]"
             }`}
           >
             <span className="truncate">{item.title}</span>
@@ -736,7 +736,7 @@ export function ShadowingPractice() {
       </div>
 
       {/* Main Workspace Card */}
-      <div className="rounded-3xl border border-glass bg-glass p-4 sm:p-8 space-y-5 shadow-sm relative overflow-hidden">
+      <div className="rounded-3xl border border-border/60 bg-card p-4 sm:p-8 space-y-5 shadow-sm relative overflow-hidden">
         {/* Topic & Level Badges */}
         <div className="flex items-center justify-between">
           <span className="text-xs text-muted-foreground font-bold uppercase tracking-wider bg-foreground/[0.03] px-3 py-1 rounded-lg">
@@ -821,10 +821,10 @@ export function ShadowingPractice() {
           <Button
             onClick={handlePlayNative}
             variant={isPlayingNative ? "secondary" : "outline"}
-            className={`w-full sm:w-auto h-10 sm:h-11 px-4 sm:px-5 rounded-2xl sm:rounded-xl font-bold text-xs uppercase tracking-wider gap-2 border-glass active:scale-[0.98] transition-all flex items-center justify-center ${
+            className={`w-full sm:w-auto h-10 sm:h-11 px-4 sm:px-5 rounded-2xl sm:rounded-xl font-bold text-xs uppercase tracking-wider gap-2 border-border/60 active:scale-[0.98] transition-all flex items-center justify-center ${
               isPlayingNative
                 ? "bg-violet-600 text-white hover:bg-violet-700 hover:text-white"
-                : "bg-glass hover:bg-white/10 text-foreground"
+                : "bg-card hover:bg-muted/50 text-foreground"
             }`}
           >
             {isPlayingNative ? (
@@ -953,10 +953,10 @@ export function ShadowingPractice() {
                 <Button
                   onClick={handlePlayRecorded}
                   variant={isPlayingRecorded ? "secondary" : "outline"}
-                  className={`w-full sm:w-auto h-12 px-6 rounded-2xl font-bold text-xs uppercase tracking-wider gap-2 border-glass active:scale-[0.98] transition-all flex items-center justify-center ${
+                  className={`w-full sm:w-auto h-12 px-6 rounded-2xl font-bold text-xs uppercase tracking-wider gap-2 border-border/60 active:scale-[0.98] transition-all flex items-center justify-center ${
                     isPlayingRecorded
                       ? "bg-violet-600 text-white hover:bg-violet-700 hover:text-white"
-                      : "bg-glass hover:bg-white/10 text-foreground"
+                      : "bg-card hover:bg-muted/50 text-foreground"
                   }`}
                 >
                   {isPlayingRecorded ? (

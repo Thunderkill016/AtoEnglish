@@ -3,31 +3,32 @@
 import { useState } from "react";
 import { toast } from "sonner";
 import Link from "next/link";
+import { SecondaryPageShell, ListSection, MinimalButton } from "@/components/design-system";
 
 const BASE_URL = "https://atoenglish.vercel.app";
 
 const REWARDS = [
-  { icon: "🎯", title: "Học hiệu quả hơn", desc: "Học cùng bạn bè giúp tăng retention lên 40%", color: "emerald" },
-  { icon: "🔥", title: "Giữ streak cùng nhau", desc: "Nhắc nhở lẫn nhau để không mất streak", color: "orange" },
-  { icon: "🏆", title: "Thi đua cùng nhau", desc: "Xem ai lên level nhanh hơn trên Leaderboard", color: "purple" },
+  { icon: "🎯", title: "Học hiệu quả hơn", desc: "Học cùng bạn bè giúp tăng retention lên 40%" },
+  { icon: "🔥", title: "Giữ streak cùng nhau", desc: "Nhắc nhở lẫn nhau để không mất streak" },
+  { icon: "🏆", title: "Thi đua cùng nhau", desc: "Xem ai lên level nhanh hơn trên Leaderboard" },
 ];
 
 const SHARE_MESSAGES = [
   {
     id: "general",
-    label: "🗣 Giới thiệu chung",
-    text: (name: string, url: string) =>
+    label: "Giới thiệu chung",
+    text: (_name: string, url: string) =>
       `Mình đang học tiếng Anh với AtoEnglish — app học tiếng Anh khoa học nhất cho người Việt! Dùng link của mình để đăng ký nhé: ${url}`,
   },
   {
     id: "career",
-    label: "💼 Mục tiêu sự nghiệp",
-    text: (name: string, url: string) =>
+    label: "Mục tiêu sự nghiệp",
+    text: (_name: string, url: string) =>
       `Bạn muốn làm việc ở công ty quốc tế? Mình đang dùng AtoEnglish để luyện Business English. Vào đây học cùng mình: ${url}`,
   },
   {
     id: "challenge",
-    label: "⚡ Thách đấu bạn bè",
+    label: "Thách đấu bạn bè",
     text: (name: string, url: string) =>
       `${name} thách bạn học tiếng Anh 10 phút mỗi ngày trong 30 ngày! Dùng AtoEnglish cùng mình: ${url}`,
   },
@@ -58,14 +59,11 @@ export default function InviteClient({
   const shareText = SHARE_MESSAGES[selectedMsg]?.text(displayName, inviteUrl) ?? "";
 
   const handleWhatsApp = () => {
-    const url = `https://wa.me/?text=${encodeURIComponent(shareText)}`;
-    window.open(url, "_blank", "noopener,noreferrer");
+    window.open(`https://wa.me/?text=${encodeURIComponent(shareText)}`, "_blank", "noopener,noreferrer");
   };
 
   const handleZalo = () => {
-    // Zalo share uses URL scheme — best effort
-    const url = `https://zalo.me/share?text=${encodeURIComponent(shareText)}`;
-    window.open(url, "_blank", "noopener,noreferrer");
+    window.open(`https://zalo.me/share?text=${encodeURIComponent(shareText)}`, "_blank", "noopener,noreferrer");
   };
 
   const handleFacebook = () => {
@@ -74,111 +72,93 @@ export default function InviteClient({
   };
 
   return (
-    <div className="min-h-screen pb-24 pt-6 px-4 max-w-xl mx-auto">
-      {/* ── Hero ── */}
-      <div className="rounded-2xl bg-gradient-to-br from-emerald-500/10 via-teal-500/5 to-blue-500/8 border border-emerald-500/15 p-6 sm:p-8 mb-6 text-center">
-        <div className="flex size-16 mx-auto items-center justify-center rounded-2xl bg-emerald-500/10 text-3xl mb-4">
-          🎓
+    <SecondaryPageShell
+      title="Mời bạn học cùng"
+      subtitle={`Mã giới thiệu: ${refCode}`}
+    >
+      <div className="space-y-5 pb-16">
+        <div className="rounded-xl border border-border/60 bg-card p-4 text-center">
+          <p className="text-sm text-muted-foreground leading-relaxed">
+            Chia sẻ AtoEnglish với bạn bè để cùng tiến bộ nhanh hơn.
+          </p>
         </div>
-        <h1 className="text-xl sm:text-2xl font-black text-zinc-900 dark:text-zinc-50 mb-2">
-          Học cùng bạn bè!
-        </h1>
-        <p className="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed max-w-sm mx-auto">
-          Chia sẻ AtoEnglish với bạn bè để cùng tiến bộ nhanh hơn.
-          Mã giới thiệu của bạn: <span className="font-black text-emerald-600 dark:text-emerald-400">{refCode}</span>
-        </p>
-      </div>
 
-      {/* ── Why invite ── */}
-      <div className="grid grid-cols-1 gap-3 mb-6">
-        {REWARDS.map(({ icon, title, desc }) => (
-          <div key={title} className="flex items-start gap-3 p-4 rounded-2xl border border-zinc-200/60 dark:border-zinc-800/60 bg-white/60 dark:bg-zinc-900/30">
-            <span className="text-2xl shrink-0">{icon}</span>
-            <div>
-              <p className="text-sm font-black text-zinc-900 dark:text-zinc-50">{title}</p>
-              <p className="text-xs text-zinc-500 mt-0.5">{desc}</p>
+        <ListSection title="Lợi ích">
+          {REWARDS.map(({ icon, title, desc }) => (
+            <div key={title} className="flex items-start gap-3 px-4 py-3 border-b border-border/40 last:border-0">
+              <span className="text-xl shrink-0">{icon}</span>
+              <div>
+                <p className="text-sm font-bold text-foreground">{title}</p>
+                <p className="text-xs text-muted-foreground mt-0.5">{desc}</p>
+              </div>
+            </div>
+          ))}
+        </ListSection>
+
+        <ListSection title="Link của bạn">
+          <div className="px-4 py-3">
+            <div className="flex items-center gap-2 p-3 rounded-xl bg-muted/50 border border-border/60">
+              <span className="flex-1 text-xs font-mono text-foreground truncate">{inviteUrl}</span>
+              <MinimalButton
+                variant="primary"
+                onClick={() => handleCopy(inviteUrl)}
+                className="!min-h-8 !px-3 !text-xs shrink-0"
+              >
+                {copied ? "✓" : "Copy"}
+              </MinimalButton>
             </div>
           </div>
-        ))}
-      </div>
+        </ListSection>
 
-      {/* ── Invite link box ── */}
-      <div className="rounded-2xl border border-zinc-200/60 dark:border-zinc-800/60 bg-white/60 dark:bg-zinc-900/30 p-5 mb-4">
-        <p className="text-xs font-black text-zinc-500 uppercase tracking-widest mb-2">Link của bạn</p>
-        <div className="flex items-center gap-2 p-3 rounded-xl bg-zinc-100 dark:bg-zinc-800/60 border border-zinc-200/60 dark:border-zinc-700/40">
-          <span className="flex-1 text-xs font-mono text-zinc-600 dark:text-zinc-300 truncate">{inviteUrl}</span>
-          <button
-            onClick={() => handleCopy(inviteUrl)}
-            className="shrink-0 text-xs font-black px-3 py-1.5 rounded-lg bg-emerald-500 hover:bg-emerald-600 text-white transition-colors"
-          >
-            {copied ? "✓" : "Copy"}
-          </button>
-        </div>
-      </div>
+        <ListSection title="Tin nhắn chia sẻ">
+          <div className="px-4 py-3 space-y-3">
+            <div className="flex gap-2 flex-wrap">
+              {SHARE_MESSAGES.map((msg, idx) => (
+                <button
+                  key={msg.id}
+                  onClick={() => setSelectedMsg(idx)}
+                  className={`text-xs font-bold px-3 py-1.5 rounded-full border transition-all ${
+                    selectedMsg === idx
+                      ? "bg-primary text-primary-foreground border-primary"
+                      : "border-border/60 text-muted-foreground hover:border-primary/30"
+                  }`}
+                >
+                  {msg.label}
+                </button>
+              ))}
+            </div>
+            <div className="p-3 rounded-xl bg-muted/40 text-xs text-foreground/80 leading-relaxed border border-border/60">
+              {shareText}
+            </div>
+            <MinimalButton variant="secondary" fullWidth onClick={() => handleCopy(shareText)}>
+              Sao chép tin nhắn
+            </MinimalButton>
+          </div>
+        </ListSection>
 
-      {/* ── Message picker ── */}
-      <div className="rounded-2xl border border-zinc-200/60 dark:border-zinc-800/60 bg-white/60 dark:bg-zinc-900/30 p-5 mb-4">
-        <p className="text-xs font-black text-zinc-500 uppercase tracking-widest mb-3">Chọn tin nhắn để chia sẻ</p>
-        <div className="flex gap-2 flex-wrap mb-3">
-          {SHARE_MESSAGES.map((msg, idx) => (
+        <div className="grid grid-cols-3 gap-3">
+          {[
+            { label: "WhatsApp", emoji: "💬", onClick: handleWhatsApp },
+            { label: "Zalo", emoji: "📱", onClick: handleZalo },
+            { label: "Facebook", emoji: "📘", onClick: handleFacebook },
+          ].map((item) => (
             <button
-              key={msg.id}
-              onClick={() => setSelectedMsg(idx)}
-              className={`text-xs font-bold px-3 py-1.5 rounded-full border transition-all ${
-                selectedMsg === idx
-                  ? "bg-emerald-500 text-white border-emerald-500"
-                  : "border-zinc-200/60 dark:border-zinc-700/60 text-zinc-600 dark:text-zinc-400 hover:border-emerald-500/30"
-              }`}
+              key={item.label}
+              onClick={item.onClick}
+              className="flex flex-col items-center gap-2 p-4 rounded-xl border border-border/60 bg-card hover:bg-muted/40 transition-all"
             >
-              {msg.label}
+              <span className="text-2xl">{item.emoji}</span>
+              <span className="text-xs font-bold text-foreground">{item.label}</span>
             </button>
           ))}
         </div>
-        <div className="p-3 rounded-xl bg-zinc-50 dark:bg-zinc-800/40 text-xs text-zinc-600 dark:text-zinc-300 leading-relaxed border border-zinc-200/50 dark:border-zinc-700/30">
-          {shareText}
+
+        <div className="text-center">
+          <Link href="/me" className="text-xs font-bold text-muted-foreground hover:text-foreground transition-colors">
+            ← Quay lại
+          </Link>
         </div>
-        <button
-          onClick={() => handleCopy(shareText)}
-          className="mt-2 w-full text-xs font-black py-2 rounded-xl border border-zinc-200/60 dark:border-zinc-700/60 text-zinc-600 dark:text-zinc-400 hover:border-emerald-500/30 hover:text-emerald-600 dark:hover:text-emerald-400 transition-all"
-        >
-          📋 Sao chép tin nhắn
-        </button>
       </div>
-
-      {/* ── Share buttons ── */}
-      <div className="grid grid-cols-3 gap-3 mb-6">
-        <button
-          onClick={handleWhatsApp}
-          className="flex flex-col items-center gap-2 p-4 rounded-2xl border border-green-500/20 bg-green-500/5 hover:bg-green-500/10 transition-all"
-        >
-          <span className="text-2xl">💬</span>
-          <span className="text-xs font-black text-green-700 dark:text-green-400">WhatsApp</span>
-        </button>
-        <button
-          onClick={handleZalo}
-          className="flex flex-col items-center gap-2 p-4 rounded-2xl border border-blue-500/20 bg-blue-500/5 hover:bg-blue-500/10 transition-all"
-        >
-          <span className="text-2xl">📱</span>
-          <span className="text-xs font-black text-blue-700 dark:text-blue-400">Zalo</span>
-        </button>
-        <button
-          onClick={handleFacebook}
-          className="flex flex-col items-center gap-2 p-4 rounded-2xl border border-indigo-500/20 bg-indigo-500/5 hover:bg-indigo-500/10 transition-all"
-        >
-          <span className="text-2xl">📘</span>
-          <span className="text-xs font-black text-indigo-700 dark:text-indigo-400">Facebook</span>
-        </button>
-      </div>
-
-      {/* ── CTA back ── */}
-      <div className="text-center">
-        <Link
-          href="/dashboard"
-          className="text-xs font-bold text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300 transition-colors"
-        >
-          ← Quay lại Dashboard
-        </Link>
-      </div>
-    </div>
+    </SecondaryPageShell>
   );
 }

@@ -457,7 +457,7 @@ export default function FlashcardsPage() {
                   className="w-full h-full preserve-3d relative"
                 >
                   {/* CARD FRONT */}
-                  <div className="absolute w-full h-full backface-hidden rounded-3xl bg-glass border border-glass p-5 sm:p-8 flex flex-col justify-between shadow-[0_15px_40px_rgba(0,0,0,0.025)]">
+                  <div className="absolute w-full h-full backface-hidden rounded-3xl border border-border/60 bg-card p-5 sm:p-8 flex flex-col justify-between shadow-[0_15px_40px_rgba(0,0,0,0.025)]">
                     <div className="flex justify-between items-start">
                       <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl text-[10px] font-bold uppercase tracking-wider bg-foreground/[0.04] text-muted-foreground border border-foreground/[0.05]">
                         <Folder className="size-3.5" />
@@ -510,7 +510,7 @@ export default function FlashcardsPage() {
                   </div>
 
                   {/* CARD BACK */}
-                  <div className="absolute w-full h-full backface-hidden rotate-y-180 rounded-3xl bg-glass border border-glass p-8 flex flex-col justify-between shadow-[0_15px_40px_rgba(0,0,0,0.025)]">
+                  <div className="absolute w-full h-full backface-hidden rotate-y-180 rounded-3xl border border-border/60 bg-card p-8 flex flex-col justify-between shadow-[0_15px_40px_rgba(0,0,0,0.025)]">
                     <div className="flex justify-between items-start">
                       <span className="text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
                         {reverseMode ? "Từ Tiếng Anh" : "Nghĩa Tiếng Việt"}
@@ -641,7 +641,7 @@ export default function FlashcardsPage() {
         <motion.div 
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="rounded-3xl border border-glass bg-glass p-5 sm:p-8 text-center max-w-md mx-auto space-y-6 shadow-[0_15px_40px_rgba(0,0,0,0.015)]"
+          className="rounded-3xl border border-border/60 bg-card p-5 sm:p-8 text-center max-w-md mx-auto space-y-6 shadow-[0_15px_40px_rgba(0,0,0,0.015)]"
         >
           <div className="inline-flex size-16 items-center justify-center rounded-2xl bg-primary/10 text-primary">
             <Award className="size-8" />
@@ -711,7 +711,7 @@ export default function FlashcardsPage() {
             <Button
               onClick={resetReview}
               variant="outline"
-              className="w-full sm:w-auto rounded-xl text-xs sm:text-sm font-semibold border-glass h-12 sm:h-11 px-5 hover:bg-muted active:scale-[0.98] flex items-center justify-center"
+              className="w-full sm:w-auto rounded-xl text-xs sm:text-sm font-semibold border-border/60 h-12 sm:h-11 px-5 hover:bg-muted active:scale-[0.98] flex items-center justify-center"
             >
               <RotateCcw className="size-4 mr-1.5" />
               Ôn tập lại
