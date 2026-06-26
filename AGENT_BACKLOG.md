@@ -358,10 +358,10 @@
 - **Started:** 2026-06-26 — autopilot (PHASE1: read AGENTS+BACKLOG+PLAN+ROADMAP+AUTOPILOT+CONTENT§6-7 + grep; memory sim via logs; PHASE2: plan section+refill run (skipped >=2); PHASE3: set in_progress, edit doc)
 
 ### TASK-046 — Curriculum quality B2 audio declarations
-- **Status:** `ready`
+- **Status:** `in_progress`
 - **Mô tả:** Extend `curriculum-quality.test.ts` verify mọi B2 unit có `audio` path declared cho vocab+dialogue.
 - **Done khi:** Test pass; 0 missing audio fields.
-- **Started:** auto-refill
+- **Started:** 2026-06-26 — autopilot (PHASE1: read AGENTS/BACKLOG/PLAN/CONTENT§6-7 + blueprint + center-ref + flow + unit1 gold + curriculum-quality.test + grep B2 units audio decl + memory sim via logs; PHASE2 plan+backlog; PHASE3: extend test with B2-specific audio guard for vocab+dialogues)
 
 
 ### TASK-047 — GitHub agent-health check auto-refill

@@ -324,4 +324,30 @@ describe("Curriculum Quality Rigorous Assessment Suite", () => {
       });
     });
   }
+
+  // TASK-046: Explicit B2 audio declaration verification for vocab + dialogue
+  // (per lesson-blueprint vocab/dialogues fields + unit1 gold; ensures post-gen B2 units declare /audio/ paths)
+  describe("B2 units audio declarations (vocab + dialogue)", () => {
+    const b2Files = files.filter((f) => /unit3[3-9]|unit4[0-2]/.test(f));
+    it("every B2 unit declares audio path for all vocab items and dialogues", async () => {
+      for (const file of b2Files) {
+        const filePath = path.join(unitsDir, file);
+        const importedModule = await import(filePath);
+        const unit = importedModule.default || Object.values(importedModule)[0];
+        if (unit.level !== "B2") continue;
+
+        unit.vocab?.forEach((item: any, index: number) => {
+          const vocabDesc = `B2 ${file} vocab#${index + 1} (${item.word || "unknown"})`;
+          expect(item.audio, `${vocabDesc}: missing audio path`).toBeDefined();
+          expect(item.audio).toMatch(/^\/audio\//);
+        });
+
+        unit.dialogues?.forEach((dialogue: any, index: number) => {
+          const dialogueDesc = `B2 ${file} dialogue#${index + 1} (${dialogue.title || "unknown"})`;
+          expect(dialogue.audio, `${dialogueDesc}: missing audio`).toBeDefined();
+          expect(dialogue.audio).toMatch(/^\/audio\//);
+        });
+      }
+    });
+  });
 });

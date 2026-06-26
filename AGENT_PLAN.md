@@ -570,3 +570,23 @@
 - No secret/DB; pure content. Self debug from output of lint/test/audit.
 - If push needs GITLAB_TOKEN and blocked → status blocked in backlog, advance if other ready.
 **Done khi**: unit24 passes test:content-standard (0 vio, L1=100%); full blueprint comments + header present (grep "── VOCABULARY" unit24); grammar.rule concise; lint+unit tests+tsc clean; 1 commit + push via git-push.sh main; BACKLOG=done + entry SHA; no user asked; autonomous.
+
+### TASK-046 — Curriculum quality B2 audio declarations
+**Mục tiêu**: Extend `curriculum-quality.test.ts` để có explicit verification cho mọi B2 unit (33-42) có `audio` path declared cho vocab items + dialogues (theo lesson-blueprint vocab/dialogues blocks + unit1 gold mẫu + sau audio gen B2). Mặc dù test hiện đã enforce audio /^\/audio\// cho TẤT CẢ units trong loop, task yêu cầu "extend" để có B2-specific guard / describe block riêng (tương tự pattern unit tests khác), đảm bảo 0 missing cho B2. Không sửa data unit, không đổi logic test khác, không đụng UI/flow.
+**Bước thực hiện**:
+1. PHASE1 research complete: read AGENTS.md (ALWAYS + search_memory rule), AGENT_BACKLOG/PLAN/ROADMAP, CONTENT_STYLE.md §6–7 (blueprint ref), lesson-center-reference.ts, lesson-blueprint.ts (vocab+dialogues require audio), learning-flow.ts, unit1.ts (gold has audio decl), curriculum-quality.test.ts (existing audio asserts), src/__tests__/unit-audio.test.ts (runtime separate), grep audio decl in unit33-42.ts (counts match 14/18+2), agent logs for memory sim of TASK-046 (refilled ready, no prior code change).
+2. Grep confirm test already covers all (incl B2) but needs explicit B2 block per task desc; identify edit target: only curriculum-quality.test.ts .
+3. Update BACKLOG: TASK-046 status `in_progress`.
+4. Update AGENT_PLAN.md (this section) + Nhật ký.
+5. Ready count >=3 (046/047/048) → skip `bash scripts/agent-refill-backlog.sh` (KHÔNG hỏi).
+6. PHASE3 minimal: edit src/__tests__/curriculum-quality.test.ts — append dedicated describe("B2 units must declare audio paths for vocab + dialogue") that loads B2 files (or filter in existing), asserts every vocab[i].audio && /^\/audio\// and every dialogue.audio; re-use same dynamic import pattern; add comment // TASK-046 B2 audio guard.
+7. Run gates bắt buộc: npm run lint && npm run test (note: content-standard/audit not required as no unit*.ts change).
+8. Pass → update BACKLOG done + Nhật ký + SHA; PLAN log.
+9. git pull --rebase; git add AGENT_BACKLOG.md AGENT_PLAN.md src/__tests__/curriculum-quality.test.ts; commit "test(curriculum): extend curriculum-quality.test.ts with explicit B2 audio declaration checks for vocab+dialogue (TASK-046)"; `bash scripts/git-push.sh main`.
+**Rủi ro**:
+- Test already passes for B2 (data has audio) → extension just adds dedicated block, will pass first try; if syntax in describe → fix once.
+- Duplicate assert with general loop → ok, task asks extend for B2 verify.
+- No data/secret change; pure test. If test run needs update count (146→?) ok.
+- Fail 2x → blocked + lý do.
+- Pure JS/TS test, self debug from output.
+**Done khi**: curriculum-quality.test.ts extended with B2-specific audio check; `npm run lint && npm run test` pass (0 missing); 1 commit + push via git-push.sh main; BACKLOG status=done + entry SHA+date in Nhật ký; no ask user; autonomous.
