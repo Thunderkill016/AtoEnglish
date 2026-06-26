@@ -26,6 +26,7 @@ import {
   type StudyPhase,
 } from "@/lib/constants/study-plan";
 import { UNITS } from "@/lib/constants/units";
+import { SecondaryPageShell, PrimaryRow } from "@/components/design-system";
 
 interface Props {
   nextUnitRoute: string;
@@ -81,42 +82,24 @@ export default function RoadmapClient({
   }
 
   return (
-    <div
-      style={{
-        minHeight: "100dvh",
-        background: "#09090b",
-        paddingBottom: 100,
-      }}
-    >
-      {/* ── Header ─────────────────────────────────────────────────────── */}
+    <SecondaryPageShell title="Lộ trình" subtitle="A0 → B2 · 50 unit">
+      {nextUnitTitle && (
+        <div className="mb-4">
+          <PrimaryRow
+            href={nextUnitRoute}
+            label="Học tiếp"
+            description={nextUnitTitle}
+            icon={Play}
+          />
+        </div>
+      )}
+      <div style={{ paddingBottom: 80 }}>
       <div
         style={{
-          padding: "24px 16px 0",
           maxWidth: 480,
           margin: "0 auto",
         }}
       >
-        <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          style={{ marginBottom: 20 }}
-        >
-          <h1
-            style={{
-              fontSize: 22,
-              fontWeight: 800,
-              color: "#fafafa",
-              fontFamily: "'Space Grotesk', sans-serif",
-              marginBottom: 6,
-            }}
-          >
-            🗺️ Lộ Trình A0 → B2
-          </h1>
-          <p style={{ fontSize: 13, color: "#71717a", lineHeight: 1.5 }}>
-            4 giai đoạn · 12–18 tháng · Thiết kế cho người Việt mục tiêu SaaS &amp; business
-          </p>
-        </motion.div>
-
         {/* Current level badge */}
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
@@ -855,6 +838,7 @@ export default function RoadmapClient({
           </div>
         </motion.div>
       </div>
-    </div>
+      </div>
+    </SecondaryPageShell>
   );
 }

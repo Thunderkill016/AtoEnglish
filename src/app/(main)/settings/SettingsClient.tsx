@@ -28,6 +28,7 @@ import {
 } from "@/lib/push-notifications";
 import { savePushSubscription, removePushSubscription } from "@/app/actions/push";
 import { saveNotificationPreferences } from "@/app/actions/notifications";
+import { SecondaryPageShell } from "@/components/design-system";
 
 const VAPID_PUBLIC_KEY = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY ?? "";
 
@@ -325,13 +326,8 @@ export default function SettingsClient({
   };
 
   return (
-    <div className="max-w-2xl mx-auto px-4 sm:px-6 py-6 pb-24">
-      {/* Header */}
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">Cài đặt</h1>
-        <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1">{userEmail}</p>
-      </div>
-
+    <SecondaryPageShell title="Cài đặt" subtitle={userEmail || undefined}>
+      <div className="pb-16">
       {/* Notifications */}
       <SettingSection title="Thông báo">
         {/* Push toggle */}
@@ -588,7 +584,8 @@ export default function SettingsClient({
           </AnimatePresence>
         </motion.button>
       </div>
-    </div>
+      </div>
+    </SecondaryPageShell>
   );
 }
 

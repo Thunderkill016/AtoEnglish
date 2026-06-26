@@ -2,7 +2,10 @@
 
 import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Volume2, Mic, MicOff, ChevronRight, Sparkles } from "lucide-react";
+import { Volume2, Mic, MicOff, Sparkles, ChevronRight } from "lucide-react";
+import LessonSectionHeader from "../lesson-ui/LessonSectionHeader";
+import LessonContinueButton from "../lesson-ui/LessonContinueButton";
+import { lessonSectionMotion } from "../lesson-ui/motion";
 import { toast } from "sonner";
 import { calcSpeechScore } from "@/lib/utils/speech";
 import { SpeechRecognitionFallback } from "@/lib/utils/speech-fallback";
@@ -51,12 +54,6 @@ interface ShadowingSectionProps {
   playTTS: (text: string, rate?: number) => void;
   goNext: () => void;
 }
-
-const sectionVariants = {
-  initial: { opacity: 0, x: 20 },
-  animate: { opacity: 1, x: 0 },
-  exit: { opacity: 0, x: -20 },
-};
 
 // Helper: detect specific missing English final consonants (codas) commonly deleted by Vietnamese learners
 function detectMissingCodas(expected: string, actual: string): string[] {
@@ -231,25 +228,16 @@ export default function ShadowingSection({
   return (
     <motion.div
       key="s6"
-      variants={sectionVariants}
-      initial="initial"
-      animate="animate"
-      exit="exit"
-      transition={{ duration: 0.3 }}
+      initial={lessonSectionMotion.initial}
+      animate={lessonSectionMotion.animate}
+      exit={lessonSectionMotion.exit}
+      transition={lessonSectionMotion.transition}
     >
-      <div className="flex items-center gap-2 mb-6">
-        <span className="text-2xl">🗣️</span>
-        <div className="flex-1">
-          <div className="flex items-center gap-2">
-            <h1 className="text-xl sm:text-2xl font-black bg-gradient-to-r from-violet-200 to-white bg-clip-text text-transparent">
-              Shadowing
-            </h1>
-            <span className="text-[10px] font-bold text-violet-600 bg-violet-950/60 border border-violet-800/50 px-2 py-0.5 rounded-full">
-              Bước {sectionOrderIdx + 1}/{TOTAL_SECTIONS}
-            </span>
-          </div>
-        </div>
-      </div>
+      <LessonSectionHeader
+        sectionId={6}
+        sectionOrderIdx={sectionOrderIdx}
+        totalSections={TOTAL_SECTIONS}
+      />
 
       {DIALOGUES.length > 0 && !shadowDone ? (
         <div className="bg-gradient-to-b from-zinc-900/80 to-zinc-950/80 border border-zinc-700/50 rounded-2xl p-4 sm:p-6 shadow-lg">
@@ -402,12 +390,7 @@ export default function ShadowingSection({
           <div className="text-4xl mb-3">🎉</div>
           <p className="text-emerald-400 font-bold text-lg mb-1">Hoàn thành Shadowing!</p>
           <p className="text-zinc-400 text-sm mb-6">Điểm trung bình: {shadowAvg}%</p>
-          <button
-            onClick={goNext}
-            className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-white font-bold rounded-2xl px-6 py-4 flex items-center justify-center gap-2 transition-all duration-200 text-lg shadow-lg shadow-emerald-900/40 active:scale-95"
-          >
-            Tiếp tục luyện nói <ChevronRight size={20} />
-          </button>
+          <LessonContinueButton onClick={goNext}>Tiếp tục luyện nói</LessonContinueButton>
         </div>
       )}
     </motion.div>

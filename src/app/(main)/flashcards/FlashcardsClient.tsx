@@ -24,6 +24,7 @@ import Link from "next/link";
 import { getDueCards, reviewCard, getAllCards, getCardTopics } from "@/app/actions/cards";
 import { recordFlashcardSession, type FlashcardStats } from "@/app/actions/flashcard-stats";
 import { toast } from "sonner";
+import { SecondaryPageShell, PrimaryRow } from "@/components/design-system";
 
 interface Flashcard {
   id: string;
@@ -273,84 +274,53 @@ export default function FlashcardsPage() {
   // Loading state UI
   if (isLoading) {
     return (
-      <div className="relative mx-auto max-w-4xl px-4 py-6 sm:py-8 sm:px-6 flex flex-col items-center justify-center min-h-[60vh] space-y-4 overflow-x-hidden">
-        <Loader2 className="size-10 text-primary animate-spin" />
-        <p className="text-sm text-muted-foreground font-semibold">Đang tải thẻ đến hạn từ Supabase...</p>
-      </div>
+      <SecondaryPageShell title="Ôn tập" subtitle="Đang tải thẻ SRS...">
+        <div className="flex flex-col items-center justify-center min-h-[40vh] space-y-4">
+          <Loader2 className="size-10 text-primary animate-spin" />
+          <p className="text-sm text-muted-foreground font-semibold">Đang tải thẻ đến hạn...</p>
+        </div>
+      </SecondaryPageShell>
     );
   }
 
   // Empty state UI (No due cards)
   if (!isLoading && cards.length === 0) {
     return (
-      <div className="relative mx-auto max-w-4xl px-4 py-6 sm:py-8 sm:px-6 flex flex-col items-center justify-center min-h-[65vh] space-y-6 text-center bg-grid-pattern overflow-x-hidden">
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 -z-10 h-80 w-80 rounded-full bg-primary/5 blur-3xl" />
-        <div className="inline-flex size-16 items-center justify-center rounded-2xl bg-emerald-500/10 text-emerald-600">
-          <CheckCircle className="size-8" />
-        </div>
-        <div className="space-y-2 max-w-md">
-          <h2 className="text-xl sm:text-2xl font-black text-foreground">Hôm nay bạn đã ôn xong!</h2>
-          <p className="text-sm text-muted-foreground leading-relaxed font-normal">
-            Tuyệt vời! Không có thẻ nào cần ôn hôm nay. Hãy củng cố từ vựng bằng Quiz trắc nghiệm hoặc học thêm bài mới.
+      <SecondaryPageShell title="Ôn tập" subtitle="Hôm nay bạn đã ôn xong!">
+        <div className="flex flex-col items-center text-center space-y-4 mb-6">
+          <div className="inline-flex size-14 items-center justify-center rounded-2xl bg-emerald-500/10 text-emerald-600">
+            <CheckCircle className="size-7" />
+          </div>
+          <p className="text-sm text-muted-foreground max-w-md">
+            Không có thẻ đến hạn. Tiếp tục học hoặc ôn thêm.
           </p>
         </div>
-        <div className="flex flex-wrap gap-3 justify-center pt-2">
-          <Button
-            onClick={() => router.push("/quiz")}
-            className="bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-500 hover:to-purple-500 text-white rounded-xl text-xs sm:text-sm font-semibold h-11 px-5 shadow-lg shadow-violet-600/15 active:scale-[0.98]"
-          >
-            Quiz Từ vựng
-          </Button>
-          <Button
-            onClick={() => router.push("/learn")}
-            className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-white rounded-xl text-xs sm:text-sm font-semibold h-11 px-5 shadow-lg shadow-emerald-600/15 active:scale-[0.98]"
-          >
-            Học Unit Mới
-          </Button>
-          <Button
-            onClick={() => router.push("/flashcards/hard")}
-            variant="outline"
-            className="rounded-xl text-xs sm:text-sm font-semibold border-red-500/20 text-red-600 dark:text-red-400 h-11 px-5 hover:bg-red-500/5 active:scale-[0.98] flex items-center gap-1.5"
-          >
-            <AlertTriangle className="size-4" />
-            Từ Khó Nhất
-          </Button>
-          <Button
-            onClick={() => router.push("/dashboard")}
-            variant="outline"
-            className="rounded-xl text-xs sm:text-sm font-semibold border-glass h-11 px-5 hover:bg-muted active:scale-[0.98]"
-          >
-            Về Dashboard
-          </Button>
+        <div className="space-y-2">
+          <PrimaryRow href="/learn" label="Học bài mới" description="Tiếp tục lộ trình" icon={Layers} />
+          <PrimaryRow href="/quiz" label="Quiz từ vựng" description="Trắc nghiệm nhanh" icon={HelpCircle} />
+          <PrimaryRow href="/flashcards/hard" label="Từ khó nhất" description="Ôn các thẻ leech" icon={AlertTriangle} />
         </div>
-      </div>
+      </SecondaryPageShell>
     );
   }
 
   const currentCard = cards[currentIndex];
   const progressPercentage = cards.length > 0 ? ((currentIndex + (isFlipped ? 0.5 : 0)) / cards.length) * 100 : 0;
 
-  return (
-    <div className="relative mx-auto max-w-4xl px-4 py-5 sm:py-8 sm:px-6 space-y-5 sm:space-y-8 bg-grid-pattern min-h-screen overflow-x-hidden pb-20 sm:pb-0">
-      {/* Background decoration */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 -z-10 h-80 w-80 rounded-full bg-primary/5 blur-3xl" />
+  const dueCount = cards.length - currentIndex;
 
-      {/* Header */}
+  return (
+    <SecondaryPageShell
+      title="Ôn tập"
+      subtitle={`${dueCount} thẻ còn lại · SRS`}
+    >
+      <div className="space-y-5 sm:space-y-6 pb-16">
       <motion.div 
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
-        className="space-y-4 border-b border-foreground/[0.05] pb-4"
+        className="space-y-3 border-b border-foreground/[0.05] pb-4"
       >
-        <div className="flex items-center justify-between">
-          <div className="space-y-1">
-            <span className="inline-flex items-center gap-1.5 text-xs font-bold text-primary px-3 py-1 rounded-full bg-primary/10 border border-primary/20">
-              <Layers className="size-3.5 animate-pulse" />
-              Spaced Repetition (SRS)
-            </span>
-            <h1 className="mt-1 text-2xl sm:text-3xl font-black tracking-tight text-foreground">
-              Thẻ ôn tập thông minh
-            </h1>
-          </div>
+        <div className="flex items-center justify-end">
           <div className="flex flex-col items-end gap-2">
             {/* Cram Mode Toggle */}
             <button
@@ -755,6 +725,7 @@ export default function FlashcardsPage() {
           </div>
         </motion.div>
       )}
-    </div>
+      </div>
+    </SecondaryPageShell>
   );
 }

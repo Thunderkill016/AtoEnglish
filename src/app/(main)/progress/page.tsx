@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { Flame, Layers, BookOpen, TrendingUp, Trophy, Star, Mic } from "lucide-react";
+import { SecondaryPageShell, PrimaryRow } from "@/components/design-system";
 import { getProgressStats, getWeeklyXpData, getDailyActivity } from "@/app/actions/stats";
 import { getAchievements } from "@/app/actions/gamification";
 import { AchievementsPanel } from "@/components/gamification/AchievementsPanel";
@@ -101,24 +102,11 @@ export default async function ProgressPage() {
   const totalSrs = Math.max(srsBoxes.reduce((s, b) => s + b.count, 0), 1);
 
   return (
-    <div className="relative mx-auto max-w-7xl px-4 py-5 sm:py-8 sm:px-6 lg:px-8 space-y-5 sm:space-y-8 min-h-screen overflow-x-hidden pb-20 sm:pb-0">
-      {/* Ambient glow */}
-      <div className="absolute top-1/3 left-1/4 -z-10 h-80 w-[60vw] max-w-80 rounded-full bg-primary/5 blur-3xl pointer-events-none" />
-      <div className="absolute bottom-1/4 right-1/4 -z-10 h-80 w-[60vw] max-w-80 rounded-full bg-emerald-500/5 blur-3xl pointer-events-none" />
-
-      {/* Header */}
-      <div className="pb-6 border-b border-foreground/[0.05]">
-        <span className="inline-flex items-center gap-1.5 text-xs font-bold text-primary px-3 py-1 rounded-full bg-primary/10 border border-primary/20">
-          <TrendingUp className="size-3.5" />
-          Báo cáo học tập cá nhân
-        </span>
-        <h1 className="mt-2 text-3xl sm:text-4xl font-black tracking-tight text-foreground">
-          Tiến độ &amp; Thành tích
-        </h1>
-        <p className="text-sm sm:text-base text-muted-foreground mt-1">
-          Dữ liệu thực từ hành trình học tập của bạn.
-        </p>
-      </div>
+    <SecondaryPageShell
+      title="Tiến độ"
+      subtitle={`${stats.totalXp.toLocaleString()} XP · ${stats.streak} ngày streak`}
+    >
+    <div className="space-y-5 sm:space-y-8 pb-16">
 
       {/* Stat cards */}
       <div className="grid grid-cols-2 gap-3 sm:gap-4 sm:grid-cols-3 lg:grid-cols-5">
@@ -169,33 +157,20 @@ export default async function ProgressPage() {
         />
       </div>
 
-      {/* Leaderboard CTA banner */}
-      <a
-        href="/leaderboard"
-        className="flex items-center gap-4 p-4 rounded-2xl border border-yellow-500/20 bg-yellow-500/5 hover:bg-yellow-500/8 hover:border-yellow-500/35 transition-all duration-200 group"
-      >
-        <span className="flex size-10 items-center justify-center rounded-xl bg-yellow-500/15 text-2xl shrink-0">🏆</span>
-        <div className="flex-1 min-w-0">
-          <p className="text-xs font-black text-yellow-400 uppercase tracking-widest mb-0.5">Bảng xếp hạng</p>
-          <p className="text-sm font-bold text-foreground">Xem vị trí của bạn trong tuần này</p>
-          <p className="text-xs text-muted-foreground">Top học viên theo XP — reset mỗi thứ Hai</p>
-        </div>
-        <Trophy className="size-5 text-yellow-500/60 group-hover:text-yellow-500 group-hover:translate-x-0.5 transition-all shrink-0" />
-      </a>
-
-      {/* Weekly Report CTA */}
-      <a
-        href="/progress/weekly"
-        className="flex items-center gap-4 p-4 rounded-2xl border border-blue-500/20 bg-blue-500/5 hover:bg-blue-500/8 hover:border-blue-500/35 transition-all duration-200 group"
-      >
-        <span className="flex size-10 items-center justify-center rounded-xl bg-blue-500/15 text-2xl shrink-0">📊</span>
-        <div className="flex-1 min-w-0">
-          <p className="text-xs font-black text-blue-400 uppercase tracking-widest mb-0.5">Tổng kết 7 ngày</p>
-          <p className="text-sm font-bold text-foreground">Báo Cáo Tuần Này</p>
-          <p className="text-xs text-muted-foreground">Bài học, thẻ ôn, ngày hoạt động — so sánh với tuần trước</p>
-        </div>
-        <TrendingUp className="size-5 text-blue-500/60 group-hover:text-blue-500 group-hover:translate-x-0.5 transition-all shrink-0" />
-      </a>
+      <div className="space-y-2">
+        <PrimaryRow
+          href="/leaderboard"
+          label="Bảng xếp hạng"
+          description="Top học viên theo XP tuần này"
+          icon={Trophy}
+        />
+        <PrimaryRow
+          href="/progress/weekly"
+          label="Báo cáo tuần"
+          description="Tổng kết 7 ngày học tập"
+          icon={TrendingUp}
+        />
+      </div>
 
       <div className="grid gap-4 sm:gap-6 lg:grid-cols-3">
         {/* Weekly XP Chart */}
@@ -301,6 +276,7 @@ export default async function ProgressPage() {
         unlockedIds={new Set(achievementsRes.unlockedIds)}
       />
     </div>
+    </SecondaryPageShell>
   );
 }
 

@@ -3,7 +3,9 @@
 import { useState, useCallback, useEffect } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Trophy, Star, CheckCircle, Volume2, ChevronRight, Sparkles } from "lucide-react";
+import { Star, CheckCircle, Volume2, Sparkles, ChevronRight } from "lucide-react";
+import LessonSectionHeader from "../lesson-ui/LessonSectionHeader";
+import { lessonSectionMotion } from "../lesson-ui/motion";
 import { toast } from "sonner";
 import type { UnitData, QuizQuestion } from "../UnitTemplate";
 import { ReadingComprehensionExercise } from "@/components/exercises/ReadingComprehensionExercise";
@@ -59,12 +61,6 @@ interface QuizSectionProps {
   xpToEarn: number;
   nextRoute: string;
 }
-
-const sectionVariants = {
-  initial: { opacity: 0, x: 20 },
-  animate: { opacity: 1, x: 0 },
-  exit: { opacity: 0, x: -20 },
-};
 
 export default function QuizSection({
   unit,
@@ -221,28 +217,17 @@ export default function QuizSection({
   return (
     <motion.div
       key="s8"
-      variants={sectionVariants}
-      initial="initial"
-      animate="animate"
-      exit="exit"
-      transition={{ duration: 0.3 }}
+      initial={lessonSectionMotion.initial}
+      animate={lessonSectionMotion.animate}
+      exit={lessonSectionMotion.exit}
+      transition={lessonSectionMotion.transition}
     >
-      <div className="flex items-center gap-2 mb-6">
-        <div className="p-2 bg-yellow-500/10 rounded-xl">
-          <Trophy className="text-yellow-400" size={24} />
-        </div>
-        <div className="flex-1">
-          <div className="flex items-center gap-2">
-            <h1 className="text-xl sm:text-2xl font-black bg-gradient-to-r from-yellow-200 to-white bg-clip-text text-transparent">
-              Ôn tập & Kết quả
-            </h1>
-            <span className="text-[10px] font-bold text-yellow-600 bg-yellow-950/60 border border-yellow-800/50 px-2 py-0.5 rounded-full">
-              Bước {sectionOrderIdx + 1}/{TOTAL_SECTIONS}
-            </span>
-          </div>
-          <p className="text-xs text-zinc-500">~3 phút • Hoàn thành để nhận XP</p>
-        </div>
-      </div>
+      <LessonSectionHeader
+        sectionId={8}
+        sectionOrderIdx={sectionOrderIdx}
+        totalSections={TOTAL_SECTIONS}
+        subtitle="Hoàn thành để nhận XP"
+      />
 
       {/* Spaced Cumulative Review */}
       {unit.cumulativeReviewQuestions && unit.cumulativeReviewQuestions.length > 0 && (

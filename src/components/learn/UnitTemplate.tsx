@@ -29,8 +29,6 @@ import {
   TOTAL_SECTIONS,
   MINI_SESSION_START,
   MINI_SESSION_QUIZ,
-  getSectionPhase,
-  getSectionGoalVi,
   type SectionNumber,
 } from "@/lib/lessons/learning-flow";
 import { enrichUnitForLearning } from "@/lib/lessons/enrich-unit";
@@ -797,8 +795,6 @@ export default function UnitTemplate({
   };
 
   const sectionOrderIdx = SECTION_ORDER.indexOf(section as SectionNumber);
-  const currentPhase = getSectionPhase(section);
-  const sectionGoal = getSectionGoalVi(section);
 
   return (
     <div className="relative min-h-screen bg-zinc-950">
@@ -814,8 +810,6 @@ export default function UnitTemplate({
         section={section}
         sectionOrderIdx={sectionOrderIdx}
         totalSections={TOTAL_SECTIONS}
-        currentPhase={currentPhase}
-        sectionGoal={sectionGoal}
         sessionXp={sessionXp}
         xpPopup={xpPopup}
         miniSession={miniSession}
