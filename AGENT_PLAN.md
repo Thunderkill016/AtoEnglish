@@ -57,4 +57,4 @@
 |------------|------|--------------|---------|
 | 2026-06-26T01:36Z | TASK-001/002 | P0 ops: migration blocked, deploy OK | autopilot armed |
 | 2026-06-26T08:55Z | TASK-001/011 | db push migration + E2E B1 unlock | 2 e2e pass |
-| 2026-06-26 | TASK-021 | Sync docs: placement, 50u, header, autopilot | in_progress (minimal doc sync only) |
+| 2026-06-26 | TASK-021 | Sync docs: placement, 50u, header, autopilot | done — 3d36d2f push main; tests 159 pass |
