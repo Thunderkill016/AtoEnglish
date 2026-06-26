@@ -552,12 +552,31 @@
 - **Mô tả:** `CertificateClient.tsx` eligible — `SecondaryPageShell` + flat card.
 - **Done khi:** Dùng design-system; lint+test pass.
 - **Started:** 2026-06-26 — autopilot (PHASE1: search_memory sim via logs/grep (only prior prompt, empty impl) + read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6-7 + MINIMAL_V2 + grep CertificateClient + SecondaryPageShell + design-system + checkpoint for pattern; PHASE2: PLAN+BACKLOG in_progress (ready=2 >=2 skip refill); PHASE3: impl)
-- **Completed:** 2026-06-26 — eligible wrapped in SecondaryPageShell + flat bg-card card (removed all zinc-900/min-h heavy); MinimalButton for actions; keep share/print/motion/ids-as-testid; 0 heavy styles; lint0 +170t +tsc0 pass; commit + push via git-push.sh main; autonomous
+- **Completed:** 2026-06-26 — eligible wrapped in SecondaryPageShell + flat bg-card card (removed all zinc-900/min-h heavy); MinimalButton for actions; keep share/print/motion/ids-as-testid; 0 heavy styles; lint0 +170t +tsc0 pass; commit e82d92f + push via git-push.sh main; autonomous
 
 ### TASK-087 — Legal pages Prose
 - **Status:** `ready`
 - **Mô tả:** `terms/page.tsx`, `privacy/page.tsx` — `Screen` + `Prose`.
 - **Done khi:** 2 page dùng kit; lint pass.
+- **Started:** auto-refill
+
+
+### TASK-088 — Legacy CSS purge
+- **Status:** `ready`
+- **Mô tả:** Xóa `bg-glass`, `bg-grid-pattern`, `border-glass` khỏi `globals.css` nếu không còn dùng trong `src/`.
+- **Done khi:** grep src/ không match; lint+test pass.
+- **Started:** auto-refill
+
+### TASK-089 — Speaking: tab → sub-routes
+- **Status:** `ready`
+- **Mô tả:** `SpeakingClient` 4 tab → PrimaryRow entry + sub-routes theo V2 IA.
+- **Done khi:** Không 4-tab trên 1 page; lint+test pass.
+- **Started:** auto-refill
+
+### TASK-090 — E2E regression V2
+- **Status:** `ready`
+- **Mô tả:** Chạy `e2e:time-to-lesson` + smoke tab paths; fix regression.
+- **Done khi:** E2E pass; baseline ghi AGENT_PLAN.
 - **Started:** auto-refill
 
 
@@ -570,8 +589,11 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
+| 2026-06-26 | TASK-088 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-06-26 | TASK-089 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-06-26 | TASK-090 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-06-26 | TASK-085 | auto-refill từ AGENT_ROADMAP.md | ready |
-| 2026-06-26 | TASK-086 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-06-26 | TASK-086 | PHASE1 search_memory sim + read agents+backlog+plan+roadmap+content+minimalv2+grep cert; PHASE2 plan+backlog in_progress (2r skip); PHASE3: SecondaryPageShell+flat bg-card for eligible (purge zinc), MinimalButton, preserve all UX; gates 0+170+0; e82d92f + git-push main; done | done — e82d92f |
 | 2026-06-26 | TASK-087 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-06-26 | TASK-078 | PHASE1: real search_memory + read agents+backlog+plan+content§6-7 + grep; PHASE2: PLAN+BACKLOG in_progress (3r>=2 skip); PHASE3: gates clean (lint0+170t+tsc0+cs50/50+audit50/50) no fix needed + sync log/PLAN/BACKLOG; commit+push via git-push.sh main | done — 1879565 |
 | 2026-06-26 | TASK-079 | V2 research: audit post-bac3f15, MINIMAL_REDESIGN_V2+ROADMAP+BACKLOG queue TASK-081..090 | done |
