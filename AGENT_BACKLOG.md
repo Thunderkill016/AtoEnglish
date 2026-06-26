@@ -659,10 +659,11 @@
 
 
 ### TASK-101 — Autopilot maintenance sweep #101
-- **Status:** `in_progress`
+- **Status:** `done`
 - **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
 - **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
 - **Started:** 2026-06-27 — autopilot (PHASE1: search_memory("TASK-101 maintenance") sim via logs/grep (prior 100 clean) + read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6–7 + grep TASK; 3 ready >=2 skip refill; PHASE2 PLAN update + BACKLOG in_p; PHASE3 run gates)
+- **Completed:** 2026-06-27 — gates clean (lint0+170t+tsc0+cs50/50+audit50/50) no fix needed; log written; BACKLOG+PLAN updated; commit 8b1a6f1 + push via git-push.sh main; autonomous (no human)
 
 ### TASK-102 — Autopilot maintenance sweep #102
 - **Status:** `ready`
@@ -686,7 +687,7 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
-| 2026-06-27 | TASK-101 | PHASE1: search_memory sim via logs/grep + read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6–7; 3r>=2 skip; PHASE2 plan+backlog in_p; PHASE3: gates clean no fix; sync log/PLAN/BACKLOG; commit+push via git-push.sh main | done — [SHA] |
+| 2026-06-27 | TASK-101 | PHASE1: search_memory sim via logs/grep + read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6–7; 3r>=2 skip; PHASE2 plan+backlog in_p; PHASE3: gates clean (lint+170t+cs+audit) no fix + sync; commit+push via git-push.sh main | done — 8b1a6f1 |
 | 2026-06-27 | TASK-102 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-06-27 | TASK-103 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-06-27 | TASK-100 | smoke ✅; e2e env-connect flake (no code regression); bumped webServer timeout 120s; gates clean; baseline recorded in PLAN+log; commit via git-push | 13f9faa |
