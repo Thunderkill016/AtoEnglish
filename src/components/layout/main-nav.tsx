@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
+import { createPortal } from "react-dom";
 import { ChevronDown } from "lucide-react";
 
 import { desktopPrimaryNav, desktopMoreItems } from "@/lib/constants/navigation";
@@ -15,21 +16,64 @@ import { cn } from "@/lib/utils";
  *
  * "Thêm" dropdown: Viết, Tiến độ, Bảng xếp hạng, Lộ trình, Business
  */
+type DropdownCoords = { top: number; left: number };
+
 export function MainNav() {
   const pathname = usePathname();
   const [moreOpen, setMoreOpen] = useState(false);
+  const [dropdownCoords, setDropdownCoords] = useState<DropdownCoords | null>(null);
+  const [mounted, setMounted] = useState(false);
   const moreRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
 
-  // Close "More" dropdown on outside click
+  const updateDropdownCoords = useCallback(() => {
+    const trigger = triggerRef.current;
+    if (!trigger) return;
+    const rect = trigger.getBoundingClientRect();
+    setDropdownCoords({
+      top: rect.bottom + 6,
+      left: rect.left,
+    });
+  }, []);
+
+  // eslint-disable-next-line react-hooks/set-state-in-effect
+  useEffect(() => setMounted(true), []);
+
+  // Close "More" dropdown on outside click (trigger + portaled panel)
   useEffect(() => {
+    if (!moreOpen) return;
+
     function handleClickOutside(e: MouseEvent) {
-      if (moreRef.current && !moreRef.current.contains(e.target as Node)) {
-        setMoreOpen(false);
+      const target = e.target as Node;
+      if (
+        moreRef.current?.contains(target) ||
+        panelRef.current?.contains(target)
+      ) {
+        return;
       }
+      setMoreOpen(false);
     }
+
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+  }, [moreOpen]);
+
+  // Keep portaled dropdown aligned with trigger on scroll/resize
+  useEffect(() => {
+    if (!moreOpen) return;
+
+    updateDropdownCoords();
+
+    const handleReposition = () => updateDropdownCoords();
+    window.addEventListener("resize", handleReposition);
+    window.addEventListener("scroll", handleReposition, { passive: true });
+
+    return () => {
+      window.removeEventListener("resize", handleReposition);
+      window.removeEventListener("scroll", handleReposition);
+    };
+  }, [moreOpen, updateDropdownCoords]);
 
   // Close "More" on route change
   useEffect(() => {
@@ -67,10 +111,17 @@ export function MainNav() {
         );
       })}
 
-      {/* "More" dropdown */}
+      {/* "More" dropdown — portaled so sticky hub nav / header transform cannot clip it */}
       <div className="relative" ref={moreRef}>
         <button
-          onClick={() => setMoreOpen((prev) => !prev)}
+          ref={triggerRef}
+          onClick={() => {
+            setMoreOpen((prev) => {
+              const next = !prev;
+              if (next) updateDropdownCoords();
+              return next;
+            });
+          }}
           aria-expanded={moreOpen}
           aria-haspopup="menu"
           className={cn(
@@ -89,43 +140,49 @@ export function MainNav() {
           />
         </button>
 
-        {/* Dropdown panel */}
-        {moreOpen && (
-          <div
-            role="menu"
-            className="absolute left-0 top-full mt-1.5 w-52 rounded-xl border border-zinc-200/60 dark:border-zinc-800/60 bg-background/95 dark:bg-zinc-900/95 backdrop-blur-xl shadow-lg shadow-black/5 dark:shadow-black/30 overflow-hidden z-50 animate-in fade-in-0 zoom-in-95 slide-in-from-top-2 duration-150"
-          >
-            {desktopMoreItems.map((item) => {
-              const isActive =
-                pathname === item.href || pathname.startsWith(item.href + "/");
-              const Icon = item.icon;
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  role="menuitem"
-                  onClick={() => setMoreOpen(false)}
-                  className={cn(
-                    "flex items-center gap-2.5 px-3.5 py-2.5 text-sm transition-colors duration-100",
-                    isActive
-                      ? "bg-primary/10 text-primary font-semibold"
-                      : "text-zinc-600 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-800/60 hover:text-zinc-900 dark:hover:text-zinc-100"
-                  )}
-                >
-                  <Icon className="size-3.5 shrink-0" />
-                  <div>
-                    <p className="font-medium leading-tight">{item.title}</p>
-                    {item.description && (
-                      <p className="text-[10px] text-zinc-400 dark:text-zinc-500 leading-tight mt-0.5">
-                        {item.description}
-                      </p>
+        {mounted &&
+          moreOpen &&
+          dropdownCoords &&
+          createPortal(
+            <div
+              ref={panelRef}
+              role="menu"
+              style={{ top: dropdownCoords.top, left: dropdownCoords.left }}
+              className="fixed w-52 rounded-xl border border-zinc-200/60 dark:border-zinc-800/60 bg-background dark:bg-zinc-900 shadow-lg shadow-black/10 dark:shadow-black/40 overflow-hidden z-[200] animate-in fade-in-0 zoom-in-95 slide-in-from-top-2 duration-150"
+            >
+              {desktopMoreItems.map((item) => {
+                const isActive =
+                  pathname === item.href ||
+                  pathname.startsWith(item.href + "/");
+                const Icon = item.icon;
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    role="menuitem"
+                    onClick={() => setMoreOpen(false)}
+                    className={cn(
+                      "flex items-center gap-2.5 px-3.5 py-2.5 text-sm transition-colors duration-100",
+                      isActive
+                        ? "bg-primary/10 text-primary font-semibold"
+                        : "text-zinc-600 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-800/60 hover:text-zinc-900 dark:hover:text-zinc-100"
                     )}
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
-        )}
+                  >
+                    <Icon className="size-3.5 shrink-0" />
+                    <div>
+                      <p className="font-medium leading-tight">{item.title}</p>
+                      {item.description && (
+                        <p className="text-[10px] text-zinc-400 dark:text-zinc-500 leading-tight mt-0.5">
+                          {item.description}
+                        </p>
+                      )}
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>,
+            document.body
+          )}
       </div>
     </nav>
   );

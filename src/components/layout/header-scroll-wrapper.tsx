@@ -2,6 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 
+import { cn } from "@/lib/utils";
+
 interface HeaderScrollWrapperProps {
   children: React.ReactNode;
 }
@@ -56,8 +58,10 @@ export function HeaderScrollWrapper({ children }: HeaderScrollWrapperProps) {
 
   return (
     <div
-      className="transition-transform duration-300 ease-in-out will-change-transform"
-      style={{ transform: hidden ? "translateY(-110%)" : "translateY(0)" }}
+      className={cn(
+        "transition-transform duration-300 ease-in-out",
+        hidden && "-translate-y-[110%] will-change-transform",
+      )}
     >
       {children}
     </div>

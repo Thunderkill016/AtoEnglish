@@ -19,8 +19,8 @@ export async function Header() {
   const fullName = user?.user_metadata?.full_name || user?.email?.split("@")[0];
 
   return (
-    <div className="sticky top-0 z-40 w-full max-w-7xl mx-auto px-4 pt-4 sm:px-6 lg:px-8">
-      <header className="w-full rounded-2xl border border-glass bg-glass shadow-[0_8px_30px_rgb(0,0,0,0.02)] dark:shadow-none h-14 flex items-center justify-between gap-4 px-4 sm:px-6 transition-all duration-300">
+    <div className="sticky top-0 z-50 w-full max-w-7xl mx-auto px-4 pt-4 sm:px-6 lg:px-8 overflow-visible">
+      <header className="w-full overflow-visible rounded-2xl border border-glass bg-glass shadow-[0_8px_30px_rgb(0,0,0,0.02)] dark:shadow-none h-14 flex items-center justify-between gap-4 px-4 sm:px-6 transition-all duration-300">
         <div className="flex items-center gap-6">
           <Link
             href="/"
