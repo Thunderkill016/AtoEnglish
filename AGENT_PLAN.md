@@ -7,7 +7,7 @@
 | Field | Value |
 |-------|-------|
 | Started | 2026-06-26 |
-| Focus | TASK-088: Legacy CSS purge — remove unused bg-glass, bg-grid-pattern, border-glass from globals.css (V2) |
+| Focus | TASK-089: `SpeakingClient` 4 tab → PrimaryRow entry + sub-routes theo V2 IA |
 | Owner | Autopilot (no human) |
 
 ### TASK-079 — V2 Minimal Redesign: research + kế hoạch autopilot
@@ -1239,3 +1239,30 @@
 - Doc-only commit still must pass full checklist (tsc/lint/test).
 - Fail 2 lần liên tiếp → blocked + ghi lý do.
 **Done khi**: lint+test (all gates) pass; nếu fix thì 1 minimal change; AGENT_PLAN/BACKLOG updated with PHASE log + SHA; 1 commit + push via git-push.sh main (or blocked noted); BACKLOG status=done; no feature; no ask user; autonomous.
+
+### TASK-089 — Speaking: tab → sub-routes
+**Mục tiêu**: `SpeakingClient.tsx` (4 internal tabs via useState activeTab + tab buttons ListSection + AnimatePresence grid switch 4 comps + sidebar history) → PrimaryRow entry (list 4 modes) + sub-routes `/speaking/shadowing`, `/speaking/roleplay`, `/speaking/journal`, `/speaking/phoneme` theo V2 IA (Hick's Law: 1 screen 1 list, progressive disclosure). Giữ PrimaryRow cho pronunciation ở entry. Sub pages: thin wrapper SecondaryPageShell + feature comp (ShadowingPractice, AIRoleplay, JournalMode, PhonemeChecker). Giữ count fetch cho subtitle; bỏ tab UI/state/Animate/grid/sidebar từ main. Không sửa logic/feature comps (save, eval, speech, data, query ?id= support). **Done khi:** Không 4-tab trên 1 page; /speaking = PrimaryRow list; 4 sub-routes hoạt động; lint+test pass.
+**Bước thực hiện**:
+1. Search memory("TASK-089" + "SpeakingClient" + "4 tab" + "PrimaryRow" + "sub-routes" + "V2") via terminal grep logs + read AGENTS.md (ALWAYS), AGENT_BACKLOG/PLAN/ROADMAP, CONTENT_STYLE.md §6–7 (blueprint only), MINIMAL_REDESIGN_V2.md (F1 speaking 4tab→PrimaryRow+sub, IA §4, TabSegment≤3), src/app/(main)/speaking/{page,SpeakingClient,shadowing-practice,ai-roleplay,journal-mode,phoneme-checker}.tsx + design-system/* (PrimaryRow,ListSection,SecondaryPageShell), lib/constants/{me-hub,navigation}.ts , app/actions/speaking.ts .
+2. Grep confirm tab code (activeTab, tabs array, button map, cond render 4, sidebar grid), PrimaryRow usage in me-hub etc; list files: SpeakingClient edit, 4 new sub page.tsx ; no feature change.
+3. Update BACKLOG: TASK-089 status `in_progress`.
+4. Update AGENT_PLAN.md (this section + header).
+5. After in_progress, ready count <2 → run `bash scripts/agent-refill-backlog.sh` (read ROADMAP.md); KHÔNG hỏi user.
+6. mkdir -p src/app/\(main\)/speaking/{shadowing,roleplay,journal,phoneme}
+   Create 4 pages (min): each import SecondaryPageShell + named/default comp from "../xxx-*.tsx"; return <SecondaryPageShell title="..." subtitle="..."><Comp /></SecondaryPageShell>
+   Edit SpeakingClient: drop tab state/useEffect only for history count, drop tabs const + button flex + grid+Animate+sidebar; add 4 PrimaryRow in ListSection "Chế độ luyện nói" using prior labels/desc/icons + new hrefs; keep pronun PrimaryRow + shell + count subtitle + import history action if used.
+   Use exact labels: Shadowing Practice, AI Roleplay, Daily Journal, Phoneme Coach; descs match.
+7. `npm run lint && npm run test`; npx tsc --noEmit.
+8. Pass → update BACKLOG done + Nhật ký entry + SHA; PLAN log + write log file.
+9. git pull --rebase; git add src/app/(main)/speaking/ AGENT_BACKLOG.md AGENT_PLAN.md logs/agent/* ; commit "refactor(speaking): 4 tabs → PrimaryRow entry + sub-routes /shadowing/roleplay/journal/phoneme (TASK-089)"; `bash scripts/git-push.sh main`.
+**Rủi ro**:
+- Sub pages layout (shell inside route) → use SecondaryPageShell directly in sub page + feature body (matches other secondaries); no double title.
+- History sidebar removed from main → count in subtitle kept (value preserved); full history was only for context, focus practice per mode now (V2).
+- ?id= shadowing deep from lesson → client useEffect reads window still works on /speaking/shadowing?id=
+- No links in code to old tabs → /speaking entry + new paths safe.
+- Component mount/unmount state reset ok (was tab switch anyway).
+- Fail 2x liên tiếp → status blocked + lý do, next ready.
+- No secrets (client UI refactor).
+- Self-debug: grep after edit for tab remnants; lint/test.
+**Done khi**: 0 tab state/buttons/AnimatePresence/switch in SpeakingClient (grep verify); 4 PrimaryRow on /speaking; 4 subdir pages render correct comp under shell; gates (lint+170t+tsc+cs50/50) pass; 1 commit + push via git-push.sh main; BACKLOG=done + SHA; autonomous (no human).
+**Completed:** 2026-06-26 — 0 4-tab; PrimaryRow list + 4 sub-routes created; count preserved on entry; lint+test pass; commit + push; BACKLOG done; autonomous

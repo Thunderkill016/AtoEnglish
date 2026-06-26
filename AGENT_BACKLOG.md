@@ -570,10 +570,11 @@
 - **Completed:** 2026-06-26 — 0 uses in src/ (grep clean); removed 3 @utility blocks from globals.css; tsc0 + lint0 + 170 tests pass; commit 8d1cb7b + push via git-push.sh main; autonomous
 
 ### TASK-089 — Speaking: tab → sub-routes
-- **Status:** `in_progress`
+- **Status:** `done`
 - **Mô tả:** `SpeakingClient` 4 tab → PrimaryRow entry + sub-routes theo V2 IA.
 - **Done khi:** Không 4-tab trên 1 page; lint+test pass.
 - **Started:** 2026-06-26 — autopilot (PHASE1: search_memory sim via logs/grep + read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6-7 + MINIMAL_V2 + grep SpeakingClient+PrimaryRow+design+sub routes+me-hub; PHASE2: PLAN header+section update + BACKLOG in_p; ready low→refill; PHASE3 impl PrimaryRow+4 sub pages)
+- **Completed:** 2026-06-26 — 0 4-tab (removed state+buttons+animate+sidebar); 5 PrimaryRow (pronun+4 modes) on entry + compact recent; 4 sub pages (shadowing/roleplay/journal/phoneme) with Secondary+comp; lint0+170t+tsc0; commit + push via git-push main; autonomous
 
 ### TASK-090 — E2E regression V2
 - **Status:** `ready`
@@ -614,6 +615,7 @@
 | 2026-06-26 | TASK-092 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-06-26 | TASK-093 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-06-26 | TASK-088 | PHASE1 search_memory sim + read agents+backlog+plan+roadmap+content+minimalv2+grep (0 uses src/); PHASE2 PLAN+BACKLOG in_progress (3r>=2 skip); PHASE3 purge 3 utils from globals.css; gates 0+170+0; commit+push via git-push main | done — 8d1cb7b |
+| 2026-06-26 | TASK-089 | PHASE1 search_memory+read agents+backlog+plan+roadmap+content+minimalv2+grep; PHASE2 plan update+backlog in_p+refill; PHASE3: SpeakingClient PrimaryRow entry+4 sub-routes, no tabs, compact recent; lint0+170t+tsc0; commit+push via git-push main | done — SHA |
 | 2026-06-26 | TASK-089 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-06-26 | TASK-090 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-06-26 | TASK-085 | auto-refill từ AGENT_ROADMAP.md | ready |
