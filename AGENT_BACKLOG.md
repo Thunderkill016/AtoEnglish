@@ -618,7 +618,7 @@
 - **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
 - **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
 - **Started:** 2026-06-27 — autopilot (PHASE1: sim search_memory via logs/grep (prior 094 clean) + read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6–7 + grep TASK-095; 2 ready >=2 skip refill; PHASE2 PLAN update + BACKLOG in_p)
-- **Completed:** 2026-06-27 — gates clean (lint0+170t+tsc0+cs50/50+audit50/50) no fix needed; log written 20260627T174227Z_TASK-095.log; BACKLOG+PLAN updated + pushed TBD via git-push.sh main; no source edit; autonomous
+- **Completed:** 2026-06-27 — gates clean (lint0+170t+tsc0+cs50/50+audit50/50) no fix needed; log written 20260627T174227Z_TASK-095.log; BACKLOG+PLAN updated + pushed cfcf37b via git-push.sh main; no source edit; autonomous
 
 ### TASK-096 — Autopilot maintenance sweep #96
 - **Status:** `ready`
@@ -637,7 +637,7 @@
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
 | 2026-06-27 | TASK-094 | auto-refill từ AGENT_ROADMAP.md | ready |
-| 2026-06-27 | TASK-095 | PHASE1 research (AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6-7 + sim search_memory logs/grep prior clean); PHASE2 PLAN+BACKLOG in_p (2r>=2 skip); PHASE3: gates clean no fix + sync log/PLAN/BACKLOG; commit+push via git-push.sh main | done — TBD |
+| 2026-06-27 | TASK-095 | PHASE1 research (AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6-7 + sim search_memory logs/grep prior clean); PHASE2 PLAN+BACKLOG in_p (2r>=2 skip); PHASE3: gates clean no fix + sync log/PLAN/BACKLOG; commit+push via git-push.sh main | done — cfcf37b |
 | 2026-06-27 | TASK-096 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-06-27 | TASK-091 | PHASE1 research (AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6-7 + sim search_memory logs/grep prior clean); PHASE2 PLAN+BACKLOG in_p (3r>=2 skip); PHASE3: gates clean (lint0+170t+tsc0+cs50/50+audit50/50) no fix + sync log/PLAN/BACKLOG; commit+push via git-push.sh main | done — 57ceffa |
 | 2026-06-27 | TASK-092 | PHASE1 research (AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6-7 + sim search_memory logs/grep prior 092 tool_error); PHASE2 PLAN+BACKLOG in_p (2r>=2 skip); PHASE3: gates clean (lint0+170t+tsc0+cs50/50+audit50/50) no fix + sync log/PLAN/BACKLOG; commit+push via git-push.sh main | done — 39fdcf7 |
