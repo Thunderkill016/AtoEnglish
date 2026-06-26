@@ -1397,8 +1397,6 @@
 
 **Started:** 2026-06-27 — autopilot
 
-**Completed TASK-095 (post exec sync)**: gates clean (lint0+170t+tsc0+cs50/50+audit50/50) no fix needed; log written 20260627T174227Z_TASK-095.log; BACKLOG+PLAN updated + pushed cfcf37b via git-push.sh main; no source edit; autonomous.
-
 ### TASK-096 — Autopilot maintenance sweep #96
 **Mục tiêu**: Chạy full gates (lint, tsc --noEmit, npm test, test:content-standard, audit-lesson-content) để detect failure. Fix failure đầu tiên (nếu có) với thay đổi tối thiểu (chỉ 1 chỗ gây lỗi đầu). Sync AGENT_PLAN.md (nhật ký phiên + log table) + BACKLOG (status + nhật ký entry). Không thêm feature mới, không sửa logic app/content. Nhiệm vụ maintenance sweep định kỳ.
 **Bước thực hiện**:
@@ -1419,3 +1417,5 @@
 **Done khi**: lint+test (all gates) pass; nếu fix thì 1 minimal change; AGENT_PLAN/BACKLOG updated with PHASE log + SHA; 1 commit + push via git-push.sh main (or blocked noted); BACKLOG status=done; no feature; no ask user; autonomous.
 
 **Started:** 2026-06-27 — autopilot
+
+**Completed TASK-096 (post exec sync)**: gates clean (lint0+170t+tsc0+cs50/50+audit50/50) no fix needed; log written 20260627T175000Z_TASK-096.log; BACKLOG+PLAN updated + pushed 6151286 via git-push.sh main; no source edit; autonomous.
