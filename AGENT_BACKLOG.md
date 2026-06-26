@@ -140,9 +140,10 @@
 - **Started:** 2026-06-26 — autopilot (no human)
 
 ### TASK-039 — Dashboard hiển thị daily_xp_goal từ onboarding
-- **Status:** `in_progress`
+- **Status:** `done`
 - **Mô tả:** `dashboard/page.tsx` đọc `daily_xp_goal` từ `user_progress`, hiển thị progress bar hôm nay vs goal.
 - **Done khi:** UI hiển thị đúng; lint+test pass.
+- **Completed:** 2026-06-26 — fixed getUserProgress to return data.daily_xp_goal (so page read effective); bar now uses onboarding goal vs todayXp; lint+159 tests+tsc pass; 9cefdd7
 - **Started:** 2026-06-26 — autopilot (no human)
 
 ### TASK-040 — Production smoke script learn B2
@@ -152,17 +153,39 @@
 - **Started:** auto-refill
 
 
+### TASK-041 — audio:generate:all npm script
+- **Status:** `ready`
+- **Mô tả:** Một script chạy a0+a1+a2+b1+b2; document trong README.
+- **Done khi:** Script tồn tại; dry-run list đúng 50 unit folders.
+- **Started:** auto-refill
+
+### TASK-042 — Roadmap highlight B2 phase
+- **Status:** `ready`
+- **Mô tả:** `RoadmapClient` group B2 units 33-42 với badge level; respect `starting_unit_index` cho B2 user.
+- **Done khi:** Roadmap render đúng; unit test hoặc snapshot pass.
+- **Started:** auto-refill
+
+### TASK-043 — Reduce agent stash pile-up
+- **Status:** `ready`
+- **Mô tả:** Orchestrator: nếu chỉ thay đổi `AGENT_*.md` + `logs/agent/*` thì không stash; auto-pop stash cũ >7 ngày.
+- **Done khi:** Daemon không stash mất work-in-progress; test script dry-run.
+- **Started:** auto-refill
+
+
 ---
 
 ## Nhật ký agent
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
+| 2026-06-26 | TASK-041 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-06-26 | TASK-042 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-06-26 | TASK-043 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-06-26 | TASK-037 | E2E playwright /learn/unit-19 click vocab speaker, verify Audio or TTS no-crash + network /audio/ probe; lint+159 pass | ffc66bc |
 | 2026-06-26 | TASK-038 | research(agents+memory+grep+setup+profile migration), set in_progress, update PLAN+BACKLOG, add profile cleanup in setup-integration, append RLS+columns tests (own insert success + cross-user block) to progress.integration.test.ts, lint+159 units+23 integration (incl 2 new) pass, commit+push via git-push.sh | 339f5a9 |
 | 2026-06-26 | TASK-037 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-06-26 | TASK-038 | auto-refill từ AGENT_ROADMAP.md | ready |
-| 2026-06-26 | TASK-039 | research + plan + set in_progress; fix daily_xp_goal read | in_progress |
+| 2026-06-26 | TASK-039 | research(agents+memory+grep+dashboard+stats), plan update, run refill, set in_progress, minimal fix stats.ts getter daily_xp_goal from DB, lint+159+tsc pass, commit 9cefdd7 + git-push.sh; status done | done — 9cefdd7 |
 | 2026-06-26 | TASK-040 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-06-26 | TASK-001 | Supabase migration | blocked — no CLI/token |
 | 2026-06-26 | TASK-002 | Vercel deploy check | done — 334ca23 READY |
