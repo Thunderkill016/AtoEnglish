@@ -177,10 +177,17 @@
 
 
 ### TASK-044 — Placement test retry stability
-- **Status:** `in_progress`
+- **Status:** `blocked`
 - **Mô tả:** Ổn định E2E placement nếu flake (wait for network idle, isolate test user).
 - **Done khi:** 3 E2E run liên tiếp pass.
+- **Blocked:** 2026-06-26 — user restart pilot; ưu tiên nội dung bài học (057+). Lock daemon do dev server kẹt.
 - **Started:** 2026-06-26 — autopilot (no human)
+
+### TASK-060 — B1 unit24+unit31 L1 notes
+- **Status:** `ready`
+- **Mô tả:** Hai unit B1 dưới 50% L1.
+- **Done khi:** test:content-standard pass B1.
+- **Started:** user mandate — chuẩn nội dung (ưu tiên P0 sau restart)
 
 ### TASK-057 — practiceTranslate ≥3 mọi unit
 - **Status:** `ready`
@@ -198,12 +205,6 @@
 - **Status:** `ready`
 - **Mô tả:** Nâng cumulative review câu/unit.
 - **Done khi:** cumulativeReviewMin=3; test pass.
-- **Started:** user mandate — chuẩn nội dung
-
-### TASK-060 — B1 unit24+unit31 L1 notes
-- **Status:** `ready`
-- **Mô tả:** Hai unit B1 dưới 50% L1.
-- **Done khi:** test:content-standard pass B1.
 - **Started:** user mandate — chuẩn nội dung
 
 ### TASK-061 — Unit files: comment blocks theo blueprint (như unit1)
