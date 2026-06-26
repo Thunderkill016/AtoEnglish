@@ -29,8 +29,11 @@ import { UNITS } from "@/lib/constants/units";
 
 interface Props {
   nextUnitRoute: string;
+  nextUnitTitle?: string;
   userLevel: string;
   completedUnitIds: string[];
+  startingUnitIndex?: number;
+  placementCompleted?: boolean;
 }
 
 type TabKey = "milestones" | "routine" | "resources" | "tips";
@@ -55,11 +58,15 @@ const RESOURCE_TYPE_ICON: Record<string, string> = {
 
 export default function RoadmapClient({
   nextUnitRoute,
+  nextUnitTitle,
   userLevel,
   completedUnitIds,
+  startingUnitIndex = 0,
+  placementCompleted = false,
 }: Props) {
   const currentPhase = getPhaseForLevel(userLevel);
   const [expandedPhase, setExpandedPhase] = useState<number>(currentPhase.id);
+  const entryUnit = startingUnitIndex > 0 ? UNITS[startingUnitIndex] : null;
   const [activeTab, setActiveTab] = useState<Record<number, TabKey>>({});
   const todayTip = DAILY_TIPS[new Date().getDate() % DAILY_TIPS.length]!;
 
@@ -150,6 +157,16 @@ export default function RoadmapClient({
             <div style={{ fontSize: 12, color: "#71717a", marginTop: 2 }}>
               Mục tiêu: {currentPhase.cefrFrom} → {currentPhase.cefrTo}
             </div>
+            {placementCompleted && entryUnit && (
+              <div style={{ fontSize: 11, color: "#38bdf8", marginTop: 4 }}>
+                Đã xác định trình độ — bắt đầu từ {entryUnit.title}
+              </div>
+            )}
+            {nextUnitTitle && (
+              <div style={{ fontSize: 11, color: "#a1a1aa", marginTop: 4 }}>
+                Bài tiếp theo: {nextUnitTitle}
+              </div>
+            )}
           </div>
           <Link
             href={nextUnitRoute}

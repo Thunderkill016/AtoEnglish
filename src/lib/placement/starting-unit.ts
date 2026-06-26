@@ -41,6 +41,26 @@ export function getPlacementLearnPath(level: string, mini = true): string {
   return mini ? `/learn/${slug}?mini=1` : `/learn/${slug}`;
 }
 
+/** Next incomplete unit respecting placement entry point (matches getCurrentUnit). */
+export function getNextUnitFromProgress(
+  completedUnitIds: string[],
+  startingUnitIndex = 0,
+) {
+  const fromPlacement = UNITS.find(
+    (u, i) => i >= startingUnitIndex && !completedUnitIds.includes(u.id),
+  );
+  if (fromPlacement) return fromPlacement;
+
+  return UNITS.find((u) => !completedUnitIds.includes(u.id));
+}
+
+export function getNextUnitRoute(
+  completedUnitIds: string[],
+  startingUnitIndex = 0,
+): string {
+  return getNextUnitFromProgress(completedUnitIds, startingUnitIndex)?.route ?? "/learn";
+}
+
 /** Units at or before the placement entry point are accessible without prior completion. */
 export function isUnitUnlocked(
   index: number,

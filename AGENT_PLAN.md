@@ -23,7 +23,7 @@
 
 ### Ngày 4 — Placement UX
 - [x] TASK-011 E2E self-select B1
-- [ ] TASK-012 Roadmap starting_unit_index
+- [x] TASK-012 Roadmap starting_unit_index
 
 ### Ngày 5+ — Chất lượng & mở rộng
 - [ ] TASK-020 integration test flakes

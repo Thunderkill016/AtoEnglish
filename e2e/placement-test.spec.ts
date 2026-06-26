@@ -92,4 +92,29 @@ test.describe("Placement Test Flow", () => {
     );
     await expect(unit20Card.getByText("Chưa mở khóa")).toBeVisible();
   });
+
+  test("roadmap Học CTA points to unit-19 after B1 placement", async ({
+    page,
+  }) => {
+    await page.goto("/placement-test");
+    const b1Option = page
+      .getByRole("button")
+      .filter({ hasText: "B1" })
+      .filter({ hasText: "Trung cấp" });
+    await b1Option.click();
+    await expect(
+      page.getByRole("link", { name: /Bắt đầu học ngay/i }),
+    ).toBeVisible({ timeout: 15_000 });
+
+    await page.goto("/roadmap");
+    await expect(page.locator("h1")).toContainText("Lộ Trình");
+
+    const learnCta = page.locator('main a[href="/learn/unit-19"]');
+    await expect(learnCta).toBeVisible();
+    await expect(learnCta).toContainText("Học");
+
+    await expect(page.locator("body")).toContainText("Bài tiếp theo:");
+    await expect(page.locator("body")).toContainText("Unit 19:");
+    await expect(page.locator("body")).toContainText("Đang ở đây");
+  });
 });

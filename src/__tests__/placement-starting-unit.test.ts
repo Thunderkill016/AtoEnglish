@@ -3,6 +3,8 @@ import {
   getStartingUnitIndex,
   getStartingUnitSlug,
   getPlacementLearnPath,
+  getNextUnitFromProgress,
+  getNextUnitRoute,
   isUnitUnlocked,
   isPlacedOutUnit,
 } from "@/lib/placement/starting-unit";
@@ -31,5 +33,18 @@ describe("placement starting unit", () => {
   it("marks earlier units as placed out when not completed", () => {
     expect(isPlacedOutUnit(1, getStartingUnitIndex("A2"), [])).toBe(true);
     expect(isPlacedOutUnit(1, getStartingUnitIndex("A2"), ["unit-a0-2"])).toBe(false);
+  });
+
+  it("picks next unit from placement index, not curriculum start", () => {
+    const b1Start = getStartingUnitIndex("B1");
+    const next = getNextUnitFromProgress([], b1Start);
+    expect(next?.id).toBe("unit-19");
+    expect(getNextUnitRoute([], b1Start)).toBe("/learn/unit-19");
+  });
+
+  it("falls back to first incomplete when all from placement index are done", () => {
+    const b1Start = getStartingUnitIndex("B1");
+    const completed = ["unit-19", "unit-20"];
+    expect(getNextUnitFromProgress(completed, b1Start)?.id).toBe("unit-21");
   });
 });

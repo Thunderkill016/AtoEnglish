@@ -51,7 +51,7 @@
 - **Done khi:** E2E pass trong CI
 
 ### TASK-012 — Roadmap respects starting_unit_index
-- **Status:** `ready`
+- **Status:** `done`
 - **Mô tả:** `roadmap/page.tsx` + `RoadmapClient` highlight phase theo placement; `nextUnitRoute` từ starting index.
 - **Done khi:** B1 user thấy đúng unit tiếp theo trên roadmap
 
@@ -94,3 +94,4 @@
 | 2026-06-26 | TASK-010 | A1 audio unit-1..12 | done — autopilot batch |
 | 2026-06-26 | TASK-001 | Supabase placement migration | done — db push |
 | 2026-06-26 | TASK-011 | Placement E2E B1 → unit-19 | done — e2e/helpers/auth |
+| 2026-06-26 | TASK-012 | Roadmap starting_unit_index | done — getNextUnitRoute |

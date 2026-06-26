@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
-import { UNITS } from "@/lib/constants/units";
+import { getNextUnitFromProgress } from "@/lib/placement/starting-unit";
 import RoadmapClient from "./RoadmapClient";
 
 export const metadata: Metadata = {
@@ -20,7 +20,9 @@ export default async function RoadmapPage() {
     user
       ? supabase
           .from("user_progress")
-          .select("current_level, total_xp")
+          .select(
+            "current_level, total_xp, starting_unit_index, placement_completed_at",
+          )
           .eq("user_id", user.id)
           .single()
       : Promise.resolve({ data: null }),
@@ -34,15 +36,20 @@ export default async function RoadmapPage() {
 
   const completedIds = (lessonRes.data ?? []).map((r) => r.unit_id);
   const userLevel = progressRes.data?.current_level ?? "A0";
-  const nextUnit = UNITS.find((u) => !completedIds.includes(u.id));
+  const startingUnitIndex = progressRes.data?.starting_unit_index ?? 0;
+  const placementCompleted = Boolean(progressRes.data?.placement_completed_at);
+  const nextUnit = getNextUnitFromProgress(completedIds, startingUnitIndex);
   const nextUnitRoute = nextUnit?.route ?? "/learn";
 
   return (
     <main id="main-content">
       <RoadmapClient
         nextUnitRoute={nextUnitRoute}
+        nextUnitTitle={nextUnit?.title}
         userLevel={userLevel}
         completedUnitIds={completedIds}
+        startingUnitIndex={startingUnitIndex}
+        placementCompleted={placementCompleted}
       />
     </main>
   );
