@@ -522,6 +522,71 @@ export function calculateResult(answers: Record<number, number>): TestResult {
   return { totalScore, readingScore, vocabularyScore, languageUseScore, cefrLevel, levelLabel, levelDescription, nextSteps };
 }
 
+/** Result payload when the learner self-selects a level (no scored test). */
+export function buildSelfSelectResult(level: CEFRLevel): TestResult {
+  const templates: Record<CEFRLevel, Omit<TestResult, "totalScore" | "readingScore" | "vocabularyScore" | "languageUseScore">> = {
+    A0: {
+      cefrLevel: "A0",
+      levelLabel: "A0 — Foundation",
+      levelDescription: "Bạn chọn bắt đầu từ nền tảng — phù hợp nếu mới học hoặc cần củng cố căn bản.",
+      nextSteps: [
+        "Bắt đầu Unit A0-1 — bảng chữ cái & âm cơ bản",
+        "Học 15 phút/ngày để xây thói quen",
+        "Làm lại bài test sau 2 tuần để kiểm tra tiến bộ",
+      ],
+    },
+    A1: {
+      cefrLevel: "A1",
+      levelLabel: "A1 — Beginner",
+      levelDescription: "Bạn chọn mức cơ bản — lộ trình mở từ Unit 1, bỏ qua phần A0.",
+      nextSteps: [
+        "Bắt đầu Unit 1 — động từ To be",
+        "Luyện phát âm IPA 15 phút/ngày",
+        "Dùng chế độ học nhanh (~15 phút) khi bận",
+      ],
+    },
+    A2: {
+      cefrLevel: "A2",
+      levelLabel: "A2 — Elementary",
+      levelDescription: "Bạn chọn sơ trung cấp — bắt đầu từ Unit 13, bỏ qua A0–A1.",
+      nextSteps: [
+        "Bắt đầu Unit 13 — Past Simple",
+        "Đọc News in Levels Level 1 mỗi ngày",
+        "Luyện nói Shadowing 3 lần/tuần",
+      ],
+    },
+    B1: {
+      cefrLevel: "B1",
+      levelLabel: "B1 — Intermediate",
+      levelDescription: "Bạn chọn trung cấp — bắt đầu từ Unit 19, không cần học lại từ đầu.",
+      nextSteps: [
+        "Bắt đầu Unit 19 — Present Perfect",
+        "Thử AI Roleplay trên trang Luyện nói",
+        "Luyện business email trong mục Viết",
+      ],
+    },
+    B2: {
+      cefrLevel: "B2",
+      levelLabel: "B2 — Upper Intermediate",
+      levelDescription: "Bạn chọn mức khá — bắt đầu từ Unit 33, tập trung polish & chuyên ngành.",
+      nextSteps: [
+        "Bắt đầu Unit 33 — Advanced structures",
+        "Luyện cold pitch bằng tiếng Anh",
+        "Tham gia Business track khi sẵn sàng",
+      ],
+    },
+  };
+
+  const template = templates[level];
+  return {
+    totalScore: 0,
+    readingScore: 0,
+    vocabularyScore: 0,
+    languageUseScore: 0,
+    ...template,
+  };
+}
+
 export const TOTAL_QUESTIONS = PLACEMENT_QUESTIONS.length;
 export const READING_COUNT = PLACEMENT_QUESTIONS.filter(q => q.skill === "reading").length;
 export const VOCAB_COUNT = PLACEMENT_QUESTIONS.filter(q => q.skill === "vocabulary").length;

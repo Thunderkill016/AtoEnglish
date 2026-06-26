@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { LoginSchema, SignUpSchema } from "@/lib/security/validation";
 import {
   getOnboardingRedirectPath,
+  getOnboardingStartingUnitIndex,
   mapQuizLevelToCefr,
 } from "@/lib/onboarding";
 
@@ -35,7 +36,7 @@ const QUESTIONS = [
   {
     id: 1,
     title: "Trình độ tiếng Anh hiện tại của bạn?",
-    subtitle: "Hãy chọn mức gần nhất với bạn hiện tại.",
+    subtitle: "Chọn mức gần nhất — sau đăng ký có thể làm bài test chính xác hơn.",
     options: [
       { emoji: "🆕", label: "Mất gốc / Chưa biết gì", val: "A0-A1" },
       { emoji: "📚", label: "Biết từ vựng cơ bản, chưa nói được", val: "A2" },
@@ -246,6 +247,7 @@ function LoginContent() {
             await supabase.from("user_progress").insert({
               user_id: data.user.id,
               current_level: mappedLevel,
+              starting_unit_index: getOnboardingStartingUnitIndex(level),
               streak: 0,
               total_xp: 0,
             });
@@ -276,6 +278,7 @@ function LoginContent() {
             await supabase.from("user_progress").insert({
               user_id: data.user.id,
               current_level: mappedLevel,
+              starting_unit_index: getOnboardingStartingUnitIndex(level),
               streak: 0,
               total_xp: 0,
             });

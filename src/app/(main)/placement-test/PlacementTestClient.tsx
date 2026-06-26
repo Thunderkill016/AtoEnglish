@@ -13,17 +13,21 @@ import {
 import {
   PLACEMENT_QUESTIONS,
   calculateResult,
+  buildSelfSelectResult,
   TOTAL_QUESTIONS,
   READING_COUNT,
   VOCAB_COUNT,
   LANG_USE_COUNT,
+  type CEFRLevel,
 } from "@/lib/data/placement-test";
-import { savePlacementResult } from "@/app/actions/placement";
+import { savePlacementResult, setPlacementLevel } from "@/app/actions/placement";
+import { PLACEMENT_LEVEL_OPTIONS } from "@/lib/placement/starting-unit";
 
 
-type Stage = "intro" | "test" | "saving" | "results";
+type Stage = "pick" | "test" | "saving" | "results";
 
 const CEFR_COLORS: Record<string, string> = {
+  A0: "#14b8a6",
   A1: "#3b82f6",
   A2: "#8b5cf6",
   B1: "#f59e0b",
@@ -43,12 +47,14 @@ const SKILL_ICON: Record<string, string> = {
 };
 
 export default function PlacementTestClient() {
-  const [stage, setStage] = useState<Stage>("intro");
+  const [stage, setStage] = useState<Stage>("pick");
   const [currentIdx, setCurrentIdx] = useState(0);
   const [answers, setAnswers] = useState<Record<number, number>>({});
   const [selected, setSelected] = useState<number | null>(null);
   const [result, setResult] = useState<ReturnType<typeof calculateResult> | null>(null);
   const [saveError, setSaveError] = useState<string | null>(null);
+  const [learnPath, setLearnPath] = useState<string | null>(null);
+  const [isSelfSelect, setIsSelfSelect] = useState(false);
 
   const currentQ = PLACEMENT_QUESTIONS[currentIdx]!;
   const isLast = currentIdx === TOTAL_QUESTIONS - 1;
@@ -67,10 +73,15 @@ export default function PlacementTestClient() {
 
     if (isLast) {
       setStage("saving");
+      setIsSelfSelect(false);
       const res = calculateResult(newAnswers);
       setResult(res);
       const saveRes = await savePlacementResult(res.cefrLevel, res.totalScore);
-      if (!saveRes.success) setSaveError(saveRes.error ?? null);
+      if (saveRes.success) {
+        setLearnPath(saveRes.learnPath);
+      } else {
+        setSaveError(saveRes.error ?? null);
+      }
       setStage("results");
     } else {
       setCurrentIdx((i) => i + 1);
@@ -78,8 +89,23 @@ export default function PlacementTestClient() {
     }
   }, [selected, answers, currentQ.id, isLast]);
 
-  // ── INTRO SCREEN ────────────────────────────────────────────────────────────
-  if (stage === "intro") {
+  const handleSelfSelect = useCallback(async (level: CEFRLevel) => {
+    setStage("saving");
+    setIsSelfSelect(true);
+    setSaveError(null);
+    const res = buildSelfSelectResult(level);
+    setResult(res);
+    const saveRes = await setPlacementLevel(level);
+    if (saveRes.success) {
+      setLearnPath(saveRes.learnPath);
+    } else {
+      setSaveError(saveRes.error ?? null);
+    }
+    setStage("results");
+  }, []);
+
+  // ── PICK LEVEL OR TAKE TEST ──────────────────────────────────────────────────
+  if (stage === "pick") {
     return (
       <div style={{ minHeight: "100dvh", background: "#09090b", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "24px 16px 100px" }}>
         <motion.div
@@ -95,61 +121,73 @@ export default function PlacementTestClient() {
           </div>
 
           <h1 style={{ fontSize: 26, fontWeight: 800, color: "#fafafa", fontFamily: "'Space Grotesk', sans-serif", textAlign: "center", marginBottom: 10 }}>
-            Xác Định Trình Độ Tiếng Anh
+            Chọn Điểm Bắt Đầu Học
           </h1>
-          <p style={{ fontSize: 13, color: "#71717a", textAlign: "center", lineHeight: 1.6, marginBottom: 28 }}>
-            Bài test chuẩn CEFR gồm <strong style={{ color: "#a1a1aa" }}>40 câu hỏi</strong> — Grammar, Vocabulary và Reading. Mất khoảng <strong style={{ color: "#a1a1aa" }}>15–25 phút</strong>. Không giới hạn thời gian.
+          <p style={{ fontSize: 13, color: "#71717a", textAlign: "center", lineHeight: 1.6, marginBottom: 20 }}>
+            Không cần học lại từ đầu. Chọn trình độ phù hợp hoặc làm bài test để xác định chính xác hơn.
           </p>
 
-          {/* Stats grid */}
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 8, marginBottom: 24 }}>
-            {[
-            { icon: "📖", label: "Reading", count: READING_COUNT },
-            { icon: "📝", label: "Vocabulary", count: VOCAB_COUNT },
-            { icon: "💬", label: "Language Use", count: LANG_USE_COUNT },
-          ].map((s) => (
-              <div key={s.label} style={{ background: "#111118", border: "1px solid #27272a", borderRadius: 12, padding: "14px 10px", textAlign: "center" }}>
-                <div style={{ fontSize: 22, marginBottom: 4 }}>{s.icon}</div>
-                <div style={{ fontSize: 18, fontWeight: 800, color: "#fafafa" }}>{s.count}</div>
-                <div style={{ fontSize: 10, color: "#52525b", fontWeight: 600 }}>{s.label}</div>
-              </div>
+          <div style={{ fontSize: 11, color: "#52525b", fontWeight: 700, marginBottom: 10, textTransform: "uppercase", letterSpacing: "0.08em" }}>
+            Tôi biết trình độ của mình
+          </div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 8, marginBottom: 20 }}>
+            {PLACEMENT_LEVEL_OPTIONS.map((opt) => (
+              <button
+                key={opt.level}
+                type="button"
+                onClick={() => handleSelfSelect(opt.level)}
+                style={{
+                  width: "100%",
+                  textAlign: "left",
+                  background: "#111118",
+                  border: `1px solid ${CEFR_COLORS[opt.level]}35`,
+                  borderRadius: 12,
+                  padding: "12px 14px",
+                  cursor: "pointer",
+                }}
+              >
+                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                  <span style={{ fontSize: 22 }}>{opt.emoji}</span>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 2 }}>
+                      <span style={{ fontSize: 13, fontWeight: 800, color: CEFR_COLORS[opt.level] }}>{opt.level}</span>
+                      <span style={{ fontSize: 13, fontWeight: 700, color: "#fafafa" }}>{opt.title}</span>
+                    </div>
+                    <div style={{ fontSize: 11, color: "#71717a", lineHeight: 1.4 }}>{opt.description}</div>
+                    <div style={{ fontSize: 10, color: "#52525b", marginTop: 4 }}>Bắt đầu: {opt.startLabel}</div>
+                  </div>
+                  <ChevronRight size={16} color="#52525b" />
+                </div>
+              </button>
             ))}
           </div>
 
-          {/* CEFR levels */}
-          <div style={{ background: "#111118", border: "1px solid #27272a", borderRadius: 12, padding: "14px", marginBottom: 24 }}>
-            <div style={{ fontSize: 11, color: "#52525b", fontWeight: 700, marginBottom: 10, textTransform: "uppercase", letterSpacing: "0.08em" }}>
-              Kết quả xác định
+          <div style={{ background: "#111118", border: "1px solid #27272a", borderRadius: 12, padding: "14px", marginBottom: 16 }}>
+            <div style={{ fontSize: 11, color: "#52525b", fontWeight: 700, marginBottom: 8, textTransform: "uppercase", letterSpacing: "0.08em" }}>
+              Hoặc làm bài test đầy đủ
             </div>
-            <div style={{ display: "flex", gap: 6 }}>
-              {(["A1", "A2", "B1", "B2"] as const).map((lvl) => (
-                <div key={lvl} style={{ flex: 1, background: `${CEFR_COLORS[lvl]}20`, border: `1px solid ${CEFR_COLORS[lvl]}40`, borderRadius: 8, padding: "8px 4px", textAlign: "center" }}>
-                  <div style={{ fontSize: 14, fontWeight: 800, color: CEFR_COLORS[lvl] }}>{lvl}</div>
+            <p style={{ fontSize: 12, color: "#a1a1aa", lineHeight: 1.5, marginBottom: 10 }}>
+              {TOTAL_QUESTIONS} câu Reading · Vocabulary · Language Use · ~15–25 phút · không giới hạn thời gian
+            </p>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 6 }}>
+              {[
+                { icon: "📖", label: "Reading", count: READING_COUNT },
+                { icon: "📝", label: "Vocab", count: VOCAB_COUNT },
+                { icon: "💬", label: "Grammar", count: LANG_USE_COUNT },
+              ].map((s) => (
+                <div key={s.label} style={{ background: "#0c0c10", borderRadius: 8, padding: "8px 6px", textAlign: "center" }}>
+                  <div style={{ fontSize: 14, fontWeight: 800, color: "#fafafa" }}>{s.count}</div>
+                  <div style={{ fontSize: 9, color: "#52525b" }}>{s.label}</div>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Rules */}
-          <div style={{ background: "#111118", border: "1px solid #27272a", borderRadius: 12, padding: "14px", marginBottom: 24 }}>
-            <div style={{ fontSize: 11, color: "#52525b", fontWeight: 700, marginBottom: 10, textTransform: "uppercase", letterSpacing: "0.08em" }}>
-              Lưu ý
-            </div>
-            {[
-              "Câu hỏi bằng tiếng Anh — đọc kỹ trước khi chọn",
-              "Không thể quay lại câu trước",
-              "Kết quả tự động cập nhật level trong app",
-              "Làm thật — đừng đoán mò để kết quả chính xác nhất",
-            ].map((tip, i) => (
-              <div key={i} style={{ display: "flex", gap: 8, alignItems: "flex-start", marginBottom: 6 }}>
-                <div style={{ width: 5, height: 5, borderRadius: "50%", background: "#10b981", marginTop: 6, flexShrink: 0 }} />
-                <span style={{ fontSize: 12, color: "#a1a1aa", lineHeight: 1.5 }}>{tip}</span>
-              </div>
-            ))}
-          </div>
-
           <button
-            onClick={() => setStage("test")}
+            onClick={() => {
+              setIsSelfSelect(false);
+              setStage("test");
+            }}
             style={{
               width: "100%",
               background: "linear-gradient(135deg, #10b981, #14b8a6)",
@@ -167,7 +205,7 @@ export default function PlacementTestClient() {
               boxShadow: "0 4px 20px #10b98130",
             }}
           >
-            Bắt Đầu Test <ArrowRight size={18} />
+            Làm Bài Test Đầy Đủ <ArrowRight size={18} />
           </button>
         </motion.div>
       </div>
@@ -218,25 +256,33 @@ export default function PlacementTestClient() {
               </p>
             </div>
 
-            {/* Score card */}
-            <div style={{ background: "#111118", border: `1px solid ${color}40`, borderRadius: 14, padding: "16px", marginBottom: 14 }}>
-              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 10 }}>
-                <span style={{ fontSize: 12, color: "#52525b", fontWeight: 700 }}>TỔNG ĐIỂM</span>
-                <span style={{ fontSize: 18, fontWeight: 900, color }}>
-                  {result.totalScore}/{TOTAL_QUESTIONS}
-                </span>
+            {!isSelfSelect && (
+              <div style={{ background: "#111118", border: `1px solid ${color}40`, borderRadius: 14, padding: "16px", marginBottom: 14 }}>
+                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 10 }}>
+                  <span style={{ fontSize: 12, color: "#52525b", fontWeight: 700 }}>TỔNG ĐIỂM</span>
+                  <span style={{ fontSize: 18, fontWeight: 900, color }}>
+                    {result.totalScore}/{TOTAL_QUESTIONS}
+                  </span>
+                </div>
+                <div style={{ height: 8, background: "#27272a", borderRadius: 99, overflow: "hidden" }}>
+                  <motion.div
+                    initial={{ width: 0 }}
+                    animate={{ width: `${(result.totalScore / TOTAL_QUESTIONS) * 100}%` }}
+                    transition={{ duration: 1, delay: 0.4 }}
+                    style={{ height: "100%", background: color, borderRadius: 99 }}
+                  />
+                </div>
               </div>
-              <div style={{ height: 8, background: "#27272a", borderRadius: 99, overflow: "hidden" }}>
-                <motion.div
-                  initial={{ width: 0 }}
-                  animate={{ width: `${(result.totalScore / TOTAL_QUESTIONS) * 100}%` }}
-                  transition={{ duration: 1, delay: 0.4 }}
-                  style={{ height: "100%", background: color, borderRadius: 99 }}
-                />
+            )}
+
+            {isSelfSelect && (
+              <div style={{ background: "#111118", border: `1px solid ${color}40`, borderRadius: 14, padding: "14px", marginBottom: 14, fontSize: 12, color: "#a1a1aa", lineHeight: 1.6 }}>
+                ✅ Lộ trình đã mở từ trình độ <strong style={{ color }}>{result.cefrLevel}</strong> — các bài trước đó có thể ôn lại tuỳ chọn, không bắt buộc.
               </div>
-            </div>
+            )}
 
             {/* Skill breakdown */}
+            {!isSelfSelect && (
             <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 8, marginBottom: 16 }}>
               {[
                 { key: "reading", score: result.readingScore, total: READING_COUNT },
@@ -258,6 +304,7 @@ export default function PlacementTestClient() {
                 </div>
               ))}
             </div>
+            )}
 
             {/* Next steps */}
             <div style={{ background: "#111118", border: "1px solid #27272a", borderRadius: 14, padding: "16px", marginBottom: 16 }}>
@@ -275,6 +322,7 @@ export default function PlacementTestClient() {
             </div>
 
             {/* Review wrong answers */}
+            {!isSelfSelect && (
             <div style={{ background: "#111118", border: "1px solid #27272a", borderRadius: 14, padding: "16px", marginBottom: 20 }}>
               <div style={{ fontSize: 12, color: "#52525b", fontWeight: 700, marginBottom: 12, textTransform: "uppercase", letterSpacing: "0.08em" }}>
                 📋 Review đáp án
@@ -307,6 +355,7 @@ export default function PlacementTestClient() {
                 );
               })}
             </div>
+            )}
 
             {saveError && (
               <div style={{ background: "#ef444410", border: "1px solid #ef444430", borderRadius: 10, padding: "10px 12px", marginBottom: 14, fontSize: 12, color: "#ef4444" }}>
@@ -315,29 +364,46 @@ export default function PlacementTestClient() {
             )}
 
             {/* CTAs */}
-            <div style={{ display: "flex", gap: 8 }}>
-              <Link
-                href="/dashboard"
-                style={{
-                  flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
-                  background: "linear-gradient(135deg, #10b981, #14b8a6)",
-                  color: "#fff", textDecoration: "none", borderRadius: 12, padding: "14px",
-                  fontSize: 13, fontWeight: 800,
-                }}
-              >
-                <Trophy size={16} /> Về Dashboard
-              </Link>
-              <Link
-                href="/roadmap"
-                style={{
-                  flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
-                  background: "#111118", border: "1px solid #27272a",
-                  color: "#a1a1aa", textDecoration: "none", borderRadius: 12, padding: "14px",
-                  fontSize: 13, fontWeight: 700,
-                }}
-              >
-                Xem lộ trình
-              </Link>
+            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+              {learnPath && (
+                <Link
+                  href={learnPath}
+                  style={{
+                    display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
+                    background: "linear-gradient(135deg, #10b981, #14b8a6)",
+                    color: "#fff", textDecoration: "none", borderRadius: 12, padding: "14px",
+                    fontSize: 14, fontWeight: 800,
+                  }}
+                >
+                  <ArrowRight size={16} /> Bắt đầu học ngay
+                </Link>
+              )}
+              <div style={{ display: "flex", gap: 8 }}>
+                <Link
+                  href="/learn"
+                  style={{
+                    flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
+                    background: learnPath ? "#111118" : "linear-gradient(135deg, #10b981, #14b8a6)",
+                    border: learnPath ? "1px solid #27272a" : "none",
+                    color: learnPath ? "#a1a1aa" : "#fff",
+                    textDecoration: "none", borderRadius: 12, padding: "14px",
+                    fontSize: 13, fontWeight: learnPath ? 700 : 800,
+                  }}
+                >
+                  <Trophy size={16} /> {learnPath ? "Xem lộ trình học" : "Về Bài học"}
+                </Link>
+                <Link
+                  href="/dashboard"
+                  style={{
+                    flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
+                    background: "#111118", border: "1px solid #27272a",
+                    color: "#a1a1aa", textDecoration: "none", borderRadius: 12, padding: "14px",
+                    fontSize: 13, fontWeight: 700,
+                  }}
+                >
+                  Dashboard
+                </Link>
+              </div>
             </div>
           </motion.div>
         </div>

@@ -35,6 +35,8 @@ export async function getUserProgress() {
       progress: {
         user_id: user.id,
         current_level: data?.current_level || "A0",
+        starting_unit_index: data?.starting_unit_index ?? 0,
+        placement_completed_at: data?.placement_completed_at ?? null,
         streak: data?.streak || 0,
         total_xp: data?.total_xp || 0,
         last_active_date: data?.last_active_date || null,

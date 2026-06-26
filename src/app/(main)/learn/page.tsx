@@ -35,10 +35,14 @@ export default async function LearnPage() {
 
   let userLevel = "A0";
   let totalXp = 0;
+  let startingUnitIndex = 0;
+  let placementCompleted = false;
 
   if (progressRes.success && progressRes.progress) {
-    userLevel = progressRes.progress.current_level || "A1";
+    userLevel = progressRes.progress.current_level || "A0";
     totalXp = progressRes.progress.total_xp || 0;
+    startingUnitIndex = progressRes.progress.starting_unit_index ?? 0;
+    placementCompleted = Boolean(progressRes.progress.placement_completed_at);
   }
 
   // Build completed units and vocab maps from parallel results
@@ -100,6 +104,8 @@ export default async function LearnPage() {
       completedUnitIds={completedUnitIds}
       activeUnitId={activeUnitId}
       unitStatuses={unitStatuses}
+      startingUnitIndex={startingUnitIndex}
+      placementCompleted={placementCompleted}
     />
   );
 }

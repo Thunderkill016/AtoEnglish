@@ -3,8 +3,12 @@
 import React from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { Lock, Play, CheckCircle, Sparkles, BookOpen, Star, Clock, RotateCcw, BookOpenCheck, Trophy, ChevronRight, Zap } from "lucide-react";
+import { Lock, Play, CheckCircle, Sparkles, BookOpen, Star, Clock, RotateCcw, BookOpenCheck, Trophy, ChevronRight, Zap, Target, SkipForward } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import {
+  isPlacedOutUnit,
+  isUnitUnlocked,
+} from "@/lib/placement/starting-unit";
 
 interface UnitStatus {
   id: string;
@@ -26,6 +30,8 @@ interface LearnClientProps {
   completedUnitIds: string[];
   activeUnitId: string;
   unitStatuses: UnitStatus[];
+  startingUnitIndex?: number;
+  placementCompleted?: boolean;
 }
 
 export default function LearnClient({
@@ -34,7 +40,10 @@ export default function LearnClient({
   completedUnitIds,
   activeUnitId,
   unitStatuses,
+  startingUnitIndex = 0,
+  placementCompleted = false,
 }: LearnClientProps) {
+  const unitIds = unitStatuses.map((u) => u.id);
   const activeUnit = unitStatuses.find((u) => u.id === activeUnitId);
 
   return (
@@ -73,7 +82,9 @@ export default function LearnClient({
           transition={{ duration: 0.4, delay: 0.2 }}
           className="text-zinc-500 dark:text-zinc-400 text-sm sm:text-base max-w-xl mx-auto"
         >
-          Hoàn thành các chương học theo phương pháp IPOR (Input - Processing - Output - Review) để mở khóa các bài học nâng cao hơn.
+          {startingUnitIndex > 0
+            ? "Các bài trước trình độ của bạn đã được mở — học từ điểm phù hợp, không cần làm lại từ đầu."
+            : "Hoàn thành các chương học theo phương pháp IPOR (Input - Processing - Output - Review) để mở khóa các bài học nâng cao hơn."}
         </motion.p>
       </div>
 
@@ -101,8 +112,8 @@ export default function LearnClient({
         </motion.div>
       )}
 
-      {/* New user: placement test CTA */}
-      {completedUnitIds.length === 0 && (
+      {/* Placement CTA — skip if already placed or started learning */}
+      {!placementCompleted && startingUnitIndex === 0 && completedUnitIds.length === 0 && (
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -113,11 +124,13 @@ export default function LearnClient({
             href="/placement-test"
             className="flex items-center gap-3 p-4 rounded-2xl border border-violet-500/25 bg-violet-500/5 hover:bg-violet-500/10 hover:border-violet-500/35 transition-all duration-200 group"
           >
-            <span className="flex size-10 items-center justify-center rounded-xl bg-violet-500/15 text-xl shrink-0">🎯</span>
+            <span className="flex size-10 items-center justify-center rounded-xl bg-violet-500/15 shrink-0">
+              <Target className="size-5 text-violet-500" />
+            </span>
             <div className="flex-1 min-w-0">
-              <p className="text-xs font-black text-violet-400 uppercase tracking-widest mb-0.5">Bước đầu tiên</p>
-              <p className="text-sm font-bold text-zinc-900 dark:text-zinc-50">Xác định trình độ CEFR của mày</p>
-              <p className="text-xs text-zinc-500 dark:text-zinc-400">40 câu · ~20 phút · Tự động set level phù hợp</p>
+              <p className="text-xs font-black text-violet-400 uppercase tracking-widest mb-0.5">Không cần học lại từ đầu</p>
+              <p className="text-sm font-bold text-zinc-900 dark:text-zinc-50">Xác định trình độ &amp; mở đúng bài học</p>
+              <p className="text-xs text-zinc-500 dark:text-zinc-400">Tự chọn nhanh hoặc làm bài test ~20 phút</p>
             </div>
             <ChevronRight className="size-5 text-violet-400/60 group-hover:text-violet-400 group-hover:translate-x-0.5 transition-all shrink-0" />
           </Link>
@@ -131,8 +144,18 @@ export default function LearnClient({
 
         {unitStatuses.map((unit, index) => {
           const isCompleted = completedUnitIds.includes(unit.id);
-          const isUnlocked = index === 0 || completedUnitIds.includes(unitStatuses[index - 1].id);
-          const isActive = unit.id === activeUnitId && isUnlocked && !isCompleted;
+          const isUnlocked = isUnitUnlocked(
+            index,
+            startingUnitIndex,
+            completedUnitIds,
+            unitIds,
+          );
+          const isPlacedOut = isPlacedOutUnit(
+            index,
+            startingUnitIndex,
+            completedUnitIds,
+          );
+          const isActive = unit.id === activeUnitId && isUnlocked && !isCompleted && !isPlacedOut;
 
           // Layout styling helpers
           const isEven = index % 2 === 0;
@@ -214,7 +237,7 @@ export default function LearnClient({
                 <div
                   className={`group relative rounded-2xl border bg-white/60 dark:bg-zinc-900/30 backdrop-blur-sm p-5 space-y-4 hover:border-emerald-500/30 transition-all duration-300 shadow-sm ${
                     isActive ? "border-emerald-500/40 ring-1 ring-emerald-500/10 shadow-emerald-950/5" : "border-zinc-200/60 dark:border-zinc-800/60"
-                  } ${!isUnlocked ? "opacity-60 grayscale-[40%]" : ""}`}
+                  } ${!isUnlocked ? "opacity-60 grayscale-[40%]" : isPlacedOut ? "opacity-75" : ""}`}
                 >
                   {/* Card Glow */}
                   {isActive && (
@@ -222,7 +245,13 @@ export default function LearnClient({
                   )}
 
                   {/* Level Tag & XP */}
-                  <div className={`flex items-center gap-2 text-xs font-semibold ${isEven ? "sm:justify-end" : ""}`}>
+                  <div className={`flex flex-wrap items-center gap-2 text-xs font-semibold ${isEven ? "sm:justify-end" : ""}`}>
+                    {isPlacedOut && (
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-sky-500/10 text-sky-600 dark:text-sky-400 border border-sky-500/20">
+                        <SkipForward className="size-3" />
+                        Đã xác định
+                      </span>
+                    )}
                     <span className="px-2 py-0.5 rounded-md bg-zinc-100 dark:bg-zinc-800 text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
                       {unit.level}
                     </span>
@@ -317,6 +346,16 @@ export default function LearnClient({
                           </Button>
                         </Link>
                       </div>
+                    ) : isPlacedOut ? (
+                      <Link href={unit.route} className="w-full sm:w-auto">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="w-full rounded-xl text-sky-600 dark:text-sky-400 hover:bg-sky-500/10 text-xs font-bold gap-1"
+                        >
+                          <RotateCcw className="size-3" /> Ôn lại (tuỳ chọn)
+                        </Button>
+                      </Link>
                     ) : isActive ? (
                       <Link href={unit.route} className="w-full sm:w-auto">
                         <Button

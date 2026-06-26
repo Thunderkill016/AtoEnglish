@@ -582,6 +582,8 @@ export type Database = {
           email_notifications: boolean | null
           last_active_date: string | null
           notification_hour: number | null
+          placement_completed_at: string | null
+          starting_unit_index: number
           streak: number
           streak_freeze_count: number
           total_xp: number
@@ -596,6 +598,8 @@ export type Database = {
           email_notifications?: boolean | null
           last_active_date?: string | null
           notification_hour?: number | null
+          placement_completed_at?: string | null
+          starting_unit_index?: number
           streak?: number
           streak_freeze_count?: number
           total_xp?: number
@@ -610,6 +614,8 @@ export type Database = {
           email_notifications?: boolean | null
           last_active_date?: string | null
           notification_hour?: number | null
+          placement_completed_at?: string | null
+          starting_unit_index?: number
           streak?: number
           streak_freeze_count?: number
           total_xp?: number

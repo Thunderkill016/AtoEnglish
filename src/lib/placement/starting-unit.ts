@@ -1,0 +1,109 @@
+import { UNITS } from "@/lib/constants/units";
+
+export type PlacementCefrLevel = "A0" | "A1" | "A2" | "B1" | "B2";
+
+export const PLACEMENT_CEFR_LEVELS: PlacementCefrLevel[] = [
+  "A0",
+  "A1",
+  "A2",
+  "B1",
+  "B2",
+];
+
+/** First curriculum index for each CEFR band (matches UNITS[] order). */
+const LEVEL_START_INDEX: Record<PlacementCefrLevel, number> = {
+  A0: 0,
+  A1: UNITS.findIndex((u) => u.level === "A1"),
+  A2: UNITS.findIndex((u) => u.level === "A2"),
+  B1: UNITS.findIndex((u) => u.level === "B1"),
+  B2: UNITS.findIndex((u) => u.level === "B2"),
+};
+
+export function normalizePlacementLevel(level: string): PlacementCefrLevel | null {
+  const upper = level.toUpperCase() as PlacementCefrLevel;
+  return PLACEMENT_CEFR_LEVELS.includes(upper) ? upper : null;
+}
+
+export function getStartingUnitIndex(level: string): number {
+  const normalized = normalizePlacementLevel(level);
+  if (!normalized) return 0;
+  const index = LEVEL_START_INDEX[normalized];
+  return index >= 0 ? index : 0;
+}
+
+export function getStartingUnitSlug(level: string): string {
+  const index = getStartingUnitIndex(level);
+  return UNITS[index]?.id ?? "unit-a0-1";
+}
+
+export function getPlacementLearnPath(level: string, mini = true): string {
+  const slug = getStartingUnitSlug(level);
+  return mini ? `/learn/${slug}?mini=1` : `/learn/${slug}`;
+}
+
+/** Units at or before the placement entry point are accessible without prior completion. */
+export function isUnitUnlocked(
+  index: number,
+  startingUnitIndex: number,
+  completedUnitIds: string[],
+  unitIds: string[],
+): boolean {
+  if (index <= startingUnitIndex) return true;
+  const prevId = unitIds[index - 1];
+  if (!prevId) return true;
+  if (index - 1 < startingUnitIndex) return true;
+  return completedUnitIds.includes(prevId);
+}
+
+/** Skipped via placement — optional review, not required for progression. */
+export function isPlacedOutUnit(
+  index: number,
+  startingUnitIndex: number,
+  completedUnitIds: string[],
+): boolean {
+  return index < startingUnitIndex && !completedUnitIds.includes(UNITS[index]?.id ?? "");
+}
+
+export const PLACEMENT_LEVEL_OPTIONS: Array<{
+  level: PlacementCefrLevel;
+  emoji: string;
+  title: string;
+  description: string;
+  startLabel: string;
+}> = [
+  {
+    level: "A0",
+    emoji: "🌱",
+    title: "Mất gốc",
+    description: "Chưa biết hoặc mới học — bắt đầu từ bảng chữ cái",
+    startLabel: "Unit A0-1",
+  },
+  {
+    level: "A1",
+    emoji: "📚",
+    title: "Cơ bản",
+    description: "Biết từ vựng đơn giản, chưa nói trôi chảy",
+    startLabel: "Unit 1 — To be",
+  },
+  {
+    level: "A2",
+    emoji: "💬",
+    title: "Sơ trung cấp",
+    description: "Giao tiếp được nhưng phản xạ còn chậm",
+    startLabel: "Unit 13 — Past Simple",
+  },
+  {
+    level: "B1",
+    emoji: "🎯",
+    title: "Trung cấp",
+    description: "Tự tin hội thoại, cần nâng business English",
+    startLabel: "Unit 19 — Present Perfect",
+  },
+  {
+    level: "B2",
+    emoji: "🚀",
+    title: "Khá",
+    description: "Nói trôi chảy, muốn polish & chuyên ngành",
+    startLabel: "Unit 33 — Advanced grammar",
+  },
+];

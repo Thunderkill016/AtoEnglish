@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import {
   getOnboardingRedirectPath,
+  getOnboardingStartingUnitIndex,
   mapQuizLevelToCefr,
 } from "@/lib/onboarding";
 
@@ -34,6 +35,7 @@ export async function GET(request: Request) {
         {
           user_id: user.id,
           current_level: mappedLevel,
+          starting_unit_index: getOnboardingStartingUnitIndex(level),
           streak: 0,
           total_xp: 0,
         },

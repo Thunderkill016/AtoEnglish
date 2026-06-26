@@ -423,8 +423,13 @@ export async function getCurrentUnit() {
       (UNIT_VOCABULARY[unit.id] || []).map(v => v.word.toLowerCase().trim())
     );
 
-    // Parallel: fetch completed lessons + user cards simultaneously
-    const [completedRes, cardsRes] = await Promise.all([
+    // Parallel: progress (starting index) + completed lessons + user cards
+    const [progressRes, completedRes, cardsRes] = await Promise.all([
+      supabase
+        .from("user_progress")
+        .select("starting_unit_index")
+        .eq("user_id", user.id)
+        .maybeSingle(),
       supabase
         .from("user_lesson_progress")
         .select("unit_id")
@@ -445,6 +450,7 @@ export async function getCurrentUnit() {
 
     const completedUnitIds = completedRes.data?.map(l => l.unit_id) || [];
     const savedWords = new Set(cardsRes.data?.map(c => c.word.toLowerCase().trim()) || []);
+    const startingUnitIndex = progressRes.data?.starting_unit_index ?? 0;
 
     const unitStatuses = UNITS.map(unit => {
       const isCompleted = completedUnitIds.includes(unit.id);
@@ -474,8 +480,15 @@ export async function getCurrentUnit() {
       };
     });
 
-    let activeUnit = unitStatuses.find(u => !u.completed && u.progress > 0);
-    if (!activeUnit) activeUnit = unitStatuses.find(u => !u.completed);
+    let activeUnit = unitStatuses.find(
+      (u, i) => i >= startingUnitIndex && !u.completed && u.progress > 0,
+    );
+    if (!activeUnit) {
+      activeUnit = unitStatuses.find(
+        (u, i) => i >= startingUnitIndex && !u.completed,
+      );
+    }
+    if (!activeUnit) activeUnit = unitStatuses.find((u) => !u.completed);
     if (!activeUnit) activeUnit = unitStatuses[unitStatuses.length - 1];
 
     return {
