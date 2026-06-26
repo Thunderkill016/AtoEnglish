@@ -25,5 +25,5 @@ PHASE 3 — TRIỂN KHAI:
 
 Gates: lint0 + tsc0 + 170t + cs50/50 + audit50/50 clean. No feature. Autonomous.
 
-Final commit SHA: 679ca7b (amended last for SHA refs)
+Pushed SHA: ae4aab5 (to origin/github; GitLab primary per model when token ready); docs synced post-push.
 Next: run `bash scripts/git-push.sh main` (GitLab primary per model A); verify; set done complete.
