@@ -6,8 +6,8 @@
 
 | Field | Value |
 |-------|-------|
-| Started | 2026-06-26 |
-| Focus | TASK-090: E2E regression V2 — run `e2e:time-to-lesson` + smoke tab paths; fix any regression |
+| Started | 2026-06-27 |
+| Focus | TASK-091: Autopilot maintenance sweep #91 — Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới. |
 | Owner | Autopilot (no human) |
 
 ### TASK-079 — V2 Minimal Redesign: research + kế hoạch autopilot
@@ -40,7 +40,7 @@
 **Done khi**: `npm run e2e:time-to-lesson` exit 0 (or skips clean); smoke pass; 0 regression or 1 minimal fix; baseline in PLAN; lint+170t+tsc pass; 1 commit via git-push; BACKLOG done; autonomous.
 **Started:** 2026-06-27 — autopilot
 
-**Completed TASK-090 (post exec sync)**: smoke:learn ✅ (unit-33 + audio rewrite); `npm run e2e:time-to-lesson` executed (revealed 1) connect timing in tool env + 2) explicit "Playwright Test did not expect test.use() to be called here" on the 3-tab test — this was the regression post V2 nav change); minimal fix: replaced inner test.use with `await page.setViewportSize({ width: 390, height: 844 })`; 170 tests + lint0 + tsc0 clean (no other changes); baseline: e2e spec now runnable, time-to-lesson assertions preserved (≤2 taps, ≤15s warmup); smoke tabs verified via nav const + e2e + prod curl; log written; commit 2697f6a + git-push.sh main; BACKLOG done; autonomous.
+**Completed TASK-090 (post exec sync)**: smoke:learn ✅ (unit-33 + audio rewrite); `npm run e2e:time-to-lesson` executed (revealed 1) connect timing in tool env + 2) explicit "Playwright Test did not expect test.use() to be called here" on the 3-tab test — this was the regression post V2 nav change); minimal fix: replaced inner test.use with `await page.setViewportSize({ width: 390, height: 844 })`; 170 tests + lint0 + tsc0 clean (no other changes); baseline: e2e spec now runnable, time-to-lesson assertions preserved (≤2 taps, ≤15s warmup); smoke tabs verified via nav const + e2e + prod curl; log written; commits 2697f6a (fix+run) + f924f7f (docs); pushed via git-push.sh; BACKLOG done; autonomous.
 
 ### TASK-081 — Placement test: test/saving/results minimal shell
 **Mục tiêu**: `PlacementTestClient.tsx` — migrate stages "test"/"saving"/"results" (pick stage đã dùng SecondaryPageShell) sang Screen + Tailwind design-system (bg-card, border-border/60, text-foreground, MinimalButton, ListSection if fit, Screen canvas) + xóa hết ~63 inline `style={{}}`. Giữ nguyên logic tính điểm, savePlacementResult/setPlacementLevel, framer, texts, E2E paths, CEFR result data. Dùng primary accent thay per-CEFR hex (V2 minimal). **Done khi:** 0 inline style; lint+test pass.
@@ -1264,6 +1264,8 @@
 - Fail 2 lần liên tiếp → blocked + ghi lý do.
 **Done khi**: lint+test (all gates) pass; nếu fix thì 1 minimal change; AGENT_PLAN/BACKLOG updated with PHASE log + SHA; 1 commit + push via git-push.sh main (or blocked noted); BACKLOG status=done; no feature; no ask user; autonomous.
 
+**Completed TASK-091 (post exec sync)**: gates clean (lint0+170t+tsc0+cs50/50+audit50/50) no fix needed; log written 20260627T001400Z_TASK-091.log; BACKLOG+PLAN updated + pushed; no source edit; autonomous.
+
 ### TASK-089 — Speaking: tab → sub-routes
 **Mục tiêu**: `SpeakingClient.tsx` (4 internal tabs via useState activeTab + tab buttons ListSection + AnimatePresence grid switch 4 comps + sidebar history) → PrimaryRow entry (list 4 modes) + sub-routes `/speaking/shadowing`, `/speaking/roleplay`, `/speaking/journal`, `/speaking/phoneme` theo V2 IA (Hick's Law: 1 screen 1 list, progressive disclosure). Giữ PrimaryRow cho pronunciation ở entry. Sub pages: thin wrapper SecondaryPageShell + feature comp (ShadowingPractice, AIRoleplay, JournalMode, PhonemeChecker). Giữ count fetch cho subtitle; bỏ tab UI/state/Animate/grid/sidebar từ main. Không sửa logic/feature comps (save, eval, speech, data, query ?id= support). **Done khi:** Không 4-tab trên 1 page; /speaking = PrimaryRow list; 4 sub-routes hoạt động; lint+test pass.
 **Bước thực hiện**:
@@ -1290,3 +1292,22 @@
 - Self-debug: grep after edit for tab remnants; lint/test.
 **Done khi**: 0 tab state/buttons/AnimatePresence/switch in SpeakingClient (grep verify); 4 PrimaryRow on /speaking; 4 subdir pages render correct comp under shell; gates (lint+170t+tsc+cs50/50) pass; 1 commit + push via git-push.sh main; BACKLOG=done + SHA; autonomous (no human).
 **Completed:** 2026-06-26 — 0 4-tab; PrimaryRow list + 4 sub-routes created; count preserved on entry; lint+test pass; commit 638cd2d + push via git-push; BACKLOG done; autonomous
+
+### TASK-091 — Autopilot maintenance sweep #91
+**Mục tiêu**: Chạy full gates (lint, tsc --noEmit, npm test, test:content-standard, audit-lesson-content) để detect failure. Fix failure đầu tiên (nếu có) với thay đổi tối thiểu (chỉ 1 chỗ gây lỗi đầu). Sync AGENT_PLAN.md (nhật ký phiên + log table) + BACKLOG (status + nhật ký entry). Không thêm feature mới, không sửa logic app/content. Nhiệm vụ maintenance sweep định kỳ.
+**Bước thực hiện**:
+1. Search memory("TASK-091" + "maintenance sweep" + "autopilot") (sim via logs/grep (prior 090 clean, 091 prompt only)); read AGENTS.md (ALWAYS), AGENT_BACKLOG/PLAN/ROADMAP, CONTENT_STYLE.md §6–7 (blueprint gate), scripts/agent-*.sh (refill/pick); grep for TASK-091 in logs/backlog/plan + run initial lint/test to see first fail.
+2. Grep codebase liên quan: confirm chỉ cần edit AGENT_*.md (no src/); identify files: AGENT_BACKLOG.md, AGENT_PLAN.md (add section, update focus/log), and logs/agent/ for timestamp log.
+3. Update BACKLOG: TASK-091 status `in_progress` (done in this run).
+4. Update AGENT_PLAN.md với mục tiêu + bước + rủi ro cho TASK-091 (this section) + update Phiên hiện tại focus (done).
+5. Backlog thấp? Chạy `bash scripts/agent-refill-backlog.sh` (read ROADMAP.md); hiện 3 ready (091-093) ≥2 → skip (KHÔNG hỏi user).
+6. PHASE3 triển khai tối thiểu: run `npm run lint && npm run test` + npx tsc --noEmit + `npm run test:content-standard` + `bash scripts/audit-lesson-content.sh`. Nếu có failure đầu tiên → fix chỉ cái đó (ví dụ 1 test hoặc 1 lint violation), tự debug. Nếu clean → no code change.
+7. Pass gates → update BACKLOG done + nhật ký entry + SHA; update PLAN log table + write logs/agent/20260627..._TASK-091.log (PHASE summary).
+8. git pull --rebase; git add AGENT_BACKLOG.md AGENT_PLAN.md logs/agent/*; commit "chore(agent): TASK-091 maintenance sweep — lint+test+content50/50 clean, sync PLAN log (no fix needed)"; `bash scripts/git-push.sh main`.
+**Rủi ro**:
+- Gates fail (e.g. new flake in 170 tests or content) → fix first failure only (1 minimal edit), rerun once; if still fail after 1 fix → 2nd attempt fail → set blocked + lý do.
+- Push blocked (thiếu GITLAB_TOKEN or net) → status=blocked in BACKLOG, note next sweep ready if can advance.
+- No secret/DB change needed (pure maintenance); self-debug from lint/test output.
+- Doc-only commit still must pass full checklist (tsc/lint/test).
+- Fail 2 lần liên tiếp → blocked + ghi lý do.
+**Done khi**: lint+test (all gates) pass; nếu fix thì 1 minimal change; AGENT_PLAN/BACKLOG updated with PHASE log + SHA; 1 commit + push via git-push.sh main (or blocked noted); BACKLOG status=done; no feature; no ask user; autonomous.
