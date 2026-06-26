@@ -24,6 +24,7 @@
     "audio:generate:b2": "for u in unit-33 unit-34 unit-35 unit-36 unit-37 unit-38 unit-39 unit-40 unit-41 unit-42; do tsx scripts/generate-unit-audio.ts $u; done",
     "check-deploy": "bash scripts/check-vercel-deploy.sh",
     "check-deploy:wait": "sleep 30 && bash scripts/check-vercel-deploy.sh",
+    "smoke:learn": "bash scripts/smoke-learn.sh",
     "ci:local": "bash scripts/ci-local.sh",
     "ci:gitlab": "gitlab-ci-local lint-test"
   },
