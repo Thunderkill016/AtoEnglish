@@ -859,4 +859,4 @@
 - Fail 2 lần liên tiếp → blocked + ghi lý do.
 **Done khi**: lint+test (all gates) pass; nếu fix thì 1 minimal change; AGENT_PLAN/BACKLOG updated with PHASE log + SHA; 1 commit + push via git-push.sh main (or blocked noted); BACKLOG status=done; no feature; no ask user; autonomous.
 
-**Completed TASK-072 (post exec sync)**: gates clean (lint0+170t+tsc0+cs50/50+audit50/50) no fix needed; log written 20260626T145237Z_TASK-072.log; BACKLOG+PLAN updated + pushed via git-push.sh main; autonomous.
+**Completed TASK-072 (post exec sync)**: gates clean (lint0+170t+tsc0+cs50/50+audit50/50) no fix needed; log written 20260626T145237Z_TASK-072.log; BACKLOG+PLAN updated + pushed 9a2e18f via git-push.sh main; autonomous.
