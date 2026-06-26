@@ -819,6 +819,7 @@ export default function UnitTemplate({
         sessionXp={sessionXp}
         xpPopup={xpPopup}
         miniSession={miniSession}
+        allowMiniSession={isCompleted}
         onStartMiniSession={() => {
           setMiniSession(true);
           setSection(4);

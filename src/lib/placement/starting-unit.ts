@@ -36,7 +36,8 @@ export function getStartingUnitSlug(level: string): string {
   return UNITS[index]?.id ?? "unit-a0-1";
 }
 
-export function getPlacementLearnPath(level: string, mini = true): string {
+/** Default: full lesson. Pass mini=true only for explicit review shortcut. */
+export function getPlacementLearnPath(level: string, mini = false): string {
   const slug = getStartingUnitSlug(level);
   return mini ? `/learn/${slug}?mini=1` : `/learn/${slug}`;
 }

@@ -14,9 +14,9 @@ describe("onboarding helpers", () => {
     expect(getFirstUnitSlug("unknown")).toBe("unit-a0-1");
   });
 
-  it("builds mini-session redirect path", () => {
-    expect(getOnboardingRedirectPath("A0-A1")).toBe("/learn/unit-a0-1?mini=1");
-    expect(getOnboardingRedirectPath("B1", "15min")).toBe("/learn/unit-19?mini=1");
+  it("builds full-lesson redirect path for new users", () => {
+    expect(getOnboardingRedirectPath("A0-A1")).toBe("/learn/unit-a0-1");
+    expect(getOnboardingRedirectPath("B1", "15min")).toBe("/learn/unit-19");
   });
 
   it("maps quiz level to CEFR for user_progress", () => {

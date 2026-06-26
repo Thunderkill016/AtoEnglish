@@ -8,6 +8,7 @@ import LessonSectionHeader from "../lesson-ui/LessonSectionHeader";
 import SituationCard from "../lesson-ui/SituationCard";
 import LessonContinueButton from "../lesson-ui/LessonContinueButton";
 import { lessonSectionMotion } from "../lesson-ui/motion";
+import HowToLearnCard from "../lesson-ui/HowToLearnCard";
 
 interface WarmupSectionProps {
   unit: UnitData;
@@ -52,6 +53,8 @@ export default function WarmupSection({
         totalSections={TOTAL_SECTIONS}
         subtitle="Làm quen ngữ cảnh + ôn SRS"
       />
+
+      <HowToLearnCard />
 
       {unit.situation && (
         <SituationCard situation={unit.situation} outcomes={unit.learningOutcomes} />

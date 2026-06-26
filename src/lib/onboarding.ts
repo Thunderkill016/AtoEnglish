@@ -20,13 +20,13 @@ export function getFirstUnitSlug(quizLevel: string): string {
   return getStartingUnitSlug(cefr);
 }
 
-/** Redirect path for new users after onboarding — micro-session for fast first win */
+/** Redirect path for new users — full lesson first (cách học đúng từ đầu) */
 export function getOnboardingRedirectPath(
   quizLevel: string,
   _time?: string,
 ): string {
   const cefr = QUIZ_TO_CEFR[quizLevel] ?? "A0";
-  return getPlacementLearnPath(cefr, true);
+  return getPlacementLearnPath(cefr, false);
 }
 
 /** Map onboarding quiz level to stored CEFR level in user_progress */

@@ -107,7 +107,7 @@ async function persistPlacementLevel(
     message: `Đã đặt trình độ ${cefr} — bắt đầu từ ${getStartingUnitSlug(cefr)}.`,
     level: cefr,
     startingUnitIndex,
-    learnPath: getPlacementLearnPath(cefr, true),
+    learnPath: getPlacementLearnPath(cefr, false),
   } satisfies PlacementSaveResult;
 }
 

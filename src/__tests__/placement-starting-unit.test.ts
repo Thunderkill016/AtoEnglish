@@ -18,8 +18,9 @@ describe("placement starting unit", () => {
     expect(getStartingUnitSlug("B2")).toBe("unit-33");
   });
 
-  it("returns learn path with mini session", () => {
-    expect(getPlacementLearnPath("B1")).toBe("/learn/unit-19?mini=1");
+  it("returns full lesson path by default", () => {
+    expect(getPlacementLearnPath("B1")).toBe("/learn/unit-19");
+    expect(getPlacementLearnPath("B1", true)).toBe("/learn/unit-19?mini=1");
   });
 
   it("unlocks units up to and including starting index", () => {

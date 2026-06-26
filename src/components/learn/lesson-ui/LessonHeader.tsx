@@ -18,6 +18,8 @@ interface LessonHeaderProps {
   sessionXp: number;
   xpPopup: { id: number; value: number } | null;
   miniSession: boolean;
+  /** Ôn nhanh chỉ khi đã hoàn thành unit ít nhất 1 lần */
+  allowMiniSession: boolean;
   onStartMiniSession: () => void;
   onClearProgress: () => void;
 }
@@ -34,6 +36,7 @@ export default function LessonHeader({
   sessionXp,
   xpPopup,
   miniSession,
+  allowMiniSession,
   onStartMiniSession,
   onClearProgress,
 }: LessonHeaderProps) {
@@ -89,14 +92,15 @@ export default function LessonHeader({
                 </Link>
               </div>
             ) : (
+              allowMiniSession &&
               section < 8 && (
                 <button
                   type="button"
                   onClick={onStartMiniSession}
                   className="text-[10px] font-bold px-2.5 py-1 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-400 hover:bg-amber-500/20 transition-colors whitespace-nowrap"
-                  title="Chỉ luyện tập + quiz ~5 phút"
+                  title="Ôn lại: luyện tập + quiz ~5 phút (sau khi đã học bài đầy đủ)"
                 >
-                  ⚡ Ôn nhanh
+                  ⚡ Ôn lại
                 </button>
               )
             )}
