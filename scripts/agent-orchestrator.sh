@@ -36,9 +36,20 @@ if [[ "$BRANCH" != "main" ]]; then
   git checkout main
 fi
 
-# Pull latest to avoid push conflicts
+# Stash local edits so pull never blocks on dirty docs/worktrees
+STASHED=0
+if ! git diff --quiet 2>/dev/null || ! git diff --cached --quiet 2>/dev/null; then
+  log "📦 Stashing local changes trước khi pull..."
+  if git stash push -u -m "autopilot-$(date -u +%Y%m%dT%H%M%SZ)" --quiet 2>/dev/null; then
+    STASHED=1
+  else
+    log "⚠️  Stash failed — thử pull anyway"
+  fi
+fi
+
 git pull --rebase origin main --quiet 2>/dev/null || {
-  log "❌ git pull failed — có conflict, cần người xử lý"
+  log "❌ git pull failed — có conflict thật, cần người xử lý"
+  [[ "$STASHED" == 1 ]] && git stash pop --quiet 2>/dev/null || true
   echo "FAIL" >> "$STATE_FILE"
   exit 1
 }
@@ -68,6 +79,10 @@ if [[ -n "${VERCEL_TOKEN:-}" ]] && [[ -f "$ROOT/.env.local" ]]; then
   export VERCEL_TOKEN
   log "📡 Checking Vercel deploy..."
   npm run check-deploy 2>&1 | tail -8 || true
+fi
+
+if [[ "$STASHED" == 1 ]]; then
+  log "📦 Local stash giữ nguyên (git stash list) — không auto-pop để tránh conflict với agent"
 fi
 
 log "🏁 Orchestrator cycle done"
