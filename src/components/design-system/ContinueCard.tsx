@@ -1,9 +1,9 @@
 "use client";
 
-import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ThinProgress } from "./ThinProgress";
+import { MinimalButton } from "./MinimalButton";
 
 export interface ContinueCardProps {
   title: string;
@@ -61,20 +61,15 @@ export function ContinueCard({
         </p>
       )}
 
-      <Link
+      <MinimalButton
         href={href}
         onClick={handleClick}
         data-testid="continue-learning"
-        className={cn(
-          "flex min-h-[var(--minimal-touch)] w-full items-center justify-center gap-2",
-          "rounded-xl bg-primary text-primary-foreground font-bold",
-          "text-[var(--minimal-body-size)] transition-all duration-150",
-          "hover:opacity-90 active:scale-[0.98]"
-        )}
+        fullWidth
       >
         Học tiếp
         <ArrowRight className="size-4" />
-      </Link>
+      </MinimalButton>
     </article>
   );
 }
