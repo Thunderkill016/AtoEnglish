@@ -139,6 +139,35 @@
 **Done khi**: grep zinc-9.. in LessonSectionHeader.tsx ==0; header uses foreground/muted/card/border like Translate cards + UnitTemplate text-foreground; lint pass; 1 commit + push via git-push.sh main; BACKLOG=done + SHA; no ask user.
 **Completed:** 2026-06-26 — 0 zinc dark island (icon/bg/badge); icon uses bg-card border-border/60 + phase text; title=foreground, badge+sub=muted+muted card tokens; all gates 0+170 pass; commit a1bf33b + push via script; BACKLOG done; autonomous
 
+### TASK-085 — Login visual minimal
+**Mục tiêu**: `login/page.tsx` — thay 2 CTA gradient emerald (welcome "Bắt đầu" + email submit) bằng <MinimalButton variant="primary" fullWidth ...> từ design-system (flat bg-primary, consistent V2, no gradient). Thu gọn desktop left panel (w-[43%], p-16, 2 ambient blobs, 3 feature rows, gradient bg) → giảm padding/width/decor, flat bg-zinc-950 (dark) + simpler 2 rows copy; giữ full visual split + 3-step flow (0 welcome /1 level /2 auth). Giữ: all logic, onb answers, supabase auth, recap banner, Google btn, motion/slide, e2e selectors (text "Bắt đầu"), no change to step count or redirect. **Done khi:** Không gradient CTA; e2e onboarding pass; lint+test.
+**Bước thực hiện**:
+1. Search memory("TASK-085" + "login visual" + "MinimalButton" + "gradient" + "desktop panel") sim via logs/grep (prior empty, only refill) + read AGENTS.md (ALWAYS), AGENT_BACKLOG/PLAN/ROADMAP, CONTENT_STYLE.md §6–7 (blueprint context only), MINIMAL_REDESIGN_V2.md (§2 calls out login gradients/panel), src/app/login/page.tsx, src/components/design-system/MinimalButton.tsx + index, e2e/onboarding.spec.ts (button role text), globals.css minimal tokens.
+2. Grep codebase: confirm gradients only in 2 CTA + left bg + emoji illustration + 1 text span; 2 motion.button/Button that need swap; desktop panel structure to compact (remove blobs, shorten features, reduce p/w); identify only this file edit.
+3. Update BACKLOG: TASK-085 status `in_progress`.
+4. Update AGENT_PLAN.md với mục tiêu + bước + rủi ro cho TASK-085 (this section) + current focus.
+5. Backlog 3 ready (085-087) ≥2 → skip `bash scripts/agent-refill-backlog.sh` (read ROADMAP; KHÔNG hỏi).
+6. Edit src/app/login/page.tsx (minimal):
+   - Add import { MinimalButton } from "@/components/design-system";
+   - Replace welcome motion.button (line~510) gradient + py-4 rounded-2xl → <MinimalButton fullWidth onClick=... className="max-w-xs"> keep text; remove motion wrapper if not needed.
+   - Replace email submit inside form: the <Button type=submit class gradient ...> → <MinimalButton type="submit" fullWidth ... > keep children.
+   - Compact desktop: change w-[43%] to w-[36%]; p-16→p-10; bg-gradient-to-br ... to bg-zinc-950 (flat minimal); remove 2 motion ambient blob divs; reduce feature list from 3 to 2 items (keep 2 strongest); shorten bottom footer text.
+   - Keep emoji illustration, logo, all other copy, 3-step, right panel, forms unchanged.
+   - Ensure no gradient-* left in CTAs.
+7. `npm run lint && npm run test`; npx tsc --noEmit.
+8. Pass gates → update BACKLOG done + Nhật ký entry + SHA; update PLAN log table + write logs/agent/2026..._TASK-085.log (PHASE summary).
+9. git pull --rebase; git add src/app/login/page.tsx AGENT_BACKLOG.md AGENT_PLAN.md logs/agent/*; commit "refactor(login): replace gradient CTAs with MinimalButton; compact desktop panel; keep 3-step (TASK-085)"; `bash scripts/git-push.sh main`.
+**Rủi ro**:
+- Button size/height mismatch (Minimal uses var(--minimal-touch) 44px vs py-4 h-12) → visual ok per V2; if test fail on height adjust className only.
+- E2E onboarding: getByRole name /Bắt đầu/ still match (text unchanged); if click path broken by class only → revert minimal.
+- Desktop compact changes too much whitespace → keep logo+headline+2 bullets, still readable.
+- Dark/light: MinimalButton primary uses theme primary (emerald in tokens); login canvas mixed ok.
+- Google btn stays custom (no gradient); submit + start are the targeted.
+- No behavior change; pure visual per V2 mandate.
+- Fail 2 lần → blocked + lý do.
+- No secrets (pure UI); self-debug from lint/test/e2e output if run.
+**Done khi**: 0 "bg-gradient-to-r from-emerald" or "to-emerald-500" on CTA buttons; desktop panel simplified (no blobs, flat, shorter); 3-step intact; e2e onboarding pass (or unit if e2e needs server); lint+170t+tsc0 pass; 1 commit + push via git-push.sh main; BACKLOG=done + entry SHA+date; no ask; autonomous.
+
 ### TASK-045 — Sync AGENT_AUTOPILOT.md với auto-refill
 **Mục tiêu**: Làm cho AGENT_AUTOPILOT.md mô tả chính xác cơ chế tự động: daemon/orchestrator/pick-task tự gọi refill từ AGENT_ROADMAP.md khi ready < 2 (MIN_READY), script agent-refill-backlog.sh parse roadmap pool, chèn tối đa 4 task `ready` vào BACKLOG, commit+push (chore, skip ci). Xóa mọi hướng dẫn gợi ý "user thêm task thủ công" vào backlog (user chỉ thêm vào ROADMAP nếu muốn ưu tiên). Giữ phần "Việc cần làm thủ công 1 lần (P0)" vì là setup secrets/migration (khác task hàng ngày). Doc khớp scripts hiện tại (refill, pick, orchestrator, roadmap format). Chỉ sửa doc; không code/logic.
 **Bước thực hiện**:

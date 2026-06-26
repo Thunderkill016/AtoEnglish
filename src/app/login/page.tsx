@@ -8,6 +8,7 @@ import { Mail, Lock, Loader2, Sparkles, ArrowLeft, Sprout, Check } from "lucide-
 import { toast } from "sonner";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
+import { MinimalButton } from "@/components/design-system";
 import { LoginSchema, SignUpSchema } from "@/lib/security/validation";
 import {
   getDailyMinutes,
@@ -324,21 +325,9 @@ function LoginContent() {
   return (
     <div className="min-h-screen min-h-[100dvh] bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-50 font-sans flex flex-col lg:flex-row selection:bg-emerald-100 dark:selection:bg-emerald-950/30 selection:text-emerald-900 dark:selection:text-emerald-200">
 
-      {/* ── Left Column: Desktop only — not mounted on mobile to save animation cost ── */}
+      {/* ── Left Column: Desktop only — compact minimal (V2) — not mounted on mobile ── */}
       {isDesktop && (
-      <div className="hidden lg:flex w-[43%] bg-gradient-to-br from-zinc-900 via-emerald-950 to-zinc-950 p-16 text-white flex-col justify-between relative overflow-hidden select-none border-r border-zinc-800/30">
-        {/* Animated ambient blobs */}
-        <motion.div
-          animate={{ scale: [1, 1.15, 1], opacity: [0.08, 0.15, 0.08] }}
-          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-0 right-0 w-[450px] h-[450px] bg-emerald-500 rounded-full blur-3xl pointer-events-none"
-        />
-        <motion.div
-          animate={{ scale: [1, 1.1, 1], opacity: [0.08, 0.12, 0.08] }}
-          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-          className="absolute bottom-0 left-0 w-[450px] h-[450px] bg-emerald-600 rounded-full blur-3xl pointer-events-none"
-        />
-
+      <div className="hidden lg:flex w-[36%] bg-zinc-950 p-8 text-white flex-col justify-between relative overflow-hidden select-none border-r border-zinc-800/30">
         <Link href="/" className="flex items-center gap-2.5 z-10 self-start group">
           <motion.span
             whileHover={{ scale: 1.05, rotate: 5 }}
@@ -354,36 +343,32 @@ function LoginContent() {
           </div>
         </Link>
 
-        <div className="space-y-8 z-10 max-w-md my-auto">
+        <div className="space-y-6 z-10 max-w-md my-auto">
           <div className="inline-flex items-center gap-1.5 text-[10px] font-bold text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-full border border-emerald-500/20 uppercase tracking-wider">
             Giai đoạn thử nghiệm mở (Open Beta)
           </div>
-          <h2 className="text-3xl xl:text-4xl font-extrabold tracking-tight leading-tight">
+          <h2 className="text-2xl xl:text-3xl font-extrabold tracking-tight leading-tight">
             Làm chủ tiếng Anh từ số 0 bằng khoa học ghi nhớ.
           </h2>
-          <div className="space-y-4 text-sm text-zinc-300">
+          <div className="space-y-3 text-sm text-zinc-300">
             {[
               {
                 title: "Luyện nói phản xạ:",
-                desc: "Thực hành hội thoại tự nhiên và tự sửa phát âm chuẩn xác ngay lập tức.",
+                desc: "Hội thoại tự nhiên + tự sửa phát âm ngay.",
               },
               {
                 title: "Thẻ học thông minh (SRS):",
-                desc: "Thuật toán FSRS tối ưu hóa chu kỳ lặp lại giúp ghi nhớ từ vựng vĩnh viễn.",
-              },
-              {
-                title: "Lộ trình cá nhân hóa:",
-                desc: "Bài học ngắn 15 phút mỗi ngày thiết kế riêng cho người Việt mất gốc.",
+                desc: "FSRS tối ưu lặp lại — ghi nhớ vĩnh viễn.",
               },
             ].map((item) => (
               <div
                 key={item.title}
-                className="flex items-center gap-3.5 bg-white/5 backdrop-blur-sm border border-white/5 p-4 rounded-2xl hover:border-emerald-500/25 transition-all duration-300"
+                className="flex items-center gap-3 bg-white/5 border border-white/5 p-3 rounded-xl"
               >
                 <div className="size-5 rounded-full bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center shrink-0">
                   <Check className="size-3 text-emerald-400" strokeWidth={3} />
                 </div>
-                <p className="text-zinc-300 leading-relaxed text-left">
+                <p className="text-zinc-300 leading-relaxed text-left text-sm">
                   <strong className="text-white">{item.title}</strong> {item.desc}
                 </p>
               </div>
@@ -391,8 +376,8 @@ function LoginContent() {
           </div>
         </div>
 
-        <div className="z-10 text-xs text-zinc-400 border-t border-zinc-800/80 pt-6 text-left">
-          Học tập hoàn toàn miễn phí. Tiến trình được tự động đồng bộ đám mây.
+        <div className="z-10 text-xs text-zinc-400 border-t border-zinc-800/80 pt-4 text-left">
+          Miễn phí. Tiến trình đồng bộ đám mây.
         </div>
       </div>
       )} {/* end isDesktop left panel */}
@@ -472,7 +457,7 @@ function LoginContent() {
                     transition={{ type: "spring", stiffness: 300, damping: 24 }}
                     className="relative"
                   >
-                    <div className="size-24 rounded-3xl bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center text-5xl shadow-xl shadow-emerald-500/20">
+                    <div className="size-24 rounded-3xl bg-emerald-600 flex items-center justify-center text-5xl shadow-xl shadow-emerald-500/20">
                       🌱
                     </div>
                     <motion.div
@@ -505,14 +490,13 @@ function LoginContent() {
                   </div>
 
                   {/* Primary CTA */}
-                  <motion.button
+                  <MinimalButton
                     onClick={() => { setDirection(1); setOnboardingStep(1); }}
-                    whileHover={{ scale: 1.02, y: -2 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="w-full max-w-xs bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-700 hover:to-emerald-600 text-white font-bold py-4 rounded-2xl text-base shadow-lg shadow-emerald-500/20 hover:shadow-xl hover:shadow-emerald-500/25 transition-all duration-300 border-t border-white/10"
+                    fullWidth
+                    className="max-w-xs"
                   >
                     Bắt đầu — Miễn phí 🚀
-                  </motion.button>
+                  </MinimalButton>
 
                   {/* Already have account */}
                   <button
@@ -689,22 +673,20 @@ function LoginContent() {
                         </div>
                       </div>
 
-                      <motion.div whileHover={{ scale: 1.01, y: -0.5 }} whileTap={{ scale: 0.99 }}>
-                        <Button
-                          type="submit"
-                          disabled={isLoading || isGoogleLoading}
-                          className="w-full bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-700 hover:to-emerald-600 text-white font-bold h-12 rounded-xl text-sm gap-2 active:scale-[0.98] transition-all duration-300 shadow-md shadow-emerald-600/10 hover:shadow-lg hover:shadow-emerald-600/20 border-t border-white/10"
-                        >
-                          {isLoading && <Loader2 className="size-4 animate-spin" />}
-                          <span>
-                            {isSignUp
-                              ? hasAnswers
-                                ? "Kích hoạt lộ trình học"
-                                : "Đăng ký tài khoản"
-                              : "Đăng nhập bằng Email"}
-                          </span>
-                        </Button>
-                      </motion.div>
+                      <MinimalButton
+                        type="submit"
+                        disabled={isLoading || isGoogleLoading}
+                        fullWidth
+                      >
+                        {isLoading && <Loader2 className="size-4 animate-spin" />}
+                        <span>
+                          {isSignUp
+                            ? hasAnswers
+                              ? "Kích hoạt lộ trình học"
+                              : "Đăng ký tài khoản"
+                            : "Đăng nhập bằng Email"}
+                        </span>
+                      </MinimalButton>
                     </form>
 
                     {/* Toggle + redo survey */}

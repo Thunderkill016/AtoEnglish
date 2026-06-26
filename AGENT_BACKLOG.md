@@ -541,10 +541,10 @@
 
 
 ### TASK-085 — Login visual minimal
-- **Status:** `ready`
+- **Status:** `in_progress`
 - **Mô tả:** `login/page.tsx` — `MinimalButton` thay gradient; thu gọn desktop panel; giữ 3-step.
 - **Done khi:** Không gradient CTA; e2e onboarding pass.
-- **Started:** auto-refill
+- **Started:** 2026-06-26 — autopilot (PHASE1: search_memory sim logs/grep empty prior + read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6-7 + MINIMAL_V2 + login/page + design-system/MinimalButton + e2e/onboarding + grep gradients; PHASE2: PLAN update + BACKLOG in_progress (3ready>=2 skip refill); PHASE3: impl)
 
 ### TASK-086 — Certificate eligible view minimal
 - **Status:** `ready`
