@@ -1,5 +1,12 @@
 import { UnitData } from "@/components/learn/UnitTemplate";
 
+
+// ─────────────────────────────────────────────────────────────────────────────
+// UNIT-27 — Get Things Done  (B1)
+// Standardized header + section comments per lesson-blueprint.ts (CONTENT_BLOCK_ORDER)
+// + lesson-center-reference.ts (ESA Engage/Study/Activate, CELTA, Nation, CLT VN)
+// Gold sample: src/lib/data/units/unit1.ts — field order meta→hook→warmup→vocab→grammar→exercises→dialogues→fluency→output→review
+// ─────────────────────────────────────────────────────────────────────────────
 export const unit27: UnitData = {
   unitId: "unit-27",
   title: "Unit 27: Get Things Done",
@@ -9,18 +16,26 @@ export const unit27: UnitData = {
   description: "Nắm 20 phrasal verbs thiết yếu nhất trong tiếng Anh công sở — look up, give up, carry out, deal with. Không có phrasal verbs → tiếng Anh nghe như robot.",
   badgeName: "Chuyên Gia Hành Động",
   badgeEmoji: "⚡",
+
+  // ── HOOK: situation (real VN context) + learningOutcomes (2–5 can-do) + culturalNote (pragmatic VN↔EN)
   situation: "Sếp nhắn: 'Can you look into the issue, sort it out, and follow up with the client?' Bạn hiểu không? Nếu không biết phrasal verbs, bạn bỏ lỡ 40% nội dung giao tiếp hàng ngày trong môi trường quốc tế.",
   learningOutcomes: [
     "Nhận biết và hiểu 20 phrasal verbs thiết yếu nhất trong công việc",
     "Dùng phrasal verbs tự nhiên trong email, cuộc họp và giao tiếp hàng ngày",
     "Phân biệt separable vs inseparable phrasal verbs",
   ],
+
+  // ── HOOK (cultural): pragmatic note
   culturalNote: 'Người bản ngữ dùng phrasal verbs <span class="text-emerald-400 font-semibold">liên tục</span> — thay vì nói <span class="text-zinc-400">"investigate"</span>, họ nói <span class="text-emerald-400">"look into"</span>. Thay vì <span class="text-zinc-400">"continue"</span>, họ nói <span class="text-emerald-400">"carry on"</span>. Không học phrasal verbs → tiếng Anh của bạn nghe formal quá mức, cứng nhắc, không tự nhiên.',
+
+  // ── WARMUP: ≥3 short phrases (SRS + prior knowledge activation)
   warmupGreetings: [
     { emoji: "🔍", en: "Can you look into this issue and get back to me by Friday?", vn: "Bạn có thể điều tra vấn đề này và phản hồi lại tôi trước thứ Sáu không?", context: "look into = investigate | get back to = respond" },
     { emoji: "✅", en: "I'll carry out the tests and sort out any problems.", vn: "Tôi sẽ thực hiện các bài kiểm tra và giải quyết mọi vấn đề.", context: "carry out = perform | sort out = resolve" },
     { emoji: "📞", en: "Please follow up with the client and find out their timeline.", vn: "Vui lòng theo dõi với khách hàng và tìm hiểu tiến độ của họ.", context: "follow up = check progress | find out = discover" },
   ],
+
+  // ── VOCABULARY: 8–20 words, pre-teach BEFORE dialogues; l1_interference_vn (A1 100%, B1+ ≥50%)
   vocab: [
     { id: 1, word: "look into", emoji: "🔍", phonetic: "/lʊk ˈɪntə/", meaning: "điều tra / xem xét", example: "Can you look into why the sales dropped this month?", example2: "I'll look into the technical issue and report back.", collocation: "look into a problem / look into the matter", audio: "/audio/unit27/look_into.mp3" },
     { id: 2, word: "carry out", emoji: "✅", phonetic: "/ˈkæri aʊt/", meaning: "thực hiện / tiến hành", example: "We need to carry out a full audit of the system.", example2: "The tests were carried out successfully.", collocation: "carry out research / carry out a task / carry out an investigation", audio: "/audio/unit27/carry_out.mp3", l1_interference_vn: "⚠️ = thực hiện. \'Carry out a plan\' / \'carry the plan out\'. Không tách được với pronoun." },
@@ -35,6 +50,8 @@ export const unit27: UnitData = {
     { id: 11, word: "take on", emoji: "💪", phonetic: "/teɪk ɒn/", meaning: "đảm nhận / tiếp nhận", example: "Are you willing to take on the project manager role?", example2: "We took on three new clients this quarter.", collocation: "take on responsibility / take on a project / take on staff", audio: "/audio/unit27/take_on.mp3", l1_interference_vn: "⚠️ Hai nghĩa: (1) đảm nhận trách nhiệm, (2) tuyển dụng \'take on new staff\'. Phân biệt ngữ cảnh." },
     { id: 12, word: "hand in", emoji: "📤", phonetic: "/hænd ɪn/", meaning: "nộp / giao nộp", example: "Please hand in your report by 5pm today.", example2: "She handed in her resignation yesterday.", collocation: "hand in a report / hand in your notice / hand in work", audio: "/audio/unit27/hand_in.mp3" },
   ],
+
+  // ── DIALOGUES: ≥1 dialogue AFTER vocab (98% coverage)
   dialogues: [
     {
       id: 1,
@@ -63,6 +80,8 @@ export const unit27: UnitData = {
       ],
     },
   ],
+
+  // ── EXERCISES_INPUT: listenAndChoose ≥5 (controlled practice)
   listenAndChoose: [
     { id: "lac1", audio_text: "Can you look into the client complaint we received", options: ["Can you look at the client complaint we received", "Can you look into the client complaint we received", "Can you look for the client complaint we received", "Can you look up the client complaint we received"], answer: "Can you look into the client complaint we received" },
     { id: "lac2", audio_text: "I'll sort it out right away", options: ["I'll sort out it right away", "I'll sort it out right away", "I'll sort out right away", "I'll sorting it out right away"], answer: "I'll sort it out right away" },
@@ -70,12 +89,16 @@ export const unit27: UnitData = {
     { id: "lac4", audio_text: "I'll hand in the report by Thursday", options: ["I'll hand the report in by Thursday", "I'll hand in the report by Thursday", "I'll handing in the report by Thursday", "Both A and B are correct"], answer: "Both A and B are correct" },
     { id: "lac5", audio_text: "She brought up the budget issue in the meeting", options: ["She brought the budget issue up in the meeting", "She brought up the budget issue in the meeting", "She bring up the budget issue in the meeting", "Both A and B are correct"], answer: "Both A and B are correct" },
   ],
+
+  // ── OUTPUT: speaking prompts (freer production)
   speaking: {
     level1Prompt: "At work, I often need to {input} and {input}. When problems arise, I always try to {input}.",
     level1Placeholder: "Ví dụ: follow up with clients — set up meetings — sort things out quickly...",
     level2Situation: "Mô tả một ngày làm việc điển hình bằng phrasal verbs. Bao gồm ít nhất 8 phrasal verbs từ bài học. Kể về: buổi sáng (set up, carry out), vấn đề xảy ra (sort out, deal with), và cuối ngày (hand in, follow up).",
     level2Hint: "In the morning, I [set up / carry out]. I had to [deal with / sort out] [issue]. Then I [followed up / found out]. By the end of the day, I [handed in / brought up]. I never [give up / put off] important tasks.",
   },
+
+  // ── GRAMMAR: Inductive (Meaning→Form→CCQ) + vnNote L1
   grammar: {
     title: "Phrasal Verbs — Tách Được & Không Tách Được",
     rule: "SEPARABLE (có thể tách): Object có thể đứng giữa hoặc sau\n→ 'Sort OUT the problem' = 'Sort the problem OUT'\n→ Nếu object là đại từ (it/them) → PHẢI đứng giữa:\n  ✅ 'Sort IT out' ❌ 'Sort out IT'\n\nINSEPARABLE (không thể tách): Object LUÔN đứng sau\n→ 'Look INTO the issue' (✅)\n→ 'Look the issue into' (❌)\n\nINSEPARABLE: look into, deal with, get back to, carry out, find out, go through",
@@ -104,6 +127,8 @@ export const unit27: UnitData = {
       explanation: "Với separable phrasal verb + pronoun → pronoun PHẢI đứng giữa: 'sort IT out' ✅. 'look into' là inseparable → không thể tách: 'look it into' ❌.",
     },
   },
+
+  // ── EXERCISES_INPUT: practiceQuiz (active recall)
   practiceQuiz: [
     { id: "pq1", type: "multiple-choice", question: "Chọn phrasal verb đúng: 'Can you ___ why the system crashed?'", options: ["look into", "look up", "look at", "look for"], answer: "look into" },
     { id: "pq2", type: "multiple-choice", question: "Đúng với pronoun: 'The problem is urgent. Please sort ___.'", options: ["out it", "it out", "it up", "out them"], answer: "it out" },
@@ -111,6 +136,8 @@ export const unit27: UnitData = {
     { id: "pq4", type: "multiple-choice", question: "'Please ___ your assignment by 5pm.' (nộp bài)", options: ["hand in", "hand out", "hand over", "hand up"], answer: "hand in" },
     { id: "pq5", type: "multiple-choice", question: "Nghĩa của 'bring up': 'She brought up a concern in the meeting.'", options: ["mang đến", "đề cập / nêu lên", "tăng lên", "giới thiệu"], answer: "đề cập / nêu lên" },
   ],
+
+  // ── EXERCISES_INPUT: matching
   matchingExercise: {
     title: "Nối phrasal verb với nghĩa đúng",
     pairs: [
@@ -121,6 +148,8 @@ export const unit27: UnitData = {
       { left: "find out", right: "tìm hiểu / phát hiện" },
     ],
   },
+
+  // ── OUTPUT: practiceTranslate (VN→EN ≥3) + speaking (level1/2)
   practiceTranslate: [
     {
       id: "pt-1",
@@ -139,6 +168,8 @@ export const unit27: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: sentenceCorrection
   sentenceCorrectionExercises: [
     {
       id: "sc27-1",
@@ -156,6 +187,8 @@ export const unit27: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: listenAndArrange
   listenAndArrangeExercises: [
     {
       id: "la27-1",
@@ -173,6 +206,8 @@ export const unit27: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: wordBank
   wordBankExercises: [
     {
       id: "wb1",
@@ -194,11 +229,15 @@ export const unit27: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: scramble
   scrambleExercises: [
     { id: "s27-1", prompt_vn: "Bạn có thể điều tra vấn đề này không?", words: ["Can", "you", "look", "into", "this", "issue", "?"], answer: "Can you look into this issue ?" },
     { id: "s27-2", prompt_vn: "Tôi sẽ thiết lập cuộc họp và không hoãn nó lại.", words: ["I", "will", "set", "up", "the", "meeting", "and", "not", "put", "it", "off", "."], answer: "I will set up the meeting and not put it off ." },
     { id: "s27-3", prompt_vn: "Cô ấy đảm nhận dự án và nộp báo cáo trước thứ Năm.", words: ["She", "took", "on", "the", "project", "and", "handed", "in", "the", "report", "by", "Thursday", "."], answer: "She took on the project and handed in the report by Thursday ." },
   ],
+
+  // ── REVIEW: Final quiz ≥5 (retrieval practice)
   quiz: [
     { id: "fq1", type: "multiple-choice", question: "Dịch: 'Tôi sẽ theo dõi với khách hàng và tìm hiểu tiến độ của họ.'", options: ["I'll follow with the client and find their timeline.", "I'll follow up with the client and find out their timeline.", "I'll follow up with the client and find their timeline out.", "I'll follow the client and find out their timeline."], answer: "I'll follow up with the client and find out their timeline.",
       explanation_vn: "'follow up with' = theo dõi; 'find out' = tìm hiểu — cả hai là phrasal verb inseparable đúng chuẩn." },
@@ -216,11 +255,15 @@ export const unit27: UnitData = {
     { id: "q-ex6", type: "multiple-choice", question: "'Make someone do': cấu trúc đúng:", options: ["make + obj + to-inf", "make + obj + V-ing", "make + obj + bare inf", "make + obj + V3"], answer: "make + obj + bare inf" },
     { id: "q-ex7", type: "multiple-choice", question: "'I got my phone stolen.' nghĩa là:", options: ["Tôi đã lấy cắp điện thoại", "Điện thoại của tôi bị lấy cắp", "Tôi đã mua điện thoại", "Tôi tìm được điện thoại"], answer: "Điện thoại của tôi bị lấy cắp" },
   ],
+
+  // ── REVIEW: Exit quiz + cumulativeReview (spiral) + reading (B1+)
   cumulativeReviewQuestions: [
     { id: "cr27-1", question: "Ôn tập Unit 26 — Đúng: 'I suggest ___ a new approach.'", options: ["to try", "trying", "try", "to trying"], answer: "trying", type: "multiple-choice" },
     { id: "cr27-2", question: "Ôn tập Unit 25 — Điền: 'She is the specialist ___ designed our system.'", options: [], answer: "who", type: "cloze" },
     { id: "cr27-3", question: "Ôn tập Unit 24 — Passive đúng: 'The report ___ (submit) before 5pm.'", options: ["was submitted", "submitted", "is submitting", "submits"], answer: "was submitted", type: "multiple-choice" },
   ],
+
+  // ── FLUENCY: pronunciationFocus
   pronunciationFocus: {
     phoneme: "causative tone",
     description: "Causative have — stress pattern khi là causative khác với have thông thường",
@@ -233,6 +276,8 @@ export const unit27: UnitData = {
     ],
   },
 
+
+  // ── FLUENCY: fluencyDrill ≥5 (Nation Strand 4 automaticity)
   fluencyDrill: {
     items: [
       { en: "Can you look into this and get back to me?", vn: "Bạn có thể điều tra cái này và phản hồi lại tôi không?" },
@@ -245,6 +290,8 @@ export const unit27: UnitData = {
       { en: "I'll bring up the budget issue in tomorrow's meeting", vn: "Tôi sẽ đề cập vấn đề ngân sách trong cuộc họp ngày mai" },
     ],
   },
+
+  // ── REVIEW: Reading passage for skills integration
   readingPassage: {
     id: "unit27-reading-1",
     title: "Getting Things Done at Work",
@@ -313,6 +360,8 @@ export const unit27: UnitData = {
       },
     ],
   },
+
+  // ── OUTPUT: shadowing
   shadowingVideoId: "ZiQpOt7R3r8",
 };
 

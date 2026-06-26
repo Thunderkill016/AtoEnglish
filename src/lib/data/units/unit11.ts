@@ -1,5 +1,12 @@
 import { UnitData } from "@/components/learn/UnitTemplate";
 
+
+// ─────────────────────────────────────────────────────────────────────────────
+// UNIT-11 — Health & Feelings  (A1)
+// Standardized header + section comments per lesson-blueprint.ts (CONTENT_BLOCK_ORDER)
+// + lesson-center-reference.ts (ESA Engage/Study/Activate, CELTA, Nation, CLT VN)
+// Gold sample: src/lib/data/units/unit1.ts — field order meta→hook→warmup→vocab→grammar→exercises→dialogues→fluency→output→review
+// ─────────────────────────────────────────────────────────────────────────────
 export const unit11: UnitData = {
   unitId: "unit-11",
   title: "Unit 11: Health & Feelings",
@@ -8,6 +15,8 @@ export const unit11: UnitData = {
   estimatedTime: 40,
   description: "Học từ vựng về sức khỏe, cảm xúc và cách diễn đạt tình trạng bản thân bằng tiếng Anh.",
   badgeName: "Người Khỏe Mạnh",
+
+  // ── HOOK: situation (real VN context) + learningOutcomes (2–5 can-do) + culturalNote (pragmatic VN↔EN)
   situation: "Bạn không khỏe và cần giải thích triệu chứng cho bác sĩ người nước ngoài, đồng thời nói về cảm xúc với bạn bè.",
   learningOutcomes: [
     "Mô tả triệu chứng bệnh và tình trạng sức khỏe bằng tiếng Anh",
@@ -15,12 +24,18 @@ export const unit11: UnitData = {
     "Hỏi thăm sức khỏe và cảm xúc của người khác"
   ],
   badgeEmoji: "💪",
+
+  // ── WARMUP: ≥3 short phrases (SRS + prior knowledge activation)
   warmupGreetings: [
     { emoji: "🤒", en: "I have a headache.", vn: "Tôi bị đau đầu.", context: "Nói về triệu chứng bệnh" },
     { emoji: "😊", en: "I feel happy today.", vn: "Hôm nay tôi cảm thấy vui.", context: "Diễn đạt cảm xúc" },
     { emoji: "😢", en: "She feels tired after work.", vn: "Cô ấy cảm thấy mệt sau khi làm việc.", context: "Mô tả cảm xúc của người khác" }
   ],
+
+  // ── HOOK (cultural): pragmatic note
   culturalNote: "Người Anh thường hỏi <span class=\"text-emerald-400 font-semibold\">How are you feeling?</span> thay vì <span class=\"text-emerald-400 font-semibold\">Are you sick?</span> khi lo lắng về sức khỏe ai đó. Khi nói về bệnh tật, dùng <span class=\"text-emerald-400 font-semibold\">I have a...</span> cho triệu chứng và <span class=\"text-emerald-400 font-semibold\">I feel...</span> cho cảm xúc/trạng thái.",
+
+  // ── VOCABULARY: 8–20 words, pre-teach BEFORE dialogues; l1_interference_vn (A1 100%, B1+ ≥50%)
   vocab: [
     { id: 1, word: "headache", emoji: "🤕", phonetic: "/ˈhɛdeɪk/", meaning: "đau đầu", example: "I have a headache.", example2: "She gets headaches when she is stressed.", collocation: "have a headache", audio: "/audio/unit11/headache.mp3" , l1_interference_vn: "⚠️ Đọc: HEAD-ache /ˈhɛdeɪk/ — 'ache' đọc /eɪk/ như 'cake'. Không phải 'head-ah-che'." },
     { id: 2, word: "cold", emoji: "🤧", phonetic: "/kəʊld/", meaning: "cảm lạnh", example: "He has a cold.", example2: "I have a bad cold this week.", collocation: "have a cold / catch a cold", audio: "/audio/unit11/cold.mp3" , l1_interference_vn: "⚠️ 'Have a cold' (bị cảm) ≠ 'feel cold' (cảm thấy lạnh). 'I have a cold' — cần mạo từ 'a'." },
@@ -35,6 +50,8 @@ export const unit11: UnitData = {
     { id: 11, word: "better", emoji: "✅", phonetic: "/ˈbɛtər/", meaning: "khỏe hơn / tốt hơn", example: "I feel better today, thank you.", example2: "She is getting better after her illness.", collocation: "feel better / get better", audio: "/audio/unit11/better.mp3" , l1_interference_vn: "⚠️ So sánh bất quy tắc của 'good'. Không phải 'gooder' hay 'more good'." },
     { id: 12, word: "worried", emoji: "😟", phonetic: "/ˈwʌrid/", meaning: "lo lắng", example: "I feel worried about my health.", example2: "She looks worried. What's wrong?", collocation: "feel worried / look worried", audio: "/audio/unit11/worried.mp3", l1_interference_vn: "⚠️ 'Worried ABOUT something' — giới từ 'about'. 'I'm worried about the exam'. KHÔNG 'worried for' hay 'worried of'." },
   ],
+
+  // ── DIALOGUES: ≥1 dialogue AFTER vocab (98% coverage)
   dialogues: [
     {
       id: 1,
@@ -65,6 +82,8 @@ export const unit11: UnitData = {
       ]
     },
   ],
+
+  // ── EXERCISES_INPUT: listenAndChoose ≥5 (controlled practice)
   listenAndChoose: [
     { id: "lac1", audio_text: "I have a headache", options: ["I have a stomachache", "I have a fever", "I have a headache", "I have a cold"], answer: "I have a headache" },
     { id: "lac2", audio_text: "She feels tired", options: ["She feels happy", "She feels stressed", "She feels tired", "He feels tired"], answer: "She feels tired" },
@@ -72,12 +91,16 @@ export const unit11: UnitData = {
     { id: "lac4", audio_text: "He has a cold and a fever", options: ["He has a cold and a headache", "She has a cold and a fever", "He has a cold and a fever", "He has a cough and a fever"], answer: "He has a cold and a fever" },
     { id: "lac5", audio_text: "You should rest", options: ["You should eat", "You should rest", "She should rest", "You should study"], answer: "You should rest" },
   ],
+
+  // ── OUTPUT: speaking prompts (freer production)
   speaking: {
     level1Prompt: "I feel {input} today.",
     level1Placeholder: "Ví dụ: happy, tired, stressed, better...",
     level2Situation: "Bạn đang gọi điện cho bạn bè để xin vắng mặt buổi học nhóm vì bạn đang bị ốm. Mô tả triệu chứng và cảm xúc của bạn.",
     level2Hint: "Hi [tên]! I'm sorry I can't come today. I have a [triệu chứng]. I feel very [cảm xúc]. I'm [taking medicine/resting]. I hope I'll feel better by [thời gian].",
   },
+
+  // ── GRAMMAR: Inductive (Meaning→Form→CCQ) + vnNote L1
   grammar: {
     title: "I have... / I feel... — Sức khỏe và Cảm xúc",
     rule: "I/You/We/They have + a/an + illness  |  He/She/It has + a/an + illness  |  Subject + feel(s) + adjective",
@@ -101,6 +124,8 @@ export const unit11: UnitData = {
       answer: "She has a cold and feels tired.",
     },
   },
+
+  // ── EXERCISES_INPUT: matching
   matchingExercise: {
     title: "Nối triệu chứng / cảm xúc với nghĩa",
     pairs: [
@@ -111,17 +136,23 @@ export const unit11: UnitData = {
       { left: "better", right: "khỏe hơn" },
     ],
   },
+
+  // ── EXERCISES_INPUT: practiceQuiz (active recall)
   practiceQuiz: [
     { id: "pq1", question: "Chọn câu đúng với 'She':", options: ["She have a headache.", "She has a headache.", "She having a headache.", "She is have a headache."], answer: "She has a headache.", type: "multiple-choice" },
     { id: "pq2", question: "Dùng 'feel' để nói về điều gì?", options: ["Triệu chứng bệnh", "Cảm xúc / trạng thái", "Địa điểm", "Thời gian"], answer: "Cảm xúc / trạng thái", type: "multiple-choice" },
     { id: "pq3", question: "Điền từ còn thiếu: 'I ___ very tired today.'", options: [], answer: "feel", type: "cloze" },
   ],
 
+
+  // ── OUTPUT: practiceTranslate (VN→EN ≥3) + speaking (level1/2)
   practiceTranslate: [
     { id: "pt11-1", prompt_vn: "Tôi bị đau đầu.", answer: "I have a headache." },
     { id: "pt11-2", prompt_vn: "Bạn cảm thấy thế nào hôm nay?", answer: "How do you feel today?" },
     { id: "pt11-3", prompt_vn: "Cô ấy bị cảm lạnh.", answer: "She has a cold." },
   ],
+
+  // ── REVIEW: Final quiz ≥5 (retrieval practice)
   quiz: [
     { id: "q1", question: "Câu nào đúng về bệnh:", options: ["I have headache.", "I have a headache.", "I feel a headache.", "I am a headache."], answer: "I have a headache.", type: "multiple-choice",
       explanation_vn: "Tên bệnh (headache, cold, fever) là danh từ đếm được số ít → bắt buộc có mạo từ 'a': 'I have A headache'." },
@@ -134,6 +165,8 @@ export const unit11: UnitData = {
     { id: "q6", question: "Tôi bị đau đầu và cảm thấy mệt.", options: [], answer: "I have a headache and I feel tired.", type: "translate" },
     { id: "q7", question: "Bạn nên nghỉ ngơi khi bạn bị ốm.", options: [], answer: "You should rest when you are sick.", type: "translate" },
   ],
+
+  // ── EXERCISES_INPUT: sentenceCorrection
   sentenceCorrectionExercises: [
     {
       id: "sc11-1",
@@ -151,6 +184,8 @@ export const unit11: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: listenAndArrange
   listenAndArrangeExercises: [
     {
       id: "la11-1",
@@ -168,6 +203,8 @@ export const unit11: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: wordBank
   wordBankExercises: [
     {
       id: "wb1",
@@ -189,6 +226,8 @@ export const unit11: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: scramble
   scrambleExercises: [
     {
       id: "s11-1",
@@ -209,6 +248,8 @@ export const unit11: UnitData = {
       answer: "You should take medicine and rest .",
     },
   ],
+
+  // ── REVIEW: Exit quiz + cumulativeReview (spiral) + reading (B1+)
   cumulativeReviewQuestions: [
     {
       id: "cr11-1",
@@ -233,6 +274,8 @@ export const unit11: UnitData = {
     },
   ],
 
+
+  // ── FLUENCY: pronunciationFocus
   pronunciationFocus: {
     phoneme: "/θ/ (health words)",
     description: "Âm /θ/ trong các từ y tế: health, teeth, breath, mouth",
@@ -246,6 +289,8 @@ export const unit11: UnitData = {
     ],
   },
 
+
+  // ── FLUENCY: fluencyDrill ≥5 (Nation Strand 4 automaticity)
   fluencyDrill: {
     items: [
       { en: "I am working", vn: "Tôi đang làm việc" },
@@ -258,6 +303,8 @@ export const unit11: UnitData = {
       { en: "I am not free now", vn: "Tôi không rảnh lúc này" },
     ],
   },
+
+  // ── REVIEW: Reading passage for skills integration
   readingPassage: {
     id: "unit11-reading-1",
     title: "How Are You Feeling?",
@@ -324,6 +371,8 @@ export const unit11: UnitData = {
       },
     ],
   },
+
+  // ── OUTPUT: shadowing
   shadowingVideoId: "nkJJh0KJiB0",
 };
 

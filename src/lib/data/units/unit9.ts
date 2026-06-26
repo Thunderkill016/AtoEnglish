@@ -1,5 +1,12 @@
 import { UnitData } from "@/components/learn/UnitTemplate";
 
+
+// ─────────────────────────────────────────────────────────────────────────────
+// UNIT-9 — Places & Directions  (A1)
+// Standardized header + section comments per lesson-blueprint.ts (CONTENT_BLOCK_ORDER)
+// + lesson-center-reference.ts (ESA Engage/Study/Activate, CELTA, Nation, CLT VN)
+// Gold sample: src/lib/data/units/unit1.ts — field order meta→hook→warmup→vocab→grammar→exercises→dialogues→fluency→output→review
+// ─────────────────────────────────────────────────────────────────────────────
 export const unit9: UnitData = {
   unitId: "unit-9",
   title: "Unit 9: Places & Directions",
@@ -8,6 +15,8 @@ export const unit9: UnitData = {
   estimatedTime: 45,
   description: "Học từ vựng địa điểm, cách hỏi và chỉ đường bằng tiếng Anh sử dụng giới từ nơi chốn.",
   badgeName: "Người Dẫn Đường",
+
+  // ── HOOK: situation (real VN context) + learningOutcomes (2–5 can-do) + culturalNote (pragmatic VN↔EN)
   situation: "Khách du lịch nước ngoài hỏi bạn đường đến bưu điện — bạn cần hỏi lại và chỉ đường rõ ràng bằng tiếng Anh.",
   learningOutcomes: [
     "Hỏi đường và mô tả vị trí địa điểm bằng tiếng Anh",
@@ -15,12 +24,18 @@ export const unit9: UnitData = {
     "Nói về các địa điểm quen thuộc gần chỗ bạn sống"
   ],
   badgeEmoji: "🗺️",
+
+  // ── WARMUP: ≥3 short phrases (SRS + prior knowledge activation)
   warmupGreetings: [
     { emoji: "📍", en: "The bank is next to the post office.", vn: "Ngân hàng ở cạnh bưu điện.", context: "Mô tả vị trí địa điểm" },
     { emoji: "❓", en: "Excuse me, where is the nearest café?", vn: "Xin lỗi, quán cà phê gần nhất ở đâu?", context: "Hỏi đường lịch sự" },
     { emoji: "➡️", en: "Go straight and turn left.", vn: "Đi thẳng và rẽ trái.", context: "Hướng dẫn đường đơn giản" }
   ],
+
+  // ── HOOK (cultural): pragmatic note
   culturalNote: "Khi hỏi đường bằng tiếng Anh, luôn bắt đầu bằng <span class=\"text-emerald-400 font-semibold\">Excuse me...</span> hoặc <span class=\"text-emerald-400 font-semibold\">Sorry to bother you...</span> trước khi hỏi. Nói thẳng 'Where is...?' mà không có lời mở đầu có thể bị coi là thiếu lịch sự ở các nước nói tiếng Anh.",
+
+  // ── VOCABULARY: 8–20 words, pre-teach BEFORE dialogues; l1_interference_vn (A1 100%, B1+ ≥50%)
   vocab: [
     { id: 1, word: "bank", emoji: "🏦", phonetic: "/bæŋk/", meaning: "ngân hàng", example: "The bank is on the main street.", example2: "I need to go to the bank today.", collocation: "go to the bank", audio: "/audio/unit9/bank.mp3", l1_interference_vn: "⚠️ 'At the bank' (giới từ). 'Go to the bank'. 'Bank' cũng = bờ sông (riverbank) — nhớ ngữ cảnh." },
     { id: 2, word: "hospital", emoji: "🏥", phonetic: "/ˈhɒspɪtəl/", meaning: "bệnh viện", example: "The hospital is opposite the park.", example2: "She works at the hospital.", collocation: "go to hospital / local hospital", audio: "/audio/unit9/hospital.mp3" , l1_interference_vn: "⚠️ 'Go to hospital' (Anh, không mạo từ) vs 'go to THE hospital' (Mỹ). Cả hai đều đúng." },
@@ -35,6 +50,8 @@ export const unit9: UnitData = {
     { id: 11, word: "turn right", emoji: "➡️", phonetic: "/tɜːn raɪt/", meaning: "rẽ phải", example: "Turn right after the bridge.", example2: "Turn right and the bank is on your left.", collocation: "turn right at the crossroads", audio: "/audio/unit9/turn_right.mp3" , l1_interference_vn: "⚠️ Âm /r/ tiếng Anh không cuộn lưỡi. Phát âm từ cuống họng, không chạm vòm miệng." },
     { id: 12, word: "straight ahead", emoji: "⬆️", phonetic: "/streɪt əˈhɛd/", meaning: "đi thẳng", example: "Go straight ahead for two blocks.", example2: "The hotel is straight ahead.", collocation: "go straight ahead", audio: "/audio/unit9/straight_ahead.mp3" , l1_interference_vn: "⚠️ 'gh' trong 'straight' hoàn toàn CÂM — đọc /streɪt/. Không đọc 'straight-t'." },
   ],
+
+  // ── DIALOGUES: ≥1 dialogue AFTER vocab (98% coverage)
   dialogues: [
     {
       id: 1,
@@ -65,6 +82,8 @@ export const unit9: UnitData = {
       ]
     },
   ],
+
+  // ── EXERCISES_INPUT: listenAndChoose ≥5 (controlled practice)
   listenAndChoose: [
     { id: "lac1", audio_text: "The bank is next to the post office", options: ["The bank is opposite the post office", "The bank is next to the post office", "The bank is between the post offices", "The post office is next to the bank"], answer: "The bank is next to the post office" },
     { id: "lac2", audio_text: "Turn left at the traffic light", options: ["Turn right at the traffic light", "Go straight at the traffic light", "Turn left at the corner", "Turn left at the traffic light"], answer: "Turn left at the traffic light" },
@@ -72,12 +91,16 @@ export const unit9: UnitData = {
     { id: "lac4", audio_text: "Go straight ahead for two blocks", options: ["Turn left for two blocks", "Go straight ahead for two blocks", "Go straight for one block", "Go ahead two streets"], answer: "Go straight ahead for two blocks" },
     { id: "lac5", audio_text: "The supermarket is between the bank and the school", options: ["The supermarket is next to the bank and school", "The school is between the supermarket and bank", "The supermarket is between the bank and the school", "The bank is between the supermarket and school"], answer: "The supermarket is between the bank and the school" },
   ],
+
+  // ── OUTPUT: speaking prompts (freer production)
   speaking: {
     level1Prompt: "The {input} is next to the park.",
     level1Placeholder: "Ví dụ: bank, school, hospital, supermarket...",
     level2Situation: "Bạn đang giúp một khách du lịch tìm đường đến siêu thị gần nhất. Chỉ đường từ đây, qua một vài địa điểm nổi tiếng.",
     level2Hint: "Go straight ahead for [số] blocks. Turn [left/right] at [địa điểm]. The [nơi] is [opposite/next to/between] [địa điểm khác].",
   },
+
+  // ── GRAMMAR: Inductive (Meaning→Form→CCQ) + vnNote L1
   grammar: {
     title: "Prepositions of Place — Giới từ chỉ nơi chốn",
     rule: "next to (cạnh) | opposite (đối diện) | between...and... (giữa...và...)",
@@ -101,6 +124,8 @@ export const unit9: UnitData = {
       answer: "between",
     },
   },
+
+  // ── EXERCISES_INPUT: matching
   matchingExercise: {
     title: "Nối giới từ với nghĩa tiếng Việt",
     pairs: [
@@ -111,17 +136,23 @@ export const unit9: UnitData = {
       { left: "straight ahead", right: "đi thẳng" },
     ],
   },
+
+  // ── EXERCISES_INPUT: practiceQuiz (active recall)
   practiceQuiz: [
     { id: "pq1", question: "Điền giới từ đúng: 'The park is ___ the school and the bank.'", options: ["next to", "opposite", "between", "near"], answer: "between", type: "multiple-choice" },
     { id: "pq2", question: "Để hỏi đường lịch sự, bạn bắt đầu bằng:", options: ["Where is...?", "Tell me where...!", "Excuse me, where is...?", "I need to know..."], answer: "Excuse me, where is...?", type: "multiple-choice" },
     { id: "pq3", question: "Điền từ còn thiếu: 'The bank is ___ the post office.'", options: [], answer: "next to", type: "cloze" },
   ],
 
+
+  // ── OUTPUT: practiceTranslate (VN→EN ≥3) + speaking (level1/2)
   practiceTranslate: [
     { id: "pt9-1", prompt_vn: "Bưu điện ở đâu?", answer: "Where is the post office?" },
     { id: "pt9-2", prompt_vn: "Đi thẳng rồi rẽ trái.", answer: "Go straight and then turn left." },
     { id: "pt9-3", prompt_vn: "Siêu thị cách đây bao xa?", answer: "How far is the supermarket from here?" },
   ],
+
+  // ── REVIEW: Final quiz ≥5 (retrieval practice)
   quiz: [
     { id: "q1", question: "Chọn câu mô tả đúng vị trí:", options: ["The hospital is next the park.", "The hospital is opposite the park.", "The hospital is between park.", "The park is next to hospital."], answer: "The hospital is opposite the park.", type: "multiple-choice",
       explanation_vn: "'Opposite' = đối diện. 'Next to' cần từ 'to' (không nói 'next the'). 'Between' cần hai đối tượng." },
@@ -135,6 +166,8 @@ export const unit9: UnitData = {
     { id: "q7", question: "Xin lỗi, siêu thị gần nhất ở đâu?", options: [], answer: "Excuse me, where is the nearest supermarket?", type: "translate" },
   ],
 
+
+  // ── EXERCISES_INPUT: sentenceCorrection
   sentenceCorrectionExercises: [
     {
       id: "sc9-1",
@@ -152,6 +185,8 @@ export const unit9: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: listenAndArrange
   listenAndArrangeExercises: [
     {
       id: "la9-1",
@@ -169,6 +204,8 @@ export const unit9: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: wordBank
   wordBankExercises: [
     {
       id: "wb1",
@@ -190,6 +227,8 @@ export const unit9: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: scramble
   scrambleExercises: [
     {
       id: "s9-1",
@@ -210,6 +249,8 @@ export const unit9: UnitData = {
       answer: "The supermarket is between the bank and the school .",
     },
   ],
+
+  // ── REVIEW: Exit quiz + cumulativeReview (spiral) + reading (B1+)
   cumulativeReviewQuestions: [
     {
       id: "cr9-1",
@@ -234,6 +275,8 @@ export const unit9: UnitData = {
     },
   ],
 
+
+  // ── FLUENCY: pronunciationFocus
   pronunciationFocus: {
     phoneme: "/θ/ (cuối từ)",
     description: "Âm /θ/ trong các từ chỉ hướng: north, south, both, path — hay bị đọc thành /t/ hoặc /s/",
@@ -247,6 +290,8 @@ export const unit9: UnitData = {
     ],
   },
 
+
+  // ── FLUENCY: fluencyDrill ≥5 (Nation Strand 4 automaticity)
   fluencyDrill: {
     items: [
       { en: "I worked yesterday", vn: "Tôi đã làm việc hôm qua" },
@@ -259,6 +304,8 @@ export const unit9: UnitData = {
       { en: "They came on time", vn: "Họ đã đến đúng giờ" },
     ],
   },
+
+  // ── REVIEW: Reading passage for skills integration
   readingPassage: {
     id: "unit9-reading-1",
     title: "My Neighbourhood",
@@ -320,6 +367,8 @@ export const unit9: UnitData = {
       },
     ],
   },
+
+  // ── OUTPUT: shadowing
   shadowingVideoId: "2g3BAsn9x3c",
 };
 

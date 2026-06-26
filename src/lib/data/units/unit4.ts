@@ -1,5 +1,12 @@
 import { UnitData } from "@/components/learn/UnitTemplate";
 
+
+// ─────────────────────────────────────────────────────────────────────────────
+// UNIT-4 — Daily Routines  (A1)
+// Standardized header + section comments per lesson-blueprint.ts (CONTENT_BLOCK_ORDER)
+// + lesson-center-reference.ts (ESA Engage/Study/Activate, CELTA, Nation, CLT VN)
+// Gold sample: src/lib/data/units/unit1.ts — field order meta→hook→warmup→vocab→grammar→exercises→dialogues→fluency→output→review
+// ─────────────────────────────────────────────────────────────────────────────
 export const unit4: UnitData = {
   unitId: "unit-4",
   title: "Unit 4: Daily Routines",
@@ -8,6 +15,8 @@ export const unit4: UnitData = {
   estimatedTime: 45,
   description: "Học từ vựng về hoạt động thường ngày và cách dùng thì Hiện Tại Đơn (Present Simple) để mô tả thói quen.",
   badgeName: "Người Có Nề Nếp",
+
+  // ── HOOK: situation (real VN context) + learningOutcomes (2–5 can-do) + culturalNote (pragmatic VN↔EN)
   situation: "Bạn kể cho người bạn nước ngoài mới quen nghe về một ngày bình thường của mình — từ sáng thức dậy đến tối đi ngủ.",
   learningOutcomes: [
     "Mô tả thói quen và lịch trình hàng ngày bằng tiếng Anh",
@@ -15,6 +24,8 @@ export const unit4: UnitData = {
     "Hỏi về lịch trình ngày thường của người khác"
   ],
   badgeEmoji: "⏰",
+
+  // ── WARMUP: ≥3 short phrases (SRS + prior knowledge activation)
   warmupGreetings: [
     {
       emoji: "🌅",
@@ -35,7 +46,11 @@ export const unit4: UnitData = {
       context: "Present Simple với He"
     }
   ],
+
+  // ── HOOK (cultural): pragmatic note
   culturalNote: "Người Việt thường nói giờ bằng cách thêm <span class=\"text-emerald-400 font-semibold\">o'clock</span> sau số (seven o'clock). Người bản xứ hay nói ngắn hơn: <span class=\"text-emerald-400 font-semibold\">at seven</span> thay vì 'at seven o'clock' trong hội thoại thường ngày.",
+
+  // ── VOCABULARY: 8–20 words, pre-teach BEFORE dialogues; l1_interference_vn (A1 100%, B1+ ≥50%)
   vocab: [
     { id: 1, word: "wake up", emoji: "🌅", phonetic: "/weɪk ʌp/", meaning: "thức dậy", example: "I wake up at 6 am.", example2: "She wakes up early every day.", collocation: "wake up early", audio: "/audio/unit4/wake_up.mp3" , l1_interference_vn: "⚠️ Phrasal verb: 'wake up' — không nói chỉ 'wake'. 'I wake up at 6' không phải 'I up wake'." },
     { id: 2, word: "brush teeth", emoji: "🪥", phonetic: "/brʌʃ tiːθ/", meaning: "đánh răng", example: "I brush my teeth twice a day.", example2: "He brushes his teeth before bed.", collocation: "brush your teeth", audio: "/audio/unit4/brush_teeth.mp3" , l1_interference_vn: "⚠️ Luôn dùng số nhiều 'teeth'. 'Brush my tooth' (số ít) — sai ngữ pháp." },
@@ -50,6 +65,8 @@ export const unit4: UnitData = {
     { id: 11, word: "take a shower", emoji: "🚿", phonetic: "/teɪk ə ˈʃaʊər/", meaning: "tắm", example: "I take a shower every morning.", example2: "He takes a shower after exercise.", collocation: "take a hot/cold shower", audio: "/audio/unit4/take_a_shower.mp3" , l1_interference_vn: "⚠️ 'Take a shower' (Mỹ) hoặc 'have a shower' (Anh). Không phải 'do/make shower'." },
     { id: 12, word: "study", emoji: "📚", phonetic: "/ˈstʌdi/", meaning: "học bài", example: "She studies English every evening.", example2: "I study for two hours before dinner.", collocation: "study hard / study English", audio: "/audio/unit4/study.mp3", l1_interference_vn: "⚠️ 'Study' (v) = học bài cụ thể. 'Learn' = học cái gì đó mới. 'Study English' (không phải 'learn English lesson')." },
   ],
+
+  // ── DIALOGUES: ≥1 dialogue AFTER vocab (98% coverage)
   dialogues: [
     {
       id: 1,
@@ -80,6 +97,8 @@ export const unit4: UnitData = {
       ]
     },
   ],
+
+  // ── EXERCISES_INPUT: listenAndChoose ≥5 (controlled practice)
   listenAndChoose: [
     { id: "lac1", audio_text: "I wake up at six", options: ["I wake up at six", "I wake up at seven", "I wake up at eight", "I wake up at nine"], answer: "I wake up at six" },
     { id: "lac2", audio_text: "She brushes her teeth", options: ["She brushes her teeth", "He brushes his teeth", "They brush their teeth", "I brush my teeth"], answer: "She brushes her teeth" },
@@ -87,12 +106,16 @@ export const unit4: UnitData = {
     { id: "lac4", audio_text: "I study English every evening", options: ["I study every morning", "I study English every evening", "She studies English every day", "I study at school"], answer: "I study English every evening" },
     { id: "lac5", audio_text: "We have lunch at noon", options: ["We have dinner at noon", "We have breakfast at noon", "We have lunch at noon", "We have lunch at night"], answer: "We have lunch at noon" },
   ],
+
+  // ── OUTPUT: speaking prompts (freer production)
   speaking: {
     level1Prompt: "I wake up at {input} every morning.",
     level1Placeholder: "Ví dụ: six, seven thirty, eight o'clock...",
     level2Situation: "Mô tả thói quen hàng ngày của bạn từ sáng đến tối cho một người bạn ngoại quốc. Dùng ít nhất 5 câu.",
     level2Hint: "I wake up at [giờ]. I have breakfast at [giờ]. I go to [work/school] at [giờ]. In the evening, I [hoạt động]. I go to bed at [giờ].",
   },
+
+  // ── GRAMMAR: Inductive (Meaning→Form→CCQ) + vnNote L1
   grammar: {
     title: "Present Simple — Thì Hiện Tại Đơn",
     rule: "I/You/We/They + verb  |  He/She/It + verb + -s/-es",
@@ -120,6 +143,8 @@ export const unit4: UnitData = {
       answer: "goes",
     },
   },
+
+  // ── EXERCISES_INPUT: matching
   matchingExercise: {
     title: "Nối hoạt động với thời gian",
     pairs: [
@@ -130,17 +155,23 @@ export const unit4: UnitData = {
       { left: "go to bed", right: "đêm" },
     ],
   },
+
+  // ── EXERCISES_INPUT: practiceQuiz (active recall)
   practiceQuiz: [
     { id: "pq1", question: "Chọn dạng đúng: 'He ___ at seven o'clock.'", options: ["wake up", "wakes up", "waking up", "waked up"], answer: "wakes up", type: "multiple-choice" },
     { id: "pq2", question: "'She has breakfast at 7.' — Đây là thì gì?", options: ["Hiện tại tiếp diễn", "Quá khứ đơn", "Hiện tại đơn", "Tương lai"], answer: "Hiện tại đơn", type: "multiple-choice" },
     { id: "pq3", question: "Điền từ còn thiếu: 'I ___ to bed at ten.'", options: [], answer: "go", type: "cloze" },
   ],
 
+
+  // ── OUTPUT: practiceTranslate (VN→EN ≥3) + speaking (level1/2)
   practiceTranslate: [
     { id: "pt4-1", prompt_vn: "Tôi thường thức dậy lúc 6 giờ 30.", answer: "I usually wake up at 6:30." },
     { id: "pt4-2", prompt_vn: "Cô ấy không đi làm sớm.", answer: "She doesn't go to work early." },
     { id: "pt4-3", prompt_vn: "Chúng tôi xem TV vào buổi tối.", answer: "We watch TV in the evening." },
   ],
+
+  // ── REVIEW: Final quiz ≥5 (retrieval practice)
   quiz: [
     { id: "q1", question: "Chọn câu Present Simple đúng với 'He':", options: ["He go to school.", "He goes to school.", "He going to school.", "He goed to school."], answer: "He goes to school.", type: "multiple-choice",
       explanation_vn: "Với 'He/She/It' → thêm '-s/-es'. 'Go' → 'goes'. 'He going' sai vì thiếu động từ 'to be'." },
@@ -153,6 +184,8 @@ export const unit4: UnitData = {
     { id: "q6", question: "Tôi thức dậy lúc 7 giờ sáng mỗi ngày.", options: [], answer: "I wake up at seven every morning.", type: "translate" },
     { id: "q7", question: "Cô ấy đi làm bằng xe buýt.", options: [], answer: "She goes to work by bus.", type: "translate" },
   ],
+
+  // ── EXERCISES_INPUT: listenAndArrange
   listenAndArrangeExercises: [
     {
       id: "la4-1",
@@ -171,6 +204,8 @@ export const unit4: UnitData = {
   ],
 
 
+
+  // ── EXERCISES_INPUT: wordBank
   wordBankExercises: [
     {
       id: "wb1",
@@ -192,6 +227,8 @@ export const unit4: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: sentenceCorrection
   sentenceCorrectionExercises: [
     {
       id: "sc4-1",
@@ -209,6 +246,8 @@ export const unit4: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: scramble
   scrambleExercises: [
     {
       id: "s4-1",
@@ -229,6 +268,8 @@ export const unit4: UnitData = {
       answer: "He eats breakfast before work .",
     },
   ],
+
+  // ── REVIEW: Exit quiz + cumulativeReview (spiral) + reading (B1+)
   cumulativeReviewQuestions: [
     {
       id: "cr4-1",
@@ -254,6 +295,8 @@ export const unit4: UnitData = {
     },
   ],
 
+
+  // ── FLUENCY: pronunciationFocus
   pronunciationFocus: {
     phoneme: "-s cuối /s/ /z/ /ɪz/",
     description: "Quy tắc đọc -s cuối: sau vô thanh → /s/, sau hữu thanh → /z/, sau /s,z,ʃ/ → /ɪz/",
@@ -267,6 +310,8 @@ export const unit4: UnitData = {
     ],
   },
 
+
+  // ── FLUENCY: fluencyDrill ≥5 (Nation Strand 4 automaticity)
   fluencyDrill: {
     items: [
       { en: "I work", vn: "Tôi làm việc" },
@@ -280,6 +325,8 @@ export const unit4: UnitData = {
     ],
   },
 
+
+  // ── REVIEW: Reading passage for skills integration
   readingPassage: {
     id: "unit4-reading-1",
     title: "A Day in My Life",
@@ -323,6 +370,8 @@ export const unit4: UnitData = {
       },
     ],
   },
+
+  // ── OUTPUT: shadowing
   shadowingVideoId: "2FHMKlW-OIE", // BBC Learning English — Food vocabulary
 };
 

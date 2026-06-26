@@ -1,5 +1,12 @@
 import { UnitData } from "@/components/learn/UnitTemplate";
 
+
+// ─────────────────────────────────────────────────────────────────────────────
+// UNIT-2 — Personal Information  (A1)
+// Standardized header + section comments per lesson-blueprint.ts (CONTENT_BLOCK_ORDER)
+// + lesson-center-reference.ts (ESA Engage/Study/Activate, CELTA, Nation, CLT VN)
+// Gold sample: src/lib/data/units/unit1.ts — field order meta→hook→warmup→vocab→grammar→exercises→dialogues→fluency→output→review
+// ─────────────────────────────────────────────────────────────────────────────
 export const unit2: UnitData = {
   unitId: "unit-2",
   title: "Unit 2: Personal Information",
@@ -8,6 +15,8 @@ export const unit2: UnitData = {
   estimatedTime: 40,
   description: "Học cách hỏi và trả lời về thông tin cá nhân: tên, tuổi, nghề nghiệp và nơi sống.",
   badgeName: "Người Tự Giới Thiệu",
+
+  // ── HOOK: situation (real VN context) + learningOutcomes (2–5 can-do) + culturalNote (pragmatic VN↔EN)
   situation: "HR manager yêu cầu bạn điền form thông tin cá nhân và hỏi thêm về nghề nghiệp, tuổi tác và nơi sống của bạn.",
   learningOutcomes: [
     "Cung cấp thông tin cá nhân chính xác bằng tiếng Anh",
@@ -15,6 +24,8 @@ export const unit2: UnitData = {
     "Điền form đăng ký tài khoản hoặc hồ sơ bằng tiếng Anh"
   ],
   badgeEmoji: "🪪",
+
+  // ── WARMUP: ≥3 short phrases (SRS + prior knowledge activation)
   warmupGreetings: [
     {
       emoji: "❓",
@@ -35,7 +46,11 @@ export const unit2: UnitData = {
       context: "Hỏi nghề nghiệp tự nhiên"
     }
   ],
+
+  // ── HOOK (cultural): pragmatic note
   culturalNote: "Người Anh và Mỹ thường hỏi <span class=\"text-emerald-400 font-semibold\">What do you do?</span> thay vì <span class=\"text-emerald-400 font-semibold\">What is your job?</span> — nghe tự nhiên hơn rất nhiều trong hội thoại thường ngày.",
+
+  // ── VOCABULARY: 8–20 words, pre-teach BEFORE dialogues; l1_interference_vn (A1 100%, B1+ ≥50%)
   vocab: [
     { id: 1, word: "name", emoji: "🏷️", phonetic: "/neɪm/", meaning: "tên", example: "What's your name?", example2: "My name is Minh.", collocation: "first name / last name", audio: "/audio/unit2/name.mp3" , l1_interference_vn: "⚠️ 'What's your name?' không phải 'What is your name are?' — lỗi to be rất phổ biến." },
     { id: 2, word: "age", emoji: "🎂", phonetic: "/eɪdʒ/", meaning: "tuổi", example: "What's your age?", example2: "She is 25 years old.", collocation: "at the age of", audio: "/audio/unit2/age.mp3" , l1_interference_vn: "⚠️ Hỏi tuổi: 'How old are you?' không phải 'How age are you?' — dùng 'old', không phải 'age'." },
@@ -50,6 +65,8 @@ export const unit2: UnitData = {
     { id: 11, word: "married", emoji: "💍", phonetic: "/ˈmærid/", meaning: "đã kết hôn", example: "Are you married?", example2: "He got married last year.", collocation: "get married", audio: "/audio/unit2/married.mp3" , l1_interference_vn: "⚠️ 'Are you married?' không phải 'Are you marry?' — dùng tính từ 'married'." },
     { id: 12, word: "single", emoji: "🙋", phonetic: "/ˈsɪŋɡəl/", meaning: "độc thân", example: "I am single.", example2: "Are you single or married?", collocation: "single person", audio: "/audio/unit2/single.mp3" , l1_interference_vn: "⚠️ 'I'm single' = chưa kết hôn (độc thân). 'Single' còn nghĩa khác tùy context." },
   ],
+
+  // ── DIALOGUES: ≥1 dialogue AFTER vocab (98% coverage)
   dialogues: [
     {
       id: 1,
@@ -79,6 +96,8 @@ export const unit2: UnitData = {
       ]
     },
   ],
+
+  // ── EXERCISES_INPUT: listenAndChoose ≥5 (controlled practice)
   listenAndChoose: [
     { id: "lac1", audio_text: "What is your name", options: ["How old are you", "What is your name", "Where are you from", "What do you do"], answer: "What is your name" },
     { id: "lac2", audio_text: "I am a teacher", options: ["I am a student", "I am a teacher", "I am a doctor", "I am an engineer"], answer: "I am a teacher" },
@@ -86,12 +105,16 @@ export const unit2: UnitData = {
     { id: "lac4", audio_text: "What do you do", options: ["What is your name", "Where do you live", "What do you do", "How are you"], answer: "What do you do" },
     { id: "lac5", audio_text: "I am from Vietnam", options: ["I am fine", "I am from Vietnam", "I am a student", "I am married"], answer: "I am from Vietnam" },
   ],
+
+  // ── OUTPUT: speaking prompts (freer production)
   speaking: {
     level1Prompt: "My name is {input}. I am a student.",
     level1Placeholder: "Ví dụ: Minh, Lan, Nam...",
     level2Situation: "Bạn đang điền vào form đăng ký tại một trung tâm tiếng Anh. Nhân viên hỏi bạn về thông tin cá nhân.",
     level2Hint: "My name is [tên]. I am [tuổi] years old. I am a [nghề nghiệp]. I am from [nơi].",
   },
+
+  // ── GRAMMAR: Inductive (Meaning→Form→CCQ) + vnNote L1
   grammar: {
     title: "Wh- Questions — Câu hỏi thông tin",
     rule: "What / Who / Where / How old + am/is/are + chủ ngữ?",
@@ -115,6 +138,8 @@ export const unit2: UnitData = {
       answer: "What is your name?",
     },
   },
+
+  // ── EXERCISES_INPUT: matching
   matchingExercise: {
     title: "Nối câu hỏi với câu trả lời",
     pairs: [
@@ -125,17 +150,23 @@ export const unit2: UnitData = {
       { left: "Are you married?", right: "No, I'm single." },
     ],
   },
+
+  // ── EXERCISES_INPUT: practiceQuiz (active recall)
   practiceQuiz: [
     { id: "pq1", question: "Chọn câu hỏi đúng: '___ your name?' ", options: ["What's", "Who's", "Where's", "How's"], answer: "What's", type: "multiple-choice" },
     { id: "pq2", question: "'What do you do?' hỏi về điều gì?", options: ["Tên", "Tuổi", "Nghề nghiệp", "Địa chỉ"], answer: "Nghề nghiệp", type: "multiple-choice" },
     { id: "pq3", question: "Điền vào chỗ trống: 'I ___ a doctor.'", options: [], answer: "am", type: "cloze" },
   ],
 
+
+  // ── OUTPUT: practiceTranslate (VN→EN ≥3) + speaking (level1/2)
   practiceTranslate: [
     { id: "pt2-1", prompt_vn: "Bạn tên là gì?", answer: "What is your name?" },
     { id: "pt2-2", prompt_vn: "Tôi 25 tuổi.", answer: "I am 25 years old." },
     { id: "pt2-3", prompt_vn: "Số điện thoại của bạn là gì?", answer: "What is your phone number?" },
   ],
+
+  // ── REVIEW: Final quiz ≥5 (retrieval practice)
   quiz: [
     { id: "q1", question: "Câu hỏi nào hỏi về nghề nghiệp?", options: ["What is your name?", "How old are you?", "What do you do?", "Where are you from?"], answer: "What do you do?", type: "multiple-choice",
       explanation_vn: "'What do you do?' hỏi nghề nghiệp. 'What is your name?' hỏi tên, 'How old' hỏi tuổi." },
@@ -148,6 +179,8 @@ export const unit2: UnitData = {
     { id: "q6", question: "Tên tôi là Hoa và tôi là sinh viên.", options: [], answer: "My name is Hoa and I am a student.", type: "translate" },
     { id: "q7", question: "Bạn đến từ đâu?", options: [], answer: "Where are you from?", type: "translate" },
   ],
+
+  // ── EXERCISES_INPUT: scramble
   scrambleExercises: [
     {
       id: "s2-1",
@@ -169,6 +202,8 @@ export const unit2: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: listenAndArrange
   listenAndArrangeExercises: [
     {
       id: "la2-1",
@@ -187,6 +222,8 @@ export const unit2: UnitData = {
   ],
 
 
+
+  // ── EXERCISES_INPUT: wordBank
   wordBankExercises: [
     {
       id: "wb2-1",
@@ -211,6 +248,8 @@ export const unit2: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: sentenceCorrection
   sentenceCorrectionExercises: [
     {
       id: "sc2-1",
@@ -228,6 +267,8 @@ export const unit2: UnitData = {
     },
   ],
 
+
+  // ── REVIEW: Exit quiz + cumulativeReview (spiral) + reading (B1+)
   cumulativeReviewQuestions: [
     {
       id: "cr2-1",
@@ -253,6 +294,8 @@ export const unit2: UnitData = {
     },
   ],
 
+
+  // ── FLUENCY: pronunciationFocus
   pronunciationFocus: {
     phoneme: "/w/",
     description: "Âm /w/ — tiếng Việt không có, hay bị đọc thành /v/ hoặc /u/",
@@ -266,6 +309,8 @@ export const unit2: UnitData = {
     ],
   },
 
+
+  // ── FLUENCY: fluencyDrill ≥5 (Nation Strand 4 automaticity)
   fluencyDrill: {
     items: [
       { en: "What is your name?", vn: "Tên bạn là gì?" },
@@ -279,6 +324,8 @@ export const unit2: UnitData = {
     ],
   },
 
+
+  // ── REVIEW: Reading passage for skills integration
   readingPassage: {
     id: "unit2-reading-1",
     title: "My Name is Lan",
@@ -320,6 +367,8 @@ export const unit2: UnitData = {
       },
     ],
   },
+
+  // ── OUTPUT: shadowing
   shadowingVideoId: "XeZbFQUoHq8", // BBC Learning English — Family vocabulary A1
 };
 

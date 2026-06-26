@@ -1,5 +1,12 @@
 import { UnitData } from "@/components/learn/UnitTemplate";
 
+
+// ─────────────────────────────────────────────────────────────────────────────
+// UNIT-31 — Business Communication  (B1)
+// Standardized header + section comments per lesson-blueprint.ts (CONTENT_BLOCK_ORDER)
+// + lesson-center-reference.ts (ESA Engage/Study/Activate, CELTA, Nation, CLT VN)
+// Gold sample: src/lib/data/units/unit1.ts — field order meta→hook→warmup→vocab→grammar→exercises→dialogues→fluency→output→review
+// ─────────────────────────────────────────────────────────────────────────────
 // ─────────────────────────────────────────────────────────────────────────────
 // UNIT 31 — Business Communication (B1) — Formal register + reporting verbs
 // Per TASK-060: bring L1 interference >=50% (B1 target 0.5)
@@ -17,13 +24,19 @@ export const unit31: UnitData = {
   description: "Formal Writing — Làm quen với ngôn ngữ trang trọng trong công sở, viết email và báo cáo chuyên nghiệp. Bài học cốt lõi cho TOEIC Reading và IELTS Writing Task 1.",
   badgeName: "Chuyên Gia Công Sở",
   badgeEmoji: "💼",
+
+  // ── HOOK: situation (real VN context) + learningOutcomes (2–5 can-do) + culturalNote (pragmatic VN↔EN)
   situation: "Soạn thảo email gửi đối tác quốc tế để giải thích về sự chậm trễ của dự án và đề xuất lịch họp mới. Bạn cần viết trang trọng, lịch sự và sử dụng các động từ báo cáo (suggest, recommend, advise) đúng ngữ pháp doanh nghiệp.",
   learningOutcomes: [
     "Viết email và báo cáo công sở bằng từ vựng trang trọng (formal register)",
     "Sử dụng các động từ đề xuất suggest, recommend, advise đúng cấu trúc ngữ pháp",
     "Trình bày lý do chậm trễ và đề xuất lịch trình mới một cách lịch sự, chuyên nghiệp",
   ],
+
+  // ── HOOK (cultural): pragmatic note
   culturalNote: 'Trong email công sở tiếng Anh, việc dùng <span class="text-emerald-400">"inform"</span> trang trọng hơn <span class="text-zinc-400">"tell"</span>, và <span class="text-emerald-400">"request"</span> trang trọng hơn <span class="text-zinc-400">"ask for"</span>. Để tạo sự chuyên nghiệp, email thường bắt đầu bằng <span class="text-emerald-400">"I am writing to inform you that..."</span> thay vì đi thẳng vào vấn đề một cách đột ngột.',
+
+  // ── WARMUP: ≥3 short phrases (SRS + prior knowledge activation)
   warmupGreetings: [
     { emoji: "📧", en: "Please find the attached proposal for your review.", vn: "Vui lòng xem bản đề xuất đính kèm để xem xét.", context: "attached proposal — cụm từ email cực kỳ phổ biến" },
     { emoji: "📅", en: "I would like to confirm our meeting scheduled for Thursday.", vn: "Tôi muốn xác nhận cuộc họp của chúng ta được lên lịch vào thứ Năm.", context: "confirm scheduled meeting — xác nhận lịch họp" },
@@ -33,6 +46,8 @@ export const unit31: UnitData = {
   // ── VOCABULARY: 12 từ formal — pre-teach trước dialogue (CLT business)
   // L1: reporting verb structures (suggest/recommend/advise), confirm/that, prepositions
   // Center: VN CLT — so sánh formal VN vs EN; lỗi hay gặp ở email công sở
+
+  // ── VOCABULARY: 8–20 words, pre-teach BEFORE dialogues; l1_interference_vn (A1 100%, B1+ ≥50%)
   vocab: [
     { id: 1, word: "confirm", emoji: "✅", phonetic: "/kənˈfɜːm/", meaning: "xác nhận", example: "I am writing to confirm our appointment for tomorrow.", example2: "The manager confirmed that the budget was approved.", collocation: "confirm a booking / confirm an appointment / confirm details", audio: "/audio/unit31/confirm.mp3", l1_interference_vn: "⚠️ \'Confirm that...\': \'confirm that the meeting is on Friday\'. Không phải \'confirm to/for\'." },
     { id: 2, word: "request", emoji: "📝", phonetic: "/rɪˈkwest/", meaning: "yêu cầu (trang trọng)", example: "You can request additional funding if needed.", example2: "We received a request for more information from the client.", collocation: "submit a request / make a request / request assistance", audio: "/audio/unit31/request.mp3", l1_interference_vn: "⚠️ 'request' (v/n) trang trọng hơn 'ask'. 'Request that...' hoặc +N. Không 'request to do' trực tiếp." },
@@ -47,6 +62,8 @@ export const unit31: UnitData = {
     { id: 11, word: "deadline", emoji: "🏁", phonetic: "/ˈdedlaɪn/", meaning: "hạn chót / thời hạn cuối", example: "We must work hard to meet the project deadline.", example2: "The deadline for submission is next Friday.", collocation: "meet a deadline / miss a deadline / strict deadline", audio: "/audio/unit31/deadline.mp3", l1_interference_vn: "⚠️ \'MEET a deadline\' (kịp hạn) hoặc \'MISS a deadline\' (trễ). Không phải \'do/finish the deadline\'." },
     { id: 12, word: "corporate", emoji: "🏢", phonetic: "/ˈkɔːpərət/", meaning: "thuộc doanh nghiệp / tập đoàn", example: "She is climbing the corporate ladder rapidly.", example2: "The company has a strong corporate culture.", collocation: "corporate client / corporate culture / corporate strategy", audio: "/audio/unit31/corporate.mp3", l1_interference_vn: "⚠️ 'Corporate' (adj) = công ty. 'Corporate ladder' = thăng tiến. Không 'corporation' nhầm khi nói tính từ." },
   ],
+
+  // ── DIALOGUES: ≥1 dialogue AFTER vocab (98% coverage)
   dialogues: [
     {
       id: 1,
@@ -73,6 +90,8 @@ export const unit31: UnitData = {
       ],
     },
   ],
+
+  // ── EXERCISES_INPUT: listenAndChoose ≥5 (controlled practice)
   listenAndChoose: [
     { id: "lac1", audio_text: "I am writing to confirm our scheduled meeting.", options: ["I am writing to confirm our scheduled meeting.", "I want to cancel the scheduled meeting.", "We had a meeting on Friday afternoon.", "Please write a proposal about meetings."], answer: "I am writing to confirm our scheduled meeting." },
     { id: "lac2", audio_text: "We recommend that the company invest in new technology.", options: ["We recommend that the company invest in new technology.", "We demand the company stop using old technology.", "The company invested in a new factory last year.", "IT staff recommended repairing the computer."], answer: "We recommend that the company invest in new technology." },
@@ -80,12 +99,16 @@ export const unit31: UnitData = {
     { id: "lac4", audio_text: "We apologize for the delay in completing the report.", options: ["We apologize for the delay in completing the report.", "We finished the report ahead of the deadline.", "The corporate client was happy with the report.", "The delay was caused by the weather yesterday."], answer: "We apologize for the delay in completing the report." },
     { id: "lac5", audio_text: "The deadline for submission is next Friday.", options: ["The deadline for submission is next Friday.", "We must submit the proposal this Tuesday.", "Friday is the first day of the corporate event.", "The client requested a meeting on Friday."], answer: "The deadline for submission is next Friday." },
   ],
+
+  // ── OUTPUT: speaking prompts (freer production)
   speaking: {
     level1Prompt: "I am writing to {input} you that we need to extend the {input}. I recommend that we {input}.",
     level1Placeholder: "Ví dụ: inform — deadline — reschedule the meeting...",
     level2Situation: "Bạn viết một email gửi quản lý của mình để báo cáo tiến độ công việc. Hãy: (1) Thông báo về việc đã gửi bản đề xuất đính kèm, (2) Khuyên sếp nên làm rõ các mục tiêu của dự án với khách hàng doanh nghiệp, (3) Xác nhận thời hạn hoàn thành.",
     level2Hint: "Please find the attached project proposal. I recommend that we clarify the project goals with our corporate client. I would like to confirm that we can meet the final deadline next Friday.",
   },
+
+  // ── GRAMMAR: Inductive (Meaning→Form→CCQ) + vnNote L1
   grammar: {
     title: "Reporting Verbs with Subjunctive — Động Từ Khuyến Nghị & Câu Giả Định",
     rule: "Trong văn phong trang trọng, các động từ như suggest (đề xuất), recommend (khuyến nghị), advise (khuyên) được dùng để đưa ra ý kiến với các cấu trúc sau:\n\n1. Động từ + V-ing (Đề xuất chung chung)\n   → 'I recommend extending the deadline.'\n2. Động từ + that + Subject + Verb-infinitive (Cấu trúc giả định - Subjunctive)\n   → 'I recommend that we extend the deadline.' (Động từ 'extend' không chia cho dù chủ ngữ là gì)\n3. Advise / Recommend + object + to + Verb\n   → 'I advise you to review the attachment.'",
@@ -114,6 +137,8 @@ export const unit31: UnitData = {
       explanation: "Sau 'suggest' chỉ có thể dùng danh động từ (V-ing) hoặc mệnh đề 'that'. Không được dùng 'suggest + to-V' hay 'suggest someone to-V'.",
     },
   },
+
+  // ── EXERCISES_INPUT: practiceQuiz (active recall)
   practiceQuiz: [
     { id: "pq1", type: "multiple-choice", question: "Chọn câu đúng: 'I advise you ___ the corporate policy carefully.'", options: ["read", "reading", "to read", "reads"], answer: "to read" },
     { id: "pq2", type: "multiple-choice", question: "Chọn dạng đúng của động từ: 'The manager recommended that he ___ the email immediately.'", options: ["sends", "send", "sending", "to send"], answer: "send" },
@@ -121,6 +146,8 @@ export const unit31: UnitData = {
     { id: "pq4", type: "multiple-choice", question: "Từ nào đồng nghĩa với 'formal plan/suggestion'?", options: ["delay", "agenda", "proposal", "deadline"], answer: "proposal" },
     { id: "pq5", type: "cloze", question: "Điền: 'Please inform us ___ (giới từ) any project delays.'", answer: "of" },
   ],
+
+  // ── EXERCISES_INPUT: matching
   matchingExercise: {
     title: "Nối từ vựng email công sở với nghĩa đúng",
     pairs: [
@@ -131,6 +158,8 @@ export const unit31: UnitData = {
       { left: "corporate", right: "thuộc doanh nghiệp" },
     ],
   },
+
+  // ── OUTPUT: practiceTranslate (VN→EN ≥3) + speaking (level1/2)
   practiceTranslate: [
     {
       id: "pt-1",
@@ -149,6 +178,8 @@ export const unit31: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: sentenceCorrection
   sentenceCorrectionExercises: [
     {
       id: "sc31-1",
@@ -166,6 +197,8 @@ export const unit31: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: listenAndArrange
   listenAndArrangeExercises: [
     {
       id: "la31-1",
@@ -183,6 +216,8 @@ export const unit31: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: wordBank
   wordBankExercises: [
     {
       id: "wb1",
@@ -204,11 +239,15 @@ export const unit31: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: scramble
   scrambleExercises: [
     { id: "s31-1", prompt_vn: "Tôi khuyên bạn nên xem tệp đính kèm hợp đồng.", words: ["I", "advise", "you", "to", "review", "the", "contract", "attachment", "."], answer: "I advise you to review the contract attachment ." },
     { id: "s31-2", prompt_vn: "Vui lòng xác nhận sự có mặt của bạn trước thứ Năm.", words: ["Please", "confirm", "your", "availability", "before", "Thursday", "."], answer: "Please confirm your availability before Thursday ." },
     { id: "s31-3", prompt_vn: "Chúng tôi xin lỗi vì sự chậm trễ trong dự án này.", words: ["We", "apologize", "for", "the", "delay", "in", "this", "project", "."], answer: "We apologize for the delay in this project ." },
   ],
+
+  // ── REVIEW: Final quiz ≥5 (retrieval practice)
   quiz: [
     { id: "fq1", type: "multiple-choice", question: "Điền động từ: 'The legal team advised us ___ the contract.'", options: ["not sign", "not to sign", "not signing", "don't sign"], answer: "not to sign", explanation_vn: "'Advise + object + to-V': 'advised us NOT TO sign'. 'Not signing' không dùng sau 'advise + object'." },
     { id: "fq2", type: "cloze", question: "Điền: 'I am writing to ___ (thông báo) you of our decisions.'", answer: "inform" },
@@ -223,11 +262,15 @@ export const unit31: UnitData = {
     { id: "q-ex6", type: "multiple-choice", question: "Trong cuộc họp, 'I'd like to add that...' dùng để:", options: ["Ngắt lời", "Bổ sung thêm ý kiến", "Kết thúc cuộc họp", "Bác bỏ ý kiến"], answer: "Bổ sung thêm ý kiến" },
     { id: "q-ex7", type: "multiple-choice", question: "'Action points' trong meeting có nghĩa là:", options: ["Điểm tranh luận", "Các việc cần làm sau họp", "Chương trình họp", "Kết luận cuộc họp"], answer: "Các việc cần làm sau họp" },
   ],
+
+  // ── REVIEW: Exit quiz + cumulativeReview (spiral) + reading (B1+)
   cumulativeReviewQuestions: [
     { id: "cr31-1", question: "Ôn tập Unit 30 — Điền: 'It is essential to protect the local ___.'", options: ["ecosystem", "prevention", "medical", "pollution"], answer: "ecosystem", type: "multiple-choice" },
     { id: "cr31-2", question: "Ôn tập Unit 29 — Điền từ: 'The team reached a ___ (sự đồng nhất) after discussion.'", options: [], answer: "consensus", type: "cloze" },
     { id: "cr31-3", question: "Ôn tập Unit 28 — Chọn thì đúng: 'She ___ on this corporate project since January.'", options: ["is working", "has been working", "was working", "worked"], answer: "has been working", type: "multiple-choice" },
   ],
+
+  // ── FLUENCY: pronunciationFocus
   pronunciationFocus: {
     phoneme: "professional /prəˈfɛʃənl/",
     description: "Business vocabulary stress — professional, collaboration, agenda",
@@ -240,6 +283,8 @@ export const unit31: UnitData = {
     ],
   },
 
+
+  // ── FLUENCY: fluencyDrill ≥5 (Nation Strand 4 automaticity)
   fluencyDrill: {
     items: [
       { en: "Please see the attached file", vn: "Vui lòng xem tệp đính kèm" },
@@ -252,6 +297,8 @@ export const unit31: UnitData = {
       { en: "Here is the meeting agenda", vn: "Đây là chương trình cuộc họp" },
     ],
   },
+
+  // ── REVIEW: Reading passage for skills integration
   readingPassage: {
     id: "unit31-reading-1",
     title: "Writing Professional Emails",
@@ -321,6 +368,8 @@ export const unit31: UnitData = {
       },
     ],
   },
+
+  // ── OUTPUT: shadowing
   shadowingVideoId: "U0pnDXS_KWc",
 };
 

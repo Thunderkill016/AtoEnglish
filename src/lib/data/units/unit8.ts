@@ -1,5 +1,12 @@
 import { UnitData } from "@/components/learn/UnitTemplate";
 
+
+// ─────────────────────────────────────────────────────────────────────────────
+// UNIT-8 — Food & Ordering  (A1)
+// Standardized header + section comments per lesson-blueprint.ts (CONTENT_BLOCK_ORDER)
+// + lesson-center-reference.ts (ESA Engage/Study/Activate, CELTA, Nation, CLT VN)
+// Gold sample: src/lib/data/units/unit1.ts — field order meta→hook→warmup→vocab→grammar→exercises→dialogues→fluency→output→review
+// ─────────────────────────────────────────────────────────────────────────────
 export const unit8: UnitData = {
   unitId: "unit-8",
   title: "Unit 8: Food & Ordering",
@@ -8,6 +15,8 @@ export const unit8: UnitData = {
   estimatedTime: 40,
   description: "Học từ vựng đồ ăn, cách gọi món và phân biệt Countable/Uncountable nouns trong tiếng Anh.",
   badgeName: "Người Sành Ăn",
+
+  // ── HOOK: situation (real VN context) + learningOutcomes (2–5 can-do) + culturalNote (pragmatic VN↔EN)
   situation: "Bạn đi ăn tối tại nhà hàng nước ngoài và cần gọi món, hỏi về thành phần và thanh toán bằng tiếng Anh.",
   learningOutcomes: [
     "Gọi món ăn và thức uống tự tin tại nhà hàng",
@@ -15,12 +24,18 @@ export const unit8: UnitData = {
     "Hỏi về menu và thanh toán bằng tiếng Anh"
   ],
   badgeEmoji: "🍜",
+
+  // ── WARMUP: ≥3 short phrases (SRS + prior knowledge activation)
   warmupGreetings: [
     { emoji: "🍚", en: "I'd like some rice, please.", vn: "Cho tôi một ít cơm, làm ơn.", context: "Gọi món lịch sự" },
     { emoji: "🥤", en: "Can I have a glass of water?", vn: "Tôi có thể có một ly nước không?", context: "Yêu cầu đồ uống" },
     { emoji: "🍖", en: "Do you have any chicken?", vn: "Bạn có thịt gà không?", context: "Hỏi về món ăn" }
   ],
+
+  // ── HOOK (cultural): pragmatic note
   culturalNote: "Trong tiếng Anh, <span class=\"text-emerald-400 font-semibold\">I'd like...</span> (= I would like...) lịch sự hơn <span class=\"text-emerald-400 font-semibold\">I want...</span> rất nhiều khi gọi món. Người Việt khi học tiếng Anh thường quên dùng 'I'd like' và nói thẳng 'I want' — điều này có thể nghe không lịch sự trong văn hóa phương Tây.",
+
+  // ── VOCABULARY: 8–20 words, pre-teach BEFORE dialogues; l1_interference_vn (A1 100%, B1+ ≥50%)
   vocab: [
     { id: 1, word: "rice", emoji: "🍚", phonetic: "/raɪs/", meaning: "cơm / gạo", example: "I eat rice every day.", example2: "Can I have some rice, please?", collocation: "fried rice / steamed rice", audio: "/audio/unit8/rice.mp3", l1_interference_vn: "⚠️ 'Rice' không đếm được — KHÔNG 'a rice', 'two rices'. 'A bowl/plate of rice'. Tương tự: 'bread', 'water'." },
     { id: 2, word: "noodles", emoji: "🍜", phonetic: "/ˈnuːdəlz/", meaning: "mì / bún", example: "I love eating noodles for breakfast.", example2: "Vietnamese noodles are delicious.", collocation: "noodle soup", audio: "/audio/unit8/noodles.mp3", l1_interference_vn: "⚠️ 'Noodles' — số nhiều. 'A bowl of noodles'. KHÔNG 'a noodle' (trừ khi đếm từng sợi!)." },
@@ -35,6 +50,8 @@ export const unit8: UnitData = {
     { id: 11, word: "menu", emoji: "📋", phonetic: "/ˈmenjuː/", meaning: "thực đơn", example: "Can I see the menu, please?", example2: "The menu has many Vietnamese dishes.", collocation: "look at the menu", audio: "/audio/unit8/menu.mp3" , l1_interference_vn: "⚠️ Âm /ˈmenjuː/ — 'u' cuối đọc /juː/. Không đọc 'men-nu' — đúng: 'MEN-yoo'." },
     { id: 12, word: "bill", emoji: "🧾", phonetic: "/bɪl/", meaning: "hóa đơn tiền ăn", example: "Can we have the bill, please?", example2: "The bill comes to fifty dollars.", collocation: "pay the bill / ask for the bill", audio: "/audio/unit8/bill.mp3" , l1_interference_vn: "⚠️ 'The bill, please' (Anh) hoặc 'Check, please' (Mỹ) khi kêu tính tiền." },
   ],
+
+  // ── DIALOGUES: ≥1 dialogue AFTER vocab (98% coverage)
   dialogues: [
     {
       id: 1,
@@ -65,6 +82,8 @@ export const unit8: UnitData = {
       ]
     },
   ],
+
+  // ── EXERCISES_INPUT: listenAndChoose ≥5 (controlled practice)
   listenAndChoose: [
     { id: "lac1", audio_text: "I'd like some rice please", options: ["I want some rice please", "I'd like some rice please", "I'd like a rice please", "I like some rice please"], answer: "I'd like some rice please" },
     { id: "lac2", audio_text: "Can I have some water", options: ["Can I have some water", "Can I have a water", "Can you give me water", "I'd like some water"], answer: "Can I have some water" },
@@ -72,12 +91,16 @@ export const unit8: UnitData = {
     { id: "lac4", audio_text: "Can we have the bill please", options: ["Can we pay now please", "Can we have the menu please", "Can we have the bill please", "Can I have the bill please"], answer: "Can we have the bill please" },
     { id: "lac5", audio_text: "There is some fruit on the table", options: ["There are fruits on the table", "There is a fruit on the table", "There is some fruit on the table", "There is some fruits on the table"], answer: "There is some fruit on the table" },
   ],
+
+  // ── OUTPUT: speaking prompts (freer production)
   speaking: {
     level1Prompt: "I'd like some {input}, please.",
     level1Placeholder: "Ví dụ: rice, chicken, noodles, water...",
     level2Situation: "Bạn đang gọi món tại một nhà hàng. Hỏi thực đơn, gọi món chính và đồ uống, hỏi về tráng miệng và yêu cầu thanh toán.",
     level2Hint: "Excuse me, can I see the menu? I'd like [món ăn]. Can I have [đồ uống]? For dessert, I'd like [tráng miệng]. Can we have the bill, please?",
   },
+
+  // ── GRAMMAR: Inductive (Meaning→Form→CCQ) + vnNote L1
   grammar: {
     title: "Countable & Uncountable Nouns — Danh từ đếm được và không đếm được",
     rule: "Countable: a/an + noun, some + noun-s  |  Uncountable: some + noun (no -s)",
@@ -101,6 +124,8 @@ export const unit8: UnitData = {
       answer: "I'd like some water.",
     },
   },
+
+  // ── EXERCISES_INPUT: matching
   matchingExercise: {
     title: "Đếm được hay không đếm được?",
     pairs: [
@@ -111,17 +136,23 @@ export const unit8: UnitData = {
       { left: "bread (không đếm được)", right: "some bread" },
     ],
   },
+
+  // ── EXERCISES_INPUT: practiceQuiz (active recall)
   practiceQuiz: [
     { id: "pq1", question: "'Water' là loại danh từ gì?", options: ["Countable", "Uncountable", "Cả hai", "Không xác định"], answer: "Uncountable", type: "multiple-choice" },
     { id: "pq2", question: "Chọn câu đúng:", options: ["I'd like a rice.", "I'd like some rice.", "I'd like two rices.", "I'd like a rices."], answer: "I'd like some rice.", type: "multiple-choice" },
     { id: "pq3", question: "Điền từ đúng: 'Do you have ___ chicken?'", options: [], answer: "any", type: "cloze" },
   ],
 
+
+  // ── OUTPUT: practiceTranslate (VN→EN ≥3) + speaking (level1/2)
   practiceTranslate: [
     { id: "pt8-1", prompt_vn: "Tôi muốn gọi một tô phở.", answer: "I would like to order a bowl of pho." },
     { id: "pt8-2", prompt_vn: "Bạn có muốn uống gì không?", answer: "Would you like something to drink?" },
     { id: "pt8-3", prompt_vn: "Mang hóa đơn cho tôi với.", answer: "Can I have the bill, please?" },
   ],
+
+  // ── REVIEW: Final quiz ≥5 (retrieval practice)
   quiz: [
     { id: "q1", question: "Câu gọi món lịch sự nhất:", options: ["I want some soup.", "Give me some soup.", "I'd like some soup, please.", "Some soup for me."], answer: "I'd like some soup, please.", type: "multiple-choice",
       explanation_vn: "'I'd like' = cấu trúc lịch sự (= I would like). 'I want' đúng ngữ pháp nhưng kém lịch sự hơn khi gọi món." },
@@ -135,6 +166,8 @@ export const unit8: UnitData = {
     { id: "q7", question: "Bạn có muốn thêm rau không?", options: [], answer: "Would you like any vegetables?", type: "translate" },
   ],
 
+
+  // ── EXERCISES_INPUT: sentenceCorrection
   sentenceCorrectionExercises: [
     {
       id: "sc8-1",
@@ -152,6 +185,8 @@ export const unit8: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: listenAndArrange
   listenAndArrangeExercises: [
     {
       id: "la8-1",
@@ -169,6 +204,8 @@ export const unit8: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: wordBank
   wordBankExercises: [
     {
       id: "wb1",
@@ -190,6 +227,8 @@ export const unit8: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: scramble
   scrambleExercises: [
     {
       id: "s8-1",
@@ -210,6 +249,8 @@ export const unit8: UnitData = {
       answer: "Can we have the bill please ?",
     },
   ],
+
+  // ── REVIEW: Exit quiz + cumulativeReview (spiral) + reading (B1+)
   cumulativeReviewQuestions: [
     {
       id: "cr8-1",
@@ -234,6 +275,8 @@ export const unit8: UnitData = {
     },
   ],
 
+
+  // ── FLUENCY: pronunciationFocus
   pronunciationFocus: {
     phoneme: "/ɔː/",
     description: "Nguyên âm /ɔː/ dài tròn — trong fork, order, morning hay bị thu ngắn",
@@ -247,6 +290,8 @@ export const unit8: UnitData = {
     ],
   },
 
+
+  // ── FLUENCY: fluencyDrill ≥5 (Nation Strand 4 automaticity)
   fluencyDrill: {
     items: [
       { en: "I can speak English", vn: "Tôi có thể nói tiếng Anh" },
@@ -259,6 +304,8 @@ export const unit8: UnitData = {
       { en: "They can't attend", vn: "Họ không thể tham dự" },
     ],
   },
+
+  // ── REVIEW: Reading passage for skills integration
   readingPassage: {
     id: "unit8-reading-1",
     title: "A Vietnamese Lunch",
@@ -324,6 +371,8 @@ export const unit8: UnitData = {
       },
     ],
   },
+
+  // ── OUTPUT: shadowing
   shadowingVideoId: "QL-4pUhQy5c",
 };
 

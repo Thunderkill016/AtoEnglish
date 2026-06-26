@@ -1,5 +1,12 @@
 import { UnitData } from "@/components/learn/UnitTemplate";
 
+
+// ─────────────────────────────────────────────────────────────────────────────
+// UNIT-13 — Past Experiences  (A2)
+// Standardized header + section comments per lesson-blueprint.ts (CONTENT_BLOCK_ORDER)
+// + lesson-center-reference.ts (ESA Engage/Study/Activate, CELTA, Nation, CLT VN)
+// Gold sample: src/lib/data/units/unit1.ts — field order meta→hook→warmup→vocab→grammar→exercises→dialogues→fluency→output→review
+// ─────────────────────────────────────────────────────────────────────────────
 export const unit13: UnitData = {
   unitId: "unit-13",
   title: "Unit 13: Past Experiences",
@@ -9,18 +16,26 @@ export const unit13: UnitData = {
   description: "Học cách kể về các sự kiện và trải nghiệm trong quá khứ bằng Past Simple.",
   badgeName: "Người Kể Chuyện",
   badgeEmoji: "📖",
+
+  // ── HOOK: situation (real VN context) + learningOutcomes (2–5 can-do) + culturalNote (pragmatic VN↔EN)
   situation: "Bạn đang ăn trưa cùng đồng nghiệp người nước ngoài. Họ hỏi về kỳ nghỉ cuối tuần của bạn. Bạn cần kể lại những việc đã làm bằng Past Simple.",
   learningOutcomes: [
     "Kể về sự kiện đã xảy ra trong quá khứ",
     "Hỏi và trả lời về kỳ nghỉ, cuối tuần",
     "Dùng đúng Past Simple regular và irregular verbs"
   ],
+
+  // ── WARMUP: ≥3 short phrases (SRS + prior knowledge activation)
   warmupGreetings: [
     { emoji: "📅", en: "I went to the beach last weekend.", vn: "Cuối tuần trước tôi đã đi biển.", context: "Kể chuyện quá khứ" },
     { emoji: "🍜", en: "We had pho for lunch yesterday.", vn: "Hôm qua chúng tôi ăn phở buổi trưa.", context: "Mô tả bữa ăn qua khứ" },
     { emoji: "✈️", en: "She traveled to Singapore last year.", vn: "Năm ngoái cô ấy đã du lịch Singapore.", context: "Kể về chuyến đi" }
   ],
+
+  // ── HOOK (cultural): pragmatic note
   culturalNote: "Khi nói về quá khứ trong tiếng Anh, hãy chú ý đến <span class=\"text-emerald-400 font-semibold\">time markers</span>: yesterday (hôm qua), last week/month/year (tuần/tháng/năm trước), ago (... trước). Những từ này giúp người nghe hiểu rõ thời điểm xảy ra sự kiện.",
+
+  // ── VOCABULARY: 8–20 words, pre-teach BEFORE dialogues; l1_interference_vn (A1 100%, B1+ ≥50%)
   vocab: [
     { id: 1, word: "went", emoji: "🚶", phonetic: "/went/", meaning: "đã đi (quá khứ của go)", example: "I went to work by bus.", example2: "We went shopping yesterday.", collocation: "went to / went shopping / went swimming", audio: "/audio/unit13/went.mp3" , l1_interference_vn: "⚠️ Quá khứ bất quy tắc của 'go' — KHÔNG nói 'goed'. 'I went' không phải 'I go... yesterday'." },
     { id: 2, word: "had", emoji: "🍽️", phonetic: "/hæd/", meaning: "đã có / đã ăn (quá khứ của have)", example: "I had lunch at 12.", example2: "She had a great time.", collocation: "had lunch / had fun / had a meeting", audio: "/audio/unit13/had.mp3" , l1_interference_vn: "⚠️ 'Had' = quá khứ của 'have'. Người Việt hay dùng 'have' cho cả hiện tại lẫn quá khứ." },
@@ -35,6 +50,8 @@ export const unit13: UnitData = {
     { id: 11, word: "last", emoji: "📅", phonetic: "/lɑːst/", meaning: "trước (tuần/tháng/năm)", example: "I saw her last week.", example2: "He visited last month.", collocation: "last week / last year / last night", audio: "/audio/unit13/last.mp3" , l1_interference_vn: "⚠️ 'Last night/week/year' không có 'the' trong time expressions quá khứ." },
     { id: 12, word: "yesterday", emoji: "📆", phonetic: "/ˈjestədeɪ/", meaning: "hôm qua", example: "I worked from home yesterday.", example2: "Yesterday was a holiday.", collocation: "yesterday morning / yesterday evening", audio: "/audio/unit13/yesterday.mp3" , l1_interference_vn: "⚠️ Đứng đầu hoặc cuối câu: 'Yesterday I went' hoặc 'I went yesterday'. Không đứng giữa." },
   ],
+
+  // ── DIALOGUES: ≥1 dialogue AFTER vocab (98% coverage)
   dialogues: [
     {
       id: 1,
@@ -65,6 +82,8 @@ export const unit13: UnitData = {
       ]
     },
   ],
+
+  // ── EXERCISES_INPUT: listenAndChoose ≥5 (controlled practice)
   listenAndChoose: [
     { id: "lac1", audio_text: "I went to Ha Long Bay last weekend", options: ["I go to Ha Long Bay last weekend", "I went to Ha Long Bay last weekend", "She went to Ha Long Bay last weekend", "I went to Ha Long Bay this weekend"], answer: "I went to Ha Long Bay last weekend" },
     { id: "lac2", audio_text: "We stayed at a hotel near the beach", options: ["We stay at a hotel near the beach", "They stayed at a hotel near the beach", "We stayed at a hotel near the beach", "We stayed in a hotel near the beach"], answer: "We stayed at a hotel near the beach" },
@@ -72,12 +91,16 @@ export const unit13: UnitData = {
     { id: "lac4", audio_text: "She traveled to Japan two years ago", options: ["She travel to Japan two years ago", "She traveled to Japan two years ago", "She traveled to Japan last year", "He traveled to Japan two years ago"], answer: "She traveled to Japan two years ago" },
     { id: "lac5", audio_text: "We had fresh seafood every meal", options: ["We have fresh seafood every meal", "We had fresh seafood every meal", "We had fresh seafood every day", "They had fresh seafood every meal"], answer: "We had fresh seafood every meal" },
   ],
+
+  // ── OUTPUT: speaking prompts (freer production)
   speaking: {
     level1Prompt: "Last weekend, I {input}.",
     level1Placeholder: "Ví dụ: went to the beach, cooked dinner at home, watched a movie...",
     level2Situation: "Đồng nghiệp người nước ngoài hỏi bạn về kỳ nghỉ Tết hoặc cuối tuần vừa rồi. Kể lại những việc bạn đã làm, nơi bạn đã đến, và cảm xúc của bạn.",
     level2Hint: "Last [time period], I went to [place] with [person]. We stayed at [accommodation]. I visited [place], had [food], and met [person]. I enjoyed it because [reason].",
   },
+
+  // ── GRAMMAR: Inductive (Meaning→Form→CCQ) + vnNote L1
   grammar: {
     title: "Past Simple — Nói về quá khứ",
     rule: "Subject + V-ed (regular) / irregular verb + time marker\nNegative: Subject + did not (didn't) + V\nQuestion: Did + Subject + V?",
@@ -107,6 +130,8 @@ export const unit13: UnitData = {
       explanation: "Past Simple dùng dạng quá khứ của động từ. 'Go' là irregular verb nên quá khứ là 'went', không thêm -ed.",
     },
   },
+
+  // ── EXERCISES_INPUT: practiceQuiz (active recall)
   practiceQuiz: [
     { id: "pq1", type: "multiple-choice", question: "Chọn dạng quá khứ đúng: 'She ___ to the market this morning.'", options: ["go", "goes", "went", "going"], answer: "went" },
     { id: "pq2", type: "multiple-choice", question: "Điền đúng: 'We ___ at a 5-star hotel.'", options: ["stay", "stays", "stayed", "staying"], answer: "stayed" },
@@ -115,6 +140,8 @@ export const unit13: UnitData = {
     { id: "pq5", type: "cloze", question: "Điền: 'She ___ (meet) her boss two days ago.'", answer: "met" },
   ],
 
+
+  // ── EXERCISES_INPUT: matching
   matchingExercise: {
     title: "Nối động từ quá khứ với nghĩa đúng",
     pairs: [
@@ -126,6 +153,8 @@ export const unit13: UnitData = {
     ],
   },
 
+
+  // ── OUTPUT: practiceTranslate (VN→EN ≥3) + speaking (level1/2)
   practiceTranslate: [
     {
       id: "pt-1",
@@ -144,6 +173,8 @@ export const unit13: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: sentenceCorrection
   sentenceCorrectionExercises: [
     {
       id: "sc13-1",
@@ -161,6 +192,8 @@ export const unit13: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: listenAndArrange
   listenAndArrangeExercises: [
     {
       id: "la13-1",
@@ -178,6 +211,8 @@ export const unit13: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: wordBank
   wordBankExercises: [
     {
       id: "wb1",
@@ -199,6 +234,8 @@ export const unit13: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: scramble
   scrambleExercises: [
     {
       id: "s13-1",
@@ -220,6 +257,8 @@ export const unit13: UnitData = {
     },
   ],
 
+
+  // ── REVIEW: Final quiz ≥5 (retrieval practice)
   quiz: [
     { id: "fq1", type: "multiple-choice", question: "Dịch: 'Tôi đã ghé thăm cha mẹ tôi tuần trước.'", options: ["I visit my parents last week.", "I visited my parents last week.", "I was visited my parents last week.", "I visits my parents last week."], answer: "I visited my parents last week.",
       explanation_vn: "'Động từ đều' (regular) thêm -ed ở quá khứ: visit → visited. 'I was visited' là bị động, sai ngữ cảnh." },
@@ -238,6 +277,8 @@ export const unit13: UnitData = {
     { id: "q-ex7", type: "translate", question: "Dịch: 'Tôi đã ở lại khách sạn 3 đêm.'", answer: "I stayed at the hotel for 3 nights." },
   ],
 
+
+  // ── REVIEW: Exit quiz + cumulativeReview (spiral) + reading (B1+)
   cumulativeReviewQuestions: [
     {
       id: "cr13-1",
@@ -262,6 +303,8 @@ export const unit13: UnitData = {
     },
   ],
 
+
+  // ── FLUENCY: pronunciationFocus
   pronunciationFocus: {
     phoneme: "-ed endings /t/ /d/ /ɪd/",
     description: "Quy tắc đọc đuôi -ed: 3 cách đọc — người Việt thường bỏ âm cuối",
@@ -276,6 +319,8 @@ export const unit13: UnitData = {
     ],
   },
 
+
+  // ── FLUENCY: fluencyDrill ≥5 (Nation Strand 4 automaticity)
   fluencyDrill: {
     items: [
       { en: "I went", vn: "Tôi đã đi" },
@@ -289,6 +334,8 @@ export const unit13: UnitData = {
     ],
   },
 
+
+  // ── REVIEW: Reading passage for skills integration
   readingPassage: {
     id: "unit13-reading-1",
     title: "A Weekend in Ha Long Bay",
@@ -346,6 +393,8 @@ export const unit13: UnitData = {
       },
     ],
   },
+
+  // ── OUTPUT: shadowing
   shadowingVideoId: "5MgBikgcWnY",
 };
 

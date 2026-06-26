@@ -1,5 +1,12 @@
 import { UnitData } from "@/components/learn/UnitTemplate";
 
+
+// ─────────────────────────────────────────────────────────────────────────────
+// UNIT-3 — Family & Friends  (A1)
+// Standardized header + section comments per lesson-blueprint.ts (CONTENT_BLOCK_ORDER)
+// + lesson-center-reference.ts (ESA Engage/Study/Activate, CELTA, Nation, CLT VN)
+// Gold sample: src/lib/data/units/unit1.ts — field order meta→hook→warmup→vocab→grammar→exercises→dialogues→fluency→output→review
+// ─────────────────────────────────────────────────────────────────────────────
 export const unit3: UnitData = {
   unitId: "unit-3",
   title: "Unit 3: Family & Friends",
@@ -8,6 +15,8 @@ export const unit3: UnitData = {
   estimatedTime: 45,
   description: "Học từ vựng mô tả gia đình, bạn bè và cách sử dụng đại từ sở hữu cơ bản.",
   badgeName: "Người Thân Thiện",
+
+  // ── HOOK: situation (real VN context) + learningOutcomes (2–5 can-do) + culturalNote (pragmatic VN↔EN)
   situation: "Đồng nghiệp nước ngoài hỏi bạn về gia đình trong buổi teambuilding — bạn cần mô tả các thành viên và mối quan hệ.",
   learningOutcomes: [
     "Giới thiệu và mô tả các thành viên trong gia đình",
@@ -15,6 +24,8 @@ export const unit3: UnitData = {
     "Kể về bạn bè thân thiết một cách tự nhiên"
   ],
   badgeEmoji: "👥",
+
+  // ── WARMUP: ≥3 short phrases (SRS + prior knowledge activation)
   warmupGreetings: [
     {
       emoji: "👨‍👩‍👧‍👦",
@@ -35,7 +46,11 @@ export const unit3: UnitData = {
       context: "Hỏi về nơi sống của gia đình"
     }
   ],
+
+  // ── HOOK (cultural): pragmatic note
   culturalNote: "Trong tiếng Anh, từ <span class=\"text-emerald-400 font-semibold\">family</span> có thể đi với động từ số ít hoặc số nhiều tùy thuộc vào việc bạn muốn nói về gia đình như một tổ ấm tập thể hay nói về từng cá nhân trong gia đình đó. Cả hai cách dùng đều được chấp nhận rộng rãi!",
+
+  // ── VOCABULARY: 8–20 words, pre-teach BEFORE dialogues; l1_interference_vn (A1 100%, B1+ ≥50%)
   vocab: [
     {
       id: 1,
@@ -141,6 +156,8 @@ export const unit3: UnitData = {
       l1_interference_vn: "⚠️ 'Her' = của cô ấy (sở hữu) VÀ tân ngữ: 'I like her' / 'her book'. Phân biệt: 'She likes him' vs 'He likes her'."
     }
   ],
+
+  // ── DIALOGUES: ≥1 dialogue AFTER vocab (98% coverage)
   dialogues: [
     {
       id: 1,
@@ -187,6 +204,8 @@ export const unit3: UnitData = {
       ]
     }
   ],
+
+  // ── EXERCISES_INPUT: listenAndChoose ≥5 (controlled practice)
   listenAndChoose: [
     {
       id: "lc1",
@@ -219,6 +238,8 @@ export const unit3: UnitData = {
       answer: "Bố mẹ cô ấy sống ở Hà Nội"
     }
   ],
+
+  // ── OUTPUT: speaking prompts (freer production)
   speaking: {
     level1Prompt: "This is my mother. Her name is {input}.",
     level1Placeholder: "Ví dụ: Lan",
@@ -226,6 +247,8 @@ export const unit3: UnitData = {
     level2Hint: "This is my father. His name is [tên]. He is [tuổi] years old and he is very kind."
   },
 
+
+  // ── GRAMMAR: Inductive (Meaning→Form→CCQ) + vnNote L1
   grammar: {
     title: "Đại từ sở hữu — Possessive Adjectives",
     rule: "my / your / his / her / our / their + danh từ",
@@ -257,6 +280,8 @@ export const unit3: UnitData = {
     },
   },
 
+
+  // ── EXERCISES_INPUT: matching
   matchingExercise: {
     title: "Nối đại từ sở hữu với chủ ngữ tương ứng",
     pairs: [
@@ -268,12 +293,16 @@ export const unit3: UnitData = {
     ],
   },
 
+
+  // ── EXERCISES_INPUT: practiceQuiz (active recall)
   practiceQuiz: [
     { id: "pq1", question: "Điền đại từ đúng: 'This is ___ mother.' (của tôi)", options: ["my", "his", "her", "your"], answer: "my", type: "multiple-choice" },
     { id: "pq2", question: "Đại từ sở hữu của 'She' là gì?", options: ["his", "my", "her", "their"], answer: "her", type: "multiple-choice" },
     { id: "pq3", question: "Điền từ còn thiếu: 'His ___ is Tom.' (tên)", options: [], answer: "name", type: "cloze" },
   ],
 
+
+  // ── OUTPUT: practiceTranslate (VN→EN ≥3) + speaking (level1/2)
   practiceTranslate: [
     { id: "pt3-1", prompt_vn: "Đây là em gái tôi.", answer: "This is my sister." },
     { id: "pt3-2", prompt_vn: "Bố tôi là giáo viên.", answer: "My father is a teacher." },
@@ -281,6 +310,8 @@ export const unit3: UnitData = {
   ],
 
 
+
+  // ── REVIEW: Final quiz ≥5 (retrieval practice)
   quiz: [
     {
       id: "q1",
@@ -325,6 +356,8 @@ export const unit3: UnitData = {
     { id: "q7", question: "Anh trai của tôi là bác sĩ.", options: [], answer: "My brother is a doctor.", type: "translate" },
   ],
 
+
+  // ── EXERCISES_INPUT: listenAndArrange
   listenAndArrangeExercises: [
     {
       id: "la3-1",
@@ -343,6 +376,8 @@ export const unit3: UnitData = {
   ],
 
 
+
+  // ── EXERCISES_INPUT: wordBank
   wordBankExercises: [
     {
       id: "wb1",
@@ -364,6 +399,8 @@ export const unit3: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: scramble
   scrambleExercises: [
     {
       id: "s3-1",
@@ -385,6 +422,8 @@ export const unit3: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: sentenceCorrection
   sentenceCorrectionExercises: [
     {
       id: "sc3-1",
@@ -402,6 +441,8 @@ export const unit3: UnitData = {
     },
   ],
 
+
+  // ── REVIEW: Exit quiz + cumulativeReview (spiral) + reading (B1+)
   cumulativeReviewQuestions: [
     {
       id: "cr3-1",
@@ -426,6 +467,8 @@ export const unit3: UnitData = {
     },
   ],
 
+
+  // ── FLUENCY: pronunciationFocus
   pronunciationFocus: {
     phoneme: "/ð/",
     description: "Âm \"th\" hữu thanh — lưỡi chạm răng, CÓ rung (the, they, this)",
@@ -439,6 +482,8 @@ export const unit3: UnitData = {
     ],
   },
 
+
+  // ── FLUENCY: fluencyDrill ≥5 (Nation Strand 4 automaticity)
   fluencyDrill: {
     items: [
       { en: "my family", vn: "gia đình của tôi" },
@@ -452,6 +497,8 @@ export const unit3: UnitData = {
     ],
   },
 
+
+  // ── REVIEW: Reading passage for skills integration
   readingPassage: {
     id: "unit3-reading-1",
     title: "My Family",
@@ -495,6 +542,8 @@ export const unit3: UnitData = {
       },
     ],
   },
+
+  // ── OUTPUT: shadowing
   shadowingVideoId: "8U40yQ7IVqY", // BBC Learning English — Daily Routines
 };
 

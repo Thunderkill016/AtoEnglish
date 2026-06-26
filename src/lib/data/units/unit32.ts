@@ -1,5 +1,12 @@
 import { UnitData } from "@/components/learn/UnitTemplate";
 
+
+// ─────────────────────────────────────────────────────────────────────────────
+// UNIT-32 — B1 Review & Mock Test  (B1)
+// Standardized header + section comments per lesson-blueprint.ts (CONTENT_BLOCK_ORDER)
+// + lesson-center-reference.ts (ESA Engage/Study/Activate, CELTA, Nation, CLT VN)
+// Gold sample: src/lib/data/units/unit1.ts — field order meta→hook→warmup→vocab→grammar→exercises→dialogues→fluency→output→review
+// ─────────────────────────────────────────────────────────────────────────────
 export const unit32: UnitData = {
   unitId: "unit-32",
   title: "Unit 32: B1 Review & Mock Test",
@@ -9,18 +16,26 @@ export const unit32: UnitData = {
   description: "B1 Complete — Ôn tập toàn diện ngữ pháp, từ vựng B1 và thực hành bài thi thử IELTS/TOEIC cấp độ B1. Đánh giá năng lực trước khi tiến lên cấp độ B2.",
   badgeName: "Tốt Nghiệp B1",
   badgeEmoji: "🎓",
+
+  // ── HOOK: situation (real VN context) + learningOutcomes (2–5 can-do) + culturalNote (pragmatic VN↔EN)
   situation: "Bạn tham gia buổi đánh giá năng lực cuối cấp độ B1 với giáo viên bản ngữ. Bạn cần kết hợp tất cả các thì và cấu trúc đã học ở B1 (quá khứ tiếp diễn, quá khứ hoàn thành, tương lai hoàn thành, thể bị động, mệnh đề quan hệ, danh động từ, hiện tại hoàn thành tiếp diễn) để thảo luận về học tập và công việc.",
   learningOutcomes: [
     "Tổng hợp và vận dụng thành thạo toàn bộ ngữ pháp B1 trong giao tiếp",
     "Làm quen với cấu trúc bài thi IELTS Speaking Part 3 và TOEIC Reading Part 5/6",
     "Đánh giá và xác nhận trình độ tương đương B1 (IELTS ~5.0 / TOEIC ~500)",
   ],
+
+  // ── HOOK (cultural): pragmatic note
   culturalNote: 'Ở cấp độ B1+, người học cần chú ý đến <span class="text-emerald-400 font-semibold">"Coherence and Cohesion"</span> (sự mạch lạc và liên kết). Hãy sử dụng các từ nối như <span class="text-emerald-400">"However"</span>, <span class="text-emerald-400">"Therefore"</span>, <span class="text-emerald-400">"Consequently"</span> để liên kết các ý của bạn khi trả lời các câu hỏi mở, giúp bài nói trôi chảy và chuyên nghiệp hơn.',
+
+  // ── WARMUP: ≥3 short phrases (SRS + prior knowledge activation)
   warmupGreetings: [
     { emoji: "📊", en: "I've been preparing for this B1 assessment all week.", vn: "Tôi đã chuẩn bị cho buổi đánh giá B1 này suốt cả tuần.", context: "have been preparing — Present Perfect Continuous" },
     { emoji: "🚀", en: "By next month, I will have started my B2 curriculum.", vn: "Trước tháng tới, tôi sẽ đã bắt đầu chương trình học B2.", context: "will have started — Future Perfect" },
     { emoji: "💡", en: "It is essential to review all B1 lessons systematically.", vn: "Việc ôn tập tất cả các bài học B1 một cách hệ thống là rất thiết yếu.", context: "It is essential to + V — cấu trúc giả định" },
   ],
+
+  // ── VOCABULARY: 8–20 words, pre-teach BEFORE dialogues; l1_interference_vn (A1 100%, B1+ ≥50%)
   vocab: [
     { id: 1, word: "accumulate", emoji: "📦", phonetic: "/əˈkjuːmjuleɪt/", meaning: "tích lũy", example: "I have accumulated a lot of vocabulary during B1.", example2: "The company has accumulated wealth over the years.", collocation: "accumulate knowledge / accumulate experience", audio: "/audio/unit32/accumulate.mp3", l1_interference_vn: "⚠️ \'Accumulate\' + N: \'accumulate experience/debt\'. Cũng nội động từ: \'Debts accumulate over time.\'" },
     { id: 2, word: "sustainable", emoji: "♻️", phonetic: "/səˈsteɪnəbəl/", meaning: "bền vững", example: "We are aiming for a sustainable growth model.", example2: "Electric cars are a sustainable option.", collocation: "sustainable energy / sustainable development", audio: "/audio/unit32/sustainable.mp3", l1_interference_vn: "⚠️ Thường trước danh từ: \'sustainable development/energy/growth\'." },
@@ -35,6 +50,8 @@ export const unit32: UnitData = {
     { id: 11, word: "consequence", emoji: "💥", phonetic: "/ˈkɒnsɪkwəns/", meaning: "hậu quả / hệ quả", example: "Global warming has severe environmental consequences.", example2: "Every decision has a consequence.", collocation: "severe consequences / logical consequence", audio: "/audio/unit32/consequence.mp3", l1_interference_vn: "⚠️ \'Consequence OF\': \'consequences of climate change\'. Giới từ \'of\', không phải \'from\'." },
     { id: 12, word: "deal with", emoji: "🛠️", phonetic: "/diːl wɪð/", meaning: "giải quyết / đối phó với", example: "She is very good at dealing with difficult clients.", example2: "How did you deal with the project delay?", collocation: "deal with a problem / deal with pressure", audio: "/audio/unit32/deal_with.mp3", l1_interference_vn: "⚠️ Không tách được: \'deal with the problem\' (không phải \'deal the problem with\')." },
   ],
+
+  // ── DIALOGUES: ≥1 dialogue AFTER vocab (98% coverage)
   dialogues: [
     {
       id: 1,
@@ -63,6 +80,8 @@ export const unit32: UnitData = {
       ],
     },
   ],
+
+  // ── EXERCISES_INPUT: listenAndChoose ≥5 (controlled practice)
   listenAndChoose: [
     { id: "lac1", audio_text: "I've been studying intensively for six months.", options: ["I studied English for six months.", "I've been studying intensively for six months.", "I am studying English for six months.", "I've never studied English for six months."], answer: "I've been studying intensively for six months." },
     { id: "lac2", audio_text: "Before I started, I had never spoken English with a foreigner.", options: ["Before I started, I had never spoken English with a foreigner.", "I spoke to a foreigner before starting English class.", "I will speak to a foreigner when I start.", "I had spoken English before starting six months ago."], answer: "Before I started, I had never spoken English with a foreigner." },
@@ -70,12 +89,16 @@ export const unit32: UnitData = {
     { id: "lac4", audio_text: "I recommend that you review your notes daily.", options: ["I recommend that you review your notes daily.", "I recommended reviewing your notes yesterday.", "You should not review your notes daily.", "I advise you to write notes weekly."], answer: "I recommend that you review your notes daily." },
     { id: "lac5", audio_text: "We need to collaborate to solve this problem.", options: ["We need to fight each other to win.", "We should avoid collaborating with others.", "We need to collaborate to solve this problem.", "We solved the problem without collaboration."], answer: "We need to collaborate to solve this problem." },
   ],
+
+  // ── OUTPUT: speaking prompts (freer production)
   speaking: {
     level1Prompt: "I've been {input} for {input}. Before that, I had {input}. By next year, I will have {input}.",
     level1Placeholder: "Ví dụ: studying English — six months — never spoken with a foreigner — achieved IELTS 6.5...",
     level2Situation: "Bạn tham gia buổi thi nói cuối kỳ B1. Trình bày: (1) Bạn đã tích lũy được những kinh nghiệm học tập gì gần đây, (2) Nhắc lại một khó khăn trong quá khứ bạn đã giải quyết, (3) Đưa ra dự đoán về kết quả học tập trong tương lai của bạn.",
     level2Hint: "I have been studying English intensively at AtoEnglish. Before starting this course, I had struggled with listening. I managed to deal with this problem by practicing daily. I predict that I will have achieved my target score by next year.",
   },
+
+  // ── GRAMMAR: Inductive (Meaning→Form→CCQ) + vnNote L1
   grammar: {
     title: "B1 Grammar Synthesis — Tổng Hợp Ngữ Pháp B1",
     rule: "Tóm tắt các cấu trúc ngữ pháp trọng tâm B1:\n\n1. Past Continuous (was/were + V-ing) vs Past Simple:\n   → Hành động đang diễn ra thì hành động khác xen vào.\n2. Past Perfect (had + PP):\n   → Hành động xảy ra và hoàn thành trước một thời điểm/hành động khác trong quá khứ.\n3. Future Perfect (will have + PP):\n   → Hành động sẽ hoàn thành trước một thời điểm trong tương lai.\n4. Present Perfect Continuous (have/has been + V-ing):\n   → Nhấn mạnh tính liên tục và thời gian của hành động kéo dài từ quá khứ đến nay.\n5. Subjunctive with suggest/recommend/It is crucial:\n   → 'I recommend that S + V-inf'.",
@@ -104,6 +127,8 @@ export const unit32: UnitData = {
       explanation: "Future Perfect (will have + PP) dùng để diễn tả một hành động sẽ được hoàn thành trước một thời điểm xác định trong tương lai ('By next year').",
     },
   },
+
+  // ── EXERCISES_INPUT: practiceQuiz (active recall)
   practiceQuiz: [
     { id: "pq1", type: "multiple-choice", question: "Chọn thì đúng: 'When I arrived at the office, the meeting ___ already.'", options: ["started", "has started", "had started", "will have started"], answer: "had started" },
     { id: "pq2", type: "multiple-choice", question: "Chọn dạng đúng: 'I recommend that she ___ for the exam today.'", options: ["prepares", "prepare", "preparing", "to prepare"], answer: "prepare" },
@@ -111,6 +136,8 @@ export const unit32: UnitData = {
     { id: "pq4", type: "multiple-choice", question: "Điền: 'He ___ (learn) English for three hours and his head hurts.'", options: ["has learned", "is learning", "has been learning", "learned"], answer: "has been learning" },
     { id: "pq5", type: "cloze", question: "Điền: 'It is crucial ___ (giới từ) the company to protect resources.'", answer: "for" },
   ],
+
+  // ── EXERCISES_INPUT: matching
   matchingExercise: {
     title: "Nối từ vựng ôn tập B1 với nghĩa tiếng Việt",
     pairs: [
@@ -121,6 +148,8 @@ export const unit32: UnitData = {
       { left: "resolution", right: "sự giải quyết" },
     ],
   },
+
+  // ── OUTPUT: practiceTranslate (VN→EN ≥3) + speaking (level1/2)
   practiceTranslate: [
     {
       id: "pt-1",
@@ -139,6 +168,8 @@ export const unit32: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: sentenceCorrection
   sentenceCorrectionExercises: [
     {
       id: "sc32-1",
@@ -157,6 +188,8 @@ export const unit32: UnitData = {
   ],
 
 
+
+  // ── EXERCISES_INPUT: listenAndArrange
   listenAndArrangeExercises: [
     {
       id: "la32-1",
@@ -175,6 +208,8 @@ export const unit32: UnitData = {
   ],
 
 
+
+  // ── EXERCISES_INPUT: wordBank
   wordBankExercises: [
     {
       id: "wb1",
@@ -196,11 +231,15 @@ export const unit32: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: scramble
   scrambleExercises: [
     { id: "s32-1", prompt_vn: "Trước khi tôi bắt đầu, tôi chưa bao giờ nói tiếng Anh.", words: ["Before", "I", "started", ",", "I", "had", "never", "spoken", "English", "."], answer: "Before I started , I had never spoken English ." },
     { id: "s32-2", prompt_vn: "Đến cuối năm, tôi sẽ hoàn thành cấp độ B2.", words: ["By", "the", "end", "of", "the", "year", ",", "I", "will", "have", "completed", "B2", "."], answer: "By the end of the year , I will have completed B2 ." },
     { id: "s32-3", prompt_vn: "Tôi đã và đang học tiếng Anh chuyên sâu trong sáu tháng.", words: ["I", "have", "been", "studying", "English", "intensively", "for", "six", "months", "."], answer: "I have been studying English intensively for six months ." },
   ],
+
+  // ── REVIEW: Final quiz ≥5 (retrieval practice)
   quiz: [
     { id: "fq1", type: "multiple-choice", question: "Chọn câu đúng: 'By the time she called, I ___ the email.'", options: ["sent", "had sent", "will have sent", "am sending"], answer: "had sent" },
     { id: "fq2", type: "cloze", question: "Điền từ: 'The team reached a ___ (sự đồng thuận) about the agenda.'", answer: "consensus" },
@@ -215,11 +254,15 @@ export const unit32: UnitData = {
     { id: "q-ex6", type: "multiple-choice", question: "'Wish + past simple' diễn tả:", options: ["Điều kiện thật", "Mong ước về hiện tại không thật", "Tiếc về quá khứ", "Kế hoạch tương lai"], answer: "Mong ước về hiện tại không thật" },
     { id: "q-ex7", type: "multiple-choice", question: "'It's time you went to bed.' — cấu trúc này dùng:", options: ["Thì hiện tại đơn", "Thì quá khứ đơn (subjunctive)", "Thì hiện tại hoàn thành", "Modal verb"], answer: "Thì quá khứ đơn (subjunctive)" },
   ],
+
+  // ── REVIEW: Exit quiz + cumulativeReview (spiral) + reading (B1+)
   cumulativeReviewQuestions: [
     { id: "cr32-1", question: "Ôn tập Unit 31 — Điền: 'The corporate client requested the ___ (tệp đính kèm).'", options: ["attachment", "agenda", "proposal", "delay"], answer: "attachment", type: "multiple-choice" },
     { id: "cr32-2", question: "Ôn tập Unit 30 — Điền: 'Deforestation causes severe loss of ___ (đa dạng sinh học).'", options: [], answer: "biodiversity", type: "cloze" },
     { id: "cr32-3", question: "Ôn tập Unit 29 — Chọn dạng: 'What if we ___ (offer) them a refund yesterday?'", options: ["offered", "offer", "offering", "to offer"], answer: "offered", type: "multiple-choice" },
   ],
+
+  // ── FLUENCY: pronunciationFocus
   pronunciationFocus: {
     phoneme: "would've /ˈwʊdəv/",
     description: "Would have — second/third conditional giảm âm",
@@ -232,6 +275,8 @@ export const unit32: UnitData = {
     ],
   },
 
+
+  // ── FLUENCY: fluencyDrill ≥5 (Nation Strand 4 automaticity)
   fluencyDrill: {
     items: [
       { en: "I've been preparing for this assessment", vn: "Tôi đã chuẩn bị cho buổi đánh giá này" },
@@ -244,6 +289,8 @@ export const unit32: UnitData = {
       { en: "Let's work towards a quick resolution", vn: "Hãy cùng hướng tới sự giải quyết nhanh chóng" },
     ],
   },
+
+  // ── REVIEW: Reading passage for skills integration
   readingPassage: {
     id: "unit32-reading-1",
     title: "B1 Achievement Review",
@@ -307,6 +354,8 @@ export const unit32: UnitData = {
       },
     ],
   },
+
+  // ── OUTPUT: shadowing
   shadowingVideoId: "8S0FDjFBj8o",
 };
 

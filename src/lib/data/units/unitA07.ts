@@ -1,5 +1,12 @@
 import { UnitData } from "@/components/learn/UnitTemplate";
 
+
+// ─────────────────────────────────────────────────────────────────────────────
+// UNIT-A0-7 — Thời Gian, Ngày & Tháng  (A0)
+// Standardized header + section comments per lesson-blueprint.ts (CONTENT_BLOCK_ORDER)
+// + lesson-center-reference.ts (ESA Engage/Study/Activate, CELTA, Nation, CLT VN)
+// Gold sample: src/lib/data/units/unit1.ts — field order meta→hook→warmup→vocab→grammar→exercises→dialogues→fluency→output→review
+// ─────────────────────────────────────────────────────────────────────────────
 // UNIT A0-7 — Thời Gian, Ngày & Tháng (Time, Days & Months)
 // Grammar: Prepositions of time — AT / ON / IN
 // L1 Alert: Vietnamese uses same word "vào" for all; English splits into 3!
@@ -17,6 +24,8 @@ export const unitA07: UnitData = {
   badgeName: "Người Đúng Giờ",
   badgeEmoji: "⏰",
 
+
+  // ── HOOK: situation (real VN context) + learningOutcomes (2–5 can-do) + culturalNote (pragmatic VN↔EN)
   situation:
     "Bạn cần đặt lịch họp với đối tác nước ngoài qua email hoặc điện thoại. Họ hỏi: 'When are you free?' Bạn cần trả lời bằng tiếng Anh!",
 
@@ -26,9 +35,13 @@ export const unitA07: UnitData = {
     "Đặt và xác nhận lịch hẹn đơn giản",
   ],
 
+
+  // ── HOOK (cultural): pragmatic note
   culturalNote:
     'Người Anh-Mỹ rất coi trọng đúng giờ. <span class="text-emerald-400 font-semibold">"Let\'s meet at 9 sharp"</span> có nghĩa là 9 giờ đúng, không được đến trễ! Khi muốn thay đổi lịch, luôn báo trước và xin lỗi: <span class="text-emerald-400 font-semibold">"I\'m sorry, can we reschedule?"</span>',
 
+
+  // ── WARMUP: ≥3 short phrases (SRS + prior knowledge activation)
   warmupGreetings: [
     {
       emoji: "📅",
@@ -50,6 +63,8 @@ export const unitA07: UnitData = {
     },
   ],
 
+
+  // ── VOCABULARY: 8–20 words, pre-teach BEFORE dialogues; l1_interference_vn (A1 100%, B1+ ≥50%)
   vocab: [
     {
       id: 1,
@@ -172,6 +187,8 @@ export const unitA07: UnitData = {
     },
   ],
 
+
+  // ── GRAMMAR: Inductive (Meaning→Form→CCQ) + vnNote L1
   grammar: {
     title: "Giới từ thời gian: AT / ON / IN",
     rule: "AT = giờ cụ thể | ON = ngày cụ thể | IN = thời đoạn dài hơn (tháng, năm, buổi)",
@@ -223,6 +240,8 @@ export const unitA07: UnitData = {
     },
   },
 
+
+  // ── EXERCISES_INPUT: matching
   matchingExercise: {
     title: "Nối thời gian với giới từ đúng",
     pairs: [
@@ -234,6 +253,8 @@ export const unitA07: UnitData = {
     ],
   },
 
+
+  // ── EXERCISES_INPUT: practiceQuiz (active recall)
   practiceQuiz: [
     {
       id: "pq7-1",
@@ -270,6 +291,8 @@ export const unitA07: UnitData = {
     },
   ],
 
+
+  // ── OUTPUT: practiceTranslate (VN→EN ≥3) + speaking (level1/2)
   practiceTranslate: [
     {
       id: "pt7-1",
@@ -288,6 +311,8 @@ export const unitA07: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: sentenceCorrection
   sentenceCorrectionExercises: [
     {
       id: "sc-A07-1",
@@ -306,6 +331,8 @@ export const unitA07: UnitData = {
   ],
 
 
+
+  // ── EXERCISES_INPUT: listenAndArrange
   listenAndArrangeExercises: [
     {
       id: "laA07-1",
@@ -324,6 +351,8 @@ export const unitA07: UnitData = {
   ],
 
 
+
+  // ── EXERCISES_INPUT: wordBank
   wordBankExercises: [
     {
       id: "wb1",
@@ -345,6 +374,8 @@ export const unitA07: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: scramble
   scrambleExercises: [
     {
       id: "s7-1",
@@ -366,6 +397,8 @@ export const unitA07: UnitData = {
     },
   ],
 
+
+  // ── DIALOGUES: ≥1 dialogue AFTER vocab (98% coverage)
   dialogues: [
     {
       id: 1,
@@ -451,6 +484,8 @@ export const unitA07: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: listenAndChoose ≥5 (controlled practice)
   listenAndChoose: [
     {
       id: "lac7-1",
@@ -499,6 +534,8 @@ export const unitA07: UnitData = {
     },
   ],
 
+
+  // ── REVIEW: Exit quiz + cumulativeReview (spiral) + reading (B1+)
   cumulativeReviewQuestions: [
     {
       id: "crA07-1",
@@ -530,6 +567,8 @@ export const unitA07: UnitData = {
     },
   ],
 
+
+  // ── FLUENCY: pronunciationFocus
   pronunciationFocus: {
     phoneme: "/p/ /t/ /k/ cuối từ",
     description: "Ba phụ âm nổ cuối từ — không bật hơi",
@@ -542,6 +581,8 @@ export const unitA07: UnitData = {
     ],
   },
 
+
+  // ── FLUENCY: fluencyDrill ≥5 (Nation Strand 4 automaticity)
   fluencyDrill: {
     title: "Luyện nhanh: Thời gian & Lịch hẹn",
     items: [
@@ -556,6 +597,8 @@ export const unitA07: UnitData = {
     ],
   },
 
+
+  // ── OUTPUT: speaking prompts (freer production)
   speaking: {
     level1Prompt: "I'm free on {input} at ___ o'clock.",
     level1Placeholder: "Nhập ngày (Monday, Tuesday, Wednesday...)...",
@@ -564,6 +607,8 @@ export const unitA07: UnitData = {
     level2Hint: "I'm busy on... / I'm free on [day] in the [morning/afternoon] at [time] o'clock.",
   },
 
+
+  // ── REVIEW: Final quiz ≥5 (retrieval practice)
   quiz: [
     {
       id: "q7-1",
@@ -620,6 +665,8 @@ export const unitA07: UnitData = {
       type: "translate",
     },
   ],
+
+  // ── REVIEW: Reading passage for skills integration
   readingPassage: {
     id: "unitA07-reading-1",
     title: "My Day",
@@ -664,6 +711,8 @@ export const unitA07: UnitData = {
       },
     ],
   },
+
+  // ── OUTPUT: shadowing
   shadowingVideoId: "8U40yQ7IVqY", // BBC Learning English — Daily Routines & time
 };
 

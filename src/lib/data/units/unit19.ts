@@ -1,5 +1,12 @@
 import { UnitData } from "@/components/learn/UnitTemplate";
 
+
+// ─────────────────────────────────────────────────────────────────────────────
+// UNIT-19 — Stories & Narratives  (B1)
+// Standardized header + section comments per lesson-blueprint.ts (CONTENT_BLOCK_ORDER)
+// + lesson-center-reference.ts (ESA Engage/Study/Activate, CELTA, Nation, CLT VN)
+// Gold sample: src/lib/data/units/unit1.ts — field order meta→hook→warmup→vocab→grammar→exercises→dialogues→fluency→output→review
+// ─────────────────────────────────────────────────────────────────────────────
 // ─────────────────────────────────────────────────────────────────────────────
 // UNIT 19 — Stories & Narratives  (B1)
 // First B1 unit. Grammar: Past Continuous + Past Simple (interrupted action).
@@ -21,6 +28,8 @@ export const unit19: UnitData = {
   badgeName: "Người Kể Chuyện",
   badgeEmoji: "📖",
 
+
+  // ── HOOK: situation (real VN context) + learningOutcomes (2–5 can-do) + culturalNote (pragmatic VN↔EN)
   situation:
     "Trong buổi phỏng vấn xin việc, nhà tuyển dụng hỏi: 'Tell me about a challenging situation at work.' Bạn muốn kể lại câu chuyện sinh động — không chỉ 'Something happened and I fixed it', mà là khung cảnh, diễn biến, hành động đan xen nhau. Đây là cách người B1+ kể chuyện.",
 
@@ -30,9 +39,13 @@ export const unit19: UnitData = {
     "Kể lại sự kiện trong quá khứ một cách sinh động và chuyên nghiệp",
   ],
 
+
+  // ── HOOK (cultural): pragmatic note
   culturalNote:
     'Trong tiếng Anh, <span class="text-emerald-400 font-semibold">storytelling</span> tốt không chỉ nói "what happened" mà còn vẽ ra <span class="text-emerald-400 font-semibold">bối cảnh</span> (what was happening). Người Việt thường kể: <span class="text-zinc-400">"I worked late. The power went out. I lost the file."</span> — đúng nhưng khô. Người bản ngữ kể: <span class="text-emerald-400">"I <strong>was working</strong> late when suddenly the power went out and I lost everything."</span> — cùng sự kiện, nhưng hình ảnh hơn, engaging hơn, và tự nhiên hơn.',
 
+
+  // ── WARMUP: ≥3 short phrases (SRS + prior knowledge activation)
   warmupGreetings: [
     {
       emoji: "💼",
@@ -54,6 +67,8 @@ export const unit19: UnitData = {
     },
   ],
 
+
+  // ── VOCABULARY: 8–20 words, pre-teach BEFORE dialogues; l1_interference_vn (A1 100%, B1+ ≥50%)
   vocab: [
     {
       id: 1,
@@ -201,6 +216,8 @@ export const unit19: UnitData = {
     },
   ],
 
+
+  // ── DIALOGUES: ≥1 dialogue AFTER vocab (98% coverage)
   dialogues: [
     {
       id: 1,
@@ -292,6 +309,8 @@ export const unit19: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: listenAndChoose ≥5 (controlled practice)
   listenAndChoose: [
     {
       id: "lac1",
@@ -350,6 +369,8 @@ export const unit19: UnitData = {
     },
   ],
 
+
+  // ── OUTPUT: speaking prompts (freer production)
   speaking: {
     level1Prompt:
       "I was {input} when suddenly {input}. Fortunately, I managed to {input}.",
@@ -361,6 +382,8 @@ export const unit19: UnitData = {
       "I was [doing something] when [event happened]. While I was [action], my colleague/team was [parallel action]. Fortunately/Unfortunately, [result]. In the end, we managed to [resolution].",
   },
 
+
+  // ── GRAMMAR: Inductive (Meaning→Form→CCQ) + vnNote L1
   grammar: {
     title: "Past Continuous — Kể Chuyện Có Diễn Tiến",
     rule: "Past Continuous: was/were + V-ing\n→ Mô tả hành động đang diễn ra tại một thời điểm quá khứ\n\nKết hợp cổ điển:\n→ Past Continuous (bối cảnh) + WHEN + Past Simple (sự kiện đột ngột)\n→ WHILE + Past Continuous + Past Simple (hai hành động song song)\n\nCông thức:\n(+) I/He/She was working | We/They were waiting\n(-) I wasn't sleeping | They weren't listening\n(?) Was he working? | Were they waiting?",
@@ -403,6 +426,8 @@ export const unit19: UnitData = {
     },
   },
 
+
+  // ── EXERCISES_INPUT: practiceQuiz (active recall)
   practiceQuiz: [
     {
       id: "pq1",
@@ -454,6 +479,8 @@ export const unit19: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: matching
   matchingExercise: {
     title: "Nối từ với nghĩa đúng",
     pairs: [
@@ -465,6 +492,8 @@ export const unit19: UnitData = {
     ],
   },
 
+
+  // ── OUTPUT: practiceTranslate (VN→EN ≥3) + speaking (level1/2)
   practiceTranslate: [
     {
       id: "pt-1",
@@ -483,6 +512,8 @@ export const unit19: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: sentenceCorrection
   sentenceCorrectionExercises: [
     {
       id: "sc19-1",
@@ -501,6 +532,8 @@ export const unit19: UnitData = {
   ],
 
 
+
+  // ── EXERCISES_INPUT: listenAndArrange
   listenAndArrangeExercises: [
     {
       id: "la19-1",
@@ -519,6 +552,8 @@ export const unit19: UnitData = {
   ],
 
 
+
+  // ── EXERCISES_INPUT: wordBank
   wordBankExercises: [
     {
       id: "wb1",
@@ -540,6 +575,8 @@ export const unit19: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: scramble
   scrambleExercises: [
     {
       id: "s19-1",
@@ -561,6 +598,8 @@ export const unit19: UnitData = {
     },
   ],
 
+
+  // ── REVIEW: Final quiz ≥5 (retrieval practice)
   quiz: [
     {
       id: "fq1",
@@ -625,6 +664,8 @@ export const unit19: UnitData = {
     { id: "q-ex7", type: "multiple-choice", question: "Từ nối nào thể hiện tương phản?", options: ["and", "because", "however", "therefore"], answer: "however" },
   ],
 
+
+  // ── REVIEW: Exit quiz + cumulativeReview (spiral) + reading (B1+)
   cumulativeReviewQuestions: [
     {
       id: "cr19-1",
@@ -659,6 +700,8 @@ export const unit19: UnitData = {
     },
   ],
 
+
+  // ── FLUENCY: pronunciationFocus
   pronunciationFocus: {
     phoneme: "was /wɒz/ vs were /wɜːr/",
     description: "Was/were — âm /ɜː/ trong were rất khó với người Việt",
@@ -672,6 +715,8 @@ export const unit19: UnitData = {
     ],
   },
 
+
+  // ── FLUENCY: fluencyDrill ≥5 (Nation Strand 4 automaticity)
   fluencyDrill: {
     items: [
       { en: "I was working when he called", vn: "Tôi đang làm việc thì anh ấy gọi" },
@@ -684,6 +729,8 @@ export const unit19: UnitData = {
       { en: "Fortunately, we managed to resolve the issue", vn: "May mắn thay, chúng tôi đã giải quyết được vấn đề" },
     ],
   },
+
+  // ── REVIEW: Reading passage for skills integration
   readingPassage: {
     id: "unit19-reading-1",
     title: "The Day Everything Went Wrong",
@@ -750,6 +797,8 @@ export const unit19: UnitData = {
       },
     ],
   },
+
+  // ── OUTPUT: shadowing
   shadowingVideoId: "Mc0CXKDjFnw",
 };
 

@@ -1,5 +1,12 @@
 import { UnitData } from "@/components/learn/UnitTemplate";
 
+
+// ─────────────────────────────────────────────────────────────────────────────
+// UNIT-30 — Health & Environment  (B1)
+// Standardized header + section comments per lesson-blueprint.ts (CONTENT_BLOCK_ORDER)
+// + lesson-center-reference.ts (ESA Engage/Study/Activate, CELTA, Nation, CLT VN)
+// Gold sample: src/lib/data/units/unit1.ts — field order meta→hook→warmup→vocab→grammar→exercises→dialogues→fluency→output→review
+// ─────────────────────────────────────────────────────────────────────────────
 export const unit30: UnitData = {
   unitId: "unit-30",
   title: "Unit 30: Health & Environment",
@@ -9,18 +16,26 @@ export const unit30: UnitData = {
   description: "Abstract Topics — Thảo luận về các vấn đề sức khỏe cộng đồng và môi trường toàn cầu. Nền tảng từ vựng cực kỳ quan trọng cho IELTS Reading & Listening.",
   badgeName: "Đại Sứ Xanh",
   badgeEmoji: "🌱",
+
+  // ── HOOK: situation (real VN context) + learningOutcomes (2–5 can-do) + culturalNote (pragmatic VN↔EN)
   situation: "Thảo luận nhóm tại trường học hoặc câu lạc bộ về chủ đề bảo vệ môi trường. Các thành viên chia sẻ quan điểm về biến đổi khí hậu và lối sống bền vững. Sử dụng cấu trúc câu giả định 'It is important to...' hoặc 'It is crucial that...' để trình bày quan điểm mang tính học thuật.",
   learningOutcomes: [
     "Sử dụng từ vựng về môi trường và sức khỏe ở mức độ B1+ một cách tự tin",
     "Trình bày các quan điểm và lập luận về các vấn đề xã hội trừu tượng",
     "Sử dụng cấu trúc 'It is + adjective + to-V' để nhấn mạnh tầm quan trọng của hành động",
   ],
+
+  // ── HOOK (cultural): pragmatic note
   culturalNote: 'Khi thảo luận về môi trường và sức khỏe toàn cầu trong các kỳ thi IELTS/TOEIC, người học cần sử dụng từ vựng chuyên ngành cơ bản (collocations) như <span class="text-emerald-400">"sustainable development"</span> (phát triển bền vững) hoặc <span class="text-emerald-400">"protect the ecosystem"</span> (bảo vệ hệ sinh thái) thay vì các từ quá chung chung để đạt điểm tiêu chí Lexical Resource cao.',
+
+  // ── WARMUP: ≥3 short phrases (SRS + prior knowledge activation)
   warmupGreetings: [
     { emoji: "🌍", en: "It is crucial to protect our planet for future generations.", vn: "Việc bảo vệ hành tinh của chúng ta cho các thế hệ tương lai là cực kỳ quan trọng.", context: "It is crucial to + V — cấu trúc nhấn mạnh" },
     { emoji: "🥦", en: "A healthy diet is key to disease prevention.", vn: "Chế độ ăn lành mạnh là chìa khóa để phòng ngừa bệnh tật.", context: "prevention — danh từ từ prevent" },
     { emoji: "☀️", en: "Climate change has become a major global challenge.", vn: "Biến đổi khí hậu đã trở thành một thách thức lớn toàn cầu.", context: "climate change — biến đổi khí hậu" },
   ],
+
+  // ── VOCABULARY: 8–20 words, pre-teach BEFORE dialogues; l1_interference_vn (A1 100%, B1+ ≥50%)
   vocab: [
     { id: 1, word: "conservation", emoji: "🌲", phonetic: "/ˌkɒnsəˈveɪʃən/", meaning: "sự bảo tồn", example: "Wildlife conservation is essential for maintaining biodiversity.", example2: "The government has funded several conservation projects.", collocation: "wildlife conservation / conservation efforts / energy conservation", audio: "/audio/unit30/conservation.mp3", l1_interference_vn: "⚠️ \'Conservation OF\': \'conservation of wildlife\'. Giới từ \'of\'. Phân biệt với \'preservation\'." },
     { id: 2, word: "environment", emoji: "🌿", phonetic: "/ɪnˈvaɪrənmənt/", meaning: "môi trường", example: "We must take action to protect the environment.", example2: "A clean environment leads to better public health.", collocation: "protect the environment / damage the environment / natural environment", audio: "/audio/unit30/environment.mp3" },
@@ -35,6 +50,8 @@ export const unit30: UnitData = {
     { id: 11, word: "global warming", emoji: "🥵", phonetic: "/ˈɡləʊbəl ˈwɔːmɪŋ/", meaning: "sự nóng lên toàn cầu", example: "Global warming is melting the polar ice caps.", example2: "We must reduce greenhouse gases to slow down global warming.", collocation: "slow down global warming / effects of global warming / combat global warming", audio: "/audio/unit30/global_warming.mp3" },
     { id: 12, word: "biodiversity", emoji: "🦋", phonetic: "/ˌbaɪəʊdaɪˈvɜːsəti/", meaning: "đa dạng sinh học", example: "The rainforest is famous for its rich biodiversity.", example2: "Loss of biodiversity is a global environmental crisis.", collocation: "rich biodiversity / protect biodiversity / loss of biodiversity", audio: "/audio/unit30/biodiversity.mp3", l1_interference_vn: "⚠️ Không đếm được — không có số nhiều. \'Protect biodiversity\' (không có \'a biodiversity\')." },
   ],
+
+  // ── DIALOGUES: ≥1 dialogue AFTER vocab (98% coverage)
   dialogues: [
     {
       id: 1,
@@ -61,6 +78,8 @@ export const unit30: UnitData = {
       ],
     },
   ],
+
+  // ── EXERCISES_INPUT: listenAndChoose ≥5 (controlled practice)
   listenAndChoose: [
     { id: "lac1", audio_text: "It is crucial to protect our planet for future generations.", options: ["It is crucial to protect our planet for future generations.", "It is easy to destroy our environment globally.", "Climate change is not a major issue today.", "Public health has improved significantly recently."], answer: "It is crucial to protect our planet for future generations." },
     { id: "lac2", audio_text: "Air pollution is a serious problem in big cities.", options: ["Water pollution is solved in big cities.", "Air pollution is a serious problem in big cities.", "Deforestation damages the marine ecosystem.", "Organic food is cheaper in big cities."], answer: "Air pollution is a serious problem in big cities." },
@@ -68,12 +87,16 @@ export const unit30: UnitData = {
     { id: "lac4", audio_text: "Regular exercise is important for the prevention of heart disease.", options: ["Regular exercise is important for the prevention of heart disease.", "Medical research has found a cure for cancer.", "Healthy diet cannot prevent chronic illness.", "Conservation efforts are very expensive."], answer: "Regular exercise is important for the prevention of heart disease." },
     { id: "lac5", audio_text: "The rainforest is famous for its rich biodiversity.", options: ["The rainforest is famous for its dry weather.", "The ecosystem of the desert has no water.", "The rainforest is famous for its rich biodiversity.", "Many resources are imported from the rainforest."], answer: "The rainforest is famous for its rich biodiversity." },
   ],
+
+  // ── OUTPUT: speaking prompts (freer production)
   speaking: {
     level1Prompt: "It is {input} to reduce {input} because it directly damages our {input}.",
     level1Placeholder: "Ví dụ: crucial — pollution — ecosystem...",
     level2Situation: "Bạn tham gia một bài nói ngắn về biến đổi khí hậu trong buổi thi nói tiếng Anh. Hãy: (1) Nêu vấn đề biến đổi khí hậu do sự nóng lên toàn cầu gây ra, (2) Nhấn mạnh việc bảo tồn tài nguyên thiên nhiên là cực kỳ quan trọng, (3) Đề xuất lối sống bền vững.",
     level2Hint: "Climate change is caused by global warming. It is crucial to protect our natural resources and local ecosystems. We should adopt a more sustainable lifestyle to prevent further environmental damage.",
   },
+
+  // ── GRAMMAR: Inductive (Meaning→Form→CCQ) + vnNote L1
   grammar: {
     title: "It is + Adjective + to-infinitive / that clause — Cấu Trúc Giả Định",
     rule: "Công thức để nhấn mạnh tầm quan trọng, tính cấp thiết hoặc ý kiến khách quan:\n\n1. It is + adjective + to + Verb-infinitive\n   → 'It is important to protect the environment.'\n2. It is + adjective + that + Subject + Verb-infinitive (Subjunctive mood - giả định)\n   → 'It is crucial that the community work together.' (Động từ 'work' để nguyên thể không chia)\n\nCác tính từ phổ biến: important (quan trọng), crucial (cực kỳ quan trọng), essential (thiết yếu), necessary (cần thiết), recommended (khuyến nghị).",
@@ -102,6 +125,8 @@ export const unit30: UnitData = {
       explanation: "Sau 'It is essential that', động từ ở vế sau phải ở dạng nguyên thể không chia (consume), bất kể chủ ngữ là ngôi thứ ba số ít (she).",
     },
   },
+
+  // ── EXERCISES_INPUT: practiceQuiz (active recall)
   practiceQuiz: [
     { id: "pq1", type: "multiple-choice", question: "Chọn dạng đúng: 'It is crucial for us ___ natural resources.'", options: ["protect", "protecting", "to protect", "protected"], answer: "to protect" },
     { id: "pq2", type: "multiple-choice", question: "Tìm từ trái nghĩa với 'destructive':", options: ["pollution", "sustainable", "medical", "biodiversity"], answer: "sustainable" },
@@ -109,6 +134,8 @@ export const unit30: UnitData = {
     { id: "pq4", type: "multiple-choice", question: "Chọn từ điền vào chỗ trống: 'Air ___ is worsening in metropolitan areas.'", options: ["conservation", "pollution", "resource", "biodiversity"], answer: "pollution" },
     { id: "pq5", type: "cloze", question: "Điền từ: 'It is essential ___ preserve our ecosystem.'", answer: "to" },
   ],
+
+  // ── EXERCISES_INPUT: matching
   matchingExercise: {
     title: "Nối thuật ngữ môi trường và sức khỏe với nghĩa đúng",
     pairs: [
@@ -119,6 +146,8 @@ export const unit30: UnitData = {
       { left: "sustainable", right: "bền vững" },
     ],
   },
+
+  // ── OUTPUT: practiceTranslate (VN→EN ≥3) + speaking (level1/2)
   practiceTranslate: [
     {
       id: "pt-1",
@@ -137,6 +166,8 @@ export const unit30: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: sentenceCorrection
   sentenceCorrectionExercises: [
     {
       id: "sc30-1",
@@ -154,6 +185,8 @@ export const unit30: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: listenAndArrange
   listenAndArrangeExercises: [
     {
       id: "la30-1",
@@ -171,6 +204,8 @@ export const unit30: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: wordBank
   wordBankExercises: [
     {
       id: "wb1",
@@ -192,11 +227,15 @@ export const unit30: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: scramble
   scrambleExercises: [
     { id: "s30-1", prompt_vn: "Bảo vệ tài nguyên thiên nhiên là vô cùng thiết yếu.", words: ["It", "is", "essential", "to", "protect", "natural", "resources", "."], answer: "It is essential to protect natural resources ." },
     { id: "s30-2", prompt_vn: "Biến đổi khí hậu đang đe dọa hệ sinh thái biển.", words: ["Climate", "change", "is", "threatening", "the", "marine", "ecosystem", "."], answer: "Climate change is threatening the marine ecosystem ." },
     { id: "s30-3", prompt_vn: "Thực phẩm hữu cơ ngày càng trở nên phổ biến.", words: ["Organic", "food", "is", "becoming", "more", "popular", "nowadays", "."], answer: "Organic food is becoming more popular nowadays ." },
   ],
+
+  // ── REVIEW: Final quiz ≥5 (retrieval practice)
   quiz: [
     { id: "fq1", type: "multiple-choice", question: "Dịch câu: 'Việc giảm thiểu lượng khí thải nhà kính là cực kỳ quan trọng.'", options: ["It is crucial to reduce greenhouse gas emissions.", "It is easy to reduce greenhouse gas emissions.", "We should not reduce greenhouse gas emissions.", "Greenhouse gases are crucial to reduce."], answer: "It is crucial to reduce greenhouse gas emissions.",
       explanation_vn: "'It is crucial to + V' = cấu trúc giả định nhấn mạnh tầm quan trọng. 'It is easy' sai nghĩa; 'Greenhouse gases are crucial to reduce' lộn cấu trúc." },
@@ -214,11 +253,15 @@ export const unit30: UnitData = {
     { id: "q-ex6", type: "multiple-choice", question: "'Renewable energy' là:", options: ["Năng lượng hóa thạch", "Năng lượng tái tạo", "Năng lượng hạt nhân", "Năng lượng tiêu thụ"], answer: "Năng lượng tái tạo" },
     { id: "q-ex7", type: "multiple-choice", question: "'Unless we act now, it ___ too late.'", options: ["will be", "would be", "is", "was"], answer: "will be" },
   ],
+
+  // ── REVIEW: Exit quiz + cumulativeReview (spiral) + reading (B1+)
   cumulativeReviewQuestions: [
     { id: "cr30-1", question: "Ôn tập Unit 29 — Chọn từ: 'I propose that we ___ our website photos.'", options: ["optimize", "optimizes", "optimized", "optimizing"], answer: "optimize", type: "multiple-choice" },
     { id: "cr30-2", question: "Ôn tập Unit 28 — Điền: 'How long ___ they ___ (work) on this environment project?'", options: [], answer: "have they been working", type: "cloze" },
     { id: "cr30-3", question: "Ôn tập Unit 27 — Chọn phrasal verb có nghĩa là 'thực hiện':", options: ["carry out", "give up", "look up", "deal with"], answer: "carry out", type: "multiple-choice" },
   ],
+
+  // ── FLUENCY: pronunciationFocus
   pronunciationFocus: {
     phoneme: "should've /ˈʃʊdəv/",
     description: "Should have — nối âm và giảm âm trong văn nói",
@@ -231,6 +274,8 @@ export const unit30: UnitData = {
     ],
   },
 
+
+  // ── FLUENCY: fluencyDrill ≥5 (Nation Strand 4 automaticity)
   fluencyDrill: {
     items: [
       { en: "It is important to protect the environment", vn: "Việc bảo vệ môi trường là rất quan trọng" },
@@ -243,6 +288,8 @@ export const unit30: UnitData = {
       { en: "Organic farming is good for soil", vn: "Canh tác hữu cơ tốt cho đất" },
     ],
   },
+
+  // ── REVIEW: Reading passage for skills integration
   readingPassage: {
     id: "unit30-reading-1",
     title: "Living Sustainably",
@@ -312,6 +359,8 @@ export const unit30: UnitData = {
       },
     ],
   },
+
+  // ── OUTPUT: shadowing
   shadowingVideoId: "kX6QmBMvpkE",
 };
 

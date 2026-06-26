@@ -1,5 +1,12 @@
 import { UnitData } from "@/components/learn/UnitTemplate";
 
+
+// ─────────────────────────────────────────────────────────────────────────────
+// UNIT-20 — News & Current Events  (B1)
+// Standardized header + section comments per lesson-blueprint.ts (CONTENT_BLOCK_ORDER)
+// + lesson-center-reference.ts (ESA Engage/Study/Activate, CELTA, Nation, CLT VN)
+// Gold sample: src/lib/data/units/unit1.ts — field order meta→hook→warmup→vocab→grammar→exercises→dialogues→fluency→output→review
+// ─────────────────────────────────────────────────────────────────────────────
 // UNIT 20 — News & Current Events (B1)
 // Grammar: Past Perfect (had + past participle)
 // L1 Alert: Vietnamese has no equivalent — learners use Past Simple for all past events
@@ -15,6 +22,8 @@ export const unit20: UnitData = {
   badgeName: "Phóng Viên",
   badgeEmoji: "📰",
 
+
+  // ── HOOK: situation (real VN context) + learningOutcomes (2–5 can-do) + culturalNote (pragmatic VN↔EN)
   situation:
     "Bạn đang trình bày tóm tắt tin tức tại cuộc họp sáng thứ Hai. Đồng nghiệp hỏi: 'Why did the stock price drop yesterday?' Để giải thích đúng nguyên nhân và hệ quả, bạn cần Past Perfect: 'By the time the market opened, the company had already announced the losses.'",
 
@@ -24,15 +33,21 @@ export const unit20: UnitData = {
     "Đọc và thảo luận tin tức thời sự bằng tiếng Anh tự nhiên",
   ],
 
+
+  // ── HOOK (cultural): pragmatic note
   culturalNote:
     'Trong tiếng Anh, <span class="text-emerald-400 font-semibold">Past Perfect</span> giúp phân biệt THỨ TỰ của các sự kiện. Ví dụ: <span class="text-zinc-400">"When I arrived, the meeting started."</span> → nghe như hai việc xảy ra đồng thời. Còn <span class="text-emerald-400">"When I arrived, the meeting <strong>had already started</strong>."</span> → rõ ràng cuộc họp bắt đầu TRƯỚC khi tôi đến. Người Việt thường bỏ qua sự phân biệt này vì tiếng Việt dùng "đã" cho mọi trường hợp.',
 
+
+  // ── WARMUP: ≥3 short phrases (SRS + prior knowledge activation)
   warmupGreetings: [
     { emoji: "📊", en: "By the time I arrived, the presentation had already started.", vn: "Khi tôi đến, buổi thuyết trình đã bắt đầu rồi.", context: "Sự kiện xảy ra trước" },
     { emoji: "📰", en: "The company had announced the results before the market opened.", vn: "Công ty đã công bố kết quả trước khi thị trường mở cửa.", context: "Nguyên nhân trước hệ quả" },
     { emoji: "✉️", en: "She had already sent the report when her boss asked for it.", vn: "Cô ấy đã gửi báo cáo rồi khi sếp yêu cầu.", context: "Hành động hoàn thành trước" },
   ],
 
+
+  // ── VOCABULARY: 8–20 words, pre-teach BEFORE dialogues; l1_interference_vn (A1 100%, B1+ ≥50%)
   vocab: [
     { id: 1, word: "announce", emoji: "📢", phonetic: "/əˈnaʊns/", meaning: "thông báo / công bố", example: "The CEO announced the merger last Friday.", example2: "They had announced the results before we arrived.", collocation: "announce a decision / publicly announce", audio: "/audio/unit20/announce.mp3", l1_interference_vn: "⚠️ \'Announce\' + that/N: \'announce the decision\'. Không dùng \'announce someone that\' — dùng \'tell someone\'." },
     { id: 2, word: "merger", emoji: "🤝", phonetic: "/ˈmɜːdʒər/", meaning: "sự sáp nhập (công ty)", example: "The merger created the largest bank in the region.", example2: "By the time we heard, the merger had already been approved.", collocation: "company merger / merger deal / agree to a merger", audio: "/audio/unit20/merger.mp3" },
@@ -48,6 +63,8 @@ export const unit20: UnitData = {
     { id: 12, word: "impact", emoji: "💥", phonetic: "/ˈɪmpækt/", meaning: "tác động / ảnh hưởng", example: "The scandal had a major impact on the company's reputation.", example2: "What impact will this decision have on our team?", collocation: "major impact / have an impact on / economic impact", audio: "/audio/unit20/impact.mp3" },
   ],
 
+
+  // ── DIALOGUES: ≥1 dialogue AFTER vocab (98% coverage)
   dialogues: [
     {
       id: 1,
@@ -78,6 +95,8 @@ export const unit20: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: listenAndChoose ≥5 (controlled practice)
   listenAndChoose: [
     { id: "lac1", audio_text: "By the time I arrived the meeting had already started", options: ["By the time I arrived the meeting had already started", "By the time I arrived the meeting already started", "By the time I arrived the meeting has already started", "By the time I arrived the meeting was already starting"], answer: "By the time I arrived the meeting had already started" },
     { id: "lac2", audio_text: "The company had announced the merger before the market opened", options: ["The company announced the merger before the market opened", "The company had announced the merger before the market opened", "The company has announced the merger before the market opened", "The company had announced the merger before the market opens"], answer: "The company had announced the merger before the market opened" },
@@ -86,6 +105,8 @@ export const unit20: UnitData = {
     { id: "lac5", audio_text: "By 2023 the company had acquired three smaller firms", options: ["By 2023 the company acquired three smaller firms", "By 2023 the company had acquired three smaller firms", "By 2023 the company has acquired three smaller firms", "By 2023 the company was acquiring three smaller firms"], answer: "By 2023 the company had acquired three smaller firms" },
   ],
 
+
+  // ── OUTPUT: speaking prompts (freer production)
   speaking: {
     level1Prompt: "By the time {input}, the company had already {input}.",
     level1Placeholder: "Ví dụ: we heard the news — announced the merger...",
@@ -93,6 +114,8 @@ export const unit20: UnitData = {
     level2Hint: "By the time [event], [company/person] had already [action]. Previously, they had [background]. The announcement revealed that [consequence]. Going forward, [prediction].",
   },
 
+
+  // ── GRAMMAR: Inductive (Meaning→Form→CCQ) + vnNote L1
   grammar: {
     title: "Past Perfect — Sự Kiện Xảy Ra Trước Trong Quá Khứ",
     rule: "Past Perfect: had + past participle (V3)\n→ Dùng khi muốn nói rõ một hành động xảy ra TRƯỚC một hành động khác trong quá khứ\n\nCông thức:\n(+) I/You/He/She/We/They had finished\n(-) I/You/He/She/We/They hadn't started\n(?) Had you already left?\n\nKết hợp thường gặp:\n→ By the time + Past Simple → Past Perfect\n→ When + Past Simple → Past Perfect (hành động trước)\n→ Before/After + Past Simple → Past Perfect",
@@ -122,6 +145,8 @@ export const unit20: UnitData = {
     },
   },
 
+
+  // ── EXERCISES_INPUT: practiceQuiz (active recall)
   practiceQuiz: [
     { id: "pq1", type: "multiple-choice", question: "Chọn đúng: 'By the time she called, I ___ the report.'", options: ["finished", "had finished", "have finished", "was finishing"], answer: "had finished" },
     { id: "pq2", type: "multiple-choice", question: "Chọn đúng: 'When we arrived at the airport, the plane ___ already ___.'", options: ["already / departed", "had / already departed", "has / already departed", "was / already departing"], answer: "had / already departed" },
@@ -130,6 +155,8 @@ export const unit20: UnitData = {
     { id: "pq5", type: "cloze", question: "Điền: 'By 2025, the company ___ (acquire) five new markets.'", answer: "had acquired" },
   ],
 
+
+  // ── EXERCISES_INPUT: matching
   matchingExercise: {
     title: "Nối từ với nghĩa đúng",
     pairs: [
@@ -141,6 +168,8 @@ export const unit20: UnitData = {
     ],
   },
 
+
+  // ── OUTPUT: practiceTranslate (VN→EN ≥3) + speaking (level1/2)
   practiceTranslate: [
     {
       id: "pt-1",
@@ -159,6 +188,8 @@ export const unit20: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: sentenceCorrection
   sentenceCorrectionExercises: [
     {
       id: "sc20-1",
@@ -177,6 +208,8 @@ export const unit20: UnitData = {
   ],
 
 
+
+  // ── EXERCISES_INPUT: listenAndArrange
   listenAndArrangeExercises: [
     {
       id: "la20-1",
@@ -195,6 +228,8 @@ export const unit20: UnitData = {
   ],
 
 
+
+  // ── EXERCISES_INPUT: wordBank
   wordBankExercises: [
     {
       id: "wb1",
@@ -216,12 +251,16 @@ export const unit20: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: scramble
   scrambleExercises: [
     { id: "s20-1", prompt_vn: "Khi tôi đến, cuộc họp đã bắt đầu rồi.", words: ["When", "I", "arrived", ",", "the", "meeting", "had", "already", "started", "."], answer: "When I arrived , the meeting had already started ." },
     { id: "s20-2", prompt_vn: "Công ty đã công bố kết quả trước khi thị trường mở cửa.", words: ["The", "company", "had", "announced", "the", "results", "before", "the", "market", "opened", "."], answer: "The company had announced the results before the market opened ." },
     { id: "s20-3", prompt_vn: "Đến năm 2024, họ đã mua lại ba công ty nhỏ hơn.", words: ["By", "2024", ",", "they", "had", "acquired", "three", "smaller", "companies", "."], answer: "By 2024 , they had acquired three smaller companies ." },
   ],
 
+
+  // ── REVIEW: Final quiz ≥5 (retrieval practice)
   quiz: [
     { id: "fq1", type: "multiple-choice", question: "Dịch: 'Khi chúng tôi nghe tin, thỏa thuận đã được ký rồi.'", options: ["When we heard the news, the deal was already signed.", "When we heard the news, the deal had already been signed.", "When we heard the news, the deal has already been signed.", "When we heard the news, the deal already signed."], answer: "When we heard the news, the deal had already been signed." },
     { id: "fq2", type: "cloze", question: "Điền: 'She ___ (send) the email before he ___ (ask) for it.'", answer: "had sent / asked" },
@@ -237,12 +276,16 @@ export const unit20: UnitData = {
     { id: "q-ex7", type: "translate", question: "Dịch: 'Bệnh viện mới sẽ được xây dựng.'", answer: "A new hospital will be built." },
   ],
 
+
+  // ── REVIEW: Exit quiz + cumulativeReview (spiral) + reading (B1+)
   cumulativeReviewQuestions: [
     { id: "cr20-1", question: "Ôn tập Unit 19 — Chọn Past Continuous đúng: 'I ___ the report when my boss called.'", options: ["wrote", "was writing", "had written", "have written"], answer: "was writing", type: "multiple-choice" },
     { id: "cr20-2", question: "Ôn tập Unit 19 — Điền: 'While she ___ (present), the projector ___ (stop) working.'", options: [], answer: "was presenting / stopped", type: "cloze" },
     { id: "cr20-3", question: "Ôn tập A2 — Câu nào dùng Present Perfect đúng?", options: ["I worked here since 2020.", "I've worked here since 2020.", "I was working here since 2020.", "I work here since 2020."], answer: "I've worked here since 2020.", type: "multiple-choice" },
   ],
 
+
+  // ── FLUENCY: pronunciationFocus
   pronunciationFocus: {
     phoneme: "politics /ˈpɒlɪtɪks/",
     description: "Stress trong từ tin tức/chính trị — hay bị stress sai",
@@ -256,6 +299,8 @@ export const unit20: UnitData = {
     ],
   },
 
+
+  // ── FLUENCY: fluencyDrill ≥5 (Nation Strand 4 automaticity)
   fluencyDrill: {
     items: [
       { en: "By the time I arrived, it had already started", vn: "Khi tôi đến, nó đã bắt đầu rồi" },
@@ -268,6 +313,8 @@ export const unit20: UnitData = {
       { en: "The decision had been made before we were consulted", vn: "Quyết định đã được đưa ra trước khi chúng tôi được tham khảo" },
     ],
   },
+
+  // ── REVIEW: Reading passage for skills integration
   readingPassage: {
     id: "unit20-reading-1",
     title: "This Week in Tech News",
@@ -326,6 +373,8 @@ export const unit20: UnitData = {
       },
     ],
   },
+
+  // ── OUTPUT: shadowing
   shadowingVideoId: "F1C8IaAFgPo",
 };
 

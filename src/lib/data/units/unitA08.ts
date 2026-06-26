@@ -1,5 +1,12 @@
 import { UnitData } from "@/components/learn/UnitTemplate";
 
+
+// ─────────────────────────────────────────────────────────────────────────────
+// UNIT-A0-8 — Khẩn Cấp & Cụm Từ Sinh Tồn  (A0)
+// Standardized header + section comments per lesson-blueprint.ts (CONTENT_BLOCK_ORDER)
+// + lesson-center-reference.ts (ESA Engage/Study/Activate, CELTA, Nation, CLT VN)
+// Gold sample: src/lib/data/units/unit1.ts — field order meta→hook→warmup→vocab→grammar→exercises→dialogues→fluency→output→review
+// ─────────────────────────────────────────────────────────────────────────────
 // UNIT A0-8 — Khẩn Cấp & Cụm Từ Sinh Tồn (Emergency & Survival Phrases)
 // Grammar: Imperative + Please (Commands and requests)
 // L1 Alert: VN imperative = same verb; English uses base form (no subject)
@@ -18,6 +25,8 @@ export const unitA08: UnitData = {
   badgeName: "Người Sinh Tồn",
   badgeEmoji: "🆘",
 
+
+  // ── HOOK: situation (real VN context) + learningOutcomes (2–5 can-do) + culturalNote (pragmatic VN↔EN)
   situation:
     "Bạn đang du lịch một mình ở nước ngoài. Đột nhiên bạn bị lạc, không tìm thấy khách sạn, và điện thoại sắp hết pin. Bạn cần nhờ người xung quanh giúp đỡ ngay lập tức!",
 
@@ -27,9 +36,13 @@ export const unitA08: UnitData = {
     "Dùng câu mệnh lệnh lịch sự: Call..., Please help...",
   ],
 
+
+  // ── HOOK (cultural): pragmatic note
   culturalNote:
     'Trong tình huống khẩn cấp tại Mỹ/Anh, gọi <span class="text-emerald-400 font-semibold">911 (Mỹ)</span> hoặc <span class="text-emerald-400 font-semibold">999 (Anh)</span>. Nói ngay: <span class="text-emerald-400 font-semibold">"I need help!"</span> và địa chỉ của bạn. Người điều hành sẽ hỏi thêm — cứ trả lời từng câu một, không cần nói dài.',
 
+
+  // ── WARMUP: ≥3 short phrases (SRS + prior knowledge activation)
   warmupGreetings: [
     {
       emoji: "🆘",
@@ -51,6 +64,8 @@ export const unitA08: UnitData = {
     },
   ],
 
+
+  // ── VOCABULARY: 8–20 words, pre-teach BEFORE dialogues; l1_interference_vn (A1 100%, B1+ ≥50%)
   vocab: [
     {
       id: 1,
@@ -173,6 +188,8 @@ export const unitA08: UnitData = {
     },
   ],
 
+
+  // ── GRAMMAR: Inductive (Meaning→Form→CCQ) + vnNote L1
   grammar: {
     title: "Câu Mệnh Lệnh + Please (Imperative)",
     rule: "Câu mệnh lệnh = ĐỘNG TỪ (dạng nguyên thể) + ... — Không cần chủ ngữ!",
@@ -222,6 +239,8 @@ export const unitA08: UnitData = {
     },
   },
 
+
+  // ── EXERCISES_INPUT: matching
   matchingExercise: {
     title: "Nối tình huống với câu nói phù hợp",
     pairs: [
@@ -233,6 +252,8 @@ export const unitA08: UnitData = {
     ],
   },
 
+
+  // ── EXERCISES_INPUT: practiceQuiz (active recall)
   practiceQuiz: [
     {
       id: "pq8-1",
@@ -274,6 +295,8 @@ export const unitA08: UnitData = {
     },
   ],
 
+
+  // ── OUTPUT: practiceTranslate (VN→EN ≥3) + speaking (level1/2)
   practiceTranslate: [
     {
       id: "pt8-1",
@@ -292,6 +315,8 @@ export const unitA08: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: sentenceCorrection
   sentenceCorrectionExercises: [
     {
       id: "sc-A08-1",
@@ -310,6 +335,8 @@ export const unitA08: UnitData = {
   ],
 
 
+
+  // ── EXERCISES_INPUT: listenAndArrange
   listenAndArrangeExercises: [
     {
       id: "laA08-1",
@@ -328,6 +355,8 @@ export const unitA08: UnitData = {
   ],
 
 
+
+  // ── EXERCISES_INPUT: wordBank
   wordBankExercises: [
     {
       id: "wb1",
@@ -349,6 +378,8 @@ export const unitA08: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: scramble
   scrambleExercises: [
     {
       id: "s8-1",
@@ -370,6 +401,8 @@ export const unitA08: UnitData = {
     },
   ],
 
+
+  // ── DIALOGUES: ≥1 dialogue AFTER vocab (98% coverage)
   dialogues: [
     {
       id: 1,
@@ -467,6 +500,8 @@ export const unitA08: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: listenAndChoose ≥5 (controlled practice)
   listenAndChoose: [
     {
       id: "lac8-1",
@@ -516,6 +551,8 @@ export const unitA08: UnitData = {
   ],
 
   // ── CUMULATIVE REVIEW: Ôn lại unitA01-A07 (Thời gian + Ngày) ────────────
+
+  // ── REVIEW: Exit quiz + cumulativeReview (spiral) + reading (B1+)
   cumulativeReviewQuestions: [
     {
       id: "crA08-1",
@@ -547,6 +584,8 @@ export const unitA08: UnitData = {
     },
   ],
 
+
+  // ── FLUENCY: pronunciationFocus
   pronunciationFocus: {
     phoneme: "/ŋ/ cuối từ",
     description: "Âm NG cuối — sing, ring, long",
@@ -559,6 +598,8 @@ export const unitA08: UnitData = {
     ],
   },
 
+
+  // ── FLUENCY: fluencyDrill ≥5 (Nation Strand 4 automaticity)
   fluencyDrill: {
     title: "Luyện nhanh: Cụm từ sống còn",
     items: [
@@ -575,6 +616,8 @@ export const unitA08: UnitData = {
     ],
   },
 
+
+  // ── OUTPUT: speaking prompts (freer production)
   speaking: {
     level1Prompt: "Help! I'm {input}. Can you help me?",
     level1Placeholder: "Nhập tình trạng: lost / sick / hurt...",
@@ -583,6 +626,8 @@ export const unitA08: UnitData = {
     level2Hint: "Excuse me! I need help. I'm lost. My wallet is lost too. Please call the police. Is there a police station nearby?",
   },
 
+
+  // ── REVIEW: Final quiz ≥5 (retrieval practice)
   quiz: [
     {
       id: "q8-1",
@@ -644,6 +689,8 @@ export const unitA08: UnitData = {
       type: "translate",
     },
   ],
+
+  // ── REVIEW: Reading passage for skills integration
   readingPassage: {
     id: "unitA08-reading-1",
     title: "Help!",
@@ -698,6 +745,8 @@ export const unitA08: UnitData = {
       },
     ],
   },
+
+  // ── OUTPUT: shadowing
   shadowingVideoId: "mA-MK2bJA4I", // BBC Learning English — Travel & asking for help
 };
 

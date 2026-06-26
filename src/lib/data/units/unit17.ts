@@ -1,5 +1,12 @@
 import { UnitData } from "@/components/learn/UnitTemplate";
 
+
+// ─────────────────────────────────────────────────────────────────────────────
+// UNIT-17 — Experiences & Present Perfect  (A2)
+// Standardized header + section comments per lesson-blueprint.ts (CONTENT_BLOCK_ORDER)
+// + lesson-center-reference.ts (ESA Engage/Study/Activate, CELTA, Nation, CLT VN)
+// Gold sample: src/lib/data/units/unit1.ts — field order meta→hook→warmup→vocab→grammar→exercises→dialogues→fluency→output→review
+// ─────────────────────────────────────────────────────────────────────────────
 export const unit17: UnitData = {
   unitId: "unit-17",
   title: "Unit 17: Experiences & Present Perfect",
@@ -9,18 +16,26 @@ export const unit17: UnitData = {
   description: "Học Present Perfect để nói về kinh nghiệm sống và thành tích của bản thân.",
   badgeName: "Người Nhiều Trải Nghiệm",
   badgeEmoji: "🌟",
+
+  // ── HOOK: situation (real VN context) + learningOutcomes (2–5 can-do) + culturalNote (pragmatic VN↔EN)
   situation: "Buổi phỏng vấn xin việc hoặc buổi trà dư tửu hậu với đội nhóm quốc tế. Bạn cần chia sẻ về kinh nghiệm, những nơi bạn đã đến, và những thành tích bạn đã đạt được.",
   learningOutcomes: [
     "Nói về kinh nghiệm trong cuộc sống bằng Present Perfect",
     "Phân biệt Present Perfect với Past Simple",
     "Hỏi về kinh nghiệm của người khác một cách tự nhiên"
   ],
+
+  // ── WARMUP: ≥3 short phrases (SRS + prior knowledge activation)
   warmupGreetings: [
     { emoji: "🌍", en: "Have you ever traveled abroad?", vn: "Bạn đã từng đi nước ngoài chưa?", context: "Hỏi về kinh nghiệm" },
     { emoji: "🏆", en: "I've won a sales award three times.", vn: "Tôi đã giành được giải thưởng bán hàng ba lần.", context: "Thành tích" },
     { emoji: "🍣", en: "I have never eaten sushi before.", vn: "Tôi chưa bao giờ ăn sushi.", context: "Chưa từng làm gì" }
   ],
+
+  // ── HOOK (cultural): pragmatic note
   culturalNote: "Present Perfect (<span class=\"text-emerald-400 font-semibold\">have/has + past participle</span>) thường gây nhầm lẫn cho người học tiếng Việt vì tiếng Việt không có thì này. Quy tắc nhớ nhanh: dùng Present Perfect khi <strong>thời điểm cụ thể không quan trọng</strong>, chỉ quan trọng là <strong>đã từng làm chưa</strong>. Ngược lại, Past Simple dùng khi có thời điểm cụ thể.",
+
+  // ── VOCABULARY: 8–20 words, pre-teach BEFORE dialogues; l1_interference_vn (A1 100%, B1+ ≥50%)
   vocab: [
     { id: 1, word: "experience", emoji: "🌟", phonetic: "/ɪkˈspɪəriəns/", meaning: "kinh nghiệm / trải nghiệm", example: "I have three years of experience in marketing.", example2: "It was an amazing experience.", collocation: "work experience / life experience", audio: "/audio/unit17/experience.mp3" , l1_interference_vn: "⚠️ 'Have experience' (không đếm được) vs 'have an experience' (trải nghiệm cụ thể)." },
     { id: 2, word: "ever", emoji: "❓", phonetic: "/ˈevər/", meaning: "từng / bao giờ", example: "Have you ever worked abroad?", example2: "It's the best meal I've ever had!", collocation: "have you ever / best ever", audio: "/audio/unit17/ever.mp3" , l1_interference_vn: "⚠️ 'Have you EVER been...?' — 'ever' giữa have và V3 trong câu hỏi." },
@@ -35,6 +50,8 @@ export const unit17: UnitData = {
     { id: 11, word: "accomplished", emoji: "✨", phonetic: "/əˈkʌmplɪʃt/", meaning: "có thành tích / đã hoàn thành", example: "She is a very accomplished engineer.", example2: "I've accomplished all my goals this year.", collocation: "accomplished professional / feel accomplished", audio: "/audio/unit17/accomplished.mp3", l1_interference_vn: "⚠️ 'Accomplished' (adj) = có thành tích. 'Accomplish' (v) = hoàn thành/đạt được. 'Accomplished professional' = chuyên gia giỏi." },
     { id: 12, word: "certificate", emoji: "🎓", phonetic: "/sərˈtɪfɪkət/", meaning: "chứng chỉ / chứng nhận", example: "I have a certificate in project management.", example2: "She received a certificate for her work.", collocation: "get a certificate / certified professional", audio: "/audio/unit17/certificate.mp3", l1_interference_vn: "⚠️ Stress: cer-TIF-i-cate (n, /kəˈtɪfɪkɪt/). 'A certificate IN English'. KHÔNG nhầm với 'certification' (quá trình cấp chứng chỉ)." },
   ],
+
+  // ── DIALOGUES: ≥1 dialogue AFTER vocab (98% coverage)
   dialogues: [
     {
       id: 1,
@@ -64,6 +81,8 @@ export const unit17: UnitData = {
       ]
     },
   ],
+
+  // ── EXERCISES_INPUT: listenAndChoose ≥5 (controlled practice)
   listenAndChoose: [
     { id: "lac1", audio_text: "Have you ever worked in an international environment", options: ["Did you ever work in an international environment", "Have you ever worked in an international environment", "Have you ever work in an international environment", "Do you ever work in international environment"], answer: "Have you ever worked in an international environment" },
     { id: "lac2", audio_text: "I've worked here since 2020", options: ["I've worked here since 2020", "I've worked here for 2020", "I work here since 2020", "I worked here since 2020"], answer: "I've worked here since 2020" },
@@ -71,12 +90,16 @@ export const unit17: UnitData = {
     { id: "lac4", audio_text: "Have you finished the report yet", options: ["Have you finished the report yet", "Have you finish the report yet", "Did you finish the report yet", "Have you yet finished the report"], answer: "Have you finished the report yet" },
     { id: "lac5", audio_text: "I've just received my certificate", options: ["I just received my certificate", "I've just received my certificate", "I've just receive my certificate", "I just have received my certificate"], answer: "I've just received my certificate" },
   ],
+
+  // ── OUTPUT: speaking prompts (freer production)
   speaking: {
     level1Prompt: "I have {input} in my career.",
     level1Placeholder: "Ví dụ: led a team of five people, completed three projects, received an award...",
     level2Situation: "Trong buổi networking với chuyên gia quốc tế, hãy chia sẻ về kinh nghiệm của bạn: nước ngoài bạn đã đến, loại công việc bạn đã làm, và thành tích bạn đã đạt được trong sự nghiệp.",
     level2Hint: "I've worked in [field] for [duration] years. I've [achievement 1]. Have you ever [experience]? I've never [thing], but I hope to [goal]. Recently, I've [recent achievement].",
   },
+
+  // ── GRAMMAR: Inductive (Meaning→Form→CCQ) + vnNote L1
   grammar: {
     title: "Present Perfect — Kinh nghiệm và thành tích",
     rule: "Have/Has + past participle\nKeywords: ever, never, already, yet, just, since, for, recently",
@@ -106,6 +129,8 @@ export const unit17: UnitData = {
       explanation: "Present Perfect: have/has + past participle. 'Go' → past participle là 'been' (khi nói về địa điểm). 'I went to Japan last year' cũng đúng nhưng đó là Past Simple với thời điểm cụ thể.",
     },
   },
+
+  // ── EXERCISES_INPUT: practiceQuiz (active recall)
   practiceQuiz: [
     { id: "pq1", type: "multiple-choice", question: "Chọn đúng: 'She ___ a team for two years.'", options: ["lead", "led", "has led", "have led"], answer: "has led" },
     { id: "pq2", type: "multiple-choice", question: "Điền đúng: 'I've worked here ___ 2019.'", options: ["for", "since", "from", "at"], answer: "since" },
@@ -114,6 +139,8 @@ export const unit17: UnitData = {
     { id: "pq5", type: "cloze", question: "Điền: 'I have ___ been to Europe before. (chưa bao giờ)'", answer: "never" },
   ],
 
+
+  // ── EXERCISES_INPUT: matching
   matchingExercise: {
     title: "Nối từ với nghĩa đúng",
     pairs: [
@@ -125,6 +152,8 @@ export const unit17: UnitData = {
     ],
   },
 
+
+  // ── OUTPUT: practiceTranslate (VN→EN ≥3) + speaking (level1/2)
   practiceTranslate: [
     {
       id: "pt-1",
@@ -143,6 +172,8 @@ export const unit17: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: sentenceCorrection
   sentenceCorrectionExercises: [
     {
       id: "sc17-1",
@@ -161,6 +192,8 @@ export const unit17: UnitData = {
   ],
 
 
+
+  // ── EXERCISES_INPUT: listenAndArrange
   listenAndArrangeExercises: [
     {
       id: "la17-1",
@@ -179,6 +212,8 @@ export const unit17: UnitData = {
   ],
 
 
+
+  // ── EXERCISES_INPUT: wordBank
   wordBankExercises: [
     {
       id: "wb1",
@@ -200,6 +235,8 @@ export const unit17: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: scramble
   scrambleExercises: [
     {
       id: "s17-1",
@@ -221,6 +258,8 @@ export const unit17: UnitData = {
     },
   ],
 
+
+  // ── REVIEW: Final quiz ≥5 (retrieval practice)
   quiz: [
     { id: "fq1", type: "multiple-choice", question: "Dịch: 'Tôi đã làm việc với khách hàng nước ngoài được ba năm.'", options: ["I worked with foreign clients for three years.", "I've worked with foreign clients for three years.", "I've worked with foreign clients since three years.", "I work with foreign clients for three years."], answer: "I've worked with foreign clients for three years.", explanation_vn: "Present Perfect: 'I've worked... for three years' = đã và đang làm (kéo dài đến hiện tại). Simple Past 'I worked' = đã làm xong. 'Since three years' sai — dùng 'for'." },
     { id: "fq2", type: "cloze", question: "Điền: 'Have you ___ tried Vietnamese pho? (từng)'", answer: "ever" },
@@ -236,6 +275,8 @@ export const unit17: UnitData = {
     { id: "q-ex7", type: "translate", question: "Dịch: 'Tôi chưa ăn sáng.'", answer: "I haven't had breakfast yet." },
   ],
 
+
+  // ── REVIEW: Exit quiz + cumulativeReview (spiral) + reading (B1+)
   cumulativeReviewQuestions: [
     {
       id: "cr17-1",
@@ -265,6 +306,8 @@ export const unit17: UnitData = {
     },
   ],
 
+
+  // ── FLUENCY: pronunciationFocus
   pronunciationFocus: {
     phoneme: "have /hæv/ vs /həv/",
     description: "Have trong Present Perfect — dạng mạnh và yếu",
@@ -277,6 +320,8 @@ export const unit17: UnitData = {
     ],
   },
 
+
+  // ── FLUENCY: fluencyDrill ≥5 (Nation Strand 4 automaticity)
   fluencyDrill: {
     items: [
       { en: "I have worked here for 2 years", vn: "Tôi đã làm việc ở đây 2 năm" },
@@ -290,6 +335,8 @@ export const unit17: UnitData = {
     ],
   },
 
+
+  // ── REVIEW: Reading passage for skills integration
   readingPassage: {
     id: "unit17-reading-1",
     title: "An Interview to Remember",
@@ -347,6 +394,8 @@ export const unit17: UnitData = {
       },
     ],
   },
+
+  // ── OUTPUT: shadowing
   shadowingVideoId: "d_ndXSKm5po",
 };
 

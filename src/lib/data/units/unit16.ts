@@ -1,5 +1,12 @@
 import { UnitData } from "@/components/learn/UnitTemplate";
 
+
+// ─────────────────────────────────────────────────────────────────────────────
+// UNIT-16 — Travel & Directions  (A2)
+// Standardized header + section comments per lesson-blueprint.ts (CONTENT_BLOCK_ORDER)
+// + lesson-center-reference.ts (ESA Engage/Study/Activate, CELTA, Nation, CLT VN)
+// Gold sample: src/lib/data/units/unit1.ts — field order meta→hook→warmup→vocab→grammar→exercises→dialogues→fluency→output→review
+// ─────────────────────────────────────────────────────────────────────────────
 export const unit16: UnitData = {
   unitId: "unit-16",
   title: "Unit 16: Travel & Directions",
@@ -9,18 +16,26 @@ export const unit16: UnitData = {
   description: "Học cách hỏi và chỉ đường, mô tả địa điểm và đặt phòng khách sạn bằng tiếng Anh.",
   badgeName: "Người Dẫn Đường",
   badgeEmoji: "🗺️",
+
+  // ── HOOK: situation (real VN context) + learningOutcomes (2–5 can-do) + culturalNote (pragmatic VN↔EN)
   situation: "Đối tác người nước ngoài đến Hà Nội lần đầu tiên. Họ nhờ bạn chỉ đường đến văn phòng từ khách sạn và tư vấn phương tiện di chuyển.",
   learningOutcomes: [
     "Hỏi và chỉ đường bằng tiếng Anh rõ ràng",
     "Mô tả vị trí địa điểm bằng prepositions of place",
     "Đặt phòng và hỏi thông tin khách sạn"
   ],
+
+  // ── WARMUP: ≥3 short phrases (SRS + prior knowledge activation)
   warmupGreetings: [
     { emoji: "🗺️", en: "Excuse me, how do I get to the city center?", vn: "Xin lỗi, làm sao để đến trung tâm thành phố?", context: "Hỏi đường" },
     { emoji: "↗️", en: "Go straight and turn right at the traffic lights.", vn: "Đi thẳng và rẽ phải ở đèn giao thông.", context: "Chỉ đường" },
     { emoji: "🏨", en: "I'd like to book a room for two nights.", vn: "Tôi muốn đặt phòng hai đêm.", context: "Đặt phòng khách sạn" }
   ],
+
+  // ── HOOK (cultural): pragmatic note
   culturalNote: "Ở Việt Nam, grab và taxi là phương tiện di chuyển phổ biến nhất cho người nước ngoài. Khi chỉ đường, người Việt thường dùng <span class=\"text-emerald-400 font-semibold\">landmark</span> (mốc nhà quen thuộc như cột điện, ngân hàng) thay vì tên đường. Hãy học cách kết hợp: tên đường + mốc nhà quen để chỉ đường hiệu quả.",
+
+  // ── VOCABULARY: 8–20 words, pre-teach BEFORE dialogues; l1_interference_vn (A1 100%, B1+ ≥50%)
   vocab: [
     { id: 1, word: "straight", emoji: "⬆️", phonetic: "/streɪt/", meaning: "thẳng", example: "Go straight for two blocks.", example2: "The road goes straight ahead.", collocation: "go straight / straight ahead", audio: "/audio/unit16/straight.mp3", l1_interference_vn: "⚠️ 'Straight' = thẳng (hướng đi). 'Go straight' KHÔNG phải 'go straightly'. Đây là trạng từ, không thêm -ly." },
     { id: 2, word: "turn", emoji: "↪️", phonetic: "/tɜːrn/", meaning: "rẽ / quay", example: "Turn left at the traffic lights.", example2: "Turn right at the corner.", collocation: "turn left / turn right / turn around", audio: "/audio/unit16/turn.mp3", l1_interference_vn: "⚠️ 'Turn left/right' — KHÔNG 'turn to left'. Cụm cố định: turn left, turn right, không dùng 'to'." },
@@ -35,6 +50,8 @@ export const unit16: UnitData = {
     { id: 11, word: "distance", emoji: "📏", phonetic: "/ˈdɪstəns/", meaning: "khoảng cách", example: "It's a 10-minute walk from here.", example2: "What's the distance to the airport?", collocation: "walking distance / within distance", audio: "/audio/unit16/distance.mp3" , l1_interference_vn: "⚠️ Hỏi khoảng cách: 'How far is it?' không phải 'How distance is it?'" },
     { id: 12, word: "landmark", emoji: "🗼", phonetic: "/ˈlændmɑːrk/", meaning: "địa danh / mốc nhà", example: "Use Hoan Kiem Lake as a landmark.", example2: "The clock tower is a famous landmark.", collocation: "well-known landmark / use as a landmark", audio: "/audio/unit16/landmark.mp3" , l1_interference_vn: "⚠️ Stress: LAND-mark. Dùng chỉ đường: 'Turn left at the landmark'." },
   ],
+
+  // ── DIALOGUES: ≥1 dialogue AFTER vocab (98% coverage)
   dialogues: [
     {
       id: 1,
@@ -65,6 +82,8 @@ export const unit16: UnitData = {
       ]
     },
   ],
+
+  // ── EXERCISES_INPUT: listenAndChoose ≥5 (controlled practice)
   listenAndChoose: [
     { id: "lac1", audio_text: "Turn right at the traffic lights", options: ["Turn right at the traffic lights", "Turn left at the traffic lights", "Go right at the traffic lights", "Turn right in the traffic lights"], answer: "Turn right at the traffic lights" },
     { id: "lac2", audio_text: "The office is opposite the bank", options: ["The office is opposite the bank", "The office is opposite to bank", "The office is in front of the bank", "The office is near the bank"], answer: "The office is opposite the bank" },
@@ -72,12 +91,16 @@ export const unit16: UnitData = {
     { id: "lac4", audio_text: "It's only ten minutes on foot", options: ["It's only ten minutes on foot", "It's only ten minutes by foot", "It's only ten minute on foot", "It's ten minutes only on foot"], answer: "It's only ten minutes on foot" },
     { id: "lac5", audio_text: "Go straight for two blocks", options: ["Go straight for two blocks", "Go straight two blocks", "Goes straight for two blocks", "Go straight along two blocks"], answer: "Go straight for two blocks" },
   ],
+
+  // ── OUTPUT: speaking prompts (freer production)
   speaking: {
     level1Prompt: "To get to {input}, go straight and turn {input}.",
     level1Placeholder: "Ví dụ: the office, the café — right/left...",
     level2Situation: "Đối tác nước ngoài nhờ bạn chỉ đường từ khách sạn Hilton Hanoi đến văn phòng của bạn. Mô tả đường đi rõ ràng bằng tiếng Anh, bao gồm: phương tiện di chuyển, số phút đi bộ, các mốc nhà quan trọng.",
     level2Hint: "From the Hilton Hotel, [go straight / take a taxi / walk] along [street name]. At [landmark], turn [left/right]. Our office is [opposite/next to/near] [landmark]. It takes about [time] by [transport].",
   },
+
+  // ── GRAMMAR: Inductive (Meaning→Form→CCQ) + vnNote L1
   grammar: {
     title: "Prepositions of Place & Giving Directions",
     rule: "Location prepositions: opposite, next to, near, in front of, behind, between\nDirections: go straight / turn left|right / take the first/second left",
@@ -107,6 +130,8 @@ export const unit16: UnitData = {
       explanation: "'Opposite' = ở phía đối diện. 'In front of' = ở trước mặt (không nhất thiết phải đối mặt nhau). Khi hai địa điểm đối mặt nhau qua đường, dùng 'opposite'.",
     },
   },
+
+  // ── EXERCISES_INPUT: practiceQuiz (active recall)
   practiceQuiz: [
     { id: "pq1", type: "multiple-choice", question: "Chọn đúng: 'The pharmacy is ___ the coffee shop.'", options: ["opposite to", "opposite", "in front to", "facing to"], answer: "opposite" },
     { id: "pq2", type: "multiple-choice", question: "Điền đúng: 'Go ___ for three blocks, then turn left.'", options: ["straight", "forward", "ahead on", "direct"], answer: "straight" },
@@ -115,6 +140,8 @@ export const unit16: UnitData = {
     { id: "pq5", type: "cloze", question: "Điền: 'Turn ___ at the traffic lights, then go straight.'", answer: "right" },
   ],
 
+
+  // ── EXERCISES_INPUT: matching
   matchingExercise: {
     title: "Nối từ với nghĩa đúng",
     pairs: [
@@ -126,6 +153,8 @@ export const unit16: UnitData = {
     ],
   },
 
+
+  // ── OUTPUT: practiceTranslate (VN→EN ≥3) + speaking (level1/2)
   practiceTranslate: [
     {
       id: "pt-1",
@@ -144,6 +173,8 @@ export const unit16: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: sentenceCorrection
   sentenceCorrectionExercises: [
     {
       id: "sc16-1",
@@ -162,6 +193,8 @@ export const unit16: UnitData = {
   ],
 
 
+
+  // ── EXERCISES_INPUT: listenAndArrange
   listenAndArrangeExercises: [
     {
       id: "la16-1",
@@ -180,6 +213,8 @@ export const unit16: UnitData = {
   ],
 
 
+
+  // ── EXERCISES_INPUT: wordBank
   wordBankExercises: [
     {
       id: "wb1",
@@ -201,6 +236,8 @@ export const unit16: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: scramble
   scrambleExercises: [
     {
       id: "s16-1",
@@ -222,6 +259,8 @@ export const unit16: UnitData = {
     },
   ],
 
+
+  // ── REVIEW: Final quiz ≥5 (retrieval practice)
   quiz: [
     { id: "fq1", type: "multiple-choice", question: "Dịch: 'Văn phòng chúng tôi ở góc đường, đối diện với ngân hàng.'", options: ["Our office is at the corner, opposite bank.", "Our office is on the corner, opposite the bank.", "Our office is in the corner, opposite a bank.", "Our office at corner opposite the bank."], answer: "Our office is on the corner, opposite the bank.", explanation_vn: "'On the corner' (góc đường, ngoài trời). 'In the corner' = trong góc phòng. 'Opposite the bank' = đối diện ngân hàng (cần 'the')." },
     { id: "fq2", type: "cloze", question: "Điền: 'The hotel is ___ the train station — just across the road.'", answer: "opposite" },
@@ -238,6 +277,8 @@ export const unit16: UnitData = {
   ],
 
 
+
+  // ── REVIEW: Exit quiz + cumulativeReview (spiral) + reading (B1+)
   cumulativeReviewQuestions: [
     {
       id: "cr16-1",
@@ -267,6 +308,8 @@ export const unit16: UnitData = {
     },
   ],
 
+
+  // ── FLUENCY: pronunciationFocus
   pronunciationFocus: {
     phoneme: "travel word stress",
     description: "Stress và âm trong từ du lịch: passport, departure, arrival",
@@ -280,6 +323,8 @@ export const unit16: UnitData = {
     ],
   },
 
+
+  // ── FLUENCY: fluencyDrill ≥5 (Nation Strand 4 automaticity)
   fluencyDrill: {
     items: [
       { en: "Turn left", vn: "Rẽ trái" },
@@ -293,6 +338,8 @@ export const unit16: UnitData = {
     ],
   },
 
+
+  // ── REVIEW: Reading passage for skills integration
   readingPassage: {
     id: "unit16-reading-1",
     title: "Finding the Hotel",
@@ -350,6 +397,8 @@ export const unit16: UnitData = {
       },
     ],
   },
+
+  // ── OUTPUT: shadowing
   shadowingVideoId: "mA-MK2bJA4I",
 };
 

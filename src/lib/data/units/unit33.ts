@@ -1,5 +1,12 @@
 import { UnitData } from "@/components/learn/UnitTemplate";
 
+
+// ─────────────────────────────────────────────────────────────────────────────
+// UNIT-33 — Imagining & Hypothesizing  (B2)
+// Standardized header + section comments per lesson-blueprint.ts (CONTENT_BLOCK_ORDER)
+// + lesson-center-reference.ts (ESA Engage/Study/Activate, CELTA, Nation, CLT VN)
+// Gold sample: src/lib/data/units/unit1.ts — field order meta→hook→warmup→vocab→grammar→exercises→dialogues→fluency→output→review
+// ─────────────────────────────────────────────────────────────────────────────
 export const unit33: UnitData = {
   unitId: "unit-33",
   title: "Unit 33: Imagining & Hypothesizing",
@@ -9,18 +16,26 @@ export const unit33: UnitData = {
   description: "Second Conditional — Giả định các tình huống không có thật ở hiện tại hoặc tương lai. Thường xuyên được hỏi trong phỏng vấn tuyển dụng và đàm phán thương lượng.",
   badgeName: "Nhà Hoạch Định",
   badgeEmoji: "🔮",
+
+  // ── HOOK: situation (real VN context) + learningOutcomes (2–5 can-do) + culturalNote (pragmatic VN↔EN)
   situation: "Phỏng vấn xin việc vị trí Quản lý Dự án. Người phỏng vấn đặt câu hỏi giả định: 'What would you do if a key team member resigned in the middle of a project?' Bạn cần dùng câu điều kiện loại 2 (Second Conditional) để trả lời một cách tự tin và chuyên nghiệp.",
   learningOutcomes: [
     "Sử dụng câu điều kiện loại 2 (Second Conditional) để giả định tình huống",
     "Thảo luận về các rủi ro, kết quả giả định và đưa ra giải pháp trong công việc",
     "Sử dụng từ vựng về quản lý rủi ro và đánh giá dự án ở cấp độ B2",
   ],
+
+  // ── HOOK (cultural): pragmatic note
   culturalNote: 'Trong phỏng vấn hành vi (Behavioral Interview) của các tập đoàn đa quốc gia, câu hỏi giả định bắt đầu bằng <span class="text-emerald-400">"What would you do if..."</span> rất phổ biến. Bạn nên trả lời bằng <span class="text-emerald-400">"If that happened, I would..."</span> thay vì dùng <span class="text-zinc-400">"will"</span> để thể hiện tư duy phân tích sắc bén và khả năng xử lý tình huống giả định chuyên nghiệp.',
+
+  // ── WARMUP: ≥3 short phrases (SRS + prior knowledge activation)
   warmupGreetings: [
     { emoji: "💼", en: "If I were you, I would invest in that new venture.", vn: "Nếu tôi là bạn, tôi sẽ đầu tư vào dự án mạo hiểm mới đó.", context: "If I were you, I would — lời khuyên giả định" },
     { emoji: "🔮", en: "Imagine what the outcome would be if we failed.", vn: "Hãy tưởng tượng kết quả sẽ thế nào nếu chúng ta thất bại.", context: "imagine ... if we failed — giả định tương lai" },
     { emoji: "📈", en: "We would expand our business if we had more resources.", vn: "Chúng tôi sẽ mở rộng kinh doanh nếu có nhiều tài nguyên hơn.", context: "would expand if we had — giả định hiện tại" },
   ],
+
+  // ── VOCABULARY: 8–20 words, pre-teach BEFORE dialogues; l1_interference_vn (A1 100%, B1+ ≥50%)
   vocab: [
     { id: 1, word: "hypothetical", emoji: "💭", phonetic: "/ˌhaɪpəˈθetɪkəl/", meaning: "mang tính giả định / giả thuyết", example: "Let's look at a hypothetical situation to understand this rule.", example2: "This is a purely hypothetical question.", collocation: "hypothetical situation / hypothetical question / purely hypothetical", audio: "/audio/unit33/hypothetical.mp3" },
     { id: 2, word: "scenario", emoji: "🎬", phonetic: "/sɪˈnɑːriəʊ/", meaning: "kịch bản / tình huống có thể xảy ra", example: "We must prepare for the worst-case scenario.", example2: "In this scenario, we would lose half of our users.", collocation: "worst-case scenario / likely scenario / best-case scenario", audio: "/audio/unit33/scenario.mp3" },
@@ -35,6 +50,8 @@ export const unit33: UnitData = {
     { id: 11, word: "assess", emoji: "🔍", phonetic: "/əˈses/", meaning: "đánh giá / định giá", example: "We need to assess the risks before making a decision.", example2: "The teacher will assess the students' speaking skills.", collocation: "assess risks / assess performance / assess the situation", audio: "/audio/unit33/assess.mp3" },
     { id: 12, word: "resources", emoji: "💎", phonetic: "/rɪˈzɔːsɪz/", meaning: "tài nguyên / nguồn lực", example: "Human resources are the most valuable asset of a company.", example2: "We don't have enough resources to start the expansion.", collocation: "natural resources / human resources / lack of resources", audio: "/audio/unit33/resources.mp3" },
   ],
+
+  // ── DIALOGUES: ≥1 dialogue AFTER vocab (98% coverage)
   dialogues: [
     {
       id: 1,
@@ -61,6 +78,8 @@ export const unit33: UnitData = {
       ],
     },
   ],
+
+  // ── EXERCISES_INPUT: listenAndChoose ≥5 (controlled practice)
   listenAndChoose: [
     { id: "lac1", audio_text: "If I were you, I would invest in that new venture.", options: ["If I am you, I will invest in that new venture.", "If I were you, I would invest in that new venture.", "If I were you, I will invest in that new venture.", "If I was you, I invest in that new venture."], answer: "If I were you, I would invest in that new venture." },
     { id: "lac2", audio_text: "We would expand our business if we had more resources.", options: ["We will expand our business if we have more resources.", "We would expand our business if we had more resources.", "We would expand our business if we have more resources.", "We expanded our business because we had more resources."], answer: "We would expand our business if we had more resources." },
@@ -68,12 +87,16 @@ export const unit33: UnitData = {
     { id: "lac4", audio_text: "What would you do if a key member resigned?", options: ["What will you do if a key member resigns?", "What did you do when a key member resigned?", "What would you do if a key member resigned?", "What would you do if a key member resigns?"], answer: "What would you do if a key member resigned?" },
     { id: "lac5", audio_text: "We need to assess the risks before making a decision.", options: ["We should ignore the risks before making a decision.", "We need to assess the risks before making a decision.", "We assessed the risks after the decision was made.", "It is easy to predict the outcome of the risk."], answer: "We need to assess the risks before making a decision." },
   ],
+
+  // ── OUTPUT: speaking prompts (freer production)
   speaking: {
     level1Prompt: "If we had more {input}, we would {input} in this new {input}.",
     level1Placeholder: "Ví dụ: resources — invest — venture...",
     level2Situation: "Bạn đang tham gia buổi phỏng vấn xin việc và được hỏi câu hỏi tình huống: 'Bạn sẽ làm gì nếu ngân sách dự án bị cắt giảm 30%?'. Hãy: (1) Nói rằng đó là một tình huống giả định khó khăn, (2) Đưa ra phương án cắt giảm chi phí không thiết yếu, (3) Nhấn mạnh tầm quan trọng của nguồn nhân lực.",
     level2Hint: "If that hypothetical scenario happened, I would first assess the project budget to reduce non-essential costs. If we cut down on advertising, we would save some budget. However, I would protect our human resources because they are our most valuable asset.",
   },
+
+  // ── GRAMMAR: Inductive (Meaning→Form→CCQ) + vnNote L1
   grammar: {
     title: "Second Conditional — Câu Điều Kiện Loại 2 (Giả Định Hiện Tại)",
     rule: "Câu điều kiện loại 2 dùng để diễn tả các tình huống giả định, không có thật, hoặc trái với thực tế ở hiện tại hoặc tương lai.\n\nCấu trúc:\nIf + S + Past Simple (động từ chia ở quá khứ đơn), S + would / could / might + Verb-infinitive (động từ nguyên thể)\n\nLưu ý: Với động từ 'To be', ta dùng 'WERE' cho tất cả các ngôi (I/he/she/it/we/they) trong văn phong trang trọng.\n   → 'If I were the manager, I would change the policy.'",
@@ -102,6 +125,8 @@ export const unit33: UnitData = {
       explanation: "'If I had time, I would help you' dùng quá khứ đơn ở vế If và would ở vế sau, thể hiện hiện tại tôi không có thời gian và tôi không thể giúp bạn.",
     },
   },
+
+  // ── EXERCISES_INPUT: practiceQuiz (active recall)
   practiceQuiz: [
     { id: "pq1", type: "multiple-choice", question: "Chọn dạng đúng: 'If the company ___ more capital, it would invest in AI.'", options: ["has", "have", "had", "will have"], answer: "had" },
     { id: "pq2", type: "multiple-choice", question: "Chọn động từ đúng: 'If he ___ the CEO, he would change the corporate structure.'", options: ["is", "was", "were", "be"], answer: "were" },
@@ -109,6 +134,8 @@ export const unit33: UnitData = {
     { id: "pq4", type: "multiple-choice", question: "Chọn từ điền: 'Starting a joint venture involves a high level of ___.'", options: ["outcome", "criteria", "risk", "expansion"], answer: "risk" },
     { id: "pq5", type: "cloze", question: "Điền: 'If they took that risk, they ___ (might/will) lose their investment.'", answer: "might" },
   ],
+
+  // ── EXERCISES_INPUT: matching
   matchingExercise: {
     title: "Nối từ vựng giả định với nghĩa đúng",
     pairs: [
@@ -119,6 +146,8 @@ export const unit33: UnitData = {
       { left: "expansion", right: "sự mở rộng" },
     ],
   },
+
+  // ── OUTPUT: practiceTranslate (VN→EN ≥3) + speaking (level1/2)
   practiceTranslate: [
     {
       id: "pt-1",
@@ -137,6 +166,8 @@ export const unit33: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: sentenceCorrection
   sentenceCorrectionExercises: [
     {
       id: "sc33-1",
@@ -155,6 +186,8 @@ export const unit33: UnitData = {
   ],
 
 
+
+  // ── EXERCISES_INPUT: listenAndArrange
   listenAndArrangeExercises: [
     {
       id: "la33-1",
@@ -173,6 +206,8 @@ export const unit33: UnitData = {
   ],
 
 
+
+  // ── EXERCISES_INPUT: wordBank
   wordBankExercises: [
     {
       id: "wb1",
@@ -194,11 +229,15 @@ export const unit33: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: scramble
   scrambleExercises: [
     { id: "s33-1", prompt_vn: "Nếu tôi là bạn, tôi sẽ không chấp nhận rủi ro đó.", words: ["If", "I", "were", "you", ",", "I", "would", "not", "take", "that", "risk", "."], answer: "If I were you , I would not take that risk ." },
     { id: "s33-2", prompt_vn: "Chúng tôi sẽ đầu tư nhiều hơn nếu chúng tôi có vốn.", words: ["We", "would", "invest", "more", "if", "we", "had", "capital", "."], answer: "We would invest more if we had capital ." },
     { id: "s33-3", prompt_vn: "Hãy tưởng tượng kịch bản tệ nhất có thể xảy ra.", words: ["Imagine", "the", "worst-case", "scenario", "that", "could", "occur", "."], answer: "Imagine the worst-case scenario that could occur ." },
   ],
+
+  // ── REVIEW: Final quiz ≥5 (retrieval practice)
   quiz: [
     { id: "fq1", type: "multiple-choice", question: "Điền từ: 'If they ___ harder, they would meet the criteria.'", options: ["work", "worked", "working", "had worked"], answer: "worked" },
     { id: "fq2", type: "cloze", question: "Điền từ: 'We need to ___ (đánh giá) the expected outcome of the project.'", answer: "assess" },
@@ -213,11 +252,15 @@ export const unit33: UnitData = {
     { id: "q-ex6", type: "multiple-choice", question: "'What would you do if you won the lottery?' — câu hỏi về điều gì?", options: ["Kế hoạch thực tế", "Tình huống giả định", "Lời khuyên", "Hành động đã xảy ra"], answer: "Tình huống giả định" },
     { id: "q-ex7", type: "multiple-choice", question: "'Supposing you could fly...' = 'Giả sử bạn có thể bay...' — cấu trúc tương đương:", options: ["Even if you could fly", "If you could fly", "When you can fly", "Unless you can fly"], answer: "If you could fly" },
   ],
+
+  // ── REVIEW: Exit quiz + cumulativeReview (spiral) + reading (B1+)
   cumulativeReviewQuestions: [
     { id: "cr33-1", question: "Ôn tập Unit 32 — Điền: 'By next month, I ___ (complete) the B1 level.'", options: ["will have completed", "completed", "have completed", "will complete"], answer: "will have completed", type: "multiple-choice" },
     { id: "cr33-2", question: "Ôn tập Unit 31 — Điền: 'The corporate manager recommended that she ___ (inform) the client.'", options: [], answer: "inform", type: "cloze" },
     { id: "cr33-3", question: "Ôn tập Unit 30 — Điền: 'Deforestation is damaging the local ___.'", options: ["prevention", "pollution", "ecosystem", "sustainable"], answer: "ecosystem", type: "multiple-choice" },
   ],
+
+  // ── FLUENCY: pronunciationFocus
   pronunciationFocus: {
     phoneme: "subjunctive were /wɜːr/",
     description: "Subjunctive were — If I were you — âm /ɜː/ khó nhất",
@@ -230,6 +273,8 @@ export const unit33: UnitData = {
     ],
   },
 
+
+  // ── FLUENCY: fluencyDrill ≥5 (Nation Strand 4 automaticity)
   fluencyDrill: {
     items: [
       { en: "If I were you, I would invest", vn: "Nếu tôi là bạn, tôi sẽ đầu tư" },
@@ -242,6 +287,8 @@ export const unit33: UnitData = {
       { en: "If we had capital, we would start", vn: "Nếu có vốn, chúng tôi đã bắt đầu" },
     ],
   },
+
+  // ── REVIEW: Reading passage for skills integration
   readingPassage: {
     id: "unit33-reading-1",
     title: "If I Could Change One Thing",
@@ -310,6 +357,8 @@ export const unit33: UnitData = {
       },
     ],
   },
+
+  // ── OUTPUT: shadowing
   shadowingVideoId: "PqHzCRO0-tY",
 };
 

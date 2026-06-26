@@ -1,5 +1,12 @@
 import { UnitData } from "@/components/learn/UnitTemplate";
 
+
+// ─────────────────────────────────────────────────────────────────────────────
+// UNIT-10 — Abilities & Daily Skills  (A1)
+// Standardized header + section comments per lesson-blueprint.ts (CONTENT_BLOCK_ORDER)
+// + lesson-center-reference.ts (ESA Engage/Study/Activate, CELTA, Nation, CLT VN)
+// Gold sample: src/lib/data/units/unit1.ts — field order meta→hook→warmup→vocab→grammar→exercises→dialogues→fluency→output→review
+// ─────────────────────────────────────────────────────────────────────────────
 export const unit10: UnitData = {
   unitId: "unit-10",
   title: "Unit 10: Abilities & Daily Skills",
@@ -8,6 +15,8 @@ export const unit10: UnitData = {
   estimatedTime: 40,
   description: "Học cách nói về khả năng bản thân bằng 'can/can't' và hỏi về kỹ năng của người khác.",
   badgeName: "Người Đa Tài",
+
+  // ── HOOK: situation (real VN context) + learningOutcomes (2–5 can-do) + culturalNote (pragmatic VN↔EN)
   situation: "Trong buổi phỏng vấn xin việc, nhà tuyển dụng hỏi bạn có thể làm gì và kỹ năng nào bạn giỏi nhất.",
   learningOutcomes: [
     "Nói về khả năng và kỹ năng của bản thân bằng can/can't",
@@ -15,12 +24,18 @@ export const unit10: UnitData = {
     "Mô tả điểm mạnh và điểm yếu trong tiếng Anh"
   ],
   badgeEmoji: "⭐",
+
+  // ── WARMUP: ≥3 short phrases (SRS + prior knowledge activation)
   warmupGreetings: [
     { emoji: "🏊", en: "I can swim very well.", vn: "Tôi có thể bơi rất giỏi.", context: "Nói về khả năng bản thân" },
     { emoji: "🎸", en: "Can you play the guitar?", vn: "Bạn có thể chơi guitar không?", context: "Hỏi về khả năng người khác" },
     { emoji: "❌", en: "I can't speak Japanese.", vn: "Tôi không thể nói tiếng Nhật.", context: "Phủ định khả năng" }
   ],
+
+  // ── HOOK (cultural): pragmatic note
   culturalNote: "<span class=\"text-emerald-400 font-semibold\">Can</span> là modal verb — không thêm -s dù chủ ngữ là He/She/It. Sai: 'She cans swim'. Đúng: 'She can swim'. Người Việt hay mắc lỗi này vì quen với quy tắc thêm -s của Present Simple.",
+
+  // ── VOCABULARY: 8–20 words, pre-teach BEFORE dialogues; l1_interference_vn (A1 100%, B1+ ≥50%)
   vocab: [
     { id: 1, word: "swim", emoji: "🏊", phonetic: "/swɪm/", meaning: "bơi lội", example: "I can swim across the river.", example2: "Can you swim in the sea?", collocation: "swim well / swim fast", audio: "/audio/unit10/swim.mp3" , l1_interference_vn: "⚠️ 'Can swim' — KHÔNG thêm 'to': 'can TO swim' SAI. Sau modal dùng V nguyên thể." },
     { id: 2, word: "drive", emoji: "🚗", phonetic: "/draɪv/", meaning: "lái xe", example: "She can drive a car.", example2: "Can you drive a motorbike?", collocation: "drive a car / drive safely", audio: "/audio/unit10/drive.mp3" , l1_interference_vn: "⚠️ 'Drive a car' — cần mạo từ 'a' (lần đầu đề cập) hoặc 'the car' (cái xe cụ thể)." },
@@ -35,6 +50,8 @@ export const unit10: UnitData = {
     { id: 11, word: "draw", emoji: "✏️", phonetic: "/drɔː/", meaning: "vẽ", example: "He can draw portraits very well.", example2: "I can't draw at all!", collocation: "draw well / draw a picture", audio: "/audio/unit10/draw.mp3" , l1_interference_vn: "⚠️ Âm /drɔː/ — 'aw' đọc như trong 'saw'. Người Việt hay đọc thành 'dro' (âm ngắn)." },
     { id: 12, word: "take photos", emoji: "📷", phonetic: "/teɪk ˈfəʊtəʊz/", meaning: "chụp ảnh", example: "She can take beautiful photos.", example2: "Can you take a photo of us?", collocation: "take photos / take a photo of", audio: "/audio/unit10/take_photos.mp3", l1_interference_vn: "⚠️ 'Take photos/pictures' — KHÔNG 'make photos'. 'Take a selfie'. 'Take' là collocation cố định với photos." },
   ],
+
+  // ── DIALOGUES: ≥1 dialogue AFTER vocab (98% coverage)
   dialogues: [
     {
       id: 1,
@@ -64,6 +81,8 @@ export const unit10: UnitData = {
       ]
     },
   ],
+
+  // ── EXERCISES_INPUT: listenAndChoose ≥5 (controlled practice)
   listenAndChoose: [
     { id: "lac1", audio_text: "I can swim very well", options: ["I can run very well", "She can swim very well", "I can swim very well", "I can't swim very well"], answer: "I can swim very well" },
     { id: "lac2", audio_text: "She can drive a car", options: ["She can drive a bus", "She can't drive a car", "He can drive a car", "She can drive a car"], answer: "She can drive a car" },
@@ -71,12 +90,16 @@ export const unit10: UnitData = {
     { id: "lac4", audio_text: "Can you cook Vietnamese food", options: ["Can you eat Vietnamese food", "Can you cook Vietnamese food", "Can she cook Vietnamese food", "Can you cook Chinese food"], answer: "Can you cook Vietnamese food" },
     { id: "lac5", audio_text: "He can play the guitar", options: ["She can play the guitar", "He can play the piano", "He can't play the guitar", "He can play the guitar"], answer: "He can play the guitar" },
   ],
+
+  // ── OUTPUT: speaking prompts (freer production)
   speaking: {
     level1Prompt: "I can {input} very well.",
     level1Placeholder: "Ví dụ: swim, cook, sing, speak English...",
     level2Situation: "Bạn đang tham gia một buổi giới thiệu bản thân tại lớp học mới. Nói về 3 thứ bạn có thể làm tốt và 2 thứ bạn chưa thể làm.",
     level2Hint: "My name is [tên]. I can [kỹ năng 1] and [kỹ năng 2]. I can also [kỹ năng 3]. But I can't [chưa làm được 1] or [chưa làm được 2] yet.",
   },
+
+  // ── GRAMMAR: Inductive (Meaning→Form→CCQ) + vnNote L1
   grammar: {
     title: "Can / Can't — Diễn đạt khả năng",
     rule: "Subject + can + verb (không thêm -s) | Subject + can't + verb | Can + subject + verb?",
@@ -104,6 +127,8 @@ export const unit10: UnitData = {
       answer: "She can swim.",
     },
   },
+
+  // ── EXERCISES_INPUT: matching
   matchingExercise: {
     title: "Nối kỹ năng với nghĩa tiếng Việt",
     pairs: [
@@ -114,17 +139,23 @@ export const unit10: UnitData = {
       { left: "draw", right: "vẽ" },
     ],
   },
+
+  // ── EXERCISES_INPUT: practiceQuiz (active recall)
   practiceQuiz: [
     { id: "pq1", question: "Câu nào đúng với 'She'?", options: ["She cans swim.", "She can swims.", "She can swim.", "She is can swim."], answer: "She can swim.", type: "multiple-choice" },
     { id: "pq2", question: "Phủ định của 'I can sing' là gì?", options: ["I don't can sing.", "I can't sing.", "I cannot to sing.", "I not can sing."], answer: "I can't sing.", type: "multiple-choice" },
     { id: "pq3", question: "Điền từ còn thiếu: 'He ___ play the guitar.'", options: [], answer: "can", type: "cloze" },
   ],
 
+
+  // ── OUTPUT: practiceTranslate (VN→EN ≥3) + speaking (level1/2)
   practiceTranslate: [
     { id: "pt10-1", prompt_vn: "Tôi có thể nói tiếng Anh một chút.", answer: "I can speak a little English." },
     { id: "pt10-2", prompt_vn: "Anh ấy không thể lái xe.", answer: "He can't drive a car." },
     { id: "pt10-3", prompt_vn: "Bạn có thể giúp tôi không?", answer: "Can you help me?" },
   ],
+
+  // ── REVIEW: Final quiz ≥5 (retrieval practice)
   quiz: [
     { id: "q1", question: "Câu hỏi đúng về khả năng:", options: ["Do you can cook?", "Are you can cook?", "Can you cook?", "You can cook?"], answer: "Can you cook?", type: "multiple-choice",
       explanation_vn: "'Can' là động từ khiếm khuyết, câu hỏi đảo 'Can' lên đầu. Không dùng 'Do/Does/Are' với 'can'." },
@@ -138,6 +169,8 @@ export const unit10: UnitData = {
     { id: "q7", question: "Bạn có thể nói tiếng Anh không?", options: [], answer: "Can you speak English?", type: "translate" },
   ],
 
+
+  // ── EXERCISES_INPUT: sentenceCorrection
   sentenceCorrectionExercises: [
     {
       id: "sc10-1",
@@ -155,6 +188,8 @@ export const unit10: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: listenAndArrange
   listenAndArrangeExercises: [
     {
       id: "la10-1",
@@ -172,6 +207,8 @@ export const unit10: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: wordBank
   wordBankExercises: [
     {
       id: "wb1",
@@ -193,6 +230,8 @@ export const unit10: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: scramble
   scrambleExercises: [
     {
       id: "s10-1",
@@ -213,6 +252,8 @@ export const unit10: UnitData = {
       answer: "Can you cook Vietnamese food ?",
     },
   ],
+
+  // ── REVIEW: Exit quiz + cumulativeReview (spiral) + reading (B1+)
   cumulativeReviewQuestions: [
     {
       id: "cr10-1",
@@ -237,6 +278,8 @@ export const unit10: UnitData = {
     },
   ],
 
+
+  // ── FLUENCY: pronunciationFocus
   pronunciationFocus: {
     phoneme: "can /kæn/ vs /kən/",
     description: "Modal \"can\" — dạng mạnh /kæn/ (nhấn mạnh) và dạng yếu /kən/ (thông thường)",
@@ -249,6 +292,8 @@ export const unit10: UnitData = {
     ],
   },
 
+
+  // ── FLUENCY: fluencyDrill ≥5 (Nation Strand 4 automaticity)
   fluencyDrill: {
     items: [
       { en: "at 9 o'clock", vn: "lúc 9 giờ" },
@@ -261,6 +306,8 @@ export const unit10: UnitData = {
       { en: "at the meeting", vn: "tại cuộc họp" },
     ],
   },
+
+  // ── REVIEW: Reading passage for skills integration
   readingPassage: {
     id: "unit10-reading-1",
     title: "My New Colleague",
@@ -306,6 +353,8 @@ export const unit10: UnitData = {
       },
     ],
   },
+
+  // ── OUTPUT: shadowing
   shadowingVideoId: "BRK15SNOIJQ",
 };
 

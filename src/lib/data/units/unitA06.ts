@@ -1,5 +1,12 @@
 import { UnitData } from "@/components/learn/UnitTemplate";
 
+
+// ─────────────────────────────────────────────────────────────────────────────
+// UNIT-A0-6 — Gia Đình & Những Người Thân  (A0)
+// Standardized header + section comments per lesson-blueprint.ts (CONTENT_BLOCK_ORDER)
+// + lesson-center-reference.ts (ESA Engage/Study/Activate, CELTA, Nation, CLT VN)
+// Gold sample: src/lib/data/units/unit1.ts — field order meta→hook→warmup→vocab→grammar→exercises→dialogues→fluency→output→review
+// ─────────────────────────────────────────────────────────────────────────────
 // UNIT A0-6 — Gia Đình & Những Người Thân (Family Members)
 // Grammar: HE / SHE / THEY + BE — Third person pronouns with gender
 // L1 Alert: Vietnamese "anh ấy/cô ấy/họ" ≈ English HE/SHE/THEY
@@ -18,6 +25,8 @@ export const unitA06: UnitData = {
   badgeName: "Người Kể Chuyện",
   badgeEmoji: "👨‍👩‍👧‍👦",
 
+
+  // ── HOOK: situation (real VN context) + learningOutcomes (2–5 can-do) + culturalNote (pragmatic VN↔EN)
   situation:
     "Đồng nghiệp nước ngoài Sara nhìn thấy ảnh gia đình trên điện thoại của bạn và hỏi về từng người. Bạn cần kể về gia đình bằng tiếng Anh.",
 
@@ -27,9 +36,13 @@ export const unitA06: UnitData = {
     "Kể về gia đình: This is my mother. She is a teacher.",
   ],
 
+
+  // ── HOOK (cultural): pragmatic note
   culturalNote:
     'Người bản ngữ thường hỏi <span class="text-emerald-400 font-semibold">"Do you have any brothers or sisters?"</span> thay vì hỏi về từng người một. Câu trả lời ngắn gọn như <span class="text-emerald-400 font-semibold">"I have one older brother"</span> là đủ — không cần kể chi tiết nếu không được hỏi tiếp.',
 
+
+  // ── WARMUP: ≥3 short phrases (SRS + prior knowledge activation)
   warmupGreetings: [
     {
       emoji: "📸",
@@ -51,6 +64,8 @@ export const unitA06: UnitData = {
     },
   ],
 
+
+  // ── VOCABULARY: 8–20 words, pre-teach BEFORE dialogues; l1_interference_vn (A1 100%, B1+ ≥50%)
   vocab: [
     {
       id: 1,
@@ -174,6 +189,8 @@ export const unitA06: UnitData = {
     },
   ],
 
+
+  // ── GRAMMAR: Inductive (Meaning→Form→CCQ) + vnNote L1
   grammar: {
     title: "HE / SHE / THEY + BE — Đại từ ngôi 3",
     rule: "HE = nam giới (anh, chú, ông, bố...) / SHE = nữ giới / THEY = nhiều người",
@@ -222,6 +239,8 @@ export const unitA06: UnitData = {
     },
   },
 
+
+  // ── EXERCISES_INPUT: matching
   matchingExercise: {
     title: "Nối thành viên gia đình với đại từ đúng",
     pairs: [
@@ -233,6 +252,8 @@ export const unitA06: UnitData = {
     ],
   },
 
+
+  // ── EXERCISES_INPUT: practiceQuiz (active recall)
   practiceQuiz: [
     {
       id: "pq6-1",
@@ -269,6 +290,8 @@ export const unitA06: UnitData = {
     },
   ],
 
+
+  // ── OUTPUT: practiceTranslate (VN→EN ≥3) + speaking (level1/2)
   practiceTranslate: [
     {
       id: "pt6-1",
@@ -287,6 +310,8 @@ export const unitA06: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: sentenceCorrection
   sentenceCorrectionExercises: [
     {
       id: "sc-A06-1",
@@ -305,6 +330,8 @@ export const unitA06: UnitData = {
   ],
 
 
+
+  // ── EXERCISES_INPUT: listenAndArrange
   listenAndArrangeExercises: [
     {
       id: "laA06-1",
@@ -323,6 +350,8 @@ export const unitA06: UnitData = {
   ],
 
 
+
+  // ── EXERCISES_INPUT: wordBank
   wordBankExercises: [
     {
       id: "wb1",
@@ -344,6 +373,8 @@ export const unitA06: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: scramble
   scrambleExercises: [
     {
       id: "s6-1",
@@ -365,6 +396,8 @@ export const unitA06: UnitData = {
     },
   ],
 
+
+  // ── DIALOGUES: ≥1 dialogue AFTER vocab (98% coverage)
   dialogues: [
     {
       id: 1,
@@ -456,6 +489,8 @@ export const unitA06: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: listenAndChoose ≥5 (controlled practice)
   listenAndChoose: [
     {
       id: "lac6-1",
@@ -504,6 +539,8 @@ export const unitA06: UnitData = {
     },
   ],
 
+
+  // ── REVIEW: Exit quiz + cumulativeReview (spiral) + reading (B1+)
   cumulativeReviewQuestions: [
     {
       id: "crA06-1",
@@ -535,6 +572,8 @@ export const unitA06: UnitData = {
     },
   ],
 
+
+  // ── FLUENCY: pronunciationFocus
   pronunciationFocus: {
     phoneme: "/ʌ/ vs /ɑː/",
     description: "Phân biệt CUP /ʌ/ và CAR /ɑː/",
@@ -547,6 +586,8 @@ export const unitA06: UnitData = {
     ],
   },
 
+
+  // ── FLUENCY: fluencyDrill ≥5 (Nation Strand 4 automaticity)
   fluencyDrill: {
     title: "Luyện nhanh: Kể về gia đình",
     items: [
@@ -561,6 +602,8 @@ export const unitA06: UnitData = {
     ],
   },
 
+
+  // ── OUTPUT: speaking prompts (freer production)
   speaking: {
     level1Prompt: "This is my {input}. He/She is a...",
     level1Placeholder: "Nhập quan hệ (mother, father, brother, sister)...",
@@ -569,6 +612,8 @@ export const unitA06: UnitData = {
     level2Hint: "This is my [relation]. He/She is [job/description]. My family is [adjective].",
   },
 
+
+  // ── REVIEW: Final quiz ≥5 (retrieval practice)
   quiz: [
     {
       id: "q6-1",
@@ -625,6 +670,8 @@ export const unitA06: UnitData = {
       type: "translate",
     },
   ],
+
+  // ── REVIEW: Reading passage for skills integration
   readingPassage: {
     id: "unitA06-reading-1",
     title: "My Family",
@@ -668,6 +715,8 @@ export const unitA06: UnitData = {
       },
     ],
   },
+
+  // ── OUTPUT: shadowing
   shadowingVideoId: "XeZbFQUoHq8", // BBC Learning English — Family vocabulary
 };
 

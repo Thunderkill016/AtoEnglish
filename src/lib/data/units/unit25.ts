@@ -1,5 +1,12 @@
 import { UnitData } from "@/components/learn/UnitTemplate";
 
+
+// ─────────────────────────────────────────────────────────────────────────────
+// UNIT-25 — Describing People & Places  (B1)
+// Standardized header + section comments per lesson-blueprint.ts (CONTENT_BLOCK_ORDER)
+// + lesson-center-reference.ts (ESA Engage/Study/Activate, CELTA, Nation, CLT VN)
+// Gold sample: src/lib/data/units/unit1.ts — field order meta→hook→warmup→vocab→grammar→exercises→dialogues→fluency→output→review
+// ─────────────────────────────────────────────────────────────────────────────
 export const unit25: UnitData = {
   unitId: "unit-25",
   title: "Unit 25: Describing People & Places",
@@ -9,18 +16,26 @@ export const unit25: UnitData = {
   description: "Dùng Relative Clauses (who, which, that, where, whose) để mô tả chi tiết và phức tạp hơn — nâng cấp câu từ A2 lên B1+ ngay lập tức.",
   badgeName: "Người Mô Tả",
   badgeEmoji: "🔍",
+
+  // ── HOOK: situation (real VN context) + learningOutcomes (2–5 can-do) + culturalNote (pragmatic VN↔EN)
   situation: "Bạn đang giới thiệu nhóm dự án và văn phòng mới cho đối tác nước ngoài. Thay vì nói hai câu ngắn: 'This is our manager. She led the project.' — bạn dùng relative clause: 'This is our manager, who led the entire project.' — nghe tự nhiên và B1+ hơn nhiều.",
   learningOutcomes: [
     "Dùng who/which/that/where/whose để gắn kết thông tin trong một câu",
     "Phân biệt defining relative clauses (không có dấu phẩy) và mô tả thiết yếu",
     "Giới thiệu người và địa điểm bằng câu phức tự nhiên ở B1+",
   ],
+
+  // ── HOOK (cultural): pragmatic note
   culturalNote: 'Relative clauses là dấu hiệu rõ nhất của người nói tiếng Anh B1+. Người A2 nói: <span class="text-zinc-400">"She is our engineer. She designed the system."</span> Người B1 nói: <span class="text-emerald-400">"She is our engineer <strong>who designed the entire system</strong>."</span> Luyện tập ghép câu → câu nói của bạn ngay lập tức nghe chuyên nghiệp và tự nhiên hơn.',
+
+  // ── WARMUP: ≥3 short phrases (SRS + prior knowledge activation)
   warmupGreetings: [
     { emoji: "👩‍💼", en: "This is Lan, who leads our marketing department.", vn: "Đây là Lan, người dẫn dắt bộ phận marketing của chúng tôi.", context: "who — mô tả người" },
     { emoji: "🏢", en: "This is the office where the R&D team works.", vn: "Đây là văn phòng nơi nhóm R&D làm việc.", context: "where — mô tả địa điểm" },
     { emoji: "💻", en: "The software that we developed won a national award.", vn: "Phần mềm mà chúng tôi phát triển đã giành giải thưởng quốc gia.", context: "that — mô tả vật" },
   ],
+
+  // ── VOCABULARY: 8–20 words, pre-teach BEFORE dialogues; l1_interference_vn (A1 100%, B1+ ≥50%)
   vocab: [
     { id: 1, word: "headquarters", emoji: "🏢", phonetic: "/ˈhedkwɔːtəz/", meaning: "trụ sở chính", example: "Our headquarters, which is located in Hanoi, has 500 employees.", example2: "The company moved its headquarters to a new building.", collocation: "company headquarters / regional headquarters / based at HQ", audio: "/audio/unit25/headquarters.mp3" },
     { id: 2, word: "department", emoji: "🏬", phonetic: "/dɪˈpɑːtmənt/", meaning: "phòng / bộ phận", example: "She works in the finance department, which handles all company accounts.", example2: "Each department has its own manager and budget.", collocation: "HR department / finance department / head of department", audio: "/audio/unit25/department.mp3", l1_interference_vn: "⚠️ Viết hoa khi là tên chính thức: \'the Department of Education\'. Thường: \'marketing department\'." },
@@ -35,6 +50,8 @@ export const unit25: UnitData = {
     { id: 11, word: "branch", emoji: "🌿", phonetic: "/brɑːntʃ/", meaning: "chi nhánh", example: "We have a branch in Singapore where 50 staff are based.", example2: "The company opened a new branch in Ho Chi Minh City.", collocation: "open a branch / branch office / regional branch", audio: "/audio/unit25/branch.mp3", l1_interference_vn: "⚠️ = chi nhánh (đếm được): \'open a branch\'. Phân biệt \'department\' (phòng ban trong cùng công ty)." },
     { id: 12, word: "portfolio", emoji: "💼", phonetic: "/pɔːtˈfəʊliəʊ/", meaning: "danh mục / hồ sơ năng lực", example: "Her portfolio, which includes 20+ projects, is very impressive.", example2: "Please send your portfolio before the interview.", collocation: "project portfolio / investment portfolio / build a portfolio", audio: "/audio/unit25/portfolio.mp3", l1_interference_vn: "⚠️ Đếm được: \'a portfolio\'. Dùng cả trong tài chính (danh mục đầu tư) và sáng tạo (hồ sơ tác phẩm)." },
   ],
+
+  // ── DIALOGUES: ≥1 dialogue AFTER vocab (98% coverage)
   dialogues: [
     {
       id: 1,
@@ -63,6 +80,8 @@ export const unit25: UnitData = {
       ],
     },
   ],
+
+  // ── EXERCISES_INPUT: listenAndChoose ≥5 (controlled practice)
   listenAndChoose: [
     { id: "lac1", audio_text: "This is Lan who leads our marketing department", options: ["This is Lan which leads our marketing department", "This is Lan who leads our marketing department", "This is Lan whom leads our marketing department", "This is Lan whose leads our marketing department"], answer: "This is Lan who leads our marketing department" },
     { id: "lac2", audio_text: "The software that we developed won a national award", options: ["The software who we developed won a national award", "The software which we developed won a national award", "The software that we developed won a national award", "The software where we developed won a national award"], answer: "The software that we developed won a national award" },
@@ -70,12 +89,16 @@ export const unit25: UnitData = {
     { id: "lac4", audio_text: "Tom whose portfolio includes Fortune 500 campaigns works remotely", options: ["Tom who portfolio includes Fortune 500 campaigns works remotely", "Tom which portfolio includes Fortune 500 campaigns works remotely", "Tom whose portfolio includes Fortune 500 campaigns works remotely", "Tom where portfolio includes Fortune 500 campaigns works remotely"], answer: "Tom whose portfolio includes Fortune 500 campaigns works remotely" },
     { id: "lac5", audio_text: "The equipment that you see here was imported from Germany", options: ["The equipment who you see here was imported from Germany", "The equipment that you see here was imported from Germany", "The equipment where you see here was imported from Germany", "The equipment whose you see here was imported from Germany"], answer: "The equipment that you see here was imported from Germany" },
   ],
+
+  // ── OUTPUT: speaking prompts (freer production)
   speaking: {
     level1Prompt: "This is {input}, who {input}. She/He works in {input}, which {input}.",
     level1Placeholder: "Ví dụ: Lan — leads our engineering team — the innovation lab — has the latest equipment...",
     level2Situation: "Giới thiệu công ty hoặc nhóm của bạn với đối tác nước ngoài. Sử dụng ít nhất 4 relative clauses khác nhau (who, which, that, where, whose). Mô tả: người (tên + vai trò), địa điểm, sản phẩm/dự án, và một thành tích của nhóm.",
     level2Hint: "This is [name], who [role/achievement]. She/He is the [title] whose [possession/quality]. We work in [place], where [activity]. The [product/project] that we [created/launched] [achievement]. Our [team/company], which was founded in [year], now [current status].",
   },
+
+  // ── GRAMMAR: Inductive (Meaning→Form→CCQ) + vnNote L1
   grammar: {
     title: "Relative Clauses — Ghép Câu Như Người Bản Ngữ",
     rule: "Relative pronouns dùng cho:\nWHO → người (subject or object)\n→ 'The engineer WHO designed this'\nWHICH → vật/ý tưởng\n→ 'The software WHICH we built'\nTHAT → người hoặc vật (informal)\n→ 'The project THAT won the award'\nWHERE → địa điểm\n→ 'The office WHERE we work'\nWHOSE → sở hữu (của ai)\n→ 'The manager WHOSE team won'\n\nDefining (thiết yếu — không có dấu phẩy):\n→ 'The employee who handles accounts is on leave.'\n(chỉ rõ nhân viên cụ thể nào)",
@@ -104,6 +127,8 @@ export const unit25: UnitData = {
       explanation: "'Who' dùng cho NGƯỜI khi đóng vai trò chủ ngữ trong mệnh đề quan hệ. 'Which' cho vật, 'whose' cho sở hữu.",
     },
   },
+
+  // ── EXERCISES_INPUT: practiceQuiz (active recall)
   practiceQuiz: [
     { id: "pq1", type: "multiple-choice", question: "Chọn đúng: 'She is the colleague ___ helped me with the project.'", options: ["which", "whose", "who", "where"], answer: "who" },
     { id: "pq2", type: "multiple-choice", question: "Chọn đúng: 'This is the room ___ we hold all our presentations.'", options: ["who", "which", "that", "where"], answer: "where" },
@@ -111,6 +136,8 @@ export const unit25: UnitData = {
     { id: "pq4", type: "multiple-choice", question: "Chọn đúng sở hữu: 'The manager ___ team won the contract is being promoted.'", options: ["who", "which", "whose", "where"], answer: "whose" },
     { id: "pq5", type: "multiple-choice", question: "Ghép câu: 'She is our engineer. She designed the system.' → ?", options: ["She is our engineer which designed the system.", "She is our engineer who designed the system.", "She is our engineer whose designed the system.", "She is our engineer that she designed the system."], answer: "She is our engineer who designed the system." },
   ],
+
+  // ── EXERCISES_INPUT: matching
   matchingExercise: {
     title: "Nối relative pronoun với cách dùng đúng",
     pairs: [
@@ -121,6 +148,8 @@ export const unit25: UnitData = {
       { left: "that", right: "người hoặc vật (informal)" },
     ],
   },
+
+  // ── OUTPUT: practiceTranslate (VN→EN ≥3) + speaking (level1/2)
   practiceTranslate: [
     {
       id: "pt-1",
@@ -139,6 +168,8 @@ export const unit25: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: sentenceCorrection
   sentenceCorrectionExercises: [
     {
       id: "sc25-1",
@@ -157,6 +188,8 @@ export const unit25: UnitData = {
   ],
 
 
+
+  // ── EXERCISES_INPUT: listenAndArrange
   listenAndArrangeExercises: [
     {
       id: "la25-1",
@@ -175,6 +208,8 @@ export const unit25: UnitData = {
   ],
 
 
+
+  // ── EXERCISES_INPUT: wordBank
   wordBankExercises: [
     {
       id: "wb1",
@@ -196,11 +231,15 @@ export const unit25: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: scramble
   scrambleExercises: [
     { id: "s25-1", prompt_vn: "Đây là Lan, người dẫn dắt bộ phận kỹ thuật của chúng tôi.", words: ["This", "is", "Lan", ",", "who", "leads", "our", "engineering", "department", "."], answer: "This is Lan , who leads our engineering department ." },
     { id: "s25-2", prompt_vn: "Đây là văn phòng nơi nhóm R&D làm việc.", words: ["This", "is", "the", "office", "where", "the", "R&D", "team", "works", "."], answer: "This is the office where the R&D team works ." },
     { id: "s25-3", prompt_vn: "Phần mềm mà chúng tôi phát triển đã giành giải thưởng quốc gia.", words: ["The", "software", "that", "we", "developed", "won", "a", "national", "award", "."], answer: "The software that we developed won a national award ." },
   ],
+
+  // ── REVIEW: Final quiz ≥5 (retrieval practice)
   quiz: [
     { id: "fq1", type: "multiple-choice", question: "Ghép câu đúng: 'He is a specialist. He has 10 years of experience.'", options: ["He is a specialist which has 10 years of experience.", "He is a specialist who has 10 years of experience.", "He is a specialist whose has 10 years of experience.", "He is a specialist where has 10 years of experience."], answer: "He is a specialist who has 10 years of experience." },
     { id: "fq2", type: "cloze", question: "Điền: 'The client ___ contract we signed is very satisfied.'", answer: "whose" },
@@ -215,11 +254,15 @@ export const unit25: UnitData = {
     { id: "q-ex6", type: "translate", question: "Dịch: 'Người đàn ông đang nói chuyện với sếp tôi là anh trai tôi.'", answer: "The man who is talking to my boss is my brother." },
     { id: "q-ex7", type: "multiple-choice", question: "'Where' dùng trong mệnh đề quan hệ cho:", options: ["Người", "Vật", "Địa điểm", "Lý do"], answer: "Địa điểm" },
   ],
+
+  // ── REVIEW: Exit quiz + cumulativeReview (spiral) + reading (B1+)
   cumulativeReviewQuestions: [
     { id: "cr25-1", question: "Ôn tập Unit 24 — Passive Present đúng: 'The products ___ (test) before shipping.'", options: ["test", "are tested", "were tested", "have tested"], answer: "are tested", type: "multiple-choice" },
     { id: "cr25-2", question: "Ôn tập Unit 23 — Điền First Conditional: 'If you ___ (confirm) today, we ___ (start) immediately.'", options: [], answer: "confirm / will start", type: "cloze" },
     { id: "cr25-3", question: "Ôn tập Unit 22 — 'You ___ (không bắt buộc) stay past 6pm.'", options: ["mustn't", "must not", "don't have to", "should not"], answer: "don't have to", type: "multiple-choice" },
   ],
+
+  // ── FLUENCY: pronunciationFocus
   pronunciationFocus: {
     phoneme: "who /huː/ which /wɪtʃ/ where /weər/",
     description: "Relative pronouns — phát âm và stress",
@@ -233,6 +276,8 @@ export const unit25: UnitData = {
     ],
   },
 
+
+  // ── FLUENCY: fluencyDrill ≥5 (Nation Strand 4 automaticity)
   fluencyDrill: {
     items: [
       { en: "This is Lan, who leads our marketing team", vn: "Đây là Lan, người dẫn dắt nhóm marketing" },
@@ -245,6 +290,8 @@ export const unit25: UnitData = {
       { en: "The city where our headquarters is located is Hanoi", vn: "Thành phố nơi trụ sở của chúng tôi đặt là Hà Nội" },
     ],
   },
+
+  // ── REVIEW: Reading passage for skills integration
   readingPassage: {
     id: "unit25-reading-1",
     title: "My Dream City",
@@ -312,6 +359,8 @@ export const unit25: UnitData = {
       },
     ],
   },
+
+  // ── OUTPUT: shadowing
   shadowingVideoId: "W-jAfgQm_00",
 };
 

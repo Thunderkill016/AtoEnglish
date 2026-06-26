@@ -1,5 +1,12 @@
 import { UnitData } from "@/components/learn/UnitTemplate";
 
+
+// ─────────────────────────────────────────────────────────────────────────────
+// UNIT-A0-2 — Số Đếm & Giá Tiền  (A0)
+// Standardized header + section comments per lesson-blueprint.ts (CONTENT_BLOCK_ORDER)
+// + lesson-center-reference.ts (ESA Engage/Study/Activate, CELTA, Nation, CLT VN)
+// Gold sample: src/lib/data/units/unit1.ts — field order meta→hook→warmup→vocab→grammar→exercises→dialogues→fluency→output→review
+// ─────────────────────────────────────────────────────────────────────────────
 // ─────────────────────────────────────────────────────────────────────────────
 // UNIT A0-2 — Số Đếm & Giá Tiền (Numbers & Prices)
 // Level 0 / Foundation — Pre-CEFR A0
@@ -20,6 +27,8 @@ export const unitA02: UnitData = {
   badgeName: "Người Đếm Số",
   badgeEmoji: "🔢",
 
+
+  // ── HOOK: situation (real VN context) + learningOutcomes (2–5 can-do) + culturalNote (pragmatic VN↔EN)
   situation:
     "Bạn đang mua đồ tại cửa hàng tiện lợi có thu ngân người nước ngoài. Giá hiển thị $12. Làm sao bạn hỏi giá và xử lý thanh toán bằng tiếng Anh?",
 
@@ -29,9 +38,13 @@ export const unitA02: UnitData = {
     "Xử lý giao dịch mua bán đơn giản",
   ],
 
+
+  // ── HOOK (cultural): pragmatic note
   culturalNote:
     'Người bản ngữ hay dùng <span class="text-emerald-400 font-semibold">"How much is this?"</span> khi chỉ vào món hàng, hoặc <span class="text-emerald-400 font-semibold">"What\'s the total?"</span> khi muốn biết tổng. Không cần nói "How much money" — chỉ "How much" là đủ!',
 
+
+  // ── WARMUP: ≥3 short phrases (SRS + prior knowledge activation)
   warmupGreetings: [
     {
       emoji: "💰",
@@ -54,6 +67,8 @@ export const unitA02: UnitData = {
   ],
 
   // ✅ Lewis: 10 chunks — all in dialogue, not isolated words
+
+  // ── VOCABULARY: 8–20 words, pre-teach BEFORE dialogues; l1_interference_vn (A1 100%, B1+ ≥50%)
   vocab: [
     {
       id: 1,
@@ -176,6 +191,8 @@ export const unitA02: UnitData = {
     },
   ],
 
+
+  // ── GRAMMAR: Inductive (Meaning→Form→CCQ) + vnNote L1
   grammar: {
     title: "\"How much IS it?\" — Câu hỏi giá với Verb BE",
     rule: "How much + IS/ARE + danh từ? → Hỏi giá hoặc số lượng của thứ gì đó.",
@@ -224,6 +241,8 @@ export const unitA02: UnitData = {
     },
   },
 
+
+  // ── EXERCISES_INPUT: matching
   matchingExercise: {
     title: "Nối số với từ tiếng Anh",
     pairs: [
@@ -235,6 +254,8 @@ export const unitA02: UnitData = {
     ],
   },
 
+
+  // ── EXERCISES_INPUT: practiceQuiz (active recall)
   practiceQuiz: [
     {
       id: "pq2-1",
@@ -273,6 +294,8 @@ export const unitA02: UnitData = {
     },
   ],
 
+
+  // ── OUTPUT: practiceTranslate (VN→EN ≥3) + speaking (level1/2)
   practiceTranslate: [
     {
       id: "pt2-1",
@@ -291,6 +314,8 @@ export const unitA02: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: sentenceCorrection
   sentenceCorrectionExercises: [
     {
       id: "sc-A02-1",
@@ -309,6 +334,8 @@ export const unitA02: UnitData = {
   ],
 
 
+
+  // ── EXERCISES_INPUT: listenAndArrange
   listenAndArrangeExercises: [
     {
       id: "laA02-1",
@@ -327,6 +354,8 @@ export const unitA02: UnitData = {
   ],
 
 
+
+  // ── EXERCISES_INPUT: wordBank
   wordBankExercises: [
     {
       id: "wb1",
@@ -348,6 +377,8 @@ export const unitA02: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: scramble
   scrambleExercises: [
     {
       id: "s2-1",
@@ -370,6 +401,8 @@ export const unitA02: UnitData = {
   ],
 
   // ✅ All 10 vocab words used in natural context
+
+  // ── DIALOGUES: ≥1 dialogue AFTER vocab (98% coverage)
   dialogues: [
     {
       id: 1,
@@ -467,6 +500,8 @@ export const unitA02: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: listenAndChoose ≥5 (controlled practice)
   listenAndChoose: [
     {
       id: "lac2-1",
@@ -510,6 +545,8 @@ export const unitA02: UnitData = {
     },
   ],
 
+
+  // ── REVIEW: Exit quiz + cumulativeReview (spiral) + reading (B1+)
   cumulativeReviewQuestions: [
     {
       id: "crA02-1",
@@ -541,6 +578,8 @@ export const unitA02: UnitData = {
     },
   ],
 
+
+  // ── FLUENCY: pronunciationFocus
   pronunciationFocus: {
     phoneme: "/s/ & /z/ cuối từ",
     description: "Số nhiều: khi nào thêm /s/ và khi nào /z/",
@@ -553,6 +592,8 @@ export const unitA02: UnitData = {
     ],
   },
 
+
+  // ── FLUENCY: fluencyDrill ≥5 (Nation Strand 4 automaticity)
   fluencyDrill: {
     title: "Số từ 1–20 + Cụm câu mua sắm",
     items: [
@@ -567,6 +608,8 @@ export const unitA02: UnitData = {
     ],
   },
 
+
+  // ── OUTPUT: speaking prompts (freer production)
   speaking: {
     level1Prompt: "How much is it? — It's {input} dollars.",
     level1Placeholder: "Nhập số tiền (vd: five, ten, twelve)...",
@@ -576,6 +619,8 @@ export const unitA02: UnitData = {
       "How much is the coffee? / And the sandwich? / What's the total? / Here's twenty dollars. / Keep the change!",
   },
 
+
+  // ── REVIEW: Final quiz ≥5 (retrieval practice)
   quiz: [
     {
       id: "q2-1",
@@ -632,6 +677,8 @@ export const unitA02: UnitData = {
       type: "translate",
     },
   ],
+
+  // ── REVIEW: Reading passage for skills integration
   readingPassage: {
     id: "unitA02-reading-1",
     title: "At the Market",
@@ -676,6 +723,8 @@ export const unitA02: UnitData = {
       },
     ],
   },
+
+  // ── OUTPUT: shadowing
   shadowingVideoId: "EDFWbC74Sdc", // BBC Learning English — Numbers 1-100
 };
 

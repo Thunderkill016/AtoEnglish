@@ -1,5 +1,12 @@
 import { UnitData } from "@/components/learn/UnitTemplate";
 
+
+// ─────────────────────────────────────────────────────────────────────────────
+// UNIT-40 — Linking & Cohesion  (B2)
+// Standardized header + section comments per lesson-blueprint.ts (CONTENT_BLOCK_ORDER)
+// + lesson-center-reference.ts (ESA Engage/Study/Activate, CELTA, Nation, CLT VN)
+// Gold sample: src/lib/data/units/unit1.ts — field order meta→hook→warmup→vocab→grammar→exercises→dialogues→fluency→output→review
+// ─────────────────────────────────────────────────────────────────────────────
 export const unit40: UnitData = {
   unitId: "unit-40",
   title: "Unit 40: Linking & Cohesion",
@@ -9,18 +16,26 @@ export const unit40: UnitData = {
   description: "Discourse Markers — Các từ nối và liên từ liên kết nâng cao (nevertheless, consequently, furthermore, thereby, whereas). Công cụ tối quan trọng để đạt điểm 6.5+ tiêu chí Coherence & Cohesion trong IELTS Writing Task 2.",
   badgeName: "Nhà Hùng Biện",
   badgeEmoji: "✒️",
+
+  // ── HOOK: situation (real VN context) + learningOutcomes (2–5 can-do) + culturalNote (pragmatic VN↔EN)
   situation: "Soạn thảo bài luận học thuật hoặc báo cáo phân tích chiến lược của công ty. Bạn cần liên kết các ý kiến tương phản, nguyên nhân - kết quả và bổ sung thông tin một cách mượt mà, logic bằng các liên từ chuyển tiếp nâng cao.",
   learningOutcomes: [
     "Sử dụng các từ nối nâng cao để thể hiện sự đối lập, kết quả và bổ sung ý nghĩa",
     "Đảm bảo sự mạch lạc (coherence) và tính liên kết (cohesion) trong văn bản dài",
     "Sử dụng từ vựng về cấu trúc văn bản học thuật ở mức độ B2+",
   ],
+
+  // ── HOOK (cultural): pragmatic note
   culturalNote: 'Trong viết học thuật tiếng Anh, việc lặp đi lặp lại các từ nối cơ bản như "but", "so", "and" hoặc "because" sẽ kéo băng điểm Cohesion xuống dưới 6.0. Sử dụng các từ thay thế trang trọng hơn như <span class="text-emerald-400">"nevertheless"</span> (tuy nhiên), <span class="text-emerald-400">"consequently"</span> (do đó), và <span class="text-emerald-400">"furthermore"</span> (hơn nữa) giúp văn bản mang sắc thái học thuật rõ nét.',
+
+  // ── WARMUP: ≥3 short phrases (SRS + prior knowledge activation)
   warmupGreetings: [
     { emoji: "✒️", en: "Furthermore, the new policy will enhance workplace safety.", vn: "Hơn nữa, chính sách mới sẽ nâng cao an toàn nơi làm việc.", context: "Furthermore — bổ sung thông tin (in addition)" },
     { emoji: "⚖️", en: "Sales increased; nevertheless, profits declined due to high costs.", vn: "Doanh số tăng; tuy nhiên, lợi nhuận lại giảm do chi phí cao.", context: "nevertheless = tuy nhiên (however)" },
     { emoji: "📈", en: "We optimized the code, thereby reducing the loading time.", vn: "Chúng tôi đã tối ưu hóa mã nguồn, bằng cách đó giảm thời gian tải trang.", context: "thereby + V-ing = bằng cách đó" },
   ],
+
+  // ── VOCABULARY: 8–20 words, pre-teach BEFORE dialogues; l1_interference_vn (A1 100%, B1+ ≥50%)
   vocab: [
     { id: 1, word: "nevertheless", emoji: "⚖️", phonetic: "/ˌnevəðəˈles/", meaning: "tuy nhiên / mặc dù vậy", example: "The match was wet; nevertheless, we enjoyed it.", example2: "Profits declined; nevertheless, the company expanded.", collocation: "nevertheless, S + V / but nevertheless / nevertheless true", audio: "/audio/unit40/nevertheless.mp3" },
     { id: 2, word: "consequently", emoji: "💥", phonetic: "/ˈkɒnsɪkwəntli/", meaning: "do đó / kết quả là", example: "He forgot his passport; consequently, he missed the flight.", example2: "The system crashed; consequently, data was lost.", collocation: "consequently, S + V / and consequently", audio: "/audio/unit40/consequently.mp3" },
@@ -35,6 +50,8 @@ export const unit40: UnitData = {
     { id: 11, word: "subsequent", emoji: "📅", phonetic: "/ˈsʌbsɪkwənt/", meaning: "xảy ra sau đó / theo sau", example: "The subsequent investigation proved our innocence.", example2: "Subsequent events showed that we were wrong.", collocation: "subsequent years / subsequent events / subsequent analysis", audio: "/audio/unit40/subsequent.mp3" },
     { id: 12, word: "notwithstanding", emoji: "🛡️", phonetic: "/ˌnɒtwɪðˈstændɪŋ/", meaning: "mặc dù / bất kể", example: "Notwithstanding the rain, the soccer match continued.", example2: "His achievements, notwithstanding his poor background, are amazing.", collocation: "notwithstanding the fact that / notwithstanding the difficulties", audio: "/audio/unit40/notwithstanding.mp3" },
   ],
+
+  // ── DIALOGUES: ≥1 dialogue AFTER vocab (98% coverage)
   dialogues: [
     {
       id: 1,
@@ -61,6 +78,8 @@ export const unit40: UnitData = {
       ],
     },
   ],
+
+  // ── EXERCISES_INPUT: listenAndChoose ≥5 (controlled practice)
   listenAndChoose: [
     { id: "lac1", audio_text: "He forgot his passport; consequently, he missed the flight.", options: ["He missed the flight despite having his passport.", "He forgot his passport; consequently, he missed the flight.", "He will buy a passport after he flies.", "Consequently, he forgot his passport on the flight."], answer: "He forgot his passport; consequently, he missed the flight." },
     { id: "lac2", audio_text: "Notwithstanding the rain, the soccer match continued.", options: ["The soccer match was cancelled because of rain.", "Notwithstanding the rain, the soccer match continued.", "We played soccer yesterday before it rained.", "It rained but the soccer match was delayed."], answer: "Notwithstanding the rain, the soccer match continued." },
@@ -68,12 +87,16 @@ export const unit40: UnitData = {
     { id: "lac4", audio_text: "She practice daily, thereby improving her speaking skills.", options: ["She does not practice but her speaking is good.", "She practice daily, thereby improving her speaking skills.", "She will improve her speaking tomorrow by practicing.", "Thereby, she practiced speaking skills daily."], answer: "She practice daily, thereby improving her speaking skills." },
     { id: "lac5", audio_text: "The essay lacks cohesion; the paragraphs are disconnected.", options: ["The essay is very coherent and well-structured.", "The essay lacks cohesion; the paragraphs are disconnected.", "We need to connect the writer with the editor.", "The essay had no paragraphs yesterday."], answer: "The essay lacks cohesion; the paragraphs are disconnected." },
   ],
+
+  // ── OUTPUT: speaking prompts (freer production)
   speaking: {
     level1Prompt: "Sales increased; {input}, profits declined. {input}, we must cut costs.",
     level1Placeholder: "Ví dụ: nevertheless — consequently...",
     level2Situation: "Bạn đang viết phần kết luận của bài luận IELTS bàn về giao thông công cộng. Hãy: (1) Nói rằng bất chấp chi phí cao, tàu cao tốc mang lại lợi ích lớn, (2) Giải thích rằng nó giúp giảm ô nhiễm, nhờ đó nâng cao sức khỏe cộng đồng, (3) Tương tự như vậy, nó giúp tiết kiệm thời gian đi lại.",
     level2Hint: "Notwithstanding the high construction costs, high-speed trains offer great benefits. They reduce air pollution, thereby enhancing public health. Likewise, they help commuters save travel time. Consequently, governments should fund these projects.",
   },
+
+  // ── GRAMMAR: Inductive (Meaning→Form→CCQ) + vnNote L1
   grammar: {
     title: "Advanced Discourse Markers — Các Từ Nối Chuyển Tiếp Nâng Cao",
     rule: "Liên kết ý tưởng chặt chẽ giúp đạt điểm cao trong văn viết học thuật (IELTS Task 2) và giao tiếp doanh nghiệp:\n\n1. Contrast (Đối lập/Trái ngược):\n- nevertheless (tuy nhiên): Đứng đầu câu hoặc sau dấu chấm phẩy.\n  → 'Sales fell; nevertheless, we made profit.'\n- whereas (trong khi): Nối hai mệnh đề có tính chất so sánh đối lập.\n  → 'I love coding, whereas he prefers designing.'\n- notwithstanding (mặc dù / bất kể): Đứng trước danh từ.\n  → 'Notwithstanding the difficulties, we succeeded.'\n\n2. Cause & Effect (Nguyên nhân - Kết quả):\n- consequently (do đó/kết quả là): Diễn tả hệ quả logic.\n  → 'He broke the rules; consequently, he was dismissed.'\n- thereby + V-ing (bằng cách đó/nhờ đó): Nối mệnh đề chỉ phương thức và kết quả.\n  → 'We optimized the database, thereby saving storage.'\n- hence (vì thế): 'He studied hard, hence his success.'\n\n3. Addition (Bổ sung):\n- furthermore (hơn nữa): Thêm một ý kiến bổ trợ mạnh mẽ vào lập luận.",
@@ -102,6 +125,8 @@ export const unit40: UnitData = {
       explanation: "Sau 'thereby' bắt buộc phải dùng V-ing (attracting) để chỉ kết quả/hệ quả của hành động trước đó.",
     },
   },
+
+  // ── EXERCISES_INPUT: practiceQuiz (active recall)
   practiceQuiz: [
     { id: "pq1", type: "multiple-choice", question: "Chọn từ nối thích hợp: 'The company lost money; ___ it closed down.'", options: ["furthermore", "nevertheless", "consequently", "whereas"], answer: "consequently" },
     { id: "pq2", type: "multiple-choice", question: "Chọn từ điền: 'Some countries invest in solar energy, ___ others rely on coal.'", options: ["nevertheless", "consequently", "whereas", "hence"], answer: "whereas" },
@@ -109,6 +134,8 @@ export const unit40: UnitData = {
     { id: "pq4", type: "multiple-choice", question: "Từ nào đồng nghĩa với 'in spite of':", options: ["nevertheless", "consequently", "furthermore", "notwithstanding"], answer: "notwithstanding" },
     { id: "pq5", type: "cloze", question: "Điền từ nối: 'Just as water is essential to life, ___ (tương tự như vậy) oxygen is necessary.'", answer: "likewise" },
   ],
+
+  // ── EXERCISES_INPUT: matching
   matchingExercise: {
     title: "Nối từ nối học thuật với nghĩa đúng",
     pairs: [
@@ -119,6 +146,8 @@ export const unit40: UnitData = {
       { left: "furthermore", right: "hơn nữa" },
     ],
   },
+
+  // ── OUTPUT: practiceTranslate (VN→EN ≥3) + speaking (level1/2)
   practiceTranslate: [
     {
       id: "pt-1",
@@ -137,6 +166,8 @@ export const unit40: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: sentenceCorrection
   sentenceCorrectionExercises: [
     {
       id: "sc40-1",
@@ -155,6 +186,8 @@ export const unit40: UnitData = {
   ],
 
 
+
+  // ── EXERCISES_INPUT: listenAndArrange
   listenAndArrangeExercises: [
     {
       id: "la40-1",
@@ -173,6 +206,8 @@ export const unit40: UnitData = {
   ],
 
 
+
+  // ── EXERCISES_INPUT: wordBank
   wordBankExercises: [
     {
       id: "wb1",
@@ -194,11 +229,15 @@ export const unit40: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: scramble
   scrambleExercises: [
     { id: "s40-1", prompt_vn: "Hệ thống bị sập; do đó, dữ liệu đã bị mất.", words: ["The", "system", "crashed", ";", "consequently", ",", "data", "was", "lost", "."], answer: "The system crashed ; consequently , data was lost ." },
     { id: "s40-2", prompt_vn: "Chúng tôi đã tối ưu hóa mã nguồn, nhờ đó nâng cao hiệu suất.", words: ["We", "optimized", "the", "code", ",", "thereby", "enhancing", "performance", "."], answer: "We optimized the code , thereby enhancing performance ." },
     { id: "s40-3", prompt_vn: "Mặc dù gặp khó khăn, chúng tôi đã hoàn thành thời hạn.", words: ["Notwithstanding", "the", "difficulties", ",", "we", "met", "the", "deadline", "."], answer: "Notwithstanding the difficulties , we met the deadline ." },
   ],
+
+  // ── REVIEW: Final quiz ≥5 (retrieval practice)
   quiz: [
     { id: "fq1", type: "multiple-choice", question: "Chọn từ nối: 'He was late; ___ the meeting started without him.'", options: ["furthermore", "consequently", "whereas", "likewise"], answer: "consequently" },
     { id: "fq2", type: "cloze", question: "Điền từ nối: 'The project was successful; ___ (tuy nhiên), the costs were too high.'", answer: "nevertheless" },
@@ -213,11 +252,15 @@ export const unit40: UnitData = {
     { id: "q-ex6", type: "multiple-choice", question: "'For instance' = :", options: ["Tuy nhiên", "Ví dụ như", "Hơn nữa", "Do đó"], answer: "Ví dụ như" },
     { id: "q-ex7", type: "multiple-choice", question: "Discourse marker kết luận trang trọng nhất:", options: ["So", "Anyway", "In conclusion", "Well"], answer: "In conclusion" },
   ],
+
+  // ── REVIEW: Exit quiz + cumulativeReview (spiral) + reading (B1+)
   cumulativeReviewQuestions: [
     { id: "cr40-1", question: "Ôn tập Unit 39 — Chọn câu đúng: 'The password is encrypted. She ___ have decrypted it without the key.'", options: ["must", "can't", "should", "might"], answer: "can't", type: "multiple-choice" },
     { id: "cr40-2", question: "Ôn tập Unit 38 — Điền: 'Not only ___ she design the code, but she also optimized it.'", options: [], answer: "did", type: "cloze" },
     { id: "cr40-3", question: "Ôn tập Unit 37 — Chọn đúng: '___ (complete) the research, he published his findings.'", options: ["Having completed", "Completed", "Completing", "To complete"], answer: "Having completed", type: "multiple-choice" },
   ],
+
+  // ── FLUENCY: pronunciationFocus
   pronunciationFocus: {
     phoneme: "discourse marker tone",
     description: "Discourse markers — however, furthermore — luôn có pause sau",
@@ -230,6 +273,8 @@ export const unit40: UnitData = {
     ],
   },
 
+
+  // ── FLUENCY: fluencyDrill ≥5 (Nation Strand 4 automaticity)
   fluencyDrill: {
     items: [
       { en: "He missed the flight consequently", vn: "Do đó anh ấy đã bị lỡ chuyến bay" },
@@ -242,6 +287,8 @@ export const unit40: UnitData = {
       { en: "The subsequent investigation proved", vn: "Cuộc điều tra sau đó đã chứng minh" },
     ],
   },
+
+  // ── REVIEW: Reading passage for skills integration
   readingPassage: {
     id: "unit40-reading-1",
     title: "The Importance of Cohesion in Writing",
@@ -311,6 +358,8 @@ export const unit40: UnitData = {
       },
     ],
   },
+
+  // ── OUTPUT: shadowing
   shadowingVideoId: "wBBJk2E8UYU",
 };
 

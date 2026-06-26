@@ -1,5 +1,12 @@
 import { UnitData } from "@/components/learn/UnitTemplate";
 
+
+// ─────────────────────────────────────────────────────────────────────────────
+// UNIT-37 — Concise & Precise Language  (B2)
+// Standardized header + section comments per lesson-blueprint.ts (CONTENT_BLOCK_ORDER)
+// + lesson-center-reference.ts (ESA Engage/Study/Activate, CELTA, Nation, CLT VN)
+// Gold sample: src/lib/data/units/unit1.ts — field order meta→hook→warmup→vocab→grammar→exercises→dialogues→fluency→output→review
+// ─────────────────────────────────────────────────────────────────────────────
 export const unit37: UnitData = {
   unitId: "unit-37",
   title: "Unit 37: Concise & Precise Language",
@@ -9,18 +16,26 @@ export const unit37: UnitData = {
   description: "Participle Clauses — Mệnh đề phân từ (V-ing, V-ed, Having + V3). Rút gọn câu để diễn đạt súc tích, chuyên nghiệp. Điểm mấu chốt để nâng băng điểm tiêu chí Coherence và Grammatical Range trong IELTS Writing Task 2.",
   badgeName: "Nhà Biên Tập",
   badgeEmoji: "✍️",
+
+  // ── HOOK: situation (real VN context) + learningOutcomes (2–5 can-do) + culturalNote (pragmatic VN↔EN)
   situation: "Soạn thảo tóm tắt dự án (Project Executive Summary) gửi cho Giám đốc điều hành. Bạn cần rút gọn các câu dài, lặp chủ ngữ bằng mệnh đề phân từ để văn bản trở nên súc tích, chuyên nghiệp và có tính thuyết phục cao.",
   learningOutcomes: [
     "Sử dụng mệnh đề phân từ chủ động (V-ing) và bị động (V-ed) để rút gọn câu",
     "Sử dụng phân từ hoàn thành (Having + V3) để thể hiện trình tự thời gian súc tích",
     "Áp dụng từ vựng phân tích và biên soạn báo cáo ở trình độ B2",
   ],
+
+  // ── HOOK (cultural): pragmatic note
   culturalNote: 'Trong viết học thuật và báo cáo doanh nghiệp tiếng Anh, sự súc tích (<span class="text-emerald-400">conciseness</span>) là tiêu chuẩn vàng. Việc viết những câu quá dài kết nối bằng các từ như "and", "because", "after" làm văn bản bị rời rạc. Sử dụng mệnh đề phân từ giúp bạn truyền tải cùng một lượng thông tin nhưng với ít từ hơn và cấu trúc câu đa dạng hơn.',
+
+  // ── WARMUP: ≥3 short phrases (SRS + prior knowledge activation)
   warmupGreetings: [
     { emoji: "📝", en: "Having finished the draft, she sent it to the manager.", vn: "Sau khi hoàn thành bản nháp, cô ấy đã gửi nó cho quản lý.", context: "Having + PP — hành động trước hành động chính" },
     { emoji: "⚙️", en: "Built in 2020, our system is highly integrated.", vn: "Được xây dựng vào năm 2020, hệ thống của chúng tôi tích hợp rất cao.", context: "Built (V-ed clause) — bị động rút gọn" },
     { emoji: "💡", en: "Knowing the risks, we decided to modify the plan.", vn: "Biết rõ các rủi ro, chúng tôi đã quyết định điều chỉnh kế hoạch.", context: "Knowing (V-ing clause) — chủ động chỉ nguyên nhân" },
   ],
+
+  // ── VOCABULARY: 8–20 words, pre-teach BEFORE dialogues; l1_interference_vn (A1 100%, B1+ ≥50%)
   vocab: [
     { id: 1, word: "summarize", emoji: "📝", phonetic: "/ˈsʌməraɪz/", meaning: "tóm tắt", example: "He summarized the main points of the report in three sentences.", example2: "To summarize, the campaign was a huge success.", collocation: "summarize a point / summarize findings / executive summary", audio: "/audio/unit37/summarize.mp3" },
     { id: 2, word: "compile", emoji: "📚", phonetic: "/kəmˈpaɪl/", meaning: "thu thập / biên soạn (tài liệu)", example: "We compiled a list of customer feedback from last month.", example2: "It took two weeks to compile the annual financial report.", collocation: "compile a database / compile information / compile a report", audio: "/audio/unit37/compile.mp3" },
@@ -35,6 +50,8 @@ export const unit37: UnitData = {
     { id: 11, word: "establish", emoji: "🏢", phonetic: "/ɪˈstæblɪʃ/", meaning: "thiết lập / thành lập / xác lập", example: "The company was established in Singapore in 2015.", example2: "We need to establish clear communication channels.", collocation: "establish a company / establish a relationship / establish a system", audio: "/audio/unit37/establish.mp3" },
     { id: 12, word: "substitute", emoji: "🔄", phonetic: "/ˈsʌbstɪtjuːt/", meaning: "thay thế / vật thay thế", example: "You can substitute honey for sugar in this recipe.", example2: "There is no substitute for hard work.", collocation: "substitute A for B / close substitute / act as a substitute", audio: "/audio/unit37/substitute.mp3" },
   ],
+
+  // ── DIALOGUES: ≥1 dialogue AFTER vocab (98% coverage)
   dialogues: [
     {
       id: 1,
@@ -62,6 +79,8 @@ export const unit37: UnitData = {
       ],
     },
   ],
+
+  // ── EXERCISES_INPUT: listenAndChoose ≥5 (controlled practice)
   listenAndChoose: [
     { id: "lac1", audio_text: "Having finished the draft, she sent it to the manager.", options: ["She sent the draft before she finished it.", "Having finished the draft, she sent it to the manager.", "She will finish the draft and send it to the manager.", "She is writing the draft for the manager now."], answer: "Having finished the draft, she sent it to the manager." },
     { id: "lac2", audio_text: "Built in twenty-twenty, our system is highly integrated.", options: ["Our system was built last year and integrated yesterday.", "Built in twenty-twenty, our system is highly integrated.", "We will build a highly integrated system in twenty-twenty.", "The system is not integrated because it was built in twenty-twenty."], answer: "Built in twenty-twenty, our system is highly integrated." },
@@ -69,12 +88,16 @@ export const unit37: UnitData = {
     { id: "lac4", audio_text: "The new features will enhance user experience.", options: ["The new features will enhance user experience.", "The user experience was damaged by new features.", "We will simplify the user experience tomorrow.", "We need to outline the new features."], answer: "The new features will enhance user experience." },
     { id: "lac5", audio_text: "There is no substitute for hard work.", options: ["Hard work can be substituted easily.", "There is no substitute for hard work.", "We need a substitute worker today.", "Working hard is not necessary."], answer: "There is no substitute for hard work." },
   ],
+
+  // ── OUTPUT: speaking prompts (freer production)
   speaking: {
     level1Prompt: "Having {input} the data, I {input} the summary to {input} readability.",
     level1Placeholder: "Ví dụ: compiled — simplified — enhance...",
     level2Situation: "Bạn viết một email gửi quản lý hoặc thuyết trình báo cáo. Hãy: (1) Nói rằng sau khi tổng hợp thông tin, bạn đã đề xuất chiến lược mới, (2) Giải thích rằng do được thành lập từ năm 2015, công ty có vị thế vững chắc, (3) Nhấn mạnh việc đơn giản hóa quy trình.",
     level2Hint: "Having synthesized the feedback, we formulated a new marketing strategy. Established in 2015, our company enjoys a strong reputation. We will modify our methods to simplify the process and enhance performance.",
   },
+
+  // ── GRAMMAR: Inductive (Meaning→Form→CCQ) + vnNote L1
   grammar: {
     title: "Participle Clauses — Mệnh Đề Phân Từ Rút Gọn",
     rule: "Mệnh đề phân từ dùng để nối hai câu có cùng chủ ngữ, giúp câu văn ngắn gọn và học thuật hơn.\n\n1. Present Participle (V-ing clause) — Chủ động:\nDùng để chỉ hành động xảy ra cùng lúc hoặc chỉ nguyên nhân (tương đương because/as).\n  → 'Knowing the risks, we modified the plan.' (= Because we knew the risks...)\n\n2. Past Participle (V-ed clause) — Bị động:\nDùng để rút gọn câu bị động.\n  → 'Built in 2015, the company is successful.' (= The company, which was built in 2015, is...)\n\n3. Perfect Participle (Having + Past Participle) — Chủ động hoàn thành:\nNhấn mạnh hành động ở mệnh đề phân từ hoàn thành xong trước hành động chính.\n  → 'Having compiled the data, she wrote the report.' (= After she had compiled the data, she...)",
@@ -103,6 +126,8 @@ export const unit37: UnitData = {
       explanation: "Trong câu này, chủ ngữ của vế 'Walking' phải là 'he' (anh ấy đang đi bộ thì bị cắn). Câu 1 sai vì làm cho 'a dog' (con chó) thành chủ ngữ đi bộ.",
     },
   },
+
+  // ── EXERCISES_INPUT: practiceQuiz (active recall)
   practiceQuiz: [
     { id: "pq1", type: "multiple-choice", question: "Chọn dạng đúng: '___ the database, we found the missing error.'", options: ["Examine", "Examined", "Examining", "Having been examined"], answer: "Examining" },
     { id: "pq2", type: "multiple-choice", question: "Chọn phân từ hoàn thành đúng: '___ the report, she shut down her computer.'", options: ["Finished", "Having finished", "Having finish", "Finishing"], answer: "Having finished" },
@@ -110,6 +135,8 @@ export const unit37: UnitData = {
     { id: "pq4", type: "multiple-choice", question: "Điền từ thích hợp: 'We compiled a summary to ___ readability.'", options: ["summarize", "simplify", "enhance", "construct"], answer: "enhance" },
     { id: "pq5", type: "cloze", question: "Điền dạng đúng của động từ: '___ (know) that the client was angry, he called immediately.'", answer: "Knowing" },
   ],
+
+  // ── EXERCISES_INPUT: matching
   matchingExercise: {
     title: "Nối từ vựng viết học thuật với nghĩa đúng",
     pairs: [
@@ -120,6 +147,8 @@ export const unit37: UnitData = {
       { left: "substitute", right: "thay thế" },
     ],
   },
+
+  // ── OUTPUT: practiceTranslate (VN→EN ≥3) + speaking (level1/2)
   practiceTranslate: [
     {
       id: "pt-1",
@@ -138,6 +167,8 @@ export const unit37: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: sentenceCorrection
   sentenceCorrectionExercises: [
     {
       id: "sc37-1",
@@ -156,6 +187,8 @@ export const unit37: UnitData = {
   ],
 
 
+
+  // ── EXERCISES_INPUT: listenAndArrange
   listenAndArrangeExercises: [
     {
       id: "la37-1",
@@ -174,6 +207,8 @@ export const unit37: UnitData = {
   ],
 
 
+
+  // ── EXERCISES_INPUT: wordBank
   wordBankExercises: [
     {
       id: "wb1",
@@ -195,11 +230,15 @@ export const unit37: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: scramble
   scrambleExercises: [
     { id: "s37-1", prompt_vn: "Sau khi hoàn thành bản báo cáo, cô ấy đã tắt máy tính.", words: ["Having", "completed", "the", "report", ",", "she", "turned", "off", "her", "computer", "."], answer: "Having completed the report , she turned off her computer ." },
     { id: "s37-2", prompt_vn: "Được thành lập vào năm 2015, công ty có uy tín lớn.", words: ["Established", "in", "2015", ",", "the", "company", "has", "a", "great", "reputation", "."], answer: "Established in 2015 , the company has a great reputation ." },
     { id: "s37-3", prompt_vn: "Biết rõ các quy định, chúng tôi luôn tuân thủ.", words: ["Knowing", "the", "regulations", ",", "we", "are", "always", "in", "compliance", "."], answer: "Knowing the regulations , we are always in compliance ." },
   ],
+
+  // ── REVIEW: Final quiz ≥5 (retrieval practice)
   quiz: [
     { id: "fq1", type: "multiple-choice", question: "Chọn dạng đúng: '___ the client's email, he prepared the attachment.'", options: ["Received", "Having received", "Receive", "To receive"], answer: "Having received" },
     { id: "fq2", type: "cloze", question: "Điền từ: 'The software was ___ (điều chỉnh nhẹ) to resolve the error.'", answer: "modified" },
@@ -214,11 +253,15 @@ export const unit37: UnitData = {
     { id: "q-ex6", type: "multiple-choice", question: "Nominalisation: 'decide' → danh từ:", options: ["decision", "deciding", "decided", "decisive"], answer: "decision" },
     { id: "q-ex7", type: "multiple-choice", question: "Trong cụm 'The increasing demand for energy,' từ 'increasing' là loại từ gì?", options: ["Động từ", "Danh từ", "Tính từ (participle)", "Trạng từ"], answer: "Tính từ (participle)" },
   ],
+
+  // ── REVIEW: Exit quiz + cumulativeReview (spiral) + reading (B1+)
   cumulativeReviewQuestions: [
     { id: "cr37-1", question: "Ôn tập Unit 36 — Chọn câu đúng: 'The company is reported ___ millions last year.'", options: ["to lose", "to have lost", "losing", "lost"], answer: "to have lost", type: "multiple-choice" },
     { id: "cr37-2", question: "Ôn tập Unit 35 — Điền: 'We will not sign the trade contract ___ they reduce the penalty.'", options: [], answer: "unless", type: "cloze" },
     { id: "cr37-3", question: "Ôn tập Unit 34 — Chọn đúng: 'If she ___ (investigate) the crash, she would have found the fault.'", options: ["investigated", "had investigated", "has investigated", "would investigate"], answer: "had investigated", type: "multiple-choice" },
   ],
+
+  // ── FLUENCY: pronunciationFocus
   pronunciationFocus: {
     phoneme: "having /ˈhævɪŋ/",
     description: "Having + V3 — participle clause âm nối phức tạp",
@@ -231,6 +274,8 @@ export const unit37: UnitData = {
     ],
   },
 
+
+  // ── FLUENCY: fluencyDrill ≥5 (Nation Strand 4 automaticity)
   fluencyDrill: {
     items: [
       { en: "Having finished the draft, she sent it", vn: "Sau khi làm xong bản nháp, cô ấy đã gửi" },
@@ -243,6 +288,8 @@ export const unit37: UnitData = {
       { en: "Facing issues, they modified the code", vn: "Đối mặt với sự cố, họ đã sửa đổi code" },
     ],
   },
+
+  // ── REVIEW: Reading passage for skills integration
   readingPassage: {
     id: "unit37-reading-1",
     title: "The Art of Concise Writing",
@@ -303,6 +350,8 @@ export const unit37: UnitData = {
       },
     ],
   },
+
+  // ── OUTPUT: shadowing
   shadowingVideoId: "XeI1m0B59PY",
 };
 

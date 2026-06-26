@@ -1,5 +1,12 @@
 import { UnitData } from "@/components/learn/UnitTemplate";
 
+
+// ─────────────────────────────────────────────────────────────────────────────
+// UNIT-A0-3 — Màu Sắc & Mô Tả  (A0)
+// Standardized header + section comments per lesson-blueprint.ts (CONTENT_BLOCK_ORDER)
+// + lesson-center-reference.ts (ESA Engage/Study/Activate, CELTA, Nation, CLT VN)
+// Gold sample: src/lib/data/units/unit1.ts — field order meta→hook→warmup→vocab→grammar→exercises→dialogues→fluency→output→review
+// ─────────────────────────────────────────────────────────────────────────────
 // ─────────────────────────────────────────────────────────────────────────────
 // UNIT A0-3 — Màu Sắc & Mô Tả (Colors & Description)
 // Level 0 / Foundation — Pre-CEFR A0
@@ -20,6 +27,8 @@ export const unitA03: UnitData = {
   badgeName: "Người Quan Sát",
   badgeEmoji: "🎨",
 
+
+  // ── HOOK: situation (real VN context) + learningOutcomes (2–5 can-do) + culturalNote (pragmatic VN↔EN)
   situation:
     "Bạn vào cửa hàng quần áo để mua áo. Nhân viên nói tiếng Anh. Bạn cần mô tả màu sắc và kích cỡ bạn muốn.",
 
@@ -29,9 +38,13 @@ export const unitA03: UnitData = {
     "Dùng 'I'm looking for...' khi mua sắm",
   ],
 
+
+  // ── HOOK (cultural): pragmatic note
   culturalNote:
     'Khi mua sắm, người bản ngữ hay dùng <span class="text-emerald-400 font-semibold">"I\'m looking for..."</span> thay vì "I want..." vì nghe lịch sự hơn. <span class="text-emerald-400 font-semibold">"Do you have this in blue?"</span> là câu hỏi rất phổ biến khi muốn màu khác.',
 
+
+  // ── WARMUP: ≥3 short phrases (SRS + prior knowledge activation)
   warmupGreetings: [
     {
       emoji: "🔍",
@@ -53,6 +66,8 @@ export const unitA03: UnitData = {
     },
   ],
 
+
+  // ── VOCABULARY: 8–20 words, pre-teach BEFORE dialogues; l1_interference_vn (A1 100%, B1+ ≥50%)
   vocab: [
     {
       id: 1,
@@ -176,6 +191,8 @@ export const unitA03: UnitData = {
     },
   ],
 
+
+  // ── GRAMMAR: Inductive (Meaning→Form→CCQ) + vnNote L1
   grammar: {
     title: "Tính từ đứng TRƯỚC danh từ",
     rule: "Tiếng Anh: Tính từ (màu sắc, kích cỡ) đứng TRƯỚC danh từ.\nTiếng Việt: Tính từ đứng SAU danh từ.",
@@ -223,6 +240,8 @@ export const unitA03: UnitData = {
     },
   },
 
+
+  // ── EXERCISES_INPUT: matching
   matchingExercise: {
     title: "Nối màu sắc với ý nghĩa",
     pairs: [
@@ -234,6 +253,8 @@ export const unitA03: UnitData = {
     ],
   },
 
+
+  // ── EXERCISES_INPUT: practiceQuiz (active recall)
   practiceQuiz: [
     {
       id: "pq3-1",
@@ -277,6 +298,8 @@ export const unitA03: UnitData = {
     },
   ],
 
+
+  // ── OUTPUT: practiceTranslate (VN→EN ≥3) + speaking (level1/2)
   practiceTranslate: [
     {
       id: "pt3-1",
@@ -295,6 +318,8 @@ export const unitA03: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: sentenceCorrection
   sentenceCorrectionExercises: [
     {
       id: "sc-A03-1",
@@ -313,6 +338,8 @@ export const unitA03: UnitData = {
   ],
 
 
+
+  // ── EXERCISES_INPUT: listenAndArrange
   listenAndArrangeExercises: [
     {
       id: "laA03-1",
@@ -331,6 +358,8 @@ export const unitA03: UnitData = {
   ],
 
 
+
+  // ── EXERCISES_INPUT: wordBank
   wordBankExercises: [
     {
       id: "wb1",
@@ -352,6 +381,8 @@ export const unitA03: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: scramble
   scrambleExercises: [
     {
       id: "s3-1",
@@ -373,6 +404,8 @@ export const unitA03: UnitData = {
     },
   ],
 
+
+  // ── DIALOGUES: ≥1 dialogue AFTER vocab (98% coverage)
   dialogues: [
     {
       id: 1,
@@ -458,6 +491,8 @@ export const unitA03: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: listenAndChoose ≥5 (controlled practice)
   listenAndChoose: [
     {
       id: "lac3-1",
@@ -501,6 +536,8 @@ export const unitA03: UnitData = {
     },
   ],
 
+
+  // ── REVIEW: Exit quiz + cumulativeReview (spiral) + reading (B1+)
   cumulativeReviewQuestions: [
     {
       id: "crA03-1",
@@ -532,6 +569,8 @@ export const unitA03: UnitData = {
     },
   ],
 
+
+  // ── FLUENCY: pronunciationFocus
   pronunciationFocus: {
     phoneme: "/ɜː/",
     description: "Âm 'ER' dài — bird, word, learn",
@@ -543,6 +582,8 @@ export const unitA03: UnitData = {
     ],
   },
 
+
+  // ── FLUENCY: fluencyDrill ≥5 (Nation Strand 4 automaticity)
   fluencyDrill: {
     title: "Luyện nói: Màu sắc + Mô tả",
     items: [
@@ -557,6 +598,8 @@ export const unitA03: UnitData = {
     ],
   },
 
+
+  // ── OUTPUT: speaking prompts (freer production)
   speaking: {
     level1Prompt: "I'm looking for a {input} shirt.",
     level1Placeholder: "Nhập màu sắc (red, blue, green, black, white)...",
@@ -565,6 +608,8 @@ export const unitA03: UnitData = {
     level2Hint: "I'm looking for a [size] [color] [object]. Do you have...?",
   },
 
+
+  // ── REVIEW: Final quiz ≥5 (retrieval practice)
   quiz: [
     {
       id: "q3-1",
@@ -626,6 +671,8 @@ export const unitA03: UnitData = {
       type: "multiple-choice",
     },
   ],
+
+  // ── REVIEW: Reading passage for skills integration
   readingPassage: {
     id: "unitA03-reading-1",
     title: "My Bag",
@@ -679,6 +726,8 @@ export const unitA03: UnitData = {
       },
     ],
   },
+
+  // ── OUTPUT: shadowing
   shadowingVideoId: "48MDYwdwMvY", // BBC Learning English — Easy English: Colours
 };
 

@@ -1,5 +1,12 @@
 import { UnitData } from "@/components/learn/UnitTemplate";
 
+
+// ─────────────────────────────────────────────────────────────────────────────
+// UNIT-15 — Shopping & Comparing  (A2)
+// Standardized header + section comments per lesson-blueprint.ts (CONTENT_BLOCK_ORDER)
+// + lesson-center-reference.ts (ESA Engage/Study/Activate, CELTA, Nation, CLT VN)
+// Gold sample: src/lib/data/units/unit1.ts — field order meta→hook→warmup→vocab→grammar→exercises→dialogues→fluency→output→review
+// ─────────────────────────────────────────────────────────────────────────────
 export const unit15: UnitData = {
   unitId: "unit-15",
   title: "Unit 15: Shopping & Comparing",
@@ -9,18 +16,26 @@ export const unit15: UnitData = {
   description: "Học từ vựng mua sắm và cách so sánh bằng comparative & superlative adjectives.",
   badgeName: "Người Mua Sắm Thông Minh",
   badgeEmoji: "🛍️",
+
+  // ── HOOK: situation (real VN context) + learningOutcomes (2–5 can-do) + culturalNote (pragmatic VN↔EN)
   situation: "Bạn đang giúp đồng nghiệp người nước ngoài mua đồ điện tử ở Hà Nội. Bạn cần so sánh các sản phẩm và thuyết phục họ chọn loại phù hợp với ngân sách.",
   learningOutcomes: [
     "So sánh hai đối tượng bằng comparative (-er/more)",
     "Chỉ ra đối tượng tốt nhất bằng superlative (-est/most)",
     "Dùng từ vựng mua sắm trong ngữ cảnh thực tế"
   ],
+
+  // ── WARMUP: ≥3 short phrases (SRS + prior knowledge activation)
   warmupGreetings: [
     { emoji: "🛍️", en: "This laptop is cheaper than that one.", vn: "Chiếc laptop này rẻ hơn chiếc kia.", context: "So sánh giá cả" },
     { emoji: "🏆", en: "This is the best deal in the store.", vn: "Đây là ưu đãi tốt nhất trong cửa hàng.", context: "Superlative - tốt nhất" },
     { emoji: "💰", en: "Do you have anything cheaper?", vn: "Bạn có gì rẻ hơn không?", context: "Hỏi về giá" }
   ],
+
+  // ── HOOK (cultural): pragmatic note
   culturalNote: "Khi mua sắm ở Việt Nam, bạn có thể <span class=\"text-emerald-400 font-semibold\">mặc cả (bargain)</span> ở chợ hoặc cửa hàng nhỏ, nhưng không mặc cả ở siêu thị lớn hay trung tâm thương mại. Với đồng nghiệp nước ngoài, hãy giải thích sự khác biệt này để họ không ngại thương lượng giá khi mua sắm ở chợ.",
+
+  // ── VOCABULARY: 8–20 words, pre-teach BEFORE dialogues; l1_interference_vn (A1 100%, B1+ ≥50%)
   vocab: [
     { id: 1, word: "cheap", emoji: "💰", phonetic: "/tʃiːp/", meaning: "rẻ", example: "This phone is very cheap.", example2: "I'm looking for something cheap but good.", collocation: "cheap price / dirt cheap", audio: "/audio/unit15/cheap.mp3" , l1_interference_vn: "⚠️ 'Cheap' mô tả giá thấp (trung tính). Khi mô tả người = keo kiệt — chú ý ngữ cảnh." },
     { id: 2, word: "expensive", emoji: "💎", phonetic: "/ɪkˈspensɪv/", meaning: "đắt tiền", example: "That watch is too expensive for me.", example2: "Luxury brands are always expensive.", collocation: "very expensive / too expensive", audio: "/audio/unit15/expensive.mp3" , l1_interference_vn: "⚠️ Stress: ex-PEN-sive (âm 2). Người Việt hay đọc 'EX-pen-sive' — stress âm 1." },
@@ -35,6 +50,8 @@ export const unit15: UnitData = {
     { id: 11, word: "brand", emoji: "™️", phonetic: "/brænd/", meaning: "thương hiệu", example: "What brand do you prefer?", example2: "I usually buy Korean brands.", collocation: "popular brand / brand name", audio: "/audio/unit15/brand.mp3" , l1_interference_vn: "⚠️ Âm /brænd/ — 'a' ngắn. 'Brand new' = hoàn toàn mới. 'Brand' ≠ 'label' (nhãn dán)." },
     { id: 12, word: "afford", emoji: "💳", phonetic: "/əˈfɔːrd/", meaning: "có khả năng chi trả", example: "I can't afford this laptop. It's too expensive.", example2: "Can you afford to travel this year?", collocation: "can afford / can't afford", audio: "/audio/unit15/afford.mp3" , l1_interference_vn: "⚠️ 'Can't afford TO buy' — không phải 'can't afford buying'. Sau 'afford' dùng to-infinitive." },
   ],
+
+  // ── DIALOGUES: ≥1 dialogue AFTER vocab (98% coverage)
   dialogues: [
     {
       id: 1,
@@ -65,6 +82,8 @@ export const unit15: UnitData = {
       ]
     },
   ],
+
+  // ── EXERCISES_INPUT: listenAndChoose ≥5 (controlled practice)
   listenAndChoose: [
     { id: "lac1", audio_text: "This laptop is cheaper than that one", options: ["This laptop is cheap than that one", "This laptop is cheaper than that one", "This laptop is the cheapest one", "This laptop is more cheap than that one"], answer: "This laptop is cheaper than that one" },
     { id: "lac2", audio_text: "I think it's the best option for your budget", options: ["I think it's the better option for your budget", "I think it's the best option for your budget", "I think it's the most best option", "I think it's best option for your budget"], answer: "I think it's the best option for your budget" },
@@ -72,12 +91,16 @@ export const unit15: UnitData = {
     { id: "lac4", audio_text: "The camera is better than last year's model", options: ["The camera is more better than last year's model", "The camera is better than last year's model", "The camera is best than last year's model", "The camera is better than last years model"], answer: "The camera is better than last year's model" },
     { id: "lac5", audio_text: "I can't afford this. It's too expensive.", options: ["I can't afford this. It's too expensive.", "I couldn't afford this. It's too expensive.", "I can't afford this. It's very expensive.", "I can't afford this. It's the most expensive."], answer: "I can't afford this. It's too expensive." },
   ],
+
+  // ── OUTPUT: speaking prompts (freer production)
   speaking: {
     level1Prompt: "I think {input} is better than {input} because it's more affordable.",
     level1Placeholder: "Ví dụ: Samsung, iPhone — Korean food, Japanese food...",
     level2Situation: "Bạn đang tư vấn cho sếp người nước ngoài về việc mua thiết bị cho văn phòng. So sánh ít nhất 2 lựa chọn về giá, chất lượng và bảo hành. Đề xuất lựa chọn tốt nhất.",
     level2Hint: "I recommend [product A] because it's [comparative] than [product B]. The quality is [adjective] and the price is [adjective]. It also has [feature]. I think it's the best option because [reason].",
   },
+
+  // ── GRAMMAR: Inductive (Meaning→Form→CCQ) + vnNote L1
   grammar: {
     title: "Comparative & Superlative — So sánh trong tiếng Anh",
     rule: "Comparative: adj + -er + than (short adj) / more + adj + than (long adj)\nSuperlative: the + adj + -est (short) / the most + adj (long)",
@@ -107,6 +130,8 @@ export const unit15: UnitData = {
       explanation: "'Cheap' là tính từ ngắn (1 âm tiết) → dùng 'cheaper + than', không dùng 'more cheap'.",
     },
   },
+
+  // ── EXERCISES_INPUT: practiceQuiz (active recall)
   practiceQuiz: [
     { id: "pq1", type: "multiple-choice", question: "Chọn đúng: 'This phone is ___ than that one.' (expensive)", options: ["more expensive", "expensiver", "the most expensive", "expensiveer"], answer: "more expensive" },
     { id: "pq2", type: "multiple-choice", question: "Điền đúng: 'She is the ___ student in the class.' (smart)", options: ["smarter", "more smart", "smartest", "most smart"], answer: "smartest" },
@@ -115,6 +140,8 @@ export const unit15: UnitData = {
     { id: "pq5", type: "cloze", question: "Điền: 'Samsung is ___ (affordable) than Apple.'", answer: "more affordable" },
   ],
 
+
+  // ── EXERCISES_INPUT: matching
   matchingExercise: {
     title: "Nối từ với nghĩa đúng",
     pairs: [
@@ -126,6 +153,8 @@ export const unit15: UnitData = {
     ],
   },
 
+
+  // ── OUTPUT: practiceTranslate (VN→EN ≥3) + speaking (level1/2)
   practiceTranslate: [
     {
       id: "pt-1",
@@ -144,6 +173,8 @@ export const unit15: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: sentenceCorrection
   sentenceCorrectionExercises: [
     {
       id: "sc15-1",
@@ -162,6 +193,8 @@ export const unit15: UnitData = {
   ],
 
 
+
+  // ── EXERCISES_INPUT: listenAndArrange
   listenAndArrangeExercises: [
     {
       id: "la15-1",
@@ -180,6 +213,8 @@ export const unit15: UnitData = {
   ],
 
 
+
+  // ── EXERCISES_INPUT: wordBank
   wordBankExercises: [
     {
       id: "wb1",
@@ -201,6 +236,8 @@ export const unit15: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: scramble
   scrambleExercises: [
     {
       id: "s15-1",
@@ -222,6 +259,8 @@ export const unit15: UnitData = {
     },
   ],
 
+
+  // ── REVIEW: Final quiz ≥5 (retrieval practice)
   quiz: [
     { id: "fq1", type: "multiple-choice", question: "Dịch: 'Chiếc laptop này đắt hơn chiếc kia nhưng chất lượng tốt hơn.'", options: ["This laptop is expensive than that but quality good.", "This laptop is more expensive than that but the quality is better.", "This laptop is expensiver than that but the quality is more good.", "This laptop more expensive than that one."], answer: "This laptop is more expensive than that but the quality is better.", explanation_vn: "Tính từ dài (expensive) → 'more expensive'. 'good' bất quy tắc → 'better'. Không dùng 'expensiver' hay 'more good'." },
     { id: "fq2", type: "cloze", question: "Điền: 'This is the ___ (cheap) option in the store.'", answer: "cheapest" },
@@ -237,6 +276,8 @@ export const unit15: UnitData = {
     { id: "q-ex7", type: "translate", question: "Dịch: 'Chất lượng của cái này tốt hơn.'", answer: "The quality of this one is better." },
   ],
 
+
+  // ── REVIEW: Exit quiz + cumulativeReview (spiral) + reading (B1+)
   cumulativeReviewQuestions: [
     {
       id: "cr15-1",
@@ -267,6 +308,8 @@ export const unit15: UnitData = {
   ],
 
 
+
+  // ── FLUENCY: pronunciationFocus
   pronunciationFocus: {
     phoneme: "comparative stress",
     description: "So sánh hơn: stress thay đổi trong more + adj vs tính từ + -er",
@@ -280,6 +323,8 @@ export const unit15: UnitData = {
     ],
   },
 
+
+  // ── FLUENCY: fluencyDrill ≥5 (Nation Strand 4 automaticity)
   fluencyDrill: {
     items: [
       { en: "cheaper", vn: "rẻ hơn" },
@@ -293,6 +338,8 @@ export const unit15: UnitData = {
     ],
   },
 
+
+  // ── REVIEW: Reading passage for skills integration
   readingPassage: {
     id: "unit15-reading-1",
     title: "Choosing the Best Laptop",
@@ -350,6 +397,8 @@ export const unit15: UnitData = {
       },
     ],
   },
+
+  // ── OUTPUT: shadowing
   shadowingVideoId: "tXFhNibIBf4",
 };
 

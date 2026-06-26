@@ -1,5 +1,12 @@
 import { UnitData } from "@/components/learn/UnitTemplate";
 
+
+// ─────────────────────────────────────────────────────────────────────────────
+// UNIT-21 — Predictions & Trends  (B1)
+// Standardized header + section comments per lesson-blueprint.ts (CONTENT_BLOCK_ORDER)
+// + lesson-center-reference.ts (ESA Engage/Study/Activate, CELTA, Nation, CLT VN)
+// Gold sample: src/lib/data/units/unit1.ts — field order meta→hook→warmup→vocab→grammar→exercises→dialogues→fluency→output→review
+// ─────────────────────────────────────────────────────────────────────────────
 export const unit21: UnitData = {
   unitId: "unit-21",
   title: "Unit 21: Predictions & Trends",
@@ -9,18 +16,26 @@ export const unit21: UnitData = {
   description: "Học Future Continuous và Future Perfect để thảo luận xu hướng và dự báo như chuyên gia — 'By 2030, AI will have transformed most industries.'",
   badgeName: "Nhà Phân Tích",
   badgeEmoji: "📊",
+
+  // ── HOOK: situation (real VN context) + learningOutcomes (2–5 can-do) + culturalNote (pragmatic VN↔EN)
   situation: "Cuộc họp chiến lược quý 4. Giám đốc hỏi: 'Where do you see our company in 5 years?' Bạn cần dùng Future Continuous (will be doing) và Future Perfect (will have done) để thuyết trình xu hướng một cách chuyên nghiệp.",
   learningOutcomes: [
     "Dùng Future Continuous để mô tả hành động đang diễn ra tại một thời điểm tương lai",
     "Dùng Future Perfect để nói về điều sẽ hoàn thành trước một mốc thời gian tương lai",
     "Thảo luận xu hướng kinh doanh và công nghệ bằng tiếng Anh B1+",
   ],
+
+  // ── HOOK (cultural): pragmatic note
   culturalNote: 'Trong các cuộc họp quốc tế, <span class="text-emerald-400 font-semibold">Future Continuous</span> và <span class="text-emerald-400 font-semibold">Future Perfect</span> thể hiện bạn đang suy nghĩ có chiều sâu về tương lai. Thay vì nói đơn giản <span class="text-zinc-400">"We will grow"</span>, hãy nói <span class="text-emerald-400">"By next year, we will have expanded to three new markets."</span> — nghe chuyên nghiệp và tự tin hơn nhiều.',
+
+  // ── WARMUP: ≥3 short phrases (SRS + prior knowledge activation)
   warmupGreetings: [
     { emoji: "🔮", en: "By 2030, renewable energy will have replaced most fossil fuels.", vn: "Đến năm 2030, năng lượng tái tạo sẽ thay thế hầu hết nhiên liệu hóa thạch.", context: "Future Perfect — kết quả trước mốc thời gian" },
     { emoji: "💼", en: "This time next year, we will be operating in 10 countries.", vn: "Vào thời điểm này năm tới, chúng tôi sẽ đang hoạt động tại 10 quốc gia.", context: "Future Continuous — hành động đang diễn ra" },
     { emoji: "📈", en: "The market will continue to grow over the next decade.", vn: "Thị trường sẽ tiếp tục tăng trưởng trong thập kỷ tới.", context: "Future Simple — xu hướng chung" },
   ],
+
+  // ── VOCABULARY: 8–20 words, pre-teach BEFORE dialogues; l1_interference_vn (A1 100%, B1+ ≥50%)
   vocab: [
     { id: 1, word: "forecast", emoji: "🔮", phonetic: "/ˈfɔːkɑːst/", meaning: "dự báo", example: "The forecast shows a 15% growth next year.", example2: "Analysts forecast strong demand for tech products.", collocation: "economic forecast / sales forecast / weather forecast", audio: "/audio/unit21/forecast.mp3" },
     { id: 2, word: "trend", emoji: "📈", phonetic: "/trend/", meaning: "xu hướng", example: "The trend towards remote work will continue.", example2: "We need to respond to emerging market trends.", collocation: "current trend / emerging trend / follow a trend", audio: "/audio/unit21/trend.mp3", l1_interference_vn: "⚠️ Danh từ đếm được: \'a trend\', \'trends\'. \'To trend\' (viral) là informal — tránh trong văn viết." },
@@ -35,6 +50,8 @@ export const unit21: UnitData = {
     { id: 11, word: "projection", emoji: "📉", phonetic: "/prəˈdʒekʃən/", meaning: "dự đoán / chiếu", example: "Our projections show 20% growth over five years.", example2: "The financial projections are optimistic.", collocation: "sales projections / financial projections / growth projection", audio: "/audio/unit21/projection.mp3" },
     { id: 12, word: "disrupt", emoji: "💥", phonetic: "/dɪsˈrʌpt/", meaning: "làm gián đoạn / phá vỡ", example: "New technologies will be disrupting traditional industries.", example2: "Startups are disrupting the banking sector.", collocation: "disrupt the market / disruptive technology", audio: "/audio/unit21/disrupt.mp3", l1_interference_vn: "⚠️ + N trực tiếp: \'disrupt the market/meeting\'. \'Disruption\' (danh từ), \'disruptive\' (tính từ)." },
   ],
+
+  // ── DIALOGUES: ≥1 dialogue AFTER vocab (98% coverage)
   dialogues: [
     {
       id: 1,
@@ -63,6 +80,8 @@ export const unit21: UnitData = {
       ],
     },
   ],
+
+  // ── EXERCISES_INPUT: listenAndChoose ≥5 (controlled practice)
   listenAndChoose: [
     { id: "lac1", audio_text: "By next year we will have expanded into three new markets", options: ["By next year we will expand into three new markets", "By next year we will have expanded into three new markets", "By next year we expanded into three new markets", "By next year we have expanded into three new markets"], answer: "By next year we will have expanded into three new markets" },
     { id: "lac2", audio_text: "This time next year we will be operating across Southeast Asia", options: ["This time next year we will operate across Southeast Asia", "This time next year we will be operating across Southeast Asia", "This time next year we are operating across Southeast Asia", "This time next year we operated across Southeast Asia"], answer: "This time next year we will be operating across Southeast Asia" },
@@ -70,12 +89,16 @@ export const unit21: UnitData = {
     { id: "lac4", audio_text: "The technology sector will be driving most of the growth", options: ["The technology sector will drive most of the growth", "The technology sector will be driving most of the growth", "The technology sector drives most of the growth", "The technology sector has been driving most of the growth"], answer: "The technology sector will be driving most of the growth" },
     { id: "lac5", audio_text: "By 2030 AI will have automated most repetitive work", options: ["By 2030 AI will automate most repetitive work", "By 2030 AI will have automated most repetitive work", "By 2030 AI automated most repetitive work", "By 2030 AI has automated most repetitive work"], answer: "By 2030 AI will have automated most repetitive work" },
   ],
+
+  // ── OUTPUT: speaking prompts (freer production)
   speaking: {
     level1Prompt: "By {input}, our company will have {input}. This time next year, we will be {input}.",
     level1Placeholder: "Ví dụ: 2027 — expanded to 5 markets — growing rapidly...",
     level2Situation: "Thuyết trình chiến lược 5 năm cho ban lãnh đạo. Dùng Future Continuous và Future Perfect để mô tả: (1) Chúng ta sẽ đang làm gì tại các mốc thời gian cụ thể? (2) Chúng ta sẽ đạt được gì trước các mốc đó? (3) Xu hướng nào sẽ tác động đến ngành?",
     level2Hint: "By [year], we will have [achievement]. This time in [period], we will be [ongoing action]. The [sector/trend] will be [driving/transforming/disrupting] [area]. Our projections show that [prediction].",
   },
+
+  // ── GRAMMAR: Inductive (Meaning→Form→CCQ) + vnNote L1
   grammar: {
     title: "Future Continuous & Future Perfect",
     rule: "Future Continuous: will be + V-ing\n→ Hành động đang diễn ra tại một thời điểm tương lai\n→ 'This time next year, I will be working in Singapore.'\n\nFuture Perfect: will have + past participle\n→ Hành động sẽ hoàn thành TRƯỚC một mốc thời gian tương lai\n→ 'By 2030, we will have reached 1 million users.'\n\nDấu hiệu nhận biết:\n→ 'This time next [week/month/year]...' → Future Continuous\n→ 'By [year/date/time]...' → Future Perfect",
@@ -104,6 +127,8 @@ export const unit21: UnitData = {
       explanation: "'By 2030' + Future Perfect (will have expanded) = hành động sẽ hoàn thành TRƯỚC năm 2030. Đây là cấu trúc chuẩn B1+ cho dự báo và kế hoạch dài hạn.",
     },
   },
+
+  // ── EXERCISES_INPUT: practiceQuiz (active recall)
   practiceQuiz: [
     { id: "pq1", type: "multiple-choice", question: "Chọn đúng: 'This time next month, I ___ for the new client in Tokyo.'", options: ["work", "will work", "will be working", "will have worked"], answer: "will be working" },
     { id: "pq2", type: "multiple-choice", question: "Chọn đúng: 'By the end of Q3, we ___ our sales target.'", options: ["reach", "will reach", "will be reaching", "will have reached"], answer: "will have reached" },
@@ -111,6 +136,8 @@ export const unit21: UnitData = {
     { id: "pq4", type: "cloze", question: "Điền: 'By 2030, renewable energy ___ (replace) most fossil fuels.'", answer: "will have replaced" },
     { id: "pq5", type: "multiple-choice", question: "Câu nào nói về xu hướng đang diễn ra tại một thời điểm tương lai?", options: ["Next year, AI will transform the industry.", "By next year, AI will have transformed the industry.", "This time next year, AI will be transforming the industry.", "Next year, AI transformed the industry."], answer: "This time next year, AI will be transforming the industry." },
   ],
+
+  // ── EXERCISES_INPUT: matching
   matchingExercise: {
     title: "Nối từ với nghĩa đúng",
     pairs: [
@@ -121,6 +148,8 @@ export const unit21: UnitData = {
       { left: "projection", right: "dự đoán" },
     ],
   },
+
+  // ── OUTPUT: practiceTranslate (VN→EN ≥3) + speaking (level1/2)
   practiceTranslate: [
     {
       id: "pt-1",
@@ -139,6 +168,8 @@ export const unit21: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: sentenceCorrection
   sentenceCorrectionExercises: [
     {
       id: "sc21-1",
@@ -157,6 +188,8 @@ export const unit21: UnitData = {
   ],
 
 
+
+  // ── EXERCISES_INPUT: listenAndArrange
   listenAndArrangeExercises: [
     {
       id: "la21-1",
@@ -175,6 +208,8 @@ export const unit21: UnitData = {
   ],
 
 
+
+  // ── EXERCISES_INPUT: wordBank
   wordBankExercises: [
     {
       id: "wb1",
@@ -196,11 +231,15 @@ export const unit21: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: scramble
   scrambleExercises: [
     { id: "s21-1", prompt_vn: "Đến năm 2028, doanh thu sẽ tăng gấp đôi.", words: ["By", "2028", ",", "revenue", "will", "have", "doubled", "."], answer: "By 2028 , revenue will have doubled ." },
     { id: "s21-2", prompt_vn: "Vào thời điểm này năm tới, chúng tôi sẽ đang hoạt động ở châu Á.", words: ["This", "time", "next", "year", ",", "we", "will", "be", "operating", "in", "Asia", "."], answer: "This time next year , we will be operating in Asia ." },
     { id: "s21-3", prompt_vn: "AI sẽ chuyển đổi hầu hết các ngành vào năm 2030.", words: ["By", "2030", ",", "AI", "will", "have", "transformed", "most", "industries", "."], answer: "By 2030 , AI will have transformed most industries ." },
   ],
+
+  // ── REVIEW: Final quiz ≥5 (retrieval practice)
   quiz: [
     { id: "fq1", type: "multiple-choice", question: "Dịch: 'Đến cuối năm tới, chúng tôi sẽ mở rộng sang 5 thị trường.'", options: ["By the end of next year, we will expand to 5 markets.", "By the end of next year, we will have expanded to 5 markets.", "By the end of next year, we will be expanding to 5 markets.", "By the end of next year, we expanded to 5 markets."], answer: "By the end of next year, we will have expanded to 5 markets." },
     { id: "fq2", type: "cloze", question: "Điền: 'This time next decade, most companies ___ (use) AI for daily operations.'", answer: "will be using" },
@@ -215,11 +254,15 @@ export const unit21: UnitData = {
     { id: "q-ex6", type: "multiple-choice", question: "Câu nào thể hiện dự đoán CÓ BẰNG CHỨNG?", options: ["She might win.", "She will probably win.", "Look — it's going to rain.", "It may rain later."], answer: "Look — it's going to rain." },
     { id: "q-ex7", type: "multiple-choice", question: "'Trend' nghĩa là:", options: ["Tình trạng khẩn cấp", "Xu hướng", "Báo cáo", "Quyết định"], answer: "Xu hướng" },
   ],
+
+  // ── REVIEW: Exit quiz + cumulativeReview (spiral) + reading (B1+)
   cumulativeReviewQuestions: [
     { id: "cr21-1", question: "Ôn tập Unit 20 — Chọn Past Perfect đúng: 'By the time we arrived, they ___ the deal.'", options: ["signed", "had signed", "have signed", "were signing"], answer: "had signed", type: "multiple-choice" },
     { id: "cr21-2", question: "Ôn tập Unit 19 — Điền: 'She ___ (present) when the projector ___ (stop) working.'", options: [], answer: "was presenting / stopped", type: "cloze" },
     { id: "cr21-3", question: "Ôn tập A2 — Câu nào dùng going to ĐÚNG cho kế hoạch đã lên sẵn?", options: ["I will travel to Paris next month.", "I'm going to travel to Paris next month — I have the tickets.", "I travel to Paris next month.", "I was going to travel to Paris."], answer: "I'm going to travel to Paris next month — I have the tickets.", type: "multiple-choice" },
   ],
+
+  // ── FLUENCY: pronunciationFocus
   pronunciationFocus: {
     phoneme: "might /maɪt/ tone",
     description: "Modal verbs nhẹ: might, could, would — hay bị đọc quá nặng",
@@ -232,6 +275,8 @@ export const unit21: UnitData = {
     ],
   },
 
+
+  // ── FLUENCY: fluencyDrill ≥5 (Nation Strand 4 automaticity)
   fluencyDrill: {
     items: [
       { en: "By next year, we will have reached our target", vn: "Đến năm tới, chúng tôi sẽ đạt được mục tiêu" },
@@ -244,6 +289,8 @@ export const unit21: UnitData = {
       { en: "This time next year, the team will be working on phase two", vn: "Thời điểm này năm tới, nhóm sẽ đang làm giai đoạn hai" },
     ],
   },
+
+  // ── REVIEW: Reading passage for skills integration
   readingPassage: {
     id: "unit21-reading-1",
     title: "The Future of Work",
@@ -311,6 +358,8 @@ export const unit21: UnitData = {
       },
     ],
   },
+
+  // ── OUTPUT: shadowing
   shadowingVideoId: "hfgFm3sSJxM",
 };
 

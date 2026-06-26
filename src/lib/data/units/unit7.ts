@@ -1,5 +1,12 @@
 import { UnitData } from "@/components/learn/UnitTemplate";
 
+
+// ─────────────────────────────────────────────────────────────────────────────
+// UNIT-7 — Shopping & Prices  (A1)
+// Standardized header + section comments per lesson-blueprint.ts (CONTENT_BLOCK_ORDER)
+// + lesson-center-reference.ts (ESA Engage/Study/Activate, CELTA, Nation, CLT VN)
+// Gold sample: src/lib/data/units/unit1.ts — field order meta→hook→warmup→vocab→grammar→exercises→dialogues→fluency→output→review
+// ─────────────────────────────────────────────────────────────────────────────
 export const unit7: UnitData = {
   unitId: "unit-7",
   title: "Unit 7: Shopping & Prices",
@@ -8,6 +15,8 @@ export const unit7: UnitData = {
   estimatedTime: 45,
   description: "Học từ vựng mua sắm, cách hỏi giá và mặc cả bằng tiếng Anh tự nhiên.",
   badgeName: "Người Mua Sắm Thông Minh",
+
+  // ── HOOK: situation (real VN context) + learningOutcomes (2–5 can-do) + culturalNote (pragmatic VN↔EN)
   situation: "Bạn đang mua sắm tại cửa hàng ở nước ngoài — cần hỏi giá, so sánh sản phẩm và thanh toán bằng tiếng Anh.",
   learningOutcomes: [
     "Hỏi giá và mặc cả sản phẩm tự tin",
@@ -15,12 +24,18 @@ export const unit7: UnitData = {
     "Hoàn tất giao dịch mua bán bằng tiếng Anh"
   ],
   badgeEmoji: "🛍️",
+
+  // ── WARMUP: ≥3 short phrases (SRS + prior knowledge activation)
   warmupGreetings: [
     { emoji: "💰", en: "How much is this shirt?", vn: "Chiếc áo này giá bao nhiêu?", context: "Hỏi giá đồ đơn lẻ" },
     { emoji: "👟", en: "How much are these shoes?", vn: "Đôi giày này giá bao nhiêu?", context: "Hỏi giá đồ số nhiều" },
     { emoji: "🏷️", en: "Can I have a discount?", vn: "Bạn có thể giảm giá cho tôi không?", context: "Mặc cả lịch sự" }
   ],
+
+  // ── HOOK (cultural): pragmatic note
   culturalNote: "Ở chợ Việt Nam, mặc cả là bình thường. Nhưng ở siêu thị hoặc cửa hàng lớn, giá thường cố định. Khi nói tiếng Anh, <span class=\"text-emerald-400 font-semibold\">How much is/are...?</span> là cách hỏi giá tự nhiên nhất — không nói 'What is the price of...?' trong giao tiếp thường ngày.",
+
+  // ── VOCABULARY: 8–20 words, pre-teach BEFORE dialogues; l1_interference_vn (A1 100%, B1+ ≥50%)
   vocab: [
     { id: 1, word: "price", emoji: "💰", phonetic: "/praɪs/", meaning: "giá cả", example: "What is the price of this bag?", example2: "The price is very reasonable.", collocation: "price tag / half price", audio: "/audio/unit7/price.mp3" , l1_interference_vn: "⚠️ Âm /pr/ người Việt hay tách: 'puh-rice'. Luyện nối: 'price' không phải 'p-rice'." },
     { id: 2, word: "cheap", emoji: "✅", phonetic: "/tʃiːp/", meaning: "rẻ", example: "This shirt is very cheap.", example2: "I found a cheap flight to London.", collocation: "cheap price / dirt cheap", audio: "/audio/unit7/cheap.mp3" , l1_interference_vn: "⚠️ 'Cheap' mô tả giá thấp (trung tính). Khi mô tả người = keo kiệt — chú ý ngữ cảnh." },
@@ -35,6 +50,8 @@ export const unit7: UnitData = {
     { id: 11, word: "cash", emoji: "💵", phonetic: "/kæʃ/", meaning: "tiền mặt", example: "Do you accept cash?", example2: "I only have cash today.", collocation: "pay in cash", audio: "/audio/unit7/cash.mp3" , l1_interference_vn: "⚠️ 'Pay in cash' hoặc 'pay cash' — không phải 'pay by cash'. 'By' dùng với 'card'." },
     { id: 12, word: "sale", emoji: "📢", phonetic: "/seɪl/", meaning: "giảm giá / đợt sale", example: "The shop has a sale today.", example2: "I bought this on sale.", collocation: "on sale / end-of-season sale", audio: "/audio/unit7/sale.mp3", l1_interference_vn: "⚠️ 'On sale' = đang giảm giá. 'For sale' = đang bán (chưa mua). Hai cụm hoàn toàn khác nhau!" },
   ],
+
+  // ── DIALOGUES: ≥1 dialogue AFTER vocab (98% coverage)
   dialogues: [
     {
       id: 1,
@@ -66,6 +83,8 @@ export const unit7: UnitData = {
       ]
     },
   ],
+
+  // ── EXERCISES_INPUT: listenAndChoose ≥5 (controlled practice)
   listenAndChoose: [
     { id: "lac1", audio_text: "How much is this shirt", options: ["How much are these shirts", "How much is this shirt", "How much is that dress", "How much does this cost"], answer: "How much is this shirt" },
     { id: "lac2", audio_text: "It costs fifty thousand dong", options: ["It costs fifteen thousand dong", "It costs fifty thousand dong", "They cost fifty thousand dong", "It costs five thousand dong"], answer: "It costs fifty thousand dong" },
@@ -73,12 +92,16 @@ export const unit7: UnitData = {
     { id: "lac4", audio_text: "How much are these shoes", options: ["How much is this shoe", "How much are these shoes", "How much are those bags", "How much is a shoe"], answer: "How much are these shoes" },
     { id: "lac5", audio_text: "I pay by card", options: ["I pay by cash", "I pay online", "I pay by card", "She pays by card"], answer: "I pay by card" },
   ],
+
+  // ── OUTPUT: speaking prompts (freer production)
   speaking: {
     level1Prompt: "How much is this {input}?",
     level1Placeholder: "Ví dụ: shirt, bag, dress, book...",
     level2Situation: "Bạn đang mua sắm tại một cửa hàng quần áo ở Hà Nội. Hỏi giá, thử đồ và xem có được giảm giá không.",
     level2Hint: "Excuse me, how much is this [đồ vật]? Can I try it on? That's [expensive/cheap]. Can I have a discount? I'll pay by [cash/card].",
   },
+
+  // ── GRAMMAR: Inductive (Meaning→Form→CCQ) + vnNote L1
   grammar: {
     title: "How much is/are...? — Hỏi giá",
     rule: "How much is + singular noun? / How much are + plural nouns? / It costs / They cost...",
@@ -102,6 +125,8 @@ export const unit7: UnitData = {
       answer: "How much are these books?",
     },
   },
+
+  // ── EXERCISES_INPUT: matching
   matchingExercise: {
     title: "Nối từ vựng mua sắm với nghĩa",
     pairs: [
@@ -112,17 +137,23 @@ export const unit7: UnitData = {
       { left: "change", right: "tiền thối" },
     ],
   },
+
+  // ── EXERCISES_INPUT: practiceQuiz (active recall)
   practiceQuiz: [
     { id: "pq1", question: "Hỏi giá một chiếc áo:", options: ["How much are this shirt?", "How much is this shirt?", "How many is this shirt?", "How much this shirt is?"], answer: "How much is this shirt?", type: "multiple-choice" },
     { id: "pq2", question: "'Can I try this on?' — nghĩa là gì?", options: ["Có thể mua không?", "Có thể giảm giá không?", "Có thể thử đồ không?", "Có thể trả tiền không?"], answer: "Có thể thử đồ không?", type: "multiple-choice" },
     { id: "pq3", question: "Điền từ còn thiếu: 'It ___ fifty thousand dong.'", options: [], answer: "costs", type: "cloze" },
   ],
 
+
+  // ── OUTPUT: practiceTranslate (VN→EN ≥3) + speaking (level1/2)
   practiceTranslate: [
     { id: "pt7-1", prompt_vn: "Cái áo này giá bao nhiêu?", answer: "How much is this shirt?" },
     { id: "pt7-2", prompt_vn: "Tôi muốn mua một đôi giày.", answer: "I want to buy a pair of shoes." },
     { id: "pt7-3", prompt_vn: "Cái này quá đắt.", answer: "This is too expensive." },
   ],
+
+  // ── REVIEW: Final quiz ≥5 (retrieval practice)
   quiz: [
     { id: "q1", question: "Câu hỏi giá đúng với 'these jeans':", options: ["How much is these jeans?", "How much are these jeans?", "How many are these jeans?", "How much these jeans?"], answer: "How much are these jeans?", type: "multiple-choice",
       explanation_vn: "'These jeans' là số nhiều → 'How much ARE'. Không dùng 'How many' cho hàng không đếm được theo cái." },
@@ -136,6 +167,8 @@ export const unit7: UnitData = {
     { id: "q7", question: "Hôm nay có đợt giảm giá 20%.", options: [], answer: "There is a 20% discount today.", type: "translate" },
   ],
 
+
+  // ── EXERCISES_INPUT: sentenceCorrection
   sentenceCorrectionExercises: [
     {
       id: "sc7-1",
@@ -153,6 +186,8 @@ export const unit7: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: listenAndArrange
   listenAndArrangeExercises: [
     {
       id: "la7-1",
@@ -170,6 +205,8 @@ export const unit7: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: wordBank
   wordBankExercises: [
     {
       id: "wb1",
@@ -191,6 +228,8 @@ export const unit7: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: scramble
   scrambleExercises: [
     {
       id: "s7-1",
@@ -211,6 +250,8 @@ export const unit7: UnitData = {
       answer: "How much are these shoes ?",
     },
   ],
+
+  // ── REVIEW: Exit quiz + cumulativeReview (spiral) + reading (B1+)
   cumulativeReviewQuestions: [
     {
       id: "cr7-1",
@@ -236,6 +277,8 @@ export const unit7: UnitData = {
     },
   ],
 
+
+  // ── FLUENCY: pronunciationFocus
   pronunciationFocus: {
     phoneme: "/æ/",
     description: "Nguyên âm /æ/ (cat, can, map) — miệng mở rộng, lưỡi thấp và ra trước",
@@ -249,6 +292,8 @@ export const unit7: UnitData = {
     ],
   },
 
+
+  // ── FLUENCY: fluencyDrill ≥5 (Nation Strand 4 automaticity)
   fluencyDrill: {
     items: [
       { en: "a coffee", vn: "một ly cà phê" },
@@ -261,6 +306,8 @@ export const unit7: UnitData = {
       { en: "the deadline", vn: "hạn chót" },
     ],
   },
+
+  // ── REVIEW: Reading passage for skills integration
   readingPassage: {
     id: "unit7-reading-1",
     title: "My Favourite Clothes",
@@ -321,6 +368,8 @@ export const unit7: UnitData = {
       },
     ],
   },
+
+  // ── OUTPUT: shadowing
   shadowingVideoId: "kJfmNekLLEI",
 };
 

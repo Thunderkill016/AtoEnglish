@@ -1,5 +1,12 @@
 import { UnitData } from "@/components/learn/UnitTemplate";
 
+
+// ─────────────────────────────────────────────────────────────────────────────
+// UNIT-12 — Review & Real-life Application  (A1)
+// Standardized header + section comments per lesson-blueprint.ts (CONTENT_BLOCK_ORDER)
+// + lesson-center-reference.ts (ESA Engage/Study/Activate, CELTA, Nation, CLT VN)
+// Gold sample: src/lib/data/units/unit1.ts — field order meta→hook→warmup→vocab→grammar→exercises→dialogues→fluency→output→review
+// ─────────────────────────────────────────────────────────────────────────────
 export const unit12: UnitData = {
   unitId: "unit-12",
   title: "Unit 12: Review & Real-life Application",
@@ -8,6 +15,8 @@ export const unit12: UnitData = {
   estimatedTime: 60,
   description: "Ôn tập toàn bộ ngữ pháp và từ vựng A1, áp dụng vào các tình huống giao tiếp thực tế.",
   badgeName: "Chinh Phục A1",
+
+  // ── HOOK: situation (real VN context) + learningOutcomes (2–5 can-do) + culturalNote (pragmatic VN↔EN)
   situation: "Bạn gặp người nước ngoài tại sân bay và họ muốn tìm hiểu về cuộc sống, con người và văn hóa Việt Nam từ chính bạn.",
   learningOutcomes: [
     "Kết hợp tất cả kỹ năng A1 trong hội thoại thực",
@@ -15,12 +24,18 @@ export const unit12: UnitData = {
     "Sẵn sàng bước sang cấp độ A2 với nền tảng vững chắc"
   ],
   badgeEmoji: "🏆",
+
+  // ── WARMUP: ≥3 short phrases (SRS + prior knowledge activation)
   warmupGreetings: [
     { emoji: "🎉", en: "Congratulations! You've reached Unit 12.", vn: "Chúc mừng! Bạn đã đến Unit 12.", context: "Tổng kết hành trình học" },
     { emoji: "🔁", en: "Let's review everything you've learned.", vn: "Hãy ôn lại tất cả những gì bạn đã học.", context: "Mục tiêu ôn tập" },
     { emoji: "💬", en: "Now you can have real conversations!", vn: "Bây giờ bạn có thể có những cuộc trò chuyện thực sự!", context: "Kết quả sau A1" }
   ],
+
+  // ── HOOK (cultural): pragmatic note
   culturalNote: "Sau khi hoàn thành A1, bạn có thể: <span class=\"text-emerald-400 font-semibold\">tự giới thiệu</span>, <span class=\"text-emerald-400 font-semibold\">mua sắm</span>, <span class=\"text-emerald-400 font-semibold\">hỏi đường</span>, <span class=\"text-emerald-400 font-semibold\">nói về sức khỏe</span> và <span class=\"text-emerald-400 font-semibold\">chia sẻ sở thích</span>. Đây là nền tảng vững chắc để tiến lên A2!",
+
+  // ── VOCABULARY: 8–20 words, pre-teach BEFORE dialogues; l1_interference_vn (A1 100%, B1+ ≥50%)
   vocab: [
     { id: 1, word: "introduce", emoji: "🤝", phonetic: "/ˌɪntrəˈdjuːs/", meaning: "giới thiệu", example: "Let me introduce myself.", example2: "I'd like to introduce my friend Tom.", collocation: "introduce yourself / introduce someone", audio: "/audio/unit12/introduce.mp3", l1_interference_vn: "⚠️ 'Introduce yourself' = tự giới thiệu. 'Let me introduce you TO John' — giới từ 'to'. KHÔNG 'introduce you WITH'." },
     { id: 2, word: "conversation", emoji: "💬", phonetic: "/ˌkɒnvəˈseɪʃən/", meaning: "cuộc trò chuyện", example: "I can have a conversation in English.", example2: "Let's have a conversation about hobbies.", collocation: "have a conversation", audio: "/audio/unit12/conversation.mp3" , l1_interference_vn: "⚠️ Stress: con-ver-SA-tion (âm 3). 4 âm tiết. 'Have a conversation' — động từ 'have'." },
@@ -35,6 +50,8 @@ export const unit12: UnitData = {
     { id: 11, word: "review", emoji: "🔁", phonetic: "/rɪˈvjuː/", meaning: "ôn tập", example: "Let's review what we learned.", example2: "It's important to review old lessons.", collocation: "review your notes", audio: "/audio/unit12/review.mp3" , l1_interference_vn: "⚠️ Stress: re-VIEW (động từ, âm 2). RE-view (danh từ, âm 1). Người Việt hay stress sai." },
     { id: 12, word: "achieve", emoji: "🏆", phonetic: "/əˈtʃiːv/", meaning: "đạt được", example: "You achieved your A1 goal!", example2: "She achieved great results.", collocation: "achieve a goal / achieve success", audio: "/audio/unit12/achieve.mp3" , l1_interference_vn: "⚠️ Stress: a-CHIEVE (âm 2). Âm /tʃ/ trong '-chieve'. 'Achieve a goal' — không 'reach a goal'." },
   ],
+
+  // ── DIALOGUES: ≥1 dialogue AFTER vocab (98% coverage)
   dialogues: [
     {
       id: 1,
@@ -66,6 +83,8 @@ export const unit12: UnitData = {
       ]
     },
   ],
+
+  // ── EXERCISES_INPUT: listenAndChoose ≥5 (controlled practice)
   listenAndChoose: [
     { id: "lac1", audio_text: "I can have a conversation in English", options: ["I can speak English well", "I can have a conversation in English", "She can have a conversation in English", "I can have a talk in English"], answer: "I can have a conversation in English" },
     { id: "lac2", audio_text: "My goal is to speak English fluently", options: ["My goal is to speak English slowly", "My aim is to speak English fluently", "My goal is to speak English fluently", "Her goal is to speak English fluently"], answer: "My goal is to speak English fluently" },
@@ -73,12 +92,16 @@ export const unit12: UnitData = {
     { id: "lac4", audio_text: "I feel confident speaking English now", options: ["I feel confident speaking Vietnamese now", "She feels confident speaking English now", "I feel confident speaking English now", "I felt confident speaking English"], answer: "I feel confident speaking English now" },
     { id: "lac5", audio_text: "You achieved your A1 goal", options: ["You achieved your A2 goal", "She achieved your A1 goal", "You achieved your A1 goal", "You can achieve your A1 goal"], answer: "You achieved your A1 goal" },
   ],
+
+  // ── OUTPUT: speaking prompts (freer production)
   speaking: {
     level1Prompt: "I can {input} now. I am proud of myself!",
     level1Placeholder: "Ví dụ: speak English, introduce myself, order food...",
     level2Situation: "Tổng hợp A1: Bạn gặp một người bạn quốc tế lần đầu tiên. Tự giới thiệu, hỏi về nghề nghiệp, sở thích, mô tả nhà bạn, và chia sẻ cảm xúc của bạn hôm nay.",
     level2Hint: "Hi! My name is [tên]. I am [tuổi] years old. I am a [nghề nghiệp]. I like [sở thích]. In my home, there is/are [mô tả nhà]. Today I feel [cảm xúc] because [lý do]. I can [kỹ năng]!",
   },
+
+  // ── GRAMMAR: Inductive (Meaning→Form→CCQ) + vnNote L1
   grammar: {
     title: "Ôn tập Ngữ pháp A1 — 11 Cấu trúc quan trọng",
     rule: "To be | Wh- questions | Possessives | Present Simple | like+V-ing | There is/are | How much | some/any | Prepositions | Can/Can't | have/feel",
@@ -107,6 +130,8 @@ export const unit12: UnitData = {
       answer: "I'm a teacher. I like cooking and I can speak English well.",
     },
   },
+
+  // ── EXERCISES_INPUT: matching
   matchingExercise: {
     title: "Nối ngữ pháp với ví dụ đúng",
     pairs: [
@@ -117,17 +142,23 @@ export const unit12: UnitData = {
       { left: "Can/Can't (Unit 10)", right: "He can play guitar." },
     ],
   },
+
+  // ── EXERCISES_INPUT: practiceQuiz (active recall)
   practiceQuiz: [
     { id: "pq1", question: "Câu nào ÔN lại ngữ pháp Unit 4 đúng?", options: ["She go to work.", "She goes to work.", "She going to work.", "She is go to work."], answer: "She goes to work.", type: "multiple-choice" },
     { id: "pq2", question: "Câu nào dùng đúng 'like + V-ing' (Unit 5)?", options: ["I like swim.", "I like to swimming.", "I like swimming.", "I like swims."], answer: "I like swimming.", type: "multiple-choice" },
     { id: "pq3", question: "Điền vào: 'I ___ speak English now. I'm proud!' (Unit 10)", options: [], answer: "can", type: "cloze" },
   ],
 
+
+  // ── OUTPUT: practiceTranslate (VN→EN ≥3) + speaking (level1/2)
   practiceTranslate: [
     { id: "pt12-1", prompt_vn: "Tôi đã học tiếng Anh được ba tháng.", answer: "I have been learning English for three months." },
     { id: "pt12-2", prompt_vn: "Bạn có thể giới thiệu bản thân bằng tiếng Anh không?", answer: "Can you introduce yourself in English?" },
     { id: "pt12-3", prompt_vn: "Tôi muốn cải thiện kỹ năng nói của mình.", answer: "I want to improve my speaking skills." },
   ],
+
+  // ── REVIEW: Final quiz ≥5 (retrieval practice)
   quiz: [
     { id: "q1", question: "Câu nào ÔN đúng ngữ pháp 'There is/are' (Unit 6)?", options: ["There is two windows.", "There are two window.", "There are two windows.", "There have two windows."], answer: "There are two windows.", type: "multiple-choice",
       explanation_vn: "'Two windows' là số nhiều → 'There ARE'. Danh từ cũng phải số nhiều: 'windows', không phải 'window'." },
@@ -140,6 +171,8 @@ export const unit12: UnitData = {
     { id: "q6", question: "Tôi thức dậy lúc 6 giờ và đi làm lúc 8 giờ. (Unit 4)", options: [], answer: "I wake up at six and go to work at eight.", type: "translate" },
     { id: "q7", question: "Tôi cảm thấy tự tin khi nói tiếng Anh bây giờ. (Unit 11)", options: [], answer: "I feel confident speaking English now.", type: "translate" },
   ],
+
+  // ── EXERCISES_INPUT: sentenceCorrection
   sentenceCorrectionExercises: [
     {
       id: "sc12-1",
@@ -157,6 +190,8 @@ export const unit12: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: listenAndArrange
   listenAndArrangeExercises: [
     {
       id: "la12-1",
@@ -174,6 +209,8 @@ export const unit12: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: wordBank
   wordBankExercises: [
     {
       id: "wb1",
@@ -195,6 +232,8 @@ export const unit12: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: scramble
   scrambleExercises: [
     {
       id: "s12-1",
@@ -215,6 +254,8 @@ export const unit12: UnitData = {
       answer: "There is a park next to my house .",
     },
   ],
+
+  // ── REVIEW: Exit quiz + cumulativeReview (spiral) + reading (B1+)
   cumulativeReviewQuestions: [
     {
       id: "cr12-1",
@@ -239,6 +280,8 @@ export const unit12: UnitData = {
     },
   ],
 
+
+  // ── FLUENCY: pronunciationFocus
   pronunciationFocus: {
     phoneme: "word stress",
     description: "Stress từ — sai stress khiến người bản ngữ không hiểu dù phát âm từng âm đúng",
@@ -252,6 +295,8 @@ export const unit12: UnitData = {
     ],
   },
 
+
+  // ── FLUENCY: fluencyDrill ≥5 (Nation Strand 4 automaticity)
   fluencyDrill: {
     items: [
       { en: "bigger", vn: "lớn hơn" },
@@ -264,6 +309,8 @@ export const unit12: UnitData = {
       { en: "the fastest", vn: "nhanh nhất" },
     ],
   },
+
+  // ── REVIEW: Reading passage for skills integration
   readingPassage: {
     id: "unit12-reading-1",
     title: "My English Journey",
@@ -325,6 +372,8 @@ export const unit12: UnitData = {
       },
     ],
   },
+
+  // ── OUTPUT: shadowing
   shadowingVideoId: "QVg9aSlLdJg",
 };
 

@@ -1,5 +1,12 @@
 import { UnitData } from "@/components/learn/UnitTemplate";
 
+
+// ─────────────────────────────────────────────────────────────────────────────
+// UNIT-23 — If & When  (B1)
+// Standardized header + section comments per lesson-blueprint.ts (CONTENT_BLOCK_ORDER)
+// + lesson-center-reference.ts (ESA Engage/Study/Activate, CELTA, Nation, CLT VN)
+// Gold sample: src/lib/data/units/unit1.ts — field order meta→hook→warmup→vocab→grammar→exercises→dialogues→fluency→output→review
+// ─────────────────────────────────────────────────────────────────────────────
 export const unit23: UnitData = {
   unitId: "unit-23",
   title: "Unit 23: If & When",
@@ -9,18 +16,26 @@ export const unit23: UnitData = {
   description: "Thành thạo Zero & First Conditionals — nói về điều kiện thực tế trong kinh doanh và cuộc sống hàng ngày.",
   badgeName: "Nhà Đàm Phán",
   badgeEmoji: "🤝",
+
+  // ── HOOK: situation (real VN context) + learningOutcomes (2–5 can-do) + culturalNote (pragmatic VN↔EN)
   situation: "Bạn đang đàm phán hợp đồng với đối tác. Họ hỏi điều kiện của bạn. Bạn cần dùng conditionals: 'If you increase the order, we will offer a discount.' Hiểu và dùng đúng conditionals = đàm phán hiệu quả.",
   learningOutcomes: [
     "Dùng Zero Conditional cho sự thật và quy luật chung",
     "Dùng First Conditional cho điều kiện có thể xảy ra trong tương lai",
     "Đàm phán điều kiện hợp đồng bằng tiếng Anh tự nhiên",
   ],
+
+  // ── HOOK (cultural): pragmatic note
   culturalNote: 'Trong đàm phán kinh doanh, <span class="text-emerald-400 font-semibold">First Conditional</span> là công cụ mạnh nhất: <span class="text-emerald-400">"If you sign before Friday, we will give you a 10% discount."</span> Nghe chuyên nghiệp, rõ ràng và tạo động lực hành động. Người Việt hay nói kiểu <span class="text-zinc-400">"If you sign, we will giving..."</span> — sai thì trong vế kết quả.',
+
+  // ── WARMUP: ≥3 short phrases (SRS + prior knowledge activation)
   warmupGreetings: [
     { emoji: "🔬", en: "If you heat water to 100°C, it boils. (Zero — scientific fact)", vn: "Nếu bạn đun nước đến 100°C, nó sẽ sôi.", context: "Zero Conditional — sự thật" },
     { emoji: "💼", en: "If we increase the order, they will offer a better price.", vn: "Nếu chúng ta tăng đơn hàng, họ sẽ đưa ra giá tốt hơn.", context: "First Conditional — khả năng thực tế" },
     { emoji: "⚠️", en: "Unless we act now, we will miss the opportunity.", vn: "Trừ khi chúng ta hành động ngay, chúng ta sẽ bỏ lỡ cơ hội.", context: "Unless = if...not" },
   ],
+
+  // ── VOCABULARY: 8–20 words, pre-teach BEFORE dialogues; l1_interference_vn (A1 100%, B1+ ≥50%)
   vocab: [
     { id: 1, word: "condition", emoji: "📋", phonetic: "/kənˈdɪʃən/", meaning: "điều kiện", example: "The condition is that you must pay within 30 days.", example2: "We agree to the terms and conditions.", collocation: "on the condition that / terms and conditions", audio: "/audio/unit23/condition.mp3" },
     { id: 2, word: "unless", emoji: "⚠️", phonetic: "/ənˈles/", meaning: "trừ khi / nếu không", example: "We won't proceed unless you confirm the order.", example2: "Unless you call ahead, there may not be a table.", collocation: "unless otherwise stated / unless you / unless we", audio: "/audio/unit23/unless.mp3", l1_interference_vn: "⚠️ \'Unless\' = \'if not\' — KHÔNG dùng phủ định: \'Unless you study\' (KHÔNG \'Unless you don\'t study\')." },
@@ -35,6 +50,8 @@ export const unit23: UnitData = {
     { id: 11, word: "proceed", emoji: "▶️", phonetic: "/prəˈsiːd/", meaning: "tiến hành / tiếp tục", example: "If you sign today, we will proceed with the order immediately.", example2: "Please proceed to the next step once confirmed.", collocation: "proceed with / proceed to / proceed as planned", audio: "/audio/unit23/proceed.mp3", l1_interference_vn: "⚠️ \'Proceed WITH\': \'proceed with the plan\'. Hoặc \'proceed to DO sth\'. Không dùng \'proceed to doing\'." },
     { id: 12, word: "agreement", emoji: "📝", phonetic: "/əˈɡriːmənt/", meaning: "thỏa thuận / hợp đồng", example: "If we reach an agreement today, production starts next week.", example2: "Both parties signed the agreement yesterday.", collocation: "reach an agreement / sign an agreement / in agreement", audio: "/audio/unit23/agreement.mp3", l1_interference_vn: "⚠️ \'Agreement ON/ABOUT\': \'reach an agreement on the price\'. \'In agreement WITH\' = đồng ý với." },
   ],
+
+  // ── DIALOGUES: ≥1 dialogue AFTER vocab (98% coverage)
   dialogues: [
     {
       id: 1,
@@ -63,6 +80,8 @@ export const unit23: UnitData = {
       ],
     },
   ],
+
+  // ── EXERCISES_INPUT: listenAndChoose ≥5 (controlled practice)
   listenAndChoose: [
     { id: "lac1", audio_text: "If you increase the order we will offer a better price", options: ["If you increase the order we will offer a better price", "If you will increase the order we will offer a better price", "If you increase the order we offer a better price", "If you increased the order we will offer a better price"], answer: "If you increase the order we will offer a better price" },
     { id: "lac2", audio_text: "Unless you confirm by Thursday we cannot proceed", options: ["Unless you confirm by Thursday we cannot proceed", "Unless you will confirm by Thursday we cannot proceed", "If you don't confirm by Thursday we can proceed", "Unless you confirmed by Thursday we cannot proceed"], answer: "Unless you confirm by Thursday we cannot proceed" },
@@ -70,12 +89,16 @@ export const unit23: UnitData = {
     { id: "lac4", audio_text: "If you sign today we will proceed immediately", options: ["If you sign today we proceeded immediately", "If you will sign today we will proceed immediately", "If you sign today we will proceed immediately", "If you signed today we will proceed immediately"], answer: "If you sign today we will proceed immediately" },
     { id: "lac5", audio_text: "If you cancel within fourteen days you pay a twenty percent penalty", options: ["If you cancel within fourteen days you will pay a twenty percent penalty", "If you cancel within fourteen days you pay a twenty percent penalty", "If you cancelled within fourteen days you pay a twenty percent penalty", "If you will cancel within fourteen days you pay a twenty percent penalty"], answer: "If you cancel within fourteen days you pay a twenty percent penalty" },
   ],
+
+  // ── OUTPUT: speaking prompts (freer production)
   speaking: {
     level1Prompt: "If you {input}, we will {input}. However, unless you {input}, we cannot {input}.",
     level1Placeholder: "Ví dụ: increase the order — offer 10% discount — confirm by Friday — proceed...",
     level2Situation: "Bạn đang đàm phán điều khoản hợp đồng. Trình bày rõ ràng: (1) Điều kiện bạn đưa ra là gì (First Conditional)? (2) Quy luật nào áp dụng tự động (Zero Conditional)? (3) Điều gì xảy ra nếu đối tác không đồng ý (Unless)?",
     level2Hint: "If you [condition], we will [result]. Unless you [condition], we cannot [proceed]. If both parties [action], the agreement will [outcome]. In general, if [rule], [consequence] — this is our standard policy.",
   },
+
+  // ── GRAMMAR: Inductive (Meaning→Form→CCQ) + vnNote L1
   grammar: {
     title: "Zero & First Conditionals",
     rule: "ZERO CONDITIONAL — Sự thật / Quy luật chung:\nIf + Present Simple → Present Simple\n→ 'If you heat water to 100°C, it boils.'\n→ 'If the market grows, prices rise.'\n\nFIRST CONDITIONAL — Điều kiện có thể xảy ra:\nIf + Present Simple → will + infinitive\n→ 'If you sign today, we will give you a discount.'\n→ 'If they confirm, we will start production.'\n\nUNLESS = If...not:\n→ 'Unless you pay, we won't deliver.' = 'If you don't pay, we won't deliver.'",
@@ -104,6 +127,8 @@ export const unit23: UnitData = {
       explanation: "First Conditional: If + Present Simple (sign) → will + infinitive (will start). Vế IF không dùng 'will'.",
     },
   },
+
+  // ── EXERCISES_INPUT: practiceQuiz (active recall)
   practiceQuiz: [
     { id: "pq1", type: "multiple-choice", question: "Chọn đúng First Conditional: 'If she ___ the report, the manager ___ pleased.'", options: ["submits / will be", "will submit / will be", "submits / is", "submitted / will be"], answer: "submits / will be" },
     { id: "pq2", type: "multiple-choice", question: "Zero Conditional — quy luật: 'If the temperature ___ below zero, water ___.'", options: ["falls / freezes", "will fall / will freeze", "falls / will freeze", "fell / froze"], answer: "falls / freezes" },
@@ -111,6 +136,8 @@ export const unit23: UnitData = {
     { id: "pq4", type: "multiple-choice", question: "Câu nào ĐÚNG về điều kiện trong hợp đồng?", options: ["If you will pay early, we will give a discount.", "If you pay early, we will give a discount.", "If you paid early, we will give a discount.", "If you pay early, we give a discount."], answer: "If you pay early, we will give a discount." },
     { id: "pq5", type: "cloze", question: "Điền: 'If both sides ___ (negotiate) fairly, they ___ (reach) a good agreement.'", answer: "negotiate / will reach" },
   ],
+
+  // ── EXERCISES_INPUT: matching
   matchingExercise: {
     title: "Nối từ với nghĩa đúng",
     pairs: [
@@ -121,6 +148,8 @@ export const unit23: UnitData = {
       { left: "proposal", right: "đề xuất" },
     ],
   },
+
+  // ── OUTPUT: practiceTranslate (VN→EN ≥3) + speaking (level1/2)
   practiceTranslate: [
     {
       id: "pt-1",
@@ -139,6 +168,8 @@ export const unit23: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: sentenceCorrection
   sentenceCorrectionExercises: [
     {
       id: "sc23-1",
@@ -157,6 +188,8 @@ export const unit23: UnitData = {
   ],
 
 
+
+  // ── EXERCISES_INPUT: listenAndArrange
   listenAndArrangeExercises: [
     {
       id: "la23-1",
@@ -175,6 +208,8 @@ export const unit23: UnitData = {
   ],
 
 
+
+  // ── EXERCISES_INPUT: wordBank
   wordBankExercises: [
     {
       id: "wb1",
@@ -196,11 +231,15 @@ export const unit23: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: scramble
   scrambleExercises: [
     { id: "s23-1", prompt_vn: "Nếu bạn tăng đơn hàng, chúng tôi sẽ đưa ra giá tốt hơn.", words: ["If", "you", "increase", "the", "order", ",", "we", "will", "offer", "a", "better", "price", "."], answer: "If you increase the order , we will offer a better price ." },
     { id: "s23-2", prompt_vn: "Trừ khi bạn xác nhận trước thứ Năm, chúng tôi không thể tiến hành.", words: ["Unless", "you", "confirm", "by", "Thursday", ",", "we", "cannot", "proceed", "."], answer: "Unless you confirm by Thursday , we cannot proceed ." },
     { id: "s23-3", prompt_vn: "Nếu bạn ký hôm nay, tôi sẽ gửi hợp đồng tối nay.", words: ["If", "you", "sign", "today", ",", "I", "will", "send", "the", "contract", "tonight", "."], answer: "If you sign today , I will send the contract tonight ." },
   ],
+
+  // ── REVIEW: Final quiz ≥5 (retrieval practice)
   quiz: [
     { id: "fq1", type: "multiple-choice", question: "Dịch: 'Nếu bạn đặt hàng trước thứ Sáu, chúng tôi sẽ giao hàng miễn phí.'", options: ["If you will order before Friday, we will deliver for free.", "If you order before Friday, we will deliver for free.", "If you ordered before Friday, we will deliver for free.", "If you order before Friday, we deliver for free."], answer: "If you order before Friday, we will deliver for free." },
     { id: "fq2", type: "cloze", question: "Điền: '___ you pay within 10 days, you ___ (receive) a 3% discount.'", answer: "If / will receive" },
@@ -215,11 +254,15 @@ export const unit23: UnitData = {
     { id: "q-ex6", type: "translate", question: "Dịch: 'Nếu bạn cần giúp đỡ, hãy gọi cho tôi.'", answer: "If you need help, call me." },
     { id: "q-ex7", type: "multiple-choice", question: "Zero conditional: 'If you heat water to 100°C, it ___'", options: ["boils", "will boil", "would boil", "boiled"], answer: "boils" },
   ],
+
+  // ── REVIEW: Exit quiz + cumulativeReview (spiral) + reading (B1+)
   cumulativeReviewQuestions: [
     { id: "cr23-1", question: "Ôn tập Unit 22 — 'You ___ share passwords' (BỊ CẤM).", options: ["should not", "don't have to", "mustn't", "needn't"], answer: "mustn't", type: "multiple-choice" },
     { id: "cr23-2", question: "Ôn tập Unit 21 — Điền: 'By 2030, we ___ (expand) into 10 countries.'", options: [], answer: "will have expanded", type: "cloze" },
     { id: "cr23-3", question: "Ôn tập Unit 20 — Câu Past Perfect đúng:", options: ["When I arrived, the meeting started.", "When I arrived, the meeting has started.", "When I arrived, the meeting had already started.", "When I arrived, the meeting was starting."], answer: "When I arrived, the meeting had already started.", type: "multiple-choice" },
   ],
+
+  // ── FLUENCY: pronunciationFocus
   pronunciationFocus: {
     phoneme: "if + linking",
     description: "Conditional nối âm — if it → /ɪ fɪt/, if I → /ɪ faɪ/",
@@ -232,6 +275,8 @@ export const unit23: UnitData = {
     ],
   },
 
+
+  // ── FLUENCY: fluencyDrill ≥5 (Nation Strand 4 automaticity)
   fluencyDrill: {
     items: [
       { en: "If you sign today, we will start immediately", vn: "Nếu bạn ký hôm nay, chúng tôi sẽ bắt đầu ngay" },
@@ -244,6 +289,8 @@ export const unit23: UnitData = {
       { en: "Unless we act now, we will miss the opportunity", vn: "Trừ khi chúng ta hành động ngay, chúng ta sẽ bỏ lỡ cơ hội" },
     ],
   },
+
+  // ── REVIEW: Reading passage for skills integration
   readingPassage: {
     id: "unit23-reading-1",
     title: "Planning for Success",
@@ -311,6 +358,8 @@ export const unit23: UnitData = {
       },
     ],
   },
+
+  // ── OUTPUT: shadowing
   shadowingVideoId: "oXlk6H_Jqis",
 };
 

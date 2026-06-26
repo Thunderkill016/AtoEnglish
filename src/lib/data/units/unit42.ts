@@ -1,5 +1,12 @@
 import { UnitData } from "@/components/learn/UnitTemplate";
 
+
+// ─────────────────────────────────────────────────────────────────────────────
+// UNIT-42 — B2 Final Assessment  (B2)
+// Standardized header + section comments per lesson-blueprint.ts (CONTENT_BLOCK_ORDER)
+// + lesson-center-reference.ts (ESA Engage/Study/Activate, CELTA, Nation, CLT VN)
+// Gold sample: src/lib/data/units/unit1.ts — field order meta→hook→warmup→vocab→grammar→exercises→dialogues→fluency→output→review
+// ─────────────────────────────────────────────────────────────────────────────
 export const unit42: UnitData = {
   unitId: "unit-42",
   title: "Unit 42: B2 Final Assessment",
@@ -9,18 +16,26 @@ export const unit42: UnitData = {
   description: "B2 Complete — Bài đánh giá năng lực cuối cùng tổng hợp toàn bộ chương trình học từ A0 đến B2. Cấu trúc bài thi bao quát các dạng bài IELTS Reading, Listening và TOEIC Part 5/6/7. Cột mốc chứng nhận trình độ tương đương IELTS 6.5 / TOEIC 785+.",
   badgeName: "Bậc Thầy Tiếng Anh",
   badgeEmoji: "🏆",
+
+  // ── HOOK: situation (real VN context) + learningOutcomes (2–5 can-do) + culturalNote (pragmatic VN↔EN)
   situation: "Bạn tham gia buổi phỏng vấn đánh giá năng lực cuối kỳ và hoàn thành bài thi chứng chỉ B2 của AtoEnglish. Bạn cần sử dụng kết hợp tất cả các kiến thức từ vựng học thuật, kỹ năng đàm phán, viết email, thuyết trình và các cấu trúc ngữ pháp nâng cao để khẳng định trình độ tiếng Anh của mình.",
   learningOutcomes: [
     "Sử dụng thành thạo và linh hoạt toàn bộ hệ thống ngữ pháp A0-B2 trong mọi ngữ cảnh",
     "Hoàn thành tốt các câu hỏi thi thử mô phỏng đề thi thực tế IELTS và TOEIC",
     "Đạt trình độ độc lập hoàn toàn (CEFR B2), đủ điều kiện làm việc trong môi trường quốc tế",
   ],
+
+  // ── HOOK (cultural): pragmatic note
   culturalNote: 'Chúc mừng bạn đã đi đến chặng đường cuối cùng! Đạt trình độ <span class="text-emerald-400 font-semibold">CEFR B2 (IELTS 6.5 / TOEIC 785+)</span> nghĩa là bạn đã có khả năng tự tin làm việc trong môi trường quốc tế, hiểu các văn bản chuyên ngành và giao tiếp tự nhiên không gặp trở ngại lớn. Đây là bệ phóng vững chắc để bạn tiếp tục phát triển sự nghiệp toàn cầu.',
+
+  // ── WARMUP: ≥3 short phrases (SRS + prior knowledge activation)
   warmupGreetings: [
     { emoji: "🏆", en: "Having completed all forty-two units, I feel ready for the exam.", vn: "Sau khi hoàn thành tất cả bốn mươi hai bài học, tôi cảm thấy sẵn sàng cho kỳ thi.", context: "Having completed — Perfect Participle" },
     { emoji: "🎓", en: "By next week, I will have received my B2 certificate.", vn: "Trước tuần tới, tôi sẽ đã nhận được chứng chỉ B2 của mình.", context: "will have received — Future Perfect" },
     { emoji: "💪", en: "Rarely has anyone demonstrated such dedication to learning.", vn: "Hiếm khi có ai thể hiện sự cống hiến lớn lao như vậy đối với việc học.", context: "Rarely has anyone demonstrated — Inversion" },
   ],
+
+  // ── VOCABULARY: 8–20 words, pre-teach BEFORE dialogues; l1_interference_vn (A1 100%, B1+ ≥50%)
   vocab: [
     { id: 1, word: "expertise", emoji: "🎓", phonetic: "/ˌekspɜːˈtiːz/", meaning: "chuyên môn / kinh nghiệm chuyên sâu", example: "Her expertise in business administration is widely recognized.", example2: "We need to leverage our collective expertise.", collocation: "technical expertise / develop expertise / area of expertise", audio: "/audio/unit42/expertise.mp3" },
     { id: 2, word: "sustainable", emoji: "♻️", phonetic: "/səˈsteɪnəbəl/", meaning: "bền vững", example: "A sustainable economy requires clean energy.", example2: "We must adopt sustainable business practices.", collocation: "sustainable energy / sustainable development / sustainable growth", audio: "/audio/unit42/sustainable.mp3", l1_interference_vn: "⚠️ Thường trước danh từ: \'sustainable development/energy/growth\'." },
@@ -35,6 +50,8 @@ export const unit42: UnitData = {
     { id: 11, word: "consequence", emoji: "💥", phonetic: "/ˈkɒnsɪkwəns/", meaning: "hậu quả / hệ quả", example: "Climate change has severe consequences for agriculture.", example2: "You must accept the consequences of your actions.", collocation: "severe consequences / negative consequence", audio: "/audio/unit42/consequence.mp3", l1_interference_vn: "⚠️ \'Consequence OF\': \'consequences of climate change\'. Giới từ \'of\', không phải \'from\'." },
     { id: 12, word: "validate", emoji: "✔️", phonetic: "/ˈvælɪdeɪt/", meaning: "xác thực / phê chuẩn", example: "We gathered data to validate our business model.", example2: "The manager validated the signature on the contract.", collocation: "validate data / validate a contract / validate findings", audio: "/audio/unit42/validate.mp3" },
   ],
+
+  // ── DIALOGUES: ≥1 dialogue AFTER vocab (98% coverage)
   dialogues: [
     {
       id: 1,
@@ -62,6 +79,8 @@ export const unit42: UnitData = {
       ],
     },
   ],
+
+  // ── EXERCISES_INPUT: listenAndChoose ≥5 (controlled practice)
   listenAndChoose: [
     { id: "lac1", audio_text: "Having completed the curriculum, I feel confident speaking.", options: ["I feel confident speaking before starting the curriculum.", "Having completed the curriculum, I feel confident speaking.", "I will start the curriculum to become confident.", "Speaking confidence is not related to the curriculum."], answer: "Having completed the curriculum, I feel confident speaking." },
     { id: "lac2", audio_text: "If I had started sooner, I would be even more fluent now.", options: ["I started early so I am very fluent now.", "If I had started sooner, I would be even more fluent now.", "I will start early to be fluent now.", "Starting early did not help my fluency."], answer: "If I had started sooner, I would be even more fluent now." },
@@ -69,12 +88,16 @@ export const unit42: UnitData = {
     { id: "lac4", audio_text: "The factory is in compliance with all safety standards.", options: ["The factory is in compliance with all safety standards.", "The factory violated the safety standards yesterday.", "Compliance is not required in the factory.", "We will ensure safety standards next year."], answer: "The factory is in compliance with all safety standards." },
     { id: "lac5", audio_text: "We gathered data to validate our business model.", options: ["We validated the data before building the business model.", "We gathered data to validate our business model.", "Our business model failed despite the data.", "We will gather data next year to check our business model."], answer: "We gathered data to validate our business model." },
   ],
+
+  // ── OUTPUT: speaking prompts (freer production)
   speaking: {
     level1Prompt: "Having {input} the B2 level, I feel ready to {input} in a {input} environment.",
     level1Placeholder: "Ví dụ: completed — collaborate — global...",
     level2Situation: "Bạn phát biểu trong buổi lễ tốt nghiệp hoặc phỏng vấn đánh giá. Hãy: (1) Khẳng định rằng bạn đã tích lũy chuyên môn B2 thành công, (2) Giải thích rằng nếu không có phương pháp học tập đúng đắn, bạn đã không đạt kết quả hôm nay, (3) Bày tỏ quyết tâm tiếp tục hợp tác quốc tế.",
     level2Hint: "Having completed the curriculum, I have accumulated valuable expertise. If I had not practiced daily with AtoEnglish, I would not be fluent today. Consequently, I am ready to collaborate with global partners and meet all professional criteria.",
   },
+
+  // ── GRAMMAR: Inductive (Meaning→Form→CCQ) + vnNote L1
   grammar: {
     title: "A0-B2 Grammar Review — Tổng Hợp Ngữ Pháp Toàn Diện",
     rule: "Chúc mừng bạn đã hoàn thành toàn bộ hệ thống ngữ pháp A0-B2. Hãy xem lại bản đồ ngữ pháp cốt lõi của bạn:\n\n1. A0-A2: Verb BE, Thời gian, Số đếm, Hiện tại đơn, Quá khứ đơn, Tương lai đơn (will/going to), Hiện tại hoàn thành.\n2. B1: Quá khứ tiếp diễn, Quá khứ hoàn thành, Tương lai hoàn thành, Động từ khuyết thiếu mở rộng, Câu điều kiện loại 0 & 1, Thể bị động cơ bản, Mệnh đề quan hệ xác định, Danh động từ & Động từ nguyên mẫu.\n3. B2: Câu điều kiện loại 2 & 3, Câu điều kiện hỗn hợp, Bị động học thuật nâng cao, Mệnh đề phân từ rút gọn, Đảo ngữ, Câu chẻ nhấn mạnh, Động từ khuyết thiếu hoàn thành (Modal Perfect), Từ nối liên kết nâng cao.",
@@ -103,6 +126,8 @@ export const unit42: UnitData = {
       explanation: "'If I had had' (Quá khứ hoàn thành - giả định quá khứ) kết hợp với 'would be V-ing' (giả định hiện tại) tạo thành câu điều kiện hỗn hợp.",
     },
   },
+
+  // ── EXERCISES_INPUT: practiceQuiz (active recall)
   practiceQuiz: [
     { id: "pq1", type: "multiple-choice", question: "Chọn dạng đúng: 'Rarely ___ our developers encountered such a server crash.'", options: ["do", "did", "have", "had"], answer: "have" },
     { id: "pq2", type: "multiple-choice", question: "Chọn từ nối thích hợp: 'We worked hard; ___ (do đó) we achieved our target.'", options: ["consequently", "nevertheless", "furthermore", "whereas"], answer: "consequently" },
@@ -110,6 +135,8 @@ export const unit42: UnitData = {
     { id: "pq4", type: "multiple-choice", question: "Chọn từ điền: 'The company is in ___ with safety standards.'", options: ["compliance", "expertise", "resolution", "alternative"], answer: "compliance" },
     { id: "pq5", type: "cloze", question: "Điền dạng phân từ hoàn thành: '___ (complete) the assessment, he celebrated.'", answer: "Having completed" },
   ],
+
+  // ── EXERCISES_INPUT: matching
   matchingExercise: {
     title: "Nối từ vựng học thuật cấp độ B2 với nghĩa đúng",
     pairs: [
@@ -120,6 +147,8 @@ export const unit42: UnitData = {
       { left: "consequence", right: "hậu quả / hệ quả" },
     ],
   },
+
+  // ── OUTPUT: practiceTranslate (VN→EN ≥3) + speaking (level1/2)
   practiceTranslate: [
     {
       id: "pt-1",
@@ -138,6 +167,8 @@ export const unit42: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: sentenceCorrection
   sentenceCorrectionExercises: [
     {
       id: "sc42-1",
@@ -156,6 +187,8 @@ export const unit42: UnitData = {
   ],
 
 
+
+  // ── EXERCISES_INPUT: listenAndArrange
   listenAndArrangeExercises: [
     {
       id: "la42-1",
@@ -174,6 +207,8 @@ export const unit42: UnitData = {
   ],
 
 
+
+  // ── EXERCISES_INPUT: wordBank
   wordBankExercises: [
     {
       id: "wb1",
@@ -195,11 +230,15 @@ export const unit42: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: scramble
   scrambleExercises: [
     { id: "s42-1", prompt_vn: "Chính sự chuyển đổi số đã nâng cao hiệu suất của chúng tôi.", words: ["It", "was", "digital", "transformation", "that", "enhanced", "our", "performance", "."], answer: "It was digital transformation that enhanced our performance ." },
     { id: "s42-2", prompt_vn: "Không những họ đạt chỉ tiêu, họ còn cắt giảm chi phí.", words: ["Not", "only", "did", "they", "meet", "targets", ",", "they", "also", "cut", "costs", "."], answer: "Not only did they meet targets , they also cut costs ." },
     { id: "s42-3", prompt_vn: "Hiếm khi có học sinh nào đạt điểm tuyệt đối 100%.", words: ["Rarely", "does", "any", "student", "achieve", "a", "perfect", "score", "."], answer: "Rarely does any student achieve a perfect score ." },
   ],
+
+  // ── REVIEW: Final quiz ≥5 (retrieval practice)
   quiz: [
     { id: "fq1", type: "multiple-choice", question: "Chọn dạng đúng: 'The new system is claimed ___ performance by thirty percent.'", options: ["to enhance", "to have enhanced", "enhancing", "enhanced"], answer: "to have enhanced" },
     { id: "fq2", type: "cloze", question: "Điền từ nối: 'He was tired; ___ (tuy nhiên), he kept studying.'", answer: "nevertheless" },
@@ -214,11 +253,15 @@ export const unit42: UnitData = {
     { id: "q-ex6", type: "multiple-choice", question: "Modal perfect 'must have + V3' diễn tả:", options: ["Nghĩa vụ trong QK", "Suy luận chắc chắn về QK", "Khả năng trong TL", "Điều kiện QK"], answer: "Suy luận chắc chắn về QK" },
     { id: "q-ex7", type: "multiple-choice", question: "Từ nối học thuật tốt nhất để tương phản:", options: ["but", "however", "and", "so"], answer: "however" },
   ],
+
+  // ── REVIEW: Exit quiz + cumulativeReview (spiral) + reading (B1+)
   cumulativeReviewQuestions: [
     { id: "cr42-1", question: "Ôn tập Unit 41 — Chọn từ thích hợp: 'Urbanization has caused severe environmental ___.'", options: ["degradation", "wellbeing", "deforestation", "infrastructure"], answer: "degradation", type: "multiple-choice" },
     { id: "cr42-2", question: "Ôn tập Unit 40 — Điền: 'She practices daily, ___ (nhờ đó) improving her fluency.'", options: [], answer: "thereby", type: "cloze" },
     { id: "cr42-3", question: "Ôn tập Unit 39 — Chọn dạng đúng: 'He ___ (forget) his keys because the car is locked.'", options: ["must have forgotten", "can't have forgotten", "should have forgotten", "might forget"], answer: "must have forgotten", type: "multiple-choice" },
   ],
+
+  // ── FLUENCY: pronunciationFocus
   pronunciationFocus: {
     phoneme: "final consonants",
     description: "Ôn tập toàn bộ — focus vào 5 lỗi phổ biến nhất người Việt B2",
@@ -232,6 +275,8 @@ export const unit42: UnitData = {
     ],
   },
 
+
+  // ── FLUENCY: fluencyDrill ≥5 (Nation Strand 4 automaticity)
   fluencyDrill: {
     items: [
       { en: "Having completed B2, I feel ready", vn: "Sau khi hoàn thành B2, tôi thấy sẵn sàng" },
@@ -244,6 +289,8 @@ export const unit42: UnitData = {
       { en: "I am ready to collaborate globally", vn: "Tôi đã sẵn sàng cộng tác trên toàn cầu" },
     ],
   },
+
+  // ── REVIEW: Reading passage for skills integration
   readingPassage: {
     id: "unit42-reading-1",
     title: "Your B2 Achievement",
@@ -314,6 +361,8 @@ export const unit42: UnitData = {
       },
     ],
   },
+
+  // ── OUTPUT: shadowing
   shadowingVideoId: "SKRhFCaFMpI",
 };
 

@@ -1,5 +1,12 @@
 import { UnitData } from "@/components/learn/UnitTemplate";
 
+
+// ─────────────────────────────────────────────────────────────────────────────
+// UNIT-28 — How Long Have You Been...?  (B1)
+// Standardized header + section comments per lesson-blueprint.ts (CONTENT_BLOCK_ORDER)
+// + lesson-center-reference.ts (ESA Engage/Study/Activate, CELTA, Nation, CLT VN)
+// Gold sample: src/lib/data/units/unit1.ts — field order meta→hook→warmup→vocab→grammar→exercises→dialogues→fluency→output→review
+// ─────────────────────────────────────────────────────────────────────────────
 export const unit28: UnitData = {
   unitId: "unit-28",
   title: "Unit 28: How Long Have You Been...?",
@@ -9,18 +16,26 @@ export const unit28: UnitData = {
   description: "Present Perfect Continuous — 'I've been studying English for 6 months.' Diễn tả hành động đang tiếp diễn từ quá khứ đến hiện tại với trọng tâm vào THỜI GIAN và TIẾN TRÌNH.",
   badgeName: "Người Kiên Trì",
   badgeEmoji: "⏳",
+
+  // ── HOOK: situation (real VN context) + learningOutcomes (2–5 can-do) + culturalNote (pragmatic VN↔EN)
   situation: "Phỏng vấn xin học bổng. Interviewer hỏi: 'How long have you been working on this project?' Dùng Present Perfect Continuous: 'I've been working on it for eight months.' — thể hiện rõ sự liên tục và nỗ lực hơn Present Perfect đơn giản.",
   learningOutcomes: [
     "Dùng Present Perfect Continuous (have/has been + V-ing) cho hành động đang tiếp diễn",
     "Phân biệt Present Perfect Simple vs Continuous (result vs duration/process)",
     "Mô tả kinh nghiệm đang diễn ra trong phỏng vấn và hội thoại chuyên nghiệp",
   ],
+
+  // ── HOOK (cultural): pragmatic note
   culturalNote: 'So sánh: <span class="text-zinc-400">"I have read the report"</span> (xong rồi, kết quả) vs <span class="text-emerald-400">"I have been reading the report"</span> (vẫn đang đọc, hoặc vừa đọc xong — nhấn mạnh quá trình). Người B1+ dùng Continuous khi muốn nhấn mạnh <span class="text-emerald-400 font-semibold">nỗ lực liên tục</span> và <span class="text-emerald-400 font-semibold">thời gian đã bỏ ra</span>.',
+
+  // ── WARMUP: ≥3 short phrases (SRS + prior knowledge activation)
   warmupGreetings: [
     { emoji: "📚", en: "I've been studying English for six months now.", vn: "Tôi đã học tiếng Anh được sáu tháng rồi.", context: "for + thời gian — hành động đang tiếp diễn" },
     { emoji: "💼", en: "She's been working on the project since January.", vn: "Cô ấy đã làm dự án từ tháng Một.", context: "since + thời điểm bắt đầu" },
     { emoji: "🏃", en: "How long have you been learning to code?", vn: "Bạn đã học lập trình được bao lâu rồi?", context: "how long + present perfect continuous" },
   ],
+
+  // ── VOCABULARY: 8–20 words, pre-teach BEFORE dialogues; l1_interference_vn (A1 100%, B1+ ≥50%)
   vocab: [
     { id: 1, word: "progress", emoji: "📈", phonetic: "/ˈprəʊɡres/", meaning: "tiến triển / tiến bộ", example: "I've been making steady progress with my English.", example2: "The project has been progressing well.", collocation: "make progress / track progress / steady progress", audio: "/audio/unit28/progress.mp3" , l1_interference_vn: "⚠️ PRO-gress (danh từ) vs pro-GRESS (động từ). 'Make progress' — không có 'a'." },
     { id: 2, word: "consistently", emoji: "🔁", phonetic: "/kənˈsɪstəntli/", meaning: "một cách nhất quán / đều đặn", example: "She has been consistently achieving high scores.", example2: "Our team has been consistently meeting targets.", collocation: "consistently good / consistently perform / maintain consistently", audio: "/audio/unit28/consistently.mp3" },
@@ -35,6 +50,8 @@ export const unit28: UnitData = {
     { id: 11, word: "initiative", emoji: "🚀", phonetic: "/ɪˈnɪʃətɪv/", meaning: "sáng kiến / chủ động", example: "She has been leading the digital transformation initiative.", example2: "I take the initiative to improve processes wherever I can.", collocation: "take the initiative / strategic initiative / lead an initiative", audio: "/audio/unit28/initiative.mp3" },
     { id: 12, word: "achievement", emoji: "🏆", phonetic: "/əˈtʃiːvmənt/", meaning: "thành tích / thành tựu", example: "I've been tracking my achievements to prepare for the review.", example2: "Her greatest achievement was leading the team to success.", collocation: "academic achievement / remarkable achievement / sense of achievement", audio: "/audio/unit28/achievement.mp3" },
   ],
+
+  // ── DIALOGUES: ≥1 dialogue AFTER vocab (98% coverage)
   dialogues: [
     {
       id: 1,
@@ -63,6 +80,8 @@ export const unit28: UnitData = {
       ],
     },
   ],
+
+  // ── EXERCISES_INPUT: listenAndChoose ≥5 (controlled practice)
   listenAndChoose: [
     { id: "lac1", audio_text: "I've been studying English for six months", options: ["I've studied English for six months", "I've been studying English for six months", "I've been studying English since six months", "I'm studying English for six months"], answer: "I've been studying English for six months" },
     { id: "lac2", audio_text: "She has been working on the project since January", options: ["She has worked on the project since January", "She has been working on the project since January", "She is working on the project since January", "She has been worked on the project since January"], answer: "She has been working on the project since January" },
@@ -70,12 +89,16 @@ export const unit28: UnitData = {
     { id: "lac4", audio_text: "We've been developing the system since March", options: ["We've developed the system since March", "We've been developing the system since March", "We're developing the system since March", "We've been developing the system for March"], answer: "We've been developing the system since March" },
     { id: "lac5", audio_text: "I've been practicing every day for three months", options: ["I've practiced every day for three months", "I've been practiced every day for three months", "I've been practicing every day for three months", "I've been practicing every day since three months"], answer: "I've been practicing every day for three months" },
   ],
+
+  // ── OUTPUT: speaking prompts (freer production)
   speaking: {
     level1Prompt: "I've been {input} for {input}. Since {input}, I've also been {input}.",
     level1Placeholder: "Ví dụ: studying IELTS — 6 months — January — working on a research project...",
     level2Situation: "Phỏng vấn học bổng hoặc xin việc. Dùng Present Perfect Continuous để mô tả: (1) Bạn đã chuẩn bị cho vị trí này bao lâu và như thế nào? (2) Bạn đang phát triển kỹ năng gì? (3) Bạn đã đạt được tiến triển gì?",
     level2Hint: "I've been preparing for [period]. I've been [developing/studying/working on] [skill/project] since [date]. For the past [period], I've been consistently [action]. I've been making significant progress with [area].",
   },
+
+  // ── GRAMMAR: Inductive (Meaning→Form→CCQ) + vnNote L1
   grammar: {
     title: "Present Perfect Continuous — Nhấn Mạnh Quá Trình",
     rule: "Công thức: have/has + been + V-ing\n\nDùng khi:\n1. Hành động bắt đầu trong quá khứ và ĐANG TIẾP DIỄN đến hiện tại\n   → 'I've been studying for 3 hours.' (vẫn đang học)\n2. Nhấn mạnh THỜI GIAN hoặc QUÁ TRÌNH, không phải kết quả\n   → 'She's been working hard.' (quá trình liên tục)\n\nDấu hiệu: for, since, how long, all day/week\n\nSo sánh:\nPresent Perfect Simple: 'I've written the report.' → kết quả, xong rồi\nPresent Perfect Continuous: 'I've been writing the report.' → đang làm / vừa làm xong, nhấn mạnh quá trình",
@@ -104,6 +127,8 @@ export const unit28: UnitData = {
       explanation: "'Have been writing' = Present Perfect Continuous — nhấn mạnh quá trình liên tục suốt tuần. 'Have written' = nhấn mạnh số lượng kết quả (3 báo cáo).",
     },
   },
+
+  // ── EXERCISES_INPUT: practiceQuiz (active recall)
   practiceQuiz: [
     { id: "pq1", type: "multiple-choice", question: "Chọn đúng — nhấn mạnh quá trình: 'She ___ English for two years.'", options: ["studied", "has studied", "has been studying", "is studying"], answer: "has been studying" },
     { id: "pq2", type: "multiple-choice", question: "'How long ___ you ___ on this project?'", options: ["have / worked", "have / been working", "did / work", "are / working"], answer: "have / been working" },
@@ -111,6 +136,8 @@ export const unit28: UnitData = {
     { id: "pq4", type: "multiple-choice", question: "Phân biệt: Câu nào nhấn mạnh KẾT QUẢ?", options: ["I've been reading the report.", "I've read the report.", "I was reading the report.", "I've been reading the report all morning."], answer: "I've read the report." },
     { id: "pq5", type: "cloze", question: "Điền: '___ (how long) she ___ (work) as a mentor?'", answer: "How long / has she been working" },
   ],
+
+  // ── EXERCISES_INPUT: matching
   matchingExercise: {
     title: "Nối từ với nghĩa đúng",
     pairs: [
@@ -121,6 +148,8 @@ export const unit28: UnitData = {
       { left: "achievement", right: "thành tích" },
     ],
   },
+
+  // ── OUTPUT: practiceTranslate (VN→EN ≥3) + speaking (level1/2)
   practiceTranslate: [
     {
       id: "pt-1",
@@ -139,6 +168,8 @@ export const unit28: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: sentenceCorrection
   sentenceCorrectionExercises: [
     {
       id: "sc28-1",
@@ -156,6 +187,8 @@ export const unit28: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: listenAndArrange
   listenAndArrangeExercises: [
     {
       id: "la28-1",
@@ -173,6 +206,8 @@ export const unit28: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: wordBank
   wordBankExercises: [
     {
       id: "wb1",
@@ -194,11 +229,15 @@ export const unit28: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: scramble
   scrambleExercises: [
     { id: "s28-1", prompt_vn: "Tôi đã học tiếng Anh được sáu tháng.", words: ["I've", "been", "studying", "English", "for", "six", "months", "."], answer: "I've been studying English for six months ." },
     { id: "s28-2", prompt_vn: "Cô ấy đã hướng dẫn nhân viên trẻ được ba năm.", words: ["She", "has", "been", "mentoring", "junior", "staff", "for", "three", "years", "."], answer: "She has been mentoring junior staff for three years ." },
     { id: "s28-3", prompt_vn: "Nhóm đã phát triển hệ thống mới từ tháng Ba.", words: ["The", "team", "has", "been", "developing", "the", "new", "system", "since", "March", "."], answer: "The team has been developing the new system since March ." },
   ],
+
+  // ── REVIEW: Final quiz ≥5 (retrieval practice)
   quiz: [
     { id: "fq1", type: "multiple-choice", question: "Dịch: 'Bạn đã làm dự án này bao lâu rồi?'", options: ["How long did you work on this project?", "How long have you been working on this project?", "How long are you working on this project?", "How long were you working on this project?"], answer: "How long have you been working on this project?",
       explanation_vn: "Present Perfect Continuous: 'have been working' nhấn mạnh tiến trình đang tiếp diễn, không phải 'did work' hay 'are working'." },
@@ -216,11 +255,15 @@ export const unit28: UnitData = {
     { id: "q-ex6", type: "multiple-choice", question: "'It's been ages since I saw him.' nghĩa là:", options: ["Tôi vừa gặp anh ấy", "Đã rất lâu tôi không gặp anh ấy", "Tôi thường xuyên gặp anh ấy", "Tôi chưa bao giờ gặp anh ấy"], answer: "Đã rất lâu tôi không gặp anh ấy" },
     { id: "q-ex7", type: "multiple-choice", question: "'For a long time' đi với thì nào nhất?", options: ["Simple Past chỉ", "Present Perfect", "Simple Present chỉ", "Future Simple chỉ"], answer: "Present Perfect" },
   ],
+
+  // ── REVIEW: Exit quiz + cumulativeReview (spiral) + reading (B1+)
   cumulativeReviewQuestions: [
     { id: "cr28-1", question: "Ôn tập Unit 27 — 'She ___ the problem in the meeting.' (đề cập)", options: ["brought up", "brought on", "set up", "looked into"], answer: "brought up", type: "multiple-choice" },
     { id: "cr28-2", question: "Ôn tập Unit 26 — Điền: 'I ___ (consider) changing my approach.'", options: [], answer: "am considering", type: "cloze" },
     { id: "cr28-3", question: "Ôn tập Unit 25 — Relative pronoun đúng: 'Tom, ___ portfolio includes Fortune 500 clients, works remotely.'", options: ["who", "which", "whose", "where"], answer: "whose", type: "multiple-choice" },
   ],
+
+  // ── FLUENCY: pronunciationFocus
   pronunciationFocus: {
     phoneme: "for /fɔːr/ vs /fər/",
     description: "For trong present perfect — dạng mạnh /fɔːr/ và yếu /fər/",
@@ -233,6 +276,8 @@ export const unit28: UnitData = {
     ],
   },
 
+
+  // ── FLUENCY: fluencyDrill ≥5 (Nation Strand 4 automaticity)
   fluencyDrill: {
     items: [
       { en: "I've been studying English for six months", vn: "Tôi đã học tiếng Anh được sáu tháng" },
@@ -245,6 +290,8 @@ export const unit28: UnitData = {
       { en: "She's been consistently achieving high scores", vn: "Cô ấy đã đạt điểm cao một cách nhất quán" },
     ],
   },
+
+  // ── REVIEW: Reading passage for skills integration
   readingPassage: {
     id: "unit28-reading-1",
     title: "A Passion for Teaching",
@@ -313,6 +360,8 @@ export const unit28: UnitData = {
       },
     ],
   },
+
+  // ── OUTPUT: shadowing
   shadowingVideoId: "kSU0P7bRHPo",
 };
 

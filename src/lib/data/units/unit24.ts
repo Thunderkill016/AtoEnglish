@@ -1,5 +1,12 @@
 import { UnitData } from "@/components/learn/UnitTemplate";
 
+
+// ─────────────────────────────────────────────────────────────────────────────
+// UNIT-24 — How Things Are Made  (B1)
+// Standardized header + section comments per lesson-blueprint.ts (CONTENT_BLOCK_ORDER)
+// + lesson-center-reference.ts (ESA Engage/Study/Activate, CELTA, Nation, CLT VN)
+// Gold sample: src/lib/data/units/unit1.ts — field order meta→hook→warmup→vocab→grammar→exercises→dialogues→fluency→output→review
+// ─────────────────────────────────────────────────────────────────────────────
 // ─────────────────────────────────────────────────────────────────────────────
 // UNIT 24 — How Things Are Made (B1) — Passive Voice for processes
 // Per TASK-060: bring L1 interference >=50% (B1 target 0.5)
@@ -18,13 +25,19 @@ export const unit24: UnitData = {
   description: "Học Passive Voice để mô tả quy trình và sự kiện mà không cần nhấn mạnh chủ thể — kỹ năng thiết yếu cho báo cáo và thuyết trình kỹ thuật.",
   badgeName: "Kỹ Sư Quy Trình",
   badgeEmoji: "⚙️",
+
+  // ── HOOK: situation (real VN context) + learningOutcomes (2–5 can-do) + culturalNote (pragmatic VN↔EN)
   situation: "Đoàn khách quốc tế đến thăm nhà máy. Giám đốc nhờ bạn giải thích quy trình sản xuất bằng tiếng Anh. Trong kỹ thuật và báo cáo, Passive Voice là chuẩn: 'The components are assembled here. The product is tested before shipping.'",
   learningOutcomes: [
     "Dùng Passive Voice Present Simple (is/are + done) để mô tả quy trình hiện tại",
     "Dùng Passive Past Simple (was/were + done) và Present Perfect Passive (has been + done)",
     "Thuyết trình quy trình sản xuất và kỹ thuật bằng tiếng Anh chuyên nghiệp",
   ],
+
+  // ── HOOK (cultural): pragmatic note
   culturalNote: 'Trong báo cáo kỹ thuật và khoa học bằng tiếng Anh, <span class="text-emerald-400 font-semibold">Passive Voice</span> được dùng rất phổ biến vì nó tập trung vào <span class="text-emerald-400 font-semibold">QUY TRÌNH</span>, không phải người thực hiện. <span class="text-zinc-400">"Workers assemble the parts"</span> → <span class="text-emerald-400">"The parts are assembled"</span>. Đây là phong cách viết chuyên nghiệp trong môi trường quốc tế.',
+
+  // ── WARMUP: ≥3 short phrases (SRS + prior knowledge activation)
   warmupGreetings: [
     { emoji: "🏭", en: "The components are manufactured in our Ho Chi Minh City facility.", vn: "Các linh kiện được sản xuất tại cơ sở Thành phố Hồ Chí Minh của chúng tôi.", context: "Passive Present — quy trình hiện tại" },
     { emoji: "🔍", en: "Each product is tested three times before it is shipped.", vn: "Mỗi sản phẩm được kiểm tra ba lần trước khi vận chuyển.", context: "Passive Present — quy trình kiểm soát chất lượng" },
@@ -34,6 +47,8 @@ export const unit24: UnitData = {
   // ── VOCABULARY: 12 từ — DẠY TRƯỚC DIALOGUE (Nation pre-teach) ─────────────
   // L1 notes: focus common VN errors on Passive (missing BE, wrong V3, active habit)
   // ESA Study / CELTA Clarification: IPA + collocation + l1_interference_vn (ILA style)
+
+  // ── VOCABULARY: 8–20 words, pre-teach BEFORE dialogues; l1_interference_vn (A1 100%, B1+ ≥50%)
   vocab: [
     { id: 1, word: "manufacture", emoji: "🏭", phonetic: "/ˌmænjuˈfæktʃər/", meaning: "sản xuất", example: "The parts are manufactured using automated machinery.", example2: "This company manufactures electronic components.", collocation: "manufacture goods / manufacturing process / mass manufacture", audio: "/audio/unit24/manufacture.mp3", l1_interference_vn: "⚠️ Passive: 'are manufactured' (be + V3). VN hay quên 'be': 'parts manufacture' ❌ — phải 'The parts ARE manufactured'." },
     { id: 2, word: "assemble", emoji: "🔧", phonetic: "/əˈsembəl/", meaning: "lắp ráp", example: "The devices are assembled by hand in our factory.", example2: "All components must be assembled in the correct order.", collocation: "assemble a product / assembly line / fully assembled", audio: "/audio/unit24/assemble.mp3", l1_interference_vn: "⚠️ 'are assembled' (KHÔNG 'assemble themselves' hoặc bỏ be). 'By hand' = thủ công, không 'with hand'." },
@@ -48,6 +63,8 @@ export const unit24: UnitData = {
     { id: 11, word: "defect", emoji: "⚠️", phonetic: "/ˈdiːfekt/", meaning: "lỗi / khuyết tật", example: "Any product with a defect is rejected and removed from the line.", example2: "Our defect rate is less than 0.1%.", collocation: "manufacturing defect / defect rate / free from defects", audio: "/audio/unit24/defect.mp3", l1_interference_vn: "⚠️ 'with a defect' (adj). Passive: 'is rejected'. Không 'defect products' — 'defective'." },
     { id: 12, word: "package", emoji: "📦", phonetic: "/ˈpækɪdʒ/", meaning: "đóng gói", example: "After inspection, the products are packaged and labeled.", example2: "Each item is carefully packaged to prevent damage.", collocation: "package a product / packaging material / packaged goods", audio: "/audio/unit24/package.mp3" },
   ],
+
+  // ── DIALOGUES: ≥1 dialogue AFTER vocab (98% coverage)
   dialogues: [
     {
       id: 1,
@@ -76,6 +93,8 @@ export const unit24: UnitData = {
       ],
     },
   ],
+
+  // ── EXERCISES_INPUT: listenAndChoose ≥5 (controlled practice)
   listenAndChoose: [
     { id: "lac1", audio_text: "The components are manufactured here in our main facility", options: ["The components manufacture here in our main facility", "The components are manufactured here in our main facility", "The components are manufacturing here in our main facility", "The components were manufactured here in our main facility"], answer: "The components are manufactured here in our main facility" },
     { id: "lac2", audio_text: "Each unit is inspected three times before it is shipped", options: ["Each unit is inspected three times before it ships", "Each unit inspects three times before it is shipped", "Each unit is inspected three times before it is shipped", "Each unit is inspecting three times before it is shipped"], answer: "Each unit is inspected three times before it is shipped" },
@@ -83,12 +102,16 @@ export const unit24: UnitData = {
     { id: "lac4", audio_text: "All defective parts are immediately removed from the line", options: ["All defective parts immediately remove from the line", "All defective parts are immediate removed from the line", "All defective parts are immediately removing from the line", "All defective parts are immediately removed from the line"], answer: "All defective parts are immediately removed from the line" },
     { id: "lac5", audio_text: "The machine was repaired this morning and has been tested successfully", options: ["The machine repaired this morning and has been tested successfully", "The machine was repaired this morning and has been tested successfully", "The machine was repaired this morning and was tested successfully", "The machine was repairing this morning and has been tested successfully"], answer: "The machine was repaired this morning and has been tested successfully" },
   ],
+
+  // ── OUTPUT: speaking prompts (freer production)
   speaking: {
     level1Prompt: "First, {input} is/are {input}. Then it is {input}. Finally, each unit is {input} before shipping.",
     level1Placeholder: "Ví dụ: raw material — sourced from suppliers — processed — inspected...",
     level2Situation: "Thuyết trình quy trình sản xuất hoặc dịch vụ của công ty bạn (hoặc tưởng tượng) cho đoàn khách. Mô tả ít nhất 5 bước quy trình bằng Passive Voice. Bao gồm: quy trình kiểm soát chất lượng và tính bền vững.",
     level2Hint: "First, [materials] are sourced/received. Then [components] are manufactured/assembled. Each [unit/product] is inspected/tested at [stage]. Any defects are removed. Finally, [products] are packaged and distributed. Our facility has been certified by [standard].",
   },
+
+  // ── GRAMMAR: Inductive (Meaning→Form→CCQ) + vnNote L1
   grammar: {
     title: "Passive Voice — Tập Trung Vào Quy Trình",
     rule: "Active → Passive: đổi chủ ngữ, dùng BE + past participle\n\nPresent Simple Passive: is/are + done\n→ 'The parts ARE assembled here.'\n\nPast Simple Passive: was/were + done\n→ 'The factory WAS built in 2020.'\n\nPresent Perfect Passive: has/have been + done\n→ 'The equipment HAS BEEN updated.'\n\nFuture Passive: will be + done\n→ 'Solar panels WILL BE installed next year.'\n\nBởi ai? dùng BY:\n→ 'The product was designed BY our team.'",
@@ -117,6 +140,8 @@ export const unit24: UnitData = {
       explanation: "Present Simple Passive: is/are + past participle (assembled). Dùng để mô tả quy trình diễn ra đều đặn — chuẩn ngôn ngữ kỹ thuật/báo cáo.",
     },
   },
+
+  // ── EXERCISES_INPUT: practiceQuiz (active recall)
   practiceQuiz: [
     { id: "pq1", type: "multiple-choice", question: "Đổi sang Passive: 'Workers inspect each unit carefully.'", options: ["Each unit inspects carefully.", "Each unit is carefully inspected.", "Each unit was carefully inspected.", "Each unit has carefully inspected."], answer: "Each unit is carefully inspected." },
     { id: "pq2", type: "multiple-choice", question: "Chọn đúng Past Passive: 'The factory ___ in 2021.'", options: ["is built", "was built", "has been built", "builds"], answer: "was built" },
@@ -124,6 +149,8 @@ export const unit24: UnitData = {
     { id: "pq4", type: "multiple-choice", question: "Present Perfect Passive: 'The equipment ___.'", options: ["is serviced", "was serviced", "has been serviced", "serviced"], answer: "has been serviced" },
     { id: "pq5", type: "cloze", question: "Điền: 'All defective items ___ (remove) before packaging.' (Present Passive)", answer: "are removed" },
   ],
+
+  // ── EXERCISES_INPUT: matching
   matchingExercise: {
     title: "Nối từ với nghĩa đúng",
     pairs: [
@@ -134,6 +161,8 @@ export const unit24: UnitData = {
       { left: "distribute", right: "phân phối" },
     ],
   },
+
+  // ── OUTPUT: practiceTranslate (VN→EN ≥3) + speaking (level1/2)
   practiceTranslate: [
     {
       id: "pt-1",
@@ -152,6 +181,8 @@ export const unit24: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: sentenceCorrection
   sentenceCorrectionExercises: [
     {
       id: "sc24-1",
@@ -170,6 +201,8 @@ export const unit24: UnitData = {
   ],
 
 
+
+  // ── EXERCISES_INPUT: listenAndArrange
   listenAndArrangeExercises: [
     {
       id: "la24-1",
@@ -188,6 +221,8 @@ export const unit24: UnitData = {
   ],
 
 
+
+  // ── EXERCISES_INPUT: wordBank
   wordBankExercises: [
     {
       id: "wb1",
@@ -209,11 +244,15 @@ export const unit24: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: scramble
   scrambleExercises: [
     { id: "s24-1", prompt_vn: "Các linh kiện được sản xuất tại cơ sở chính của chúng tôi.", words: ["The", "components", "are", "manufactured", "at", "our", "main", "facility", "."], answer: "The components are manufactured at our main facility ." },
     { id: "s24-2", prompt_vn: "Nhà máy đã được chứng nhận ISO 9001 từ năm 2020.", words: ["The", "factory", "has", "been", "certified", "by", "ISO", "9001", "since", "2020", "."], answer: "The factory has been certified by ISO 9001 since 2020 ." },
     { id: "s24-3", prompt_vn: "Tất cả vật liệu đóng gói được tái chế.", words: ["All", "packaging", "materials", "are", "recycled", "."], answer: "All packaging materials are recycled ." },
   ],
+
+  // ── REVIEW: Final quiz ≥5 (retrieval practice)
   quiz: [
     { id: "fq1", type: "multiple-choice", question: "Dịch: 'Mỗi sản phẩm được kiểm tra ba lần trước khi vận chuyển.'", options: ["Each product inspects three times before shipping.", "Each product is inspected three times before shipping.", "Each product was inspected three times before shipping.", "Each product has inspected three times before shipping."], answer: "Each product is inspected three times before shipping." },
     { id: "fq2", type: "cloze", question: "Điền: 'The system ___ (install) last week and ___ (test) successfully.'", answer: "was installed / was tested" },
@@ -228,11 +267,15 @@ export const unit24: UnitData = {
     { id: "q-ex6", type: "translate", question: "Dịch: 'Xe máy của tôi đã được sửa.'", answer: "My motorbike has been repaired." },
     { id: "q-ex7", type: "multiple-choice", question: "'By' trong câu bị động dùng để:", options: ["Chỉ thời gian", "Chỉ tác nhân thực hiện hành động", "Chỉ địa điểm", "Chỉ cách thức"], answer: "Chỉ tác nhân thực hiện hành động" },
   ],
+
+  // ── REVIEW: Exit quiz + cumulativeReview (spiral) + reading (B1+)
   cumulativeReviewQuestions: [
     { id: "cr24-1", question: "Ôn tập Unit 23 — First Conditional đúng:", options: ["If you will confirm, we will proceed.", "If you confirm, we will proceed.", "If you confirmed, we will proceed.", "If you confirm, we proceed."], answer: "If you confirm, we will proceed.", type: "multiple-choice" },
     { id: "cr24-2", question: "Ôn tập Unit 22 — Điền modal: 'You ___ share passwords — it's prohibited.'", options: [], answer: "mustn't", type: "cloze" },
     { id: "cr24-3", question: "Ôn tập Unit 21 — Câu Future Perfect đúng:", options: ["By 2030, we will expand globally.", "By 2030, we will be expanding globally.", "By 2030, we will have expanded globally.", "By 2030, we expand globally."], answer: "By 2030, we will have expanded globally.", type: "multiple-choice" },
   ],
+
+  // ── FLUENCY: pronunciationFocus
   pronunciationFocus: {
     phoneme: "been /biːn/",
     description: "Passive been — âm /iː/ dài, không phải /ɪ/ ngắn",
@@ -245,6 +288,8 @@ export const unit24: UnitData = {
     ],
   },
 
+
+  // ── FLUENCY: fluencyDrill ≥5 (Nation Strand 4 automaticity)
   fluencyDrill: {
     items: [
       { en: "The product is tested before shipping", vn: "Sản phẩm được kiểm tra trước khi vận chuyển" },
@@ -257,6 +302,8 @@ export const unit24: UnitData = {
       { en: "The report must be approved before submission", vn: "Báo cáo phải được duyệt trước khi nộp" },
     ],
   },
+
+  // ── REVIEW: Reading passage for skills integration
   readingPassage: {
     id: "unit24-reading-1",
     title: "How Bánh Mì Is Made",
@@ -324,6 +371,8 @@ export const unit24: UnitData = {
       },
     ],
   },
+
+  // ── OUTPUT: shadowing
   shadowingVideoId: "3nKL_QL8fdA",
 };
 

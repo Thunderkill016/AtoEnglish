@@ -1,5 +1,12 @@
 import { UnitData } from "@/components/learn/UnitTemplate";
 
+
+// ─────────────────────────────────────────────────────────────────────────────
+// UNIT-35 — Advanced Conditions  (B2)
+// Standardized header + section comments per lesson-blueprint.ts (CONTENT_BLOCK_ORDER)
+// + lesson-center-reference.ts (ESA Engage/Study/Activate, CELTA, Nation, CLT VN)
+// Gold sample: src/lib/data/units/unit1.ts — field order meta→hook→warmup→vocab→grammar→exercises→dialogues→fluency→output→review
+// ─────────────────────────────────────────────────────────────────────────────
 export const unit35: UnitData = {
   unitId: "unit-35",
   title: "Unit 35: Advanced Conditions",
@@ -9,18 +16,26 @@ export const unit35: UnitData = {
   description: "Mixed Conditionals & Alternatives to IF — Câu điều kiện hỗn hợp và các liên từ thay thế IF (unless, provided that, as long as, even if). Kỹ năng cốt lõi cho đàm phán hợp đồng thương mại và bài thi TOEIC Part 5 & 6.",
   badgeName: "Nhà Đàm Phán",
   badgeEmoji: "🤝",
+
+  // ── HOOK: situation (real VN context) + learningOutcomes (2–5 can-do) + culturalNote (pragmatic VN↔EN)
   situation: "Thảo luận và đàm phán hợp đồng với đối tác quốc tế. Hai bên đang tranh luận về các điều khoản thanh toán, bảo hành và khoản phạt khi giao hàng chậm trễ. Sử dụng câu điều kiện hỗn hợp và các liên từ điều kiện để đưa ra thỏa hiệp một cách chặt chẽ.",
   learningOutcomes: [
     "Sử dụng câu điều kiện hỗn hợp (Mixed Conditionals) để liên kết quá khứ với hiện tại",
     "Áp dụng các liên từ điều kiện unless, provided that, as long as trong đàm phán",
     "Đọc hiểu và sử dụng từ vựng về điều khoản hợp đồng ở cấp độ B2 chuyên nghiệp",
   ],
+
+  // ── HOOK (cultural): pragmatic note
   culturalNote: 'Trong đàm phán thương mại quốc tế, các từ thay thế cho "if" như <span class="text-emerald-400">"provided that"</span> hoặc <span class="text-emerald-400">"as long as"</span> được ưa chuộng hơn vì chúng nhấn mạnh <span class="text-emerald-400 font-semibold">điều kiện tiên quyết bắt buộc</span>. Ngược lại, <span class="text-emerald-400">"unless"</span> (trừ khi) được dùng để đưa ra cảnh báo mạnh mẽ về hệ quả xấu nếu điều kiện không được đáp ứng.',
+
+  // ── WARMUP: ≥3 short phrases (SRS + prior knowledge activation)
   warmupGreetings: [
     { emoji: "📄", en: "Provided that you deliver on time, we will sign the agreement.", vn: "Với điều kiện là bạn giao hàng đúng hạn, chúng tôi sẽ ký thỏa thuận.", context: "provided that = miễn là / với điều kiện là" },
     { emoji: "🤝", en: "We will not sign the contract unless you clarify this clause.", vn: "Chúng tôi sẽ không ký hợp đồng trừ khi bạn làm rõ điều khoản này.", context: "unless = trừ khi (if not)" },
     { emoji: "⏳", en: "If we had signed yesterday, we would be in compliance today.", vn: "Nếu hôm qua chúng ta ký kết, hôm nay chúng ta đã tuân thủ đúng luật rồi.", context: "Mixed Conditional: Past action -> Present result" },
   ],
+
+  // ── VOCABULARY: 8–20 words, pre-teach BEFORE dialogues; l1_interference_vn (A1 100%, B1+ ≥50%)
   vocab: [
     { id: 1, word: "agreement", emoji: "🤝", phonetic: "/əˈɡriːmənt/", meaning: "sự thỏa thuận / hợp đồng", example: "Both parties finally signed the trade agreement.", example2: "We reached an agreement after a long negotiation.", collocation: "sign an agreement / reach an agreement / verbal agreement", audio: "/audio/unit35/agreement.mp3", l1_interference_vn: "⚠️ \'Agreement ON/ABOUT\': \'reach an agreement on the price\'. \'In agreement WITH\' = đồng ý với." },
     { id: 2, word: "negotiate", emoji: "🗣️", phonetic: "/nɪˈɡəʊʃɪeɪt/", meaning: "đàm phán / thương lượng", example: "We need to negotiate the price before making a order.", example2: "She is skilled at negotiating contracts.", collocation: "negotiate a contract / negotiate with / negotiate terms", audio: "/audio/unit35/negotiate.mp3", l1_interference_vn: "⚠️ \'Negotiate a deal/contract\' — không dùng \'negotiate to\' hay \'negotiate for sth\' trực tiếp." },
@@ -35,6 +50,8 @@ export const unit35: UnitData = {
     { id: 11, word: "dispute", phonetic: "/dɪˈspjuːt/", emoji: "⚖️", meaning: "tranh chấp / bất đồng", example: "The court resolved the trade dispute between the two companies.", example2: "There is a dispute over the ownership of the land.", collocation: "resolve a dispute / trade dispute / legal dispute", audio: "/audio/unit35/dispute.mp3" },
     { id: 12, word: "penalty", emoji: "💸", phonetic: "/ˈpenəlti/", meaning: "khoản phạt / hình phạt", example: "There will be a heavy penalty if we terminate the contract early.", example2: "The penalty for late submission is a lower grade.", collocation: "pay a penalty / penalty clause / death penalty", audio: "/audio/unit35/penalty.mp3", l1_interference_vn: "⚠️ \'Penalty FOR\': \'a penalty for breaking the law\'. Giới từ \'for\', không phải \'of\'." },
   ],
+
+  // ── DIALOGUES: ≥1 dialogue AFTER vocab (98% coverage)
   dialogues: [
     {
       id: 1,
@@ -62,6 +79,8 @@ export const unit35: UnitData = {
       ],
     },
   ],
+
+  // ── EXERCISES_INPUT: listenAndChoose ≥5 (controlled practice)
   listenAndChoose: [
     { id: "lac1", audio_text: "As long as you agree to sign, we can offer a discount.", options: ["We will offer a discount even if you don't sign.", "As long as you agree to sign, we can offer a discount.", "Unless you agree to sign, we will offer a discount.", "We offered a discount after you signed."], answer: "As long as you agree to sign, we can offer a discount." },
     { id: "lac2", audio_text: "We will not sign the contract unless you clarify this clause.", options: ["We will sign the contract and clarify this clause.", "We will not sign the contract unless you clarify this clause.", "We signed the contract before you clarified the clause.", "Unless we sign, you cannot clarify the contract."], answer: "We will not sign the contract unless you clarify this clause." },
@@ -69,12 +88,16 @@ export const unit35: UnitData = {
     { id: "lac4", audio_text: "There is a penalty clause for late delivery.", options: ["There is a penalty clause for late delivery.", "There is no penalty for late delivery.", "We received a bonus because of late delivery.", "They will terminate the contract if we deliver early."], answer: "There is a penalty clause for late delivery." },
     { id: "lac5", audio_text: "We will win, provided that we have documented all violations.", options: ["We will win even if we don't have documents.", "We lost because we didn't have documents.", "We will win, provided that we have documented all violations.", "Providing documents will help us terminate the lawsuit."], answer: "We will win, provided that we have documented all violations." },
   ],
+
+  // ── OUTPUT: speaking prompts (freer production)
   speaking: {
     level1Prompt: "We will not sign the {input} unless you clarify the {input} regarding the {input}.",
     level1Placeholder: "Ví dụ: contract — clause — penalty...",
     level2Situation: "Bạn là một chuyên viên pháp lý đang đàm phán hợp đồng. Hãy: (1) Nói rằng bạn sẵn sàng tiếp tục hợp tác miễn là đối tác đảm bảo sự tuân thủ các tiêu chuẩn, (2) Giải thích rằng nếu họ không vi phạm điều khoản trong quá khứ thì bây giờ hai bên không có tranh chấp, (3) Nhấn mạnh điều khoản chấm dứt hợp đồng.",
     level2Hint: "We will continue our agreement as long as you ensure compliance with our terms. If you had not violated the quality clause last year, we would not face a dispute now. Otherwise, we will be forced to terminate the contract and apply the penalty provision.",
   },
+
+  // ── GRAMMAR: Inductive (Meaning→Form→CCQ) + vnNote L1
   grammar: {
     title: "Mixed Conditionals & Alternatives to IF — Câu Điều Kiện Hỗn Hợp",
     rule: "1. Mixed Conditionals (Câu điều kiện hỗn hợp):\nKết hợp quá khứ và hiện tại để nói về giả định quá khứ ảnh hưởng đến hiện tại.\n- Loại hỗn hợp phổ biến nhất: Giả định quá khứ dẫn đến kết quả hiện tại.\n  Cấu trúc: If + S + had + Past Participle (loại 3), S + would + Verb-infinitive (loại 2)\n  → 'If we had signed the contract yesterday, we would be happy today.' (Thực tế: hôm qua không ký, hôm nay không vui).\n\n2. Alternatives to IF (Liên từ điều kiện thay thế If):\n- unless = if... not (trừ khi): 'We won't pay unless they deliver.'\n- provided that / providing that / as long as = only if (miễn là / với điều kiện là): 'We will sign as long as the price is fixed.'\n- even if (ngay cả khi - kết quả không đổi): 'Even if it rains, the event will continue.'",
@@ -103,6 +126,8 @@ export const unit35: UnitData = {
       explanation: "'As long as' = 'miễn là / chỉ khi', diễn đạt điều kiện tương đương với từ 'if'. 'Unless' mang nghĩa ngược lại ('trừ khi').",
     },
   },
+
+  // ── EXERCISES_INPUT: practiceQuiz (active recall)
   practiceQuiz: [
     { id: "pq1", type: "multiple-choice", question: "Chọn liên từ thích hợp: 'We will not sign the contract ___ they agree to our terms.'", options: ["provided that", "as long as", "unless", "even if"], answer: "unless" },
     { id: "pq2", type: "multiple-choice", question: "Chọn dạng đúng của điều kiện hỗn hợp: 'If we ___ the contract last year, we would be in a better position now.'", options: ["signed", "had signed", "would have signed", "have signed"], answer: "had signed" },
@@ -110,6 +135,8 @@ export const unit35: UnitData = {
     { id: "pq4", type: "multiple-choice", question: "Điền từ: 'The legal team is working to resolve the contract ___.'", options: ["compliance", "dispute", "guarantee", "provision"], answer: "dispute" },
     { id: "pq5", type: "cloze", question: "Điền dạng đúng của động từ: 'If he had not taken that risk, he ___ (be) rich today.'", answer: "would be" },
   ],
+
+  // ── EXERCISES_INPUT: matching
   matchingExercise: {
     title: "Nối từ vựng đàm phán hợp đồng với nghĩa đúng",
     pairs: [
@@ -120,6 +147,8 @@ export const unit35: UnitData = {
       { left: "negotiate", right: "đàm phán" },
     ],
   },
+
+  // ── OUTPUT: practiceTranslate (VN→EN ≥3) + speaking (level1/2)
   practiceTranslate: [
     {
       id: "pt-1",
@@ -138,6 +167,8 @@ export const unit35: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: sentenceCorrection
   sentenceCorrectionExercises: [
     {
       id: "sc35-1",
@@ -156,6 +187,8 @@ export const unit35: UnitData = {
   ],
 
 
+
+  // ── EXERCISES_INPUT: listenAndArrange
   listenAndArrangeExercises: [
     {
       id: "la35-1",
@@ -174,6 +207,8 @@ export const unit35: UnitData = {
   ],
 
 
+
+  // ── EXERCISES_INPUT: wordBank
   wordBankExercises: [
     {
       id: "wb1",
@@ -195,11 +230,15 @@ export const unit35: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: scramble
   scrambleExercises: [
     { id: "s35-1", prompt_vn: "Chúng tôi sẽ không ký hợp đồng trừ khi họ giảm phạt.", words: ["We", "will", "not", "sign", "the", "contract", "unless", "they", "reduce", "the", "penalty", "."], answer: "We will not sign the contract unless they reduce the penalty ." },
     { id: "s35-2", prompt_vn: "Miễn là bạn tuân thủ luật pháp, bạn sẽ an toàn.", words: ["As", "long", "as", "you", "are", "in", "compliance", "with", "the", "law", ",", "you", "will", "be", "safe", "."], answer: "As long as you are in compliance with the law , you will be safe ." },
     { id: "s35-3", prompt_vn: "Nếu tôi đã nhận công việc đó, giờ tôi đang ở Luân Đôn.", words: ["If", "I", "had", "taken", "that", "job", ",", "I", "would", "be", "in", "London", "now", "."], answer: "If I had taken that job , I would be in London now ." },
   ],
+
+  // ── REVIEW: Final quiz ≥5 (retrieval practice)
   quiz: [
     { id: "fq1", type: "multiple-choice", question: "Điền từ: '___ you deliver the product on time, we will make the payment.'", options: ["Unless", "Provided that", "Even if", "Although"], answer: "Provided that" },
     { id: "fq2", type: "cloze", question: "Điền từ: 'The company faced a heavy ___ (khoản phạt) for environmental violations.'", answer: "penalty" },
@@ -214,11 +253,15 @@ export const unit35: UnitData = {
     { id: "q-ex6", type: "multiple-choice", question: "Đảo ngữ điều kiện (inversion): 'Had I known...' = :", options: ["If I know...", "If I had known...", "If I knew...", "If I would know..."], answer: "If I had known..." },
     { id: "q-ex7", type: "multiple-choice", question: "'Were it not for your help...' là dạng:", options: ["First conditional", "Second conditional đảo ngữ", "Third conditional", "Zero conditional"], answer: "Second conditional đảo ngữ" },
   ],
+
+  // ── REVIEW: Exit quiz + cumulativeReview (spiral) + reading (B1+)
   cumulativeReviewQuestions: [
     { id: "cr35-1", question: "Ôn tập Unit 34 — Điền: 'If we had investigated the risk, we ___ (prevent) the delay.'", options: ["would prevent", "would have prevented", "had prevented", "prevented"], answer: "would have prevented", type: "multiple-choice" },
     { id: "cr35-2", question: "Ôn tập Unit 33 — Điền: 'If I ___ (be) you, I would invest in this venture.'", options: [], answer: "were", type: "cloze" },
     { id: "cr35-3", question: "Ôn tập Unit 32 — Điền: 'By next December, she ___ (graduate) from university.'", options: ["will have graduated", "graduated", "has graduated", "will graduate"], answer: "will have graduated", type: "multiple-choice" },
   ],
+
+  // ── FLUENCY: pronunciationFocus
   pronunciationFocus: {
     phoneme: "inversion stress",
     description: "Đảo ngữ nhấn mạnh — Had I known... — stress thay đổi hoàn toàn",
@@ -231,6 +274,8 @@ export const unit35: UnitData = {
     ],
   },
 
+
+  // ── FLUENCY: fluencyDrill ≥5 (Nation Strand 4 automaticity)
   fluencyDrill: {
     items: [
       { en: "Provided that you deliver on time", vn: "Với điều kiện là bạn giao đúng hạn" },
@@ -243,6 +288,8 @@ export const unit35: UnitData = {
       { en: "If we had signed, we would be safe", vn: "Nếu chúng ta đã ký, giờ ta đã an toàn" },
     ],
   },
+
+  // ── REVIEW: Reading passage for skills integration
   readingPassage: {
     id: "unit35-reading-1",
     title: "Real and Unreal: Conditionals in Context",
@@ -312,6 +359,8 @@ export const unit35: UnitData = {
       },
     ],
   },
+
+  // ── OUTPUT: shadowing
   shadowingVideoId: "BJ8ROBuL4LM",
 };
 

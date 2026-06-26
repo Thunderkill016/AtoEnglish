@@ -1,5 +1,12 @@
 import { UnitData } from "@/components/learn/UnitTemplate";
 
+
+// ─────────────────────────────────────────────────────────────────────────────
+// UNIT-6 — Home & Daily Life  (A1)
+// Standardized header + section comments per lesson-blueprint.ts (CONTENT_BLOCK_ORDER)
+// + lesson-center-reference.ts (ESA Engage/Study/Activate, CELTA, Nation, CLT VN)
+// Gold sample: src/lib/data/units/unit1.ts — field order meta→hook→warmup→vocab→grammar→exercises→dialogues→fluency→output→review
+// ─────────────────────────────────────────────────────────────────────────────
 export const unit6: UnitData = {
   unitId: "unit-6",
   title: "Unit 6: Home & Daily Life",
@@ -8,6 +15,8 @@ export const unit6: UnitData = {
   estimatedTime: 40,
   description: "Học từ vựng về nhà ở, đồ đạc và cách dùng 'There is/are' để mô tả không gian.",
   badgeName: "Người Giữ Nhà",
+
+  // ── HOOK: situation (real VN context) + learningOutcomes (2–5 can-do) + culturalNote (pragmatic VN↔EN)
   situation: "Bạn bè quốc tế đến thăm nhà lần đầu — bạn cần dẫn họ tham quan và mô tả các phòng, đồ vật trong nhà.",
   learningOutcomes: [
     "Mô tả các phòng và đồ dùng trong nhà bằng tiếng Anh",
@@ -15,12 +24,18 @@ export const unit6: UnitData = {
     "Hỏi về nhà và chỗ ở của người khác"
   ],
   badgeEmoji: "🏠",
+
+  // ── WARMUP: ≥3 short phrases (SRS + prior knowledge activation)
   warmupGreetings: [
     { emoji: "🛋️", en: "There is a sofa in the living room.", vn: "Có một chiếc ghế sofa trong phòng khách.", context: "Mô tả đồ đạc trong nhà" },
     { emoji: "🛏️", en: "There are two beds in the bedroom.", vn: "Có hai chiếc giường trong phòng ngủ.", context: "Dùng 'are' với số nhiều" },
     { emoji: "❓", en: "Is there a bathroom upstairs?", vn: "Có phòng tắm ở tầng trên không?", context: "Câu hỏi với There is/are" }
   ],
+
+  // ── HOOK (cultural): pragmatic note
   culturalNote: "Người Việt thường nói <span class=\"text-emerald-400 font-semibold\">living room</span> (phòng khách) hoặc <span class=\"text-emerald-400 font-semibold\">sitting room</span> (British English). <span class=\"text-emerald-400 font-semibold\">There is/are</span> được dùng rất nhiều khi mô tả địa điểm và không gian — rất thực tế cho giao tiếp hàng ngày.",
+
+  // ── VOCABULARY: 8–20 words, pre-teach BEFORE dialogues; l1_interference_vn (A1 100%, B1+ ≥50%)
   vocab: [
     { id: 1, word: "bedroom", emoji: "🛏️", phonetic: "/ˈbɛdruːm/", meaning: "phòng ngủ", example: "There are two bedrooms in my house.", example2: "My bedroom is on the second floor.", collocation: "master bedroom", audio: "/audio/unit6/bedroom.mp3" , l1_interference_vn: "⚠️ Stress: BED-room. 'There IS a bedroom' (số ít) — không phải 'There ARE a bedroom'." },
     { id: 2, word: "kitchen", emoji: "🍳", phonetic: "/ˈkɪtʃɪn/", meaning: "nhà bếp", example: "The kitchen is next to the dining room.", example2: "She cooks in the kitchen every morning.", collocation: "kitchen table", audio: "/audio/unit6/kitchen.mp3" , l1_interference_vn: "⚠️ Âm /tʃ/ trong 'kitchen'. Người Việt hay đọc 'ki-chen' thay vì 'KITCH-in'." },
@@ -35,6 +50,8 @@ export const unit6: UnitData = {
     { id: 11, word: "wardrobe", emoji: "🪞", phonetic: "/ˈwɔːdrəʊb/", meaning: "tủ quần áo", example: "There is a wardrobe in the corner.", example2: "My clothes are in the wardrobe.", collocation: "built-in wardrobe", audio: "/audio/unit6/wardrobe.mp3" , l1_interference_vn: "⚠️ 'Wardrobe' (Anh) = 'closet' (Mỹ). Phân biệt với 'cabinet' (tủ nhỏ trong bếp/nhà bếp)." },
     { id: 12, word: "garden", emoji: "🌿", phonetic: "/ˈɡɑːdən/", meaning: "khu vườn", example: "There is a small garden behind the house.", example2: "I love sitting in the garden.", collocation: "flower garden / back garden", audio: "/audio/unit6/garden.mp3" , l1_interference_vn: "⚠️ 'In the garden' — dùng 'in', không phải 'at'. 'Garden' (Anh) = 'yard' (Mỹ)." },
   ],
+
+  // ── DIALOGUES: ≥1 dialogue AFTER vocab (98% coverage)
   dialogues: [
     {
       id: 1,
@@ -64,6 +81,8 @@ export const unit6: UnitData = {
       ]
     },
   ],
+
+  // ── EXERCISES_INPUT: listenAndChoose ≥5 (controlled practice)
   listenAndChoose: [
     { id: "lac1", audio_text: "There is a sofa in the living room", options: ["There is a bed in the living room", "There is a sofa in the living room", "There are sofas in the living room", "There is a sofa in the bedroom"], answer: "There is a sofa in the living room" },
     { id: "lac2", audio_text: "There are two chairs in the kitchen", options: ["There is one chair in the kitchen", "There are two chairs in the kitchen", "There are two tables in the kitchen", "There are three chairs in the kitchen"], answer: "There are two chairs in the kitchen" },
@@ -71,12 +90,16 @@ export const unit6: UnitData = {
     { id: "lac4", audio_text: "There isn't a garden", options: ["There is a garden", "There are gardens", "There isn't a garden", "There aren't gardens"], answer: "There isn't a garden" },
     { id: "lac5", audio_text: "There are three bedrooms in my house", options: ["There is one bedroom in my house", "There are three bedrooms in my house", "There are three bathrooms in my house", "There are three bedrooms in the hotel"], answer: "There are three bedrooms in my house" },
   ],
+
+  // ── OUTPUT: speaking prompts (freer production)
   speaking: {
     level1Prompt: "In my house, there is a {input}.",
     level1Placeholder: "Ví dụ: kitchen, living room, garden...",
     level2Situation: "Mô tả nhà của bạn cho một người bạn. Nói về các phòng, đồ đạc và những gì bạn thích nhất trong ngôi nhà.",
     level2Hint: "In my house, there are [số] rooms. There is a [phòng] and a [phòng]. In the [phòng], there is/are [đồ đạc]. My favourite room is the [phòng] because [lý do].",
   },
+
+  // ── GRAMMAR: Inductive (Meaning→Form→CCQ) + vnNote L1
   grammar: {
     title: "There is / There are — Mô tả không gian",
     rule: "There is + singular  |  There are + plural  |  There isn't / There aren't",
@@ -100,6 +123,8 @@ export const unit6: UnitData = {
       answer: "There are two chairs.",
     },
   },
+
+  // ── EXERCISES_INPUT: matching
   matchingExercise: {
     title: "Nối phòng với đồ đạc phù hợp",
     pairs: [
@@ -110,17 +135,23 @@ export const unit6: UnitData = {
       { left: "garden", right: "flowers" },
     ],
   },
+
+  // ── EXERCISES_INPUT: practiceQuiz (active recall)
   practiceQuiz: [
     { id: "pq1", question: "Chọn câu đúng mô tả nhiều ghế:", options: ["There is two chairs.", "There are two chairs.", "There be two chairs.", "Is there two chairs."], answer: "There are two chairs.", type: "multiple-choice" },
     { id: "pq2", question: "Câu hỏi đúng về phòng ngủ:", options: ["Is there a bedroom?", "There is a bedroom?", "Are there a bedroom?", "Is a bedroom there?"], answer: "Is there a bedroom?", type: "multiple-choice" },
     { id: "pq3", question: "Điền vào chỗ trống: 'There ___ a lamp on the table.'", options: [], answer: "is", type: "cloze" },
   ],
 
+
+  // ── OUTPUT: practiceTranslate (VN→EN ≥3) + speaking (level1/2)
   practiceTranslate: [
     { id: "pt6-1", prompt_vn: "Có một cái bàn trong phòng bếp.", answer: "There is a table in the kitchen." },
     { id: "pt6-2", prompt_vn: "Không có ghế sofa trong phòng ngủ.", answer: "There isn't a sofa in the bedroom." },
     { id: "pt6-3", prompt_vn: "Có hai phòng ngủ trong căn hộ của tôi.", answer: "There are two bedrooms in my apartment." },
   ],
+
+  // ── REVIEW: Final quiz ≥5 (retrieval practice)
   quiz: [
     { id: "q1", question: "Chọn câu đúng với 'two windows':", options: ["There is two windows.", "There are two windows.", "There have two windows.", "There be two windows."], answer: "There are two windows.", type: "multiple-choice",
       explanation_vn: "'Two windows' là số nhiều → dùng 'There ARE'. 'There IS' chỉ dùng cho số ít." },
@@ -134,6 +165,8 @@ export const unit6: UnitData = {
     { id: "q7", question: "Có phòng tắm nào ở tầng dưới không?", options: [], answer: "Is there a bathroom downstairs?", type: "translate" },
   ],
 
+
+  // ── EXERCISES_INPUT: sentenceCorrection
   sentenceCorrectionExercises: [
     {
       id: "sc6-1",
@@ -151,6 +184,8 @@ export const unit6: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: listenAndArrange
   listenAndArrangeExercises: [
     {
       id: "la6-1",
@@ -168,6 +203,8 @@ export const unit6: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: wordBank
   wordBankExercises: [
     {
       id: "wb1",
@@ -189,6 +226,8 @@ export const unit6: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: scramble
   scrambleExercises: [
     {
       id: "s6-1",
@@ -209,6 +248,8 @@ export const unit6: UnitData = {
       answer: "Is there a bathroom upstairs ?",
     },
   ],
+
+  // ── REVIEW: Exit quiz + cumulativeReview (spiral) + reading (B1+)
   cumulativeReviewQuestions: [
     {
       id: "cr6-1",
@@ -234,6 +275,8 @@ export const unit6: UnitData = {
     },
   ],
 
+
+  // ── FLUENCY: pronunciationFocus
   pronunciationFocus: {
     phoneme: "/ɪ/ vs /iː/",
     description: "Nguyên âm ngắn /ɪ/ (bit) vs dài /iː/ (beat) — người Việt thường đọc cả hai thành /i/ dài",
@@ -247,6 +290,8 @@ export const unit6: UnitData = {
     ],
   },
 
+
+  // ── FLUENCY: fluencyDrill ≥5 (Nation Strand 4 automaticity)
   fluencyDrill: {
     items: [
       { en: "There is a meeting room", vn: "Có một phòng họp" },
@@ -259,6 +304,8 @@ export const unit6: UnitData = {
       { en: "There are many options", vn: "Có nhiều lựa chọn" },
     ],
   },
+
+  // ── REVIEW: Reading passage for skills integration
   readingPassage: {
     id: "unit6-reading-1",
     title: "My New Apartment",
@@ -318,6 +365,8 @@ export const unit6: UnitData = {
       },
     ],
   },
+
+  // ── OUTPUT: shadowing
   shadowingVideoId: "nVl6E0NRSA0",
 };
 

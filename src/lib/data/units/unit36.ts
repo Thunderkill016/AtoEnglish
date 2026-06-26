@@ -1,5 +1,12 @@
 import { UnitData } from "@/components/learn/UnitTemplate";
 
+
+// ─────────────────────────────────────────────────────────────────────────────
+// UNIT-36 — Academic & Formal Passive  (B2)
+// Standardized header + section comments per lesson-blueprint.ts (CONTENT_BLOCK_ORDER)
+// + lesson-center-reference.ts (ESA Engage/Study/Activate, CELTA, Nation, CLT VN)
+// Gold sample: src/lib/data/units/unit1.ts — field order meta→hook→warmup→vocab→grammar→exercises→dialogues→fluency→output→review
+// ─────────────────────────────────────────────────────────────────────────────
 export const unit36: UnitData = {
   unitId: "unit-36",
   title: "Unit 36: Academic & Formal Passive",
@@ -9,18 +16,26 @@ export const unit36: UnitData = {
   description: "Advanced Passive Voice — Thể bị động nâng cao với động từ tường thuật (reporting verbs: said, believed, claimed, reported). Cực kỳ hữu ích cho IELTS Writing Task 1 & 2 và đọc hiểu báo chí học thuật.",
   badgeName: "Nhà Nghiên Cứu",
   badgeEmoji: "🔬",
+
+  // ── HOOK: situation (real VN context) + learningOutcomes (2–5 can-do) + culturalNote (pragmatic VN↔EN)
   situation: "Trình bày kết quả nghiên cứu thị trường tại một hội thảo quốc tế. Bạn cần báo cáo thông tin một cách khách quan, tránh dùng chủ ngữ cá nhân (I, We) bằng cách sử dụng các cấu trúc bị động học thuật như 'It is reported that...' hoặc 'The product is believed to...'.",
   learningOutcomes: [
     "Sử dụng thể bị động nâng cao với các động từ tường thuật (It is claimed that... / S is believed to V)",
     "Báo cáo kết quả nghiên cứu và thông tin học thuật một cách khách quan, khoa học",
     "Áp dụng từ vựng nghiên cứu và học thuật B2 trong viết và nói",
   ],
+
+  // ── HOOK (cultural): pragmatic note
   culturalNote: 'Trong văn phong học thuật và báo chí tiếng Anh, sự khách quan (<span class="text-emerald-400">objectivity</span>) được đề cao tối đa. Sử dụng thể bị động khách quan giúp người viết tránh đưa ra các khẳng định mang tính cá nhân, tạo cảm giác tin cậy và có cơ sở khoa học hơn. Ví dụ, thay vì nói <span class="text-zinc-400">"I think this is true"</span>, hãy nói <span class="text-emerald-400">"It has been verified that..."</span>.',
+
+  // ── WARMUP: ≥3 short phrases (SRS + prior knowledge activation)
   warmupGreetings: [
     { emoji: "📊", en: "It is reported that global temperatures are rising rapidly.", vn: "Có báo cáo cho thấy nhiệt độ toàn cầu đang tăng lên nhanh chóng.", context: "It is reported that + clause — bị động khách quan" },
     { emoji: "🔬", en: "The experiment is claimed to have been successful.", vn: "Thí nghiệm được khẳng định là đã thành công.", context: "Subject + is claimed to + have + PP" },
     { emoji: "🔍", en: "New evidence was obtained to verify the hypothesis.", vn: "Bằng chứng mới đã được thu thập để xác minh giả thuyết.", context: "was obtained ... to verify — bị động thường kết hợp mục đích" },
   ],
+
+  // ── VOCABULARY: 8–20 words, pre-teach BEFORE dialogues; l1_interference_vn (A1 100%, B1+ ≥50%)
   vocab: [
     { id: 1, word: "claim", emoji: "🗣️", phonetic: "/kleɪm/", meaning: "tuyên bố / khẳng định (chưa chứng minh)", example: "The company claims that its product is completely organic.", example2: "It is claimed that the new drug has no side effects.", collocation: "make a claim / claim that / widely claimed", audio: "/audio/unit36/claim.mp3" },
     { id: 2, word: "evidence", emoji: "🔍", phonetic: "/ˈevɪdəns/", meaning: "bằng chứng / chứng cứ", example: "There is no scientific evidence to support this theory.", example2: "We gathered evidence to prove his innocence.", collocation: "scientific evidence / clear evidence / search for evidence", audio: "/audio/unit36/evidence.mp3" },
@@ -35,6 +50,8 @@ export const unit36: UnitData = {
     { id: 11, word: "illustrate", emoji: "📊", phonetic: "/ˈɪləstreɪt/", meaning: "minh họa / làm rõ qua ví dụ", example: "The graph illustrates the growth in sales over the last year.", example2: "To illustrate my point, let's look at this case study.", collocation: "illustrate a point / graph illustrates / illustrate with examples", audio: "/audio/unit36/illustrate.mp3" },
     { id: 12, word: "conduct", emoji: "🧪", phonetic: "/kənˈdʌkt/", meaning: "tiến hành / thực hiện", example: "The university is conducting a study on sleep deprivation.", example2: "We must conduct a risk analysis before we start.", collocation: "conduct research / conduct a study / conduct an interview", audio: "/audio/unit36/conduct.mp3" },
   ],
+
+  // ── DIALOGUES: ≥1 dialogue AFTER vocab (98% coverage)
   dialogues: [
     {
       id: 1,
@@ -61,6 +78,8 @@ export const unit36: UnitData = {
       ],
     },
   ],
+
+  // ── EXERCISES_INPUT: listenAndChoose ≥5 (controlled practice)
   listenAndChoose: [
     { id: "lac1", audio_text: "It is believed that consumer habits are changing.", options: ["Consumer habits will not change.", "It is believed that consumer habits are changing.", "We changed our habits yesterday.", "I believe that I need to shop online."], answer: "It is believed that consumer habits are changing." },
     { id: "lac2", audio_text: "The research findings were published in a medical journal.", options: ["The research findings were published in a medical journal.", "We will publish a book about medicine next month.", "The medical journal was rejected by the university.", "No articles were published last year."], answer: "The research findings were published in a medical journal." },
@@ -68,12 +87,16 @@ export const unit36: UnitData = {
     { id: "lac4", audio_text: "The new virus is claimed to have been isolated yesterday.", options: ["The virus was not isolated yesterday.", "The new virus is claimed to have been isolated yesterday.", "We will isolate the virus next week.", "I claim that the virus is dangerous."], answer: "The new virus is claimed to have been isolated yesterday." },
     { id: "lac5", audio_text: "The graph illustrates the growth in sales over the last year.", options: ["The graph illustrates the growth in sales over the last year.", "Sales decreased significantly last year.", "We need to draw a new graph for sales.", "The illustration was drawn by a designer."], answer: "The graph illustrates the growth in sales over the last year." },
   ],
+
+  // ── OUTPUT: speaking prompts (freer production)
   speaking: {
     level1Prompt: "It is {input} that the virus was {input} after a study was {input}.",
     level1Placeholder: "Ví dụ: claimed — isolated — conducted...",
     level2Situation: "Bạn đang viết phần mở đầu của một bài báo cáo khoa học hoặc thuyết trình học thuật. Hãy: (1) Nói rằng nghiên cứu được tiến hành để xác minh giả thuyết, (2) Dùng cấu trúc bị động 'It is reported that...' để báo cáo kết quả, (3) Nêu rằng bằng chứng đã được thu thập đầy đủ.",
     level2Hint: "This study was conducted to examine the local ecosystem. It is reported that several species have been threatened by pollution. Sufficient evidence was obtained to demonstrate the loss of biodiversity.",
   },
+
+  // ── GRAMMAR: Inductive (Meaning→Form→CCQ) + vnNote L1
   grammar: {
     title: "Academic & Formal Passive — Bị Động Tường Thuật Học Thuật",
     rule: "Trong các văn bản khoa học, tin tức báo chí và bài luận IELTS Writing, cấu trúc bị động với động từ tường thuật (claim, say, believe, report, expect, think) được sử dụng rộng rãi để báo cáo thông tin khách quan.\n\nCấu trúc 1 (Cấu trúc giả định với IT):\nIt + is/was + Past Participle (said/believed/reported...) + that + Clause (Mệnh đề)\n  → 'It is believed that the market will grow.' (Người ta tin rằng thị trường sẽ phát triển)\n\nCấu trúc 2 (Cấu trúc chuyển chủ ngữ lên đầu):\nSubject + is/are/was/were + Past Participle + to + Verb-infinitive (cho hiện tại/tương lai)\n  → 'The company is said to be very successful.'\nSubject + is/are/was/were + Past Participle + to + have + Past Participle (cho quá khứ)\n  → 'The virus is claimed to have been isolated yesterday.'",
@@ -102,6 +125,8 @@ export const unit36: UnitData = {
       explanation: "Vì hành động 'lost' xảy ra trong quá khứ (last year) trước thời điểm báo cáo (is reported), ta phải dùng 'to have + Past Participle' (to have lost).",
     },
   },
+
+  // ── EXERCISES_INPUT: practiceQuiz (active recall)
   practiceQuiz: [
     { id: "pq1", type: "multiple-choice", question: "Chọn dạng đúng: 'The prime minister is said ___ the country yesterday.'", options: ["to leave", "to have left", "leaving", "has left"], answer: "to have left" },
     { id: "pq2", type: "multiple-choice", question: "Chọn cấu trúc đúng: 'It is reported ___ the inflation rate has dropped.'", options: ["that", "which", "to", "what"], answer: "that" },
@@ -109,6 +134,8 @@ export const unit36: UnitData = {
     { id: "pq4", type: "multiple-choice", question: "Điền từ: 'We need clear scientific ___ before we can accept the theory.'", options: ["evidence", "claim", "hypothesis", "isolation"], answer: "evidence" },
     { id: "pq5", type: "cloze", question: "Điền dạng đúng: 'It is hypothesized that the virus ___ (be) contagious.'", answer: "is" },
   ],
+
+  // ── EXERCISES_INPUT: matching
   matchingExercise: {
     title: "Nối từ vựng học thuật B2 với nghĩa tiếng Việt",
     pairs: [
@@ -119,6 +146,8 @@ export const unit36: UnitData = {
       { left: "conduct", right: "tiến hành / thực hiện" },
     ],
   },
+
+  // ── OUTPUT: practiceTranslate (VN→EN ≥3) + speaking (level1/2)
   practiceTranslate: [
     {
       id: "pt-1",
@@ -137,6 +166,8 @@ export const unit36: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: sentenceCorrection
   sentenceCorrectionExercises: [
     {
       id: "sc36-1",
@@ -148,6 +179,8 @@ export const unit36: UnitData = {
   ],
 
 
+
+  // ── EXERCISES_INPUT: listenAndArrange
   listenAndArrangeExercises: [
     {
       id: "la36-1",
@@ -166,6 +199,8 @@ export const unit36: UnitData = {
   ],
 
 
+
+  // ── EXERCISES_INPUT: wordBank
   wordBankExercises: [
     {
       id: "wb1",
@@ -187,11 +222,15 @@ export const unit36: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: scramble
   scrambleExercises: [
     { id: "s36-1", prompt_vn: "Thí nghiệm được khẳng định là đã thành công.", words: ["The", "experiment", "is", "claimed", "to", "have", "been", "successful", "."], answer: "The experiment is claimed to have been successful ." },
     { id: "s36-2", prompt_vn: "Biểu đồ minh họa sự tăng trưởng trong doanh thu.", words: ["The", "chart", "illustrates", "the", "growth", "in", "revenue", "."], answer: "The chart illustrates the growth in revenue ." },
     { id: "s36-3", prompt_vn: "Các nhà khoa học đã tiến hành một nghiên cứu về giấc ngủ.", words: ["Scientists", "conducted", "a", "study", "on", "sleep", "deprivation", "."], answer: "Scientists conducted a study on sleep deprivation ." },
   ],
+
+  // ── REVIEW: Final quiz ≥5 (retrieval practice)
   quiz: [
     { id: "fq1", type: "multiple-choice", question: "Điền từ: 'The product is claimed ___ outstanding results during testing.'", options: ["to produce", "to have produced", "producing", "produced"], answer: "to have produced" },
     { id: "fq2", type: "cloze", question: "Điền từ: 'The researchers managed to ___ (cô lập) the rare bacteria.'", answer: "isolate" },
@@ -206,11 +245,15 @@ export const unit36: UnitData = {
     { id: "q-ex6", type: "multiple-choice", question: "'It is said that he is wealthy.' = :", options: ["He is said to be wealthy.", "He said to be wealthy.", "He is saying to be wealthy.", "He was said being wealthy."], answer: "He is said to be wealthy." },
     { id: "q-ex7", type: "multiple-choice", question: "Trong văn bản học thuật/khoa học, tại sao hay dùng bị động?", options: ["Để câu ngắn hơn", "Để tập trung vào hành động, không phải tác nhân", "Vì luôn chính xác hơn chủ động", "Vì dễ viết hơn"], answer: "Để tập trung vào hành động, không phải tác nhân" },
   ],
+
+  // ── REVIEW: Exit quiz + cumulativeReview (spiral) + reading (B1+)
   cumulativeReviewQuestions: [
     { id: "cr36-1", question: "Ôn tập Unit 35 — Chọn liên từ: 'We will not sign the contract ___ you pay the penalty.'", options: ["provided that", "as long as", "unless", "even if"], answer: "unless", type: "multiple-choice" },
     { id: "cr36-2", question: "Ôn tập Unit 34 — Điền: 'If we had foreseen the risk, we ___ (avoid) the complication.'", options: [], answer: "would have avoided", type: "cloze" },
     { id: "cr36-3", question: "Ôn tập Unit 33 — Chọn dạng đúng: 'If she ___ more time, she would invest in our startup.'", options: ["has", "had", "have", "would have"], answer: "had", type: "multiple-choice" },
   ],
+
+  // ── FLUENCY: pronunciationFocus
   pronunciationFocus: {
     phoneme: "impersonal passive",
     description: "Impersonal passive — It is said that — linking và stress",
@@ -223,6 +266,8 @@ export const unit36: UnitData = {
     ],
   },
 
+
+  // ── FLUENCY: fluencyDrill ≥5 (Nation Strand 4 automaticity)
   fluencyDrill: {
     items: [
       { en: "It is believed that habits are changing", vn: "Người ta tin rằng thói quen đang thay đổi" },
@@ -235,6 +280,8 @@ export const unit36: UnitData = {
       { en: "We conducted a detailed risk analysis", vn: "Chúng tôi đã tiến hành phân tích rủi ro chi tiết" },
     ],
   },
+
+  // ── REVIEW: Reading passage for skills integration
   readingPassage: {
     id: "unit36-reading-1",
     title: "A Study on Remote Work",
@@ -294,6 +341,8 @@ export const unit36: UnitData = {
       },
     ],
   },
+
+  // ── OUTPUT: shadowing
   shadowingVideoId: "9O8E7Bxwrjo",
 };
 

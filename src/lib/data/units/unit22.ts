@@ -1,5 +1,12 @@
 import { UnitData } from "@/components/learn/UnitTemplate";
 
+
+// ─────────────────────────────────────────────────────────────────────────────
+// UNIT-22 — Rules & Obligations  (B1)
+// Standardized header + section comments per lesson-blueprint.ts (CONTENT_BLOCK_ORDER)
+// + lesson-center-reference.ts (ESA Engage/Study/Activate, CELTA, Nation, CLT VN)
+// Gold sample: src/lib/data/units/unit1.ts — field order meta→hook→warmup→vocab→grammar→exercises→dialogues→fluency→output→review
+// ─────────────────────────────────────────────────────────────────────────────
 export const unit22: UnitData = {
   unitId: "unit-22",
   title: "Unit 22: Rules & Obligations",
@@ -9,18 +16,26 @@ export const unit22: UnitData = {
   description: "Phân biệt must/have to/should/needn't để nói về nghĩa vụ và quy định — lỗi phổ biến nhất của người Việt khi làm việc môi trường quốc tế.",
   badgeName: "Người Tuân Thủ",
   badgeEmoji: "📋",
+
+  // ── HOOK: situation (real VN context) + learningOutcomes (2–5 can-do) + culturalNote (pragmatic VN↔EN)
   situation: "Ngày đầu tiên tại công ty mới. HR giải thích nội quy: bạn MUST wear a badge at all times, you DON'T HAVE TO work overtime unless necessary, and you SHOULD always confirm meetings 24 hours in advance. Hiểu sai nghĩa các modal này → vi phạm quy định mà không biết.",
   learningOutcomes: [
     "Phân biệt must (bắt buộc nội tâm) vs have to (bắt buộc ngoại cảnh)",
     "Dùng should/shouldn't để đưa ra lời khuyên lịch sự",
     "Phân biệt needn't/don't have to (không cần) vs mustn't (không được phép)",
   ],
+
+  // ── HOOK (cultural): pragmatic note
   culturalNote: 'Trong tiếng Anh công sở, <span class="text-emerald-400 font-semibold">must</span> nghe mạnh và nội tâm — như bạn tự đặt ra quy tắc cho mình. <span class="text-emerald-400 font-semibold">Have to</span> nghe như quy định bên ngoài đặt ra. Dùng nhầm có thể nghe kiêu ngạo hoặc quá cứng nhắc. Ví dụ: <span class="text-zinc-400">"I must finish this"</span> (tôi tự thấy phải làm) vs <span class="text-emerald-400">"I have to finish this"</span> (sếp/deadline bắt tôi làm).',
+
+  // ── WARMUP: ≥3 short phrases (SRS + prior knowledge activation)
   warmupGreetings: [
     { emoji: "🪪", en: "You must wear your ID badge at all times in the building.", vn: "Bạn phải đeo thẻ ID mọi lúc trong tòa nhà.", context: "Quy định bắt buộc" },
     { emoji: "⏰", en: "You don't have to arrive before 8am — core hours are 9 to 6.", vn: "Bạn không cần đến trước 8 giờ sáng — giờ cốt lõi là 9 đến 6.", context: "Không bắt buộc" },
     { emoji: "💡", en: "You should always confirm your attendance at least 24 hours before a meeting.", vn: "Bạn nên xác nhận sự tham dự ít nhất 24 tiếng trước cuộc họp.", context: "Lời khuyên tốt" },
   ],
+
+  // ── VOCABULARY: 8–20 words, pre-teach BEFORE dialogues; l1_interference_vn (A1 100%, B1+ ≥50%)
   vocab: [
     { id: 1, word: "regulation", emoji: "📜", phonetic: "/ˌreɡjuˈleɪʃən/", meaning: "quy định / điều lệ", example: "All employees must comply with health and safety regulations.", example2: "New regulations require companies to report emissions.", collocation: "comply with regulations / government regulation", audio: "/audio/unit22/regulation.mp3", l1_interference_vn: "⚠️ Thường số nhiều: \'follow the regulations\'. \'Regulation OF\' trong danh từ ghép." },
     { id: 2, word: "mandatory", emoji: "✅", phonetic: "/ˈmændətəri/", meaning: "bắt buộc", example: "Attendance at the induction is mandatory for all new staff.", example2: "Safety training is mandatory in this industry.", collocation: "mandatory training / mandatory requirement", audio: "/audio/unit22/mandatory.mp3" },
@@ -35,6 +50,8 @@ export const unit22: UnitData = {
     { id: 11, word: "authorize", emoji: "🔑", phonetic: "/ˈɔːθəraɪz/", meaning: "ủy quyền / cho phép", example: "Only authorized personnel are allowed in the server room.", example2: "You need a manager to authorize purchases over $500.", collocation: "authorized personnel / authorize access / prior authorization", audio: "/audio/unit22/authorize.mp3" },
     { id: 12, word: "confidential", emoji: "🔐", phonetic: "/ˌkɒnfɪˈdenʃəl/", meaning: "bảo mật / mật", example: "You must not share confidential information with outside parties.", example2: "All client data is strictly confidential.", collocation: "strictly confidential / confidential information / keep confidential", audio: "/audio/unit22/confidential.mp3", l1_interference_vn: "⚠️ = bí mật nội bộ. Phân biệt \'secret\' (bí mật cá nhân) và \'classified\' (tài liệu nhà nước)." },
   ],
+
+  // ── DIALOGUES: ≥1 dialogue AFTER vocab (98% coverage)
   dialogues: [
     {
       id: 1,
@@ -63,6 +80,8 @@ export const unit22: UnitData = {
       ],
     },
   ],
+
+  // ── EXERCISES_INPUT: listenAndChoose ≥5 (controlled practice)
   listenAndChoose: [
     { id: "lac1", audio_text: "You must wear your ID badge at all times in the building", options: ["You should wear your ID badge at all times in the building", "You must wear your ID badge at all times in the building", "You have to wearing your ID badge at all times", "You must to wear your ID badge at all times"], answer: "You must wear your ID badge at all times in the building" },
     { id: "lac2", audio_text: "You don't have to arrive before eight am", options: ["You don't must arrive before eight am", "You mustn't arrive before eight am", "You don't have to arrive before eight am", "You needn't to arrive before eight am"], answer: "You don't have to arrive before eight am" },
@@ -70,12 +89,16 @@ export const unit22: UnitData = {
     { id: "lac4", audio_text: "You must never share confidential client data", options: ["You should never share confidential client data", "You don't have to share confidential client data", "You must never share confidential client data", "You needn't share confidential client data"], answer: "You must never share confidential client data" },
     { id: "lac5", audio_text: "For larger amounts you must get manager authorization", options: ["For larger amounts you should get manager authorization", "For larger amounts you must get manager authorization", "For larger amounts you have to getting manager authorization", "For larger amounts you must to get manager authorization"], answer: "For larger amounts you must get manager authorization" },
   ],
+
+  // ── OUTPUT: speaking prompts (freer production)
   speaking: {
     level1Prompt: "In our company, you must {input}. You don't have to {input}, but you should {input}.",
     level1Placeholder: "Ví dụ: wear a badge — work overtime — confirm meetings in advance...",
     level2Situation: "Bạn là HR đang giải thích quy định công ty cho nhân viên mới. Giải thích: (1) Những gì PHẢI làm (must/have to), (2) Những gì KHÔNG CẦN làm (don't have to/needn't), (3) Những gì NÊN làm (should), (4) Những gì KHÔNG ĐƯỢC làm (mustn't).",
     level2Hint: "You must/have to [mandatory rule]. You don't have to [optional]. However, you should [recommendation]. You mustn't [prohibition] — this is strictly enforced. If you violate [policy], there will be [consequence].",
   },
+
+  // ── GRAMMAR: Inductive (Meaning→Form→CCQ) + vnNote L1
   grammar: {
     title: "Modal Verbs — Nghĩa Vụ, Khuyên Bảo & Cấm Đoán",
     rule: "MUST: Nghĩa vụ mạnh — người nói tự thấy bắt buộc\n→ 'I must finish this report.' (tôi tự đặt ra)\n\nHAVE TO: Nghĩa vụ ngoại cảnh — luật/quy định/người khác bắt buộc\n→ 'I have to wear a badge.' (công ty quy định)\n\nSHOULD: Lời khuyên — nên làm nhưng không bắt buộc\n→ 'You should arrive early for meetings.'\n\nDON'T HAVE TO / NEEDN'T: Không cần thiết (nhưng được phép)\n→ 'You don't have to work overtime.'\n\nMUSTN'T: Bị cấm — tuyệt đối không được làm\n→ 'You mustn't share confidential data.'",
@@ -104,6 +127,8 @@ export const unit22: UnitData = {
       explanation: "'Don't have to' = không bắt buộc nhưng được phép. Khác hoàn toàn với 'mustn't' = bị cấm.",
     },
   },
+
+  // ── EXERCISES_INPUT: practiceQuiz (active recall)
   practiceQuiz: [
     { id: "pq1", type: "multiple-choice", question: "Chọn đúng nghĩa: 'You ___  attend the training — it's optional.'", options: ["must", "mustn't", "have to", "don't have to"], answer: "don't have to" },
     { id: "pq2", type: "multiple-choice", question: "Chọn đúng: Hành động BỊ CẤM hoàn toàn.", options: ["You should share passwords.", "You don't have to share passwords.", "You mustn't share passwords.", "You needn't share passwords."], answer: "You mustn't share passwords." },
@@ -111,6 +136,8 @@ export const unit22: UnitData = {
     { id: "pq4", type: "multiple-choice", question: "Phân biệt must vs have to: 'I feel this is important, so I ___ finish it today.'", options: ["have to", "must", "should", "don't have to"], answer: "must" },
     { id: "pq5", type: "multiple-choice", question: "Câu nào diễn đạt LỜI KHUYÊN (không bắt buộc)?", options: ["You must arrive on time.", "You have to confirm attendance.", "You should confirm attendance in advance.", "You mustn't be late."], answer: "You should confirm attendance in advance." },
   ],
+
+  // ── EXERCISES_INPUT: matching
   matchingExercise: {
     title: "Nối modal với nghĩa đúng",
     pairs: [
@@ -121,6 +148,8 @@ export const unit22: UnitData = {
       { left: "don't have to", right: "không bắt buộc" },
     ],
   },
+
+  // ── OUTPUT: practiceTranslate (VN→EN ≥3) + speaking (level1/2)
   practiceTranslate: [
     {
       id: "pt-1",
@@ -139,6 +168,8 @@ export const unit22: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: sentenceCorrection
   sentenceCorrectionExercises: [
     {
       id: "sc22-1",
@@ -157,6 +188,8 @@ export const unit22: UnitData = {
   ],
 
 
+
+  // ── EXERCISES_INPUT: listenAndArrange
   listenAndArrangeExercises: [
     {
       id: "la22-1",
@@ -175,6 +208,8 @@ export const unit22: UnitData = {
   ],
 
 
+
+  // ── EXERCISES_INPUT: wordBank
   wordBankExercises: [
     {
       id: "wb1",
@@ -196,11 +231,15 @@ export const unit22: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: scramble
   scrambleExercises: [
     { id: "s22-1", prompt_vn: "Bạn phải đeo thẻ ID mọi lúc trong tòa nhà.", words: ["You", "must", "wear", "your", "ID", "badge", "at", "all", "times", "in", "the", "building", "."], answer: "You must wear your ID badge at all times in the building ." },
     { id: "s22-2", prompt_vn: "Bạn không được chia sẻ mật khẩu với ai.", words: ["You", "mustn't", "share", "your", "password", "with", "anyone", "."], answer: "You mustn't share your password with anyone ." },
     { id: "s22-3", prompt_vn: "Bạn không cần làm thêm giờ trừ khi có deadline gấp.", words: ["You", "don't", "have", "to", "work", "overtime", "unless", "there", "is", "an", "urgent", "deadline", "."], answer: "You don't have to work overtime unless there is an urgent deadline ." },
   ],
+
+  // ── REVIEW: Final quiz ≥5 (retrieval practice)
   quiz: [
     { id: "fq1", type: "multiple-choice", question: "Dịch: 'Nhân viên phải tuân thủ chính sách bảo mật của công ty.'", options: ["Employees should comply with the company's data policy.", "Employees must comply with the company's data policy.", "Employees needn't comply with the company's data policy.", "Employees don't have to comply with the company's data policy."], answer: "Employees must comply with the company's data policy." },
     { id: "fq2", type: "cloze", question: "Điền: 'You ___ share confidential information — it's strictly prohibited.'", answer: "mustn't" },
@@ -215,11 +254,15 @@ export const unit22: UnitData = {
     { id: "q-ex6", type: "translate", question: "Dịch: 'Bạn nên ngủ đủ giấc.'", answer: "You should get enough sleep." },
     { id: "q-ex7", type: "multiple-choice", question: "'Mustn't' vs 'don't have to': khác nhau chính?", options: ["Giống nhau hoàn toàn", "'Mustn't' = cấm, 'don't have to' = không bắt buộc", "'Don't have to' = cấm, 'mustn't' = không bắt buộc", "Cả hai đều là cấm"], answer: "'Mustn't' = cấm, 'don't have to' = không bắt buộc" },
   ],
+
+  // ── REVIEW: Exit quiz + cumulativeReview (spiral) + reading (B1+)
   cumulativeReviewQuestions: [
     { id: "cr22-1", question: "Ôn tập Unit 21 — Chọn đúng: 'By next year, we ___ into Asia.'", options: ["will expand", "will have expanded", "will be expanded", "expand"], answer: "will have expanded", type: "multiple-choice" },
     { id: "cr22-2", question: "Ôn tập Unit 20 — Điền: 'By the time I arrived, they ___ (sign) the deal.'", options: [], answer: "had signed", type: "cloze" },
     { id: "cr22-3", question: "Ôn tập Unit 19 — Câu kể chuyện tự nhiên nhất:", options: ["The server crashed. I fixed it.", "I was fixing the server when the power went out.", "I fix the server when power goes out.", "The server was crashed."], answer: "I was fixing the server when the power went out.", type: "multiple-choice" },
   ],
+
+  // ── FLUENCY: pronunciationFocus
   pronunciationFocus: {
     phoneme: "must /mʌst/ vs /məst/",
     description: "Must — dạng mạnh /mʌst/ và yếu /məst/ trong câu",
@@ -232,6 +275,8 @@ export const unit22: UnitData = {
     ],
   },
 
+
+  // ── FLUENCY: fluencyDrill ≥5 (Nation Strand 4 automaticity)
   fluencyDrill: {
     items: [
       { en: "You must wear your ID badge at all times", vn: "Bạn phải đeo thẻ ID mọi lúc" },
@@ -244,6 +289,8 @@ export const unit22: UnitData = {
       { en: "You should always follow the correct procedure", vn: "Bạn luôn nên tuân theo quy trình đúng" },
     ],
   },
+
+  // ── REVIEW: Reading passage for skills integration
   readingPassage: {
     id: "unit22-reading-1",
     title: "Office Rules and Policies",
@@ -306,6 +353,8 @@ export const unit22: UnitData = {
       },
     ],
   },
+
+  // ── OUTPUT: shadowing
   shadowingVideoId: "4ALKkMNtlrY",
 };
 

@@ -1,5 +1,12 @@
 import { UnitData } from "@/components/learn/UnitTemplate";
 
+
+// ─────────────────────────────────────────────────────────────────────────────
+// UNIT-29 — Problems & Solutions  (B1)
+// Standardized header + section comments per lesson-blueprint.ts (CONTENT_BLOCK_ORDER)
+// + lesson-center-reference.ts (ESA Engage/Study/Activate, CELTA, Nation, CLT VN)
+// Gold sample: src/lib/data/units/unit1.ts — field order meta→hook→warmup→vocab→grammar→exercises→dialogues→fluency→output→review
+// ─────────────────────────────────────────────────────────────────────────────
 export const unit29: UnitData = {
   unitId: "unit-29",
   title: "Unit 29: Problems & Solutions",
@@ -9,18 +16,26 @@ export const unit29: UnitData = {
   description: "Discussion Skills — Phát triển kỹ năng thảo luận vấn đề và đề xuất giải pháp. Nền tảng quan trọng cho IELTS Speaking Part 3 và TOEIC Part 3.",
   badgeName: "Nhà Giải Quyết",
   badgeEmoji: "🧩",
+
+  // ── HOOK: situation (real VN context) + learningOutcomes (2–5 can-do) + culturalNote (pragmatic VN↔EN)
   situation: "Họp nhóm tìm giải pháp cho website bán hàng đang bị chậm. Trưởng nhóm yêu cầu mọi người đóng góp ý kiến. Sử dụng các cấu trúc thảo luận và đề xuất (should, could, we might want to, how about + V-ing) giúp trao đổi ý kiến một cách lịch sự, chuyên nghiệp.",
   learningOutcomes: [
     "Trình bày các vấn đề nơi công sở bằng tiếng Anh chuyên nghiệp",
     "Đưa ra các giải pháp và đề xuất lịch sự sử dụng should/could/how about...",
     "Phát biểu ý kiến và thể hiện sự đồng ý/không đồng ý trong các buổi thảo luận",
   ],
+
+  // ── HOOK (cultural): pragmatic note
   culturalNote: 'Trong thảo luận bằng tiếng Anh, người bản xứ thường tránh nói trực diện kiểu <span class="text-zinc-400">"This is wrong"</span> vì dễ gây cảm giác thô lỗ. Thay vào đó, họ dùng các từ giảm nhẹ như <span class="text-emerald-400">"We have a slight issue"</span> (vấn đề nhỏ) và đề xuất gián tiếp <span class="text-emerald-400">"We might want to consider..."</span> để giữ không khí thảo luận cởi mở.',
+
+  // ── WARMUP: ≥3 short phrases (SRS + prior knowledge activation)
   warmupGreetings: [
     { emoji: "🤝", en: "Let's brainstorm some ideas to solve this problem.", vn: "Chúng ta hãy cùng động não tìm vài ý tưởng để giải quyết vấn đề này.", context: "brainstorm ideas — cụm từ thảo luận thông dụng" },
     { emoji: "💡", en: "What if we try to reduce the loading time first?", vn: "Nếu chúng ta thử giảm thời gian tải trang trước thì sao?", context: "What if + clause — đưa ra giả thuyết/gợi ý" },
     { emoji: "💬", en: "I propose we schedule a follow-up meeting.", vn: "Tôi đề xuất chúng ta lên lịch một cuộc họp tiếp theo.", context: "propose + clause — đề xuất chính thức" },
   ],
+
+  // ── VOCABULARY: 8–20 words, pre-teach BEFORE dialogues; l1_interference_vn (A1 100%, B1+ ≥50%)
   vocab: [
     { id: 1, word: "issue", emoji: "⚠️", phonetic: "/ˈɪʃuː/", meaning: "vấn đề / trở ngại", example: "We need to address the main issue as soon as possible.", example2: "There is an issue with the database connection.", collocation: "address an issue / solve an issue / minor issue", audio: "/audio/unit29/issue.mp3" },
     { id: 2, word: "solution", emoji: "🔑", phonetic: "/səˈluːʃən/", meaning: "giải pháp", example: "Finding a permanent solution is our top priority.", example2: "They proposed a creative solution to the budget cut.", collocation: "propose a solution / find a solution / temporary solution", audio: "/audio/unit29/solution.mp3", l1_interference_vn: "⚠️ \'Solution TO\': \'the solution to the problem\'. Giới từ \'to\', không phải \'of\' hay \'for\'." },
@@ -35,6 +50,8 @@ export const unit29: UnitData = {
     { id: 11, word: "obstacle", emoji: "🚧", phonetic: "/ˈɒbstəkəl/", meaning: "trở ngại / chướng ngại vật", example: "Language barrier is a major obstacle for international students.", example2: "We overcame all obstacles to complete the project on time.", collocation: "overcome an obstacle / major obstacle / unexpected obstacle", audio: "/audio/unit29/obstacle.mp3", l1_interference_vn: "⚠️ \'Obstacle TO\': \'an obstacle to progress\'. Giới từ \'to\', không phải \'for\' hay \'of\'." },
     { id: 12, word: "feasible", emoji: "👌", phonetic: "/ˈfiːzəbəl/", meaning: "khả thi", example: "It is not feasible to finish this in one day.", example2: "We are looking for a feasible business model.", collocation: "financially feasible / highly feasible / feasible plan", audio: "/audio/unit29/feasible.mp3" },
   ],
+
+  // ── DIALOGUES: ≥1 dialogue AFTER vocab (98% coverage)
   dialogues: [
     {
       id: 1,
@@ -63,6 +80,8 @@ export const unit29: UnitData = {
       ],
     },
   ],
+
+  // ── EXERCISES_INPUT: listenAndChoose ≥5 (controlled practice)
   listenAndChoose: [
     { id: "lac1", audio_text: "We need to address the main issue as soon as possible.", options: ["We need to ignore the main issue.", "We need to solve the minor issue.", "We need to address the main issue as soon as possible.", "We need to find the main database issue."], answer: "We need to address the main issue as soon as possible." },
     { id: "lac2", audio_text: "I propose that we optimize all the images first.", options: ["I propose that we optimize all the images first.", "I agree we should upgrade the hosting server.", "I propose that we change the website theme.", "I suggest we write a report about images."], answer: "I propose that we optimize all the images first." },
@@ -70,12 +89,16 @@ export const unit29: UnitData = {
     { id: "lac4", audio_text: "The team reached a consensus after the meeting.", options: ["The team reached a consensus after the meeting.", "The team had an argument during the meeting.", "The team ignored the feedback after the meeting.", "The team found a major obstacle yesterday."], answer: "The team reached a consensus after the meeting." },
     { id: "lac5", audio_text: "How can we resolve this shipping delay?", options: ["How can we buy this shipping service?", "How can we resolve this shipping delay?", "How should we ship this order today?", "When did we resolve the shipping issue?"], answer: "How can we resolve this shipping delay?" },
   ],
+
+  // ── OUTPUT: speaking prompts (freer production)
   speaking: {
     level1Prompt: "To address this {input}, I propose we {input}. Another feasible solution is to {input}.",
     level1Placeholder: "Ví dụ: issue — optimize the homepage — upgrade the hosting server...",
     level2Situation: "Họp công ty thảo luận về việc văn phòng dùng quá nhiều giấy in. Đóng vai nhân viên đề xuất giải pháp: (1) Nêu vấn đề lãng phí giấy, (2) Đề xuất giải pháp số hóa tài liệu, (3) Nêu giải pháp thay thế là tái sử dụng giấy nháp.",
     level2Hint: "We have an issue with paper waste. I propose we address this by digitizing all documents. Alternatively, we could encourage everyone to reuse scrap paper. This is a feasible way to start saving costs immediately.",
   },
+
+  // ── GRAMMAR: Inductive (Meaning→Form→CCQ) + vnNote L1
   grammar: {
     title: "Language for Making Suggestions — Cách Đưa Ra Đề Xuất",
     rule: "Các cấu trúc đưa ra đề xuất lịch sự và chuyên nghiệp trong thảo luận:\n\n1. S + should + V-infinitive (Nên làm gì)\n   → 'We should address the issue now.'\n2. S + could + V-infinitive (Có thể làm gì - nhẹ nhàng hơn should)\n   → 'We could upgrade the server.'\n3. I propose (that) + S + V-infinitive/should V (Đề xuất chính thức)\n   → 'I propose we optimize the database.'\n4. How about / What about + V-ing? (Còn việc... thì sao?)\n   → 'How about hiring a consultant?'\n5. What if we + V-past/present? (Nếu chúng ta... thì sao?)\n   → 'What if we offered a discount?'",
@@ -104,6 +127,8 @@ export const unit29: UnitData = {
       explanation: "'We could' mang tính chất đề nghị nhẹ nhàng và lịch sự hơn, giúp tạo không khí thảo luận cởi mở.",
     },
   },
+
+  // ── EXERCISES_INPUT: practiceQuiz (active recall)
   practiceQuiz: [
     { id: "pq1", type: "multiple-choice", question: "Chọn cấu trúc đề xuất đúng: 'How about ___ our hosting server?'", options: ["upgrade", "to upgrade", "upgrading", "upgraded"], answer: "upgrading" },
     { id: "pq2", type: "multiple-choice", question: "Điền từ thích hợp: 'We must ___ this technical issue immediately.'", options: ["propose", "address", "feedback", "feasible"], answer: "address" },
@@ -111,6 +136,8 @@ export const unit29: UnitData = {
     { id: "pq4", type: "multiple-choice", question: "Tìm từ đồng nghĩa với 'practicable/possible':", options: ["obstacle", "issue", "feasible", "alternative"], answer: "feasible" },
     { id: "pq5", type: "cloze", question: "Điền từ thích hợp: 'What ___ we upgraded the server next week?'", answer: "if" },
   ],
+
+  // ── EXERCISES_INPUT: matching
   matchingExercise: {
     title: "Nối từ vựng thảo luận với nghĩa tiếng Việt",
     pairs: [
@@ -121,6 +148,8 @@ export const unit29: UnitData = {
       { left: "alternative", right: "lựa chọn thay thế" },
     ],
   },
+
+  // ── OUTPUT: practiceTranslate (VN→EN ≥3) + speaking (level1/2)
   practiceTranslate: [
     {
       id: "pt-1",
@@ -139,6 +168,8 @@ export const unit29: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: sentenceCorrection
   sentenceCorrectionExercises: [
     {
       id: "sc29-1",
@@ -156,6 +187,8 @@ export const unit29: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: listenAndArrange
   listenAndArrangeExercises: [
     {
       id: "la29-1",
@@ -173,6 +206,8 @@ export const unit29: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: wordBank
   wordBankExercises: [
     {
       id: "wb1",
@@ -194,11 +229,15 @@ export const unit29: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: scramble
   scrambleExercises: [
     { id: "s29-1", prompt_vn: "Tôi đề xuất chúng ta tối ưu hóa các hình ảnh trước.", words: ["I", "propose", "we", "optimize", "the", "images", "first", "."], answer: "I propose we optimize the images first ." },
     { id: "s29-2", prompt_vn: "Chúng ta nên giải quyết vấn đề này càng sớm càng tốt.", words: ["We", "should", "address", "this", "issue", "as", "soon", "as", "possible", "."], answer: "We should address this issue as soon as possible ." },
     { id: "s29-3", prompt_vn: "Đó là một giải pháp khả thi cho vấn đề kỹ thuật.", words: ["That", "is", "a", "feasible", "solution", "to", "the", "technical", "problem", "."], answer: "That is a feasible solution to the technical problem ." },
   ],
+
+  // ── REVIEW: Final quiz ≥5 (retrieval practice)
   quiz: [
     { id: "fq1", type: "multiple-choice", question: "Dịch đề xuất lịch sự: 'Chúng ta có thể cân nhắc việc hoàn tiền phí vận chuyển.'", options: ["We must refund the shipping fee.", "We could consider refunding the shipping fee.", "Refund the shipping fee now.", "We did refund the shipping fee."], answer: "We could consider refunding the shipping fee.",
       explanation_vn: "'could consider + V-ing' — đề xuất nhẹ nhàng, lịch sự. 'must refund' quá trực tiếp; 'could' phù hợp gữa các bên." },
@@ -216,11 +255,15 @@ export const unit29: UnitData = {
     { id: "q-ex6", type: "multiple-choice", question: "'Have you considered...?' + dạng nào?", options: ["to-infinitive", "V-ing", "bare infinitive", "V3"], answer: "V-ing" },
     { id: "q-ex7", type: "multiple-choice", question: "Giải pháp lịch sự nhất khi đề xuất:", options: ["You must do this.", "Why don't you try...?", "Do this now.", "I want you to do this."], answer: "Why don't you try...?" },
   ],
+
+  // ── REVIEW: Exit quiz + cumulativeReview (spiral) + reading (B1+)
   cumulativeReviewQuestions: [
     { id: "cr29-1", question: "Ôn tập Unit 28 — Điền: 'I ___ (study) English for six months now.'", options: ["have studied", "have been studying", "am studying", "studied"], answer: "have been studying", type: "multiple-choice" },
     { id: "cr29-2", question: "Ôn tập Unit 27 — Điền phrasal verb: 'We need to ___ (giải quyết/xử lý) this problem immediately.'", options: [], answer: "deal with", type: "cloze" },
     { id: "cr29-3", question: "Ôn tập Unit 26 — Dịch: 'Tôi thích đọc sách hơn chơi game.'", options: ["I prefer reading books to playing games.", "I like read books than play games.", "I enjoy to read books than gaming.", "I prefer to read books rather play games."], answer: "I prefer reading books to playing games.", type: "multiple-choice" },
   ],
+
+  // ── FLUENCY: pronunciationFocus
   pronunciationFocus: {
     phoneme: "wish /wɪʃ/",
     description: "Wish và subjunctive mood — âm /ʃ/ cuối và stress",
@@ -233,6 +276,8 @@ export const unit29: UnitData = {
     ],
   },
 
+
+  // ── FLUENCY: fluencyDrill ≥5 (Nation Strand 4 automaticity)
   fluencyDrill: {
     items: [
       { en: "We have a serious issue", vn: "Chúng ta đang gặp vấn đề nghiêm trọng" },
@@ -245,6 +290,8 @@ export const unit29: UnitData = {
       { en: "We need an alternative plan", vn: "Chúng ta cần một kế hoạch thay thế" },
     ],
   },
+
+  // ── REVIEW: Reading passage for skills integration
   readingPassage: {
     id: "unit29-reading-1",
     title: "Solving a Supply Chain Problem",
@@ -314,6 +361,8 @@ export const unit29: UnitData = {
       },
     ],
   },
+
+  // ── OUTPUT: shadowing
   shadowingVideoId: "8pVq8WElnOo",
 };
 

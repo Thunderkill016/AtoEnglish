@@ -223,10 +223,11 @@
 - **Started:** 2026-06-26 — autopilot (PHASE1 research complete)
 
 ### TASK-061 — Unit files: comment blocks theo blueprint (như unit1)
-- **Status:** `ready`
+- **Status:** `done`
 - **Mô tả:** Mỗi `unit*.ts` thêm header block + comment `── HOOK/VOCAB/…` khớp `lesson-blueprint.ts`; field order bám mẫu unit1.
 - **Done khi:** `grep "── HOOK" src/lib/data/units/*.ts` ≥45 file; lint+test pass.
-- **Started:** user mandate — nội dung + cách học cùng khung
+- **Started:** 2026-06-26 — autopilot (PHASE1: memory empty + read AGENTS/BACKLOG/PLAN/CONTENT§6-7 + blueprint + center-ref + learning-flow + unit1 gold + grep only unit1 has HOOK; 49 files need; PHASE2 plan+update; PHASE3 bulk comment header+section markers via safe edit)
+- **Completed:** 2026-06-26 — header + ── comments (HOOK etc) on 50/50 units (49+unit1); 50 files have ── HOOK (grep 99 matches); gates tsc+lint+169test+content-std50/50+audit50/50 pass; commit+push via git-push; no data/ flow change only comments to match blueprint/unit1 (TASK-061)
 
 ### TASK-062 — Redesign pilot: unit24 theo center-reference + unit1
 - **Status:** `ready`
@@ -365,7 +366,7 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
-| 2026-06-26 | TASK-059 | PHASE1 research(memory+AGENTS+blueprint+center+content-std+unit1+count units), PHASE2 PLAN+BACKLOG in_progress (refill skipped 8ready), PHASE3: min=3 in content-std + +1 cr item to each of unit2-12 (spiral from prior units, unit1 style), gates: tsc/lint/169test + content-std 50/50 + audit50/50 pass; commit+push via git-push | done — [SHA] |
+| 2026-06-26 | TASK-059 | PHASE1 research(memory+AGENTS+blueprint+center+content-std+unit1+count units), PHASE2 PLAN+BACKLOG in_progress (refill skipped 8ready), PHASE3: min=3 in content-std + +1 cr item to each of unit2-12 (spiral from prior units, unit1 style), gates: tsc/lint/169test + content-std 50/50 + audit50/50 pass; commit+push via git-push | done — 81e06b4 |
 | 2026-06-26 | TASK-043 | research(agents+memory+grep+orch+watchdog), set in_progress, update PLAN+BACKLOG, implement only-agent-changes skip stash in orchestrator + auto pop at end + age>7d cleanup (orch+watchdog MAX=7), syntax+sim test, lint+159 tests+tsc pass, commit 5062230 + git-push.sh main; status done | done — 5062230 |
 | 2026-06-26 | TASK-049..056 | user mandate: P1 bài học+cách học — queued ready sau TASK-044 | ready |
 | 2026-06-26 | TASK-044 | research(agents+memory+grep+placement e2e files), set in_progress, update PLAN+BACKLOG, implement networkidle waits + reset for test user isolation in placement-test.spec.ts (+helper if needed), lint+test | in_progress |
@@ -398,3 +399,4 @@
 | 2026-06-26 | TASK-035 | E2E test signup persist to user_onboarding_profile + daily_xp_goal | done — 7030384 |
 | 2026-06-26 | TASK-036 | Fix audio path /unitN vs /unit-N (rewrite + verify B1/B2 playUnitAudio native) | done — 0d30be9 |
 | 2026-06-26 | TASK-060 | research(agents+blueprint+center+content-std+grep units), set in_progress, update PLAN+BACKLOG, add header comments + >=6 L1 notes each to unit24 (passive VN errors) + unit31 (report verbs + formal), 9/12 & 11/12 L1; tsc+lint+169tests+content-std+audit 50/50 pass; commit+push via git-push | done — 5df0678 |
+| 2026-06-26 | TASK-061 | PHASE1 research (memory empty, agents+blueprint+center+content+unit1+50units grep), PHASE2: update PLAN/BACKLOG, set 061 in_progress; PHASE3: bulk header+ ──HOOK etc comments 50 files; all gates pass; pushed | done — [pending SHA] |

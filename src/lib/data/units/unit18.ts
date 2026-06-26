@@ -1,5 +1,12 @@
 import { UnitData } from "@/components/learn/UnitTemplate";
 
+
+// ─────────────────────────────────────────────────────────────────────────────
+// UNIT-18 — A2 Review & Real-life Communication  (A2)
+// Standardized header + section comments per lesson-blueprint.ts (CONTENT_BLOCK_ORDER)
+// + lesson-center-reference.ts (ESA Engage/Study/Activate, CELTA, Nation, CLT VN)
+// Gold sample: src/lib/data/units/unit1.ts — field order meta→hook→warmup→vocab→grammar→exercises→dialogues→fluency→output→review
+// ─────────────────────────────────────────────────────────────────────────────
 export const unit18: UnitData = {
   unitId: "unit-18",
   title: "Unit 18: A2 Review & Real-life Communication",
@@ -9,18 +16,26 @@ export const unit18: UnitData = {
   description: "Ôn tập toàn bộ ngữ pháp và từ vựng A2. Tổng hợp 4 kỹ năng: nói về quá khứ, tương lai, so sánh và kinh nghiệm.",
   badgeName: "Chuyên Gia A2",
   badgeEmoji: "🎓",
+
+  // ── HOOK: situation (real VN context) + learningOutcomes (2–5 can-do) + culturalNote (pragmatic VN↔EN)
   situation: "Buổi họp nhóm quốc tế cuối năm. Bạn cần báo cáo về những gì đã đạt được (Past Simple), những kế hoạch sắp tới (will/going to), so sánh kết quả với năm ngoái (comparative), và chia sẻ kinh nghiệm của bạn (Present Perfect).",
   learningOutcomes: [
     "Kết hợp thành thạo 4 thì quan trọng của A2",
     "Giao tiếp tự tin trong cuộc họp quốc tế",
     "Chia sẻ thành tích, kế hoạch và kinh nghiệm bằng tiếng Anh"
   ],
+
+  // ── WARMUP: ≥3 short phrases (SRS + prior knowledge activation)
   warmupGreetings: [
     { emoji: "📊", en: "Last year, we achieved excellent results.", vn: "Năm ngoái, chúng tôi đã đạt được kết quả xuất sắc.", context: "Báo cáo thành tích quá khứ" },
     { emoji: "🚀", en: "Next quarter, we're going to launch three new products.", vn: "Quý tới, chúng tôi sẽ ra mắt ba sản phẩm mới.", context: "Kế hoạch tương lai" },
     { emoji: "🌟", en: "I've worked in this industry for over five years.", vn: "Tôi đã làm trong ngành này hơn năm năm.", context: "Kinh nghiệm Present Perfect" }
   ],
+
+  // ── HOOK (cultural): pragmatic note
   culturalNote: "Trong các cuộc họp quốc tế, người Việt thường khiêm tốn hơn so với văn hóa phương Tây. Tuy nhiên, khi nói tiếng Anh trong môi trường chuyên nghiệp quốc tế, hãy tự tin chia sẻ thành tích của mình. Sử dụng <span class=\"text-emerald-400 font-semibold\">'We achieved...'</span> thay vì <span class=\"text-emerald-400 font-semibold\">'I think we did OK...'</span> để thể hiện sự chuyên nghiệp.",
+
+  // ── VOCABULARY: 8–20 words, pre-teach BEFORE dialogues; l1_interference_vn (A1 100%, B1+ ≥50%)
   vocab: [
     { id: 1, word: "achieved", emoji: "🏆", phonetic: "/əˈtʃiːvd/", meaning: "đã đạt được", example: "We achieved 120% of our sales target.", example2: "She achieved remarkable results.", collocation: "achieved our goal / achieved success", audio: "/audio/unit18/achieved.mp3", l1_interference_vn: "⚠️ 'Achieve' = đạt được (bằng nỗ lực). 'Achieve a goal/target'. Không nhầm 'achieve' với 'receive' (nhận được)." },
     { id: 2, word: "report", emoji: "📋", phonetic: "/rɪˈpɔːrt/", meaning: "báo cáo", example: "I will present my annual report.", example2: "Have you finished the report yet?", collocation: "annual report / submit a report", audio: "/audio/unit18/report.mp3", l1_interference_vn: "⚠️ 'Report' (n/v): 'a report on...' hoặc 'report on...'. 'Present a report' (không phải 'say a report')." },
@@ -35,6 +50,8 @@ export const unit18: UnitData = {
     { id: 11, word: "opportunity", emoji: "🌟", phonetic: "/ˌɒpərˈtjuːnɪti/", meaning: "cơ hội", example: "This is a great opportunity to grow.", example2: "I hope to get an opportunity to work abroad.", collocation: "take an opportunity / miss an opportunity", audio: "/audio/unit18/opportunity.mp3" , l1_interference_vn: "⚠️ Stress: op-por-TU-ni-ty (âm 3). 5 âm tiết. 'An opportunity TO do something'." },
     { id: 12, word: "fluent", emoji: "🗣️", phonetic: "/ˈfluːənt/", meaning: "thành thạo / trôi chảy", example: "I'm becoming more fluent in English.", example2: "She speaks French fluently.", collocation: "speak fluently / become fluent", audio: "/audio/unit18/fluent.mp3" , l1_interference_vn: "⚠️ Stress: FLU-ent (âm 1). 'Fluent IN English' — giới từ 'in'. 'Speak fluently' (trạng từ)." },
   ],
+
+  // ── DIALOGUES: ≥1 dialogue AFTER vocab (98% coverage)
   dialogues: [
     {
       id: 1,
@@ -65,6 +82,8 @@ export const unit18: UnitData = {
       ]
     },
   ],
+
+  // ── EXERCISES_INPUT: listenAndChoose ≥5 (controlled practice)
   listenAndChoose: [
     { id: "lac1", audio_text: "Revenue increased by twenty percent compared to last year", options: ["Revenue increased by twenty percent compared to last year", "Revenue increased twenty percent compared to last year", "Revenue increased by twenty percent compare to last year", "Revenue was increased by twenty percent compared to last year"], answer: "Revenue increased by twenty percent compared to last year" },
     { id: "lac2", audio_text: "We're going to launch two new products next quarter", options: ["We going to launch two new products next quarter", "We're going to launch two new products next quarter", "We will going to launch two new products next quarter", "We're going launch two new products next quarter"], answer: "We're going to launch two new products next quarter" },
@@ -72,12 +91,16 @@ export const unit18: UnitData = {
     { id: "lac4", audio_text: "The campaign was more successful than last year", options: ["The campaign was more successful than last year", "The campaign was successful more than last year", "The campaign was more successfuler than last year", "The campaign was most successful than last year"], answer: "The campaign was more successful than last year" },
     { id: "lac5", audio_text: "I've never been more confident", options: ["I've never been more confident", "I never been more confident", "I've never be more confident", "I haven't never been more confident"], answer: "I've never been more confident" },
   ],
+
+  // ── OUTPUT: speaking prompts (freer production)
   speaking: {
     level1Prompt: "This year, I achieved {input}. Next year, I'm going to {input}.",
     level1Placeholder: "Ví dụ: my sales target — expand to new markets...",
     level2Situation: "Bạn đang thuyết trình trong cuộc họp tổng kết cuối năm với đội nhóm quốc tế. Báo cáo: (1) những gì đã đạt được năm vừa rồi, (2) kế hoạch năm tới, (3) so sánh kết quả với năm trước, (4) kinh nghiệm bạn đã có được.",
     level2Hint: "Last year, we achieved [result]. Revenue [increased/decreased] by [%] compared to [time period]. I've [experience/accomplishment] since [time]. Next year, we're going to [plan]. I hope we will [prediction].",
   },
+
+  // ── GRAMMAR: Inductive (Meaning→Form→CCQ) + vnNote L1
   grammar: {
     title: "A2 Grammar Review — 4 thì quan trọng",
     rule: "Past Simple: V-ed / irregular (yesterday, last...)\nFuture going to: am/is/are + going to + V (planned)\nFuture will: will + V (prediction/spontaneous)\nPresent Perfect: have/has + past participle (experience)",
@@ -107,6 +130,8 @@ export const unit18: UnitData = {
       explanation: "Past Simple (achieved - thời điểm cụ thể) + Present Perfect (since 2020 - tính đến hiện tại) + Going to (kế hoạch đã lên sẵn) — ba thì kết hợp đúng hoàn toàn.",
     },
   },
+
+  // ── EXERCISES_INPUT: practiceQuiz (active recall)
   practiceQuiz: [
     { id: "pq1", type: "multiple-choice", question: "Chọn đúng thì: 'We ___ our sales target last quarter.' (đã đạt - quá khứ cụ thể)", options: ["have achieved", "achieved", "are achieving", "achieve"], answer: "achieved" },
     { id: "pq2", type: "multiple-choice", question: "Chọn đúng: 'She ___ (kế hoạch sẵn) study for the IELTS next year.'", options: ["will study", "is going to study", "studies", "was going to study"], answer: "is going to study" },
@@ -115,6 +140,8 @@ export const unit18: UnitData = {
     { id: "pq5", type: "cloze", question: "Điền: 'Revenue ___ (increase) by 20% compared to last year.'", answer: "increased" },
   ],
 
+
+  // ── EXERCISES_INPUT: matching
   matchingExercise: {
     title: "Nối từ với nghĩa đúng",
     pairs: [
@@ -126,6 +153,8 @@ export const unit18: UnitData = {
     ],
   },
 
+
+  // ── OUTPUT: practiceTranslate (VN→EN ≥3) + speaking (level1/2)
   practiceTranslate: [
     {
       id: "pt-1",
@@ -144,6 +173,8 @@ export const unit18: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: sentenceCorrection
   sentenceCorrectionExercises: [
     {
       id: "sc18-1",
@@ -162,6 +193,8 @@ export const unit18: UnitData = {
   ],
 
 
+
+  // ── EXERCISES_INPUT: listenAndArrange
   listenAndArrangeExercises: [
     {
       id: "la18-1",
@@ -180,6 +213,8 @@ export const unit18: UnitData = {
   ],
 
 
+
+  // ── EXERCISES_INPUT: wordBank
   wordBankExercises: [
     {
       id: "wb1",
@@ -201,6 +236,8 @@ export const unit18: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: scramble
   scrambleExercises: [
     {
       id: "s18-1",
@@ -222,6 +259,8 @@ export const unit18: UnitData = {
     },
   ],
 
+
+  // ── REVIEW: Final quiz ≥5 (retrieval practice)
   quiz: [
     { id: "fq1", type: "multiple-choice", question: "Dịch: 'Năm ngoái doanh thu tăng 20% so với năm trước.'", options: ["Last year revenue increases 20% compared previous year.", "Last year revenue increased by 20% compared to the previous year.", "Last year revenue has increased 20% compare to previous year.", "Revenue last year increased by 20% compare previous year."], answer: "Last year revenue increased by 20% compared to the previous year.", explanation_vn: "Tường thuật số liệu: 'increase BY X%'. 'Compared TO the previous year'. Simple Past 'increased' vì có mốc 'last year'. KHÔNG 'has increased' (không có mốc cụ thể)." },
     { id: "fq2", type: "cloze", question: "Điền: 'I ___ (work) in this company since 2021.'", answer: "have worked" },
@@ -237,6 +276,8 @@ export const unit18: UnitData = {
     { id: "q-ex7", type: "translate", question: "Dịch: 'Kế hoạch của bạn là gì?'", answer: "What are your plans?" },
   ],
 
+
+  // ── REVIEW: Exit quiz + cumulativeReview (spiral) + reading (B1+)
   cumulativeReviewQuestions: [
     {
       id: "cr18-1",
@@ -273,6 +314,8 @@ export const unit18: UnitData = {
     },
   ],
 
+
+  // ── FLUENCY: pronunciationFocus
   pronunciationFocus: {
     phoneme: "noun vs verb stress",
     description: "Ôn tập: stress thay đổi nghĩa — noun vs verb pairs rất phổ biến trong A2",
@@ -286,6 +329,8 @@ export const unit18: UnitData = {
     ],
   },
 
+
+  // ── FLUENCY: fluencyDrill ≥5 (Nation Strand 4 automaticity)
   fluencyDrill: {
     items: [
       { en: "I work every day", vn: "Tôi làm việc mỗi ngày" },
@@ -298,6 +343,8 @@ export const unit18: UnitData = {
       { en: "They didn't attend", vn: "Họ đã không tham dự" },
     ],
   },
+
+  // ── REVIEW: Reading passage for skills integration
   readingPassage: {
     id: "unit18-reading-1",
     title: "The Year-End Review",
@@ -355,6 +402,8 @@ export const unit18: UnitData = {
       },
     ],
   },
+
+  // ── OUTPUT: shadowing
   shadowingVideoId: "SiPTuOTqYn8",
 };
 

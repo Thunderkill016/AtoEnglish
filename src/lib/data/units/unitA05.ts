@@ -1,5 +1,12 @@
 import { UnitData } from "@/components/learn/UnitTemplate";
 
+
+// ─────────────────────────────────────────────────────────────────────────────
+// UNIT-A0-5 — Thông Tin Cá Nhân  (A0)
+// Standardized header + section comments per lesson-blueprint.ts (CONTENT_BLOCK_ORDER)
+// + lesson-center-reference.ts (ESA Engage/Study/Activate, CELTA, Nation, CLT VN)
+// Gold sample: src/lib/data/units/unit1.ts — field order meta→hook→warmup→vocab→grammar→exercises→dialogues→fluency→output→review
+// ─────────────────────────────────────────────────────────────────────────────
 // UNIT A0-5 — Thông Tin Cá Nhân (Personal Information)
 // Grammar: Verb BE — Full conjugation (I am / You are / He is / She is / We are / They are)
 // L1 Alert: VN pronouns don't change with person; English verb changes every time
@@ -17,6 +24,8 @@ export const unitA05: UnitData = {
   badgeName: "Người Tự Tin",
   badgeEmoji: "🪪",
 
+
+  // ── HOOK: situation (real VN context) + learningOutcomes (2–5 can-do) + culturalNote (pragmatic VN↔EN)
   situation:
     "Bạn đang ở sân bay quốc tế. Nhân viên hải quan hỏi một loạt câu hỏi bằng tiếng Anh: tên, tuổi, nghề nghiệp, quê quán. Bạn cần trả lời nhanh và chính xác.",
 
@@ -26,9 +35,13 @@ export const unitA05: UnitData = {
     "Hỏi và trả lời thông tin cá nhân cơ bản",
   ],
 
+
+  // ── HOOK (cultural): pragmatic note
   culturalNote:
     'Tại các nước Anh-Mỹ, việc hỏi tuổi (<span class="text-emerald-400 font-semibold">"How old are you?"</span>) được coi là hơi bất lịch sự với người lạ — chỉ hỏi khi cần thiết (điền form, v.v.). Tuy nhiên tại hải quan, việc hỏi và trả lời trực tiếp là hoàn toàn bình thường.',
 
+
+  // ── WARMUP: ≥3 short phrases (SRS + prior knowledge activation)
   warmupGreetings: [
     {
       emoji: "🪪",
@@ -50,6 +63,8 @@ export const unitA05: UnitData = {
     },
   ],
 
+
+  // ── VOCABULARY: 8–20 words, pre-teach BEFORE dialogues; l1_interference_vn (A1 100%, B1+ ≥50%)
   vocab: [
     {
       id: 1,
@@ -173,6 +188,8 @@ export const unitA05: UnitData = {
     },
   ],
 
+
+  // ── GRAMMAR: Inductive (Meaning→Form→CCQ) + vnNote L1
   grammar: {
     title: "Verb BE — Toàn bộ ngôi (I am / You are / He is…)",
     rule: "BE thay đổi theo CHỦ NGỮ — khác hoàn toàn với tiếng Việt!",
@@ -223,6 +240,8 @@ export const unitA05: UnitData = {
     },
   },
 
+
+  // ── EXERCISES_INPUT: matching
   matchingExercise: {
     title: "Nối chủ ngữ với động từ BE đúng",
     pairs: [
@@ -234,6 +253,8 @@ export const unitA05: UnitData = {
     ],
   },
 
+
+  // ── EXERCISES_INPUT: practiceQuiz (active recall)
   practiceQuiz: [
     {
       id: "pq5-1",
@@ -275,6 +296,8 @@ export const unitA05: UnitData = {
     },
   ],
 
+
+  // ── OUTPUT: practiceTranslate (VN→EN ≥3) + speaking (level1/2)
   practiceTranslate: [
     {
       id: "pt5-1",
@@ -293,6 +316,8 @@ export const unitA05: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: sentenceCorrection
   sentenceCorrectionExercises: [
     {
       id: "sc-A05-1",
@@ -311,6 +336,8 @@ export const unitA05: UnitData = {
   ],
 
 
+
+  // ── EXERCISES_INPUT: listenAndArrange
   listenAndArrangeExercises: [
     {
       id: "laA05-1",
@@ -329,6 +356,8 @@ export const unitA05: UnitData = {
   ],
 
 
+
+  // ── EXERCISES_INPUT: wordBank
   wordBankExercises: [
     {
       id: "wb1",
@@ -350,6 +379,8 @@ export const unitA05: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: scramble
   scrambleExercises: [
     {
       id: "s5-1",
@@ -371,6 +402,8 @@ export const unitA05: UnitData = {
     },
   ],
 
+
+  // ── DIALOGUES: ≥1 dialogue AFTER vocab (98% coverage)
   dialogues: [
     {
       id: 1,
@@ -480,6 +513,8 @@ export const unitA05: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: listenAndChoose ≥5 (controlled practice)
   listenAndChoose: [
     {
       id: "lac5-1",
@@ -518,6 +553,8 @@ export const unitA05: UnitData = {
     },
   ],
 
+
+  // ── REVIEW: Exit quiz + cumulativeReview (spiral) + reading (B1+)
   cumulativeReviewQuestions: [
     {
       id: "crA05-1",
@@ -549,6 +586,8 @@ export const unitA05: UnitData = {
     },
   ],
 
+
+  // ── FLUENCY: pronunciationFocus
   pronunciationFocus: {
     phoneme: "/ɪ/ vs /iː/",
     description: "Phân biệt SIT /ɪ/ và SEE /iː/",
@@ -561,6 +600,8 @@ export const unitA05: UnitData = {
     ],
   },
 
+
+  // ── FLUENCY: fluencyDrill ≥5 (Nation Strand 4 automaticity)
   fluencyDrill: {
     title: "Luyện nhanh: Verb BE theo ngôi",
     items: [
@@ -575,6 +616,8 @@ export const unitA05: UnitData = {
     ],
   },
 
+
+  // ── OUTPUT: speaking prompts (freer production)
   speaking: {
     level1Prompt: "I am {input} years old. I am from Vietnam.",
     level1Placeholder: "Nhập tuổi của bạn (vd: twenty-five)...",
@@ -583,6 +626,8 @@ export const unitA05: UnitData = {
     level2Hint: "My name is... / I am from... / I am ... years old / I work as... / I am single/married.",
   },
 
+
+  // ── REVIEW: Final quiz ≥5 (retrieval practice)
   quiz: [
     {
       id: "q5-1",
@@ -644,6 +689,8 @@ export const unitA05: UnitData = {
       type: "translate",
     },
   ],
+
+  // ── REVIEW: Reading passage for skills integration
   readingPassage: {
     id: "unitA05-reading-1",
     title: "About Me",
@@ -687,6 +734,8 @@ export const unitA05: UnitData = {
       },
     ],
   },
+
+  // ── OUTPUT: shadowing
   shadowingVideoId: "sNvmqN2MBBo", // BBC Learning English — Introducing yourself
 };
 

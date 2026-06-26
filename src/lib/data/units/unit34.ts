@@ -1,5 +1,12 @@
 import { UnitData } from "@/components/learn/UnitTemplate";
 
+
+// ─────────────────────────────────────────────────────────────────────────────
+// UNIT-34 — Past Regrets & What-ifs  (B2)
+// Standardized header + section comments per lesson-blueprint.ts (CONTENT_BLOCK_ORDER)
+// + lesson-center-reference.ts (ESA Engage/Study/Activate, CELTA, Nation, CLT VN)
+// Gold sample: src/lib/data/units/unit1.ts — field order meta→hook→warmup→vocab→grammar→exercises→dialogues→fluency→output→review
+// ─────────────────────────────────────────────────────────────────────────────
 export const unit34: UnitData = {
   unitId: "unit-34",
   title: "Unit 34: Past Regrets & What-ifs",
@@ -9,18 +16,26 @@ export const unit34: UnitData = {
   description: "Third Conditional — Câu điều kiện loại 3. Diễn đạt sự hối tiếc về quá khứ, phân tích nguyên nhân sai lầm và rút ra bài học kinh nghiệm sau dự án. Cấu trúc ngữ pháp cực kỳ quan trọng cho IELTS Writing Task 2.",
   badgeName: "Nhà Đánh Giá",
   badgeEmoji: "🔍",
+
+  // ── HOOK: situation (real VN context) + learningOutcomes (2–5 can-do) + culturalNote (pragmatic VN↔EN)
   situation: "Cuộc họp rút kinh nghiệm (Post-mortem Meeting) sau khi dự án ra mắt sản phẩm bị trễ 2 tuần. Cả đội cùng phân tích xem những lỗi nào đã bị bỏ sót (overlooked) và thảo luận: 'Nếu chúng ta làm khác đi trong quá khứ thì kết quả đã thế nào?'.",
   learningOutcomes: [
     "Sử dụng thành thạo câu điều kiện loại 3 (Third Conditional) để nói về quá khứ giả định",
     "Phân tích lỗi sai, sự cố dự án và đề xuất cách khắc phục (rectify) một cách chuyên nghiệp",
     "Thể hiện sự hối tiếc và tự kiểm điểm (reflection) bằng tiếng Anh doanh nghiệp",
   ],
+
+  // ── HOOK (cultural): pragmatic note
   culturalNote: 'Trong văn hóa làm việc phương Tây, các buổi họp rút kinh nghiệm không nhằm mục đích đổ lỗi (<span class="text-zinc-400">blame</span>) mà tập trung vào phân tích khách quan (<span class="text-emerald-400">analysis</span>). Khi thảo luận về sai lầm của đồng nghiệp, hãy dùng câu điều kiện loại 3 dạng bị động như <span class="text-emerald-400">"If the error had been detected earlier, we would have prevented the delay"</span> để tránh chỉ trích cá nhân.',
+
+  // ── WARMUP: ≥3 short phrases (SRS + prior knowledge activation)
   warmupGreetings: [
     { emoji: "🤦", en: "If we had double-checked the data, we would have avoided the error.", vn: "Nếu chúng ta kiểm tra kỹ dữ liệu, chúng ta đã tránh được lỗi sai.", context: "If we had + PP, we would have + PP" },
     { emoji: "🔍", en: "If they had investigated the issue, they would have foreseen the risk.", vn: "Nếu họ tìm hiểu kỹ vấn đề, họ đã thấy trước được rủi ro.", context: "had investigated ... would have foreseen" },
     { emoji: "🛠️", en: "We could have rectified the complication if you had informed us.", vn: "Chúng tôi đã có thể khắc phục rắc rối nếu bạn thông báo cho chúng tôi.", context: "could have rectified if you had informed" },
   ],
+
+  // ── VOCABULARY: 8–20 words, pre-teach BEFORE dialogues; l1_interference_vn (A1 100%, B1+ ≥50%)
   vocab: [
     { id: 1, word: "regret", emoji: "😢", phonetic: "/rɪˈɡret/", meaning: "sự hối tiếc / hối tiếc", example: "I deeply regret not attending the training session last month.", example2: "My greatest regret is that we didn't launch the project earlier.", collocation: "express regret / deep regret / feel regret", audio: "/audio/unit34/regret.mp3" },
     { id: 2, word: "reflection", emoji: "🧘", phonetic: "/rɪˈflekʃən/", meaning: "sự suy ngẫm / phản chiếu", example: "Upon reflection, I realize we made several wrong decisions.", example2: "The report is a clear reflection of our team's effort.", collocation: "upon reflection / self-reflection / written reflection", audio: "/audio/unit34/reflection.mp3" },
@@ -35,6 +50,8 @@ export const unit34: UnitData = {
     { id: 11, word: "analysis", emoji: "📈", phonetic: "/əˈnæləsɪs/", meaning: "sự phân tích", example: "A detailed analysis of the market is required.", example2: "The team conducted a risk analysis before investing.", collocation: "data analysis / market analysis / conduct an analysis", audio: "/audio/unit34/analysis.mp3" },
     { id: 12, word: "error", emoji: "❌", phonetic: "/ˈerər/", meaning: "sai sót / lỗi kỹ thuật", example: "The system displayed a system error code.", example2: "An error occurred during the file transfer.", collocation: "system error / human error / avoid errors", audio: "/audio/unit34/error.mp3" },
   ],
+
+  // ── DIALOGUES: ≥1 dialogue AFTER vocab (98% coverage)
   dialogues: [
     {
       id: 1,
@@ -61,6 +78,8 @@ export const unit34: UnitData = {
       ],
     },
   ],
+
+  // ── EXERCISES_INPUT: listenAndChoose ≥5 (controlled practice)
   listenAndChoose: [
     { id: "lac1", audio_text: "If we had double-checked the data, we would have avoided the error.", options: ["If we double-check the data, we avoid the error.", "If we had double-checked the data, we would have avoided the error.", "If we checked the data, we would avoid the error.", "We avoided the error because we checked the data."], answer: "If we had double-checked the data, we would have avoided the error." },
     { id: "lac2", audio_text: "If we had foreseen the delay, we would have changed the plan.", options: ["If we foresee the delay, we will change the plan.", "If we had foreseen the delay, we would have changed the plan.", "If we had foreseen the delay, we would change the plan.", "We changed the plan because we foresaw the delay."], answer: "If we had foreseen the delay, we would have changed the plan." },
@@ -68,12 +87,16 @@ export const unit34: UnitData = {
     { id: "lac4", audio_text: "The error was rectified before the product launch.", options: ["We made a new error during the product launch.", "The error was overlooked after the product launch.", "The error was rectified before the product launch.", "We did not rectify any errors last week."], answer: "The error was rectified before the product launch." },
     { id: "lac5", audio_text: "Upon reflection, I realize we made several wrong decisions.", options: ["Upon reflection, I realize we made several wrong decisions.", "I think we made all correct decisions.", "We will reflect on our decisions tomorrow.", "Reflecting is not necessary for this project."], answer: "Upon reflection, I realize we made several wrong decisions." },
   ],
+
+  // ── OUTPUT: speaking prompts (freer production)
   speaking: {
     level1Prompt: "If we had {input} the issue earlier, we would have {input} the project {input}.",
     level1Placeholder: "Ví dụ: investigated — prevented — delay...",
     level2Situation: "Bạn thuyết trình đánh giá hiệu quả dự án cuối năm. Đóng vai trưởng nhóm thảo luận về sự cố máy chủ: (1) Nói rằng nếu đội ngũ IT phát hiện lỗi sớm hơn, sự cố đã không xảy ra, (2) Nhận lỗi vì đã bỏ sót khâu kiểm tra, (3) Nêu giải pháp đã khắc phục.",
     level2Hint: "If the IT team had detected the system error earlier, the server crash would have been prevented. It was our fault for overlooking the security check. Fortunately, we have rectified the situation now through detailed analysis.",
   },
+
+  // ── GRAMMAR: Inductive (Meaning→Form→CCQ) + vnNote L1
   grammar: {
     title: "Third Conditional — Câu Điều Kiện Loại 3 (Giả Định Quá Khứ)",
     rule: "Câu điều kiện loại 3 dùng để giả định một tình huống trái ngược với thực tế đã xảy ra trong quá khứ. Thường dùng để thể hiện sự hối tiếc hoặc phân tích bài học kinh nghiệm.\n\nCấu trúc:\nIf + S + had + Past Participle (Quá khứ hoàn thành), S + would / could / might + have + Past Participle\n\nVí dụ:\n- 'If I had studied harder, I would have passed the exam.' (Thực tế trong quá khứ: Tôi không học chăm chỉ và tôi đã trượt)\n- 'If we had launched earlier, we could have captured the market.'",
@@ -102,6 +125,8 @@ export const unit34: UnitData = {
       explanation: "Chỉ có câu điều kiện loại 3 ('had hired' và 'would have avoided') mới diễn tả tình huống giả định trái ngược hoàn toàn với quá khứ thực tế (thực tế chúng ta đã không thuê tester và đã gặp lỗi).",
     },
   },
+
+  // ── EXERCISES_INPUT: practiceQuiz (active recall)
   practiceQuiz: [
     { id: "pq1", type: "multiple-choice", question: "Chọn dạng đúng: 'If you ___ me, I would have helped you rectify the mistake.'", options: ["tell", "told", "had told", "would have told"], answer: "had told" },
     { id: "pq2", type: "multiple-choice", question: "Chọn vế sau đúng: 'If the team had worked together, we ___ the deadline.'", options: ["would meet", "will meet", "would have met", "had met"], answer: "would have met" },
@@ -109,6 +134,8 @@ export const unit34: UnitData = {
     { id: "pq4", type: "multiple-choice", question: "Chọn từ điền: 'Upon ___, I realized we made a serious error.'", options: ["evaluation", "reflection", "fault", "analysis"], answer: "reflection" },
     { id: "pq5", type: "cloze", question: "Điền: 'If the software had been tested, the crash ___ (prevent/bị động) .'", answer: "would have been prevented" },
   ],
+
+  // ── EXERCISES_INPUT: matching
   matchingExercise: {
     title: "Nối từ vựng hối tiếc và đánh giá với nghĩa đúng",
     pairs: [
@@ -119,6 +146,8 @@ export const unit34: UnitData = {
       { left: "complication", right: "sự rắc rối phức tạp" },
     ],
   },
+
+  // ── OUTPUT: practiceTranslate (VN→EN ≥3) + speaking (level1/2)
   practiceTranslate: [
     {
       id: "pt-1",
@@ -137,6 +166,8 @@ export const unit34: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: sentenceCorrection
   sentenceCorrectionExercises: [
     {
       id: "sc34-1",
@@ -155,6 +186,8 @@ export const unit34: UnitData = {
   ],
 
 
+
+  // ── EXERCISES_INPUT: listenAndArrange
   listenAndArrangeExercises: [
     {
       id: "la34-1",
@@ -173,6 +206,8 @@ export const unit34: UnitData = {
   ],
 
 
+
+  // ── EXERCISES_INPUT: wordBank
   wordBankExercises: [
     {
       id: "wb1",
@@ -194,11 +229,15 @@ export const unit34: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: scramble
   scrambleExercises: [
     { id: "s34-1", prompt_vn: "Nếu chúng ta phân tích rủi ro, chúng ta đã tránh được sai lầm.", words: ["If", "we", "had", "analyzed", "the", "risks", ",", "we", "would", "have", "avoided", "the", "mistake", "."], answer: "If we had analyzed the risks , we would have avoided the mistake ." },
     { id: "s34-2", prompt_vn: "Đó không phải lỗi của tôi khi trang web bị sập.", words: ["It", "was", "not", "my", "fault", "that", "the", "website", "crashed", "."], answer: "It was not my fault that the website crashed ." },
     { id: "s34-3", prompt_vn: "Chúng tôi đã có thể sửa lỗi đó sớm hơn.", words: ["We", "could", "have", "rectified", "that", "error", "much", "earlier", "."], answer: "We could have rectified that error much earlier ." },
   ],
+
+  // ── REVIEW: Final quiz ≥5 (retrieval practice)
   quiz: [
     { id: "fq1", type: "multiple-choice", question: "Chọn dạng đúng: 'He might have got the job if he ___ his speaking skills.'", options: ["improved", "had improved", "would improve", "has improved"], answer: "had improved" },
     { id: "fq2", type: "cloze", question: "Điền từ: 'We apologize for the human ___ (sai sót) in this report.'", answer: "error" },
@@ -213,11 +252,15 @@ export const unit34: UnitData = {
     { id: "q-ex6", type: "multiple-choice", question: "'I shouldn't have said that.' nghĩa là:", options: ["Tôi không nên nói điều đó (tương lai)", "Tôi hối tiếc đã nói điều đó", "Tôi sẽ không nói điều đó", "Tôi không biết nói gì"], answer: "Tôi hối tiếc đã nói điều đó" },
     { id: "q-ex7", type: "multiple-choice", question: "'If only I hadn't missed the bus!' — cảm xúc chính:", options: ["Vui mừng", "Tiếc nuối về quá khứ", "Hy vọng tương lai", "Lo lắng"], answer: "Tiếc nuối về quá khứ" },
   ],
+
+  // ── REVIEW: Exit quiz + cumulativeReview (spiral) + reading (B1+)
   cumulativeReviewQuestions: [
     { id: "cr34-1", question: "Ôn tập Unit 33 — Chọn dạng đúng: 'If I were you, I ___ in that business venture.'", options: ["will invest", "would invest", "invested", "would have invested"], answer: "would invest", type: "multiple-choice" },
     { id: "cr34-2", question: "Ôn tập Unit 32 — Điền: 'By 2030, scientists ___ (develop) sustainable energy.'", options: [], answer: "will have developed", type: "cloze" },
     { id: "cr34-3", question: "Ôn tập Unit 31 — Điền động từ: 'I recommend that he ___ (xác nhận) the scheduled meeting.'", options: ["confirms", "confirm", "confirming", "to confirm"], answer: "confirm", type: "multiple-choice" },
   ],
+
+  // ── FLUENCY: pronunciationFocus
   pronunciationFocus: {
     phoneme: "had've /hæd.əv/",
     description: "Had have (third conditional) — nối âm phức tạp nhất",
@@ -230,6 +273,8 @@ export const unit34: UnitData = {
     ],
   },
 
+
+  // ── FLUENCY: fluencyDrill ≥5 (Nation Strand 4 automaticity)
   fluencyDrill: {
     items: [
       { en: "If we had known, we would have helped", vn: "Nếu chúng tôi biết, chúng tôi đã giúp rồi" },
@@ -242,6 +287,8 @@ export const unit34: UnitData = {
       { en: "We conducted a thorough project evaluation", vn: "Chúng tôi đã thực hiện đánh giá dự án kỹ lưỡng" },
     ],
   },
+
+  // ── REVIEW: Reading passage for skills integration
   readingPassage: {
     id: "unit34-reading-1",
     title: "Lessons Learned",
@@ -309,6 +356,8 @@ export const unit34: UnitData = {
       },
     ],
   },
+
+  // ── OUTPUT: shadowing
   shadowingVideoId: "sTpMgHbL6GU",
 };
 

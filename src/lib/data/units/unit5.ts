@@ -1,5 +1,12 @@
 import { UnitData } from "@/components/learn/UnitTemplate";
 
+
+// ─────────────────────────────────────────────────────────────────────────────
+// UNIT-5 — Free Time & Hobbies  (A1)
+// Standardized header + section comments per lesson-blueprint.ts (CONTENT_BLOCK_ORDER)
+// + lesson-center-reference.ts (ESA Engage/Study/Activate, CELTA, Nation, CLT VN)
+// Gold sample: src/lib/data/units/unit1.ts — field order meta→hook→warmup→vocab→grammar→exercises→dialogues→fluency→output→review
+// ─────────────────────────────────────────────────────────────────────────────
 export const unit5: UnitData = {
   unitId: "unit-5",
   title: "Unit 5: Free Time & Hobbies",
@@ -8,6 +15,8 @@ export const unit5: UnitData = {
   estimatedTime: 40,
   description: "Học cách nói về sở thích và hoạt động giải trí bằng cấu trúc 'like + V-ing'.",
   badgeName: "Người Năng Động",
+
+  // ── HOOK: situation (real VN context) + learningOutcomes (2–5 can-do) + culturalNote (pragmatic VN↔EN)
   situation: "Bạn tham gia networking event và cần bắt chuyện với người nước ngoài bằng cách nói về sở thích và thời gian rảnh.",
   learningOutcomes: [
     "Nói về sở thích và hoạt động yêu thích bằng tiếng Anh",
@@ -15,12 +24,18 @@ export const unit5: UnitData = {
     "Đề xuất cùng nhau làm một hoạt động"
   ],
   badgeEmoji: "🎮",
+
+  // ── WARMUP: ≥3 short phrases (SRS + prior knowledge activation)
   warmupGreetings: [
     { emoji: "📚", en: "I like reading books.", vn: "Tôi thích đọc sách.", context: "Nói về sở thích cá nhân" },
     { emoji: "⚽", en: "He likes playing football.", vn: "Anh ấy thích chơi bóng đá.", context: "Dùng 'likes' với He/She/It" },
     { emoji: "🎵", en: "What do you like doing?", vn: "Bạn thích làm gì?", context: "Câu hỏi về sở thích" }
   ],
+
+  // ── HOOK (cultural): pragmatic note
   culturalNote: "Người Việt thường hỏi <span class=\"text-emerald-400 font-semibold\">What do you like doing in your free time?</span> hoặc ngắn hơn <span class=\"text-emerald-400 font-semibold\">What are your hobbies?</span>. Cả hai cách đều tự nhiên và lịch sự.",
+
+  // ── VOCABULARY: 8–20 words, pre-teach BEFORE dialogues; l1_interference_vn (A1 100%, B1+ ≥50%)
   vocab: [
     { id: 1, word: "reading", emoji: "📚", phonetic: "/ˈriːdɪŋ/", meaning: "đọc sách", example: "I like reading every night.", example2: "Reading is my favourite hobby.", collocation: "like reading books", audio: "/audio/unit5/reading.mp3" , l1_interference_vn: "⚠️ 'I like reading' (V-ing sau like) — không phải 'I like read'. Lỗi cực phổ biến." },
     { id: 2, word: "listening to music", emoji: "🎵", phonetic: "/ˈlɪsənɪŋ tə ˈmjuːzɪk/", meaning: "nghe nhạc", example: "She likes listening to music.", example2: "I enjoy listening to music while studying.", collocation: "listen to music / pop music", audio: "/audio/unit5/listening_to_music.mp3" , l1_interference_vn: "⚠️ 'Listen TO music' — không quên giới từ 'to'. Hay bỏ: 'listen music' — sai." },
@@ -35,6 +50,8 @@ export const unit5: UnitData = {
     { id: 11, word: "photography", emoji: "📷", phonetic: "/fəˈtɒɡrəfi/", meaning: "chụp ảnh", example: "He likes photography on weekends.", example2: "Photography is her main hobby.", collocation: "enjoy photography", audio: "/audio/unit5/photography.mp3" , l1_interference_vn: "⚠️ Stress: pho-TOG-ra-phy (âm 2). 4 âm tiết. Người Việt hay stress âm 1." },
     { id: 12, word: "watching movies", emoji: "🎬", phonetic: "/ˈwɒtʃɪŋ ˈmuːviz/", meaning: "xem phim", example: "I like watching movies on Friday nights.", example2: "We enjoy watching movies together at home.", collocation: "love watching movies", audio: "/audio/unit5/watching_movies.mp3", l1_interference_vn: "⚠️ 'Watch movies' (tại nhà) vs 'see a movie' (ở rạp). 'Watching' sau like/love/enjoy trong câu thói quen." },
   ],
+
+  // ── DIALOGUES: ≥1 dialogue AFTER vocab (98% coverage)
   dialogues: [
     {
       id: 1,
@@ -63,6 +80,8 @@ export const unit5: UnitData = {
       ]
     },
   ],
+
+  // ── EXERCISES_INPUT: listenAndChoose ≥5 (controlled practice)
   listenAndChoose: [
     { id: "lac1", audio_text: "I like reading books", options: ["I like cooking food", "I like reading books", "I like playing games", "I like swimming"], answer: "I like reading books" },
     { id: "lac2", audio_text: "She likes dancing", options: ["She likes singing", "He likes dancing", "She likes dancing", "She likes drawing"], answer: "She likes dancing" },
@@ -70,12 +89,16 @@ export const unit5: UnitData = {
     { id: "lac4", audio_text: "Do you like swimming", options: ["Do you like cooking", "Do you like swimming", "Does she like swimming", "Do you like running"], answer: "Do you like swimming" },
     { id: "lac5", audio_text: "He likes playing football on weekends", options: ["He likes playing football every day", "She likes playing football on weekends", "He likes playing football on weekends", "He likes watching football on weekends"], answer: "He likes playing football on weekends" },
   ],
+
+  // ── OUTPUT: speaking prompts (freer production)
   speaking: {
     level1Prompt: "I like {input} in my free time.",
     level1Placeholder: "Ví dụ: reading, swimming, cooking...",
     level2Situation: "Bạn đang trò chuyện với một người bạn ngoại quốc về sở thích. Kể cho họ nghe bạn thích làm gì, khi nào và tại sao.",
     level2Hint: "I like [sở thích] in my free time. I also enjoy [sở thích khác]. My favourite hobby is [sở thích yêu thích nhất] because [lý do].",
   },
+
+  // ── GRAMMAR: Inductive (Meaning→Form→CCQ) + vnNote L1
   grammar: {
     title: "like + V-ing — Diễn đạt sở thích",
     rule: "I/You/We/They like + V-ing  |  He/She/It likes + V-ing",
@@ -103,6 +126,8 @@ export const unit5: UnitData = {
       answer: "She likes swimming.",
     },
   },
+
+  // ── EXERCISES_INPUT: matching
   matchingExercise: {
     title: "Nối sở thích với nghĩa tiếng Việt",
     pairs: [
@@ -113,17 +138,23 @@ export const unit5: UnitData = {
       { left: "traveling", right: "du lịch" },
     ],
   },
+
+  // ── EXERCISES_INPUT: practiceQuiz (active recall)
   practiceQuiz: [
     { id: "pq1", question: "Chọn dạng đúng: 'He ___ football every day.'", options: ["like playing", "likes playing", "likes play", "like play"], answer: "likes playing", type: "multiple-choice" },
     { id: "pq2", question: "'I like cooking.' — Từ 'cooking' là gì?", options: ["Tính từ", "Danh từ", "Động từ dạng -ing", "Trạng từ"], answer: "Động từ dạng -ing", type: "multiple-choice" },
     { id: "pq3", question: "Điền từ còn thiếu: 'She ___ dancing very much.'", options: [], answer: "likes", type: "cloze" },
   ],
 
+
+  // ── OUTPUT: practiceTranslate (VN→EN ≥3) + speaking (level1/2)
   practiceTranslate: [
     { id: "pt5-1", prompt_vn: "Tôi thích đọc sách vào cuối tuần.", answer: "I like reading books at the weekend." },
     { id: "pt5-2", prompt_vn: "Anh ấy không thích xem phim.", answer: "He doesn't like watching movies." },
     { id: "pt5-3", prompt_vn: "Bạn thích làm gì vào thời gian rảnh?", answer: "What do you like doing in your free time?" },
   ],
+
+  // ── REVIEW: Final quiz ≥5 (retrieval practice)
   quiz: [
     { id: "q1", question: "Câu nào đúng với chủ ngữ 'He'?", options: ["He like reading.", "He likes reading.", "He liking reading.", "He liked reading."], answer: "He likes reading.", type: "multiple-choice",
       explanation_vn: "'He' → thêm '-s': 'likes'. Sau 'like/likes' dùng V-ing: 'likes reading'. 'He liking' thiếu động từ 'to be'." },
@@ -136,6 +167,8 @@ export const unit5: UnitData = {
     { id: "q6", question: "Tôi thích chụp ảnh vào cuối tuần.", options: [], answer: "I like taking photos on weekends.", type: "translate" },
     { id: "q7", question: "Bạn có thích du lịch không?", options: [], answer: "Do you like traveling?", type: "translate" },
   ],
+
+  // ── EXERCISES_INPUT: listenAndArrange
   listenAndArrangeExercises: [
     {
       id: "la5-1",
@@ -154,6 +187,8 @@ export const unit5: UnitData = {
   ],
 
 
+
+  // ── EXERCISES_INPUT: wordBank
   wordBankExercises: [
     {
       id: "wb1",
@@ -175,6 +210,8 @@ export const unit5: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: sentenceCorrection
   sentenceCorrectionExercises: [
     {
       id: "sc5-1",
@@ -192,6 +229,8 @@ export const unit5: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: scramble
   scrambleExercises: [
     {
       id: "s5-1",
@@ -212,6 +251,8 @@ export const unit5: UnitData = {
       answer: "We like listening to music .",
     },
   ],
+
+  // ── REVIEW: Exit quiz + cumulativeReview (spiral) + reading (B1+)
   cumulativeReviewQuestions: [
     {
       id: "cr5-1",
@@ -236,6 +277,8 @@ export const unit5: UnitData = {
     },
   ],
 
+
+  // ── FLUENCY: pronunciationFocus
   pronunciationFocus: {
     phoneme: "/r/",
     description: "Âm /r/ tiếng Anh — không cuộn lưỡi, phát âm từ cuống họng",
@@ -249,6 +292,8 @@ export const unit5: UnitData = {
     ],
   },
 
+
+  // ── FLUENCY: fluencyDrill ≥5 (Nation Strand 4 automaticity)
   fluencyDrill: {
     items: [
       { en: "I like reading", vn: "Tôi thích đọc sách" },
@@ -262,6 +307,8 @@ export const unit5: UnitData = {
     ],
   },
 
+
+  // ── REVIEW: Reading passage for skills integration
   readingPassage: {
     id: "unit5-reading-1",
     title: "My Hobbies",
@@ -321,6 +368,8 @@ export const unit5: UnitData = {
       },
     ],
   },
+
+  // ── OUTPUT: shadowing
   shadowingVideoId: "EDFWbC74Sdc", // BBC Learning English — Numbers 1-100
 };
 

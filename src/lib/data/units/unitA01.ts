@@ -1,5 +1,12 @@
 import { UnitData } from "@/components/learn/UnitTemplate";
 
+
+// ─────────────────────────────────────────────────────────────────────────────
+// UNIT-A0-1 — Bảng Chữ Cái & Âm Cơ Bản  (A0)
+// Standardized header + section comments per lesson-blueprint.ts (CONTENT_BLOCK_ORDER)
+// + lesson-center-reference.ts (ESA Engage/Study/Activate, CELTA, Nation, CLT VN)
+// Gold sample: src/lib/data/units/unit1.ts — field order meta→hook→warmup→vocab→grammar→exercises→dialogues→fluency→output→review
+// ─────────────────────────────────────────────────────────────────────────────
 // ─────────────────────────────────────────────────────────────────────────────
 // UNIT A0-1 — Bảng Chữ Cái & Âm Cơ Bản (The Alphabet & Basic Sounds)
 // Level 0 / Foundation — Pre-CEFR A0  [FIRST UNIT — Entry Point]
@@ -27,6 +34,8 @@ export const unitA01: UnitData = {
   badgeEmoji: "🔤",
 
   // ── CONTEXT: Real situation to create need-to-learn ───────────────────────
+
+  // ── HOOK: situation (real VN context) + learningOutcomes (2–5 can-do) + culturalNote (pragmatic VN↔EN)
   situation:
     "Bạn đến một công ty nước ngoài để nộp hồ sơ. Nhân viên lễ tân nhìn lên và hỏi: \"Can you spell your name, please?\" Bạn cần biết cách phát âm từng chữ cái tiếng Anh để đánh vần tên mình.",
 
@@ -36,6 +45,8 @@ export const unitA01: UnitData = {
     "Giới thiệu bản thân bằng câu chuẩn: My name IS... / I AM from...",
   ],
 
+
+  // ── HOOK (cultural): pragmatic note
   culturalNote:
     '<strong class="text-emerald-400">Bảng 26 chữ cái tiếng Anh</strong> — cách đọc gần với tiếng Việt:<br/><br/>' +
     '<span class="font-mono text-sm leading-loose">' +
@@ -48,6 +59,8 @@ export const unitA01: UnitData = {
 
 
   // ── WARMUP: 3 cards to activate prior knowledge ───────────────────────────
+
+  // ── WARMUP: ≥3 short phrases (SRS + prior knowledge activation)
   warmupGreetings: [
     {
       emoji: "👋",
@@ -72,6 +85,8 @@ export const unitA01: UnitData = {
   // ── VOCABULARY: 10 chunks — all appear in dialogue ────────────────────────
   // ✅ Lewis Lexical Approach: teach CHUNKS not isolated words
   // ✅ All 10 words used in dialogue (i+1 principle)
+
+  // ── VOCABULARY: 8–20 words, pre-teach BEFORE dialogues; l1_interference_vn (A1 100%, B1+ ≥50%)
   vocab: [
     {
       id: 1,
@@ -197,6 +212,8 @@ export const unitA01: UnitData = {
 
   // ── GRAMMAR: Verb BE — Meaning → Form → Pronunciation (CELTA order) ───────
   // ✅ Ellis: explicit instruction with L1 contrast for adult learners
+
+  // ── GRAMMAR: Inductive (Meaning→Form→CCQ) + vnNote L1
   grammar: {
     title: "Verb BE — \"My name IS...\" (Câu giới thiệu đầu tiên)",
     rule: "Tiếng Anh BẮT BUỘC phải có động từ. Câu đơn giản nhất: My name IS [tên].",
@@ -249,6 +266,8 @@ export const unitA01: UnitData = {
   },
 
   // ── MATCHING: Chunks-based, not letter-matching ───────────────────────────
+
+  // ── EXERCISES_INPUT: matching
   matchingExercise: {
     title: "Nối cụm từ với nghĩa tiếng Việt",
     pairs: [
@@ -261,6 +280,8 @@ export const unitA01: UnitData = {
   },
 
   // ── PRACTICE QUIZ: Controlled accuracy practice ───────────────────────────
+
+  // ── EXERCISES_INPUT: practiceQuiz (active recall)
   practiceQuiz: [
     {
       id: "pq1-1",
@@ -304,6 +325,8 @@ export const unitA01: UnitData = {
 
   // ── PRACTICE TRANSLATE: Recall tasks (harder than recognition) ────────────
   // ✅ Ellis: Output forces learners to process language more precisely
+
+  // ── OUTPUT: practiceTranslate (VN→EN ≥3) + speaking (level1/2)
   practiceTranslate: [
     {
       id: "pt1-1",
@@ -323,6 +346,8 @@ export const unitA01: UnitData = {
   ],
 
   // ── SCRAMBLE: Sentence building with target chunks ─────────────────────────
+
+  // ── EXERCISES_INPUT: sentenceCorrection
   sentenceCorrectionExercises: [
     {
       id: "sc-A01-1",
@@ -341,6 +366,8 @@ export const unitA01: UnitData = {
   ],
 
 
+
+  // ── EXERCISES_INPUT: listenAndArrange
   listenAndArrangeExercises: [
     {
       id: "laA01-1",
@@ -359,6 +386,8 @@ export const unitA01: UnitData = {
   ],
 
 
+
+  // ── EXERCISES_INPUT: wordBank
   wordBankExercises: [
     {
       id: "wb1",
@@ -380,6 +409,8 @@ export const unitA01: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: scramble
   scrambleExercises: [
     {
       id: "s1-1",
@@ -404,6 +435,8 @@ export const unitA01: UnitData = {
   // ── DIALOGUE: Context-rich — ALL 10 vocab words appear ───────────────────
   // ✅ CELTA: Language presented IN CONTEXT (dialogue before grammar isolated)
   // ✅ i+1: 100% of words are from vocab list — zero unknown words
+
+  // ── DIALOGUES: ≥1 dialogue AFTER vocab (98% coverage)
   dialogues: [
     {
       id: 1,
@@ -523,6 +556,8 @@ export const unitA01: UnitData = {
   ],
 
   // ── LISTEN & CHOOSE: Discrimination practice ──────────────────────────────
+
+  // ── EXERCISES_INPUT: listenAndChoose ≥5 (controlled practice)
   listenAndChoose: [
     {
       id: "lac1-1",
@@ -564,6 +599,8 @@ export const unitA01: UnitData = {
   // ── SHADOWING: Fluency drill — key chunks from dialogue ──────────────────
   // ✅ Nation: Fluency strand — speed and automaticity
   // ✅ Pronunciation focus: /θ/, final /t/, /iː/ vowels
+
+  // ── FLUENCY: pronunciationFocus
   pronunciationFocus: {
     phoneme: "/θ/",
     description: "Âm TH vô thanh — lưỡi nhô ra",
@@ -575,6 +612,8 @@ export const unitA01: UnitData = {
     ],
   },
 
+
+  // ── FLUENCY: fluencyDrill ≥5 (Nation Strand 4 automaticity)
   fluencyDrill: {
     title: "Luyện nói nhanh — 7 câu chủ chốt",
     items: [
@@ -617,6 +656,8 @@ export const unitA01: UnitData = {
   },
 
   // ── SPEAKING: Free production tasks ───────────────────────────────────────
+
+  // ── OUTPUT: speaking prompts (freer production)
   speaking: {
     level1Prompt: "My name is {input}. Nice to meet you!",
     level1Placeholder: "Nhập tên của bạn...",
@@ -629,6 +670,8 @@ export const unitA01: UnitData = {
   // ── QUIZ: Mixed types — MCQ + Cloze + Translate (7 items) ────────────────
   // ✅ Spaced retrieval: immediate testing within lesson
   // ✅ Wrong words → FSRS schedules for later review
+
+  // ── REVIEW: Final quiz ≥5 (retrieval practice)
   quiz: [
     {
       id: "q1-1",
@@ -696,6 +739,8 @@ export const unitA01: UnitData = {
       type: "translate",
     },
   ],
+
+  // ── REVIEW: Reading passage for skills integration
   readingPassage: {
     id: "unitA01-reading-1",
     title: "My Name",
@@ -740,6 +785,8 @@ export const unitA01: UnitData = {
       },
     ],
   },
+
+  // ── REVIEW: Exit quiz + cumulativeReview (spiral) + reading (B1+)
   cumulativeReviewQuestions: [
     {
       id: "uA01-cr-1",
@@ -774,6 +821,8 @@ export const unitA01: UnitData = {
       explanation_vn: "'Goodbye!' là lời tạm biệt phổ biến. Bạn cũng có thể nói 'Bye!' hay 'See you later!'",
     },
   ],
+
+  // ── OUTPUT: shadowing
   shadowingVideoId: "sNvmqN2MBBo", // BBC Learning English — How to Greet People in English
 };
 

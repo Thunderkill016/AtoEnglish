@@ -183,8 +183,9 @@
 | Time (UTC) | Task | Plan summary | Outcome |
 |------------|------|--------------|---------|
 | 2026-06-26 | TASK-044 | PHASE1: search_memory + read AGENTS/BACKLOG/PLAN/ROADMAP + grep e2e/placement/helpers/global/playwright; PHASE2 update PLAN+BACKLOG in_progress; PHASE3 minimal stabilize: networkidle + reset isolate in placement-test.spec; lint+test | in_progress |
-| 2026-06-26 | TASK-059 | PHASE1: search_memory + read AGENTS+BACKLOG+PLAN+ROADMAP+CONTENT§6-7+lesson-blueprint+center-ref+learning-flow+content-std+unit1(gold)+count low units(2-12); PHASE2 update PLAN+BACKLOG in_progress, refill skip (>=2 ready); PHASE3 min=3 + add 1 spiral cr each for unit2-12; lint+tsc+169u+50 content-std+audit pass; commit+push | done — [pending SHA] |
+| 2026-06-26 | TASK-059 | PHASE1: search_memory + read AGENTS+BACKLOG+PLAN+ROADMAP+CONTENT§6-7+lesson-blueprint+center-ref+learning-flow+content-std+unit1(gold)+count low units(2-12); PHASE2 update PLAN+BACKLOG in_progress, refill skip (>=2 ready); PHASE3 min=3 + add 1 spiral cr each for unit2-12; lint+tsc+169u+50 content-std+audit pass; commit+push | done — 81e06b4 |
 | 2026-06-26 | TASK-060 | PHASE1 research(AGENTS+CONTENT_STYLE+blueprint+center-ref+unit1+unit24/31+content-std+grep L1), PHASE2 update PLAN/BACKLOG in_progress, PHASE3: header comments + L1 notes (6+ per) for unit24/31 per ESA/CELTA/CLT VN, 75%/100% L1; all gates pass; commit 5df0678 + git-push | done — 5df0678 |
+| 2026-06-26 | TASK-061 | PHASE1 (memory+AGENTS+BACKLOG+PLAN+CONTENT§6-7+blueprint+center+flow+unit1+grep), PHASE2 PLAN/BACKLOG update 061 in_progress (ready>2 skip refill), PHASE3: node script added header+ ── HOOK/WARMUP/VOCAB/... comments to 49 units (50 total have HOOK); field visibility per blueprint; tsc+lint+169tests+content-std50/50+audit pass; log+commit+push | done |
 | 2026-06-26T01:36Z | TASK-001/002 | P0 ops: migration blocked, deploy OK | autopilot armed |
 | 2026-06-26T08:55Z | TASK-001/011 | db push migration + E2E B1 unlock | 2 e2e pass |
 | 2026-06-26 | TASK-021 | Sync docs: placement, 50u, header, autopilot | done — 3d36d2f (docs commit); f9f21a1 (status) |
@@ -452,3 +453,21 @@
 - Commit chỉ content + docs agent; giữ minimal đúng scope (L1 for these 2).
 - Follow blueprint: map vocab → Study/Clarification lexis (center ref).
 **Done khi**: unit24 + unit31 đạt >=50% L1 (6/12+), test:content-standard pass 0 violations for them (and others unchanged); lint+unit tests + tsc clean; 1 commit + push via git-push; backlog done + entry SHA; autonomous, no user asked.
+
+### TASK-061 — Unit files: comment blocks theo blueprint (như unit1)
+**Mục tiêu**: Chuẩn hóa 50 unit*.ts (A0 + A1–B2) theo "cách xây nội dung = cách học" 1 khung: thêm top header block (giống unit1: UNIT X — title (level) + research refs) + nội bộ ── HOOK / WARMUP / VOCABULARY / GRAMMAR / DIALOGUES / FLUENCY / OUTPUT / REVIEW (khớp LESSON_BLUEPRINT CONTENT_BLOCK_ORDER + lesson-center-reference ESA/CELTA/Nation/CLT VN mapping). Field property order trong object bám unit1 gold (meta → hook fields → warmup → vocab → grammar → exercises → dialogues → fluency → output → review). Đạt `grep "── HOOK" ≥45`; gates pass. Không đổi nội dung data, logic, flow, chỉ comment + order cosmetic. 
+**Bước thực hiện**:
+1. PHASE1: search_memory("TASK-061" + "blueprint" + "unit header") (sim empty) + read AGENTS.md (ALWAYS), AGENT_BACKLOG/PLAN/ROADMAP, CONTENT_STYLE.md §6–7, lesson-blueprint.ts (CONTENT_BLOCK_ORDER + formatBlueprintChecklist), lesson-center-reference.ts (map ESA), learning-flow.ts, unit1.ts (gold header+comments+field order), content-standard.ts, count 50 units, grep current "── HOOK" (only unit1), sample unit2/unitA01/unit33 for variation; run scripts/print-lesson-blueprint.mjs .
+2. PHASE2: update AGENT_PLAN.md (this section) + BACKLOG (TASK-061 status `in_progress`); ready count check (several UI+062 ready >2, skip refill unless low); note 058 in_progress but mandate single task=061.
+3. PHASE3: minimal impl — use safe string-based edit (node fs script idempotent: if (!has "── HOOK") { insert top header modeled unit1 using title/level; insert "  // ── XXX: ..." before key fields per blueprint; reorder top keys minimally if feasible without syntax risk). Target all 49 + ensure unit1 stays. Only touch src/lib/data/units/*.ts + agent files.
+4. Run gates bắt buộc: npx tsc --noEmit && npm run lint && npm run test && npm run test:content-standard && bash scripts/audit-lesson-content.sh
+5. Update BACKLOG (in_progress → done + Nhật ký + SHA), PLAN log table. Write logs/agent/ timestamp_TASK-061.log
+6. git pull --rebase; git add src/lib/data/units/*.ts AGENT_BACKLOG.md AGENT_PLAN.md; commit "chore(content): standardize unit*.ts header + blueprint section comments (── HOOK etc) matching unit1 + lesson-blueprint (TASK-061)"; `bash scripts/git-push.sh main`.
+**Rủi ro**:
+- Bulk edit 50 files break syntax (comma, indent) → script MUST use precise unique anchors + test parse post (tsc will catch); do in one go, verify count before/after.
+- Some units (A0, recent) already have partial headers/comments (unitA0x, unit24/31) → script skips if "── HOOK" present; only augment to have the specific blueprint ones.
+- Field reorder may be non-trivial for objects with many keys → minimal: add comments first (satisfies done-when grep), reorder only top 10 meta/hook fields if safe; prioritize comments.
+- test:content-standard may catch unrelated if run before other tasks; but since 059/060/057 done, should be clean.
+- No secret needed; pure content comments. Self-debug from tsc/lint/test output.
+- If fail 2x on gate → set blocked + lý do.
+**Done khi**: >=45 files contain `── HOOK` (verified by grep); all 50 unit files have consistent header+section comments; field order in unit1 gold + at least major units close; `npm run lint && npm run test` + content-std + audit all pass 50/50; 1 commit + push via git-push.sh main; BACKLOG status=done + entry with SHA; no user asked; autonomous.

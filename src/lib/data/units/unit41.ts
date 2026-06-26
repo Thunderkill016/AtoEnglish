@@ -1,5 +1,12 @@
 import { UnitData } from "@/components/learn/UnitTemplate";
 
+
+// ─────────────────────────────────────────────────────────────────────────────
+// UNIT-41 — IELTS & TOEIC Topics  (B2)
+// Standardized header + section comments per lesson-blueprint.ts (CONTENT_BLOCK_ORDER)
+// + lesson-center-reference.ts (ESA Engage/Study/Activate, CELTA, Nation, CLT VN)
+// Gold sample: src/lib/data/units/unit1.ts — field order meta→hook→warmup→vocab→grammar→exercises→dialogues→fluency→output→review
+// ─────────────────────────────────────────────────────────────────────────────
 export const unit41: UnitData = {
   unitId: "unit-41",
   title: "Unit 41: IELTS & TOEIC Topics",
@@ -9,18 +16,26 @@ export const unit41: UnitData = {
   description: "Academic Vocabulary — 20 từ vựng học thuật cao cấp bao trùm 5 chủ đề IELTS phổ biến nhất: môi trường, công nghệ, giáo dục, y tế và xã hội. Cực kỳ quan trọng để chinh phục IELTS 6.5+ và TOEIC 800+.",
   badgeName: "Chuyên Gia Học Thuật",
   badgeEmoji: "🏫",
+
+  // ── HOOK: situation (real VN context) + learningOutcomes (2–5 can-do) + culturalNote (pragmatic VN↔EN)
   situation: "Bạn tham gia một buổi thảo luận chuyên sâu về tác động của chuyển đổi số và đô thị hóa đối với sức khỏe cộng đồng và môi trường. Bạn cần sử dụng từ vựng học thuật chuẩn CEFR B2 để diễn đạt các ý tưởng phức tạp một cách trôi chảy.",
   learningOutcomes: [
     "Sử dụng thành thạo từ vựng học thuật cao cấp thuộc 5 chủ đề IELTS phổ biến",
     "Kết hợp linh hoạt các cấu trúc ngữ pháp B2 để thảo luận các vấn đề vĩ mô",
     "Nâng cao khả năng đọc hiểu và nghe hiểu văn bản học thuật phức tạp",
   ],
+
+  // ── HOOK (cultural): pragmatic note
   culturalNote: 'Trong các kỳ thi như IELTS và TOEIC, để đạt điểm từ vựng (Lexical Resource) từ 6.5 trở lên, bạn phải chứng minh khả năng sử dụng <span class="text-emerald-400">"less common lexical items"</span> (từ vựng ít thông dụng) và <span class="text-emerald-400">"collocations"</span> chuẩn xác. Thay vì dùng các từ đơn giản như "city growth", hãy dùng <span class="text-emerald-400">"urbanization"</span>; thay vì nói "dirty environment", hãy dùng <span class="text-emerald-400">"environmental degradation"</span>.',
+
+  // ── WARMUP: ≥3 short phrases (SRS + prior knowledge activation)
   warmupGreetings: [
     { emoji: "🌱", en: "Renewable energy is crucial to prevent environmental degradation.", vn: "Năng lượng tái tạo là cực kỳ quan trọng để ngăn chặn sự suy thoái môi trường.", context: "renewable energy & environmental degradation" },
     { emoji: "🤖", en: "Artificial intelligence has accelerated digital transformation globally.", vn: "Trí tuệ nhân tạo đã đẩy nhanh quá trình chuyển đổi số trên toàn cầu.", context: "AI & digital transformation" },
     { emoji: "🏫", en: "Socio-economic factors heavily influence academic performance.", vn: "Các yếu tố kinh tế xã hội ảnh hưởng nặng nề đến kết quả học tập.", context: "socio-economic & academic performance" },
   ],
+
+  // ── VOCABULARY: 8–20 words, pre-teach BEFORE dialogues; l1_interference_vn (A1 100%, B1+ ≥50%)
   vocab: [
     { id: 1, word: "environmental degradation", emoji: "🍂", phonetic: "/ɪnˌvaɪrənˈmentəl ˌdeɡrəˈdeɪʃən/", meaning: "sự suy thoái môi trường", example: "Urbanization has led to severe environmental degradation.", example2: "We must implement policies to slow down environmental degradation.", collocation: "prevent environmental degradation / cause environmental degradation / combat environmental degradation", audio: "/audio/unit41/environmental_degradation.mp3" },
     { id: 2, word: "deforestation", emoji: "🪓", phonetic: "/diːˌfɒrɪˈsteɪʃən/", meaning: "nạn phá rừng", example: "Deforestation threatens the habitats of many endangered species.", example2: "The government is trying to combat illegal deforestation.", collocation: "illegal deforestation / halt deforestation / cause deforestation", audio: "/audio/unit41/deforestation.mp3" },
@@ -39,6 +54,8 @@ export const unit41: UnitData = {
     { id: 15, word: "socio-economic", emoji: "📊", phonetic: "/ˌsəʊsiəʊˌiːkəˈnɒmɪk/", meaning: "thuộc kinh tế xã hội", example: "Socio-economic background should not limit education opportunities.", example2: "We analyzed the socio-economic impact of the pandemic.", collocation: "socio-economic development / socio-economic status / socio-economic factors", audio: "/audio/unit41/socio_economic.mp3" },
     { id: 16, word: "infrastructure", emoji: "🛣️", phonetic: "/ˈɪnfrəˌstrʌktʃər/", meaning: "cơ sở hạ tầng", example: "The country needs to upgrade its transport infrastructure.", example2: "Building internet infrastructure in rural areas is essential.", collocation: "transport infrastructure / public infrastructure / digital infrastructure", audio: "/audio/unit41/infrastructure.mp3" },
   ],
+
+  // ── DIALOGUES: ≥1 dialogue AFTER vocab (98% coverage)
   dialogues: [
     {
       id: 1,
@@ -65,6 +82,8 @@ export const unit41: UnitData = {
       ],
     },
   ],
+
+  // ── EXERCISES_INPUT: listenAndChoose ≥5 (controlled practice)
   listenAndChoose: [
     { id: "lac1", audio_text: "Urbanization has led to severe environmental degradation.", options: ["Urbanization has improved the environment.", "Urbanization has led to severe environmental degradation.", "We must stop urbanization in rural areas.", "Environmental degradation has no connection to urbanization."], answer: "Urbanization has led to severe environmental degradation." },
     { id: "lac2", audio_text: "We should invest more in renewable energy sources.", options: ["We should stop investing in renewable energy.", "We should invest more in renewable energy sources.", "Coal and oil are cheap renewable energy sources.", "Investing in energy is not necessary today."], answer: "We should invest more in renewable energy sources." },
@@ -72,12 +91,16 @@ export const unit41: UnitData = {
     { id: "lac4", audio_text: "Socio-economic background should not limit education opportunities.", options: ["Only rich people should get education opportunities.", "Socio-economic background should not limit education opportunities.", "Education has no connection to economy.", "We need to analyze the socio-economic status of students."], answer: "Socio-economic background should not limit education opportunities." },
     { id: "lac5", audio_text: "Vitamin C helps strengthen your immune system.", options: ["Vitamin C damages your immune system.", "Vitamin C helps strengthen your immune system.", "We need to eat organic food to weaken our body.", "Chronic disease can be cured by vitamins."], answer: "Vitamin C helps strengthen your immune system." },
   ],
+
+  // ── OUTPUT: speaking prompts (freer production)
   speaking: {
     level1Prompt: "To prevent {input}, we must invest in {input} and promote {input}.",
     level1Placeholder: "Ví dụ: environmental degradation — renewable energy — digital transformation...",
     level2Situation: "Bạn đang tham gia buổi thuyết trình thảo luận về phát triển đô thị thông minh. Hãy: (1) Nêu tác động của sự đô thị hóa nhanh chóng, (2) Đề xuất giải pháp năng lượng tái tạo để bảo vệ môi trường, (3) Nhấn mạnh việc nâng cao chất lượng cuộc sống người dân.",
     level2Hint: "Rapid urbanization has put heavy pressure on public infrastructure and caused environmental degradation. To combat this, we should leverage artificial intelligence to optimize resources and invest in renewable energy. This is essential to enhance the physical and mental wellbeing of citizens.",
   },
+
+  // ── GRAMMAR: Inductive (Meaning→Form→CCQ) + vnNote L1
   grammar: {
     title: "B2 Grammar Synthesis in Academic Writing — Tổng Hợp Ngữ Pháp B2 Trong Văn Viết",
     rule: "Tổng hợp các cấu trúc ngữ pháp B2 giúp bạn viết bài luận IELTS Task 2 một cách học thuật, thuyết phục:\n\n1. Second & Third Conditionals (Giả định):\n   → 'If governments had invested in renewable energy, environmental degradation would be less severe now.' (Hỗn hợp)\n2. Advanced Passive (Bị động khách quan):\n   → 'The curriculum is claimed to have been modified to meet student needs.'\n3. Participle Clauses (Mệnh đề phân từ rút gọn):\n   → 'Having implemented digital transformation, the company enhanced its productivity.'\n4. Inversion (Đảo ngữ tạo điểm nhấn):\n   → 'Not only did urbanization cause pollution, but it also threatened biodiversity.'\n5. Cleft Sentences (Câu chẻ nhấn mạnh):\n   → 'It was the rapid automation that eliminated manual labor jobs.'",
@@ -106,6 +129,8 @@ export const unit41: UnitData = {
       explanation: "Đảo ngữ với trợ động từ 'did' + chủ ngữ 'urbanization' + động từ nguyên thể 'cause'.",
     },
   },
+
+  // ── EXERCISES_INPUT: practiceQuiz (active recall)
   practiceQuiz: [
     { id: "pq1", type: "multiple-choice", question: "Chọn từ điền: 'We must halt ___ to protect the rainforest ecosystem.'", options: ["pedagogy", "deforestation", "wellbeing", "automation"], answer: "deforestation" },
     { id: "pq2", type: "multiple-choice", question: "Chọn dạng đúng: 'Not only ___ the software enhance performance, but it also simplified the code.'", options: ["does", "did", "was", "has"], answer: "did" },
@@ -113,6 +138,8 @@ export const unit41: UnitData = {
     { id: "pq4", type: "multiple-choice", question: "Từ nào mô tả tình trạng 'sức khỏe, hạnh phúc'?", options: ["degradation", "wellbeing", "urbanization", "infrastructure"], answer: "wellbeing" },
     { id: "pq5", type: "cloze", question: "Điền dạng đúng của động từ: 'Having ___ (compile) the results, the scientist published the paper.'", answer: "compiled" },
   ],
+
+  // ── EXERCISES_INPUT: matching
   matchingExercise: {
     title: "Nối từ vựng học thuật IELTS với nghĩa đúng",
     pairs: [
@@ -123,6 +150,8 @@ export const unit41: UnitData = {
       { left: "degradation", right: "sự suy thoái" },
     ],
   },
+
+  // ── OUTPUT: practiceTranslate (VN→EN ≥3) + speaking (level1/2)
   practiceTranslate: [
     {
       id: "pt-1",
@@ -141,6 +170,8 @@ export const unit41: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: sentenceCorrection
   sentenceCorrectionExercises: [
     {
       id: "sc41-1",
@@ -159,6 +190,8 @@ export const unit41: UnitData = {
   ],
 
 
+
+  // ── EXERCISES_INPUT: listenAndArrange
   listenAndArrangeExercises: [
     {
       id: "la41-1",
@@ -177,6 +210,8 @@ export const unit41: UnitData = {
   ],
 
 
+
+  // ── EXERCISES_INPUT: wordBank
   wordBankExercises: [
     {
       id: "wb1",
@@ -198,11 +233,15 @@ export const unit41: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: scramble
   scrambleExercises: [
     { id: "s41-1", prompt_vn: "Năng lượng tái tạo là cực kỳ quan trọng cho tương lai.", words: ["Renewable", "energy", "is", "extremely", "important", "for", "the", "future", "."], answer: "Renewable energy is extremely important for the future ." },
     { id: "s41-2", prompt_vn: "Chính sự đô thị hóa nhanh chóng đã làm suy thoái môi trường.", words: ["It", "was", "rapid", "urbanization", "that", "caused", "environmental", "degradation", "."], answer: "It was rapid urbanization that caused environmental degradation ." },
     { id: "s41-3", prompt_vn: "Không những tự động hóa giúp tăng sản lượng, nó còn giảm lỗi.", words: ["Not", "only", "did", "automation", "increase", "output", ",", "it", "also", "reduced", "errors", "."], answer: "Not only did automation increase output , it also reduced errors ." },
   ],
+
+  // ── REVIEW: Final quiz ≥5 (retrieval practice)
   quiz: [
     { id: "fq1", type: "multiple-choice", question: "Chọn từ điền: 'The company is leading the ___ transformation of the banking sector.'", options: ["corporate", "digital", "sustainable", "infrastructure"], answer: "digital" },
     { id: "fq2", type: "cloze", question: "Điền: 'Diabetes is a common ___ (mãn tính) disease.'", answer: "chronic" },
@@ -217,11 +256,15 @@ export const unit41: UnitData = {
     { id: "q-ex6", type: "multiple-choice", question: "TOEIC Part 7 — Reading Comprehension: kỹ năng chính cần:", options: ["Đọc từng từ một", "Skimming và scanning", "Dịch từng câu", "Học thuộc lòng đoạn văn"], answer: "Skimming và scanning" },
     { id: "q-ex7", type: "multiple-choice", question: "'Coherence' trong bài viết nghĩa là:", options: ["Dùng từ vựng phong phú", "Ý tưởng liên kết logic, rõ ràng", "Không có lỗi ngữ pháp", "Dùng nhiều câu dài"], answer: "Ý tưởng liên kết logic, rõ ràng" },
   ],
+
+  // ── REVIEW: Exit quiz + cumulativeReview (spiral) + reading (B1+)
   cumulativeReviewQuestions: [
     { id: "cr41-1", question: "Ôn tập Unit 40 — Chọn từ nối: 'He was late; ___ (do đó) the meeting was delayed.'", options: ["consequently", "nevertheless", "furthermore", "whereas"], answer: "consequently", type: "multiple-choice" },
     { id: "cr41-2", question: "Ôn tập Unit 39 — Điền: 'She ___ have left the office because her keys are here.'", options: [], answer: "can't", type: "cloze" },
     { id: "cr41-3", question: "Ôn tập Unit 38 — Chọn câu chẻ đúng:", options: ["It was the marketing campaign that boosted sales.", "It was the marketing campaign who boosted sales.", "What we need that boosted sales is marketing.", "The marketing campaign it was boosted sales."], answer: "It was the marketing campaign that boosted sales.", type: "multiple-choice" },
   ],
+
+  // ── FLUENCY: pronunciationFocus
   pronunciationFocus: {
     phoneme: "academic /ˌækəˈdɛmɪk/",
     description: "IELTS/academic vocabulary — stress đặc trưng của từ học thuật",
@@ -234,6 +277,8 @@ export const unit41: UnitData = {
     ],
   },
 
+
+  // ── FLUENCY: fluencyDrill ≥5 (Nation Strand 4 automaticity)
   fluencyDrill: {
     items: [
       { en: "Urbanization causes environmental degradation", vn: "Đô thị hóa gây ra sự suy thoái môi trường" },
@@ -246,6 +291,8 @@ export const unit41: UnitData = {
       { en: "Exercise boosts the immune system", vn: "Tập thể dục giúp tăng cường hệ miễn dịch" },
     ],
   },
+
+  // ── REVIEW: Reading passage for skills integration
   readingPassage: {
     id: "unit41-reading-1",
     title: "Understanding IELTS Band Scores",
@@ -306,6 +353,8 @@ export const unit41: UnitData = {
       },
     ],
   },
+
+  // ── OUTPUT: shadowing
   shadowingVideoId: "o0rJkAiqcZs",
 };
 

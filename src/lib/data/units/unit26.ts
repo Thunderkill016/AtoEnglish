@@ -1,5 +1,12 @@
 import { UnitData } from "@/components/learn/UnitTemplate";
 
+
+// ─────────────────────────────────────────────────────────────────────────────
+// UNIT-26 — Likes, Dislikes & Preferences  (B1)
+// Standardized header + section comments per lesson-blueprint.ts (CONTENT_BLOCK_ORDER)
+// + lesson-center-reference.ts (ESA Engage/Study/Activate, CELTA, Nation, CLT VN)
+// Gold sample: src/lib/data/units/unit1.ts — field order meta→hook→warmup→vocab→grammar→exercises→dialogues→fluency→output→review
+// ─────────────────────────────────────────────────────────────────────────────
 export const unit26: UnitData = {
   unitId: "unit-26",
   title: "Unit 26: Likes, Dislikes & Preferences",
@@ -9,18 +16,26 @@ export const unit26: UnitData = {
   description: "Phân biệt Gerund vs Infinitive — enjoy doing vs want to do. Lỗi người Việt cực hay mắc khi nói về sở thích và đề xuất.",
   badgeName: "Người Biết Chọn",
   badgeEmoji: "🎯",
+
+  // ── HOOK: situation (real VN context) + learningOutcomes (2–5 can-do) + culturalNote (pragmatic VN↔EN)
   situation: "Trong cuộc họp dự án, bạn cần đề xuất phương án làm việc: 'I suggest trying a new approach' (NOT suggest to try). 'I would like to present the results' (NOT would like presenting). Sai Gerund/Infinitive → câu sai hoàn toàn.",
   learningOutcomes: [
     "Nắm các động từ luôn đi với Gerund: enjoy, avoid, suggest, consider, mind, finish",
     "Nắm các động từ luôn đi với Infinitive: want, decide, hope, plan, agree, refuse, offer",
     "Phân biệt forget/remember/stop + Gerund vs Infinitive (nghĩa khác nhau hoàn toàn)",
   ],
+
+  // ── HOOK (cultural): pragmatic note
   culturalNote: 'Trong tiếng Anh, <span class="text-emerald-400 font-semibold">Gerund (V-ing)</span> vs <span class="text-emerald-400 font-semibold">Infinitive (to V)</span> là một trong những điểm khó nhất với người Việt — vì tiếng Việt không phân biệt. Mẹo: Động từ liên quan đến <span class="text-emerald-400">quá khứ/thực tế</span> → Gerund. Động từ liên quan đến <span class="text-emerald-400">tương lai/mục tiêu</span> → Infinitive.',
+
+  // ── WARMUP: ≥3 short phrases (SRS + prior knowledge activation)
   warmupGreetings: [
     { emoji: "😊", en: "I enjoy working with international teams.", vn: "Tôi thích làm việc với các nhóm quốc tế.", context: "enjoy + V-ing (KHÔNG enjoy to work)" },
     { emoji: "🎯", en: "I want to improve my English before the IELTS exam.", vn: "Tôi muốn cải thiện tiếng Anh trước kỳ thi IELTS.", context: "want + to V (KHÔNG want improving)" },
     { emoji: "💡", en: "I suggest using a new project management tool.", vn: "Tôi đề xuất sử dụng công cụ quản lý dự án mới.", context: "suggest + V-ing (KHÔNG suggest to use)" },
   ],
+
+  // ── VOCABULARY: 8–20 words, pre-teach BEFORE dialogues; l1_interference_vn (A1 100%, B1+ ≥50%)
   vocab: [
     { id: 1, word: "suggest", emoji: "💡", phonetic: "/səˈdʒest/", meaning: "đề xuất / gợi ý", example: "I suggest dividing the team into smaller groups.", example2: "She suggested starting the meeting earlier.", collocation: "suggest a solution / suggest doing / open to suggestions", audio: "/audio/unit26/suggest.mp3", l1_interference_vn: "⚠️ KHÔNG dùng to-inf: \'suggest doing\' / \'suggest that...(should)\'. SAI: \'suggest to do\'." },
     { id: 2, word: "consider", emoji: "🤔", phonetic: "/kənˈsɪdər/", meaning: "xem xét / cân nhắc", example: "Have you considered applying for the senior role?", example2: "We are considering outsourcing the design work.", collocation: "consider options / worth considering / carefully consider", audio: "/audio/unit26/consider.mp3", l1_interference_vn: "⚠️ \'Consider + V-ING\': \'consider doing sth\'. KHÔNG dùng \'consider to do\'." },
@@ -35,6 +50,8 @@ export const unit26: UnitData = {
     { id: 11, word: "prefer", emoji: "💜", phonetic: "/prɪˈfɜːr/", meaning: "thích hơn / ưa thích", example: "I prefer working in the morning when it's quiet.", example2: "She prefers to attend meetings in person.", collocation: "prefer doing / prefer to do / much prefer", audio: "/audio/unit26/prefer.mp3" , l1_interference_vn: "⚠️ 'Prefer A TO B' — không phải 'prefer A than B'. 'I prefer tea to coffee' — đúng." },
     { id: 12, word: "negotiate", emoji: "🤝", phonetic: "/nɪˈɡəʊʃieɪt/", meaning: "đàm phán", example: "We need to avoid rushing when negotiating contracts.", example2: "She agreed to negotiate the terms directly.", collocation: "negotiate a deal / open to negotiation / skilled negotiator", audio: "/audio/unit26/negotiate.mp3", l1_interference_vn: "⚠️ \'Negotiate a deal/contract\' — không dùng \'negotiate to\' hay \'negotiate for sth\' trực tiếp." },
   ],
+
+  // ── DIALOGUES: ≥1 dialogue AFTER vocab (98% coverage)
   dialogues: [
     {
       id: 1,
@@ -63,6 +80,8 @@ export const unit26: UnitData = {
       ],
     },
   ],
+
+  // ── EXERCISES_INPUT: listenAndChoose ≥5 (controlled practice)
   listenAndChoose: [
     { id: "lac1", audio_text: "I suggest dividing the project into three phases", options: ["I suggest to divide the project into three phases", "I suggest dividing the project into three phases", "I suggest divided the project into three phases", "I suggest divide the project into three phases"], answer: "I suggest dividing the project into three phases" },
     { id: "lac2", audio_text: "I intend to finish this project before the deadline", options: ["I intend finishing this project before the deadline", "I intend to finishing this project before the deadline", "I intend to finish this project before the deadline", "I intend finish this project before the deadline"], answer: "I intend to finish this project before the deadline" },
@@ -70,12 +89,16 @@ export const unit26: UnitData = {
     { id: "lac4", audio_text: "She hesitated to share her opinion in the meeting", options: ["She hesitated sharing her opinion in the meeting", "She hesitated to sharing her opinion in the meeting", "She hesitated to share her opinion in the meeting", "She hesitated share her opinion in the meeting"], answer: "She hesitated to share her opinion in the meeting" },
     { id: "lac5", audio_text: "I recommend starting with user research", options: ["I recommend to start with user research", "I recommend starting with user research", "I recommend start with user research", "I recommend started with user research"], answer: "I recommend starting with user research" },
   ],
+
+  // ── OUTPUT: speaking prompts (freer production)
   speaking: {
     level1Prompt: "In my work, I enjoy {input}. I always try to avoid {input}. I plan to {input} this year.",
     level1Placeholder: "Ví dụ: collaborating with others — missing deadlines — improve my presentation skills...",
     level2Situation: "Phỏng vấn IELTS Speaking Part 1 & 2: Mô tả phong cách làm việc và sở thích cá nhân. Dùng ít nhất 5 cấu trúc Gerund/Infinitive khác nhau. Trả lời: Bạn thích làm gì? Tránh điều gì? Kế hoạch tương lai là gì?",
     level2Hint: "I enjoy [V-ing]. I avoid [V-ing]. I suggest [V-ing]. I plan to [V]. I decided to [V]. I recommend [V-ing] because [reason]. I consider [V-ing] to be important for [reason].",
   },
+
+  // ── GRAMMAR: Inductive (Meaning→Form→CCQ) + vnNote L1
   grammar: {
     title: "Gerund vs Infinitive — Quy Tắc Nhớ Mãi",
     rule: "VERB + GERUND (V-ing):\nenjoy / avoid / consider / suggest / recommend / mind / finish / keep / practice\n→ 'I enjoy working.' 'She suggests trying.'\n\nVERB + INFINITIVE (to V):\nwant / decide / hope / plan / agree / refuse / offer / intend / hesitate / promise\n→ 'I want to improve.' 'She decided to quit.'\n\nMẸO NHỚ:\n→ Gerund = hành động thực tế, hiện tại/quá khứ\n→ Infinitive = mục tiêu, tương lai, ý định\n\nĐẶC BIỆT (nghĩa KHÁC NHAU):\nstop + -ing = dừng việc đang làm: 'He stopped smoking.'\nstop + to = dừng lại để làm: 'He stopped to smoke.'",
@@ -104,6 +127,8 @@ export const unit26: UnitData = {
       explanation: "'Suggest' luôn đi với Gerund (-ing). 'Want' luôn đi với Infinitive (to). 'Enjoy' luôn đi với Gerund.",
     },
   },
+
+  // ── EXERCISES_INPUT: practiceQuiz (active recall)
   practiceQuiz: [
     { id: "pq1", type: "multiple-choice", question: "Chọn đúng: 'She recommended ___ the contract before signing.'", options: ["to read", "reading", "read", "to reading"], answer: "reading" },
     { id: "pq2", type: "multiple-choice", question: "Chọn đúng: 'I plan ___ the TOEIC exam next month.'", options: ["taking", "take", "to take", "to taking"], answer: "to take" },
@@ -111,6 +136,8 @@ export const unit26: UnitData = {
     { id: "pq4", type: "multiple-choice", question: "Phân biệt: 'I stopped ___ (quit the habit) vs 'I stopped ___ (paused to do)'.", options: ["to smoke / smoking", "smoking / to smoke", "smoking / smoking", "to smoke / to smoke"], answer: "smoking / to smoke" },
     { id: "pq5", type: "multiple-choice", question: "Câu ĐÚNG: Đề xuất phương án mới.", options: ["I suggest to try a different approach.", "I suggest trying a different approach.", "I suggest try a different approach.", "I suggesting a different approach."], answer: "I suggest trying a different approach." },
   ],
+
+  // ── EXERCISES_INPUT: matching
   matchingExercise: {
     title: "Nối động từ với cấu trúc đúng",
     pairs: [
@@ -121,6 +148,8 @@ export const unit26: UnitData = {
       { left: "avoid", right: "+ V-ing" },
     ],
   },
+
+  // ── OUTPUT: practiceTranslate (VN→EN ≥3) + speaking (level1/2)
   practiceTranslate: [
     {
       id: "pt-1",
@@ -139,6 +168,8 @@ export const unit26: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: sentenceCorrection
   sentenceCorrectionExercises: [
     {
       id: "sc26-1",
@@ -157,6 +188,8 @@ export const unit26: UnitData = {
   ],
 
 
+
+  // ── EXERCISES_INPUT: listenAndArrange
   listenAndArrangeExercises: [
     {
       id: "la26-1",
@@ -175,6 +208,8 @@ export const unit26: UnitData = {
   ],
 
 
+
+  // ── EXERCISES_INPUT: wordBank
   wordBankExercises: [
     {
       id: "wb1",
@@ -196,11 +231,15 @@ export const unit26: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: scramble
   scrambleExercises: [
     { id: "s26-1", prompt_vn: "Tôi đề xuất chia dự án thành ba giai đoạn.", words: ["I", "suggest", "dividing", "the", "project", "into", "three", "phases", "."], answer: "I suggest dividing the project into three phases ." },
     { id: "s26-2", prompt_vn: "Cô ấy tránh đến muộn các cuộc họp.", words: ["She", "avoids", "arriving", "late", "to", "meetings", "."], answer: "She avoids arriving late to meetings ." },
     { id: "s26-3", prompt_vn: "Tôi có kế hoạch thi IELTS vào năm tới.", words: ["I", "plan", "to", "take", "the", "IELTS", "exam", "next", "year", "."], answer: "I plan to take the IELTS exam next year ." },
   ],
+
+  // ── REVIEW: Final quiz ≥5 (retrieval practice)
   quiz: [
     { id: "fq1", type: "multiple-choice", question: "Dịch: 'Tôi khuyến nghị thử phương pháp học mới.'", options: ["I recommend to try a new learning method.", "I recommend trying a new learning method.", "I recommend try a new learning method.", "I recommend tried a new learning method."], answer: "I recommend trying a new learning method." },
     { id: "fq2", type: "cloze", question: "Điền: 'She decided ___ (apply) for the position after considering ___ (stay) in her current role.'", answer: "to apply / staying" },
@@ -215,11 +254,15 @@ export const unit26: UnitData = {
     { id: "q-ex6", type: "multiple-choice", question: "'It's up to you' nghĩa là:", options: ["Đó là lỗi của bạn", "Tùy bạn quyết định", "Trên bạn", "Bạn không thể làm"], answer: "Tùy bạn quyết định" },
     { id: "q-ex7", type: "multiple-choice", question: "'I'd rather you didn't smoke here.' — cấu trúc này dùng khi:", options: ["Nói về bản thân", "Bày tỏ sở thích về hành động của người khác", "Ra lệnh", "Xin phép"], answer: "Bày tỏ sở thích về hành động của người khác" },
   ],
+
+  // ── REVIEW: Exit quiz + cumulativeReview (spiral) + reading (B1+)
   cumulativeReviewQuestions: [
     { id: "cr26-1", question: "Ôn tập Unit 25 — Relative pronoun đúng: 'This is the room ___ we hold meetings.'", options: ["who", "which", "that", "where"], answer: "where", type: "multiple-choice" },
     { id: "cr26-2", question: "Ôn tập Unit 24 — Điền Passive: 'The report ___ (submit) yesterday.'", options: [], answer: "was submitted", type: "cloze" },
     { id: "cr26-3", question: "Ôn tập Unit 23 — First Conditional đúng:", options: ["If you will sign, we will start.", "If you sign, we will start.", "If you signed, we will start.", "If you sign, we start."], answer: "If you sign, we will start.", type: "multiple-choice" },
   ],
+
+  // ── FLUENCY: pronunciationFocus
   pronunciationFocus: {
     phoneme: "rather /ˈrɑːðər/",
     description: "Would rather — âm /ð/ trong rather và stress",
@@ -232,6 +275,8 @@ export const unit26: UnitData = {
     ],
   },
 
+
+  // ── FLUENCY: fluencyDrill ≥5 (Nation Strand 4 automaticity)
   fluencyDrill: {
     items: [
       { en: "I enjoy working with international teams", vn: "Tôi thích làm việc với các nhóm quốc tế" },
@@ -244,6 +289,8 @@ export const unit26: UnitData = {
       { en: "She refused to sign the contract without legal advice", vn: "Cô ấy từ chối ký hợp đồng khi chưa có tư vấn pháp lý" },
     ],
   },
+
+  // ── REVIEW: Reading passage for skills integration
   readingPassage: {
     id: "unit26-reading-1",
     title: "Coffee Culture in Vietnam",
@@ -305,6 +352,8 @@ export const unit26: UnitData = {
       },
     ],
   },
+
+  // ── OUTPUT: shadowing
   shadowingVideoId: "2bLhULqFkKI",
 };
 

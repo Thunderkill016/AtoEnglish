@@ -1,5 +1,12 @@
 import { UnitData } from "@/components/learn/UnitTemplate";
 
+
+// ─────────────────────────────────────────────────────────────────────────────
+// UNIT-A0-4 — Chào Hỏi & Câu Xã Giao  (A0)
+// Standardized header + section comments per lesson-blueprint.ts (CONTENT_BLOCK_ORDER)
+// + lesson-center-reference.ts (ESA Engage/Study/Activate, CELTA, Nation, CLT VN)
+// Gold sample: src/lib/data/units/unit1.ts — field order meta→hook→warmup→vocab→grammar→exercises→dialogues→fluency→output→review
+// ─────────────────────────────────────────────────────────────────────────────
 // UNIT A0-4 — Chào Hỏi & Câu Xã Giao (Greetings & Small Talk)
 // Grammar: "How ARE you?" — Question with verb BE
 // L1 Alert: VN "Bạn khỏe không?" → direct but English has formal/informal split
@@ -17,6 +24,8 @@ export const unitA04: UnitData = {
   badgeName: "Người Giao Tiếp",
   badgeEmoji: "👋",
 
+
+  // ── HOOK: situation (real VN context) + learningOutcomes (2–5 can-do) + culturalNote (pragmatic VN↔EN)
   situation:
     "Sáng thứ Hai đầu tuần làm việc. Bạn gặp sếp ở thang máy, rồi gặp đồng nghiệp thân thiết ở căng-tin. Cách chào hai người này hoàn toàn khác nhau!",
 
@@ -26,9 +35,13 @@ export const unitA04: UnitData = {
     "Kết thúc cuộc trò chuyện lịch sự: See you later / Take care",
   ],
 
+
+  // ── HOOK (cultural): pragmatic note
   culturalNote:
     'Người bản ngữ thường nói <span class="text-emerald-400 font-semibold">"How are you?"</span> như một câu chào — không nhất thiết muốn nghe câu trả lời dài. Câu trả lời chuẩn nhất: <span class="text-emerald-400 font-semibold">"Fine, thanks. And you?"</span> — luôn hỏi lại!',
 
+
+  // ── WARMUP: ≥3 short phrases (SRS + prior knowledge activation)
   warmupGreetings: [
     {
       emoji: "🌅",
@@ -50,6 +63,8 @@ export const unitA04: UnitData = {
     },
   ],
 
+
+  // ── VOCABULARY: 8–20 words, pre-teach BEFORE dialogues; l1_interference_vn (A1 100%, B1+ ≥50%)
   vocab: [
     {
       id: 1,
@@ -172,6 +187,8 @@ export const unitA04: UnitData = {
     },
   ],
 
+
+  // ── GRAMMAR: Inductive (Meaning→Form→CCQ) + vnNote L1
   grammar: {
     title: "How ARE you? — Hỏi thăm với Verb BE",
     rule: "How + ARE/IS + Chủ ngữ? → Hỏi về trạng thái, cảm giác của ai đó.",
@@ -221,6 +238,8 @@ export const unitA04: UnitData = {
     },
   },
 
+
+  // ── EXERCISES_INPUT: matching
   matchingExercise: {
     title: "Nối lời chào với thời điểm phù hợp",
     pairs: [
@@ -232,6 +251,8 @@ export const unitA04: UnitData = {
     ],
   },
 
+
+  // ── EXERCISES_INPUT: practiceQuiz (active recall)
   practiceQuiz: [
     {
       id: "pq4-1",
@@ -273,6 +294,8 @@ export const unitA04: UnitData = {
     },
   ],
 
+
+  // ── OUTPUT: practiceTranslate (VN→EN ≥3) + speaking (level1/2)
   practiceTranslate: [
     {
       id: "pt4-1",
@@ -291,6 +314,8 @@ export const unitA04: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: sentenceCorrection
   sentenceCorrectionExercises: [
     {
       id: "sc-A04-1",
@@ -309,6 +334,8 @@ export const unitA04: UnitData = {
   ],
 
 
+
+  // ── EXERCISES_INPUT: listenAndArrange
   listenAndArrangeExercises: [
     {
       id: "laA04-1",
@@ -327,6 +354,8 @@ export const unitA04: UnitData = {
   ],
 
 
+
+  // ── EXERCISES_INPUT: wordBank
   wordBankExercises: [
     {
       id: "wb1",
@@ -348,6 +377,8 @@ export const unitA04: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: scramble
   scrambleExercises: [
     {
       id: "s4-1",
@@ -369,6 +400,8 @@ export const unitA04: UnitData = {
     },
   ],
 
+
+  // ── DIALOGUES: ≥1 dialogue AFTER vocab (98% coverage)
   dialogues: [
     {
       id: 1,
@@ -454,6 +487,8 @@ export const unitA04: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: listenAndChoose ≥5 (controlled practice)
   listenAndChoose: [
     {
       id: "lac4-1",
@@ -497,6 +532,8 @@ export const unitA04: UnitData = {
     },
   ],
 
+
+  // ── REVIEW: Exit quiz + cumulativeReview (spiral) + reading (B1+)
   cumulativeReviewQuestions: [
     {
       id: "crA04-1",
@@ -528,6 +565,8 @@ export const unitA04: UnitData = {
     },
   ],
 
+
+  // ── FLUENCY: pronunciationFocus
   pronunciationFocus: {
     phoneme: "/æ/ vs /e/",
     description: "Phân biệt CAT /æ/ và BED /e/",
@@ -540,6 +579,8 @@ export const unitA04: UnitData = {
     ],
   },
 
+
+  // ── FLUENCY: fluencyDrill ≥5 (Nation Strand 4 automaticity)
   fluencyDrill: {
     title: "Luyện nhanh: Chào hỏi đầy đủ",
     items: [
@@ -554,6 +595,8 @@ export const unitA04: UnitData = {
     ],
   },
 
+
+  // ── OUTPUT: speaking prompts (freer production)
   speaking: {
     level1Prompt: "Good morning! I'm {input} today.",
     level1Placeholder: "Nhập trạng thái: fine / tired / great / busy...",
@@ -562,6 +605,8 @@ export const unitA04: UnitData = {
     level2Hint: "Fine, thanks! And you? / My weekend was... / See you at the meeting!",
   },
 
+
+  // ── REVIEW: Final quiz ≥5 (retrieval practice)
   quiz: [
     {
       id: "q4-1",
@@ -623,6 +668,8 @@ export const unitA04: UnitData = {
       type: "translate",
     },
   ],
+
+  // ── REVIEW: Reading passage for skills integration
   readingPassage: {
     id: "unitA04-reading-1",
     title: "Good Morning!",
@@ -671,6 +718,8 @@ export const unitA04: UnitData = {
       },
     ],
   },
+
+  // ── OUTPUT: shadowing
   shadowingVideoId: "sNvmqN2MBBo", // BBC Learning English — Greetings & small talk
 };
 

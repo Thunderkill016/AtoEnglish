@@ -1,5 +1,12 @@
 import { UnitData } from "@/components/learn/UnitTemplate";
 
+
+// ─────────────────────────────────────────────────────────────────────────────
+// UNIT-14 — Future Plans & Predictions  (A2)
+// Standardized header + section comments per lesson-blueprint.ts (CONTENT_BLOCK_ORDER)
+// + lesson-center-reference.ts (ESA Engage/Study/Activate, CELTA, Nation, CLT VN)
+// Gold sample: src/lib/data/units/unit1.ts — field order meta→hook→warmup→vocab→grammar→exercises→dialogues→fluency→output→review
+// ─────────────────────────────────────────────────────────────────────────────
 export const unit14: UnitData = {
   unitId: "unit-14",
   title: "Unit 14: Future Plans & Predictions",
@@ -9,18 +16,26 @@ export const unit14: UnitData = {
   description: "Học cách nói về kế hoạch tương lai và dự đoán bằng 'will' và 'going to'.",
   badgeName: "Người Lập Kế Hoạch",
   badgeEmoji: "📋",
+
+  // ── HOOK: situation (real VN context) + learningOutcomes (2–5 can-do) + culturalNote (pragmatic VN↔EN)
   situation: "Sếp người nước ngoài hỏi về kế hoạch dự án tháng tới và định hướng sự nghiệp của bạn. Bạn cần trình bày kế hoạch bằng tiếng Anh một cách tự tin.",
   learningOutcomes: [
     "Nói về kế hoạch đã lên sẵn bằng 'going to'",
     "Đưa ra dự đoán và quyết định tức thì bằng 'will'",
     "Hỏi về kế hoạch tương lai của người khác"
   ],
+
+  // ── WARMUP: ≥3 short phrases (SRS + prior knowledge activation)
   warmupGreetings: [
     { emoji: "📋", en: "I'm going to attend a meeting tomorrow.", vn: "Ngày mai tôi sẽ tham dự một cuộc họp.", context: "Kế hoạch đã lên sẵn" },
     { emoji: "🔮", en: "I think it will rain this afternoon.", vn: "Tôi nghĩ chiều nay trời sẽ mưa.", context: "Dự đoán" },
     { emoji: "✈️", en: "We're going to launch a new product next month.", vn: "Tháng tới chúng tôi sẽ ra mắt sản phẩm mới.", context: "Kế hoạch công việc" }
   ],
+
+  // ── HOOK (cultural): pragmatic note
   culturalNote: "Trong môi trường làm việc quốc tế, <span class=\"text-emerald-400 font-semibold\">'going to'</span> dùng cho kế hoạch đã lên sẵn và chắc chắn, còn <span class=\"text-emerald-400 font-semibold\">'will'</span> dùng cho dự đoán hoặc quyết định vừa nghĩ ra. Người bản xứ thường nói <span class=\"text-emerald-400 font-semibold\">'I'll'</span> (viết tắt của 'I will') trong văn nói thông thường.",
+
+  // ── VOCABULARY: 8–20 words, pre-teach BEFORE dialogues; l1_interference_vn (A1 100%, B1+ ≥50%)
   vocab: [
     { id: 1, word: "plan", emoji: "📋", phonetic: "/plæn/", meaning: "kế hoạch / lên kế hoạch", example: "What are your plans for next week?", example2: "I have a plan to improve my English.", collocation: "make a plan / have a plan", audio: "/audio/unit14/plan.mp3" , l1_interference_vn: "⚠️ 'Plan TO do': 'I plan to travel'. 'Plan ON doing' cũng đúng. Không: 'plan doing'." },
     { id: 2, word: "meeting", emoji: "🤝", phonetic: "/ˈmiːtɪŋ/", meaning: "cuộc họp", example: "I have a meeting at 9 AM.", example2: "Let's schedule a meeting for Thursday.", collocation: "have a meeting / attend a meeting", audio: "/audio/unit14/meeting.mp3", l1_interference_vn: "⚠️ 'Have/attend a meeting' — collocation chuẩn. 'A meeting' (đếm được). KHÔNG 'do a meeting' hay 'make a meeting'." },
@@ -35,6 +50,8 @@ export const unit14: UnitData = {
     { id: 11, word: "improve", emoji: "📈", phonetic: "/ɪmˈpruːv/", meaning: "cải thiện / tiến bộ", example: "I'm going to improve my English skills.", example2: "Sales will improve next quarter.", collocation: "improve your skills / improve performance", audio: "/audio/unit14/improve.mp3" , l1_interference_vn: "⚠️ 'Improve your English' (ngoại) hoặc 'Your English is improving' (nội). Không: 'improve up'." },
     { id: 12, word: "schedule", emoji: "🗓️", phonetic: "/ˈʃedjuːl/", meaning: "lịch trình / lên lịch", example: "Let's schedule a call for Monday.", example2: "I have a busy schedule this week.", collocation: "follow a schedule / on schedule", audio: "/audio/unit14/schedule.mp3" , l1_interference_vn: "⚠️ Anh: /ˈʃɛdjuːl/, Mỹ: /ˈskɛdʒuːl/. Người Việt đọc 'sked-ule' — gần tiếng Mỹ." },
   ],
+
+  // ── DIALOGUES: ≥1 dialogue AFTER vocab (98% coverage)
   dialogues: [
     {
       id: 1,
@@ -64,6 +81,8 @@ export const unit14: UnitData = {
       ]
     },
   ],
+
+  // ── EXERCISES_INPUT: listenAndChoose ≥5 (controlled practice)
   listenAndChoose: [
     { id: "lac1", audio_text: "I'm going to finish the report by Friday", options: ["I'm going to finish the report by Friday", "I finished the report by Friday", "I will finish the report by Friday", "She's going to finish the report by Friday"], answer: "I'm going to finish the report by Friday" },
     { id: "lac2", audio_text: "We will launch the product next month", options: ["We launch the product next month", "We will launch the product next month", "We are launch the product next month", "They will launch the product next month"], answer: "We will launch the product next month" },
@@ -71,12 +90,16 @@ export const unit14: UnitData = {
     { id: "lac4", audio_text: "It will probably be hot this weekend", options: ["It is probably hot this weekend", "It will probably be hot this weekend", "It will probably hot this weekend", "It will be probably hot this weekend"], answer: "It will probably be hot this weekend" },
     { id: "lac5", audio_text: "I'm going to prepare a presentation this week", options: ["I prepare a presentation this week", "I prepared a presentation this week", "I'm going to prepare a presentation this week", "I'm preparing a presentation this week"], answer: "I'm going to prepare a presentation this week" },
   ],
+
+  // ── OUTPUT: speaking prompts (freer production)
   speaking: {
     level1Prompt: "Next month, I'm going to {input}.",
     level1Placeholder: "Ví dụ: start a new project, travel to Da Nang, improve my English...",
     level2Situation: "Sếp người nước ngoài hỏi về kế hoạch làm việc của bạn trong 3 tháng tới. Hãy mô tả ít nhất 3 kế hoạch cụ thể: dự án sẽ làm, kỹ năng sẽ phát triển, và mục tiêu cá nhân.",
     level2Hint: "In the next three months, I'm going to [plan 1]. I will also [plan 2]. I hope to [goal]. Probably, I will [prediction]. My main deadline is [date].",
   },
+
+  // ── GRAMMAR: Inductive (Meaning→Form→CCQ) + vnNote L1
   grammar: {
     title: "Will vs Going To — Tương lai trong tiếng Anh",
     rule: "'Going to' = kế hoạch đã lên sẵn (planned intention)\n'Will' = dự đoán hoặc quyết định tức thì (prediction/spontaneous decision)",
@@ -106,6 +129,8 @@ export const unit14: UnitData = {
       explanation: "'Going to' cần có 'to be' phía trước: am/is/are + going to + base verb.",
     },
   },
+
+  // ── EXERCISES_INPUT: practiceQuiz (active recall)
   practiceQuiz: [
     { id: "pq1", type: "multiple-choice", question: "Chọn đúng: 'She ___ (kế hoạch sẵn) attend the conference next week.'", options: ["will attend", "is going to attend", "attends", "going to attend"], answer: "is going to attend" },
     { id: "pq2", type: "multiple-choice", question: "Điền đúng: 'The deadline ___ next Friday.'", options: ["is", "was", "will be", "going to be"], answer: "will be" },
@@ -114,6 +139,8 @@ export const unit14: UnitData = {
     { id: "pq5", type: "cloze", question: "Điền: 'We ___ (launch) the app in two months.'", answer: "are going to launch" },
   ],
 
+
+  // ── EXERCISES_INPUT: matching
   matchingExercise: {
     title: "Nối từ với nghĩa đúng",
     pairs: [
@@ -125,6 +152,8 @@ export const unit14: UnitData = {
     ],
   },
 
+
+  // ── OUTPUT: practiceTranslate (VN→EN ≥3) + speaking (level1/2)
   practiceTranslate: [
     {
       id: "pt-1",
@@ -143,6 +172,8 @@ export const unit14: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: sentenceCorrection
   sentenceCorrectionExercises: [
     {
       id: "sc14-1",
@@ -160,6 +191,8 @@ export const unit14: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: listenAndArrange
   listenAndArrangeExercises: [
     {
       id: "la14-1",
@@ -177,6 +210,8 @@ export const unit14: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: wordBank
   wordBankExercises: [
     {
       id: "wb1",
@@ -198,6 +233,8 @@ export const unit14: UnitData = {
     },
   ],
 
+
+  // ── EXERCISES_INPUT: scramble
   scrambleExercises: [
     {
       id: "s14-1",
@@ -219,6 +256,8 @@ export const unit14: UnitData = {
     },
   ],
 
+
+  // ── REVIEW: Final quiz ≥5 (retrieval practice)
   quiz: [
     { id: "fq1", type: "multiple-choice", question: "Dịch: 'Tháng tới chúng tôi sẽ ra mắt sản phẩm mới.'", options: ["Next month we launch a new product.", "Next month we are going to launch a new product.", "Next month we will launching a new product.", "Next month we launched a new product."], answer: "Next month we are going to launch a new product.",
       explanation_vn: "Kế hoạch đã lên sẵn → 'going to'. 'Will launching' sai vì 'will' + V nguyên mẫu, không dùng -ing." },
@@ -237,6 +276,8 @@ export const unit14: UnitData = {
     { id: "q-ex7", type: "translate", question: "Dịch: 'Tôi sẽ giúp bạn!' (quyết định tức thì)", answer: "I'll help you!" },
   ],
 
+
+  // ── REVIEW: Exit quiz + cumulativeReview (spiral) + reading (B1+)
   cumulativeReviewQuestions: [
     {
       id: "cr14-1",
@@ -261,6 +302,8 @@ export const unit14: UnitData = {
     },
   ],
 
+
+  // ── FLUENCY: pronunciationFocus
   pronunciationFocus: {
     phoneme: "going to → gonna",
     description: "Phát âm going to nhanh: /ˈɡɒɪŋ tə/ → gonna /ˈɡɒnə/ trong nói nhanh",
@@ -273,6 +316,8 @@ export const unit14: UnitData = {
     ],
   },
 
+
+  // ── FLUENCY: fluencyDrill ≥5 (Nation Strand 4 automaticity)
   fluencyDrill: {
     items: [
       { en: "I will call you", vn: "Tôi sẽ gọi cho bạn" },
@@ -286,6 +331,8 @@ export const unit14: UnitData = {
     ],
   },
 
+
+  // ── REVIEW: Reading passage for skills integration
   readingPassage: {
     id: "unit14-reading-1",
     title: "Big Plans for Next Month",
@@ -343,6 +390,8 @@ export const unit14: UnitData = {
       },
     ],
   },
+
+  // ── OUTPUT: shadowing
   shadowingVideoId: "zrANkpvxlpo",
 };
 
