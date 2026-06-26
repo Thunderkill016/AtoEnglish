@@ -125,6 +125,16 @@ export const unit39: UnitData = {
       prompt_vn: "Từ dữ liệu này, chúng ta có thể suy ra kết quả.",
       answer: "From this data, we can deduce the outcome.",
     },
+    {
+      id: "pt-2",
+      prompt_vn: "Có thể họ đã bỏ lỡ bằng chứng quan trọng.",
+      answer: "They may have overlooked crucial evidence.",
+    },
+    {
+      id: "pt-3",
+      prompt_vn: "Giả thuyết phải được chứng minh bằng dữ liệu đáng tin.",
+      answer: "The hypothesis must have been supported by credible data.",
+    },
   ],
 
   sentenceCorrectionExercises: [

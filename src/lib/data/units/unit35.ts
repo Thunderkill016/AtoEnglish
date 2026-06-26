@@ -126,6 +126,16 @@ export const unit35: UnitData = {
       prompt_vn: "Chúng tôi sẽ chấm dứt thỏa thuận trừ khi họ sửa lỗi.",
       answer: "We will terminate the agreement unless they rectify the error.",
     },
+    {
+      id: "pt-2",
+      prompt_vn: "Nếu không có điều khoản đó, chúng tôi sẽ không đồng ý.",
+      answer: "Without that clause, we would not have agreed.",
+    },
+    {
+      id: "pt-3",
+      prompt_vn: "Họ đàm phán điều khoản mới sau khi ký.",
+      answer: "They negotiated new terms after signing.",
+    },
   ],
 
   sentenceCorrectionExercises: [

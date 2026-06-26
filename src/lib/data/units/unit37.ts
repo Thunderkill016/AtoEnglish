@@ -126,6 +126,16 @@ export const unit37: UnitData = {
       prompt_vn: "Đối mặt với các vấn đề tài chính, họ đã hoãn kế hoạch mở rộng.",
       answer: "Facing financial problems, they postponed the expansion plan.",
     },
+    {
+      id: "pt-2",
+      prompt_vn: "Tóm tắt báo cáo, nhóm đề xuất thay đổi chiến lược.",
+      answer: "Summarizing the report, the team proposed a strategy change.",
+    },
+    {
+      id: "pt-3",
+      prompt_vn: "Được xây dựng cẩn thận, mô hình đã dự đoán chính xác.",
+      answer: "Carefully constructed, the model predicted accurately.",
+    },
   ],
 
   sentenceCorrectionExercises: [

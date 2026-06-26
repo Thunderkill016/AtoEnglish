@@ -137,6 +137,16 @@ export const unit31: UnitData = {
       prompt_vn: "Hạn chót cho bản đề xuất là ngày mai.",
       answer: "The deadline for the proposal is tomorrow.",
     },
+    {
+      id: "pt-2",
+      prompt_vn: "Anh ấy khuyên tôi xác nhận lại thông tin.",
+      answer: "He advised me to confirm the information again.",
+    },
+    {
+      id: "pt-3",
+      prompt_vn: "Họ yêu cầu chúng tôi làm rõ yêu cầu trước thứ Sáu.",
+      answer: "They requested that we clarify the requirements before Friday.",
+    },
   ],
 
   sentenceCorrectionExercises: [

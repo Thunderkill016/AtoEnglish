@@ -147,6 +147,16 @@ export const unit20: UnitData = {
       prompt_vn: "Khi chúng tôi nghe tin, thỏa thuận đã được ký rồi.",
       answer: "When we heard the news, the deal had already been signed.",
     },
+    {
+      id: "pt-2",
+      prompt_vn: "Công ty đã tuyên bố sáp nhập trước khi thị trường biết.",
+      answer: "The company had announced the merger before the market knew.",
+    },
+    {
+      id: "pt-3",
+      prompt_vn: "Giám đốc đã từ chức sau khi điều tra kết thúc.",
+      answer: "The director had resigned after the investigation ended.",
+    },
   ],
 
   sentenceCorrectionExercises: [

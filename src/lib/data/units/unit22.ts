@@ -127,6 +127,16 @@ export const unit22: UnitData = {
       prompt_vn: "Nhân viên phải tuân thủ chính sách bảo mật của công ty.",
       answer: "Employees must comply with the company's data policy.",
     },
+    {
+      id: "pt-2",
+      prompt_vn: "Bạn nên đeo thẻ nhân viên mọi lúc.",
+      answer: "You should wear your employee badge at all times.",
+    },
+    {
+      id: "pt-3",
+      prompt_vn: "Quy định yêu cầu chúng ta báo cáo bất kỳ vi phạm nào.",
+      answer: "The regulation requires us to report any violations.",
+    },
   ],
 
   sentenceCorrectionExercises: [

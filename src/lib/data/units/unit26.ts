@@ -127,6 +127,16 @@ export const unit26: UnitData = {
       prompt_vn: "Tôi khuyến nghị thử phương pháp học mới.",
       answer: "I recommend trying a new learning method.",
     },
+    {
+      id: "pt-2",
+      prompt_vn: "Bạn nên cân nhắc tránh ăn quá nhiều đồ ngọt.",
+      answer: "You should consider avoiding eating too much sweet food.",
+    },
+    {
+      id: "pt-3",
+      prompt_vn: "Chúng tôi đánh giá cao sự hỗ trợ của bạn.",
+      answer: "We appreciate your support very much.",
+    },
   ],
 
   sentenceCorrectionExercises: [

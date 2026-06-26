@@ -127,6 +127,16 @@ export const unit32: UnitData = {
       prompt_vn: "Chúng tôi đã hợp tác để tìm giải pháp thay thế.",
       answer: "We collaborated to find an alternative solution.",
     },
+    {
+      id: "pt-2",
+      prompt_vn: "Họ đề xuất giải pháp bền vững cho vấn đề.",
+      answer: "They recommended a sustainable solution to the problem.",
+    },
+    {
+      id: "pt-3",
+      prompt_vn: "Chúng ta cần tích lũy dữ liệu trước khi quyết định.",
+      answer: "We need to accumulate data before making a decision.",
+    },
   ],
 
   sentenceCorrectionExercises: [

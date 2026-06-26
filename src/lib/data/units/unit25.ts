@@ -127,6 +127,16 @@ export const unit25: UnitData = {
       prompt_vn: "Đây là văn phòng nơi toàn bộ nhóm R&D làm việc hàng ngày.",
       answer: "This is the office where the entire R&D team works every day.",
     },
+    {
+      id: "pt-2",
+      prompt_vn: "Người phụ trách là chuyên gia có bằng cấp cao.",
+      answer: "The person in charge is a specialist with high qualifications.",
+    },
+    {
+      id: "pt-3",
+      prompt_vn: "Trụ sở chính nằm ở khu vực có cơ sở vật chất hiện đại.",
+      answer: "The headquarters is located in an area with modern facilities.",
+    },
   ],
 
   sentenceCorrectionExercises: [

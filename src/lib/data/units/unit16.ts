@@ -132,6 +132,16 @@ export const unit16: UnitData = {
       prompt_vn: "Văn phòng chúng tôi ở góc đường, đối diện với ngân hàng.",
       answer: "Our office is on the corner, opposite the bank.",
     },
+    {
+      id: "pt-2",
+      prompt_vn: "Đi thẳng hai khối rồi rẽ trái ở đèn giao thông.",
+      answer: "Go straight for two blocks then turn left at the traffic lights.",
+    },
+    {
+      id: "pt-3",
+      prompt_vn: "Nhà ga nằm đối diện với công viên.",
+      answer: "The station is opposite the park.",
+    },
   ],
 
   sentenceCorrectionExercises: [

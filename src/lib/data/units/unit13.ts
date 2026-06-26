@@ -132,6 +132,16 @@ export const unit13: UnitData = {
       prompt_vn: "Tôi đã ghé thăm cha mẹ tôi tuần trước.",
       answer: "I visited my parents last week.",
     },
+    {
+      id: "pt-2",
+      prompt_vn: "Họ đã đi biển cuối tuần trước.",
+      answer: "They went to the beach last weekend.",
+    },
+    {
+      id: "pt-3",
+      prompt_vn: "Chúng tôi đã gặp bạn cũ hôm qua.",
+      answer: "We met an old friend yesterday.",
+    },
   ],
 
   sentenceCorrectionExercises: [

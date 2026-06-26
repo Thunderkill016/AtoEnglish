@@ -471,6 +471,16 @@ export const unit19: UnitData = {
       prompt_vn: "Trong khi tôi đang thuyết trình, sếp bước vào phòng.",
       answer: "While I was presenting, the boss walked into the room.",
     },
+    {
+      id: "pt-2",
+      prompt_vn: "Đồng nghiệp đang gọi khi điện thoại đổ chuông.",
+      answer: "My colleague was calling when the phone rang.",
+    },
+    {
+      id: "pt-3",
+      prompt_vn: "Họ đang chạy đến hạn chót khi hệ thống sập.",
+      answer: "They were rushing to meet the deadline when the system crashed.",
+    },
   ],
 
   sentenceCorrectionExercises: [

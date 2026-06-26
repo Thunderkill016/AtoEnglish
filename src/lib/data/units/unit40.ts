@@ -125,6 +125,16 @@ export const unit40: UnitData = {
       prompt_vn: "Một số người thích làm việc tại văn phòng, trong khi số khác thích làm việc từ xa.",
       answer: "Some people prefer working at the office, whereas others prefer working remotely.",
     },
+    {
+      id: "pt-2",
+      prompt_vn: "Do đó, chúng tôi đã thay đổi chiến lược tiếp cận.",
+      answer: "Consequently, we changed our approach strategy.",
+    },
+    {
+      id: "pt-3",
+      prompt_vn: "Tuy nhiên, kết quả vẫn chưa đạt như mong đợi.",
+      answer: "Nevertheless, the results have not met expectations.",
+    },
   ],
 
   sentenceCorrectionExercises: [

@@ -125,6 +125,16 @@ export const unit30: UnitData = {
       prompt_vn: "Việc giảm thiểu lượng khí thải nhà kính là cực kỳ quan trọng.",
       answer: "It is crucial to reduce greenhouse gas emissions.",
     },
+    {
+      id: "pt-2",
+      prompt_vn: "Bảo vệ môi trường là trách nhiệm của tất cả chúng ta.",
+      answer: "Protecting the environment is the responsibility of all of us.",
+    },
+    {
+      id: "pt-3",
+      prompt_vn: "Phòng ngừa ô nhiễm tốt hơn chữa trị sau này.",
+      answer: "Prevention of pollution is better than cure later.",
+    },
   ],
 
   sentenceCorrectionExercises: [

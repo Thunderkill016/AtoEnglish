@@ -127,6 +127,16 @@ export const unit29: UnitData = {
       prompt_vn: "Chúng ta có thể cân nhắc việc hoàn tiền phí vận chuyển.",
       answer: "We could consider refunding the shipping fee.",
     },
+    {
+      id: "pt-2",
+      prompt_vn: "Họ đề xuất một giải pháp thay thế khả thi.",
+      answer: "They proposed a feasible alternative solution.",
+    },
+    {
+      id: "pt-3",
+      prompt_vn: "Chúng tôi sẽ giải quyết vấn đề bằng cách động não.",
+      answer: "We will resolve the issue by brainstorming.",
+    },
   ],
 
   sentenceCorrectionExercises: [

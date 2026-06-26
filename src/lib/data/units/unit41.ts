@@ -129,6 +129,16 @@ export const unit41: UnitData = {
       prompt_vn: "Học lực của cô ấy đã được cải thiện rõ rệt.",
       answer: "Her academic performance has improved significantly.",
     },
+    {
+      id: "pt-2",
+      prompt_vn: "Chuyển đổi số sẽ tác động đến mọi ngành nghề.",
+      answer: "Digital transformation will affect every industry.",
+    },
+    {
+      id: "pt-3",
+      prompt_vn: "Năng lượng tái tạo giúp giảm suy thoái môi trường.",
+      answer: "Renewable energy helps reduce environmental degradation.",
+    },
   ],
 
   sentenceCorrectionExercises: [

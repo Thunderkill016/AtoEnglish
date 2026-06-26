@@ -126,6 +126,16 @@ export const unit42: UnitData = {
       prompt_vn: "Chúng tôi cần tiến hành đánh giá để xác thực kết quả.",
       answer: "We need to conduct an evaluation to validate the results.",
     },
+    {
+      id: "pt-2",
+      prompt_vn: "Sau khi hoàn thành chương trình, tôi cảm thấy tự tin giao tiếp trong môi trường quốc tế.",
+      answer: "Having completed the curriculum, I feel confident communicating in an international environment.",
+    },
+    {
+      id: "pt-3",
+      prompt_vn: "Nhà máy đang tuân thủ đầy đủ các tiêu chuẩn an toàn.",
+      answer: "The factory is in full compliance with all safety standards.",
+    },
   ],
 
   sentenceCorrectionExercises: [

@@ -125,6 +125,16 @@ export const unit34: UnitData = {
       prompt_vn: "Nếu bạn hỏi, tôi đã nói cho bạn biết rồi.",
       answer: "If you had asked, I would have told you.",
     },
+    {
+      id: "pt-2",
+      prompt_vn: "Nếu họ nhìn thấy dấu hiệu, họ đã tránh được sai lầm.",
+      answer: "If they had foreseen the sign, they would have avoided the mistake.",
+    },
+    {
+      id: "pt-3",
+      prompt_vn: "Tôi hối tiếc đã không đầu tư sớm hơn.",
+      answer: "I regret that I had not invested earlier.",
+    },
   ],
 
   sentenceCorrectionExercises: [

@@ -125,6 +125,16 @@ export const unit36: UnitData = {
       prompt_vn: "Người ta tin rằng biến đổi khí hậu đang đẩy nhanh.",
       answer: "It is believed that climate change is accelerating.",
     },
+    {
+      id: "pt-2",
+      prompt_vn: "Bằng chứng cho thấy giả thuyết đã được kiểm chứng.",
+      answer: "Evidence shows that the hypothesis has been examined.",
+    },
+    {
+      id: "pt-3",
+      prompt_vn: "Kết quả được thu thập từ nhiều nguồn khác nhau.",
+      answer: "The results were obtained from multiple sources.",
+    },
   ],
 
   sentenceCorrectionExercises: [

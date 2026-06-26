@@ -131,6 +131,16 @@ export const unit17: UnitData = {
       prompt_vn: "Tôi đã làm việc với khách hàng nước ngoài được ba năm.",
       answer: "I've worked with foreign clients for three years.",
     },
+    {
+      id: "pt-2",
+      prompt_vn: "Bạn đã từng đi Nhật Bản chưa?",
+      answer: "Have you ever been to Japan?",
+    },
+    {
+      id: "pt-3",
+      prompt_vn: "Chúng tôi chưa bao giờ gặp vấn đề này.",
+      answer: "We have never experienced this issue.",
+    },
   ],
 
   sentenceCorrectionExercises: [

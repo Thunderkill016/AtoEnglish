@@ -127,6 +127,16 @@ export const unit21: UnitData = {
       prompt_vn: "Đến cuối năm tới, chúng tôi sẽ mở rộng sang 5 thị trường.",
       answer: "By the end of next year, we will have expanded to 5 markets.",
     },
+    {
+      id: "pt-2",
+      prompt_vn: "Vào lúc này tuần sau, đội sẽ trình bày dự báo.",
+      answer: "At this time next week, the team will be presenting the forecast.",
+    },
+    {
+      id: "pt-3",
+      prompt_vn: "Xu hướng bền vững sẽ thay đổi ngành công nghiệp.",
+      answer: "Sustainable trends will be transforming the industry.",
+    },
   ],
 
   sentenceCorrectionExercises: [

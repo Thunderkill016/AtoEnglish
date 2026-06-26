@@ -125,6 +125,16 @@ export const unit33: UnitData = {
       prompt_vn: "Nếu chúng tôi có nhiều nguồn lực hơn, chúng tôi sẽ mở rộng.",
       answer: "If we had more resources, we would expand.",
     },
+    {
+      id: "pt-2",
+      prompt_vn: "Nếu tôi là bạn, tôi sẽ đầu tư vào công nghệ mới.",
+      answer: "If I were you, I would invest in new technology.",
+    },
+    {
+      id: "pt-3",
+      prompt_vn: "Họ sẽ mạo hiểm nếu thị trường ổn định.",
+      answer: "They would venture if the market were stable.",
+    },
   ],
 
   sentenceCorrectionExercises: [

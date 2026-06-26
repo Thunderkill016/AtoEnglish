@@ -7,8 +7,31 @@
 | Field | Value |
 |-------|-------|
 | Started | 2026-06-26 |
-| Focus | **Chuẩn nội dung** TASK-060 (B1 L1 50% unit24+31) + follow-up 057+; `npm run test:content-standard` = gate content |
+| Focus | **Chuẩn nội dung** TASK-057 (practiceTranslate ≥3/unit + min=3) + follow-ups 058+; gate=`npm run test:content-standard` + audit; blueprint + unit1 gold |
 | Owner | Autopilot (no human) |
+
+### TASK-057 — Chuẩn content: practiceTranslate ≥3 mọi unit + nâng min=3
+**Mục tiêu**: 30 units (13-42) hiện chỉ 1 câu translate VN→EN. Bổ sung +2 câu mỗi unit (tổng ≥3), sát với vocab+grammar của unit đó. Nâng LESSON_CONTENT_STANDARD.practiceTranslateMin từ 1→3 (đúng blueprint authorGuide và CONTENT_STYLE §7). Giữ format, id pt-1/2/3, câu ngắn tự nhiên, <12 từ EN, controlled output theo Nation/CLT. Chỉ edit content-standard + 30 unit files; không đổi flow/UI.
+**Bước thực hiện**:
+1. Search memory("TASK-057" + "practiceTranslate") + read AGENTS.md (ALWAYS), AGENT_BACKLOG/PLAN/ROADMAP, CONTENT_STYLE.md §6–7, lesson-center-reference.ts, lesson-blueprint.ts, learning-flow.ts, content-standard.ts, unit1.ts (gold mẫu), units list, 30 files unit13-42 (vocab/grammar/translate/dialogue sections).
+2. Grep confirm 30 units <3, A0+A1=3+; identify edit targets.
+3. Update BACKLOG: TASK-057 status `in_progress`.
+4. Update AGENT_PLAN.md với mục tiêu + bước + rủi ro cho TASK-057.
+5. Nếu ready <2: chạy `bash scripts/agent-refill-backlog.sh` (auto từ ROADMAP, KHÔNG hỏi user).
+6. Edit src/lib/lessons/content-standard.ts: practiceTranslateMin: 3 (comment update if any).
+7. For each unit13.ts..42.ts: expand practiceTranslate: [ {pt-1}, {pt-2 new}, {pt-3 new} ] — 2 câu mới dùng từ vựng/ thì của unit, giống unit1/unit10 style (short, natural, unit-internal).
+8. `npm run lint && npm run test` (unit); đặc biệt `npm run test:content-standard` (50 units) + `bash scripts/audit-lesson-content.sh`.
+9. Pass → update BACKLOG done + Nhật ký + SHA; PLAN log.
+10. git pull --rebase; git add content-standard.ts unit*.ts AGENT_*.md; commit "feat(content): practiceTranslate ≥3 all units + min=3 (TASK-057)"; `bash scripts/git-push.sh main`.
+**Rủi ro**:
+- Câu dịch không sát unit (vocab/grammar) → re-craft từ extract summary (vocab words + gtitle); unit1 gold style.
+- Id collision or syntax error in array → use "pt-2","pt-3" + verify format exact.
+- test:content-standard fail on other (L1 etc) → only touch translate; prior TASK-060 fixed some B1.
+- Many files (31 edits) → batch verify counts post, use replace_all careful or unique string.
+- Git large? No, text small. If push fail (secret) → status blocked, note next ready.
+- Fail 2x liên tiếp → blocked + lý do in backlog.
+- No user interaction; self-debug with lint/test output.
+**Done khi**: 50 units pass test:content-standard (practiceTranslate≥3, min updated); lint+all tests pass; 1 commit + push via git-push.sh main; BACKLOG status=done + entry SHA+date; no ask user.
 
 ### TASK-021 — Sync placement flow, 50 units, header shell, autopilot docs (PAGE_SPECIFICATIONS.md + AGENT_*)
 **Mục tiêu**: Làm cho docs phản ánh chính xác codebase hiện tại (50 units A0-B2, placement /placement-test + self-select + starting_unit_index flow, HeaderShell mới, navigation mở rộng, onboarding/login integration).
@@ -115,6 +138,7 @@
 | Time (UTC) | Task | Plan summary | Outcome |
 |------------|------|--------------|---------|
 | 2026-06-26 | TASK-044 | PHASE1: search_memory + read AGENTS/BACKLOG/PLAN/ROADMAP + grep e2e/placement/helpers/global/playwright; PHASE2 update PLAN+BACKLOG in_progress; PHASE3 minimal stabilize: networkidle + reset isolate in placement-test.spec; lint+test | in_progress |
+| 2026-06-26 | TASK-060 | PHASE1 research(AGENTS+CONTENT_STYLE+blueprint+center-ref+unit1+unit24/31+content-std+grep L1), PHASE2 update PLAN/BACKLOG in_progress, PHASE3: header comments + L1 notes (6+ per) for unit24/31 per ESA/CELTA/CLT VN, 75%/100% L1; all gates pass; commit 5df0678 + git-push | done — 5df0678 |
 | 2026-06-26T01:36Z | TASK-001/002 | P0 ops: migration blocked, deploy OK | autopilot armed |
 | 2026-06-26T08:55Z | TASK-001/011 | db push migration + E2E B1 unlock | 2 e2e pass |
 | 2026-06-26 | TASK-021 | Sync docs: placement, 50u, header, autopilot | done — 3d36d2f (docs commit); f9f21a1 (status) |

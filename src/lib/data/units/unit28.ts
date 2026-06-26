@@ -127,6 +127,16 @@ export const unit28: UnitData = {
       prompt_vn: "Bạn đã làm dự án này bao lâu rồi?",
       answer: "How long have you been working on this project?",
     },
+    {
+      id: "pt-2",
+      prompt_vn: "Cô ấy đã cống hiến cho công ty suốt năm năm.",
+      answer: "She has been dedicating herself to the company for five years.",
+    },
+    {
+      id: "pt-3",
+      prompt_vn: "Chúng tôi đã làm việc nhất quán trên chiến lược này.",
+      answer: "We have been working consistently on this strategy.",
+    },
   ],
 
   sentenceCorrectionExercises: [

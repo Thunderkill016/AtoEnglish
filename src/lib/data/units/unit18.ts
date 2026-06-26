@@ -132,6 +132,16 @@ export const unit18: UnitData = {
       prompt_vn: "Năm ngoái doanh thu tăng 20% so với năm trước.",
       answer: "Last year revenue increased by 20% compared to the previous year.",
     },
+    {
+      id: "pt-2",
+      prompt_vn: "Chúng tôi đã đạt mục tiêu quý này.",
+      answer: "We achieved the target this quarter.",
+    },
+    {
+      id: "pt-3",
+      prompt_vn: "Báo cáo cho thấy doanh số tăng mạnh.",
+      answer: "The report shows that sales increased significantly.",
+    },
   ],
 
   sentenceCorrectionExercises: [

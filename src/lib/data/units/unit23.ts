@@ -127,6 +127,16 @@ export const unit23: UnitData = {
       prompt_vn: "Nếu bạn đặt hàng trước thứ Sáu, chúng tôi sẽ giao hàng miễn phí.",
       answer: "If you order before Friday, we will deliver for free.",
     },
+    {
+      id: "pt-2",
+      prompt_vn: "Trừ khi bạn xác nhận sớm, chúng tôi không thể đảm bảo.",
+      answer: "Unless you confirm early, we cannot guarantee it.",
+    },
+    {
+      id: "pt-3",
+      prompt_vn: "Nếu giá giảm, doanh số sẽ tăng.",
+      answer: "If the price drops, sales will increase.",
+    },
   ],
 
   sentenceCorrectionExercises: [

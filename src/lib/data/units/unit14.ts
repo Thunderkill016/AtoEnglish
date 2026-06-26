@@ -131,6 +131,16 @@ export const unit14: UnitData = {
       prompt_vn: "Tháng tới chúng tôi sẽ ra mắt sản phẩm mới.",
       answer: "Next month we are going to launch a new product.",
     },
+    {
+      id: "pt-2",
+      prompt_vn: "Chúng tôi sẽ họp vào thứ Hai tới.",
+      answer: "We will have a meeting next Monday.",
+    },
+    {
+      id: "pt-3",
+      prompt_vn: "Tôi dự định nộp báo cáo trước hạn chót.",
+      answer: "I am going to submit the report before the deadline.",
+    },
   ],
 
   sentenceCorrectionExercises: [

@@ -132,6 +132,16 @@ export const unit15: UnitData = {
       prompt_vn: "Chiếc laptop này đắt hơn chiếc kia nhưng chất lượng tốt hơn.",
       answer: "This laptop is more expensive than that but the quality is better.",
     },
+    {
+      id: "pt-2",
+      prompt_vn: "Cửa hàng này rẻ hơn nhưng không có giảm giá.",
+      answer: "This shop is cheaper but there is no discount.",
+    },
+    {
+      id: "pt-3",
+      prompt_vn: "Chiếc điện thoại đắt nhất có bảo hành hai năm.",
+      answer: "The most expensive phone has a two-year warranty.",
+    },
   ],
 
   sentenceCorrectionExercises: [

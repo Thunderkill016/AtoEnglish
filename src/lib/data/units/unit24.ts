@@ -140,6 +140,16 @@ export const unit24: UnitData = {
       prompt_vn: "Mỗi sản phẩm được kiểm tra ba lần trước khi vận chuyển.",
       answer: "Each product is inspected three times before shipping.",
     },
+    {
+      id: "pt-2",
+      prompt_vn: "Sản phẩm được sản xuất tại nhà máy ở Hà Nội.",
+      answer: "The product is manufactured at the factory in Hanoi.",
+    },
+    {
+      id: "pt-3",
+      prompt_vn: "Hàng hóa được phân phối đến các cửa hàng mỗi tuần.",
+      answer: "Goods are distributed to stores every week.",
+    },
   ],
 
   sentenceCorrectionExercises: [

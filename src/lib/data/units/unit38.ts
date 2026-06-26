@@ -125,6 +125,16 @@ export const unit38: UnitData = {
       prompt_vn: "Không những anh ấy nói trôi chảy, mà anh ấy còn viết rất giỏi.",
       answer: "Not only does he speak fluently, but he also writes very well.",
     },
+    {
+      id: "pt-2",
+      prompt_vn: "Chỉ sau khi họp xong họ mới tiết lộ thông tin.",
+      answer: "Only after the meeting did they reveal the information.",
+    },
+    {
+      id: "pt-3",
+      prompt_vn: "Chính sự thuyết phục đã giúp họ thắng cuộc tranh luận.",
+      answer: "It was the persuasion that helped them win the debate.",
+    },
   ],
 
   sentenceCorrectionExercises: [

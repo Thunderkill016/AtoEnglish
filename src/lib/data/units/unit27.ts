@@ -127,6 +127,16 @@ export const unit27: UnitData = {
       prompt_vn: "Tôi sẽ theo dõi với khách hàng và tìm hiểu tiến độ của họ.",
       answer: "I'll follow up with the client and find out their timeline.",
     },
+    {
+      id: "pt-2",
+      prompt_vn: "Chúng tôi sẽ điều tra vấn đề và sắp xếp giải pháp.",
+      answer: "We will look into the issue and sort out a solution.",
+    },
+    {
+      id: "pt-3",
+      prompt_vn: "Họ đã thiết lập một quy trình mới để thực hiện dự án.",
+      answer: "They set up a new process to carry out the project.",
+    },
   ],
 
   sentenceCorrectionExercises: [
