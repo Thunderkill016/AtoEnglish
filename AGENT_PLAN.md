@@ -1266,7 +1266,7 @@
 
 **Completed TASK-091 (post exec sync)**: gates clean (lint0+170t+tsc0+cs50/50+audit50/50) no fix needed; log written 20260627T001400Z_TASK-091.log; BACKLOG+PLAN updated + pushed (57ceffa main + follow); no source edit; autonomous.
 
-**Completed TASK-092 (post exec sync)**: gates clean (lint0+170t+tsc0+cs50/50+audit50/50) no fix needed; log written 20260627T002013Z_TASK-092.log; BACKLOG+PLAN updated + pushed via git-push.sh main; no source edit; autonomous.
+**Completed TASK-092 (post exec sync)**: gates clean (lint0+170t+tsc0+cs50/50+audit50/50) no fix needed; log written 20260627T002013Z_TASK-092.log; BACKLOG+PLAN updated + pushed 39fdcf7 via git-push.sh main; no source edit; autonomous.
 
 ### TASK-089 — Speaking: tab → sub-routes
 **Mục tiêu**: `SpeakingClient.tsx` (4 internal tabs via useState activeTab + tab buttons ListSection + AnimatePresence grid switch 4 comps + sidebar history) → PrimaryRow entry (list 4 modes) + sub-routes `/speaking/shadowing`, `/speaking/roleplay`, `/speaking/journal`, `/speaking/phoneme` theo V2 IA (Hick's Law: 1 screen 1 list, progressive disclosure). Giữ PrimaryRow cho pronunciation ở entry. Sub pages: thin wrapper SecondaryPageShell + feature comp (ShadowingPractice, AIRoleplay, JournalMode, PhonemeChecker). Giữ count fetch cho subtitle; bỏ tab UI/state/Animate/grid/sidebar từ main. Không sửa logic/feature comps (save, eval, speech, data, query ?id= support). **Done khi:** Không 4-tab trên 1 page; /speaking = PrimaryRow list; 4 sub-routes hoạt động; lint+test pass.
