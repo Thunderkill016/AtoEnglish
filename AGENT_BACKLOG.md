@@ -538,6 +538,25 @@
 - **Done khi:** Khớp light UnitTemplate; lint pass
 
 
+### TASK-085 — Login visual minimal
+- **Status:** `ready`
+- **Mô tả:** `login/page.tsx` — `MinimalButton` thay gradient; thu gọn desktop panel; giữ 3-step.
+- **Done khi:** Không gradient CTA; e2e onboarding pass.
+- **Started:** auto-refill
+
+### TASK-086 — Certificate eligible view minimal
+- **Status:** `ready`
+- **Mô tả:** `CertificateClient.tsx` eligible — `SecondaryPageShell` + flat card.
+- **Done khi:** Dùng design-system; lint+test pass.
+- **Started:** auto-refill
+
+### TASK-087 — Legal pages Prose
+- **Status:** `ready`
+- **Mô tả:** `terms/page.tsx`, `privacy/page.tsx` — `Screen` + `Prose`.
+- **Done khi:** 2 page dùng kit; lint pass.
+- **Started:** auto-refill
+
+
 ---
 
 ## Nhật ký agent
@@ -547,6 +566,9 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
+| 2026-06-26 | TASK-085 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-06-26 | TASK-086 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-06-26 | TASK-087 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-06-26 | TASK-078 | PHASE1: real search_memory + read agents+backlog+plan+content§6-7 + grep; PHASE2: PLAN+BACKLOG in_progress (3r>=2 skip); PHASE3: gates clean (lint0+170t+tsc0+cs50/50+audit50/50) no fix needed + sync log/PLAN/BACKLOG; commit+push via git-push.sh main | done — 1879565 |
 | 2026-06-26 | TASK-079 | V2 research: audit post-bac3f15, MINIMAL_REDESIGN_V2+ROADMAP+BACKLOG queue TASK-081..090 | done |
 | 2026-06-26 | TASK-080 | cancelled — replaced by V2 queue | cancelled |
