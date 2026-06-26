@@ -10,6 +10,31 @@
 | Focus | Kế hoạch tối giản P0–P6 done (905cb61). Tiếp: TASK-045 (doc autopilot) → TASK-046 (B2 audio test) |
 | Owner | Autopilot (no human) |
 
+### TASK-045 — Sync AGENT_AUTOPILOT.md với auto-refill
+**Mục tiêu**: Làm cho AGENT_AUTOPILOT.md mô tả chính xác cơ chế tự động: daemon/orchestrator/pick-task tự gọi refill từ AGENT_ROADMAP.md khi ready < 2 (MIN_READY), script agent-refill-backlog.sh parse roadmap pool, chèn tối đa 4 task `ready` vào BACKLOG, commit+push (chore, skip ci). Xóa mọi hướng dẫn gợi ý "user thêm task thủ công" vào backlog (user chỉ thêm vào ROADMAP nếu muốn ưu tiên). Giữ phần "Việc cần làm thủ công 1 lần (P0)" vì là setup secrets/migration (khác task hàng ngày). Doc khớp scripts hiện tại (refill, pick, orchestrator, roadmap format). Chỉ sửa doc; không code/logic.
+**Bước thực hiện**:
+1. Search memory("TASK-045" + "autopilot" + "refill" + "AGENT_AUTOPILOT") + read AGENTS.md (ALWAYS), AGENT_BACKLOG/PLAN/ROADMAP/AUTOPILOT.md, scripts/agent-refill-backlog.sh + agent-pick-task.sh + agent-orchestrator.sh (to confirm auto flow), CONTENT_STYLE §6-7 (không liên quan trực tiếp).
+2. Grep AGENT_AUTOPILOT.md cho cụm "user thêm", "thủ công", "thêm vào BACKLOG", "tạo task"; xác định file cần edit (chỉ AUTOPILOT).
+3. Update BACKLOG: TASK-045 status `in_progress`.
+4. Update AGENT_PLAN.md với mục tiêu + bước + rủi ro cho TASK-045 (this section).
+5. Nếu ready <2: chạy `bash scripts/agent-refill-backlog.sh` (đã chạy, 2 ready ≥2 skip; KHÔNG hỏi).
+6. Edit AGENT_AUTOPILOT.md: 
+   - Đảm bảo section "Quản lý backlog (tự động)" + bảng file mô tả rõ ROADMAP + refill script behavior (tự chèn khi thấp).
+   - Bổ sung mô tả ngắn: "Agent tự refill từ ROADMAP; user KHÔNG thêm task vào BACKLOG thủ công — chỉ edit ROADMAP nếu cần ưu tiên."
+   - Xóa / rephrase dòng gợi ý user can "thêm task thủ công".
+   - Giữ "Việc cần làm thủ công 1 lần (P0)" nguyên (khác scope: setup infra 1 lần).
+7. `npm run lint && npm run test` (chỉ doc → chủ yếu lint ts? nhưng doc md ok; chạy full per rule).
+8. Pass → update BACKLOG done + Nhật ký + SHA; PLAN log.
+9. git pull --rebase; git add AGENT_AUTOPILOT.md AGENT_BACKLOG.md AGENT_PLAN.md; commit "docs(agent): sync AGENT_AUTOPILOT.md with auto-refill from ROADMAP, remove manual task instructions (TASK-045)"; `bash scripts/git-push.sh main`.
+**Rủi ro**:
+- Edit doc làm sai lệch mô tả script (e.g. MIN_READY=2) → bám đúng code refill.sh (if >= skip, NEED= target-ready, python parse ### TASK- , chèn trước marker nhật ký).
+- Xóa nhầm phần "thủ công 1 lần P0" (setup migration/secrets) → chỉ chạm phần quản lý backlog / "user không cần nhắc".
+- Commit md only, nhưng vẫn chạy lint+test như mọi task (per AGENTS checklist before commit).
+- Refill/push may race with other agent — pull --rebase first.
+- Fail 2x → blocked + lý do.
+- No secret/DB; pure docs. Self-debug from test/lint output.
+**Done khi**: AGENT_AUTOPILOT.md mô tả ROADMAP+refill chính xác (grep verify); không còn hướng dẫn "user thêm task thủ công" (trừ P0 setup); lint+test pass; 1 commit + push via git-push.sh main; BACKLOG status=done + entry SHA+date; no ask user.
+
 ### TASK-058 — Chuẩn content: B2 L1 interference ≥50%
 **Mục tiêu**: unit33–42 (B2) hiện L1 ratio ~0-25% (0-3/12). Nâng LESSON_CONTENT_STANDARD.l1MinRatioByLevel.B2 từ 0→0.5 (đúng CONTENT_STYLE §7 + center ref VN CLT L1 contrast). Thêm l1_interference_vn (≥15 ký tự, ⚠️ format, lỗi người Việt hay mắc theo ESA/CELTA/ILA: article, tense, collocation, passive/conditional, false friends, prepositions) cho ≥6/12 (unit41: ≥8/16) từ mỗi unit. Giữ 1 dòng object; pre-teach lexis Study phase. Chỉ edit content-standard + 10 B2 unit files; không đổi flow/UI/grammar.
 **Bước thực hiện**:

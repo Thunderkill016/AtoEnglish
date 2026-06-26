@@ -57,7 +57,7 @@ scheduler_create interval=3h prompt="Autopilot AtoEnglish: 1 task từ AGENT_BAC
 
 ## Quản lý backlog (tự động)
 
-**User không cần nhắc agent tạo task.**
+**User KHÔNG cần nhắc / thêm task thủ công.** Agent tự quản lý.
 
 | File | Vai trò |
 |------|---------|
@@ -66,12 +66,13 @@ scheduler_create interval=3h prompt="Autopilot AtoEnglish: 1 task từ AGENT_BAC
 
 ```bash
 bash scripts/agent-refill-backlog.sh --dry-run   # xem sẽ thêm task nào
-bash scripts/agent-refill-backlog.sh             # refill + commit + push
+bash scripts/agent-refill-backlog.sh             # refill + commit + push (auto bởi pick/orchestrator)
 ```
 
-- Ưu tiên: P0 → P1 → P2 → P3
-- Agent nhận task `ready` đầu tiên
-- Muốn ưu tiên feature cụ thể: thêm vào `AGENT_ROADMAP.md` (không cần sửa backlog tay)
+- Cơ chế: `agent-pick-task.sh` + `agent-orchestrator.sh` tự gọi refill khi ready < MIN_READY (2). Script parse ROADMAP (### TASK-xxx), chèn tối đa 4 `ready` trước marker "Nhật ký agent", commit "chore(agent): auto-refill...".
+- Ưu tiên: P0 → P1 → P2 → P3 (theo thứ tự trong ROADMAP + backlog queue)
+- Agent nhận task `ready` đầu tiên (sau tự refill nếu cần)
+- Muốn ưu tiên feature cụ thể: thêm vào `AGENT_ROADMAP.md` (KHÔNG sửa BACKLOG tay; agent sẽ tự đưa vào khi refill)
 
 ## CI — GitLab + local (đã bỏ GitHub Actions auto)
 
@@ -123,4 +124,5 @@ Push mặc định: `bash scripts/git-push.sh` (GitLab). Pull: `git pull gitlab 
 4. Xóa/điều chỉnh cron nếu không cần nữa: `crontab -e`
 
 ## Nhật ký cập nhật (autopilot)
+- 2026-06-26 TASK-045: synced AGENT_AUTOPILOT.md — mô tả ROADMAP + agent-refill-backlog.sh; xóa mọi gợi ý user thêm task thủ công vào backlog (chỉ ROADMAP cho ưu tiên); agent tự refill + pick. Docs khớp script hiện tại (pick/orch/refill).
 - 2026-06-26 TASK-021: synced PAGE_SPECIFICATIONS.md (50 units A0-B2, placement flow /placement-test + onboarding, HeaderShell, nav); updated AGENT_PLAN + BACKLOG. Docs now match code.

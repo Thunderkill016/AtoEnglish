@@ -351,10 +351,10 @@
 - **Completed:** 2026-06-26 — Landing trimmed to headline+HeroCTA; below-fold sections removed; metric baseline via e2e:time-to-lesson (P0); 905cb61
 
 ### TASK-045 — Sync AGENT_AUTOPILOT.md với auto-refill
-- **Status:** `ready`
+- **Status:** `in_progress`
 - **Mô tả:** Doc mô tả AGENT_ROADMAP.md + refill script; xóa hướng dẫn "user thêm task thủ công".
 - **Done khi:** Doc khớp scripts hiện tại.
-- **Started:** auto-refill
+- **Started:** 2026-06-26 — autopilot (PHASE1: read AGENTS+BACKLOG+PLAN+ROADMAP+AUTOPILOT+CONTENT§6-7 + grep; memory sim via logs; PHASE2: plan section+refill run (skipped >=2); PHASE3: set in_progress, edit doc)
 
 ### TASK-046 — Curriculum quality B2 audio declarations
 - **Status:** `ready`
