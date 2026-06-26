@@ -27,7 +27,7 @@
 6. `git pull --rebase` (staged first); `git add` (targeted + -f for log per .gitignore); commit "chore(maintenance): autopilot sweep #117 — lint+test gates + PLAN/BACKLOG sync (TASK-117)" ; follow-up sync if; `bash scripts/git-push.sh main`.
 7. Updated table/SHA refs.
 
-**Result:** All gates clean. No failures (0 fixes). No new features. Files touched: AGENT_BACKLOG.md, AGENT_PLAN.md, 1 log. Commit + push via git-push.sh. Status=`done`. Ready now includes 118 + refilled.
+**Result:** All gates clean. No failures (0 fixes). No new features. Files touched: AGENT_BACKLOG.md, AGENT_PLAN.md, 1 log. Commit 7966b60 + follow-up f898d6f + push via git-push.sh. Status=`done`. Ready now includes 118+119-121.
 
 Per AGENTS.md / AGENT_BACKLOG / query rules: autonomous, 1 task/session, lint+test mandatory + pass, self-debug, ship small, no ask. Next ready for daemon. 
 
