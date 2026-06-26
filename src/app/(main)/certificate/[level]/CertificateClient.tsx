@@ -3,7 +3,6 @@
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { Award, Download, ArrowLeft, BookOpen, Star, Lock, Share2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { SecondaryPageShell, MinimalButton } from "@/components/design-system";
 import { toast } from "sonner";
 
@@ -132,57 +131,45 @@ export default function CertificateClient({
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-4 pb-28 sm:p-8 sm:pb-8 relative overflow-hidden">
-      {/* Background glow */}
-      <div className={`pointer-events-none absolute inset-0 -z-10 bg-gradient-to-br from-zinc-950 via-zinc-900 to-zinc-950`} />
-      <div className={`pointer-events-none absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 -z-10 h-96 w-96 rounded-full bg-gradient-to-br ${theme.gradient} opacity-10 blur-[120px]`} />
-
-      {/* Back button */}
-      <motion.div
-        initial={{ opacity: 0, x: -20 }}
-        animate={{ opacity: 1, x: 0 }}
-        className="absolute top-6 left-6"
-      >
-        <Button variant="ghost" size="sm" onClick={() => router.back()} className="text-zinc-500 hover:text-zinc-300 rounded-xl">
-          <ArrowLeft className="size-4 mr-1" /> Quay lại
-        </Button>
-      </motion.div>
-
-      {/* Certificate Card */}
+    <SecondaryPageShell
+      title={`Chứng nhận ${level.toUpperCase()}`}
+      subtitle={levelLabel}
+    >
+      {/* Certificate flat card */}
       <motion.div
         id="certificate-card"
-        initial={{ opacity: 0, scale: 0.9, y: 30 }}
+        initial={{ opacity: 0, scale: 0.98, y: 10 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
-        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-        className="w-full max-w-2xl bg-zinc-900/80 border border-zinc-700/60 rounded-3xl overflow-hidden shadow-[0_40px_80px_rgba(0,0,0,0.5)] backdrop-blur-xl print:shadow-none"
+        transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+        className="w-full max-w-2xl mx-auto bg-card border border-border/60 rounded-2xl overflow-hidden print:shadow-none"
       >
-        {/* Top gradient bar */}
-        <div className={`h-2 w-full bg-gradient-to-r ${theme.gradient}`} />
+        {/* Accent top bar */}
+        <div className={`h-1.5 w-full bg-gradient-to-r ${theme.gradient}`} />
 
-        <div className="p-8 sm:p-12 space-y-8">
+        <div className="p-8 sm:p-10 space-y-7">
           {/* Header row */}
           <div className="flex items-start justify-between">
             <div className="space-y-1">
-              <p className="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-500">AtoEnglish</p>
-              <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-600">Certificate of Completion</p>
+              <p className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground">AtoEnglish</p>
+              <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/70">Certificate of Completion</p>
             </div>
             <motion.div
-              animate={{ rotate: [0, 5, -5, 0] }}
+              animate={{ rotate: [0, 4, -4, 0] }}
               transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
-              className={`size-16 rounded-2xl bg-gradient-to-br ${theme.gradient} flex items-center justify-center shadow-lg`}
+              className={`size-14 rounded-2xl bg-gradient-to-br ${theme.gradient} flex items-center justify-center`}
             >
-              <Award className="size-9 text-white" />
+              <Award className="size-8 text-white" />
             </motion.div>
           </div>
 
           {/* Main content */}
-          <div className="text-center space-y-6">
+          <div className="text-center space-y-5">
             <div className="space-y-2">
-              <p className="text-zinc-500 text-sm font-semibold">Chứng nhận hoàn thành</p>
-              <h1 className={`text-4xl sm:text-5xl font-black bg-gradient-to-r ${theme.gradient} bg-clip-text text-transparent`}>
+              <p className="text-muted-foreground text-sm font-semibold">Chứng nhận hoàn thành</p>
+              <h1 className={`text-3xl sm:text-4xl font-black bg-gradient-to-r ${theme.gradient} bg-clip-text text-transparent`}>
                 {levelLabel.split("—")[0].trim()}
               </h1>
-              <p className="text-zinc-400 text-sm">{levelLabel.split("—")[1]?.trim()}</p>
+              <p className="text-muted-foreground text-sm">{levelLabel.split("—")[1]?.trim()}</p>
             </div>
 
             {/* Stars */}
@@ -190,11 +177,11 @@ export default function CertificateClient({
               {[1, 2, 3].map((i) => (
                 <motion.div
                   key={i}
-                  initial={{ scale: 0, rotate: -30 }}
+                  initial={{ scale: 0, rotate: -20 }}
                   animate={{ scale: 1, rotate: 0 }}
-                  transition={{ delay: 0.4 + i * 0.1, type: "spring", stiffness: 200 }}
+                  transition={{ delay: 0.3 + i * 0.08, type: "spring", stiffness: 220 }}
                 >
-                  <Star className="size-8 text-yellow-400 fill-yellow-400" />
+                  <Star className="size-7 text-yellow-400 fill-yellow-400" />
                 </motion.div>
               ))}
             </div>
@@ -202,10 +189,10 @@ export default function CertificateClient({
             {/* Divider */}
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-zinc-700/60" />
+                <div className="w-full border-t border-border/60" />
               </div>
               <div className="relative flex justify-center">
-                <span className="bg-zinc-900 px-4 text-[10px] text-zinc-600 uppercase tracking-widest font-bold">
+                <span className="bg-card px-3 text-[10px] text-muted-foreground uppercase tracking-widest font-bold">
                   Cấp cho
                 </span>
               </div>
@@ -213,19 +200,19 @@ export default function CertificateClient({
 
             {/* Recipient name */}
             <div className="space-y-1">
-              <h2 className="text-3xl sm:text-4xl font-black text-zinc-100 tracking-tight">
+              <h2 className="text-2xl sm:text-3xl font-black text-foreground tracking-tight">
                 {userName}
               </h2>
-              <p className="text-zinc-500 text-sm">
-                đã hoàn thành <span className="font-bold text-zinc-300">{requiredUnits} bài học</span> chặng{" "}
-                <span className="font-bold text-zinc-300">{level.toUpperCase()}</span> với{" "}
+              <p className="text-muted-foreground text-sm">
+                đã hoàn thành <span className="font-bold text-foreground">{requiredUnits} bài học</span> chặng{" "}
+                <span className="font-bold text-foreground">{level.toUpperCase()}</span> với{" "}
                 <span className={`font-black ${theme.accent}`}>{totalXp.toLocaleString()} XP</span>
               </p>
             </div>
 
             {/* Date */}
             {completedDate && (
-              <p className="text-xs text-zinc-600 font-mono">
+              <p className="text-xs text-muted-foreground font-mono">
                 Ngày cấp: {completedDate}
               </p>
             )}
@@ -238,20 +225,20 @@ export default function CertificateClient({
               { label: "XP tích lũy", value: totalXp.toLocaleString() },
               { label: "Trình độ", value: level.toUpperCase() },
             ].map(({ label, value }) => (
-              <div key={label} className="rounded-2xl bg-zinc-800/60 border border-zinc-700/40 p-3 text-center">
+              <div key={label} className="rounded-xl bg-muted/40 border border-border/60 p-3 text-center">
                 <p className={`text-lg font-black ${theme.accent}`}>{value}</p>
-                <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider mt-0.5">{label}</p>
+                <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-wider mt-0.5">{label}</p>
               </div>
             ))}
           </div>
 
           {/* Watermark / signature line */}
-          <div className="flex items-center justify-between pt-4 border-t border-zinc-800">
+          <div className="flex items-center justify-between pt-3 border-t border-border/60">
             <div className="space-y-1">
               <div className={`text-xs font-black bg-gradient-to-r ${theme.gradient} bg-clip-text text-transparent`}>
                 AtoEnglish
               </div>
-              <p className="text-[10px] text-zinc-600">atoenglish.vercel.app</p>
+              <p className="text-[10px] text-muted-foreground">atoenglish.vercel.app</p>
             </div>
             <div className={`text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-xl border ${theme.badge}`}>
               Xác thực ✓
@@ -259,18 +246,18 @@ export default function CertificateClient({
           </div>
         </div>
 
-        {/* Bottom gradient bar */}
-        <div className={`h-1 w-full bg-gradient-to-r ${theme.gradient} opacity-40`} />
+        {/* Bottom accent */}
+        <div className={`h-0.5 w-full bg-gradient-to-r ${theme.gradient} opacity-50`} />
       </motion.div>
 
       {/* Share Section */}
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.4 }}
-        className="w-full max-w-2xl mt-6 rounded-2xl border border-zinc-800 bg-zinc-900/40 p-4 print:hidden"
+        transition={{ delay: 0.25 }}
+        className="w-full max-w-2xl mx-auto mt-5 rounded-2xl border border-border/60 bg-card p-4 print:hidden"
       >
-        <p className="text-xs font-black text-zinc-400 uppercase tracking-wider text-center mb-3">
+        <p className="text-xs font-black text-muted-foreground uppercase tracking-wider text-center mb-3">
           🎉 Chia sẻ thành tích với mọi người
         </p>
         <div className="grid grid-cols-3 gap-2">
@@ -279,11 +266,10 @@ export default function CertificateClient({
             onClick={handleShareLinkedIn}
             className="flex flex-col items-center gap-1.5 p-3 rounded-xl bg-[#0077b5]/10 border border-[#0077b5]/20 hover:bg-[#0077b5]/20 transition-all duration-200 group"
           >
-            {/* LinkedIn inline SVG — lucide-react doesn't export Linkedin */}
             <svg className="size-5" viewBox="0 0 24 24" fill="#0077b5" aria-hidden="true">
               <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
             </svg>
-            <span className="text-[10px] font-bold text-zinc-400 group-hover:text-zinc-200">LinkedIn</span>
+            <span className="text-[10px] font-bold text-muted-foreground group-hover:text-foreground">LinkedIn</span>
           </button>
           <button
             id="share-facebook"
@@ -291,43 +277,43 @@ export default function CertificateClient({
             className="flex flex-col items-center gap-1.5 p-3 rounded-xl bg-[#1877f2]/10 border border-[#1877f2]/20 hover:bg-[#1877f2]/20 transition-all duration-200 group"
           >
             <Share2 className="size-5 text-[#1877f2]" />
-            <span className="text-[10px] font-bold text-zinc-400 group-hover:text-zinc-200">Facebook</span>
+            <span className="text-[10px] font-bold text-muted-foreground group-hover:text-foreground">Facebook</span>
           </button>
           <button
             id="share-copy-link"
             onClick={handleCopyLink}
-            className="flex flex-col items-center gap-1.5 p-3 rounded-xl bg-zinc-800/60 border border-zinc-700/40 hover:bg-zinc-700/60 transition-all duration-200 group"
+            className="flex flex-col items-center gap-1.5 p-3 rounded-xl bg-muted border border-border/60 hover:bg-muted/80 transition-all duration-200 group"
           >
-            <Share2 className="size-5 text-zinc-400" />
-            <span className="text-[10px] font-bold text-zinc-400 group-hover:text-zinc-200">Sao chép</span>
+            <Share2 className="size-5 text-muted-foreground" />
+            <span className="text-[10px] font-bold text-muted-foreground group-hover:text-foreground">Sao chép</span>
           </button>
         </div>
       </motion.div>
 
       {/* Action buttons */}
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.5 }}
-        className="flex flex-col sm:flex-row gap-3 mt-4 w-full max-w-2xl print:hidden"
+        transition={{ delay: 0.35 }}
+        className="flex flex-col sm:flex-row gap-3 mt-4 w-full max-w-2xl mx-auto print:hidden"
       >
-        <Button
-          id="print-certificate"
+        <MinimalButton
+          data-testid="print-certificate"
+          variant="secondary"
+          fullWidth
           onClick={handlePrint}
-          variant="outline"
-          className="flex-1 h-12 rounded-xl font-bold border-zinc-700 hover:bg-zinc-800 text-zinc-300 gap-2"
         >
           <Download className="size-4" />
           Lưu / In chứng nhận
-        </Button>
-        <Button
-          id="back-to-dashboard"
+        </MinimalButton>
+        <MinimalButton
+          data-testid="back-to-dashboard"
+          fullWidth
           onClick={() => router.push("/dashboard")}
-          className={`flex-1 h-12 bg-gradient-to-r ${theme.gradient} text-white font-bold rounded-xl shadow-lg`}
         >
           Về Dashboard
-        </Button>
+        </MinimalButton>
       </motion.div>
-    </div>
+    </SecondaryPageShell>
   );
 }

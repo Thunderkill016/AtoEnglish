@@ -168,6 +168,41 @@
 - No secrets (pure UI); self-debug from lint/test/e2e output if run.
 **Done khi**: 0 "bg-gradient-to-r from-emerald" or "to-emerald-500" on CTA buttons; desktop panel simplified (no blobs, flat, shorter); 3-step intact; e2e onboarding pass (or unit if e2e needs server); lint+170t+tsc0 pass; 1 commit + push via git-push.sh main; BACKLOG=done + entry SHA+date; no ask; autonomous.
 
+**Completed:** 2026-06-26 — 0 CTA gradients (MinimalButton + flat tokens); panel w-36% compact flat no blobs 2 rows; 3-step kept; gates lint+170+tsc+cs50/50 clean; commit 8985c8a + git-push.sh main; BACKLOG done; autonomous
+
+### TASK-086 — Certificate eligible view minimal
+**Mục tiêu**: `CertificateClient.tsx` eligible (isEligible branch) — wrap với `SecondaryPageShell` (như ineligible lock state + các secondary như roadmap/progress) + thay fancy heavy zinc-900/gradient/glow card bằng flat card dùng tokens V2: `bg-card border border-border/60`, text-foreground/muted-foreground, rounded-2xl; dùng `MinimalButton` cho actions (print, dashboard, share nếu fit). Giữ: level themes accents cho tên/level (subtle), all share/print/copy logic, ids (certificate-card, print-certificate, share-*), motion, userName, xp, date, stats grid, texts VN, framer. Xóa: min-h-screen outer, absolute glows, zinc specific bg/border/text, custom Button zinc classes, heavy shadow/gradient bars. **Done khi:** Dùng design-system (shell + flat); 0 heavy zinc in eligible; lint+test pass.
+**Bước thực hiện**:
+1. Search memory("TASK-086" + "certificate eligible" + "SecondaryPageShell" + "flat card") sim via logs/grep (empty prior impl, only prompt) + read AGENTS.md (ALWAYS), AGENT_BACKLOG/PLAN/ROADMAP, CONTENT_STYLE.md §6–7 (blueprint context, not UI), MINIMAL_REDESIGN_V2.md (notes certificate eligible missing shell), src/app/(main)/certificate/[level]/CertificateClient.tsx + page.tsx, src/components/design-system/{SecondaryPageShell,Screen,LargeTitle,MinimalButton}.tsx , src/app/(main)/checkpoint/[phase]/CheckpointClient.tsx (pattern for locked/eligible inside shell + flat success card).
+2. Grep codebase confirm: only CertificateClient has the heavy eligible layout; ineligible already shell+Minimal; other cert refs are data/vocab; identify edit only this client file (no server/page change).
+3. Update BACKLOG: TASK-086 status `in_progress` (done).
+4. Update AGENT_PLAN.md (this section) + current focus.
+5. ready=2 (086,087) ≥2 → skip `bash scripts/agent-refill-backlog.sh` (read ROADMAP confirmed; KHÔNG hỏi user).
+6. Edit CertificateClient.tsx (minimal):
+   - Eligible return: wrap content with <SecondaryPageShell title={`Chứng nhận ${level.toUpperCase()}`} subtitle={levelLabel}> ... </SecondaryPageShell>
+   - Replace outer <div className="min-h-screen ... relative overflow-hidden"> + bg divs + absolute back + fancy motion.card zinc by: motion.div or div for the card with classes "max-w-2xl mx-auto rounded-2xl border border-border/60 bg-card p-8 sm:p-12 space-y-8" (keep id="certificate-card")
+   - Top gradient bar: keep thin or replace with subtle border-accent using theme.accent if needed; bottom bar minimal.
+   - All inner text: zinc- → foreground / muted-foreground; bg-zinc-800/60 → bg-muted/30 or border-border/60 bg-card inner; keep subtle level gradients only on key elements (h1 name? or accent).
+   - Stats grid: use bg-muted/50 border-border/60
+   - Share section: keep grid but flat classes (border-border/60 bg-card); buttons keep or wrap with MinimalButton variant=ghost/secondary where fits (preserve onClick).
+   - Action buttons: replace 2 <Button ...> by <MinimalButton fullWidth ...> and variant ghost/primary; keep icons + ids.
+   - Remove unused imports if any (keep Button if still? but replace); keep all handlers, certUrl, shareText, motion, toast, router.
+   - For print: add print:hidden to shell title? or let it, or add class on header if needed; keep id for card.
+   - Preserve exact texts, requiredUnits, totalXp display, date format.
+7. `npm run lint && npm run test`; npx tsc --noEmit.
+8. Pass → update BACKLOG done + Nhật ký + SHA; PLAN log entry; create log file summary if needed.
+9. git pull --rebase; git add src/app/(main)/certificate/[level]/CertificateClient.tsx AGENT_BACKLOG.md AGENT_PLAN.md; commit "refactor(certificate): eligible view to SecondaryPageShell + flat card tokens (TASK-086)"; `bash scripts/git-push.sh main`.
+**Rủi ro**:
+- Print layout: card was full bleed fancy now inside Screen (max-w narrow? but shell narrow=false) → use inner wide card ok; print may include title, add "print:hidden" on LargeTitle wrapper if needed but minimal first.
+- Theme accent lost → keep subtle gradient on title or level badge using existing theme; V2 accepts primary + level subtle.
+- Share buttons custom styled → keep custom for brand colors (linkedin blue) or minimal change; logic intact.
+- Motion centering → shell provides container, card max-w-2xl mx-auto inside children will center.
+- No secret (client UI only); fail on style only → self fix.
+- If fail 2x → blocked.
+**Done khi**: Eligible uses SecondaryPageShell + flat bg-card card (grep zinc-900/ min-h-screen confirm 0 in eligible); all share/print/UX preserved; gates lint+test pass; 1 commit+push via git-push main; BACKLOG done+SHA; autonomous.
+
+**Completed:** 2026-06-26 — SecondaryPageShell + flat card (bg-card / border-border/60) for eligible; 0 zinc heavy; MinimalButton + preserved ids via data-testid; gates clean 0+170+0; push via git-push; BACKLOG done; autonomous
+
 ### TASK-045 — Sync AGENT_AUTOPILOT.md với auto-refill
 **Mục tiêu**: Làm cho AGENT_AUTOPILOT.md mô tả chính xác cơ chế tự động: daemon/orchestrator/pick-task tự gọi refill từ AGENT_ROADMAP.md khi ready < 2 (MIN_READY), script agent-refill-backlog.sh parse roadmap pool, chèn tối đa 4 task `ready` vào BACKLOG, commit+push (chore, skip ci). Xóa mọi hướng dẫn gợi ý "user thêm task thủ công" vào backlog (user chỉ thêm vào ROADMAP nếu muốn ưu tiên). Giữ phần "Việc cần làm thủ công 1 lần (P0)" vì là setup secrets/migration (khác task hàng ngày). Doc khớp scripts hiện tại (refill, pick, orchestrator, roadmap format). Chỉ sửa doc; không code/logic.
 **Bước thực hiện**:
@@ -408,6 +443,7 @@
 
 | Time (UTC) | Task | Plan summary | Outcome |
 |------------|------|--------------|---------|
+| 2026-06-26 | TASK-086 | PHASE1: search_memory sim via logs/grep (empty prior for 086 impl) + read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6-7 + MINIMAL_V2 (cert eligible listed) + grep Certificate + design-system + checkpoint lock pattern; PHASE2: BACKLOG in_progress + full TASK-086 PLAN section (ready=2 >=2 skip refill); PHASE3: wrap eligible in SecondaryPageShell + flat bg-card border-border/60 card (removed zinc heavy/glows), MinimalButton actions, data-testid keep selectors, all logic/texts/motion/share/print preserved; lint0+170t+tsc0 pass; commit+push via git-push.sh; done | done — [SHA] |
 | 2026-06-26 | TASK-082 | PHASE1 (grep+read AGENTS/BACKLOG/PLAN/ROADMAP/MINIMAL_V2/CONTENT + design-system + PronunciationClient + ipa-sounds); PHASE2 set in_progress (2ready skip refill) + full PLAN section; PHASE3: all 63 style= purged, Tailwind equivs + DIFF map for accents, SecondaryPageShell kept + inner max-w; logic identical; lint0+170t+tsc pass; bdef932 + push; done | done — bdef932 |
 | 2026-06-26 | TASK-083 | PHASE1 (read AGENTS/BACKLOG/PLAN/CONTENT§6-7 + MINIMAL_V2 + grep 3 sections+Fluency/Translate + sim search_memory); PHASE2: BACKLOG in_progress + PLAN section + skip refill; PHASE3: Grammar/Vocab/Warmup light cards (bg-card/border-border/60/text-fg/muted + primary accents, keep flip style+semantics); 170 tests+lint+tsc0; commit acd10ad + push via git-push.sh; BACKLOG done | done — acd10ad |
 | 2026-06-26 | TASK-045 | PHASE1 research(memory+AGENTS+BACKLOG/PLAN+ROADMAP+AUTOPILOT+CONTENT§6-7 + grep "thủ công"); PHASE2 update PLAN+BACKLOG set in_progress (refill run, 2ready>=2 skip), add full TASK-045 section; PHASE3: set in_progress, minimal edit AUTOPILOT "Quản lý backlog" describe ROADMAP+refill auto + explicit "KHÔNG thêm thủ công", update Nhật ký; gates tsc+lint+169 pass; commit 75b72b3 + git-push.sh main; BACKLOG done + log | done — 75b72b3 |
