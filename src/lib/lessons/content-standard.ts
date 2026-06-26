@@ -32,8 +32,8 @@ export const LESSON_CONTENT_STANDARD = {
 
   /** Output & review */
   fluencyDrillItemsMin: 5,
-  /** Nhiều unit hiện có 1–2 câu; mục tiêu 3 — TASK-059 nâng dần */
-  cumulativeReviewMin: 1,
+  /** Mục tiêu đạt 3 — TASK-059 (spiral review, Nation + center ref) */
+  cumulativeReviewMin: 3,
   /** Mục tiêu 3 — TASK-057 đã nâng: mọi unit ≥3 practiceTranslate */
   practiceTranslateMin: 3,
   listenAndChooseMin: 5,

@@ -244,6 +244,14 @@ export const unit4: UnitData = {
       answer: "My mother is a teacher.",
       type: "translate",
     },
+    {
+      id: "cr4-3",
+      question: "Chọn câu chào đúng buổi sáng. (Unit 1)",
+      options: ["Good morning", "Good afternoon", "Good evening", "Good night"],
+      answer: "Good morning",
+      type: "multiple-choice",
+      explanation_vn: "Good morning: sáng. Từ unit1.",
+    },
   ],
 
   pronunciationFocus: {

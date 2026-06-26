@@ -243,6 +243,14 @@ export const unit2: UnitData = {
       answer: "Nice to meet you.",
       type: "translate",
     },
+    {
+      id: "cr2-3",
+      question: "Chào buổi sáng bằng tiếng Anh là gì? (Unit 1)",
+      options: ["Good morning", "Good night", "Good evening", "See you"],
+      answer: "Good morning",
+      type: "multiple-choice",
+      explanation_vn: "Good morning dùng cho sáng sớm. Từ unit1 vocab + warmup.",
+    },
   ],
 
   pronunciationFocus: {

@@ -225,6 +225,13 @@ export const unit9: UnitData = {
       answer: "Do you have any chicken?",
       type: "translate",
     },
+    {
+      id: "cr9-3",
+      question: "Gọi món: 'Cho tôi một ít cơm.' (Unit 8)",
+      options: [],
+      answer: "I'd like some rice, please.",
+      type: "translate",
+    },
   ],
 
   pronunciationFocus: {

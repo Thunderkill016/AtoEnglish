@@ -225,6 +225,13 @@ export const unit8: UnitData = {
       answer: "How much are these shoes?",
       type: "translate",
     },
+    {
+      id: "cr8-3",
+      question: "Có hai chiếc ghế trong phòng. (Unit 6)",
+      options: [],
+      answer: "There are two chairs in the room.",
+      type: "translate",
+    },
   ],
 
   pronunciationFocus: {

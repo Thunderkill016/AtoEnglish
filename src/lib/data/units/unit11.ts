@@ -224,6 +224,13 @@ export const unit11: UnitData = {
       answer: "He can sing and play the guitar.",
       type: "translate",
     },
+    {
+      id: "cr11-3",
+      question: "Đi thẳng rồi rẽ trái. (Unit 9)",
+      options: [],
+      answer: "Go straight and turn left.",
+      type: "translate",
+    },
   ],
 
   pronunciationFocus: {

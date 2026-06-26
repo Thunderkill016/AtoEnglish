@@ -216,10 +216,11 @@
 - **Started:** 2026-06-26 — autopilot (PHASE1 research complete: memory search, refs read, counts: most 0/14 L1)
 
 ### TASK-059 — cumulativeReview ≥3
-- **Status:** `ready`
+- **Status:** `done`
 - **Mô tả:** Nâng cumulative review câu/unit.
 - **Done khi:** cumulativeReviewMin=3; test pass.
-- **Started:** user mandate — chuẩn nội dung
+- **Completed:** 2026-06-26 — content-std min=3; unit2-12 +1 each (spiral prior); all 50 pass test:content-standard + audit 50/50; lint+169 tests pass
+- **Started:** 2026-06-26 — autopilot (PHASE1 research complete)
 
 ### TASK-061 — Unit files: comment blocks theo blueprint (như unit1)
 - **Status:** `ready`
@@ -364,6 +365,7 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
+| 2026-06-26 | TASK-059 | PHASE1 research(memory+AGENTS+blueprint+center+content-std+unit1+count units), PHASE2 PLAN+BACKLOG in_progress (refill skipped 8ready), PHASE3: min=3 in content-std + +1 cr item to each of unit2-12 (spiral from prior units, unit1 style), gates: tsc/lint/169test + content-std 50/50 + audit50/50 pass; commit+push via git-push | done — [SHA] |
 | 2026-06-26 | TASK-043 | research(agents+memory+grep+orch+watchdog), set in_progress, update PLAN+BACKLOG, implement only-agent-changes skip stash in orchestrator + auto pop at end + age>7d cleanup (orch+watchdog MAX=7), syntax+sim test, lint+159 tests+tsc pass, commit 5062230 + git-push.sh main; status done | done — 5062230 |
 | 2026-06-26 | TASK-049..056 | user mandate: P1 bài học+cách học — queued ready sau TASK-044 | ready |
 | 2026-06-26 | TASK-044 | research(agents+memory+grep+placement e2e files), set in_progress, update PLAN+BACKLOG, implement networkidle waits + reset for test user isolation in placement-test.spec.ts (+helper if needed), lint+test | in_progress |

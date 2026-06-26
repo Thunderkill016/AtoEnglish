@@ -417,6 +417,13 @@ export const unit3: UnitData = {
       answer: "She goes to work by bus every day.",
       type: "translate",
     },
+    {
+      id: "cr3-3",
+      question: "Dịch: 'Tên tôi là Minh.' (Unit 1)",
+      options: [],
+      answer: "My name is Minh.",
+      type: "translate",
+    },
   ],
 
   pronunciationFocus: {

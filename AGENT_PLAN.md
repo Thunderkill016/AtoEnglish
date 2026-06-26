@@ -32,6 +32,29 @@
 - No secret needed; pure content. Self debug lint/test output.
 **Done khi**: B2 minRatio=0.5; 10/10 unit33-42 đạt >=50% L1 (verified); 50/50 test:content-standard pass; lint+unit tests+tsc clean; 1 commit + push via git-push.sh main; BACKLOG status=done + entry SHA+date; no ask user.
 
+### TASK-059 — Chuẩn content: cumulativeReview ≥3
+**Mục tiêu**: Nâng cumulativeReviewMin từ 1→3 (CONTENT_STYLE §7 + blueprint authorGuide). 16 units thấp: unit2–12 (hiện 2 câu), unit15–19 (hiện 1 câu) cần +1 hoặc +2 câu cumulativeReviewQuestions (spiral review từ prior units theo Nation/CLT/center-ref Review). Giữ format/unit-internal như unit1 gold (mc/translate/cloze, id crN-x, (Unit X: topic) tag, explanation_vn). Chỉ sửa content-standard + 16 unit files; không đổi UI/flow/quiz/reading/other fields. Sau edit mọi unit >=3; 50/50 test pass.
+**Bước thực hiện**:
+1. Search memory("TASK-059" + "cumulativeReviewQuestions") + read AGENTS.md (ALWAYS), AGENT_BACKLOG/PLAN/ROADMAP, CONTENT_STYLE.md §6–7, lesson-center-reference.ts (Review: spiral curriculum), lesson-blueprint.ts (review block: cumulativeReview ≥3), learning-flow.ts, content-standard.ts, unit1.ts (gold sample: 5 cr items + header comment "CUMULATIVE REVIEW"), low count units via script, read samples (unit2, unit15, unit1, unit13+ for style).
+2. Grep/ count confirm 16 units <3; identify: unit2-12 + unit15-19.
+3. Update BACKLOG: TASK-059 status `in_progress`.
+4. Update AGENT_PLAN.md với mục tiêu + bước + rủi ro cho TASK-059.
+5. Nếu ready <2: chạy `bash scripts/agent-refill-backlog.sh` (đã chạy, 8 ready — skip).
+6. Edit src/lib/lessons/content-standard.ts: cumulativeReviewMin: 3, update comment (mục tiêu đạt).
+7. Edit 16 units: append missing items to cumulativeReviewQuestions (use +1 for count=2, +2 for count=1); ids sequential "crXX-3" etc; content spiral review prior units vocab/grammar (e.g. unit15 reviews unit13 past + unit14 going-to); short natural, match unit1 style (mix types, explanation_vn, tag prior unit). Add/update comment header "── CUMULATIVE REVIEW" like unit1 if absent. Keep 1-liner objects.
+8. `npm run lint && npm run test` (unit); `npm run test:content-standard` (50 units) + `bash scripts/audit-lesson-content.sh`.
+9. Pass → update BACKLOG done + Nhật ký + SHA; PLAN log table.
+10. git pull --rebase; git add content-standard.ts src/lib/data/units/unit{2..12}.ts src/lib/data/units/unit1{5..9}.ts AGENT_*.md; commit "fix(content): cumulativeReviewQuestions >=3 all units + min=3 (TASK-059)"; `bash scripts/git-push.sh main`.
+**Rủi ro**:
+- Questions not relevant to prior (not spiral) or leak future vocab → craft from unit's own prior refs + unit title/theme (unit15 "Comparatives" review will/going-to/past simple of unit13-14).
+- Syntax error inserting into [] → match unique last question + ], insert , + new before ]; test count post each batch.
+- test:content-standard fail unrelated (L1/translate now 3) → only edit cumulativeReviewQuestions; prior 057/060/058 fixed others.
+- 16 files → batch count verify before/after with node script; use unique strings (full question text) for replace.
+- Id dupes across? no, per unit cr prefix.
+- Fail 2x → blocked + lý do.
+- No secret/DB; pure content. Self-debug from test output.
+**Done khi**: cumulativeReviewMin=3; all 50/50 pass test:content-standard (no cumulative violations); 16 units reach >=3 (verified by count); lint + 159+ tests + tsc clean; 1 commit + push via git-push.sh main; BACKLOG status=done + Nhật ký entry with SHA; no ask user.
+
 ### TASK-057 — Chuẩn content: practiceTranslate ≥3 mọi unit + nâng min=3
 **Mục tiêu**: 30 units (13-42) hiện chỉ 1 câu translate VN→EN. Bổ sung +2 câu mỗi unit (tổng ≥3), sát với vocab+grammar của unit đó. Nâng LESSON_CONTENT_STANDARD.practiceTranslateMin từ 1→3 (đúng blueprint authorGuide và CONTENT_STYLE §7). Giữ format, id pt-1/2/3, câu ngắn tự nhiên, <12 từ EN, controlled output theo Nation/CLT. Chỉ edit content-standard + 30 unit files; không đổi flow/UI.
 **Bước thực hiện**:
@@ -160,6 +183,7 @@
 | Time (UTC) | Task | Plan summary | Outcome |
 |------------|------|--------------|---------|
 | 2026-06-26 | TASK-044 | PHASE1: search_memory + read AGENTS/BACKLOG/PLAN/ROADMAP + grep e2e/placement/helpers/global/playwright; PHASE2 update PLAN+BACKLOG in_progress; PHASE3 minimal stabilize: networkidle + reset isolate in placement-test.spec; lint+test | in_progress |
+| 2026-06-26 | TASK-059 | PHASE1: search_memory + read AGENTS+BACKLOG+PLAN+ROADMAP+CONTENT§6-7+lesson-blueprint+center-ref+learning-flow+content-std+unit1(gold)+count low units(2-12); PHASE2 update PLAN+BACKLOG in_progress, refill skip (>=2 ready); PHASE3 min=3 + add 1 spiral cr each for unit2-12; lint+tsc+169u+50 content-std+audit pass; commit+push | done — [pending SHA] |
 | 2026-06-26 | TASK-060 | PHASE1 research(AGENTS+CONTENT_STYLE+blueprint+center-ref+unit1+unit24/31+content-std+grep L1), PHASE2 update PLAN/BACKLOG in_progress, PHASE3: header comments + L1 notes (6+ per) for unit24/31 per ESA/CELTA/CLT VN, 75%/100% L1; all gates pass; commit 5df0678 + git-push | done — 5df0678 |
 | 2026-06-26T01:36Z | TASK-001/002 | P0 ops: migration blocked, deploy OK | autopilot armed |
 | 2026-06-26T08:55Z | TASK-001/011 | db push migration + E2E B1 unlock | 2 e2e pass |

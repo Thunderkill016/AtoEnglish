@@ -227,6 +227,13 @@ export const unit5: UnitData = {
       answer: "She brushes her teeth every morning.",
       type: "translate",
     },
+    {
+      id: "cr5-3",
+      question: "Cô ấy đi làm bằng xe buýt mỗi ngày. (Unit 3)",
+      options: [],
+      answer: "She goes to work by bus every day.",
+      type: "translate",
+    },
   ],
 
   pronunciationFocus: {

@@ -228,6 +228,13 @@ export const unit10: UnitData = {
       answer: "Go straight and turn left at the traffic light.",
       type: "translate",
     },
+    {
+      id: "cr10-3",
+      question: "Siêu thị nằm giữa ngân hàng và trường. (Unit 9)",
+      options: [],
+      answer: "The supermarket is between the bank and the school.",
+      type: "translate",
+    },
   ],
 
   pronunciationFocus: {

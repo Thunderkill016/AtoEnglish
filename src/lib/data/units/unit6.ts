@@ -224,6 +224,14 @@ export const unit6: UnitData = {
       answer: "She likes taking photos on weekends.",
       type: "translate",
     },
+    {
+      id: "cr6-3",
+      question: "Chọn đúng: 'She ___ to school.' (Unit 2/3 Present Simple)",
+      options: ["go", "goes", "going", "to go"],
+      answer: "goes",
+      type: "multiple-choice",
+      explanation_vn: "She goes. 3rd person +s/es.",
+    },
   ],
 
   pronunciationFocus: {

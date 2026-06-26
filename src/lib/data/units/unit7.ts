@@ -226,6 +226,14 @@ export const unit7: UnitData = {
       answer: "Is there a bathroom upstairs?",
       type: "translate",
     },
+    {
+      id: "cr7-3",
+      question: "Chọn: 'I like ___ photos.' (Unit 5 hobbies)",
+      options: ["take", "taking", "to taking", "takes"],
+      answer: "taking",
+      type: "multiple-choice",
+      explanation_vn: "Like + V-ing.",
+    },
   ],
 
   pronunciationFocus: {

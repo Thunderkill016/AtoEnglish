@@ -230,6 +230,13 @@ export const unit12: UnitData = {
       answer: "I have a headache and I feel tired.",
       type: "translate",
     },
+    {
+      id: "cr12-3",
+      question: "Anh ấy có thể nói tiếng Anh. (Unit 10)",
+      options: [],
+      answer: "He can speak English.",
+      type: "translate",
+    },
   ],
 
   pronunciationFocus: {
