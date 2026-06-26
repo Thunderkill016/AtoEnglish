@@ -58,6 +58,30 @@
 - Git: large commit (196 binaries) — ok, precedent from A1/A2; don't split unless fail.
 **Done khi**: Every unit-19 to unit-32 has exactly 14 MP3s matching declared paths; generator + :b1 script updated; `npm run lint && npm run test` clean (0 err, all tests pass); 1 primary commit pushed; backlog status=done + entry with SHA; no user asked.
 
+### TASK-032 — Persist onboarding answers (Q2–Q4: goal, obstacle, daily_minutes)
+**Mục tiêu**: Tạo migration `user_onboarding_profile` (1:1 với user) để lưu vĩnh viễn câu trả lời Q2 (goal), Q3 (obstacle), Q4 (daily time) từ quiz signup. Đồng thời đảm bảo daily_xp_goal được ghi vào user_progress tại signup (Q4). Code changes minimal: cập nhật flows email+OAuth để pass đầy đủ params + insert profile + set goal. Update types (tạm) + helpers để tsc pass. Không thay đổi UX hay logic redirect.
+**Bước thực hiện**:
+1. Search memory (done) + read AGENTS/ BACKLOG/PLAN, login/page.tsx, auth/callback/route.ts , lib/onboarding.ts, recent migrations (placement, challenge, quiz, push), src/types/supabase.ts, places setting daily_xp_goal.
+2. Tạo migration mới supabase/migrations/20260626140000_user_onboarding_profile.sql theo pattern (IF NOT EXISTS, PK user_id, RLS policies với (select auth.uid()), index, comment).
+3. Cập nhật AGENT_PLAN.md (section này) + BACKLOG (status in_progress).
+4. Thêm helper getDailyXpGoalFromTime, getDailyMinutes vào lib/onboarding.ts (minimal).
+5. Sửa src/app/login/page.tsx: pass full target/obstacle/time/level qua URL cho google + email redirect; set daily_xp_goal vào insert user_progress; insert user_onboarding_profile cho new signup (dùng client supabase).
+6. Sửa src/app/auth/callback/route.ts: extract target/obstacle/time; set daily_xp_goal vào upsert user_progress; upsert profile nếu isNewUser.
+7. Append definition của user_onboarding_profile vào src/types/supabase.ts (sau user_progress) để tsc/compile pass ngay (sau apply prod sẽ db:types overwrite).
+8. Update comment ở login (remove "no DB column yet").
+9. Chạy `npm run lint && npm run test` (có thể npx tsc --noEmit). Fix nếu lỗi.
+10. Update BACKLOG status→done + nhật ký + SHA; AGENT_PLAN log.
+11. git pull --rebase; git add migration + 3 src files + AGENT_*.md; commit với format feat(onboarding): persist Q2-Q4 to user_onboarding_profile; push.
+**Rủi ro**:
+- Thiếu secret cho `npm run db:types` hoặc supabase db push (prod) → không apply ngay, nhưng local migration + type patch cho phép code chạy + test pass. Ghi blocked nếu apply fail.
+- TS drift nếu edit types — chỉ append, dùng đúng pattern từ challenge_results; prod regen sau sẽ fix.
+- URL param length: thêm 2 param nhỏ, safe.
+- Không overwrite profile cho returning user (chỉ insert/upsert on new signup).
+- Không thay đổi daily_xp_goal cho existing users (scope task).
+- Nếu test integration cần profile (không), unit tests không hit auth flow trực tiếp.
+- Commit có migration + type edit — theo precedent các task trước.
+**Done khi**: migration file tồn tại đúng format; signup flows (email + google) persist đầy đủ Q2-Q4 + daily_xp_goal; `npm run lint && npm run test` (và tsc) pass 0 error; 1 commit pushed main; backlog done + entry SHA; không hỏi user.
+
 ## Roadmap tự động (7 ngày)
 
 ### Ngày 1 — Vận hành
@@ -77,7 +101,7 @@
 - [x] TASK-020 integration test flakes
 - [x] TASK-030 A2 audio (6bbc693)
 - [x] TASK-031 B1 audio (2119534)
-- [ ] TASK-032 onboarding profile DB
+- [x] TASK-032 onboarding profile DB (user_onboarding_profile + Q2-Q4 persist)
 
 ## Nguyên tắc tự quyết
 
@@ -97,3 +121,4 @@
 | 2026-06-26 | TASK-030 | Re-verify gen+counts+lint+test (all 6 units 14 clips) | done — 202bfea (pushed) |
 | 2026-06-26T03:25Z | TASK-030 | Autopilot full cycle: research(agents+grep), plan update, run gen 17+18, lint+159test, 3 commits/push, log | complete — c58cf13 |
 | 2026-06-26 | TASK-031 | Research(agents+grep+units+gen), update PLAN/BACKLOG to in_progress, extend generator+pkg for B1 19-32, batch gTTS, lint+test, commit+push | done — 2119534a5e432816f2cf95c1de5b84767066a2aa (196 clips + fixes) |
+| 2026-06-26 | TASK-032 | research(agents+grep+memory+login/callback/migrations), plan update, create migration 20260626140000, edit onboarding/login/callback/types, hoist helpers, wire insert+upsert+params+xp_goal, lint+159+tsc pass, commit+push | done — (SHA) |

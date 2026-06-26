@@ -40,3 +40,22 @@ export function getOnboardingStartingUnitIndex(quizLevel: string): number {
 }
 
 export { normalizePlacementLevel, getStartingUnitIndex, getStartingUnitSlug };
+
+/** Map onboarding time choice (Q4) to daily XP goal persisted in user_progress */
+const TIME_TO_XP: Record<string, number> = {
+  "5min": 20,
+  "15min": 50,
+  "30min": 100,
+  "60min": 200,
+};
+
+export function getDailyXpGoalFromTime(time: string | undefined | null): number {
+  return TIME_TO_XP[time ?? "15min"] ?? 50;
+}
+
+/** Parse Q4 value to minutes number for profile table */
+export function getDailyMinutes(time: string | undefined | null): number {
+  if (!time) return 15;
+  const m = parseInt(time.replace(/[^0-9]/g, ""), 10);
+  return [5, 15, 30, 60].includes(m) ? m : 15;
+}

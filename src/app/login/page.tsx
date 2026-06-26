@@ -10,6 +10,8 @@ import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { LoginSchema, SignUpSchema } from "@/lib/security/validation";
 import {
+  getDailyMinutes,
+  getDailyXpGoalFromTime,
   getOnboardingRedirectPath,
   getOnboardingStartingUnitIndex,
   mapQuizLevelToCefr,
@@ -181,11 +183,12 @@ function LoginContent() {
     try {
       const level = answers[1] || "A0-A1";
       const target = answers[2] || "work";
+      const obstacle = answers[3] || "fear";
       const time = answers[4] || "15min";
       const postAuthPath = hasAnswers
         ? getOnboardingRedirectPath(level, time)
         : next;
-      const redirectUrl = `${window.location.origin}/auth/callback?next=${encodeURIComponent(postAuthPath)}&level=${encodeURIComponent(level)}&target=${encodeURIComponent(target)}&time=${encodeURIComponent(time)}`;
+      const redirectUrl = `${window.location.origin}/auth/callback?next=${encodeURIComponent(postAuthPath)}&level=${encodeURIComponent(level)}&target=${encodeURIComponent(target)}&obstacle=${encodeURIComponent(obstacle)}&time=${encodeURIComponent(time)}`;
 
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
@@ -214,15 +217,15 @@ function LoginContent() {
     }
 
     const level = answers[1] || "A0-A1";
-    const mappedLevel = mapQuizLevelToCefr(level);
+    const target = answers[2] || "work";
+    const obstacle = answers[3] || "fear";
     const time = answers[4] || "15min";
+    const mappedLevel = mapQuizLevelToCefr(level);
     const postAuthPath = hasAnswers
       ? getOnboardingRedirectPath(level, time)
       : next;
-    const xpGoalMap: Record<string, number> = {
-      "5min": 20, "15min": 50, "30min": 100, "60min": 200,
-    };
-    const dailyXpGoal = xpGoalMap[time] ?? 50;
+    const dailyXpGoal = getDailyXpGoalFromTime(time);
+    const dailyMinutes = getDailyMinutes(time);
 
     setIsLoading(true);
     try {
@@ -231,7 +234,7 @@ function LoginContent() {
           email,
           password,
           options: {
-            emailRedirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(postAuthPath)}&level=${encodeURIComponent(level)}&time=${encodeURIComponent(time)}`,
+            emailRedirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(postAuthPath)}&level=${encodeURIComponent(level)}&target=${encodeURIComponent(target)}&obstacle=${encodeURIComponent(obstacle)}&time=${encodeURIComponent(time)}`,
           },
         });
         if (error) throw error;
@@ -250,9 +253,16 @@ function LoginContent() {
               starting_unit_index: getOnboardingStartingUnitIndex(level),
               streak: 0,
               total_xp: 0,
+              daily_xp_goal: dailyXpGoal,
+            });
+            // Persist Q2–Q4 from signup survey to dedicated table
+            await supabase.from("user_onboarding_profile").insert({
+              user_id: data.user.id,
+              goal: target,
+              obstacle: obstacle,
+              daily_minutes: dailyMinutes,
             });
           }
-          // Persist XP goal preference locally (no DB column yet)
           localStorage.setItem("ato_daily_xp_goal", String(dailyXpGoal));
 
           toast.success("Đăng ký tài khoản thành công!");
@@ -281,6 +291,7 @@ function LoginContent() {
               starting_unit_index: getOnboardingStartingUnitIndex(level),
               streak: 0,
               total_xp: 0,
+              daily_xp_goal: dailyXpGoal,
             });
           }
           localStorage.setItem("ato_daily_xp_goal", String(dailyXpGoal));

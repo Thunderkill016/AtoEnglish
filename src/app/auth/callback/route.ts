@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import {
+  getDailyMinutes,
+  getDailyXpGoalFromTime,
   getOnboardingRedirectPath,
   getOnboardingStartingUnitIndex,
   mapQuizLevelToCefr,
@@ -19,7 +21,12 @@ export async function GET(request: Request) {
     if (!error && data?.user) {
       const user = data.user;
       const level = searchParams.get("level") ?? "A0-A1";
+      const target = searchParams.get("target") ?? "work";
+      const obstacle = searchParams.get("obstacle") ?? "fear";
+      const time = searchParams.get("time") ?? "15min";
       const mappedLevel = mapQuizLevelToCefr(level);
+      const dailyXpGoal = getDailyXpGoalFromTime(time);
+      const dailyMinutes = getDailyMinutes(time);
 
       const { data: existingProgress } = await supabase
         .from("user_progress")
@@ -38,13 +45,26 @@ export async function GET(request: Request) {
           starting_unit_index: getOnboardingStartingUnitIndex(level),
           streak: 0,
           total_xp: 0,
+          daily_xp_goal: dailyXpGoal,
         },
         { onConflict: "user_id", ignoreDuplicates: true }
       );
 
+      if (isNewUser) {
+        // Persist Q2–Q4 from signup survey (goal/obstacle/daily_minutes)
+        await supabase.from("user_onboarding_profile").upsert(
+          {
+            user_id: user.id,
+            goal: target,
+            obstacle: obstacle,
+            daily_minutes: dailyMinutes,
+          },
+          { onConflict: "user_id", ignoreDuplicates: true }
+        );
+      }
+
       // New signups with onboarding survey → first lesson micro-session (~3 min)
       if (isNewUser && searchParams.has("level")) {
-        const time = searchParams.get("time") ?? "15min";
         destination = getOnboardingRedirectPath(level, time);
       }
     }
