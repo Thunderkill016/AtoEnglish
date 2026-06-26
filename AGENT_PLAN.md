@@ -7,7 +7,7 @@
 | Field | Value |
 |-------|-------|
 | Started | 2026-06-26 |
-| Focus | **Chuẩn nội dung** TASK-057..060 → UI TASK-049+; `npm run test:content-standard` = gate content |
+| Focus | **Chuẩn nội dung** TASK-060 (B1 L1 50% unit24+31) + follow-up 057+; `npm run test:content-standard` = gate content |
 | Owner | Autopilot (no human) |
 
 ### TASK-021 — Sync placement flow, 50 units, header shell, autopilot docs (PAGE_SPECIFICATIONS.md + AGENT_*)
@@ -362,3 +362,23 @@
 - Fail 2x liên tục → blocked + ghi lý do (e.g. deeper race in app).
 - Không đổi prod code, chỉ test files.
 **Done khi**: 3 E2E run liên tiếp (local/CI) pass cho placement-test.spec (incl audio subtest); `npm run lint && npm run test` pass; 1 commit pushed; backlog done + entry SHA; autonomous no user.
+
+### TASK-060 — B1 unit24+unit31 L1 notes
+**Mục tiêu**: Sửa 2 unit B1 (unit-24 "How Things Are Made" Passive, unit-31 "Business Communication") đang dưới 50% vocab có l1_interference_vn theo content-standard B1 (0.5). Đưa ratio >=0.5 (cần ~6/12 mỗi unit). Tuân thủ lesson-center-reference (VN CLT L1 contrast), lesson-blueprint (vocab block), unit1 gold style (⚠️ notes + comment headers). Gate: npm run test:content-standard pass cho 2 unit. Minimal: chỉ thêm l1 notes + style comments cho vocab; không thêm từ, không đổi flow.
+**Bước thực hiện**:
+1. PHASE1 research: read AGENTS.md + CONTENT_STYLE §6-7 + lesson-blueprint + lesson-center-reference + learning-flow + unit1.ts (gold) + unit24.ts + unit31.ts + content-standard.ts + grep l1 + units.ts (B1=19-32). Confirm counts: unit24=1/12 L1, unit31=5/12. Identify exact vocab cần note (common VN passive errors / reporting verb errors).
+2. PHASE2: update AGENT_PLAN + BACKLOG (TASK-060 in_progress). Check ready count (>=2, skip refill).
+3. PHASE3: Edit unit24 + unit31: 
+   - Add header comment block giống unit1 (Unit X — title, research notes).
+   - Thêm l1_interference_vn (≥15 ký tự, ⚠️ format) cho ≥6 từ/unit (ưu tiên từ có L1 thực: passive be+V3 omission, participle wrong, suggest/recommend/advise +to vs Ving/that, formal prepositions, 'confirm that').
+   - Giữ format 1 dòng object; tái sử dụng existing fields.
+4. Chạy gate bắt buộc: npx tsc --noEmit && npm run lint && npm run test && npm run test:content-standard && bash scripts/audit-lesson-content.sh
+5. Update BACKLOG (in_progress→done + Nhật ký + SHA), PLAN log table.
+6. git pull --rebase; git add src/lib/data/units/unit24.ts src/lib/data/units/unit31.ts AGENT_BACKLOG.md AGENT_PLAN.md; commit "fix(content): add L1 interference >=50% for B1 units 24+31 (TASK-060)"; bash scripts/git-push.sh main. Write logs/agent/ timestamp log.
+**Rủi ro**:
+- L1 note quá dài hoặc không đúng lỗi thực tế → dùng pattern từ unit1/unit17/unit31 existing (ngắn, actionable, VN-specific).
+- Nếu sau edit 1 unit vẫn fail test:content-standard (e.g. other fields), tự debug 1x (add min practiceTranslate nếu min raised? nhưng current min=1). Fail 2x → blocked.
+- Không secret/DB, chỉ content data. test:content-standard là unit test local.
+- Commit chỉ content + docs agent; giữ minimal đúng scope (L1 for these 2).
+- Follow blueprint: map vocab → Study/Clarification lexis (center ref).
+**Done khi**: unit24 + unit31 đạt >=50% L1 (6/12+), test:content-standard pass 0 violations for them (and others unchanged); lint+unit tests + tsc clean; 1 commit + push via git-push; backlog done + entry SHA; autonomous, no user asked.
