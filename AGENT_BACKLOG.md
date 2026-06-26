@@ -681,10 +681,11 @@
 
 
 ### TASK-104 — Autopilot maintenance sweep #104
-- **Status:** `ready`
+- **Status:** `done`
 - **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
 - **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
-- **Started:** auto-refill
+- **Started:** 2026-06-27 — autopilot (PHASE1: search_memory sim via logs/grep + read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6–7 + grep; 3r >=2 skip refill; PHASE2 PLAN update + BACKLOG in_p; PHASE3: run gates)
+- **Completed:** 2026-06-27 — gates clean (lint0+170t+tsc0+cs50/50+audit50/50) no fix needed; log written 20260626T184126Z_TASK-104.log; BACKLOG+PLAN updated; no src edit; autonomous (no human)
 
 ### TASK-105 — Autopilot maintenance sweep #105
 - **Status:** `ready`
@@ -708,7 +709,7 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
-| 2026-06-27 | TASK-104 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-06-27 | TASK-104 | PHASE1: search_memory sim via logs/grep + read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6–7; 3r>=2 skip; PHASE2 PLAN update + BACKLOG in_p (no refill); PHASE3: gates clean (lint+170t+cs+audit50/50) no fix + sync log/PLAN/BACKLOG; commit+push via git-push.sh main | done — (pending SHA) |
 | 2026-06-27 | TASK-105 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-06-27 | TASK-106 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-06-27 | TASK-101 | PHASE1: search_memory sim via logs/grep + read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6–7; 3r>=2 skip; PHASE2 plan+backlog in_p; PHASE3: gates clean (lint+170t+cs+audit) no fix + sync; commit+push via git-push.sh main | done — 8b1a6f1 |
