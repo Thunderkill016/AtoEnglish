@@ -46,7 +46,7 @@ Quy trình:
 1. Status → in_progress trong AGENT_BACKLOG.md
 2. Implement tối thiểu, đúng phạm vi
 3. npm run lint && npm run test
-4. Pass → commit + push main; status done + nhật ký + SHA
+4. Pass → commit + `bash scripts/git-push.sh main` (GitLab primary); status done + nhật ký + SHA
 5. Blocked (thiếu secret) → status blocked, chuyển task tiếp theo ready nếu có thể
 6. Fail 2 lần → blocked + ghi lý do
 

@@ -79,21 +79,24 @@ bash scripts/agent-refill-backlog.sh             # refill + commit + push
 |------|----------|----------|
 | Local | Daemon | `ci-local.sh` lint+tsc+test → agent → `check-deploy` |
 | GitLab | `.gitlab-ci.yml` | CI mirror; self-hosted runner = **unlimited** |
-| Vercel | Build prod | Tự build mỗi push GitHub |
+| Vercel | Build prod | Tự build mỗi push **GitLab** (model A) |
 
-GitHub Actions: **manual only** (0 phút/tháng).
+GitHub Actions: **TẮT** (0 phút). GitHub chỉ archive mirror (tuỳ chọn).
 
-### Setup GitLab (1 lần)
+### Model A — GitLab primary (đang dùng)
 
 ```bash
-bash scripts/setup-gitlab-mirror.sh   # thêm remote gitlab, push
-bash scripts/setup-gitlab-runner.sh   # runner trên laptop (khuyến nghị)
-bash scripts/push-all-remotes.sh      # push origin + gitlab
+# 1. Thêm GITLAB_TOKEN vào .env.local (api + write_repository)
+bash scripts/migrate-model-a.sh
+
+# 2. Vercel Dashboard → Project → Settings → Git
+#    Disconnect GitHub → Connect GitLab → Thunderkill016/atoenglish
+
+# 3. Self-hosted runner (unlimited CI)
+bash scripts/setup-gitlab-full.sh   # hoặc setup-gitlab-runner.sh
 ```
 
-GitLab → CI/CD → Variables: `NEXT_PUBLIC_SUPABASE_URL`, `ANON_KEY`, `SERVICE_ROLE_KEY`
-
-Vercel vẫn connect **GitHub** — không cần đổi deploy.
+Push mặc định: `bash scripts/git-push.sh` (GitLab). Pull: `git pull gitlab main`.
 
 ## Giám sát
 

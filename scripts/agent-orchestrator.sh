@@ -51,8 +51,9 @@ fi
 
 cd "$ROOT"
 
-log "🔍 Preflight..."
-git fetch origin main --quiet 2>/dev/null || true
+GIT_REMOTE="$(bash "$ROOT/scripts/git-primary.sh")"
+log "🔍 Preflight (remote: $GIT_REMOTE)..."
+git fetch "$GIT_REMOTE" main --quiet 2>/dev/null || true
 BRANCH=$(git branch --show-current)
 if [[ "$BRANCH" != "main" ]]; then
   log "⚠️  Not on main ($BRANCH) — checkout main"
@@ -69,7 +70,7 @@ if ! git diff --quiet 2>/dev/null || ! git diff --cached --quiet 2>/dev/null; th
   fi
 fi
 
-git pull --rebase origin main --quiet 2>/dev/null || {
+git pull --rebase "$GIT_REMOTE" main --quiet 2>/dev/null || {
   log "❌ git pull failed — có conflict thật, cần người xử lý"
   [[ "$STASHED" == 1 ]] && git stash pop --quiet 2>/dev/null || true
   echo "FAIL" >> "$STATE_FILE"

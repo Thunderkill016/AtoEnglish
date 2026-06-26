@@ -123,7 +123,8 @@ if ! git remote get-url gitlab &>/dev/null; then
   git remote add gitlab "git@${GITLAB_HOST#https://}:${GITLAB_USER}/${GITLAB_PROJECT}.git"
 fi
 log "📤 Push main → gitlab..."
-git push gitlab main
+git config --local atoenglish.git.primary gitlab 2>/dev/null || true
+bash "$ROOT/scripts/git-push.sh" main
 
 # Runner registration
 log "🏃 Đăng ký self-hosted runner..."

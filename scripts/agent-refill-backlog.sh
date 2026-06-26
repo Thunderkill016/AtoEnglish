@@ -153,7 +153,7 @@ if git diff --cached --quiet; then
 fi
 
 git commit -m "chore(agent): auto-refill backlog ($IDS) [skip ci]" --quiet
-git push origin main --quiet 2>/dev/null || {
+bash "$ROOT/scripts/git-push.sh" main 2>/dev/null || {
   log "⚠️  Push refill failed — task vẫn local, cycle tiếp sẽ retry"
   exit 0
 }
