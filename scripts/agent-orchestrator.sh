@@ -7,9 +7,16 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 LOG_DIR="$ROOT/logs/agent"
 STATE_FILE="$LOG_DIR/.orchestrator-state"
+LOCKFILE="$LOG_DIR/.daemon.lock"
 mkdir -p "$LOG_DIR"
 
 log() { echo "[$(date -Iseconds)] $*"; }
+
+exec 9>"$LOCKFILE"
+if ! flock -n 9; then
+  log "⏳ Orchestrator đang chạy ở process khác — bỏ qua cycle này"
+  exit 2
+fi
 
 # Circuit breaker: stop after 3 consecutive failures
 FAIL_COUNT=0
@@ -74,8 +81,8 @@ else
   exit 1
 fi
 
-# 4. Optional: check Vercel deploy if VERCEL_TOKEN in env
-if [[ -n "${VERCEL_TOKEN:-}" ]] && [[ -f "$ROOT/.env.local" ]]; then
+# 4. Optional: check Vercel deploy (skip in daemon mode)
+if [[ "${ORCHESTRATOR_SKIP_DEPLOY:-0}" != "1" ]] && [[ -n "${VERCEL_TOKEN:-}" ]] && [[ -f "$ROOT/.env.local" ]]; then
   export VERCEL_TOKEN
   log "📡 Checking Vercel deploy..."
   npm run check-deploy 2>&1 | tail -8 || true
