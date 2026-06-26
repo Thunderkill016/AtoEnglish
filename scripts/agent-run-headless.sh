@@ -75,7 +75,6 @@ grok --prompt-file "$PROMPT_FILE" \
   --cwd "$ROOT" \
   --yolo \
   --max-turns 80 \
-  --effort high \
   --output-format plain \
   2>&1 | tee "$LOG_FILE"
 EXIT_CODE=${PIPESTATUS[0]}
