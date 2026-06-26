@@ -40,7 +40,7 @@ export async function getUserProgress() {
         streak: data?.streak || 0,
         total_xp: data?.total_xp || 0,
         last_active_date: data?.last_active_date || null,
-        daily_xp_goal: 50,
+        daily_xp_goal: data?.daily_xp_goal ?? 50,
         display_name: displayName
       }
     };

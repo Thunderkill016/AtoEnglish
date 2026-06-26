@@ -7,7 +7,7 @@
 | Field | Value |
 |-------|-------|
 | Started | 2026-06-26 |
-| Focus | TASK-038 completed (integration test user_onboarding_profile) |
+| Focus | TASK-039 (Dashboard reads daily_xp_goal from user_progress + shows progress bar today vs goal) |
 | Owner | Autopilot (no human) |
 
 ### TASK-021 — Sync placement flow, 50 units, header shell, autopilot docs (PAGE_SPECIFICATIONS.md + AGENT_*)
@@ -134,6 +134,7 @@
 | 2026-06-26 | TASK-036 | research(agents+grep+data+unit-audio+config), set in_progress, update PLAN, run refill (low ready), add rewrite next.config, verify probe map 200 for unit19(B1)/unit36(B2), lint+159+tsc pass, commit+push | done — 0d30be9 |
 | 2026-06-26 | TASK-037 | research(agents+grep+e2e+unit-audio+vocab), set in_progress, update PLAN+BACKLOG, add setE2EStartingUnit helper, add E2E test in placement-test (B1 login, advance warmup, click Nghe: speaker, Audio spy + /audio/ waitForRequest), lint+159+tsc pass, commit+push | done — ffc66bc |
 | 2026-06-26 | TASK-038 | research(memory+agents+grep+setup-integration+profile migration+RLS), phase1/2/3, update PLAN/BACKLOG to in_progress, extend cleanup, implement 2 minimal RLS tests in progress.integration (own insert+columns verify, policy block), run lint+test+test:integration (all 159u+23i pass), commit 339f5a9 + scripts/git-push.sh main | done — 339f5a9 |
+| 2026-06-26 | TASK-039 | research(agents+memory+grep+dashboard+stats+onboarding), plan update, run refill, fix getUserProgress to return real daily_xp_goal from DB (page.tsx read now effective), bar vs goal works, lint+test pass, commit+push via git-push | done — [pending SHA] |
 
 ### TASK-034 — Regenerate Supabase types after onboarding migration
 **Mục tiêu**: Chạy `npm run db:types` (sau khi migration `user_onboarding_profile` đã apply trên prod). So sánh output với patch tạm thời (từ TASK-032); nếu khác (table order, Relationships: [] vs FK, generated header) thì overwrite `src/types/supabase.ts` bằng generated chính thức từ prod schema. Commit nếu có thay đổi. Đảm bảo tsc/lint/test pass, types khớp live.
@@ -240,3 +241,22 @@
 - If 2x fail (e.g. DB schema mismatch) → blocked.
 - No change to prod code, only tests.
 **Done khi**: Test mới pass khi chạy test:integration; columns verified goal/obstacle/daily_minutes; RLS behavior asserted (success own, fail cross); lint + full unit tests pass; 1 commit + push via git-push.sh; backlog done + log SHA; autonomous, no user query.
+
+### TASK-039 — Dashboard hiển thị daily_xp_goal từ onboarding
+**Mục tiêu**: Đảm bảo `dashboard/page.tsx` (qua getUserProgress) đọc đúng `daily_xp_goal` từ `user_progress` (đã được set lúc onboarding/signup theo Q4 daily_minutes), và progress bar "XP hôm nay" hiển thị todayXp vs daily goal (bar hiện có trong DashboardClient). Fix nguồn dữ liệu để giá trị từ DB (50/80/100) được dùng thay vì hardcode 50.
+**Bước thực hiện**:
+1. Search memory (done) + đọc AGENTS.md, AGENT_BACKLOG/PLAN/ROADMAP, src/app/(main)/dashboard/page.tsx (read + compute todayXp + pass dailyXpGoal/initial), DashboardClient.tsx (XP card + bar + xpTarget), src/app/actions/stats.ts (getUserProgress hardcode + update), supabase migrations for daily_xp_goal, lib/onboarding.ts, previous TASK-032/035/038 notes.
+2. Cập nhật AGENT_PLAN.md + BACKLOG.md set TASK-039 in_progress.
+3. Run `bash scripts/agent-refill-backlog.sh` (per rules).
+4. Minimal implement: sửa getUserProgress() return daily_xp_goal: data?.daily_xp_goal ?? 50, (thay vì :50); (không sửa UI, calc todayXp, hay update action — scope đúng: đọc từ user_progress cho dashboard bar).
+5. `npm run lint && npm run test` (fix nếu cần).
+6. Update BACKLOG (in_progress→done) + nhật ký + SHA; update PLAN log table.
+7. git pull --rebase; git add src/app/actions/stats.ts AGENT_BACKLOG.md AGENT_PLAN.md; commit "feat(dashboard): read daily_xp_goal from user_progress for today XP progress bar (TASK-039)"; push via scripts/git-push.sh main.
+**Rủi ro**:
+- todayXp calc chỉ đếm unit lessons (không speaking/SRS/quiz cùng ngày) — nhưng task scope không đổi logic todayXp, chỉ đọc goal để bar dùng giá trị đúng từ DB.
+- updateDailyXpGoal vẫn local/session only (không ghi DB) — thay đổi goal trong UI không persist reload, nhưng hiển thị load ban đầu sẽ đúng từ DB (onboarding value); giữ minimal.
+- getUserProgress trả shape hẹp (không tất cả fields), page dùng cast cho best etc — chỉ sửa daily line, tránh broad change.
+- Nếu data null (user chưa có progress row) vẫn default 50 ok.
+- Không cần db:types, migration, secrets (column đã tồn tại từ trước).
+- Nếu lint/test fail → debug 1 lần, 2 lần thì blocked.
+**Done khi**: getUserProgress trả giá trị DB (verified qua test hoặc manual); dashboard load dùng daily_xp_goal từ onboarding; bar hiển thị today vs đúng goal; `npm run lint && npm run test` pass; 1 commit pushed; backlog done + entry SHA; autonomous no user.

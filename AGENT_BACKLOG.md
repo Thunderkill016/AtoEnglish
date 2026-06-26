@@ -140,10 +140,10 @@
 - **Started:** 2026-06-26 — autopilot (no human)
 
 ### TASK-039 — Dashboard hiển thị daily_xp_goal từ onboarding
-- **Status:** `ready`
+- **Status:** `in_progress`
 - **Mô tả:** `dashboard/page.tsx` đọc `daily_xp_goal` từ `user_progress`, hiển thị progress bar hôm nay vs goal.
 - **Done khi:** UI hiển thị đúng; lint+test pass.
-- **Started:** auto-refill
+- **Started:** 2026-06-26 — autopilot (no human)
 
 ### TASK-040 — Production smoke script learn B2
 - **Status:** `ready`
@@ -162,7 +162,7 @@
 | 2026-06-26 | TASK-038 | research(agents+memory+grep+setup+profile migration), set in_progress, update PLAN+BACKLOG, add profile cleanup in setup-integration, append RLS+columns tests (own insert success + cross-user block) to progress.integration.test.ts, lint+159 units+23 integration (incl 2 new) pass, commit+push via git-push.sh | 339f5a9 |
 | 2026-06-26 | TASK-037 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-06-26 | TASK-038 | auto-refill từ AGENT_ROADMAP.md | ready |
-| 2026-06-26 | TASK-039 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-06-26 | TASK-039 | research + plan + set in_progress; fix daily_xp_goal read | in_progress |
 | 2026-06-26 | TASK-040 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-06-26 | TASK-001 | Supabase migration | blocked — no CLI/token |
 | 2026-06-26 | TASK-002 | Vercel deploy check | done — 334ca23 READY |
