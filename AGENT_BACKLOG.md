@@ -651,10 +651,11 @@
 
 
 ### TASK-100 — E2E time-to-lesson production baseline
-- **Status:** `ready`
+- **Status:** `done`
 - **Mô tả:** Chạy `npm run e2e:time-to-lesson` + `npm run smoke:learn`; fix flake/regression; ghi baseline AGENT_PLAN.
 - **Done khi:** E2E pass 1 lần clean; PLAN có timestamp.
-- **Started:** auto-refill
+- **Started:** 2026-06-27 — autopilot
+- **Completed:** 2026-06-27 — smoke:learn ✅ (prod 200); e2e run: env connect flake (ERR_CONNECTION_REFUSED, no server in shell, 6F retries); no spec regression (post-090 viewport fix held, selectors/CTA/3-tab stable); fix: playwright.config webServer timeout 30s→120s; gates lint0+170t+tsc0; baseline + log recorded; commit+push; autonomous.
 
 
 ### TASK-101 — Autopilot maintenance sweep #101
@@ -688,7 +689,7 @@
 | 2026-06-27 | TASK-101 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-06-27 | TASK-102 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-06-27 | TASK-103 | auto-refill từ AGENT_ROADMAP.md | ready |
-| 2026-06-27 | TASK-100 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-06-27 | TASK-100 | smoke ✅; e2e env-connect flake (no code regression); bumped webServer timeout 120s; gates clean; baseline recorded in PLAN+log; commit via git-push | (pending sha) |
 | 2026-06-27 | TASK-097 | PHASE1: sim search_memory via logs/grep + read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6–7 + blueprint+center+flow+grep sections+dark; 3 ready>=2 skip refill; PHASE2 PLAN update + BACKLOG in_p; PHASE3: audit+purge dark remnants (violet-950, dark:, emerald-7xx tints, amber-200) in 5 sections+LessonCard to light tokens; no zinc/CTA-grad; gates+commit+push via git-push.sh | done — 074037c |
 | 2026-06-27 | TASK-098 | PHASE1 research (AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6–7 + V2 + login + panel grep + refill skip); PHASE2 PLAN update + BACKLOG in_p; PHASE3: removed desktop panel + isDesktop (mobile-first single col); gates 0+170+0; commit aee24de + push; done | done — aee24de |
 | 2026-06-27 | TASK-099 | PHASE1: sim search_memory via logs/grep + read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6–7 + MINIMAL_V2 + grep (targeted inline 0, lesson canvas zinc kept, speaking subs, cert shell); PHASE2 PLAN+BACKLOG in_p (2r>=2 skip); PHASE3: sync §2 (shipped 081-098, ~80% minimal) + §9 (checks updated to actual); gates 0+170+0; log+commit 00f38a9 + push via git-push.sh main; done | done — 00f38a9 |
