@@ -13,16 +13,16 @@
 ## Roadmap tự động (7 ngày)
 
 ### Ngày 1 — Vận hành
-- [ ] TASK-001 Supabase migration placement columns
-- [ ] TASK-002 Vercel deploy healthy
-- [ ] Verify placement live end-to-end
+- [x] TASK-001 Supabase migration placement columns
+- [x] TASK-002 Vercel deploy healthy
+- [x] Verify placement live end-to-end
 
 ### Ngày 2–3 — Audio A1
 - [ ] TASK-010 unit-1..12 MP3 batch
 - [ ] Smoke test playUnitAudio on production
 
 ### Ngày 4 — Placement UX
-- [ ] TASK-011 E2E self-select B1
+- [x] TASK-011 E2E self-select B1
 - [ ] TASK-012 Roadmap starting_unit_index
 
 ### Ngày 5+ — Chất lượng & mở rộng
@@ -42,3 +42,4 @@
 | Time (UTC) | Task | Plan summary | Outcome |
 |------------|------|--------------|---------|
 | 2026-06-26T01:36Z | TASK-001/002 | P0 ops: migration blocked, deploy OK | autopilot armed |
+| 2026-06-26T08:55Z | TASK-001/011 | db push migration + E2E B1 unlock | 2 e2e pass |

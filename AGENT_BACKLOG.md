@@ -25,11 +25,10 @@
 ## P0 — Vận hành (làm trước)
 
 ### TASK-001 — Apply Supabase migration placement
-- **Status:** `blocked`
+- **Status:** `done`
 - **Mô tả:** Apply `supabase/migrations/20260626120000_placement_starting_unit.sql` lên Supabase production. Verify cột `starting_unit_index`, `placement_completed_at` tồn tại. Chạy `npm run db:types` nếu có quyền.
 - **Done khi:** Migration applied; placement test lưu được trên live
-- **Blocked nếu:** Không có `SUPABASE_ACCESS_TOKEN` / DB password
-- **Blocked lý do:** Supabase CLI chưa cài / không có token trên máy — cần `npx supabase db push` hoặc SQL Editor thủ công khi user về
+- **Completed:** 2026-06-26 — `supabase db push` applied `20260626120000_placement_starting_unit.sql`
 
 ### TASK-002 — Fix Vercel deploy nếu fail
 - **Status:** `done`
@@ -47,7 +46,7 @@
 - **Ước tính:** ~150 clips, cần network cho gtts
 
 ### TASK-011 — Placement E2E mở rộng
-- **Status:** `ready`
+- **Status:** `done`
 - **Mô tả:** E2E: self-select B1 → `/learn` shows unit-19 unlocked. Thêm test trong `e2e/placement-test.spec.ts`.
 - **Done khi:** E2E pass trong CI
 
@@ -93,3 +92,5 @@
 | 2026-06-26 | TASK-001 | Supabase migration | blocked — no CLI/token |
 | 2026-06-26 | TASK-002 | Vercel deploy check | done — 334ca23 READY |
 | 2026-06-26 | TASK-010 | A1 audio unit-1..12 | done — autopilot batch |
+| 2026-06-26 | TASK-001 | Supabase placement migration | done — db push |
+| 2026-06-26 | TASK-011 | Placement E2E B1 → unit-19 | done — e2e/helpers/auth |
