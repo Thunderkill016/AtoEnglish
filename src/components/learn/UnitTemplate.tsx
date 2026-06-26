@@ -430,14 +430,24 @@ export default function UnitTemplate({
       if (res.success && res.completed) setIsCompleted(true);
     });
     try {
+      if (startMiniSession) {
+        localStorage.setItem(
+          `lesson-progress-${normalizedUnit.unitId}`,
+          JSON.stringify({ section: 4, mini: true })
+        );
+        return;
+      }
       const saved = localStorage.getItem(`lesson-progress-${normalizedUnit.unitId}`);
       if (saved) {
-        const { section: savedSection } = JSON.parse(saved) as { section: number };
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        if (savedSection > 1 && savedSection < TOTAL_SECTIONS) setSection(savedSection);
+        const parsed = JSON.parse(saved) as { section: number; mini?: boolean };
+        if (parsed.section > 1 && parsed.section < TOTAL_SECTIONS) {
+          // eslint-disable-next-line react-hooks/set-state-in-effect -- restore saved lesson progress from localStorage
+          setSection(parsed.section);
+          if (parsed.mini) setMiniSession(true);
+        }
       }
     } catch { /* ignore */ }
-  }, [normalizedUnit.unitId]);
+  }, [normalizedUnit.unitId, startMiniSession]);
 
   useEffect(() => {
     return () => {
@@ -454,9 +464,12 @@ export default function UnitTemplate({
     if (isLastSection) {
       localStorage.removeItem(`lesson-progress-${normalizedUnit.unitId}`);
     } else if (!isFirstSection && orderIdx > 0) {
-      localStorage.setItem(`lesson-progress-${normalizedUnit.unitId}`, JSON.stringify({ section }));
+      localStorage.setItem(
+        `lesson-progress-${normalizedUnit.unitId}`,
+        JSON.stringify({ section, mini: miniSession })
+      );
     }
-  }, [section, normalizedUnit.unitId]);
+  }, [section, miniSession, normalizedUnit.unitId]);
 
   // Settings
   const userSettings = (() => {
@@ -829,8 +842,21 @@ export default function UnitTemplate({
               )}
               {/* S3-2: Mini-session toggle / active indicator */}
               {miniSession ? (
-                <div className="flex items-center gap-1 text-[11px] font-black px-2.5 py-1 rounded-xl bg-amber-500/15 border border-amber-500/40 text-amber-300">
-                  ⚡ <span>5 phút</span>
+                <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-1 text-[11px] font-black px-2.5 py-1 rounded-xl bg-amber-500/15 border border-amber-500/40 text-amber-300">
+                    ⚡ <span>Ôn nhanh</span>
+                  </div>
+                  <Link
+                    href={`/learn/${normalizedUnit.unitId}`}
+                    onClick={() => {
+                      try {
+                        localStorage.removeItem(`lesson-progress-${normalizedUnit.unitId}`);
+                      } catch { /* ignore */ }
+                    }}
+                    className="text-[10px] font-bold text-zinc-500 hover:text-emerald-400 transition-colors whitespace-nowrap"
+                  >
+                    Bài đầy đủ →
+                  </Link>
                 </div>
               ) : section < 8 && (
                 <button
@@ -840,7 +866,7 @@ export default function UnitTemplate({
                     try {
                       localStorage.setItem(
                         `lesson-progress-${normalizedUnit.unitId}`,
-                        JSON.stringify({ section: 4 })
+                        JSON.stringify({ section: 4, mini: true })
                       );
                     } catch { /* ignore */ }
                   }}
@@ -1029,6 +1055,20 @@ export default function UnitTemplate({
               playWrongSound={playWrongSound}
               goNext={goNext}
             />
+          )}
+
+          {section === 4 && miniSession && !sessionBreak && (
+            <motion.div
+              key="mini-banner"
+              initial={{ opacity: 0, y: -6 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="mb-4 rounded-2xl border border-amber-500/25 bg-amber-500/8 px-4 py-3 text-sm text-amber-200/90"
+            >
+              <p className="font-bold text-amber-300">⚡ Chế độ ôn nhanh (~5 phút)</p>
+              <p className="text-xs text-amber-200/70 mt-0.5">
+                Luyện tập → Quiz. Muốn học đủ 10 bước? Chọn <strong className="text-amber-100">Bài đầy đủ</strong> ở góc trên.
+              </p>
+            </motion.div>
           )}
 
           {section === 4 && !sessionBreak && (
@@ -1291,6 +1331,19 @@ export default function UnitTemplate({
                   >
                     Bài tiếp theo <ChevronRight size={18} />
                   </Link>
+                  {miniSession && (
+                    <Link
+                      href={`/learn/${normalizedUnit.unitId}`}
+                      onClick={() => {
+                        try {
+                          localStorage.removeItem(`lesson-progress-${normalizedUnit.unitId}`);
+                        } catch { /* ignore */ }
+                      }}
+                      className="w-full flex items-center justify-center gap-2 bg-amber-500/10 hover:bg-amber-500/15 border border-amber-500/25 text-amber-300 font-bold rounded-2xl py-3 text-sm transition-colors"
+                    >
+                      Học bài đầy đủ (~40 phút)
+                    </Link>
+                  )}
                   <div className="flex gap-3">
                     <Link
                       href="/flashcards"

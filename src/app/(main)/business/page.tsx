@@ -77,12 +77,20 @@ export default async function BusinessPage() {
         </div>
 
         {nextUnit?.meta && (
-          <Link
-            href={nextUnit.meta.route}
-            className="mt-4 inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-sm font-black transition-colors shadow-lg shadow-blue-900/20"
-          >
-            {doneCount === 0 ? "🚀 Bắt đầu track" : "▶ Tiếp tục"} — {nextUnit.icon} {nextUnit.skill}
-          </Link>
+          <div className="mt-4 flex flex-wrap gap-2">
+            <Link
+              href={nextUnit.meta.route}
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-sm font-black transition-colors shadow-lg shadow-blue-900/20"
+            >
+              {doneCount === 0 ? "🚀 Bắt đầu track" : "▶ Tiếp tục"} — {nextUnit.icon} {nextUnit.skill}
+            </Link>
+            <Link
+              href={`${nextUnit.meta.route}?mini=1`}
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-amber-500/10 hover:bg-amber-500/15 border border-amber-500/30 text-amber-700 dark:text-amber-300 text-sm font-bold transition-colors"
+            >
+              ⚡ Ôn nhanh ~5 phút
+            </Link>
+          </div>
         )}
         {doneCount === BUSINESS_TRACK.length && (
           <div className="mt-4 inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-sm font-black">
@@ -91,14 +99,14 @@ export default async function BusinessPage() {
         )}
       </div>
 
-      {/* ── Why Business English ── */}
+      {/* ── Track highlights ── */}
       <div className="grid grid-cols-3 gap-3 mb-6">
         {[
-          { stat: "60%", label: "người Việt học English vì career" },
-          { stat: "30%", label: "tăng lương với tiếng Anh B1+" },
-          { stat: "#1", label: "kỹ năng cho jobs quốc tế" },
+          { stat: "10", label: "bài công sở thiết yếu" },
+          { stat: "B1+", label: "trình độ khuyến nghị" },
+          { stat: "5 phút", label: "ôn nhanh mỗi bài" },
         ].map(({ stat, label }) => (
-          <div key={stat} className="flex flex-col gap-1 p-3 rounded-xl bg-zinc-50 dark:bg-zinc-900/50 border border-zinc-200/60 dark:border-zinc-800/60 text-center">
+          <div key={label} className="flex flex-col gap-1 p-3 rounded-xl bg-zinc-50 dark:bg-zinc-900/50 border border-zinc-200/60 dark:border-zinc-800/60 text-center">
             <span className="text-lg font-black text-blue-600 dark:text-blue-400">{stat}</span>
             <span className="text-[10px] text-zinc-500 leading-tight">{label}</span>
           </div>
@@ -116,47 +124,58 @@ export default async function BusinessPage() {
             {idx < trackUnits.length - 1 && (
               <div className="absolute left-7 top-full h-3 w-px bg-zinc-300 dark:bg-zinc-700 z-10" />
             )}
-            <Link
-              href={unit.meta?.route ?? "/dashboard"}
-              className={`flex items-start gap-3 p-4 rounded-2xl border transition-all group ${
+            <div
+              className={`flex flex-col gap-3 p-4 rounded-2xl border transition-all ${
                 unit.done
-                  ? "border-emerald-500/20 bg-emerald-500/5 hover:bg-emerald-500/8"
-                  : "border-zinc-200/60 dark:border-zinc-800/60 bg-white/60 dark:bg-zinc-900/30 hover:border-blue-500/30 hover:bg-blue-500/5"
+                  ? "border-emerald-500/20 bg-emerald-500/5"
+                  : "border-zinc-200/60 dark:border-zinc-800/60 bg-white/60 dark:bg-zinc-900/30"
               }`}
             >
-              {/* Step badge */}
-              <div className={`flex size-9 shrink-0 items-center justify-center rounded-xl text-sm font-black transition-colors ${
-                unit.done
-                  ? "bg-emerald-500 text-white"
-                  : "bg-zinc-100 dark:bg-zinc-800 text-zinc-500 group-hover:bg-blue-500/10 group-hover:text-blue-500"
-              }`}>
-                {unit.done ? "✓" : String(idx + 1)}
-              </div>
-
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 flex-wrap">
-                  <span className="text-sm font-black text-zinc-900 dark:text-zinc-50 leading-tight">
-                    {unit.icon} {unit.skill}
-                  </span>
-                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400">
-                    {unit.meta?.level}
-                  </span>
-                  {unit.meta?.xp && (
-                    <span className="text-[10px] font-bold text-amber-600 dark:text-amber-400">
-                      +{unit.meta.xp} XP
-                    </span>
-                  )}
+              <div className="flex items-start gap-3">
+                <div className={`flex size-9 shrink-0 items-center justify-center rounded-xl text-sm font-black ${
+                  unit.done
+                    ? "bg-emerald-500 text-white"
+                    : "bg-zinc-100 dark:bg-zinc-800 text-zinc-500"
+                }`}>
+                  {unit.done ? "✓" : String(idx + 1)}
                 </div>
-                <p className="text-[11px] text-zinc-500 dark:text-zinc-400 mt-0.5 leading-relaxed">{unit.why}</p>
-                <p className="text-[10px] text-zinc-400 dark:text-zinc-500 mt-0.5">{unit.meta?.title}</p>
+
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="text-sm font-black text-zinc-900 dark:text-zinc-50 leading-tight">
+                      {unit.icon} {unit.skill}
+                    </span>
+                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400">
+                      {unit.meta?.level}
+                    </span>
+                    {unit.meta?.xp && (
+                      <span className="text-[10px] font-bold text-amber-600 dark:text-amber-400">
+                        +{unit.meta.xp} XP
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-[11px] text-zinc-500 dark:text-zinc-400 mt-0.5 leading-relaxed">{unit.why}</p>
+                  <p className="text-[10px] text-zinc-400 dark:text-zinc-500 mt-0.5">{unit.meta?.title}</p>
+                </div>
               </div>
 
-              <span className={`shrink-0 text-sm transition-transform group-hover:translate-x-0.5 ${
-                unit.done ? "text-emerald-500" : "text-zinc-400"
-              }`}>
-                {unit.done ? "✓" : "→"}
-              </span>
-            </Link>
+              {unit.meta?.route && (
+                <div className="flex flex-wrap gap-2 pl-12">
+                  <Link
+                    href={unit.meta.route}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-600/10 hover:bg-blue-600/15 border border-blue-500/20 text-blue-700 dark:text-blue-300 text-xs font-bold transition-colors"
+                  >
+                    {unit.done ? "Xem lại" : "Học đầy đủ"} →
+                  </Link>
+                  <Link
+                    href={`${unit.meta.route}?mini=1`}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-500/10 hover:bg-amber-500/15 border border-amber-500/25 text-amber-700 dark:text-amber-300 text-xs font-bold transition-colors"
+                  >
+                    ⚡ Ôn nhanh
+                  </Link>
+                </div>
+              )}
+            </div>
           </div>
         ))}
       </div>
