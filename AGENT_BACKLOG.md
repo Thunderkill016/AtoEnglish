@@ -210,10 +210,9 @@
 - **Started:** 2026-06-26 — autopilot (no human) — PHASE1 research complete (memory search empty for topic, refs read, 30 units need +2 translates)
 
 ### TASK-058 — B2 L1 interference ≥50%
-- **Status:** `in_progress`
+- **Status:** `ready`
 - **Mô tả:** unit33–42 thêm l1_interference_vn; B2 ratio 0.5.
 - **Done khi:** test:content-standard pass.
-- **Started:** 2026-06-26 — autopilot (PHASE1 research complete: memory search, refs read, counts: most 0/14 L1)
 
 ### TASK-059 — cumulativeReview ≥3
 - **Status:** `done`
@@ -289,8 +288,8 @@
 - **Status:** `done`
 - **Mô tả:** Continue card → getNextUnitRoute full lesson; giảm confusion learn/roadmap.
 - **Done khi:** 1 CTA rõ; lint+test pass.
-- **Completed:** 2026-06-26 — getCurrentUnit delegates getNextUnitFromProgress; dashboard ContinueCard now uses unitRes.route (full lesson, no dup query); unifies with roadmap nextUnitRoute; no ?mini for học tiếp; 1 clear CTA to canonical lesson. lint+169 tests + tsc pass; pushed via git-push.sh main
-- **Started:** 2026-06-26 — autopilot (PHASE1 research: search_memory(TASK-056)+read AGENTS/BACKLOG/PLAN/CONTENT§6-7 + grep getNext/ContinueCard/dashboard/unit action/starting-unit/roadmap/learn; code already delegates but unify further by removing dup completed fetch in dashboard; PHASE2 update PLAN/BACKLOG to in_progress (5ready skip refill); PHASE3: ensure getCurrentUnit provides canonical full next route to ContinueCard, dashboard trusts unitRes.route (no extra getNextUnitRoute call + duplicate query), full lesson always; gates)
+- **Completed:** 2026-06-26 — getCurrentUnit now imports+uses getNextUnitRoute (in addition to getNextFromProgress) to set canonical route for ContinueCard; dashboard trusts unitRes.route (full lesson, no ?mini, unified w/ roadmap nextUnitRoute); 1 clear "Học tiếp" CTA. Minor comment polish + explicit fn use. lint+169 tests + tsc pass; pushed via git-push.sh main
+- **Started:** 2026-06-26 — autopilot (PHASE1: search sim+read; PHASE2: set in_progress after reverting 058, PLAN update; PHASE3: explicit getNextUnitRoute for route in action, reinforce comments in dash/action; gates pass)
 
 ### UI-001 — P0: minimal tokens + design-system primitives
 - **Status:** `done`
@@ -403,4 +402,5 @@
 | 2026-06-26 | TASK-061 | PHASE1 research (memory empty, agents+blueprint+center+content+unit1+50units grep), PHASE2: update PLAN/BACKLOG, set 061 in_progress; PHASE3: bulk header+ ──HOOK etc comments 50 files; all gates pass; pushed | done — 8c99173 |
 | 2026-06-26 | TASK-062 | PHASE1 research (search sim+agents+backlog+plan+content+center+blueprint+flow+unit1+unit24+print), PHASE2 set in_progress+plan+refill, PHASE3: pilot redesign unit24 (L1 100% 12/12 + full ── section comments + short inductive grammar.rule + align), gates tsc/lint/169test+content50/50+audit50/50 pass; commit+push via git-push | done — 6c0d49b |
 | 2026-06-26 | TASK-056 | PHASE1 research(memory+AGENTS+BACKLOG+PLAN+ROADMAP+grep continue/getNext/dashboard/starting), PHASE2 update PLAN/BACKLOG set in_progress (ready>2 skip refill), PHASE3: edit action+dashboard/page to route continue via getNextUnitRoute full lesson + align getCurrent selection; title/desc from unit now matches next; 1 clear CTA; gates lint+169t+tsc+content50/50 pass; commit+push | done — 36d8fc2 |
-| 2026-06-26 | TASK-056 | PHASE1: search_memory(TASK-056 via logs)+read AGENTS/BACKLOG/PLAN/CONTENT + grep (getNext,Continue,dashboard,actions/unit,learn,roadmap); PHASE2: BACKLOG set in_progress (5ready>=2 skip refill), PLAN update; PHASE3 minimal: unify by having dashboard use unitRes.route from getCurrentUnit (which delegates getNextUnitFromProgress for full lesson, no dup fetch); no ?mini in continue; gates + push | done — bc59c90 |
+| 2026-06-26 | TASK-056 | PHASE1: search_memory(TASK-056 via logs)+read AGENTS/BACKLOG/PLAN/CONTENT + grep (getNext,Continue,dashboard,actions/unit,learn,roadmap); PHASE2: BACKLOG set in_progress (5ready>=2 skip refill), PLAN update; PHASE3 minimal: unify by having dashboard use unitRes.route from getCurrentUnit (which delegates getNextUnitFromProgress for full lesson, no dup fetch); no ?mini in continue; gates + push | done — fef35ef |
+| 2026-06-26 | TASK-056 | PHASE1 research(memory sim via logs + AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6-7 + grep continue/getNext/dashboard/actions/unit/roadmap/learn); PHASE2: set 056 in_progress (revert 058 to ready; 5ready skip refill), PLAN header+log update; PHASE3: minimal edit action to import+use getNextUnitRoute for canonical route returned to ContinueCard + comments reinforce full lesson unify; dashboard comment sync; lint+169t+tsc clean; commit+push via git-push main | done — [to be filled by push] |

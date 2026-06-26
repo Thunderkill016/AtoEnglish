@@ -4,7 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 import { UNIT_VOCABULARY } from "@/lib/constants/vocabulary";
 import { UNITS } from "@/lib/constants/units";
-import { getNextUnitFromProgress } from "@/lib/placement/starting-unit";
+import { getNextUnitFromProgress, getNextUnitRoute } from "@/lib/placement/starting-unit";
 import { headers } from "next/headers";
 import { createRateLimiter } from "@/lib/security/rate-limit";
 import { CompleteUnitSchema } from "@/lib/security/validation";
@@ -399,7 +399,7 @@ export async function resetUnitProgress(unitId: string) {
 
 /**
  * Server Action lấy thông tin Unit đang học hiện tại của người dùng.
- * Selection uses getNextUnitFromProgress so "current" for ContinueCard = next incomplete full lesson.
+ * Selection uses getNextUnitFromProgress + getNextUnitRoute so ContinueCard always gets canonical next full lesson route (unify w/ roadmap, no ?mini).
  */
 export async function getCurrentUnit() {
   try {
@@ -482,9 +482,11 @@ export async function getCurrentUnit() {
       };
     });
 
-    // Use canonical getNextUnitFromProgress (same as roadmap) so ContinueCard gets
-    // the next incomplete unit >= starting (full lesson route, no mini).
+    // Use canonical getNextUnitFromProgress + getNextUnitRoute (same as roadmap)
+    // so ContinueCard gets the next incomplete full lesson (no ?mini).
+    // Unifies "Học tiếp" CTA across dashboard + roadmap; reduces learn/roadmap confusion.
     const nextMeta = getNextUnitFromProgress(completedUnitIds, startingUnitIndex);
+    const canonicalRoute = getNextUnitRoute(completedUnitIds, startingUnitIndex);
     let activeUnit = nextMeta
       ? unitStatuses.find((u) => u.unitId === nextMeta.id)
       : undefined;
@@ -493,9 +495,12 @@ export async function getCurrentUnit() {
     }
     if (!activeUnit) activeUnit = unitStatuses[unitStatuses.length - 1];
 
+    // Ensure route for ContinueCard is always the canonical full lesson from getNextUnitRoute
+    const route = canonicalRoute || activeUnit?.route || "/learn";
     return {
       success: true,
-      ...activeUnit
+      ...(activeUnit || {}),
+      route
     };
 
   } catch (error) {

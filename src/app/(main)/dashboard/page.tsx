@@ -39,9 +39,9 @@ export default async function DashboardPage() {
     currentUnitData.description = unitRes.description || currentUnitData.description;
     currentUnitData.progress = unitRes.progress || 0;
     currentUnitData.xp = UNITS.find((u) => u.id === unitRes.unitId)?.xp ?? 80;
-    // Continue card uses getCurrentUnit (delegates getNextUnitFromProgress)
-    // → canonical next full lesson route (no ?mini). Unifies dashboard + roadmap.
-    // Reduces confusion: "Học tiếp" always full lesson; /learn = list, /roadmap = overview.
+    // Continue card uses getCurrentUnit which uses getNextUnitRoute (via getNextUnitFromProgress)
+    // → canonical next full lesson (no ?mini). Unifies dashboard + roadmap next.
+    // 1 clear CTA "Học tiếp"; /learn=list, /roadmap=overview → giảm confusion.
     currentUnitData.route = unitRes.route || currentUnitData.route;
   }
 

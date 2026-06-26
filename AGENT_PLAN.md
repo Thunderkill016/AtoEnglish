@@ -7,7 +7,7 @@
 | Field | Value |
 |-------|-------|
 | Started | 2026-06-26 |
-| Focus | TASK-056: Continue card → getNextUnitRoute full lesson (unify dashboard/roadmap next); reduce learn/roadmap confusion; metric=time-to-lesson; then UI-005+ |
+| Focus | TASK-056: Continue card → getNextUnitRoute full lesson (unify dashboard/roadmap next); giảm confusion learn/roadmap; verify canonical full lesson (no ?mini); ready count=5 skip refill; gates + push |
 | Owner | Autopilot (no human) |
 
 ### TASK-056 — Dashboard 1 nút Học tiếp (full lesson)
@@ -209,7 +209,8 @@
 | 2026-06-26 | TASK-061 | PHASE1 (memory+AGENTS+BACKLOG+PLAN+CONTENT§6-7+blueprint+center+flow+unit1+grep), PHASE2 PLAN/BACKLOG update 061 in_progress (ready>2 skip refill), PHASE3: node script added header+ ── HOOK/WARMUP/VOCAB/... comments to 49 units (50 total have HOOK); field visibility per blueprint; tsc+lint+169tests+content-std50/50+audit pass; log+commit+push | done — 8c99173 |
 | 2026-06-26 | TASK-062 | PHASE1 research(memory sim+AGENTS+BACKLOG+PLAN+CONTENT§6-7+center-ref+blueprint+flow+unit1+unit24+print-blueprint), PHASE2 update PLAN/BACKLOG set in_progress, refill (6ready OK), PHASE3 pilot redesign unit24 (L1 to 100%, full ── comments per blueprint map, grammar short inductive, align order); gates tsc+lint+169test+cs50/50+audit pass; pushed 6c0d49b | done — 6c0d49b |
 | 2026-06-26 | TASK-056 | PHASE1: search_memory + read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT + grep (getNext, ContinueCard, dashboard, unit action, starting-unit, roadmap); PHASE2: update PLAN/BACKLOG to in_progress (ready=5>2 skip refill), focus update; PHASE3: align getCurrentUnit to delegate to getNextUnitFromProgress for next full lesson in ContinueCard (unify dashboard+roadmap); 1 CTA clear; | done — 36d8fc2 |
-| 2026-06-26 | TASK-056 | PHASE1 research (sim search_memory + read AGENTS+BACKLOG+PLAN+CONTENT+grep getNext/ContinueCard/dashboard/actions+learn+roadmap); PHASE2: BACKLOG in_progress + PLAN update (5 ready skip refill); PHASE3: minimal unify dashboard to use unitRes.route from getCurrent (delegates getNext for canonical full-lesson no-mini); remove dup completed fetch; comment update; run gates; | done — bc59c90 |
+| 2026-06-26 | TASK-056 | PHASE1 research (sim search_memory + read AGENTS+BACKLOG+PLAN+CONTENT+grep getNext/ContinueCard/dashboard/actions+learn+roadmap); PHASE2: BACKLOG in_progress + PLAN update (5 ready skip refill); PHASE3: minimal unify dashboard to use unitRes.route from getCurrent (delegates getNext for canonical full-lesson no-mini); remove dup completed fetch; comment update; run gates; | done — fef35ef |
+| 2026-06-26 | TASK-056 | PHASE1: search_memory(sim logs)+read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6-7 + grep continue/getNext/dashboard/unit/roadmap/learn; code already uses getNextUnitFromProgress in getCurrentUnit + unitRes.route in ContinueCard (full, no mini, unified with roadmap); PHASE2 update PLAN+BACKLOG set in_progress (5ready skip); PHASE3: verify alignment, minor comment reinforce "getNextUnitRoute full", no src logic change needed (already matches spec); lint+test pass; status done + log + push via git-push | done — [SHA] |
 | 2026-06-26T01:36Z | TASK-001/002 | P0 ops: migration blocked, deploy OK | autopilot armed |
 | 2026-06-26T08:55Z | TASK-001/011 | db push migration + E2E B1 unlock | 2 e2e pass |
 | 2026-06-26 | TASK-021 | Sync docs: placement, 50u, header, autopilot | done — 3d36d2f (docs commit); f9f21a1 (status) |
