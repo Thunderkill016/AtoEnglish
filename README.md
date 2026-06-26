@@ -3,7 +3,7 @@
 > **Học tiếng Anh chuẩn phát âm — dành cho người Việt**
 
 [![CI](https://github.com/Thunderkill016/AtoEnglish/actions/workflows/ci.yml/badge.svg)](https://github.com/Thunderkill016/AtoEnglish/actions/workflows/ci.yml)
-[![Tests](https://img.shields.io/badge/tests-146%20passed-brightgreen)](https://github.com/Thunderkill016/AtoEnglish/actions)
+[![Tests](https://img.shields.io/badge/tests-149%20passed-brightgreen)](https://github.com/Thunderkill016/AtoEnglish/actions)
 [![Live](https://img.shields.io/badge/live-atoenglish.vercel.app-emerald)](https://atoenglish.vercel.app)
 
 AtoEnglish là web app học tiếng Anh hướng đến người Việt — tập trung vào **phản xạ nói**, **phát âm chuẩn** và **ghi nhớ từ vựng lâu dài** qua thuật toán SRS.
@@ -69,7 +69,7 @@ Generate VAPID keys: `npx web-push generate-vapid-keys`
 ## 🧪 Testing
 
 ```bash
-npm run test          # Unit tests (Vitest) — 146 tests
+npm run test          # Unit tests (Vitest) — 149 tests
 npm run test:integration  # Supabase integration tests
 npm run test:watch    # Watch mode
 npm run test:coverage # Coverage report

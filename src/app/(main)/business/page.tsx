@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { UNITS } from "@/lib/constants/units";
+import { BUSINESS_TRACK } from "@/lib/constants/business-track";
 import { getAllUnitCompletionStatuses } from "@/app/actions/unit";
 
 export const metadata: Metadata = {
@@ -9,20 +10,6 @@ export const metadata: Metadata = {
 };
 
 export const revalidate = 60;
-
-// Business track: 10 units curated for career/workplace English
-const BUSINESS_TRACK = [
-  { id: "unit-17", icon: "🏆", skill: "Kinh nghiệm & CV",        why: "Present Perfect — nói về thành tích sự nghiệp, CV chuyên nghiệp" },
-  { id: "unit-22", icon: "📋", skill: "Quy định & Công sở",       why: "Must/Have to — phân biệt quy định bắt buộc vs khuyến nghị nơi làm việc" },
-  { id: "unit-24", icon: "⚙️",  skill: "Quy trình & Báo cáo",    why: "Passive Voice — mô tả quy trình, viết báo cáo không cần chủ ngữ" },
-  { id: "unit-25", icon: "🤝", skill: "Mô tả & Networking",       why: "Relative Clauses — giới thiệu công ty, đồng nghiệp, đối tác tự nhiên" },
-  { id: "unit-27", icon: "💬", skill: "Phrasal Verbs Công sở",    why: "20 phrasal verbs thiết yếu: carry out, deal with, look into, follow up" },
-  { id: "unit-28", icon: "⏳", skill: "Kinh nghiệm Lâu dài",     why: "Pres. Perfect Continuous — 'I've been working here for 3 years'" },
-  { id: "unit-29", icon: "🔧", skill: "Giải quyết Vấn đề",       why: "Thảo luận vấn đề, đề xuất giải pháp — TOEIC Part 3 & meetings" },
-  { id: "unit-31", icon: "📧", skill: "Email & Văn bản Formal",   why: "Reporting verbs, formal tone, email structure — từ A đến Z" },
-  { id: "unit-35", icon: "🤜", skill: "Đàm phán & Hợp đồng",     why: "Advanced Conditionals — unless/provided that trong đàm phán" },
-  { id: "unit-40", icon: "🎤", skill: "Thuyết trình & Cohesion",  why: "30 discourse markers — nevertheless, furthermore, thereby — IELTS 6.5" },
-];
 
 export default async function BusinessPage() {
   const bulkRes = await getAllUnitCompletionStatuses();
@@ -187,10 +174,10 @@ export default async function BusinessPage() {
         </p>
         <p className="text-xs text-zinc-500 mb-3">Chia sẻ lên LinkedIn để tăng profile của bạn</p>
         <Link
-          href="/progress"
+          href="/certificate/business"
           className="inline-flex items-center gap-1.5 text-xs font-black text-blue-600 dark:text-blue-400 hover:underline"
         >
-          Xem chứng chỉ của tôi →
+          {doneCount === BUSINESS_TRACK.length ? "Nhận chứng chỉ Business →" : "Xem tiến độ chứng chỉ →"}
         </Link>
       </div>
     </div>

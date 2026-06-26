@@ -35,6 +35,7 @@ import {
   countCompletedMissions,
   type DailyMission,
 } from "@/lib/dashboard/daily-missions";
+import type { BusinessTrackProgress } from "@/lib/constants/business-track";
 import DashboardHubNav from "./DashboardHubNav";
 import LevelProgressBar from "./LevelProgressBar";
 import StreakFreezeCard from "@/features/streak/components/StreakFreezeCard";
@@ -95,6 +96,7 @@ interface DashboardClientProps {
     scenario_id: string | null;
     created_at: string;
   }>;
+  businessTrack: BusinessTrackProgress;
 }
 
 const getLevelBadgeStyles = (level: string) => {
@@ -151,6 +153,7 @@ export default function DashboardClient({
   weeklyData,
   calendarData,
   recentSpeakingSessions,
+  businessTrack,
 }: DashboardClientProps) {
   const [xpCurrent, setXpCurrent] = useState(initialXpCurrent);
   const [greeting, setGreeting] = useState("Chào bạn");
@@ -724,16 +727,42 @@ export default function DashboardClient({
 
         {/* ── 8. Bottom utility sections ── */}
         <Link
-          href="/business"
+          href={
+            businessTrack.isComplete
+              ? "/certificate/business"
+              : businessTrack.nextRoute ?? "/business"
+          }
           id="business-track-cta"
-          className="flex items-center gap-3 p-4 rounded-2xl border border-blue-500/15 bg-blue-500/3 dark:bg-blue-500/5 hover:bg-blue-500/8 hover:border-blue-500/25 transition-all group"
+          className="flex flex-col gap-3 p-4 rounded-2xl border border-blue-500/15 bg-blue-500/3 dark:bg-blue-500/5 hover:bg-blue-500/8 hover:border-blue-500/25 transition-all group"
         >
-          <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-blue-500/10 text-lg">💼</span>
-          <div className="flex-1 min-w-0">
-            <p className="text-xs font-black text-zinc-900 dark:text-zinc-50 leading-tight">Business English Track</p>
-            <p className="text-[10px] text-zinc-500 dark:text-zinc-400">10 bài thiết yếu cho sự nghiệp — email, họp, thuyết trình</p>
+          <div className="flex items-center gap-3">
+            <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-blue-500/10 text-lg">💼</span>
+            <div className="flex-1 min-w-0">
+              <p className="text-xs font-black text-zinc-900 dark:text-zinc-50 leading-tight">Business English Track</p>
+              <p className="text-[10px] text-zinc-500 dark:text-zinc-400">
+                {businessTrack.isComplete
+                  ? "Hoàn thành — nhận chứng chỉ Business"
+                  : businessTrack.nextSkill
+                    ? `Tiếp theo: ${businessTrack.nextSkill}`
+                    : "10 bài thiết yếu cho sự nghiệp"}
+              </p>
+            </div>
+            <ChevronRight className="size-4 text-blue-400/60 shrink-0 group-hover:text-blue-500 group-hover:translate-x-0.5 transition-all" />
           </div>
-          <ChevronRight className="size-4 text-blue-400/60 shrink-0 group-hover:text-blue-500 group-hover:translate-x-0.5 transition-all" />
+          <div>
+            <div className="flex items-center justify-between mb-1">
+              <span className="text-[10px] font-bold text-zinc-500">Tiến độ track</span>
+              <span className="text-[10px] font-black text-blue-500">
+                {businessTrack.doneCount}/{businessTrack.total}
+              </span>
+            </div>
+            <div className="h-1.5 rounded-full bg-zinc-200 dark:bg-zinc-800 overflow-hidden">
+              <div
+                className="h-full rounded-full bg-gradient-to-r from-blue-500 to-emerald-500 transition-all duration-500"
+                style={{ width: `${businessTrack.percent}%` }}
+              />
+            </div>
+          </div>
         </Link>
 
         {/* ── Speaking Activity Feed ── */}

@@ -13,6 +13,7 @@ import {
 } from "@/app/actions/unit";
 import { getRecentSpeakingSessions } from "@/app/actions/speaking";
 import { UNITS } from "@/lib/constants/units";
+import { getBusinessTrackProgress } from "@/lib/constants/business-track";
 import { UNIT_VOCABULARY } from "@/lib/constants/vocabulary";
 import DashboardClient from "./components/DashboardClient";
 
@@ -152,6 +153,8 @@ export default async function DashboardPage() {
     .filter(u => completedMap.has(u.id))
     .map(u => u.id);
 
+  const businessTrack = getBusinessTrackProgress(completedUnitIds);
+
   // ── Word of the Day: deterministic by VN date, from current unit vocab ──────
   const allVocab = UNITS.flatMap(u => UNIT_VOCABULARY[u.id] ?? []);
   const currentUnitVocab = UNIT_VOCABULARY[currentUnitData.unitId] ?? [];
@@ -194,6 +197,7 @@ export default async function DashboardPage() {
       calendarData={calendarData}
       allUnits={UNITS.map(u => ({ id: u.id, title: u.title, level: u.level, route: u.route, xp: u.xp }))}
       recentSpeakingSessions={recentSpeakingSessions}
+      businessTrack={businessTrack}
     />
   );
 }

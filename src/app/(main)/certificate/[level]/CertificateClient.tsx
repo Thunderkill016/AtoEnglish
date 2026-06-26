@@ -39,6 +39,11 @@ const LEVEL_THEMES: Record<string, { gradient: string; accent: string; badge: st
     accent: "text-orange-400",
     badge: "bg-orange-500/20 border-orange-500/40 text-orange-300",
   },
+  business: {
+    gradient: "from-blue-600 via-indigo-500 to-emerald-500",
+    accent: "text-blue-400",
+    badge: "bg-blue-500/20 border-blue-500/40 text-blue-300",
+  },
 };
 
 export default function CertificateClient({
