@@ -7,7 +7,7 @@
 | Field | Value |
 |-------|-------|
 | Started | 2026-06-26 |
-| Focus | Kế hoạch tối giản P0–P6 done. TASK-045 (autopilot doc sync) done 75b72b3. Tiếp: TASK-046 (B2 audio test) |
+| Focus | Kế hoạch tối giản + content gates done. TASK-046 done. TASK-047: GitHub agent-health workflow to fail on ready=0 (daemon stall detect) |
 | Owner | Autopilot (no human) |
 
 ### TASK-045 — Sync AGENT_AUTOPILOT.md với auto-refill
@@ -260,6 +260,7 @@
 | 2026-06-26 | TASK-056 | PHASE1 research (sim search_memory + read AGENTS+BACKLOG+PLAN+CONTENT+grep getNext/ContinueCard/dashboard/actions+learn+roadmap); PHASE2: BACKLOG in_progress + PLAN update (5 ready skip refill); PHASE3: minimal unify dashboard to use unitRes.route from getCurrent (delegates getNext for canonical full-lesson no-mini); remove dup completed fetch; comment update; run gates; | done — fef35ef |
 | 2026-06-26 | TASK-056 | PHASE1: search sim (logs); read AGENTS+BACKLOG+PLAN+ROADMAP+CONTENT§6-7; grep + code read getNext/Continue/dashboard/learn/roadmap; PHASE2 set in_progress (5ready skip), PLAN update; PHASE3: import+use getNextUnitRoute explicitly in getCurrent for Continue route + comments; lint+169+tsc pass; commit ff6f7bb + push via git-push | done — ff6f7bb |
 | 2026-06-26 | TASK-056 | PHASE1: search_memory(sim logs)+read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6-7 + grep continue/getNext/dashboard/unit/roadmap/learn; code already uses getNextUnitFromProgress in getCurrentUnit + unitRes.route in ContinueCard (full, no mini, unified with roadmap); PHASE2 update PLAN+BACKLOG set in_progress (5ready skip); PHASE3: verify alignment, minor comment reinforce "getNextUnitRoute full", no src logic change needed (already matches spec); lint+test pass; status done + log + push via git-push | done — [SHA] |
+| 2026-06-26T13:22Z | TASK-046 | PHASE1 research (memory sim logs + AGENTS+BACKLOG+PLAN+CONTENT§6-7+blueprint+center-ref+learning-flow+unit1+curriculum-quality.test+ B2 grep audio decl); PHASE2 set in_progress + add PLAN section (ready>2 skip refill); PHASE3 minimal extend test with B2 audio vocab+dialogue describe block; gates lint+170t+tsc pass; commit+push da2c844 | done — da2c844 |
 | 2026-06-26T01:36Z | TASK-001/002 | P0 ops: migration blocked, deploy OK | autopilot armed |
 | 2026-06-26T08:55Z | TASK-001/011 | db push migration + E2E B1 unlock | 2 e2e pass |
 | 2026-06-26 | TASK-021 | Sync docs: placement, 50u, header, autopilot | done — 3d36d2f (docs commit); f9f21a1 (status) |
@@ -590,3 +591,27 @@
 - Fail 2x → blocked + lý do.
 - Pure JS/TS test, self debug from output.
 **Done khi**: curriculum-quality.test.ts extended with B2-specific audio check; `npm run lint && npm run test` pass (0 missing); 1 commit + push via git-push.sh main; BACKLOG status=done + entry SHA+date in Nhật ký; no ask user; autonomous.
+
+### TASK-047 — GitHub agent-health check auto-refill
+**Mục tiêu**: Cập nhật `.github/workflows/agent-health.yml` để fail (exit 1 + ::error alert) nếu số `**Status:** \`ready\`` trong AGENT_BACKLOG.md == 0. Thêm trigger `schedule` cron hàng giờ để detect daemon stalled (nếu ready=0 quá 6h → nhiều run fail, trigger cảnh báo GitHub). Giữ workflow_dispatch cho manual trigger. Chỉ edit workflow yml (và PLAN/BACKLOG log); không đụng app code, scripts hay data. Mục tiêu: workflow health gate giúp phát hiện daemon kẹt (refill/orchestrator fail) sớm.
+**Bước thực hiện**:
+1. PHASE1 research: search_memory("TASK-047 agent-health workflow daemon stalled") + read AGENTS.md (ALWAYS), AGENT_BACKLOG/PLAN/ROADMAP, .github/workflows/agent-health.yml (dispatch + count||true), ci.yml/performance (manual only pattern), scripts/agent-daemon.sh + agent-refill-backlog.sh + agent-watchdog.sh (confirm dùng cùng grep ready count), CONTENT_STYLE §6-7 (không liên quan).
+2. Grep codebase confirm yml hiện không fail job (chỉ count || true), không có schedule, không alert; xác định file cần sửa: chỉ .github/workflows/agent-health.yml .
+3. Update BACKLOG: TASK-047 status `in_progress`.
+4. Update AGENT_PLAN.md (thêm section này + update header focus).
+5. Ready count =2 ≥ MIN_READY=2 → KHÔNG chạy `bash scripts/agent-refill-backlog.sh` (per rule; daemon tự xử lý nếu thấp).
+6. PHASE3 implement tối thiểu đúng scope: 
+   - Thêm `schedule: - cron: '0 * * * *'` (hourly) vào on:
+   - Sửa job step: compute COUNT, if eq 0 thì ::error:: + echo + exit 1; else ✅ healthy.
+   - Giữ checkout; đổi tên job rõ "Agent Health".
+7. Chạy gates bắt buộc: `npm run lint && npm run test` (và npx tsc --noEmit). (yml syntax tự kiểm bởi edit, GitHub sẽ validate).
+8. Pass → update BACKLOG done + Nhật ký entry + SHA; update PLAN log table.
+9. git pull --rebase; git add .github/workflows/agent-health.yml AGENT_BACKLOG.md AGENT_PLAN.md; commit "ci(github): schedule agent-health.yml + fail on ready=0 (step grep + alert) to catch daemon stall >6h (TASK-047)"; `bash scripts/git-push.sh main`.
+**Rủi ro**:
+- Scheduled workflows chỉ chạy trên default branch (main) và có thể bị GitHub rate limit nếu nhiều; nhưng đủ cho health (1 run/giờ).
+- yml multi-line run cần đúng indent ( | block) — sai syntax GitHub reject run. Dùng pattern chuẩn từ ci.yml.
+- Nếu ready=0 là trạng thái hợp lệ (hết task) → nhưng theo ROADMAP+daemon design, phải auto-refill khi <2, 0 nghĩa là stall (refill/orchestrator/watchdog lỗi).
+- Không secret cần (file public workflow). Nếu git-push.sh fail (thiếu GITLAB_TOKEN) → set blocked, advance TASK-048 nếu được.
+- Fail 2 lần liên → blocked + lý do.
+- Pure config + docs; tự debug từ output lint/test + (sau) GitHub run log.
+**Done khi**: agent-health.yml chứa schedule cron + step grep backlog mà exit 1 + ::error khi ready==0 (và ✅ khi >0); manual dispatch vẫn hoạt động; `npm run lint && npm run test` pass; 1 commit + push via git-push.sh main; BACKLOG status=done + entry SHA+date; no user asked; autonomous.

@@ -358,17 +358,18 @@
 - **Started:** 2026-06-26 — autopilot (PHASE1: read AGENTS+BACKLOG+PLAN+ROADMAP+AUTOPILOT+CONTENT§6-7 + grep; memory sim via logs; PHASE2: plan section+refill run (skipped >=2); PHASE3: set in_progress, edit doc)
 
 ### TASK-046 — Curriculum quality B2 audio declarations
-- **Status:** `in_progress`
+- **Status:** `done`
 - **Mô tả:** Extend `curriculum-quality.test.ts` verify mọi B2 unit có `audio` path declared cho vocab+dialogue.
 - **Done khi:** Test pass; 0 missing audio fields.
+- **Completed:** 2026-06-26 — extend curriculum-quality.test.ts with dedicated B2 describe block asserting audio /^\/audio\// on vocab+dialogues for unit33-42; general asserts kept; lint+170 tests (51 in curriculum-q) + tsc clean; commit da2c844 + push via git-push.sh (origin); status done; autonomous
 - **Started:** 2026-06-26 — autopilot (PHASE1: read AGENTS/BACKLOG/PLAN/CONTENT§6-7 + blueprint + center-ref + flow + unit1 gold + curriculum-quality.test + grep B2 units audio decl + memory sim via logs; PHASE2 plan+backlog; PHASE3: extend test with B2-specific audio guard for vocab+dialogues)
 
 
 ### TASK-047 — GitHub agent-health check auto-refill
-- **Status:** `ready`
+- **Status:** `in_progress`
 - **Mô tả:** Workflow `agent-health.yml` fail nếu backlog `ready`=0 quá 6h (daemon stalled).
 - **Done khi:** Workflow có step grep backlog + alert.
-- **Started:** auto-refill
+- **Started:** 2026-06-26 — autopilot (PHASE1: search_memory(TASK-047 agent-health) sim logs + read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6-7 + grep .github/workflows + daemon scripts ready-count logic; PHASE2 plan update + BACKLOG in_progress (ready=2 skip refill); PHASE3: edit yml to scheduled cron + fail on 0 + alert)
 
 ### TASK-048 — Onboarding profile read API
 - **Status:** `ready`
@@ -427,3 +428,4 @@
 | 2026-06-26 | TASK-056 | PHASE1 research(memory+AGENTS+BACKLOG+PLAN+ROADMAP+grep continue/getNext/dashboard/starting), PHASE2 update PLAN/BACKLOG set in_progress (ready>2 skip refill), PHASE3: edit action+dashboard/page to route continue via getNextUnitRoute full lesson + align getCurrent selection; title/desc from unit now matches next; 1 clear CTA; gates lint+169t+tsc+content50/50 pass; commit+push | done — 36d8fc2 |
 | 2026-06-26 | TASK-056 | PHASE1: search_memory(TASK-056 via logs)+read AGENTS/BACKLOG/PLAN/CONTENT + grep (getNext,Continue,dashboard,actions/unit,learn,roadmap); PHASE2: BACKLOG set in_progress (5ready>=2 skip refill), PLAN update; PHASE3 minimal: unify by having dashboard use unitRes.route from getCurrentUnit (which delegates getNextUnitFromProgress for full lesson, no dup fetch); no ?mini in continue; gates + push | done — fef35ef |
 | 2026-06-26 | TASK-056 | PHASE1 research(memory sim via logs + AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6-7 + grep continue/getNext/dashboard/actions/unit/roadmap/learn); PHASE2: set 056 in_progress (revert 058 to ready; 5ready skip refill), PLAN header+log update; PHASE3: minimal edit action to import+use getNextUnitRoute for canonical route returned to ContinueCard + comments reinforce full lesson unify; dashboard comment sync; lint+169t+tsc clean; commit+push via git-push main | done — ff6f7bb |
+| 2026-06-26 | TASK-046 | PHASE1 (search_memory sim logs + read AGENTS/BACKLOG/PLAN/CONTENT§6-7+blueprint+center+flow+unit1+test+grep B2 audio counts match); PHASE2 PLAN+BACKLOG in_progress (ready>2 skip refill); PHASE3: extend curriculum-quality.test.ts + B2 describe block for vocab+dialogue audio decl; lint+170t (51 curriculum) +tsc pass; commit da2c844 + git-push.sh main | done — da2c844 |

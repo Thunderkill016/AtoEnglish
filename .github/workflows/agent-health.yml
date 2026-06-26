@@ -1,6 +1,8 @@
-name: Agent Health (manual)
+name: Agent Health
 
 on:
+  schedule:
+    - cron: '0 * * * *'   # hourly — detect stalled daemon (ready=0 >6h will cause repeated fails)
   workflow_dispatch:
 
 jobs:
@@ -8,4 +10,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: grep -c '\*\*Status:\*\* `ready`' AGENT_BACKLOG.md || true
+      - name: Check backlog ready count (fail if 0 to alert stall)
+        run: |
+          COUNT=$(grep -c '\*\*Status:\*\* `ready`' AGENT_BACKLOG.md || true)
+          echo "ready count: $COUNT"
+          if [ "${COUNT:-0}" -eq 0 ]; then
+            echo "::error::Backlog ready=0 — daemon stalled (may exceed 6h). Investigate/refill or check orchestrator."
+            exit 1
+          fi
+          echo "✅ Backlog healthy: $COUNT ready tasks"
