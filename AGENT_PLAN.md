@@ -7,8 +7,30 @@
 | Field | Value |
 |-------|-------|
 | Started | 2026-06-26 |
-| Focus | TASK-056: Continue card → getNextUnitRoute full lesson (unify dashboard/roadmap next); giảm confusion learn/roadmap; verify canonical full lesson (no ?mini); ready count=5 skip refill; gates + push |
+| Focus | TASK-058: B2 L1 interference >=50% (unit33-42 add l1_interference_vn >=6/12 or equiv; set B2 ratio 0.5 in content-standard); per center-ref VN CLT + CONTENT_STYLE §7 + unit1 gold; skip refill (many ready); gates + push |
 | Owner | Autopilot (no human) |
+
+### TASK-058 — Chuẩn content: B2 L1 interference ≥50%
+**Mục tiêu**: unit33–42 (B2) hiện L1 ratio ~0-25% (0-3/12). Nâng LESSON_CONTENT_STANDARD.l1MinRatioByLevel.B2 từ 0→0.5 (đúng CONTENT_STYLE §7 + center ref VN CLT L1 contrast). Thêm l1_interference_vn (≥15 ký tự, ⚠️ format, lỗi người Việt hay mắc theo ESA/CELTA/ILA: article, tense, collocation, passive/conditional, false friends, prepositions) cho ≥6/12 (unit41: ≥8/16) từ mỗi unit. Giữ 1 dòng object; pre-teach lexis Study phase. Chỉ edit content-standard + 10 B2 unit files; không đổi flow/UI/grammar.
+**Bước thực hiện**:
+1. Search memory("TASK-058" + "B2 L1" + "l1_interference_vn") + read AGENTS.md (ALWAYS), AGENT_BACKLOG/PLAN/ROADMAP, CONTENT_STYLE.md §6–7, lesson-center-reference.ts (VN CLT L1), lesson-blueprint.ts (vocab block), learning-flow.ts, content-standard.ts, unit1.ts (gold L1 mẫu), unit33-42.ts (vocab sections); run count script for current ratios.
+2. Grep confirm low L1 in B2 (0-3 notes); identify edit targets (≥6 per).
+3. Update BACKLOG: TASK-058 status `in_progress`.
+4. Update AGENT_PLAN.md với mục tiêu + bước + rủi ro cho TASK-058 (this section).
+5. Nếu ready <2: chạy `bash scripts/agent-refill-backlog.sh` (KHÔNG hỏi user).
+6. Edit src/lib/lessons/content-standard.ts: B2: 0.5 (update comment).
+7. For unit33–42: for ≥6 (or 8) vocab items add `, l1_interference_vn: "⚠️ [VN-specific error + fix]"` — ngắn gọn, actionable như unit1 (e.g. "⚠️ B2 learners often drop 'the' before abstract nouns..."; reuse topic like second cond → 'were' subjunctive for VN).
+8. `npm run lint && npm run test` (unit); `npm run test:content-standard` (50 units) + `bash scripts/audit-lesson-content.sh`.
+9. Pass → update BACKLOG done + Nhật ký + SHA; PLAN log.
+10. git pull --rebase; git add content-standard.ts src/lib/data/units/unit3{3..9}.ts ... unit4{0-2}.ts AGENT_*.md; commit "fix(content): B2 L1 interference >=50% for unit33-42 + ratio 0.5 (TASK-058)"; `bash scripts/git-push.sh main`.
+**Rủi ro**:
+- L1 note không đúng lỗi thực tế VN B2 (e.g. conditional 'were' vs 'was', article with uncountable, 'would' overuse) → craft từ common TEFL VN errors + unit topic vocab/grammar.
+- Syntax break 1-liner {} → ensure , before l1 + no trailing comma issue; test each after batch edit.
+- test:content-standard fail (other mins) → only L1; prior tasks fixed translate/cum.
+- 10 files edits → use unique strings per entry; verify ratios post with tsx script.
+- Fail 2x → blocked + lý do.
+- No secret needed; pure content. Self debug lint/test output.
+**Done khi**: B2 minRatio=0.5; 10/10 unit33-42 đạt >=50% L1 (verified); 50/50 test:content-standard pass; lint+unit tests+tsc clean; 1 commit + push via git-push.sh main; BACKLOG status=done + entry SHA+date; no ask user.
 
 ### TASK-056 — Dashboard 1 nút Học tiếp (full lesson)
 **Mục tiêu**: Continue card trên dashboard (và getCurrentUnit dùng bởi nó) dùng `getNextUnitRoute` / `getNextUnitFromProgress` để chọn unit tiếp theo (first !completed >= starting_unit_index), trả route full lesson (không ?mini). Giảm confusion giữa /learn (danh sách) và /roadmap (overview) bằng cách 1 CTA "Học tiếp" rõ ràng trỏ đến canonical next full. Đảm bảo getCurrentUnit selection khớp getNext (thống nhất với roadmap's nextUnitRoute). Chỉ sửa logic selection trong action + docs; không đổi UI, flow, mini handling, SECTION_ORDER, lesson data.
@@ -229,6 +251,7 @@
 
 | 2026-06-26 | TASK-033 | B2 audio batch unit-33..42 (144 clips), extend gen+b2 script, lint+159 pass | done — cff5faa |
 | 2026-06-26 | TASK-035 | research(memory+agents+e2e files), plan update, extend helpers/auth + onboarding.spec for DB verify of profile+xp_goal on quiz+signup, cleanup, lint+159+tsc pass, commit+push | done — b23d945 |
+| 2026-06-26 | TASK-058 | PHASE1: search_memory + read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6-7+lesson-center-ref+blueprint+learning-flow+content-std+unit1(gold)+count ratios (0-25% B2), PHASE2 update PLAN+BACKLOG in_progress (many ready skip refill), PHASE3: B2 ratio=0.5 + l1_interference_vn (>=6 per unit33-42, VN CLT errors per topic); gates + push | done — (lint+169t+cs50/50+audit50/50 pass) |
 | 2026-06-26 | TASK-036 | research(agents+grep+data+unit-audio+config), set in_progress, update PLAN, run refill (low ready), add rewrite next.config, verify probe map 200 for unit19(B1)/unit36(B2), lint+159+tsc pass, commit+push | done — 0d30be9 |
 | 2026-06-26 | TASK-037 | research(agents+grep+e2e+unit-audio+vocab), set in_progress, update PLAN+BACKLOG, add setE2EStartingUnit helper, add E2E test in placement-test (B1 login, advance warmup, click Nghe: speaker, Audio spy + /audio/ waitForRequest), lint+159+tsc pass, commit+push | done — ffc66bc |
 | 2026-06-26 | TASK-038 | research(memory+agents+grep+setup-integration+profile migration+RLS), phase1/2/3, update PLAN/BACKLOG to in_progress, extend cleanup, implement 2 minimal RLS tests in progress.integration (own insert+columns verify, policy block), run lint+test+test:integration (all 159u+23i pass), commit 339f5a9 + scripts/git-push.sh main | done — 339f5a9 |

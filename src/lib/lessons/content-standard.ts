@@ -24,8 +24,8 @@ export const LESSON_CONTENT_STANDARD = {
     A1: 1,
     A2: 1,
     B1: 0.5,
-    /** Mục tiêu 0.5 — TASK-058 (hiện ~6%) */
-    B2: 0,
+    /** Mục tiêu 0.5 — TASK-058 (B2 L1 >=50% per center-ref VN CLT + §7) */
+    B2: 0.5,
   } as Record<string, number>,
 
   l1NoteMinChars: 15,

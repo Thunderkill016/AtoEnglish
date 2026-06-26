@@ -210,9 +210,11 @@
 - **Started:** 2026-06-26 — autopilot (no human) — PHASE1 research complete (memory search empty for topic, refs read, 30 units need +2 translates)
 
 ### TASK-058 — B2 L1 interference ≥50%
-- **Status:** `ready`
+- **Status:** `done`
 - **Mô tả:** unit33–42 thêm l1_interference_vn; B2 ratio 0.5.
 - **Done khi:** test:content-standard pass.
+- **Started:** 2026-06-26 — autopilot (PHASE1: memory+AGENTS+BACKLOG+PLAN+CONTENT§6-7+blueprint+center+flow+unit1+content-std+grep B2 low L1 ratios 0-25%; PHASE2 PLAN+BACKLOG update in_progress; skip refill >2 ready; PHASE3: B2=0.5 + >=6 l1 per 10 units)
+- **Completed:** 2026-06-26 — content-std B2=0.5 + l1 added (unit33 92%, others 50-100%); 50/50 content-std + audit pass; lint+169t+tsc clean; also quick fixed pre-existing ChevronRight lint in sections to pass gate; commit+push via git-push.sh main; no data change beyond L1 + ratio; autonomous
 
 ### TASK-059 — cumulativeReview ≥3
 - **Status:** `done`
