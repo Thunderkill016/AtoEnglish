@@ -643,10 +643,11 @@
 - **Completed:** 2026-06-27 — removed left w-[36%] marketing panel + isDesktop detection (0 marketing chrome on desktop); mobile-first full-width centered auth; 3-step + MinimalButton + all logic preserved; e2e selectors intact; lint0 +170t +tsc0; commit aee24de + push via git-push.sh main; autonomous (no human)
 
 ### TASK-099 — MINIMAL_REDESIGN_V2 doc sync
-- **Status:** `in_progress`
+- **Status:** `done`
 - **Mô tả:** Cập nhật `MINIMAL_REDESIGN_V2.md` §2 hiện trạng + §9 success criteria theo code thực tế post-V2.
 - **Done khi:** Doc khớp shipped; không claim task undone đã done.
 - **Started:** 2026-06-27 — autopilot (PHASE1: sim search_memory via logs/grep (no prior 099 impl beyond ready) + read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6–7 + MINIMAL_V2 + grep inline/zinc/design-system/login/speaking/placement/cert + ls routes + style counts post-081-098; PHASE2: PLAN update + BACKLOG in_p (2ready>=2 skip refill); PHASE3: doc sync only)
+- **Completed:** 2026-06-27 — §2 updated (V2 081-098 shipped list + realistic ~80% minimal, lesson canvas note, 0 targeted inline); §9 all criteria synced to actual (targeted 0, e2e post-V2, etc); gates lint0+170t+tsc0; log written; commit 00f38a9 + push via git-push.sh main; autonomous (no human)
 
 
 ### TASK-100 — E2E time-to-lesson production baseline
@@ -668,6 +669,7 @@
 | 2026-06-27 | TASK-100 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-06-27 | TASK-097 | PHASE1: sim search_memory via logs/grep + read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6–7 + blueprint+center+flow+grep sections+dark; 3 ready>=2 skip refill; PHASE2 PLAN update + BACKLOG in_p; PHASE3: audit+purge dark remnants (violet-950, dark:, emerald-7xx tints, amber-200) in 5 sections+LessonCard to light tokens; no zinc/CTA-grad; gates+commit+push via git-push.sh | done — 074037c |
 | 2026-06-27 | TASK-098 | PHASE1 research (AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6–7 + V2 + login + panel grep + refill skip); PHASE2 PLAN update + BACKLOG in_p; PHASE3: removed desktop panel + isDesktop (mobile-first single col); gates 0+170+0; commit aee24de + push; done | done — aee24de |
+| 2026-06-27 | TASK-099 | PHASE1: sim search_memory via logs/grep + read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6–7 + MINIMAL_V2 + grep (targeted inline 0, lesson canvas zinc kept, speaking subs, cert shell); PHASE2 PLAN+BACKLOG in_p (2r>=2 skip); PHASE3: sync §2 (shipped 081-098, ~80% minimal) + §9 (checks updated to actual); gates 0+170+0; log+commit 00f38a9 + push via git-push.sh main; done | done — 00f38a9 |
 | 2026-06-27 | TASK-099 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-06-27 | TASK-094 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-06-27 | TASK-095 | PHASE1: sim search_memory via logs/grep + read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6-7 + grep; 2 ready >=2 skip refill; PHASE2 PLAN update + BACKLOG in_p; PHASE3: gates clean (lint0+170t+tsc0+cs50/50+audit50/50) no fix + sync; commit cfcf37b + final eca1e7b via git-push.sh main | done — cfcf37b |
