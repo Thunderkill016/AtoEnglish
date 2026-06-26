@@ -232,7 +232,7 @@
 - No ask user.
 **Done khi**: 0 legacy outer div/nav in 2 files (grep); pages return Screen+Prose+LargeTitle direct; inner zinc colors stripped from prose children; 2 pages dùng kit; lint pass (test may skip as no unit for pages); 1 commit + push via git-push.sh main; BACKLOG=done + SHA entry; autonomous.
 
-**Completed:** (pending impl)
+**Completed:** 2026-06-26 — legacy nav+outer purged; pages use direct Screen narrow + Prose (prose styles take over); simple back link; gates lint0+170t+tsc0 clean; commit 08bc1d2 + push via git-push.sh main; BACKLOG done; autonomous
 
 ### TASK-045 — Sync AGENT_AUTOPILOT.md với auto-refill
 **Mục tiêu**: Làm cho AGENT_AUTOPILOT.md mô tả chính xác cơ chế tự động: daemon/orchestrator/pick-task tự gọi refill từ AGENT_ROADMAP.md khi ready < 2 (MIN_READY), script agent-refill-backlog.sh parse roadmap pool, chèn tối đa 4 task `ready` vào BACKLOG, commit+push (chore, skip ci). Xóa mọi hướng dẫn gợi ý "user thêm task thủ công" vào backlog (user chỉ thêm vào ROADMAP nếu muốn ưu tiên). Giữ phần "Việc cần làm thủ công 1 lần (P0)" vì là setup secrets/migration (khác task hàng ngày). Doc khớp scripts hiện tại (refill, pick, orchestrator, roadmap format). Chỉ sửa doc; không code/logic.

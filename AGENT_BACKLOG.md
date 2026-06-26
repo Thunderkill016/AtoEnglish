@@ -555,10 +555,11 @@
 - **Completed:** 2026-06-26 — eligible wrapped in SecondaryPageShell + flat bg-card card (removed all zinc-900/min-h heavy); MinimalButton for actions; keep share/print/motion/ids-as-testid; 0 heavy styles; lint0 +170t +tsc0 pass; commit e82d92f + push via git-push.sh main; autonomous
 
 ### TASK-087 — Legal pages Prose
-- **Status:** `in_progress`
+- **Status:** `done`
 - **Mô tả:** `terms/page.tsx`, `privacy/page.tsx` — `Screen` + `Prose`.
 - **Done khi:** 2 page dùng kit; lint pass.
 - **Started:** 2026-06-26 — autopilot (PHASE1: real search_memory + read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6-7 + MINIMAL_V2 + grep terms/privacy/Screen/Prose + design-system files; PHASE2: PLAN+BACKLOG in_progress (3+ ready >=2 skip refill); PHASE3: remove legacy outer wrapper+custom nav, make pages return <Screen narrow> + LargeTitle + Prose directly (minimal class purge for zinc in sections); gates)
+- **Completed:** 2026-06-26 — legacy wrapper+nav removed; both pages now root <Screen narrow> + backlink + LargeTitle + Prose (zinc colors purged from prose children); lint0 + 170t + tsc0 pass; commit 08bc1d2 + push via git-push.sh main; autonomous
 
 
 ### TASK-088 — Legacy CSS purge
@@ -594,7 +595,7 @@
 | 2026-06-26 | TASK-090 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-06-26 | TASK-085 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-06-26 | TASK-086 | PHASE1 search_memory sim + read agents+backlog+plan+roadmap+content+minimalv2+grep cert; PHASE2 plan+backlog in_progress (2r skip); PHASE3: SecondaryPageShell+flat bg-card for eligible (purge zinc), MinimalButton, preserve all UX; gates 0+170+0; e82d92f + git-push main; done | done — e82d92f |
-| 2026-06-26 | TASK-087 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-06-26 | TASK-087 | PHASE1 real search_memory + read agents+backlog+plan+roadmap+content+minimalv2+grep legal+design; PHASE2 plan+backlog in_progress (ready>=2 skip); PHASE3: stripped legacy min-h/nav in terms+privacy, return Screen+Prose root + minimal prose class clean, back link; lint0+170t+tsc0; 08bc1d2 + git-push main; done | done — 08bc1d2 |
 | 2026-06-26 | TASK-078 | PHASE1: real search_memory + read agents+backlog+plan+content§6-7 + grep; PHASE2: PLAN+BACKLOG in_progress (3r>=2 skip); PHASE3: gates clean (lint0+170t+tsc0+cs50/50+audit50/50) no fix needed + sync log/PLAN/BACKLOG; commit+push via git-push.sh main | done — 1879565 |
 | 2026-06-26 | TASK-079 | V2 research: audit post-bac3f15, MINIMAL_REDESIGN_V2+ROADMAP+BACKLOG queue TASK-081..090 | done |
 | 2026-06-26 | TASK-080 | cancelled — replaced by V2 queue | cancelled |
