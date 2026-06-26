@@ -112,3 +112,61 @@ describe("completeUnit()", () => {
     expect(result.success).toBe(false);
   });
 });
+
+async function cleanOnboardingProfile() {
+  await adminClient.from("user_onboarding_profile").delete().eq("user_id", testUserId);
+}
+
+describe("user_onboarding_profile (RLS + columns)", () => {
+  beforeEach(async () => {
+    await cleanOnboardingProfile();
+  });
+
+  it("allows authenticated user to insert own profile row; columns goal/obstacle/daily_minutes persist", async () => {
+    const client = (globalThis as any).__testSupabaseClient;
+    expect(client).toBeDefined();
+
+    const payload = {
+      user_id: testUserId,
+      goal: "work",
+      obstacle: "fear",
+      daily_minutes: 15,
+    };
+
+    const { error: insErr } = await client.from("user_onboarding_profile").insert(payload);
+    expect(insErr, insErr?.message || "insert should succeed under RLS own").toBeNull();
+
+    const { data, error: selErr } = await adminClient
+      .from("user_onboarding_profile")
+      .select("goal, obstacle, daily_minutes, user_id")
+      .eq("user_id", testUserId)
+      .single();
+
+    expect(selErr).toBeNull();
+    expect(data).toMatchObject(payload);
+  });
+
+  it("RLS prevents insert of profile for other user_id (auth.uid != user_id)", async () => {
+    const client = (globalThis as any).__testSupabaseClient;
+    const fakeOtherId = "00000000-0000-0000-0000-000000000000";
+
+    const { error: insErr } = await client.from("user_onboarding_profile").insert({
+      user_id: fakeOtherId,
+      goal: "work",
+      obstacle: "fear",
+      daily_minutes: 15,
+    });
+
+    // Expect policy error (or no success); 42501 is insufficient_privilege in PG
+    if (insErr) {
+      expect(String(insErr.code || insErr.message)).toMatch(/42501|permission|policy|RLS|violates/i);
+    }
+
+    const { count } = await adminClient
+      .from("user_onboarding_profile")
+      .select("*", { count: "exact", head: true })
+      .eq("user_id", fakeOtherId);
+
+    expect(count).toBe(0);
+  });
+});

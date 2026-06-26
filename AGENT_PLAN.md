@@ -7,7 +7,7 @@
 | Field | Value |
 |-------|-------|
 | Started | 2026-06-26 |
-| Focus | TASK-037 E2E native audio probe on learn /unit-19 vocab speaker |
+| Focus | TASK-038 Integration test user_onboarding_profile (insert + RLS + columns) |
 | Owner | Autopilot (no human) |
 
 ### TASK-021 — Sync placement flow, 50 units, header shell, autopilot docs (PAGE_SPECIFICATIONS.md + AGENT_*)
@@ -214,3 +214,28 @@
 - If 2 fails: set blocked.
 - Dev server must be running for e2e (pw config does).
 **Done khi**: New test added to placement-test or equiv; can run to click speaker in unit-19 B1; verifies request or Audio src for /audio/; lint + 159 unit tests pass; 1 commit pushed; backlog done + entry; autonomous no user.
+
+### TASK-038 — Integration test user_onboarding_profile
+**Mục tiêu**: Thêm test trong `progress.integration.test.ts` (hoặc file mới) : dùng authenticated client (RLS path) để insert profile row, verify columns goal/obstacle/daily_minutes chính xác, và RLS policy hoạt động (own user chỉ insert/select own; không cho phép user khác). Test bổ sung cho E2E (TASK-035) và cover direct DB access qua client JWT như production signup. Clean via admin. Scope: integration test + setup cleanup only.
+**Bước thực hiện**:
+1. Search memory (done for "TASK-038") + đọc AGENTS.md (ALWAYS), BACKLOG/PLAN/ROADMAP, src/__tests__/integration/progress.integration.test.ts, src/__tests__/setup-integration.ts, supabase/migrations/20260626140000_user_onboarding_profile.sql (RLS policies), e2e/helpers/auth.ts (pattern for verify/expected), src/types/supabase.ts (type confirm), login flows if needed.
+2. Cập nhật AGENT_PLAN.md + BACKLOG.md (set in_progress for 038).
+3. Chạy `bash scripts/agent-refill-backlog.sh` (per instruction, dù count >=2).
+4. Extend cleanup: thêm `await adminClient.from("user_onboarding_profile").delete().eq("user_id", testUserId);` trong afterAll của setup-integration.ts .
+5. Thêm clean helper và describe block tối thiểu vào progress.integration.test.ts (re-use adminClient + global __testSupabaseClient cho RLS test):
+   - it("authenticated client can insert own profile row, columns roundtrip (goal/obstacle/daily_minutes)")
+   - it("RLS blocks insert with mismatched user_id (policy violation)")
+   - beforeEach: delete profile for testUserId
+   - Assert via admin select after insert; expect insert err or no row for RLS negative.
+6. `npm run lint && npm run test` (units) + `npm run test:integration` để cover (fix nếu flake).
+7. Update BACKLOG status→done + Nhật ký entry + SHA; update PLAN log + nhật ký.
+8. git pull --rebase; git add src/__tests__/integration/progress.integration.test.ts src/__tests__/setup-integration.ts AGENT_BACKLOG.md AGENT_PLAN.md; commit "test(integration): user_onboarding_profile insert verifies RLS + goal/obstacle/daily_minutes columns (TASK-038)"; push with scripts/git-push.sh main.
+**Rủi ro**:
+- Integration requires .env.local with SERVICE_ROLE + test DB reachable (no secret block expected, but if env fail → blocked).
+- Client not exposed: use globalThis.__testSupabaseClient (as setup already does for actions) — if undefined in test → debug export or direct create with token from session.
+- RLS negative test: Postgrest returns error code 42501 or 403/row not inserted; assert via catch or count==0. Policy uses (select auth.uid()), correct in recent migration.
+- Test user may have stale profile from manual runs → always clean before/after.
+- Running "npm run test" (unit) won't execute integration; must run test:integration explicitly to validate, then units for checklist.
+- If 2x fail (e.g. DB schema mismatch) → blocked.
+- No change to prod code, only tests.
+**Done khi**: Test mới pass khi chạy test:integration; columns verified goal/obstacle/daily_minutes; RLS behavior asserted (success own, fail cross); lint + full unit tests pass; 1 commit + push via git-push.sh; backlog done + log SHA; autonomous, no user query.

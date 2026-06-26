@@ -140,6 +140,9 @@ beforeAll(async () => {
     },
     { onConflict: "user_id" }
   );
+
+  // 5. Clean onboarding profile for this test user (RLS test will (re)insert)
+  await adminClient.from("user_onboarding_profile").delete().eq("user_id", testUserId);
 });
 
 afterAll(async () => {
@@ -148,5 +151,6 @@ afterAll(async () => {
   await adminClient.from("card_review_logs").delete().eq("user_id", testUserId);
   await adminClient.from("challenge_results").delete().eq("user_id", testUserId);
   await adminClient.from("quiz_results").delete().eq("user_id", testUserId);
+  await adminClient.from("user_onboarding_profile").delete().eq("user_id", testUserId);
   globalThis.__testSupabaseClient = undefined;
 });

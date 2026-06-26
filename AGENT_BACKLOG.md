@@ -133,10 +133,10 @@
 - **Started:** auto-refill
 
 ### TASK-038 — Integration test user_onboarding_profile
-- **Status:** `ready`
+- **Status:** `in_progress`
 - **Mô tả:** Thêm test trong `progress.integration.test.ts` hoặc file mới: insert profile row, verify RLS + columns goal/obstacle/daily_minutes.
 - **Done khi:** Integration test pass với Supabase local/prod test user.
-- **Started:** auto-refill
+- **Started:** 2026-06-26 — autopilot (no human)
 
 ### TASK-039 — Dashboard hiển thị daily_xp_goal từ onboarding
 - **Status:** `ready`
