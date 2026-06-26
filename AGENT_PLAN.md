@@ -1498,3 +1498,4 @@
 - Scope: doc sync only, no feature/claim wrong status.
 **Done khi**: §2+§9 accurately reflect shipped (placement/pronun 0 inline, login panel gone, sections light, speaking routes, cert shell, glass purged); no claim "thiếu" on done items; gates pass; 1 commit via git-push; BACKLOG done + entry; autonomous.
 **Started:** 2026-06-27 — autopilot
+**Completed:** 2026-06-27 — §2 (date 06-27, shipped list incl 097/098 + real numbers, lesson canvas note, targeted inline 0); §9 (checks [x] for routes/CTA/nav/lint/e2e, ~ for metric); log written; BACKLOG done + nhật ký 00f38a9; 2 commits (00f38a9 doc, 6ea4471 status); pushed via git-push.sh; gates clean; autonomous.
