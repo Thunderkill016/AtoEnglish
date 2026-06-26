@@ -6,6 +6,7 @@ import { BookOpen, Volume2, ChevronRight } from "lucide-react";
 import { toast } from "sonner";
 import { saveCardToSRS } from "@/app/actions/cards";
 import type { UnitData } from "../UnitTemplate";
+import { playUnitAudio } from "@/lib/utils/unit-audio";
 
 interface VocabSectionProps {
   unit: UnitData;
@@ -108,7 +109,9 @@ export default function VocabSection({
                   n.add(i);
                   return n;
                 });
-                if (isNowFlipped && autoPlay) playTTS(v.word, 0.85);
+                if (isNowFlipped && autoPlay) {
+                  void playUnitAudio({ src: v.audio, text: v.word, rate: 0.85 }, playTTS);
+                }
               }}
               className="cursor-pointer"
               style={{ perspective: "600px" }}
@@ -167,7 +170,7 @@ export default function VocabSection({
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
-                        playTTS(v.word);
+                        void playUnitAudio({ src: v.audio, text: v.word, rate: 0.7 }, playTTS);
                       }}
                       aria-label={`Nghe: ${v.word}`}
                       className="p-1.5 rounded-xl bg-emerald-600/15 hover:bg-emerald-600/35 text-emerald-400 transition-all active:scale-90"
@@ -239,7 +242,7 @@ export default function VocabSection({
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
-                          playTTS(v.word);
+                          void playUnitAudio({ src: v.audio, text: v.word, rate: 0.7 }, playTTS);
                         }}
                         aria-label={`Nghe: ${v.word}`}
                         className="p-1.5 rounded-xl bg-emerald-600/15 hover:bg-emerald-600/35 text-emerald-400 transition-all active:scale-90"

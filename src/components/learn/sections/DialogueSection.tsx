@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Headphones, Volume2, Eye, EyeOff, ChevronRight } from "lucide-react";
 import type { UnitData } from "../UnitTemplate";
+import { playUnitAudio, stopUnitAudio } from "@/lib/utils/unit-audio";
 
 interface DialogueSectionProps {
   unit: UnitData;
@@ -61,9 +62,11 @@ export default function DialogueSection({
 
   const playDialogueTTS = (dialogueIdx: number, speed: number) => {
     if (DIALOGUES.length === 0) return;
-    const lines = DIALOGUES[dialogueIdx].lines;
+    const dialogue = DIALOGUES[dialogueIdx];
+    const lines = dialogue.lines;
     if (!window.speechSynthesis) return;
     window.speechSynthesis.cancel();
+    stopUnitAudio();
     setIsPlayingDialogue(true);
     const voice = pickEnglishVoice();
     let i = 0;
@@ -87,6 +90,26 @@ export default function DialogueSection({
       window.speechSynthesis.speak(u);
     };
     playNext();
+  };
+
+  const playDialogue = async (dialogueIdx: number, speed: number) => {
+    if (DIALOGUES.length === 0) return;
+    const dialogue = DIALOGUES[dialogueIdx];
+    const fullText = dialogue.lines.map((l) => l.text).join(" ");
+    window.speechSynthesis?.cancel();
+    stopUnitAudio();
+
+    const usedNative = await playUnitAudio(
+      { src: dialogue.audio, text: fullText, rate: speed },
+      () => { /* TTS fallback handled below */ }
+    );
+
+    if (usedNative) {
+      setIsPlayingDialogue(false);
+      return;
+    }
+
+    playDialogueTTS(dialogueIdx, speed);
   };
 
   return (
@@ -147,8 +170,8 @@ export default function DialogueSection({
             <button
               onClick={() =>
                 isPlayingDialogue
-                  ? (window.speechSynthesis?.cancel(), setIsPlayingDialogue(false))
-                  : playDialogueTTS(selectedDialogue, 1.0)
+                  ? (window.speechSynthesis?.cancel(), stopUnitAudio(), setIsPlayingDialogue(false))
+                  : void playDialogue(selectedDialogue, 1.0)
               }
               className={`flex items-center gap-2 px-4 py-2 rounded-xl font-semibold text-sm transition-all duration-200 ${
                 isPlayingDialogue
@@ -162,8 +185,8 @@ export default function DialogueSection({
             <button
               onClick={() =>
                 isPlayingDialogue
-                  ? (window.speechSynthesis?.cancel(), setIsPlayingDialogue(false))
-                  : playDialogueTTS(selectedDialogue, 0.75)
+                  ? (window.speechSynthesis?.cancel(), stopUnitAudio(), setIsPlayingDialogue(false))
+                  : void playDialogue(selectedDialogue, 0.75)
               }
               className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold bg-zinc-800/80 text-zinc-300 hover:bg-zinc-700 hover:text-white transition-colors active:scale-95"
             >

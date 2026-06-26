@@ -16,6 +16,8 @@
     "db:types": "npx supabase@2 gen types typescript --project-id vhpfskkredizeazlyzsh > src/types/supabase.ts",
     "prepare": "husky",
     "test:integration": "dotenv -e .env.local -- vitest run --config vitest.integration.config.ts",
+    "audio:generate": "tsx scripts/generate-unit-audio.ts",
+    "audio:generate:a0": "tsx scripts/generate-unit-audio.ts unit-a0-1 && tsx scripts/generate-unit-audio.ts unit-a0-2 && tsx scripts/generate-unit-audio.ts unit-a0-3 && tsx scripts/generate-unit-audio.ts unit-a0-4 && tsx scripts/generate-unit-audio.ts unit-a0-5 && tsx scripts/generate-unit-audio.ts unit-a0-6 && tsx scripts/generate-unit-audio.ts unit-a0-7 && tsx scripts/generate-unit-audio.ts unit-a0-8",
     "check-deploy": "bash scripts/check-vercel-deploy.sh",
     "check-deploy:wait": "sleep 30 && bash scripts/check-vercel-deploy.sh"
   },
@@ -63,11 +65,13 @@
     "dotenv-cli": "^11.0.0",
     "eslint": "^9",
     "eslint-config-next": "16.2.9",
+    "gtts": "^0.2.1",
     "husky": "^9.1.7",
     "jsdom": "^29.1.1",
     "lint-staged": "^17.0.7",
     "postcss": "^8",
     "tailwindcss": "^4.3.1",
+    "tsx": "^4.22.4",
     "typescript": "^6.0.3",
     "vitest": "^4.1.9",
     "wait-on": "^9.0.10"
