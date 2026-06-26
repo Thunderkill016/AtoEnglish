@@ -410,7 +410,7 @@
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
 | 2026-06-26 | TASK-063 | PHASE1: read AGENTS+BACKLOG+PLAN+CONTENT§6-7 + grep TASK + sim search_memory logs; PHASE2: PLAN update (focus+full section) + BACKLOG in_progress (3ready skip refill); PHASE3: gates clean (lint 0 + 170t + tsc + cs50/50 + audit50/50) no fix needed; sync log + commit + push | done — b7ef421 |
-| 2026-06-26 | TASK-064 | PHASE1: read AGENTS+BACKLOG+PLAN+CONTENT§6-7 + sim search_memory via logs/grep (TASK-063 clean prior); PHASE2: PLAN update + BACKLOG in_progress (2ready>=2 skip refill); PHASE3: gates clean (lint0 +170t +tsc +cs50/50 +audit50/50) no fix + sync log/PLAN/BACKLOG; commit+push via git-push.sh main | done — [PENDING_SHA] |
+| 2026-06-26 | TASK-064 | PHASE1: read AGENTS+BACKLOG+PLAN+CONTENT§6-7 + sim search_memory via logs/grep (TASK-063 clean prior); PHASE2: PLAN update + BACKLOG in_progress (2ready>=2 skip refill); PHASE3: gates clean (lint0 +170t +tsc +cs50/50 +audit50/50) no fix + sync log/PLAN/BACKLOG; commit+push via git-push.sh main | done — 50c5438 |
 | 2026-06-26 | TASK-065 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-06-26 | TASK-047 | PHASE1 search_memory+read agents+backlog+plan+roadmap+grep yml+daemon ready logic; PHASE2 PLAN update+backlog in_progress (2ready skip refill); PHASE3: yml schedule hourly cron + check count ready, ::error exit1 if 0 + ✅ if healthy; gates lint+170t pass; commit ccef87e + push via git-push.sh main | done — ccef87e |
 | 2026-06-26 | TASK-048 | auto-refill từ AGENT_ROADMAP.md | ready |
