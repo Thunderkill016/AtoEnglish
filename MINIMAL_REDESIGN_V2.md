@@ -36,17 +36,31 @@
 
 ---
 
-## 2. Hiện trạng (audit 2026-06-26)
+## 2. Hiện trạng (audit 2026-06-26, cập nhật sau `bac3f15`)
 
-| Rating | Routes | % |
-|--------|--------|---|
-| **Minimal** | `/`, `/dashboard` | ~8% |
-| **Mixed** | flashcards, settings, progress, roadmap, learn/[unit] | ~23% |
-| **Heavy** | learn list, speaking, quiz, writing, leaderboard, business, grammar, pronunciation, login, placement, challenge, … | ~69% |
+| Rating | Routes | Ước tính |
+|--------|--------|----------|
+| **Minimal** | `/`, `/dashboard`, `/me`, `/roadmap`, `/invite`, `/checkpoint`, placement pick | ~35% |
+| **Mixed** | flashcards, settings, progress, learn list, speaking, quiz, writing, grammar, challenge, login | ~40% |
+| **Heavy** | placement test/results, pronunciation, certificate eligible, lesson body (Grammar/Vocab/Warmup) | ~25% |
 
-**V1 đã ship:** tokens, 3-tab, dashboard 1 CTA, lesson header mỏng, 4 secondary shells, landing gọn.
+**V1 shipped (P0–P6):** UI-001..007 — spine daily path, design-system primitives cơ bản.
 
-**V1 chưa chạm:** 17+ feature routes, login funnel 903 lines, lesson body dark theme, Fluency/Translate sections.
+**V2 shipped (`57bb163`, `30b71f7`, `bac3f15`):**
+- PR-01: 7 primitives + token extension + dead code purge
+- PR-02: `/me` hub, 3-tab nav, header minimal, light `UnitTemplate`
+- PR-04..14 batch: Fluency/Translate kit, login 3-step, Roadmap rewrite, SecondaryPageShell (invite/checkpoint/placement pick/certificate lock), bg-glass → card (flashcards/speaking), xóa `mobile-nav`
+
+**V2 còn lại (autopilot queue TASK-081..090):**
+- `PlacementTestClient` — 63× `style={{}}` (test/saving/results)
+- `PronunciationClient` — 63× inline styles
+- Lesson internals — `GrammarSection`, `VocabSection`, `WarmupSection` vẫn dark zinc cards
+- `LessonSectionHeader` — icon box `bg-zinc-900`, title `text-white`
+- Login — logic 3-step OK, UI vẫn gradient + desktop panel ~750 lines
+- Certificate eligible — gradient hero + print layout nặng
+- `globals.css` — utilities `bg-glass`, `bg-grid-pattern` chưa xóa
+- Speaking — 4 tab trong tab (chưa tách routes)
+- E2E `time-to-lesson` chưa regression sau V2
 
 ---
 
@@ -203,18 +217,18 @@ Cài đặt          → /settings
 
 ## 8. Open Questions (user quyết)
 
-1. **Tab "Tôi" → `/me` hay giữ `/settings` làm hub?** (đề xuất: `/me` alias, settings = sub-page)
-2. **Lesson theme:** light only hay user chọn? (đề xuất: follow system, light default)
-3. **Leaderboard/Business:** giữ feature hay ẩn sau "Tôi"? (đề xuất: giữ, ẩn khỏi daily path)
-4. **Login funnel:** bắt buộc placement hay optional skip? (đề xuất: optional — 1 tap skip)
+1. **Tab "Tôi" → `/me`** — ✅ **Đã quyết:** `/me` hub, settings = sub-page
+2. **Lesson theme:** light only hay user chọn? — ✅ **Đã quyết:** follow system, light default
+3. **Leaderboard/Business:** giữ feature hay ẩn sau "Tôi"? — ✅ **Đã quyết:** giữ, ẩn khỏi daily path
+4. **Login funnel:** bắt buộc placement hay optional skip? — ✅ **Đã quyết:** 1 câu level + skip auth
 
 ---
 
 ## 9. Success criteria
 
-- [ ] 26/26 routes dùng `Screen` hoặc `SecondaryPageShell`
-- [ ] 0 inline `style={{}}` trong client pages
-- [ ] 1 CTA component (`MinimalButton`) — grep không còn gradient button classes trên daily path
-- [ ] Nav: chỉ bottom 3-tab + `/me` list (no hamburger, no "Thêm")
-- [ ] `npm run lint && npm run test && npm run e2e:time-to-lesson` pass
+- [~] 26/26 routes dùng `Screen` hoặc `SecondaryPageShell` — **19/26** (thiếu: login, lesson, placement results, pronunciation, certificate eligible, weekly progress)
+- [~] 0 inline `style={{}}` trong client pages — **~130 còn** (placement 63, pronunciation 63, flashcards 3, progress 3)
+- [~] 1 CTA component (`MinimalButton`) — daily path OK; login + một số feature CTA vẫn gradient
+- [x] Nav: chỉ bottom 3-tab + `/me` list (no hamburger, no "Thêm")
+- [~] `npm run lint && npm run test && npm run e2e:time-to-lesson` pass — lint+test OK; e2e chưa chạy post-V2
 - [ ] time-to-lesson ≤2 tap, ≤10s (không regression)

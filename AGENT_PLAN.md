@@ -7,8 +7,16 @@
 | Field | Value |
 |-------|-------|
 | Started | 2026-06-26 |
-| Focus | TASK-078: Autopilot maintenance sweep — run lint+test, fix first fail if any, sync PLAN log. No new features. Sweeps 079+ queued. |
+| Focus | TASK-079: V2 Minimal Redesign — research audit + backlog plan |
 | Owner | Autopilot (no human) |
+
+### TASK-079 — V2 Minimal Redesign: research + kế hoạch autopilot
+
+**Audit sau `bac3f15`:** 19/26 routes minimal; ~130 inline styles (placement+pronunciation); nav 3-tab+`/me` ✅; login 3-step ✅; lesson kit 6/10.
+
+**Hàng đợi:** TASK-081 Placement → 082 Pronunciation → 083–084 Lesson → 085–086 Login/Cert → 087–088 Legal/CSS → 089 Speaking → 090 E2E.
+
+**Giữ nguyên:** IPOR, FSRS, time-to-lesson ≤2 tap ≤10s.
 
 ### TASK-045 — Sync AGENT_AUTOPILOT.md với auto-refill
 **Mục tiêu**: Làm cho AGENT_AUTOPILOT.md mô tả chính xác cơ chế tự động: daemon/orchestrator/pick-task tự gọi refill từ AGENT_ROADMAP.md khi ready < 2 (MIN_READY), script agent-refill-backlog.sh parse roadmap pool, chèn tối đa 4 task `ready` vào BACKLOG, commit+push (chore, skip ci). Xóa mọi hướng dẫn gợi ý "user thêm task thủ công" vào backlog (user chỉ thêm vào ROADMAP nếu muốn ưu tiên). Giữ phần "Việc cần làm thủ công 1 lần (P0)" vì là setup secrets/migration (khác task hàng ngày). Doc khớp scripts hiện tại (refill, pick, orchestrator, roadmap format). Chỉ sửa doc; không code/logic.

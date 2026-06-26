@@ -17,17 +17,21 @@
 4. Không force-push `main`
 5. Nếu fail 2 lần liên tiếp → đổi status `blocked`, ghi lý do
 
-## Hàng đợi — Kế hoạch tối giản (user mandate 2026-06-26)
+## Hàng đợi — V2 Minimal Redesign (user mandate 2026-06-26)
 
-> Agent tự chạy **không cần user nhắc**. Thứ tự: content gate → UI minimal P3–P6.
+> Agent tự chạy **không cần user nhắc**. Spec: `MINIMAL_REDESIGN_V2.md`. Pool: `AGENT_ROADMAP.md` TASK-081..090.
 
-| # | Task | Phase |
-|---|------|-------|
-| 1 | TASK-058 → 059 → 061 → 062 | Content 50/50 |
-| 2 | UI-005 → UI-008 → UI-009 | P3 lesson chrome |
-| 3 | UI-006 → UI-007 | P4–P6 secondary + landing |
+| # | Task | Phase V2 |
+|---|------|----------|
+| 1 | TASK-081 → 082 | Placement + Pronunciation (inline style purge) |
+| 2 | TASK-083 → 084 | Lesson light theme |
+| 3 | TASK-085 → 086 | Login visual + Certificate |
+| 4 | TASK-087 → 088 | Legal Prose + CSS purge |
+| 5 | TASK-089 → 090 | Speaking IA + E2E regression |
 
-**Metric UI:** time-to-lesson ≤2 tap, ≤10s (`npm run e2e:time-to-lesson`). Primitives: `src/components/design-system/`. **Không** đổi `SECTION_ORDER` / IPOR logic.
+**V1 done:** UI-001..007 + content 058–062. **V2 shipped:** PR-01/02/03 + batch `bac3f15` (~60% surfaces).
+
+**Metric:** time-to-lesson ≤2 tap, ≤10s. Primitives: `src/components/design-system/`. **Không** đổi `SECTION_ORDER` / IPOR / FSRS.
 
 ## Trạng thái
 
@@ -496,17 +500,36 @@
 - **Started:** 2026-06-26 — autopilot (PHASE1: search_memory("TASK-078 maintenance") real via fn + read AGENTS/BACKLOG/PLAN/CONTENT§6-7 + grep TASK-078/logs + ready=3 >=2 skip refill; PHASE2 PLAN update + BACKLOG in_progress; PHASE3: run gates)
 - **Completed:** 2026-06-26 — gates clean (lint0+170t+tsc0+cs50/50+audit50/50) no fix (stale tsbuildinfo cleared, Fluency already sectionId); sync log/PLAN/BACKLOG; commit + push via git-push.sh main; autonomous
 
-### TASK-079 — Autopilot maintenance sweep #79
-- **Status:** `ready`
-- **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
-- **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
-- **Started:** auto-refill
+### TASK-079 — V2 minimal redesign: research + backlog plan
+- **Status:** `done`
+- **Mô tả:** Audit post-`bac3f15`; cập nhật `MINIMAL_REDESIGN_V2.md` §2+§9; thêm pool TASK-081..090 vào `AGENT_ROADMAP.md`; đổi hàng đợi backlog sang V2.
+- **Done khi:** Spec audit cập nhật; roadmap có 10 task V2; PLAN ghi research; lint+test pass
+- **Started:** 2026-06-26 — user mandate autopilot nghiên cứu kế hoạch tối giản
+- **Completed:** 2026-06-26 — audit 19/26 routes minimal; ~130 inline styles còn; queue TASK-081..090
 
 ### TASK-080 — Autopilot maintenance sweep #80
+- **Status:** `cancelled`
+- **Mô tả:** Thay bằng V2 queue TASK-081..090 (user mandate redesign).
+
+### TASK-081 — Placement test: test/saving/results minimal shell
 - **Status:** `ready`
-- **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
-- **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
-- **Started:** auto-refill
+- **Mô tả:** `PlacementTestClient.tsx` — migrate test/saving/results; xóa inline `style={{}}`.
+- **Done khi:** 0 inline style trong file; lint+test pass
+
+### TASK-082 — Pronunciation module minimal
+- **Status:** `ready`
+- **Mô tả:** `PronunciationClient.tsx` — SecondaryPageShell + xóa inline styles.
+- **Done khi:** 0 inline style; lint+test pass
+
+### TASK-083 — Lesson sections light theme (Grammar/Vocab/Warmup)
+- **Status:** `ready`
+- **Mô tả:** Light card tokens trong 3 section files (theo Fluency/Translate pattern).
+- **Done khi:** Không zinc-950 cards; lint+test pass
+
+### TASK-084 — LessonSectionHeader light tokens
+- **Status:** `ready`
+- **Mô tả:** Header dùng foreground/muted thay dark island.
+- **Done khi:** Khớp light UnitTemplate; lint pass
 
 
 ---
@@ -519,8 +542,9 @@
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
 | 2026-06-26 | TASK-078 | PHASE1: real search_memory + read agents+backlog+plan+content§6-7 + grep; PHASE2: PLAN+BACKLOG in_progress (3r>=2 skip); PHASE3: gates clean (lint0+170t+tsc0+cs50/50+audit50/50) no fix needed + sync log/PLAN/BACKLOG; commit+push via git-push.sh main | done — 1879565 |
-| 2026-06-26 | TASK-079 | auto-refill từ AGENT_ROADMAP.md | ready |
-| 2026-06-26 | TASK-080 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-06-26 | TASK-079 | V2 research: audit post-bac3f15, MINIMAL_REDESIGN_V2+ROADMAP+BACKLOG queue TASK-081..090 | done |
+| 2026-06-26 | TASK-080 | cancelled — replaced by V2 queue | cancelled |
+| 2026-06-26 | TASK-081..084 | V2 pool ready (placement, pronunciation, lesson, header) | ready |
 | 2026-06-26 | TASK-075 | PHASE1: search_memory + read AGENTS/BACKLOG/PLAN/CONTENT§6-7 + grep; PHASE2: PLAN+BACKLOG in_progress (3r>=2 skip); PHASE3: gates clean no fix + sync; commit+push via git-push.sh main | done — 3afba82 |
 | 2026-06-26 | TASK-076 | PHASE1 research (agents+backlog+plan+content§6-7 + sim search_memory via logs/grep prior clean); PHASE2 PLAN+BACKLOG in_progress (2r>=2 skip); PHASE3: gates clean no fix + sync; commit+push via git-push.sh main | done — ae4aab5 |
 | 2026-06-26 | TASK-077 | PHASE1 research (AGENTS/BACKLOG/PLAN/CONTENT§6-7 + sim search_memory via logs/grep (prior clean)); PHASE2 PLAN update + BACKLOG in_progress (5r>=2 skip); PHASE3: gates clean (lint0+170t+tsc0+cs50/50+audit50/50) no fix + sync log/PLAN/BACKLOG; commit+push via git-push.sh main | done — ff52cbe |

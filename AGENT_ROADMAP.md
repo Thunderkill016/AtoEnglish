@@ -14,11 +14,57 @@
 
 - Format giống backlog: `### TASK-NNN — Title` + Mô tả + Done khi
 - Chỉ thêm số TASK **lớn hơn** mọi TASK đã có trong backlog
-- **Ưu tiên (2026-06-26):** (1) Content gate 058–062 → (2) **Kế hoạch tối giản** UI-005..009, UI-006, UI-007
+- **Ưu tiên (2026-06-26+):** **V2 Minimal Redesign** TASK-081..090 (`MINIMAL_REDESIGN_V2.md`)
 
 ---
 
-## Pool — P1 Kế hoạch tối giản (USER MANDATE)
+## Pool — V2 Minimal Redesign (USER MANDATE 2026-06-26)
+
+> Spec: `MINIMAL_REDESIGN_V2.md`. Metric: time-to-lesson ≤2 tap ≤10s. Không đổi IPOR/FSRS.
+
+### TASK-081 — Placement test: test/saving/results minimal shell
+- **Mô tả:** `PlacementTestClient.tsx` — migrate stages test/saving/results sang `SecondaryPageShell` + Tailwind; xóa inline `style={{}}` (~63).
+- **Done khi:** 0 inline style trong file; lint+test pass.
+
+### TASK-082 — Pronunciation module minimal
+- **Mô tả:** `PronunciationClient.tsx` — `SecondaryPageShell` + design-system; xóa inline styles (~63).
+- **Done khi:** 0 inline style; lint+test pass.
+
+### TASK-083 — Lesson sections light theme (Grammar/Vocab/Warmup)
+- **Mô tả:** Card internals trong 3 section files sang `border-border/60 bg-card` (theo Fluency/Translate).
+- **Done khi:** Không `zinc-950`/`text-white` cards; lint+test pass.
+
+### TASK-084 — LessonSectionHeader light tokens
+- **Mô tả:** `LessonSectionHeader.tsx` — foreground/muted thay dark island.
+- **Done khi:** Khớp light UnitTemplate; lint pass.
+
+### TASK-085 — Login visual minimal
+- **Mô tả:** `login/page.tsx` — `MinimalButton` thay gradient; thu gọn desktop panel; giữ 3-step.
+- **Done khi:** Không gradient CTA; e2e onboarding pass.
+
+### TASK-086 — Certificate eligible view minimal
+- **Mô tả:** `CertificateClient.tsx` eligible — `SecondaryPageShell` + flat card.
+- **Done khi:** Dùng design-system; lint+test pass.
+
+### TASK-087 — Legal pages Prose
+- **Mô tả:** `terms/page.tsx`, `privacy/page.tsx` — `Screen` + `Prose`.
+- **Done khi:** 2 page dùng kit; lint pass.
+
+### TASK-088 — Legacy CSS purge
+- **Mô tả:** Xóa `bg-glass`, `bg-grid-pattern`, `border-glass` khỏi `globals.css` nếu không còn dùng trong `src/`.
+- **Done khi:** grep src/ không match; lint+test pass.
+
+### TASK-089 — Speaking: tab → sub-routes
+- **Mô tả:** `SpeakingClient` 4 tab → PrimaryRow entry + sub-routes theo V2 IA.
+- **Done khi:** Không 4-tab trên 1 page; lint+test pass.
+
+### TASK-090 — E2E regression V2
+- **Mô tả:** Chạy `e2e:time-to-lesson` + smoke tab paths; fix regression.
+- **Done khi:** E2E pass; baseline ghi AGENT_PLAN.
+
+---
+
+## Pool — P1 Kế hoạch tối giản V1 (DONE — archive)
 
 > Metric: time-to-lesson. Primitives: `src/components/design-system/`. UI-001–004 done.
 
