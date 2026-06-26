@@ -105,15 +105,17 @@
 - **Completed:** 2026-06-26 — generator extended + b2 npm script; full batch gTTS (144 clips); lint+159 tests pass.
 
 ### TASK-034 — Regenerate Supabase types after onboarding migration
-- **Status:** `in_progress`
+- **Status:** `done`
 - **Mô tả:** Chạy `npm run db:types` sau khi migration `user_onboarding_profile` đã apply prod. Commit updated `src/types/supabase.ts` nếu khác patch tạm.
 - **Done khi:** Types khớp live schema; tsc pass.
+- **Completed:** 2026-06-26 — chore(types) 71d846d; types from prod; lint+test pass
 - **Started:** 2026-06-26 — autopilot (prod table confirmed, gen types succeeded)
 
 ### TASK-035 — E2E onboarding profile persist
-- **Status:** `in_progress`
+- **Status:** `done`
 - **Mô tả:** E2E test: signup flow lưu goal/obstacle/daily_minutes vào `user_onboarding_profile` và `daily_xp_goal` trên `user_progress`.
 - **Done khi:** E2E pass; không flake.
+- **Completed:** 2026-06-26 — added E2E test in onboarding.spec.ts + helpers; verified persist via admin queries for work/fear/15min; lint+159 tests+tsc pass; pushed b23d945
 - **Started:** 2026-06-26 — autopilot (no human)
 
 ### TASK-036 — Fix audio path mismatch (unitN vs unit-N folders)
@@ -140,3 +142,5 @@
 | 2026-06-26 | TASK-031 | Native audio B1 (extend gen+pkg, 196 MP3s unit19-32, test fix for env, lint+159+tsc pass) | done — 2119534 |
 | 2026-06-26 | TASK-032 | Persist onboarding Q2-Q4: new migration user_onboarding_profile, pass all params in login+callback, insert profile + daily_xp_goal, patch types, helpers; lint+159+tsc pass | done — cab2260 |
 | 2026-06-26 | TASK-033 | Native audio B2 (unit-33..42) — generator+b2 script, 144 MP3s, lint+159 pass | done — cff5faa |
+| 2026-06-26 | TASK-034 | Regenerate supabase.ts post onboarding migration | done — 71d846d |
+| 2026-06-26 | TASK-035 | E2E test signup persist to user_onboarding_profile + daily_xp_goal | done — b23d945 |
