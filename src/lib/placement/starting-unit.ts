@@ -42,7 +42,7 @@ export function getPlacementLearnPath(level: string, mini = false): string {
   return mini ? `/learn/${slug}?mini=1` : `/learn/${slug}`;
 }
 
-/** Next incomplete unit respecting placement entry point (matches getCurrentUnit). */
+/** Next incomplete unit respecting placement entry point (used by getCurrentUnit for ContinueCard + roadmap). */
 export function getNextUnitFromProgress(
   completedUnitIds: string[],
   startingUnitIndex = 0,

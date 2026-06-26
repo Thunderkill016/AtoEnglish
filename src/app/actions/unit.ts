@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 import { UNIT_VOCABULARY } from "@/lib/constants/vocabulary";
 import { UNITS } from "@/lib/constants/units";
+import { getNextUnitFromProgress } from "@/lib/placement/starting-unit";
 import { headers } from "next/headers";
 import { createRateLimiter } from "@/lib/security/rate-limit";
 import { CompleteUnitSchema } from "@/lib/security/validation";
@@ -398,6 +399,7 @@ export async function resetUnitProgress(unitId: string) {
 
 /**
  * Server Action lấy thông tin Unit đang học hiện tại của người dùng.
+ * Selection uses getNextUnitFromProgress so "current" for ContinueCard = next incomplete full lesson.
  */
 export async function getCurrentUnit() {
   try {
@@ -480,15 +482,15 @@ export async function getCurrentUnit() {
       };
     });
 
-    let activeUnit = unitStatuses.find(
-      (u, i) => i >= startingUnitIndex && !u.completed && u.progress > 0,
-    );
+    // Use canonical getNextUnitFromProgress (same as roadmap) so ContinueCard gets
+    // the next incomplete unit >= starting (full lesson route, no mini).
+    const nextMeta = getNextUnitFromProgress(completedUnitIds, startingUnitIndex);
+    let activeUnit = nextMeta
+      ? unitStatuses.find((u) => u.unitId === nextMeta.id)
+      : undefined;
     if (!activeUnit) {
-      activeUnit = unitStatuses.find(
-        (u, i) => i >= startingUnitIndex && !u.completed,
-      );
+      activeUnit = unitStatuses.find((u) => !u.completed);
     }
-    if (!activeUnit) activeUnit = unitStatuses.find((u) => !u.completed);
     if (!activeUnit) activeUnit = unitStatuses[unitStatuses.length - 1];
 
     return {

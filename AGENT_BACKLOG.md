@@ -286,11 +286,11 @@
 - **Started:** user mandate — bài học P1
 
 ### TASK-056 — Dashboard 1 nút Học tiếp (full lesson)
-- **Status:** `blocked`
+- **Status:** `done`
 - **Mô tả:** Continue card → getNextUnitRoute full lesson; giảm confusion learn/roadmap.
 - **Done khi:** 1 CTA rõ; lint+test pass.
-- **Blocked:** 2026-06-26 — pause UI; ưu tiên content 058–062
-- **Started:** user mandate — bài học P1
+- **Completed:** 2026-06-26 — ContinueCard + getCurrentUnit now use getNextUnitRoute/getNextUnitFromProgress for next full lesson (unifies dashboard continue with roadmap); explicit getNext call in dashboard/page; lint+169 tests + tsc + content-std pass; pushed df8e8f7 via git-push.sh main
+- **Started:** 2026-06-26 — autopilot (PHASE1: search_memory(TASK-056)+read AGENTS/BACKLOG/PLAN/CONTENT§6-7 + grep getNextUnitRoute+ContinueCard+dashboard+actions/unit+starting-unit+roadmap; PHASE2 plan+backlog update; PHASE3: align getCurrentUnit selection to getNextUnitFromProgress so continue card gets canonical next full-lesson route (no mini); minimal, unify with roadmap next; gates; push)
 
 ### UI-001 — P0: minimal tokens + design-system primitives
 - **Status:** `done`
@@ -401,4 +401,5 @@
 | 2026-06-26 | TASK-036 | Fix audio path /unitN vs /unit-N (rewrite + verify B1/B2 playUnitAudio native) | done — 0d30be9 |
 | 2026-06-26 | TASK-060 | research(agents+blueprint+center+content-std+grep units), set in_progress, update PLAN+BACKLOG, add header comments + >=6 L1 notes each to unit24 (passive VN errors) + unit31 (report verbs + formal), 9/12 & 11/12 L1; tsc+lint+169tests+content-std+audit 50/50 pass; commit+push via git-push | done — 5df0678 |
 | 2026-06-26 | TASK-061 | PHASE1 research (memory empty, agents+blueprint+center+content+unit1+50units grep), PHASE2: update PLAN/BACKLOG, set 061 in_progress; PHASE3: bulk header+ ──HOOK etc comments 50 files; all gates pass; pushed | done — 8c99173 |
-| 2026-06-26 | TASK-062 | PHASE1 research (search sim+agents+backlog+plan+content+center+blueprint+flow+unit1+unit24+print), PHASE2 set in_progress+plan+refill, PHASE3: pilot redesign unit24 (L1 100% 12/12 + full ── section comments + short inductive grammar.rule + align), gates tsc/lint/169test+content50/50+audit50/50 pass; commit+push via git-push | done — [SHA] |
+| 2026-06-26 | TASK-062 | PHASE1 research (search sim+agents+backlog+plan+content+center+blueprint+flow+unit1+unit24+print), PHASE2 set in_progress+plan+refill, PHASE3: pilot redesign unit24 (L1 100% 12/12 + full ── section comments + short inductive grammar.rule + align), gates tsc/lint/169test+content50/50+audit50/50 pass; commit+push via git-push | done — 6c0d49b |
+| 2026-06-26 | TASK-056 | PHASE1 research(memory+AGENTS+BACKLOG+PLAN+ROADMAP+grep continue/getNext/dashboard/starting), PHASE2 update PLAN/BACKLOG set in_progress (ready>2 skip refill), PHASE3: edit action+dashboard/page to route continue via getNextUnitRoute full lesson + align getCurrent selection; title/desc from unit now matches next; 1 clear CTA; gates lint+169t+tsc+content50/50 pass; commit+push | done — 203bdcc |

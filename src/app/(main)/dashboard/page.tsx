@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { getUserProgress } from "@/app/actions/stats";
 import { getCurrentUnit } from "@/app/actions/unit";
 import { UNITS } from "@/lib/constants/units";
+import { getNextUnitRoute } from "@/lib/placement/starting-unit";
+import { createClient } from "@/lib/supabase/server";
 import DashboardMinimalClient from "./components/DashboardMinimalClient";
 
 export const metadata: Metadata = {
@@ -12,6 +14,7 @@ export const metadata: Metadata = {
 export const revalidate = 30;
 
 export default async function DashboardPage() {
+  const supabase = await createClient();
   const [progressRes, unitRes] = await Promise.all([
     getUserProgress(),
     getCurrentUnit(),
@@ -19,11 +22,26 @@ export default async function DashboardPage() {
 
   let userName = "Học viên";
   let currentStreak = 0;
+  let startingUnitIndex = 0;
+  let completedUnitIds: string[] = [];
 
   if (progressRes.success && progressRes.progress) {
     const p = progressRes.progress;
     userName = p.display_name || "Học viên";
     currentStreak = p.streak || 0;
+    startingUnitIndex = p.starting_unit_index ?? 0;
+  }
+
+  // Fetch completed to compute canonical next via getNextUnitRoute for ContinueCard (full lesson)
+  if (progressRes.success && progressRes.progress) {
+    const { data: user } = await supabase.auth.getUser();
+    if (user.user) {
+      const { data: lessons } = await supabase
+        .from("user_lesson_progress")
+        .select("unit_id")
+        .eq("user_id", user.user.id);
+      completedUnitIds = (lessons || []).map((l: { unit_id: string }) => l.unit_id);
+    }
   }
 
   const currentUnitData = {
@@ -38,9 +56,11 @@ export default async function DashboardPage() {
     currentUnitData.title = unitRes.title || currentUnitData.title;
     currentUnitData.description = unitRes.description || currentUnitData.description;
     currentUnitData.progress = unitRes.progress || 0;
-    currentUnitData.route = unitRes.route || "/learn/unit-1";
     currentUnitData.xp = UNITS.find((u) => u.id === unitRes.unitId)?.xp ?? 80;
   }
+
+  // Continue card → getNextUnitRoute full lesson (TASK-056); reduces learn/roadmap path confusion
+  currentUnitData.route = getNextUnitRoute(completedUnitIds, startingUnitIndex);
 
   return (
     <DashboardMinimalClient

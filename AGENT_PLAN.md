@@ -7,8 +7,29 @@
 | Field | Value |
 |-------|-------|
 | Started | 2026-06-26 |
-| Focus | **Content gate** 058→059→061→062, rồi **kế hoạch tối giản** UI-005→008→009→006→007; metric=time-to-lesson |
+| Focus | TASK-056: Continue card → getNextUnitRoute full lesson (unify dashboard/roadmap next); reduce learn/roadmap confusion; metric=time-to-lesson; then UI-005+ |
 | Owner | Autopilot (no human) |
+
+### TASK-056 — Dashboard 1 nút Học tiếp (full lesson)
+**Mục tiêu**: Continue card trên dashboard (và getCurrentUnit dùng bởi nó) dùng `getNextUnitRoute` / `getNextUnitFromProgress` để chọn unit tiếp theo (first !completed >= starting_unit_index), trả route full lesson (không ?mini). Giảm confusion giữa /learn (danh sách) và /roadmap (overview) bằng cách 1 CTA "Học tiếp" rõ ràng trỏ đến canonical next full. Đảm bảo getCurrentUnit selection khớp getNext (thống nhất với roadmap's nextUnitRoute). Chỉ sửa logic selection trong action + docs; không đổi UI, flow, mini handling, SECTION_ORDER, lesson data.
+**Bước thực hiện**:
+1. Search memory("TASK-056" + "getNextUnitRoute" + "ContinueCard" + "dashboard full lesson") + read AGENTS.md (ALWAYS), AGENT_BACKLOG/PLAN/ROADMAP, CONTENT_STYLE (không liên quan content), src/app/(main)/dashboard/page.tsx + DashboardMinimalClient.tsx + ContinueCard.tsx, src/app/actions/unit.ts (getCurrentUnit), src/lib/placement/starting-unit.ts (getNext* fns), src/app/(main)/roadmap/page.tsx + RoadmapClient, placement test, grep for ?mini in dashboard paths.
+2. Grep confirm current selection in getCurrent prefers progress>0 vs getNext first incomplete; dashboard continues via getCurrent not directly getNext; continue route currently full but not canonical unified.
+3. Update BACKLOG: TASK-056 status `in_progress`.
+4. Update AGENT_PLAN.md với mục tiêu + bước + rủi ro cho TASK-056 (this section).
+5. Nếu ready <2: chạy `bash scripts/agent-refill-backlog.sh` (KHÔNG hỏi; hiện >=5 UI ready → skip).
+6. Edit src/app/actions/unit.ts: add import getNextUnitFromProgress; in getCurrentUnit after compute completedUnitIds + startingUnitIndex, replace custom activeUnit find with: const nextMeta = getNextUnitFromProgress(completedUnitIds, startingUnitIndex); let activeUnit = nextMeta ? unitStatuses.find(u => u.unitId === nextMeta.id) : undefined; then existing fallbacks. This makes returned route = next full lesson route.
+7. (Optional minimal) in dashboard/page.tsx ensure route from unitRes (now will be next).
+8. `npm run lint && npm run test` (unit tests cover getNext + placement; getCurrent used in dashboard/learn).
+9. Pass → update BACKLOG done + Nhật ký + SHA; PLAN log table.
+10. git pull --rebase; git add AGENT_*.md src/app/actions/unit.ts ; commit "fix(dashboard): ContinueCard uses getNextUnitRoute full lesson via aligned getCurrentUnit (TASK-056)"; `bash scripts/git-push.sh main`.
+**Rủi ro**:
+- Selection change: getCurrent now always picks first-incomplete-per-start (getNext) instead of prefer-progress>0 ; may affect "active" highlight in learn list or dashboard title if previously picked a later partial — but for "Học tiếp" this is correct (next to do); self verify by test.
+- If unitStatuses map key mismatch (unitId vs id) → use correct field (from code: unitStatuses use unitId: unit.id ).
+- getCurrent called unauth returns u1; getNext also handles [] → first.
+- No secret, pure logic align + continue full (default route no mini). Fail 2x → blocked + lý do.
+- Learn page uses activeUnitId from it for "current" marker — using next is semantically better for "tiếp tục".
+**Done khi**: dashboard continue card href uses getNext full lesson (verified in code/path); getCurrentUnit selection delegates to getNextUnitFromProgress (unifies with roadmap); `npm run lint && npm run test` pass (incl placement-starting-unit.test); 1 commit + push via git-push.sh main; BACKLOG status=done + entry SHA+date; no ask user; autonomous.
 
 ### TASK-058 — Chuẩn content: B2 L1 interference ≥50%
 **Mục tiêu**: unit33–42 (B2) hiện L1 ratio ~0-21% (0-3/14). Nâng LESSON_CONTENT_STANDARD.l1MinRatioByLevel.B2 từ 0→0.5 (đúng CONTENT_STYLE §7 + center ref VN CLT L1 contrast). Thêm l1_interference_vn (≥15 ký tự, ⚠️ format, lỗi người Việt hay mắc theo ESA/CELTA/ILA: article, tense, collocation, passive/conditional, false friends, prepositions) cho ≥7/14 (unit41: ≥9/18) từ mỗi unit. Giữ 1 dòng object; pre-teach lexis Study phase. Chỉ edit content-standard + 10 B2 unit files; không đổi flow/UI/grammar.
@@ -186,7 +207,8 @@
 | 2026-06-26 | TASK-059 | PHASE1: search_memory + read AGENTS+BACKLOG+PLAN+ROADMAP+CONTENT§6-7+lesson-blueprint+center-ref+learning-flow+content-std+unit1(gold)+count low units(2-12); PHASE2 update PLAN+BACKLOG in_progress, refill skip (>=2 ready); PHASE3 min=3 + add 1 spiral cr each for unit2-12; lint+tsc+169u+50 content-std+audit pass; commit+push | done — 81e06b4 |
 | 2026-06-26 | TASK-060 | PHASE1 research(AGENTS+CONTENT_STYLE+blueprint+center-ref+unit1+unit24/31+content-std+grep L1), PHASE2 update PLAN/BACKLOG in_progress, PHASE3: header comments + L1 notes (6+ per) for unit24/31 per ESA/CELTA/CLT VN, 75%/100% L1; all gates pass; commit 5df0678 + git-push | done — 5df0678 |
 | 2026-06-26 | TASK-061 | PHASE1 (memory+AGENTS+BACKLOG+PLAN+CONTENT§6-7+blueprint+center+flow+unit1+grep), PHASE2 PLAN/BACKLOG update 061 in_progress (ready>2 skip refill), PHASE3: node script added header+ ── HOOK/WARMUP/VOCAB/... comments to 49 units (50 total have HOOK); field visibility per blueprint; tsc+lint+169tests+content-std50/50+audit pass; log+commit+push | done — 8c99173 |
-| 2026-06-26 | TASK-062 | PHASE1 research(memory sim+AGENTS+BACKLOG+PLAN+CONTENT§6-7+center-ref+blueprint+flow+unit1+unit24+print-blueprint), PHASE2 update PLAN/BACKLOG set in_progress, refill (6ready OK), PHASE3 pilot redesign unit24 (L1 to 100%, full ── comments per blueprint map, grammar short inductive, align order); gates pass | in_progress |
+| 2026-06-26 | TASK-062 | PHASE1 research(memory sim+AGENTS+BACKLOG+PLAN+CONTENT§6-7+center-ref+blueprint+flow+unit1+unit24+print-blueprint), PHASE2 update PLAN/BACKLOG set in_progress, refill (6ready OK), PHASE3 pilot redesign unit24 (L1 to 100%, full ── comments per blueprint map, grammar short inductive, align order); gates tsc+lint+169test+cs50/50+audit pass; pushed 6c0d49b | done — 6c0d49b |
+| 2026-06-26 | TASK-056 | PHASE1: search_memory + read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT + grep (getNext, ContinueCard, dashboard, unit action, starting-unit, roadmap); PHASE2: update PLAN/BACKLOG to in_progress (ready=5>2 skip refill), focus update; PHASE3: align getCurrentUnit to delegate to getNextUnitFromProgress for next full lesson in ContinueCard (unify dashboard+roadmap); 1 CTA clear; | done — 203bdcc |
 | 2026-06-26T01:36Z | TASK-001/002 | P0 ops: migration blocked, deploy OK | autopilot armed |
 | 2026-06-26T08:55Z | TASK-001/011 | db push migration + E2E B1 unlock | 2 e2e pass |
 | 2026-06-26 | TASK-021 | Sync docs: placement, 50u, header, autopilot | done — 3d36d2f (docs commit); f9f21a1 (status) |
