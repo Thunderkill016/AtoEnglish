@@ -711,7 +711,7 @@
 | 2026-06-27 | TASK-105 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-06-27 | TASK-106 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-06-27 | TASK-101 | PHASE1: search_memory sim via logs/grep + read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6–7; 3r>=2 skip; PHASE2 plan+backlog in_p; PHASE3: gates clean (lint+170t+cs+audit) no fix + sync; commit+push via git-push.sh main | done — 8b1a6f1 |
-| 2026-06-27 | TASK-102 | PHASE1: search sim via logs/grep + read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6–7; 1r (post in_p) → refill added 104-106; PHASE2 plan+backlog in_p; PHASE3: gates clean (lint0+170t+tsc0+cs50/50+audit50/50) no fix + sync log/PLAN/BACKLOG; commit+push via git-push.sh main | done — <SHA> |
+| 2026-06-27 | TASK-102 | PHASE1: search sim via logs/grep + read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6–7; 1r (post in_p) → refill added 104-106; PHASE2 plan+backlog in_p; PHASE3: gates clean (lint0+170t+tsc0+cs50/50+audit50/50) no fix + sync log/PLAN/BACKLOG; commit+push via git-push.sh main | done — d076eb7 |
 | 2026-06-27 | TASK-103 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-06-27 | TASK-100 | smoke ✅; e2e env-connect flake (no code regression); bumped webServer timeout 120s; gates clean; baseline recorded in PLAN+log; commit via git-push | 13f9faa |
 | 2026-06-27 | TASK-097 | PHASE1: sim search_memory via logs/grep + read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6–7 + blueprint+center+flow+grep sections+dark; 3 ready>=2 skip refill; PHASE2 PLAN update + BACKLOG in_p; PHASE3: audit+purge dark remnants (violet-950, dark:, emerald-7xx tints, amber-200) in 5 sections+LessonCard to light tokens; no zinc/CTA-grad; gates+commit+push via git-push.sh | done — 074037c |
