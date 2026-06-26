@@ -908,7 +908,7 @@
 **Bước thực hiện**:
 1. Search memory("TASK-075" + "maintenance sweep" + "autopilot") + read AGENTS.md (ALWAYS), AGENT_BACKLOG/PLAN/ROADMAP, CONTENT_STYLE.md §6–7 (blueprint gate), scripts/agent-*.sh (refill/pick); grep for TASK-075 in logs/backlog/plan + run initial lint/test to see first fail.
 2. Grep codebase liên quan: confirm chỉ cần edit AGENT_*.md (no src/); identify files: AGENT_BACKLOG.md, AGENT_PLAN.md (add section, update focus/log), and logs/agent/ for timestamp log.
-3. Update BACKLOG: TASK-075 status `in_progress`.
+3. Update BACKLOG: TASK-075 status `in_progress` (then done post gates).
 4. Update AGENT_PLAN.md với mục tiêu + bước + rủi ro cho TASK-075 (this section) + update Phiên hiện tại focus.
 5. Backlog thấp? Chạy `bash scripts/agent-refill-backlog.sh` (read ROADMAP.md); hiện 3 ready (075-077) ≥2 → skip (KHÔNG hỏi).
 6. PHASE3 triển khai tối thiểu: run `npm run lint && npm run test` + tsc + content-std + audit. Nếu có failure đầu tiên → fix chỉ cái đó (ví dụ fix 1 test hoặc 1 lint rule violation), tự debug. Nếu clean → no code change.
