@@ -486,7 +486,7 @@
 - **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
 - **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
 - **Started:** 2026-06-26 — autopilot (PHASE1 research complete: read AGENTS/BACKLOG/PLAN/CONTENT§6-7 + sim search_memory via logs/grep (prior 076 clean); grep TASK-077; 5 ready >=2 skip refill; PHASE2 PLAN update + BACKLOG in_progress; PHASE3: run gates)
-- **Completed:** 2026-06-26 — gates clean (lint0+170t+tsc0+cs50/50+audit50/50) no fix; sync log/PLAN/BACKLOG; commit + push via git-push.sh main; autonomous
+- **Completed:** 2026-06-26 — gates clean (lint0+170t+tsc0+cs50/50+audit50/50) no fix; sync log/PLAN/BACKLOG; commit ff52cbe + push via git-push.sh main; autonomous
 
 
 ### TASK-078 — Autopilot maintenance sweep #78
@@ -522,7 +522,7 @@
 | 2026-06-26 | TASK-080 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-06-26 | TASK-075 | PHASE1: search_memory + read AGENTS/BACKLOG/PLAN/CONTENT§6-7 + grep; PHASE2: PLAN+BACKLOG in_progress (3r>=2 skip); PHASE3: gates clean no fix + sync; commit+push via git-push.sh main | done — 3afba82 |
 | 2026-06-26 | TASK-076 | PHASE1 research (agents+backlog+plan+content§6-7 + sim search_memory via logs/grep prior clean); PHASE2 PLAN+BACKLOG in_progress (2r>=2 skip); PHASE3: gates clean no fix + sync; commit+push via git-push.sh main | done — ae4aab5 |
-| 2026-06-26 | TASK-077 | PHASE1 research (AGENTS/BACKLOG/PLAN/CONTENT§6-7 + sim search_memory via logs/grep (prior clean)); PHASE2 PLAN update + BACKLOG in_progress (5r>=2 skip); PHASE3: gates clean (lint0+170t+tsc0+cs50/50+audit50/50) no fix + sync log/PLAN/BACKLOG; commit+push via git-push.sh main | done — [SHA] |
+| 2026-06-26 | TASK-077 | PHASE1 research (AGENTS/BACKLOG/PLAN/CONTENT§6-7 + sim search_memory via logs/grep (prior clean)); PHASE2 PLAN update + BACKLOG in_progress (5r>=2 skip); PHASE3: gates clean (lint0+170t+tsc0+cs50/50+audit50/50) no fix + sync log/PLAN/BACKLOG; commit+push via git-push.sh main | done — ff52cbe |
 | 2026-06-26 | TASK-072 | PHASE1 research (AGENTS/BACKLOG/PLAN/CONTENT§6-7 + sim search_memory via logs/grep (prior 071 clean)); PHASE2: PLAN update + BACKLOG in_progress (3ready>=2 skip refill); PHASE3: gates clean (lint0+170t+tsc0+cs50/50+audit50/50) no fix + sync log/PLAN/BACKLOG; commit+push via git-push.sh main | done — 9a2e18f |
 | 2026-06-26 | TASK-073 | PHASE1 research (AGENTS/BACKLOG/PLAN/CONTENT§6-7 + sim search_memory via logs/grep (prior 072 clean)); PHASE2: PLAN update + BACKLOG in_progress (2ready>=2 skip refill); PHASE3: gates clean (lint0+170t+tsc0+cs50/50+audit50/50) no fix + sync log/PLAN/BACKLOG; commit+push via git-push.sh main | done — 2d10628 |
 | 2026-06-26 | TASK-074 | PHASE1 research (AGENTS/BACKLOG/PLAN/CONTENT§6-7 + sim search_memory via logs/grep (prior 073 clean)); PHASE2: PLAN update + BACKLOG in_progress (3ready>=2 skip refill); PHASE3: gates clean (lint0+170t+tsc0+cs50/50+audit50/50) no fix + sync log/PLAN/BACKLOG; commit+push via git-push.sh main | done — bf38400 |
