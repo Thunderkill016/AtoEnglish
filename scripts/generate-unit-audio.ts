@@ -17,6 +17,18 @@ import { unitA05 } from "../src/lib/data/units/unitA05";
 import { unitA06 } from "../src/lib/data/units/unitA06";
 import { unitA07 } from "../src/lib/data/units/unitA07";
 import { unitA08 } from "../src/lib/data/units/unitA08";
+import { unit1 } from "../src/lib/data/units/unit1";
+import { unit2 } from "../src/lib/data/units/unit2";
+import { unit3 } from "../src/lib/data/units/unit3";
+import { unit4 } from "../src/lib/data/units/unit4";
+import { unit5 } from "../src/lib/data/units/unit5";
+import { unit6 } from "../src/lib/data/units/unit6";
+import { unit7 } from "../src/lib/data/units/unit7";
+import { unit8 } from "../src/lib/data/units/unit8";
+import { unit9 } from "../src/lib/data/units/unit9";
+import { unit10 } from "../src/lib/data/units/unit10";
+import { unit11 } from "../src/lib/data/units/unit11";
+import { unit12 } from "../src/lib/data/units/unit12";
 import type { UnitData } from "../src/components/learn/UnitTemplate";
 
 const UNITS: Record<string, UnitData> = {
@@ -28,6 +40,18 @@ const UNITS: Record<string, UnitData> = {
   "unit-a0-6": unitA06,
   "unit-a0-7": unitA07,
   "unit-a0-8": unitA08,
+  "unit-1": unit1,
+  "unit-2": unit2,
+  "unit-3": unit3,
+  "unit-4": unit4,
+  "unit-5": unit5,
+  "unit-6": unit6,
+  "unit-7": unit7,
+  "unit-8": unit8,
+  "unit-9": unit9,
+  "unit-10": unit10,
+  "unit-11": unit11,
+  "unit-12": unit12,
 };
 
 function saveMp3(text: string, outPath: string): Promise<void> {

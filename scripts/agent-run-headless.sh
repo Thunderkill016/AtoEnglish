@@ -6,34 +6,41 @@ set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 LOG_DIR="$ROOT/logs/agent"
+TASK_FILE="$LOG_DIR/.next-task.json"
 mkdir -p "$LOG_DIR"
 
 DRY_RUN=0
 [[ "${1:-}" == "--dry-run" ]] && DRY_RUN=1
 
-eval "$(bash "$ROOT/scripts/agent-pick-task.sh")"
+bash "$ROOT/scripts/agent-pick-task.sh" >/dev/null
 
-if [[ -z "${TASK_ID:-}" ]]; then
+TASK_ID=$(python3 -c "import json; print(json.load(open('$TASK_FILE'))['task_id'])")
+TASK_DESC=$(python3 -c "import json; print(json.load(open('$TASK_FILE'))['task_desc'])")
+
+if [[ -z "$TASK_ID" ]]; then
   echo "✅ Không còn task ready trong AGENT_BACKLOG.md"
   exit 0
 fi
 
 STAMP="$(date -u +%Y%m%dT%H%M%SZ)"
 LOG_FILE="$LOG_DIR/${STAMP}_${TASK_ID}.log"
+PROMPT_FILE="$LOG_DIR/${STAMP}_${TASK_ID}.prompt.txt"
 
-PROMPT=$(cat <<EOF
-Bạn là autopilot agent 24/7 cho AtoEnglish tại $ROOT. User KHÔNG có mặt — tuyệt đối không hỏi, tự quyết.
+python3 - "$ROOT" "$TASK_ID" "$TASK_DESC" "$PROMPT_FILE" <<'PY'
+import sys
+root, task_id, task_desc, out = sys.argv[1:5]
+prompt = f"""Bạn là autopilot agent 24/7 cho AtoEnglish tại {root}. User KHÔNG có mặt — tuyệt đối không hỏi, tự quyết.
 
 PHASE 1 — NGHIÊN CỨU (5 phút):
 - Đọc AGENTS.md, AGENT_BACKLOG.md, AGENT_PLAN.md
 - Grep codebase liên quan task; xác định file cần sửa
 
 PHASE 2 — LẬP KẾ HOẠCH:
-- Cập nhật AGENT_PLAN.md: mục tiêu, bước, rủi ro cho $TASK_ID
+- Cập nhật AGENT_PLAN.md: mục tiêu, bước, rủi ro cho {task_id}
 - Nếu backlog trống: tự thêm 1–2 task P1 hợp lý vào AGENT_BACKLOG.md rồi làm task đầu
 
-PHASE 3 — TRIỂN KHAI (task duy nhất): $TASK_ID
-$TASK_DESC
+PHASE 3 — TRIỂN KHAI (task duy nhất): {task_id}
+{task_desc}
 
 Quy trình:
 1. Status → in_progress trong AGENT_BACKLOG.md
@@ -44,15 +51,15 @@ Quy trình:
 6. Fail 2 lần → blocked + ghi lý do
 
 Không chờ user. Tự debug. Ưu tiên ship từng task nhỏ.
-EOF
-)
+"""
+open(out, "w", encoding="utf-8").write(prompt)
+PY
 
 echo "🤖 Agent session: $TASK_ID"
 echo "📝 Log: $LOG_FILE"
 
 if [[ "$DRY_RUN" == 1 ]]; then
-  echo "--- DRY RUN PROMPT ---"
-  echo "$PROMPT"
+  cat "$PROMPT_FILE"
   exit 0
 fi
 
@@ -63,9 +70,8 @@ fi
 
 cd "$ROOT"
 
-# Headless autopilot — auto-approve tools, cap turns, high effort
 set +e
-grok -p "$PROMPT" \
+grok --prompt-file "$PROMPT_FILE" \
   --cwd "$ROOT" \
   --yolo \
   --max-turns 80 \

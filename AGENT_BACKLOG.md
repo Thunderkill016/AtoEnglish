@@ -41,7 +41,7 @@
 ## P1 — Sản phẩm (theo roadmap)
 
 ### TASK-010 — Native audio batch A1 (unit-1 → unit-12)
-- **Status:** `ready`
+- **Status:** `in_progress`
 - **Mô tả:** `npm run audio:generate -- unit-1` … `unit-12`. Commit MP3 vào `public/audio/`. Verify `playUnitAudio` probe 200 trên sample file.
 - **Done khi:** 12 unit folders có MP3; tests pass
 - **Ước tính:** ~150 clips, cần network cho gtts

@@ -1,39 +1,43 @@
 #!/usr/bin/env bash
 # Pick the next ready task from AGENT_BACKLOG.md
-# Usage: eval "$(bash scripts/agent-pick-task.sh)"
+# Writes JSON to logs/agent/.next-task.json
 
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 BACKLOG="$ROOT/AGENT_BACKLOG.md"
+OUT="$ROOT/logs/agent/.next-task.json"
+mkdir -p "$(dirname "$OUT")"
 
 if [[ ! -f "$BACKLOG" ]]; then
-  echo "echo 'ERROR: AGENT_BACKLOG.md not found'" >&2
+  echo '{"task_id":"","task_desc":""}' > "$OUT"
   exit 1
 fi
 
-TASK_ID=""
-TASK_DESC=""
+python3 - "$BACKLOG" "$OUT" <<'PY'
+import json, re, sys
 
-python3 - "$BACKLOG" <<'PY'
-import re, sys
-path = sys.argv[1]
+path, out = sys.argv[1], sys.argv[2]
 text = open(path, encoding="utf-8").read()
-blocks = re.split(r"(?=^### TASK-\d+)", text, flags=re.M)
-for block in blocks:
+result = {"task_id": "", "task_desc": ""}
+
+for block in re.split(r"(?=^### TASK-\d+)", text, flags=re.M):
     m = re.match(r"^### (TASK-\d+)", block)
     if not m:
         continue
     if re.search(r"- \*\*Status:\*\* `ready`", block):
-        tid = m.group(1)
+        result["task_id"] = m.group(1)
         desc_m = re.search(r"- \*\*Mô tả:\*\* (.+)", block)
-        desc = desc_m.group(1).strip() if desc_m else ""
-        print(f'TASK_ID="{tid}"')
-        # Escape quotes for bash eval
-        desc_esc = desc.replace("\\", "\\\\").replace('"', '\\"')
-        print(f'TASK_DESC="{desc_esc}"')
+        if desc_m:
+            result["task_desc"] = desc_m.group(1).strip()
         break
-else:
-    print('TASK_ID=""')
-    print('TASK_DESC=""')
+
+with open(out, "w", encoding="utf-8") as f:
+    json.dump(result, f, ensure_ascii=False)
 PY
+
+# For shell callers that need env vars (safe — no eval)
+TASK_ID=$(python3 -c "import json; print(json.load(open('$OUT'))['task_id'])")
+TASK_DESC=$(python3 -c "import json; print(json.load(open('$OUT'))['task_desc'])")
+echo "TASK_ID=\"$TASK_ID\""
+# Desc may contain quotes — only print id for legacy; runners should read JSON
