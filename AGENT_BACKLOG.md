@@ -625,7 +625,7 @@
 - **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
 - **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
 - **Started:** 2026-06-27 — autopilot (PHASE1: sim search_memory via logs/grep (prior 095 clean) + read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6–7 + grep TASK-096; 4 ready (096-099) >=2 skip refill; PHASE2 PLAN update + BACKLOG in_p)
-- **Completed:** 2026-06-27 — gates clean (lint0+170t+tsc0+cs50/50+audit50/50) no fix needed; log written 20260627T175000Z_TASK-096.log; BACKLOG+PLAN updated + pushed; no source edit; autonomous
+- **Completed:** 2026-06-27 — gates clean (lint0+170t+tsc0+cs50/50+audit50/50) no fix needed; log written 20260627T175000Z_TASK-096.log; BACKLOG+PLAN updated + pushed 6151286 via git-push.sh main; no source edit; autonomous
 
 
 ### TASK-097 — V2 audit: lesson sections no dark islands
