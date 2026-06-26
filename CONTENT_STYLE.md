@@ -176,7 +176,17 @@ C1 → "C1 Advanced"
 
 ## 6. Blueprint — Cách xây nội dung = Cách học (1 khung)
 
+> **Trung tâm:** `src/lib/lessons/lesson-center-reference.ts` (BC ESA, CELTA, CEFR, Nation, CLT VN)  
 > **File tham chiếu:** `src/lib/lessons/lesson-blueprint.ts` · **Mẫu vàng:** `unit1.ts` · **Luồng app:** `learning-flow.ts`
+
+| ESA (British Council) | Block AtoEnglish | Trung tâm VN hay làm |
+|----------------------|------------------|----------------------|
+| Engage | hook + warmup | Tình huống + warm-up oral |
+| Study | vocab + grammar + exercises + dialogue | Lexis + MF(P) + controlled drill |
+| Activate | fluency + output (dịch/shadow/nói) | Freer practice / role-play |
+| Review | quiz + cumulativeReview | Exit test + ôn spiral |
+
+Autopilot: `npx tsx scripts/print-lesson-blueprint.mjs` in checklist đầy đủ.
 
 Mọi unit phải map **cùng thứ tự block** và **cùng IPOR**:
 

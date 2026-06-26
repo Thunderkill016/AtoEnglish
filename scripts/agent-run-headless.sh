@@ -38,6 +38,7 @@ content_rules = ""
 if blueprint.strip():
     content_rules = f"""
 CHUẨN BÀI HỌC (bắt buộc khi sửa unit*.ts):
+- Tham chiếu trung tâm: lesson-center-reference.ts (BC ESA, CELTA, CEFR, Nation, CLT VN)
 - Cách xây nội dung = cách học — 1 khung: lesson-blueprint.ts
 - Mẫu vàng: src/lib/data/units/unit1.ts (comment block + field)
 - Luồng app: learning-flow.ts (IPOR 10 bước)

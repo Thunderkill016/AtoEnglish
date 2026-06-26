@@ -212,6 +212,12 @@
 - **Done khi:** `grep "── HOOK" src/lib/data/units/*.ts` ≥45 file; lint+test pass.
 - **Started:** user mandate — nội dung + cách học cùng khung
 
+### TASK-062 — Redesign pilot: unit24 theo center-reference + unit1
+- **Status:** `ready`
+- **Mô tả:** Áp `lesson-center-reference.ts` (ESA/CELTA/CLT VN): bổ sung L1 ≥50%, practiceTranslate≥3, cumulativeReview≥3; comment blocks.
+- **Done khi:** unit24 pass test:content-standard; lint+test pass.
+- **Started:** user mandate — tham chiếu trung tâm, pilot 1 bài B1 fail
+
 ### TASK-049 — Lesson UI: migrate Dialogue + Shadowing + Speaking + Quiz
 - **Status:** `ready`
 - **Mô tả:** Dùng `lesson-ui/` cho 4 section còn lại — một kiểu visual, không half-old half-new.
