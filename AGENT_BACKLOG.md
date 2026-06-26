@@ -126,9 +126,10 @@
 - **Started:** 2026-06-26 — autopilot (no human)
 
 ### TASK-037 — E2E native audio probe on learn page
-- **Status:** `in_progress`
+- **Status:** `done`
 - **Mô tả:** Playwright: mở `/learn/unit-19`, click vocab speaker, verify `Audio` plays or TTS fallback không crash. Mock hoặc probe network cho `/audio/`.
 - **Done khi:** E2E pass trong CI; không flake 3 lần.
+- **Completed:** 2026-06-26 — added E2E in placement-test.spec.ts + helper setE2EStartingUnit; spy new Audio + wait network /audio/; warmup advance + click vocab speaker (unit-19); lint+159+tsc pass; pushed ffc66bc
 - **Started:** auto-refill
 
 ### TASK-038 — Integration test user_onboarding_profile
@@ -156,6 +157,7 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
+| 2026-06-26 | TASK-037 | E2E playwright /learn/unit-19 click vocab speaker, verify Audio or TTS no-crash + network /audio/ probe; lint+159 pass | ffc66bc |
 | 2026-06-26 | TASK-037 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-06-26 | TASK-038 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-06-26 | TASK-039 | auto-refill từ AGENT_ROADMAP.md | ready |
