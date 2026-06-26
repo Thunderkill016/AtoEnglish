@@ -764,7 +764,7 @@
 - **Status:** `done`
 - **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
 - **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
-- **Completed:** 2026-06-27 — gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed; log written 20260626T195518Z_TASK-115.log; BACKLOG+PLAN+nhật ký synced; commit + push via git-push.sh main; autonomous (no human)
+- **Completed:** 2026-06-27 — gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed; log written 20260626T195518Z_TASK-115.log; BACKLOG+PLAN+nhật ký synced; commit 6f46ec7 + push via git-push.sh main; autonomous (no human)
 - **Started:** 2026-06-27 — autopilot (PHASE1: sim search_memory via logs/grep (prior 115 tool_error) + read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6–7 + grep TASK-115; 4r (115-118) >=2 skip refill; PHASE2 PLAN update + BACKLOG in_p)
 
 
@@ -797,7 +797,7 @@
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
 | 2026-06-27 | TASK-114 | gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix + log 20260626T195015Z_TASK-114.log + sync PLAN/BACKLOG; no src; commit via git-push.sh main | done — 4e4bea9 |
-| 2026-06-27 | TASK-115 | gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed; log 20260626T195518Z_TASK-115.log + BACKLOG/PLAN sync; no src edit; commit+push via git-push.sh main | done — [pending] |
+| 2026-06-27 | TASK-115 | gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed; log 20260626T195518Z_TASK-115.log + BACKLOG/PLAN sync; no src edit; commit+push via git-push.sh main | done — 6f46ec7 |
 | 2026-06-27 | TASK-116 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-06-27 | TASK-117 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-06-27 | TASK-118 | auto-refill từ AGENT_ROADMAP.md | ready |
@@ -805,7 +805,6 @@
 | 2026-06-27 | TASK-111 | PHASE1: search_memory sim via logs/grep (prior 111 tool_error) + read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6–7 + grep; 2r (after in_p became 1<2) → refill (113-115); PHASE2 PLAN update + BACKLOG in_p; PHASE3: gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix + log 20260626T192926Z_TASK-111.log + sync PLAN/BACKLOG; no src; commit 671a404 + push via git-push.sh main | done — 671a404 |
 | 2026-06-27 | TASK-113 | PHASE1: search_memory sim + read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6–7 + grep; 3r>=2 skip refill; PHASE2 PLAN update + BACKLOG in_p; PHASE3: gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix + log 20260626T194408Z_TASK-113.log + sync PLAN/BACKLOG; no src; commit via git-push.sh main | done — 1af7c8c |
 | 2026-06-27 | TASK-114 | auto-refill từ AGENT_ROADMAP.md | ready |
-| 2026-06-27 | TASK-115 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-06-27 | TASK-110 | PHASE1: read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6–7 + grep; 3r>=2 (refill script run skip); PHASE2 PLAN update + BACKLOG in_p; PHASE3: gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix + log 20260627T192200Z_TASK-110.log + sync PLAN/BACKLOG; no src; commit 353fd6e + push via git-push.sh main (github fallback) | done — 353fd6e |
 | 2026-06-27 | TASK-111 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-06-27 | TASK-112 | auto-refill từ AGENT_ROADMAP.md | ready |
