@@ -68,7 +68,7 @@
 - **Status:** `done`
 - **Mô tả:** Cập nhật placement flow, 50 units, header shell, autopilot docs.
 - **Done khi:** Doc khớp code hiện tại
-- **Completed:** 2026-06-26 — docs sync only; lint+159 tests pass; 3d36d2f (main) + f9f21a1 (status)
+- **Completed:** 2026-06-26 — docs sync only; lint+159 tests pass; 3d36d2f (main docs); e68671e (final logs)
 
 ---
 
