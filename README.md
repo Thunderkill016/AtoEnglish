@@ -2,8 +2,8 @@
 
 > **Học tiếng Anh chuẩn phát âm — dành cho người Việt**
 
-[![CI](https://github.com/Thunderkill016/AtoEnglish/actions/workflows/ci.yml/badge.svg)](https://github.com/Thunderkill016/AtoEnglish/actions/workflows/ci.yml)
-[![Tests](https://img.shields.io/badge/tests-151%20passed-brightgreen)](https://github.com/Thunderkill016/AtoEnglish/actions)
+[![Tests](https://img.shields.io/badge/tests-159%20passed-brightgreen)](/)
+CI: local daemon + GitLab (`.gitlab-ci.yml`)
 [![Live](https://img.shields.io/badge/live-atoenglish.vercel.app-emerald)](https://atoenglish.vercel.app)
 
 AtoEnglish là web app học tiếng Anh hướng đến người Việt — tập trung vào **phản xạ nói**, **phát âm chuẩn** và **ghi nhớ từ vựng lâu dài** qua thuật toán SRS.
@@ -127,7 +127,7 @@ Auto-deploy qua Vercel khi push lên `main`:
 git push origin main  # → auto deploy to atoenglish.vercel.app
 ```
 
-CI pipeline: **Lint → TypeCheck → Unit Tests → Build → E2E Tests**
+CI: **local** `ci-local.sh` + **GitLab** `.gitlab-ci.yml` + **Vercel** build
 
 ## 📄 License
 

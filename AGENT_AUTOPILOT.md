@@ -13,10 +13,9 @@ Kế hoạch vận hành agent tự động khi bạn không có mặt.
                           │
                           ▼
 ┌─────────────────────────────────────────────────────────┐
-│  Tầng 2 — GitHub Actions (đã có + mới)                  │
-│  ci.yml          → lint/test/build mỗi push             │
-│  vercel-monitor  → bắt deploy fail                      │
-│  agent-health.yml → nightly smoke + issue nếu stalled   │
+│  Tầng 2 — GitLab CI + local ci-local.sh                 │
+│  .gitlab-ci.yml  → lint/test (self-hosted = unlimited)  │
+│  GitHub Actions  → TẮT auto (manual only)               │
 └─────────────────────────────────────────────────────────┘
                           │
                           ▼
@@ -42,7 +41,7 @@ bash scripts/agent-orchestrator.sh
 (crontab -l 2>/dev/null; echo "0 */3 * * * cd /home/thunder/Code/atoenglish && bash scripts/agent-orchestrator.sh >> logs/agent/cron.log 2>&1") | crontab -
 ```
 
-**Yêu cầu:** Máy bật + đăng nhập Grok (`grok` đã auth). Nếu tắt máy → chỉ còn Tầng 2 (CI), không có agent code.
+**Yêu cầu:** Máy bật + đăng nhập Grok (`grok` đã auth). CI chạy local (`ci-local.sh`) — không phụ thuộc GitHub Actions.
 
 ## Trong Grok session (nếu để app mở)
 
@@ -74,33 +73,27 @@ bash scripts/agent-refill-backlog.sh             # refill + commit + push
 - Agent nhận task `ready` đầu tiên
 - Muốn ưu tiên feature cụ thể: thêm vào `AGENT_ROADMAP.md` (không cần sửa backlog tay)
 
-## GitHub Actions — giới hạn 2000 phút/tháng (private)
+## CI — GitLab + local (đã bỏ GitHub Actions auto)
 
-Autopilot push nhiều → CI cũ tốn ~30–40 phút/push. Đã tối ưu:
+| Tầng | Nền tảng | Việc làm |
+|------|----------|----------|
+| Local | Daemon | `ci-local.sh` lint+tsc+test → agent → `check-deploy` |
+| GitLab | `.gitlab-ci.yml` | CI mirror; self-hosted runner = **unlimited** |
+| Vercel | Build prod | Tự build mỗi push GitHub |
 
-| Workflow | Trước | Sau |
-|----------|-------|-----|
-| `ci.yml` push main | full+build+E2E | **lint+test ~3p** |
-| `ci.yml` E2E | mỗi push | **PR + chủ nhật** |
-| `vercel-monitor` | mỗi push | **thứ 2 + manual** (daemon local `check-deploy`) |
-| `performance` | mỗi push | **chủ nhật** |
-| `agent-health` | npm ci nightly | **grep backlog only** |
+GitHub Actions: **manual only** (0 phút/tháng).
 
-**Không tốn phút GitHub:**
-- Daemon local: `lint + test + check-deploy` trước mỗi push
-- Commit agent docs: `[skip ci]` tự động
-- Chỉ audio/AGENT_*.md: `paths-ignore` — không trigger workflow
-
-**Unlimited minutes (khuyến nghị nếu vẫn hết quota):**
+### Setup GitLab (1 lần)
 
 ```bash
-bash scripts/setup-github-runner.sh
-# Sau đó trong ci.yml đổi runs-on: [self-hosted, linux, atoenglish]
+bash scripts/setup-gitlab-mirror.sh   # thêm remote gitlab, push
+bash scripts/setup-gitlab-runner.sh   # runner trên laptop (khuyến nghị)
+bash scripts/push-all-remotes.sh      # push origin + gitlab
 ```
 
-Self-hosted runner chạy trên laptop = **0 phút** tính vào quota private repo.
+GitLab → CI/CD → Variables: `NEXT_PUBLIC_SUPABASE_URL`, `ANON_KEY`, `SERVICE_ROLE_KEY`
 
-Theo dõi usage: https://github.com/settings/billing
+Vercel vẫn connect **GitHub** — không cần đổi deploy.
 
 ## Giám sát
 

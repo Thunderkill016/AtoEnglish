@@ -1,0 +1,72 @@
+# GitLab CI — thay GitHub Actions (private repo GitHub chỉ 2000p/tháng)
+#
+# Khuyến nghị: self-hosted runner trên laptop → KHÔNG tốn GitLab minutes
+#   bash scripts/setup-gitlab-runner.sh
+
+stages:
+  - verify
+  - build
+  - e2e
+
+default:
+  tags:
+    - atoenglish
+
+variables:
+  npm_config_cache: "$CI_PROJECT_DIR/.npm"
+
+cache:
+  key: "${CI_COMMIT_REF_SLUG}"
+  paths:
+    - node_modules/
+    - .npm/
+
+.node_setup: &node_setup
+  image: node:20-bookworm
+  before_script:
+    - npm ci --legacy-peer-deps
+
+lint-test:
+  <<: *node_setup
+  stage: verify
+  script:
+    - npm run lint
+    - npx tsc --noEmit
+    - npm run test
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+
+build:
+  <<: *node_setup
+  stage: build
+  script:
+    - npm run build
+  variables:
+    UPSTASH_REDIS_REST_URL: "https://placeholder.upstash.io"
+    UPSTASH_REDIS_REST_TOKEN: "placeholder"
+    NEXT_PUBLIC_VAPID_PUBLIC_KEY: "BEl62iUYgUivxIkv69yViEuiBIa40TAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    VAPID_PRIVATE_KEY: "placeholder-vapid-private-key"
+    VAPID_SUBJECT: "mailto:build@atoenglish.vercel.app"
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+    - if: $CI_COMMIT_BRANCH == "main"
+      changes:
+        - src/**/*
+        - package.json
+        - package-lock.json
+
+e2e:
+  <<: *node_setup
+  stage: e2e
+  script:
+    - npx playwright install chromium --with-deps
+    - npm run dev &
+    - npx wait-on http://localhost:3000 --timeout 60000
+    - npm run e2e
+  variables:
+    PLAYWRIGHT_BASE_URL: "http://localhost:3000"
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+    - if: $CI_PIPELINE_SOURCE == "web"

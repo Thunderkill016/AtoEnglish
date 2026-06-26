@@ -76,9 +76,12 @@ git pull --rebase origin main --quiet 2>/dev/null || {
   exit 1
 }
 
-log "🧪 Smoke: lint + unit tests..."
-if ! npm run lint --silent 2>&1 | tail -5; then
-  log "❌ Lint fail — agent vẫn chạy nhưng ưu tiên fix"
+log "🧪 CI local (thay GitHub Actions)..."
+if ! bash "$ROOT/scripts/ci-local.sh" 2>&1 | tail -8; then
+  log "❌ CI local fail — bỏ qua agent session"
+  echo "FAIL" >> "$STATE_FILE"
+  tail -10 "$STATE_FILE" > "${STATE_FILE}.tmp" && mv "${STATE_FILE}.tmp" "$STATE_FILE"
+  exit 1
 fi
 
 log "📋 Auto-refill backlog nếu cần..."
