@@ -235,5 +235,6 @@ npm run test             # all 64 tests pass
 | Live URL | `https://atoenglish.vercel.app` |
 | Supabase project | `vhpfskkredizeazlyzsh` |
 | Deploy | Push to `main` → Vercel auto-deploys |
-| CI | lint → tsc → unit tests → security audit → build → E2E |
+| CI | push main: lint+test fast · PR/weekly: full+build+E2E · `[skip ci]` cho agent chore |
+| GitHub minutes | Private ~2000p/tháng — xem `AGENT_AUTOPILOT.md` § GitHub Actions |
 | Node | 20.x (CI) · 24.x (local) |

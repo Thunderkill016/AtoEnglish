@@ -1,11 +1,12 @@
+# Vercel deploy monitor — CHỈ manual / weekly (daemon local đã chạy check-deploy mỗi cycle)
+# Tiết kiệm ~10–15 phút mỗi push main trên GitHub Actions.
+
 name: Vercel Deploy Monitor
 
 on:
-  push:
-    branches: [main]
-
-# Only run after the main CI job — we poll Vercel for the real production build
-# This catches errors that only appear with real Vercel env vars (VAPID keys, Redis, etc.)
+  schedule:
+    - cron: "0 8 * * 1"  # Thứ 2 08:00 UTC
+  workflow_dispatch:
 
 concurrency:
   group: vercel-monitor-${{ github.ref }}
@@ -18,43 +19,39 @@ jobs:
     timeout-minutes: 15
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Wait for Vercel deployment to complete
         id: vercel_check
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-          VERCEL_TEAM_ID: ${{ secrets.VERCEL_TEAM_ID }}   # optional — leave empty if personal account
+          VERCEL_TEAM_ID: ${{ secrets.VERCEL_TEAM_ID }}
           COMMIT_SHA: ${{ github.sha }}
         run: |
           echo "🔍 Monitoring Vercel deployment for commit: $COMMIT_SHA"
 
-          # Build API URL — support both personal and team accounts
           if [ -n "$VERCEL_TEAM_ID" ]; then
             TEAM_PARAM="&teamId=$VERCEL_TEAM_ID"
           else
             TEAM_PARAM=""
           fi
 
-          MAX_POLLS=60         # 60 × 15s = 15 minutes max
-          POLL_INTERVAL=15     # seconds between polls
+          MAX_POLLS=60
+          POLL_INTERVAL=15
           FOUND_DEPLOYMENT=0
 
           for i in $(seq 1 $MAX_POLLS); do
             echo "--- Poll $i/$MAX_POLLS ---"
 
-            # Fetch latest deployments for this project
             RESPONSE=$(curl -sf \
               "https://api.vercel.com/v6/deployments?projectId=atoenglish&limit=5$TEAM_PARAM" \
               -H "Authorization: Bearer $VERCEL_TOKEN" \
               -H "Content-Type: application/json" 2>&1) || {
-              echo "⚠️  Vercel API call failed (network/auth issue), will retry..."
+              echo "⚠️  Vercel API call failed, will retry..."
               sleep $POLL_INTERVAL
               continue
             }
 
-            # Find deployment matching this commit SHA
             DEPLOYMENT=$(echo "$RESPONSE" | python3 -c "
           import sys, json
           data = json.load(sys.stdin)
@@ -68,7 +65,7 @@ jobs:
           " 2>/dev/null)
 
             if [ -z "$DEPLOYMENT" ]; then
-              echo "⏳ Deployment not found yet, waiting ${POLL_INTERVAL}s..."
+              echo "⏳ Deployment not found yet..."
               sleep $POLL_INTERVAL
               continue
             fi
@@ -83,71 +80,38 @@ jobs:
 
             case "$STATE" in
               READY)
-                echo ""
                 echo "✅ Vercel deployment SUCCEEDED!"
-                echo "🌐 Live at: https://$DEPLOY_URL"
                 echo "deploy_url=https://$DEPLOY_URL" >> $GITHUB_OUTPUT
                 echo "deploy_state=READY" >> $GITHUB_OUTPUT
                 exit 0
                 ;;
               ERROR|CANCELED)
-                echo ""
-                echo "❌ Vercel deployment FAILED with state: $STATE"
-                echo ""
-
-                # Fetch build error logs
-                echo "📋 Fetching build logs..."
+                echo "❌ Vercel deployment FAILED: $STATE"
                 LOG_RESPONSE=$(curl -sf \
                   "https://api.vercel.com/v2/deployments/$DEPLOY_ID/events?direction=backward&limit=100$TEAM_PARAM" \
                   -H "Authorization: Bearer $VERCEL_TOKEN" 2>/dev/null) || echo "Could not fetch logs"
-
                 if [ -n "$LOG_RESPONSE" ] && [ "$LOG_RESPONSE" != "Could not fetch logs" ]; then
-                  echo "--- Last 50 build log lines ---"
                   echo "$LOG_RESPONSE" | python3 -c "
           import sys, json
           data = json.load(sys.stdin)
           events = data if isinstance(data, list) else data.get('events', [])
           for e in events[-50:]:
               text = e.get('text', '') or e.get('payload', {}).get('text', '')
-              if text:
-                  print(text)
+              if text: print(text)
           " 2>/dev/null || echo "$LOG_RESPONSE" | tail -100
                 fi
-
                 echo "deploy_state=ERROR" >> $GITHUB_OUTPUT
                 exit 1
                 ;;
-              BUILDING|INITIALIZING|QUEUED|DEPLOYING)
-                echo "⏳ Still building... waiting ${POLL_INTERVAL}s"
-                sleep $POLL_INTERVAL
-                continue
-                ;;
               *)
-                echo "❓ Unknown state: $STATE — waiting..."
                 sleep $POLL_INTERVAL
-                continue
                 ;;
             esac
           done
 
           if [ "$FOUND_DEPLOYMENT" = "0" ]; then
-            echo "⚠️  Warning: No matching Vercel deployment found for commit $COMMIT_SHA after $MAX_POLLS polls"
-            echo "This may indicate the deployment hasn't started yet or the project name is wrong."
-            echo "Check manually: https://vercel.com/thunderkill016/atoenglish"
-            exit 0   # Don't fail — deployment may be queued
+            echo "⚠️  No matching deployment found — check Vercel dashboard"
+            exit 0
           fi
-
-          echo "⏱️  Timed out waiting for Vercel deployment after 15 minutes"
+          echo "⏱️  Timed out after 15 minutes"
           exit 1
-
-      - name: Comment deploy status on commit (failure only)
-        if: failure() && steps.vercel_check.outputs.deploy_state == 'ERROR'
-        uses: actions/github-script@v7
-        with:
-          script: |
-            github.rest.repos.createCommitComment({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              commit_sha: context.sha,
-              body: `## ❌ Vercel Deployment Failed\n\nThe production deployment for commit \`${context.sha.slice(0,7)}\` failed on Vercel.\n\n**Check the [Vercel Dashboard](https://vercel.com/thunderkill016/atoenglish) for full build logs.**\n\nCommon causes:\n- Missing environment variables (VAPID keys, Redis URL)\n- Next.js build error not caught by local build\n- Edge runtime incompatibility\n\n> Fix the error, then push a new commit to trigger a fresh deploy.`
-            })

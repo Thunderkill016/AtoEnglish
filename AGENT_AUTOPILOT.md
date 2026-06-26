@@ -74,6 +74,34 @@ bash scripts/agent-refill-backlog.sh             # refill + commit + push
 - Agent nhận task `ready` đầu tiên
 - Muốn ưu tiên feature cụ thể: thêm vào `AGENT_ROADMAP.md` (không cần sửa backlog tay)
 
+## GitHub Actions — giới hạn 2000 phút/tháng (private)
+
+Autopilot push nhiều → CI cũ tốn ~30–40 phút/push. Đã tối ưu:
+
+| Workflow | Trước | Sau |
+|----------|-------|-----|
+| `ci.yml` push main | full+build+E2E | **lint+test ~3p** |
+| `ci.yml` E2E | mỗi push | **PR + chủ nhật** |
+| `vercel-monitor` | mỗi push | **thứ 2 + manual** (daemon local `check-deploy`) |
+| `performance` | mỗi push | **chủ nhật** |
+| `agent-health` | npm ci nightly | **grep backlog only** |
+
+**Không tốn phút GitHub:**
+- Daemon local: `lint + test + check-deploy` trước mỗi push
+- Commit agent docs: `[skip ci]` tự động
+- Chỉ audio/AGENT_*.md: `paths-ignore` — không trigger workflow
+
+**Unlimited minutes (khuyến nghị nếu vẫn hết quota):**
+
+```bash
+bash scripts/setup-github-runner.sh
+# Sau đó trong ci.yml đổi runs-on: [self-hosted, linux, atoenglish]
+```
+
+Self-hosted runner chạy trên laptop = **0 phút** tính vào quota private repo.
+
+Theo dõi usage: https://github.com/settings/billing
+
 ## Giám sát
 
 | Cách | Lệnh / URL |

@@ -1,34 +1,25 @@
+# Agent health — nhẹ, không npm ci (tiết kiệm ~5 phút/ngày)
+# Daemon local đã chạy lint+test; job này chỉ cảnh báo backlog stalled.
+
 name: Agent Health (Nightly)
 
 on:
   schedule:
-    # 02:00 UTC daily = 09:00 VN — health check khi agent không chạy
     - cron: "0 2 * * *"
   workflow_dispatch:
 
 jobs:
   health:
-    name: Nightly health + backlog reminder
+    name: Backlog stall check
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-          cache: npm
-
-      - run: npm ci --legacy-peer-deps
-
-      - name: Lint + test
-        run: |
-          npm run lint
-          npm run test
-
       - name: Count ready backlog tasks
         id: backlog
         run: |
-          COUNT=$(grep -c '\*\*Status:\*\* `ready`' AGENT_BACKLOG.md || echo 0)
+          COUNT=$(grep -c '\*\*Status:\*\* `ready`' AGENT_BACKLOG.md 2>/dev/null || true)
+          COUNT=${COUNT:-0}
           echo "ready_count=$COUNT" >> "$GITHUB_OUTPUT"
           echo "📋 Backlog ready tasks: $COUNT"
 
@@ -58,7 +49,7 @@ jobs:
                   owner: context.repo.owner,
                   repo: context.repo.repo,
                   title,
-                  body: `Có task \`ready\` trong AGENT_BACKLOG.md nhưng main không có commit mới trong ${Math.round(hours)}h.\n\nKiểm tra:\n- Cron agent trên máy dev: \`crontab -l\`\n- Logs: \`logs/agent/\`\n- Chạy thủ công: \`bash scripts/agent-orchestrator.sh\``,
+                  body: `Có task \`ready\` trong AGENT_BACKLOG.md nhưng main không có commit mới trong ${Math.round(hours)}h.\n\nKiểm tra:\n- \`systemctl --user status atoenglish-autopilot.service\`\n- \`tail -f logs/agent/daemon.log\`\n- \`bash scripts/agent-orchestrator.sh\``,
                   labels: ['autopilot'],
                 });
               }
