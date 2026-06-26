@@ -21,6 +21,12 @@ vi.mock("@upstash/redis", () => {
 });
 
 describe("createRateLimiter (InMemory fallback)", () => {
+  beforeEach(() => {
+    // Force InMemory fallback regardless of host/CI .env or prior test pollution
+    vi.stubEnv("UPSTASH_REDIS_REST_URL", "");
+    vi.stubEnv("UPSTASH_REDIS_REST_TOKEN", "");
+  });
+
   it("allows requests under the limit", async () => {
     const limiter = createRateLimiter(5, 60_000, "test-allow");
     const result = await limiter.check("1.2.3.4");

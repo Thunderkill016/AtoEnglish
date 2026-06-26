@@ -35,6 +35,20 @@ import { unit15 } from "../src/lib/data/units/unit15";
 import { unit16 } from "../src/lib/data/units/unit16";
 import { unit17 } from "../src/lib/data/units/unit17";
 import { unit18 } from "../src/lib/data/units/unit18";
+import { unit19 } from "../src/lib/data/units/unit19";
+import { unit20 } from "../src/lib/data/units/unit20";
+import { unit21 } from "../src/lib/data/units/unit21";
+import { unit22 } from "../src/lib/data/units/unit22";
+import { unit23 } from "../src/lib/data/units/unit23";
+import { unit24 } from "../src/lib/data/units/unit24";
+import { unit25 } from "../src/lib/data/units/unit25";
+import { unit26 } from "../src/lib/data/units/unit26";
+import { unit27 } from "../src/lib/data/units/unit27";
+import { unit28 } from "../src/lib/data/units/unit28";
+import { unit29 } from "../src/lib/data/units/unit29";
+import { unit30 } from "../src/lib/data/units/unit30";
+import { unit31 } from "../src/lib/data/units/unit31";
+import { unit32 } from "../src/lib/data/units/unit32";
 import type { UnitData } from "../src/components/learn/UnitTemplate";
 
 const UNITS: Record<string, UnitData> = {
@@ -64,6 +78,20 @@ const UNITS: Record<string, UnitData> = {
   "unit-16": unit16,
   "unit-17": unit17,
   "unit-18": unit18,
+  "unit-19": unit19,
+  "unit-20": unit20,
+  "unit-21": unit21,
+  "unit-22": unit22,
+  "unit-23": unit23,
+  "unit-24": unit24,
+  "unit-25": unit25,
+  "unit-26": unit26,
+  "unit-27": unit27,
+  "unit-28": unit28,
+  "unit-29": unit29,
+  "unit-30": unit30,
+  "unit-31": unit31,
+  "unit-32": unit32,
 };
 
 function saveMp3(text: string, outPath: string): Promise<void> {

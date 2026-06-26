@@ -81,7 +81,10 @@
 - **Completed:** 2026-06-26 — generator extended + a2 npm script; full batch gTTS; lint+test pass; 6bbc693
 
 ### TASK-031 — Native audio B1 (unit-19 → unit-32)
-- **Status:** `ready`
+- **Status:** `in_progress`
+- **Mô tả:** Extend generate-unit-audio.ts for B1 units (19-32); add audio:generate:b1 script; run batch gTTS for unit-19..32 (14 units, ~196 clips); commit native MP3s to public/audio/. Follow exact pattern of TASK-030 / TASK-010. Verify counts + lint/test.
+- **Done khi:** 196 MP3 (14/unit) in public/audio/unit-19..32; generator supports B1 (imports+map); 159+ tests + lint pass.
+- **Started:** 2026-06-26 — autopilot self-assign
 
 ### TASK-032 — Persist onboarding answers (goal, obstacle, daily_minutes)
 - **Status:** `ready`
