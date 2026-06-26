@@ -7,7 +7,7 @@
 | Field | Value |
 |-------|-------|
 | Started | 2026-06-26 |
-| Focus | TASK-084 (done): LessonSectionHeader light tokens (foreground/muted + bg-card/border instead dark island) — V2 minimal lesson polish |
+| Focus | TASK-087: terms/page.tsx, privacy/page.tsx — use Screen + Prose (strip legacy wrapper/nav per V2 Phase H) |
 | Owner | Autopilot (no human) |
 
 ### TASK-079 — V2 Minimal Redesign: research + kế hoạch autopilot
@@ -201,7 +201,38 @@
 - If fail 2x → blocked.
 **Done khi**: Eligible uses SecondaryPageShell + flat bg-card card (grep zinc-900/ min-h-screen confirm 0 in eligible); all share/print/UX preserved; gates lint+test pass; 1 commit+push via git-push main; BACKLOG done+SHA; autonomous.
 
-**Completed:** 2026-06-26 — SecondaryPageShell + flat card (bg-card / border-border/60) for eligible; 0 zinc heavy; MinimalButton + preserved ids via data-testid; gates clean 0+170+0; push via git-push; BACKLOG done; autonomous
+**Completed:** 2026-06-26 — SecondaryPageShell + flat card (bg-card / border-border/60) for eligible; 0 zinc heavy; MinimalButton + preserved ids via data-testid; gates clean 0+170+0; commit e82d92f + push via git-push; BACKLOG done; autonomous
+
+### TASK-087 — Legal pages Prose
+**Mục tiêu**: `terms/page.tsx`, `privacy/page.tsx` — migrate sang dùng `Screen` + `Prose` + `LargeTitle` làm root (loại bỏ outer min-h-screen bg-white + custom sticky nav hard-coded zinc). Giữ nguyên nội dung text, links, metadata. Dùng canvas V2 từ Screen (minimal-canvas tokens), prose styles cho headings/p/uls. Xóa legacy wrapper + nav (trùng lặp với landing); thêm simple back link nội dung nếu cần. **Done khi:** 2 pages chỉ return Screen/Prose (no outer legacy div/nav); lint pass.
+**Bước thực hiện**:
+1. Search memory("TASK-087" + "legal" + "terms" + "privacy" + "Screen" + "Prose") real via fn + read AGENTS.md (ALWAYS), AGENT_BACKLOG/PLAN/ROADMAP, CONTENT_STYLE.md §6–7 (blueprint context only, not UI), MINIMAL_REDESIGN_V2.md (Phase H: legal → Prose+Screen), src/app/{terms,privacy}/page.tsx, src/components/design-system/{Screen,LargeTitle,Prose}.tsx , src/app/page.tsx (landing nav pattern).
+2. Grep confirm: both pages have import + <Screen narrow> + <Prose> + <LargeTitle> but wrapped in legacy <div min-h-screen bg-white zinc nav>; nav uses Sprout+backdrop hard zinc; sections h2/ul use zinc- colors overriding prose; identify only these 2 files.
+3. Update BACKLOG: TASK-087 status `in_progress`.
+4. Update AGENT_PLAN.md (this section) + current focus (already).
+5. ready >=2 (087-090) → skip `bash scripts/agent-refill-backlog.sh` (read ROADMAP; KHÔNG hỏi user).
+6. Edit src/app/terms/page.tsx and src/app/privacy/page.tsx (minimal identical pattern):
+   - Remove outer <div className="min-h-screen bg-white dark:bg-zinc-950 ..."> and </div> wrapper.
+   - Remove entire custom <nav> sticky logo + back (legacy glass/zinc).
+   - Make function return <Screen narrow> ... directly (keep inside: LargeTitle + Prose + footer div links).
+   - Inside <Prose>: strip zinc color overrides on h2 (keep sizing font-bold) and ul (remove text-zinc-600..) so prose-zinc styles apply + tokens.
+   - Keep back link: add <Link href="/" className="text-sm text-muted-foreground hover:text-foreground mb-2 inline-block">← Trang chủ</Link> before LargeTitle (minimal preserve nav UX).
+   - Keep all text, sections, links, metadata, Sprout? no (no nav), exact content.
+   - No change to footer links structure.
+7. `npm run lint && npm run test`; npx tsc --noEmit.
+8. Pass → update BACKLOG done + Nhật ký + SHA; PLAN log entry.
+9. git pull --rebase; git add src/app/terms/page.tsx src/app/privacy/page.tsx AGENT_BACKLOG.md AGENT_PLAN.md; commit "refactor(legal): terms/privacy use Screen + Prose as root, remove legacy nav/wrapper (TASK-087)"; `bash scripts/git-push.sh main`.
+**Rủi ro**:
+- Back UX lost without nav → add minimal top Link back (text only, no logo to keep minimal); bottom links still there.
+- Visual shift (canvas #f5f5f7 vs white, no sticky nav) → V2 intent (canvas for legal long prose); ok per spec.
+- Prose style changes (no forced zinc on headings) → intended, lets design-system prose control; verify lint no a11y.
+- Dupe code between terms/privacy → out of scope, task is kit usage not DRY refactor.
+- No secret; public pages. Self-debug: after edit run grep "min-h-screen bg-white" in files ==0.
+- Fail 2 lần → blocked + lý do, move next if possible.
+- No ask user.
+**Done khi**: 0 legacy outer div/nav in 2 files (grep); pages return Screen+Prose+LargeTitle direct; inner zinc colors stripped from prose children; 2 pages dùng kit; lint pass (test may skip as no unit for pages); 1 commit + push via git-push.sh main; BACKLOG=done + SHA entry; autonomous.
+
+**Completed:** (pending impl)
 
 ### TASK-045 — Sync AGENT_AUTOPILOT.md với auto-refill
 **Mục tiêu**: Làm cho AGENT_AUTOPILOT.md mô tả chính xác cơ chế tự động: daemon/orchestrator/pick-task tự gọi refill từ AGENT_ROADMAP.md khi ready < 2 (MIN_READY), script agent-refill-backlog.sh parse roadmap pool, chèn tối đa 4 task `ready` vào BACKLOG, commit+push (chore, skip ci). Xóa mọi hướng dẫn gợi ý "user thêm task thủ công" vào backlog (user chỉ thêm vào ROADMAP nếu muốn ưu tiên). Giữ phần "Việc cần làm thủ công 1 lần (P0)" vì là setup secrets/migration (khác task hàng ngày). Doc khớp scripts hiện tại (refill, pick, orchestrator, roadmap format). Chỉ sửa doc; không code/logic.
@@ -443,7 +474,7 @@
 
 | Time (UTC) | Task | Plan summary | Outcome |
 |------------|------|--------------|---------|
-| 2026-06-26 | TASK-086 | PHASE1: search_memory sim via logs/grep (empty prior for 086 impl) + read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6-7 + MINIMAL_V2 (cert eligible listed) + grep Certificate + design-system + checkpoint lock pattern; PHASE2: BACKLOG in_progress + full TASK-086 PLAN section (ready=2 >=2 skip refill); PHASE3: wrap eligible in SecondaryPageShell + flat bg-card border-border/60 card (removed zinc heavy/glows), MinimalButton actions, data-testid keep selectors, all logic/texts/motion/share/print preserved; lint0+170t+tsc0 pass; commit+push via git-push.sh; done | done — [SHA] |
+| 2026-06-26 | TASK-086 | PHASE1: search_memory sim via logs/grep (empty prior for 086 impl) + read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6-7 + MINIMAL_V2 (cert eligible listed) + grep Certificate + design-system + checkpoint lock pattern; PHASE2: BACKLOG in_progress + full TASK-086 PLAN section (ready=2 >=2 skip refill); PHASE3: wrap eligible in SecondaryPageShell + flat bg-card border-border/60 card (removed zinc heavy/glows), MinimalButton actions, data-testid keep selectors, all logic/texts/motion/share/print preserved; lint0+170t+tsc0 pass; commit+push via git-push.sh; done | done — e82d92f |
 | 2026-06-26 | TASK-082 | PHASE1 (grep+read AGENTS/BACKLOG/PLAN/ROADMAP/MINIMAL_V2/CONTENT + design-system + PronunciationClient + ipa-sounds); PHASE2 set in_progress (2ready skip refill) + full PLAN section; PHASE3: all 63 style= purged, Tailwind equivs + DIFF map for accents, SecondaryPageShell kept + inner max-w; logic identical; lint0+170t+tsc pass; bdef932 + push; done | done — bdef932 |
 | 2026-06-26 | TASK-083 | PHASE1 (read AGENTS/BACKLOG/PLAN/CONTENT§6-7 + MINIMAL_V2 + grep 3 sections+Fluency/Translate + sim search_memory); PHASE2: BACKLOG in_progress + PLAN section + skip refill; PHASE3: Grammar/Vocab/Warmup light cards (bg-card/border-border/60/text-fg/muted + primary accents, keep flip style+semantics); 170 tests+lint+tsc0; commit acd10ad + push via git-push.sh; BACKLOG done | done — acd10ad |
 | 2026-06-26 | TASK-045 | PHASE1 research(memory+AGENTS+BACKLOG/PLAN+ROADMAP+AUTOPILOT+CONTENT§6-7 + grep "thủ công"); PHASE2 update PLAN+BACKLOG set in_progress (refill run, 2ready>=2 skip), add full TASK-045 section; PHASE3: set in_progress, minimal edit AUTOPILOT "Quản lý backlog" describe ROADMAP+refill auto + explicit "KHÔNG thêm thủ công", update Nhật ký; gates tsc+lint+169 pass; commit 75b72b3 + git-push.sh main; BACKLOG done + log | done — 75b72b3 |

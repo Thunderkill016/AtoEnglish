@@ -555,10 +555,10 @@
 - **Completed:** 2026-06-26 — eligible wrapped in SecondaryPageShell + flat bg-card card (removed all zinc-900/min-h heavy); MinimalButton for actions; keep share/print/motion/ids-as-testid; 0 heavy styles; lint0 +170t +tsc0 pass; commit e82d92f + push via git-push.sh main; autonomous
 
 ### TASK-087 — Legal pages Prose
-- **Status:** `ready`
+- **Status:** `in_progress`
 - **Mô tả:** `terms/page.tsx`, `privacy/page.tsx` — `Screen` + `Prose`.
 - **Done khi:** 2 page dùng kit; lint pass.
-- **Started:** auto-refill
+- **Started:** 2026-06-26 — autopilot (PHASE1: real search_memory + read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6-7 + MINIMAL_V2 + grep terms/privacy/Screen/Prose + design-system files; PHASE2: PLAN+BACKLOG in_progress (3+ ready >=2 skip refill); PHASE3: remove legacy outer wrapper+custom nav, make pages return <Screen narrow> + LargeTitle + Prose directly (minimal class purge for zinc in sections); gates)
 
 
 ### TASK-088 — Legacy CSS purge
