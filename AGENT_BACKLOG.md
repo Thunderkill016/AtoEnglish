@@ -380,9 +380,10 @@
 
 
 ### TASK-063 — Autopilot maintenance sweep #63
-- **Status:** `in_progress`
+- **Status:** `done`
 - **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
 - **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
+- **Completed:** 2026-06-26 — gates clean (no failure to fix); doc sync only; main commit fb4c049 + log sync 2da3490; lint+170t+cs50/50+audit pass; pushed
 - **Started:** 2026-06-26 — autopilot (PHASE1 research: read AGENTS/BACKLOG/PLAN/CONTENT§6-7 + grep TASK-063 + sim search_memory via logs (empty prior sweep); PHASE2 PLAN update + BACKLOG in_progress (3ready>=2 skip refill); PHASE3 clean sweep no fail + sync log)
 
 ### TASK-064 — Autopilot maintenance sweep #64
