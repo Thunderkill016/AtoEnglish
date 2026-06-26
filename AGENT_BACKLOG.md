@@ -636,15 +636,23 @@
 - **Completed:** 2026-06-27 — 5 sections + LessonCard audited (no zinc-950, no CTA gradients); fixed sót dark: + violet-950 badge + amber-200 + legacy emerald-7xx/text-200 tints in Practice/Shadowing/Quiz/Dialogue to light tokens (bg-emerald-500/10 etc); Speaking clean; LessonCard clean; 170t+lint+tsc0 pass; commit + push via git-push.sh main; autonomous.
 
 ### TASK-098 — Login visual: thu gọn desktop chrome
-- **Status:** `in_progress`
+- **Status:** `done`
 - **Mô tả:** `login/page.tsx` — bỏ/giảm desktop marketing panel; giữ 3-step + MinimalButton; mobile-first.
 - **Done khi:** Không panel >40% width desktop; e2e onboarding pass.
 - **Started:** 2026-06-27 — autopilot (PHASE1: read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6-7 + MINIMAL_V2 + login/page + grep panel + run refill (2ready>=2 skip); PHASE2: PLAN+BACKLOG in_p; PHASE3: remove desktop marketing panel for mobile-first single-col auth)
+- **Completed:** 2026-06-27 — removed left w-[36%] marketing panel + isDesktop detection (0 marketing chrome on desktop); mobile-first full-width centered auth; 3-step + MinimalButton + all logic preserved; e2e selectors intact; lint0 +170t +tsc0; commit aee24de + push via git-push.sh main; autonomous (no human)
 
 ### TASK-099 — MINIMAL_REDESIGN_V2 doc sync
 - **Status:** `ready`
 - **Mô tả:** Cập nhật `MINIMAL_REDESIGN_V2.md` §2 hiện trạng + §9 success criteria theo code thực tế post-V2.
 - **Done khi:** Doc khớp shipped; không claim task undone đã done.
+- **Started:** auto-refill
+
+
+### TASK-100 — E2E time-to-lesson production baseline
+- **Status:** `ready`
+- **Mô tả:** Chạy `npm run e2e:time-to-lesson` + `npm run smoke:learn`; fix flake/regression; ghi baseline AGENT_PLAN.
+- **Done khi:** E2E pass 1 lần clean; PLAN có timestamp.
 - **Started:** auto-refill
 
 
@@ -657,8 +665,9 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
+| 2026-06-27 | TASK-100 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-06-27 | TASK-097 | PHASE1: sim search_memory via logs/grep + read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6–7 + blueprint+center+flow+grep sections+dark; 3 ready>=2 skip refill; PHASE2 PLAN update + BACKLOG in_p; PHASE3: audit+purge dark remnants (violet-950, dark:, emerald-7xx tints, amber-200) in 5 sections+LessonCard to light tokens; no zinc/CTA-grad; gates+commit+push via git-push.sh | done — 074037c |
-| 2026-06-27 | TASK-098 | PHASE1 research (AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6–7 + V2 + login + panel grep + refill skip); PHASE2 PLAN update + BACKLOG in_p; | in_progress |
+| 2026-06-27 | TASK-098 | PHASE1 research (AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6–7 + V2 + login + panel grep + refill skip); PHASE2 PLAN update + BACKLOG in_p; PHASE3: removed desktop panel + isDesktop (mobile-first single col); gates 0+170+0; commit aee24de + push; done | done — aee24de |
 | 2026-06-27 | TASK-099 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-06-27 | TASK-094 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-06-27 | TASK-095 | PHASE1: sim search_memory via logs/grep + read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6-7 + grep; 2 ready >=2 skip refill; PHASE2 PLAN update + BACKLOG in_p; PHASE3: gates clean (lint0+170t+tsc0+cs50/50+audit50/50) no fix + sync; commit cfcf37b + final eca1e7b via git-push.sh main | done — cfcf37b |
