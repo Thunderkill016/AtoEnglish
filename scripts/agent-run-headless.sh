@@ -31,10 +31,28 @@ if echo "$TASK_ID $TASK_DESC" | grep -qiE 'unit|content|lesson|curriculum|practi
   BLUEPRINT_BLOCK="$(cd "$ROOT" && npx tsx scripts/print-lesson-blueprint.mjs 2>/dev/null || true)"
 fi
 
-python3 - "$ROOT" "$TASK_ID" "$TASK_DESC" "$PROMPT_FILE" "$BLUEPRINT_BLOCK" <<'PY'
+UI_MINIMAL_BLOCK=""
+if echo "$TASK_ID" | grep -qiE '^UI-'; then
+  UI_MINIMAL_BLOCK="1"
+fi
+
+python3 - "$ROOT" "$TASK_ID" "$TASK_DESC" "$PROMPT_FILE" "$BLUEPRINT_BLOCK" "$UI_MINIMAL_BLOCK" <<'PY'
 import sys
-root, task_id, task_desc, out, blueprint = sys.argv[1:6]
+root, task_id, task_desc, out, blueprint, ui_flag = sys.argv[1:7]
 content_rules = ""
+ui_rules = ""
+if ui_flag.strip():
+    ui_rules = """
+KẾ HOẠCH TỐI GIẢN (research-backed — bắt buộc UI-*):
+- Metric chính: time-to-lesson ≤2 tap, ≤10s tới section Khởi động
+- Primitives: src/components/design-system/ (Screen, LargeTitle, ContinueCard, PrimaryRow, ThinProgress)
+- Hick: ≤1 primary CTA mỗi màn; progressive disclosure
+- Cognitive load: xóa extraneous chrome (widget, gradient, 4-color bar) — giữ germane load (IPOR steps)
+- KHÔNG đổi SECTION_ORDER, learning-flow.ts, UnitTemplate logic học
+- Tham chiếu: WarmupSection.tsx + lesson-ui/ đã migrate
+- Verify: npm run lint && npm run test; UI task có e2e → npm run e2e:time-to-lesson
+- Shell 3-tab đã ship: Học/Ôn/Tôi — không revert
+"""
 if blueprint.strip():
     content_rules = f"""
 CHUẨN BÀI HỌC (bắt buộc khi sửa unit*.ts):
@@ -51,7 +69,7 @@ prompt = f"""Bạn là autopilot agent 24/7 cho AtoEnglish tại {root}. User KH
 PHASE 1 — NGHIÊN CỨU (5 phút):
 - Đọc AGENTS.md, AGENT_BACKLOG.md, AGENT_PLAN.md, CONTENT_STYLE.md §6–7
 - Grep codebase liên quan task; xác định file cần sửa
-{content_rules}
+{content_rules}{ui_rules}
 PHASE 2 — LẬP KẾ HOẠCH:
 - Cập nhật AGENT_PLAN.md: mục tiêu, bước, rủi ro cho {task_id}
 - Backlog thấp: chạy `bash scripts/agent-refill-backlog.sh` (đọc AGENT_ROADMAP.md) — KHÔNG hỏi user

@@ -17,6 +17,18 @@
 4. Không force-push `main`
 5. Nếu fail 2 lần liên tiếp → đổi status `blocked`, ghi lý do
 
+## Hàng đợi — Kế hoạch tối giản (user mandate 2026-06-26)
+
+> Agent tự chạy **không cần user nhắc**. Thứ tự: content gate → UI minimal P3–P6.
+
+| # | Task | Phase |
+|---|------|-------|
+| 1 | TASK-058 → 059 → 061 → 062 | Content 50/50 |
+| 2 | UI-005 → UI-008 → UI-009 | P3 lesson chrome |
+| 3 | UI-006 → UI-007 | P4–P6 secondary + landing |
+
+**Metric UI:** time-to-lesson ≤2 tap, ≤10s (`npm run e2e:time-to-lesson`). Primitives: `src/components/design-system/`. **Không** đổi `SECTION_ORDER` / IPOR logic.
+
 ## Trạng thái
 
 | Status | Ý nghĩa |
@@ -301,11 +313,23 @@
 - **Done khi:** ≤1 primary CTA; time-to-lesson ≤2 tap.
 - **Completed:** 2026-06-26 — minimal home live
 
-### UI-005 — P3: Lesson chrome thin progress + unified kit
+### UI-005 — P3a: LessonHeader thin progress (bỏ 4-color bar)
 - **Status:** `ready`
-- **Mô tả:** Gộp lesson-ui; header title + thin progress; bỏ 4-color IPOR bar (giữ flow).
-- **Done khi:** 6 section dùng kit; completion rate không giảm.
-- **Blocked:** Chờ content gate 058–062 xong
+- **Mô tả:** `LessonHeader.tsx`: dùng `ThinProgress` từ design-system; ẩn/bỏ `LessonPhaseBar` 4 màu; header ≤2 hàng mobile; giữ back + title + section label. **Không** đổi `SECTION_ORDER`.
+- **Done khi:** Header gọn; lint+test pass; `e2e:time-to-lesson` pass.
+- **Started:** user mandate — kế hoạch tối giản P3
+
+### UI-008 — P3b: Dialogue + Quiz → lesson-ui kit
+- **Status:** `ready`
+- **Mô tả:** `DialogueSection.tsx` + `QuizSection.tsx` dùng `LessonSectionHeader`, `LessonContinueButton`, `lessonSectionMotion` (giống WarmupSection). Không đổi logic học.
+- **Done khi:** 2 file dùng kit; lint+test pass.
+- **Started:** user mandate — kế hoạch tối giản P3
+
+### UI-009 — P3c: Shadowing + Speaking → lesson-ui kit
+- **Status:** `ready`
+- **Mô tả:** `ShadowingSection.tsx` + `SpeakingSection.tsx` migrate lesson-ui kit; motion + continue button thống nhất.
+- **Done khi:** 2 file dùng kit; lint+test pass.
+- **Started:** user mandate — kế hoạch tối giản P3
 
 ### UI-006 — P4: Secondary pages grouped list
 - **Status:** `ready`
@@ -318,21 +342,25 @@
 - **Done khi:** time-to-lesson ≤10s documented.
 
 ### TASK-045 — Sync AGENT_AUTOPILOT.md với auto-refill
-- **Status:** `ready`
+- **Status:** `blocked`
 - **Mô tả:** Doc mô tả AGENT_ROADMAP.md + refill script; xóa hướng dẫn "user thêm task thủ công".
 - **Done khi:** Doc khớp scripts hiện tại.
+- **Blocked:** 2026-06-26 — sau UI-007
 - **Started:** auto-refill
 
 ### TASK-046 — Curriculum quality B2 audio declarations
-- **Status:** `ready`
+- **Status:** `blocked`
 - **Mô tả:** Extend `curriculum-quality.test.ts` verify mọi B2 unit có `audio` path declared cho vocab+dialogue.
 - **Done khi:** Test pass; 0 missing audio fields.
+- **Blocked:** 2026-06-26 — sau UI-007
 - **Started:** auto-refill
 
 
 ---
 
 ## Nhật ký agent
+
+| 2026-06-26 | UI-001..004 + queue | user mandate: kế hoạch tối giản P0–P2 shipped; agent queue 058→062→UI-005..009→006→007 | configured |
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|

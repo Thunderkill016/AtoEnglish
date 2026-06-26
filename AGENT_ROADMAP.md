@@ -14,11 +14,37 @@
 
 - Format giống backlog: `### TASK-NNN — Title` + Mô tả + Done khi
 - Chỉ thêm số TASK **lớn hơn** mọi TASK đã có trong backlog
-- **Ưu tiên tuyệt đối (2026-06-26):** P1 **bài học + cách học** — không thêm UI/agent/CI trừ khi chặn học
+- **Ưu tiên (2026-06-26):** (1) Content gate 058–062 → (2) **Kế hoạch tối giản** UI-005..009, UI-006, UI-007
 
 ---
 
-## Pool — P1 Bài học & cách học (USER MANDATE)
+## Pool — P1 Kế hoạch tối giản (USER MANDATE)
+
+> Metric: time-to-lesson. Primitives: `src/components/design-system/`. UI-001–004 done.
+
+### UI-005 — LessonHeader thin progress
+- **Mô tả:** ThinProgress thay LessonPhaseBar; header ≤2 hàng mobile.
+- **Done khi:** lint+test; e2e:time-to-lesson pass.
+
+### UI-008 — Dialogue + Quiz lesson-ui kit
+- **Mô tả:** Migrate 2 section files to lesson-ui kit.
+- **Done khi:** lint+test pass.
+
+### UI-009 — Shadowing + Speaking lesson-ui kit
+- **Mô tả:** Migrate 2 section files to lesson-ui kit.
+- **Done khi:** lint+test pass.
+
+### UI-006 — Secondary pages PrimaryRow
+- **Mô tả:** Flashcards, Progress, Settings, Roadmap — design-system PrimaryRow.
+- **Done khi:** lint pass.
+
+### UI-007 — Landing minimal + metrics
+- **Mô tả:** Landing 1 headline 1 CTA; document time-to-lesson vs baseline.
+- **Done khi:** metric documented.
+
+---
+
+## Pool — P1 Bài học & cách học (content)
 
 > Mục tiêu: trải nghiệm học 1 đường rõ, bài đầy đủ, polish section, không ôn nhanh mặc định.
 

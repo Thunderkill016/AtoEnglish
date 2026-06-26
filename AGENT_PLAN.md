@@ -7,8 +7,30 @@
 | Field | Value |
 |-------|-------|
 | Started | 2026-06-26 |
-| Focus | **Chuẩn nội dung** TASK-057 (practiceTranslate ≥3/unit + min=3) + follow-ups 058+; gate=`npm run test:content-standard` + audit; blueprint + unit1 gold |
+| Focus | **Content gate** 058→059→061→062, rồi **kế hoạch tối giản** UI-005→008→009→006→007; metric=time-to-lesson |
 | Owner | Autopilot (no human) |
+
+### TASK-058 — Chuẩn content: B2 L1 interference ≥50%
+**Mục tiêu**: unit33–42 (B2) hiện L1 ratio ~0-21% (0-3/14). Nâng LESSON_CONTENT_STANDARD.l1MinRatioByLevel.B2 từ 0→0.5 (đúng CONTENT_STYLE §7 + center ref VN CLT L1 contrast). Thêm l1_interference_vn (≥15 ký tự, ⚠️ format, lỗi người Việt hay mắc theo ESA/CELTA/ILA: article, tense, collocation, passive/conditional, false friends, prepositions) cho ≥7/14 (unit41: ≥9/18) từ mỗi unit. Giữ 1 dòng object; pre-teach lexis Study phase. Chỉ edit content-standard + 10 B2 unit files; không đổi flow/UI/grammar.
+**Bước thực hiện**:
+1. Search memory("TASK-058" + "B2 L1" + "l1_interference_vn") + read AGENTS.md (ALWAYS), AGENT_BACKLOG/PLAN/ROADMAP, CONTENT_STYLE.md §6–7, lesson-center-reference.ts (VN CLT L1), lesson-blueprint.ts (vocab block), learning-flow.ts, content-standard.ts, unit1.ts (gold L1 mẫu), unit33-42.ts (vocab sections); run count script for current ratios.
+2. Grep confirm low L1 in B2 (0-3 notes); identify edit targets (≥7 per).
+3. Update BACKLOG: TASK-058 status `in_progress`.
+4. Update AGENT_PLAN.md với mục tiêu + bước + rủi ro cho TASK-058.
+5. Nếu ready <2: chạy `bash scripts/agent-refill-backlog.sh` (KHÔNG hỏi user).
+6. Edit src/lib/lessons/content-standard.ts: B2: 0.5 (update comment).
+7. For unit33–42: for ≥7 (or 9) vocab items add `, l1_interference_vn: "⚠️ [VN-specific error + fix]"` — ngắn gọn, actionable như unit1 (e.g. "⚠️ B2 learners often drop 'the' before abstract nouns in conditionals..."; reuse topic like second cond → 'were' subjunctive for VN).
+8. `npm run lint && npm run test` (unit); `npm run test:content-standard` (50 units) + `bash scripts/audit-lesson-content.sh`.
+9. Pass → update BACKLOG done + Nhật ký + SHA; PLAN log.
+10. git pull --rebase; git add content-standard.ts src/lib/data/units/unit3{3..9}.ts ... unit4{0-2}.ts AGENT_*.md; commit "fix(content): B2 L1 interference >=50% for unit33-42 + ratio 0.5 (TASK-058)"; `bash scripts/git-push.sh main`.
+**Rủi ro**:
+- L1 note không đúng lỗi thực tế VN B2 (e.g. conditional 'were' vs 'was', article with uncountable, 'would' overuse) → craft từ common TEFL VN errors + unit topic vocab/grammar.
+- Syntax break 1-liner {} → ensure , before l1 + no trailing comma issue; test each after batch edit.
+- test:content-standard fail (other mins) → only L1; prior tasks fixed translate/cum.
+- 10 files edits → use unique strings per entry; verify ratios post with tsx script.
+- Fail 2x → blocked + lý do.
+- No secret needed; pure content. Self debug lint/test output.
+**Done khi**: B2 minRatio=0.5; 10/10 unit33-42 đạt >=50% L1 (verified); 50/50 test:content-standard pass; lint+unit tests+tsc clean; 1 commit + push via git-push.sh main; BACKLOG status=done + entry SHA+date; no ask user.
 
 ### TASK-057 — Chuẩn content: practiceTranslate ≥3 mọi unit + nâng min=3
 **Mục tiêu**: 30 units (13-42) hiện chỉ 1 câu translate VN→EN. Bổ sung +2 câu mỗi unit (tổng ≥3), sát với vocab+grammar của unit đó. Nâng LESSON_CONTENT_STANDARD.practiceTranslateMin từ 1→3 (đúng blueprint authorGuide và CONTENT_STYLE §7). Giữ format, id pt-1/2/3, câu ngắn tự nhiên, <12 từ EN, controlled output theo Nation/CLT. Chỉ edit content-standard + 30 unit files; không đổi flow/UI.
