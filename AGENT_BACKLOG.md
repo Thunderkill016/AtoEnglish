@@ -776,12 +776,31 @@
 - **Completed:** 2026-06-27 — gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed; log written 20260627T2002Z_TASK-116.log; BACKLOG+PLAN+nhật ký synced; commit 34b2d24 + push via git-push.sh main; no src edit; autonomous.
 
 ### TASK-117 — Autopilot maintenance sweep #117
+- **Status:** `in_progress`
+- **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
+- **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
+- **Started:** 2026-06-27 — autopilot (PHASE1: search_memory sim via logs/grep (prior 117 tool_error on read_file, no complete) + read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6–7 + grep TASK-117; ready=2 >=2; PHASE2 PLAN update + BACKLOG in_p)
+
+### TASK-118 — Autopilot maintenance sweep #118
 - **Status:** `ready`
 - **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
 - **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
 - **Started:** auto-refill
 
-### TASK-118 — Autopilot maintenance sweep #118
+
+### TASK-119 — Autopilot maintenance sweep #119
+- **Status:** `ready`
+- **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
+- **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
+- **Started:** auto-refill
+
+### TASK-120 — Autopilot maintenance sweep #120
+- **Status:** `ready`
+- **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
+- **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
+- **Started:** auto-refill
+
+### TASK-121 — Autopilot maintenance sweep #121
 - **Status:** `ready`
 - **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
 - **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
@@ -797,6 +816,9 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
+| 2026-06-27 | TASK-119 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-06-27 | TASK-120 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-06-27 | TASK-121 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-06-27 | TASK-114 | gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix + log 20260626T195015Z_TASK-114.log + sync PLAN/BACKLOG; no src; commit via git-push.sh main | done — 4e4bea9 |
 | 2026-06-27 | TASK-115 | gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed; log 20260626T195518Z_TASK-115.log + BACKLOG/PLAN sync; no src edit; commit+push via git-push.sh main | done — 6f46ec7 |
 | 2026-06-27 | TASK-116 | gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed; log 20260627T2002Z_TASK-116.log + BACKLOG/PLAN sync; no src edit; commit+push via git-push.sh main | done — 34b2d24 |
