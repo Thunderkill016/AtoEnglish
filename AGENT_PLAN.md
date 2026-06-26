@@ -7,7 +7,7 @@
 | Field | Value |
 |-------|-------|
 | Started | 2026-06-26 |
-| Focus | TASK-036 Fix audio path mismatch (unitN vs unit-N) + refill if low |
+| Focus | TASK-037 E2E native audio probe on learn /unit-19 vocab speaker |
 | Owner | Autopilot (no human) |
 
 ### TASK-021 — Sync placement flow, 50 units, header shell, autopilot docs (PAGE_SPECIFICATIONS.md + AGENT_*)
@@ -193,3 +193,23 @@
 - If git push conflict after refill (which also pushes), use pull --rebase.
 - Fail 2x → blocked.
 **Done khi**: `/audio/unit19/incident.mp3` (and unit1, unit36) returns HTTP 200 when requested; playUnitAudio can return true (native) for valid B1/B2 samples; `npm run lint && npm run test` 0 issues; 1 commit (or with refill) pushed; backlog status=done + entry; no user asked; autonomous.
+
+### TASK-037 — E2E native audio probe on learn page
+**Mục tiêu**: Thêm Playwright E2E test verify native audio on /learn/unit-19: login B1 user (set starting high), mở unit-19, advance warmup (rate 5 words), click vocab speaker button, verify either native Audio used (probe success + network to /audio/unit19/... or /audio/unit-19/ ) hoặc TTS fallback không crash (no uncaught error). Dùng route mock hoặc request wait + initScript track new Audio() calls. Scope: e2e test only, không sửa logic.
+**Bước thực hiện**:
+1. Search memory (done) + read AGENTS.md, BACKLOG/PLAN/ROADMAP, e2e/placement-test.spec.ts + helpers/auth.ts (for B1 setup + admin + loginAs), e2e/*.spec.ts patterns, src/components/learn/sections/VocabSection.tsx (aria-label Nghe:, playUnitAudio call), UnitTemplate (section==2), unit-audio.ts (probe + new Audio), src/lib/data/units/unit19.ts (sample audio paths), playwright.config.ts.
+2. Set BACKLOG TASK-037 to `in_progress` (done); update this PLAN with section; run refill script (dry or not, per state) — observed 4 ready.
+3. Implement minimal: add test.describe in e2e/placement-test.spec.ts (reuse B1 patterns) or if clean, but keep in existing: "B1 user on /learn/unit-19 can click vocab speaker (native Audio or TTS fallback ok)". Use ensure + set starting_unit_index >=18 for B1 unlock equiv; loginAsE2ETestUser; page.goto("/learn/unit-19"); wait for warmup UI; click 5 "✓ Biết" ; click "Bắt đầu học"; wait for Vocab h1 or grid; then setup audio spy: addInitScript track Audio srcs + waitForRequest(/audio\//i); click first speaker getByRole('button', {name: /Nghe:/}).first(); await Promise; assert request.url includes audio/unit or audioCalls has /audio/ ; also expect no page error with 'play' or crash. If native not (env), still pass if no throw on click + fallback ran.
+4. To make stable: use timeout generous, scrollIntoView, click options {force? no}; skip test if !hasE2EAdminCredentials(); also support mini? but task wants vocab so full flow to section 2.
+5. Run `npm run lint && npm run test` (unit only); then manually or in bg `npm run e2e -- e2e/placement-test.spec.ts -g "audio|speaker|unit-19"` if possible, but since dev server auto in pw. Fix flake (add waits). Note: e2e not in "npm test".
+6. Update BACKLOG status→done + Nhật ký + SHA; update PLAN log table.
+7. git pull --rebase; git add e2e/placement-test.spec.ts AGENT_BACKLOG.md AGENT_PLAN.md; commit "test(e2e): playwright probe native audio on /learn/unit-19 vocab speaker (TASK-037)"; push using scripts/git-push.sh main .
+**Rủi ro**:
+- Audio in headless: play() may be blocked or muted; solve by tracking constructor calls + network requests instead of await play success. TTS fallback (speechSynthesis.speak) may also be no-op in CI/headless.
+- Flaky selector / warmup flow: warmup has dynamic cards, use specific clicks for 5 ratings + wait "Bắt đầu học"; use toBeVisible with timeout.
+- Auth + progress: E2E test user may have low starting_index; must admin upsert starting_unit_index to B1 (~18) before login, reset if needed.
+- Rewrite / network: in test, waitForRequest matches source path `/audio/unit19/` (before or after internal rewrite ok).
+- No secret: pure E2E + static, admin key needed only for user setup (same as placement tests).
+- If 2 fails: set blocked.
+- Dev server must be running for e2e (pw config does).
+**Done khi**: New test added to placement-test or equiv; can run to click speaker in unit-19 B1; verifies request or Audio src for /audio/; lint + 159 unit tests pass; 1 commit pushed; backlog done + entry; autonomous no user.

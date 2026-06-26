@@ -126,7 +126,7 @@
 - **Started:** 2026-06-26 — autopilot (no human)
 
 ### TASK-037 — E2E native audio probe on learn page
-- **Status:** `ready`
+- **Status:** `in_progress`
 - **Mô tả:** Playwright: mở `/learn/unit-19`, click vocab speaker, verify `Audio` plays or TTS fallback không crash. Mock hoặc probe network cho `/audio/`.
 - **Done khi:** E2E pass trong CI; không flake 3 lần.
 - **Started:** auto-refill

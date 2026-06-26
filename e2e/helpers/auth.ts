@@ -95,6 +95,26 @@ export async function resetE2EPlacementState(userId: string): Promise<void> {
   }
 }
 
+/** Set user to B1+ so /learn/unit-19 is in unlocked range (UI + for test realism). */
+export async function setE2EStartingUnit(userId: string, startingIndex: number, level = "B1"): Promise<void> {
+  const admin = getAdminClient();
+  const today = new Date().toISOString().split("T")[0];
+  const { error } = await admin.from("user_progress").upsert(
+    {
+      user_id: userId,
+      current_level: level,
+      starting_unit_index: startingIndex,
+      total_xp: 300,
+      streak: 1,
+      last_active_date: today,
+    },
+    { onConflict: "user_id" },
+  );
+  if (error) {
+    throw new Error(`Failed to set starting unit: ${error.message}`);
+  }
+}
+
 export async function loginAsE2ETestUser(page: Page): Promise<void> {
   await page.goto("/login?mode=login");
   await page.getByPlaceholder("Email của bạn").fill(E2E_TEST_EMAIL);
