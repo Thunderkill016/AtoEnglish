@@ -390,7 +390,7 @@
 - **Status:** `done`
 - **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
 - **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
-- **Completed:** 2026-06-26 — gates clean (no failure to fix); doc sync only; lint+170t+cs50/50+audit pass; pushed via git-push.sh; autonomous
+- **Completed:** 2026-06-26 — gates clean (no failure to fix); doc sync only; lint+170t+cs50/50+audit pass; pushed 50c5438 via git-push.sh (github fallback); autonomous
 - **Started:** 2026-06-26 — autopilot (PHASE1 research complete: read AGENTS/BACKLOG/PLAN/CONTENT§6-7 + sim search_memory logs + grep TASK; 2 ready >=2 skip refill; PHASE2 plan update + BACKLOG in_progress; PHASE3 gates clean no fix + doc sync)
 
 ### TASK-065 — Autopilot maintenance sweep #65
