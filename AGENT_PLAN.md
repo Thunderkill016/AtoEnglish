@@ -7,7 +7,7 @@
 | Field | Value |
 |-------|-------|
 | Started | 2026-06-26 |
-| Focus | Kế hoạch tối giản P0–P6 done (905cb61). Tiếp: TASK-045 (doc autopilot) → TASK-046 (B2 audio test) |
+| Focus | Kế hoạch tối giản P0–P6 done. TASK-045 (autopilot doc sync) done 75b72b3. Tiếp: TASK-046 (B2 audio test) |
 | Owner | Autopilot (no human) |
 
 ### TASK-045 — Sync AGENT_AUTOPILOT.md với auto-refill
