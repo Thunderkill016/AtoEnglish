@@ -76,7 +76,7 @@
 ### Ngày 5+ — Chất lượng & mở rộng
 - [x] TASK-020 integration test flakes
 - [x] TASK-030 A2 audio (6bbc693)
-- [ ] TASK-031 B1 audio
+- [x] TASK-031 B1 audio (2119534)
 - [ ] TASK-032 onboarding profile DB
 
 ## Nguyên tắc tự quyết
@@ -96,4 +96,4 @@
 | 2026-06-26 | TASK-030 | Native audio A2 batch unit-13..18 (extend script + 84 MP3s) | done — 6bbc693 |
 | 2026-06-26 | TASK-030 | Re-verify gen+counts+lint+test (all 6 units 14 clips) | done — 202bfea (pushed) |
 | 2026-06-26T03:25Z | TASK-030 | Autopilot full cycle: research(agents+grep), plan update, run gen 17+18, lint+159test, 3 commits/push, log | complete — c58cf13 |
-| 2026-06-26 | TASK-031 | Research(agents+grep+units+gen), update PLAN/BACKLOG to in_progress, extend generator+pkg for B1 19-32, batch gTTS, lint+test, commit+push | (to complete) |
+| 2026-06-26 | TASK-031 | Research(agents+grep+units+gen), update PLAN/BACKLOG to in_progress, extend generator+pkg for B1 19-32, batch gTTS, lint+test, commit+push | done — 2119534a5e432816f2cf95c1de5b84767066a2aa (196 clips + fixes) |
