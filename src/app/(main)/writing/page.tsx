@@ -14,9 +14,9 @@ import {
   BookmarkPlus,
   BookmarkCheck,
   History,
-  PenLine,
 } from "lucide-react";
 import { analyzeWriting, saveWritingSentence, type WritingFeedback } from "@/app/actions/writing";
+import { SecondaryPageShell } from "@/components/design-system";
 
 // ─── Level selector ────────────────────────────────────────────────────────────
 const LEVELS = [
@@ -156,32 +156,20 @@ export default function WriteImprovePage() {
   };
 
   return (
-    <div className="relative mx-auto max-w-2xl px-4 py-6 sm:py-8 sm:px-6 space-y-6 min-h-screen pb-24">
-      {/* Background glow */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 -z-10 w-96 h-96 rounded-full bg-emerald-500/5 blur-3xl pointer-events-none" />
-
-      {/* Header */}
-      <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="space-y-2">
-        <div className="flex items-center justify-between gap-3">
-          <span className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-600 dark:text-emerald-400 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20">
-            <PenLine className="w-3.5 h-3.5" />
-            AI Writing Coach
-          </span>
-          <Link
-            href="/writing/history"
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-zinc-200/60 dark:border-white/10 bg-white/60 dark:bg-white/5 text-xs font-bold text-zinc-500 dark:text-zinc-400 hover:text-emerald-600 dark:hover:text-emerald-400 hover:border-emerald-500/30 transition-all"
-          >
-            <History className="w-3.5 h-3.5" />
-            Lịch sử
-          </Link>
-        </div>
-        <h1 className="text-2xl sm:text-3xl font-black text-zinc-900 dark:text-white tracking-tight">
-          Viết &amp; Cải thiện
-        </h1>
-        <p className="text-zinc-500 dark:text-zinc-400 text-sm">
-          Nhập câu tiếng Anh — AI sẽ sửa lỗi, giải thích bằng tiếng Việt, và gợi ý cách viết hay hơn.
-        </p>
-      </motion.div>
+    <SecondaryPageShell
+      title="Viết & Cải thiện"
+      subtitle="Nhập câu tiếng Anh — AI sẽ sửa lỗi, giải thích bằng tiếng Việt, và gợi ý cách viết hay hơn."
+    >
+    <div className="space-y-6 pb-16">
+      <div className="flex justify-end -mt-2">
+        <Link
+          href="/writing/history"
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-border/60 bg-card text-xs font-bold text-muted-foreground hover:text-foreground transition-all"
+        >
+          <History className="w-3.5 h-3.5" />
+          Lịch sử
+        </Link>
+      </div>
 
       {/* Level selector */}
       <div className="flex gap-2 flex-wrap">
@@ -381,5 +369,6 @@ export default function WriteImprovePage() {
         )}
       </AnimatePresence>
     </div>
+    </SecondaryPageShell>
   );
 }

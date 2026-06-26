@@ -2,12 +2,13 @@
 
 import { useState, useEffect, Suspense } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Trophy, Zap, Flame, Calendar, Star, Shield } from "lucide-react";
+import { Zap, Flame, Calendar, Star, Shield } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { getLeaderboard, getWeeklyLeaderboard, type LeaderboardEntry } from "@/app/actions/leaderboard";
 import { getMyLeague } from "@/app/actions/leagues";
 import { TIER_CONFIG } from "@/lib/leagues";
 import type { LeagueData, LeagueTier } from "@/lib/leagues";
+import { SecondaryPageShell } from "@/components/design-system";
 
 
 export const dynamic = "force-dynamic";
@@ -232,23 +233,11 @@ function LeaderboardContent() {
   const tierCfg = leagueData ? TIER_CONFIG[leagueData.tier as LeagueTier] : null;
 
   return (
-    <div className="relative mx-auto max-w-2xl px-4 py-6 sm:py-8 sm:px-6 space-y-6 min-h-screen pb-24">
-      {/* Glow */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 -z-10 w-96 h-96 rounded-full bg-yellow-500/5 blur-3xl pointer-events-none" />
-
-      {/* Header */}
-      <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="space-y-2">
-        <span className="inline-flex items-center gap-1.5 text-xs font-bold text-yellow-600 dark:text-yellow-400 px-3 py-1 rounded-full bg-yellow-500/10 border border-yellow-500/20">
-          <Trophy className="w-3.5 h-3.5" />
-          Bảng xếp hạng
-        </span>
-        <h1 className="text-2xl sm:text-3xl font-black text-zinc-900 dark:text-white tracking-tight">
-          Top Học Viên
-        </h1>
-        <p className="text-zinc-500 dark:text-zinc-400 text-sm">
-          Cạnh tranh lành mạnh để duy trì động lực học tiếng Anh mỗi ngày.
-        </p>
-      </motion.div>
+    <SecondaryPageShell
+      title="Top Học Viên"
+      subtitle="Cạnh tranh lành mạnh để duy trì động lực học tiếng Anh mỗi ngày."
+    >
+    <div className="space-y-6 pb-16">
 
       {/* Tabs */}
       <div className="flex gap-2 flex-wrap">
@@ -401,6 +390,7 @@ function LeaderboardContent() {
           : "Top 20 theo tổng XP tích lũy 🏆"}
       </p>
     </div>
+    </SecondaryPageShell>
   );
 }
 
@@ -408,13 +398,13 @@ function LeaderboardContent() {
 export default function LeaderboardPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="space-y-2 w-full max-w-2xl px-4">
+      <SecondaryPageShell title="Top Học Viên" subtitle="Đang tải bảng xếp hạng...">
+        <div className="space-y-2 pb-16">
           {Array.from({ length: 8 }).map((_, i) => (
-            <div key={i} className="h-16 rounded-2xl bg-zinc-100 dark:bg-white/4 border border-zinc-200/60 dark:border-white/8 animate-pulse" />
+            <div key={i} className="h-16 rounded-2xl bg-muted border border-border/60 animate-pulse" />
           ))}
         </div>
-      </div>
+      </SecondaryPageShell>
     }>
       <LeaderboardContent />
     </Suspense>

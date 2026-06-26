@@ -10,9 +10,13 @@ import {
   MessageSquare,
   History,
   Calendar,
-  TrendingUp,
-  ChevronRight,
 } from "lucide-react";
+import {
+  ListSection,
+  PrimaryRow,
+  SecondaryPageShell,
+} from "@/components/design-system";
+import { cn } from "@/lib/utils";
 import { ShadowingPractice } from "./shadowing-practice";
 import { AIRoleplay } from "./ai-roleplay";
 import { JournalMode } from "./journal-mode";
@@ -44,58 +48,20 @@ export default function SpeakingPage() {
   ] as const;
 
   return (
-    <div className="relative mx-auto max-w-7xl px-4 py-6 sm:py-8 sm:px-6 lg:px-8 space-y-5 sm:space-y-8 bg-grid-pattern min-h-screen pb-28 sm:pb-12 overflow-x-hidden">
-      {/* Background ambient blurs */}
-      <div className="absolute top-10 left-10 -z-10 h-96 w-[70vw] max-w-96 rounded-full bg-primary/5 blur-3xl" />
-      <div className="absolute bottom-20 right-10 -z-10 h-96 w-[70vw] max-w-96 rounded-full bg-violet-500/5 blur-3xl" />
-
-      {/* Header */}
-      <motion.div
-        initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between pb-6 border-b border-foreground/[0.05]"
-      >
-        <div className="space-y-1.5">
-          <span className="inline-flex items-center gap-1.5 text-xs font-bold text-primary px-3 py-1 rounded-full bg-primary/10 border border-primary/20">
-            <Mic className="size-3.5" />
-            Speaking Module
-          </span>
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-black tracking-tight text-foreground mt-1 leading-tight">
-            Luyện Nói Phản Xạ
-          </h1>
-          <p className="text-sm sm:text-base text-muted-foreground font-normal">
-            Làm chủ ngữ điệu bản xứ qua kỹ thuật Shadowing và hội thoại thông minh AI.
-          </p>
-        </div>
-
-        {/* Stats card */}
-        <div className="w-full sm:w-64 bg-glass border border-glass p-4 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.01)] flex items-center justify-between">
-          <div className="space-y-1">
-            <span className="text-xs text-muted-foreground font-bold">Lịch sử gần nhất</span>
-            <div className="text-xl font-bold text-foreground">{speakingCount} buổi luyện</div>
-          </div>
-          <span className="flex size-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
-            <TrendingUp className="size-5" />
-          </span>
-        </div>
-      </motion.div>
-
-      {/* IPA Pronunciation quick-access banner */}
-      <Link
+    <SecondaryPageShell
+      title="Luyện nói"
+      subtitle={`${speakingCount} buổi luyện gần đây`}
+    >
+      <div className="space-y-5 pb-16">
+      <PrimaryRow
         href="/pronunciation"
-        className="flex items-center gap-3 p-4 rounded-2xl border border-emerald-500/20 bg-emerald-500/5 hover:bg-emerald-500/10 hover:border-emerald-500/30 transition-all duration-200 group"
-      >
-        <span className="flex size-10 items-center justify-center rounded-xl bg-emerald-500/15 text-xl shrink-0">🔤</span>
-        <div className="flex-1 min-w-0">
-          <p className="text-xs font-black text-emerald-500 uppercase tracking-widest mb-0.5">Phase 1 · A0 → A1</p>
-          <p className="text-sm font-bold text-foreground">Luyện 44 Âm IPA</p>
-          <p className="text-xs text-muted-foreground">Nghe · Ghi âm · So sánh với native</p>
-        </div>
-        <ChevronRight className="size-5 text-emerald-500/60 group-hover:text-emerald-500 group-hover:translate-x-0.5 transition-all shrink-0" />
-      </Link>
+        label="Luyện 44 âm IPA"
+        description="Nghe · ghi âm · so sánh native"
+        icon={Mic}
+      />
 
-      {/* Stepper Tabs — horizontal scroll on mobile, grid on md+ */}
-      <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-none md:overflow-visible md:bg-glass md:border md:border-glass md:p-1.5 md:rounded-2xl md:gap-1">
+      <ListSection title="Chế độ">
+        <div className="flex gap-1 p-1 rounded-[var(--minimal-radius)] bg-muted/80 border border-border/50">
         {tabs.map((tab) => {
           const Icon = tab.icon;
           const isActive = activeTab === tab.id;
@@ -103,44 +69,28 @@ export default function SpeakingPage() {
           return (
             <button
               key={tab.id}
+              type="button"
               onClick={() => setActiveTab(tab.id)}
-              className={`shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all relative overflow-hidden select-none active:scale-[0.98]
-                md:flex-1 md:min-w-0 md:text-left md:p-3
-                ${
-                  isActive
-                    ? "bg-gradient-to-r from-emerald-500/10 to-teal-500/10 border border-emerald-500/20 text-emerald-500 dark:text-emerald-400"
-                    : "bg-glass border border-glass text-muted-foreground hover:text-foreground hover:bg-white/5"
-                }`}
-            >
-              {isActive && (
-                <motion.div
-                  layoutId="activeSpeakingTab"
-                  className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-teal-500/10 border border-emerald-500/20 rounded-xl md:block hidden"
-                  transition={{ type: "spring", stiffness: 130, damping: 19 }}
-                />
-              )}
-              <span className={`relative z-10 flex size-7 shrink-0 items-center justify-center rounded-lg transition-all duration-300 ${
+              className={cn(
+                "flex-1 min-h-[2.25rem] flex items-center justify-center gap-1.5 rounded-lg",
+                "text-[var(--minimal-caption-size)] font-semibold transition-colors",
                 isActive
-                  ? "bg-gradient-to-r from-emerald-500 to-teal-600 text-white shadow-md shadow-emerald-500/20"
-                  : "bg-zinc-100 dark:bg-zinc-800 text-muted-foreground"
-              }`}>
-                <Icon className="size-4" />
+                  ? "bg-background text-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground"
+              )}
+            >
+              <Icon className="size-3.5 shrink-0" />
+              <span className="truncate">
+                {tab.id === "shadowing" ? "Shadowing"
+                  : tab.id === "roleplay" ? "Roleplay"
+                  : tab.id === "journal" ? "Journal"
+                  : "Phoneme"}
               </span>
-              <div className="relative z-10 min-w-0">
-                <span className="block font-bold text-[11px] uppercase tracking-wider whitespace-nowrap">
-                  {tab.id === "shadowing" ? "Shadowing"
-                    : tab.id === "roleplay" ? "Roleplay"
-                    : tab.id === "journal" ? "Journal"
-                    : "Phoneme"}
-                </span>
-                <span className="hidden md:block text-[10px] text-muted-foreground font-normal truncate">
-                  {tab.desc}
-                </span>
-              </div>
             </button>
           );
         })}
-      </div>
+        </div>
+      </ListSection>
 
       {/* Tab Contents Workspace */}
       <div className="grid gap-5 sm:gap-8 lg:grid-cols-3 items-start">
@@ -168,7 +118,7 @@ export default function SpeakingPage() {
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="rounded-3xl border border-glass bg-glass p-6 space-y-4 shadow-[0_8px_30px_rgb(0,0,0,0.01)]"
+            className="rounded-xl border border-border/60 bg-card p-6 space-y-4"
           >
             <h3 className="font-bold text-xs text-foreground uppercase tracking-widest">
               Kỹ thuật Shadowing là gì?
@@ -186,7 +136,7 @@ export default function SpeakingPage() {
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="rounded-3xl border border-glass bg-glass p-6 space-y-4 shadow-[0_8px_30px_rgb(0,0,0,0.01)]"
+            className="rounded-xl border border-border/60 bg-card p-6 space-y-4"
           >
             <div className="flex items-center justify-between">
               <h3 className="font-bold text-xs text-foreground uppercase tracking-widest">
@@ -243,6 +193,7 @@ export default function SpeakingPage() {
           </motion.div>
         </div>
       </div>
-    </div>
+      </div>
+    </SecondaryPageShell>
   );
 }

@@ -58,9 +58,9 @@ export const bottomNavItems: NavItem[] = [
   },
   {
     title: "Tôi",
-    href: "/settings",
+    href: "/me",
     icon: User,
-    description: "Cài đặt & tiến độ",
+    description: "Tiến độ, luyện tập & cài đặt",
   },
 ];
 
@@ -80,13 +80,13 @@ export const desktopPrimaryNav: NavItem[] = [
   },
   {
     title: "Tôi",
-    href: "/settings",
+    href: "/me",
     icon: User,
-    description: "Cài đặt & tiến độ",
+    description: "Tiến độ, luyện tập & cài đặt",
   },
 ];
 
-// ─── Tier 3 — Desktop "Thêm" dropdown (secondary paths, not primary Hick) ────
+/** @deprecated V2 — links live on /me hub; kept for command palette / legacy */
 export const desktopMoreItems: NavItem[] = [
   {
     title: "Bài học",

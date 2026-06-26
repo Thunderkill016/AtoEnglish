@@ -28,7 +28,7 @@ export function BottomNav({ dueCardsCount = 0 }: BottomNavProps) {
   const pathname = usePathname();
 
   // Hide during lesson pages (full-screen learning UI)
-  const isInLesson = pathname.startsWith("/learn/");
+  const isInLesson = /^\/learn\/unit/.test(pathname);
   if (isInLesson) return null;
 
   return (
@@ -40,7 +40,9 @@ export function BottomNav({ dueCardsCount = 0 }: BottomNavProps) {
       {bottomNavItems.map((item) => {
         const Icon = item.icon;
         const isActive =
-          pathname === item.href || pathname.startsWith(item.href + "/");
+          pathname === item.href ||
+          (item.href === "/me" && pathname.startsWith("/settings")) ||
+          pathname.startsWith(item.href + "/");
         const isFlashcards = item.href === "/flashcards";
         const showBadge = isFlashcards && dueCardsCount > 0;
 

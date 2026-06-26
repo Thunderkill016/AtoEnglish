@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Sprout } from "lucide-react";
 import type { Metadata } from "next";
+import { Screen, LargeTitle, Prose } from "@/components/design-system";
 
 export const metadata: Metadata = {
   title: "Điều khoản Sử dụng | AtoEnglish",
@@ -35,18 +36,12 @@ export default function TermsPage() {
         </div>
       </nav>
 
-      {/* Content */}
-      <main className="max-w-3xl mx-auto px-5 sm:px-8 py-16 sm:py-24 space-y-10">
-        <div className="space-y-3">
-          <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight">
-            Điều khoản Sử dụng
-          </h1>
-          <p className="text-zinc-500 dark:text-zinc-400 text-sm">
-            Cập nhật lần cuối: Tháng 6 năm 2025
-          </p>
-        </div>
+      <Screen narrow>
+        <LargeTitle subtitle="Cập nhật lần cuối: Tháng 6 năm 2025">
+          Điều khoản Sử dụng
+        </LargeTitle>
 
-        <div className="prose prose-zinc dark:prose-invert max-w-none space-y-8 text-sm sm:text-base leading-relaxed text-zinc-700 dark:text-zinc-300">
+        <Prose>
           <section className="space-y-3">
             <h2 className="text-lg sm:text-xl font-bold text-zinc-900 dark:text-zinc-100">1. Chấp nhận Điều khoản</h2>
             <p>
@@ -113,17 +108,17 @@ export default function TermsPage() {
               </a>
             </p>
           </section>
-        </div>
+        </Prose>
 
-        <div className="pt-8 border-t border-zinc-200/40 dark:border-zinc-800/40 flex gap-4 text-sm">
+        <div className="pt-8 border-t border-border/40 flex gap-4 text-sm">
           <Link href="/privacy" className="text-emerald-600 dark:text-emerald-400 font-semibold hover:underline">
             Chính sách Bảo mật →
           </Link>
-          <Link href="/" className="text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors">
+          <Link href="/" className="text-muted-foreground hover:text-foreground transition-colors">
             Về trang chủ
           </Link>
         </div>
-      </main>
+      </Screen>
     </div>
   );
 }

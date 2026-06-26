@@ -3,6 +3,7 @@ import Link from "next/link";
 import { UNITS } from "@/lib/constants/units";
 import { BUSINESS_TRACK } from "@/lib/constants/business-track";
 import { getAllUnitCompletionStatuses } from "@/app/actions/unit";
+import { SecondaryPageShell, StatLine, ListSection, ThinProgress } from "@/components/design-system";
 
 export const metadata: Metadata = {
   title: "Business English Track | AtoEnglish",
@@ -28,82 +29,45 @@ export default async function BusinessPage() {
   const nextUnit = trackUnits.find((u) => !u.done);
 
   return (
-    <div className="min-h-screen pb-24 pt-6 px-4 max-w-3xl mx-auto">
-      {/* ── Hero ── */}
-      <div className="rounded-2xl bg-gradient-to-br from-blue-600/10 via-indigo-600/5 to-emerald-600/8 border border-blue-500/15 p-6 sm:p-8 mb-6">
-        <div className="flex items-start gap-4">
-          <div className="flex size-14 shrink-0 items-center justify-center rounded-2xl bg-blue-500/10 text-2xl">
-            💼
-          </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-xs font-black text-blue-500 uppercase tracking-widest mb-1">
-              Lộ trình chuyên biệt
-            </p>
-            <h1 className="text-xl sm:text-2xl font-black text-zinc-900 dark:text-zinc-50 leading-tight">
-              Business English Track
-            </h1>
-            <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1.5 leading-relaxed">
-              10 bài học thiết yếu cho sự nghiệp — email, họp, thuyết trình, đàm phán.
-              Dành cho người Việt muốn làm việc ở công ty quốc tế.
-            </p>
-          </div>
-        </div>
+    <SecondaryPageShell
+      title="Business English Track"
+      subtitle="10 bài học thiết yếu cho sự nghiệp — email, họp, thuyết trình, đàm phán. Dành cho người Việt muốn làm việc ở công ty quốc tế."
+    >
+    <div className="space-y-6 pb-16">
+      <ThinProgress
+        value={progress}
+        label={`Tiến độ · ${doneCount}/${BUSINESS_TRACK.length} bài`}
+      />
 
-        {/* Progress bar */}
-        <div className="mt-5">
-          <div className="flex items-center justify-between mb-1.5">
-            <span className="text-xs font-bold text-zinc-500">Tiến độ</span>
-            <span className="text-xs font-black text-blue-500">{doneCount}/{BUSINESS_TRACK.length} bài</span>
-          </div>
-          <div className="h-2 rounded-full bg-zinc-200 dark:bg-zinc-800 overflow-hidden">
-            <div
-              className="h-full rounded-full bg-gradient-to-r from-blue-500 to-emerald-500 transition-all duration-500"
-              style={{ width: `${progress}%` }}
-            />
-          </div>
+      {nextUnit?.meta && (
+        <div className="flex flex-wrap gap-2">
+          <Link
+            href={nextUnit.meta.route}
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-primary-foreground text-sm font-bold transition-colors"
+          >
+            {doneCount === 0 ? "🚀 Bắt đầu track" : "▶ Tiếp tục"} — {nextUnit.icon} {nextUnit.skill}
+          </Link>
+          <Link
+            href={`${nextUnit.meta.route}?mini=1`}
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-border/60 bg-card text-sm font-semibold transition-colors"
+          >
+            ⚡ Ôn nhanh ~5 phút
+          </Link>
         </div>
+      )}
+      {doneCount === BUSINESS_TRACK.length && (
+        <div className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-emerald-500/20 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-sm font-bold">
+          🎉 Hoàn thành toàn bộ Business Track!
+        </div>
+      )}
 
-        {nextUnit?.meta && (
-          <div className="mt-4 flex flex-wrap gap-2">
-            <Link
-              href={nextUnit.meta.route}
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-sm font-black transition-colors shadow-lg shadow-blue-900/20"
-            >
-              {doneCount === 0 ? "🚀 Bắt đầu track" : "▶ Tiếp tục"} — {nextUnit.icon} {nextUnit.skill}
-            </Link>
-            <Link
-              href={`${nextUnit.meta.route}?mini=1`}
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-amber-500/10 hover:bg-amber-500/15 border border-amber-500/30 text-amber-700 dark:text-amber-300 text-sm font-bold transition-colors"
-            >
-              ⚡ Ôn nhanh ~5 phút
-            </Link>
-          </div>
-        )}
-        {doneCount === BUSINESS_TRACK.length && (
-          <div className="mt-4 inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-sm font-black">
-            🎉 Hoàn thành toàn bộ Business Track!
-          </div>
-        )}
+      <div className="rounded-xl border border-border/60 bg-card px-4">
+        <StatLine label="Bài công sở thiết yếu" value="10" />
+        <StatLine label="Trình độ khuyến nghị" value="B1+" />
+        <StatLine label="Ôn nhanh mỗi bài" value="5 phút" />
       </div>
 
-      {/* ── Track highlights ── */}
-      <div className="grid grid-cols-3 gap-3 mb-6">
-        {[
-          { stat: "10", label: "bài công sở thiết yếu" },
-          { stat: "B1+", label: "trình độ khuyến nghị" },
-          { stat: "5 phút", label: "ôn nhanh mỗi bài" },
-        ].map(({ stat, label }) => (
-          <div key={label} className="flex flex-col gap-1 p-3 rounded-xl bg-zinc-50 dark:bg-zinc-900/50 border border-zinc-200/60 dark:border-zinc-800/60 text-center">
-            <span className="text-lg font-black text-blue-600 dark:text-blue-400">{stat}</span>
-            <span className="text-[10px] text-zinc-500 leading-tight">{label}</span>
-          </div>
-        ))}
-      </div>
-
-      {/* ── Unit list ── */}
-      <h2 className="text-sm font-black text-zinc-700 dark:text-zinc-300 uppercase tracking-widest mb-3">
-        10 Bài Học Trong Track
-      </h2>
+      <ListSection title="10 Bài Học Trong Track">
       <div className="space-y-3">
         {trackUnits.map((unit, idx) => (
           <div key={unit.id} className="relative">
@@ -166,9 +130,10 @@ export default async function BusinessPage() {
           </div>
         ))}
       </div>
+      </ListSection>
 
       {/* ── Bottom CTA ── */}
-      <div className="mt-8 p-5 rounded-2xl bg-gradient-to-r from-blue-600/8 to-indigo-600/8 border border-blue-500/15 text-center">
+      <div className="p-5 rounded-xl border border-border/60 bg-card text-center">
         <p className="text-sm font-bold text-zinc-700 dark:text-zinc-300 mb-1">
           🎓 Hoàn thành track để nhận chứng chỉ Business English
         </p>
@@ -181,5 +146,6 @@ export default async function BusinessPage() {
         </Link>
       </div>
     </div>
+    </SecondaryPageShell>
   );
 }

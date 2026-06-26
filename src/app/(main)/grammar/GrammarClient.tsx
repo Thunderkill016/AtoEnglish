@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronDown, BookOpen, Lightbulb } from "lucide-react";
+import { ChevronDown, Lightbulb } from "lucide-react";
 import {
   GRAMMAR_TOPICS,
   LEVEL_COLORS,
@@ -10,6 +10,7 @@ import {
   type GrammarLevel,
   type GrammarTopic,
 } from "@/lib/data/grammar-topics";
+import { SecondaryPageShell } from "@/components/design-system";
 
 const LEVELS: GrammarLevel[] = ["A0", "A1", "A2", "B1", "B2"];
 
@@ -47,19 +48,11 @@ export default function GrammarClient() {
   const filtered = GRAMMAR_TOPICS.filter(t => t.level === activeLevel);
 
   return (
-    <div className="min-h-dvh bg-background pb-24">
-      <div className="max-w-lg mx-auto px-4 pt-5">
-
-        {/* Header */}
-        <div className="mb-5">
-          <span className="inline-flex items-center gap-1.5 bg-emerald-500/10 border border-emerald-500/20 rounded-full px-3 py-1 text-[11px] font-black text-emerald-400 uppercase tracking-widest mb-3">
-            <BookOpen className="w-3 h-3" /> Grammar Reference
-          </span>
-          <h1 className="text-2xl font-black text-zinc-50 mb-1.5">Ngữ Pháp A0 → B2</h1>
-          <p className="text-sm text-zinc-500 leading-relaxed">
-            Giải thích tiếng Việt · Ví dụ thực tế · Lỗi hay gặp · Mẹo nhớ
-          </p>
-        </div>
+    <SecondaryPageShell
+      title="Ngữ Pháp A0 → B2"
+      subtitle="Giải thích tiếng Việt · Ví dụ thực tế · Lỗi hay gặp · Mẹo nhớ"
+    >
+      <div className="max-w-lg mx-auto pb-16">
 
         {/* Level tabs */}
         <div className="flex gap-1.5 mb-5">
@@ -105,7 +98,7 @@ export default function GrammarClient() {
           </motion.div>
         </AnimatePresence>
       </div>
-    </div>
+    </SecondaryPageShell>
   );
 }
 

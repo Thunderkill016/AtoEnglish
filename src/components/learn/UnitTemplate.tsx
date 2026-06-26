@@ -797,11 +797,7 @@ export default function UnitTemplate({
   const sectionOrderIdx = SECTION_ORDER.indexOf(section as SectionNumber);
 
   return (
-    <div className="relative min-h-screen bg-zinc-950">
-      <div className="pointer-events-none fixed inset-0 overflow-hidden" aria-hidden>
-        <div className="absolute -top-24 right-0 size-96 rounded-full bg-emerald-500/8 blur-[100px]" />
-        <div className="absolute bottom-0 left-0 size-72 rounded-full bg-teal-500/6 blur-[80px]" />
-      </div>
+    <div className="relative min-h-screen bg-[var(--minimal-canvas)] dark:bg-background text-foreground">
 
       <LessonHeader
         level={normalizedUnit.level}

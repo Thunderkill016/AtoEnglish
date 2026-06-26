@@ -20,6 +20,7 @@ import {
   ALL_SOUNDS,
   type IpaSound,
 } from "@/lib/data/ipa-sounds";
+import { SecondaryPageShell } from "@/components/design-system";
 
 const STORAGE_KEY = "ato-ipa-mastered";
 
@@ -220,36 +221,11 @@ export default function PronunciationClient() {
   }
 
   return (
-    <div
-      style={{
-        minHeight: "100dvh",
-        background: "#09090b",
-        paddingBottom: 100,
-      }}
+    <SecondaryPageShell
+      title="44 Âm IPA Tiếng Anh"
+      subtitle="Nhấn vào âm để xem hướng dẫn · Nghe audio · Luyện giọng"
     >
-      <div style={{ maxWidth: 520, margin: "0 auto", padding: "20px 16px 0" }}>
-
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          style={{ marginBottom: 16 }}
-        >
-          <h1
-            style={{
-              fontSize: 22,
-              fontWeight: 800,
-              color: "#fafafa",
-              fontFamily: "'Space Grotesk', sans-serif",
-              marginBottom: 4,
-            }}
-          >
-            🔤 44 Âm IPA Tiếng Anh
-          </h1>
-          <p style={{ fontSize: 12, color: "#71717a", lineHeight: 1.5 }}>
-            Nhấn vào âm để xem hướng dẫn · Nghe audio · Luyện giọng
-          </p>
-        </motion.div>
+      <div style={{ maxWidth: 520, margin: "0 auto" }} className="pb-16">
 
         {/* Progress bar */}
         <div
@@ -735,6 +711,6 @@ export default function PronunciationClient() {
           )}
         </AnimatePresence>
       </div>
-    </div>
+    </SecondaryPageShell>
   );
 }

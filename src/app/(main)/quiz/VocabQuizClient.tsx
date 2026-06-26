@@ -13,6 +13,7 @@ import {
   Flame,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { SecondaryPageShell } from "@/components/design-system";
 import { UNIT_VOCABULARY, type VocabularyItem } from "@/lib/constants/vocabulary";
 import { UNITS } from "@/lib/constants/units";
 import { saveQuizResult } from "@/app/actions/quiz";
@@ -163,20 +164,11 @@ export default function VocabQuizClient() {
   // ── Unit Selection Screen ────────────────────────────────────────────────
   if (!selectedUnit) {
     return (
-      <div className="mx-auto max-w-2xl px-4 py-8 pb-28 sm:px-6 space-y-8">
-        <div className="text-center space-y-2">
-          <div className="inline-flex size-14 items-center justify-center rounded-2xl bg-violet-500/10 text-violet-600 dark:text-violet-400 mb-2">
-            <BookOpen className="size-7" />
-          </div>
-          <h1 className="text-2xl sm:text-3xl font-black text-zinc-900 dark:text-zinc-50">
-            Kiểm tra Từ vựng
-          </h1>
-          <p className="text-sm text-zinc-500 dark:text-zinc-400">
-            Chọn unit để bắt đầu quiz trắc nghiệm từ vựng
-          </p>
-        </div>
-
-        <div className="space-y-3">
+      <SecondaryPageShell
+        title="Kiểm tra Từ vựng"
+        subtitle="Chọn unit để bắt đầu quiz trắc nghiệm từ vựng"
+      >
+        <div className="space-y-3 pb-16">
           {UNITS.map((unit) => {
             const vocab = UNIT_VOCABULARY[unit.id] ?? [];
             const hasEnough = vocab.length >= 4;
@@ -213,7 +205,7 @@ export default function VocabQuizClient() {
             );
           })}
         </div>
-      </div>
+      </SecondaryPageShell>
     );
   }
 
@@ -227,10 +219,14 @@ export default function VocabQuizClient() {
       "Quay lại bài học và luyện SRS nhiều hơn.";
 
     return (
+      <SecondaryPageShell
+        title="Kiểm tra Từ vựng"
+        subtitle={`${score}/${questions.length} đúng · ${pct}%`}
+      >
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="mx-auto max-w-md px-4 py-10 pb-28 text-center space-y-6"
+        className="mx-auto max-w-md text-center space-y-6 pb-16"
       >
         <div className="text-6xl">{medal}</div>
         <div className="space-y-1">
@@ -300,6 +296,7 @@ export default function VocabQuizClient() {
           </Button>
         </div>
       </motion.div>
+      </SecondaryPageShell>
     );
   }
 
@@ -308,7 +305,11 @@ export default function VocabQuizClient() {
   const progressPct = Math.round((current / questions.length) * 100);
 
   return (
-    <div className="mx-auto max-w-lg px-4 py-8 pb-28 sm:px-6 space-y-6">
+    <SecondaryPageShell
+      title="Kiểm tra Từ vựng"
+      subtitle={`Câu ${current + 1} / ${questions.length} · ${score} đúng`}
+    >
+    <div className="mx-auto max-w-lg space-y-6 pb-16">
       {/* Progress */}
       <div className="space-y-2">
         <div className="flex justify-between text-xs font-bold text-zinc-500 dark:text-zinc-400">
@@ -410,5 +411,6 @@ export default function VocabQuizClient() {
         </motion.div>
       )}
     </div>
+    </SecondaryPageShell>
   );
 }

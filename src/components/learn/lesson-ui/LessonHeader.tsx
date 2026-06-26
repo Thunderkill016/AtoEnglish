@@ -1,8 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ChevronLeft } from "lucide-react";
-import { ThinProgress } from "@/components/design-system";
+import { SheetHeader } from "@/components/design-system";
 import { SECTION_LABELS } from "@/lib/lessons/learning-flow";
 
 interface LessonHeaderProps {
@@ -20,7 +19,7 @@ interface LessonHeaderProps {
   onClearProgress: () => void;
 }
 
-/** Minimal lesson chrome — thin progress only (P3 / UI-005). IPOR logic unchanged in flow. */
+/** V2 light lesson chrome — SheetHeader + thin progress */
 export default function LessonHeader({
   level,
   title,
@@ -35,71 +34,51 @@ export default function LessonHeader({
   onStartMiniSession,
   onClearProgress,
 }: LessonHeaderProps) {
-  const progressPct = Math.round((sectionOrderIdx / Math.max(totalSections - 1, 1)) * 100);
+  const progressPct = Math.round(
+    (sectionOrderIdx / Math.max(totalSections - 1, 1)) * 100
+  );
   const sectionLabel = SECTION_LABELS[section] ?? "Học";
 
-  return (
-    <div className="sticky top-0 z-40 border-b border-zinc-800/60 bg-zinc-950/95 backdrop-blur-xl">
-      <div className="max-w-[var(--minimal-content-max)] mx-auto px-4 py-2.5">
-        <div className="flex items-center gap-2.5">
-          <Link
-            href="/dashboard"
-            aria-label="Về trang Học"
-            className="shrink-0 flex size-9 items-center justify-center rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white transition-colors"
+  const trailing = (
+    <div className="flex items-center gap-1.5 shrink-0 text-[var(--minimal-caption-size)]">
+      {sessionXp > 0 && (
+        <span className="font-bold px-2 py-0.5 rounded-lg bg-primary/10 text-primary border border-primary/20">
+          {sessionXp} XP
+          {xpPopup && <span className="ml-0.5">+{xpPopup.value}</span>}
+        </span>
+      )}
+      {miniSession ? (
+        <Link
+          href={`/learn/${unitId}`}
+          onClick={onClearProgress}
+          className="font-semibold text-muted-foreground hover:text-primary whitespace-nowrap"
+        >
+          Bài đầy đủ
+        </Link>
+      ) : (
+        allowMiniSession &&
+        section < 8 && (
+          <button
+            type="button"
+            onClick={onStartMiniSession}
+            className="font-medium text-muted-foreground hover:text-foreground"
           >
-            <ChevronLeft size={18} />
-          </Link>
-
-          <div className="flex-1 min-w-0">
-            <p className="text-[10px] font-semibold text-zinc-500 uppercase tracking-wide truncate">
-              {level}
-            </p>
-            <p className="text-sm font-semibold text-zinc-100 truncate">{title}</p>
-          </div>
-
-          <div className="flex items-center gap-1.5 shrink-0">
-            {sessionXp > 0 && (
-              <span className="text-[10px] font-bold px-2 py-0.5 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                {sessionXp} XP
-                {xpPopup && (
-                  <span key={xpPopup.id} className="ml-0.5 text-emerald-300">
-                    +{xpPopup.value}
-                  </span>
-                )}
-              </span>
-            )}
-            {miniSession ? (
-              <Link
-                href={`/learn/${unitId}`}
-                onClick={onClearProgress}
-                className="text-[10px] font-bold text-zinc-500 hover:text-emerald-400 whitespace-nowrap"
-              >
-                Bài đầy đủ →
-              </Link>
-            ) : (
-              allowMiniSession &&
-              section < 8 && (
-                <button
-                  type="button"
-                  onClick={onStartMiniSession}
-                  className="text-[10px] font-medium text-zinc-500 hover:text-zinc-300"
-                >
-                  Ôn lại
-                </button>
-              )
-            )}
-          </div>
-        </div>
-
-        <div className="mt-2 pb-0.5">
-          <p className="text-xs font-semibold text-zinc-300 mb-1 truncate">{sectionLabel}</p>
-          <ThinProgress
-            value={progressPct}
-            label={`Bước ${sectionOrderIdx + 1}/${totalSections}`}
-            className="[&_span]:text-zinc-500 [&_.bg-muted]:bg-zinc-800"
-          />
-        </div>
-      </div>
+            Ôn lại
+          </button>
+        )
+      )}
     </div>
+  );
+
+  return (
+    <SheetHeader
+      backHref="/dashboard"
+      backLabel="Về trang Học"
+      eyebrow={level}
+      title={title}
+      progress={progressPct}
+      progressLabel={`${sectionLabel} · ${sectionOrderIdx + 1}/${totalSections}`}
+      trailing={trailing}
+    />
   );
 }

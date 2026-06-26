@@ -14,10 +14,10 @@ import {
   RotateCcw,
   BookOpen,
   Layers,
-  Target,
 } from "lucide-react";
 import { UNIT_VOCABULARY, type VocabularyItem } from "@/lib/constants/vocabulary";
 import { getTodayChallengeResult, saveChallengeResult } from "@/app/actions/challenge";
+import { SecondaryPageShell, StatLine } from "@/components/design-system";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 interface Question {
@@ -235,73 +235,38 @@ export default function ChallengeClient({ level }: { level: string }) {
 
   if (loadingPrior) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="size-8 rounded-full border-2 border-emerald-500 border-t-transparent animate-spin" />
-      </div>
+      <SecondaryPageShell title="Thử Thách Hôm Nay" subtitle="Đang tải...">
+        <div className="flex items-center justify-center min-h-[40vh]">
+          <div className="size-8 rounded-full border-2 border-emerald-500 border-t-transparent animate-spin" />
+        </div>
+      </SecondaryPageShell>
     );
   }
 
   // ── Intro screen ─────────────────────────────────────────────────────────────
   if (phase === "intro") {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center px-4 py-8">
-        <div className="absolute inset-0 -z-10 overflow-hidden">
-          <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-96 h-96 rounded-full bg-emerald-500/6 blur-3xl" />
-          <div className="absolute bottom-1/4 left-1/3 w-64 h-64 rounded-full bg-violet-500/6 blur-3xl" />
-        </div>
-
+      <SecondaryPageShell
+        title="Thử Thách Hôm Nay"
+        subtitle="5 câu từ vựng · Tối đa 50 XP mỗi ngày"
+      >
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="max-w-sm w-full text-center space-y-6"
+          className="max-w-sm mx-auto w-full text-center space-y-6 pb-16"
         >
           <Link
             href="/dashboard"
-            className="inline-flex items-center gap-1.5 text-xs text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300 transition-colors"
+            className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
             Dashboard
           </Link>
 
-          <div className="space-y-3">
-            <div className="inline-flex w-16 h-16 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500/20 to-teal-500/20 border border-emerald-500/25 mx-auto">
-              <Target className="w-8 h-8 text-emerald-500" />
-            </div>
-            <div>
-              <span className="inline-flex items-center gap-1.5 text-xs font-black text-emerald-600 dark:text-emerald-400 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 mb-2">
-                <Zap className="w-3 h-3" />
-                Thử Thách Hôm Nay
-              </span>
-              <h1 className="text-2xl font-black text-zinc-900 dark:text-white tracking-tight mt-2">
-                5 Câu Từ Vựng
-              </h1>
-              <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-2 leading-relaxed">
-                Trả lời đúng càng nhiều, nhận càng nhiều XP. Tối đa{" "}
-                <span className="font-black text-amber-500">50 XP</span> mỗi ngày!
-              </p>
-            </div>
-          </div>
-
-          {/* Stats row */}
-          <div className="grid grid-cols-3 gap-3">
-            {[
-              { label: "Câu hỏi", value: "5", icon: "📝" },
-              { label: "Cấp độ", value: level, icon: "🎓" },
-              { label: "Max XP", value: "50", icon: "⚡" },
-            ].map((s) => (
-              <div
-                key={s.label}
-                className="flex flex-col items-center p-3 rounded-2xl bg-white/60 dark:bg-white/4 border border-zinc-200/60 dark:border-white/8"
-              >
-                <span className="text-lg">{s.icon}</span>
-                <span className="text-base font-black text-zinc-900 dark:text-white mt-0.5">
-                  {s.value}
-                </span>
-                <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider">
-                  {s.label}
-                </span>
-              </div>
-            ))}
+          <div className="rounded-xl border border-border/60 bg-card px-4 text-left">
+            <StatLine label="Câu hỏi" value="5" />
+            <StatLine label="Cấp độ" value={level} />
+            <StatLine label="Max XP" value="50" />
           </div>
 
           {questions.length === 0 ? (
@@ -319,7 +284,7 @@ export default function ChallengeClient({ level }: { level: string }) {
             </motion.button>
           )}
         </motion.div>
-      </div>
+      </SecondaryPageShell>
     );
   }
 
@@ -338,15 +303,14 @@ export default function ChallengeClient({ level }: { level: string }) {
         : "Hãy ôn tập nhé 🔄";
 
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center px-4 py-8">
-        <div className="absolute inset-0 -z-10 overflow-hidden">
-          <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-96 h-96 rounded-full bg-amber-500/5 blur-3xl" />
-        </div>
-
+      <SecondaryPageShell
+        title="Thử Thách Hôm Nay"
+        subtitle={`${score}/${TOTAL_QUESTIONS} đúng · ${pct}%`}
+      >
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="max-w-sm w-full space-y-6 text-center"
+          className="max-w-sm mx-auto w-full space-y-6 text-center pb-16"
         >
           {/* Trophy icon */}
           <motion.div
@@ -359,7 +323,7 @@ export default function ChallengeClient({ level }: { level: string }) {
           </motion.div>
 
           <div className="space-y-2">
-            <h1 className="text-2xl font-black text-zinc-900 dark:text-white">{label}</h1>
+            <h2 className="text-2xl font-black text-zinc-900 dark:text-white">{label}</h2>
             <p className="text-sm text-zinc-500 dark:text-zinc-400">
               Bạn trả lời đúng{" "}
               <span className="font-black text-zinc-900 dark:text-white">
@@ -433,7 +397,7 @@ export default function ChallengeClient({ level }: { level: string }) {
             </div>
           </div>
         </motion.div>
-      </div>
+      </SecondaryPageShell>
     );
   }
 
@@ -441,25 +405,19 @@ export default function ChallengeClient({ level }: { level: string }) {
   if (!q) return null;
 
   return (
-    <div className="min-h-screen flex flex-col px-4 py-6 max-w-lg mx-auto">
-      <div className="absolute inset-0 -z-10 overflow-hidden">
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-96 h-96 rounded-full bg-primary/4 blur-3xl" />
-      </div>
-
-      {/* Header */}
-      <div className="flex items-center justify-between mb-6">
+    <SecondaryPageShell
+      title="Thử Thách Hôm Nay"
+      subtitle={`Câu ${current + 1} / ${TOTAL_QUESTIONS}`}
+    >
+    <div className="flex flex-col max-w-lg mx-auto pb-16">
+      <div className="flex items-center justify-end mb-4">
         <button
           onClick={() => setPhase("intro")}
-          className="p-2 rounded-xl text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300 transition-colors"
+          className="p-2 rounded-xl text-muted-foreground hover:text-foreground transition-colors"
+          aria-label="Quay lại"
         >
           <ArrowLeft className="w-4 h-4" />
         </button>
-        <span className="text-xs font-black text-zinc-400 uppercase tracking-widest">
-          Thử Thách Hôm Nay
-        </span>
-        <span className="text-xs font-black text-zinc-500">
-          {current + 1}/{TOTAL_QUESTIONS}
-        </span>
       </div>
 
       {/* Progress dots */}
@@ -565,5 +523,6 @@ export default function ChallengeClient({ level }: { level: string }) {
         </div>
       )}
     </div>
+    </SecondaryPageShell>
   );
 }

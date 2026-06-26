@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { Flame, Layers, BookOpen, TrendingUp, Trophy, Star, Mic } from "lucide-react";
-import { SecondaryPageShell, PrimaryRow } from "@/components/design-system";
+import { SecondaryPageShell, PrimaryRow, StatLine, ListSection } from "@/components/design-system";
 import { getProgressStats, getWeeklyXpData, getDailyActivity } from "@/app/actions/stats";
 import { getAchievements } from "@/app/actions/gamification";
 import { AchievementsPanel } from "@/components/gamification/AchievementsPanel";
@@ -108,29 +108,18 @@ export default async function ProgressPage() {
     >
     <div className="space-y-5 sm:space-y-8 pb-16">
 
-      {/* Stat cards */}
-      <div className="grid grid-cols-2 gap-3 sm:gap-4 sm:grid-cols-3 lg:grid-cols-5">
-        {statCards.map((stat, idx) => {
-          const Icon = stat.icon;
-          return (
-            <div
-              key={idx}
-              className="group relative overflow-hidden rounded-3xl bg-white/60 dark:bg-zinc-900/30 border border-zinc-200/60 dark:border-zinc-800/60 backdrop-blur-sm p-4 sm:p-6 space-y-2 sm:space-y-3 hover:-translate-y-1 hover:shadow-lg transition-all duration-300"
-            >
-              <div className="flex items-center justify-between">
-                <span className="text-[10px] sm:text-xs font-extrabold text-muted-foreground uppercase tracking-widest truncate">{stat.label}</span>
-                <span className={`flex size-8 sm:size-10 items-center justify-center rounded-xl transition-transform duration-300 group-hover:scale-110 ${stat.color}`}>
-                  <Icon className="size-5" />
-                </span>
-              </div>
-              <div>
-                <span className="text-2xl sm:text-3xl font-black tracking-tight text-foreground">{stat.value}</span>
-                <p className="text-xs text-muted-foreground mt-1 font-medium">{stat.sub}</p>
-              </div>
-            </div>
-          );
-        })}
-      </div>
+      <ListSection title="Tổng quan">
+        <div className="rounded-xl border border-border/60 bg-card px-4">
+          {statCards.map((stat) => (
+            <StatLine
+              key={stat.label}
+              label={stat.label}
+              value={stat.value}
+              caption={stat.sub}
+            />
+          ))}
+        </div>
+      </ListSection>
 
       {/* Activity Heatmap */}
       <ActivityHeatmap

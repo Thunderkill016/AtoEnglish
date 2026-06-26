@@ -15,6 +15,7 @@ import {
   Trophy,
 } from "lucide-react";
 import { getHardWords } from "@/app/actions/cards";
+import { SecondaryPageShell, StatLine } from "@/components/design-system";
 
 type HardWord = {
   id: string;
@@ -225,69 +226,39 @@ export default function HardWordsClient() {
   const criticalCount = words ? words.filter((w) => w.mastery_pct < 50).length : 0;
 
   return (
-    <div className="relative mx-auto max-w-2xl px-4 py-6 sm:py-8 sm:px-6 space-y-6 min-h-screen pb-24">
-      {/* Background glow */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 -z-10 w-80 h-80 rounded-full bg-red-500/5 blur-3xl pointer-events-none" />
-
-      {/* Back + Header */}
-      <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} className="space-y-3">
+    <SecondaryPageShell
+      title="Từ Khó Nhất"
+      subtitle="Những từ bạn bấm Again nhiều nhất — ôn để không quên nữa."
+    >
+    <div className="space-y-6 pb-16">
+      <div className="flex items-center justify-between gap-3">
         <Link
           href="/flashcards"
-          className="inline-flex items-center gap-1.5 text-xs text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 transition-colors"
+          className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
           Quay lại Flashcards
         </Link>
-
-        <div className="flex items-start justify-between gap-3">
-          <div className="space-y-1">
-            <span className="inline-flex items-center gap-1.5 text-xs font-bold text-red-600 dark:text-red-400 px-3 py-1 rounded-full bg-red-500/10 border border-red-500/20">
-              <AlertTriangle className="w-3.5 h-3.5" />
-              Từ Yếu Nhất
-            </span>
-            <h1 className="text-2xl sm:text-3xl font-black text-zinc-900 dark:text-white tracking-tight">
-              Từ Khó Nhất
-            </h1>
-            <p className="text-zinc-500 dark:text-zinc-400 text-sm">
-              Những từ bạn bấm &ldquo;Again&rdquo; nhiều nhất — ôn để không quên nữa.
-            </p>
-          </div>
-          <button
-            onClick={load}
-            disabled={loading}
-            className="shrink-0 p-2 rounded-xl border border-zinc-200/60 dark:border-white/10 bg-white/60 dark:bg-white/5 text-zinc-400 hover:text-zinc-700 dark:hover:text-white transition-colors disabled:opacity-40"
-            aria-label="Làm mới"
-          >
-            <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
-          </button>
-        </div>
-      </motion.div>
+        <button
+          onClick={load}
+          disabled={loading}
+          className="shrink-0 p-2 rounded-xl border border-border/60 bg-card text-muted-foreground hover:text-foreground transition-colors disabled:opacity-40"
+          aria-label="Làm mới"
+        >
+          <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
+        </button>
+      </div>
 
       {/* Stats row */}
       {!loading && words && words.length > 0 && (
         <motion.div
           initial={{ opacity: 0, y: 6 }}
           animate={{ opacity: 1, y: 0 }}
-          className="grid grid-cols-3 gap-3"
+          className="rounded-xl border border-border/60 bg-card px-4"
         >
-          <div className="flex flex-col items-center p-3 rounded-2xl bg-red-500/5 border border-red-500/15 text-center">
-            <span className="text-xl font-black text-red-500">{criticalCount}</span>
-            <span className="text-[10px] font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mt-0.5">
-              Cần chú ý
-            </span>
-          </div>
-          <div className="flex flex-col items-center p-3 rounded-2xl bg-amber-500/5 border border-amber-500/15 text-center">
-            <span className="text-xl font-black text-amber-500">{totalAgain}</span>
-            <span className="text-[10px] font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mt-0.5">
-              Tổng Again
-            </span>
-          </div>
-          <div className="flex flex-col items-center p-3 rounded-2xl bg-blue-500/5 border border-blue-500/15 text-center">
-            <span className="text-xl font-black text-blue-500">{avgMastery}%</span>
-            <span className="text-[10px] font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mt-0.5">
-              TB Thành thạo
-            </span>
-          </div>
+          <StatLine label="Cần chú ý" value={String(criticalCount)} />
+          <StatLine label="Tổng Again" value={String(totalAgain)} />
+          <StatLine label="TB Thành thạo" value={`${avgMastery}%`} />
         </motion.div>
       )}
 
@@ -366,5 +337,6 @@ export default function HardWordsClient() {
         </div>
       )}
     </div>
+    </SecondaryPageShell>
   );
 }
