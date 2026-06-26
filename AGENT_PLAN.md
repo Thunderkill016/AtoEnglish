@@ -7,7 +7,7 @@
 | Field | Value |
 |-------|-------|
 | Started | 2026-06-26 |
-| Focus | TASK-087: terms/page.tsx, privacy/page.tsx — use Screen + Prose (strip legacy wrapper/nav per V2 Phase H) |
+| Focus | TASK-088: Legacy CSS purge — remove unused bg-glass, bg-grid-pattern, border-glass from globals.css (V2) |
 | Owner | Autopilot (no human) |
 
 ### TASK-079 — V2 Minimal Redesign: research + kế hoạch autopilot
@@ -233,6 +233,32 @@
 **Done khi**: 0 legacy outer div/nav in 2 files (grep); pages return Screen+Prose+LargeTitle direct; inner zinc colors stripped from prose children; 2 pages dùng kit; lint pass (test may skip as no unit for pages); 1 commit + push via git-push.sh main; BACKLOG=done + SHA entry; autonomous.
 
 **Completed:** 2026-06-26 — legacy nav+outer purged; pages use direct Screen narrow + Prose (prose styles take over); simple back link; gates lint0+170t+tsc0 clean; commit 08bc1d2 + push via git-push.sh main; BACKLOG done; autonomous
+
+### TASK-088 — Legacy CSS purge
+**Mục tiêu**: Xóa `bg-glass`, `bg-grid-pattern`, `border-glass` khỏi `globals.css` nếu không còn dùng trong `src/`. (Grep xác nhận 0 match trong src/ sau V2 redesign; legacy glassmorphism từ trước đã thay bằng bg-card/border-border/60). Chỉ purge defs trong globals.css; không đụng docs/MINIMAL/ other. Giữ nguyên mọi active utilities + tokens. **Done khi:** grep src/ không match các class; lint+test pass.
+**Bước thực hiện**:
+1. Search memory("TASK-088" + "legacy CSS" + "bg-glass" + "bg-grid-pattern" + "border-glass" + "globals.css" + "purge") sim via logs/grep (prior prompt only + tool error, no impl) + read AGENTS.md (ALWAYS), AGENT_BACKLOG/PLAN/ROADMAP, CONTENT_STYLE.md §6–7 (blueprint context only, not for this css), MINIMAL_REDESIGN_V2.md (notes remaining glass in globals), src/app/globals.css, grep -r the 3 classes in src/ (confirm 0).
+2. Grep confirm: classes only defined in globals.css; zero usage in all src/ .tsx/ts (and whole but scope is src/ per task); identify only edit target: the 3 @utility blocks + their .dark rules.
+3. Update BACKLOG: TASK-088 status `in_progress`.
+4. Update AGENT_PLAN.md (this section) + header focus.
+5. ready=3 (088-090) ≥2 → skip `bash scripts/agent-refill-backlog.sh` (read ROADMAP; KHÔNG hỏi user).
+6. Edit src/app/globals.css (minimal, exact scope):
+   - Remove the entire `@utility bg-glass { ... }` + `.dark .bg-glass { ... }`
+   - Remove the entire `@utility border-glass { ... }` + `.dark .border-glass { ... }`
+   - Remove the entire `@utility bg-grid-pattern { ... }`
+   - Ensure surrounding @utility blocks (perspective, metal-reflect, animation-delay*, answer-*, step-dot*) and other content stay intact; no other changes.
+7. `npm run lint && npm run test`; npx tsc --noEmit.
+8. Pass → update BACKLOG done + Nhật ký + SHA; PLAN log entry.
+9. git pull --rebase; git add src/app/globals.css AGENT_BACKLOG.md AGENT_PLAN.md; commit "refactor(css): remove unused bg-glass, border-glass, bg-grid-pattern from globals.css (TASK-088)"; `bash scripts/git-push.sh main`.
+**Rủi ro**:
+- Missed usage outside src/ (e.g. public, docs) → task explicitly "if no longer used in src/"; docs will be stale but not in scope (no edit docs here).
+- Removing @utility may affect build? but since unused, Tailwind v4 will just drop; lint/test catch if any runtime class ref (but grep 0).
+- No visual change (already not used post redesign).
+- If gates fail 1st → self debug (re-grep after edit to confirm removal); 2 fails → blocked.
+- No secrets; pure style purge. Self-debug.
+**Done khi**: 0 matches for the 3 classes in src/ (post-edit grep); defs removed from globals.css; only 1 minimal edit; lint0 + tests pass + tsc0; 1 commit + push via git-push.sh main; BACKLOG=done + SHA; autonomous (no human).
+
+**Completed:** 2026-06-26 — 0 matches post-purge in src/; 3 @utility removed; gates lint0+test170+tsc0 pass; commit + push via git-push.sh main; BACKLOG done; autonomous (no human)
 
 ### TASK-045 — Sync AGENT_AUTOPILOT.md với auto-refill
 **Mục tiêu**: Làm cho AGENT_AUTOPILOT.md mô tả chính xác cơ chế tự động: daemon/orchestrator/pick-task tự gọi refill từ AGENT_ROADMAP.md khi ready < 2 (MIN_READY), script agent-refill-backlog.sh parse roadmap pool, chèn tối đa 4 task `ready` vào BACKLOG, commit+push (chore, skip ci). Xóa mọi hướng dẫn gợi ý "user thêm task thủ công" vào backlog (user chỉ thêm vào ROADMAP nếu muốn ưu tiên). Giữ phần "Việc cần làm thủ công 1 lần (P0)" vì là setup secrets/migration (khác task hàng ngày). Doc khớp scripts hiện tại (refill, pick, orchestrator, roadmap format). Chỉ sửa doc; không code/logic.
