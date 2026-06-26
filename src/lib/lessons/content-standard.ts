@@ -3,6 +3,7 @@
  * Mọi unit phải đạt trước khi ship. Kiểm tra: curriculum-quality.test.ts + audit-lesson-content.sh
  *
  * Tham chiếu mẫu: src/lib/data/units/unit1.ts
+ * Blueprint (nội dung + cách học): src/lib/lessons/lesson-blueprint.ts
  */
 
 export const LESSON_CONTENT_STANDARD = {

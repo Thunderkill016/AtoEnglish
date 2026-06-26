@@ -26,15 +26,31 @@ STAMP="$(date -u +%Y%m%dT%H%M%SZ)"
 LOG_FILE="$LOG_DIR/${STAMP}_${TASK_ID}.log"
 PROMPT_FILE="$LOG_DIR/${STAMP}_${TASK_ID}.prompt.txt"
 
-python3 - "$ROOT" "$TASK_ID" "$TASK_DESC" "$PROMPT_FILE" <<'PY'
+BLUEPRINT_BLOCK=""
+if echo "$TASK_ID $TASK_DESC" | grep -qiE 'unit|content|lesson|curriculum|practiceTranslate|cumulative|l1_|blueprint|SDL'; then
+  BLUEPRINT_BLOCK="$(cd "$ROOT" && npx tsx scripts/print-lesson-blueprint.mjs 2>/dev/null || true)"
+fi
+
+python3 - "$ROOT" "$TASK_ID" "$TASK_DESC" "$PROMPT_FILE" "$BLUEPRINT_BLOCK" <<'PY'
 import sys
-root, task_id, task_desc, out = sys.argv[1:5]
+root, task_id, task_desc, out, blueprint = sys.argv[1:6]
+content_rules = ""
+if blueprint.strip():
+    content_rules = f"""
+CHUẨN BÀI HỌC (bắt buộc khi sửa unit*.ts):
+- Cách xây nội dung = cách học — 1 khung: lesson-blueprint.ts
+- Mẫu vàng: src/lib/data/units/unit1.ts (comment block + field)
+- Luồng app: learning-flow.ts (IPOR 10 bước)
+- Gate: npm run test:content-standard + bash scripts/audit-lesson-content.sh
+
+{blueprint}
+"""
 prompt = f"""Bạn là autopilot agent 24/7 cho AtoEnglish tại {root}. User KHÔNG có mặt — tuyệt đối không hỏi, tự quyết.
 
 PHASE 1 — NGHIÊN CỨU (5 phút):
-- Đọc AGENTS.md, AGENT_BACKLOG.md, AGENT_PLAN.md
+- Đọc AGENTS.md, AGENT_BACKLOG.md, AGENT_PLAN.md, CONTENT_STYLE.md §6–7
 - Grep codebase liên quan task; xác định file cần sửa
-
+{content_rules}
 PHASE 2 — LẬP KẾ HOẠCH:
 - Cập nhật AGENT_PLAN.md: mục tiêu, bước, rủi ro cho {task_id}
 - Backlog thấp: chạy `bash scripts/agent-refill-backlog.sh` (đọc AGENT_ROADMAP.md) — KHÔNG hỏi user

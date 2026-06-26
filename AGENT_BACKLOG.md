@@ -206,6 +206,12 @@
 - **Done khi:** test:content-standard pass B1.
 - **Started:** user mandate — chuẩn nội dung
 
+### TASK-061 — Unit files: comment blocks theo blueprint (như unit1)
+- **Status:** `ready`
+- **Mô tả:** Mỗi `unit*.ts` thêm header block + comment `── HOOK/VOCAB/…` khớp `lesson-blueprint.ts`; field order bám mẫu unit1.
+- **Done khi:** `grep "── HOOK" src/lib/data/units/*.ts` ≥45 file; lint+test pass.
+- **Started:** user mandate — nội dung + cách học cùng khung
+
 ### TASK-049 — Lesson UI: migrate Dialogue + Shadowing + Speaking + Quiz
 - **Status:** `ready`
 - **Mô tả:** Dùng `lesson-ui/` cho 4 section còn lại — một kiểu visual, không half-old half-new.

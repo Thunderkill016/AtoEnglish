@@ -174,10 +174,30 @@ C1 → "C1 Advanced"
 
 ---
 
-## 6. Chuẩn SDL — Mọi bài học phải đạt
+## 6. Blueprint — Cách xây nội dung = Cách học (1 khung)
 
-> Kiểm tra tự động: `npm run test` (curriculum-quality) + `bash scripts/audit-lesson-content.sh`  
-> Code: `src/lib/lessons/content-standard.ts` · Mẫu: `unit1.ts`
+> **File tham chiếu:** `src/lib/lessons/lesson-blueprint.ts` · **Mẫu vàng:** `unit1.ts` · **Luồng app:** `learning-flow.ts`
+
+Mọi unit phải map **cùng thứ tự block** và **cùng IPOR**:
+
+| Block | Nội dung (fields) | Cách học (app section) |
+|-------|-------------------|------------------------|
+| hook | situation, learningOutcomes, culturalNote | Khởi động §1 |
+| warmup | warmupGreetings | Khởi động §1 + SRS |
+| vocab | vocab (+ l1_interference) | Từ vựng §2 — **trước** dialogue |
+| grammar | grammar + ccq | Ngữ pháp §3 |
+| exercises | practice, listenAndChoose… | Luyện tập §4 |
+| dialogues | dialogues | Hội thoại §5 — sau vocab |
+| fluency | fluencyDrill | Phản xạ §10 |
+| output | practiceTranslate, speaking | Dịch §9 → Shadow §6 → Nói §7 |
+| review | quiz, cumulativeReview | Hoàn thành §8 + FSRS |
+
+Autopilot/agent: đọc `formatBlueprintChecklistForAgent()` trước khi sửa `unit*.ts`.
+
+## 7. Chuẩn SDL — Mọi bài học phải đạt
+
+> Kiểm tra: `npm run test:content-standard` + `bash scripts/audit-lesson-content.sh`  
+> Code: `src/lib/lessons/content-standard.ts`
 
 | Hạng mục | Chuẩn |
 |----------|--------|
@@ -197,7 +217,7 @@ C1 → "C1 Advanced"
 
 ---
 
-## 7. SEO & Meta Content
+## 8. SEO & Meta Content
 
 ### Title Pattern
 
@@ -216,7 +236,7 @@ Học tiếng Anh miễn phí — AtoEnglish
 
 ---
 
-## 8. Terminology Glossary
+## 9. Terminology Glossary
 
 | Thuật ngữ EN | Thuật ngữ VN (dùng trong app) |
 |-------------|------------------------------|

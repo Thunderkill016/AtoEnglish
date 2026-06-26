@@ -1,17 +1,39 @@
+import {
+  LESSON_BLUEPRINT,
+  REFERENCE_UNIT_ID,
+  type ContentBlockId,
+} from "@/lib/lessons/lesson-blueprint";
 import { IPOR_META, type IporPhase } from "@/lib/lessons/learning-flow";
 
-const STEPS: { phase: IporPhase; text: string }[] = [
-  { phase: "input", text: "Hiểu tình huống → học từ → nghe hội thoại" },
-  { phase: "processing", text: "Nắm ngữ pháp → làm bài (nhớ chủ động, không chỉ đọc)" },
-  { phase: "output", text: "Dịch câu → shadowing → nói (bắt buộc mở mic)" },
-  { phase: "review", text: "Quiz + flashcards SRS ngày hôm sau" },
-];
+const IPOR_PHASES: IporPhase[] = ["input", "processing", "output", "review"];
+
+/** Gộp blueprint blocks theo IPOR — cùng khung với unit1.ts + lesson-blueprint.ts */
+const STEPS = IPOR_PHASES.map((phase) => {
+  const blocks = LESSON_BLUEPRINT.filter((b) => b.phase === phase && b.sectionIds.length > 0);
+  const labels: Record<ContentBlockId, string> = {
+    meta: "",
+    hook: "tình huống",
+    warmup: "ôn SRS",
+    vocab: "từ vựng",
+    grammar: "ngữ pháp",
+    exercises_input: "luyện tập",
+    dialogues: "hội thoại",
+    fluency: "phản xạ",
+    output: "dịch → shadowing → nói",
+    review: "quiz + ôn tích lũy",
+  };
+  const text = blocks.map((b) => labels[b.id]).filter(Boolean).join(" → ");
+  return { phase, text };
+});
 
 export default function HowToLearnCard() {
   return (
     <div className="mb-6 rounded-2xl border border-zinc-800/80 bg-zinc-900/60 p-4">
-      <p className="text-[11px] font-black text-zinc-500 uppercase tracking-wider mb-3">
+      <p className="text-[11px] font-black text-zinc-500 uppercase tracking-wider mb-1">
         Cách học 1 bài (~30 phút)
+      </p>
+      <p className="text-[10px] text-zinc-600 mb-3">
+        Cùng khung với nội dung — tham chiếu {REFERENCE_UNIT_ID} (SDL + IPOR)
       </p>
       <ol className="space-y-2.5">
         {STEPS.map(({ phase, text }, i) => (

@@ -181,6 +181,27 @@ const Comp = dynamic(() => import('./Comp'), { ssr: false });
 
 ---
 
+## 📘 Bài học — Blueprint (nội dung = cách học)
+
+Mọi unit phải dùng **cùng một khung** cho cách viết nội dung và cách người học trải nghiệm:
+
+| File | Vai trò |
+|------|---------|
+| `src/lib/lessons/lesson-blueprint.ts` | Map field → section → IPOR phase |
+| `src/lib/data/units/unit1.ts` | **Mẫu vàng** — comment block + cấu trúc field |
+| `src/lib/lessons/learning-flow.ts` | Thứ tự 10 section trong app |
+| `src/lib/lessons/content-standard.ts` | Chuẩn số lượng SDL (vocab, L1, quiz…) |
+
+```bash
+npx tsx scripts/print-lesson-blueprint.mjs   # checklist cho agent
+npm run test:content-standard                # gate nội dung
+bash scripts/audit-lesson-content.sh         # audit toàn curriculum
+```
+
+Khi sửa `unit*.ts`: đọc `CONTENT_STYLE.md` §6–7, bám `unit1.ts`, không đổi thứ tự học trong `learning-flow.ts` trừ khi có task riêng.
+
+---
+
 ## 🧪 Testing
 
 **Unit tests** (`src/__tests__/`):
