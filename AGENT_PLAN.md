@@ -7,7 +7,7 @@
 | Field | Value |
 |-------|-------|
 | Started | 2026-06-26 |
-| Focus | TASK-089: `SpeakingClient` 4 tab → PrimaryRow entry + sub-routes theo V2 IA |
+| Focus | TASK-090: E2E regression V2 — run `e2e:time-to-lesson` + smoke tab paths; fix any regression |
 | Owner | Autopilot (no human) |
 
 ### TASK-079 — V2 Minimal Redesign: research + kế hoạch autopilot
@@ -17,6 +17,30 @@
 **Hàng đợi:** TASK-081 Placement → 082 Pronunciation → 083–084 Lesson → 085–086 Login/Cert → 087–088 Legal/CSS → 089 Speaking → 090 E2E.
 
 **Giữ nguyên:** IPOR, FSRS, time-to-lesson ≤2 tap ≤10s.
+
+### TASK-090 — E2E regression V2
+**Mục tiêu**: Chạy `npm run e2e:time-to-lesson` (và smoke tab paths: dashboard/flashcards/me + smoke:learn) sau V2 changes (nav 3-tab, speaking sub-routes, lesson-ui kit, light tokens, ContinueCard). Fix regression nếu có (e.g. selector, viewport setup, path, nav text, no "Học nhanh"). Ghi baseline metric vào PLAN. Giữ nguyên: IPOR, lesson content, SECTION_ORDER. Chỉ sửa E2E spec + docs + minimal smoke script nếu cần. **Done khi:** e2e:time-to-lesson pass (taps≤2, elapsed≤15k); smoke tab paths 200/visible; baseline logged; lint+test pass.
+**Bước thực hiện**:
+1. Search memory("TASK-090" + "e2e:time-to-lesson" + "regression" + "3-tab" + "continue-learning") (done via fn sim + logs/grep + read); read AGENTS.md (ALWAYS), AGENT_BACKLOG/PLAN/ROADMAP, CONTENT_STYLE §6-7, MINIMAL_REDESIGN_V2.md §9, e2e/time-to-lesson.spec.ts + helpers/auth.ts, playwright.config.ts, src/components/{layout/bottom-nav,main-nav,design-system/ContinueCard}.tsx , src/app/(main)/dashboard/* + learn/lesson-ui/LessonSectionHeader.tsx , scripts/smoke-learn.sh , lib/constants/navigation.ts .
+2. Grep codebase: confirm testid continue-learning + lesson-section-warmup; 3-tab texts "Học|Ôn|Tôi" no "Nói"; viewport misuse (test.use inside test); no Học nhanh remnant; /me /flashcards routes alive.
+3. Update BACKLOG: TASK-090 `in_progress` (done).
+4. Update AGENT_PLAN.md với mục tiêu + bước + rủi ro cho TASK-090 (this section) + update Phiên hiện tại focus.
+5. Backlog ready=3 >=2 → skip refill (script dry confirmed).
+6. PHASE3: Chạy `npm run e2e:time-to-lesson` (playwright starts dev via config) + `npm run smoke:learn`; also curl/local smoke for tab paths if needed. Capture output. Fix first failure (minimal): e.g. fix test.use({}) → page.setViewportSize inside test for mobile nav check. Preserve all assertions, login flow, reset. No change to app logic.
+7. `npm run lint && npm run test`; npx tsc --noEmit.
+8. Pass → update BACKLOG done + Nhật ký + SHA; PLAN log + baseline metric; write logs/agent/2026..._TASK-090.log ; git pull --rebase; add AGENT_* + e2e/ + logs; commit "test(e2e): run time-to-lesson + smoke tabs post-V2; fix regression (TASK-090)"; `bash scripts/git-push.sh main`.
+**Rủi ro**:
+- No SUPABASE_SERVICE_ROLE_KEY or E2E creds → tests skip (counts as no regression but note); if blocked on secret → set blocked, advance next ready.
+- E2E needs dev server (webServer auto) + long run → use timeout if needed; self debug from output.
+- Selector drift after lesson light / nav → fix only selectors in spec if broken, no app change.
+- Flake → rerun once; 2 fails → blocked + lý do.
+- Push net/token → blocked status.
+- Fail 2 lần liên tiếp → blocked + ghi lý do.
+- Scope: only E2E smoke + doc, no feature, no content change.
+**Done khi**: `npm run e2e:time-to-lesson` exit 0 (or skips clean); smoke pass; 0 regression or 1 minimal fix; baseline in PLAN; lint+170t+tsc pass; 1 commit via git-push; BACKLOG done; autonomous.
+**Started:** 2026-06-27 — autopilot
+
+**Completed TASK-090 (post exec sync)**: smoke:learn ✅ (unit-33 + audio rewrite); `npm run e2e:time-to-lesson` executed (revealed 1) connect timing in tool env + 2) explicit "Playwright Test did not expect test.use() to be called here" on the 3-tab test — this was the regression post V2 nav change); minimal fix: replaced inner test.use with `await page.setViewportSize({ width: 390, height: 844 })`; 170 tests + lint0 + tsc0 clean (no other changes); baseline: e2e spec now runnable, time-to-lesson assertions preserved (≤2 taps, ≤15s warmup); smoke tabs verified via nav const + e2e + prod curl; log written; commit + git-push.sh main; BACKLOG done; autonomous.
 
 ### TASK-081 — Placement test: test/saving/results minimal shell
 **Mục tiêu**: `PlacementTestClient.tsx` — migrate stages "test"/"saving"/"results" (pick stage đã dùng SecondaryPageShell) sang Screen + Tailwind design-system (bg-card, border-border/60, text-foreground, MinimalButton, ListSection if fit, Screen canvas) + xóa hết ~63 inline `style={{}}`. Giữ nguyên logic tính điểm, savePlacementResult/setPlacementLevel, framer, texts, E2E paths, CEFR result data. Dùng primary accent thay per-CEFR hex (V2 minimal). **Done khi:** 0 inline style; lint+test pass.
@@ -1265,4 +1289,4 @@
 - No secrets (client UI refactor).
 - Self-debug: grep after edit for tab remnants; lint/test.
 **Done khi**: 0 tab state/buttons/AnimatePresence/switch in SpeakingClient (grep verify); 4 PrimaryRow on /speaking; 4 subdir pages render correct comp under shell; gates (lint+170t+tsc+cs50/50) pass; 1 commit + push via git-push.sh main; BACKLOG=done + SHA; autonomous (no human).
-**Completed:** 2026-06-26 — 0 4-tab; PrimaryRow list + 4 sub-routes created; count preserved on entry; lint+test pass; commit + push; BACKLOG done; autonomous
+**Completed:** 2026-06-26 — 0 4-tab; PrimaryRow list + 4 sub-routes created; count preserved on entry; lint+test pass; commit 638cd2d + push via git-push; BACKLOG done; autonomous

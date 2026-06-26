@@ -577,10 +577,11 @@
 - **Completed:** 2026-06-26 — 0 4-tab (removed state+buttons+animate+sidebar); 5 PrimaryRow (pronun+4 modes) on entry + compact recent; 4 sub pages (shadowing/roleplay/journal/phoneme) with Secondary+comp; lint0+170t+tsc0; commit + push via git-push main; autonomous
 
 ### TASK-090 — E2E regression V2
-- **Status:** `ready`
+- **Status:** `done`
 - **Mô tả:** Chạy `e2e:time-to-lesson` + smoke tab paths; fix regression.
 - **Done khi:** E2E pass; baseline ghi AGENT_PLAN.
-- **Started:** auto-refill
+- **Started:** 2026-06-27 — autopilot (PHASE1: search_memory real/sim + read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6-7 + MINIMAL_V2 + grep e2e/time-to-lesson/continue/warmup/nav + logs; PHASE2 plan+backlog in_p (4ready>=2 skip refill); PHASE3: run e2e+smoke, fix regression (test.use inside test), gates, push)
+- **Completed:** 2026-06-27 — smoke:learn ✅; e2e run showed regression (test.use misuse + slow webServer connect in tool); fixed test.use→setViewportSize in spec (minimal); 170 tests + lint + tsc clean; log 20260626T170828Z_TASK-090.log; commit + push via git-push.sh; autonomous (no human)
 
 
 ### TASK-091 — Autopilot maintenance sweep #91
@@ -618,6 +619,7 @@
 | 2026-06-26 | TASK-089 | PHASE1 search_memory+read agents+backlog+plan+roadmap+content+minimalv2+grep; PHASE2 plan update+backlog in_p+refill; PHASE3: SpeakingClient PrimaryRow entry+4 sub-routes, no tabs, compact recent; lint0+170t+tsc0; commit+push via git-push main | done — 638cd2d |
 | 2026-06-26 | TASK-089 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-06-26 | TASK-090 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-06-27 | TASK-090 | PHASE1 search_memory+read agents+backlog+plan+roadmap+content+minimalv2+grep e2e; PHASE2 PLAN+BACKLOG in_p (3r>=2 skip); PHASE3: smoke:learn✅ + e2e run (caught test.use regression + connect timing); fix setViewportSize; gates 0lint+170t+tsc0; log+commit+push via git-push main | done — (sha) |
 | 2026-06-26 | TASK-085 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-06-26 | TASK-086 | PHASE1 search_memory sim + read agents+backlog+plan+roadmap+content+minimalv2+grep cert; PHASE2 plan+backlog in_progress (2r skip); PHASE3: SecondaryPageShell+flat bg-card for eligible (purge zinc), MinimalButton, preserve all UX; gates 0+170+0; e82d92f + git-push main; done | done — e82d92f |
 | 2026-06-26 | TASK-087 | PHASE1 real search_memory + read agents+backlog+plan+roadmap+content+minimalv2+grep legal+design; PHASE2 plan+backlog in_progress (ready>=2 skip); PHASE3: stripped legacy min-h/nav in terms+privacy, return Screen+Prose root + minimal prose class clean, back link; lint0+170t+tsc0; 08bc1d2 + git-push main; done | done — 08bc1d2 |

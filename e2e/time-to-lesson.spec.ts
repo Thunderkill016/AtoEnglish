@@ -60,7 +60,7 @@ test.describe("Time-to-lesson baseline", () => {
   });
 
   test("3-tab bottom nav: Học · Ôn · Tôi", async ({ page }) => {
-    test.use({ viewport: { width: 390, height: 844 } });
+    await page.setViewportSize({ width: 390, height: 844 });
 
     await loginAsE2ETestUser(page);
     await page.waitForURL(/\/dashboard/, { timeout: 20_000 });
