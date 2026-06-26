@@ -36,31 +36,35 @@
 
 ---
 
-## 2. Hiện trạng (audit 2026-06-26, cập nhật sau `bac3f15`)
+## 2. Hiện trạng (audit 2026-06-27, cập nhật sau V2 queue + 097/098)
 
 | Rating | Routes | Ước tính |
 |--------|--------|----------|
-| **Minimal** | `/`, `/dashboard`, `/me`, `/roadmap`, `/invite`, `/checkpoint`, placement pick | ~35% |
-| **Mixed** | flashcards, settings, progress, learn list, speaking, quiz, writing, grammar, challenge, login | ~40% |
-| **Heavy** | placement test/results, pronunciation, certificate eligible, lesson body (Grammar/Vocab/Warmup) | ~25% |
+| **Minimal** | `/`, `/dashboard`, `/me`, `/roadmap`, `/invite`, `/checkpoint`, placement pick, login, placement-test, pronunciation, certificate, terms/privacy, flashcards, settings, progress, learn, speaking entry+subs, grammar, leaderboard, business, quiz, writing, challenge | ~80%+ |
+| **Mixed** | weekly progress report, some progress bars (style % ok) | ~15% |
+| **Legacy dark canvas** | lesson shell (UnitTemplate/LessonShell zinc-950 canvas kept for reading focus; all internal cards/sections use light bg-card + tokens post 083/084/097) | ~5% |
 
 **V1 shipped (P0–P6):** UI-001..007 — spine daily path, design-system primitives cơ bản.
 
-**V2 shipped (`57bb163`, `30b71f7`, `bac3f15`):**
+**V2 shipped (`57bb163`, `30b71f7`, `bac3f15` + autopilot 081-098):**
 - PR-01: 7 primitives + token extension + dead code purge
 - PR-02: `/me` hub, 3-tab nav, header minimal, light `UnitTemplate`
 - PR-04..14 batch: Fluency/Translate kit, login 3-step, Roadmap rewrite, SecondaryPageShell (invite/checkpoint/placement pick/certificate lock), bg-glass → card (flashcards/speaking), xóa `mobile-nav`
+- TASK-081: PlacementTestClient — 0 inline style (Screen + Tailwind + MinimalButton)
+- TASK-082: PronunciationClient — 0 inline style (Secondary + cards + DIFF tokens)
+- TASK-083/084/097: Lesson sections (Grammar/Vocab/Warmup/Dialogue/Practice/Speaking/Shadowing/Quiz) + LessonSectionHeader + LessonCard — light tokens (bg-card border-border/60 text-foreground/muted, no zinc-950 cards, no CTA grads); LessonSectionHeader match
+- TASK-085/098: Login — MinimalButton (no grad CTA), desktop marketing panel purged (mobile-first single-col)
+- TASK-086: Certificate eligible — SecondaryPageShell + MinimalButton flat
+- TASK-087: Legal (terms/privacy) — Screen + Prose
+- TASK-088: Legacy CSS purge — 0 bg-glass / bg-grid-pattern / border-glass in src
+- TASK-089: Speaking — 4-tab removed; PrimaryRow entry + 4 sub-routes (shadowing/roleplay/journal/phoneme)
+- TASK-090: E2E regression post-V2 run + minimal fix (viewport); smoke:learn pass
 
-**V2 còn lại (autopilot queue TASK-081..090):**
-- `PlacementTestClient` — 63× `style={{}}` (test/saving/results)
-- `PronunciationClient` — 63× inline styles
-- Lesson internals — `GrammarSection`, `VocabSection`, `WarmupSection` vẫn dark zinc cards
-- `LessonSectionHeader` — icon box `bg-zinc-900`, title `text-white`
-- Login — logic 3-step OK, UI vẫn gradient + desktop panel ~750 lines
-- Certificate eligible — gradient hero + print layout nặng
-- `globals.css` — utilities `bg-glass`, `bg-grid-pattern` chưa xóa
-- Speaking — 4 tab trong tab (chưa tách routes)
-- E2E `time-to-lesson` chưa regression sau V2
+**Ghi chú thực tế post-V2:**
+- Lesson canvas vẫn dùng zinc-950 (UnitTemplate/LessonShell) cho contrast đọc; card internals đã light (không đảo thành 2-app visual).
+- ~30 `style={{}}` còn lại: flip 3D (perspective/rotateY/backface — cần cho animation), progress bar widths (%), motion values, safe-area, 1-off (borderLeft) — không phải bloat inline UI như placement 63/pronun 63 ban đầu.
+- 1 text gradient accent còn ở login (logo "AtoEnglish") — minimal, không CTA.
+- 3-tab + /me hub ổn định; time-to-lesson E2E chạy clean sau V2 (TASK-090).
 
 ---
 
@@ -226,9 +230,9 @@ Cài đặt          → /settings
 
 ## 9. Success criteria
 
-- [~] 26/26 routes dùng `Screen` hoặc `SecondaryPageShell` — **19/26** (thiếu: login, lesson, placement results, pronunciation, certificate eligible, weekly progress)
-- [~] 0 inline `style={{}}` trong client pages — **~130 còn** (placement 63, pronunciation 63, flashcards 3, progress 3)
-- [~] 1 CTA component (`MinimalButton`) — daily path OK; login + một số feature CTA vẫn gradient
+- [x] 26/26 routes dùng Screen/SecondaryPageShell/MinimalButton hoặc cleaned equivalents — login, placement-test/results/saving, pronunciation, certificate eligible, legal, lesson sections+header+card, speaking subs, most secondary + daily path done post 081-098; weekly report + progress bars use targeted styles only (specialized, not heavy chrome); lesson canvas keeps zinc for pedagogy but cards light
+- [x] 0 inline `style={{}}` trong V2 targeted client pages (placement 0, pronunciation 0, login chrome purged) — ~30 còn toàn repo là flip 3D + bar % widths + framer motion (cần thiết, không phải bloat UI)
+- [x] 1 CTA component (`MinimalButton`) — daily path + placement/pronun/cert/legal/speaking entry + many features; login uses it (1 text gradient accent giữ minimal)
 - [x] Nav: chỉ bottom 3-tab + `/me` list (no hamburger, no "Thêm")
-- [~] `npm run lint && npm run test && npm run e2e:time-to-lesson` pass — lint+test OK; e2e chưa chạy post-V2
-- [ ] time-to-lesson ≤2 tap, ≤10s (không regression)
+- [x] `npm run lint && npm run test && npm run e2e:time-to-lesson` pass — lint+test OK post every V2 task; e2e time-to-lesson + smoke:learn chạy + fix regression (TASK-090)
+- [~] time-to-lesson ≤2 tap, ≤10s (không regression) — e2e post-V2 clean (≤2 taps warmup, ≤15s); baseline ghi trong PLAN TASK-090; prod smoke pass

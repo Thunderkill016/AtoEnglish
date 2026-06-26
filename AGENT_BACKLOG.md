@@ -643,10 +643,10 @@
 - **Completed:** 2026-06-27 — removed left w-[36%] marketing panel + isDesktop detection (0 marketing chrome on desktop); mobile-first full-width centered auth; 3-step + MinimalButton + all logic preserved; e2e selectors intact; lint0 +170t +tsc0; commit aee24de + push via git-push.sh main; autonomous (no human)
 
 ### TASK-099 — MINIMAL_REDESIGN_V2 doc sync
-- **Status:** `ready`
+- **Status:** `in_progress`
 - **Mô tả:** Cập nhật `MINIMAL_REDESIGN_V2.md` §2 hiện trạng + §9 success criteria theo code thực tế post-V2.
 - **Done khi:** Doc khớp shipped; không claim task undone đã done.
-- **Started:** auto-refill
+- **Started:** 2026-06-27 — autopilot (PHASE1: sim search_memory via logs/grep (no prior 099 impl beyond ready) + read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6–7 + MINIMAL_V2 + grep inline/zinc/design-system/login/speaking/placement/cert + ls routes + style counts post-081-098; PHASE2: PLAN update + BACKLOG in_p (2ready>=2 skip refill); PHASE3: doc sync only)
 
 
 ### TASK-100 — E2E time-to-lesson production baseline

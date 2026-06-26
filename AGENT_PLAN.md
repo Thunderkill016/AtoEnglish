@@ -7,7 +7,7 @@
 | Field | Value |
 |-------|-------|
 | Started | 2026-06-27 |
-| Focus | TASK-098: login/page.tsx — bỏ/giảm desktop marketing panel; mobile-first single column; keep 3-step + MinimalButton. |
+| Focus | TASK-099 — MINIMAL_REDESIGN_V2 doc sync: update §2 current status + §9 success criteria to match shipped code post 081-090 + 097/098. |
 | Owner | Autopilot (no human) |
 
 ### TASK-079 — V2 Minimal Redesign: research + kế hoạch autopilot
@@ -1476,4 +1476,25 @@
 - No secret/ DB change; pure UI reduction.
 - Fail 2 lần → set blocked + lý do.
 **Done khi**: w-[36%] marketing panel and isDesktop desktop-panel code gone (grep confirm 0); 3-step + MinimalButton + full flow intact; e2e "completes the 3-step survey" pass; lint0 +170t +tsc0; 1 commit + push via git-push.sh; BACKLOG=done + entry SHA; autonomous.
+**Started:** 2026-06-27 — autopilot
+**Completed:** 2026-06-27 — panel marketing desktop removed (0 chrome); isDesktop state+effect+JSX purged; single-col mobile-first auth (max-w centered form); 3-step/MinimalButton/flows intact; 170t+lint+tsc0; commit aee24de + push via git-push.sh main; BACKLOG done; autonomous.
+
+### TASK-099 — MINIMAL_REDESIGN_V2 doc sync
+**Mục tiêu**: Cập nhật `MINIMAL_REDESIGN_V2.md` §2 (Hiện trạng audit) + §9 (Success criteria) để khớp chính xác code thực tế sau khi hoàn thành queue V2 (TASK-081 Placement purge, 082 Pronunciation, 083-084 Lesson light cards/header, 085 Login visual, 086 Certificate, 087 Legal Prose, 088 CSS purge, 089 Speaking sub-routes, 090 E2E + 097 lesson sections dark audit, 098 login panel remove). Ghi nhận: 0 inline style trong targeted files (placement/pronun), login mobile-first, speaking PrimaryRow+subs, cert shell, legacy glass purged, lesson cards use bg-card/foreground (canvas zinc-950 giữ cho focus), most routes use primitives. Không claim undone work; sync số liệu (inline ~30 còn nhưng phần lớn flip/progress necessary; targeted 0). Giữ nguyên: không sửa src, chỉ doc + agent logs/PLAN/BACKLOG. **Done khi:** §2 ghi "V2 shipped 081-098"; §9 checklist updated (numbers match, ~x/26, 0 targeted inline, e2e pass note); lint+test pass.
+**Bước thực hiện**:
+1. Search memory("TASK-099" + "MINIMAL_REDESIGN_V2" + "doc sync" + "post-V2") (sim via logs/grep + no prior impl; prior 079 did initial queue); read AGENTS.md (ALWAYS), AGENT_BACKLOG/PLAN/ROADMAP, CONTENT_STYLE.md §6–7, MINIMAL_REDESIGN_V2.md full (focus §2 §9), + relevant: src/app/login/page.tsx, PlacementTestClient, PronunciationClient, CertificateClient, SpeakingClient, globals.css, components/learn/sections + UnitTemplate, design-system/*, e2e/time-to-lesson, list of (main) routes.
+2. Grep codebase: confirm 0 style={{ in placement/pronun; legacy glass gone; speaking no 4-tab state (PrimaryRow hrefs); cert uses Secondary+Minimal; login no panel + 1 gradient text ok; lesson cards no zinc-950; ~30 style left are flip+bar% (necessary); zinc-950 only in lesson canvas/shell (pedagogy); design-system used in 40+ files; 3-tab + /me nav live.
+3. Update BACKLOG: TASK-099 status `in_progress`.
+4. Update AGENT_PLAN.md với mục tiêu + bước + rủi ro cho TASK-099 (this section) + update Phiên hiện tại focus.
+5. Backlog ready=2 (099+100) >=2 → skip `bash scripts/agent-refill-backlog.sh` (KHÔNG hỏi).
+6. PHASE3 triển khai tối thiểu: edit ONLY MINIMAL_REDESIGN_V2.md §2 (update date, shipped list to include 097 098, "V2 còn lại" clear or note all targeted done; lesson canvas note) + §9 (fix counts: 26 routes now mostly minimal or cleaned; 0 inline targeted; e2e done in 090; time-to-lesson ~; update [~]→[x] where accurate, add note post-V2).
+7. `npm run lint && npm run test`; npx tsc --noEmit.
+8. Pass → update BACKLOG done + Nhật ký + SHA; PLAN log table + write logs/agent/ timestamp_TASK-099.log; git pull --rebase; add AGENT_* + MINIMAL_REDESIGN_V2.md + logs; commit "docs(v2): sync MINIMAL_REDESIGN_V2 §2+§9 to post-081-098 shipped state (TASK-099)"; `bash scripts/git-push.sh main`.
+**Rủi ro**:
+- Doc numbers imprecise (26 routes hard to exact) → audit via grep/ls + be conservative ("most", "targeted 0"); keep V2 spirit.
+- If gates fail (doc edit shouldn't) → no src change so tsc/lint should be clean unless md syntax weird; rerun.
+- Push net/token → blocked.
+- Fail 2x → blocked + lý do.
+- Scope: doc sync only, no feature/claim wrong status.
+**Done khi**: §2+§9 accurately reflect shipped (placement/pronun 0 inline, login panel gone, sections light, speaking routes, cert shell, glass purged); no claim "thiếu" on done items; gates pass; 1 commit via git-push; BACKLOG done + entry; autonomous.
 **Started:** 2026-06-27 — autopilot
