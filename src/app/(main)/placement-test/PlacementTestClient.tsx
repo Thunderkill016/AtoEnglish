@@ -22,18 +22,10 @@ import {
 } from "@/lib/data/placement-test";
 import { savePlacementResult, setPlacementLevel } from "@/app/actions/placement";
 import { PLACEMENT_LEVEL_OPTIONS } from "@/lib/placement/starting-unit";
-import { SecondaryPageShell, MinimalButton, ListSection } from "@/components/design-system";
+import { SecondaryPageShell, MinimalButton, ListSection, Screen } from "@/components/design-system";
 
 
 type Stage = "pick" | "test" | "saving" | "results";
-
-const CEFR_COLORS: Record<string, string> = {
-  A0: "#14b8a6",
-  A1: "#3b82f6",
-  A2: "#8b5cf6",
-  B1: "#f59e0b",
-  B2: "#10b981",
-};
 
 const SKILL_LABEL: Record<string, string> = {
   "language-use": "Language Use",
@@ -179,225 +171,197 @@ export default function PlacementTestClient() {
   // ── SAVING SCREEN ───────────────────────────────────────────────────────────
   if (stage === "saving") {
     return (
-      <div style={{ minHeight: "100dvh", background: "#09090b", display: "flex", alignItems: "center", justifyContent: "center" }}>
-        <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
-          style={{ width: 40, height: 40, border: "3px solid #27272a", borderTop: "3px solid #10b981", borderRadius: "50%" }}
+      <Screen narrow={false} className="flex items-center justify-center">
+        <motion.div
+          animate={{ rotate: 360 }}
+          transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
+          className="w-10 h-10 border-4 border-border border-t-primary rounded-full"
         />
-      </div>
+      </Screen>
     );
   }
 
   // ── RESULTS SCREEN ──────────────────────────────────────────────────────────
   if (stage === "results" && result) {
-    const color = CEFR_COLORS[result.cefrLevel] ?? "#10b981";
-
     return (
-      <div style={{ minHeight: "100dvh", background: "#09090b", paddingBottom: 100 }}>
-        <div style={{ maxWidth: 480, margin: "0 auto", padding: "24px 16px 0" }}>
+      <Screen narrow={false}>
+        <div className="max-w-[480px] mx-auto pt-1 pb-24">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
 
             {/* Level badge hero */}
-            <div style={{ textAlign: "center", marginBottom: 24 }}>
+            <div className="text-center mb-6">
               <motion.div
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 transition={{ type: "spring", damping: 12, stiffness: 200, delay: 0.2 }}
-                style={{
-                  width: 100, height: 100, borderRadius: "50%",
-                  background: `${color}20`, border: `3px solid ${color}`,
-                  display: "flex", alignItems: "center", justifyContent: "center",
-                  margin: "0 auto 16px", fontSize: 32, fontWeight: 900,
-                  color, fontFamily: "'Space Grotesk', sans-serif",
-                }}
+                className="w-24 h-24 rounded-full bg-primary/10 border-4 border-primary flex items-center justify-center mx-auto mb-4 text-3xl font-black text-primary font-sans"
               >
                 {result.cefrLevel}
               </motion.div>
-              <h1 style={{ fontSize: 22, fontWeight: 800, color: "#fafafa", marginBottom: 6 }}>
+              <h1 className="text-[22px] font-extrabold text-foreground mb-1.5">
                 {result.levelLabel}
               </h1>
-              <p style={{ fontSize: 13, color: "#a1a1aa", lineHeight: 1.6, maxWidth: 340, margin: "0 auto" }}>
+              <p className="text-[13px] text-muted-foreground leading-relaxed max-w-[340px] mx-auto">
                 {result.levelDescription}
               </p>
             </div>
 
             {!isSelfSelect && (
-              <div style={{ background: "#111118", border: `1px solid ${color}40`, borderRadius: 14, padding: "16px", marginBottom: 14 }}>
-                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 10 }}>
-                  <span style={{ fontSize: 12, color: "#52525b", fontWeight: 700 }}>TỔNG ĐIỂM</span>
-                  <span style={{ fontSize: 18, fontWeight: 900, color }}>
+              <div className="rounded-xl border border-border/60 bg-card p-4 mb-3.5">
+                <div className="flex justify-between mb-2.5">
+                  <span className="text-xs font-bold text-muted-foreground tracking-wider">TỔNG ĐIỂM</span>
+                  <span className="text-lg font-black text-primary">
                     {result.totalScore}/{TOTAL_QUESTIONS}
                   </span>
                 </div>
-                <div style={{ height: 8, background: "#27272a", borderRadius: 99, overflow: "hidden" }}>
+                <div className="h-2 bg-muted rounded-full overflow-hidden">
                   <motion.div
                     initial={{ width: 0 }}
                     animate={{ width: `${(result.totalScore / TOTAL_QUESTIONS) * 100}%` }}
                     transition={{ duration: 1, delay: 0.4 }}
-                    style={{ height: "100%", background: color, borderRadius: 99 }}
+                    className="h-full bg-primary rounded-full"
                   />
                 </div>
               </div>
             )}
 
             {isSelfSelect && (
-              <div style={{ background: "#111118", border: `1px solid ${color}40`, borderRadius: 14, padding: "14px", marginBottom: 14, fontSize: 12, color: "#a1a1aa", lineHeight: 1.6 }}>
-                ✅ Lộ trình đã mở từ trình độ <strong style={{ color }}>{result.cefrLevel}</strong> — các bài trước đó có thể ôn lại tuỳ chọn, không bắt buộc.
+              <div className="rounded-xl border border-border/60 bg-card p-3.5 mb-3.5 text-xs text-muted-foreground leading-relaxed">
+                ✅ Lộ trình đã mở từ trình độ <strong className="text-primary">{result.cefrLevel}</strong> — các bài trước đó có thể ôn lại tuỳ chọn, không bắt buộc.
               </div>
             )}
 
             {/* Skill breakdown */}
             {!isSelfSelect && (
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 8, marginBottom: 16 }}>
-              {[
-                { key: "reading", score: result.readingScore, total: READING_COUNT },
-                { key: "vocabulary", score: result.vocabularyScore, total: VOCAB_COUNT },
-                { key: "language-use", score: result.languageUseScore, total: LANG_USE_COUNT },
-              ].map((s) => (
-                <div key={s.key} style={{ background: "#111118", border: "1px solid #27272a", borderRadius: 12, padding: "12px 8px", textAlign: "center" }}>
-                  <div style={{ fontSize: 18, marginBottom: 4 }}>{SKILL_ICON[s.key]}</div>
-                  <div style={{ fontSize: 16, fontWeight: 800, color: "#fafafa" }}>{s.score}/{s.total}</div>
-                  <div style={{ fontSize: 10, color: "#52525b", fontWeight: 600 }}>{SKILL_LABEL[s.key]}</div>
-                  <div style={{ marginTop: 6, height: 3, background: "#27272a", borderRadius: 99, overflow: "hidden" }}>
-                    <motion.div
-                      initial={{ width: 0 }}
-                      animate={{ width: `${(s.score / s.total) * 100}%` }}
-                      transition={{ duration: 0.8, delay: 0.6 }}
-                      style={{ height: "100%", background: color, borderRadius: 99 }}
-                    />
+              <div className="grid grid-cols-3 gap-2 mb-4">
+                {[
+                  { key: "reading", score: result.readingScore, total: READING_COUNT },
+                  { key: "vocabulary", score: result.vocabularyScore, total: VOCAB_COUNT },
+                  { key: "language-use", score: result.languageUseScore, total: LANG_USE_COUNT },
+                ].map((s) => (
+                  <div key={s.key} className="rounded-xl border border-border/60 bg-card p-3 text-center">
+                    <div className="text-lg mb-1">{SKILL_ICON[s.key]}</div>
+                    <div className="text-base font-extrabold text-foreground">{s.score}/{s.total}</div>
+                    <div className="text-[10px] text-muted-foreground font-semibold">{SKILL_LABEL[s.key]}</div>
+                    <div className="mt-1.5 h-0.5 bg-muted rounded-full overflow-hidden">
+                      <motion.div
+                        initial={{ width: 0 }}
+                        animate={{ width: `${(s.score / s.total) * 100}%` }}
+                        transition={{ duration: 0.8, delay: 0.6 }}
+                        className="h-full bg-primary rounded-full"
+                      />
+                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
             )}
 
             {/* Next steps */}
-            <div style={{ background: "#111118", border: "1px solid #27272a", borderRadius: 14, padding: "16px", marginBottom: 16 }}>
-              <div style={{ fontSize: 12, color: "#52525b", fontWeight: 700, marginBottom: 12, textTransform: "uppercase", letterSpacing: "0.08em" }}>
+            <div className="rounded-xl border border-border/60 bg-card p-4 mb-4">
+              <div className="text-xs text-muted-foreground font-bold mb-3 tracking-[0.08em] uppercase">
                 🎯 Bước tiếp theo
               </div>
               {result.nextSteps.map((step, i) => (
-                <div key={i} style={{ display: "flex", gap: 10, alignItems: "flex-start", marginBottom: 8 }}>
-                  <div style={{ width: 20, height: 20, borderRadius: "50%", background: `${color}20`, border: `1px solid ${color}50`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 10, fontWeight: 800, color, flexShrink: 0 }}>
+                <div key={i} className="flex gap-2.5 items-start mb-2">
+                  <div className="w-5 h-5 rounded-full bg-primary/10 border border-primary/50 flex items-center justify-center text-[10px] font-extrabold text-primary shrink-0">
                     {i + 1}
                   </div>
-                  <span style={{ fontSize: 12, color: "#a1a1aa", lineHeight: 1.5 }}>{step}</span>
+                  <span className="text-xs text-muted-foreground leading-snug">{step}</span>
                 </div>
               ))}
             </div>
 
             {/* Review wrong answers */}
             {!isSelfSelect && (
-            <div style={{ background: "#111118", border: "1px solid #27272a", borderRadius: 14, padding: "16px", marginBottom: 20 }}>
-              <div style={{ fontSize: 12, color: "#52525b", fontWeight: 700, marginBottom: 12, textTransform: "uppercase", letterSpacing: "0.08em" }}>
-                📋 Review đáp án
-              </div>
-              {PLACEMENT_QUESTIONS.map((q) => {
-                const userAns = answers[q.id];
-                const correct = userAns === q.correctAnswer;
-                return (
-                  <div key={q.id} style={{ display: "flex", gap: 8, alignItems: "flex-start", marginBottom: 10, paddingBottom: 10, borderBottom: "1px solid #1c1c24" }}>
-                    <div style={{ flexShrink: 0, marginTop: 1 }}>
-                      {correct
-                        ? <CheckCircle2 size={14} color="#10b981" />
-                        : <XCircle size={14} color="#ef4444" />}
-                    </div>
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ fontSize: 11, color: correct ? "#10b981" : "#ef4444", fontWeight: 700, marginBottom: 2 }}>
-                        {`Q${q.id}`} · {SKILL_LABEL[q.skill]} · {q.level}
+              <div className="rounded-xl border border-border/60 bg-card p-4 mb-5">
+                <div className="text-xs text-muted-foreground font-bold mb-3 tracking-[0.08em] uppercase">
+                  📋 Review đáp án
+                </div>
+                {PLACEMENT_QUESTIONS.map((q) => {
+                  const userAns = answers[q.id];
+                  const correct = userAns === q.correctAnswer;
+                  return (
+                    <div key={q.id} className="flex gap-2 items-start mb-2.5 pb-2.5 border-b border-border/40 last:border-0 last:mb-0 last:pb-0">
+                      <div className="shrink-0 mt-0.5">
+                        {correct
+                          ? <CheckCircle2 size={14} className="text-emerald-500" />
+                          : <XCircle size={14} className="text-red-500" />}
                       </div>
-                      <div style={{ fontSize: 11, color: "#a1a1aa", lineHeight: 1.4, marginBottom: !correct ? 4 : 0 }}>
-                        {q.question.length > 60 ? q.question.slice(0, 60) + "…" : q.question}
-                      </div>
-                      {!correct && (
-                        <div style={{ fontSize: 11, color: "#71717a", lineHeight: 1.4 }}>
-                          ✓ <span style={{ color: "#10b981" }}>{q.options[q.correctAnswer]}</span>
-                          {" · "}{q.explanation}
+                      <div className="flex-1 min-w-0">
+                        <div className={`text-[11px] font-bold mb-0.5 ${correct ? "text-emerald-500" : "text-red-500"}`}>
+                          {`Q${q.id}`} · {SKILL_LABEL[q.skill]} · {q.level}
                         </div>
-                      )}
+                        <div className="text-[11px] text-muted-foreground leading-snug mb-0.5">
+                          {q.question.length > 60 ? q.question.slice(0, 60) + "…" : q.question}
+                        </div>
+                        {!correct && (
+                          <div className="text-[11px] text-muted-foreground leading-snug">
+                            ✓ <span className="text-emerald-500">{q.options[q.correctAnswer]}</span>
+                            {" · "}{q.explanation}
+                          </div>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                );
-              })}
-            </div>
+                  );
+                })}
+              </div>
             )}
 
             {saveError && (
-              <div style={{ background: "#ef444410", border: "1px solid #ef444430", borderRadius: 10, padding: "10px 12px", marginBottom: 14, fontSize: 12, color: "#ef4444" }}>
+              <div className="rounded-lg bg-red-500/10 border border-red-500/20 px-3 py-2.5 mb-3.5 text-xs text-red-500">
                 ⚠️ {saveError} — Level đã tính xong nhưng chưa lưu được DB.
               </div>
             )}
 
             {/* CTAs */}
-            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+            <div className="flex flex-col gap-2">
               {learnPath && (
-                <Link
-                  href={learnPath}
-                  style={{
-                    display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
-                    background: "linear-gradient(135deg, #10b981, #14b8a6)",
-                    color: "#fff", textDecoration: "none", borderRadius: 12, padding: "14px",
-                    fontSize: 14, fontWeight: 800,
-                  }}
-                >
+                <MinimalButton fullWidth href={learnPath}>
                   <ArrowRight size={16} /> Bắt đầu học ngay
-                </Link>
+                </MinimalButton>
               )}
-              <div style={{ display: "flex", gap: 8 }}>
-                <Link
+              <div className="flex gap-2">
+                <MinimalButton
                   href="/learn"
-                  style={{
-                    flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
-                    background: learnPath ? "#111118" : "linear-gradient(135deg, #10b981, #14b8a6)",
-                    border: learnPath ? "1px solid #27272a" : "none",
-                    color: learnPath ? "#a1a1aa" : "#fff",
-                    textDecoration: "none", borderRadius: 12, padding: "14px",
-                    fontSize: 13, fontWeight: learnPath ? 700 : 800,
-                  }}
+                  variant={learnPath ? "secondary" : "primary"}
+                  className="flex-1"
                 >
                   <Trophy size={16} /> {learnPath ? "Xem lộ trình học" : "Về Bài học"}
-                </Link>
-                <Link
-                  href="/dashboard"
-                  style={{
-                    flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
-                    background: "#111118", border: "1px solid #27272a",
-                    color: "#a1a1aa", textDecoration: "none", borderRadius: 12, padding: "14px",
-                    fontSize: 13, fontWeight: 700,
-                  }}
-                >
+                </MinimalButton>
+                <MinimalButton href="/dashboard" variant="secondary" className="flex-1">
                   Dashboard
-                </Link>
+                </MinimalButton>
               </div>
             </div>
           </motion.div>
         </div>
-      </div>
+      </Screen>
     );
   }
 
   // ── TEST SCREEN ─────────────────────────────────────────────────────────────
   return (
-    <div style={{ minHeight: "100dvh", background: "#09090b", paddingBottom: 100 }}>
-      <div style={{ maxWidth: 480, margin: "0 auto", padding: "20px 16px 0" }}>
+    <Screen narrow={false}>
+      <div className="max-w-[480px] mx-auto pb-24">
 
         {/* Progress header */}
-        <div style={{ marginBottom: 20 }}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-              <span style={{ fontSize: 14 }}>{SKILL_ICON[currentQ.skill]}</span>
-              <span style={{ fontSize: 11, color: "#71717a", fontWeight: 700 }}>
+        <div className="mb-5">
+          <div className="flex justify-between items-center mb-2">
+            <div className="flex items-center gap-1.5">
+              <span className="text-sm">{SKILL_ICON[currentQ.skill]}</span>
+              <span className="text-[11px] text-muted-foreground font-bold">
                 {SKILL_LABEL[currentQ.skill]} · {currentQ.level}
               </span>
             </div>
-            <span style={{ fontSize: 12, color: "#52525b", fontWeight: 600 }}>
+            <span className="text-xs text-muted-foreground font-semibold">
               {currentIdx + 1}/{TOTAL_QUESTIONS}
             </span>
           </div>
-          <div style={{ height: 4, background: "#27272a", borderRadius: 99, overflow: "hidden" }}>
+          <div className="h-1 bg-muted rounded-full overflow-hidden">
             <motion.div
               animate={{ width: `${progressPct}%` }}
               transition={{ duration: 0.3 }}
-              style={{ height: "100%", background: CEFR_COLORS[currentQ.level] ?? "#10b981", borderRadius: 99 }}
+              className="h-full bg-primary rounded-full"
             />
           </div>
         </div>
@@ -412,31 +376,25 @@ export default function PlacementTestClient() {
           >
             {/* Reading passage */}
             {currentQ.context && (
-              <div style={{
-                background: "#111118", border: "1px solid #27272a", borderRadius: 12,
-                padding: "14px", marginBottom: 16,
-              }}>
-                <div style={{ fontSize: 10, color: "#52525b", fontWeight: 700, marginBottom: 8, textTransform: "uppercase" }}>
+              <div className="rounded-xl border border-border/60 bg-card p-3.5 mb-4">
+                <div className="text-[10px] text-muted-foreground font-bold mb-2 uppercase tracking-wider">
                   📖 Đoạn văn
                 </div>
-                <p style={{ fontSize: 13, color: "#a1a1aa", lineHeight: 1.7, margin: 0 }}>
+                <p className="text-sm text-muted-foreground leading-relaxed m-0">
                   {currentQ.context}
                 </p>
               </div>
             )}
 
             {/* Question */}
-            <div style={{
-              background: "#111118", border: `1px solid ${CEFR_COLORS[currentQ.level] ?? "#27272a"}30`,
-              borderRadius: 14, padding: "18px", marginBottom: 16,
-            }}>
-              <p style={{ fontSize: 16, fontWeight: 700, color: "#fafafa", lineHeight: 1.5, margin: 0 }}>
+            <div className="rounded-xl border border-border/60 bg-card p-4.5 mb-4">
+              <p className="text-base font-bold text-foreground leading-snug m-0">
                 {currentQ.question}
               </p>
             </div>
 
             {/* Options */}
-            <div style={{ display: "flex", flexDirection: "column", gap: 8, marginBottom: 20 }}>
+            <div className="flex flex-col gap-2 mb-5">
               {currentQ.options.map((opt, i) => {
                 const isSelected = selected === i;
                 return (
@@ -445,26 +403,22 @@ export default function PlacementTestClient() {
                     whileTap={{ scale: 0.98 }}
                     onClick={() => handleAnswer(i)}
                     disabled={selected !== null}
-                    style={{
-                      background: isSelected ? `${CEFR_COLORS[currentQ.level] ?? "#10b981"}20` : "#111118",
-                      border: `1.5px solid ${isSelected ? (CEFR_COLORS[currentQ.level] ?? "#10b981") : "#27272a"}`,
-                      borderRadius: 12, padding: "14px 16px",
-                      cursor: selected !== null ? "default" : "pointer",
-                      textAlign: "left", display: "flex", alignItems: "center", gap: 12,
-                      transition: "all 0.15s",
-                    }}
+                    className={`w-full text-left rounded-xl px-4 py-3.5 flex items-center gap-3 transition-all text-sm ${
+                      isSelected
+                        ? "bg-primary/10 border-2 border-primary text-foreground"
+                        : "bg-card border-2 border-border/60 text-muted-foreground hover:border-primary/40"
+                    } ${selected !== null ? "cursor-default" : "cursor-pointer"}`}
                   >
-                    <div style={{
-                      width: 28, height: 28, borderRadius: "50%", flexShrink: 0,
-                      background: isSelected ? (CEFR_COLORS[currentQ.level] ?? "#10b981") : "#1c1c24",
-                      border: `1.5px solid ${isSelected ? "transparent" : "#3f3f46"}`,
-                      display: "flex", alignItems: "center", justifyContent: "center",
-                      fontSize: 11, fontWeight: 800,
-                      color: isSelected ? "#fff" : "#71717a",
-                    }}>
+                    <div
+                      className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-extrabold shrink-0 ${
+                        isSelected
+                          ? "bg-primary text-primary-foreground"
+                          : "bg-muted border border-border/70 text-muted-foreground"
+                      }`}
+                    >
                       {String.fromCharCode(65 + i)}
                     </div>
-                    <span style={{ fontSize: 14, color: isSelected ? "#fafafa" : "#a1a1aa", fontWeight: isSelected ? 600 : 400, lineHeight: 1.4 }}>
+                    <span className={`leading-snug ${isSelected ? "font-semibold text-foreground" : ""}`}>
                       {opt}
                     </span>
                   </motion.button>
@@ -476,18 +430,11 @@ export default function PlacementTestClient() {
             <button
               onClick={handleNext}
               disabled={selected === null}
-              style={{
-                width: "100%",
-                background: selected !== null
-                  ? `linear-gradient(135deg, ${CEFR_COLORS[currentQ.level] ?? "#10b981"}, #14b8a6)`
-                  : "#1c1c24",
-                border: "none", borderRadius: 14, padding: "16px",
-                fontSize: 15, fontWeight: 800,
-                color: selected !== null ? "#fff" : "#52525b",
-                cursor: selected !== null ? "pointer" : "not-allowed",
-                transition: "all 0.2s",
-                display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
-              }}
+              className={`w-full rounded-xl py-4 text-[15px] font-extrabold flex items-center justify-center gap-2 transition-all ${
+                selected !== null
+                  ? "bg-primary text-primary-foreground"
+                  : "bg-muted text-muted-foreground cursor-not-allowed"
+              }`}
             >
               {isLast ? "Nộp bài & Xem kết quả" : "Câu tiếp theo"}
               <ChevronRight size={18} />
@@ -495,6 +442,6 @@ export default function PlacementTestClient() {
           </motion.div>
         </AnimatePresence>
       </div>
-    </div>
+    </Screen>
   );
 }

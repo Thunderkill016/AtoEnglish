@@ -7,7 +7,7 @@
 | Field | Value |
 |-------|-------|
 | Started | 2026-06-26 |
-| Focus | TASK-079: V2 Minimal Redesign — research audit + backlog plan |
+| Focus | TASK-081: PlacementTestClient — migrate test/saving/results + purge inline styles |
 | Owner | Autopilot (no human) |
 
 ### TASK-079 — V2 Minimal Redesign: research + kế hoạch autopilot
@@ -17,6 +17,32 @@
 **Hàng đợi:** TASK-081 Placement → 082 Pronunciation → 083–084 Lesson → 085–086 Login/Cert → 087–088 Legal/CSS → 089 Speaking → 090 E2E.
 
 **Giữ nguyên:** IPOR, FSRS, time-to-lesson ≤2 tap ≤10s.
+
+### TASK-081 — Placement test: test/saving/results minimal shell
+**Mục tiêu**: `PlacementTestClient.tsx` — migrate stages "test"/"saving"/"results" (pick stage đã dùng SecondaryPageShell) sang Screen + Tailwind design-system (bg-card, border-border/60, text-foreground, MinimalButton, ListSection if fit, Screen canvas) + xóa hết ~63 inline `style={{}}`. Giữ nguyên logic tính điểm, savePlacementResult/setPlacementLevel, framer, texts, E2E paths, CEFR result data. Dùng primary accent thay per-CEFR hex (V2 minimal). **Done khi:** 0 inline style; lint+test pass.
+**Bước thực hiện**:
+1. Search memory("TASK-081" + "PlacementTestClient" + "inline style") sim via logs/grep + read AGENTS.md (ALWAYS), AGENT_BACKLOG/PLAN/ROADMAP, CONTENT_STYLE.md §6–7 (blueprint context only), MINIMAL_REDESIGN_V2.md, src/app/(main)/placement-test/PlacementTestClient.tsx + page.tsx, components/design-system/* (Screen,SecondaryPageShell,MinimalButton), e2e/placement-test.spec.ts (text selectors), lib/data/placement-test.ts, app/actions/placement.ts.
+2. Grep confirm 63 style={{}} all in test/saving/results; xác định edit targets + preserve h1/texts from pick.
+3. Update BACKLOG: TASK-081 status `in_progress`.
+4. Update AGENT_PLAN.md với mục tiêu + bước + rủi ro cho TASK-081 (this section).
+5. ready >=2 (081-084) → skip `bash scripts/agent-refill-backlog.sh` (KHÔNG hỏi).
+6. Edit PlacementTestClient.tsx:
+   - Thêm Screen vào import từ design-system.
+   - Saving: thay div style min-h bg dark center bằng <Screen narrow={false} className="flex items-center justify-center"> + Tailwind animate-spin border cho spinner.
+   - Results: thay 2 outer div style min-h/max-w/pad bằng <Screen narrow={false}> + inner max-w- container; mọi card/badge/progress/cta/review dùng class "rounded-xl border border-border/60 bg-card p-4 text-foreground text-muted-foreground" ; progress bg-primary ; badge dùng primary/10 ring-primary ; CTAs thay bằng <MinimalButton fullWidth href=... variant=...> ; xóa CEFR_COLORS map hoặc giữ chỉ data; 0 style={{}} .
+   - Test quiz: thay outer divs + header progress + passage + q box + option buttons + next btn style bằng Tailwind equiv (bg-card, border-primary, etc); option dùng state classes; use bg-primary for level accent.
+   - Giữ motion/AnimatePresence, all texts, logic, hooks nguyên.
+7. `npm run lint && npm run test`; npx tsc --noEmit (per AGENTS).
+8. Pass → update BACKLOG done + Nhật ký + SHA; PLAN log.
+9. git pull --rebase; git add src/app/(main)/placement-test/PlacementTestClient.tsx AGENT_BACKLOG.md AGENT_PLAN.md; commit "refactor(placement): migrate test/saving/results to design-system + remove all inline styles (TASK-081)"; `bash scripts/git-push.sh main`.
+**Rủi ro**:
+- E2E break (h1 text, button names like "Làm bài test đầy đủ", "Bắt đầu học ngay", "Câu tiếp theo") → chỉ đổi styles, KHÔNG đổi JSX text/content.
+- Dynamic per-level colors gone → dùng unified primary accent (V2 flat, ok cho purge).
+- Spinner/transition/layout shift → match padding, use Screen inner; verify with class.
+- Self-select vs full test paths (isSelfSelect) → preserve flags.
+- Fail 2 lần → set blocked + lý do, chuyển next ready nếu có thể.
+- No secrets (pure client UI); self-debug from lint/test.
+**Done khi**: 0 `style={{` (grep verify) trong PlacementTestClient.tsx; E2E paths text ok; lint+test pass; 1 commit + push via git-push.sh main; BACKLOG=done + SHA; no ask user.
 
 ### TASK-045 — Sync AGENT_AUTOPILOT.md với auto-refill
 **Mục tiêu**: Làm cho AGENT_AUTOPILOT.md mô tả chính xác cơ chế tự động: daemon/orchestrator/pick-task tự gọi refill từ AGENT_ROADMAP.md khi ready < 2 (MIN_READY), script agent-refill-backlog.sh parse roadmap pool, chèn tối đa 4 task `ready` vào BACKLOG, commit+push (chore, skip ci). Xóa mọi hướng dẫn gợi ý "user thêm task thủ công" vào backlog (user chỉ thêm vào ROADMAP nếu muốn ưu tiên). Giữ phần "Việc cần làm thủ công 1 lần (P0)" vì là setup secrets/migration (khác task hàng ngày). Doc khớp scripts hiện tại (refill, pick, orchestrator, roadmap format). Chỉ sửa doc; không code/logic.

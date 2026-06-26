@@ -512,9 +512,10 @@
 - **Mô tả:** Thay bằng V2 queue TASK-081..090 (user mandate redesign).
 
 ### TASK-081 — Placement test: test/saving/results minimal shell
-- **Status:** `ready`
+- **Status:** `in_progress`
 - **Mô tả:** `PlacementTestClient.tsx` — migrate test/saving/results; xóa inline `style={{}}`.
 - **Done khi:** 0 inline style trong file; lint+test pass
+- **Started:** 2026-06-26 — autopilot (PHASE1: sim search_memory via logs/grep (no prior 081 impl) + read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6-7 + MINIMAL_V2 + grep Placement+design-system+e2e; PHASE2: PLAN update + BACKLOG in_progress (ready>=2 skip refill); PHASE3: migrate)
 
 ### TASK-082 — Pronunciation module minimal
 - **Status:** `ready`
