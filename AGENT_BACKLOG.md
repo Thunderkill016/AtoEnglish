@@ -351,9 +351,10 @@
 - **Completed:** 2026-06-26 — Landing trimmed to headline+HeroCTA; below-fold sections removed; metric baseline via e2e:time-to-lesson (P0); 905cb61
 
 ### TASK-045 — Sync AGENT_AUTOPILOT.md với auto-refill
-- **Status:** `in_progress`
+- **Status:** `done`
 - **Mô tả:** Doc mô tả AGENT_ROADMAP.md + refill script; xóa hướng dẫn "user thêm task thủ công".
 - **Done khi:** Doc khớp scripts hiện tại.
+- **Completed:** 2026-06-26 — autopilot; updated AUTOPILOT "Quản lý backlog" to describe ROADMAP+refill mechanics + "KHÔNG thêm thủ công"; clarified user only edits ROADMAP for priority; added Nhật ký; gates lint+169t+tsc clean; commit 75b72b3 + push via git-push.sh (origin)
 - **Started:** 2026-06-26 — autopilot (PHASE1: read AGENTS+BACKLOG+PLAN+ROADMAP+AUTOPILOT+CONTENT§6-7 + grep; memory sim via logs; PHASE2: plan section+refill run (skipped >=2); PHASE3: set in_progress, edit doc)
 
 ### TASK-046 — Curriculum quality B2 audio declarations
@@ -377,7 +378,7 @@
 | 2026-06-26 | TASK-043 | research(agents+memory+grep+orch+watchdog), set in_progress, update PLAN+BACKLOG, implement only-agent-changes skip stash in orchestrator + auto pop at end + age>7d cleanup (orch+watchdog MAX=7), syntax+sim test, lint+159 tests+tsc pass, commit 5062230 + git-push.sh main; status done | done — 5062230 |
 | 2026-06-26 | TASK-049..056 | user mandate: P1 bài học+cách học — queued ready sau TASK-044 | ready |
 | 2026-06-26 | TASK-044 | research(agents+memory+grep+placement e2e files), set in_progress, update PLAN+BACKLOG, implement networkidle waits + reset for test user isolation in placement-test.spec.ts (+helper if needed), lint+test | in_progress |
-| 2026-06-26 | TASK-045 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-06-26 | TASK-045 | PHASE1 (read AGENTS+BACKLOG+PLAN+ROADMAP+AUTOPILOT+CONTENT§6-7 + grep); PHASE2 PLAN update + refill run (skip); PHASE3 set in_progress + edit AUTOPILOT to describe ROADMAP+refill script + "User KHÔNG thêm thủ công", update Nhật ký; lint+169t+tsc pass; commit+push; status done | done — 75b72b3 |
 | 2026-06-26 | TASK-046 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-06-26 | TASK-042 | research(agents+memory+grep+roadmap+units+placement), update PLAN+BACKLOG in_progress, minimal add B2 units(33-42) group + "B2" badge pill + startingUnitIndex respect (entry highlight + review dim) inside phase-3 card in RoadmapClient, lint+159+tsc pass, commit 473f514 + git-push.sh main | done — 473f514 |
 | 2026-06-26 | TASK-041 | research(agents+memory+grep+pkg+gen+readme), set in_progress, add audio:generate:all (chain a0-a1-a2-b1-b2) + audio:generate:list (dry-run prints 50 folders exactly), doc in README, lint+159+tsc pass, commit+push via git-push.sh main | done — 242328e |
