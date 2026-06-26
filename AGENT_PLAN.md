@@ -57,7 +57,7 @@
 
 ### Ngày 5+ — Chất lượng & mở rộng
 - [x] TASK-020 integration test flakes
-- [ ] TASK-030 A2 audio (13-16 complete; 17-18 pending gen)
+- [x] TASK-030 A2 audio (6bbc693)
 - [ ] TASK-031 B1 audio
 - [ ] TASK-032 onboarding profile DB
 
@@ -75,4 +75,4 @@
 | 2026-06-26T01:36Z | TASK-001/002 | P0 ops: migration blocked, deploy OK | autopilot armed |
 | 2026-06-26T08:55Z | TASK-001/011 | db push migration + E2E B1 unlock | 2 e2e pass |
 | 2026-06-26 | TASK-021 | Sync docs: placement, 50u, header, autopilot | done — 3d36d2f (docs commit); f9f21a1 (status) |
-| 2026-06-26 | TASK-030 | Research: gen already supports A2 (imports+map+a2 script); 13-16 done, generate 17+18 | in_progress |
+| 2026-06-26 | TASK-030 | Native audio A2 batch unit-13..18 (extend script + 84 MP3s) | done — 6bbc693 |
