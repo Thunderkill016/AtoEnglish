@@ -64,7 +64,29 @@
 
 ---
 
-## Pool — P1 Kế hoạch tối giản V1 (DONE — archive)
+## Pool — V2 Phase 2 (post lesson-sections `dc1cd74`)
+
+> Cập nhật 2026-06-27. Lesson sections 5 file đã light; còn login chrome, doc sync, E2E verify.
+
+### TASK-097 — V2 audit: lesson sections no dark islands
+- **Mô tả:** `grep` 5 section files (Dialogue/Practice/Speaking/Shadowing/Quiz) + `LessonCard.tsx` — không `zinc-950`, không gradient CTA; fix sót nếu có.
+- **Done khi:** grep clean; lint+test pass.
+
+### TASK-098 — Login visual: thu gọn desktop chrome
+- **Mô tả:** `login/page.tsx` — bỏ/giảm desktop marketing panel; giữ 3-step + MinimalButton; mobile-first.
+- **Done khi:** Không panel >40% width desktop; e2e onboarding pass.
+
+### TASK-099 — MINIMAL_REDESIGN_V2 doc sync
+- **Mô tả:** Cập nhật `MINIMAL_REDESIGN_V2.md` §2 hiện trạng + §9 success criteria theo code thực tế post-V2.
+- **Done khi:** Doc khớp shipped; không claim task undone đã done.
+
+### TASK-100 — E2E time-to-lesson production baseline
+- **Mô tả:** Chạy `npm run e2e:time-to-lesson` + `npm run smoke:learn`; fix flake/regression; ghi baseline AGENT_PLAN.
+- **Done khi:** E2E pass 1 lần clean; PLAN có timestamp.
+
+---
+
+## Pool — P1 Kếhoạch tối giản V1 (DONE — archive)
 
 > Metric: time-to-lesson. Primitives: `src/components/design-system/`. UI-001–004 done.
 
