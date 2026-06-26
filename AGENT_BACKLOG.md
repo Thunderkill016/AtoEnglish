@@ -133,9 +133,10 @@
 - **Started:** auto-refill
 
 ### TASK-038 — Integration test user_onboarding_profile
-- **Status:** `in_progress`
+- **Status:** `done`
 - **Mô tả:** Thêm test trong `progress.integration.test.ts` hoặc file mới: insert profile row, verify RLS + columns goal/obstacle/daily_minutes.
 - **Done khi:** Integration test pass với Supabase local/prod test user.
+- **Completed:** 2026-06-26 — integration tests for profile insert+RLS (2 tests) added to progress.integration.test.ts; lint+units+integration all pass; 339f5a9
 - **Started:** 2026-06-26 — autopilot (no human)
 
 ### TASK-039 — Dashboard hiển thị daily_xp_goal từ onboarding
@@ -158,6 +159,7 @@
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
 | 2026-06-26 | TASK-037 | E2E playwright /learn/unit-19 click vocab speaker, verify Audio or TTS no-crash + network /audio/ probe; lint+159 pass | ffc66bc |
+| 2026-06-26 | TASK-038 | research(agents+memory+grep+setup+profile migration), set in_progress, update PLAN+BACKLOG, add profile cleanup in setup-integration, append RLS+columns tests (own insert success + cross-user block) to progress.integration.test.ts, lint+159 units+23 integration (incl 2 new) pass, commit+push via git-push.sh | 339f5a9 |
 | 2026-06-26 | TASK-037 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-06-26 | TASK-038 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-06-26 | TASK-039 | auto-refill từ AGENT_ROADMAP.md | ready |

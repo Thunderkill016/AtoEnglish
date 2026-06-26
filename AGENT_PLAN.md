@@ -7,7 +7,7 @@
 | Field | Value |
 |-------|-------|
 | Started | 2026-06-26 |
-| Focus | TASK-038 Integration test user_onboarding_profile (insert + RLS + columns) |
+| Focus | TASK-038 completed (integration test user_onboarding_profile) |
 | Owner | Autopilot (no human) |
 
 ### TASK-021 — Sync placement flow, 50 units, header shell, autopilot docs (PAGE_SPECIFICATIONS.md + AGENT_*)
@@ -133,6 +133,7 @@
 | 2026-06-26 | TASK-035 | research(memory+agents+e2e files), plan update, extend helpers/auth + onboarding.spec for DB verify of profile+xp_goal on quiz+signup, cleanup, lint+159+tsc pass, commit+push | done — b23d945 |
 | 2026-06-26 | TASK-036 | research(agents+grep+data+unit-audio+config), set in_progress, update PLAN, run refill (low ready), add rewrite next.config, verify probe map 200 for unit19(B1)/unit36(B2), lint+159+tsc pass, commit+push | done — 0d30be9 |
 | 2026-06-26 | TASK-037 | research(agents+grep+e2e+unit-audio+vocab), set in_progress, update PLAN+BACKLOG, add setE2EStartingUnit helper, add E2E test in placement-test (B1 login, advance warmup, click Nghe: speaker, Audio spy + /audio/ waitForRequest), lint+159+tsc pass, commit+push | done — ffc66bc |
+| 2026-06-26 | TASK-038 | research(memory+agents+grep+setup-integration+profile migration+RLS), phase1/2/3, update PLAN/BACKLOG to in_progress, extend cleanup, implement 2 minimal RLS tests in progress.integration (own insert+columns verify, policy block), run lint+test+test:integration (all 159u+23i pass), commit 339f5a9 + scripts/git-push.sh main | done — 339f5a9 |
 
 ### TASK-034 — Regenerate Supabase types after onboarding migration
 **Mục tiêu**: Chạy `npm run db:types` (sau khi migration `user_onboarding_profile` đã apply trên prod). So sánh output với patch tạm thời (từ TASK-032); nếu khác (table order, Relationships: [] vs FK, generated header) thì overwrite `src/types/supabase.ts` bằng generated chính thức từ prod schema. Commit nếu có thay đổi. Đảm bảo tsc/lint/test pass, types khớp live.
