@@ -394,10 +394,11 @@
 - **Started:** 2026-06-26 — autopilot (PHASE1 research complete: read AGENTS/BACKLOG/PLAN/CONTENT§6-7 + sim search_memory logs + grep TASK; 2 ready >=2 skip refill; PHASE2 plan update + BACKLOG in_progress; PHASE3 gates clean no fix + doc sync)
 
 ### TASK-065 — Autopilot maintenance sweep #65
-- **Status:** `in_progress`
+- **Status:** `done`
 - **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
 - **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
-- **Started:** 2026-06-26 — autopilot (PHASE1: read AGENTS/BACKLOG/PLAN/CONTENT§6-7 + sim search_memory via logs/grep (TASK-064 clean prior); PHASE2: PLAN update + BACKLOG in_progress (4ready>=2 skip refill); PHASE3: ...)
+- **Completed:** 2026-06-26 — gates clean (lint0 +170t +tsc0 +cs50/50 +audit50/50) no fix + sync log/PLAN/BACKLOG; commit+push via git-push.sh main; autonomous
+- **Started:** 2026-06-26 — autopilot (PHASE1 research complete: read AGENTS/BACKLOG/PLAN/CONTENT§6-7 + sim search_memory logs + grep TASK; 4 ready >=2 skip refill; PHASE2 plan update + BACKLOG in_progress; PHASE3: gates clean no fix + doc sync)
 
 
 ### TASK-066 — Autopilot maintenance sweep #66
@@ -433,7 +434,7 @@
 | 2026-06-26 | TASK-068 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-06-26 | TASK-063 | PHASE1: read AGENTS+BACKLOG+PLAN+CONTENT§6-7 + grep TASK + sim search_memory logs; PHASE2: PLAN update (focus+full section) + BACKLOG in_progress (3ready skip refill); PHASE3: gates clean (lint 0 + 170t + tsc + cs50/50 + audit50/50) no fix needed; sync log + commit + push | done — b7ef421 |
 | 2026-06-26 | TASK-064 | PHASE1: read AGENTS+BACKLOG+PLAN+CONTENT§6-7 + sim search_memory via logs/grep (TASK-063 clean prior); PHASE2: PLAN update + BACKLOG in_progress (2ready>=2 skip refill); PHASE3: gates clean (lint0 +170t +tsc +cs50/50 +audit50/50) no fix + sync log/PLAN/BACKLOG; commit+push via git-push.sh main | done — 50c5438 |
-| 2026-06-26 | TASK-065 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-06-26 | TASK-065 | PHASE1: read AGENTS/BACKLOG/PLAN/CONTENT§6-7 + sim search_memory via logs/grep (TASK-064 clean prior); PHASE2: PLAN update + BACKLOG in_progress (4ready>=2 skip refill); PHASE3: gates clean (lint0+170t+tsc0+cs50/50+audit50/50) no fix + sync log/PLAN/BACKLOG; commit+push via git-push.sh main | done — e4827d2 |
 | 2026-06-26 | TASK-047 | PHASE1 search_memory+read agents+backlog+plan+roadmap+grep yml+daemon ready logic; PHASE2 PLAN update+backlog in_progress (2ready skip refill); PHASE3: yml schedule hourly cron + check count ready, ::error exit1 if 0 + ✅ if healthy; gates lint+170t pass; commit ccef87e + push via git-push.sh main | done — ccef87e |
 | 2026-06-26 | TASK-048 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-06-26 | TASK-058 | PHASE1 research(memory+AGENTS+BACKLOG+PLAN+CONTENT§6-7+center-ref+blueprint+flow+content-std+unit1+grep/count B2 L1), PHASE2 update PLAN+BACKLOG in_progress (ready>2 skip refill), PHASE3: content-std B2=0.5 + added l1_interference_vn (unit33/34 boost, others >=50% already qualifying); lint(quick unrelated)+169 tests+tsc+cs50/50+audit50/50 pass; commit+push via git-push.sh main | done — f859b5c |
