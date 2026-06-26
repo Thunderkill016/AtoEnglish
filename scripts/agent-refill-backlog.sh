@@ -13,7 +13,8 @@ ROADMAP="$ROOT/AGENT_ROADMAP.md"
 LOG_DIR="$ROOT/logs/agent"
 DRY_RUN=0
 [[ "${1:-}" == "--dry-run" ]] && DRY_RUN=1
-export DRY_RUN
+# Chỉ export khi dry-run — export DRY_RUN=0 khiến Python coi là truthy và không ghi file
+[[ "$DRY_RUN" == 1 ]] && export DRY_RUN=1
 
 MIN_READY="${MIN_READY:-2}"
 REFILL_TARGET="${REFILL_TARGET:-4}"
@@ -120,7 +121,7 @@ nhật_ký_header = "| Date | Task | Result | Commit |\n|------|------|--------|
 if nhật_ký_header in new_backlog:
     new_backlog = new_backlog.replace(nhật_ký_header, nhật_ký_header + log_rows, 1)
 
-if not __import__("os").environ.get("DRY_RUN"):
+if __import__("os").environ.get("DRY_RUN") != "1":
     open(backlog_path, "w", encoding="utf-8").write(new_backlog)
 
 ids = ",".join(t[0] for t in to_add)
