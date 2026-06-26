@@ -366,15 +366,35 @@
 
 
 ### TASK-047 — GitHub agent-health check auto-refill
-- **Status:** `in_progress`
+- **Status:** `done`
 - **Mô tả:** Workflow `agent-health.yml` fail nếu backlog `ready`=0 quá 6h (daemon stalled).
 - **Done khi:** Workflow có step grep backlog + alert.
+- **Completed:** 2026-06-26 — schedule cron hourly + step with grep ready count + ::error + exit 1 on 0 (alert); healthy path ✅; lint+170 tests pass; commit+push via git-push.sh main; ccef87e
 - **Started:** 2026-06-26 — autopilot (PHASE1: search_memory(TASK-047 agent-health) sim logs + read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6-7 + grep .github/workflows + daemon scripts ready-count logic; PHASE2 plan update + BACKLOG in_progress (ready=2 skip refill); PHASE3: edit yml to scheduled cron + fail on 0 + alert)
 
 ### TASK-048 — Onboarding profile read API
 - **Status:** `ready`
 - **Mô tả:** Server action `getOnboardingProfile()`; dùng trên dashboard/settings.
 - **Done khi:** Typed return; lint+test pass.
+- **Started:** auto-refill
+
+
+### TASK-063 — Autopilot maintenance sweep #63
+- **Status:** `ready`
+- **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
+- **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
+- **Started:** auto-refill
+
+### TASK-064 — Autopilot maintenance sweep #64
+- **Status:** `ready`
+- **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
+- **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
+- **Started:** auto-refill
+
+### TASK-065 — Autopilot maintenance sweep #65
+- **Status:** `ready`
+- **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
+- **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
 - **Started:** auto-refill
 
 
@@ -387,7 +407,10 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
-| 2026-06-26 | TASK-047 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-06-26 | TASK-063 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-06-26 | TASK-064 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-06-26 | TASK-065 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-06-26 | TASK-047 | PHASE1 search_memory+read agents+backlog+plan+roadmap+grep yml+daemon ready logic; PHASE2 PLAN update+backlog in_progress (2ready skip refill); PHASE3: yml schedule hourly cron + check count ready, ::error exit1 if 0 + ✅ if healthy; gates lint+170t pass; commit ccef87e + push via git-push.sh main | done — ccef87e |
 | 2026-06-26 | TASK-048 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-06-26 | TASK-058 | PHASE1 research(memory+AGENTS+BACKLOG+PLAN+CONTENT§6-7+center-ref+blueprint+flow+content-std+unit1+grep/count B2 L1), PHASE2 update PLAN+BACKLOG in_progress (ready>2 skip refill), PHASE3: content-std B2=0.5 + added l1_interference_vn (unit33/34 boost, others >=50% already qualifying); lint(quick unrelated)+169 tests+tsc+cs50/50+audit50/50 pass; commit+push via git-push.sh main | done — f859b5c |
 | 2026-06-26 | TASK-059 | PHASE1 research(memory+AGENTS+blueprint+center+content-std+unit1+count units), PHASE2 PLAN+BACKLOG in_progress (refill skipped 8ready), PHASE3: min=3 in content-std + +1 cr item to each of unit2-12 (spiral from prior units, unit1 style), gates: tsc/lint/169test + content-std 50/50 + audit50/50 pass; commit+push via git-push | done — 81e06b4 |
