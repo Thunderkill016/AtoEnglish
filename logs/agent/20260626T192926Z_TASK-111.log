@@ -10,3 +10,4 @@ PHASE3:
 No first failure → no fix applied. Only doc sync (PLAN/BACKLOG) + log. No src edits.
 Log: this file. Status will be done + Nhật ký + SHA after commit.
 Gates clean; autonomous (no human).
+735bd02
