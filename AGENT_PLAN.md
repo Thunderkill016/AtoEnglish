@@ -7,7 +7,7 @@
 | Field | Value |
 |-------|-------|
 | Started | 2026-06-26 |
-| Focus | **P1 Bài học + cách học** — TASK-049..056 sau TASK-044; không thêm agent/CI/UI phụ |
+| Focus | **Chuẩn nội dung** TASK-057..060 → UI TASK-049+; `npm run test:content-standard` = gate content |
 | Owner | Autopilot (no human) |
 
 ### TASK-021 — Sync placement flow, 50 units, header shell, autopilot docs (PAGE_SPECIFICATIONS.md + AGENT_*)

@@ -174,7 +174,30 @@ C1 → "C1 Advanced"
 
 ---
 
-## 6. SEO & Meta Content
+## 6. Chuẩn SDL — Mọi bài học phải đạt
+
+> Kiểm tra tự động: `npm run test` (curriculum-quality) + `bash scripts/audit-lesson-content.sh`  
+> Code: `src/lib/lessons/content-standard.ts` · Mẫu: `unit1.ts`
+
+| Hạng mục | Chuẩn |
+|----------|--------|
+| **situation** | ≥30 ký tự — tình huống thực tế người Việt hay gặp |
+| **learningOutcomes** | 2–5 mục — đo được sau bài |
+| **culturalNote** | ≥40 ký tự — ghi chú văn hóa / pragmatic |
+| **warmupGreetings** | ≥3 câu — kích hoạt prior knowledge |
+| **vocab** | 8–20 từ, audio path, example + collocation (A2+) |
+| **l1_interference_vn** | A1/A2: 100% từ · B1/B2: ≥50% từ (lỗi người Việt hay mắc) |
+| **fluencyDrill** | ≥5 câu — automaticity (Nation strand 4) |
+| **practiceTranslate** | ≥3 câu VN→EN trong phạm vi unit |
+| **listenAndChoose** | ≥5 câu |
+| **quiz** | ≥5 câu, distractor hợp lý |
+| **cumulativeReviewQuestions** | ≥3 câu ôn tích lũy |
+
+**Không đạt chuẩn → không merge.** Autopilot TASK-057+ sửa content theo band level.
+
+---
+
+## 7. SEO & Meta Content
 
 ### Title Pattern
 
@@ -193,7 +216,7 @@ Học tiếng Anh miễn phí — AtoEnglish
 
 ---
 
-## 7. Terminology Glossary
+## 8. Terminology Glossary
 
 | Thuật ngữ EN | Thuật ngữ VN (dùng trong app) |
 |-------------|------------------------------|

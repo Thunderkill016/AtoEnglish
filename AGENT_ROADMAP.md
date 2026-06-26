@@ -50,6 +50,22 @@
 - **Mô tả:** Extend test: mọi unit phải có `situation` + `learningOutcomes` length≥2 (hoặc enrich-unit fallback documented).
 - **Done khi:** Test pass 50 units.
 
+### TASK-057 — Chuẩn content: practiceTranslate ≥3 mọi unit
+- **Mô tả:** 30 unit chỉ có 1 câu translate — bổ sung đến ≥3, sát vocab+grammar unit đó.
+- **Done khi:** `test:content-standard` pass; LESSON_CONTENT_STANDARD.practiceTranslateMin=3.
+
+### TASK-058 — Chuẩn content: B2 L1 interference ≥50%
+- **Mô tả:** unit33–42: thêm `l1_interference_vn` cho từ vựng (lỗi người Việt hay mắc).
+- **Done khi:** l1MinRatioByLevel.B2=0.5; test:content-standard pass.
+
+### TASK-059 — Chuẩn content: cumulativeReview ≥3
+- **Mô tả:** Nâng cumulativeReviewQuestions từ 1–2 lên ≥3 câu/unit.
+- **Done khi:** cumulativeReviewMin=3; test pass.
+
+### TASK-060 — Fix B1 unit24 + unit31 L1 notes
+- **Mô tả:** Hai unit B1 dưới 50% L1 — bổ sung ghi chú đủ 50%.
+- **Done khi:** test:content-standard pass với B1 min 0.5.
+
 ### TASK-056 — Gộp roadmap: 1 nút "Học tiếp" từ dashboard
 - **Mô tả:** Dashboard continue card dùng `getNextUnitRoute` + full lesson; ẩn duplicate path /learn vs /roadmap confusion trong copy.
 - **Done khi:** 1 CTA rõ; lint+test pass.

@@ -182,6 +182,30 @@
 - **Done khi:** 3 E2E run liên tiếp pass.
 - **Started:** 2026-06-26 — autopilot (no human)
 
+### TASK-057 — practiceTranslate ≥3 mọi unit
+- **Status:** `ready`
+- **Mô tả:** Bổ sung câu dịch đến ≥3/unit; nâng practiceTranslateMin=3.
+- **Done khi:** `npm run test:content-standard` pass.
+- **Started:** user mandate — chuẩn nội dung (ưu tiên trước UI)
+
+### TASK-058 — B2 L1 interference ≥50%
+- **Status:** `ready`
+- **Mô tả:** unit33–42 thêm l1_interference_vn; B2 ratio 0.5.
+- **Done khi:** test:content-standard pass.
+- **Started:** user mandate — chuẩn nội dung
+
+### TASK-059 — cumulativeReview ≥3
+- **Status:** `ready`
+- **Mô tả:** Nâng cumulative review câu/unit.
+- **Done khi:** cumulativeReviewMin=3; test pass.
+- **Started:** user mandate — chuẩn nội dung
+
+### TASK-060 — B1 unit24+unit31 L1 notes
+- **Status:** `ready`
+- **Mô tả:** Hai unit B1 dưới 50% L1.
+- **Done khi:** test:content-standard pass B1.
+- **Started:** user mandate — chuẩn nội dung
+
 ### TASK-049 — Lesson UI: migrate Dialogue + Shadowing + Speaking + Quiz
 - **Status:** `ready`
 - **Mô tả:** Dùng `lesson-ui/` cho 4 section còn lại — một kiểu visual, không half-old half-new.
@@ -219,9 +243,10 @@
 - **Started:** user mandate — bài học P1
 
 ### TASK-055 — curriculum-quality: situation + learningOutcomes
-- **Status:** `ready`
-- **Mô tả:** Test bắt buộc situation + learningOutcomes≥2 cho 50 units.
-- **Done khi:** Test pass.
+- **Status:** `done`
+- **Mô tả:** `content-standard.ts` + `lesson-content-standard.test.ts` + audit script.
+- **Done khi:** Chuẩn SDL codified; 38/50 pass; backlog 057–060 nâng tiếp.
+- **Completed:** 2026-06-26 — content-standard.ts, test, CONTENT_STYLE §6, audit-lesson-content.sh
 - **Started:** user mandate — bài học P1
 
 ### TASK-056 — Dashboard 1 nút Học tiếp (full lesson)
