@@ -27,16 +27,16 @@ if [[ ! -f "$BACKLOG" ]]; then
   exit 1
 fi
 
-READY_COUNT=$(grep -c '\*\*Status:\*\* `ready`' "$BACKLOG" 2>/dev/null || true)
-READY_COUNT=${READY_COUNT:-0}
+READY_BEFORE=$(grep -c '\*\*Status:\*\* `ready`' "$BACKLOG" 2>/dev/null || true)
+READY_BEFORE=${READY_BEFORE:-0}
 
-if [[ "$READY_COUNT" -ge "$MIN_READY" ]]; then
-  log "✅ Backlog OK ($READY_COUNT ready ≥ $MIN_READY) — skip refill"
+if [[ "$READY_BEFORE" -ge "$MIN_READY" ]]; then
+  log "✅ Backlog OK ($READY_BEFORE ready ≥ $MIN_READY) — skip refill"
   exit 0
 fi
 
-NEED=$((REFILL_TARGET - READY_COUNT))
-log "📭 Backlog thấp ($READY_COUNT ready) — refill tối đa $NEED task từ roadmap..."
+NEED=$((REFILL_TARGET - READY_BEFORE))
+log "📭 Backlog thấp ($READY_BEFORE ready) — refill tối đa $NEED task từ roadmap..."
 
 RESULT=$(python3 - "$BACKLOG" "$ROADMAP" "$NEED" <<'PY'
 import re, sys
@@ -139,7 +139,15 @@ if [[ "$ADDED" -eq 0 ]]; then
   exit 0
 fi
 
-log "➕ Đã thêm $ADDED task: $IDS"
+READY_AFTER=$(grep -c '\*\*Status:\*\* `ready`' "$BACKLOG" 2>/dev/null || true)
+READY_AFTER=${READY_AFTER:-0}
+
+if [[ "$READY_AFTER" -le "$READY_BEFORE" ]]; then
+  log "⚠️  Refill không đổi ready count ($READY_BEFORE → $READY_AFTER) — bỏ qua commit"
+  exit 0
+fi
+
+log "➕ Đã thêm $ADDED task: $IDS (ready $READY_BEFORE → $READY_AFTER)"
 
 if [[ "$DRY_RUN" == 1 ]]; then
   log "(dry-run — không commit)"
@@ -149,7 +157,7 @@ fi
 cd "$ROOT"
 git add AGENT_BACKLOG.md
 if git diff --cached --quiet; then
-  log "⚠️  Không có diff sau refill"
+  log "✅ Backlog đã có trên git ($READY_AFTER ready) — không cần commit"
   exit 0
 fi
 

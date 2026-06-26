@@ -62,6 +62,12 @@ fi
 
 STASHED=0
 if ! git diff --quiet 2>/dev/null || ! git diff --cached --quiet 2>/dev/null; then
+  STASH_COUNT=$(git stash list 2>/dev/null | wc -l)
+  STASH_COUNT=${STASH_COUNT// /}
+  if [[ "${STASH_COUNT:-0}" -ge 15 ]]; then
+    log "🧹 Stash đầy ($STASH_COUNT) — dọn trước khi stash mới..."
+    bash "$ROOT/scripts/agent-watchdog.sh" 2>&1 | grep -E 'Stash|Health' | tail -2 || true
+  fi
   log "📦 Stashing local changes trước khi pull..."
   if git stash push -u -m "autopilot-$(date -u +%Y%m%dT%H%M%SZ)" --quiet 2>/dev/null; then
     STASHED=1

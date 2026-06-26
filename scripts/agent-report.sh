@@ -20,7 +20,7 @@ fi
 LAST_COMMIT=$(cd "$ROOT" && git log -1 --format='%h %ci %s' 2>/dev/null || echo "unknown")
 READY_TASKS=$(grep -c '\*\*Status:\*\* `ready`' "$ROOT/AGENT_BACKLOG.md" 2>/dev/null || true)
 READY_TASKS=${READY_TASKS:-0}
-IN_PROGRESS=$(grep '\*\*Status:\*\* `in_progress`' "$ROOT/AGENT_BACKLOG.md" 2>/dev/null | head -1 | sed 's/.*### //; s/ —.*//' || echo "none")
+IN_PROGRESS=$(grep -B5 '\*\*Status:\*\* `in_progress`' "$ROOT/AGENT_BACKLOG.md" 2>/dev/null | grep '^### TASK-' | head -1 | sed 's/^### //; s/ —.*//' || echo "none")
 DONE_TODAY=$(grep "$(date +%Y-%m-%d)" "$ROOT/AGENT_BACKLOG.md" 2>/dev/null | grep -c 'done' || echo 0)
 
 LAST_CYCLE=""
@@ -39,6 +39,26 @@ if [[ -f "$ROOT/logs/agent/deploy-check.log" ]]; then
   fi
 fi
 
+STASH_COUNT=$(git -C "$ROOT" stash list 2>/dev/null | wc -l)
+STASH_COUNT=${STASH_COUNT// /}
+CIRCUIT="OK"
+if [[ -f "$ROOT/logs/agent/.orchestrator-state" ]]; then
+  FAIL_RECENT=$(tail -3 "$ROOT/logs/agent/.orchestrator-state" 2>/dev/null | grep -c '^FAIL$' || true)
+  FAIL_RECENT=${FAIL_RECENT:-0}
+  [[ "$FAIL_RECENT" -ge 3 ]] && CIRCUIT="⚠️ OPEN ($FAIL_RECENT fail)"
+fi
+
+WATCHDOG_LINE=""
+if [[ -f "$ROOT/logs/agent/watchdog.log" ]]; then
+  WATCHDOG_LINE=$(tail -1 "$ROOT/logs/agent/watchdog.log" 2>/dev/null | sed 's/^\[//; s/\] /] /' || true)
+fi
+
+ACTIVE_AGENT="none"
+LATEST_AGENT_LOG=$(ls -t "$ROOT/logs/agent"/*_TASK-*.log 2>/dev/null | head -1 || true)
+if [[ -n "$LATEST_AGENT_LOG" ]] && pgrep -f "grok --prompt-file.*atoenglish" >/dev/null 2>&1; then
+  ACTIVE_AGENT="$(basename "$LATEST_AGENT_LOG" .log | sed 's/.*_//')"
+fi
+
 cat > "$REPORT" <<EOF
 # Báo cáo Autopilot — AtoEnglish
 
@@ -54,7 +74,14 @@ cat > "$REPORT" <<EOF
 | Commit mới nhất | \`$LAST_COMMIT\` |
 | Task đang làm | $IN_PROGRESS |
 | Task ready còn lại | $READY_TASKS |
+| Agent đang chạy | $ACTIVE_AGENT |
+| Circuit breaker | $CIRCUIT |
+| Git stash | $STASH_COUNT entries |
 | Live | https://atoenglish.vercel.app |
+
+## Giám sát (watchdog)
+
+${WATCHDOG_LINE:-Chưa chạy — \`systemctl --user enable --now atoenglish-autopilot-watchdog.timer\`}
 
 ## Phiên gần nhất
 
