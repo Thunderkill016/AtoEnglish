@@ -14,7 +14,45 @@
 
 - Format giống backlog: `### TASK-NNN — Title` + Mô tả + Done khi
 - Chỉ thêm số TASK **lớn hơn** mọi TASK đã có trong backlog
-- Ưu tiên: P1 sản phẩm → P2 chất lượng → P3 mở rộng
+- **Ưu tiên tuyệt đối (2026-06-26):** P1 **bài học + cách học** — không thêm UI/agent/CI trừ khi chặn học
+
+---
+
+## Pool — P1 Bài học & cách học (USER MANDATE)
+
+> Mục tiêu: trải nghiệm học 1 đường rõ, bài đầy đủ, polish section, không ôn nhanh mặc định.
+
+### TASK-049 — Lesson UI: migrate Dialogue + Shadowing + Speaking + Quiz
+- **Mô tả:** Dùng `lesson-ui/` (LessonSectionHeader, LessonContinueButton, lessonSectionMotion) cho 4 section còn lại. Một kiểu visual, không half-old half-new.
+- **Done khi:** 4 file section dùng kit; lint+test pass; không đổi logic học.
+
+### TASK-050 — Lesson header gọn: bớt chrome, giữ IPOR
+- **Mô tả:** `LessonHeader`: gộp phase bar + segment progress; ẩn mục tiêu dài trên mobile; 1 dòng tiến độ rõ.
+- **Done khi:** Header ≤2 hàng trên mobile; vẫn hiện IPOR; lint pass.
+
+### TASK-051 — CTA học: full lesson primary everywhere
+- **Mô tả:** Dashboard `UnitCard`, business track, learn list — nút chính = bài đầy đủ; `?mini=1` chỉ link phụ "Ôn lại" sau khi unit done.
+- **Done khi:** Không còn CTA primary màu amber mini; grep `mini=1` chỉ secondary links.
+
+### TASK-052 — Tiến độ section lưu server (resume cross-device)
+- **Mô tả:** `user_lesson_progress` hoặc cột mới: `last_section`, `mini`. Server action save/load; fallback localStorage.
+- **Done khi:** Đổi máy resume đúng section; integration test hoặc unit test action.
+
+### TASK-053 — Session break: copy cách học Phần 2 (output)
+- **Mô tả:** Card nghỉ giữa bài: nhấn shadowing+nói bắt buộc; bỏ tag cloud rối; CTA rõ.
+- **Done khi:** Copy tiếng Việt ngắn, đúng IPOR output; UI gọn hơn.
+
+### TASK-054 — E2E full lesson path (không mini)
+- **Mô tả:** Playwright: auth test user → `/learn/unit-1` không `mini` → thấy HowToLearnCard + SituationCard + section Khởi động.
+- **Done khi:** E2E pass 3 lần; không flake.
+
+### TASK-055 — curriculum-quality: bắt buộc situation + learningOutcomes
+- **Mô tả:** Extend test: mọi unit phải có `situation` + `learningOutcomes` length≥2 (hoặc enrich-unit fallback documented).
+- **Done khi:** Test pass 50 units.
+
+### TASK-056 — Gộp roadmap: 1 nút "Học tiếp" từ dashboard
+- **Mô tả:** Dashboard continue card dùng `getNextUnitRoute` + full lesson; ẩn duplicate path /learn vs /roadmap confusion trong copy.
+- **Done khi:** 1 CTA rõ; lint+test pass.
 
 ---
 

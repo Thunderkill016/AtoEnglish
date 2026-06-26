@@ -7,7 +7,7 @@
 | Field | Value |
 |-------|-------|
 | Started | 2026-06-26 |
-| Focus | TASK-042 (RoadmapClient group B2 units 33-42 with level badge; respect starting_unit_index for B2 users) |
+| Focus | **P1 Bài học + cách học** — TASK-049..056 sau TASK-044; không thêm agent/CI/UI phụ |
 | Owner | Autopilot (no human) |
 
 ### TASK-021 — Sync placement flow, 50 units, header shell, autopilot docs (PAGE_SPECIFICATIONS.md + AGENT_*)
@@ -114,6 +114,7 @@
 
 | Time (UTC) | Task | Plan summary | Outcome |
 |------------|------|--------------|---------|
+| 2026-06-26 | TASK-044 | PHASE1: search_memory + read AGENTS/BACKLOG/PLAN/ROADMAP + grep e2e/placement/helpers/global/playwright; PHASE2 update PLAN+BACKLOG in_progress; PHASE3 minimal stabilize: networkidle + reset isolate in placement-test.spec; lint+test | in_progress |
 | 2026-06-26T01:36Z | TASK-001/002 | P0 ops: migration blocked, deploy OK | autopilot armed |
 | 2026-06-26T08:55Z | TASK-001/011 | db push migration + E2E B1 unlock | 2 e2e pass |
 | 2026-06-26 | TASK-021 | Sync docs: placement, 50u, header, autopilot | done — 3d36d2f (docs commit); f9f21a1 (status) |
@@ -335,3 +336,29 @@
 - Fail 2x → blocked.
 - Pure UI + props already wired; no secret/DB.
 **Done khi**: B2 units 33-42 appear grouped in RoadmapClient with visible "B2" level badges; B2-placed user sees entry unit highlighted + pre-start marked review; `npm run lint && npm run test` pass; 1 commit pushed; backlog done + SHA; autonomous.
+
+### TASK-044 — Placement test retry stability
+**Mục tiêu**: Ổn định các E2E test trong e2e/placement-test.spec.ts (Placement Test Flow + Learn audio native probe) để giảm flake. Áp dụng "wait for network idle" (thay các waitForLoadState('domcontentloaded') + short waits + timeout thấp bằng networkidle + generous); "isolate test user" bằng cách đảm bảo reset state rõ ràng hơn cho shared E2E test user ở tất cả describe (gọi reset trước setStarting trong audio test; có thể mở rộng reset nếu cần). Giữ minimal, chỉ thay đổi waits + 1-2 reset calls + login helper nếu cần; không đổi logic test hay selectors.
+**Bước thực hiện**:
+1. Search memory (done via edge fn "TASK-044 placement e2e flake...") + đọc AGENTS.md (ALWAYS), BACKLOG/PLAN/ROADMAP/AUTOPILOT, e2e/placement-test.spec.ts, e2e/helpers/auth.ts, e2e/global-setup.ts, playwright.config.ts, e2e/mobile.spec.ts (networkidle pattern), test-results/* (prior flakes), src/app/(main)/learn/* if needed for load states.
+2. Cập nhật AGENT_PLAN.md (header + section mới) + AGENT_BACKLOG.md (status `in_progress` + started).
+3. Backlog count >=2 (3 ready incl 044/45/46) — KHÔNG chạy refill (chỉ khi <2).
+4. Implement tối thiểu đúng scope trong e2e/placement-test.spec.ts:
+   - Thêm `await page.waitForLoadState("networkidle");` sau các page.goto chính (placement, learn, roadmap), sau loginAsE2ETestUser, sau B1 select clicks + waits.
+   - Thay "domcontentloaded" bằng "networkidle" trong audio test.
+   - Trong audio test describe: trước setE2EStartingUnit, gọi `await resetE2EPlacementState(userId);` (isolate: đảm bảo sạch trước override starting; state như lesson progress nếu ảnh hưởng).
+   - Tăng một số timeout nhạy cảm (e.g. waitForRequest 10s, expect visible 15s) + thêm .catch an toàn nếu cần.
+   - Optionally: update loginAsE2ETestUser trong helpers/auth.ts để `await page.waitForLoadState("networkidle");` sau waitURL (giúp mọi E2E dùng nó).
+5. `npm run lint && npm run test && npx tsc --noEmit`.
+6. (Nếu có env + dev sẵn: thử `npm run e2e -- e2e/placement-test.spec.ts` nhưng không bắt buộc; CI sẽ verify 3 runs liên tiếp. Tự debug nếu local e2e fail 1 lần.)
+7. Update BACKLOG (in_progress→done + Nhật ký + SHA), PLAN log table.
+8. git pull --rebase; git add e2e/placement-test.spec.ts e2e/helpers/auth.ts? AGENT_BACKLOG.md AGENT_PLAN.md; commit "test(e2e): stabilize placement by networkidle waits + user reset isolation (TASK-044)"; bash scripts/git-push.sh main.
+**Rủi ro**:
+- E2E cần dev server + admin creds (SUPABASE_SERVICE_ROLE_KEY); nếu thiếu → không chạy e2e full ở đây, chỉ lint+unit, nhưng vẫn ship nếu units ok (E2E flake fix là cho CI/prod verify). Nếu thiếu secret cho verify → set blocked sau 1 attempt.
+- networkidle quá strict (slow assets) → test timeout; dùng với timeout cao hơn, và reuse pattern từ mobile.spec (đã dùng thành công).
+- Shared user isolation: resetE2EPlacementState chỉ chạm user_progress — nếu learn page flake do user_lesson_progress hoặc card_reviews thì cần mở rộng reset, nhưng giữ minimal trước (chỉ placement relevant); nếu vẫn flake sau 1 push thì lần 2 mở rộng.
+- Audio test: speaker click + network /audio/ có thể vẫn no-op ở headless (TTS/Audio blocked) — test đã tolerant (hit || true), chỉ cần không crash + page stable.
+- Playwright webServer timing (reuseExisting); nếu dev not hot after edits, may need manual start. 
+- Fail 2x liên tục → blocked + ghi lý do (e.g. deeper race in app).
+- Không đổi prod code, chỉ test files.
+**Done khi**: 3 E2E run liên tiếp (local/CI) pass cho placement-test.spec (incl audio subtest); `npm run lint && npm run test` pass; 1 commit pushed; backlog done + entry SHA; autonomous no user.

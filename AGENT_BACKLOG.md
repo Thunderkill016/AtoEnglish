@@ -177,10 +177,58 @@
 
 
 ### TASK-044 — Placement test retry stability
-- **Status:** `ready`
+- **Status:** `in_progress`
 - **Mô tả:** Ổn định E2E placement nếu flake (wait for network idle, isolate test user).
 - **Done khi:** 3 E2E run liên tiếp pass.
-- **Started:** auto-refill
+- **Started:** 2026-06-26 — autopilot (no human)
+
+### TASK-049 — Lesson UI: migrate Dialogue + Shadowing + Speaking + Quiz
+- **Status:** `ready`
+- **Mô tả:** Dùng `lesson-ui/` cho 4 section còn lại — một kiểu visual, không half-old half-new.
+- **Done khi:** 4 file section dùng kit; lint+test pass; không đổi logic học.
+- **Started:** user mandate — bài học P1
+
+### TASK-050 — Lesson header gọn: bớt chrome, giữ IPOR
+- **Status:** `ready`
+- **Mô tả:** Gộp phase bar + segment progress; ẩn mục tiêu dài trên mobile.
+- **Done khi:** Header ≤2 hàng trên mobile; vẫn hiện IPOR; lint pass.
+- **Started:** user mandate — bài học P1
+
+### TASK-051 — CTA học: full lesson primary everywhere
+- **Status:** `ready`
+- **Mô tả:** Dashboard/business/learn — nút chính = bài đầy đủ; mini chỉ link phụ sau unit done.
+- **Done khi:** Không CTA primary amber mini; grep verify.
+- **Started:** user mandate — bài học P1
+
+### TASK-052 — Tiến độ section lưu server (resume cross-device)
+- **Status:** `ready`
+- **Mô tả:** Save/load `last_section` server + fallback localStorage.
+- **Done khi:** Resume cross-device; test action.
+- **Started:** user mandate — bài học P1
+
+### TASK-053 — Session break: copy cách học Phần 2 (output)
+- **Status:** `ready`
+- **Mô tả:** Card nghỉ giữa bài — nhấn shadowing+nói; UI gọn.
+- **Done khi:** Copy IPOR output rõ; ít tag hơn.
+- **Started:** user mandate — bài học P1
+
+### TASK-054 — E2E full lesson path (không mini)
+- **Status:** `ready`
+- **Mô tả:** Playwright full lesson unit-1: HowToLearnCard + Khởi động visible.
+- **Done khi:** E2E pass 3 lần.
+- **Started:** user mandate — bài học P1
+
+### TASK-055 — curriculum-quality: situation + learningOutcomes
+- **Status:** `ready`
+- **Mô tả:** Test bắt buộc situation + learningOutcomes≥2 cho 50 units.
+- **Done khi:** Test pass.
+- **Started:** user mandate — bài học P1
+
+### TASK-056 — Dashboard 1 nút Học tiếp (full lesson)
+- **Status:** `ready`
+- **Mô tả:** Continue card → getNextUnitRoute full lesson; giảm confusion learn/roadmap.
+- **Done khi:** 1 CTA rõ; lint+test pass.
+- **Started:** user mandate — bài học P1
 
 ### TASK-045 — Sync AGENT_AUTOPILOT.md với auto-refill
 - **Status:** `ready`
@@ -202,7 +250,8 @@
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
 | 2026-06-26 | TASK-043 | research(agents+memory+grep+orch+watchdog), set in_progress, update PLAN+BACKLOG, implement only-agent-changes skip stash in orchestrator + auto pop at end + age>7d cleanup (orch+watchdog MAX=7), syntax+sim test, lint+159 tests+tsc pass, commit 5062230 + git-push.sh main; status done | done — 5062230 |
-| 2026-06-26 | TASK-044 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-06-26 | TASK-049..056 | user mandate: P1 bài học+cách học — queued ready sau TASK-044 | ready |
+| 2026-06-26 | TASK-044 | research(agents+memory+grep+placement e2e files), set in_progress, update PLAN+BACKLOG, implement networkidle waits + reset for test user isolation in placement-test.spec.ts (+helper if needed), lint+test | in_progress |
 | 2026-06-26 | TASK-045 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-06-26 | TASK-046 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-06-26 | TASK-042 | research(agents+memory+grep+roadmap+units+placement), update PLAN+BACKLOG in_progress, minimal add B2 units(33-42) group + "B2" badge pill + startingUnitIndex respect (entry highlight + review dim) inside phase-3 card in RoadmapClient, lint+159+tsc pass, commit 473f514 + git-push.sh main | done — 473f514 |
