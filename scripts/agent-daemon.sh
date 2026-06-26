@@ -32,7 +32,8 @@ FAIL_STREAK=0
 EMPTY_STREAK=0
 
 while true; do
-  READY_COUNT=$(grep -c '\*\*Status:\*\* `ready`' "$ROOT/AGENT_BACKLOG.md" 2>/dev/null || echo 0)
+  READY_COUNT=$(grep -c '\*\*Status:\*\* `ready`' "$ROOT/AGENT_BACKLOG.md" 2>/dev/null || true)
+  READY_COUNT=${READY_COUNT:-0}
 
   if [[ "$READY_COUNT" -eq 0 ]]; then
     EMPTY_STREAK=$((EMPTY_STREAK + 1))

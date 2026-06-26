@@ -18,7 +18,8 @@ elif [[ -f "$ROOT/logs/agent/.daemon.pid" ]] && kill -0 "$(cat "$ROOT/logs/agent
 fi
 
 LAST_COMMIT=$(cd "$ROOT" && git log -1 --format='%h %ci %s' 2>/dev/null || echo "unknown")
-READY_TASKS=$(grep -c '\*\*Status:\*\* `ready`' "$ROOT/AGENT_BACKLOG.md" 2>/dev/null || echo 0)
+READY_TASKS=$(grep -c '\*\*Status:\*\* `ready`' "$ROOT/AGENT_BACKLOG.md" 2>/dev/null || true)
+READY_TASKS=${READY_TASKS:-0}
 IN_PROGRESS=$(grep '\*\*Status:\*\* `in_progress`' "$ROOT/AGENT_BACKLOG.md" 2>/dev/null | head -1 | sed 's/.*### //; s/ —.*//' || echo "none")
 DONE_TODAY=$(grep "$(date +%Y-%m-%d)" "$ROOT/AGENT_BACKLOG.md" 2>/dev/null | grep -c 'done' || echo 0)
 

@@ -7,7 +7,7 @@
 | Field | Value |
 |-------|-------|
 | Started | 2026-06-26 |
-| Focus | P0 ops → P1 audio A1 → P1 placement polish → TASK-021 doc sync → TASK-030 A2 audio (completed in 6bbc693 + verify) → TASK-031 B1 audio (unit-19..32) |
+| Focus | TASK-033 B2 audio (unit-33..42) → TASK-034 db:types → TASK-035 E2E onboarding → TASK-036 audio path fix |
 | Owner | Autopilot (no human) |
 
 ### TASK-021 — Sync placement flow, 50 units, header shell, autopilot docs (PAGE_SPECIFICATIONS.md + AGENT_*)
@@ -121,4 +121,12 @@
 | 2026-06-26 | TASK-030 | Re-verify gen+counts+lint+test (all 6 units 14 clips) | done — 202bfea (pushed) |
 | 2026-06-26T03:25Z | TASK-030 | Autopilot full cycle: research(agents+grep), plan update, run gen 17+18, lint+159test, 3 commits/push, log | complete — c58cf13 |
 | 2026-06-26 | TASK-031 | Research(agents+grep+units+gen), update PLAN/BACKLOG to in_progress, extend generator+pkg for B1 19-32, batch gTTS, lint+test, commit+push | done — 2119534a5e432816f2cf95c1de5b84767066a2aa (196 clips + fixes) |
-| 2026-06-26 | TASK-032 | research(agents+grep+memory+login/callback/migrations), plan update, create migration 20260626140000, edit onboarding/login/callback/types, hoist helpers, wire insert+upsert+params+xp_goal, lint+159+tsc pass, commit+push | done — (SHA) |
+| 2026-06-26 | TASK-032 | research(agents+grep+memory+login/callback/migrations), plan update, create migration 20260626140000, edit onboarding/login/callback/types, hoist helpers, wire insert+upsert+params+xp_goal, lint+159+tsc pass, commit+push | done — cab2260 |
+
+### TASK-033 — Native audio B2 (unit-33 → unit-42)
+**Mục tiêu**: Generate native MP3 audio assets (gTTS "en") cho 10 units B2 (33-42, ~144 clips). Extend generator imports+map; add audio:generate:b2 npm script; run full batch; commit MP3s.
+**Bước**: extend generate-unit-audio.ts + package.json → `npm run audio:generate:b2` → verify counts per unit → lint+test → commit+push.
+**Rủi ro**: gTTS rate limit on 144 calls; unit-41 has 18 clips; path mismatch unit33 vs unit-33 (TASK-036).
+**Done khi**: All unit-33..42 folders have correct MP3 counts; lint+test pass; pushed.
+
+| 2026-06-26 | TASK-033 | B2 audio batch unit-33..42 (144 clips), extend gen+b2 script, lint+159 pass | done — (SHA) |
