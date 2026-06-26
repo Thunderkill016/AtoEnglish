@@ -611,7 +611,7 @@
 - **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
 - **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
 - **Started:** 2026-06-27 — autopilot (PHASE1: real search_memory(TASK-094)+read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6-7 + grep; 3 ready (094-096) >=2 skip refill; PHASE2 PLAN+BACKLOG in_p)
-- **Completed:** 2026-06-27 — gates clean (lint0+170t+tsc0+cs50/50+audit50/50) no fix needed; log written 20260627T173400Z_TASK-094.log; BACKLOG+PLAN updated + pushed f27718e via git-push.sh main; no source edit; autonomous
+- **Completed:** 2026-06-27 — gates clean (lint0+170t+tsc0+cs50/50+audit50/50) no fix needed; log written 20260627T173400Z_TASK-094.log; BACKLOG+PLAN updated + pushed f653db9 via git-push.sh main; no source edit; autonomous
 
 ### TASK-095 — Autopilot maintenance sweep #95
 - **Status:** `ready`
@@ -641,7 +641,7 @@
 | 2026-06-27 | TASK-091 | PHASE1 research (AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6-7 + sim search_memory logs/grep prior clean); PHASE2 PLAN+BACKLOG in_p (3r>=2 skip); PHASE3: gates clean (lint0+170t+tsc0+cs50/50+audit50/50) no fix + sync log/PLAN/BACKLOG; commit+push via git-push.sh main | done — 57ceffa |
 | 2026-06-27 | TASK-092 | PHASE1 research (AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6-7 + sim search_memory logs/grep prior 092 tool_error); PHASE2 PLAN+BACKLOG in_p (2r>=2 skip); PHASE3: gates clean (lint0+170t+tsc0+cs50/50+audit50/50) no fix + sync log/PLAN/BACKLOG; commit+push via git-push.sh main | done — 39fdcf7 |
 | 2026-06-27 | TASK-093 | PHASE1 research (AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6-7 + real search_memory); PHASE2 PLAN+BACKLOG in_p (4r>=2 skip); PHASE3: gates clean (lint0+170t+tsc0+cs50/50+audit50/50) no fix + sync log/PLAN/BACKLOG; commit+push via git-push.sh main | done — 36d0262 |
-| 2026-06-27 | TASK-094 | PHASE1 real search_memory(TASK-094)+read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6-7 + grep; PHASE2 PLAN update + BACKLOG in_p (3r>=2 skip); PHASE3: gates clean (lint0+170t+tsc0+cs50/50+audit50/50) no fix + sync log/PLAN/BACKLOG; commit+push via git-push.sh main | done — f27718e |
+| 2026-06-27 | TASK-094 | PHASE1 real search_memory(TASK-094)+read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6-7 + grep; PHASE2 PLAN update + BACKLOG in_p (3r>=2 skip); PHASE3: gates clean (lint0+170t+tsc0+cs50/50+audit50/50) no fix + sync log/PLAN/BACKLOG; commit+push via git-push.sh main | done — 101067e |
 | 2026-06-26 | TASK-088 | PHASE1 search_memory sim + read agents+backlog+plan+roadmap+content+minimalv2+grep (0 uses src/); PHASE2 PLAN+BACKLOG in_progress (3r>=2 skip); PHASE3 purge 3 utils from globals.css; gates 0+170+0; commit+push via git-push main | done — 8d1cb7b |
 | 2026-06-26 | TASK-089 | PHASE1 search_memory+read agents+backlog+plan+roadmap+content+minimalv2+grep; PHASE2 plan update+backlog in_p+refill; PHASE3: SpeakingClient PrimaryRow entry+4 sub-routes, no tabs, compact recent; lint0+170t+tsc0; commit+push via git-push main | done — 638cd2d |
 | 2026-06-26 | TASK-089 | auto-refill từ AGENT_ROADMAP.md | ready |
