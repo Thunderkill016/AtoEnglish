@@ -4,7 +4,9 @@ import { useState, useCallback, useEffect } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { Star, CheckCircle, Volume2, Sparkles, ChevronRight } from "lucide-react";
+import { MinimalButton } from "@/components/design-system";
 import LessonSectionHeader from "../lesson-ui/LessonSectionHeader";
+import LessonContinueButton from "../lesson-ui/LessonContinueButton";
 import { lessonSectionMotion } from "../lesson-ui/motion";
 import { toast } from "sonner";
 import type { UnitData, QuizQuestion } from "../UnitTemplate";
@@ -233,14 +235,14 @@ export default function QuizSection({
       {unit.cumulativeReviewQuestions && unit.cumulativeReviewQuestions.length > 0 && (
         <div className="mb-6">
           {!cumulativeSubmitted ? (
-            <div className="bg-amber-950/20 border border-amber-700/30 rounded-2xl p-5">
+            <div className="bg-amber-500/10 border border-amber-500/30 rounded-2xl p-5">
               <div className="flex items-center gap-2 mb-4">
                 <span className="text-lg">🔁</span>
                 <div>
                   <p className="text-xs font-bold text-amber-400 uppercase tracking-widest">
                     Ôn tập bài cũ
                   </p>
-                  <p className="text-xs text-zinc-500">
+                  <p className="text-xs text-muted-foreground">
                     Trả lời để kích hoạt bộ nhớ dài hạn trước khi học tiếp
                   </p>
                 </div>
@@ -250,7 +252,7 @@ export default function QuizSection({
                   if (q.type === "cloze" || q.type === "translate") {
                     return (
                       <div key={q.id}>
-                        <p className="text-white text-sm mb-2">
+                        <p className="text-foreground text-sm mb-2">
                           <span className="text-amber-500/70 mr-2">↺ {qi + 1}.</span>
                           {q.question}
                         </p>
@@ -268,14 +270,14 @@ export default function QuizSection({
                               ? "Nhập câu tiếng Anh..."
                               : "Điền từ còn thiếu..."
                           }
-                          className="w-full bg-zinc-800 border border-amber-700/30 rounded-xl px-4 py-2.5 text-white placeholder-zinc-500 focus:outline-none focus:border-amber-500 transition-colors text-sm"
+                          className="w-full bg-muted/40 border border-amber-500/30 rounded-xl px-4 py-2.5 text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:border-amber-500 transition-colors text-sm"
                         />
                       </div>
                     );
                   }
                   return (
                     <div key={q.id}>
-                      <p className="text-white text-sm mb-2">
+                      <p className="text-foreground text-sm mb-2">
                         <span className="text-amber-500/70 mr-2">↺ {qi + 1}.</span>
                         {q.question}
                       </p>
@@ -294,7 +296,7 @@ export default function QuizSection({
                             className={`px-3 py-2 rounded-xl text-sm font-medium border text-left disabled:cursor-default ${
                               cumulativeAnswers[q.id] === opt
                                 ? "bg-amber-600/30 border-amber-500 text-amber-300"
-                                : "bg-zinc-800 border-zinc-700 text-zinc-300 hover:border-amber-600/40"
+                                : "bg-card border-border/60 text-foreground hover:border-amber-500/60 hover:bg-muted/40"
                             }`}
                           >
                             {opt}
@@ -305,7 +307,10 @@ export default function QuizSection({
                   );
                 })}
               </div>
-              <button
+              <MinimalButton
+                type="button"
+                fullWidth
+                className="mt-4 !rounded-2xl"
                 disabled={unit.cumulativeReviewQuestions.some((q) =>
                   q.type === "multiple-choice"
                     ? !cumulativeAnswers[q.id]
@@ -321,13 +326,12 @@ export default function QuizSection({
                   ).length;
                   if (correct === unit.cumulativeReviewQuestions!.length) playCorrectSound();
                 }}
-                className="mt-4 w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 disabled:opacity-40 text-white font-bold rounded-2xl py-2.5 text-sm transition-all duration-200 active:scale-95"
               >
                 Kiểm tra ôn tập
-              </button>
+              </MinimalButton>
             </div>
           ) : (
-            <div className="bg-amber-950/20 border border-amber-700/30 rounded-2xl p-4">
+            <div className="bg-amber-500/10 border border-amber-500/30 rounded-2xl p-4">
               <p className="text-xs font-bold text-amber-400 mb-2">🔁 Kết quả ôn tập bài cũ</p>
               <div className="space-y-2">
                 {unit.cumulativeReviewQuestions.map((q, qi) => {
@@ -340,12 +344,12 @@ export default function QuizSection({
                     <div
                       key={q.id}
                       className={`flex items-start gap-2 text-xs rounded-xl p-2 ${
-                        isCorrect ? "bg-emerald-950/30" : "bg-red-950/20"
+                        isCorrect ? "bg-emerald-500/10" : "bg-red-500/10"
                       }`}
                     >
                       <span>{isCorrect ? "✓" : "✗"}</span>
                       <div>
-                        <p className="text-zinc-300">
+                        <p className="text-foreground">
                           {qi + 1}. {q.question}
                         </p>
                         {!isCorrect && <p className="text-emerald-400 mt-0.5">Đáp án: {q.answer}</p>}
@@ -361,15 +365,15 @@ export default function QuizSection({
 
       {/* Final Quiz */}
       {!quizSubmitted ? (
-        <div className="bg-gradient-to-b from-zinc-900/70 to-zinc-950/70 border border-zinc-700/50 rounded-2xl p-6 mb-6 shadow-md">
-          <p className="text-sm font-bold text-white mb-5">🧠 Quiz tổng hợp — {FINAL_QS.length} câu</p>
+        <div className="border border-border/60 bg-card rounded-2xl p-6 mb-6 shadow-md">
+          <p className="text-sm font-bold text-foreground mb-5">🧠 Quiz tổng hợp — {FINAL_QS.length} câu</p>
           <div className="space-y-6">
             {FINAL_QS.map((q, qi) => {
               if (q.type === "cloze") {
                 return (
                   <div key={q.id}>
-                    <p className="text-white text-sm mb-3">
-                      <span className="text-zinc-500 mr-2">Câu {qi + 1}.</span>
+                    <p className="text-foreground text-sm mb-3">
+                      <span className="text-muted-foreground mr-2">Câu {qi + 1}.</span>
                       {q.question}
                     </p>
                     <input
@@ -379,7 +383,7 @@ export default function QuizSection({
                         setQuizClozeInputs((p) => ({ ...p, [q.id]: e.target.value }))
                       }
                       placeholder="Điền từ còn thiếu..."
-                      className="w-full bg-zinc-800 border border-zinc-700 rounded-xl px-4 py-2.5 text-white placeholder-zinc-500 focus:outline-none focus:border-emerald-500 transition-colors text-sm"
+                      className="w-full bg-muted/40 border border-border/60 rounded-xl px-4 py-2.5 text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:border-emerald-500 transition-colors text-sm"
                     />
                   </div>
                 );
@@ -387,8 +391,8 @@ export default function QuizSection({
               if (q.type === "translate") {
                 return (
                   <div key={q.id}>
-                    <p className="text-white text-sm mb-1">
-                      <span className="text-zinc-500 mr-2">Câu {qi + 1}.</span>
+                    <p className="text-foreground text-sm mb-1">
+                      <span className="text-muted-foreground mr-2">Câu {qi + 1}.</span>
                       {q.question}
                     </p>
                     <p className="text-xs text-violet-400 mb-2">✍️ Dịch sang tiếng Anh</p>
@@ -399,7 +403,7 @@ export default function QuizSection({
                         setQuizClozeInputs((p) => ({ ...p, [q.id]: e.target.value }))
                       }
                       placeholder="Nhập câu tiếng Anh..."
-                      className="w-full bg-zinc-800 border border-violet-700/50 rounded-xl px-4 py-2.5 text-white placeholder-zinc-500 focus:outline-none focus:border-violet-500 transition-colors text-sm"
+                      className="w-full bg-muted/40 border border-violet-500/50 rounded-xl px-4 py-2.5 text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:border-violet-500 transition-colors text-sm"
                     />
                   </div>
                 );
@@ -409,8 +413,8 @@ export default function QuizSection({
                 const tfOptions = q.options ?? ["Đúng", "Sai", "Không đề cập"];
                 return (
                   <div key={q.id}>
-                    <p className="text-white text-sm mb-3">
-                      <span className="text-zinc-500 mr-2">Câu {qi + 1}.</span>
+                    <p className="text-foreground text-sm mb-3">
+                      <span className="text-muted-foreground mr-2">Câu {qi + 1}.</span>
                       {q.question}
                     </p>
                     <div className="flex gap-2">
@@ -420,13 +424,13 @@ export default function QuizSection({
                         const isRightAnswer = quizSubmitted && opt === q.answer;
                         let cls = "flex-1 px-3 py-2.5 rounded-xl text-sm font-bold border text-center ";
                         if (quizSubmitted) {
-                          if (isRightAnswer) cls += "bg-emerald-600/30 border-emerald-500 text-emerald-300";
+                          if (isRightAnswer) cls += "bg-primary/10 border-primary text-primary";
                           else if (isWrongAnswer) cls += "bg-red-900/30 border-red-500 text-red-300 animate-shake";
-                          else cls += "bg-zinc-800/50 border-zinc-700/50 text-zinc-500 cursor-default";
+                          else cls += "bg-card border-border/60 text-muted-foreground cursor-default";
                         } else {
                           cls += isSelected
-                            ? "bg-emerald-600/30 border-emerald-500 text-emerald-300"
-                            : "bg-zinc-800 border-zinc-700 text-zinc-300 hover:border-emerald-600/50";
+                            ? "bg-primary/10 border-primary text-primary"
+                            : "bg-card border-border/60 text-foreground hover:border-primary/60 hover:bg-muted/40";
                         }
                         return (
                           <motion.button
@@ -444,7 +448,7 @@ export default function QuizSection({
                       })}
                     </div>
                     {quizSubmitted && quizAnswers[q.id] !== q.answer && q.explanation_vn && (
-                      <div className="mt-2 flex items-start gap-2 bg-amber-950/30 border border-amber-700/40 rounded-xl px-3 py-2.5">
+                      <div className="mt-2 flex items-start gap-2 bg-amber-500/10 border border-amber-500/30 rounded-xl px-3 py-2.5">
                         <span className="text-amber-400 text-sm shrink-0">💡</span>
                         <p className="text-amber-200 text-xs leading-relaxed">{q.explanation_vn}</p>
                       </div>
@@ -454,8 +458,8 @@ export default function QuizSection({
               }
               return (
                 <div key={q.id}>
-                  <p className="text-white text-sm mb-3">
-                    <span className="text-zinc-500 mr-2">Câu {qi + 1}.</span>
+                  <p className="text-foreground text-sm mb-3">
+                    <span className="text-muted-foreground mr-2">Câu {qi + 1}.</span>
                     {q.question}
                   </p>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -465,13 +469,13 @@ export default function QuizSection({
                       const isRightAnswer = quizSubmitted && opt === q.answer;
                       let cls = "px-3 py-2 rounded-xl text-sm font-medium border text-left ";
                       if (quizSubmitted) {
-                        if (isRightAnswer) cls += "bg-emerald-600/30 border-emerald-500 text-emerald-300";
+                        if (isRightAnswer) cls += "bg-primary/10 border-primary text-primary";
                         else if (isWrongAnswer) cls += "bg-red-900/30 border-red-500 text-red-300 animate-shake";
-                        else cls += "bg-zinc-800/50 border-zinc-700/50 text-zinc-500 cursor-default";
+                        else cls += "bg-card border-border/60 text-muted-foreground cursor-default";
                       } else {
                         cls += isSelected
-                          ? "bg-emerald-600/30 border-emerald-500 text-emerald-300"
-                          : "bg-zinc-800 border-zinc-700 text-zinc-300 hover:border-emerald-600/50";
+                          ? "bg-primary/10 border-primary text-primary"
+                          : "bg-card border-border/60 text-foreground hover:border-primary/60 hover:bg-muted/40";
                       }
                       return (
                         <motion.button
@@ -490,7 +494,7 @@ export default function QuizSection({
                   </div>
                   {/* S1-2: Static grammar explanation */}
                   {quizSubmitted && quizAnswers[q.id] !== q.answer && q.explanation_vn && (
-                    <div className="mt-2 flex items-start gap-2 bg-amber-950/30 border border-amber-700/40 rounded-xl px-3 py-2.5">
+                    <div className="mt-2 flex items-start gap-2 bg-amber-500/10 border border-amber-500/30 rounded-xl px-3 py-2.5">
                       <span className="text-amber-400 text-sm shrink-0">💡</span>
                       <p className="text-amber-200 text-xs leading-relaxed">{q.explanation_vn}</p>
                     </div>
@@ -498,21 +502,21 @@ export default function QuizSection({
                   {/* S4-2: AI grammar note — shown when no static explanation exists */}
                   {quizSubmitted && quizAnswers[q.id] !== q.answer && !q.explanation_vn && (
                     aiLoading[q.id] ? (
-                      <div className="mt-2 flex items-center gap-2 bg-violet-950/30 border border-violet-700/40 rounded-xl px-3 py-2.5">
+                      <div className="mt-2 flex items-center gap-2 bg-violet-500/10 border border-violet-500/30 rounded-xl px-3 py-2.5">
                         <Sparkles size={13} className="text-violet-400 shrink-0 animate-pulse" />
-                        <p className="text-violet-300 text-xs">AI đang phân tích lỗi ngữ pháp...</p>
+                        <p className="text-violet-700 dark:text-violet-300 text-xs">AI đang phân tích lỗi ngữ pháp...</p>
                       </div>
                     ) : aiNotes[q.id] ? (
-                      <div className="mt-2 flex items-start gap-2 bg-violet-950/30 border border-violet-700/40 rounded-xl px-3 py-2.5">
+                      <div className="mt-2 flex items-start gap-2 bg-violet-500/10 border border-violet-500/30 rounded-xl px-3 py-2.5">
                         <Sparkles size={13} className="text-violet-400 shrink-0 mt-0.5" />
-                        <p className="text-violet-200 text-xs leading-relaxed">{aiNotes[q.id]}</p>
+                        <p className="text-violet-700 dark:text-violet-200 text-xs leading-relaxed">{aiNotes[q.id]}</p>
                       </div>
                     ) : null
                   )}
                   {/* S1-3: Mandatory recall */}
                   {quizSubmitted && quizAnswers[q.id] !== q.answer && (
                     <div className="mt-2">
-                      <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider mb-1.5">
+                      <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-1.5">
                         ✏️ Gõ lại đáp án đúng:
                       </p>
                       <div className="flex items-center gap-2">
@@ -523,12 +527,12 @@ export default function QuizSection({
                           onBlur={() => checkRecall(q.id, q.answer)}
                           onKeyDown={e => e.key === "Enter" && checkRecall(q.id, q.answer)}
                           placeholder={q.answer}
-                          className={`flex-1 bg-zinc-800/80 border rounded-xl px-3 py-2 text-sm text-white placeholder-zinc-600 focus:outline-none transition-colors ${
+                          className={`flex-1 bg-muted border rounded-xl px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none transition-colors ${
                             recallChecked[q.id] === true
-                              ? "border-emerald-500 bg-emerald-950/20"
+                              ? "border-emerald-500 bg-emerald-500/10"
                               : recallChecked[q.id] === false
                               ? "border-red-500/60"
-                              : "border-zinc-700 focus:border-amber-500/60"
+                              : "border-border/60 focus:border-amber-500/60"
                           }`}
                         />
                         {recallChecked[q.id] === true && (
@@ -541,12 +545,14 @@ export default function QuizSection({
               );
             })}
           </div>
-          <button
+          <MinimalButton
+            type="button"
+            fullWidth
+            className="mt-6 !rounded-2xl"
             onClick={() => {
               setQuizSubmitted(true);
               if (finalQuizScore >= Math.ceil(FINAL_QS.length * 0.8)) playCorrectSound();
               else if (finalQuizScore < Math.ceil(FINAL_QS.length * 0.5)) playWrongSound();
-              // S1-4: Auto-play TTS of first wrong MC answer's correct option
               const firstWrong = FINAL_QS.find(
                 q => q.type === "multiple-choice" && quizAnswers[q.id] !== q.answer
               );
@@ -560,15 +566,14 @@ export default function QuizSection({
                 (q) => !(quizClozeInputs[q.id] ?? "").trim()
               )
             }
-            className="mt-6 w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 disabled:opacity-40 text-white font-bold rounded-2xl py-3 transition-all duration-200 shadow-md shadow-emerald-900/40 active:scale-95"
           >
             Kiểm tra đáp án
-          </button>
+          </MinimalButton>
         </div>
       ) : (
         <div className="space-y-6">
           {/* Score Display */}
-          <div className="bg-gradient-to-br from-emerald-950/60 to-teal-950/40 border border-emerald-600/40 rounded-2xl p-6 text-center shadow-lg shadow-emerald-950/60">
+          <div className="border border-emerald-500/40 bg-emerald-500/5 rounded-2xl p-6 text-center shadow-md">
             <div className="text-5xl mb-3">
               {finalQuizScore >= Math.ceil(FINAL_QS.length * 0.8)
                 ? "🏆"
@@ -576,8 +581,8 @@ export default function QuizSection({
                 ? "🎯"
                 : "💪"}
             </div>
-            <p className="text-emerald-300 font-black text-2xl mb-1">{finalQuizScore}/{FINAL_QS.length} đúng</p>
-            <p className="text-zinc-400 text-sm">
+            <p className="text-emerald-600 dark:text-emerald-400 font-black text-2xl mb-1">{finalQuizScore}/{FINAL_QS.length} đúng</p>
+            <p className="text-muted-foreground text-sm">
               {finalQuizScore >= Math.ceil(FINAL_QS.length * 0.8)
                 ? "Xuất sắc! Bạn đã nắm vững bài học!"
                 : finalQuizScore >= Math.ceil(FINAL_QS.length * 0.6)
@@ -588,9 +593,9 @@ export default function QuizSection({
 
           {/* Retry panel */}
           {wrongQuestions.length > 0 && (
-            <div className="bg-amber-950/30 border border-amber-700/40 rounded-2xl p-5">
+            <div className="bg-amber-500/10 border border-amber-500/30 rounded-2xl p-5">
               <p className="text-sm font-bold text-amber-400 mb-1">💡 Ôn lại câu sai ({wrongQuestions.length} câu)</p>
-              <p className="text-xs text-zinc-500 mb-4">
+              <p className="text-xs text-muted-foreground mb-4">
                 Trả lời đúng để nhận thêm điểm thưởng (tối đa +10%)!
               </p>
               {!retrySubmitted ? (
@@ -599,7 +604,7 @@ export default function QuizSection({
                     if (q.type === "cloze") {
                       return (
                         <div key={q.id}>
-                          <p className="text-white text-sm mb-2">
+                          <p className="text-foreground text-sm mb-2">
                             <span className="text-amber-400 mr-2">↺ {qi + 1}.</span>
                             {q.question}
                           </p>
@@ -610,14 +615,14 @@ export default function QuizSection({
                               setRetryClozeInputs((p) => ({ ...p, [q.id]: e.target.value }))
                             }
                             placeholder="Điền từ còn thiếu..."
-                            className="w-full bg-zinc-800 border border-zinc-700 rounded-xl px-4 py-2.5 text-white placeholder-zinc-500 focus:outline-none focus:border-amber-500 transition-colors text-sm"
+                            className="w-full bg-muted/40 border border-border/60 rounded-xl px-4 py-2.5 text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:border-amber-500 transition-colors text-sm"
                           />
                         </div>
                       );
                     }
                     return (
                       <div key={q.id}>
-                        <p className="text-white text-sm mb-2">
+                        <p className="text-foreground text-sm mb-2">
                           <span className="text-amber-400 mr-2">↺ {qi + 1}.</span>
                           {q.question}
                         </p>
@@ -633,7 +638,7 @@ export default function QuizSection({
                               className={`px-3 py-2 rounded-xl text-sm font-medium border text-left ${
                                 retryAnswers[q.id] === opt
                                   ? "bg-amber-600/30 border-amber-500 text-amber-300"
-                                  : "bg-zinc-800 border-zinc-700 text-zinc-300 hover:border-amber-600/50"
+                                  : "bg-card border-border/60 text-foreground hover:border-amber-500/60 hover:bg-muted/40"
                               }`}
                             >
                               {opt}
@@ -643,7 +648,10 @@ export default function QuizSection({
                       </div>
                     );
                   })}
-                  <button
+                  <MinimalButton
+                    type="button"
+                    fullWidth
+                    className="!rounded-2xl"
                     onClick={() => {
                       setRetrySubmitted(true);
                       if (retryCorrectCount > 0) playCorrectSound();
@@ -653,10 +661,9 @@ export default function QuizSection({
                         ? !retryAnswers[q.id]
                         : !(retryClozeInputs[q.id] ?? "").trim()
                     )}
-                    className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 disabled:opacity-40 text-white font-bold rounded-2xl py-2.5 text-sm transition-all duration-200 active:scale-95"
                   >
                     Gửi câu trả lời
-                  </button>
+                  </MinimalButton>
                 </div>
               ) : (
                 <div className="text-center py-2">
@@ -678,7 +685,7 @@ export default function QuizSection({
 
           {/* Reading Comprehension — shown after quiz submitted */}
           {hasReading && unit.readingPassage && (
-            <div className="bg-blue-950/20 border border-blue-700/30 rounded-2xl p-5">
+            <div className="bg-blue-500/10 border border-blue-500/30 rounded-2xl p-5">
               <ReadingComprehensionExercise
                 passage={unit.readingPassage}
                 onComplete={(score, total) => {
@@ -690,8 +697,8 @@ export default function QuizSection({
           )}
 
           {/* Progress Summary */}
-          <div className="bg-gradient-to-b from-zinc-900/70 to-zinc-950/70 border border-zinc-700/50 rounded-2xl p-5 shadow-md">
-            <p className="text-sm font-bold text-white mb-3">📊 Kết quả học tập</p>
+          <div className="border border-border/60 bg-card rounded-2xl p-5 shadow-md">
+            <p className="text-sm font-bold text-foreground mb-3">📊 Kết quả học tập</p>
             <div className="space-y-2">
               {[
                 {
@@ -721,9 +728,9 @@ export default function QuizSection({
               ].map((item, i) => (
                 <div key={i} className="flex items-center gap-3">
                   <span>{item.icon}</span>
-                  <span className="text-zinc-400 text-sm flex-1">{item.label}</span>
+                  <span className="text-muted-foreground text-sm flex-1">{item.label}</span>
                   <span
-                    className={`text-sm font-bold ${item.done ? "text-emerald-400" : "text-zinc-400"}`}
+                    className={`text-sm font-bold ${item.done ? "text-emerald-400" : "text-muted-foreground"}`}
                   >
                     {item.value}
                   </span>
@@ -734,35 +741,35 @@ export default function QuizSection({
           </div>
 
           {/* Badge — performance-based stars */}
-          <div className="bg-gradient-to-br from-emerald-950/60 to-teal-950/60 border border-emerald-700/40 rounded-2xl p-5 sm:p-8 text-center">
+          <div className="border border-emerald-500/40 bg-emerald-500/5 rounded-2xl p-5 sm:p-8 text-center">
             <div className="text-7xl mb-3 animate-bounce">{unit.badgeEmoji}</div>
             <div className="flex justify-center gap-1 mb-2">
               {[...Array(3)].map((_, i) => (
                 <Star
                   key={i}
                   size={20}
-                  className={i < effectiveStarCount ? "text-yellow-400 fill-yellow-400" : "text-zinc-600"}
+                  className={i < effectiveStarCount ? "text-yellow-400 fill-yellow-400" : "text-muted-foreground/60"}
                 />
               ))}
             </div>
-            <p className="text-xs text-zinc-500 mb-2">
+            <p className="text-xs text-muted-foreground mb-2">
               {effectiveScore}% tổng điểm
               {retryBonusPct > 0 ? (
                 <span className="text-emerald-400 ml-1">(+{retryBonusPct}% bonus)</span>
               ) : null}
             </p>
-            <p className="text-emerald-300 font-black text-xl mb-1">
+            <p className="text-emerald-600 dark:text-emerald-400 font-black text-xl mb-1">
               Huy hiệu: {unit.badgeName}
             </p>
-            <p className="text-zinc-400 text-sm">{unit.title}</p>
+            <p className="text-muted-foreground text-sm">{unit.title}</p>
           </div>
 
           {/* Motivation */}
-          <div className="border-l-4 border-emerald-500 bg-emerald-950/20 rounded-r-2xl p-5">
-            <p className="text-emerald-300 font-bold text-lg leading-relaxed">
+          <div className="border-l-4 border-emerald-500 bg-emerald-500/10 rounded-r-2xl p-5">
+            <p className="text-emerald-600 dark:text-emerald-400 font-bold text-lg leading-relaxed">
               Tuyệt vời! Bạn đã hoàn thành xuất sắc chương học này. 🌟
             </p>
-            <p className="text-zinc-400 text-sm mt-2">
+            <p className="text-muted-foreground text-sm mt-2">
               Hãy tiếp tục phát huy tinh thần tự học mỗi ngày. Lặp lại ngắt quãng sẽ giúp bạn nhớ từ
               vựng lâu hơn!
             </p>
@@ -770,19 +777,19 @@ export default function QuizSection({
 
           {/* Proof Moment */}
           {unit.situation && (
-            <div className="bg-gradient-to-br from-violet-950/40 to-teal-950/40 border border-violet-600/30 rounded-2xl p-5">
+            <div className="border border-violet-500/30 bg-violet-500/5 rounded-2xl p-5">
               <p className="text-[10px] font-black text-violet-400 uppercase tracking-widest mb-1">
                 🎤 Proof of Progress
               </p>
-              <p className="text-white font-semibold text-sm mb-1">Hãy thử lại tình huống hôm nay!</p>
-              <p className="text-zinc-400 text-xs mb-4">
+              <p className="text-foreground font-semibold text-sm mb-1">Hãy thử lại tình huống hôm nay!</p>
+              <p className="text-muted-foreground text-xs mb-4">
                 Nói to câu trả lời cho tình huống:{" "}
-                <span className="text-zinc-300 italic">&ldquo;{unit.situation}&rdquo;</span>
+                <span className="text-foreground italic">&ldquo;{unit.situation}&rdquo;</span>
               </p>
               {unit.learningOutcomes && (
                 <div className="space-y-1 mb-4">
                   {unit.learningOutcomes.map((outcome, i) => (
-                    <div key={i} className="flex items-center gap-2 text-xs text-zinc-300">
+                    <div key={i} className="flex items-center gap-2 text-xs text-foreground">
                       <span className="text-emerald-400">✓</span> {outcome}
                     </div>
                   ))}
@@ -792,7 +799,7 @@ export default function QuizSection({
                 onClick={() =>
                   playTTS(`${unit.situation ?? ""} — ${unit.learningOutcomes?.join(", ") ?? ""}`)
                 }
-                className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-violet-600/20 border border-violet-500/30 text-violet-300 font-bold text-sm hover:bg-violet-600/30 transition-colors"
+                className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-violet-600/20 border border-violet-500/30 text-violet-700 dark:text-violet-300 font-bold text-sm hover:bg-violet-600/30 transition-colors"
               >
                 <Volume2 size={16} /> Nghe lại tình huống
               </button>
@@ -801,41 +808,38 @@ export default function QuizSection({
 
           {/* Completion buttons */}
           {!isCompleted ? (
-            <button
+            <LessonContinueButton
               onClick={handleCompleteUnit}
               disabled={isSubmitting || !readingDone}
-              className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 disabled:opacity-60 text-white font-black rounded-2xl px-6 py-5 flex items-center justify-center gap-3 transition-all duration-200 text-lg shadow-lg shadow-emerald-900/40 active:scale-95"
+              className="!py-5 text-lg"
             >
               {isSubmitting
                 ? "Đang lưu..."
                 : !readingDone
                 ? "Hoàn thành Đọc hiểu để tiếp tục ↑"
                 : `🎉 Hoàn thành bài học (+${xpToEarn} XP)`}
-            </button>
+            </LessonContinueButton>
           ) : (
             <div className="text-center">
               <div className="bg-emerald-600/20 border border-emerald-600/40 rounded-xl p-4 mb-4">
-                <p className="text-emerald-300 font-bold">✅ Bạn đã hoàn thành chương học này!</p>
+                <p className="text-emerald-600 dark:text-emerald-400 font-bold">✅ Bạn đã hoàn thành chương học này!</p>
               </div>
               <div className="flex flex-wrap gap-3 justify-center">
                 <button
                   onClick={handleShare}
-                  className="inline-flex items-center gap-2 bg-emerald-600/20 hover:bg-emerald-600/30 border border-emerald-500/30 text-emerald-300 font-bold rounded-xl px-5 py-3 transition-colors text-sm"
+                  className="inline-flex items-center gap-2 bg-emerald-600/20 hover:bg-emerald-600/30 border border-emerald-500/30 text-emerald-600 dark:text-emerald-400 font-bold rounded-xl px-5 py-3 transition-colors text-sm"
                 >
                   🔗 Chia sẻ thành tích
                 </button>
                 <Link
                   href="/quiz"
-                  className="inline-flex items-center gap-2 bg-violet-600 hover:bg-violet-500 text-white font-bold rounded-xl px-5 py-3 transition-colors text-sm"
+                  className="inline-flex items-center gap-2 bg-violet-600 hover:bg-violet-500 text-foreground font-bold rounded-xl px-5 py-3 transition-colors text-sm"
                 >
                   📝 Quiz từ vựng
                 </Link>
-                <Link
-                  href={nextRoute}
-                  className="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-white font-bold rounded-xl px-5 py-3 transition-all duration-200 text-sm shadow-md shadow-emerald-900/40 active:scale-95"
-                >
+                <MinimalButton href={nextRoute} className="!rounded-xl">
                   Tiếp tục <ChevronRight size={16} />
-                </Link>
+                </MinimalButton>
               </div>
             </div>
           )}

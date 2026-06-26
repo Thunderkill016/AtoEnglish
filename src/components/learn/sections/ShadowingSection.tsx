@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Volume2, Mic, MicOff, Sparkles, ChevronRight } from "lucide-react";
+import { MinimalButton } from "@/components/design-system";
 import LessonSectionHeader from "../lesson-ui/LessonSectionHeader";
 import LessonContinueButton from "../lesson-ui/LessonContinueButton";
 import { lessonSectionMotion } from "../lesson-ui/motion";
@@ -240,7 +241,7 @@ export default function ShadowingSection({
       />
 
       {DIALOGUES.length > 0 && !shadowDone ? (
-        <div className="bg-gradient-to-b from-zinc-900/80 to-zinc-950/80 border border-zinc-700/50 rounded-2xl p-4 sm:p-6 shadow-lg">
+        <div className="border border-border/60 bg-card rounded-2xl p-4 sm:p-6 shadow-lg">
           {/* Dialogue selector tabs */}
           {DIALOGUES.length > 1 && (
             <div className="flex gap-2 mb-4 overflow-x-auto pb-1">
@@ -256,8 +257,8 @@ export default function ShadowingSection({
                   }}
                   className={`shrink-0 px-3 py-1.5 rounded-xl text-xs font-bold border transition-all duration-200 ${
                     idx === shadowDialogueIdx
-                      ? "bg-emerald-600/20 border-emerald-500/50 text-emerald-300"
-                      : "bg-zinc-800 border-zinc-700 text-zinc-400 hover:border-teal-600/50 hover:text-zinc-200"
+                      ? "bg-emerald-500/10 border-emerald-500/50 text-emerald-600 dark:text-emerald-400"
+                      : "bg-muted border-border/60 text-muted-foreground hover:border-primary/60 hover:text-foreground"
                   }`}
                 >
                   Hội thoại {idx + 1}
@@ -266,15 +267,15 @@ export default function ShadowingSection({
             </div>
           )}
 
-          <div className="flex justify-between text-xs text-zinc-500 mb-2 font-bold">
+          <div className="flex justify-between text-xs text-muted-foreground mb-2 font-bold">
             <span>Tiến độ dòng hội thoại</span>
             <span>
               {shadowLineIdx + 1}/{DIALOGUES[shadowDialogueIdx].lines.length}
             </span>
           </div>
-          <div className="w-full h-2 bg-zinc-800/80 rounded-full overflow-hidden mb-6">
+          <div className="w-full h-2 bg-muted rounded-full overflow-hidden mb-6">
             <div
-              className="h-full bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full transition-all duration-500"
+              className="h-full bg-primary rounded-full transition-all duration-500"
               style={{
                 width: `${
                   (shadowLineIdx / DIALOGUES[shadowDialogueIdx].lines.length) * 100
@@ -283,18 +284,18 @@ export default function ShadowingSection({
             />
           </div>
 
-          <div className="bg-gradient-to-b from-zinc-800/80 to-zinc-900/90 border border-zinc-700/50 rounded-2xl p-5 mb-6 text-center relative overflow-hidden">
+          <div className="border border-border/60 bg-muted/40 rounded-2xl p-5 mb-6 text-center relative overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-br from-violet-500/3 to-transparent pointer-events-none" />
             <span className="absolute top-3 left-3 text-[10px] font-bold text-violet-400 bg-violet-950/60 border border-violet-800/40 px-2 py-0.5 rounded-full uppercase tracking-wide">
               {DIALOGUES[shadowDialogueIdx].lines[shadowLineIdx].speaker}
             </span>
-            <p className="text-zinc-500 text-[10px] mb-3 uppercase tracking-widest font-black">
+            <p className="text-muted-foreground text-[10px] mb-3 uppercase tracking-widest font-black">
               Hãy nghe rồi nói lại
             </p>
-            <p className="text-white text-base sm:text-xl font-bold mb-2 leading-snug">
+            <p className="text-foreground text-base sm:text-xl font-bold mb-2 leading-snug">
               {DIALOGUES[shadowDialogueIdx].lines[shadowLineIdx].text}
             </p>
-            <p className="text-zinc-400 text-sm italic">
+            <p className="text-muted-foreground text-sm italic">
               {DIALOGUES[shadowDialogueIdx].lines[shadowLineIdx].translation}
             </p>
           </div>
@@ -305,7 +306,7 @@ export default function ShadowingSection({
                 playTTS(DIALOGUES[shadowDialogueIdx].lines[shadowLineIdx].text, shadowSpeed)
               }
               aria-label="Nghe mẫu"
-              className="w-14 h-14 rounded-full bg-zinc-800 hover:bg-zinc-700 hover:scale-105 text-zinc-200 flex items-center justify-center transition-all duration-200 border border-zinc-700/60 shadow-md active:scale-95"
+              className="w-14 h-14 rounded-full bg-muted/40 hover:bg-muted/60 hover:scale-105 text-foreground flex items-center justify-center transition-all duration-200 border border-border/60 shadow-md active:scale-95"
             >
               <Volume2 size={22} />
             </button>
@@ -332,16 +333,16 @@ export default function ShadowingSection({
 
             <button
               onClick={() => setShadowSpeed((s) => (s === 1.0 ? 0.75 : 1.0))}
-              className="px-4 py-2 rounded-xl bg-zinc-850 border border-zinc-850/80 text-xs font-bold text-zinc-300 hover:bg-zinc-800 transition-colors"
+              className="px-4 py-2 rounded-xl bg-muted border border-border/60 text-xs font-bold text-foreground hover:bg-muted/60 transition-colors"
             >
               {shadowSpeed === 1.0 ? "Normal Speed" : "🐢 Chậm (0.75x)"}
             </button>
           </div>
 
           {shadowTranscripts[shadowLineIdx] && (
-            <div className="bg-gradient-to-b from-zinc-800/60 to-zinc-900/70 border border-zinc-700/50 rounded-2xl p-4 mb-6 text-center shadow-sm">
-              <p className="text-[10px] text-zinc-500 mb-1 font-bold">BẠN VỪA NÓI:</p>
-              <p className="text-white text-sm font-semibold mb-2">
+            <div className="border border-border/60 bg-muted/40 rounded-2xl p-4 mb-6 text-center shadow-sm">
+              <p className="text-[10px] text-muted-foreground mb-1 font-bold">BẠN VỪA NÓI:</p>
+              <p className="text-foreground text-sm font-semibold mb-2">
                 &ldquo;{shadowTranscripts[shadowLineIdx]}&rdquo;
               </p>
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-bold border border-emerald-500/10 mb-3">
@@ -359,12 +360,12 @@ export default function ShadowingSection({
                     <Sparkles size={10} /> Phân tích phát âm chi tiết
                   </p>
                   {phonemeData[shadowLineIdx].map((err, i) => (
-                    <div key={i} className="bg-violet-950/30 border border-violet-700/40 rounded-xl px-3 py-2.5 text-left">
-                      <p className="text-xs font-bold text-violet-200 mb-0.5">
+                    <div key={i} className="bg-violet-500/10 border border-violet-500/30 rounded-xl px-3 py-2.5 text-left">
+                      <p className="text-xs font-bold text-violet-700 dark:text-violet-200 mb-0.5">
                         Từ: <span className="text-white">&ldquo;{err.word}&rdquo;</span>
                         <span className="ml-2 text-violet-400 font-mono text-[11px]">{err.ipa_target}</span>
                       </p>
-                      <p className="text-[11px] text-zinc-400 mb-0.5">{err.common_mistake_vn}</p>
+                      <p className="text-[11px] text-muted-foreground mb-0.5">{err.common_mistake_vn}</p>
                       <p className="text-[11px] text-amber-300">💡 {err.tip_vn}</p>
                     </div>
                   ))}
@@ -374,22 +375,24 @@ export default function ShadowingSection({
           )}
 
           {shadowScores[shadowLineIdx] !== undefined && (
-            <button
+            <MinimalButton
+              type="button"
+              fullWidth
+              className="!rounded-xl"
               onClick={handleShadowNext}
-              className="w-full bg-zinc-800 hover:bg-zinc-700 text-white font-bold rounded-xl py-3 flex items-center justify-center gap-2 transition-colors border border-zinc-750"
             >
               {shadowLineIdx < DIALOGUES[shadowDialogueIdx].lines.length - 1
                 ? "Dòng tiếp theo"
                 : "Hoàn thành phần Shadowing"}
               <ChevronRight size={16} />
-            </button>
+            </MinimalButton>
           )}
         </div>
       ) : (
-        <div className="text-center mb-4 sm:mb-6 bg-gradient-to-b from-zinc-900/70 to-zinc-950/70 border border-zinc-700/50 rounded-2xl p-5 sm:p-8 shadow-md">
+        <div className="text-center mb-4 sm:mb-6 border border-border/60 bg-card rounded-2xl p-5 sm:p-8 shadow-md">
           <div className="text-4xl mb-3">🎉</div>
           <p className="text-emerald-400 font-bold text-lg mb-1">Hoàn thành Shadowing!</p>
-          <p className="text-zinc-400 text-sm mb-6">Điểm trung bình: {shadowAvg}%</p>
+          <p className="text-muted-foreground text-sm mb-6">Điểm trung bình: {shadowAvg}%</p>
           <LessonContinueButton onClick={goNext}>Tiếp tục luyện nói</LessonContinueButton>
         </div>
       )}

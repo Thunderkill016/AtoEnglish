@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Shuffle, CheckCircle, ChevronRight } from "lucide-react";
+import { Shuffle, CheckCircle } from "lucide-react";
+import { MinimalButton } from "@/components/design-system";
 import LessonSectionHeader from "../lesson-ui/LessonSectionHeader";
 import LessonContinueButton from "../lesson-ui/LessonContinueButton";
 import { lessonSectionMotion } from "../lesson-ui/motion";
@@ -192,8 +193,8 @@ export default function PracticeSection({
       />
       {/* S3-3: Adaptive weak-type tip */}
       {weakTip && (
-        <div className="flex items-start gap-2 bg-blue-950/30 border border-blue-700/40 rounded-xl px-3 py-2.5 mb-5">
-          <p className="text-blue-200 text-xs leading-relaxed">{weakTip}</p>
+        <div className="flex items-start gap-2 bg-blue-500/10 border border-blue-500/30 rounded-xl px-3 py-2.5 mb-5">
+          <p className="text-blue-700 dark:text-blue-200 text-xs leading-relaxed">{weakTip}</p>
         </div>
       )}
 
@@ -209,12 +210,12 @@ export default function PracticeSection({
                 className={`rounded-2xl border p-5 transition-all duration-300 ${
                   practiceSubmitted
                     ? isCorrect
-                      ? "border-emerald-500/50 bg-emerald-950/30"
-                      : "border-red-500/40 bg-red-950/20"
-                    : "border-zinc-700/60 bg-zinc-900/40"
+                      ? "border-emerald-500/50 bg-emerald-500/5"
+                      : "border-red-500/40 bg-red-500/5"
+                    : "border-border/60 bg-card"
                 }`}
               >
-                <p className="text-white font-bold mb-3 text-sm">
+                <p className="text-foreground font-bold mb-3 text-sm">
                   <span className="text-emerald-400 mr-2">{qi + 1}.</span>
                   {q.question}
                 </p>
@@ -224,7 +225,7 @@ export default function PracticeSection({
                   value={userInput}
                   onChange={(e) => setClozeInputs((p) => ({ ...p, [q.id]: e.target.value }))}
                   placeholder="Điền từ còn thiếu..."
-                  className="w-full bg-zinc-800 border border-zinc-700 rounded-xl px-4 py-2.5 text-white placeholder-zinc-500 focus:outline-none focus:border-emerald-500 transition-colors text-sm"
+                  className="w-full bg-muted/40 border border-border/60 rounded-xl px-4 py-2.5 text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:border-emerald-500 transition-colors text-sm"
                 />
                 {practiceSubmitted && (
                   <p className={`text-xs mt-2 font-bold ${isCorrect ? "text-emerald-400" : "text-red-400"}`}>
@@ -244,12 +245,12 @@ export default function PracticeSection({
               className={`rounded-2xl border p-5 transition-all duration-300 ${
                 practiceSubmitted
                   ? isCorrect
-                    ? "border-emerald-500/50 bg-emerald-950/30"
-                    : "border-red-500/40 bg-red-950/20"
-                  : "border-zinc-700/60 bg-zinc-900/40"
+                    ? "border-emerald-500/50 bg-emerald-500/5"
+                    : "border-red-500/40 bg-red-500/5"
+                  : "border-border/60 bg-card"
               }`}
             >
-              <p className="text-white font-bold mb-3 text-sm">
+              <p className="text-foreground font-bold mb-3 text-sm">
                 <span className="text-emerald-400 mr-2">{qi + 1}.</span>
                 {q.question}
               </p>
@@ -261,13 +262,13 @@ export default function PracticeSection({
                     "px-3 py-2 rounded-xl text-sm font-medium border text-left ";
                   if (!practiceSubmitted) {
                     cls += isPicked
-                      ? "bg-emerald-600/30 border-emerald-500 text-emerald-300"
-                      : "bg-zinc-800 border-zinc-700 text-zinc-300 hover:border-emerald-600/50 hover:bg-zinc-700/50";
+                      ? "bg-primary/10 border-primary text-primary"
+                      : "bg-card border-border/60 text-foreground hover:border-primary/60 hover:bg-muted/40";
                   } else {
-                    if (isRight) cls += "bg-emerald-600/30 border-emerald-500 text-emerald-200 font-bold";
+                    if (isRight) cls += "bg-emerald-500/10 border-emerald-500 text-emerald-600 dark:text-emerald-400 font-bold";
                     else if (isPicked && !isRight)
                       cls += "bg-red-900/30 border-red-500/60 text-red-300 line-through";
-                    else cls += "bg-zinc-800/50 border-zinc-700/40 text-zinc-500";
+                    else cls += "bg-card border-border/60 text-muted-foreground";
                   }
                   return (
                     <motion.button
@@ -299,10 +300,10 @@ export default function PracticeSection({
 
       {/* ── Matching Exercise ── */}
       {unit.matchingExercise && (
-        <div className="bg-gradient-to-b from-zinc-900/70 to-zinc-950/70 border border-zinc-700/50 rounded-2xl p-5 mb-6 shadow-md">
+        <div className="border border-border/60 bg-card rounded-2xl p-5 mb-6 shadow-md">
           <div className="flex items-center gap-2 mb-4">
             <Shuffle size={16} className="text-teal-400" />
-            <p className="text-sm font-bold text-white">
+            <p className="text-sm font-bold text-foreground">
               {unit.matchingExercise.title ?? "Nối từ với nghĩa đúng"}
             </p>
             {matchingDone && <CheckCircle size={16} className="text-emerald-400 ml-auto" />}
@@ -313,7 +314,7 @@ export default function PracticeSection({
                   setMatchLeft(null);
                   setWrongMatch(null);
                 }}
-                className="ml-auto text-[10px] font-bold text-zinc-500 hover:text-zinc-300 px-2 py-1 rounded-lg bg-zinc-800/60 border border-zinc-700/40 transition-colors"
+                className="ml-auto text-[10px] font-bold text-muted-foreground hover:text-foreground px-2 py-1 rounded-lg bg-muted/40 border border-border/60 transition-colors"
               >
                 ↺ Làm lại
               </button>
@@ -332,10 +333,10 @@ export default function PracticeSection({
                     onClick={() => !isMatched && handleMatchSelect("left", pair.left)}
                     className={`w-full px-3 py-2.5 rounded-xl text-sm font-medium border text-left transition-all duration-200 ${
                       isMatched
-                        ? "bg-emerald-600/20 border-emerald-500/50 text-emerald-300 cursor-default"
+                        ? "bg-emerald-500/10 border-emerald-500/50 text-emerald-600 dark:text-emerald-400 cursor-default"
                         : isSelected
-                        ? "bg-teal-600/30 border-teal-400 text-teal-200 ring-2 ring-teal-400/30 ring-offset-1 ring-offset-zinc-950 scale-[1.02]"
-                        : "bg-zinc-800 border-zinc-700 text-zinc-300 hover:border-teal-500/60 hover:bg-zinc-700/60 active:scale-95"
+                        ? "bg-primary/10 border-primary text-primary ring-2 ring-primary/20 scale-[1.02]"
+                        : "bg-card border-border/60 text-foreground hover:border-primary/60 hover:bg-muted/40 active:scale-95"
                     }`}
                   >
                     {isMatched && "✓ "}{pair.left}
@@ -355,10 +356,10 @@ export default function PracticeSection({
                     onClick={() => !isMatched && handleMatchSelect("right", right)}
                     className={`w-full px-3 py-2.5 rounded-xl text-sm font-medium border text-left transition-all duration-200 ${
                       isMatched
-                        ? "bg-emerald-600/20 border-emerald-500/50 text-emerald-300 cursor-default"
+                        ? "bg-emerald-500/10 border-emerald-500/50 text-emerald-600 dark:text-emerald-400 cursor-default"
                         : isWrong
                         ? "bg-red-900/30 border-red-500/60 text-red-300 animate-shake"
-                        : "bg-zinc-800 border-zinc-700 text-zinc-300 hover:border-teal-500/60 hover:bg-zinc-700/60 active:scale-95"
+                        : "bg-card border-border/60 text-foreground hover:border-primary/60 hover:bg-muted/40 active:scale-95"
                     }`}
                   >
                     {isMatched && "✓ "}{right}
@@ -383,8 +384,8 @@ export default function PracticeSection({
         <div className="space-y-4 mb-6">
           <div className="flex items-center gap-2">
             <span className="text-lg">🔀</span>
-            <p className="text-sm font-bold text-white">Sắp xếp thành câu đúng</p>
-            <span className="text-xs text-zinc-500 ml-auto">Sản xuất ngôn ngữ</span>
+            <p className="text-sm font-bold text-foreground">Sắp xếp thành câu đúng</p>
+            <span className="text-xs text-muted-foreground ml-auto">Sản xuất ngôn ngữ</span>
           </div>
           {unit.scrambleExercises.map((ex) => {
             const built = scrambleBuilt[ex.id] ?? [];
@@ -399,16 +400,16 @@ export default function PracticeSection({
                 className={`rounded-2xl border p-5 transition-all duration-300 ${
                   isChecked
                     ? isCorrect
-                      ? "border-emerald-500/50 bg-emerald-950/30"
-                      : "border-red-500/40 bg-red-950/20"
-                    : "border-zinc-700/60 bg-zinc-900/40"
+                      ? "border-emerald-500/50 bg-emerald-500/5"
+                      : "border-red-500/40 bg-red-500/5"
+                    : "border-border/60 bg-card"
                 }`}
               >
-                <p className="text-zinc-400 text-xs mb-3">🇻🇳 {ex.prompt_vn}</p>
+                <p className="text-muted-foreground text-xs mb-3">🇻🇳 {ex.prompt_vn}</p>
                 {/* Built sentence slot */}
-                <div className="min-h-[44px] flex flex-wrap gap-2 mb-3 p-3 bg-zinc-900/60 rounded-xl border border-zinc-700/40">
+                <div className="min-h-[44px] flex flex-wrap gap-2 mb-3 p-3 bg-muted/30 rounded-xl border border-border/60">
                   {built.length === 0 ? (
-                    <span className="text-zinc-600 text-xs self-center">
+                    <span className="text-muted-foreground/60 text-xs self-center">
                       Nhấn từ bên dưới để xây dựng câu...
                     </span>
                   ) : (
@@ -451,8 +452,8 @@ export default function PracticeSection({
                           }}
                           className={`px-2.5 py-1.5 rounded-lg text-xs font-bold border transition-all duration-150 ${
                             disabled
-                              ? "opacity-20 bg-zinc-900 border-zinc-800 text-zinc-600 cursor-not-allowed"
-                              : "bg-gradient-to-b from-zinc-600/90 to-zinc-700/90 border-zinc-500/80 text-white hover:border-teal-400/70 hover:from-zinc-500/90 hover:-translate-y-0.5 cursor-pointer active:scale-90 active:translate-y-0 shadow-sm"
+                              ? "opacity-20 bg-muted border-border/60 text-muted-foreground/60 cursor-not-allowed"
+                              : "bg-muted border-border/60 text-foreground hover:border-teal-400/70 hover:bg-muted/80 hover:-translate-y-0.5 cursor-pointer active:scale-90 active:translate-y-0 shadow-sm"
                           }`}
                         >
                           {w}
@@ -502,8 +503,8 @@ export default function PracticeSection({
         <div className="space-y-4 mb-6">
           <div className="flex items-center gap-2">
             <span className="text-lg">🔍</span>
-            <p className="text-sm font-bold text-white">Tìm và sửa lỗi ngữ pháp</p>
-            <span className="text-xs text-zinc-500 ml-auto">Nhận biết lỗi sai</span>
+            <p className="text-sm font-bold text-foreground">Tìm và sửa lỗi ngữ pháp</p>
+            <span className="text-xs text-muted-foreground ml-auto">Nhận biết lỗi sai</span>
           </div>
           {unit.sentenceCorrectionExercises.map((ex) => (
             <SentenceCorrectionExercise
@@ -525,8 +526,8 @@ export default function PracticeSection({
         <div className="space-y-4 mb-6">
           <div className="flex items-center gap-2">
             <span className="text-lg">🎧</span>
-            <p className="text-sm font-bold text-white">Nghe và sắp xếp từ</p>
-            <span className="text-xs text-zinc-500 ml-auto">
+            <p className="text-sm font-bold text-foreground">Nghe và sắp xếp từ</p>
+            <span className="text-xs text-muted-foreground ml-auto">
               {arrangeIndex + 1}/{arrangeItems.length}
             </span>
           </div>
@@ -554,9 +555,9 @@ export default function PracticeSection({
       )}
 
       {arrangeDone && arrangeItems.length > 0 && practiceSubmitted && (
-        <div className="flex items-center gap-2 rounded-xl bg-violet-950/40 border border-violet-500/20 p-3">
+        <div className="flex items-center gap-2 rounded-xl bg-violet-500/10 border border-violet-500/20 p-3">
           <CheckCircle size={16} className="text-violet-400 shrink-0" />
-          <p className="text-sm text-violet-300 font-semibold">
+          <p className="text-sm text-violet-700 dark:text-violet-300 font-semibold">
             Nghe & sắp xếp: {arrangeScore}/{arrangeItems.length} chính xác
           </p>
         </div>
@@ -566,8 +567,8 @@ export default function PracticeSection({
         <div className="space-y-3">
           <div className="flex items-center gap-2">
             <span className="text-lg">🧩</span>
-            <p className="text-sm font-bold text-white">Xây dựng câu tiếng Anh</p>
-            <span className="text-xs text-zinc-500 ml-auto">
+            <p className="text-sm font-bold text-foreground">Xây dựng câu tiếng Anh</p>
+            <span className="text-xs text-muted-foreground ml-auto">
               {wordBankIndex + 1}/{unit.wordBankExercises.length}
             </span>
           </div>
@@ -591,9 +592,9 @@ export default function PracticeSection({
       )}
 
       {unit.wordBankExercises && unit.wordBankExercises.length > 0 && wordBankDone && (
-        <div className="flex items-center gap-2 rounded-xl bg-emerald-950/40 border border-emerald-500/20 p-3">
+        <div className="flex items-center gap-2 rounded-xl bg-emerald-500/10 border border-emerald-500/20 p-3">
           <CheckCircle size={16} className="text-emerald-400 shrink-0" />
-          <p className="text-sm text-emerald-300 font-semibold">
+          <p className="text-sm text-emerald-600 dark:text-emerald-400 font-semibold">
             Xây dựng câu: {wordBankScore}/{unit.wordBankExercises.length} chính xác
           </p>
         </div>
@@ -604,8 +605,8 @@ export default function PracticeSection({
         <div className="space-y-3">
           <div className="flex items-center gap-2">
             <span className="text-lg">🎧</span>
-            <p className="text-sm font-bold text-white">Nghe và gõ lại câu</p>
-            <span className="text-xs text-zinc-500 ml-auto">
+            <p className="text-sm font-bold text-foreground">Nghe và gõ lại câu</p>
+            <span className="text-xs text-muted-foreground ml-auto">
               {dictationIndex + 1}/{dictationItems.length}
             </span>
           </div>
@@ -633,16 +634,19 @@ export default function PracticeSection({
       )}
 
       {dictationDone && dictationItems.length > 0 && wordBankDone && (
-        <div className="flex items-center gap-2 rounded-xl bg-blue-950/40 border border-blue-500/20 p-3">
+        <div className="flex items-center gap-2 rounded-xl bg-blue-500/10 border border-blue-500/20 p-3">
           <CheckCircle size={16} className="text-blue-400 shrink-0" />
-          <p className="text-sm text-blue-300 font-semibold">
+          <p className="text-sm text-blue-700 dark:text-blue-300 font-semibold">
             Chính tả: {dictationScore}/{dictationItems.length} chính xác
           </p>
         </div>
       )}
 
       {!practiceSubmitted ? (
-        <button
+        <MinimalButton
+          type="button"
+          fullWidth
+          className="!rounded-2xl !py-4 text-lg"
           disabled={!allPracticeAnswered}
           onClick={() => {
             setPracticeSubmitted(true);
@@ -651,23 +655,22 @@ export default function PracticeSection({
               addSessionXp?.(10); // S2-3: +10 XP for passing quiz
             } else playWrongSound();
           }}
-          className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 disabled:opacity-40 disabled:cursor-not-allowed text-white font-bold rounded-2xl px-6 py-4 flex items-center justify-center gap-2 transition-all duration-200 text-lg shadow-lg shadow-emerald-900/40 active:scale-95"
         >
-          Kiểm tra đáp án <ChevronRight size={20} />
-        </button>
+          Kiểm tra đáp án
+        </MinimalButton>
       ) : (
         <div className="space-y-4">
           <div
             className={`rounded-2xl p-4 text-center border ${
               practiceScore === PRACTICE_QS.length
-                ? "bg-emerald-950/40 border-emerald-500/30"
-                : "bg-zinc-900/40 border-zinc-700/40"
+                ? "bg-emerald-500/10 border-emerald-500/30"
+                : "bg-muted/30 border-border/60"
             }`}
           >
-            <p className="text-2xl sm:text-3xl font-black bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent">
+            <p className="text-2xl sm:text-3xl font-black text-primary">
               {practiceScore}/{PRACTICE_QS.length} câu đúng
             </p>
-            <p className="text-sm text-zinc-400 mt-1">
+            <p className="text-sm text-muted-foreground mt-1">
               {practiceScore === PRACTICE_QS.length
                 ? "🏆 Xuất sắc! Bạn nắm vững bài học!"
                 : practiceScore >= Math.ceil(PRACTICE_QS.length * 0.7)
@@ -678,7 +681,7 @@ export default function PracticeSection({
           {matchingDone && allScrambleDone && allCorrectionsDone && allArrangeDone && allWordBankDone && allDictationDone ? (
             <LessonContinueButton onClick={goNext}>Tiếp tục</LessonContinueButton>
           ) : (
-            <p className="text-center text-zinc-500 text-sm flex items-center justify-center gap-1.5">
+            <p className="text-center text-muted-foreground text-sm flex items-center justify-center gap-1.5">
               <span>↑</span>
               {!matchingDone
                 ? "Hoàn thành phần nối từ ở trên để tiếp tục"

@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { Volume2 } from "lucide-react";
 import type { UnitData } from "../UnitTemplate";
+import { MinimalButton } from "@/components/design-system";
 import LessonSectionHeader from "../lesson-ui/LessonSectionHeader";
 import LessonContinueButton from "../lesson-ui/LessonContinueButton";
 import { lessonSectionMotion } from "../lesson-ui/motion";
@@ -180,7 +181,7 @@ export default function GrammarSection({
                       return (
                         <>
                           {text.slice(0, idx)}
-                          <mark className="bg-violet-500/30 text-violet-200 px-0.5 rounded font-bold not-italic">
+                          <mark className="bg-violet-500/30 text-violet-700 dark:text-violet-200 px-0.5 rounded font-bold not-italic">
                             {highlight}
                           </mark>
                           {text.slice(idx + highlight.length)}
@@ -235,17 +236,19 @@ export default function GrammarSection({
                   })}
                 </div>
                 {!ccqSubmitted ? (
-                  <button
+                  <MinimalButton
+                    type="button"
+                    fullWidth
+                    className="!rounded-2xl"
                     disabled={!ccqAnswer}
                     onClick={() => {
                       setCcqSubmitted(true);
                       if (ccqCorrect) playCorrectSound();
                       else playWrongSound();
                     }}
-                    className="w-full bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-400 hover:to-teal-400 disabled:opacity-40 text-white font-bold rounded-2xl py-2 text-sm transition-all duration-200 active:scale-95"
                   >
                     Kiểm tra
-                  </button>
+                  </MinimalButton>
                 ) : (
                   <div>
                     <p className={`text-sm font-bold ${ccqCorrect ? "text-emerald-400" : "text-red-400"}`}>
@@ -254,7 +257,7 @@ export default function GrammarSection({
                         : `✗ Đáp án đúng: "${unit.grammar.ccq.answer}"`}
                     </p>
                     {unit.grammar.ccq.explanation && (
-                      <p className="text-xs text-zinc-400 mt-1.5 italic">
+                      <p className="text-xs text-muted-foreground mt-1.5 italic">
                         {unit.grammar.ccq.explanation}
                       </p>
                     )}

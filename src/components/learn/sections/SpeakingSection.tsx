@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Mic, MicOff, CheckCircle, Lightbulb, Volume2 } from "lucide-react";
+import { MinimalButton } from "@/components/design-system";
 import LessonSectionHeader from "../lesson-ui/LessonSectionHeader";
 import LessonContinueButton from "../lesson-ui/LessonContinueButton";
 import { lessonSectionMotion } from "../lesson-ui/motion";
@@ -206,21 +207,21 @@ export default function SpeakingSection({
       />
 
       {/* Level 1 */}
-      <div className="bg-gradient-to-b from-zinc-900/70 to-zinc-950/70 border border-zinc-700/50 rounded-2xl p-4 sm:p-6 mb-4 sm:mb-5 shadow-md">
+      <div className="border border-border/60 bg-card rounded-2xl p-4 sm:p-6 mb-4 sm:mb-5 shadow-md">
         <div className="flex items-center gap-2 mb-4">
           <span className="px-2 py-0.5 text-xs font-bold bg-emerald-600/20 text-emerald-400 rounded-full">
             Cấp độ 1
           </span>
-          <p className="text-white font-semibold">Nói theo khung</p>
+          <p className="text-foreground font-semibold">Nói theo khung</p>
           {level1Done && <CheckCircle size={16} className="text-emerald-400 ml-auto" />}
         </div>
 
-        <div className="bg-gradient-to-b from-zinc-800/80 to-zinc-900/90 border border-zinc-700/50 rounded-2xl p-4 mb-4 text-center relative overflow-hidden">
+        <div className="border border-border/60 bg-muted/40 rounded-2xl p-4 mb-4 text-center relative overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-br from-pink-500/3 to-transparent pointer-events-none" />
-          <p className="text-zinc-400 text-xs mb-2 uppercase tracking-widest font-bold">
+          <p className="text-muted-foreground text-xs mb-2 uppercase tracking-widest font-bold">
             Hãy nói to câu sau:
           </p>
-          <p className="text-white text-base sm:text-xl font-bold leading-snug">
+          <p className="text-foreground text-base sm:text-xl font-bold leading-snug">
             {formattedL1Prompt}
           </p>
         </div>
@@ -230,7 +231,7 @@ export default function SpeakingSection({
           placeholder={unit.speaking.level1Placeholder}
           value={nameInput}
           onChange={(e) => setNameInput(e.target.value)}
-          className="w-full bg-zinc-800 border border-zinc-700 rounded-xl px-4 py-3 text-white placeholder-zinc-500 mb-3 focus:outline-none focus:border-emerald-500 transition-colors"
+          className="w-full bg-muted/40 border border-border/60 rounded-xl px-4 py-3 text-foreground placeholder:text-muted-foreground/60 mb-3 focus:outline-none focus:border-emerald-500 transition-colors"
         />
 
         {nameInput && (
@@ -239,7 +240,7 @@ export default function SpeakingSection({
               <button
                 onClick={() => playTTS(formattedL1Prompt)}
                 aria-label="Nghe mẫu"
-                className="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-zinc-800 hover:bg-zinc-700 border border-zinc-700/60 text-white font-semibold text-sm transition-all duration-200 active:scale-95"
+                className="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-muted/40 hover:bg-muted/60 border border-border/60 text-foreground font-semibold text-sm transition-all duration-200 active:scale-95"
               >
                 <Volume2 size={16} /> Nghe mẫu
               </button>
@@ -275,7 +276,7 @@ export default function SpeakingSection({
                 className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-bold text-sm transition-all duration-200 ${
                   isLevel1Recording
                     ? "bg-red-600 text-white animate-pulse"
-                    : "bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-white shadow-md active:scale-95"
+                    : "bg-primary hover:bg-primary/90 text-primary-foreground shadow-md active:scale-95"
                 }`}
               >
                 {isLevel1Recording ? (
@@ -290,9 +291,9 @@ export default function SpeakingSection({
               </button>
             </div>
             {level1Transcript && (
-              <div className="bg-zinc-900/60 rounded-xl px-4 py-3 text-sm">
-                <p className="text-zinc-500 text-[10px] mb-1 font-bold">BẠN VỪA NÓI:</p>
-                <p className="text-zinc-200">&ldquo;{level1Transcript}&rdquo;</p>
+              <div className="bg-muted/30 rounded-xl px-4 py-3 text-sm">
+                <p className="text-muted-foreground text-[10px] mb-1 font-bold">BẠN VỪA NÓI:</p>
+                <p className="text-foreground">&ldquo;{level1Transcript}&rdquo;</p>
                 {level1Score !== null && (
                   <div className="flex items-center gap-2 mt-2">
                     <span
@@ -310,7 +311,7 @@ export default function SpeakingSection({
                           setLevel1Score(null);
                           setLevel1Transcript("");
                         }}
-                        className="text-[10px] text-zinc-500 hover:text-zinc-300 font-bold"
+                        className="text-[10px] text-muted-foreground hover:text-foreground font-bold"
                       >
                         Thử lại
                       </button>
@@ -327,7 +328,7 @@ export default function SpeakingSection({
             {!level1Done && level1Score !== null && level1Score < 60 && (
               <button
                 onClick={() => setLevel1Done(true)}
-                className="w-full text-zinc-500 hover:text-zinc-300 text-xs font-bold py-2 transition-colors"
+                className="w-full text-muted-foreground hover:text-foreground text-xs font-bold py-2 transition-colors"
               >
                 Bỏ qua và tiếp tục →
               </button>
@@ -338,29 +339,29 @@ export default function SpeakingSection({
 
       {/* Level 2 */}
       <div
-        className={`bg-gradient-to-b from-zinc-900/70 to-zinc-950/70 border rounded-2xl p-6 mb-6 transition-all shadow-md ${
-          level1Done ? "border-zinc-700/50" : "border-zinc-800/30 opacity-40 pointer-events-none"
+        className={`border border-border/60 bg-card rounded-2xl p-6 mb-6 transition-all shadow-md ${
+          level1Done ? "border-border/60" : "border-border/40 opacity-40 pointer-events-none"
         }`}
       >
         <div className="flex items-center gap-2 mb-4">
           <span className="px-2 py-0.5 text-xs font-bold bg-teal-600/20 text-teal-400 rounded-full">
             Cấp độ 2
           </span>
-          <p className="text-white font-semibold">Tự giới thiệu / Diễn đạt tự do</p>
+          <p className="text-foreground font-semibold">Tự giới thiệu / Diễn đạt tự do</p>
           {level2Done && <CheckCircle size={16} className="text-emerald-400 ml-auto" />}
         </div>
 
-        <div className="bg-gradient-to-b from-zinc-800/80 to-zinc-900/90 border border-zinc-700/50 rounded-2xl p-4 mb-4">
+        <div className="border border-border/60 bg-muted/40 rounded-2xl p-4 mb-4">
           <p className="text-xs font-bold text-teal-400 mb-2 uppercase tracking-widest">
             📍 Tình huống:
           </p>
-          <p className="text-white text-sm italic">&ldquo;{unit.speaking.level2Situation}&rdquo;</p>
+          <p className="text-foreground text-sm italic">&ldquo;{unit.speaking.level2Situation}&rdquo;</p>
         </div>
 
         <div className="flex gap-2 mb-4">
           <button
             onClick={() => setShowHint((p) => !p)}
-            className="text-xs text-zinc-500 hover:text-zinc-300 flex items-center gap-1 transition-colors"
+            className="text-xs text-muted-foreground hover:text-foreground flex items-center gap-1 transition-colors"
           >
             <Lightbulb size={12} />
             {showHint ? "Ẩn gợi ý" : "Xem gợi ý"}
@@ -373,10 +374,10 @@ export default function SpeakingSection({
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
-              className="border-l-4 border-zinc-600 bg-zinc-800/40 rounded-r-xl p-3 mb-4 overflow-hidden"
+              className="border-l-4 border-primary/40 bg-muted/30 rounded-r-xl p-3 mb-4 overflow-hidden"
             >
               <p
-                className="text-zinc-300 text-sm"
+                className="text-foreground text-sm"
                 dangerouslySetInnerHTML={{ __html: unit.speaking.level2Hint }}
               />
             </motion.div>
@@ -384,9 +385,9 @@ export default function SpeakingSection({
         </AnimatePresence>
 
         {level2Transcript && (
-          <div className="bg-zinc-900/60 rounded-xl p-3 mb-3">
-            <p className="text-xs text-zinc-500 mb-1">Bạn vừa nói:</p>
-            <p className="text-white text-sm">&ldquo;{level2Transcript}&rdquo;</p>
+          <div className="bg-muted/30 rounded-xl p-3 mb-3">
+            <p className="text-xs text-muted-foreground mb-1">Bạn vừa nói:</p>
+            <p className="text-foreground text-sm">&ldquo;{level2Transcript}&rdquo;</p>
             {level2Score !== null && (
               <div className="mt-2 flex items-center gap-2">
                 <div
@@ -398,7 +399,7 @@ export default function SpeakingSection({
                 >
                   Độ chính xác: {level2Score}%
                 </div>
-                <span className="text-xs text-zinc-500">
+                <span className="text-xs text-muted-foreground">
                   {level2Score >= 70 ? "Tốt lắm! 🎉" : "Thử lại sẽ tốt hơn 💪"}
                 </span>
               </div>
@@ -427,7 +428,7 @@ export default function SpeakingSection({
           {level2Transcript && (
             <button
               onClick={() => setLevel2Done(true)}
-              className="px-4 py-3 rounded-xl bg-zinc-700 hover:bg-zinc-600 text-white font-semibold text-sm transition-colors"
+              className="px-4 py-3 rounded-xl bg-muted hover:bg-muted/80 text-foreground font-semibold text-sm transition-colors"
             >
               Tiếp tục
             </button>
@@ -439,7 +440,7 @@ export default function SpeakingSection({
             ⚠️ Trình duyệt không hỗ trợ ghi âm. Thử Chrome hoặc Edge.
           </p>
         )}
-        <p className="text-zinc-600 text-xs mt-2 text-center">
+        <p className="text-muted-foreground/60 text-xs mt-2 text-center">
           Không sao đâu, cứ thử — mình ở đây để luyện cùng bạn! 💪
         </p>
       </div>
@@ -448,7 +449,7 @@ export default function SpeakingSection({
         <LessonContinueButton onClick={goNext}>Xem kết quả</LessonContinueButton>
       )}
       {level1Done && !level2Done && level2Transcript === "" && (
-        <p className="text-center text-zinc-500 text-sm">Thử nói ở Cấp độ 2 trước khi tiếp tục 🎤</p>
+        <p className="text-center text-muted-foreground text-sm">Thử nói ở Cấp độ 2 trước khi tiếp tục 🎤</p>
       )}
     </motion.div>
   );

@@ -428,19 +428,10 @@ export default function PlacementTestClient() {
               })}
             </div>
 
-            {/* Next button */}
-            <button
-              onClick={handleNext}
-              disabled={selected === null}
-              className={`w-full rounded-xl py-4 text-[15px] font-extrabold flex items-center justify-center gap-2 transition-all ${
-                selected !== null
-                  ? "bg-primary text-primary-foreground"
-                  : "bg-muted text-muted-foreground cursor-not-allowed"
-              }`}
-            >
+            <MinimalButton fullWidth onClick={handleNext} disabled={selected === null}>
               {isLast ? "Nộp bài & Xem kết quả" : "Câu tiếp theo"}
               <ChevronRight size={18} />
-            </button>
+            </MinimalButton>
           </motion.div>
         </AnimatePresence>
       </div>
