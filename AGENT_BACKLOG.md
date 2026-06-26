@@ -533,10 +533,11 @@
 - **Completed:** 2026-06-26 — Grammar/Vocab/Warmup cards use bg-card border-border/60 text-foreground/muted + primary accents (no zinc-950 cards); 0 zinc-950 in 3 files; lint0 + 170t + tsc pass; commit acd10ad + push via git-push.sh main; done
 
 ### TASK-084 — LessonSectionHeader light tokens
-- **Status:** `in_progress`
+- **Status:** `done`
 - **Mô tả:** Header dùng foreground/muted thay dark island.
 - **Done khi:** Khớp light UnitTemplate; lint pass
 - **Started:** 2026-06-26 — autopilot (PHASE1: memory sim via logs/grep + read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6-7 + grep header+theme+UnitTemplate+light sections; PHASE2: PLAN update + BACKLOG in_progress (ready>=2 skip refill); PHASE3: implement)
+- **Completed:** 2026-06-26 — LessonSectionHeader icon+badge+title+sub now bg-card border-border/60 + text-foreground/muted-foreground (no zinc dark island); matches Translate/Fluency/UnitTemplate light tokens; lint0 + 170t + tsc0; commit a1bf33b + push via git-push.sh main; done — autonomous (no human)
 
 
 ### TASK-085 — Login visual minimal
@@ -574,6 +575,7 @@
 | 2026-06-26 | TASK-079 | V2 research: audit post-bac3f15, MINIMAL_REDESIGN_V2+ROADMAP+BACKLOG queue TASK-081..090 | done |
 | 2026-06-26 | TASK-080 | cancelled — replaced by V2 queue | cancelled |
 | 2026-06-26 | TASK-081..084 | V2 pool ready (placement, pronunciation, lesson, header) | ready |
+| 2026-06-26 | TASK-084 | PHASE1: search_memory sim logs/grep + read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6-7 + grep LessonSectionHeader+UnitTemplate+light tokens; PHASE2: PLAN+BACKLOG in_progress (4r>=2 skip refill); PHASE3: 4 targeted token swaps in header (icon bg-card border-border/60, h1 foreground, badge muted+bg-muted+border-border/60, p muted) — no zinc island; 170t+lint+tsc0; commit a1bf33b + git-push.sh main; done | done — a1bf33b |
 | 2026-06-26 | TASK-083 | PHASE1: read AGENTS/BACKLOG/PLAN/CONTENT§6-7 + grep + sim search_memory via logs (empty prior); PHASE2: BACKLOG in_progress + PLAN full section (ready=2 skip refill); PHASE3: 3 section files (Grammar/Vocab/Warmup) migrated to bg-card border-border/60 text-foreground/muted + primary accents (no zinc-950 cards), flip styles preserved, 170t+lint+tsc clean; commit acd10ad + push via git-push.sh main; done | done — acd10ad |
 | 2026-06-26 | TASK-081 | PHASE1: sim search_memory via logs/grep + read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6-7 + V2 + grep Placement+design-system+e2e; PHASE2: PLAN update + BACKLOG in_progress (ready>=2 skip refill); PHASE3: migrate saving/results/test to Screen+Tailwind (MinimalButton, cards, primary accents), remove 63 style={{}}; gates lint0+170t+tsc0 pass; main commit aca1618 + push (polish 5f1e57c); done | done — aca1618 |
 | 2026-06-26 | TASK-082 | PHASE1: read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT + grep Pronunciation/Secondary + ipa + design; PHASE2: BACKLOG in_progress + PLAN full section (ready=2 skip refill); PHASE3: purge 63 styles → Tailwind cards/filters/panel + DIFF class map + keep shell; 0 style={{}}; all text/logic same; lint0+170t+tsc0; commit + git-push.sh; done | done — bdef932 |

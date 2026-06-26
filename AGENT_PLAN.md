@@ -7,7 +7,7 @@
 | Field | Value |
 |-------|-------|
 | Started | 2026-06-26 |
-| Focus | TASK-083: Lesson sections light theme (Grammar/Vocab/Warmup) — bg-card tokens per Fluency/Translate |
+| Focus | TASK-084 (done): LessonSectionHeader light tokens (foreground/muted + bg-card/border instead dark island) — V2 minimal lesson polish |
 | Owner | Autopilot (no human) |
 
 ### TASK-079 — V2 Minimal Redesign: research + kế hoạch autopilot
@@ -137,6 +137,7 @@
 - Fail 2 lần → blocked + lý do, chuyển next.
 - No secrets (pure UI token refactor); self-debug from output.
 **Done khi**: grep zinc-9.. in LessonSectionHeader.tsx ==0; header uses foreground/muted/card/border like Translate cards + UnitTemplate text-foreground; lint pass; 1 commit + push via git-push.sh main; BACKLOG=done + SHA; no ask user.
+**Completed:** 2026-06-26 — 0 zinc dark island (icon/bg/badge); icon uses bg-card border-border/60 + phase text; title=foreground, badge+sub=muted+muted card tokens; all gates 0+170 pass; commit a1bf33b + push via script; BACKLOG done; autonomous
 
 ### TASK-045 — Sync AGENT_AUTOPILOT.md với auto-refill
 **Mục tiêu**: Làm cho AGENT_AUTOPILOT.md mô tả chính xác cơ chế tự động: daemon/orchestrator/pick-task tự gọi refill từ AGENT_ROADMAP.md khi ready < 2 (MIN_READY), script agent-refill-backlog.sh parse roadmap pool, chèn tối đa 4 task `ready` vào BACKLOG, commit+push (chore, skip ci). Xóa mọi hướng dẫn gợi ý "user thêm task thủ công" vào backlog (user chỉ thêm vào ROADMAP nếu muốn ưu tiên). Giữ phần "Việc cần làm thủ công 1 lần (P0)" vì là setup secrets/migration (khác task hàng ngày). Doc khớp scripts hiện tại (refill, pick, orchestrator, roadmap format). Chỉ sửa doc; không code/logic.
