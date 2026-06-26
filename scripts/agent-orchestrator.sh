@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# Full autopilot cycle: health check → pick task → run agent → notify
-# Designed for cron: 0 */3 * * * /path/to/agent-orchestrator.sh
+# Full autopilot cycle: health check → pick task → run agent → deploy gate
+# Designed for cron or agent-daemon.sh (continuous loop)
 
 set -euo pipefail
 
@@ -12,6 +12,25 @@ mkdir -p "$LOG_DIR"
 
 log() { echo "[$(date -Iseconds)] $*"; }
 
+load_env_local() {
+  local env_file="$ROOT/.env.local"
+  [[ -f "$env_file" ]] || return 0
+  while IFS= read -r line || [[ -n "$line" ]]; do
+    line="${line%%#*}"
+    line="${line#"${line%%[![:space:]]*}"}"
+    [[ -n "$line" ]] || continue
+    [[ "$line" == *"="* ]] || continue
+    local key="${line%%=*}"
+    local val="${line#*=}"
+    val="${val%\"}"; val="${val#\"}"; val="${val%\'}"; val="${val#\'}"
+    if [[ -n "$key" && -z "${!key:-}" ]]; then
+      export "$key=$val"
+    fi
+  done < "$env_file"
+}
+
+load_env_local
+
 exec 9>"$LOCKFILE"
 if ! flock -n 9; then
   log "⏳ Orchestrator đang chạy ở process khác — bỏ qua cycle này"
@@ -21,8 +40,6 @@ fi
 # Circuit breaker: stop after 3 consecutive failures
 FAIL_COUNT=0
 if [[ -f "$STATE_FILE" ]]; then
-  FAIL_COUNT=$(grep -c '^FAIL$' "$STATE_FILE" 2>/dev/null | tail -1 || echo 0)
-  # Read last 3 lines
   RECENT=$(tail -3 "$STATE_FILE" 2>/dev/null || true)
   FAIL_COUNT=$(echo "$RECENT" | grep -c '^FAIL$' || true)
 fi
@@ -34,7 +51,6 @@ fi
 
 cd "$ROOT"
 
-# 1. Quick health: repo exists, on main, no dirty conflict
 log "🔍 Preflight..."
 git fetch origin main --quiet 2>/dev/null || true
 BRANCH=$(git branch --show-current)
@@ -43,7 +59,6 @@ if [[ "$BRANCH" != "main" ]]; then
   git checkout main
 fi
 
-# Stash local edits so pull never blocks on dirty docs/worktrees
 STASHED=0
 if ! git diff --quiet 2>/dev/null || ! git diff --cached --quiet 2>/dev/null; then
   log "📦 Stashing local changes trước khi pull..."
@@ -61,18 +76,15 @@ git pull --rebase origin main --quiet 2>/dev/null || {
   exit 1
 }
 
-# 2. CI smoke locally (fast)
 log "🧪 Smoke: lint + unit tests..."
 if ! npm run lint --silent 2>&1 | tail -5; then
   log "❌ Lint fail — agent vẫn chạy nhưng ưu tiên fix"
 fi
 
-# 3. Run headless agent for one task
 log "🚀 Starting headless agent..."
 if bash "$ROOT/scripts/agent-run-headless.sh"; then
   log "✅ Agent session completed"
   echo "OK" >> "$STATE_FILE"
-  # Keep only last 10 state lines
   tail -10 "$STATE_FILE" > "${STATE_FILE}.tmp" && mv "${STATE_FILE}.tmp" "$STATE_FILE"
 else
   log "❌ Agent session failed"
@@ -81,11 +93,17 @@ else
   exit 1
 fi
 
-# 4. Optional: check Vercel deploy (skip in daemon mode)
-if [[ "${ORCHESTRATOR_SKIP_DEPLOY:-0}" != "1" ]] && [[ -n "${VERCEL_TOKEN:-}" ]] && [[ -f "$ROOT/.env.local" ]]; then
-  export VERCEL_TOKEN
+# Vercel deploy gate — bắt buộc sau mỗi push (set ORCHESTRATOR_SKIP_DEPLOY=1 chỉ khi debug)
+if [[ "${ORCHESTRATOR_SKIP_DEPLOY:-0}" != "1" ]]; then
   log "📡 Checking Vercel deploy..."
-  npm run check-deploy 2>&1 | tail -8 || true
+  if npm run check-deploy 2>&1 | tee -a "$LOG_DIR/deploy-check.log" | tail -12; then
+    log "✅ Vercel deploy OK"
+  else
+    log "❌ Vercel deploy FAILED — cycle FAIL, ưu tiên fix deploy"
+    echo "FAIL" >> "$STATE_FILE"
+    tail -10 "$STATE_FILE" > "${STATE_FILE}.tmp" && mv "${STATE_FILE}.tmp" "$STATE_FILE"
+    exit 1
+  fi
 fi
 
 if [[ "$STASHED" == 1 ]]; then

@@ -46,8 +46,7 @@ while true; do
 
   cd "$ROOT"
   set +e
-  ORCHESTRATOR_SKIP_DEPLOY="${ORCHESTRATOR_SKIP_DEPLOY:-1}" \
-    bash "$ROOT/scripts/agent-orchestrator.sh" >> "$LOGFILE" 2>&1
+  bash "$ROOT/scripts/agent-orchestrator.sh" >> "$LOGFILE" 2>&1
   EXIT=$?
   set -e
 
