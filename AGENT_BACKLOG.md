@@ -438,10 +438,10 @@
 - **Completed:** 2026-06-26 — gates clean (lint0+170t+tsc0+cs50/50+audit50/50) no fix; sync log/PLAN/BACKLOG; commit + push via git-push.sh main; autonomous
 
 ### TASK-071 — Autopilot maintenance sweep #71
-- **Status:** `ready`
+- **Status:** `in_progress`
 - **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
 - **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
-- **Started:** auto-refill
+- **Started:** 2026-06-26 — autopilot (PHASE1 research complete: read AGENTS/BACKLOG/PLAN/CONTENT§6-7 + sim search_memory via logs/grep (prior 070 clean); grep TASK-071; 4 ready (071-074) >=2 skip refill; PHASE2 PLAN update + BACKLOG in_progress; PHASE3: run gates)
 
 
 ### TASK-072 — Autopilot maintenance sweep #72
