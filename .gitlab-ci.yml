@@ -1,7 +1,5 @@
-# GitLab CI — thay GitHub Actions (private repo GitHub chỉ 2000p/tháng)
-#
-# Khuyến nghị: self-hosted runner trên laptop → KHÔNG tốn GitLab minutes
-#   bash scripts/setup-gitlab-runner.sh
+# GitLab CI — self-hosted runner (shell, không Docker) = unlimited minutes
+# Setup: bash scripts/setup-gitlab-full.sh
 
 stages:
   - verify
@@ -21,15 +19,10 @@ cache:
     - node_modules/
     - .npm/
 
-.node_setup: &node_setup
-  image: node:20-bookworm
-  before_script:
-    - npm ci --legacy-peer-deps
-
 lint-test:
-  <<: *node_setup
   stage: verify
   script:
+    - npm ci --legacy-peer-deps
     - npm run lint
     - npx tsc --noEmit
     - npm run test
@@ -38,9 +31,9 @@ lint-test:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
 
 build:
-  <<: *node_setup
   stage: build
   script:
+    - npm ci --legacy-peer-deps
     - npm run build
   variables:
     UPSTASH_REDIS_REST_URL: "https://placeholder.upstash.io"
@@ -58,9 +51,9 @@ build:
         - package-lock.json
 
 e2e:
-  <<: *node_setup
   stage: e2e
   script:
+    - npm ci --legacy-peer-deps
     - npx playwright install chromium --with-deps
     - npm run dev &
     - npx wait-on http://localhost:3000 --timeout 60000
