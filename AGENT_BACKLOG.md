@@ -394,10 +394,10 @@
 - **Started:** 2026-06-26 — autopilot (PHASE1 research complete: read AGENTS/BACKLOG/PLAN/CONTENT§6-7 + sim search_memory logs + grep TASK; 2 ready >=2 skip refill; PHASE2 plan update + BACKLOG in_progress; PHASE3 gates clean no fix + doc sync)
 
 ### TASK-065 — Autopilot maintenance sweep #65
-- **Status:** `ready`
+- **Status:** `in_progress`
 - **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
 - **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
-- **Started:** auto-refill
+- **Started:** 2026-06-26 — autopilot (PHASE1: read AGENTS/BACKLOG/PLAN/CONTENT§6-7 + sim search_memory via logs/grep (TASK-064 clean prior); PHASE2: PLAN update + BACKLOG in_progress (4ready>=2 skip refill); PHASE3: ...)
 
 
 ### TASK-066 — Autopilot maintenance sweep #66
