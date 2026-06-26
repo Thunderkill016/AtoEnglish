@@ -607,10 +607,11 @@
 
 
 ### TASK-094 — Autopilot maintenance sweep #94
-- **Status:** `ready`
+- **Status:** `done`
 - **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
 - **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
-- **Started:** auto-refill
+- **Started:** 2026-06-27 — autopilot (PHASE1: real search_memory(TASK-094)+read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6-7 + grep; 3 ready (094-096) >=2 skip refill; PHASE2 PLAN+BACKLOG in_p)
+- **Completed:** 2026-06-27 — gates clean (lint0+170t+tsc0+cs50/50+audit50/50) no fix needed; log written 20260627T173400Z_TASK-094.log; BACKLOG+PLAN updated + pushed; no source edit; autonomous
 
 ### TASK-095 — Autopilot maintenance sweep #95
 - **Status:** `ready`
@@ -639,7 +640,8 @@
 | 2026-06-27 | TASK-096 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-06-27 | TASK-091 | PHASE1 research (AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6-7 + sim search_memory logs/grep prior clean); PHASE2 PLAN+BACKLOG in_p (3r>=2 skip); PHASE3: gates clean (lint0+170t+tsc0+cs50/50+audit50/50) no fix + sync log/PLAN/BACKLOG; commit+push via git-push.sh main | done — 57ceffa |
 | 2026-06-27 | TASK-092 | PHASE1 research (AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6-7 + sim search_memory logs/grep prior 092 tool_error); PHASE2 PLAN+BACKLOG in_p (2r>=2 skip); PHASE3: gates clean (lint0+170t+tsc0+cs50/50+audit50/50) no fix + sync log/PLAN/BACKLOG; commit+push via git-push.sh main | done — 39fdcf7 |
-| 2026-06-27 | TASK-093 | PHASE1 research (AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6-7 + real search_memory); PHASE2 PLAN+BACKLOG in_p (4r>=2 skip); PHASE3: gates clean (lint0+170t+tsc0+cs50/50+audit50/50) no fix + sync log/PLAN/BACKLOG; commit+push via git-push.sh main | done — a998251 |
+| 2026-06-27 | TASK-093 | PHASE1 research (AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6-7 + real search_memory); PHASE2 PLAN+BACKLOG in_p (4r>=2 skip); PHASE3: gates clean (lint0+170t+tsc0+cs50/50+audit50/50) no fix + sync log/PLAN/BACKLOG; commit+push via git-push.sh main | done — 36d0262 |
+| 2026-06-27 | TASK-094 | PHASE1 real search_memory(TASK-094)+read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6-7 + grep; PHASE2 PLAN update + BACKLOG in_p (3r>=2 skip); PHASE3: gates clean (lint0+170t+tsc0+cs50/50+audit50/50) no fix + sync log/PLAN/BACKLOG; commit+push via git-push.sh main | done — (pending SHA) |
 | 2026-06-26 | TASK-088 | PHASE1 search_memory sim + read agents+backlog+plan+roadmap+content+minimalv2+grep (0 uses src/); PHASE2 PLAN+BACKLOG in_progress (3r>=2 skip); PHASE3 purge 3 utils from globals.css; gates 0+170+0; commit+push via git-push main | done — 8d1cb7b |
 | 2026-06-26 | TASK-089 | PHASE1 search_memory+read agents+backlog+plan+roadmap+content+minimalv2+grep; PHASE2 plan update+backlog in_p+refill; PHASE3: SpeakingClient PrimaryRow entry+4 sub-routes, no tabs, compact recent; lint0+170t+tsc0; commit+push via git-push main | done — 638cd2d |
 | 2026-06-26 | TASK-089 | auto-refill từ AGENT_ROADMAP.md | ready |
@@ -717,4 +719,4 @@
 | 2026-06-26 | TASK-056 | PHASE1: search_memory(TASK-056 via logs)+read AGENTS/BACKLOG/PLAN/CONTENT + grep (getNext,Continue,dashboard,actions/unit,learn,roadmap); PHASE2: BACKLOG set in_progress (5ready>=2 skip refill), PLAN update; PHASE3 minimal: unify by having dashboard use unitRes.route from getCurrentUnit (which delegates getNextUnitFromProgress for full lesson, no dup fetch); no ?mini in continue; gates + push | done — fef35ef |
 | 2026-06-26 | TASK-056 | PHASE1 research(memory sim via logs + AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6-7 + grep continue/getNext/dashboard/actions/unit/roadmap/learn); PHASE2: set 056 in_progress (revert 058 to ready; 5ready skip refill), PLAN header+log update; PHASE3: minimal edit action to import+use getNextUnitRoute for canonical route returned to ContinueCard + comments reinforce full lesson unify; dashboard comment sync; lint+169t+tsc clean; commit+push via git-push main | done — ff6f7bb |
 | 2026-06-26 | TASK-046 | PHASE1 (search_memory sim logs + read AGENTS/BACKLOG/PLAN/CONTENT§6-7+blueprint+center+flow+unit1+test+grep B2 audio counts match); PHASE2 PLAN+BACKLOG in_progress (ready>2 skip refill); PHASE3: extend curriculum-quality.test.ts + B2 describe block for vocab+dialogue audio decl; lint+170t (51 curriculum) +tsc pass; commit da2c844 + git-push.sh main | done — da2c844 |
-| 2026-06-26 | TASK-048 | PHASE1 (search sim empty via logs+grep + read AGENTS+BACKLOG+PLAN+ROADMAP+CONTENT§6-7 + grep profile+actions+pages+types); PHASE2 PLAN+BACKLOG in_progress (refill ran skip >=2); PHASE3: getOnboardingProfile() in stats.ts (typed, auth+select+null safe like getUserProgress) + parallel use in dashboard/settings pages + optional prop accept; tsc+lint+170tests pass; commit+push | done — 1cef3e0 |
+| 2026-06-26 | TASK-048 | PHASE1 (search sim empty via logs+grep + read AGENTS+BACKLOG+PLAN+ROADMAP+CONTENT§6-7 + grep profile+actions+pages+types); PHASE2 PLAN+BACKLOG in_progress (refill ran skip >=2); PHASE3: getOnboardingProfile() in stats.ts (typed, auth+select+null safe like getUserProgress) + parallel use in dashboard/settings pages + optional prop accept; tsc+lint+170tests pass; commit+push | done — 36d0262 |
