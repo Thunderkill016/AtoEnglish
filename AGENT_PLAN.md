@@ -7,7 +7,7 @@
 | Field | Value |
 |-------|-------|
 | Started | 2026-06-26 |
-| Focus | TASK-058: B2 L1 interference >=50% (unit33-42 add l1_interference_vn >=6/12 or equiv; set B2 ratio 0.5 in content-standard); per center-ref VN CLT + CONTENT_STYLE §7 + unit1 gold; skip refill (many ready); gates + push |
+| Focus | Kế hoạch tối giản P0–P6 done (905cb61). Tiếp: TASK-045 (doc autopilot) → TASK-046 (B2 audio test) |
 | Owner | Autopilot (no human) |
 
 ### TASK-058 — Chuẩn content: B2 L1 interference ≥50%
