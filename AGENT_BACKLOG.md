@@ -659,10 +659,10 @@
 
 
 ### TASK-101 — Autopilot maintenance sweep #101
-- **Status:** `ready`
+- **Status:** `in_progress`
 - **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
 - **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
-- **Started:** auto-refill
+- **Started:** 2026-06-27 — autopilot (PHASE1: search_memory("TASK-101 maintenance") sim via logs/grep (prior 100 clean) + read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6–7 + grep TASK; 3 ready >=2 skip refill; PHASE2 PLAN update + BACKLOG in_p; PHASE3 run gates)
 
 ### TASK-102 — Autopilot maintenance sweep #102
 - **Status:** `ready`
@@ -686,10 +686,10 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
-| 2026-06-27 | TASK-101 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-06-27 | TASK-101 | PHASE1: search_memory sim via logs/grep + read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6–7; 3r>=2 skip; PHASE2 plan+backlog in_p; PHASE3: gates clean no fix; sync log/PLAN/BACKLOG; commit+push via git-push.sh main | done — [SHA] |
 | 2026-06-27 | TASK-102 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-06-27 | TASK-103 | auto-refill từ AGENT_ROADMAP.md | ready |
-| 2026-06-27 | TASK-100 | smoke ✅; e2e env-connect flake (no code regression); bumped webServer timeout 120s; gates clean; baseline recorded in PLAN+log; commit via git-push | (pending sha) |
+| 2026-06-27 | TASK-100 | smoke ✅; e2e env-connect flake (no code regression); bumped webServer timeout 120s; gates clean; baseline recorded in PLAN+log; commit via git-push | 13f9faa |
 | 2026-06-27 | TASK-097 | PHASE1: sim search_memory via logs/grep + read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6–7 + blueprint+center+flow+grep sections+dark; 3 ready>=2 skip refill; PHASE2 PLAN update + BACKLOG in_p; PHASE3: audit+purge dark remnants (violet-950, dark:, emerald-7xx tints, amber-200) in 5 sections+LessonCard to light tokens; no zinc/CTA-grad; gates+commit+push via git-push.sh | done — 074037c |
 | 2026-06-27 | TASK-098 | PHASE1 research (AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6–7 + V2 + login + panel grep + refill skip); PHASE2 PLAN update + BACKLOG in_p; PHASE3: removed desktop panel + isDesktop (mobile-first single col); gates 0+170+0; commit aee24de + push; done | done — aee24de |
 | 2026-06-27 | TASK-099 | PHASE1: sim search_memory via logs/grep + read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6–7 + MINIMAL_V2 + grep (targeted inline 0, lesson canvas zinc kept, speaking subs, cert shell); PHASE2 PLAN+BACKLOG in_p (2r>=2 skip); PHASE3: sync §2 (shipped 081-098, ~80% minimal) + §9 (checks updated to actual); gates 0+170+0; log+commit 00f38a9 + push via git-push.sh main; done | done — 00f38a9 |
