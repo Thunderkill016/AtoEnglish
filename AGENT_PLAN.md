@@ -108,7 +108,35 @@
 - Self-debug from lint/test/grep after each; no secret (pure UI client).
 - Fail 2x → blocked + lý do, next ready.
 **Done khi**: 0 `zinc-950|to-zinc-950|from-zinc-9` card containers in 3 files (grep); all interactive same; texts preserved; lint+test pass; 1 commit + push via git-push.sh main; BACKLOG=done + SHA; no ask user.
-**Completed:** (pending impl)
+**Completed:** 2026-06-26 — Grammar/Vocab/Warmup cards use bg-card border-border/60 text-foreground/muted + primary accents (no zinc-950 cards); 0 zinc-950 in 3 files; lint0 + 170t + tsc pass; commit acd10ad + push via git-push.sh main; done
+
+### TASK-084 — LessonSectionHeader light tokens
+**Mục tiêu**: `LessonSectionHeader.tsx` — icon pill ("dark island") và số thứ tự badge dùng foreground/muted + bg-card/border-border/60 thay bg-zinc-900/80 border-zinc-800/80. h1: text-foreground (thay text-white); subtitle p: text-muted-foreground (thay text-zinc-500). Khớp light UnitTemplate canvas + SheetHeader + recent sections (Translate/Fluency/Grammar cards use bg-card border-border/60 text-foreground/muted). Giữ nguyên: phaseIconColor logic + text color, getSectionTheme, data-testid for warmup, subtitle/goal render, flex layout, sizes, cn, all callers/props. Không sửa theme.ts, LessonCard, LessonShell, UnitTemplate. Scope: header only. **Done khi:** Khớp light UnitTemplate; 0 zinc dark island classes trong file; lint pass.
+**Bước thực hiện**:
+1. Search memory("TASK-084" + "LessonSectionHeader" + "light tokens" + "dark island") sim via logs/grep + read AGENTS.md (ALWAYS), AGENT_BACKLOG/PLAN/ROADMAP, CONTENT_STYLE.md §6–7 (blueprint context), MINIMAL_REDESIGN_V2.md, src/components/learn/lesson-ui/LessonSectionHeader.tsx + theme.ts, src/components/learn/UnitTemplate.tsx (canvas light), src/components/design-system/SheetHeader.tsx, recent light sections (TranslateSection.tsx, FluencySection.tsx, GrammarSection for token ex), grep zinc in lesson-ui/*.
+2. Grep confirm zinc dark only in icon div + badge + h1 + p of header (4 places); xác định exact class strings to swap; preserve JSX structure/text/props 100%.
+3. Update BACKLOG: TASK-084 status `in_progress`.
+4. Update AGENT_PLAN.md với mục tiêu + bước + rủi ro cho TASK-084 (this section).
+5. ready >=2 (084 + 085+) → skip `bash scripts/agent-refill-backlog.sh` (KHÔNG hỏi user).
+6. Edit src/components/learn/lesson-ui/LessonSectionHeader.tsx (minimal targeted):
+   - icon container: replace "bg-zinc-900/80 border-zinc-800/80" with "bg-card border-border/60"
+   - h1: "text-foreground" (instead of "text-white")
+   - badge span: replace "text-zinc-500 bg-zinc-900 border border-zinc-800" with "text-muted-foreground bg-muted border border-border/60"
+   - p subtitle: "text-muted-foreground" (instead of "text-zinc-500")
+   - Keep phaseIconColor(phase) class as-is for colored icon.
+   - Use cn() already present.
+7. `npm run lint && npm run test`; npx tsc --noEmit.
+8. Pass → update BACKLOG done + Nhật ký + SHA; PLAN log.
+9. git pull --rebase; git add src/components/learn/lesson-ui/LessonSectionHeader.tsx AGENT_BACKLOG.md AGENT_PLAN.md; commit "refactor(lesson): LessonSectionHeader uses foreground/muted + card tokens instead of dark zinc island (TASK-084)"; `bash scripts/git-push.sh main`.
+**Rủi ro**:
+- Icon pill contrast in light/dark: bg-card + colored text- (emerald etc) should be ok (card is surface); if low contrast on light verify visually via run but since no user, rely lint/test + token usage in other components.
+- Badge/p text too dim: muted-foreground is standard in SheetHeader/sections, matches "khớp light".
+- Other lesson-ui still dark (LessonCard, HowToLearn, Shell) — out of scope, leave for later tasks.
+- No behavior/ text/ logic change — only color tokens.
+- Self-debug: after edit grep for zinc in the file ==0; run dev? no, use lint/test.
+- Fail 2 lần → blocked + lý do, chuyển next.
+- No secrets (pure UI token refactor); self-debug from output.
+**Done khi**: grep zinc-9.. in LessonSectionHeader.tsx ==0; header uses foreground/muted/card/border like Translate cards + UnitTemplate text-foreground; lint pass; 1 commit + push via git-push.sh main; BACKLOG=done + SHA; no ask user.
 
 ### TASK-045 — Sync AGENT_AUTOPILOT.md với auto-refill
 **Mục tiêu**: Làm cho AGENT_AUTOPILOT.md mô tả chính xác cơ chế tự động: daemon/orchestrator/pick-task tự gọi refill từ AGENT_ROADMAP.md khi ready < 2 (MIN_READY), script agent-refill-backlog.sh parse roadmap pool, chèn tối đa 4 task `ready` vào BACKLOG, commit+push (chore, skip ci). Xóa mọi hướng dẫn gợi ý "user thêm task thủ công" vào backlog (user chỉ thêm vào ROADMAP nếu muốn ưu tiên). Giữ phần "Việc cần làm thủ công 1 lần (P0)" vì là setup secrets/migration (khác task hàng ngày). Doc khớp scripts hiện tại (refill, pick, orchestrator, roadmap format). Chỉ sửa doc; không code/logic.

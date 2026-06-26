@@ -533,9 +533,10 @@
 - **Completed:** 2026-06-26 — Grammar/Vocab/Warmup cards use bg-card border-border/60 text-foreground/muted + primary accents (no zinc-950 cards); 0 zinc-950 in 3 files; lint0 + 170t + tsc pass; commit acd10ad + push via git-push.sh main; done
 
 ### TASK-084 — LessonSectionHeader light tokens
-- **Status:** `ready`
+- **Status:** `in_progress`
 - **Mô tả:** Header dùng foreground/muted thay dark island.
 - **Done khi:** Khớp light UnitTemplate; lint pass
+- **Started:** 2026-06-26 — autopilot (PHASE1: memory sim via logs/grep + read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6-7 + grep header+theme+UnitTemplate+light sections; PHASE2: PLAN update + BACKLOG in_progress (ready>=2 skip refill); PHASE3: implement)
 
 
 ### TASK-085 — Login visual minimal
