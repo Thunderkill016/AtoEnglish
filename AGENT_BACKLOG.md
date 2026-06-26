@@ -125,12 +125,41 @@
 - **Completed:** 2026-06-26 — rewrite in next.config + file-verify for B1(unit-19)/B2(unit-36) + unit1; probe would succeed; lint+159 tests + tsc pass; native MP3s now reachable.
 - **Started:** 2026-06-26 — autopilot (no human)
 
+### TASK-037 — E2E native audio probe on learn page
+- **Status:** `ready`
+- **Mô tả:** Playwright: mở `/learn/unit-19`, click vocab speaker, verify `Audio` plays or TTS fallback không crash. Mock hoặc probe network cho `/audio/`.
+- **Done khi:** E2E pass trong CI; không flake 3 lần.
+- **Started:** auto-refill
+
+### TASK-038 — Integration test user_onboarding_profile
+- **Status:** `ready`
+- **Mô tả:** Thêm test trong `progress.integration.test.ts` hoặc file mới: insert profile row, verify RLS + columns goal/obstacle/daily_minutes.
+- **Done khi:** Integration test pass với Supabase local/prod test user.
+- **Started:** auto-refill
+
+### TASK-039 — Dashboard hiển thị daily_xp_goal từ onboarding
+- **Status:** `ready`
+- **Mô tả:** `dashboard/page.tsx` đọc `daily_xp_goal` từ `user_progress`, hiển thị progress bar hôm nay vs goal.
+- **Done khi:** UI hiển thị đúng; lint+test pass.
+- **Started:** auto-refill
+
+### TASK-040 — Production smoke script learn B2
+- **Status:** `ready`
+- **Mô tả:** Script `scripts/smoke-learn.sh` curl 200 cho `/learn/unit-33` và sample static `/audio/unit33/hypothetical.mp3` (sau TASK-036).
+- **Done khi:** Script exit 0 trên production URL.
+- **Started:** auto-refill
+
+
 ---
 
 ## Nhật ký agent
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
+| 2026-06-26 | TASK-037 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-06-26 | TASK-038 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-06-26 | TASK-039 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-06-26 | TASK-040 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-06-26 | TASK-001 | Supabase migration | blocked — no CLI/token |
 | 2026-06-26 | TASK-002 | Vercel deploy check | done — 334ca23 READY |
 | 2026-06-26 | TASK-010 | A1 audio unit-1..12 | done — autopilot batch |
