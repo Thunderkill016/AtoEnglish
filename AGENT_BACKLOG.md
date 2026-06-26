@@ -230,10 +230,11 @@
 - **Completed:** 2026-06-26 — header + ── comments (HOOK etc) on 50/50 units (49+unit1); 50 files have ── HOOK (grep 99 matches); gates tsc+lint+169test+content-std50/50+audit50/50 pass; commit+push via git-push; no data/ flow change only comments to match blueprint/unit1 (TASK-061)
 
 ### TASK-062 — Redesign pilot: unit24 theo center-reference + unit1
-- **Status:** `ready`
+- **Status:** `done`
 - **Mô tả:** Áp `lesson-center-reference.ts` (ESA/CELTA/CLT VN): bổ sung L1 ≥50%, practiceTranslate≥3, cumulativeReview≥3; comment blocks.
 - **Done khi:** unit24 pass test:content-standard; lint+test pass.
-- **Started:** user mandate — tham chiếu trung tâm, pilot 1 bài B1 fail
+- **Started:** 2026-06-26 — autopilot (PHASE1: search sim+read AGENTS/BACKLOG/PLAN/CONTENT§6-7+center-ref+blueprint+learning-flow+unit1+unit24+content-std; PHASE2 plan+refill (6ready); PHASE3: pilot redesign unit24: full comments per blueprint, L1 to 100% pilot, grammar rule short+inductive from dialog, field order align, no data change beyond polish)
+- **Completed:** 2026-06-26 — pilot unit24 L1=100% (12/12), added full ── HOOK/WARMUP/VOCAB/GRAMMAR/EXERCISES/DIALOGUES/FLUENCY/OUTPUT/REVIEW + CUMULATIVE comments per blueprint+center-ref, grammar.rule short inductive, gates tsc+lint+169tests+content-std50/50+audit50/50 pass; unit24 now gold pilot B1; no other units touched.
 
 ### TASK-049 — Lesson UI: migrate Dialogue + Shadowing + Speaking + Quiz
 - **Status:** `blocked`
@@ -399,4 +400,5 @@
 | 2026-06-26 | TASK-035 | E2E test signup persist to user_onboarding_profile + daily_xp_goal | done — 7030384 |
 | 2026-06-26 | TASK-036 | Fix audio path /unitN vs /unit-N (rewrite + verify B1/B2 playUnitAudio native) | done — 0d30be9 |
 | 2026-06-26 | TASK-060 | research(agents+blueprint+center+content-std+grep units), set in_progress, update PLAN+BACKLOG, add header comments + >=6 L1 notes each to unit24 (passive VN errors) + unit31 (report verbs + formal), 9/12 & 11/12 L1; tsc+lint+169tests+content-std+audit 50/50 pass; commit+push via git-push | done — 5df0678 |
-| 2026-06-26 | TASK-061 | PHASE1 research (memory empty, agents+blueprint+center+content+unit1+50units grep), PHASE2: update PLAN/BACKLOG, set 061 in_progress; PHASE3: bulk header+ ──HOOK etc comments 50 files; all gates pass; pushed | done — [pending SHA] |
+| 2026-06-26 | TASK-061 | PHASE1 research (memory empty, agents+blueprint+center+content+unit1+50units grep), PHASE2: update PLAN/BACKLOG, set 061 in_progress; PHASE3: bulk header+ ──HOOK etc comments 50 files; all gates pass; pushed | done — 8c99173 |
+| 2026-06-26 | TASK-062 | PHASE1 research (search sim+agents+backlog+plan+content+center+blueprint+flow+unit1+unit24+print), PHASE2 set in_progress+plan+refill, PHASE3: pilot redesign unit24 (L1 100% 12/12 + full ── section comments + short inductive grammar.rule + align), gates tsc/lint/169test+content50/50+audit50/50 pass; commit+push via git-push | done — [SHA] |

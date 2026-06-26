@@ -2,18 +2,14 @@ import { UnitData } from "@/components/learn/UnitTemplate";
 
 
 // ─────────────────────────────────────────────────────────────────────────────
-// UNIT-24 — How Things Are Made  (B1)
-// Standardized header + section comments per lesson-blueprint.ts (CONTENT_BLOCK_ORDER)
-// + lesson-center-reference.ts (ESA Engage/Study/Activate, CELTA, Nation, CLT VN)
-// Gold sample: src/lib/data/units/unit1.ts — field order meta→hook→warmup→vocab→grammar→exercises→dialogues→fluency→output→review
-// ─────────────────────────────────────────────────────────────────────────────
-// ─────────────────────────────────────────────────────────────────────────────
 // UNIT 24 — How Things Are Made (B1) — Passive Voice for processes
-// Per TASK-060: bring L1 interference >=50% (B1 target 0.5)
-// Reference: lesson-center-reference (BC ESA Study lexis + VN CLT L1 contrast)
-// Blueprint: vocab block (l1_interference_vn mandatory for B1)
-// Gold: unit1.ts style — ⚠️ notes + comment sections
-// Common VN error: missing 'be+V3', active voice in process desc, wrong participle
+// Pilot redesign per TASK-062: lesson-center-reference.ts (BC ESA / CELTA / Nation / CLT VN) + lesson-blueprint.ts + unit1.ts gold
+// ESA: Engage (hook+warmup) → Study (vocab+grammar+ex+dialogue) → Activate (fluency+output) → Review
+// CELTA: Lead-in → Clarification (lexis/MF(P) inductive) → Controlled → Freer → Feedback
+// Nation: pre-teach vocab 98% coverage before dialogue; fluency = strand 4 automaticity
+// VN CLT: tình huống công sở + L1 contrast (ILA/Apollo style) + TOEIC-like distractors
+// Blueprint: field order + 10 blocks IPOR; authorGuide: L1 for B1 >=50% (pilot 100%), practiceTranslate>=3, cum>=3, short rule
+// Gold: unit1.ts — header block + ── comments + l1_interference_vn ⚠️ + inductive grammar + can-do outcomes
 // ─────────────────────────────────────────────────────────────────────────────
 
 export const unit24: UnitData = {
@@ -26,7 +22,8 @@ export const unit24: UnitData = {
   badgeName: "Kỹ Sư Quy Trình",
   badgeEmoji: "⚙️",
 
-  // ── HOOK: situation (real VN context) + learningOutcomes (2–5 can-do) + culturalNote (pragmatic VN↔EN)
+  // ── HOOK (Engage/Lead-in per center-ref): situation cụ thể (công sở) + learningOutcomes can-do CEFR B1 + culturalNote pragmatic VN↔EN
+  // Blueprint: situation ≥30c, outcomes 2-5 measurable, culturalNote ≥40c
   situation: "Đoàn khách quốc tế đến thăm nhà máy. Giám đốc nhờ bạn giải thích quy trình sản xuất bằng tiếng Anh. Trong kỹ thuật và báo cáo, Passive Voice là chuẩn: 'The components are assembled here. The product is tested before shipping.'",
   learningOutcomes: [
     "Dùng Passive Voice Present Simple (is/are + done) để mô tả quy trình hiện tại",
@@ -37,34 +34,34 @@ export const unit24: UnitData = {
   // ── HOOK (cultural): pragmatic note
   culturalNote: 'Trong báo cáo kỹ thuật và khoa học bằng tiếng Anh, <span class="text-emerald-400 font-semibold">Passive Voice</span> được dùng rất phổ biến vì nó tập trung vào <span class="text-emerald-400 font-semibold">QUY TRÌNH</span>, không phải người thực hiện. <span class="text-zinc-400">"Workers assemble the parts"</span> → <span class="text-emerald-400">"The parts are assembled"</span>. Đây là phong cách viết chuyên nghiệp trong môi trường quốc tế.',
 
-  // ── WARMUP: ≥3 short phrases (SRS + prior knowledge activation)
+  // ── WARMUP (Engage / activate schemata): ≥3 mẫu câu ngắn — nghe nhắc lại, kích hoạt prior (SRS ôn unit trước)
+  // Apollo/CLT style warm-up oral
   warmupGreetings: [
     { emoji: "🏭", en: "The components are manufactured in our Ho Chi Minh City facility.", vn: "Các linh kiện được sản xuất tại cơ sở Thành phố Hồ Chí Minh của chúng tôi.", context: "Passive Present — quy trình hiện tại" },
     { emoji: "🔍", en: "Each product is tested three times before it is shipped.", vn: "Mỗi sản phẩm được kiểm tra ba lần trước khi vận chuyển.", context: "Passive Present — quy trình kiểm soát chất lượng" },
     { emoji: "✅", en: "The new factory was built in 2023 and has been certified by ISO.", vn: "Nhà máy mới được xây dựng vào năm 2023 và đã được chứng nhận bởi ISO.", context: "Past Passive + Present Perfect Passive" },
   ],
 
-  // ── VOCABULARY: 12 từ — DẠY TRƯỚC DIALOGUE (Nation pre-teach) ─────────────
-  // L1 notes: focus common VN errors on Passive (missing BE, wrong V3, active habit)
-  // ESA Study / CELTA Clarification: IPA + collocation + l1_interference_vn (ILA style)
-
-  // ── VOCABULARY: 8–20 words, pre-teach BEFORE dialogues; l1_interference_vn (A1 100%, B1+ ≥50%)
+  // ── VOCABULARY (Study/Clarification — lexis): pre-teach BEFORE dialogues (Nation 98% coverage)
+  // BẮT BUỘC l1_interference_vn (lỗi VN) như ILA correction; pilot 100% for B1 redesign
+  // IPA + collocation + example + example2 (A2+); ESA Study / CELTA lexis
   vocab: [
     { id: 1, word: "manufacture", emoji: "🏭", phonetic: "/ˌmænjuˈfæktʃər/", meaning: "sản xuất", example: "The parts are manufactured using automated machinery.", example2: "This company manufactures electronic components.", collocation: "manufacture goods / manufacturing process / mass manufacture", audio: "/audio/unit24/manufacture.mp3", l1_interference_vn: "⚠️ Passive: 'are manufactured' (be + V3). VN hay quên 'be': 'parts manufacture' ❌ — phải 'The parts ARE manufactured'." },
     { id: 2, word: "assemble", emoji: "🔧", phonetic: "/əˈsembəl/", meaning: "lắp ráp", example: "The devices are assembled by hand in our factory.", example2: "All components must be assembled in the correct order.", collocation: "assemble a product / assembly line / fully assembled", audio: "/audio/unit24/assemble.mp3", l1_interference_vn: "⚠️ 'are assembled' (KHÔNG 'assemble themselves' hoặc bỏ be). 'By hand' = thủ công, không 'with hand'." },
     { id: 3, word: "inspect", emoji: "🔍", phonetic: "/ɪnˈspekt/", meaning: "kiểm tra / thanh tra", example: "Every unit is inspected for defects before packaging.", example2: "The factory is inspected annually by regulators.", collocation: "inspect a product / quality inspection / inspect for defects", audio: "/audio/unit24/inspect.mp3", l1_interference_vn: "⚠️ Passive luôn: 'is inspected' (be+V3). Dùng 'for defects' (không 'about')." },
-    { id: 4, word: "distribute", emoji: "🚚", phonetic: "/dɪˈstrɪbjuːt/", meaning: "phân phối", example: "The finished goods are distributed to retailers nationwide.", example2: "Products are distributed through our partner network.", collocation: "distribute products / distribution channel / distribute globally", audio: "/audio/unit24/distribute.mp3" },
+    { id: 4, word: "distribute", emoji: "🚚", phonetic: "/dɪˈstrɪbjuːt/", meaning: "phân phối", example: "The finished goods are distributed to retailers nationwide.", example2: "Products are distributed through our partner network.", collocation: "distribute products / distribution channel / distribute globally", audio: "/audio/unit24/distribute.mp3", l1_interference_vn: "⚠️ 'are distributed' (be + V3). VN hay quên 'be': 'goods distribute' ❌ — đúng: 'are distributed to retailers'." },
     { id: 5, word: "approve", emoji: "✅", phonetic: "/əˈpruːv/", meaning: "phê duyệt / chấp thuận", example: "The design must be approved by the engineering team.", example2: "All changes are approved before implementation.", collocation: "approve a design / get approved / officially approved", audio: "/audio/unit24/approve.mp3", l1_interference_vn: "⚠️ 'be approved by' — 'by' chỉ tác nhân. VN hay dùng active: 'team approve' ❌." },
     { id: 6, word: "certify", emoji: "🏅", phonetic: "/ˈsɜːtɪfaɪ/", meaning: "chứng nhận", example: "Our products are certified to international safety standards.", example2: "The factory has been certified by ISO 9001.", collocation: "certified product / ISO certified / certification process", audio: "/audio/unit24/certify.mp3", l1_interference_vn: "⚠️ Present Perfect Passive hay dùng: 'has been certified'. 'by ISO' (không 'with')." },
     { id: 7, word: "automate", emoji: "🤖", phonetic: "/ˈɔːtəmeɪt/", meaning: "tự động hóa", example: "Many steps in the process have been automated to improve efficiency.", example2: "The warehouse is now fully automated.", collocation: "automate a process / fully automated / automation system", audio: "/audio/unit24/automate.mp3", l1_interference_vn: "⚠️ 'have been automated' (Present Perfect Passive). VN hay nhầm thì: 'is automated' khi nói kết quả đến nay." },
     { id: 8, word: "install", emoji: "🔌", phonetic: "/ɪnˈstɔːl/", meaning: "lắp đặt", example: "The new equipment was installed last month.", example2: "Software updates are installed automatically overnight.", collocation: "install equipment / install software / newly installed", audio: "/audio/unit24/install.mp3", l1_interference_vn: "⚠️ Past Passive: 'was installed'. Không 'install by' — đúng 'installed by team'." },
-    { id: 9, word: "maintain", emoji: "🛠️", phonetic: "/meɪnˈteɪn/", meaning: "bảo trì / duy trì", example: "All machinery is maintained on a quarterly schedule.", example2: "High standards must be maintained throughout production.", collocation: "maintain equipment / maintain standards / routine maintenance", audio: "/audio/unit24/maintain.mp3" },
+    { id: 9, word: "maintain", emoji: "🛠️", phonetic: "/meɪnˈteɪn/", meaning: "bảo trì / duy trì", example: "All machinery is maintained on a quarterly schedule.", example2: "High standards must be maintained throughout production.", collocation: "maintain equipment / maintain standards / routine maintenance", audio: "/audio/unit24/maintain.mp3", l1_interference_vn: "⚠️ 'is maintained' (be+V3). Passive cho quy trình bảo trì. VN hay bỏ 'be' hoặc nhầm prep: đúng 'maintained on a schedule'." },
     { id: 10, word: "recycle", emoji: "♻️", phonetic: "/ˌriːˈsaɪkəl/", meaning: "tái chế", example: "All packaging materials are recycled in our facility.", example2: "Waste water is treated and recycled back into the process.", collocation: "recycle materials / recycled content / recycling process", audio: "/audio/unit24/recycle.mp3", l1_interference_vn: "⚠️ + N trực tiếp: \'recycle plastic\'. Gerund: \'recycling facilities\', \'recycling centre\'." },
     { id: 11, word: "defect", emoji: "⚠️", phonetic: "/ˈdiːfekt/", meaning: "lỗi / khuyết tật", example: "Any product with a defect is rejected and removed from the line.", example2: "Our defect rate is less than 0.1%.", collocation: "manufacturing defect / defect rate / free from defects", audio: "/audio/unit24/defect.mp3", l1_interference_vn: "⚠️ 'with a defect' (adj). Passive: 'is rejected'. Không 'defect products' — 'defective'." },
-    { id: 12, word: "package", emoji: "📦", phonetic: "/ˈpækɪdʒ/", meaning: "đóng gói", example: "After inspection, the products are packaged and labeled.", example2: "Each item is carefully packaged to prevent damage.", collocation: "package a product / packaging material / packaged goods", audio: "/audio/unit24/package.mp3" },
+    { id: 12, word: "package", emoji: "📦", phonetic: "/ˈpækɪdʒ/", meaning: "đóng gói", example: "After inspection, the products are packaged and labeled.", example2: "Each item is carefully packaged to prevent damage.", collocation: "package a product / packaging material / packaged goods", audio: "/audio/unit24/package.mp3", l1_interference_vn: "⚠️ 'are packaged' (be + V3). Khi mô tả quy trình: dùng passive, không active 'we package'. 'Packaged goods' = collocation." },
   ],
 
-  // ── DIALOGUES: ≥1 dialogue AFTER vocab (98% coverage)
+  // ── DIALOGUES (Study/Meaningful input CLT): hội thoại tự nhiên, translation VN; chỉ từ đã dạy + grammar unit
+  // BC Skills style; pre-teach done above
   dialogues: [
     {
       id: 1,
@@ -94,7 +91,8 @@ export const unit24: UnitData = {
     },
   ],
 
-  // ── EXERCISES_INPUT: listenAndChoose ≥5 (controlled practice)
+  // ── EXERCISES_INPUT (Study/Controlled practice): gap-fill/matching/listen-choose/arrange ~80% đúng; TOEIC-like distractors
+  // practiceQuiz + listenAndChoose >=5
   listenAndChoose: [
     { id: "lac1", audio_text: "The components are manufactured here in our main facility", options: ["The components manufacture here in our main facility", "The components are manufactured here in our main facility", "The components are manufacturing here in our main facility", "The components were manufactured here in our main facility"], answer: "The components are manufactured here in our main facility" },
     { id: "lac2", audio_text: "Each unit is inspected three times before it is shipped", options: ["Each unit is inspected three times before it ships", "Each unit inspects three times before it is shipped", "Each unit is inspected three times before it is shipped", "Each unit is inspecting three times before it is shipped"], answer: "Each unit is inspected three times before it is shipped" },
@@ -103,7 +101,8 @@ export const unit24: UnitData = {
     { id: "lac5", audio_text: "The machine was repaired this morning and has been tested successfully", options: ["The machine repaired this morning and has been tested successfully", "The machine was repaired this morning and has been tested successfully", "The machine was repaired this morning and was tested successfully", "The machine was repairing this morning and has been tested successfully"], answer: "The machine was repaired this morning and has been tested successfully" },
   ],
 
-  // ── OUTPUT: speaking prompts (freer production)
+  // ── OUTPUT (Activate/Freer practice + task): practiceTranslate >=3 (VN→EN controlled prod) + shadowing + speaking level2 (situational role)
+  // Bắt buộc SẢN XUẤT per center-ref CLT
   speaking: {
     level1Prompt: "First, {input} is/are {input}. Then it is {input}. Finally, each unit is {input} before shipping.",
     level1Placeholder: "Ví dụ: raw material — sourced from suppliers — processed — inspected...",
@@ -111,10 +110,12 @@ export const unit24: UnitData = {
     level2Hint: "First, [materials] are sourced/received. Then [components] are manufactured/assembled. Each [unit/product] is inspected/tested at [stage]. Any defects are removed. Finally, [products] are packaged and distributed. Our facility has been certified by [standard].",
   },
 
-  // ── GRAMMAR: Inductive (Meaning→Form→CCQ) + vnNote L1
+  // ── GRAMMAR (Study / CELTA MF(P) inductive): Meaning (dialogue) → Form (rule ngắn) → CCQ
   grammar: {
     title: "Passive Voice — Tập Trung Vào Quy Trình",
-    rule: "Active → Passive: đổi chủ ngữ, dùng BE + past participle\n\nPresent Simple Passive: is/are + done\n→ 'The parts ARE assembled here.'\n\nPast Simple Passive: was/were + done\n→ 'The factory WAS built in 2020.'\n\nPresent Perfect Passive: has/have been + done\n→ 'The equipment HAS BEEN updated.'\n\nFuture Passive: will be + done\n→ 'Solar panels WILL BE installed next year.'\n\nBởi ai? dùng BY:\n→ 'The product was designed BY our team.'",
+    rule: "BE + V3 (past participle). is/are (present) | was/were (past) | has/have been (perfect) | will be (future). Dùng BY cho tác nhân nếu cần.",
+    // Inductive: Meaning from dialogue examples first → Form rule short <30w per blueprint; CCQ 4 opts ~80% success
+    // VN L1: no clear passive form in VN → explicit be+V3 needed in EN for process focus (CLT VN pattern)
     examples: [
       { en: "Components are manufactured in our facility. (Present Passive — ongoing process)", vn: "Các linh kiện được sản xuất tại cơ sở của chúng tôi." },
       { en: "The defect was identified during inspection. (Past Passive — specific event)", vn: "Lỗi được xác định trong quá trình kiểm tra." },
@@ -162,7 +163,7 @@ export const unit24: UnitData = {
     ],
   },
 
-  // ── OUTPUT: practiceTranslate (VN→EN ≥3) + speaking (level1/2)
+  // ── OUTPUT / practiceTranslate (VN→EN controlled): ≥3 câu trong phạm vi unit (blueprint)
   practiceTranslate: [
     {
       id: "pt-1",
@@ -252,7 +253,7 @@ export const unit24: UnitData = {
     { id: "s24-3", prompt_vn: "Tất cả vật liệu đóng gói được tái chế.", words: ["All", "packaging", "materials", "are", "recycled", "."], answer: "All packaging materials are recycled ." },
   ],
 
-  // ── REVIEW: Final quiz ≥5 (retrieval practice)
+  // ── REVIEW (Review/Feedback + consolidation): quiz >=5 + cumulativeReview >=3 (spiral Nation/center) + reading B1+
   quiz: [
     { id: "fq1", type: "multiple-choice", question: "Dịch: 'Mỗi sản phẩm được kiểm tra ba lần trước khi vận chuyển.'", options: ["Each product inspects three times before shipping.", "Each product is inspected three times before shipping.", "Each product was inspected three times before shipping.", "Each product has inspected three times before shipping."], answer: "Each product is inspected three times before shipping." },
     { id: "fq2", type: "cloze", question: "Điền: 'The system ___ (install) last week and ___ (test) successfully.'", answer: "was installed / was tested" },
@@ -268,14 +269,15 @@ export const unit24: UnitData = {
     { id: "q-ex7", type: "multiple-choice", question: "'By' trong câu bị động dùng để:", options: ["Chỉ thời gian", "Chỉ tác nhân thực hiện hành động", "Chỉ địa điểm", "Chỉ cách thức"], answer: "Chỉ tác nhân thực hiện hành động" },
   ],
 
-  // ── REVIEW: Exit quiz + cumulativeReview (spiral) + reading (B1+)
+  // ── CUMULATIVE REVIEW (spiral curriculum): >=3 câu ôn unit prior (per blueprint authorGuide + center Review)
   cumulativeReviewQuestions: [
     { id: "cr24-1", question: "Ôn tập Unit 23 — First Conditional đúng:", options: ["If you will confirm, we will proceed.", "If you confirm, we will proceed.", "If you confirmed, we will proceed.", "If you confirm, we proceed."], answer: "If you confirm, we will proceed.", type: "multiple-choice" },
     { id: "cr24-2", question: "Ôn tập Unit 22 — Điền modal: 'You ___ share passwords — it's prohibited.'", options: [], answer: "mustn't", type: "cloze" },
     { id: "cr24-3", question: "Ôn tập Unit 21 — Câu Future Perfect đúng:", options: ["By 2030, we will expand globally.", "By 2030, we will be expanding globally.", "By 2030, we will have expanded globally.", "By 2030, we expand globally."], answer: "By 2030, we will have expanded globally.", type: "multiple-choice" },
   ],
 
-  // ── FLUENCY: pronunciationFocus
+  // ── FLUENCY (Activate/Fluency drill): >=5 items, Nation strand 4 automaticity; short repeat drill
+  // pronunciationFocus for be + been
   pronunciationFocus: {
     phoneme: "been /biːn/",
     description: "Passive been — âm /iː/ dài, không phải /ɪ/ ngắn",

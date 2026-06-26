@@ -185,7 +185,8 @@
 | 2026-06-26 | TASK-044 | PHASE1: search_memory + read AGENTS/BACKLOG/PLAN/ROADMAP + grep e2e/placement/helpers/global/playwright; PHASE2 update PLAN+BACKLOG in_progress; PHASE3 minimal stabilize: networkidle + reset isolate in placement-test.spec; lint+test | in_progress |
 | 2026-06-26 | TASK-059 | PHASE1: search_memory + read AGENTS+BACKLOG+PLAN+ROADMAP+CONTENT§6-7+lesson-blueprint+center-ref+learning-flow+content-std+unit1(gold)+count low units(2-12); PHASE2 update PLAN+BACKLOG in_progress, refill skip (>=2 ready); PHASE3 min=3 + add 1 spiral cr each for unit2-12; lint+tsc+169u+50 content-std+audit pass; commit+push | done — 81e06b4 |
 | 2026-06-26 | TASK-060 | PHASE1 research(AGENTS+CONTENT_STYLE+blueprint+center-ref+unit1+unit24/31+content-std+grep L1), PHASE2 update PLAN/BACKLOG in_progress, PHASE3: header comments + L1 notes (6+ per) for unit24/31 per ESA/CELTA/CLT VN, 75%/100% L1; all gates pass; commit 5df0678 + git-push | done — 5df0678 |
-| 2026-06-26 | TASK-061 | PHASE1 (memory+AGENTS+BACKLOG+PLAN+CONTENT§6-7+blueprint+center+flow+unit1+grep), PHASE2 PLAN/BACKLOG update 061 in_progress (ready>2 skip refill), PHASE3: node script added header+ ── HOOK/WARMUP/VOCAB/... comments to 49 units (50 total have HOOK); field visibility per blueprint; tsc+lint+169tests+content-std50/50+audit pass; log+commit+push | done |
+| 2026-06-26 | TASK-061 | PHASE1 (memory+AGENTS+BACKLOG+PLAN+CONTENT§6-7+blueprint+center+flow+unit1+grep), PHASE2 PLAN/BACKLOG update 061 in_progress (ready>2 skip refill), PHASE3: node script added header+ ── HOOK/WARMUP/VOCAB/... comments to 49 units (50 total have HOOK); field visibility per blueprint; tsc+lint+169tests+content-std50/50+audit pass; log+commit+push | done — 8c99173 |
+| 2026-06-26 | TASK-062 | PHASE1 research(memory sim+AGENTS+BACKLOG+PLAN+CONTENT§6-7+center-ref+blueprint+flow+unit1+unit24+print-blueprint), PHASE2 update PLAN/BACKLOG set in_progress, refill (6ready OK), PHASE3 pilot redesign unit24 (L1 to 100%, full ── comments per blueprint map, grammar short inductive, align order); gates pass | in_progress |
 | 2026-06-26T01:36Z | TASK-001/002 | P0 ops: migration blocked, deploy OK | autopilot armed |
 | 2026-06-26T08:55Z | TASK-001/011 | db push migration + E2E B1 unlock | 2 e2e pass |
 | 2026-06-26 | TASK-021 | Sync docs: placement, 50u, header, autopilot | done — 3d36d2f (docs commit); f9f21a1 (status) |
@@ -471,3 +472,27 @@
 - No secret needed; pure content comments. Self-debug from tsc/lint/test output.
 - If fail 2x on gate → set blocked + lý do.
 **Done khi**: >=45 files contain `── HOOK` (verified by grep); all 50 unit files have consistent header+section comments; field order in unit1 gold + at least major units close; `npm run lint && npm run test` + content-std + audit all pass 50/50; 1 commit + push via git-push.sh main; BACKLOG status=done + entry with SHA; no user asked; autonomous.
+
+### TASK-062 — Redesign pilot: unit24 theo center-reference + unit1
+**Mục tiêu**: Làm unit24 trở thành pilot "redesign" áp dụng đầy đủ lesson-center-reference.ts (ESA Engage/Study/Activate, CELTA inductive MF(P), Nation Four Strands pre-teach+fluency, CEFR can-do, CLT VN L1 contrast + tình huống công sở) + blueprint.ts (10 block IPOR) + unit1.ts gold (header block + ── comments + field order + L1 notes + short rule). Mặc dù L1/translate/cumulative đã đạt min từ task trước, pilot này polish để: 1) 100% vocab có l1_interference_vn (pilot B1 example), 2) grammar.rule ngắn <30 từ + inductive rõ (Meaning từ dialogue → Form), 3) comment blocks đầy đủ ── HOOK / WARMUP / VOCABULARY / GRAMMAR / EXERCISES_INPUT / DIALOGUES / FLUENCY / OUTPUT / REVIEW / CUMULATIVE REVIEW như unit1, 4) property order meta→hook→warmup→vocab→grammar→exercises→dialogues→fluency→output→review. Chỉ edit unit24 + agent docs; không đổi flow, learning-flow, SECTION_ORDER, logic app.
+**Bước thực hiện**:
+1. PHASE1: search_memory("TASK-062" + "unit24" + "center-ref") (done sim empty) + read AGENTS.md (ALWAYS), AGENT_BACKLOG/PLAN/ROADMAP, CONTENT_STYLE.md §6–7, lesson-center-reference.ts (full ESA/CELTA map + VN CLT), lesson-blueprint.ts (CONTENT_BLOCK_ORDER + formatBlueprintChecklistForAgent + authorGuide), learning-flow.ts (IPOR 10), unit1.ts (gold: header + ── comments + l1 style + short rule + dialogueExample), unit24.ts (current), content-standard.ts, run npx tsx scripts/print-lesson-blueprint.mjs + count L1/translate/cr via tsx validate.
+2. PHASE2: update AGENT_PLAN.md (this section) + BACKLOG (TASK-062 `in_progress`); run `bash scripts/agent-refill-backlog.sh` (KHÔNG hỏi); check ready (now >=2, skip deep).
+3. PHASE3: minimal redesign unit24.ts:
+   - Update top header comment block → full refs to center-ref + blueprint + unit1 + ESA/CELTA.
+   - Insert/ensure ── HOOK / ── WARMUP / ── VOCABULARY / ── GRAMMAR / ── EXERCISES_INPUT / ── DIALOGUES / ── FLUENCY / ── OUTPUT / ── REVIEW (CUMULATIVE) comments exactly matching blueprint map.
+   - Add l1_interference_vn (⚠️ VN error + fix, >=15 char, ILA correction style) to the 3 missing words (distribute, maintain, package) → 12/12 =100% pilot example.
+   - Polish grammar.rule: rút gọn <30 từ cho form chính + list thì; giữ inductive (dialogueExample dẫn Meaning), vnNote, ccq 4 options.
+   - Reorder top-level keys in object literal to follow CONTENT_BLOCK_ORDER (meta, hook fields, warmup, vocab, grammar, exercises_*, dialogues, fluency, output fields, review) where safe (no runtime change).
+   - Keep all existing data/translation/answers; only L1 polish + comments + cosmetic order.
+4. PHASE3 gates: npx tsc --noEmit && npm run lint && npm run test && npm run test:content-standard && bash scripts/audit-lesson-content.sh
+5. Update BACKLOG (in_progress→done + Nhật ký entry + SHA), PLAN log table. Write logs/agent/ timestamp_TASK-062.log
+6. git pull --rebase; git add src/lib/data/units/unit24.ts AGENT_BACKLOG.md AGENT_PLAN.md; commit "fix(content): pilot redesign unit24 per lesson-center-ref + unit1 gold (L1 100%, comments, grammar polish) (TASK-062)"; `bash scripts/git-push.sh main`.
+**Rủi ro**:
+- Grammar reorder or comment insert break trailing comma/indent → use unique anchor strings for replace, verify with tsc after each; test count L1 post.
+- L1 note not accurate for VN B1 passive/process → craft from common TEFL (missing be, wrong participle) + unit topic (factory/ISO); short actionable like unit1.
+- test:content-standard may fail unrelated (but prior tasks set mins); self-debug 1x only, 2x → blocked + lý do.
+- Reorder fields cosmetic only; if syntax risk high skip reorder keep comments as main.
+- No secret/DB; pure content. Self debug from output of lint/test/audit.
+- If push needs GITLAB_TOKEN and blocked → status blocked in backlog, advance if other ready.
+**Done khi**: unit24 passes test:content-standard (0 vio, L1=100%); full blueprint comments + header present (grep "── VOCABULARY" unit24); grammar.rule concise; lint+unit tests+tsc clean; 1 commit + push via git-push.sh main; BACKLOG=done + entry SHA; no user asked; autonomous.
