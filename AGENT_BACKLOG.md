@@ -25,13 +25,14 @@
 ## P0 — Vận hành (làm trước)
 
 ### TASK-001 — Apply Supabase migration placement
-- **Status:** `ready`
+- **Status:** `blocked`
 - **Mô tả:** Apply `supabase/migrations/20260626120000_placement_starting_unit.sql` lên Supabase production. Verify cột `starting_unit_index`, `placement_completed_at` tồn tại. Chạy `npm run db:types` nếu có quyền.
 - **Done khi:** Migration applied; placement test lưu được trên live
 - **Blocked nếu:** Không có `SUPABASE_ACCESS_TOKEN` / DB password
+- **Blocked lý do:** Supabase CLI chưa cài / không có token trên máy — cần `npx supabase db push` hoặc SQL Editor thủ công khi user về
 
 ### TASK-002 — Fix Vercel deploy nếu fail
-- **Status:** `ready`
+- **Status:** `done`
 - **Mô tả:** Chạy `npm run check-deploy`. Nếu ERROR: đọc log, fix build, push fix.
 - **Done khi:** Latest main deploy READY
 
@@ -89,4 +90,5 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
-| — | — | — | — |
+| 2026-06-26 | TASK-001 | Supabase migration | blocked — no CLI/token |
+| 2026-06-26 | TASK-002 | Vercel deploy check | done — 334ca23 READY |

@@ -22,23 +22,28 @@ STAMP="$(date -u +%Y%m%dT%H%M%SZ)"
 LOG_FILE="$LOG_DIR/${STAMP}_${TASK_ID}.log"
 
 PROMPT=$(cat <<EOF
-Bạn là autopilot agent cho repo AtoEnglish tại $ROOT.
+Bạn là autopilot agent 24/7 cho AtoEnglish tại $ROOT. User KHÔNG có mặt — tuyệt đối không hỏi, tự quyết.
 
-ĐỌC TRƯỚC:
-- AGENTS.md
-- AGENT_BACKLOG.md
+PHASE 1 — NGHIÊN CỨU (5 phút):
+- Đọc AGENTS.md, AGENT_BACKLOG.md, AGENT_PLAN.md
+- Grep codebase liên quan task; xác định file cần sửa
 
-NHIỆM VỤ DUY NHẤT: $TASK_ID
+PHASE 2 — LẬP KẾ HOẠCH:
+- Cập nhật AGENT_PLAN.md: mục tiêu, bước, rủi ro cho $TASK_ID
+- Nếu backlog trống: tự thêm 1–2 task P1 hợp lý vào AGENT_BACKLOG.md rồi làm task đầu
+
+PHASE 3 — TRIỂN KHAI (task duy nhất): $TASK_ID
 $TASK_DESC
 
-Quy trình bắt buộc:
-1. Đổi status task trong AGENT_BACKLOG.md thành in_progress
-2. Implement đúng phạm vi task — không refactor lan man
-3. Chạy: npm run lint && npm run test (npm run build chỉ khi đổi build-critical)
-4. Nếu pass: commit + push origin main; đổi status done + ghi nhật ký agent
-5. Nếu fail 2 lần: status blocked + ghi lý do
+Quy trình:
+1. Status → in_progress trong AGENT_BACKLOG.md
+2. Implement tối thiểu, đúng phạm vi
+3. npm run lint && npm run test
+4. Pass → commit + push main; status done + nhật ký + SHA
+5. Blocked (thiếu secret) → status blocked, chuyển task tiếp theo ready nếu có thể
+6. Fail 2 lần → blocked + ghi lý do
 
-Không hỏi user. Tự debug và hoàn thành.
+Không chờ user. Tự debug. Ưu tiên ship từng task nhỏ.
 EOF
 )
 
