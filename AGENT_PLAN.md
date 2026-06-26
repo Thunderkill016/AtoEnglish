@@ -136,6 +136,7 @@
 | 2026-06-26 | TASK-038 | research(memory+agents+grep+setup-integration+profile migration+RLS), phase1/2/3, update PLAN/BACKLOG to in_progress, extend cleanup, implement 2 minimal RLS tests in progress.integration (own insert+columns verify, policy block), run lint+test+test:integration (all 159u+23i pass), commit 339f5a9 + scripts/git-push.sh main | done — 339f5a9 |
 | 2026-06-26 | TASK-039 | research(agents+memory+grep+dashboard+stats+onboarding), plan update, run refill, fix getUserProgress to return real daily_xp_goal from DB (page.tsx read now effective), bar vs goal works, lint+test pass, commit+push via git-push | done — [pending SHA] |
 | 2026-06-26 | TASK-040 | research(memory+agents+grep+rewrite+unit33+scripts), set in_progress BACKLOG, update PLAN focus+section, run refill, create minimal scripts/smoke-learn.sh (curl -L 200 for learn+audio unit33), add npm script, lint+test, commit+push via git-push.sh | done — 3a795df |
+| 2026-06-26 | TASK-042 | research(agents+memory+grep+roadmap+units+starting), set in_progress, update PLAN+BACKLOG, minimal B2 units group+badge+starting respect logic in RoadmapClient, lint+159+tsc pass, commit+push via git-push; status done | done — 473f514 |
 | 2026-06-26 | TASK-041 | research(agents+memory+grep+package+generator+readme), update PLAN+BACKLOG in_progress, add :all chain + :list dry-run (50 folders), README docs, lint+159+tsc, commit+push via git-push; status done | done — 242328e |
 
 ### TASK-034 — Regenerate Supabase types after onboarding migration

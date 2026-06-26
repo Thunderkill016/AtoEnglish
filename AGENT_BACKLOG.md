@@ -162,9 +162,10 @@
 - **Started:** 2026-06-26 — autopilot (TASK-041)
 
 ### TASK-042 — Roadmap highlight B2 phase
-- **Status:** `in_progress`
+- **Status:** `done`
 - **Mô tả:** `RoadmapClient` group B2 units 33-42 với badge level; respect `starting_unit_index` cho B2 user.
 - **Done khi:** Roadmap render đúng; unit test hoặc snapshot pass.
+- **Completed:** 2026-06-26 — B2 units list + B2 badge + starting highlight/review markers in RoadmapClient; lint+159+tsc pass; pushed 473f514
 - **Started:** 2026-06-26 — autopilot (no human)
 
 ### TASK-043 — Reduce agent stash pile-up
@@ -180,6 +181,7 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
+| 2026-06-26 | TASK-042 | research(agents+memory+grep+roadmap+units+placement), update PLAN+BACKLOG in_progress, minimal add B2 units(33-42) group + "B2" badge pill + startingUnitIndex respect (entry highlight + review dim) inside phase-3 card in RoadmapClient, lint+159+tsc pass, commit 473f514 + git-push.sh main | done — 473f514 |
 | 2026-06-26 | TASK-041 | research(agents+memory+grep+pkg+gen+readme), set in_progress, add audio:generate:all (chain a0-a1-a2-b1-b2) + audio:generate:list (dry-run prints 50 folders exactly), doc in README, lint+159+tsc pass, commit+push via git-push.sh main | done — 242328e |
 | 2026-06-26 | TASK-042 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-06-26 | TASK-043 | auto-refill từ AGENT_ROADMAP.md | ready |
