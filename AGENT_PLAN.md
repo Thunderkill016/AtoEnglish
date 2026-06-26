@@ -138,6 +138,7 @@
 | 2026-06-26 | TASK-040 | research(memory+agents+grep+rewrite+unit33+scripts), set in_progress BACKLOG, update PLAN focus+section, run refill, create minimal scripts/smoke-learn.sh (curl -L 200 for learn+audio unit33), add npm script, lint+test, commit+push via git-push.sh | done — 3a795df |
 | 2026-06-26 | TASK-042 | research(agents+memory+grep+roadmap+units+starting), set in_progress, update PLAN+BACKLOG, minimal B2 units group+badge+starting respect logic in RoadmapClient, lint+159+tsc pass, commit+push via git-push; status done | done — 473f514 |
 | 2026-06-26 | TASK-041 | research(agents+memory+grep+package+generator+readme), update PLAN+BACKLOG in_progress, add :all chain + :list dry-run (50 folders), README docs, lint+159+tsc, commit+push via git-push; status done | done — 242328e |
+| 2026-06-26 | TASK-043 | research(agents+memory+grep+orch+watchdog+stash), update PLAN/BACKLOG in_progress, add only-agent skip in orchestrator + pop at cycle end + auto age>7d cleanup (MAX=7 in watchdog), sim verify detect, lint+159+tsc pass, commit+push via git-push.sh; status done | done — 5062230 |
 
 ### TASK-034 — Regenerate Supabase types after onboarding migration
 **Mục tiêu**: Chạy `npm run db:types` (sau khi migration `user_onboarding_profile` đã apply trên prod). So sánh output với patch tạm thời (từ TASK-032); nếu khác (table order, Relationships: [] vs FK, generated header) thì overwrite `src/types/supabase.ts` bằng generated chính thức từ prod schema. Commit nếu có thay đổi. Đảm bảo tsc/lint/test pass, types khớp live.

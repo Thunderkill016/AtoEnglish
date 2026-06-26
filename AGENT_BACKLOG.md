@@ -169,9 +169,10 @@
 - **Started:** 2026-06-26 — autopilot (no human)
 
 ### TASK-043 — Reduce agent stash pile-up
-- **Status:** `in_progress`
+- **Status:** `done`
 - **Mô tả:** Orchestrator: nếu chỉ thay đổi `AGENT_*.md` + `logs/agent/*` thì không stash; auto-pop stash cũ >7 ngày.
 - **Done khi:** Daemon không stash mất work-in-progress; test script dry-run.
+- **Completed:** 2026-06-26 — orchestrator skip agent-only stash + end-of-cycle pop + age>7d pop in orch+watchdog; lint+159 tests pass; pushed 5062230
 - **Started:** 2026-06-26 — autopilot (no human)
 
 
@@ -200,6 +201,7 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
+| 2026-06-26 | TASK-043 | research(agents+memory+grep+orch+watchdog), set in_progress, update PLAN+BACKLOG, implement only-agent-changes skip stash in orchestrator + auto pop at end + age>7d cleanup (orch+watchdog MAX=7), syntax+sim test, lint+159 tests+tsc pass, commit 5062230 + git-push.sh main; status done | done — 5062230 |
 | 2026-06-26 | TASK-044 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-06-26 | TASK-045 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-06-26 | TASK-046 | auto-refill từ AGENT_ROADMAP.md | ready |
