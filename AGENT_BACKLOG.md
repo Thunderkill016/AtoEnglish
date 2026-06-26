@@ -364,6 +364,19 @@
 - **Started:** auto-refill
 
 
+### TASK-047 — GitHub agent-health check auto-refill
+- **Status:** `ready`
+- **Mô tả:** Workflow `agent-health.yml` fail nếu backlog `ready`=0 quá 6h (daemon stalled).
+- **Done khi:** Workflow có step grep backlog + alert.
+- **Started:** auto-refill
+
+### TASK-048 — Onboarding profile read API
+- **Status:** `ready`
+- **Mô tả:** Server action `getOnboardingProfile()`; dùng trên dashboard/settings.
+- **Done khi:** Typed return; lint+test pass.
+- **Started:** auto-refill
+
+
 ---
 
 ## Nhật ký agent
@@ -373,6 +386,8 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
+| 2026-06-26 | TASK-047 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-06-26 | TASK-048 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-06-26 | TASK-058 | PHASE1 research(memory+AGENTS+BACKLOG+PLAN+CONTENT§6-7+center-ref+blueprint+flow+content-std+unit1+grep/count B2 L1), PHASE2 update PLAN+BACKLOG in_progress (ready>2 skip refill), PHASE3: content-std B2=0.5 + added l1_interference_vn (unit33/34 boost, others >=50% already qualifying); lint(quick unrelated)+169 tests+tsc+cs50/50+audit50/50 pass; commit+push via git-push.sh main | done — f859b5c |
 | 2026-06-26 | TASK-059 | PHASE1 research(memory+AGENTS+blueprint+center+content-std+unit1+count units), PHASE2 PLAN+BACKLOG in_progress (refill skipped 8ready), PHASE3: min=3 in content-std + +1 cr item to each of unit2-12 (spiral from prior units, unit1 style), gates: tsc/lint/169test + content-std 50/50 + audit50/50 pass; commit+push via git-push | done — 81e06b4 |
 | 2026-06-26 | TASK-043 | research(agents+memory+grep+orch+watchdog), set in_progress, update PLAN+BACKLOG, implement only-agent-changes skip stash in orchestrator + auto pop at end + age>7d cleanup (orch+watchdog MAX=7), syntax+sim test, lint+159 tests+tsc pass, commit 5062230 + git-push.sh main; status done | done — 5062230 |
