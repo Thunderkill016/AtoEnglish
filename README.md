@@ -73,6 +73,8 @@ npm run test          # Unit tests (Vitest) — 151 tests
 npm run test:integration  # Supabase integration tests
 npm run audio:generate -- unit-a0-1  # Generate native MP3 for a unit
 npm run audio:generate:a0           # Regenerate all A0 foundation audio
+npm run audio:generate:all          # Run a0+a1+a2+b1+b2 (all 50 units)
+npm run audio:generate:list         # Dry-run: list all 50 unit folders (for verify)
 npm run test:watch    # Watch mode
 npm run test:coverage # Coverage report
 

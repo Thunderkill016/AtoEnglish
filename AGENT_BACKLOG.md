@@ -155,10 +155,11 @@
 
 
 ### TASK-041 — audio:generate:all npm script
-- **Status:** `ready`
+- **Status:** `done`
 - **Mô tả:** Một script chạy a0+a1+a2+b1+b2; document trong README.
 - **Done khi:** Script tồn tại; dry-run list đúng 50 unit folders.
-- **Started:** auto-refill
+- **Completed:** 2026-06-26 — added audio:generate:all + :list (dry-run prints 50 folders); README doc; lint+159 tests + tsc pass; pushed via git-push.sh
+- **Started:** 2026-06-26 — autopilot (TASK-041)
 
 ### TASK-042 — Roadmap highlight B2 phase
 - **Status:** `ready`
@@ -179,7 +180,7 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
-| 2026-06-26 | TASK-041 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-06-26 | TASK-041 | research(agents+memory+grep+pkg+gen+readme), set in_progress, add audio:generate:all (chain a0-a1-a2-b1-b2) + audio:generate:list (dry-run prints 50 folders exactly), doc in README, lint+159+tsc pass, commit+push via git-push.sh main | done — 242328e |
 | 2026-06-26 | TASK-042 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-06-26 | TASK-043 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-06-26 | TASK-037 | E2E playwright /learn/unit-19 click vocab speaker, verify Audio or TTS no-crash + network /audio/ probe; lint+159 pass | ffc66bc |

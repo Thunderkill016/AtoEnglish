@@ -1,6 +1,7 @@
 /**
  * Generate MP3 assets for a unit folder under public/audio/.
  * Usage: npx tsx scripts/generate-unit-audio.ts unit-a0-1
+ *        npx tsx scripts/generate-unit-audio.ts list   # dry-run: list all 50 unit folders
  *
  * Requires: gtts (devDependency) — Google Translate TTS, British English voice.
  */
@@ -163,7 +164,14 @@ async function generateUnit(unitId: string) {
   console.log("Done.");
 }
 
-const unitId = process.argv[2] ?? "unit-a0-1";
+const arg = process.argv[2];
+if (arg === "list" || arg === "--list") {
+  const folders = Object.keys(UNITS);
+  console.log(folders.join("\n"));
+  console.log(`Total: ${folders.length} unit folders`);
+  process.exit(0);
+}
+const unitId = arg ?? "unit-a0-1";
 generateUnit(unitId).catch((err) => {
   console.error(err);
   process.exit(1);
