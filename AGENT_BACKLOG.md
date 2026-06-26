@@ -438,10 +438,11 @@
 - **Completed:** 2026-06-26 — gates clean (lint0+170t+tsc0+cs50/50+audit50/50) no fix; sync log/PLAN/BACKLOG; commit + push via git-push.sh main; autonomous
 
 ### TASK-071 — Autopilot maintenance sweep #71
-- **Status:** `in_progress`
+- **Status:** `done`
 - **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
 - **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
 - **Started:** 2026-06-26 — autopilot (PHASE1 research complete: read AGENTS/BACKLOG/PLAN/CONTENT§6-7 + sim search_memory via logs/grep (prior 070 clean); grep TASK-071; 4 ready (071-074) >=2 skip refill; PHASE2 PLAN update + BACKLOG in_progress; PHASE3: run gates)
+- **Completed:** 2026-06-26 — gates clean (lint0+170t+tsc0+cs50/50+audit50/50) no fix; sync log/PLAN/BACKLOG; commit 56d7763 + push via git-push.sh main; autonomous
 
 
 ### TASK-072 — Autopilot maintenance sweep #72
@@ -477,7 +478,7 @@
 | 2026-06-26 | TASK-074 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-06-26 | TASK-069 | PHASE1 research (AGENTS+BACKLOG+PLAN+CONTENT§6-7+grep+logs); PHASE2 PLAN+BACKLOG in_progress (3ready skip refill); PHASE3 gates clean (lint0+170t+tsc0+cs50/50+audit50/50) no fix + sync log/PLAN/BACKLOG | done — b79f9ab |
 | 2026-06-26 | TASK-070 | gates clean + sync; commit f3d8e1a | done |
-| 2026-06-26 | TASK-071 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-06-26 | TASK-071 | PHASE1 research (AGENTS/BACKLOG/PLAN/CONTENT§6-7 + sim search_memory via logs/grep (prior 070 clean)); PHASE2: PLAN update (focus+full section) + BACKLOG in_progress (4ready>=2 skip refill); PHASE3: gates clean (lint0+170t+tsc0+cs50/50+audit50/50) no fix + sync log/PLAN/BACKLOG; commit+push via git-push.sh main | done — 56d7763 |
 | 2026-06-26 | TASK-066 | PHASE1 research (AGENTS+BACKLOG+PLAN+CONTENT§6-7+grep+logs); PHASE2 PLAN+BACKLOG in_progress (3ready skip refill); PHASE3 gates clean (lint0+170t+tsc0+cs50/50+audit50/50) no fix + sync log/PLAN/BACKLOG | done — a208a51 |
 | 2026-06-26 | TASK-067 | PHASE1 research (AGENTS+BACKLOG+PLAN+CONTENT§6-7+grep+logs); PHASE2 PLAN+BACKLOG in_progress (2ready skip refill); PHASE3 gates clean (lint0+170t+tsc0+cs50/50+audit50/50) no fix + sync log/PLAN/BACKLOG | done — 9be9ce9 |
 | 2026-06-26 | TASK-068 | PHASE1 research (AGENTS+BACKLOG+PLAN+CONTENT§6-7+grep+logs); PHASE2 PLAN+BACKLOG in_progress (4ready skip refill); PHASE3 gates clean (lint0+170t+tsc0+cs50/50+audit50/50) no fix + sync log/PLAN/BACKLOG | done — 469537e |
