@@ -758,13 +758,14 @@
 - **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
 - **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
 - **Started:** 2026-06-27 — autopilot (PHASE1: search_memory sim via logs/grep (prior prompt only, tool_error on read) + read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6–7 + grep TASK-114; 2 ready >=2; PHASE2 PLAN+BACKLOG; PHASE3 gates)
-- **Completed:** 2026-06-27 — gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed; log written 20260626T195015Z_TASK-114.log; BACKLOG+PLAN updated; commit + push via git-push.sh main; autonomous (no human)
+- **Completed:** 2026-06-27 — gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed; log written 20260626T195015Z_TASK-114.log; BACKLOG+PLAN updated; commit 4e4bea9 + push via git-push.sh main; autonomous (no human)
 
 ### TASK-115 — Autopilot maintenance sweep #115
-- **Status:** `ready`
+- **Status:** `done`
 - **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
 - **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
-- **Started:** auto-refill
+- **Completed:** 2026-06-27 — gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed; log written 20260626T195518Z_TASK-115.log; BACKLOG+PLAN+nhật ký synced; commit + push via git-push.sh main; autonomous (no human)
+- **Started:** 2026-06-27 — autopilot (PHASE1: sim search_memory via logs/grep (prior 115 tool_error) + read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6–7 + grep TASK-115; 4r (115-118) >=2 skip refill; PHASE2 PLAN update + BACKLOG in_p)
 
 
 ### TASK-116 — Autopilot maintenance sweep #116
@@ -795,7 +796,8 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
-| 2026-06-27 | TASK-114 | gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix + log 20260626T195015Z_TASK-114.log + sync PLAN/BACKLOG; no src; commit via git-push.sh main | done — (pending SHA) |
+| 2026-06-27 | TASK-114 | gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix + log 20260626T195015Z_TASK-114.log + sync PLAN/BACKLOG; no src; commit via git-push.sh main | done — 4e4bea9 |
+| 2026-06-27 | TASK-115 | gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed; log 20260626T195518Z_TASK-115.log + BACKLOG/PLAN sync; no src edit; commit+push via git-push.sh main | done — [pending] |
 | 2026-06-27 | TASK-116 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-06-27 | TASK-117 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-06-27 | TASK-118 | auto-refill từ AGENT_ROADMAP.md | ready |
