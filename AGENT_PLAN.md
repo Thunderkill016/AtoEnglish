@@ -36,7 +36,7 @@
 
 **Started:** 2026-06-27 — autopilot (PHASE1 complete via reads/greps; PHASE2 PLAN+BACKLOG update; PHASE3 gates run)
 
-**Completed TASK-110**: gates clean (tsc0 + lint0 + 170 tests + content-std 50/50 + audit 50/50) — no failure, no fix applied; log written 20260627T192200Z_TASK-110.log; BACKLOG+PLAN+nhật ký synced (TASK-110 done — 397ed7a); no src edit; autonomous.
+**Completed TASK-110**: gates clean (tsc0 + lint0 + 170 tests + content-std 50/50 + audit 50/50) — no failure, no fix applied; log written 20260627T192200Z_TASK-110.log; BACKLOG+PLAN+nhật ký synced (TASK-110 done — 353fd6e); no src edit; autonomous.
 
 ### TASK-079 — V2 Minimal Redesign: research + kế hoạch autopilot
 
