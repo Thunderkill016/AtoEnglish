@@ -76,4 +76,4 @@
 | 2026-06-26T08:55Z | TASK-001/011 | db push migration + E2E B1 unlock | 2 e2e pass |
 | 2026-06-26 | TASK-021 | Sync docs: placement, 50u, header, autopilot | done — 3d36d2f (docs commit); f9f21a1 (status) |
 | 2026-06-26 | TASK-030 | Native audio A2 batch unit-13..18 (extend script + 84 MP3s) | done — 6bbc693 |
-| 2026-06-26 | TASK-030 | Re-verify gen+counts+lint+test (all 6 units 14 clips) | done — no new code, docs log |
+| 2026-06-26 | TASK-030 | Re-verify gen+counts+lint+test (all 6 units 14 clips) | done — 9537046 (pushed) |

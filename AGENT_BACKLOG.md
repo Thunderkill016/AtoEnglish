@@ -102,4 +102,4 @@
 | 2026-06-26 | TASK-020 | progress integration flakes | done — RPC date cast + schema |
 | 2026-06-26 | TASK-021 | Sync PAGE_SPECIFICATIONS (placement,50u,header,autopilot) | done — 3d36d2f (docs) |
 | 2026-06-26 | TASK-030 | Native audio A2 (unit-13..18) | done — 6bbc693 (84 clips + script) |
-| 2026-06-26 | TASK-030 | Re-verify: ran gTTS for 17/18, all 14/14 clips, lint clean, 159 tests pass | done — verify (HEAD 4ec48aa) |
+| 2026-06-26 | TASK-030 | Re-verify: ran gTTS for 17/18, all 14/14 clips, lint clean, 159 tests pass | done — 9537046 (verify+push) |
