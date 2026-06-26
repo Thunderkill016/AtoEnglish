@@ -108,7 +108,12 @@ if [[ -n "$STASH_LIST" ]]; then
   done || true
 fi
 
-git pull --rebase "$GIT_REMOTE" main --quiet 2>/dev/null || {
+PULL_ARGS=(--rebase "$GIT_REMOTE" main --quiet)
+if [[ "$ONLY_AGENT_CHANGES" == 1 ]]; then
+  PULL_ARGS=(--rebase --autostash "$GIT_REMOTE" main --quiet)
+fi
+
+git pull "${PULL_ARGS[@]}" 2>/dev/null || {
   log "❌ git pull failed — có conflict thật, cần người xử lý"
   [[ "$STASHED" == 1 ]] && git stash pop --quiet 2>/dev/null || true
   echo "FAIL" >> "$STATE_FILE"
