@@ -65,7 +65,7 @@
 - **Done khi:** 3 run liên tiếp pass
 
 ### TASK-021 — Sync PAGE_SPECIFICATIONS.md
-- **Status:** `ready`
+- **Status:** `in_progress`
 - **Mô tả:** Cập nhật placement flow, 50 units, header shell, autopilot docs.
 - **Done khi:** Doc khớp code hiện tại
 

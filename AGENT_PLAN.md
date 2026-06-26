@@ -7,8 +7,22 @@
 | Field | Value |
 |-------|-------|
 | Started | 2026-06-26 |
-| Focus | P0 ops → P1 audio A1 → P1 placement polish |
+| Focus | P0 ops → P1 audio A1 → P1 placement polish → TASK-021 doc sync |
 | Owner | Autopilot (no human) |
+
+### TASK-021 — Sync placement flow, 50 units, header shell, autopilot docs (PAGE_SPECIFICATIONS.md + AGENT_*)
+**Mục tiêu**: Làm cho docs phản ánh chính xác codebase hiện tại (50 units A0-B2, placement /placement-test + self-select + starting_unit_index flow, HeaderShell mới, navigation mở rộng, onboarding/login integration).
+**Bước thực hiện**:
+1. Đọc PAGE_SPECIFICATIONS.md, units.ts, placement/*, learn/*, roadmap/*, header-shell.tsx, login/page.tsx, AGENT_BACKLOG/PLAN/AUTOPILOT.
+2. Cập nhật index table, Page 4 Learn, Page 9 Roadmap, thêm Page mới cho Placement Test.
+3. Thêm mô tả HeaderShell trong layout.
+4. Cập nhật AGENT_PLAN.md + AGENT_BACKLOG.md (status, nhật ký).
+5. Verify: no code change, chỉ doc; run lint/test.
+**Rủi ro**:
+- Docs drift nếu code thay đổi sau — nhưng task chỉ sync 1 lần.
+- Over-update ngoài scope (giữ minimal: PAGE_SPECS + agent plan/backlog).
+- Placement details (A0 support, 40Q test) phải chính xác.
+**Done khi**: PAGE_SPECIFICATIONS.md mô tả đúng 50 units + placement + header; plan updated; tests pass; commit.
 
 ## Roadmap tự động (7 ngày)
 
@@ -43,3 +57,4 @@
 |------------|------|--------------|---------|
 | 2026-06-26T01:36Z | TASK-001/002 | P0 ops: migration blocked, deploy OK | autopilot armed |
 | 2026-06-26T08:55Z | TASK-001/011 | db push migration + E2E B1 unlock | 2 e2e pass |
+| 2026-06-26 | TASK-021 | Sync docs: placement, 50u, header, autopilot | in_progress (minimal doc sync only) |

@@ -87,3 +87,6 @@ Chỉnh `AGENT_BACKLOG.md`:
 2. Đọc `AGENT_BACKLOG.md` nhật ký agent
 3. Review commits trên main từ lúc đi
 4. Xóa/điều chỉnh cron nếu không cần nữa: `crontab -e`
+
+## Nhật ký cập nhật (autopilot)
+- 2026-06-26 TASK-021: synced PAGE_SPECIFICATIONS.md (50 units A0-B2, placement flow /placement-test + onboarding, HeaderShell, nav); updated AGENT_PLAN + BACKLOG. Docs now match code.

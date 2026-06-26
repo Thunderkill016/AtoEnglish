@@ -20,6 +20,7 @@
 | 10 | Quiz | `/quiz` | ✅ Live |
 | 11 | Privacy Policy | `/privacy` | ✅ Live |
 | 12 | Terms | `/terms` | ✅ Live |
+| 13 | Placement Test | `/placement-test` | ✅ Live |
 
 ---
 
@@ -68,15 +69,43 @@ description: "App học tiếng Anh A1-B1 miễn phí cho người Việt. FSRS,
 2. Google OAuth button
 3. Nếu signup → 5-step onboarding quiz:
    - Step 1: Mục tiêu học (Communication, Travel, Work...)
-   - Step 2: Trình độ hiện tại
+   - Step 2: Trình độ hiện tại (A0-A1 / A2 / B1 / B2+)
    - Step 3: Thời gian học/ngày
-   - Step 4: Sở thích chủ đề
+   - Step 4: Sở thích chủ đề / obstacle
    - Step 5: Nhắc nhở (push notification opt-in)
+4. Onboarding lưu `current_level` + `starting_unit_index` vào user_progress (sử dụng getOnboardingStartingUnitIndex từ placement lib). Redirect về lesson đầu của level với `?mini=1`.
+5. Sau đăng nhập: có thể truy cập `/placement-test` để tự chọn lại level hoặc làm test 40 câu (A0-B2) → lưu starting_unit_index, revalidate learn/roadmap/dashboard.
 
 **Design**:
 - Split layout (desktop): Form left, illustration/preview right
 - Full-screen form (mobile)
 - Glassmorphism card trên nền zinc-950
+
+---
+
+## Page 13 — Placement Test
+
+**Route**: `/placement-test`  
+**File**: `src/app/(main)/placement-test/page.tsx`  
+**Client**: `PlacementTestClient.tsx`
+
+**Mục tiêu**: Cho phép user (đã auth) tự đánh giá hoặc test chính xác để đặt `starting_unit_index` + `current_level` trong user_progress. Bỏ qua các unit trước.
+
+**Flow**:
+1. **Pick stage**: Chọn "Tự chọn nhanh" (A0/A1/A2/B1/B2) hoặc "Làm bài test 40 câu".
+2. **Test stage**: 40 câu (EF SET style: Reading + Vocab + Language Use). Hỗ trợ A0 foundation questions.
+   - Tiến độ % , 1 câu/lần.
+   - Tính điểm theo band (A0/A1/A2/B1/B2).
+3. **Save**: Gọi `savePlacementResult(level, score)` hoặc `setPlacementLevel` (rate limited 3/h).
+   - Server: persist vào user_progress: current_level, starting_unit_index = LEVEL_START_INDEX[cefr], placement_completed_at=now.
+   - Revalidate dashboard/learn/roadmap.
+4. **Results**: Hiển thị level + điểm + "Bắt đầu học" → `/learn/${startingSlug}?mini=1`
+
+**Data**: `PLACEMENT_QUESTIONS` + `calculateResult` + `buildSelfSelectResult` trong `@/lib/data/placement-test.ts` (TOTAL_QUESTIONS=40).
+
+**UI**: Framer Motion stages, color per CEFR, skill icons, error handling on save.
+
+**Access**: Từ Learn (nếu chưa placed), từ Settings "Đánh giá lại trình độ", protected.
 
 ---
 
@@ -116,17 +145,23 @@ Promise.all([getUserProgress(), getCompletedUnitsCount(), getDueCards(), getCurr
 **File**: `src/app/(main)/learn/page.tsx` (Server Component)  
 **Client**: `src/app/(main)/learn/components/LearnClient.tsx`
 
-**Mục tiêu**: Hiển thị roadmap 12 units, mở khóa tuần tự.
+**Mục tiêu**: Hiển thị toàn bộ lộ trình 50 units (A0 → B2), mở khóa theo placement + completion. Hỗ trợ 50 units: 8 A0 foundation + 12 A1 + 6 A2 + 14 B1 + 10 B2.
 
 **Layout**:
-- Header: "Bài học" + CEFR level badge
-- List của `UnitCard` components (12 items)
-- Mỗi card: Unit number + title + duration + status (locked/unlocked/completed)
-- Completed: ✅ check + star rating
-- Current: highlight emerald
-- Locked: gray + 🔒 icon
+- Header: "Bài học" + CEFR level badge + XP
+- Placement CTA (nếu chưa placement và starting=0): link đến /placement-test "Xác định trình độ & mở đúng bài học"
+- Timeline list UnitCard (50 items)
+- Mỗi card: Unit id + title + description + duration + xp + status
+- Completed: ✅ check + star rating (1-3 based on xp)
+- Current/active: highlight
+- Locked: gray + 🔒 ; placed-out units (skipped by placement) vẫn unlock nhưng optional
+- Progress per unit: % từ vocab saved / full complete
 
-**Lock logic**: Unit N+1 unlocked khi Unit N hoàn thành.
+**Lock logic** (respect placement):
+- Units at/before `starting_unit_index` unlocked ngay (isUnitUnlocked).
+- Sau đó: N+1 unlock khi N completed.
+- `getNextUnitFromProgress` + `isPlacedOutUnit` dùng startingUnitIndex từ user_progress.
+- Active unit từ getCurrentUnit respects placement entry point.
 
 ---
 
@@ -136,7 +171,7 @@ Promise.all([getUserProgress(), getCompletedUnitsCount(), getDueCards(), getCurr
 **File**: `src/app/(main)/learn/[unitSlug]/page.tsx`  
 **Component**: `src/components/learn/UnitTemplate.tsx` (main engine)
 
-**Mục tiêu**: Dạy 1 unit theo Hybrid Model — 9 sections.
+**Mục tiêu**: Dạy 1 unit theo Hybrid Model — 9 sections. Hỗ trợ 50 units từ A0 foundation (bảng chữ cái) → B2 (advanced conditionals, IELTS 6.5+).
 
 **Section flow** (`SECTION_ORDER = [1, 5, 2, 3, 4, 9, 6, 7, 8]`):
 
@@ -245,14 +280,20 @@ Again (🔴) · Hard (🟠) · Good (🟢) · Easy (🔵)
 
 **Route**: `/roadmap`  
 **File**: `src/app/(main)/roadmap/page.tsx`
+**Client**: `RoadmapClient.tsx`
 
-**Mục tiêu**: Lộ trình tổng thể A1 → B1 với 12 Units.
+**Mục tiêu**: Lộ trình tổng thể A0 → B2 với 50 Units (8 A0 + 12 A1 + 6 A2 + 14 B1 + 10 B2). Hiển thị theo placement starting point.
 
 **Layout**:
-- Visual timeline/tree of all 12 units
-- Current unit highlighted
+- Visual timeline/tree of all 50 units grouped by level (A0/A1/A2/B1/B2)
+- Current / next unit (computed via getNextUnitFromProgress(completed, startingUnitIndex)) highlighted
 - Completed units marked
-- Estimated time to complete per level
+- Placed-out units (index < starting) shown as optional review
+- CTA "Học" trỏ đúng next unit theo placement
+- User level + starting info from user_progress (starting_unit_index, placement_completed_at)
+- Estimated time per level
+
+**Placement integration**: Roadmap page server fetches starting_unit_index + completed, passes to client; uses same lib functions as Learn.
 
 ---
 
@@ -274,6 +315,27 @@ Again (🔴) · Hard (🟠) · Good (🟢) · Easy (🔵)
 **Purpose**: Legal pages, không cần authentication
 
 **Design**: Simple markdown-style layout, light/dark compatible, max-w-prose
+
+---
+
+## Common Layout — Header Shell & Navigation
+
+**Files**:
+- `src/components/layout/header-shell.tsx` (client, sticky glass card)
+- `src/components/layout/header.tsx` (server wrapper, fetches user)
+- `src/components/layout/main-nav.tsx` (desktop nav + more panel inline)
+- `src/components/layout/mobile-nav.tsx`, `bottom-nav.tsx`
+- Navigation config: `@/lib/constants/navigation.ts` (bottom 5, primary 4 + Thêm, mobile groups)
+
+**HeaderShell features**:
+- Logo + "AtoEnglish / Grow every day"
+- Desktop: primary nav (Trang chủ, Học, Luyện, Ôn) + "Thêm" expands inline MainNavMorePanel (Viết, Tiến độ, Bảng xếp hạng, Lộ trình, Business) — pushes content, no overlay
+- User: avatar + name (sm+), Settings icon, Logout; ThemeToggle; Notification bell (if user)
+- Mobile: MobileNav drawer + bottom tab bar (5 items)
+- Auto-close more panel on route change / Esc
+- Used in root layout for protected + landing variants
+
+**Update note**: HeaderShell thay thế layout cũ; glassmorphism `bg-glass border-glass`; responsive.
 
 ---
 
