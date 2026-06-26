@@ -783,7 +783,7 @@
 - **Completed:** 2026-06-27 — gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed; log written 20260627T034500Z_TASK-117.log; BACKLOG+PLAN+nhật ký synced; commit 7966b60 + push via git-push.sh main; no src edit; autonomous.
 
 ### TASK-118 — Autopilot maintenance sweep #118
-- **Status:** `in_progress`
+- **Status:** `done`
 - **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
 - **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
 - **Started:** 2026-06-27 — autopilot (PHASE1: sim search_memory via logs/grep (prior 118 prompt only, 0-byte log) + read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6–7 + grep TASK-118; 4r >=2 ; PHASE2 PLAN update + BACKLOG in_p)
