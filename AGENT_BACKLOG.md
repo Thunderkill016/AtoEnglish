@@ -570,15 +570,34 @@
 - **Completed:** 2026-06-26 — 0 uses in src/ (grep clean); removed 3 @utility blocks from globals.css; tsc0 + lint0 + 170 tests pass; commit 8d1cb7b + push via git-push.sh main; autonomous
 
 ### TASK-089 — Speaking: tab → sub-routes
-- **Status:** `ready`
+- **Status:** `in_progress`
 - **Mô tả:** `SpeakingClient` 4 tab → PrimaryRow entry + sub-routes theo V2 IA.
 - **Done khi:** Không 4-tab trên 1 page; lint+test pass.
-- **Started:** auto-refill
+- **Started:** 2026-06-26 — autopilot (PHASE1: search_memory sim via logs/grep + read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6-7 + MINIMAL_V2 + grep SpeakingClient+PrimaryRow+design+sub routes+me-hub; PHASE2: PLAN header+section update + BACKLOG in_p; ready low→refill; PHASE3 impl PrimaryRow+4 sub pages)
 
 ### TASK-090 — E2E regression V2
 - **Status:** `ready`
 - **Mô tả:** Chạy `e2e:time-to-lesson` + smoke tab paths; fix regression.
 - **Done khi:** E2E pass; baseline ghi AGENT_PLAN.
+- **Started:** auto-refill
+
+
+### TASK-091 — Autopilot maintenance sweep #91
+- **Status:** `ready`
+- **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
+- **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
+- **Started:** auto-refill
+
+### TASK-092 — Autopilot maintenance sweep #92
+- **Status:** `ready`
+- **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
+- **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
+- **Started:** auto-refill
+
+### TASK-093 — Autopilot maintenance sweep #93
+- **Status:** `ready`
+- **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
+- **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
 - **Started:** auto-refill
 
 
@@ -591,6 +610,9 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
+| 2026-06-26 | TASK-091 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-06-26 | TASK-092 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-06-26 | TASK-093 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-06-26 | TASK-088 | PHASE1 search_memory sim + read agents+backlog+plan+roadmap+content+minimalv2+grep (0 uses src/); PHASE2 PLAN+BACKLOG in_progress (3r>=2 skip); PHASE3 purge 3 utils from globals.css; gates 0+170+0; commit+push via git-push main | done — 8d1cb7b |
 | 2026-06-26 | TASK-089 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-06-26 | TASK-090 | auto-refill từ AGENT_ROADMAP.md | ready |
