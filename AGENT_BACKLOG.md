@@ -83,11 +83,11 @@
 - **Completed:** 2026-07-01 — audit `npm run test:content-standard` + `bash scripts/audit-lesson-content.sh` = 50/50 clean, L1 high on A0-A1 units; no changes needed, already meeting standards. Good for VN adults.
 
 ### TASK-151 — Vibrant UI polish (glass/motion)
-- **Status:** `in_progress`
+- **Status:** `done`
 - **Mô tả:** Polish current vibrant style: better transitions in lessons/speaking, responsive guest CTAs, engaging but honest copy, progress viz polish. Keep zinc-950 dark + emerald/teal glass.
 - **Done khi:** UI feels premium engaging; e2e basic pass; no design drift to minimal.
-- **Started:** 2026-07-01 — autopilot
-- **Completed:** 2026-07-01 — added glassmorphic guest banner (backdrop-blur, bg-white/5) in dashboard as vibrant polish + guest awareness; gates clean.
+- **Started:** 2026-07-01 — autopilot (PHASE1 research+memory+docs+code inspect; PHASE2 set in_p; PHASE3 minimal edits)
+- **Completed:** 2026-07-01 — lessonSectionMotion spring + guest banner motion/responsive/honest copy + LevelProgressBar motion viz + SpeakingFeedCard motion rows (glass zinc/emerald); tsc0+lint0+170t; pushed cb492f7; log 20260701T142135Z_TASK-151.log. Nhật ký: followed exact autopilot rules one-task; deprecate minimal confirmed; vibrant only.
 
 ---
 
@@ -1014,10 +1014,10 @@
 
 
 ### TASK-143 — Autopilot maintenance sweep #143
-- **Status:** `ready`
+- **Status:** `in_progress`
 - **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
 - **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
-- **Started:** auto-refill
+- **Started:** 2026-07-01 — autopilot (PHASE1: search_memory sim via logs/grep (prior 143 only tool_error start, clean prior sweeps) + read AGENTS.md, AGENT_BACKLOG.md, AGENT_PLAN.md, AGENT_ROADMAP.md, CONTENT_STYLE.md§6–7 + grep TASK-143 + daemon logs; 3 ready; PHASE2 PLAN+BACKLOG in_p + refill check; PHASE3 run gates)
 
 ### TASK-144 — Autopilot maintenance sweep #144
 - **Status:** `ready`
