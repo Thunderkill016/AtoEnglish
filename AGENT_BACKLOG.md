@@ -30,7 +30,7 @@
 | 5 | TASK-150 — Polish lessons to blueprint standards | P1 done (autopilot: audit clean) |
 | 6 | TASK-151 — Vibrant UI polish (glass/motion) | P2 done (autopilot) |
 | 7 | TASK-152 — Enhance free speaking coach further (more VN L1, local history viz, job polish) | P0 done (autopilot) |
-| 8 | TASK-153 — Raise lesson content bar for world-class (nội dung học): more dialogues, shadowing, L1, job scenarios per new standard | P0 |
+| 8 | TASK-153 — Raise lesson content bar for world-class (nội dung học): more dialogues, shadowing, L1, job scenarios per new standard | P0 done (autopilot) |
 
 **V1 done:** UI-001..007 + content 058–062. **V2 shipped:** PR-01/02/03 + batch `bac3f15` (~60% surfaces).
 
