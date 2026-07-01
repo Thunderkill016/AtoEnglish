@@ -37,7 +37,7 @@
 
 **Started:** 2026-07-01 — autopilot (PHASE1: search sim via logs/grep + read+grep; 3r; PHASE2: PLAN+BACKLOG in_p + run refill per instr)
 
-**Completed TASK-155**: gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed; log 20260701T152720Z_TASK-155.log + BACKLOG/PLAN/nhật ký synced; no src edit; commit a3d4fd2 + push via git-push.sh main; autonomous (PHASE3)
+**Completed TASK-155**: gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed; log 20260701T152720Z_TASK-155.log + BACKLOG/PLAN/nhật ký synced; no src edit; commit a3d4fd2 + push via git-push.sh main; follow-up 858edd5; autonomous (PHASE3)
 
 ### TASK-153 — Autopilot maintenance sweep #153
 **Mục tiêu**: Chạy `npm run lint && npm run test` (cùng npx tsc --noEmit + content gates nếu liên quan); fix failure đầu tiên (nếu có, minimal patch); sync AGENT_PLAN nhật ký + BACKLOG status + Nhật ký + log file. Không feature mới, không thay đổi logic app, chỉ gates + doc. **Done khi:** gates pass (0 lint, all tests); 0 or 1 small fix if first failure; PLAN/BACKLOG/nhật ký updated; 1 commit nếu change or doc sync; pushed via git-push.sh main.

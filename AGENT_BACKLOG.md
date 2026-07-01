@@ -1070,7 +1070,7 @@
 - **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
 - **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
 - **Started:** 2026-07-01 — autopilot (PHASE1: search_memory sim via logs/grep (prior 154 clean, no TASK-155 impl) + read AGENTS.md (ALWAYS), AGENT_BACKLOG/PLAN/ROADMAP, CONTENT_STYLE.md §6–7 + grep TASK-155 + maintenance sweeps + recent logs/daemon + scripts; confirmed >=3 ready pre in_p; files: BACKLOG, PLAN, logs/agent/* (src only if 1st fail); PHASE2: PLAN update + BACKLOG in_p + run refill per instruction; PHASE3: run gates + fix first + sync)
-- **Completed:** 2026-07-01 — gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed; log 20260701T152720Z_TASK-155.log + BACKLOG/PLAN/nhật ký synced; no src edit; commit a3d4fd2 + push via git-push.sh main; autonomous (PHASE3)
+- **Completed:** 2026-07-01 — gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed; log 20260701T152720Z_TASK-155.log + BACKLOG/PLAN/nhật ký synced; no src edit; commit a3d4fd2 + push via git-push.sh main; follow-up SHA sync 858edd5; autonomous (PHASE3)
 
 
 ### TASK-156 — Autopilot maintenance sweep #156
@@ -1108,6 +1108,7 @@
 | 2026-07-01 | TASK-154 | gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix + log 20260701T152038Z_TASK-154.log + sync PLAN/BACKLOG; no src; commit 870454a + push via git-push.sh main; autonomous | done — 870454a |
 | 2026-07-01 | TASK-154 | follow-up SHA sync in PLAN/BACKLOG Nhật ký | done — 2e3ee8a |
 | 2026-07-01 | TASK-155 | PHASE1: search sim via logs/grep + read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6–7 + grep; 3r>=2 skip refill; PHASE2: PLAN update + BACKLOG in_p; PHASE3: gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix + log 20260701T152720Z_TASK-155.log + sync PLAN/BACKLOG; no src; autonomous (PHASE3) | done — a3d4fd2 |
+| 2026-07-01 | TASK-155 | follow-up SHA sync in PLAN/BACKLOG Nhật ký | done — 858edd5 |
 | 2026-07-01 | TASK-143 | gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix + log 20260701T142617Z_TASK-143.log + sync PLAN/BACKLOG; no src; autonomous | done — (pending SHA) |
 | 2026-07-01 | TASK-144 | gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix + log 20260701T144534Z_TASK-144.log + sync PLAN/BACKLOG; no src; commit via git-push.sh main; autonomous | done — (pending SHA) |
 | 2026-07-01 | TASK-145 | gates clean (tsc0+lint0+170t+cs50/50+audit50/50) after minimal first-fail fix (unit13 syntax/type); log 20260701T215600Z_TASK-145.log + sync PLAN/BACKLOG; commit via git-push.sh main; autonomous | done — (pending SHA) |
