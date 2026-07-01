@@ -160,7 +160,6 @@ export default async function UnitPage({
     <UnitTemplate
       unit={entry.data}
       nextRoute={entry.next}
-      startMiniSession={mini === "1"}
     />
   );
 }

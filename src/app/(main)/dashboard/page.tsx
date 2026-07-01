@@ -173,28 +173,7 @@ export default async function DashboardPage() {
     : []
   ).slice(-49).map(d => ({ date: d.date, xp: d.xp }));
 
-  return (
-    <DashboardClient
-      userName={userName}
-      currentStreak={currentStreak}
-      bestStreak={bestStreak}
-      lastActiveDate={lastActiveDate}
-      totalXp={totalXp}
-      userLevel={userLevel}
-      completedUnits={completedUnits}
-      dueCardsCount={dueCardsCount}
-      currentUnitData={currentUnitData}
-      initialXpCurrent={initialXpCurrent}
-      dailyMissions={dailyMissions}
-      dailyXpGoal={dailyXpGoal}
-      isGuest={isGuest}
-      wordOfDay={wordOfDay}
-      completedUnitIds={completedUnitIds}
-      streakFreezeCount={streakFreezeCount}
-      weeklyData={weeklyData}
-      calendarData={calendarData}
-      allUnits={UNITS.map(u => ({ id: u.id, title: u.title, level: u.level, route: u.route, xp: u.xp }))}
-      recentSpeakingSessions={recentSpeakingSessions}
-    />
-  );
+  // Use simple stub for rollback best version
+  return <DashboardClient />;
+
 }
