@@ -23,10 +23,16 @@ export default function SpeakingPage() {
   useEffect(() => {
     async function loadHistory() {
       const res = await getRecentSpeakingSessions(6);
-      if (res.success && res.sessions) {
-        setHistorySessions(res.sessions);
-        setSpeakingCount(res.sessions.length);
+      let sessions = (res.success && res.sessions) ? res.sessions : [];
+      // Guest: show local history viz (TASK-152)
+      if (sessions.length === 0 && typeof window !== "undefined") {
+        try {
+          const local = JSON.parse(localStorage.getItem("guest_speaking_sessions") || "[]");
+          if (Array.isArray(local) && local.length) sessions = local;
+        } catch {}
       }
+      setHistorySessions(sessions);
+      setSpeakingCount(sessions.length);
     }
     loadHistory();
   }, []);
@@ -71,10 +77,10 @@ export default function SpeakingPage() {
           />
         </ListSection>
 
-        {/* Compact recent (preserve value from old sidebar, min scope) */}
+        {/* Compact recent — guest local history viz enhanced (TASK-152) */}
         {historySessions.length > 0 && (
           <ListSection title="Gần đây">
-            {historySessions.slice(0, 3).map((session) => (
+            {historySessions.slice(0, 5).map((session) => (
               <div
                 key={session.id}
                 className="p-3 rounded-xl bg-card border border-border/60 flex items-center justify-between gap-3 text-xs"

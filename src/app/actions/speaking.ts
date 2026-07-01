@@ -245,20 +245,25 @@ export async function generateRoleplayTurn(
 
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {
-      // World-class free fallback (research: low-stakes output + specific VN L1 feedback)
+      // World-class free fallback (research: low-stakes output + specific VN L1 feedback) — TASK-152 polish
       const lastUser = history.filter((h) => h.sender === "user").pop()?.text || userMessage;
-      const analysis = analyzeSpeaking("Thank you for your help. I would like to check in.", lastUser, "roleplay");
+      const analysis = analyzeSpeaking("Thank you. Tell me more about your experience.", lastUser, "roleplay");
 
-      const aiPrompt = "Thank you. How can I assist you today?";
-      const userSuggestion = "I'd like to check in for my reservation.";
-      const userSuggestionVi = "Tôi muốn nhận phòng theo đặt chỗ.";
+      // Scenario-aware free responses (no Gemini dep, always available)
+      const s = scenario || { title: "Conversation", character: "Partner" };
+      const isJob = /job|interview|meeting|salary|performance|client|pitch|demo|presentation/i.test(s.title);
+      const aiPrompt = isJob
+        ? `Thank you for sharing. In the context of ${s.title.toLowerCase()}, can you elaborate on how you handled a similar challenge?`
+        : "Thank you. How can I assist you today?";
+      const userSuggestion = isJob
+        ? "I led a project where we improved the process by 30% through team collaboration."
+        : "I'd like to check in for my reservation.";
+      const userSuggestionVi = isJob
+        ? "Tôi đã dẫn dắt dự án giúp cải thiện quy trình 30% nhờ hợp tác nhóm."
+        : "Tôi muốn nhận phòng theo đặt chỗ.";
 
-      let grammarFeedback = "";
+      let grammarFeedback = analysis.specificTips.slice(0, 2).join(" ") || (isJob ? "Nhấn âm cuối -ed/-s, linking rõ cho chuyên nghiệp." : "Nói rõ âm cuối và dùng cụm từ tự nhiên.");
       let grammarCorrection = "";
-
-      if (analysis.similarity < 70) {
-        grammarFeedback = analysis.specificTips[0] || "Nói rõ âm cuối và dùng cụm từ tự nhiên.";
-      }
 
       return {
         success: true,
@@ -397,17 +402,17 @@ export async function evaluateSpeakingSession(
 
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {
-      // High-quality free analysis (no Gemini)
+      // High-quality free analysis (no Gemini) — TASK-152 improved
       const ref = "I had a productive meeting today and discussed the new project timeline with the team.";
       const analysis = analyzeSpeaking(ref, transcript || "", practiceType);
 
       let fb = `**Đánh giá chung**\n${analysis.feedback}\n\n**Độ chính xác:** ${analysis.similarity}% (${analysis.wordsCorrect}/${analysis.totalWords} từ chính).\n\n`;
 
       if (analysis.specificTips.length > 0) {
-        fb += "**Mẹo cụ thể cho người Việt:**\n" + analysis.specificTips.map((t, i) => `${i + 1}. ${t}`).join("\n") + "\n\n";
+        fb += "**Mẹo cụ thể cho người Việt (L1 tips):**\n" + analysis.specificTips.map((t, i) => `${i + 1}. ${t}`).join("\n") + "\n\n";
       }
 
-      fb += "Tiếp tục luyện nhiều lượt — shadowing + roleplay là cách nhanh nhất để tăng phản xạ.";
+      fb += "Tiếp tục luyện shadowing + roleplay job scenarios để tăng phản xạ tự nhiên. Miễn phí hoàn toàn.";
 
       return { success: true, feedback: fb };
     }

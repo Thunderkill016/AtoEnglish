@@ -29,7 +29,7 @@
 | 4 | TASK-149 — Motivation daily goals + viz | P0 done (autopilot) |
 | 5 | TASK-150 — Polish lessons to blueprint standards | P1 done (autopilot: audit clean) |
 | 6 | TASK-151 — Vibrant UI polish (glass/motion) | P2 done (autopilot) |
-| 7 | TASK-152 — Enhance free speaking coach further (more VN L1, local history viz, job polish) | P0 ready |
+| 7 | TASK-152 — Enhance free speaking coach further (more VN L1, local history viz, job polish) | P0 in_progress |
 
 **V1 done:** UI-001..007 + content 058–062. **V2 shipped:** PR-01/02/03 + batch `bac3f15` (~60% surfaces).
 
@@ -91,11 +91,11 @@
 - **Completed:** 2026-07-01 — lessonSectionMotion spring + guest banner motion/responsive/honest copy + LevelProgressBar motion viz + SpeakingFeedCard motion rows (glass zinc/emerald); tsc0+lint0+170t; pushed cb492f7; log 20260701T142135Z_TASK-151.log. Nhật ký: followed exact autopilot rules one-task; deprecate minimal confirmed; vibrant only.
 
 ### TASK-152 — Enhance free speaking coach further (more VN L1, local history viz, job polish)
-- **Status:** `ready`
+- **Status:** `in_progress`
 - **Mô tả:** Build on early speaking coach: expand VN L1 tips, add local speaking history viz in dashboard/speaking for guests, polish job scenarios with more L1 notes and free fallback improvements. Keep free, no Gemini dep.
 - **Done khi:** Better feedback for common VN errors; guest sees history; more job roleplays; tests pass; vibrant UI.
-- **Started:** 2026-07-01 — autopilot
-- **Completed:** (pending next cycle)
+- **Started:** 2026-07-01 — autopilot (PHASE1: read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT_STYLE§6-7 + grep speech-analysis/L1/guest local/roleplay scenarios/job SCENARIO/fallback + dashboard/SpeakingClient/SpeakingFeedCard + memory sim via logs; files: speech-analysis, speaking.ts, ai-roleplay.tsx, SpeakingFeedCard, SpeakingClient, DashboardClient)
+- **Completed:** (pending)
 
 ---
 

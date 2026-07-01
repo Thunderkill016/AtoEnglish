@@ -5,6 +5,7 @@
  * - Simple phonetic / L1 interference rules common for VN speakers
  * - Actionable feedback templates
  *
+ * TASK-152: expanded L1 patterns (final cons, vowels, clusters, articles, 3sg, v/w, intonation).
  * Evidence: Shadowing + targeted feedback + output practice show strong gains
  * (studies on TBLT, AI low-stakes practice for Vietnamese EFL).
  */
@@ -69,6 +70,9 @@ function applyVnL1Normalize(text: string): string {
     .replace(/\bs\b/g, "") // plural s
     .replace(/\bve\b/g, "have")
     .replace(/\breally\b/g, "very") // allow swaps in score
+    // More VN L1: final consonants full, linking tolerance, vowel rough for scoring
+    .replace(/\b(\w+)[ptkbdg]\b/g, "$1") // tolerate omitted final stops
+    .replace(/\b(get|put|pick|come|go|look|back)\s+(up|out|in|it|on|a)\b/g, "$1$2") // link C+V for match
     .replace(/\s+/g, " ")
     .trim();
 }
@@ -93,6 +97,19 @@ const L1_PATTERNS: Array<{
   { pattern: /\bget\s+(up|it|out)\b/gi, tip: "Nối âm (linking): 'get up' nghe như 'ge-dup'. Tập C+V linking cho flow." },
   { pattern: /\bship|sheep|bit|beat|live|leave\b/gi, tip: "Nguyên âm ngắn/dài (ship vs sheep, bit vs beat). Mở miệng rõ hơn cho /i:/." },
   { pattern: /\b(r|l)\b/gi, tip: "Âm /r/ và /l/ đôi khi lẫn. Tập lưỡi cuộn nhẹ cho r, chạm răng cho l." },
+  // Enhanced for TASK-152: more final cons, tones/intonation influence, clusters
+  { pattern: /\b\w+[ptkbdgzs]\b/gi, tip: "Âm cuối (final consonants) hay bị nuốt ở người Việt. Nói rõ /p t k d g s z/ cuối (stop, liked, dogs, has, cats) — mang ngữ pháp quan trọng." },
+  { pattern: /\b(get|pick|put|come|go|back)\s+(up|out|in|it|a|the)\b/gi, tip: "Linking quan trọng: tập nối consonant cuối sang vowel sau cho tự nhiên (get_up → ge-dup)." },
+  { pattern: /\?$/gi, tip: "Intonation: câu hỏi Anh lên giọng cuối (rise). Giọng Việt tonal hay giữ phẳng — nâng cao pitch cuối câu hỏi để rõ nghĩa." },
+  { pattern: /(?<!\?)\.$/gi, tip: "Câu kể: xuống giọng cuối + nhấn stress từ quan trọng (cao hơn, dài hơn). Tránh flat intonation từ L1 tone." },
+  { pattern: /\b\w{2,}[sz]\b/gi, tip: "Plural/3rd -s /z/: nói rõ rung nhẹ, không bỏ. 'has', 'goes', 'dogs'." },
+  // TASK-152 more high-impact VN L1
+  { pattern: /\b(v|w)ery|view|work|value|very\b/gi, tip: "/v/ rung môi dưới chạm răng trên; /w/ tròn môi không rung (very vs wary). Hay lẫn ở người Việt." },
+  { pattern: /\b(a|the)\s+(important|apple|hour|honest|university)\b/gi, tip: "Article a/an/the: an + nguyên âm (an hour), the nhấn /ðə/ trước phụ âm. Hay bỏ article." },
+  { pattern: /\bship|sheep|bit|beat|sit|seat|live|leave|fill|feel\b/gi, tip: "Nguyên âm ngắn/dài /ɪ/ vs /i:/ — ship vs sheep. Mở miệng rộng + giữ lâu hơn cho /i:/." },
+  { pattern: /\b(he|she|it|this)\s+(go|do|have|want|need|work)\b/gi, tip: "3sg -s: he works, she has. Hay quên -s do L1 không chia." },
+  { pattern: /\bstr|spl|scr|spr\b/gi, tip: "Cụm phụ âm đầu (str, spl): 'street' /str/ không bỏ r; tập chậm tách /s/ + /tr/." },
+  { pattern: /\bæ|bad|man|cat|hat|map\b/gi, tip: "Nguyên âm /æ/ (bad, man) — mở miệng rộng ngang, không thành /e/ (bed)." },
 ];
 
 /**

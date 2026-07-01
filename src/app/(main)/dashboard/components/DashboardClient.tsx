@@ -154,6 +154,14 @@ export default function DashboardClient({
 }: DashboardClientProps) {
   const [xpCurrent, setXpCurrent] = useState(initialXpCurrent);
   const [greeting, setGreeting] = useState("Chào bạn");
+  // Guest local history for speaking viz (TASK-152, minimal) — lazy init avoids set-in-effect
+  const [localSpeaking, setLocalSpeaking] = useState(() => {
+    if (typeof window === "undefined") return recentSpeakingSessions;
+    try {
+      const local = JSON.parse(localStorage.getItem("guest_speaking_sessions") || "[]");
+      return (Array.isArray(local) && local.length) ? local : recentSpeakingSessions;
+    } catch { return recentSpeakingSessions; }
+  });
 
   // Parse short level label (e.g. "B1 Intermediate" → "B1")
   const shortLevel = userLevel.split(" ")[0] ?? userLevel;
@@ -756,9 +764,9 @@ export default function DashboardClient({
         </Link>
 
         {/* ── Speaking Activity Feed ── */}
-        {recentSpeakingSessions.length > 0 && (
+        {localSpeaking.length > 0 && (
           <WidgetErrorBoundary name="SpeakingFeed">
-            <SpeakingFeedCard sessions={recentSpeakingSessions} />
+            <SpeakingFeedCard sessions={localSpeaking} />
           </WidgetErrorBoundary>
         )}
 

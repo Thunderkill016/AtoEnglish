@@ -66,6 +66,7 @@ export interface Scenario {
   aiCharacter: string;
   difficulty: "Easy" | "Medium" | "Hard";
   initialMessage: string;
+  l1Note?: string; // TASK-152 VN L1 polish for job scenarios
   steps: DialogStep[];
 }
 
@@ -102,6 +103,7 @@ export const ROLEPLAY_SCENARIOS: Scenario[] = [
     aiCharacter: "Hiring Manager (Nhà tuyển dụng)",
     difficulty: "Medium",
     initialMessage: "Good morning! Thank you for coming in today. To start, could you please tell me a little bit about yourself?",
+    l1Note: "L1: nhấn âm cuối -ed/-s rõ (worked, has); intonation lên ở câu hỏi cá nhân. Tránh nuốt âm cuối. Linking 'software engineering'.",
     steps: [
       {
         aiPrompt: "That sounds impressive. We are looking for someone who works well in teams. Can you describe a time when you solved a difficult problem with your team?",
@@ -252,6 +254,7 @@ export const ROLEPLAY_SCENARIOS: Scenario[] = [
     aiCharacter: "Potential Customer (Khách hàng tiềm năng)",
     difficulty: "Hard",
     initialMessage: "Hi, thanks for jumping on this call! I checked out your website briefly. Can you give me a quick overview of what your product actually does?",
+    l1Note: "L1: stress 'innovative' 'personalize'. Final -s rõ (users, apps). Nói chậm cụm 'Vietnamese-first' cho rõ.",
     steps: [
       {
         aiPrompt: "Interesting. So it's like an AI tutor built into a learning app. What makes it different from Duolingo or other apps already on the market?",
@@ -282,6 +285,7 @@ export const ROLEPLAY_SCENARIOS: Scenario[] = [
     aiCharacter: "Angel Investor (Nhà đầu tư)",
     difficulty: "Hard",
     initialMessage: "Hi, I've got about 15 minutes. Impress me. What's the problem you're solving?",
+    l1Note: "L1: rõ /v/ trong 'vision' 'value', linking 'pre-seed'. Số liệu: nói '150 thousand' rõ, stress 'middle class'.",
     steps: [
       {
         aiPrompt: "Okay, so there's a clear pain point. What's your proposed solution and why is now the right time?",
@@ -312,6 +316,7 @@ export const ROLEPLAY_SCENARIOS: Scenario[] = [
     aiCharacter: "Unhappy Customer (Khách hàng không hài lòng)",
     difficulty: "Medium",
     initialMessage: "Hi, I'm really frustrated right now. I've been a paying customer for 3 months and I'm not seeing any progress. I want a refund.",
+    l1Note: "L1: 'frustrated' /ʌ/ rõ, âm cuối 'progress' 'refund'. Giữ tone lịch sự, intonation xuống khi xin lỗi.",
     steps: [
       {
         aiPrompt: "I open the app maybe three or four times a week, but the lessons feel repetitive. I feel like I'm just clicking through the same vocabulary cards over and over.",
@@ -342,6 +347,7 @@ export const ROLEPLAY_SCENARIOS: Scenario[] = [
     aiCharacter: "Meeting Facilitator (Người điều hành)",
     difficulty: "Medium",
     initialMessage: "Good morning everyone, let's get started. We have three agenda items today: the Q3 review, the new product launch, and resource planning. First, could someone give a quick update on Q3?",
+    l1Note: "L1: linking 'Q3 review', final /z/ 'items' 'launch'. Intonation rise khi hỏi 'What does everyone think?'. Nói 'resource' rõ cụm.",
     steps: [
       {
         aiPrompt: "Thank you for that update. Numbers look solid! Does anyone have questions or comments on the Q3 results before we move on to the product launch?",
@@ -372,6 +378,7 @@ export const ROLEPLAY_SCENARIOS: Scenario[] = [
     aiCharacter: "HR Manager (Quản lý nhân sự)",
     difficulty: "Hard",
     initialMessage: "Congratulations! We'd like to offer you the senior developer position. The package includes a base salary of 2,500 USD per month, plus health insurance and 14 days annual leave. What do you think?",
+    l1Note: "L1: final cons /s/ /d/ (dollars, days) + linking '2,500 USD per'. Nói rõ số + stress từ 'research'.",
     steps: [
       {
         aiPrompt: "I understand your research shows a higher range. I have to be transparent — our budget for this role is firm at 2,500. However, we do offer a performance review after 6 months with potential for adjustment. Does that work for you?",
@@ -422,6 +429,7 @@ export const ROLEPLAY_SCENARIOS: Scenario[] = [
     aiCharacter: "Direct Manager (Quản lý trực tiếp)",
     difficulty: "Medium",
     initialMessage: "Thanks for coming in. So, it's been six months since your last review. Overall I'd say it's been a strong period. How do you feel you've been performing?",
+    l1Note: "L1: intonation flat -> nhấn 'strong' 'growth'. Âm cuối -d -t (led, shipped). Dùng rising cho câu hỏi 'How do you see that?'.",
     steps: [
       {
         aiPrompt: "Those are great examples. I agree — your technical output has been excellent. One area I'd like to see growth in is cross-team communication. Some stakeholders mentioned they sometimes feel out of the loop on your projects. How do you see that?",
@@ -751,6 +759,15 @@ export function AIRoleplay() {
     if (!isMountedRef.current) return;
     if (saveRes.success && saveRes.xpEarned) {
       toast.success(`+${saveRes.xpEarned} XP — buổi hội thoại đã được lưu!`);
+    } else if (saveRes.success) {
+      // Guest: persist local history for viz in dashboard/speaking (TASK-152)
+      try {
+        const key = "guest_speaking_sessions";
+        const prev = JSON.parse(localStorage.getItem(key) || "[]");
+        // eslint-disable-next-line react-hooks/purity -- local guest timestamp id only
+        const entry = { id: `guest-${Date.now()}`, practice_type: "roleplay" as const, duration, accuracy_score: null, scenario_id: activeScenario.id, created_at: new Date().toISOString() };
+        localStorage.setItem(key, JSON.stringify([entry, ...prev].slice(0, 20)));
+      } catch {}
     }
   };
 
@@ -897,6 +914,9 @@ export function AIRoleplay() {
             <div>
               <h4 className="text-sm font-bold text-foreground">{activeScenario.title}</h4>
               <p className="text-[10px] text-muted-foreground font-normal">Đóng vai cùng: {activeScenario.aiCharacter}</p>
+              {activeScenario.l1Note && (
+                <p className="text-[9px] text-emerald-600 dark:text-emerald-400 mt-0.5">💡 {activeScenario.l1Note}</p>
+              )}
             </div>
           </div>
           <span className={`text-[10px] px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider border ${

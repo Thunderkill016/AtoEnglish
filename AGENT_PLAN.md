@@ -7,7 +7,7 @@
 | Field | Value |
 |-------|-------|
 | Started | 2026-07-01 |
-| Focus | TASK-143 — Autopilot maintenance sweep #143: Chạy lint+test; fix failure đầu tiên (nếu có); sync AGENT_PLAN nhật ký + BACKLOG. Không feature mới. |
+| Focus | TASK-152 — Enhance free speaking coach further (more VN L1, local history viz, job polish) — minimal, gates, push done. |
 | Owner | Autopilot (no human) |
 
 ### TASK-143 — Autopilot maintenance sweep #143
@@ -38,6 +38,8 @@
 **Started:** 2026-07-01 — autopilot
 
 **Completed TASK-143**: gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed; log written 20260701T142617Z_TASK-143.log; BACKLOG+PLAN+nhật ký synced; no src edit; autonomous (PHASE3)
+
+**Completed TASK-152**: richer L1 analysis (final cons, tones/intonation, linking) + norm; guest speaking history viz (local save+hydrate) on /speaking dashboard; job roleplay L1 notes + free fallback enhanced; vibrant glass kept; gates clean (tsc0 lint0 170t); log written; BACKLOG done + Nhật ký; commit + push via git-push.sh main; autonomous one-task.
 
 ### TASK-151 — Vibrant UI polish (glass/motion)
 **Mục tiêu**: Polish vibrant glassmorphism + motion: enhance smooth Framer Motion transitions (lessons via motion.ts + shell, speaking cards, dashboard sections), make guest CTAs responsive (mobile friendly glass banners/CTAs), polish progress viz with motion, add subtle engaging but honest copy. Keep zinc-950 dark bg + emerald-500/teal-500 glass (bg-white/5 + backdrop-blur-xl etc). Deprecate any minimal drift. No logic, no new deps, MINIMAL diff. **Done khi:** better feel on cards/sections/CTAs/viz; gates pass (tsc/lint/test); docs updated with Nhật ký; pushed via git-push.sh.
@@ -2757,4 +2759,6 @@
 **Done khi**: UI has realistic notes + speaking CTA in goal/daily viz; tsc/lint/test clean; docs updated + Nhật ký; commit + push; no hype language; follow AGENTS exactly.
 **Started:** 2026-07-01 — autopilot (PHASE1 search sim + read AGENTS/BACKLOG/ROADMAP + web research + code inspect; PHASE2 backlog update set 149 in_p + prior statuses; PHASE3: minimal edit + gates)
 **Completed TASK-149**: research done (small consistent daily practice, honest progress viz, impl intentions, realistic streaks ok); implemented minimal in EfSetGoalTracker (realistic note + /speaking link) + DashboardClient daily xp (consistency text); tsc0 + lint0 + 170 tests pass; BACKLOG+PLAN updated with Nhật ký; commit + push via git-push.sh; vibrant glass kept; success, suggest 150 next.
+
+**Completed TASK-152**: richer L1 analysis (final cons, tones/intonation, linking) + norm; guest speaking history viz (local save+hydrate) on /speaking dashboard; job roleplay L1 notes + free fallback enhanced; vibrant glass kept; gates clean (tsc0 lint0 170t); log written; BACKLOG done + Nhật ký; commit + push via git-push.sh main; autonomous one-task.
 

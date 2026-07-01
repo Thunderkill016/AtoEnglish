@@ -195,6 +195,15 @@ export function JournalMode() {
       if (res.success) {
         toast.success(res.xpEarned ? `Đã lưu nhật ký! +${res.xpEarned} XP` : "Đã lưu nhật ký nói!");
         setSavedCount(p => p + 1);
+        if (!res.xpEarned) {
+          // Guest local history viz (TASK-152)
+          try {
+            const key = "guest_speaking_sessions";
+            const prev = JSON.parse(localStorage.getItem(key) || "[]");
+            const entry = { id: `guest-${Date.now()}`, practice_type: "journal" as const, duration: Math.round(wordCount * 0.5), accuracy_score: null, scenario_id: null, created_at: new Date().toISOString() };
+            localStorage.setItem(key, JSON.stringify([entry, ...prev].slice(0, 20)));
+          } catch {}
+        }
       } else {
         toast.error(res.error || "Không thể lưu.");
       }

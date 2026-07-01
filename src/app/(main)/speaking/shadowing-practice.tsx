@@ -499,6 +499,14 @@ export function ShadowingPractice() {
             if (!isMountedRef.current) return;
             if (saveRes.success && saveRes.xpEarned) {
               toast.success(`+${saveRes.xpEarned} XP — tiếp tục luyện hàng ngày!`);
+            } else if (saveRes.success) {
+              // Guest: persist local history for viz (TASK-152)
+              try {
+                const key = "guest_speaking_sessions";
+                const prev = JSON.parse(localStorage.getItem(key) || "[]");
+                const entry = { id: `guest-${Date.now()}`, practice_type: "shadowing" as const, duration, accuracy_score: score ?? null, scenario_id: activeItem.id, created_at: new Date().toISOString() };
+                localStorage.setItem(key, JSON.stringify([entry, ...prev].slice(0, 20)));
+              } catch {}
             }
           } else {
             setAccuracyScore(0);
