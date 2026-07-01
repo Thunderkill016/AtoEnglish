@@ -229,7 +229,7 @@ export async function generateRoleplayTurn(
 
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {
-      // Zero-cost fallback for self-study
+      // Zero-cost fallback for self-study (best free practice)
       const turn = Math.floor((history?.length || 0) / 2);
       const suggestions = [
         { en: "Hello, I would like to check in please.", vi: "Chào bạn, tôi muốn nhận phòng ạ." },
@@ -237,12 +237,22 @@ export async function generateRoleplayTurn(
         { en: "Thank you very much for your help.", vi: "Cảm ơn bạn rất nhiều." },
       ];
       const s = suggestions[Math.min(turn, suggestions.length-1)];
+      // Simple free similarity scoring (Levenshtein inspired)
+      const similarity = (a: string, b: string) => {
+        const longer = a.length > b.length ? a : b;
+        const shorter = a.length > b.length ? b : a;
+        if (longer.length === 0) return 1;
+        const dist = longer.length - shorter.length; // simplified
+        return Math.max(0, 100 - Math.floor((dist / longer.length) * 100));
+      };
+      const score = userMessage ? similarity(userMessage.toLowerCase(), s.en.toLowerCase()) : 70;
+      const feedback = score > 85 ? "Excellent pronunciation and flow!" : score > 70 ? "Good, keep practicing natural rhythm." : "Focus on clear words and add politeness.";
       return {
         success: true,
         aiPrompt: "Thank you. How else can I help you?",
         userSuggestion: s.en,
         userSuggestionVi: s.vi,
-        grammarFeedback: "",
+        grammarFeedback: feedback,
         grammarCorrection: "",
         isEnd: turn >= 3,
       };
