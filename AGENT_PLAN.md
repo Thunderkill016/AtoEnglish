@@ -66,7 +66,7 @@
 
 **Started:** 2026-07-01 — autopilot (PHASE1: search_memory("TASK-132 maintenance sweep") via logs/grep + read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6–7 + grep TASK-132; 2r>=2; PHASE2 PLAN+BACKLOG in_p + refill run)
 
-**Completed TASK-132**: gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed; log written 20260701T113033Z_TASK-132.log; BACKLOG+PLAN+nhật ký synced; commit + push via git-push.sh main; no src edit; autonomous (PHASE3)
+**Completed TASK-132**: gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed; log written 20260701T113033Z_TASK-132.log; BACKLOG+PLAN+nhật ký synced; commit 3551ff6 + push via git-push.sh main; no src edit; autonomous (PHASE3)
 
 ### TASK-126 — Autopilot maintenance sweep #126
 **Mục tiêu**: Chạy `npm run lint && npm run test` (cùng npx tsc --noEmit + content gates nếu liên quan); fix failure đầu tiên (nếu có, minimal patch); sync AGENT_PLAN nhật ký + BACKLOG status + Nhật ký + log file. Không feature mới, không thay đổi logic app, chỉ gates + doc. **Done khi:** gates pass (0 lint, all tests); 0 or 1 small fix if first failure; PLAN/BACKLOG/nhật ký updated; 1 commit if change or doc sync; pushed via git-push.sh main.
@@ -1170,7 +1170,7 @@
 
 | Time (UTC) | Task | Plan summary | Outcome |
 |------------|------|--------------|---------|
-| 2026-07-01 | TASK-132 | PHASE1: search_memory("TASK-132 maintenance sweep") via logs/grep + read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6–7 + grep; 2r>=2; PHASE2: update PLAN focus+full section + BACKLOG in_p + run refill (added 134-136); PHASE3: tsc/lint/test/content/audit all clean (170+50), no first failure, no fix, log+sync docs | done — [SHA] |
+| 2026-07-01 | TASK-132 | PHASE1: search_memory("TASK-132 maintenance sweep") via logs/grep + read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6–7 + grep; 2r>=2; PHASE2: update PLAN focus+full section + BACKLOG in_p + run refill (added 134-136); PHASE3: tsc/lint/test/content/audit all clean (170+50), no first failure, no fix, log+sync docs | done — 3551ff6 |
 | 2026-07-01 | TASK-124 | PHASE1: search sim via logs/grep + read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6–7 + grep TASK-124; 4r>=2; PHASE2: update PLAN focus+full section + BACKLOG in_p (skip refill); PHASE3: tsc/lint/test/content/audit all clean (170+50), no first failure, no fix, log+sync docs | done — 2a33ecd |
 | 2026-07-01 | TASK-125 | PHASE1: real search_memory(TASK-125)+read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6–7 + grep; 3r>=2; PHASE2: update PLAN+BACKLOG in_p + run refill (OK skip); PHASE3: tsc/lint/test/content/audit all clean (170+50), no first failure, no fix, log+sync docs | done — f598330 |
 | 2026-06-26 | TASK-086 | PHASE1: search_memory sim via logs/grep (empty prior for 086 impl) + read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6-7 + MINIMAL_V2 (cert eligible listed) + grep Certificate + design-system + checkpoint lock pattern; PHASE2: BACKLOG in_progress + full TASK-086 PLAN section (ready=2 >=2 skip refill); PHASE3: wrap eligible in SecondaryPageShell + flat bg-card border-border/60 card (removed zinc heavy/glows), MinimalButton actions, data-testid keep selectors, all logic/texts/motion/share/print preserved; lint0+170t+tsc0 pass; commit+push via git-push.sh; done | done — e82d92f |
