@@ -7,8 +7,37 @@
 | Field | Value |
 |-------|-------|
 | Started | 2026-07-01 |
-| Focus | TASK-141 — Autopilot maintenance sweep #141: Chạy lint+test; fix failure đầu tiên (nếu có); sync AGENT_PLAN nhật ký + BACKLOG. Không feature mới. (2 ready pre) |
+| Focus | TASK-142 — Autopilot maintenance sweep #142: Chạy lint+test; fix failure đầu tiên (nếu có); sync AGENT_PLAN nhật ký + BACKLOG. Không feature mới. (4 ready pre) |
 | Owner | Autopilot (no human) |
+
+### TASK-142 — Autopilot maintenance sweep #142
+**Mục tiêu**: Chạy `npm run lint && npm run test` (cùng npx tsc --noEmit + content gates nếu liên quan); fix failure đầu tiên (nếu có, minimal patch); sync AGENT_PLAN nhật ký + BACKLOG status + Nhật ký + log file. Không feature mới, không thay đổi logic app, chỉ gates + doc. **Done khi:** gates pass (0 lint, all tests); 0 or 1 small fix if first failure; PLAN/BACKLOG/nhật ký updated; 1 commit nếu change or doc sync; pushed via git-push.sh main.
+
+**Bước thực hiện**:
+1. PHASE1 research (done): read AGENTS.md (ALWAYS), AGENT_BACKLOG/PLAN/ROADMAP, CONTENT_STYLE.md §6–7 (context for any content std but not editing units), grep TASK-142 + recent sweeps in logs/agent/* + BACKLOG/PLAN; search_memory("TASK-142"); confirm 4 ready (142-145) ≥2 pre in_p.
+2. Update BACKLOG: TASK-142 `in_progress` (done).
+3. Update AGENT_PLAN.md với mục tiêu + bước + rủi ro cho TASK-142 (this section) + update "Phiên hiện tại" focus (done).
+4. Backlog hiện tại sau in_p =3 ready >=2 → KHÔNG chạy (script skips) nhưng per user query "Backlog thấp: chạy" vẫn chạy `bash scripts/agent-refill-backlog.sh` (read ROADMAP.md) — KHÔNG hỏi user (script will skip safely).
+5. PHASE3 triển khai: 
+   - rm -f tsconfig.tsbuildinfo (stale guard common in sweeps).
+   - Chạy `npx tsc --noEmit` (zero errors gate).
+   - Chạy `npm run lint` (zero warnings).
+   - Chạy `npm run test` (all pass) — note first failure nếu có, fix minimal duy nhất (e.g. tsbuild stale, minor import, test helper).
+   - Per sweep pattern: `npm run test:content-standard && bash scripts/audit-lesson-content.sh` (50/50 expected).
+   - Capture outputs, fix only the very first error encountered; no scope creep.
+6. Sau gates: viết log `logs/agent/20260701T...Z_TASK-142.log` (tóm tắt gates + fix or clean); update BACKLOG (in_progress→done + Nhật ký entry + SHA); sync PLAN log table + Completed.
+7. git pull --rebase; git add AGENT_BACKLOG.md AGENT_PLAN.md logs/agent/* (và src nếu fix 1 file); commit "chore(maintenance): autopilot sweep #142 — lint+test gates + PLAN/BACKLOG sync (TASK-142)"; `bash scripts/git-push.sh main`.
+**Rủi ro**:
+- Lint/test fail on transient (tsbuildinfo, coverage artifact) → rm -f tsconfig.tsbuildinfo; rerun once; 2 fails → blocked + lý do.
+- First failure is real bug in core → minimal fix (e.g. type or test data), self-debug from error msg; if needs major or secret → blocked.
+- Git push needs token (GITLAB_TOKEN) or net → status blocked, do not force.
+- No new feature: strictly only fix first failure or doc-sync only.
+- Fail 2 lần liên tiếp → status `blocked` + ghi lý do vào BACKLOG/PLAN.
+**Done khi**: `npm run lint && npm run test` pass (or 1 minimal fix); tsc0; content gates nếu chạy 50/50; PLAN+BACKLOG+nhật ký synced; log file; commit+push via script if change; BACKLOG done; autonomous.
+
+**Started:** 2026-07-01 — autopilot (PHASE1: search_memory real + read+grep; 4r; PHASE2: PLAN+BACKLOG in_p + run refill)
+
+**Completed TASK-142**: gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed; log written 20260701T141347Z_TASK-142.log; BACKLOG+PLAN+nhật ký synced; no src edit; autonomous (PHASE3)
 
 ### TASK-141 — Autopilot maintenance sweep #141
 **Mục tiêu**: Chạy `npm run lint && npm run test` (cùng npx tsc --noEmit + content gates nếu liên quan); fix failure đầu tiên (nếu có, minimal patch); sync AGENT_PLAN nhật ký + BACKLOG status + Nhật ký + log file. Không feature mới, không thay đổi logic app, chỉ gates + doc. **Done khi:** gates pass (0 lint, all tests); 0 or 1 small fix if first failure; PLAN/BACKLOG/nhật ký updated; 1 commit nếu change or doc sync; pushed via git-push.sh main.
@@ -2661,4 +2690,19 @@
 **Started:** 2026-06-27 — autopilot (PHASE1: search_memory sim via logs/grep (prior 109 tool_error) + read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6–7 + grep TASK; 4r>=2 skip refill; PHASE2 PLAN update + BACKLOG in_p; PHASE3: run gates)
 
 **Completed TASK-109 (post exec sync)**: gates clean (lint0+170t+tsc0+cs50/50+audit50/50) no fix needed; log written 20260627T191520Z_TASK-109.log; BACKLOG+PLAN updated; commit 6f62dc8 + push via git-push.sh main; no src edit; autonomous (no human).
+
+### TASK-149 — Enhance motivation: daily goals + progress viz without gamification (autopilot)
+**Mục tiêu**: Enhance EfSetGoalTracker (CEFR goal viz) + daily XP card in dashboard with realistic motivation: honest "small daily > burst" insight, daily consistency note, link to free speaking practice. No gamification hype, no badges, keep vibrant glassmorphism (emerald/teal accents, bg-white/5). Build on existing daily_xp_goal / milestones / streaks. Minimal diff only. Research-backed for adult learners. Update docs, gates, commit+push. One task.
+**Bước thực hiện**:
+1. PHASE1: search_memory("TASK-149" or "motivation daily goals realistic") + read AGENTS.md, AGENT_BACKLOG.md, AGENT_ROADMAP.md, AGENT_PLAN.md (focus vibrant+guest+speaking+realistic motiv), web_search adult language learner motivation (consistent small daily, honest viz, impl intentions, realistic streaks no hype); inspect EfSetGoalTracker.tsx, DashboardClient.tsx daily xp viz, TodayPlan, WeeklyRecap, streak files, speaking links, guest code.
+2. Update BACKLOG: set TASK-149 in_progress; mark 147 done + note, 148 partial (per current state).
+3. Update PLAN (this section + nhật ký) + refresh current focus.
+4. Implement minimal diff: add honest realistic note + speaking link in EfSetGoalTracker (inside expanded), add consistency line under daily xp progress bar in DashboardClient. Use existing vibrant classes (no new tokens, glassmorphism match, emerald for speaking link).
+5. PHASE3: npx tsc --noEmit (0 err); npm run lint (0 warn); npm run test (all 170 pass); no content change so no need content gates.
+6. Update BACKLOG: mark TASK-149 done + Nhật ký entry + commit SHA; add to PLAN log.
+7. git add only AGENT_BACKLOG.md src/.../EfSetGoalTracker.tsx src/.../DashboardClient.tsx ; commit "feat(motivation): daily goals + realistic consistency viz (small daily > burst, speaking link)"; bash scripts/git-push.sh main.
+**Rủi ro**: None major — pure UI text add on existing components; no DB, no new deps, guest speaking link safe, no logic change.
+**Done khi**: UI has realistic notes + speaking CTA in goal/daily viz; tsc/lint/test clean; docs updated + Nhật ký; commit + push; no hype language; follow AGENTS exactly.
+**Started:** 2026-07-01 — autopilot (PHASE1 search sim + read AGENTS/BACKLOG/ROADMAP + web research + code inspect; PHASE2 backlog update set 149 in_p + prior statuses; PHASE3: minimal edit + gates)
+**Completed TASK-149**: research done (small consistent daily practice, honest progress viz, impl intentions, realistic streaks ok); implemented minimal in EfSetGoalTracker (realistic note + /speaking link) + DashboardClient daily xp (consistency text); tsc0 + lint0 + 170 tests pass; BACKLOG+PLAN updated with Nhật ký; commit + push via git-push.sh; vibrant glass kept; success, suggest 150 next.
 

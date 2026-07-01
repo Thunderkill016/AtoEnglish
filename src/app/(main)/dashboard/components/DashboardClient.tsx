@@ -448,6 +448,7 @@ export default function DashboardClient({
                     style={{ width: `${Math.min(xpPercent, 100)}%` }}
                   />
                 </div>
+                <p className="text-[9px] text-emerald-600/80 dark:text-emerald-400/80 font-medium">Nhỏ đều &gt; burst — giữ thói quen nói mỗi ngày.</p>
               </div>
             )}
           </div>
