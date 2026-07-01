@@ -798,10 +798,11 @@
 - **Completed:** 2026-06-27 — gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed; log written 20260627T032200Z_TASK-119.log; BACKLOG+PLAN+nhật ký synced; no src edit; autonomous (PHASE3)
 
 ### TASK-120 — Autopilot maintenance sweep #120
-- **Status:** `in_progress`
+- **Status:** `done`
 - **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
 - **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
 - **Started:** 2026-07-01 — autopilot (PHASE1: search_memory sim via logs/grep + read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6–7 + grep TASK-120; 2 ready (120-121) >=2; PHASE2: PLAN update + BACKLOG in_p)
+- **Completed:** 2026-07-01 — gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed; log written 20260701T085250Z_TASK-120.log; BACKLOG+PLAN updated; no src edit; autonomous (PHASE3)
 
 ### TASK-121 — Autopilot maintenance sweep #121
 - **Status:** `ready`
@@ -959,3 +960,4 @@
 | 2026-06-26 | TASK-056 | PHASE1 research(memory sim via logs + AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6-7 + grep continue/getNext/dashboard/actions/unit/roadmap/learn); PHASE2: set 056 in_progress (revert 058 to ready; 5ready skip refill), PLAN header+log update; PHASE3: minimal edit action to import+use getNextUnitRoute for canonical route returned to ContinueCard + comments reinforce full lesson unify; dashboard comment sync; lint+169t+tsc clean; commit+push via git-push main | done — ff6f7bb |
 | 2026-06-26 | TASK-046 | PHASE1 (search_memory sim logs + read AGENTS/BACKLOG/PLAN/CONTENT§6-7+blueprint+center+flow+unit1+test+grep B2 audio counts match); PHASE2 PLAN+BACKLOG in_progress (ready>2 skip refill); PHASE3: extend curriculum-quality.test.ts + B2 describe block for vocab+dialogue audio decl; lint+170t (51 curriculum) +tsc pass; commit da2c844 + git-push.sh main | done — da2c844 |
 | 2026-06-26 | TASK-048 | PHASE1 (search sim empty via logs+grep + read AGENTS+BACKLOG+PLAN+ROADMAP+CONTENT§6-7 + grep profile+actions+pages+types); PHASE2 PLAN+BACKLOG in_progress (refill ran skip >=2); PHASE3: getOnboardingProfile() in stats.ts (typed, auth+select+null safe like getUserProgress) + parallel use in dashboard/settings pages + optional prop accept; tsc+lint+170tests pass; commit+push | done — 36d0262 |
+| 2026-07-01 | TASK-120 | PHASE1 research (search sim via logs/grep + read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6–7 + grep); 2r>=2; PHASE2 PLAN update + BACKLOG in_p + refill (122-124); PHASE3: gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix + log 20260701T085250Z_TASK-120.log + sync PLAN/BACKLOG; no src; autonomous | done — (pending push) |
