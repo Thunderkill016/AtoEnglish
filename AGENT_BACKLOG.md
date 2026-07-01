@@ -1044,10 +1044,10 @@
 - **Completed:** 2026-07-01 — gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed; log 20260701T144534Z_TASK-144.log + sync PLAN/BACKLOG; no src edit; autonomous (PHASE3)
 
 ### TASK-145 — Autopilot maintenance sweep #145
-- **Status:** `ready`
+- **Status:** `in_progress`
 - **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
 - **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
-- **Started:** auto-refill
+- **Started:** 2026-07-01 — autopilot (PHASE1: real search_memory(TASK-145) + read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT_STYLE.md§6–7 + grep TASK-145 + recent logs/daemon; 4r >=2; PHASE2 PLAN+BACKLOG in_p + run refill per query; PHASE3: run gates)
 
 
 ### TASK-153 — Autopilot maintenance sweep #153
