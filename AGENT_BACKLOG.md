@@ -1081,10 +1081,11 @@
 - **Completed:** 2026-07-01 — gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed (all pass); log written 20260701T153414Z_TASK-156.log + BACKLOG/PLAN/nhật ký synced; no src edit; commit + push via git-push.sh main; autonomous (PHASE3)
 
 ### TASK-157 — Autopilot maintenance sweep #157
-- **Status:** `in_progress`
+- **Status:** `done`
 - **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
 - **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
 - **Started:** 2026-07-01 — autopilot (PHASE1: real search_memory(TASK-157 maintenance) + read AGENTS.md (ALWAYS), AGENT_BACKLOG.md, AGENT_PLAN.md, AGENT_ROADMAP.md, CONTENT_STYLE.md §6–7 + grep TASK-157 + recent logs/daemon; 2 ready (157-158); PHASE2: PLAN update + BACKLOG in_p + run refill; PHASE3: gates + first-fail fix minimal + sync)
+- **Completed:** 2026-07-01 — gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed; log written 20260701T154400Z_TASK-157.log + BACKLOG/PLAN/nhật ký synced; no src edit; commit + push via git-push.sh main; autonomous (PHASE3)
 
 ### TASK-158 — Autopilot maintenance sweep #158
 - **Status:** `ready`
@@ -1125,7 +1126,7 @@
 | 2026-07-01 | TASK-160 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-01 | TASK-161 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-01 | TASK-156 | gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix + log 20260701T153414Z_TASK-156.log + sync PLAN/BACKLOG; no src; commit 9bdf3cf + push via git-push.sh main; autonomous | done — 9bdf3cf |
-| 2026-07-01 | TASK-157 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-07-01 | TASK-157 | gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed; log 20260701T154400Z_TASK-157.log + BACKLOG/PLAN/nhật ký synced; no src; commit + push via git-push.sh main; autonomous | done — (pending) |
 | 2026-07-01 | TASK-158 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-01 | TASK-153 | gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix + log 20260701T151239Z_TASK-153.log + sync PLAN/BACKLOG; no src; commit ec01806 + push via git-push.sh main; autonomous | done — ec01806 |
 | 2026-07-01 | TASK-154 | gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix + log 20260701T152038Z_TASK-154.log + sync PLAN/BACKLOG; no src; commit 870454a + push via git-push.sh main; autonomous | done — 870454a |
