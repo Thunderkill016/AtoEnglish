@@ -62,7 +62,7 @@ export const LESSON_BLUEPRINT: readonly LessonBlueprintBlock[] = [
     phase: "input",
     learnMethodVi: "Đọc tình huống + mục tiêu trước khi học từ — biết vì sao học.",
     authorGuideVi:
-      "situation = câu hỏi/tình huống cụ thể (không chung chung). learningOutcomes = 2–5 hành vi đo được. culturalNote = pragmatic Việt↔Anh.",
+      "situation = câu hỏi/tình huống cụ thể (không chung chung, ưu tiên job/career cho adult VN). learningOutcomes = 2–5 hành vi đo được. culturalNote = pragmatic Việt↔Anh.",
   },
   {
     id: "warmup",

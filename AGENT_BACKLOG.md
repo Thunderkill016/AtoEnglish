@@ -30,6 +30,7 @@
 | 5 | TASK-150 — Polish lessons to blueprint standards | P1 done (autopilot: audit clean) |
 | 6 | TASK-151 — Vibrant UI polish (glass/motion) | P2 done (autopilot) |
 | 7 | TASK-152 — Enhance free speaking coach further (more VN L1, local history viz, job polish) | P0 done (autopilot) |
+| 8 | TASK-153 — Raise lesson content bar for world-class (nội dung học): more dialogues, shadowing, L1, job scenarios per new standard | P0 |
 
 **V1 done:** UI-001..007 + content 058–062. **V2 shipped:** PR-01/02/03 + batch `bac3f15` (~60% surfaces).
 
@@ -96,6 +97,13 @@
 - **Done khi:** Better feedback for common VN errors; guest sees history; more job roleplays; tests pass; vibrant UI.
 - **Started:** 2026-07-01 — autopilot (PHASE1: search_memory empty via sim + read AGENTS/BACKLOG/ROADMAP/PLAN + web research VN L1 + code inspect speech-analysis/Speaking*/Dashboard* /actions + job scenarios; PHASE2: PLAN+BACKLOG update in_p; PHASE3: minimal diff impl + gates + docs + push)
 - **Completed:** 2026-07-01 — enhanced speech-analysis (more final-cons/tones/linking patterns + norm), guest local save+hydrate viz in /speaking + dashboard SpeakingFeed, job scenarios +L1 notes + fallback polish; tsc0+lint0+170t pass; log 20260701T143556Z_TASK-152.log; commit 787fdb9 + push via git-push.sh main; followed 1-task rule strictly.
+
+### TASK-153 — Raise lesson content bar for world-class (nội dung học): more dialogues, shadowing, L1, job scenarios per new standard
+- **Status:** `in_progress`
+- **Mô tả:** Update content-standard + blueprint for higher bar (dialogues 2+, shadowing 5+, job 1+, more L1). Enhance unit1 (golden) + sample job units. Re-audit. Focus Babbel-like real convos + VN adult job needs.
+- **Done khi:** New standard met by model units; audit passes for enhanced; blueprint guide updated.
+- **Started:** 2026-07-01 — autopilot (user: "Quan trọng là phần nội dung học")
+- **Completed:** 2026-07-01 — raised standard (added dialoguesMin etc, jobScenarios), enhanced unit1 with jobScenarios + more shadowing + warmup; blueprint authorGuide updated for job focus; content test still running full but model improved. Next units to catch up.
 
 ---
 
