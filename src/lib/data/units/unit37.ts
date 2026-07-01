@@ -351,7 +351,16 @@ export const unit37: UnitData = {
     ],
   },
 
-  jobScenarios: [ { id: 1, title: "Work scenario for unit 37", focus: "professional skills", context: "job context" } ], 
+  jobScenarios: [
+    {
+      id: 1,
+      title: "Writing concise business reports",
+      focus: "precise language in emails/proposals",
+      context: "professional writing",
+      l1Note: "⚠️ 'Concise' formal. Người VN hay dùng từ thừa. 'To sum up' vs 'In summary'.",
+      example: "To summarize the findings, the market is expanding rapidly."
+    }
+  ], 
   // ── OUTPUT: shadowing
   shadowingVideoId: "XeI1m0B59PY",
 };

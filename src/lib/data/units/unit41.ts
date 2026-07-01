@@ -354,7 +354,16 @@ export const unit41: UnitData = {
     ],
   },
 
-  jobScenarios: [ { id: 1, title: "Work scenario for unit 41", focus: "professional skills", context: "job context" } ], 
+  jobScenarios: [
+    {
+      id: 1,
+      title: "Discussing sustainability in corporate strategy",
+      focus: "IELTS topic in business context",
+      context: "board meeting on green policies",
+      l1Note: "⚠️ Environmental collocations. 'Renewable energy' vs 'fossil fuels'.",
+      example: "We must invest in renewable energy to combat climate change."
+    }
+  ], 
   // ── OUTPUT: shadowing
   shadowingVideoId: "o0rJkAiqcZs",
 };

@@ -354,7 +354,16 @@ export const unit39: UnitData = {
     ],
   },
 
-  jobScenarios: [ { id: 1, title: "Work scenario for unit 39", focus: "professional skills", context: "job context" } ], 
+  jobScenarios: [
+    {
+      id: 1,
+      title: "Speculating on market trends in meeting",
+      focus: "deduction language in business",
+      context: "team discussion on data",
+      l1Note: "⚠️ 'Must have been' for deduction. Người VN hay dùng 'maybe' thay vì modal perfect.",
+      example: "The sales must have increased. It can't have been a coincidence."
+    }
+  ], 
   // ── OUTPUT: shadowing
   shadowingVideoId: "v3FIvCDJMxg",
 };

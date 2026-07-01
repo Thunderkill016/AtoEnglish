@@ -355,7 +355,16 @@ export const unit32: UnitData = {
     ],
   },
 
-  jobScenarios: [ { id: 1, title: "Career talk unit 32", focus: "job skills", context: "workplace" } ], 
+  jobScenarios: [
+    {
+      id: 1,
+      title: "Reviewing performance in annual meeting",
+      focus: "B1 review language",
+      context: "performance review",
+      l1Note: "⚠️ 'Accumulate' formal. 'Build up' casual.",
+      example: "We have accumulated enough data. I recommend we proceed."
+    }
+  ], 
   // ── OUTPUT: shadowing
   shadowingVideoId: "8S0FDjFBj8o",
 };

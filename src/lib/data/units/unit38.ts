@@ -359,7 +359,16 @@ export const unit38: UnitData = {
     ],
   },
 
-  jobScenarios: [ { id: 1, title: "Work scenario for unit 38", focus: "professional skills", context: "job context" } ], 
+  jobScenarios: [
+    {
+      id: 1,
+      title: "Persuasive pitch to investors",
+      focus: "emphasis in business presentations",
+      context: "sales pitch",
+      l1Note: "⚠️ 'Emphasis on' . Người VN hay dịch thẳng 'nhấn mạnh vào'. 'It is crucial that...' for persuasion.",
+      example: "We must emphasize the unique value. It is essential that you invest now."
+    }
+  ], 
   // ── OUTPUT: shadowing
   shadowingVideoId: "nz7LRTF-a-Q",
 };

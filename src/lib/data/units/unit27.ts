@@ -361,7 +361,16 @@ export const unit27: UnitData = {
     ],
   },
 
-  jobScenarios: [ { id: 1, title: "Work scenario for unit 27", focus: "professional skills", context: "job context" } ], 
+  jobScenarios: [
+    {
+      id: 1,
+      title: "Delegating tasks in team meeting",
+      focus: "causative/get things done at work",
+      context: "manager assigns to staff",
+      l1Note: "⚠️ 'Have/get something done' – causative. Người VN hay dùng active 'I do it' thay vì 'I have it done'.",
+      example: "I had the report prepared by the team. We got the project finished on time."
+    }
+  ], 
   // ── OUTPUT: shadowing
   shadowingVideoId: "ZiQpOt7R3r8",
 };

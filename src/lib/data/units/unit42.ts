@@ -362,7 +362,16 @@ export const unit42: UnitData = {
     ],
   },
 
-  jobScenarios: [ { id: 1, title: "Work scenario for unit 42", focus: "professional skills", context: "job context" } ], 
+  jobScenarios: [
+    {
+      id: 1,
+      title: "Final project presentation and Q&A",
+      focus: "B2 assessment in professional setting",
+      context: "pitch to stakeholders",
+      l1Note: "⚠️ Use advanced vocab from unit. 'Deploy' for implementation.",
+      example: "We have deployed the strategy successfully. Sustainability is key."
+    }
+  ], 
   // ── OUTPUT: shadowing
   shadowingVideoId: "SKRhFCaFMpI",
 };
