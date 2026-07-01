@@ -26,7 +26,7 @@
 | 1 | TASK-146 — Enhance free speaking coach advanced local VN-L1 analysis | P0 ready |
 | 2 | TASK-147 — Improve guest/self-study persistence & seamless flow | P0 done (guest note) |
 | 3 | TASK-148 — Job/career focused roleplays | P1 partial (scenarios added) |
-| 4 | TASK-149 — Motivation daily goals + viz | P0 in_progress |
+| 4 | TASK-149 — Motivation daily goals + viz | P0 done (autopilot) |
 | 5 | TASK-150 — Polish lessons to blueprint standards | P1 (autopilot: audit clean 50/50) |
 | 6 | TASK-151 — Vibrant UI polish (glass/motion) | P2 |
 
@@ -1038,6 +1038,7 @@
 | 2026-07-01 | TASK-144 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-01 | TASK-145 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-01 | TASK-140 | gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed; log 20260701T132923Z_TASK-140.log + sync PLAN/BACKLOG; no src; commit 59e70c2 + push via git-push.sh main (follow-ups 68581ad, 5d2e459, 3484437); autonomous | done — 59e70c2 |
+| 2026-07-01 | TASK-149 | PHASE1: search_memory sim + read AGENTS/BACKLOG/ROADMAP + web research (small daily consistent practice, honest progress viz, impl intentions, realistic no-hype for adult VN learners); PHASE2: backlog set 149 in_p (147 done note, 148 partial); PHASE3: minimal diff enhance EfSetGoalTracker (realistic note + speaking link glass) + DashboardClient daily xp (consistency text); tsc0 lint0 170t pass; commit acb42a3 + push via git-push.sh; update Nhật ký + PLAN; success | done — acb42a3 |
 | 2026-07-01 | TASK-139 | gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed; log 20260701T131947Z_TASK-139.log + sync PLAN/BACKLOG; no src; commit b3af66a + push via git-push.sh main (follow-up 1f6daf4); autonomous | done — b3af66a |
 | 2026-07-01 | TASK-138 | gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed; log 20260701T131233Z_TASK-138.log + sync PLAN/BACKLOG; no src; commit + push via git-push.sh main; autonomous | done |
 | 2026-07-01 | TASK-141 | gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed; log 20260701T133921Z_TASK-141.log + sync PLAN/BACKLOG; no src; commit 0fd0a24 + push via git-push.sh main (follow-ups 5e3d73c, 4e97c38, caa28f2, 2440967); autonomous | done — 0fd0a24 |
