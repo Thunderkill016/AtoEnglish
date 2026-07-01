@@ -3286,3 +3286,33 @@
 
 **Started:** 2026-07-01 — autopilot (PHASE1: search sim + reads + grep + refill; 2r; PHASE2: PLAN update + BACKLOG in_p + run refill)
 
+### TASK-168 — Autopilot maintenance sweep #168
+**Mục tiêu**: Chạy full gates (npm run lint, npx tsc --noEmit, npm run test, npm run test:content-standard, bash scripts/audit-lesson-content.sh) để detect failure. Fix failure đầu tiên (nếu có) với thay đổi tối thiểu (chỉ 1 chỗ gây lỗi đầu). Sync AGENT_PLAN.md (nhật ký phiên + log table) + BACKLOG (status + nhật ký entry). Không thêm feature mới, không sửa logic app/content. Nhiệm vụ maintenance sweep định kỳ (giống 063-167).
+**Bước thực hiện**:
+1. Search memory("TASK-168" + "maintenance sweep" + "autopilot") (sim via logs/grep (prior 168 had tool_error read_file) + read AGENTS.md (ALWAYS), AGENT_BACKLOG/PLAN/ROADMAP, CONTENT_STYLE.md §6–7 (blueprint gate for content tests), scripts/agent-*.sh (refill/pick); grep for TASK-168 in logs/backlog/plan + run initial lint/test to see first fail if any.
+2. Grep codebase liên quan: confirm chỉ cần edit AGENT_*.md (no src/ unless fail); identify files: AGENT_BACKLOG.md, AGENT_PLAN.md (add section, update focus/log), and logs/agent/ for timestamp log. Grep src/ for forbidden (console.*, as any) + recent changes. (done: 0 console/as-any)
+3. Update BACKLOG: TASK-168 status `in_progress` (done).
+4. Update AGENT_PLAN.md với mục tiêu + bước + rủi ro cho TASK-168 (this section) + update "Phiên hiện tại" focus (done).
+5. Backlog thấp? Chạy `bash scripts/agent-refill-backlog.sh` (read AGENT_ROADMAP.md) — hiện 3 ready >=2 → skip (KHÔNG hỏi user).
+6. PHASE3 triển khai tối thiểu: 
+   - rm -f tsconfig.tsbuildinfo (stale guard).
+   - Chạy `npx tsc --noEmit` (zero errors).
+   - Chạy `npm run lint` (zero warnings).
+   - Chạy `npm run test` (all pass) — note first failure nếu có, fix minimal duy nhất.
+   - Per sweep: `npm run test:content-standard && bash scripts/audit-lesson-content.sh` (50/50 expected).
+   - Capture outputs, fix only the very first error encountered; no scope creep. No new feature.
+7. Pass gates → update BACKLOG done + nhật ký entry + SHA; update PLAN log table + write logs/agent/20260702T...Z_TASK-168.log (PHASE summary).
+8. git pull --rebase; git add AGENT_BACKLOG.md AGENT_PLAN.md logs/agent/*; commit "chore(agent): TASK-168 maintenance sweep — lint+test+content50/50 clean, sync PLAN log (no fix needed)"; `bash scripts/git-push.sh main`.
+**Rủi ro**:
+- Gates fail (e.g. new flake in 170 tests or content) → fix first failure only (1 minimal edit), rerun once; if still fail after 1 fix → 2nd attempt fail → set blocked + lý do.
+- Push blocked (thiếu GITLAB_TOKEN or net) → status=blocked in BACKLOG, note next sweep ready if can advance.
+- No secret/DB change needed (pure maintenance); self-debug from lint/test output.
+- Doc-only commit still must pass full checklist (tsc/lint/test).
+- Fail 2 lần liên tiếp → blocked + lý do.
+- Since ready >=2 , skip refill per rule.
+**Done khi**: lint+test (all gates) pass; nếu fix thì 1 minimal change; AGENT_PLAN/BACKLOG updated with PHASE log + SHA; 1 commit + push via git-push.sh main (or blocked noted); BACKLOG status=done; no feature; no ask user; autonomous.
+
+**Started:** 2026-07-02 — autopilot (PHASE1: read AGENTS (ALWAYS) + BACKLOG/PLAN/ROADMAP/CONTENT§6–7 + grep TASK-168/maintenance + logs + confirm ready=3>=2 + no console/as-any; PHASE2: BACKLOG in_p + PLAN update this section + skip refill (read script); PHASE3: gates + 1st fail fix min + sync)
+
+**Completed TASK-168**: gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed; log written 20260702T171000Z_TASK-168.log; BACKLOG+PLAN+nhật ký synced; no src edit; commit + push via git-push.sh main; autonomous (PHASE3)
+
