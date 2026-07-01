@@ -1125,10 +1125,11 @@
 - **Completed:** 2026-07-01 — gates clean (tsc0+lint0+170t+cs50/50+audit50/50) after 1 minimal first-fail fix (UnitTemplate jobScenarios type + l1Note support); log 20260701T162212Z_TASK-162.log + BACKLOG/PLAN/nhật ký synced; src edit only for type gate; commit + push via git-push.sh main; autonomous (PHASE3)
 
 ### TASK-163 — Autopilot maintenance sweep #163
-- **Status:** `in_progress`
+- **Status:** `done`
 - **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
 - **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
 - **Started:** 2026-07-01 — autopilot (PHASE1: search sim via logs/grep + read AGENTS.md (ALWAYS), AGENT_BACKLOG/PLAN/ROADMAP, CONTENT_STYLE.md §6–7 + grep TASK-163 + daemon logs; 2 ready (163-164) >=2 skip refill; PHASE2: PLAN update + BACKLOG in_p; PHASE3: run gates + first-fail fix minimal if any + sync)
+- **Completed:** 2026-07-01 — gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed (refill added 165-167 mid); log written 20260701T163005Z_TASK-163.log + BACKLOG/PLAN/nhật ký synced; no src edit; commit + push via git-push.sh main; autonomous (PHASE3)
 
 ### TASK-164 — Autopilot maintenance sweep #164
 - **Status:** `ready`
@@ -1165,11 +1166,12 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
+| 2026-07-01 | TASK-163 | gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed; log 20260701T163005Z_TASK-163.log + sync PLAN/BACKLOG; no src edit; commit + push via git-push.sh main; autonomous | done — (pending SHA) |
 | 2026-07-01 | TASK-165 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-01 | TASK-166 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-01 | TASK-167 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-01 | TASK-162 | gates clean (tsc0+lint0+170t+cs50/50+audit50/50) after 1 min first-fail type fix (jobScenarios l1Note); log 20260701T162212Z_TASK-162.log + sync; commit + push via git-push.sh main; autonomous | done — (SHA pending) |
-| 2026-07-01 | TASK-163 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-07-01 | TASK-163 | gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed (refill ran); log 20260701T163005Z_TASK-163.log + BACKLOG/PLAN/nhật ký synced; commit via git-push.sh main; autonomous | done — (pending SHA) |
 | 2026-07-01 | TASK-164 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-01 | TASK-159 | gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix + log 20260701T160042Z_TASK-159.log + sync PLAN/BACKLOG; no src; commit 111389d + push via git-push.sh main; autonomous | done — 111389d (final 1f491c7) |
 | 2026-07-01 | TASK-160 | gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix + log 20260701T160755Z_TASK-160.log + sync PLAN/BACKLOG; no src; commit+push via git-push.sh main; autonomous | done — (pending SHA) |
