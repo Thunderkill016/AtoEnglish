@@ -1118,10 +1118,11 @@
 
 
 ### TASK-162 — Autopilot maintenance sweep #162
-- **Status:** `ready`
+- **Status:** `done`
 - **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
 - **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
-- **Started:** auto-refill
+- **Started:** 2026-07-01 — autopilot (PHASE1: search_memory("TASK-162 maintenance sweep") via logs/grep + read AGENTS.md (ALWAYS), AGENT_BACKLOG/PLAN/ROADMAP, CONTENT_STYLE.md §6–7 + grep TASK-162 + maintenance sweeps + logs/agent/* + BACKLOG/PLAN; confirm 3 ready >=2 pre in_p; files to touch: AGENT_BACKLOG.md, AGENT_PLAN.md, logs/agent/* (unless fix 1st failure); PHASE2: PLAN update + BACKLOG in_p + check/refill if low; PHASE3: gates + first-fail fix minimal + sync)
+- **Completed:** 2026-07-01 — gates clean (tsc0+lint0+170t+cs50/50+audit50/50) after 1 minimal first-fail fix (UnitTemplate jobScenarios type + l1Note support); log 20260701T162212Z_TASK-162.log + BACKLOG/PLAN/nhật ký synced; src edit only for type gate; commit + push via git-push.sh main; autonomous (PHASE3)
 
 ### TASK-163 — Autopilot maintenance sweep #163
 - **Status:** `ready`
@@ -1145,7 +1146,7 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
-| 2026-07-01 | TASK-162 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-07-01 | TASK-162 | gates clean (tsc0+lint0+170t+cs50/50+audit50/50) after 1 min first-fail type fix (jobScenarios l1Note); log 20260701T162212Z_TASK-162.log + sync; commit + push via git-push.sh main; autonomous | done — (SHA pending) |
 | 2026-07-01 | TASK-163 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-01 | TASK-164 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-01 | TASK-159 | gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix + log 20260701T160042Z_TASK-159.log + sync PLAN/BACKLOG; no src; commit 111389d + push via git-push.sh main; autonomous | done — 111389d (final 1f491c7) |
