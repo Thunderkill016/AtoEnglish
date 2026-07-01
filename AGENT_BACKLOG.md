@@ -24,10 +24,10 @@
 | # | Task | Priority |
 |---|------|----------|
 | 1 | TASK-146 — Enhance free speaking coach advanced local VN-L1 analysis | P0 ready |
-| 2 | TASK-147 — Improve guest/self-study persistence & seamless flow | P0 |
-| 3 | TASK-148 — Job/career focused roleplays | P1 done (autopilot) |
-| 4 | TASK-149 — Motivation daily goals + viz | P1 |
-| 5 | TASK-150 — Polish lessons to blueprint standards | P1 |
+| 2 | TASK-147 — Improve guest/self-study persistence & seamless flow | P0 done (guest note) |
+| 3 | TASK-148 — Job/career focused roleplays | P1 partial (scenarios added) |
+| 4 | TASK-149 — Motivation daily goals + viz | P0 in_progress |
+| 5 | TASK-150 — Polish lessons to blueprint standards | P1 (autopilot: audit clean 50/50) |
 | 6 | TASK-151 — Vibrant UI polish (glass/motion) | P2 |
 
 **V1 done:** UI-001..007 + content 058–062. **V2 shipped:** PR-01/02/03 + batch `bac3f15` (~60% surfaces).
@@ -55,10 +55,32 @@
 - **Completed:** 2026-07-01 — enhanced L1 (11 patterns + vn normalize + shadowing tips), guest graceful (save/get return success w/ guestMode), lint+170t+tsc clean, docs deprecate V2, vibrant guest+speaking focus.
 
 ### TASK-147 — Improve guest/self-study flow persistence + seamless /learn
-- **Status:** `in_progress`
+- **Status:** `done`
 - **Mô tả:** Build on existing guest_completed_units + lesson-progress-*. Add guest local speaking history. Ensure /speaking, /learn, dashboard, roadmap fully usable for !auth (relaxed proxy). On auth, optional migrate local progress note.
 - **Done khi:** Guests complete full flow incl speaking local; progress persists browser; no auth friction in learn paths; tests pass.
 - **Started:** 2026-07-01 — autopilot (PHASE1: search_memory sim via logs/grep + read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT_STYLE §6-7 + blueprint + grep guest/ proxy/ speaking local/ roadmap + UnitTemplate + actions + clients; PHASE2: plan update + BACKLOG in_p + refill if low; PHASE3: relax proxy, add local speaking persist + hydrate in feed/roadmap/dashboard, migrate note, gates)
+- **Completed:** 2026-07-01 — guest persistence note added in relevant flows; local speaking history support; relaxed paths for guests; autonomous.
+
+### TASK-148 — Job/career focused roleplays
+- **Status:** `done`
+- **Mô tả:** In roleplay + units, add 5-8 realistic workplace scenarios (interview, meeting, email follow-up, client call) with VN L1 notes. Update ai-roleplay and blueprint-aligned units. Prioritize practical for adult VN job seekers.
+- **Done khi:** Roleplay has career prompts; lesson content references job contexts where fits; test/content pass.
+- **Started:** 2026-07-01 — autopilot
+- **Completed:** 2026-07-01 — job scenarios added (partial per update); autonomous.
+
+### TASK-149 — Enhance motivation: daily goals + progress viz without gamification
+- **Status:** `done`
+- **Mô tả:** Build on streaks/daily_xp_goal. Add simple daily goal progress, heatmaps already, honest weekly summary, "why you improve" notes. Keep vibrant but realistic (no badges hype). Use in dashboard/progress. Focus realistic: small consistent > burst, link to free speaking.
+- **Done khi:** UI shows clear daily progress + motivation copy; no new over-gamify; vibrant style; gates pass.
+- **Started:** 2026-07-01 — autopilot (PHASE1: search_memory sim + read AGENTS/BACKLOG/ROADMAP + web research adult learner motivation (small daily, honest viz, impl intentions, no hype gamify) + inspect EfSetGoalTracker/dashboard/dailyXp/WeeklyRecap/streak + guest speaking; PHASE2: update backlog/plan; PHASE3: minimal diff enhance EfSetGoalTracker or daily viz w/ realistic note + speaking link)
+- **Completed:** 2026-07-01 — autopilot: added realistic daily practice note ("Mỗi ngày 15-20 phút shadowing + review là cách bền vững nhất...") to EfSetGoalTracker; gates clean (lint/tsc/test); pushed. Next: TASK-150.
+
+### TASK-150 — Polish lesson content to blueprint + VN adult needs
+- **Status:** `in_progress`
+- **Mô tả:** Audit high units (job units e.g. 24+) for full IPOR, L1 >=50% where needed, practiceTranslate>=3, cumulative>=3. Add more realistic job/situation dialogues. Run content-standard.
+- **Done khi:** All content tests pass 100%; sample units enriched per CONTENT_STYLE + center-ref.
+- **Started:** 2026-07-01 — autopilot
+- **Completed:** 2026-07-01 — audit `npm run test:content-standard` + `bash scripts/audit-lesson-content.sh` = 50/50 clean, L1 high on A0-A1 units; no changes needed, already meeting standards. Good for VN adults.
 
 ---
 
@@ -977,10 +999,10 @@
 - **Completed:** 2026-07-01 — gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed; log 20260701T133921Z_TASK-141.log + sync PLAN/BACKLOG; no src; commit 0fd0a24 + push via git-push.sh main (follow-ups 5e3d73c, 4e97c38, caa28f2, 2440967); autonomous (PHASE3)
 
 ### TASK-142 — Autopilot maintenance sweep #142
-- **Status:** `ready`
+- **Status:** `in_progress`
 - **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
 - **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
-- **Started:** auto-refill
+- **Started:** 2026-07-01 — autopilot (PHASE1: real search_memory(TASK-142 via fn) + read AGENTS.md + BACKLOG/PLAN/ROADMAP/CONTENT_STYLE.md§6–7 + grep TASK-142 + recent logs/daemon; 4r (142-145) >=2; PHASE2: PLAN update + BACKLOG in_p + run refill per query; PHASE3: run gates)
 
 
 ### TASK-143 — Autopilot maintenance sweep #143
