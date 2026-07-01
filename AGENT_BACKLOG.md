@@ -868,7 +868,7 @@
 - **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
 - **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
 - **Started:** 2026-07-01 — autopilot (PHASE1: real search_memory(TASK-129)+read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6–7 + grep TASK-129 + recent logs; 2r>=2; PHASE2 PLAN+BACKLOG in_p)
-- **Completed:** 2026-07-01 — gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed; log written 20260701T104002Z_TASK-129.log; BACKLOG+PLAN+nhật ký synced; commit + push via git-push.sh main; no src edit; autonomous (PHASE3)
+- **Completed:** 2026-07-01 — gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed; log written 20260701T104002Z_TASK-129.log; BACKLOG+PLAN+nhật ký synced; commit afc02df + push via git-push.sh main (follow-up 74938ca); no src edit; autonomous (PHASE3)
 
 ### TASK-130 — Autopilot maintenance sweep #130
 - **Status:** `ready`
