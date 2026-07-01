@@ -923,10 +923,11 @@
 
 
 ### TASK-137 — Autopilot maintenance sweep #137
-- **Status:** `ready`
+- **Status:** `done`
 - **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
 - **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
-- **Started:** auto-refill
+- **Started:** 2026-07-01 — autopilot (PHASE1: search_memory("TASK-137 maintenance sweep") via logs/grep + read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT_STYLE.md§6–7 + grep TASK-137 + recent logs/daemon; 3 ready >=2; PHASE2 PLAN+BACKLOG in_p (skip refill))
+- **Completed:** 2026-07-01 — gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed; log written 20260701T130343Z_TASK-137.log; BACKLOG+PLAN+nhật ký synced; commit + push via git-push.sh main; no src edit; autonomous (PHASE3)
 
 ### TASK-138 — Autopilot maintenance sweep #138
 - **Status:** `ready`
@@ -951,7 +952,7 @@
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
 | 2026-07-01 | TASK-136 | PHASE1: search_memory via logs/grep + read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT_STYLE.md§6–7 + grep TASK-136; 4r>=2; PHASE2 PLAN update + BACKLOG in_p (skip refill); PHASE3: gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix + log 20260701T125000Z_TASK-136.log + sync PLAN/BACKLOG; no src; commit cb0a4e7 + push via git-push.sh main (follow-up 99440fc, ea53345) | done — cb0a4e7 |
-| 2026-07-01 | TASK-137 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-07-01 | TASK-137 | gates clean no fix + log 20260701T130343Z_TASK-137.log + sync PLAN/BACKLOG; no src; commit+push via git-push.sh main | done — (pending SHA) |
 | 2026-07-01 | TASK-138 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-01 | TASK-139 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-01 | TASK-134 | PHASE1: search_memory + read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6–7 + grep; 3r>=2 skip refill; PHASE2 plan+backlog in_p; PHASE3: gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix + log 20260701T123125Z_TASK-134.log + sync; no src; commit+push via git-push.sh main | done — (pending SHA) |
