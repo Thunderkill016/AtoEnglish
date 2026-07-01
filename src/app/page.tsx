@@ -268,9 +268,9 @@ export default function LandingPage() {
 
               {/* Subheadline */}
               <p className="animate-fade-in-up animation-delay-150 text-base sm:text-lg lg:text-xl text-zinc-600 dark:text-zinc-350 max-w-2xl mx-auto leading-relaxed font-normal">
-                Phương pháp khoa học giúp bạn tự tin giao tiếp thực tế từ con số 0.
+                Luyện phản xạ nói thực tế cho người Việt.
                 <br className="hidden sm:block" />
-                Luyện nói chủ động ngay từ những bài học đầu tiên.
+                Học theo phương pháp IPOR + FSRS, thực hành ngay từ bài đầu.
               </p>
 
               <HeroCTA />

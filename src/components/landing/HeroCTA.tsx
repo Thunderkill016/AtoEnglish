@@ -7,10 +7,10 @@ import { Button } from "@/components/ui/button";
 import { checkHasSession } from "@/lib/auth-check";
 
 const QUICK_STATS = [
-  { icon: "🔥", text: "2,400+ học viên active" },
-  { icon: "📚", text: "50 bài học A0 → B2" },
-  { icon: "⭐", text: "4.9/5 đánh giá" },
-  { icon: "🎁", text: "Miễn phí 100%" },
+  { icon: "🆓", text: "Miễn phí Open Beta" },
+  { icon: "🗣️", text: "Luyện nói Shadowing + Roleplay" },
+  { icon: "🔁", text: "Ôn tập bằng FSRS" },
+  { icon: "🇻🇳", text: "Dành cho người Việt" },
 ];
 
 export default function HeroCTA() {

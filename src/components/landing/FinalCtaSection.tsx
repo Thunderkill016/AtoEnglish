@@ -49,14 +49,14 @@ export default function FinalCtaSection() {
 
           <ScrollReveal delayMs={150} className="flex flex-col items-center gap-4">
             <Link
-              href={isLoggedIn ? "/dashboard" : "/login"}
+              href={isLoggedIn ? "/dashboard" : "/learn"}
               prefetch={false}
               className="w-full sm:w-auto"
             >
               <Button className="w-full sm:w-auto sm:min-w-[280px] justify-center bg-emerald-600 hover:bg-emerald-500 dark:bg-emerald-600 dark:hover:bg-emerald-500 text-white font-bold h-14 px-10 rounded-2xl shadow-lg shadow-emerald-600/15 dark:shadow-emerald-500/10 hover:shadow-emerald-500/25 hover:scale-[1.01] active:scale-[0.97] transition-all duration-300 gap-2.5">
                 {isLoggedIn
                   ? "Vào Dashboard ngay"
-                  : "Bắt đầu học ngay"}
+                  : "Học thử ngay (không cần đăng nhập)"}
                 <ArrowRight className="size-5" />
               </Button>
             </Link>

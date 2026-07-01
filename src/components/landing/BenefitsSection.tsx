@@ -16,8 +16,8 @@ export default function BenefitsSection() {
     },
     {
       icon: Wallet,
-      title: "Tiết kiệm 90% chi phí",
-      desc: "Trải nghiệm luyện nói giao tiếp phản xạ chất lượng tương đương học 1-1 với giáo viên bản xứ, nhưng với mức học phí tối giản nhất.",
+      title: "Miễn phí trong Open Beta",
+      desc: "Hiện tại bạn có thể dùng toàn bộ tính năng luyện nói, shadowing và ôn tập FSRS mà không mất phí.",
     },
   ];
 

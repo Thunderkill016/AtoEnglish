@@ -80,7 +80,7 @@ export default function TestimonialsSection() {
       </div>
 
       <div className="mx-auto max-w-6xl">
-        {/* Header */}
+        {/* Header - honest */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -90,90 +90,41 @@ export default function TestimonialsSection() {
         >
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-xs font-bold uppercase tracking-wider">
             <Quote className="size-3.5" />
-            Học viên nói gì về AtoEnglish
+            Thực tế về AtoEnglish
           </div>
           <h2 className="text-3xl sm:text-4xl font-black tracking-tight text-zinc-900 dark:text-zinc-50">
-            Kết quả{" "}
-            <span className="bg-gradient-to-r from-emerald-600 to-teal-500 bg-clip-text text-transparent dark:from-emerald-400 dark:to-teal-400">
-              thực tế
-            </span>{" "}
-            từ người Việt
+            Một dự án nhỏ đang phát triển
           </h2>
           <p className="text-zinc-500 dark:text-zinc-400 text-sm sm:text-base max-w-xl mx-auto">
-            Hàng nghìn học viên người Việt đã cải thiện tiếng Anh với AtoEnglish — đây là câu chuyện của họ.
+            Không có hàng nghìn học viên. Không có con số ảo. Chỉ có công cụ để bạn tự luyện nói mỗi ngày.
           </p>
         </motion.div>
 
-        {/* Testimonial Grid */}
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-60px" }}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"
-        >
-          {TESTIMONIALS.map((t) => (
-            <motion.div
-              key={t.name}
-              variants={cardVariants}
-              className="group relative rounded-2xl border border-zinc-200/60 dark:border-zinc-800/60 bg-white/60 dark:bg-zinc-900/30 backdrop-blur-sm p-6 space-y-4 hover:border-emerald-500/30 hover:shadow-lg hover:shadow-emerald-500/5 transition-all duration-300"
-            >
-              {/* Quote icon */}
-              <Quote className="size-6 text-emerald-500/30 dark:text-emerald-500/20 fill-current absolute top-5 right-5" />
-
-              {/* Stars */}
-              <div className="flex gap-0.5">
-                {Array.from({ length: t.rating }).map((_, i) => (
-                  <Star key={i} className="size-4 text-amber-400 fill-amber-400" />
-                ))}
-              </div>
-
-              {/* Outcome badge */}
-              <div className="inline-flex items-center text-xs font-bold text-emerald-700 dark:text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-1 rounded-lg">
-                ✅ {t.outcome}
-              </div>
-
-              {/* Review text */}
-              <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
-                &ldquo;{t.text}&rdquo;
-              </p>
-
-              {/* Reviewer */}
-              <div className="flex items-center gap-3 pt-1 border-t border-zinc-100 dark:border-zinc-800/60">
-                <div className={`size-9 rounded-full ${t.avatarBg} flex items-center justify-center text-white text-xs font-black shrink-0`}>
-                  {t.avatar}
-                </div>
-                <div>
-                  <p className="text-sm font-bold text-zinc-900 dark:text-zinc-50">{t.name}</p>
-                  <p className="text-xs text-zinc-500 dark:text-zinc-400">{t.role}</p>
-                </div>
-              </div>
-            </motion.div>
-          ))}
-        </motion.div>
-
-        {/* Trust stats row */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.3 }}
-          className="mt-14 grid grid-cols-2 sm:grid-cols-4 gap-6 text-center"
-        >
+        {/* Honest cards - keep the beautiful glass design */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {[
-            { value: "4.9/5", label: "Đánh giá trung bình" },
-            { value: "92%", label: "Học viên duy trì ≥30 ngày" },
-            { value: "3.2×", label: "Tốc độ nhớ từ so với học thông thường" },
-            { value: "15 phút", label: "Thời gian học tối thiểu mỗi ngày" },
-          ].map((stat) => (
-            <div key={stat.label} className="space-y-1">
-              <p className="text-2xl sm:text-3xl font-black bg-gradient-to-r from-emerald-600 to-teal-500 bg-clip-text text-transparent dark:from-emerald-400 dark:to-teal-400">
-                {stat.value}
+            { title: "Thử mà không cần tài khoản", text: "Bạn có thể vào học thử ngay (guest mode). Tiến độ lưu cục bộ trên trình duyệt." },
+            { title: "Tập trung vào nói", text: "Mỗi bài có Shadowing (nhại theo) và Roleplay tình huống thực tế. Không chỉ đọc chép." },
+            { title: "Ôn tập FSRS miễn phí", text: "Dùng thuật toán FSRS mã nguồn mở để nhắc ôn đúng lúc sắp quên." },
+            { title: "Open Beta", text: "Dự án đang phát triển. Sẽ được cải thiện dựa trên phản hồi người dùng thật." },
+          ].map((note, idx) => (
+            <div
+              key={idx}
+              className="group relative rounded-2xl border border-zinc-200/60 dark:border-zinc-800/60 bg-white/60 dark:bg-zinc-900/30 backdrop-blur-sm p-6 space-y-4 hover:border-emerald-500/30 hover:shadow-lg hover:shadow-emerald-500/5 transition-all duration-300 flex flex-col"
+            >
+              <div className="text-emerald-600 dark:text-emerald-400 font-bold text-sm">
+                {note.title}
+              </div>
+              <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed flex-1">
+                {note.text}
               </p>
-              <p className="text-xs text-zinc-500 dark:text-zinc-400 leading-tight">{stat.label}</p>
             </div>
           ))}
-        </motion.div>
+        </div>
+
+        <p className="mt-10 text-center text-xs text-zinc-500 dark:text-zinc-400">
+          Muốn xem thực tế? Bấm “Học thử ngay” — không cần đăng nhập.
+        </p>
       </div>
     </section>
   );
