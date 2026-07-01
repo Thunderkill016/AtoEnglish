@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
-import { Star, BookOpen, Zap, Flame, ChevronRight } from "lucide-react";
+import { ChevronLeft, Star, BookOpen, Zap, Flame, ChevronRight } from "lucide-react";
 import { toast } from "sonner";
 import confetti from "canvas-confetti";
 
@@ -22,16 +22,24 @@ import SpeakingSection from "./sections/SpeakingSection";
 import QuizSection from "./sections/QuizSection";
 import TranslateSection from "./sections/TranslateSection";
 import FluencySection from "./sections/FluencySection";
-import LessonHeader from "./lesson-ui/LessonHeader";
 import type { ReadingPassage } from "@/components/exercises/ReadingComprehensionExercise";
-import {
-  SECTION_ORDER,
-  TOTAL_SECTIONS,
-  MINI_SESSION_START,
-  MINI_SESSION_QUIZ,
-  type SectionNumber,
-} from "@/lib/lessons/learning-flow";
-import { enrichUnitForLearning } from "@/lib/lessons/enrich-unit";
+
+// ─── Section order & labels (10 steps, Hybrid pedagogical flow) ───────────────
+const SECTION_LABELS: Record<number, string> = {
+  1: "Khởi động",
+  2: "Từ vựng",
+  3: "Ngữ pháp",
+  4: "Luyện tập",
+  5: "Hội thoại",
+  10: "Phản xạ",
+  9: "Dịch câu",
+  6: "Shadowing",
+  7: "Luyện nói",
+  8: "Hoàn thành",
+};
+const SECTION_ORDER = [1, 2, 3, 4, 5, 10, 9, 6, 7, 8] as const;
+type SectionNumber = (typeof SECTION_ORDER)[number];
+const TOTAL_SECTIONS = SECTION_ORDER.length;
 
 // ─── Interfaces ──────────────────────────────────────────────────────────────
 export interface VocabItem {
@@ -230,8 +238,6 @@ export interface UnitData {
 interface UnitTemplateProps {
   unit: UnitData;
   nextRoute?: string;
-  /** Deep-link ?mini=1 — skip to practice + quiz (~15 phút) */
-  startMiniSession?: boolean;
 }
 
 interface CompletionData {
@@ -343,16 +349,11 @@ function VideoShadowingCard({ videoId }: { videoId: string }) {
   );
 }
 
-export default function UnitTemplate({
-  unit: rawUnit,
-  nextRoute = "/dashboard",
-  startMiniSession = false,
-}: UnitTemplateProps) {
-  const unit = enrichUnitForLearning(rawUnit);
-  const [section, setSection] = useState<number>(startMiniSession ? MINI_SESSION_START : 1);
+export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTemplateProps) {
+  const [section, setSection] = useState<number>(1);
   const [isCompleted, setIsCompleted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [miniSession, setMiniSession] = useState(startMiniSession);
+  const [miniSession, setMiniSession] = useState(false);
   const [sessionBreak, setSessionBreak] = useState(false); // mid-lesson break after Practice
   const [completionData, setCompletionData] = useState<CompletionData | null>(null);
 
@@ -422,25 +423,23 @@ export default function UnitTemplate({
     getUnitCompletionStatus(normalizedUnit.unitId).then((res) => {
       if (res.success && res.completed) setIsCompleted(true);
     });
+    // Guest local fallback for self-study
     try {
-      if (startMiniSession) {
-        localStorage.setItem(
-          `lesson-progress-${normalizedUnit.unitId}`,
-          JSON.stringify({ section: 4, mini: true })
-        );
-        return;
+      const guestDone = JSON.parse(localStorage.getItem("guest_completed_units") || "[]");
+      if (Array.isArray(guestDone) && guestDone.includes(normalizedUnit.unitId)) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setIsCompleted(true);
       }
+    } catch {}
+    try {
       const saved = localStorage.getItem(`lesson-progress-${normalizedUnit.unitId}`);
       if (saved) {
-        const parsed = JSON.parse(saved) as { section: number; mini?: boolean };
-        if (parsed.section > 1 && parsed.section < TOTAL_SECTIONS) {
-          // eslint-disable-next-line react-hooks/set-state-in-effect -- restore saved lesson progress from localStorage
-          setSection(parsed.section);
-          if (parsed.mini) setMiniSession(true);
-        }
+        const { section: savedSection } = JSON.parse(saved) as { section: number };
+         
+        if (savedSection > 1 && savedSection < TOTAL_SECTIONS) setSection(savedSection);
       }
     } catch { /* ignore */ }
-  }, [normalizedUnit.unitId, startMiniSession]);
+  }, [normalizedUnit.unitId]);
 
   useEffect(() => {
     return () => {
@@ -457,12 +456,9 @@ export default function UnitTemplate({
     if (isLastSection) {
       localStorage.removeItem(`lesson-progress-${normalizedUnit.unitId}`);
     } else if (!isFirstSection && orderIdx > 0) {
-      localStorage.setItem(
-        `lesson-progress-${normalizedUnit.unitId}`,
-        JSON.stringify({ section, mini: miniSession })
-      );
+      localStorage.setItem(`lesson-progress-${normalizedUnit.unitId}`, JSON.stringify({ section }));
     }
-  }, [section, miniSession, normalizedUnit.unitId]);
+  }, [section, normalizedUnit.unitId]);
 
   // Settings
   const userSettings = (() => {
@@ -548,8 +544,8 @@ export default function UnitTemplate({
   const goNext = () => {
     window.speechSynthesis?.cancel();
     // S3-2: Micro-session mode — after Practice (4) jump straight to Quiz (8)
-    if (miniSession && section === MINI_SESSION_START) {
-      setSection(MINI_SESSION_QUIZ);
+    if (miniSession && section === 4) {
+      setSection(8);
       window.scrollTo({ top: 0, behavior: "smooth" });
       return;
     }
@@ -788,6 +784,24 @@ export default function UnitTemplate({
       const prev = Number(localStorage.getItem(xpSyncKey) ?? 0);
       localStorage.setItem(xpSyncKey, String(prev + earnedXp));
       window.dispatchEvent(new CustomEvent("ato:xp-earned", { detail: { xp: earnedXp } }));
+    } else if (res.error && res.error.includes("đăng nhập")) {
+      // Guest self-study fallback
+      setIsCompleted(true);
+      try {
+        const key = "guest_completed_units";
+        const arr = JSON.parse(localStorage.getItem(key) || "[]");
+        const nextArr = Array.isArray(arr) ? [...new Set([...arr, normalizedUnit.unitId])] : [normalizedUnit.unitId];
+        localStorage.setItem(key, JSON.stringify(nextArr));
+      } catch {}
+      toast.success("🎉 Hoàn thành! (Chế độ khách — lưu cục bộ)");
+      setCompletionData({
+        xpEarned: xpToEarn,
+        starCount: effectiveStarCount,
+        effectiveScore,
+        newStreak: 0,
+        vocabPreview: normalizedUnit.vocab.slice(0, 5).map(v => ({ word: v.word, meaning: v.meaning })),
+        nextRoute,
+      });
     } else {
       toast.error(res.error || "Có lỗi xảy ra");
     }
@@ -795,39 +809,139 @@ export default function UnitTemplate({
   };
 
   const sectionOrderIdx = SECTION_ORDER.indexOf(section as SectionNumber);
+  const progress = Math.round((sectionOrderIdx / (TOTAL_SECTIONS - 1)) * 100);
 
   return (
-    <div className="relative min-h-screen bg-[var(--minimal-canvas)] dark:bg-background text-foreground">
+    <div className="min-h-screen bg-gradient-to-br from-zinc-950 via-zinc-900 to-emerald-950/20">
+      {/* Sticky Header */}
+      <div className="sticky top-0 z-40 bg-zinc-950/80 backdrop-blur-xl border-b border-zinc-800/60">
+        <div className="max-w-3xl mx-auto px-4 py-3">
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-2 min-w-0">
+              <Link
+                href="/dashboard"
+                aria-label="Về Dashboard"
+                className="shrink-0 flex items-center justify-center w-7 h-7 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-white transition-colors"
+              >
+                <ChevronLeft size={16} />
+              </Link>
+              <div className="min-w-0">
+                <p className="text-xs text-zinc-500">{normalizedUnit.level}</p>
+                <p className="text-sm font-semibold text-white truncate max-w-[130px] sm:max-w-xs">
+                  {normalizedUnit.title}
+                </p>
+              </div>
+            </div>
+            <div className="text-right shrink-0 flex items-center gap-2">
+              {/* S2-3: Live session XP counter */}
+              {sessionXp > 0 && (
+                <div className="relative flex items-center gap-1 text-[11px] font-black px-2.5 py-1 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
+                  ⚡ {sessionXp} XP
+                  {xpPopup && (
+                    <span
+                      key={xpPopup.id}
+                      className="absolute -top-5 left-1/2 -translate-x-1/2 text-[10px] font-black text-emerald-300 animate-bounce pointer-events-none"
+                    >
+                      +{xpPopup.value}
+                    </span>
+                  )}
+                </div>
+              )}
+              {/* S3-2: Mini-session toggle / active indicator */}
+              {miniSession ? (
+                <div className="flex items-center gap-1 text-[11px] font-black px-2.5 py-1 rounded-xl bg-amber-500/15 border border-amber-500/40 text-amber-300">
+                  ⚡ <span>5 phút</span>
+                </div>
+              ) : section < 8 && (
+                <button
+                  onClick={() => {
+                    setMiniSession(true);
+                    setSection(4);
+                    try {
+                      localStorage.setItem(
+                        `lesson-progress-${normalizedUnit.unitId}`,
+                        JSON.stringify({ section: 4 })
+                      );
+                    } catch { /* ignore */ }
+                  }}
+                  className="flex items-center gap-1.5 text-[11px] font-bold px-3 py-1.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-400 hover:bg-amber-500/20 hover:border-amber-500/50 transition-all whitespace-nowrap active:scale-95"
+                  title="Bỏ qua các phần đầu, chỉ làm luyện tập + quiz ~5 phút"
+                >
+                  ⚡ <span>Ôn nhanh</span>
+                  <span className="text-amber-500/60 text-[9px] font-bold">~5p</span>
+                </button>
+              )}
+              <div>
+                <p className="text-xs text-zinc-500">{SECTION_LABELS[section] ?? "Học"}</p>
+                <p className="text-sm font-bold text-emerald-400">
+                  {sectionOrderIdx + 1}/{TOTAL_SECTIONS}
+                </p>
+              </div>
+            </div>
+          </div>
 
-      <LessonHeader
-        level={normalizedUnit.level}
-        title={normalizedUnit.title}
-        unitId={normalizedUnit.unitId}
-        section={section}
-        sectionOrderIdx={sectionOrderIdx}
-        totalSections={TOTAL_SECTIONS}
-        sessionXp={sessionXp}
-        xpPopup={xpPopup}
-        miniSession={miniSession}
-        allowMiniSession={isCompleted}
-        onStartMiniSession={() => {
-          setMiniSession(true);
-          setSection(4);
-          try {
-            localStorage.setItem(
-              `lesson-progress-${normalizedUnit.unitId}`,
-              JSON.stringify({ section: 4, mini: true })
-            );
-          } catch { /* ignore */ }
-        }}
-        onClearProgress={() => {
-          try {
-            localStorage.removeItem(`lesson-progress-${normalizedUnit.unitId}`);
-          } catch { /* ignore */ }
-        }}
-      />
+          {/* Step dots progress */}
+          <div
+            className="flex items-center gap-0 mt-2"
+            role="progressbar"
+            aria-valuenow={progress}
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-label={`Tiến độ bài học: bước ${sectionOrderIdx + 1} / ${TOTAL_SECTIONS}`}
+          >
+            {SECTION_ORDER.map((secNum, i) => {
+              const isSecCompleted = i < sectionOrderIdx;
+              const isSecCurrent = i === sectionOrderIdx;
+              return (
+                <div key={secNum} className="flex items-center flex-1 min-w-0">
+                  <div
+                    className={`relative flex items-center justify-center rounded-full shrink-0 transition-all duration-300 ${
+                      isSecCurrent
+                        ? "w-7 h-7 bg-emerald-500 ring-2 ring-emerald-400/50 ring-offset-1 ring-offset-zinc-950 shadow-lg shadow-emerald-900/60"
+                        : isSecCompleted
+                        ? "w-5 h-5 bg-emerald-800"
+                        : "w-5 h-5 bg-zinc-800"
+                    }`}
+                  >
+                    {isSecCompleted ? (
+                      <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+                        <path
+                          d="M2 5l2 2 4-4"
+                          stroke="#34d399"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                    ) : (
+                      <span
+                        className={`font-bold tabular-nums leading-none select-none ${
+                          isSecCurrent ? "text-white text-[11px]" : "text-zinc-600 text-[9px]"
+                        }`}
+                      >
+                        {i + 1}
+                      </span>
+                    )}
+                    {isSecCurrent && (
+                      <span className="absolute inset-0 rounded-full bg-emerald-400/20 animate-ping" />
+                    )}
+                  </div>
+                  {i < SECTION_ORDER.length - 1 && (
+                    <div
+                      className={`h-px flex-1 mx-0.5 transition-all duration-500 ${
+                        i < sectionOrderIdx ? "bg-emerald-700" : "bg-zinc-800"
+                      }`}
+                    />
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
 
-      <div className="relative z-10 max-w-3xl mx-auto px-4 py-5 sm:py-8 pb-28">
+      {/* Main Content Area */}
+      <div className="max-w-3xl mx-auto px-4 py-4 sm:py-8 pb-24">
         <AnimatePresence mode="wait">
 
           {/* ── Session Break Card (between Practice and Dialogue) ── */}
@@ -837,7 +951,7 @@ export default function UnitTemplate({
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0 }}
-              className="rounded-3xl border border-emerald-500/25 bg-zinc-900/80 backdrop-blur-sm p-6 sm:p-8 space-y-6 text-center"
+              className="rounded-3xl border border-emerald-500/20 bg-gradient-to-b from-emerald-500/8 to-teal-500/5 p-6 sm:p-8 space-y-6 text-center"
             >
               {/* Congrats badge */}
               <div className="flex size-16 mx-auto items-center justify-center rounded-2xl bg-emerald-500/10 text-3xl">
@@ -845,10 +959,10 @@ export default function UnitTemplate({
               </div>
               <div>
                 <p className="text-xs font-black text-emerald-500 uppercase tracking-widest mb-1">Phần 1 hoàn thành!</p>
-                <h3 className="text-lg sm:text-xl font-black text-white leading-tight">
+                <h3 className="text-lg sm:text-xl font-black text-zinc-900 dark:text-zinc-50 leading-tight">
                   Bạn đã học xong ~15 phút đầu tiên
                 </h3>
-                <p className="text-sm text-zinc-400 mt-1.5 max-w-sm mx-auto">
+                <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1.5 max-w-sm mx-auto">
                   Nghỉ ngơi hoặc tiếp tục ngay Phần 2 — Hội thoại, Shadowing, Luyện nói và Hoàn thành.
                 </p>
               </div>
@@ -935,20 +1049,6 @@ export default function UnitTemplate({
               playWrongSound={playWrongSound}
               goNext={goNext}
             />
-          )}
-
-          {section === 4 && miniSession && !sessionBreak && (
-            <motion.div
-              key="mini-banner"
-              initial={{ opacity: 0, y: -6 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="mb-4 rounded-2xl border border-amber-500/25 bg-amber-500/8 px-4 py-3 text-sm text-amber-200/90"
-            >
-              <p className="font-bold text-amber-300">⚡ Chế độ ôn nhanh (~5 phút)</p>
-              <p className="text-xs text-amber-200/70 mt-0.5">
-                Luyện tập → Quiz. Muốn học đủ 10 bước? Chọn <strong className="text-amber-100">Bài đầy đủ</strong> ở góc trên.
-              </p>
-            </motion.div>
           )}
 
           {section === 4 && !sessionBreak && (
@@ -1211,19 +1311,6 @@ export default function UnitTemplate({
                   >
                     Bài tiếp theo <ChevronRight size={18} />
                   </Link>
-                  {miniSession && (
-                    <Link
-                      href={`/learn/${normalizedUnit.unitId}`}
-                      onClick={() => {
-                        try {
-                          localStorage.removeItem(`lesson-progress-${normalizedUnit.unitId}`);
-                        } catch { /* ignore */ }
-                      }}
-                      className="w-full flex items-center justify-center gap-2 bg-amber-500/10 hover:bg-amber-500/15 border border-amber-500/25 text-amber-300 font-bold rounded-2xl py-3 text-sm transition-colors"
-                    >
-                      Học bài đầy đủ (~40 phút)
-                    </Link>
-                  )}
                   <div className="flex gap-3">
                     <Link
                       href="/flashcards"

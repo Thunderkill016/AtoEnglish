@@ -34,11 +34,12 @@ export async function updateSession(request: NextRequest) {
 
   const pathname = request.nextUrl.pathname;
   const protectedRoutes = [
-    "/dashboard",
-    "/learn",
-    "/flashcards",
+    // Core learning opened for self-study guest mode (no login)
+    // "/dashboard",
+    // "/learn",
+    // "/flashcards",
+    // "/speaking",
     "/progress",
-    "/speaking",
     "/roadmap",
     "/writing",
     "/leaderboard",
