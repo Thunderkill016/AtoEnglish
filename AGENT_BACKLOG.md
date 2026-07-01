@@ -1140,10 +1140,11 @@
 
 
 ### TASK-165 — Autopilot maintenance sweep #165
-- **Status:** `ready`
+- **Status:** `done`
 - **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
 - **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
-- **Started:** auto-refill
+- **Started:** 2026-07-01 — autopilot (PHASE1: search_memory("TASK-165 maintenance sweep") real + read AGENTS.md (ALWAYS), AGENT_BACKLOG/PLAN/ROADMAP, CONTENT_STYLE.md §6–7 + grep TASK-165 + maintenance sweeps + logs/agent/* + BACKLOG/PLAN; confirm 3 ready >=2 pre in_p; files: AGENT_BACKLOG.md AGENT_PLAN.md logs/agent/* (unless fix 1st failure); PHASE2: PLAN update + BACKLOG in_p + run refill per instr (read ROADMAP); PHASE3: gates + first-fail fix minimal if any + sync)
+- **Completed:** 2026-07-01 — gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed; log 20260701T164500Z_TASK-165.log + BACKLOG/PLAN/nhật ký synced; no src edit; commit + push via git-push.sh main; autonomous (PHASE3)
 
 ### TASK-166 — Autopilot maintenance sweep #166
 - **Status:** `ready`
@@ -1169,7 +1170,7 @@
 |------|------|--------|--------|
 | 2026-07-01 | TASK-163 | gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed; log 20260701T163005Z_TASK-163.log + sync PLAN/BACKLOG; no src edit; commit + push via git-push.sh main; autonomous | done — (pending SHA) |
 | 2026-07-01 | TASK-164 | gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed; log 20260701T163727Z_TASK-164.log + sync PLAN/BACKLOG; no src edit; commit + push via git-push.sh main; autonomous | done — (pending SHA) |
-| 2026-07-01 | TASK-165 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-07-01 | TASK-165 | gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed; log 20260701T164500Z_TASK-165.log + sync PLAN/BACKLOG; no src edit; commit + push via git-push.sh main; autonomous | done — (pending SHA) |
 | 2026-07-01 | TASK-166 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-01 | TASK-167 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-01 | TASK-162 | gates clean (tsc0+lint0+170t+cs50/50+audit50/50) after 1 min first-fail type fix (jobScenarios l1Note); log 20260701T162212Z_TASK-162.log + sync; commit + push via git-push.sh main; autonomous | done — (SHA pending) |
