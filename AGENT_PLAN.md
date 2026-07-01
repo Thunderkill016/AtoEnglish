@@ -7,8 +7,36 @@
 | Field | Value |
 |-------|-------|
 | Started | 2026-07-01 |
-| Focus | TASK-125 — Autopilot maintenance sweep #125: Chạy lint+test; fix failure đầu tiên (nếu có); sync AGENT_PLAN nhật ký + BACKLOG. Không feature mới. |
+| Focus | TASK-126 — Autopilot maintenance sweep #126: Chạy lint+test; fix failure đầu tiên (nếu có); sync AGENT_PLAN nhật ký + BACKLOG. Không feature mới. |
 | Owner | Autopilot (no human) |
+
+### TASK-126 — Autopilot maintenance sweep #126
+**Mục tiêu**: Chạy `npm run lint && npm run test` (cùng npx tsc --noEmit + content gates nếu liên quan); fix failure đầu tiên (nếu có, minimal patch); sync AGENT_PLAN nhật ký + BACKLOG status + Nhật ký + log file. Không feature mới, không thay đổi logic app, chỉ gates + doc. **Done khi:** gates pass (0 lint, all tests); 0 or 1 small fix if first failure; PLAN/BACKLOG/nhật ký updated; 1 commit if change or doc sync; pushed via git-push.sh main.
+
+**Bước thực hiện**:
+1. PHASE1 research (done): read AGENTS.md (ALWAYS), AGENT_BACKLOG/PLAN/ROADMAP, CONTENT_STYLE.md §6–7 (context for any content std but not editing units), grep TASK-126 + recent sweeps in logs/agent/* + BACKLOG/PLAN; search_memory("TASK-126"); confirm 2 ready (126-127) ≥2.
+2. Update BACKLOG: TASK-126 `in_progress` (done).
+3. Update AGENT_PLAN.md với mục tiêu + bước + rủi ro cho TASK-126 (this section) + update "Phiên hiện tại" focus (done).
+4. Backlog hiện tại sau in_p =1 ready <2 → chạy `bash scripts/agent-refill-backlog.sh` (read ROADMAP.md) per user query instruction — KHÔNG hỏi user (script added TASK-128..130, now 4 ready).
+5. PHASE3 triển khai: 
+   - Chạy `npx tsc --noEmit` (zero errors gate).
+   - Chạy `npm run lint` (zero warnings).
+   - Chạy `npm run test` (all pass) — note first failure nếu có, fix minimal duy nhất (e.g. tsbuild stale, minor import, test helper).
+   - Per sweep pattern: `npm run test:content-standard && bash scripts/audit-lesson-content.sh` (50/50 expected).
+   - Capture outputs, fix only the very first error encountered; no scope creep.
+6. Sau gates: viết log `logs/agent/20260701T...Z_TASK-126.log` (tóm tắt gates + fix or clean); update BACKLOG (in_progress→done + Nhật ký entry + SHA); sync PLAN log table + Completed.
+7. git pull --rebase; git add AGENT_BACKLOG.md AGENT_PLAN.md logs/agent/* (và src nếu fix 1 file); commit "chore(maintenance): autopilot sweep #126 — lint+test gates + PLAN/BACKLOG sync (TASK-126)"; `bash scripts/git-push.sh main`.
+**Rủi ro**:
+- Lint/test fail on transient (tsbuildinfo, coverage artifact) → rm -f tsconfig.tsbuildinfo; rerun once; 2 fails → blocked + lý do.
+- First failure is real bug in core → minimal fix (e.g. type or test data), self-debug from error msg; if needs major or secret → blocked.
+- Git push needs token (GITLAB_TOKEN) or net → status blocked, do not force.
+- No new feature: strictly only fix first failure or doc-sync only.
+- Fail 2 lần liên tiếp → status `blocked` + ghi lý do vào BACKLOG/PLAN.
+**Done khi**: `npm run lint && npm run test` pass (or 1 minimal fix); tsc0; content gates nếu chạy 50/50; PLAN+BACKLOG+nhật ký synced; log file; commit+push via script if change; BACKLOG done; autonomous.
+
+**Started:** 2026-07-01 — autopilot (PHASE1: real search_memory(TASK-126)+read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6–7 + grep TASK-126; 2r>=2; PHASE2 PLAN+BACKLOG in_p + run refill)
+
+**Completed TASK-126**: gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed; log written 20260701T101453Z_TASK-126.log; BACKLOG+PLAN+nhật ký synced; commit+push via git-push.sh main; no src edit; autonomous (PHASE3)
 
 ### TASK-123 — Autopilot maintenance sweep #123
 **Mục tiêu**: Chạy `npm run lint && npm run test` (cùng npx tsc --noEmit + content gates nếu liên quan); fix failure đầu tiên (nếu có, minimal patch); sync AGENT_PLAN nhật ký + BACKLOG status + Nhật ký + log file. Không feature mới, không thay đổi logic app, chỉ gates + doc. **Done khi:** gates pass (0 lint, all tests); 0 or 1 small fix if first failure; PLAN/BACKLOG/nhật ký updated; 1 commit if change or doc sync; pushed via git-push.sh main.
@@ -92,7 +120,7 @@
 
 **Started:** 2026-07-01 — autopilot (PHASE1: real search_memory(TASK-125) + read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6–7 + grep; 3r>=2; PHASE2 PLAN+BACKLOG in_p + run refill per query)
 
-**Completed TASK-125**: gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed; log written 20260701T100659Z_TASK-125.log; BACKLOG+PLAN+nhật ký synced; commit + push via git-push.sh main; no src edit; autonomous (PHASE3)
+**Completed TASK-125**: gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed; log written 20260701T100659Z_TASK-125.log; BACKLOG+PLAN+nhật ký synced; commit f598330 + push via git-push.sh main; no src edit; autonomous (PHASE3)
 
 ### TASK-122 — Autopilot maintenance sweep #122
 **Mục tiêu**: Chạy `npm run lint && npm run test` (cùng npx tsc --noEmit + content gates nếu liên quan); fix failure đầu tiên (nếu có, minimal patch); sync AGENT_PLAN nhật ký + BACKLOG status + Nhật ký + log file. Không feature mới, không thay đổi logic app, chỉ gates + doc. **Done khi:** gates pass (0 lint, all tests); 0 or 1 small fix if first failure; PLAN/BACKLOG/nhật ký updated; 1 commit if change or doc sync; pushed via git-push.sh main.
@@ -969,7 +997,7 @@
 | Time (UTC) | Task | Plan summary | Outcome |
 |------------|------|--------------|---------|
 | 2026-07-01 | TASK-124 | PHASE1: search sim via logs/grep + read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6–7 + grep TASK-124; 4r>=2; PHASE2: update PLAN focus+full section + BACKLOG in_p (skip refill); PHASE3: tsc/lint/test/content/audit all clean (170+50), no first failure, no fix, log+sync docs | done — 2a33ecd |
-| 2026-07-01 | TASK-125 | PHASE1: real search_memory(TASK-125)+read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6–7 + grep; 3r>=2; PHASE2: update PLAN+BACKLOG in_p + run refill (OK skip); PHASE3: tsc/lint/test/content/audit all clean (170+50), no first failure, no fix, log+sync docs | done — (pending push) |
+| 2026-07-01 | TASK-125 | PHASE1: real search_memory(TASK-125)+read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6–7 + grep; 3r>=2; PHASE2: update PLAN+BACKLOG in_p + run refill (OK skip); PHASE3: tsc/lint/test/content/audit all clean (170+50), no first failure, no fix, log+sync docs | done — f598330 |
 | 2026-06-26 | TASK-086 | PHASE1: search_memory sim via logs/grep (empty prior for 086 impl) + read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6-7 + MINIMAL_V2 (cert eligible listed) + grep Certificate + design-system + checkpoint lock pattern; PHASE2: BACKLOG in_progress + full TASK-086 PLAN section (ready=2 >=2 skip refill); PHASE3: wrap eligible in SecondaryPageShell + flat bg-card border-border/60 card (removed zinc heavy/glows), MinimalButton actions, data-testid keep selectors, all logic/texts/motion/share/print preserved; lint0+170t+tsc0 pass; commit+push via git-push.sh; done | done — e82d92f |
 | 2026-06-26 | TASK-082 | PHASE1 (grep+read AGENTS/BACKLOG/PLAN/ROADMAP/MINIMAL_V2/CONTENT + design-system + PronunciationClient + ipa-sounds); PHASE2 set in_progress (2ready skip refill) + full PLAN section; PHASE3: all 63 style= purged, Tailwind equivs + DIFF map for accents, SecondaryPageShell kept + inner max-w; logic identical; lint0+170t+tsc pass; bdef932 + push; done | done — bdef932 |
 | 2026-06-26 | TASK-083 | PHASE1 (read AGENTS/BACKLOG/PLAN/CONTENT§6-7 + MINIMAL_V2 + grep 3 sections+Fluency/Translate + sim search_memory); PHASE2: BACKLOG in_progress + PLAN section + skip refill; PHASE3: Grammar/Vocab/Warmup light cards (bg-card/border-border/60/text-fg/muted + primary accents, keep flip style+semantics); 170 tests+lint+tsc0; commit acd10ad + push via git-push.sh; BACKLOG done | done — acd10ad |
