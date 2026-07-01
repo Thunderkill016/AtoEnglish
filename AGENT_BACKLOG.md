@@ -879,10 +879,10 @@
 
 
 ### TASK-131 — Autopilot maintenance sweep #131
-- **Status:** `ready`
+- **Status:** `in_progress`
 - **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
 - **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
-- **Started:** auto-refill
+- **Started:** 2026-07-01 — autopilot (PHASE1: real search_memory(TASK-131)+read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6–7 + grep TASK-131 + recent logs; 3r>=2; PHASE2 PLAN+BACKLOG in_p (will be 2r >=2 skip refill))
 
 ### TASK-132 — Autopilot maintenance sweep #132
 - **Status:** `ready`
