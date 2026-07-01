@@ -842,7 +842,7 @@
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
 | 2026-07-01 | TASK-121 | PHASE1: sim search_memory + read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6–7 + grep; 4r>=2; PHASE2 PLAN+BACKLOG in_p + run refill script (OK skip); PHASE3: gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix + log 20260701T090844Z_TASK-121.log + sync PLAN/BACKLOG; no src; commit+push via git-push.sh main | done — (pending push) |
-| 2026-07-01 | TASK-122 | PHASE1: real search_memory(TASK-122)+read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6–7 + grep; 3r>=2; PHASE2 PLAN update + BACKLOG in_p + run refill (OK skip); PHASE3: gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix + log 20260701T092917Z_TASK-122.log + sync PLAN/BACKLOG; no src; commit+push via git-push.sh main | done — 19380c4 |
+| 2026-07-01 | TASK-122 | PHASE1: real search_memory(TASK-122)+read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6–7 + grep; 3r>=2; PHASE2 PLAN update + BACKLOG in_p + run refill (OK skip); PHASE3: gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix + log 20260701T092917Z_TASK-122.log + sync PLAN/BACKLOG; no src; commit 19380c4 + push via git-push.sh main | done — 19380c4 |
 | 2026-07-01 | TASK-123 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-01 | TASK-124 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-06-27 | TASK-119 | PHASE1 research (search sim via logs/grep + read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6–7 + grep); 3r>=2 skip refill; PHASE2 PLAN+BACKLOG in_p; PHASE3: gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix + log 20260627T032200Z_TASK-119.log + sync PLAN/BACKLOG; no src; commit+push via git-push.sh main | done — 543154c |
