@@ -19,7 +19,7 @@
 
 ## Hàng đợi — P0: Best-in-World Vibrant Self-Study + Free Speaking (aligned to user rollback state 2026-07)
 
-> Deprecate all V2 minimal. Focus: vibrant glassmorphism full landing + seamless guest/self-study + world-class FREE speaking coach (advanced local VN L1 + shadowing) + motivation realistic + job content + blueprint polish. See ROADMAP new pool. One task/cycle. Follow AGENTS strictly.
+> Core P0 "Best-in-World on vibrant base" COMPLETE (all 146-153 done by autopilot). No more auto feature tasks. User can add to ROADMAP for future. Old V2 tasks ignored per request.
 
 | # | Task | Priority |
 |---|------|----------|
@@ -1074,10 +1074,10 @@
 
 
 ### TASK-156 — Autopilot maintenance sweep #156
-- **Status:** `ready`
+- **Status:** `in_progress`
 - **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
 - **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
-- **Started:** auto-refill
+- **Started:** 2026-07-01 — autopilot (PHASE1: search_memory sim via logs/grep + read AGENTS.md (ALWAYS), AGENT_BACKLOG/PLAN/ROADMAP, CONTENT_STYLE.md §6–7 + grep TASK-156 + maintenance sweeps + daemon logs; 3 ready; PHASE2: PLAN update + BACKLOG in_p + run refill per query; PHASE3: gates + first-fail-fix minimal + sync)
 
 ### TASK-157 — Autopilot maintenance sweep #157
 - **Status:** `ready`
