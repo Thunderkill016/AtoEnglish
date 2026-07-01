@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { motion } from "framer-motion";
 
 const CEFR_LADDER = [
   { level: "A0", label: "A0", emoji: "🌱", color: "#94a3b8", desc: "Khởi đầu" },
@@ -110,9 +111,12 @@ export default function LevelProgressBar({
                   )}
                   {/* Fill: current segment partially filled by pct */}
                   {isCurrent && (
-                    <div
-                      className="absolute inset-y-0 left-0 rounded-full transition-all duration-700"
-                      style={{ width: `${pct}%`, background: step.color }}
+                    <motion.div
+                      className="absolute inset-y-0 left-0 rounded-full"
+                      style={{ background: step.color }}
+                      initial={{ width: 0 }}
+                      animate={{ width: `${pct}%` }}
+                      transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
                     />
                   )}
                 </div>

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { motion } from "framer-motion";
 import { Mic, ChevronRight } from "lucide-react";
 
 interface SpeakingSession {
@@ -179,8 +180,11 @@ export default function SpeakingFeedCard({ sessions }: SpeakingFeedCardProps) {
             const durationMin = Math.max(1, Math.round(s.duration / 60));
 
             return (
-              <div
+              <motion.div
                 key={s.id}
+                initial={{ opacity: 0, y: 4 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.2 }}
                 className="flex items-center gap-3 p-3 rounded-xl bg-white/40 dark:bg-zinc-800/30 border border-zinc-200/50 dark:border-zinc-700/30"
               >
                 {/* Type icon */}
@@ -213,7 +217,7 @@ export default function SpeakingFeedCard({ sessions }: SpeakingFeedCardProps) {
                     —
                   </span>
                 )}
-              </div>
+              </motion.div>
             );
           })}
 

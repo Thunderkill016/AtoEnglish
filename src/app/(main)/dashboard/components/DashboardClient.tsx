@@ -346,15 +346,20 @@ export default function DashboardClient({
               !
             </h1>
           </div>
-          {/* Guest persistence notice — vibrant glass polish (TASK-151) + TASK-147 seamless */}
+          {/* Guest persistence notice — vibrant glass + motion polish (TASK-151) */}
           {(() => {
             const g = typeof window !== 'undefined' ? JSON.parse(localStorage.getItem("guest_completed_units") || "[]") : [];
             const s = typeof window !== 'undefined' ? JSON.parse(localStorage.getItem("guest_speaking_sessions") || "[]") : [];
             if ((Array.isArray(g) && g.length > 0) || (Array.isArray(s) && s.length > 0)) {
               return (
-                <div className="mt-2 p-3 rounded-2xl border border-emerald-500/20 bg-white/5 dark:bg-white/5 backdrop-blur-md text-xs text-emerald-700 dark:text-emerald-300 flex items-center gap-2">
-                  <span>Guest mode: tiến độ (lessons + speaking) lưu cục bộ trình duyệt này. Đăng nhập để đồng bộ đám mây & giữ vĩnh viễn.</span>
-                </div>
+                <motion.div
+                  initial={{ opacity: 0, y: 6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+                  className="mt-2 p-3 sm:p-3.5 rounded-2xl border border-emerald-500/20 bg-white/5 dark:bg-white/5 backdrop-blur-md text-[11px] sm:text-xs text-emerald-700 dark:text-emerald-300 flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-2"
+                >
+                  <span>Tiến độ tự học (bài + nói) được giữ an toàn ngay trên trình duyệt này. Đăng nhập để tiếp tục mượt mà trên mọi thiết bị.</span>
+                </motion.div>
               );
             }
             return null;
