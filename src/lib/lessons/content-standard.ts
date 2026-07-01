@@ -30,8 +30,13 @@ export const LESSON_CONTENT_STANDARD = {
 
   l1NoteMinChars: 15,
 
-  /** Output & review */
+  /** Output & review — TASK-153 raise for world-class (Babbel real convos + VN job) */
   fluencyDrillItemsMin: 5,
+  /** shadowing via fluency/activate drill target 5+ */
+  shadowingMin: 5,
+  dialoguesMin: 2,
+  /** job focused scenarios target ≥1 per unit (adult VN career needs) */
+  jobScenariosMin: 1,
   /** Mục tiêu đạt 3 — TASK-059 (spiral review, Nation + center ref) */
   cumulativeReviewMin: 3,
   /** Mục tiêu 3 — TASK-057 đã nâng: mọi unit ≥3 practiceTranslate */
@@ -53,6 +58,7 @@ export interface UnitLike {
   warmupGreetings?: unknown[];
   vocab?: Array<{ l1_interference_vn?: string }>;
   fluencyDrill?: { items?: unknown[] };
+  dialogues?: unknown[];
   cumulativeReviewQuestions?: unknown[];
   practiceTranslate?: unknown[];
   listenAndChoose?: unknown[];
@@ -116,6 +122,11 @@ export function validateLessonContentStandard(
 
   if ((unit.quiz?.length ?? 0) < s.finalQuizMin) {
     tag("quiz", `quiz phải ≥ ${s.finalQuizMin} câu`);
+  }
+
+  const dialoguesLen = (unit.dialogues?.length ?? 0);
+  if (dialoguesLen < s.dialoguesMin) {
+    tag("dialogues", `dialogues phải ≥ ${s.dialoguesMin} (Babbel-like real convos + job)`);
   }
 
   const minL1 = s.l1MinRatioByLevel[unit.level] ?? 0.5;

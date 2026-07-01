@@ -104,7 +104,7 @@ describe("Curriculum Quality Rigorous Assessment Suite", () => {
         // 3. Dialogues Validation
         expect(unit.dialogues).toBeDefined();
         expect(Array.isArray(unit.dialogues)).toBe(true);
-        expect(unit.dialogues.length).toBeGreaterThanOrEqual(1);
+        expect(unit.dialogues.length).toBeGreaterThanOrEqual(1); // target 2+ per TASK-153 world-class (unit1+25 meet; others catchup)
 
         unit.dialogues.forEach((dialogue: any, index: number) => {
           const dialogueDesc = `Dialogue #${index + 1} (${dialogue.title || "unknown"})`;

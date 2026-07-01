@@ -28,6 +28,12 @@ export const unit25: UnitData = {
   // ── HOOK (cultural): pragmatic note
   culturalNote: 'Relative clauses là dấu hiệu rõ nhất của người nói tiếng Anh B1+. Người A2 nói: <span class="text-zinc-400">"She is our engineer. She designed the system."</span> Người B1 nói: <span class="text-emerald-400">"She is our engineer <strong>who designed the entire system</strong>."</span> Luyện tập ghép câu → câu nói của bạn ngay lập tức nghe chuyên nghiệp và tự nhiên hơn.',
 
+  // ── JOB SCENARIOS (TASK-153 raise bar) ───────────────────────────────────
+  jobScenarios: [
+    { id: 1, title: "Project team intro to foreign partner", focus: "relative clauses + department + remote collab", context: "B1 job meeting" },
+    { id: 2, title: "Office tour for client", focus: "which/where clauses + facility", context: "client visit at new branch" },
+  ],
+
   // ── WARMUP: ≥3 short phrases (SRS + prior knowledge activation)
   warmupGreetings: [
     { emoji: "👩‍💼", en: "This is Lan, who leads our marketing department.", vn: "Đây là Lan, người dẫn dắt bộ phận marketing của chúng tôi.", context: "who — mô tả người" },

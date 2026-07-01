@@ -217,11 +217,13 @@ Autopilot/agent: đọc `formatBlueprintChecklistForAgent()` trước khi sửa 
 | **warmupGreetings** | ≥3 câu — kích hoạt prior knowledge |
 | **vocab** | 8–20 từ, audio path, example + collocation (A2+) |
 | **l1_interference_vn** | A1/A2: 100% từ · B1/B2: ≥50% từ (lỗi người Việt hay mắc) |
-| **fluencyDrill** | ≥5 câu — automaticity (Nation strand 4) |
+| **fluencyDrill** | ≥5 câu — automaticity (Nation strand 4); shadowingMin=5 per TASK-153 |
+| **dialogues** | ≥2 (Babbel-like real convos + ≥1 job scenario) |
 | **practiceTranslate** | ≥3 câu VN→EN trong phạm vi unit |
 | **listenAndChoose** | ≥5 câu |
 | **quiz** | ≥5 câu, distractor hợp lý |
 | **cumulativeReviewQuestions** | ≥3 câu ôn tích lũy |
+| **jobScenarios** | ≥1 (VN adult career: interview, meeting, client call) |
 
 **Không đạt chuẩn → không merge.** Autopilot TASK-057+ sửa content theo band level.
 

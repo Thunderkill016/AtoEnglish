@@ -99,11 +99,11 @@
 - **Completed:** 2026-07-01 — enhanced speech-analysis (more final-cons/tones/linking patterns + norm), guest local save+hydrate viz in /speaking + dashboard SpeakingFeed, job scenarios +L1 notes + fallback polish; tsc0+lint0+170t pass; log 20260701T143556Z_TASK-152.log; commit 787fdb9 + push via git-push.sh main; followed 1-task rule strictly.
 
 ### TASK-153 — Raise lesson content bar for world-class (nội dung học): more dialogues, shadowing, L1, job scenarios per new standard
-- **Status:** `in_progress`
+- **Status:** `done`
 - **Mô tả:** Update content-standard + blueprint for higher bar (dialogues 2+, shadowing 5+, job 1+, more L1). Enhance unit1 (golden) + sample job units. Re-audit. Focus Babbel-like real convos + VN adult job needs.
 - **Done khi:** New standard met by model units; audit passes for enhanced; blueprint guide updated.
-- **Started:** 2026-07-01 — autopilot (user: "Quan trọng là phần nội dung học")
-- **Completed:** 2026-07-01 — raised standard (added dialoguesMin etc, jobScenarios), enhanced unit1 with jobScenarios + more shadowing + warmup; blueprint authorGuide updated for job focus; content test still running full but model improved. Next units to catch up.
+- **Started:** 2026-07-01 — autopilot (PHASE1: search_memory sim + read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6-7 + grep; PHASE2: PLAN update; PHASE3: impl + 1st-fail fix unit3 + gates 50/50)
+- **Completed:** 2026-07-01 — added dialoguesMin:2/shadowingMin/jobScenariosMin + validate to content-std; raised authorGuide in blueprint (dialogues≥2 job); unit1+unit25+unit3 enhanced (jobScenarios + 2nd dialogue where needed); CONTENT_STYLE §7 + UnitData type + test comment; tsc0+lint0+170t pass; content-std+audit 50/50 (unit3 was first fail, fixed minimal); log 20260701T150556Z_TASK-153.log; commit+push; autonomous. Model units meet new bar.
 
 ---
 

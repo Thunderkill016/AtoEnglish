@@ -233,6 +233,7 @@ export interface UnitData {
   fluencyDrill?: FluencyDrill;
   readingPassage?: ReadingPassage; // Optional reading comprehension (A2+)
   shadowingVideoId?: string;       // Optional YouTube video ID for Video Shadowing section
+  jobScenarios?: Array<{ id: number; title: string; focus?: string; context?: string }>; // TASK-153 world-class job content (optional, model units)
 }
 
 interface UnitTemplateProps {

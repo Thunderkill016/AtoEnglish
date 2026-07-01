@@ -62,7 +62,7 @@ export const LESSON_BLUEPRINT: readonly LessonBlueprintBlock[] = [
     phase: "input",
     learnMethodVi: "Đọc tình huống + mục tiêu trước khi học từ — biết vì sao học.",
     authorGuideVi:
-      "situation = câu hỏi/tình huống cụ thể (không chung chung, ưu tiên job/career cho adult VN). learningOutcomes = 2–5 hành vi đo được. culturalNote = pragmatic Việt↔Anh.",
+      "situation = câu hỏi/tình huống cụ thể (không chung chung, ưu tiên job/career cho adult VN per TASK-153). learningOutcomes = 2–5 hành vi đo được. culturalNote = pragmatic Việt↔Anh. Add jobScenarios for world-class.",
   },
   {
     id: "warmup",
@@ -111,7 +111,7 @@ export const LESSON_BLUEPRINT: readonly LessonBlueprintBlock[] = [
     sectionIds: [5],
     phase: "input",
     learnMethodVi: "Nghe hội thoại SAU khi đã có vocab coverage 98% (Nation & Webb).",
-    authorGuideVi: "≥1 dialogue, lines có translation VN. Chỉ dùng từ đã dạy + grammar unit.",
+    authorGuideVi: "≥2 dialogues (TASK-153 world-class Babbel real convos), lines có translation VN. Chỉ dùng từ đã dạy + grammar unit. Ưu tiên ≥1 job/career scenario cho VN adult (office, interview, meeting).",
   },
   {
     id: "fluency",
@@ -119,7 +119,7 @@ export const LESSON_BLUEPRINT: readonly LessonBlueprintBlock[] = [
     sectionIds: [10],
     phase: "processing",
     learnMethodVi: "Phản xạ nhanh — đọc/nói câu ngắn trong giới hạn thời gian.",
-    authorGuideVi: "fluencyDrill.items ≥5 cặp en/vn. Nation Strand 4 automaticity.",
+    authorGuideVi: "fluencyDrill.items ≥5 (shadowingMin per TASK-153). Nation Strand 4 automaticity. Shadowing drill for pronunciation.",
   },
   {
     id: "output",
@@ -127,7 +127,7 @@ export const LESSON_BLUEPRINT: readonly LessonBlueprintBlock[] = [
     sectionIds: [9, 6, 7],
     phase: "output",
     learnMethodVi: "Dịch VN→EN → shadowing → nói tự do. Bắt buộc sản xuất (không chỉ đọc).",
-    authorGuideVi: "practiceTranslate ≥3 câu trong phạm vi unit. speaking level1+level2 prompts.",
+    authorGuideVi: "practiceTranslate ≥3 câu trong phạm vi unit. shadowing 5+ (video or drill) + speaking level1+level2. ≥1 job scenario in dialogues/hook for VN career.",
   },
   {
     id: "review",

@@ -39,6 +39,12 @@ export const unit1: UnitData = {
   culturalNote:
     'Người bản ngữ dùng <span class="text-emerald-400 font-semibold">Hi!</span> thường xuyên hơn <span class="text-emerald-400 font-semibold">Hello!</span> trong giao tiếp hàng ngày — ngay cả trong môi trường công sở. <span class="text-emerald-400 font-semibold">Hello</span> nghe trang trọng hơn, phù hợp khi gặp khách hàng hoặc sếp lần đầu. Thú vị: người Anh và người Mỹ bắt tay NGẮN và CHỈ 1 LẦN — không lắc tay nhiều lần như ở Việt Nam!',
 
+  // ── JOB SCENARIOS (TASK-153: world-class + VN adult job needs) ───────────
+  jobScenarios: [
+    { id: 1, title: "Ngày đầu đi làm tại văn phòng", focus: "greetings + self-intro + small talk", context: "first day office in Hanoi with US colleague (Babbel-style)" },
+    { id: 2, title: "Gặp sếp hoặc khách hàng", focus: "formal hello + how are you + seat", context: "meeting manager or client" },
+  ],
+
   // ── WARMUP: Kích hoạt prior knowledge ────────────────────────────────────
   // Research: Schema activation giảm cognitive load cho phần học tiếp theo
   warmupGreetings: [
@@ -687,6 +693,8 @@ export const unit1: UnitData = {
       { en: "How are you?", vn: "Bạn có khỏe không?" },
       { en: "I'm fine, thank you", vn: "Tôi khỏe, cảm ơn" },
       { en: "My name is...", vn: "Tên tôi là..." },
+      { en: "Good morning", vn: "Chào buổi sáng (công sở)" },
+      { en: "How are you today?", vn: "Hôm nay bạn thế nào?" },
     ],
   },
 

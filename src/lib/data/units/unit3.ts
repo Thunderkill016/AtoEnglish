@@ -202,7 +202,25 @@ export const unit3: UnitData = {
           translation: "Em ấy 10 tuổi rồi. Em ấy thân thiện lắm."
         }
       ]
+    },
+    // TASK-153: 2nd dialogue (job scenario sample for family + work context)
+    {
+      id: 2,
+      title: "Giới thiệu anh trai tại công ty",
+      audio: "/audio/unit3/dialogue_2.mp3",
+      desc: "Anna giới thiệu em trai với đồng nghiệp.",
+      lines: [
+        { id: "l7", speaker: "Anna", text: "This is my brother Ben. He works at our branch office.", translation: "Đây là em trai tôi Ben. Anh ấy làm việc tại chi nhánh công ty." },
+        { id: "l8", speaker: "Colleague", text: "Nice to meet you, Ben. Do you collaborate with the HQ team?", translation: "Rất vui được gặp, Ben. Bạn có hợp tác với đội ngũ trụ sở không?" },
+        { id: "l9", speaker: "Ben", text: "Yes, I collaborate with the experienced team remotely.", translation: "Vâng, tôi hợp tác từ xa với đội ngũ có kinh nghiệm." }
+      ]
     }
+  ],
+
+  // ── JOB SCENARIOS (TASK-153) ─────────────────────────────────────────────
+  jobScenarios: [
+    { id: 1, title: "Meet my family", focus: "family vocab + who/that", context: "casual intro" },
+    { id: 2, title: "Introduce brother at office", focus: "work collab + branch", context: "VN family + job" },
   ],
 
   // ── EXERCISES_INPUT: listenAndChoose ≥5 (controlled practice)

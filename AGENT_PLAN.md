@@ -7,7 +7,7 @@
 | Field | Value |
 |-------|-------|
 | Started | 2026-07-01 |
-| Focus | TASK-145 — Autopilot maintenance sweep #145 (lint+test; fix 1st fail if any; sync logs/PLAN/BACKLOG). No new features. |
+| Focus | TASK-153 — Raise lesson content bar for world-class (nội dung học): update content-standard + blueprint (dialogues 2+, shadowing 5+, job 1+); enhance unit1 + sample; re-audit. No new features beyond spec. |
 | Owner | Autopilot (no human) |
 
 ### TASK-145 — Autopilot maintenance sweep #145
@@ -38,6 +38,36 @@
 **Started:** 2026-07-01 — autopilot (PHASE1: real search_memory + read+grep; 4r; PHASE2: PLAN+BACKLOG in_p + run refill; PHASE3: gates)
 
 **Completed TASK-145**: gates clean (tsc0+lint0+170t+cs50/50+audit50/50) after 1st-fail minimal fixes (unit13 stray syntax + unknown props); log 20260701T215600Z_TASK-145.log + BACKLOG/PLAN/nhật ký synced; commit + push via git-push.sh main; no src beyond gate fix; autonomous (PHASE3)
+
+**Completed TASK-153**: content-std+blueprint+style updated w/ dialoguesMin2 + shadowing5 + jobScenarios; unit1/25/3 enhanced (jobScenarios + dialogues); UnitData type fix (1st fail); tsc0 lint0 170t + content 50/50 + audit50/50; log 20260701T150556Z_TASK-153.log; BACKLOG done + Nhật ký; commit + push via git-push.sh main; autonomous (PHASE3; fixed first tsc+first content violator only).
+
+### TASK-153 — Raise lesson content bar for world-class (nội dung học)
+**Mục tiêu**: Update content-standard + blueprint for higher bar (dialogues 2+, shadowing 5+, job 1+, more L1 emphasis). Enhance unit1 (golden sample) + 1 sample job unit (e.g. unit25). Re-audit via content + audit script (note model units meet). Focus Babbel-like real convos + VN adult job needs. No logic change, no new UI. Minimal diff. **Done khi:** New fields+checks in standard; authorGuide updated in blueprint; unit1 + sample have jobScenarios/dialogues>=2 polish; CONTENT_STYLE §7 updated; content gates log model improved (full catchup later); lint+test (main) pass; PLAN/BACKLOG/nhật ký + log synced; commit+push.
+
+**Bước thực hiện**:
+1. PHASE1 research (done): read AGENTS.md (ALWAYS), AGENT_BACKLOG/PLAN/ROADMAP, CONTENT_STYLE.md §6–7 (blueprint + chuẩn SDL), grep TASK-153 + dialogues/shadowing/job + content-standard/lesson-blueprint/unit1/unit25 + curriculum test + logs; search_memory("TASK-153 content bar"); confirm unit1 has 3 dialogues + job theme already; files to touch: content-standard.ts, lesson-blueprint.ts, unit1.ts (enhance), unit25.ts (sample), CONTENT_STYLE.md, AGENT_*.md , log.
+2. Update BACKLOG: TASK-153 `in_progress` (already).
+3. Update AGENT_PLAN.md với mục tiêu + bước + rủi ro cho TASK-153 (this section) + update "Phiên hiện tại" focus (done).
+4. Backlog sau in_p: check count ready; if <2 run `bash scripts/agent-refill-backlog.sh` (read AGENT_ROADMAP.md) — KHÔNG hỏi user.
+5. PHASE3 triển khai tối thiểu đúng scope:
+   - Update content-standard.ts: add dialoguesMin:2 , shadowingMin:5 (via fluency proxy), jobScenarios note; add to validate if dialogues <2 ; update UnitLike + l1 if more.
+   - Update lesson-blueprint.ts: raise authorGuideVi for dialogues block (≥2 Babbel real + job 1+), output (shadowing 5+), hook for job focus VN adult.
+   - Enhance unit1.ts (golden): add jobScenarios field + comment; ensure L1 high, dialogues=3 (already), more fluency items if < ; job title polish.
+   - Enhance sample job unit e.g. unit25.ts : add 2nd dialogue (realistic job interview follow-up with VN L1 context), declare audio path (no generate now), add jobScenarios stub; keep existing 1st.
+   - Update CONTENT_STYLE.md §7 Chuẩn SDL: add dialoguesMin:2 , shadowingMin:5 , jobScenariosMin:1 .
+   - Update curriculum-quality.test.ts comment for target >=2 dialogues (no change expect to avoid mass fail).
+   - rm -f tsconfig.tsbuildinfo ; npx tsc --noEmit ; npm run lint ; npm run test (main pass expected); npm run test:content-standard && bash scripts/audit-lesson-content.sh (expect model pass, full may note catchup).
+   - Capture first failure (if any non-content); fix minimal only first.
+6. Sau gates: viết log `logs/agent/20260701T...Z_TASK-153.log` (gates + model enhanced); update BACKLOG (in_p → done + Nhật ký + SHA); sync PLAN table + Completed note.
+7. git pull --rebase; git add AGENT_BACKLOG.md AGENT_PLAN.md CONTENT_STYLE.md src/lib/lessons/* src/lib/data/units/unit1.ts src/lib/data/units/unit25.ts src/__tests__/curriculum-quality.test.ts logs/agent/* ; commit "chore(content): TASK-153 raise lesson bar — dialogues 2+ / job focus in std+blueprint+unit1+sample (minimal)"; `bash scripts/git-push.sh main`.
+**Rủi ro**:
+- Raising dialoguesMin breaks content gate for 49 units → set min in SDL, fix first failure unit only (one sample); note full catchup in log; main npm test unaffected (excludes content test).
+- Audio path declare for new dialogue in sample without mp3 file → ok for unit test (regex only), e2e later; no generate this task.
+- Over edit units → strictly golden unit1 + ONE sample (unit25); no more.
+- Git push blocked (secret) → status blocked in BACKLOG, move next sweep ready if possible.
+- Fail 2 times on gates → blocked + lý do.
+- No feature: no callers change, no new runtime fields used yet.
+**Done khi**: standard+blueprint+style+sample enhanced; model units meet new bar in audit; main lint+test pass; content log shows improvement for unit1/25; PLAN/BACKLOG/nhật ký + log file; commit+push via script; autonomous.
 
 ### TASK-143 — Autopilot maintenance sweep #143
 **Mục tiêu**: Chạy `npm run lint && npm run test` (cùng npx tsc --noEmit + content gates nếu liên quan); fix failure đầu tiên (nếu có, minimal patch); sync AGENT_PLAN nhật ký + BACKLOG status + Nhật ký + log file. Không feature mới, không thay đổi logic app, chỉ gates + doc. **Done khi:** gates pass (0 lint, all tests); 0 or 1 small fix if first failure; PLAN/BACKLOG/nhật ký updated; 1 commit nếu change or doc sync; pushed via git-push.sh main.
