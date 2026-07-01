@@ -63,6 +63,7 @@ export default async function DashboardPage() {
   let userLevel = "A0 Learner";
   let dailyXpGoal = 50;
   let streakFreezeCount = 0;
+  const isGuest = !progressRes.success || !progressRes.progress;
 
   if (progressRes.success && progressRes.progress) {
     const p = progressRes.progress;
@@ -186,6 +187,7 @@ export default async function DashboardPage() {
       initialXpCurrent={initialXpCurrent}
       dailyMissions={dailyMissions}
       dailyXpGoal={dailyXpGoal}
+      isGuest={isGuest}
       wordOfDay={wordOfDay}
       completedUnitIds={completedUnitIds}
       streakFreezeCount={streakFreezeCount}

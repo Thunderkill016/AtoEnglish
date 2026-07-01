@@ -92,6 +92,7 @@ interface DashboardClientProps {
     scenario_id: string | null;
     created_at: string;
   }>;
+  isGuest?: boolean;
 }
 
 const getLevelBadgeStyles = (level: string) => {
@@ -148,6 +149,7 @@ export default function DashboardClient({
   weeklyData,
   calendarData,
   recentSpeakingSessions,
+  isGuest = false,
 }: DashboardClientProps) {
   const [xpCurrent, setXpCurrent] = useState(initialXpCurrent);
   const [greeting, setGreeting] = useState("Chào bạn");
@@ -300,6 +302,12 @@ export default function DashboardClient({
       {/* Ambient glow — CSS only, no JS */}
       <div className="pointer-events-none absolute top-0 right-0 -z-10 h-[300px] w-[50vw] max-w-[400px] rounded-full bg-emerald-500/6 dark:bg-emerald-500/4 blur-[120px]" />
       <div className="pointer-events-none absolute bottom-0 left-0 -z-10 h-[300px] w-[300px] rounded-full bg-teal-500/5 dark:bg-teal-500/3 blur-[100px]" />
+
+      {isGuest && (
+        <div className="mb-4 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-300">
+          Chế độ tự học khách: tiến độ lưu cục bộ trên máy này. <Link href="/learn" className="underline font-medium">Bắt đầu học ngay</Link> — không cần tài khoản.
+        </div>
+      )}
 
       {/* — Streak at-risk fixed banner — */}
       {!bannerDismissed && (
