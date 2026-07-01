@@ -1100,7 +1100,7 @@
 - **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
 - **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
 - **Started:** 2026-07-01 — autopilot (PHASE1: read AGENTS.md (ALWAYS), BACKLOG/PLAN/ROADMAP/CONTENT_STYLE.md§6–7 + grep TASK-159 + logs/daemon; 3r >=2; PHASE2: PLAN update + BACKLOG in_p + run refill per query; PHASE3: gates)
-- **Completed:** 2026-07-01 — gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed; log 20260701T160042Z_TASK-159.log + BACKLOG/PLAN/nhật ký synced; no src edit; commit 111389d + push via git-push.sh main (follow-up 0a4e25f); autonomous (PHASE3)
+- **Completed:** 2026-07-01 — gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed; log 20260701T160042Z_TASK-159.log + BACKLOG/PLAN/nhật ký synced; no src edit; commit 111389d + push via git-push.sh main (sync 9b1bab4); autonomous (PHASE3)
 
 ### TASK-160 — Autopilot maintenance sweep #160
 - **Status:** `ready`
@@ -1124,7 +1124,7 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
-| 2026-07-01 | TASK-159 | gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix + log 20260701T160042Z_TASK-159.log + sync PLAN/BACKLOG; no src; commit 111389d + push via git-push.sh main; autonomous | done — 111389d (follow-up 0a4e25f report) |
+| 2026-07-01 | TASK-159 | gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix + log 20260701T160042Z_TASK-159.log + sync PLAN/BACKLOG; no src; commit 111389d + push via git-push.sh main; autonomous | done — 111389d (sync 9b1bab4) |
 | 2026-07-01 | TASK-160 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-01 | TASK-161 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-01 | TASK-156 | gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix + log 20260701T153414Z_TASK-156.log + sync PLAN/BACKLOG; no src; commit 9bdf3cf + push via git-push.sh main; autonomous | done — 9bdf3cf |
