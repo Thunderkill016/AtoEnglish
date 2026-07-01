@@ -19,6 +19,7 @@ import { toast } from "sonner";
 import confetti from "canvas-confetti";
 import { saveSpeakingSession } from "@/app/actions/speaking";
 import { SpeechRecognitionFallback } from "@/lib/utils/speech-fallback";
+import { analyzeSpeaking } from "@/lib/utils/speech-analysis";
 
 interface SpeechRecognitionMock {
   continuous: boolean;

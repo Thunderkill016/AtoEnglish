@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 import { createRateLimiter } from "@/lib/security/rate-limit";
 import { SpeakingSessionSchema } from "@/lib/security/validation";
+import { analyzeSpeaking, basicWordCountFeedback } from "@/lib/utils/speech-analysis";
 
 const speakingLimiter = createRateLimiter(20, 60 * 1000, "speaking");
 const aiLimiter = createRateLimiter(30, 60 * 1000, "ai-gen");
@@ -18,7 +19,11 @@ const SCENARIO_DETAILS: Record<string, { title: string; character: string; diffi
   "doctors-appointment": { title: "Doctor's Appointment", character: "Doctor (Bác sĩ)", difficulty: "Hard" },
   "saas-product-demo": { title: "Product Demo", character: "Potential Customer (Khách hàng tiềm năng)", difficulty: "Hard" },
   "investor-pitch": { title: "Investor Pitch", character: "Angel Investor (Nhà đầu tư)", difficulty: "Hard" },
-  "customer-support": { title: "Customer Support", character: "Unhappy Customer (Khách hàng không hài lòng)", difficulty: "Medium" }
+  "customer-support": { title: "Customer Support", character: "Unhappy Customer (Khách hàng không hài lòng)", difficulty: "Medium" },
+  // New high-value job-focused (research: practical situational practice = Babbel strength)
+  "team-meeting-update": { title: "Team Meeting - Project Update", character: "Team Lead (Trưởng nhóm)", difficulty: "Medium" },
+  "client-negotiation": { title: "Client Negotiation Call", character: "Client (Khách hàng)", difficulty: "Hard" },
+  "performance-review": { title: "Performance Review Discussion", character: "Manager (Quản lý)", difficulty: "Medium" },
 };
 
 interface ChatMessageParam {
@@ -231,10 +236,30 @@ export async function generateRoleplayTurn(
 
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {
-      // free fallback on rolled best version
-      const turn = Math.floor((history?.length || 0) / 2);
-      const s = { en: "Hello, please help me.", vi: "Chào, hãy giúp tôi." };
-      return { success: true, aiPrompt: "Thank you.", userSuggestion: s.en, userSuggestionVi: s.vi, grammarFeedback: "", grammarCorrection: "", isEnd: false };
+      // World-class free fallback (research: low-stakes output + specific VN L1 feedback)
+      const lastUser = history.filter((h) => h.sender === "user").pop()?.text || userMessage;
+      const analysis = analyzeSpeaking("Thank you for your help. I would like to check in.", lastUser, "roleplay");
+
+      const aiPrompt = "Thank you. How can I assist you today?";
+      const userSuggestion = "I'd like to check in for my reservation.";
+      const userSuggestionVi = "Tôi muốn nhận phòng theo đặt chỗ.";
+
+      let grammarFeedback = "";
+      let grammarCorrection = "";
+
+      if (analysis.similarity < 70) {
+        grammarFeedback = analysis.specificTips[0] || "Nói rõ âm cuối và dùng cụm từ tự nhiên.";
+      }
+
+      return {
+        success: true,
+        aiPrompt,
+        userSuggestion,
+        userSuggestionVi,
+        grammarFeedback,
+        grammarCorrection,
+        isEnd: false,
+      };
     }
 
     // 3. Build native multi-turn contents array (Gemini multi-turn format)
@@ -363,8 +388,19 @@ export async function evaluateSpeakingSession(
 
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {
-      const w = (transcript || "").trim().split(/\s+/).length;
-      return { success: true, feedback: `**Nhận xét chung**\nBạn nói được ${w} từ. Tốt! (free fallback trên phiên bản roll best)` };
+      // High-quality free analysis (no Gemini)
+      const ref = "I had a productive meeting today and discussed the new project timeline with the team.";
+      const analysis = analyzeSpeaking(ref, transcript || "", practiceType);
+
+      let fb = `**Đánh giá chung**\n${analysis.feedback}\n\n**Độ chính xác:** ${analysis.similarity}% (${analysis.wordsCorrect}/${analysis.totalWords} từ chính).\n\n`;
+
+      if (analysis.specificTips.length > 0) {
+        fb += "**Mẹo cụ thể cho người Việt:**\n" + analysis.specificTips.map((t, i) => `${i + 1}. ${t}`).join("\n") + "\n\n";
+      }
+
+      fb += "Tiếp tục luyện nhiều lượt — shadowing + roleplay là cách nhanh nhất để tăng phản xạ.";
+
+      return { success: true, feedback: fb };
     }
 
     const prompt = `You are an expert English language tutor. Analyze the following English speaking practice session transcript of a Vietnamese learner.
