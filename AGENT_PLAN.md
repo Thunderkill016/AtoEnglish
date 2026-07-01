@@ -7,7 +7,7 @@
 | Field | Value |
 |-------|-------|
 | Started | 2026-07-01 |
-| Focus | TASK-128 — Autopilot maintenance sweep #128: Chạy lint+test; fix failure đầu tiên (nếu có); sync AGENT_PLAN nhật ký + BACKLOG. Không feature mới. |
+| Focus | TASK-129 — Autopilot maintenance sweep #129: Chạy lint+test; fix failure đầu tiên (nếu có); sync AGENT_PLAN nhật ký + BACKLOG. Không feature mới. |
 | Owner | Autopilot (no human) |
 
 ### TASK-126 — Autopilot maintenance sweep #126
@@ -94,7 +94,36 @@
 
 **Started:** 2026-07-01 — autopilot (PHASE1: real search_memory(TASK-128)+read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6–7 + grep TASK-128 + recent logs; 3r>=2; PHASE2 PLAN+BACKLOG in_p)
 
-**Completed TASK-128**: gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed; log written 20260701T103145Z_TASK-128.log; BACKLOG+PLAN+nhật ký synced; commit + push via git-push.sh main; no src edit; autonomous (PHASE3)
+**Completed TASK-128**: gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed; log written 20260701T103145Z_TASK-128.log; BACKLOG+PLAN+nhật ký synced; commit 065a763 + push via git-push.sh main; no src edit; autonomous (PHASE3)
+
+### TASK-129 — Autopilot maintenance sweep #129
+**Mục tiêu**: Chạy `npm run lint && npm run test` (cùng npx tsc --noEmit + content gates nếu liên quan); fix failure đầu tiên (nếu có, minimal patch); sync AGENT_PLAN nhật ký + BACKLOG status + Nhật ký + log file. Không feature mới, không thay đổi logic app, chỉ gates + doc. **Done khi:** gates pass (0 lint, all tests); 0 or 1 small fix if first failure; PLAN/BACKLOG/nhật ký updated; 1 commit if change or doc sync; pushed via git-push.sh main.
+
+**Bước thực hiện**:
+1. PHASE1 research (done): read AGENTS.md (ALWAYS), AGENT_BACKLOG/PLAN/ROADMAP, CONTENT_STYLE.md §6–7 (context for any content std but not editing units), grep TASK-129 + recent sweeps in logs/agent/* + BACKLOG/PLAN; search_memory("TASK-129"); confirm 2 ready (129-130) ≥2.
+2. Update BACKLOG: TASK-129 `in_progress` (done).
+3. Update AGENT_PLAN.md với mục tiêu + bước + rủi ro cho TASK-129 (this section) + update "Phiên hiện tại" focus (done).
+4. Backlog hiện tại sau in_p (post 128) =1 ready <2 → chạy `bash scripts/agent-refill-backlog.sh` (read ROADMAP.md) per user query instruction — KHÔNG hỏi user (refill added 131-133 after count drop).
+5. PHASE3 triển khai: 
+   - rm -f tsconfig.tsbuildinfo (stale guard common in sweeps).
+   - Chạy `npx tsc --noEmit` (zero errors gate).
+   - Chạy `npm run lint` (zero warnings).
+   - Chạy `npm run test` (all pass) — note first failure nếu có, fix minimal duy nhất (e.g. tsbuild stale, minor import, test helper).
+   - Per sweep pattern: `npm run test:content-standard && bash scripts/audit-lesson-content.sh` (50/50 expected).
+   - Capture outputs, fix only the very first error encountered; no scope creep.
+6. Sau gates: viết log `logs/agent/20260701T...Z_TASK-129.log` (tóm tắt gates + fix or clean); update BACKLOG (in_progress→done + Nhật ký entry + SHA); sync PLAN log table + Completed.
+7. git pull --rebase; git add AGENT_BACKLOG.md AGENT_PLAN.md logs/agent/* (và src nếu fix 1 file); commit "chore(maintenance): autopilot sweep #129 — lint+test gates + PLAN/BACKLOG sync (TASK-129)"; `bash scripts/git-push.sh main`.
+**Rủi ro**:
+- Lint/test fail on transient (tsbuildinfo, coverage artifact) → rm -f tsconfig.tsbuildinfo; rerun once; 2 fails → blocked + lý do.
+- First failure is real bug in core → minimal fix (e.g. type or test data), self-debug from error msg; if needs major or secret → blocked.
+- Git push needs token (GITLAB_TOKEN) or net → status blocked, do not force.
+- No new feature: strictly only fix first failure or doc-sync only.
+- Fail 2 lần liên tiếp → status `blocked` + ghi lý do vào BACKLOG/PLAN.
+**Done khi**: `npm run lint && npm run test` pass (or 1 minimal fix); tsc0; content gates nếu chạy 50/50; PLAN+BACKLOG+nhật ký synced; log file; commit+push via script if change; BACKLOG done; autonomous.
+
+**Started:** 2026-07-01 — autopilot (PHASE1: real search_memory(TASK-129)+read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6–7 + grep TASK-129 + recent logs; 2r>=2; PHASE2 PLAN+BACKLOG in_p + refill ran)
+
+**Completed TASK-129**: gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed; log written 20260701T104002Z_TASK-129.log; BACKLOG+PLAN+nhật ký synced; no src edit; commit+push via git-push.sh main; autonomous (PHASE3)
 
 ### TASK-123 — Autopilot maintenance sweep #123
 **Mục tiêu**: Chạy `npm run lint && npm run test` (cùng npx tsc --noEmit + content gates nếu liên quan); fix failure đầu tiên (nếu có, minimal patch); sync AGENT_PLAN nhật ký + BACKLOG status + Nhật ký + log file. Không feature mới, không thay đổi logic app, chỉ gates + doc. **Done khi:** gates pass (0 lint, all tests); 0 or 1 small fix if first failure; PLAN/BACKLOG/nhật ký updated; 1 commit if change or doc sync; pushed via git-push.sh main.
