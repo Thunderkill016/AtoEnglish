@@ -1102,7 +1102,7 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
-| 2026-07-01 | TASK-156 | gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix + log 20260701T153414Z_TASK-156.log + sync PLAN/BACKLOG; no src; commit + push via git-push.sh main; autonomous | done — (pending SHA) |
+| 2026-07-01 | TASK-156 | gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix + log 20260701T153414Z_TASK-156.log + sync PLAN/BACKLOG; no src; commit 9bdf3cf + push via git-push.sh main; autonomous | done — 9bdf3cf |
 | 2026-07-01 | TASK-157 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-01 | TASK-158 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-01 | TASK-153 | gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix + log 20260701T151239Z_TASK-153.log + sync PLAN/BACKLOG; no src; commit ec01806 + push via git-push.sh main; autonomous | done — ec01806 |
