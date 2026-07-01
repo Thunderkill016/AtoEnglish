@@ -25,7 +25,7 @@
 |---|------|----------|
 | 1 | TASK-146 — Enhance free speaking coach advanced local VN-L1 analysis | P0 ready |
 | 2 | TASK-147 — Improve guest/self-study persistence & seamless flow | P0 |
-| 3 | TASK-148 — Job/career focused roleplays | P1 |
+| 3 | TASK-148 — Job/career focused roleplays | P1 done (autopilot) |
 | 4 | TASK-149 — Motivation daily goals + viz | P1 |
 | 5 | TASK-150 — Polish lessons to blueprint standards | P1 |
 | 6 | TASK-151 — Vibrant UI polish (glass/motion) | P2 |
@@ -55,10 +55,10 @@
 - **Completed:** 2026-07-01 — enhanced L1 (11 patterns + vn normalize + shadowing tips), guest graceful (save/get return success w/ guestMode), lint+170t+tsc clean, docs deprecate V2, vibrant guest+speaking focus.
 
 ### TASK-147 — Improve guest/self-study flow persistence + seamless /learn
-- **Status:** `done`
+- **Status:** `in_progress`
 - **Mô tả:** Build on existing guest_completed_units + lesson-progress-*. Add guest local speaking history. Ensure /speaking, /learn, dashboard, roadmap fully usable for !auth (relaxed proxy). On auth, optional migrate local progress note.
 - **Done khi:** Guests complete full flow incl speaking local; progress persists browser; no auth friction in learn paths; tests pass.
-- **Completed:** 2026-07-01 — autopilot: added guest local progress notice banner in DashboardClient for persistence awareness (TASK-147); speaking/lesson local already robust; gates clean; pushed.
+- **Started:** 2026-07-01 — autopilot (PHASE1: search_memory sim via logs/grep + read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT_STYLE §6-7 + blueprint + grep guest/ proxy/ speaking local/ roadmap + UnitTemplate + actions + clients; PHASE2: plan update + BACKLOG in_p + refill if low; PHASE3: relax proxy, add local speaking persist + hydrate in feed/roadmap/dashboard, migrate note, gates)
 
 ---
 

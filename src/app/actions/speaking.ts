@@ -24,6 +24,8 @@ const SCENARIO_DETAILS: Record<string, { title: string; character: string; diffi
   "team-meeting-update": { title: "Team Meeting - Project Update", character: "Team Lead (Trưởng nhóm)", difficulty: "Medium" },
   "client-negotiation": { title: "Client Negotiation Call", character: "Client (Khách hàng)", difficulty: "Hard" },
   "performance-review": { title: "Performance Review Discussion", character: "Manager (Quản lý)", difficulty: "Medium" },
+  "salary-negotiation": { title: "Salary Negotiation", character: "HR Manager (Quản lý nhân sự)", difficulty: "Hard" },
+  "team-presentation": { title: "Team Presentation Q&A", character: "Colleague (Đồng nghiệp)", difficulty: "Medium" },
 };
 
 interface ChatMessageParam {
