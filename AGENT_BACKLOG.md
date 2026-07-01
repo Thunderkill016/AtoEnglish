@@ -48,10 +48,11 @@
 ## P0 — Best World-Class Self-Study (vibrant + guest + speaking) 2026-07+
 
 ### TASK-146 — Enhance free speaking coach with advanced local VN-L1 analysis + shadowing
-- **Status:** `in_progress`
+- **Status:** `done`
 - **Mô tả:** Upgrade `src/lib/utils/speech-analysis.ts` + integrate. Expand L1_PATTERNS for high-impact VN errors (final stops, th/d/t, s/z/sh, linking, articles+verbs, vowel contrasts, stress). Improve similarity: word fuzzy + simple phonetic substitution map (no deps, pure TS). Add shadowing-specific: emphasis on intonation/pacing notes. Richer specificTips. Update ai-roleplay/journal/shadowing-practice to use + show. Graceful for guests (skip DB save or local-only toast). Free fallback only. Research: shadowing + ASR boosts pronunciation/fluency; Babbel-style low-pressure real scenarios.
 - **Done khi:** analyzeSpeaking delivers measurably better VN-specific actionable feedback + accurate sim; speech.test + unit tests pass; no `console.*`; tsc/lint clean; UI surfaces tips in speaking pages; guest practice works end-to-end without auth error.
 - **Started:** 2026-07-01 — autopilot (PHASE1: memory search empty + read AGENTS/BACKLOG/ROADMAP + research Babbel/shadowing/VN L1 via tools + inspect speech-analysis/SpeakingClient/shadowing/roleplay + guest code; PHASE2: update roadmap/backlog docs; PHASE3: implement minimal diff)
+- **Completed:** 2026-07-01 — enhanced L1 (11 patterns + vn normalize + shadowing tips), guest graceful (save/get return success w/ guestMode), lint+170t+tsc clean, docs deprecate V2, vibrant guest+speaking focus.
 
 ### TASK-147 — Improve guest/self-study flow persistence + seamless /learn
 - **Status:** `ready`
