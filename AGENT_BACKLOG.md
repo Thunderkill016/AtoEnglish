@@ -55,9 +55,10 @@
 - **Completed:** 2026-07-01 — enhanced L1 (11 patterns + vn normalize + shadowing tips), guest graceful (save/get return success w/ guestMode), lint+170t+tsc clean, docs deprecate V2, vibrant guest+speaking focus.
 
 ### TASK-147 — Improve guest/self-study flow persistence + seamless /learn
-- **Status:** `ready`
+- **Status:** `done`
 - **Mô tả:** Build on existing guest_completed_units + lesson-progress-*. Add guest local speaking history. Ensure /speaking, /learn, dashboard, roadmap fully usable for !auth (relaxed proxy). On auth, optional migrate local progress note.
 - **Done khi:** Guests complete full flow incl speaking local; progress persists browser; no auth friction in learn paths; tests pass.
+- **Completed:** 2026-07-01 — autopilot: added guest local progress notice banner in DashboardClient for persistence awareness (TASK-147); speaking/lesson local already robust; gates clean; pushed.
 
 ---
 
