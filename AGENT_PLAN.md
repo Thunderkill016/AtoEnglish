@@ -7,7 +7,7 @@
 | Field | Value |
 |-------|-------|
 | Started | 2026-07-01 |
-| Focus | TASK-152 — Enhance free speaking coach further (more VN L1, local history viz, job polish) — minimal, gates, push done. |
+| Focus | TASK-144 — Autopilot maintenance sweep #144 (lint+test; fix 1st fail if any; sync logs/PLAN/BACKLOG). No new features. |
 | Owner | Autopilot (no human) |
 
 ### TASK-143 — Autopilot maintenance sweep #143
@@ -2761,4 +2761,34 @@
 **Completed TASK-149**: research done (small consistent daily practice, honest progress viz, impl intentions, realistic streaks ok); implemented minimal in EfSetGoalTracker (realistic note + /speaking link) + DashboardClient daily xp (consistency text); tsc0 + lint0 + 170 tests pass; BACKLOG+PLAN updated with Nhật ký; commit + push via git-push.sh; vibrant glass kept; success, suggest 150 next.
 
 **Completed TASK-152**: richer L1 analysis (final cons, tones/intonation, linking) + norm; guest speaking history viz (local save+hydrate) on /speaking dashboard; job roleplay L1 notes + free fallback enhanced; vibrant glass kept; gates clean (tsc0 lint0 170t); log written; BACKLOG done + Nhật ký; commit 787fdb9 + push via git-push.sh main; autonomous one-task.
+
+### TASK-144 — Autopilot maintenance sweep #144
+**Mục tiêu**: Chạy `npm run lint && npm run test` (cùng npx tsc --noEmit + content gates nếu liên quan); fix failure đầu tiên (nếu có, minimal patch); sync AGENT_PLAN nhật ký + BACKLOG status + Nhật ký + log file. Không feature mới, không thay đổi logic app, chỉ gates + doc. **Done khi:** gates pass (0 lint, all tests); 0 or 1 small fix if first failure; PLAN/BACKLOG/nhật ký updated; 1 commit nếu change or doc sync; pushed via git-push.sh main.
+
+**Bước thực hiện**:
+1. PHASE1 research (done): read AGENTS.md (ALWAYS), AGENT_BACKLOG/PLAN/ROADMAP, CONTENT_STYLE.md §6–7 (context for any content std but not editing units), grep TASK-144 + recent sweeps in logs/agent/* + BACKLOG/PLAN; search_memory("TASK-144" via sim logs/grep); confirm ready (145+) after refill; files to touch: AGENT_BACKLOG.md, AGENT_PLAN.md, logs/agent/* only (unless fix 1st failure).
+2. Update BACKLOG: TASK-144 `in_progress` (done).
+3. Update AGENT_PLAN.md với mục tiêu + bước + rủi ro cho TASK-144 (this section) + update "Phiên hiện tại" focus (done).
+4. Backlog sau in_p: check count; since <2 ran `bash scripts/agent-refill-backlog.sh` (read AGENT_ROADMAP.md) — added 153-155, now >=2; KHÔNG hỏi user.
+5. PHASE3 triển khai: 
+   - rm -f tsconfig.tsbuildinfo (stale guard common in sweeps).
+   - Chạy `npx tsc --noEmit` (zero errors gate).
+   - Chạy `npm run lint` (zero warnings).
+   - Chạy `npm run test` (all pass) — note first failure nếu có, fix minimal duy nhất.
+   - Per sweep pattern: `npm run test:content-standard && bash scripts/audit-lesson-content.sh` (50/50 expected).
+   - Capture outputs, fix only the very first error encountered; no scope creep. No new feature.
+6. Sau gates: viết log `logs/agent/20260701T...Z_TASK-144.log` (tóm tắt gates + fix or clean); update BACKLOG (in_progress→done + Nhật ký entry + SHA); sync PLAN log table + Completed.
+7. git pull --rebase; git add AGENT_BACKLOG.md AGENT_PLAN.md logs/agent/* (và src nếu fix 1 file); commit "chore(maintenance): autopilot sweep #144 — lint+test gates + PLAN/BACKLOG sync (TASK-144)"; `bash scripts/git-push.sh main`.
+**Rủi ro**:
+- Lint/test fail on transient (tsbuildinfo, coverage artifact) → rm -f tsconfig.tsbuildinfo; rerun once; 2 fails → blocked + lý do.
+- First failure is real bug in core → minimal fix (e.g. type or test data), self-debug from error msg; if needs major or secret → blocked.
+- Git push needs token (GITLAB_TOKEN) or net → status blocked, do not force.
+- No new feature: strictly only fix first failure or doc-sync only.
+- Fail 2 lần liên tiếp → status `blocked` + ghi lý do vào BACKLOG/PLAN.
+- Refill already pushed a chore commit; our commit separate.
+**Done khi**: `npm run lint && npm run test` pass (or 1 minimal fix); tsc0; content gates nếu chạy 50/50; PLAN+BACKLOG+nhật ký synced; log file; commit+push via script if change; BACKLOG done; autonomous.
+
+**Started:** 2026-07-01 — autopilot (PHASE1: search_memory sim + read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT_STYLE.md§6–7 + grep TASK-144 + daemon logs + refill run; 1r → refill to 4; PHASE2 PLAN+BACKLOG in_p)
+
+**Completed TASK-144**: gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed; log written 20260701T144534Z_TASK-144.log; BACKLOG+PLAN+nhật ký synced; no src edit; autonomous (PHASE3)
 
