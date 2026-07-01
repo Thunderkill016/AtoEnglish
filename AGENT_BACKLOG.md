@@ -17,17 +17,18 @@
 4. Không force-push `main`
 5. Nếu fail 2 lần liên tiếp → đổi status `blocked`, ghi lý do
 
-## Hàng đợi — V2 Minimal Redesign (user mandate 2026-06-26)
+## Hàng đợi — P0: Best-in-World Vibrant Self-Study + Free Speaking (aligned to user rollback state 2026-07)
 
-> Agent tự chạy **không cần user nhắc**. Spec: `MINIMAL_REDESIGN_V2.md`. Pool: `AGENT_ROADMAP.md` TASK-081..090.
+> Deprecate all V2 minimal. Focus: vibrant glassmorphism full landing + seamless guest/self-study + world-class FREE speaking coach (advanced local VN L1 + shadowing) + motivation realistic + job content + blueprint polish. See ROADMAP new pool. One task/cycle. Follow AGENTS strictly.
 
-| # | Task | Phase V2 |
+| # | Task | Priority |
 |---|------|----------|
-| 1 | TASK-081 → 082 | Placement + Pronunciation (inline style purge) |
-| 2 | TASK-083 → 084 | Lesson light theme |
-| 3 | TASK-085 → 086 | Login visual + Certificate |
-| 4 | TASK-087 → 088 | Legal Prose + CSS purge |
-| 5 | TASK-089 → 090 | Speaking IA + E2E regression |
+| 1 | TASK-146 — Enhance free speaking coach advanced local VN-L1 analysis | P0 ready |
+| 2 | TASK-147 — Improve guest/self-study persistence & seamless flow | P0 |
+| 3 | TASK-148 — Job/career focused roleplays | P1 |
+| 4 | TASK-149 — Motivation daily goals + viz | P1 |
+| 5 | TASK-150 — Polish lessons to blueprint standards | P1 |
+| 6 | TASK-151 — Vibrant UI polish (glass/motion) | P2 |
 
 **V1 done:** UI-001..007 + content 058–062. **V2 shipped:** PR-01/02/03 + batch `bac3f15` (~60% surfaces).
 
@@ -41,6 +42,21 @@
 | `in_progress` | Đang chạy (agent set khi bắt đầu) |
 | `done` | Hoàn thành |
 | `blocked` | Cần người (secrets, quyết định, lỗi lặp) |
+
+---
+
+## P0 — Best World-Class Self-Study (vibrant + guest + speaking) 2026-07+
+
+### TASK-146 — Enhance free speaking coach with advanced local VN-L1 analysis + shadowing
+- **Status:** `in_progress`
+- **Mô tả:** Upgrade `src/lib/utils/speech-analysis.ts` + integrate. Expand L1_PATTERNS for high-impact VN errors (final stops, th/d/t, s/z/sh, linking, articles+verbs, vowel contrasts, stress). Improve similarity: word fuzzy + simple phonetic substitution map (no deps, pure TS). Add shadowing-specific: emphasis on intonation/pacing notes. Richer specificTips. Update ai-roleplay/journal/shadowing-practice to use + show. Graceful for guests (skip DB save or local-only toast). Free fallback only. Research: shadowing + ASR boosts pronunciation/fluency; Babbel-style low-pressure real scenarios.
+- **Done khi:** analyzeSpeaking delivers measurably better VN-specific actionable feedback + accurate sim; speech.test + unit tests pass; no `console.*`; tsc/lint clean; UI surfaces tips in speaking pages; guest practice works end-to-end without auth error.
+- **Started:** 2026-07-01 — autopilot (PHASE1: memory search empty + read AGENTS/BACKLOG/ROADMAP + research Babbel/shadowing/VN L1 via tools + inspect speech-analysis/SpeakingClient/shadowing/roleplay + guest code; PHASE2: update roadmap/backlog docs; PHASE3: implement minimal diff)
+
+### TASK-147 — Improve guest/self-study flow persistence + seamless /learn
+- **Status:** `ready`
+- **Mô tả:** Build on existing guest_completed_units + lesson-progress-*. Add guest local speaking history. Ensure /speaking, /learn, dashboard, roadmap fully usable for !auth (relaxed proxy). On auth, optional migrate local progress note.
+- **Done khi:** Guests complete full flow incl speaking local; progress persists browser; no auth friction in learn paths; tests pass.
 
 ---
 
@@ -952,10 +968,11 @@
 - **Completed:** 2026-07-01 — gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed; log written 20260701T132923Z_TASK-140.log; BACKLOG+PLAN+nhật ký synced; commit 59e70c2 + push via git-push.sh main (follow-ups 68581ad, 5d2e459, 3484437); no src edit; autonomous (PHASE3)
 
 ### TASK-141 — Autopilot maintenance sweep #141
-- **Status:** `in_progress`
+- **Status:** `done`
 - **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
 - **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
 - **Started:** 2026-07-01 — autopilot (PHASE1: search_memory("TASK-141") real via fn + read AGENTS.md + BACKLOG/PLAN/ROADMAP/CONTENT_STYLE.md§6–7 + grep TASK-141 + recent logs; 2r (141-142) ; PHASE2: PLAN update + BACKLOG in_p + refill since low)
+- **Completed:** 2026-07-01 — gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed; log 20260701T133921Z_TASK-141.log + sync PLAN/BACKLOG; no src; commit TBD + push via git-push.sh main; autonomous (PHASE3)
 
 ### TASK-142 — Autopilot maintenance sweep #142
 - **Status:** `ready`
@@ -998,7 +1015,7 @@
 | 2026-07-01 | TASK-140 | gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed; log 20260701T132923Z_TASK-140.log + sync PLAN/BACKLOG; no src; commit 59e70c2 + push via git-push.sh main (follow-ups 68581ad, 5d2e459, 3484437); autonomous | done — 59e70c2 |
 | 2026-07-01 | TASK-139 | gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed; log 20260701T131947Z_TASK-139.log + sync PLAN/BACKLOG; no src; commit b3af66a + push via git-push.sh main (follow-up 1f6daf4); autonomous | done — b3af66a |
 | 2026-07-01 | TASK-138 | gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed; log 20260701T131233Z_TASK-138.log + sync PLAN/BACKLOG; no src; commit + push via git-push.sh main; autonomous | done |
-| 2026-07-01 | TASK-141 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-07-01 | TASK-141 | gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed; log 20260701T133921Z_TASK-141.log + sync PLAN/BACKLOG; no src; commit TBD + push via git-push.sh main; autonomous | done — TBD |
 | 2026-07-01 | TASK-142 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-01 | TASK-136 | PHASE1: search_memory via logs/grep + read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT_STYLE.md§6–7 + grep TASK-136; 4r>=2; PHASE2 PLAN update + BACKLOG in_p (skip refill); PHASE3: gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix + log 20260701T125000Z_TASK-136.log + sync PLAN/BACKLOG; no src; commit cb0a4e7 + push via git-push.sh main (follow-up 99440fc, ea53345) | done — cb0a4e7 |
 | 2026-07-01 | TASK-137 | gates clean no fix + log 20260701T130343Z_TASK-137.log + sync PLAN/BACKLOG; no src; commit+push via git-push.sh main | done — 6d04690 |
