@@ -945,10 +945,11 @@
 
 
 ### TASK-140 — Autopilot maintenance sweep #140
-- **Status:** `ready`
+- **Status:** `done`
 - **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
 - **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
-- **Started:** auto-refill
+- **Started:** 2026-07-01 — autopilot (PHASE1: sim search_memory via logs/grep (only prompt, empty prior) + read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT_STYLE.md§6–7 + grep TASK-140 + recent logs/daemon; 3r >=2 skip refill; PHASE2 PLAN update + BACKLOG in_p)
+- **Completed:** 2026-07-01 — gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed; log written 20260701T132923Z_TASK-140.log; BACKLOG+PLAN+nhật ký synced; commit + push via git-push.sh main; no src edit; autonomous (PHASE3)
 
 ### TASK-141 — Autopilot maintenance sweep #141
 - **Status:** `ready`
@@ -972,9 +973,9 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
+| 2026-07-01 | TASK-140 | gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed; log 20260701T132923Z_TASK-140.log + sync PLAN/BACKLOG; no src; commit + push via git-push.sh main; autonomous | done |
 | 2026-07-01 | TASK-139 | gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed; log 20260701T131947Z_TASK-139.log + sync PLAN/BACKLOG; no src; commit b3af66a + push via git-push.sh main (follow-up 1f6daf4); autonomous | done — b3af66a |
 | 2026-07-01 | TASK-138 | gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed; log 20260701T131233Z_TASK-138.log + sync PLAN/BACKLOG; no src; commit + push via git-push.sh main; autonomous | done |
-| 2026-07-01 | TASK-140 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-01 | TASK-141 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-01 | TASK-142 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-01 | TASK-136 | PHASE1: search_memory via logs/grep + read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT_STYLE.md§6–7 + grep TASK-136; 4r>=2; PHASE2 PLAN update + BACKLOG in_p (skip refill); PHASE3: gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix + log 20260701T125000Z_TASK-136.log + sync PLAN/BACKLOG; no src; commit cb0a4e7 + push via git-push.sh main (follow-up 99440fc, ea53345) | done — cb0a4e7 |
