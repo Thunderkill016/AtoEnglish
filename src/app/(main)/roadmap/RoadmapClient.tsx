@@ -46,7 +46,12 @@ export default function RoadmapClient({
   const entryUnit = startingUnitIndex > 0 ? UNITS[startingUnitIndex] : null;
   const todayTip = DAILY_TIPS[new Date().getDate() % DAILY_TIPS.length]!;
   const allUnits = UNITS.map((u) => ({ id: u.id, level: u.level }));
-  const overallProgress = getPhaseProgress(userLevel, completedUnitIds, allUnits);
+
+  // Guest local merge (consistent with dashboard for seamless self-study)
+  const guestCompleted = typeof window !== 'undefined' ? (() => { try { return JSON.parse(localStorage.getItem('guest_completed_units') || '[]'); } catch { return []; } })() : [];
+  const effectiveCompleted = Array.from(new Set([...(completedUnitIds || []), ...guestCompleted]));
+
+  const overallProgress = getPhaseProgress(userLevel, effectiveCompleted, allUnits);
 
   return (
     <SecondaryPageShell
