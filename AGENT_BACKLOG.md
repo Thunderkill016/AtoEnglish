@@ -949,7 +949,7 @@
 - **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
 - **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
 - **Started:** 2026-07-01 — autopilot (PHASE1: sim search_memory via logs/grep (only prompt, empty prior) + read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT_STYLE.md§6–7 + grep TASK-140 + recent logs/daemon; 3r >=2 skip refill; PHASE2 PLAN update + BACKLOG in_p)
-- **Completed:** 2026-07-01 — gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed; log written 20260701T132923Z_TASK-140.log; BACKLOG+PLAN+nhật ký synced; commit 59e70c2 + push via git-push.sh main (follow-up 68581ad); no src edit; autonomous (PHASE3)
+- **Completed:** 2026-07-01 — gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed; log written 20260701T132923Z_TASK-140.log; BACKLOG+PLAN+nhật ký synced; commit 59e70c2 + push via git-push.sh main (follow-ups 68581ad, 5d2e459); no src edit; autonomous (PHASE3)
 
 ### TASK-141 — Autopilot maintenance sweep #141
 - **Status:** `ready`
@@ -973,7 +973,7 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
-| 2026-07-01 | TASK-140 | gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed; log 20260701T132923Z_TASK-140.log + sync PLAN/BACKLOG; no src; commit 59e70c2 + push via git-push.sh main (follow-up 68581ad); autonomous | done — 59e70c2 |
+| 2026-07-01 | TASK-140 | gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed; log 20260701T132923Z_TASK-140.log + sync PLAN/BACKLOG; no src; commit 59e70c2 + push via git-push.sh main (follow-ups 68581ad, 5d2e459); autonomous | done — 59e70c2 |
 | 2026-07-01 | TASK-139 | gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed; log 20260701T131947Z_TASK-139.log + sync PLAN/BACKLOG; no src; commit b3af66a + push via git-push.sh main (follow-up 1f6daf4); autonomous | done — b3af66a |
 | 2026-07-01 | TASK-138 | gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed; log 20260701T131233Z_TASK-138.log + sync PLAN/BACKLOG; no src; commit + push via git-push.sh main; autonomous | done |
 | 2026-07-01 | TASK-141 | auto-refill từ AGENT_ROADMAP.md | ready |
