@@ -1044,10 +1044,11 @@
 - **Completed:** 2026-07-01 — gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed; log 20260701T144534Z_TASK-144.log + sync PLAN/BACKLOG; no src edit; autonomous (PHASE3)
 
 ### TASK-145 — Autopilot maintenance sweep #145
-- **Status:** `in_progress`
+- **Status:** `done`
 - **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
 - **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
 - **Started:** 2026-07-01 — autopilot (PHASE1: real search_memory(TASK-145) + read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT_STYLE.md§6–7 + grep TASK-145 + recent logs/daemon; 4r >=2; PHASE2 PLAN+BACKLOG in_p + run refill per query; PHASE3: run gates)
+- **Completed:** 2026-07-01 — gates clean after minimal first-fail fix (unit13 stray syntax + non-typed fields removed to unblock tsc; no data/content change); tsc0+lint0+170t+cs50/50+audit50/50; log 20260701T215600Z_TASK-145.log + sync PLAN/BACKLOG; commit via git-push.sh main; autonomous (PHASE3)
 
 
 ### TASK-153 — Autopilot maintenance sweep #153
@@ -1083,7 +1084,7 @@
 | 2026-07-01 | TASK-155 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-01 | TASK-143 | gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix + log 20260701T142617Z_TASK-143.log + sync PLAN/BACKLOG; no src; autonomous | done — (pending SHA) |
 | 2026-07-01 | TASK-144 | gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix + log 20260701T144534Z_TASK-144.log + sync PLAN/BACKLOG; no src; commit via git-push.sh main; autonomous | done — (pending SHA) |
-| 2026-07-01 | TASK-145 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-07-01 | TASK-145 | gates clean (tsc0+lint0+170t+cs50/50+audit50/50) after minimal first-fail fix (unit13 syntax/type); log 20260701T215600Z_TASK-145.log + sync PLAN/BACKLOG; commit via git-push.sh main; autonomous | done — (pending SHA) |
 | 2026-07-01 | TASK-140 | gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed; log 20260701T132923Z_TASK-140.log + sync PLAN/BACKLOG; no src; commit 59e70c2 + push via git-push.sh main (follow-ups 68581ad, 5d2e459, 3484437); autonomous | done — 59e70c2 |
 | 2026-07-01 | TASK-149 | PHASE1: search_memory sim + read AGENTS/BACKLOG/ROADMAP + web research (small daily consistent practice, honest progress viz, impl intentions, realistic no-hype for adult VN learners); PHASE2: backlog set 149 in_p (147 done note, 148 partial); PHASE3: minimal diff enhance EfSetGoalTracker (realistic note + speaking link glass) + DashboardClient daily xp (consistency text); tsc0 lint0 170t pass; commit acb42a3 + push via git-push.sh; update Nhật ký + PLAN; success | done — acb42a3 |
 | 2026-07-01 | TASK-139 | gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed; log 20260701T131947Z_TASK-139.log + sync PLAN/BACKLOG; no src; commit b3af66a + push via git-push.sh main (follow-up 1f6daf4); autonomous | done — b3af66a |
