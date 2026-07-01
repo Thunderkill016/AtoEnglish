@@ -33,7 +33,12 @@ export async function updateSession(request: NextRequest) {
   );
 
   const pathname = request.nextUrl.pathname;
-  const protectedRoutes = ["/dashboard", "/learn", "/flashcards", "/progress", "/speaking", "/roadmap"];
+  const protectedRoutes = [
+    // guest self-study on pre-minimal best version
+    // "/dashboard", "/learn", "/flashcards", "/speaking",
+    "/progress", "/roadmap", "/writing", "/leaderboard", "/grammar", "/business",
+    "/challenge", "/pronunciation", "/placement-test", "/invite", "/certificate", "/settings", "/checkpoint", "/quiz"
+  ];
   const isProtectedRoute = protectedRoutes.some(route => pathname.startsWith(route));
   const isLoginRoute = pathname === "/login";
 

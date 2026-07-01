@@ -423,11 +423,19 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
     getUnitCompletionStatus(normalizedUnit.unitId).then((res) => {
       if (res.success && res.completed) setIsCompleted(true);
     });
+    // guest local from best pre-minimal version
+    try {
+      const g = JSON.parse(localStorage.getItem("guest_completed_units") || "[]");
+      if (Array.isArray(g) && g.includes(normalizedUnit.unitId)) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setIsCompleted(true);
+      }
+    } catch {}
     try {
       const saved = localStorage.getItem(`lesson-progress-${normalizedUnit.unitId}`);
       if (saved) {
         const { section: savedSection } = JSON.parse(saved) as { section: number };
-        // eslint-disable-next-line react-hooks/set-state-in-effect
+         
         if (savedSection > 1 && savedSection < TOTAL_SECTIONS) setSection(savedSection);
       }
     } catch { /* ignore */ }
@@ -776,6 +784,16 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
       const prev = Number(localStorage.getItem(xpSyncKey) ?? 0);
       localStorage.setItem(xpSyncKey, String(prev + earnedXp));
       window.dispatchEvent(new CustomEvent("ato:xp-earned", { detail: { xp: earnedXp } }));
+    } else if (res.error && res.error.includes("đăng nhập")) {
+      // guest fallback from rolled best version
+      setIsCompleted(true);
+      try {
+        const k = "guest_completed_units";
+        const a = JSON.parse(localStorage.getItem(k) || "[]");
+        localStorage.setItem(k, JSON.stringify(Array.isArray(a) ? [...new Set([...a, normalizedUnit.unitId])] : [normalizedUnit.unitId]));
+      } catch {}
+      toast.success("🎉 Hoàn thành! (guest mode - local only)");
+      setCompletionData({ xpEarned: xpToEarn, starCount: effectiveStarCount, effectiveScore, newStreak: 0, vocabPreview: normalizedUnit.vocab.slice(0,5).map(v=>({word:v.word,meaning:v.meaning})), nextRoute });
     } else {
       toast.error(res.error || "Có lỗi xảy ra");
     }
