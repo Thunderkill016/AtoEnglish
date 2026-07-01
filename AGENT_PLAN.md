@@ -126,7 +126,7 @@
 **Started:** 2026-07-02 — autopilot (PHASE1: search_memory sim via logs/grep + reads AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6–7 + grep; 3r>=2; PHASE2: PLAN update + BACKLOG in_p + skip refill)
 
 **Completed TASK-171**: gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed; log written 20260702T172800Z_TASK-171.log + BACKLOG/PLAN/nhật ký synced; no src edit; commit f1639fd + push via git-push.sh main; autonomous (PHASE3)
-**Follow-up**: commit 5a29599 for Nhật ký table row sync.
+**Follow-up**: commit 54dda94 for Nhật ký table row sync.
 
 ### TASK-162 — Autopilot maintenance sweep #162
 **Mục tiêu**: Chạy `npm run lint && npm run test` (cùng npx tsc --noEmit + content gates nếu liên quan); fix failure đầu tiên (nếu có, minimal patch); sync AGENT_PLAN nhật ký + BACKLOG status + Nhật ký + log file. Không feature mới, không thay đổi logic app, chỉ gates + doc. **Done khi:** gates pass (0 lint, all tests); 0 or 1 small fix if first failure; PLAN/BACKLOG/nhật ký updated; 1 commit nếu change or doc sync; pushed via git-push.sh main.
