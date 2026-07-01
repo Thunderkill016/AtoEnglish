@@ -71,16 +71,16 @@ export default function LandingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-white text-zinc-900 dark:bg-zinc-950 dark:text-zinc-50 font-sans antialiased">
+    <div className="min-h-screen bg-zinc-950 text-white font-sans antialiased">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <nav className="sticky top-0 z-50 w-full bg-white/70 dark:bg-zinc-950/70 backdrop-blur-md border-b border-zinc-200/40 dark:border-zinc-800/40">
+      <nav className="sticky top-0 z-50 w-full bg-zinc-950/80 backdrop-blur-xl border-b border-white/10">
         <div className="max-w-6xl mx-auto h-16 flex items-center justify-between px-5 sm:px-8">
           <Link href="/" className="flex items-center gap-2.5 group">
-            <span className="flex size-8 items-center justify-center rounded-lg bg-emerald-600 text-white">
+            <span className="flex size-8 items-center justify-center rounded-lg bg-gradient-to-br from-emerald-500 to-teal-400 text-white">
               <Sprout className="size-4.5" />
             </span>
             <span className="text-sm font-bold tracking-tight">AtoEnglish</span>
@@ -93,33 +93,41 @@ export default function LandingPage() {
         <MobileMenu />
       </nav>
 
-      <main id="main-content" className="flex flex-col items-center justify-center px-5 sm:px-8 py-20 sm:py-28 min-h-[calc(100dvh-4rem)]">
-        <div className="max-w-xl w-full text-center space-y-8">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold leading-[1.1] tracking-tight">
+      <main className="flex flex-col items-center justify-center px-5 sm:px-8 py-20 sm:py-28 text-center">
+        <div className="max-w-3xl w-full space-y-8">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-black leading-[1.05] tracking-[-2px]">
             Học tiếng Anh để{" "}
-            <span className="bg-gradient-to-r from-emerald-600 to-teal-500 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent">
               nói được
             </span>
             , không chỉ để biết.
           </h1>
-          <p className="text-base sm:text-lg text-zinc-600 dark:text-zinc-400 leading-relaxed">
-            IPOR + FSRS + Shadowing — 15 phút mỗi ngày. Miễn phí trong Open Beta.
+          <p className="text-xl text-zinc-400 max-w-xl mx-auto">
+            IPOR + FSRS + Shadowing. 15 phút mỗi ngày. Bắt đầu ngay không cần tài khoản.
           </p>
+
           <HeroCTA align="center" />
+
+          <div className="pt-8 grid grid-cols-1 md:grid-cols-2 gap-4">
+            {[
+              { title: "Tình huống thực tế", desc: "Công việc, du lịch, phỏng vấn – học để dùng ngay" },
+              { title: "Phản xạ nói", desc: "Shadowing + roleplay giúp bật câu tự nhiên" },
+              { title: "Ôn tập thông minh", desc: "FSRS nhắc đúng lúc sắp quên, nhớ lâu" },
+              { title: "Siêu ngắn gọn", desc: "Bài 10-15 phút, mobile-first, dễ duy trì" },
+            ].map((item, i) => (
+              <div key={i} className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-5 text-left">
+                <h3 className="font-semibold text-lg mb-1">{item.title}</h3>
+                <p className="text-sm text-zinc-400">{item.desc}</p>
+              </div>
+            ))}
+          </div>
+
+          <p className="text-xs text-zinc-500 pt-4">50 unit A0→B2 • Miễn phí Open Beta • Dành cho người Việt</p>
         </div>
       </main>
 
-      <footer className="border-t border-zinc-200/40 dark:border-zinc-800/40 py-8 px-5 text-center">
-        <p className="text-xs text-zinc-500">
-          &copy; {new Date().getFullYear()} AtoEnglish ·{" "}
-          <Link href="/privacy" className="hover:text-zinc-700 dark:hover:text-zinc-300">
-            Bảo mật
-          </Link>
-          {" · "}
-          <Link href="/terms" className="hover:text-zinc-700 dark:hover:text-zinc-300">
-            Điều khoản
-          </Link>
-        </p>
+      <footer className="border-t border-white/10 py-8 px-5 text-center text-xs text-zinc-500">
+        &copy; {new Date().getFullYear()} AtoEnglish · <Link href="/privacy" className="hover:text-white">Bảo mật</Link> · <Link href="/terms" className="hover:text-white">Điều khoản</Link>
       </footer>
     </div>
   );
