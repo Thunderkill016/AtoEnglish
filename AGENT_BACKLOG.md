@@ -1052,10 +1052,11 @@
 
 
 ### TASK-153 — Autopilot maintenance sweep #153
-- **Status:** `ready`
+- **Status:** `done`
 - **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
 - **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
-- **Started:** auto-refill
+- **Started:** 2026-07-01 — autopilot (PHASE1: search_memory sim via logs/grep + read AGENTS.md (ALWAYS), AGENT_BACKLOG/PLAN/ROADMAP, CONTENT_STYLE.md §6–7 + grep TASK-153 + maintenance + recent daemon logs + ts issues/unit13/unit stray; confirmed 3 ready; PHASE2: BACKLOG in_p + PLAN update for sweep + run refill if low; PHASE3: gates + first fail fix if any + sync)
+- **Completed:** 2026-07-01 — gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed; log 20260701T151239Z_TASK-153.log + sync PLAN/BACKLOG; no src edit; commit via git-push.sh main; autonomous (PHASE3)
 
 ### TASK-154 — Autopilot maintenance sweep #154
 - **Status:** `ready`
@@ -1079,7 +1080,7 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
-| 2026-07-01 | TASK-153 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-07-01 | TASK-153 | gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix + log 20260701T151239Z_TASK-153.log + sync PLAN/BACKLOG; no src; commit via git-push.sh main; autonomous | done — (pending SHA) |
 | 2026-07-01 | TASK-154 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-01 | TASK-155 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-01 | TASK-143 | gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix + log 20260701T142617Z_TASK-143.log + sync PLAN/BACKLOG; no src; autonomous | done — (pending SHA) |
