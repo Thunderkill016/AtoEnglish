@@ -1154,10 +1154,11 @@
 - **Completed:** 2026-07-01 — gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed; log 20260701T165440Z_TASK-166.log + BACKLOG/PLAN/nhật ký synced; no src edit; commit a5bb1b6 + push via git-push.sh main; autonomous (PHASE3)
 
 ### TASK-167 — Autopilot maintenance sweep #167
-- **Status:** `ready`
+- **Status:** `done`
 - **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
 - **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
-- **Started:** auto-refill
+- **Started:** 2026-07-01 — autopilot (PHASE1: search_memory sim via logs/grep + read AGENTS.md (ALWAYS), AGENT_BACKLOG/PLAN/ROADMAP, CONTENT_STYLE.md §6–7 + grep TASK-167 + maintenance sweeps + logs/agent/* + BACKLOG/PLAN; confirm 4 ready >=2; files: AGENT_BACKLOG.md AGENT_PLAN.md logs/agent/* (unless fix 1st failure); PHASE2: PLAN update + BACKLOG in_p + skip refill (OK); PHASE3: gates + first-fail fix minimal if any + sync)
+- **Completed:** 2026-07-02 — gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed; log 20260702T170400Z_TASK-167.log + BACKLOG/PLAN/nhật ký synced; no src edit; commit + push via git-push.sh main; autonomous (PHASE3)
 
 
 ### TASK-168 — Autopilot maintenance sweep #168
@@ -1188,6 +1189,7 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
+| 2026-07-02 | TASK-167 | gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed; log 20260702T170400Z_TASK-167.log + BACKLOG/PLAN/nhật ký synced; no src edit; commit + push via git-push.sh main; autonomous | done — (pending SHA) |
 | 2026-07-01 | TASK-168 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-01 | TASK-169 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-01 | TASK-170 | auto-refill từ AGENT_ROADMAP.md | ready |
