@@ -805,10 +805,11 @@
 - **Completed:** 2026-07-01 — gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed; log written 20260701T085250Z_TASK-120.log; BACKLOG+PLAN updated; no src edit; autonomous (PHASE3)
 
 ### TASK-121 — Autopilot maintenance sweep #121
-- **Status:** `ready`
+- **Status:** `done`
 - **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
 - **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
-- **Started:** auto-refill
+- **Started:** 2026-07-01 — autopilot (PHASE1: search_memory sim via logs/grep (prior 120 clean) + read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6–7 + grep TASK-121; 4 ready (121-124) >=2; PHASE2: PLAN update + BACKLOG in_p + run refill script per query)
+- **Completed:** 2026-07-01 — gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed; log written 20260701T090844Z_TASK-121.log; BACKLOG+PLAN+nhật ký synced; no src edit; autonomous (PHASE3)
 
 
 ### TASK-122 — Autopilot maintenance sweep #122
@@ -839,6 +840,7 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
+| 2026-07-01 | TASK-121 | PHASE1: sim search_memory + read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6–7 + grep; 4r>=2; PHASE2 PLAN+BACKLOG in_p + run refill script (OK skip); PHASE3: gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix + log 20260701T090844Z_TASK-121.log + sync PLAN/BACKLOG; no src; commit+push via git-push.sh main | done — (pending push) |
 | 2026-07-01 | TASK-122 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-01 | TASK-123 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-01 | TASK-124 | auto-refill từ AGENT_ROADMAP.md | ready |
