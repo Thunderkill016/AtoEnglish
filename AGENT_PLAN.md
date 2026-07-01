@@ -37,6 +37,8 @@
 
 **Started:** 2026-07-01 — autopilot
 
+**Completed TASK-143**: gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed; log written 20260701T142617Z_TASK-143.log; BACKLOG+PLAN+nhật ký synced; no src edit; autonomous (PHASE3)
+
 ### TASK-151 — Vibrant UI polish (glass/motion)
 **Mục tiêu**: Polish vibrant glassmorphism + motion: enhance smooth Framer Motion transitions (lessons via motion.ts + shell, speaking cards, dashboard sections), make guest CTAs responsive (mobile friendly glass banners/CTAs), polish progress viz with motion, add subtle engaging but honest copy. Keep zinc-950 dark bg + emerald-500/teal-500 glass (bg-white/5 + backdrop-blur-xl etc). Deprecate any minimal drift. No logic, no new deps, MINIMAL diff. **Done khi:** better feel on cards/sections/CTAs/viz; gates pass (tsc/lint/test); docs updated with Nhật ký; pushed via git-push.sh.
 

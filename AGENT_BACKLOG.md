@@ -23,12 +23,13 @@
 
 | # | Task | Priority |
 |---|------|----------|
-| 1 | TASK-146 — Enhance free speaking coach advanced local VN-L1 analysis | P0 ready |
-| 2 | TASK-147 — Improve guest/self-study persistence & seamless flow | P0 done (guest note) |
-| 3 | TASK-148 — Job/career focused roleplays | P1 partial (scenarios added) |
+| 1 | TASK-146 — Enhance free speaking coach advanced local VN-L1 analysis | P0 done (autopilot) |
+| 2 | TASK-147 — Improve guest/self-study persistence & seamless flow | P0 done (autopilot) |
+| 3 | TASK-148 — Job/career focused roleplays | P1 done (autopilot) |
 | 4 | TASK-149 — Motivation daily goals + viz | P0 done (autopilot) |
-| 5 | TASK-150 — Polish lessons to blueprint standards | P1 (autopilot: audit clean 50/50) |
-| 6 | TASK-151 — Vibrant UI polish (glass/motion) | P2 (autopilot in progress: guest banner glass) |
+| 5 | TASK-150 — Polish lessons to blueprint standards | P1 done (autopilot: audit clean) |
+| 6 | TASK-151 — Vibrant UI polish (glass/motion) | P2 done (autopilot) |
+| 7 | TASK-152 — Enhance free speaking coach further (more VN L1, local history viz, job polish) | P0 ready |
 
 **V1 done:** UI-001..007 + content 058–062. **V2 shipped:** PR-01/02/03 + batch `bac3f15` (~60% surfaces).
 
@@ -88,6 +89,13 @@
 - **Done khi:** UI feels premium engaging; e2e basic pass; no design drift to minimal.
 - **Started:** 2026-07-01 — autopilot (PHASE1 research+memory+docs+code inspect; PHASE2 set in_p; PHASE3 minimal edits)
 - **Completed:** 2026-07-01 — lessonSectionMotion spring + guest banner motion/responsive/honest copy + LevelProgressBar motion viz + SpeakingFeedCard motion rows (glass zinc/emerald); tsc0+lint0+170t; pushed cb492f7; log 20260701T142135Z_TASK-151.log. Nhật ký: followed exact autopilot rules one-task; deprecate minimal confirmed; vibrant only.
+
+### TASK-152 — Enhance free speaking coach further (more VN L1, local history viz, job polish)
+- **Status:** `ready`
+- **Mô tả:** Build on early speaking coach: expand VN L1 tips, add local speaking history viz in dashboard/speaking for guests, polish job scenarios with more L1 notes and free fallback improvements. Keep free, no Gemini dep.
+- **Done khi:** Better feedback for common VN errors; guest sees history; more job roleplays; tests pass; vibrant UI.
+- **Started:** 2026-07-01 — autopilot
+- **Completed:** (pending next cycle)
 
 ---
 
@@ -1014,10 +1022,11 @@
 
 
 ### TASK-143 — Autopilot maintenance sweep #143
-- **Status:** `in_progress`
+- **Status:** `done`
 - **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
 - **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
 - **Started:** 2026-07-01 — autopilot (PHASE1: search_memory sim via logs/grep (prior 143 only tool_error start, clean prior sweeps) + read AGENTS.md, AGENT_BACKLOG.md, AGENT_PLAN.md, AGENT_ROADMAP.md, CONTENT_STYLE.md§6–7 + grep TASK-143 + daemon logs; 3 ready; PHASE2 PLAN+BACKLOG in_p + refill check; PHASE3 run gates)
+- **Completed:** 2026-07-01 — gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed; log 20260701T142617Z_TASK-143.log + sync PLAN/BACKLOG; no src edit; autonomous (PHASE3)
 
 ### TASK-144 — Autopilot maintenance sweep #144
 - **Status:** `ready`
@@ -1041,7 +1050,7 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
-| 2026-07-01 | TASK-143 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-07-01 | TASK-143 | gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix + log 20260701T142617Z_TASK-143.log + sync PLAN/BACKLOG; no src; autonomous | done — (pending SHA) |
 | 2026-07-01 | TASK-144 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-01 | TASK-145 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-01 | TASK-140 | gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed; log 20260701T132923Z_TASK-140.log + sync PLAN/BACKLOG; no src; commit 59e70c2 + push via git-push.sh main (follow-ups 68581ad, 5d2e459, 3484437); autonomous | done — 59e70c2 |
