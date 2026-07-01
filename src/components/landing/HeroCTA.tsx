@@ -28,26 +28,31 @@ export default function HeroCTA() {
 
   return (
     <div className="animate-fade-in-up animation-delay-225 flex flex-col items-center gap-4 pt-4 w-full">
-      {/* CTA Buttons */}
+      {/* CTA Buttons — vibrant pre-minimal: gradient primary "Học thử ngay" direct to /learn for guest self-study */}
       <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 w-full">
         <Link
-          href={isLoggedIn ? "/dashboard" : "/login"}
+          href={isLoggedIn ? "/dashboard" : "/learn"}
           prefetch={false}
           className="w-full sm:w-auto"
         >
-          <Button className="w-full sm:w-auto sm:min-w-[220px] justify-center bg-emerald-600 hover:bg-emerald-500 dark:bg-emerald-600 dark:hover:bg-emerald-500 text-white font-bold h-14 px-8 rounded-2xl shadow-lg shadow-emerald-600/15 dark:shadow-emerald-500/10 hover:shadow-emerald-500/25 hover:scale-[1.01] active:scale-[0.97] transition-all duration-300 gap-2">
-            {isLoggedIn ? "Vào Dashboard" : "Bắt đầu học ngay"}
+          <Button className="w-full sm:w-auto sm:min-w-[220px] justify-center bg-gradient-to-r from-emerald-600 via-teal-500 to-emerald-500 hover:from-emerald-500 hover:via-teal-400 hover:to-emerald-400 text-white font-bold h-14 px-8 rounded-2xl shadow-lg shadow-emerald-600/20 dark:shadow-emerald-500/15 hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 gap-2">
+            {isLoggedIn ? "Vào Dashboard" : "Học thử ngay"}
             <ArrowRight className="size-4.5" />
           </Button>
         </Link>
-        <Button
-          variant="outline"
-          onClick={handleScrollToHowItWorks}
-          className="w-full sm:w-auto border-zinc-200 dark:border-zinc-800/80 bg-transparent hover:bg-zinc-50 dark:hover:bg-zinc-900/30 text-zinc-700 dark:text-zinc-300 hover:text-zinc-950 dark:hover:text-zinc-50 font-bold h-14 px-8 rounded-2xl gap-1.5 active:scale-[0.97] transition-all duration-300"
+        <Link
+          href="/login"
+          prefetch={false}
+          className="w-full sm:w-auto"
         >
-          <span>Xem cách học</span>
-          <ChevronRight className="size-4.5" />
-        </Button>
+          <Button
+            variant="outline"
+            className="w-full sm:w-auto border-zinc-200 dark:border-white/15 bg-white/5 dark:bg-white/5 backdrop-blur-md hover:bg-white/10 dark:hover:bg-white/10 text-zinc-700 dark:text-zinc-200 hover:text-zinc-950 dark:hover:text-white font-bold h-14 px-8 rounded-2xl gap-1.5 active:scale-[0.97] transition-all duration-300"
+          >
+            <span>Đăng nhập</span>
+            <ChevronRight className="size-4.5" />
+          </Button>
+        </Link>
       </div>
 
       {/* Social proof microstats */}
