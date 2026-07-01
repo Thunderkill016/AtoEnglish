@@ -19,7 +19,7 @@ import { toast } from "sonner";
 import confetti from "canvas-confetti";
 import { saveSpeakingSession } from "@/app/actions/speaking";
 import { SpeechRecognitionFallback } from "@/lib/utils/speech-fallback";
-import { analyzeSpeaking } from "@/lib/utils/speech-analysis";
+import { analyzeSpeaking, type SpeechAnalysisResult } from "@/lib/utils/speech-analysis";
 
 interface SpeechRecognitionMock {
   continuous: boolean;
@@ -587,23 +587,21 @@ export function ShadowingPractice() {
     audio.play();
   };
 
-  // Hàm tính toán độ trùng khớp từ vựng
+  // Advanced free analysis (research-backed): Levenshtein + VN L1 interference tips for best shadowing feedback
   const calculateAccuracy = (original: string, recognized: string) => {
-    const cleanWord = (w: string) => w.toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?]/g, "").trim();
-    const origWords = original.split(/\s+/).map(cleanWord).filter(Boolean);
-    const recWords = recognized.split(/\s+/).map(cleanWord).filter(Boolean);
+    const analysis = analyzeSpeaking(original, recognized, "shadowing");
+    lastAnalysisRef.current = analysis;
+    setAnalysisTips(analysis.specificTips || []);
+    return analysis.similarity;
+  };
 
-    if (origWords.length === 0) return 0;
-    
-    let matches = 0;
-    const recSet = new Set(recWords);
-    origWords.forEach(word => {
-      if (recSet.has(word)) {
-        matches++;
-      }
-    });
+  // Ref + state for latest analysis tips (avoids direct ref read in render body per hooks rules)
+  const lastAnalysisRef = useRef<SpeechAnalysisResult | null>(null);
+  const [analysisTips, setAnalysisTips] = useState<string[]>([]);
 
-    return Math.round((matches / origWords.length) * 100);
+  const getAnalysisTips = (): string[] => {
+    const a = lastAnalysisRef.current;
+    return (a && a.specificTips) || [];
   };
 
   // Helper: detect specific missing English final consonants (codas) commonly deleted by Vietnamese learners
@@ -902,6 +900,18 @@ export function ShadowingPractice() {
                       <ul className="list-disc list-inside space-y-1 font-semibold pl-1">
                         {missingCodas.map((warning, i) => (
                           <li key={i} className="text-foreground/90 dark:text-zinc-200">{warning}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {/* Best-practice L1 feedback from advanced analyzer (autopilot applied) */}
+                  {analysisTips.length > 0 && (
+                    <div className="mt-3 p-4 rounded-2xl border border-emerald-500/20 bg-emerald-500/5 text-emerald-700 dark:text-emerald-400 text-xs space-y-1.5 shadow-sm">
+                      <div className="font-bold uppercase tracking-wider">Mẹo dành riêng cho người Việt (phân tích cục bộ)</div>
+                      <ul className="list-disc list-inside space-y-0.5 pl-1">
+                        {analysisTips.map((tip: string, i: number) => (
+                          <li key={i} className="text-foreground/90 dark:text-zinc-200">{tip}</li>
                         ))}
                       </ul>
                     </div>

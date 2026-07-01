@@ -67,35 +67,41 @@ export async function saveSpeakingSession(params: SaveSpeakingSessionParams) {
 
     const supabase = await createClient();
     
-    // 1. Kiểm tra trạng thái đăng nhập
+    // 1. Kiểm tra trạng thái đăng nhập — guest: vẫn cho luyện (local analysis), skip persist/XP
     const { data: { user }, error: authError } = await supabase.auth.getUser();
-    if (authError || !user) {
+    const isGuest = authError || !user;
+
+    if (!isGuest) {
+      // 2. Chèn bản ghi mới (chỉ cho user thật)
+      const { error } = await supabase
+        .from("speaking_sessions")
+        .insert({
+          user_id: user!.id,
+          practice_type: cleanParams.practiceType,
+          duration: cleanParams.duration,
+          transcript: cleanParams.transcript || null,
+          accuracy_score: cleanParams.accuracyScore !== undefined ? cleanParams.accuracyScore : null,
+          scenario_id: cleanParams.scenarioId || null
+        });
+
+      if (error) {
+        return {
+          success: false,
+          error: `Lỗi lưu lịch sử: ${error.message}`
+        };
+      }
+    }
+
+    // For guests: silently succeed (analysis + feedback is local + free). Seamless self-study.
+
+    // 3. Award XP + streak only for logged-in users (guest: local only, already handled in lesson progress)
+    if (isGuest) {
       return {
-        success: false,
-        error: "Bạn cần đăng nhập để lưu lịch sử luyện nói."
+        success: true,
+        guestMode: true,
       };
     }
 
-    // 2. Chèn bản ghi mới
-    const { error } = await supabase
-      .from("speaking_sessions")
-      .insert({
-        user_id: user.id,
-        practice_type: cleanParams.practiceType,
-        duration: cleanParams.duration,
-        transcript: cleanParams.transcript || null,
-        accuracy_score: cleanParams.accuracyScore !== undefined ? cleanParams.accuracyScore : null,
-        scenario_id: cleanParams.scenarioId || null
-      });
-
-    if (error) {
-      return {
-        success: false,
-        error: `Lỗi lưu lịch sử: ${error.message}`
-      };
-    }
-
-    // 3. Award XP for speaking practice + update streak
     const XP_BY_TYPE: Record<string, number> = {
       shadowing: 5,
       roleplay: 8,
@@ -168,16 +174,17 @@ export async function getRecentSpeakingSessions(limit: number = 5) {
   try {
     const supabase = await createClient();
     
-    // 1. Kiểm tra trạng thái đăng nhập
+    // 1. Kiểm tra trạng thái đăng nhập — guest: return empty (local practice still works)
     const { data: { user }, error: authError } = await supabase.auth.getUser();
     if (authError || !user) {
       return {
-        success: false,
-        error: "Bạn cần đăng nhập để lấy lịch sử luyện tập."
+        success: true,
+        sessions: [],
+        guestMode: true,
       };
     }
 
-    // 2. Truy vấn
+    // 2. Truy vấn (user thật)
     const { data, error } = await supabase
       .from("speaking_sessions")
       .select("*")

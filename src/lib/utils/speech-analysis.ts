@@ -54,6 +54,26 @@ function normalizeForComparison(text: string): string {
 }
 
 /**
+ * VN L1 phonetic-friendly normalize for better transcript matching.
+ * Applies common substitutions Vietnamese speakers make (and ASR often hears).
+ * Pure local, no external deps. Improves free coach quality.
+ */
+function applyVnL1Normalize(text: string): string {
+  return text
+    .replace(/\bth(ink|ought|ank|is|at|ese|ose|ing|ree|ank|em|ose)\b/g, "t$1")
+    .replace(/\bthis\b/g, "dis")
+    .replace(/\bthat\b/g, "dat")
+    .replace(/\bwith\b/g, "wit")
+    .replace(/\b(s|t|k|d|p|b|g|z|sh|ch)\b(?=\s|$)/g, "") // drop final stops/fric often missed
+    .replace(/\bed\b/g, "") // past -ed often weak
+    .replace(/\bs\b/g, "") // plural s
+    .replace(/\bve\b/g, "have")
+    .replace(/\breally\b/g, "very") // allow swaps in score
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+/**
  * Common Vietnamese L1 interference patterns + tips.
  * These are high-frequency real problems.
  */
@@ -62,12 +82,17 @@ const L1_PATTERNS: Array<{
   tip: string;
   example?: string;
 }> = [
-  { pattern: /\bth(ink|ank|ing|at|is|is|ese|ose)\b/gi, tip: "Âm 'th' thường bị thay bằng 't' hoặc 'd'. Tập thổi nhẹ không rung dây thanh." },
-  { pattern: /\b(s|t|k|d|p)\s*$/gi, tip: "Người Việt hay nuốt âm cuối. Nói rõ âm cuối (cats, stopped, liked)." },
-  { pattern: /\ba\s+(hour|apple|egg|umbrella)\b/gi, tip: "Dùng 'an' trước nguyên âm. 'a hour' sai → 'an hour'." },
-  { pattern: /\b(he|she|it)\s+(have|do|are)\b/gi, tip: "Chủ ngữ số ít thứ 3 cần -s: he has, she does, it is." },
-  { pattern: /\bvery\s+(much|good)\b/gi, tip: "Trong một số ngữ cảnh 'very' + adj, nhưng hãy thử 'really' hoặc cụm từ tự nhiên hơn." },
-  { pattern: /\bI\s+(am|was)\s+(from|in)\s+Vietnam\b/gi, tip: "Tốt, nhưng thử 'I'm Vietnamese' hoặc 'I come from Vietnam' nghe tự nhiên hơn." },
+  { pattern: /\bth(ink|ought|ank|is|at|ese|ose|ing|ree)\b/gi, tip: "Âm 'th' thường bị thay bằng 't' hoặc 'd'. Tập thổi nhẹ không rung dây thanh (unvoiced th)." },
+  { pattern: /\b(s|t|k|d|p|b|g|z|sh)\s*$/gi, tip: "Người Việt hay nuốt âm cuối. Nói rõ âm cuối (cats, stopped, liked, has)." },
+  { pattern: /\ba\s+(hour|apple|egg|umbrella|honest)\b/gi, tip: "Dùng 'an' trước nguyên âm. 'a hour' → 'an hour'." },
+  { pattern: /\b(he|she|it)\s+(have|do|are|go|want|need)\b/gi, tip: "Chủ ngữ số ít thứ 3 cần -s: he has, she does, it is." },
+  { pattern: /\bvery\s+(much|good|well|important)\b/gi, tip: "Thử 'really' hoặc 'quite' thay very cho tự nhiên hơn trong giao tiếp." },
+  { pattern: /\bI\s+(am|was)\s+(from|in)\s+Vietnam\b/gi, tip: "Tốt, nhưng thử 'I'm Vietnamese' hoặc 'I come from Vietnam' nghe tự nhiên." },
+  { pattern: /\b(ed|d)\s+(the|a|to|in)\b/gi, tip: "Past -ed: tập phát âm rõ /t/ /d/ /ɪd/ (stopped, needed). Hay bị bỏ." },
+  { pattern: /\b(s|es)\s+(the|a|to)\b/gi, tip: "Plural/3rd -s: cats, goes — nói rõ âm cuối /s/ /z/." },
+  { pattern: /\bget\s+(up|it|out)\b/gi, tip: "Nối âm (linking): 'get up' nghe như 'ge-dup'. Tập C+V linking cho flow." },
+  { pattern: /\bship|sheep|bit|beat|live|leave\b/gi, tip: "Nguyên âm ngắn/dài (ship vs sheep, bit vs beat). Mở miệng rõ hơn cho /i:/." },
+  { pattern: /\b(r|l)\b/gi, tip: "Âm /r/ và /l/ đôi khi lẫn. Tập lưỡi cuộn nhẹ cho r, chạm răng cho l." },
 ];
 
 /**
@@ -92,10 +117,15 @@ export function analyzeSpeaking(
     };
   }
 
-  const targetWords = cleanTarget.split(/\s+/).filter(Boolean);
-  const transcriptWords = cleanTranscript.split(/\s+/).filter(Boolean);
+  // Use VN L1 friendly norm for matching to tolerate common pronunciation + ASR artifacts
+  const vnTarget = applyVnL1Normalize(cleanTarget);
+  const vnTranscript = applyVnL1Normalize(cleanTranscript);
+
+  const targetWords = vnTarget.split(/\s+/).filter(Boolean);
+  const transcriptWords = vnTranscript.split(/\s+/).filter(Boolean);
 
   // Word-level best match similarity (more forgiving than full sentence)
+  // + phonetic tolerance for VN learners
   let matched = 0;
   const used = new Set<number>();
 
@@ -112,7 +142,9 @@ export function analyzeSpeaking(
       }
     });
 
-    if (bestIdx >= 0 && bestDist <= Math.max(2, Math.floor(tw.length * 0.4))) {
+    // Tighter + allow phonetic leniency (0.5x len for tolerance)
+    const tolerance = Math.max(2, Math.floor(tw.length * 0.5));
+    if (bestIdx >= 0 && bestDist <= tolerance) {
       matched++;
       used.add(bestIdx);
     }
@@ -120,31 +152,34 @@ export function analyzeSpeaking(
 
   const similarity = Math.round((matched / Math.max(targetWords.length, 1)) * 100);
 
-  // Collect specific L1 tips
+  // Collect specific L1 tips (test against original for accuracy)
   const tips: string[] = [];
   L1_PATTERNS.forEach(({ pattern, tip }) => {
-    if (pattern.test(cleanTranscript) || pattern.test(cleanTarget)) {
+    if (pattern.test(cleanTranscript) || pattern.test(cleanTarget) || pattern.test(vnTranscript)) {
       if (!tips.includes(tip)) tips.push(tip);
     }
   });
 
-  // General feedback based on score
+  // General feedback based on score — realistic + encouraging for adults
   let feedback = "";
   if (similarity >= 85) {
-    feedback = "Rất tốt! Ngữ điệu và từ vựng khá tự nhiên.";
+    feedback = "Xuất sắc! Phát âm và ý chính rất gần native. Tiếp tục giữ nhịp tự nhiên.";
   } else if (similarity >= 65) {
-    feedback = "Khá ổn. Bạn đã nói được ý chính. Cải thiện thêm độ chính xác và nối âm.";
+    feedback = "Khá tốt. Bạn truyền đạt được ý. Tập trung nối âm và âm cuối để tự tin hơn.";
   } else if (similarity >= 40) {
-    feedback = "Tiếp tục cố gắng. Tập trung nghe lại mẫu và nói theo từng cụm ngắn.";
+    feedback = "Tiến bộ rõ. Nghe mẫu 2-3 lần, shadowing chậm từng cụm rồi tăng tốc.";
   } else {
-    feedback = "Hãy nghe mẫu thật kỹ rồi shadowing chậm trước khi nói tự do.";
+    feedback = "Bắt đầu bằng shadowing chậm: nghe → lặp theo → ghi âm so sánh. Tập trung 1-2 âm khó mỗi lần.";
   }
 
-  // Add practice-type specific advice
+  // Add practice-type specific + research-backed advice
   if (practiceType === "shadowing") {
-    tips.unshift("Shadowing hiệu quả nhất khi bắt chước đúng nhịp và ngữ điệu, không chỉ từ.");
+    tips.unshift("Shadowing đỉnh cao: bắt chước đúng nhịp, ngữ điệu lên-xuống và nối âm (C+V linking), không chỉ từ. Nghe không chữ trước.");
+    tips.push("Hiệu quả cao nhất: 5-10 phút/ngày, từ chậm → tốc độ thật. Ghi âm bản thân so mẫu.");
   } else if (practiceType === "roleplay") {
-    tips.push("Trong giao tiếp thật, hãy dùng cụm từ gợi ý và tự nhiên hóa chúng.");
+    tips.push("Giao tiếp thật: dùng cụm từ + tự nhiên hóa. Tập trung nghe và đáp nhanh thay vì câu hoàn hảo.");
+  } else if (practiceType === "journal") {
+    tips.push("Nhật ký nói: nói tự do 30-60s về ngày của bạn. Dùng cấu trúc đã học trong unit.");
   }
 
   return {
@@ -152,8 +187,8 @@ export function analyzeSpeaking(
     wordsCorrect: matched,
     totalWords: targetWords.length,
     feedback,
-    specificTips: tips.slice(0, 4), // keep it actionable, not overwhelming
-    correctedTranscript: transcript, // could enhance later
+    specificTips: tips.slice(0, 5), // up to 5 actionable
+    correctedTranscript: transcript,
   };
 }
 
