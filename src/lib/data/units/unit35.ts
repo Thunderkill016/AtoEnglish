@@ -362,6 +362,11 @@ export const unit35: UnitData = {
 
   // ── OUTPUT: shadowing
   shadowingVideoId: "BJ8ROBuL4LM",
+
+  // jobScenarios for world-class VN adult career content (TASK-153)
+  jobScenarios: [
+    { id: 1, title: "Professional presentation", focus: "B2 work skills", context: "office report" },
+  ],
 };
 
 export default unit35;

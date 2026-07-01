@@ -369,6 +369,7 @@ export const unit31: UnitData = {
     ],
   },
 
+  jobScenarios: [ { id: 1, title: "Career talk unit 31", focus: "job skills", context: "workplace" } ], 
   // ── OUTPUT: shadowing
   shadowingVideoId: "U0pnDXS_KWc",
 };

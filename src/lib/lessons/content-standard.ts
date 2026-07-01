@@ -63,6 +63,7 @@ export interface UnitLike {
   practiceTranslate?: unknown[];
   listenAndChoose?: unknown[];
   quiz?: unknown[];
+  jobScenarios?: unknown[];
 }
 
 export function l1CoverageRatio(unit: UnitLike): number {
@@ -127,6 +128,11 @@ export function validateLessonContentStandard(
   const dialoguesLen = (unit.dialogues?.length ?? 0);
   if (dialoguesLen < s.dialoguesMin) {
     tag("dialogues", `dialogues phải ≥ ${s.dialoguesMin} (Babbel-like real convos + job)`);
+  }
+
+  const jobLen = (unit.jobScenarios?.length ?? 0);
+  if (jobLen < s.jobScenariosMin) {
+    tag("jobScenarios", `jobScenarios phải ≥ ${s.jobScenariosMin} (VN adult career/job contexts)`);
   }
 
   const minL1 = s.l1MinRatioByLevel[unit.level] ?? 0.5;

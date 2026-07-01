@@ -737,6 +737,7 @@ export const unitA05: UnitData = {
 
   // ── OUTPUT: shadowing
   shadowingVideoId: "sNvmqN2MBBo", // BBC Learning English — Introducing yourself
+  jobScenarios: [ { id: 1, title: "Career intro for unitA05", focus: "entry job", context: "VN work start" } ], 
 };
 
-export default unitA05;
+

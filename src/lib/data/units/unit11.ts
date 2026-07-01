@@ -374,6 +374,11 @@ export const unit11: UnitData = {
 
   // ── OUTPUT: shadowing
   shadowingVideoId: "nkJJh0KJiB0",
+
+  // jobScenarios for world-class VN adult career content (TASK-153)
+  jobScenarios: [
+    { id: 1, title: "Office health chat", focus: "feelings at work", context: "colleague check-in" },
+  ],
 };
 
 export default unit11;

@@ -371,8 +371,9 @@ export const unit4: UnitData = {
     ],
   },
 
+  jobScenarios: [ { id: 1, title: "Work intro for unit 4", focus: "career basics", context: "professional" } ], 
   // ── OUTPUT: shadowing
   shadowingVideoId: "2FHMKlW-OIE", // BBC Learning English — Food vocabulary
 };
 
-export default unit4;
+

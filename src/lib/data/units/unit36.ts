@@ -342,6 +342,7 @@ export const unit36: UnitData = {
     ],
   },
 
+  jobScenarios: [ { id: 1, title: "Work scenario for unit 36", focus: "professional skills", context: "job context" } ], 
   // ── OUTPUT: shadowing
   shadowingVideoId: "9O8E7Bxwrjo",
 };

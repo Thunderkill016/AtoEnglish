@@ -729,6 +729,7 @@ export const unitA03: UnitData = {
 
   // ── OUTPUT: shadowing
   shadowingVideoId: "48MDYwdwMvY", // BBC Learning English — Easy English: Colours
+  jobScenarios: [ { id: 1, title: "Career intro for unitA03", focus: "entry job", context: "VN work start" } ], 
 };
 
-export default unitA03;
+

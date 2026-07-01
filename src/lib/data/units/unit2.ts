@@ -368,8 +368,9 @@ export const unit2: UnitData = {
     ],
   },
 
+  jobScenarios: [ { id: 1, title: "Work intro for unit 2", focus: "career basics", context: "professional" } ], 
   // ── OUTPUT: shadowing
   shadowingVideoId: "XeZbFQUoHq8", // BBC Learning English — Family vocabulary A1
 };
 
-export default unit2;
+

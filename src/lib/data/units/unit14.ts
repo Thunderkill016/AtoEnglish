@@ -393,6 +393,11 @@ export const unit14: UnitData = {
 
   // ── OUTPUT: shadowing
   shadowingVideoId: "zrANkpvxlpo",
+
+  // jobScenarios for world-class VN adult career content (TASK-153)
+  jobScenarios: [
+    { id: 1, title: "Busy work month planning", focus: "future plans at job", context: "team schedule" },
+  ],
 };
 
 export default unit14;

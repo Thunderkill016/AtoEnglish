@@ -369,8 +369,9 @@ export const unit7: UnitData = {
     ],
   },
 
+  jobScenarios: [ { id: 1, title: "Work intro for unit 7", focus: "career basics", context: "professional" } ], 
   // ── OUTPUT: shadowing
   shadowingVideoId: "kJfmNekLLEI",
 };
 
-export default unit7;
+

@@ -400,6 +400,11 @@ export const unit15: UnitData = {
 
   // ── OUTPUT: shadowing
   shadowingVideoId: "tXFhNibIBf4",
+
+  // jobScenarios for world-class VN adult career content (TASK-153)
+  jobScenarios: [
+    { id: 1, title: "Choosing office equipment", focus: "comparisons at work", context: "procurement decision" },
+  ],
 };
 
 export default unit15;

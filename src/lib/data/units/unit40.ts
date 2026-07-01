@@ -361,6 +361,11 @@ export const unit40: UnitData = {
 
   // ── OUTPUT: shadowing
   shadowingVideoId: "wBBJk2E8UYU",
+
+  // jobScenarios for world-class VN adult career content (TASK-153)
+  jobScenarios: [
+    { id: 1, title: "Advanced team negotiation", focus: "B2 career", context: "client meeting" },
+  ],
 };
 
 export default unit40;

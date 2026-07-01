@@ -718,6 +718,7 @@ export const unitA06: UnitData = {
 
   // ── OUTPUT: shadowing
   shadowingVideoId: "XeZbFQUoHq8", // BBC Learning English — Family vocabulary
+  jobScenarios: [ { id: 1, title: "Career intro for unitA06", focus: "entry job", context: "VN work start" } ], 
 };
 
-export default unitA06;
+

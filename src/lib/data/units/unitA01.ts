@@ -824,6 +824,7 @@ export const unitA01: UnitData = {
 
   // ── OUTPUT: shadowing
   shadowingVideoId: "sNvmqN2MBBo", // BBC Learning English — How to Greet People in English
+  jobScenarios: [ { id: 1, title: "Career intro for unitA01", focus: "entry job", context: "VN work start" } ], 
 };
 
 export default unitA01;

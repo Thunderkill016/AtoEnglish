@@ -356,6 +356,11 @@ export const unit10: UnitData = {
 
   // ── OUTPUT: shadowing
   shadowingVideoId: "BRK15SNOIJQ",
+
+  // jobScenarios for world-class VN adult career content (TASK-153)
+  jobScenarios: [
+    { id: 1, title: "Daily office commute and small talk", focus: "transport + work greeting", context: "commute to office" },
+  ],
 };
 
 export default unit10;
