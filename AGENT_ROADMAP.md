@@ -14,13 +14,41 @@
 
 - Format giống backlog: `### TASK-NNN — Title` + Mô tả + Done khi
 - Chỉ thêm số TASK **lớn hơn** mọi TASK đã có trong backlog
-- **Ưu tiên (2026-06-26+):** **V2 Minimal Redesign** TASK-081..090 (`MINIMAL_REDESIGN_V2.md`)
+- **Ưu tiên (2026-07-01+):** Vibrant pre-minimal UI + seamless guest/self-study + world-class FREE speaking coach (VN L1, shadowing, roleplay job-focused) + motivation + lesson quality per blueprint. **Deprecate V2 minimal tasks** — user rejected minimal design; focus on best-in-world realistic vibrant self-study for Vietnamese adults (Babbel-like convos + strong free speaking + low friction + career).
 
 ---
 
-## Pool — V2 Minimal Redesign (USER MANDATE 2026-06-26)
+## Pool — V2 Minimal Redesign (DEPRECATED — user rejected minimal; see current vibrant rollback state)
 
-> Spec: `MINIMAL_REDESIGN_V2.md`. Metric: time-to-lesson ≤2 tap ≤10s. Không đổi IPOR/FSRS.
+> Archived. Do NOT pick these. Old metric focused on chrome reduction. Current focus: vibrant glassmorphism/gradients full experience + guest/self-study + free world-class speaking.
+
+## Pool — Best-in-World Self-Study for Vietnamese (2026-07+)
+
+> Goal: Make the rolled-back vibrant realistic version the #1 free self-study English app for VN learners. Babbel-like conversation focus + strong free speaking (no paywall) + IPOR/FSRS + job/career + motivation streaks/daily without hype. Local-first for guests. No new heavy deps.
+
+### TASK-146 — Enhance free speaking coach: advanced local VN-L1 analysis + shadowing
+- **Mô tả:** Improve `lib/utils/speech-analysis.ts`: expand L1_PATTERNS (final cons, linking, th/s/z/vowels for VN), better fuzzy word similarity (phonetic subs like t/th, drop ends), shadowing-specific feedback (intonation, pace notes), richer actionable tips. Update callers (shadowing/roleplay/journal/phoneme/ai-fallback) to surface better. Graceful guest support (no save error). Research-backed: shadowing + ASR for pronunciation/fluency gains.
+- **Done khi:** analyzeSpeaking returns richer tips/scores for VN errors; tests/lint pass; no console; speaking UIs use enhanced feedback.
+
+### TASK-147 — Improve guest/self-study flow persistence + seamless /learn
+- **Mô tả:** Enhance guest_completed_units + lesson-progress localStorage. Add guest speaking practice local history. Make dashboard/roadmap/learn fully functional for guests (relaxed guards already). On login merge if possible (local only otherwise). Low friction entry.
+- **Done khi:** Guest can complete lessons, resume, do speaking (local), see progress; no login walls in learn/speaking for guests; lint+test.
+
+### TASK-148 — Add job/career focused roleplay scenarios + content
+- **Mô tả:** In roleplay + units, add 5-8 realistic workplace scenarios (interview, meeting, email follow-up, client call) with VN L1 notes. Update ai-roleplay and blueprint-aligned units. Prioritize practical for adult VN job seekers.
+- **Done khi:** Roleplay has career prompts; lesson content references job contexts where fits; test/content pass.
+
+### TASK-149 — Enhance motivation: daily goals + progress viz without gamification
+- **Mô tả:** Build on streaks/daily_xp_goal. Add simple daily goal progress, heatmaps already, honest weekly summary, "why you improve" notes. Keep vibrant but realistic (no badges hype). Use in dashboard/progress.
+- **Done khi:** UI shows clear daily progress + motivation copy; no new over-gamify.
+
+### TASK-150 — Polish lesson content to blueprint + VN adult needs
+- **Mô tả:** Audit high units (job units e.g. 24+) for full IPOR, L1 >=50% where needed, practiceTranslate>=3, cumulative>=3. Add more realistic job/situation dialogues. Run content-standard.
+- **Done khi:** All content tests pass 100%; sample units enriched per CONTENT_STYLE + center-ref.
+
+### TASK-151 — Vibrant UI enhancements (glass + motion + low friction)
+- **Mô tả:** Polish current vibrant style: better transitions in lessons/speaking, responsive guest CTAs, engaging but honest copy, progress viz polish. Keep zinc-950 dark + emerald/teal glass.
+- **Done khi:** UI feels premium engaging; e2e basic pass; no design drift to minimal.
 
 ### TASK-081 — Placement test: test/saving/results minimal shell
 - **Mô tả:** `PlacementTestClient.tsx` — migrate stages test/saving/results sang `SecondaryPageShell` + Tailwind; xóa inline `style={{}}` (~63).
