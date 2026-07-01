@@ -346,6 +346,19 @@ export default function DashboardClient({
               !
             </h1>
           </div>
+          {/* Guest persistence notice — vibrant glass polish (TASK-151) + TASK-147 seamless */}
+          {(() => {
+            const g = typeof window !== 'undefined' ? JSON.parse(localStorage.getItem("guest_completed_units") || "[]") : [];
+            const s = typeof window !== 'undefined' ? JSON.parse(localStorage.getItem("guest_speaking_sessions") || "[]") : [];
+            if ((Array.isArray(g) && g.length > 0) || (Array.isArray(s) && s.length > 0)) {
+              return (
+                <div className="mt-2 p-3 rounded-2xl border border-emerald-500/20 bg-white/5 dark:bg-white/5 backdrop-blur-md text-xs text-emerald-700 dark:text-emerald-300 flex items-center gap-2">
+                  <span>Guest mode: tiến độ (lessons + speaking) lưu cục bộ trình duyệt này. Đăng nhập để đồng bộ đám mây & giữ vĩnh viễn.</span>
+                </div>
+              );
+            }
+            return null;
+          })()}
           {/* Streak badge (new StreakCounter) + Notification Bell */}
             <div className="flex items-center gap-2 shrink-0">
               <StreakCounter state={streakState} compact />

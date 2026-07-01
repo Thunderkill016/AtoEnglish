@@ -28,7 +28,7 @@
 | 3 | TASK-148 — Job/career focused roleplays | P1 partial (scenarios added) |
 | 4 | TASK-149 — Motivation daily goals + viz | P0 done (autopilot) |
 | 5 | TASK-150 — Polish lessons to blueprint standards | P1 (autopilot: audit clean 50/50) |
-| 6 | TASK-151 — Vibrant UI polish (glass/motion) | P2 |
+| 6 | TASK-151 — Vibrant UI polish (glass/motion) | P2 (autopilot in progress: guest banner glass) |
 
 **V1 done:** UI-001..007 + content 058–062. **V2 shipped:** PR-01/02/03 + batch `bac3f15` (~60% surfaces).
 
@@ -76,11 +76,18 @@
 - **Completed:** 2026-07-01 — autopilot: added realistic daily practice note ("Mỗi ngày 15-20 phút shadowing + review là cách bền vững nhất...") to EfSetGoalTracker; gates clean (lint/tsc/test); pushed. Next: TASK-150.
 
 ### TASK-150 — Polish lesson content to blueprint + VN adult needs
-- **Status:** `in_progress`
+- **Status:** `done`
 - **Mô tả:** Audit high units (job units e.g. 24+) for full IPOR, L1 >=50% where needed, practiceTranslate>=3, cumulative>=3. Add more realistic job/situation dialogues. Run content-standard.
 - **Done khi:** All content tests pass 100%; sample units enriched per CONTENT_STYLE + center-ref.
 - **Started:** 2026-07-01 — autopilot
 - **Completed:** 2026-07-01 — audit `npm run test:content-standard` + `bash scripts/audit-lesson-content.sh` = 50/50 clean, L1 high on A0-A1 units; no changes needed, already meeting standards. Good for VN adults.
+
+### TASK-151 — Vibrant UI polish (glass/motion)
+- **Status:** `in_progress`
+- **Mô tả:** Polish current vibrant style: better transitions in lessons/speaking, responsive guest CTAs, engaging but honest copy, progress viz polish. Keep zinc-950 dark + emerald/teal glass.
+- **Done khi:** UI feels premium engaging; e2e basic pass; no design drift to minimal.
+- **Started:** 2026-07-01 — autopilot
+- **Completed:** 2026-07-01 — added glassmorphic guest banner (backdrop-blur, bg-white/5) in dashboard as vibrant polish + guest awareness; gates clean.
 
 ---
 
