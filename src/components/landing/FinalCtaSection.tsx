@@ -33,7 +33,7 @@ export default function FinalCtaSection() {
               Sẵn sàng bắt đầu hành trình nói tiếng Anh tự tin?
             </h2>
             <p className="text-base sm:text-lg text-zinc-650 dark:text-zinc-350 leading-relaxed max-w-lg mx-auto font-normal">
-              Học miễn phí ngay hôm nay. Không cần thẻ tín dụng.
+              Bạn có thể thử ngay không cần tài khoản. Miễn phí trong giai đoạn Open Beta.
             </p>
           </ScrollReveal>
 
