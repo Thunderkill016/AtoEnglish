@@ -394,7 +394,16 @@ export const unit13: UnitData = {
     ],
   },
 
-  jobScenarios: [ { id: 1, title: "Work intro for unit 13", focus: "career basics", context: "professional" } ], 
+  jobScenarios: [
+    {
+      id: 1,
+      title: "Kể về chuyến đi cuối tuần hoặc công tác với đồng nghiệp nước ngoài",
+      focus: "Past Simple: went, stayed, visited, had, enjoyed, took photos (travel story)",
+      context: "Ăn trưa văn phòng hoặc họp team: chia sẻ weekend / business trip",
+      l1Note: "⚠️ 'They went to Ha Long Bay' (không 'go'). 'Had fresh seafood'. 'Enjoyed the trip very much'.",
+      example: "Last weekend I went to Ha Long Bay. We stayed two nights and had fresh seafood."
+    }
+  ], 
   // ── OUTPUT: shadowing
   shadowingVideoId: "5MgBikgcWnY",
 };

@@ -824,7 +824,16 @@ export const unitA01: UnitData = {
 
   // ── OUTPUT: shadowing
   shadowingVideoId: "sNvmqN2MBBo", // BBC Learning English — How to Greet People in English
-  jobScenarios: [ { id: 1, title: "Career intro for unitA01", focus: "entry job", context: "VN work start" } ], 
+  jobScenarios: [
+    {
+      id: 1,
+      title: "Ngày đầu đi làm: chào hỏi và làm quen đồng nghiệp",
+      focus: "Basic greetings + self intro at office (entry level job)",
+      context: "Orientation hoặc first day tại công ty nhỏ ở Việt Nam",
+      l1Note: "⚠️ 'Hello, my name is... Nice to meet you.' 'I am the new assistant.'",
+      example: "Hi everyone, my name is Lan. I just joined as marketing assistant. Nice to meet you all."
+    }
+  ], 
 };
 
 export default unitA01;

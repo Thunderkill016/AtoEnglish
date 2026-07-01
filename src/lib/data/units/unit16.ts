@@ -398,7 +398,16 @@ export const unit16: UnitData = {
     ],
   },
 
-  jobScenarios: [ { id: 1, title: "Career talk unit 16", focus: "job skills", context: "workplace" } ], 
+  jobScenarios: [
+    {
+      id: 1,
+      title: "Đặt phòng khách sạn cho chuyến công tác",
+      focus: "Directions + booking: opposite, check in, double room, nearby facilities",
+      context: "Gọi điện hoặc chat với khách sạn khi sắp đi công tác cùng khách hàng",
+      l1Note: "⚠️ 'The hotel is opposite the post office'. 'I book a double room and check in at 2 PM'.",
+      example: "The hotel is on the corner, opposite the post office. I need a double room at 2 PM."
+    }
+  ], 
   // ── OUTPUT: shadowing
   shadowingVideoId: "mA-MK2bJA4I",
 };

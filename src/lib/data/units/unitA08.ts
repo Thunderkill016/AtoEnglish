@@ -748,7 +748,16 @@ export const unitA08: UnitData = {
 
   // ── OUTPUT: shadowing
   shadowingVideoId: "mA-MK2bJA4I", // BBC Learning English — Travel & asking for help
-  jobScenarios: [ { id: 1, title: "Career intro for unitA08", focus: "entry job", context: "VN work start" } ], 
+  jobScenarios: [
+    {
+      id: 1,
+      title: "Kết thúc ngày làm việc: chào tạm biệt và xác nhận deadline",
+      focus: "End of day: goodbye, confirm tomorrow tasks (entry level)",
+      context: "Cuối ngày với đồng nghiệp hoặc sếp trực tiếp",
+      l1Note: "⚠️ 'Have a nice evening.' 'I'll finish the list tomorrow morning.' 'See you at 8.'",
+      example: "I will send the file first thing tomorrow. Have a good evening! See you at eight."
+    }
+  ], 
 };
 
 

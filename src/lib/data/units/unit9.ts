@@ -368,7 +368,16 @@ export const unit9: UnitData = {
     ],
   },
 
-  jobScenarios: [ { id: 1, title: "Work intro for unit 9", focus: "career basics", context: "professional" } ], 
+  jobScenarios: [
+    {
+      id: 1,
+      title: "Hỏi đường đến chỗ họp khách hàng hoặc ngân hàng gần văn phòng",
+      focus: "Places in town + directions (between, opposite, next to)",
+      context: "Gặp đồng nghiệp hoặc bảo vệ khi cần đến họp khách hoặc giao dịch gần công ty",
+      l1Note: "⚠️ 'The park is between the supermarket and the school'. 'Opposite the bank' — không 'in front of'.",
+      example: "The post office is next to the bank, on the main street. The hospital is opposite the bank."
+    }
+  ], 
   // ── OUTPUT: shadowing
   shadowingVideoId: "2g3BAsn9x3c",
 };

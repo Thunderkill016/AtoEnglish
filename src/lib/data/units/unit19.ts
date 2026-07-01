@@ -798,7 +798,16 @@ export const unit19: UnitData = {
     ],
   },
 
-  jobScenarios: [ { id: 1, title: "Career talk unit 19", focus: "job skills", context: "workplace" } ], 
+  jobScenarios: [
+    {
+      id: 1,
+      title: "Thảo luận kế hoạch team và phân công nhiệm vụ",
+      focus: "Team planning language, responsibilities, deadlines in workplace",
+      context: "Weekly team sync hoặc kickoff meeting với manager",
+      l1Note: "⚠️ Dùng thì tương lai gần và present continuous cho kế hoạch: 'We are launching', 'I will handle X'.",
+      example: "I will prepare the report by Friday. We are launching the new feature next month."
+    }
+  ], 
   // ── OUTPUT: shadowing
   shadowingVideoId: "Mc0CXKDjFnw",
 };

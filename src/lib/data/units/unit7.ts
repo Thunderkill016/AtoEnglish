@@ -369,7 +369,16 @@ export const unit7: UnitData = {
     ],
   },
 
-  jobScenarios: [ { id: 1, title: "Work intro for unit 7", focus: "career basics", context: "professional" } ], 
+  jobScenarios: [
+    {
+      id: 1,
+      title: "Hỏi trang phục đi làm / phỏng vấn",
+      focus: "wear + clothes for office (shirt, trousers, jacket, dress code)",
+      context: "Hỏi đồng nghiệp hoặc chuẩn bị phỏng vấn: mặc gì phù hợp tại công ty VN",
+      l1Note: "⚠️ 'I usually wear a white shirt' — không 'I wearing'. 'For work' + 'on cold days'.",
+      example: "For work, I usually wear a white shirt and black trousers. On cold days, I wear a jacket."
+    }
+  ], 
   // ── OUTPUT: shadowing
   shadowingVideoId: "kJfmNekLLEI",
 };

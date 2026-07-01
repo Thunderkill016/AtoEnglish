@@ -721,7 +721,16 @@ export const unitA04: UnitData = {
 
   // ── OUTPUT: shadowing
   shadowingVideoId: "sNvmqN2MBBo", // BBC Learning English — Greetings & small talk
-  jobScenarios: [ { id: 1, title: "Career intro for unitA04", focus: "entry job", context: "VN work start" } ], 
+  jobScenarios: [
+    {
+      id: 1,
+      title: "Nói về kỹ năng máy tính cơ bản khi apply entry job",
+      focus: "Office tools: email, Word, Excel basics for job",
+      context: "Phỏng vấn hoặc training entry admin/sales",
+      l1Note: "⚠️ 'I can use email and Microsoft Word.' 'I know basic Excel formulas.'",
+      example: "I can send professional emails and use Word to write reports. I also know how to make simple tables in Excel."
+    }
+  ], 
 };
 
 

@@ -737,7 +737,16 @@ export const unitA05: UnitData = {
 
   // ── OUTPUT: shadowing
   shadowingVideoId: "sNvmqN2MBBo", // BBC Learning English — Introducing yourself
-  jobScenarios: [ { id: 1, title: "Career intro for unitA05", focus: "entry job", context: "VN work start" } ], 
+  jobScenarios: [
+    {
+      id: 1,
+      title: "Gọi điện đặt lịch hẹn phỏng vấn hoặc meeting",
+      focus: "Phone language: introduce, purpose, confirm time/place (entry)",
+      context: "Gọi HR hoặc đối tác khi apply việc",
+      l1Note: "⚠️ 'Hello, this is Minh calling about the interview.' 'Can I confirm the time on Monday at 10am?'",
+      example: "Hi, I'm calling about the sales assistant position. Is 9am on Tuesday okay for the interview?"
+    }
+  ], 
 };
 
 

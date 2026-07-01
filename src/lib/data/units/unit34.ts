@@ -357,7 +357,16 @@ export const unit34: UnitData = {
     ],
   },
 
-  jobScenarios: [ { id: 1, title: "Work scenario for unit 34", focus: "professional skills", context: "job context" } ], 
+  jobScenarios: [
+    {
+      id: 1,
+      title: "Xử lý khiếu nại của khách hàng qua email và gọi điện",
+      focus: "Customer service: empathize, apologize, offer solution, follow up",
+      context: "Support cho khách hàng B2B hoặc e-commerce",
+      l1Note: "⚠️ 'I'm sorry for the inconvenience.' 'To make this right, we can offer a full refund or replacement.' 'I'll follow up in 48h.'",
+      example: "Thank you for letting us know. I apologize for the delay. We will ship a replacement today and refund the shipping."
+    }
+  ], 
   // ── OUTPUT: shadowing
   shadowingVideoId: "sTpMgHbL6GU",
 };

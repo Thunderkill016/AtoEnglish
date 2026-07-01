@@ -369,7 +369,16 @@ export const unit31: UnitData = {
     ],
   },
 
-  jobScenarios: [ { id: 1, title: "Career talk unit 31", focus: "job skills", context: "workplace" } ], 
+  jobScenarios: [
+    {
+      id: 1,
+      title: "Thuyết trình ý tưởng cải tiến quy trình cho lãnh đạo",
+      focus: "Business presentation: problem, data, proposed solution, ROI",
+      context: "Internal pitch meeting với directors",
+      l1Note: "⚠️ 'Currently it takes 4 days. Our proposal cuts it to 1 day.' 'Expected ROI is 3x in 6 months.'",
+      example: "The bottleneck is manual approval. Automating saves 15 hours/week. We can pilot in two teams next month."
+    }
+  ], 
   // ── OUTPUT: shadowing
   shadowingVideoId: "U0pnDXS_KWc",
 };

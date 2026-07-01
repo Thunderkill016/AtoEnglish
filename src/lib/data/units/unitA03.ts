@@ -729,7 +729,16 @@ export const unitA03: UnitData = {
 
   // ── OUTPUT: shadowing
   shadowingVideoId: "48MDYwdwMvY", // BBC Learning English — Easy English: Colours
-  jobScenarios: [ { id: 1, title: "Career intro for unitA03", focus: "entry job", context: "VN work start" } ], 
+  jobScenarios: [
+    {
+      id: 1,
+      title: "Đặt câu hỏi về giờ giấc và nghỉ trưa tại công ty",
+      focus: "Ask about work hours, lunch break, office rules (A0)",
+      context: "Hỏi HR hoặc đồng nghiệp entry level",
+      l1Note: "⚠️ 'What time is lunch?' 'We start at 8 and finish at 5.' 'Is there a break?'",
+      example: "Do we have a one-hour lunch break? Can I leave at 5:30 if I finish my work?"
+    }
+  ], 
 };
 
 

@@ -369,7 +369,16 @@ export const unit5: UnitData = {
     ],
   },
 
-  jobScenarios: [ { id: 1, title: "Work intro for unit 5", focus: "career basics", context: "professional" } ], 
+  jobScenarios: [
+    {
+      id: 1,
+      title: "Nói về sở thích với đồng nghiệp lúc nghỉ trưa",
+      focus: "I like / She likes + hobbies (cycling, cooking, watching movies)",
+      context: "Icebreaker team lunch hoặc sau giờ làm tại văn phòng",
+      l1Note: "⚠️ 'I like cycling' không 'I like to cycling'. 'She likes cooking Vietnamese food'.",
+      example: "I like reading books after work. My colleague likes playing football on weekends."
+    }
+  ], 
   // ── OUTPUT: shadowing
   shadowingVideoId: "EDFWbC74Sdc", // BBC Learning English — Numbers 1-100
 };

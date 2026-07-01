@@ -395,7 +395,16 @@ export const unit17: UnitData = {
     ],
   },
 
-  jobScenarios: [ { id: 1, title: "Career talk unit 17", focus: "job skills", context: "workplace" } ], 
+  jobScenarios: [
+    {
+      id: 1,
+      title: "Chia sẻ trải nghiệm phỏng vấn xin việc với đồng nghiệp",
+      focus: "Present Perfect: have led, have not heard yet, have never felt so confident",
+      context: "Cà phê sau phỏng vấn hoặc mentor talk với junior ở công ty",
+      l1Note: "⚠️ 'I have already led three campaigns'. 'I have not heard the final decision yet'.",
+      example: "I have led three successful campaigns. I have never felt so confident in an interview before."
+    }
+  ], 
   // ── OUTPUT: shadowing
   shadowingVideoId: "d_ndXSKm5po",
 };

@@ -361,7 +361,16 @@ export const unit28: UnitData = {
     ],
   },
 
-  jobScenarios: [ { id: 1, title: "Work scenario for unit 28", focus: "professional skills", context: "job context" } ], 
+  jobScenarios: [
+    {
+      id: 1,
+      title: "Đàm phán điều khoản hợp đồng với đối tác",
+      focus: "Negotiation: propose, counter, compromise, close deal",
+      context: "Meeting với vendor hoặc client về giá và timeline",
+      l1Note: "⚠️ 'We can offer 5% discount if you commit to 12 months.' 'Can we meet in the middle at 8%?'",
+      example: "If you sign for two years we can reduce the fee by 10%. Shall we finalize today?"
+    }
+  ], 
   // ── OUTPUT: shadowing
   shadowingVideoId: "kSU0P7bRHPo",
 };

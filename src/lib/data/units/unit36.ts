@@ -342,7 +342,16 @@ export const unit36: UnitData = {
     ],
   },
 
-  jobScenarios: [ { id: 1, title: "Work scenario for unit 36", focus: "professional skills", context: "job context" } ], 
+  jobScenarios: [
+    {
+      id: 1,
+      title: "Hỏi xin feedback và review từ manager sau dự án",
+      focus: "Feedback conversation: strengths, areas to improve, next goals",
+      context: "1:1 with manager post project delivery",
+      l1Note: "⚠️ 'What went well?' 'One thing I would improve is...' 'For the next quarter I want to focus on X.'",
+      example: "I think the launch went smoothly thanks to the team. Where can I improve? I would like more exposure to client presentations."
+    }
+  ], 
   // ── OUTPUT: shadowing
   shadowingVideoId: "9O8E7Bxwrjo",
 };

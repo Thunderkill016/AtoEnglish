@@ -373,7 +373,16 @@ export const unit12: UnitData = {
     ],
   },
 
-  jobScenarios: [ { id: 1, title: "Work intro for unit 12", focus: "career basics", context: "professional" } ], 
+  jobScenarios: [
+    {
+      id: 1,
+      title: "Báo cáo tiến bộ tiếng Anh với sếp trong review",
+      focus: "From 'could not' to 'can': introduce myself, describe routine, ask for help",
+      context: "Cuộc họp đánh giá 6 tháng hoặc xin thăng tiến cần giao tiếp tiếng Anh",
+      l1Note: "⚠️ 'Six months ago, I could not...' → 'Now I can introduce myself'. Dùng 'I decided to practice every day'.",
+      example: "Six months ago I was too shy. Now I can describe my daily routine and ask colleagues for help."
+    }
+  ], 
   // ── OUTPUT: shadowing
   shadowingVideoId: "QVg9aSlLdJg",
 };

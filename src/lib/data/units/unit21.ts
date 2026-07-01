@@ -359,7 +359,16 @@ export const unit21: UnitData = {
     ],
   },
 
-  jobScenarios: [ { id: 1, title: "Work scenario for unit 21", focus: "professional skills", context: "job context" } ], 
+  jobScenarios: [
+    {
+      id: 1,
+      title: "Thuyết trình tầm nhìn 5 năm của công ty trong họp chiến lược",
+      focus: "Future Continuous / Future Perfect: will be doing, will have done (predictions & trends)",
+      context: "Q4 strategy meeting với giám đốc và team quốc tế",
+      l1Note: "⚠️ 'Where do you see our company in 5 years?' → 'By 2030 we will have expanded to 3 new markets. We will be using AI daily.'",
+      example: "In five years we will have launched three new products. Customers will be using our app everywhere."
+    }
+  ], 
   // ── OUTPUT: shadowing
   shadowingVideoId: "hfgFm3sSJxM",
 };

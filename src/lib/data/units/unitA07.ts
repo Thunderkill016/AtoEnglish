@@ -714,7 +714,16 @@ export const unitA07: UnitData = {
 
   // ── OUTPUT: shadowing
   shadowingVideoId: "8U40yQ7IVqY", // BBC Learning English — Daily Routines & time
-  jobScenarios: [ { id: 1, title: "Career intro for unitA07", focus: "entry job", context: "VN work start" } ], 
+  jobScenarios: [
+    {
+      id: 1,
+      title: "Hỏi xin chữ ký hoặc approval từ sếp entry level",
+      focus: "Polite request at work: 'Could you sign this?' 'When do you need it by?'",
+      context: "Văn phòng nhỏ, cần chữ ký cho đơn hoặc báo cáo",
+      l1Note: "⚠️ 'Excuse me, could you please sign this form?' 'I need it before 3pm today.'",
+      example: "Excuse me Mr. Tuan, could you sign this expense report? I need to submit it before the end of the day."
+    }
+  ], 
 };
 
 

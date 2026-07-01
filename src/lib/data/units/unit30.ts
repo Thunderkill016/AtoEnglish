@@ -360,7 +360,16 @@ export const unit30: UnitData = {
     ],
   },
 
-  jobScenarios: [ { id: 1, title: "Career talk unit 30", focus: "job skills", context: "workplace" } ], 
+  jobScenarios: [
+    {
+      id: 1,
+      title: "Phỏng vấn ứng viên cho vị trí junior developer",
+      focus: "Interview questions: experience, problem solving, culture fit",
+      context: "Technical interview panel tại công ty VN cho vị trí IT",
+      l1Note: "⚠️ 'Tell me about a project you are proud of.' 'How do you handle tight deadlines?' 'Why do you want to join us?'",
+      example: "Can you walk me through a bug you fixed recently? What would you do if requirements changed mid-sprint?"
+    }
+  ], 
   // ── OUTPUT: shadowing
   shadowingVideoId: "kX6QmBMvpkE",
 };

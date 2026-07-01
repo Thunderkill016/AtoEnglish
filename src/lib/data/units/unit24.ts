@@ -374,7 +374,16 @@ export const unit24: UnitData = {
     ],
   },
 
-  jobScenarios: [ { id: 1, title: "Work scenario for unit 24", focus: "professional skills", context: "job context" } ], 
+  jobScenarios: [
+    {
+      id: 1,
+      title: "Tham gia cuộc họp khách hàng và trình bày giải pháp",
+      focus: "Meeting language: present solution, handle questions, agree next actions",
+      context: "Sales / account meeting với khách hàng tiềm năng",
+      l1Note: "⚠️ 'This solution will reduce your costs by 20%.' 'Could you clarify...?' 'Let's move forward with phase one.'",
+      example: "Our platform can integrate in two weeks. What are your main concerns? Shall we start with a pilot?"
+    }
+  ], 
   // ── OUTPUT: shadowing
   shadowingVideoId: "3nKL_QL8fdA",
 };

@@ -372,7 +372,16 @@ export const unit8: UnitData = {
     ],
   },
 
-  jobScenarios: [ { id: 1, title: "Work intro for unit 8", focus: "career basics", context: "professional" } ], 
+  jobScenarios: [
+    {
+      id: 1,
+      title: "Nói về bữa trưa với đồng nghiệp",
+      focus: "Food at work: rice and vegetables, grilled chicken, fruit, green tea",
+      context: "Giờ nghỉ trưa văn phòng hoặc kể thói quen ăn trưa khi phỏng vấn",
+      l1Note: "⚠️ 'I usually eat rice' — 'My mum cooks grilled chicken'. 'We always eat fruit after lunch'.",
+      example: "I usually eat rice and vegetables for lunch. After that we eat mangoes or bananas."
+    }
+  ], 
   // ── OUTPUT: shadowing
   shadowingVideoId: "QL-4pUhQy5c",
 };

@@ -359,7 +359,16 @@ export const unit23: UnitData = {
     ],
   },
 
-  jobScenarios: [ { id: 1, title: "Work scenario for unit 23", focus: "professional skills", context: "job context" } ], 
+  jobScenarios: [
+    {
+      id: 1,
+      title: "Gửi email follow-up sau cuộc họp khách hàng",
+      focus: "Email writing: thank, summarize action items, propose next steps",
+      context: "Sau meeting với client quốc tế, cần viết email chuyên nghiệp",
+      l1Note: "⚠️ 'Thank you for your time.' 'Please find attached the proposal.' 'I look forward to your feedback.'",
+      example: "Thank you for the meeting. Attached is the proposal. Let's schedule a call next week to discuss next steps."
+    }
+  ], 
   // ── OUTPUT: shadowing
   shadowingVideoId: "oXlk6H_Jqis",
 };

@@ -374,7 +374,16 @@ export const unit20: UnitData = {
     ],
   },
 
-  jobScenarios: [ { id: 1, title: "Career talk unit 20", focus: "job skills", context: "workplace" } ], 
+  jobScenarios: [
+    {
+      id: 1,
+      title: "Thảo luận xu hướng công nghệ và tuyển dụng trong họp kinh doanh",
+      focus: "launch new product, hire employees, investment increase, privacy changes",
+      context: "Họp chiến lược với team marketing / HR về kế hoạch mở rộng ở VN",
+      l1Note: "⚠️ 'has just launched', 'is planning to hire 50,000', 'has increased by 40%'.",
+      example: "A manufacturer has launched a new foldable phone. The company is planning to hire 50,000 across SE Asia."
+    }
+  ], 
   // ── OUTPUT: shadowing
   shadowingVideoId: "F1C8IaAFgPo",
 };

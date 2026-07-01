@@ -358,7 +358,16 @@ export const unit33: UnitData = {
     ],
   },
 
-  jobScenarios: [ { id: 1, title: "Work scenario for unit 33", focus: "professional skills", context: "job context" } ], 
+  jobScenarios: [
+    {
+      id: 1,
+      title: "Tham gia họp dự án và cập nhật status với stakeholder",
+      focus: "Project update: blockers, timeline, ask for support",
+      context: "Cross-team sync với PM và client",
+      l1Note: "⚠️ 'We are on track for delivery next Friday.' 'We are blocked on the design assets.' 'Can we get your input by EOD?'",
+      example: "Backend is 90% done. The main blocker is API spec. I will send the updated timeline after this call."
+    }
+  ], 
   // ── OUTPUT: shadowing
   shadowingVideoId: "PqHzCRO0-tY",
 };

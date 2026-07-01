@@ -366,7 +366,16 @@ export const unit6: UnitData = {
     ],
   },
 
-  jobScenarios: [ { id: 1, title: "Work intro for unit 6", focus: "career basics", context: "professional" } ], 
+  jobScenarios: [
+    {
+      id: 1,
+      title: "Kể về nhà mới khi chuyển công tác",
+      focus: "There is / There are + rooms, sofa, balcony (mô tả chỗ ở gần văn phòng)",
+      context: "Chia sẻ với đồng nghiệp mới hoặc HR về nhà ở khi nhận việc ở thành phố khác",
+      l1Note: "⚠️ 'There is a big sofa' không 'There are a big sofa'. 'There are three rooms'.",
+      example: "There are three rooms. There is a balcony where I put flowers."
+    }
+  ], 
   // ── OUTPUT: shadowing
   shadowingVideoId: "nVl6E0NRSA0",
 };

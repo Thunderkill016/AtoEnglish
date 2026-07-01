@@ -718,7 +718,16 @@ export const unitA06: UnitData = {
 
   // ── OUTPUT: shadowing
   shadowingVideoId: "XeZbFQUoHq8", // BBC Learning English — Family vocabulary
-  jobScenarios: [ { id: 1, title: "Career intro for unitA06", focus: "entry job", context: "VN work start" } ], 
+  jobScenarios: [
+    {
+      id: 1,
+      title: "Viết email đơn giản apply việc entry level",
+      focus: "Email structure: subject, greeting, introduce, attach CV, close",
+      context: "Gửi CV cho vị trí receptionist hoặc assistant",
+      l1Note: "⚠️ Subject clear. 'Dear Hiring Manager,' 'Please find my CV attached.' 'Thank you for your time.'",
+      example: "Subject: Application for Receptionist Position. Dear Sir/Madam, I am writing to apply... Please see attached CV."
+    }
+  ], 
 };
 
 

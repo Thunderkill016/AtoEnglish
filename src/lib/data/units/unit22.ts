@@ -354,7 +354,16 @@ export const unit22: UnitData = {
     ],
   },
 
-  jobScenarios: [ { id: 1, title: "Work scenario for unit 22", focus: "professional skills", context: "job context" } ], 
+  jobScenarios: [
+    {
+      id: 1,
+      title: "Nghe HR giải thích nội quy công ty ngày đầu nhận việc",
+      focus: "Modal verbs: must / don't have to / should (badge, overtime, confirm meetings)",
+      context: "Orientation với HR tại công ty nước ngoài ở Việt Nam",
+      l1Note: "⚠️ 'You must wear a badge' (bắt buộc). 'You don't have to work overtime' (không bắt buộc). 'You should confirm 24h in advance'.",
+      example: "You must always wear your badge. You don't have to stay late, but you should confirm meetings one day before."
+    }
+  ], 
   // ── OUTPUT: shadowing
   shadowingVideoId: "4ALKkMNtlrY",
 };

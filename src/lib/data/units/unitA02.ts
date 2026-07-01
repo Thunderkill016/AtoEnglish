@@ -726,7 +726,16 @@ export const unitA02: UnitData = {
 
   // ── OUTPUT: shadowing
   shadowingVideoId: "EDFWbC74Sdc", // BBC Learning English — Numbers 1-100
-  jobScenarios: [ { id: 1, title: "Career intro for unitA02", focus: "entry job", context: "VN work start" } ], 
+  jobScenarios: [
+    {
+      id: 1,
+      title: "Hỏi về công việc và nhiệm vụ hàng ngày của đồng nghiệp mới",
+      focus: "Ask simple questions about job tasks at entry level",
+      context: "Buddy chat trên first week at work",
+      l1Note: "⚠️ 'What do you do every day?' 'I send emails and answer phones.'",
+      example: "What time do you start? I answer customer emails in the morning and prepare reports in the afternoon."
+    }
+  ], 
 };
 
 

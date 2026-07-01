@@ -403,7 +403,16 @@ export const unit18: UnitData = {
     ],
   },
 
-  jobScenarios: [ { id: 1, title: "Career talk unit 18", focus: "job skills", context: "workplace" } ], 
+  jobScenarios: [
+    {
+      id: 1,
+      title: "Báo cáo kết quả quý và kế hoạch năm sau trong họp team",
+      focus: "achieved target, revenue increased, launch new products, explore abroad",
+      context: "Quarterly business review với sếp và đồng nghiệp nước ngoài",
+      l1Note: "⚠️ 'Minh's team achieved 120%'. 'Revenue increased by 18%'. 'is going to launch two new products'.",
+      example: "We achieved 120% of target. Revenue increased by 18%. We are going to launch two new products."
+    }
+  ], 
   // ── OUTPUT: shadowing
   shadowingVideoId: "SiPTuOTqYn8",
 };

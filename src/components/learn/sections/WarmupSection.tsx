@@ -60,6 +60,40 @@ export default function WarmupSection({
         <SituationCard situation={unit.situation} outcomes={unit.learningOutcomes} />
       )}
 
+      {/* ── Job / Career Focus (TASK-153 world-class VN adult job content) ── */}
+      {unit.jobScenarios && unit.jobScenarios.length > 0 && (
+        <div className="mb-8">
+          <div className="flex items-center gap-2 mb-3">
+            <span className="text-lg">💼</span>
+            <p className="text-sm font-bold text-primary">Job / Career Focus — Ứng dụng thực tế công việc</p>
+          </div>
+          <div className="grid gap-3 sm:grid-cols-2">
+            {unit.jobScenarios.map((js, idx) => (
+              <div
+                key={idx}
+                className="rounded-2xl border border-border/60 bg-card p-4 shadow-md hover:border-primary/40 transition-colors"
+              >
+                <div className="font-bold text-foreground text-sm mb-1">{js.title}</div>
+                <div className="text-xs text-muted-foreground mb-1">
+                  🎯 {js.focus}
+                </div>
+                <div className="text-xs text-muted-foreground/80 mb-2">{js.context}</div>
+                {js.l1Note && (
+                  <div className="mt-2 rounded-xl bg-amber-950/30 border border-amber-900/50 p-2 text-[11px] text-amber-300">
+                    {js.l1Note}
+                  </div>
+                )}
+                {js.example && (
+                  <div className="mt-2 text-[11px] font-mono bg-black/30 rounded-lg px-2 py-1 text-emerald-300/90">
+                    {js.example}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Interaction Row */}
       <div className="grid grid-cols-2 gap-4 mb-8">
         {unit.warmupGreetings.map((g, i) => (

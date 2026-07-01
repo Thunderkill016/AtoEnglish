@@ -362,7 +362,16 @@ export const unit29: UnitData = {
     ],
   },
 
-  jobScenarios: [ { id: 1, title: "Work scenario for unit 29", focus: "professional skills", context: "job context" } ], 
+  jobScenarios: [
+    {
+      id: 1,
+      title: "Giới thiệu bản thân và công ty trong networking event",
+      focus: "Elevator pitch + small talk at professional event",
+      context: "Industry meetup hoặc hội chợ việc làm cho người VN",
+      l1Note: "⚠️ 'Hi, I'm Linh from ABC Corp. We help SMEs automate reporting.' 'What brings you here today?'",
+      example: "I'm a product manager at a fintech startup. We make accounting software for Vietnamese SMEs. How about you?"
+    }
+  ], 
   // ── OUTPUT: shadowing
   shadowingVideoId: "8pVq8WElnOo",
 };

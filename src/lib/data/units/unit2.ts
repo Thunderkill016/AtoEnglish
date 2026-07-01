@@ -368,7 +368,16 @@ export const unit2: UnitData = {
     ],
   },
 
-  jobScenarios: [ { id: 1, title: "Work intro for unit 2", focus: "career basics", context: "professional" } ], 
+  jobScenarios: [
+    {
+      id: 1,
+      title: "Giới thiệu nghề nghiệp khi điền form HR",
+      focus: "What do you do? + tuổi + nghề (student / teacher / doctor)",
+      context: "Buổi đầu gặp HR hoặc đăng ký làm việc tại công ty Hà Nội",
+      l1Note: "⚠️ Dùng 'What do you do?' tự nhiên hơn 'What is your job?'. VN hay nhầm 'I am student' thiếu 'a'.",
+      example: "I'm a student at Hanoi University. I study English."
+    }
+  ], 
   // ── OUTPUT: shadowing
   shadowingVideoId: "XeZbFQUoHq8", // BBC Learning English — Family vocabulary A1
 };

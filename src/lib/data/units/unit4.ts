@@ -371,7 +371,16 @@ export const unit4: UnitData = {
     ],
   },
 
-  jobScenarios: [ { id: 1, title: "Work intro for unit 4", focus: "career basics", context: "professional" } ], 
+  jobScenarios: [
+    {
+      id: 1,
+      title: "Mô tả lịch trình làm việc hàng ngày khi phỏng vấn",
+      focus: "Present Simple: start/finish work, meetings, send emails",
+      context: "Phỏng vấn xin việc hoặc kể với đồng nghiệp mới về ngày làm việc",
+      l1Note: "⚠️ 'I start work at eight' — không 'I starting'. -s cho he/she: 'She finishes at 5'.",
+      example: "I wake up at six, start at eight, finish at five. I don't work on Sunday."
+    }
+  ], 
   // ── OUTPUT: shadowing
   shadowingVideoId: "2FHMKlW-OIE", // BBC Learning English — Food vocabulary
 };

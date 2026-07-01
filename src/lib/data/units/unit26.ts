@@ -353,7 +353,16 @@ export const unit26: UnitData = {
     ],
   },
 
-  jobScenarios: [ { id: 1, title: "Work scenario for unit 26", focus: "professional skills", context: "job context" } ], 
+  jobScenarios: [
+    {
+      id: 1,
+      title: "Thảo luận KPI và đề xuất cải tiến trong họp team",
+      focus: "Performance discussion: metrics, suggestions, action plan",
+      context: "Monthly team review với manager",
+      l1Note: "⚠️ 'Our conversion rate increased 12%.' 'I suggest we test X.' 'Action: I will own the follow-up.'",
+      example: "The target was missed by 8%. I suggest focusing on email campaigns. I will prepare the test plan by Monday."
+    }
+  ], 
   // ── OUTPUT: shadowing
   shadowingVideoId: "2bLhULqFkKI",
 };
