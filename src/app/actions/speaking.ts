@@ -219,18 +219,34 @@ export async function generateRoleplayTurn(
       return { success: false, error: "Yêu cầu quá thường xuyên. Vui lòng thử lại sau." };
     }
 
-    // 2. Check Auth
+    // 2. Check Auth (relaxed for guest self-study)
     const supabase = await createClient();
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
-    if (authError || !user) {
-      return { success: false, error: "Bạn cần đăng nhập để thực hiện tác vụ này." };
-    }
+    const { data: { user } } = await supabase.auth.getUser();
+    // guest allowed, user may be null
 
     const scenario = SCENARIO_DETAILS[scenarioId];
     if (!scenario) return { success: false, error: "Kịch bản không tồn tại." };
 
     const apiKey = process.env.GEMINI_API_KEY;
-    if (!apiKey) return { success: false, error: "Gemini API Key is not configured." };
+    if (!apiKey) {
+      // Zero-cost fallback for self-study
+      const turn = Math.floor((history?.length || 0) / 2);
+      const suggestions = [
+        { en: "Hello, I would like to check in please.", vi: "Chào bạn, tôi muốn nhận phòng ạ." },
+        { en: "Yes, is breakfast included?", vi: "Vâng, bữa sáng có bao gồm không ạ?" },
+        { en: "Thank you very much for your help.", vi: "Cảm ơn bạn rất nhiều." },
+      ];
+      const s = suggestions[Math.min(turn, suggestions.length-1)];
+      return {
+        success: true,
+        aiPrompt: "Thank you. How else can I help you?",
+        userSuggestion: s.en,
+        userSuggestionVi: s.vi,
+        grammarFeedback: "",
+        grammarCorrection: "",
+        isEnd: turn >= 3,
+      };
+    }
 
     // 3. Build native multi-turn contents array (Gemini multi-turn format)
     // History alternates user → model. Gemini requires this strict alternation.
@@ -358,9 +374,11 @@ export async function evaluateSpeakingSession(
 
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {
+      // Zero-cost fallback
+      const w = (transcript || "").trim().split(/\s+/).filter(Boolean).length;
       return {
-        success: false,
-        error: "Gemini API Key is not configured."
+        success: true,
+        feedback: `**Nhận xét chung**\nBạn đã thực hành ${w} từ. Tiếp tục luyện nhé!\n\n**Sửa lỗi & Gợi ý**\n- Thêm từ lịch sự (please, thank you).\n- Phát âm rõ âm cuối.\n\n**Mẹo cho người Việt**: Ghi âm lại và so với audio gốc.`,
       };
     }
 
