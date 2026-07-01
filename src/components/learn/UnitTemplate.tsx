@@ -423,10 +423,10 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
     getUnitCompletionStatus(normalizedUnit.unitId).then((res) => {
       if (res.success && res.completed) setIsCompleted(true);
     });
-    // Guest local fallback for self-study
+    // guest local from best pre-minimal version
     try {
-      const guestDone = JSON.parse(localStorage.getItem("guest_completed_units") || "[]");
-      if (Array.isArray(guestDone) && guestDone.includes(normalizedUnit.unitId)) {
+      const g = JSON.parse(localStorage.getItem("guest_completed_units") || "[]");
+      if (Array.isArray(g) && g.includes(normalizedUnit.unitId)) {
         // eslint-disable-next-line react-hooks/set-state-in-effect
         setIsCompleted(true);
       }
@@ -785,23 +785,15 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
       localStorage.setItem(xpSyncKey, String(prev + earnedXp));
       window.dispatchEvent(new CustomEvent("ato:xp-earned", { detail: { xp: earnedXp } }));
     } else if (res.error && res.error.includes("đăng nhập")) {
-      // Guest self-study fallback
+      // guest fallback from rolled best version
       setIsCompleted(true);
       try {
-        const key = "guest_completed_units";
-        const arr = JSON.parse(localStorage.getItem(key) || "[]");
-        const nextArr = Array.isArray(arr) ? [...new Set([...arr, normalizedUnit.unitId])] : [normalizedUnit.unitId];
-        localStorage.setItem(key, JSON.stringify(nextArr));
+        const k = "guest_completed_units";
+        const a = JSON.parse(localStorage.getItem(k) || "[]");
+        localStorage.setItem(k, JSON.stringify(Array.isArray(a) ? [...new Set([...a, normalizedUnit.unitId])] : [normalizedUnit.unitId]));
       } catch {}
-      toast.success("🎉 Hoàn thành! (Chế độ khách — lưu cục bộ)");
-      setCompletionData({
-        xpEarned: xpToEarn,
-        starCount: effectiveStarCount,
-        effectiveScore,
-        newStreak: 0,
-        vocabPreview: normalizedUnit.vocab.slice(0, 5).map(v => ({ word: v.word, meaning: v.meaning })),
-        nextRoute,
-      });
+      toast.success("🎉 Hoàn thành! (guest mode - local only)");
+      setCompletionData({ xpEarned: xpToEarn, starCount: effectiveStarCount, effectiveScore, newStreak: 0, vocabPreview: normalizedUnit.vocab.slice(0,5).map(v=>({word:v.word,meaning:v.meaning})), nextRoute });
     } else {
       toast.error(res.error || "Có lỗi xảy ra");
     }
