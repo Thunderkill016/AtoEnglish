@@ -1029,12 +1029,31 @@
 - **Completed:** 2026-07-01 — gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed; log 20260701T142617Z_TASK-143.log + sync PLAN/BACKLOG; no src edit; autonomous (PHASE3)
 
 ### TASK-144 — Autopilot maintenance sweep #144
-- **Status:** `ready`
+- **Status:** `in_progress`
 - **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
 - **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
 - **Started:** auto-refill
 
 ### TASK-145 — Autopilot maintenance sweep #145
+- **Status:** `ready`
+- **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
+- **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
+- **Started:** auto-refill
+
+
+### TASK-153 — Autopilot maintenance sweep #153
+- **Status:** `ready`
+- **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
+- **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
+- **Started:** auto-refill
+
+### TASK-154 — Autopilot maintenance sweep #154
+- **Status:** `ready`
+- **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
+- **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
+- **Started:** auto-refill
+
+### TASK-155 — Autopilot maintenance sweep #155
 - **Status:** `ready`
 - **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
 - **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
@@ -1050,6 +1069,9 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
+| 2026-07-01 | TASK-153 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-07-01 | TASK-154 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-07-01 | TASK-155 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-01 | TASK-143 | gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix + log 20260701T142617Z_TASK-143.log + sync PLAN/BACKLOG; no src; autonomous | done — (pending SHA) |
 | 2026-07-01 | TASK-144 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-01 | TASK-145 | auto-refill từ AGENT_ROADMAP.md | ready |
