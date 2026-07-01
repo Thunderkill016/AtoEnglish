@@ -18,7 +18,7 @@ import DashboardClient from "./components/DashboardClient";
 
 export const metadata: Metadata = {
   title: "Dashboard | AtoEnglish",
-  description: "Xem tiến độ học, streak, XP và tiếp tục bài học tiếng Anh của bạn.",
+  description: "Xem tiến độ học, streak, XP và tiếp tục bài học tiếng Anh của bạn. (Rollback best version + guest self-study)",
 };
 
 // P1-1 Fix: ISR 30s — fresh enough for daily dashboard use.
