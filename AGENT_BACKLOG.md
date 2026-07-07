@@ -1191,12 +1191,31 @@
 - **Completed:** 2026-07-02 — gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed; log 20260702T172800Z_TASK-171.log + BACKLOG/PLAN/nhật ký synced; no src edit; commit f1639fd + push via git-push.sh main; autonomous
 
 ### TASK-172 — Autopilot maintenance sweep #172
+- **Status:** `in_progress`
+- **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
+- **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
+- **Started:** 2026-07-07 — autopilot (PHASE1: search_memory sim via logs/grep + read AGENTS.md (ALWAYS), AGENT_BACKLOG/PLAN/ROADMAP, CONTENT_STYLE.md §6–7 + grep TASK-172 + sweeps + logs/agent/* + BACKLOG/PLAN; confirmed 2 ready (172-173) ; PHASE2: PLAN update + BACKLOG in_p + run refill since low after; PHASE3: gates + first-fail minimal + sync)
+
+### TASK-173 — Autopilot maintenance sweep #173
 - **Status:** `ready`
 - **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
 - **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
 - **Started:** auto-refill
 
-### TASK-173 — Autopilot maintenance sweep #173
+
+### TASK-174 — Autopilot maintenance sweep #174
+- **Status:** `ready`
+- **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
+- **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
+- **Started:** auto-refill
+
+### TASK-175 — Autopilot maintenance sweep #175
+- **Status:** `ready`
+- **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
+- **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
+- **Started:** auto-refill
+
+### TASK-176 — Autopilot maintenance sweep #176
 - **Status:** `ready`
 - **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
 - **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
@@ -1212,6 +1231,9 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
+| 2026-07-07 | TASK-174 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-07-07 | TASK-175 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-07-07 | TASK-176 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-02 | TASK-171 | gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed; log 20260702T172800Z_TASK-171.log + BACKLOG/PLAN/nhật ký synced; no src edit; commit f1639fd + push via git-push.sh main; autonomous | done — f1639fd |
 | 2026-07-02 | TASK-171 | follow-up SHA sync in PLAN/BACKLOG Nhật ký | done — b6b2506 |
 | 2026-07-02 | TASK-172 | auto-refill từ AGENT_ROADMAP.md | ready |
