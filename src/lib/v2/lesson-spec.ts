@@ -175,6 +175,8 @@ export const LessonSpecSchema = z
 export type LessonSpec = z.infer<typeof LessonSpecSchema>;
 export type LexisItem = z.infer<typeof LexisItemSchema>;
 export type LessonPhase = z.infer<typeof LessonPhaseSchema>;
+export type ControlledExercise = z.infer<typeof ControlledExerciseSchema>;
+export type QuizItem = z.infer<typeof QuizItemSchema>;
 
 export const LESSON_STAGES = [
   { id: "engage", label_vi: "Bắt đầu", strand: "engage" },

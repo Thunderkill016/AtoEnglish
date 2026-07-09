@@ -7,35 +7,38 @@
 | Field | Value |
 |-------|-------|
 | Started | 2026-07-10 |
-| Focus | TASK-184 — Author l-a0-08 Cụm sinh tồn + P0 gate mini-review |
+| Focus | TASK-185 — Player v2: controlled scramble + cloze input |
 | Owner | Autopilot (no human) |
 
-### TASK-184 — Author l-a0-08 Cụm sinh tồn + P0 gate
-**Mục tiêu**: Author full LessonSpec v2 for `l-a0-08` (P0/A0 «Cụm sinh tồn»): Excuse me, I don't understand, Can you help me?, Sorry, Thank you (+ please / You're welcome / Can you repeat?). Spiral full P0 (a0-01..07). Marks end of A0 block — P0 8/8 playable. Register in `lessons/index.ts`; sequential path test; docs. **Done khi:** Zod pass; registry has l-a0-08; next after a0-01..07 = a0-08; Home continue walks a0-01→08; lint+test; commit + `bash scripts/git-push.sh main`.
+### TASK-185 — Player v2: controlled scramble + cloze input
+**Mục tiêu**: `LessonPlayerV2` ControlledStage hiện chỉ MCQ (options buttons); content đã có `type: scramble` (words[]) + `cloze`/`correction` (stem+answer text) nhưng player reveal đáp án / không tương tác. Thêm UI scramble (tap order) + cloze text input để luyện controlled đầy đủ. Review quiz cloze (nếu không options) cũng nhận text input + normalize so khớp. **Done khi:** scramble/cloze usable in player; no console; lint+test; commit + `bash scripts/git-push.sh main`.
 
 **Bước thực hiện**:
-1. PHASE1 research (done): AGENTS, BACKLOG/PLAN/ROADMAP, CONTENT_STYLE §6–7, lesson-spec, l-a0-07 gold, path (order 8 already), index + tests.
-2. BACKLOG TASK-184 → `in_progress` (done).
+1. PHASE1 research (done): AGENTS, BACKLOG/PLAN/CONTENT§6–7, lesson-spec ControlledExerciseSchema, LessonPlayerV2 ControlledStage, v1 PracticeSection scramble/cloze pattern, sample l-a0-01 scramble + l-a1-01 cloze/correction.
+2. BACKLOG TASK-185 → `in_progress` (done).
 3. Update AGENT_PLAN this section (done).
-4. Ready after in_p: 3 ready ≥2 → skip refill.
+4. Ready after in_p: 2 ready (186,187) ≥2 → skip refill.
 5. PHASE3:
-   - Create `src/lib/v2/lessons/l-a0-08.ts` (8 stages, ≥50% L1 A0, spiral P0).
-   - Wire `index.ts`.
-   - Extend `lesson-spec-v2.test.ts` (title + sequential → l-a0-08; authored ≥10).
-   - `docs/V2_PRODUCT.md` authored line …08 P0 complete.
+   - Extend ControlledStage: scramble tap-order pool/built; cloze+correction text input + check; keep MCQ.
+   - normalizeAnswer for feedback + review scoring.
+   - ReviewStage: cloze without options → text input.
+   - Optional small unit test for normalize if extracted; else rely on existing suite.
    - `npm run lint && npm run test`.
 6. Log + BACKLOG done + nhật ký + SHA; PLAN completed.
-7. commit `feat(v2): l-a0-08 survival chunks + P0 gate (TASK-184)`; push via git-push.sh main.
+7. commit `feat(v2): scramble tap-order + cloze input in LessonPlayerV2 (TASK-185)`; push via git-push.sh main.
 
 **Rủi ro**:
-- Zod (L1 ratio, max lengths, dialogue min) → minimal content fix.
-- Path hole if not registered → getNextPlayable skips unauthored.
+- Scramble word order vs punctuation in answer → normalize whitespace/punct.
+- Duplicate words in pool → count-based disable (v1 pattern).
+- Hydration: shuffle client-only via useMemo/useState lazy init.
 - Push GITLAB_TOKEN → blocked, no force.
 - Fail 2× → blocked + reason.
 
-**Started:** 2026-07-10 — autopilot (PHASE1–2 done; PHASE3 content factory)
+**Started:** 2026-07-10 — autopilot (PHASE1–2 done; PHASE3 player UX)
 
-**Completed TASK-184**: l-a0-08 authored (survival chunks + spiral full P0); registry + tests sequential a0-07→08; docs V2 P0 complete; lint0+195t; log 20260709T200605Z_TASK-184.log; commit ec7b0e5 + push via git-push.sh main; autonomous.
+**Completed TASK-185**: scramble tap-order + cloze/correction text in ControlledStage; ReviewStage cloze text input; `exercise-answer.ts` normalize/shuffle + 4 unit tests; quiz scoring answersMatch; lint0+199t; log 20260709T201700Z_TASK-185.log; commit + push via git-push.sh main; autonomous.
+
+**Completed TASK-184** (prior): l-a0-08 survival + P0 8/8; ec7b0e5.
 
 ### TASK-183 — Author l-a0-07 Ngày trong tuần
 **Mục tiêu**: Author full LessonSpec v2 for `l-a0-07` (P0/A0 «Ngày trong tuần»): days Mon–Sun, phrases **Today is…** / **What day is it?**. Spiral from a0-01..06 (time of day, family, greetings). Register in `lessons/index.ts`; sequential path test; docs. **Done khi:** Zod pass; registry has l-a0-07; next after a0-01..06 = a0-07; lint+test; commit + `bash scripts/git-push.sh main`.

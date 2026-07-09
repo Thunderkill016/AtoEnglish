@@ -12,8 +12,9 @@ import {
   PartyPopper,
   Volume2,
 } from "lucide-react";
-import type { LessonSpec } from "@/lib/v2/lesson-spec";
+import type { ControlledExercise, LessonSpec, QuizItem } from "@/lib/v2/lesson-spec";
 import { LESSON_STAGES } from "@/lib/v2/lesson-spec";
+import { answersMatch, shuffleWords } from "@/lib/v2/exercise-answer";
 import { markLessonComplete } from "@/lib/v2/progress";
 import { cn } from "@/lib/utils";
 
@@ -34,7 +35,9 @@ export function LessonPlayerV2({ lesson }: Props) {
   const quizItems = lesson.review.quiz;
 
   const correctCount = useMemo(() => {
-    return quizItems.filter((q) => selected[q.id] === q.answer).length;
+    return quizItems.filter((q) =>
+      answersMatch(selected[q.id] ?? "", q.answer),
+    ).length;
   }, [quizItems, selected]);
 
   function goNext() {
@@ -320,47 +323,293 @@ function ControlledStage({
 }) {
   return (
     <div className="space-y-3">
-      <SectionTitle hint="Chạm đáp án — ~80% đúng là ổn">Luyện tập</SectionTitle>
+      <SectionTitle hint="MCQ · chạm từ sắp xếp · điền chỗ trống — ~80% đúng là ổn">
+        Luyện tập
+      </SectionTitle>
       {lesson.controlled.map((ex, i) => (
         <div
           key={ex.id}
           className="rounded-2xl border border-zinc-800 bg-zinc-950/40 p-4 space-y-2"
         >
-          <p className="text-[11px] font-bold text-zinc-600">#{i + 1}</p>
+          <div className="flex items-center gap-2">
+            <p className="text-[11px] font-bold text-zinc-600">#{i + 1}</p>
+            <span className="rounded-md bg-zinc-800/80 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-zinc-500">
+              {ex.type}
+            </span>
+          </div>
           <p className="text-sm font-medium text-zinc-100">{ex.prompt_vi}</p>
-          {ex.stem && (
+          {ex.stem && ex.type !== "scramble" && (
             <p className="text-sm font-mono text-teal-300/90">{ex.stem}</p>
           )}
-          {ex.options ? (
-            <div className="flex flex-wrap gap-2 pt-1">
-              {ex.options.map((o) => {
-                const picked = selected[ex.id] === o;
-                const ok = o === ex.answer;
-                return (
-                  <button
-                    key={o}
-                    type="button"
-                    onClick={() => onSelect(ex.id, o)}
-                    className={cn(
-                      "rounded-xl border px-3 py-2 text-xs font-semibold transition",
-                      picked && ok && "border-emerald-500 bg-emerald-500/20 text-emerald-200",
-                      picked && !ok && "border-amber-500/60 bg-amber-500/10 text-amber-100",
-                      !picked && "border-zinc-700 text-zinc-400 hover:border-zinc-500",
-                    )}
-                  >
-                    {o}
-                  </button>
-                );
-              })}
-            </div>
+          {ex.type === "scramble" ? (
+            <ScrambleExercise ex={ex} onCommit={(v) => onSelect(ex.id, v)} />
+          ) : ex.type === "cloze" || ex.type === "correction" ? (
+            <ClozeExercise
+              exerciseId={ex.id}
+              answer={ex.answer}
+              explanation={ex.explanation_vi}
+              placeholder={
+                ex.type === "correction"
+                  ? "Sửa câu đúng..."
+                  : "Điền từ còn thiếu..."
+              }
+              onCommit={(v) => onSelect(ex.id, v)}
+            />
+          ) : ex.options && ex.options.length > 0 ? (
+            <McqOptions
+              options={ex.options}
+              answer={ex.answer}
+              selected={selected[ex.id]}
+              onSelect={(v) => onSelect(ex.id, v)}
+            />
           ) : (
-            <p className="text-xs text-emerald-500/90">Gợi ý: {ex.answer}</p>
-          )}
-          {selected[ex.id] && selected[ex.id] !== ex.answer && (
-            <p className="text-xs text-amber-400">→ {ex.answer}</p>
+            <ClozeExercise
+              exerciseId={ex.id}
+              answer={ex.answer}
+              explanation={ex.explanation_vi}
+              placeholder="Nhập đáp án..."
+              onCommit={(v) => onSelect(ex.id, v)}
+            />
           )}
         </div>
       ))}
+    </div>
+  );
+}
+
+function McqOptions({
+  options,
+  answer,
+  selected,
+  onSelect,
+}: {
+  options: string[];
+  answer: string;
+  selected?: string;
+  onSelect: (v: string) => void;
+}) {
+  return (
+    <div className="flex flex-wrap gap-2 pt-1">
+      {options.map((o) => {
+        const picked = selected === o;
+        const ok = answersMatch(o, answer);
+        return (
+          <button
+            key={o}
+            type="button"
+            onClick={() => onSelect(o)}
+            className={cn(
+              "rounded-xl border px-3 py-2 text-xs font-semibold transition",
+              picked && ok && "border-emerald-500 bg-emerald-500/20 text-emerald-200",
+              picked && !ok && "border-amber-500/60 bg-amber-500/10 text-amber-100",
+              !picked && "border-zinc-700 text-zinc-400 hover:border-zinc-500",
+            )}
+          >
+            {o}
+          </button>
+        );
+      })}
+      {selected && !answersMatch(selected, answer) && (
+        <p className="w-full text-xs text-amber-400">→ {answer}</p>
+      )}
+    </div>
+  );
+}
+
+/** Tap-order scramble: pool → built sentence → check. */
+function ScrambleExercise({
+  ex,
+  onCommit,
+}: {
+  ex: ControlledExercise;
+  onCommit: (joined: string) => void;
+}) {
+  const [pool] = useState(() =>
+    shuffleWords(ex.words && ex.words.length > 0 ? ex.words : ex.answer.split(/\s+/)),
+  );
+  const [built, setBuilt] = useState<string[]>([]);
+  const [checked, setChecked] = useState(false);
+
+  const joined = built.join(" ");
+  const isCorrect = answersMatch(joined, ex.answer);
+
+  function pickWord(w: string) {
+    if (checked) return;
+    const used = built.filter((b) => b === w).length;
+    const total = pool.filter((t) => t === w).length;
+    if (used >= total) return;
+    setBuilt((prev) => [...prev, w]);
+  }
+
+  function removeAt(i: number) {
+    if (checked) return;
+    setBuilt((prev) => {
+      const next = [...prev];
+      next.splice(i, 1);
+      return next;
+    });
+  }
+
+  function check() {
+    if (built.length === 0) return;
+    setChecked(true);
+    onCommit(joined);
+  }
+
+  return (
+    <div className="space-y-2 pt-1">
+      <div
+        className={cn(
+          "min-h-[44px] flex flex-wrap gap-2 rounded-xl border p-3",
+          checked
+            ? isCorrect
+              ? "border-emerald-500/40 bg-emerald-500/10"
+              : "border-amber-500/40 bg-amber-500/10"
+            : "border-zinc-700 bg-zinc-900/50",
+        )}
+      >
+        {built.length === 0 ? (
+          <span className="self-center text-xs text-zinc-500">
+            Chạm từ bên dưới để xếp câu...
+          </span>
+        ) : (
+          built.map((w, i) => (
+            <button
+              key={`${w}-${i}`}
+              type="button"
+              disabled={checked}
+              onClick={() => removeAt(i)}
+              className="rounded-lg border border-emerald-500/40 bg-emerald-500/10 px-2.5 py-1 text-xs font-semibold text-emerald-200 disabled:cursor-default hover:bg-emerald-500/20"
+            >
+              {w}
+            </button>
+          ))
+        )}
+      </div>
+      {!checked && (
+        <div className="flex flex-wrap gap-2">
+          {pool.map((w, i) => {
+            const used = built.filter((b) => b === w).length;
+            const total = pool.filter((t) => t === w).length;
+            const disabled = used >= total;
+            return (
+              <button
+                key={`${w}-pool-${i}`}
+                type="button"
+                disabled={disabled}
+                onClick={() => pickWord(w)}
+                className={cn(
+                  "rounded-lg border px-2.5 py-1.5 text-xs font-bold transition",
+                  disabled
+                    ? "cursor-not-allowed border-zinc-800 text-zinc-600 opacity-30"
+                    : "border-zinc-600 bg-zinc-800/80 text-zinc-100 hover:border-teal-400/70 hover:bg-zinc-800 active:scale-95",
+                )}
+              >
+                {w}
+              </button>
+            );
+          })}
+        </div>
+      )}
+      {!checked ? (
+        <button
+          type="button"
+          disabled={built.length === 0}
+          onClick={check}
+          className="rounded-xl border border-teal-500/40 bg-teal-500/10 px-4 py-1.5 text-xs font-bold text-teal-300 hover:bg-teal-500/20 disabled:opacity-40"
+        >
+          Kiểm tra
+        </button>
+      ) : (
+        <p
+          className={cn(
+            "text-xs font-bold",
+            isCorrect ? "text-emerald-400" : "text-amber-400",
+          )}
+        >
+          {isCorrect ? "✓ Chính xác!" : `→ ${ex.answer}`}
+          {ex.explanation_vi && !isCorrect ? (
+            <span className="mt-1 block font-medium text-zinc-500">
+              {ex.explanation_vi}
+            </span>
+          ) : null}
+        </p>
+      )}
+    </div>
+  );
+}
+
+/** Cloze / correction free-text with check. */
+function ClozeExercise({
+  exerciseId,
+  answer,
+  explanation,
+  placeholder,
+  onCommit,
+}: {
+  exerciseId: string;
+  answer: string;
+  explanation?: string;
+  placeholder: string;
+  onCommit: (v: string) => void;
+}) {
+  const [draft, setDraft] = useState("");
+  const [checked, setChecked] = useState(false);
+  const isCorrect = answersMatch(draft, answer);
+
+  function check() {
+    if (!draft.trim()) return;
+    setChecked(true);
+    onCommit(draft.trim());
+  }
+
+  return (
+    <div className="space-y-2 pt-1">
+      <input
+        id={`cloze-${exerciseId}`}
+        type="text"
+        autoComplete="off"
+        disabled={checked}
+        value={draft}
+        onChange={(e) => setDraft(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            check();
+          }
+        }}
+        placeholder={placeholder}
+        className={cn(
+          "w-full rounded-xl border bg-zinc-900/60 px-3 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:ring-1 focus:ring-emerald-500/50 disabled:opacity-70",
+          checked
+            ? isCorrect
+              ? "border-emerald-500/50"
+              : "border-amber-500/50"
+            : "border-zinc-700",
+        )}
+      />
+      {!checked ? (
+        <button
+          type="button"
+          disabled={!draft.trim()}
+          onClick={check}
+          className="rounded-xl border border-teal-500/40 bg-teal-500/10 px-4 py-1.5 text-xs font-bold text-teal-300 hover:bg-teal-500/20 disabled:opacity-40"
+        >
+          Kiểm tra
+        </button>
+      ) : (
+        <p
+          className={cn(
+            "text-xs font-bold",
+            isCorrect ? "text-emerald-400" : "text-amber-400",
+          )}
+        >
+          {isCorrect ? "✓ Chính xác!" : `→ ${answer}`}
+          {explanation && !isCorrect ? (
+            <span className="mt-1 block font-medium text-zinc-500">{explanation}</span>
+          ) : null}
+        </p>
+      )}
     </div>
   );
 }
@@ -513,23 +762,7 @@ function ReviewStage({
         <div key={q.id} className="space-y-2 rounded-2xl border border-zinc-800 bg-zinc-950/40 p-4">
           <p className="text-[11px] font-bold text-zinc-600">Câu {i + 1}</p>
           <p className="text-sm font-medium text-zinc-100">{q.question}</p>
-          <div className="flex flex-wrap gap-2">
-            {(q.options ?? [q.answer]).map((opt) => (
-              <button
-                key={opt}
-                type="button"
-                onClick={() => onSelect(q.id, opt)}
-                className={cn(
-                  "rounded-xl border px-3 py-2 text-xs font-semibold transition",
-                  selected[q.id] === opt
-                    ? "border-emerald-500 bg-emerald-500/20 text-emerald-200"
-                    : "border-zinc-700 text-zinc-400 hover:border-zinc-500",
-                )}
-              >
-                {opt}
-              </button>
-            ))}
-          </div>
+          <ReviewQuestionBody q={q} selected={selected[q.id]} onSelect={onSelect} />
         </div>
       ))}
       {quizScore !== null && (
@@ -543,6 +776,61 @@ function ReviewStage({
           </p>
         </div>
       )}
+    </div>
+  );
+}
+
+function ReviewQuestionBody({
+  q,
+  selected,
+  onSelect,
+}: {
+  q: QuizItem;
+  selected?: string;
+  onSelect: (id: string, val: string) => void;
+}) {
+  const needsText =
+    q.type === "cloze" || !q.options || q.options.length === 0;
+  const [draft, setDraft] = useState(selected ?? "");
+
+  if (needsText) {
+    return (
+      <div className="space-y-2">
+        <input
+          type="text"
+          autoComplete="off"
+          value={draft}
+          onChange={(e) => {
+            setDraft(e.target.value);
+            onSelect(q.id, e.target.value);
+          }}
+          placeholder="Điền đáp án..."
+          className="w-full rounded-xl border border-zinc-700 bg-zinc-900/60 px-3 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:ring-1 focus:ring-emerald-500/50"
+        />
+        {selected && answersMatch(selected, q.answer) && (
+          <p className="text-xs font-bold text-emerald-400">✓</p>
+        )}
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex flex-wrap gap-2">
+      {q.options!.map((opt) => (
+        <button
+          key={opt}
+          type="button"
+          onClick={() => onSelect(q.id, opt)}
+          className={cn(
+            "rounded-xl border px-3 py-2 text-xs font-semibold transition",
+            selected === opt
+              ? "border-emerald-500 bg-emerald-500/20 text-emerald-200"
+              : "border-zinc-700 text-zinc-400 hover:border-zinc-500",
+          )}
+        >
+          {opt}
+        </button>
+      ))}
     </div>
   );
 }
