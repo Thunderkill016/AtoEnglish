@@ -1283,7 +1283,7 @@
 - **Mô tả:** Complete rule docs: task attempt + quiz floor. Enforce soft floor (e.g. ≥50% quiz or re-try prompt) in player before markLessonComplete.
 - **Done khi:** cannot one-click complete review with 0 answers; copy VI clear.
 - **Started:** 2026-07-10 — autopilot (PHASE1: progress + LessonPlayerV2 ReviewStage goNext; PHASE2: PLAN + in_p)
-- **Completed:** 2026-07-10 — canMarkLessonComplete + meetsQuizFloor (50%); player block 0 answers + below floor + «Làm lại quiz» VI; progress-v2 7 tests; docs V2; lint0+206t; log 20260709T203400Z_TASK-187.log; commit 1cd8059; push git-push.sh main
+- **Completed:** 2026-07-10 — canMarkLessonComplete + meetsQuizFloor (50%); player block 0 answers + below floor + «Làm lại quiz» VI; progress-v2 7 tests; docs V2; lint0+206t; log 20260709T203400Z_TASK-187.log; commit d96c82e; push git-push.sh main
 
 
 ### TASK-188 — Autopilot maintenance sweep #188
@@ -1314,7 +1314,7 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
-| 2026-07-10 | TASK-187 | feat(v2): soft quiz floor ≥50% before complete; re-try VI; lint0+206t | done — 1cd8059 |
+| 2026-07-10 | TASK-187 | feat(v2): soft quiz floor ≥50% before complete; re-try VI; lint0+206t | done — d96c82e |
 | 2026-07-10 | TASK-186 | feat(v2): l-a1-02 personal info age/job/phone/email; L1 100%; sequential a1-01→02; lint0+199t | done — c4cef59 |
 | 2026-07-10 | TASK-188 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-10 | TASK-189 | auto-refill từ AGENT_ROADMAP.md | ready |
