@@ -31,4 +31,4 @@ Owner: Autopilot (no human)
 - [x] lint+test pass
 - [x] PLAN/BACKLOG/nhật ký sync
 - [x] log file
-- [ ] commit + git-push.sh main (pending)
+- [x] commit dda7e2a + git-push.sh main
