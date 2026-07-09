@@ -7,35 +7,38 @@
 | Field | Value |
 |-------|-------|
 | Started | 2026-07-10 |
-| Focus | TASK-181 — Author l-a0-05 Gia đình cơ bản (Family lexis + This is my…; sequential after a0-04) |
+| Focus | TASK-182 — Author l-a0-06 Thời gian trong ngày (morning/afternoon/evening/night + Good morning…; o'clock basic A0) |
 | Owner | Autopilot (no human) |
 
-### TASK-181 — Author l-a0-05 Gia đình cơ bản
-**Mục tiêu**: Author full LessonSpec v2 for `l-a0-05` (P0/A0 «Gia đình cơ bản»): family lexis (mother/father/sister/brother/family/parents/my/photo), grammar spine **This is my… / Who is this?**, controlled + dialogue + listen + fluency + speak task + review + spiral from a0-01..04. Register in `lessons/index.ts`; update `lesson-spec-v2` sequential path test; docs authored list. **Done khi:** Zod schema pass; registry has l-a0-05; next-playable after a0-01..04 = a0-05; lint+test pass; commit + `bash scripts/git-push.sh main`.
+### TASK-182 — Author l-a0-06 Thời gian trong ngày
+**Mục tiêu**: Author full LessonSpec v2 for `l-a0-06` (P0/A0 «Thời gian trong ngày»): parts of day (morning/afternoon/evening/night), greetings **Good morning / Good afternoon / Good evening / Good night**, basic clock **… o'clock** if fits A0. Spiral from a0-01..05 (family/greetings/from). Register in `lessons/index.ts`; sequential path test; docs. **Done khi:** Zod pass; registry has l-a0-06; next after a0-01..05 = a0-06; lint+test; commit + `bash scripts/git-push.sh main`.
 
 **Bước thực hiện**:
-1. PHASE1 research (done): AGENTS.md, AGENT_BACKLOG/PLAN/ROADMAP, CONTENT_STYLE §6–7, docs/V2_PRODUCT, lesson-spec.ts, l-a0-04 gold pattern, path.ts (l-a0-05 already in CORE_PATH_PLAN order 5), index + tests.
-2. BACKLOG TASK-181 → `in_progress` (done).
+1. PHASE1 research (done): AGENTS, BACKLOG/PLAN/ROADMAP, CONTENT_STYLE §6–7, lesson-spec, l-a0-05 gold, path (order 6 already), index + tests.
+2. BACKLOG TASK-182 → `in_progress` (done).
 3. Update AGENT_PLAN this section (done).
-4. Ready count after in_p: TASK-182/183/184 still ready ≥2 → skip `bash scripts/agent-refill-backlog.sh`.
-5. PHASE3 implement:
-   - Create `src/lib/v2/lessons/l-a0-05.ts` (full 8 stages, ≥50% L1 on A0 lexis).
-   - Wire registry `index.ts`.
-   - Extend `lesson-spec-v2.test.ts` (title + sequential next = l-a0-05; authored ≥7).
-   - Touch `docs/V2_PRODUCT.md` authored line.
-   - `npm run lint && npm run test` (self-debug if fail).
-6. Log `logs/agent/…_TASK-181.log`; BACKLOG done + nhật ký + SHA; PLAN completed.
-7. commit `feat(v2): l-a0-05 family lexis + This is my… (TASK-181)`; `bash scripts/git-push.sh main`.
+4. Ready after in_p: TASK-183/184 ≥2 → skip refill.
+5. PHASE3:
+   - Create `src/lib/v2/lessons/l-a0-06.ts` (8 stages, ≥50% L1 A0).
+   - Wire `index.ts`.
+   - Extend `lesson-spec-v2.test.ts` (title + sequential → l-a0-06; authored ≥8).
+   - `docs/V2_PRODUCT.md` authored line …06.
+   - `npm run lint && npm run test`.
+6. Log + BACKLOG done + nhật ký + SHA; PLAN completed.
+7. commit `feat(v2): l-a0-06 time of day + Good morning… (TASK-182)`; push via git-push.sh main.
 
 **Rủi ro**:
-- Zod fail (L1 ratio, string max, dialogue min lines) → fix content minimal; re-parse.
-- Sequential path wrong if registry order / CORE_PATH_PLAN hole → getNextPlayable uses plan order + authored presence.
-- Push needs GITLAB_TOKEN → blocked, no force.
-- Fail 2× → status blocked + reason.
+- Zod (L1 ratio, max lengths, dialogue min) → minimal content fix.
+- Path hole if not registered → getNextPlayable skips unauthored.
+- Push GITLAB_TOKEN → blocked, no force.
+- Fail 2× → blocked + reason.
 
 **Started:** 2026-07-10 — autopilot (PHASE1–2 done; PHASE3 content factory)
 
-**Completed TASK-181**: l-a0-05 authored (family lexis + This is my… / Who is this?); registry + tests sequential a0-04→05; docs V2 authored …05; lint0+195t; log 20260709T194758Z_TASK-181.log; commit + push via git-push.sh main; autonomous.
+**Completed TASK-182**: l-a0-06 authored (morning/afternoon/evening/night + Good morning… + It's … o'clock); registry + tests sequential a0-05→06; docs V2 authored …06; lint0+195t; log 20260709T195247Z_TASK-182.log; commit + push via git-push.sh main; autonomous.
+
+### TASK-181 — Author l-a0-05 Gia đình cơ bản (prior)
+**Completed TASK-181**: l-a0-05 authored (family lexis + This is my… / Who is this?); registry + tests sequential a0-04→05; docs V2 authored …05; lint0+195t; log 20260709T194758Z_TASK-181.log; commit f362660 + push via git-push.sh main; autonomous.
 
 ### TASK-174 — Autopilot maintenance sweep #174 (prior)
 **Completed TASK-174**: gates clean; maintenance-only; superseded focus by content factory TASK-181.
