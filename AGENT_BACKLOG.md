@@ -1294,12 +1294,31 @@
 - **Completed:** 2026-07-10 — gates clean (tsc0+lint0+206t+cs50/50+audit50/50) no fix; log 20260709T203759Z_TASK-188.log; PLAN/BACKLOG/nhật ký sync; no src edit; commit + push git-push.sh main; autonomous
 
 ### TASK-189 — Autopilot maintenance sweep #189
+- **Status:** `in_progress`
+- **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
+- **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
+- **Started:** 2026-07-10 — autopilot (PHASE1: AGENTS/BACKLOG/PLAN/CONTENT §6–7; PHASE2: PLAN; PHASE3: gates only)
+
+### TASK-190 — Autopilot maintenance sweep #190
 - **Status:** `ready`
 - **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
 - **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
 - **Started:** auto-refill
 
-### TASK-190 — Autopilot maintenance sweep #190
+
+### TASK-191 — Autopilot maintenance sweep #191
+- **Status:** `ready`
+- **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
+- **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
+- **Started:** auto-refill
+
+### TASK-192 — Autopilot maintenance sweep #192
+- **Status:** `ready`
+- **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
+- **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
+- **Started:** auto-refill
+
+### TASK-193 — Autopilot maintenance sweep #193
 - **Status:** `ready`
 - **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
 - **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
@@ -1315,6 +1334,9 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
+| 2026-07-10 | TASK-191 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-07-10 | TASK-192 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-07-10 | TASK-193 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-10 | TASK-188 | gates clean (tsc0+lint0+206t+cs50/50+audit50/50) no fix; log 20260709T203759Z_TASK-188.log; PLAN/BACKLOG sync; no src | done — 2152dcf |
 | 2026-07-10 | TASK-187 | feat(v2): soft quiz floor ≥50% before complete; re-try VI; lint0+206t | done — d96c82e |
 | 2026-07-10 | TASK-186 | feat(v2): l-a1-02 personal info age/job/phone/email; L1 100%; sequential a1-01→02; lint0+199t | done — c4cef59 |
