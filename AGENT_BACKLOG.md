@@ -1247,7 +1247,7 @@
 - **Mô tả:** morning/afternoon/evening/night + Good morning… Clock phrases basic (o'clock if fits A0).
 - **Done khi:** schema + registry + path.
 - **Started:** 2026-07-10 — autopilot (PHASE1: AGENTS/BACKLOG/PLAN/CONTENT§6–7 + V2 path + l-a0-05 gold; PHASE2: PLAN + in_p; ready 183–184 ≥2 skip refill)
-- **Completed:** 2026-07-10 — l-a0-06.ts full LessonSpec (parts of day + Good morning… + o'clock); registry; path a0-01..06 sequential; lint0+195t; log 20260709T195247Z_TASK-182.log; commit + push via git-push.sh main
+- **Completed:** 2026-07-10 — l-a0-06.ts full LessonSpec (parts of day + Good morning… + o'clock); registry; path a0-01..06 sequential; lint0+195t; log 20260709T195247Z_TASK-182.log; commit 16edeb8; push via git-push.sh main
 
 ### TASK-183 — Author l-a0-07 Ngày trong tuần
 - **Status:** `ready`
@@ -1271,7 +1271,7 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
-| 2026-07-10 | TASK-182 | feat(v2): l-a0-06 time of day + Good morning…/o'clock; 8 playable; sequential a0-01..06; lint0+195t | done — (SHA pending) |
+| 2026-07-10 | TASK-182 | feat(v2): l-a0-06 time of day + Good morning…/o'clock; 8 playable; sequential a0-01..06; lint0+195t | done — 16edeb8 |
 | 2026-07-10 | TASK-181 | feat(v2): l-a0-05 family + This is my…; 7 playable; sequential a0-01..05; lint0+195t | done — f362660 |
 | 2026-07-10 | TASK-182 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-10 | TASK-183 | auto-refill từ AGENT_ROADMAP.md | ready |
