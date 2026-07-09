@@ -1,8 +1,8 @@
 "use server";
 
-import { headers } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 import { createRateLimiter } from "@/lib/security/rate-limit";
+import { checkActionRateLimit } from "@/lib/security/action-guard";
 import { RecordFlashcardSessionSchema } from "@/lib/security/validation";
 import type { Database } from "@/types/supabase";
 
@@ -69,10 +69,11 @@ export async function getFlashcardStats(): Promise<{
 export async function recordFlashcardSession(
   cardsReviewed: number
 ): Promise<{ success: boolean; stats?: FlashcardStats; error?: string }> {
-  // Rate limiting
-  const ip = (await headers()).get("x-forwarded-for") ?? "unknown";
-  const rateLimitCheck = await flashcardWriteLimiter.check(ip);
-  if (!rateLimitCheck.success) return { success: false, error: "Tốc độ quá giới hạn." };
+  const rateErr = await checkActionRateLimit(
+    flashcardWriteLimiter,
+    "Tốc độ quá giới hạn.",
+  );
+  if (rateErr) return { success: false, error: rateErr };
 
   // Input validation
   const validated = RecordFlashcardSessionSchema.safeParse({ cardsReviewed });

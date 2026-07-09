@@ -2,8 +2,12 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
-import { headers } from "next/headers";
 import { createRateLimiter } from "@/lib/security/rate-limit";
+import { checkActionRateLimit } from "@/lib/security/action-guard";
+import {
+  PlacementLevelSchema,
+  PlacementResultSchema,
+} from "@/lib/security/validation";
 import {
   getPlacementLearnPath,
   getStartingUnitIndex,
@@ -117,15 +121,23 @@ export async function savePlacementResult(
   score: number,
 ): Promise<PlacementSaveResult> {
   try {
-    const reqHeaders = await headers();
-    const ip =
-      reqHeaders.get("x-forwarded-for")?.split(",")[0].trim() || "127.0.0.1";
-    const rateLimitCheck = await placementLimiter.check(ip);
-    if (!rateLimitCheck.success) {
-      return { success: false, error: "Vui lòng chờ trước khi làm lại test." } satisfies PlacementSaveResult;
+    const rateErr = await checkActionRateLimit(
+      placementLimiter,
+      "Vui lòng chờ trước khi làm lại test.",
+    );
+    if (rateErr) {
+      return { success: false, error: rateErr } satisfies PlacementSaveResult;
     }
 
-    return await persistPlacementLevel(level, score, "test");
+    const parsed = PlacementResultSchema.safeParse({ level, score });
+    if (!parsed.success) {
+      return {
+        success: false,
+        error: parsed.error.issues[0]?.message ?? "Dữ liệu không hợp lệ.",
+      } satisfies PlacementSaveResult;
+    }
+
+    return await persistPlacementLevel(parsed.data.level, parsed.data.score, "test");
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);
     return { success: false, error: msg } satisfies PlacementSaveResult;
@@ -135,15 +147,23 @@ export async function savePlacementResult(
 /** Self-select level without taking the full test (quick path). */
 export async function setPlacementLevel(level: string): Promise<PlacementSaveResult> {
   try {
-    const reqHeaders = await headers();
-    const ip =
-      reqHeaders.get("x-forwarded-for")?.split(",")[0].trim() || "127.0.0.1";
-    const rateLimitCheck = await placementLimiter.check(ip);
-    if (!rateLimitCheck.success) {
-      return { success: false, error: "Vui lòng chờ trước khi thử lại." } satisfies PlacementSaveResult;
+    const rateErr = await checkActionRateLimit(
+      placementLimiter,
+      "Vui lòng chờ trước khi thử lại.",
+    );
+    if (rateErr) {
+      return { success: false, error: rateErr } satisfies PlacementSaveResult;
     }
 
-    return await persistPlacementLevel(level, 0, "self-select");
+    const parsed = PlacementLevelSchema.safeParse({ level });
+    if (!parsed.success) {
+      return {
+        success: false,
+        error: parsed.error.issues[0]?.message ?? "Trình độ không hợp lệ.",
+      } satisfies PlacementSaveResult;
+    }
+
+    return await persistPlacementLevel(parsed.data.level, 0, "self-select");
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);
     return { success: false, error: msg } satisfies PlacementSaveResult;

@@ -18,7 +18,8 @@ export function Screen({ children, className, narrow = true }: ScreenProps) {
     >
       <div
         className={cn(
-          "mx-auto w-full px-4 pb-8 pt-6 sm:px-6",
+          // Content rhythm; (main)/layout.tsx already has pb-16 for fixed BottomNav
+          "mx-auto w-full px-4 pb-10 pt-6 sm:px-6 sm:pb-10",
           narrow && "max-w-[var(--minimal-content-max)]"
         )}
       >

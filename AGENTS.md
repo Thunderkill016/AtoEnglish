@@ -1,6 +1,9 @@
 # AGENTS.md — AtoEnglish
 
 > Vietnamese-first English learning web app.
+> **Product North Star (2026-07-10):** core outcome = **CEFR B1 Independent User** (“dùng được” tiếng Anh độc lập).  
+> **Rebuild v2 (in progress):** full product + new LessonSpec path A0→B1 (`l-*` ids). Spec: `docs/V2_PRODUCT.md`. Code: `src/lib/v2/`. Flag: `NEXT_PUBLIC_CURRICULUM_V2`. Pilot: `/learn/v2/l-a1-01`. v1 curriculum frozen — see `archive/curriculum-v1/README.md`.  
+> Pedagogy: `LESSON_SYSTEM_FOUNDATION.md` · `CURRICULUM_PROGRAM.md`.
 > **Stack**: Next.js 16 · TypeScript 6 · TailwindCSS v4 · Supabase (Auth + PostgreSQL) · Framer Motion · ts-fsrs · Vercel
 
 ---
@@ -183,14 +186,19 @@ const Comp = dynamic(() => import('./Comp'), { ssr: false });
 
 ## 📘 Bài học — Blueprint (nội dung = cách học)
 
+> **SSOT tổng hợp (đọc trước khi đổi pedagogy/content):**  
+> [`LESSON_SYSTEM_FOUNDATION.md`](./LESSON_SYSTEM_FOUNDATION.md) — khoa học học + IPOR + gates + quy trình phát triển **không rebuild**.
+
 Mọi unit phải dùng **cùng một khung** cho cách viết nội dung và cách người học trải nghiệm:
 
 | File | Vai trò |
 |------|---------|
+| `LESSON_SYSTEM_FOUNDATION.md` | Nền tảng world-class (SLA + map code) |
 | `src/lib/lessons/lesson-blueprint.ts` | Map field → section → IPOR phase |
 | `src/lib/data/units/unit1.ts` | **Mẫu vàng** — comment block + cấu trúc field |
 | `src/lib/lessons/learning-flow.ts` | Thứ tự 10 section trong app |
 | `src/lib/lessons/content-standard.ts` | Chuẩn số lượng SDL (vocab, L1, quiz…) |
+| `src/lib/lessons/lesson-center-reference.ts` | ESA/CELTA/CEFR/Nation/CLT VN |
 
 ```bash
 npx tsx scripts/print-lesson-blueprint.mjs   # checklist cho agent

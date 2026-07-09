@@ -1,8 +1,9 @@
 "use server";
 
-import { headers } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 import { createRateLimiter } from "@/lib/security/rate-limit";
+import { checkActionRateLimit } from "@/lib/security/action-guard";
+import { LeagueXpSchema } from "@/lib/security/validation";
 import type { LeagueTier, LeagueData, LeagueMember } from "@/lib/leagues";
 
 // Re-export types so consumers can import from either this file or @/lib/leagues
@@ -13,11 +14,15 @@ const leagueLimiter = createRateLimiter(30, 60_000, "league");
 /**
  * getMyLeague — fetch (or create) the current user's weekly league.
  * Uses the assign_league_for_user() DB function for idempotent assignment.
+ * Rate-limited: RPC can write membership rows.
  */
 export async function getMyLeague(): Promise<
   { success: true; data: LeagueData } | { success: false; error: string }
 > {
   try {
+    const rateErr = await checkActionRateLimit(leagueLimiter);
+    if (rateErr) return { success: false, error: rateErr };
+
     const supabase = await createClient();
     const { data: { user }, error: authError } = await supabase.auth.getUser();
     if (authError || !user) return { success: false, error: "Not authenticated" };
@@ -110,10 +115,11 @@ export async function getMyLeague(): Promise<
  */
 export async function updateLeagueXp(xpEarned: number): Promise<void> {
   try {
-    const reqHeaders = await headers();
-    const ip = reqHeaders.get("x-forwarded-for")?.split(",")[0].trim() ?? "127.0.0.1";
-    const rateCheck = await leagueLimiter.check(ip);
-    if (!rateCheck.success) return;
+    const parsed = LeagueXpSchema.safeParse({ xpEarned });
+    if (!parsed.success) return;
+
+    const rateErr = await checkActionRateLimit(leagueLimiter);
+    if (rateErr) return;
 
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
@@ -121,7 +127,7 @@ export async function updateLeagueXp(xpEarned: number): Promise<void> {
 
     await supabase.rpc("bump_league_xp", {
       p_user_id: user.id,
-      p_xp_delta: Math.min(xpEarned, 500), // cap per call to prevent abuse
+      p_xp_delta: Math.min(parsed.data.xpEarned, 500),
     });
   } catch { /* silent — league XP is non-critical */ }
 }

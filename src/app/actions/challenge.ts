@@ -2,8 +2,8 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
-import { headers } from "next/headers";
 import { createRateLimiter } from "@/lib/security/rate-limit";
+import { checkActionRateLimit } from "@/lib/security/action-guard";
 import { z } from "zod";
 import { updateLeagueXp } from "./leagues";
 
@@ -74,12 +74,8 @@ export async function saveChallengeResult(params: {
   date: string;
 }) {
   try {
-    const reqHeaders = await headers();
-    const ip = reqHeaders.get("x-forwarded-for")?.split(",")[0].trim() || "127.0.0.1";
-    const rateLimitCheck = await challengeLimiter.check(ip);
-    if (!rateLimitCheck.success) {
-      return { success: false, error: "Yêu cầu quá thường xuyên." };
-    }
+    const rateErr = await checkActionRateLimit(challengeLimiter, "Yêu cầu quá thường xuyên.");
+    if (rateErr) return { success: false, error: rateErr };
 
     const validated = ChallengeResultSchema.safeParse(params);
     if (!validated.success) {

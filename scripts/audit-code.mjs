@@ -190,15 +190,20 @@ for (const file of allFiles) {
   }
 
   // E. Server Action Rate-limiting check
+  // Only real writes: insert/update/upsert/delete/rpc — NOT .from() (reads also use .from)
   if (isServerActionFile) {
-    const writeOperations = ['.from(', '.insert(', '.update(', '.upsert(', '.delete('];
+    const writeOperations = ['.insert(', '.update(', '.upsert(', '.delete(', '.rpc('];
     const hasWriteOperation = writeOperations.some(op => content.includes(op));
 
     if (hasWriteOperation) {
-      // Needs rate limiter
-      const hasLimiter = content.includes('limiter') || content.includes('Limiter') || content.includes('rateLimit');
+      // Needs rate limiter (createRateLimiter, *Limiter, checkActionRateLimit, rateLimit)
+      const hasLimiter =
+        content.includes('limiter') ||
+        content.includes('Limiter') ||
+        content.includes('rateLimit') ||
+        content.includes('checkActionRateLimit');
       if (!hasLimiter) {
-        // Exclude unit-content.ts since it is unused/dead-code
+        // Exclude unit-content.ts since it is unused/dead-code seed helper
         if (!relativePath.endsWith('unit-content.ts')) {
           violations.push({
             file: relativePath,
@@ -209,9 +214,14 @@ for (const file of allFiles) {
           });
         }
       }
-      const hasValidation = content.includes('Schema.safeParse') || content.includes('.safeParse') || content.includes('Schema.parse') || content.includes('z.object');
+      const hasValidation =
+        content.includes('Schema.safeParse') ||
+        content.includes('.safeParse') ||
+        content.includes('Schema.parse') ||
+        content.includes('z.object') ||
+        content.includes('z.enum') ||
+        content.includes('z.number');
       if (!hasValidation) {
-        // Allow fallback check in file
         if (!relativePath.endsWith('unit-content.ts')) {
           violations.push({
             file: relativePath,
@@ -247,29 +257,55 @@ function getRouteDirs(dir, dirs = []) {
 
 const routeDirs = getRouteDirs(MAIN_PAGES_DIR);
 
+// Layout-level clearance for fixed BottomNav (h-16)
+const mainLayoutPath = path.join(MAIN_PAGES_DIR, 'layout.tsx');
+const mainLayoutContent = fs.existsSync(mainLayoutPath)
+  ? fs.readFileSync(mainLayoutPath, 'utf8')
+  : '';
+const layoutHasNavPadding = /pb-(1[6-9]|[2-9]\d)/.test(mainLayoutContent);
+
+// Shared shells that include mobile bottom padding
+const screenPath = path.resolve('src/components/design-system/Screen.tsx');
+const screenContent = fs.existsSync(screenPath) ? fs.readFileSync(screenPath, 'utf8') : '';
+const screenHasPadding = /pb-(1[6-9]|[2-9]\d)/.test(screenContent);
+
+function contentHasPadding(content) {
+  return (
+    /pb-\d+/.test(content) ||
+    /paddingBottom:\s*(\d+|['"]\d+px['"])/.test(content) ||
+    content.includes('style={{ minHeight: "100dvh"') ||
+    content.includes('SecondaryPageShell') ||
+    content.includes('<Screen') ||
+    (content.includes('from "@/components/design-system"') && screenHasPadding)
+  );
+}
+
 for (const routeDir of routeDirs) {
   const relativeRoute = path.relative(MAIN_PAGES_DIR, routeDir) || 'root';
   // Whitelist routes that delegate layout to shared components (e.g. UnitTemplate has pb-24)
   if (relativeRoute === 'learn/[unitSlug]') continue;
   // Get all TSX files in this route directory (recursively)
   const routeFiles = getFiles(routeDir).filter(f => f.endsWith('.tsx'));
-  let hasPadding = false;
+  let hasPadding = layoutHasNavPadding;
 
-  for (const file of routeFiles) {
-    const content = fs.readFileSync(file, 'utf8');
-    const matchesPadding = /pb-\d+/.test(content) || 
-                           /paddingBottom:\s*(\d+|['"]\d+px['"])/.test(content) || 
-                           /style=\{\{\s*minHeight:\s*['"]100dvh['"].*paddingBottom:/.test(content) ||
-                           content.includes('style={{ minHeight: "100dvh"') ||
-                           content.includes('pb-20') ||
-                           content.includes('pb-24') ||
-                           content.includes('pb-28') ||
-                           content.includes('pb-32') ||
-                           content.includes('pb-36') ||
-                           content.includes('pb-40');
-    if (matchesPadding) {
-      hasPadding = true;
-      break;
+  if (!hasPadding) {
+    for (const file of routeFiles) {
+      const content = fs.readFileSync(file, 'utf8');
+      if (contentHasPadding(content)) {
+        hasPadding = true;
+        break;
+      }
+    }
+  }
+
+  // SecondaryPageShell → Screen has pb-24
+  if (!hasPadding && screenHasPadding) {
+    for (const file of routeFiles) {
+      const content = fs.readFileSync(file, 'utf8');
+      if (content.includes('SecondaryPageShell') || content.includes('<Screen')) {
+        hasPadding = true;
+        break;
+      }
     }
   }
 

@@ -1,8 +1,8 @@
 "use server";
 
-import { headers } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 import { createRateLimiter } from "@/lib/security/rate-limit";
+import { checkActionRateLimit } from "@/lib/security/action-guard";
 import { z } from "zod";
 
 const grammarNoteLimiter = createRateLimiter(10, 60_000, "grammar-notes");
@@ -35,11 +35,12 @@ export async function generateGrammarNote(params: {
   cefr_level: "A0" | "A1" | "A2" | "B1" | "B2";
 }) {
   try {
-    const reqHeaders = await headers();
-    const ip = reqHeaders.get("x-forwarded-for")?.split(",")[0].trim() ?? "127.0.0.1";
-    const rateCheck = await grammarNoteLimiter.check(ip);
-    if (!rateCheck.success) {
-      return { success: false as const, error: "Quá nhiều yêu cầu. Thử lại sau 1 phút." };
+    const rateErr = await checkActionRateLimit(
+      grammarNoteLimiter,
+      "Quá nhiều yêu cầu. Thử lại sau 1 phút.",
+    );
+    if (rateErr) {
+      return { success: false as const, error: rateErr };
     }
 
     const supabase = await createClient();

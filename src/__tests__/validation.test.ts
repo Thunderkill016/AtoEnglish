@@ -5,6 +5,11 @@ import {
   ReviewCardSchema,
   CompleteUnitSchema,
   SpeakingSessionSchema,
+  PlacementResultSchema,
+  PlacementLevelSchema,
+  LeagueXpSchema,
+  StreakMilestoneSchema,
+  DailyXpGoalSchema,
   assertProductionEnv,
   ProductionEnvSchema,
 } from "@/lib/security/validation";
@@ -284,6 +289,63 @@ describe("ProductionEnvSchema", () => {
       NEXT_PUBLIC_SUPABASE_ANON_KEY: "a".repeat(20),
     });
     expect(result.success).toBe(false);
+  });
+});
+
+// ─── Placement / League / Streak / Daily goal schemas ────────────────────────
+describe("PlacementResultSchema", () => {
+  it("accepts valid level + score", () => {
+    const result = PlacementResultSchema.safeParse({ level: "A1", score: 10 });
+    expect(result.success).toBe(true);
+  });
+
+  it("rejects empty level", () => {
+    const result = PlacementResultSchema.safeParse({ level: "", score: 0 });
+    expect(result.success).toBe(false);
+  });
+
+  it("rejects negative score", () => {
+    const result = PlacementResultSchema.safeParse({ level: "A1", score: -1 });
+    expect(result.success).toBe(false);
+  });
+});
+
+describe("PlacementLevelSchema", () => {
+  it("accepts CEFR level string", () => {
+    expect(PlacementLevelSchema.safeParse({ level: "B1" }).success).toBe(true);
+  });
+});
+
+describe("LeagueXpSchema", () => {
+  it("accepts 0–500", () => {
+    expect(LeagueXpSchema.safeParse({ xpEarned: 50 }).success).toBe(true);
+    expect(LeagueXpSchema.safeParse({ xpEarned: 0 }).success).toBe(true);
+  });
+
+  it("rejects over cap", () => {
+    expect(LeagueXpSchema.safeParse({ xpEarned: 501 }).success).toBe(false);
+  });
+});
+
+describe("StreakMilestoneSchema", () => {
+  it("accepts positive milestone", () => {
+    expect(StreakMilestoneSchema.safeParse({ milestone: 7 }).success).toBe(true);
+  });
+
+  it("rejects zero/negative", () => {
+    expect(StreakMilestoneSchema.safeParse({ milestone: 0 }).success).toBe(false);
+  });
+});
+
+describe("DailyXpGoalSchema", () => {
+  it("accepts allowed goals", () => {
+    for (const goal of [30, 50, 80, 100]) {
+      expect(DailyXpGoalSchema.safeParse({ goal }).success).toBe(true);
+    }
+  });
+
+  it("rejects other values", () => {
+    expect(DailyXpGoalSchema.safeParse({ goal: 40 }).success).toBe(false);
   });
 });
 

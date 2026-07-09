@@ -1,6 +1,8 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { speakingXpFor } from "@/lib/constants/speaking-xp";
+import { DailyXpGoalSchema } from "@/lib/security/validation";
 
 /**
  * Server Action lấy thông tin tiến trình tổng thể của người dùng (streak, XP, level).
@@ -63,13 +65,16 @@ export async function updateDailyXpGoal(goal: number) {
       return { success: false, error: "Bạn cần đăng nhập để cập nhật mục tiêu XP." };
     }
 
-    const validGoals = [30, 50, 80, 100];
-    if (!validGoals.includes(goal)) {
+    const parsed = DailyXpGoalSchema.safeParse({ goal });
+    if (!parsed.success) {
       return { success: false, error: "Mục tiêu XP không hợp lệ." };
     }
 
     // Goal is stored in localStorage by the client — no DB write needed.
-    return { success: true, message: `Đã cập nhật mục tiêu XP hàng ngày thành ${goal} XP.` };
+    return {
+      success: true,
+      message: `Đã cập nhật mục tiêu XP hàng ngày thành ${parsed.data.goal} XP.`,
+    };
   } catch (error) {
     const errMsg = error instanceof Error ? error.message : String(error);
     return { success: false, error: errMsg };
@@ -122,12 +127,11 @@ export async function getWeeklyXpData() {
     }
 
     // Add speaking XP per day (estimated from practice_type)
-    const SPEAKING_XP: Record<string, number> = { shadowing: 5, roleplay: 8, journal: 5 };
     if (!speakingRes.error && speakingRes.data) {
       for (const row of speakingRes.data) {
         const rowDate = new Date(row.created_at).toLocaleDateString("sv-SE", { timeZone: "Asia/Ho_Chi_Minh" });
         const day = days.find(d => d.day === rowDate);
-        if (day) day.xp += SPEAKING_XP[row.practice_type] ?? 5;
+        if (day) day.xp += speakingXpFor(row.practice_type);
       }
     }
 
@@ -227,7 +231,6 @@ export async function getDailyActivity(): Promise<{ success: boolean; days: DayA
 
     // Aggregate XP per day
     const xpMap: Record<string, number> = {};
-    const SPEAKING_XP: Record<string, number> = { shadowing: 5, roleplay: 8, journal: 5 };
 
     if (!lessonsRes.error && lessonsRes.data) {
       for (const row of lessonsRes.data) {
@@ -238,7 +241,7 @@ export async function getDailyActivity(): Promise<{ success: boolean; days: DayA
     if (!speakingRes.error && speakingRes.data) {
       for (const row of speakingRes.data) {
         const d = new Date(row.created_at).toLocaleDateString("sv-SE", { timeZone: "Asia/Ho_Chi_Minh" });
-        xpMap[d] = (xpMap[d] ?? 0) + (SPEAKING_XP[row.practice_type] ?? 5);
+        xpMap[d] = (xpMap[d] ?? 0) + speakingXpFor(row.practice_type);
       }
     }
 

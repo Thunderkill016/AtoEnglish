@@ -1,0 +1,348 @@
+import type { LessonSpec } from "@/lib/v2/lesson-spec";
+
+/** Pilot B1 — longer personal story (independent user path) */
+export const lessonB101: LessonSpec = {
+  id: "l-b1-01",
+  phase: "P3",
+  cefr: "B1",
+  title_vi: "Kể chuyện dài hơn",
+  estimatedMin: 40,
+  canDo: [
+    "Kể một trải nghiệm quá khứ 6–10 câu có mở–thân–kết",
+    "Dùng linking: first, then, after that, finally",
+    "Trả lời Why? bằng because + lý do đơn giản",
+  ],
+  situation:
+    "Trong cuộc họp team online, mọi người chia sẻ 'one challenge you solved last month'. Đến lượt bạn — bạn cần kể rõ chuyện gì xảy ra, bạn làm gì, kết quả ra sao trong khoảng 1 phút.",
+  culturalNote_vi:
+    "Ở môi trường quốc tế, kể chuyện công việc nên có cấu trúc: tình huống → hành động → kết quả (situation–action–result). Tránh vòng vo; 60–90 giây là vừa cho stand-up/share.",
+  jobAngle: "Team meeting — share a challenge you solved",
+  lexis: [
+    {
+      id: "v1",
+      word: "challenge",
+      phonetic: "/ˈtʃælɪndʒ/",
+      meaning_vi: "thách thức / khó khăn",
+      example_en: "We had a big challenge last month.",
+      l1_note_vi: "Không phải 'challenger' khi muốn nói vấn đề. a challenge = một khó khăn.",
+    },
+    {
+      id: "v2",
+      word: "solve",
+      phonetic: "/sɒlv/",
+      meaning_vi: "giải quyết",
+      example_en: "We solved the problem quickly.",
+      l1_note_vi: "solve a problem — không solve 'the issue' sai preposition thường gặp: fix/solve + problem.",
+    },
+    {
+      id: "v3",
+      word: "at first",
+      phonetic: "/ət ˈfɜːst/",
+      meaning_vi: "lúc đầu",
+      example_en: "At first, the system was slow.",
+      l1_note_vi: "At first ≠ first of all hoàn toàn: at first = giai đầu tình huống.",
+    },
+    {
+      id: "v4",
+      word: "then",
+      phonetic: "/ðen/",
+      meaning_vi: "sau đó",
+      example_en: "Then we called the client.",
+    },
+    {
+      id: "v5",
+      word: "after that",
+      phonetic: "/ˈɑːftə ðæt/",
+      meaning_vi: "sau đó nữa",
+      example_en: "After that, we tested again.",
+    },
+    {
+      id: "v6",
+      word: "finally",
+      phonetic: "/ˈfaɪnəli/",
+      meaning_vi: "cuối cùng",
+      example_en: "Finally, everything worked.",
+      l1_note_vi: "finally (kết thúc chuỗi) ≠ at last (sau chờ đợi lâu) — gần nhau nhưng finally phổ biến hơn khi kể bước.",
+    },
+    {
+      id: "v7",
+      word: "because",
+      phonetic: "/bɪˈkɒz/",
+      meaning_vi: "bởi vì",
+      example_en: "We fixed it because the log showed an error.",
+      l1_note_vi: "because + mệnh đề. because of + danh từ: because of the bug.",
+    },
+    {
+      id: "v8",
+      word: "result",
+      phonetic: "/rɪˈzʌlt/",
+      meaning_vi: "kết quả",
+      example_en: "The result was positive.",
+    },
+    {
+      id: "v9",
+      word: "in the end",
+      phonetic: "/ɪn ði end/",
+      meaning_vi: "cuối cùng / rốt cuộc",
+      example_en: "In the end, the client was happy.",
+    },
+    {
+      id: "v10",
+      word: "improve",
+      phonetic: "/ɪmˈpruːv/",
+      meaning_vi: "cải thiện",
+      example_en: "We improved the process.",
+      l1_note_vi: "improve (ngoại) — improve the process. Không improve 'to' something sai kiểu I improve to…",
+    },
+  ],
+  grammar: {
+    title: "Past simple story chain",
+    rule: "Past simple events in order + because + reason",
+    examples: [
+      { en: "Last month, we had a problem.", vi: "Tháng trước chúng tôi gặp vấn đề." },
+      { en: "We fixed it because the log was clear.", vi: "Chúng tôi sửa vì log rõ." },
+      { en: "In the end, the client was happy.", vi: "Cuối cùng khách hài lòng." },
+    ],
+    vnNote:
+      "Kể chuyện công việc: giữ thì quá khứ đơn cho chuỗi sự kiện. Đừng nhảy lung tung present/past nếu chưa cần.",
+    ccq: {
+      question: "Câu kể quá khứ nào tự nhiên?",
+      options: [
+        "Yesterday I go to a meeting",
+        "Yesterday I went to a meeting",
+        "Yesterday I going to a meeting",
+        "Yesterday I goes to a meeting",
+      ],
+      answer: "Yesterday I went to a meeting",
+    },
+  },
+  controlled: [
+    {
+      id: "c1",
+      type: "mcq",
+      prompt_vi: "Nối bước: lúc đầu",
+      options: ["At first", "Finally", "Because", "Result"],
+      answer: "At first",
+    },
+    {
+      id: "c2",
+      type: "scramble",
+      prompt_vi: "Sắp xếp: solved / We / the / problem",
+      words: ["We", "solved", "the", "problem"],
+      answer: "We solved the problem",
+    },
+    {
+      id: "c3",
+      type: "mcq",
+      prompt_vi: "Lý do: We fixed it ___ the log showed an error.",
+      options: ["because", "because of", "so that", "although"],
+      answer: "because",
+    },
+    {
+      id: "c4",
+      type: "correction",
+      prompt_vi: "Sửa: Yesterday I go to the office.",
+      stem: "Yesterday I go to the office.",
+      answer: "Yesterday I went to the office.",
+    },
+    {
+      id: "c5",
+      type: "mcq",
+      prompt_vi: "Kết thúc câu chuyện",
+      options: ["In the end,", "At first,", "Spell", "Nice to meet you"],
+      answer: "In the end,",
+    },
+  ],
+  input: {
+    dialogues: [
+      {
+        id: "d1",
+        title_vi: "Share in stand-up",
+        context_vi: "Manager hỏi challenge tháng trước.",
+        lines: [
+          {
+            id: "1",
+            speaker: "Manager",
+            text: "Can you share one challenge you solved last month?",
+            translation_vi: "Bạn chia sẻ một thách thức bạn đã giải quyết tháng trước được không?",
+          },
+          {
+            id: "2",
+            speaker: "Minh",
+            text: "Sure. At first, our report was late every week.",
+            translation_vi: "Được. Lúc đầu báo cáo của chúng tôi trễ mỗi tuần.",
+          },
+          {
+            id: "3",
+            speaker: "Minh",
+            text: "Then we found the bug in the export tool.",
+            translation_vi: "Sau đó chúng tôi tìm ra lỗi trong công cụ export.",
+          },
+          {
+            id: "4",
+            speaker: "Minh",
+            text: "After that, we fixed it and tested again.",
+            translation_vi: "Sau đó chúng tôi sửa và test lại.",
+          },
+          {
+            id: "5",
+            speaker: "Minh",
+            text: "Finally, the reports were on time. The result was better for the client.",
+            translation_vi: "Cuối cùng báo cáo đúng hạn. Kết quả tốt hơn cho khách.",
+          },
+          {
+            id: "6",
+            speaker: "Manager",
+            text: "Nice. Why was it late at first?",
+            translation_vi: "Hay. Sao lúc đầu lại trễ?",
+          },
+          {
+            id: "7",
+            speaker: "Minh",
+            text: "Because the export failed silently.",
+            translation_vi: "Vì export lỗi mà không báo.",
+          },
+        ],
+      },
+    ],
+    listenItems: [
+      {
+        id: "lac1",
+        audio_text: "At first, our report was late",
+        options: [
+          "At first, our report was late",
+          "At last, our report was late",
+          "At first, our report was great",
+          "First our report late",
+        ],
+        answer: "At first, our report was late",
+      },
+      {
+        id: "lac2",
+        audio_text: "We solved the problem",
+        options: [
+          "We solved the problem",
+          "We solve the problem",
+          "We solving the problem",
+          "We solves the problem",
+        ],
+        answer: "We solved the problem",
+      },
+      {
+        id: "lac3",
+        audio_text: "Because the export failed",
+        options: [
+          "Because the export failed",
+          "Because of export failed",
+          "Because the export fail",
+          "Because export failing",
+        ],
+        answer: "Because the export failed",
+      },
+      {
+        id: "lac4",
+        audio_text: "In the end, the client was happy",
+        options: [
+          "In the end, the client was happy",
+          "In end, the client was happy",
+          "In the end the client is happy yesterday",
+          "On the end, the client was happy",
+        ],
+        answer: "In the end, the client was happy",
+      },
+    ],
+  },
+  fluency: {
+    items: [
+      { en: "At first, we had a problem.", vi: "Lúc đầu chúng tôi có vấn đề." },
+      { en: "Then we checked the logs.", vi: "Sau đó chúng tôi kiểm tra log." },
+      { en: "After that, we fixed it.", vi: "Sau đó chúng tôi sửa." },
+      { en: "Finally, it worked.", vi: "Cuối cùng nó chạy." },
+      { en: "We solved it because we tested carefully.", vi: "Chúng tôi giải quyết vì test kỹ." },
+      { en: "In the end, the client was happy.", vi: "Cuối cùng khách hài lòng." },
+    ],
+  },
+  task: {
+    type: "speak",
+    prompt_vi:
+      "Kể 1 challenge bạn (hoặc team) đã xử lý: At first… Then… After that… Finally… Because… In the end… (45–90 giây).",
+    successCriteria_vi: [
+      "Có ít nhất 3 linking: at first / then / finally (hoặc tương đương)",
+      "Có 1 lý do với because",
+      "Có kết quả (result / in the end)",
+      "Nói được trọn ý trong ~1 phút",
+    ],
+    scaffold_en: [
+      "At first…",
+      "Then…",
+      "After that…",
+      "Finally…",
+      "… because …",
+      "In the end…",
+    ],
+  },
+  review: {
+    quiz: [
+      {
+        id: "q1",
+        type: "mcq",
+        question: "___ first, the system was slow.",
+        options: ["At", "In", "On", "By"],
+        answer: "At",
+      },
+      {
+        id: "q2",
+        type: "mcq",
+        question: "We fixed it ___ the log was clear.",
+        options: ["because", "because of", "so", "but"],
+        answer: "because",
+      },
+      {
+        id: "q3",
+        type: "mcq",
+        question: "Past form of solve",
+        options: ["solved", "solves", "solving", "solveed"],
+        answer: "solved",
+      },
+      {
+        id: "q4",
+        type: "true-false",
+        question: "Finally có thể dùng để kết thúc chuỗi bước.",
+        options: ["True", "False"],
+        answer: "True",
+      },
+      {
+        id: "q5",
+        type: "mcq",
+        question: "In the end ≈",
+        options: ["rốt cuộc", "lúc đầu", "bởi vì", "làm ơn"],
+        answer: "rốt cuộc",
+      },
+    ],
+    spiral: [
+      {
+        id: "s1",
+        type: "mcq",
+        question: "(Ôn A1) I'm ___ Vietnam.",
+        options: ["from", "for", "form", "front"],
+        answer: "from",
+      },
+      {
+        id: "s2",
+        type: "mcq",
+        question: "challenge ≈",
+        options: ["khó khăn cần xử lý", "bữa trưa", "chào hỏi", "bảng chữ cái"],
+        answer: "khó khăn cần xử lý",
+      },
+    ],
+  },
+  pronunciationFocus: {
+    phoneme: "final -ed /d/ /t/ /ɪd/",
+    description_vi: "solved /d/, fixed /t/, needed /ɪd/ — đừng nuốt -ed.",
+    examples: [
+      { word: "solved", tip_vi: "/d/ sau hữu thanh" },
+      { word: "fixed", tip_vi: "/t/ sau vô thanh" },
+      { word: "needed", tip_vi: "/ɪd/ sau t/d" },
+    ],
+  },
+};

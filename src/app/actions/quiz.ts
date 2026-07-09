@@ -2,8 +2,8 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
-import { headers } from "next/headers";
 import { createRateLimiter } from "@/lib/security/rate-limit";
+import { checkActionRateLimit } from "@/lib/security/action-guard";
 import { z } from "zod";
 import { quizXpFromPct } from "@/lib/quiz-scoring";
 
@@ -72,12 +72,8 @@ export async function saveQuizResult(params: {
   total: number;
 }) {
   try {
-    const reqHeaders = await headers();
-    const ip = reqHeaders.get("x-forwarded-for")?.split(",")[0].trim() || "127.0.0.1";
-    const rateLimitCheck = await quizLimiter.check(ip);
-    if (!rateLimitCheck.success) {
-      return { success: false, error: "Yêu cầu quá thường xuyên." };
-    }
+    const rateErr = await checkActionRateLimit(quizLimiter, "Yêu cầu quá thường xuyên.");
+    if (rateErr) return { success: false, error: rateErr };
 
     const validated = QuizResultSchema.safeParse(params);
     if (!validated.success) {

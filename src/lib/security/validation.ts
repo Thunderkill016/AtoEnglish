@@ -108,6 +108,33 @@ export const WrongWordsSchema = z.object({
 export const RecordFlashcardSessionSchema = z.object({
   cardsReviewed: z.number().int().positive("Số thẻ ôn tập phải lớn hơn 0"),
 });
+
+/** Placement test save — level normalized by normalizePlacementLevel */
+export const PlacementResultSchema = z.object({
+  level: z.string().min(1).max(5).trim(),
+  score: z.number().int().min(0).max(50).default(0),
+});
+
+/** Self-select placement level without full test */
+export const PlacementLevelSchema = z.object({
+  level: z.string().min(1).max(5).trim(),
+});
+
+/** League XP bump after unit completion */
+export const LeagueXpSchema = z.object({
+  xpEarned: z.number().int().min(0).max(500),
+});
+
+/** Streak milestone reward claim */
+export const StreakMilestoneSchema = z.object({
+  milestone: z.number().int().positive(),
+});
+
+/** Daily XP goal (client-persisted; validated server-side) */
+export const DailyXpGoalSchema = z.object({
+  goal: z.union([z.literal(30), z.literal(50), z.literal(80), z.literal(100)]),
+});
+
 /**
  * P0-3: Production environment validation.
  * Call assertProductionEnv() at module init in any file that creates rate limiters.

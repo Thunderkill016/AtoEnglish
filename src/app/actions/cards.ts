@@ -4,8 +4,8 @@ import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 import { reviewCardFSRS } from "@/lib/srs/fsrs";
 import { Card } from "@/types/database";
-import { headers } from "next/headers";
 import { createRateLimiter } from "@/lib/security/rate-limit";
+import { checkActionRateLimit } from "@/lib/security/action-guard";
 import { SaveCardSchema, ReviewCardSchema, SeedVocabSchema, WrongWordsSchema } from "@/lib/security/validation";
 
 const saveCardLimiter = createRateLimiter(60, 60 * 1000, "save-card");
@@ -28,13 +28,11 @@ interface SaveCardParams {
 export async function saveCardToSRS(params: SaveCardParams) {
   try {
     // Rate Limiting
-    const reqHeaders = await headers();
-    const ip = reqHeaders.get("x-forwarded-for")?.split(",")[0].trim() || "127.0.0.1";
-    const rateLimitCheck = await saveCardLimiter.check(ip);
-    if (!rateLimitCheck.success) {
+    const rateErr = await checkActionRateLimit(saveCardLimiter, "Yêu cầu quá thường xuyên. Vui lòng thử lại sau.");
+    if (rateErr) {
       return {
         success: false,
-        error: "Yêu cầu quá thường xuyên. Vui lòng thử lại sau."
+        error: rateErr
       };
     }
 
@@ -235,13 +233,11 @@ export async function reviewCard(
 ) {
   try {
     // Rate Limiting
-    const reqHeaders = await headers();
-    const ip = reqHeaders.get("x-forwarded-for")?.split(",")[0].trim() || "127.0.0.1";
-    const rateLimitCheck = await reviewCardLimiter.check(ip);
-    if (!rateLimitCheck.success) {
+    const rateErr = await checkActionRateLimit(reviewCardLimiter, "Yêu cầu quá thường xuyên. Vui lòng thử lại sau.");
+    if (rateErr) {
       return {
         success: false,
-        error: "Yêu cầu quá thường xuyên. Vui lòng thử lại sau."
+        error: rateErr
       };
     }
 
@@ -408,10 +404,8 @@ export async function seedUnitVocabToSRS(params: {
   level?: "A0" | "A1" | "A2" | "B1" | "B2" | "C1";
 }) {
   try {
-    const reqHeaders = await headers();
-    const ip = reqHeaders.get("x-forwarded-for")?.split(",")[0].trim() || "127.0.0.1";
-    const rateLimitCheck = await seedVocabLimiter.check(ip);
-    if (!rateLimitCheck.success) return { success: false, added: 0 };
+    const rateErr = await checkActionRateLimit(seedVocabLimiter);
+    if (rateErr) return { success: false, added: 0 };
 
     const validated = SeedVocabSchema.safeParse(params);
     if (!validated.success) return { success: false, added: 0 };
@@ -465,10 +459,8 @@ export async function scheduleWrongWordsForReview(words: string[]) {
   try {
     if (!words.length) return { success: true, updated: 0 };
 
-    const reqHeaders = await headers();
-    const ip = reqHeaders.get("x-forwarded-for")?.split(",")[0].trim() || "127.0.0.1";
-    const rateLimitCheck = await wrongWordsLimiter.check(ip);
-    if (!rateLimitCheck.success) return { success: false, updated: 0 };
+    const rateErr = await checkActionRateLimit(wrongWordsLimiter);
+    if (rateErr) return { success: false, updated: 0 };
 
     const validated = WrongWordsSchema.safeParse({ words });
     if (!validated.success) return { success: false, updated: 0 };

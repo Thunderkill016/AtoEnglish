@@ -1,8 +1,8 @@
 "use server";
 
-import { headers } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 import { createRateLimiter } from "@/lib/security/rate-limit";
+import { checkActionRateLimit } from "@/lib/security/action-guard";
 import { z } from "zod";
 
 const writingLimiter = createRateLimiter(15, 60_000, "writing");
@@ -35,16 +35,12 @@ export async function analyzeWriting(formData: {
   level: "A1" | "A2" | "B1" | "B2";
 }) {
   try {
-    // Rate limit
-    const reqHeaders = await headers();
-    const ip =
-      reqHeaders.get("x-forwarded-for")?.split(",")[0].trim() ?? "127.0.0.1";
-    const rateCheck = await writingLimiter.check(ip);
-    if (!rateCheck.success) {
-      return {
-        success: false as const,
-        error: "Quá nhiều yêu cầu. Vui lòng thử lại sau 1 phút.",
-      };
+    const rateErr = await checkActionRateLimit(
+      writingLimiter,
+      "Quá nhiều yêu cầu. Vui lòng thử lại sau 1 phút.",
+    );
+    if (rateErr) {
+      return { success: false as const, error: rateErr };
     }
 
     // Auth
@@ -164,11 +160,9 @@ export async function saveWritingSentence(params: {
   level: "A1" | "A2" | "B1" | "B2";
 }) {
   try {
-    const reqHeaders = await headers();
-    const ip = reqHeaders.get("x-forwarded-for")?.split(",")[0].trim() ?? "127.0.0.1";
-    const rateCheck = await saveLimiter.check(ip);
-    if (!rateCheck.success) {
-      return { success: false as const, error: "Quá nhiều yêu cầu." };
+    const rateErr = await checkActionRateLimit(saveLimiter, "Quá nhiều yêu cầu.");
+    if (rateErr) {
+      return { success: false as const, error: rateErr };
     }
 
     const supabase = await createClient();
@@ -263,10 +257,8 @@ export async function deleteUserSentence(id: string): Promise<{
   error?: string;
 }> {
   try {
-    const reqHeaders = await headers();
-    const ip = reqHeaders.get("x-forwarded-for")?.split(",")[0].trim() ?? "127.0.0.1";
-    const rateCheck = await deleteLimiter.check(ip);
-    if (!rateCheck.success) return { success: false, error: "Quá nhiều yêu cầu." };
+    const rateErr = await checkActionRateLimit(deleteLimiter, "Quá nhiều yêu cầu.");
+    if (rateErr) return { success: false, error: rateErr };
 
     if (!id || typeof id !== "string") return { success: false, error: "ID không hợp lệ." };
 

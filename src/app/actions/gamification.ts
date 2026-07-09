@@ -3,6 +3,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 import { createRateLimiter } from "@/lib/security/rate-limit";
+import { checkActionRateLimit } from "@/lib/security/action-guard";
 import { z } from "zod";
 
 const freezeLimiter = createRateLimiter(5, 60 * 60 * 1000, "streak-freeze");
@@ -45,11 +46,11 @@ export async function useStreakFreeze() {
   const { data: { user }, error: authError } = await supabase.auth.getUser();
   if (authError || !user) return { success: false, error: "Bạn cần đăng nhập." };
 
-  const { headers } = await import("next/headers");
-  const headerStore = await headers();
-  const ip = headerStore.get("x-forwarded-for")?.split(",")[0] ?? "127.0.0.1";
-  const rl = await freezeLimiter.check(ip);
-  if (!rl.success) return { success: false, error: "Quá nhiều yêu cầu. Thử lại sau." };
+  const rateErr = await checkActionRateLimit(
+    freezeLimiter,
+    "Quá nhiều yêu cầu. Thử lại sau.",
+  );
+  if (rateErr) return { success: false, error: rateErr };
 
   // use_streak_freeze RPC is added by migration 20260624020000.
   // Cast via unknown since supabase.ts hasn't been regenerated yet.

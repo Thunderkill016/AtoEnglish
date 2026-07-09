@@ -2,9 +2,10 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
-import { headers } from "next/headers";
 import { createRateLimiter } from "@/lib/security/rate-limit";
+import { checkActionRateLimit } from "@/lib/security/action-guard";
 import { SpeakingSessionSchema } from "@/lib/security/validation";
+import { speakingXpFor } from "@/lib/constants/speaking-xp";
 import { analyzeSpeaking, basicWordCountFeedback } from "@/lib/utils/speech-analysis";
 
 const speakingLimiter = createRateLimiter(20, 60 * 1000, "speaking");
@@ -46,15 +47,9 @@ interface SaveSpeakingSessionParams {
  */
 export async function saveSpeakingSession(params: SaveSpeakingSessionParams) {
   try {
-    // Rate Limiting
-    const reqHeaders = await headers();
-    const ip = reqHeaders.get("x-forwarded-for")?.split(",")[0].trim() || "127.0.0.1";
-    const rateLimitCheck = await speakingLimiter.check(ip);
-    if (!rateLimitCheck.success) {
-      return {
-        success: false,
-        error: "Yêu cầu quá thường xuyên. Vui lòng thử lại sau."
-      };
+    const rateErr = await checkActionRateLimit(speakingLimiter);
+    if (rateErr) {
+      return { success: false, error: rateErr };
     }
 
     // Input Validation
@@ -104,12 +99,7 @@ export async function saveSpeakingSession(params: SaveSpeakingSessionParams) {
       };
     }
 
-    const XP_BY_TYPE: Record<string, number> = {
-      shadowing: 5,
-      roleplay: 8,
-      journal: 5,
-    };
-    const xpEarned = XP_BY_TYPE[cleanParams.practiceType] ?? 5;
+    const xpEarned = speakingXpFor(cleanParams.practiceType);
     const today = new Date().toLocaleDateString("sv-SE", { timeZone: "Asia/Ho_Chi_Minh" });
 
     const { data: userProgress } = await supabase
@@ -225,13 +215,8 @@ export async function generateRoleplayTurn(
   userMessage: string
 ) {
   try {
-    // 1. Rate Limiting
-    const reqHeaders = await headers();
-    const ip = reqHeaders.get("x-forwarded-for")?.split(",")[0].trim() || "127.0.0.1";
-    const rateLimitCheck = await aiLimiter.check(ip);
-    if (!rateLimitCheck.success) {
-      return { success: false, error: "Yêu cầu quá thường xuyên. Vui lòng thử lại sau." };
-    }
+    const rateErr = await checkActionRateLimit(aiLimiter);
+    if (rateErr) return { success: false, error: rateErr };
 
     // 2. Check Auth
     const supabase = await createClient();
@@ -379,15 +364,9 @@ export async function evaluateSpeakingSession(
   transcript: string
 ) {
   try {
-    // 1. Rate Limiting
-    const reqHeaders = await headers();
-    const ip = reqHeaders.get("x-forwarded-for")?.split(",")[0].trim() || "127.0.0.1";
-    const rateLimitCheck = await aiLimiter.check(ip);
-    if (!rateLimitCheck.success) {
-      return {
-        success: false,
-        error: "Yêu cầu quá thường xuyên. Vui lòng thử lại sau."
-      };
+    const rateErr = await checkActionRateLimit(aiLimiter);
+    if (rateErr) {
+      return { success: false, error: rateErr };
     }
 
     // 2. Check Auth

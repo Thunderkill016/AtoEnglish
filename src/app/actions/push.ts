@@ -1,9 +1,9 @@
 "use server";
 
 import { z } from "zod";
-import { headers } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 import { createRateLimiter } from "@/lib/security/rate-limit";
+import { checkActionRateLimit } from "@/lib/security/action-guard";
 import type { Database } from "@/types/supabase";
 
 const pushLimiter = createRateLimiter(10, 60 * 1000, "push");
@@ -27,10 +27,11 @@ type PushSubscriptionInsert =
 export async function savePushSubscription(
   subscription: z.infer<typeof PushSubscriptionSchema>
 ): Promise<{ success: boolean; error?: string }> {
-  // Rate limiting
-  const ip = (await headers()).get("x-forwarded-for") ?? "unknown";
-  const rateLimitCheck = await pushLimiter.check(ip);
-  if (!rateLimitCheck.success) return { success: false, error: "Tốc độ quá giới hạn. Thử lại sau." };
+  const rateErr = await checkActionRateLimit(
+    pushLimiter,
+    "Tốc độ quá giới hạn. Thử lại sau.",
+  );
+  if (rateErr) return { success: false, error: rateErr };
 
   // Input validation
   const validated = PushSubscriptionSchema.safeParse(subscription);
@@ -69,10 +70,8 @@ export async function savePushSubscription(
 export async function removePushSubscription(
   endpoint: string
 ): Promise<{ success: boolean }> {
-  // Rate limiting
-  const ip = (await headers()).get("x-forwarded-for") ?? "unknown";
-  const rateLimitCheck = await pushLimiter.check(ip);
-  if (!rateLimitCheck.success) return { success: false };
+  const rateErr = await checkActionRateLimit(pushLimiter);
+  if (rateErr) return { success: false };
 
   if (!endpoint || typeof endpoint !== "string") return { success: false };
 

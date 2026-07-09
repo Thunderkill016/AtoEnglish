@@ -1,8 +1,8 @@
 "use server";
 
-import { headers } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 import { createRateLimiter } from "@/lib/security/rate-limit";
+import { checkActionRateLimit } from "@/lib/security/action-guard";
 import { z } from "zod";
 
 const phonemeLimiter = createRateLimiter(20, 60_000, "phoneme");
@@ -37,11 +37,12 @@ export async function assessPronunciation(params: {
   spoken: string;  // What the SpeechRecognition API heard
 }) {
   try {
-    const reqHeaders = await headers();
-    const ip = reqHeaders.get("x-forwarded-for")?.split(",")[0].trim() ?? "127.0.0.1";
-    const rateCheck = await phonemeLimiter.check(ip);
-    if (!rateCheck.success) {
-      return { success: false as const, error: "Quá nhiều yêu cầu. Thử lại sau 1 phút." };
+    const rateErr = await checkActionRateLimit(
+      phonemeLimiter,
+      "Quá nhiều yêu cầu. Thử lại sau 1 phút.",
+    );
+    if (rateErr) {
+      return { success: false as const, error: rateErr };
     }
 
     const supabase = await createClient();

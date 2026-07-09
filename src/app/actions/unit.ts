@@ -5,8 +5,8 @@ import { revalidatePath } from "next/cache";
 import { UNIT_VOCABULARY } from "@/lib/constants/vocabulary";
 import { UNITS } from "@/lib/constants/units";
 import { getNextUnitFromProgress, getNextUnitRoute } from "@/lib/placement/starting-unit";
-import { headers } from "next/headers";
 import { createRateLimiter } from "@/lib/security/rate-limit";
+import { checkActionRateLimit } from "@/lib/security/action-guard";
 import { CompleteUnitSchema } from "@/lib/security/validation";
 import { updateLeagueXp } from "@/app/actions/leagues";
 
@@ -26,13 +26,11 @@ void CEFR_LEVEL_ORDER;
 export async function completeUnit(unitId: string, starCount: number = 3) {
   try {
     // Rate Limiting
-    const reqHeaders = await headers();
-    const ip = reqHeaders.get("x-forwarded-for")?.split(",")[0].trim() || "127.0.0.1";
-    const rateLimitCheck = await completeUnitLimiter.check(ip);
-    if (!rateLimitCheck.success) {
+    const rateErr = await checkActionRateLimit(completeUnitLimiter, "Yêu cầu quá thường xuyên. Vui lòng thử lại sau.");
+    if (rateErr) {
       return {
         success: false,
-        error: "Yêu cầu quá thường xuyên. Vui lòng thử lại sau."
+        error: rateErr
       };
     }
 

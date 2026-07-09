@@ -2,18 +2,20 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { createRateLimiter } from "@/lib/security/rate-limit";
+import { checkActionRateLimit } from "@/lib/security/action-guard";
+import { StreakMilestoneSchema } from "@/lib/security/validation";
 import { getTodayVN, MILESTONE_REWARDS, STREAK_MILESTONES } from "@/features/streak/utils/streakCalculator";
 
 const repairRateLimiter = createRateLimiter(5, 60_000, "streak-repair");
 
 /** Repair a broken streak. Costs 200 XP. Only within 24h of break. */
 export async function repairStreak(): Promise<{ success: boolean; error?: string; newStreak?: number }> {
+  const rateErr = await checkActionRateLimit(repairRateLimiter, "Thao tác quá nhanh, thử lại sau.");
+  if (rateErr) return { success: false, error: rateErr };
+
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return { success: false, error: "Không có quyền truy cập" };
-
-  const rl = await repairRateLimiter.check(user.id);
-  if (!rl.success) return { success: false, error: "Thao tác quá nhanh, thử lại sau." };
 
   const { data: progress } = await supabase
     .from("user_progress")
@@ -53,19 +55,24 @@ const milestoneRateLimiter = createRateLimiter(20, 60_000, "streak-milestone");
 
 /** Award milestone rewards (XP bonus + freezes). Called after lesson completion. */
 export async function awardMilestoneReward(milestone: number): Promise<{ success: boolean; error?: string }> {
-  if (!(STREAK_MILESTONES as readonly number[]).includes(milestone)) {
+  const parsed = StreakMilestoneSchema.safeParse({ milestone });
+  if (!parsed.success) {
     return { success: false, error: "Invalid milestone." };
   }
 
-  const reward = MILESTONE_REWARDS[milestone];
+  if (!(STREAK_MILESTONES as readonly number[]).includes(parsed.data.milestone)) {
+    return { success: false, error: "Invalid milestone." };
+  }
+
+  const reward = MILESTONE_REWARDS[parsed.data.milestone];
   if (!reward) return { success: false, error: "No reward config." };
+
+  const rateErr = await checkActionRateLimit(milestoneRateLimiter, "Rate limit exceeded.");
+  if (rateErr) return { success: false, error: rateErr };
 
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return { success: false, error: "Unauthorized" };
-
-  const rl = await milestoneRateLimiter.check(user.id);
-  if (!rl.success) return { success: false, error: "Rate limit exceeded." };
 
   const { data: progress } = await supabase
     .from("user_progress")

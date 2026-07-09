@@ -1,9 +1,9 @@
 "use server";
 
 import { z } from "zod";
-import { headers } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 import { createRateLimiter } from "@/lib/security/rate-limit";
+import { checkActionRateLimit } from "@/lib/security/action-guard";
 
 const notifLimiter = createRateLimiter(5, 60 * 1000, "notif-prefs");
 
@@ -18,9 +18,8 @@ const PreferencesSchema = z.object({
 export async function saveNotificationPreferences(
   prefs: z.infer<typeof PreferencesSchema>
 ): Promise<{ success: boolean; error?: string }> {
-  const ip = (await headers()).get("x-forwarded-for") ?? "unknown";
-  const rl = await notifLimiter.check(ip);
-  if (!rl.success) return { success: false, error: "Tốc độ quá giới hạn." };
+  const rateErr = await checkActionRateLimit(notifLimiter, "Tốc độ quá giới hạn.");
+  if (rateErr) return { success: false, error: rateErr };
 
   const validated = PreferencesSchema.safeParse(prefs);
   if (!validated.success) return { success: false, error: "Dữ liệu không hợp lệ." };

@@ -1,7 +1,7 @@
 "use server";
 
-import { headers } from "next/headers";
 import { createRateLimiter } from "@/lib/security/rate-limit";
+import { checkActionRateLimit } from "@/lib/security/action-guard";
 
 const translateLimiter = createRateLimiter(20, 60 * 1000, "translate-grade");
 
@@ -23,12 +23,11 @@ export async function gradeTranslation(
   userAnswer: string
 ): Promise<{ success: boolean; grade?: TranslationGrade; error?: string }> {
   try {
-    const reqHeaders = await headers();
-    const ip = reqHeaders.get("x-forwarded-for")?.split(",")[0].trim() || "127.0.0.1";
-    const rateCheck = await translateLimiter.check(ip);
-    if (!rateCheck.success) {
-      return { success: false, error: "Yêu cầu quá thường xuyên. Thử lại sau." };
-    }
+    const rateErr = await checkActionRateLimit(
+      translateLimiter,
+      "Yêu cầu quá thường xuyên. Thử lại sau.",
+    );
+    if (rateErr) return { success: false, error: rateErr };
 
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) return { success: false, error: "API key not configured." };
