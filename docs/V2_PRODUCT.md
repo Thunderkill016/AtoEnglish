@@ -80,9 +80,9 @@ isCurriculumV2() // env NEXT_PUBLIC_CURRICULUM_V2 === "1" | true
 | `/path` | Full 42-slot roadmap |
 | v1 `/learn/[unitSlug]` | Live until cutover |
 
-**Authored (playable):** `l-a0-01`…`l-a0-06`, `l-a1-01`, `l-b1-01`  
+**Authored (playable):** `l-a0-01`…`l-a0-07`, `l-a1-01`, `l-b1-01`  
 **Progress:** localStorage `ato_v2_progress` until DB migration  
-**Content factory priority:** finish P0 (`l-a0-06`…`l-a0-08`) then sequential A1 — no more empty maintenance-only autopilot.
+**Content factory priority:** finish P0 (`l-a0-08`) then sequential A1 — no more empty maintenance-only autopilot.
 
 ---
 

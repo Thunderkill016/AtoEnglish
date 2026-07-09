@@ -7,25 +7,25 @@
 | Field | Value |
 |-------|-------|
 | Started | 2026-07-10 |
-| Focus | TASK-182 — Author l-a0-06 Thời gian trong ngày (morning/afternoon/evening/night + Good morning…; o'clock basic A0) |
+| Focus | TASK-183 — Author l-a0-07 Ngày trong tuần (Mon–Sun + Today is… / What day is it?) |
 | Owner | Autopilot (no human) |
 
-### TASK-182 — Author l-a0-06 Thời gian trong ngày
-**Mục tiêu**: Author full LessonSpec v2 for `l-a0-06` (P0/A0 «Thời gian trong ngày»): parts of day (morning/afternoon/evening/night), greetings **Good morning / Good afternoon / Good evening / Good night**, basic clock **… o'clock** if fits A0. Spiral from a0-01..05 (family/greetings/from). Register in `lessons/index.ts`; sequential path test; docs. **Done khi:** Zod pass; registry has l-a0-06; next after a0-01..05 = a0-06; lint+test; commit + `bash scripts/git-push.sh main`.
+### TASK-183 — Author l-a0-07 Ngày trong tuần
+**Mục tiêu**: Author full LessonSpec v2 for `l-a0-07` (P0/A0 «Ngày trong tuần»): days Mon–Sun, phrases **Today is…** / **What day is it?**. Spiral from a0-01..06 (time of day, family, greetings). Register in `lessons/index.ts`; sequential path test; docs. **Done khi:** Zod pass; registry has l-a0-07; next after a0-01..06 = a0-07; lint+test; commit + `bash scripts/git-push.sh main`.
 
 **Bước thực hiện**:
-1. PHASE1 research (done): AGENTS, BACKLOG/PLAN/ROADMAP, CONTENT_STYLE §6–7, lesson-spec, l-a0-05 gold, path (order 6 already), index + tests.
-2. BACKLOG TASK-182 → `in_progress` (done).
+1. PHASE1 research (done): AGENTS, BACKLOG/PLAN/ROADMAP, CONTENT_STYLE §6–7, lesson-spec, l-a0-06 gold, path (order 7 already), index + tests.
+2. BACKLOG TASK-183 → `in_progress` (done).
 3. Update AGENT_PLAN this section (done).
-4. Ready after in_p: TASK-183/184 ≥2 → skip refill.
+4. Ready after in_p: 1 ready → ran `agent-refill-backlog.sh` → TASK-185/186/187.
 5. PHASE3:
-   - Create `src/lib/v2/lessons/l-a0-06.ts` (8 stages, ≥50% L1 A0).
+   - Create `src/lib/v2/lessons/l-a0-07.ts` (8 stages, ≥50% L1 A0).
    - Wire `index.ts`.
-   - Extend `lesson-spec-v2.test.ts` (title + sequential → l-a0-06; authored ≥8).
-   - `docs/V2_PRODUCT.md` authored line …06.
+   - Extend `lesson-spec-v2.test.ts` (title + sequential → l-a0-07; authored ≥9).
+   - `docs/V2_PRODUCT.md` authored line …07.
    - `npm run lint && npm run test`.
 6. Log + BACKLOG done + nhật ký + SHA; PLAN completed.
-7. commit `feat(v2): l-a0-06 time of day + Good morning… (TASK-182)`; push via git-push.sh main.
+7. commit `feat(v2): l-a0-07 days of week + Today is… (TASK-183)`; push via git-push.sh main.
 
 **Rủi ro**:
 - Zod (L1 ratio, max lengths, dialogue min) → minimal content fix.
@@ -35,7 +35,10 @@
 
 **Started:** 2026-07-10 — autopilot (PHASE1–2 done; PHASE3 content factory)
 
-**Completed TASK-182**: l-a0-06 authored (morning/afternoon/evening/night + Good morning… + It's … o'clock); registry + tests sequential a0-05→06; docs V2 authored …06; lint0+195t; log 20260709T195247Z_TASK-182.log; commit + push via git-push.sh main; autonomous.
+**Completed TASK-183**: l-a0-07 authored (Mon–Sun + Today is… / What day is it? / on + day); registry + tests sequential a0-06→07; docs V2 authored …07; lint0+195t; log 20260709T200103Z_TASK-183.log; commit + push via git-push.sh main; autonomous.
+
+### TASK-182 — Author l-a0-06 Thời gian trong ngày (prior)
+**Completed TASK-182**: l-a0-06 authored (morning/afternoon/evening/night + Good morning… + It's … o'clock); registry + tests sequential a0-05→06; docs V2 authored …06; lint0+195t; log 20260709T195247Z_TASK-182.log; commit 16edeb8 + push via git-push.sh main; autonomous.
 
 ### TASK-181 — Author l-a0-05 Gia đình cơ bản (prior)
 **Completed TASK-181**: l-a0-05 authored (family lexis + This is my… / Who is this?); registry + tests sequential a0-04→05; docs V2 authored …05; lint0+195t; log 20260709T194758Z_TASK-181.log; commit f362660 + push via git-push.sh main; autonomous.
