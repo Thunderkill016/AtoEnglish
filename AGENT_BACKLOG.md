@@ -1250,15 +1250,34 @@
 - **Completed:** 2026-07-10 — l-a0-06.ts full LessonSpec (parts of day + Good morning… + o'clock); registry; path a0-01..06 sequential; lint0+195t; log 20260709T195247Z_TASK-182.log; commit 16edeb8; push via git-push.sh main
 
 ### TASK-183 — Author l-a0-07 Ngày trong tuần
-- **Status:** `ready`
+- **Status:** `in_progress`
 - **Mô tả:** Mon–Sun + Today is… What day is it?
 - **Done khi:** schema + registry + path.
-- **Started:** auto-refill
+- **Started:** 2026-07-10 — autopilot (PHASE1: AGENTS/BACKLOG/PLAN/CONTENT§6–7 + V2 path + l-a0-06 gold; PHASE2: PLAN + in_p; ready after → refill if <2)
 
 ### TASK-184 — Author l-a0-08 Cụm sinh tồn + P0 gate mini-review
 - **Status:** `ready`
 - **Mô tả:** Survival chunks: Excuse me, I don't understand, Can you help me?, Sorry, Thank you. Spiral full P0. Marks end of A0 block.
 - **Done khi:** P0 8/8 authored playable; Home continue walks a0-01→08.
+- **Started:** auto-refill
+
+
+### TASK-185 — Player v2: controlled scramble + cloze input
+- **Status:** `ready`
+- **Mô tả:** `LessonPlayerV2` currently MCQ-heavy; support scramble (tap order) and cloze text for controlled exercises so lesson content is fully exercised.
+- **Done khi:** scramble/cloze usable in player; no console; lint+test.
+- **Started:** auto-refill
+
+### TASK-186 — Author l-a1-02 Thông tin cá nhân
+- **Status:** `ready`
+- **Mô tả:** After P0 complete, extend A1: age/job/phone/email survival with L1 100%.
+- **Done khi:** schema + registry.
+- **Started:** auto-refill
+
+### TASK-187 — V2 progress: soft quiz floor before complete
+- **Status:** `ready`
+- **Mô tả:** Complete rule docs: task attempt + quiz floor. Enforce soft floor (e.g. ≥50% quiz or re-try prompt) in player before markLessonComplete.
+- **Done khi:** cannot one-click complete review with 0 answers; copy VI clear.
 - **Started:** auto-refill
 
 
@@ -1271,6 +1290,9 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
+| 2026-07-10 | TASK-185 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-07-10 | TASK-186 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-07-10 | TASK-187 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-10 | TASK-182 | feat(v2): l-a0-06 time of day + Good morning…/o'clock; 8 playable; sequential a0-01..06; lint0+195t | done — 16edeb8 |
 | 2026-07-10 | TASK-181 | feat(v2): l-a0-05 family + This is my…; 7 playable; sequential a0-01..05; lint0+195t | done — f362660 |
 | 2026-07-10 | TASK-182 | auto-refill từ AGENT_ROADMAP.md | ready |
