@@ -35,7 +35,7 @@
 
 **Started:** 2026-07-10 — autopilot (PHASE1–2 done; PHASE3 content factory)
 
-**Completed TASK-184**: l-a0-08 authored (survival chunks + spiral full P0); registry + tests sequential a0-07→08; docs V2 P0 complete; lint0+195t; log 20260709T200605Z_TASK-184.log; commit 961facd + push via git-push.sh main; autonomous.
+**Completed TASK-184**: l-a0-08 authored (survival chunks + spiral full P0); registry + tests sequential a0-07→08; docs V2 P0 complete; lint0+195t; log 20260709T200605Z_TASK-184.log; commit ec7b0e5 + push via git-push.sh main; autonomous.
 
 ### TASK-183 — Author l-a0-07 Ngày trong tuần
 **Mục tiêu**: Author full LessonSpec v2 for `l-a0-07` (P0/A0 «Ngày trong tuần»): days Mon–Sun, phrases **Today is…** / **What day is it?**. Spiral from a0-01..06 (time of day, family, greetings). Register in `lessons/index.ts`; sequential path test; docs. **Done khi:** Zod pass; registry has l-a0-07; next after a0-01..06 = a0-07; lint+test; commit + `bash scripts/git-push.sh main`.
