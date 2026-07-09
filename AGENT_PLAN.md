@@ -7,22 +7,22 @@
 | Field | Value |
 |-------|-------|
 | Started | 2026-07-10 |
-| Focus | TASK-223 — Autopilot maintenance sweep #223 |
+| Focus | TASK-224 — Autopilot maintenance sweep #224 |
 | Owner | Autopilot (no human) |
 
-### TASK-223 — Autopilot maintenance sweep #223
+### TASK-224 — Autopilot maintenance sweep #224
 **Mục tiêu**: Chạy `npm run lint && npm run test` (cùng `npx tsc --noEmit` + content gates nếu liên quan); fix failure đầu tiên nếu có (minimal); sync AGENT_PLAN nhật ký + BACKLOG + log. **Không feature mới**, không đổi logic app. **Done khi:** gates pass; 0 or 1 small fix; PLAN/BACKLOG/nhật ký; 1 commit; push `git-push.sh main`.
 
 **Bước thực hiện**:
-1. PHASE1 (done): AGENTS.md, BACKLOG (TASK-223 ready; 224–226 ready), PLAN prior TASK-222 done a3021f1/a17a56f, CONTENT_STYLE §6–7 (context only — no unit edit).
-2. BACKLOG TASK-223 → `in_progress`.
-3. Ready after in_p: 3 (224–226) ≥ 2 → skip refill.
+1. PHASE1 (done): AGENTS.md, BACKLOG (TASK-224 ready; 225–226 ready), PLAN prior TASK-223 done 8cc68ab, CONTENT_STYLE §6–7 (context only — no unit edit).
+2. BACKLOG TASK-224 → `in_progress`.
+3. Ready after in_p: 2 (225–226) ≥ 2 → skip refill.
 4. PHASE3:
    - `rm -f tsconfig.tsbuildinfo` (stale guard).
    - `npx tsc --noEmit`; `npm run lint`; `npm run test`.
    - Optional: content-standard + audit (maintenance pattern).
    - Fix only first failure; no scope creep.
-5. Log `logs/agent/*_TASK-223.log`; BACKLOG done + Nhật ký + SHA; PLAN completed; commit + `bash scripts/git-push.sh main`.
+5. Log `logs/agent/*_TASK-224.log`; BACKLOG done + Nhật ký + SHA; PLAN completed; commit + `bash scripts/git-push.sh main`.
 
 **Rủi ro**:
 - Transient tsbuildinfo / flake → clear + rerun once; 2 fails → blocked.
@@ -32,6 +32,9 @@
 
 **Started:** 2026-07-10 — autopilot
 
+**Completed TASK-224**: gates clean (tsc0+lint0+206t+cs50/50+audit50/50) no fix needed; log 20260709T235811Z_TASK-224.log; BACKLOG/PLAN/nhật ký synced; no src edit; commit PENDING + push via git-push.sh main; autonomous.
+
+### TASK-223 — Autopilot maintenance sweep #223 (prior)
 **Completed TASK-223**: gates clean (tsc0+lint0+206t+cs50/50+audit50/50) no fix needed; log 20260709T235414Z_TASK-223.log; BACKLOG/PLAN/nhật ký synced; no src edit; commit 8cc68ab + push via git-push.sh main; autonomous.
 
 ### TASK-222 — Autopilot maintenance sweep #222 (prior)
