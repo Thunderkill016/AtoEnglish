@@ -1,0 +1,7 @@
+TASK-208 — Autopilot maintenance sweep #208
+Date: 2026-07-10 (UTC)
+
+PHASE1: read AGENTS/BACKLOG/PLAN/CONTENT_STYLE §6–7; prior TASK-207 done 39ffe1d
+PHASE2: BACKLOG in_progress; PLAN updated; ready after in_p=3 (209–211) ≥2 → skip refill
+PHASE3: rm tsbuildinfo; tsc0 + lint0 + 206 tests + content-standard 50/50 + audit 50/50; no src fix needed
+DONE: BACKLOG/PLAN/nhật ký synced; no feature; autonomous
