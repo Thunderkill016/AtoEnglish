@@ -1240,6 +1240,25 @@
 - **Done khi:** n/a
 
 
+### TASK-182 — Author l-a0-06 Thời gian trong ngày
+- **Status:** `ready`
+- **Mô tả:** morning/afternoon/evening/night + Good morning… Clock phrases basic (o'clock if fits A0).
+- **Done khi:** schema + registry + path.
+- **Started:** auto-refill
+
+### TASK-183 — Author l-a0-07 Ngày trong tuần
+- **Status:** `ready`
+- **Mô tả:** Mon–Sun + Today is… What day is it?
+- **Done khi:** schema + registry + path.
+- **Started:** auto-refill
+
+### TASK-184 — Author l-a0-08 Cụm sinh tồn + P0 gate mini-review
+- **Status:** `ready`
+- **Mô tả:** Survival chunks: Excuse me, I don't understand, Can you help me?, Sorry, Thank you. Spiral full P0. Marks end of A0 block.
+- **Done khi:** P0 8/8 authored playable; Home continue walks a0-01→08.
+- **Started:** auto-refill
+
+
 ---
 
 ## Nhật ký agent
@@ -1249,6 +1268,9 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
+| 2026-07-10 | TASK-182 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-07-10 | TASK-183 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-07-10 | TASK-184 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-10 | TASK-180 | feat(v2): l-a0-04 name & nationality; 6 playable; sequential path a0-01..04 | pending |
 | 2026-07-10 | TASK-178 | feat(v2): l-a0-02 numbers + l-a0-03 greetings; 5 playable; roadmap content factory TASK-180+; cancel empty sweeps 175/176 | pending |
 | 2026-07-07 | TASK-172 | gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed; log 20260707T150500Z_TASK-172.log + BACKLOG/PLAN/nhật ký synced; no src edit; commit + push via git-push.sh main; autonomous | done — (pending SHA) |
