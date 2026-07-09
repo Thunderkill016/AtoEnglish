@@ -1219,9 +1219,10 @@
 - **Completed:** 2026-07-10 — user mandate product quality (break maintenance-only loop)
 
 ### TASK-180 — Author l-a0-04 Tên & quốc tịch
-- **Status:** `ready`
+- **Status:** `done`
 - **Mô tả:** LessonSpec full stages; I'm from / Where are you from?; spiral a0-01..03.
 - **Done khi:** l-a0-04.ts + registry + tests
+- **Completed:** 2026-07-10 — autopilot session (user chose mode 2)
 
 ### TASK-181 — Author l-a0-05 Gia đình cơ bản
 - **Status:** `ready`
@@ -1248,6 +1249,7 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
+| 2026-07-10 | TASK-180 | feat(v2): l-a0-04 name & nationality; 6 playable; sequential path a0-01..04 | pending |
 | 2026-07-10 | TASK-178 | feat(v2): l-a0-02 numbers + l-a0-03 greetings; 5 playable; roadmap content factory TASK-180+; cancel empty sweeps 175/176 | pending |
 | 2026-07-07 | TASK-172 | gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed; log 20260707T150500Z_TASK-172.log + BACKLOG/PLAN/nhật ký synced; no src edit; commit + push via git-push.sh main; autonomous | done — (pending SHA) |
 | 2026-07-07 | TASK-173 | gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed; log 20260707T150508Z_TASK-173.log + BACKLOG/PLAN/nhật ký synced; no src edit; commit + push via git-push.sh main; autonomous | done — 9c1bcd0 |
