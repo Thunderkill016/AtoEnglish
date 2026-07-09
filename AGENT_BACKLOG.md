@@ -1335,7 +1335,7 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
-| 2026-07-10 | TASK-189 | gates clean (tsc0+lint0+206t+cs50/50+audit50/50) no fix; log 20260709T204411Z_TASK-189.log; PLAN/BACKLOG sync; no src | done — (SHA pending) |
+| 2026-07-10 | TASK-189 | gates clean (tsc0+lint0+206t+cs50/50+audit50/50) no fix; log 20260709T204411Z_TASK-189.log; PLAN/BACKLOG sync; no src | done — 8faa7ca |
 | 2026-07-10 | TASK-191 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-10 | TASK-192 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-10 | TASK-193 | auto-refill từ AGENT_ROADMAP.md | ready |
