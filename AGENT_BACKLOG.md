@@ -1272,15 +1272,34 @@
 - **Completed:** 2026-07-10 — scramble tap-order + cloze/correction text in ControlledStage; review cloze text; normalizeExerciseAnswer; lint0+199t; log 20260709T201700Z_TASK-185.log; commit 6a141e2
 
 ### TASK-186 — Author l-a1-02 Thông tin cá nhân
-- **Status:** `ready`
+- **Status:** `in_progress`
 - **Mô tả:** After P0 complete, extend A1: age/job/phone/email survival with L1 100%.
 - **Done khi:** schema + registry.
-- **Started:** auto-refill
+- **Started:** 2026-07-10 — autopilot (PHASE1: AGENTS/BACKLOG/PLAN/CONTENT§6–7 + V2 path + l-a1-01 gold; PHASE2: PLAN + in_p; ready after → refill if <2)
 
 ### TASK-187 — V2 progress: soft quiz floor before complete
 - **Status:** `ready`
 - **Mô tả:** Complete rule docs: task attempt + quiz floor. Enforce soft floor (e.g. ≥50% quiz or re-try prompt) in player before markLessonComplete.
 - **Done khi:** cannot one-click complete review with 0 answers; copy VI clear.
+- **Started:** auto-refill
+
+
+### TASK-188 — Autopilot maintenance sweep #188
+- **Status:** `ready`
+- **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
+- **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
+- **Started:** auto-refill
+
+### TASK-189 — Autopilot maintenance sweep #189
+- **Status:** `ready`
+- **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
+- **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
+- **Started:** auto-refill
+
+### TASK-190 — Autopilot maintenance sweep #190
+- **Status:** `ready`
+- **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
+- **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
 - **Started:** auto-refill
 
 
@@ -1293,6 +1312,9 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
+| 2026-07-10 | TASK-188 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-07-10 | TASK-189 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-07-10 | TASK-190 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-10 | TASK-185 | feat(v2): scramble tap-order + cloze input in LessonPlayerV2; review cloze; lint0+199t | done — 6a141e2 |
 | 2026-07-10 | TASK-184 | feat(v2): l-a0-08 survival chunks + P0 gate; P0 8/8; sequential a0-01..08; lint0+195t | done — ec7b0e5 |
 | 2026-07-10 | TASK-183 | feat(v2): l-a0-07 days of week + Today is…/What day is it?; 9 playable; sequential a0-01..07; lint0+195t | done — fc61593 |
