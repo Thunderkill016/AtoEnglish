@@ -7,36 +7,37 @@
 | Field | Value |
 |-------|-------|
 | Started | 2026-07-10 |
-| Focus | TASK-185 — Player v2: controlled scramble + cloze input |
+| Focus | TASK-186 — Author l-a1-02 Thông tin cá nhân |
 | Owner | Autopilot (no human) |
 
-### TASK-185 — Player v2: controlled scramble + cloze input
-**Mục tiêu**: `LessonPlayerV2` ControlledStage hiện chỉ MCQ (options buttons); content đã có `type: scramble` (words[]) + `cloze`/`correction` (stem+answer text) nhưng player reveal đáp án / không tương tác. Thêm UI scramble (tap order) + cloze text input để luyện controlled đầy đủ. Review quiz cloze (nếu không options) cũng nhận text input + normalize so khớp. **Done khi:** scramble/cloze usable in player; no console; lint+test; commit + `bash scripts/git-push.sh main`.
+### TASK-186 — Author l-a1-02 Thông tin cá nhân
+**Mục tiêu**: After P0 complete + l-a1-01 gold, author full LessonSpec v2 for `l-a1-02` (P1/A1 «Thông tin cá nhân»): age / job / phone / email survival chunks. L1 notes **100%** on all lexis (A1 schema gate). Spiral from a1-01 (greetings/intro) + a0 name/numbers. Register in `lessons/index.ts`; sequential path after a1-01; docs. **Done khi:** Zod pass; registry has l-a1-02; next after a0-01..08 + a1-01 = a1-02; lint+test; commit + `bash scripts/git-push.sh main`.
 
 **Bước thực hiện**:
-1. PHASE1 research (done): AGENTS, BACKLOG/PLAN/CONTENT§6–7, lesson-spec ControlledExerciseSchema, LessonPlayerV2 ControlledStage, v1 PracticeSection scramble/cloze pattern, sample l-a0-01 scramble + l-a1-01 cloze/correction.
-2. BACKLOG TASK-185 → `in_progress` (done).
+1. PHASE1 research (done): AGENTS, BACKLOG/PLAN/CONTENT§6–7, V2_PRODUCT, lesson-spec (A1 L1=100%), l-a1-01 gold, path order 10, index + tests.
+2. BACKLOG TASK-186 → `in_progress` (done).
 3. Update AGENT_PLAN this section (done).
-4. Ready after in_p: 2 ready (186,187) ≥2 → skip refill.
+4. Ready after in_p: 1 ready (187) → run `agent-refill-backlog.sh` if <2.
 5. PHASE3:
-   - Extend ControlledStage: scramble tap-order pool/built; cloze+correction text input + check; keep MCQ.
-   - normalizeAnswer for feedback + review scoring.
-   - ReviewStage: cloze without options → text input.
-   - Optional small unit test for normalize if extracted; else rely on existing suite.
+   - Create `src/lib/v2/lessons/l-a1-02.ts` (8 stages, age/job/phone/email, L1 100%).
+   - Wire `index.ts`.
+   - Extend `lesson-spec-v2.test.ts` (title + sequential a1-01→02; authored ≥11).
+   - `docs/V2_PRODUCT.md` authored line include a1-02.
    - `npm run lint && npm run test`.
 6. Log + BACKLOG done + nhật ký + SHA; PLAN completed.
-7. commit `feat(v2): scramble tap-order + cloze input in LessonPlayerV2 (TASK-185)`; push via git-push.sh main.
+7. commit `feat(v2): l-a1-02 personal info age/job/phone/email (TASK-186)`; push via git-push.sh main.
 
 **Rủi ro**:
-- Scramble word order vs punctuation in answer → normalize whitespace/punct.
-- Duplicate words in pool → count-based disable (v1 pattern).
-- Hydration: shuffle client-only via useMemo/useState lazy init.
+- Zod (L1 ratio 100%, max lengths, dialogue min) → minimal content fix.
+- Path hole if not registered → getNextPlayable skips unauthored.
 - Push GITLAB_TOKEN → blocked, no force.
 - Fail 2× → blocked + reason.
 
-**Started:** 2026-07-10 — autopilot (PHASE1–2 done; PHASE3 player UX)
+**Started:** 2026-07-10 — autopilot (PHASE1–2 done; PHASE3 content factory)
 
-**Completed TASK-185**: scramble tap-order + cloze/correction text in ControlledStage; ReviewStage cloze text input; `exercise-answer.ts` normalize/shuffle + 4 unit tests; quiz scoring answersMatch; lint0+199t; log 20260709T201700Z_TASK-185.log; commit + push via git-push.sh main; autonomous.
+**Completed TASK-186**: l-a1-02 authored (age/job/phone/email + L1 100%); registry + tests sequential a1-01→02; docs V2 authored …a1-02; lint0+199t; log 20260709T202300Z_TASK-186.log; commit + push via git-push.sh main; autonomous.
+
+**Completed TASK-185** (prior): scramble tap-order + cloze input; lint0+199t; 6a141e2.
 
 **Completed TASK-184** (prior): l-a0-08 survival + P0 8/8; ec7b0e5.
 

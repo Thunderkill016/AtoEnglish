@@ -1272,10 +1272,11 @@
 - **Completed:** 2026-07-10 — scramble tap-order + cloze/correction text in ControlledStage; review cloze text; normalizeExerciseAnswer; lint0+199t; log 20260709T201700Z_TASK-185.log; commit 6a141e2
 
 ### TASK-186 — Author l-a1-02 Thông tin cá nhân
-- **Status:** `in_progress`
+- **Status:** `done`
 - **Mô tả:** After P0 complete, extend A1: age/job/phone/email survival with L1 100%.
 - **Done khi:** schema + registry.
 - **Started:** 2026-07-10 — autopilot (PHASE1: AGENTS/BACKLOG/PLAN/CONTENT§6–7 + V2 path + l-a1-01 gold; PHASE2: PLAN + in_p; ready after → refill if <2)
+- **Completed:** 2026-07-10 — l-a1-02.ts full LessonSpec (age/job/phone/email + L1 100%); registry; sequential a0-01..08→a1-01→a1-02; docs V2 authored …a1-02; lint0+199t; log 20260709T202300Z_TASK-186.log; commit dc48cd1; push via git-push.sh main
 
 ### TASK-187 — V2 progress: soft quiz floor before complete
 - **Status:** `ready`
@@ -1312,6 +1313,7 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
+| 2026-07-10 | TASK-186 | feat(v2): l-a1-02 personal info age/job/phone/email; L1 100%; sequential a1-01→02; lint0+199t | done — dc48cd1 |
 | 2026-07-10 | TASK-188 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-10 | TASK-189 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-10 | TASK-190 | auto-refill từ AGENT_ROADMAP.md | ready |
