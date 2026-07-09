@@ -1315,7 +1315,7 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
-| 2026-07-10 | TASK-188 | gates clean (tsc0+lint0+206t+cs50/50+audit50/50) no fix; log 20260709T203759Z_TASK-188.log; PLAN/BACKLOG sync; no src | done — 42fb1c9 |
+| 2026-07-10 | TASK-188 | gates clean (tsc0+lint0+206t+cs50/50+audit50/50) no fix; log 20260709T203759Z_TASK-188.log; PLAN/BACKLOG sync; no src | done — 2152dcf |
 | 2026-07-10 | TASK-187 | feat(v2): soft quiz floor ≥50% before complete; re-try VI; lint0+206t | done — d96c82e |
 | 2026-07-10 | TASK-186 | feat(v2): l-a1-02 personal info age/job/phone/email; L1 100%; sequential a1-01→02; lint0+199t | done — c4cef59 |
 | 2026-07-10 | TASK-189 | auto-refill từ AGENT_ROADMAP.md | ready |
