@@ -1,0 +1,33 @@
+# TASK-202 — Autopilot maintenance sweep #202
+Date: 2026-07-10 (UTC 2026-07-09 ~21:57)
+Owner: Autopilot (no human)
+
+## PHASE1 — Research
+- Read AGENTS.md, AGENT_BACKLOG.md, AGENT_PLAN.md (prior TASK-201 done dda7e2a)
+- CONTENT_STYLE §6–7: blueprint IPOR + SDL standards (context only; no unit edit)
+- Grep TASK-202: ready maintenance sweep; ready queue 202–205 (4 ready)
+- Files to touch: AGENT_BACKLOG.md, AGENT_PLAN.md, logs/agent/* (no src unless 1st fail)
+
+## PHASE2 — Plan
+- BACKLOG TASK-202 → in_progress
+- AGENT_PLAN focus → TASK-202 (mục tiêu / bước / rủi ro)
+- Ready after in_p: 3 (203–205) ≥ 2 → skip agent-refill-backlog.sh
+
+## PHASE3 — Gates
+1. rm -f tsconfig.tsbuildinfo
+2. npx tsc --noEmit → exit 0
+3. npm run lint → exit 0 (eslint .)
+4. npm run test → 19 files, 206 tests passed
+5. npm run test:content-standard → 50/50
+6. bash scripts/audit-lesson-content.sh → 50/50 ĐẠT CHUẨN
+
+## Result
+- Gates clean; no first failure; no src edit
+- Fix: none
+- Feature: none (maintenance only)
+
+## Done criteria
+- [x] lint+test pass
+- [x] PLAN/BACKLOG/nhật ký sync
+- [x] log file
+- [ ] commit + git-push.sh main (pending)
