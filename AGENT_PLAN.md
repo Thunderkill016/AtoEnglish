@@ -7,32 +7,34 @@
 | Field | Value |
 |-------|-------|
 | Started | 2026-07-10 |
-| Focus | TASK-187 — V2 progress: soft quiz floor before complete |
+| Focus | TASK-188 — Autopilot maintenance sweep #188 |
 | Owner | Autopilot (no human) |
 
-### TASK-187 — V2 progress: soft quiz floor before complete
-**Mục tiêu**: Complete rule = **task attempt + quiz floor ≥50%**. Player hiện cho «Hoàn thành bài» sau chấm quiz dù 0/N. Enforce soft floor: không complete nếu 0 answers hoặc &lt;50%; prompt VI «Làm lại quiz». Pure helpers testable. Docs V2 complete rule. **Done khi:** cannot one-click complete with 0 answers; VI clear; lint+test; push.
+### TASK-188 — Autopilot maintenance sweep #188
+**Mục tiêu**: Chạy `npm run lint && npm run test` (cùng `npx tsc --noEmit` + content gates nếu liên quan); fix failure đầu tiên nếu có (minimal); sync AGENT_PLAN nhật ký + BACKLOG + log. **Không feature mới**, không đổi logic app. **Done khi:** gates pass; 0 or 1 small fix; PLAN/BACKLOG/nhật ký; 1 commit; push `git-push.sh main`.
 
 **Bước thực hiện**:
-1. PHASE1 (done): progress.markLessonComplete + LessonPlayerV2 goNext/ReviewStage; V2_PRODUCT complete rule row.
-2. BACKLOG in_progress; PLAN this section.
-3. Ready count ≥2 (188–190) → skip refill.
+1. PHASE1 (done): AGENTS.md, BACKLOG (TASK-188 ready), PLAN prior TASK-187 done, CONTENT_STYLE §6–7 (context only — no unit edit).
+2. BACKLOG TASK-188 → `in_progress`.
+3. Ready after in_p: 189–190 still ready (≥2) → skip `agent-refill-backlog.sh`.
 4. PHASE3:
-   - `progress.ts`: QUIZ_FLOOR_RATIO, meetsQuizFloor, canMarkLessonComplete.
-   - Player: block grade if 0 answers; block complete if !floor; retry clears score; VI copy.
-   - Unit tests progress-v2.
-   - docs/V2_PRODUCT complete rule note.
-   - lint + test.
-5. Log + done + nhật ký + SHA; push git-push.sh main.
+   - `rm -f tsconfig.tsbuildinfo` (stale guard).
+   - `npx tsc --noEmit`; `npm run lint`; `npm run test`.
+   - Optional: content-standard + audit if time (maintenance pattern).
+   - Fix only first failure; no scope creep.
+5. Log `logs/agent/*_TASK-188.log`; BACKLOG done + Nhật ký + SHA; PLAN completed; commit + `bash scripts/git-push.sh main`.
 
 **Rủi ro**:
-- Rounding 1/3 vs 50% → use correct/total >= 0.5.
-- Controlled stage shares `selected` map → retry only clears quiz ids.
-- Push primary origin only if GitLab SSH down.
+- Transient tsbuildinfo / flake → clear + rerun once; 2 fails → blocked.
+- First real bug → minimal fix only; major/secret → blocked.
+- Push needs GitLab access → blocked, no force.
+- No new feature.
 
 **Started:** 2026-07-10 — autopilot
 
-**Completed TASK-187**: soft quiz floor ≥50% + task gate; player re-try VI; progress-v2 tests; docs; lint0+206t; commit + push; autonomous.
+**Completed TASK-188**: gates clean (tsc0+lint0+206t+cs50/50+audit50/50) no fix needed; log 20260709T203759Z_TASK-188.log; BACKLOG/PLAN/nhật ký synced; no src edit; commit 42fb1c9 + push via git-push.sh main; autonomous.
+
+**Completed TASK-187** (prior): soft quiz floor ≥50% + task gate; player re-try VI; progress-v2 tests; docs; lint0+206t; d96c82e; push git-push.sh main; autonomous.
 
 **Completed TASK-186** (prior): l-a1-02; c4cef59.
 

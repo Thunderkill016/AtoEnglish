@@ -1287,10 +1287,11 @@
 
 
 ### TASK-188 — Autopilot maintenance sweep #188
-- **Status:** `ready`
+- **Status:** `done`
 - **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
 - **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
-- **Started:** auto-refill
+- **Started:** 2026-07-10 — autopilot (PHASE1: AGENTS/BACKLOG/PLAN/CONTENT §6–7; PHASE2: PLAN; PHASE3: gates only)
+- **Completed:** 2026-07-10 — gates clean (tsc0+lint0+206t+cs50/50+audit50/50) no fix; log 20260709T203759Z_TASK-188.log; PLAN/BACKLOG/nhật ký sync; no src edit; commit + push git-push.sh main; autonomous
 
 ### TASK-189 — Autopilot maintenance sweep #189
 - **Status:** `ready`
@@ -1314,9 +1315,9 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
+| 2026-07-10 | TASK-188 | gates clean (tsc0+lint0+206t+cs50/50+audit50/50) no fix; log 20260709T203759Z_TASK-188.log; PLAN/BACKLOG sync; no src | done — 42fb1c9 |
 | 2026-07-10 | TASK-187 | feat(v2): soft quiz floor ≥50% before complete; re-try VI; lint0+206t | done — d96c82e |
 | 2026-07-10 | TASK-186 | feat(v2): l-a1-02 personal info age/job/phone/email; L1 100%; sequential a1-01→02; lint0+199t | done — c4cef59 |
-| 2026-07-10 | TASK-188 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-10 | TASK-189 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-10 | TASK-190 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-10 | TASK-185 | feat(v2): scramble tap-order + cloze input in LessonPlayerV2; review cloze; lint0+199t | done — 6a141e2 |
@@ -1341,7 +1342,7 @@
 | 2026-07-02 | TASK-171 | follow-up SHA sync in PLAN/BACKLOG Nhật ký | done — b6b2506 |
 | 2026-07-02 | TASK-172 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-02 | TASK-173 | auto-refill từ AGENT_ROADMAP.md | ready |
-| 2026-07-02 | TASK-170 | gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed; log 20260701T172209Z_TASK-170.log + BACKLOG/PLAN/nhật ký synced; no src edit; commit + push via git-push.sh main; autonomous | done — (SHA pending) |
+| 2026-07-02 | TASK-170 | gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed; log 20260701T172209Z_TASK-170.log + BACKLOG/PLAN/nhật ký synced; no src edit; commit + push via git-push.sh main; autonomous | done — 232cc01 |
 | 2026-07-02 | TASK-169 | gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed (investigated unit L1 diffs but 0 fail); log 20260702T001633Z_TASK-169.log + BACKLOG/PLAN/nhật ký synced; no src edit; commit + push via git-push.sh main; autonomous | done — 5db49a5 |
 | 2026-07-02 | TASK-168 | gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed; log 20260702T171000Z_TASK-168.log + BACKLOG/PLAN/nhật ký synced; no src edit; commit + push via git-push.sh main; autonomous | done |
 | 2026-07-02 | TASK-167 | gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed; log 20260702T170400Z_TASK-167.log + BACKLOG/PLAN/nhật ký synced; no src edit; commit + push via git-push.sh main; autonomous | done — (pending SHA) |
@@ -1353,7 +1354,7 @@
 | 2026-07-01 | TASK-166 | gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed; log 20260701T165440Z_TASK-166.log + BACKLOG/PLAN/nhật ký synced; no src edit; commit + push via git-push.sh main; autonomous | done — a5bb1b6 |
 | 2026-07-01 | TASK-166 | follow-up SHA sync in PLAN/BACKLOG Nhật ký | done — 8889f81 |
 | 2026-07-01 | TASK-167 | auto-refill từ AGENT_ROADMAP.md | ready |
-| 2026-07-01 | TASK-162 | gates clean (tsc0+lint0+170t+cs50/50+audit50/50) after 1 min first-fail type fix (jobScenarios l1Note); log 20260701T162212Z_TASK-162.log + sync; commit + push via git-push.sh main; autonomous | done — (SHA pending) |
+| 2026-07-01 | TASK-162 | gates clean (tsc0+lint0+170t+cs50/50+audit50/50) after 1 min first-fail type fix (jobScenarios l1Note); log 20260701T162212Z_TASK-162.log + sync; commit + push via git-push.sh main; autonomous | done — 232cc01 |
 | 2026-07-01 | TASK-163 | gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed (refill ran); log 20260701T163005Z_TASK-163.log + BACKLOG/PLAN/nhật ký synced; commit via git-push.sh main; autonomous | done — (pending SHA) |
 | 2026-07-01 | TASK-159 | gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix + log 20260701T160042Z_TASK-159.log + sync PLAN/BACKLOG; no src; commit 111389d + push via git-push.sh main; autonomous | done — 111389d (final 1f491c7) |
 | 2026-07-01 | TASK-160 | gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix + log 20260701T160755Z_TASK-160.log + sync PLAN/BACKLOG; no src; commit+push via git-push.sh main; autonomous | done — (pending SHA) |
