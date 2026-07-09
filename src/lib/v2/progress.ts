@@ -49,9 +49,29 @@ export function saveV2Progress(state: V2ProgressState): void {
   try {
     state.updatedAt = new Date().toISOString();
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    emitProgressChange();
   } catch {
     /* ignore quota */
   }
+}
+
+/** Subscribe for useSyncExternalStore — Home/Path re-read without useEffect setState */
+export function subscribeV2Progress(onChange: () => void): () => void {
+  if (typeof window === "undefined") return () => {};
+  window.addEventListener(V2_PROGRESS_EVENT, onChange);
+  window.addEventListener("storage", onChange);
+  return () => {
+    window.removeEventListener(V2_PROGRESS_EVENT, onChange);
+    window.removeEventListener("storage", onChange);
+  };
+}
+
+export function getCompletedIdsSnapshot(): string {
+  return getCompletedIds().slice().sort().join("\n");
+}
+
+export function getServerCompletedIdsSnapshot(): string {
+  return "";
 }
 
 export function isLessonCompleted(lessonId: string): boolean {
