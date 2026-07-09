@@ -1,7 +1,12 @@
 /**
  * v2 lesson progress — local-first (guest + until DB migration).
  * Key: ato_v2_progress
+ *
+ * Complete rule (soft): task attempt + quiz floor ≥50% (see canMarkLessonComplete).
  */
+
+/** Soft quiz floor before markLessonComplete (TASK-187). */
+export const QUIZ_FLOOR_RATIO = 0.5;
 
 export interface LessonProgressRecord {
   lessonId: string;
@@ -9,6 +14,57 @@ export interface LessonProgressRecord {
   quizCorrect: number;
   quizTotal: number;
   taskDone: boolean;
+}
+
+/** True when quizCorrect/quizTotal meets soft floor (default ≥50%). */
+export function meetsQuizFloor(
+  quizCorrect: number,
+  quizTotal: number,
+  floor: number = QUIZ_FLOOR_RATIO,
+): boolean {
+  if (quizTotal <= 0) return false;
+  if (quizCorrect < 0) return false;
+  return quizCorrect / quizTotal >= floor;
+}
+
+export type CompleteGateResult =
+  | { ok: true }
+  | { ok: false; reason: "no_task" | "no_answers" | "below_floor"; message_vi: string };
+
+/**
+ * Soft complete gate: task attempt + at least one graded answer + ≥50% quiz.
+ * Player must surface message_vi and allow re-try — not a hard ban forever.
+ */
+export function canMarkLessonComplete(input: {
+  taskDone: boolean;
+  quizCorrect: number;
+  quizTotal: number;
+  answeredCount?: number;
+}): CompleteGateResult {
+  if (!input.taskDone) {
+    return {
+      ok: false,
+      reason: "no_task",
+      message_vi: "Hãy hoàn thành nhiệm vụ nói trước khi kết thúc bài.",
+    };
+  }
+  const answered = input.answeredCount ?? input.quizCorrect;
+  if (input.quizTotal <= 0 || answered <= 0) {
+    return {
+      ok: false,
+      reason: "no_answers",
+      message_vi: "Hãy trả lời quiz trước khi hoàn thành bài (không được bỏ trống).",
+    };
+  }
+  if (!meetsQuizFloor(input.quizCorrect, input.quizTotal)) {
+    const need = Math.ceil(input.quizTotal * QUIZ_FLOOR_RATIO);
+    return {
+      ok: false,
+      reason: "below_floor",
+      message_vi: `Cần đạt ít nhất ${Math.round(QUIZ_FLOOR_RATIO * 100)}% quiz (tối thiểu ${need}/${input.quizTotal} đúng). Hiện ${input.quizCorrect}/${input.quizTotal}. Bấm «Làm lại quiz» để thử lại.`,
+    };
+  }
+  return { ok: true };
 }
 
 export interface V2ProgressState {

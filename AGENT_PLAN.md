@@ -7,37 +7,36 @@
 | Field | Value |
 |-------|-------|
 | Started | 2026-07-10 |
-| Focus | TASK-186 — Author l-a1-02 Thông tin cá nhân |
+| Focus | TASK-187 — V2 progress: soft quiz floor before complete |
 | Owner | Autopilot (no human) |
 
-### TASK-186 — Author l-a1-02 Thông tin cá nhân
-**Mục tiêu**: After P0 complete + l-a1-01 gold, author full LessonSpec v2 for `l-a1-02` (P1/A1 «Thông tin cá nhân»): age / job / phone / email survival chunks. L1 notes **100%** on all lexis (A1 schema gate). Spiral from a1-01 (greetings/intro) + a0 name/numbers. Register in `lessons/index.ts`; sequential path after a1-01; docs. **Done khi:** Zod pass; registry has l-a1-02; next after a0-01..08 + a1-01 = a1-02; lint+test; commit + `bash scripts/git-push.sh main`.
+### TASK-187 — V2 progress: soft quiz floor before complete
+**Mục tiêu**: Complete rule = **task attempt + quiz floor ≥50%**. Player hiện cho «Hoàn thành bài» sau chấm quiz dù 0/N. Enforce soft floor: không complete nếu 0 answers hoặc &lt;50%; prompt VI «Làm lại quiz». Pure helpers testable. Docs V2 complete rule. **Done khi:** cannot one-click complete with 0 answers; VI clear; lint+test; push.
 
 **Bước thực hiện**:
-1. PHASE1 research (done): AGENTS, BACKLOG/PLAN/CONTENT§6–7, V2_PRODUCT, lesson-spec (A1 L1=100%), l-a1-01 gold, path order 10, index + tests.
-2. BACKLOG TASK-186 → `in_progress` (done).
-3. Update AGENT_PLAN this section (done).
-4. Ready after in_p: 1 ready (187) → run `agent-refill-backlog.sh` if <2.
-5. PHASE3:
-   - Create `src/lib/v2/lessons/l-a1-02.ts` (8 stages, age/job/phone/email, L1 100%).
-   - Wire `index.ts`.
-   - Extend `lesson-spec-v2.test.ts` (title + sequential a1-01→02; authored ≥11).
-   - `docs/V2_PRODUCT.md` authored line include a1-02.
-   - `npm run lint && npm run test`.
-6. Log + BACKLOG done + nhật ký + SHA; PLAN completed.
-7. commit `feat(v2): l-a1-02 personal info age/job/phone/email (TASK-186)`; push via git-push.sh main.
+1. PHASE1 (done): progress.markLessonComplete + LessonPlayerV2 goNext/ReviewStage; V2_PRODUCT complete rule row.
+2. BACKLOG in_progress; PLAN this section.
+3. Ready count ≥2 (188–190) → skip refill.
+4. PHASE3:
+   - `progress.ts`: QUIZ_FLOOR_RATIO, meetsQuizFloor, canMarkLessonComplete.
+   - Player: block grade if 0 answers; block complete if !floor; retry clears score; VI copy.
+   - Unit tests progress-v2.
+   - docs/V2_PRODUCT complete rule note.
+   - lint + test.
+5. Log + done + nhật ký + SHA; push git-push.sh main.
 
 **Rủi ro**:
-- Zod (L1 ratio 100%, max lengths, dialogue min) → minimal content fix.
-- Path hole if not registered → getNextPlayable skips unauthored.
-- Push GITLAB_TOKEN → blocked, no force.
-- Fail 2× → blocked + reason.
+- Rounding 1/3 vs 50% → use correct/total >= 0.5.
+- Controlled stage shares `selected` map → retry only clears quiz ids.
+- Push primary origin only if GitLab SSH down.
 
-**Started:** 2026-07-10 — autopilot (PHASE1–2 done; PHASE3 content factory)
+**Started:** 2026-07-10 — autopilot
 
-**Completed TASK-186**: l-a1-02 authored (age/job/phone/email + L1 100%); registry + tests sequential a1-01→02; docs V2 authored …a1-02; lint0+199t; log 20260709T202300Z_TASK-186.log; commit + push via git-push.sh main; autonomous.
+**Completed TASK-187**: soft quiz floor ≥50% + task gate; player re-try VI; progress-v2 tests; docs; lint0+206t; commit + push; autonomous.
 
-**Completed TASK-185** (prior): scramble tap-order + cloze input; lint0+199t; 6a141e2.
+**Completed TASK-186** (prior): l-a1-02; c4cef59.
+
+**Completed TASK-185** (prior): scramble/cloze; 6a141e2.
 
 **Completed TASK-184** (prior): l-a0-08 survival + P0 8/8; ec7b0e5.
 

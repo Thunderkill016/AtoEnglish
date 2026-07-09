@@ -22,7 +22,7 @@ Promise VI: *“Đạt B1 — đủ để dùng tiếng Anh độc lập trong �
 |-------|----|----|
 | Curriculum | 50 units `unit*.ts` | New `l-*` lessons A0→B1 only at launch |
 | Lesson shape | Mega UnitData + 10 IPOR sections | **LessonSpec** stages + time budget |
-| Complete rule | Mostly quiz/path | **Task attempt + quiz floor + can-do** |
+| Complete rule | Mostly quiz/path | **Task attempt + quiz floor ≥50%** (soft re-try; code: `canMarkLessonComplete`) |
 | Progress | XP-heavy | **% path to B1** + speak minutes + gates |
 | IA | Many tabs/features | Home · Learn · Review · Speak · Path · Me |
 | B2 / leagues | Shipped | Deferred |
@@ -82,6 +82,7 @@ isCurriculumV2() // env NEXT_PUBLIC_CURRICULUM_V2 === "1" | true
 
 **Authored (playable):** `l-a0-01`…`l-a0-08` (P0 complete), `l-a1-01`, `l-a1-02`, `l-b1-01`  
 **Progress:** localStorage `ato_v2_progress` until DB migration  
+**Complete gate (player):** task attempt («Tôi đã nói xong») + quiz ≥1 answer + **≥50%** correct — else VI re-try «Làm lại quiz» (`src/lib/v2/progress.ts`).  
 **Content factory priority:** P0 done — sequential A1 (`l-a1-03`…) next; no empty maintenance-only autopilot.
 
 ---

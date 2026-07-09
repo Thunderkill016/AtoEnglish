@@ -15,7 +15,12 @@ import {
 import type { ControlledExercise, LessonSpec, QuizItem } from "@/lib/v2/lesson-spec";
 import { LESSON_STAGES } from "@/lib/v2/lesson-spec";
 import { answersMatch, shuffleWords } from "@/lib/v2/exercise-answer";
-import { markLessonComplete } from "@/lib/v2/progress";
+import {
+  canMarkLessonComplete,
+  markLessonComplete,
+  meetsQuizFloor,
+  QUIZ_FLOOR_RATIO,
+} from "@/lib/v2/progress";
 import { cn } from "@/lib/utils";
 
 interface Props {
@@ -29,10 +34,12 @@ export function LessonPlayerV2({ lesson }: Props) {
   const [quizScore, setQuizScore] = useState<number | null>(null);
   const [selected, setSelected] = useState<Record<string, string>>({});
   const [finished, setFinished] = useState(false);
+  const [reviewHint, setReviewHint] = useState<string | null>(null);
 
   const stage = LESSON_STAGES[stageIndex];
   const isLast = stageIndex >= LESSON_STAGES.length - 1;
   const quizItems = lesson.review.quiz;
+  const quizIds = useMemo(() => new Set(quizItems.map((q) => q.id)), [quizItems]);
 
   const correctCount = useMemo(() => {
     return quizItems.filter((q) =>
@@ -40,13 +47,48 @@ export function LessonPlayerV2({ lesson }: Props) {
     ).length;
   }, [quizItems, selected]);
 
+  const answeredCount = useMemo(() => {
+    return quizItems.filter((q) => (selected[q.id] ?? "").trim().length > 0)
+      .length;
+  }, [quizItems, selected]);
+
+  const floorMet =
+    quizScore !== null && meetsQuizFloor(correctCount, quizItems.length);
+
+  function resetQuizOnly() {
+    setQuizScore(null);
+    setReviewHint(null);
+    setSelected((prev) => {
+      const next = { ...prev };
+      for (const id of quizIds) delete next[id];
+      return next;
+    });
+  }
+
   function goNext() {
     if (stage.id === "task" && !taskDone) return;
     if (stage.id === "review" && quizScore === null) {
+      if (answeredCount === 0) {
+        setReviewHint(
+          "Hãy chọn hoặc điền ít nhất một đáp án trước khi chấm quiz.",
+        );
+        return;
+      }
       setQuizScore(correctCount);
+      setReviewHint(null);
       return;
     }
     if (isLast && quizScore !== null) {
+      const gate = canMarkLessonComplete({
+        taskDone,
+        quizCorrect: correctCount,
+        quizTotal: quizItems.length,
+        answeredCount,
+      });
+      if (!gate.ok) {
+        setReviewHint(gate.message_vi);
+        return;
+      }
       markLessonComplete({
         lessonId: lesson.id,
         quizCorrect: correctCount,
@@ -157,10 +199,18 @@ export function LessonPlayerV2({ lesson }: Props) {
             <ReviewStage
               lesson={lesson}
               selected={selected}
-              onSelect={(id, val) => setSelected((s) => ({ ...s, [id]: val }))}
+              onSelect={(id, val) => {
+                setSelected((s) => ({ ...s, [id]: val }));
+                if (quizScore !== null) setQuizScore(null);
+                setReviewHint(null);
+              }}
               quizScore={quizScore}
               correctCount={correctCount}
+              answeredCount={answeredCount}
               taskDone={taskDone}
+              floorMet={floorMet}
+              reviewHint={reviewHint}
+              onRetryQuiz={resetQuizOnly}
             />
           )}
         </motion.div>
@@ -179,14 +229,21 @@ export function LessonPlayerV2({ lesson }: Props) {
         <button
           type="button"
           onClick={goNext}
-          disabled={stage.id === "task" && !taskDone}
+          disabled={
+            (stage.id === "task" && !taskDone) ||
+            (stage.id === "review" &&
+              quizScore !== null &&
+              !floorMet)
+          }
           className="flex-1 inline-flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 py-3 text-sm font-black text-zinc-950 shadow-lg shadow-emerald-900/25 disabled:opacity-40 hover:brightness-110 active:scale-[0.99] transition"
         >
           {stage.id === "review" && quizScore === null
             ? "Chấm quiz"
-            : isLast && quizScore !== null
+            : isLast && quizScore !== null && floorMet
               ? "Hoàn thành bài"
-              : "Tiếp tục"}
+              : isLast && quizScore !== null && !floorMet
+                ? `Cần ≥${Math.round(QUIZ_FLOOR_RATIO * 100)}% quiz`
+                : "Tiếp tục"}
           <ArrowRight className="size-4" />
         </button>
       </div>
@@ -194,6 +251,11 @@ export function LessonPlayerV2({ lesson }: Props) {
       {stage.id === "task" && !taskDone && (
         <p className="text-center text-xs text-amber-400/90 font-medium">
           Hãy nói to nhiệm vụ rồi bấm «Tôi đã nói xong»
+        </p>
+      )}
+      {stage.id === "review" && reviewHint && (
+        <p className="text-center text-xs text-amber-400/95 font-medium px-2">
+          {reviewHint}
         </p>
       )}
     </div>
@@ -745,19 +807,32 @@ function ReviewStage({
   onSelect,
   quizScore,
   correctCount,
+  answeredCount,
   taskDone,
+  floorMet,
+  reviewHint,
+  onRetryQuiz,
 }: {
   lesson: LessonSpec;
   selected: Record<string, string>;
   onSelect: (id: string, val: string) => void;
   quizScore: number | null;
   correctCount: number;
+  answeredCount: number;
   taskDone: boolean;
+  floorMet: boolean;
+  reviewHint: string | null;
+  onRetryQuiz: () => void;
 }) {
   const total = lesson.review.quiz.length;
+  const floorPct = Math.round(QUIZ_FLOOR_RATIO * 100);
   return (
     <div className="space-y-4">
       <SectionTitle>Quiz cuối</SectionTitle>
+      <p className="text-xs text-zinc-500">
+        Cần làm quiz (không bỏ trống) và đạt ≥{floorPct}% để hoàn thành bài. Nhiệm
+        vụ nói: {taskDone ? "đã xong ✓" : "chưa"}.
+      </p>
       {lesson.review.quiz.map((q, i) => (
         <div key={q.id} className="space-y-2 rounded-2xl border border-zinc-800 bg-zinc-950/40 p-4">
           <p className="text-[11px] font-bold text-zinc-600">Câu {i + 1}</p>
@@ -766,15 +841,44 @@ function ReviewStage({
         </div>
       ))}
       {quizScore !== null && (
-        <div className="rounded-2xl border border-emerald-500/30 bg-emerald-500/10 p-4">
-          <p className="font-black text-emerald-300">
+        <div
+          className={cn(
+            "rounded-2xl border p-4 space-y-2",
+            floorMet
+              ? "border-emerald-500/30 bg-emerald-500/10"
+              : "border-amber-500/30 bg-amber-500/10",
+          )}
+        >
+          <p
+            className={cn(
+              "font-black",
+              floorMet ? "text-emerald-300" : "text-amber-300",
+            )}
+          >
             Quiz {correctCount}/{total}
             {taskDone ? " · Task ✓" : ""}
+            {floorMet
+              ? ` · Đạt sàn ≥${floorPct}%`
+              : ` · Chưa đạt sàn ≥${floorPct}%`}
           </p>
-          <p className="text-xs text-zinc-400 mt-1">
-            Bấm «Hoàn thành bài» để lưu và về Home.
+          <p className="text-xs text-zinc-400">
+            {floorMet
+              ? "Bấm «Hoàn thành bài» để lưu và về Home."
+              : `Đã trả lời ${answeredCount}/${total}. Làm lại quiz để đạt tối thiểu ${Math.ceil(total * QUIZ_FLOOR_RATIO)} câu đúng.`}
           </p>
+          {!floorMet && (
+            <button
+              type="button"
+              onClick={onRetryQuiz}
+              className="w-full rounded-xl border border-amber-500/40 bg-amber-400/15 py-2.5 text-sm font-bold text-amber-200 hover:bg-amber-400/25"
+            >
+              Làm lại quiz
+            </button>
+          )}
         </div>
+      )}
+      {reviewHint && quizScore === null && (
+        <p className="text-xs font-medium text-amber-400/95">{reviewHint}</p>
       )}
     </div>
   );
