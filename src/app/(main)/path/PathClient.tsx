@@ -2,6 +2,8 @@
 
 import { useMemo, useSyncExternalStore } from "react";
 import Link from "next/link";
+import { motion } from "framer-motion";
+import { ArrowLeft, Check, Lock, Play } from "lucide-react";
 import { CORE_PATH_PLAN } from "@/lib/v2/path";
 import { getLessonV2 } from "@/lib/v2/lessons";
 import {
@@ -12,11 +14,30 @@ import {
 import { learnPathForLesson } from "@/lib/v2/flag";
 import { cn } from "@/lib/utils";
 
-const PHASE_LABEL: Record<string, string> = {
-  P0: "Nền tảng A0",
-  P1: "Đời sống A1",
-  P2: "Chức năng A2",
-  P3: "Độc lập B1 ★",
+const PHASE_META: Record<
+  string,
+  { title: string; accent: string; ring: string }
+> = {
+  P0: {
+    title: "Nền tảng A0",
+    accent: "text-sky-400",
+    ring: "border-sky-500/30 bg-sky-500/10",
+  },
+  P1: {
+    title: "Đời sống A1",
+    accent: "text-emerald-400",
+    ring: "border-emerald-500/30 bg-emerald-500/10",
+  },
+  P2: {
+    title: "Chức năng A2 · cổng giữa",
+    accent: "text-violet-400",
+    ring: "border-violet-500/30 bg-violet-500/10",
+  },
+  P3: {
+    title: "Độc lập B1 ★ đích",
+    accent: "text-amber-400",
+    ring: "border-amber-500/30 bg-amber-500/10",
+  },
 };
 
 export function PathClient() {
@@ -33,69 +54,119 @@ export function PathClient() {
   const phases = ["P0", "P1", "P2", "P3"] as const;
 
   return (
-    <div className="mx-auto max-w-lg px-4 py-8 pb-28 space-y-6">
-      <header className="space-y-2">
-        <Link href="/home" className="text-sm text-zinc-500 hover:text-emerald-400">
-          ← Home
+    <div className="relative mx-auto max-w-lg min-h-[calc(100dvh-4rem)] px-4 py-8 pb-28 sm:px-6 overflow-x-hidden">
+      <div className="pointer-events-none absolute top-10 left-1/2 -z-10 h-[200px] w-[80%] -translate-x-1/2 rounded-full bg-emerald-500/8 blur-[80px]" />
+
+      <header className="space-y-3 mb-8">
+        <Link
+          href="/home"
+          className="inline-flex items-center gap-1.5 text-sm font-medium text-zinc-400 hover:text-emerald-400 transition-colors"
+        >
+          <ArrowLeft className="size-4" />
+          Home
         </Link>
-        <h1 className="text-2xl font-bold text-zinc-50">Lộ trình tới B1</h1>
-        <p className="text-sm text-zinc-400">
-          42 bài · A0 → B1. Chỉ bài có nội dung (pilot) mở được.
+        <h1 className="text-3xl font-black tracking-tight text-zinc-50">
+          Lộ trình{" "}
+          <span className="bg-gradient-to-r from-emerald-400 to-teal-300 bg-clip-text text-transparent">
+            B1
+          </span>
+        </h1>
+        <p className="text-sm text-zinc-400 leading-relaxed">
+          42 bài · A0 → B1. Bài có chấm xanh mở được (pilot). Còn lại đang soạn.
         </p>
       </header>
 
-      {phases.map((phase) => {
-        const items = CORE_PATH_PLAN.filter((l) => l.phase === phase);
-        return (
-          <section key={phase} className="space-y-2">
-            <h2 className="text-sm font-semibold text-emerald-400/90">
-              {PHASE_LABEL[phase]} · {items.length} bài
-              {phase === "P2" && (
-                <span className="ml-2 text-xs text-zinc-500">→ cổng A2</span>
-              )}
-              {phase === "P3" && (
-                <span className="ml-2 text-xs text-zinc-500">→ cổng B1</span>
-              )}
-            </h2>
-            <ul className="space-y-1.5">
-              {items.map((item) => {
-                const hasContent = Boolean(getLessonV2(item.id));
-                const completed = done.has(item.id);
-                const inner = (
-                  <div
-                    className={cn(
-                      "flex items-center gap-3 rounded-xl border px-3 py-2.5 text-sm",
-                      hasContent
-                        ? "border-white/10 bg-white/5 hover:border-emerald-500/40"
-                        : "border-transparent bg-zinc-900/40 opacity-50",
-                    )}
-                  >
-                    <span className="w-6 text-xs text-zinc-500 tabular-nums">
-                      {item.order}
-                    </span>
-                    <span className="flex-1 text-zinc-200">{item.title_vi}</span>
-                    {completed && (
-                      <span className="text-xs text-emerald-400">✓</span>
-                    )}
-                    {!hasContent && (
-                      <span className="text-[10px] text-zinc-600">soon</span>
-                    )}
-                  </div>
-                );
-                return (
-                  <li key={item.id}>
-                    {hasContent ? (
-                      <Link href={learnPathForLesson(item.id)}>{inner}</Link>
-                    ) : (
-                      inner
-                    )}
-                  </li>
-                );
-              })}
-            </ul>
-          </section>
-        );
-      })}
+      <div className="space-y-8">
+        {phases.map((phase, pi) => {
+          const items = CORE_PATH_PLAN.filter((l) => l.phase === phase);
+          const pm = PHASE_META[phase];
+          const phaseDone = items.filter((i) => done.has(i.id)).length;
+          return (
+            <motion.section
+              key={phase}
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: pi * 0.06, duration: 0.35 }}
+              className="space-y-3"
+            >
+              <div className="flex items-center justify-between gap-2">
+                <div
+                  className={cn(
+                    "inline-flex items-center rounded-full border px-3 py-1 text-xs font-bold",
+                    pm.ring,
+                    pm.accent,
+                  )}
+                >
+                  {pm.title}
+                </div>
+                <span className="text-[11px] tabular-nums text-zinc-500">
+                  {phaseDone}/{items.length}
+                </span>
+              </div>
+              <ul className="relative space-y-1.5 pl-2 border-l border-zinc-800 ml-2">
+                {items.map((item) => {
+                  const hasContent = Boolean(getLessonV2(item.id));
+                  const completed = done.has(item.id);
+                  const row = (
+                    <div
+                      className={cn(
+                        "relative ml-4 flex items-center gap-3 rounded-xl border px-3 py-2.5 text-sm transition",
+                        hasContent
+                          ? "border-zinc-800/80 bg-zinc-900/70 hover:border-emerald-500/35 hover:bg-zinc-900"
+                          : "border-transparent bg-zinc-950/40 opacity-45",
+                      )}
+                    >
+                      <span
+                        className={cn(
+                          "absolute -left-[1.4rem] flex size-5 items-center justify-center rounded-full border text-[10px]",
+                          completed
+                            ? "border-emerald-500 bg-emerald-500 text-zinc-950"
+                            : hasContent
+                              ? "border-teal-500/50 bg-zinc-900 text-teal-400"
+                              : "border-zinc-700 bg-zinc-900 text-zinc-600",
+                        )}
+                      >
+                        {completed ? (
+                          <Check className="size-3" strokeWidth={3} />
+                        ) : hasContent ? (
+                          <Play className="size-2.5 fill-current" />
+                        ) : (
+                          <Lock className="size-2.5" />
+                        )}
+                      </span>
+                      <span className="w-6 shrink-0 text-[11px] tabular-nums text-zinc-600">
+                        {item.order}
+                      </span>
+                      <span
+                        className={cn(
+                          "flex-1 font-medium",
+                          hasContent ? "text-zinc-100" : "text-zinc-500",
+                        )}
+                      >
+                        {item.title_vi}
+                      </span>
+                      {!hasContent && (
+                        <span className="text-[10px] font-semibold uppercase tracking-wide text-zinc-600">
+                          soon
+                        </span>
+                      )}
+                    </div>
+                  );
+                  return (
+                    <li key={item.id}>
+                      {hasContent ? (
+                        <Link href={learnPathForLesson(item.id)}>{row}</Link>
+                      ) : (
+                        row
+                      )}
+                    </li>
+                  );
+                })}
+              </ul>
+            </motion.section>
+          );
+        })}
+      </div>
     </div>
   );
 }
