@@ -1269,7 +1269,7 @@
 - **Mô tả:** `LessonPlayerV2` currently MCQ-heavy; support scramble (tap order) and cloze text for controlled exercises so lesson content is fully exercised.
 - **Done khi:** scramble/cloze usable in player; no console; lint+test.
 - **Started:** 2026-07-10 — autopilot (PHASE1: AGENTS/BACKLOG/PLAN + LessonPlayerV2 ControlledStage MCQ-only + schema scramble/cloze/words; PHASE2: PLAN; ready≥2 skip refill)
-- **Completed:** 2026-07-10 — scramble tap-order + cloze/correction text in ControlledStage; review cloze text; normalizeExerciseAnswer; lint0+199t; log 20260709T201700Z_TASK-185.log
+- **Completed:** 2026-07-10 — scramble tap-order + cloze/correction text in ControlledStage; review cloze text; normalizeExerciseAnswer; lint0+199t; log 20260709T201700Z_TASK-185.log; commit 6a141e2
 
 ### TASK-186 — Author l-a1-02 Thông tin cá nhân
 - **Status:** `ready`
@@ -1293,7 +1293,7 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
-| 2026-07-10 | TASK-185 | feat(v2): scramble tap-order + cloze input in LessonPlayerV2; review cloze; lint0+199t | done — (SHA pending) |
+| 2026-07-10 | TASK-185 | feat(v2): scramble tap-order + cloze input in LessonPlayerV2; review cloze; lint0+199t | done — 6a141e2 |
 | 2026-07-10 | TASK-184 | feat(v2): l-a0-08 survival chunks + P0 gate; P0 8/8; sequential a0-01..08; lint0+195t | done — ec7b0e5 |
 | 2026-07-10 | TASK-183 | feat(v2): l-a0-07 days of week + Today is…/What day is it?; 9 playable; sequential a0-01..07; lint0+195t | done — fc61593 |
 | 2026-07-10 | TASK-185 | auto-refill từ AGENT_ROADMAP.md | ready |
