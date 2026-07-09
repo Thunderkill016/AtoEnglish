@@ -1254,7 +1254,7 @@
 - **Mô tả:** Mon–Sun + Today is… What day is it?
 - **Done khi:** schema + registry + path.
 - **Started:** 2026-07-10 — autopilot (PHASE1: AGENTS/BACKLOG/PLAN/CONTENT§6–7 + V2 path + l-a0-06 gold; PHASE2: PLAN + in_p; ready after → refill if <2)
-- **Completed:** 2026-07-10 — l-a0-07.ts full LessonSpec (Mon–Sun + Today is… / What day is it?); registry; path a0-01..07 sequential; lint0+195t; log 20260709T200103Z_TASK-183.log; commit pending SHA; push via git-push.sh main
+- **Completed:** 2026-07-10 — l-a0-07.ts full LessonSpec (Mon–Sun + Today is… / What day is it?); registry; path a0-01..07 sequential; lint0+195t; log 20260709T200103Z_TASK-183.log; commit fc61593; push via git-push.sh main
 
 ### TASK-184 — Author l-a0-08 Cụm sinh tồn + P0 gate mini-review
 - **Status:** `ready`
@@ -1291,7 +1291,7 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
-| 2026-07-10 | TASK-183 | feat(v2): l-a0-07 days of week + Today is…/What day is it?; 9 playable; sequential a0-01..07; lint0+195t | done — (SHA pending) |
+| 2026-07-10 | TASK-183 | feat(v2): l-a0-07 days of week + Today is…/What day is it?; 9 playable; sequential a0-01..07; lint0+195t | done — fc61593 |
 | 2026-07-10 | TASK-185 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-10 | TASK-186 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-10 | TASK-187 | auto-refill từ AGENT_ROADMAP.md | ready |
