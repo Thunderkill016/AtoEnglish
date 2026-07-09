@@ -2,12 +2,16 @@ import type { LessonSpec } from "@/lib/v2/lesson-spec";
 import { safeParseLessonSpec } from "@/lib/v2/lesson-spec";
 import { CORE_PATH_PLAN } from "@/lib/v2/path";
 import { lessonA001 } from "@/lib/v2/lessons/l-a0-01";
+import { lessonA002 } from "@/lib/v2/lessons/l-a0-02";
+import { lessonA003 } from "@/lib/v2/lessons/l-a0-03";
 import { lessonA101 } from "@/lib/v2/lessons/l-a1-01";
 import { lessonB101 } from "@/lib/v2/lessons/l-b1-01";
 
 /** Registry of authored v2 lessons (grows over time). */
 const LESSON_MODULES: Record<string, LessonSpec> = {
   "l-a0-01": lessonA001,
+  "l-a0-02": lessonA002,
+  "l-a0-03": lessonA003,
   "l-a1-01": lessonA101,
   "l-b1-01": lessonB101,
 };

@@ -14,13 +14,54 @@
 
 - Format giống backlog: `### TASK-NNN — Title` + Mô tả + Done khi
 - Chỉ thêm số TASK **lớn hơn** mọi TASK đã có trong backlog
-- **Ưu tiên (2026-07-01+):** Vibrant pre-minimal UI + seamless guest/self-study + world-class FREE speaking coach (VN L1, shadowing, roleplay job-focused) + motivation + lesson quality per blueprint. **Deprecate V2 minimal tasks** — user rejected minimal design; focus on best-in-world realistic vibrant self-study for Vietnamese adults (Babbel-like convos + strong free speaking + low friction + career).
+- **Ưu tiên (2026-07-10+):** **V2 Content Factory** — sequential `l-a0-*` → A1→B1 LessonSpec lessons (B1 Independent User). Then player gates, speaking coach, guest flow. **No empty maintenance sweeps** when content tasks exist. Deprecate minimal-UI pool.
 
 ---
 
 ## Pool — V2 Minimal Redesign (DEPRECATED — user rejected minimal; see current vibrant rollback state)
 
 > Archived. Do NOT pick these. Old metric focused on chrome reduction. Current focus: vibrant glassmorphism/gradients full experience + guest/self-study + free world-class speaking.
+
+## Pool — V2 Content Factory + B1 Path (2026-07-10+ PRIORITY)
+
+> **Product North Star:** CEFR B1 Independent User.  
+> **Stop empty maintenance sweeps** when ready work is content/player.  
+> Target: sequential A0→B1 authored lessons under `src/lib/v2/lessons/`.  
+> Done bar each lesson: Zod LessonSpec, L1 notes by band, spiral from prior lesson, registered in `lessons/index.ts`, tests pass.
+
+### TASK-180 — Author l-a0-04 Tên & quốc tịch
+- **Mô tả:** LessonSpec full 8 stages for path title «Tên & quốc tịch». Lexis: name, from, country, Vietnam, city… Grammar: I'm from… / Where are you from?. Spiral from a0-01..03.
+- **Done khi:** file `l-a0-04.ts` + registry; `lesson-spec-v2` pass; next-playable after a0-03 = a0-04.
+
+### TASK-181 — Author l-a0-05 Gia đình cơ bản
+- **Mô tả:** Family words mother/father/sister/brother/family; This is my… Spiral numbers/greetings.
+- **Done khi:** schema + registry + sequential path test.
+
+### TASK-182 — Author l-a0-06 Thời gian trong ngày
+- **Mô tả:** morning/afternoon/evening/night + Good morning… Clock phrases basic (o'clock if fits A0).
+- **Done khi:** schema + registry + path.
+
+### TASK-183 — Author l-a0-07 Ngày trong tuần
+- **Mô tả:** Mon–Sun + Today is… What day is it?
+- **Done khi:** schema + registry + path.
+
+### TASK-184 — Author l-a0-08 Cụm sinh tồn + P0 gate mini-review
+- **Mô tả:** Survival chunks: Excuse me, I don't understand, Can you help me?, Sorry, Thank you. Spiral full P0. Marks end of A0 block.
+- **Done khi:** P0 8/8 authored playable; Home continue walks a0-01→08.
+
+### TASK-185 — Player v2: controlled scramble + cloze input
+- **Mô tả:** `LessonPlayerV2` currently MCQ-heavy; support scramble (tap order) and cloze text for controlled exercises so lesson content is fully exercised.
+- **Done khi:** scramble/cloze usable in player; no console; lint+test.
+
+### TASK-186 — Author l-a1-02 Thông tin cá nhân
+- **Mô tả:** After P0 complete, extend A1: age/job/phone/email survival with L1 100%.
+- **Done khi:** schema + registry.
+
+### TASK-187 — V2 progress: soft quiz floor before complete
+- **Mô tả:** Complete rule docs: task attempt + quiz floor. Enforce soft floor (e.g. ≥50% quiz or re-try prompt) in player before markLessonComplete.
+- **Done khi:** cannot one-click complete review with 0 answers; copy VI clear.
+
+---
 
 ## Pool — Best-in-World Self-Study for Vietnamese (2026-07+)
 

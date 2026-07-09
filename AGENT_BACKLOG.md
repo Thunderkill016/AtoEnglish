@@ -1212,17 +1212,31 @@
 - **Started:** 2026-07-07 — autopilot (PHASE1: read AGENTS.md (ALWAYS), AGENT_BACKLOG/PLAN/ROADMAP, CONTENT_STYLE.md §6–7 + grep TASK-174 + maintenance sweeps + logs/agent/* + BACKLOG/PLAN; search_memory("TASK-174 maintenance sweep") via logs/grep (prior tool_error on read); confirmed 3 ready (174-176) >=2; PHASE2: PLAN update + BACKLOG in_p + check/run refill per query instr)
 - **Completed:** 2026-07-07 — gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed; log 20260707T151901Z_TASK-174.log + BACKLOG/PLAN/nhật ký synced; no src edit; commit + push via git-push.sh main; autonomous (PHASE3)
 
-### TASK-175 — Autopilot maintenance sweep #175
+### TASK-178 — Content factory: l-a0-02 + l-a0-03
+- **Status:** `done`
+- **Mô tả:** Author sequential A0 lessons numbers/price + simple greetings; wire registry; sequential next-playable tests.
+- **Done khi:** 5 playable lessons; path a0-01→02→03; schema+tests pass
+- **Completed:** 2026-07-10 — user mandate product quality (break maintenance-only loop)
+
+### TASK-180 — Author l-a0-04 Tên & quốc tịch
 - **Status:** `ready`
-- **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
-- **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
-- **Started:** auto-refill
+- **Mô tả:** LessonSpec full stages; I'm from / Where are you from?; spiral a0-01..03.
+- **Done khi:** l-a0-04.ts + registry + tests
+
+### TASK-181 — Author l-a0-05 Gia đình cơ bản
+- **Status:** `ready`
+- **Mô tả:** Family lexis + This is my…; sequential after a0-04.
+- **Done khi:** schema + registry + path
+
+### TASK-175 — Autopilot maintenance sweep #175
+- **Status:** `cancelled`
+- **Mô tả:** Superseded by content factory (empty sweep loop).
+- **Done khi:** n/a
 
 ### TASK-176 — Autopilot maintenance sweep #176
-- **Status:** `ready`
-- **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
-- **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
-- **Started:** auto-refill
+- **Status:** `cancelled`
+- **Mô tả:** Superseded by content factory (empty sweep loop).
+- **Done khi:** n/a
 
 
 ---
@@ -1234,6 +1248,7 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
+| 2026-07-10 | TASK-178 | feat(v2): l-a0-02 numbers + l-a0-03 greetings; 5 playable; roadmap content factory TASK-180+; cancel empty sweeps 175/176 | pending |
 | 2026-07-07 | TASK-172 | gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed; log 20260707T150500Z_TASK-172.log + BACKLOG/PLAN/nhật ký synced; no src edit; commit + push via git-push.sh main; autonomous | done — (pending SHA) |
 | 2026-07-07 | TASK-173 | gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed; log 20260707T150508Z_TASK-173.log + BACKLOG/PLAN/nhật ký synced; no src edit; commit + push via git-push.sh main; autonomous | done — 9c1bcd0 |
 | 2026-07-07 | TASK-174 | gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed; log 20260707T151901Z_TASK-174.log + BACKLOG/PLAN/nhật ký synced; no src edit; commit + push via git-push.sh main; autonomous | done — (pending SHA) |

@@ -1,6 +1,10 @@
 import { describe, it, expect } from "vitest";
 import { safeParseLessonSpec, LESSON_STAGES } from "@/lib/v2/lesson-spec";
-import { getAllAuthoredLessons, getLessonV2 } from "@/lib/v2/lessons";
+import {
+  getAllAuthoredLessons,
+  getLessonV2,
+  getNextPlayableLessonId,
+} from "@/lib/v2/lessons";
 import { CORE_PATH_PLAN, CORE_END_LESSON_ID, CORE_PATH_TOTAL } from "@/lib/v2/path";
 import { isCurriculumV2 } from "@/lib/v2/flag";
 import { lessonA101 } from "@/lib/v2/lessons/l-a1-01";
@@ -21,18 +25,27 @@ describe("LessonSpec v2", () => {
     }
   });
 
-  it("registry has three pilots", () => {
+  it("registry has A0 spine pilots + A1/B1 gold", () => {
     expect(getLessonV2("l-a0-01")?.cefr).toBe("A0");
+    expect(getLessonV2("l-a0-02")?.title_vi).toContain("Số");
+    expect(getLessonV2("l-a0-03")?.title_vi).toContain("Chào");
     expect(getLessonV2("l-a1-01")?.title_vi).toContain("Chào hỏi");
     expect(getLessonV2("l-b1-01")?.cefr).toBe("B1");
-    expect(getAllAuthoredLessons()).toHaveLength(3);
+    expect(getAllAuthoredLessons().length).toBeGreaterThanOrEqual(5);
   });
 
   it("all authored lessons pass schema", () => {
     for (const lesson of getAllAuthoredLessons()) {
       const r = safeParseLessonSpec(lesson);
-      expect(r.success).toBe(true);
+      expect(r.success, r.success ? "" : JSON.stringify(r.error?.issues)).toBe(
+        true,
+      );
     }
+  });
+
+  it("A0 path continues sequentially after l-a0-01", () => {
+    expect(getNextPlayableLessonId(["l-a0-01"])).toBe("l-a0-02");
+    expect(getNextPlayableLessonId(["l-a0-01", "l-a0-02"])).toBe("l-a0-03");
   });
 
   it("rejects bad id", () => {
