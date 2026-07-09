@@ -32,7 +32,7 @@
 
 **Started:** 2026-07-10 — autopilot
 
-**Completed TASK-220**: gates clean (tsc0+lint0+206t+cs50/50+audit50/50) no fix needed; log 20260709T233911Z_TASK-220.log; BACKLOG/PLAN/nhật ký synced; no src edit; commit pending + push via git-push.sh main; autonomous.
+**Completed TASK-220**: gates clean (tsc0+lint0+206t+cs50/50+audit50/50) no fix needed; log 20260709T233911Z_TASK-220.log; BACKLOG/PLAN/nhật ký synced; no src edit; commit bb75d83 + push via git-push.sh main; autonomous.
 
 ### TASK-219 — Autopilot maintenance sweep #219 (prior)
 **Completed TASK-219**: gates clean (tsc0+lint0+206t+cs50/50+audit50/50) no fix needed; log 20260709T233233Z_TASK-219.log; BACKLOG/PLAN/nhật ký synced; no src edit; commit 30f18c6 + push via git-push.sh main; autonomous.
