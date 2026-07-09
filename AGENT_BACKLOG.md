@@ -1510,7 +1510,7 @@
 - **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
 - **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
 - **Started:** 2026-07-10 — autopilot (PHASE1: AGENTS/BACKLOG/PLAN/CONTENT §6–7; PHASE2: PLAN; PHASE3: gates only)
-- **Completed:** 2026-07-10 — gates clean (tsc0+lint0+206t+cs50/50+audit50/50) no fix; log 20260709T232730Z_TASK-218.log; PLAN/BACKLOG/nhật ký sync; no src edit; commit pending + push git-push.sh main; autonomous
+- **Completed:** 2026-07-10 — gates clean (tsc0+lint0+206t+cs50/50+audit50/50) no fix; log 20260709T232730Z_TASK-218.log; PLAN/BACKLOG/nhật ký sync; no src edit; commit 46ca1e0 + push git-push.sh main; autonomous
 
 ### TASK-219 — Autopilot maintenance sweep #219
 - **Status:** `ready`
@@ -1534,7 +1534,7 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
-| 2026-07-10 | TASK-218 | gates clean (tsc0+lint0+206t+cs50/50+audit50/50) no fix; log 20260709T232730Z_TASK-218.log; PLAN/BACKLOG sync; no src | done — pending |
+| 2026-07-10 | TASK-218 | gates clean (tsc0+lint0+206t+cs50/50+audit50/50) no fix; log 20260709T232730Z_TASK-218.log; PLAN/BACKLOG sync; no src | done — 46ca1e0 |
 | 2026-07-10 | TASK-217 | gates clean (tsc0+lint0+206t+cs50/50+audit50/50) no fix; log 20260709T232230Z_TASK-217.log; PLAN/BACKLOG sync; no src | done — 85be14b |
 | 2026-07-10 | TASK-216 | gates clean (tsc0+lint0+206t+cs50/50+audit50/50) no fix; log 20260709T231530Z_TASK-216.log; PLAN/BACKLOG sync; no src | done — 170e64e |
 | 2026-07-10 | TASK-218 | auto-refill từ AGENT_ROADMAP.md | ready |
