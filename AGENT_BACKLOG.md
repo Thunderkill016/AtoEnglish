@@ -1225,9 +1225,11 @@
 - **Completed:** 2026-07-10 — autopilot session (user chose mode 2)
 
 ### TASK-181 — Author l-a0-05 Gia đình cơ bản
-- **Status:** `ready`
+- **Status:** `done`
 - **Mô tả:** Family lexis + This is my…; sequential after a0-04.
 - **Done khi:** schema + registry + path
+- **Started:** 2026-07-10 — autopilot (PHASE1: AGENTS/BACKLOG/PLAN/CONTENT§6–7 + V2 path + l-a0-04 gold pattern; PHASE2: PLAN + in_p; ready 182–184 ≥2 skip refill)
+- **Completed:** 2026-07-10 — l-a0-05.ts full LessonSpec (family + This is my…); registry; path a0-01..05 sequential; lint0+195t; log 20260709T194758Z_TASK-181.log; push via git-push.sh main
 
 ### TASK-175 — Autopilot maintenance sweep #175
 - **Status:** `cancelled`
@@ -1268,6 +1270,7 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
+| 2026-07-10 | TASK-181 | feat(v2): l-a0-05 family + This is my…; 7 playable; sequential a0-01..05; lint0+195t | pending SHA |
 | 2026-07-10 | TASK-182 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-10 | TASK-183 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-10 | TASK-184 | auto-refill từ AGENT_ROADMAP.md | ready |

@@ -5,6 +5,7 @@ import { lessonA001 } from "@/lib/v2/lessons/l-a0-01";
 import { lessonA002 } from "@/lib/v2/lessons/l-a0-02";
 import { lessonA003 } from "@/lib/v2/lessons/l-a0-03";
 import { lessonA004 } from "@/lib/v2/lessons/l-a0-04";
+import { lessonA005 } from "@/lib/v2/lessons/l-a0-05";
 import { lessonA101 } from "@/lib/v2/lessons/l-a1-01";
 import { lessonB101 } from "@/lib/v2/lessons/l-b1-01";
 
@@ -14,6 +15,7 @@ const LESSON_MODULES: Record<string, LessonSpec> = {
   "l-a0-02": lessonA002,
   "l-a0-03": lessonA003,
   "l-a0-04": lessonA004,
+  "l-a0-05": lessonA005,
   "l-a1-01": lessonA101,
   "l-b1-01": lessonB101,
 };

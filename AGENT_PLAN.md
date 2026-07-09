@@ -6,39 +6,39 @@
 
 | Field | Value |
 |-------|-------|
-| Started | 2026-07-07 |
-| Focus | TASK-174 — Autopilot maintenance sweep #174: run lint+test + fix first failure if any (minimal) + sync PLAN/BACKLOG/nhật ký + log. No new features. |
+| Started | 2026-07-10 |
+| Focus | TASK-181 — Author l-a0-05 Gia đình cơ bản (Family lexis + This is my…; sequential after a0-04) |
 | Owner | Autopilot (no human) |
 
-### TASK-174 — Autopilot maintenance sweep #174
-**Mục tiêu**: Chạy `npm run lint && npm run test` (cùng npx tsc --noEmit + content gates nếu liên quan); fix failure đầu tiên (nếu có, minimal patch); sync AGENT_PLAN nhật ký + BACKLOG status + Nhật ký + log file. Không feature mới, không thay đổi logic app, chỉ gates + doc. **Done khi:** gates pass (0 lint, all tests); 0 or 1 small fix if first failure; PLAN/BACKLOG/nhật ký updated; 1 commit nếu change or doc sync; pushed via git-push.sh main.
+### TASK-181 — Author l-a0-05 Gia đình cơ bản
+**Mục tiêu**: Author full LessonSpec v2 for `l-a0-05` (P0/A0 «Gia đình cơ bản»): family lexis (mother/father/sister/brother/family/parents/my/photo), grammar spine **This is my… / Who is this?**, controlled + dialogue + listen + fluency + speak task + review + spiral from a0-01..04. Register in `lessons/index.ts`; update `lesson-spec-v2` sequential path test; docs authored list. **Done khi:** Zod schema pass; registry has l-a0-05; next-playable after a0-01..04 = a0-05; lint+test pass; commit + `bash scripts/git-push.sh main`.
 
 **Bước thực hiện**:
-1. PHASE1 research (done): read AGENTS.md (ALWAYS), AGENT_BACKLOG/PLAN/ROADMAP, CONTENT_STYLE.md §6–7 (context), grep TASK-174 + maintenance sweeps + logs/agent/* + BACKLOG/PLAN; search_memory("TASK-174 maintenance sweep") via logs/grep (prior tool_errors on read_file for 174); confirm ready count (3 ready 174-176) ≥2 pre in_p; files to touch: AGENT_BACKLOG.md, AGENT_PLAN.md, logs/agent/* (unless fix 1st failure in src). Check git status for stray before src touch.
-2. Update BACKLOG: TASK-174 `in_progress` (done).
-3. Update AGENT_PLAN.md với mục tiêu + bước + rủi ro cho TASK-174 (this section) + update "Phiên hiện tại" focus (done).
-4. Backlog sau in_p: check count; 2 ready >=2, skip `bash scripts/agent-refill-backlog.sh` (read AGENT_ROADMAP.md) — per rules; but ran per explicit PHASE2 instr in query (skip logged); KHÔNG hỏi user.
-5. PHASE3 triển khai: 
-   - rm -f tsconfig.tsbuildinfo (stale guard common in sweeps).
-   - Chạy `npx tsc --noEmit` (zero errors gate).
-   - Chạy `npm run lint` (zero warnings).
-   - Chạy `npm run test` (all pass) — note first failure nếu có, fix minimal duy nhất.
-   - Per sweep pattern: `npm run test:content-standard && bash scripts/audit-lesson-content.sh` (50/50 expected).
-   - Capture outputs, fix only the very first error encountered; no scope creep. No new feature. Self debug.
-6. Sau gates: viết log `logs/agent/20260707T...Z_TASK-174.log` (tóm tắt gates + fix or clean); update BACKLOG (in_progress→done + Nhật ký + SHA); sync PLAN log table + Completed.
-7. git pull --rebase; git add AGENT_BACKLOG.md AGENT_PLAN.md logs/agent/* (và src ONLY if the 1st-fail fix); commit "chore(maintenance): autopilot sweep #174 — lint+test gates + PLAN/BACKLOG sync (TASK-174)"; `bash scripts/git-push.sh main`.
+1. PHASE1 research (done): AGENTS.md, AGENT_BACKLOG/PLAN/ROADMAP, CONTENT_STYLE §6–7, docs/V2_PRODUCT, lesson-spec.ts, l-a0-04 gold pattern, path.ts (l-a0-05 already in CORE_PATH_PLAN order 5), index + tests.
+2. BACKLOG TASK-181 → `in_progress` (done).
+3. Update AGENT_PLAN this section (done).
+4. Ready count after in_p: TASK-182/183/184 still ready ≥2 → skip `bash scripts/agent-refill-backlog.sh`.
+5. PHASE3 implement:
+   - Create `src/lib/v2/lessons/l-a0-05.ts` (full 8 stages, ≥50% L1 on A0 lexis).
+   - Wire registry `index.ts`.
+   - Extend `lesson-spec-v2.test.ts` (title + sequential next = l-a0-05; authored ≥7).
+   - Touch `docs/V2_PRODUCT.md` authored line.
+   - `npm run lint && npm run test` (self-debug if fail).
+6. Log `logs/agent/…_TASK-181.log`; BACKLOG done + nhật ký + SHA; PLAN completed.
+7. commit `feat(v2): l-a0-05 family lexis + This is my… (TASK-181)`; `bash scripts/git-push.sh main`.
+
 **Rủi ro**:
-- Lint/test fail on transient (tsbuildinfo, coverage artifact) → rm -f tsconfig.tsbuildinfo; rerun once; 2 fails → blocked + lý do.
-- First failure is real bug in core → minimal fix (e.g. type or test data), self-debug from error msg; if needs major or secret → blocked.
-- Git push needs token (GITLAB_TOKEN) or net → status blocked, do not force.
-- No new feature: strictly only fix first failure or doc-sync only.
-- Fail 2 lần liên tiếp → status `blocked` + ghi lý do vào BACKLOG/PLAN.
-- Prior tool read errors on this task; clean env, use smaller reads.
-**Done khi**: `npm run lint && npm run test` pass (or 1 minimal fix); tsc0; content gates nếu chạy 50/50; PLAN+BACKLOG+nhật ký synced; log file; commit+push via script if change; BACKLOG done; autonomous.
+- Zod fail (L1 ratio, string max, dialogue min lines) → fix content minimal; re-parse.
+- Sequential path wrong if registry order / CORE_PATH_PLAN hole → getNextPlayable uses plan order + authored presence.
+- Push needs GITLAB_TOKEN → blocked, no force.
+- Fail 2× → status blocked + reason.
 
-**Started:** 2026-07-07 — autopilot (PHASE1: read AGENTS/BACKLOG/PLAN/ROADMAP/CONTENT§6–7 + grep TASK-174 + sim search_memory + git stray check; PHASE2: PLAN update + BACKLOG in_p + run refill script (skipped))
+**Started:** 2026-07-10 — autopilot (PHASE1–2 done; PHASE3 content factory)
 
-**Completed TASK-174**: gates clean (tsc0+lint0+170t+cs50/50+audit50/50) no fix needed; log 20260707T151901Z_TASK-174.log + BACKLOG/PLAN/nhật ký synced; no src edit; commit + push via git-push.sh main; autonomous (PHASE3)
+**Completed TASK-181**: l-a0-05 authored (family lexis + This is my… / Who is this?); registry + tests sequential a0-04→05; docs V2 authored …05; lint0+195t; log 20260709T194758Z_TASK-181.log; commit + push via git-push.sh main; autonomous.
+
+### TASK-174 — Autopilot maintenance sweep #174 (prior)
+**Completed TASK-174**: gates clean; maintenance-only; superseded focus by content factory TASK-181.
 
 ### TASK-167 — Autopilot maintenance sweep #167
 **Mục tiêu**: Chạy `npm run lint && npm run test` (cùng npx tsc --noEmit + content gates nếu liên quan); fix failure đầu tiên (nếu có, minimal patch); sync AGENT_PLAN nhật ký + BACKLOG status + Nhật ký + log file. Không feature mới, không thay đổi logic app, chỉ gates + doc. **Done khi:** gates pass (0 lint, all tests); 0 or 1 small fix if first failure; PLAN/BACKLOG/nhật ký updated; 1 commit nếu change or doc sync; pushed via git-push.sh main.
