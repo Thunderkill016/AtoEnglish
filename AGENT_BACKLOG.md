@@ -1542,10 +1542,11 @@
 - **Completed:** 2026-07-10 — gates clean (tsc0+lint0+206t+cs50/50+audit50/50) no fix; log 20260709T234816Z_TASK-222.log; PLAN/BACKLOG/nhật ký sync; no src edit; commit a3021f1 + push git-push.sh main; autonomous
 
 ### TASK-223 — Autopilot maintenance sweep #223
-- **Status:** `ready`
+- **Status:** `done`
 - **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
 - **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
-- **Started:** auto-refill
+- **Started:** 2026-07-10 — autopilot (PHASE1: AGENTS/BACKLOG/PLAN/CONTENT §6–7; PHASE2: PLAN; PHASE3: gates only)
+- **Completed:** 2026-07-10 — gates clean (tsc0+lint0+206t+cs50/50+audit50/50) no fix; log 20260709T235414Z_TASK-223.log; PLAN/BACKLOG/nhật ký sync; no src edit; commit pending + push git-push.sh main; autonomous
 
 
 ### TASK-224 — Autopilot maintenance sweep #224
@@ -1576,6 +1577,7 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
+| 2026-07-10 | TASK-223 | gates clean (tsc0+lint0+206t+cs50/50+audit50/50) no fix; PLAN/BACKLOG sync; no src | done — pending |
 | 2026-07-10 | TASK-224 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-10 | TASK-225 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-10 | TASK-226 | auto-refill từ AGENT_ROADMAP.md | ready |
