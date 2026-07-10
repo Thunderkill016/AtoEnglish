@@ -63,7 +63,7 @@ npm run radar:plan     # radar + chèn task feature vào ROADMAP nếu thiếu /
 ```
 
 Daemon (mặc định): mỗi `RADAR_EVERY=3` cycle chạy radar + plan-from-radar, rồi refill/pick.  
-Chi tiết: [`docs/PRODUCT_LOOP.md`](./docs/PRODUCT_LOOP.md).
+Chi tiết: [`docs/product/PRODUCT_LOOP.md`](./docs/product/PRODUCT_LOOP.md).
 
 ## Quản lý backlog (tự động)
 

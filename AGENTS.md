@@ -2,8 +2,9 @@
 
 > Vietnamese-first English learning web app.
 > **Product North Star (2026-07-10):** core outcome = **CEFR B1 Independent User** (“dùng được” tiếng Anh độc lập).  
-> **Rebuild v2 (in progress):** full product + new LessonSpec path A0→B1 (`l-*` ids). Spec: `docs/V2_PRODUCT.md`. Code: `src/lib/v2/`. Flag: `NEXT_PUBLIC_CURRICULUM_V2`. Pilot: `/learn/v2/l-a1-01`. v1 curriculum frozen — see `archive/curriculum-v1/README.md`.  
-> Pedagogy: `LESSON_SYSTEM_FOUNDATION.md` · `CURRICULUM_PROGRAM.md`.
+> **Rebuild v2 (in progress):** full product + new LessonSpec path A0→B1 (`l-*` ids). Spec: [`docs/product/V2_PRODUCT.md`](./docs/product/V2_PRODUCT.md). Code: `src/lib/v2/`. Flag: `NEXT_PUBLIC_CURRICULUM_V2`. Pilot: `/learn/v2/l-a1-01`. v1 frozen: `archive/curriculum-v1/README.md`.  
+> Pedagogy: [`docs/pedagogy/LESSON_SYSTEM_FOUNDATION.md`](./docs/pedagogy/LESSON_SYSTEM_FOUNDATION.md) · [`docs/pedagogy/CURRICULUM_PROGRAM.md`](./docs/pedagogy/CURRICULUM_PROGRAM.md) · style [`docs/pedagogy/CONTENT_STYLE.md`](./docs/pedagogy/CONTENT_STYLE.md) §6–7.  
+> UI: [`docs/design/UI_SYSTEM.md`](./docs/design/UI_SYSTEM.md) (Ato Surface). **Folder map:** [`docs/STRUCTURE.md`](./docs/STRUCTURE.md) · docs index: [`docs/README.md`](./docs/README.md).  
 > **Stack**: Next.js 16 · TypeScript 6 · TailwindCSS v4 · Supabase (Auth + PostgreSQL) · Framer Motion · ts-fsrs · Vercel
 
 ---
@@ -44,35 +45,26 @@ npm run db:types      # regenerate src/types/supabase.ts from live DB
 
 ## 🏗️ Architecture
 
+> Full map: [`docs/STRUCTURE.md`](./docs/STRUCTURE.md). Docs live under `docs/{product,pedagogy,design,specs}/` — root only keeps agent queue + stubs.
+
 ```
+docs/                            # product · pedagogy · design · specs · archive
 src/
 ├── app/
-│   ├── page.tsx                 # Landing (Server Component)
-│   ├── login/page.tsx           # Auth + 5-step onboarding quiz
-│   ├── auth/callback/           # OAuth redirect handler
-│   └── (main)/                  # Protected routes (proxy.ts guard)
-│       ├── dashboard/
-│       ├── learn/[unitSlug]/
-│       ├── flashcards/
-│       ├── speaking/
-│       ├── progress/
-│       └── roadmap/
+│   ├── page.tsx                 # Landing
+│   ├── login/ · auth/callback/
+│   └── (main)/                  # shell: home · path · learn · learn/v2 · speaking · …
 ├── components/
-│   ├── landing/                 # Hero, Problem, HowItWorks, Outcomes, FAQ
-│   ├── layout/                  # Header, BottomNav, MobileNav
-│   └── ui/                      # Button (@base-ui), Spotlight, Logo
-├── features/flashcards/         # FSRS scheduling logic (ts-fsrs v5)
+│   ├── design-system/           # Ato Surface (Screen, Surface, AppButton, …)
+│   ├── layout/ · learn/ · landing/ · ui/
+├── features/                    # flashcards, srs, streak, …
 ├── lib/
-│   ├── supabase/                # client.ts · server.ts · middleware.ts · session.ts
-│   ├── security/                # rate-limit.ts · validation.ts (Zod)
-│   ├── srs/fsrs.ts              # FSRS wrapper
-│   ├── queries/user.ts          # React.cache() deduped RSC queries
-│   ├── constants/               # units.ts · navigation.ts · vocabulary.ts
-│   └── data/units/              # unit1–5 lesson content
-├── types/
-│   ├── supabase.ts              # AUTO-GENERATED — never edit manually
-│   └── index.ts                 # SpeechRecognition + shared types
-└── proxy.ts                     # Next.js 16 middleware (auth guard + rate limit)
+│   ├── v2/                      # LessonSpec, path, lessons/l-*, progress, flag
+│   ├── data/units/              # v1 curriculum (frozen)
+│   ├── lessons/                 # blueprint, content-standard, flow
+│   ├── supabase/ · srs/ · security/ · ui/
+├── __tests__/ · types/
+└── proxy.ts                     # Next.js 16 auth + rate limit
 ```
 
 **Auth flow**: Landing → `/login?mode=signup` → 5-step onboarding quiz → Supabase Auth → first unit `?mini=1` (returning users → `/dashboard`)
@@ -187,17 +179,19 @@ const Comp = dynamic(() => import('./Comp'), { ssr: false });
 ## 📘 Bài học — Blueprint (nội dung = cách học)
 
 > **SSOT tổng hợp (đọc trước khi đổi pedagogy/content):**  
-> [`LESSON_SYSTEM_FOUNDATION.md`](./LESSON_SYSTEM_FOUNDATION.md) — khoa học học + IPOR + gates + quy trình phát triển **không rebuild**.
+> [`docs/pedagogy/LESSON_SYSTEM_FOUNDATION.md`](./docs/pedagogy/LESSON_SYSTEM_FOUNDATION.md) — khoa học học + IPOR + gates.
 
 Mọi unit phải dùng **cùng một khung** cho cách viết nội dung và cách người học trải nghiệm:
 
 | File | Vai trò |
 |------|---------|
-| `LESSON_SYSTEM_FOUNDATION.md` | Nền tảng world-class (SLA + map code) |
+| `docs/pedagogy/LESSON_SYSTEM_FOUNDATION.md` | Nền tảng world-class (SLA + map code) |
+| `docs/pedagogy/CONTENT_STYLE.md` | Style + §6–7 blueprint / SDL |
 | `src/lib/lessons/lesson-blueprint.ts` | Map field → section → IPOR phase |
-| `src/lib/data/units/unit1.ts` | **Mẫu vàng** — comment block + cấu trúc field |
-| `src/lib/lessons/learning-flow.ts` | Thứ tự 10 section trong app |
-| `src/lib/lessons/content-standard.ts` | Chuẩn số lượng SDL (vocab, L1, quiz…) |
+| `src/lib/data/units/unit1.ts` | **Mẫu vàng** v1 — comment block + cấu trúc field |
+| `src/lib/v2/lessons/` | **v2** LessonSpec content (`l-*`) |
+| `src/lib/lessons/learning-flow.ts` | Thứ tự 10 section v1 |
+| `src/lib/lessons/content-standard.ts` | Chuẩn số lượng SDL |
 | `src/lib/lessons/lesson-center-reference.ts` | ESA/CELTA/CEFR/Nation/CLT VN |
 
 ```bash
@@ -206,7 +200,8 @@ npm run test:content-standard                # gate nội dung
 bash scripts/audit-lesson-content.sh         # audit toàn curriculum
 ```
 
-Khi sửa `unit*.ts`: đọc `CONTENT_STYLE.md` §6–7, bám `unit1.ts`, không đổi thứ tự học trong `learning-flow.ts` trừ khi có task riêng.
+Khi sửa `unit*.ts`: đọc `docs/pedagogy/CONTENT_STYLE.md` §6–7, bám `unit1.ts`, không đổi thứ tự học trong `learning-flow.ts` trừ khi có task riêng.  
+Khi sửa v2: `docs/product/V2_PRODUCT.md` + Zod `src/lib/v2/lesson-spec.ts`.
 
 ---
 

@@ -134,3 +134,17 @@ CI: **local** `ci-local.sh` + **GitLab** `.gitlab-ci.yml` + **Vercel** build
 ## 📄 License
 
 Private project — © 2026 AtoEnglish
+
+## 📁 Project layout
+
+Long-form docs live under **`docs/`** (see [`docs/README.md`](./docs/README.md) and [`docs/STRUCTURE.md`](./docs/STRUCTURE.md)).
+
+| Area | Path |
+|------|------|
+| Product v2 | `docs/product/` |
+| Pedagogy / content style | `docs/pedagogy/` |
+| UI (Ato Surface) | `docs/design/` |
+| Agent queue | root `AGENT_*.md` + `AGENTS.md` |
+| App code | `src/` · v2 lessons `src/lib/v2/` |
+
+Root `CONTENT_STYLE.md` etc. are **stubs** pointing at `docs/…` (compat for old prompts).

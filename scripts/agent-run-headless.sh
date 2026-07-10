@@ -67,7 +67,7 @@ CHUẨN BÀI HỌC (bắt buộc khi sửa unit*.ts):
 prompt = f"""Bạn là autopilot agent 24/7 cho AtoEnglish tại {root}. User KHÔNG có mặt — tuyệt đối không hỏi, tự quyết.
 
 PHASE 1 — NGHIÊN CỨU (5 phút):
-- Đọc AGENTS.md, AGENT_BACKLOG.md, AGENT_PLAN.md, CONTENT_STYLE.md §6–7
+- Đọc AGENTS.md, AGENT_BACKLOG.md, AGENT_PLAN.md, docs/pedagogy/CONTENT_STYLE.md §6–7
 - Grep codebase liên quan task; xác định file cần sửa
 {content_rules}{ui_rules}
 PHASE 2 — LẬP KẾ HOẠCH:

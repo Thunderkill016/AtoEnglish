@@ -1812,7 +1812,7 @@
 
 ### TASK-260 — UI Ato Surface: tokens + design-system primitives
 - **Status:** `done`
-- **Mô tả:** Foundation UI redesign (no MUI): CSS `--ato-*` tokens, `src/lib/ui/ato-surface.ts`, Surface/AppButton/PageHeader/Chip, Screen `ato`+`ambient`, docs/UI_SYSTEM.md + unit tests.
+- **Mô tả:** Foundation UI redesign (no MUI): CSS `--ato-*` tokens, `src/lib/ui/ato-surface.ts`, Surface/AppButton/PageHeader/Chip, Screen `ato`+`ambient`, docs/design/UI_SYSTEM.md + unit tests.
 - **Done khi:** primitives export; docs; lint+test; no heavy UI deps.
 - **Started:** 2026-07-10 — user-approved plan (Tailwind elevate; shell/home/learn/speak)
 - **Completed:** 2026-07-10 — ato-surface maps + Surface/AppButton/PageHeader/Chip + Screen ato/ambient + UI_SYSTEM.md + 4 tests; lint0+210t; commit cac611a
@@ -1850,7 +1850,7 @@
 - **Mô tả:** Doc residual screens; no big-bang landing rewrite.
 - **Done khi:** ROADMAP lists residual; UI_SYSTEM updated.
 - **Started:** 2026-07-10 — autopilot (PHASE1: AGENTS/BACKLOG/PLAN/CONTENT§6–7 + residual surfaces; PHASE2 PLAN; ready 266–268 ≥2 skip refill; PHASE3 docs only)
-- **Completed:** 2026-07-10 — residual inventory in docs/UI_SYSTEM.md + AGENT_ROADMAP.md; no landing rewrite; Progress/Me/Landing deferred; lint0+213t; log 20260710T031519Z_TASK-265.log
+- **Completed:** 2026-07-10 — residual inventory in docs/design/UI_SYSTEM.md + AGENT_ROADMAP.md; no landing rewrite; Progress/Me/Landing deferred; lint0+213t; log 20260710T031519Z_TASK-265.log
 
 
 ### TASK-269 — CI/local: run product-radar after deploy gate
@@ -1891,6 +1891,7 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
+| 2026-07-10 | DOCS-STRUCT | docs taxonomy product/pedagogy/design/specs + stubs + STRUCTURE.md | done — 736c461 |
 | 2026-07-10 | TASK-267 | feat(v2): l-a1-04 Thói quen hàng ngày; present simple; L1 100%; sequential after a1-03 | done — 9f6d315 |
 | 2026-07-10 | TASK-266 | feat(v2): l-a1-03 Gia đình & bạn bè; L1 100%; sequential after a1-02 | done — 18690f4 |
 | 2026-07-10 | TASK-265 | docs(ui): residual Progress/Me/Landing inventory; no landing rewrite | done — 9852077 |

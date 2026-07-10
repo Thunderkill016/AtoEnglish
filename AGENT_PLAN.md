@@ -55,7 +55,7 @@
    - Author `src/lib/v2/lessons/l-a1-04.ts` (8 stages, L1 100%, spiral a0-06 + light a1-01/03).
    - Register in `lessons/index.ts`.
    - Update `lesson-spec-v2.test.ts` (title + sequential after a1-03).
-   - Optional: `docs/V2_PRODUCT.md` authored list.
+   - Optional: `docs/product/V2_PRODUCT.md` authored list.
 4. `npm run lint && npm run test`.
 5. Log `logs/agent/*_TASK-267.log`; BACKLOG done + Nhật ký + SHA; PLAN completed; commit + `bash scripts/git-push.sh main`.
 

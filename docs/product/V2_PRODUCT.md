@@ -113,6 +113,6 @@ isCurriculumV2() // env NEXT_PUBLIC_CURRICULUM_V2 === "1" | true
 
 ## 9. Related docs
 
-- `LESSON_SYSTEM_FOUNDATION.md` — pedagogy constitution (still valid)  
-- `CURRICULUM_PROGRAM.md` — phase/can-do design (adapt to new ids)  
+- `docs/pedagogy/LESSON_SYSTEM_FOUNDATION.md` — pedagogy constitution (still valid)  
+- `docs/pedagogy/CURRICULUM_PROGRAM.md` — phase/can-do design (adapt to new ids)  
 - `archive/curriculum-v1/README.md` — freeze policy for old units  

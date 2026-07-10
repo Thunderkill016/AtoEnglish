@@ -34,10 +34,10 @@
 ## Pool — Ato Surface UI redesign (2026-07-10+ user-approved)
 
 > Keep Tailwind/Base UI. **No MUI/antd/StyleX.** Shell → Home → Learn chrome → Speak.  
-> Spec: `docs/UI_SYSTEM.md`. Plan: Ato Surface glass emerald/teal.
+> Spec: `docs/design/UI_SYSTEM.md`. Plan: Ato Surface glass emerald/teal.
 
 ### TASK-260 — UI Ato Surface: tokens + design-system primitives
-- **Mô tả:** CSS tokens + Surface/AppButton/PageHeader/Chip + Screen ato mode + docs/UI_SYSTEM.md + unit tests.
+- **Mô tả:** CSS tokens + Surface/AppButton/PageHeader/Chip + Screen ato mode + docs/design/UI_SYSTEM.md + unit tests.
 - **Done khi:** exports + docs + lint/test; no heavy UI deps.
 
 ### TASK-261 — UI shell: Header + BottomNav Ato Surface
@@ -63,7 +63,7 @@
 ### Residual inventory (post TASK-265 — docs, not auto-pick rewrites)
 
 > Core Ato Surface path **done**: 260 tokens → 261 shell → 262 Home → 263 Learn/player → 264 Speak → 265 residual **documented**.  
-> Spec detail: `docs/UI_SYSTEM.md` § Residual screens.  
+> Spec detail: `docs/design/UI_SYSTEM.md` § Residual screens.  
 > **CẤM** auto-generate “restyle all residual” or landing big-bang. Optional one-route polish only if product asks.
 
 | Residual | Path | Priority | Guidance |
