@@ -60,7 +60,7 @@ import { Screen, Surface, AppButton, PageHeader, Chip } from "@/components/desig
 | TASK-261 | Header + BottomNav Ato glass ✅ |
 | TASK-262 | Home pass — HomeClient on Screen/Surface/AppButton/PageHeader/Chip ✅ |
 | TASK-263 | Learn + LessonPlayerV2 chrome ✅ |
-| TASK-264 | Speaking hub |
+| TASK-264 | Speaking hub Ato Surface ✅ |
 | TASK-265 | Residual screens on roadmap |
 
 

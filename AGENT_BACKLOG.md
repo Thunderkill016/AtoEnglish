@@ -1839,10 +1839,11 @@
 - **Completed:** 2026-07-10 — LearnClient Screen/Surface/AppButton/PageHeader/Chip; v2 page chrome; LessonPlayerV2 Surface+AppButton nav/finish/retry/task; quiz floor/stage logic untouched (TASK-187); lint0+213t; log 20260710T031010Z_TASK-263.log
 
 ### TASK-264 — UI Speaking hub chrome
-- **Status:** `in_progress`
+- **Status:** `done`
 - **Mô tả:** SpeakingClient hub cards on Surface/ListRow language; guest history rows.
 - **Done khi:** hub matches Home/Learn; lint+test.
 - **Started:** 2026-07-10 — autopilot (user bật; product loop)
+- **Completed:** 2026-07-10 — SpeakingClient Ato Surface (Screen/Surface/AppButton/PageHeader/Chip); mode cards; guest local history; lint0+213t; commit 7ba15c6
 
 ### TASK-265 — UI residual roadmap (Progress/Me/Landing later)
 - **Status:** `ready`
@@ -1885,6 +1886,7 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
+| 2026-07-10 | TASK-264 | feat(ui): Speaking hub Ato Surface + guest history rows | done — 7ba15c6 |
 | 2026-07-10 | TASK-266 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-10 | TASK-267 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-10 | TASK-268 | auto-refill từ AGENT_ROADMAP.md | ready |
