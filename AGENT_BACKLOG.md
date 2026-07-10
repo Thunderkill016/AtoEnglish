@@ -1915,7 +1915,7 @@
 - **Mô tả:** Places in town; Where is…? / next to / opposite / turn left. L1 100%.
 - **Done khi:** schema + registry + path sequential.
 - **Started:** 2026-07-10 — autopilot (PHASE1: AGENTS/BACKLOG/PLAN + a1-08 gold + schema/path/tests; PHASE2: PLAN; PHASE3: author l-a1-09 + registry + sequential after a1-08)
-- **Completed:** 2026-07-10 — l-a1-09 full LessonSpec (bank/station/supermarket/hospital/post office; Where is…? / next to / opposite / turn left / go straight; spiral a1-08 cafe); L1 100%; registry + sequential after a1-08; lint0+222t; docs V2_PRODUCT
+- **Completed:** 2026-07-10 — l-a1-09 full LessonSpec (bank/station/supermarket/hospital/post office; Where is…? / next to / opposite / turn left / go straight; spiral a1-08 cafe); L1 100%; registry + sequential after a1-08; lint0+222t; docs V2_PRODUCT; commit a5394ab
 
 
 ### TASK-277 — Nav: Học tab → /home when v2 flag
@@ -1983,7 +1983,7 @@
 | 2026-07-10 | TASK-270 | feat(v2): l-a1-06 Nhà cửa; there is/are + rooms; L1 100%; sequential after a1-05 | done — 35e9f0e |
 | 2026-07-10 | TASK-271 | feat(v2): l-a1-07 Mua sắm; How much is/are + money light; L1 100%; sequential after a1-06 | done — 438f914 |
 | 2026-07-10 | TASK-272 | feat(v2): l-a1-08 Đồ ăn & order; I'd like/Can I have cafe; L1 100%; sequential after a1-07 | done — 3a9f939 |
-| 2026-07-10 | TASK-273 | feat(v2): l-a1-09 Địa điểm & chỉ đường; Where is/next to/opposite/turn left; L1 100%; sequential after a1-08 | done — (pending SHA) |
+| 2026-07-10 | TASK-273 | feat(v2): l-a1-09 Địa điểm & chỉ đường; Where is/next to/opposite/turn left; L1 100%; sequential after a1-08 | done — a5394ab |
 
 | 2026-07-10 | TASK-272 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-10 | TASK-273 | auto-refill từ AGENT_ROADMAP.md | ready |
