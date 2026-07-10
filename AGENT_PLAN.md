@@ -7,33 +7,35 @@
 | Field | Value |
 |-------|-------|
 | Started | 2026-07-10 |
-| Focus | TASK-256 — Autopilot maintenance sweep #256 |
+| Focus | TASK-257 — Autopilot maintenance sweep #257 |
 | Owner | Autopilot (user absent; autonomous) |
 
-### TASK-256 — Autopilot maintenance sweep #256
+### TASK-257 — Autopilot maintenance sweep #257
 **Mục tiêu**: Chạy `npm run lint && npm run test` (cùng `npx tsc --noEmit` + content gates nếu liên quan); fix failure đầu tiên nếu có (minimal); sync AGENT_PLAN nhật ký + BACKLOG + log. **Không feature mới**, không đổi logic app. **Done khi:** gates pass; 0 or 1 small fix; PLAN/BACKLOG/nhật ký; 1 commit; push `git-push.sh main`.
 
 **Bước thực hiện**:
-1. PHASE1 (done): AGENTS.md, BACKLOG (TASK-256 ready→in_p; 257–259 ready + UI 261–265), PLAN prior TASK-260 done cac611a / TASK-255 9c07fd1, CONTENT_STYLE §6–7 (context only — no unit edit).
-2. BACKLOG TASK-256 → `in_progress`.
-3. Ready after in_p: ≥2 (257–259, 262–265) → skip refill.
+1. PHASE1 (done): AGENTS.md, BACKLOG (TASK-257 ready→in_p; 258–259 ready + UI 262–265), PLAN prior TASK-256 done 9c38898 / TASK-261 d801b6e, CONTENT_STYLE §6–7 (context only — no unit edit).
+2. BACKLOG TASK-257 → `in_progress`.
+3. Ready after in_p: ≥2 (258–259, 262–265) → skip refill.
 4. PHASE3:
    - `rm -f tsconfig.tsbuildinfo` (stale guard).
    - `npx tsc --noEmit`; `npm run lint`; `npm run test`.
    - Optional: content-standard + audit (maintenance pattern).
    - Fix only first failure; no scope creep; no UI feature.
-5. Log `logs/agent/*_TASK-256.log`; BACKLOG done + Nhật ký + SHA; PLAN completed; commit + `bash scripts/git-push.sh main`.
+5. Log `logs/agent/*_TASK-257.log`; BACKLOG done + Nhật ký + SHA; PLAN completed; commit + `bash scripts/git-push.sh main`.
 
 **Rủi ro**:
 - Transient tsbuildinfo / flake → clear + rerun once; 2 fails → blocked.
 - First real bug → minimal fix only; major/secret → blocked.
 - Push needs GitLab access → blocked, no force.
-- Concurrent TASK-261 landed mid-session (d801b6e) — do not re-ship UI.
 - No new feature.
 
 **Started:** 2026-07-10 — autopilot
 
-**Completed TASK-256**: gates clean (tsc0+lint0+213t+cs50/50+audit50/50) no fix needed; log 20260710T025545Z_TASK-256.log; BACKLOG/PLAN/nhật ký synced; no src edit; commit + push via git-push.sh main; autonomous. Prior mid-session: TASK-261 shipped d801b6e.
+**Completed TASK-257**: gates clean (tsc0+lint0+213t+cs50/50+audit50/50) no fix needed; log 20260710T030026Z_TASK-257.log; BACKLOG/PLAN/nhật ký synced; no src edit; commit + push via git-push.sh main; autonomous.
+
+### TASK-256 — Autopilot maintenance sweep #256 (prior)
+**Completed TASK-256**: gates clean (tsc0+lint0+213t+cs50/50+audit50/50) no fix needed; log 20260710T025545Z_TASK-256.log; BACKLOG/PLAN/nhật ký synced; no src edit; commit 9c38898 + push via git-push.sh main; autonomous.
 
 ### TASK-261 — UI shell Header + BottomNav (prior)
 **Completed TASK-261**: Ato glass shell; hide /learn/v2; tests; push d801b6e / b5f678d.
