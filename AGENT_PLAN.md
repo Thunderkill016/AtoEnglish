@@ -43,7 +43,7 @@
 
 **Started:** 2026-07-10 — autopilot
 
-**Completed TASK-262**: HomeClient composed on Screen(ato+ambient)/Surface/AppButton/PageHeader/Chip; continue CTA + B1 % preserved; lint0+213t; log 20260710T030540Z_TASK-262.log; commit 23ef4ce + push via git-push.sh main; autonomous. Next: TASK-263.
+**Completed TASK-262**: HomeClient composed on Screen(ato+ambient)/Surface/AppButton/PageHeader/Chip; continue CTA + B1 % preserved; lint0+213t; log 20260710T030540Z_TASK-262.log; commit dad7d9d + push via git-push.sh main; autonomous. Next: TASK-263.
 
 ### TASK-257 — Autopilot maintenance sweep #257 (prior)
 **Completed TASK-257**: gates clean (tsc0+lint0+213t+cs50/50+audit50/50) no fix needed; log 20260710T030026Z_TASK-257.log; BACKLOG/PLAN/nhật ký synced; no src edit; commit 6c12963 + push via git-push.sh main; autonomous.
