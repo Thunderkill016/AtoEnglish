@@ -593,7 +593,7 @@
 - **Mô tả:** Light card tokens trong 3 section files (theo Fluency/Translate pattern).
 - **Done khi:** Không zinc-950 cards; lint+test pass
 - **Started:** 2026-06-26 — autopilot (PHASE1: read AGENTS/BACKLOG/PLAN/CONTENT§6-7 + grep sections+Fluency/Translate+design + sim search_memory via logs; PHASE2: BACKLOG in_progress + PLAN section + skip refill >=2r; PHASE3: light tokens 3 files)
-- **Completed:** 2026-06-26 — Grammar/Vocab/Warmup cards use bg-card border-border/60 text-foreground/muted + primary accents (no zinc-950 cards); 0 zinc-950 in 3 files; lint0 + 170t + tsc pass; commit acd10ad + push via git-push.sh main; done
+- **Completed:** 2026-06-26 — Grammar/Vocab/Warmup cards use bg-card border-border/60 text-foreground/muted + primary accents (no zinc-950 cards); 0 zinc-950 in 3 files; lint0 + 170t + tsc pass; commit acd10ad + push via git-push.sh main; done — 72e3725
 
 ### TASK-084 — LessonSectionHeader light tokens
 - **Status:** `done`
@@ -1732,10 +1732,11 @@
 - **Completed:** 2026-07-10 — gates clean (tsc0+lint0+206t+cs50/50+audit50/50) no fix; log 20260710T015713Z_TASK-248.log; PLAN/BACKLOG sync; no src; autonomous 14c178e
 
 ### TASK-249 — Autopilot maintenance sweep #249
-- **Status:** `in_progress`
+- **Status:** `done`
 - **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
 - **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
 - **Started:** 2026-07-10 — autopilot (PHASE1: AGENTS/BACKLOG/PLAN/CONTENT§6-7; prior TASK-248 done 14c178e; PHASE2 PLAN; PHASE3 gates)
+- **Completed:** 2026-07-10 — gates clean (tsc0+lint0+206t+cs50/50+audit50/50) no fix; log 20260710T020232Z_TASK-249.log; PLAN/BACKLOG sync; no src; autonomous 72e3725 72e3725
 
 ### TASK-250 — Autopilot maintenance sweep #250
 - **Status:** `ready`
@@ -1772,6 +1773,7 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
+| 2026-07-10 | TASK-249 | gates clean (tsc0+lint0+206t+cs50/50+audit50/50) no fix; log 20260710T020232Z_TASK-249.log; PLAN/BACKLOG sync; no src | done — 72e3725 |
 | 2026-07-10 | TASK-251 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-10 | TASK-252 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-10 | TASK-253 | auto-refill từ AGENT_ROADMAP.md | ready |
