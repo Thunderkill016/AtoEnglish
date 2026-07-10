@@ -314,10 +314,10 @@ export default function DashboardClient({
   };
 
   return (
-    <div className="relative mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 min-h-screen overflow-x-hidden pb-20 sm:pb-0">
-      {/* Ambient glow — CSS only, no JS */}
-      <div className="pointer-events-none absolute top-0 right-0 -z-10 h-[300px] w-[50vw] max-w-[400px] rounded-full bg-emerald-500/6 dark:bg-emerald-500/4 blur-[120px]" />
-      <div className="pointer-events-none absolute bottom-0 left-0 -z-10 h-[300px] w-[300px] rounded-full bg-teal-500/5 dark:bg-teal-500/3 blur-[100px]" />
+    <div className="relative mx-auto max-w-7xl min-h-screen overflow-x-hidden bg-zinc-950 px-4 py-8 pb-20 text-zinc-50 sm:px-6 sm:pb-0 lg:px-8">
+      {/* Ato Surface ambient — match landing dark brand */}
+      <div className="pointer-events-none absolute top-0 right-0 -z-10 h-[300px] w-[50vw] max-w-[400px] rounded-full bg-emerald-500/10 blur-[120px]" />
+      <div className="pointer-events-none absolute bottom-0 left-0 -z-10 h-[300px] w-[300px] rounded-full bg-teal-500/8 blur-[100px]" />
 
       {/* — Streak at-risk fixed banner — */}
       {!bannerDismissed && (
