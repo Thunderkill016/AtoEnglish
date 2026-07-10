@@ -68,3 +68,5 @@
 - Push needs GitLab → blocked, no force.
 
 **Started:** 2026-07-10 — autopilot
+
+**Completed TASK-277**: getPrimaryLearnHref + getBottomNavItems/getDesktopPrimaryNav; Me hub B1 north-star copy + v2 study hrefs; navigation-v2 9 tests; lint0+222t; commit 5af0b20 + push. Next: TASK-273 / l-a1-09 or TASK-278.

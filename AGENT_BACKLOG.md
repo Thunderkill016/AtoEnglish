@@ -1915,10 +1915,11 @@
 
 
 ### TASK-277 — Nav: Học tab → /home when v2 flag
-- **Status:** `in_progress`
+- **Status:** `done`
 - **Mô tả:** bottomNavItems + desktopPrimaryNav: href /home if isCurriculumV2 else /dashboard. Me hub copy B1.
 - **Done khi:** flag matrix correct; time-to-lesson ≤2 tap; lint+test.
 - **Started:** 2026-07-10 — autopilot
+- **Completed:** 2026-07-10 — getPrimaryLearnHref + live bottom/desktop getters; Me hub B1 copy + v2 /home|/path; navigation-v2 9 tests; lint0+222t; commit 5af0b20 + push.
 
 
 ### TASK-278 — Dashboard Ato Surface full migrate
@@ -1943,6 +1944,7 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
+| 2026-07-10 | TASK-277 | feat(nav): Học → /home when v2; Me hub B1; getters + 9 tests | done — 5af0b20 |
 | 2026-07-10 | TASK-277 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-10 | TASK-278 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-10 | TASK-284 | auto-refill từ AGENT_ROADMAP.md | ready |
