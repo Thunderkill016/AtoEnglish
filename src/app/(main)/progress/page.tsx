@@ -1,7 +1,15 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { Flame, Layers, BookOpen, TrendingUp, Trophy, Star, Mic } from "lucide-react";
-import { SecondaryPageShell, PrimaryRow, StatLine, ListSection } from "@/components/design-system";
+import {
+  Screen,
+  Surface,
+  PageHeader,
+  Chip,
+  PrimaryRow,
+  StatLine,
+  ListSection,
+} from "@/components/design-system";
 import { getProgressStats, getWeeklyXpData, getDailyActivity } from "@/app/actions/stats";
 import { getAchievements } from "@/app/actions/gamification";
 import { AchievementsPanel } from "@/components/gamification/AchievementsPanel";
@@ -101,15 +109,27 @@ export default async function ProgressPage() {
   ];
   const totalSrs = Math.max(srsBoxes.reduce((s, b) => s + b.count, 0), 1);
 
+  const rowAto =
+    "bg-white/5 border-white/10 hover:bg-white/[0.07] hover:border-emerald-500/30";
+
   return (
-    <SecondaryPageShell
-      title="Tiến độ"
-      subtitle={`${stats.totalXp.toLocaleString()} XP · ${stats.streak} ngày streak`}
-    >
+    <Screen ato ambient narrow={false}>
+      <div className="mb-6 space-y-3">
+        <Chip tone="brand" className="tracking-widest">
+          <TrendingUp className="size-3.5" aria-hidden />
+          Theo dõi · XP &amp; streak
+        </Chip>
+        <PageHeader
+          eyebrow="Học tập"
+          title="Tiến độ"
+          subtitle={`${stats.totalXp.toLocaleString()} XP · ${stats.streak} ngày streak`}
+        />
+      </div>
+
     <div className="space-y-5 sm:space-y-8 pb-16">
 
       <ListSection title="Tổng quan">
-        <div className="rounded-xl border border-border/60 bg-card px-4">
+        <Surface className="px-4">
           {statCards.map((stat) => (
             <StatLine
               key={stat.label}
@@ -118,7 +138,7 @@ export default async function ProgressPage() {
               caption={stat.sub}
             />
           ))}
-        </div>
+        </Surface>
       </ListSection>
 
       {/* Activity Heatmap */}
@@ -129,10 +149,10 @@ export default async function ProgressPage() {
       />
 
       {/* Streak Stats — milestone roadmap, freeze inventory, share card */}
-      <div className="rounded-3xl border border-zinc-200/60 dark:border-zinc-800/60 bg-white/60 dark:bg-zinc-900/30 backdrop-blur-sm p-4 sm:p-6 space-y-1">
+      <Surface className="p-4 sm:p-6 space-y-1">
         <div className="flex items-center gap-2 mb-4">
           <Flame className="size-4 text-orange-500" />
-          <h2 className="text-xs font-black text-foreground uppercase tracking-widest">Streak &amp; Milestones</h2>
+          <h2 className="text-xs font-black text-zinc-100 uppercase tracking-widest">Streak &amp; Milestones</h2>
         </div>
         <StreakStats
           currentStreak={stats.streak}
@@ -144,32 +164,34 @@ export default async function ProgressPage() {
           completedLessons={stats.completedUnits}
           weeklyActiveDays={weeklyActiveDays}
         />
-      </div>
+      </Surface>
 
-      <div className="space-y-2">
+      <Surface className="space-y-2 p-2">
         <PrimaryRow
           href="/leaderboard"
           label="Bảng xếp hạng"
           description="Top học viên theo XP tuần này"
           icon={Trophy}
+          className={rowAto}
         />
         <PrimaryRow
           href="/progress/weekly"
           label="Báo cáo tuần"
           description="Tổng kết 7 ngày học tập"
           icon={TrendingUp}
+          className={rowAto}
         />
-      </div>
+      </Surface>
 
       <div className="grid gap-4 sm:gap-6 lg:grid-cols-3">
         {/* Weekly XP Chart */}
-        <div className="lg:col-span-2 rounded-3xl border border-zinc-200/60 dark:border-zinc-800/60 bg-white/60 dark:bg-zinc-900/30 backdrop-blur-sm p-4 sm:p-8 space-y-4 sm:space-y-6">
+        <Surface className="lg:col-span-2 p-4 sm:p-8 space-y-4 sm:space-y-6">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="font-bold text-xs text-foreground uppercase tracking-widest">XP hàng ngày</h3>
-              <p className="text-[11px] text-muted-foreground mt-0.5">Kinh nghiệm 7 ngày qua</p>
+              <h3 className="font-bold text-xs text-zinc-100 uppercase tracking-widest">XP hàng ngày</h3>
+              <p className="text-[11px] text-zinc-500 mt-0.5">Kinh nghiệm 7 ngày qua</p>
             </div>
-            <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-muted-foreground bg-muted/80 px-3 py-1.5 rounded-xl border border-border/40">
+            <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-zinc-400 bg-white/5 px-3 py-1.5 rounded-xl border border-white/10">
               <Star className="size-3.5" />
               Tuần này
             </span>
@@ -177,14 +199,14 @@ export default async function ProgressPage() {
           <div className="relative h-52">
             <div className="absolute inset-x-0 top-0 bottom-8 flex flex-col justify-between pointer-events-none">
               {[0,1,2,3].map(i => (
-                <div key={i} className="border-t border-dashed border-foreground/10 w-full" />
+                <div key={i} className="border-t border-dashed border-white/10 w-full" />
               ))}
             </div>
-            <div className="absolute inset-0 flex items-end justify-between gap-2 px-1 border-b border-foreground/[0.05]">
+            <div className="absolute inset-0 flex items-end justify-between gap-2 px-1 border-b border-white/5">
               {weeklyData.map((d, idx) => (
                 <div key={idx} className="flex-1 flex flex-col items-center gap-1 h-full justify-end group relative">
                   {d.xp > 0 && (
-                    <span className="opacity-0 group-hover:opacity-100 transition-all text-[10px] font-mono font-bold bg-primary text-primary-foreground px-1.5 py-0.5 rounded-lg absolute bottom-full mb-1 whitespace-nowrap">
+                    <span className="opacity-0 group-hover:opacity-100 transition-all text-[10px] font-mono font-bold bg-emerald-500 text-zinc-950 px-1.5 py-0.5 rounded-lg absolute bottom-full mb-1 whitespace-nowrap">
                       {d.xp} XP
                     </span>
                   )}
@@ -194,21 +216,21 @@ export default async function ProgressPage() {
                       height: d.pct > 0 ? `${Math.max(d.pct, 8)}%` : "4px",
                       background: d.pct > 0
                         ? "linear-gradient(to top, #10b981, #34d399)"
-                        : "rgb(var(--muted)/0.4)",
+                        : "rgba(255,255,255,0.08)",
                     }}
                   />
-                  <span className="text-[10px] text-muted-foreground font-bold py-1">{d.label}</span>
+                  <span className="text-[10px] text-zinc-500 font-bold py-1">{d.label}</span>
                 </div>
               ))}
             </div>
           </div>
-        </div>
+        </Surface>
 
         {/* SRS State */}
-        <div className="rounded-3xl border border-zinc-200/60 dark:border-zinc-800/60 bg-white/60 dark:bg-zinc-900/30 backdrop-blur-sm p-4 sm:p-8 space-y-4 sm:space-y-5 flex flex-col justify-between">
+        <Surface className="p-4 sm:p-8 space-y-4 sm:space-y-5 flex flex-col justify-between">
           <div>
-            <h3 className="font-bold text-xs text-foreground uppercase tracking-widest">Trạng thái SRS</h3>
-            <p className="text-[11px] text-muted-foreground mt-0.5">
+            <h3 className="font-bold text-xs text-zinc-100 uppercase tracking-widest">Trạng thái SRS</h3>
+            <p className="text-[11px] text-zinc-500 mt-0.5">
               {stats.totalCards} từ vựng trong hộp nhớ
             </p>
           </div>
@@ -218,10 +240,10 @@ export default async function ProgressPage() {
               return (
                 <div key={idx} className="space-y-1.5">
                   <div className="flex justify-between text-xs font-bold">
-                    <span className="text-foreground truncate max-w-[160px] sm:max-w-none">{box.name}</span>
-                    <span className="text-muted-foreground font-mono">{box.count}</span>
+                    <span className="text-zinc-100 truncate max-w-[160px] sm:max-w-none">{box.name}</span>
+                    <span className="text-zinc-500 font-mono">{box.count}</span>
                   </div>
-                  <div className="h-2.5 w-full rounded-full bg-muted overflow-hidden">
+                  <div className="h-2.5 w-full rounded-full bg-white/10 overflow-hidden">
                     <div
                       className={`h-full rounded-full transition-all duration-700 ${box.color}`}
                       style={{ width: `${pct}%` }}
@@ -231,19 +253,19 @@ export default async function ProgressPage() {
               );
             })}
           </div>
-          <p className="text-[11px] text-muted-foreground text-center border-t border-foreground/[0.04] pt-4">
+          <p className="text-[11px] text-zinc-500 text-center border-t border-white/5 pt-4">
             Ôn flashcard mỗi ngày để đẩy từ lên Hộp 4.
           </p>
-        </div>
+        </Surface>
       </div>
 
       {/* Achievements */}
       <Suspense fallback={
         <div className="space-y-3 animate-pulse">
-          <div className="h-5 w-32 bg-muted rounded-lg" />
+          <div className="h-5 w-32 bg-white/10 rounded-lg" />
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
             {Array.from({ length: 6 }).map((_, i) => (
-              <div key={i} className="h-24 bg-muted/50 rounded-2xl" />
+              <div key={i} className="h-24 bg-white/5 rounded-2xl border border-white/10" />
             ))}
           </div>
         </div>
@@ -265,7 +287,7 @@ export default async function ProgressPage() {
         unlockedIds={new Set(achievementsRes.unlockedIds)}
       />
     </div>
-    </SecondaryPageShell>
+    </Screen>
   );
 }
 

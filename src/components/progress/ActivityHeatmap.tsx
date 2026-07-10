@@ -2,6 +2,7 @@
 
 import { useMemo } from 'react';
 import type { DayActivity } from '@/app/actions/stats';
+import { Surface } from '@/components/design-system';
 
 interface ActivityHeatmapProps {
   days: DayActivity[];
@@ -58,14 +59,14 @@ export function ActivityHeatmap({ days, totalActiveDays, longestStreak }: Activi
   };
 
   return (
-    <div className="rounded-3xl border border-zinc-200/60 dark:border-zinc-800/60 bg-white/60 dark:bg-zinc-900/30 backdrop-blur-sm p-4 sm:p-6 space-y-4">
+    <Surface className="p-4 sm:p-6 space-y-4">
       {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-2">
         <div>
-          <h3 className="font-bold text-xs text-foreground uppercase tracking-widest">Lịch hoạt động</h3>
-          <p className="text-[11px] text-muted-foreground mt-0.5">52 tuần gần nhất</p>
+          <h3 className="font-bold text-xs text-zinc-100 uppercase tracking-widest">Lịch hoạt động</h3>
+          <p className="text-[11px] text-zinc-500 mt-0.5">52 tuần gần nhất</p>
         </div>
-        <div className="flex items-center gap-4 text-[11px] text-muted-foreground">
+        <div className="flex items-center gap-4 text-[11px] text-zinc-400">
           <span><span className="font-bold text-emerald-400">{totalActiveDays}</span> ngày học</span>
           <span><span className="font-bold text-orange-400">{longestStreak}</span> ngày liên tiếp kỷ lục</span>
         </div>
@@ -79,7 +80,7 @@ export function ActivityHeatmap({ days, totalActiveDays, longestStreak }: Activi
             {monthPositions.map(({ label, col }, i) => (
               <div
                 key={i}
-                className="text-[10px] text-muted-foreground font-semibold absolute"
+                className="text-[10px] text-zinc-500 font-semibold absolute"
                 style={{ marginLeft: `${col * 13}px`, position: 'relative', minWidth: 0 }}
               >
                 {label}
@@ -91,7 +92,7 @@ export function ActivityHeatmap({ days, totalActiveDays, longestStreak }: Activi
             {/* Day-of-week labels */}
             <div className="flex flex-col gap-0.5 mr-1">
               {DAY_LABELS.map((lbl, i) => (
-                <div key={i} className="h-[11px] text-[9px] text-muted-foreground/60 leading-[11px] w-5 text-right pr-0.5">
+                <div key={i} className="h-[11px] text-[9px] text-zinc-600 leading-[11px] w-5 text-right pr-0.5">
                   {lbl}
                 </div>
               ))}
@@ -117,14 +118,14 @@ export function ActivityHeatmap({ days, totalActiveDays, longestStreak }: Activi
 
           {/* Legend */}
           <div className="flex items-center gap-1.5 mt-2 justify-end">
-            <span className="text-[10px] text-muted-foreground">Ít</span>
+            <span className="text-[10px] text-zinc-500">Ít</span>
             {([0,1,2,3,4] as const).map(l => (
               <div key={l} className={`w-[11px] h-[11px] rounded-[2px] ${LEVEL_CLASSES[l]}`} />
             ))}
-            <span className="text-[10px] text-muted-foreground">Nhiều</span>
+            <span className="text-[10px] text-zinc-500">Nhiều</span>
           </div>
         </div>
       </div>
-    </div>
+    </Surface>
   );
 }

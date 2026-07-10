@@ -1,29 +1,25 @@
-# Agent Plan — TASK-278 complete (local)
+# Agent Plan — TASK-284 complete (local)
 
-> Project archived 2026-07-10 (see `ARCHIVE.md`). TASK-278 implemented and committed locally; remote push blocked.
+> User mandate 2026-07-10: residual Progress + Me Ato Surface. Archive noted.
 
 | Field | Value |
 |-------|-------|
-| Task | TASK-278 — Dashboard Ato Surface full migrate |
-| Status | **done (local)** — push blocked |
-| Commits | `6523720` feat · `e8d7886` docs |
+| Task | TASK-284 — Progress + Me Ato polish |
+| Status | **done (pending push)** |
 | Gates | lint 0 · 222 tests pass |
 
 ## Delivered
 
-- `DashboardClient` stats / stats panel / curriculum grid → `Surface` + dark zinc tokens
-- Child cards: UnitCard, SrsCard, TodayMission, TodayPlanWidget, LevelProgressBar, QuickActions, WordOfDay, League, SpeakingFeed, WeeklyRecap, EfSetGoal — no primary `bg-white/60`
-- Matches Home/landing glass dark brand (`bg-white/5`, `border-white/10`)
+- **Me** (`MeClient`): `Screen` ato+ambient · `PageHeader` · `Chip` · `Surface` groups · PrimaryRow dark glass
+- **Progress** (`page.tsx`): same shell; stats / streak / XP chart / SRS cards → `Surface`; no `bg-white/60`
+- **ProgressClient**: achievement cards on `Surface` + zinc tokens + `Chip` count
+- **ActivityHeatmap**: outer shell → `Surface` dark brand
+- **Landing:** not touched
 
-## Push block
+## Push
 
-| Remote | Result |
-|--------|--------|
-| `origin` (GitHub) | **archived read-only** |
-| `gitlab` | Permission denied (publickey) |
+Expect same block as TASK-278 if remotes still archived/denied — commit local first, then `git-push.sh main`.
 
-Owner must unarchive GitHub or fix GitLab SSH before `git-push.sh main` succeeds.
+## Next ready (backlog)
 
-## Next ready
-
-TASK-284 (Progress + Me Ato polish) — only if product work resumes; archive policy says no new feature autopilot.
+TASK-274 / 275 / 276 (v2 content) if product work continues.
