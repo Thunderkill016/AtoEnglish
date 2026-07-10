@@ -1992,10 +1992,11 @@
 - **Started:** auto-refill
 
 ### TASK-279 — v2 progress Supabase persistence
-- **Status:** `ready`
+- **Status:** `done`
 - **Mô tả:** Migration user_v2_lesson_progress (or equivalent) + RLS; sync from localStorage on auth; markLessonComplete writes DB.
 - **Done khi:** multi-device progress; types regenerated; ask if schema needs human — implement with RLS.
-- **Started:** auto-refill
+- **Started:** 2026-07-10 — autopilot (PHASE1: backlog+progress.ts+v1 user_lesson_progress RLS patterns; PHASE2: PLAN; PHASE3: migration+actions+hydrate)
+- **Completed:** 2026-07-10 — migration `user_v2_lesson_progress` + RLS; types; complete/fetch/sync actions; merge helper; LessonPlayerV2 dual-write; V2ProgressHydrator on auth+flag; lint+233 tests+tsc
 
 
 ---
@@ -2007,6 +2008,7 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
+| 2026-07-10 | TASK-279 | feat(v2): user_v2_lesson_progress + RLS + local sync | done — (SHA after commit; push may block archive) |
 | 2026-07-10 | TASK-282 | feat(v2): l-a2-01 past simple survival (first A2) | done — 82ba4fa (push blocked: GitHub archive) |
 | 2026-07-10 | TASK-283 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-10 | TASK-279 | auto-refill từ AGENT_ROADMAP.md | ready |

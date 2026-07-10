@@ -21,6 +21,7 @@ import {
   QUIZ_FLOOR_RATIO,
 } from "@/lib/v2/progress";
 import { seedV2LessonLexisToSRS } from "@/app/actions/cards";
+import { completeV2Lesson } from "@/app/actions/v2-progress";
 import { Surface, AppButton } from "@/components/design-system";
 import { cn } from "@/lib/utils";
 
@@ -90,11 +91,19 @@ export function LessonPlayerV2({ lesson }: Props) {
         setReviewHint(gate.message_vi);
         return;
       }
-      markLessonComplete({
+      const local = markLessonComplete({
         lessonId: lesson.id,
         quizCorrect: correctCount,
         quizTotal: quizItems.length,
         taskDone,
+      });
+      // TASK-279: persist to Supabase when authenticated (guest no-op)
+      void completeV2Lesson({
+        lessonId: lesson.id,
+        quizCorrect: correctCount,
+        quizTotal: quizItems.length,
+        taskDone,
+        completedAt: local.completed[lesson.id]?.completedAt,
       });
       // TASK-280: seed FSRS from lexis (auth only; guest no-op)
       void seedV2LessonLexisToSRS(lesson.id);
@@ -135,7 +144,8 @@ export function LessonPlayerV2({ lesson }: Props) {
             {taskDone ? " · Nhiệm vụ nói ✓" : ""}
           </p>
           <p className="text-xs text-zinc-500">
-            Tiến độ đã lưu trên máy này. Đã đăng nhập: từ vựng vào Flashcard (FSRS).
+            Tiến độ đã lưu trên máy này. Đã đăng nhập: đồng bộ tài khoản + từ vựng
+            Flashcard (FSRS).
           </p>
           <div className="flex flex-col sm:flex-row gap-2 justify-center pt-2">
             <AppButton href="/home" size="lg">

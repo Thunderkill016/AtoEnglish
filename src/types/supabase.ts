@@ -573,6 +573,42 @@ export type Database = {
         }
         Relationships: []
       }
+      user_v2_lesson_progress: {
+        Row: {
+          completed_at: string
+          created_at: string
+          id: string
+          lesson_id: string
+          quiz_correct: number
+          quiz_total: number
+          task_done: boolean
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string
+          created_at?: string
+          id?: string
+          lesson_id: string
+          quiz_correct?: number
+          quiz_total?: number
+          task_done?: boolean
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          completed_at?: string
+          created_at?: string
+          id?: string
+          lesson_id?: string
+          quiz_correct?: number
+          quiz_total?: number
+          task_done?: boolean
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_onboarding_profile: {
         Row: {
           created_at: string

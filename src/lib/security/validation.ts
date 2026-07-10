@@ -92,13 +92,36 @@ export const SeedVocabSchema = z.object({
 });
 
 /** v2 lesson id — server loads lexis from registry (TASK-280) */
+export const V2_LESSON_ID_REGEX = /^l-(a0|a1|a2|b1)-\d{2}$/;
+
 export const SeedV2LessonLexisSchema = z.object({
   lessonId: z
     .string()
-    .regex(
-      /^l-(a0|a1|a2|b1)-\d{2}$/,
-      "ID bài v2 không hợp lệ",
-    ),
+    .regex(V2_LESSON_ID_REGEX, "ID bài v2 không hợp lệ"),
+});
+
+/** TASK-279: mark one v2 lesson complete in DB */
+export const CompleteV2LessonSchema = z.object({
+  lessonId: z.string().regex(V2_LESSON_ID_REGEX, "ID bài v2 không hợp lệ"),
+  quizCorrect: z.number().int().min(0).max(100),
+  quizTotal: z.number().int().min(0).max(100),
+  taskDone: z.boolean(),
+  completedAt: z.string().datetime().optional(),
+});
+
+/** TASK-279: bulk upsert from localStorage on auth */
+export const SyncV2ProgressSchema = z.object({
+  records: z
+    .array(
+      z.object({
+        lessonId: z.string().regex(V2_LESSON_ID_REGEX),
+        completedAt: z.string().min(1).max(40),
+        quizCorrect: z.number().int().min(0).max(100),
+        quizTotal: z.number().int().min(0).max(100),
+        taskDone: z.boolean(),
+      }),
+    )
+    .max(80),
 });
 
 /**

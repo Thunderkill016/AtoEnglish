@@ -1,6 +1,6 @@
 /**
- * v2 lesson progress — local-first (guest + until DB migration).
- * Key: ato_v2_progress
+ * v2 lesson progress — local-first for guests; auth users also write Supabase
+ * (`user_v2_lesson_progress`, TASK-279). Key: ato_v2_progress
  *
  * Complete rule (soft): task attempt + quiz floor ≥50% (see canMarkLessonComplete).
  */
@@ -151,6 +151,74 @@ export function markLessonComplete(input: {
   state.lastLessonId = input.lessonId;
   saveV2Progress(state);
   return state;
+}
+
+/**
+ * Merge remote DB rows into a progress state (union).
+ * Prefer earlier completedAt; max quiz scores; taskDone OR.
+ * Pure — used by hydrator + unit tests (TASK-279).
+ */
+export function mergeLessonRecords(
+  local: V2ProgressState,
+  remote: readonly LessonProgressRecord[],
+): V2ProgressState {
+  const completed: Record<string, LessonProgressRecord> = {
+    ...local.completed,
+  };
+
+  for (const rec of remote) {
+    if (!rec?.lessonId) continue;
+    const existing = completed[rec.lessonId];
+    if (!existing) {
+      completed[rec.lessonId] = {
+        lessonId: rec.lessonId,
+        completedAt: rec.completedAt,
+        quizCorrect: rec.quizCorrect,
+        quizTotal: rec.quizTotal,
+        taskDone: rec.taskDone,
+      };
+      continue;
+    }
+    const earlier =
+      existing.completedAt <= rec.completedAt
+        ? existing.completedAt
+        : rec.completedAt;
+    completed[rec.lessonId] = {
+      lessonId: rec.lessonId,
+      completedAt: earlier,
+      quizCorrect: Math.max(existing.quizCorrect, rec.quizCorrect),
+      quizTotal: Math.max(existing.quizTotal, rec.quizTotal),
+      taskDone: existing.taskDone || rec.taskDone,
+    };
+  }
+
+  let lastLessonId = local.lastLessonId;
+  const ids = Object.keys(completed);
+  if (ids.length > 0) {
+    let latestId = ids[0];
+    let latestAt = completed[latestId]?.completedAt ?? "";
+    for (const id of ids) {
+      const at = completed[id]?.completedAt ?? "";
+      if (at > latestAt) {
+        latestAt = at;
+        latestId = id;
+      }
+    }
+    lastLessonId = latestId;
+  }
+
+  return {
+    completed,
+    lastLessonId,
+    updatedAt: new Date().toISOString(),
+  };
+}
+
+/** Serialize records for server sync (auth only). */
+export function listCompletedRecords(
+  state: V2ProgressState = loadV2Progress(),
+): LessonProgressRecord[] {
+  return Object.values(state.completed);
 }
 
 export function countCompleted(): number {
