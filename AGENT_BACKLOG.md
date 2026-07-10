@@ -1900,10 +1900,11 @@
 - **Completed:** 2026-07-10 — l-a1-07 full LessonSpec (shop/price/cheap/expensive; How much is/are; dollars light; try on/pay; spiral a1-02); L1 100%; registry + sequential after a1-06; lint0+213t; docs V2_PRODUCT; log 20260710T035343Z_TASK-271.log; commit 438f914 + push via git-push.sh main
 
 ### TASK-272 — Author l-a1-08 Đồ ăn & order
-- **Status:** `ready`
+- **Status:** `in_progress`
 - **Mô tả:** Food/drink; I'd like… / Can I have…? Cafe order. Spiral a1-07 shopping. L1 100%.
 - **Done khi:** schema + registry + path sequential.
-- **Started:** auto-refill
+- **Started:** 2026-07-10 — autopilot (PHASE1: AGENTS/BACKLOG/PLAN + a1-07 gold + schema/path/tests; PHASE2: PLAN; PHASE3: author l-a1-08 + registry + sequential after a1-07)
+
 
 ### TASK-273 — Author l-a1-09 Địa điểm & chỉ đường
 - **Status:** `ready`

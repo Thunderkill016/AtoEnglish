@@ -21,16 +21,16 @@
 | Auto tasks added | TASK-269–273 |
 | Date | 2026-07-10 |
 
-**Focus:** A1 content factory TASK-271 — see `logs/agent/product-radar-latest.md`.
+**Focus:** A1 content factory TASK-272 — see `logs/agent/product-radar-latest.md`.
 
 
 ## Phiên OPS (prior)
 
 | Field | Value |
 |-------|-------|
-| Focus | TASK-270 A1 l-a1-06 home |
-| Commit | 35e9f0e |
-| Next pick | TASK-271 A1 l-a1-07 |
+| Focus | TASK-271 A1 l-a1-07 shopping |
+| Commit | 438f914 |
+| Next pick | TASK-272 A1 l-a1-08 |
 
 
 > Agent ghi kế hoạch trước khi code. User không cần approve.
@@ -40,36 +40,32 @@
 | Field | Value |
 |-------|-------|
 | Started | 2026-07-10 |
-| Focus | TASK-271 — Author l-a1-07 Mua sắm |
+| Focus | TASK-272 — Author l-a1-08 Đồ ăn & order |
 | Owner | Autopilot (user absent; autonomous) |
 
-### TASK-271 — Author l-a1-07 Mua sắm
-**Mục tiêu**: Full LessonSpec A1 shopping phrases; How much is/are…?; numbers money light. Spiral a1-02 numbers/personal. L1 notes 100%. Register + sequential next after a1-06.
+### TASK-272 — Author l-a1-08 Đồ ăn & order
+**Mục tiêu**: Full LessonSpec A1 food/drink; I'd like… / Can I have…? Cafe order. Spiral a1-07 shopping. L1 notes 100%. Register + sequential next after a1-07.
 
-**Done khi:** `l-a1-07.ts` + registry; schema pass; `getNextPlayableLessonId(…a1-06)` = `l-a1-07`; lint+test; commit + push.
+**Done khi:** `l-a1-08.ts` + registry; schema pass; `getNextPlayableLessonId(…a1-07)` = `l-a1-08`; lint+test; commit + push.
 
 **Bước thực hiện**:
-1. PHASE1 (done): AGENTS, BACKLOG (271 ready), PLAN, CONTENT_STYLE §6–7, gold a1-06 + unit7 shopping, path meta l-a1-07 exists, tests sequential stop at a1-06.
-2. BACKLOG TASK-271 → `in_progress`. ready 272–273 ≥2 skip refill.
+1. PHASE1 (done): AGENTS, BACKLOG (272 ready), PLAN, CONTENT_STYLE §6–7, gold a1-07 + path meta l-a1-08 exists, tests sequential stop at a1-07.
+2. BACKLOG TASK-272 → `in_progress`. ready 273 ≥1; refill if ready < 2 after done.
 3. PHASE3:
-   - Author `src/lib/v2/lessons/l-a1-07.ts` (8 stages, L1 100%, How much is/are + money light).
+   - Author `src/lib/v2/lessons/l-a1-08.ts` (8 stages, L1 100%, I'd like / Can I have + cafe lexis).
    - Register in `lessons/index.ts`.
-   - Update `lesson-spec-v2.test.ts` (title + sequential after a1-06).
+   - Update `lesson-spec-v2.test.ts` (title + sequential after a1-07).
    - Optional: `docs/product/V2_PRODUCT.md` authored list.
 4. `npm run lint && npm run test`.
-5. Log `logs/agent/*_TASK-271.log`; BACKLOG done + Nhật ký + SHA; PLAN completed; commit + `bash scripts/git-push.sh main`.
+5. Log `logs/agent/*_TASK-272.log`; BACKLOG done + Nhật ký + SHA; PLAN completed; commit + `bash scripts/git-push.sh main`.
 
 **Rủi ro**:
 - Schema L1 100% A1 — every lexis item needs `l1_note_vi` ≥10 chars.
-- How much is (sg) vs How much are (pl) — core VN trap; light numbers (ten, fifty, hundred + dollars/dong).
-- Spiral a1-02: age/job/phone/email — not pure numbers only.
-- Sequential test must list all A0 + a1-01..06 completed → next a1-07.
+- I'd like + noun vs Can I have + noun — core polite order; not I want only.
+- Spiral a1-07: How much is/are, dollars, I'll take it — cafe bill/price link.
+- Lexis max 12; grammar rule max 120; dialogue lines max 12.
+- Sequential test must list all A0 + a1-01..07 completed → next a1-08.
 - Transient lint/test flake → clear tsbuildinfo + rerun once; 2 fails → blocked.
 - Push needs GitLab → blocked, no force.
 
 **Started:** 2026-07-10 — autopilot
-
-**Completed TASK-271**: `l-a1-07` shopping How much is/are + money light; L1 100%; registry + sequential after a1-06; lint0+213t; docs V2_PRODUCT; log + commit + push; autonomous. Next: TASK-272 / l-a1-08.
-
-### TASK-270 — Author l-a1-06 Nhà cửa (prior)
-**Completed TASK-270**: `l-a1-06` home/rooms there is/are; L1 100%; sequential after a1-05; commit 35e9f0e. Next: TASK-271 / l-a1-07.
