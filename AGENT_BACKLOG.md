@@ -1915,7 +1915,7 @@
 - **Mô tả:** Places in town; Where is…? / next to / opposite / turn left. L1 100%.
 - **Done khi:** schema + registry + path sequential.
 - **Started:** 2026-07-10 — autopilot (PHASE1: AGENTS/BACKLOG/PLAN + a1-08 gold + schema/path/tests; PHASE2: PLAN; PHASE3: author l-a1-09 + registry + sequential after a1-08)
-- **Completed:** 2026-07-10 — l-a1-09 full LessonSpec (bank/station/supermarket/hospital/post office; Where is…? / next to / opposite / turn left / go straight; spiral a1-08 cafe); L1 100%; registry + sequential after a1-08; lint0+222t; docs V2_PRODUCT; commit a5394ab
+- **Completed:** 2026-07-10 — l-a1-09 full LessonSpec (bank/station/supermarket/hospital/post office; Where is…? / next to / opposite / turn left / go straight; spiral a1-08 cafe); L1 100%; registry + sequential after a1-08; lint0+222t; docs V2_PRODUCT; commit a5394ab. **Push blocked:** GitHub `origin` archived read-only; GitLab SSH publickey denied. Local main only.
 
 
 ### TASK-277 — Nav: Học tab → /home when v2 flag
