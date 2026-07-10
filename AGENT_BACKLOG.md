@@ -1829,7 +1829,7 @@
 - **Mô tả:** HomeClient uses Screen/Surface/AppButton/PageHeader/Chip; keep continue CTA + B1 %.
 - **Done khi:** Home only uses design-system CTAs/cards; lint+test.
 - **Started:** 2026-07-10 — autopilot (PHASE1: AGENTS/BACKLOG/PLAN/CONTENT§6–7 + HomeClient + design-system + UI_SYSTEM; PHASE2 PLAN; PHASE3 compose primitives)
-- **Completed:** 2026-07-10 — HomeClient on Screen(ato+ambient)/Surface/AppButton/PageHeader/Chip; keep continue CTA + B1 %; data-testid continue-learning + b1-progress; lint0+213t; log 20260710T030540Z_TASK-262.log
+- **Completed:** 2026-07-10 — HomeClient on Screen(ato+ambient)/Surface/AppButton/PageHeader/Chip; keep continue CTA + B1 %; data-testid continue-learning + b1-progress; lint0+213t; log 20260710T030540Z_TASK-262.log; commit dad7d9d
 
 ### TASK-263 — UI Learn + LessonPlayerV2 chrome
 - **Status:** `ready`
