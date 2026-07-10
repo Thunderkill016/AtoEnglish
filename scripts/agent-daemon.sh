@@ -27,6 +27,10 @@ echo $$ > "$PIDFILE"
 trap 'rm -f "$PIDFILE"; log "🛑 Daemon stopped"; exit 0' INT TERM
 
 log "🟢 Autopilot daemon started (pid $$) — chạy liên tục, không dừng"
+log "📌 Policy: no empty maintenance fallback (ALLOW_MAINTENANCE_FALLBACK=0); pick prefers UI/content"
+
+# Never invent maintenance sweeps in daemon mode
+export ALLOW_MAINTENANCE_FALLBACK="${ALLOW_MAINTENANCE_FALLBACK:-0}"
 
 FAIL_STREAK=0
 EMPTY_STREAK=0
@@ -36,10 +40,17 @@ while true; do
   READY_COUNT=${READY_COUNT:-0}
 
   if [[ "$READY_COUNT" -lt 2 ]]; then
-    log "📭 Backlog thấp ($READY_COUNT ready) — auto-refill từ AGENT_ROADMAP.md..."
+    log "📭 Backlog thấp ($READY_COUNT ready) — auto-refill feature tasks only..."
     bash "$ROOT/scripts/agent-refill-backlog.sh" 2>&1 | tee -a "$LOGFILE" || true
     READY_COUNT=$(grep -c '\*\*Status:\*\* `ready`' "$ROOT/AGENT_BACKLOG.md" 2>/dev/null || true)
     READY_COUNT=${READY_COUNT:-0}
+  fi
+
+  if [[ "$READY_COUNT" -eq 0 ]]; then
+    EMPTY_STREAK=$((EMPTY_STREAK + 1))
+    log "⚠️  0 ready feature tasks (empty streak $EMPTY_STREAK) — nghỉ 10 phút, KHÔNG spawn maintenance"
+    sleep 600
+    continue
   fi
   EMPTY_STREAK=0
 

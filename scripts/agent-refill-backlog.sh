@@ -3,7 +3,11 @@
 # Không cần user — daemon/orchestrator gọi mỗi cycle.
 #
 # Usage: bash scripts/agent-refill-backlog.sh [--dry-run]
-# Env: MIN_READY=2 (default), REFILL_TARGET=4
+# Env:
+#   MIN_READY=2 (default)
+#   REFILL_TARGET=4
+#   ALLOW_MAINTENANCE_FALLBACK=0 (default) — NEVER invent empty sweeps
+#   Prefer feature: UI, content (Author/l-a*), v2 player — skip maintenance titles
 
 set -euo pipefail
 
@@ -13,11 +17,11 @@ ROADMAP="$ROOT/AGENT_ROADMAP.md"
 LOG_DIR="$ROOT/logs/agent"
 DRY_RUN=0
 [[ "${1:-}" == "--dry-run" ]] && DRY_RUN=1
-# Chỉ export khi dry-run — export DRY_RUN=0 khiến Python coi là truthy và không ghi file
 [[ "$DRY_RUN" == 1 ]] && export DRY_RUN=1
 
 MIN_READY="${MIN_READY:-2}"
 REFILL_TARGET="${REFILL_TARGET:-4}"
+export ALLOW_MAINTENANCE_FALLBACK="${ALLOW_MAINTENANCE_FALLBACK:-0}"
 
 mkdir -p "$LOG_DIR"
 log() { echo "[$(date -Iseconds)] $*"; }
@@ -36,19 +40,59 @@ if [[ "$READY_BEFORE" -ge "$MIN_READY" ]]; then
 fi
 
 NEED=$((REFILL_TARGET - READY_BEFORE))
-log "📭 Backlog thấp ($READY_BEFORE ready) — refill tối đa $NEED task từ roadmap..."
+log "📭 Backlog thấp ($READY_BEFORE ready) — refill tối đa $NEED task từ roadmap (no empty maint)..."
 
 RESULT=$(python3 - "$BACKLOG" "$ROADMAP" "$NEED" <<'PY'
-import re, sys
+import os
+import re
+import sys
 
 backlog_path, roadmap_path, need_s = sys.argv[1:4]
 need = int(need_s)
+allow_maint = os.environ.get("ALLOW_MAINTENANCE_FALLBACK", "0") == "1"
 
 backlog = open(backlog_path, encoding="utf-8").read()
-roadmap = open(roadmap_path, encoding="utf-8").read() if __import__("os").path.isfile(roadmap_path) else ""
+roadmap = (
+    open(roadmap_path, encoding="utf-8").read()
+    if os.path.isfile(roadmap_path)
+    else ""
+)
 
 existing_ids = set(re.findall(r"^### (TASK-\d+)", backlog, re.M))
-ready_count = len(re.findall(r"- \*\*Status:\*\* `ready`", backlog))
+
+
+def task_num(tid: str) -> int:
+    return int(tid.split("-")[1])
+
+
+def is_maintenance(title: str, desc: str) -> bool:
+    blob = f"{title} {desc}".lower()
+    return any(
+        k in blob
+        for k in (
+            "maintenance sweep",
+            "autopilot maintenance",
+            "gates only",
+            "không feature mới",
+            "no feature",
+            "empty sweep",
+        )
+    )
+
+
+def feature_priority(title: str, desc: str) -> int:
+    """Lower = higher priority. Maintenance should not enter pool when allow_maint=0."""
+    blob = f"{title} {desc}".lower()
+    if re.search(r"\bui\b|ato surface|header|bottom.?nav|home redesign|speaking hub", blob):
+        return 0
+    if re.search(r"author|l-a[012]|l-b1|lesson.?spec|content factory", blob):
+        return 1
+    if re.search(r"player|quiz floor|scramble|cloze|progress gate", blob):
+        return 2
+    if re.search(r"speaking|guest|fsrs", blob):
+        return 3
+    return 5
+
 
 pool_blocks = []
 for block in re.split(r"(?=^### TASK-\d+)", roadmap, flags=re.M):
@@ -62,34 +106,37 @@ for block in re.split(r"(?=^### TASK-\d+)", roadmap, flags=re.M):
     done_m = re.search(r"- \*\*Done khi:\*\* (.+)", block)
     if not desc_m:
         continue
-    pool_blocks.append((tid, title, desc_m.group(1).strip(), done_m.group(1).strip() if done_m else "lint+test pass"))
+    desc = desc_m.group(1).strip()
+    done = done_m.group(1).strip() if done_m else "lint+test pass"
+    if is_maintenance(title, desc) and not allow_maint:
+        continue
+    pri = feature_priority(title, desc)
+    pool_blocks.append((pri, task_num(tid), tid, title, desc, done))
 
-# Sort by task number
-def task_num(tid):
-    return int(tid.split("-")[1])
+pool_blocks.sort(key=lambda x: (x[0], x[1]))
+to_add = [(tid, title, desc, done) for _, _, tid, title, desc, done in pool_blocks[:need]]
 
-pool_blocks.sort(key=lambda x: task_num(x[0]))
-
-to_add = pool_blocks[:need]
-if not to_add:
-    # Fallback: generate maintenance tasks beyond max id
+if not to_add and allow_maint:
+    # Explicit opt-in only — invent maintenance beyond max id
     max_n = max((task_num(t) for t in existing_ids), default=0)
     for i in range(1, need + 1):
         n = max_n + i
-        tid = f"TASK-{n:03d}"
+        tid = f"TASK-{n:03d}" if n < 1000 else f"TASK-{n}"
         if tid in existing_ids:
             continue
-        to_add.append((
-            tid,
-            f"Autopilot maintenance sweep #{n}",
-            "Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.",
-            "lint+test pass; 1 commit nếu có fix nhỏ",
-        ))
+        to_add.append(
+            (
+                tid,
+                f"Autopilot maintenance sweep #{n}",
+                "Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.",
+                "lint+test pass; 1 commit nếu có fix nhỏ",
+            )
+        )
         if len(to_add) >= need:
             break
 
 if not to_add:
-    print("ADDED=0")
+    print("ADDED=0 REASON=no_feature_pool")
     sys.exit(0)
 
 entries = []
@@ -116,12 +163,11 @@ log_rows = "".join(
     for tid, *_ in to_add
 )
 
-# Append log after header row of nhật ký table (first data row)
 nhật_ký_header = "| Date | Task | Result | Commit |\n|------|------|--------|--------|\n"
 if nhật_ký_header in new_backlog:
     new_backlog = new_backlog.replace(nhật_ký_header, nhật_ký_header + log_rows, 1)
 
-if __import__("os").environ.get("DRY_RUN") != "1":
+if os.environ.get("DRY_RUN") != "1":
     open(backlog_path, "w", encoding="utf-8").write(new_backlog)
 
 ids = ",".join(t[0] for t in to_add)
@@ -135,7 +181,11 @@ IDS=$(echo "$RESULT" | grep -oE 'IDS=[^ ]+' | head -1 | cut -d= -f2-)
 IDS=${IDS:-}
 
 if [[ "$ADDED" -eq 0 ]]; then
-  log "⚠️  Không thêm được task (roadmap hết hoặc lỗi parse)"
+  if echo "$RESULT" | grep -q 'no_feature_pool'; then
+    log "⚠️  Roadmap hết feature task — KHÔNG tạo maintenance rỗng (set ALLOW_MAINTENANCE_FALLBACK=1 nếu thật sự cần)"
+  else
+    log "⚠️  Không thêm được task (roadmap hết hoặc lỗi parse)"
+  fi
   exit 0
 fi
 

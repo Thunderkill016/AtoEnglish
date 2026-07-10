@@ -14,7 +14,7 @@
 
 - Format giống backlog: `### TASK-NNN — Title` + Mô tả + Done khi
 - Chỉ thêm số TASK **lớn hơn** mọi TASK đã có trong backlog
-- **Ưu tiên (2026-07-10+):** **V2 Content Factory** — sequential `l-a0-*` → A1→B1 LessonSpec lessons (B1 Independent User). Then player gates, speaking coach, guest flow. **No empty maintenance sweeps** when content tasks exist. Deprecate minimal-UI pool.
+- **Ưu tiên (2026-07-10+):** (1) **Ato Surface UI** TASK-262…265 (2) **A1 content** `l-a1-03+` (3) player/speaking. **CẤM** auto-generate empty maintenance sweeps (`ALLOW_MAINTENANCE_FALLBACK=0`). Refill only from feature pool. Pick skips maintenance when any feature ready.
 
 ---
 
@@ -52,6 +52,21 @@
 - **Done khi:** roadmap residual listed.
 
 ---
+
+## Pool — A1 Content Factory (continue after UI)
+
+### TASK-266 — Author l-a1-03 Gia đình & bạn bè
+- **Mô tả:** LessonSpec A1: family/friends expansion beyond a0-05; This is my friend… Spiral a1-01/02. L1 100%.
+- **Done khi:** schema + registry + sequential after a1-02.
+
+### TASK-267 — Author l-a1-04 Thói quen hàng ngày
+- **Mô tả:** Daily routine present simple; get up / go to work. Spiral time of day. L1 100%.
+- **Done khi:** schema + registry + path sequential.
+
+### TASK-268 — Author l-a1-05 Sở thích
+- **Mô tả:** like / love / hate + -ing; hobbies. L1 100%.
+- **Done khi:** schema + registry + path sequential.
+
 
 ## Pool — V2 Content Factory + B1 Path (2026-07-10+ PRIORITY)
 

@@ -1797,16 +1797,18 @@
 - **Completed:** 2026-07-10 — gates clean (tsc0+lint0+213t+cs50/50+audit50/50) no fix; log 20260710T030026Z_TASK-257.log; PLAN/BACKLOG sync; no src; autonomous
 
 ### TASK-258 — Autopilot maintenance sweep #258
-- **Status:** `ready`
+- **Status:** `cancelled`
 - **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
 - **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
 - **Started:** auto-refill
+- **Cancelled:** 2026-07-10 — ops fix: empty maintenance banned; prefer UI/content
 
 ### TASK-259 — Autopilot maintenance sweep #259
-- **Status:** `ready`
+- **Status:** `cancelled`
 - **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
 - **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
 - **Started:** auto-refill
+- **Cancelled:** 2026-07-10 — ops fix: empty maintenance banned; prefer UI/content
 
 ### TASK-260 — UI Ato Surface: tokens + design-system primitives
 - **Status:** `done`
@@ -1852,6 +1854,7 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
+| 2026-07-10 | OPS | cancel empty maintenance ready (TASK-258,TASK-259); refill/pick prefer feature | done |
 | 2026-07-10 | TASK-257 | gates clean (tsc0+lint0+213t+cs50/50+audit50/50) no fix; log 20260710T030026Z_TASK-257.log; PLAN/BACKLOG sync; no src | done — 6c12963 |
 | 2026-07-10 | TASK-256 | gates clean (tsc0+lint0+213t+cs50/50+audit50/50) no fix; log 20260710T025545Z_TASK-256.log; PLAN/BACKLOG sync; no src | done — 9c38898 |
 | 2026-07-10 | TASK-261 | feat(ui): shell Header+BottomNav Ato Surface; hide v2 lesson chrome | done — b5f678d |

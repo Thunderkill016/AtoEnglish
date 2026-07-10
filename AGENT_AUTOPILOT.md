@@ -70,9 +70,11 @@ bash scripts/agent-refill-backlog.sh             # refill + commit + push (auto 
 ```
 
 - Cơ chế: `agent-pick-task.sh` + `agent-orchestrator.sh` tự gọi refill khi ready < MIN_READY (2). Script parse ROADMAP (### TASK-xxx), chèn tối đa 4 `ready` trước marker "Nhật ký agent", commit "chore(agent): auto-refill...".
-- Ưu tiên: P0 → P1 → P2 → P3 (theo thứ tự trong ROADMAP + backlog queue)
-- Agent nhận task `ready` đầu tiên (sau tự refill nếu cần)
-- Muốn ưu tiên feature cụ thể: thêm vào `AGENT_ROADMAP.md` (KHÔNG sửa BACKLOG tay; agent sẽ tự đưa vào khi refill)
+- **Ưu tiên pick:** UI / content (`Author`, `l-a*`) / player **trước** maintenance. Không pick empty sweep nếu còn feature `ready`.
+- **CẤM** auto-tạo maintenance rỗng khi roadmap hết feature. Env `ALLOW_MAINTENANCE_FALLBACK=0` (default). Chỉ set `=1` khi chủ động muốn sweep gates.
+- Daemon: nếu 0 ready feature → nghỉ 10 phút, **không** spawn TASK maintenance mới.
+- Muốn thêm việc: ghi `AGENT_ROADMAP.md` (UI, content, player) — agent refill sẽ lấy.
+- **1 agent / repo:** daemon dùng `flock` trên `logs/agent/.daemon.lock`. Không chạy session interactive + daemon cùng lúc trên cùng working tree (tránh stash đè code).
 
 ## CI — GitLab + local (đã bỏ GitHub Actions auto)
 
