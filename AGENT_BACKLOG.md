@@ -1949,10 +1949,10 @@
 - **Completed:** 2026-07-10 — feat(v2) l-a1-10 can/can't; L1 100%; spiral×6 a1-01..09; registry+path sequential; lint0+222t; commit 1be2331
 
 ### TASK-275 — Author l-a1-11 Sức khỏe & cảm xúc
-- **Status:** `ready`
+- **Status:** `in_progress`
 - **Mô tả:** How are you / I feel… health lexis; L1 100%.
 - **Done khi:** schema + registry + path.
-- **Started:** auto-refill
+- **Started:** 2026-07-10 — autopilot (PHASE1: ARCHIVE noted; user mandate TASK-275; inspect a1-10 + unit11 + path/registry/tests; PHASE2: AGENT_PLAN; PHASE3: author l-a1-11)
 
 ### TASK-276 — Author l-a1-12 Ôn A1 & áp dụng
 - **Status:** `ready`

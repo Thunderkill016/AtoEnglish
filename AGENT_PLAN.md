@@ -1,25 +1,46 @@
-# Agent Plan — TASK-274 complete (local)
+# Agent Plan — TASK-275 in progress
 
-> Autopilot 2026-07-10: Author `l-a1-10` Khả năng (can/can't).
+> Autopilot 2026-07-10: Author `l-a1-11` Sức khỏe & cảm xúc.
 
 | Field | Value |
 |-------|-------|
-| Task | TASK-274 — Author l-a1-10 Khả năng (can) |
-| Status | **done (local)** — push may be blocked |
-| Commits | `1be2331` feat |
-| Gates | lint 0 · 222 tests pass |
+| Task | TASK-275 — Author l-a1-11 Sức khỏe & cảm xúc |
+| Status | **in_progress** |
+| Scope | How are you / I feel… health lexis; L1 100% |
+| Gates | lint 0 · npm test pass |
 
-## Delivered
+## Goal
 
-- **`src/lib/v2/lessons/l-a1-10.ts`** full LessonSpec (12 lexis L1 100%, grammar can/can't/Can you…?, controlled×6, dialogue interview skills, listen×4, fluency×8, speak task, quiz×6, spiral×6 a1-09/08/07/05/01/04)
-- **Registry** `lessons/index.ts` + sequential path after `l-a1-09` (meta already in `path.ts`)
-- **Tests** registry title + getNextPlayable a1-09→a1-10
-- **Docs** `V2_PRODUCT.md` authored …`l-a1-10`; next factory `l-a1-11`…
+Ship playable LessonSpec `l-a1-11` (path meta already in `path.ts`):
 
-## Push
+- have/has + illness (a headache, a cold, a fever…)
+- feel/feels + adjective (tired, happy, stressed…)
+- How are you / How are you feeling?
+- L1 notes 100% on all lexis (A1 schema gate)
+- Spiral ×6 from a1-10 / a1-09 / a1-08 / a1-05 / a1-01 / a1-04
+- Registry + sequential path after `l-a1-10`
+- Tests + `V2_PRODUCT.md` authored list
 
-Attempt `bash scripts/git-push.sh main`. If GitHub archive / GitLab key fail, code stays on local `main` only (same as TASK-273).
+## Steps
+
+1. Status → `in_progress` in AGENT_BACKLOG.md
+2. Author `src/lib/v2/lessons/l-a1-11.ts` (mirror l-a1-10 structure; content from v1 unit11 gold)
+3. Register in `lessons/index.ts`
+4. Extend `lesson-spec-v2.test.ts` (title + getNextPlayable a1-10→a1-11)
+5. Docs: `V2_PRODUCT.md` authored …`l-a1-11`
+6. `npm run lint && npm run test`
+7. Commit + `bash scripts/git-push.sh main`; backlog done + SHA
+
+## Risks
+
+- Schema: lexis max 12, L1 ≥10 chars each, dialogue 3–12 lines, quiz 4–10, spiral 2–6
+- Push may fail if GitHub archive / GitLab key (same as TASK-273/274) — keep local main
+- Do not touch v1 units or change LessonSpec schema
+
+## Out of scope
+
+- l-a1-12, DB progress, audio generation, player UI changes
 
 ## Next ready
 
-TASK-275 / 276 (v2 A1 content) if product work continues.
+TASK-276 — Author l-a1-12 Ôn A1 & áp dụng
