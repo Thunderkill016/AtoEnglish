@@ -1956,10 +1956,11 @@
 - **Completed:** 2026-07-10 — feat(v2) l-a1-11 health & feelings; L1 100%; spiral×6 a1-10..01; registry+path sequential; lint0+222t; commit 8dbf415
 
 ### TASK-276 — Author l-a1-12 Ôn A1 & áp dụng
-- **Status:** `ready`
+- **Status:** `done`
 - **Mô tả:** A1 review spiral + freer task; marks end A1 block.
 - **Done khi:** A1 12/12 authored; Home continue walks a1 path.
-- **Started:** auto-refill
+- **Started:** 2026-07-10 — autopilot (PHASE1: ARCHIVE noted; user mandate TASK-276; inspect a1-11 + unit12 + path/registry/tests; PHASE2: AGENT_PLAN; PHASE3: author l-a1-12)
+- **Completed:** 2026-07-10 — feat(v2) l-a1-12 A1 review & apply; L1 100%; spiral×6; freer speak; registry+path sequential; A1 12/12; lint0+222t
 
 
 ### TASK-280 — FSRS seed from v2 LessonSpec lexis
