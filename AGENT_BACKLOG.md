@@ -1942,10 +1942,11 @@
 
 
 ### TASK-274 — Author l-a1-10 Khả năng (can)
-- **Status:** `in_progress`
+- **Status:** `done`
 - **Mô tả:** LessonSpec A1 can/can't survival; L1 100%; spiral a1-01..09.
 - **Done khi:** schema + registry + sequential path.
 - **Started:** 2026-07-10 — autopilot (PHASE1: ARCHIVE noted; user mandate TASK-274; inspect a1-09 + unit10 + path/registry/tests; PHASE2: AGENT_PLAN; PHASE3: author l-a1-10)
+- **Completed:** 2026-07-10 — feat(v2) l-a1-10 can/can't; L1 100%; spiral×6 a1-01..09; registry+path sequential; lint0+222t; commit 1be2331
 
 ### TASK-275 — Author l-a1-11 Sức khỏe & cảm xúc
 - **Status:** `ready`
@@ -1970,6 +1971,7 @@
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
 | 2026-07-10 | TASK-284 | feat(ui): Progress + Me Ato Surface; no landing rewrite | done — c585708 |
+| 2026-07-10 | TASK-274 | feat(v2): l-a1-10 can/can't; L1 100%; spiral a1-01..09 | done — 1be2331 (push blocked: GitHub archive) |
 | 2026-07-10 | TASK-274 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-10 | TASK-275 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-10 | TASK-276 | auto-refill từ AGENT_ROADMAP.md | ready |
