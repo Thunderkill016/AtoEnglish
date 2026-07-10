@@ -38,6 +38,7 @@ import {
 import DashboardHubNav from "./DashboardHubNav";
 import LevelProgressBar from "./LevelProgressBar";
 import StreakFreezeCard from "@/features/streak/components/StreakFreezeCard";
+import { Surface } from "@/components/design-system";
 
 // Dynamic import — PushPermissionCard uses browser APIs (Notification, PushManager)
 const PushPermissionCard = dynamic(
@@ -100,17 +101,17 @@ interface DashboardClientProps {
 const getLevelBadgeStyles = (level: string) => {
   switch (level) {
     case "A0":
-      return "bg-zinc-100 text-zinc-700 dark:bg-zinc-800/60 dark:text-zinc-300";
+      return "bg-zinc-800/60 text-zinc-300";
     case "A1":
-      return "bg-emerald-100 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400";
+      return "bg-emerald-950/40 text-emerald-400";
     case "A2":
-      return "bg-blue-100 text-blue-700 dark:bg-blue-950/40 dark:text-blue-400";
+      return "bg-blue-950/40 text-blue-400";
     case "B1":
-      return "bg-purple-100 text-purple-700 dark:bg-purple-950/40 dark:text-purple-400";
+      return "bg-purple-950/40 text-purple-400";
     case "B2":
-      return "bg-amber-100 text-amber-700 dark:bg-amber-950/40 dark:text-amber-400";
+      return "bg-amber-950/40 text-amber-400";
     default:
-      return "bg-zinc-100 text-zinc-700 dark:bg-zinc-800/60 dark:text-zinc-300";
+      return "bg-zinc-800/60 text-zinc-300";
   }
 };
 
@@ -343,12 +344,12 @@ export default function DashboardClient({
         {/* ── 1. Greeting row ── */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-4">
           <div>
-            <p className="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest mb-0.5 whitespace-nowrap">
+            <p className="text-xs font-bold text-emerald-400 uppercase tracking-widest mb-0.5 whitespace-nowrap">
               Chào mừng trở lại
             </p>
-            <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-zinc-900 dark:text-zinc-50">
+            <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-zinc-50">
               {greeting},{" "}
-              <span className="bg-gradient-to-r from-emerald-600 via-teal-500 to-emerald-500 bg-clip-text text-transparent dark:from-emerald-400 dark:via-teal-400 dark:to-emerald-300">
+              <span className="bg-gradient-to-r from-emerald-400 via-teal-400 to-emerald-300 bg-clip-text text-transparent">
                 {userName}
               </span>
               !
@@ -364,7 +365,7 @@ export default function DashboardClient({
                   initial={{ opacity: 0, y: 6 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
-                  className="mt-2 p-3 sm:p-3.5 rounded-2xl border border-emerald-500/20 bg-white/5 dark:bg-white/5 backdrop-blur-md text-[11px] sm:text-xs text-emerald-700 dark:text-emerald-300 flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-2"
+                  className="mt-2 p-3 sm:p-3.5 rounded-2xl border border-emerald-500/20 bg-white/5 backdrop-blur-md text-[11px] sm:text-xs text-emerald-300 flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-2"
                 >
                   <span>Tiến độ tự học (bài + nói) được giữ an toàn ngay trên trình duyệt này. Đăng nhập để tiếp tục mượt mà trên mọi thiết bị.</span>
                 </motion.div>
@@ -399,84 +400,86 @@ export default function DashboardClient({
         )}
 
 
-        {/* ── 2. Stats strip ── */}
+        {/* ── 2. Stats strip — Ato Surface (TASK-278) ── */}
         <div className="grid grid-cols-3 gap-3">
           {/* XP today */}
           <div
             onClick={() => setShowGoalSelector(true)}
-            className="rounded-2xl border border-zinc-200/60 dark:border-zinc-800/60 bg-white/60 dark:bg-zinc-900/30 backdrop-blur-sm p-4 space-y-2 hover:border-emerald-500/30 transition-colors duration-200 cursor-pointer relative overflow-hidden group"
             title="Nhấn để thay đổi mục tiêu daily XP"
+            className="cursor-pointer group"
           >
-            {showGoalSelector && (
-              <div className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-zinc-950/95 border border-zinc-800 p-2.5 space-y-1.5 rounded-2xl">
-                <p className="text-[9px] font-black text-emerald-400 uppercase tracking-widest">Mục tiêu XP mới</p>
-                <div className="grid grid-cols-2 gap-1 w-full">
-                  {[30, 50, 80, 100].map((val) => (
-                    <button
-                      key={val}
-                      disabled={updatingGoal}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleUpdateGoal(val);
-                      }}
-                      className={`py-1 rounded-lg text-[9px] font-extrabold transition-all border ${
-                        xpTarget === val
-                          ? "bg-gradient-to-r from-emerald-500 to-teal-500 text-white border-emerald-400 shadow-sm"
-                          : "bg-zinc-900 border-zinc-800 text-zinc-300 hover:border-emerald-500/30"
-                      }`}
-                    >
-                      {val} XP
-                    </button>
-                  ))}
+            <Surface
+              variant="interactive"
+              className="rounded-2xl p-4 space-y-2 relative overflow-hidden"
+              data-testid="dash-xp-card"
+            >
+              {showGoalSelector && (
+                <div className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-zinc-950/95 border border-zinc-800 p-2.5 space-y-1.5 rounded-2xl">
+                  <p className="text-[9px] font-black text-emerald-400 uppercase tracking-widest">Mục tiêu XP mới</p>
+                  <div className="grid grid-cols-2 gap-1 w-full">
+                    {[30, 50, 80, 100].map((val) => (
+                      <button
+                        key={val}
+                        disabled={updatingGoal}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleUpdateGoal(val);
+                        }}
+                        className={`py-1 rounded-lg text-[9px] font-extrabold transition-all border ${
+                          xpTarget === val
+                            ? "bg-gradient-to-r from-emerald-500 to-teal-500 text-white border-emerald-400 shadow-sm"
+                            : "bg-zinc-900 border-zinc-800 text-zinc-300 hover:border-emerald-500/30"
+                        }`}
+                      >
+                        {val} XP
+                      </button>
+                    ))}
+                  </div>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setShowGoalSelector(false);
+                    }}
+                    className="text-[8px] text-zinc-500 hover:text-zinc-300 font-bold uppercase transition-colors"
+                  >
+                    Đóng
+                  </button>
                 </div>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setShowGoalSelector(false);
-                  }}
-                  className="text-[8px] text-zinc-500 hover:text-zinc-300 font-bold uppercase transition-colors"
-                >
-                  Đóng
-                </button>
-              </div>
-            )}
+              )}
 
-            {/* Label — changes based on mode */}
-            <div className="flex items-center gap-2">
-              <span className="flex size-7 items-center justify-center rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
-                <Star className="size-3.5 fill-current" />
-              </span>
-              <span className="text-[10px] font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider group-hover:text-emerald-500 transition-colors">
-                {xpCurrent === 0 ? "Mục tiêu hôm nay ⚙️" : "XP hôm nay ⚙️"}
-              </span>
-            </div>
-
-            {xpCurrent === 0 ? (
-              /* ── Opportunity mode: no XP yet today ── */
-              <div className="space-y-1.5">
-                <p className="text-xl font-black text-zinc-900 dark:text-zinc-50 leading-none">
-                  {xpTarget} <span className="text-xs font-bold text-zinc-400 dark:text-zinc-500">XP</span>
-                </p>
-                <p className="text-[10px] font-semibold text-emerald-600 dark:text-emerald-400 leading-tight">
-                  Học bài đầu tiên →
-                </p>
+              <div className="flex items-center gap-2">
+                <span className="flex size-7 items-center justify-center rounded-lg bg-emerald-500/10 text-emerald-400">
+                  <Star className="size-3.5 fill-current" />
+                </span>
+                <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider group-hover:text-emerald-400 transition-colors">
+                  {xpCurrent === 0 ? "Mục tiêu hôm nay ⚙️" : "XP hôm nay ⚙️"}
+                </span>
               </div>
-            ) : (
-              /* ── Progress mode: already earned XP today ── */
-              <div className="space-y-1.5">
-                <p className="text-xl font-black text-zinc-900 dark:text-zinc-50 leading-none">
-                  {xpCurrent}<span className="text-xs font-bold text-zinc-400 dark:text-zinc-500">/{xpTarget}</span>
-                </p>
-                {/* Mini progress bar — only shown when progress > 0 */}
-                <div className="h-2 w-full bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
-                  <div
-                    className="h-full bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full transition-all duration-700"
-                    style={{ width: `${Math.min(xpPercent, 100)}%` }}
-                  />
+
+              {xpCurrent === 0 ? (
+                <div className="space-y-1.5">
+                  <p className="text-xl font-black text-zinc-50 leading-none">
+                    {xpTarget} <span className="text-xs font-bold text-zinc-500">XP</span>
+                  </p>
+                  <p className="text-[10px] font-semibold text-emerald-400 leading-tight">
+                    Học bài đầu tiên →
+                  </p>
                 </div>
-                <p className="text-[9px] text-emerald-600/80 dark:text-emerald-400/80 font-medium">Nhỏ đều &gt; burst — giữ thói quen nói mỗi ngày.</p>
-              </div>
-            )}
+              ) : (
+                <div className="space-y-1.5">
+                  <p className="text-xl font-black text-zinc-50 leading-none">
+                    {xpCurrent}<span className="text-xs font-bold text-zinc-500">/{xpTarget}</span>
+                  </p>
+                  <div className="h-2 w-full bg-zinc-800 rounded-full overflow-hidden">
+                    <div
+                      className="h-full bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full transition-all duration-700"
+                      style={{ width: `${Math.min(xpPercent, 100)}%` }}
+                    />
+                  </div>
+                  <p className="text-[9px] text-emerald-400/80 font-medium">Nhỏ đều &gt; burst — giữ thói quen nói mỗi ngày.</p>
+                </div>
+              )}
+            </Surface>
           </div>
 
           {/* Level */}
@@ -492,59 +495,57 @@ export default function DashboardClient({
             const nextLevel = NEXT[shortLevel] ?? "";
             const unitsLeft = Math.max(0, levelUnitsAll.length - levelUnitsDone);
             return (
-              <Link
-                href="/roadmap"
-                className="rounded-2xl border border-zinc-200/60 dark:border-zinc-800/60 bg-white/60 dark:bg-zinc-900/30 backdrop-blur-sm p-4 space-y-2 hover:border-blue-500/30 transition-colors duration-200 cursor-pointer block"
-              >
-                <div className="flex items-center gap-2">
-                  <span className="flex size-7 items-center justify-center rounded-lg bg-blue-500/10 text-blue-600 dark:text-blue-400">
-                    <GraduationCap className="size-3.5" />
-                  </span>
-                  <span className="text-[10px] font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">Trình độ</span>
-                </div>
-                <p className="text-xl font-black text-zinc-900 dark:text-zinc-50 leading-none">{shortLevel}</p>
-                {nextLevel && levelUnitsAll.length > 0 ? (
-                  <>
-                    <div className="h-1.5 w-full bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
-                      <div
-                        className="h-full bg-gradient-to-r from-blue-500 to-violet-500 rounded-full transition-all duration-700"
-                        style={{ width: `${levelProgress}%` }}
-                      />
-                    </div>
-                    <p className="text-[9px] text-blue-500 dark:text-blue-400 font-bold">
-                      {unitsLeft > 0 ? `Còn ${unitsLeft} bài → ${nextLevel}` : `Sẵn sàng lên ${nextLevel}! 🎉`}
-                    </p>
-                  </>
-                ) : (
-                  <p className="text-[10px] text-zinc-500 dark:text-zinc-400 font-medium tabular-nums">{displayXp} XP tích lũy</p>
-                )}
+              <Link href="/roadmap" className="block">
+                <Surface variant="interactive" className="rounded-2xl p-4 space-y-2 h-full">
+                  <div className="flex items-center gap-2">
+                    <span className="flex size-7 items-center justify-center rounded-lg bg-blue-500/10 text-blue-400">
+                      <GraduationCap className="size-3.5" />
+                    </span>
+                    <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider">Trình độ</span>
+                  </div>
+                  <p className="text-xl font-black text-zinc-50 leading-none">{shortLevel}</p>
+                  {nextLevel && levelUnitsAll.length > 0 ? (
+                    <>
+                      <div className="h-1.5 w-full bg-zinc-800 rounded-full overflow-hidden">
+                        <div
+                          className="h-full bg-gradient-to-r from-blue-500 to-violet-500 rounded-full transition-all duration-700"
+                          style={{ width: `${levelProgress}%` }}
+                        />
+                      </div>
+                      <p className="text-[9px] text-blue-400 font-bold">
+                        {unitsLeft > 0 ? `Còn ${unitsLeft} bài → ${nextLevel}` : `Sẵn sàng lên ${nextLevel}! 🎉`}
+                      </p>
+                    </>
+                  ) : (
+                    <p className="text-[10px] text-zinc-400 font-medium tabular-nums">{displayXp} XP tích lũy</p>
+                  )}
+                </Surface>
               </Link>
             );
           })()}
 
-          {/* Card 3: Chuỗi học (streak days) — more motivating than raw unit count */}
-          <Link
-            href="/progress"
-            className="rounded-2xl border border-zinc-200/60 dark:border-zinc-800/60 bg-white/60 dark:bg-zinc-900/30 backdrop-blur-sm p-4 space-y-2 hover:border-orange-500/30 transition-colors duration-200 cursor-pointer block"
-          >
-            <div className="flex items-center gap-2">
-              <span className="flex size-7 items-center justify-center rounded-lg bg-orange-500/10 text-orange-600 dark:text-orange-400">
-                <Flame className="size-3.5" />
-              </span>
-              <span className="text-[10px] font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">Chuỗi học</span>
-            </div>
-            <p className="text-xl font-black text-zinc-900 dark:text-zinc-50 leading-none">
-              {currentStreak}<span className="text-xs font-bold text-zinc-400 dark:text-zinc-500"> ngày</span>
-            </p>
-            <p className="text-[10px] text-zinc-500 dark:text-zinc-400 font-medium">
-              {currentStreak === 0
-                ? "Bắt đầu hôm nay →"
-                : currentStreak < 7
-                ? "🌱 Đang xây dựng!"
-                : currentStreak < 30
-                ? "🔥 Giữ vững nhé!"
-                : "⚡ Siêu kiên trì!"}
-            </p>
+          {/* Card 3: Chuỗi học */}
+          <Link href="/progress" className="block">
+            <Surface variant="interactive" className="rounded-2xl p-4 space-y-2 h-full">
+              <div className="flex items-center gap-2">
+                <span className="flex size-7 items-center justify-center rounded-lg bg-orange-500/10 text-orange-400">
+                  <Flame className="size-3.5" />
+                </span>
+                <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider">Chuỗi học</span>
+              </div>
+              <p className="text-xl font-black text-zinc-50 leading-none">
+                {currentStreak}<span className="text-xs font-bold text-zinc-500"> ngày</span>
+              </p>
+              <p className="text-[10px] text-zinc-400 font-medium">
+                {currentStreak === 0
+                  ? "Bắt đầu hôm nay →"
+                  : currentStreak < 7
+                  ? "🌱 Đang xây dựng!"
+                  : currentStreak < 30
+                  ? "🔥 Giữ vững nhé!"
+                  : "⚡ Siêu kiên trì!"}
+              </p>
+            </Surface>
           </Link>
         </div>
 
@@ -642,16 +643,16 @@ export default function DashboardClient({
 
         {/* ── Section: Tiến độ ── */}
         <div id="dash-progress" className="space-y-6 scroll-mt-28">
-        {/* Collapsible Detailed Stats Panel */}
-        <div className="rounded-2xl border border-zinc-200/60 dark:border-zinc-800/60 bg-white/60 dark:bg-zinc-900/30 backdrop-blur-sm overflow-hidden">
+        {/* Collapsible Detailed Stats Panel — Ato Surface */}
+        <Surface className="rounded-2xl overflow-hidden p-0">
           <button
             onClick={() => setShowDetailedStats((prev) => !prev)}
-            className="w-full flex items-center justify-between px-5 py-4 text-sm font-bold text-zinc-800 dark:text-zinc-100 hover:bg-zinc-100/50 dark:hover:bg-zinc-800/30 transition-colors"
+            className="w-full flex items-center justify-between px-5 py-4 text-sm font-bold text-zinc-100 hover:bg-white/5 transition-colors"
           >
             <span className="flex items-center gap-2">
               📊 Thống kê chi tiết & Lịch sử học
             </span>
-            <span className="text-zinc-500 dark:text-zinc-400">
+            <span className="text-zinc-400">
               {showDetailedStats ? (
                 <ChevronUp className="size-4" />
               ) : (
@@ -667,13 +668,13 @@ export default function DashboardClient({
                 animate={{ height: "auto", opacity: 1 }}
                 exit={{ height: 0, opacity: 0 }}
                 transition={{ duration: 0.25, ease: "easeInOut" }}
-                className="border-t border-zinc-200/40 dark:border-zinc-800/40 divide-y divide-zinc-200/40 dark:divide-zinc-800/40"
+                className="border-t border-white/10 divide-y divide-white/10"
               >
                 {weeklyData && weeklyData.length > 0 && (
                   <div className="p-4 space-y-3">
                     <div className="flex items-center justify-between">
-                      <p className="text-[10px] font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">Lịch chuỗi học tuần này</p>
-                      <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold">Luyện tập đều đặn để giữ streak!</span>
+                      <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider">Lịch chuỗi học tuần này</p>
+                      <span className="text-[10px] text-emerald-400 font-bold">Luyện tập đều đặn để giữ streak!</span>
                     </div>
                     <div className="flex justify-between items-center gap-1">
                       {weeklyData.map((d, idx) => {
@@ -685,8 +686,8 @@ export default function DashboardClient({
                               hasLearned
                                 ? "bg-gradient-to-br from-orange-500 to-amber-500 border-orange-400 text-white shadow-sm shadow-orange-500/20"
                                 : isToday
-                                  ? "bg-zinc-100 dark:bg-zinc-800 border-emerald-500/50 text-zinc-400 dark:text-zinc-500 ring-2 ring-emerald-500/20"
-                                  : "bg-zinc-50 dark:bg-zinc-950/40 border-zinc-200 dark:border-zinc-800/60 text-zinc-300 dark:text-zinc-700"
+                                  ? "bg-zinc-800 border-emerald-500/50 text-zinc-500 ring-2 ring-emerald-500/20"
+                                  : "bg-zinc-950/40 border-zinc-800/60 text-zinc-700"
                             }`}>
                               {hasLearned ? (
                                 <Flame className="size-4 fill-current animate-pulse text-orange-200" />
@@ -698,7 +699,7 @@ export default function DashboardClient({
                               )}
                             </div>
                             <span className={`text-[10px] font-bold ${
-                              isToday ? "text-emerald-600 dark:text-emerald-400 font-black" : "text-zinc-400 dark:text-zinc-500"
+                              isToday ? "text-emerald-400 font-black" : "text-zinc-500"
                             }`}>
                               {d.label}
                             </span>
@@ -734,7 +735,7 @@ export default function DashboardClient({
                   );
                 })()}
 
-                <div className="p-4 bg-zinc-50/50 dark:bg-zinc-900/10">
+                <div className="p-4 bg-zinc-900/20">
                   <WeeklyRecapCard
                     currentStreak={currentStreak}
                     totalXp={totalXp}
@@ -747,7 +748,7 @@ export default function DashboardClient({
               </motion.div>
             )}
           </AnimatePresence>
-        </div>
+        </Surface>
 
         {/* ── 8. Bottom utility sections ── */}
         <Link
@@ -757,8 +758,8 @@ export default function DashboardClient({
         >
           <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-blue-500/10 text-lg">💼</span>
           <div className="flex-1 min-w-0">
-            <p className="text-xs font-black text-zinc-900 dark:text-zinc-50 leading-tight">Business English Track</p>
-            <p className="text-[10px] text-zinc-500 dark:text-zinc-400">10 bài thiết yếu cho sự nghiệp — email, họp, thuyết trình</p>
+            <p className="text-xs font-black text-zinc-50 leading-tight">Business English Track</p>
+            <p className="text-[10px] text-zinc-400">10 bài thiết yếu cho sự nghiệp — email, họp, thuyết trình</p>
           </div>
           <ChevronRight className="size-4 text-blue-400/60 shrink-0 group-hover:text-blue-500 group-hover:translate-x-0.5 transition-all" />
         </Link>
@@ -780,10 +781,10 @@ export default function DashboardClient({
             <span className="flex size-10 items-center justify-center rounded-xl bg-violet-500/15 text-xl shrink-0">🏆</span>
             <div className="flex-1 min-w-0">
               <p className="text-xs font-black text-violet-400 uppercase tracking-widest mb-0.5">Kiểm tra đột phá!</p>
-              <p className="text-sm font-bold text-zinc-900 dark:text-zinc-50">
+              <p className="text-sm font-bold text-zinc-50">
                 Checkpoint Test — {completedUnits} units hoàn thành!
               </p>
-              <p className="text-[11px] text-zinc-500 dark:text-zinc-400">
+              <p className="text-[11px] text-zinc-400">
                 Đánh giá trình độ của bạn sau {completedUnits} bài học · ~10 phút
               </p>
             </div>
@@ -793,14 +794,13 @@ export default function DashboardClient({
 
         {/* WeeklyRecapCard moved to Collapsible Detailed Stats Panel */}
 
-        {/* ── 9. Collapsible Curriculum Progress Grid ── */}
-        <div className="rounded-2xl border border-zinc-200/60 dark:border-zinc-800/60 bg-white/60 dark:bg-zinc-900/25 backdrop-blur-sm p-5 sm:p-6">
+        {/* ── 9. Collapsible Curriculum Progress Grid — Ato Surface ── */}
+        <Surface className="rounded-2xl p-5 sm:p-6">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-sm font-bold text-zinc-900 dark:text-zinc-50">Tiến độ khoá học</h2>
-            <span className="text-xs text-zinc-500 dark:text-zinc-400 font-semibold">{completedUnitIds.length}/{allUnits.length} units</span>
+            <h2 className="text-sm font-bold text-zinc-50">Tiến độ khoá học</h2>
+            <span className="text-xs text-zinc-400 font-semibold">{completedUnitIds.length}/{allUnits.length} units</span>
           </div>
 
-          {/* Group by level */}
           {(expandProgressGrid ? ["A0", "A1", "A2", "B1", "B2"] : [shortLevel]).map(level => {
             const levelUnits = allUnits.filter(u => u.level === level);
             const levelDone = levelUnits.filter(u => completedUnitIds.includes(u.id)).length;
@@ -811,8 +811,8 @@ export default function DashboardClient({
                   <span className={`text-[10px] font-black px-2 py-0.5 rounded-full ${getLevelBadgeStyles(level)}`}>
                     {level}
                   </span>
-                  <span className="text-[10px] text-zinc-500 dark:text-zinc-400 font-semibold">{levelDone}/{levelUnits.length} hoàn thành</span>
-                  <div className="flex-1 h-1 bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
+                  <span className="text-[10px] text-zinc-400 font-semibold">{levelDone}/{levelUnits.length} hoàn thành</span>
+                  <div className="flex-1 h-1 bg-zinc-800 rounded-full overflow-hidden">
                     <div
                       className={`h-full rounded-full transition-all duration-500 ${getLevelProgressStyles(level)}`}
                       style={{ width: `${levelUnits.length ? (levelDone / levelUnits.length) * 100 : 0}%` }}
@@ -833,8 +833,8 @@ export default function DashboardClient({
                           done
                             ? "bg-gradient-to-br from-emerald-500 to-teal-600 text-white border-emerald-400/70 shadow-sm shadow-emerald-500/25 hover:from-emerald-400 hover:to-teal-500 active:scale-95"
                             : isCurrent
-                              ? "bg-zinc-900 dark:bg-zinc-50 text-white dark:text-zinc-900 border-zinc-700 dark:border-zinc-200 shadow-sm"
-                              : "bg-zinc-50 dark:bg-zinc-800/50 text-zinc-500 dark:text-zinc-400 border-zinc-200 dark:border-zinc-700 hover:border-emerald-500/40 hover:text-emerald-600 dark:hover:text-emerald-400"
+                              ? "bg-zinc-50 text-zinc-900 border-zinc-200 shadow-sm"
+                              : "bg-zinc-800/50 text-zinc-400 border-zinc-700 hover:border-emerald-500/40 hover:text-emerald-400"
                         }`}
                       >
                         {done ? (
@@ -845,7 +845,7 @@ export default function DashboardClient({
                           displayNum
                         )}
                         {isCurrent && !done && (
-                          <span className="absolute -top-1 -right-1 size-2.5 rounded-full bg-amber-400 border-2 border-white dark:border-zinc-900" />
+                          <span className="absolute -top-1 -right-1 size-2.5 rounded-full bg-amber-400 border-2 border-zinc-900" />
                         )}
                       </a>
                     );
@@ -855,10 +855,10 @@ export default function DashboardClient({
             );
           })}
 
-          <div className="mt-4 pt-3 border-t border-zinc-100 dark:border-zinc-800/60 flex justify-center">
+          <div className="mt-4 pt-3 border-t border-white/10 flex justify-center">
             <button
               onClick={() => setExpandProgressGrid(prev => !prev)}
-              className="text-xs font-bold text-emerald-600 dark:text-emerald-400 hover:underline flex items-center gap-1"
+              className="text-xs font-bold text-emerald-400 hover:underline flex items-center gap-1"
             >
               {expandProgressGrid ? (
                 <>Thu gọn lộ trình</>
@@ -867,7 +867,7 @@ export default function DashboardClient({
               )}
             </button>
           </div>
-        </div>
+        </Surface>
         </div>
       </div>
 

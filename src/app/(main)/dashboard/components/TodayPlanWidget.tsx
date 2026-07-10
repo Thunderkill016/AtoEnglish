@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { Clock, ChevronDown, ChevronUp } from "lucide-react";
 import { getPhaseForLevel, DAILY_TIPS } from "@/lib/constants/study-plan";
+import { Surface } from "@/components/design-system";
 
 const SKILL_COLORS: Record<string, string> = {
   pronunciation: "#f59e0b",
@@ -50,7 +51,7 @@ export default function TodayPlanWidget({ userLevel }: TodayPlanWidgetProps) {
   const totalMins = phase.dailyRoutine.reduce((s, a) => s + a.duration, 0);
 
   return (
-    <div className="rounded-2xl border border-zinc-200/60 dark:border-zinc-800/60 bg-white/60 dark:bg-zinc-900/30 backdrop-blur-sm overflow-hidden">
+    <Surface className="rounded-2xl overflow-hidden p-0">
       {/* Header */}
       <button
         onClick={() => setCollapsed((v) => !v)}
@@ -59,25 +60,25 @@ export default function TodayPlanWidget({ userLevel }: TodayPlanWidgetProps) {
         <div className="flex items-center gap-3">
           <span className="text-xl">{phase.emoji}</span>
           <div>
-            <p className="text-xs font-black uppercase tracking-widest text-zinc-500 dark:text-zinc-400">
+            <p className="text-xs font-black uppercase tracking-widest text-zinc-400">
               Kế hoạch hôm nay · Phase {phase.id}
             </p>
-            <p className="text-sm font-bold text-zinc-900 dark:text-zinc-50">
+            <p className="text-sm font-bold text-zinc-50">
               {phase.title} — {phase.months}
             </p>
           </div>
         </div>
         <div className="flex items-center gap-3 shrink-0">
           <div className="text-right">
-            <p className="text-base font-black text-zinc-900 dark:text-zinc-50">{doneCount}/{total}</p>
-            <p className="text-[10px] text-zinc-500 dark:text-zinc-400 flex items-center gap-1 justify-end">
+            <p className="text-base font-black text-zinc-50">{doneCount}/{total}</p>
+            <p className="text-[10px] text-zinc-400 flex items-center gap-1 justify-end">
               <Clock className="size-3" />{totalMins} phút
             </p>
           </div>
           {/* Progress ring */}
           <div className="relative size-10 shrink-0">
             <svg className="size-10 -rotate-90" viewBox="0 0 36 36">
-              <circle cx="18" cy="18" r="15" fill="none" stroke="currentColor" strokeWidth="3" className="text-zinc-200 dark:text-zinc-800" />
+              <circle cx="18" cy="18" r="15" fill="none" stroke="currentColor" strokeWidth="3" className="text-zinc-800" />
               <circle
                 cx="18" cy="18" r="15" fill="none"
                 stroke={phase.color} strokeWidth="3"
@@ -103,13 +104,13 @@ export default function TodayPlanWidget({ userLevel }: TodayPlanWidgetProps) {
               className={`w-full flex items-center gap-3 p-3 rounded-xl border transition-all duration-150 text-left ${
                 checked[i]
                   ? "border-emerald-500/30 bg-emerald-500/5"
-                  : "border-zinc-200/60 dark:border-zinc-800/60 bg-zinc-50/50 dark:bg-zinc-800/20 hover:border-zinc-300 dark:hover:border-zinc-700"
+                  : "border-white/10 bg-zinc-800/20 hover:border-zinc-700"
               }`}
             >
               {/* Checkbox */}
               <div
                 className={`size-5 rounded-full border-2 flex items-center justify-center shrink-0 transition-all ${
-                  checked[i] ? "border-emerald-500 bg-emerald-500" : "border-zinc-300 dark:border-zinc-600"
+                  checked[i] ? "border-emerald-500 bg-emerald-500" : "border-zinc-600"
                 }`}
               >
                 {checked[i] && (
@@ -128,11 +129,11 @@ export default function TodayPlanWidget({ userLevel }: TodayPlanWidgetProps) {
               {/* Text */}
               <div className="flex-1 min-w-0">
                 <p className={`text-xs font-bold truncate ${
-                  checked[i] ? "line-through text-zinc-400 dark:text-zinc-500" : "text-zinc-900 dark:text-zinc-50"
+                  checked[i] ? "line-through text-zinc-500" : "text-zinc-50"
                 }`}>
                   {act.title}
                 </p>
-                <p className="text-[10px] text-zinc-500 dark:text-zinc-400 truncate">{act.resource}</p>
+                <p className="text-[10px] text-zinc-400 truncate">{act.resource}</p>
               </div>
               {/* Duration */}
               <span
@@ -147,13 +148,13 @@ export default function TodayPlanWidget({ userLevel }: TodayPlanWidgetProps) {
           {/* Daily tip */}
           <div className="flex gap-2 items-start p-3 rounded-xl bg-amber-500/5 border border-amber-500/20 mt-1">
             <span className="text-base shrink-0">💡</span>
-            <p className="text-[11px] text-zinc-600 dark:text-zinc-400 leading-relaxed">
+            <p className="text-[11px] text-zinc-400 leading-relaxed">
               <span className="font-bold text-amber-600 dark:text-amber-400">Tip: </span>
               {todayTip}
             </p>
           </div>
         </div>
       )}
-    </div>
+    </Surface>
   );
 }

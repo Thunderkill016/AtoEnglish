@@ -1926,10 +1926,11 @@
 
 
 ### TASK-278 — Dashboard Ato Surface full migrate
-- **Status:** `ready`
+- **Status:** `done`
 - **Mô tả:** DashboardClient cards → Surface/dark zinc only; no bg-white/60 primary; match landing.
 - **Done khi:** visual dark brand; lint+test; no light canvas.
-- **Started:** auto-refill
+- **Started:** 2026-07-10 — autopilot (PHASE1: ARCHIVE noted; user mandate TASK-278; inspect DashboardClient + child cards + Surface/HomeClient; PHASE2: AGENT_PLAN; PHASE3: Surface migrate)
+- **Completed:** 2026-07-10 — DashboardClient + child card shells → Surface / dark zinc; zero `bg-white/60` on dashboard cards; lint0+222t; commit pending push SHA.
 
 ### TASK-284 — Progress + Me Ato polish
 - **Status:** `ready`

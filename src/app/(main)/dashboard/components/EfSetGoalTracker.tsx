@@ -124,7 +124,7 @@ export default function EfSetGoalTracker({ userLevel, completedUnits }: EfSetGoa
               </span>
             )}
           </div>
-          <p className="text-sm font-bold text-zinc-900 dark:text-zinc-50">{config.title}</p>
+          <p className="text-sm font-bold text-zinc-50">{config.title}</p>
           <div className="flex items-center gap-2 mt-1.5">
             <div className="flex-1 h-1.5 bg-amber-500/15 rounded-full overflow-hidden">
               <div
@@ -147,11 +147,11 @@ export default function EfSetGoalTracker({ userLevel, completedUnits }: EfSetGoa
             return (
               <div key={m.id} className="flex items-center gap-2.5">
                 <span className={`flex size-4 items-center justify-center rounded-full shrink-0 text-[9px] font-black ${
-                  done ? "bg-emerald-500 text-white" : "bg-zinc-200 dark:bg-zinc-800 text-zinc-400"
+                  done ? "bg-emerald-500 text-white" : "bg-zinc-800 text-zinc-400"
                 }`}>
                   {done ? "✓" : "·"}
                 </span>
-                <span className={`text-xs font-medium ${done ? "line-through text-zinc-400 dark:text-zinc-600" : "text-zinc-700 dark:text-zinc-300"}`}>
+                <span className={`text-xs font-medium ${done ? "line-through text-zinc-500" : "text-zinc-300"}`}>
                   {m.label}
                 </span>
               </div>
@@ -168,7 +168,7 @@ export default function EfSetGoalTracker({ userLevel, completedUnits }: EfSetGoa
           </a>
 
           {/* Realistic motivation — small consistent daily practice > bursts; link to free speaking (vibrant glass, no hype) */}
-          <div className="mt-2 p-2 rounded-xl bg-white/5 dark:bg-zinc-950/30 border border-white/10 text-[10px] text-zinc-600 dark:text-zinc-400 leading-snug">
+          <div className="mt-2 p-2 rounded-xl bg-white/5 border border-white/10 text-[10px] text-zinc-400 leading-snug">
             Nhỏ đều đặn mỗi ngày &gt; bùng nổ một lần. Thói quen nói ngắn giữ tiến bộ bền vững.
             <a href="/speaking" className="ml-1 font-medium text-emerald-500 hover:underline">Luyện nói miễn phí →</a>
           </div>

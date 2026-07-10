@@ -64,21 +64,21 @@ export default function WeeklyRecapCard({
             {/* Left: Stats grid */}
             <div className="grid grid-cols-2 gap-2">
               {stats.map(({ icon, label, value, sub }) => (
-                <div key={label} className="flex flex-col gap-1 p-3 rounded-xl bg-white/40 dark:bg-zinc-800/30 border border-zinc-200/50 dark:border-zinc-700/30">
+                <div key={label} className="flex flex-col gap-1 p-3 rounded-xl bg-zinc-800/30 border border-zinc-700/30">
                   <span className="text-xl">{icon}</span>
-                  <p className="text-[10px] font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider leading-tight">{label}</p>
-                  <p className="text-base font-black text-zinc-900 dark:text-zinc-50 leading-tight">{value}</p>
-                  <p className="text-[10px] text-zinc-400 dark:text-zinc-500 font-medium">{sub}</p>
+                  <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider leading-tight">{label}</p>
+                  <p className="text-base font-black text-zinc-50 leading-tight">{value}</p>
+                  <p className="text-[10px] text-zinc-500 font-medium">{sub}</p>
                 </div>
               ))}
             </div>
 
             {/* Right: Recharts Weekly XP */}
             {weeklyData && weeklyData.length > 0 && (
-              <div className="p-4 rounded-xl bg-white/40 dark:bg-zinc-800/30 border border-zinc-200/50 dark:border-zinc-700/30">
+              <div className="p-4 rounded-xl bg-zinc-800/30 border border-zinc-700/30">
                 <div className="flex justify-between items-center mb-2">
-                  <p className="text-[10px] font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">XP 7 ngày qua</p>
-                  <span className="text-[10px] text-zinc-400 dark:text-zinc-500 font-bold">Biểu đồ tuần</span>
+                  <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider">XP 7 ngày qua</p>
+                  <span className="text-[10px] text-zinc-500 font-bold">Biểu đồ tuần</span>
                 </div>
                 <WeeklyActivityChart data={weeklyData} />
               </div>
@@ -89,7 +89,7 @@ export default function WeeklyRecapCard({
           <div className="mt-3 flex items-center gap-2 p-3 rounded-xl bg-emerald-500/5 border border-emerald-500/15">
             <span className="text-base shrink-0">🎓</span>
             <div className="flex-1 min-w-0">
-              <p className="text-[11px] font-bold text-zinc-700 dark:text-zinc-300">
+              <p className="text-[11px] font-bold text-zinc-300">
                 Đạt CEFR? Chia sẻ chứng chỉ lên LinkedIn!
               </p>
             </div>
@@ -102,7 +102,7 @@ export default function WeeklyRecapCard({
           <div className="mt-2 flex items-center gap-2 p-3 rounded-xl bg-purple-500/5 border border-purple-500/15">
             <span className="text-base shrink-0">👥</span>
             <div className="flex-1 min-w-0">
-              <p className="text-[11px] font-bold text-zinc-700 dark:text-zinc-300">Học cùng bạn bè hiệu quả hơn 40%!</p>
+              <p className="text-[11px] font-bold text-zinc-300">Học cùng bạn bè hiệu quả hơn 40%!</p>
             </div>
             <Link href="/invite" className="shrink-0 text-[10px] font-black text-purple-600 dark:text-purple-400 hover:underline whitespace-nowrap">Mời bạn →</Link>
           </div>

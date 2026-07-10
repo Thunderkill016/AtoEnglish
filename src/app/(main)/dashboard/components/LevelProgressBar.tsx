@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { Surface } from "@/components/design-system";
 
 const CEFR_LADDER = [
   { level: "A0", label: "A0", emoji: "🌱", color: "#94a3b8", desc: "Khởi đầu" },
@@ -38,15 +39,15 @@ export default function LevelProgressBar({
     : 0;
 
   return (
-    <div className="rounded-2xl border border-zinc-200/60 dark:border-zinc-800/60 bg-white/60 dark:bg-zinc-900/30 backdrop-blur-sm p-4 space-y-3">
+    <Surface className="rounded-2xl p-4 space-y-3">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <p className="text-[10px] font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
+        <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider">
           Lộ trình CEFR của bạn
         </p>
         <Link
           href="/roadmap"
-          className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 hover:underline"
+          className="text-[10px] font-bold text-emerald-400 hover:underline"
         >
           Chi tiết →
         </Link>
@@ -69,7 +70,7 @@ export default function LevelProgressBar({
                       ? "border-transparent text-white shadow-md shadow-emerald-500/30 scale-110 z-10"
                       : isDone
                         ? "border-transparent text-white"
-                        : "border-zinc-200 dark:border-zinc-700 bg-zinc-100 dark:bg-zinc-800 text-zinc-400 dark:text-zinc-600"
+                        : "border-zinc-700 bg-zinc-800 text-zinc-600"
                   }`}
                   style={isDone || isCurrent ? { background: step.color } : {}}
                 >
@@ -92,10 +93,10 @@ export default function LevelProgressBar({
                 <span
                   className={`text-[8px] font-bold leading-none ${
                     isCurrent
-                      ? "text-zinc-700 dark:text-zinc-200"
+                      ? "text-zinc-200"
                       : isDone
-                        ? "text-zinc-400 dark:text-zinc-500"
-                        : "text-zinc-300 dark:text-zinc-700"
+                        ? "text-zinc-500"
+                        : "text-zinc-700"
                   }`}
                 >
                   {step.label}
@@ -104,7 +105,7 @@ export default function LevelProgressBar({
 
               {/* Connector line (skip after last) */}
               {idx < CEFR_LADDER.length - 1 && (
-                <div className="flex-1 h-0.5 mx-0.5 rounded-full overflow-hidden bg-zinc-200 dark:bg-zinc-800 relative">
+                <div className="flex-1 h-0.5 mx-0.5 rounded-full overflow-hidden bg-zinc-800 relative">
                   {/* Fill: completed segments are fully filled */}
                   {isDone && (
                     <div className="absolute inset-0 rounded-full" style={{ background: step.color }} />
@@ -131,11 +132,11 @@ export default function LevelProgressBar({
         <div className="flex items-center gap-2">
           <span className="text-base">{current.emoji}</span>
           <div>
-            <p className="text-xs font-black text-zinc-900 dark:text-zinc-50 leading-none">
+            <p className="text-xs font-black text-zinc-50 leading-none">
               {current.label} · {current.desc}
             </p>
             {next && (
-              <p className="text-[10px] text-zinc-500 dark:text-zinc-400 mt-0.5">
+              <p className="text-[10px] text-zinc-400 mt-0.5">
                 {levelUnitsDone}/{levelUnitsTotal} bài → {next.label}
               </p>
             )}
@@ -149,6 +150,6 @@ export default function LevelProgressBar({
           <span>{pct}%</span>
         </div>
       </div>
-    </div>
+    </Surface>
   );
 }

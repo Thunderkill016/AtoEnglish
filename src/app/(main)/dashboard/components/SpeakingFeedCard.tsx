@@ -25,21 +25,21 @@ const TYPE_META: Record<
   shadowing: {
     label: "Shadowing",
     icon: "🎧",
-    color: "text-teal-600 dark:text-teal-400",
+    color: "text-teal-400",
     bg: "bg-teal-500/10 border-teal-500/20",
     href: "/speaking",
   },
   roleplay: {
     label: "AI Roleplay",
     icon: "🤖",
-    color: "text-violet-600 dark:text-violet-400",
+    color: "text-violet-400",
     bg: "bg-violet-500/10 border-violet-500/20",
     href: "/speaking",
   },
   journal: {
     label: "Journal",
     icon: "📓",
-    color: "text-blue-600 dark:text-blue-400",
+    color: "text-blue-400",
     bg: "bg-blue-500/10 border-blue-500/20",
     href: "/speaking",
   },
@@ -79,7 +79,7 @@ function ScoreRing({ score }: { score: number }) {
         <circle
           cx="18" cy="18" r={radius}
           fill="none" stroke="currentColor" strokeWidth="3"
-          className="text-zinc-200 dark:text-zinc-800"
+          className="text-zinc-800"
         />
         <circle
           cx="18" cy="18" r={radius}
@@ -134,7 +134,7 @@ export default function SpeakingFeedCard({ sessions }: SpeakingFeedCardProps) {
           <p className="text-xs font-black text-teal-500 uppercase tracking-widest">
             Lịch sử luyện nói
           </p>
-          <p className="text-xs text-zinc-500 dark:text-zinc-400 font-medium mt-0.5">
+          <p className="text-xs text-zinc-400 font-medium mt-0.5">
             {sessions.length} buổi · {totalMinutes} phút
             {avgScore !== null && ` · Điểm TB: ${avgScore}%`}
           </p>
@@ -185,7 +185,7 @@ export default function SpeakingFeedCard({ sessions }: SpeakingFeedCardProps) {
                 initial={{ opacity: 0, y: 4 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.2 }}
-                className="flex items-center gap-3 p-3 rounded-xl bg-white/40 dark:bg-zinc-800/30 border border-zinc-200/50 dark:border-zinc-700/30"
+                className="flex items-center gap-3 p-3 rounded-xl bg-zinc-800/30 border border-zinc-700/30"
               >
                 {/* Type icon */}
                 <span
@@ -199,12 +199,12 @@ export default function SpeakingFeedCard({ sessions }: SpeakingFeedCardProps) {
                   <p className={`text-xs font-bold truncate ${meta.color}`}>
                     {meta.label}
                     {scenarioLabel && (
-                      <span className="text-zinc-500 dark:text-zinc-400 font-medium">
+                      <span className="text-zinc-400 font-medium">
                         {" "}· {scenarioLabel}
                       </span>
                     )}
                   </p>
-                  <p className="text-[10px] text-zinc-400 dark:text-zinc-500 font-medium">
+                  <p className="text-[10px] text-zinc-500 font-medium">
                     {durationMin} phút · {timeAgo(s.created_at)}
                   </p>
                 </div>
@@ -213,7 +213,7 @@ export default function SpeakingFeedCard({ sessions }: SpeakingFeedCardProps) {
                 {s.accuracy_score !== null ? (
                   <ScoreRing score={s.accuracy_score} />
                 ) : (
-                  <span className="text-[10px] text-zinc-400 dark:text-zinc-500 shrink-0 font-medium">
+                  <span className="text-[10px] text-zinc-500 shrink-0 font-medium">
                     —
                   </span>
                 )}
