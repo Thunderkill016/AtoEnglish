@@ -1897,7 +1897,7 @@
 - **Mô tả:** Shopping phrases; How much is…?; numbers money light. Spiral a1-02 numbers/personal. L1 100%.
 - **Done khi:** schema + registry + path sequential.
 - **Started:** 2026-07-10 — autopilot (PHASE1: AGENTS/BACKLOG/PLAN + a1-06 gold + unit7 shopping + schema/path/tests; PHASE2: PLAN; PHASE3: author l-a1-07 + registry + sequential after a1-06)
-- **Completed:** 2026-07-10 — l-a1-07 full LessonSpec (shop/price/cheap/expensive; How much is/are; dollars light; try on/pay; spiral a1-02); L1 100%; registry + sequential after a1-06; lint0+213t; docs V2_PRODUCT; log 20260710T035343Z_TASK-271.log; commit f980c9e + push via git-push.sh main
+- **Completed:** 2026-07-10 — l-a1-07 full LessonSpec (shop/price/cheap/expensive; How much is/are; dollars light; try on/pay; spiral a1-02); L1 100%; registry + sequential after a1-06; lint0+213t; docs V2_PRODUCT; log 20260710T035343Z_TASK-271.log; commit 438f914 + push via git-push.sh main
 
 ### TASK-272 — Author l-a1-08 Đồ ăn & order
 - **Status:** `ready`
@@ -1923,7 +1923,7 @@
 |------|------|--------|--------|
 | 2026-07-10 | MASTER-PLAN | Full audit + MASTER_AUTOPILOT_PLAN; wave A–D in ROADMAP 274–284; daemon continues 270+ | done — cece18e |
 | 2026-07-10 | TASK-270 | feat(v2): l-a1-06 Nhà cửa; there is/are + rooms; L1 100%; sequential after a1-05 | done — 35e9f0e |
-| 2026-07-10 | TASK-271 | feat(v2): l-a1-07 Mua sắm; How much is/are + money light; L1 100%; sequential after a1-06 | done — f980c9e |
+| 2026-07-10 | TASK-271 | feat(v2): l-a1-07 Mua sắm; How much is/are + money light; L1 100%; sequential after a1-06 | done — 438f914 |
 
 | 2026-07-10 | TASK-272 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-10 | TASK-273 | auto-refill từ AGENT_ROADMAP.md | ready |
