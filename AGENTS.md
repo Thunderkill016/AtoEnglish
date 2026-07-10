@@ -5,6 +5,7 @@
 > **Rebuild v2 (in progress):** full product + new LessonSpec path A0→B1 (`l-*` ids). Spec: [`docs/product/V2_PRODUCT.md`](./docs/product/V2_PRODUCT.md). Code: `src/lib/v2/`. Flag: `NEXT_PUBLIC_CURRICULUM_V2`. Pilot: `/learn/v2/l-a1-01`. v1 frozen: `archive/curriculum-v1/README.md`.  
 > Pedagogy: [`docs/pedagogy/LESSON_SYSTEM_FOUNDATION.md`](./docs/pedagogy/LESSON_SYSTEM_FOUNDATION.md) · [`docs/pedagogy/CURRICULUM_PROGRAM.md`](./docs/pedagogy/CURRICULUM_PROGRAM.md) · style [`docs/pedagogy/CONTENT_STYLE.md`](./docs/pedagogy/CONTENT_STYLE.md) §6–7.  
 > UI: [`docs/design/UI_SYSTEM.md`](./docs/design/UI_SYSTEM.md) (Ato Surface). **Folder map:** [`docs/STRUCTURE.md`](./docs/STRUCTURE.md) · docs index: [`docs/README.md`](./docs/README.md).  
+> **24/7 plan:** [`docs/product/MASTER_AUTOPILOT_PLAN.md`](./docs/product/MASTER_AUTOPILOT_PLAN.md) — content→IA→DB→cutover.
 > **Stack**: Next.js 16 · TypeScript 6 · TailwindCSS v4 · Supabase (Auth + PostgreSQL) · Framer Motion · ts-fsrs · Vercel
 
 ---

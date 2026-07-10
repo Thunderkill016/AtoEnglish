@@ -14,7 +14,7 @@
 
 - Format giống backlog: `### TASK-NNN — Title` + Mô tả + Done khi
 - Chỉ thêm số TASK **lớn hơn** mọi TASK đã có trong backlog
-- **Ưu tiên (2026-07-10+):** (1) **Ato Surface UI** TASK-262…265 (2) **A1 content** `l-a1-03+` (3) player/speaking. **CẤM** auto-generate empty maintenance sweeps (`ALLOW_MAINTENANCE_FALLBACK=0`). Refill only from feature pool. Pick skips maintenance when any feature ready.
+- **Ưu tiên (2026-07-10+ MASTER):** Wave A content `l-a1-06…12` → Wave B nav/dashboard/DB/FSRS/e2e → Wave C A2 + chrome → Wave D B1 cutover. SSOT `docs/product/MASTER_AUTOPILOT_PLAN.md`. **CẤM** empty maintenance. Live radar FAIL=0.
 
 ---
 
@@ -30,6 +30,56 @@
 ## Pool — V2 Minimal Redesign (DEPRECATED — user rejected minimal; see current vibrant rollback state)
 
 > Archived. Do NOT pick these. Old metric focused on chrome reduction. Current focus: vibrant glassmorphism/gradients full experience + guest/self-study + free world-class speaking.
+
+
+## Pool — Master plan Wave B–D (after A1 content) 2026-07-10
+
+> SSOT: `docs/product/MASTER_AUTOPILOT_PLAN.md`. Do not invent maintenance.
+
+### TASK-274 — Author l-a1-10 Khả năng (can)
+- **Mô tả:** LessonSpec A1 can/can't survival; L1 100%; spiral a1-01..09.
+- **Done khi:** schema + registry + sequential path.
+
+### TASK-275 — Author l-a1-11 Sức khỏe & cảm xúc
+- **Mô tả:** How are you / I feel… health lexis; L1 100%.
+- **Done khi:** schema + registry + path.
+
+### TASK-276 — Author l-a1-12 Ôn A1 & áp dụng
+- **Mô tả:** A1 review spiral + freer task; marks end A1 block.
+- **Done khi:** A1 12/12 authored; Home continue walks a1 path.
+
+### TASK-277 — Nav: Học tab → /home when v2 flag
+- **Mô tả:** bottomNavItems + desktopPrimaryNav: href /home if isCurriculumV2 else /dashboard. Me hub copy B1.
+- **Done khi:** flag matrix correct; time-to-lesson ≤2 tap; lint+test.
+
+### TASK-278 — Dashboard Ato Surface full migrate
+- **Mô tả:** DashboardClient cards → Surface/dark zinc only; no bg-white/60 primary; match landing.
+- **Done khi:** visual dark brand; lint+test; no light canvas.
+
+### TASK-279 — v2 progress Supabase persistence
+- **Mô tả:** Migration user_v2_lesson_progress (or equivalent) + RLS; sync from localStorage on auth; markLessonComplete writes DB.
+- **Done khi:** multi-device progress; types regenerated; ask if schema needs human — implement with RLS.
+
+### TASK-280 — FSRS seed from v2 LessonSpec lexis
+- **Mô tả:** On lesson complete, upsert cards from lexis words for FSRS.
+- **Done khi:** flashcards show v2 words; lint+test.
+
+### TASK-281 — E2E v2 guest-or-auth complete smoke
+- **Mô tả:** Playwright: open /learn/v2/l-a1-01, complete flow or stage smoke + quiz floor.
+- **Done khi:** e2e pass or documented skip if no server.
+
+### TASK-282 — Author l-a2-01 Kể chuyện quá khứ
+- **Mô tả:** First A2 LessonSpec; past simple survival; L1 ≥50% band.
+- **Done khi:** schema + registry + path after a1-12.
+
+### TASK-283 — Speaking subroutes Ato chrome
+- **Mô tả:** shadowing/roleplay/journal/phoneme page shells use Screen/Surface/AppButton.
+- **Done khi:** match speaking hub; lint+test.
+
+### TASK-284 — Progress + Me Ato polish
+- **Mô tả:** Residual progress/me pages Ato Surface; no landing rewrite.
+- **Done khi:** dark brand; lint+test.
+
 
 ## Pool — Ato Surface UI redesign (2026-07-10+ user-approved)
 

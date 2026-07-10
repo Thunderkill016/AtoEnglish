@@ -1,5 +1,23 @@
 # Agent Plan — Tự cập nhật mỗi phiên
 
+> Agent ghi kế hoạch trước khi code. User không cần approve.
+
+## Master plan active (2026-07-10)
+
+| Field | Value |
+|-------|-------|
+| SSOT | `docs/product/MASTER_AUTOPILOT_PLAN.md` |
+| Live smoke | PASS all key routes 200 |
+| Wave now | **A** content l-a1-06…12 (TASK-270+) |
+| Next waves | B nav/dashboard/DB · C A2 · D B1 cutover |
+| Daemon | ON — feature-only refill |
+| Maintenance | **FORBIDDEN** empty sweeps |
+
+
+---
+
+# Agent Plan — Tự cập nhật mỗi phiên
+
 ## Product loop (deployed)
 
 | Field | Value |
