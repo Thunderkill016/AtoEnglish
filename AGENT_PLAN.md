@@ -6,7 +6,7 @@
 |-------|-------|
 | Task | TASK-281 — E2E v2 guest-or-auth complete smoke |
 | Status | **done** |
-| Commit | `da30b9f` |
+| Commit | `149cc01` |
 | Gates | lint 0 · 228 unit tests · Playwright chromium 2/2 pass |
 
 ## Delivered
