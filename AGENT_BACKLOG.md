@@ -1999,6 +1999,25 @@
 - **Completed:** 2026-07-10 — migration `user_v2_lesson_progress` + RLS; types; complete/fetch/sync actions; merge helper; LessonPlayerV2 dual-write; V2ProgressHydrator on auth+flag; lint+233 tests+tsc
 
 
+### TASK-285 — Author l-a2-02 Kế hoạch tương lai (will/going to)
+- **Status:** `ready`
+- **Mô tả:** LessonSpec A2 future plans: will / going to survival; L1 ≥50%; jobAngle planning week.
+- **Done khi:** schema + registry + path after l-a2-01; tests pass.
+- **Started:** auto-refill
+
+### TASK-286 — Author l-a2-03 So sánh & đề xuất (comparatives)
+- **Status:** `ready`
+- **Mô tả:** A2 comparatives/superlatives light + recommend; dialogues shop/office; L1 notes.
+- **Done khi:** schema + registry + sequential path; content gate.
+- **Started:** auto-refill
+
+### TASK-288 — Author l-a2-04 Trải nghiệm & present perfect intro
+- **Status:** `ready`
+- **Mô tả:** Light present perfect (ever/never/have you…); travel/job interview angle; L1 VN interference.
+- **Done khi:** schema + registry + path; tests pass.
+- **Started:** auto-refill
+
+
 ---
 
 ## Nhật ký agent
@@ -2008,6 +2027,9 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
+| 2026-07-10 | TASK-285 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-07-10 | TASK-286 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-07-10 | TASK-288 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-10 | TASK-279 | feat(v2): user_v2_lesson_progress + RLS + local sync | done — 7f7c798 (push blocked: GitHub archive) |
 | 2026-07-10 | TASK-282 | feat(v2): l-a2-01 past simple survival (first A2) | done — 82ba4fa (push blocked: GitHub archive) |
 | 2026-07-10 | TASK-283 | auto-refill từ AGENT_ROADMAP.md | ready |
