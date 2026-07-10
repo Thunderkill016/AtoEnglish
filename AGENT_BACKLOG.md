@@ -1869,10 +1869,11 @@
 
 
 ### TASK-267 — Author l-a1-04 Thói quen hàng ngày
-- **Status:** `ready`
+- **Status:** `done`
 - **Mô tả:** Daily routine present simple; get up / go to work. Spiral time of day. L1 100%.
 - **Done khi:** schema + registry + path sequential.
-- **Started:** auto-refill
+- **Started:** 2026-07-10 — autopilot (PHASE1: AGENTS/BACKLOG/PLAN + a0-06 time + a1-03 gold + schema/path/tests; PHASE2: PLAN; PHASE3: author l-a1-04 + registry + sequential after a1-03)
+- **Completed:** 2026-07-10 — l-a1-04 full LessonSpec (get up/go to work/breakfast/lunch/go home/go to bed/usually/every day/in the morning/at+time); present simple I/you; spiral a0-06 + a1-03; L1 100%; registry + sequential after a1-03; lint0+213t; docs V2_PRODUCT; commit pending push
 
 ### TASK-268 — Author l-a1-05 Sở thích
 - **Status:** `ready`

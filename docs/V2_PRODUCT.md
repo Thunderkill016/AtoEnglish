@@ -80,10 +80,10 @@ isCurriculumV2() // env NEXT_PUBLIC_CURRICULUM_V2 === "1" | true
 | `/path` | Full 42-slot roadmap |
 | v1 `/learn/[unitSlug]` | Live until cutover |
 
-**Authored (playable):** `l-a0-01`…`l-a0-08` (P0 complete), `l-a1-01`, `l-a1-02`, `l-a1-03`, `l-b1-01`  
+**Authored (playable):** `l-a0-01`…`l-a0-08` (P0 complete), `l-a1-01`…`l-a1-04`, `l-b1-01`  
 **Progress:** localStorage `ato_v2_progress` until DB migration  
 **Complete gate (player):** task attempt («Tôi đã nói xong») + quiz ≥1 answer + **≥50%** correct — else VI re-try «Làm lại quiz» (`src/lib/v2/progress.ts`).  
-**Content factory priority:** P0 done — sequential A1 (`l-a1-03`…) next; no empty maintenance-only autopilot.
+**Content factory priority:** P0 done — sequential A1 (`l-a1-05`…) next; no empty maintenance-only autopilot.
 
 ---
 

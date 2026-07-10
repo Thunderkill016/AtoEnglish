@@ -12,6 +12,7 @@ import { lessonA008 } from "@/lib/v2/lessons/l-a0-08";
 import { lessonA101 } from "@/lib/v2/lessons/l-a1-01";
 import { lessonA102 } from "@/lib/v2/lessons/l-a1-02";
 import { lessonA103 } from "@/lib/v2/lessons/l-a1-03";
+import { lessonA104 } from "@/lib/v2/lessons/l-a1-04";
 import { lessonB101 } from "@/lib/v2/lessons/l-b1-01";
 
 /** Registry of authored v2 lessons (grows over time). */
@@ -27,6 +28,7 @@ const LESSON_MODULES: Record<string, LessonSpec> = {
   "l-a1-01": lessonA101,
   "l-a1-02": lessonA102,
   "l-a1-03": lessonA103,
+  "l-a1-04": lessonA104,
   "l-b1-01": lessonB101,
 };
 

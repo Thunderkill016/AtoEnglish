@@ -37,8 +37,9 @@ describe("LessonSpec v2", () => {
     expect(getLessonV2("l-a1-01")?.title_vi).toContain("Chào hỏi");
     expect(getLessonV2("l-a1-02")?.title_vi).toMatch(/Thông tin|cá nhân/i);
     expect(getLessonV2("l-a1-03")?.title_vi).toMatch(/Gia đình|bạn bè/i);
+    expect(getLessonV2("l-a1-04")?.title_vi).toMatch(/Thói quen|hàng ngày/i);
     expect(getLessonV2("l-b1-01")?.cefr).toBe("B1");
-    expect(getAllAuthoredLessons().length).toBeGreaterThanOrEqual(12);
+    expect(getAllAuthoredLessons().length).toBeGreaterThanOrEqual(13);
   });
 
   it("all authored lessons pass schema", () => {
@@ -128,6 +129,21 @@ describe("LessonSpec v2", () => {
         "l-a1-02",
       ]),
     ).toBe("l-a1-03");
+    expect(
+      getNextPlayableLessonId([
+        "l-a0-01",
+        "l-a0-02",
+        "l-a0-03",
+        "l-a0-04",
+        "l-a0-05",
+        "l-a0-06",
+        "l-a0-07",
+        "l-a0-08",
+        "l-a1-01",
+        "l-a1-02",
+        "l-a1-03",
+      ]),
+    ).toBe("l-a1-04");
   });
 
   it("rejects bad id", () => {
