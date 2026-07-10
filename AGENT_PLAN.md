@@ -5,7 +5,8 @@
 | Field | Value |
 |-------|-------|
 | Task | TASK-284 — Progress + Me Ato polish |
-| Status | **done (pending push)** |
+| Status | **done (local)** — push blocked |
+| Commits | `c585708` feat · `e8be54c` docs |
 | Gates | lint 0 · 222 tests pass |
 
 ## Delivered
@@ -16,10 +17,15 @@
 - **ActivityHeatmap**: outer shell → `Surface` dark brand
 - **Landing:** not touched
 
-## Push
+## Push block
 
-Expect same block as TASK-278 if remotes still archived/denied — commit local first, then `git-push.sh main`.
+| Remote | Result |
+|--------|--------|
+| `origin` (GitHub) | **archived read-only** |
+| `gitlab` | Permission denied (publickey) |
 
-## Next ready (backlog)
+Owner must unarchive GitHub or fix GitLab SSH before `git-push.sh main` succeeds. Code on local `main` only.
 
-TASK-274 / 275 / 276 (v2 content) if product work continues.
+## Next ready
+
+TASK-274 / 275 / 276 (v2 A1 content) if product work resumes.
