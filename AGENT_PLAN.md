@@ -1,26 +1,30 @@
-# Agent Plan — TASK-280 complete (local)
+# Agent Plan — TASK-281 complete (local)
 
-> Autopilot 2026-07-10: FSRS seed from v2 LessonSpec lexis on lesson complete.
+> Autopilot 2026-07-10: Playwright E2E smoke for v2 lesson `l-a1-01` (guest, stage walk + quiz floor).
 
 | Field | Value |
 |-------|-------|
-| Task | TASK-280 — FSRS seed from v2 LessonSpec lexis |
+| Task | TASK-281 — E2E v2 guest-or-auth complete smoke |
 | Status | **done** |
-| Commit | `ad08732` |
-| Gates | lint 0 · 228 tests pass |
+| Commit | `da30b9f` |
+| Gates | lint 0 · 228 unit tests · Playwright chromium 2/2 pass |
 
 ## Delivered
 
-- **`src/lib/v2/seed-lexis.ts`** — pure `lexisToSeedVocab` (dedupe, cap 30)
-- **`seedV2LessonLexisToSRS(lessonId)`** in `cards.ts` — rate limit + Zod + registry load + upsert `cards` (`user_id,word`, ignoreDuplicates); topic = lessonId; level = cefr
-- **`SeedV2LessonLexisSchema`** in validation.ts
-- **`LessonPlayerV2`** — fire-and-forget after `markLessonComplete`
-- **Tests** `seed-lexis-v2.test.ts` (mapper + schema + l-a1-01 gold)
+- **`e2e/learn-v2-smoke.spec.ts`** — guest open `/learn/v2/l-a1-01`; stage smoke; full task + quiz floor → `lesson-complete`
+- **`e2e/global-setup.ts`** — soft-fail when Supabase DNS/admin unreachable so guest smokes still run
+
+## Verify
+
+```bash
+env -u CI npx dotenv -e .env.local -- playwright test e2e/learn-v2-smoke.spec.ts --project=chromium
+# 2 passed
+```
 
 ## Push
 
-Attempt `bash scripts/git-push.sh main`. If GitHub archive / GitLab key fail, code stays on local `main` only.
+`bash scripts/git-push.sh main` — if GitHub archive / GitLab key fail, code stays on local `main`.
 
 ## Next ready
 
-TASK-281 / TASK-282 (pick first ready in backlog)
+TASK-282 — Author l-a2-01

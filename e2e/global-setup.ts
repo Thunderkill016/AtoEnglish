@@ -30,7 +30,16 @@ export default async function globalSetup(): Promise<void> {
     return;
   }
 
-  const userId = await ensureE2ETestUser();
-  await resetE2EPlacementState(userId);
-  console.log("[e2e] Test user ready:", userId);
+  // Soft-fail: guest smokes (e.g. learn-v2) must run without live Supabase DNS.
+  // Auth-dependent specs use test.skip(!hasE2EAdminCredentials()) or fail at login.
+  try {
+    const userId = await ensureE2ETestUser();
+    await resetE2EPlacementState(userId);
+    console.log("[e2e] Test user ready:", userId);
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err);
+    console.warn(
+      `[e2e] Skipping auth user bootstrap — Supabase unreachable or admin error: ${msg}`,
+    );
+  }
 }

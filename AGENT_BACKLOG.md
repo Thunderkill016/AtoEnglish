@@ -1971,10 +1971,11 @@
 - **Completed:** 2026-07-10 — feat(v2) seedV2LessonLexisToSRS from registry lexis on complete; pure lexisToSeedVocab; guest no-op; lint0+228t; commit ad08732
 
 ### TASK-281 — E2E v2 guest-or-auth complete smoke
-- **Status:** `ready`
+- **Status:** `done`
 - **Mô tả:** Playwright: open /learn/v2/l-a1-01, complete flow or stage smoke + quiz floor.
 - **Done khi:** e2e pass or documented skip if no server.
-- **Started:** auto-refill
+- **Started:** 2026-07-10 — autopilot (PHASE1: ARCHIVE noted; user mandate TASK-281; inspect LessonPlayerV2 + quiz floor + proxy guest /learn/v2; PHASE2: AGENT_PLAN; PHASE3: e2e learn-v2-smoke)
+- **Completed:** 2026-07-10 — e2e/learn-v2-smoke.spec.ts guest stage smoke + task/quiz floor complete; global-setup soft-fail offline Supabase; lint0+228t; playwright chromium 2/2; commit da30b9f
 
 ### TASK-282 — Author l-a2-01 Kể chuyện quá khứ
 - **Status:** `ready`
@@ -1992,6 +1993,7 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
+| 2026-07-10 | TASK-281 | test(e2e): v2 l-a1-01 guest stage smoke + quiz floor complete | done — da30b9f |
 | 2026-07-10 | TASK-280 | feat(v2): seed FSRS from LessonSpec lexis on complete; guest no-op | done — ad08732 (push blocked: GitHub archive) |
 | 2026-07-10 | TASK-276 | feat(v2): l-a1-12 A1 review & apply; A1 12/12; L1 100% | done — 205fd60 (push blocked: GitHub archive + GitLab key) |
 | 2026-07-10 | TASK-280 | auto-refill từ AGENT_ROADMAP.md | ready |
