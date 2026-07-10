@@ -1964,10 +1964,10 @@
 
 
 ### TASK-280 — FSRS seed from v2 LessonSpec lexis
-- **Status:** `ready`
+- **Status:** `in_progress`
 - **Mô tả:** On lesson complete, upsert cards from lexis words for FSRS.
 - **Done khi:** flashcards show v2 words; lint+test.
-- **Started:** auto-refill
+- **Started:** 2026-07-10 — autopilot (PHASE1: ARCHIVE noted; user mandate TASK-280; inspect completeUnit seed + seedUnitVocabToSRS + LessonPlayerV2 + lexis; PHASE2: AGENT_PLAN; PHASE3: seed-lexis + action + wire)
 
 ### TASK-281 — E2E v2 guest-or-auth complete smoke
 - **Status:** `ready`

@@ -6,11 +6,20 @@ import { reviewCardFSRS } from "@/lib/srs/fsrs";
 import { Card } from "@/types/database";
 import { createRateLimiter } from "@/lib/security/rate-limit";
 import { checkActionRateLimit } from "@/lib/security/action-guard";
-import { SaveCardSchema, ReviewCardSchema, SeedVocabSchema, WrongWordsSchema } from "@/lib/security/validation";
+import {
+  SaveCardSchema,
+  ReviewCardSchema,
+  SeedVocabSchema,
+  SeedV2LessonLexisSchema,
+  WrongWordsSchema,
+} from "@/lib/security/validation";
+import { getLessonV2 } from "@/lib/v2/lessons";
+import { lexisToSeedVocab } from "@/lib/v2/seed-lexis";
 
 const saveCardLimiter = createRateLimiter(60, 60 * 1000, "save-card");
 const reviewCardLimiter = createRateLimiter(60, 60 * 1000, "review-card");
 const seedVocabLimiter = createRateLimiter(20, 60 * 1000, "seed-vocab");
+const seedV2LexisLimiter = createRateLimiter(20, 60 * 1000, "seed-v2-lexis");
 const wrongWordsLimiter = createRateLimiter(30, 60 * 1000, "wrong-words");
 
 interface SaveCardParams {
@@ -437,6 +446,66 @@ export async function seedUnitVocabToSRS(params: {
     }));
 
     // upsert with ignoreDuplicates — skip words already in the user's deck
+    const { error } = await supabase
+      .from("cards")
+      .upsert(rows, { onConflict: "user_id,word", ignoreDuplicates: true });
+
+    if (error) return { success: false, added: 0 };
+
+    revalidatePath("/flashcards");
+    revalidatePath("/dashboard");
+    return { success: true, added: rows.length };
+  } catch {
+    return { success: false, added: 0 };
+  }
+}
+
+/**
+ * TASK-280: On v2 lesson complete, upsert FSRS cards from LessonSpec lexis.
+ * Client sends lessonId only — lexis loaded server-side from registry.
+ * Guest / unauth → silent no-op (fire-and-forget safe).
+ */
+export async function seedV2LessonLexisToSRS(lessonId: string) {
+  try {
+    const rateErr = await checkActionRateLimit(seedV2LexisLimiter);
+    if (rateErr) return { success: false, added: 0 };
+
+    const validated = SeedV2LessonLexisSchema.safeParse({ lessonId });
+    if (!validated.success) return { success: false, added: 0 };
+    const cleanId = validated.data.lessonId;
+
+    const lesson = getLessonV2(cleanId);
+    if (!lesson) return { success: false, added: 0 };
+
+    const vocab = lexisToSeedVocab(lesson.lexis);
+    if (vocab.length === 0) return { success: true, added: 0 };
+
+    const supabase = await createClient();
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
+    if (authError || !user) return { success: false, added: 0 };
+
+    const now = new Date().toISOString();
+    const rows = vocab.map((v) => ({
+      user_id: user.id,
+      word: v.word.toLowerCase().trim(),
+      phonetic: v.phonetic,
+      meaning_vn: v.meaning_vn,
+      example_en: v.example_en,
+      topic: cleanId,
+      level: lesson.cefr,
+      interval: 0,
+      repetitions: 0,
+      due_date: now,
+      state: 0,
+      difficulty: 0.0,
+      stability: 0.0,
+      last_review: null,
+      next_review: now,
+    }));
+
     const { error } = await supabase
       .from("cards")
       .upsert(rows, { onConflict: "user_id,word", ignoreDuplicates: true });

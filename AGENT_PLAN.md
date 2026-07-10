@@ -1,25 +1,36 @@
-# Agent Plan — TASK-276 complete (local)
+# Agent Plan — TASK-280
 
-> Autopilot 2026-07-10: Author `l-a1-12` Ôn A1 & áp dụng (end A1 block).
+> Autopilot 2026-07-10: FSRS seed from v2 LessonSpec lexis on lesson complete.
 
 | Field | Value |
 |-------|-------|
-| Task | TASK-276 — Author l-a1-12 Ôn A1 & áp dụng |
-| Status | **done (local)** — push blocked |
-| Commits | `205fd60` feat · `a1ef6d4` docs |
-| Gates | lint 0 · 222 tests pass |
+| Task | TASK-280 — FSRS seed from v2 LessonSpec lexis |
+| Status | **in_progress** |
+| Scope | On v2 complete → upsert `cards` from `lesson.lexis` (auth users) |
 
-## Delivered
+## Goal
 
-- **`src/lib/v2/lessons/l-a1-12.ts`** full LessonSpec (12 lexis L1 100%, multi-spine A1 grammar, controlled×6, composite dialogue, listen×4, fluency×8, freer speak task, quiz×6, spiral×6 a1-01/07/09/10/06/11)
-- **Registry** `lessons/index.ts` (meta already in `path.ts` order 20)
-- **Tests** registry title + getNextPlayable a1-11→a1-12; authored ≥21
-- **Docs** `V2_PRODUCT.md` P1 A1 complete …`l-a1-12`; next factory `l-a2-01`
+When a learner finishes a v2 lesson (`markLessonComplete`), seed FSRS flashcards from that lesson’s lexis so `/flashcards` shows the new words (same pattern as v1 `completeUnit` / `seedUnitVocabToSRS`).
 
-## Push
+## Steps
 
-Attempt `bash scripts/git-push.sh main`. If GitHub archive / GitLab key fail, code stays on local `main` only (same as TASK-274/275).
+1. Pure mapper: `LessonSpec.lexis` → seed payload (dedupe, cap 30).
+2. Server action `seedV2LessonLexisToSRS(lessonId)`: rate limit + Zod lessonId → `getLessonV2` → upsert `cards` (`onConflict: user_id,word`, ignoreDuplicates). Guest / unauth → silent no-op.
+3. Wire `LessonPlayerV2` fire-and-forget after successful complete gate.
+4. Unit tests for mapper + schema; lint + test.
+5. Commit + `bash scripts/git-push.sh main`; backlog done + nhật ký.
 
-## Next ready
+## Risks
 
-TASK-280 / TASK-281 / TASK-282 (pick first ready in backlog after refill)
+| Risk | Mitigation |
+|------|------------|
+| Client-forged vocab | Server loads lexis from registry by `lessonId` only |
+| Guest complete | No auth → `{ success: false, added: 0 }`; local progress still works |
+| Duplicate words across lessons | `ignoreDuplicates` on `(user_id, word)` |
+| Rate limit abuse | Existing seed-vocab style limiter 20/min |
+
+## Out of scope
+
+- DB migration for v2 progress (TASK-279)
+- E2E smoke (TASK-281)
+- Changing FSRS algorithm params

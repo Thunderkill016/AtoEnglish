@@ -91,6 +91,16 @@ export const SeedVocabSchema = z.object({
   level: z.enum(["A0", "A1", "A2", "B1", "B2", "C1"]).default("A1"),
 });
 
+/** v2 lesson id — server loads lexis from registry (TASK-280) */
+export const SeedV2LessonLexisSchema = z.object({
+  lessonId: z
+    .string()
+    .regex(
+      /^l-(a0|a1|a2|b1)-\d{2}$/,
+      "ID bài v2 không hợp lệ",
+    ),
+});
+
 /**
  * Schema for scheduling wrong words for early FSRS review.
  * Sends rated "Again" to bring them back to the front of the queue.
