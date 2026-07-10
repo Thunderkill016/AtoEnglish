@@ -1884,6 +1884,31 @@
 
 
 
+### TASK-270 — Author l-a1-06 Nhà cửa
+- **Status:** `ready`
+- **Mô tả:** Home/rooms/furniture; there is/are; This is my room… Spiral a1-03 family. L1 100%.
+- **Done khi:** schema + registry + sequential after a1-05.
+- **Started:** auto-refill
+
+### TASK-271 — Author l-a1-07 Mua sắm
+- **Status:** `ready`
+- **Mô tả:** Shopping phrases; How much is…?; numbers money light. Spiral a1-02 numbers/personal. L1 100%.
+- **Done khi:** schema + registry + path sequential.
+- **Started:** auto-refill
+
+### TASK-272 — Author l-a1-08 Đồ ăn & order
+- **Status:** `ready`
+- **Mô tả:** Food/drink; I'd like… / Can I have…? Cafe order. Spiral a1-07 shopping. L1 100%.
+- **Done khi:** schema + registry + path sequential.
+- **Started:** auto-refill
+
+### TASK-273 — Author l-a1-09 Địa điểm & chỉ đường
+- **Status:** `ready`
+- **Mô tả:** Places in town; Where is…? / next to / opposite / turn left. L1 100%.
+- **Done khi:** schema + registry + path sequential.
+- **Started:** auto-refill
+
+
 ---
 
 ## Nhật ký agent
@@ -1893,6 +1918,10 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
+| 2026-07-10 | TASK-270 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-07-10 | TASK-271 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-07-10 | TASK-272 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-07-10 | TASK-273 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-10 | TASK-268 | feat(v2): l-a1-05 Sở thích; like/love/hate + -ing; L1 100%; sequential after a1-04 | done — cec91e7 |
 | 2026-07-10 | DOCS-STRUCT | docs taxonomy product/pedagogy/design/specs + stubs + STRUCTURE.md | done — 571bea5 |
 | 2026-07-10 | TASK-267 | feat(v2): l-a1-04 Thói quen hàng ngày; present simple; L1 100%; sequential after a1-03 | done — 571bea5 |
