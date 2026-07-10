@@ -6,10 +6,11 @@ import {
   SecondaryPageShell,
 } from "@/components/design-system";
 import {
+  getMeHubStudy,
+  ME_HUB_OUTCOME_LINE,
   meHubAccount,
   meHubMore,
   meHubPractice,
-  meHubStudy,
 } from "@/lib/constants/me-hub";
 
 interface MeClientProps {
@@ -18,11 +19,14 @@ interface MeClientProps {
 }
 
 export default function MeClient({ userName, subtitle }: MeClientProps) {
+  const studyItems = getMeHubStudy();
+  const defaultSubtitle = `Chào ${userName} · ${ME_HUB_OUTCOME_LINE}`;
+
   return (
-    <SecondaryPageShell title="Tôi" subtitle={subtitle ?? `Chào ${userName}`}>
+    <SecondaryPageShell title="Tôi" subtitle={subtitle ?? defaultSubtitle}>
       <div className="space-y-6 pb-8">
         <ListSection title="Học tập">
-          {meHubStudy.map((item) => (
+          {studyItems.map((item) => (
             <PrimaryRow
               key={item.href}
               href={item.href}

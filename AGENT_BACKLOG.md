@@ -1915,10 +1915,11 @@
 
 
 ### TASK-277 — Nav: Học tab → /home when v2 flag
-- **Status:** `ready`
+- **Status:** `in_progress`
 - **Mô tả:** bottomNavItems + desktopPrimaryNav: href /home if isCurriculumV2 else /dashboard. Me hub copy B1.
 - **Done khi:** flag matrix correct; time-to-lesson ≤2 tap; lint+test.
-- **Started:** auto-refill
+- **Started:** 2026-07-10 — autopilot
+
 
 ### TASK-278 — Dashboard Ato Surface full migrate
 - **Status:** `ready`

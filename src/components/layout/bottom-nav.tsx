@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
 
 import { isLessonChromeHidden } from "@/lib/ui/lesson-chrome";
-import { bottomNavItems } from "@/lib/constants/navigation";
+import { getBottomNavItems } from "@/lib/constants/navigation";
 import { ATO_FOCUS } from "@/lib/ui/ato-surface";
 import { cn } from "@/lib/utils";
 
@@ -18,6 +18,8 @@ export function BottomNav({ dueCardsCount = 0 }: BottomNavProps) {
   const pathname = usePathname();
   if (isLessonChromeHidden(pathname)) return null;
 
+  const items = getBottomNavItems();
+
   return (
     <nav
       className={cn(
@@ -28,12 +30,12 @@ export function BottomNav({ dueCardsCount = 0 }: BottomNavProps) {
       aria-label="Điều hướng chính"
       style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
     >
-      {bottomNavItems.map((item) => {
+      {items.map((item) => {
         const Icon = item.icon;
         const isActive =
           pathname === item.href ||
           (item.href === "/me" && pathname.startsWith("/settings")) ||
-          pathname.startsWith(item.href + "/");
+          (item.href !== "/" && pathname.startsWith(item.href + "/"));
         const showBadge = item.href === "/flashcards" && dueCardsCount > 0;
 
         return (

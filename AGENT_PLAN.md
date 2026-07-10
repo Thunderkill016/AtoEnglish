@@ -21,16 +21,16 @@
 | Auto tasks added | TASK-269–273 |
 | Date | 2026-07-10 |
 
-**Focus:** A1 content factory TASK-272 — see `logs/agent/product-radar-latest.md`.
+**Focus:** Wave B product spine — TASK-277 nav flag → `/home` when v2.
 
 
 ## Phiên OPS (prior)
 
 | Field | Value |
 |-------|-------|
-| Focus | TASK-271 A1 l-a1-07 shopping |
-| Commit | 438f914 |
-| Next pick | TASK-272 A1 l-a1-08 |
+| Focus | TASK-272 A1 l-a1-08 food/order |
+| Commit | 3a9f939 |
+| Next pick | TASK-277 nav (user session override) |
 
 
 > Agent ghi kế hoạch trước khi code. User không cần approve.
@@ -40,34 +40,31 @@
 | Field | Value |
 |-------|-------|
 | Started | 2026-07-10 |
-| Focus | TASK-272 — Author l-a1-08 Đồ ăn & order |
+| Focus | TASK-277 — Nav Học → /home when v2 flag + Me hub B1 copy |
 | Owner | Autopilot (user absent; autonomous) |
 
-### TASK-272 — Author l-a1-08 Đồ ăn & order
-**Mục tiêu**: Full LessonSpec A1 food/drink; I'd like… / Can I have…? Cafe order. Spiral a1-07 shopping. L1 notes 100%. Register + sequential next after a1-07.
+### TASK-277 — Nav: Học tab → /home when v2 flag
+**Mục tiêu**: `bottomNavItems` + `desktopPrimaryNav` Học href = `/home` nếu `isCurriculumV2()` else `/dashboard`. Me hub copy bám north star B1 Independent User. time-to-lesson ≤2 tap.
 
-**Done khi:** `l-a1-08.ts` + registry; schema pass; `getNextPlayableLessonId(…a1-07)` = `l-a1-08`; lint+test; commit + push.
+**Done khi:** flag matrix correct; Me hub B1 copy; lint+test; commit + push.
 
 **Bước thực hiện**:
-1. PHASE1 (done): AGENTS, BACKLOG (272 ready), PLAN, CONTENT_STYLE §6–7, gold a1-07 + path meta l-a1-08 exists, tests sequential stop at a1-07.
-2. BACKLOG TASK-272 → `in_progress`. ready 273 ≥1; refill if ready < 2 after done.
+1. PHASE1 (done): AGENTS, BACKLOG (277 ready), ROADMAP B1 wave, MASTER B1, navigation.ts static /dashboard, me-hub A0→B2 copy, flag.ts.
+2. BACKLOG TASK-277 → `in_progress`.
 3. PHASE3:
-   - Author `src/lib/v2/lessons/l-a1-08.ts` (8 stages, L1 100%, I'd like / Can I have + cafe lexis).
-   - Register in `lessons/index.ts`.
-   - Update `lesson-spec-v2.test.ts` (title + sequential after a1-07).
-   - Optional: `docs/product/V2_PRODUCT.md` authored list.
+   - `getPrimaryLearnHref()` + live getters for bottom/desktop primary nav.
+   - Wire bottom-nav + main-nav + command-palette.
+   - Me hub study copy → B1 Independent User (product-outcome).
+   - Unit test flag matrix (v2 on → /home, off → /dashboard).
 4. `npm run lint && npm run test`.
-5. Log `logs/agent/*_TASK-272.log`; BACKLOG done + Nhật ký + SHA; PLAN completed; commit + `bash scripts/git-push.sh main`.
+5. Log + BACKLOG done + Nhật ký + SHA; PLAN completed; commit + `bash scripts/git-push.sh main`.
 
 **Rủi ro**:
-- Schema L1 100% A1 — every lexis item needs `l1_note_vi` ≥10 chars.
-- I'd like + noun vs Can I have + noun — core polite order; not I want only.
-- Spiral a1-07: How much is/are, dollars, I'll take it — cafe bill/price link.
-- Lexis max 12; grammar rule max 120; dialogue lines max 12.
-- Sequential test must list all A0 + a1-01..07 completed → next a1-08.
+- Static const eval once at import — use getters so flag is read at render/call time.
+- Active-tab match: `/home` exact; do not break `/me` settings highlight.
+- NEXT_PUBLIC_CURRICULUM_V2 default off — prod stays /dashboard until cutover.
+- Do not change mobilePanelGroups / auth redirects (out of scope).
 - Transient lint/test flake → clear tsbuildinfo + rerun once; 2 fails → blocked.
 - Push needs GitLab → blocked, no force.
 
 **Started:** 2026-07-10 — autopilot
-
-**Completed TASK-272**: `l-a1-08` food/cafe I'd like / Can I have; L1 100%; registry + sequential after a1-07; lint0+213t; docs V2_PRODUCT; log + commit 3a9f939 + push; autonomous. Next: TASK-273 / l-a1-09.

@@ -12,6 +12,12 @@ import {
   type LucideIcon,
 } from "lucide-react";
 
+import {
+  CORE_OUTCOME_CEFR,
+  CORE_OUTCOME_PROMISE_VI,
+} from "@/lib/constants/product-outcome";
+import { isCurriculumV2 } from "@/lib/v2/flag";
+
 export type MeHubItem = {
   href: string;
   label: string;
@@ -19,32 +25,43 @@ export type MeHubItem = {
   icon: LucideIcon;
 };
 
-export const meHubStudy: MeHubItem[] = [
-  {
-    href: "/progress",
-    label: "Tiến độ",
-    description: "XP, streak, thành tích",
-    icon: TrendingUp,
-  },
-  {
-    href: "/roadmap",
-    label: "Lộ trình",
-    description: "A0 → B2 · 50 unit",
-    icon: Map,
-  },
-  {
-    href: "/learn",
-    label: "Bài học",
-    description: "Danh sách 50 unit",
-    icon: BookOpen,
-  },
-];
+/** B1 Independent User — north star copy for Me hub (Wave B1) */
+export const ME_HUB_OUTCOME_LINE = CORE_OUTCOME_PROMISE_VI;
+
+export function getMeHubStudy(): MeHubItem[] {
+  const v2 = isCurriculumV2();
+  return [
+    {
+      href: "/progress",
+      label: "Tiến độ",
+      description: `XP, streak · hướng ${CORE_OUTCOME_CEFR} Independent`,
+      icon: TrendingUp,
+    },
+    {
+      href: v2 ? "/path" : "/roadmap",
+      label: "Lộ trình",
+      description: `A0 → ${CORE_OUTCOME_CEFR} · Independent User`,
+      icon: Map,
+    },
+    {
+      href: v2 ? "/home" : "/learn",
+      label: "Bài học",
+      description: v2
+        ? `Tiếp tục tới ${CORE_OUTCOME_CEFR} — dùng được tiếng Anh`
+        : "Danh sách unit · đích B1 Independent",
+      icon: BookOpen,
+    },
+  ];
+}
+
+/** Snapshot for simple imports; prefer getMeHubStudy() when flag may change */
+export const meHubStudy: MeHubItem[] = getMeHubStudy();
 
 export const meHubPractice: MeHubItem[] = [
   {
     href: "/speaking",
     label: "Luyện nói",
-    description: "Shadowing & roleplay",
+    description: "Shadowing & roleplay — nói được B1",
     icon: Mic,
   },
   {
@@ -77,13 +94,13 @@ export const meHubMore: MeHubItem[] = [
   {
     href: "/business",
     label: "Business English",
-    description: "Tiếng Anh công sở",
+    description: "Tiếng Anh công sở (sau B1)",
     icon: Briefcase,
   },
   {
     href: "/grammar",
     label: "Ngữ pháp",
-    description: "Chủ điểm A0–B2",
+    description: "Chủ điểm A0–B1",
     icon: BookOpen,
   },
   {

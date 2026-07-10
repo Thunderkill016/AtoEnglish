@@ -3,21 +3,22 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-import { desktopPrimaryNav } from "@/lib/constants/navigation";
+import { getDesktopPrimaryNav } from "@/lib/constants/navigation";
 import { ATO_FOCUS } from "@/lib/ui/ato-surface";
 import { cn } from "@/lib/utils";
 
 /** Desktop primary nav — Ato Surface active emerald pill */
 export function MainNavRow() {
   const pathname = usePathname();
+  const items = getDesktopPrimaryNav();
 
   return (
     <nav className="hidden items-center gap-0.5 md:flex" aria-label="Điều hướng chính">
-      {desktopPrimaryNav.map((item) => {
+      {items.map((item) => {
         const isActive =
           pathname === item.href ||
           (item.href === "/me" && pathname.startsWith("/settings")) ||
-          pathname.startsWith(`${item.href}/`);
+          (item.href !== "/" && pathname.startsWith(`${item.href}/`));
         const Icon = item.icon;
 
         return (

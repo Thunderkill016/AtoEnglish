@@ -16,6 +16,8 @@ import {
   type LucideIcon,
 } from "lucide-react";
 
+import { isCurriculumV2 } from "@/lib/v2/flag";
+
 export type NavItem = {
   title: string;
   href: string;
@@ -41,50 +43,52 @@ export const dashboardSections: DashboardSection[] = [
   { id: "dash-progress", label: "Tiến độ", icon: TrendingUp },
 ];
 
+/**
+ * Primary «Học» destination — Wave B1 product spine.
+ * v2 flag ON → /home (daily CTA + B1 path); OFF → /dashboard (v1 hub).
+ */
+export function getPrimaryLearnHref(): string {
+  return isCurriculumV2() ? "/home" : "/dashboard";
+}
+
+const hocNavItem = (): NavItem => ({
+  title: "Học",
+  href: getPrimaryLearnHref(),
+  icon: BookOpen,
+  description: "Tiếp tục bài học",
+});
+
+const onNavItem: NavItem = {
+  title: "Ôn",
+  href: "/flashcards",
+  icon: Layers,
+  description: "Ôn tập flashcard SRS",
+};
+
+const toiNavItem: NavItem = {
+  title: "Tôi",
+  href: "/me",
+  icon: User,
+  description: "Tiến độ, luyện tập & cài đặt",
+};
+
 // ─── Tier 1 — Bottom Nav (mobile) — 3-tab Hick-compliant shell (P1) ────────
 // Học (home + continue) · Ôn (SRS) · Tôi (settings/profile)
-export const bottomNavItems: NavItem[] = [
-  {
-    title: "Học",
-    href: "/dashboard",
-    icon: BookOpen,
-    description: "Tiếp tục bài học",
-  },
-  {
-    title: "Ôn",
-    href: "/flashcards",
-    icon: Layers,
-    description: "Ôn tập flashcard SRS",
-  },
-  {
-    title: "Tôi",
-    href: "/me",
-    icon: User,
-    description: "Tiến độ, luyện tập & cài đặt",
-  },
-];
+/** Live list — call each render so flag matrix stays correct */
+export function getBottomNavItems(): NavItem[] {
+  return [hocNavItem(), onNavItem, toiNavItem];
+}
+
+/** @deprecated Prefer getBottomNavItems() — snapshot at first access for legacy imports */
+export const bottomNavItems: NavItem[] = getBottomNavItems();
 
 // ─── Tier 2 — Desktop Primary Nav — matches 3-tab shell ─────────────────────
-export const desktopPrimaryNav: NavItem[] = [
-  {
-    title: "Học",
-    href: "/dashboard",
-    icon: BookOpen,
-    description: "Tiếp tục bài học",
-  },
-  {
-    title: "Ôn",
-    href: "/flashcards",
-    icon: Layers,
-    description: "Ôn tập flashcard SRS",
-  },
-  {
-    title: "Tôi",
-    href: "/me",
-    icon: User,
-    description: "Tiến độ, luyện tập & cài đặt",
-  },
-];
+export function getDesktopPrimaryNav(): NavItem[] {
+  return [hocNavItem(), onNavItem, toiNavItem];
+}
+
+/** @deprecated Prefer getDesktopPrimaryNav() — snapshot at first access for legacy imports */
+export const desktopPrimaryNav: NavItem[] = getDesktopPrimaryNav();
 
 /** @deprecated V2 — links live on /me hub; kept for command palette / legacy */
 export const desktopMoreItems: NavItem[] = [
@@ -199,6 +203,6 @@ export function getDashboardExploreActions(unitRoute: string): NavItem[] {
 
 // ─── Legacy export — backward compat for components importing mainNavItems ────
 export const mainNavItems: NavItem[] = [
-  ...desktopPrimaryNav,
+  ...getDesktopPrimaryNav(),
   ...desktopMoreItems,
 ];

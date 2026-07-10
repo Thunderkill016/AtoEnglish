@@ -14,9 +14,9 @@ import {
 } from "lucide-react";
 
 import {
-  bottomNavItems,
   desktopMoreItems,
-  desktopPrimaryNav,
+  getBottomNavItems,
+  getDesktopPrimaryNav,
   mobilePanelGroups,
   type NavItem,
 } from "@/lib/constants/navigation";
@@ -40,7 +40,7 @@ function collectRoutes(): NavItem[] {
     items.push(item);
   };
 
-  [...desktopPrimaryNav, ...desktopMoreItems, ...bottomNavItems].forEach(add);
+  [...getDesktopPrimaryNav(), ...desktopMoreItems, ...getBottomNavItems()].forEach(add);
   mobilePanelGroups.forEach((g) => g.items.forEach(add));
   EXTRA_ROUTES.forEach(add);
 
