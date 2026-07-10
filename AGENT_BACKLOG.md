@@ -1885,10 +1885,12 @@
 
 
 ### TASK-270 — Author l-a1-06 Nhà cửa
-- **Status:** `ready`
+- **Status:** `done`
 - **Mô tả:** Home/rooms/furniture; there is/are; This is my room… Spiral a1-03 family. L1 100%.
 - **Done khi:** schema + registry + sequential after a1-05.
-- **Started:** auto-refill
+- **Started:** 2026-07-10 — autopilot (PHASE1: AGENTS/BACKLOG/PLAN + a1-05 gold + unit6 home + schema/path/tests; PHASE2: PLAN; PHASE3: author l-a1-06 + registry + sequential after a1-05)
+- **Completed:** 2026-07-10 — l-a1-06 full LessonSpec (house/apartment/rooms/furniture; there is/are; This is my room; spiral a1-03); L1 100%; registry + sequential after a1-05; lint0+213t; docs V2_PRODUCT; log 20260710T034818Z_TASK-270.log
+
 
 ### TASK-271 — Author l-a1-07 Mua sắm
 - **Status:** `ready`
@@ -1919,7 +1921,7 @@
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
 | 2026-07-10 | MASTER-PLAN | Full audit + MASTER_AUTOPILOT_PLAN; wave A–D in ROADMAP 274–284; daemon continues 270+ | done — cece18e |
-| 2026-07-10 | TASK-270 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-07-10 | TASK-270 | feat(v2): l-a1-06 Nhà cửa; there is/are + rooms; L1 100%; sequential after a1-05 | done — 3ec29fb |
 | 2026-07-10 | TASK-271 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-10 | TASK-272 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-10 | TASK-273 | auto-refill từ AGENT_ROADMAP.md | ready |
