@@ -1,30 +1,28 @@
-# Agent Plan — TASK-279 complete (local)
+# Agent Plan — TASK-285 complete (local)
 
-> Autopilot 2026-07-10: v2 progress Supabase persistence.
+> Autopilot 2026-07-10: LessonSpec `l-a2-02` will / going to survival.
 
 | Field | Value |
 |-------|-------|
-| Task | TASK-279 — v2 progress Supabase persistence |
+| Task | TASK-285 — Author l-a2-02 Kế hoạch tương lai (will/going to) |
 | Status | **done** |
-| Commit | `7f7c798` |
 | Gates | lint 0 · 233 unit tests · tsc 0 |
 
 ## Delivered
 
-- **Migration** `supabase/migrations/20260710130000_user_v2_lesson_progress.sql` — table + RLS select/insert/update own; no delete; lesson_id check
-- **Types** `user_v2_lesson_progress` in `src/types/supabase.ts` (hand-patched; apply migration on prod when secret available)
-- **Actions** `src/app/actions/v2-progress.ts` — `completeV2Lesson`, `fetchV2LessonProgress`, `syncV2ProgressFromLocal` (+ rate limit + Zod)
-- **Client** `markLessonComplete` still local; player dual-writes DB; `V2ProgressHydrator` push→pull→merge once per session (auth + `NEXT_PUBLIC_CURRICULUM_V2`)
-- **Pure merge** `mergeLessonRecords` + tests (union / earlier completedAt / max quiz)
-
-## Ops note
-
-Apply migration to Supabase prod when credentials allow (`supabase db push` or SQL editor). Code is safe if table missing: actions return soft failure; guests unaffected.
+- **Content** `src/lib/v2/lessons/l-a2-02.ts` — A2/P2 future plans survival
+  - Grammar: be going to + V1 (plans) vs will / I'll (decide/offer)
+  - Lexis 10 items, L1 notes 100% (schema A2)
+  - `jobAngle`: Monday planning — What are you going to do this week?
+  - 2 dialogues (stand-up + coffee), 5 listen, 8 fluency, speak task, quiz+spiral (past a2-01)
+- **Registry** `index.ts` → `l-a2-02`
+- **Path** already had order 22 after `l-a2-01`
+- **Tests** getLesson + next playable after a2-01 → a2-02
 
 ## Push
 
-`bash scripts/git-push.sh main` → **blocked** (GitHub archive read-only). Local `main` at `7f7c798`.
+`bash scripts/git-push.sh main` — may block (GitHub archive read-only). Local commit on `main`.
 
 ## Next ready
 
-TASK-283 — Speaking subroutes Ato chrome
+TASK-283 — Speaking subroutes Ato chrome · TASK-286 — l-a2-03 comparatives
