@@ -1978,10 +1978,11 @@
 - **Completed:** 2026-07-10 — e2e/learn-v2-smoke.spec.ts guest stage smoke + task/quiz floor complete; global-setup soft-fail offline Supabase; lint0+228t; playwright chromium 2/2; commit 149cc01
 
 ### TASK-282 — Author l-a2-01 Kể chuyện quá khứ
-- **Status:** `in_progress`
+- **Status:** `done`
 - **Mô tả:** First A2 LessonSpec; past simple survival; L1 ≥50% band.
 - **Done khi:** schema + registry + path after a1-12.
 - **Started:** 2026-07-10 — autopilot (PHASE1: ARCHIVE noted; user mandate TASK-282; inspect LessonSpec+path+l-a1-*; PHASE2: AGENT_PLAN; PHASE3: author l-a2-01)
+- **Completed:** 2026-07-10 — `l-a2-01.ts` past simple survival (P2/A2); L1 100% lexis (schema A2); registry + next after a1-12; lint0+228t; commit `82ba4fa`; push blocked (GitHub archive read-only)
 
 
 ### TASK-283 — Speaking subroutes Ato chrome
@@ -2006,6 +2007,7 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
+| 2026-07-10 | TASK-282 | feat(v2): l-a2-01 past simple survival (first A2) | done — 82ba4fa (push blocked: GitHub archive) |
 | 2026-07-10 | TASK-283 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-10 | TASK-279 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-10 | TASK-281 | test(e2e): v2 l-a1-01 guest stage smoke + quiz floor complete | done — 149cc01 (push blocked: GitHub archive + GitLab key) |

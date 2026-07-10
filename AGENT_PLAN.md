@@ -1,36 +1,25 @@
-# Agent Plan — TASK-282 in progress
+# Agent Plan — TASK-282 complete (local)
 
-> Autopilot 2026-07-10: First A2 LessonSpec `l-a2-01` — past simple survival (kể chuyện quá khứ).
+> Autopilot 2026-07-10: First A2 LessonSpec `l-a2-01` — past simple survival.
 
 | Field | Value |
 |-------|-------|
 | Task | TASK-282 — Author l-a2-01 Kể chuyện quá khứ |
-| Status | **in_progress** |
-| Scope | New LessonSpec only + registry + path already planned |
-| Gates | lint · unit tests · schema parse |
+| Status | **done** |
+| Commit | `82ba4fa` |
+| Gates | lint 0 · 228 unit tests · schema parse OK |
 
-## Goal
+## Delivered
 
-Ship first P2/A2 lesson after A1 gate (`l-a1-12`): past simple survival so learners can tell a short yesterday/last-week story with L1 notes meeting A2 band (schema = 100% lexis L1).
+- **`src/lib/v2/lessons/l-a2-01.ts`** — P2/A2 past simple: yesterday/last week·night, went/had/saw/met/worked, did+V1, was/were; 10 lexis L1 100%; 2 dialogues (coffee chat + stand-up); jobAngle weekend small talk
+- **Registry** `index.ts` → `l-a2-01`
+- **Path** already had order 21 after `l-a1-12`
+- **Tests** registry + `getNextPlayable` after full A1 → `l-a2-01`
 
-## Steps
+## Push
 
-1. Author `src/lib/v2/lessons/l-a2-01.ts` (past simple: was/were, did, went, had, yesterday/last…)
-2. Register in `lessons/index.ts`
-3. Extend `lesson-spec-v2.test.ts` (registry + next after a1-12 → a2-01)
-4. `npm run lint && npm run test`
-5. Commit + push; backlog done + SHA
+`bash scripts/git-push.sh main` → **blocked** (GitHub archive read-only). Local `main` at `82ba4fa` (ahead of origin).
 
-## Risks
+## Next ready
 
-| Risk | Mitigation |
-|------|------------|
-| Schema L1 100% for A2 | Every lexis item has `l1_note_vi` ≥10 chars |
-| Phase/cefr mismatch | phase `P2` + cefr `A2` |
-| Push blocked (archive remotes) | Local commit; document push failure |
-
-## Out of scope
-
-- Full A2 spine (a2-02…08)
-- UI chrome, DB, e2e for a2-01
-- v1 unit*.ts changes
+TASK-283 — Speaking subroutes Ato chrome · TASK-279 — v2 progress Supabase persistence
