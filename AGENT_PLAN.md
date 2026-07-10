@@ -9,7 +9,7 @@
 | Daemon | RADAR_EVERY=3 |
 | Orchestrator | ORCHESTRATOR_RADAR_POST=1 (fail cycle if FAIL>0) |
 | First smoke | 2026-07-10 PASS=13 FAIL=0 live vercel |
-| Next pick | TASK-272 A1 l-a1-08 food/order |
+| Next pick | TASK-273 A1 l-a1-09 places/directions |
 
 
 ## Product loop (radar)
@@ -69,3 +69,5 @@
 - Push needs GitLab → blocked, no force.
 
 **Started:** 2026-07-10 — autopilot
+
+**Completed TASK-272**: `l-a1-08` food/cafe I'd like / Can I have; L1 100%; registry + sequential after a1-07; lint0+213t; docs V2_PRODUCT; log + commit 3a9f939 + push; autonomous. Next: TASK-273 / l-a1-09.
