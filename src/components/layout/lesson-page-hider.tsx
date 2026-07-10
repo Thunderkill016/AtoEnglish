@@ -1,10 +1,11 @@
 "use client";
 import { usePathname } from "next/navigation";
+import { isLessonChromeHidden } from "@/lib/ui/lesson-chrome";
+
+export { isLessonChromeHidden } from "@/lib/ui/lesson-chrome";
 
 export function LessonPageHider({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  // Hide header/bottom-nav on unit lesson pages (full-screen lesson UI)
-  const isLessonPage = /^\/learn\/unit/.test(pathname);
-  if (isLessonPage) return null;
+  if (isLessonChromeHidden(pathname)) return null;
   return <>{children}</>;
 }

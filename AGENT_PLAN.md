@@ -7,19 +7,43 @@
 | Field | Value |
 |-------|-------|
 | Started | 2026-07-10 |
-| Focus | TASK-260 — UI Ato Surface tokens + primitives |
-| Owner | Autopilot (user-approved UI redesign plan) |
+| Focus | TASK-261 — UI shell Header + BottomNav |
+| Owner | Autopilot |
 
-### TASK-260 — UI Ato Surface: tokens + design-system primitives
-**Mục tiêu**: Foundation redesign — keep Tailwind; no MUI. CSS `--ato-*`, `ato-surface.ts`, Surface/AppButton/PageHeader/Chip, Screen `ato`+`ambient`, `docs/UI_SYSTEM.md`, unit tests. Queue TASK-261–265. **Done khi:** exports+docs+lint/test+push.
+**Completed TASK-261**: Ato glass shell; hide /learn/v2; tests; push.
 
-**Bước**: implement kit additive; backlog/roadmap; lint+test; commit.
 
-**Rủi ro**: Screen default props must not break legacy; no page rewrites yet.
+| Field | Value |
+|-------|-------|
+| Started | 2026-07-10 |
+| Focus | TASK-256 — Autopilot maintenance sweep #256 |
+| Owner | Autopilot (user absent; autonomous) |
 
-**Started:** 2026-07-10 — user-approved plan
+### TASK-256 — Autopilot maintenance sweep #256
+**Mục tiêu**: Chạy `npm run lint && npm run test` (cùng `npx tsc --noEmit` + content gates nếu liên quan); fix failure đầu tiên nếu có (minimal); sync AGENT_PLAN nhật ký + BACKLOG + log. **Không feature mới**, không đổi logic app. **Done khi:** gates pass; 0 or 1 small fix; PLAN/BACKLOG/nhật ký; 1 commit; push `git-push.sh main`.
 
-**Completed TASK-260**: Ato Surface foundation shipped; TASK-261–265 ready; lint0+210t; push.
+**Bước thực hiện**:
+1. PHASE1 (done): AGENTS.md, BACKLOG (TASK-256 ready→in_p; 257–259 ready + UI 261–265), PLAN prior TASK-260 done cac611a / TASK-255 9c07fd1, CONTENT_STYLE §6–7 (context only — no unit edit).
+2. BACKLOG TASK-256 → `in_progress`.
+3. Ready after in_p: ≥2 (257–259, 262–265) → skip refill. Note: TASK-261 was already in_progress with uncommitted WIP — stashed before gates so maintenance stays clean.
+4. PHASE3:
+   - `rm -f tsconfig.tsbuildinfo` (stale guard).
+   - `npx tsc --noEmit`; `npm run lint`; `npm run test`.
+   - Optional: content-standard + audit (maintenance pattern).
+   - Fix only first failure; no scope creep; no UI feature.
+5. Log `logs/agent/*_TASK-256.log`; BACKLOG done + Nhật ký + SHA; PLAN completed; commit + `bash scripts/git-push.sh main`; restore TASK-261 stash.
+
+**Rủi ro**:
+- Transient tsbuildinfo / flake → clear + rerun once; 2 fails → blocked.
+- First real bug → minimal fix only; major/secret → blocked.
+- Push needs GitLab access → blocked, no force.
+- Concurrent TASK-261 WIP must not be discarded or mixed into this commit.
+- No new feature.
+
+**Started:** 2026-07-10 — autopilot
+
+### TASK-260 — UI Ato Surface: tokens + design-system primitives (prior)
+**Completed TASK-260**: Ato Surface foundation shipped; TASK-261–265 queued; lint0+210t; push cac611a.
 
 **Completed TASK-255** (prior maintenance): 9c07fd1.
 

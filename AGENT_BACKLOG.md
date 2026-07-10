@@ -1783,10 +1783,10 @@
 - **Completed:** 2026-07-10 — gates clean (tsc0+lint0+206t+cs50/50+audit50/50) no fix; log 20260710T022532Z_TASK-255.log; PLAN/BACKLOG sync; no src; autonomous
 
 ### TASK-256 — Autopilot maintenance sweep #256
-- **Status:** `ready`
+- **Status:** `in_progress`
 - **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
 - **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
-- **Started:** auto-refill
+- **Started:** 2026-07-10 — autopilot (PHASE1: AGENTS/BACKLOG/PLAN/CONTENT§6-7; prior TASK-255 done 9c07fd1 + TASK-260 cac611a; PHASE2 PLAN; PHASE3 gates only — no feature)
 
 
 ### TASK-257 — Autopilot maintenance sweep #257
@@ -1815,9 +1815,11 @@
 - **Completed:** 2026-07-10 — ato-surface maps + Surface/AppButton/PageHeader/Chip + Screen ato/ambient + UI_SYSTEM.md + 4 tests; lint0+210t; commit cac611a
 
 ### TASK-261 — UI shell: Header + BottomNav Ato Surface
-- **Status:** `ready`
+- **Status:** `done`
 - **Mô tả:** Restyle header-shell + bottom-nav to match Ato Surface; keep LessonPageHider; active emerald glow.
 - **Done khi:** shell consistent with Home language; lint+test.
+- **Started:** 2026-07-10 — autopilot (user bật; UI redesign plan)
+- **Completed:** 2026-07-10 — header/bottom/main-nav Ato glass + isLessonChromeHidden v2; lesson-chrome tests; docs; lint0; commit b5f678d
 
 ### TASK-262 — UI Home redesign on primitives
 - **Status:** `ready`
@@ -1849,6 +1851,7 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
+| 2026-07-10 | TASK-261 | feat(ui): shell Header+BottomNav Ato Surface; hide v2 lesson chrome | done — b5f678d |
 | 2026-07-10 | TASK-260 | feat(ui): Ato Surface tokens + Surface/AppButton/PageHeader/Chip + docs | done — cac611a |
 | 2026-07-10 | TASK-257 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-10 | TASK-258 | auto-refill từ AGENT_ROADMAP.md | ready |

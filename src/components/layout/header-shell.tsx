@@ -6,8 +6,11 @@ import { LogOut, Sprout } from "lucide-react";
 
 import { MainNavRow } from "@/components/layout/main-nav";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
-import { MinimalButton } from "@/components/design-system";
+import { AppButton } from "@/components/design-system";
+import { isLessonChromeHidden } from "@/lib/ui/lesson-chrome";
 import { signOut } from "@/app/actions/auth";
+import { ATO_FOCUS } from "@/lib/ui/ato-surface";
+import { cn } from "@/lib/utils";
 
 type HeaderShellProps = {
   user: { id: string } | null;
@@ -15,21 +18,29 @@ type HeaderShellProps = {
   fullName?: string;
 };
 
-/** V2 minimal header — logo, 3-tab nav (desktop), theme, auth */
+/** Ato Surface header — glass bar, brand mark, desktop tabs, auth */
 export function HeaderShell({ user, fullName }: HeaderShellProps) {
   const pathname = usePathname();
-  const isLesson = /^\/learn\/unit/.test(pathname);
-  if (isLesson) return null;
+  if (isLessonChromeHidden(pathname)) return null;
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border/50 bg-[var(--minimal-canvas)]/90 dark:bg-background/90 backdrop-blur-md">
+    <header
+      className={cn(
+        "sticky top-0 z-50 w-full border-b border-white/10",
+        "bg-zinc-950/85 backdrop-blur-xl",
+        "shadow-[0_4px_24px_-8px_rgba(0,0,0,0.45)]",
+      )}
+    >
       <div className="mx-auto flex h-14 max-w-[var(--minimal-content-max)] items-center justify-between gap-4 px-4 sm:px-6">
         <div className="flex min-w-0 items-center gap-6">
-          <Link href="/dashboard" className="flex shrink-0 items-center gap-2">
-            <span className="flex size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-              <Sprout className="size-4" />
+          <Link
+            href="/dashboard"
+            className={cn("flex shrink-0 items-center gap-2 rounded-xl", ATO_FOCUS)}
+          >
+            <span className="flex size-8 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-teal-500 text-zinc-950 shadow-md shadow-emerald-900/30">
+              <Sprout className="size-4" strokeWidth={2.4} />
             </span>
-            <span className="text-sm font-bold tracking-tight hidden sm:inline">
+            <span className="hidden text-sm font-black tracking-tight text-zinc-50 sm:inline">
               AtoEnglish
             </span>
           </Link>
@@ -41,14 +52,18 @@ export function HeaderShell({ user, fullName }: HeaderShellProps) {
           {user ? (
             <>
               {fullName && (
-                <span className="hidden md:inline text-xs font-medium text-muted-foreground max-w-[120px] truncate">
+                <span className="hidden max-w-[120px] truncate text-xs font-medium text-zinc-400 md:inline">
                   {fullName}
                 </span>
               )}
               <form action={signOut}>
                 <button
                   type="submit"
-                  className="flex size-9 items-center justify-center rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+                  className={cn(
+                    "flex size-9 items-center justify-center rounded-xl text-zinc-400 transition-colors",
+                    "hover:bg-white/5 hover:text-zinc-100",
+                    ATO_FOCUS,
+                  )}
                   title="Đăng xuất"
                   aria-label="Đăng xuất"
                 >
@@ -57,9 +72,9 @@ export function HeaderShell({ user, fullName }: HeaderShellProps) {
               </form>
             </>
           ) : (
-            <MinimalButton href="/login?mode=login" variant="secondary" className="!min-h-9 !px-3 text-sm">
+            <AppButton href="/login?mode=login" variant="secondary" size="sm" className="!min-h-9">
               Đăng nhập
-            </MinimalButton>
+            </AppButton>
           )}
         </div>
       </div>

@@ -57,8 +57,15 @@ import { Screen, Surface, AppButton, PageHeader, Chip } from "@/components/desig
 | Task | Scope |
 |------|--------|
 | TASK-260 | Tokens + primitives + this doc ✅ |
-| TASK-261 | Header + BottomNav |
+| TASK-261 | Header + BottomNav Ato glass ✅ |
 | TASK-262 | Home pass |
 | TASK-263 | Learn + LessonPlayerV2 chrome |
 | TASK-264 | Speaking hub |
 | TASK-265 | Residual screens on roadmap |
+
+
+### Shell notes (TASK-261)
+
+- Header: zinc-950 glass, brand gradient mark, AppButton login.
+- BottomNav/MainNav: emerald active pill + glow; 3 tabs Học · Ôn · Tôi.
+- Full-screen hide: `/learn/unit*` and `/learn/v2/*` via `isLessonChromeHidden`.

@@ -4,9 +4,10 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import { desktopPrimaryNav } from "@/lib/constants/navigation";
+import { ATO_FOCUS } from "@/lib/ui/ato-surface";
 import { cn } from "@/lib/utils";
 
-/** Desktop 3-tab nav — Hick-compliant, no "Thêm" dropdown (V2) */
+/** Desktop primary nav — Ato Surface active emerald pill */
 export function MainNavRow() {
   const pathname = usePathname();
 
@@ -24,10 +25,11 @@ export function MainNavRow() {
             key={item.href}
             href={item.href}
             className={cn(
-              "inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium transition-colors duration-[var(--minimal-motion-ms)]",
+              "inline-flex items-center gap-1.5 rounded-xl px-3 py-2 text-sm font-semibold transition-colors duration-200",
+              ATO_FOCUS,
               isActive
-                ? "bg-primary/10 text-primary font-semibold"
-                : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                ? "bg-emerald-500/15 text-emerald-400 shadow-[0_0_16px_-4px_rgba(16,185,129,0.4)]"
+                : "text-zinc-400 hover:bg-white/5 hover:text-zinc-100",
             )}
           >
             <Icon className="size-3.5 shrink-0" />
