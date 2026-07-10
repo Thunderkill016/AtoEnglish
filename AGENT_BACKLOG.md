@@ -1851,7 +1851,7 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
-| 2026-07-10 | TASK-256 | gates clean (tsc0+lint0+213t+cs50/50+audit50/50) no fix; log 20260710T025545Z_TASK-256.log; PLAN/BACKLOG sync; no src | done — pending |
+| 2026-07-10 | TASK-256 | gates clean (tsc0+lint0+213t+cs50/50+audit50/50) no fix; log 20260710T025545Z_TASK-256.log; PLAN/BACKLOG sync; no src | done — 9c38898 |
 | 2026-07-10 | TASK-261 | feat(ui): shell Header+BottomNav Ato Surface; hide v2 lesson chrome | done — b5f678d |
 | 2026-07-10 | TASK-260 | feat(ui): Ato Surface tokens + Surface/AppButton/PageHeader/Chip + docs | done — cac611a |
 | 2026-07-10 | TASK-257 | auto-refill từ AGENT_ROADMAP.md | ready |
