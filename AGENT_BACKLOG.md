@@ -1865,7 +1865,7 @@
 - **Mô tả:** LessonSpec A1: family/friends expansion beyond a0-05; This is my friend… Spiral a1-01/02. L1 100%.
 - **Done khi:** schema + registry + sequential after a1-02.
 - **Started:** 2026-07-10 — autopilot (PHASE1: AGENTS/BACKLOG/PLAN + a0-05/a1-01/a1-02 + schema + path; PHASE2: PLAN; PHASE3: author l-a1-03 + registry + tests)
-- **Completed:** 2026-07-10 — l-a1-03 full LessonSpec (friend/husband-wife/son-daughter/cousin/older-younger/Do you have/His-Her name); L1 100%; registry + sequential after a1-02; lint0+213t; docs V2_PRODUCT; push via git-push.sh main
+- **Completed:** 2026-07-10 — l-a1-03 full LessonSpec (friend/husband-wife/son-daughter/cousin/older-younger/Do you have/His-Her name); L1 100%; registry + sequential after a1-02; lint0+213t; docs V2_PRODUCT; commit 18690f4 + push via git-push.sh main
 
 
 ### TASK-267 — Author l-a1-04 Thói quen hàng ngày
@@ -1890,7 +1890,7 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
-| 2026-07-10 | TASK-266 | feat(v2): l-a1-03 Gia đình & bạn bè; L1 100%; sequential after a1-02 | done — (SHA pending push) |
+| 2026-07-10 | TASK-266 | feat(v2): l-a1-03 Gia đình & bạn bè; L1 100%; sequential after a1-02 | done — 18690f4 |
 | 2026-07-10 | TASK-265 | docs(ui): residual Progress/Me/Landing inventory; no landing rewrite | done — 9852077 |
 | 2026-07-10 | TASK-264 | feat(ui): Speaking hub Ato Surface + guest history rows | done — 7ba15c6 |
 | 2026-07-10 | TASK-266 | auto-refill từ AGENT_ROADMAP.md | ready |
