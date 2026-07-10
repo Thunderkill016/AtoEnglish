@@ -1,38 +1,29 @@
-# Agent Plan — TASK-278 (active session)
+# Agent Plan — TASK-278 complete (local)
 
-> Project archive notice stands in ARCHIVE.md; this session executes **TASK-278 only** per explicit autopilot mandate (user absent).
+> Project archived 2026-07-10 (see `ARCHIVE.md`). TASK-278 implemented and committed locally; remote push blocked.
 
 | Field | Value |
 |-------|-------|
 | Task | TASK-278 — Dashboard Ato Surface full migrate |
-| Status | done — awaiting SHA after push |
-| Scope | DashboardClient + dashboard card children shells |
-| Out of scope | Landing rewrite, Progress/Me (TASK-284), FSRS/IPOR, schema |
+| Status | **done (local)** — push blocked |
+| Commits | `6523720` feat · `e8d7886` docs |
+| Gates | lint 0 · 222 tests pass |
 
-## Mục tiêu
+## Delivered
 
-Dashboard cards use **Ato `Surface` / dark zinc only** — no primary `bg-white/60` light canvas; visual match Home/landing dark brand (`zinc-950` + glass `bg-white/5`).
+- `DashboardClient` stats / stats panel / curriculum grid → `Surface` + dark zinc tokens
+- Child cards: UnitCard, SrsCard, TodayMission, TodayPlanWidget, LevelProgressBar, QuickActions, WordOfDay, League, SpeakingFeed, WeeklyRecap, EfSetGoal — no primary `bg-white/60`
+- Matches Home/landing glass dark brand (`bg-white/5`, `border-white/10`)
 
-## Bước
+## Push block
 
-1. Mark TASK-278 `in_progress` in AGENT_BACKLOG.md
-2. Migrate `DashboardClient.tsx` card shells → `Surface` (+ dark-only text/track tokens)
-3. Migrate child card shells used on dashboard that still ship `bg-white/60` as primary fill
-4. `npm run lint && npm run test`
-5. Commit + `bash scripts/git-push.sh main`; backlog done + SHA + nhật ký
-6. If ready &lt; 2 after done → refill from roadmap
+| Remote | Result |
+|--------|--------|
+| `origin` (GitHub) | **archived read-only** |
+| `gitlab` | Permission denied (publickey) |
 
-## Rủi ro
+Owner must unarchive GitHub or fix GitLab SSH before `git-push.sh main` succeeds.
 
-| Risk | Mitigation |
-|------|------------|
-| Large dual light/dark class churn | Prefer Surface variant + zinc dark tokens; no logic changes |
-| Child widgets still light | Fix outer shells in same task for “no light canvas” |
-| Surface no onClick / as=a | Wrap with div/Link; Surface for chrome only |
-| Over-scope residual pages | Progress/Me stays TASK-284 |
+## Next ready
 
-## Done khi
-
-- No primary `bg-white/60` on dashboard card shells
-- Dark brand visible (Surface glass / zinc)
-- lint + unit tests pass; commit pushed
+TASK-284 (Progress + Me Ato polish) — only if product work resumes; archive policy says no new feature autopilot.
