@@ -1978,10 +1978,10 @@
 - **Completed:** 2026-07-10 — e2e/learn-v2-smoke.spec.ts guest stage smoke + task/quiz floor complete; global-setup soft-fail offline Supabase; lint0+228t; playwright chromium 2/2; commit 149cc01
 
 ### TASK-282 — Author l-a2-01 Kể chuyện quá khứ
-- **Status:** `ready`
+- **Status:** `in_progress`
 - **Mô tả:** First A2 LessonSpec; past simple survival; L1 ≥50% band.
 - **Done khi:** schema + registry + path after a1-12.
-- **Started:** auto-refill
+- **Started:** 2026-07-10 — autopilot (PHASE1: ARCHIVE noted; user mandate TASK-282; inspect LessonSpec+path+l-a1-*; PHASE2: AGENT_PLAN; PHASE3: author l-a2-01)
 
 
 ### TASK-283 — Speaking subroutes Ato chrome
