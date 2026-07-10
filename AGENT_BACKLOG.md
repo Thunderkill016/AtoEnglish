@@ -1900,16 +1900,36 @@
 - **Completed:** 2026-07-10 — l-a1-07 full LessonSpec (shop/price/cheap/expensive; How much is/are; dollars light; try on/pay; spiral a1-02); L1 100%; registry + sequential after a1-06; lint0+213t; docs V2_PRODUCT; log 20260710T035343Z_TASK-271.log; commit 438f914 + push via git-push.sh main
 
 ### TASK-272 — Author l-a1-08 Đồ ăn & order
-- **Status:** `in_progress`
+- **Status:** `done`
 - **Mô tả:** Food/drink; I'd like… / Can I have…? Cafe order. Spiral a1-07 shopping. L1 100%.
 - **Done khi:** schema + registry + path sequential.
 - **Started:** 2026-07-10 — autopilot (PHASE1: AGENTS/BACKLOG/PLAN + a1-07 gold + schema/path/tests; PHASE2: PLAN; PHASE3: author l-a1-08 + registry + sequential after a1-07)
+- **Completed:** 2026-07-10 — l-a1-08 full LessonSpec (menu/coffee/tea/sandwich/bill; I'd like / Can I have; for here/to go; spiral a1-07); L1 100%; registry + sequential after a1-07; lint0+213t; docs V2_PRODUCT; log 20260710T035929Z_TASK-272.log; commit 3a9f939 + push via git-push.sh main
 
 
 ### TASK-273 — Author l-a1-09 Địa điểm & chỉ đường
 - **Status:** `ready`
 - **Mô tả:** Places in town; Where is…? / next to / opposite / turn left. L1 100%.
 - **Done khi:** schema + registry + path sequential.
+- **Started:** auto-refill
+
+
+### TASK-277 — Nav: Học tab → /home when v2 flag
+- **Status:** `ready`
+- **Mô tả:** bottomNavItems + desktopPrimaryNav: href /home if isCurriculumV2 else /dashboard. Me hub copy B1.
+- **Done khi:** flag matrix correct; time-to-lesson ≤2 tap; lint+test.
+- **Started:** auto-refill
+
+### TASK-278 — Dashboard Ato Surface full migrate
+- **Status:** `ready`
+- **Mô tả:** DashboardClient cards → Surface/dark zinc only; no bg-white/60 primary; match landing.
+- **Done khi:** visual dark brand; lint+test; no light canvas.
+- **Started:** auto-refill
+
+### TASK-284 — Progress + Me Ato polish
+- **Status:** `ready`
+- **Mô tả:** Residual progress/me pages Ato Surface; no landing rewrite.
+- **Done khi:** dark brand; lint+test.
 - **Started:** auto-refill
 
 
@@ -1922,9 +1942,13 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
+| 2026-07-10 | TASK-277 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-07-10 | TASK-278 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-07-10 | TASK-284 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-10 | MASTER-PLAN | Full audit + MASTER_AUTOPILOT_PLAN; wave A–D in ROADMAP 274–284; daemon continues 270+ | done — cece18e |
 | 2026-07-10 | TASK-270 | feat(v2): l-a1-06 Nhà cửa; there is/are + rooms; L1 100%; sequential after a1-05 | done — 35e9f0e |
 | 2026-07-10 | TASK-271 | feat(v2): l-a1-07 Mua sắm; How much is/are + money light; L1 100%; sequential after a1-06 | done — 438f914 |
+| 2026-07-10 | TASK-272 | feat(v2): l-a1-08 Đồ ăn & order; I'd like/Can I have cafe; L1 100%; sequential after a1-07 | done — 3a9f939 |
 
 | 2026-07-10 | TASK-272 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-10 | TASK-273 | auto-refill từ AGENT_ROADMAP.md | ready |
