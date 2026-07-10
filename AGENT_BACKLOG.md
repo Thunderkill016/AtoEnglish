@@ -1960,7 +1960,7 @@
 - **Mô tả:** A1 review spiral + freer task; marks end A1 block.
 - **Done khi:** A1 12/12 authored; Home continue walks a1 path.
 - **Started:** 2026-07-10 — autopilot (PHASE1: ARCHIVE noted; user mandate TASK-276; inspect a1-11 + unit12 + path/registry/tests; PHASE2: AGENT_PLAN; PHASE3: author l-a1-12)
-- **Completed:** 2026-07-10 — feat(v2) l-a1-12 A1 review & apply; L1 100%; spiral×6; freer speak; registry+path sequential; A1 12/12; lint0+222t
+- **Completed:** 2026-07-10 — feat(v2) l-a1-12 A1 review & apply; L1 100%; spiral×6; freer speak; registry+path sequential; A1 12/12; lint0+222t; commit 205fd60
 
 
 ### TASK-280 — FSRS seed from v2 LessonSpec lexis
@@ -1991,6 +1991,7 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
+| 2026-07-10 | TASK-276 | feat(v2): l-a1-12 A1 review & apply; A1 12/12; L1 100% | done — 205fd60 |
 | 2026-07-10 | TASK-280 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-10 | TASK-281 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-10 | TASK-282 | auto-refill từ AGENT_ROADMAP.md | ready |
