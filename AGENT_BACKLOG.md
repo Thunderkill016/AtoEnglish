@@ -1942,10 +1942,10 @@
 
 
 ### TASK-274 — Author l-a1-10 Khả năng (can)
-- **Status:** `ready`
+- **Status:** `in_progress`
 - **Mô tả:** LessonSpec A1 can/can't survival; L1 100%; spiral a1-01..09.
 - **Done khi:** schema + registry + sequential path.
-- **Started:** auto-refill
+- **Started:** 2026-07-10 — autopilot (PHASE1: ARCHIVE noted; user mandate TASK-274; inspect a1-09 + unit10 + path/registry/tests; PHASE2: AGENT_PLAN; PHASE3: author l-a1-10)
 
 ### TASK-275 — Author l-a1-11 Sức khỏe & cảm xúc
 - **Status:** `ready`
