@@ -5,8 +5,8 @@
 | Field | Value |
 |-------|-------|
 | Task | TASK-276 — Author l-a1-12 Ôn A1 & áp dụng |
-| Status | **done (local)** — push may be blocked |
-| Commits | `205fd60` feat |
+| Status | **done (local)** — push blocked |
+| Commits | `205fd60` feat · `a1ef6d4` docs |
 | Gates | lint 0 · 222 tests pass |
 
 ## Delivered

@@ -1991,7 +1991,7 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
-| 2026-07-10 | TASK-276 | feat(v2): l-a1-12 A1 review & apply; A1 12/12; L1 100% | done — 205fd60 |
+| 2026-07-10 | TASK-276 | feat(v2): l-a1-12 A1 review & apply; A1 12/12; L1 100% | done — 205fd60 (push blocked: GitHub archive + GitLab key) |
 | 2026-07-10 | TASK-280 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-10 | TASK-281 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-10 | TASK-282 | auto-refill từ AGENT_ROADMAP.md | ready |
