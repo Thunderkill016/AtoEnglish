@@ -102,7 +102,11 @@ export default function RootLayout({
   const supabaseOrigin = supabaseUrl ? new URL(supabaseUrl).origin : null;
 
   return (
-    <html lang="vi" suppressHydrationWarning className={cn("font-sans", sansFont.variable)}>
+    <html
+      lang="vi"
+      suppressHydrationWarning
+      className={cn("font-sans dark", sansFont.variable)}
+    >
       <head>
         {/* Preconnect to external origins for faster resource loading */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -114,7 +118,7 @@ export default function RootLayout({
           </>
         )}
       </head>
-      <body className="min-h-screen">
+      <body className="min-h-screen bg-zinc-950 text-zinc-50 antialiased">
         {/* Skip to main content — keyboard / screen reader accessibility */}
         <a
           href="#main-content"
@@ -122,12 +126,8 @@ export default function RootLayout({
         >
           Chuyển đến nội dung chính
         </a>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
+        {/* ThemeProvider defaults dark — brand matches landing / Ato Surface */}
+        <ThemeProvider>
           {children}
           <Toaster richColors position="top-center" closeButton />
           <SpeedInsights />

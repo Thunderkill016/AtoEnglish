@@ -16,7 +16,7 @@ export default async function MainLayout({
   const dueCardsCount = user ? await getCachedDueCardsCount(user.id) : 0;
 
   return (
-    <div className="relative flex min-h-screen flex-col pb-16 sm:pb-0">
+    <div className="relative flex min-h-screen flex-col bg-zinc-950 text-zinc-50 pb-16 sm:pb-0">
       {/* Header with auto-hide scroll behavior (client wrapper) */}
       <LessonPageHider>
         <HeaderScrollWrapper>
@@ -24,7 +24,7 @@ export default async function MainLayout({
         </HeaderScrollWrapper>
       </LessonPageHider>
 
-      <main id="main-content" className="flex-1">
+      <main id="main-content" className="flex-1 bg-zinc-950">
         {children}
       </main>
 

@@ -48,7 +48,8 @@ import { Screen, Surface, AppButton, PageHeader, Chip } from "@/components/desig
 2. New screens compose primitives — avoid one-off gradient classes when `AppButton` fits.  
 3. Do not change IPOR / FSRS / lesson content for styling.  
 4. Motion ≤ ~0.35s; respect `prefers-reduced-motion` where custom.  
-5. Ship shell → Home → Learn chrome → Speak (WS-UI-02…05).
+5. Ship shell → Home → Learn chrome → Speak (WS-UI-02…05).  
+6. **Brand is dark-first** (`bg-zinc-950` / class `dark` on `<html>`). Do not ship light `bg-white/60` dashboard cards as primary canvas — landing + app shell must match.
 
 ---
 
