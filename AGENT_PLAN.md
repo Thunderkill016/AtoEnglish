@@ -1,5 +1,14 @@
 # Agent Plan — Tự cập nhật mỗi phiên
 
+## Phiên OPS (vừa xong)
+
+| Field | Value |
+|-------|-------|
+| Focus | fix(agent): ban empty maintenance + pick UI first |
+| Commit | 78ecc99 |
+| Next pick | TASK-262 (Home redesign) |
+
+
 > Agent ghi kế hoạch trước khi code. User không cần approve.
 
 ## Phiên hiện tại
