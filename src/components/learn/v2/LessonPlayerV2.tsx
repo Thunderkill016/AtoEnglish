@@ -1,7 +1,6 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -21,6 +20,7 @@ import {
   meetsQuizFloor,
   QUIZ_FLOOR_RATIO,
 } from "@/lib/v2/progress";
+import { Surface, AppButton } from "@/components/design-system";
 import { cn } from "@/lib/utils";
 
 interface Props {
@@ -111,36 +111,42 @@ export function LessonPlayerV2({ lesson }: Props) {
       <motion.div
         initial={{ opacity: 0, scale: 0.96 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="relative overflow-hidden rounded-3xl border border-emerald-500/30 bg-gradient-to-br from-emerald-500/20 via-teal-500/10 to-zinc-900/80 p-8 text-center space-y-4 shadow-[0_0_60px_-15px_rgba(16,185,129,0.4)]"
       >
-        <div className="mx-auto flex size-16 items-center justify-center rounded-2xl bg-emerald-500/20 border border-emerald-500/30">
-          <PartyPopper className="size-8 text-emerald-300" />
-        </div>
-        <p className="text-2xl font-black text-zinc-50">Hoàn thành!</p>
-        <p className="text-sm text-zinc-300">
-          {lesson.title_vi}
-          <br />
-          Quiz <span className="font-bold text-emerald-400">{correctCount}/{quizItems.length}</span>{" "}
-          ({pct}%)
-          {taskDone ? " · Nhiệm vụ nói ✓" : ""}
-        </p>
-        <p className="text-xs text-zinc-500">Tiến độ đã lưu trên máy này.</p>
-        <div className="flex flex-col sm:flex-row gap-2 justify-center pt-2">
-          <Link
-            href="/home"
-            className="inline-flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 px-6 py-3 text-sm font-black text-zinc-950 shadow-lg shadow-emerald-900/30"
-          >
-            Home — bài tiếp
-            <ArrowRight className="size-4" />
-          </Link>
-          <button
-            type="button"
-            onClick={() => router.push("/path")}
-            className="rounded-2xl border border-white/15 bg-white/5 px-6 py-3 text-sm font-semibold text-zinc-200 hover:bg-white/10"
-          >
-            Xem lộ trình
-          </button>
-        </div>
+        <Surface
+          variant="success"
+          className="relative overflow-hidden p-8 text-center space-y-4 border-emerald-500/30 bg-gradient-to-br from-emerald-500/20 via-teal-500/10 to-zinc-900/80 shadow-[0_0_60px_-15px_rgba(16,185,129,0.4)]"
+          data-testid="lesson-complete"
+        >
+          <div className="mx-auto flex size-16 items-center justify-center rounded-2xl bg-emerald-500/20 border border-emerald-500/30">
+            <PartyPopper className="size-8 text-emerald-300" aria-hidden />
+          </div>
+          <p className="text-2xl font-black text-zinc-50">Hoàn thành!</p>
+          <p className="text-sm text-zinc-300">
+            {lesson.title_vi}
+            <br />
+            Quiz{" "}
+            <span className="font-bold text-emerald-400">
+              {correctCount}/{quizItems.length}
+            </span>{" "}
+            ({pct}%)
+            {taskDone ? " · Nhiệm vụ nói ✓" : ""}
+          </p>
+          <p className="text-xs text-zinc-500">Tiến độ đã lưu trên máy này.</p>
+          <div className="flex flex-col sm:flex-row gap-2 justify-center pt-2">
+            <AppButton href="/home" size="lg">
+              Home — bài tiếp
+              <ArrowRight className="size-4" aria-hidden />
+            </AppButton>
+            <AppButton
+              type="button"
+              variant="secondary"
+              size="lg"
+              onClick={() => router.push("/path")}
+            >
+              Xem lộ trình
+            </AppButton>
+          </div>
+        </Surface>
       </motion.div>
     );
   }
@@ -178,64 +184,65 @@ export function LessonPlayerV2({ lesson }: Props) {
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: -8 }}
           transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
-          className="rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl p-5 sm:p-6 shadow-[0_8px_40px_-12px_rgba(0,0,0,0.5)] space-y-4"
         >
-          {stage.id === "engage" && <EngageStage lesson={lesson} />}
-          {stage.id === "lexis" && <LexisStage lesson={lesson} />}
-          {stage.id === "grammar" && <GrammarStage lesson={lesson} />}
-          {stage.id === "controlled" && (
-            <ControlledStage
-              lesson={lesson}
-              selected={selected}
-              onSelect={(id, v) => setSelected((s) => ({ ...s, [id]: v }))}
-            />
-          )}
-          {stage.id === "input" && <InputStage lesson={lesson} />}
-          {stage.id === "fluency" && <FluencyStage lesson={lesson} />}
-          {stage.id === "task" && (
-            <TaskStage lesson={lesson} done={taskDone} onDone={() => setTaskDone(true)} />
-          )}
-          {stage.id === "review" && (
-            <ReviewStage
-              lesson={lesson}
-              selected={selected}
-              onSelect={(id, val) => {
-                setSelected((s) => ({ ...s, [id]: val }));
-                if (quizScore !== null) setQuizScore(null);
-                setReviewHint(null);
-              }}
-              quizScore={quizScore}
-              correctCount={correctCount}
-              answeredCount={answeredCount}
-              taskDone={taskDone}
-              floorMet={floorMet}
-              reviewHint={reviewHint}
-              onRetryQuiz={resetQuizOnly}
-            />
-          )}
+          <Surface className="p-5 sm:p-6 space-y-4" data-testid="lesson-stage-card">
+            {stage.id === "engage" && <EngageStage lesson={lesson} />}
+            {stage.id === "lexis" && <LexisStage lesson={lesson} />}
+            {stage.id === "grammar" && <GrammarStage lesson={lesson} />}
+            {stage.id === "controlled" && (
+              <ControlledStage
+                lesson={lesson}
+                selected={selected}
+                onSelect={(id, v) => setSelected((s) => ({ ...s, [id]: v }))}
+              />
+            )}
+            {stage.id === "input" && <InputStage lesson={lesson} />}
+            {stage.id === "fluency" && <FluencyStage lesson={lesson} />}
+            {stage.id === "task" && (
+              <TaskStage lesson={lesson} done={taskDone} onDone={() => setTaskDone(true)} />
+            )}
+            {stage.id === "review" && (
+              <ReviewStage
+                lesson={lesson}
+                selected={selected}
+                onSelect={(id, val) => {
+                  setSelected((s) => ({ ...s, [id]: val }));
+                  if (quizScore !== null) setQuizScore(null);
+                  setReviewHint(null);
+                }}
+                quizScore={quizScore}
+                correctCount={correctCount}
+                answeredCount={answeredCount}
+                taskDone={taskDone}
+                floorMet={floorMet}
+                reviewHint={reviewHint}
+                onRetryQuiz={resetQuizOnly}
+              />
+            )}
+          </Surface>
         </motion.div>
       </AnimatePresence>
 
       <div className="flex gap-3">
-        <button
+        <AppButton
           type="button"
+          variant="secondary"
           onClick={goPrev}
           disabled={stageIndex === 0}
-          className="inline-flex items-center gap-1.5 rounded-2xl border border-zinc-700 bg-zinc-900/80 px-4 py-3 text-sm font-semibold text-zinc-300 disabled:opacity-35 hover:border-zinc-600 hover:bg-zinc-900"
+          className="shrink-0"
         >
-          <ArrowLeft className="size-4" />
+          <ArrowLeft className="size-4" aria-hidden />
           Lại
-        </button>
-        <button
+        </AppButton>
+        <AppButton
           type="button"
           onClick={goNext}
           disabled={
             (stage.id === "task" && !taskDone) ||
-            (stage.id === "review" &&
-              quizScore !== null &&
-              !floorMet)
+            (stage.id === "review" && quizScore !== null && !floorMet)
           }
-          className="flex-1 inline-flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 py-3 text-sm font-black text-zinc-950 shadow-lg shadow-emerald-900/25 disabled:opacity-40 hover:brightness-110 active:scale-[0.99] transition"
+          className="flex-1"
+          data-testid="lesson-next"
         >
           {stage.id === "review" && quizScore === null
             ? "Chấm quiz"
@@ -244,8 +251,8 @@ export function LessonPlayerV2({ lesson }: Props) {
               : isLast && quizScore !== null && !floorMet
                 ? `Cần ≥${Math.round(QUIZ_FLOOR_RATIO * 100)}% quiz`
                 : "Tiếp tục"}
-          <ArrowRight className="size-4" />
-        </button>
+          <ArrowRight className="size-4" aria-hidden />
+        </AppButton>
       </div>
 
       {stage.id === "task" && !taskDone && (
@@ -784,19 +791,22 @@ function TaskStage({
           </ul>
         </div>
       )}
-      <button
+      <AppButton
         type="button"
         onClick={onDone}
-        className={cn(
-          "w-full rounded-2xl py-3.5 text-sm font-black transition flex items-center justify-center gap-2",
+        fullWidth
+        size="lg"
+        variant={done ? "secondary" : "primary"}
+        className={
           done
-            ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/40"
-            : "bg-amber-400 text-zinc-950 hover:bg-amber-300 shadow-lg shadow-amber-900/20",
-        )}
+            ? "border-emerald-500/40 bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500/25"
+            : "bg-amber-400 text-zinc-950 hover:bg-amber-300 shadow-lg shadow-amber-900/20 hover:brightness-100"
+        }
+        data-testid="task-done"
       >
-        <Mic className="size-4" />
+        <Mic className="size-4" aria-hidden />
         {done ? "Đã nói xong ✓" : "Tôi đã nói xong nhiệm vụ"}
-      </button>
+      </AppButton>
     </div>
   );
 }
@@ -841,13 +851,10 @@ function ReviewStage({
         </div>
       ))}
       {quizScore !== null && (
-        <div
-          className={cn(
-            "rounded-2xl border p-4 space-y-2",
-            floorMet
-              ? "border-emerald-500/30 bg-emerald-500/10"
-              : "border-amber-500/30 bg-amber-500/10",
-          )}
+        <Surface
+          variant={floorMet ? "success" : "warn"}
+          className="p-4 space-y-2 rounded-2xl"
+          data-testid="quiz-floor-result"
         >
           <p
             className={cn(
@@ -867,15 +874,18 @@ function ReviewStage({
               : `Đã trả lời ${answeredCount}/${total}. Làm lại quiz để đạt tối thiểu ${Math.ceil(total * QUIZ_FLOOR_RATIO)} câu đúng.`}
           </p>
           {!floorMet && (
-            <button
+            <AppButton
               type="button"
+              variant="secondary"
+              fullWidth
               onClick={onRetryQuiz}
-              className="w-full rounded-xl border border-amber-500/40 bg-amber-400/15 py-2.5 text-sm font-bold text-amber-200 hover:bg-amber-400/25"
+              className="border-amber-500/40 bg-amber-400/15 text-amber-200 hover:bg-amber-400/25"
+              data-testid="retry-quiz"
             >
               Làm lại quiz
-            </button>
+            </AppButton>
           )}
-        </div>
+        </Surface>
       )}
       {reviewHint && quizScore === null && (
         <p className="text-xs font-medium text-amber-400/95">{reviewHint}</p>

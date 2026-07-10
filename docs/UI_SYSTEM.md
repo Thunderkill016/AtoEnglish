@@ -58,8 +58,8 @@ import { Screen, Surface, AppButton, PageHeader, Chip } from "@/components/desig
 |------|--------|
 | TASK-260 | Tokens + primitives + this doc ✅ |
 | TASK-261 | Header + BottomNav Ato glass ✅ |
-| TASK-262 | Home pass — HomeClient on Screen/Surface/AppButton/PageHeader/Chip |
-| TASK-263 | Learn + LessonPlayerV2 chrome |
+| TASK-262 | Home pass — HomeClient on Screen/Surface/AppButton/PageHeader/Chip ✅ |
+| TASK-263 | Learn + LessonPlayerV2 chrome ✅ |
 | TASK-264 | Speaking hub |
 | TASK-265 | Residual screens on roadmap |
 
@@ -69,3 +69,9 @@ import { Screen, Surface, AppButton, PageHeader, Chip } from "@/components/desig
 - Header: zinc-950 glass, brand gradient mark, AppButton login.
 - BottomNav/MainNav: emerald active pill + glow; 3 tabs Học · Ôn · Tôi.
 - Full-screen hide: `/learn/unit*` and `/learn/v2/*` via `isLessonChromeHidden`.
+
+### Learn + player chrome (TASK-263)
+
+- `/learn` LearnClient: Screen(ato+ambient)/PageHeader/Chip/Surface unit rows; placement AppButton.
+- `/learn/v2/[id]`: Screen + AppButton back + Chip CEFR + PageHeader; player stage card = Surface; nav/finish/retry/task = AppButton.
+- **Do not** change quiz floor / stage logic (TASK-187).

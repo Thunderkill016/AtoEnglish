@@ -1832,9 +1832,11 @@
 - **Completed:** 2026-07-10 — HomeClient on Screen(ato+ambient)/Surface/AppButton/PageHeader/Chip; keep continue CTA + B1 %; data-testid continue-learning + b1-progress; lint0+213t; log 20260710T030540Z_TASK-262.log; commit dad7d9d
 
 ### TASK-263 — UI Learn + LessonPlayerV2 chrome
-- **Status:** `ready`
+- **Status:** `done`
 - **Mô tả:** Learn list + v2 player chrome on primitives; do not change quiz floor / stage logic.
 - **Done khi:** chrome uses Surface/AppButton; TASK-187 behavior preserved.
+- **Started:** 2026-07-10 — autopilot (PHASE1: AGENTS/BACKLOG/PLAN/CONTENT§6–7 + LearnClient + LessonPlayerV2 + v2 page + Home pattern; PHASE2 PLAN; ready 264–265 ≥2 skip refill; PHASE3 chrome only)
+- **Completed:** 2026-07-10 — LearnClient Screen/Surface/AppButton/PageHeader/Chip; v2 page chrome; LessonPlayerV2 Surface+AppButton nav/finish/retry/task; quiz floor/stage logic untouched (TASK-187); lint0+213t; log 20260710T031010Z_TASK-263.log
 
 ### TASK-264 — UI Speaking hub chrome
 - **Status:** `ready`
@@ -1856,6 +1858,7 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
+| 2026-07-10 | TASK-263 | feat(ui): Learn list + LessonPlayerV2 chrome on Surface/AppButton; TASK-187 preserved | done — 00822e6 |
 | 2026-07-10 | TASK-262 | feat(ui): HomeClient Ato Surface Screen/Surface/AppButton/PageHeader/Chip; keep continue+B1% | done — dad7d9d |
 | 2026-07-10 | OPS | cancel empty maintenance ready (TASK-258,TASK-259); refill/pick prefer feature | done |
 | 2026-07-10 | TASK-257 | gates clean (tsc0+lint0+213t+cs50/50+audit50/50) no fix; log 20260710T030026Z_TASK-257.log; PLAN/BACKLOG sync; no src | done — 6c12963 |
