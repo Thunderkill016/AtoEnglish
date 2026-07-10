@@ -1557,12 +1557,31 @@
 - **Completed:** 2026-07-10 — gates clean (tsc0+lint0+206t+cs50/50+audit50/50) no fix; log 20260709T235811Z_TASK-224.log; PLAN/BACKLOG/nhật ký sync; no src edit; commit 780a22e + push git-push.sh main; autonomous
 
 ### TASK-225 — Autopilot maintenance sweep #225
+- **Status:** `in_progress`
+- **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
+- **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
+- **Started:** 2026-07-10 — autopilot (PHASE1: AGENTS/BACKLOG/PLAN/CONTENT §6–7; PHASE2: PLAN; PHASE3: gates only)
+
+### TASK-226 — Autopilot maintenance sweep #226
 - **Status:** `ready`
 - **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
 - **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
 - **Started:** auto-refill
 
-### TASK-226 — Autopilot maintenance sweep #226
+
+### TASK-227 — Autopilot maintenance sweep #227
+- **Status:** `ready`
+- **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
+- **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
+- **Started:** auto-refill
+
+### TASK-228 — Autopilot maintenance sweep #228
+- **Status:** `ready`
+- **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
+- **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
+- **Started:** auto-refill
+
+### TASK-229 — Autopilot maintenance sweep #229
 - **Status:** `ready`
 - **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
 - **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
@@ -1578,6 +1597,9 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
+| 2026-07-10 | TASK-227 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-07-10 | TASK-228 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-07-10 | TASK-229 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-10 | TASK-224 | gates clean (tsc0+lint0+206t+cs50/50+audit50/50) no fix; log 20260709T235811Z_TASK-224.log; PLAN/BACKLOG sync; no src | done — 780a22e |
 | 2026-07-10 | TASK-223 | gates clean (tsc0+lint0+206t+cs50/50+audit50/50) no fix; log 20260709T235414Z_TASK-223.log; PLAN/BACKLOG sync; no src | done — 8cc68ab |
 | 2026-07-10 | TASK-224 | auto-refill từ AGENT_ROADMAP.md | ready |
