@@ -7,15 +7,6 @@
 | Field | Value |
 |-------|-------|
 | Started | 2026-07-10 |
-| Focus | TASK-261 — UI shell Header + BottomNav |
-| Owner | Autopilot |
-
-**Completed TASK-261**: Ato glass shell; hide /learn/v2; tests; push.
-
-
-| Field | Value |
-|-------|-------|
-| Started | 2026-07-10 |
 | Focus | TASK-256 — Autopilot maintenance sweep #256 |
 | Owner | Autopilot (user absent; autonomous) |
 
@@ -25,22 +16,27 @@
 **Bước thực hiện**:
 1. PHASE1 (done): AGENTS.md, BACKLOG (TASK-256 ready→in_p; 257–259 ready + UI 261–265), PLAN prior TASK-260 done cac611a / TASK-255 9c07fd1, CONTENT_STYLE §6–7 (context only — no unit edit).
 2. BACKLOG TASK-256 → `in_progress`.
-3. Ready after in_p: ≥2 (257–259, 262–265) → skip refill. Note: TASK-261 was already in_progress with uncommitted WIP — stashed before gates so maintenance stays clean.
+3. Ready after in_p: ≥2 (257–259, 262–265) → skip refill.
 4. PHASE3:
    - `rm -f tsconfig.tsbuildinfo` (stale guard).
    - `npx tsc --noEmit`; `npm run lint`; `npm run test`.
    - Optional: content-standard + audit (maintenance pattern).
    - Fix only first failure; no scope creep; no UI feature.
-5. Log `logs/agent/*_TASK-256.log`; BACKLOG done + Nhật ký + SHA; PLAN completed; commit + `bash scripts/git-push.sh main`; restore TASK-261 stash.
+5. Log `logs/agent/*_TASK-256.log`; BACKLOG done + Nhật ký + SHA; PLAN completed; commit + `bash scripts/git-push.sh main`.
 
 **Rủi ro**:
 - Transient tsbuildinfo / flake → clear + rerun once; 2 fails → blocked.
 - First real bug → minimal fix only; major/secret → blocked.
 - Push needs GitLab access → blocked, no force.
-- Concurrent TASK-261 WIP must not be discarded or mixed into this commit.
+- Concurrent TASK-261 landed mid-session (d801b6e) — do not re-ship UI.
 - No new feature.
 
 **Started:** 2026-07-10 — autopilot
+
+**Completed TASK-256**: gates clean (tsc0+lint0+213t+cs50/50+audit50/50) no fix needed; log 20260710T025545Z_TASK-256.log; BACKLOG/PLAN/nhật ký synced; no src edit; commit + push via git-push.sh main; autonomous. Prior mid-session: TASK-261 shipped d801b6e.
+
+### TASK-261 — UI shell Header + BottomNav (prior)
+**Completed TASK-261**: Ato glass shell; hide /learn/v2; tests; push d801b6e / b5f678d.
 
 ### TASK-260 — UI Ato Surface: tokens + design-system primitives (prior)
 **Completed TASK-260**: Ato Surface foundation shipped; TASK-261–265 queued; lint0+210t; push cac611a.

@@ -1783,11 +1783,11 @@
 - **Completed:** 2026-07-10 — gates clean (tsc0+lint0+206t+cs50/50+audit50/50) no fix; log 20260710T022532Z_TASK-255.log; PLAN/BACKLOG sync; no src; autonomous
 
 ### TASK-256 — Autopilot maintenance sweep #256
-- **Status:** `in_progress`
+- **Status:** `done`
 - **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
 - **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
 - **Started:** 2026-07-10 — autopilot (PHASE1: AGENTS/BACKLOG/PLAN/CONTENT§6-7; prior TASK-255 done 9c07fd1 + TASK-260 cac611a; PHASE2 PLAN; PHASE3 gates only — no feature)
-
+- **Completed:** 2026-07-10 — gates clean (tsc0+lint0+213t+cs50/50+audit50/50) no fix; log 20260710T025545Z_TASK-256.log; PLAN/BACKLOG sync; no src; concurrent TASK-261 already on main (d801b6e); autonomous
 
 ### TASK-257 — Autopilot maintenance sweep #257
 - **Status:** `ready`
@@ -1851,6 +1851,7 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
+| 2026-07-10 | TASK-256 | gates clean (tsc0+lint0+213t+cs50/50+audit50/50) no fix; log 20260710T025545Z_TASK-256.log; PLAN/BACKLOG sync; no src | done — pending |
 | 2026-07-10 | TASK-261 | feat(ui): shell Header+BottomNav Ato Surface; hide v2 lesson chrome | done — b5f678d |
 | 2026-07-10 | TASK-260 | feat(ui): Ato Surface tokens + Surface/AppButton/PageHeader/Chip + docs | done — cac611a |
 | 2026-07-10 | TASK-257 | auto-refill từ AGENT_ROADMAP.md | ready |
