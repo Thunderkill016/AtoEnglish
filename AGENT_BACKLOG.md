@@ -1622,12 +1622,31 @@
 - **Completed:** 2026-07-10 — gates clean (tsc0+lint0+206t+cs50/50+audit50/50) no fix; log 20260710T004612Z_TASK-233.log; PLAN/BACKLOG/nhật ký sync; no src edit; commit 68b0fa0 + push git-push.sh main; autonomous
 
 ### TASK-234 — Autopilot maintenance sweep #234
+- **Status:** `in_progress`
+- **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
+- **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
+- **Started:** 2026-07-10 — autopilot (PHASE1: AGENTS/BACKLOG/PLAN/CONTENT §6–7; PHASE2: PLAN; PHASE3: gates only)
+
+### TASK-235 — Autopilot maintenance sweep #235
 - **Status:** `ready`
 - **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
 - **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
 - **Started:** auto-refill
 
-### TASK-235 — Autopilot maintenance sweep #235
+
+### TASK-236 — Autopilot maintenance sweep #236
+- **Status:** `ready`
+- **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
+- **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
+- **Started:** auto-refill
+
+### TASK-237 — Autopilot maintenance sweep #237
+- **Status:** `ready`
+- **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
+- **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
+- **Started:** auto-refill
+
+### TASK-238 — Autopilot maintenance sweep #238
 - **Status:** `ready`
 - **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
 - **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
@@ -1643,6 +1662,9 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
+| 2026-07-10 | TASK-236 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-07-10 | TASK-237 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-07-10 | TASK-238 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-10 | TASK-233 | gates clean (tsc0+lint0+206t+cs50/50+audit50/50) no fix; log 20260710T004612Z_TASK-233.log; PLAN/BACKLOG sync; no src | done — 68b0fa0 |
 | 2026-07-10 | TASK-232 | gates clean (tsc0+lint0+206t+cs50/50+audit50/50) no fix; log 20260710T004124Z_TASK-232.log; PLAN/BACKLOG sync; no src | done — eda7f15 |
 | 2026-07-10 | TASK-231 | gates clean (tsc0+lint0+206t+cs50/50+audit50/50) no fix; log 20260710T003538Z_TASK-231.log; PLAN/BACKLOG sync; no src | done — c13bdf5 |
