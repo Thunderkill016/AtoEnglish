@@ -60,6 +60,23 @@
 - **Mô tả:** Document residual only; no landing big-bang.
 - **Done khi:** roadmap residual listed.
 
+### Residual inventory (post TASK-265 — docs, not auto-pick rewrites)
+
+> Core Ato Surface path **done**: 260 tokens → 261 shell → 262 Home → 263 Learn/player → 264 Speak → 265 residual **documented**.  
+> Spec detail: `docs/UI_SYSTEM.md` § Residual screens.  
+> **CẤM** auto-generate “restyle all residual” or landing big-bang. Optional one-route polish only if product asks.
+
+| Residual | Path | Priority | Guidance |
+|----------|------|----------|----------|
+| Progress | `/progress`, `/progress/weekly` | P2 optional | SecondaryPageShell → Screen/Surface if needed; keep stats |
+| Me | `/me` | P2 optional | Hub rows; low risk |
+| Landing | `/` + `components/landing/*` | **P3 deferred** | **No big-bang rewrite**; marketing stays independent |
+| Settings / Roadmap / Flashcards | secondary hubs | P3 | one route / task if ever |
+| Speaking sub-routes | roleplay, shadowing, journal, phoneme | P2 optional | hub already Ato |
+| Dashboard legacy + other SecondaryPageShell pages | various | P3 | Home primary; no dashboard big-bang |
+
+**Next product priority after UI:** A1 content factory (TASK-266+), not residual chrome.
+
 ---
 
 ## Pool — A1 Content Factory (continue after UI)

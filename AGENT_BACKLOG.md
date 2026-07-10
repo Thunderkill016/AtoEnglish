@@ -1846,9 +1846,11 @@
 - **Completed:** 2026-07-10 — SpeakingClient Ato Surface (Screen/Surface/AppButton/PageHeader/Chip); mode cards; guest local history; lint0+213t; commit 7ba15c6
 
 ### TASK-265 — UI residual roadmap (Progress/Me/Landing later)
-- **Status:** `ready`
+- **Status:** `done`
 - **Mô tả:** Doc residual screens; no big-bang landing rewrite.
 - **Done khi:** ROADMAP lists residual; UI_SYSTEM updated.
+- **Started:** 2026-07-10 — autopilot (PHASE1: AGENTS/BACKLOG/PLAN/CONTENT§6–7 + residual surfaces; PHASE2 PLAN; ready 266–268 ≥2 skip refill; PHASE3 docs only)
+- **Completed:** 2026-07-10 — residual inventory in docs/UI_SYSTEM.md + AGENT_ROADMAP.md; no landing rewrite; Progress/Me/Landing deferred; lint0+213t; log 20260710T031519Z_TASK-265.log
 
 
 ### TASK-269 — CI/local: run product-radar after deploy gate
@@ -1886,6 +1888,7 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
+| 2026-07-10 | TASK-265 | docs(ui): residual Progress/Me/Landing inventory; no landing rewrite | done — 9852077 |
 | 2026-07-10 | TASK-264 | feat(ui): Speaking hub Ato Surface + guest history rows | done — 7ba15c6 |
 | 2026-07-10 | TASK-266 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-10 | TASK-267 | auto-refill từ AGENT_ROADMAP.md | ready |
