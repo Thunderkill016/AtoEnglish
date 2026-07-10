@@ -1964,10 +1964,11 @@
 
 
 ### TASK-280 — FSRS seed from v2 LessonSpec lexis
-- **Status:** `in_progress`
+- **Status:** `done`
 - **Mô tả:** On lesson complete, upsert cards from lexis words for FSRS.
 - **Done khi:** flashcards show v2 words; lint+test.
 - **Started:** 2026-07-10 — autopilot (PHASE1: ARCHIVE noted; user mandate TASK-280; inspect completeUnit seed + seedUnitVocabToSRS + LessonPlayerV2 + lexis; PHASE2: AGENT_PLAN; PHASE3: seed-lexis + action + wire)
+- **Completed:** 2026-07-10 — feat(v2) seedV2LessonLexisToSRS from registry lexis on complete; pure lexisToSeedVocab; guest no-op; lint0+228t; commit ad08732
 
 ### TASK-281 — E2E v2 guest-or-auth complete smoke
 - **Status:** `ready`
@@ -1991,6 +1992,7 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
+| 2026-07-10 | TASK-280 | feat(v2): seed FSRS from LessonSpec lexis on complete; guest no-op | done — ad08732 |
 | 2026-07-10 | TASK-276 | feat(v2): l-a1-12 A1 review & apply; A1 12/12; L1 100% | done — 205fd60 (push blocked: GitHub archive + GitLab key) |
 | 2026-07-10 | TASK-280 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-10 | TASK-281 | auto-refill từ AGENT_ROADMAP.md | ready |

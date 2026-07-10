@@ -1,36 +1,26 @@
-# Agent Plan — TASK-280
+# Agent Plan — TASK-280 complete (local)
 
 > Autopilot 2026-07-10: FSRS seed from v2 LessonSpec lexis on lesson complete.
 
 | Field | Value |
 |-------|-------|
 | Task | TASK-280 — FSRS seed from v2 LessonSpec lexis |
-| Status | **in_progress** |
-| Scope | On v2 complete → upsert `cards` from `lesson.lexis` (auth users) |
+| Status | **done** |
+| Commit | `ad08732` |
+| Gates | lint 0 · 228 tests pass |
 
-## Goal
+## Delivered
 
-When a learner finishes a v2 lesson (`markLessonComplete`), seed FSRS flashcards from that lesson’s lexis so `/flashcards` shows the new words (same pattern as v1 `completeUnit` / `seedUnitVocabToSRS`).
+- **`src/lib/v2/seed-lexis.ts`** — pure `lexisToSeedVocab` (dedupe, cap 30)
+- **`seedV2LessonLexisToSRS(lessonId)`** in `cards.ts` — rate limit + Zod + registry load + upsert `cards` (`user_id,word`, ignoreDuplicates); topic = lessonId; level = cefr
+- **`SeedV2LessonLexisSchema`** in validation.ts
+- **`LessonPlayerV2`** — fire-and-forget after `markLessonComplete`
+- **Tests** `seed-lexis-v2.test.ts` (mapper + schema + l-a1-01 gold)
 
-## Steps
+## Push
 
-1. Pure mapper: `LessonSpec.lexis` → seed payload (dedupe, cap 30).
-2. Server action `seedV2LessonLexisToSRS(lessonId)`: rate limit + Zod lessonId → `getLessonV2` → upsert `cards` (`onConflict: user_id,word`, ignoreDuplicates). Guest / unauth → silent no-op.
-3. Wire `LessonPlayerV2` fire-and-forget after successful complete gate.
-4. Unit tests for mapper + schema; lint + test.
-5. Commit + `bash scripts/git-push.sh main`; backlog done + nhật ký.
+Attempt `bash scripts/git-push.sh main`. If GitHub archive / GitLab key fail, code stays on local `main` only.
 
-## Risks
+## Next ready
 
-| Risk | Mitigation |
-|------|------------|
-| Client-forged vocab | Server loads lexis from registry by `lessonId` only |
-| Guest complete | No auth → `{ success: false, added: 0 }`; local progress still works |
-| Duplicate words across lessons | `ignoreDuplicates` on `(user_id, word)` |
-| Rate limit abuse | Existing seed-vocab style limiter 20/min |
-
-## Out of scope
-
-- DB migration for v2 progress (TASK-279)
-- E2E smoke (TASK-281)
-- Changing FSRS algorithm params
+TASK-281 / TASK-282 (pick first ready in backlog)
