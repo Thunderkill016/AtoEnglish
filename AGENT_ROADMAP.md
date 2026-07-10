@@ -93,6 +93,22 @@
 - **Mô tả:** like / love / hate + -ing; hobbies. L1 100%.
 - **Done khi:** schema + registry + path sequential.
 
+### TASK-270 — Author l-a1-06 Nhà cửa
+- **Mô tả:** Home/rooms/furniture; there is/are; This is my room… Spiral a1-03 family. L1 100%.
+- **Done khi:** schema + registry + sequential after a1-05.
+
+### TASK-271 — Author l-a1-07 Mua sắm
+- **Mô tả:** Shopping phrases; How much is…?; numbers money light. Spiral a1-02 numbers/personal. L1 100%.
+- **Done khi:** schema + registry + path sequential.
+
+### TASK-272 — Author l-a1-08 Đồ ăn & order
+- **Mô tả:** Food/drink; I'd like… / Can I have…? Cafe order. Spiral a1-07 shopping. L1 100%.
+- **Done khi:** schema + registry + path sequential.
+
+### TASK-273 — Author l-a1-09 Địa điểm & chỉ đường
+- **Mô tả:** Places in town; Where is…? / next to / opposite / turn left. L1 100%.
+- **Done khi:** schema + registry + path sequential.
+
 
 ## Pool — V2 Content Factory + B1 Path (2026-07-10+ PRIORITY)
 
