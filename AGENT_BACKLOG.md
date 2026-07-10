@@ -1937,7 +1937,7 @@
 - **Mô tả:** Residual progress/me pages Ato Surface; no landing rewrite.
 - **Done khi:** dark brand; lint+test.
 - **Started:** 2026-07-10 — autopilot (PHASE1: ARCHIVE noted; user mandate TASK-284; inspect progress/page + MeClient + ProgressClient + ActivityHeatmap + Speaking/Home Ato pattern; PHASE2: AGENT_PLAN; PHASE3: Screen/PageHeader/Surface migrate)
-- **Completed:** 2026-07-10 — Progress + Me Ato Surface (Screen/PageHeader/Surface/Chip); ActivityHeatmap + ProgressClient dark zinc; no landing rewrite; no bg-white/60 primary; lint0+222t
+- **Completed:** 2026-07-10 — Progress + Me Ato Surface (Screen/PageHeader/Surface/Chip); ActivityHeatmap + ProgressClient dark zinc; no landing rewrite; no bg-white/60 primary; lint0+222t; commit c585708
 
 
 ### TASK-274 — Author l-a1-10 Khả năng (can)
@@ -1968,6 +1968,7 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
+| 2026-07-10 | TASK-284 | feat(ui): Progress + Me Ato Surface; no landing rewrite | done — c585708 |
 | 2026-07-10 | TASK-274 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-10 | TASK-275 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-10 | TASK-276 | auto-refill từ AGENT_ROADMAP.md | ready |
