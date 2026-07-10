@@ -22,6 +22,37 @@
 
 > Archived. Do NOT pick these. Old metric focused on chrome reduction. Current focus: vibrant glassmorphism/gradients full experience + guest/self-study + free world-class speaking.
 
+## Pool — Ato Surface UI redesign (2026-07-10+ user-approved)
+
+> Keep Tailwind/Base UI. **No MUI/antd/StyleX.** Shell → Home → Learn chrome → Speak.  
+> Spec: `docs/UI_SYSTEM.md`. Plan: Ato Surface glass emerald/teal.
+
+### TASK-260 — UI Ato Surface: tokens + design-system primitives
+- **Mô tả:** CSS tokens + Surface/AppButton/PageHeader/Chip + Screen ato mode + docs/UI_SYSTEM.md + unit tests.
+- **Done khi:** exports + docs + lint/test; no heavy UI deps.
+
+### TASK-261 — UI shell: Header + BottomNav Ato Surface
+- **Mô tả:** header-shell + bottom-nav restyle; LessonPageHider preserved.
+- **Done khi:** shell matches brand; lint+test.
+
+### TASK-262 — UI Home redesign on primitives
+- **Mô tả:** HomeClient on Screen/Surface/AppButton/PageHeader.
+- **Done khi:** Home uses kit; continue CTA + B1 % intact.
+
+### TASK-263 — UI Learn + LessonPlayerV2 chrome
+- **Mô tả:** chrome only; quiz floor logic untouched.
+- **Done khi:** primitives on chrome; lint+test.
+
+### TASK-264 — UI Speaking hub chrome
+- **Mô tả:** Speaking hub cards/history on Surface language.
+- **Done khi:** visual align; lint+test.
+
+### TASK-265 — UI residual roadmap (Progress/Me/Landing)
+- **Mô tả:** Document residual only; no landing big-bang.
+- **Done khi:** roadmap residual listed.
+
+---
+
 ## Pool — V2 Content Factory + B1 Path (2026-07-10+ PRIORITY)
 
 > **Product North Star:** CEFR B1 Independent User.  

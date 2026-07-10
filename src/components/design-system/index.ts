@@ -13,3 +13,12 @@ export { TabSegment } from "./TabSegment";
 export type { TabSegmentItem } from "./TabSegment";
 export { SheetHeader } from "./SheetHeader";
 export { Prose } from "./Prose";
+/** Ato Surface kit (UI redesign 2026-07) */
+export { Surface } from "./Surface";
+export type { SurfaceProps } from "./Surface";
+export { AppButton } from "./AppButton";
+export type { AppButtonProps } from "./AppButton";
+export { PageHeader } from "./PageHeader";
+export type { PageHeaderProps } from "./PageHeader";
+export { Chip } from "./Chip";
+export type { ChipProps, ChipTone } from "./Chip";

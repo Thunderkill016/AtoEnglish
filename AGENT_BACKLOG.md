@@ -1807,6 +1807,38 @@
 - **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
 - **Started:** auto-refill
 
+### TASK-260 — UI Ato Surface: tokens + design-system primitives
+- **Status:** `done`
+- **Mô tả:** Foundation UI redesign (no MUI): CSS `--ato-*` tokens, `src/lib/ui/ato-surface.ts`, Surface/AppButton/PageHeader/Chip, Screen `ato`+`ambient`, docs/UI_SYSTEM.md + unit tests.
+- **Done khi:** primitives export; docs; lint+test; no heavy UI deps.
+- **Started:** 2026-07-10 — user-approved plan (Tailwind elevate; shell/home/learn/speak)
+- **Completed:** 2026-07-10 — ato-surface maps + Surface/AppButton/PageHeader/Chip + Screen ato/ambient + UI_SYSTEM.md + 4 tests; lint0+210t; commit 4418d5a
+
+### TASK-261 — UI shell: Header + BottomNav Ato Surface
+- **Status:** `ready`
+- **Mô tả:** Restyle header-shell + bottom-nav to match Ato Surface; keep LessonPageHider; active emerald glow.
+- **Done khi:** shell consistent with Home language; lint+test.
+
+### TASK-262 — UI Home redesign on primitives
+- **Status:** `ready`
+- **Mô tả:** HomeClient uses Screen/Surface/AppButton/PageHeader/Chip; keep continue CTA + B1 %.
+- **Done khi:** Home only uses design-system CTAs/cards; lint+test.
+
+### TASK-263 — UI Learn + LessonPlayerV2 chrome
+- **Status:** `ready`
+- **Mô tả:** Learn list + v2 player chrome on primitives; do not change quiz floor / stage logic.
+- **Done khi:** chrome uses Surface/AppButton; TASK-187 behavior preserved.
+
+### TASK-264 — UI Speaking hub chrome
+- **Status:** `ready`
+- **Mô tả:** SpeakingClient hub cards on Surface/ListRow language; guest history rows.
+- **Done khi:** hub matches Home/Learn; lint+test.
+
+### TASK-265 — UI residual roadmap (Progress/Me/Landing later)
+- **Status:** `ready`
+- **Mô tả:** Doc residual screens; no big-bang landing rewrite.
+- **Done khi:** ROADMAP lists residual; UI_SYSTEM updated.
+
 
 ---
 
@@ -1817,6 +1849,7 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
+| 2026-07-10 | TASK-260 | feat(ui): Ato Surface tokens + Surface/AppButton/PageHeader/Chip + docs | done — 4418d5a |
 | 2026-07-10 | TASK-257 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-10 | TASK-258 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-10 | TASK-259 | auto-refill từ AGENT_ROADMAP.md | ready |

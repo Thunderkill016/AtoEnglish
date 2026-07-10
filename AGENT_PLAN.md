@@ -7,32 +7,21 @@
 | Field | Value |
 |-------|-------|
 | Started | 2026-07-10 |
-| Focus | TASK-255 — Autopilot maintenance sweep #255 |
-| Owner | Autopilot (no human) |
+| Focus | TASK-260 — UI Ato Surface tokens + primitives |
+| Owner | Autopilot (user-approved UI redesign plan) |
 
-### TASK-255 — Autopilot maintenance sweep #255
-**Mục tiêu**: Chạy `npm run lint && npm run test` (cùng `npx tsc --noEmit` + content gates nếu liên quan); fix failure đầu tiên nếu có (minimal); sync AGENT_PLAN nhật ký + BACKLOG + log. **Không feature mới**, không đổi logic app. **Done khi:** gates pass; 0 or 1 small fix; PLAN/BACKLOG/nhật ký; 1 commit; push `git-push.sh main`.
+### TASK-260 — UI Ato Surface: tokens + design-system primitives
+**Mục tiêu**: Foundation redesign — keep Tailwind; no MUI. CSS `--ato-*`, `ato-surface.ts`, Surface/AppButton/PageHeader/Chip, Screen `ato`+`ambient`, `docs/UI_SYSTEM.md`, unit tests. Queue TASK-261–265. **Done khi:** exports+docs+lint/test+push.
 
-**Bước thực hiện**:
-1. PHASE1 (done): AGENTS.md, BACKLOG (TASK-255 ready→in_p; 256 ready), PLAN prior TASK-254 done 96e7586, CONTENT_STYLE §6–7 (context only — no unit edit).
-2. BACKLOG TASK-255 → `in_progress`.
-3. Ready after in_p: 1 (<2) → refill → TASK-257–259; ready=4.
-4. PHASE3:
-   - `rm -f tsconfig.tsbuildinfo` (stale guard).
-   - `npx tsc --noEmit`; `npm run lint`; `npm run test`.
-   - Optional: content-standard + audit (maintenance pattern).
-   - Fix only first failure; no scope creep.
-5. Log `logs/agent/*_TASK-255.log`; BACKLOG done + Nhật ký + SHA; PLAN completed; commit + `bash scripts/git-push.sh main`.
+**Bước**: implement kit additive; backlog/roadmap; lint+test; commit.
 
-**Rủi ro**:
-- Transient tsbuildinfo / flake → clear + rerun once; 2 fails → blocked.
-- First real bug → minimal fix only; major/secret → blocked.
-- Push needs GitLab access → blocked, no force.
-- No new feature.
+**Rủi ro**: Screen default props must not break legacy; no page rewrites yet.
 
-**Started:** 2026-07-10 — autopilot
+**Started:** 2026-07-10 — user-approved plan
 
-**Completed TASK-255**: gates clean (tsc0+lint0+206t+cs50/50+audit50/50) no fix needed; log 20260710T022532Z_TASK-255.log; BACKLOG/PLAN/nhật ký synced; no src edit; commit 9c07fd1 + push via git-push.sh main; autonomous.
+**Completed TASK-260**: Ato Surface foundation shipped; TASK-261–265 ready; lint0+210t; push.
+
+**Completed TASK-255** (prior maintenance): 9c07fd1.
 
 ### TASK-254 — Autopilot maintenance sweep #254 (prior)
 **Completed TASK-254**: gates clean (tsc0+lint0+206t+cs50/50+audit50/50) no fix needed; log 20260710T022138Z_TASK-254.log; BACKLOG/PLAN/nhật ký synced; no src edit; commit 96e7586 + push via git-push.sh main; autonomous.
