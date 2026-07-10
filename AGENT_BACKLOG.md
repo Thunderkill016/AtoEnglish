@@ -2004,7 +2004,7 @@
 - **Mô tả:** LessonSpec A2 future plans: will / going to survival; L1 ≥50%; jobAngle planning week.
 - **Done khi:** schema + registry + path after l-a2-01; tests pass.
 - **Started:** 2026-07-10 — autopilot (PHASE1: ARCHIVE noted; user mandate TASK-285; inspect LessonSpec+path+l-a2-01; PHASE2: AGENT_PLAN; PHASE3: author l-a2-02)
-- **Completed:** 2026-07-10 — `l-a2-02.ts` will/going to survival (P2/A2); L1 100% lexis; jobAngle Monday planning; registry + next after a2-01; lint0+233t; commit pending SHA
+- **Completed:** 2026-07-10 — `l-a2-02.ts` will/going to survival (P2/A2); L1 100% lexis; jobAngle Monday planning; registry + next after a2-01; lint0+233t; commit `404a29c`; push blocked (GitHub archive read-only)
 
 ### TASK-286 — Author l-a2-03 So sánh & đề xuất (comparatives)
 - **Status:** `ready`
@@ -2028,6 +2028,7 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
+| 2026-07-10 | TASK-285 | feat(v2): l-a2-02 will/going to future plans | done — 404a29c (push blocked: GitHub archive) |
 | 2026-07-10 | TASK-285 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-10 | TASK-286 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-10 | TASK-288 | auto-refill từ AGENT_ROADMAP.md | ready |
