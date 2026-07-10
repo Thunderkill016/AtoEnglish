@@ -80,6 +80,22 @@
 - **Mô tả:** Residual progress/me pages Ato Surface; no landing rewrite.
 - **Done khi:** dark brand; lint+test.
 
+### TASK-285 — Author l-a2-02 Kế hoạch tương lai (will/going to)
+- **Mô tả:** LessonSpec A2 future plans: will / going to survival; L1 ≥50%; jobAngle planning week.
+- **Done khi:** schema + registry + path after l-a2-01; tests pass.
+
+### TASK-286 — Author l-a2-03 So sánh & đề xuất (comparatives)
+- **Mô tả:** A2 comparatives/superlatives light + recommend; dialogues shop/office; L1 notes.
+- **Done khi:** schema + registry + sequential path; content gate.
+
+### TASK-287 — Apply user_v2_lesson_progress migration on Supabase
+- **Mô tả:** Apply `20260710130000_user_v2_lesson_progress.sql` to prod (db push or SQL editor); verify RLS; optional `npm run db:types`.
+- **Done khi:** table live; select own works; types match if regenerated.
+
+### TASK-288 — Author l-a2-04 Trải nghiệm & present perfect intro
+- **Mô tả:** Light present perfect (ever/never/have you…); travel/job interview angle; L1 VN interference.
+- **Done khi:** schema + registry + path; tests pass.
+
 
 ## Pool — Ato Surface UI redesign (2026-07-10+ user-approved)
 
