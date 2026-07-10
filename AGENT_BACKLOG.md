@@ -1776,10 +1776,11 @@
 - **Completed:** 2026-07-10 — gates clean (tsc0+lint0+206t+cs50/50+audit50/50) no fix; log 20260710T022138Z_TASK-254.log; PLAN/BACKLOG sync; no src; autonomous
 
 ### TASK-255 — Autopilot maintenance sweep #255
-- **Status:** `in_progress`
+- **Status:** `done`
 - **Mô tả:** Chạy lint+test; fix failure đầu tiên; sync AGENT_PLAN nhật ký. Không feature mới.
 - **Done khi:** lint+test pass; 1 commit nếu có fix nhỏ
 - **Started:** 2026-07-10 — autopilot (PHASE1: AGENTS/BACKLOG/PLAN/CONTENT§6-7; prior TASK-254 done 96e7586; PHASE2 PLAN; PHASE3 gates)
+- **Completed:** 2026-07-10 — gates clean (tsc0+lint0+206t+cs50/50+audit50/50) no fix; log 20260710T022532Z_TASK-255.log; PLAN/BACKLOG sync; no src; autonomous
 
 ### TASK-256 — Autopilot maintenance sweep #256
 - **Status:** `ready`
@@ -1822,7 +1823,7 @@
 | 2026-07-10 | TASK-254 | gates clean (tsc0+lint0+206t+cs50/50+audit50/50) no fix; log 20260710T022138Z_TASK-254.log; PLAN/BACKLOG sync; no src | done — 96e7586 |
 | 2026-07-10 | TASK-253 | gates clean (tsc0+lint0+206t+cs50/50+audit50/50) no fix; log 20260710T021808Z_TASK-253.log; PLAN/BACKLOG sync; no src | done — 7f1371d |
 | 2026-07-10 | TASK-252 | gates clean (tsc0+lint0+206t+cs50/50+audit50/50) no fix; log 20260710T021513Z_TASK-252.log; PLAN/BACKLOG sync; no src; refill 254–256 | done — f21eb7f |
-| 2026-07-10 | TASK-255 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-07-10 | TASK-255 | gates clean (tsc0+lint0+206t+cs50/50+audit50/50) no fix; log 20260710T022532Z_TASK-255.log; PLAN/BACKLOG sync; no src | done — PENDING_SHA |
 | 2026-07-10 | TASK-256 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-10 | TASK-251 | gates clean (tsc0+lint0+206t+cs50/50+audit50/50) no fix; log 20260710T020953Z_TASK-251.log; PLAN/BACKLOG sync; no src | done — fa06779 |
 | 2026-07-10 | TASK-250 | gates clean (tsc0+lint0+206t+cs50/50+audit50/50) no fix; log 20260710T020734Z_TASK-250.log; PLAN/BACKLOG sync; no src | done — 6d9f7e5 |

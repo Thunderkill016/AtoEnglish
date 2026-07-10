@@ -7,22 +7,22 @@
 | Field | Value |
 |-------|-------|
 | Started | 2026-07-10 |
-| Focus | TASK-254 — Autopilot maintenance sweep #254 |
+| Focus | TASK-255 — Autopilot maintenance sweep #255 |
 | Owner | Autopilot (no human) |
 
-### TASK-254 — Autopilot maintenance sweep #254
+### TASK-255 — Autopilot maintenance sweep #255
 **Mục tiêu**: Chạy `npm run lint && npm run test` (cùng `npx tsc --noEmit` + content gates nếu liên quan); fix failure đầu tiên nếu có (minimal); sync AGENT_PLAN nhật ký + BACKLOG + log. **Không feature mới**, không đổi logic app. **Done khi:** gates pass; 0 or 1 small fix; PLAN/BACKLOG/nhật ký; 1 commit; push `git-push.sh main`.
 
 **Bước thực hiện**:
-1. PHASE1 (done): AGENTS.md, BACKLOG (TASK-254 ready→in_p; 255–256 ready), PLAN prior TASK-253 done 7f1371d, CONTENT_STYLE §6–7 (context only — no unit edit).
-2. BACKLOG TASK-254 → `in_progress`.
-3. Ready after in_p: 2 (255–256) ≥ 2 → skip refill.
+1. PHASE1 (done): AGENTS.md, BACKLOG (TASK-255 ready→in_p; 256 ready), PLAN prior TASK-254 done 96e7586, CONTENT_STYLE §6–7 (context only — no unit edit).
+2. BACKLOG TASK-255 → `in_progress`.
+3. Ready after in_p: 1 (<2) → refill → TASK-257–259; ready=4.
 4. PHASE3:
    - `rm -f tsconfig.tsbuildinfo` (stale guard).
    - `npx tsc --noEmit`; `npm run lint`; `npm run test`.
    - Optional: content-standard + audit (maintenance pattern).
    - Fix only first failure; no scope creep.
-5. Log `logs/agent/*_TASK-254.log`; BACKLOG done + Nhật ký + SHA; PLAN completed; commit + `bash scripts/git-push.sh main`.
+5. Log `logs/agent/*_TASK-255.log`; BACKLOG done + Nhật ký + SHA; PLAN completed; commit + `bash scripts/git-push.sh main`.
 
 **Rủi ro**:
 - Transient tsbuildinfo / flake → clear + rerun once; 2 fails → blocked.
@@ -32,6 +32,9 @@
 
 **Started:** 2026-07-10 — autopilot
 
+**Completed TASK-255**: gates clean (tsc0+lint0+206t+cs50/50+audit50/50) no fix needed; log 20260710T022532Z_TASK-255.log; BACKLOG/PLAN/nhật ký synced; no src edit; commit PENDING_SHA + push via git-push.sh main; autonomous.
+
+### TASK-254 — Autopilot maintenance sweep #254 (prior)
 **Completed TASK-254**: gates clean (tsc0+lint0+206t+cs50/50+audit50/50) no fix needed; log 20260710T022138Z_TASK-254.log; BACKLOG/PLAN/nhật ký synced; no src edit; commit 96e7586 + push via git-push.sh main; autonomous.
 
 ### TASK-253 — Autopilot maintenance sweep #253 (prior)
