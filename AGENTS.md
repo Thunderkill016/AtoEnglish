@@ -1,7 +1,8 @@
 # AGENTS.md — AtoEnglish
 
-> Vietnamese-first English learning web app.
-> **Product North Star (2026-07-10):** core outcome = **CEFR B1 Independent User** (“dùng được” tiếng Anh độc lập).  
+> ⛔ **PROJECT ARCHIVED (2026-07-10).** Do **not** run autopilot / new features. See [`ARCHIVE.md`](./ARCHIVE.md).  
+> Vietnamese-first English learning web app *(historical)*.
+> **Product North Star (was):** core outcome = **CEFR B1 Independent User** (“dùng được” tiếng Anh độc lập).  
 > **Rebuild v2 (in progress):** full product + new LessonSpec path A0→B1 (`l-*` ids). Spec: [`docs/product/V2_PRODUCT.md`](./docs/product/V2_PRODUCT.md). Code: `src/lib/v2/`. Flag: `NEXT_PUBLIC_CURRICULUM_V2`. Pilot: `/learn/v2/l-a1-01`. v1 frozen: `archive/curriculum-v1/README.md`.  
 > Pedagogy: [`docs/pedagogy/LESSON_SYSTEM_FOUNDATION.md`](./docs/pedagogy/LESSON_SYSTEM_FOUNDATION.md) · [`docs/pedagogy/CURRICULUM_PROGRAM.md`](./docs/pedagogy/CURRICULUM_PROGRAM.md) · style [`docs/pedagogy/CONTENT_STYLE.md`](./docs/pedagogy/CONTENT_STYLE.md) §6–7.  
 > UI: [`docs/design/UI_SYSTEM.md`](./docs/design/UI_SYSTEM.md) (Ato Surface). **Folder map:** [`docs/STRUCTURE.md`](./docs/STRUCTURE.md) · docs index: [`docs/README.md`](./docs/README.md).  

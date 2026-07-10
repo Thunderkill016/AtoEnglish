@@ -1,9 +1,14 @@
 # AtoEnglish 🇻🇳→🇬🇧
 
-> **Học tiếng Anh chuẩn phát âm — dành cho người Việt**
+> ⚠️ **ARCHIVED / CLOSED — 2026-07-10**  
+> Dự án **đóng vĩnh viễn** theo quyết định owner. Code được **lưu trữ trên GitHub** (không phát triển tiếp).  
+> Chi tiết: [`ARCHIVE.md`](./ARCHIVE.md) · Tag: `archive/final-2026-07-10`
 
-[![Tests](https://img.shields.io/badge/tests-159%20passed-brightgreen)](/)
-CI: local daemon + GitLab (`.gitlab-ci.yml`)
+---
+
+> **Học tiếng Anh chuẩn phát âm — dành cho người Việt** *(historical product copy)*
+
+[![Status](https://img.shields.io/badge/status-archived-lightgrey)](/)
 [![Live](https://img.shields.io/badge/live-atoenglish.vercel.app-emerald)](https://atoenglish.vercel.app)
 
 AtoEnglish là web app học tiếng Anh hướng đến người Việt — tập trung vào **phản xạ nói**, **phát âm chuẩn** và **ghi nhớ từ vựng lâu dài** qua thuật toán SRS.

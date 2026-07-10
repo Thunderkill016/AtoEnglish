@@ -1,5 +1,8 @@
 # Agent Backlog — AtoEnglish Autopilot
 
+> ⛔ **ARCHIVED 2026-07-10** — no new tasks. See `ARCHIVE.md`.
+
+
 > Agent đọc file này trước mỗi phiên. Chỉ làm task `ready`, một task mỗi phiên.
 > Sau khi xong: đổi status → `done`, ghi `Completed` + commit SHA, chạy test, push nếu pass.
 
@@ -1944,6 +1947,7 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
+| 2026-07-10 | ARCHIVE | Project permanently closed by owner; code stored on GitHub; tag archive/final-2026-07-10 | archived |
 | 2026-07-10 | TASK-277 | feat(nav): Học → /home when v2; Me hub B1; getters + 9 tests | done — 5af0b20 |
 | 2026-07-10 | TASK-277 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-10 | TASK-278 | auto-refill từ AGENT_ROADMAP.md | ready |
