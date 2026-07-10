@@ -1825,9 +1825,11 @@
 - **Completed:** 2026-07-10 — header/bottom/main-nav Ato glass + isLessonChromeHidden v2; lesson-chrome tests; docs; lint0; commit b5f678d
 
 ### TASK-262 — UI Home redesign on primitives
-- **Status:** `ready`
+- **Status:** `done`
 - **Mô tả:** HomeClient uses Screen/Surface/AppButton/PageHeader/Chip; keep continue CTA + B1 %.
 - **Done khi:** Home only uses design-system CTAs/cards; lint+test.
+- **Started:** 2026-07-10 — autopilot (PHASE1: AGENTS/BACKLOG/PLAN/CONTENT§6–7 + HomeClient + design-system + UI_SYSTEM; PHASE2 PLAN; PHASE3 compose primitives)
+- **Completed:** 2026-07-10 — HomeClient on Screen(ato+ambient)/Surface/AppButton/PageHeader/Chip; keep continue CTA + B1 %; data-testid continue-learning + b1-progress; lint0+213t; log 20260710T030540Z_TASK-262.log
 
 ### TASK-263 — UI Learn + LessonPlayerV2 chrome
 - **Status:** `ready`
@@ -1854,6 +1856,7 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
+| 2026-07-10 | TASK-262 | feat(ui): HomeClient Ato Surface Screen/Surface/AppButton/PageHeader/Chip; keep continue+B1% | done — 23ef4ce |
 | 2026-07-10 | OPS | cancel empty maintenance ready (TASK-258,TASK-259); refill/pick prefer feature | done |
 | 2026-07-10 | TASK-257 | gates clean (tsc0+lint0+213t+cs50/50+audit50/50) no fix; log 20260710T030026Z_TASK-257.log; PLAN/BACKLOG sync; no src | done — 6c12963 |
 | 2026-07-10 | TASK-256 | gates clean (tsc0+lint0+213t+cs50/50+audit50/50) no fix; log 20260710T025545Z_TASK-256.log; PLAN/BACKLOG sync; no src | done — 9c38898 |
