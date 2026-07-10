@@ -6,6 +6,7 @@
 |-------|-------|
 | Task | TASK-279 — v2 progress Supabase persistence |
 | Status | **done** |
+| Commit | `7f7c798` |
 | Gates | lint 0 · 233 unit tests · tsc 0 |
 
 ## Delivered
@@ -19,6 +20,10 @@
 ## Ops note
 
 Apply migration to Supabase prod when credentials allow (`supabase db push` or SQL editor). Code is safe if table missing: actions return soft failure; guests unaffected.
+
+## Push
+
+`bash scripts/git-push.sh main` → **blocked** (GitHub archive read-only). Local `main` at `7f7c798`.
 
 ## Next ready
 

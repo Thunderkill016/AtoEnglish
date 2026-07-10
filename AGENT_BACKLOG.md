@@ -2008,7 +2008,7 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
-| 2026-07-10 | TASK-279 | feat(v2): user_v2_lesson_progress + RLS + local sync | done — (SHA after commit; push may block archive) |
+| 2026-07-10 | TASK-279 | feat(v2): user_v2_lesson_progress + RLS + local sync | done — 7f7c798 (push blocked: GitHub archive) |
 | 2026-07-10 | TASK-282 | feat(v2): l-a2-01 past simple survival (first A2) | done — 82ba4fa (push blocked: GitHub archive) |
 | 2026-07-10 | TASK-283 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-10 | TASK-279 | auto-refill từ AGENT_ROADMAP.md | ready |
