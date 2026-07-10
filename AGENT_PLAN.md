@@ -23,7 +23,7 @@ env -u CI npx dotenv -e .env.local -- playwright test e2e/learn-v2-smoke.spec.ts
 
 ## Push
 
-`bash scripts/git-push.sh main` — if GitHub archive / GitLab key fail, code stays on local `main`.
+Attempted `bash scripts/git-push.sh main` → **blocked** (GitHub archive read-only; GitLab publickey denied). Code on local `main` at `149cc01` (+ docs `506a3a9`).
 
 ## Next ready
 

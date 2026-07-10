@@ -1993,7 +1993,7 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
-| 2026-07-10 | TASK-281 | test(e2e): v2 l-a1-01 guest stage smoke + quiz floor complete | done — 149cc01 |
+| 2026-07-10 | TASK-281 | test(e2e): v2 l-a1-01 guest stage smoke + quiz floor complete | done — 149cc01 (push blocked: GitHub archive + GitLab key) |
 | 2026-07-10 | TASK-280 | feat(v2): seed FSRS from LessonSpec lexis on complete; guest no-op | done — ad08732 (push blocked: GitHub archive) |
 | 2026-07-10 | TASK-276 | feat(v2): l-a1-12 A1 review & apply; A1 12/12; L1 100% | done — 205fd60 (push blocked: GitHub archive + GitLab key) |
 | 2026-07-10 | TASK-280 | auto-refill từ AGENT_ROADMAP.md | ready |
