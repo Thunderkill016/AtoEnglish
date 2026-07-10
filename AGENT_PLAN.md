@@ -9,7 +9,7 @@
 | Daemon | RADAR_EVERY=3 |
 | Orchestrator | ORCHESTRATOR_RADAR_POST=1 (fail cycle if FAIL>0) |
 | First smoke | 2026-07-10 PASS=13 FAIL=0 live vercel |
-| Next pick | TASK-270 A1 l-a1-06 home |
+| Next pick | TASK-272 A1 l-a1-08 food/order |
 
 
 ## Product loop (radar)
@@ -21,16 +21,16 @@
 | Auto tasks added | TASK-269–273 |
 | Date | 2026-07-10 |
 
-**Focus:** A1 content factory TASK-270 — see `logs/agent/product-radar-latest.md`.
+**Focus:** A1 content factory TASK-271 — see `logs/agent/product-radar-latest.md`.
 
 
 ## Phiên OPS (prior)
 
 | Field | Value |
 |-------|-------|
-| Focus | TASK-268 A1 l-a1-05 hobbies |
-| Commit | cec91e7 |
-| Next pick | TASK-270 A1 l-a1-06 |
+| Focus | TASK-270 A1 l-a1-06 home |
+| Commit | 35e9f0e |
+| Next pick | TASK-271 A1 l-a1-07 |
 
 
 > Agent ghi kế hoạch trước khi code. User không cần approve.
@@ -40,36 +40,36 @@
 | Field | Value |
 |-------|-------|
 | Started | 2026-07-10 |
-| Focus | TASK-270 — Author l-a1-06 Nhà cửa |
+| Focus | TASK-271 — Author l-a1-07 Mua sắm |
 | Owner | Autopilot (user absent; autonomous) |
 
-### TASK-270 — Author l-a1-06 Nhà cửa
-**Mục tiêu**: Full LessonSpec A1 home/rooms/furniture with there is/are + This is my room…. Spiral a1-03 family lightly. L1 notes 100%. Register + sequential next after a1-05.
+### TASK-271 — Author l-a1-07 Mua sắm
+**Mục tiêu**: Full LessonSpec A1 shopping phrases; How much is/are…?; numbers money light. Spiral a1-02 numbers/personal. L1 notes 100%. Register + sequential next after a1-06.
 
-**Done khi:** `l-a1-06.ts` + registry; schema pass; `getNextPlayableLessonId(…a1-05)` = `l-a1-06`; lint+test; commit + push.
+**Done khi:** `l-a1-07.ts` + registry; schema pass; `getNextPlayableLessonId(…a1-06)` = `l-a1-07`; lint+test; commit + push.
 
 **Bước thực hiện**:
-1. PHASE1 (done): AGENTS, BACKLOG (270 ready), PLAN, CONTENT_STYLE §6–7, gold a1-05 + unit6 home, path meta l-a1-06 exists, tests sequential stop at a1-05.
-2. BACKLOG TASK-270 → `in_progress`. ready 271–273 ≥2 skip refill.
+1. PHASE1 (done): AGENTS, BACKLOG (271 ready), PLAN, CONTENT_STYLE §6–7, gold a1-06 + unit7 shopping, path meta l-a1-07 exists, tests sequential stop at a1-06.
+2. BACKLOG TASK-271 → `in_progress`. ready 272–273 ≥2 skip refill.
 3. PHASE3:
-   - Author `src/lib/v2/lessons/l-a1-06.ts` (8 stages, L1 100%, there is/are + rooms/furniture).
+   - Author `src/lib/v2/lessons/l-a1-07.ts` (8 stages, L1 100%, How much is/are + money light).
    - Register in `lessons/index.ts`.
-   - Update `lesson-spec-v2.test.ts` (title + sequential after a1-05).
+   - Update `lesson-spec-v2.test.ts` (title + sequential after a1-06).
    - Optional: `docs/product/V2_PRODUCT.md` authored list.
 4. `npm run lint && npm run test`.
-5. Log `logs/agent/*_TASK-270.log`; BACKLOG done + Nhật ký + SHA; PLAN completed; commit + `bash scripts/git-push.sh main`.
+5. Log `logs/agent/*_TASK-271.log`; BACKLOG done + Nhật ký + SHA; PLAN completed; commit + `bash scripts/git-push.sh main`.
 
 **Rủi ro**:
 - Schema L1 100% A1 — every lexis item needs `l1_note_vi` ≥10 chars.
-- there is (sg) vs there are (pl) — heavy VN L1 trap; cover isn't/aren't lightly.
-- living room = 2 words; apartment vs flat light note.
-- Sequential test must list all A0 + a1-01..05 completed → next a1-06.
+- How much is (sg) vs How much are (pl) — core VN trap; light numbers (ten, fifty, hundred + dollars/dong).
+- Spiral a1-02: age/job/phone/email — not pure numbers only.
+- Sequential test must list all A0 + a1-01..06 completed → next a1-07.
 - Transient lint/test flake → clear tsbuildinfo + rerun once; 2 fails → blocked.
 - Push needs GitLab → blocked, no force.
 
 **Started:** 2026-07-10 — autopilot
 
-**Completed TASK-270**: `l-a1-06` home/rooms there is/are; L1 100%; registry + sequential after a1-05; lint0+213t; docs V2_PRODUCT; log + commit + push; autonomous. Next: TASK-271 / l-a1-07.
+**Completed TASK-271**: `l-a1-07` shopping How much is/are + money light; L1 100%; registry + sequential after a1-06; lint0+213t; docs V2_PRODUCT; log + commit + push; autonomous. Next: TASK-272 / l-a1-08.
 
-### TASK-268 — Author l-a1-05 Sở thích (prior)
-**Completed TASK-268**: `l-a1-05` hobbies like/love/hate + -ing; L1 100%; sequential after a1-04; commit cec91e7.
+### TASK-270 — Author l-a1-06 Nhà cửa (prior)
+**Completed TASK-270**: `l-a1-06` home/rooms there is/are; L1 100%; sequential after a1-05; commit 35e9f0e. Next: TASK-271 / l-a1-07.
