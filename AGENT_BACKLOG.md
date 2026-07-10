@@ -1812,7 +1812,7 @@
 - **Mô tả:** Foundation UI redesign (no MUI): CSS `--ato-*` tokens, `src/lib/ui/ato-surface.ts`, Surface/AppButton/PageHeader/Chip, Screen `ato`+`ambient`, docs/UI_SYSTEM.md + unit tests.
 - **Done khi:** primitives export; docs; lint+test; no heavy UI deps.
 - **Started:** 2026-07-10 — user-approved plan (Tailwind elevate; shell/home/learn/speak)
-- **Completed:** 2026-07-10 — ato-surface maps + Surface/AppButton/PageHeader/Chip + Screen ato/ambient + UI_SYSTEM.md + 4 tests; lint0+210t; commit 4418d5a
+- **Completed:** 2026-07-10 — ato-surface maps + Surface/AppButton/PageHeader/Chip + Screen ato/ambient + UI_SYSTEM.md + 4 tests; lint0+210t; commit cac611a
 
 ### TASK-261 — UI shell: Header + BottomNav Ato Surface
 - **Status:** `ready`
@@ -1849,7 +1849,7 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
-| 2026-07-10 | TASK-260 | feat(ui): Ato Surface tokens + Surface/AppButton/PageHeader/Chip + docs | done — 4418d5a |
+| 2026-07-10 | TASK-260 | feat(ui): Ato Surface tokens + Surface/AppButton/PageHeader/Chip + docs | done — cac611a |
 | 2026-07-10 | TASK-257 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-10 | TASK-258 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-10 | TASK-259 | auto-refill từ AGENT_ROADMAP.md | ready |
