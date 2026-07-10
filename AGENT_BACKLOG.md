@@ -1839,9 +1839,10 @@
 - **Completed:** 2026-07-10 — LearnClient Screen/Surface/AppButton/PageHeader/Chip; v2 page chrome; LessonPlayerV2 Surface+AppButton nav/finish/retry/task; quiz floor/stage logic untouched (TASK-187); lint0+213t; log 20260710T031010Z_TASK-263.log
 
 ### TASK-264 — UI Speaking hub chrome
-- **Status:** `ready`
+- **Status:** `in_progress`
 - **Mô tả:** SpeakingClient hub cards on Surface/ListRow language; guest history rows.
 - **Done khi:** hub matches Home/Learn; lint+test.
+- **Started:** 2026-07-10 — autopilot (user bật; product loop)
 
 ### TASK-265 — UI residual roadmap (Progress/Me/Landing later)
 - **Status:** `ready`
@@ -1856,6 +1857,25 @@
 - **Completed:** 2026-07-10 — product-radar + plan-from-radar + npm radar/radar:plan; daemon RADAR_EVERY; orchestrator ORCHESTRATOR_RADAR_POST=1; docs PRODUCT_LOOP.md
 
 
+### TASK-266 — Author l-a1-03 Gia đình & bạn bè
+- **Status:** `ready`
+- **Mô tả:** LessonSpec A1: family/friends expansion beyond a0-05; This is my friend… Spiral a1-01/02. L1 100%.
+- **Done khi:** schema + registry + sequential after a1-02.
+- **Started:** auto-refill
+
+### TASK-267 — Author l-a1-04 Thói quen hàng ngày
+- **Status:** `ready`
+- **Mô tả:** Daily routine present simple; get up / go to work. Spiral time of day. L1 100%.
+- **Done khi:** schema + registry + path sequential.
+- **Started:** auto-refill
+
+### TASK-268 — Author l-a1-05 Sở thích
+- **Status:** `ready`
+- **Mô tả:** like / love / hate + -ing; hobbies. L1 100%.
+- **Done khi:** schema + registry + path sequential.
+- **Started:** auto-refill
+
+
 ---
 
 ## Nhật ký agent
@@ -1865,6 +1885,9 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
+| 2026-07-10 | TASK-266 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-07-10 | TASK-267 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-07-10 | TASK-268 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-10 | PRODUCT-LOOP | radar→plan→daemon/orchestrator; first smoke PASS=13; TASK-269 wired | done — 6969aa9 |
 | 2026-07-10 | TASK-263 | feat(ui): Learn list + LessonPlayerV2 chrome on Surface/AppButton; TASK-187 preserved | done — 310da93 |
 | 2026-07-10 | TASK-262 | feat(ui): HomeClient Ato Surface Screen/Surface/AppButton/PageHeader/Chip; keep continue+B1% | done — dad7d9d |
