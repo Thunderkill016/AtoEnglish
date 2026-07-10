@@ -1858,7 +1858,7 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
-| 2026-07-10 | TASK-263 | feat(ui): Learn list + LessonPlayerV2 chrome on Surface/AppButton; TASK-187 preserved | done — 00822e6 |
+| 2026-07-10 | TASK-263 | feat(ui): Learn list + LessonPlayerV2 chrome on Surface/AppButton; TASK-187 preserved | done — 310da93 |
 | 2026-07-10 | TASK-262 | feat(ui): HomeClient Ato Surface Screen/Surface/AppButton/PageHeader/Chip; keep continue+B1% | done — dad7d9d |
 | 2026-07-10 | OPS | cancel empty maintenance ready (TASK-258,TASK-259); refill/pick prefer feature | done |
 | 2026-07-10 | TASK-257 | gates clean (tsc0+lint0+213t+cs50/50+audit50/50) no fix; log 20260710T030026Z_TASK-257.log; PLAN/BACKLOG sync; no src | done — 6c12963 |
