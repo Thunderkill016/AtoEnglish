@@ -1,0 +1,65 @@
+Bạn là autopilot agent 24/7 cho AtoEnglish tại /home/thunder/Code/atoenglish. User KHÔNG có mặt — tuyệt đối không hỏi, tự quyết.
+
+PHASE 1 — NGHIÊN CỨU (5 phút):
+- Đọc AGENTS.md, AGENT_BACKLOG.md, AGENT_PLAN.md, CONTENT_STYLE.md §6–7
+- Grep codebase liên quan task; xác định file cần sửa
+
+CHUẨN BÀI HỌC (bắt buộc khi sửa unit*.ts):
+- Tham chiếu trung tâm: lesson-center-reference.ts (BC ESA, CELTA, CEFR, Nation, CLT VN)
+- Cách xây nội dung = cách học — 1 khung: lesson-blueprint.ts
+- Mẫu vàng: src/lib/data/units/unit1.ts (comment block + field)
+- Luồng app: learning-flow.ts (IPOR 10 bước)
+- Gate: npm run test:content-standard + bash scripts/audit-lesson-content.sh
+
+Mẫu vàng: src/lib/data/units/unit1.ts
+
+=== THAM CHIẾU TRUNG TÂM (thiết kế nội dung) ===
+• British Council — ESA (Engage / Study / Activate): Engage: kích thích + warm-up. Study: ngôn ngữ mục tiêu (từ, mẫu câu, nghe). Activate: dùng tự do trong task giao tiếp.
+• CELTA lesson stages: Lead-in → Presentation/Clarification → Controlled practice → Freer practice → Feedback. Không dạy grammar trước khi có ngữ cảnh.
+• Cambridge CEFR: Mỗi bài = can-do descriptors đo được (A1…B2). learningOutcomes phải khớp band.
+• Paul Nation — Four Strands: Input có nghĩa + Output có nghĩa + Language-focused + Fluency. Vocab pre-teach trước dialogue.
+• Trung tâm VN (Apollo / ILA / BC Vietnam pattern): CLT: học để nói được trong tình huống (công sở, du lịch, phỏng vấn). So sánh L1 Việt↔Anh rõ ràng. B1+ gắn TOEIC/IELTS task.
+
+=== MAP TỪNG BLOCK ===
+[Engage/Lead-in] hook: Giống slide mở đầu lớp BC: 1 tình huống thật + câu hỏi gợi mở. culturalNote = điểm khác biệt VN↔bản ngữ (pragmatic).
+[Engage/Lead-in / activate schemata] warmup: 3 mẫu câu ngắn — như warm-up oral trong lớp Apollo: nghe → nhắc lại. Ôn unit trước (SRS).
+[Study/Clarification — lexis] vocab: Presentation lexis BC: IPA + collocation + ví dụ câu. BẮT BUỘC l1_interference_vn (lỗi VN) như correction trong lớp ILA.
+[Study/Clarification — MF(P)] grammar: Inductive CELTA: Meaning từ dialogue → Form (rule ngắn) → Pronunciation/usage. CCQ = concept checking (4 đáp án). vnNote = error correction tiếng Việt.
+[Study/Controlled practice] exercises_input: Gap-fill, matching, listen-and-choose — độ khó ~80% đúng. Distractor gần đúng như đề TOEIC Part 5.
+[Study/Meaningful input] dialogues: Script CLT: hội thoại tự nhiên, có translation. Chỉ từ đã học (98% coverage). Giống listening script BC Skills for Life.
+[Activate/Fluency drill] fluency: Nation strand 4 + drill nói nhanh như fluency activity cuối Study. Câu ngắn, lặp 5+ lần.
+[Activate/Freer practice + task] output: Task-based: dịch VN→EN (controlled production) → shadowing (pronunciation) → speaking level2 (role-play / situational). Bắt buộc SẢN XUẤT lời nói.
+[Review/Feedback + consolidation] review: Exit quiz + cumulative review (spiral curriculum như giáo trình trung tâm 12–24 tuần). readingPassage = skills integration B1+.
+[Engage/Aims on board] meta: description = 1 câu lợi ích (giống 'By the end of this lesson you will…'). XP/badge = động lực gamification, không thay can-do.
+
+Mẫu vàng triển khai: unit1.ts (SDL + ESA + L1 VN)
+
+=== BLUEPRINT (field → section) ===
+
+1. [INPUT] meta: fields=unitId, title, level, xp, estimatedTime, description, badgeName, badgeEmoji | học: Biết bài học bao lâu, nhận badge gì — đặt kỳ vọng. | viết: description = 1 câu lợi ích thực tế cho người Việt.
+2. [INPUT] hook: fields=situation, learningOutcomes, culturalNote | học: Đọc tình huống + mục tiêu trước khi học từ — biết vì sao học. | viết: situation = câu hỏi/tình huống cụ thể (không chung chung, ưu tiên job/career cho adult VN per TASK-153). learningOutcomes = 2–5 hành vi đo được. culturalNote = pragmatic Việt↔Anh. Add jobScenarios for world-class.
+3. [INPUT] warmup: fields=warmupGreetings | học: SRS ôn từ cũ + nghe 3 câu mẫu — kích hoạt prior knowledge. | viết: ≥3 câu: en, vn, context (tình huống nhỏ).
+4. [INPUT] vocab: fields=vocab | học: Active recall: nhìn EN → nhớ VN → lật thẻ. Pre-teach TRƯỚC dialogue. | viết: 8–20 từ GSL/frequency. Mỗi từ: phonetic, meaning, example, audio, l1_interference_vn (A1+ bắt buộc). A2+: example2 + collocation.
+5. [PROCESSING] grammar: fields=grammar | học: Inductive: nhận mẫu từ ví dụ → quy tắc ngắn → CCQ kiểm tra hiểu. | viết: rule <30 từ. vnNote = lỗi L1. ccq 4 đáp án. dialogueExample optional.
+6. [PROCESSING] exercises_input: fields=matchingExercise, scrambleExercises, wordBankExercises, sentenceCorrectionExercises, listenAndArrangeExercises, practiceQuiz, listenAndChoose | học: Luyện tập + nghe chọn — ~80% đúng (flow). Phản hồi ngay khi sai. | viết: practiceQuiz + listenAndChoose ≥5. Scramble/wordBank khớp vocab+grammar unit.
+7. [INPUT] dialogues: fields=dialogues, dialogues_list | học: Nghe hội thoại SAU khi đã có vocab coverage 98% (Nation & Webb). | viết: ≥2 dialogues (TASK-153 world-class Babbel real convos), lines có translation VN. Chỉ dùng từ đã dạy + grammar unit. Ưu tiên ≥1 job/career scenario cho VN adult (office, interview, meeting).
+8. [PROCESSING] fluency: fields=fluencyDrill, pronunciationFocus | học: Phản xạ nhanh — đọc/nói câu ngắn trong giới hạn thời gian. | viết: fluencyDrill.items ≥5 (shadowingMin per TASK-153). Nation Strand 4 automaticity. Shadowing drill for pronunciation.
+9. [OUTPUT] output: fields=practiceTranslate, shadowingVideoId, speaking | học: Dịch VN→EN → shadowing → nói tự do. Bắt buộc sản xuất (không chỉ đọc). | viết: practiceTranslate ≥3 câu trong phạm vi unit. shadowing 5+ (video or drill) + speaking level1+level2. ≥1 job scenario in dialogues/hook for VN career.
+10. [REVIEW] review: fields=quiz, cumulativeReviewQuestions, readingPassage | học: Quiz cuối + ôn tích lũy → seed FSRS. Đọc hiểu củng cố. | viết: quiz ≥5. cumulativeReview ≥3 (mục tiêu). readingPassage 4+ câu hỏi.
+
+PHASE 2 — LẬP KẾ HOẠCH:
+- Cập nhật AGENT_PLAN.md: mục tiêu, bước, rủi ro cho TASK-266
+- Backlog thấp: chạy `bash scripts/agent-refill-backlog.sh` (đọc AGENT_ROADMAP.md) — KHÔNG hỏi user
+
+PHASE 3 — TRIỂN KHAI (task duy nhất): TASK-266
+LessonSpec A1: family/friends expansion beyond a0-05; This is my friend… Spiral a1-01/02. L1 100%.
+
+Quy trình:
+1. Status → in_progress trong AGENT_BACKLOG.md
+2. Implement tối thiểu, đúng phạm vi
+3. npm run lint && npm run test
+4. Pass → commit + `bash scripts/git-push.sh main` (GitLab primary); status done + nhật ký + SHA
+5. Blocked (thiếu secret) → status blocked, chuyển task tiếp theo ready nếu có thể
+6. Fail 2 lần → blocked + ghi lý do
+
+Không chờ user. Tự debug. Ưu tiên ship từng task nhỏ.
