@@ -1,1 +1,4 @@
-{"task_id": "TASK-186", "task_desc": "After P0 complete, extend A1: age/job/phone/email survival with L1 100%."}
+{
+  "task_id": "TASK-256",
+  "task_desc": "Ch\u1ea1y lint+test; fix failure \u0111\u1ea7u ti\u00ean; sync AGENT_PLAN nh\u1eadt k\u00fd. Kh\u00f4ng feature m\u1edbi."
+}

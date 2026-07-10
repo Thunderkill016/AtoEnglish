@@ -1823,7 +1823,7 @@
 | 2026-07-10 | TASK-254 | gates clean (tsc0+lint0+206t+cs50/50+audit50/50) no fix; log 20260710T022138Z_TASK-254.log; PLAN/BACKLOG sync; no src | done — 96e7586 |
 | 2026-07-10 | TASK-253 | gates clean (tsc0+lint0+206t+cs50/50+audit50/50) no fix; log 20260710T021808Z_TASK-253.log; PLAN/BACKLOG sync; no src | done — 7f1371d |
 | 2026-07-10 | TASK-252 | gates clean (tsc0+lint0+206t+cs50/50+audit50/50) no fix; log 20260710T021513Z_TASK-252.log; PLAN/BACKLOG sync; no src; refill 254–256 | done — f21eb7f |
-| 2026-07-10 | TASK-255 | gates clean (tsc0+lint0+206t+cs50/50+audit50/50) no fix; log 20260710T022532Z_TASK-255.log; PLAN/BACKLOG sync; no src | done — PENDING_SHA |
+| 2026-07-10 | TASK-255 | gates clean (tsc0+lint0+206t+cs50/50+audit50/50) no fix; log 20260710T022532Z_TASK-255.log; PLAN/BACKLOG sync; no src | done — 9c07fd1 |
 | 2026-07-10 | TASK-256 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-10 | TASK-251 | gates clean (tsc0+lint0+206t+cs50/50+audit50/50) no fix; log 20260710T020953Z_TASK-251.log; PLAN/BACKLOG sync; no src | done — fa06779 |
 | 2026-07-10 | TASK-250 | gates clean (tsc0+lint0+206t+cs50/50+audit50/50) no fix; log 20260710T020734Z_TASK-250.log; PLAN/BACKLOG sync; no src | done — 6d9f7e5 |
