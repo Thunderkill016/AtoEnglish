@@ -1933,9 +1933,28 @@
 - **Completed:** 2026-07-10 — DashboardClient + child card shells → Surface / dark zinc; zero `bg-white/60` on dashboard cards; lint0+222t; local commits 6523720 + e8d7886. **Push blocked:** GitHub `origin` archived read-only; GitLab SSH publickey denied. Code on local main only until owner unarchives or fixes GitLab key.
 
 ### TASK-284 — Progress + Me Ato polish
-- **Status:** `ready`
+- **Status:** `in_progress`
 - **Mô tả:** Residual progress/me pages Ato Surface; no landing rewrite.
 - **Done khi:** dark brand; lint+test.
+- **Started:** 2026-07-10 — autopilot (PHASE1: ARCHIVE noted; user mandate TASK-284; inspect progress/page + MeClient + ProgressClient + ActivityHeatmap + Speaking/Home Ato pattern; PHASE2: AGENT_PLAN; PHASE3: Screen/PageHeader/Surface migrate)
+
+
+### TASK-274 — Author l-a1-10 Khả năng (can)
+- **Status:** `ready`
+- **Mô tả:** LessonSpec A1 can/can't survival; L1 100%; spiral a1-01..09.
+- **Done khi:** schema + registry + sequential path.
+- **Started:** auto-refill
+
+### TASK-275 — Author l-a1-11 Sức khỏe & cảm xúc
+- **Status:** `ready`
+- **Mô tả:** How are you / I feel… health lexis; L1 100%.
+- **Done khi:** schema + registry + path.
+- **Started:** auto-refill
+
+### TASK-276 — Author l-a1-12 Ôn A1 & áp dụng
+- **Status:** `ready`
+- **Mô tả:** A1 review spiral + freer task; marks end A1 block.
+- **Done khi:** A1 12/12 authored; Home continue walks a1 path.
 - **Started:** auto-refill
 
 
@@ -1948,6 +1967,9 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
+| 2026-07-10 | TASK-274 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-07-10 | TASK-275 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-07-10 | TASK-276 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-10 | TASK-278 | feat(ui): Dashboard Surface/dark zinc; no bg-white/60 cards | done — 6523720 |
 | 2026-07-10 | ARCHIVE | Project permanently closed by owner; code stored on GitHub; tag archive/final-2026-07-10 | archived |
 | 2026-07-10 | TASK-277 | feat(nav): Học → /home when v2; Me hub B1; getters + 9 tests | done — 5af0b20 |
