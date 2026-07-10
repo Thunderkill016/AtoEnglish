@@ -1,5 +1,29 @@
 # Agent Plan — Tự cập nhật mỗi phiên
 
+## Product loop (deployed)
+
+| Field | Value |
+|-------|-------|
+| Scripts | product-radar.sh · agent-plan-from-radar.sh |
+| npm | `radar` · `radar:plan` |
+| Daemon | RADAR_EVERY=3 |
+| Orchestrator | ORCHESTRATOR_RADAR_POST=1 (fail cycle if FAIL>0) |
+| First smoke | 2026-07-10 PASS=13 FAIL=0 live vercel |
+| Next pick | TASK-264 Speaking hub |
+
+
+## Product loop (radar)
+
+| Field | Value |
+|-------|-------|
+| Last radar | `product-radar-latest.md` |
+| PASS / FAIL | 13 / 0 |
+| Auto tasks added | TASK-269 |
+| Date | 2026-07-10 |
+
+**Focus:** UI 262–264 then A1 content — see `logs/agent/product-radar-latest.md`.
+
+
 ## Phiên OPS (prior)
 
 | Field | Value |

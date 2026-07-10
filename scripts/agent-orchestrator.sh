@@ -128,6 +128,13 @@ if ! bash "$ROOT/scripts/ci-local.sh" 2>&1 | tail -8; then
   exit 1
 fi
 
+# Optional product loop (observe live → plan). Default off per cycle; daemon uses RADAR_EVERY.
+if [[ "${ORCHESTRATOR_RADAR:-0}" == "1" ]]; then
+  log "📡 Product radar (ORCHESTRATOR_RADAR=1)..."
+  bash "$ROOT/scripts/product-radar.sh" 2>&1 | tail -8 || true
+  bash "$ROOT/scripts/agent-plan-from-radar.sh" 2>&1 | tail -5 || true
+fi
+
 log "📋 Auto-refill backlog nếu cần..."
 bash "$ROOT/scripts/agent-refill-backlog.sh" 2>&1 | tail -3 || true
 
@@ -154,6 +161,23 @@ if [[ "${ORCHESTRATOR_SKIP_DEPLOY:-0}" != "1" ]]; then
     tail -10 "$STATE_FILE" > "${STATE_FILE}.tmp" && mv "${STATE_FILE}.tmp" "$STATE_FILE"
     exit 1
   fi
+fi
+
+# Post-deploy product radar (default ON — smoke live; set ORCHESTRATOR_RADAR_POST=0 to skip)
+if [[ "${ORCHESTRATOR_RADAR_POST:-1}" == "1" ]]; then
+  log "📡 Post-deploy product radar..."
+  RADAR_OUT_LINE=$(bash "$ROOT/scripts/product-radar.sh" 2>&1 | tee -a "$LOG_DIR/radar-post.log" | tail -5)
+  echo "$RADAR_OUT_LINE" | tail -3
+  FAIL_N=$(echo "$RADAR_OUT_LINE" | grep -oE 'FAIL=[0-9]+' | tail -1 | cut -d= -f2 || echo 0)
+  FAIL_N=${FAIL_N:-0}
+  bash "$ROOT/scripts/agent-plan-from-radar.sh" 2>&1 | tail -3 || true
+  if [[ "$FAIL_N" -gt 0 ]]; then
+    log "❌ Product radar FAIL=$FAIL_N after deploy — cycle FAIL (see logs/agent/product-radar-latest.md)"
+    echo "FAIL" >> "$STATE_FILE"
+    tail -10 "$STATE_FILE" > "${STATE_FILE}.tmp" && mv "${STATE_FILE}.tmp" "$STATE_FILE"
+    exit 1
+  fi
+  log "✅ Product radar green (FAIL=0)"
 fi
 
 if [[ "$STASHED" == 1 ]]; then

@@ -55,6 +55,16 @@ Hoặc durable scheduler (persist session):
 scheduler_create interval=3h prompt="Autopilot AtoEnglish: 1 task từ AGENT_BACKLOG.md" durable=true
 ```
 
+## Product loop (live → plan → agent)
+
+```bash
+npm run radar          # smoke https://atoenglish.vercel.app → logs/agent/product-radar-latest.md
+npm run radar:plan     # radar + chèn task feature vào ROADMAP nếu thiếu / HTTP FAIL
+```
+
+Daemon (mặc định): mỗi `RADAR_EVERY=3` cycle chạy radar + plan-from-radar, rồi refill/pick.  
+Chi tiết: [`docs/PRODUCT_LOOP.md`](./docs/PRODUCT_LOOP.md).
+
 ## Quản lý backlog (tự động)
 
 **User KHÔNG cần nhắc / thêm task thủ công.** Agent tự quản lý.

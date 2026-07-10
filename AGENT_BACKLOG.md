@@ -1849,6 +1849,13 @@
 - **Done khi:** ROADMAP lists residual; UI_SYSTEM updated.
 
 
+### TASK-269 — CI/local: run product-radar after deploy gate
+- **Status:** `done`
+- **Mô tả:** Wire product-radar.sh into orchestrator post-deploy or npm script; fail cycle on critical FAIL.
+- **Done khi:** script in package.json; docs; optional ORCHESTRATOR_RADAR=1
+- **Completed:** 2026-07-10 — product-radar + plan-from-radar + npm radar/radar:plan; daemon RADAR_EVERY; orchestrator ORCHESTRATOR_RADAR_POST=1; docs PRODUCT_LOOP.md
+
+
 ---
 
 ## Nhật ký agent
@@ -1858,6 +1865,7 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
+| 2026-07-10 | PRODUCT-LOOP | radar→plan→daemon/orchestrator; first smoke PASS=13; TASK-269 wired | done — 6969aa9 |
 | 2026-07-10 | TASK-263 | feat(ui): Learn list + LessonPlayerV2 chrome on Surface/AppButton; TASK-187 preserved | done — 310da93 |
 | 2026-07-10 | TASK-262 | feat(ui): HomeClient Ato Surface Screen/Surface/AppButton/PageHeader/Chip; keep continue+B1% | done — dad7d9d |
 | 2026-07-10 | OPS | cancel empty maintenance ready (TASK-258,TASK-259); refill/pick prefer feature | done |

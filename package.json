@@ -28,6 +28,8 @@
     "audio:generate:list": "tsx scripts/generate-unit-audio.ts list",
     "check-deploy": "bash scripts/check-vercel-deploy.sh",
     "check-deploy:wait": "sleep 30 && bash scripts/check-vercel-deploy.sh",
+    "radar": "bash scripts/product-radar.sh",
+    "radar:plan": "bash scripts/product-radar.sh && bash scripts/agent-plan-from-radar.sh",
     "smoke:learn": "bash scripts/smoke-learn.sh",
     "ci:local": "bash scripts/ci-local.sh",
     "ci:gitlab": "gitlab-ci-local lint-test"
