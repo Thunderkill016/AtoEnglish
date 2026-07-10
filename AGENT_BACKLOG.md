@@ -1962,6 +1962,25 @@
 - **Started:** auto-refill
 
 
+### TASK-280 — FSRS seed from v2 LessonSpec lexis
+- **Status:** `ready`
+- **Mô tả:** On lesson complete, upsert cards from lexis words for FSRS.
+- **Done khi:** flashcards show v2 words; lint+test.
+- **Started:** auto-refill
+
+### TASK-281 — E2E v2 guest-or-auth complete smoke
+- **Status:** `ready`
+- **Mô tả:** Playwright: open /learn/v2/l-a1-01, complete flow or stage smoke + quiz floor.
+- **Done khi:** e2e pass or documented skip if no server.
+- **Started:** auto-refill
+
+### TASK-282 — Author l-a2-01 Kể chuyện quá khứ
+- **Status:** `ready`
+- **Mô tả:** First A2 LessonSpec; past simple survival; L1 ≥50% band.
+- **Done khi:** schema + registry + path after a1-12.
+- **Started:** auto-refill
+
+
 ---
 
 ## Nhật ký agent
@@ -1971,6 +1990,9 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
+| 2026-07-10 | TASK-280 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-07-10 | TASK-281 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-07-10 | TASK-282 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-10 | TASK-275 | feat(v2): l-a1-11 health & feelings; L1 100%; spiral a1-10..01 | done — 8dbf415 (push blocked: GitHub archive) |
 | 2026-07-10 | TASK-284 | feat(ui): Progress + Me Ato Surface; no landing rewrite | done — c585708 |
 | 2026-07-10 | TASK-274 | feat(v2): l-a1-10 can/can't; L1 100%; spiral a1-01..09 | done — 1be2331 (push blocked: GitHub archive) |
