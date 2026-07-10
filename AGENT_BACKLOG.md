@@ -1880,7 +1880,7 @@
 - **Mô tả:** like / love / hate + -ing; hobbies. L1 100%.
 - **Done khi:** schema + registry + path sequential.
 - **Started:** 2026-07-10 — autopilot (PHASE1: AGENTS/BACKLOG/PLAN + a1-04 gold + unit5 hobbies + schema/path/tests; PHASE2: PLAN; PHASE3: author l-a1-05 + registry + sequential after a1-04)
-- **Completed:** 2026-07-10 — l-a1-05 full LessonSpec (like/love/hate + V-ing; free time/hobbies; spiral a1-04 + a1-01); L1 100%; registry + sequential after a1-04; lint0+213t; docs V2_PRODUCT; commit 571bea5 + push via git-push.sh main
+- **Completed:** 2026-07-10 — l-a1-05 full LessonSpec (like/love/hate + V-ing; free time/hobbies; spiral a1-04 + a1-01); L1 100%; registry + sequential after a1-04; lint0+213t; docs V2_PRODUCT; commit cec91e7 + push via git-push.sh main
 
 
 
@@ -1893,7 +1893,7 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
-| 2026-07-10 | TASK-268 | feat(v2): l-a1-05 Sở thích; like/love/hate + -ing; L1 100%; sequential after a1-04 | done — 571bea5 |
+| 2026-07-10 | TASK-268 | feat(v2): l-a1-05 Sở thích; like/love/hate + -ing; L1 100%; sequential after a1-04 | done — cec91e7 |
 | 2026-07-10 | DOCS-STRUCT | docs taxonomy product/pedagogy/design/specs + stubs + STRUCTURE.md | done — 571bea5 |
 | 2026-07-10 | TASK-267 | feat(v2): l-a1-04 Thói quen hàng ngày; present simple; L1 100%; sequential after a1-03 | done — 571bea5 |
 | 2026-07-10 | TASK-266 | feat(v2): l-a1-03 Gia đình & bạn bè; L1 100%; sequential after a1-02 | done — 571bea5 |
