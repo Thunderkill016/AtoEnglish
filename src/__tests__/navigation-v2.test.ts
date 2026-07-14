@@ -12,11 +12,18 @@ import {
 import { CORE_OUTCOME_CEFR, CORE_OUTCOME_PROMISE_VI } from "@/lib/constants/product-outcome";
 import {
   countAuthoredOnCorePath,
+  getContinueLessonId,
   getLessonV2,
+  getNextPlayableLessonId,
+  isCorePathComplete,
   isPathLessonOpenable,
   listAuthoredLessonIds,
 } from "@/lib/v2/lessons";
-import { CORE_PATH_PLAN, CORE_PATH_TOTAL } from "@/lib/v2/path";
+import {
+  CORE_END_LESSON_ID,
+  CORE_PATH_PLAN,
+  CORE_PATH_TOTAL,
+} from "@/lib/v2/path";
 
 describe("TASK-277 primary learn nav flag matrix", () => {
   afterEach(() => {
@@ -131,6 +138,55 @@ describe("TASK-310 path sequential unlock + full registry", () => {
 
   it("unknown / missing content never openable", () => {
     expect(isPathLessonOpenable("l-does-not-exist", [])).toBe(false);
+  });
+});
+
+describe("TASK-311 home continue walks full sequential path to l-b1-14", () => {
+  const allCoreIds = CORE_PATH_PLAN.map((m) => m.id);
+
+  it("empty progress continues at first path lesson", () => {
+    expect(getNextPlayableLessonId([])).toBe("l-a0-01");
+    expect(getContinueLessonId([])).toBe("l-a0-01");
+    expect(isCorePathComplete([])).toBe(false);
+  });
+
+  it("advances to next uncompleted after each completed id (guest/auth same pure helper)", () => {
+    // Guest localStorage + auth hydrate both feed completed id lists into these helpers
+    const progressive: string[] = [];
+    for (let i = 0; i < allCoreIds.length - 1; i++) {
+      progressive.push(allCoreIds[i]!);
+      expect(getNextPlayableLessonId(progressive)).toBe(allCoreIds[i + 1]);
+      expect(getContinueLessonId(progressive)).toBe(allCoreIds[i + 1]);
+      expect(isCorePathComplete(progressive)).toBe(false);
+    }
+  });
+
+  it("after l-b1-13 → continue is l-b1-14 (CORE_END)", () => {
+    const almost = allCoreIds.slice(0, -1);
+    expect(almost[almost.length - 1]).toBe("l-b1-13");
+    expect(getNextPlayableLessonId(almost)).toBe(CORE_END_LESSON_ID);
+    expect(getContinueLessonId(almost)).toBe("l-b1-14");
+    expect(isCorePathComplete(almost)).toBe(false);
+  });
+
+  it("end-of-path after l-b1-14: complete + continue review target is gate", () => {
+    expect(getNextPlayableLessonId(allCoreIds)).toBeNull();
+    expect(isCorePathComplete(allCoreIds)).toBe(true);
+    // Review target (Home shows congrats; continue id still points at gate for ôn)
+    expect(getContinueLessonId(allCoreIds)).toBe(CORE_END_LESSON_ID);
+    expect(getLessonV2(CORE_END_LESSON_ID)).not.toBeNull();
+    expect(CORE_END_LESSON_ID).toBe("l-b1-14");
+  });
+
+  it("primary Học tab still lands on /home under v2 (continue UI lives there)", async () => {
+    vi.stubEnv("NEXT_PUBLIC_CURRICULUM_V2", "1");
+    vi.resetModules();
+    const { getPrimaryLearnHref: href } = await import("@/lib/constants/navigation");
+    expect(href()).toBe("/home");
+  });
+
+  it("ignores unknown completed ids when choosing next", () => {
+    expect(getContinueLessonId(["not-a-lesson", "l-a0-01"])).toBe("l-a0-02");
   });
 });
 

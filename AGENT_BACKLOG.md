@@ -2200,10 +2200,11 @@
 - **Completed:** 2026-07-15 — `isPathLessonOpenable` + PathClient sequential lock + honest full-path header (no pilot/đang soạn when 42/42); navigation-v2 tests; lint+237t pass; commit defcb28 (push blocked: GitHub archive + GitLab key — local main SSOT)
 
 ### TASK-311 — Home continue CTA walks full sequential path to l-b1-14
-- **Status:** `ready`
+- **Status:** `in_progress`
 - **Mô tả:** Verify getPrimaryLearnHref / continue on /home advances through all completed ids to next unpublished-or-next lesson; end state after l-b1-14 is clear (review or congrats).
 - **Done khi:** unit tests for end-of-path; guest localStorage + auth path; lint+test.
-- **Started:** auto-refill
+- **Started:** 2026-07-15 — autopilot (PHASE1: getContinueLessonId fallback bug + Home pilot copy; PHASE2: plan; PHASE3: isCorePathComplete + congrats UI + tests)
+
 
 ### TASK-312 — product-radar: mark /path critical + add /me /flashcards smoke notes
 - **Status:** `ready`

@@ -1,6 +1,10 @@
 import type { LessonSpec } from "@/lib/v2/lesson-spec";
 import { safeParseLessonSpec } from "@/lib/v2/lesson-spec";
-import { CORE_PATH_PLAN, getPathMeta } from "@/lib/v2/path";
+import {
+  CORE_END_LESSON_ID,
+  CORE_PATH_PLAN,
+  getPathMeta,
+} from "@/lib/v2/path";
 import { lessonA001 } from "@/lib/v2/lessons/l-a0-01";
 import { lessonA002 } from "@/lib/v2/lessons/l-a0-02";
 import { lessonA003 } from "@/lib/v2/lessons/l-a0-03";
@@ -108,22 +112,48 @@ export function getAllAuthoredLessons(): LessonSpec[] {
     .filter((l): l is LessonSpec => l !== null);
 }
 
-/** Next playable lesson on core path (first not completed that has content). */
-export function getNextPlayableLessonId(completedIds: Iterable<string>): string | null {
+/**
+ * Next playable lesson on core path (first not completed that has content).
+ * Skips plan slots without registry content. Returns null when every authored
+ * core-path lesson is completed (end of A0→B1).
+ */
+export function getNextPlayableLessonId(
+  completedIds: Iterable<string>,
+): string | null {
   const done = new Set(completedIds);
   for (const meta of CORE_PATH_PLAN) {
     if (done.has(meta.id)) continue;
     if (getLessonV2(meta.id)) return meta.id;
   }
-  // All authored completed — return first authored if any incomplete plan holes
+  // Authored off-plan leftovers (should be rare once registry == CORE_PATH)
   for (const id of listAuthoredLessonIds()) {
     if (!done.has(id)) return id;
   }
   return null;
 }
 
+/**
+ * True when every authored CORE_PATH lesson is in completedIds.
+ * Guest (localStorage) and auth share the same pure check via completed id list.
+ */
+export function isCorePathComplete(completedIds: Iterable<string>): boolean {
+  if (countAuthoredOnCorePath() === 0) return false;
+  return getNextPlayableLessonId(completedIds) === null;
+}
+
+/**
+ * Home «continue» target lesson id.
+ * - Empty / partial progress → first uncompleted authored path node
+ * - Full path complete → CORE_END (l-b1-14) for review (pair with isCorePathComplete)
+ * - No content at all → l-a0-01 fallback
+ */
 export function getContinueLessonId(completedIds: Iterable<string>): string {
-  return getNextPlayableLessonId(completedIds) ?? "l-a0-01";
+  const next = getNextPlayableLessonId(completedIds);
+  if (next) return next;
+  if (isCorePathComplete(completedIds) && getLessonV2(CORE_END_LESSON_ID)) {
+    return CORE_END_LESSON_ID;
+  }
+  return "l-a0-01";
 }
 
 /**

@@ -11,6 +11,8 @@ import {
   Target,
   CheckCircle2,
   Circle,
+  Trophy,
+  Layers,
 } from "lucide-react";
 import {
   Screen,
@@ -19,10 +21,15 @@ import {
   PageHeader,
   Chip,
 } from "@/components/design-system";
-import { CORE_PATH_TOTAL, getPathMeta } from "@/lib/v2/path";
+import {
+  CORE_END_LESSON_ID,
+  CORE_PATH_TOTAL,
+  getPathMeta,
+} from "@/lib/v2/path";
 import {
   getContinueLessonId,
   getLessonV2,
+  isCorePathComplete,
   listAuthoredLessonIds,
 } from "@/lib/v2/lessons";
 import {
@@ -30,7 +37,10 @@ import {
   getServerCompletedIdsSnapshot,
   subscribeV2Progress,
 } from "@/lib/v2/progress";
-import { CORE_OUTCOME_PROMISE_VI } from "@/lib/constants/product-outcome";
+import {
+  CORE_OUTCOME_CEFR,
+  CORE_OUTCOME_PROMISE_VI,
+} from "@/lib/constants/product-outcome";
 import { learnPathForLesson } from "@/lib/v2/flag";
 import { cn } from "@/lib/utils";
 
@@ -51,9 +61,11 @@ export function HomeClient() {
     [completedKey],
   );
   const done = completedIds.length;
+  const pathComplete = isCorePathComplete(completedIds);
   const continueId = getContinueLessonId(completedIds);
   const continueLesson = getLessonV2(continueId);
   const meta = getPathMeta(continueId);
+  const endLesson = getLessonV2(CORE_END_LESSON_ID);
   const authored = listAuthoredLessonIds();
   const pct = Math.min(100, Math.round((done / CORE_PATH_TOTAL) * 100));
   const hour = new Date().getHours();
@@ -65,11 +77,11 @@ export function HomeClient() {
       <motion.div {...fade} className="space-y-3 mb-8">
         <Chip tone="brand" className="tracking-widest">
           <Sparkles className="size-3.5" aria-hidden />
-          Lộ trình B1 · v2
+          Lộ trình {CORE_OUTCOME_CEFR} · A0→B1
         </Chip>
         <PageHeader
           eyebrow={greeting}
-          title="Hôm nay học gì?"
+          title={pathComplete ? "Bạn đã hoàn thành lộ trình B1" : "Hôm nay học gì?"}
           subtitle={CORE_OUTCOME_PROMISE_VI}
         />
       </motion.div>
@@ -92,7 +104,7 @@ export function HomeClient() {
               <div>
                 <p className="text-sm font-bold text-zinc-100">Tiến độ tới B1</p>
                 <p className="text-[11px] text-zinc-500">
-                  {authored.length} bài sẵn sàng · {CORE_PATH_TOTAL} slot lộ trình
+                  {authored.length}/{CORE_PATH_TOTAL} bài trên lộ trình
                 </p>
               </div>
             </div>
@@ -116,11 +128,15 @@ export function HomeClient() {
               transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
             />
           </div>
-          <p className="mt-2 text-[11px] text-zinc-500">{pct}% hoàn thành (pilot)</p>
+          <p className="mt-2 text-[11px] text-zinc-500">
+            {pathComplete
+              ? "Đã xong toàn bộ A0→B1 — Independent User"
+              : `${pct}% hoàn thành lộ trình A0→B1`}
+          </p>
         </Surface>
       </motion.div>
 
-      {/* Primary continue CTA */}
+      {/* Primary continue CTA — or B1 path-complete congrats */}
       <motion.div
         {...fade}
         transition={{ ...fade.transition, delay: 0.1 }}
@@ -129,16 +145,76 @@ export function HomeClient() {
         <Surface
           variant="success"
           className="relative overflow-hidden p-5 sm:p-6 border-emerald-500/30 bg-gradient-to-br from-emerald-500/15 via-teal-500/10 to-zinc-900/40"
+          data-testid={pathComplete ? "path-complete" : "continue-card"}
         >
           <div
             className="pointer-events-none absolute -right-8 -top-8 size-32 rounded-full bg-emerald-400/20 blur-2xl"
             aria-hidden
           />
-          <p className="relative text-[11px] font-bold uppercase tracking-widest text-emerald-400/90 mb-2">
-            Việc duy nhất hôm nay
-          </p>
-          {continueLesson ? (
+          {pathComplete ? (
             <>
+              <p className="relative text-[11px] font-bold uppercase tracking-widest text-emerald-400/90 mb-2">
+                Chúc mừng
+              </p>
+              <div className="relative flex items-start gap-3 mb-4">
+                <div className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-zinc-950/50 border border-white/10">
+                  <Trophy className="size-5 text-amber-300" aria-hidden />
+                </div>
+                <div className="min-w-0">
+                  <h2 className="text-xl font-black text-zinc-50 leading-snug">
+                    Cổng B1 — Independent User
+                  </h2>
+                  <p className="mt-1 text-sm text-zinc-400">
+                    Bạn đã hoàn thành {CORE_PATH_TOTAL}/{CORE_PATH_TOTAL} bài.{" "}
+                    {CORE_OUTCOME_PROMISE_VI}
+                  </p>
+                </div>
+              </div>
+              <div className="relative flex flex-col gap-2 sm:flex-row">
+                <AppButton
+                  href={learnPathForLesson(CORE_END_LESSON_ID)}
+                  fullWidth
+                  size="lg"
+                  data-testid="review-b1-gate"
+                  className="relative"
+                >
+                  Ôn cổng B1
+                  <ArrowRight className="size-4" aria-hidden />
+                </AppButton>
+                <AppButton
+                  href="/path"
+                  fullWidth
+                  size="lg"
+                  variant="secondary"
+                  data-testid="open-full-path"
+                  className="relative"
+                >
+                  <Map className="size-4" aria-hidden />
+                  Xem lộ trình
+                </AppButton>
+                <AppButton
+                  href="/flashcards"
+                  fullWidth
+                  size="lg"
+                  variant="secondary"
+                  data-testid="continue-srs"
+                  className="relative"
+                >
+                  <Layers className="size-4" aria-hidden />
+                  Ôn flashcard
+                </AppButton>
+              </div>
+              {endLesson ? (
+                <p className="relative mt-3 text-[11px] text-zinc-500">
+                  Gợi ý ôn: {endLesson.title_vi} · ~{endLesson.estimatedMin} phút
+                </p>
+              ) : null}
+            </>
+          ) : continueLesson ? (
+            <>
+              <p className="relative text-[11px] font-bold uppercase tracking-widest text-emerald-400/90 mb-2">
+                Việc duy nhất hôm nay
+              </p>
               <div className="relative flex items-start gap-3 mb-4">
                 <div className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-zinc-950/50 border border-white/10">
                   <BookOpen className="size-5 text-teal-300" aria-hidden />
@@ -167,21 +243,21 @@ export function HomeClient() {
               </AppButton>
             </>
           ) : (
-            <p className="relative text-sm text-zinc-300">
-              Bạn đã xong các bài pilot. Thêm bài mới đang được build.
+            <p className="relative text-sm text-zinc-300" data-testid="no-lessons">
+              Chưa có bài học sẵn sàng. Quay lại sau nhé.
             </p>
           )}
         </Surface>
       </motion.div>
 
-      {/* Pilot list */}
+      {/* Lesson list (authored registry order) */}
       <motion.section
         {...fade}
         transition={{ ...fade.transition, delay: 0.15 }}
         className="space-y-3"
       >
         <div className="flex items-center justify-between">
-          <h3 className="text-sm font-bold text-zinc-200">Bài pilot</h3>
+          <h3 className="text-sm font-bold text-zinc-200">Bài trên lộ trình</h3>
           <Link
             href="/path"
             className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-400 hover:text-emerald-300"
