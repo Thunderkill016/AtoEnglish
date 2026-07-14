@@ -2067,10 +2067,11 @@
 - **Completed:** 2026-07-15 — feat(v2): l-a2-05 for/since + yet/already; L1 100%; job interview + standup; spiral a2-04; registry + path tests; lint+233t pass
 
 ### TASK-294 — Author l-a2-06 Công việc cơ bản
-- **Status:** `ready`
+- **Status:** `done`
 - **Mô tả:** A2 workplace survival lexis + simple present work routines; dialogues office; L1 notes.
 - **Done khi:** schema + registry + path; content gate.
-- **Started:** auto-refill
+- **Started:** 2026-07-15 — autopilot (PHASE1 docs+a2-05 pattern; PHASE2 PLAN; PHASE3 author l-a2-06)
+- **Completed:** 2026-07-15 — feat(v2): l-a2-06 workplace simple present routines; L1 100%; office dialogues; spiral a2-05; registry + path tests; lint+233t pass
 
 ### TASK-295 — Author l-a2-07 Vấn đề nhỏ & nhờ giúp
 - **Status:** `ready`

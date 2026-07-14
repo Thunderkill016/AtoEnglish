@@ -1,23 +1,23 @@
-# Agent Plan — TASK-293 complete
+# Agent Plan — TASK-294 complete
 
 > Autopilot 2026-07-15
 
-## TASK-293 — Author l-a2-05 Kinh nghiệm (Present Perfect expand)
+## TASK-294 — Author l-a2-06 Công việc cơ bản
 
 | Field | Value |
 |-------|-------|
 | Status | **done** |
-| Goal | LessonSpec A2 expand present perfect (for/since, yet/already light); spiral a2-04; L1 100%; jobAngle experience questions |
-| Files | `src/lib/v2/lessons/l-a2-05.ts` · `index.ts` · `lesson-spec-v2.test.ts` |
+| Goal | A2 workplace survival lexis + simple present work routines; office dialogues; L1 100% |
+| Files | `src/lib/v2/lessons/l-a2-06.ts` · `index.ts` · `lesson-spec-v2.test.ts` |
 | Gates | schema OK · lint 0 · **233** unit tests pass |
 
 ### Delivered
 
-- **Grammar spine:** have/has + V3 + **for/since** · **already** · **yet** (Q/neg)
-- **Lexis:** 10 items, L1 notes 100% (A2 gate)
-- **Dialogues:** job interview (How long / for / since + spiral ever) · standup (already/yet)
-- **Spiral review:** a2-04 ever/never + a2-01 past simple contrast
-- **Path:** sequential after `l-a2-04` → `l-a2-05`
+- **Grammar spine:** simple present work routines — I/you work · he/she works · start/finish at · What do you do?
+- **Lexis:** 10 workplace items, L1 notes 100% (A2 gate)
+- **Dialogues:** office intro (What do you do?) · standup light (remote/meeting/deadline)
+- **Spiral review:** a2-05 for/since + a2-01 past simple contrast
+- **Path:** sequential after `l-a2-05` → `l-a2-06`
 
 ### Risks remaining
 
@@ -26,9 +26,9 @@
 
 ### Next ready
 
-TASK-292 path 404 closeout (if still ready) or TASK-294 l-a2-06 workplace.
+TASK-292 path 404 closeout (if still ready) or TASK-295 l-a2-07 help requests.
 
 ### Commit
 
-- `91cea64` feat(v2): l-a2-05 present perfect expand
-- Push: **blocked** (GitHub archive read-only). Local main SSOT.
+- (pending SHA) feat(v2): l-a2-06 workplace simple present
+- Push: attempt via `git-push.sh main`
