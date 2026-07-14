@@ -140,6 +140,18 @@
 - **Mô tả:** B1 likes/dislikes + opinion phrases (I think / in my opinion / prefer); soft disagreement; spiral b1-07.
 - **Done khi:** schema + registry + path; content gate.
 
+### TASK-304 — Author l-b1-09 Nhờ làm hộ (get things done)
+- **Mô tả:** B1 causative/get things done (get/have something done light + requests: Could you… / Would you mind…); work/life; spiral b1-08 opinion.
+- **Done khi:** schema + registry + sequential path after l-b1-08; lint+test.
+
+### TASK-305 — Author l-b1-10 Kinh nghiệm dài (PPC)
+- **Mô tả:** B1 present perfect continuous light (have been + V-ing / for/since experience stretch); work career; spiral b1-09.
+- **Done khi:** schema + registry + path; tests pass.
+
+### TASK-306 — Author l-b1-11 Vấn đề & giải pháp
+- **Mô tả:** B1 problem–solution language (The problem is… / One solution is… / We could…); work incidents; spiral b1-10.
+- **Done khi:** schema + registry + path; content gate.
+
 
 ## Pool — Ato Surface UI redesign (2026-07-10+ user-approved)
 
