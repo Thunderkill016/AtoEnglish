@@ -2053,10 +2053,11 @@
 - **Completed:** 2026-07-15 — live `/home` 200 (`x-matched-path: /home`); product-radar PASS=13 FAIL=0; route `src/app/(main)/home/page.tsx` OK; no code change
 
 ### TASK-292 — P0 fix prod HTTP 404 on /path
-- **Status:** `ready`
+- **Status:** `done`
 - **Mô tả:** Radar FAIL: `/path` (Path B1) returned 404 on live. Reproduce, fix route/proxy/deploy, re-run product-radar.
 - **Done khi:** `/path` returns 200 on BASE_URL; product-radar PASS for path; lint+test.
-- **Started:** auto-refill
+- **Started:** 2026-07-15 — autopilot: reproduce live + radar; root cause = TASK-289 deploy restore (not route code)
+- **Completed:** 2026-07-15 — live `/path` 200 (`x-matched-path: /path`); product-radar PASS=13 FAIL=0; route `src/app/(main)/path/page.tsx` OK; no code change
 
 
 ### TASK-293 — Author l-a2-05 Kinh nghiệm (Present Perfect expand)
@@ -2191,6 +2192,31 @@
 - **Completed:** 2026-07-15 — feat(v2): l-b1-14 B1 gate review spiral + freer; spiral b1-01..13 light; path ends CORE_END; registry 42/42; lint+233t pass; commit `6a9f274` (push blocked: GitHub archive + GitLab key)
 
 
+### TASK-310 — Path UI: unlock all authored CORE_PATH lessons + honest copy
+- **Status:** `ready`
+- **Mô tả:** PathClient still says "pilot / đang soạn" but 42/42 LessonSpecs exist. Unlock nodes that have registry entries (not only pilot); update header copy to reflect full A0→B1 path; keep sequential lock for incomplete progress.
+- **Done khi:** /path shows all authored lessons openable per progress rules; no "đang soạn" when registry complete; navigation-v2 or path unit test; lint+test.
+- **Started:** auto-refill
+
+### TASK-311 — Home continue CTA walks full sequential path to l-b1-14
+- **Status:** `ready`
+- **Mô tả:** Verify getPrimaryLearnHref / continue on /home advances through all completed ids to next unpublished-or-next lesson; end state after l-b1-14 is clear (review or congrats).
+- **Done khi:** unit tests for end-of-path; guest localStorage + auth path; lint+test.
+- **Started:** auto-refill
+
+### TASK-312 — product-radar: mark /path critical + add /me /flashcards smoke notes
+- **Status:** `ready`
+- **Mô tả:** Raise /path critical flag in product-radar.sh PATHS; document PASS baseline; ensure orchestrator can fail on critical path 404.
+- **Done khi:** radar script updated; product-radar PASS on live; package.json script if missing.
+- **Started:** auto-refill
+
+### TASK-313 — Apply blocked user_v2_lesson_progress migration (retry TASK-287)
+- **Status:** `ready`
+- **Mô tả:** Retry Supabase apply for v2 progress table + RLS if secrets available; else document blocked and keep localStorage SSOT.
+- **Done khi:** migration applied OR status blocked with clear reason; db:types if applied.
+- **Started:** auto-refill
+
+
 ---
 
 ## Nhật ký agent
@@ -2200,6 +2226,10 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
+| 2026-07-15 | TASK-310 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-07-15 | TASK-311 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-07-15 | TASK-312 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-07-15 | TASK-313 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-15 | TASK-307 | feat(v2): l-b1-12 health & social should/ought to + plans; work wellness; spiral b1-11 | done — 9a71a7c (push blocked: GitHub archive + GitLab key) |
 | 2026-07-15 | TASK-308 | feat(v2): l-b1-13 workplace meetings/email/updates/soft disagree; spiral b1-12 | done — f68040b (push blocked: GitHub archive + GitLab key) |
 | 2026-07-15 | TASK-309 | feat(v2): l-b1-14 B1 gate review spiral + freer “dùng được”; spiral b1-01..13 light; CORE_END complete 42/42 | done — 6a9f274 (push blocked: GitHub archive + GitLab key) |
