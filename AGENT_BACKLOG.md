@@ -2167,10 +2167,11 @@
 
 
 ### TASK-307 — Author l-b1-12 Sức khỏe & xã hội
-- **Status:** `ready`
+- **Status:** `in_progress`
 - **Mô tả:** B1 health & social language (symptoms, advice should/ought to, social plans); work wellness + life; spiral b1-11 problem–solution.
 - **Done khi:** schema + registry + sequential path after l-b1-11; lint+test.
-- **Started:** auto-refill
+- **Started:** 2026-07-15 — autopilot (PHASE1: docs+l-b1-11+path+schema; PHASE2: PLAN; PHASE3: author l-b1-12)
+
 
 ### TASK-308 — Author l-b1-13 Giao tiếp công sở
 - **Status:** `ready`
