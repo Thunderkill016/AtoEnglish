@@ -2104,10 +2104,11 @@
 - **Completed:** 2026-07-15 — feat(v2): l-b1-03 will/might/probably + trend talk; L1 100%; remote/sales dialogues; spiral b1-02; path after l-b1-02; registry + tests; lint+233t pass; commit `ee3f2e8` (push blocked: GitHub archive + GitLab key)
 
 ### TASK-299 — Author l-b1-04 Quy định & nghĩa vụ
-- **Status:** `in_progress`
+- **Status:** `done`
 - **Mô tả:** B1 must/have to/should / rules at work; office compliance dialogues; L1.
 - **Done khi:** schema + registry + path; content gate.
 - **Started:** 2026-07-15 — autopilot (PHASE1: docs+l-b1-03+path+schema; PHASE2: PLAN; PHASE3: author l-b1-04)
+- **Completed:** 2026-07-15 — feat(v2): l-b1-04 must/have to/should + office compliance; L1 100%; HR/manager dialogues; spiral b1-03; path after l-b1-03; registry + tests; lint+233t pass; commit `0cbf12e` (push blocked: GitHub archive + GitLab key)
 
 
 ---
@@ -2119,6 +2120,7 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
+| 2026-07-15 | TASK-299 | feat(v2): l-b1-04 must/have to/should + office compliance; spiral b1-03; path after b1-03 | done — 0cbf12e (push blocked: GitHub archive + GitLab key) |
 | 2026-07-15 | TASK-298 | feat(v2): l-b1-03 will/might/probably + trends; spiral b1-02; path after b1-02 | done — ee3f2e8 (push blocked: GitHub archive + GitLab key) |
 | 2026-07-15 | TASK-297 | feat(v2): l-b1-02 news main idea past+present+opinion; spiral a2-08; path after b1-01 | done — 50a4042 (push blocked: GitHub archive + GitLab key) |
 | 2026-07-15 | TASK-297 | auto-refill từ AGENT_ROADMAP.md | ready |

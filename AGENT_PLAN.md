@@ -1,4 +1,4 @@
-# Agent Plan — TASK-299 in progress
+# Agent Plan — TASK-299 complete
 
 > Autopilot 2026-07-15
 
@@ -6,23 +6,31 @@
 
 | Field | Value |
 |-------|-------|
-| Status | **in_progress** |
-| Goal | B1 must / have to / should + rules at work; office compliance dialogues; L1 notes; spiral b1-03 |
+| Status | **done** |
+| Goal | B1 must/have to/should + rules at work; office compliance dialogues; L1 notes |
 | Files | `src/lib/v2/lessons/l-b1-04.ts` · `index.ts` · `lesson-spec-v2.test.ts` |
-| Gates | schema OK · lint 0 · unit tests pass |
+| Gates | schema OK · lint 0 · **233** unit tests pass |
 
-### Steps
+### Delivered
 
-1. Author `l-b1-04` LessonSpec: grammar spine must / have to / should (+ mustn't / don't have to light)
-2. Lexis 12 items, L1 100%; 2 office compliance dialogues; listen 5; controlled 6; review + spiral b1-03
-3. Register in `index.ts`; extend path sequential tests after b1-03 → b1-04
-4. lint + test → commit + `bash scripts/git-push.sh main` → backlog done + SHA
+- **Grammar spine:** must / have to (obligation) · should (advice) · mustn't · don't have to
+- **Lexis:** 12 items (must, have to, should, rule, policy, allowed, forbidden, compliance, badge, deadline, safety, on time), L1 100%
+- **Dialogues:** HR onboarding safety/badge · manager hybrid policy + deadline
+- **Listen:** 5 obligation/policy items
+- **Spiral review:** b1-03 (will / might / probably / growing)
+- **Task:** 45–60s speak — rules + must/have to + should + mustn't/don't have to
+- **Path:** sequential after `l-b1-03` → `l-b1-04` (B1 4/14)
 
-### Risks
+### Risks remaining
 
 - Git push may block (GitHub archive / GitLab key) — local main SSOT if so
-- Modal mix: must ≠ have to ≠ should — keep CCQ + controlled clear for VN adults
+- B1 still sparse (l-b1-01..04 of 14; next TASK-300)
 
 ### Next ready
 
-TASK-300 — Author l-b1-05 Điều kiện if/when (after refill if needed)
+TASK-300 — Author l-b1-05 Điều kiện if/when
+
+### Commit
+
+- `0cbf12e` feat(v2): author l-b1-04 rules obligation must have to should
+- Push: **blocked** (GitHub archive + GitLab key). Local main SSOT.
