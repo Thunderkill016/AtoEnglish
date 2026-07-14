@@ -1,6 +1,6 @@
 import type { LessonSpec } from "@/lib/v2/lesson-spec";
 import { safeParseLessonSpec } from "@/lib/v2/lesson-spec";
-import { CORE_PATH_PLAN } from "@/lib/v2/path";
+import { CORE_PATH_PLAN, getPathMeta } from "@/lib/v2/path";
 import { lessonA001 } from "@/lib/v2/lessons/l-a0-01";
 import { lessonA002 } from "@/lib/v2/lessons/l-a0-02";
 import { lessonA003 } from "@/lib/v2/lessons/l-a0-03";
@@ -124,4 +124,32 @@ export function getNextPlayableLessonId(completedIds: Iterable<string>): string 
 
 export function getContinueLessonId(completedIds: Iterable<string>): string {
   return getNextPlayableLessonId(completedIds) ?? "l-a0-01";
+}
+
+/**
+ * Path UI open rule (TASK-310): registry content required; sequential lock for
+ * incomplete progress; completed lessons stay open for re-review.
+ * Earlier plan nodes without content are skipped (do not block).
+ */
+export function isPathLessonOpenable(
+  lessonId: string,
+  completedIds: Iterable<string>,
+): boolean {
+  if (!getLessonV2(lessonId)) return false;
+  const done = new Set(completedIds);
+  if (done.has(lessonId)) return true;
+
+  const meta = getPathMeta(lessonId);
+  if (!meta) return false;
+
+  for (const prev of CORE_PATH_PLAN) {
+    if (prev.order >= meta.order) break;
+    if (getLessonV2(prev.id) && !done.has(prev.id)) return false;
+  }
+  return true;
+}
+
+/** Count of CORE_PATH slots that have a valid LessonSpec in the registry. */
+export function countAuthoredOnCorePath(): number {
+  return CORE_PATH_PLAN.filter((m) => Boolean(getLessonV2(m.id))).length;
 }

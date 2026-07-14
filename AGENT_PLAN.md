@@ -1,42 +1,38 @@
-# Agent Plan — TASK-292 complete
+# Agent Plan — TASK-310
 
 > Autopilot 2026-07-15
 
-## TASK-292 — P0 fix prod HTTP 404 on /path
+## TASK-310 — Path UI: unlock all authored CORE_PATH lessons + honest copy
 
 | Field | Value |
 |-------|-------|
-| Status | **done** |
-| Goal | `/path` returns 200 on live; product-radar PASS for Path B1 |
-| Files | Route already present: `src/app/(main)/path/page.tsx` + `PathClient.tsx` — **no code change** |
-| Gates | live HTTP 200 · product-radar PASS=13 FAIL=0 · lint · unit tests |
+| Status | **in_progress** |
+| Goal | `/path` reflects full A0→B1 (42 LessonSpecs); honest copy (no pilot/đang soạn); sequential progress lock |
+| Files | `src/lib/v2/lessons/index.ts` · `src/app/(main)/path/PathClient.tsx` · `src/__tests__/navigation-v2.test.ts` (or path tests) |
+| Gates | lint · unit tests · path unlock pure fn covered |
 
 ### Root cause
 
-Same class as TASK-289/290/291: earlier radar 404s came from **Vercel deploy / project missing** (`DEPLOYMENT_NOT_FOUND`), not from missing Next.js route or proxy block.
+- Registry has **42/42** CORE_PATH lessons (`listAuthoredLessonIds` / `LESSON_MODULES`).
+- `PathClient` already uses `getLessonV2` for `hasContent`, so nodes are not pilot-filtered — but **header copy** still says pilot / đang soạn.
+- All content nodes are **unconditionally** linked — no sequential lock for incomplete progress.
 
-- Route: `src/app/(main)/path/page.tsx` → `PathClient` (CORE_PATH_PLAN A0→B1)
-- Proxy: only rate-limits `/login` + `/auth/*` — no `/path` deny
-- Live: `x-matched-path: /path`, HTTP 200 after TASK-289 recreate+deploy
+### Steps
 
-### Verify
+1. Add pure `isPathLessonOpenable(lessonId, completedIds)`:
+   - must have registry content
+   - completed lessons always openable (re-review)
+   - else all earlier path lessons with content must be completed
+2. PathClient: use openable for Link vs lock UI; honest header when registry covers full plan
+3. Unit tests for sequential frontier + completed re-open
+4. lint + test → commit → push → backlog done
 
-```text
-curl -sI https://atoenglish.vercel.app/path → 200
-bash scripts/product-radar.sh → PASS=13 WARN=0 FAIL=0
-```
+### Risks
 
-### Risks remaining
+- Circular import: keep helper in `lessons/index.ts` (already imports `CORE_PATH_PLAN`)
+- Git push may block (archive / GitLab key) — local main SSOT if so
+- Direct URL `/learn/v2/l-*` may still bypass path UI lock (out of scope; path UX only)
 
-- Git push may block (GitHub archive / GitLab publickey) — local main SSOT
-- Further radar tasks may still be queued if refill re-adds stale 404s; treat as verify-only if live already 200
+### Next ready after
 
-### Next ready
-
-Refill backlog if ready < 2; prefer content/ops pool from ROADMAP (core B1 path already complete via TASK-309)
-
-### Commit
-
-- docs(agent): TASK-292 /path live 200 verified; seed post-B1 pool (local main SSOT; push blocked)
-
-- Push blocked: GitHub archive + GitLab publickey — local main SSOT
+TASK-311 — Home continue CTA full sequential path

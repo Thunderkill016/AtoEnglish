@@ -2193,10 +2193,10 @@
 
 
 ### TASK-310 — Path UI: unlock all authored CORE_PATH lessons + honest copy
-- **Status:** `ready`
+- **Status:** `in_progress`
 - **Mô tả:** PathClient still says "pilot / đang soạn" but 42/42 LessonSpecs exist. Unlock nodes that have registry entries (not only pilot); update header copy to reflect full A0→B1 path; keep sequential lock for incomplete progress.
 - **Done khi:** /path shows all authored lessons openable per progress rules; no "đang soạn" when registry complete; navigation-v2 or path unit test; lint+test.
-- **Started:** auto-refill
+- **Started:** 2026-07-15 — autopilot (PHASE1: AGENTS/BACKLOG/PLAN + PathClient/path/lessons registry 42/42; PHASE2: plan; PHASE3: sequential unlock + honest copy + tests)
 
 ### TASK-311 — Home continue CTA walks full sequential path to l-b1-14
 - **Status:** `ready`

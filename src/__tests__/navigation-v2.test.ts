@@ -10,6 +10,13 @@ import {
   ME_HUB_OUTCOME_LINE,
 } from "@/lib/constants/me-hub";
 import { CORE_OUTCOME_CEFR, CORE_OUTCOME_PROMISE_VI } from "@/lib/constants/product-outcome";
+import {
+  countAuthoredOnCorePath,
+  getLessonV2,
+  isPathLessonOpenable,
+  listAuthoredLessonIds,
+} from "@/lib/v2/lessons";
+import { CORE_PATH_PLAN, CORE_PATH_TOTAL } from "@/lib/v2/path";
 
 describe("TASK-277 primary learn nav flag matrix", () => {
   afterEach(() => {
@@ -95,3 +102,35 @@ describe("TASK-277 Me hub B1 copy", () => {
     expect(hrefs).toContain("/roadmap");
   });
 });
+
+describe("TASK-310 path sequential unlock + full registry", () => {
+  it("registry covers full CORE_PATH plan (no pilot-only subset)", () => {
+    expect(CORE_PATH_TOTAL).toBe(42);
+    expect(countAuthoredOnCorePath()).toBe(CORE_PATH_TOTAL);
+    expect(listAuthoredLessonIds().length).toBeGreaterThanOrEqual(CORE_PATH_TOTAL);
+    for (const meta of CORE_PATH_PLAN) {
+      expect(getLessonV2(meta.id), meta.id).not.toBeNull();
+    }
+  });
+
+  it("empty progress: only first path lesson openable", () => {
+    expect(isPathLessonOpenable("l-a0-01", [])).toBe(true);
+    expect(isPathLessonOpenable("l-a0-02", [])).toBe(false);
+    expect(isPathLessonOpenable("l-a1-01", [])).toBe(false);
+    expect(isPathLessonOpenable("l-b1-14", [])).toBe(false);
+  });
+
+  it("unlocks next after previous completed; completed stay openable", () => {
+    expect(isPathLessonOpenable("l-a0-02", ["l-a0-01"])).toBe(true);
+    expect(isPathLessonOpenable("l-a0-01", ["l-a0-01"])).toBe(true);
+    expect(isPathLessonOpenable("l-a0-03", ["l-a0-01"])).toBe(false);
+    expect(
+      isPathLessonOpenable("l-a0-03", ["l-a0-01", "l-a0-02"]),
+    ).toBe(true);
+  });
+
+  it("unknown / missing content never openable", () => {
+    expect(isPathLessonOpenable("l-does-not-exist", [])).toBe(false);
+  });
+});
+
