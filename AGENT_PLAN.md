@@ -22,13 +22,15 @@
 
 ### Risks remaining
 
-- Git push may still block (GitHub archive / GitLab publickey) — local commit is SSOT
-- B1 content still sparse (only l-b1-01 authored of 14)
+- Git push **blocked** (GitHub archive read-only; GitLab publickey denied) — local main SSOT
+- B1 content still sparse (only l-b1-01 authored of 14; pool TASK-297+ added)
 
 ### Next ready
 
-Refill from ROADMAP if ready < 2; prefer next B1 author or ready P0 ops tasks.
+TASK-297+ (B1 author) after refill from ROADMAP pool.
 
 ### Commit
 
 - `6c2310f` feat(v2): author l-a2-08 A2 gate review spiral and freer task
+- `33e2741` docs(agent): TASK-296 done SHA
+- Push: **blocked** (GitHub archive + GitLab publickey). Local main SSOT.

@@ -112,6 +112,22 @@
 - **Mô tả:** A2 review spiral + freer task; marks end A2 block / gate to B1.
 - **Done khi:** A2 8/8 authored; Home continue walks a2 path; tests pass.
 
+### TASK-297 — Author l-b1-02 Tin tức & ý chính
+- **Mô tả:** B1 read/listen for main idea (news short); past + present + opinion light; spiral a2-08 gate; L1 ≥50%.
+- **Done khi:** schema + registry + sequential path after l-b1-01; lint+test.
+
+### TASK-298 — Author l-b1-03 Dự đoán & xu hướng
+- **Mô tả:** B1 will/might/probably + trend talk; job/news angle; spiral b1-02; L1 notes.
+- **Done khi:** schema + registry + path; tests pass.
+
+### TASK-299 — Author l-b1-04 Quy định & nghĩa vụ
+- **Mô tả:** B1 must/have to/should / rules at work; office compliance dialogues; L1.
+- **Done khi:** schema + registry + path; content gate.
+
+### TASK-300 — Author l-b1-05 Điều kiện if/when
+- **Mô tả:** B1 first conditional if/when + will; work/life scenarios; spiral b1-04.
+- **Done khi:** schema + registry + sequential path; lint+test.
+
 
 ## Pool — Ato Surface UI redesign (2026-07-10+ user-approved)
 
