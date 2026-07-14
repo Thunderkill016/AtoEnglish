@@ -2193,10 +2193,11 @@
 
 
 ### TASK-310 — Path UI: unlock all authored CORE_PATH lessons + honest copy
-- **Status:** `in_progress`
+- **Status:** `done`
 - **Mô tả:** PathClient still says "pilot / đang soạn" but 42/42 LessonSpecs exist. Unlock nodes that have registry entries (not only pilot); update header copy to reflect full A0→B1 path; keep sequential lock for incomplete progress.
 - **Done khi:** /path shows all authored lessons openable per progress rules; no "đang soạn" when registry complete; navigation-v2 or path unit test; lint+test.
 - **Started:** 2026-07-15 — autopilot (PHASE1: AGENTS/BACKLOG/PLAN + PathClient/path/lessons registry 42/42; PHASE2: plan; PHASE3: sequential unlock + honest copy + tests)
+- **Completed:** 2026-07-15 — `isPathLessonOpenable` + PathClient sequential lock + honest full-path header (no pilot/đang soạn when 42/42); navigation-v2 tests; lint+237t pass; commit defcb28
 
 ### TASK-311 — Home continue CTA walks full sequential path to l-b1-14
 - **Status:** `ready`
@@ -2227,7 +2228,7 @@
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
 | 2026-07-15 | TASK-292 | verify `/path` 200 post TASK-289 deploy; radar PASS=13 FAIL=0; route page.tsx OK; no code change | done — docs (push blocked) |
-| 2026-07-15 | TASK-310 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-07-15 | TASK-310 | feat(path): unlock full A0→B1 path with sequential progress lock | done — defcb28 |
 | 2026-07-15 | TASK-311 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-15 | TASK-312 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-15 | TASK-313 | auto-refill từ AGENT_ROADMAP.md | ready |
