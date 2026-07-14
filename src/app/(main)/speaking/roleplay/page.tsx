@@ -1,20 +1,21 @@
 import type { Metadata } from "next";
-import { SecondaryPageShell } from "@/components/design-system";
+import { SpeakingSubShell } from "../SpeakingSubShell";
 import { AIRoleplay } from "../ai-roleplay";
 
 export const metadata: Metadata = {
   title: "AI Roleplay | Luyện nói — AtoEnglish",
-  description: "Hội thoại nhập vai với AI để luyện giao tiếp tình huống thực tế.",
+  description:
+    "Hội thoại nhập vai với AI để luyện giao tiếp tình huống thực tế.",
   robots: { index: false },
 };
 
 export default function RoleplayPage() {
   return (
-    <SecondaryPageShell
+    <SpeakingSubShell
       title="AI Roleplay"
       subtitle="Hội thoại nhập vai với AI"
     >
       <AIRoleplay />
-    </SecondaryPageShell>
+    </SpeakingSubShell>
   );
 }

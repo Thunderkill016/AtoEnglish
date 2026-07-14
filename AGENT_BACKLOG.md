@@ -1986,10 +1986,11 @@
 
 
 ### TASK-283 — Speaking subroutes Ato chrome
-- **Status:** `ready`
+- **Status:** `done`
 - **Mô tả:** shadowing/roleplay/journal/phoneme page shells use Screen/Surface/AppButton.
 - **Done khi:** match speaking hub; lint+test.
-- **Started:** auto-refill
+- **Started:** 2026-07-14 — autopilot (after TASK-287 blocked; SpeakingSubShell + 4 pages)
+- **Completed:** 2026-07-14 — `SpeakingSubShell` (Screen ato ambient + Chip + PageHeader + AppButton hub back + Surface); 4 pages drop SecondaryPageShell; lint0+233t; commit `be8527e`
 
 ### TASK-279 — v2 progress Supabase persistence
 - **Status:** `done`
@@ -2023,10 +2024,11 @@
 
 
 ### TASK-287 — Apply user_v2_lesson_progress migration on Supabase
-- **Status:** `ready`
+- **Status:** `blocked`
 - **Mô tả:** Apply `20260710130000_user_v2_lesson_progress.sql` to prod (db push or SQL editor); verify RLS; optional `npm run db:types`.
 - **Done khi:** table live; select own works; types match if regenerated.
-- **Started:** auto-refill
+- **Started:** 2026-07-14 — autopilot (PHASE1: ARCHIVE noted; user mandate TASK-287; migration+v2-progress actions; PHASE2: AGENT_PLAN; PHASE3: db push + RLS verify)
+- **Blocked:** 2026-07-14 — Supabase project `vhpfskkredizeazlyzsh` **removed** (Management API `400 Resource has been removed`; DNS `Could not resolve host: vhpfskkredizeazlyzsh.supabase.co`). Migration file present in repo (TASK-279). Access token only lists org MoneyFlow project. Cannot apply SQL / verify RLS without restored project or new Supabase ref + credentials. Unblock: recreate/restore project → link → `supabase db push` → `npm run db:types`.
 
 
 ---
@@ -2038,7 +2040,8 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
-| 2026-07-14 | TASK-287 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-07-14 | TASK-283 | SpeakingSubShell Ato chrome for shadowing/roleplay/journal/phoneme | done — be8527e |
+| 2026-07-14 | TASK-287 | blocked: Supabase project vhpfskkredizeazlyzsh removed (API+DNS); migration stays in repo | blocked |
 | 2026-07-14 | TASK-288 | feat(v2): l-a2-04 present perfect ever/never travel+interview | done — e170092 (push blocked: GitHub archive + GitLab key) |
 | 2026-07-14 | TASK-286 | feat(v2): l-a2-03 comparatives/superlatives + recommend | done — 29c1a31 (push blocked: GitHub archive) |
 | 2026-07-10 | TASK-285 | feat(v2): l-a2-02 will/going to future plans | done — 404a29c (push blocked: GitHub archive) |
