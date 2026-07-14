@@ -2159,10 +2159,11 @@
 - **Completed:** 2026-07-15 — feat(v2): l-b1-10 have been + V-ing / for/since career stretch; L1 100%; interview/standup dialogues; spiral b1-09; path after l-b1-09; registry + tests; lint+233t pass; commit `bfae6c3` (push blocked: GitHub archive + GitLab key)
 
 ### TASK-306 — Author l-b1-11 Vấn đề & giải pháp
-- **Status:** `ready`
+- **Status:** `done`
 - **Mô tả:** B1 problem–solution language (The problem is… / One solution is… / We could…); work incidents; spiral b1-10.
 - **Done khi:** schema + registry + path; content gate.
-- **Started:** auto-refill
+- **Started:** 2026-07-15 — autopilot (PHASE1: docs+l-b1-10+path+schema; PHASE2: PLAN; PHASE3: author l-b1-11)
+- **Completed:** 2026-07-15 — feat(v2): l-b1-11 problem–solution The problem is / One solution is / We could; work incidents; spiral b1-10; path after l-b1-10; registry + tests; lint+233t pass
 
 
 ---
@@ -2177,6 +2178,7 @@
 | 2026-07-15 | TASK-303 | feat(v2): l-b1-08 likes/dislikes + I think/in my opinion/prefer + soft disagree; tool/standup; spiral b1-07; path after b1-07 | done — 24c73d2 (push blocked: GitHub archive + GitLab key) |
 | 2026-07-15 | TASK-304 | feat(v2): l-b1-09 get/have done + Could you/Would you mind; work print/fix; spiral b1-08; path after b1-08 | done — f5dbc53 (push blocked: GitHub archive + GitLab key) |
 | 2026-07-15 | TASK-305 | feat(v2): l-b1-10 PPC have been + V-ing / for/since; career stretch; spiral b1-09; path after b1-09 | done — bfae6c3 (push blocked: GitHub archive + GitLab key) |
+| 2026-07-15 | TASK-306 | feat(v2): l-b1-11 problem–solution The problem is / One solution is / We could; work incidents; spiral b1-10 | done — (pending SHA) |
 
 | 2026-07-15 | TASK-305 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-15 | TASK-306 | auto-refill từ AGENT_ROADMAP.md | ready |
