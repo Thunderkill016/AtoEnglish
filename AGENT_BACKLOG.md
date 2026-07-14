@@ -2163,7 +2163,7 @@
 - **Mô tả:** B1 problem–solution language (The problem is… / One solution is… / We could…); work incidents; spiral b1-10.
 - **Done khi:** schema + registry + path; content gate.
 - **Started:** 2026-07-15 — autopilot (PHASE1: docs+l-b1-10+path+schema; PHASE2: PLAN; PHASE3: author l-b1-11)
-- **Completed:** 2026-07-15 — feat(v2): l-b1-11 problem–solution The problem is / One solution is / We could; work incidents; spiral b1-10; path after l-b1-10; registry + tests; lint+233t pass
+- **Completed:** 2026-07-15 — feat(v2): l-b1-11 problem–solution The problem is / One solution is / We could; work incidents; spiral b1-10; path after l-b1-10; registry + tests; lint+233t pass; commit `d222843`
 
 
 ---
