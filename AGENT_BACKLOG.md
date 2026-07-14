@@ -2068,7 +2068,7 @@
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
 | 2026-07-15 | TASK-289 | recreate Vercel project + prod deploy; `/` 200; radar PASS=13 | done — 22ace16 (push blocked: GitHub archive + GitLab key) |
-| 2026-07-15 | TASK-290 | verify `/login` 200 post TASK-289 deploy; radar PASS=13 FAIL=0; no code change | done — 1e1e89c |
+| 2026-07-15 | TASK-290 | verify `/login` 200 post TASK-289 deploy; radar PASS=13 FAIL=0; no code change | done — 7ec7527 |
 | 2026-07-15 | TASK-291 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-15 | TASK-292 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-14 | TASK-283 | SpeakingSubShell Ato chrome for shadowing/roleplay/journal/phoneme | done — 8c3b684 |
