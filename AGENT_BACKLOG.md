@@ -2031,6 +2031,31 @@
 - **Blocked:** 2026-07-14 — Supabase project `vhpfskkredizeazlyzsh` **removed** (Management API `400 Resource has been removed`; DNS `Could not resolve host: vhpfskkredizeazlyzsh.supabase.co`). Migration file present in repo (TASK-279). Access token only lists org MoneyFlow project. Cannot apply SQL / verify RLS without restored project or new Supabase ref + credentials. Unblock: recreate/restore project → link → `supabase db push` → `npm run db:types`.
 
 
+### TASK-289 — P0 fix prod HTTP 404 on /
+- **Status:** `ready`
+- **Mô tả:** Radar FAIL: `/` (Landing) returned 404 on live. Reproduce, fix route/proxy/deploy, re-run product-radar.
+- **Done khi:** `/` returns 200 on BASE_URL; product-radar PASS for path; lint+test.
+- **Started:** auto-refill
+
+### TASK-290 — P0 fix prod HTTP 404 on /login
+- **Status:** `ready`
+- **Mô tả:** Radar FAIL: `/login` (Login) returned 404 on live. Reproduce, fix route/proxy/deploy, re-run product-radar.
+- **Done khi:** `/login` returns 200 on BASE_URL; product-radar PASS for path; lint+test.
+- **Started:** auto-refill
+
+### TASK-291 — P0 fix prod HTTP 404 on /home
+- **Status:** `ready`
+- **Mô tả:** Radar FAIL: `/home` (Home v2) returned 404 on live. Reproduce, fix route/proxy/deploy, re-run product-radar.
+- **Done khi:** `/home` returns 200 on BASE_URL; product-radar PASS for path; lint+test.
+- **Started:** auto-refill
+
+### TASK-292 — P0 fix prod HTTP 404 on /path
+- **Status:** `ready`
+- **Mô tả:** Radar FAIL: `/path` (Path B1) returned 404 on live. Reproduce, fix route/proxy/deploy, re-run product-radar.
+- **Done khi:** `/path` returns 200 on BASE_URL; product-radar PASS for path; lint+test.
+- **Started:** auto-refill
+
+
 ---
 
 ## Nhật ký agent
@@ -2040,6 +2065,10 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
+| 2026-07-15 | TASK-289 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-07-15 | TASK-290 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-07-15 | TASK-291 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-07-15 | TASK-292 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-14 | TASK-283 | SpeakingSubShell Ato chrome for shadowing/roleplay/journal/phoneme | done — 8c3b684 |
 | 2026-07-14 | TASK-287 | blocked: Supabase project vhpfskkredizeazlyzsh removed (API+DNS); migration stays in repo | blocked |
 | 2026-07-14 | TASK-288 | feat(v2): l-a2-04 present perfect ever/never travel+interview | done — e170092 (push blocked: GitHub archive + GitLab key) |
