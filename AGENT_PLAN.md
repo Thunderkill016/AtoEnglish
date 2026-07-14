@@ -21,8 +21,9 @@
 
 ## Push
 
-`bash scripts/git-push.sh main` — see journal for result.
+`bash scripts/git-push.sh main` → **blocked** (GitHub archive read-only; GitLab publickey).  
+Local commits: `e170092` (feat) · `b5e36c3` (journal). Branch ahead of origin.
 
 ## Next ready
 
-TASK-283 — Speaking subroutes Ato chrome · refill for a2-05 if needed
+TASK-283 — Speaking subroutes Ato chrome · TASK-287 — apply v2 progress migration

@@ -2039,7 +2039,7 @@
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
 | 2026-07-14 | TASK-287 | auto-refill từ AGENT_ROADMAP.md | ready |
-| 2026-07-14 | TASK-288 | feat(v2): l-a2-04 present perfect ever/never travel+interview | done — e170092 |
+| 2026-07-14 | TASK-288 | feat(v2): l-a2-04 present perfect ever/never travel+interview | done — e170092 (push blocked: GitHub archive + GitLab key) |
 | 2026-07-14 | TASK-286 | feat(v2): l-a2-03 comparatives/superlatives + recommend | done — 29c1a31 (push blocked: GitHub archive) |
 | 2026-07-10 | TASK-285 | feat(v2): l-a2-02 will/going to future plans | done — 404a29c (push blocked: GitHub archive) |
 | 2026-07-10 | TASK-285 | auto-refill từ AGENT_ROADMAP.md | ready |
