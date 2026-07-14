@@ -33,3 +33,4 @@ Refill backlog if ready < 2 → TASK-307 Author l-b1-12 if in roadmap
 ### Commit
 
 - `d222843` feat(v2): author l-b1-11 problem–solution work incidents
+- Push blocked: GitHub archive + GitLab publickey — local main SSOT
