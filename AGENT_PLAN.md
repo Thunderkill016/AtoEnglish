@@ -29,4 +29,4 @@
 
 ### Push
 
-`bash scripts/git-push.sh main`
+`bash scripts/git-push.sh main` — **blocked** (GitHub origin archived read-only; GitLab `Permission denied (publickey)`). Local commit `22ace16` is source of truth. Live prod already restored via Vercel CLI (not git-linked deploy).

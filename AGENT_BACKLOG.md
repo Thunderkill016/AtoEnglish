@@ -2066,7 +2066,7 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
-| 2026-07-15 | TASK-289 | recreate Vercel project + prod deploy; `/` 200; radar PASS=13 | done — af1dec4 |
+| 2026-07-15 | TASK-289 | recreate Vercel project + prod deploy; `/` 200; radar PASS=13 | done — 22ace16 (push blocked: GitHub archive + GitLab key) |
 | 2026-07-15 | TASK-290 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-15 | TASK-291 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-15 | TASK-292 | auto-refill từ AGENT_ROADMAP.md | ready |
