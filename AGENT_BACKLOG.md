@@ -2057,7 +2057,7 @@
 - **Mô tả:** Radar FAIL: `/path` (Path B1) returned 404 on live. Reproduce, fix route/proxy/deploy, re-run product-radar.
 - **Done khi:** `/path` returns 200 on BASE_URL; product-radar PASS for path; lint+test.
 - **Started:** 2026-07-15 — autopilot: reproduce live + radar; root cause = TASK-289 deploy restore (not route code)
-- **Completed:** 2026-07-15 — live `/path` 200 (`x-matched-path: /path`); product-radar PASS=13 FAIL=0; route `src/app/(main)/path/page.tsx` OK; no code change
+- **Completed:** 2026-07-15 — live `/path` 200 (`x-matched-path: /path`); product-radar PASS=13 FAIL=0; route `src/app/(main)/path/page.tsx` OK; no code change (push blocked: GitHub archive + GitLab key)
 
 
 ### TASK-293 — Author l-a2-05 Kinh nghiệm (Present Perfect expand)
@@ -2226,6 +2226,7 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
+| 2026-07-15 | TASK-292 | verify `/path` 200 post TASK-289 deploy; radar PASS=13 FAIL=0; route page.tsx OK; no code change | done — docs (push blocked) |
 | 2026-07-15 | TASK-310 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-15 | TASK-311 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-15 | TASK-312 | auto-refill từ AGENT_ROADMAP.md | ready |

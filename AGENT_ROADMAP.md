@@ -510,3 +510,22 @@
 ### TASK-048 — Onboarding profile read API
 - **Mô tả:** Server action `getOnboardingProfile()`; dùng trên dashboard/settings.
 - **Done khi:** Typed return; lint+test pass.
+## Pool — Post B1 core complete (2026-07-15+)
+
+> Core path A0→B1 (42 lessons) authored. Focus: product polish, copy truth, persistence ops, radar.
+
+### TASK-310 — Path UI: unlock all authored CORE_PATH lessons + honest copy
+- **Mô tả:** PathClient still says "pilot / đang soạn" but 42/42 LessonSpecs exist. Unlock nodes that have registry entries (not only pilot); update header copy to reflect full A0→B1 path; keep sequential lock for incomplete progress.
+- **Done khi:** /path shows all authored lessons openable per progress rules; no "đang soạn" when registry complete; navigation-v2 or path unit test; lint+test.
+
+### TASK-311 — Home continue CTA walks full sequential path to l-b1-14
+- **Mô tả:** Verify getPrimaryLearnHref / continue on /home advances through all completed ids to next unpublished-or-next lesson; end state after l-b1-14 is clear (review or congrats).
+- **Done khi:** unit tests for end-of-path; guest localStorage + auth path; lint+test.
+
+### TASK-312 — product-radar: mark /path critical + add /me /flashcards smoke notes
+- **Mô tả:** Raise /path critical flag in product-radar.sh PATHS; document PASS baseline; ensure orchestrator can fail on critical path 404.
+- **Done khi:** radar script updated; product-radar PASS on live; package.json script if missing.
+
+### TASK-313 — Apply blocked user_v2_lesson_progress migration (retry TASK-287)
+- **Mô tả:** Retry Supabase apply for v2 progress table + RLS if secrets available; else document blocked and keep localStorage SSOT.
+- **Done khi:** migration applied OR status blocked with clear reason; db:types if applied.
