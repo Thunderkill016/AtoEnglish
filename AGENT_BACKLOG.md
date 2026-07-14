@@ -2007,10 +2007,11 @@
 - **Completed:** 2026-07-10 — `l-a2-02.ts` will/going to survival (P2/A2); L1 100% lexis; jobAngle Monday planning; registry + next after a2-01; lint0+233t; commit `404a29c`; push blocked (GitHub archive read-only)
 
 ### TASK-286 — Author l-a2-03 So sánh & đề xuất (comparatives)
-- **Status:** `ready`
+- **Status:** `done`
 - **Mô tả:** A2 comparatives/superlatives light + recommend; dialogues shop/office; L1 notes.
 - **Done khi:** schema + registry + sequential path; content gate.
-- **Started:** auto-refill
+- **Started:** 2026-07-14 — autopilot (PHASE1: ARCHIVE noted; user mandate TASK-286; inspect LessonSpec+path+l-a2-02; PHASE2: AGENT_PLAN; PHASE3: author l-a2-03)
+- **Completed:** 2026-07-14 — `l-a2-03.ts` comparatives/superlatives + recommend (P2/A2); L1 100%; dialogues shop+office; registry + next after a2-02; lint0+233t
 
 ### TASK-288 — Author l-a2-04 Trải nghiệm & present perfect intro
 - **Status:** `ready`

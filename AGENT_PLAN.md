@@ -1,23 +1,23 @@
-# Agent Plan — TASK-285 complete (local)
+# Agent Plan — TASK-286 complete (local)
 
-> Autopilot 2026-07-10: LessonSpec `l-a2-02` will / going to survival.
+> Autopilot 2026-07-14: LessonSpec `l-a2-03` comparatives/superlatives + recommend.
 
 | Field | Value |
 |-------|-------|
-| Task | TASK-285 — Author l-a2-02 Kế hoạch tương lai (will/going to) |
+| Task | TASK-286 — Author l-a2-03 So sánh & đề xuất (comparatives) |
 | Status | **done** |
-| Gates | lint 0 · 233 unit tests · tsc 0 |
+| Gates | lint 0 · 233 unit tests |
 
 ## Delivered
 
-- **Content** `src/lib/v2/lessons/l-a2-02.ts` — A2/P2 future plans survival
-  - Grammar: be going to + V1 (plans) vs will / I'll (decide/offer)
+- **Content** `src/lib/v2/lessons/l-a2-03.ts` — A2/P2 compare & recommend survival
+  - Grammar: -er / more + adj · the -est / the most · I recommend…
   - Lexis 10 items, L1 notes 100% (schema A2)
-  - `jobAngle`: Monday planning — What are you going to do this week?
-  - 2 dialogues (stand-up + coffee), 5 listen, 8 fluency, speak task, quiz+spiral (past a2-01)
-- **Registry** `index.ts` → `l-a2-02`
-- **Path** already had order 22 after `l-a2-01`
-- **Tests** getLesson + next playable after a2-01 → a2-02
+  - `jobAngle`: Office pick — Which option is better? I recommend…
+  - 2 dialogues (shop laptop + office vendor), 5 listen, 8 fluency, speak task, quiz+spiral (future a2-02, past a2-01, shop a1-07)
+- **Registry** `index.ts` → `l-a2-03`
+- **Path** already had order 23 after `l-a2-02`
+- **Tests** getLesson + next playable after a2-02 → a2-03
 
 ## Push
 
@@ -25,4 +25,4 @@
 
 ## Next ready
 
-TASK-283 — Speaking subroutes Ato chrome · TASK-286 — l-a2-03 comparatives
+TASK-288 — l-a2-04 present perfect intro · TASK-283 — Speaking subroutes Ato chrome
