@@ -1,37 +1,33 @@
-# Agent Plan — TASK-291 complete
+# Agent Plan — TASK-293 complete
 
 > Autopilot 2026-07-15
 
-## TASK-291 — P0 fix prod HTTP 404 on `/home`
+## TASK-293 — Author l-a2-05 Kinh nghiệm (Present Perfect expand)
 
 | Field | Value |
 |-------|-------|
 | Status | **done** |
-| Root cause | Same as TASK-289/290: Vercel project deleted (`DEPLOYMENT_NOT_FOUND`) — not a Next `/home` route or proxy bug |
-| Route code | `src/app/(main)/home/page.tsx` + `HomeClient.tsx` present; `proxy.ts` has no `/home` special-case |
-| Live verify | `curl -sI https://atoenglish.vercel.app/home` → **HTTP 200**, `x-matched-path: /home` |
-| Radar | **PASS=13 WARN=0 FAIL=0** (`/home` PASS) |
-| Fix needed this session | **None** — restored by TASK-289 prod redeploy (`prj_2lnCWZp4PvBvuTBksDjMtPPruVqL`) |
+| Goal | LessonSpec A2 expand present perfect (for/since, yet/already light); spiral a2-04; L1 100%; jobAngle experience questions |
+| Files | `src/lib/v2/lessons/l-a2-05.ts` · `index.ts` · `lesson-spec-v2.test.ts` |
+| Gates | schema OK · lint 0 · **233** unit tests pass |
 
-### Steps executed
+### Delivered
 
-1. Reproduce live: `/home` → 200, matched path `/home`
-2. Confirm app route under `(main)/home` (no rewrite/delete of home)
-3. Re-run `bash scripts/product-radar.sh` → full green
-4. Gates: lint + unit tests
-5. Close backlog + nhật ký
+- **Grammar spine:** have/has + V3 + **for/since** · **already** · **yet** (Q/neg)
+- **Lexis:** 10 items, L1 notes 100% (A2 gate)
+- **Dialogues:** job interview (How long / for / since + spiral ever) · standup (already/yet)
+- **Spiral review:** a2-04 ever/never + a2-01 past simple contrast
+- **Path:** sequential after `l-a2-04` → `l-a2-05`
 
-### Risks
+### Risks remaining
 
-- Supabase still removed (TASK-287) — Home UI loads but auth/progress may fail at runtime
-- Git push may still be blocked (GitHub archive read-only; GitLab publickey) — local commit is source of truth; live already OK via Vercel CLI deploy from TASK-289
+- Git push may still block (GitHub archive / GitLab publickey) — local commit is SSOT
+- Supabase removed (TASK-287) — progress table not live
 
 ### Next ready
 
-TASK-292 `/path` — already 200 on radar; expect same closeout pattern.
+TASK-292 path 404 closeout (if still ready) or TASK-294 l-a2-06 workplace.
 
 ### Commit
 
-- `035f348` docs(ops) close TASK-291
-- `f700ef7` chore(agent) auto-refill TASK-293..295
-- Push: **blocked** (GitHub origin archived read-only; GitLab `Permission denied (publickey)`). Live already green via TASK-289 Vercel deploy.
+- `c233414` feat(v2): l-a2-05 present perfect expand

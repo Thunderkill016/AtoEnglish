@@ -2060,10 +2060,11 @@
 
 
 ### TASK-293 — Author l-a2-05 Kinh nghiệm (Present Perfect expand)
-- **Status:** `ready`
+- **Status:** `done`
 - **Mô tả:** LessonSpec A2 expand present perfect (for/since, yet/already light); spiral a2-04; L1 ≥50%; jobAngle experience questions.
 - **Done khi:** schema + registry + sequential path after l-a2-04; lint+test.
-- **Started:** auto-refill
+- **Started:** 2026-07-15 — autopilot (PHASE1 docs+a2-04 pattern; PHASE2 PLAN; PHASE3 author l-a2-05)
+- **Completed:** 2026-07-15 — feat(v2): l-a2-05 for/since + yet/already; L1 100%; job interview + standup; spiral a2-04; registry + path tests; lint+233t pass
 
 ### TASK-294 — Author l-a2-06 Công việc cơ bản
 - **Status:** `ready`
@@ -2087,7 +2088,7 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
-| 2026-07-15 | TASK-293 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-07-15 | TASK-293 | feat(v2): l-a2-05 present perfect for/since yet/already + jobAngle | done — c233414 |
 | 2026-07-15 | TASK-294 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-15 | TASK-295 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-15 | TASK-289 | recreate Vercel project + prod deploy; `/` 200; radar PASS=13 | done — 22ace16 (push blocked: GitHub archive + GitLab key) |
