@@ -29,3 +29,9 @@
 ### Next ready
 
 TASK-291 `/home`, TASK-292 `/path` — also 200 on radar; expect same closeout pattern.
+
+### Commit
+
+- `7ec7527` docs(ops) close TASK-290
+- `54102ba` nhật ký SHA
+- Push: **blocked** (GitHub origin archived read-only; GitLab `Permission denied (publickey)`). Live already green via TASK-289 Vercel deploy.
