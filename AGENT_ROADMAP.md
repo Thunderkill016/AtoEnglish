@@ -128,6 +128,18 @@
 - **Mô tả:** B1 first conditional if/when + will; work/life scenarios; spiral b1-04.
 - **Done khi:** schema + registry + sequential path; lint+test.
 
+### TASK-301 — Author l-b1-06 Mô tả quy trình
+- **Mô tả:** B1 process language (first/then/after that/finally + sequence); work SOP / how-to; spiral b1-05 if/when.
+- **Done khi:** schema + registry + sequential path; lint+test.
+
+### TASK-302 — Author l-b1-07 Mô tả người & nơi
+- **Mô tả:** B1 describe people & places (appearance, personality, location); work/life; spiral b1-06 process.
+- **Done khi:** schema + registry + path; tests pass.
+
+### TASK-303 — Author l-b1-08 Sở thích & ý kiến
+- **Mô tả:** B1 likes/dislikes + opinion phrases (I think / in my opinion / prefer); soft disagreement; spiral b1-07.
+- **Done khi:** schema + registry + path; content gate.
+
 
 ## Pool — Ato Surface UI redesign (2026-07-10+ user-approved)
 
