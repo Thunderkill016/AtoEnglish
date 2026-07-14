@@ -2022,6 +2022,13 @@
 
 
 
+### TASK-287 — Apply user_v2_lesson_progress migration on Supabase
+- **Status:** `ready`
+- **Mô tả:** Apply `20260710130000_user_v2_lesson_progress.sql` to prod (db push or SQL editor); verify RLS; optional `npm run db:types`.
+- **Done khi:** table live; select own works; types match if regenerated.
+- **Started:** auto-refill
+
+
 ---
 
 ## Nhật ký agent
@@ -2031,6 +2038,7 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
+| 2026-07-14 | TASK-287 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-14 | TASK-288 | feat(v2): l-a2-04 present perfect ever/never travel+interview | done — e170092 |
 | 2026-07-14 | TASK-286 | feat(v2): l-a2-03 comparatives/superlatives + recommend | done — 29c1a31 (push blocked: GitHub archive) |
 | 2026-07-10 | TASK-285 | feat(v2): l-a2-02 will/going to future plans | done — 404a29c (push blocked: GitHub archive) |
