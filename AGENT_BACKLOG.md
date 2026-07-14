@@ -2166,6 +2166,25 @@
 - **Completed:** 2026-07-15 — feat(v2): l-b1-11 problem–solution The problem is / One solution is / We could; work incidents; spiral b1-10; path after l-b1-10; registry + tests; lint+233t pass; commit `d222843` (push blocked: GitHub archive + GitLab key)
 
 
+### TASK-307 — Author l-b1-12 Sức khỏe & xã hội
+- **Status:** `ready`
+- **Mô tả:** B1 health & social language (symptoms, advice should/ought to, social plans); work wellness + life; spiral b1-11 problem–solution.
+- **Done khi:** schema + registry + sequential path after l-b1-11; lint+test.
+- **Started:** auto-refill
+
+### TASK-308 — Author l-b1-13 Giao tiếp công sở
+- **Status:** `ready`
+- **Mô tả:** B1 workplace communication (meetings, email phrases, polite disagreement, updates); spiral b1-12.
+- **Done khi:** schema + registry + path; content gate.
+- **Started:** auto-refill
+
+### TASK-309 — Author l-b1-14 Cổng B1 — dùng được
+- **Status:** `ready`
+- **Mô tả:** B1 gate review spiral + freer task; marks end B1 / “dùng được” independent user outcome; spiral b1-01..13 light.
+- **Done khi:** B1 14/14 authored; path ends at l-b1-14; tests pass.
+- **Started:** auto-refill
+
+
 ---
 
 ## Nhật ký agent
@@ -2175,6 +2194,9 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
+| 2026-07-15 | TASK-307 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-07-15 | TASK-308 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-07-15 | TASK-309 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-15 | TASK-303 | feat(v2): l-b1-08 likes/dislikes + I think/in my opinion/prefer + soft disagree; tool/standup; spiral b1-07; path after b1-07 | done — 24c73d2 (push blocked: GitHub archive + GitLab key) |
 | 2026-07-15 | TASK-304 | feat(v2): l-b1-09 get/have done + Could you/Would you mind; work print/fix; spiral b1-08; path after b1-08 | done — f5dbc53 (push blocked: GitHub archive + GitLab key) |
 | 2026-07-15 | TASK-305 | feat(v2): l-b1-10 PPC have been + V-ing / for/since; career stretch; spiral b1-09; path after b1-09 | done — bfae6c3 (push blocked: GitHub archive + GitLab key) |
