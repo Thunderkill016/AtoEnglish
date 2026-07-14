@@ -2204,7 +2204,7 @@
 - **Mô tả:** Verify getPrimaryLearnHref / continue on /home advances through all completed ids to next unpublished-or-next lesson; end state after l-b1-14 is clear (review or congrats).
 - **Done khi:** unit tests for end-of-path; guest localStorage + auth path; lint+test.
 - **Started:** 2026-07-15 — autopilot (PHASE1: getContinueLessonId fallback bug + Home pilot copy; PHASE2: plan; PHASE3: isCorePathComplete + congrats UI + tests)
-- **Completed:** 2026-07-15 — `isCorePathComplete` + continue returns CORE_END for review; HomeClient congrats (ôn B1 / path / flashcards); honest A0→B1 copy; navigation-v2 sequential+end tests; lint+243t; commit `15f591e`
+- **Completed:** 2026-07-15 — `isCorePathComplete` + continue returns CORE_END for review; HomeClient congrats (ôn B1 / path / flashcards); honest A0→B1 copy; navigation-v2 sequential+end tests; lint+243t; commit `15f591e` (docs a5d5ff2; push blocked: GitHub archive + GitLab key — local main SSOT)
 
 
 ### TASK-312 — product-radar: mark /path critical + add /me /flashcards smoke notes
@@ -2231,7 +2231,7 @@
 |------|------|--------|--------|
 | 2026-07-15 | TASK-292 | verify `/path` 200 post TASK-289 deploy; radar PASS=13 FAIL=0; route page.tsx OK; no code change | done — docs (push blocked) |
 | 2026-07-15 | TASK-310 | feat(path): unlock full A0→B1 path with sequential progress lock | done — defcb28 (push blocked: GitHub archive + GitLab key) |
-| 2026-07-15 | TASK-311 | feat(home): end-of-path continue after l-b1-14; isCorePathComplete + congrats/review CTA; sequential tests | done — 15f591e |
+| 2026-07-15 | TASK-311 | feat(home): end-of-path continue after l-b1-14; isCorePathComplete + congrats/review CTA; sequential tests | done — 15f591e (push blocked: GitHub archive + GitLab key) |
 | 2026-07-15 | TASK-312 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-15 | TASK-313 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-15 | TASK-307 | feat(v2): l-b1-12 health & social should/ought to + plans; work wellness; spiral b1-11 | done — 9a71a7c (push blocked: GitHub archive + GitLab key) |

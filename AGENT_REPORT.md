@@ -8,30 +8,30 @@
 | Mục | Giá trị |
 |-----|---------|
 | Daemon | **running (systemd)** |
-| Deploy Vercel | check after push |
-| Commit mới nhất | `6a9f274` feat(v2): l-b1-14 B1 gate |
-| Task đang làm | none (TASK-309 just finished) |
-| Task ready còn lại | refill if &lt;2 |
-| Agent vừa xong | TASK-309 |
+| Deploy Vercel | blocked (push) |
+| Commit mới nhất | `15f591e` feat(home): end-of-path continue after l-b1-14 |
+| Task đang làm | none (TASK-311 just finished) |
+| Task ready còn lại | TASK-312, TASK-313 |
+| Agent vừa xong | TASK-311 |
 | Circuit breaker | OK |
 | Live | https://atoenglish.vercel.app |
+| Push | blocked — GitHub archive + GitLab publickey; local main SSOT |
 
 ## Phiên gần nhất
 
-- 🤖 Agent session: TASK-309
-- feat(v2): l-b1-14 Cổng B1 — dùng được (gate review + freer)
-- B1 14/14 authored; core path 42/42 complete
-- lint 0 · 233 unit tests pass
+- 🤖 Agent session: TASK-311
+- Home continue walks full CORE_PATH; end state after l-b1-14 = congrats + review
+- lint 0 · 243 unit tests pass
 
-## Delivered (TASK-309)
+## Delivered (TASK-311)
 
-- `src/lib/v2/lessons/l-b1-14.ts` — B1 gate, no new grammar
-- Spiral light b1-01..13 samples
-- Freer speak task independent-user outcome
-- Registry + path next after b1-13 → b1-14; all complete → null
-- Tests extended in `lesson-spec-v2.test.ts`
+- `isCorePathComplete` + `getContinueLessonId` review target = `l-b1-14` when path done
+- `HomeClient` path-complete UI (ôn cổng B1 / path / flashcards); honest A0→B1 copy
+- Tests: sequential advance + end-of-path in `navigation-v2.test.ts`
+- Guest + auth share pure helpers (completed id list)
 
 ## Nhật ký hôm nay
 
-| 2026-07-15 | TASK-309 | l-b1-14 B1 gate “dùng được”; spiral light; core 42/42 | done |
-| 2026-07-15 | TASK-308 | l-b1-13 workplace meetings/email | done — f68040b |
+| 2026-07-15 | TASK-311 | home continue end-of-path + congrats | done — 15f591e |
+| 2026-07-15 | TASK-310 | path sequential unlock full registry | done — defcb28 |
+| 2026-07-15 | TASK-309 | l-b1-14 B1 gate; core 42/42 | done — 6a9f274 |
