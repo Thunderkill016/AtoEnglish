@@ -530,3 +530,15 @@
 - **Mô tả:** Retry Supabase apply for v2 progress table + RLS if secrets available; else document blocked and keep localStorage SSOT.
 - **Done khi:** migration applied OR status blocked with clear reason; db:types if applied.
 - **Status:** blocked 2026-07-15 — project `vhpfskkredizeazlyzsh` still removed; localStorage SSOT documented.
+
+### TASK-314 — FSRS seed from LessonSpec lexis on v2 complete
+- **Mô tả:** On LessonPlayerV2 mark-complete (local + completeV2Lesson), seed FSRS cards from lesson lexis/target phrases so flashcards appear without manual add. Guest: local cards only if supported; auth: existing card_reviews path when DB up. Pure helpers + unit tests; no schema change.
+- **Done khi:** completing a v2 lesson creates reviewable cards from lexis; unit tests; lint+test; graceful when Supabase down (localStorage progress still works).
+
+### TASK-315 — E2E smoke guest → v2 lesson complete (quiz floor)
+- **Mô tả:** Playwright: guest opens /learn/v2/l-a0-01 (or pilot), completes task gate + quiz ≥50%, sees complete CTA; progress key ato_v2_progress updated. Skip if no browser CI.
+- **Done khi:** e2e spec green locally (or documented skip); lint+test unit suite green.
+
+### TASK-316 — Soft-hide gamification noise when curriculum v2 flag ON
+- **Mô tả:** When isCurriculumV2(), soften/hide league/leaderboard/badge hype on home/dashboard secondary surfaces; keep honest daily goal + streak. Match vibrant dark Ato, no redesign.
+- **Done khi:** v2 flag surfaces less gamify noise; unit or component smoke; lint+test.

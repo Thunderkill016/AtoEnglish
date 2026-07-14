@@ -2219,6 +2219,7 @@
 - **Done khi:** migration applied OR status blocked with clear reason; db:types if applied.
 - **Started:** 2026-07-15 — autopilot (PHASE1: TASK-287 log + migration file + env secrets; PHASE2: AGENT_PLAN; PHASE3: retry probe)
 - **Blocked:** 2026-07-15 — secrets present but Supabase project `vhpfskkredizeazlyzsh` still **removed** (DNS NXDOMAIN; Management API `400 Resource has been removed`). Token only lists MoneyFlow — not AtoEnglish. Did **not** apply SQL to foreign project. **SSOT runtime:** localStorage `ato_v2_progress` (guests + auth offline path). Migration file + types + dual-write code remain in repo (TASK-279). Unblock: recreate/restore Supabase project → update env → `supabase db push` → `npm run db:types`.
+- **Commit:** `472bea6` (docs + SSOT; push blocked: GitHub archive + GitLab publickey)
 
 
 ### TASK-314 — FSRS seed from LessonSpec lexis on v2 complete
@@ -2256,7 +2257,7 @@
 | 2026-07-15 | TASK-310 | feat(path): unlock full A0→B1 path with sequential progress lock | done — defcb28 (push blocked: GitHub archive + GitLab key) |
 | 2026-07-15 | TASK-311 | feat(home): end-of-path continue after l-b1-14; isCorePathComplete + congrats/review CTA; sequential tests | done — 15f591e (push blocked: GitHub archive + GitLab key) |
 | 2026-07-15 | TASK-312 | auto-refill từ AGENT_ROADMAP.md | ready |
-| 2026-07-15 | TASK-313 | retry apply user_v2_lesson_progress; project still removed; localStorage SSOT documented | blocked — secrets ok, Supabase vhpf… removed (same TASK-287) |
+| 2026-07-15 | TASK-313 | retry apply user_v2_lesson_progress; project still removed; localStorage SSOT documented | blocked — `472bea6` (push blocked: GitHub archive + GitLab key) |
 | 2026-07-15 | TASK-307 | feat(v2): l-b1-12 health & social should/ought to + plans; work wellness; spiral b1-11 | done — 9a71a7c (push blocked: GitHub archive + GitLab key) |
 | 2026-07-15 | TASK-308 | feat(v2): l-b1-13 workplace meetings/email/updates/soft disagree; spiral b1-12 | done — f68040b (push blocked: GitHub archive + GitLab key) |
 | 2026-07-15 | TASK-309 | feat(v2): l-b1-14 B1 gate review spiral + freer “dùng được”; spiral b1-01..13 light; CORE_END complete 42/42 | done — 6a9f274 (push blocked: GitHub archive + GitLab key) |
