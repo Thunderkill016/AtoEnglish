@@ -2221,6 +2221,25 @@
 - **Blocked:** 2026-07-15 — secrets present but Supabase project `vhpfskkredizeazlyzsh` still **removed** (DNS NXDOMAIN; Management API `400 Resource has been removed`). Token only lists MoneyFlow — not AtoEnglish. Did **not** apply SQL to foreign project. **SSOT runtime:** localStorage `ato_v2_progress` (guests + auth offline path). Migration file + types + dual-write code remain in repo (TASK-279). Unblock: recreate/restore Supabase project → update env → `supabase db push` → `npm run db:types`.
 
 
+### TASK-314 — FSRS seed from LessonSpec lexis on v2 complete
+- **Status:** `ready`
+- **Mô tả:** On LessonPlayerV2 mark-complete (local + completeV2Lesson), seed FSRS cards from lesson lexis/target phrases so flashcards appear without manual add. Guest: local cards only if supported; auth: existing card_reviews path when DB up. Pure helpers + unit tests; no schema change.
+- **Done khi:** completing a v2 lesson creates reviewable cards from lexis; unit tests; lint+test; graceful when Supabase down (localStorage progress still works).
+- **Started:** auto-refill
+
+### TASK-315 — E2E smoke guest → v2 lesson complete (quiz floor)
+- **Status:** `ready`
+- **Mô tả:** Playwright: guest opens /learn/v2/l-a0-01 (or pilot), completes task gate + quiz ≥50%, sees complete CTA; progress key ato_v2_progress updated. Skip if no browser CI.
+- **Done khi:** e2e spec green locally (or documented skip); lint+test unit suite green.
+- **Started:** auto-refill
+
+### TASK-316 — Soft-hide gamification noise when curriculum v2 flag ON
+- **Status:** `ready`
+- **Mô tả:** When isCurriculumV2(), soften/hide league/leaderboard/badge hype on home/dashboard secondary surfaces; keep honest daily goal + streak. Match vibrant dark Ato, no redesign.
+- **Done khi:** v2 flag surfaces less gamify noise; unit or component smoke; lint+test.
+- **Started:** auto-refill
+
+
 ---
 
 ## Nhật ký agent
@@ -2230,6 +2249,9 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
+| 2026-07-15 | TASK-314 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-07-15 | TASK-315 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-07-15 | TASK-316 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-15 | TASK-292 | verify `/path` 200 post TASK-289 deploy; radar PASS=13 FAIL=0; route page.tsx OK; no code change | done — docs (push blocked) |
 | 2026-07-15 | TASK-310 | feat(path): unlock full A0→B1 path with sequential progress lock | done — defcb28 (push blocked: GitHub archive + GitLab key) |
 | 2026-07-15 | TASK-311 | feat(home): end-of-path continue after l-b1-14; isCorePathComplete + congrats/review CTA; sequential tests | done — 15f591e (push blocked: GitHub archive + GitLab key) |
