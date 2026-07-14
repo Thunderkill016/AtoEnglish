@@ -2082,10 +2082,11 @@
 
 
 ### TASK-296 — Author l-a2-08 Cổng A2
-- **Status:** `in_progress`
+- **Status:** `done`
 - **Mô tả:** A2 review spiral + freer task; marks end A2 block / gate to B1.
 - **Done khi:** A2 8/8 authored; Home continue walks a2 path; tests pass.
 - **Started:** 2026-07-15 — autopilot (PHASE1: docs+l-a1-12 gate pattern+a2-01..07; PHASE2: PLAN; PHASE3: author l-a2-08)
+- **Completed:** 2026-07-15 — feat(v2): l-a2-08 A2 gate review spiral + freer task; L1 100%; mentor+office dialogues; spiral a2-01..07; path → l-b1-01; registry + tests; lint+233t pass; commit `6c2310f`
 
 
 ---
@@ -2097,6 +2098,7 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
+| 2026-07-15 | TASK-296 | feat(v2): l-a2-08 A2 gate review spiral + freer; A2 8/8; path→b1-01 | done — 6c2310f |
 | 2026-07-15 | TASK-296 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-15 | TASK-295 | feat(v2): l-a2-07 problem/help requests + IT/colleague dialogues | done — 90529de |
 | 2026-07-15 | TASK-294 | feat(v2): l-a2-06 workplace simple present + office dialogues | done — 2ea11d0 |

@@ -1,4 +1,4 @@
-# Agent Plan — TASK-296 in progress
+# Agent Plan — TASK-296 complete
 
 > Autopilot 2026-07-15
 
@@ -6,28 +6,29 @@
 
 | Field | Value |
 |-------|-------|
-| Status | **in_progress** |
+| Status | **done** |
 | Goal | A2 review spiral + freer task; marks end A2 block / gate to B1 |
 | Files | `src/lib/v2/lessons/l-a2-08.ts` · `index.ts` · `lesson-spec-v2.test.ts` |
-| Pattern | Mirror `l-a1-12` gate: meta lexis + combined grammar spine + multi-topic spiral + freer speak task |
-| Done khi | A2 8/8 authored; Home continue walks a2 path → b1-01; schema + lint + unit tests |
+| Gates | schema OK · lint 0 · **233** unit tests pass |
 
-### Steps
+### Delivered
 
-1. Author `l-a2-08` — review past / future / compare / PP / work / help; L1 100%; freer task
-2. Register in `lessons/index.ts`
-3. Tests: registry title/jobAngle + sequential next after a2-07 → a2-08 → b1-01
-4. `npm run lint && npm run test`
-5. Commit + `bash scripts/git-push.sh main`; backlog done + nhật ký
+- **Grammar spine:** past · going to/will · comparative · PP · work present · help (combine only)
+- **Lexis:** 12 gate/meta + A2 survival items, L1 notes 100%
+- **Dialogues:** mentor coffee multi-topic · office pick + plan
+- **Spiral review:** a2-01…a2-07 sample (6 items)
+- **Freer task:** 45–60s networking monologue ≥4 topics → B1 goal
+- **Path:** sequential after `l-a2-07` → `l-a2-08` → `l-b1-01` (A2 8/8)
 
-### Risks
+### Risks remaining
 
-- Git push may block (GitHub archive / GitLab publickey) — local commit remains SSOT
-- Spiral max 6 items — sample key A2 lessons, not all 7 equally deep
-- No new grammar forms (gate = combine only)
+- Git push may still block (GitHub archive / GitLab publickey) — local commit is SSOT
+- B1 content still sparse (only l-b1-01 authored of 14)
 
-### Out of scope
+### Next ready
 
-- New B1 lessons beyond existing l-b1-01
-- Schema / SECTION_ORDER / FSRS changes
-- Audio generation
+Refill from ROADMAP if ready < 2; prefer next B1 author or ready P0 ops tasks.
+
+### Commit
+
+- `6c2310f` feat(v2): author l-a2-08 A2 gate review spiral and freer task
