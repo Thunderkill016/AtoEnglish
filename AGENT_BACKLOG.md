@@ -2088,7 +2088,7 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
-| 2026-07-15 | TASK-293 | feat(v2): l-a2-05 present perfect for/since yet/already + jobAngle | done — c233414 |
+| 2026-07-15 | TASK-293 | feat(v2): l-a2-05 present perfect for/since yet/already + jobAngle | done — 91cea64 |
 | 2026-07-15 | TASK-294 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-15 | TASK-295 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-15 | TASK-289 | recreate Vercel project + prod deploy; `/` 200; radar PASS=13 | done — 22ace16 (push blocked: GitHub archive + GitLab key) |

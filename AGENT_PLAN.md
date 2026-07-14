@@ -30,4 +30,5 @@ TASK-292 path 404 closeout (if still ready) or TASK-294 l-a2-06 workplace.
 
 ### Commit
 
-- `c233414` feat(v2): l-a2-05 present perfect expand
+- `91cea64` feat(v2): l-a2-05 present perfect expand
+- Push: **blocked** (GitHub archive read-only). Local main SSOT.
