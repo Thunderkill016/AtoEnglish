@@ -1990,7 +1990,7 @@
 - **Mô tả:** shadowing/roleplay/journal/phoneme page shells use Screen/Surface/AppButton.
 - **Done khi:** match speaking hub; lint+test.
 - **Started:** 2026-07-14 — autopilot (after TASK-287 blocked; SpeakingSubShell + 4 pages)
-- **Completed:** 2026-07-14 — `SpeakingSubShell` (Screen ato ambient + Chip + PageHeader + AppButton hub back + Surface); 4 pages drop SecondaryPageShell; lint0+233t; commit `be8527e`
+- **Completed:** 2026-07-14 — `SpeakingSubShell` (Screen ato ambient + Chip + PageHeader + AppButton hub back + Surface); 4 pages drop SecondaryPageShell; lint0+233t; commit `8c3b684` (docs journal `4a31ecd`); push blocked (GitHub archive + GitLab publickey)
 
 ### TASK-279 — v2 progress Supabase persistence
 - **Status:** `done`
