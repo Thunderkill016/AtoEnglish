@@ -31,4 +31,5 @@ TASK-292 path 404 closeout (if still ready) or TASK-296 l-a2-08 A2 gate.
 ### Commit
 
 - `90529de` feat(v2): author l-a2-07 problem and help requests
-- Push: attempt `bash scripts/git-push.sh main`
+- `babd957` docs(agent): TASK-295 done SHA + refill TASK-296
+- Push: **blocked** (GitHub archive read-only; GitLab publickey). Local main SSOT.
