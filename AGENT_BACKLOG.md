@@ -2176,10 +2176,11 @@
 
 
 ### TASK-308 — Author l-b1-13 Giao tiếp công sở
-- **Status:** `ready`
+- **Status:** `in_progress`
 - **Mô tả:** B1 workplace communication (meetings, email phrases, polite disagreement, updates); spiral b1-12.
 - **Done khi:** schema + registry + path; content gate.
-- **Started:** auto-refill
+- **Started:** 2026-07-15 — autopilot (PHASE1: docs+l-b1-12+path+schema; PHASE2: PLAN; PHASE3: author l-b1-13)
+
 
 ### TASK-309 — Author l-b1-14 Cổng B1 — dùng được
 - **Status:** `ready`

@@ -164,7 +164,15 @@ describe("LessonSpec v2", () => {
     expect(getLessonV2("l-b1-12")?.jobAngle).toMatch(
       /wellness|sick|rest|appointment|should|How about|problem/i,
     );
-    expect(getAllAuthoredLessons().length).toBeGreaterThanOrEqual(39);
+    expect(getLessonV2("l-b1-13")?.cefr).toBe("B1");
+    expect(getLessonV2("l-b1-13")?.title_vi).toMatch(
+      /giao tiếp công sở|công sở|workplace|office/i,
+    );
+    expect(getLessonV2("l-b1-13")?.phase).toBe("P3");
+    expect(getLessonV2("l-b1-13")?.jobAngle).toMatch(
+      /meeting|email|agenda|update|disagree|action|follow/i,
+    );
+    expect(getAllAuthoredLessons().length).toBeGreaterThanOrEqual(40);
   });
 
   it("all authored lessons pass schema", () => {
@@ -1093,8 +1101,9 @@ describe("LessonSpec v2", () => {
         "l-b1-09",
         "l-b1-10",
         "l-b1-11",
+        "l-b1-12",
       ]),
-    ).toBe("l-b1-12");
+    ).toBe("l-b1-13");
   });
 
   it("rejects bad id", () => {
