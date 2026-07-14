@@ -2059,6 +2059,25 @@
 - **Started:** auto-refill
 
 
+### TASK-293 — Author l-a2-05 Kinh nghiệm (Present Perfect expand)
+- **Status:** `ready`
+- **Mô tả:** LessonSpec A2 expand present perfect (for/since, yet/already light); spiral a2-04; L1 ≥50%; jobAngle experience questions.
+- **Done khi:** schema + registry + sequential path after l-a2-04; lint+test.
+- **Started:** auto-refill
+
+### TASK-294 — Author l-a2-06 Công việc cơ bản
+- **Status:** `ready`
+- **Mô tả:** A2 workplace survival lexis + simple present work routines; dialogues office; L1 notes.
+- **Done khi:** schema + registry + path; content gate.
+- **Started:** auto-refill
+
+### TASK-295 — Author l-a2-07 Vấn đề nhỏ & nhờ giúp
+- **Status:** `ready`
+- **Mô tả:** A2 problem/help requests (Can you help…, There's a problem…); service/job scenarios; L1.
+- **Done khi:** schema + registry + path; tests pass.
+- **Started:** auto-refill
+
+
 ---
 
 ## Nhật ký agent
@@ -2068,9 +2087,12 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
+| 2026-07-15 | TASK-293 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-07-15 | TASK-294 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-07-15 | TASK-295 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-15 | TASK-289 | recreate Vercel project + prod deploy; `/` 200; radar PASS=13 | done — 22ace16 (push blocked: GitHub archive + GitLab key) |
 | 2026-07-15 | TASK-290 | verify `/login` 200 post TASK-289 deploy; radar PASS=13 FAIL=0; no code change | done — 7ec7527 |
-| 2026-07-15 | TASK-291 | verify `/home` 200 post TASK-289 deploy; radar PASS=13 FAIL=0; no code change | done — (SHA pending) |
+| 2026-07-15 | TASK-291 | verify `/home` 200 post TASK-289 deploy; radar PASS=13 FAIL=0; no code change | done — 035f348 |
 | 2026-07-15 | TASK-292 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-14 | TASK-283 | SpeakingSubShell Ato chrome for shadowing/roleplay/journal/phoneme | done — 8c3b684 |
 | 2026-07-14 | TASK-287 | blocked: Supabase project vhpfskkredizeazlyzsh removed (API+DNS); migration stays in repo | blocked |
