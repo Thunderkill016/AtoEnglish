@@ -2039,10 +2039,11 @@
 - **Completed:** 2026-07-15 — recreated Vercel project `atoenglish` (`prj_2lnCWZp4PvBvuTBksDjMtPPruVqL`), prod deploy Ready, `/` 200, product-radar PASS=13 FAIL=0; check-vercel-deploy team defaults; lint+233 tests
 
 ### TASK-290 — P0 fix prod HTTP 404 on /login
-- **Status:** `ready`
+- **Status:** `done`
 - **Mô tả:** Radar FAIL: `/login` (Login) returned 404 on live. Reproduce, fix route/proxy/deploy, re-run product-radar.
 - **Done khi:** `/login` returns 200 on BASE_URL; product-radar PASS for path; lint+test.
-- **Started:** auto-refill
+- **Started:** 2026-07-15 — autopilot: reproduce live + radar; root cause = TASK-289 deploy restore (not route code)
+- **Completed:** 2026-07-15 — live `/login` 200 (`x-matched-path: /login`); product-radar PASS=13 FAIL=0; route `src/app/login/page.tsx` OK; proxy rate-limit only; no code change
 
 ### TASK-291 — P0 fix prod HTTP 404 on /home
 - **Status:** `ready`
@@ -2067,7 +2068,7 @@
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
 | 2026-07-15 | TASK-289 | recreate Vercel project + prod deploy; `/` 200; radar PASS=13 | done — 22ace16 (push blocked: GitHub archive + GitLab key) |
-| 2026-07-15 | TASK-290 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-07-15 | TASK-290 | verify `/login` 200 post TASK-289 deploy; radar PASS=13 FAIL=0; no code change | done — 1e1e89c |
 | 2026-07-15 | TASK-291 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-15 | TASK-292 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-14 | TASK-283 | SpeakingSubShell Ato chrome for shadowing/roleplay/journal/phoneme | done — 8c3b684 |
