@@ -2111,6 +2111,13 @@
 - **Completed:** 2026-07-15 — feat(v2): l-b1-04 must/have to/should + office compliance; L1 100%; HR/manager dialogues; spiral b1-03; path after l-b1-03; registry + tests; lint+233t pass; commit `0cbf12e` (push blocked: GitHub archive + GitLab key)
 
 
+### TASK-300 — Author l-b1-05 Điều kiện if/when
+- **Status:** `ready`
+- **Mô tả:** B1 first conditional if/when + will; work/life scenarios; spiral b1-04.
+- **Done khi:** schema + registry + sequential path; lint+test.
+- **Started:** auto-refill
+
+
 ---
 
 ## Nhật ký agent
@@ -2120,6 +2127,7 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
+| 2026-07-15 | TASK-300 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-15 | TASK-299 | feat(v2): l-b1-04 must/have to/should + office compliance; spiral b1-03; path after b1-03 | done — 0cbf12e (push blocked: GitHub archive + GitLab key) |
 | 2026-07-15 | TASK-298 | feat(v2): l-b1-03 will/might/probably + trends; spiral b1-02; path after b1-02 | done — ee3f2e8 (push blocked: GitHub archive + GitLab key) |
 | 2026-07-15 | TASK-297 | feat(v2): l-b1-02 news main idea past+present+opinion; spiral a2-08; path after b1-01 | done — 50a4042 (push blocked: GitHub archive + GitLab key) |
