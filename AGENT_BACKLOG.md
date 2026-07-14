@@ -2040,7 +2040,7 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
-| 2026-07-14 | TASK-283 | SpeakingSubShell Ato chrome for shadowing/roleplay/journal/phoneme | done — be8527e |
+| 2026-07-14 | TASK-283 | SpeakingSubShell Ato chrome for shadowing/roleplay/journal/phoneme | done — 8c3b684 |
 | 2026-07-14 | TASK-287 | blocked: Supabase project vhpfskkredizeazlyzsh removed (API+DNS); migration stays in repo | blocked |
 | 2026-07-14 | TASK-288 | feat(v2): l-a2-04 present perfect ever/never travel+interview | done — e170092 (push blocked: GitHub archive + GitLab key) |
 | 2026-07-14 | TASK-286 | feat(v2): l-a2-03 comparatives/superlatives + recommend | done — 29c1a31 (push blocked: GitHub archive) |
