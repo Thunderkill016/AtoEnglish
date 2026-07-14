@@ -2228,7 +2228,7 @@
 - **Done khi:** completing a v2 lesson creates reviewable cards from lexis; unit tests; lint+test; graceful when Supabase down (localStorage progress still works).
 - **Started:** 2026-07-15 — autopilot (PHASE1: TASK-280 seed-lexis + cards action + LessonPlayerV2 + flashcards guest gap; PHASE2: AGENT_PLAN; PHASE3: phrases + local cards + tests)
 - **Completed:** 2026-07-15 — `lessonToSeedVocab` (lexis+fluency phrases); `local-cards.ts` guest deck `ato_local_cards`; LessonPlayerV2 seeds local always + `seedV2LessonLexisToSRS` auth; FlashcardsClient local fallback + review; pure tests; lint+253t green. No schema change. Supabase down safe.
-- **Commit:** `79b075b` (push blocked: GitHub archive + GitLab key)
+- **Commit:** `7e84170` (push blocked: GitHub archive + GitLab publickey)
 
 ### TASK-315 — E2E smoke guest → v2 lesson complete (quiz floor)
 - **Status:** `ready`
@@ -2252,7 +2252,7 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
-| 2026-07-15 | TASK-314 | seed lexis+phrases local+auth FSRS; flashcards guest fallback; 253t | done — 79b075b (push blocked) |
+| 2026-07-15 | TASK-314 | seed lexis+phrases local+auth FSRS; flashcards guest fallback; 253t | done — 7e84170 (push blocked) |
 | 2026-07-15 | TASK-315 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-15 | TASK-316 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-15 | TASK-292 | verify `/path` 200 post TASK-289 deploy; radar PASS=13 FAIL=0; route page.tsx OK; no code change | done — docs (push blocked) |
