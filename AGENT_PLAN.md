@@ -1,36 +1,29 @@
-# Agent Plan — TASK-296 complete
+# Agent Plan — TASK-297 in progress
 
 > Autopilot 2026-07-15
 
-## TASK-296 — Author l-a2-08 Cổng A2
+## TASK-297 — Author l-b1-02 Tin tức & ý chính
 
 | Field | Value |
 |-------|-------|
-| Status | **done** |
-| Goal | A2 review spiral + freer task; marks end A2 block / gate to B1 |
-| Files | `src/lib/v2/lessons/l-a2-08.ts` · `index.ts` · `lesson-spec-v2.test.ts` |
-| Gates | schema OK · lint 0 · **233** unit tests pass |
+| Status | **in_progress** |
+| Goal | B1 short news: main idea (read/listen); past + present + opinion light; spiral a2-08 gate; L1 ≥50% |
+| Files | `src/lib/v2/lessons/l-b1-02.ts` · `index.ts` · `lesson-spec-v2.test.ts` |
+| Gates | schema OK · lint 0 · unit tests pass |
 
-### Delivered
+### Steps
 
-- **Grammar spine:** past · going to/will · comparative · PP · work present · help (combine only)
-- **Lexis:** 12 gate/meta + A2 survival items, L1 notes 100%
-- **Dialogues:** mentor coffee multi-topic · office pick + plan
-- **Spiral review:** a2-01…a2-07 sample (6 items)
-- **Freer task:** 45–60s networking monologue ≥4 topics → B1 goal
-- **Path:** sequential after `l-a2-07` → `l-a2-08` → `l-b1-01` (A2 8/8)
+1. Author `l-b1-02` LessonSpec (news lexis, main-idea listen/dialogues, past+present+opinion grammar)
+2. Register in `lessons/index.ts`
+3. Tests: registry title/cefr + sequential path after `l-b1-01` → `l-b1-02`
+4. lint + test → commit + `bash scripts/git-push.sh main`
 
-### Risks remaining
+### Risks
 
-- Git push **blocked** (GitHub archive read-only; GitLab publickey denied) — local main SSOT
-- B1 content still sparse (only l-b1-01 authored of 14; pool TASK-297+ added)
+- Git push may block (GitHub archive read-only; GitLab publickey) — local main remains SSOT
+- Keep B1 L1 ratio ≥50% (schema); prefer ≥70% for quality
+- Spiral must sample a2-08 gate (past / plan / experience / work / help), not invent new A2 forms
 
 ### Next ready
 
-TASK-297+ (B1 author) after refill from ROADMAP pool.
-
-### Commit
-
-- `6c2310f` feat(v2): author l-a2-08 A2 gate review spiral and freer task
-- `33e2741` docs(agent): TASK-296 done SHA
-- Push: **blocked** (GitHub archive + GitLab publickey). Local main SSOT.
+TASK-298 (l-b1-03 Dự đoán & xu hướng) after 297 done.

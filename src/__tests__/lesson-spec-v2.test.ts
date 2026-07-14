@@ -80,7 +80,13 @@ describe("LessonSpec v2", () => {
       /networking|weekend|plan|experience|job|help|gate/i,
     );
     expect(getLessonV2("l-b1-01")?.cefr).toBe("B1");
-    expect(getAllAuthoredLessons().length).toBeGreaterThanOrEqual(28);
+    expect(getLessonV2("l-b1-02")?.cefr).toBe("B1");
+    expect(getLessonV2("l-b1-02")?.title_vi).toMatch(/tin tức|ý chính|news|main/i);
+    expect(getLessonV2("l-b1-02")?.phase).toBe("P3");
+    expect(getLessonV2("l-b1-02")?.jobAngle).toMatch(
+      /news|office|summar|opinion|policy|hybrid/i,
+    );
+    expect(getAllAuthoredLessons().length).toBeGreaterThanOrEqual(29);
   });
 
   it("all authored lessons pass schema", () => {
@@ -593,6 +599,39 @@ describe("LessonSpec v2", () => {
         "l-a2-08",
       ]),
     ).toBe("l-b1-01");
+    expect(
+      getNextPlayableLessonId([
+        "l-a0-01",
+        "l-a0-02",
+        "l-a0-03",
+        "l-a0-04",
+        "l-a0-05",
+        "l-a0-06",
+        "l-a0-07",
+        "l-a0-08",
+        "l-a1-01",
+        "l-a1-02",
+        "l-a1-03",
+        "l-a1-04",
+        "l-a1-05",
+        "l-a1-06",
+        "l-a1-07",
+        "l-a1-08",
+        "l-a1-09",
+        "l-a1-10",
+        "l-a1-11",
+        "l-a1-12",
+        "l-a2-01",
+        "l-a2-02",
+        "l-a2-03",
+        "l-a2-04",
+        "l-a2-05",
+        "l-a2-06",
+        "l-a2-07",
+        "l-a2-08",
+        "l-b1-01",
+      ]),
+    ).toBe("l-b1-02");
   });
 
   it("rejects bad id", () => {

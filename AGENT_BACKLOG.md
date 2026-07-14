@@ -2090,10 +2090,10 @@
 
 
 ### TASK-297 — Author l-b1-02 Tin tức & ý chính
-- **Status:** `ready`
+- **Status:** `in_progress`
 - **Mô tả:** B1 read/listen for main idea (news short); past + present + opinion light; spiral a2-08 gate; L1 ≥50%.
 - **Done khi:** schema + registry + sequential path after l-b1-01; lint+test.
-- **Started:** auto-refill
+- **Started:** 2026-07-15 — autopilot (PHASE1: docs+l-b1-01+path+schema; PHASE2: PLAN; PHASE3: author l-b1-02)
 
 ### TASK-298 — Author l-b1-03 Dự đoán & xu hướng
 - **Status:** `ready`
