@@ -21,7 +21,8 @@
 
 ## Push
 
-`bash scripts/git-push.sh main` — may block (GitHub archive read-only). Local commit on `main`.
+`bash scripts/git-push.sh main` → **blocked** (GitHub archive read-only).  
+Local commits: `29c1a31` (feat) · `dae0afd` (journal). Branch ahead of origin.
 
 ## Next ready
 
