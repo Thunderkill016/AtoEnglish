@@ -2014,10 +2014,11 @@
 - **Completed:** 2026-07-14 — `l-a2-03.ts` comparatives/superlatives + recommend (P2/A2); L1 100%; dialogues shop+office; registry + next after a2-02; lint0+233t
 
 ### TASK-288 — Author l-a2-04 Trải nghiệm & present perfect intro
-- **Status:** `in_progress`
+- **Status:** `done`
 - **Mô tả:** Light present perfect (ever/never/have you…); travel/job interview angle; L1 VN interference.
 - **Done khi:** schema + registry + path; tests pass.
 - **Started:** 2026-07-14 — autopilot (PHASE1: ARCHIVE noted; user mandate TASK-288; inspect LessonSpec+path+l-a2-03; PHASE2: AGENT_PLAN; PHASE3: author l-a2-04)
+- **Completed:** 2026-07-14 — `l-a2-04.ts` present perfect ever/never (P2/A2); L1 100%; travel+interview dialogues; registry + next after a2-03; lint0+233t; commit `e170092`
 
 
 
@@ -2030,6 +2031,7 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
+| 2026-07-14 | TASK-288 | feat(v2): l-a2-04 present perfect ever/never travel+interview | done — e170092 |
 | 2026-07-14 | TASK-286 | feat(v2): l-a2-03 comparatives/superlatives + recommend | done — 29c1a31 (push blocked: GitHub archive) |
 | 2026-07-10 | TASK-285 | feat(v2): l-a2-02 will/going to future plans | done — 404a29c (push blocked: GitHub archive) |
 | 2026-07-10 | TASK-285 | auto-refill từ AGENT_ROADMAP.md | ready |

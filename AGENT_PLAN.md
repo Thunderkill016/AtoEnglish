@@ -1,34 +1,28 @@
-# Agent Plan — TASK-288 (in progress)
+# Agent Plan — TASK-288 complete (local)
 
 > Autopilot 2026-07-14: LessonSpec `l-a2-04` present perfect intro (ever/never).
 
 | Field | Value |
 |-------|-------|
 | Task | TASK-288 — Author l-a2-04 Trải nghiệm & present perfect intro |
-| Status | **in_progress** |
-| Gates | lint · unit tests |
+| Status | **done** |
+| Gates | lint 0 · 233 unit tests |
 
-## Goal
+## Delivered
 
-Author playable A2 lesson `l-a2-04`: light present perfect (ever/never/Have you…?) with **travel + job interview** angle and full L1 VN notes (A2 schema 100%).
+- **Content** `src/lib/v2/lessons/l-a2-04.ts` — A2/P2 present perfect light
+  - Grammar: have/has + V3 · ever / never · Have you ever…? · Yes, I have / No, I haven't
+  - Lexis 10 items, L1 notes 100% (schema A2)
+  - `jobAngle`: Interview — Have you ever worked…? Yes, I have / No, I haven't
+  - 2 dialogues (travel chat + job interview), 5 listen, 8 fluency, speak task, quiz+spiral (comparatives a2-03, future a2-02, past a2-01)
+- **Registry** `index.ts` → `l-a2-04`
+- **Path** title_vi → «Du lịch & trải nghiệm» order 24
+- **Tests** getLesson + next playable after a2-03 → a2-04
 
-## Steps
+## Push
 
-1. Status → `in_progress` in AGENT_BACKLOG.md
-2. Author `src/lib/v2/lessons/l-a2-04.ts` (mirror `l-a2-03` structure)
-3. Registry `index.ts` → `l-a2-04`
-4. Path already has order 24 (`Du lịch`) — align `title_vi` if needed
-5. Tests: getLesson + next playable after a2-03 → a2-04
-6. `npm run lint && npm run test` → commit + `bash scripts/git-push.sh main`
+`bash scripts/git-push.sh main` — see journal for result.
 
-## Risks
+## Next ready
 
-- Push may fail (GitHub archive read-only / GitLab key) — local commit + journal SHA still mark done
-- Do not deepen into for/since/PPC (reserved for a2-05 / b1-10)
-- Schema: L1 100% on lexis; min dialogues/listen/fluency/quiz counts
-
-## Scope out
-
-- TASK-287 migration apply
-- a2-05 full experience lesson
-- Audio generation
+TASK-283 — Speaking subroutes Ato chrome · refill for a2-05 if needed
