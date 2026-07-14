@@ -2134,8 +2134,28 @@
 - **Completed:** 2026-07-15 — feat(v2): l-b1-07 describe people & places (look/look like/located); L1 100%; teammate/office dialogues; spiral b1-06; path after l-b1-06; registry + tests; lint+233t pass; commit `36a9f8c` (push blocked: GitHub archive + GitLab key)
 
 ### TASK-303 — Author l-b1-08 Sở thích & ý kiến
-- **Status:** `ready`
+- **Status:** `in_progress`
 - **Mô tả:** B1 likes/dislikes + opinion phrases (I think / in my opinion / prefer); soft disagreement; spiral b1-07.
+- **Done khi:** schema + registry + path; content gate.
+- **Started:** 2026-07-15 — autopilot (PHASE1: docs+l-b1-07+path+schema; PHASE2: PLAN; PHASE3: author l-b1-08)
+
+
+
+### TASK-304 — Author l-b1-09 Nhờ làm hộ (get things done)
+- **Status:** `ready`
+- **Mô tả:** B1 causative/get things done (get/have something done light + requests: Could you… / Would you mind…); work/life; spiral b1-08 opinion.
+- **Done khi:** schema + registry + sequential path after l-b1-08; lint+test.
+- **Started:** auto-refill
+
+### TASK-305 — Author l-b1-10 Kinh nghiệm dài (PPC)
+- **Status:** `ready`
+- **Mô tả:** B1 present perfect continuous light (have been + V-ing / for/since experience stretch); work career; spiral b1-09.
+- **Done khi:** schema + registry + path; tests pass.
+- **Started:** auto-refill
+
+### TASK-306 — Author l-b1-11 Vấn đề & giải pháp
+- **Status:** `ready`
+- **Mô tả:** B1 problem–solution language (The problem is… / One solution is… / We could…); work incidents; spiral b1-10.
 - **Done khi:** schema + registry + path; content gate.
 - **Started:** auto-refill
 
@@ -2149,6 +2169,9 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
+| 2026-07-15 | TASK-304 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-07-15 | TASK-305 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-07-15 | TASK-306 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-15 | TASK-302 | feat(v2): l-b1-07 describe people & places look/look like/located; teammate/office; spiral b1-06; path after b1-06 | done — 36a9f8c (push blocked: GitHub archive + GitLab key) |
 | 2026-07-15 | TASK-301 | feat(v2): l-b1-06 process language first/then/after that/finally; SOP/how-to; spiral b1-05; path after b1-05 | done — c67885e (push blocked: GitHub archive + GitLab key) |
 | 2026-07-15 | TASK-301 | auto-refill từ AGENT_ROADMAP.md | ready |
