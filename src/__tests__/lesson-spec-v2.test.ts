@@ -132,7 +132,15 @@ describe("LessonSpec v2", () => {
     expect(getLessonV2("l-b1-08")?.jobAngle).toMatch(
       /tool|remote|office|prefer|think|disagree|enjoy|standup/i,
     );
-    expect(getAllAuthoredLessons().length).toBeGreaterThanOrEqual(35);
+    expect(getLessonV2("l-b1-09")?.cefr).toBe("B1");
+    expect(getLessonV2("l-b1-09")?.title_vi).toMatch(
+      /nhờ|làm hộ|get things done|causative|request|could you/i,
+    );
+    expect(getLessonV2("l-b1-09")?.phase).toBe("P3");
+    expect(getLessonV2("l-b1-09")?.jobAngle).toMatch(
+      /print|fix|book|deliver|Could you|Would you mind|get|have done/i,
+    );
+    expect(getAllAuthoredLessons().length).toBeGreaterThanOrEqual(36);
   });
 
   it("all authored lessons pass schema", () => {
@@ -897,6 +905,46 @@ describe("LessonSpec v2", () => {
         "l-b1-07",
       ]),
     ).toBe("l-b1-08");
+    expect(
+      getNextPlayableLessonId([
+        "l-a0-01",
+        "l-a0-02",
+        "l-a0-03",
+        "l-a0-04",
+        "l-a0-05",
+        "l-a0-06",
+        "l-a0-07",
+        "l-a0-08",
+        "l-a1-01",
+        "l-a1-02",
+        "l-a1-03",
+        "l-a1-04",
+        "l-a1-05",
+        "l-a1-06",
+        "l-a1-07",
+        "l-a1-08",
+        "l-a1-09",
+        "l-a1-10",
+        "l-a1-11",
+        "l-a1-12",
+        "l-a2-01",
+        "l-a2-02",
+        "l-a2-03",
+        "l-a2-04",
+        "l-a2-05",
+        "l-a2-06",
+        "l-a2-07",
+        "l-a2-08",
+        "l-b1-01",
+        "l-b1-02",
+        "l-b1-03",
+        "l-b1-04",
+        "l-b1-05",
+        "l-b1-06",
+        "l-b1-07",
+        "l-b1-08",
+      ]),
+    ).toBe("l-b1-09");
   });
 
   it("rejects bad id", () => {

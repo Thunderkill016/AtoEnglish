@@ -37,6 +37,7 @@ import { lessonB105 } from "@/lib/v2/lessons/l-b1-05";
 import { lessonB106 } from "@/lib/v2/lessons/l-b1-06";
 import { lessonB107 } from "@/lib/v2/lessons/l-b1-07";
 import { lessonB108 } from "@/lib/v2/lessons/l-b1-08";
+import { lessonB109 } from "@/lib/v2/lessons/l-b1-09";
 
 /** Registry of authored v2 lessons (grows over time). */
 const LESSON_MODULES: Record<string, LessonSpec> = {
@@ -76,6 +77,7 @@ const LESSON_MODULES: Record<string, LessonSpec> = {
   "l-b1-06": lessonB106,
   "l-b1-07": lessonB107,
   "l-b1-08": lessonB108,
+  "l-b1-09": lessonB109,
 };
 
 export function getLessonV2(lessonId: string): LessonSpec | null {
