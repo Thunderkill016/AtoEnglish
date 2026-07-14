@@ -2101,7 +2101,7 @@
 - **Mô tả:** B1 will/might/probably + trend talk; job/news angle; spiral b1-02; L1 notes.
 - **Done khi:** schema + registry + path; tests pass.
 - **Started:** 2026-07-15 — autopilot (PHASE1: docs+l-b1-02+path+schema; PHASE2: PLAN; PHASE3: author l-b1-03)
-- **Completed:** 2026-07-15 — feat(v2): l-b1-03 will/might/probably + trend talk; L1 100%; remote/sales dialogues; spiral b1-02; path after l-b1-02; registry + tests; lint+233t pass
+- **Completed:** 2026-07-15 — feat(v2): l-b1-03 will/might/probably + trend talk; L1 100%; remote/sales dialogues; spiral b1-02; path after l-b1-02; registry + tests; lint+233t pass; commit `ee3f2e8`
 
 ### TASK-299 — Author l-b1-04 Quy định & nghĩa vụ
 - **Status:** `ready`
@@ -2119,7 +2119,7 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
-| 2026-07-15 | TASK-298 | feat(v2): l-b1-03 will/might/probably + trends; spiral b1-02; path after b1-02 | done — (SHA after commit) |
+| 2026-07-15 | TASK-298 | feat(v2): l-b1-03 will/might/probably + trends; spiral b1-02; path after b1-02 | done — ee3f2e8 |
 | 2026-07-15 | TASK-297 | feat(v2): l-b1-02 news main idea past+present+opinion; spiral a2-08; path after b1-01 | done — 50a4042 (push blocked: GitHub archive + GitLab key) |
 | 2026-07-15 | TASK-297 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-15 | TASK-298 | auto-refill từ AGENT_ROADMAP.md | ready |
