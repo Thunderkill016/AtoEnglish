@@ -2089,6 +2089,25 @@
 - **Completed:** 2026-07-15 — feat(v2): l-a2-08 A2 gate review spiral + freer task; L1 100%; mentor+office dialogues; spiral a2-01..07; path → l-b1-01; registry + tests; lint+233t pass; commit `6c2310f`
 
 
+### TASK-297 — Author l-b1-02 Tin tức & ý chính
+- **Status:** `ready`
+- **Mô tả:** B1 read/listen for main idea (news short); past + present + opinion light; spiral a2-08 gate; L1 ≥50%.
+- **Done khi:** schema + registry + sequential path after l-b1-01; lint+test.
+- **Started:** auto-refill
+
+### TASK-298 — Author l-b1-03 Dự đoán & xu hướng
+- **Status:** `ready`
+- **Mô tả:** B1 will/might/probably + trend talk; job/news angle; spiral b1-02; L1 notes.
+- **Done khi:** schema + registry + path; tests pass.
+- **Started:** auto-refill
+
+### TASK-299 — Author l-b1-04 Quy định & nghĩa vụ
+- **Status:** `ready`
+- **Mô tả:** B1 must/have to/should / rules at work; office compliance dialogues; L1.
+- **Done khi:** schema + registry + path; content gate.
+- **Started:** auto-refill
+
+
 ---
 
 ## Nhật ký agent
@@ -2098,6 +2117,9 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
+| 2026-07-15 | TASK-297 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-07-15 | TASK-298 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-07-15 | TASK-299 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-15 | TASK-296 | feat(v2): l-a2-08 A2 gate review spiral + freer; A2 8/8; path→b1-01 | done — 6c2310f |
 | 2026-07-15 | TASK-296 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-15 | TASK-295 | feat(v2): l-a2-07 problem/help requests + IT/colleague dialogues | done — 90529de |
