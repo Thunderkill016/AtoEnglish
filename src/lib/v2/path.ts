@@ -44,7 +44,7 @@ export const CORE_PATH_PLAN: readonly PathLessonMeta[] = [
   { id: "l-a2-01", phase: "P2", cefr: "A2", title_vi: "Kể chuyện quá khứ", order: 21 },
   { id: "l-a2-02", phase: "P2", cefr: "A2", title_vi: "Kế hoạch tương lai", order: 22 },
   { id: "l-a2-03", phase: "P2", cefr: "A2", title_vi: "So sánh & mua sắm", order: 23 },
-  { id: "l-a2-04", phase: "P2", cefr: "A2", title_vi: "Du lịch", order: 24 },
+  { id: "l-a2-04", phase: "P2", cefr: "A2", title_vi: "Du lịch & trải nghiệm", order: 24 },
   { id: "l-a2-05", phase: "P2", cefr: "A2", title_vi: "Kinh nghiệm (Present Perfect)", order: 25 },
   { id: "l-a2-06", phase: "P2", cefr: "A2", title_vi: "Công việc cơ bản", order: 26 },
   { id: "l-a2-07", phase: "P2", cefr: "A2", title_vi: "Vấn đề nhỏ & nhờ giúp", order: 27 },

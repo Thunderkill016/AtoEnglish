@@ -2014,10 +2014,11 @@
 - **Completed:** 2026-07-14 — `l-a2-03.ts` comparatives/superlatives + recommend (P2/A2); L1 100%; dialogues shop+office; registry + next after a2-02; lint0+233t
 
 ### TASK-288 — Author l-a2-04 Trải nghiệm & present perfect intro
-- **Status:** `ready`
+- **Status:** `in_progress`
 - **Mô tả:** Light present perfect (ever/never/have you…); travel/job interview angle; L1 VN interference.
 - **Done khi:** schema + registry + path; tests pass.
-- **Started:** auto-refill
+- **Started:** 2026-07-14 — autopilot (PHASE1: ARCHIVE noted; user mandate TASK-288; inspect LessonSpec+path+l-a2-03; PHASE2: AGENT_PLAN; PHASE3: author l-a2-04)
+
 
 
 ---

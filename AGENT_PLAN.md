@@ -1,29 +1,34 @@
-# Agent Plan — TASK-286 complete (local)
+# Agent Plan — TASK-288 (in progress)
 
-> Autopilot 2026-07-14: LessonSpec `l-a2-03` comparatives/superlatives + recommend.
+> Autopilot 2026-07-14: LessonSpec `l-a2-04` present perfect intro (ever/never).
 
 | Field | Value |
 |-------|-------|
-| Task | TASK-286 — Author l-a2-03 So sánh & đề xuất (comparatives) |
-| Status | **done** |
-| Gates | lint 0 · 233 unit tests |
+| Task | TASK-288 — Author l-a2-04 Trải nghiệm & present perfect intro |
+| Status | **in_progress** |
+| Gates | lint · unit tests |
 
-## Delivered
+## Goal
 
-- **Content** `src/lib/v2/lessons/l-a2-03.ts` — A2/P2 compare & recommend survival
-  - Grammar: -er / more + adj · the -est / the most · I recommend…
-  - Lexis 10 items, L1 notes 100% (schema A2)
-  - `jobAngle`: Office pick — Which option is better? I recommend…
-  - 2 dialogues (shop laptop + office vendor), 5 listen, 8 fluency, speak task, quiz+spiral (future a2-02, past a2-01, shop a1-07)
-- **Registry** `index.ts` → `l-a2-03`
-- **Path** already had order 23 after `l-a2-02`
-- **Tests** getLesson + next playable after a2-02 → a2-03
+Author playable A2 lesson `l-a2-04`: light present perfect (ever/never/Have you…?) with **travel + job interview** angle and full L1 VN notes (A2 schema 100%).
 
-## Push
+## Steps
 
-`bash scripts/git-push.sh main` → **blocked** (GitHub archive read-only).  
-Local commits: `29c1a31` (feat) · `dae0afd` (journal). Branch ahead of origin.
+1. Status → `in_progress` in AGENT_BACKLOG.md
+2. Author `src/lib/v2/lessons/l-a2-04.ts` (mirror `l-a2-03` structure)
+3. Registry `index.ts` → `l-a2-04`
+4. Path already has order 24 (`Du lịch`) — align `title_vi` if needed
+5. Tests: getLesson + next playable after a2-03 → a2-04
+6. `npm run lint && npm run test` → commit + `bash scripts/git-push.sh main`
 
-## Next ready
+## Risks
 
-TASK-288 — l-a2-04 present perfect intro · TASK-283 — Speaking subroutes Ato chrome
+- Push may fail (GitHub archive read-only / GitLab key) — local commit + journal SHA still mark done
+- Do not deepen into for/since/PPC (reserved for a2-05 / b1-10)
+- Schema: L1 100% on lexis; min dialogues/listen/fluency/quiz counts
+
+## Scope out
+
+- TASK-287 migration apply
+- a2-05 full experience lesson
+- Audio generation
