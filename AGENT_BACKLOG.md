@@ -2046,10 +2046,11 @@
 - **Completed:** 2026-07-15 — live `/login` 200 (`x-matched-path: /login`); product-radar PASS=13 FAIL=0; route `src/app/login/page.tsx` OK; proxy rate-limit only; no code change
 
 ### TASK-291 — P0 fix prod HTTP 404 on /home
-- **Status:** `ready`
+- **Status:** `done`
 - **Mô tả:** Radar FAIL: `/home` (Home v2) returned 404 on live. Reproduce, fix route/proxy/deploy, re-run product-radar.
 - **Done khi:** `/home` returns 200 on BASE_URL; product-radar PASS for path; lint+test.
-- **Started:** auto-refill
+- **Started:** 2026-07-15 — autopilot: reproduce live + radar; root cause = TASK-289 deploy restore (not route code)
+- **Completed:** 2026-07-15 — live `/home` 200 (`x-matched-path: /home`); product-radar PASS=13 FAIL=0; route `src/app/(main)/home/page.tsx` OK; no code change
 
 ### TASK-292 — P0 fix prod HTTP 404 on /path
 - **Status:** `ready`
@@ -2069,7 +2070,7 @@
 |------|------|--------|--------|
 | 2026-07-15 | TASK-289 | recreate Vercel project + prod deploy; `/` 200; radar PASS=13 | done — 22ace16 (push blocked: GitHub archive + GitLab key) |
 | 2026-07-15 | TASK-290 | verify `/login` 200 post TASK-289 deploy; radar PASS=13 FAIL=0; no code change | done — 7ec7527 |
-| 2026-07-15 | TASK-291 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-07-15 | TASK-291 | verify `/home` 200 post TASK-289 deploy; radar PASS=13 FAIL=0; no code change | done — (SHA pending) |
 | 2026-07-15 | TASK-292 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-14 | TASK-283 | SpeakingSubShell Ato chrome for shadowing/roleplay/journal/phoneme | done — 8c3b684 |
 | 2026-07-14 | TASK-287 | blocked: Supabase project vhpfskkredizeazlyzsh removed (API+DNS); migration stays in repo | blocked |
