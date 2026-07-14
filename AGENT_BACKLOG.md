@@ -2078,7 +2078,14 @@
 - **Mô tả:** A2 problem/help requests (Can you help…, There's a problem…); service/job scenarios; L1.
 - **Done khi:** schema + registry + path; tests pass.
 - **Started:** 2026-07-15 — autopilot (PHASE1 docs+a2-06 pattern; PHASE2 PLAN; PHASE3 author l-a2-07)
-- **Completed:** 2026-07-15 — feat(v2): l-a2-07 help requests Can you help / There's a problem; L1 100%; IT+colleague dialogues; spiral a2-06; registry + path tests; lint+233t pass
+- **Completed:** 2026-07-15 — feat(v2): l-a2-07 help requests Can you help / There's a problem; L1 100%; IT+colleague dialogues; spiral a2-06; registry + path tests; lint+233t pass; commit `90529de`
+
+
+### TASK-296 — Author l-a2-08 Cổng A2
+- **Status:** `ready`
+- **Mô tả:** A2 review spiral + freer task; marks end A2 block / gate to B1.
+- **Done khi:** A2 8/8 authored; Home continue walks a2 path; tests pass.
+- **Started:** auto-refill
 
 
 ---
@@ -2090,6 +2097,8 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
+| 2026-07-15 | TASK-296 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-07-15 | TASK-295 | feat(v2): l-a2-07 problem/help requests + IT/colleague dialogues | done — 90529de |
 | 2026-07-15 | TASK-294 | feat(v2): l-a2-06 workplace simple present + office dialogues | done — 2ea11d0 |
 | 2026-07-15 | TASK-293 | feat(v2): l-a2-05 present perfect for/since yet/already + jobAngle | done — 91cea64 |
 | 2026-07-15 | TASK-295 | auto-refill từ AGENT_ROADMAP.md | ready |

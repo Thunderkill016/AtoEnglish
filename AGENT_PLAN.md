@@ -30,5 +30,5 @@ TASK-292 path 404 closeout (if still ready) or TASK-296 l-a2-08 A2 gate.
 
 ### Commit
 
-- (pending) feat(v2): l-a2-07 problem/help requests
+- `90529de` feat(v2): author l-a2-07 problem and help requests
 - Push: attempt `bash scripts/git-push.sh main`
