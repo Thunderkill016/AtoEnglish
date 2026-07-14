@@ -2116,7 +2116,7 @@
 - **Mô tả:** B1 first conditional if/when + will; work/life scenarios; spiral b1-04.
 - **Done khi:** schema + registry + sequential path; lint+test.
 - **Started:** 2026-07-15 — autopilot (PHASE1: docs+l-b1-04+path+schema; PHASE2: PLAN; PHASE3: author l-b1-05)
-- **Completed:** 2026-07-15 — feat(v2): l-b1-05 first conditional if/when + will; L1 100%; manager/colleague dialogues; spiral b1-04; path after l-b1-04; registry + tests; lint+233t pass
+- **Completed:** 2026-07-15 — feat(v2): l-b1-05 first conditional if/when + will; L1 100%; manager/colleague dialogues; spiral b1-04; path after l-b1-04; registry + tests; lint+233t pass; commit `50f885f` (bundled w/ refill TASK-301..303; push may block)
 
 
 ### TASK-301 — Author l-b1-06 Mô tả quy trình
@@ -2150,7 +2150,7 @@
 | 2026-07-15 | TASK-301 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-15 | TASK-302 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-15 | TASK-303 | auto-refill từ AGENT_ROADMAP.md | ready |
-| 2026-07-15 | TASK-300 | feat(v2): l-b1-05 first conditional if/when + will; work/life; spiral b1-04; path after b1-04 | done — (SHA pending commit) |
+| 2026-07-15 | TASK-300 | feat(v2): l-b1-05 first conditional if/when + will; work/life; spiral b1-04; path after b1-04 | done — 50f885f (push may block) |
 | 2026-07-15 | TASK-300 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-15 | TASK-299 | feat(v2): l-b1-04 must/have to/should + office compliance; spiral b1-03; path after b1-03 | done — 0cbf12e (push blocked: GitHub archive + GitLab key) |
 | 2026-07-15 | TASK-298 | feat(v2): l-b1-03 will/might/probably + trends; spiral b1-02; path after b1-02 | done — ee3f2e8 (push blocked: GitHub archive + GitLab key) |

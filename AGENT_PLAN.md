@@ -28,8 +28,8 @@
 
 ### Next ready
 
-TASK-301 — Author l-b1-06 Mô tả quy trình (after refill)
+TASK-301 — Author l-b1-06 Mô tả quy trình
 
 ### Commit
 
-- (pending) feat(v2): author l-b1-05 first conditional if/when + will
+- `50f885f` feat content + registry/tests + roadmap pool 301–303 (commit msg was auto-refill race; content complete)
