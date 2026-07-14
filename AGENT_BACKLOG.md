@@ -2176,10 +2176,11 @@
 
 
 ### TASK-308 — Author l-b1-13 Giao tiếp công sở
-- **Status:** `in_progress`
+- **Status:** `done`
 - **Mô tả:** B1 workplace communication (meetings, email phrases, polite disagreement, updates); spiral b1-12.
 - **Done khi:** schema + registry + path; content gate.
 - **Started:** 2026-07-15 — autopilot (PHASE1: docs+l-b1-12+path+schema; PHASE2: PLAN; PHASE3: author l-b1-13)
+- **Completed:** 2026-07-15 — feat(v2): l-b1-13 workplace meetings/email/updates/soft disagree; spiral b1-12; path after l-b1-12; registry + tests; lint+233t pass; commit `f68040b`
 
 
 ### TASK-309 — Author l-b1-14 Cổng B1 — dùng được
@@ -2199,7 +2200,7 @@
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
 | 2026-07-15 | TASK-307 | feat(v2): l-b1-12 health & social should/ought to + plans; work wellness; spiral b1-11 | done — 9a71a7c (push blocked: GitHub archive + GitLab key) |
-| 2026-07-15 | TASK-308 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-07-15 | TASK-308 | feat(v2): l-b1-13 workplace meetings/email/updates/soft disagree; spiral b1-12 | done — f68040b |
 | 2026-07-15 | TASK-309 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-15 | TASK-303 | feat(v2): l-b1-08 likes/dislikes + I think/in my opinion/prefer + soft disagree; tool/standup; spiral b1-07; path after b1-07 | done — 24c73d2 (push blocked: GitHub archive + GitLab key) |
 | 2026-07-15 | TASK-304 | feat(v2): l-b1-09 get/have done + Could you/Would you mind; work print/fix; spiral b1-08; path after b1-08 | done — f5dbc53 (push blocked: GitHub archive + GitLab key) |
