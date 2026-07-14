@@ -2174,7 +2174,7 @@
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
 | 2026-07-15 | TASK-303 | feat(v2): l-b1-08 likes/dislikes + I think/in my opinion/prefer + soft disagree; tool/standup; spiral b1-07; path after b1-07 | done — 24c73d2 (push blocked: GitHub archive + GitLab key) |
-| 2026-07-15 | TASK-304 | feat(v2): l-b1-09 get/have done + Could you/Would you mind; work print/fix; spiral b1-08; path after b1-08 | done — SHA pending push |
+| 2026-07-15 | TASK-304 | feat(v2): l-b1-09 get/have done + Could you/Would you mind; work print/fix; spiral b1-08; path after b1-08 | done — f5dbc53 (push pending) |
 
 | 2026-07-15 | TASK-305 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-15 | TASK-306 | auto-refill từ AGENT_ROADMAP.md | ready |

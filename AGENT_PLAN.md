@@ -33,4 +33,4 @@ TASK-306 — Author l-b1-11 Vấn đề & giải pháp
 
 ### Commit
 
-- (set after commit) feat(v2): author l-b1-09 get things done requests
+- `f5dbc53` feat(v2): author l-b1-09 get things done requests
