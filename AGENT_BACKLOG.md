@@ -2104,10 +2104,10 @@
 - **Completed:** 2026-07-15 — feat(v2): l-b1-03 will/might/probably + trend talk; L1 100%; remote/sales dialogues; spiral b1-02; path after l-b1-02; registry + tests; lint+233t pass; commit `ee3f2e8` (push blocked: GitHub archive + GitLab key)
 
 ### TASK-299 — Author l-b1-04 Quy định & nghĩa vụ
-- **Status:** `ready`
+- **Status:** `in_progress`
 - **Mô tả:** B1 must/have to/should / rules at work; office compliance dialogues; L1.
 - **Done khi:** schema + registry + path; content gate.
-- **Started:** auto-refill
+- **Started:** 2026-07-15 — autopilot (PHASE1: docs+l-b1-03+path+schema; PHASE2: PLAN; PHASE3: author l-b1-04)
 
 
 ---

@@ -1,37 +1,28 @@
-# Agent Plan — TASK-298 complete
+# Agent Plan — TASK-299 in progress
 
 > Autopilot 2026-07-15
 
-## TASK-298 — Author l-b1-03 Dự đoán & xu hướng
+## TASK-299 — Author l-b1-04 Quy định & nghĩa vụ
 
 | Field | Value |
 |-------|-------|
-| Status | **done** |
-| Goal | B1 will/might/probably + trend talk; job/news angle; spiral b1-02; L1 notes |
-| Files | `src/lib/v2/lessons/l-b1-03.ts` · `index.ts` · `lesson-spec-v2.test.ts` |
-| Gates | schema OK · lint 0 · **233** unit tests pass |
+| Status | **in_progress** |
+| Goal | B1 must / have to / should + rules at work; office compliance dialogues; L1 notes; spiral b1-03 |
+| Files | `src/lib/v2/lessons/l-b1-04.ts` · `index.ts` · `lesson-spec-v2.test.ts` |
+| Gates | schema OK · lint 0 · unit tests pass |
 
-### Delivered
+### Steps
 
-- **Grammar spine:** will (prediction) · might (possibility) · will probably · trend is growing
-- **Lexis:** 12 items (will, might, probably, trend, grow, likely, expect, demand, forecast, rise…), L1 100%
-- **Dialogues:** remote-work news small talk · sales forecast for manager
-- **Listen:** 5 prediction/trend items
-- **Spiral review:** b1-02 (According to / announced / I think / Currently)
-- **Task:** 45–60s speak — trend + will/probably + might + because
-- **Path:** sequential after `l-b1-02` → `l-b1-03` (B1 3/14)
+1. Author `l-b1-04` LessonSpec: grammar spine must / have to / should (+ mustn't / don't have to light)
+2. Lexis 12 items, L1 100%; 2 office compliance dialogues; listen 5; controlled 6; review + spiral b1-03
+3. Register in `index.ts`; extend path sequential tests after b1-03 → b1-04
+4. lint + test → commit + `bash scripts/git-push.sh main` → backlog done + SHA
 
-### Risks remaining
+### Risks
 
 - Git push may block (GitHub archive / GitLab key) — local main SSOT if so
-- B1 still sparse (l-b1-01..03 of 14; next TASK-299)
+- Modal mix: must ≠ have to ≠ should — keep CCQ + controlled clear for VN adults
 
 ### Next ready
 
-TASK-299 — Author l-b1-04 Quy định & nghĩa vụ
-
-### Commit
-
-- `ee3f2e8` feat(v2): author l-b1-03 predictions trends will might probably
-- `631d99a` docs(agent): TASK-298 done SHA ee3f2e8
-- Push: **blocked** (GitHub archive + GitLab publickey). Local main SSOT.
+TASK-300 — Author l-b1-05 Điều kiện if/when (after refill if needed)
