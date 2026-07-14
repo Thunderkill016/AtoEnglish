@@ -2071,7 +2071,7 @@
 - **Mô tả:** A2 workplace survival lexis + simple present work routines; dialogues office; L1 notes.
 - **Done khi:** schema + registry + path; content gate.
 - **Started:** 2026-07-15 — autopilot (PHASE1 docs+a2-05 pattern; PHASE2 PLAN; PHASE3 author l-a2-06)
-- **Completed:** 2026-07-15 — feat(v2): l-a2-06 workplace simple present routines; L1 100%; office dialogues; spiral a2-05; registry + path tests; lint+233t pass
+- **Completed:** 2026-07-15 — feat(v2): l-a2-06 workplace simple present routines; L1 100%; office dialogues; spiral a2-05; registry + path tests; lint+233t pass; commit `2ea11d0`
 
 ### TASK-295 — Author l-a2-07 Vấn đề nhỏ & nhờ giúp
 - **Status:** `ready`
@@ -2089,8 +2089,8 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
+| 2026-07-15 | TASK-294 | feat(v2): l-a2-06 workplace simple present + office dialogues | done — 2ea11d0 |
 | 2026-07-15 | TASK-293 | feat(v2): l-a2-05 present perfect for/since yet/already + jobAngle | done — 91cea64 |
-| 2026-07-15 | TASK-294 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-15 | TASK-295 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-15 | TASK-289 | recreate Vercel project + prod deploy; `/` 200; radar PASS=13 | done — 22ace16 (push blocked: GitHub archive + GitLab key) |
 | 2026-07-15 | TASK-290 | verify `/login` 200 post TASK-289 deploy; radar PASS=13 FAIL=0; no code change | done — 7ec7527 |

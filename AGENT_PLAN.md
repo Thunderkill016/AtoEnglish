@@ -30,5 +30,5 @@ TASK-292 path 404 closeout (if still ready) or TASK-295 l-a2-07 help requests.
 
 ### Commit
 
-- (pending SHA) feat(v2): l-a2-06 workplace simple present
+- `2ea11d0` feat(v2): l-a2-06 workplace simple present
 - Push: attempt via `git-push.sh main`
