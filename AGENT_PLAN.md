@@ -32,5 +32,6 @@ TASK-292 `/path` — already 200 on radar; expect same closeout pattern.
 
 ### Commit
 
-- docs(ops) close TASK-291
-- Push: attempt `bash scripts/git-push.sh main`
+- `035f348` docs(ops) close TASK-291
+- `f700ef7` chore(agent) auto-refill TASK-293..295
+- Push: **blocked** (GitHub origin archived read-only; GitLab `Permission denied (publickey)`). Live already green via TASK-289 Vercel deploy.

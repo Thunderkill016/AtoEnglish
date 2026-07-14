@@ -96,6 +96,22 @@
 - **Mô tả:** Light present perfect (ever/never/have you…); travel/job interview angle; L1 VN interference.
 - **Done khi:** schema + registry + path; tests pass.
 
+### TASK-293 — Author l-a2-05 Kinh nghiệm (Present Perfect expand)
+- **Mô tả:** LessonSpec A2 expand present perfect (for/since, yet/already light); spiral a2-04; L1 ≥50%; jobAngle experience questions.
+- **Done khi:** schema + registry + sequential path after l-a2-04; lint+test.
+
+### TASK-294 — Author l-a2-06 Công việc cơ bản
+- **Mô tả:** A2 workplace survival lexis + simple present work routines; dialogues office; L1 notes.
+- **Done khi:** schema + registry + path; content gate.
+
+### TASK-295 — Author l-a2-07 Vấn đề nhỏ & nhờ giúp
+- **Mô tả:** A2 problem/help requests (Can you help…, There's a problem…); service/job scenarios; L1.
+- **Done khi:** schema + registry + path; tests pass.
+
+### TASK-296 — Author l-a2-08 Cổng A2
+- **Mô tả:** A2 review spiral + freer task; marks end A2 block / gate to B1.
+- **Done khi:** A2 8/8 authored; Home continue walks a2 path; tests pass.
+
 
 ## Pool — Ato Surface UI redesign (2026-07-10+ user-approved)
 
