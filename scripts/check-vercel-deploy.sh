@@ -11,8 +11,11 @@ RED='\033[0;31m'; GREEN='\033[0;32m'; YELLOW='\033[1;33m'
 BLUE='\033[0;34m'; CYAN='\033[0;36m'; BOLD='\033[1m'; RESET='\033[0m'
 
 # ─── Config ────────────────────────────────────────────────────────────────────
-PROJECT_ID="atoenglish"
-VERCEL_DASHBOARD="https://vercel.com/thunderkill016/atoenglish"
+# Project recreated 2026-07-15 (TASK-289): old prj deleted → DEPLOYMENT_NOT_FOUND
+PROJECT_ID="${VERCEL_PROJECT_ID:-atoenglish}"
+VERCEL_DASHBOARD="${VERCEL_DASHBOARD:-https://vercel.com/thunderkill016s-projects/atoenglish}"
+# Team required for API (personal hobby scope)
+: "${VERCEL_TEAM_ID:=team_1MZEcAVjG3nrOnklJxYIqGQs}"
 MAX_POLLS="${VERCEL_MAX_POLLS:-40}"   # 40 × 15s = 10 minutes
 POLL_INTERVAL="${VERCEL_POLL_INTERVAL:-15}"
 

@@ -2032,10 +2032,11 @@
 
 
 ### TASK-289 — P0 fix prod HTTP 404 on /
-- **Status:** `ready`
+- **Status:** `done`
 - **Mô tả:** Radar FAIL: `/` (Landing) returned 404 on live. Reproduce, fix route/proxy/deploy, re-run product-radar.
 - **Done khi:** `/` returns 200 on BASE_URL; product-radar PASS for path; lint+test.
-- **Started:** auto-refill
+- **Started:** 2026-07-15 — autopilot: live = DEPLOYMENT_NOT_FOUND (Vercel project deleted); recreate+deploy, not route code
+- **Completed:** 2026-07-15 — recreated Vercel project `atoenglish` (`prj_2lnCWZp4PvBvuTBksDjMtPPruVqL`), prod deploy Ready, `/` 200, product-radar PASS=13 FAIL=0; check-vercel-deploy team defaults; lint+233 tests
 
 ### TASK-290 — P0 fix prod HTTP 404 on /login
 - **Status:** `ready`
@@ -2065,7 +2066,7 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
-| 2026-07-15 | TASK-289 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-07-15 | TASK-289 | recreate Vercel project + prod deploy; `/` 200; radar PASS=13 | done — af1dec4 |
 | 2026-07-15 | TASK-290 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-15 | TASK-291 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-15 | TASK-292 | auto-refill từ AGENT_ROADMAP.md | ready |
