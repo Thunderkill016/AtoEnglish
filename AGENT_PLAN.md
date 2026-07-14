@@ -1,23 +1,23 @@
-# Agent Plan — TASK-294 complete
+# Agent Plan — TASK-295 complete
 
 > Autopilot 2026-07-15
 
-## TASK-294 — Author l-a2-06 Công việc cơ bản
+## TASK-295 — Author l-a2-07 Vấn đề nhỏ & nhờ giúp
 
 | Field | Value |
 |-------|-------|
 | Status | **done** |
-| Goal | A2 workplace survival lexis + simple present work routines; office dialogues; L1 100% |
-| Files | `src/lib/v2/lessons/l-a2-06.ts` · `index.ts` · `lesson-spec-v2.test.ts` |
+| Goal | A2 problem/help requests (Can you help…, There's a problem…); service/job scenarios; L1 100% |
+| Files | `src/lib/v2/lessons/l-a2-07.ts` · `index.ts` · `lesson-spec-v2.test.ts` |
 | Gates | schema OK · lint 0 · **233** unit tests pass |
 
 ### Delivered
 
-- **Grammar spine:** simple present work routines — I/you work · he/she works · start/finish at · What do you do?
-- **Lexis:** 10 workplace items, L1 notes 100% (A2 gate)
-- **Dialogues:** office intro (What do you do?) · standup light (remote/meeting/deadline)
-- **Spiral review:** a2-05 for/since + a2-01 past simple contrast
-- **Path:** sequential after `l-a2-05` → `l-a2-06`
+- **Grammar spine:** Can/Could you + V…? · There's a problem with… · It doesn't work / It's broken
+- **Lexis:** 10 help/problem items, L1 notes 100% (A2 gate)
+- **Dialogues:** IT desk printer · colleague Wi‑Fi/email
+- **Spiral review:** a2-06 work as/works · a2-05 for + duration
+- **Path:** sequential after `l-a2-06` → `l-a2-07`
 
 ### Risks remaining
 
@@ -26,10 +26,9 @@
 
 ### Next ready
 
-TASK-292 path 404 closeout (if still ready) or TASK-295 l-a2-07 help requests.
+TASK-292 path 404 closeout (if still ready) or TASK-296 l-a2-08 A2 gate.
 
 ### Commit
 
-- `2ea11d0` feat(v2): l-a2-06 workplace simple present
-- `26fb4ac` docs(agent): TASK-294 done SHA
-- Push: **blocked** (GitHub archive read-only). Local main SSOT.
+- (pending) feat(v2): l-a2-07 problem/help requests
+- Push: attempt `bash scripts/git-push.sh main`

@@ -2074,10 +2074,11 @@
 - **Completed:** 2026-07-15 — feat(v2): l-a2-06 workplace simple present routines; L1 100%; office dialogues; spiral a2-05; registry + path tests; lint+233t pass; commit `2ea11d0`
 
 ### TASK-295 — Author l-a2-07 Vấn đề nhỏ & nhờ giúp
-- **Status:** `ready`
+- **Status:** `done`
 - **Mô tả:** A2 problem/help requests (Can you help…, There's a problem…); service/job scenarios; L1.
 - **Done khi:** schema + registry + path; tests pass.
-- **Started:** auto-refill
+- **Started:** 2026-07-15 — autopilot (PHASE1 docs+a2-06 pattern; PHASE2 PLAN; PHASE3 author l-a2-07)
+- **Completed:** 2026-07-15 — feat(v2): l-a2-07 help requests Can you help / There's a problem; L1 100%; IT+colleague dialogues; spiral a2-06; registry + path tests; lint+233t pass
 
 
 ---
