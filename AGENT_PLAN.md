@@ -31,4 +31,5 @@ TASK-292 path 404 closeout (if still ready) or TASK-295 l-a2-07 help requests.
 ### Commit
 
 - `2ea11d0` feat(v2): l-a2-06 workplace simple present
-- Push: attempt via `git-push.sh main`
+- `26fb4ac` docs(agent): TASK-294 done SHA
+- Push: **blocked** (GitHub archive read-only). Local main SSOT.
