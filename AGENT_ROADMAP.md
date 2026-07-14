@@ -152,6 +152,18 @@
 - **Mô tả:** B1 problem–solution language (The problem is… / One solution is… / We could…); work incidents; spiral b1-10.
 - **Done khi:** schema + registry + path; content gate.
 
+### TASK-307 — Author l-b1-12 Sức khỏe & xã hội
+- **Mô tả:** B1 health & social language (symptoms, advice should/ought to, social plans); work wellness + life; spiral b1-11 problem–solution.
+- **Done khi:** schema + registry + sequential path after l-b1-11; lint+test.
+
+### TASK-308 — Author l-b1-13 Giao tiếp công sở
+- **Mô tả:** B1 workplace communication (meetings, email phrases, polite disagreement, updates); spiral b1-12.
+- **Done khi:** schema + registry + path; content gate.
+
+### TASK-309 — Author l-b1-14 Cổng B1 — dùng được
+- **Mô tả:** B1 gate review spiral + freer task; marks end B1 / “dùng được” independent user outcome; spiral b1-01..13 light.
+- **Done khi:** B1 14/14 authored; path ends at l-b1-14; tests pass.
+
 
 ## Pool — Ato Surface UI redesign (2026-07-10+ user-approved)
 
