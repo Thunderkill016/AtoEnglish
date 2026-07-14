@@ -33,3 +33,4 @@ TASK-309 Author l-b1-14 Cổng B1 — dùng được (ready)
 ### Commit
 
 - `f68040b` feat(v2): author l-b1-13 workplace communication meetings/email
+- Push blocked: GitHub archive + GitLab publickey — local main SSOT
