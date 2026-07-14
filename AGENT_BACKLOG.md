@@ -2152,10 +2152,10 @@
 
 
 ### TASK-305 — Author l-b1-10 Kinh nghiệm dài (PPC)
-- **Status:** `ready`
+- **Status:** `in_progress`
 - **Mô tả:** B1 present perfect continuous light (have been + V-ing / for/since experience stretch); work career; spiral b1-09.
 - **Done khi:** schema + registry + path; tests pass.
-- **Started:** auto-refill
+- **Started:** 2026-07-15 — autopilot (PHASE1: docs+l-b1-09+path+schema; PHASE2: PLAN; PHASE3: author l-b1-10)
 
 ### TASK-306 — Author l-b1-11 Vấn đề & giải pháp
 - **Status:** `ready`
