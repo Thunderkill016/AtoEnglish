@@ -2082,10 +2082,10 @@
 
 
 ### TASK-296 — Author l-a2-08 Cổng A2
-- **Status:** `ready`
+- **Status:** `in_progress`
 - **Mô tả:** A2 review spiral + freer task; marks end A2 block / gate to B1.
 - **Done khi:** A2 8/8 authored; Home continue walks a2 path; tests pass.
-- **Started:** auto-refill
+- **Started:** 2026-07-15 — autopilot (PHASE1: docs+l-a1-12 gate pattern+a2-01..07; PHASE2: PLAN; PHASE3: author l-a2-08)
 
 
 ---

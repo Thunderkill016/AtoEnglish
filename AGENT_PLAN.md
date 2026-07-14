@@ -1,35 +1,33 @@
-# Agent Plan — TASK-295 complete
+# Agent Plan — TASK-296 in progress
 
 > Autopilot 2026-07-15
 
-## TASK-295 — Author l-a2-07 Vấn đề nhỏ & nhờ giúp
+## TASK-296 — Author l-a2-08 Cổng A2
 
 | Field | Value |
 |-------|-------|
-| Status | **done** |
-| Goal | A2 problem/help requests (Can you help…, There's a problem…); service/job scenarios; L1 100% |
-| Files | `src/lib/v2/lessons/l-a2-07.ts` · `index.ts` · `lesson-spec-v2.test.ts` |
-| Gates | schema OK · lint 0 · **233** unit tests pass |
+| Status | **in_progress** |
+| Goal | A2 review spiral + freer task; marks end A2 block / gate to B1 |
+| Files | `src/lib/v2/lessons/l-a2-08.ts` · `index.ts` · `lesson-spec-v2.test.ts` |
+| Pattern | Mirror `l-a1-12` gate: meta lexis + combined grammar spine + multi-topic spiral + freer speak task |
+| Done khi | A2 8/8 authored; Home continue walks a2 path → b1-01; schema + lint + unit tests |
 
-### Delivered
+### Steps
 
-- **Grammar spine:** Can/Could you + V…? · There's a problem with… · It doesn't work / It's broken
-- **Lexis:** 10 help/problem items, L1 notes 100% (A2 gate)
-- **Dialogues:** IT desk printer · colleague Wi‑Fi/email
-- **Spiral review:** a2-06 work as/works · a2-05 for + duration
-- **Path:** sequential after `l-a2-06` → `l-a2-07`
+1. Author `l-a2-08` — review past / future / compare / PP / work / help; L1 100%; freer task
+2. Register in `lessons/index.ts`
+3. Tests: registry title/jobAngle + sequential next after a2-07 → a2-08 → b1-01
+4. `npm run lint && npm run test`
+5. Commit + `bash scripts/git-push.sh main`; backlog done + nhật ký
 
-### Risks remaining
+### Risks
 
-- Git push may still block (GitHub archive / GitLab publickey) — local commit is SSOT
-- Supabase removed (TASK-287) — progress table not live
+- Git push may block (GitHub archive / GitLab publickey) — local commit remains SSOT
+- Spiral max 6 items — sample key A2 lessons, not all 7 equally deep
+- No new grammar forms (gate = combine only)
 
-### Next ready
+### Out of scope
 
-TASK-292 path 404 closeout (if still ready) or TASK-296 l-a2-08 A2 gate.
-
-### Commit
-
-- `90529de` feat(v2): author l-a2-07 problem and help requests
-- `babd957` docs(agent): TASK-295 done SHA + refill TASK-296
-- Push: **blocked** (GitHub archive read-only; GitLab publickey). Local main SSOT.
+- New B1 lessons beyond existing l-b1-01
+- Schema / SECTION_ORDER / FSRS changes
+- Audio generation
