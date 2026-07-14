@@ -2138,7 +2138,7 @@
 - **Mô tả:** B1 likes/dislikes + opinion phrases (I think / in my opinion / prefer); soft disagreement; spiral b1-07.
 - **Done khi:** schema + registry + path; content gate.
 - **Started:** 2026-07-15 — autopilot (PHASE1: docs+l-b1-07+path+schema; PHASE2: PLAN; PHASE3: author l-b1-08)
-- **Completed:** 2026-07-15 — feat(v2): l-b1-08 likes/opinions/prefer + soft disagreement; L1 100%; tool/standup dialogues; spiral b1-07; path after l-b1-07; registry + tests; lint+233t pass
+- **Completed:** 2026-07-15 — feat(v2): l-b1-08 likes/opinions/prefer + soft disagreement; L1 100%; tool/standup dialogues; spiral b1-07; path after l-b1-07; registry + tests; lint+233t pass; commit `24c73d2` (push blocked: GitHub archive + GitLab key)
 
 
 
@@ -2170,6 +2170,7 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
+| 2026-07-15 | TASK-303 | feat(v2): l-b1-08 likes/dislikes + I think/in my opinion/prefer + soft disagree; tool/standup; spiral b1-07; path after b1-07 | done — 24c73d2 (push blocked: GitHub archive + GitLab key) |
 | 2026-07-15 | TASK-304 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-15 | TASK-305 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-15 | TASK-306 | auto-refill từ AGENT_ROADMAP.md | ready |
