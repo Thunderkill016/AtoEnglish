@@ -32,4 +32,5 @@ TASK-302 — Author l-b1-07 Mô tả người & nơi
 
 ### Commit
 
-- (pending)
+- `c67885e` feat(v2): author l-b1-06 process language (first/then/finally)
+- Push blocked: GitHub archive + GitLab publickey — local main SSOT

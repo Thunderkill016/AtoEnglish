@@ -2124,7 +2124,7 @@
 - **Mô tả:** B1 process language (first/then/after that/finally + sequence); work SOP / how-to; spiral b1-05 if/when.
 - **Done khi:** schema + registry + sequential path; lint+test.
 - **Started:** 2026-07-15 — autopilot (PHASE1: docs+l-b1-05+path+schema; PHASE2: PLAN; PHASE3: author l-b1-06)
-- **Completed:** 2026-07-15 — feat(v2): l-b1-06 process language first/then/after that/finally; L1 100%; SOP/install dialogues; spiral b1-05; path after l-b1-05; registry + tests; lint+233t pass
+- **Completed:** 2026-07-15 — feat(v2): l-b1-06 process language first/then/after that/finally; L1 100%; SOP/install dialogues; spiral b1-05; path after l-b1-05; registry + tests; lint+233t pass; commit `c67885e` (push blocked: GitHub archive + GitLab key)
 
 ### TASK-302 — Author l-b1-07 Mô tả người & nơi
 - **Status:** `ready`
@@ -2148,7 +2148,7 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
-| 2026-07-15 | TASK-301 | feat(v2): l-b1-06 process language first/then/after that/finally; SOP/how-to; spiral b1-05; path after b1-05 | done — (SHA pending commit) |
+| 2026-07-15 | TASK-301 | feat(v2): l-b1-06 process language first/then/after that/finally; SOP/how-to; spiral b1-05; path after b1-05 | done — c67885e (push blocked: GitHub archive + GitLab key) |
 | 2026-07-15 | TASK-301 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-15 | TASK-302 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-15 | TASK-303 | auto-refill từ AGENT_ROADMAP.md | ready |
