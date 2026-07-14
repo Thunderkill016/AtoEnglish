@@ -2090,10 +2090,11 @@
 
 
 ### TASK-297 — Author l-b1-02 Tin tức & ý chính
-- **Status:** `in_progress`
+- **Status:** `done`
 - **Mô tả:** B1 read/listen for main idea (news short); past + present + opinion light; spiral a2-08 gate; L1 ≥50%.
 - **Done khi:** schema + registry + sequential path after l-b1-01; lint+test.
 - **Started:** 2026-07-15 — autopilot (PHASE1: docs+l-b1-01+path+schema; PHASE2: PLAN; PHASE3: author l-b1-02)
+- **Completed:** 2026-07-15 — feat(v2): l-b1-02 news main idea past+present+opinion; L1 100%; hybrid/sales dialogues; spiral a2-08 gate; path after l-b1-01; registry + tests; lint+233t pass; commit `50a4042` (push blocked: GitHub archive + GitLab key)
 
 ### TASK-298 — Author l-b1-03 Dự đoán & xu hướng
 - **Status:** `ready`
@@ -2117,6 +2118,7 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
+| 2026-07-15 | TASK-297 | feat(v2): l-b1-02 news main idea past+present+opinion; spiral a2-08; path after b1-01 | done — 50a4042 (push blocked: GitHub archive + GitLab key) |
 | 2026-07-15 | TASK-297 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-15 | TASK-298 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-15 | TASK-299 | auto-refill từ AGENT_ROADMAP.md | ready |
