@@ -8,8 +8,9 @@
 |-------|-------|
 | Status | **done** |
 | Goal | `/path` reflects full A0→B1 (42 LessonSpecs); honest copy; sequential progress lock |
-| Commit | `defcb28` |
+| Commit | `defcb28` (docs follow-up `6322ce7`) |
 | Gates | lint · 237 unit tests |
+| Push | blocked — GitHub archive + GitLab publickey; local main SSOT |
 
 ### Changes
 
