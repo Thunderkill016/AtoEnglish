@@ -1,6 +1,7 @@
 /**
- * v2 lesson progress — local-first for guests; auth users also write Supabase
- * (`user_v2_lesson_progress`, TASK-279). Key: ato_v2_progress
+ * v2 lesson progress — **localStorage is runtime SSOT** (`ato_v2_progress`).
+ * Auth dual-write to Supabase `user_v2_lesson_progress` (TASK-279) is ready in code
+ * but prod project removed (TASK-287/313) — keep working offline until DB restored.
  *
  * Complete rule (soft): task attempt + quiz floor ≥50% (see canMarkLessonComplete).
  */

@@ -1,29 +1,41 @@
-# Agent Plan — TASK-311 complete
+# Agent Plan — TASK-313
 
-> Autopilot 2026-07-15
+> Autopilot 2026-07-15 — no user present
 
-## TASK-311 — Home continue CTA walks full sequential path to l-b1-14
+## TASK-313 — Retry apply `user_v2_lesson_progress` (retry TASK-287)
 
 | Field | Value |
 |-------|-------|
-| Status | **done** |
-| Goal | Continue on `/home` advances through completed ids; clear end after `l-b1-14` |
-| Commit | `15f591e` |
-| Gates | lint · 243 unit tests |
-| Push | try `git-push.sh main`; may block (GitHub archive / GitLab key) |
+| Status | **blocked** (infra) |
+| Goal | Apply migration + RLS on live Supabase if secrets/project available; else document blocked and keep **localStorage SSOT** |
+| Migration | `supabase/migrations/20260710130000_user_v2_lesson_progress.sql` |
+| Code already shipped | TASK-279: actions, types, hydrator, dual-write |
 
-### Changes
+### Steps executed
 
-1. **`isCorePathComplete` / `getContinueLessonId`** (`src/lib/v2/lessons/index.ts`)
-   - Next uncompleted authored CORE_PATH node
-   - When all done → continue id = `CORE_END_LESSON_ID` (`l-b1-14`) for review
-2. **`HomeClient`**: path-complete congrats (B1 Independent User) + CTAs ôn cổng / path / flashcards; drop pilot copy
-3. **Tests** `navigation-v2.test.ts`: full sequential walk, end state, `/home` under v2
+1. Confirm secrets present in `.env.local` (URL, anon, service role, access token) — **present**
+2. Probe DNS `vhpfskkredizeazlyzsh.supabase.co` — **fail** (Could not resolve host)
+3. Management API `GET /v1/projects/vhpfskkredizeazlyzsh` — **400 Resource has been removed**
+4. Access token project list — only **MoneyFlow** (`fwpldsdkpzhswpuctbke`); not AtoEnglish
+5. **Do not** apply AtoEnglish SQL to MoneyFlow (wrong product/DB)
+6. Document: runtime SSOT remains **localStorage** `ato_v2_progress`; multi-device DB path stays offline until project restored
+7. lint + unit tests (no app code change required for blocked path)
+8. Commit docs + backlog; try `git-push.sh main`
 
-### Risks remaining
+### Risks / unblock path
 
-- Direct URL still bypasses path lock (out of scope)
-- Push may fail — local main SSOT
+| Risk | Mitigation |
+|------|------------|
+| Supabase project permanently deleted | Human recreate project → new URL/keys in env → `supabase link` → `supabase db push` → `npm run db:types` |
+| Wrong-project apply | Never push to MoneyFlow |
+| Auth dual-write fails silently | Client still writes localStorage; completeV2Lesson errors are non-fatal for guest/local UX |
+| GitHub archive / GitLab key | Push may fail; local `main` remains SSOT |
+
+### Outcome
+
+- Migration **not** applied (project removed — same as TASK-287)
+- **localStorage** remains sole live progress SSOT for v2
+- Repo migration + types + client dual-write code remain ready for when DB returns
 
 ### Next ready
 

@@ -529,3 +529,4 @@
 ### TASK-313 — Apply blocked user_v2_lesson_progress migration (retry TASK-287)
 - **Mô tả:** Retry Supabase apply for v2 progress table + RLS if secrets available; else document blocked and keep localStorage SSOT.
 - **Done khi:** migration applied OR status blocked with clear reason; db:types if applied.
+- **Status:** blocked 2026-07-15 — project `vhpfskkredizeazlyzsh` still removed; localStorage SSOT documented.

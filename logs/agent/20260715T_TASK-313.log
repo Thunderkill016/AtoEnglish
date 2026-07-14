@@ -1,0 +1,20 @@
+TASK-313 Apply blocked user_v2_lesson_progress migration (retry TASK-287)
+
+PHASE1:
+- Read AGENTS.md, ARCHIVE, BACKLOG, PLAN, CONTENT_STYLE context via prior sessions
+- Migration present: supabase/migrations/20260710130000_user_v2_lesson_progress.sql
+- Code dual-write: src/app/actions/v2-progress.ts + progress.ts localStorage
+
+PHASE2:
+- AGENT_PLAN.md updated for TASK-313
+
+PHASE3 probe (secrets present in .env.local):
+- NEXT_PUBLIC_SUPABASE_URL host: vhpfskkredizeazlyzsh
+- DNS: Could not resolve host vhpfskkredizeazlyzsh.supabase.co
+- Management API GET /v1/projects/vhpfskkredizeazlyzsh → 400 Resource has been removed
+- Access token project list: only MoneyFlow (fwpldsdkpzhswpuctbke) ACTIVE_HEALTHY
+- Decision: do NOT apply AtoEnglish migration to MoneyFlow
+
+Outcome: blocked (infra). Runtime SSOT = localStorage ato_v2_progress.
+Docs: V2_PRODUCT.md + progress.ts header + BACKLOG blocked reason.
+Unblock: recreate Supabase → env → supabase db push → npm run db:types
