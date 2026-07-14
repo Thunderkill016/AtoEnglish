@@ -1,42 +1,40 @@
-# Agent Plan — TASK-313
+# Agent Plan — TASK-314
 
 > Autopilot 2026-07-15 — no user present
 
-## TASK-313 — Retry apply `user_v2_lesson_progress` (retry TASK-287)
+## TASK-314 — FSRS seed from LessonSpec lexis on v2 complete
 
 | Field | Value |
 |-------|-------|
-| Status | **blocked** (infra) |
-| Goal | Apply migration + RLS on live Supabase if secrets/project available; else document blocked and keep **localStorage SSOT** |
-| Migration | `supabase/migrations/20260710130000_user_v2_lesson_progress.sql` |
-| Code already shipped | TASK-279: actions, types, hydrator, dual-write |
+| Status | **done** |
+| Goal | On LessonPlayerV2 mark-complete, seed reviewable FSRS cards from lexis + target phrases (fluency). Guest → localStorage cards; auth → `cards` upsert when DB up. Pure helpers + unit tests; no schema change. |
+| Builds on | TASK-280 (`lexisToSeedVocab`, `seedV2LessonLexisToSRS`) |
 
-### Steps executed
+### Steps
 
-1. Confirm secrets present in `.env.local` (URL, anon, service role, access token) — **present**
-2. Probe DNS `vhpfskkredizeazlyzsh.supabase.co` — **fail** (Could not resolve host)
-3. Management API `GET /v1/projects/vhpfskkredizeazlyzsh` — **400 Resource has been removed**
-4. Access token project list — only **MoneyFlow** (`fwpldsdkpzhswpuctbke`); not AtoEnglish
-5. **Do not** apply AtoEnglish SQL to MoneyFlow (wrong product/DB)
-6. Document: runtime SSOT remains **localStorage** `ato_v2_progress`; multi-device DB path stays offline until project restored
-7. lint + unit tests (no app code change required for blocked path)
-8. Commit docs + backlog; try `git-push.sh main`
+1. Extend pure helpers in `src/lib/v2/seed-lexis.ts`:
+   - Map fluency target phrases → seed rows
+   - `lessonToSeedVocab(lesson)` = lexis ∪ phrases, dedupe, cap
+2. Add `src/lib/v2/local-cards.ts`: localStorage deck for guests / offline (merge seed, load due)
+3. Wire `LessonPlayerV2` mark-complete: always seed local; keep fire-and-forget `seedV2LessonLexisToSRS`
+4. Update server action to seed lexis **+** fluency phrases via shared helper
+5. FlashcardsClient: if server returns unauth/error empty, fall back to local cards + local review
+6. Unit tests for pure helpers + local merge; lint + test
+7. Commit + push; backlog done + nhật ký + SHA
 
-### Risks / unblock path
+### Risks
 
 | Risk | Mitigation |
 |------|------------|
-| Supabase project permanently deleted | Human recreate project → new URL/keys in env → `supabase link` → `supabase db push` → `npm run db:types` |
-| Wrong-project apply | Never push to MoneyFlow |
-| Auth dual-write fails silently | Client still writes localStorage; completeV2Lesson errors are non-fatal for guest/local UX |
-| GitHub archive / GitLab key | Push may fail; local `main` remains SSOT |
+| Supabase project removed (TASK-313) | Local seed always runs; auth upsert fails soft (added:0) |
+| Phrase collisions with lexis words | Dedupe by lowercased `word` |
+| Guest flashcards empty UX | Local storage + FlashcardsClient fallback |
+| Schema change temptation | No — reuse `cards` table + localStorage only |
 
-### Outcome
+### Done khi
 
-- Migration **not** applied (project removed — same as TASK-287)
-- **localStorage** remains sole live progress SSOT for v2
-- Repo migration + types + client dual-write code remain ready for when DB returns
-
-### Next ready
-
-TASK-312 — product-radar: mark /path critical + /me /flashcards smoke notes
+- Completing v2 lesson creates reviewable cards from lexis + target phrases
+- Guest local cards without manual add
+- Auth path still uses existing `cards` upsert
+- Unit tests + lint/test green
+- Graceful when Supabase down

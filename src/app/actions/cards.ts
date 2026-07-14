@@ -14,7 +14,7 @@ import {
   WrongWordsSchema,
 } from "@/lib/security/validation";
 import { getLessonV2 } from "@/lib/v2/lessons";
-import { lexisToSeedVocab } from "@/lib/v2/seed-lexis";
+import { lessonToSeedVocab } from "@/lib/v2/seed-lexis";
 
 const saveCardLimiter = createRateLimiter(60, 60 * 1000, "save-card");
 const reviewCardLimiter = createRateLimiter(60, 60 * 1000, "review-card");
@@ -461,9 +461,9 @@ export async function seedUnitVocabToSRS(params: {
 }
 
 /**
- * TASK-280: On v2 lesson complete, upsert FSRS cards from LessonSpec lexis.
- * Client sends lessonId only — lexis loaded server-side from registry.
- * Guest / unauth → silent no-op (fire-and-forget safe).
+ * TASK-280/314: On v2 lesson complete, upsert FSRS cards from LessonSpec
+ * lexis + fluency target phrases. Client sends lessonId only — content from registry.
+ * Guest / unauth / DB down → silent no-op (fire-and-forget safe; local seed is client-side).
  */
 export async function seedV2LessonLexisToSRS(lessonId: string) {
   try {
@@ -477,7 +477,7 @@ export async function seedV2LessonLexisToSRS(lessonId: string) {
     const lesson = getLessonV2(cleanId);
     if (!lesson) return { success: false, added: 0 };
 
-    const vocab = lexisToSeedVocab(lesson.lexis);
+    const vocab = lessonToSeedVocab(lesson);
     if (vocab.length === 0) return { success: true, added: 0 };
 
     const supabase = await createClient();
@@ -485,7 +485,7 @@ export async function seedV2LessonLexisToSRS(lessonId: string) {
       data: { user },
       error: authError,
     } = await supabase.auth.getUser();
-    if (authError || !user) return { success: false, added: 0 };
+    if (authError || !user) return { success: false, added: 0, guestMode: true };
 
     const now = new Date().toISOString();
     const rows = vocab.map((v) => ({

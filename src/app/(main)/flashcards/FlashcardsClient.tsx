@@ -23,6 +23,12 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { getDueCards, reviewCard, getAllCards, getCardTopics } from "@/app/actions/cards";
 import { recordFlashcardSession, type FlashcardStats } from "@/app/actions/flashcard-stats";
+import {
+  getAllLocalCards,
+  getDueLocalCards,
+  reviewLocalCard,
+  type LocalCard,
+} from "@/lib/v2/local-cards";
 import { toast } from "sonner";
 import { SecondaryPageShell, PrimaryRow } from "@/components/design-system";
 
@@ -58,6 +64,8 @@ export default function FlashcardsPage() {
   const [againCounts, setAgainCounts] = useState<Record<string, number>>({});
   const [topics, setTopics] = useState<string[]>([]);
   const [selectedTopic, setSelectedTopic] = useState<string>("all");
+  /** TASK-314: guest/offline deck from v2 lesson complete */
+  const [useLocalDeck, setUseLocalDeck] = useState(false);
 
   // Drag state using Framer Motion
   const x = useMotionValue(0);
@@ -65,14 +73,55 @@ export default function FlashcardsPage() {
   const opacityLeft = useTransform(x, [-150, 0], [1, 0]);
   const opacityRight = useTransform(x, [0, 150], [0, 1]);
 
+  function mapLocalToFlashcard(c: LocalCard): Flashcard {
+    return {
+      id: c.id,
+      word: c.word,
+      phonetic: c.phonetic || "",
+      pos: c.topic || "Vocabulary",
+      meaning_vn: c.meaning_vn,
+      example_en: c.example_en || "",
+      example_vn: "",
+      topic: c.topic || "General",
+      level: c.level || "B1",
+      stability: c.stability,
+      difficulty: c.difficulty,
+      state: c.state,
+    };
+  }
+
+  function loadLocalDeck(cram = cramMode, topic = selectedTopic, difficult = difficultMode) {
+    let local = cram || difficult ? getAllLocalCards() : getDueLocalCards();
+    if (topic !== "all") {
+      local = local.filter((c) => c.topic === topic);
+    }
+    let mapped = local.map(mapLocalToFlashcard);
+    if (difficult) {
+      mapped = mapped.filter((c) => (c.stability ?? 999) < 2);
+    }
+    setUseLocalDeck(true);
+    setCards(mapped);
+    const localTopics = [
+      ...new Set(getAllLocalCards().map((c) => c.topic).filter(Boolean)),
+    ];
+    if (localTopics.length > 0) setTopics(localTopics);
+    return mapped.length;
+  }
+
   // Fetch topics on mount
   useEffect(() => {
     getCardTopics().then(res => {
-      if (res.success) setTopics(res.topics);
+      if (res.success && res.topics.length > 0) setTopics(res.topics);
+      else {
+        const localTopics = [
+          ...new Set(getAllLocalCards().map((c) => c.topic).filter(Boolean)),
+        ];
+        if (localTopics.length > 0) setTopics(localTopics);
+      }
     });
   }, []);
 
-  // Fetch thẻ đến hạn từ Supabase
+  // Fetch thẻ đến hạn từ Supabase; TASK-314 fall back to local guest deck
   const fetchCards = async (cram = cramMode, topic = selectedTopic, difficult = difficultMode) => {
     setIsLoading(true);
     try {
@@ -92,7 +141,8 @@ export default function FlashcardsPage() {
       const res = (cram || difficult)
         ? await getAllCards(topic !== "all" ? topic : undefined)
         : await getDueCards(maxNewCards);
-      if (res.success && res.cards) {
+      if (res.success && res.cards && res.cards.length > 0) {
+        setUseLocalDeck(false);
         let mappedCards: Flashcard[] = res.cards.map((c) => ({
           id: c.id,
           word: c.word,
@@ -113,11 +163,17 @@ export default function FlashcardsPage() {
         }
         setCards(mappedCards);
       } else {
-        toast.error(res.error || "Không thể tải thẻ ôn tập.");
+        // Guest / DB down / empty server deck → local seed from v2 lessons
+        const n = loadLocalDeck(cram, topic, difficult);
+        if (n === 0 && res.success === false) {
+          toast.error(res.error || "Không thể tải thẻ ôn tập.");
+        }
       }
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : String(err);
-      toast.error(`Có lỗi xảy ra khi tải thẻ: ${errorMessage}`);
+    } catch {
+      const n = loadLocalDeck(cram, topic, difficult);
+      if (n === 0) {
+        toast.error("Có lỗi xảy ra khi tải thẻ.");
+      }
     } finally {
       setIsLoading(false);
     }
@@ -140,13 +196,62 @@ export default function FlashcardsPage() {
     }
   };
 
+  const advanceAfterReview = (
+    currentCard: Flashcard,
+    scoreLabel: "Again" | "Hard" | "Good" | "Easy",
+    message?: string,
+  ) => {
+    setResponseLog((prev) => [...prev, { word: currentCard.word, score: scoreLabel }]);
+    if (scoreLabel === "Again") {
+      setAgainCounts((prev) => ({
+        ...prev,
+        [currentCard.word]: (prev[currentCard.word] ?? 0) + 1,
+      }));
+    }
+    if (message) toast.success(message);
+
+    if (currentIndex < cards.length - 1) {
+      setIsFlipped(false);
+      x.set(0);
+      setCurrentIndex((prev) => prev + 1);
+    } else {
+      setShowFinished(true);
+      confetti({
+        particleCount: 150,
+        spread: 80,
+        origin: { y: 0.5 },
+        colors: ["#10b981", "#3b82f6", "#f59e0b"],
+      });
+      const finalLog = [
+        ...responseLog,
+        { word: currentCard.word, score: scoreLabel },
+      ];
+      if (!useLocalDeck) {
+        recordFlashcardSession(finalLog.length).then((r) => {
+          if (r.success && r.stats) setSessionStats(r.stats);
+        });
+      }
+    }
+  };
+
   const handleResponse = async (scoreLabel: "Again" | "Hard" | "Good" | "Easy") => {
     if (isReviewing) return;
-    
+
     const currentCard = cards[currentIndex];
     setIsReviewing(true);
-    
+
     try {
+      // TASK-314: local guest/offline cards (ids start with local-)
+      if (useLocalDeck || currentCard.id.startsWith("local-")) {
+        const res = reviewLocalCard(currentCard.id, scoreLabel);
+        if (res.success) {
+          advanceAfterReview(currentCard, scoreLabel, "Đã ghi nhận (máy này)");
+        } else {
+          toast.error("Không thể ghi nhận thẻ local.");
+        }
+        return;
+      }
+
       let retentionRate: number | undefined;
       try {
         const stored = localStorage.getItem("ato_settings");
@@ -162,36 +267,26 @@ export default function FlashcardsPage() {
 
       const res = await reviewCard(currentCard.id, scoreLabel, retentionRate);
       if (res.success) {
-        setResponseLog((prev) => [...prev, { word: currentCard.word, score: scoreLabel }]);
-        if (scoreLabel === "Again") {
-          setAgainCounts(prev => ({ ...prev, [currentCard.word]: (prev[currentCard.word] ?? 0) + 1 }));
-        }
-        toast.success(res.message);
-        
-        if (currentIndex < cards.length - 1) {
-          setIsFlipped(false);
-          x.set(0); // Reset vị trí kéo
-          setCurrentIndex((prev) => prev + 1);
-        } else {
-          setShowFinished(true);
-          confetti({
-            particleCount: 150,
-            spread: 80,
-            origin: { y: 0.5 },
-            colors: ["#10b981", "#3b82f6", "#f59e0b"]
-          });
-          // Record session stats
-          const finalLog = [...responseLog, { word: currentCard.word, score: scoreLabel }];
-          recordFlashcardSession(finalLog.length).then(res => {
-            if (res.success && res.stats) setSessionStats(res.stats);
-          });
-        }
+        advanceAfterReview(currentCard, scoreLabel, res.message);
       } else {
-        toast.error(res.error || "Không thể ghi nhận kết quả đánh giá.");
+        // Auth failed / DB down mid-session → try local
+        const localRes = reviewLocalCard(currentCard.id, scoreLabel);
+        if (localRes.success) {
+          setUseLocalDeck(true);
+          advanceAfterReview(currentCard, scoreLabel, "Đã ghi nhận (máy này)");
+        } else {
+          toast.error(res.error || "Không thể ghi nhận kết quả đánh giá.");
+        }
       }
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : String(err);
-      toast.error(`Lỗi hệ thống khi đánh giá: ${errorMessage}`);
+      const localRes = reviewLocalCard(currentCard.id, scoreLabel);
+      if (localRes.success) {
+        setUseLocalDeck(true);
+        advanceAfterReview(currentCard, scoreLabel, "Đã ghi nhận (máy này)");
+      } else {
+        const errorMessage = err instanceof Error ? err.message : String(err);
+        toast.error(`Lỗi hệ thống khi đánh giá: ${errorMessage}`);
+      }
     } finally {
       setIsReviewing(false);
     }

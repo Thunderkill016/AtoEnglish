@@ -20,6 +20,8 @@ import {
   meetsQuizFloor,
   QUIZ_FLOOR_RATIO,
 } from "@/lib/v2/progress";
+import { lessonToSeedVocab } from "@/lib/v2/seed-lexis";
+import { seedLessonToLocalCards } from "@/lib/v2/local-cards";
 import { seedV2LessonLexisToSRS } from "@/app/actions/cards";
 import { completeV2Lesson } from "@/app/actions/v2-progress";
 import { Surface, AppButton } from "@/components/design-system";
@@ -97,6 +99,12 @@ export function LessonPlayerV2({ lesson }: Props) {
         quizTotal: quizItems.length,
         taskDone,
       });
+      // TASK-314: always seed local deck (guest + offline); appears in /flashcards
+      const seed = lessonToSeedVocab(lesson);
+      seedLessonToLocalCards(seed, {
+        lessonId: lesson.id,
+        level: lesson.cefr,
+      });
       // TASK-279: persist to Supabase when authenticated (guest no-op)
       void completeV2Lesson({
         lessonId: lesson.id,
@@ -105,7 +113,7 @@ export function LessonPlayerV2({ lesson }: Props) {
         taskDone,
         completedAt: local.completed[lesson.id]?.completedAt,
       });
-      // TASK-280: seed FSRS from lexis (auth only; guest no-op)
+      // TASK-280/314: seed FSRS lexis+phrases to cards table when auth + DB up
       void seedV2LessonLexisToSRS(lesson.id);
       setFinished(true);
       return;
@@ -144,13 +152,21 @@ export function LessonPlayerV2({ lesson }: Props) {
             {taskDone ? " · Nhiệm vụ nói ✓" : ""}
           </p>
           <p className="text-xs text-zinc-500">
-            Tiến độ đã lưu trên máy này. Đã đăng nhập: đồng bộ tài khoản + từ vựng
-            Flashcard (FSRS).
+            Tiến độ + thẻ ôn (từ vựng &amp; câu phản xạ) đã lưu trên máy này. Đã
+            đăng nhập: đồng bộ tài khoản khi DB sẵn sàng.
           </p>
           <div className="flex flex-col sm:flex-row gap-2 justify-center pt-2">
             <AppButton href="/home" size="lg">
               Home — bài tiếp
               <ArrowRight className="size-4" aria-hidden />
+            </AppButton>
+            <AppButton
+              type="button"
+              variant="secondary"
+              size="lg"
+              onClick={() => router.push("/flashcards")}
+            >
+              Ôn flashcard
             </AppButton>
             <AppButton
               type="button"

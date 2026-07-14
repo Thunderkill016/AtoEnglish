@@ -1,10 +1,19 @@
 import { describe, it, expect } from "vitest";
-import { lexisToSeedVocab, V2_SEED_LEXIS_MAX } from "@/lib/v2/seed-lexis";
+import {
+  lexisToSeedVocab,
+  phrasesToSeedVocab,
+  lessonToSeedVocab,
+  mergeSeedVocab,
+  V2_SEED_LEXIS_MAX,
+} from "@/lib/v2/seed-lexis";
 import { getLessonV2 } from "@/lib/v2/lessons";
 import { SeedV2LessonLexisSchema } from "@/lib/security/validation";
-import type { LexisItem } from "@/lib/v2/lesson-spec";
+import type { FluencyItem, LexisItem } from "@/lib/v2/lesson-spec";
 
-function item(partial: Partial<LexisItem> & Pick<LexisItem, "id" | "word" | "meaning_vi" | "example_en">): LexisItem {
+function item(
+  partial: Partial<LexisItem> &
+    Pick<LexisItem, "id" | "word" | "meaning_vi" | "example_en">,
+): LexisItem {
   return {
     phonetic: partial.phonetic,
     l1_note_vi: partial.l1_note_vi,
@@ -30,6 +39,7 @@ describe("lexisToSeedVocab (TASK-280)", () => {
         phonetic: "/həˈloʊ/",
         meaning_vn: "xin chào",
         example_en: "Hello! My name is Linh.",
+        source: "lexis",
       },
     ]);
   });
@@ -46,13 +56,15 @@ describe("lexisToSeedVocab (TASK-280)", () => {
   });
 
   it("caps at V2_SEED_LEXIS_MAX", () => {
-    const many: LexisItem[] = Array.from({ length: V2_SEED_LEXIS_MAX + 5 }, (_, i) =>
-      item({
-        id: `v${i}`,
-        word: `word${i}`,
-        meaning_vi: `nghĩa ${i}`,
-        example_en: `Example ${i}.`,
-      }),
+    const many: LexisItem[] = Array.from(
+      { length: V2_SEED_LEXIS_MAX + 5 },
+      (_, i) =>
+        item({
+          id: `v${i}`,
+          word: `word${i}`,
+          meaning_vi: `nghĩa ${i}`,
+          example_en: `Example ${i}.`,
+        }),
     );
     expect(lexisToSeedVocab(many)).toHaveLength(V2_SEED_LEXIS_MAX);
   });
@@ -68,6 +80,87 @@ describe("lexisToSeedVocab (TASK-280)", () => {
       true,
     );
     expect(rows.some((r) => /hello/i.test(r.word))).toBe(true);
+  });
+});
+
+describe("phrasesToSeedVocab + lessonToSeedVocab (TASK-314)", () => {
+  it("maps fluency phrases to seed rows", () => {
+    const phrases: FluencyItem[] = [
+      { en: "How are you?", vi: "Bạn khỏe không?" },
+      { en: "  Nice to meet you  ", vi: "Rất vui được gặp bạn" },
+      { en: "", vi: "skip" },
+      { en: "How are you?", vi: "dup" },
+    ];
+    const rows = phrasesToSeedVocab(phrases);
+    expect(rows.map((r) => r.word)).toEqual([
+      "How are you?",
+      "Nice to meet you",
+    ]);
+    expect(rows[0]).toMatchObject({
+      meaning_vn: "Bạn khỏe không?",
+      example_en: "How are you?",
+      phonetic: null,
+      source: "phrase",
+    });
+  });
+
+  it("lessonToSeedVocab prefers lexis then adds unique phrases", () => {
+    const lesson = {
+      lexis: [
+        item({
+          id: "v1",
+          word: "hello",
+          meaning_vi: "xin chào",
+          example_en: "Hello!",
+        }),
+      ],
+      fluency: {
+        items: [
+          { en: "Hello", vi: "Xin chào (phrase)" },
+          { en: "Good morning", vi: "Chào buổi sáng" },
+        ],
+      },
+    };
+    const rows = lessonToSeedVocab(lesson);
+    expect(rows.map((r) => r.word.toLowerCase())).toEqual([
+      "hello",
+      "good morning",
+    ]);
+    expect(rows[0].source).toBe("lexis");
+    expect(rows[0].meaning_vn).toBe("xin chào");
+    expect(rows[1].source).toBe("phrase");
+  });
+
+  it("mergeSeedVocab respects max across parts", () => {
+    const a = lexisToSeedVocab(
+      Array.from({ length: 5 }, (_, i) =>
+        item({
+          id: `a${i}`,
+          word: `a${i}`,
+          meaning_vi: `ma${i}`,
+          example_en: `ea${i}`,
+        }),
+      ),
+    );
+    const b = phrasesToSeedVocab(
+      Array.from({ length: 10 }, (_, i) => ({
+        en: `phrase ${i}`,
+        vi: `câu ${i}`,
+      })),
+    );
+    expect(mergeSeedVocab([a, b], 8)).toHaveLength(8);
+  });
+
+  it("seeds real lesson with lexis + fluency (≥ lexis count)", () => {
+    const lesson = getLessonV2("l-a0-01");
+    expect(lesson).not.toBeNull();
+    if (!lesson) return;
+    const rows = lessonToSeedVocab(lesson);
+    expect(rows.length).toBeGreaterThanOrEqual(lesson.lexis.length);
+    expect(rows.length).toBeLessThanOrEqual(V2_SEED_LEXIS_MAX);
+    const phraseCount = rows.filter((r) => r.source === "phrase").length;
+    expect(phraseCount).toBeGreaterThan(0);
+    expect(rows.every((r) => r.word && r.meaning_vn)).toBe(true);
   });
 });
 
