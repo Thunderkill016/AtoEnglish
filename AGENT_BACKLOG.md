@@ -2127,10 +2127,11 @@
 - **Completed:** 2026-07-15 — feat(v2): l-b1-06 process language first/then/after that/finally; L1 100%; SOP/install dialogues; spiral b1-05; path after l-b1-05; registry + tests; lint+233t pass; commit `c67885e` (push blocked: GitHub archive + GitLab key)
 
 ### TASK-302 — Author l-b1-07 Mô tả người & nơi
-- **Status:** `in_progress`
+- **Status:** `done`
 - **Mô tả:** B1 describe people & places (appearance, personality, location); work/life; spiral b1-06 process.
 - **Done khi:** schema + registry + path; tests pass.
 - **Started:** 2026-07-15 — autopilot (PHASE1: docs+l-b1-06+path+schema; PHASE2: PLAN; PHASE3: author l-b1-07)
+- **Completed:** 2026-07-15 — feat(v2): l-b1-07 describe people & places (look/look like/located); L1 100%; teammate/office dialogues; spiral b1-06; path after l-b1-06; registry + tests; lint+233t pass; commit `36a9f8c` (push blocked: GitHub archive + GitLab key)
 
 ### TASK-303 — Author l-b1-08 Sở thích & ý kiến
 - **Status:** `ready`
@@ -2148,6 +2149,7 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
+| 2026-07-15 | TASK-302 | feat(v2): l-b1-07 describe people & places look/look like/located; teammate/office; spiral b1-06; path after b1-06 | done — 36a9f8c (push blocked: GitHub archive + GitLab key) |
 | 2026-07-15 | TASK-301 | feat(v2): l-b1-06 process language first/then/after that/finally; SOP/how-to; spiral b1-05; path after b1-05 | done — c67885e (push blocked: GitHub archive + GitLab key) |
 | 2026-07-15 | TASK-301 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-15 | TASK-302 | auto-refill từ AGENT_ROADMAP.md | ready |
