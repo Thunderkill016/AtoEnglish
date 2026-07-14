@@ -2167,10 +2167,12 @@
 
 
 ### TASK-307 — Author l-b1-12 Sức khỏe & xã hội
-- **Status:** `in_progress`
+- **Status:** `done`
 - **Mô tả:** B1 health & social language (symptoms, advice should/ought to, social plans); work wellness + life; spiral b1-11 problem–solution.
 - **Done khi:** schema + registry + sequential path after l-b1-11; lint+test.
 - **Started:** 2026-07-15 — autopilot (PHASE1: docs+l-b1-11+path+schema; PHASE2: PLAN; PHASE3: author l-b1-12)
+- **Completed:** 2026-07-15 — feat(v2): l-b1-12 health & social should/ought to + plans; work wellness; spiral b1-11; path after l-b1-11; registry + tests; lint+233t pass; commit `9a71a7c` (push blocked: GitHub archive + GitLab key)
+
 
 
 ### TASK-308 — Author l-b1-13 Giao tiếp công sở
@@ -2195,7 +2197,7 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
-| 2026-07-15 | TASK-307 | auto-refill từ AGENT_ROADMAP.md | ready |
+| 2026-07-15 | TASK-307 | feat(v2): l-b1-12 health & social should/ought to + plans; work wellness; spiral b1-11 | done — 9a71a7c (push blocked: GitHub archive + GitLab key) |
 | 2026-07-15 | TASK-308 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-15 | TASK-309 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-15 | TASK-303 | feat(v2): l-b1-08 likes/dislikes + I think/in my opinion/prefer + soft disagree; tool/standup; spiral b1-07; path after b1-07 | done — 24c73d2 (push blocked: GitHub archive + GitLab key) |
