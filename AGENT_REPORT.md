@@ -9,7 +9,7 @@
 |-----|---------|
 | Daemon | **running (systemd)** |
 | Deploy Vercel | check after push |
-| Commit mới nhất | TASK-309 l-b1-14 (pending SHA) |
+| Commit mới nhất | `6a9f274` feat(v2): l-b1-14 B1 gate |
 | Task đang làm | none (TASK-309 just finished) |
 | Task ready còn lại | refill if &lt;2 |
 | Agent vừa xong | TASK-309 |

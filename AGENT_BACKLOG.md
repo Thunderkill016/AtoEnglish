@@ -2188,7 +2188,7 @@
 - **Mô tả:** B1 gate review spiral + freer task; marks end B1 / “dùng được” independent user outcome; spiral b1-01..13 light.
 - **Done khi:** B1 14/14 authored; path ends at l-b1-14; tests pass.
 - **Started:** 2026-07-15 — autopilot (PHASE1: a2-08 gate template + b1 spines + path CORE_END; PHASE2: PLAN; PHASE3: author l-b1-14)
-- **Completed:** 2026-07-15 — feat(v2): l-b1-14 B1 gate review spiral + freer; spiral b1-01..13 light; path ends CORE_END; registry 42/42; lint+233t pass
+- **Completed:** 2026-07-15 — feat(v2): l-b1-14 B1 gate review spiral + freer; spiral b1-01..13 light; path ends CORE_END; registry 42/42; lint+233t pass; commit `6a9f274` (push blocked: GitHub archive + GitLab key)
 
 
 ---
@@ -2202,7 +2202,7 @@
 |------|------|--------|--------|
 | 2026-07-15 | TASK-307 | feat(v2): l-b1-12 health & social should/ought to + plans; work wellness; spiral b1-11 | done — 9a71a7c (push blocked: GitHub archive + GitLab key) |
 | 2026-07-15 | TASK-308 | feat(v2): l-b1-13 workplace meetings/email/updates/soft disagree; spiral b1-12 | done — f68040b (push blocked: GitHub archive + GitLab key) |
-| 2026-07-15 | TASK-309 | feat(v2): l-b1-14 B1 gate review spiral + freer “dùng được”; spiral b1-01..13 light; CORE_END complete 42/42 | done — (SHA pending commit) |
+| 2026-07-15 | TASK-309 | feat(v2): l-b1-14 B1 gate review spiral + freer “dùng được”; spiral b1-01..13 light; CORE_END complete 42/42 | done — 6a9f274 (push blocked: GitHub archive + GitLab key) |
 | 2026-07-15 | TASK-303 | feat(v2): l-b1-08 likes/dislikes + I think/in my opinion/prefer + soft disagree; tool/standup; spiral b1-07; path after b1-07 | done — 24c73d2 (push blocked: GitHub archive + GitLab key) |
 | 2026-07-15 | TASK-304 | feat(v2): l-b1-09 get/have done + Could you/Would you mind; work print/fix; spiral b1-08; path after b1-08 | done — f5dbc53 (push blocked: GitHub archive + GitLab key) |
 | 2026-07-15 | TASK-305 | feat(v2): l-b1-10 PPC have been + V-ing / for/since; career stretch; spiral b1-09; path after b1-09 | done — bfae6c3 (push blocked: GitHub archive + GitLab key) |
