@@ -108,6 +108,36 @@ describe("TASK-277 Me hub B1 copy", () => {
     expect(hrefs).toContain("/learn");
     expect(hrefs).toContain("/roadmap");
   });
+
+  it("TASK-316: v2 soft-hides leaderboard from Me more + explore", async () => {
+    vi.stubEnv("NEXT_PUBLIC_CURRICULUM_V2", "1");
+    vi.resetModules();
+    const { getMeHubMore } = await import("@/lib/constants/me-hub");
+    const { getDashboardExploreActions } = await import(
+      "@/lib/constants/navigation"
+    );
+    expect(getMeHubMore().some((i) => i.href === "/leaderboard")).toBe(false);
+    expect(
+      getDashboardExploreActions("/learn/v2/l-a0-01").some(
+        (i) => i.href === "/leaderboard",
+      ),
+    ).toBe(false);
+  });
+
+  it("TASK-316: v2 off keeps leaderboard on Me + explore", async () => {
+    vi.stubEnv("NEXT_PUBLIC_CURRICULUM_V2", "");
+    vi.resetModules();
+    const { getMeHubMore } = await import("@/lib/constants/me-hub");
+    const { getDashboardExploreActions } = await import(
+      "@/lib/constants/navigation"
+    );
+    expect(getMeHubMore().some((i) => i.href === "/leaderboard")).toBe(true);
+    expect(
+      getDashboardExploreActions("/learn/unit-1").some(
+        (i) => i.href === "/leaderboard",
+      ),
+    ).toBe(true);
+  });
 });
 
 describe("TASK-310 path sequential unlock + full registry", () => {

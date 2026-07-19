@@ -11,9 +11,9 @@ import {
 } from "@/components/design-system";
 import {
   getMeHubStudy,
+  getMeHubMore,
   ME_HUB_OUTCOME_LINE,
   meHubAccount,
-  meHubMore,
   meHubPractice,
 } from "@/lib/constants/me-hub";
 
@@ -27,6 +27,7 @@ const ROW_ATO =
 
 export default function MeClient({ userName, subtitle }: MeClientProps) {
   const studyItems = getMeHubStudy();
+  const moreItems = getMeHubMore();
   const defaultSubtitle = `Chào ${userName} · ${ME_HUB_OUTCOME_LINE}`;
 
   return (
@@ -76,7 +77,7 @@ export default function MeClient({ userName, subtitle }: MeClientProps) {
 
         <ListSection title="Khám phá">
           <Surface className="space-y-2 p-2">
-            {meHubMore.map((item) => (
+            {moreItems.map((item) => (
               <PrimaryRow
                 key={item.href}
                 href={item.href}

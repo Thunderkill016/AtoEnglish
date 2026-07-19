@@ -16,6 +16,7 @@ import { AchievementsPanel } from "@/components/gamification/AchievementsPanel";
 import { ActivityHeatmap } from "@/components/progress/ActivityHeatmap";
 import ProgressClient from "./ProgressClient";
 import StreakStats from "@/features/streak/components/StreakStats";
+import { isCurriculumV2 } from "@/lib/v2/flag";
 
 export const dynamic = "force-dynamic";
 
@@ -167,13 +168,15 @@ export default async function ProgressPage() {
       </Surface>
 
       <Surface className="space-y-2 p-2">
-        <PrimaryRow
-          href="/leaderboard"
-          label="Bảng xếp hạng"
-          description="Top học viên theo XP tuần này"
-          icon={Trophy}
-          className={rowAto}
-        />
+        {!isCurriculumV2() && (
+          <PrimaryRow
+            href="/leaderboard"
+            label="Bảng xếp hạng"
+            description="Top học viên theo XP tuần này"
+            icon={Trophy}
+            className={rowAto}
+          />
+        )}
         <PrimaryRow
           href="/progress/weekly"
           label="Báo cáo tuần"

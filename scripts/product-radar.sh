@@ -17,16 +17,17 @@ RADAR_JSON="${RADAR_JSON:-$LOG_DIR/product-radar-$UTC.json}"
 LATEST_MD="$LOG_DIR/product-radar-latest.md"
 LATEST_JSON="$LOG_DIR/product-radar-latest.json"
 
+# path|expect|label|critical — critical=1 → non-zero exit if fail (orchestrator)
 PATHS=(
   "/|200|Landing|1"
   "/login|200|Login|1"
   "/home|200|Home v2|1"
-  "/path|200|Path B1|0"
+  "/path|200|Path B1|1"
   "/learn|200|Learn list|1"
   "/speaking|200|Speaking hub|1"
   "/dashboard|200|Dashboard|1"
-  "/me|200|Me hub|0"
-  "/flashcards|200|Flashcards|0"
+  "/me|200|Me hub|1"
+  "/flashcards|200|Flashcards|1"
   "/learn/v2/l-a0-01|200|V2 pilot l-a0-01|1"
   "/learn/v2/l-a1-01|200|V2 pilot l-a1-01|1"
   "/learn/v2/l-a1-02|200|V2 A1 personal info|0"
@@ -102,19 +103,25 @@ done
   echo
   echo "## Planner notes"
   echo
-  echo "- UI Ato Surface: shell 260–261 done; queue Home/Learn/Speak 262–264"
-  echo "- V2 content: P0 complete + a1-01/02; next a1-03+"
-  echo "- Quiz floor ≥50% in player — verify on prod after deploy"
+  echo "- **Critical paths:** landing, login, home, **/path**, learn, speaking, dashboard, **/me**, **/flashcards**, v2 pilot lessons"
+  echo "- **/path** = B1 sequential path (A0→B1 42 lessons) — FAIL here blocks cutover"
+  echo "- **/me** hub: study/practice/account groups (Hick shell)"
+  echo "- **/flashcards** SRS review surface (guest local deck + auth cards)"
+  echo "- V2 CORE_PATH 42/42 authored; progress SSOT localStorage \`ato_v2_progress\` when Supabase down"
+  echo "- Quiz floor ≥50% in LessonPlayerV2 — verify on prod after deploy"
   echo "- No schema/auth/FSRS/RLS changes from radar alone"
   echo
   echo "## Suggested next focus"
   echo
-  if [[ "$FAIL" -gt 0 ]]; then
-    echo "1. **P0** Fix critical HTTP fails"
-    echo "2. Then UI 262–264 + A1 content"
+  if [[ -s "$TMP_CRIT" ]]; then
+    echo "1. **P0** Fix **critical** HTTP fails (exit non-zero)"
+    echo "2. Re-run \`npm run radar\` until FAIL=0"
+  elif [[ "$FAIL" -gt 0 ]]; then
+    echo "1. Fix non-critical fails"
+    echo "2. Keep critical green"
   else
-    echo "1. Prod smoke green — **TASK-262 Home** → Learn → Speak chrome"
-    echo "2. Content factory **l-a1-03+**"
+    echo "1. Prod smoke green — path/me/flashcards critical OK"
+    echo "2. Continue backlog ready tasks (E2E guest complete, soft gamify)"
   fi
   echo
   echo "---"
@@ -143,4 +150,10 @@ cp -f "$RADAR_JSON" "$LATEST_JSON"
 log "DONE PASS=$PASS WARN=$WARN FAIL=$FAIL → $RADAR_OUT"
 echo "RADAR_OUT=$RADAR_OUT"
 echo "PASS=$PASS WARN=$WARN FAIL=$FAIL"
+
+# Orchestrator / CI: fail when any critical path is down
+if [[ -s "$TMP_CRIT" ]]; then
+  log "CRITICAL fails present — exit 1"
+  exit 1
+fi
 exit 0

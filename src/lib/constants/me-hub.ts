@@ -34,7 +34,9 @@ export function getMeHubStudy(): MeHubItem[] {
     {
       href: "/progress",
       label: "Tiến độ",
-      description: `XP, streak · hướng ${CORE_OUTCOME_CEFR} Independent`,
+      description: v2
+        ? `Streak & mục tiêu ngày · hướng ${CORE_OUTCOME_CEFR}`
+        : `XP, streak · hướng ${CORE_OUTCOME_CEFR} Independent`,
       icon: TrendingUp,
     },
     {
@@ -84,32 +86,41 @@ export const meHubPractice: MeHubItem[] = [
   },
 ];
 
-export const meHubMore: MeHubItem[] = [
-  {
-    href: "/leaderboard",
-    label: "Bảng xếp hạng",
-    description: "Top XP tuần này",
-    icon: Trophy,
-  },
-  {
-    href: "/business",
-    label: "Business English",
-    description: "Tiếng Anh công sở (sau B1)",
-    icon: Briefcase,
-  },
-  {
-    href: "/grammar",
-    label: "Ngữ pháp",
-    description: "Chủ điểm A0–B1",
-    icon: BookOpen,
-  },
-  {
-    href: "/pronunciation",
-    label: "Phát âm IPA",
-    description: "44 âm tiếng Anh",
-    icon: Mic,
-  },
-];
+/** Secondary practice extras — soft-hide league/XP leaderboard when curriculum v2 (TASK-316) */
+export function getMeHubMore(): MeHubItem[] {
+  const items: MeHubItem[] = [
+    {
+      href: "/business",
+      label: "Business English",
+      description: "Tiếng Anh công sở (sau B1)",
+      icon: Briefcase,
+    },
+    {
+      href: "/grammar",
+      label: "Ngữ pháp",
+      description: "Chủ điểm A0–B1",
+      icon: BookOpen,
+    },
+    {
+      href: "/pronunciation",
+      label: "Phát âm IPA",
+      description: "44 âm tiếng Anh",
+      icon: Mic,
+    },
+  ];
+  if (!isCurriculumV2()) {
+    items.unshift({
+      href: "/leaderboard",
+      label: "Bảng xếp hạng",
+      description: "Top XP tuần này",
+      icon: Trophy,
+    });
+  }
+  return items;
+}
+
+/** @deprecated Prefer getMeHubMore() — snapshot at first access */
+export const meHubMore: MeHubItem[] = getMeHubMore();
 
 export const meHubAccount: MeHubItem[] = [
   {

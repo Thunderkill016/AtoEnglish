@@ -16,6 +16,7 @@ import SrsCard from "./SrsCard";
 import QuickActions from "./QuickActions";
 import WordOfDayCard from "./WordOfDayCard";
 import LeagueCard from "./LeagueCard";
+import { isCurriculumV2 } from "@/lib/v2/flag";
 import SpeakingFeedCard from "./SpeakingFeedCard";
 import LevelUpModal from "@/components/learn/LevelUpModal";
 import { WidgetErrorBoundary } from "@/components/ui/widget-error-boundary";
@@ -612,9 +613,12 @@ export default function DashboardClient({
               </WidgetErrorBoundary>
             )}
 
-            <WidgetErrorBoundary name="LeagueCard">
-              <LeagueCard />
-            </WidgetErrorBoundary>
+            {/* TASK-316: soft-hide league hype when curriculum v2 */}
+            {!isCurriculumV2() && (
+              <WidgetErrorBoundary name="LeagueCard">
+                <LeagueCard />
+              </WidgetErrorBoundary>
+            )}
             {wordOfDay && (
               <WidgetErrorBoundary name="WordOfDay">
                 <WordOfDayCard

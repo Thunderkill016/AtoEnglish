@@ -2208,10 +2208,11 @@
 
 
 ### TASK-312 — product-radar: mark /path critical + add /me /flashcards smoke notes
-- **Status:** `ready`
+- **Status:** `done`
 - **Mô tả:** Raise /path critical flag in product-radar.sh PATHS; document PASS baseline; ensure orchestrator can fail on critical path 404.
 - **Done khi:** radar script updated; product-radar PASS on live; package.json script if missing.
-- **Started:** auto-refill
+- **Started:** 2026-07-20 — resume after CI FluencyItem break
+- **Completed:** 2026-07-20 — `/path` `/me` `/flashcards` critical=1; planner notes; exit 1 on critical fails; npm run radar already exists
 
 ### TASK-313 — Apply blocked user_v2_lesson_progress migration (retry TASK-287)
 - **Status:** `blocked`
@@ -2231,16 +2232,18 @@
 - **Commit:** `7e84170` (push blocked: GitHub archive + GitLab publickey)
 
 ### TASK-315 — E2E smoke guest → v2 lesson complete (quiz floor)
-- **Status:** `ready`
+- **Status:** `done`
 - **Mô tả:** Playwright: guest opens /learn/v2/l-a0-01 (or pilot), completes task gate + quiz ≥50%, sees complete CTA; progress key ato_v2_progress updated. Skip if no browser CI.
 - **Done khi:** e2e spec green locally (or documented skip); lint+test unit suite green.
-- **Started:** auto-refill
+- **Started:** 2026-07-20 — resume codex/autopilot unfinished
+- **Completed:** 2026-07-20 — `e2e/learn-v2-smoke.spec.ts` asserts localStorage `ato_v2_progress` has `l-a1-01` after complete; unit suite green
 
 ### TASK-316 — Soft-hide gamification noise when curriculum v2 flag ON
-- **Status:** `ready`
+- **Status:** `done`
 - **Mô tả:** When isCurriculumV2(), soften/hide league/leaderboard/badge hype on home/dashboard secondary surfaces; keep honest daily goal + streak. Match vibrant dark Ato, no redesign.
 - **Done khi:** v2 flag surfaces less gamify noise; unit or component smoke; lint+test.
-- **Started:** auto-refill
+- **Started:** 2026-07-20 — resume codex/autopilot unfinished
+- **Completed:** 2026-07-20 — hide LeagueCard + leaderboard rows on Me/progress/explore when v2; navigation-v2 tests; 255t
 
 
 ---
@@ -2252,6 +2255,7 @@
 
 | Date | Task | Result | Commit |
 |------|------|--------|--------|
+| 2026-07-20 | TASK-312+315+316 | FluencyItem export fix; radar critical path/me/flashcards; e2e progress key; soft-hide league | done — pending SHA |
 | 2026-07-15 | TASK-314 | seed lexis+phrases local+auth FSRS; flashcards guest fallback; 253t | done — 7e84170 (push blocked) |
 | 2026-07-15 | TASK-315 | auto-refill từ AGENT_ROADMAP.md | ready |
 | 2026-07-15 | TASK-316 | auto-refill từ AGENT_ROADMAP.md | ready |

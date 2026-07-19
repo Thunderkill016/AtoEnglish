@@ -119,5 +119,15 @@ test.describe("v2 lesson guest smoke — l-a1-01", () => {
       /Hoàn thành/i,
     );
     await expect(page.getByTestId("lesson-complete")).toContainText(/5\/5/);
+
+    // TASK-315: guest SSOT progress key updated after mark-complete
+    const progressRaw = await page.evaluate(() =>
+      localStorage.getItem("ato_v2_progress"),
+    );
+    expect(progressRaw).toBeTruthy();
+    const progress = JSON.parse(progressRaw!) as {
+      completed?: Record<string, unknown>;
+    };
+    expect(progress.completed?.["l-a1-01"]).toBeTruthy();
   });
 });

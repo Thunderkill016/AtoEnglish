@@ -167,7 +167,7 @@ export const mobilePanelGroups: NavGroup[] = [
 
 /** Secondary shortcuts at bottom of dashboard (explore, not daily loop) */
 export function getDashboardExploreActions(unitRoute: string): NavItem[] {
-  return [
+  const actions: NavItem[] = [
     {
       title: "Học 10 phút",
       href: unitRoute,
@@ -192,13 +192,17 @@ export function getDashboardExploreActions(unitRoute: string): NavItem[] {
       icon: Mic,
       description: "IPA drills",
     },
-    {
+  ];
+  // TASK-316: soft-hide XP leaderboard noise when curriculum v2
+  if (!isCurriculumV2()) {
+    actions.push({
       title: "Bảng xếp hạng",
       href: "/leaderboard",
       icon: Trophy,
       description: "XP leaderboard",
-    },
-  ];
+    });
+  }
+  return actions;
 }
 
 // ─── Legacy export — backward compat for components importing mainNavItems ────
