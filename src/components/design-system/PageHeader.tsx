@@ -2,7 +2,6 @@ import { cn } from "@/lib/utils";
 import { ATO_EYEBROW } from "@/lib/ui/ato-surface";
 
 export interface PageHeaderProps {
-  /** Small uppercase label above title */
   eyebrow?: string;
   title: string;
   subtitle?: string;
@@ -10,7 +9,7 @@ export interface PageHeaderProps {
   className?: string;
 }
 
-/** Consistent page title block (Home / hub screens). */
+/** Page title block — semantic foreground colors (shadcn tokens). */
 export function PageHeader({
   eyebrow,
   title,
@@ -25,13 +24,13 @@ export function PageHeader({
         className,
       )}
     >
-      <div className="space-y-2 min-w-0">
+      <div className="min-w-0 space-y-1.5">
         {eyebrow ? <p className={ATO_EYEBROW}>{eyebrow}</p> : null}
-        <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-zinc-50">
+        <h1 className="text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
           {title}
         </h1>
         {subtitle ? (
-          <p className="text-sm text-zinc-400 leading-relaxed max-w-md">
+          <p className="max-w-md text-sm leading-relaxed text-muted-foreground">
             {subtitle}
           </p>
         ) : null}

@@ -6,10 +6,10 @@ import { LogOut, Sprout } from "lucide-react";
 
 import { MainNavRow } from "@/components/layout/main-nav";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
-import { AppButton } from "@/components/design-system";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { isLessonChromeHidden } from "@/lib/ui/lesson-chrome";
+import { getPrimaryLearnHref } from "@/lib/constants/navigation";
 import { signOut } from "@/app/actions/auth";
-import { ATO_FOCUS } from "@/lib/ui/ato-surface";
 import { cn } from "@/lib/utils";
 
 type HeaderShellProps = {
@@ -18,29 +18,30 @@ type HeaderShellProps = {
   fullName?: string;
 };
 
-/** Ato Surface header — glass bar, brand mark, desktop tabs, auth */
+/** Product header — shadcn tokens + primary learn href */
 export function HeaderShell({ user, fullName }: HeaderShellProps) {
   const pathname = usePathname();
   if (isLessonChromeHidden(pathname)) return null;
 
+  const homeHref = getPrimaryLearnHref();
+
   return (
     <header
       className={cn(
-        "sticky top-0 z-50 w-full border-b border-white/10",
-        "bg-zinc-950/85 backdrop-blur-xl",
-        "shadow-[0_4px_24px_-8px_rgba(0,0,0,0.45)]",
+        "sticky top-0 z-50 w-full border-b border-border/80",
+        "bg-background/90 backdrop-blur-md supports-[backdrop-filter]:bg-background/75",
       )}
     >
       <div className="mx-auto flex h-14 max-w-[var(--minimal-content-max)] items-center justify-between gap-4 px-4 sm:px-6">
         <div className="flex min-w-0 items-center gap-6">
           <Link
-            href="/dashboard"
-            className={cn("flex shrink-0 items-center gap-2 rounded-xl", ATO_FOCUS)}
+            href={homeHref}
+            className="flex shrink-0 items-center gap-2 rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
           >
-            <span className="flex size-8 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-teal-500 text-zinc-950 shadow-md shadow-emerald-900/30">
+            <span className="flex size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-sm">
               <Sprout className="size-4" strokeWidth={2.4} />
             </span>
-            <span className="hidden text-sm font-black tracking-tight text-zinc-50 sm:inline">
+            <span className="hidden text-sm font-semibold tracking-tight text-foreground sm:inline">
               AtoEnglish
             </span>
           </Link>
@@ -52,29 +53,29 @@ export function HeaderShell({ user, fullName }: HeaderShellProps) {
           {user ? (
             <>
               {fullName && (
-                <span className="hidden max-w-[120px] truncate text-xs font-medium text-zinc-400 md:inline">
+                <span className="hidden max-w-[120px] truncate text-xs font-medium text-muted-foreground md:inline">
                   {fullName}
                 </span>
               )}
               <form action={signOut}>
-                <button
+                <Button
                   type="submit"
-                  className={cn(
-                    "flex size-9 items-center justify-center rounded-xl text-zinc-400 transition-colors",
-                    "hover:bg-white/5 hover:text-zinc-100",
-                    ATO_FOCUS,
-                  )}
+                  variant="ghost"
+                  size="icon"
                   title="Đăng xuất"
                   aria-label="Đăng xuất"
                 >
                   <LogOut className="size-4" />
-                </button>
+                </Button>
               </form>
             </>
           ) : (
-            <AppButton href="/login?mode=login" variant="secondary" size="sm" className="!min-h-9">
+            <Link
+              href="/login?mode=login"
+              className={cn(buttonVariants({ variant: "outline", size: "sm" }))}
+            >
               Đăng nhập
-            </AppButton>
+            </Link>
           )}
         </div>
       </div>

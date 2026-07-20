@@ -32,8 +32,8 @@ interface AppButtonAsLink extends AppButtonBase {
 export type AppButtonProps = AppButtonAsButton | AppButtonAsLink;
 
 /**
- * Primary product CTA — Ato Surface (emerald/teal gradient).
- * Prefer this over one-off Tailwind buttons on new screens.
+ * Compat CTA — shadcn-aligned tokens.
+ * Prefer `import { Button } from "@/components/ui/button"` for new code.
  */
 export function AppButton({
   variant = "primary",

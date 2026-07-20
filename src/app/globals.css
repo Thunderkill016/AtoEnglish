@@ -136,17 +136,17 @@
   --minimal-content-max: 680px;
   --minimal-motion-ms: 200ms;
 
-  /* Ato Surface (UI redesign 2026-07) — glass + brand; see docs/UI_SYSTEM.md */
-  --ato-canvas: #09090b; /* zinc-950 */
-  --ato-surface: rgb(255 255 255 / 0.05);
-  --ato-surface-border: rgb(255 255 255 / 0.1);
-  --ato-radius-card: 1.5rem; /* 24px ~ rounded-3xl */
-  --ato-radius-btn: 1rem;
+  /* Deprecated Ato Surface tokens — do not use in new code (see docs/design/UI_SYSTEM.md) */
+  --ato-canvas: var(--background);
+  --ato-surface: var(--card);
+  --ato-surface-border: var(--border);
+  --ato-radius-card: var(--radius);
+  --ato-radius-btn: var(--radius);
   --ato-touch: 2.75rem;
-  --ato-content-max: 32rem; /* max-w-lg Home */
-  --ato-motion-ms: 220ms;
-  --ato-glow-emerald: rgb(16 185 129 / 0.1);
-  --ato-glow-teal: rgb(20 184 166 / 0.08);
+  --ato-content-max: var(--minimal-content-max);
+  --ato-motion-ms: 200ms;
+  --ato-glow-emerald: transparent;
+  --ato-glow-teal: transparent;
 }
 
 .dark {

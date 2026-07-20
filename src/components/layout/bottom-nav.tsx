@@ -6,14 +6,13 @@ import { motion } from "framer-motion";
 
 import { isLessonChromeHidden } from "@/lib/ui/lesson-chrome";
 import { getBottomNavItems } from "@/lib/constants/navigation";
-import { ATO_FOCUS } from "@/lib/ui/ato-surface";
 import { cn } from "@/lib/utils";
 
 interface BottomNavProps {
   dueCardsCount?: number;
 }
 
-/** BottomNav — Mobile Ato Surface tab bar (sm: and below). */
+/** Bottom nav — shadcn semantic tokens (mobile) */
 export function BottomNav({ dueCardsCount = 0 }: BottomNavProps) {
   const pathname = usePathname();
   if (isLessonChromeHidden(pathname)) return null;
@@ -24,8 +23,7 @@ export function BottomNav({ dueCardsCount = 0 }: BottomNavProps) {
     <nav
       className={cn(
         "fixed bottom-0 left-0 right-0 z-50 flex h-16 items-stretch justify-around sm:hidden",
-        "border-t border-white/10 bg-zinc-950/90 backdrop-blur-xl",
-        "shadow-[0_-8px_32px_-8px_rgba(0,0,0,0.55)]",
+        "border-t border-border bg-background/95 backdrop-blur-md supports-[backdrop-filter]:bg-background/80",
       )}
       aria-label="Điều hướng chính"
       style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
@@ -47,13 +45,13 @@ export function BottomNav({ dueCardsCount = 0 }: BottomNavProps) {
             aria-label={item.description ?? item.title}
             className={cn(
               "group relative flex flex-1 flex-col items-center justify-center py-1 select-none",
-              ATO_FOCUS,
+              "outline-none focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background",
             )}
           >
             {isActive && (
               <motion.div
                 layoutId="activeBottomTabPill"
-                className="absolute inset-x-1.5 top-1 bottom-1 -z-10 rounded-xl border border-emerald-500/25 bg-emerald-500/15 shadow-[0_0_20px_-4px_rgba(16,185,129,0.45)]"
+                className="absolute inset-x-1.5 top-1 bottom-1 -z-10 rounded-lg bg-primary/12 ring-1 ring-primary/20"
                 transition={{ type: "spring", stiffness: 400, damping: 32 }}
               />
             )}
@@ -61,10 +59,10 @@ export function BottomNav({ dueCardsCount = 0 }: BottomNavProps) {
             <span className="relative flex items-center justify-center">
               <span
                 className={cn(
-                  "flex size-6 items-center justify-center rounded-lg transition-all duration-200",
+                  "flex size-6 items-center justify-center rounded-md transition-colors duration-200",
                   isActive
-                    ? "scale-110 text-emerald-400"
-                    : "text-zinc-500 group-hover:scale-105 group-hover:text-zinc-200",
+                    ? "text-primary"
+                    : "text-muted-foreground group-hover:text-foreground",
                 )}
               >
                 <Icon className="size-5" strokeWidth={isActive ? 2.2 : 1.8} />
@@ -74,7 +72,7 @@ export function BottomNav({ dueCardsCount = 0 }: BottomNavProps) {
                 <motion.span
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
-                  className="absolute -top-1 -right-1.5 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-red-500 px-0.5 text-[9px] font-black text-white shadow-sm shadow-red-500/30"
+                  className="absolute -top-1 -right-1.5 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-destructive px-0.5 text-[9px] font-bold text-white"
                 >
                   {dueCardsCount > 99 ? "99+" : dueCardsCount}
                 </motion.span>
@@ -83,10 +81,10 @@ export function BottomNav({ dueCardsCount = 0 }: BottomNavProps) {
 
             <span
               className={cn(
-                "mt-0.5 text-[9px] font-bold tracking-tight transition-all duration-200",
+                "mt-0.5 text-[9px] font-semibold tracking-tight transition-colors duration-200",
                 isActive
-                  ? "font-black text-emerald-400"
-                  : "text-zinc-500 group-hover:text-zinc-300",
+                  ? "text-primary"
+                  : "text-muted-foreground group-hover:text-foreground",
               )}
             >
               {item.title}

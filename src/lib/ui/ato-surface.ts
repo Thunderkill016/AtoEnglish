@@ -1,50 +1,45 @@
 /**
- * Ato Surface — design-system class maps (pure, unit-testable).
- * SSOT for glass surfaces + CTA variants. No React.
- * See docs/UI_SYSTEM.md
+ * Compat maps for legacy design-system components.
+ * SSOT for NEW UI: docs/design/UI_SYSTEM.md + src/components/ui (shadcn).
+ * Prefer semantic tokens (bg-card, bg-primary) over glass utilities.
  */
 
 export type SurfaceVariant = "default" | "interactive" | "success" | "warn" | "danger";
 export type AppButtonVariant = "primary" | "secondary" | "ghost" | "danger";
 export type AppButtonSize = "sm" | "md" | "lg";
 
-/** Soft glass card (zinc-950 dark brand). */
+/** Card-like panels — shadcn Card language (no heavy glass). */
 export const SURFACE_VARIANT: Record<SurfaceVariant, string> = {
-  default:
-    "rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl shadow-[0_8px_40px_-12px_rgba(0,0,0,0.5)]",
+  default: "rounded-xl bg-card text-card-foreground ring-1 ring-foreground/10",
   interactive:
-    "rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl shadow-[0_8px_40px_-12px_rgba(0,0,0,0.5)] transition hover:border-emerald-500/30 hover:bg-white/[0.07] active:scale-[0.99]",
-  success:
-    "rounded-3xl border border-emerald-500/30 bg-emerald-500/10 backdrop-blur-xl",
-  warn: "rounded-3xl border border-amber-500/30 bg-amber-500/10 backdrop-blur-xl",
-  danger:
-    "rounded-3xl border border-red-500/30 bg-red-500/10 backdrop-blur-xl",
+    "rounded-xl bg-card text-card-foreground ring-1 ring-foreground/10 transition hover:ring-primary/30 hover:bg-muted/40 active:scale-[0.99]",
+  success: "rounded-xl bg-primary/10 text-card-foreground ring-1 ring-primary/25",
+  warn: "rounded-xl bg-amber-500/10 text-card-foreground ring-1 ring-amber-500/25",
+  danger: "rounded-xl bg-destructive/10 text-card-foreground ring-1 ring-destructive/25",
 };
 
+/** Maps to shadcn Button intent (implemented via ui/button in AppButton). */
 export const APP_BUTTON_VARIANT: Record<AppButtonVariant, string> = {
-  primary:
-    "bg-gradient-to-r from-emerald-500 to-teal-500 text-zinc-950 font-black shadow-lg shadow-emerald-900/25 hover:brightness-110",
+  primary: "bg-primary text-primary-foreground hover:bg-primary/90 font-semibold shadow-sm",
   secondary:
-    "border border-white/15 bg-white/5 text-zinc-100 font-semibold hover:bg-white/10",
-  ghost: "bg-transparent text-zinc-300 font-semibold hover:bg-white/5",
+    "border border-border bg-background text-foreground hover:bg-muted font-medium",
+  ghost: "bg-transparent text-muted-foreground hover:bg-muted hover:text-foreground font-medium",
   danger:
-    "border border-red-500/40 bg-red-500/15 text-red-200 font-bold hover:bg-red-500/25",
+    "border border-destructive/30 bg-destructive/10 text-destructive hover:bg-destructive/20 font-semibold",
 };
 
 export const APP_BUTTON_SIZE: Record<AppButtonSize, string> = {
-  sm: "min-h-10 px-3.5 text-xs rounded-xl gap-1.5",
-  md: "min-h-11 px-5 text-sm rounded-2xl gap-2",
-  lg: "min-h-12 px-6 text-sm rounded-2xl gap-2",
+  sm: "min-h-9 h-9 px-3 text-xs rounded-lg gap-1.5",
+  md: "min-h-10 h-10 px-4 text-sm rounded-lg gap-2",
+  lg: "min-h-11 h-11 px-5 text-sm rounded-lg gap-2",
 };
 
-/** Shared focus ring (a11y). */
 export const ATO_FOCUS =
-  "outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/50 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950";
+  "outline-none focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background";
 
-/** Label / eyebrow style used on Home + shells. */
 export const ATO_EYEBROW =
-  "text-[11px] font-bold uppercase tracking-widest text-emerald-400";
+  "text-[11px] font-semibold uppercase tracking-widest text-primary";
 
-/** Soft ambient brand glows (optional Screen prop). */
+/** Soft brand wash — optional, keep subtle (not full glass stack). */
 export const ATO_AMBIENT =
-  "pointer-events-none absolute top-0 right-0 -z-10 h-[280px] w-[50vw] max-w-[360px] rounded-full bg-emerald-500/10 blur-[100px]";
+  "pointer-events-none absolute top-0 right-0 -z-10 h-[240px] w-[45vw] max-w-[320px] rounded-full bg-primary/10 blur-[90px]";

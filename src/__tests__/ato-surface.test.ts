@@ -8,17 +8,16 @@ import {
 } from "@/lib/ui/ato-surface";
 
 describe("Ato Surface tokens (TASK-260 / UI-01)", () => {
-  it("defines all surface variants with glass markers", () => {
+  it("defines all surface variants with card/ring markers (shadcn)", () => {
     for (const key of ["default", "interactive", "success", "warn", "danger"] as const) {
       expect(SURFACE_VARIANT[key]).toMatch(/rounded/);
       expect(SURFACE_VARIANT[key].length).toBeGreaterThan(20);
     }
-    expect(SURFACE_VARIANT.default).toMatch(/backdrop-blur/);
+    expect(SURFACE_VARIANT.default).toMatch(/bg-card|ring-/);
   });
 
-  it("primary button is brand gradient", () => {
-    expect(APP_BUTTON_VARIANT.primary).toMatch(/emerald/);
-    expect(APP_BUTTON_VARIANT.primary).toMatch(/teal|gradient/);
+  it("primary button uses primary token", () => {
+    expect(APP_BUTTON_VARIANT.primary).toMatch(/primary/);
   });
 
   it("has three sizes with min touch height classes", () => {
