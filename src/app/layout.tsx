@@ -124,9 +124,8 @@ export default function RootLayout({
         </a>
         <ThemeProvider
           attribute="class"
-          defaultTheme="light"
-          enableSystem={false}
-          storageKey="ato-theme-light-restore"
+          defaultTheme="system"
+          enableSystem
           disableTransitionOnChange
         >
           {children}
