@@ -12,60 +12,51 @@ import {
   ArrowRight,
   History,
 } from "lucide-react";
+import { Screen, PageHeader, AppButton } from "@/components/design-system";
+import { Badge } from "@/components/ui/badge";
 import {
-  Screen,
-  Surface,
-  AppButton,
-  PageHeader,
-  Chip,
-} from "@/components/design-system";
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { getRecentSpeakingSessions } from "@/app/actions/speaking";
 import { SpeakingSession } from "@/types/database";
 import { cn } from "@/lib/utils";
 
 const fade = {
-  initial: { opacity: 0, y: 10 },
+  initial: { opacity: 0, y: 8 },
   animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.35, ease: [0.22, 1, 0.36, 1] as const },
+  transition: { duration: 0.28, ease: [0.22, 1, 0.36, 1] as const },
 };
 
 const MODES = [
   {
     href: "/speaking/shadowing",
-    label: "Shadowing Practice",
-    description: "Nói đuổi theo audio — luyện nhịp & phát âm",
+    label: "Shadowing",
+    description: "Nói đuổi theo audio — nhịp & phát âm",
     icon: Volume2,
-    tone: "amber" as const,
   },
   {
     href: "/speaking/roleplay",
-    label: "AI Roleplay",
-    description: "Hội thoại nhập vai tình huống thực tế",
+    label: "Roleplay",
+    description: "Hội thoại tình huống thực tế",
     icon: MessageSquare,
-    tone: "violet" as const,
   },
   {
     href: "/speaking/journal",
-    label: "Daily Journal",
-    description: "Nhật ký nói tự do — phản xạ hàng ngày",
+    label: "Journal",
+    description: "Nhật ký nói tự do mỗi ngày",
     icon: Calendar,
-    tone: "teal" as const,
   },
   {
     href: "/speaking/phoneme",
-    label: "Phoneme Coach",
-    description: "Phân tích phát âm chi tiết (local VN L1)",
+    label: "Phoneme",
+    description: "Phân tích lỗi phát âm VN",
     icon: Sparkles,
-    tone: "emerald" as const,
   },
 ] as const;
-
-const TONE_ICON: Record<(typeof MODES)[number]["tone"], string> = {
-  amber: "bg-amber-500/15 border-amber-500/25 text-amber-300",
-  violet: "bg-violet-500/15 border-violet-500/25 text-violet-300",
-  teal: "bg-teal-500/15 border-teal-500/25 text-teal-300",
-  emerald: "bg-emerald-500/15 border-emerald-500/25 text-emerald-300",
-};
 
 export default function SpeakingClient() {
   const [historySessions, setHistorySessions] = useState<SpeakingSession[]>([]);
@@ -87,7 +78,7 @@ export default function SpeakingClient() {
             fromGuest = true;
           }
         } catch {
-          /* ignore corrupt local */
+          /* ignore */
         }
       }
       setHistorySessions(sessions);
@@ -99,198 +90,185 @@ export default function SpeakingClient() {
   const count = historySessions.length;
 
   return (
-    <Screen ato ambient>
+    <Screen ambient>
       <motion.div {...fade} className="mb-6 space-y-3">
-        <Chip tone="brand" className="tracking-widest">
-          <Mic className="size-3.5" aria-hidden />
-          Free speaking · không paywall
-        </Chip>
+        <Badge variant="secondary" className="gap-1.5">
+          <Mic className="size-3" aria-hidden />
+          Luyện nói
+        </Badge>
         <PageHeader
-          eyebrow="Luyện nói"
-          title="Nói được — không chỉ thuộc"
+          eyebrow="Nói được"
+          title="Luyện nói hàng ngày"
           subtitle={
             count > 0
-              ? `${count} buổi gần đây${guestLocal ? " (lưu trên máy — guest)" : ""}. Chọn một chế độ và nói to.`
-              : "Shadowing, roleplay, journal — guest cũng luyện được; lịch sử lưu local."
+              ? `${count} buổi gần đây${guestLocal ? " (máy này · guest)" : ""}. Chọn một chế độ và nói to.`
+              : "Shadowing · roleplay · journal — guest cũng luyện được."
           }
         />
       </motion.div>
 
-      {/* Primary CTA row */}
       <motion.div
         {...fade}
-        transition={{ ...fade.transition, delay: 0.05 }}
-        className="mb-5"
+        transition={{ ...fade.transition, delay: 0.04 }}
+        className="mb-4"
       >
-        <Surface
-          variant="success"
-          className="relative overflow-hidden border-emerald-500/30 bg-gradient-to-br from-emerald-500/15 via-teal-500/10 to-zinc-900/40 p-5"
-        >
-          <p className="mb-2 text-[11px] font-bold uppercase tracking-widest text-emerald-400/90">
-            Bắt đầu nhanh
-          </p>
-          <p className="mb-4 text-sm text-zinc-300">
-            Shadowing 5–10 phút mỗi ngày là cách bền vững nhất để cải thiện phát
-            âm và nhịp nói.
-          </p>
-          <AppButton href="/speaking/shadowing" fullWidth size="lg">
-            Vào Shadowing
-            <ArrowRight className="size-4" aria-hidden />
-          </AppButton>
-        </Surface>
+        <Card className="border-primary/20 bg-primary/5">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-base">Bắt đầu nhanh</CardTitle>
+            <CardDescription>
+              Shadowing 5–10 phút/ngày là cách bền vững để cải thiện phát âm.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <AppButton href="/speaking/shadowing" fullWidth size="lg">
+              Vào Shadowing
+              <ArrowRight className="size-4" aria-hidden />
+            </AppButton>
+          </CardContent>
+        </Card>
       </motion.div>
 
-      {/* IPA shortcut */}
       <motion.div
         {...fade}
-        transition={{ ...fade.transition, delay: 0.08 }}
+        transition={{ ...fade.transition, delay: 0.06 }}
         className="mb-6"
       >
-        <Surface variant="interactive" className="p-0">
-          <Link
-            href="/pronunciation"
-            className="flex min-h-12 items-center gap-3 px-4 py-3"
+        <Link href="/pronunciation" className="block group">
+          <Card
+            size="sm"
+            className="transition group-hover:bg-muted/40"
             data-testid="speaking-ipa-link"
           >
-            <span className="flex size-10 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-zinc-200">
-              <Mic className="size-4" aria-hidden />
-            </span>
-            <span className="min-w-0 flex-1">
-              <span className="block text-sm font-bold text-zinc-100">
-                Luyện 44 âm IPA
+            <CardContent className="flex min-h-12 items-center gap-3 py-3">
+              <span className="flex size-9 items-center justify-center rounded-lg bg-muted text-foreground">
+                <Mic className="size-4" aria-hidden />
               </span>
-              <span className="block text-xs text-zinc-500">
-                Nghe · ghi âm · so sánh native
+              <span className="min-w-0 flex-1">
+                <span className="block text-sm font-medium">Luyện 44 âm IPA</span>
+                <span className="block text-xs text-muted-foreground">
+                  Nghe · ghi âm · so sánh
+                </span>
               </span>
-            </span>
-            <ArrowRight className="size-4 shrink-0 text-zinc-500" aria-hidden />
-          </Link>
-        </Surface>
+              <ArrowRight className="size-4 text-muted-foreground" aria-hidden />
+            </CardContent>
+          </Card>
+        </Link>
       </motion.div>
 
-      {/* Mode cards */}
       <motion.section
         {...fade}
-        transition={{ ...fade.transition, delay: 0.12 }}
+        transition={{ ...fade.transition, delay: 0.1 }}
         className="mb-8 space-y-3"
         aria-label="Chế độ luyện nói"
       >
-        <h2 className="text-sm font-bold text-zinc-200">Chế độ luyện nói</h2>
+        <h2 className="text-sm font-semibold text-foreground">Chế độ</h2>
         <ul className="space-y-2">
           {MODES.map((mode) => {
             const Icon = mode.icon;
             return (
               <li key={mode.href}>
-                <Surface variant="interactive" className="p-0">
-                  <Link
-                    href={mode.href}
-                    className="flex min-h-14 items-center gap-3 px-4 py-3"
-                    data-testid={`speaking-mode-${mode.href.split("/").pop()}`}
-                  >
-                    <span
-                      className={cn(
-                        "flex size-10 shrink-0 items-center justify-center rounded-xl border",
-                        TONE_ICON[mode.tone],
-                      )}
-                    >
-                      <Icon className="size-4" aria-hidden />
-                    </span>
-                    <span className="min-w-0 flex-1">
-                      <span className="block text-sm font-bold text-zinc-50">
-                        {mode.label}
+                <Link
+                  href={mode.href}
+                  className="block group"
+                  data-testid={`speaking-mode-${mode.href.split("/").pop()}`}
+                >
+                  <Card size="sm" className="transition group-hover:bg-muted/40">
+                    <CardContent className="flex min-h-14 items-center gap-3 py-3">
+                      <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                        <Icon className="size-4" aria-hidden />
                       </span>
-                      <span className="block text-xs text-zinc-500">
-                        {mode.description}
+                      <span className="min-w-0 flex-1">
+                        <span className="block text-sm font-medium text-foreground">
+                          {mode.label}
+                        </span>
+                        <span className="block text-xs text-muted-foreground">
+                          {mode.description}
+                        </span>
                       </span>
-                    </span>
-                    <ArrowRight
-                      className="size-4 shrink-0 text-zinc-500"
-                      aria-hidden
-                    />
-                  </Link>
-                </Surface>
+                      <ArrowRight
+                        className="size-4 shrink-0 text-muted-foreground"
+                        aria-hidden
+                      />
+                    </CardContent>
+                  </Card>
+                </Link>
               </li>
             );
           })}
         </ul>
       </motion.section>
 
-      {/* Recent history — auth DB or guest localStorage */}
-      {historySessions.length > 0 && (
+      {historySessions.length > 0 ? (
         <motion.section
           {...fade}
-          transition={{ ...fade.transition, delay: 0.16 }}
+          transition={{ ...fade.transition, delay: 0.12 }}
           className="space-y-3 pb-8"
           data-testid="speaking-history"
         >
           <div className="flex items-center gap-2">
-            <History className="size-4 text-emerald-400" aria-hidden />
-            <h2 className="text-sm font-bold text-zinc-200">Gần đây</h2>
-            {guestLocal && (
-              <Chip tone="neutral" className="normal-case tracking-normal">
-                Guest · máy này
-              </Chip>
-            )}
+            <History className="size-4 text-primary" aria-hidden />
+            <h2 className="text-sm font-semibold">Gần đây</h2>
+            {guestLocal ? (
+              <Badge variant="outline">Guest · máy này</Badge>
+            ) : null}
           </div>
           <ul className="space-y-2">
             {historySessions.slice(0, 5).map((session) => (
               <li key={session.id}>
-                <Surface className="flex items-center justify-between gap-3 px-4 py-3">
-                  <div className="flex min-w-0 items-center gap-2">
-                    <span
-                      className={cn(
-                        "shrink-0 rounded-md border px-1.5 py-0.5 text-[9px] font-extrabold uppercase",
-                        session.practice_type === "shadowing"
-                          ? "border-amber-500/30 bg-amber-500/10 text-amber-300"
-                          : session.practice_type === "roleplay"
-                            ? "border-violet-500/30 bg-violet-500/10 text-violet-300"
-                            : "border-teal-500/30 bg-teal-500/10 text-teal-300",
-                      )}
-                    >
-                      {session.practice_type}
-                    </span>
-                    <span className="truncate text-[11px] text-zinc-500">
-                      {new Date(session.created_at).toLocaleDateString("vi-VN", {
-                        month: "numeric",
-                        day: "numeric",
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}
-                    </span>
-                  </div>
-                  {session.accuracy_score !== null &&
-                    session.accuracy_score !== undefined && (
-                      <span className="shrink-0 font-mono text-sm font-black text-emerald-400">
+                <Card size="sm">
+                  <CardContent className="flex items-center justify-between gap-3 py-3">
+                    <div className="flex min-w-0 items-center gap-2">
+                      <Badge variant="secondary" className="uppercase">
+                        {session.practice_type}
+                      </Badge>
+                      <span className="truncate text-xs text-muted-foreground">
+                        {new Date(session.created_at).toLocaleDateString(
+                          "vi-VN",
+                          {
+                            month: "numeric",
+                            day: "numeric",
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          },
+                        )}
+                      </span>
+                    </div>
+                    {session.accuracy_score != null && (
+                      <span
+                        className={cn(
+                          "shrink-0 font-mono text-sm font-semibold text-primary",
+                        )}
+                      >
                         {session.accuracy_score}%
                       </span>
                     )}
-                </Surface>
+                  </CardContent>
+                </Card>
               </li>
             ))}
           </ul>
         </motion.section>
-      )}
-
-      {historySessions.length === 0 && (
+      ) : (
         <motion.div
           {...fade}
-          transition={{ ...fade.transition, delay: 0.16 }}
+          transition={{ ...fade.transition, delay: 0.12 }}
           className="pb-10"
         >
-          <Surface className="p-5 text-center">
-            <p className="text-sm text-zinc-400">
-              Chưa có buổi luyện. Bấm Shadowing hoặc Roleplay — guest cũng lưu
-              lịch sử trên máy này.
-            </p>
-            <AppButton
-              href="/speaking/shadowing"
-              variant="secondary"
-              className="mt-4"
-              size="sm"
-            >
-              Thử Shadowing
-            </AppButton>
-          </Surface>
+          <Card>
+            <CardContent className="space-y-3 py-6 text-center">
+              <p className="text-sm text-muted-foreground">
+                Chưa có buổi luyện. Bắt đầu Shadowing — guest cũng lưu trên máy
+                này.
+              </p>
+              <AppButton
+                href="/speaking/shadowing"
+                variant="secondary"
+                size="sm"
+              >
+                Thử Shadowing
+              </AppButton>
+            </CardContent>
+          </Card>
         </motion.div>
       )}
     </Screen>

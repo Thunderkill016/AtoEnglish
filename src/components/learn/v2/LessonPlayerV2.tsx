@@ -134,24 +134,24 @@ export function LessonPlayerV2({ lesson }: Props) {
       >
         <Surface
           variant="success"
-          className="relative overflow-hidden p-8 text-center space-y-4 border-emerald-500/30 bg-gradient-to-br from-emerald-500/20 via-teal-500/10 to-zinc-900/80 shadow-[0_0_60px_-15px_rgba(16,185,129,0.4)]"
+          className="relative overflow-hidden p-8 text-center space-y-4 border-primary/30 bg-gradient-to-br from-primary/15 via-primary/5 to-card "
           data-testid="lesson-complete"
         >
-          <div className="mx-auto flex size-16 items-center justify-center rounded-2xl bg-emerald-500/20 border border-emerald-500/30">
-            <PartyPopper className="size-8 text-emerald-300" aria-hidden />
+          <div className="mx-auto flex size-16 items-center justify-center rounded-2xl bg-primary/20 border border-primary/30">
+            <PartyPopper className="size-8 text-primary" aria-hidden />
           </div>
-          <p className="text-2xl font-black text-zinc-50">Hoàn thành!</p>
-          <p className="text-sm text-zinc-300">
+          <p className="text-2xl font-black text-foreground">Hoàn thành!</p>
+          <p className="text-sm text-muted-foreground">
             {lesson.title_vi}
             <br />
             Quiz{" "}
-            <span className="font-bold text-emerald-400">
+            <span className="font-bold text-primary">
               {correctCount}/{quizItems.length}
             </span>{" "}
             ({pct}%)
             {taskDone ? " · Nhiệm vụ nói ✓" : ""}
           </p>
-          <p className="text-xs text-zinc-500">
+          <p className="text-xs text-foreground0">
             Tiến độ + thẻ ôn (từ vựng &amp; câu phản xạ) đã lưu trên máy này. Đã
             đăng nhập: đồng bộ tài khoản khi DB sẵn sàng.
           </p>
@@ -193,19 +193,19 @@ export function LessonPlayerV2({ lesson }: Props) {
             className={cn(
               "h-1.5 flex-1 rounded-full transition-all duration-300",
               i < stageIndex
-                ? "bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]"
+                ? "bg-primary "
                 : i === stageIndex
-                  ? "bg-teal-400"
-                  : "bg-zinc-800",
+                  ? "bg-primary/80"
+                  : "bg-muted",
             )}
           />
         ))}
       </div>
       <div className="flex items-center justify-between">
-        <p className="text-xs font-bold uppercase tracking-widest text-emerald-400/90">
+        <p className="text-xs font-bold uppercase tracking-widest text-primary/90">
           {stageIndex + 1}/{LESSON_STAGES.length} · {stage.label_vi}
         </p>
-        <p className="text-[11px] text-zinc-500">{lesson.estimatedMin} phút</p>
+        <p className="text-[11px] text-foreground0">{lesson.estimatedMin} phút</p>
       </div>
 
       <AnimatePresence mode="wait">
@@ -303,8 +303,8 @@ export function LessonPlayerV2({ lesson }: Props) {
 function SectionTitle({ children, hint }: { children: React.ReactNode; hint?: string }) {
   return (
     <div className="space-y-1 mb-1">
-      <h2 className="text-lg font-black text-zinc-50 tracking-tight">{children}</h2>
-      {hint && <p className="text-xs text-zinc-500">{hint}</p>}
+      <h2 className="text-lg font-black text-foreground tracking-tight">{children}</h2>
+      {hint && <p className="text-xs text-foreground0">{hint}</p>}
     </div>
   );
 }
@@ -313,25 +313,25 @@ function EngageStage({ lesson }: { lesson: LessonSpec }) {
   return (
     <div className="space-y-4">
       <SectionTitle hint="Biết vì sao học trước khi vào từ">Tình huống</SectionTitle>
-      <p className="text-[15px] text-zinc-200 leading-relaxed">{lesson.situation}</p>
-      <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/10 p-4">
-        <p className="text-[11px] font-bold uppercase tracking-widest text-emerald-400 mb-2">
+      <p className="text-[15px] text-foreground leading-relaxed">{lesson.situation}</p>
+      <div className="rounded-2xl border border-emerald-500/20 bg-primary/10 p-4">
+        <p className="text-[11px] font-bold uppercase tracking-widest text-primary mb-2">
           Sau bài bạn làm được
         </p>
         <ul className="space-y-2">
           {lesson.canDo.map((c) => (
-            <li key={c} className="flex gap-2 text-sm text-zinc-200">
-              <CheckCircle2 className="size-4 shrink-0 text-emerald-400 mt-0.5" />
+            <li key={c} className="flex gap-2 text-sm text-foreground">
+              <CheckCircle2 className="size-4 shrink-0 text-primary mt-0.5" />
               {c}
             </li>
           ))}
         </ul>
       </div>
-      <div className="rounded-2xl border border-white/10 bg-zinc-950/40 p-4">
-        <p className="text-[11px] font-bold text-zinc-500 uppercase tracking-wide mb-1">
+      <div className="rounded-2xl border border-border bg-zinc-950/40 p-4">
+        <p className="text-[11px] font-bold text-foreground0 uppercase tracking-wide mb-1">
           Ghi chú văn hóa
         </p>
-        <p className="text-sm text-zinc-400 leading-relaxed">{lesson.culturalNote_vi}</p>
+        <p className="text-sm text-muted-foreground leading-relaxed">{lesson.culturalNote_vi}</p>
       </div>
       {lesson.jobAngle && (
         <p className="text-xs font-semibold text-teal-400/90">💼 {lesson.jobAngle}</p>
@@ -350,16 +350,16 @@ function LexisStage({ lesson }: { lesson: LessonSpec }) {
         {lesson.lexis.map((item) => (
           <li
             key={item.id}
-            className="rounded-2xl border border-zinc-800 bg-zinc-950/50 p-3.5 hover:border-emerald-500/25 transition-colors"
+            className="rounded-2xl border border-zinc-800 bg-background p-3.5 hover:border-emerald-500/25 transition-colors"
           >
             <div className="flex flex-wrap items-baseline gap-2">
-              <span className="text-base font-black text-emerald-300">{item.word}</span>
+              <span className="text-base font-black text-primary">{item.word}</span>
               {item.phonetic && (
-                <span className="text-xs text-zinc-500 font-mono">{item.phonetic}</span>
+                <span className="text-xs text-foreground0 font-mono">{item.phonetic}</span>
               )}
             </div>
-            <p className="text-sm text-zinc-300 mt-0.5">{item.meaning_vi}</p>
-            <p className="mt-1.5 text-sm text-zinc-500 italic">“{item.example_en}”</p>
+            <p className="text-sm text-muted-foreground mt-0.5">{item.meaning_vi}</p>
+            <p className="mt-1.5 text-sm text-foreground0 italic">“{item.example_en}”</p>
             {item.l1_note_vi && (
               <p className="mt-2 text-xs leading-relaxed text-amber-200/85 rounded-lg bg-amber-500/10 border border-amber-500/15 px-2.5 py-1.5">
                 ⚠️ {item.l1_note_vi}
@@ -383,8 +383,8 @@ function GrammarStage({ lesson }: { lesson: LessonSpec }) {
       <ul className="space-y-2">
         {g.examples.map((ex) => (
           <li key={ex.en} className="rounded-xl bg-zinc-950/40 border border-white/5 px-3 py-2">
-            <p className="text-sm font-medium text-zinc-100">{ex.en}</p>
-            <p className="text-xs text-zinc-500">{ex.vi}</p>
+            <p className="text-sm font-medium text-foreground">{ex.en}</p>
+            <p className="text-xs text-foreground0">{ex.vi}</p>
           </li>
         ))}
       </ul>
@@ -398,8 +398,8 @@ function GrammarStage({ lesson }: { lesson: LessonSpec }) {
               className={cn(
                 "text-sm rounded-lg px-2 py-1",
                 o === g.ccq.answer
-                  ? "bg-emerald-500/20 text-emerald-300 font-semibold"
-                  : "text-zinc-400",
+                  ? "bg-primary/20 text-primary font-semibold"
+                  : "text-muted-foreground",
               )}
             >
               {o === g.ccq.answer ? "✓ " : "· "}
@@ -432,12 +432,12 @@ function ControlledStage({
           className="rounded-2xl border border-zinc-800 bg-zinc-950/40 p-4 space-y-2"
         >
           <div className="flex items-center gap-2">
-            <p className="text-[11px] font-bold text-zinc-600">#{i + 1}</p>
-            <span className="rounded-md bg-zinc-800/80 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-zinc-500">
+            <p className="text-[11px] font-bold text-muted-foreground">#{i + 1}</p>
+            <span className="rounded-md bg-muted/80 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-foreground0">
               {ex.type}
             </span>
           </div>
-          <p className="text-sm font-medium text-zinc-100">{ex.prompt_vi}</p>
+          <p className="text-sm font-medium text-foreground">{ex.prompt_vi}</p>
           {ex.stem && ex.type !== "scramble" && (
             <p className="text-sm font-mono text-teal-300/90">{ex.stem}</p>
           )}
@@ -500,9 +500,9 @@ function McqOptions({
             onClick={() => onSelect(o)}
             className={cn(
               "rounded-xl border px-3 py-2 text-xs font-semibold transition",
-              picked && ok && "border-emerald-500 bg-emerald-500/20 text-emerald-200",
+              picked && ok && "border-emerald-500 bg-primary/20 text-emerald-200",
               picked && !ok && "border-amber-500/60 bg-amber-500/10 text-amber-100",
-              !picked && "border-zinc-700 text-zinc-400 hover:border-zinc-500",
+              !picked && "border-zinc-700 text-muted-foreground hover:border-zinc-500",
             )}
           >
             {o}
@@ -563,13 +563,13 @@ function ScrambleExercise({
           "min-h-[44px] flex flex-wrap gap-2 rounded-xl border p-3",
           checked
             ? isCorrect
-              ? "border-emerald-500/40 bg-emerald-500/10"
+              ? "border-emerald-500/40 bg-primary/10"
               : "border-amber-500/40 bg-amber-500/10"
             : "border-zinc-700 bg-zinc-900/50",
         )}
       >
         {built.length === 0 ? (
-          <span className="self-center text-xs text-zinc-500">
+          <span className="self-center text-xs text-foreground0">
             Chạm từ bên dưới để xếp câu...
           </span>
         ) : (
@@ -579,7 +579,7 @@ function ScrambleExercise({
               type="button"
               disabled={checked}
               onClick={() => removeAt(i)}
-              className="rounded-lg border border-emerald-500/40 bg-emerald-500/10 px-2.5 py-1 text-xs font-semibold text-emerald-200 disabled:cursor-default hover:bg-emerald-500/20"
+              className="rounded-lg border border-emerald-500/40 bg-primary/10 px-2.5 py-1 text-xs font-semibold text-emerald-200 disabled:cursor-default hover:bg-primary/20"
             >
               {w}
             </button>
@@ -601,8 +601,8 @@ function ScrambleExercise({
                 className={cn(
                   "rounded-lg border px-2.5 py-1.5 text-xs font-bold transition",
                   disabled
-                    ? "cursor-not-allowed border-zinc-800 text-zinc-600 opacity-30"
-                    : "border-zinc-600 bg-zinc-800/80 text-zinc-100 hover:border-teal-400/70 hover:bg-zinc-800 active:scale-95",
+                    ? "cursor-not-allowed border-zinc-800 text-muted-foreground opacity-30"
+                    : "border-zinc-600 bg-muted/80 text-foreground hover:border-teal-400/70 hover:bg-muted active:scale-95",
                 )}
               >
                 {w}
@@ -624,12 +624,12 @@ function ScrambleExercise({
         <p
           className={cn(
             "text-xs font-bold",
-            isCorrect ? "text-emerald-400" : "text-amber-400",
+            isCorrect ? "text-primary" : "text-amber-400",
           )}
         >
           {isCorrect ? "✓ Chính xác!" : `→ ${ex.answer}`}
           {ex.explanation_vi && !isCorrect ? (
-            <span className="mt-1 block font-medium text-zinc-500">
+            <span className="mt-1 block font-medium text-foreground0">
               {ex.explanation_vi}
             </span>
           ) : null}
@@ -680,7 +680,7 @@ function ClozeExercise({
         }}
         placeholder={placeholder}
         className={cn(
-          "w-full rounded-xl border bg-zinc-900/60 px-3 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:ring-1 focus:ring-emerald-500/50 disabled:opacity-70",
+          "w-full rounded-xl border bg-zinc-900/60 px-3 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-emerald-500/50 disabled:opacity-70",
           checked
             ? isCorrect
               ? "border-emerald-500/50"
@@ -701,12 +701,12 @@ function ClozeExercise({
         <p
           className={cn(
             "text-xs font-bold",
-            isCorrect ? "text-emerald-400" : "text-amber-400",
+            isCorrect ? "text-primary" : "text-amber-400",
           )}
         >
           {isCorrect ? "✓ Chính xác!" : `→ ${answer}`}
           {explanation && !isCorrect ? (
-            <span className="mt-1 block font-medium text-zinc-500">{explanation}</span>
+            <span className="mt-1 block font-medium text-foreground0">{explanation}</span>
           ) : null}
         </p>
       )}
@@ -728,31 +728,31 @@ function InputStage({ lesson }: { lesson: LessonSpec }) {
             <h3 className="text-sm font-bold text-teal-300">{d.title_vi}</h3>
           </div>
           {d.context_vi && (
-            <p className="text-xs text-zinc-500">{d.context_vi}</p>
+            <p className="text-xs text-foreground0">{d.context_vi}</p>
           )}
           <ul className="space-y-2.5">
             {d.lines.map((line) => (
               <li
                 key={line.id}
-                className="rounded-2xl border border-white/5 bg-zinc-950/50 px-3.5 py-2.5"
+                className="rounded-2xl border border-white/5 bg-background px-3.5 py-2.5"
               >
                 <p className="text-[11px] font-bold text-emerald-500/90 mb-0.5">
                   {line.speaker}
                 </p>
-                <p className="text-sm font-medium text-zinc-100">{line.text}</p>
-                <p className="text-xs text-zinc-500 mt-1">{line.translation_vi}</p>
+                <p className="text-sm font-medium text-foreground">{line.text}</p>
+                <p className="text-xs text-foreground0 mt-1">{line.translation_vi}</p>
               </li>
             ))}
           </ul>
         </div>
       )}
       <div className="rounded-2xl border border-zinc-800 p-3">
-        <p className="text-[11px] font-bold text-zinc-500 mb-2">Nghe & chọn</p>
-        <ul className="space-y-1.5 text-sm text-zinc-400">
+        <p className="text-[11px] font-bold text-foreground0 mb-2">Nghe & chọn</p>
+        <ul className="space-y-1.5 text-sm text-muted-foreground">
           {lesson.input.listenItems.map((item) => (
             <li key={item.id}>
-              <span className="text-zinc-300">“{item.audio_text}”</span>
-              <span className="text-emerald-400"> → {item.answer}</span>
+              <span className="text-muted-foreground">“{item.audio_text}”</span>
+              <span className="text-primary"> → {item.answer}</span>
             </li>
           ))}
         </ul>
@@ -773,8 +773,8 @@ function FluencyStage({ lesson }: { lesson: LessonSpec }) {
           >
             <Mic className="size-4 shrink-0 text-teal-400/80" />
             <div>
-              <p className="text-sm font-bold text-zinc-100">{item.en}</p>
-              <p className="text-xs text-zinc-500">{item.vi}</p>
+              <p className="text-sm font-bold text-foreground">{item.en}</p>
+              <p className="text-xs text-foreground0">{item.vi}</p>
             </div>
           </li>
         ))}
@@ -796,23 +796,23 @@ function TaskStage({
   return (
     <div className="space-y-4">
       <SectionTitle hint="Output thật — tiêu chí rõ">Nhiệm vụ nói</SectionTitle>
-      <p className="text-[15px] text-zinc-200 leading-relaxed">{t.prompt_vi}</p>
-      <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/10 p-4">
-        <p className="text-[11px] font-bold uppercase tracking-wide text-emerald-400 mb-2">
+      <p className="text-[15px] text-foreground leading-relaxed">{t.prompt_vi}</p>
+      <div className="rounded-2xl border border-emerald-500/20 bg-primary/10 p-4">
+        <p className="text-[11px] font-bold uppercase tracking-wide text-primary mb-2">
           Tiêu chí thành công
         </p>
         <ul className="space-y-1.5">
           {t.successCriteria_vi.map((c) => (
-            <li key={c} className="flex gap-2 text-sm text-zinc-200">
-              <CheckCircle2 className="size-4 shrink-0 text-emerald-400 mt-0.5" />
+            <li key={c} className="flex gap-2 text-sm text-foreground">
+              <CheckCircle2 className="size-4 shrink-0 text-primary mt-0.5" />
               {c}
             </li>
           ))}
         </ul>
       </div>
       {t.scaffold_en && (
-        <div className="rounded-2xl border border-white/10 bg-zinc-950/50 p-4">
-          <p className="text-[11px] font-bold text-zinc-500 mb-2">Khung gợi ý</p>
+        <div className="rounded-2xl border border-border bg-background p-4">
+          <p className="text-[11px] font-bold text-foreground0 mb-2">Khung gợi ý</p>
           <ul className="space-y-1">
             {t.scaffold_en.map((s) => (
               <li key={s} className="text-sm font-mono text-teal-300/90">
@@ -830,7 +830,7 @@ function TaskStage({
         variant={done ? "secondary" : "primary"}
         className={
           done
-            ? "border-emerald-500/40 bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500/25"
+            ? "border-emerald-500/40 bg-primary/20 text-primary hover:bg-primary/25"
             : "bg-amber-400 text-zinc-950 hover:bg-amber-300 shadow-lg shadow-amber-900/20 hover:brightness-100"
         }
         data-testid="task-done"
@@ -870,14 +870,14 @@ function ReviewStage({
   return (
     <div className="space-y-4">
       <SectionTitle>Quiz cuối</SectionTitle>
-      <p className="text-xs text-zinc-500">
+      <p className="text-xs text-foreground0">
         Cần làm quiz (không bỏ trống) và đạt ≥{floorPct}% để hoàn thành bài. Nhiệm
         vụ nói: {taskDone ? "đã xong ✓" : "chưa"}.
       </p>
       {lesson.review.quiz.map((q, i) => (
         <div key={q.id} className="space-y-2 rounded-2xl border border-zinc-800 bg-zinc-950/40 p-4">
-          <p className="text-[11px] font-bold text-zinc-600">Câu {i + 1}</p>
-          <p className="text-sm font-medium text-zinc-100">{q.question}</p>
+          <p className="text-[11px] font-bold text-muted-foreground">Câu {i + 1}</p>
+          <p className="text-sm font-medium text-foreground">{q.question}</p>
           <ReviewQuestionBody q={q} selected={selected[q.id]} onSelect={onSelect} />
         </div>
       ))}
@@ -890,7 +890,7 @@ function ReviewStage({
           <p
             className={cn(
               "font-black",
-              floorMet ? "text-emerald-300" : "text-amber-300",
+              floorMet ? "text-primary" : "text-amber-300",
             )}
           >
             Quiz {correctCount}/{total}
@@ -899,7 +899,7 @@ function ReviewStage({
               ? ` · Đạt sàn ≥${floorPct}%`
               : ` · Chưa đạt sàn ≥${floorPct}%`}
           </p>
-          <p className="text-xs text-zinc-400">
+          <p className="text-xs text-muted-foreground">
             {floorMet
               ? "Bấm «Hoàn thành bài» để lưu và về Home."
               : `Đã trả lời ${answeredCount}/${total}. Làm lại quiz để đạt tối thiểu ${Math.ceil(total * QUIZ_FLOOR_RATIO)} câu đúng.`}
@@ -950,10 +950,10 @@ function ReviewQuestionBody({
             onSelect(q.id, e.target.value);
           }}
           placeholder="Điền đáp án..."
-          className="w-full rounded-xl border border-zinc-700 bg-zinc-900/60 px-3 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:ring-1 focus:ring-emerald-500/50"
+          className="w-full rounded-xl border border-zinc-700 bg-zinc-900/60 px-3 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-emerald-500/50"
         />
         {selected && answersMatch(selected, q.answer) && (
-          <p className="text-xs font-bold text-emerald-400">✓</p>
+          <p className="text-xs font-bold text-primary">✓</p>
         )}
       </div>
     );
@@ -969,8 +969,8 @@ function ReviewQuestionBody({
           className={cn(
             "rounded-xl border px-3 py-2 text-xs font-semibold transition",
             selected === opt
-              ? "border-emerald-500 bg-emerald-500/20 text-emerald-200"
-              : "border-zinc-700 text-zinc-400 hover:border-zinc-500",
+              ? "border-emerald-500 bg-primary/20 text-emerald-200"
+              : "border-zinc-700 text-muted-foreground hover:border-zinc-500",
           )}
         >
           {opt}

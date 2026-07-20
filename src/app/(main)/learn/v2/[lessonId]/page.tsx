@@ -5,12 +5,8 @@ import { getLessonV2 } from "@/lib/v2/lessons";
 import { getPathMeta } from "@/lib/v2/path";
 import { LESSON_STAGES } from "@/lib/v2/lesson-spec";
 import { LessonPlayerV2 } from "@/components/learn/v2/LessonPlayerV2";
-import {
-  Screen,
-  AppButton,
-  PageHeader,
-  Chip,
-} from "@/components/design-system";
+import { Screen, AppButton, PageHeader } from "@/components/design-system";
+import { Badge } from "@/components/ui/badge";
 
 interface Props {
   params: Promise<{ lessonId: string }>;
@@ -35,15 +31,15 @@ export default async function LearnV2LessonPage({ params }: Props) {
   const meta = getPathMeta(lessonId);
 
   return (
-    <Screen ato ambient narrow className="pb-28">
+    <Screen ambient narrow className="pb-28">
       <div className="mb-5 flex items-center justify-between gap-3">
-        <AppButton href="/home" variant="ghost" size="sm" className="px-2 -ml-2">
+        <AppButton href="/home" variant="ghost" size="sm" className="-ml-2 px-2">
           <ArrowLeft className="size-4" aria-hidden />
           Home
         </AppButton>
-        <Chip tone="brand">
+        <Badge variant="secondary">
           {lesson.cefr} · {lesson.phase}
-        </Chip>
+        </Badge>
       </div>
 
       <PageHeader
@@ -51,9 +47,14 @@ export default async function LearnV2LessonPage({ params }: Props) {
         eyebrow={
           meta
             ? `Bài ${meta.order}/42 · Lộ trình B1 · ${LESSON_STAGES.length} bước · ~${lesson.estimatedMin} phút`
-            : `Pilot học v2 · ${LESSON_STAGES.length} bước · ~${lesson.estimatedMin} phút`
+            : `Bài học · ${LESSON_STAGES.length} bước · ~${lesson.estimatedMin} phút`
         }
         title={lesson.title_vi}
+        subtitle={
+          lesson.canDo?.length
+            ? `Can-do: ${lesson.canDo.slice(0, 2).join(" · ")}`
+            : undefined
+        }
       />
 
       <LessonPlayerV2 lesson={lesson} />

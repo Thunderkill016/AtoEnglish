@@ -35,13 +35,13 @@ const FinalCtaSection = dynamic(
 );
 
 export const metadata: Metadata = {
-  title: "AtoEnglish — Học tiếng Anh để nói được, không chỉ để biết",
+  title: "AtoEnglish — Đạt B1, dùng tiếng Anh độc lập",
   description:
-    "Nền tảng tự học tiếng Anh cá nhân hóa với phương pháp IPOR, luyện nói phản xạ và ôn tập thông minh FSRS. Miễn phí hoàn toàn.",
+    "Web học tiếng Anh cho người Việt: lộ trình A0→B1, giải thích tiếng Việt, luyện nói có kiểm soát và ôn FSRS. Open Beta miễn phí.",
   openGraph: {
-    title: "AtoEnglish — Học tiếng Anh để nói được",
+    title: "AtoEnglish — Đạt B1 Independent User",
     description:
-      "Phương pháp khoa học giúp bạn tự tin giao tiếp thực tế từ con số 0. Miễn phí hoàn toàn trong giai đoạn Open Beta.",
+      "Từ mất gốc đến dùng được tiếng Anh độc lập. Lộ trình A0→B1, nói thật, nhớ lâu. Miễn phí Open Beta.",
     url: "https://atoenglish.vercel.app",
     siteName: "AtoEnglish",
     locale: "vi_VN",
@@ -69,9 +69,9 @@ export const metadata: Metadata = {
 
 export default function LandingPage() {
   const stats = [
-    { value: "Open Beta", label: "Thử nghiệm mở" },
-    { value: "15 phút", label: "Mỗi bài học hàng ngày" },
-    { value: "A1 - C1", label: "Lộ trình đầy đủ" },
+    { value: "A0 → B1", label: "Lộ trình Independent User" },
+    { value: "42 bài", label: "LessonSpec có can-do đo được" },
+    { value: "15–20 phút", label: "Mỗi ngày là đủ để tiến bộ" },
   ];
 
   const jsonLd = {
@@ -172,46 +172,45 @@ export default function LandingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-white text-zinc-900 dark:bg-zinc-950 dark:text-zinc-50 font-sans selection:bg-emerald-100 dark:selection:bg-emerald-900/40 selection:text-emerald-900 dark:selection:text-emerald-100 overflow-x-hidden antialiased">
+    <div className="min-h-screen bg-background text-foreground font-sans selection:bg-primary/20 selection:text-foreground overflow-x-hidden antialiased">
       {/* JSON-LD Structured Data */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       {/* ===== Navigation Bar ===== */}
-      <nav className="sticky top-0 z-50 w-full bg-white/70 dark:bg-zinc-950/70 backdrop-blur-md border-b border-zinc-200/40 dark:border-zinc-800/40 transition-colors duration-300">
-        <div className="max-w-6xl mx-auto h-16 flex items-center justify-between px-5 sm:px-8">
-          <Link href="/" className="flex items-center gap-2.5 group">
-            <span className="flex size-8 items-center justify-center rounded-lg bg-emerald-600 text-white shadow-md shadow-emerald-500/10 group-hover:scale-105 transition-transform duration-200">
+      <nav className="sticky top-0 z-50 w-full border-b border-border/80 bg-background/90 backdrop-blur-md supports-[backdrop-filter]:bg-background/75">
+        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5 sm:px-8">
+          <Link href="/" className="group flex items-center gap-2.5">
+            <span className="flex size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-sm transition-transform group-hover:scale-105">
               <Sprout className="size-4.5" />
             </span>
-            <div className="flex flex-col leading-none text-left">
-              <span className="text-sm font-bold tracking-tight text-zinc-900 dark:text-zinc-50 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors duration-200">
+            <div className="flex flex-col text-left leading-none">
+              <span className="text-sm font-semibold tracking-tight text-foreground group-hover:text-primary">
                 AtoEnglish
               </span>
-              <span className="text-[9px] text-zinc-500 dark:text-zinc-400 font-medium">
-                Grow every day
+              <span className="text-[9px] font-medium text-muted-foreground">
+                A0 → B1 Independent
               </span>
             </div>
           </Link>
 
-          {/* Middle links - desktop only */}
-          <div className="hidden md:flex items-center gap-8">
+          <div className="hidden items-center gap-8 md:flex">
             <a
               href="#how-it-works"
-              className="text-sm font-bold text-zinc-650 hover:text-emerald-600 dark:text-zinc-400 dark:hover:text-emerald-400 transition-colors duration-200"
+              className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
             >
               Cách học
             </a>
             <a
               href="#science"
-              className="text-sm font-bold text-zinc-650 hover:text-emerald-600 dark:text-zinc-400 dark:hover:text-emerald-400 transition-colors duration-200"
+              className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
             >
               Phương pháp
             </a>
             <a
               href="#faq"
-              className="text-sm font-bold text-zinc-650 hover:text-emerald-600 dark:text-zinc-400 dark:hover:text-emerald-400 transition-colors duration-200"
+              className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
             >
               Hỏi đáp
             </a>
@@ -247,22 +246,21 @@ export default function LandingPage() {
             <div className="space-y-6 sm:space-y-8">
               {/* Badge */}
               <div className="animate-fade-in-up">
-                <span className="inline-flex items-center gap-1.5 text-[11px] font-bold text-emerald-800 dark:text-emerald-400 bg-emerald-500/10 dark:bg-emerald-500/15 backdrop-blur-sm border border-emerald-500/20 dark:border-emerald-400/25 px-4 py-1.5 rounded-full uppercase tracking-[0.12em] shadow-sm">
-                  <Sparkles className="size-3 text-emerald-600 dark:text-emerald-400 animate-pulse" />
-                  Phương pháp học thế hệ mới
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/25 bg-primary/10 px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.12em] text-primary">
+                  <Sparkles className="size-3" />
+                  Dành cho người Việt · Open Beta
                 </span>
               </div>
 
-              {/* Headline */}
-              <h1 className="animate-fade-in-up animation-delay-75 flex flex-col items-center gap-y-2 sm:gap-y-3 text-xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-zinc-900 dark:text-zinc-50 max-w-4xl mx-auto px-4">
+              <h1 className="animate-fade-in-up animation-delay-75 mx-auto flex max-w-4xl flex-col items-center gap-y-2 px-4 text-2xl font-semibold tracking-tight text-foreground sm:gap-y-3 sm:text-4xl md:text-5xl lg:text-6xl">
                 <span className="block lg:whitespace-nowrap">
-                  Học tiếng Anh để{" "}
-                  <span className="bg-gradient-to-r from-emerald-600 via-teal-500 to-emerald-500 bg-clip-text text-transparent dark:from-emerald-400 dark:via-teal-400 dark:to-emerald-300">
-                    nói được
-                  </span>
+                  Đạt{" "}
+                  <span className="text-primary">B1</span>
+                  {" — "}
+                  dùng tiếng Anh độc lập
                 </span>
-                <span className="block lg:whitespace-nowrap">
-                  không chỉ để biết.
+                <span className="block text-lg font-medium text-muted-foreground sm:text-2xl md:text-3xl lg:whitespace-nowrap">
+                  Lộ trình A0→B1 · giải thích tiếng Việt · luyện nói thật
                 </span>
               </h1>
 

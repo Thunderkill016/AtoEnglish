@@ -1,19 +1,27 @@
 import type { Metadata } from "next";
+import { redirect } from "next/navigation";
 import { getUserProgress } from "@/app/actions/stats";
 import { getCurrentUnit } from "@/app/actions/unit";
 import { UNITS } from "@/lib/constants/units";
 import { UNIT_VOCABULARY } from "@/lib/constants/vocabulary";
 import LearnClient from "./components/LearnClient";
 import { createClient } from "@/lib/supabase/server";
+import { isCurriculumV2 } from "@/lib/v2/flag";
 
 export const metadata: Metadata = {
   title: "Bài Học | AtoEnglish",
-  description: "Khám phá lộ trình học tiếng Anh A1–B2 với các bài học tương tác, từ vựng và luyện nói.",
+  description:
+    "Lộ trình A0→B1: học theo LessonSpec, luyện nói và ôn FSRS — dành cho người Việt.",
 };
 
 export const revalidate = 0; // Disable caching
 
 export default async function LearnPage() {
+  // Product v2: primary learn surface is /home (path + continue)
+  if (isCurriculumV2()) {
+    redirect("/home");
+  }
+
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 

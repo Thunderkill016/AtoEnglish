@@ -12,32 +12,27 @@ export default async function MainLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // Fetch user + due cards count at layout level.
-  // React.cache() deduplicates — page.tsx calling these same queries = 0 extra DB hits.
   const user = await getCachedUser();
   const dueCardsCount = user ? await getCachedDueCardsCount(user.id) : 0;
   const hydrateV2 = Boolean(user) && isCurriculumV2();
 
   return (
-    <div className="relative flex min-h-screen flex-col bg-zinc-950 text-zinc-50 pb-16 sm:pb-0">
-      {/* Header with auto-hide scroll behavior (client wrapper) */}
+    <div className="relative flex min-h-screen flex-col bg-background text-foreground pb-16 sm:pb-0">
       <LessonPageHider>
         <HeaderScrollWrapper>
           <Header />
         </HeaderScrollWrapper>
       </LessonPageHider>
 
-      <main id="main-content" className="flex-1 bg-zinc-950">
+      <main id="main-content" className="flex-1 bg-background">
         {children}
       </main>
 
-      {/* BottomNav with SRS badge count */}
       <LessonPageHider>
         <BottomNav dueCardsCount={dueCardsCount} />
       </LessonPageHider>
 
       <CommandPaletteLoader />
-      {/* TASK-279: multi-device v2 progress (auth + flag only) */}
       {hydrateV2 ? <V2ProgressHydrator /> : null}
     </div>
   );
