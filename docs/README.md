@@ -6,6 +6,7 @@ Index tài liệu (sau dọn root 2026-07-10). **Code & agent queue vẫn ở ro
 
 | File | Nội dung |
 |------|----------|
+| [product/VISION_VN.md](./product/VISION_VN.md) | **SSOT** — tầm nhìn sản phẩm VN (2026-07-20) |
 | [product/V2_PRODUCT.md](./product/V2_PRODUCT.md) | Rebuild v2, LessonSpec, path A0→B1, flag |
 | [product/PRODUCT_LOOP.md](./product/PRODUCT_LOOP.md) | Radar live → plan → daemon |
 | [product/MASTER_AUTOPILOT_PLAN.md](./product/MASTER_AUTOPILOT_PLAN.md) | **Full audit plan** waves A–D for 24/7 |

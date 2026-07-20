@@ -1,50 +1,28 @@
-# AtoEnglish — Project archived
+# AtoEnglish — Lịch sử archive (tham khảo)
 
-**Status:** **ARCHIVED / CLOSED** (owner decision 2026-07-10)  
-**Reason:** Product development stalled (design fragmentation, dual curriculum v1/v2, IA confusion). Owner chose permanent close rather than continue rebuild.
+**Trạng thái hiện tại:** **ACTIVE** — phát triển sản phẩm tại repo này.
 
-This repository is preserved for **history, code salvage, and learning** — not active product development.
-
----
-
-## What is frozen here
-
-| Layer | Location |
-|-------|----------|
-| App (Next.js 16) | `src/` |
-| v1 curriculum (50 units) | `src/lib/data/units/` |
-| v2 LessonSpec + lessons | `src/lib/v2/` |
-| Design system (Ato Surface) | `src/components/design-system/`, `docs/design/` |
-| Docs | `docs/` (see `docs/README.md`, `docs/STRUCTURE.md`) |
-| Supabase migrations | `supabase/migrations/` |
-| Agent / autopilot | `AGENT_*.md`, `scripts/agent-*.sh` |
-| Master plan (last) | `docs/product/MASTER_AUTOPILOT_PLAN.md` |
-| Live URL (may expire) | https://atoenglish.vercel.app |
+**Tầm nhìn:** [`docs/product/VISION_VN.md`](./docs/product/VISION_VN.md)  
+**Spec kỹ thuật:** [`docs/product/V2_PRODUCT.md`](./docs/product/V2_PRODUCT.md)
 
 ---
 
-## GitHub archive steps (owner)
+## Timeline
 
-1. Confirm all commits on `main` are pushed to `origin` (GitHub).
-2. Tag: `archive/final-2026-07-10` (created with this closeout).
-3. On GitHub → **Settings → General → Danger Zone → Archive this repository**.
-4. Optional: download ZIP from GitHub **Code → Download ZIP** or clone with `--mirror`.
-5. Optional: disconnect Vercel / pause Supabase project to stop billing.
+| Ngày | Sự kiện |
+|------|---------|
+| 2026-07-10 | Owner đóng tạm (dual curriculum, IA rối) — tag `archive/final-2026-07-10` |
+| 2026-07-19/20 | Recovery snapshot + audit Codex |
+| 2026-07-20 | **Mở lại phát triển** — mục tiêu: web học tiếng Anh tốt nhất cho người Việt tại VN |
 
----
+Recovery freeze (read-only): `/home/thunder/Code/atoenglish-recovery/20260720T001449-0700/` @ `c06680f2`
 
-## Salvage later (if reopening)
-
-- Do **not** restart dual UI skins — one dark Ato Surface only.
-- Prefer **one** curriculum path (v2 `l-*` or v1 units), not both as default.
-- Auth + FSRS + RLS patterns remain reusable.
+Live: https://atoenglish.vercel.app
 
 ---
 
-## Do not
+## Quy tắc phát triển
 
-- Run `agent-daemon` for new features (project closed).
-- Force-push or rewrite history needed for archive (keep as-is).
-- Delete this repo unless you already have a verified mirror.
-
-*Closed by owner request. Code retained on GitHub.*
+- **Một** curriculum mặc định: v2 LessonSpec A0→B1 (`NEXT_PUBLIC_CURRICULUM_V2` mặc định bật)
+- Giữ chất lượng nội dung + speaking + SRS — không feature mill mù
+- Autopilot chỉ bật khi owner + CI + remote SSOT ổn định

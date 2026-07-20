@@ -31,8 +31,16 @@ describe("TASK-277 primary learn nav flag matrix", () => {
     vi.resetModules();
   });
 
-  it("defaults to /dashboard when v2 flag is off", async () => {
+  it("defaults to /home when v2 flag is unset (v2 is default product)", async () => {
     vi.stubEnv("NEXT_PUBLIC_CURRICULUM_V2", "");
+    const { getPrimaryLearnHref: href } = await import("@/lib/constants/navigation");
+    const { isCurriculumV2 } = await import("@/lib/v2/flag");
+    expect(isCurriculumV2()).toBe(true);
+    expect(href()).toBe("/home");
+  });
+
+  it("returns /dashboard when NEXT_PUBLIC_CURRICULUM_V2 is 0 (legacy v1)", async () => {
+    vi.stubEnv("NEXT_PUBLIC_CURRICULUM_V2", "0");
     const { getPrimaryLearnHref: href } = await import("@/lib/constants/navigation");
     const { isCurriculumV2 } = await import("@/lib/v2/flag");
     expect(isCurriculumV2()).toBe(false);
@@ -100,8 +108,8 @@ describe("TASK-277 Me hub B1 copy", () => {
     expect(hrefs).not.toContain("/learn");
   });
 
-  it("v2 off keeps v1 learn/roadmap hubs", async () => {
-    vi.stubEnv("NEXT_PUBLIC_CURRICULUM_V2", "");
+  it("v1 off keeps v1 learn/roadmap hubs when flag is 0", async () => {
+    vi.stubEnv("NEXT_PUBLIC_CURRICULUM_V2", "0");
     vi.resetModules();
     const { getMeHubStudy: studyFn } = await import("@/lib/constants/me-hub");
     const hrefs = studyFn().map((i) => i.href);
@@ -124,8 +132,8 @@ describe("TASK-277 Me hub B1 copy", () => {
     ).toBe(false);
   });
 
-  it("TASK-316: v2 off keeps leaderboard on Me + explore", async () => {
-    vi.stubEnv("NEXT_PUBLIC_CURRICULUM_V2", "");
+  it("TASK-316: v1 off keeps leaderboard on Me + explore when flag is 0", async () => {
+    vi.stubEnv("NEXT_PUBLIC_CURRICULUM_V2", "0");
     vi.resetModules();
     const { getMeHubMore } = await import("@/lib/constants/me-hub");
     const { getDashboardExploreActions } = await import(

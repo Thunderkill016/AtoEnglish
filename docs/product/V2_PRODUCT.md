@@ -1,7 +1,8 @@
 # AtoEnglish v2 — Product Rebuild
 
-> **Status:** In progress (WS0+)  
-> **Locked:** Full product rebuild · archive curriculum v1 · new A0→B1 path · outcome **B1 Independent User**  
+> **Status:** ACTIVE — default product (2026-07-20)  
+> **Vision:** [VISION_VN.md](./VISION_VN.md)  
+> **Locked:** v2 LessonSpec A0→B1 · outcome **B1 Independent User** · v1 curriculum frozen  
 > **Stack:** Keep Next.js 16 · Supabase · Tailwind · FSRS · Vercel  
 > **Plan source:** session plan (approved)
 
@@ -63,11 +64,11 @@ v1 path (`unit-a0-1`…`unit-32`) → `archive/curriculum-v1/` (logical freeze f
 
 ```ts
 // src/lib/v2/flag.ts
-isCurriculumV2() // env NEXT_PUBLIC_CURRICULUM_V2 === "1" | true
+isCurriculumV2() // default ON; set NEXT_PUBLIC_CURRICULUM_V2=0 to use v1
 ```
 
-- `false` (default): production keeps v1 routes  
-- `true`: new users / preview use v2 learn path  
+- **Default ON (2026-07-20):** `/home`, `/path`, `/learn/v2/*`  
+- `0` / `false`: legacy v1 routes only (maintenance)  
 
 ---
 

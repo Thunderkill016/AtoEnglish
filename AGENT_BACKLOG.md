@@ -1,6 +1,6 @@
-# Agent Backlog — AtoEnglish Autopilot
+# Agent Backlog — AtoEnglish
 
-> ⛔ **ARCHIVED 2026-07-10** — no new tasks. See `ARCHIVE.md`.
+> **ACTIVE 2026-07-20** — vision: [`docs/product/VISION_VN.md`](./docs/product/VISION_VN.md)
 
 
 > Agent đọc file này trước mỗi phiên. Chỉ làm task `ready`, một task mỗi phiên.
