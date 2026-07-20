@@ -1,110 +1,62 @@
-import { StatLine } from "@/components/ui/page";
-
-import { Headphones, Layers, Mic2, RefreshCw } from "lucide-react";
-import ScrollReveal from "@/components/ui/scroll-reveal";
+const STEPS = [
+  {
+    n: "01",
+    title: "Học theo bài có can-do",
+    desc: "Mỗi bài A0→B1 có mục tiêu đo được: nói được gì sau 15–40 phút.",
+  },
+  {
+    n: "02",
+    title: "Luyện nói có kiểm soát",
+    desc: "Shadowing, roleplay, journal — feedback tiếng Việt, không điểm ảo.",
+  },
+  {
+    n: "03",
+    title: "Ôn đúng lúc quên",
+    desc: "FSRS xếp lịch từ vựng & câu — nhớ lâu hơn học vẹt.",
+  },
+  {
+    n: "04",
+    title: "Tiến độ lộ trình B1",
+    desc: "Path tuần tự, cổng A2/B1 — biết mình đang ở đâu trên đường Independent User.",
+  },
+] as const;
 
 export default function HowItWorksSection() {
-  const steps = [
-    {
-      id: "01",
-      title: "Nghe & Đọc (Input)",
-      desc: "Tiếp xúc với tiếng Anh thực tế qua các tình huống giao tiếp gần gũi, nghe và đọc theo ngữ điệu người bản xứ.",
-      icon: Headphones,
-      gradient: "from-emerald-500/5 to-teal-500/5 dark:from-emerald-500/10 dark:to-teal-500/5",
-      iconBg: "bg-emerald-500/10 dark:bg-emerald-500/20",
-      iconColor: "text-emerald-700 dark:text-emerald-400",
-      borderColor: "hover:border-emerald-500/30 dark:hover:border-emerald-500/20",
-    },
-    {
-      id: "02",
-      title: "Xử lý sâu (Processing)",
-      desc: "Làm chủ từ vựng và cấu trúc qua bài tập viết câu phản xạ và ghép thẻ thông minh (SRS), chống học vẹt thụ động.",
-      icon: Layers,
-      gradient: "from-blue-500/5 to-indigo-500/5 dark:from-blue-500/10 dark:to-indigo-500/5",
-      iconBg: "bg-blue-500/10 dark:bg-blue-500/20",
-      iconColor: "text-blue-700 dark:text-blue-400",
-      borderColor: "hover:border-blue-500/30 dark:hover:border-blue-500/20",
-    },
-    {
-      id: "03",
-      title: "Nói & Viết (Output)",
-      desc: "Luyện nói Shadowing và thực hành đóng vai (Roleplay) tình huống thực tế. Ghi âm và nhận phản hồi lỗi phát âm tức thì.",
-      icon: Mic2,
-      gradient: "from-violet-500/5 to-purple-500/5 dark:from-violet-500/10 dark:to-purple-500/5",
-      iconBg: "bg-violet-500/10 dark:bg-violet-500/20",
-      iconColor: "text-violet-700 dark:text-violet-400",
-      borderColor: "hover:border-violet-500/30 dark:hover:border-violet-500/20",
-    },
-    {
-      id: "04",
-      title: "Ôn tập thông minh (Review)",
-      desc: "Thuật toán ôn tập ngắt quãng (FSRS) tự động tính toán thời điểm vàng để nhắc nhở, đưa từ vựng vào trí nhớ vĩnh viễn.",
-      icon: RefreshCw,
-      gradient: "from-amber-500/5 to-orange-500/5 dark:from-amber-500/10 dark:to-orange-500/5",
-      iconBg: "bg-amber-500/10 dark:bg-amber-500/20",
-      iconColor: "text-amber-700 dark:text-amber-450",
-      borderColor: "hover:border-amber-500/30 dark:hover:border-amber-500/20",
-    },
-  ];
-
-  const delayMs = [0, 100, 200, 300];
-
   return (
-    <section
-      id="how-it-works"
-      className="py-24 sm:py-32 lg:py-40 px-5 sm:px-8 relative"
-    >
-      <div className="absolute inset-0 overflow-hidden pointer-events-none -z-10">
-        <div className="absolute top-[20%] left-[-10%] w-[45%] h-[45%] rounded-full bg-emerald-500/4 dark:bg-emerald-500/2 blur-[100px]" />
-      </div>
-
-      <div className="max-w-6xl mx-auto space-y-16 sm:space-y-24">
-        {/* Section Header */}
-        <ScrollReveal className="text-center space-y-4">
-          <h2 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-zinc-900 dark:text-zinc-50 leading-normal">
-            Cách học giúp bạn nói được nhanh nhất
-          </h2>
-          <p className="text-base sm:text-lg text-zinc-650 dark:text-zinc-350 max-w-xl mx-auto leading-relaxed font-normal">
-            Chỉ 4 bước lặp lại mỗi ngày — giúp bạn chuyển từ “thuộc lòng lý thuyết” sang “nói trôi chảy tự nhiên”.
+    <section id="how-it-works" className="py-16 md:py-20">
+      <div className="mx-auto max-w-5xl px-5 sm:px-8">
+        <div className="mx-auto max-w-2xl text-center">
+          <p className="text-xs font-semibold uppercase tracking-wider text-primary">
+            Cách học
           </p>
-        </ScrollReveal>
-
-        {/* 4 Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
-          {steps.map((step, index) => {
-            const Icon = step.icon;
-            return (
-              <ScrollReveal
-                key={step.id}
-                delayMs={delayMs[index]}
-                className="h-full"
-              >
-                <div
-                  className={`group relative flex flex-col h-full bg-gradient-to-br ${step.gradient} border border-zinc-200/50 dark:border-zinc-800/40 ${step.borderColor} p-8 sm:p-9 rounded-3xl space-y-6 hover:shadow-xl hover:shadow-zinc-900/[0.03] dark:hover:shadow-black/25 hover:-translate-y-1 transition-all duration-300`}
-                >
-                  <div className="flex items-center justify-between">
-                    <span
-                      className={`flex size-12 items-center justify-center rounded-xl ${step.iconBg} ${step.iconColor} group-hover:scale-110 transition-transform duration-300`}
-                    >
-                      <Icon className="size-5.5" />
-                    </span>
-                    <span className="text-3xl font-mono font-bold text-zinc-350 dark:text-zinc-700/80 group-hover:text-emerald-500/40 dark:group-hover:text-emerald-400/30 transition-colors duration-300">
-                      {step.id}
-                    </span>
-                  </div>
-                  <div className="space-y-3 flex-1 flex flex-col">
-                    <h3 className="text-lg sm:text-xl font-bold text-zinc-900 dark:text-zinc-100 tracking-tight leading-normal">
-                      {step.title}
-                    </h3>
-                    <p className="text-sm sm:text-[15px] text-zinc-650 dark:text-zinc-400 leading-relaxed flex-1 font-normal">
-                      {step.desc}
-                    </p>
-                  </div>
-                </div>
-              </ScrollReveal>
-            );
-          })}
+          <h2 className="mt-2 text-2xl font-semibold tracking-tight md:text-3xl">
+            Bốn bước, một thói quen
+          </h2>
+          <p className="mt-3 text-sm text-muted-foreground md:text-base">
+            15–20 phút/ngày. Không cần app native — mở web là học.
+          </p>
         </div>
+
+        <ol className="mt-10 grid gap-4 sm:grid-cols-2">
+          {STEPS.map((s) => (
+            <li
+              key={s.n}
+              className="flex gap-4 rounded-xl border border-border bg-card p-5"
+            >
+              <span className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-sm font-semibold tabular-nums text-primary">
+                {s.n}
+              </span>
+              <div className="min-w-0">
+                <h3 className="text-base font-semibold text-foreground">
+                  {s.title}
+                </h3>
+                <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
+                  {s.desc}
+                </p>
+              </div>
+            </li>
+          ))}
+        </ol>
       </div>
     </section>
   );
