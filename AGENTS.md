@@ -36,10 +36,34 @@ npm run lint          # ESLint
 npx tsc --noEmit      # type check
 npm run e2e           # Playwright E2E (needs dev server running)
 npm run db:types      # regenerate src/types/supabase.ts from live DB
+npm run check-deploy  # poll latest Vercel production deploy (needs VERCEL_TOKEN)
 ```
 
 > ⛔ **Never** run `npm run build` during iterative sessions — use `npm run dev`.
 > Run `npm run build` only at end of session to verify compilation.
+
+### Vercel deploy author (CRITICAL)
+
+Team Hobby blocks production when commit author is not a team member  
+(`COMMIT_AUTHOR_REQUIRED` → `readyState: BLOCKED`, CLI often shows `UNKNOWN`).
+
+| Allowed author email | Notes |
+|---|---|
+| `thunderkill016@gmail.com` | Vercel account / team OWNER |
+| `66909862+Thunderkill016@users.noreply.github.com` | GitHub noreply |
+
+**Never** commit as `thunder@atoenglish.com` (or any email not on the Vercel team).
+
+```bash
+# Correct for this repo
+git config user.email thunderkill016@gmail.com
+git config user.name Thunderkill016
+# If HEAD used a bad email:
+git commit --amend --reset-author --no-edit && git push --force-with-lease
+```
+
+⛔ Do **not** use `git -c user.email=thunder@atoenglish.com commit ...`  
+`.husky/pre-push` rejects non-allowed author emails before push.
 
 ---
 
