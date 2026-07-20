@@ -124,8 +124,9 @@ export default function RootLayout({
         </a>
         <ThemeProvider
           attribute="class"
-          defaultTheme="system"
-          enableSystem
+          defaultTheme="light"
+          enableSystem={false}
+          storageKey="ato-ui-white"
           disableTransitionOnChange
         >
           {children}

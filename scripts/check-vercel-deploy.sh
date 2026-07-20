@@ -11,8 +11,10 @@ RED='\033[0;31m'; GREEN='\033[0;32m'; YELLOW='\033[1;33m'
 BLUE='\033[0;34m'; CYAN='\033[0;36m'; BOLD='\033[1m'; RESET='\033[0m'
 
 # ─── Config ────────────────────────────────────────────────────────────────────
-PROJECT_ID="atoenglish"
-VERCEL_DASHBOARD="https://vercel.com/thunderkill016/atoenglish"
+PROJECT_ID="${VERCEL_PROJECT_ID:-atoenglish}"
+# Team slug/id required for team projects (Hobby team)
+VERCEL_TEAM_ID="${VERCEL_TEAM_ID:-team_1MZEcAVjG3nrOnklJxYIqGQs}"
+VERCEL_DASHBOARD="https://vercel.com/thunderkill016s-projects/atoenglish"
 MAX_POLLS="${VERCEL_MAX_POLLS:-40}"   # 40 × 15s = 10 minutes
 POLL_INTERVAL="${VERCEL_POLL_INTERVAL:-15}"
 
@@ -77,20 +79,24 @@ deployments = data.get('deployments', [])
 if not deployments:
     print('NONE|||')
     sys.exit(0)
-# Get the most recent one
+# Prefer readyState (BLOCKED/READY) over legacy state; surface author email
 d = deployments[0]
-state = d.get('state', 'UNKNOWN')
+state = d.get('readyState') or d.get('state') or 'UNKNOWN'
 url = d.get('url', '')
 uid = d.get('uid', '')
-sha = d.get('meta', {}).get('githubCommitSha', '')[:7]
-created = d.get('createdAt', 0)
-print(f'{state}|{url}|{uid}|{sha}')
-" 2>/dev/null) || RESULT="UNKNOWN|||"
+meta = d.get('meta') or {}
+sha = (meta.get('githubCommitSha') or '')[:7]
+author = meta.get('githubCommitAuthorEmail') or ''
+reason = d.get('readyStateReason') or ''
+print(f'{state}|{url}|{uid}|{sha}|{author}|{reason}')
+" 2>/dev/null) || RESULT="UNKNOWN|||||"
 
   STATE=$(echo "$RESULT" | cut -d'|' -f1)
   DEPLOY_URL=$(echo "$RESULT" | cut -d'|' -f2)
   DEPLOY_ID=$(echo "$RESULT" | cut -d'|' -f3)
   DEPLOY_SHA=$(echo "$RESULT" | cut -d'|' -f4)
+  DEPLOY_AUTHOR=$(echo "$RESULT" | cut -d'|' -f5)
+  DEPLOY_REASON=$(echo "$RESULT" | cut -d'|' -f6-)
 
   if [ "$STATE" = "NONE" ]; then
     echo -e "${YELLOW}No deployments found for project '$PROJECT_ID'${RESET}"
@@ -105,8 +111,27 @@ print(f'{state}|{url}|{uid}|{sha}')
       echo -e "${GREEN}${BOLD}✅ Deployment SUCCEEDED!${RESET}"
       echo -e "${GREEN}🌐 Live at: https://$DEPLOY_URL${RESET}"
       [ -n "$DEPLOY_SHA" ] && echo -e "${CYAN}Commit: $DEPLOY_SHA${RESET}"
+      [ -n "$DEPLOY_AUTHOR" ] && echo -e "${CYAN}Author: $DEPLOY_AUTHOR${RESET}"
       echo ""
       exit 0
+      ;;
+    BLOCKED)
+      echo ""
+      echo -e "${RED}${BOLD}❌ Deployment BLOCKED (not a build error)${RESET}"
+      echo -e "${RED}Dashboard: $VERCEL_DASHBOARD${RESET}"
+      [ -n "$DEPLOY_REASON" ] && echo -e "${YELLOW}Reason: $DEPLOY_REASON${RESET}"
+      [ -n "$DEPLOY_AUTHOR" ] && echo -e "${YELLOW}Commit author: $DEPLOY_AUTHOR${RESET}"
+      echo ""
+      echo -e "${YELLOW}Usually COMMIT_AUTHOR_REQUIRED: author email is not a Vercel team member.${RESET}"
+      echo "Fix:"
+      echo "  git config user.email thunderkill016@gmail.com"
+      echo "  git config user.name Thunderkill016"
+      echo "  git commit --amend --reset-author --no-edit"
+      echo "  git push --force-with-lease"
+      echo ""
+      echo "Allowed: thunderkill016@gmail.com | 66909862+Thunderkill016@users.noreply.github.com"
+      echo "Never use: thunder@atoenglish.com (not linked to the Vercel account)"
+      exit 1
       ;;
     ERROR|CANCELED)
       echo ""
