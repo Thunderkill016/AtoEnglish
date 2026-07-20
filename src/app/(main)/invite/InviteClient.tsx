@@ -1,9 +1,11 @@
 "use client";
 
+import { Page, PageHeader, Section, ListRow } from "@/components/ui/page";
+import { Button, buttonVariants } from "@/components/ui/button";
+
 import { useState } from "react";
 import { toast } from "sonner";
 import Link from "next/link";
-import { SecondaryPageShell, ListSection, MinimalButton } from "@/components/design-system";
 
 const BASE_URL = "https://atoenglish.vercel.app";
 
@@ -72,10 +74,9 @@ export default function InviteClient({
   };
 
   return (
-    <SecondaryPageShell
-      title="Mời bạn học cùng"
-      subtitle={`Mã giới thiệu: ${refCode}`}
-    >
+    <Page>
+      <PageHeader />
+      <div>
       <div className="space-y-5 pb-16">
         <div className="rounded-xl border border-border/60 bg-card p-4 text-center">
           <p className="text-sm text-muted-foreground leading-relaxed">
@@ -83,7 +84,7 @@ export default function InviteClient({
           </p>
         </div>
 
-        <ListSection title="Lợi ích">
+        <Section>
           {REWARDS.map(({ icon, title, desc }) => (
             <div key={title} className="flex items-start gap-3 px-4 py-3 border-b border-border/40 last:border-0">
               <span className="text-xl shrink-0">{icon}</span>
@@ -93,24 +94,24 @@ export default function InviteClient({
               </div>
             </div>
           ))}
-        </ListSection>
+        </Section>
 
-        <ListSection title="Link của bạn">
+        <Section>
           <div className="px-4 py-3">
             <div className="flex items-center gap-2 p-3 rounded-xl bg-muted/50 border border-border/60">
               <span className="flex-1 text-xs font-mono text-foreground truncate">{inviteUrl}</span>
-              <MinimalButton
-                variant="primary"
+              <Button
+                variant="default"
                 onClick={() => handleCopy(inviteUrl)}
                 className="!min-h-8 !px-3 !text-xs shrink-0"
               >
                 {copied ? "✓" : "Copy"}
-              </MinimalButton>
+              </Button>
             </div>
           </div>
-        </ListSection>
+        </Section>
 
-        <ListSection title="Tin nhắn chia sẻ">
+        <Section>
           <div className="px-4 py-3 space-y-3">
             <div className="flex gap-2 flex-wrap">
               {SHARE_MESSAGES.map((msg, idx) => (
@@ -130,11 +131,11 @@ export default function InviteClient({
             <div className="p-3 rounded-xl bg-muted/40 text-xs text-foreground/80 leading-relaxed border border-border/60">
               {shareText}
             </div>
-            <MinimalButton variant="secondary" fullWidth onClick={() => handleCopy(shareText)}>
+            <Button variant="secondary" className="w-full" onClick={() => handleCopy(shareText)}>
               Sao chép tin nhắn
-            </MinimalButton>
+            </Button>
           </div>
-        </ListSection>
+        </Section>
 
         <div className="grid grid-cols-3 gap-3">
           {[
@@ -159,6 +160,7 @@ export default function InviteClient({
           </Link>
         </div>
       </div>
-    </SecondaryPageShell>
+    </div>
+    </Page>
   );
 }

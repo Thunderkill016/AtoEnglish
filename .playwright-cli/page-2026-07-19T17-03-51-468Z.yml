@@ -1,0 +1,70 @@
+- generic [active] [ref=e1]:
+  - link "Chuyển đến nội dung chính" [ref=e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - generic [ref=e3]:
+    - banner [ref=e5]:
+      - generic [ref=e6]:
+        - generic [ref=e7]:
+          - link "AtoEnglish" [ref=e8] [cursor=pointer]:
+            - /url: /dashboard
+          - navigation "Điều hướng chính" [ref=e14]:
+            - link "Học" [ref=e15] [cursor=pointer]:
+              - /url: /dashboard
+            - link "Ôn" [ref=e18] [cursor=pointer]:
+              - /url: /flashcards
+            - link "Tôi" [ref=e23] [cursor=pointer]:
+              - /url: /me
+        - generic [ref=e27]:
+          - button "Toggle theme" [ref=e28]
+          - link "Đăng nhập" [ref=e29] [cursor=pointer]:
+            - /url: /login?mode=login
+    - main [ref=e30]:
+      - generic [ref=e32]:
+        - generic [ref=e33]:
+          - generic [ref=e34]: Free speaking · không paywall
+          - generic [ref=e39]:
+            - paragraph [ref=e40]: Luyện nói
+            - heading "Nói được — không chỉ thuộc" [level=1] [ref=e41]
+            - paragraph [ref=e42]: Shadowing, roleplay, journal — guest cũng luyện được; lịch sử lưu local.
+        - generic [ref=e44]:
+          - paragraph [ref=e45]: Bắt đầu nhanh
+          - paragraph [ref=e46]: Shadowing 5–10 phút mỗi ngày là cách bền vững nhất để cải thiện phát âm và nhịp nói.
+          - link "Vào Shadowing" [ref=e47] [cursor=pointer]:
+            - /url: /speaking/shadowing
+        - link "Luyện 44 âm IPA Nghe · ghi âm · so sánh native" [ref=e52] [cursor=pointer]:
+          - /url: /pronunciation
+          - generic [ref=e57]:
+            - generic [ref=e58]: Luyện 44 âm IPA
+            - generic [ref=e59]: Nghe · ghi âm · so sánh native
+        - region "Chế độ luyện nói" [ref=e62]:
+          - heading "Chế độ luyện nói" [level=2] [ref=e63]
+          - list [ref=e64]:
+            - listitem [ref=e65]:
+              - link "Shadowing Practice Nói đuổi theo audio — luyện nhịp & phát âm" [ref=e67] [cursor=pointer]:
+                - /url: /speaking/shadowing
+                - generic [ref=e73]:
+                  - generic [ref=e74]: Shadowing Practice
+                  - generic [ref=e75]: Nói đuổi theo audio — luyện nhịp & phát âm
+            - listitem [ref=e78]:
+              - link "AI Roleplay Hội thoại nhập vai tình huống thực tế" [ref=e80] [cursor=pointer]:
+                - /url: /speaking/roleplay
+                - generic [ref=e84]:
+                  - generic [ref=e85]: AI Roleplay
+                  - generic [ref=e86]: Hội thoại nhập vai tình huống thực tế
+            - listitem [ref=e89]:
+              - link "Daily Journal Nhật ký nói tự do — phản xạ hàng ngày" [ref=e91] [cursor=pointer]:
+                - /url: /speaking/journal
+                - generic [ref=e95]:
+                  - generic [ref=e96]: Daily Journal
+                  - generic [ref=e97]: Nhật ký nói tự do — phản xạ hàng ngày
+            - listitem [ref=e100]:
+              - link "Phoneme Coach Phân tích phát âm chi tiết (local VN L1)" [ref=e102] [cursor=pointer]:
+                - /url: /speaking/phoneme
+                - generic [ref=e107]:
+                  - generic [ref=e108]: Phoneme Coach
+                  - generic [ref=e109]: Phân tích phát âm chi tiết (local VN L1)
+        - generic [ref=e113]:
+          - paragraph [ref=e114]: Chưa có buổi luyện. Bấm Shadowing hoặc Roleplay — guest cũng lưu lịch sử trên máy này.
+          - link "Thử Shadowing" [ref=e115] [cursor=pointer]:
+            - /url: /speaking/shadowing
+  - region "Notifications alt+T"

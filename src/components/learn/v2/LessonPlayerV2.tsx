@@ -1,4 +1,9 @@
+import { StatLine } from "@/components/ui/page";
 "use client";
+
+import { Button, buttonVariants } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import Link from "next/link";
 
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -24,7 +29,6 @@ import { lessonToSeedVocab } from "@/lib/v2/seed-lexis";
 import { seedLessonToLocalCards } from "@/lib/v2/local-cards";
 import { seedV2LessonLexisToSRS } from "@/app/actions/cards";
 import { completeV2Lesson } from "@/app/actions/v2-progress";
-import { Surface, AppButton } from "@/components/design-system";
 import { cn } from "@/lib/utils";
 
 interface Props {
@@ -132,8 +136,8 @@ export function LessonPlayerV2({ lesson }: Props) {
         initial={{ opacity: 0, scale: 0.96 }}
         animate={{ opacity: 1, scale: 1 }}
       >
-        <Surface
-          variant="success"
+        <Card
+          
           className="relative overflow-hidden p-8 text-center space-y-4 border-primary/30 bg-gradient-to-br from-primary/15 via-primary/5 to-card "
           data-testid="lesson-complete"
         >
@@ -156,28 +160,28 @@ export function LessonPlayerV2({ lesson }: Props) {
             đăng nhập: đồng bộ tài khoản khi DB sẵn sàng.
           </p>
           <div className="flex flex-col sm:flex-row gap-2 justify-center pt-2">
-            <AppButton href="/home" size="lg">
+            <Link href="/home" className={cn(buttonVariants({variant:"default"}), "inline-flex w-full items-center justify-center gap-2 rounded-lg")}>
               Home — bài tiếp
               <ArrowRight className="size-4" aria-hidden />
-            </AppButton>
-            <AppButton
+            </Link>
+            <Button
               type="button"
               variant="secondary"
               size="lg"
               onClick={() => router.push("/flashcards")}
             >
               Ôn flashcard
-            </AppButton>
-            <AppButton
+            </Button>
+            <Button
               type="button"
               variant="secondary"
               size="lg"
               onClick={() => router.push("/path")}
             >
               Xem lộ trình
-            </AppButton>
+            </Button>
           </div>
-        </Surface>
+        </Card>
       </motion.div>
     );
   }
@@ -189,7 +193,6 @@ export function LessonPlayerV2({ lesson }: Props) {
         {LESSON_STAGES.map((s, i) => (
           <div
             key={s.id}
-            title={s.label_vi}
             className={cn(
               "h-1.5 flex-1 rounded-full transition-all duration-300",
               i < stageIndex
@@ -216,7 +219,7 @@ export function LessonPlayerV2({ lesson }: Props) {
           exit={{ opacity: 0, x: -8 }}
           transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
         >
-          <Surface className="p-5 sm:p-6 space-y-4" data-testid="lesson-stage-card">
+          <Card className="p-5 sm:p-6 space-y-4" data-testid="lesson-stage-card">
             {stage.id === "engage" && <EngageStage lesson={lesson} />}
             {stage.id === "lexis" && <LexisStage lesson={lesson} />}
             {stage.id === "grammar" && <GrammarStage lesson={lesson} />}
@@ -250,12 +253,12 @@ export function LessonPlayerV2({ lesson }: Props) {
                 onRetryQuiz={resetQuizOnly}
               />
             )}
-          </Surface>
+          </Card>
         </motion.div>
       </AnimatePresence>
 
       <div className="flex gap-3">
-        <AppButton
+        <Button
           type="button"
           variant="secondary"
           onClick={goPrev}
@@ -264,8 +267,8 @@ export function LessonPlayerV2({ lesson }: Props) {
         >
           <ArrowLeft className="size-4" aria-hidden />
           Lại
-        </AppButton>
-        <AppButton
+        </Button>
+        <Button
           type="button"
           onClick={goNext}
           disabled={
@@ -283,7 +286,7 @@ export function LessonPlayerV2({ lesson }: Props) {
                 ? `Cần ≥${Math.round(QUIZ_FLOOR_RATIO * 100)}% quiz`
                 : "Tiếp tục"}
           <ArrowRight className="size-4" aria-hidden />
-        </AppButton>
+        </Button>
       </div>
 
       {stage.id === "task" && !taskDone && (
@@ -822,22 +825,16 @@ function TaskStage({
           </ul>
         </div>
       )}
-      <AppButton
-        type="button"
-        onClick={onDone}
-        fullWidth
-        size="lg"
-        variant={done ? "secondary" : "primary"}
-        className={
+      <Button type="button" onClick={onDone} size="lg" variant={done ? "secondary" : "default"} className={cn("w-full", 
           done
             ? "border-emerald-500/40 bg-primary/20 text-primary hover:bg-primary/25"
             : "bg-amber-400 text-zinc-950 hover:bg-amber-300 shadow-lg shadow-amber-900/20 hover:brightness-100"
-        }
+        )}
         data-testid="task-done"
       >
         <Mic className="size-4" aria-hidden />
         {done ? "Đã nói xong ✓" : "Tôi đã nói xong nhiệm vụ"}
-      </AppButton>
+      </Button>
     </div>
   );
 }
@@ -882,8 +879,8 @@ function ReviewStage({
         </div>
       ))}
       {quizScore !== null && (
-        <Surface
-          variant={floorMet ? "success" : "warn"}
+        <Card
+         
           className="p-4 space-y-2 rounded-2xl"
           data-testid="quiz-floor-result"
         >
@@ -905,18 +902,16 @@ function ReviewStage({
               : `Đã trả lời ${answeredCount}/${total}. Làm lại quiz để đạt tối thiểu ${Math.ceil(total * QUIZ_FLOOR_RATIO)} câu đúng.`}
           </p>
           {!floorMet && (
-            <AppButton
+            <Button
               type="button"
               variant="secondary"
-              fullWidth
               onClick={onRetryQuiz}
-              className="border-amber-500/40 bg-amber-400/15 text-amber-200 hover:bg-amber-400/25"
               data-testid="retry-quiz"
-            >
+             className={cn("w-full", "border-amber-500/40 bg-amber-400/15 text-amber-200 hover:bg-amber-400/25")}>
               Làm lại quiz
-            </AppButton>
+            </Button>
           )}
-        </Surface>
+        </Card>
       )}
       {reviewHint && quizScore === null && (
         <p className="text-xs font-medium text-amber-400/95">{reviewHint}</p>

@@ -1,3 +1,4 @@
+import { StatLine } from "@/components/ui/page";
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";

@@ -1,9 +1,11 @@
+import { StatLine } from "@/components/ui/page";
 "use client";
+
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 
 import { useState, useEffect } from "react";
 import { Clock, ChevronDown, ChevronUp } from "lucide-react";
 import { getPhaseForLevel, DAILY_TIPS } from "@/lib/constants/study-plan";
-import { Surface } from "@/components/design-system";
 
 const SKILL_COLORS: Record<string, string> = {
   pronunciation: "#f59e0b",
@@ -51,7 +53,7 @@ export default function TodayPlanWidget({ userLevel }: TodayPlanWidgetProps) {
   const totalMins = phase.dailyRoutine.reduce((s, a) => s + a.duration, 0);
 
   return (
-    <Surface className="rounded-2xl overflow-hidden p-0">
+    <Card className="rounded-2xl overflow-hidden p-0">
       {/* Header */}
       <button
         onClick={() => setCollapsed((v) => !v)}
@@ -155,6 +157,6 @@ export default function TodayPlanWidget({ userLevel }: TodayPlanWidgetProps) {
           </div>
         </div>
       )}
-    </Surface>
+    </Card>
   );
 }

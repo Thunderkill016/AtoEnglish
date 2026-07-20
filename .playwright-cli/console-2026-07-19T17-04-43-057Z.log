@@ -1,0 +1,11 @@
+[    1993ms] Error: Minified React error #418; visit https://react.dev/errors/418?args[]=text&args[]= for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
+    at rX (https://atoenglish.vercel.app/_next/static/chunks/1hmqcz3ndu_4u.js:2:47243)
+    at https://atoenglish.vercel.app/_next/static/chunks/1hmqcz3ndu_4u.js:2:144220
+    at sh (https://atoenglish.vercel.app/_next/static/chunks/1hmqcz3ndu_4u.js:2:147785)
+    at sd (https://atoenglish.vercel.app/_next/static/chunks/1hmqcz3ndu_4u.js:2:139035)
+    at https://atoenglish.vercel.app/_next/static/chunks/1hmqcz3ndu_4u.js:2:138819
+    at sf (https://atoenglish.vercel.app/_next/static/chunks/1hmqcz3ndu_4u.js:2:138827)
+    at se (https://atoenglish.vercel.app/_next/static/chunks/1hmqcz3ndu_4u.js:2:133967)
+    at sW (https://atoenglish.vercel.app/_next/static/chunks/1hmqcz3ndu_4u.js:2:160646)
+    at sU (https://atoenglish.vercel.app/_next/static/chunks/1hmqcz3ndu_4u.js:2:158860)
+    at sB (https://atoenglish.vercel.app/_next/static/chunks/1hmqcz3ndu_4u.js:2:159204)

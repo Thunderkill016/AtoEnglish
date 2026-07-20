@@ -1,35 +1,29 @@
 "use client";
 
-import { ChevronRight } from "lucide-react";
-import { MinimalButton } from "@/components/design-system";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
-interface LessonContinueButtonProps {
-  children: React.ReactNode;
-  onClick: () => void;
-  disabled?: boolean;
-  variant?: "primary" | "secondary";
-  className?: string;
-}
+type V = "default" | "secondary" | "outline" | "ghost";
 
-export default function LessonContinueButton({
-  children,
+export function LessonContinueButton({
   onClick,
-  disabled = false,
-  variant = "primary",
+  disabled,
+  children,
   className,
-}: LessonContinueButtonProps) {
+  variant = "default",
+}: {
+  onClick?: () => void;
+  disabled?: boolean;
+  children: React.ReactNode;
+  className?: string;
+  variant?: V | "primary";
+}) {
+  const v: V = variant === "primary" ? "default" : (variant as V);
   return (
-    <MinimalButton
-      type="button"
-      onClick={onClick}
-      disabled={disabled}
-      variant={variant === "secondary" ? "secondary" : "primary"}
-      fullWidth
-      className={cn("!rounded-2xl", className)}
-    >
+    <Button type="button" variant={v} disabled={disabled} onClick={onClick} className={cn("w-full", className)}>
       {children}
-      {variant === "primary" && <ChevronRight size={18} aria-hidden />}
-    </MinimalButton>
+    </Button>
   );
 }
+
+export default LessonContinueButton;

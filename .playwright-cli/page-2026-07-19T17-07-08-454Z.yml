@@ -1,0 +1,51 @@
+- generic [ref=e1]:
+  - link "Chuyển đến nội dung chính" [ref=e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - main [ref=e4]:
+    - generic [ref=e6]:
+      - generic [ref=e7]:
+        - link "Home" [ref=e8] [cursor=pointer]:
+          - /url: /home
+        - generic [ref=e11]: A0 · P0
+      - generic [ref=e13]:
+        - paragraph [ref=e14]: Bài 1/42 · Lộ trình B1 · 8 bước · ~30 phút
+        - heading "Chữ cái & âm cơ bản" [level=1] [ref=e15]
+      - generic [ref=e16]:
+        - generic "Tiến độ bài học" [ref=e17]:
+          - generic "Bắt đầu" [ref=e18]
+          - generic "Từ vựng" [ref=e19]
+          - generic "Ngữ pháp" [ref=e20]
+          - generic "Luyện tập" [ref=e21]
+          - generic "Hội thoại & nghe" [ref=e22]
+          - generic "Phản xạ" [ref=e23]
+          - generic "Nhiệm vụ" [ref=e24]
+          - generic "Tổng kết" [ref=e25]
+        - generic [ref=e26]:
+          - paragraph [ref=e27]: 3/8 · Ngữ pháp
+          - paragraph [ref=e28]: 30 phút
+        - generic [ref=e125]:
+          - heading "How do you spell…?" [level=2] [ref=e127]
+          - paragraph [ref=e128]: How do you spell + noun?
+          - list [ref=e129]:
+            - listitem [ref=e130]:
+              - paragraph [ref=e131]: How do you spell your name?
+              - paragraph [ref=e132]: Bạn đánh vần tên thế nào?
+            - listitem [ref=e133]:
+              - paragraph [ref=e134]: How do you spell 'email'?
+              - paragraph [ref=e135]: Đánh vần 'email' thế nào?
+            - listitem [ref=e136]:
+              - paragraph [ref=e137]: It is L-A-N.
+              - paragraph [ref=e138]: Nó là L-A-N.
+          - paragraph [ref=e139]: "🇻🇳 Không nói How spell you name. Cấu trúc cố định: How do you spell…?"
+          - generic [ref=e140]:
+            - paragraph [ref=e141]: "Kiểm tra hiểu: Câu nào đúng?"
+            - list [ref=e142]:
+              - listitem [ref=e143]: · How spell your name?
+              - listitem [ref=e144]: ✓ How do you spell your name?
+              - listitem [ref=e145]: · How you spell name?
+              - listitem [ref=e146]: · Spell how name?
+        - generic [ref=e55]:
+          - button "Lại" [ref=e120]
+          - button "Tiếp tục" [active] [ref=e56]
+  - region "Notifications alt+T"
+  - alert [ref=e59]

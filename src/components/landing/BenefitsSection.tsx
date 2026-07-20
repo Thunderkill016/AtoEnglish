@@ -1,3 +1,4 @@
+import { StatLine } from "@/components/ui/page";
 
 import { Zap, Clock, Wallet } from "lucide-react";
 import ScrollReveal from "@/components/ui/scroll-reveal";

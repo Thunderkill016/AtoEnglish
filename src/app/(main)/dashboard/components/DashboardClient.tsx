@@ -1,4 +1,7 @@
+import { StatLine } from "@/components/ui/page";
 "use client";
+
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 
 import dynamic from "next/dynamic";
 import { useState, useEffect } from "react";
@@ -39,7 +42,6 @@ import {
 import DashboardHubNav from "./DashboardHubNav";
 import LevelProgressBar from "./LevelProgressBar";
 import StreakFreezeCard from "@/features/streak/components/StreakFreezeCard";
-import { Surface } from "@/components/design-system";
 
 // Dynamic import — PushPermissionCard uses browser APIs (Notification, PushManager)
 const PushPermissionCard = dynamic(
@@ -317,7 +319,7 @@ export default function DashboardClient({
 
   return (
     <div className="relative mx-auto max-w-7xl min-h-screen overflow-x-hidden bg-zinc-950 px-4 py-8 pb-20 text-zinc-50 sm:px-6 sm:pb-0 lg:px-8">
-      {/* Ato Surface ambient — match landing dark brand */}
+      {/* Ato Surface — match landing dark brand */}
       <div className="pointer-events-none absolute top-0 right-0 -z-10 h-[300px] w-[50vw] max-w-[400px] rounded-full bg-emerald-500/10 blur-[120px]" />
       <div className="pointer-events-none absolute bottom-0 left-0 -z-10 h-[300px] w-[300px] rounded-full bg-teal-500/8 blur-[100px]" />
 
@@ -406,11 +408,10 @@ export default function DashboardClient({
           {/* XP today */}
           <div
             onClick={() => setShowGoalSelector(true)}
-            title="Nhấn để thay đổi mục tiêu daily XP"
             className="cursor-pointer group"
           >
-            <Surface
-              variant="interactive"
+            <Card
+              
               className="rounded-2xl p-4 space-y-2 relative overflow-hidden"
               data-testid="dash-xp-card"
             >
@@ -480,7 +481,7 @@ export default function DashboardClient({
                   <p className="text-[9px] text-emerald-400/80 font-medium">Nhỏ đều &gt; burst — giữ thói quen nói mỗi ngày.</p>
                 </div>
               )}
-            </Surface>
+            </Card>
           </div>
 
           {/* Level */}
@@ -497,7 +498,7 @@ export default function DashboardClient({
             const unitsLeft = Math.max(0, levelUnitsAll.length - levelUnitsDone);
             return (
               <Link href="/roadmap" className="block">
-                <Surface variant="interactive" className="rounded-2xl p-4 space-y-2 h-full">
+                <Card  className="rounded-2xl p-4 space-y-2 h-full">
                   <div className="flex items-center gap-2">
                     <span className="flex size-7 items-center justify-center rounded-lg bg-blue-500/10 text-blue-400">
                       <GraduationCap className="size-3.5" />
@@ -520,14 +521,14 @@ export default function DashboardClient({
                   ) : (
                     <p className="text-[10px] text-zinc-400 font-medium tabular-nums">{displayXp} XP tích lũy</p>
                   )}
-                </Surface>
+                </Card>
               </Link>
             );
           })()}
 
           {/* Card 3: Chuỗi học */}
           <Link href="/progress" className="block">
-            <Surface variant="interactive" className="rounded-2xl p-4 space-y-2 h-full">
+            <Card  className="rounded-2xl p-4 space-y-2 h-full">
               <div className="flex items-center gap-2">
                 <span className="flex size-7 items-center justify-center rounded-lg bg-orange-500/10 text-orange-400">
                   <Flame className="size-3.5" />
@@ -546,7 +547,7 @@ export default function DashboardClient({
                   ? "🔥 Giữ vững nhé!"
                   : "⚡ Siêu kiên trì!"}
               </p>
-            </Surface>
+            </Card>
           </Link>
         </div>
 
@@ -577,7 +578,6 @@ export default function DashboardClient({
             <button
               onClick={handleDismissPlacementBanner}
               className="absolute top-3 right-3 p-1 rounded-full text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/40 transition-colors"
-              title="Đóng banner"
             >
               <svg className="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -648,7 +648,7 @@ export default function DashboardClient({
         {/* ── Section: Tiến độ ── */}
         <div id="dash-progress" className="space-y-6 scroll-mt-28">
         {/* Collapsible Detailed Stats Panel — Ato Surface */}
-        <Surface className="rounded-2xl overflow-hidden p-0">
+        <Card className="rounded-2xl overflow-hidden p-0">
           <button
             onClick={() => setShowDetailedStats((prev) => !prev)}
             className="w-full flex items-center justify-between px-5 py-4 text-sm font-bold text-zinc-100 hover:bg-white/5 transition-colors"
@@ -752,7 +752,7 @@ export default function DashboardClient({
               </motion.div>
             )}
           </AnimatePresence>
-        </Surface>
+        </Card>
 
         {/* ── 8. Bottom utility sections ── */}
         <Link
@@ -799,7 +799,7 @@ export default function DashboardClient({
         {/* WeeklyRecapCard moved to Collapsible Detailed Stats Panel */}
 
         {/* ── 9. Collapsible Curriculum Progress Grid — Ato Surface ── */}
-        <Surface className="rounded-2xl p-5 sm:p-6">
+        <Card className="rounded-2xl p-5 sm:p-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-sm font-bold text-zinc-50">Tiến độ khoá học</h2>
             <span className="text-xs text-zinc-400 font-semibold">{completedUnitIds.length}/{allUnits.length} units</span>
@@ -832,7 +832,6 @@ export default function DashboardClient({
                       <a
                         key={unit.id}
                         href={unit.route}
-                        title={unit.title}
                         className={`relative flex items-center justify-center h-9 rounded-xl text-xs font-black transition-all duration-200 border ${
                           done
                             ? "bg-gradient-to-br from-emerald-500 to-teal-600 text-white border-emerald-400/70 shadow-sm shadow-emerald-500/25 hover:from-emerald-400 hover:to-teal-500 active:scale-95"
@@ -871,7 +870,7 @@ export default function DashboardClient({
               )}
             </button>
           </div>
-        </Surface>
+        </Card>
         </div>
       </div>
 

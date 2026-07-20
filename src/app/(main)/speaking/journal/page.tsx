@@ -1,3 +1,4 @@
+import { StatLine } from "@/components/ui/page";
 import type { Metadata } from "next";
 import { SpeakingSubShell } from "../SpeakingSubShell";
 import { JournalMode } from "../journal-mode";
@@ -11,9 +12,7 @@ export const metadata: Metadata = {
 
 export default function JournalPage() {
   return (
-    <SpeakingSubShell
-      title="Daily Journal"
-      subtitle="Nhật ký nói tự do"
+    <SpeakingSubShell title="Journal"
     >
       <JournalMode />
     </SpeakingSubShell>

@@ -1,0 +1,56 @@
+- generic [active] [ref=e1]:
+  - link "Chuyển đến nội dung chính" [ref=e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - generic [ref=e3]:
+    - banner [ref=e5]:
+      - generic [ref=e6]:
+        - generic [ref=e7]:
+          - link "AtoEnglish" [ref=e8] [cursor=pointer]:
+            - /url: /dashboard
+          - navigation "Điều hướng chính" [ref=e14]:
+            - link "Học" [ref=e15] [cursor=pointer]:
+              - /url: /dashboard
+            - link "Ôn" [ref=e18] [cursor=pointer]:
+              - /url: /flashcards
+            - link "Tôi" [ref=e23] [cursor=pointer]:
+              - /url: /me
+        - generic [ref=e27]:
+          - button "Toggle theme" [ref=e28]
+          - link "Đăng nhập" [ref=e29] [cursor=pointer]:
+            - /url: /login?mode=login
+    - main [ref=e30]:
+      - generic [ref=e32]:
+        - generic [ref=e33]:
+          - generic [ref=e34]:
+            - generic [ref=e35]: Free speaking
+            - link "Speaking hub" [ref=e39] [cursor=pointer]:
+              - /url: /speaking
+          - generic [ref=e43]:
+            - paragraph [ref=e44]: Luyện nói
+            - heading "AI Roleplay" [level=1] [ref=e45]
+            - paragraph [ref=e46]: Hội thoại nhập vai với AI
+        - generic [ref=e48]:
+          - generic [ref=e49]:
+            - button "Hotel Check-in" [ref=e50]
+            - button "Job Interview" [ref=e52]
+            - button "Ordering Coffee" [ref=e54]
+            - button "Airport Security" [ref=e56]
+            - button "Restaurant Dining" [ref=e58]
+            - button "Doctor's Appointment" [ref=e60]
+            - button "Product Demo" [ref=e62]
+            - button "Investor Pitch" [ref=e64]
+            - button "Customer Support" [ref=e66]
+            - button "Online Meeting" [ref=e68]
+            - button "Salary Negotiation" [ref=e70]
+            - button "Networking Event" [ref=e72]
+            - button "Performance Review" [ref=e74]
+          - generic [ref=e76]:
+            - generic [ref=e77]:
+              - generic [ref=e82]:
+                - heading "Hotel Check-in" [level=4] [ref=e83]
+                - paragraph [ref=e84]: "Đóng vai cùng: Receptionist (Lễ tân)"
+              - generic [ref=e85]: Easy
+            - generic [ref=e89]:
+              - button "Nhấn để trả lời AI" [ref=e90]
+              - button "Khởi động lại cuộc trò chuyện" [ref=e92]
+  - region "Notifications alt+T"

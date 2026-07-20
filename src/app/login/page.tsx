@@ -1,3 +1,4 @@
+import { StatLine } from "@/components/ui/page";
 "use client";
 
 import { useState, Suspense, useEffect, useRef, useMemo } from "react";
@@ -8,7 +9,6 @@ import { Mail, Lock, Loader2, Sparkles, ArrowLeft, Sprout, Check } from "lucide-
 import { toast } from "sonner";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
-import { MinimalButton } from "@/components/design-system";
 import { LoginSchema, SignUpSchema } from "@/lib/security/validation";
 import {
   getDailyMinutes,
@@ -422,13 +422,12 @@ function LoginContent() {
                   </div>
 
                   {/* Primary CTA */}
-                  <MinimalButton
+                  <Button
                     onClick={() => { setDirection(1); setOnboardingStep(1); }}
-                    fullWidth
-                    className="max-w-xs"
+                    className="w-full max-w-xs"
                   >
                     Bắt đầu — Miễn phí 🚀
-                  </MinimalButton>
+                  </Button>
 
                   {/* Already have account */}
                   <button
@@ -605,10 +604,10 @@ function LoginContent() {
                         </div>
                       </div>
 
-                      <MinimalButton
+                      <Button
                         type="submit"
                         disabled={isLoading || isGoogleLoading}
-                        fullWidth
+                        className="w-full"
                       >
                         {isLoading && <Loader2 className="size-4 animate-spin" />}
                         <span>
@@ -618,7 +617,7 @@ function LoginContent() {
                               : "Đăng ký tài khoản"
                             : "Đăng nhập bằng Email"}
                         </span>
-                      </MinimalButton>
+                      </Button>
                     </form>
 
                     {/* Toggle + redo survey */}

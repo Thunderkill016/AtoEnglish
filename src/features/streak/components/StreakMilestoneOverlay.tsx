@@ -1,3 +1,4 @@
+import { StatLine } from "@/components/ui/page";
 "use client";
 
 import { useEffect, useState } from "react";

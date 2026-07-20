@@ -1,9 +1,11 @@
+import { StatLine } from "@/components/ui/page";
 "use client";
+
+import { Button, buttonVariants } from "@/components/ui/button";
 
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Shuffle, CheckCircle } from "lucide-react";
-import { MinimalButton } from "@/components/design-system";
 import LessonSectionHeader from "../lesson-ui/LessonSectionHeader";
 import LessonContinueButton from "../lesson-ui/LessonContinueButton";
 import { lessonSectionMotion } from "../lesson-ui/motion";
@@ -189,7 +191,6 @@ export default function PracticeSection({
         sectionId={4}
         sectionOrderIdx={sectionOrderIdx}
         totalSections={TOTAL_SECTIONS}
-        subtitle="Kiểm tra nhanh — chọn hoặc điền đáp án"
       />
       {/* S3-3: Adaptive weak-type tip */}
       {weakTip && (
@@ -643,10 +644,9 @@ export default function PracticeSection({
       )}
 
       {!practiceSubmitted ? (
-        <MinimalButton
+        <Button
           type="button"
-          fullWidth
-          className="!rounded-2xl !py-4 text-lg"
+          className="w-full !rounded-2xl !py-4 text-lg"
           disabled={!allPracticeAnswered}
           onClick={() => {
             setPracticeSubmitted(true);
@@ -657,7 +657,7 @@ export default function PracticeSection({
           }}
         >
           Kiểm tra đáp án
-        </MinimalButton>
+        </Button>
       ) : (
         <div className="space-y-4">
           <div

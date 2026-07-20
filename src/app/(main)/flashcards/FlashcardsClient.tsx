@@ -1,5 +1,7 @@
 "use client";
 
+import { Page, PageHeader, Section, ListRow } from "@/components/ui/page";
+
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence, useMotionValue, useTransform, PanInfo } from "framer-motion";
@@ -30,7 +32,6 @@ import {
   type LocalCard,
 } from "@/lib/v2/local-cards";
 import { toast } from "sonner";
-import { SecondaryPageShell, PrimaryRow } from "@/components/design-system";
 
 interface Flashcard {
   id: string;
@@ -369,19 +370,24 @@ export default function FlashcardsPage() {
   // Loading state UI
   if (isLoading) {
     return (
-      <SecondaryPageShell title="Ôn tập" subtitle="Đang tải thẻ SRS...">
+      <Page>
+      <PageHeader description="Đang tải thẻ SRS..." />
+      <div>
         <div className="flex flex-col items-center justify-center min-h-[40vh] space-y-4">
           <Loader2 className="size-10 text-primary animate-spin" />
           <p className="text-sm text-muted-foreground font-semibold">Đang tải thẻ đến hạn...</p>
         </div>
-      </SecondaryPageShell>
+      </div>
+    </Page>
     );
   }
 
   // Empty state UI (No due cards)
   if (!isLoading && cards.length === 0) {
     return (
-      <SecondaryPageShell title="Ôn tập" subtitle="Hôm nay bạn đã ôn xong!">
+      <Page>
+      <PageHeader description="Hôm nay bạn đã ôn xong!" />
+      <div>
         <div className="flex flex-col items-center text-center space-y-4 mb-6">
           <div className="inline-flex size-14 items-center justify-center rounded-2xl bg-emerald-500/10 text-emerald-600">
             <CheckCircle className="size-7" />
@@ -391,11 +397,12 @@ export default function FlashcardsPage() {
           </p>
         </div>
         <div className="space-y-2">
-          <PrimaryRow href="/learn" label="Học bài mới" description="Tiếp tục lộ trình" icon={Layers} />
-          <PrimaryRow href="/quiz" label="Quiz từ vựng" description="Trắc nghiệm nhanh" icon={HelpCircle} />
-          <PrimaryRow href="/flashcards/hard" label="Từ khó nhất" description="Ôn các thẻ leech" icon={AlertTriangle} />
+          <ListRow href="/learn" label="Học bài mới" description="Tiếp tục lộ trình" icon={Layers} />
+          <ListRow href="/quiz" label="Quiz từ vựng" description="Trắc nghiệm nhanh" icon={HelpCircle} />
+          <ListRow href="/flashcards/hard" label="Từ khó nhất" description="Ôn các thẻ leech" icon={AlertTriangle} />
         </div>
-      </SecondaryPageShell>
+      </div>
+    </Page>
     );
   }
 
@@ -405,10 +412,9 @@ export default function FlashcardsPage() {
   const dueCount = cards.length - currentIndex;
 
   return (
-    <SecondaryPageShell
-      title="Ôn tập"
-      subtitle={`${dueCount} thẻ còn lại · SRS`}
-    >
+    <Page>
+      <PageHeader />
+      <div>
       <div className="space-y-5 sm:space-y-6 pb-16">
       <motion.div 
         initial={{ opacity: 0, y: -10 }}
@@ -821,6 +827,7 @@ export default function FlashcardsPage() {
         </motion.div>
       )}
       </div>
-    </SecondaryPageShell>
+    </div>
+    </Page>
   );
 }

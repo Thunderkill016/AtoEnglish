@@ -1,3 +1,4 @@
+import { StatLine } from "@/components/ui/page";
 /**
  * P1-5 Fix: Layout-preserving skeleton for the learn unit page.
  * Matches UnitTemplate structure: header + progress bar + section tabs + content area.
@@ -19,7 +20,7 @@ export default function Loading() {
       </div>
 
       <div className="max-w-2xl mx-auto px-4 pb-24 pt-6 space-y-5">
-        {/* Unit title block */}
+        {/* Unit block */}
         <div className="space-y-2">
           <div className="h-3 bg-emerald-900/40 rounded-full w-20" />
           <div className="h-7 bg-zinc-800 rounded-xl w-64" />

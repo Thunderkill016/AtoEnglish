@@ -1,5 +1,8 @@
 "use client";
 
+import {Page, PageHeader, Section, ListRow, StatLine} from "@/components/ui/page";
+import Link from "next/link";
+
 import { useState } from "react";
 import {
   ChevronDown,
@@ -16,12 +19,6 @@ import {
   getPhaseProgress,
 } from "@/lib/constants/study-plan";
 import { UNITS } from "@/lib/constants/units";
-import {
-  SecondaryPageShell,
-  PrimaryRow,
-  ListSection,
-  StatLine,
-} from "@/components/design-system";
 import { cn } from "@/lib/utils";
 
 interface Props {
@@ -54,13 +51,12 @@ export default function RoadmapClient({
   const overallProgress = getPhaseProgress(userLevel, effectiveCompleted, allUnits);
 
   return (
-    <SecondaryPageShell
-      title="Lộ trình"
-      subtitle={`${userLevel} · ${currentPhase.title} · ${overallProgress.completed}/${overallProgress.total} unit`}
-    >
+    <Page>
+      <PageHeader />
+      <div>
       <div className="space-y-5 pb-16">
         {nextUnitTitle && (
-          <PrimaryRow
+          <ListRow
             href={nextUnitRoute}
             label="Học tiếp"
             description={nextUnitTitle}
@@ -69,14 +65,12 @@ export default function RoadmapClient({
         )}
 
         <div className="rounded-xl border border-border/60 bg-card px-4">
-          <StatLine
-            label="Giai đoạn hiện tại"
+          <StatLine label="Giai đoạn hiện tại"
             value={currentPhase.title}
             caption={`${currentPhase.months} · ${currentPhase.cefrFrom} → ${currentPhase.cefrTo}`}
           />
           {placementCompleted && entryUnit && (
-            <StatLine
-              label="Điểm bắt đầu"
+            <StatLine label="Điểm bắt đầu"
               value={entryUnit.title}
               caption="Đã xác định trình độ"
             />
@@ -88,7 +82,7 @@ export default function RoadmapClient({
           {todayTip}
         </p>
 
-        <ListSection title="4 giai đoạn">
+        <Section>
           {STUDY_PHASES.map((phase) => {
             const phaseUnits = UNITS.filter((u) =>
               phase.unitLevels.includes(u.level)
@@ -141,7 +135,7 @@ export default function RoadmapClient({
                       const completed = completedUnitIds.includes(unit.id);
                       const Icon = completed ? CheckCircle2 : Circle;
                       return (
-                        <PrimaryRow
+                        <ListRow
                           key={unit.id}
                           href={meta.route}
                           label={meta.title}
@@ -155,8 +149,9 @@ export default function RoadmapClient({
               </div>
             );
           })}
-        </ListSection>
+        </Section>
       </div>
-    </SecondaryPageShell>
+    </div>
+    </Page>
   );
 }

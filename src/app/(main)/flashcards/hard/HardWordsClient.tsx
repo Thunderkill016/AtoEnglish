@@ -1,5 +1,7 @@
 "use client";
 
+import {Page, PageHeader, Section, ListRow, StatLine} from "@/components/ui/page";
+
 import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
@@ -15,7 +17,6 @@ import {
   Trophy,
 } from "lucide-react";
 import { getHardWords } from "@/app/actions/cards";
-import { SecondaryPageShell, StatLine } from "@/components/design-system";
 
 type HardWord = {
   id: string;
@@ -226,10 +227,9 @@ export default function HardWordsClient() {
   const criticalCount = words ? words.filter((w) => w.mastery_pct < 50).length : 0;
 
   return (
-    <SecondaryPageShell
-      title="Từ Khó Nhất"
-      subtitle="Những từ bạn bấm Again nhiều nhất — ôn để không quên nữa."
-    >
+    <Page>
+      <PageHeader description="Những từ bạn bấm Again nhiều nhất — ôn để không quên nữa." />
+      <div>
     <div className="space-y-6 pb-16">
       <div className="flex items-center justify-between gap-3">
         <Link
@@ -337,6 +337,7 @@ export default function HardWordsClient() {
         </div>
       )}
     </div>
-    </SecondaryPageShell>
+    </div>
+    </Page>
   );
 }

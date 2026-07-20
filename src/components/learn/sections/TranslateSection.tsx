@@ -1,3 +1,4 @@
+import { StatLine } from "@/components/ui/page";
 "use client";
 
 import { useState, useTransition } from "react";
@@ -90,7 +91,6 @@ export default function TranslateSection({
         sectionId={9}
         sectionOrderIdx={sectionOrderIdx}
         totalSections={TOTAL_SECTIONS}
-        subtitle="Sản xuất ngôn ngữ — không nhìn gợi ý"
       />
       <p className="text-muted-foreground mb-6 text-sm">
         Đọc câu tiếng Việt và gõ bản dịch tiếng Anh của bạn.

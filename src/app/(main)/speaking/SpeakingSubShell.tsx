@@ -1,48 +1,32 @@
-import { ArrowLeft, Mic } from "lucide-react";
-import {
-  AppButton,
-  Chip,
-  PageHeader,
-  Screen,
-  Surface,
-} from "@/components/design-system";
+"use client";
 
-interface SpeakingSubShellProps {
-  title: string;
-  subtitle?: string;
-  children: React.ReactNode;
-}
+import Link from "next/link";
+import { Page, PageHeader } from "@/components/ui/page";
+import { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
-/**
- * Ato chrome for speaking practice subroutes (TASK-283).
- * Matches speaking hub: Screen ato + ambient, PageHeader, Surface, AppButton back.
- */
 export function SpeakingSubShell({
   title,
-  subtitle,
   children,
-}: SpeakingSubShellProps) {
+  backHref = "/speaking",
+}: {
+  title: string;
+  children: React.ReactNode;
+  backHref?: string;
+}) {
   return (
-    <Screen ato ambient>
-      <div className="mb-5 space-y-3">
-        <div className="flex flex-wrap items-center gap-2">
-          <Chip tone="brand" className="tracking-widest">
-            <Mic className="size-3.5" aria-hidden />
-            Free speaking
-          </Chip>
-          <AppButton
-            href="/speaking"
-            variant="ghost"
-            size="sm"
-            data-testid="speaking-sub-back"
-          >
-            <ArrowLeft className="size-3.5" aria-hidden />
-            Speaking hub
-          </AppButton>
-        </div>
-        <PageHeader eyebrow="Luyện nói" title={title} subtitle={subtitle} />
-      </div>
-      <Surface className="overflow-hidden p-4 sm:p-5">{children}</Surface>
-    </Screen>
+    <Page>
+      <Link
+        href={backHref}
+        className={cn(buttonVariants({ variant: "ghost", size: "sm" }), "-ml-2 mb-2")}
+        data-testid="speaking-back"
+      >
+        ← Quay lại
+      </Link>
+      <PageHeader title={title} />
+      {children}
+    </Page>
   );
 }
+
+export default SpeakingSubShell;

@@ -1,3 +1,4 @@
+import { StatLine } from "@/components/ui/page";
 "use client";
 
 import { useState, useEffect, useRef } from "react";
@@ -301,7 +302,6 @@ function VideoShadowingCard({ videoId }: { videoId: string }) {
               src={`https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1`}
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope"
               allowFullScreen
-              title="Shadowing video"
             />
           ) : (
             <button
@@ -858,7 +858,6 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
                     } catch { /* ignore */ }
                   }}
                   className="flex items-center gap-1.5 text-[11px] font-bold px-3 py-1.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-400 hover:bg-amber-500/20 hover:border-amber-500/50 transition-all whitespace-nowrap active:scale-95"
-                  title="Bỏ qua các phần đầu, chỉ làm luyện tập + quiz ~5 phút"
                 >
                   ⚡ <span>Ôn nhanh</span>
                   <span className="text-amber-500/60 text-[9px] font-bold">~5p</span>

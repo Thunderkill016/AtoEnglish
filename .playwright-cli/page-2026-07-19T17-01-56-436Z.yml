@@ -1,0 +1,78 @@
+- generic [ref=e1]:
+  - link "Chuyển đến nội dung chính" [ref=e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - main [ref=e4]:
+    - generic [ref=e6]:
+      - generic [ref=e7]:
+        - link "Home" [ref=e8] [cursor=pointer]:
+          - /url: /home
+        - generic [ref=e11]: A0 · P0
+      - generic [ref=e13]:
+        - paragraph [ref=e14]: Bài 1/42 · Lộ trình B1 · 8 bước · ~30 phút
+        - heading "Chữ cái & âm cơ bản" [level=1] [ref=e15]
+      - generic [ref=e16]:
+        - generic "Tiến độ bài học" [ref=e17]:
+          - generic "Bắt đầu" [ref=e18]
+          - generic "Từ vựng" [ref=e19]
+          - generic "Ngữ pháp" [ref=e20]
+          - generic "Luyện tập" [ref=e21]
+          - generic "Hội thoại & nghe" [ref=e22]
+          - generic "Phản xạ" [ref=e23]
+          - generic "Nhiệm vụ" [ref=e24]
+          - generic "Tổng kết" [ref=e25]
+        - generic [ref=e26]:
+          - paragraph [ref=e27]: 4/8 · Luyện tập
+          - paragraph [ref=e28]: 30 phút
+        - generic [ref=e149]:
+          - generic [ref=e150]:
+            - heading "Luyện tập" [level=2] [ref=e151]
+            - paragraph [ref=e152]: MCQ · chạm từ sắp xếp · điền chỗ trống — ~80% đúng là ổn
+          - generic [ref=e153]:
+            - generic [ref=e154]:
+              - paragraph [ref=e155]: "#1"
+              - generic [ref=e156]: mcq
+            - paragraph [ref=e157]: Chọn nguyên âm
+            - generic [ref=e158]:
+              - button "B" [ref=e159]
+              - button "C" [ref=e160]
+              - button "A" [ref=e161]
+              - button "D" [ref=e162]
+          - generic [ref=e163]:
+            - generic [ref=e164]:
+              - paragraph [ref=e165]: "#2"
+              - generic [ref=e166]: mcq
+            - paragraph [ref=e167]: Hỏi đánh vần tên
+            - generic [ref=e168]:
+              - button "How do you spell your name?" [ref=e169]
+              - button "What your name spell?" [ref=e170]
+              - button "Spell me name?" [ref=e171]
+              - button "Name how?" [ref=e172]
+          - generic [ref=e173]:
+            - generic [ref=e174]:
+              - paragraph [ref=e175]: "#3"
+              - generic [ref=e176]: scramble
+            - paragraph [ref=e177]: "Sắp xếp: spell / you / do / How / it"
+            - generic [ref=e178]:
+              - generic [ref=e179]: Chạm từ bên dưới để xếp câu...
+              - generic [ref=e181]:
+                - button "do" [ref=e182]
+                - button "you" [ref=e183]
+                - button "spell" [ref=e184]
+                - button "How" [ref=e185]
+                - button "it" [ref=e186]
+              - button "Kiểm tra" [disabled] [ref=e187]
+          - generic [ref=e188]:
+            - generic [ref=e189]:
+              - paragraph [ref=e190]: "#4"
+              - generic [ref=e191]: mcq
+            - paragraph [ref=e192]: "Please ___ : A B C"
+            - generic [ref=e193]:
+              - button "repeat" [ref=e194]
+              - button "from" [ref=e195]
+              - button "meet" [ref=e196]
+              - button "fine" [ref=e197]
+        - generic [ref=e55]:
+          - button "Lại" [ref=e120]
+          - button "Tiếp tục" [active] [ref=e56]
+  - region "Notifications alt+T"
+  - alert [ref=e59]

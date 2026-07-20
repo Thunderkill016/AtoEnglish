@@ -1,5 +1,7 @@
 "use client";
 
+import {Page, PageHeader, Section, ListRow, StatLine} from "@/components/ui/page";
+
 import { useState, useTransition } from "react";
 import Link from "next/link";
 import { useTheme } from "next-themes";
@@ -28,7 +30,6 @@ import {
 } from "@/lib/push-notifications";
 import { savePushSubscription, removePushSubscription } from "@/app/actions/push";
 import { saveNotificationPreferences } from "@/app/actions/notifications";
-import { SecondaryPageShell } from "@/components/design-system";
 
 const VAPID_PUBLIC_KEY = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY ?? "";
 
@@ -42,7 +43,7 @@ interface SettingToggleProps {
 }
 
 interface SettingSectionProps {
-  title: string;
+  title?: string;
   children: React.ReactNode;
 }
 
@@ -51,7 +52,7 @@ function SettingSection({ title, children }: SettingSectionProps) {
   return (
     <div className="mb-6">
       <h2 className="text-xs font-bold uppercase tracking-widest text-zinc-500 dark:text-zinc-400 px-1 mb-2">
-        {title}
+        {title ?? ""}
       </h2>
       <div className="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/50 overflow-hidden divide-y divide-zinc-100 dark:divide-zinc-800">
         {children}
@@ -332,10 +333,12 @@ export default function SettingsClient({
   };
 
   return (
-    <SecondaryPageShell title="Cài đặt" subtitle={userEmail || undefined}>
+    <Page>
+      <PageHeader />
+      <div>
       <div className="pb-16">
       {/* Notifications */}
-      <SettingSection title="Thông báo">
+      <SettingSection>
         {/* Push toggle */}
         <div className="flex items-center justify-between px-4 py-3.5 gap-4">
           <div className="flex items-center gap-3">
@@ -414,7 +417,7 @@ export default function SettingsClient({
       </SettingSection>
 
       {/* Learning */}
-      <SettingSection title="Học tập">
+      <SettingSection>
         <SettingSelect
           label="Mục tiêu XP hàng ngày"
           description="Số XP cần đạt mỗi ngày để duy trì streak"
@@ -503,7 +506,7 @@ export default function SettingsClient({
       </SettingSection>
 
       {/* Display */}
-      <SettingSection title="Giao diện">
+      <SettingSection>
         <SettingSelect
           label="Chủ đề"
           description="Màu sắc giao diện ứng dụng"
@@ -529,7 +532,7 @@ export default function SettingsClient({
       </SettingSection>
 
       {/* App */}
-      <SettingSection title="Ứng dụng">
+      <SettingSection>
         <SettingAction
           label="Cài đặt ứng dụng (PWA)"
           description="Thêm AtoEnglish vào màn hình chính"
@@ -591,7 +594,8 @@ export default function SettingsClient({
         </motion.button>
       </div>
       </div>
-    </SecondaryPageShell>
+    </div>
+    </Page>
   );
 }
 

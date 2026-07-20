@@ -1,3 +1,4 @@
+import { StatLine } from "@/components/ui/page";
 import type { Metadata } from "next";
 import { SpeakingSubShell } from "../SpeakingSubShell";
 import { ShadowingPractice } from "../shadowing-practice";
@@ -11,9 +12,7 @@ export const metadata: Metadata = {
 
 export default function ShadowingPage() {
   return (
-    <SpeakingSubShell
-      title="Shadowing Practice"
-      subtitle="Nói đuổi theo audio bản xứ"
+    <SpeakingSubShell title="Shadowing"
     >
       <ShadowingPractice />
     </SpeakingSubShell>

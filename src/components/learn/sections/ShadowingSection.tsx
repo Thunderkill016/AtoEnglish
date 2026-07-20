@@ -1,9 +1,11 @@
+import { StatLine } from "@/components/ui/page";
 "use client";
+
+import { Button, buttonVariants } from "@/components/ui/button";
 
 import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Volume2, Mic, MicOff, Sparkles, ChevronRight } from "lucide-react";
-import { MinimalButton } from "@/components/design-system";
 import LessonSectionHeader from "../lesson-ui/LessonSectionHeader";
 import LessonContinueButton from "../lesson-ui/LessonContinueButton";
 import { lessonSectionMotion } from "../lesson-ui/motion";
@@ -375,17 +377,16 @@ export default function ShadowingSection({
           )}
 
           {shadowScores[shadowLineIdx] !== undefined && (
-            <MinimalButton
+            <Button
               type="button"
-              fullWidth
-              className="!rounded-xl"
+              className="w-full !rounded-xl"
               onClick={handleShadowNext}
             >
               {shadowLineIdx < DIALOGUES[shadowDialogueIdx].lines.length - 1
                 ? "Dòng tiếp theo"
                 : "Hoàn thành phần Shadowing"}
               <ChevronRight size={16} />
-            </MinimalButton>
+            </Button>
           )}
         </div>
       ) : (

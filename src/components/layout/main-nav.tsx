@@ -1,10 +1,12 @@
+import { StatLine } from "@/components/ui/page";
 "use client";
+
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import { getDesktopPrimaryNav } from "@/lib/constants/navigation";
-import { ATO_FOCUS } from "@/lib/ui/ato-surface";
 import { cn } from "@/lib/utils";
 
 /** Desktop primary nav — Ato Surface active emerald pill */
@@ -27,7 +29,6 @@ export function MainNavRow() {
             href={item.href}
             className={cn(
               "inline-flex items-center gap-1.5 rounded-xl px-3 py-2 text-sm font-semibold transition-colors duration-200",
-              ATO_FOCUS,
               isActive
                 ? "bg-emerald-500/15 text-emerald-400 shadow-[0_0_16px_-4px_rgba(16,185,129,0.4)]"
                 : "text-zinc-400 hover:bg-white/5 hover:text-zinc-100",

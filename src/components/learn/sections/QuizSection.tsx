@@ -1,10 +1,13 @@
+import { cn } from "@/lib/utils";
+import { StatLine } from "@/components/ui/page";
 "use client";
+
+import { Button, buttonVariants } from "@/components/ui/button";
 
 import { useState, useCallback, useEffect } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { Star, CheckCircle, Volume2, Sparkles, ChevronRight } from "lucide-react";
-import { MinimalButton } from "@/components/design-system";
 import LessonSectionHeader from "../lesson-ui/LessonSectionHeader";
 import LessonContinueButton from "../lesson-ui/LessonContinueButton";
 import { lessonSectionMotion } from "../lesson-ui/motion";
@@ -228,7 +231,6 @@ export default function QuizSection({
         sectionId={8}
         sectionOrderIdx={sectionOrderIdx}
         totalSections={TOTAL_SECTIONS}
-        subtitle="Hoàn thành để nhận XP"
       />
 
       {/* Spaced Cumulative Review */}
@@ -307,10 +309,9 @@ export default function QuizSection({
                   );
                 })}
               </div>
-              <MinimalButton
+              <Button
                 type="button"
-                fullWidth
-                className="mt-4 !rounded-2xl"
+                className="w-full mt-4 !rounded-2xl"
                 disabled={unit.cumulativeReviewQuestions.some((q) =>
                   q.type === "multiple-choice"
                     ? !cumulativeAnswers[q.id]
@@ -328,7 +329,7 @@ export default function QuizSection({
                 }}
               >
                 Kiểm tra ôn tập
-              </MinimalButton>
+              </Button>
             </div>
           ) : (
             <div className="bg-amber-500/10 border border-amber-500/30 rounded-2xl p-4">
@@ -545,10 +546,9 @@ export default function QuizSection({
               );
             })}
           </div>
-          <MinimalButton
+          <Button
             type="button"
-            fullWidth
-            className="mt-6 !rounded-2xl"
+            className="w-full mt-6 !rounded-2xl"
             onClick={() => {
               setQuizSubmitted(true);
               if (finalQuizScore >= Math.ceil(FINAL_QS.length * 0.8)) playCorrectSound();
@@ -568,7 +568,7 @@ export default function QuizSection({
             }
           >
             Kiểm tra đáp án
-          </MinimalButton>
+          </Button>
         </div>
       ) : (
         <div className="space-y-6">
@@ -648,10 +648,9 @@ export default function QuizSection({
                       </div>
                     );
                   })}
-                  <MinimalButton
+                  <Button
                     type="button"
-                    fullWidth
-                    className="!rounded-2xl"
+                    className="w-full !rounded-2xl"
                     onClick={() => {
                       setRetrySubmitted(true);
                       if (retryCorrectCount > 0) playCorrectSound();
@@ -663,7 +662,7 @@ export default function QuizSection({
                     )}
                   >
                     Gửi câu trả lời
-                  </MinimalButton>
+                  </Button>
                 </div>
               ) : (
                 <div className="text-center py-2">
@@ -837,9 +836,8 @@ export default function QuizSection({
                 >
                   📝 Quiz từ vựng
                 </Link>
-                <MinimalButton href={nextRoute} className="!rounded-xl">
-                  Tiếp tục <ChevronRight size={16} />
-                </MinimalButton>
+                <Link href={nextRoute} className={cn(buttonVariants(), "inline-flex items-center gap-1 !rounded-xl")}>Tiếp tục <ChevronRight size={16} />
+                </Link>
               </div>
             </div>
           )}

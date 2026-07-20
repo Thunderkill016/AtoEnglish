@@ -1,0 +1,258 @@
+- generic [active] [ref=e1]:
+  - link "Chuyển đến nội dung chính" [ref=e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - generic [ref=e3]:
+    - banner [ref=e5]:
+      - generic [ref=e6]:
+        - generic [ref=e7]:
+          - link "AtoEnglish" [ref=e8] [cursor=pointer]:
+            - /url: /dashboard
+          - navigation "Điều hướng chính" [ref=e14]:
+            - link "Học" [ref=e15] [cursor=pointer]:
+              - /url: /dashboard
+            - link "Ôn" [ref=e18] [cursor=pointer]:
+              - /url: /flashcards
+            - link "Tôi" [ref=e23] [cursor=pointer]:
+              - /url: /me
+        - generic [ref=e27]:
+          - button "Toggle theme" [ref=e28]
+          - link "Đăng nhập" [ref=e29] [cursor=pointer]:
+            - /url: /login?mode=login
+    - main [ref=e30]:
+      - generic [ref=e32]:
+        - generic [ref=e33]:
+          - generic [ref=e34]:
+            - paragraph [ref=e35]: Chào mừng trở lại
+            - heading "Chào bạn, Học viên!" [level=1] [ref=e36]
+          - generic [ref=e38]:
+            - generic [ref=e39]: ⭕
+            - generic [ref=e40]: "0"
+        - navigation "Điều hướng dashboard" [ref=e41]:
+          - generic [ref=e42]:
+            - button "Hôm nay 4" [ref=e43]:
+              - text: Hôm nay
+              - generic [ref=e46]: "4"
+            - button "Luyện tập" [ref=e47]
+            - button "Tiến độ 50" [ref=e52]:
+              - text: Tiến độ
+              - generic [ref=e56]: "50"
+        - generic [ref=e57]:
+          - generic [ref=e58]:
+            - generic "Nhấn để thay đổi mục tiêu daily XP" [ref=e59] [cursor=pointer]:
+              - generic [ref=e60]:
+                - generic [ref=e61]: Mục tiêu hôm nay ⚙️
+                - generic [ref=e66]:
+                  - paragraph [ref=e67]: 50 XP
+                  - paragraph [ref=e68]: Học bài đầu tiên →
+            - link "Trình độ A0 Còn 8 bài → A1" [ref=e69] [cursor=pointer]:
+              - /url: /roadmap
+              - generic [ref=e70]:
+                - generic [ref=e71]: Trình độ
+                - paragraph [ref=e77]: A0
+                - paragraph [ref=e79]: Còn 8 bài → A1
+            - link "Chuỗi học 0 ngày Bắt đầu hôm nay →" [ref=e80] [cursor=pointer]:
+              - /url: /progress
+              - generic [ref=e81]:
+                - generic [ref=e82]: Chuỗi học
+                - paragraph [ref=e87]: 0 ngày
+                - paragraph [ref=e88]: Bắt đầu hôm nay →
+          - generic [ref=e89]:
+            - generic [ref=e94]:
+              - generic [ref=e95]:
+                - generic [ref=e96]: Bài học đang học
+                - generic [ref=e97]: "Pha 1: Input"
+              - generic [ref=e98]:
+                - 'heading "Unit A0-1: Bảng Chữ Cái & Âm Cơ Bản" [level=3] [ref=e99]'
+                - paragraph [ref=e100]: Học 26 chữ cái tiếng Anh và cách phát âm cơ bản — nền tảng đầu tiên của hành trình học tiếng Anh.
+              - generic [ref=e101]:
+                - generic [ref=e102]: Từ vựng +10
+                - generic [ref=e103]: Bảng chữ cái
+                - generic [ref=e104]: My name is
+            - generic [ref=e105]:
+              - generic [ref=e107]:
+                - generic [ref=e108]: Tiến trình
+                - generic [ref=e112]: 0%
+              - generic [ref=e114]:
+                - generic [ref=e115]:
+                  - paragraph [ref=e116]:
+                    - text: Hoàn thành để nhận
+                    - strong [ref=e117]: 60 XP
+                  - paragraph [ref=e118]: Tiếp tục → 20% sau bài học hôm nay 🚀
+                - generic [ref=e119]:
+                  - link [ref=e120] [cursor=pointer]:
+                    - /url: /learn/unit-a0-1?mini=1
+                    - button "Học nhanh ~15 phút" [ref=e121]
+                  - link [ref=e122] [cursor=pointer]:
+                    - /url: /learn/unit-a0-1
+                    - button "Tiếp tục học ngay" [ref=e123]
+          - generic [ref=e125]:
+            - generic [ref=e127]:
+              - paragraph [ref=e132]: Nhiệm vụ hôm nay
+              - generic [ref=e133]: 1/5 hoàn thành
+            - generic [ref=e136]:
+              - generic [ref=e137]:
+                - paragraph [ref=e138]: Ưu tiên — làm trước
+                - link [ref=e139] [cursor=pointer]:
+                  - /url: /learn/unit-a0-1
+                  - generic [ref=e143]:
+                    - paragraph [ref=e144]: "Unit A0-1: Bảng Chữ Cái & Âm Cơ Bản"
+                    - paragraph [ref=e145]: 0% tiến độ
+                  - generic [ref=e146]: +60 XP
+              - generic [ref=e152]:
+                - paragraph [ref=e153]: Danh sách — tự động cập nhật từ tiến độ
+                - generic [ref=e154]:
+                  - link "Ôn tập SRS (đã xong hôm nay!) +15 XP" [ref=e155] [cursor=pointer]:
+                    - /url: /flashcards
+                    - paragraph [ref=e161]: Ôn tập SRS (đã xong hôm nay!)
+                    - generic [ref=e162]: +15 XP
+                  - link "Quiz từ vựng — 5 câu +15 XP" [ref=e163] [cursor=pointer]:
+                    - /url: /quiz
+                    - paragraph [ref=e168]: Quiz từ vựng — 5 câu
+                    - generic [ref=e169]: +15 XP
+                  - link "Luyện nói — 5 phút +15 XP" [ref=e170] [cursor=pointer]:
+                    - /url: /speaking
+                    - paragraph [ref=e175]: Luyện nói — 5 phút
+                    - generic [ref=e176]: +15 XP
+                  - link "Thử thách hàng ngày — 5 câu từ vựng Hoàn thành daily challenge +50 XP" [ref=e177] [cursor=pointer]:
+                    - /url: /challenge
+                    - generic [ref=e181]:
+                      - paragraph [ref=e182]: Thử thách hàng ngày — 5 câu từ vựng
+                      - paragraph [ref=e183]: Hoàn thành daily challenge
+                    - generic [ref=e184]: +50 XP
+        - generic [ref=e185]:
+          - generic [ref=e186]:
+            - link "🎯 CEFR Placement Test Xác Định Trình Độ Chính Xác 40 câu · Reading + Vocab + Language Use · ~20 phút" [ref=e187] [cursor=pointer]:
+              - /url: /placement-test
+              - generic [ref=e188]: 🎯
+              - generic [ref=e189]:
+                - paragraph [ref=e190]: CEFR Placement Test
+                - paragraph [ref=e191]: Xác Định Trình Độ Chính Xác
+                - paragraph [ref=e192]: 40 câu · Reading + Vocab + Language Use · ~20 phút
+            - button "Đóng banner" [ref=e195]
+          - generic [ref=e198]:
+            - generic [ref=e199]:
+              - generic [ref=e200]:
+                - button "🧱 Kế hoạch hôm nay · Phase 1 Nền Tảng Vững — Tháng 1–3 0/5 60 phút 0%" [ref=e201]:
+                  - generic [ref=e202]:
+                    - generic [ref=e203]: 🧱
+                    - generic [ref=e204]:
+                      - paragraph [ref=e205]: Kế hoạch hôm nay · Phase 1
+                      - paragraph [ref=e206]: Nền Tảng Vững — Tháng 1–3
+                  - generic [ref=e207]:
+                    - generic [ref=e208]:
+                      - paragraph [ref=e209]: 0/5
+                      - paragraph [ref=e210]: 60 phút
+                    - generic [ref=e214]: 0%
+                - generic [ref=e221]:
+                  - button "🎯 Phát Âm & Shadowing ELSA Speak / Rachel's English / YouGlish 10'" [ref=e222]:
+                    - generic [ref=e224]: 🎯
+                    - generic [ref=e225]:
+                      - paragraph [ref=e226]: Phát Âm & Shadowing
+                      - paragraph [ref=e227]: ELSA Speak / Rachel's English / YouGlish
+                    - generic [ref=e228]: 10'
+                  - button "🃏 SRS Flashcards AtoEnglish Flashcards 15'" [ref=e229]:
+                    - generic [ref=e231]: 🃏
+                    - generic [ref=e232]:
+                      - paragraph [ref=e233]: SRS Flashcards
+                      - paragraph [ref=e234]: AtoEnglish Flashcards
+                    - generic [ref=e235]: 15'
+                  - button "📐 Ngữ Pháp Trong Ngữ Cảnh AtoEnglish Grammar / Murphy Elementary 10'" [ref=e236]:
+                    - generic [ref=e238]: 📐
+                    - generic [ref=e239]:
+                      - paragraph [ref=e240]: Ngữ Pháp Trong Ngữ Cảnh
+                      - paragraph [ref=e241]: AtoEnglish Grammar / Murphy Elementary
+                    - generic [ref=e242]: 10'
+                  - button "👂 Comprehensible Input BBC Learning English / VOA Learning English / Peppa Pig 15'" [ref=e243]:
+                    - generic [ref=e245]: 👂
+                    - generic [ref=e246]:
+                      - paragraph [ref=e247]: Comprehensible Input
+                      - paragraph [ref=e248]: BBC Learning English / VOA Learning English / Peppa Pig
+                    - generic [ref=e249]: 15'
+                  - 'button "🎙️ Output: Tự Nói & Ghi Âm Voice Memo / AtoEnglish Speaking 10''" [ref=e250]':
+                    - generic [ref=e252]: 🎙️
+                    - generic [ref=e253]:
+                      - paragraph [ref=e254]: "Output: Tự Nói & Ghi Âm"
+                      - paragraph [ref=e255]: Voice Memo / AtoEnglish Speaking
+                    - generic [ref=e256]: 10'
+                  - generic [ref=e257]:
+                    - generic [ref=e258]: 💡
+                    - paragraph [ref=e259]: "Tip: Pitch AtoEnglish cho chính mình bằng tiếng Anh — đây là speaking practice và business practice cùng lúc."
+              - button "Mục tiêu Chứng chỉ CEFR A1 1/6" [ref=e261]:
+                - generic [ref=e267]:
+                  - paragraph [ref=e269]: Mục tiêu
+                  - paragraph [ref=e270]: Chứng chỉ CEFR A1
+                  - generic [ref=e271]: 1/6
+            - generic [ref=e277]:
+              - generic [ref=e278]:
+                - generic [ref=e279]:
+                  - generic [ref=e280]: Hộp thẻ SRS
+                  - generic [ref=e287]: 0 thẻ đến hạn
+                - paragraph [ref=e288]: Không có thẻ đến hạn. Hãy tiếp tục học bài mới để mở thẻ SRS.
+                - link [ref=e289] [cursor=pointer]:
+                  - /url: /flashcards
+                  - button "Ôn tập lật thẻ" [ref=e290]
+              - generic [ref=e301]:
+                - generic [ref=e302]:
+                  - generic [ref=e303]: Từ hôm nay
+                  - generic [ref=e307]:
+                    - button "Tốc độ chậm" [ref=e308]: 1×
+                    - generic [ref=e314]: A0
+                    - generic [ref=e315]: Bảng Chữ Cái & Âm Cơ Bản
+                - generic [ref=e316]:
+                  - generic [ref=e317]:
+                    - generic [ref=e318]: name
+                    - text: /neɪm/
+                  - button "Phát âm từ name" [ref=e320]
+                - generic [ref=e326]:
+                  - paragraph [ref=e327]: 🇻🇳 tên
+                  - generic [ref=e328]:
+                    - paragraph [ref=e329]: “My name is Minh.”
+                    - button "Nghe câu ví dụ" [ref=e330]
+          - generic [ref=e335]:
+            - paragraph [ref=e336]: Khám phá thêm
+            - generic [ref=e337]:
+              - link "Học 10 phút" [ref=e338] [cursor=pointer]:
+                - /url: /learn/unit-a0-1
+              - link "Thử Thách" [ref=e344] [cursor=pointer]:
+                - /url: /challenge
+              - link "Viết & Cải thiện" [ref=e352] [cursor=pointer]:
+                - /url: /writing
+              - link "Phát âm IPA" [ref=e358] [cursor=pointer]:
+                - /url: /pronunciation
+              - link "Bảng xếp hạng" [ref=e365] [cursor=pointer]:
+                - /url: /leaderboard
+        - generic [ref=e375]:
+          - button "📊 Thống kê chi tiết & Lịch sử học" [ref=e377]
+          - link "💼 Business English Track 10 bài thiết yếu cho sự nghiệp — email, họp, thuyết trình" [ref=e382] [cursor=pointer]:
+            - /url: /business
+            - generic [ref=e383]: 💼
+            - generic [ref=e384]:
+              - paragraph [ref=e385]: Business English Track
+              - paragraph [ref=e386]: 10 bài thiết yếu cho sự nghiệp — email, họp, thuyết trình
+          - generic [ref=e389]:
+            - generic [ref=e390]:
+              - heading "Tiến độ khoá học" [level=2] [ref=e391]
+              - generic [ref=e392]: 0/50 units
+            - generic [ref=e393]:
+              - generic [ref=e394]:
+                - generic [ref=e395]: A0
+                - generic [ref=e396]: 0/8 hoàn thành
+              - generic [ref=e398]:
+                - link "1" [ref=e399] [cursor=pointer]:
+                  - /url: /learn/unit-a0-1
+                - link "2" [ref=e401] [cursor=pointer]:
+                  - /url: /learn/unit-a0-2
+                - link "3" [ref=e402] [cursor=pointer]:
+                  - /url: /learn/unit-a0-3
+                - link "4" [ref=e403] [cursor=pointer]:
+                  - /url: /learn/unit-a0-4
+                - link "5" [ref=e404] [cursor=pointer]:
+                  - /url: /learn/unit-a0-5
+                - link "6" [ref=e405] [cursor=pointer]:
+                  - /url: /learn/unit-a0-6
+                - link "7" [ref=e406] [cursor=pointer]:
+                  - /url: /learn/unit-a0-7
+                - link "8" [ref=e407] [cursor=pointer]:
+                  - /url: /learn/unit-a0-8
+            - button "Xem toàn bộ lộ trình (A0–B2)" [ref=e409]
+  - region "Notifications alt+T"

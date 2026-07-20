@@ -1,3 +1,4 @@
+import { StatLine } from "@/components/ui/page";
 import { Header } from "@/components/layout/header";
 import { BottomNav } from "@/components/layout/bottom-nav";
 import { LessonPageHider } from "@/components/layout/lesson-page-hider";
@@ -23,15 +24,12 @@ export default async function MainLayout({
           <Header />
         </HeaderScrollWrapper>
       </LessonPageHider>
-
-      <main id="main-content" className="flex-1 bg-background">
+      <main id="main-content" className="flex-1">
         {children}
       </main>
-
       <LessonPageHider>
         <BottomNav dueCardsCount={dueCardsCount} />
       </LessonPageHider>
-
       <CommandPaletteLoader />
       {hydrateV2 ? <V2ProgressHydrator /> : null}
     </div>

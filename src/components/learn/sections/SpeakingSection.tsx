@@ -1,9 +1,11 @@
+import { StatLine } from "@/components/ui/page";
 "use client";
+
+import { Button, buttonVariants } from "@/components/ui/button";
 
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Mic, MicOff, CheckCircle, Lightbulb, Volume2 } from "lucide-react";
-import { MinimalButton } from "@/components/design-system";
 import LessonSectionHeader from "../lesson-ui/LessonSectionHeader";
 import LessonContinueButton from "../lesson-ui/LessonContinueButton";
 import { lessonSectionMotion } from "../lesson-ui/motion";

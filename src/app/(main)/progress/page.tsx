@@ -1,15 +1,10 @@
+import { Page, PageHeader, Section, ListRow , StatLine} from "@/components/ui/page";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import Link from "next/link";
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { Flame, Layers, BookOpen, TrendingUp, Trophy, Star, Mic } from "lucide-react";
-import {
-  Screen,
-  Surface,
-  PageHeader,
-  Chip,
-  PrimaryRow,
-  StatLine,
-  ListSection,
-} from "@/components/design-system";
 import { getProgressStats, getWeeklyXpData, getDailyActivity } from "@/app/actions/stats";
 import { getAchievements } from "@/app/actions/gamification";
 import { AchievementsPanel } from "@/components/gamification/AchievementsPanel";
@@ -114,33 +109,31 @@ export default async function ProgressPage() {
     "bg-white/5 border-white/10 hover:bg-white/[0.07] hover:border-emerald-500/30";
 
   return (
-    <Screen ato ambient narrow={false}>
+    <Page narrow={false}>
       <div className="mb-6 space-y-3">
-        <Chip tone="brand" className="tracking-widest">
+        <Badge variant="secondary" className="tracking-widest">
           <TrendingUp className="size-3.5" aria-hidden />
           Theo dõi · XP &amp; streak
-        </Chip>
+        </Badge>
         <PageHeader
-          eyebrow="Học tập"
-          title="Tiến độ"
-          subtitle={`${stats.totalXp.toLocaleString()} XP · ${stats.streak} ngày streak`}
+          /*eyebrow*/ title="Tiến độ" data-ignore="Học tập"
+          description={`${stats.totalXp.toLocaleString()} XP · ${stats.streak} ngày streak`}
         />
       </div>
 
     <div className="space-y-5 sm:space-y-8 pb-16">
 
-      <ListSection title="Tổng quan">
-        <Surface className="px-4">
+      <Section>
+        <Card className="px-4">
           {statCards.map((stat) => (
             <StatLine
-              key={stat.label}
-              label={stat.label}
+              key={stat.label} label={stat.label}
               value={stat.value}
               caption={stat.sub}
             />
           ))}
-        </Surface>
-      </ListSection>
+        </Card>
+      </Section>
 
       {/* Activity Heatmap */}
       <ActivityHeatmap
@@ -150,7 +143,7 @@ export default async function ProgressPage() {
       />
 
       {/* Streak Stats — milestone roadmap, freeze inventory, share card */}
-      <Surface className="p-4 sm:p-6 space-y-1">
+      <Card className="p-4 sm:p-6 space-y-1">
         <div className="flex items-center gap-2 mb-4">
           <Flame className="size-4 text-orange-500" />
           <h2 className="text-xs font-black text-zinc-100 uppercase tracking-widest">Streak &amp; Milestones</h2>
@@ -165,11 +158,11 @@ export default async function ProgressPage() {
           completedLessons={stats.completedUnits}
           weeklyActiveDays={weeklyActiveDays}
         />
-      </Surface>
+      </Card>
 
-      <Surface className="space-y-2 p-2">
+      <Card className="space-y-2 p-2">
         {!isCurriculumV2() && (
-          <PrimaryRow
+          <ListRow
             href="/leaderboard"
             label="Bảng xếp hạng"
             description="Top học viên theo XP tuần này"
@@ -177,18 +170,18 @@ export default async function ProgressPage() {
             className={rowAto}
           />
         )}
-        <PrimaryRow
+        <ListRow
           href="/progress/weekly"
           label="Báo cáo tuần"
           description="Tổng kết 7 ngày học tập"
           icon={TrendingUp}
           className={rowAto}
         />
-      </Surface>
+      </Card>
 
       <div className="grid gap-4 sm:gap-6 lg:grid-cols-3">
         {/* Weekly XP Chart */}
-        <Surface className="lg:col-span-2 p-4 sm:p-8 space-y-4 sm:space-y-6">
+        <Card className="lg:col-span-2 p-4 sm:p-8 space-y-4 sm:space-y-6">
           <div className="flex items-center justify-between">
             <div>
               <h3 className="font-bold text-xs text-zinc-100 uppercase tracking-widest">XP hàng ngày</h3>
@@ -227,10 +220,10 @@ export default async function ProgressPage() {
               ))}
             </div>
           </div>
-        </Surface>
+        </Card>
 
         {/* SRS State */}
-        <Surface className="p-4 sm:p-8 space-y-4 sm:space-y-5 flex flex-col justify-between">
+        <Card className="p-4 sm:p-8 space-y-4 sm:space-y-5 flex flex-col justify-between">
           <div>
             <h3 className="font-bold text-xs text-zinc-100 uppercase tracking-widest">Trạng thái SRS</h3>
             <p className="text-[11px] text-zinc-500 mt-0.5">
@@ -259,7 +252,7 @@ export default async function ProgressPage() {
           <p className="text-[11px] text-zinc-500 text-center border-t border-white/5 pt-4">
             Ôn flashcard mỗi ngày để đẩy từ lên Hộp 4.
           </p>
-        </Surface>
+        </Card>
       </div>
 
       {/* Achievements */}
@@ -290,7 +283,7 @@ export default async function ProgressPage() {
         unlockedIds={new Set(achievementsRes.unlockedIds)}
       />
     </div>
-    </Screen>
+    </Page>
   );
 }
 

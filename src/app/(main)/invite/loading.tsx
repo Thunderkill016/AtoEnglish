@@ -1,3 +1,4 @@
+import { StatLine } from "@/components/ui/page";
 export default function InviteLoading() {
   return (
     <div className="mx-auto max-w-lg px-4 py-16 sm:px-6 space-y-8 animate-pulse text-center">

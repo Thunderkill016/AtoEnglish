@@ -1,3 +1,4 @@
+import { StatLine } from "@/components/ui/page";
 import type { Metadata } from "next";
 import { SpeakingSubShell } from "../SpeakingSubShell";
 import { AIRoleplay } from "../ai-roleplay";
@@ -11,9 +12,7 @@ export const metadata: Metadata = {
 
 export default function RoleplayPage() {
   return (
-    <SpeakingSubShell
-      title="AI Roleplay"
-      subtitle="Hội thoại nhập vai với AI"
+    <SpeakingSubShell title="Roleplay"
     >
       <AIRoleplay />
     </SpeakingSubShell>

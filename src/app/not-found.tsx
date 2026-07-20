@@ -1,3 +1,4 @@
+import { StatLine } from "@/components/ui/page";
 import Link from "next/link";
 import { Home, Search } from "lucide-react";
 

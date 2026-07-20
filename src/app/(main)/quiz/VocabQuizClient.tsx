@@ -1,5 +1,7 @@
 "use client";
 
+import { Page, PageHeader, Section, ListRow } from "@/components/ui/page";
+
 import { useState, useCallback, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -13,7 +15,6 @@ import {
   Flame,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { SecondaryPageShell } from "@/components/design-system";
 import { UNIT_VOCABULARY, type VocabularyItem } from "@/lib/constants/vocabulary";
 import { UNITS } from "@/lib/constants/units";
 import { saveQuizResult } from "@/app/actions/quiz";
@@ -164,10 +165,9 @@ export default function VocabQuizClient() {
   // ── Unit Selection Screen ────────────────────────────────────────────────
   if (!selectedUnit) {
     return (
-      <SecondaryPageShell
-        title="Kiểm tra Từ vựng"
-        subtitle="Chọn unit để bắt đầu quiz trắc nghiệm từ vựng"
-      >
+      <Page>
+      <PageHeader description="Chọn unit để bắt đầu quiz trắc nghiệm từ vựng" />
+      <div>
         <div className="space-y-3 pb-16">
           {UNITS.map((unit) => {
             const vocab = UNIT_VOCABULARY[unit.id] ?? [];
@@ -205,7 +205,8 @@ export default function VocabQuizClient() {
             );
           })}
         </div>
-      </SecondaryPageShell>
+      </div>
+    </Page>
     );
   }
 
@@ -219,10 +220,9 @@ export default function VocabQuizClient() {
       "Quay lại bài học và luyện SRS nhiều hơn.";
 
     return (
-      <SecondaryPageShell
-        title="Kiểm tra Từ vựng"
-        subtitle={`${score}/${questions.length} đúng · ${pct}%`}
-      >
+      <Page>
+      <PageHeader />
+      <div>
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -296,7 +296,8 @@ export default function VocabQuizClient() {
           </Button>
         </div>
       </motion.div>
-      </SecondaryPageShell>
+      </div>
+    </Page>
     );
   }
 
@@ -305,10 +306,9 @@ export default function VocabQuizClient() {
   const progressPct = Math.round((current / questions.length) * 100);
 
   return (
-    <SecondaryPageShell
-      title="Kiểm tra Từ vựng"
-      subtitle={`Câu ${current + 1} / ${questions.length} · ${score} đúng`}
-    >
+    <Page>
+      <PageHeader />
+      <div>
     <div className="mx-auto max-w-lg space-y-6 pb-16">
       {/* Progress */}
       <div className="space-y-2">
@@ -411,6 +411,7 @@ export default function VocabQuizClient() {
         </motion.div>
       )}
     </div>
-    </SecondaryPageShell>
+    </div>
+    </Page>
   );
 }

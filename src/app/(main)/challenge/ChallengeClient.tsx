@@ -1,5 +1,7 @@
 "use client";
 
+import {Page, PageHeader, Section, ListRow, StatLine} from "@/components/ui/page";
+
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
@@ -17,7 +19,6 @@ import {
 } from "lucide-react";
 import { UNIT_VOCABULARY, type VocabularyItem } from "@/lib/constants/vocabulary";
 import { getTodayChallengeResult, saveChallengeResult } from "@/app/actions/challenge";
-import { SecondaryPageShell, StatLine } from "@/components/design-system";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 interface Question {
@@ -235,21 +236,23 @@ export default function ChallengeClient({ level }: { level: string }) {
 
   if (loadingPrior) {
     return (
-      <SecondaryPageShell title="Thử Thách Hôm Nay" subtitle="Đang tải...">
+      <Page>
+      <PageHeader description="Đang tải..." />
+      <div>
         <div className="flex items-center justify-center min-h-[40vh]">
           <div className="size-8 rounded-full border-2 border-emerald-500 border-t-transparent animate-spin" />
         </div>
-      </SecondaryPageShell>
+      </div>
+    </Page>
     );
   }
 
   // ── Intro screen ─────────────────────────────────────────────────────────────
   if (phase === "intro") {
     return (
-      <SecondaryPageShell
-        title="Thử Thách Hôm Nay"
-        subtitle="5 câu từ vựng · Tối đa 50 XP mỗi ngày"
-      >
+      <Page>
+      <PageHeader description="5 câu từ vựng · Tối đa 50 XP mỗi ngày" />
+      <div>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -284,7 +287,8 @@ export default function ChallengeClient({ level }: { level: string }) {
             </motion.button>
           )}
         </motion.div>
-      </SecondaryPageShell>
+      </div>
+    </Page>
     );
   }
 
@@ -303,10 +307,9 @@ export default function ChallengeClient({ level }: { level: string }) {
         : "Hãy ôn tập nhé 🔄";
 
     return (
-      <SecondaryPageShell
-        title="Thử Thách Hôm Nay"
-        subtitle={`${score}/${TOTAL_QUESTIONS} đúng · ${pct}%`}
-      >
+      <Page>
+      <PageHeader />
+      <div>
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -397,7 +400,8 @@ export default function ChallengeClient({ level }: { level: string }) {
             </div>
           </div>
         </motion.div>
-      </SecondaryPageShell>
+      </div>
+    </Page>
     );
   }
 
@@ -405,10 +409,9 @@ export default function ChallengeClient({ level }: { level: string }) {
   if (!q) return null;
 
   return (
-    <SecondaryPageShell
-      title="Thử Thách Hôm Nay"
-      subtitle={`Câu ${current + 1} / ${TOTAL_QUESTIONS}`}
-    >
+    <Page>
+      <PageHeader />
+      <div>
     <div className="flex flex-col max-w-lg mx-auto pb-16">
       <div className="flex items-center justify-end mb-4">
         <button
@@ -523,6 +526,7 @@ export default function ChallengeClient({ level }: { level: string }) {
         </div>
       )}
     </div>
-    </SecondaryPageShell>
+    </div>
+    </Page>
   );
 }

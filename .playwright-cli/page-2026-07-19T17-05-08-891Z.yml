@@ -1,0 +1,224 @@
+- generic [active] [ref=e1]:
+  - link "Chuyển đến nội dung chính" [ref=e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - generic [ref=e3]:
+    - navigation [ref=e4]:
+      - generic [ref=e5]:
+        - link "AtoEnglish Grow every day" [ref=e6] [cursor=pointer]:
+          - /url: /
+          - generic [ref=e11]:
+            - generic [ref=e12]: AtoEnglish
+            - generic [ref=e13]: Grow every day
+        - generic [ref=e14]:
+          - link "Cách học" [ref=e15] [cursor=pointer]:
+            - /url: "#how-it-works"
+          - link "Phương pháp" [ref=e16] [cursor=pointer]:
+            - /url: "#science"
+          - link "Hỏi đáp" [ref=e17] [cursor=pointer]:
+            - /url: "#faq"
+        - generic [ref=e19]:
+          - link [ref=e20] [cursor=pointer]:
+            - /url: /login?mode=login
+            - button "Đăng nhập" [ref=e21]
+          - link [ref=e22] [cursor=pointer]:
+            - /url: /login
+            - button "Bắt đầu học ngay" [ref=e23]
+    - main [ref=e25]:
+      - generic [ref=e26]:
+        - generic [ref=e28]:
+          - generic [ref=e29]: Phương pháp học thế hệ mới
+          - heading "Học tiếng Anh để nói được không chỉ để biết." [level=1] [ref=e34]:
+            - generic [ref=e35]: Học tiếng Anh để nói được
+            - generic [ref=e36]: không chỉ để biết.
+          - paragraph [ref=e37]: Luyện phản xạ nói thực tế cho người Việt.Học theo phương pháp IPOR + FSRS, thực hành ngay từ bài đầu.
+          - generic [ref=e38]:
+            - generic [ref=e39]:
+              - link [ref=e40] [cursor=pointer]:
+                - /url: /learn
+                - button "Học thử ngay" [ref=e41]
+              - link [ref=e42] [cursor=pointer]:
+                - /url: /login
+                - button "Đăng nhập" [ref=e43]
+            - generic [ref=e45]:
+              - generic [ref=e46]:
+                - generic [ref=e47]: 🆓
+                - generic [ref=e48]: Miễn phí Open Beta
+              - generic [ref=e49]:
+                - generic [ref=e50]: 🗣️
+                - generic [ref=e51]: Luyện nói Shadowing + Roleplay
+              - generic [ref=e52]:
+                - generic [ref=e53]: 🔁
+                - generic [ref=e54]: Ôn tập bằng FSRS
+              - generic [ref=e55]:
+                - generic [ref=e56]: 🇻🇳
+                - generic [ref=e57]: Dành cho người Việt
+        - generic [ref=e58]:
+          - generic [ref=e59]: app.atoenglish.com/preview
+          - generic [ref=e65]:
+            - button "Luyện nói phản xạ" [ref=e66]
+            - button "Thẻ Từ Vựng (SRS)" [ref=e67]
+            - button "Dashboard" [ref=e68]
+          - generic [ref=e70]:
+            - generic [ref=e71]: Shadowing & Nhận diện giọng
+            - generic [ref=e76]:
+              - generic [ref=e77]:
+                - generic [ref=e78]: "Mẫu phát âm chuẩn:"
+                - button "Nghe mẫu" [ref=e79]
+              - heading "Nice to meet you. My name is Nam." [level=3] [ref=e85]
+              - paragraph [ref=e86]: /naɪs tu mit ju. maɪ neɪm ɪz nɑm./
+            - button "Nhấn để bắt đầu nói" [ref=e88]
+        - generic [ref=e93]:
+          - generic [ref=e94]:
+            - generic [ref=e95]:
+              - generic [ref=e96]: Open Beta
+              - generic [ref=e97]: Thử nghiệm mở
+            - generic [ref=e98]:
+              - generic [ref=e99]: 15 phút
+              - generic [ref=e100]: Mỗi bài học hàng ngày
+            - generic [ref=e101]:
+              - generic [ref=e102]: A1 - C1
+              - generic [ref=e103]: Lộ trình đầy đủ
+          - paragraph [ref=e104]: "* Dự án đang trong giai đoạn thử nghiệm mở (Open Beta). Mọi bài học đều hoàn toàn miễn phí."
+      - generic [ref=e107]:
+        - generic [ref=e109]:
+          - heading "Bạn học tiếng Anh nhiều năm nhưng vẫn ngại nói?" [level=2] [ref=e116]
+          - paragraph [ref=e117]: Hàng trăm giờ học ngữ pháp, thuộc hàng nghìn từ vựng… nhưng khi cần mở miệng giao tiếp thực tế thì lại bế tắc. Bạn không thiếu kiến thức, bạn chỉ thiếu môi trường để luyện phản xạ nói tự nhiên.
+        - generic [ref=e118]:
+          - generic [ref=e120]:
+            - generic [ref=e121]: 01. Học nhiều nhưng phản xạ chậm
+            - paragraph [ref=e122]: Mất từ 5 đến 10 giây để dịch nhẩm cấu trúc ngữ pháp trong đầu trước khi nói.
+          - generic [ref=e124]:
+            - generic [ref=e125]: 02. Nỗi sợ nói sai & bị phán xét
+            - paragraph [ref=e126]: E ngại phát âm chưa chuẩn, lo sợ người đối diện không hiểu hoặc đánh giá năng lực.
+          - generic [ref=e128]:
+            - generic [ref=e129]: 03. Thiếu môi trường thực hành
+            - paragraph [ref=e130]: Không có bạn đồng hành luyện tập phản xạ giao tiếp mỗi ngày trong môi trường an toàn.
+        - paragraph [ref=e133]: AtoEnglish được xây dựng để giải quyết đúng vấn đề này.
+      - generic [ref=e136]:
+        - generic [ref=e137]:
+          - heading "Cách học giúp bạn nói được nhanh nhất" [level=2] [ref=e138]
+          - paragraph [ref=e139]: Chỉ 4 bước lặp lại mỗi ngày — giúp bạn chuyển từ “thuộc lòng lý thuyết” sang “nói trôi chảy tự nhiên”.
+        - generic [ref=e140]:
+          - generic [ref=e142]:
+            - generic [ref=e143]: "01"
+            - generic [ref=e148]:
+              - heading "Nghe & Đọc (Input)" [level=3] [ref=e149]
+              - paragraph [ref=e150]: Tiếp xúc với tiếng Anh thực tế qua các tình huống giao tiếp gần gũi, nghe và đọc theo ngữ điệu người bản xứ.
+          - generic [ref=e152]:
+            - generic [ref=e153]: "02"
+            - generic [ref=e160]:
+              - heading "Xử lý sâu (Processing)" [level=3] [ref=e161]
+              - paragraph [ref=e162]: Làm chủ từ vựng và cấu trúc qua bài tập viết câu phản xạ và ghép thẻ thông minh (SRS), chống học vẹt thụ động.
+          - generic [ref=e164]:
+            - generic [ref=e165]: "03"
+            - generic [ref=e172]:
+              - heading "Nói & Viết (Output)" [level=3] [ref=e173]
+              - paragraph [ref=e174]: Luyện nói Shadowing và thực hành đóng vai (Roleplay) tình huống thực tế. Ghi âm và nhận phản hồi lỗi phát âm tức thì.
+          - generic [ref=e176]:
+            - generic [ref=e177]: "04"
+            - generic [ref=e185]:
+              - heading "Ôn tập thông minh (Review)" [level=3] [ref=e186]
+              - paragraph [ref=e187]: Thuật toán ôn tập ngắt quãng (FSRS) tự động tính toán thời điểm vàng để nhắc nhở, đưa từ vựng vào trí nhớ vĩnh viễn.
+      - generic [ref=e190]:
+        - heading "Bạn sẽ thay đổi như thế nào?" [level=2] [ref=e192]
+        - generic [ref=e193]:
+          - generic [ref=e201]:
+            - heading "Phản xạ nói tự nhiên" [level=3] [ref=e202]
+            - paragraph [ref=e203]: Luyện nói chủ động giúp bạn bật ra câu trả lời lập tức, hoàn toàn loại bỏ thói quen dịch nhẩm ngữ pháp từ tiếng Việt sang tiếng Anh trong đầu.
+          - generic [ref=e212]:
+            - heading "15 phút mỗi ngày là đủ" [level=3] [ref=e213]
+            - paragraph [ref=e214]: Lộ trình học ngắn gọn, thiết kế tối ưu hóa trên mọi thiết bị di động giúp bạn dễ dàng duy trì thói quen học tập bền bỉ hàng ngày mà không bị quá tải.
+          - generic [ref=e223]:
+            - heading "Miễn phí trong Open Beta" [level=3] [ref=e224]
+            - paragraph [ref=e225]: Hiện tại bạn có thể dùng toàn bộ tính năng luyện nói, shadowing và ôn tập FSRS mà không mất phí.
+      - generic [ref=e228]:
+        - heading "Được xây dựng dựa trên khoa học tối ưu cho người Việt" [level=2] [ref=e230]:
+          - generic [ref=e231]: Được xây dựng dựa trên khoa học
+          - generic [ref=e232]: tối ưu cho người Việt
+        - generic [ref=e233]:
+          - generic [ref=e241]:
+            - heading "Phương pháp IPOR & FSRS" [level=3] [ref=e242]
+            - paragraph [ref=e243]: Phương pháp học IPOR (Input → Processing → Output → Review) tích hợp thuật toán ôn tập ngắt quãng thông minh FSRS — đã được kiểm chứng khoa học mang lại hiệu quả vượt trội.
+          - generic [ref=e252]:
+            - heading "Tối ưu cho người Việt" [level=3] [ref=e253]
+            - paragraph [ref=e254]: Mỗi bài giảng và bài tập được thiết kế trực diện để sửa các lỗi phát âm và phản xạ nói phổ biến của người Việt khi học giao tiếp từ cơ bản.
+          - generic [ref=e262]:
+            - heading "Học chủ động (Active Recall)" [level=3] [ref=e263]
+            - paragraph [ref=e264]: Bắt buộc não bộ phải chủ động truy xuất thông tin liên tục, giúp củng cố kết nối thần kinh mạnh mẽ hơn 80% so với phương pháp nghe đọc thụ động truyền thống.
+        - paragraph [ref=e266]: Chúng tôi đang hoàn thiện AtoEnglish cùng với những thế hệ người học đầu tiên. Mọi phản hồi của bạn đều là nguồn động lực vô giá để chúng tôi nâng cấp sản phẩm tốt hơn.
+      - generic [ref=e267]:
+        - generic [ref=e272]:
+          - generic [ref=e273]:
+            - generic [ref=e274]: Thực tế về AtoEnglish
+            - heading "Một dự án nhỏ đang phát triển" [level=2] [ref=e278]
+            - paragraph [ref=e279]: Không có hàng nghìn học viên. Không có con số ảo. Chỉ có công cụ để bạn tự luyện nói mỗi ngày.
+          - generic [ref=e280]:
+            - generic [ref=e281]:
+              - generic [ref=e282]: Thử mà không cần tài khoản
+              - paragraph [ref=e283]: Bạn có thể vào học thử ngay (guest mode). Tiến độ lưu cục bộ trên trình duyệt.
+            - generic [ref=e284]:
+              - generic [ref=e285]: Tập trung vào nói
+              - paragraph [ref=e286]: Mỗi bài có Shadowing (nhại theo) và Roleplay tình huống thực tế. Không chỉ đọc chép.
+            - generic [ref=e287]:
+              - generic [ref=e288]: Ôn tập FSRS miễn phí
+              - paragraph [ref=e289]: Dùng thuật toán FSRS mã nguồn mở để nhắc ôn đúng lúc sắp quên.
+            - generic [ref=e290]:
+              - generic [ref=e291]: Open Beta
+              - paragraph [ref=e292]: Dự án đang phát triển. Sẽ được cải thiện dựa trên phản hồi người dùng thật.
+          - paragraph [ref=e293]: Muốn xem thực tế? Bấm “Học thử ngay” — không cần đăng nhập.
+        - generic [ref=e295]:
+          - generic [ref=e296]:
+            - heading "Giải đáp thắc mắc" [level=2] [ref=e302]
+            - paragraph [ref=e303]: Những câu hỏi thường gặp giúp bạn yên tâm bắt đầu hành trình học nói tiếng Anh.
+          - generic [ref=e304]:
+            - generic [ref=e306]:
+              - button "Người mất gốc hoặc mới bắt đầu từ con số 0 có học được không?" [ref=e307]
+              - paragraph [ref=e311]: "Hoàn toàn học được! Lộ trình của AtoEnglish được thiết kế đặc biệt từ cơ bản nhất (A1). Phương pháp 4 bước (IPOR) giúp chia nhỏ bài học: bạn sẽ tích lũy từ vựng qua hình ảnh/âm thanh, luyện tập viết câu phản xạ và thực hành nói nhại giọng (Shadowing) mà không bị áp lực ngữ pháp hàn lâm."
+            - generic [ref=e313]:
+              - button "Mỗi ngày tôi cần học bao lâu?" [ref=e314]
+              - paragraph [ref=e318]: Chỉ 15–20 phút mỗi ngày là đủ để tạo ra tiến bộ thực sự. Mỗi bài học được thiết kế hoàn chỉnh trong khoảng 40 phút, nhưng bạn hoàn toàn có thể học theo từng phần nhỏ. Hệ thống nhắc nhở thông minh và streak sẽ giúp bạn duy trì thói quen học hàng ngày một cách tự nhiên.
+            - generic [ref=e320]:
+              - button "AtoEnglish khác gì so với Duolingo hay Babbel?" [ref=e321]
+              - paragraph [ref=e325]: AtoEnglish tập trung vào giao tiếp thực tế cho người Việt — không gamification hời hợt. Bạn học theo phương pháp khoa học PPP (Present–Practice–Produce) kết hợp FSRS, thực hành nói Shadowing thực sự và roleplay tình huống. Nội dung được thiết kế sát nhu cầu của người học Việt Nam, không phải bản dịch từ nước ngoài.
+            - generic [ref=e327]:
+              - button "Tôi có phải cài đặt ứng dụng vào điện thoại không?" [ref=e328]
+              - paragraph [ref=e332]: Không cần. AtoEnglish là một nền tảng Web-App hiện đại, chạy trực tiếp trên trình duyệt web của bạn. Giao diện được tối ưu hóa mượt mà cho cả điện thoại di động (iPhone, Android), máy tính bảng lẫn máy tính cá nhân. Chỉ cần mở trình duyệt, đăng nhập nhanh bằng Google là học được ngay.
+            - generic [ref=e334]:
+              - button "Sản phẩm có thực sự miễn phí không?" [ref=e335]
+              - paragraph [ref=e339]: Có, hoàn toàn miễn phí! Hiện tại AtoEnglish đang trong giai đoạn thử nghiệm mở (Open Beta). Chúng tôi cam kết mở khóa toàn bộ các bài học giao tiếp, công cụ ôn tập lật thẻ SRS và bài tập luyện nói phản xạ cơ bản miễn phí 100% cho tất cả người học trải nghiệm trong giai đoạn này.
+            - generic [ref=e341]:
+              - button "Thuật toán Ôn tập ngắt quãng (FSRS) là gì?" [ref=e342]
+              - paragraph [ref=e346]: FSRS (Free Spaced Repetition Scheduler) là thuật toán khoa học ghi nhớ tiên tiến bậc nhất hiện nay. Thay vì cố gắng học vẹt, FSRS sẽ đo lường mức độ ghi nhớ của bạn đối với từng từ vựng và tự động lên lịch nhắc nhở ôn tập vào đúng 'thời điểm vàng' ngay trước khi bạn chuẩn bị quên. Nhờ đó, bạn ghi nhớ từ vựng lâu hơn đáng kể so với cách học vẹt truyền thống.
+            - generic [ref=e348]:
+              - button "Dữ liệu và tiến độ học của tôi có được bảo mật không?" [ref=e349]
+              - paragraph [ref=e353]: Hoàn toàn bảo mật. AtoEnglish sử dụng Supabase với Row Level Security (RLS) — dữ liệu của bạn chỉ có thể được truy cập bởi chính bạn. Đăng nhập qua Google OAuth 2.0 được mã hóa an toàn. Chúng tôi không bán hay chia sẻ dữ liệu cá nhân với bên thứ ba. Xem thêm tại Chính sách Bảo mật.
+            - generic [ref=e355]:
+              - button "Tôi bận đi làm, không có nhiều thời gian — liệu có theo kịp không?" [ref=e356]
+              - paragraph [ref=e360]: Hoàn toàn phù hợp với người bận rộn! AtoEnglish được thiết kế cho lịch học linh hoạt. Chỉ cần 15 phút mỗi ngày — tương đương một lần đi thang máy hoặc chờ cafe — là đủ để tiến bộ. Hệ thống FSRS tự động điều chỉnh lịch ôn tập, không cần học liên tục mới nhớ được. Nhiều học viên đang làm việc 8 tiếng/ngày vẫn duy trì streak 90+ ngày.
+            - generic [ref=e362]:
+              - button "Tôi nên bắt đầu từ unit nào? Làm sao biết trình độ hiện tại?" [ref=e363]
+              - paragraph [ref=e367]: Bạn có thể làm bài Kiểm tra đầu vào (Placement Test) chỉ trong 5 phút để hệ thống gợi ý unit phù hợp với trình độ hiện tại. Nếu mới bắt đầu hoàn toàn, hãy bắt đầu từ Unit A0-1 (Bảng chữ cái). Nếu đã biết căn bản, bạn có thể bắt đầu từ Unit 1 (A1 — Chào hỏi & Giới thiệu). Hệ thống sẽ tự điều chỉnh theo tốc độ học của bạn.
+        - generic [ref=e370]:
+          - generic [ref=e371]:
+            - heading "Sẵn sàng bắt đầu hành trình nói tiếng Anh tự tin?" [level=2] [ref=e372]
+            - paragraph [ref=e373]: Bạn có thể thử ngay không cần tài khoản. Miễn phí trong giai đoạn Open Beta.
+          - generic [ref=e374]: Đang trong giai đoạn Open Beta — Hoàn toàn miễn phí
+          - generic [ref=e378]:
+            - link [ref=e379] [cursor=pointer]:
+              - /url: /learn
+              - button "Học thử ngay (không cần đăng nhập)" [ref=e380]
+            - generic [ref=e381]: Đăng ký nhanh qua Google • Học miễn phí hoàn toàn
+    - contentinfo [ref=e382]:
+      - generic [ref=e383]:
+        - generic [ref=e389]:
+          - generic [ref=e390]: AtoEnglish
+          - generic [ref=e391]: Grow every day
+        - generic [ref=e392]: © 2026 AtoEnglish. Bảo lưu mọi quyền.
+        - generic [ref=e393]:
+          - link "Bảo mật" [ref=e394] [cursor=pointer]:
+            - /url: /privacy
+          - link "Điều khoản" [ref=e395] [cursor=pointer]:
+            - /url: /terms
+          - link "Hỗ trợ" [ref=e396] [cursor=pointer]:
+            - /url: mailto:support@atoenglish.com
+  - region "Notifications alt+T"

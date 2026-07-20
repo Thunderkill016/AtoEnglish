@@ -1,11 +1,13 @@
+import { StatLine } from "@/components/ui/page";
 "use client";
+
+import { Button, buttonVariants } from "@/components/ui/button";
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Volume2, Eye, EyeOff } from "lucide-react";
 import type { UnitData } from "../UnitTemplate";
 import { playUnitAudio, stopUnitAudio } from "@/lib/utils/unit-audio";
-import { MinimalButton } from "@/components/design-system";
 import LessonSectionHeader from "../lesson-ui/LessonSectionHeader";
 import LessonContinueButton from "../lesson-ui/LessonContinueButton";
 import { lessonSectionMotion } from "../lesson-ui/motion";
@@ -122,7 +124,6 @@ export default function DialogueSection({
         sectionId={5}
         sectionOrderIdx={sectionOrderIdx}
         totalSections={TOTAL_SECTIONS}
-        subtitle="Nghe & hiểu hội thoại thực tế"
       />
 
       {DIALOGUES.length > 1 && (
@@ -152,9 +153,9 @@ export default function DialogueSection({
         <div className="border border-border/60 bg-card rounded-2xl p-5 mb-4 shadow-md">
           <p className="text-xs text-muted-foreground mb-2">{DIALOGUES[selectedDialogue].desc}</p>
           <div className="flex gap-3 mb-4 flex-wrap">
-            <MinimalButton
+            <Button
               type="button"
-              variant={isPlayingDialogue ? "secondary" : "primary"}
+              variant={isPlayingDialogue ? "secondary" : "default"}
               onClick={() =>
                 isPlayingDialogue
                   ? (window.speechSynthesis?.cancel(), stopUnitAudio(), setIsPlayingDialogue(false))
@@ -164,8 +165,8 @@ export default function DialogueSection({
             >
               <Volume2 size={16} />
               {isPlayingDialogue ? "Dừng" : "Nghe hội thoại"}
-            </MinimalButton>
-            <MinimalButton
+            </Button>
+            <Button
               type="button"
               variant="secondary"
               onClick={() =>
@@ -176,7 +177,7 @@ export default function DialogueSection({
               className="!rounded-xl"
             >
               🐢 Chậm
-            </MinimalButton>
+            </Button>
             <button
               onClick={() => setShowTranscript((p) => !p)}
               className="ml-auto flex items-center gap-2 px-3 py-2 rounded-xl text-xs text-muted-foreground hover:text-foreground hover:bg-muted/40 transition-colors"
@@ -269,15 +270,14 @@ export default function DialogueSection({
           </div>
 
           {!lacSubmitted ? (
-            <MinimalButton
+            <Button
               type="button"
-              fullWidth
-              className="mt-5 !rounded-2xl"
+              className="w-full mt-5 !rounded-2xl"
               disabled={Object.keys(lacAnswers).length < LISTEN_CHOOSE.length}
               onClick={() => setLacSubmitted(true)}
             >
               Kiểm tra đáp án
-            </MinimalButton>
+            </Button>
           ) : (
             <div className="mt-4 p-4 bg-emerald-500/10 border border-emerald-500/40 rounded-xl text-center">
               <p className="text-emerald-600 font-bold text-lg">

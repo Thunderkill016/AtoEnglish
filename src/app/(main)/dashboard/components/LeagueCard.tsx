@@ -1,3 +1,4 @@
+import { StatLine } from "@/components/ui/page";
 "use client";
 
 import { useEffect, useState } from "react";
@@ -44,7 +45,7 @@ function LeagueCard() {
               <div>
                 <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider flex items-center gap-1 select-none">
                   Giải đấu tuần này
-                  <span className="cursor-help text-zinc-400 hover:text-zinc-300 font-bold" title="Top 5 học viên nhiều XP nhất tuần sẽ được thăng cấp lên giải đấu cao hơn!">
+                  <span className="cursor-help text-zinc-400 hover:text-zinc-300 font-bold">
                     (ℹ)
                   </span>
                 </p>

@@ -1,3 +1,4 @@
+import { StatLine } from "@/components/ui/page";
 import type { Metadata } from "next";
 import { PathClient } from "./PathClient";
 

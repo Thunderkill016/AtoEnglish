@@ -1,7 +1,6 @@
 import Link from "next/link";
 
 import { getDashboardExploreActions } from "@/lib/constants/navigation";
-import { Surface } from "@/components/design-system";
 
 interface QuickActionsProps {
   currentUnitRoute: string;
@@ -43,8 +42,7 @@ export default function QuickActions({ currentUnitRoute }: QuickActionsProps) {
           const style = actionStyles[index] ?? actionStyles[0];
           return (
             <Link key={href} href={href}>
-              <Surface
-                variant="interactive"
+              <div
                 className={`flex items-center justify-center gap-2.5 rounded-2xl px-4 py-3.5 ${style.hover}`}
               >
                 <span className={`flex size-7 items-center justify-center rounded-lg shrink-0 ${style.iconBg}`}>
@@ -53,7 +51,7 @@ export default function QuickActions({ currentUnitRoute }: QuickActionsProps) {
                 <span className="text-xs font-bold text-zinc-300 whitespace-nowrap hidden sm:block">
                   {title}
                 </span>
-              </Surface>
+              </div>
             </Link>
           );
         })}

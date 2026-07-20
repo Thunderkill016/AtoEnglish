@@ -1,5 +1,7 @@
 "use client";
 
+import { Page, PageHeader, Section, ListRow } from "@/components/ui/page";
+
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown, Lightbulb } from "lucide-react";
@@ -10,7 +12,6 @@ import {
   type GrammarLevel,
   type GrammarTopic,
 } from "@/lib/data/grammar-topics";
-import { SecondaryPageShell } from "@/components/design-system";
 
 const LEVELS: GrammarLevel[] = ["A0", "A1", "A2", "B1", "B2"];
 
@@ -48,10 +49,9 @@ export default function GrammarClient() {
   const filtered = GRAMMAR_TOPICS.filter(t => t.level === activeLevel);
 
   return (
-    <SecondaryPageShell
-      title="Ngữ Pháp A0 → B2"
-      subtitle="Giải thích tiếng Việt · Ví dụ thực tế · Lỗi hay gặp · Mẹo nhớ"
-    >
+    <Page>
+      <PageHeader description="Giải thích tiếng Việt · Ví dụ thực tế · Lỗi hay gặp · Mẹo nhớ" />
+      <div>
       <div className="max-w-lg mx-auto pb-16">
 
         {/* Level tabs */}
@@ -98,7 +98,8 @@ export default function GrammarClient() {
           </motion.div>
         </AnimatePresence>
       </div>
-    </SecondaryPageShell>
+    </div>
+    </Page>
   );
 }
 

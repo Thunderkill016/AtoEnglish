@@ -1,3 +1,4 @@
+import { StatLine } from "@/components/ui/page";
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { getUserProgress } from "@/app/actions/stats";

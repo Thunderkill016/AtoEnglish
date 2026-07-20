@@ -1,0 +1,255 @@
+- generic [active] [ref=e1]:
+  - link "Chuyển đến nội dung chính" [ref=e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - generic [ref=e3]:
+    - banner [ref=e5]:
+      - generic [ref=e6]:
+        - generic [ref=e7]:
+          - link "AtoEnglish" [ref=e8] [cursor=pointer]:
+            - /url: /dashboard
+          - navigation "Điều hướng chính" [ref=e14]:
+            - link "Học" [ref=e15] [cursor=pointer]:
+              - /url: /dashboard
+            - link "Ôn" [ref=e18] [cursor=pointer]:
+              - /url: /flashcards
+            - link "Tôi" [ref=e23] [cursor=pointer]:
+              - /url: /me
+        - generic [ref=e27]:
+          - button "Toggle theme" [ref=e28]
+          - link "Đăng nhập" [ref=e29] [cursor=pointer]:
+            - /url: /login?mode=login
+    - main [ref=e30]:
+      - generic [ref=e32]:
+        - generic [ref=e33]:
+          - generic [ref=e34]: Lộ trình B1 · v2
+          - generic [ref=e39]:
+            - paragraph [ref=e40]: Chào buổi chiều
+            - heading "Hôm nay học gì?" [level=1] [ref=e41]
+            - paragraph [ref=e42]: Đạt B1 — đủ để dùng tiếng Anh độc lập trong đời sống và công việc cơ bản.
+        - generic [ref=e44]:
+          - generic [ref=e45]:
+            - generic [ref=e52]:
+              - paragraph [ref=e53]: Tiến độ tới B1
+              - paragraph [ref=e54]: 25 bài sẵn sàng · 42 slot lộ trình
+            - generic [ref=e55]:
+              - text: "0"
+              - generic [ref=e56]: /42
+          - progressbar "Tiến độ tới B1" [ref=e57]
+          - paragraph [ref=e58]: 0% hoàn thành (pilot)
+        - generic [ref=e60]:
+          - paragraph [ref=e61]: Việc duy nhất hôm nay
+          - generic [ref=e66]:
+            - heading "Chữ cái & âm cơ bản" [level=2] [ref=e67]
+            - paragraph [ref=e68]: Bài 1/42 · A0 · ~30 phút
+          - link "Bắt đầu học" [ref=e69] [cursor=pointer]:
+            - /url: /learn/v2/l-a0-01
+        - generic [ref=e72]:
+          - generic [ref=e73]:
+            - heading "Bài pilot" [level=3] [ref=e74]
+            - link "Lộ trình đầy đủ" [ref=e75] [cursor=pointer]:
+              - /url: /path
+          - list [ref=e78]:
+            - listitem [ref=e79]:
+              - link "Chữ cái & âm cơ bản A0 · ~30 phút Mở" [ref=e80] [cursor=pointer]:
+                - /url: /learn/v2/l-a0-01
+                - generic [ref=e81]:
+                  - generic [ref=e84]:
+                    - paragraph [ref=e85]: Chữ cái & âm cơ bản
+                    - paragraph [ref=e86]: A0 · ~30 phút
+                  - generic [ref=e87]: Mở
+            - listitem [ref=e88]:
+              - link "Số đếm & giá cơ bản A0 · ~32 phút Mở" [ref=e89] [cursor=pointer]:
+                - /url: /learn/v2/l-a0-02
+                - generic [ref=e90]:
+                  - generic [ref=e93]:
+                    - paragraph [ref=e94]: Số đếm & giá cơ bản
+                    - paragraph [ref=e95]: A0 · ~32 phút
+                  - generic [ref=e96]: Mở
+            - listitem [ref=e97]:
+              - link "Chào hỏi đơn giản A0 · ~30 phút Mở" [ref=e98] [cursor=pointer]:
+                - /url: /learn/v2/l-a0-03
+                - generic [ref=e99]:
+                  - generic [ref=e102]:
+                    - paragraph [ref=e103]: Chào hỏi đơn giản
+                    - paragraph [ref=e104]: A0 · ~30 phút
+                  - generic [ref=e105]: Mở
+            - listitem [ref=e106]:
+              - link "Tên & quốc tịch A0 · ~32 phút Mở" [ref=e107] [cursor=pointer]:
+                - /url: /learn/v2/l-a0-04
+                - generic [ref=e108]:
+                  - generic [ref=e111]:
+                    - paragraph [ref=e112]: Tên & quốc tịch
+                    - paragraph [ref=e113]: A0 · ~32 phút
+                  - generic [ref=e114]: Mở
+            - listitem [ref=e115]:
+              - link "Gia đình cơ bản A0 · ~32 phút Mở" [ref=e116] [cursor=pointer]:
+                - /url: /learn/v2/l-a0-05
+                - generic [ref=e117]:
+                  - generic [ref=e120]:
+                    - paragraph [ref=e121]: Gia đình cơ bản
+                    - paragraph [ref=e122]: A0 · ~32 phút
+                  - generic [ref=e123]: Mở
+            - listitem [ref=e124]:
+              - link "Thời gian trong ngày A0 · ~32 phút Mở" [ref=e125] [cursor=pointer]:
+                - /url: /learn/v2/l-a0-06
+                - generic [ref=e126]:
+                  - generic [ref=e129]:
+                    - paragraph [ref=e130]: Thời gian trong ngày
+                    - paragraph [ref=e131]: A0 · ~32 phút
+                  - generic [ref=e132]: Mở
+            - listitem [ref=e133]:
+              - link "Ngày trong tuần A0 · ~32 phút Mở" [ref=e134] [cursor=pointer]:
+                - /url: /learn/v2/l-a0-07
+                - generic [ref=e135]:
+                  - generic [ref=e138]:
+                    - paragraph [ref=e139]: Ngày trong tuần
+                    - paragraph [ref=e140]: A0 · ~32 phút
+                  - generic [ref=e141]: Mở
+            - listitem [ref=e142]:
+              - link "Cụm sinh tồn A0 · ~34 phút Mở" [ref=e143] [cursor=pointer]:
+                - /url: /learn/v2/l-a0-08
+                - generic [ref=e144]:
+                  - generic [ref=e147]:
+                    - paragraph [ref=e148]: Cụm sinh tồn
+                    - paragraph [ref=e149]: A0 · ~34 phút
+                  - generic [ref=e150]: Mở
+            - listitem [ref=e151]:
+              - link "Chào hỏi & giới thiệu A1 · ~35 phút Mở" [ref=e152] [cursor=pointer]:
+                - /url: /learn/v2/l-a1-01
+                - generic [ref=e153]:
+                  - generic [ref=e156]:
+                    - paragraph [ref=e157]: Chào hỏi & giới thiệu
+                    - paragraph [ref=e158]: A1 · ~35 phút
+                  - generic [ref=e159]: Mở
+            - listitem [ref=e160]:
+              - link "Thông tin cá nhân A1 · ~35 phút Mở" [ref=e161] [cursor=pointer]:
+                - /url: /learn/v2/l-a1-02
+                - generic [ref=e162]:
+                  - generic [ref=e165]:
+                    - paragraph [ref=e166]: Thông tin cá nhân
+                    - paragraph [ref=e167]: A1 · ~35 phút
+                  - generic [ref=e168]: Mở
+            - listitem [ref=e169]:
+              - link "Gia đình & bạn bè A1 · ~35 phút Mở" [ref=e170] [cursor=pointer]:
+                - /url: /learn/v2/l-a1-03
+                - generic [ref=e171]:
+                  - generic [ref=e174]:
+                    - paragraph [ref=e175]: Gia đình & bạn bè
+                    - paragraph [ref=e176]: A1 · ~35 phút
+                  - generic [ref=e177]: Mở
+            - listitem [ref=e178]:
+              - link "Thói quen hàng ngày A1 · ~35 phút Mở" [ref=e179] [cursor=pointer]:
+                - /url: /learn/v2/l-a1-04
+                - generic [ref=e180]:
+                  - generic [ref=e183]:
+                    - paragraph [ref=e184]: Thói quen hàng ngày
+                    - paragraph [ref=e185]: A1 · ~35 phút
+                  - generic [ref=e186]: Mở
+            - listitem [ref=e187]:
+              - link "Sở thích A1 · ~35 phút Mở" [ref=e188] [cursor=pointer]:
+                - /url: /learn/v2/l-a1-05
+                - generic [ref=e189]:
+                  - generic [ref=e192]:
+                    - paragraph [ref=e193]: Sở thích
+                    - paragraph [ref=e194]: A1 · ~35 phút
+                  - generic [ref=e195]: Mở
+            - listitem [ref=e196]:
+              - link "Nhà cửa A1 · ~35 phút Mở" [ref=e197] [cursor=pointer]:
+                - /url: /learn/v2/l-a1-06
+                - generic [ref=e198]:
+                  - generic [ref=e201]:
+                    - paragraph [ref=e202]: Nhà cửa
+                    - paragraph [ref=e203]: A1 · ~35 phút
+                  - generic [ref=e204]: Mở
+            - listitem [ref=e205]:
+              - link "Mua sắm A1 · ~35 phút Mở" [ref=e206] [cursor=pointer]:
+                - /url: /learn/v2/l-a1-07
+                - generic [ref=e207]:
+                  - generic [ref=e210]:
+                    - paragraph [ref=e211]: Mua sắm
+                    - paragraph [ref=e212]: A1 · ~35 phút
+                  - generic [ref=e213]: Mở
+            - listitem [ref=e214]:
+              - link "Đồ ăn & order A1 · ~35 phút Mở" [ref=e215] [cursor=pointer]:
+                - /url: /learn/v2/l-a1-08
+                - generic [ref=e216]:
+                  - generic [ref=e219]:
+                    - paragraph [ref=e220]: Đồ ăn & order
+                    - paragraph [ref=e221]: A1 · ~35 phút
+                  - generic [ref=e222]: Mở
+            - listitem [ref=e223]:
+              - link "Địa điểm & chỉ đường A1 · ~35 phút Mở" [ref=e224] [cursor=pointer]:
+                - /url: /learn/v2/l-a1-09
+                - generic [ref=e225]:
+                  - generic [ref=e228]:
+                    - paragraph [ref=e229]: Địa điểm & chỉ đường
+                    - paragraph [ref=e230]: A1 · ~35 phút
+                  - generic [ref=e231]: Mở
+            - listitem [ref=e232]:
+              - link "Khả năng (can) A1 · ~35 phút Mở" [ref=e233] [cursor=pointer]:
+                - /url: /learn/v2/l-a1-10
+                - generic [ref=e234]:
+                  - generic [ref=e237]:
+                    - paragraph [ref=e238]: Khả năng (can)
+                    - paragraph [ref=e239]: A1 · ~35 phút
+                  - generic [ref=e240]: Mở
+            - listitem [ref=e241]:
+              - link "Sức khỏe & cảm xúc A1 · ~35 phút Mở" [ref=e242] [cursor=pointer]:
+                - /url: /learn/v2/l-a1-11
+                - generic [ref=e243]:
+                  - generic [ref=e246]:
+                    - paragraph [ref=e247]: Sức khỏe & cảm xúc
+                    - paragraph [ref=e248]: A1 · ~35 phút
+                  - generic [ref=e249]: Mở
+            - listitem [ref=e250]:
+              - link "Ôn A1 & áp dụng A1 · ~40 phút Mở" [ref=e251] [cursor=pointer]:
+                - /url: /learn/v2/l-a1-12
+                - generic [ref=e252]:
+                  - generic [ref=e255]:
+                    - paragraph [ref=e256]: Ôn A1 & áp dụng
+                    - paragraph [ref=e257]: A1 · ~40 phút
+                  - generic [ref=e258]: Mở
+            - listitem [ref=e259]:
+              - link "Kể chuyện quá khứ A2 · ~40 phút Mở" [ref=e260] [cursor=pointer]:
+                - /url: /learn/v2/l-a2-01
+                - generic [ref=e261]:
+                  - generic [ref=e264]:
+                    - paragraph [ref=e265]: Kể chuyện quá khứ
+                    - paragraph [ref=e266]: A2 · ~40 phút
+                  - generic [ref=e267]: Mở
+            - listitem [ref=e268]:
+              - link "Kế hoạch tương lai A2 · ~40 phút Mở" [ref=e269] [cursor=pointer]:
+                - /url: /learn/v2/l-a2-02
+                - generic [ref=e270]:
+                  - generic [ref=e273]:
+                    - paragraph [ref=e274]: Kế hoạch tương lai
+                    - paragraph [ref=e275]: A2 · ~40 phút
+                  - generic [ref=e276]: Mở
+            - listitem [ref=e277]:
+              - link "So sánh & mua sắm A2 · ~40 phút Mở" [ref=e278] [cursor=pointer]:
+                - /url: /learn/v2/l-a2-03
+                - generic [ref=e279]:
+                  - generic [ref=e282]:
+                    - paragraph [ref=e283]: So sánh & mua sắm
+                    - paragraph [ref=e284]: A2 · ~40 phút
+                  - generic [ref=e285]: Mở
+            - listitem [ref=e286]:
+              - link "Du lịch & trải nghiệm A2 · ~40 phút Mở" [ref=e287] [cursor=pointer]:
+                - /url: /learn/v2/l-a2-04
+                - generic [ref=e288]:
+                  - generic [ref=e291]:
+                    - paragraph [ref=e292]: Du lịch & trải nghiệm
+                    - paragraph [ref=e293]: A2 · ~40 phút
+                  - generic [ref=e294]: Mở
+            - listitem [ref=e295]:
+              - link "Kể chuyện dài hơn B1 · ~40 phút Mở" [ref=e296] [cursor=pointer]:
+                - /url: /learn/v2/l-b1-01
+                - generic [ref=e297]:
+                  - generic [ref=e300]:
+                    - paragraph [ref=e301]: Kể chuyện dài hơn
+                    - paragraph [ref=e302]: B1 · ~40 phút
+                  - generic [ref=e303]: Mở
+        - paragraph [ref=e304]:
+          - link "Dashboard cũ (v1)" [ref=e305] [cursor=pointer]:
+            - /url: /dashboard
+  - region "Notifications alt+T"

@@ -1,0 +1,63 @@
+- generic [ref=e1]:
+  - link "Chuyển đến nội dung chính" [ref=e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - main [ref=e4]:
+    - generic [ref=e6]:
+      - generic [ref=e7]:
+        - link "Home" [ref=e8] [cursor=pointer]:
+          - /url: /home
+        - generic [ref=e11]: A0 · P0
+      - generic [ref=e13]:
+        - paragraph [ref=e14]: Bài 1/42 · Lộ trình B1 · 8 bước · ~30 phút
+        - heading "Chữ cái & âm cơ bản" [level=1] [ref=e15]
+      - generic [ref=e16]:
+        - generic "Tiến độ bài học" [ref=e17]:
+          - generic "Bắt đầu" [ref=e18]
+          - generic "Từ vựng" [ref=e19]
+          - generic "Ngữ pháp" [ref=e20]
+          - generic "Luyện tập" [ref=e21]
+          - generic "Hội thoại & nghe" [ref=e22]
+          - generic "Phản xạ" [ref=e23]
+          - generic "Nhiệm vụ" [ref=e24]
+          - generic "Tổng kết" [ref=e25]
+        - generic [ref=e26]:
+          - paragraph [ref=e27]: 8/8 · Tổng kết
+          - paragraph [ref=e28]: 30 phút
+        - generic [ref=e329]:
+          - heading "Quiz cuối" [level=2] [ref=e331]
+          - paragraph [ref=e332]: "Cần làm quiz (không bỏ trống) và đạt ≥50% để hoàn thành bài. Nhiệm vụ nói: đã xong ✓."
+          - generic [ref=e333]:
+            - paragraph [ref=e334]: Câu 1
+            - paragraph [ref=e335]: How do you ___ your name?
+            - generic [ref=e336]:
+              - button "spell" [ref=e337]
+              - button "from" [ref=e338]
+              - button "fine" [ref=e339]
+              - button "meet" [ref=e340]
+          - generic [ref=e341]:
+            - paragraph [ref=e342]: Câu 2
+            - paragraph [ref=e343]: A, E, I, O, U are…
+            - generic [ref=e344]:
+              - button "vowels" [ref=e345]
+              - button "names" [ref=e346]
+              - button "countries" [ref=e347]
+              - button "numbers" [ref=e348]
+          - generic [ref=e349]:
+            - paragraph [ref=e350]: Câu 3
+            - paragraph [ref=e351]: Please repeat = làm ơn nói lại
+            - generic [ref=e352]:
+              - button "True" [ref=e353]
+              - button "False" [ref=e354]
+          - generic [ref=e355]:
+            - paragraph [ref=e356]: Câu 4
+            - paragraph [ref=e357]: Chữ cái đầu alphabet
+            - generic [ref=e358]:
+              - button "A" [ref=e359]
+              - button "Z" [ref=e360]
+              - button "M" [ref=e361]
+              - button "Q" [ref=e362]
+        - generic [ref=e55]:
+          - button "Lại" [ref=e120]
+          - button "Chấm quiz" [active] [ref=e363]
+  - region "Notifications alt+T"
+  - alert [ref=e59]

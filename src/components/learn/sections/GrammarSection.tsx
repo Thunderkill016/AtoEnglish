@@ -1,9 +1,11 @@
+import { StatLine } from "@/components/ui/page";
 "use client";
+
+import { Button, buttonVariants } from "@/components/ui/button";
 
 import { motion } from "framer-motion";
 import { Volume2 } from "lucide-react";
 import type { UnitData } from "../UnitTemplate";
-import { MinimalButton } from "@/components/design-system";
 import LessonSectionHeader from "../lesson-ui/LessonSectionHeader";
 import LessonContinueButton from "../lesson-ui/LessonContinueButton";
 import { lessonSectionMotion } from "../lesson-ui/motion";
@@ -49,7 +51,6 @@ export default function GrammarSection({
         sectionId={3}
         sectionOrderIdx={sectionOrderIdx}
         totalSections={TOTAL_SECTIONS}
-        subtitle="Nhận diện mẫu → quy tắc"
       />
 
       {unit.grammar ? (
@@ -236,10 +237,9 @@ export default function GrammarSection({
                   })}
                 </div>
                 {!ccqSubmitted ? (
-                  <MinimalButton
+                  <Button
                     type="button"
-                    fullWidth
-                    className="!rounded-2xl"
+                    className="w-full !rounded-2xl"
                     disabled={!ccqAnswer}
                     onClick={() => {
                       setCcqSubmitted(true);
@@ -248,7 +248,7 @@ export default function GrammarSection({
                     }}
                   >
                     Kiểm tra
-                  </MinimalButton>
+                  </Button>
                 ) : (
                   <div>
                     <p className={`text-sm font-bold ${ccqCorrect ? "text-emerald-400" : "text-red-400"}`}>

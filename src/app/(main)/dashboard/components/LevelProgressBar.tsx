@@ -1,8 +1,10 @@
+import { StatLine } from "@/components/ui/page";
 "use client";
+
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Surface } from "@/components/design-system";
 
 const CEFR_LADDER = [
   { level: "A0", label: "A0", emoji: "🌱", color: "#94a3b8", desc: "Khởi đầu" },
@@ -39,7 +41,7 @@ export default function LevelProgressBar({
     : 0;
 
   return (
-    <Surface className="rounded-2xl p-4 space-y-3">
+    <Card className="rounded-2xl p-4 space-y-3">
       {/* Header */}
       <div className="flex items-center justify-between">
         <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider">
@@ -150,6 +152,6 @@ export default function LevelProgressBar({
           <span>{pct}%</span>
         </div>
       </div>
-    </Surface>
+    </Card>
   );
 }

@@ -1,9 +1,9 @@
+import {Page, PageHeader, Section, ListRow, StatLine} from "@/components/ui/page";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { UNITS } from "@/lib/constants/units";
 import { BUSINESS_TRACK } from "@/lib/constants/business-track";
 import { getAllUnitCompletionStatuses } from "@/app/actions/unit";
-import { SecondaryPageShell, StatLine, ListSection, ThinProgress } from "@/components/design-system";
 
 export const metadata: Metadata = {
   title: "Business English Track | AtoEnglish",
@@ -29,13 +29,11 @@ export default async function BusinessPage() {
   const nextUnit = trackUnits.find((u) => !u.done);
 
   return (
-    <SecondaryPageShell
-      title="Business English Track"
-      subtitle="10 bài học thiết yếu cho sự nghiệp — email, họp, thuyết trình, đàm phán. Dành cho người Việt muốn làm việc ở công ty quốc tế."
-    >
+    <Page>
+      <PageHeader description="10 bài học thiết yếu cho sự nghiệp — email, họp, thuyết trình, đàm phán. Dành cho người Việt muốn làm việc ở công ty quốc tế." />
+      <div>
     <div className="space-y-6 pb-16">
-      <ThinProgress
-        value={progress}
+      <StatLine value={progress}
         label={`Tiến độ · ${doneCount}/${BUSINESS_TRACK.length} bài`}
       />
 
@@ -67,7 +65,7 @@ export default async function BusinessPage() {
         <StatLine label="Ôn nhanh mỗi bài" value="5 phút" />
       </div>
 
-      <ListSection title="10 Bài Học Trong Track">
+      <Section>
       <div className="space-y-3">
         {trackUnits.map((unit, idx) => (
           <div key={unit.id} className="relative">
@@ -130,7 +128,7 @@ export default async function BusinessPage() {
           </div>
         ))}
       </div>
-      </ListSection>
+      </Section>
 
       {/* ── Bottom CTA ── */}
       <div className="p-5 rounded-xl border border-border/60 bg-card text-center">
@@ -146,6 +144,7 @@ export default async function BusinessPage() {
         </Link>
       </div>
     </div>
-    </SecondaryPageShell>
+    </div>
+    </Page>
   );
 }

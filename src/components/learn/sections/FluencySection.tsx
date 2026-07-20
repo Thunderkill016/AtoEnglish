@@ -1,3 +1,4 @@
+import { StatLine } from "@/components/ui/page";
 "use client";
 
 import { useState, useEffect, useRef } from "react";
@@ -6,7 +7,6 @@ import { Volume2, ChevronDown, ChevronUp } from "lucide-react";
 import type { UnitData, PronunciationFocus } from "../UnitTemplate";
 import LessonSectionHeader from "../lesson-ui/LessonSectionHeader";
 import LessonContinueButton from "../lesson-ui/LessonContinueButton";
-import { ThinProgress } from "@/components/design-system";
 import { lessonSectionMotion } from "../lesson-ui/motion";
 import { cn } from "@/lib/utils";
 
@@ -85,7 +85,7 @@ function FluencyDrillPanel({
           {timeLeft}s
         </div>
         <div className="flex-1">
-          <ThinProgress value={Math.round((timeLeft / timeLimit) * 100)} />
+          <div className="h-1 bg-muted rounded" style={{width:"100%"}}><div className="h-1 bg-primary rounded" style={{width: `${Math.round((timeLeft / timeLimit) * 100)}%`}} /></div>
         </div>
         <span className="text-xs text-muted-foreground font-bold">
           {idx + 1}/{items.length}
@@ -255,7 +255,6 @@ export default function FluencySection({
         sectionId={10}
         sectionOrderIdx={sectionOrderIdx}
         totalSections={TOTAL_SECTIONS}
-        subtitle="~1 phút · Phản xạ tức thì"
       />
       <p className="text-muted-foreground mb-4 text-sm">
         Nhìn tiếng Việt → nhớ ngay tiếng Anh. Không dừng suy nghĩ.

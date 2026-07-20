@@ -1,7 +1,8 @@
+import { StatLine } from "@/components/ui/page";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import Link from "next/link";
 import { Layers, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Surface } from "@/components/design-system";
 
 interface SrsCardProps {
   dueCardsCount: number;
@@ -11,8 +12,8 @@ export default function SrsCard({ dueCardsCount }: SrsCardProps) {
   const hasDue = dueCardsCount > 0;
 
   return (
-    <Surface
-      variant={hasDue ? "warn" : "default"}
+    <Card
+      
       className={`rounded-2xl p-5 space-y-4 transition-colors duration-200 ${
         hasDue ? "hover:border-amber-500/50" : "hover:border-white/15"
       }`}
@@ -57,6 +58,6 @@ export default function SrsCard({ dueCardsCount }: SrsCardProps) {
           <ArrowRight className="size-3.5" />
         </Button>
       </Link>
-    </Surface>
+    </Card>
   );
 }

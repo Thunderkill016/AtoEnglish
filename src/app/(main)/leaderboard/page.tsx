@@ -1,5 +1,7 @@
 "use client";
 
+import { Page, PageHeader, Section, ListRow } from "@/components/ui/page";
+
 import { useState, useEffect, Suspense } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Zap, Flame, Calendar, Star, Shield } from "lucide-react";
@@ -8,7 +10,6 @@ import { getLeaderboard, getWeeklyLeaderboard, type LeaderboardEntry } from "@/a
 import { getMyLeague } from "@/app/actions/leagues";
 import { TIER_CONFIG } from "@/lib/leagues";
 import type { LeagueData, LeagueTier } from "@/lib/leagues";
-import { SecondaryPageShell } from "@/components/design-system";
 
 
 export const dynamic = "force-dynamic";
@@ -233,10 +234,9 @@ function LeaderboardContent() {
   const tierCfg = leagueData ? TIER_CONFIG[leagueData.tier as LeagueTier] : null;
 
   return (
-    <SecondaryPageShell
-      title="Top Học Viên"
-      subtitle="Cạnh tranh lành mạnh để duy trì động lực học tiếng Anh mỗi ngày."
-    >
+    <Page>
+      <PageHeader description="Cạnh tranh lành mạnh để duy trì động lực học tiếng Anh mỗi ngày." />
+      <div>
     <div className="space-y-6 pb-16">
 
       {/* Tabs */}
@@ -390,7 +390,8 @@ function LeaderboardContent() {
           : "Top 20 theo tổng XP tích lũy 🏆"}
       </p>
     </div>
-    </SecondaryPageShell>
+    </div>
+    </Page>
   );
 }
 
@@ -398,13 +399,16 @@ function LeaderboardContent() {
 export default function LeaderboardPage() {
   return (
     <Suspense fallback={
-      <SecondaryPageShell title="Top Học Viên" subtitle="Đang tải bảng xếp hạng...">
+      <Page>
+      <PageHeader description="Đang tải bảng xếp hạng..." />
+      <div>
         <div className="space-y-2 pb-16">
           {Array.from({ length: 8 }).map((_, i) => (
             <div key={i} className="h-16 rounded-2xl bg-muted border border-border/60 animate-pulse" />
           ))}
         </div>
-      </SecondaryPageShell>
+      </div>
+    </Page>
     }>
       <LeaderboardContent />
     </Suspense>

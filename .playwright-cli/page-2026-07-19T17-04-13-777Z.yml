@@ -1,0 +1,28 @@
+- generic [active] [ref=e1]:
+  - link "Chuyển đến nội dung chính" [ref=e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - generic [ref=e3]:
+    - banner [ref=e5]:
+      - generic [ref=e6]:
+        - generic [ref=e7]:
+          - link "AtoEnglish" [ref=e8] [cursor=pointer]:
+            - /url: /dashboard
+          - navigation "Điều hướng chính" [ref=e14]:
+            - link "Học" [ref=e15] [cursor=pointer]:
+              - /url: /dashboard
+            - link "Ôn" [ref=e18] [cursor=pointer]:
+              - /url: /flashcards
+            - link "Tôi" [ref=e23] [cursor=pointer]:
+              - /url: /me
+        - generic [ref=e27]:
+          - button "Switch to light mode" [ref=e28]
+          - link "Đăng nhập" [ref=e29] [cursor=pointer]:
+            - /url: /login?mode=login
+    - main [ref=e30]:
+      - generic [ref=e32]:
+        - generic [ref=e33]:
+          - heading "Ôn tập" [level=1] [ref=e34]
+          - paragraph [ref=e35]: Đang tải thẻ SRS...
+        - paragraph [ref=e39]: Đang tải thẻ đến hạn...
+  - region "Notifications alt+T"
+  - alert [ref=e40]

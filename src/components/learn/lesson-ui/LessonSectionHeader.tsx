@@ -1,3 +1,4 @@
+import { StatLine } from "@/components/ui/page";
 "use client";
 
 import { getSectionGoalVi, getSectionPhase } from "@/lib/lessons/learning-flow";

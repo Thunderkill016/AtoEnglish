@@ -1,3 +1,4 @@
+import { StatLine } from "@/components/ui/page";
 "use client";
 
 import { useState, useEffect, useRef } from "react";
@@ -1108,7 +1109,6 @@ export function AIRoleplay() {
                   variant="outline"
                   size="icon"
                   className="size-14 sm:size-12 rounded-2xl border-border/60 shrink-0 active:scale-[0.98] hover:bg-white/5 flex items-center justify-center"
-                  title="Khởi động lại cuộc trò chuyện"
                 >
                   <RefreshCw className="size-4.5 text-muted-foreground" />
                 </Button>

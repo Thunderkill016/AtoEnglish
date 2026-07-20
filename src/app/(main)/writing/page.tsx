@@ -1,5 +1,7 @@
 "use client";
 
+import { Page, PageHeader, Section, ListRow } from "@/components/ui/page";
+
 import { useState, useTransition } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
@@ -16,7 +18,6 @@ import {
   History,
 } from "lucide-react";
 import { analyzeWriting, saveWritingSentence, type WritingFeedback } from "@/app/actions/writing";
-import { SecondaryPageShell } from "@/components/design-system";
 
 // ─── Level selector ────────────────────────────────────────────────────────────
 const LEVELS = [
@@ -156,10 +157,9 @@ export default function WriteImprovePage() {
   };
 
   return (
-    <SecondaryPageShell
-      title="Viết & Cải thiện"
-      subtitle="Nhập câu tiếng Anh — AI sẽ sửa lỗi, giải thích bằng tiếng Việt, và gợi ý cách viết hay hơn."
-    >
+    <Page>
+      <PageHeader description="Nhập câu tiếng Anh — AI sẽ sửa lỗi, giải thích bằng tiếng Việt, và gợi ý cách viết hay hơn." />
+      <div>
     <div className="space-y-6 pb-16">
       <div className="flex justify-end -mt-2">
         <Link
@@ -369,6 +369,7 @@ export default function WriteImprovePage() {
         )}
       </AnimatePresence>
     </div>
-    </SecondaryPageShell>
+    </div>
+    </Page>
   );
 }

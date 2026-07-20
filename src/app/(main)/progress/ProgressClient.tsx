@@ -1,7 +1,10 @@
+import { StatLine } from "@/components/ui/page";
 "use client";
 
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+
 import { Sparkles, Award, Flame, BookOpen, Mic, Star, Lock, CheckCircle2, Zap, Trophy, Target, Volume2 } from "lucide-react";
-import { Surface, Chip } from "@/components/design-system";
 
 interface AchievementStats {
   totalCards: number;
@@ -245,9 +248,9 @@ export default function ProgressClient({ stats }: ProgressClientProps) {
       {/* Header with summary */}
       <div className="flex items-center justify-between gap-3 flex-wrap">
         <h3 className="font-bold text-base sm:text-xl text-zinc-50">Huy chương thành tích</h3>
-        <Chip tone="success" className="normal-case tracking-normal">
+        <Badge variant="default" className="normal-case tracking-normal">
           {unlockedCount} / {achievements.length} đạt được
-        </Chip>
+        </Badge>
       </div>
 
       {/* Achievement groups */}
@@ -269,7 +272,7 @@ export default function ProgressClient({ stats }: ProgressClientProps) {
                 const tierKey = ach.unlocked ? ach.tier : "locked";
                 const progressPct = Math.min(Math.round((ach.current / ach.target) * 100), 100);
                 return (
-                  <Surface
+                  <Card
                     key={idx}
                     className={`group rounded-3xl p-3 sm:p-5 flex flex-col justify-between transition-all duration-300 hover:-translate-y-1 ${tierColors[tierKey]}`}
                   >
@@ -314,7 +317,7 @@ export default function ProgressClient({ stats }: ProgressClientProps) {
                         </div>
                       )}
                     </div>
-                  </Surface>
+                  </Card>
                 );
               })}
             </div>

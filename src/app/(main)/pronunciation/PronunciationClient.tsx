@@ -1,5 +1,7 @@
 "use client";
 
+import { Page, PageHeader, Section, ListRow } from "@/components/ui/page";
+
 import { useState, useRef, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -20,7 +22,6 @@ import {
   ALL_SOUNDS,
   type IpaSound,
 } from "@/lib/data/ipa-sounds";
-import { SecondaryPageShell } from "@/components/design-system";
 
 const STORAGE_KEY = "ato-ipa-mastered";
 
@@ -205,10 +206,9 @@ export default function PronunciationClient() {
   }
 
   return (
-    <SecondaryPageShell
-      title="44 Âm IPA Tiếng Anh"
-      subtitle="Nhấn vào âm để xem hướng dẫn · Nghe audio · Luyện giọng"
-    >
+    <Page>
+      <PageHeader description="Nhấn vào âm để xem hướng dẫn · Nghe audio · Luyện giọng" />
+      <div>
       <div className="max-w-[520px] mx-auto pb-16">
 
         {/* Progress bar */}
@@ -231,7 +231,6 @@ export default function PronunciationClient() {
           </div>
           <button
             onClick={() => saveMastered(new Set())}
-            title="Reset tiến độ"
             className="p-1 text-muted-foreground hover:text-foreground"
           >
             <RotateCcw size={14} />
@@ -500,6 +499,7 @@ export default function PronunciationClient() {
           )}
         </AnimatePresence>
       </div>
-    </SecondaryPageShell>
+    </div>
+    </Page>
   );
 }

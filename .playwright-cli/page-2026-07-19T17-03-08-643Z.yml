@@ -1,0 +1,49 @@
+- generic [ref=e1]:
+  - link "Chuyển đến nội dung chính" [ref=e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - main [ref=e4]:
+    - generic [ref=e6]:
+      - generic [ref=e7]:
+        - link "Home" [ref=e8] [cursor=pointer]:
+          - /url: /home
+        - generic [ref=e11]: A0 · P0
+      - generic [ref=e13]:
+        - paragraph [ref=e14]: Bài 1/42 · Lộ trình B1 · 8 bước · ~30 phút
+        - heading "Chữ cái & âm cơ bản" [level=1] [ref=e15]
+      - generic [ref=e16]:
+        - generic "Tiến độ bài học" [ref=e17]:
+          - generic "Bắt đầu" [ref=e18]
+          - generic "Từ vựng" [ref=e19]
+          - generic "Ngữ pháp" [ref=e20]
+          - generic "Luyện tập" [ref=e21]
+          - generic "Hội thoại & nghe" [ref=e22]
+          - generic "Phản xạ" [ref=e23]
+          - generic "Nhiệm vụ" [ref=e24]
+          - generic "Tổng kết" [ref=e25]
+        - generic [ref=e26]:
+          - paragraph [ref=e27]: 7/8 · Nhiệm vụ
+          - paragraph [ref=e28]: 30 phút
+        - generic [ref=e294]:
+          - generic [ref=e295]:
+            - heading "Nhiệm vụ nói" [level=2] [ref=e296]
+            - paragraph [ref=e297]: Output thật — tiêu chí rõ
+          - paragraph [ref=e298]: "Nói to: (1) My name is + tên bạn (2) Đánh vần tên bằng chữ cái Anh (3) Please repeat nếu cần."
+          - generic [ref=e299]:
+            - paragraph [ref=e300]: Tiêu chí thành công
+            - list [ref=e301]:
+              - listitem [ref=e302]: Nói được My name is…
+              - listitem [ref=e306]: Đánh vần ít nhất 2 chữ cái bằng tiếng Anh
+              - listitem [ref=e310]: Dùng Please repeat hoặc How do you spell…?
+          - generic [ref=e314]:
+            - paragraph [ref=e315]: Khung gợi ý
+            - list [ref=e316]:
+              - listitem [ref=e317]: My name is…
+              - listitem [ref=e318]: How do you spell…?
+              - listitem [ref=e319]: A, B, C…
+              - listitem [ref=e320]: Please repeat.
+          - button "Đã nói xong ✓" [active] [ref=e326]
+        - generic [ref=e55]:
+          - button "Lại" [ref=e120]
+          - button "Tiếp tục" [ref=e56]
+  - region "Notifications alt+T"
+  - alert [ref=e59]

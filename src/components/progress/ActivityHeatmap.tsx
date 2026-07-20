@@ -1,8 +1,10 @@
+import { StatLine } from "@/components/ui/page";
 'use client';
+
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 
 import { useMemo } from 'react';
 import type { DayActivity } from '@/app/actions/stats';
-import { Surface } from '@/components/design-system';
 
 interface ActivityHeatmapProps {
   days: DayActivity[];
@@ -59,7 +61,7 @@ export function ActivityHeatmap({ days, totalActiveDays, longestStreak }: Activi
   };
 
   return (
-    <Surface className="p-4 sm:p-6 space-y-4">
+    <Card className="p-4 sm:p-6 space-y-4">
       {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-2">
         <div>
@@ -104,7 +106,6 @@ export function ActivityHeatmap({ days, totalActiveDays, longestStreak }: Activi
                 {week.map((day, di) => (
                   <div
                     key={di}
-                    title={tooltip(day)}
                     className={`w-[11px] h-[11px] rounded-[2px] transition-all duration-150 ${
                       day.date
                         ? `${LEVEL_CLASSES[day.level]} hover:ring-1 hover:ring-emerald-400/60 hover:scale-125 cursor-default`
@@ -126,6 +127,6 @@ export function ActivityHeatmap({ days, totalActiveDays, longestStreak }: Activi
           </div>
         </div>
       </div>
-    </Surface>
+    </Card>
   );
 }

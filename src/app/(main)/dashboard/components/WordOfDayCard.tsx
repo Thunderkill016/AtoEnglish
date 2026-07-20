@@ -1,8 +1,10 @@
+import { StatLine } from "@/components/ui/page";
 "use client";
+
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 
 import { useState } from "react";
 import { Volume2, BookOpen, Turtle } from "lucide-react";
-import { Surface } from "@/components/design-system";
 
 interface WordOfDayProps {
   word: string;
@@ -37,7 +39,7 @@ export default function WordOfDayCard({ word, phonetic, meaning_vn, example_en, 
   };
 
   return (
-    <Surface className="rounded-2xl p-5 space-y-3 bg-gradient-to-br from-white/5 to-emerald-500/5">
+    <Card className="rounded-2xl p-5 space-y-3 bg-gradient-to-br from-white/5 to-emerald-500/5">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
@@ -50,7 +52,6 @@ export default function WordOfDayCard({ word, phonetic, meaning_vn, example_en, 
             type="button"
             onClick={() => setSlowMode((s) => !s)}
             aria-label={slowMode ? "Tốc độ bình thường" : "Tốc độ chậm"}
-            title={slowMode ? "Đang ở chế độ chậm — nhấn để bình thường" : "Nghe chậm 0.5×"}
             className={`flex items-center gap-1 px-2 py-1 rounded-lg border text-[10px] font-bold transition-all ${
               slowMode
                 ? "bg-amber-500/15 border-amber-500/40 text-amber-600 dark:text-amber-400"
@@ -102,13 +103,12 @@ export default function WordOfDayCard({ word, phonetic, meaning_vn, example_en, 
             type="button"
             onClick={handleSpeakExample}
             aria-label="Nghe câu ví dụ"
-            title="Nghe câu ví dụ"
             className="shrink-0 flex size-6 items-center justify-center rounded-lg bg-zinc-800/60 text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 hover:bg-zinc-700/60 transition-all border border-zinc-700/40"
           >
             <Volume2 className="size-3" />
           </button>
         </div>
       </div>
-    </Surface>
+    </Card>
   );
 }

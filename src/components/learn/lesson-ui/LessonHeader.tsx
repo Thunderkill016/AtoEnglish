@@ -1,84 +1,47 @@
 "use client";
 
 import Link from "next/link";
-import { SheetHeader } from "@/components/design-system";
-import { SECTION_LABELS } from "@/lib/lessons/learning-flow";
+import { cn } from "@/lib/utils";
 
-interface LessonHeaderProps {
-  level: string;
-  title: string;
-  unitId: string;
-  section: number;
-  sectionOrderIdx: number;
-  totalSections: number;
-  sessionXp: number;
-  xpPopup: { id: number; value: number } | null;
-  miniSession: boolean;
-  allowMiniSession: boolean;
-  onStartMiniSession: () => void;
-  onClearProgress: () => void;
-}
-
-/** V2 light lesson chrome — SheetHeader + thin progress */
-export default function LessonHeader({
-  level,
+export function LessonHeader({
+  backHref = "/home",
+  backLabel = "Back",
   title,
-  unitId,
-  section,
-  sectionOrderIdx,
-  totalSections,
-  sessionXp,
-  xpPopup,
-  miniSession,
-  allowMiniSession,
-  onStartMiniSession,
-  onClearProgress,
-}: LessonHeaderProps) {
-  const progressPct = Math.round(
-    (sectionOrderIdx / Math.max(totalSections - 1, 1)) * 100
-  );
-  const sectionLabel = SECTION_LABELS[section] ?? "Học";
-
-  const trailing = (
-    <div className="flex items-center gap-1.5 shrink-0 text-[var(--minimal-caption-size)]">
-      {sessionXp > 0 && (
-        <span className="font-bold px-2 py-0.5 rounded-lg bg-primary/10 text-primary border border-primary/20">
-          {sessionXp} XP
-          {xpPopup && <span className="ml-0.5">+{xpPopup.value}</span>}
-        </span>
-      )}
-      {miniSession ? (
-        <Link
-          href={`/learn/${unitId}`}
-          onClick={onClearProgress}
-          className="font-semibold text-muted-foreground hover:text-primary whitespace-nowrap"
-        >
-          Bài đầy đủ
-        </Link>
-      ) : (
-        allowMiniSession &&
-        section < 8 && (
-          <button
-            type="button"
-            onClick={onStartMiniSession}
-            className="font-medium text-muted-foreground hover:text-foreground"
-          >
-            Ôn lại
-          </button>
-        )
-      )}
-    </div>
-  );
-
+  progress,
+  progressLabel,
+  trailing,
+  className,
+}: {
+  backHref?: string;
+  backLabel?: string;
+  title?: string;
+  eyebrow?: string;
+  progress?: number;
+  progressLabel?: string;
+  trailing?: React.ReactNode;
+  className?: string;
+}) {
   return (
-    <SheetHeader
-      backHref="/dashboard"
-      backLabel="Về trang Học"
-      eyebrow={level}
-      title={title}
-      progress={progressPct}
-      progressLabel={`${sectionLabel} · ${sectionOrderIdx + 1}/${totalSections}`}
-      trailing={trailing}
-    />
+    <header className={cn("mb-4 space-y-3", className)}>
+      <div className="flex items-center justify-between gap-2">
+        <Link href={backHref} className="text-sm text-muted-foreground hover:text-foreground">
+          ← {backLabel}
+        </Link>
+        {trailing}
+      </div>
+      {title ? <h1 className="text-lg font-semibold">{title}</h1> : null}
+      {typeof progress === "number" ? (
+        <div className="space-y-1">
+          {progressLabel ? (
+            <p className="text-xs text-muted-foreground">{progressLabel}</p>
+          ) : null}
+          <div className="h-1 overflow-hidden rounded-full bg-muted">
+            <div className="h-full bg-primary" style={{ width: `${progress}%` }} />
+          </div>
+        </div>
+      ) : null}
+    </header>
   );
 }
+
+export default LessonHeader;

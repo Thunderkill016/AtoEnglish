@@ -1,3 +1,4 @@
+import { StatLine } from "@/components/ui/page";
 import type { Metadata } from "next";
 import { SpeakingSubShell } from "../SpeakingSubShell";
 import PhonemeChecker from "../phoneme-checker";
@@ -11,9 +12,7 @@ export const metadata: Metadata = {
 
 export default function PhonemePage() {
   return (
-    <SpeakingSubShell
-      title="Phoneme Coach"
-      subtitle="AI phân tích phát âm"
+    <SpeakingSubShell title="Phoneme"
     >
       <PhonemeChecker />
     </SpeakingSubShell>

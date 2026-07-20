@@ -1,3 +1,4 @@
+import { StatLine } from "@/components/ui/page";
 "use client";
 
 import { motion } from "framer-motion";
@@ -51,7 +52,6 @@ export default function WarmupSection({
         sectionId={1}
         sectionOrderIdx={sectionOrderIdx}
         totalSections={TOTAL_SECTIONS}
-        subtitle="Làm quen ngữ cảnh + ôn SRS"
       />
 
       <HowToLearnCard />

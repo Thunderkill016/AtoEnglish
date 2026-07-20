@@ -1,4 +1,7 @@
+import { StatLine } from "@/components/ui/page";
 "use client";
+
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 
 import Link from "next/link";
 import {
@@ -15,7 +18,6 @@ import {
   type DailyMission,
 } from "@/lib/dashboard/daily-missions";
 import { cn } from "@/lib/utils";
-import { Surface } from "@/components/design-system";
 
 interface TodayMissionProps {
   missions: DailyMission[];
@@ -34,7 +36,7 @@ export default function TodayMission({ missions }: TodayMissionProps) {
   const allDone = completedCount === missions.length;
 
   return (
-    <Surface className="rounded-2xl overflow-hidden p-0">
+    <Card className="rounded-2xl overflow-hidden p-0">
       <div className="px-4 sm:px-5 pt-4 sm:pt-5 pb-3">
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center gap-2">
@@ -174,6 +176,6 @@ export default function TodayMission({ missions }: TodayMissionProps) {
           </p>
         )}
       </div>
-    </Surface>
+    </Card>
   );
 }

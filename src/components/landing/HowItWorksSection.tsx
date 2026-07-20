@@ -1,3 +1,4 @@
+import { StatLine } from "@/components/ui/page";
 
 import { Headphones, Layers, Mic2, RefreshCw } from "lucide-react";
 import ScrollReveal from "@/components/ui/scroll-reveal";

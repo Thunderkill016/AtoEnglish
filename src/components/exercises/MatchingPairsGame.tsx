@@ -1,3 +1,4 @@
+import { StatLine } from "@/components/ui/page";
 'use client';
 
 import { useState, useCallback, useEffect, useRef } from 'react';
@@ -64,7 +65,7 @@ function buildInitialState(pairs: MatchPair[]): GameState {
   };
 }
 
-export function MatchingPairsGame({ pairs, onComplete, title }: MatchingPairsGameProps) {
+export function MatchingPairsGame({ pairs, onComplete, }: MatchingPairsGameProps) {
   const [game, setGame] = useState<GameState>(() => buildInitialState(pairs));
   const startTimeRef = useRef(0);
   const wrongTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -204,7 +205,7 @@ export function MatchingPairsGame({ pairs, onComplete, title }: MatchingPairsGam
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="text-white font-semibold text-base">{title ?? '🃏 Nối từ với nghĩa'}</h3>
+          <h3 className="text-white font-semibold text-base">{'🃏 Nối từ với nghĩa'}</h3>
           <p className="text-zinc-400 text-xs mt-0.5">Chọn cặp từ tương ứng để hoàn thành</p>
         </div>
         <div className="flex items-center gap-3 text-sm">

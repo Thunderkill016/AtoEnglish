@@ -1,3 +1,4 @@
+import { StatLine } from "@/components/ui/page";
 import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import { getNextUnitFromProgress } from "@/lib/placement/starting-unit";

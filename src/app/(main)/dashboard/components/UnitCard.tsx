@@ -1,7 +1,8 @@
+import { StatLine } from "@/components/ui/page";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import Link from "next/link";
 import { BookOpen, TrendingUp, ArrowRight, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Surface } from "@/components/design-system";
 
 interface UnitCardProps {
   currentUnitData: {
@@ -21,8 +22,8 @@ export default function UnitCard({ currentUnitData }: UnitCardProps) {
   const tags = currentUnitData.tags ?? [];
 
   return (
-    <Surface
-      variant="interactive"
+    <Card
+      
       className="relative rounded-2xl p-6 sm:p-8 flex flex-col justify-between overflow-hidden group hover:-translate-y-0.5 hover:shadow-lg hover:shadow-emerald-500/5"
     >
       <div className="absolute inset-0 bg-gradient-to-tr from-emerald-500/5 via-transparent to-teal-500/5 -z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
@@ -117,6 +118,6 @@ export default function UnitCard({ currentUnitData }: UnitCardProps) {
           </div>
         </div>
       </div>
-    </Surface>
+    </Card>
   );
 }
