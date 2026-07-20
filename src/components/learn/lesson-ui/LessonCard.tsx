@@ -1,4 +1,3 @@
-import { StatLine } from "@/components/ui/page";
 import { cn } from "@/lib/utils";
 
 interface LessonCardProps {

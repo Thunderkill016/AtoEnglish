@@ -1,4 +1,3 @@
-import { StatLine } from "@/components/ui/page";
 import { createClient } from "@/lib/supabase/server";
 
 import { HeaderShell } from "@/components/layout/header-shell";

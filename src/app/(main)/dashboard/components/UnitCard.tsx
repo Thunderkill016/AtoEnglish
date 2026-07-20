@@ -1,4 +1,3 @@
-import { StatLine } from "@/components/ui/page";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import Link from "next/link";
 import { BookOpen, TrendingUp, ArrowRight, Zap } from "lucide-react";

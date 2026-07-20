@@ -1,4 +1,3 @@
-import { StatLine } from "@/components/ui/page";
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { getWeeklyReport } from "@/app/actions/weekly-summary";

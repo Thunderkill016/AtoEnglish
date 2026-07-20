@@ -1,4 +1,3 @@
-import { StatLine } from "@/components/ui/page";
 import {
   LESSON_BLUEPRINT,
   REFERENCE_UNIT_ID,

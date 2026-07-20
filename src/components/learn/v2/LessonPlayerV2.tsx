@@ -1,4 +1,3 @@
-import { StatLine } from "@/components/ui/page";
 "use client";
 
 import { Button, buttonVariants } from "@/components/ui/button";

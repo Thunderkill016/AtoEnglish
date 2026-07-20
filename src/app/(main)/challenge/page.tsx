@@ -1,4 +1,3 @@
-import { StatLine } from "@/components/ui/page";
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { getChallengeLevel } from "@/app/actions/challenge";

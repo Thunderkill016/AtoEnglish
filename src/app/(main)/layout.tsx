@@ -1,4 +1,3 @@
-import { StatLine } from "@/components/ui/page";
 import { Header } from "@/components/layout/header";
 import { BottomNav } from "@/components/layout/bottom-nav";
 import { LessonPageHider } from "@/components/layout/lesson-page-hider";

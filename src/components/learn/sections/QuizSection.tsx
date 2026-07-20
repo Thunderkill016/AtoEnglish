@@ -1,6 +1,6 @@
-import { cn } from "@/lib/utils";
-import { StatLine } from "@/components/ui/page";
 "use client";
+
+import { cn } from "@/lib/utils";
 
 import { Button, buttonVariants } from "@/components/ui/button";
 

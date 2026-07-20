@@ -1,4 +1,3 @@
-import { StatLine } from "@/components/ui/page";
 import { Suspense } from "react";
 import type { Metadata } from "next";
 import VocabQuizClient from "./VocabQuizClient";

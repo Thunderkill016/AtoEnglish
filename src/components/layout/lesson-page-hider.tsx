@@ -1,4 +1,3 @@
-import { StatLine } from "@/components/ui/page";
 "use client";
 import { usePathname } from "next/navigation";
 import { isLessonChromeHidden } from "@/lib/ui/lesson-chrome";

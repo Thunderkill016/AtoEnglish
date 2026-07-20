@@ -1,4 +1,3 @@
-import { StatLine } from "@/components/ui/page";
 export default function GrammarLoading() {
   return (
     <div className="min-h-screen bg-background flex items-center justify-center">

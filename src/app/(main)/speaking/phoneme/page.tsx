@@ -1,4 +1,3 @@
-import { StatLine } from "@/components/ui/page";
 import type { Metadata } from "next";
 import { SpeakingSubShell } from "../SpeakingSubShell";
 import PhonemeChecker from "../phoneme-checker";

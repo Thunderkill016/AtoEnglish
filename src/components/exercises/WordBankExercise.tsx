@@ -1,4 +1,3 @@
-import { StatLine } from "@/components/ui/page";
 'use client';
 
 import { useState, useCallback, useEffect } from 'react';

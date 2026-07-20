@@ -1,4 +1,3 @@
-import { StatLine } from "@/components/ui/page";
 import type { Metadata } from "next";
 import SpeakingClient from "./SpeakingClient";
 

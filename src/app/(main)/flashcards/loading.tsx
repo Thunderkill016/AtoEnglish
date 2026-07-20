@@ -1,4 +1,3 @@
-import { StatLine } from "@/components/ui/page";
 export default function Loading() {
   return (
     <div className="max-w-2xl mx-auto px-4 py-8 animate-pulse">

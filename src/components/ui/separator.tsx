@@ -1,4 +1,3 @@
-import { StatLine } from "@/components/ui/page";
 "use client"
 
 import { Separator as SeparatorPrimitive } from "@base-ui/react/separator"

@@ -1,4 +1,3 @@
-import { StatLine } from "@/components/ui/page";
 /**
  * P1-5 Fix: Layout-preserving skeleton for the learn unit page.
  * Matches UnitTemplate structure: header + progress bar + section tabs + content area.

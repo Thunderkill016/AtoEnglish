@@ -1,4 +1,3 @@
-import { StatLine } from "@/components/ui/page";
 import { Flame, Trophy, Snowflake, BarChart3, Calendar, Target } from "lucide-react";
 import Link from "next/link";
 import { getMilestoneShareText } from "../utils/streakCopy";

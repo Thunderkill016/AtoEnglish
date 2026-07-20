@@ -1,4 +1,3 @@
-import { StatLine } from "@/components/ui/page";
 export default function SettingsLoading() {
   return (
     <div className="min-h-screen bg-background flex items-center justify-center">
