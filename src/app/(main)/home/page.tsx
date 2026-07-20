@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { HomeClient } from "./HomeClient";
 
 export const metadata: Metadata = {
-  title: "Hôm nay | AtoEnglish v2",
-  description: "Kế hoạch học hôm nay — lộ trình tới B1.",
+  title: "Học tiếp | AtoEnglish",
+  description: "Bài tiếp theo trên lộ trình A0→B1 — một chạm là học.",
   robots: { index: false },
 };
 
