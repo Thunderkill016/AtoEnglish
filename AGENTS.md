@@ -259,7 +259,7 @@ npm run test             # all 64 tests pass
 | Item | Value |
 |------|-------|
 | Live URL | `https://atoenglish.vercel.app` |
-| Supabase project | `vhpfskkredizeazlyzsh` |
+| Supabase project | `zpiwddskhduuykpxltun` (Singapore; recreated 2026-07-20) |
 | Deploy | Model A: push GitLab → Vercel (connect GitLab). Tạm: GitHub cho đến khi `GITLAB_TOKEN` |
 | CI | Local `ci-local.sh` · GitLab `.gitlab-ci.yml` (self-hosted runner) |
 | Git | Model A: `git-push.sh` → GitLab · `migrate-model-a.sh` |

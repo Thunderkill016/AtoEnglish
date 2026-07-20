@@ -2024,11 +2024,12 @@
 
 
 ### TASK-287 — Apply user_v2_lesson_progress migration on Supabase
-- **Status:** `blocked`
+- **Status:** `done`
 - **Mô tả:** Apply `20260710130000_user_v2_lesson_progress.sql` to prod (db push or SQL editor); verify RLS; optional `npm run db:types`.
 - **Done khi:** table live; select own works; types match if regenerated.
 - **Started:** 2026-07-14 — autopilot (PHASE1: ARCHIVE noted; user mandate TASK-287; migration+v2-progress actions; PHASE2: AGENT_PLAN; PHASE3: db push + RLS verify)
-- **Blocked:** 2026-07-14 — Supabase project `vhpfskkredizeazlyzsh` **removed** (Management API `400 Resource has been removed`; DNS `Could not resolve host: vhpfskkredizeazlyzsh.supabase.co`). Migration file present in repo (TASK-279). Access token only lists org MoneyFlow project. Cannot apply SQL / verify RLS without restored project or new Supabase ref + credentials. Unblock: recreate/restore project → link → `supabase db push` → `npm run db:types`.
+- **Blocked:** 2026-07-14 — old project `vhpfskkredizeazlyzsh` removed.
+- **Completed:** 2026-07-20 — recreated Supabase `zpiwddskhduuykpxltun` (ap-southeast-1); full `db push` 27 migrations incl. `user_v2_lesson_progress` + RLS; anon insert blocked by RLS (42501); email signup OK; env local+Vercel updated.
 
 
 ### TASK-289 — P0 fix prod HTTP 404 on /
@@ -2215,12 +2216,12 @@
 - **Completed:** 2026-07-20 — `/path` `/me` `/flashcards` critical=1; planner notes; exit 1 on critical fails; npm run radar already exists
 
 ### TASK-313 — Apply blocked user_v2_lesson_progress migration (retry TASK-287)
-- **Status:** `blocked`
+- **Status:** `done`
 - **Mô tả:** Retry Supabase apply for v2 progress table + RLS if secrets available; else document blocked and keep localStorage SSOT.
 - **Done khi:** migration applied OR status blocked with clear reason; db:types if applied.
 - **Started:** 2026-07-15 — autopilot (PHASE1: TASK-287 log + migration file + env secrets; PHASE2: AGENT_PLAN; PHASE3: retry probe)
-- **Blocked:** 2026-07-15 — secrets present but Supabase project `vhpfskkredizeazlyzsh` still **removed** (DNS NXDOMAIN; Management API `400 Resource has been removed`). Token only lists MoneyFlow — not AtoEnglish. Did **not** apply SQL to foreign project. **SSOT runtime:** localStorage `ato_v2_progress` (guests + auth offline path). Migration file + types + dual-write code remain in repo (TASK-279). Unblock: recreate/restore Supabase project → update env → `supabase db push` → `npm run db:types`.
-- **Commit:** `472bea6` (docs + SSOT; push blocked: GitHub archive + GitLab publickey)
+- **Blocked:** 2026-07-15 — old project removed.
+- **Completed:** 2026-07-20 — same as TASK-287: project `zpiwddskhduuykpxltun`, migrations applied, dual-write path live; guests still localStorage.
 
 
 ### TASK-314 — FSRS seed from LessonSpec lexis on v2 complete

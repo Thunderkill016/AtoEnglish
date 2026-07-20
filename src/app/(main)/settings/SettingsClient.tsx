@@ -310,9 +310,13 @@ export default function SettingsClient({
 
   const clearProgress = () => {
     if (window.confirm("Bạn có chắc muốn xóa toàn bộ tiến độ học cục bộ (lưu trên thiết bị)? Dữ liệu trên server sẽ không bị xóa.")) {
-      const keep = ["ato_settings", "ato_daily_xp_goal", "sb-vhpfskkredizeazlyzsh-auth-token"];
+      // Keep settings + any Supabase auth session keys (project-ref in key name changes per env)
       const keys = Object.keys(localStorage);
-      keys.forEach(k => { if (!keep.some(p => k.includes(p))) localStorage.removeItem(k); });
+      keys.forEach((k) => {
+        if (k === "ato_settings" || k === "ato_daily_xp_goal") return;
+        if (k.startsWith("sb-") && k.includes("auth-token")) return;
+        localStorage.removeItem(k);
+      });
       window.location.reload();
     }
   };

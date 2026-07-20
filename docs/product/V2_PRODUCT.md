@@ -82,8 +82,7 @@ isCurriculumV2() // default ON; set NEXT_PUBLIC_CURRICULUM_V2=0 to use v1
 | v1 `/learn/[unitSlug]` | Live until cutover |
 
 **Authored (playable):** `l-a0-01`…`l-a0-08` (P0 complete), `l-a1-01`…`l-a1-12` (P1 A1 complete), `l-a2-01`, `l-b1-01`  
-**Progress (SSOT):** localStorage `ato_v2_progress` is the **runtime source of truth** (guests and auth) while prod Supabase project is unavailable (TASK-287 / TASK-313 blocked: project `vhpfskkredizeazlyzsh` removed).  
-**Progress (ready offline):** migration `user_v2_lesson_progress` + RLS + client dual-write/hydrator shipped (TASK-279); apply when a live project is restored, then multi-device merge resumes.  
+**Progress (SSOT):** dual-write — localStorage `ato_v2_progress` (guest + offline) + Supabase `user_v2_lesson_progress` (auth multi-device). Project **`zpiwddskhduuykpxltun`** (recreated 2026-07-20); migration applied (TASK-287/313 done).  
 **Complete gate (player):** task attempt («Tôi đã nói xong») + quiz ≥1 answer + **≥50%** correct — else VI re-try «Làm lại quiz» (`src/lib/v2/progress.ts`).  
 **Content factory priority:** P0+P1 done — sequential A2 (`l-a2-01`…) next; no empty maintenance-only autopilot.
 

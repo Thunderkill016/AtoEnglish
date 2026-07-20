@@ -1,28 +1,27 @@
-# Agent Plan — TASK-312 / 315 / 316 (resume)
+# Agent Plan — post revive (2026-07-20)
 
-> 2026-07-20 — continue unfinished after autopilot CI stuck on FluencyItem
+## Done this cycle
 
-## Blocker fixed first
+- GitHub unarchive + push + author email = Vercel team gmail
+- Supabase `zpiwddskhduuykpxltun` + migrations + env
+- Production deploy Ready; radar PASS=13
+- Auth site_url + redirects + email autoconfirm
+- TASK-287 / TASK-313 marked done
 
-- `export type FluencyItem` missing from `lesson-spec.ts` → CI typecheck fail → daemon skipped all ready tasks
-- Exported type; 255 unit tests green
+## Owner (cannot fully automate)
 
-## TASK-312 — product-radar critical
+1. Google OAuth credentials → Supabase Auth Providers  
+2. Vercel Account → Login Connections → GitHub (auto-deploy on push)
 
-- `/path`, `/me`, `/flashcards` critical=1
-- exit 1 when any critical path fails
-- Planner notes for Me + flashcards smoke
+## Next product (when owner ready)
 
-## TASK-315 — E2E guest complete progress
+- Pilot real user: guest lesson → signup email → progress hydrate  
+- Optional: `npm run db:types` after any schema drift  
+- Soft product polish / growth only after OAuth if marketing needs Google button  
+- Do **not** restart 24/7 daemon until owner confirms  
 
-- Extend `e2e/learn-v2-smoke.spec.ts` to assert `ato_v2_progress` contains `l-a1-01` after mark-complete
+## Non-goals now
 
-## TASK-316 — Soft-hide gamify on v2
-
-- `getMeHubMore()` / explore actions / LeagueCard / progress leaderboard row gated by `isCurriculumV2()`
-- Keep streak + daily goal; tests in navigation-v2
-
-## Still blocked
-
-- TASK-313 / 287: Supabase project removed — localStorage SSOT
-- Remote push may still fail (GitHub archive / GitLab key) — local main SSOT
+- GitLab Model A (SSH still broken)  
+- Public repo  
+- Delete v1 units hard (flag kill-switch enough)  

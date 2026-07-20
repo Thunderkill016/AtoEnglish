@@ -16,7 +16,7 @@ import { createInterface } from "node:readline";
 // ─── Config ────────────────────────────────────────────────────────────────
 const SUPABASE_URL =
   process.env.SUPABASE_URL ||
-  "https://vhpfskkredizeazlyzsh.supabase.co";
+  "https://zpiwddskhduuykpxltun.supabase.co";
 
 const SUPABASE_KEY =
   process.env.SUPABASE_SERVICE_ROLE_KEY ||
