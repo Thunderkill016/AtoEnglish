@@ -6,30 +6,34 @@
 
 | Field | Value |
 |---|---|
-| Task | CLEANUP-012A — Verify lesson enrichment helper |
+| Task | CLEANUP-012B — Verify Supabase middleware helper |
 | Status | done — awaiting stacked PR review |
-| Branch | `agent/cleanup-unused-enrich-unit` |
-| Goal | Remove the retired runtime fallback while preserving real curriculum content and lesson behavior |
+| Branch | `agent/cleanup-unused-supabase-middleware` |
+| Goal | Remove the obsolete helper while preserving the active proxy/session authentication boundary |
 
 ## Completed in earlier cleanup batches
 
 - Stopped automatic maintenance-task generation, commits, and direct pushes.
 - Added reproducible codebase inventory and durable cleanup evidence.
-- Removed foundation dead code, the disconnected notification center, legacy exercise components, the old landing outcomes section, unused shared UI, and the legacy type barrel.
+- Removed foundation dead code, the disconnected notification center, legacy exercise components, the old landing outcomes section, unused shared UI, the legacy type barrel, and the retired lesson enrichment fallback.
 
-## Completed in CLEANUP-012A
+## Completed in CLEANUP-012B
 
 Removed after full-checkout and behavior-aware verification:
 
-- `src/lib/lessons/enrich-unit.ts`
+- `src/lib/supabase/middleware.ts`
+
+Added permanent regression coverage:
+
+- `src/lib/supabase/session.test.ts`
 
 Evidence:
 
-- The helper and module path had no runtime or tooling consumer.
-- The active `[unitSlug]` route loads units directly from `UNIT_DATA_MAP` and passes them directly to `UnitTemplate`.
-- All 50 active units contain real `situation` and `learningOutcomes` fields.
-- Content-standard validation requires these fields, making silent runtime repair obsolete.
-- Unit content, lesson order, scoring, audio, FSRS, and `UnitTemplate` code remain unchanged.
+- `createMiddlewareClient` and the old module path had no consumer.
+- `src/proxy.ts` is the only framework convention entry and imports `updateSession` from `src/lib/supabase/session.ts`.
+- `session.ts` owns cookie refresh, missing-environment fallback, public-route bypass, protected-route redirects, authenticated login redirects, and authenticated protected pass-through.
+- Focused tests cover all of those behaviors.
+- No protected-route list, redirect destination, cookie semantics, rate limit, environment variable, dependency, database, or Supabase schema changed.
 
 ## Validation completed
 
@@ -38,25 +42,26 @@ A full GitHub Actions checkout ran before and after deletion:
 ```bash
 npm ci --ignore-scripts --legacy-peer-deps
 npm run inventory -- --write
+npx vitest run src/lib/supabase/session.test.ts
 npx tsc --noEmit
 npm run lint
 npm run test
-npm run test:content-standard
 npm run build
 ```
 
 Post-deletion results:
 
 - source files scanned: 341 → 340
-- unreachable candidates: 2 → 1
+- known entry points: 118 → 119
+- unreachable candidates: 1 → 0
+- targeted session tests passed
 - TypeScript passed
 - ESLint passed
-- unit tests passed
-- lesson content-standard tests passed
+- full unit tests passed
 - production build passed
 
 The temporary validation workflow was removed after the final successful run.
 
 ## Next action
 
-CLEANUP-012B — review `src/lib/supabase/middleware.ts` independently against proxy/session/auth behavior. Do not delete it without targeted cookie-refresh and redirect validation.
+CLEANUP-013 — reconcile `e2e/protected-routes.spec.ts` with the intentional guest-route policy in `session.ts`. Keep that behavior/test correction separate from this dead-code cleanup.

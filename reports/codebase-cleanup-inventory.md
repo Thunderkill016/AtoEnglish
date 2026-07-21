@@ -62,26 +62,38 @@ Validation: source 342 → 341; unreachable 3 → 2; TypeScript, ESLint, and uni
 
 ### Verified dead-code removal — retired lesson enrichment fallback
 
+Removed `src/lib/lessons/enrich-unit.ts` after confirming all 50 active units contain real `situation` and `learningOutcomes` fields and content-standard validation rejects incomplete content.
+
+Validation: source 341 → 340; unreachable 2 → 1; TypeScript, ESLint, unit tests, lesson content-standard tests, and production build passed.
+
+### Verified dead-code removal — obsolete Supabase middleware helper
+
 Removed:
 
-- `src/lib/lessons/enrich-unit.ts`
+- `src/lib/supabase/middleware.ts`
+
+Added durable regression coverage:
+
+- `src/lib/supabase/session.test.ts`
 
 Evidence:
 
-- `enrichUnitForLearning` and the module path had no runtime, static, dynamic, script, test, or route consumer.
-- The active lesson route loads units directly from `UNIT_DATA_MAP` and passes them directly to `UnitTemplate`.
-- All 50 active unit content files declare real `situation` and `learningOutcomes` values.
-- `src/lib/lessons/content-standard.ts` already requires a valid situation and 2–5 learning outcomes, so incomplete content is rejected instead of repaired at runtime.
-- No unit content, lesson order, scoring, audio, FSRS, or `UnitTemplate` implementation changed.
+- No static, dynamic, route, test, script, or tooling consumer referenced `createMiddlewareClient` or the old module path.
+- The only Next.js convention entry is `src/proxy.ts`.
+- `src/proxy.ts` imports and returns `updateSession` from `src/lib/supabase/session.ts`.
+- `session.ts` already owns the same request/response cookie bridge as the removed helper, plus public-route bypass, protected-route redirects, authenticated login redirects, and missing-environment fallback.
+- Focused tests cover missing environment variables, public routes, refreshed cookies, unauthenticated protected redirects, authenticated login redirects, and authenticated protected pass-through.
+- No protected-route list, redirect destination, cookie option, rate limit, environment variable, dependency, database, or Supabase schema changed.
 
 Validation results:
 
-- source files scanned: 341 → 340
-- unreachable candidates: 2 → 1
+- source files scanned: 341 → 340 (one test added, one helper removed relative to the previous 340-file branch)
+- known entry points: 118 → 119
+- unreachable candidates: 1 → 0
+- targeted session tests passed
 - TypeScript passed
 - ESLint passed
-- unit tests passed
-- lesson content-standard tests passed
+- full unit tests passed
 - production build passed
 
 Temporary GitHub Actions workflows used for full-checkout verification are removed after their final successful run so they do not consume future Actions minutes.
@@ -89,17 +101,17 @@ Temporary GitHub Actions workflows used for full-checkout verification are remov
 ## Current inventory summary
 
 - Source files scanned: 340
-- Known entry points: 118
-- Unreachable candidates: 1
+- Known entry points: 119
+- Unreachable candidates: 0
 - Files with at least 500 lines: 32
 - Possible unused runtime/tooling dependencies: 8
 - Possible unused type packages: 2
 
-## Remaining unreachable candidate
+## Unreachable source candidates
 
-- `src/lib/supabase/middleware.ts`
+No candidates currently detected by the conservative source reachability inventory.
 
-This is not an automatic deletion instruction. It duplicates part of the current session client pattern but sits in the authentication boundary, so it requires targeted proxy/session/route-protection review and auth validation.
+This does not mean the repository has no architecture debt or unused dependencies. Framework conventions, runtime strings, generated files, package CLIs, configuration-loaded plugins, and duplicated live code still require separate reviews.
 
 ## Active architecture debt
 
@@ -124,6 +136,10 @@ Classification: **active, cleanup candidate**
 
 The file combines completion transactions, XP, vocabulary seeding, achievements, streak handling, and cache revalidation. Structural splitting requires focused tests.
 
+### Protected-route test drift
+
+`e2e/protected-routes.spec.ts` currently lists `/dashboard`, `/learn`, `/flashcards`, and `/speaking` as protected, while `src/lib/supabase/session.ts` intentionally comments those routes out for guest self-study. Reconcile this in a separate behavior/test PR rather than changing authentication policy inside a dead-code cleanup.
+
 ## Dependency review candidates
 
 Do not remove packages from import-only results. Tailwind/PostCSS and type packages can be loaded implicitly; CLI and smoke tooling require config/script review. Dependency changes require lockfile review, clean installation, typecheck, lint, tests, and build validation.
@@ -141,6 +157,8 @@ A source file can be deleted only when all applicable checks pass:
 - unit tests pass
 - relevant integration, E2E, smoke, or build check passes when the area requires it
 
-## Next cleanup batch
+## Next cleanup work
 
-Review `src/lib/supabase/middleware.ts` independently against `src/proxy.ts`, `src/lib/supabase/session.ts`, cookie refresh behavior, protected-route redirects, login redirects, and Next.js proxy conventions. Require targeted auth tests plus production build before deletion.
+1. Reconcile protected-route E2E expectations with the intentional guest-route policy in `session.ts` without changing production behavior.
+2. Add focused lesson behavior coverage, then begin the first reversible `UnitTemplate` extraction.
+3. Classify dependency candidates in configuration-aware groups before touching `package.json` or the lockfile.
