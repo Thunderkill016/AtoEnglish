@@ -20,20 +20,20 @@
 
 ## Active queue
 
-### CLEANUP-014 — Add focused UnitTemplate behavior coverage
-- **Status:** `ready`
-- **Goal:** Lock the current lesson orchestration behavior before extracting code from `UnitTemplate`.
-- **Done when:** Focused tests cover section ordering, persisted progress restoration, completion gating, and the smallest practical orchestration boundaries without rewriting production behavior.
-
 ### CLEANUP-004A — Extract UnitTemplate lesson types and constants
-- **Status:** `blocked`
-- **Blocked by:** CLEANUP-014 focused lesson behavior coverage.
-- **Goal:** Move lesson-domain types and section constants into dedicated modules while preserving current imports and runtime behavior.
+- **Status:** `ready`
+- **Goal:** Move lesson-domain interfaces and section constants into dedicated modules without changing runtime behavior or breaking existing imports.
+- **Done when:** `UnitTemplate` re-exports existing public types, section labels/order/total remain byte-for-byte equivalent in meaning, the four focused orchestration tests pass, and typecheck, lint, full unit tests, content-standard tests, and production build pass.
 
 ### CLEANUP-004B — Extract UnitTemplate stateless helpers
 - **Status:** `blocked`
-- **Blocked by:** CLEANUP-004A plus passing lesson smoke/E2E validation.
+- **Blocked by:** CLEANUP-004A plus relevant lesson smoke/E2E validation.
 - **Goal:** Extract small stateless presentation helpers in separate reviewable commits.
+
+### CLEANUP-004C — Extract UnitTemplate progress persistence
+- **Status:** `blocked`
+- **Blocked by:** CLEANUP-004A and additional persistence-focused tests.
+- **Goal:** Move lesson-progress localStorage behavior into a dedicated hook without changing storage keys or section semantics.
 
 ### CLEANUP-015 — Review unit action transaction boundaries
 - **Status:** `blocked`
