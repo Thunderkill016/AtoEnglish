@@ -22,6 +22,8 @@ import SpeakingSection from "./sections/SpeakingSection";
 import QuizSection from "./sections/QuizSection";
 import TranslateSection from "./sections/TranslateSection";
 import FluencySection from "./sections/FluencySection";
+import LessonProgress from "./lesson-ui/LessonProgress";
+import SessionBreakCard from "./lesson-ui/SessionBreakCard";
 import {
   SECTION_LABELS,
   SECTION_ORDER,
@@ -636,8 +638,6 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
   };
 
   const sectionOrderIdx = SECTION_ORDER.indexOf(section as SectionNumber);
-  const progress = Math.round((sectionOrderIdx / (TOTAL_SECTIONS - 1)) * 100);
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-zinc-950 via-zinc-900 to-emerald-950/20">
       {/* Sticky Header */}
@@ -707,63 +707,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
             </div>
           </div>
 
-          {/* Step dots progress */}
-          <div
-            className="flex items-center gap-0 mt-2"
-            role="progressbar"
-            aria-valuenow={progress}
-            aria-valuemin={0}
-            aria-valuemax={100}
-            aria-label={`Tiến độ bài học: bước ${sectionOrderIdx + 1} / ${TOTAL_SECTIONS}`}
-          >
-            {SECTION_ORDER.map((secNum, i) => {
-              const isSecCompleted = i < sectionOrderIdx;
-              const isSecCurrent = i === sectionOrderIdx;
-              return (
-                <div key={secNum} className="flex items-center flex-1 min-w-0">
-                  <div
-                    className={`relative flex items-center justify-center rounded-full shrink-0 transition-all duration-300 ${
-                      isSecCurrent
-                        ? "w-7 h-7 bg-emerald-500 ring-2 ring-emerald-400/50 ring-offset-1 ring-offset-zinc-950 shadow-lg shadow-emerald-900/60"
-                        : isSecCompleted
-                        ? "w-5 h-5 bg-emerald-800"
-                        : "w-5 h-5 bg-zinc-800"
-                    }`}
-                  >
-                    {isSecCompleted ? (
-                      <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-                        <path
-                          d="M2 5l2 2 4-4"
-                          stroke="#34d399"
-                          strokeWidth="1.5"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                    ) : (
-                      <span
-                        className={`font-bold tabular-nums leading-none select-none ${
-                          isSecCurrent ? "text-white text-[11px]" : "text-zinc-600 text-[9px]"
-                        }`}
-                      >
-                        {i + 1}
-                      </span>
-                    )}
-                    {isSecCurrent && (
-                      <span className="absolute inset-0 rounded-full bg-emerald-400/20 animate-ping" />
-                    )}
-                  </div>
-                  {i < SECTION_ORDER.length - 1 && (
-                    <div
-                      className={`h-px flex-1 mx-0.5 transition-all duration-500 ${
-                        i < sectionOrderIdx ? "bg-emerald-700" : "bg-zinc-800"
-                      }`}
-                    />
-                  )}
-                </div>
-              );
-            })}
-          </div>
+          <LessonProgress sectionOrderIdx={sectionOrderIdx} />
         </div>
       </div>
 
@@ -771,64 +715,7 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
       <div className="max-w-3xl mx-auto px-4 py-4 sm:py-8 pb-24">
         <AnimatePresence mode="wait">
 
-          {/* ── Session Break Card (between Practice and Dialogue) ── */}
-          {sessionBreak && (
-            <motion.div
-              key="session-break"
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0 }}
-              className="rounded-3xl border border-emerald-500/20 bg-gradient-to-b from-emerald-500/8 to-teal-500/5 p-6 sm:p-8 space-y-6 text-center"
-            >
-              {/* Congrats badge */}
-              <div className="flex size-16 mx-auto items-center justify-center rounded-2xl bg-emerald-500/10 text-3xl">
-                ☕
-              </div>
-              <div>
-                <p className="text-xs font-black text-emerald-500 uppercase tracking-widest mb-1">Phần 1 hoàn thành!</p>
-                <h3 className="text-lg sm:text-xl font-black text-zinc-900 dark:text-zinc-50 leading-tight">
-                  Bạn đã học xong ~15 phút đầu tiên
-                </h3>
-                <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1.5 max-w-sm mx-auto">
-                  Nghỉ ngơi hoặc tiếp tục ngay Phần 2 — Hội thoại, Shadowing, Luyện nói và Hoàn thành.
-                </p>
-              </div>
-
-              {/* Part 1 recap */}
-              <div className="flex flex-wrap justify-center gap-2">
-                {["✅ Khởi động", "✅ Từ vựng", "✅ Ngữ pháp", "✅ Luyện tập"].map((s) => (
-                  <span key={s} className="text-xs font-bold px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-700 dark:text-emerald-400">
-                    {s}
-                  </span>
-                ))}
-              </div>
-              {/* Part 2 preview */}
-              <div className="flex flex-wrap justify-center gap-2">
-                {["⏳ Hội thoại", "⏳ Phản xạ", "⏳ Dịch câu", "⏳ Shadowing", "⏳ Luyện nói", "⏳ Quiz"].map((s) => (
-                  <span key={s} className="text-xs font-bold px-3 py-1.5 rounded-full bg-zinc-100 dark:bg-zinc-800/60 border border-zinc-200/60 dark:border-zinc-700/40 text-zinc-500">
-                    {s}
-                  </span>
-                ))}
-              </div>
-
-              {/* CTAs */}
-              <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                <button
-                  onClick={goNext}
-                  className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-6 py-3 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-black text-sm shadow-lg shadow-emerald-900/20 transition-all"
-                >
-                  Tiếp tục Phần 2 →
-                </button>
-                <a
-                  href="/dashboard"
-                  className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-6 py-3 rounded-2xl border border-zinc-200/60 dark:border-zinc-700/60 text-zinc-600 dark:text-zinc-400 font-bold text-sm hover:border-zinc-300 dark:hover:border-zinc-600 transition-all"
-                >
-                  💾 Lưu và nghỉ ngơi
-                </a>
-              </div>
-              <p className="text-[11px] text-zinc-400">Tiến độ tự động được lưu — quay lại lúc nào cũng được</p>
-            </motion.div>
-          )}
+          {sessionBreak && <SessionBreakCard onContinue={goNext} />}
 
           {section === 1 && !sessionBreak && (
             <WarmupSection
