@@ -7,7 +7,7 @@
 
 1. Read this file before non-trivial work.
 2. Work on a branch; do not push autonomous changes directly to `main`.
-3. One task per branch and one logical concern per commit.
+3. Use one branch per cleanup campaign and one logical concern per commit.
 4. Do not create commits whose only purpose is recording that checks passed.
 5. Do not generate placeholder maintenance tasks to keep an agent busy.
 6. Keep `AGENT_PLAN.md` limited to the current task.
@@ -28,6 +28,7 @@ npm run test:integration
 npm run e2e
 npm run build
 npm run audit
+npm run inventory
 ```
 
 Use `npm run build` as the final compilation check, not after every small edit.
@@ -103,7 +104,7 @@ Do not change lesson order as part of content cleanup.
 Cleanup must be staged:
 
 1. Establish a passing baseline.
-2. Inventory candidates.
+2. Run `npm run inventory` and review its candidates.
 3. Classify each candidate as `safe_to_delete`, `likely_unused`, or `manual_verification`.
 4. Delete only verified items.
 5. Refactor large components through small behavior-preserving extractions.
@@ -115,6 +116,7 @@ Do not combine cleanup with feature development.
 ## Before a pull request
 
 ```bash
+npm run inventory
 npx tsc --noEmit
 npm run lint
 npm run test
@@ -128,4 +130,3 @@ Confirm:
 - No production `console.log` or `console.error` was introduced.
 - No generated or runtime artifact was committed.
 - Documentation describes the current repository rather than an old implementation.
-- The pull request explains behavior impact and validation performed.
