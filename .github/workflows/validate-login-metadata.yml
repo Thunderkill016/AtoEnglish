@@ -1,0 +1,63 @@
+name: Validate login metadata fix
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Clean install
+        run: npm ci --ignore-scripts --legacy-peer-deps
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Inventory
+        run: npm run inventory
+
+      - name: Typecheck
+        run: npx tsc --noEmit
+
+      - name: Full lint
+        run: npm run lint
+
+      - name: Full unit tests
+        run: npm run test
+
+      - name: Lesson content standard
+        run: npm run test:content-standard
+
+      - name: Production build
+        run: npm run build
+
+      - name: Start production server
+        run: |
+          npm run start > /tmp/atoenglish.log 2>&1 &
+          echo $! > /tmp/atoenglish.pid
+          npx wait-on http-get://127.0.0.1:3000/login --timeout 60000
+
+      - name: Protected-route production E2E
+        run: PLAYWRIGHT_BASE_URL=http://127.0.0.1:3000 npx playwright test e2e/protected-routes.spec.ts --project=chromium
+
+      - name: Lesson production smoke E2E
+        run: PLAYWRIGHT_BASE_URL=http://127.0.0.1:3000 npx playwright test e2e/lesson-smoke.spec.ts
+
+      - name: Show server log on failure
+        if: failure()
+        run: cat /tmp/atoenglish.log || true
