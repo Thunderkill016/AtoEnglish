@@ -20,11 +20,15 @@
 
 ## Active queue
 
-### CLEANUP-007 — Verify the next unreachable source group
+### CLEANUP-008 — Verify old exercise components
 - **Status:** `ready`
-- **Goal:** Verify rollback-era minimal dashboard and lesson-shell candidates with repository-wide symbol/path searches.
-- **Candidates:** `DashboardMinimalClient.tsx`, `LessonHeader.tsx`, and `LessonShell.tsx`.
-- **Done when:** Every candidate is classified independently; only proven-unused files are removed; inventory, typecheck, lint, and unit tests pass after deletion.
+- **Goal:** Verify `ListenAndChooseExercise.tsx` and `MatchingPairsGame.tsx` against current lesson-section implementations.
+- **Done when:** Both candidates are classified independently; only proven-unused files are removed; inventory, typecheck, lint, and unit tests pass after deletion.
+
+### CLEANUP-009 — Verify notification-center group
+- **Status:** `ready`
+- **Goal:** Determine whether notification center components, hook, copy utility, and layout wrapper form a fully unused feature group or a disconnected integration.
+- **Done when:** Routes, service worker, push actions, layout integration, and runtime references are reviewed before any deletion.
 
 ### CLEANUP-004 — Split UnitTemplate safely
 - **Status:** `blocked`
