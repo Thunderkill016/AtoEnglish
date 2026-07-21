@@ -3,13 +3,8 @@
 /**
  * Conservative codebase inventory for cleanup work.
  *
- * This script does not delete or modify source files. It reports:
- * - source files not reachable from known Next.js/test entry points
- * - large source files that should be reviewed for extraction
- * - declared packages with no detected import or script usage
- *
- * Static analysis has limits. Every result is a review candidate, not proof that
- * a file or dependency is safe to delete.
+ * Reports review candidates only. It never deletes or changes source files.
+ * Static analysis cannot prove that a candidate is safe to remove.
  *
  * Usage:
  *   npm run inventory
@@ -27,6 +22,14 @@ const WRITE_REPORT = process.argv.includes("--write");
 
 const SOURCE_EXTENSIONS = [".ts", ".tsx", ".js", ".jsx", ".mjs", ".cjs"];
 const RESOLUTION_EXTENSIONS = ["", ...SOURCE_EXTENSIONS, ".json"];
+const TEXT_EXTENSIONS = new Set([
+  ...SOURCE_EXTENSIONS,
+  ".json",
+  ".yml",
+  ".yaml",
+  ".sh",
+  ".css",
+]);
 const IGNORED_DIRS = new Set([
   ".git",
   ".next",
@@ -64,9 +67,11 @@ const COMMAND_PACKAGE_MAP = new Map([
   ["vitest", "vitest"],
   ["playwright", "@playwright/test"],
   ["tsx", "tsx"],
+  ["tsc", "typescript"],
   ["husky", "husky"],
   ["dotenv", "dotenv-cli"],
   ["gitlab-ci-local", "gitlab-ci-local"],
+  ["wait-on", "wait-on"],
   ["tailwindcss", "tailwindcss"],
 ]);
 
@@ -106,9 +111,11 @@ function readText(filePath) {
 function extractModuleSpecifiers(content) {
   const specifiers = new Set();
   const patterns = [
-    /\b(?:import|export)\s+(?:type\s+)?(?:[\s\S]*?\s+from\s+)?["']([^"']+)["']/g,
+    /\b(?:import|export)\s+(?:type\s+)?[^;"']*?\sfrom\s*["']([^"']+)["']/g,
+    /\bimport\s*["']([^"']+)["']/g,
     /\bimport\s*\(\s*["']([^"']+)["']\s*\)/g,
     /\brequire\s*\(\s*["']([^"']+)["']\s*\)/g,
+    /@import\s+(?:url\()?\s*["']([^"']+)["']/g,
   ];
 
   for (const pattern of patterns) {
@@ -142,11 +149,9 @@ function resolveInternalImport(fromFile, specifier) {
   if (specifier.startsWith("@/")) {
     return tryResolve(path.join(SRC_DIR, specifier.slice(2)));
   }
-
   if (specifier.startsWith(".")) {
     return tryResolve(path.resolve(path.dirname(fromFile), specifier));
   }
-
   return null;
 }
 
@@ -163,7 +168,6 @@ function isNextEntry(filePath) {
 }
 
 function isFrameworkRoot(filePath) {
-  const rel = relative(filePath);
   return [
     "src/proxy.ts",
     "src/proxy.tsx",
@@ -171,7 +175,7 @@ function isFrameworkRoot(filePath) {
     "src/middleware.tsx",
     "src/instrumentation.ts",
     "src/instrumentation-client.ts",
-  ].includes(rel);
+  ].includes(relative(filePath));
 }
 
 function packageNameFromSpecifier(specifier) {
@@ -194,6 +198,10 @@ function markdownList(items, emptyText) {
   return items.map((item) => `- \`${item}\``).join("\n");
 }
 
+function parseJsonFile(filePath) {
+  return JSON.parse(readText(filePath));
+}
+
 if (!fs.existsSync(SRC_DIR)) {
   console.error("Missing src/ directory. Run this command from the repository root.");
   process.exit(1);
@@ -204,12 +212,9 @@ const sourceSet = new Set(sourceFiles);
 const graph = new Map(sourceFiles.map((file) => [file, new Set()]));
 
 for (const file of sourceFiles) {
-  const content = readText(file);
-  for (const specifier of extractModuleSpecifiers(content)) {
+  for (const specifier of extractModuleSpecifiers(readText(file))) {
     const resolved = resolveInternalImport(file, specifier);
-    if (resolved && sourceSet.has(resolved)) {
-      graph.get(file).add(resolved);
-    }
+    if (resolved && sourceSet.has(resolved)) graph.get(file).add(resolved);
   }
 }
 
@@ -240,21 +245,17 @@ const largeFiles = sourceFiles
   .filter(({ lines }) => lines >= 500)
   .sort((a, b) => b.lines - a.lines);
 
-const packageJsonPath = path.join(ROOT, "package.json");
-const packageJson = JSON.parse(readText(packageJsonPath));
+const packageJson = parseJsonFile(path.join(ROOT, "package.json"));
 const declaredDependencies = {
   ...(packageJson.dependencies ?? {}),
   ...(packageJson.devDependencies ?? {}),
 };
-
-const repositoryTextFiles = walk(
-  ROOT,
-  (file) =>
-    isSourceFile(file) ||
-    [".json", ".md", ".yml", ".yaml"].includes(path.extname(file)) ||
-    ["Dockerfile", "Makefile"].includes(path.basename(file)),
-);
 const usedPackages = new Set();
+
+const repositoryTextFiles = walk(ROOT, (file) => {
+  const base = path.basename(file);
+  return TEXT_EXTENSIONS.has(path.extname(file)) || base === "Dockerfile" || base === "Makefile";
+});
 
 for (const file of repositoryTextFiles) {
   let content;
@@ -271,40 +272,66 @@ for (const file of repositoryTextFiles) {
 }
 
 for (const script of Object.values(packageJson.scripts ?? {})) {
-  const tokens = String(script).split(/\s+/);
-  for (const token of tokens) {
-    const command = token.replace(/^npx$/, "");
-    const mappedPackage = COMMAND_PACKAGE_MAP.get(command);
+  for (const rawToken of String(script).split(/\s+/)) {
+    const token = rawToken.replace(/^npx$/, "").replace(/^\.\//, "");
+    const mappedPackage = COMMAND_PACKAGE_MAP.get(token);
     if (mappedPackage) usedPackages.add(mappedPackage);
   }
 }
 
-for (const typeEntry of packageJson.types ?? []) {
-  usedPackages.add(typeEntry);
+const tsconfigPath = path.join(ROOT, "tsconfig.json");
+if (fs.existsSync(tsconfigPath)) {
+  const tsconfig = parseJsonFile(tsconfigPath);
+  for (const typeName of tsconfig.compilerOptions?.types ?? []) {
+    if (typeName.startsWith("vitest/")) usedPackages.add("vitest");
+    else if (typeName === "node") usedPackages.add("@types/node");
+    else usedPackages.add(`@types/${typeName}`);
+  }
+}
+
+if (packageJson.scripts?.["test:coverage"]) usedPackages.add("@vitest/coverage-v8");
+if (readText(path.join(ROOT, "vitest.config.ts")).includes('environment: "jsdom"')) {
+  usedPackages.add("jsdom");
+}
+
+// Unscoped runtime packages commonly use matching DefinitelyTyped packages.
+for (const packageName of [...usedPackages]) {
+  if (packageName.startsWith("@")) continue;
+  const typePackage = `@types/${packageName}`;
+  if (declaredDependencies[typePackage]) usedPackages.add(typePackage);
 }
 
 const possibleUnusedDependencies = Object.keys(declaredDependencies)
   .filter((packageName) => !usedPackages.has(packageName))
   .sort();
+const possibleUnusedRuntimeDependencies = possibleUnusedDependencies.filter(
+  (packageName) => !packageName.startsWith("@types/"),
+);
+const possibleUnusedTypePackages = possibleUnusedDependencies.filter((packageName) =>
+  packageName.startsWith("@types/"),
+);
 
 const generatedAt = new Date().toISOString();
 const report = `# Generated codebase inventory\n\n` +
   `Generated: ${generatedAt}\n\n` +
-  `> This is a conservative static-analysis report. Items are review candidates, not automatic deletion instructions. Next.js conventions, generated code, runtime string references, package CLIs, CSS plugins, and external tooling can create false positives.\n\n` +
+  `> Conservative static analysis only. Every item requires manual verification. Framework conventions, runtime strings, generated code, package CLIs, CSS plugins, and external tooling can create false positives.\n\n` +
   `## Summary\n\n` +
   `- Source files scanned: ${sourceFiles.length}\n` +
   `- Known entry points: ${roots.length}\n` +
   `- Unreachable candidates: ${unreachableCandidates.length}\n` +
   `- Files with at least 500 lines: ${largeFiles.length}\n` +
-  `- Possible unused dependencies: ${possibleUnusedDependencies.length}\n\n` +
+  `- Possible unused runtime/tooling dependencies: ${possibleUnusedRuntimeDependencies.length}\n` +
+  `- Possible unused type packages: ${possibleUnusedTypePackages.length}\n\n` +
   `## Unreachable source candidates\n\n` +
   `${markdownList(unreachableCandidates, "No candidates found.")}\n\n` +
   `## Large files\n\n` +
   `${largeFiles.length === 0 ? "- No files exceed the threshold." : largeFiles.map(({ file, lines }) => `- \`${file}\` — ${lines} lines`).join("\n")}\n\n` +
-  `## Possible unused dependencies\n\n` +
-  `${markdownList(possibleUnusedDependencies, "No candidates found.")}\n\n` +
+  `## Possible unused runtime or tooling dependencies\n\n` +
+  `${markdownList(possibleUnusedRuntimeDependencies, "No candidates found.")}\n\n` +
+  `## Possible unused type packages\n\n` +
+  `${markdownList(possibleUnusedTypePackages, "No candidates found.")}\n\n` +
   `## Required verification before deletion\n\n` +
-  `1. Search for static imports, dynamic imports, route conventions, scripts, config references, and string-based runtime references.\n` +
+  `1. Search static imports, dynamic imports, framework conventions, scripts, config, migrations, and runtime string references.\n` +
   `2. Remove one candidate or one tightly related group per commit.\n` +
   `3. Run typecheck, lint, unit tests, and the relevant integration/E2E test.\n` +
   `4. Revert immediately if behavior changes unexpectedly.\n`;
