@@ -6,30 +6,30 @@
 
 | Field | Value |
 |---|---|
-| Task | CLEANUP-011 — Verify unused shared UI primitives |
+| Task | CLEANUP-012C — Verify legacy type barrel |
 | Status | done — awaiting stacked PR review |
-| Branch | `agent/cleanup-unused-shared-ui` |
-| Goal | Remove unused presentational components without rewriting active branding or avatar UI |
+| Branch | `agent/cleanup-unused-type-barrel` |
+| Goal | Remove the unused type barrel while preserving real database and generated Supabase types |
 
 ## Completed in earlier cleanup batches
 
 - Stopped automatic maintenance-task generation, commits, and direct pushes.
 - Added reproducible codebase inventory and durable cleanup evidence.
-- Removed foundation dead code, the disconnected notification center, two legacy exercise components, and the legacy landing outcomes section.
+- Removed foundation dead code, the disconnected notification center, legacy exercise components, the old landing outcomes section, and unused shared UI components.
 
-## Completed in CLEANUP-011
+## Completed in CLEANUP-012C
 
-Removed after independent full-checkout verification:
+Removed after exact barrel-import verification:
 
-- `src/components/layout/user-avatar.tsx`
-- `src/components/ui/logo.tsx`
+- `src/types/index.ts`
 
 Evidence:
 
-- No static import, dynamic import, route/layout integration, export consumer, test, or script used either component.
-- Active branding uses `Sprout` and existing markup directly in current surfaces.
-- `HeaderShell` does not import `UserAvatar` and keeps its active authentication UI unchanged.
-- No navigation, avatar behavior, branding copy, or styling was rewritten.
+- No exact alias import from `@/types` or `@/types/index` existed.
+- No relative import terminated at `types` or `types/index`.
+- No dynamic import or CommonJS require referenced the barrel.
+- Representative legacy aliases had no consumer.
+- `src/types/database.ts` and `src/types/supabase.ts` remain unchanged.
 
 ## Validation completed
 
@@ -45,8 +45,8 @@ npm run test
 
 Post-deletion results:
 
-- source files scanned: 344 → 342
-- unreachable candidates: 5 → 3
+- source files scanned: 342 → 341
+- unreachable candidates: 3 → 2
 - TypeScript passed
 - ESLint passed
 - unit tests passed
@@ -55,4 +55,4 @@ The temporary validation workflow was removed after the final successful run.
 
 ## Next action
 
-CLEANUP-012C — verify the legacy `src/types/index.ts` barrel independently. Do not combine it with lesson enrichment or Supabase session middleware cleanup.
+CLEANUP-012A — inspect `src/lib/lessons/enrich-unit.ts` against every active unit-loading path and content fallback expectation. Do not combine it with Supabase middleware cleanup.
