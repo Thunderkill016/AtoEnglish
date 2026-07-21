@@ -14,11 +14,11 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     env:
-      PR_NUMBER: "10"
-      HEAD_BRANCH: agent/cleanup-dependency-classification
-      ORIGINAL_BASE_SHA: d2f385f4b154de52dbfe533938846a06566851c0
-      ORIGINAL_HEAD_SHA: a8c2183ef64329f67b1f6fec0f3cc7e0938e19fc
-      COMMIT_TITLE: "chore: remove unused dependencies and classify tooling"
+      PR_NUMBER: "11"
+      HEAD_BRANCH: agent/unit-template-test-foundation
+      ORIGINAL_BASE_SHA: a8c2183ef64329f67b1f6fec0f3cc7e0938e19fc
+      ORIGINAL_HEAD_SHA: f810dda1ac03a8ffe781ab1470f8727450b9d162
+      COMMIT_TITLE: "test: add UnitTemplate behavior foundation"
     steps:
       - name: Checkout controller branch
         uses: actions/checkout@v4
