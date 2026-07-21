@@ -25,10 +25,10 @@
 - **Goal:** Verify `ListenAndChooseExercise.tsx` and `MatchingPairsGame.tsx` against current lesson-section implementations.
 - **Done when:** Both candidates are classified independently; only proven-unused files are removed; inventory, typecheck, lint, and unit tests pass after deletion.
 
-### CLEANUP-009 — Verify notification-center group
-- **Status:** `ready`
-- **Goal:** Determine whether notification center components, hook, copy utility, and layout wrapper form a fully unused feature group or a disconnected integration.
-- **Done when:** Routes, service worker, push actions, layout integration, and runtime references are reviewed before any deletion.
+### CLEANUP-010 — Verify remaining lightweight candidates
+- **Status:** `blocked`
+- **Blocked by:** CLEANUP-008 and independent repository-wide verification for each logical group.
+- **Goal:** Classify `OutcomesSection`, `user-avatar`, `logo`, `enrich-unit`, Supabase middleware, and `types/index.ts` without combining unrelated removals.
 
 ### CLEANUP-004 — Split UnitTemplate safely
 - **Status:** `blocked`

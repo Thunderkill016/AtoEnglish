@@ -15,7 +15,7 @@ npm run inventory -- --write
 
 The generated report is ignored by Git.
 
-## Cleanup completed in this branch
+## Cleanup completed
 
 ### Repository-noise cleanup
 
@@ -24,7 +24,7 @@ The generated report is ignored by Git.
 - Reduced agent plan/backlog files to current and open work.
 - Ignored runtime agent logs and generated inventory reports.
 
-### Verified dead-code removals
+### Verified dead-code removals — foundation batch
 
 The following files were removed only after import-graph analysis, repository-wide symbol/path searches, and successful post-deletion validation:
 
@@ -41,7 +41,7 @@ Evidence:
 - Database migrations and generated Supabase types were not changed.
 - The stale `unit-content.ts` exemption was removed from `scripts/audit-code.mjs`.
 
-Validation after cleanup:
+Validation after the foundation batch:
 
 - dependency installation from the lockfile passed with lifecycle scripts disabled
 - cleanup inventory passed
@@ -51,13 +51,40 @@ Validation after cleanup:
 - source files scanned changed from 356 to 352
 - unreachable candidates changed from 17 to 13
 
-The temporary GitHub Actions workflow used for full-checkout validation was removed after the final successful run so it does not consume future Actions minutes.
+### Verified dead-code removals — notification-center batch
+
+The following closed feature group was removed after a full-checkout search confirmed there were no code consumers outside the candidate files:
+
+- `src/components/layout/notification-center-wrapper.tsx`
+- `src/features/notifications/components/NotificationCenter.tsx`
+- `src/features/notifications/components/NotificationItem.tsx`
+- `src/features/notifications/hooks/useNotificationCenter.ts`
+- `src/features/notifications/utils/notificationCopy.ts`
+
+Evidence:
+
+- No layout, header, route, script, Supabase function, service worker, dynamic import, or runtime path referenced the notification-center wrapper, components, hook, or copy library.
+- `PushPermissionCard` remains active and separate; it does not import the removed notification-center group.
+- `src/app/api/notifications/history/route.ts`, notification migrations, generated types, push infrastructure, and database tables remain unchanged.
+- A historical migration comment mentioning `NotificationCenter` was not edited because migrations are immutable history.
+
+Validation after the notification-center batch:
+
+- dependency installation from the lockfile passed with lifecycle scripts disabled
+- cleanup inventory passed
+- TypeScript typecheck passed
+- ESLint passed
+- unit tests passed
+- source files scanned changed from 352 to 347
+- unreachable candidates changed from 13 to 8
+
+Temporary GitHub Actions workflows used for full-checkout verification are removed after their final successful run so they do not consume future Actions minutes.
 
 ## Current inventory summary
 
-- Source files scanned: 352
+- Source files scanned: 347
 - Known entry points: 118
-- Unreachable candidates: 13
+- Unreachable candidates: 8
 - Files with at least 500 lines: 32
 - Possible unused runtime/tooling dependencies: 8
 - Possible unused type packages: 2
@@ -69,13 +96,8 @@ These remain review candidates, not automatic deletion instructions:
 - `src/components/exercises/ListenAndChooseExercise.tsx`
 - `src/components/exercises/MatchingPairsGame.tsx`
 - `src/components/landing/OutcomesSection.tsx`
-- `src/components/layout/notification-center-wrapper.tsx`
 - `src/components/layout/user-avatar.tsx`
 - `src/components/ui/logo.tsx`
-- `src/features/notifications/components/NotificationCenter.tsx`
-- `src/features/notifications/components/NotificationItem.tsx`
-- `src/features/notifications/hooks/useNotificationCenter.ts`
-- `src/features/notifications/utils/notificationCopy.ts`
 - `src/lib/lessons/enrich-unit.ts`
 - `src/lib/supabase/middleware.ts`
 - `src/types/index.ts`
@@ -134,4 +156,4 @@ A source file can be deleted only when all applicable checks pass:
 
 ## Next cleanup batch
 
-Verify either the old exercise components or the notification-center group as one tightly related batch. Remove only proven-unused files, then rerun the full validation gates in an executable checkout.
+Verify `ListenAndChooseExercise.tsx` and `MatchingPairsGame.tsx` against the active lesson-section implementations. Remove only proven-unused files, then rerun the full validation gates in an executable checkout.
