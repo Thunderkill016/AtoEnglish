@@ -35,8 +35,15 @@ jobs:
       - name: Install dependencies without lifecycle scripts
         run: npm ci --ignore-scripts --legacy-peer-deps
 
-      - name: Inventory
-        run: npm run inventory
+      - name: Generate cleanup inventory
+        run: npm run inventory -- --write
+
+      - name: Upload cleanup inventory
+        uses: actions/upload-artifact@v4
+        with:
+          name: cleanup-inventory
+          path: reports/codebase-inventory.generated.md
+          if-no-files-found: error
 
       - name: Typecheck
         run: npx tsc --noEmit
