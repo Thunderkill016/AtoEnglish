@@ -20,10 +20,10 @@
 
 ## Active queue
 
-### CLEANUP-012B — Verify Supabase middleware helper
+### CLEANUP-013 — Reconcile protected-route E2E drift
 - **Status:** `ready`
-- **Goal:** Classify `src/lib/supabase/middleware.ts` without risking cookie refresh, route protection, or login redirects.
-- **Done when:** `src/proxy.ts`, `src/lib/supabase/session.ts`, exact symbol/path usage, protected-route behavior, login redirect behavior, framework conventions, targeted auth tests, typecheck, lint, unit tests, and production build are verified before and after any deletion.
+- **Goal:** Align `e2e/protected-routes.spec.ts` with the intentional guest-route policy in `src/lib/supabase/session.ts` without changing production authentication behavior.
+- **Done when:** The source of truth is explicit, stale protected-route expectations are corrected, public/guest/protected coverage is preserved, and targeted E2E or equivalent route-policy validation passes.
 
 ### CLEANUP-004 — Split UnitTemplate safely
 - **Status:** `blocked`
