@@ -38,11 +38,26 @@ jobs:
       - name: Generate cleanup inventory
         run: npm run inventory -- --write
 
-      - name: Upload cleanup inventory
+      - name: Verify first deletion candidate
+        shell: bash
+        run: |
+          {
+            echo "# unit-content.ts repository verification"
+            echo
+            echo "## References excluding the candidate file"
+            git grep -n -E 'seedUnitContent|getUnitContent|unit-content|unit_content' -- . ':(exclude)src/app/actions/unit-content.ts' || true
+            echo
+            echo "## Direct import-path references excluding the candidate file"
+            git grep -n -E '@/app/actions/unit-content|app/actions/unit-content' -- . ':(exclude)src/app/actions/unit-content.ts' || true
+          } > reports/unit-content-verification.txt
+
+      - name: Upload cleanup evidence
         uses: actions/upload-artifact@v4
         with:
-          name: cleanup-inventory
-          path: reports/codebase-inventory.generated.md
+          name: cleanup-evidence
+          path: |
+            reports/codebase-inventory.generated.md
+            reports/unit-content-verification.txt
           if-no-files-found: error
 
       - name: Typecheck
