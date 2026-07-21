@@ -20,12 +20,22 @@
 
 ## Active queue
 
-### CLEANUP-006 — Dependency classification
+### CLEANUP-014 — Add focused UnitTemplate behavior coverage
 - **Status:** `ready`
-- **Goal:** Classify every suspected unused or misplaced package before changing `package.json` or the lockfile.
-- **Done when:** Each candidate is checked against imports, configuration, scripts, CLIs, generated tooling, clean install, typecheck, lint, unit tests, production build, and any area-specific validation.
+- **Goal:** Lock the current lesson orchestration behavior before extracting code from `UnitTemplate`.
+- **Done when:** Focused tests cover section ordering, persisted progress restoration, completion gating, and the smallest practical orchestration boundaries without rewriting production behavior.
 
-### CLEANUP-004 — Split UnitTemplate safely
+### CLEANUP-004A — Extract UnitTemplate lesson types and constants
 - **Status:** `blocked`
-- **Blocked by:** Focused lesson behavior coverage plus relevant lesson smoke/E2E validation.
-- **Goal:** Extract types, constants, small components, storage hooks, and completion logic in separate reviewable batches.
+- **Blocked by:** CLEANUP-014 focused lesson behavior coverage.
+- **Goal:** Move lesson-domain types and section constants into dedicated modules while preserving current imports and runtime behavior.
+
+### CLEANUP-004B — Extract UnitTemplate stateless helpers
+- **Status:** `blocked`
+- **Blocked by:** CLEANUP-004A plus passing lesson smoke/E2E validation.
+- **Goal:** Extract small stateless presentation helpers in separate reviewable commits.
+
+### CLEANUP-015 — Review unit action transaction boundaries
+- **Status:** `blocked`
+- **Blocked by:** Focused tests for completion, XP, achievements, vocabulary seeding, streaks, and cache revalidation.
+- **Goal:** Classify responsibilities in `src/app/actions/unit.ts` before any structural split.
