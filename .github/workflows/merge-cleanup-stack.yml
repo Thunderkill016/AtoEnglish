@@ -35,7 +35,8 @@ jobs:
         run: |
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "6229c0202cd0199dd67cdbb96de86f5c61a8e812"
-          git diff --exit-code e76b0cc2a95ba3f3debbbf102cab9a7051c35a5a HEAD -- .
+          git fetch origin agent/unit-template-progress-persistence-hook --force
+          git diff --exit-code FETCH_HEAD HEAD -- .
 
       - name: Clean install
         run: npm ci --ignore-scripts --legacy-peer-deps
