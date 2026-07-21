@@ -20,20 +20,15 @@
 
 ## Active queue
 
-### CLEANUP-012C — Verify legacy type barrel
-- **Status:** `ready`
-- **Goal:** Determine whether `src/types/index.ts` has any exact barrel consumer before removal.
-- **Done when:** Direct imports from `@/types`, relative barrel imports, scripts, tests, and generated-code references are checked; typecheck, lint, and tests pass afterward.
-
 ### CLEANUP-012A — Verify lesson enrichment helper
-- **Status:** `blocked`
-- **Blocked by:** Review of active unit-loading and lesson fallback behavior.
-- **Goal:** Determine whether `src/lib/lessons/enrich-unit.ts` is truly dead or an intended content fallback.
+- **Status:** `ready`
+- **Goal:** Determine whether `src/lib/lessons/enrich-unit.ts` is truly dead or an intended fallback for incomplete unit content.
+- **Done when:** All unit-loading paths, lesson route composition, content tests, and fallback expectations are reviewed; deletion occurs only with behavior-preserving evidence and passing validation.
 
 ### CLEANUP-012B — Verify Supabase middleware helper
 - **Status:** `blocked`
-- **Blocked by:** Full review of `src/proxy.ts`, `src/lib/supabase/session.ts`, auth refresh behavior, and framework conventions.
-- **Goal:** Classify `src/lib/supabase/middleware.ts` without risking session refresh or protected-route behavior.
+- **Blocked by:** Full review of `src/proxy.ts`, `src/lib/supabase/session.ts`, auth refresh behavior, protected routes, and framework conventions.
+- **Goal:** Classify `src/lib/supabase/middleware.ts` without risking session refresh or route protection.
 
 ### CLEANUP-004 — Split UnitTemplate safely
 - **Status:** `blocked`
