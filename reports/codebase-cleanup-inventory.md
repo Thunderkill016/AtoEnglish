@@ -56,45 +56,50 @@ Validation: source 344 → 342; unreachable 5 → 3; TypeScript, ESLint, and uni
 
 ### Verified dead-code removal — legacy type barrel
 
+Removed `src/types/index.ts`. No alias, relative, dynamic, or CommonJS barrel consumer existed. `database.ts` and `supabase.ts` remain unchanged.
+
+Validation: source 342 → 341; unreachable 3 → 2; TypeScript, ESLint, and unit tests passed.
+
+### Verified dead-code removal — retired lesson enrichment fallback
+
 Removed:
 
-- `src/types/index.ts`
+- `src/lib/lessons/enrich-unit.ts`
 
 Evidence:
 
-- No exact import from `@/types` or `@/types/index` existed.
-- No relative import terminated at the `types` directory or `types/index`.
-- No dynamic import or CommonJS require referenced the barrel.
-- Representative legacy aliases exported only by the barrel had no consumer.
-- `src/types/database.ts` and `src/types/supabase.ts` remain unchanged.
+- `enrichUnitForLearning` and the module path had no runtime, static, dynamic, script, test, or route consumer.
+- The active lesson route loads units directly from `UNIT_DATA_MAP` and passes them directly to `UnitTemplate`.
+- All 50 active unit content files declare real `situation` and `learningOutcomes` values.
+- `src/lib/lessons/content-standard.ts` already requires a valid situation and 2–5 learning outcomes, so incomplete content is rejected instead of repaired at runtime.
+- No unit content, lesson order, scoring, audio, FSRS, or `UnitTemplate` implementation changed.
 
 Validation results:
 
-- source files scanned: 342 → 341
-- unreachable candidates: 3 → 2
+- source files scanned: 341 → 340
+- unreachable candidates: 2 → 1
 - TypeScript passed
 - ESLint passed
 - unit tests passed
+- lesson content-standard tests passed
+- production build passed
 
 Temporary GitHub Actions workflows used for full-checkout verification are removed after their final successful run so they do not consume future Actions minutes.
 
 ## Current inventory summary
 
-- Source files scanned: 341
+- Source files scanned: 340
 - Known entry points: 118
-- Unreachable candidates: 2
+- Unreachable candidates: 1
 - Files with at least 500 lines: 32
 - Possible unused runtime/tooling dependencies: 8
 - Possible unused type packages: 2
 
-## Remaining unreachable candidates
+## Remaining unreachable candidate
 
-These remain review candidates, not automatic deletion instructions:
-
-- `src/lib/lessons/enrich-unit.ts`
 - `src/lib/supabase/middleware.ts`
 
-Both require behavior-aware review beyond import reachability.
+This is not an automatic deletion instruction. It duplicates part of the current session client pattern but sits in the authentication boundary, so it requires targeted proxy/session/route-protection review and auth validation.
 
 ## Active architecture debt
 
@@ -136,9 +141,6 @@ A source file can be deleted only when all applicable checks pass:
 - unit tests pass
 - relevant integration, E2E, smoke, or build check passes when the area requires it
 
-## Next cleanup batches
+## Next cleanup batch
 
-1. `src/lib/lessons/enrich-unit.ts` — inspect all unit-loading paths and confirm whether fallback enrichment is intentionally retired.
-2. `src/lib/supabase/middleware.ts` — inspect `src/proxy.ts`, `session.ts`, auth refresh, protected routes, and framework conventions; require targeted auth validation before deletion.
-
-Do not combine these two candidates in one pull request.
+Review `src/lib/supabase/middleware.ts` independently against `src/proxy.ts`, `src/lib/supabase/session.ts`, cookie refresh behavior, protected-route redirects, login redirects, and Next.js proxy conventions. Require targeted auth tests plus production build before deletion.

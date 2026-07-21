@@ -20,15 +20,10 @@
 
 ## Active queue
 
-### CLEANUP-012A — Verify lesson enrichment helper
-- **Status:** `ready`
-- **Goal:** Determine whether `src/lib/lessons/enrich-unit.ts` is truly dead or an intended fallback for incomplete unit content.
-- **Done when:** All unit-loading paths, lesson route composition, content tests, and fallback expectations are reviewed; deletion occurs only with behavior-preserving evidence and passing validation.
-
 ### CLEANUP-012B — Verify Supabase middleware helper
-- **Status:** `blocked`
-- **Blocked by:** Full review of `src/proxy.ts`, `src/lib/supabase/session.ts`, auth refresh behavior, protected routes, and framework conventions.
-- **Goal:** Classify `src/lib/supabase/middleware.ts` without risking session refresh or route protection.
+- **Status:** `ready`
+- **Goal:** Classify `src/lib/supabase/middleware.ts` without risking cookie refresh, route protection, or login redirects.
+- **Done when:** `src/proxy.ts`, `src/lib/supabase/session.ts`, exact symbol/path usage, protected-route behavior, login redirect behavior, framework conventions, targeted auth tests, typecheck, lint, unit tests, and production build are verified before and after any deletion.
 
 ### CLEANUP-004 — Split UnitTemplate safely
 - **Status:** `blocked`
