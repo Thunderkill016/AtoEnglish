@@ -1,39 +1,28 @@
 # Agent Backlog — Active Tasks Only
 
-> Keep only open work here. Completed work belongs in Git commits and pull requests.
-
 ## Rules
 
-1. Use a dedicated cleanup branch and reviewed pull request.
-2. Never generate placeholder maintenance tasks.
-3. Never commit or push only to record that tests passed.
-4. Never push directly to `main` from an autonomous script.
-5. Do not delete code until usage has been verified.
-6. Every cleanup batch must preserve application behavior unless the task explicitly fixes a bug.
-
-## Status values
-
-- `ready`: safe to start.
-- `in_progress`: currently being handled on a branch.
-- `blocked`: needs a decision, secret, or manual verification.
-- `done`: remove from this file after the pull request is merged.
+1. Use a dedicated branch and reviewed pull request.
+2. Never merge automatically.
+3. Add characterization tests before moving behavior-sensitive logic.
+4. Do not change product behavior merely to reduce line count.
+5. Stop and document ambiguous behavior instead of guessing.
 
 ## Active queue
 
-### CLEANUP-017 — Expand lesson progress persistence coverage
-- **Status:** `done` — awaiting stacked PR review.
-- **Result:** Added seven persistence-focused cases for malformed JSON, non-restorable sections, per-unit key isolation, and final-section cleanup.
+### CLEANUP-018 — UnitTemplate completion-flow characterization
+- **Status:** `in_progress`
+- **Scope:** Tests and documentation only.
+- **Coverage:** Star/XP derivation, authenticated success and failure, guest fallback, nextRoute, streak/achievement coordination, completion-status loading, duplicate prevention where currently enforced, and active-unit progress cleanup.
 
-### CLEANUP-004C — Extract UnitTemplate progress persistence
-- **Status:** `done` — awaiting stacked PR review.
-- **Result:** Moved restore/save/remove behavior into `useLessonProgress` while preserving the exact storage key and section semantics covered by the 15 targeted tests.
-
-### CLEANUP-018 — Expand UnitTemplate completion-flow coverage
+### CLEANUP-019 — `/login` metadata/title investigation
 - **Status:** `ready`
-- **Goal:** Add focused tests around completion success/failure, star and XP derivation, guest fallback, achievement/streak coordination, and next-route behavior before moving completion logic.
-- **Done when:** New completion tests, existing lesson tests, six production-server smoke tests, typecheck, lint, full unit tests, content-standard tests, and production build pass without production behavior changes.
+- **Scope:** Independent bug investigation; do not mix with lesson refactoring.
+
+### CLEANUP-004D — Extract pure completion calculations
+- **Status:** `blocked`
+- **Blocked by:** CLEANUP-018 review and merge.
 
 ### CLEANUP-015 — Review unit action transaction boundaries
 - **Status:** `blocked`
-- **Blocked by:** CLEANUP-018 completion-flow coverage and focused server-action transaction tests.
-- **Goal:** Classify responsibilities in `src/app/actions/unit.ts` before any structural split.
+- **Blocked by:** Completion characterization and focused server-action transaction tests.
