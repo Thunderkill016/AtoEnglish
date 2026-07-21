@@ -14,11 +14,11 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     env:
-      PR_NUMBER: "13"
-      HEAD_BRANCH: agent/lesson-production-smoke-e2e
-      ORIGINAL_BASE_SHA: b88f1e4cb40231faf43882ebf6f1ddf063a7a717
-      ORIGINAL_HEAD_SHA: 5dab698194b4994ccad27208a935cb0b55ef8959
-      COMMIT_TITLE: "test: add lesson production smoke E2E"
+      PR_NUMBER: "14"
+      HEAD_BRANCH: agent/unit-template-stateless-presentation
+      ORIGINAL_BASE_SHA: 5dab698194b4994ccad27208a935cb0b55ef8959
+      ORIGINAL_HEAD_SHA: 8b370ad5c6189d4dcc0f6cd56cb43237c4bdab26
+      COMMIT_TITLE: "refactor: extract UnitTemplate stateless presentation helpers"
     steps:
       - name: Checkout controller branch
         uses: actions/checkout@v4
