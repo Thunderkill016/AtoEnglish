@@ -1,24 +1,24 @@
-name: Pilot promise validation
+name: Pilot promise final verification
 
 on:
   pull_request:
     branches: [main]
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
-  validate:
+  verify:
     runs-on: ubuntu-latest
     timeout-minutes: 40
     env:
       NEXT_PUBLIC_SUPABASE_URL: https://example.supabase.co
       NEXT_PUBLIC_SUPABASE_ANON_KEY: test-anon-key
     steps:
-      - name: Checkout branch
+      - name: Checkout committed branch
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -26,25 +26,12 @@ jobs:
           node-version: 24
           cache: npm
 
-      - name: Apply focused copy patch
+      - name: Verify final branch scope
         run: |
-          cp scripts/align-pilot-promise.py /tmp/align-pilot-promise.py
-          python - <<'PY'
-          from pathlib import Path
-          path = Path("/tmp/align-pilot-promise.py")
-          text = path.read_text().replace(
-              '"                           <span>Đã thiết lập xong lộ trình tối ưu!</span>"',
-              '"<span>Đã thiết lập xong lộ trình tối ưu!</span>"',
-          )
-          path.write_text(text)
-          PY
-          python /tmp/align-pilot-promise.py
-
-      - name: Verify focused scope
-        run: |
-          git diff --name-only | sort > /tmp/changed.txt
+          git diff --name-only origin/main...HEAD | sort > /tmp/changed.txt
           cat /tmp/changed.txt
           cat > /tmp/expected.txt <<'EOF'
+          .github/workflows/pilot-sync.yml
           e2e/protected-routes.spec.ts
           src/app/(main)/dashboard/components/DashboardClient.tsx
           src/app/layout.tsx
@@ -90,23 +77,3 @@ jobs:
 
       - name: Lesson production smoke E2E
         run: PLAYWRIGHT_BASE_URL=http://127.0.0.1:3000 npx playwright test e2e/lesson-smoke.spec.ts --workers=1
-
-      - name: Commit validated changes
-        run: |
-          if git diff --quiet; then
-            echo "No uncommitted changes"
-            exit 0
-          fi
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add \
-            e2e/protected-routes.spec.ts \
-            'src/app/(main)/dashboard/components/DashboardClient.tsx' \
-            src/app/layout.tsx \
-            src/app/login/page.tsx \
-            src/app/page.tsx \
-            src/components/landing/FaqSection.tsx \
-            src/components/landing/FinalCtaSection.tsx \
-            src/components/landing/HeroCTA.tsx
-          git commit -m "copy: align the 28-day speaking pilot promise"
-          git push origin HEAD:${{ github.event.pull_request.head.ref }}
