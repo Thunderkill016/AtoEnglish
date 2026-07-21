@@ -32,5 +32,18 @@ jobs:
           PY
           python /tmp/completion_patch.py
       - run: npm ci --ignore-scripts --legacy-peer-deps
-      - name: Run targeted tests with full reporter
-        run: npx vitest run src/components/learn/UnitTemplate.test.tsx src/components/learn/lesson-sections.test.ts src/components/learn/lesson-ui/lesson-presentation.test.tsx --reporter=verbose
+      - name: Capture targeted test output
+        run: |
+          set +e
+          npx vitest run src/components/learn/UnitTemplate.test.tsx src/components/learn/lesson-sections.test.ts src/components/learn/lesson-ui/lesson-presentation.test.tsx --reporter=verbose > completion-test.log 2>&1
+          echo $? > completion-test.status
+          set -e
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: completion-test-diagnostics
+          path: |
+            completion-test.log
+            completion-test.status
+      - name: Enforce targeted test result
+        run: test "$(cat completion-test.status)" = "0"
