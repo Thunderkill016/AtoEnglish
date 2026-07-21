@@ -1,0 +1,36 @@
+name: Diagnose completion characterization tests
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-24.04
+    env:
+      NEXT_PUBLIC_SUPABASE_URL: https://example.supabase.co
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: completion-tests-placeholder
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - name: Build focused patch
+        run: |
+          python <<'PY'
+          from pathlib import Path
+          recipe = Path('.github/workflows/temporary-completion-tests.yml').read_text()
+          start = recipe.index("          python <<'PY'\n") + len("          python <<'PY'\n")
+          end = recipe.index("\n          PY", start)
+          lines = recipe[start:end].splitlines()
+          code = '\n'.join(line[10:] if line.startswith('          ') else line for line in lines)
+          Path('/tmp/completion_patch.py').write_text(code + '\n')
+          PY
+          python /tmp/completion_patch.py
+      - run: npm ci --ignore-scripts --legacy-peer-deps
+      - name: Run targeted tests with full reporter
+        run: npx vitest run src/components/learn/UnitTemplate.test.tsx src/components/learn/lesson-sections.test.ts src/components/learn/lesson-ui/lesson-presentation.test.tsx --reporter=verbose
