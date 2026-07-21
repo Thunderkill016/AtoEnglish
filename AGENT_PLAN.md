@@ -6,10 +6,10 @@
 
 | Field | Value |
 |---|---|
-| Task | CLEANUP-005 — Documentation source of truth |
-| Status | in_progress |
+| Task | CLEANUP-003 — Remove verified repository waste |
+| Status | blocked — requires full checkout validation |
 | Branch | `agent/codebase-cleanup-foundation` |
-| Goal | Reconcile durable documentation with executable repository sources |
+| Goal | Remove only candidates proven unused by repository-wide analysis and passing checks |
 
 ## Completed in this branch
 
@@ -25,22 +25,30 @@
 - Added `npm run inventory` with no new dependency.
 - The inventory reports unreachable source candidates, files over 500 lines, and possibly unused packages.
 - Added `reports/codebase-cleanup-inventory.md` with evidence, classifications, and deletion gates.
+- Tested the inventory script syntax and import-pattern handling outside the repository checkout.
 - Kept all deletion candidates in review status; no source file has been deleted.
 
-## Current scope
+### CLEANUP-005 — Documentation source of truth
 
-- Remove hard-coded test counts that drift after every test addition.
-- Correct the documented lesson count and `UnitTemplate` architecture warning.
-- Remove duplicate or unverified database rows from README.
-- Describe the current cleanup and validation commands accurately.
+- Removed manually maintained test totals from README.
+- Documented the current 50-unit curriculum.
+- Removed the stale partial database table list and pointed to migrations and generated types.
+- Documented `UnitTemplate.tsx` as active architecture debt rather than presenting it as a normal small component.
+- Documented cleanup, validation, CI, and deployment sources without guessing current runtime state.
 
-## Validation
+## Blocker
 
-- Review the branch diff against `main`.
-- Confirm application behavior is unchanged.
-- Run `npm run inventory`, `npx tsc --noEmit`, `npm run lint`, and `npm run test` in a full checkout before merge.
-- Full runtime checks are unavailable in the connector-only environment and must not be claimed as passing.
+The GitHub connector can edit and review repository files but does not provide a complete executable checkout. Therefore the following commands have not been run on this branch:
 
-## Next task
+```bash
+npm run inventory
+npx tsc --noEmit
+npm run lint
+npm run test
+```
 
-CLEANUP-003 — Run the inventory in a full checkout and remove only the first verified dead-code candidate.
+No source or dependency candidate should be deleted until those commands run in a full checkout and the generated inventory is manually reviewed.
+
+## Next action
+
+Run the validation commands on `agent/codebase-cleanup-foundation`. If they pass, CLEANUP-003 may delete the first verified candidate in a dedicated commit.
