@@ -197,6 +197,29 @@ Validation results:
 
 No sticky-header interaction, completion overlay, `XpCounter`, video shadowing, orchestration state, persistence, scoring, completion transaction, server action, or section-rendering branch moved.
 
+### UnitTemplate progress persistence test matrix
+
+Expanded `src/components/learn/UnitTemplate.test.tsx` with seven focused cases that lock the existing browser persistence boundary:
+
+- malformed JSON is ignored without crashing or leaving Warmup
+- saved sections `0`, `1`, `10`, and `11` are not restored
+- progress reads and writes are isolated by `lesson-progress-<unitId>`
+- entering the final Quiz removes the current unit key only
+- progress belonging to another unit remains unchanged
+
+Validation results:
+
+- 15 targeted tests passed: 11 UnitTemplate behavior/persistence tests, 2 exact constants tests, and 2 presentation-helper tests
+- 6 production-server Playwright smoke tests passed on Desktop Chromium and Mobile Chrome
+- source inventory remained 347 files, 122 entry points, and 0 unreachable candidates
+- TypeScript passed
+- focused and full ESLint passed
+- full unit tests passed
+- lesson content-standard tests passed
+- production build passed
+
+This batch changes tests and cleanup documentation only. `UnitTemplate.tsx`, its localStorage effects, section order, routes, scoring, XP, completion, server actions, database behavior, FSRS, auth, lesson content, packages, and UI remain unchanged.
+
 Temporary GitHub Actions workflows used for full-checkout verification are removed after their successful run so they do not consume future Actions minutes.
 
 ## Current inventory summary
@@ -229,8 +252,8 @@ Safe refactor order:
 2. Extract lesson types and section constants — complete.
 3. Add production-server lesson smoke/E2E coverage — complete.
 4. Extract first stateless presentation helpers — complete.
-5. Expand persistence-specific coverage.
-6. Extract local-storage hooks only after the persistence test matrix passes.
+5. Expand persistence-specific coverage — complete.
+6. Extract local-storage hooks with the persistence test matrix as a required gate.
 7. Extract completion logic after server-action and achievement coverage.
 8. Replace related state groups with a reducer only after each state transition is covered.
 
@@ -255,4 +278,4 @@ A source file can be deleted only when all applicable checks pass:
 
 ## Next cleanup work
 
-CLEANUP-017 — expand focused lesson-progress persistence coverage for malformed JSON, invalid section numbers, per-unit key isolation, and final-section cleanup. Do not move localStorage behavior into a hook until this test matrix and the six production-server lesson smoke tests pass.
+CLEANUP-004C — extract lesson progress restore/save/remove behavior into a dedicated hook. Preserve the exact `lesson-progress-<unitId>` key, section semantics, and per-unit cleanup behavior covered by the 15 targeted tests and six production-server smoke tests.

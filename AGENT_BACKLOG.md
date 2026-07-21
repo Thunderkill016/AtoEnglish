@@ -20,23 +20,18 @@
 
 ## Active queue
 
-### CLEANUP-016 — Add lesson smoke/E2E prerequisite
-- **Status:** `done` — awaiting stacked PR review.
-- **Result:** Six Playwright tests cover guest lesson render, warmup-to-vocabulary navigation, quick-review-to-practice navigation, and section persistence on Desktop Chromium and Mobile Chrome against a production server.
-
 ### CLEANUP-004B — Extract UnitTemplate stateless presentation helpers
 - **Status:** `done` — awaiting stacked PR review.
-- **Result:** Extracted `LessonProgress` and `SessionBreakCard`, added focused component tests, reduced `UnitTemplate` from 1,182 to 1,069 lines, and passed full CI plus six production-server smoke tests.
+- **Result:** Extracted `LessonProgress` and `SessionBreakCard`, reduced `UnitTemplate` to 1,069 lines, and passed full CI plus production-server smoke coverage.
 
 ### CLEANUP-017 — Expand lesson progress persistence coverage
-- **Status:** `ready`
-- **Goal:** Add focused tests for malformed saved JSON, invalid section numbers, per-unit storage-key isolation, and final-section cleanup without changing production behavior.
-- **Done when:** New persistence tests, existing UnitTemplate/component tests, six production-server lesson smoke tests, typecheck, lint, full unit tests, content-standard tests, and production build pass.
+- **Status:** `done` — awaiting stacked PR review.
+- **Result:** Added seven persistence-focused cases for malformed JSON, non-restorable sections, per-unit key isolation, and final-section cleanup without changing production behavior.
 
 ### CLEANUP-004C — Extract UnitTemplate progress persistence
-- **Status:** `blocked`
-- **Blocked by:** CLEANUP-017 persistence-focused test matrix.
-- **Goal:** Move lesson-progress localStorage behavior into a dedicated hook without changing storage keys or section semantics.
+- **Status:** `ready`
+- **Goal:** Move lesson progress restore/save/remove behavior into a dedicated hook without changing `lesson-progress-<unitId>` keys or section semantics.
+- **Done when:** The 15 targeted tests, six production-server lesson smoke tests, typecheck, focused/full lint, full unit tests, content-standard tests, and production build pass with a focused reversible diff.
 
 ### CLEANUP-015 — Review unit action transaction boundaries
 - **Status:** `blocked`
