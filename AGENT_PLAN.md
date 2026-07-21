@@ -6,35 +6,31 @@
 
 | Field | Value |
 |---|---|
-| Task | CLEANUP-009 — Verify notification-center group |
+| Task | CLEANUP-008 — Verify old exercise components |
 | Status | done — awaiting stacked PR review |
-| Branch | `agent/cleanup-unused-notifications` |
-| Goal | Remove the disconnected notification-center UI group without changing active push or notification infrastructure |
+| Branch | `agent/cleanup-unused-exercises` |
+| Goal | Remove unreachable legacy exercise components while preserving active lesson interactions and curriculum data |
 
-## Completed in the foundation cleanup
+## Completed in earlier cleanup batches
 
-- Disabled automatic backlog generation, commits, and direct pushes.
+- Stopped automatic maintenance-task generation, commits, and direct pushes.
 - Replaced oversized agent journals with concise current/open-work files.
-- Reconciled README and architecture documentation with executable sources.
-- Added `npm run inventory` and a durable cleanup evidence report.
-- Removed four previously verified dead-code files.
+- Added reproducible codebase inventory and durable cleanup evidence.
+- Removed four foundation dead-code files.
+- Removed the disconnected five-file notification-center UI group while preserving push and API infrastructure.
 
-## Completed in CLEANUP-009
+## Completed in CLEANUP-008
 
-Removed after full-checkout inventory and repository-wide symbol/path searches:
+Removed after exact symbol/path verification:
 
-- `src/components/layout/notification-center-wrapper.tsx`
-- `src/features/notifications/components/NotificationCenter.tsx`
-- `src/features/notifications/components/NotificationItem.tsx`
-- `src/features/notifications/hooks/useNotificationCenter.ts`
-- `src/features/notifications/utils/notificationCopy.ts`
+- `src/components/exercises/ListenAndChooseExercise.tsx`
+- `src/components/exercises/MatchingPairsGame.tsx`
 
-Preserved:
+Preserved active functionality:
 
-- `src/app/api/notifications/history/route.ts`
-- `PushPermissionCard`
-- push/service-worker infrastructure
-- notification migrations, database tables, and generated Supabase types
+- `DialogueSection` still consumes `listenAndChoose` content.
+- `PracticeSection` still implements matching interactions and dictation sourced from lesson data.
+- Unit data, lesson types, content standards, section order, scoring, and audio behavior remain unchanged.
 
 ## Validation completed
 
@@ -50,8 +46,8 @@ npm run test
 
 Post-deletion results:
 
-- source files scanned: 352 → 347
-- unreachable candidates: 13 → 8
+- source files scanned: 347 → 345
+- unreachable candidates: 8 → 6
 - TypeScript passed
 - ESLint passed
 - unit tests passed
@@ -60,4 +56,4 @@ The temporary validation workflow was removed after the final successful run.
 
 ## Next action
 
-CLEANUP-008 — verify `ListenAndChooseExercise.tsx` and `MatchingPairsGame.tsx` against active lesson sections on a separate branch and pull request.
+CLEANUP-010 — verify `src/components/landing/OutcomesSection.tsx` against the current landing-page composition on a separate branch and pull request.

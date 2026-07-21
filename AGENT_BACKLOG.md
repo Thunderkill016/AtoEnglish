@@ -20,15 +20,20 @@
 
 ## Active queue
 
-### CLEANUP-008 — Verify old exercise components
+### CLEANUP-010 — Verify legacy landing outcome section
 - **Status:** `ready`
-- **Goal:** Verify `ListenAndChooseExercise.tsx` and `MatchingPairsGame.tsx` against current lesson-section implementations.
-- **Done when:** Both candidates are classified independently; only proven-unused files are removed; inventory, typecheck, lint, and unit tests pass after deletion.
+- **Goal:** Verify `src/components/landing/OutcomesSection.tsx` against the active landing-page composition.
+- **Done when:** Static/dynamic imports and landing-page references are checked; deletion occurs only if proven unused; inventory, typecheck, lint, and tests pass afterward.
 
-### CLEANUP-010 — Verify remaining lightweight candidates
+### CLEANUP-011 — Verify unused shared UI primitives
 - **Status:** `blocked`
-- **Blocked by:** CLEANUP-008 and independent repository-wide verification for each logical group.
-- **Goal:** Classify `OutcomesSection`, `user-avatar`, `logo`, `enrich-unit`, Supabase middleware, and `types/index.ts` without combining unrelated removals.
+- **Blocked by:** Independent verification after CLEANUP-010.
+- **Goal:** Classify `src/components/layout/user-avatar.tsx` and `src/components/ui/logo.tsx` without assuming that similarly named markup is equivalent.
+
+### CLEANUP-012 — Verify implementation helper candidates
+- **Status:** `blocked`
+- **Blocked by:** Separate review of framework and operational usage.
+- **Goal:** Classify `src/lib/lessons/enrich-unit.ts`, `src/lib/supabase/middleware.ts`, and `src/types/index.ts` independently; do not combine middleware deletion with UI cleanup.
 
 ### CLEANUP-004 — Split UnitTemplate safely
 - **Status:** `blocked`
