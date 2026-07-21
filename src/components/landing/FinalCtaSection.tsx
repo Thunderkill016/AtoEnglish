@@ -30,10 +30,10 @@ export default function FinalCtaSection() {
 
           <ScrollReveal className="space-y-4">
             <h2 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-zinc-900 dark:text-zinc-50 leading-normal">
-              Sẵn sàng bắt đầu hành trình nói tiếng Anh tự tin?
+              Sẵn sàng luyện nhiệm vụ nói đầu tiên?
             </h2>
             <p className="text-base sm:text-lg text-zinc-650 dark:text-zinc-350 leading-relaxed max-w-lg mx-auto font-normal">
-              Bạn có thể thử ngay không cần tài khoản. Miễn phí trong giai đoạn Open Beta.
+              Bắt đầu bằng bài giới thiệu bản thân và công việc. Mỗi ngày 10–15 phút, học thử bài đầu không cần tài khoản.
             </p>
           </ScrollReveal>
 
@@ -42,7 +42,7 @@ export default function FinalCtaSection() {
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-500/10 dark:bg-emerald-500/15 border border-emerald-500/20 dark:border-emerald-400/20">
               <span className="size-2 rounded-full bg-emerald-500 animate-pulse" />
               <span className="text-xs font-semibold text-emerald-700 dark:text-emerald-400 tracking-wide">
-                Đang trong giai đoạn Open Beta — Hoàn toàn miễn phí
+                Hành trình thử nghiệm 28 ngày · Bắt đầu từ A0
               </span>
             </div>
           </ScrollReveal>
@@ -56,12 +56,12 @@ export default function FinalCtaSection() {
               <Button className="w-full sm:w-auto sm:min-w-[280px] justify-center bg-emerald-600 hover:bg-emerald-500 dark:bg-emerald-600 dark:hover:bg-emerald-500 text-white font-bold h-14 px-10 rounded-2xl shadow-lg shadow-emerald-600/15 dark:shadow-emerald-500/10 hover:shadow-emerald-500/25 hover:scale-[1.01] active:scale-[0.97] transition-all duration-300 gap-2.5">
                 {isLoggedIn
                   ? "Vào Dashboard ngay"
-                  : "Học thử ngay (không cần đăng nhập)"}
+                  : "Bắt đầu bài đầu tiên"}
                 <ArrowRight className="size-5" />
               </Button>
             </Link>
             <div className="text-xs text-zinc-500 dark:text-zinc-400 font-semibold tracking-wider uppercase">
-              Đăng ký nhanh qua Google • Học miễn phí hoàn toàn
+              Đăng ký nhanh qua Google • Điều kiện pilot sẽ được thông báo rõ
             </div>
           </ScrollReveal>
         </div>

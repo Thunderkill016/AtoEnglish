@@ -7,10 +7,10 @@ import { Button } from "@/components/ui/button";
 import { checkHasSession } from "@/lib/auth-check";
 
 const QUICK_STATS = [
-  { icon: "🆓", text: "Miễn phí Open Beta" },
-  { icon: "🗣️", text: "Luyện nói Shadowing + Roleplay" },
-  { icon: "🔁", text: "Ôn tập bằng FSRS" },
-  { icon: "🇻🇳", text: "Dành cho người Việt" },
+  { icon: "🗓️", text: "28 ngày · một mục tiêu nói" },
+  { icon: "⏱️", text: "10–15 phút mỗi ngày" },
+  { icon: "💼", text: "Luyện nói cho công việc" },
+  { icon: "🇻🇳", text: "Dành cho người Việt mất gốc" },
 ];
 
 export default function HeroCTA() {
@@ -36,7 +36,7 @@ export default function HeroCTA() {
           className="w-full sm:w-auto"
         >
           <Button className="w-full sm:w-auto sm:min-w-[220px] justify-center bg-gradient-to-r from-emerald-600 via-teal-500 to-emerald-500 hover:from-emerald-500 hover:via-teal-400 hover:to-emerald-400 text-white font-bold h-14 px-8 rounded-2xl shadow-lg shadow-emerald-600/20 dark:shadow-emerald-500/15 hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 gap-2">
-            {isLoggedIn ? "Vào Dashboard" : "Học thử ngay"}
+            {isLoggedIn ? "Vào Dashboard" : "Bắt đầu bài đầu tiên"}
             <ArrowRight className="size-4.5" />
           </Button>
         </Link>

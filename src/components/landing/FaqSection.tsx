@@ -8,11 +8,11 @@ export default function FaqSection() {
   const faqs = [
     {
       q: "Người mất gốc hoặc mới bắt đầu từ con số 0 có học được không?",
-      a: "Hoàn toàn học được! Lộ trình của AtoEnglish được thiết kế đặc biệt từ cơ bản nhất (A1). Phương pháp 4 bước (IPOR) giúp chia nhỏ bài học: bạn sẽ tích lũy từ vựng qua hình ảnh/âm thanh, luyện tập viết câu phản xạ và thực hành nói nhại giọng (Shadowing) mà không bị áp lực ngữ pháp hàn lâm.",
+      a: "Có. Hành trình đầu tiên bắt đầu từ A0 và tập trung vào một nhiệm vụ thực tế: giới thiệu bản thân, công việc và biết xin người đối diện nhắc lại hoặc nói chậm hơn.",
     },
     {
       q: "Mỗi ngày tôi cần học bao lâu?",
-      a: "Chỉ 15–20 phút mỗi ngày là đủ để tạo ra tiến bộ thực sự. Mỗi bài học được thiết kế hoàn chỉnh trong khoảng 40 phút, nhưng bạn hoàn toàn có thể học theo từng phần nhỏ. Hệ thống nhắc nhở thông minh và streak sẽ giúp bạn duy trì thói quen học hàng ngày một cách tự nhiên.",
+      a: "Mục tiêu là 10–15 phút mỗi ngày trong 28 ngày. Mỗi buổi tập trung vào một bước nhỏ: nghe mẫu, luyện cụm từ, nói có hướng dẫn và ôn lại nội dung cần nhớ.",
     },
     {
       q: "AtoEnglish khác gì so với Duolingo hay Babbel?",
@@ -23,8 +23,8 @@ export default function FaqSection() {
       a: "Không cần. AtoEnglish là một nền tảng Web-App hiện đại, chạy trực tiếp trên trình duyệt web của bạn. Giao diện được tối ưu hóa mượt mà cho cả điện thoại di động (iPhone, Android), máy tính bảng lẫn máy tính cá nhân. Chỉ cần mở trình duyệt, đăng nhập nhanh bằng Google là học được ngay.",
     },
     {
-      q: "Sản phẩm có thực sự miễn phí không?",
-      a: "Có, hoàn toàn miễn phí! Hiện tại AtoEnglish đang trong giai đoạn thử nghiệm mở (Open Beta). Chúng tôi cam kết mở khóa toàn bộ các bài học giao tiếp, công cụ ôn tập lật thẻ SRS và bài tập luyện nói phản xạ cơ bản miễn phí 100% cho tất cả người học trải nghiệm trong giai đoạn này.",
+      q: "Tôi có thể học thử trước khi tham gia pilot không?",
+      a: "Có. Bạn có thể học thử bài đầu tiên trước khi quyết định tham gia. Điều kiện, lịch học và chi phí của pilot 28 ngày sẽ được thông báo rõ trước khi mở tuyển.",
     },
     {
       q: "Thuật toán Ôn tập ngắt quãng (FSRS) là gì?",
@@ -36,7 +36,7 @@ export default function FaqSection() {
     },
     {
       q: "Tôi bận đi làm, không có nhiều thời gian — liệu có theo kịp không?",
-      a: "Hoàn toàn phù hợp với người bận rộn! AtoEnglish được thiết kế cho lịch học linh hoạt. Chỉ cần 15 phút mỗi ngày — tương đương một lần đi thang máy hoặc chờ cafe — là đủ để tiến bộ. Hệ thống FSRS tự động điều chỉnh lịch ôn tập, không cần học liên tục mới nhớ được. Nhiều học viên đang làm việc 8 tiếng/ngày vẫn duy trì streak 90+ ngày.",
+      a: "Hành trình được thiết kế theo các phiên 10–15 phút. Khi bận, bạn có thể hoàn thành một bước nhỏ rồi tiếp tục ở lần sau; điều quan trọng là quay lại và thực hiện nhiệm vụ nói, không phải giữ streak bằng mọi giá.",
     },
     {
       q: "Tôi nên bắt đầu từ unit nào? Làm sao biết trình độ hiện tại?",
