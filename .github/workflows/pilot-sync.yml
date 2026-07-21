@@ -15,6 +15,18 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.ref }}
+      - name: Normalize temporary matcher
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          path = Path("scripts/align-pilot-promise.py")
+          text = path.read_text()
+          text = text.replace(
+              '"                           <span>Đã thiết lập xong lộ trình tối ưu!</span>"',
+              '"<span>Đã thiết lập xong lộ trình tối ưu!</span>"',
+          )
+          path.write_text(text)
+          PY
       - name: Run focused copy patch
         run: python scripts/align-pilot-promise.py
       - name: Show changed files
