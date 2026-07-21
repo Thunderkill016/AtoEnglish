@@ -31,11 +31,6 @@
 - **Blocked by:** Passing baseline typecheck, lint, unit tests, and relevant lesson smoke/E2E checks.
 - **Goal:** Extract types, constants, small components, storage hooks, and completion logic in separate reviewable batches.
 
-### CLEANUP-005 — Documentation source of truth
-- **Status:** `in_progress`
-- **Goal:** Reconcile README, architecture notes, commands, test counts, database names, and deployment instructions with executable repository sources.
-- **Done when:** Durable docs avoid manually maintained test counts and no longer understate curriculum or known architecture debt.
-
 ### CLEANUP-006 — Dependency classification
 - **Status:** `blocked`
 - **Blocked by:** Generated inventory plus local install/build verification.
