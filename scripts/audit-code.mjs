@@ -198,29 +198,23 @@ for (const file of allFiles) {
       // Needs rate limiter
       const hasLimiter = content.includes('limiter') || content.includes('Limiter') || content.includes('rateLimit');
       if (!hasLimiter) {
-        // Exclude unit-content.ts since it is unused/dead-code
-        if (!relativePath.endsWith('unit-content.ts')) {
-          violations.push({
-            file: relativePath,
-            line: 1,
-            type: 'SECURITY',
-            message: `Server Action thực hiện ghi DB nhưng thiếu Rate Limiting check`,
-            severity: 'HIGH'
-          });
-        }
+        violations.push({
+          file: relativePath,
+          line: 1,
+          type: 'SECURITY',
+          message: `Server Action thực hiện ghi DB nhưng thiếu Rate Limiting check`,
+          severity: 'HIGH'
+        });
       }
       const hasValidation = content.includes('Schema.safeParse') || content.includes('.safeParse') || content.includes('Schema.parse') || content.includes('z.object');
       if (!hasValidation) {
-        // Allow fallback check in file
-        if (!relativePath.endsWith('unit-content.ts')) {
-          violations.push({
-            file: relativePath,
-            line: 1,
-            type: 'SECURITY',
-            message: `Server Action thực hiện ghi DB nhưng thiếu Zod validation`,
-            severity: 'MEDIUM'
-          });
-        }
+        violations.push({
+          file: relativePath,
+          line: 1,
+          type: 'SECURITY',
+          message: `Server Action thực hiện ghi DB nhưng thiếu Zod validation`,
+          severity: 'MEDIUM'
+        });
       }
     }
   }
