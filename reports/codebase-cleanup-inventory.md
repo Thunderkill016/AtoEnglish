@@ -26,34 +26,24 @@ The generated report is ignored by Git.
 
 ### Verified dead-code removals — foundation batch
 
-The following files were removed only after import-graph analysis, repository-wide symbol/path searches, and successful post-deletion validation:
+Removed after import-graph analysis, repository-wide symbol/path searches, and successful post-deletion validation:
 
 - `src/app/actions/unit-content.ts`
 - `src/app/(main)/dashboard/components/DashboardMinimalClient.tsx`
 - `src/components/learn/lesson-ui/LessonHeader.tsx`
 - `src/components/learn/lesson-ui/LessonShell.tsx`
 
-Evidence:
+Validation results:
 
-- `unit-content.ts` had no caller or import; the active lesson route reads the 50 TypeScript unit files directly.
-- `DashboardMinimalClient` had no code or documentation consumer outside its own file.
-- `LessonHeader` and `LessonShell` had no code consumer; only old roadmap/design documents mentioned their names.
-- Database migrations and generated Supabase types were not changed.
-- The stale `unit-content.ts` exemption was removed from `scripts/audit-code.mjs`.
-
-Validation after the foundation batch:
-
-- dependency installation from the lockfile passed with lifecycle scripts disabled
-- cleanup inventory passed
-- TypeScript typecheck passed
+- source files scanned: 356 → 352
+- unreachable candidates: 17 → 13
+- TypeScript passed
 - ESLint passed
 - unit tests passed
-- source files scanned changed from 356 to 352
-- unreachable candidates changed from 17 to 13
 
 ### Verified dead-code removals — notification-center batch
 
-The following closed feature group was removed after a full-checkout search confirmed there were no code consumers outside the candidate files:
+Removed as one disconnected feature group after full-checkout search found no consumer outside the candidates:
 
 - `src/components/layout/notification-center-wrapper.tsx`
 - `src/features/notifications/components/NotificationCenter.tsx`
@@ -61,30 +51,51 @@ The following closed feature group was removed after a full-checkout search conf
 - `src/features/notifications/hooks/useNotificationCenter.ts`
 - `src/features/notifications/utils/notificationCopy.ts`
 
-Evidence:
+Preserved:
 
-- No layout, header, route, script, Supabase function, service worker, dynamic import, or runtime path referenced the notification-center wrapper, components, hook, or copy library.
-- `PushPermissionCard` remains active and separate; it does not import the removed notification-center group.
-- `src/app/api/notifications/history/route.ts`, notification migrations, generated types, push infrastructure, and database tables remain unchanged.
-- A historical migration comment mentioning `NotificationCenter` was not edited because migrations are immutable history.
+- `src/app/api/notifications/history/route.ts`
+- `PushPermissionCard`
+- push/service-worker infrastructure
+- notification migrations, tables, and generated Supabase types
 
-Validation after the notification-center batch:
+Validation results:
 
-- dependency installation from the lockfile passed with lifecycle scripts disabled
-- cleanup inventory passed
-- TypeScript typecheck passed
+- source files scanned: 352 → 347
+- unreachable candidates: 13 → 8
+- TypeScript passed
 - ESLint passed
 - unit tests passed
-- source files scanned changed from 352 to 347
-- unreachable candidates changed from 13 to 8
+
+### Verified dead-code removals — legacy exercise components
+
+Removed after exact symbol/path search confirmed no consumer:
+
+- `src/components/exercises/ListenAndChooseExercise.tsx`
+- `src/components/exercises/MatchingPairsGame.tsx`
+
+Evidence:
+
+- No static import, dynamic import, exported-type consumer, script, config, or runtime path referenced either component.
+- The product still supports both exercise types through active lesson code:
+  - `DialogueSection` consumes `listenAndChoose` content.
+  - `PracticeSection` implements matching interactions and dictation from `listenAndChoose` data.
+- Unit curriculum data, lesson types, content standards, scoring, section order, and audio behavior remain unchanged.
+
+Validation results:
+
+- source files scanned: 347 → 345
+- unreachable candidates: 8 → 6
+- TypeScript passed
+- ESLint passed
+- unit tests passed
 
 Temporary GitHub Actions workflows used for full-checkout verification are removed after their final successful run so they do not consume future Actions minutes.
 
 ## Current inventory summary
 
-- Source files scanned: 347
+- Source files scanned: 345
 - Known entry points: 118
-- Unreachable candidates: 8
+- Unreachable candidates: 6
 - Files with at least 500 lines: 32
 - Possible unused runtime/tooling dependencies: 8
 - Possible unused type packages: 2
@@ -93,8 +104,6 @@ Temporary GitHub Actions workflows used for full-checkout verification are remov
 
 These remain review candidates, not automatic deletion instructions:
 
-- `src/components/exercises/ListenAndChooseExercise.tsx`
-- `src/components/exercises/MatchingPairsGame.tsx`
 - `src/components/landing/OutcomesSection.tsx`
 - `src/components/layout/user-avatar.tsx`
 - `src/components/ui/logo.tsx`
@@ -156,4 +165,4 @@ A source file can be deleted only when all applicable checks pass:
 
 ## Next cleanup batch
 
-Verify `ListenAndChooseExercise.tsx` and `MatchingPairsGame.tsx` against the active lesson-section implementations. Remove only proven-unused files, then rerun the full validation gates in an executable checkout.
+Verify the remaining candidates as independent logical groups, beginning with the legacy landing component `OutcomesSection.tsx`. Do not combine UI candidates with Supabase middleware or lesson transformation helpers.
