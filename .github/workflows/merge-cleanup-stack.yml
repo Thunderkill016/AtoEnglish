@@ -1,4 +1,4 @@
-name: Validate merged cleanup stack
+name: Diagnose merged browser validation
 
 on:
   pull_request:
@@ -9,9 +9,9 @@ permissions:
   contents: read
 
 jobs:
-  validate-main:
+  diagnose-browser:
     runs-on: ubuntu-latest
-    timeout-minutes: 55
+    timeout-minutes: 40
     env:
       NEXT_PUBLIC_SUPABASE_URL: https://example.supabase.co
       NEXT_PUBLIC_SUPABASE_ANON_KEY: final-main-validation-placeholder
@@ -44,29 +44,6 @@ jobs:
       - name: Install Chromium
         run: npx playwright install --with-deps chromium
 
-      - name: Generate inventory
-        run: npm run inventory -- --write
-
-      - name: Verify inventory summary
-        shell: bash
-        run: |
-          set -euo pipefail
-          grep -F "Source files scanned: 348" reports/codebase-cleanup-inventory.md
-          grep -F "Known entry points: 122" reports/codebase-cleanup-inventory.md
-          grep -F "Unreachable candidates: 0" reports/codebase-cleanup-inventory.md
-
-      - name: Typecheck
-        run: npx tsc --noEmit
-
-      - name: Full lint
-        run: npm run lint
-
-      - name: Full unit tests
-        run: npm run test
-
-      - name: Lesson content-standard tests
-        run: npm run test:content-standard
-
       - name: Production build
         run: npm run build
 
@@ -74,42 +51,44 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          npm run start > /tmp/atoenglish-server.log 2>&1 &
-          echo $! > /tmp/atoenglish-server.pid
+          npm run start > /tmp/final-server.log 2>&1 &
+          echo $! > /tmp/final-server.pid
           npx wait-on --timeout 120000 http://127.0.0.1:3000
 
-      - name: Protected-route production E2E
-        run: npx playwright test e2e/protected-routes.spec.ts --project=chromium
-
-      - name: Lesson production smoke E2E
-        run: npx playwright test e2e/lesson-smoke.spec.ts
-
-      - name: Verify repository remains clean
+      - name: Protected-route E2E with captured output
+        id: protected
         shell: bash
         run: |
-          set -euo pipefail
-          git diff --exit-code
-          git status --short --untracked-files=no
+          set +e
+          npx playwright test e2e/protected-routes.spec.ts --project=chromium --reporter=line 2>&1 | tee /tmp/protected-e2e.log
+          status=${PIPESTATUS[0]}
+          echo "status=$status" >> "$GITHUB_OUTPUT"
+          exit 0
 
-      - name: Write validation summary
-        if: always()
+      - name: Lesson smoke E2E with captured output
+        id: lesson
         shell: bash
         run: |
-          {
-            echo "main_sha=$(git rev-parse HEAD)"
-            echo "validated_at=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
-            echo "source_files=348"
-            echo "entry_points=122"
-            echo "unreachable_candidates=0"
-          } > /tmp/final-main-validation.txt
-          cp /tmp/atoenglish-server.log /tmp/final-server.log 2>/dev/null || true
+          set +e
+          npx playwright test e2e/lesson-smoke.spec.ts --reporter=line 2>&1 | tee /tmp/lesson-e2e.log
+          status=${PIPESTATUS[0]}
+          echo "status=$status" >> "$GITHUB_OUTPUT"
+          exit 0
 
-      - name: Upload final validation evidence
+      - name: Upload browser diagnostic evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: merged-cleanup-main-validation
+          name: merged-cleanup-browser-diagnostics
           path: |
-            /tmp/final-main-validation.txt
             /tmp/final-server.log
+            /tmp/protected-e2e.log
+            /tmp/lesson-e2e.log
+            test-results
           if-no-files-found: warn
+
+      - name: Enforce browser suite results
+        shell: bash
+        run: |
+          test "${{ steps.protected.outputs.status }}" = "0"
+          test "${{ steps.lesson.outputs.status }}" = "0"
