@@ -6,44 +6,39 @@
 
 | Field | Value |
 |---|---|
-| Task | CLEANUP-007 — Verify the next unreachable source group |
+| Task | CLEANUP-008 — Verify old exercise components |
 | Status | ready |
 | Branch | `agent/codebase-cleanup-foundation` |
 | Goal | Continue verified dead-code removal one tightly related group at a time |
 
 ## Completed in this branch
 
-### CLEANUP-001 — Cleanup foundation
+### Cleanup foundation and documentation
 
 - Disabled automatic backlog generation, commits, and direct pushes.
 - Replaced oversized agent journals with concise current/open-work files.
-- Required branches, pull-request review, staged cleanup, and verified deletion.
+- Reconciled README and architecture documentation with executable sources.
 
-### CLEANUP-002 — Inventory foundation
+### Inventory foundation
 
 - Added `npm run inventory` with no new dependency.
 - Added reproducible reporting for unreachable source, files over 500 lines, and package candidates.
 - Added a durable evidence report and ignored generated reports.
 
-### CLEANUP-003 — First verified source deletion
+### Verified dead-code removal
 
-- Ran the cleanup workflow on a complete GitHub Actions checkout.
-- Installed dependencies from the lockfile without lifecycle scripts.
-- Generated and downloaded the cleanup inventory artifact.
-- Verified `src/app/actions/unit-content.ts` had no runtime import or caller.
-- Removed the unused action without altering its historical migration or generated DB types.
-- Reran inventory, TypeScript, ESLint, and unit tests successfully after deletion.
-- Confirmed source count changed 356 → 355 and unreachable candidates changed 17 → 16.
+Removed after import-graph analysis and repository-wide symbol/path searches:
 
-### CLEANUP-005 — Documentation source of truth
+- `src/app/actions/unit-content.ts`
+- `src/app/(main)/dashboard/components/DashboardMinimalClient.tsx`
+- `src/components/learn/lesson-ui/LessonHeader.tsx`
+- `src/components/learn/lesson-ui/LessonShell.tsx`
 
-- Removed hard-coded test totals and stale partial database documentation.
-- Documented the current 50-unit curriculum and active architecture debt.
-- Updated the inventory evidence with the first verified deletion.
+Also removed the stale dead-file exemption from `scripts/audit-code.mjs`.
 
-## Baseline now established
+## Validation completed
 
-The current branch has a successful full-checkout validation run covering:
+A full GitHub Actions checkout successfully ran after the source and audit changes:
 
 ```bash
 npm ci --ignore-scripts --legacy-peer-deps
@@ -53,6 +48,16 @@ npm run lint
 npm run test
 ```
 
+Results:
+
+- source files scanned: 356 → 352
+- unreachable candidates: 17 → 13
+- TypeScript passed
+- ESLint passed
+- unit tests passed
+
+The temporary validation workflow was removed after the final successful run.
+
 ## Next action
 
-Verify the rollback-era minimal dashboard and lesson-shell candidates with symbol/path searches. Remove only candidates with no framework, import, script, or runtime references, then rerun the same validation gates.
+Verify `ListenAndChooseExercise.tsx` and `MatchingPairsGame.tsx` against the active lesson sections. Remove only files with no code, framework, script, or runtime references, then rerun the full validation gates in an executable checkout.
