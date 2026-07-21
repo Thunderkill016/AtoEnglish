@@ -345,4 +345,69 @@ describe("UnitTemplate behavior foundation", () => {
     expect(container.textContent).toContain("Xuất sắc! 🏆");
     expect(container.querySelector('a[href="/learn/next-unit"]')).not.toBeNull();
   });
+
+it("ignores malformed saved progress without leaving the warmup", async () => {
+  const key = "lesson-progress-unit-test";
+  localStorage.setItem(key, "{broken-json");
+
+  await renderUnit();
+
+  expect(container.querySelector('[data-testid="section-warmup"]')).not.toBeNull();
+  expect(container.querySelector('[role="progressbar"]')).toHaveAttribute(
+    "aria-label",
+    "Tiến độ bài học: bước 1 / 10",
+  );
+  expect(localStorage.getItem(key)).toBe("{broken-json");
+});
+
+it.each([0, 1, 10, 11])(
+  "ignores non-restorable saved section %s",
+  async (savedSection) => {
+    const key = "lesson-progress-unit-test";
+    localStorage.setItem(key, JSON.stringify({ section: savedSection }));
+
+    await renderUnit();
+
+    expect(container.querySelector('[data-testid="section-warmup"]')).not.toBeNull();
+    expect(container.querySelector('[role="progressbar"]')).toHaveAttribute(
+      "aria-label",
+      "Tiến độ bài học: bước 1 / 10",
+    );
+    expect(JSON.parse(localStorage.getItem(key) ?? "null")).toEqual({
+      section: savedSection,
+    });
+  },
+);
+
+it("isolates progress reads and writes by unit id", async () => {
+  const currentKey = "lesson-progress-unit-test";
+  const otherKey = "lesson-progress-unit-other";
+  localStorage.setItem(otherKey, JSON.stringify({ section: 9 }));
+
+  await renderUnit();
+
+  expect(container.querySelector('[data-testid="section-warmup"]')).not.toBeNull();
+  await click(container.querySelector('[data-testid="section-warmup"]') as HTMLButtonElement);
+
+  expect(container.querySelector('[data-testid="section-vocab"]')).not.toBeNull();
+  expect(JSON.parse(localStorage.getItem(currentKey) ?? "null")).toEqual({ section: 2 });
+  expect(JSON.parse(localStorage.getItem(otherKey) ?? "null")).toEqual({ section: 9 });
+});
+
+it("removes only the current unit progress key on the final section", async () => {
+  const currentKey = "lesson-progress-unit-test";
+  const otherKey = "lesson-progress-unit-other";
+  localStorage.setItem(currentKey, JSON.stringify({ section: 7 }));
+  localStorage.setItem(otherKey, JSON.stringify({ section: 4 }));
+
+  await renderUnit();
+
+  expect(container.querySelector('[data-testid="section-speaking"]')).not.toBeNull();
+  await click(container.querySelector('[data-testid="section-speaking"]') as HTMLButtonElement);
+
+  expect(container.querySelector('[data-testid="section-quiz"]')).not.toBeNull();
+  expect(localStorage.getItem(currentKey)).toBeNull();
+  expect(JSON.parse(localStorage.getItem(otherKey) ?? "null")).toEqual({ section: 4 });
+});
+
 });

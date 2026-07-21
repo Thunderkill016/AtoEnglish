@@ -6,10 +6,10 @@
 
 | Field | Value |
 |---|---|
-| Task | CLEANUP-004B — Extract UnitTemplate stateless presentation helpers |
+| Task | CLEANUP-017 — Expand lesson progress persistence coverage |
 | Status | done — awaiting stacked PR review |
-| Branch | `agent/unit-template-stateless-presentation` |
-| Goal | Move only the lesson progress and mid-lesson break presentation blocks out of `UnitTemplate` without moving orchestration state or changing behavior |
+| Branch | `agent/unit-template-persistence-tests` |
+| Goal | Lock malformed, non-restorable, per-unit, and final-section localStorage behavior before extracting lesson progress persistence into a hook |
 
 ## Completed in earlier cleanup batches
 
@@ -22,32 +22,23 @@
 - Added focused UnitTemplate orchestration tests.
 - Extracted lesson-domain types and exact section constants while preserving existing imports.
 - Added six production-server lesson smoke tests across desktop and mobile.
+- Extracted `LessonProgress` and `SessionBreakCard` without moving orchestration state.
 
-## Completed in CLEANUP-004B
+## Completed in CLEANUP-017
 
-Added dedicated presentation components:
+Expanded `src/components/learn/UnitTemplate.test.tsx` with seven persistence-focused cases covering:
 
-- `src/components/learn/lesson-ui/LessonProgress.tsx`
-- `src/components/learn/lesson-ui/SessionBreakCard.tsx`
-- `src/components/learn/lesson-ui/lesson-presentation.test.tsx`
+- malformed saved JSON stays non-fatal and leaves the lesson at Warmup
+- non-restorable saved sections `0`, `1`, `10`, and `11` are ignored
+- reads and writes use the current unit's `lesson-progress-<unitId>` key only
+- reaching the final Quiz removes only the current unit's progress key
+- unrelated unit progress remains untouched throughout navigation and cleanup
 
-`UnitTemplate.tsx` now delegates:
-
-- the exact ten-step non-linear progress display to `LessonProgress`
-- the Practice-to-Dialogue break card to `SessionBreakCard`
-
-Preserved exactly:
-
-- progressbar labels and percentages
-- completed/current/upcoming step styling
-- session-break copy, motion props, dashboard link, and continue callback
-- section order, navigation, localStorage, scoring, XP, completion, database actions, FSRS, auth, routes, lesson content, and UI behavior
-
-The focused `UnitTemplate` diff is `+4/-117`. The component decreased from 1,182 to 1,069 lines. Sticky-header interactions, completion overlay, `XpCounter`, video shadowing, orchestration state, and behavior-sensitive functions remain local.
+No production source, localStorage key, section order, navigation, scoring, XP, completion, database action, FSRS behavior, auth, route, lesson content, package, or UI copy changed.
 
 ## Validation completed
 
-A clean committed checkout ran:
+A clean GitHub Actions checkout ran:
 
 ```bash
 npm ci --ignore-scripts --legacy-peer-deps
@@ -55,7 +46,7 @@ npx playwright install --with-deps chromium
 npx vitest run src/components/learn/UnitTemplate.test.tsx src/components/learn/lesson-sections.test.ts src/components/learn/lesson-ui/lesson-presentation.test.tsx
 npm run inventory -- --write
 npx tsc --noEmit
-npx eslint <focused files>
+npx eslint <focused test and lesson files>
 npm run lint
 npm run test
 npm run test:content-standard
@@ -63,22 +54,15 @@ npm run build
 PLAYWRIGHT_BASE_URL=http://127.0.0.1:3000 npx playwright test e2e/lesson-smoke.spec.ts
 ```
 
-Results:
+Expected final results:
 
-- 8 targeted tests passed: 4 orchestration, 2 exact constants, and 2 presentation-helper tests
-- 6 production-server lesson smoke tests passed on Desktop Chromium and Mobile Chrome
-- source files scanned: 344 → 347
-- known entry points: 121 → 122
-- unreachable candidates remained 0
-- `UnitTemplate.tsx`: 1,182 → 1,069 lines
-- TypeScript passed
-- focused and full ESLint passed
-- full unit tests passed
-- lesson content-standard tests passed
-- production build passed
+- 15 targeted tests: 11 UnitTemplate behavior/persistence, 2 exact constants, and 2 presentation-helper tests
+- 6 production-server lesson smoke tests on Desktop Chromium and Mobile Chrome
+- source inventory remains 347 files, 122 entry points, and 0 unreachable candidates
+- TypeScript, focused/full ESLint, full unit tests, content-standard tests, and production build pass
 
-The temporary validation workflow is removed after the final successful documentation run.
+The temporary validation workflow is removed after the final successful clean-state run.
 
 ## Next action
 
-CLEANUP-017 — add a persistence-focused UnitTemplate test matrix for malformed saved JSON, invalid section numbers, per-unit key isolation, and final-section cleanup before moving localStorage behavior into a hook.
+CLEANUP-004C — extract lesson progress restore/save/remove behavior into a dedicated hook while preserving the exact storage key and section semantics now covered by tests.
