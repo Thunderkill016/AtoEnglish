@@ -220,11 +220,48 @@ Validation results:
 
 This batch changes tests and cleanup documentation only. `UnitTemplate.tsx`, its localStorage effects, section order, routes, scoring, XP, completion, server actions, database behavior, FSRS, auth, lesson content, packages, and UI remain unchanged.
 
+### UnitTemplate progress persistence hook extraction
+
+Added:
+
+- `src/components/learn/hooks/useLessonProgress.ts`
+
+The hook owns only the existing browser persistence boundary: reading `lesson-progress-<unitId>`, restoring eligible sections, writing intermediate progress, and removing the current unit key on the final Quiz. `UnitTemplate` continues to own section state and all lesson orchestration.
+
+Preserved exactly:
+
+- malformed saved JSON is ignored
+- saved sections restore only when greater than 1 and less than 10
+- section 10 remains non-restorable
+- the first section does not write progress
+- intermediate sections persist `{ section }`
+- final-section cleanup removes only the active unit key
+- unrelated unit progress remains untouched
+
+Focused results:
+
+- `UnitTemplate.tsx`: 1,069 → 1054 lines
+- source files scanned: 347 → 348
+- known entry points remained 122
+- unreachable candidates remained 0
+
+Validation results:
+
+- 15 targeted lesson tests passed
+- 6 production-server Playwright smoke tests passed on Desktop Chromium and Mobile Chrome
+- TypeScript passed
+- focused and full ESLint passed
+- full unit tests passed
+- lesson content-standard tests passed
+- production build passed
+
+No localStorage key, section order, navigation, scoring, XP, completion transaction, server action, database behavior, FSRS, auth, route, lesson content, package, or UI behavior changed.
+
 Temporary GitHub Actions workflows used for full-checkout verification are removed after their successful run so they do not consume future Actions minutes.
 
 ## Current inventory summary
 
-- Source files scanned: 347
+- Source files scanned: 348
 - Known entry points: 122
 - Unreachable candidates: 0
 - Files with at least 500 lines: 32
@@ -244,7 +281,7 @@ This does not mean the repository has no architecture debt. Large active compone
 
 Classification: **active, oversized, high-priority refactor — never delete**
 
-Current generated size: 1,069 lines. It still owns orchestration state, browser persistence, audio, server-action coordination, scoring, completion logic, celebration UI, and the remaining stateful helper components.
+Current generated size: 1054 lines. It still owns orchestration state, audio, server-action coordination, scoring, completion logic, celebration UI, and the remaining stateful helper components.
 
 Safe refactor order:
 
@@ -253,7 +290,7 @@ Safe refactor order:
 3. Add production-server lesson smoke/E2E coverage — complete.
 4. Extract first stateless presentation helpers — complete.
 5. Expand persistence-specific coverage — complete.
-6. Extract local-storage hooks with the persistence test matrix as a required gate.
+6. Extract local-storage hooks with the persistence test matrix as a required gate — complete.
 7. Extract completion logic after server-action and achievement coverage.
 8. Replace related state groups with a reducer only after each state transition is covered.
 
@@ -278,4 +315,4 @@ A source file can be deleted only when all applicable checks pass:
 
 ## Next cleanup work
 
-CLEANUP-004C — extract lesson progress restore/save/remove behavior into a dedicated hook. Preserve the exact `lesson-progress-<unitId>` key, section semantics, and per-unit cleanup behavior covered by the 15 targeted tests and six production-server smoke tests.
+CLEANUP-018 — add focused completion-flow regression coverage before moving completion, XP, achievement, streak, or server-action coordination out of `UnitTemplate`.
