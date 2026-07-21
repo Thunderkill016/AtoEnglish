@@ -20,19 +20,19 @@
 
 ## Active queue
 
-### CLEANUP-004A — Extract UnitTemplate lesson types and constants
+### CLEANUP-016 — Add lesson smoke/E2E prerequisite
 - **Status:** `ready`
-- **Goal:** Move lesson-domain interfaces and section constants into dedicated modules without changing runtime behavior or breaking existing imports.
-- **Done when:** `UnitTemplate` re-exports existing public types, section labels/order/total remain byte-for-byte equivalent in meaning, the four focused orchestration tests pass, and typecheck, lint, full unit tests, content-standard tests, and production build pass.
+- **Goal:** Verify a real lesson route on a production Next.js server before extracting stateless presentation helpers.
+- **Done when:** A focused Playwright or smoke flow confirms the lesson renders, section progress remains usable, quick-review reaches Quiz, and the test passes with production build output.
 
 ### CLEANUP-004B — Extract UnitTemplate stateless helpers
 - **Status:** `blocked`
-- **Blocked by:** CLEANUP-004A plus relevant lesson smoke/E2E validation.
-- **Goal:** Extract small stateless presentation helpers in separate reviewable commits.
+- **Blocked by:** CLEANUP-016 lesson smoke/E2E coverage.
+- **Goal:** Extract small stateless presentation helpers in separate reviewable commits without moving orchestration state or behavior-sensitive logic.
 
 ### CLEANUP-004C — Extract UnitTemplate progress persistence
 - **Status:** `blocked`
-- **Blocked by:** CLEANUP-004A and additional persistence-focused tests.
+- **Blocked by:** Additional persistence-focused tests beyond the current restore/clear coverage.
 - **Goal:** Move lesson-progress localStorage behavior into a dedicated hook without changing storage keys or section semantics.
 
 ### CLEANUP-015 — Review unit action transaction boundaries

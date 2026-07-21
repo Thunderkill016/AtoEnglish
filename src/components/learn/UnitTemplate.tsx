@@ -22,219 +22,53 @@ import SpeakingSection from "./sections/SpeakingSection";
 import QuizSection from "./sections/QuizSection";
 import TranslateSection from "./sections/TranslateSection";
 import FluencySection from "./sections/FluencySection";
-import type { ReadingPassage } from "@/components/exercises/ReadingComprehensionExercise";
+import {
+  SECTION_LABELS,
+  SECTION_ORDER,
+  TOTAL_SECTIONS,
+  type SectionNumber,
+} from "./lesson-sections";
+import type {
+  Dialogue,
+  DialogueLine,
+  FluencyDrill,
+  GrammarPoint,
+  ListenAndChooseItem,
+  ListenArrangeItem,
+  MatchingExercise,
+  MatchingPair,
+  PronunciationFocus,
+  QuizQuestion,
+  SentenceCorrectionExercise,
+  SentenceScramble,
+  SpeakingData,
+  UnitData,
+  VocabItem,
+  WarmupCard,
+  WarmupGreeting,
+  WordBankQuestion,
+} from "./lesson-types";
 
-// ─── Section order & labels (10 steps, Hybrid pedagogical flow) ───────────────
-const SECTION_LABELS: Record<number, string> = {
-  1: "Khởi động",
-  2: "Từ vựng",
-  3: "Ngữ pháp",
-  4: "Luyện tập",
-  5: "Hội thoại",
-  10: "Phản xạ",
-  9: "Dịch câu",
-  6: "Shadowing",
-  7: "Luyện nói",
-  8: "Hoàn thành",
-};
-const SECTION_ORDER = [1, 2, 3, 4, 5, 10, 9, 6, 7, 8] as const;
-type SectionNumber = (typeof SECTION_ORDER)[number];
-const TOTAL_SECTIONS = SECTION_ORDER.length;
-
-// ─── Interfaces ──────────────────────────────────────────────────────────────
-export interface VocabItem {
-  id: number;
-  word: string;
-  phonetic: string;
-  meaning: string;
-  example: string;
-  example2?: string;
-  collocation?: string;
-  audio?: string;
-  emoji?: string;
-  image_url?: string; // S2-2: optional image for concrete nouns (Paivio dual coding)
-  l1_interference_vn?: string; // Vietnamese L1 interference note — specific error Vietnamese speakers make with this word
-}
-
-export interface WarmupCard {
-  id: string;
-  word: string;
-  phonetic?: string | null;
-  meaning_vn: string;
-  example_en?: string | null;
-}
-
-export interface DialogueLine {
-  id: string;
-  speaker: string;
-  text: string;
-  translation: string;
-}
-
-export interface Dialogue {
-  id: number;
-  title: string;
-  audio: string;
-  desc: string;
-  lines: DialogueLine[];
-}
-
-export interface WarmupGreeting {
-  emoji: string;
-  en: string;
-  vn: string;
-  context: string;
-}
-
-export interface ListenAndChooseItem {
-  id: string;
-  audio_text: string;
-  options: string[];
-  answer: string;
-}
-
-export interface QuizQuestion {
-  id: string;
-  question: string;
-  options?: string[];
-  answer: string;
-  type: "multiple-choice" | "cloze" | "translate" | "true-false"; // S2-4: true-false added
-  explanation_vn?: string; // Vietnamese grammar/vocab note shown on wrong answer (Babbel pattern)
-}
-
-export interface SpeakingData {
-  level1Prompt: string;
-  level1Placeholder: string;
-  level2Situation: string;
-  level2Hint: string;
-}
-
-export interface GrammarPoint {
-  title: string;
-  rule: string;
-  conjugation?: Array<{
-    subject: string;
-    form: string;
-    example: string;
-  }>;
-  examples: Array<{
-    en: string;
-    vn: string;
-  }>;
-  tip?: string;
-  vnNote?: string;
-  dialogueExample?: {
-    speaker: string;
-    text: string;
-    translation: string;
-    highlight: string;
-  };
-  ccq?: {
-    question: string;
-    options: string[];
-    answer: string;
-    explanation?: string;
-  };
-}
-
-export interface PronunciationFocus {
-  phoneme: string;
-  description: string;
-  examples: Array<{
-    word: string;
-    ipa: string;
-    tip: string;
-  }>;
-  minimalPairs?: Array<[string, string]>;
-}
-
-export interface FluencyDrill {
-  title?: string;
-  timeLimit?: number;
-  items: Array<{
-    en: string;
-    vn: string;
-  }>;
-}
-
-export interface MatchingPair {
-  left: string;
-  right: string;
-}
-
-export interface MatchingExercise {
-  title?: string;
-  pairs: MatchingPair[];
-}
-
-export interface SentenceScramble {
-  id: string;
-  prompt_vn: string;
-  words: string[];
-  answer: string;
-}
-
-export interface WordBankQuestion {
-  id: string;
-  prompt_vn: string;
-  words: string[];
-  answer: string;
-  hint?: string;
-}
-
-// S3-1: Sentence Correction Exercise (British Council "find the error" pattern)
-export interface SentenceCorrectionExercise {
-  id: string;
-  sentence: string;        // Sentence with exactly one grammatical error
-  errorWord: string;       // The wrong word/phrase (shown highlighted)
-  correction: string;      // Correct replacement
-  explanation_vn: string;  // Vietnamese explanation shown after answer
-  distractors?: string[];  // Wrong replacement options (if MCQ style)
-}
-
-// S4-1: Listen+Arrange Exercise (Duolingo tap-words-in-order audio-first pattern)
-export interface ListenArrangeItem {
-  id: string;
-  audio_text: string;    // English sentence spoken via TTS
-  prompt_vn: string;     // Vietnamese hint shown below speaker
-  words: string[];       // Shuffled word pool (may include 1-2 distractors)
-  answer: string;        // Correct space-joined answer
-}
-
-export interface UnitData {
-  unitId: string;
-  title: string;
-  level: string;
-  xp: number;
-  estimatedTime: number;
-  description: string;
-  badgeName: string;
-  badgeEmoji: string;
-  warmupGreetings: WarmupGreeting[];
-  culturalNote: string;
-  vocab: VocabItem[];
-  grammar?: GrammarPoint;
-  matchingExercise?: MatchingExercise;
-  scrambleExercises?: SentenceScramble[];
-  wordBankExercises?: WordBankQuestion[];
-  sentenceCorrectionExercises?: SentenceCorrectionExercise[]; // S3-1
-  listenAndArrangeExercises?: ListenArrangeItem[];            // S4-1
-  practiceQuiz?: QuizQuestion[];
-  practiceTranslate?: { id: string; prompt_vn: string; answer: string }[];
-  dialogues: Dialogue[];
-  dialogues_list?: Dialogue[]; // Fallback support for lists
-  listenAndChoose: ListenAndChooseItem[];
-  speaking: SpeakingData;
-  quiz: QuizQuestion[];
-  cumulativeReviewQuestions?: QuizQuestion[];
-  situation?: string;
-  learningOutcomes?: string[];
-  pronunciationFocus?: PronunciationFocus;
-  fluencyDrill?: FluencyDrill;
-  readingPassage?: ReadingPassage; // Optional reading comprehension (A2+)
-  shadowingVideoId?: string;       // Optional YouTube video ID for Video Shadowing section
-  jobScenarios?: Array<{ id: number; title: string; focus?: string; context?: string; l1Note?: string; example?: string }>; // TASK-153 world-class job content + VN L1 notes (optional)
-}
+export type {
+  Dialogue,
+  DialogueLine,
+  FluencyDrill,
+  GrammarPoint,
+  ListenAndChooseItem,
+  ListenArrangeItem,
+  MatchingExercise,
+  MatchingPair,
+  PronunciationFocus,
+  QuizQuestion,
+  SentenceCorrectionExercise,
+  SentenceScramble,
+  SpeakingData,
+  UnitData,
+  VocabItem,
+  WarmupCard,
+  WarmupGreeting,
+  WordBankQuestion,
+} from "./lesson-types";
 
 interface UnitTemplateProps {
   unit: UnitData;
