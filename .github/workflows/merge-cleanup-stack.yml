@@ -1,4 +1,4 @@
-name: Merge verified cleanup stack
+name: Rebuild next cleanup PR
 
 on:
   pull_request:
@@ -10,140 +10,49 @@ permissions:
   pull-requests: write
 
 jobs:
-  merge-stack:
+  rebuild:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 15
+    env:
+      PR_NUMBER: "4"
+      HEAD_BRANCH: agent/cleanup-unused-outcomes
+      ORIGINAL_BASE_SHA: b13c31f2531e03766e72e2cb3e4dd220193cb0d7
+      ORIGINAL_HEAD_SHA: 5d1c180854033ea29446a5b7f6732f2d852f2094
+      COMMIT_TITLE: "refactor: remove unused landing outcomes section"
     steps:
       - name: Checkout controller branch
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Rebuild, review, and merge PRs 3 through 16
+      - name: Rebuild and verify exact PR tree
         env:
           GH_TOKEN: ${{ github.token }}
         shell: bash
         run: |
           set -euo pipefail
-
           repo="$GITHUB_REPOSITORY"
           owner="${repo%%/*}"
           name="${repo##*/}"
-
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git fetch origin '+refs/heads/*:refs/remotes/origin/*' --force
 
-          process_pr() {
-            local pr="$1"
-            local branch="$2"
-            local original_base="$3"
-            local original_head="$4"
-            local title="$5"
-            local patch="/tmp/pr-${pr}.patch"
+          test "$(gh api "repos/${repo}/pulls/${PR_NUMBER}" --jq '.state')" = "open"
+          test "$(gh api "repos/${repo}/pulls/${PR_NUMBER}" --jq '.draft')" = "false"
+          unresolved=$(gh api graphql \
+            -f query='query($owner:String!,$name:String!,$number:Int!){repository(owner:$owner,name:$name){pullRequest(number:$number){reviewThreads(first:100){nodes{isResolved}}}}}' \
+            -f owner="$owner" -f name="$name" -F number="$PR_NUMBER" \
+            --jq '[.data.repository.pullRequest.reviewThreads.nodes[] | select(.isResolved == false)] | length')
+          test "$unresolved" -eq 0
 
-            echo "::group::PR #${pr} — ${title}"
-
-            local state draft
-            state=$(gh api "repos/${repo}/pulls/${pr}" --jq '.state')
-            draft=$(gh api "repos/${repo}/pulls/${pr}" --jq '.draft')
-            test "$state" = "open"
-            test "$draft" = "false"
-
-            local unresolved
-            unresolved=$(gh api graphql \
-              -f query='query($owner:String!,$name:String!,$number:Int!){repository(owner:$owner,name:$name){pullRequest(number:$number){reviewThreads(first:100){nodes{isResolved}}}}}' \
-              -f owner="$owner" \
-              -f name="$name" \
-              -F number="$pr" \
-              --jq '[.data.repository.pullRequest.reviewThreads.nodes[] | select(.isResolved == false)] | length')
-            test "$unresolved" -eq 0
-
-            git cat-file -e "${original_base}^{commit}"
-            git cat-file -e "${original_head}^{commit}"
-            git fetch origin main --force
-
-            # The current main tree must be identical to the original stacked base.
-            git diff --exit-code "$original_base" origin/main -- .
-
-            # Capture only this PR's original content delta.
-            git diff --binary "$original_base" "$original_head" -- . > "$patch"
-
-            # Rebuild the PR branch directly on the current main commit.
-            git checkout -B "$branch" origin/main
-            git apply --index --binary "$patch"
-            git diff --cached --check
-
-            # The rebuilt working tree must be byte-for-byte identical to the
-            # already validated original PR head before it is pushed.
-            git diff --exit-code "$original_head" -- .
-
-            git commit -m "$title"
-            local rebuilt_sha
-            rebuilt_sha=$(git rev-parse HEAD)
-            git push --force origin "HEAD:${branch}"
-
-            gh api "repos/${repo}/pulls/${pr}" \
-              -X PATCH \
-              -f base=main >/dev/null
-
-            local mergeable="null"
-            local mergeable_state="unknown"
-            for _ in $(seq 1 30); do
-              mergeable=$(gh api "repos/${repo}/pulls/${pr}" --jq '.mergeable')
-              mergeable_state=$(gh api "repos/${repo}/pulls/${pr}" --jq '.mergeable_state')
-              if [ "$mergeable" = "true" ]; then
-                break
-              fi
-              if [ "$mergeable" = "false" ] && [ "$mergeable_state" = "dirty" ]; then
-                echo "PR #${pr} has a real merge conflict after exact rebuild" >&2
-                exit 1
-              fi
-              sleep 2
-            done
-            test "$mergeable" = "true"
-
-            # A Vercel rate-limit failure is infrastructure-only and already
-            # known. Any other reported failure blocks the merge.
-            local non_vercel_failures
-            non_vercel_failures=$(gh api "repos/${repo}/commits/${rebuilt_sha}/status" \
-              --jq '[.statuses[] | select((.state == "failure" or .state == "error") and .context != "Vercel")] | length')
-            test "$non_vercel_failures" -eq 0
-
-            local result
-            result=$(gh api "repos/${repo}/pulls/${pr}/merge" \
-              -X PUT \
-              -f sha="$rebuilt_sha" \
-              -f merge_method=squash \
-              -f commit_title="$title")
-            echo "$result"
-            test "$(jq -r '.merged' <<<"$result")" = "true"
-
-            git fetch origin main --force
-
-            # The merged main tree must exactly equal the validated original head.
-            git diff --exit-code "$original_head" origin/main -- .
-
-            echo "PR #${pr} merged successfully at $(git rev-parse origin/main)"
-            echo "::endgroup::"
-          }
-
-          while IFS='|' read -r pr branch original_base original_head title; do
-            [ -n "$pr" ] || continue
-            process_pr "$pr" "$branch" "$original_base" "$original_head" "$title"
-          done <<'STACK'
-          3|agent/cleanup-unused-exercises|c4deacc4c5efbbd833384a4e3c68f95fa6934cbe|b13c31f2531e03766e72e2cb3e4dd220193cb0d7|refactor: remove unused legacy exercise components
-          4|agent/cleanup-unused-outcomes|b13c31f2531e03766e72e2cb3e4dd220193cb0d7|5d1c180854033ea29446a5b7f6732f2d852f2094|refactor: remove unused landing outcomes section
-          5|agent/cleanup-unused-shared-ui|5d1c180854033ea29446a5b7f6732f2d852f2094|5b8fcc59d7ef7a632fd93549d6e7e73f95f3259c|refactor: remove unused shared UI components
-          6|agent/cleanup-unused-type-barrel|5b8fcc59d7ef7a632fd93549d6e7e73f95f3259c|9ebcb80c97d9713e6b852982af5bf201462ed722|refactor: remove unused legacy type barrel
-          7|agent/cleanup-unused-enrich-unit|9ebcb80c97d9713e6b852982af5bf201462ed722|20d83ea67e768190ae8bb56c57b168486e32a216|refactor: remove unused lesson enrichment helper
-          8|agent/cleanup-unused-supabase-middleware|20d83ea67e768190ae8bb56c57b168486e32a216|5da2c8beac90532f43d2d65a120cdd9ae2f7af96|refactor: remove unused Supabase middleware helper
-          9|agent/cleanup-protected-routes-e2e|5da2c8beac90532f43d2d65a120cdd9ae2f7af96|d2f385f4b154de52dbfe533938846a06566851c0|test: align protected-route E2E with guest self-study policy
-          10|agent/cleanup-dependency-classification|d2f385f4b154de52dbfe533938846a06566851c0|a8c2183ef64329f67b1f6fec0f3cc7e0938e19fc|chore: remove unused dependencies and classify tooling
-          11|agent/unit-template-test-foundation|a8c2183ef64329f67b1f6fec0f3cc7e0938e19fc|f810dda1ac03a8ffe781ab1470f8727450b9d162|test: add UnitTemplate behavior foundation
-          12|agent/unit-template-types-and-constants|f810dda1ac03a8ffe781ab1470f8727450b9d162|b88f1e4cb40231faf43882ebf6f1ddf063a7a717|refactor: extract UnitTemplate types and section constants
-          13|agent/lesson-production-smoke-e2e|b88f1e4cb40231faf43882ebf6f1ddf063a7a717|5dab698194b4994ccad27208a935cb0b55ef8959|test: add lesson production smoke E2E
-          14|agent/unit-template-stateless-presentation|5dab698194b4994ccad27208a935cb0b55ef8959|8b370ad5c6189d4dcc0f6cd56cb43237c4bdab26|refactor: extract UnitTemplate stateless presentation helpers
-          15|agent/unit-template-persistence-tests|8b370ad5c6189d4dcc0f6cd56cb43237c4bdab26|305854c0dd397efee7a16cdd380adcb232e7939d|test: expand UnitTemplate persistence coverage
-          16|agent/unit-template-progress-persistence-hook|305854c0dd397efee7a16cdd380adcb232e7939d|e76b0cc2a95ba3f3debbbf102cab9a7051c35a5a|refactor: extract UnitTemplate progress persistence hook
-          STACK
+          git fetch origin main --force
+          git diff --exit-code "$ORIGINAL_BASE_SHA" origin/main -- .
+          git diff --binary "$ORIGINAL_BASE_SHA" "$ORIGINAL_HEAD_SHA" -- . > /tmp/pr.patch
+          git checkout -B "$HEAD_BRANCH" origin/main
+          git apply --index --binary /tmp/pr.patch
+          git diff --cached --check
+          git diff --exit-code "$ORIGINAL_HEAD_SHA" -- .
+          git commit -m "$COMMIT_TITLE"
+          git push --force origin "HEAD:$HEAD_BRANCH"
+          gh api "repos/${repo}/pulls/${PR_NUMBER}" -X PATCH -f base=main >/dev/null
