@@ -1,16 +1,16 @@
-name: Pilot promise E2E isolation
+name: Pilot promise validation
 
 on:
   pull_request:
     branches: [main]
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
-  diagnose:
+  validate:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 40
     env:
       NEXT_PUBLIC_SUPABASE_URL: https://example.supabase.co
       NEXT_PUBLIC_SUPABASE_ANON_KEY: test-anon-key
@@ -40,24 +40,73 @@ jobs:
           PY
           python /tmp/align-pilot-promise.py
 
-      - name: Install and build quietly
+      - name: Verify focused scope
         run: |
-          npm ci --ignore-scripts --legacy-peer-deps >/tmp/npm-ci.log 2>&1
-          npx playwright install --with-deps chromium >/tmp/chromium.log 2>&1
-          npm run build >/tmp/build.log 2>&1
+          git diff --name-only | sort > /tmp/changed.txt
+          cat /tmp/changed.txt
+          cat > /tmp/expected.txt <<'EOF'
+          e2e/protected-routes.spec.ts
+          src/app/(main)/dashboard/components/DashboardClient.tsx
+          src/app/layout.tsx
+          src/app/login/page.tsx
+          src/app/page.tsx
+          src/components/landing/FaqSection.tsx
+          src/components/landing/FinalCtaSection.tsx
+          src/components/landing/HeroCTA.tsx
+          EOF
+          diff -u /tmp/expected.txt /tmp/changed.txt
+
+      - name: Clean install
+        run: npm ci --ignore-scripts --legacy-peer-deps
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Inventory
+        run: npm run inventory
+
+      - name: Typecheck
+        run: npx tsc --noEmit
+
+      - name: Full lint
+        run: npm run lint
+
+      - name: Full unit tests
+        run: npm run test
+
+      - name: Lesson content standard
+        run: npm run test:content-standard
+
+      - name: Production build
+        run: npm run build
 
       - name: Start production server
         run: |
           npm run start > /tmp/atoenglish.log 2>&1 &
           npx wait-on http-get://127.0.0.1:3000/ --timeout 60000
 
-      - name: Landing promise test
-        run: PLAYWRIGHT_BASE_URL=http://127.0.0.1:3000 npx playwright test e2e/protected-routes.spec.ts --project=chromium --grep "states the focused 28-day pilot promise" --reporter=line
+      - name: Protected-route and promise E2E
+        run: PLAYWRIGHT_BASE_URL=http://127.0.0.1:3000 npx playwright test e2e/protected-routes.spec.ts --project=chromium --workers=1
 
-      - name: Onboarding promise test
-        if: always()
-        run: PLAYWRIGHT_BASE_URL=http://127.0.0.1:3000 npx playwright test e2e/protected-routes.spec.ts --project=chromium --grep "onboarding repeats the same duration" --reporter=line
+      - name: Lesson production smoke E2E
+        run: PLAYWRIGHT_BASE_URL=http://127.0.0.1:3000 npx playwright test e2e/lesson-smoke.spec.ts --workers=1
 
-      - name: Dashboard promise test
-        if: always()
-        run: PLAYWRIGHT_BASE_URL=http://127.0.0.1:3000 npx playwright test e2e/protected-routes.spec.ts --project=chromium --grep "dashboard reinforces the daily speaking step" --reporter=line
+      - name: Commit validated changes
+        run: |
+          if git diff --quiet; then
+            echo "No uncommitted changes"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            e2e/protected-routes.spec.ts \
+            'src/app/(main)/dashboard/components/DashboardClient.tsx' \
+            src/app/layout.tsx \
+            src/app/login/page.tsx \
+            src/app/page.tsx \
+            src/components/landing/FaqSection.tsx \
+            src/components/landing/FinalCtaSection.tsx \
+            src/components/landing/HeroCTA.tsx
+          git commit -m "copy: align the 28-day speaking pilot promise"
+          git push origin HEAD:${{ github.event.pull_request.head.ref }}
