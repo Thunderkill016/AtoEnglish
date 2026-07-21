@@ -7,35 +7,28 @@
 | Field | Value |
 |---|---|
 | Task | CLEANUP-001 — Codebase cleanup foundation |
-| Status | in_progress |
+| Status | done — awaiting review |
 | Branch | `agent/codebase-cleanup-foundation` |
 | Goal | Stop agent-generated repository noise and establish a safe cleanup workflow |
 
-## Scope
+## Completed
 
-- Disable automatic backlog refill and automatic commits/pushes.
-- Replace the oversized backlog with a small actionable queue.
-- Keep `AGENTS.md` focused on durable project rules.
-- Add a staged cleanup roadmap.
-- Correct obvious README drift without changing application behavior.
-
-## Out of scope
-
-- No product features.
-- No database or migration changes.
-- No auth, routing, FSRS, lesson-order, or Supabase behavior changes.
-- No large component refactor in this batch.
-- No direct push to `main`.
+- Disabled automatic backlog generation.
+- Disabled automatic commits and pushes from the refill script.
+- Replaced the historical backlog with a small active cleanup queue.
+- Replaced the session-history plan with a current-task-only plan.
+- Updated durable agent rules to require branches, reviewed pull requests, staged cleanup, and verified deletion.
+- Left all application files under `src/` unchanged.
 
 ## Validation
 
-Because this batch changes documentation and one shell safety script only:
+This batch changes Markdown governance files and one shell script only.
 
-1. Review the branch diff.
-2. Confirm `scripts/agent-refill-backlog.sh` no longer edits files, commits, or pushes.
-3. Confirm no application source files under `src/` changed.
-4. Open a draft pull request for review.
+- Confirmed the refill script contains no `git add`, `git commit`, `git push`, file write, or task-generation logic.
+- Confirmed cleanup tasks have explicit dependencies and deletion is blocked until an inventory exists.
+- Confirmed no database, migration, auth, routing, lesson-order, FSRS, dependency, or application source changes are included.
+- Full TypeScript, lint, and application test execution was not available through the GitHub connector-only environment; CI/local verification should run on the pull request branch.
 
-## Next planned task
+## Next task
 
 CLEANUP-002 — Build a verified dead-code and dependency inventory before deleting anything.
