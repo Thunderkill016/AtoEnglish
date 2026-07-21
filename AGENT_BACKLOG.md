@@ -20,20 +20,20 @@
 
 ## Active queue
 
-### CLEANUP-004B — Extract UnitTemplate stateless presentation helpers
-- **Status:** `done` — awaiting stacked PR review.
-- **Result:** Extracted `LessonProgress` and `SessionBreakCard`, reduced `UnitTemplate` to 1,069 lines, and passed full CI plus production-server smoke coverage.
-
 ### CLEANUP-017 — Expand lesson progress persistence coverage
 - **Status:** `done` — awaiting stacked PR review.
-- **Result:** Added seven persistence-focused cases for malformed JSON, non-restorable sections, per-unit key isolation, and final-section cleanup without changing production behavior.
+- **Result:** Added seven persistence-focused cases for malformed JSON, non-restorable sections, per-unit key isolation, and final-section cleanup.
 
 ### CLEANUP-004C — Extract UnitTemplate progress persistence
+- **Status:** `done` — awaiting stacked PR review.
+- **Result:** Moved restore/save/remove behavior into `useLessonProgress` while preserving the exact storage key and section semantics covered by the 15 targeted tests.
+
+### CLEANUP-018 — Expand UnitTemplate completion-flow coverage
 - **Status:** `ready`
-- **Goal:** Move lesson progress restore/save/remove behavior into a dedicated hook without changing `lesson-progress-<unitId>` keys or section semantics.
-- **Done when:** The 15 targeted tests, six production-server lesson smoke tests, typecheck, focused/full lint, full unit tests, content-standard tests, and production build pass with a focused reversible diff.
+- **Goal:** Add focused tests around completion success/failure, star and XP derivation, guest fallback, achievement/streak coordination, and next-route behavior before moving completion logic.
+- **Done when:** New completion tests, existing lesson tests, six production-server smoke tests, typecheck, lint, full unit tests, content-standard tests, and production build pass without production behavior changes.
 
 ### CLEANUP-015 — Review unit action transaction boundaries
 - **Status:** `blocked`
-- **Blocked by:** Focused tests for completion, XP, achievements, vocabulary seeding, streaks, and cache revalidation.
+- **Blocked by:** CLEANUP-018 completion-flow coverage and focused server-action transaction tests.
 - **Goal:** Classify responsibilities in `src/app/actions/unit.ts` before any structural split.

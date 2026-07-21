@@ -24,6 +24,7 @@ import TranslateSection from "./sections/TranslateSection";
 import FluencySection from "./sections/FluencySection";
 import LessonProgress from "./lesson-ui/LessonProgress";
 import SessionBreakCard from "./lesson-ui/SessionBreakCard";
+import useLessonProgress from "./hooks/useLessonProgress";
 import {
   SECTION_LABELS,
   SECTION_ORDER,
@@ -268,14 +269,6 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
         setIsCompleted(true);
       }
     } catch {}
-    try {
-      const saved = localStorage.getItem(`lesson-progress-${normalizedUnit.unitId}`);
-      if (saved) {
-        const { section: savedSection } = JSON.parse(saved) as { section: number };
-         
-        if (savedSection > 1 && savedSection < TOTAL_SECTIONS) setSection(savedSection);
-      }
-    } catch { /* ignore */ }
   }, [normalizedUnit.unitId]);
 
   useEffect(() => {
@@ -284,18 +277,11 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
     };
   }, []);
 
-  // Save progress
-  useEffect(() => {
-    const orderIdx = SECTION_ORDER.indexOf(section as SectionNumber);
-    const isFirstSection = orderIdx === 0;
-    const isLastSection = orderIdx === SECTION_ORDER.length - 1;
-
-    if (isLastSection) {
-      localStorage.removeItem(`lesson-progress-${normalizedUnit.unitId}`);
-    } else if (!isFirstSection && orderIdx > 0) {
-      localStorage.setItem(`lesson-progress-${normalizedUnit.unitId}`, JSON.stringify({ section }));
-    }
-  }, [section, normalizedUnit.unitId]);
+useLessonProgress({
+  unitId: normalizedUnit.unitId,
+  section,
+  setSection,
+});
 
   // Settings
   const userSettings = (() => {
