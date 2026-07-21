@@ -20,18 +20,18 @@
 
 ## Active queue
 
-### CLEANUP-003 — Remove verified repository waste
-- **Status:** `blocked`
-- **Blocked by:** Running `npm run inventory` in a full checkout and reviewing repository-wide references.
-- **Goal:** Remove only items proven unused and update `.gitignore` where needed.
-- **First candidate:** `src/app/actions/unit-content.ts` — likely unused, but not deletable until static, dynamic, script, migration, and operational references are checked.
+### CLEANUP-007 — Verify the next unreachable source group
+- **Status:** `ready`
+- **Goal:** Verify rollback-era minimal dashboard and lesson-shell candidates with repository-wide symbol/path searches.
+- **Candidates:** `DashboardMinimalClient.tsx`, `LessonHeader.tsx`, and `LessonShell.tsx`.
+- **Done when:** Every candidate is classified independently; only proven-unused files are removed; inventory, typecheck, lint, and unit tests pass after deletion.
 
 ### CLEANUP-004 — Split UnitTemplate safely
 - **Status:** `blocked`
-- **Blocked by:** Passing baseline typecheck, lint, unit tests, and relevant lesson smoke/E2E checks.
+- **Blocked by:** Focused lesson behavior coverage plus relevant lesson smoke/E2E validation.
 - **Goal:** Extract types, constants, small components, storage hooks, and completion logic in separate reviewable batches.
 
 ### CLEANUP-006 — Dependency classification
 - **Status:** `blocked`
-- **Blocked by:** Generated inventory plus local install/build verification.
+- **Blocked by:** Repository-wide config/script review and install/build verification for each package group.
 - **Goal:** Classify every suspected unused or misplaced package before changing `package.json` or the lockfile.
