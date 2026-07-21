@@ -14,11 +14,11 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     env:
-      PR_NUMBER: "8"
-      HEAD_BRANCH: agent/cleanup-unused-supabase-middleware
-      ORIGINAL_BASE_SHA: 20d83ea67e768190ae8bb56c57b168486e32a216
-      ORIGINAL_HEAD_SHA: 5da2c8beac90532f43d2d65a120cdd9ae2f7af96
-      COMMIT_TITLE: "refactor: remove unused Supabase middleware helper"
+      PR_NUMBER: "9"
+      HEAD_BRANCH: agent/cleanup-protected-routes-e2e
+      ORIGINAL_BASE_SHA: 5da2c8beac90532f43d2d65a120cdd9ae2f7af96
+      ORIGINAL_HEAD_SHA: d2f385f4b154de52dbfe533938846a06566851c0
+      COMMIT_TITLE: "test: align protected-route E2E with guest self-study policy"
     steps:
       - name: Checkout controller branch
         uses: actions/checkout@v4
