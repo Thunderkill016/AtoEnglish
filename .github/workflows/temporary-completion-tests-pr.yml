@@ -38,6 +38,48 @@ jobs:
           Path('/tmp/completion_patch.py').write_text(code + '\n')
           PY
           python /tmp/completion_patch.py
+          python <<'PY'
+          from pathlib import Path
+          import re
+          path = Path('src/components/learn/UnitTemplate.test.tsx')
+          text = path.read_text()
+          replacement = '''vi.mock("./sections/QuizSection", async () => {
+            const React = await import("react");
+            return {
+              default: ({
+                handleCompleteUnit,
+                isCompleted,
+                isSubmitting,
+                effectiveScore,
+                effectiveStarCount,
+                xpToEarn,
+              }: SectionMockProps) =>
+                React.createElement(
+                  "button",
+                  {
+                    "data-testid": "section-quiz",
+                    "data-effective-score": effectiveScore,
+                    "data-star-count": effectiveStarCount,
+                    "data-xp-to-earn": xpToEarn,
+                    disabled: Boolean(isCompleted || isSubmitting),
+                    onClick: () => void handleCompleteUnit?.(),
+                  },
+                  isCompleted ? "Completed unit" : "Complete unit",
+                ),
+            };
+          });
+          '''
+          text, count = re.subn(
+              r'vi\.mock\("\./sections/QuizSection", async \(\) => \{.*?\n\}\);\n',
+              replacement,
+              text,
+              count=1,
+              flags=re.S,
+          )
+          if count != 1:
+              raise SystemExit(f'QuizSection mock replacements: {count}')
+          path.write_text(text)
+          PY
           test "$(git diff --name-only | sort)" = "$(printf '%s\n' AGENT_BACKLOG.md AGENT_PLAN.md src/components/learn/UnitTemplate.test.tsx | sort)"
           git diff --exit-code -- src/components/learn/UnitTemplate.tsx src/app/actions/unit.ts
       - name: Clean install
