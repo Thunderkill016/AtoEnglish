@@ -1,60 +1,58 @@
 # Agent Plan — Current Work Only
 
-> This file describes the current cleanup work only. Historical work belongs in Git commits and pull requests, not in this file.
+> This file describes current cleanup work only. Historical work belongs in Git commits and pull requests.
 
 ## Current task
 
 | Field | Value |
 |---|---|
-| Task | CLEANUP-003 — Remove verified repository waste |
-| Status | blocked — requires full checkout validation |
+| Task | CLEANUP-007 — Verify the next unreachable source group |
+| Status | ready |
 | Branch | `agent/codebase-cleanup-foundation` |
-| Goal | Remove only candidates proven unused by repository-wide analysis and passing checks |
+| Goal | Continue verified dead-code removal one tightly related group at a time |
 
 ## Completed in this branch
 
 ### CLEANUP-001 — Cleanup foundation
 
-- Disabled automatic backlog generation.
-- Disabled automatic commits and pushes from the refill script.
-- Replaced historical agent journals with concise current-work files.
-- Required branches, reviewed pull requests, staged cleanup, and verified deletion.
+- Disabled automatic backlog generation, commits, and direct pushes.
+- Replaced oversized agent journals with concise current/open-work files.
+- Required branches, pull-request review, staged cleanup, and verified deletion.
 
 ### CLEANUP-002 — Inventory foundation
 
 - Added `npm run inventory` with no new dependency.
-- The inventory reports unreachable source candidates, files over 500 lines, and possibly unused packages.
-- Added `reports/codebase-cleanup-inventory.md` with evidence, classifications, and deletion gates.
-- Checked the inventory script with `node --check` and tested its static, dynamic, side-effect, and CSS import patterns outside the repository checkout.
-- Kept all deletion candidates in review status; no source file has been deleted.
+- Added reproducible reporting for unreachable source, files over 500 lines, and package candidates.
+- Added a durable evidence report and ignored generated reports.
+
+### CLEANUP-003 — First verified source deletion
+
+- Ran the cleanup workflow on a complete GitHub Actions checkout.
+- Installed dependencies from the lockfile without lifecycle scripts.
+- Generated and downloaded the cleanup inventory artifact.
+- Verified `src/app/actions/unit-content.ts` had no runtime import or caller.
+- Removed the unused action without altering its historical migration or generated DB types.
+- Reran inventory, TypeScript, ESLint, and unit tests successfully after deletion.
+- Confirmed source count changed 356 → 355 and unreachable candidates changed 17 → 16.
 
 ### CLEANUP-005 — Documentation source of truth
 
-- Removed manually maintained test totals from README.
-- Documented the current 50-unit curriculum.
-- Removed the stale partial database table list and pointed to migrations and generated types.
-- Documented `UnitTemplate.tsx` as active architecture debt rather than presenting it as a normal small component.
-- Documented cleanup, validation, CI, and deployment sources without guessing current runtime state.
+- Removed hard-coded test totals and stale partial database documentation.
+- Documented the current 50-unit curriculum and active architecture debt.
+- Updated the inventory evidence with the first verified deletion.
 
-## Validation completed
+## Baseline now established
 
-- `node --check` passed for `scripts/inventory-codebase.mjs`.
-- `bash -n` passed for the mutation-free refill-script implementation.
-- Reviewed the changed documentation and package command through the GitHub branch.
-
-## Remaining blocker
-
-The GitHub connector can edit and review repository files but does not provide a complete executable checkout. Therefore these repository-level commands have not been run on this branch:
+The current branch has a successful full-checkout validation run covering:
 
 ```bash
-npm run inventory
+npm ci --ignore-scripts --legacy-peer-deps
+npm run inventory -- --write
 npx tsc --noEmit
 npm run lint
 npm run test
 ```
 
-No source or dependency candidate should be deleted until those commands run in a full checkout and the generated inventory is manually reviewed.
-
 ## Next action
 
-Run the repository-level validation commands on `agent/codebase-cleanup-foundation`. If they pass, CLEANUP-003 may delete the first verified candidate in a dedicated commit.
+Verify the rollback-era minimal dashboard and lesson-shell candidates with symbol/path searches. Remove only candidates with no framework, import, script, or runtime references, then rerun the same validation gates.
