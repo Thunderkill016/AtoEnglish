@@ -1,136 +1,160 @@
 # AtoEnglish 🇻🇳→🇬🇧
 
-> **Học tiếng Anh chuẩn phát âm — dành cho người Việt**
+> Học tiếng Anh và luyện phản xạ nói dành cho người Việt.
 
-[![Tests](https://img.shields.io/badge/tests-159%20passed-brightgreen)](/)
-CI: local daemon + GitLab (`.gitlab-ci.yml`)
 [![Live](https://img.shields.io/badge/live-atoenglish.vercel.app-emerald)](https://atoenglish.vercel.app)
 
-AtoEnglish là web app học tiếng Anh hướng đến người Việt — tập trung vào **phản xạ nói**, **phát âm chuẩn** và **ghi nhớ từ vựng lâu dài** qua thuật toán SRS.
+AtoEnglish is a Vietnamese-first English-learning web application focused on structured lessons, speaking practice, pronunciation feedback, vocabulary review, and learning progress.
 
-## ✨ Tính năng
+## Current stack
 
-| Tính năng | Mô tả |
-|---|---|
-| 🎯 **Lộ trình CEFR** | A1 → B2 theo chuẩn châu Âu, có roadmap trực quan |
-| 🗣️ **Shadowing Practice** | Luyện phát âm theo giọng native với Web Speech API |
-| 🤖 **AI Roleplay** | Hội thoại thực tế với AI (Context-aware scenarios) |
-| 📓 **Daily Journal** | Viết nhật ký và nhận feedback phát âm |
-| 🃏 **Flashcards SRS** | Ôn tập thông minh với thuật toán FSRS v6.0 |
-| 🏆 **XP & Streak** | Gamification: kinh nghiệm, chuỗi học, thành tích |
-| 🔔 **Push Notifications** | Nhắc nhở học hàng ngày qua Web Push (VAPID) |
-| 📊 **Progress Dashboard** | Biểu đồ XP tuần, thống kê SRS, CEFR level |
+- Next.js 16 with App Router
+- React 19 and TypeScript 6
+- Tailwind CSS v4 and Framer Motion
+- Supabase Auth and PostgreSQL
+- FSRS scheduling through `ts-fsrs`
+- Vitest and Playwright
+- Sentry, Vercel Analytics, and Speed Insights
+- Upstash Redis rate limiting
 
-## 🛠 Tech Stack
+Exact versions are defined in `package.json` and `package-lock.json`.
 
-- **Framework**: Next.js 16 (App Router, Turbopack)
-- **Language**: TypeScript 6 (strict mode)
-- **Styling**: TailwindCSS v4 + Framer Motion
-- **Backend**: Supabase (PostgreSQL + Auth + Edge Functions)
-- **SRS Algorithm**: [ts-fsrs](https://github.com/open-spaced-repetition/ts-fsrs) v6.0
-- **Testing**: Vitest (unit) + Playwright (E2E)
-- **Monitoring**: Sentry + Vercel Analytics + Speed Insights
-- **Security**: Upstash Redis rate limiting, CSP headers, HSTS
+## Main product areas
 
-## 🚀 Quick Start
+- CEFR-oriented roadmap from A0 foundation through B2
+- 50 lesson units stored as TypeScript curriculum data
+- vocabulary, grammar, dialogue, translation, shadowing, speaking, and quiz sections
+- speaking practice with Vietnamese-specific feedback
+- FSRS flashcard review
+- XP, streak, progress, and league features
+- guest progress through browser storage where supported
+- Supabase-backed progress for authenticated users
+
+## Quick start
 
 ```bash
-# 1. Clone
 git clone https://github.com/Thunderkill016/AtoEnglish.git
 cd AtoEnglish
-
-# 2. Install
 npm install
-
-# 3. Setup env
 cp .env.example .env.local
-# → Fill in NEXT_PUBLIC_SUPABASE_URL + NEXT_PUBLIC_SUPABASE_ANON_KEY
-
-# 4. Run
 npm run dev
-# → http://localhost:3000
 ```
 
-## 🔧 Environment Variables
+The development server normally runs at `http://localhost:3000`.
 
-| Variable | Required | Description |
-|---|---|---|
-| `NEXT_PUBLIC_SUPABASE_URL` | ✅ | Supabase project URL |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | ✅ | Supabase anon/public key |
-| `UPSTASH_REDIS_REST_URL` | Production | Rate limiting (Upstash) |
-| `UPSTASH_REDIS_REST_TOKEN` | Production | Rate limiting token |
-| `NEXT_PUBLIC_SENTRY_DSN` | Production | Error monitoring |
-| `NEXT_PUBLIC_VAPID_PUBLIC_KEY` | Push notifications | VAPID public key |
-| `VAPID_PRIVATE_KEY` | Push notifications | VAPID private key |
-| `VAPID_SUBJECT` | Push notifications | `mailto:your@email.com` |
+## Environment
 
-Generate VAPID keys: `npx web-push generate-vapid-keys`
+At minimum, local authenticated flows require:
 
-## 🧪 Testing
+```text
+NEXT_PUBLIC_SUPABASE_URL
+NEXT_PUBLIC_SUPABASE_ANON_KEY
+```
+
+Optional production integrations use variables for Upstash, Sentry, VAPID push notifications, Resend, and deployment tooling. Use `.env.example` and the relevant integration code as the source of truth. Never commit `.env.local` or secrets.
+
+## Commands
 
 ```bash
-npm run test          # Unit tests (Vitest) — 151 tests
-npm run test:integration  # Supabase integration tests
-npm run audio:generate -- unit-a0-1  # Generate native MP3 for a unit
-npm run audio:generate:a0           # Regenerate all A0 foundation audio
-npm run audio:generate:all          # Run a0+a1+a2+b1+b2 (all 50 units)
-npm run audio:generate:list         # Dry-run: list all 50 unit folders (for verify)
-npm run test:watch    # Watch mode
-npm run test:coverage # Coverage report
-
-npm run e2e           # E2E tests (Playwright)
-npm run e2e:ui        # Playwright UI mode
+npm run dev                    # development server
+npx tsc --noEmit               # TypeScript validation
+npm run lint                   # ESLint
+npm run test                   # unit tests
+npm run test:content-standard  # curriculum content gate
+npm run test:integration       # Supabase integration tests; requires environment
+npm run e2e                    # Playwright; requires environment and app runtime
+npm run build                  # production compilation check
+npm run audit                  # project-specific static checks
+npm run inventory              # conservative cleanup inventory; no file deletion
+npm run inventory -- --write   # write generated inventory report
 ```
 
-## 📁 Project Structure
+Test totals are intentionally not written into this README because they change as the suite evolves. The test runner and CI output are the source of truth.
 
-```
+## Project structure
+
+```text
 src/
 ├── app/
-│   ├── page.tsx              # Landing page (Server Component)
-│   ├── login/page.tsx        # Auth + onboarding quiz (5 bước)
-│   ├── auth/callback/        # OAuth redirect handler
-│   └── (main)/               # Protected routes (middleware-guarded)
-│       ├── dashboard/        # Dashboard với XP, streak, current unit
-│       ├── learn/            # Học bài — 5 units (A1→B1)
-│       ├── flashcards/       # SRS flashcard review (FSRS v6.0)
-│       ├── speaking/         # Shadowing / AI Roleplay / Journal
-│       ├── progress/         # Thống kê tuần, SRS heatmap
-│       └── roadmap/          # CEFR roadmap trực quan
+│   ├── page.tsx
+│   ├── login/
+│   ├── auth/
+│   ├── actions/
+│   └── (main)/
+│       ├── dashboard/
+│       ├── learn/[unitSlug]/
+│       ├── flashcards/
+│       ├── speaking/
+│       ├── progress/
+│       └── roadmap/
 ├── components/
-│   ├── landing/              # Hero, Problem, Outcomes, FAQ, ProductPreview
-│   ├── layout/               # Header, BottomNav, UserAvatar
-│   └── learn/                # UnitTemplate (1600+ lines)
-├── features/flashcards/      # FSRS scheduling logic
+│   ├── landing/
+│   ├── layout/
+│   ├── learn/
+│   └── ui/
+├── features/
 ├── lib/
-│   ├── supabase/             # Client, Server, Middleware clients
-│   ├── security/             # Rate limiting, Zod validation
-│   └── data/units/           # Lesson content (unit1-5.ts)
-└── types/                    # TypeScript type definitions
+│   ├── data/units/
+│   ├── lessons/
+│   ├── security/
+│   ├── srs/
+│   └── supabase/
+├── types/
+└── proxy.ts
 ```
 
-## 🗄 Database Schema (Supabase)
+### Known architecture debt
 
-| Table | Purpose |
-|---|---|
-| `user_progress` | CEFR level, XP, streak per user |
-| `user_lesson_progress` | Completed units + XP earned |
-| `cards` | SRS flashcard data (FSRS state) |
-| `user_flashcard_progress` | Session stats, daily streak |
-| `user_flashcard_progress` | Session history |
+`src/components/learn/UnitTemplate.tsx` is active and central to the lesson experience, but it currently owns too many responsibilities. It must be split gradually with behavior-preserving commits and passing lesson checks; it must not be rewritten or deleted in one change.
 
-All tables use RLS with `auth.uid() = user_id` policy.
+The cleanup inventory and evidence are documented in `reports/codebase-cleanup-inventory.md`.
 
-## 🚢 Deployment
+## Curriculum source of truth
 
-Auto-deploy qua Vercel khi push lên `main`:
+The active lesson route imports the A0–B2 unit data from `src/lib/data/units/` and registers it for `/learn/[unitSlug]`.
+
+When editing curriculum data:
+
+1. follow `CONTENT_STYLE.md`
+2. preserve the lesson blueprint and learning-flow order
+3. run `npm run test:content-standard`
+4. run `bash scripts/audit-lesson-content.sh`
+
+## Database source of truth
+
+Do not maintain a partial table list in this README. The authoritative sources are:
+
+- `supabase/migrations/`
+- generated database types in `src/types/supabase.ts`
+- server actions and queries under `src/app/actions/` and `src/lib/`
+
+All schema changes must be made through migrations. Regenerate types with:
 
 ```bash
-git push origin main  # → auto deploy to atoenglish.vercel.app
+npm run db:types
 ```
 
-CI: **local** `ci-local.sh` + **GitLab** `.gitlab-ci.yml` + **Vercel** build
+Never disable RLS to work around an application bug.
 
-## 📄 License
+## Cleanup policy
+
+- Use a dedicated branch and reviewed pull request.
+- Do not push automated cleanup directly to `main`.
+- Do not create commits only to record successful checks.
+- Do not remove a file or dependency from an import-only guess.
+- Verify framework conventions, dynamic imports, scripts, config, migrations, and operational usage.
+- Delete one candidate or one tightly related group per commit.
+- Run typecheck, lint, tests, and the relevant smoke/E2E checks after each source cleanup.
+
+## Deployment and CI
+
+The repository contains local CI scripts, GitLab CI configuration, Vercel deployment checks, and Git push helper scripts. Deployment behavior depends on the configured repository remotes and environment. Treat these executable files as the source of truth rather than duplicating their implementation details here:
+
+- `scripts/ci-local.sh`
+- `.gitlab-ci.yml`
+- `scripts/check-vercel-deploy.sh`
+- `scripts/git-push.sh`
+
+## License
 
 Private project — © 2026 AtoEnglish

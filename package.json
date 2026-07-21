@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "eslint .",
     "audit": "node scripts/audit-code.mjs",
+    "inventory": "node scripts/inventory-codebase.mjs",
     "test": "vitest run --exclude src/__tests__/lesson-content-standard.test.ts",
     "test:content-standard": "vitest run src/__tests__/lesson-content-standard.test.ts",
     "test:watch": "vitest",
