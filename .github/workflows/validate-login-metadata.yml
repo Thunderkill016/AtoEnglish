@@ -52,12 +52,39 @@ jobs:
           echo $! > /tmp/atoenglish.pid
           npx wait-on http-get://127.0.0.1:3000/login --timeout 60000
 
+      - name: Capture login HTML
+        run: |
+          curl --fail --silent --show-error http://127.0.0.1:3000/login > /tmp/login.html
+          grep -o '<title[^>]*>[^<]*</title>' /tmp/login.html || true
+
       - name: Protected-route production E2E
-        run: PLAYWRIGHT_BASE_URL=http://127.0.0.1:3000 npx playwright test e2e/protected-routes.spec.ts --project=chromium
+        run: |
+          set +e
+          PLAYWRIGHT_BASE_URL=http://127.0.0.1:3000 npx playwright test e2e/protected-routes.spec.ts --project=chromium 2>&1 | tee /tmp/protected-routes.log
+          echo "${PIPESTATUS[0]}" > /tmp/protected-routes.exit
+          exit 0
 
       - name: Lesson production smoke E2E
-        run: PLAYWRIGHT_BASE_URL=http://127.0.0.1:3000 npx playwright test e2e/lesson-smoke.spec.ts
+        run: |
+          set +e
+          PLAYWRIGHT_BASE_URL=http://127.0.0.1:3000 npx playwright test e2e/lesson-smoke.spec.ts 2>&1 | tee /tmp/lesson-smoke.log
+          echo "${PIPESTATUS[0]}" > /tmp/lesson-smoke.exit
+          exit 0
 
-      - name: Show server log on failure
-        if: failure()
-        run: cat /tmp/atoenglish.log || true
+      - name: Upload diagnostic evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: login-metadata-validation
+          path: |
+            /tmp/login.html
+            /tmp/protected-routes.log
+            /tmp/protected-routes.exit
+            /tmp/lesson-smoke.log
+            /tmp/lesson-smoke.exit
+            /tmp/atoenglish.log
+
+      - name: Enforce browser results
+        run: |
+          test "$(cat /tmp/protected-routes.exit)" = "0"
+          test "$(cat /tmp/lesson-smoke.exit)" = "0"
