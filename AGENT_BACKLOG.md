@@ -22,16 +22,20 @@
 
 ### CLEANUP-016 — Add lesson smoke/E2E prerequisite
 - **Status:** `done` — awaiting stacked PR review.
-- **Result:** Six Playwright tests now cover guest lesson render, warmup-to-vocabulary navigation, quick-review-to-practice navigation, and section persistence on Desktop Chromium and Mobile Chrome against a production Next.js server.
+- **Result:** Six Playwright tests cover guest lesson render, warmup-to-vocabulary navigation, quick-review-to-practice navigation, and section persistence on Desktop Chromium and Mobile Chrome against a production server.
 
-### CLEANUP-004B — Extract UnitTemplate stateless helpers
+### CLEANUP-004B — Extract UnitTemplate stateless presentation helpers
+- **Status:** `done` — awaiting stacked PR review.
+- **Result:** Extracted `LessonProgress` and `SessionBreakCard`, added focused component tests, reduced `UnitTemplate` from 1,182 to 1,069 lines, and passed full CI plus six production-server smoke tests.
+
+### CLEANUP-017 — Expand lesson progress persistence coverage
 - **Status:** `ready`
-- **Goal:** Extract only small stateless presentation helpers in separate reviewable commits without moving orchestration state or behavior-sensitive logic.
-- **Done when:** Component tests, the six production-server lesson smoke tests, typecheck, focused/full lint, full unit tests, content-standard tests, and production build all pass.
+- **Goal:** Add focused tests for malformed saved JSON, invalid section numbers, per-unit storage-key isolation, and final-section cleanup without changing production behavior.
+- **Done when:** New persistence tests, existing UnitTemplate/component tests, six production-server lesson smoke tests, typecheck, lint, full unit tests, content-standard tests, and production build pass.
 
 ### CLEANUP-004C — Extract UnitTemplate progress persistence
 - **Status:** `blocked`
-- **Blocked by:** Additional persistence-focused tests beyond the current restore/clear and smoke coverage.
+- **Blocked by:** CLEANUP-017 persistence-focused test matrix.
 - **Goal:** Move lesson-progress localStorage behavior into a dedicated hook without changing storage keys or section semantics.
 
 ### CLEANUP-015 — Review unit action transaction boundaries

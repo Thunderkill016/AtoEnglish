@@ -160,12 +160,49 @@ Validation results:
 
 No production source, lesson content, section order, localStorage key, scoring, XP, completion, database action, FSRS behavior, auth policy, route, package, or UI copy changed.
 
+### UnitTemplate stateless presentation extraction
+
+Added:
+
+- `src/components/learn/lesson-ui/LessonProgress.tsx`
+- `src/components/learn/lesson-ui/SessionBreakCard.tsx`
+- `src/components/learn/lesson-ui/lesson-presentation.test.tsx`
+
+`UnitTemplate.tsx` now delegates the exact ten-step progress display and the mid-lesson session-break card to dedicated components. Both helpers are presentation-only: they receive derived position or callbacks through props and own no lesson orchestration state.
+
+Preserved exactly:
+
+- non-linear section order and progressbar labels
+- progress percentages and completed/current/upcoming visual states
+- session-break copy, motion props, dashboard link, and continue callback
+- section navigation, localStorage behavior, scoring, XP, completion, database actions, FSRS, auth, routes, lesson content, and UI behavior
+
+Focused diff and size results:
+
+- `UnitTemplate.tsx` diff: `+4/-117`
+- `UnitTemplate.tsx` size: 1,182 → 1,069 lines
+- source files scanned: 344 → 347
+- known entry points: 121 → 122
+- unreachable candidates remained 0
+
+Validation results:
+
+- 8 targeted tests passed: 4 orchestration, 2 exact constants, and 2 presentation-helper tests
+- 6 production-server Playwright smoke tests passed on Desktop Chromium and Mobile Chrome
+- TypeScript passed
+- focused and full ESLint passed
+- full unit tests passed
+- lesson content-standard tests passed
+- production build passed
+
+No sticky-header interaction, completion overlay, `XpCounter`, video shadowing, orchestration state, persistence, scoring, completion transaction, server action, or section-rendering branch moved.
+
 Temporary GitHub Actions workflows used for full-checkout verification are removed after their successful run so they do not consume future Actions minutes.
 
 ## Current inventory summary
 
-- Source files scanned: 344
-- Known entry points: 121
+- Source files scanned: 347
+- Known entry points: 122
 - Unreachable candidates: 0
 - Files with at least 500 lines: 32
 - Conservative dependency warnings: 6 runtime/tooling and 1 type package
@@ -184,17 +221,18 @@ This does not mean the repository has no architecture debt. Large active compone
 
 Classification: **active, oversized, high-priority refactor — never delete**
 
-Current generated size: 1,182 lines. It still owns orchestration state, browser persistence, audio, server-action coordination, scoring, completion logic, and celebration UI.
+Current generated size: 1,069 lines. It still owns orchestration state, browser persistence, audio, server-action coordination, scoring, completion logic, celebration UI, and the remaining stateful helper components.
 
 Safe refactor order:
 
 1. Focused lesson behavior coverage — complete.
 2. Extract lesson types and section constants — complete.
 3. Add production-server lesson smoke/E2E coverage — complete.
-4. Extract stateless helper components.
-5. Extract local-storage hooks after persistence-specific coverage.
-6. Extract completion logic after server-action and achievement coverage.
-7. Replace related state groups with a reducer only after each state transition is covered.
+4. Extract first stateless presentation helpers — complete.
+5. Expand persistence-specific coverage.
+6. Extract local-storage hooks only after the persistence test matrix passes.
+7. Extract completion logic after server-action and achievement coverage.
+8. Replace related state groups with a reducer only after each state transition is covered.
 
 ### `src/app/actions/unit.ts`
 
@@ -217,4 +255,4 @@ A source file can be deleted only when all applicable checks pass:
 
 ## Next cleanup work
 
-CLEANUP-004B — extract only small stateless presentation helpers from `UnitTemplate` in a reversible batch. Keep orchestration state, persistence, scoring, completion, server actions, and section rendering branches in place. Rerun component tests, the six production-server lesson smoke tests, typecheck, focused/full lint, full unit tests, content-standard tests, and production build.
+CLEANUP-017 — expand focused lesson-progress persistence coverage for malformed JSON, invalid section numbers, per-unit key isolation, and final-section cleanup. Do not move localStorage behavior into a hook until this test matrix and the six production-server lesson smoke tests pass.
