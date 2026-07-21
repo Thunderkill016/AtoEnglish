@@ -1,0 +1,14 @@
+name: Pilot alignment sync
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Trigger pilot alignment validation"
