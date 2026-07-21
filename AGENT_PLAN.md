@@ -6,62 +6,59 @@
 
 | Field | Value |
 |---|---|
-| Task | CLEANUP-012B — Verify Supabase middleware helper |
+| Task | CLEANUP-013 — Reconcile protected-route E2E drift |
 | Status | done — awaiting stacked PR review |
-| Branch | `agent/cleanup-unused-supabase-middleware` |
-| Goal | Remove the obsolete helper while preserving the active proxy/session authentication boundary |
+| Branch | `agent/cleanup-protected-routes-e2e` |
+| Goal | Align route-policy E2E coverage with intentional guest self-study behavior without changing production authentication |
 
 ## Completed in earlier cleanup batches
 
 - Stopped automatic maintenance-task generation, commits, and direct pushes.
 - Added reproducible codebase inventory and durable cleanup evidence.
-- Removed foundation dead code, the disconnected notification center, legacy exercise components, the old landing outcomes section, unused shared UI, the legacy type barrel, and the retired lesson enrichment fallback.
+- Reduced conservative unreachable source candidates from 17 to 0.
+- Added focused Supabase session regression coverage while removing the obsolete middleware helper.
 
-## Completed in CLEANUP-012B
+## Completed in CLEANUP-013
 
-Removed after full-checkout and behavior-aware verification:
+Updated only:
 
-- `src/lib/supabase/middleware.ts`
+- `e2e/protected-routes.spec.ts`
 
-Added permanent regression coverage:
+Corrections:
 
-- `src/lib/supabase/session.test.ts`
-
-Evidence:
-
-- `createMiddlewareClient` and the old module path had no consumer.
-- `src/proxy.ts` is the only framework convention entry and imports `updateSession` from `src/lib/supabase/session.ts`.
-- `session.ts` owns cookie refresh, missing-environment fallback, public-route bypass, protected-route redirects, authenticated login redirects, and authenticated protected pass-through.
-- Focused tests cover all of those behaviors.
-- No protected-route list, redirect destination, cookie semantics, rate limit, environment variable, dependency, database, or Supabase schema changed.
+- Removed `/dashboard`, `/learn/*`, `/flashcards`, and `/speaking` from protected-route expectations because `session.ts` intentionally allows guest self-study there.
+- Added missing protected-route coverage for `/certificate` and `/checkpoint`.
+- Corrected the invalid A0 slug from `/learn/unit-a01` to `/learn/unit-a0-1`.
+- Added explicit guest-route assertions requiring HTTP 200 and no redirect to `/login`.
+- Strengthened protected redirects to verify `/login`, the original `next` path, and `mode=login`.
+- Kept `src/proxy.ts`, `src/lib/supabase/session.ts`, route policy, cookies, redirects, and production pages unchanged.
 
 ## Validation completed
 
-A full GitHub Actions checkout ran before and after deletion:
+A full GitHub Actions checkout ran against a production Next.js server:
 
 ```bash
 npm ci --ignore-scripts --legacy-peer-deps
-npm run inventory -- --write
-npx vitest run src/lib/supabase/session.test.ts
+npx playwright install --with-deps chromium
 npx tsc --noEmit
 npm run lint
 npm run test
 npm run build
+npm run start
+npx playwright test e2e/protected-routes.spec.ts --project=chromium
 ```
 
-Post-deletion results:
+Results:
 
-- source files scanned: 341 → 340
-- known entry points: 118 → 119
-- unreachable candidates: 1 → 0
-- targeted session tests passed
-- TypeScript passed
-- ESLint passed
-- full unit tests passed
-- production build passed
+- TypeScript passed.
+- ESLint passed.
+- Full unit tests passed.
+- Production build passed.
+- Production server startup passed.
+- All 26 targeted Chromium route, landing, and health-check E2E tests passed.
 
 The temporary validation workflow was removed after the final successful run.
 
 ## Next action
 
-CLEANUP-013 — reconcile `e2e/protected-routes.spec.ts` with the intentional guest-route policy in `session.ts`. Keep that behavior/test correction separate from this dead-code cleanup.
+CLEANUP-006 — classify suspected unused or misplaced dependencies in small, independently validated groups. Do not remove packages from import-only evidence.

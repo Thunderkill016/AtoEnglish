@@ -20,17 +20,12 @@
 
 ## Active queue
 
-### CLEANUP-013 — Reconcile protected-route E2E drift
+### CLEANUP-006 — Dependency classification
 - **Status:** `ready`
-- **Goal:** Align `e2e/protected-routes.spec.ts` with the intentional guest-route policy in `src/lib/supabase/session.ts` without changing production authentication behavior.
-- **Done when:** The source of truth is explicit, stale protected-route expectations are corrected, public/guest/protected coverage is preserved, and targeted E2E or equivalent route-policy validation passes.
+- **Goal:** Classify every suspected unused or misplaced package before changing `package.json` or the lockfile.
+- **Done when:** Each candidate is checked against imports, configuration, scripts, CLIs, generated tooling, clean install, typecheck, lint, unit tests, production build, and any area-specific validation.
 
 ### CLEANUP-004 — Split UnitTemplate safely
 - **Status:** `blocked`
 - **Blocked by:** Focused lesson behavior coverage plus relevant lesson smoke/E2E validation.
 - **Goal:** Extract types, constants, small components, storage hooks, and completion logic in separate reviewable batches.
-
-### CLEANUP-006 — Dependency classification
-- **Status:** `blocked`
-- **Blocked by:** Repository-wide config/script review and install/build verification for each package group.
-- **Goal:** Classify every suspected unused or misplaced package before changing `package.json` or the lockfile.
