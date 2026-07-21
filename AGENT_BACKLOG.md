@@ -20,10 +20,10 @@
 
 ## Active queue
 
-### CLEANUP-011 — Verify unused shared UI primitives
+### CLEANUP-012C — Verify legacy type barrel
 - **Status:** `ready`
-- **Goal:** Classify `src/components/layout/user-avatar.tsx` and `src/components/ui/logo.tsx` independently in one presentational-UI batch.
-- **Done when:** Exact symbol/path and export usage are verified; only proven-unused files are removed; inventory, typecheck, lint, and tests pass afterward.
+- **Goal:** Determine whether `src/types/index.ts` has any exact barrel consumer before removal.
+- **Done when:** Direct imports from `@/types`, relative barrel imports, scripts, tests, and generated-code references are checked; typecheck, lint, and tests pass afterward.
 
 ### CLEANUP-012A — Verify lesson enrichment helper
 - **Status:** `blocked`
@@ -34,11 +34,6 @@
 - **Status:** `blocked`
 - **Blocked by:** Full review of `src/proxy.ts`, `src/lib/supabase/session.ts`, auth refresh behavior, and framework conventions.
 - **Goal:** Classify `src/lib/supabase/middleware.ts` without risking session refresh or protected-route behavior.
-
-### CLEANUP-012C — Verify legacy type barrel
-- **Status:** `blocked`
-- **Blocked by:** Repository-wide type import search.
-- **Goal:** Determine whether `src/types/index.ts` has any consumer before removal.
 
 ### CLEANUP-004 — Split UnitTemplate safely
 - **Status:** `blocked`
