@@ -38,18 +38,28 @@ jobs:
       - name: Generate cleanup inventory
         run: npm run inventory -- --write
 
-      - name: Verify first deletion candidate
+      - name: Verify next cleanup candidates
         shell: bash
         run: |
           {
-            echo "# unit-content.ts repository verification"
-            echo
-            echo "## References excluding the candidate file"
-            git grep -n -E 'seedUnitContent|getUnitContent|unit-content|unit_content' -- . ':(exclude)src/app/actions/unit-content.ts' || true
-            echo
-            echo "## Direct import-path references excluding the candidate file"
-            git grep -n -E '@/app/actions/unit-content|app/actions/unit-content' -- . ':(exclude)src/app/actions/unit-content.ts' || true
-          } > reports/unit-content-verification.txt
+            echo "# Cleanup candidate repository verification"
+            for entry in \
+              'src/app/(main)/dashboard/components/DashboardMinimalClient.tsx|DashboardMinimalClient|dashboard/components/DashboardMinimalClient' \
+              'src/components/learn/lesson-ui/LessonHeader.tsx|LessonHeader|learn/lesson-ui/LessonHeader' \
+              'src/components/learn/lesson-ui/LessonShell.tsx|LessonShell|learn/lesson-ui/LessonShell'
+            do
+              IFS='|' read -r file symbol import_path <<< "$entry"
+              echo
+              echo "## $file"
+              echo "### Symbol and path references excluding candidate"
+              git grep -n -E "$symbol|$import_path" -- . \
+                ":(exclude)$file" \
+                ':(exclude).github/workflows/cleanup-validation.yml' \
+                ':(exclude)reports/**' \
+                ':(exclude)AGENT_BACKLOG.md' \
+                ':(exclude)AGENT_PLAN.md' || true
+            done
+          } > reports/cleanup-candidate-verification.txt
 
       - name: Upload cleanup evidence
         uses: actions/upload-artifact@v4
@@ -57,7 +67,8 @@ jobs:
           name: cleanup-evidence
           path: |
             reports/codebase-inventory.generated.md
-            reports/unit-content-verification.txt
+            reports/cleanup-candidate-verification.txt
+            scripts/audit-code.mjs
           if-no-files-found: error
 
       - name: Typecheck
