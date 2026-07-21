@@ -21,18 +21,17 @@
 ## Active queue
 
 ### CLEANUP-016 — Add lesson smoke/E2E prerequisite
-- **Status:** `ready`
-- **Goal:** Verify a real lesson route on a production Next.js server before extracting stateless presentation helpers.
-- **Done when:** A focused Playwright or smoke flow confirms the lesson renders, section progress remains usable, quick-review reaches Quiz, and the test passes with production build output.
+- **Status:** `done` — awaiting stacked PR review.
+- **Result:** Six Playwright tests now cover guest lesson render, warmup-to-vocabulary navigation, quick-review-to-practice navigation, and section persistence on Desktop Chromium and Mobile Chrome against a production Next.js server.
 
 ### CLEANUP-004B — Extract UnitTemplate stateless helpers
-- **Status:** `blocked`
-- **Blocked by:** CLEANUP-016 lesson smoke/E2E coverage.
-- **Goal:** Extract small stateless presentation helpers in separate reviewable commits without moving orchestration state or behavior-sensitive logic.
+- **Status:** `ready`
+- **Goal:** Extract only small stateless presentation helpers in separate reviewable commits without moving orchestration state or behavior-sensitive logic.
+- **Done when:** Component tests, the six production-server lesson smoke tests, typecheck, focused/full lint, full unit tests, content-standard tests, and production build all pass.
 
 ### CLEANUP-004C — Extract UnitTemplate progress persistence
 - **Status:** `blocked`
-- **Blocked by:** Additional persistence-focused tests beyond the current restore/clear coverage.
+- **Blocked by:** Additional persistence-focused tests beyond the current restore/clear and smoke coverage.
 - **Goal:** Move lesson-progress localStorage behavior into a dedicated hook without changing storage keys or section semantics.
 
 ### CLEANUP-015 — Review unit action transaction boundaries
