@@ -6,47 +6,54 @@
 
 | Field | Value |
 |---|---|
-| Task | CLEANUP-014 — Add focused UnitTemplate behavior coverage |
+| Task | CLEANUP-004A — Extract UnitTemplate lesson types and constants |
 | Status | done — awaiting stacked PR review |
-| Branch | `agent/unit-template-test-foundation` |
-| Goal | Lock current lesson orchestration behavior before the first reversible `UnitTemplate` extraction |
+| Branch | `agent/unit-template-types-and-constants` |
+| Goal | Move lesson-domain interfaces and section constants out of `UnitTemplate` without changing runtime behavior or breaking existing imports |
 
 ## Completed in earlier cleanup batches
 
 - Stopped automatic maintenance-task generation, commits, and direct pushes.
 - Added reproducible source and dependency inventory plus durable cleanup evidence.
 - Reduced conservative unreachable source candidates from 17 to 0.
-- Added focused Supabase session regression coverage while removing the obsolete middleware helper.
+- Added Supabase session regression coverage while removing the obsolete middleware helper.
 - Reconciled protected-route E2E coverage with intentional guest self-study behavior.
 - Removed proven dependency waste and classified retained framework/tooling false positives.
+- Added four focused UnitTemplate orchestration tests.
 
-## Completed in CLEANUP-014
+## Completed in CLEANUP-004A
 
-Added durable component-level coverage:
+Added dedicated modules:
 
-- `src/components/learn/UnitTemplate.test.tsx`
+- `src/components/learn/lesson-types.ts`
+- `src/components/learn/lesson-sections.ts`
+- `src/components/learn/lesson-sections.test.ts`
 
-The four focused tests lock these orchestration behaviors:
+Updated `src/components/learn/UnitTemplate.tsx` to:
 
-1. Saved lesson progress restores the correct section using the non-linear pedagogical order.
-2. `dialogues_list` is normalized and preferred before data reaches `DialogueSection`.
-3. Quick-review mode jumps from Practice directly to Quiz, persists section 4, and clears saved progress at the final section.
-4. Guest completion preserves the `completeUnit(unitId, starCount)` action contract, records the unit locally, and uses the configured next route.
+- import lesson-domain interfaces from `lesson-types.ts`
+- import section labels, order, total, and `SectionNumber` from `lesson-sections.ts`
+- re-export every previously public lesson type so existing imports remain compatible
+- keep `UnitTemplateProps` and completion-only state local
 
-The test isolates child sections, server actions, animations, streak UI, and browser-only APIs. It uses React DOM directly and adds no package dependency.
+Preserved exactly:
 
-No production source file, lesson content, section order, scoring formula, completion transaction, database action, FSRS behavior, route, or UI copy changed.
+- section order `[1, 2, 3, 4, 5, 10, 9, 6, 7, 8]`
+- all ten Vietnamese section labels
+- scoring, XP, completion, localStorage, audio, FSRS, lesson content, routing, and rendering behavior
+
+The focused `UnitTemplate` diff is `+47/-213`. The component decreased from 1,348 to 1,182 lines without moving orchestration or behavior-sensitive logic.
 
 ## Validation completed
 
-A full GitHub Actions checkout ran:
+A clean committed checkout ran:
 
 ```bash
 npm ci --ignore-scripts --legacy-peer-deps
-npx vitest run src/components/learn/UnitTemplate.test.tsx
+npx vitest run src/components/learn/UnitTemplate.test.tsx src/components/learn/lesson-sections.test.ts
 npm run inventory -- --write
 npx tsc --noEmit
-npx eslint src/components/learn/UnitTemplate.test.tsx
+npx eslint src/components/learn/UnitTemplate.tsx src/components/learn/UnitTemplate.test.tsx src/components/learn/lesson-types.ts src/components/learn/lesson-sections.ts src/components/learn/lesson-sections.test.ts
 npm run lint
 npm run test
 npm run test:content-standard
@@ -55,11 +62,11 @@ npm run build
 
 Results:
 
-- 4 targeted UnitTemplate tests passed
-- source files scanned: 340 → 341 because one durable test file was added
-- known entry points: 119 → 120
+- 6 targeted tests passed: 4 orchestration tests plus 2 exact constants tests
+- source files scanned: 341 → 344
+- known entry points: 120 → 121
 - unreachable candidates remained 0
-- TypeScript passed
+- TypeScript passed across all existing `UnitTemplate` type consumers
 - focused and full ESLint passed
 - full unit tests passed
 - lesson content-standard tests passed
@@ -69,4 +76,4 @@ The temporary validation workflow was removed after the final successful run.
 
 ## Next action
 
-CLEANUP-004A — extract lesson-domain types and section constants from `UnitTemplate` in one reversible batch. Preserve existing type imports through re-exports, keep section values/order identical, and rerun the four focused tests plus full validation.
+CLEANUP-016 — run or strengthen a production-server lesson smoke/E2E flow before extracting stateless presentation helpers. The smoke coverage must verify a real lesson route renders, the section order remains usable, and quick-review reaches Quiz without changing production logic.
