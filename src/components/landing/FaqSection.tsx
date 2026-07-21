@@ -23,8 +23,8 @@ export default function FaqSection() {
       a: "Không cần. AtoEnglish là một nền tảng Web-App hiện đại, chạy trực tiếp trên trình duyệt web của bạn. Giao diện được tối ưu hóa mượt mà cho cả điện thoại di động (iPhone, Android), máy tính bảng lẫn máy tính cá nhân. Chỉ cần mở trình duyệt, đăng nhập nhanh bằng Google là học được ngay.",
     },
     {
-      q: "Tôi có thể học thử trước khi tham gia pilot không?",
-      a: "Có. Bạn có thể học thử bài đầu tiên trước khi quyết định tham gia. Điều kiện, lịch học và chi phí của pilot 28 ngày sẽ được thông báo rõ trước khi mở tuyển.",
+      q: "Tôi có thể học thử trước khi tham gia chương trình 28 ngày không?",
+      a: "Có. Bạn có thể học thử bài đầu tiên trước khi quyết định tham gia. Điều kiện, lịch học và chi phí của chương trình 28 ngày sẽ được thông báo rõ trước khi mở tuyển.",
     },
     {
       q: "Thuật toán Ôn tập ngắt quãng (FSRS) là gì?",

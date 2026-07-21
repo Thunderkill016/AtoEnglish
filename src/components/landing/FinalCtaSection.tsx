@@ -61,7 +61,7 @@ export default function FinalCtaSection() {
               </Button>
             </Link>
             <div className="text-xs text-zinc-500 dark:text-zinc-400 font-semibold tracking-wider uppercase">
-              Đăng ký nhanh qua Google • Điều kiện pilot sẽ được thông báo rõ
+              Đăng ký nhanh qua Google • Điều kiện chương trình sẽ được thông báo rõ
             </div>
           </ScrollReveal>
         </div>

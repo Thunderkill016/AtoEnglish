@@ -137,10 +137,10 @@ export default function LandingPage() {
           },
           {
             "@type": "Question",
-            "name": "Tôi có thể học thử trước khi tham gia pilot không?",
+            "name": "Tôi có thể học thử trước khi tham gia chương trình 28 ngày không?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Có. Bạn có thể học thử bài đầu tiên trước khi quyết định tham gia. Điều kiện, lịch học và chi phí của pilot 28 ngày sẽ được thông báo rõ trước khi mở tuyển.",
+              "text": "Có. Bạn có thể học thử bài đầu tiên trước khi quyết định tham gia. Điều kiện, lịch học và chi phí của chương trình 28 ngày sẽ được thông báo rõ trước khi mở tuyển.",
             },
           },
           {

@@ -510,7 +510,7 @@ function LoginContent() {
                       >
                         <div className="flex items-center gap-2 text-xs font-bold text-emerald-600 dark:text-emerald-400">
                           <Sparkles className="size-4" />
-                                                     <span>Đã chọn điểm bắt đầu phù hợp</span>
+                          <span>Đã chọn điểm bắt đầu phù hợp</span>
                         </div>
                         <div className="flex flex-wrap gap-1.5">
                           <span className="inline-flex items-center text-[10px] sm:text-xs font-bold text-emerald-700 dark:text-emerald-400 bg-emerald-100/50 dark:bg-emerald-950/40 px-2.5 py-0.5 rounded-lg border border-emerald-200/30 dark:border-emerald-900/30">
