@@ -14,11 +14,11 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     env:
-      PR_NUMBER: "12"
-      HEAD_BRANCH: agent/unit-template-types-and-constants
-      ORIGINAL_BASE_SHA: f810dda1ac03a8ffe781ab1470f8727450b9d162
-      ORIGINAL_HEAD_SHA: b88f1e4cb40231faf43882ebf6f1ddf063a7a717
-      COMMIT_TITLE: "refactor: extract UnitTemplate types and section constants"
+      PR_NUMBER: "13"
+      HEAD_BRANCH: agent/lesson-production-smoke-e2e
+      ORIGINAL_BASE_SHA: b88f1e4cb40231faf43882ebf6f1ddf063a7a717
+      ORIGINAL_HEAD_SHA: 5dab698194b4994ccad27208a935cb0b55ef8959
+      COMMIT_TITLE: "test: add lesson production smoke E2E"
     steps:
       - name: Checkout controller branch
         uses: actions/checkout@v4
