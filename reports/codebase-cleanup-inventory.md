@@ -33,67 +33,53 @@ Removed after import-graph analysis, repository-wide symbol/path searches, and s
 - `src/components/learn/lesson-ui/LessonHeader.tsx`
 - `src/components/learn/lesson-ui/LessonShell.tsx`
 
-Validation results:
-
-- source files scanned: 356 → 352
-- unreachable candidates: 17 → 13
-- TypeScript passed
-- ESLint passed
-- unit tests passed
+Validation: source 356 → 352; unreachable 17 → 13; TypeScript, ESLint, and unit tests passed.
 
 ### Verified dead-code removals — notification-center batch
 
-Removed as one disconnected feature group after full-checkout search found no consumer outside the candidates:
+Removed the disconnected notification-center UI wrapper, components, hook, and copy utility. Preserved the history API, push permission UI, service worker, subscriptions, migrations, tables, and generated Supabase types.
 
-- `src/components/layout/notification-center-wrapper.tsx`
-- `src/features/notifications/components/NotificationCenter.tsx`
-- `src/features/notifications/components/NotificationItem.tsx`
-- `src/features/notifications/hooks/useNotificationCenter.ts`
-- `src/features/notifications/utils/notificationCopy.ts`
-
-Preserved the notification history API, push permission UI, service worker, subscriptions, migrations, tables, and generated Supabase types.
-
-Validation results:
-
-- source files scanned: 352 → 347
-- unreachable candidates: 13 → 8
-- TypeScript passed
-- ESLint passed
-- unit tests passed
+Validation: source 352 → 347; unreachable 13 → 8; TypeScript, ESLint, and unit tests passed.
 
 ### Verified dead-code removals — legacy exercise components
 
-Removed after exact symbol/path search confirmed no consumer:
+Removed:
 
 - `src/components/exercises/ListenAndChooseExercise.tsx`
 - `src/components/exercises/MatchingPairsGame.tsx`
 
-Active exercise behavior remains in `DialogueSection` and `PracticeSection`; curriculum data, lesson types, scoring, section order, and audio behavior were unchanged.
+Active exercise behavior remains in `DialogueSection` and `PracticeSection`.
 
-Validation results:
-
-- source files scanned: 347 → 345
-- unreachable candidates: 8 → 6
-- TypeScript passed
-- ESLint passed
-- unit tests passed
+Validation: source 347 → 345; unreachable 8 → 6; TypeScript, ESLint, and unit tests passed.
 
 ### Verified dead-code removal — legacy landing outcomes section
 
-Removed after full-checkout verification:
+Removed:
 
 - `src/components/landing/OutcomesSection.tsx`
 
+The active landing composition and copy were unchanged.
+
+Validation: source 345 → 344; unreachable 6 → 5; TypeScript, ESLint, and unit tests passed.
+
+### Verified dead-code removals — unused shared UI
+
+Removed after independent symbol/path verification found no consumers:
+
+- `src/components/layout/user-avatar.tsx`
+- `src/components/ui/logo.tsx`
+
 Evidence:
 
-- No static import, dynamic import, route/layout integration, export consumer, test, script, or runtime anchor referenced the component.
-- The active landing page renders `ProblemSection`, `HowItWorksSection`, `BenefitsSection`, `ScienceSection`, `TestimonialsSection`, `FaqSection`, and `FinalCtaSection` instead.
-- No active landing component or marketing copy was edited.
+- No static import, dynamic import, route/layout integration, export consumer, test, or script used either component.
+- Active branding is rendered directly with `Sprout` and existing markup in the landing, login, and header surfaces.
+- `HeaderShell` uses its own current authentication UI and does not import `UserAvatar`.
+- No active navigation, avatar display, branding copy, or styling was rewritten.
 
 Validation results:
 
-- source files scanned: 345 → 344
-- unreachable candidates: 6 → 5
+- source files scanned: 344 → 342
+- unreachable candidates: 5 → 3
 - TypeScript passed
 - ESLint passed
 - unit tests passed
@@ -102,9 +88,9 @@ Temporary GitHub Actions workflows used for full-checkout verification are remov
 
 ## Current inventory summary
 
-- Source files scanned: 344
+- Source files scanned: 342
 - Known entry points: 118
-- Unreachable candidates: 5
+- Unreachable candidates: 3
 - Files with at least 500 lines: 32
 - Possible unused runtime/tooling dependencies: 8
 - Possible unused type packages: 2
@@ -113,8 +99,6 @@ Temporary GitHub Actions workflows used for full-checkout verification are remov
 
 These remain review candidates, not automatic deletion instructions:
 
-- `src/components/layout/user-avatar.tsx`
-- `src/components/ui/logo.tsx`
 - `src/lib/lessons/enrich-unit.ts`
 - `src/lib/supabase/middleware.ts`
 - `src/types/index.ts`
@@ -161,6 +145,12 @@ A source file can be deleted only when all applicable checks pass:
 - unit tests pass
 - relevant integration, E2E, smoke, or build check passes when the area requires it
 
-## Next cleanup batch
+## Next cleanup batches
 
-Verify the unused shared UI candidates `user-avatar.tsx` and `logo.tsx` independently in one presentational-UI batch. Keep lesson enrichment, Supabase session middleware, and type-barrel review in separate technical batches.
+Review the remaining technical candidates independently:
+
+1. `src/types/index.ts` — exact barrel-import verification.
+2. `src/lib/lessons/enrich-unit.ts` — active unit-loading and fallback-behavior review.
+3. `src/lib/supabase/middleware.ts` — proxy/session/auth refresh and framework-convention review.
+
+Do not combine Supabase middleware deletion with lesson or type cleanup.
