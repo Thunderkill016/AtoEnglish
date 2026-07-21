@@ -1,0 +1,161 @@
+name: Pilot copy polish validation
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    env:
+      NEXT_PUBLIC_SUPABASE_URL: https://example.supabase.co
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: test-anon-key
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Apply final copy polish
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          def replace(path: str, old: str, new: str) -> None:
+              file = Path(path)
+              text = file.read_text()
+              if old in text:
+                  file.write_text(text.replace(old, new))
+                  return
+              if new not in text:
+                  raise SystemExit(f"Expected text not found in {path}: {old!r}")
+
+          login = Path("src/app/login/page.tsx")
+          login_text = login.read_text()
+          polished = re.sub(
+              r'^\s*<span>Đã chọn điểm bắt đầu phù hợp</span>$',
+              '                          <span>Đã chọn điểm bắt đầu phù hợp</span>',
+              login_text,
+              flags=re.MULTILINE,
+          )
+          if polished == login_text and '                          <span>Đã chọn điểm bắt đầu phù hợp</span>' not in login_text:
+              raise SystemExit("Login confirmation span was not found")
+          login.write_text(polished)
+
+          replace(
+              "src/app/page.tsx",
+              '"name": "Tôi có thể học thử trước khi tham gia pilot không?"',
+              '"name": "Tôi có thể học thử trước khi tham gia chương trình 28 ngày không?"',
+          )
+          replace(
+              "src/app/page.tsx",
+              '"text": "Có. Bạn có thể học thử bài đầu tiên trước khi quyết định tham gia. Điều kiện, lịch học và chi phí của pilot 28 ngày sẽ được thông báo rõ trước khi mở tuyển."',
+              '"text": "Có. Bạn có thể học thử bài đầu tiên trước khi quyết định tham gia. Điều kiện, lịch học và chi phí của chương trình 28 ngày sẽ được thông báo rõ trước khi mở tuyển."',
+          )
+          replace(
+              "src/components/landing/FaqSection.tsx",
+              'q: "Tôi có thể học thử trước khi tham gia pilot không?"',
+              'q: "Tôi có thể học thử trước khi tham gia chương trình 28 ngày không?"',
+          )
+          replace(
+              "src/components/landing/FaqSection.tsx",
+              'a: "Có. Bạn có thể học thử bài đầu tiên trước khi quyết định tham gia. Điều kiện, lịch học và chi phí của pilot 28 ngày sẽ được thông báo rõ trước khi mở tuyển."',
+              'a: "Có. Bạn có thể học thử bài đầu tiên trước khi quyết định tham gia. Điều kiện, lịch học và chi phí của chương trình 28 ngày sẽ được thông báo rõ trước khi mở tuyển."',
+          )
+          replace(
+              "src/components/landing/FinalCtaSection.tsx",
+              "Đăng ký nhanh qua Google • Điều kiện pilot sẽ được thông báo rõ",
+              "Đăng ký nhanh qua Google • Điều kiện chương trình sẽ được thông báo rõ",
+          )
+          PY
+
+      - name: Verify working-tree scope
+        run: |
+          git diff --name-only | sort > /tmp/worktree.txt
+          cat /tmp/worktree.txt
+          if [ -s /tmp/worktree.txt ]; then
+            cat > /tmp/expected-worktree.txt <<'EOF'
+          src/app/login/page.tsx
+          src/app/page.tsx
+          src/components/landing/FaqSection.tsx
+          src/components/landing/FinalCtaSection.tsx
+          EOF
+            diff -u /tmp/expected-worktree.txt /tmp/worktree.txt
+          fi
+
+      - name: Verify branch scope
+        run: |
+          git diff --name-only origin/main...HEAD | sort > /tmp/branch.txt
+          cat /tmp/branch.txt
+          cat > /tmp/expected-branch.txt <<'EOF'
+          .github/workflows/pilot-copy-polish.yml
+          e2e/protected-routes.spec.ts
+          src/app/(main)/dashboard/components/DashboardClient.tsx
+          src/app/layout.tsx
+          src/app/login/page.tsx
+          src/app/page.tsx
+          src/components/landing/FaqSection.tsx
+          src/components/landing/FinalCtaSection.tsx
+          src/components/landing/HeroCTA.tsx
+          EOF
+          diff -u /tmp/expected-branch.txt /tmp/branch.txt
+
+      - name: Clean install
+        run: npm ci --ignore-scripts --legacy-peer-deps
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Typecheck
+        run: npx tsc --noEmit
+
+      - name: Full lint
+        run: npm run lint
+
+      - name: Full unit tests
+        run: npm run test
+
+      - name: Lesson content standard
+        run: npm run test:content-standard
+
+      - name: Production build
+        run: npm run build
+
+      - name: Start production server
+        run: |
+          npm run start > /tmp/atoenglish.log 2>&1 &
+          npx wait-on http-get://127.0.0.1:3000/ --timeout 60000
+
+      - name: Promise E2E
+        run: PLAYWRIGHT_BASE_URL=http://127.0.0.1:3000 npx playwright test e2e/protected-routes.spec.ts --project=chromium --workers=1
+
+      - name: Lesson smoke E2E
+        run: PLAYWRIGHT_BASE_URL=http://127.0.0.1:3000 npx playwright test e2e/lesson-smoke.spec.ts --workers=1
+
+      - name: Commit polish when needed
+        run: |
+          if git diff --quiet; then
+            echo "Committed state already verified"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            src/app/login/page.tsx \
+            src/app/page.tsx \
+            src/components/landing/FaqSection.tsx \
+            src/components/landing/FinalCtaSection.tsx
+          git commit -m "copy: polish the public 28-day program wording"
+          git push origin HEAD:${{ github.event.pull_request.head.ref }}
