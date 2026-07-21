@@ -14,11 +14,11 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     env:
-      PR_NUMBER: "15"
-      HEAD_BRANCH: agent/unit-template-persistence-tests
-      ORIGINAL_BASE_SHA: 8b370ad5c6189d4dcc0f6cd56cb43237c4bdab26
-      ORIGINAL_HEAD_SHA: 305854c0dd397efee7a16cdd380adcb232e7939d
-      COMMIT_TITLE: "test: expand UnitTemplate persistence coverage"
+      PR_NUMBER: "16"
+      HEAD_BRANCH: agent/unit-template-progress-persistence-hook
+      ORIGINAL_BASE_SHA: 305854c0dd397efee7a16cdd380adcb232e7939d
+      ORIGINAL_HEAD_SHA: e76b0cc2a95ba3f3debbbf102cab9a7051c35a5a
+      COMMIT_TITLE: "refactor: extract UnitTemplate progress persistence hook"
     steps:
       - name: Checkout controller branch
         uses: actions/checkout@v4
