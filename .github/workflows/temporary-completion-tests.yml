@@ -1,0 +1,373 @@
+name: Temporary completion characterization validation
+
+on:
+  push:
+    branches:
+      - agent/unit-template-completion-tests
+
+permissions:
+  contents: write
+
+jobs:
+  validate:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-24.04
+    env:
+      NEXT_PUBLIC_SUPABASE_URL: https://example.supabase.co
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: completion-tests-placeholder
+      NEXT_PUBLIC_APP_URL: http://127.0.0.1:3000
+      PLAYWRIGHT_BASE_URL: http://127.0.0.1:3000
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - name: Build focused test and documentation patch
+        run: |
+          python <<'PY'
+          from pathlib import Path
+
+          path = Path('src/components/learn/UnitTemplate.test.tsx')
+          text = path.read_text()
+
+          text = text.replace(
+          '''const actionMocks = vi.hoisted(() => ({
+            completeUnit: vi.fn(),
+            getUnitCompletionStatus: vi.fn(),
+            getDueWarmupCards: vi.fn(),
+            seedUnitVocabToSRS: vi.fn(),
+            scheduleWrongWordsForReview: vi.fn(),
+          }));''',
+          '''const actionMocks = vi.hoisted(() => ({
+            completeUnit: vi.fn(),
+            getUnitCompletionStatus: vi.fn(),
+            getDueWarmupCards: vi.fn(),
+            seedUnitVocabToSRS: vi.fn(),
+            scheduleWrongWordsForReview: vi.fn(),
+          }));
+
+          const streakMocks = vi.hoisted(() => ({
+            checkMilestone: vi.fn(),
+            dismissMilestone: vi.fn(),
+          }));
+
+          const toastMocks = vi.hoisted(() => ({
+            success: vi.fn(),
+            error: vi.fn(),
+            promise: vi.fn(),
+          }));''')
+
+          text = text.replace(
+          '''vi.mock("canvas-confetti", () => ({ default: vi.fn() }));''',
+          '''vi.mock("canvas-confetti", () => ({ default: vi.fn() }));
+
+          vi.mock("sonner", () => ({
+            toast: toastMocks,
+          }));''')
+
+          text = text.replace(
+          '''vi.mock("@/features/streak/hooks/useStreakMilestone", () => ({
+            useStreakMilestone: () => ({
+              showOverlay: false,
+              pendingMilestone: null,
+              checkMilestone: vi.fn(),
+              dismissMilestone: vi.fn(),
+            }),
+          }));''',
+          '''vi.mock("@/features/streak/hooks/useStreakMilestone", () => ({
+            useStreakMilestone: () => ({
+              showOverlay: false,
+              pendingMilestone: null,
+              checkMilestone: streakMocks.checkMilestone,
+              dismissMilestone: streakMocks.dismissMilestone,
+            }),
+          }));''')
+
+          text = text.replace(
+          '''interface SectionMockProps {
+            unit: UnitData;
+            goNext: () => void;
+            handleCompleteUnit?: () => Promise<void>;
+          }''',
+          '''interface SectionMockProps {
+            unit: UnitData;
+            goNext: () => void;
+            handleCompleteUnit?: () => Promise<void>;
+            isCompleted?: boolean;
+            isSubmitting?: boolean;
+            effectiveScore?: number;
+            effectiveStarCount?: number;
+            xpToEarn?: number;
+          }''')
+
+          text = text.replace(
+          '''    default: ({ handleCompleteUnit }: SectionMockProps) =>
+              React.createElement(
+                "button",
+                { "data-testid": "section-quiz", onClick: () => void handleCompleteUnit?.() },
+                "Complete unit",
+              ),''',
+          '''    default: ({
+              handleCompleteUnit,
+              isCompleted,
+              isSubmitting,
+              effectiveScore,
+              effectiveStarCount,
+              xpToEarn,
+            }: SectionMockProps) =>
+              React.createElement(
+                "button",
+                {
+                  "data-testid": "section-quiz",
+                  "data-effective-score": effectiveScore,
+                  "data-star-count": effectiveStarCount,
+                  "data-xp-to-earn": xpToEarn,
+                  disabled: Boolean(isCompleted || isSubmitting),
+                  onClick: () => void handleCompleteUnit?.(),
+                },
+                isCompleted ? "Completed unit" : "Complete unit",
+              ),''')
+
+          text = text.replace(
+          '''    actionMocks.scheduleWrongWordsForReview.mockReset();''',
+          '''    actionMocks.scheduleWrongWordsForReview.mockReset();
+            streakMocks.checkMilestone.mockReset();
+            streakMocks.dismissMilestone.mockReset();
+            toastMocks.success.mockReset();
+            toastMocks.error.mockReset();
+            toastMocks.promise.mockReset();''')
+
+          marker = '''  async function click(element: HTMLElement) {
+              await act(async () => {
+                element.click();
+                await Promise.resolve();
+                await Promise.resolve();
+              });
+            }
+          '''
+          replacement = marker + '''
+            async function reachQuiz() {
+              await click(findButton(container, "Ôn nhanh"));
+              await click(container.querySelector('[data-testid="section-practice"]') as HTMLButtonElement);
+              return container.querySelector('[data-testid="section-quiz"]') as HTMLButtonElement;
+            }
+          '''
+          text = text.replace(marker, replacement)
+
+          tests = r'''
+
+          it.each([
+            {
+              name: "three stars at 100 points",
+              unit: makeUnit({ xp: 100, quiz: [], listenAndChoose: [] }),
+              score: "100",
+              stars: "3",
+              xp: "100",
+            },
+            {
+              name: "two stars at the 60-point threshold",
+              unit: makeUnit({
+                xp: 100,
+                quiz: [{ id: "q1", question: "Choose yes", options: ["yes", "no"], answer: "yes", type: "multiple-choice" }],
+                listenAndChoose: [],
+              }),
+              score: "60",
+              stars: "2",
+              xp: "85",
+            },
+            {
+              name: "one star below 60 points",
+              unit: makeUnit({
+                xp: 100,
+                quiz: [{ id: "q1", question: "Choose yes", options: ["yes", "no"], answer: "yes", type: "multiple-choice" }],
+                listenAndChoose: [{ id: "l1", audio_text: "yes", options: ["yes", "no"], answer: "yes" }],
+              }),
+              score: "30",
+              stars: "1",
+              xp: "70",
+            },
+          ])("derives $name and preserves the completeUnit action contract", async ({ unit, score, stars, xp }) => {
+            await renderUnit(unit);
+            const quiz = await reachQuiz();
+
+            expect(quiz).toHaveAttribute("data-effective-score", score);
+            expect(quiz).toHaveAttribute("data-star-count", stars);
+            expect(quiz).toHaveAttribute("data-xp-to-earn", xp);
+
+            await click(quiz);
+            expect(actionMocks.completeUnit).toHaveBeenCalledWith("unit-test", Number(stars));
+          });
+
+          it("coordinates authenticated completion data, streak checks, XP sync, vocab seeding, and nextRoute", async () => {
+            const xpEvent = vi.fn();
+            window.addEventListener("ato:xp-earned", xpEvent as EventListener);
+            actionMocks.completeUnit.mockResolvedValue({
+              success: true,
+              xpEarned: 123,
+              newStreak: 7,
+              completedCount: 5,
+              newTotalXp: 500,
+              leveledUp: true,
+              newLevel: "A2",
+            });
+            const unit = makeUnit({
+              vocab: [{ id: 1, word: "work", phonetic: "/wɜːk/", meaning: "làm việc", example: "I work here." }],
+            });
+
+            await renderUnit(unit, "/learn/next-unit");
+            await click(await reachQuiz());
+
+            expect(streakMocks.checkMilestone).toHaveBeenCalledWith(7);
+            expect(actionMocks.seedUnitVocabToSRS).toHaveBeenCalledTimes(1);
+            expect(JSON.parse(localStorage.getItem("pending-level-up") ?? "null")).toEqual({ prev: null, next: "A2" });
+            expect(localStorage.getItem(`ato_xp_sync_${new Date().toDateString()}`)).toBe("123");
+            expect(xpEvent).toHaveBeenCalled();
+            expect(localStorage.getItem("guest_completed_units")).toBeNull();
+            expect(container.textContent).toContain("Xuất sắc! 🏆");
+            expect(container.querySelector('a[href="/learn/next-unit"]')).not.toBeNull();
+            window.removeEventListener("ato:xp-earned", xpEvent as EventListener);
+          });
+
+          it("keeps non-authenticated server failures out of guest fallback", async () => {
+            actionMocks.completeUnit.mockResolvedValue({ success: false, error: "Database unavailable" });
+
+            await renderUnit();
+            await click(await reachQuiz());
+
+            expect(localStorage.getItem("guest_completed_units")).toBeNull();
+            expect(container.textContent).not.toContain("Xuất sắc! 🏆");
+            expect(toastMocks.error).toHaveBeenCalledWith("Database unavailable");
+            expect(streakMocks.checkMilestone).not.toHaveBeenCalled();
+          });
+
+          it("loads authenticated completion status and disables duplicate completion after the status resolves", async () => {
+            let resolveStatus!: (value: { success: true; completed: true }) => void;
+            actionMocks.getUnitCompletionStatus.mockReturnValue(
+              new Promise((resolve) => {
+                resolveStatus = resolve;
+              }),
+            );
+
+            await renderUnit();
+            const quiz = await reachQuiz();
+            expect(actionMocks.getUnitCompletionStatus).toHaveBeenCalledWith("unit-test");
+            expect(quiz).not.toBeDisabled();
+
+            await act(async () => {
+              resolveStatus({ success: true, completed: true });
+              await Promise.resolve();
+              await Promise.resolve();
+            });
+
+            expect(container.querySelector('[data-testid="section-quiz"]')).toBeDisabled();
+            await click(container.querySelector('[data-testid="section-quiz"]') as HTMLButtonElement);
+            expect(actionMocks.completeUnit).not.toHaveBeenCalled();
+          });
+          '''
+
+          pos = text.rfind('\n});')
+          if pos == -1:
+              raise SystemExit('describe terminator not found')
+          text = text[:pos] + tests + text[pos:]
+          path.write_text(text)
+
+          Path('AGENT_PLAN.md').write_text('''# Agent Plan — Current Work Only
+
+> Historical cleanup is recorded in merged pull requests and `reports/codebase-cleanup-inventory.md`.
+
+## Current task
+
+| Field | Value |
+|---|---|
+| Task | CLEANUP-018 — Characterize UnitTemplate completion flow |
+| Status | in progress — test-only pull request |
+| Goal | Lock current completion, star, XP, guest, streak, achievement, and navigation behavior before any extraction |
+
+## Merged baseline
+
+- Cleanup PRs #1–#16 are merged into `main`.
+- Conservative unreachable candidates are 0.
+- `UnitTemplate` types, section constants, presentation helpers, and progress persistence are already extracted.
+- Production-server lesson smoke coverage exists on desktop and mobile.
+
+## Scope
+
+This phase changes tests and cleanup documentation only. It must not move completion logic or change XP, star, guest, streak, achievement, storage, server-action, database, auth, FSRS, route, or curriculum behavior.
+
+## Separate known issue
+
+The direct `/login` E2E title assertion can observe an empty document title while the route still returns HTTP 200. Track and fix that independently; it is not part of lesson completion refactoring.
+
+## Next action
+
+Review the CLEANUP-018 characterization PR. Phase 2 remains blocked until this PR is explicitly reviewed and merged.
+''')
+
+          Path('AGENT_BACKLOG.md').write_text('''# Agent Backlog — Active Tasks Only
+
+## Rules
+
+1. Use a dedicated branch and reviewed pull request.
+2. Never merge automatically.
+3. Add characterization tests before moving behavior-sensitive logic.
+4. Do not change product behavior merely to reduce line count.
+5. Stop and document ambiguous behavior instead of guessing.
+
+## Active queue
+
+### CLEANUP-018 — UnitTemplate completion-flow characterization
+- **Status:** `in_progress`
+- **Scope:** Tests and documentation only.
+- **Coverage:** Star/XP derivation, authenticated success and failure, guest fallback, nextRoute, streak/achievement coordination, completion-status loading, duplicate prevention where currently enforced, and active-unit progress cleanup.
+
+### CLEANUP-019 — `/login` metadata/title investigation
+- **Status:** `ready`
+- **Scope:** Independent bug investigation; do not mix with lesson refactoring.
+
+### CLEANUP-004D — Extract pure completion calculations
+- **Status:** `blocked`
+- **Blocked by:** CLEANUP-018 review and merge.
+
+### CLEANUP-015 — Review unit action transaction boundaries
+- **Status:** `blocked`
+- **Blocked by:** Completion characterization and focused server-action transaction tests.
+''')
+          PY
+
+          test "$(git diff --name-only | sort)" = "$(printf '%s\n' AGENT_BACKLOG.md AGENT_PLAN.md src/components/learn/UnitTemplate.test.tsx | sort)"
+          git diff --exit-code -- src/components/learn/UnitTemplate.tsx src/app/actions/unit.ts
+      - name: Clean install
+        run: npm ci --ignore-scripts --legacy-peer-deps
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Targeted lesson tests
+        run: npx vitest run src/components/learn/UnitTemplate.test.tsx src/components/learn/lesson-sections.test.ts src/components/learn/lesson-ui/lesson-presentation.test.tsx
+      - name: Inventory
+        run: npm run inventory -- --write
+      - name: Typecheck
+        run: npx tsc --noEmit
+      - name: Full lint
+        run: npm run lint
+      - name: Full unit tests
+        run: npm run test
+      - name: Content standard
+        run: npm run test:content-standard
+      - name: Production build
+        run: npm run build
+      - name: Lesson production smoke
+        run: |
+          npm run start > /tmp/atoenglish-server.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill $SERVER_PID || true' EXIT
+          npx wait-on http://127.0.0.1:3000 --timeout 60000
+          npx playwright test e2e/lesson-smoke.spec.ts
+      - name: Commit validated patch
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add src/components/learn/UnitTemplate.test.tsx AGENT_PLAN.md AGENT_BACKLOG.md
+          git commit -m "test: characterize UnitTemplate completion flow"
+          git push
