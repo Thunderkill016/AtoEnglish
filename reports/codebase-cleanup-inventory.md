@@ -133,7 +133,34 @@ Validation results:
 - lesson content-standard tests passed
 - production build passed
 
-Temporary GitHub Actions workflows used for full-checkout verification are removed after their final successful run so they do not consume future Actions minutes.
+### Lesson production smoke/E2E prerequisite
+
+Added durable browser coverage:
+
+- `e2e/lesson-smoke.spec.ts`
+
+The suite runs against `next start` after a production build and verifies:
+
+- guest `/learn/unit-a0-1` returns HTTP 200 and renders the warmup without redirecting to login
+- lesson progress renders at step 1 of 10
+- `Bắt đầu học` opens Vocabulary, renders step 2 of 10, and persists section 2
+- `Ôn nhanh` opens Practice, renders step 4 of 10, and persists section 4
+- the same three flows pass on Desktop Chromium and Mobile Chrome
+
+Validation results:
+
+- 6 Playwright tests passed in 8.8 seconds
+- Next.js 16.2.9 production server became ready in 209 ms
+- source inventory remained 344 files, 121 entry points, and 0 unreachable candidates because the new file is under `e2e/`
+- TypeScript passed
+- focused and full ESLint passed
+- full unit tests passed
+- lesson content-standard tests passed
+- production build passed
+
+No production source, lesson content, section order, localStorage key, scoring, XP, completion, database action, FSRS behavior, auth policy, route, package, or UI copy changed.
+
+Temporary GitHub Actions workflows used for full-checkout verification are removed after their successful run so they do not consume future Actions minutes.
 
 ## Current inventory summary
 
@@ -163,7 +190,7 @@ Safe refactor order:
 
 1. Focused lesson behavior coverage — complete.
 2. Extract lesson types and section constants — complete.
-3. Add production-server lesson smoke/E2E coverage.
+3. Add production-server lesson smoke/E2E coverage — complete.
 4. Extract stateless helper components.
 5. Extract local-storage hooks after persistence-specific coverage.
 6. Extract completion logic after server-action and achievement coverage.
@@ -190,4 +217,4 @@ A source file can be deleted only when all applicable checks pass:
 
 ## Next cleanup work
 
-CLEANUP-016 — run or strengthen a focused lesson smoke/E2E flow against a production Next.js server. Do not extract stateless helpers until a real lesson route, section navigation, and quick-review-to-Quiz flow are covered.
+CLEANUP-004B — extract only small stateless presentation helpers from `UnitTemplate` in a reversible batch. Keep orchestration state, persistence, scoring, completion, server actions, and section rendering branches in place. Rerun component tests, the six production-server lesson smoke tests, typecheck, focused/full lint, full unit tests, content-standard tests, and production build.

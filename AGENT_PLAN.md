@@ -6,10 +6,10 @@
 
 | Field | Value |
 |---|---|
-| Task | CLEANUP-004A — Extract UnitTemplate lesson types and constants |
+| Task | CLEANUP-016 — Add lesson production smoke/E2E prerequisite |
 | Status | done — awaiting stacked PR review |
-| Branch | `agent/unit-template-types-and-constants` |
-| Goal | Move lesson-domain interfaces and section constants out of `UnitTemplate` without changing runtime behavior or breaking existing imports |
+| Branch | `agent/lesson-production-smoke-e2e` |
+| Goal | Lock real guest lesson rendering and section navigation on a production Next.js server before extracting stateless helpers |
 
 ## Completed in earlier cleanup batches
 
@@ -20,60 +20,56 @@
 - Reconciled protected-route E2E coverage with intentional guest self-study behavior.
 - Removed proven dependency waste and classified retained framework/tooling false positives.
 - Added four focused UnitTemplate orchestration tests.
+- Extracted lesson-domain types and exact section constants while preserving existing imports.
 
-## Completed in CLEANUP-004A
+## Completed in CLEANUP-016
 
-Added dedicated modules:
+Added durable Playwright coverage:
 
-- `src/components/learn/lesson-types.ts`
-- `src/components/learn/lesson-sections.ts`
-- `src/components/learn/lesson-sections.test.ts`
+- `e2e/lesson-smoke.spec.ts`
 
-Updated `src/components/learn/UnitTemplate.tsx` to:
+The suite runs against `next start` after a production build and verifies on both Desktop Chromium and Mobile Chrome:
 
-- import lesson-domain interfaces from `lesson-types.ts`
-- import section labels, order, total, and `SectionNumber` from `lesson-sections.ts`
-- re-export every previously public lesson type so existing imports remain compatible
-- keep `UnitTemplateProps` and completion-only state local
+1. A guest can load `/learn/unit-a0-1` with HTTP 200 and reach the warmup section without an auth redirect.
+2. `Bắt đầu học` opens the Vocabulary section and persists section 2 to `lesson-progress-unit-a0-1`.
+3. `Ôn nhanh` opens the Practice section and persists section 4 to the same storage key.
 
-Preserved exactly:
+The tests also verify the visible lesson progressbar for steps 1, 2, and 4 and fail on uncaught browser page errors during the initial render flow.
 
-- section order `[1, 2, 3, 4, 5, 10, 9, 6, 7, 8]`
-- all ten Vietnamese section labels
-- scoring, XP, completion, localStorage, audio, FSRS, lesson content, routing, and rendering behavior
-
-The focused `UnitTemplate` diff is `+47/-213`. The component decreased from 1,348 to 1,182 lines without moving orchestration or behavior-sensitive logic.
+No production source, lesson content, section order, localStorage key, scoring, XP, completion, database action, FSRS behavior, auth policy, route, package, or UI copy changed.
 
 ## Validation completed
 
-A clean committed checkout ran:
+A full GitHub Actions checkout ran:
 
 ```bash
 npm ci --ignore-scripts --legacy-peer-deps
-npx vitest run src/components/learn/UnitTemplate.test.tsx src/components/learn/lesson-sections.test.ts
+npx playwright install --with-deps chromium
 npm run inventory -- --write
 npx tsc --noEmit
-npx eslint src/components/learn/UnitTemplate.tsx src/components/learn/UnitTemplate.test.tsx src/components/learn/lesson-types.ts src/components/learn/lesson-sections.ts src/components/learn/lesson-sections.test.ts
+npx eslint e2e/lesson-smoke.spec.ts
 npm run lint
 npm run test
 npm run test:content-standard
 npm run build
+PLAYWRIGHT_BASE_URL=http://127.0.0.1:3000 npx playwright test e2e/lesson-smoke.spec.ts
 ```
 
 Results:
 
-- 6 targeted tests passed: 4 orchestration tests plus 2 exact constants tests
-- source files scanned: 341 → 344
-- known entry points: 120 → 121
-- unreachable candidates remained 0
-- TypeScript passed across all existing `UnitTemplate` type consumers
+- 6 production-server lesson smoke tests passed in 8.8 seconds
+- 3 flows passed on Desktop Chromium
+- 3 flows passed on Mobile Chrome
+- Next.js 16.2.9 production server became ready in 209 ms
+- source inventory remained 344 files, 121 entry points, and 0 unreachable candidates
+- TypeScript passed
 - focused and full ESLint passed
 - full unit tests passed
 - lesson content-standard tests passed
 - production build passed
 
-The temporary validation workflow was removed after the final successful run.
+The temporary validation workflow was removed after the successful run.
 
 ## Next action
 
-CLEANUP-016 — run or strengthen a production-server lesson smoke/E2E flow before extracting stateless presentation helpers. The smoke coverage must verify a real lesson route renders, the section order remains usable, and quick-review reaches Quiz without changing production logic.
+CLEANUP-004B — extract only small stateless presentation helpers from `UnitTemplate` in a reversible batch. Keep orchestration state, persistence, scoring, completion, server actions, and section rendering branches in place, then rerun component tests, the six production-server lesson smoke tests, and full validation.
