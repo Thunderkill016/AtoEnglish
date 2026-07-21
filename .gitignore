@@ -11,6 +11,9 @@
 /logs/agent/cron.log
 /logs/agent/.orchestrator-state
 
+# generated cleanup reports
+/reports/codebase-inventory.generated.md
+
 # testing
 /coverage
 
