@@ -37,7 +37,7 @@ const GUEST_SELF_STUDY_ROUTES = [
 
 const PUBLIC_ROUTES = [
   { path: "/", titleMatcher: /AtoEnglish/ },
-  { path: "/login", titleMatcher: /AtoEnglish/ },
+  { path: "/login", titleMatcher: /^Đăng nhập \| AtoEnglish$/ },
 ];
 
 test.describe("Protected Routes — Unauthenticated Redirects", () => {
