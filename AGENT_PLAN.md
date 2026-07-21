@@ -25,7 +25,7 @@
 - Added `npm run inventory` with no new dependency.
 - The inventory reports unreachable source candidates, files over 500 lines, and possibly unused packages.
 - Added `reports/codebase-cleanup-inventory.md` with evidence, classifications, and deletion gates.
-- Tested the inventory script syntax and import-pattern handling outside the repository checkout.
+- Checked the inventory script with `node --check` and tested its static, dynamic, side-effect, and CSS import patterns outside the repository checkout.
 - Kept all deletion candidates in review status; no source file has been deleted.
 
 ### CLEANUP-005 — Documentation source of truth
@@ -36,9 +36,15 @@
 - Documented `UnitTemplate.tsx` as active architecture debt rather than presenting it as a normal small component.
 - Documented cleanup, validation, CI, and deployment sources without guessing current runtime state.
 
-## Blocker
+## Validation completed
 
-The GitHub connector can edit and review repository files but does not provide a complete executable checkout. Therefore the following commands have not been run on this branch:
+- `node --check` passed for `scripts/inventory-codebase.mjs`.
+- `bash -n` passed for the mutation-free refill-script implementation.
+- Reviewed the changed documentation and package command through the GitHub branch.
+
+## Remaining blocker
+
+The GitHub connector can edit and review repository files but does not provide a complete executable checkout. Therefore these repository-level commands have not been run on this branch:
 
 ```bash
 npm run inventory
@@ -51,4 +57,4 @@ No source or dependency candidate should be deleted until those commands run in 
 
 ## Next action
 
-Run the validation commands on `agent/codebase-cleanup-foundation`. If they pass, CLEANUP-003 may delete the first verified candidate in a dedicated commit.
+Run the repository-level validation commands on `agent/codebase-cleanup-foundation`. If they pass, CLEANUP-003 may delete the first verified candidate in a dedicated commit.
