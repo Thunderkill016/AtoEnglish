@@ -1,4 +1,4 @@
-name: Pilot promise E2E diagnostic
+name: Pilot promise E2E isolation
 
 on:
   pull_request:
@@ -19,11 +19,13 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.ref }}
+
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 24
           cache: npm
+
       - name: Apply focused copy patch
         run: |
           cp scripts/align-pilot-promise.py /tmp/align-pilot-promise.py
@@ -37,19 +39,25 @@ jobs:
           path.write_text(text)
           PY
           python /tmp/align-pilot-promise.py
+
       - name: Install and build quietly
         run: |
           npm ci --ignore-scripts --legacy-peer-deps >/tmp/npm-ci.log 2>&1
           npx playwright install --with-deps chromium >/tmp/chromium.log 2>&1
           npm run build >/tmp/build.log 2>&1
+
       - name: Start production server
         run: |
           npm run start > /tmp/atoenglish.log 2>&1 &
           npx wait-on http-get://127.0.0.1:3000/ --timeout 60000
-      - name: Run promise E2E with focused output
-        run: |
-          set +e
-          PLAYWRIGHT_BASE_URL=http://127.0.0.1:3000 npx playwright test e2e/protected-routes.spec.ts --project=chromium --reporter=line > /tmp/e2e.log 2>&1
-          code=$?
-          tail -160 /tmp/e2e.log
-          exit $code
+
+      - name: Landing promise test
+        run: PLAYWRIGHT_BASE_URL=http://127.0.0.1:3000 npx playwright test e2e/protected-routes.spec.ts --project=chromium --grep "states the focused 28-day pilot promise" --reporter=line
+
+      - name: Onboarding promise test
+        if: always()
+        run: PLAYWRIGHT_BASE_URL=http://127.0.0.1:3000 npx playwright test e2e/protected-routes.spec.ts --project=chromium --grep "onboarding repeats the same duration" --reporter=line
+
+      - name: Dashboard promise test
+        if: always()
+        run: PLAYWRIGHT_BASE_URL=http://127.0.0.1:3000 npx playwright test e2e/protected-routes.spec.ts --project=chromium --grep "dashboard reinforces the daily speaking step" --reporter=line
