@@ -11,6 +11,17 @@ const actionMocks = vi.hoisted(() => ({
   scheduleWrongWordsForReview: vi.fn(),
 }));
 
+const streakMocks = vi.hoisted(() => ({
+  checkMilestone: vi.fn(),
+  dismissMilestone: vi.fn(),
+}));
+
+const toastMocks = vi.hoisted(() => ({
+  success: vi.fn(),
+  error: vi.fn(),
+  promise: vi.fn(),
+}));
+
 vi.mock("@/app/actions/unit", () => ({
   completeUnit: actionMocks.completeUnit,
   getUnitCompletionStatus: actionMocks.getUnitCompletionStatus,
@@ -23,6 +34,10 @@ vi.mock("@/app/actions/cards", () => ({
 }));
 
 vi.mock("canvas-confetti", () => ({ default: vi.fn() }));
+
+vi.mock("sonner", () => ({
+  toast: toastMocks,
+}));
 
 vi.mock("next/link", async () => {
   const React = await import("react");
@@ -68,8 +83,8 @@ vi.mock("@/features/streak/hooks/useStreakMilestone", () => ({
   useStreakMilestone: () => ({
     showOverlay: false,
     pendingMilestone: null,
-    checkMilestone: vi.fn(),
-    dismissMilestone: vi.fn(),
+    checkMilestone: streakMocks.checkMilestone,
+    dismissMilestone: streakMocks.dismissMilestone,
   }),
 }));
 
@@ -81,6 +96,11 @@ interface SectionMockProps {
   unit: UnitData;
   goNext: () => void;
   handleCompleteUnit?: () => Promise<void>;
+  isCompleted?: boolean;
+  isSubmitting?: boolean;
+  effectiveScore?: number;
+  effectiveStarCount?: number;
+  xpToEarn?: number;
 }
 
 vi.mock("./sections/WarmupSection", async () => {
@@ -166,11 +186,25 @@ vi.mock("./sections/SpeakingSection", async () => {
 vi.mock("./sections/QuizSection", async () => {
   const React = await import("react");
   return {
-    default: ({ handleCompleteUnit }: SectionMockProps) =>
+    default: ({
+      handleCompleteUnit,
+      isCompleted,
+      isSubmitting,
+      effectiveScore,
+      effectiveStarCount,
+      xpToEarn,
+    }: SectionMockProps) =>
       React.createElement(
         "button",
-        { "data-testid": "section-quiz", onClick: () => void handleCompleteUnit?.() },
-        "Complete unit",
+        {
+          "data-testid": "section-quiz",
+          "data-effective-score": effectiveScore,
+          "data-star-count": effectiveStarCount,
+          "data-xp-to-earn": xpToEarn,
+          disabled: Boolean(isCompleted || isSubmitting),
+          onClick: () => void handleCompleteUnit?.(),
+        },
+        isCompleted ? "Completed unit" : "Complete unit",
       ),
   };
 });
@@ -234,6 +268,11 @@ describe("UnitTemplate behavior foundation", () => {
     actionMocks.getDueWarmupCards.mockReset();
     actionMocks.seedUnitVocabToSRS.mockReset();
     actionMocks.scheduleWrongWordsForReview.mockReset();
+  streakMocks.checkMilestone.mockReset();
+  streakMocks.dismissMilestone.mockReset();
+  toastMocks.success.mockReset();
+  toastMocks.error.mockReset();
+  toastMocks.promise.mockReset();
 
     actionMocks.getDueWarmupCards.mockResolvedValue({ success: true, cards: [] });
     actionMocks.getUnitCompletionStatus.mockResolvedValue({ success: true, completed: false });
@@ -288,6 +327,12 @@ describe("UnitTemplate behavior foundation", () => {
       await Promise.resolve();
       await Promise.resolve();
     });
+  }
+
+  async function reachQuiz() {
+    await click(findButton(container, "Ôn nhanh"));
+    await click(container.querySelector('[data-testid="section-practice"]') as HTMLButtonElement);
+    return container.querySelector('[data-testid="section-quiz"]') as HTMLButtonElement;
   }
 
   it("restores a saved section using the pedagogical section order", async () => {
@@ -408,6 +453,115 @@ it("removes only the current unit progress key on the final section", async () =
   expect(container.querySelector('[data-testid="section-quiz"]')).not.toBeNull();
   expect(localStorage.getItem(currentKey)).toBeNull();
   expect(JSON.parse(localStorage.getItem(otherKey) ?? "null")).toEqual({ section: 4 });
+});
+
+
+it.each([
+  {
+    name: "three stars at 100 points",
+    unit: makeUnit({ xp: 100, quiz: [], listenAndChoose: [] }),
+    score: "100",
+    stars: "3",
+    xp: "100",
+  },
+  {
+    name: "two stars at the 60-point threshold",
+    unit: makeUnit({
+      xp: 100,
+      quiz: [{ id: "q1", question: "Choose yes", options: ["yes", "no"], answer: "yes", type: "multiple-choice" }],
+      listenAndChoose: [],
+    }),
+    score: "60",
+    stars: "2",
+    xp: "85",
+  },
+  {
+    name: "one star below 60 points",
+    unit: makeUnit({
+      xp: 100,
+      quiz: [{ id: "q1", question: "Choose yes", options: ["yes", "no"], answer: "yes", type: "multiple-choice" }],
+      listenAndChoose: [{ id: "l1", audio_text: "yes", options: ["yes", "no"], answer: "yes" }],
+    }),
+    score: "30",
+    stars: "1",
+    xp: "70",
+  },
+])("derives $name and preserves the completeUnit action contract", async ({ unit, score, stars, xp }) => {
+  await renderUnit(unit);
+  const quiz = await reachQuiz();
+
+  expect(quiz).toHaveAttribute("data-effective-score", score);
+  expect(quiz).toHaveAttribute("data-star-count", stars);
+  expect(quiz).toHaveAttribute("data-xp-to-earn", xp);
+
+  await click(quiz);
+  expect(actionMocks.completeUnit).toHaveBeenCalledWith("unit-test", Number(stars));
+});
+
+it("coordinates authenticated completion data, streak checks, XP sync, vocab seeding, and nextRoute", async () => {
+  const xpEvent = vi.fn();
+  window.addEventListener("ato:xp-earned", xpEvent as EventListener);
+  actionMocks.completeUnit.mockResolvedValue({
+    success: true,
+    xpEarned: 123,
+    newStreak: 7,
+    completedCount: 5,
+    newTotalXp: 500,
+    leveledUp: true,
+    newLevel: "A2",
+  });
+  const unit = makeUnit({
+    vocab: [{ id: 1, word: "work", phonetic: "/wɜːk/", meaning: "làm việc", example: "I work here." }],
+  });
+
+  await renderUnit(unit, "/learn/next-unit");
+  await click(await reachQuiz());
+
+  expect(streakMocks.checkMilestone).toHaveBeenCalledWith(7);
+  expect(actionMocks.seedUnitVocabToSRS).toHaveBeenCalledTimes(1);
+  expect(JSON.parse(localStorage.getItem("pending-level-up") ?? "null")).toEqual({ prev: null, next: "A2" });
+  expect(localStorage.getItem(`ato_xp_sync_${new Date().toDateString()}`)).toBe("123");
+  expect(xpEvent).toHaveBeenCalled();
+  expect(localStorage.getItem("guest_completed_units")).toBeNull();
+  expect(container.textContent).toContain("Xuất sắc! 🏆");
+  expect(container.querySelector('a[href="/learn/next-unit"]')).not.toBeNull();
+  window.removeEventListener("ato:xp-earned", xpEvent as EventListener);
+});
+
+it("keeps non-authenticated server failures out of guest fallback", async () => {
+  actionMocks.completeUnit.mockResolvedValue({ success: false, error: "Database unavailable" });
+
+  await renderUnit();
+  await click(await reachQuiz());
+
+  expect(localStorage.getItem("guest_completed_units")).toBeNull();
+  expect(container.textContent).not.toContain("Xuất sắc! 🏆");
+  expect(toastMocks.error).toHaveBeenCalledWith("Database unavailable");
+  expect(streakMocks.checkMilestone).not.toHaveBeenCalled();
+});
+
+it("loads authenticated completion status and disables duplicate completion after the status resolves", async () => {
+  let resolveStatus!: (value: { success: true; completed: true }) => void;
+  actionMocks.getUnitCompletionStatus.mockReturnValue(
+    new Promise((resolve) => {
+      resolveStatus = resolve;
+    }),
+  );
+
+  await renderUnit();
+  const quiz = await reachQuiz();
+  expect(actionMocks.getUnitCompletionStatus).toHaveBeenCalledWith("unit-test");
+  expect(quiz).not.toBeDisabled();
+
+  await act(async () => {
+    resolveStatus({ success: true, completed: true });
+    await Promise.resolve();
+    await Promise.resolve();
+  });
+
+  expect(container.querySelector('[data-testid="section-quiz"]')).toBeDisabled();
+  await click(container.querySelector('[data-testid="section-quiz"]') as HTMLButtonElement);
+  expect(actionMocks.completeUnit).not.toHaveBeenCalled();
 });
 
 });
