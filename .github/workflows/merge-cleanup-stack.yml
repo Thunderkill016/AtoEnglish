@@ -14,11 +14,11 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     env:
-      PR_NUMBER: "6"
-      HEAD_BRANCH: agent/cleanup-unused-type-barrel
-      ORIGINAL_BASE_SHA: 5b8fcc59d7ef7a632fd93549d6e7e73f95f3259c
-      ORIGINAL_HEAD_SHA: 9ebcb80c97d9713e6b852982af5bf201462ed722
-      COMMIT_TITLE: "refactor: remove unused legacy type barrel"
+      PR_NUMBER: "7"
+      HEAD_BRANCH: agent/cleanup-unused-enrich-unit
+      ORIGINAL_BASE_SHA: 9ebcb80c97d9713e6b852982af5bf201462ed722
+      ORIGINAL_HEAD_SHA: 20d83ea67e768190ae8bb56c57b168486e32a216
+      COMMIT_TITLE: "refactor: remove unused lesson enrichment helper"
     steps:
       - name: Checkout controller branch
         uses: actions/checkout@v4
