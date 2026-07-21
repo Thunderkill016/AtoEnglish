@@ -20,20 +20,25 @@
 
 ## Active queue
 
-### CLEANUP-010 — Verify legacy landing outcome section
-- **Status:** `ready`
-- **Goal:** Verify `src/components/landing/OutcomesSection.tsx` against the active landing-page composition.
-- **Done when:** Static/dynamic imports and landing-page references are checked; deletion occurs only if proven unused; inventory, typecheck, lint, and tests pass afterward.
-
 ### CLEANUP-011 — Verify unused shared UI primitives
-- **Status:** `blocked`
-- **Blocked by:** Independent verification after CLEANUP-010.
-- **Goal:** Classify `src/components/layout/user-avatar.tsx` and `src/components/ui/logo.tsx` without assuming that similarly named markup is equivalent.
+- **Status:** `ready`
+- **Goal:** Classify `src/components/layout/user-avatar.tsx` and `src/components/ui/logo.tsx` independently in one presentational-UI batch.
+- **Done when:** Exact symbol/path and export usage are verified; only proven-unused files are removed; inventory, typecheck, lint, and tests pass afterward.
 
-### CLEANUP-012 — Verify implementation helper candidates
+### CLEANUP-012A — Verify lesson enrichment helper
 - **Status:** `blocked`
-- **Blocked by:** Separate review of framework and operational usage.
-- **Goal:** Classify `src/lib/lessons/enrich-unit.ts`, `src/lib/supabase/middleware.ts`, and `src/types/index.ts` independently; do not combine middleware deletion with UI cleanup.
+- **Blocked by:** Review of active unit-loading and lesson fallback behavior.
+- **Goal:** Determine whether `src/lib/lessons/enrich-unit.ts` is truly dead or an intended content fallback.
+
+### CLEANUP-012B — Verify Supabase middleware helper
+- **Status:** `blocked`
+- **Blocked by:** Full review of `src/proxy.ts`, `src/lib/supabase/session.ts`, auth refresh behavior, and framework conventions.
+- **Goal:** Classify `src/lib/supabase/middleware.ts` without risking session refresh or protected-route behavior.
+
+### CLEANUP-012C — Verify legacy type barrel
+- **Status:** `blocked`
+- **Blocked by:** Repository-wide type import search.
+- **Goal:** Determine whether `src/types/index.ts` has any consumer before removal.
 
 ### CLEANUP-004 — Split UnitTemplate safely
 - **Status:** `blocked`

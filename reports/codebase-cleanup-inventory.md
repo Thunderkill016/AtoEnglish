@@ -51,12 +51,7 @@ Removed as one disconnected feature group after full-checkout search found no co
 - `src/features/notifications/hooks/useNotificationCenter.ts`
 - `src/features/notifications/utils/notificationCopy.ts`
 
-Preserved:
-
-- `src/app/api/notifications/history/route.ts`
-- `PushPermissionCard`
-- push/service-worker infrastructure
-- notification migrations, tables, and generated Supabase types
+Preserved the notification history API, push permission UI, service worker, subscriptions, migrations, tables, and generated Supabase types.
 
 Validation results:
 
@@ -73,13 +68,7 @@ Removed after exact symbol/path search confirmed no consumer:
 - `src/components/exercises/ListenAndChooseExercise.tsx`
 - `src/components/exercises/MatchingPairsGame.tsx`
 
-Evidence:
-
-- No static import, dynamic import, exported-type consumer, script, config, or runtime path referenced either component.
-- The product still supports both exercise types through active lesson code:
-  - `DialogueSection` consumes `listenAndChoose` content.
-  - `PracticeSection` implements matching interactions and dictation from `listenAndChoose` data.
-- Unit curriculum data, lesson types, content standards, scoring, section order, and audio behavior remain unchanged.
+Active exercise behavior remains in `DialogueSection` and `PracticeSection`; curriculum data, lesson types, scoring, section order, and audio behavior were unchanged.
 
 Validation results:
 
@@ -89,13 +78,33 @@ Validation results:
 - ESLint passed
 - unit tests passed
 
+### Verified dead-code removal — legacy landing outcomes section
+
+Removed after full-checkout verification:
+
+- `src/components/landing/OutcomesSection.tsx`
+
+Evidence:
+
+- No static import, dynamic import, route/layout integration, export consumer, test, script, or runtime anchor referenced the component.
+- The active landing page renders `ProblemSection`, `HowItWorksSection`, `BenefitsSection`, `ScienceSection`, `TestimonialsSection`, `FaqSection`, and `FinalCtaSection` instead.
+- No active landing component or marketing copy was edited.
+
+Validation results:
+
+- source files scanned: 345 → 344
+- unreachable candidates: 6 → 5
+- TypeScript passed
+- ESLint passed
+- unit tests passed
+
 Temporary GitHub Actions workflows used for full-checkout verification are removed after their final successful run so they do not consume future Actions minutes.
 
 ## Current inventory summary
 
-- Source files scanned: 345
+- Source files scanned: 344
 - Known entry points: 118
-- Unreachable candidates: 6
+- Unreachable candidates: 5
 - Files with at least 500 lines: 32
 - Possible unused runtime/tooling dependencies: 8
 - Possible unused type packages: 2
@@ -104,7 +113,6 @@ Temporary GitHub Actions workflows used for full-checkout verification are remov
 
 These remain review candidates, not automatic deletion instructions:
 
-- `src/components/landing/OutcomesSection.tsx`
 - `src/components/layout/user-avatar.tsx`
 - `src/components/ui/logo.tsx`
 - `src/lib/lessons/enrich-unit.ts`
@@ -119,9 +127,7 @@ Every candidate still requires symbol/path search, framework-convention review, 
 
 Classification: **active, oversized, high-priority refactor — never delete**
 
-Current generated size: 1,348 lines.
-
-It owns lesson-domain types, section ordering, orchestration state, browser persistence, audio, server actions, completion logic, and celebration UI.
+Current generated size: 1,348 lines. It owns lesson-domain types, section ordering, orchestration state, browser persistence, audio, server actions, completion logic, and celebration UI.
 
 Safe refactor order:
 
@@ -136,19 +142,11 @@ Safe refactor order:
 
 Classification: **active, cleanup candidate**
 
-The file combines completion transactions, XP, vocabulary seeding, achievements, streak handling, and cache revalidation. Structural splitting requires focused tests. Its runtime CEFR tuple used only for a type remains a smaller independent cleanup candidate.
+The file combines completion transactions, XP, vocabulary seeding, achievements, streak handling, and cache revalidation. Structural splitting requires focused tests.
 
 ## Dependency review candidates
 
-Do not remove packages from import-only results:
-
-- Tailwind and PostCSS packages can be loaded through configuration.
-- Type packages can be loaded implicitly by TypeScript.
-- `shadcn` may be developer CLI tooling rather than runtime code.
-- `wait-on` may be used by CI or smoke workflows.
-- `gtts` supports audio-generation scripts.
-
-Dependency changes require lockfile review, clean installation, typecheck, lint, tests, and build validation.
+Do not remove packages from import-only results. Tailwind/PostCSS and type packages can be loaded implicitly; CLI and smoke tooling require config/script review. Dependency changes require lockfile review, clean installation, typecheck, lint, tests, and build validation.
 
 ## Deletion policy
 
@@ -165,4 +163,4 @@ A source file can be deleted only when all applicable checks pass:
 
 ## Next cleanup batch
 
-Verify the remaining candidates as independent logical groups, beginning with the legacy landing component `OutcomesSection.tsx`. Do not combine UI candidates with Supabase middleware or lesson transformation helpers.
+Verify the unused shared UI candidates `user-avatar.tsx` and `logo.tsx` independently in one presentational-UI batch. Keep lesson enrichment, Supabase session middleware, and type-barrel review in separate technical batches.

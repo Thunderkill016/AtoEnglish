@@ -6,10 +6,10 @@
 
 | Field | Value |
 |---|---|
-| Task | CLEANUP-008 — Verify old exercise components |
+| Task | CLEANUP-010 — Verify legacy landing outcomes section |
 | Status | done — awaiting stacked PR review |
-| Branch | `agent/cleanup-unused-exercises` |
-| Goal | Remove unreachable legacy exercise components while preserving active lesson interactions and curriculum data |
+| Branch | `agent/cleanup-unused-outcomes` |
+| Goal | Remove the disconnected landing section without changing the active landing composition or copy |
 
 ## Completed in earlier cleanup batches
 
@@ -17,24 +17,24 @@
 - Replaced oversized agent journals with concise current/open-work files.
 - Added reproducible codebase inventory and durable cleanup evidence.
 - Removed four foundation dead-code files.
-- Removed the disconnected five-file notification-center UI group while preserving push and API infrastructure.
+- Removed the disconnected notification-center UI group while preserving push and API infrastructure.
+- Removed two legacy exercise components while preserving active exercise behavior.
 
-## Completed in CLEANUP-008
+## Completed in CLEANUP-010
 
-Removed after exact symbol/path verification:
+Removed after full-checkout verification:
 
-- `src/components/exercises/ListenAndChooseExercise.tsx`
-- `src/components/exercises/MatchingPairsGame.tsx`
+- `src/components/landing/OutcomesSection.tsx`
 
-Preserved active functionality:
+Evidence:
 
-- `DialogueSection` still consumes `listenAndChoose` content.
-- `PracticeSection` still implements matching interactions and dictation sourced from lesson data.
-- Unit data, lesson types, content standards, section order, scoring, and audio behavior remain unchanged.
+- No static import, dynamic import, route/layout integration, test, script, or runtime anchor referenced the component.
+- The active landing page renders `ProblemSection`, `HowItWorksSection`, `BenefitsSection`, `ScienceSection`, `TestimonialsSection`, `FaqSection`, and `FinalCtaSection` instead.
+- No active landing component or marketing copy changed.
 
 ## Validation completed
 
-A full GitHub Actions checkout successfully ran before and after deletion:
+A full GitHub Actions checkout ran before and after deletion:
 
 ```bash
 npm ci --ignore-scripts --legacy-peer-deps
@@ -46,8 +46,8 @@ npm run test
 
 Post-deletion results:
 
-- source files scanned: 347 → 345
-- unreachable candidates: 8 → 6
+- source files scanned: 345 → 344
+- unreachable candidates: 6 → 5
 - TypeScript passed
 - ESLint passed
 - unit tests passed
@@ -56,4 +56,4 @@ The temporary validation workflow was removed after the final successful run.
 
 ## Next action
 
-CLEANUP-010 — verify `src/components/landing/OutcomesSection.tsx` against the current landing-page composition on a separate branch and pull request.
+CLEANUP-011 — verify `src/components/layout/user-avatar.tsx` and `src/components/ui/logo.tsx` independently as one presentational-UI batch. Do not combine them with lesson enrichment, Supabase middleware, or type-barrel cleanup.
