@@ -14,11 +14,11 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     env:
-      PR_NUMBER: "4"
-      HEAD_BRANCH: agent/cleanup-unused-outcomes
-      ORIGINAL_BASE_SHA: b13c31f2531e03766e72e2cb3e4dd220193cb0d7
-      ORIGINAL_HEAD_SHA: 5d1c180854033ea29446a5b7f6732f2d852f2094
-      COMMIT_TITLE: "refactor: remove unused landing outcomes section"
+      PR_NUMBER: "5"
+      HEAD_BRANCH: agent/cleanup-unused-shared-ui
+      ORIGINAL_BASE_SHA: 5d1c180854033ea29446a5b7f6732f2d852f2094
+      ORIGINAL_HEAD_SHA: 5b8fcc59d7ef7a632fd93549d6e7e73f95f3259c
+      COMMIT_TITLE: "refactor: remove unused shared UI components"
     steps:
       - name: Checkout controller branch
         uses: actions/checkout@v4
@@ -37,15 +37,10 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git fetch origin '+refs/heads/*:refs/remotes/origin/*' --force
-
           test "$(gh api "repos/${repo}/pulls/${PR_NUMBER}" --jq '.state')" = "open"
           test "$(gh api "repos/${repo}/pulls/${PR_NUMBER}" --jq '.draft')" = "false"
-          unresolved=$(gh api graphql \
-            -f query='query($owner:String!,$name:String!,$number:Int!){repository(owner:$owner,name:$name){pullRequest(number:$number){reviewThreads(first:100){nodes{isResolved}}}}}' \
-            -f owner="$owner" -f name="$name" -F number="$PR_NUMBER" \
-            --jq '[.data.repository.pullRequest.reviewThreads.nodes[] | select(.isResolved == false)] | length')
+          unresolved=$(gh api graphql -f query='query($owner:String!,$name:String!,$number:Int!){repository(owner:$owner,name:$name){pullRequest(number:$number){reviewThreads(first:100){nodes{isResolved}}}}}' -f owner="$owner" -f name="$name" -F number="$PR_NUMBER" --jq '[.data.repository.pullRequest.reviewThreads.nodes[] | select(.isResolved == false)] | length')
           test "$unresolved" -eq 0
-
           git fetch origin main --force
           git diff --exit-code "$ORIGINAL_BASE_SHA" origin/main -- .
           git diff --binary "$ORIGINAL_BASE_SHA" "$ORIGINAL_HEAD_SHA" -- . > /tmp/pr.patch
