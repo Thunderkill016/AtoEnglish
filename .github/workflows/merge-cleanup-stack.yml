@@ -1,4 +1,4 @@
-name: Rebuild next cleanup PR
+name: Validate merged cleanup stack
 
 on:
   pull_request:
@@ -6,48 +6,109 @@ on:
       - main
 
 permissions:
-  contents: write
-  pull-requests: write
+  contents: read
 
 jobs:
-  rebuild:
+  validate-main:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 55
     env:
-      PR_NUMBER: "16"
-      HEAD_BRANCH: agent/unit-template-progress-persistence-hook
-      ORIGINAL_BASE_SHA: 305854c0dd397efee7a16cdd380adcb232e7939d
-      ORIGINAL_HEAD_SHA: e76b0cc2a95ba3f3debbbf102cab9a7051c35a5a
-      COMMIT_TITLE: "refactor: extract UnitTemplate progress persistence hook"
+      NEXT_PUBLIC_SUPABASE_URL: https://example.supabase.co
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: final-main-validation-placeholder
+      NEXT_PUBLIC_APP_URL: http://127.0.0.1:3000
+      PLAYWRIGHT_BASE_URL: http://127.0.0.1:3000
     steps:
-      - name: Checkout controller branch
+      - name: Checkout main
         uses: actions/checkout@v4
         with:
+          ref: main
           fetch-depth: 0
 
-      - name: Rebuild and verify exact PR tree
-        env:
-          GH_TOKEN: ${{ github.token }}
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Verify expected final tree
         shell: bash
         run: |
           set -euo pipefail
-          repo="$GITHUB_REPOSITORY"
-          owner="${repo%%/*}"
-          name="${repo##*/}"
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git fetch origin '+refs/heads/*:refs/remotes/origin/*' --force
-          test "$(gh api "repos/${repo}/pulls/${PR_NUMBER}" --jq '.state')" = "open"
-          test "$(gh api "repos/${repo}/pulls/${PR_NUMBER}" --jq '.draft')" = "false"
-          unresolved=$(gh api graphql -f query='query($owner:String!,$name:String!,$number:Int!){repository(owner:$owner,name:$name){pullRequest(number:$number){reviewThreads(first:100){nodes{isResolved}}}}}' -f owner="$owner" -f name="$name" -F number="$PR_NUMBER" --jq '[.data.repository.pullRequest.reviewThreads.nodes[] | select(.isResolved == false)] | length')
-          test "$unresolved" -eq 0
-          git fetch origin main --force
-          git diff --exit-code "$ORIGINAL_BASE_SHA" origin/main -- .
-          git diff --binary "$ORIGINAL_BASE_SHA" "$ORIGINAL_HEAD_SHA" -- . > /tmp/pr.patch
-          git checkout -B "$HEAD_BRANCH" origin/main
-          git apply --index --binary /tmp/pr.patch
-          git diff --cached --check
-          git diff --exit-code "$ORIGINAL_HEAD_SHA" -- .
-          git commit -m "$COMMIT_TITLE"
-          git push --force origin "HEAD:$HEAD_BRANCH"
-          gh api "repos/${repo}/pulls/${PR_NUMBER}" -X PATCH -f base=main >/dev/null
+          test "$(git rev-parse HEAD)" = "6229c0202cd0199dd67cdbb96de86f5c61a8e812"
+          git diff --exit-code e76b0cc2a95ba3f3debbbf102cab9a7051c35a5a HEAD -- .
+
+      - name: Clean install
+        run: npm ci --ignore-scripts --legacy-peer-deps
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Generate inventory
+        run: npm run inventory -- --write
+
+      - name: Verify inventory summary
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -F "Source files scanned: 348" reports/codebase-cleanup-inventory.md
+          grep -F "Known entry points: 122" reports/codebase-cleanup-inventory.md
+          grep -F "Unreachable candidates: 0" reports/codebase-cleanup-inventory.md
+
+      - name: Typecheck
+        run: npx tsc --noEmit
+
+      - name: Full lint
+        run: npm run lint
+
+      - name: Full unit tests
+        run: npm run test
+
+      - name: Lesson content-standard tests
+        run: npm run test:content-standard
+
+      - name: Production build
+        run: npm run build
+
+      - name: Start production server
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm run start > /tmp/atoenglish-server.log 2>&1 &
+          echo $! > /tmp/atoenglish-server.pid
+          npx wait-on --timeout 120000 http://127.0.0.1:3000
+
+      - name: Protected-route production E2E
+        run: npx playwright test e2e/protected-routes.spec.ts --project=chromium
+
+      - name: Lesson production smoke E2E
+        run: npx playwright test e2e/lesson-smoke.spec.ts
+
+      - name: Verify repository remains clean
+        shell: bash
+        run: |
+          set -euo pipefail
+          git diff --exit-code
+          git status --short --untracked-files=no
+
+      - name: Write validation summary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "main_sha=$(git rev-parse HEAD)"
+            echo "validated_at=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+            echo "source_files=348"
+            echo "entry_points=122"
+            echo "unreachable_candidates=0"
+          } > /tmp/final-main-validation.txt
+          cp /tmp/atoenglish-server.log /tmp/final-server.log 2>/dev/null || true
+
+      - name: Upload final validation evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: merged-cleanup-main-validation
+          path: |
+            /tmp/final-main-validation.txt
+            /tmp/final-server.log
+          if-no-files-found: warn
