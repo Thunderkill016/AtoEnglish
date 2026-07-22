@@ -1,0 +1,60 @@
+import type { LanguageTarget } from "./schema";
+
+export const APPOINTMENT_TARGETS: LanguageTarget[] = [
+  {
+    id: "m07-what-time",
+    kind: "chunk",
+    form: "What time?",
+    meaningVi: "Hỏi giờ của một cuộc hẹn hoặc hoạt động.",
+    exampleEn: "What time?",
+    exampleVi: "Mấy giờ?",
+    priority: "core",
+  },
+  {
+    id: "m07-at-oclock",
+    kind: "chunk",
+    form: "At ... o'clock.",
+    meaningVi: "Nói giờ tròn của cuộc hẹn.",
+    exampleEn: "At three o'clock.",
+    exampleVi: "Lúc ba giờ.",
+    priority: "core",
+  },
+  {
+    id: "m07-day-ok",
+    kind: "discourse_move",
+    form: "Monday is OK.",
+    meaningVi: "Chấp nhận một ngày được đề xuất.",
+    exampleEn: "Monday is OK.",
+    exampleVi: "Thứ Hai được.",
+    priority: "core",
+  },
+  {
+    id: "m07-confirm-slot",
+    kind: "repair_strategy",
+    form: "So, Monday at three?",
+    meaningVi: "Nhắc lại ngày và giờ để xác nhận.",
+    exampleEn: "So, Monday at three?",
+    exampleVi: "Vậy là thứ Hai lúc ba giờ nhé?",
+    priority: "core",
+  },
+  {
+    id: "m07-correct-slot",
+    kind: "repair_strategy",
+    form: "No, Tuesday at three.",
+    meaningVi: "Sửa lại ngày hoặc giờ khi người kia xác nhận sai.",
+    exampleEn: "No, Tuesday at three.",
+    exampleVi: "Không, thứ Ba lúc ba giờ.",
+    priority: "support",
+  },
+  {
+    id: "m07-time-clarity",
+    kind: "pronunciation",
+    form: "two / three; Monday / Tuesday",
+    meaningVi: "Nói rõ số giờ và ngày để tránh nhầm lịch.",
+    exampleEn: "Tuesday at two o'clock.",
+    exampleVi: "Thứ Ba lúc hai giờ.",
+    priority: "support",
+    pronunciationGoal:
+      "Nhấn rõ số giờ và âm đầu của Monday/Tuesday; không nuốt phụ âm cuối trong three.",
+  },
+];

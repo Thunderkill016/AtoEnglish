@@ -13,10 +13,10 @@ import {
 import { validateProductionLessonV2 } from "./production-validator";
 
 describe("Lesson V2 runtime registry", () => {
-  it("registers six complete Pre-A1 modules and the first checkpoint", () => {
-    expect(LESSON_V2_MODULES).toHaveLength(6);
-    expect(LESSON_V2_SECTIONS).toHaveLength(7);
-    expect(LESSON_V2_REGISTRY).toHaveLength(19);
+  it("registers seven complete Pre-A1 modules and the first checkpoint", () => {
+    expect(LESSON_V2_MODULES).toHaveLength(7);
+    expect(LESSON_V2_SECTIONS).toHaveLength(8);
+    expect(LESSON_V2_REGISTRY).toHaveLength(22);
 
     for (const moduleId of [
       "pre-a1-m01",
@@ -25,6 +25,7 @@ describe("Lesson V2 runtime registry", () => {
       "pre-a1-m04",
       "pre-a1-m05",
       "pre-a1-m06",
+      "pre-a1-m07",
     ]) {
       expect(
         getLessonsForModuleV2(moduleId).map((entry) => entry.sessionKind),
@@ -44,7 +45,7 @@ describe("Lesson V2 runtime registry", () => {
     }
   });
 
-  it("resolves the next lesson through module 6", () => {
+  it("resolves the next lesson through module 7", () => {
     const first = getRegisteredLessonV2("pre-a1-m01-encounter");
     expect(first?.orderInModule).toBe(1);
     expect(
@@ -68,7 +69,10 @@ describe("Lesson V2 runtime registry", () => {
     expect(
       getNextLessonV2("pre-a1-m05-retain-transfer")?.lesson.id,
     ).toBe("pre-a1-m06-encounter");
-    expect(getNextLessonV2("pre-a1-m06-retain-transfer")).toBeUndefined();
+    expect(
+      getNextLessonV2("pre-a1-m06-retain-transfer")?.lesson.id,
+    ).toBe("pre-a1-m07-encounter");
+    expect(getNextLessonV2("pre-a1-m07-retain-transfer")).toBeUndefined();
   });
 
   it("keeps milestone prerequisites explicit", () => {
@@ -80,6 +84,10 @@ describe("Lesson V2 runtime registry", () => {
       getRegisteredLessonV2("pre-a1-m06-encounter")?.lesson
         .prerequisiteLessonIds,
     ).toEqual(["pre-a1-m05-retain-transfer"]);
+    expect(
+      getRegisteredLessonV2("pre-a1-m07-encounter")?.lesson
+        .prerequisiteLessonIds,
+    ).toEqual(["pre-a1-m06-retain-transfer"]);
   });
 
   it("keeps lesson ids unique and level order contiguous", () => {
@@ -97,6 +105,7 @@ describe("Lesson V2 runtime registry", () => {
     expect(getReviewDelayAfterLessonV2("pre-a1-m04-communicate")).toBe(24);
     expect(getReviewDelayAfterLessonV2("pre-a1-m05-communicate")).toBe(24);
     expect(getReviewDelayAfterLessonV2("pre-a1-m06-communicate")).toBe(24);
+    expect(getReviewDelayAfterLessonV2("pre-a1-m07-communicate")).toBe(24);
     expect(getReviewDelayAfterLessonV2("pre-a1-checkpoint-01")).toBeUndefined();
   });
 });
