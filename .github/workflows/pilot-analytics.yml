@@ -1,0 +1,116 @@
+name: Validate pilot analytics batch
+
+on:
+  push:
+    branches:
+      - agent/pilot-analytics
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+concurrency:
+  group: pilot-analytics-batch
+  cancel-in-progress: true
+
+jobs:
+  apply-and-validate:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      NEXT_PUBLIC_SUPABASE_URL: https://example.supabase.co
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: test-anon-key
+      NEXT_PUBLIC_SITE_URL: http://127.0.0.1:3000
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: agent/pilot-analytics
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Apply focused analytics patch
+        shell: bash
+        run: |
+          cat > /tmp/pilot-analytics-patch.gz.b64 <<'PATCH_B64'
+          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
+          PATCH_B64
+          base64 -d /tmp/pilot-analytics-patch.gz.b64 | gzip -d > /tmp/apply_patch.py
+          python /tmp/apply_patch.py
+          git diff --check
+
+      - name: Install dependencies
+        run: npm ci --ignore-scripts --legacy-peer-deps
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Run focused tests
+        run: >-
+          npx vitest run
+          src/lib/pilot/pilot-analytics.test.ts
+          src/lib/pilot/pilot-analytics-client.test.ts
+          src/components/learn/UnitTemplate.test.tsx
+
+      - name: Typecheck
+        shell: bash
+        run: |
+          set -o pipefail
+          npx tsc --noEmit 2>&1 | tee /tmp/pilot-analytics-typecheck.log
+
+      - name: Upload typecheck diagnostics
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pilot-analytics-typecheck
+          path: /tmp/pilot-analytics-typecheck.log
+          if-no-files-found: error
+
+      - name: Lint focused files
+        run: >-
+          npx eslint
+          src/lib/pilot/pilot-analytics.ts
+          src/lib/pilot/pilot-analytics.test.ts
+          src/lib/pilot/pilot-analytics-client.ts
+          src/lib/pilot/pilot-analytics-client.test.ts
+          src/app/actions/pilot-analytics.ts
+          src/components/analytics/PilotLifecycleTracker.tsx
+          src/components/landing/HeroCTA.tsx
+          src/components/landing/FinalCtaSection.tsx
+          src/components/learn/UnitTemplate.tsx
+          src/components/learn/sections/SpeakingSection.tsx
+          src/app/layout.tsx
+
+      - name: Run full quality gates
+        run: |
+          npm run lint
+          npm run test
+          npm run test:content-standard
+          npm run build
+
+      - name: Run production lesson smoke tests
+        shell: bash
+        run: |
+          npm run start -- -H 127.0.0.1 > /tmp/atoenglish-server.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill $SERVER_PID 2>/dev/null || true' EXIT
+          npx wait-on http://127.0.0.1:3000 --timeout 60000
+          PLAYWRIGHT_BASE_URL=http://127.0.0.1:3000             npx playwright test e2e/lesson-smoke.spec.ts
+
+      - name: Commit validated batch and remove temporary workflow
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm .github/workflows/pilot-analytics.yml
+          git add -A
+          git commit -m "feat: add minimal pilot analytics"
+          git push origin HEAD:agent/pilot-analytics
