@@ -1,0 +1,285 @@
+import type { LanguageTarget, LessonV2 } from "./schema";
+
+const CHECKPOINT_01_TARGETS: LanguageTarget[] = [
+  {
+    id: "cp01-greet-name",
+    kind: "discourse_move",
+    form: "Hello. My name is ...",
+    meaningVi: "Chào và tự giới thiệu tên.",
+    exampleEn: "Hello. My name is Lan.",
+    exampleVi: "Xin chào. Tên tôi là Lan.",
+    priority: "core",
+  },
+  {
+    id: "cp01-object",
+    kind: "discourse_move",
+    form: "What is this? This is a ...",
+    meaningVi: "Hỏi và xác định một đồ vật.",
+    exampleEn: "What is this? This is a bag.",
+    exampleVi: "Đây là gì? Đây là một chiếc túi.",
+    priority: "core",
+  },
+  {
+    id: "cp01-color",
+    kind: "discourse_move",
+    form: "What color is it? It is ...",
+    meaningVi: "Hỏi và nói màu của đồ vật.",
+    exampleEn: "What color is it? It is blue.",
+    exampleVi: "Nó màu gì? Nó màu xanh.",
+    priority: "core",
+  },
+  {
+    id: "cp01-price-pay",
+    kind: "discourse_move",
+    form: "How much is it? Cash/Card, please.",
+    meaningVi: "Hỏi giá và chọn cách thanh toán.",
+    exampleEn: "How much is it? Card, please.",
+    exampleVi: "Món này giá bao nhiêu? Tôi trả bằng thẻ.",
+    priority: "core",
+  },
+  {
+    id: "cp01-repair-close",
+    kind: "repair_strategy",
+    form: "Please say that again. See you later.",
+    meaningVi: "Yêu cầu lặp lại khi cần và kết thúc trao đổi.",
+    exampleEn: "Please say that again. Thank you. See you later.",
+    exampleVi: "Vui lòng nói lại. Cảm ơn. Hẹn gặp lại.",
+    priority: "core",
+  },
+];
+
+export const PRE_A1_CHECKPOINT_01: LessonV2 = {
+  schemaVersion: 2,
+  id: "pre-a1-checkpoint-01",
+  missionId: "pre-a1-checkpoint-01",
+  titleVi: "Checkpoint 1: Hoàn thành một giao dịch xã giao",
+  titleEn: "Checkpoint 1: Complete a short social transaction",
+  level: "PRE_A1",
+  legacyLevel: "A0",
+  estimatedMinutes: 12,
+  primaryOutcome: {
+    id: "pre-a1-checkpoint-01-outcome",
+    level: "PRE_A1",
+    activity: "interaction",
+    domain: "public",
+    statementEn:
+      "Can complete a short supported exchange by greeting, giving a name, identifying an item and colour, asking the price, choosing payment, repairing and closing.",
+    statementVi:
+      "Có thể hoàn thành trao đổi ngắn có hỗ trợ: chào, nói tên, xác định đồ vật và màu, hỏi giá, thanh toán, sửa hiểu nhầm và kết thúc.",
+    source: "ato-adapted",
+    sourceReference: "Integrated Pre-A1 social and transaction checkpoint",
+  },
+  prerequisiteLessonIds: [
+    "pre-a1-m01-retain-transfer",
+    "pre-a1-m02-retain-transfer",
+    "pre-a1-m03-retain-transfer",
+    "pre-a1-m04-retain-transfer",
+  ],
+  targets: CHECKPOINT_01_TARGETS,
+  steps: [
+    {
+      id: "cp01-scenario",
+      kind: "scenario",
+      estimatedMinutes: 1,
+      titleVi: "Mua một món đồ tại quầy cộng đồng",
+      roleVi: "Bạn là khách; người bán chưa biết tên bạn.",
+      situationVi:
+        "Bạn chào, giới thiệu, xác nhận món và màu, hỏi giá, trả tiền rồi rời đi.",
+      goalVi: "Kết hợp kiến thức của bốn module trong một nhiệm vụ.",
+    },
+    {
+      id: "cp01-model",
+      kind: "model",
+      estimatedMinutes: 2,
+      titleVi: "Nghe toàn bộ nhiệm vụ một lần",
+      replayRates: [0.85],
+      turns: [
+        {
+          speaker: "Seller",
+          text: "Hello. What's your name?",
+          targetIds: ["cp01-greet-name"],
+        },
+        {
+          speaker: "Customer",
+          text: "My name is Minh.",
+          targetIds: ["cp01-greet-name"],
+        },
+        {
+          speaker: "Customer",
+          text: "What is this? What color is it?",
+          targetIds: ["cp01-object", "cp01-color"],
+        },
+        {
+          speaker: "Seller",
+          text: "This is a bag. It is blue.",
+          targetIds: ["cp01-object", "cp01-color"],
+        },
+        {
+          speaker: "Customer",
+          text: "How much is it?",
+          targetIds: ["cp01-price-pay"],
+        },
+        {
+          speaker: "Seller",
+          text: "It is eight dollars.",
+          targetIds: ["cp01-price-pay"],
+        },
+        {
+          speaker: "Customer",
+          text: "Card, please. Thank you. See you later.",
+          targetIds: ["cp01-price-pay", "cp01-repair-close"],
+        },
+      ],
+    },
+    {
+      id: "cp01-notice",
+      kind: "notice",
+      estimatedMinutes: 1,
+      titleVi: "Nhìn chuỗi nhiệm vụ, không học câu mới",
+      targetIds: [
+        "cp01-greet-name",
+        "cp01-object",
+        "cp01-color",
+        "cp01-price-pay",
+        "cp01-repair-close",
+      ],
+      explanationVi:
+        "Checkpoint không thêm ngôn ngữ mới. Bạn phải chọn đúng câu cũ theo thứ tự của nhiệm vụ và tự sửa khi bị nghe nhầm.",
+    },
+    {
+      id: "cp01-practice",
+      kind: "practice",
+      estimatedMinutes: 3,
+      titleVi: "Retrieval xen kẽ bốn module",
+      exercises: [
+        {
+          id: "cp01-p1",
+          kind: "listen",
+          promptVi: "Người bán vừa nói giá bao nhiêu?",
+          audioText: "It is eight dollars.",
+          options: ["5 đô-la", "8 đô-la", "10 đô-la"],
+          answer: "8 đô-la",
+          targetIds: ["cp01-price-pay"],
+        },
+        {
+          id: "cp01-p2",
+          kind: "select",
+          promptVi: "Chọn câu để xác định món đồ.",
+          options: ["What is this?", "How are you?", "And you?"],
+          answer: "What is this?",
+          targetIds: ["cp01-object"],
+        },
+        {
+          id: "cp01-p3",
+          kind: "order",
+          promptVi: "Xếp câu tự giới thiệu.",
+          tokens: ["is", "My", "Minh", "name"],
+          answer: "My name is Minh",
+          targetIds: ["cp01-greet-name"],
+        },
+        {
+          id: "cp01-p4",
+          kind: "recall",
+          promptVi: "Tự nhớ câu hỏi giá.",
+          answer: "How much is it?",
+          acceptedAnswers: ["How much is it"],
+          targetIds: ["cp01-price-pay"],
+        },
+        {
+          id: "cp01-p5",
+          kind: "recall",
+          promptVi: "Tự nhớ câu yêu cầu người kia nói lại.",
+          answer: "Please say that again.",
+          acceptedAnswers: ["Please say that again"],
+          targetIds: ["cp01-repair-close"],
+        },
+      ],
+    },
+    {
+      id: "cp01-rehearsal",
+      kind: "rehearsal",
+      estimatedMinutes: 1,
+      titleVi: "Lập kế hoạch bằng sáu ý",
+      promptVi:
+        "Chỉ nhìn sáu ý rồi tự tạo câu: hello — name — object/color — price — payment — goodbye.",
+      keyWords: ["hello", "name", "bag/blue", "price", "card", "later"],
+      targetIds: [
+        "cp01-greet-name",
+        "cp01-object",
+        "cp01-color",
+        "cp01-price-pay",
+        "cp01-repair-close",
+      ],
+    },
+    {
+      id: "cp01-performance",
+      kind: "performance",
+      estimatedMinutes: 2,
+      titleVi: "Thực hiện checkpoint hai lượt",
+      task: {
+        roleVi: "Khách mua hàng",
+        contextVi:
+          "Lượt một mua bag/blue giá 8 đô-la. Lượt hai mua phone/black giá 10 đô-la; người bán nói giá quá nhanh.",
+        goalVi:
+          "Hoàn thành chuỗi giao tiếp và tự sửa một lần khi thông tin không rõ.",
+        promptVi:
+          "Không đọc kịch bản. Lượt hai phải dùng Please say that again trước khi chọn cash hoặc card.",
+        successCriteriaVi: [
+          "Bạn hoàn thành đủ các chức năng theo đúng thứ tự nhiệm vụ.",
+          "Người nghe hiểu tên, đồ vật, màu, giá và cách thanh toán.",
+          "Bạn tự dùng được câu sửa hiểu nhầm và lời kết.",
+        ],
+        targetIds: [
+          "cp01-greet-name",
+          "cp01-object",
+          "cp01-color",
+          "cp01-price-pay",
+          "cp01-repair-close",
+        ],
+        evidence: ["task_checklist", "self_assessment"],
+        attempts: 2,
+        preparationSeconds: 20,
+        responseSeconds: 25,
+        rubric: [
+          "task_achievement",
+          "comprehensibility",
+          "interaction_repair",
+        ],
+      },
+    },
+    {
+      id: "cp01-feedback",
+      kind: "feedback",
+      estimatedMinutes: 1,
+      titleVi: "Xác định lỗ hổng cần bài bù",
+      priorityOrder: [
+        "task_achievement",
+        "comprehensibility",
+        "interaction_repair",
+      ],
+      repairPromptsVi: [
+        "Chức năng nào bị thiếu hoặc sai thứ tự?",
+        "Thông tin nào người nghe không xác định được?",
+        "Bạn có tự sửa khi giá được nói quá nhanh không?",
+      ],
+    },
+    {
+      id: "cp01-exit",
+      kind: "exit",
+      estimatedMinutes: 1,
+      titleVi: "Chốt checkpoint",
+      canDoCheckVi:
+        "Tôi kết hợp được kiến thức của bốn module để hoàn thành một giao dịch xã giao ngắn.",
+      reviewTargetIds: [
+        "cp01-greet-name",
+        "cp01-object",
+        "cp01-color",
+        "cp01-price-pay",
+        "cp01-repair-close",
+      ],
+      confidencePromptVi:
+        "Bạn hoàn thành lượt hai mà không nhìn kịch bản và có tự sửa được không?",
+    },
+  ],
+  tags: ["pre-a1", "checkpoint", "integration", "modules-01-04"],
+};
