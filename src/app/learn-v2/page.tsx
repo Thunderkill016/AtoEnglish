@@ -3,6 +3,7 @@ import Link from "next/link";
 import {
   getLessonsForModuleV2,
   LESSON_V2_MODULES,
+  LESSON_V2_REGISTRY,
   type LessonSessionKind,
 } from "../../lib/lessons/v2/lesson-registry";
 
@@ -21,11 +22,12 @@ export default function LearnV2Page() {
             AtoEnglish Lesson System V2
           </p>
           <h1 className="mt-3 text-3xl font-bold">
-            Pre‑A1 · Hai module đầu tiên
+            Pre‑A1 · Curriculum đang triển khai
           </h1>
           <p className="mt-3 max-w-3xl text-indigo-100">
-            Sáu bài đi từ nhận biết sang giao tiếp, delayed recall và transfer.
-            Bài nhớ lại chỉ mở sau 24 giờ thật và evidence được gửi lên Supabase.
+            {LESSON_V2_MODULES.length} module với {LESSON_V2_REGISTRY.length} bài
+            đi từ nhận biết sang giao tiếp, delayed recall và transfer. Bài nhớ
+            lại chỉ mở sau 24 giờ thật và evidence được gửi lên Supabase.
           </p>
         </header>
 

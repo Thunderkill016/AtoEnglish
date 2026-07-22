@@ -1,0 +1,52 @@
+import type { LanguageTarget } from "./schema";
+
+export const OBJECT_TARGETS: LanguageTarget[] = [
+  {
+    id: "m03-what-this",
+    kind: "chunk",
+    form: "What is this?",
+    meaningVi: "Đây là gì?",
+    exampleEn: "What is this?",
+    exampleVi: "Đây là gì?",
+    priority: "core",
+    pronunciationGoal: "Nối nhẹ What is và giữ âm cuối /s/ trong this.",
+  },
+  {
+    id: "m03-this-is",
+    kind: "grammar_pattern",
+    form: "This is a ___.",
+    meaningVi: "Đây là một ___.",
+    exampleEn: "This is a key.",
+    exampleVi: "Đây là một chiếc chìa khóa.",
+    priority: "core",
+    l1NoteVi: "Không bỏ động từ is khi nói câu đầy đủ.",
+  },
+  {
+    id: "m03-what-color",
+    kind: "chunk",
+    form: "What color is it?",
+    meaningVi: "Nó màu gì?",
+    exampleEn: "What color is it?",
+    exampleVi: "Nó màu gì?",
+    priority: "core",
+  },
+  {
+    id: "m03-it-is-color",
+    kind: "grammar_pattern",
+    form: "It is ___.",
+    meaningVi: "Nó màu ___.",
+    exampleEn: "It is black.",
+    exampleVi: "Nó màu đen.",
+    priority: "core",
+    pronunciationGoal: "Nói rõ âm cuối trong black, red và blue.",
+  },
+  {
+    id: "m03-this-one",
+    kind: "repair_strategy",
+    form: "This one?",
+    meaningVi: "Cái này phải không?",
+    exampleEn: "This one?",
+    exampleVi: "Cái này phải không?",
+    priority: "support",
+  },
+];

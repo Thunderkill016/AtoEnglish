@@ -8,6 +8,11 @@ import {
   PRE_A1_M02_ENCOUNTER,
   PRE_A1_M02_RETAIN_TRANSFER,
 } from "./pre-a1-module-02";
+import {
+  PRE_A1_M03_COMMUNICATE,
+  PRE_A1_M03_ENCOUNTER,
+  PRE_A1_M03_RETAIN_TRANSFER,
+} from "./pre-a1-module-03";
 import type { ReviewUnlockRule } from "./review-unlock";
 import type { LessonV2 } from "./schema";
 
@@ -46,6 +51,13 @@ export const LESSON_V2_MODULES: LessonModuleV2[] = [
     titleVi: "Số, giá và thanh toán",
     descriptionVi:
       "Hỏi giá, nghe số tiền và chọn tiền mặt hoặc thẻ trong giao dịch đơn giản.",
+  },
+  {
+    id: "pre-a1-m03",
+    order: 3,
+    titleVi: "Nhận diện và mô tả đồ vật",
+    descriptionVi:
+      "Hỏi tên, nói màu và xác nhận đúng đồ vật trong tình huống đời sống.",
   },
 ];
 
@@ -92,6 +104,11 @@ export const LESSON_V2_REGISTRY: RegisteredLessonV2[] = [
     PRE_A1_M02_ENCOUNTER,
     PRE_A1_M02_COMMUNICATE,
     PRE_A1_M02_RETAIN_TRANSFER,
+  ]),
+  ...registerModule("pre-a1-m03", 7, [
+    PRE_A1_M03_ENCOUNTER,
+    PRE_A1_M03_COMMUNICATE,
+    PRE_A1_M03_RETAIN_TRANSFER,
   ]),
 ];
 

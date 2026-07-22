@@ -1,0 +1,200 @@
+import { OBJECT_TARGETS } from "./pre-a1-module-03-targets";
+import type { LessonV2 } from "./schema";
+
+export const PRE_A1_M03_COMMUNICATE: LessonV2 = {
+  schemaVersion: 2,
+  id: "pre-a1-m03-communicate",
+  missionId: "pre-a1-m03",
+  legacyUnitId: "unit-a0-3",
+  titleVi: "Hỏi và mô tả một đồ vật đơn giản",
+  titleEn: "Ask about and describe a simple object",
+  level: "PRE_A1",
+  legacyLevel: "A0",
+  estimatedMinutes: 10,
+  primaryOutcome: {
+    id: "pre-a1-m03-communicate-outcome",
+    level: "PRE_A1",
+    activity: "interaction",
+    domain: "personal",
+    statementEn:
+      "Can ask for and give the name and colour of a familiar object in a short supported exchange.",
+    statementVi:
+      "Có thể hỏi và nói tên, màu của một đồ vật quen thuộc trong trao đổi ngắn có hỗ trợ.",
+    source: "ato-adapted",
+    sourceReference: "CEFR Pre-A1 interaction about familiar concrete objects",
+  },
+  prerequisiteLessonIds: ["pre-a1-m03-encounter"],
+  targets: OBJECT_TARGETS,
+  steps: [
+    {
+      id: "m03c-scenario",
+      kind: "scenario",
+      estimatedMinutes: 1,
+      titleVi: "Phân biệt đồ của hai người",
+      roleVi: "Bạn đang cùng bạn bè sắp xếp đồ trên bàn.",
+      situationVi: "Bạn cần hỏi tên và màu để chọn đúng món đồ.",
+      goalVi: "Tạo một trao đổi ngắn về tên và màu của đồ vật.",
+    },
+    {
+      id: "m03c-model",
+      kind: "model",
+      estimatedMinutes: 1,
+      titleVi: "Nghe một lượt hỏi–đáp hoàn chỉnh",
+      replayRates: [0.8, 1],
+      turns: [
+        {
+          speaker: "A",
+          text: "What is this?",
+          targetIds: ["m03-what-this"],
+        },
+        {
+          speaker: "B",
+          text: "This is a bag.",
+          targetIds: ["m03-this-is"],
+        },
+        {
+          speaker: "A",
+          text: "What color is it?",
+          targetIds: ["m03-what-color"],
+        },
+        {
+          speaker: "B",
+          text: "It is red.",
+          targetIds: ["m03-it-is-color"],
+        },
+        {
+          speaker: "A",
+          text: "This one?",
+          targetIds: ["m03-this-one"],
+        },
+      ],
+    },
+    {
+      id: "m03c-notice",
+      kind: "notice",
+      estimatedMinutes: 1,
+      titleVi: "Giữ đúng đại từ",
+      targetIds: ["m03-this-is", "m03-it-is-color", "m03-this-one"],
+      explanationVi:
+        "Dùng This khi chỉ trực tiếp vào đồ vật; sau khi đã biết đồ vật, dùng it khi hỏi hoặc nói màu.",
+    },
+    {
+      id: "m03c-practice",
+      kind: "practice",
+      estimatedMinutes: 2,
+      titleVi: "Tự tạo từng lượt nói",
+      adaptive: true,
+      exercises: [
+        {
+          id: "m03c-p1",
+          kind: "listen",
+          promptVi: "Câu trả lời phù hợp nhất là gì?",
+          audioText: "What is this?",
+          options: ["This is a bag.", "It is red.", "Card, please."],
+          answer: "This is a bag.",
+          targetIds: ["m03-what-this", "m03-this-is"],
+        },
+        {
+          id: "m03c-p2",
+          kind: "select",
+          promptVi: "Chọn câu hỏi để biết màu.",
+          options: ["What color is it?", "What is this?", "How much is it?"],
+          answer: "What color is it?",
+          targetIds: ["m03-what-color"],
+        },
+        {
+          id: "m03c-p3",
+          kind: "order",
+          promptVi: "Xếp câu: Đây là một chiếc túi.",
+          tokens: ["a", "bag", "This", "is"],
+          answer: "This is a bag",
+          targetIds: ["m03-this-is"],
+        },
+        {
+          id: "m03c-p4",
+          kind: "recall",
+          promptVi: "Tự nhớ câu nói: Nó màu đỏ.",
+          answer: "It is red.",
+          acceptedAnswers: ["It is red"],
+          targetIds: ["m03-it-is-color"],
+        },
+      ],
+    },
+    {
+      id: "m03c-rehearsal",
+      kind: "rehearsal",
+      estimatedMinutes: 1,
+      titleVi: "Cá nhân hóa hai món đồ",
+      promptVi:
+        "Chọn hai đồ gần bạn. Chuẩn bị tên và màu bằng từ khóa, không viết cả câu.",
+      keyWords: ["phone — black", "bag — blue", "key — silver"],
+      targetIds: ["m03-this-is", "m03-it-is-color"],
+    },
+    {
+      id: "m03c-performance",
+      kind: "performance",
+      estimatedMinutes: 2,
+      titleVi: "Trao đổi tên và màu hai lượt",
+      task: {
+        roleVi: "Hai người đang phân loại đồ",
+        contextVi: "Một người hỏi; người kia nói tên và màu của món đồ.",
+        goalVi: "Hoàn thành bốn lượt hỏi–đáp ngắn và xác nhận đúng món.",
+        promptVi:
+          "Lượt một dùng bag/red. Nhận một góp ý rồi lượt hai đổi sang phone/black và dùng This one? khi cần xác nhận.",
+        successCriteriaVi: [
+          "Bạn hỏi và trả lời đúng về cả tên lẫn màu.",
+          "Người nghe phân biệt được đồ vật và màu bạn nói.",
+          "Bạn dùng This one? khi cần xác nhận món đồ.",
+        ],
+        targetIds: [
+          "m03-what-this",
+          "m03-this-is",
+          "m03-what-color",
+          "m03-it-is-color",
+          "m03-this-one",
+        ],
+        evidence: ["task_checklist", "self_assessment"],
+        attempts: 2,
+        preparationSeconds: 15,
+        responseSeconds: 20,
+        rubric: [
+          "task_achievement",
+          "comprehensibility",
+          "interaction_repair",
+        ],
+      },
+    },
+    {
+      id: "m03c-feedback",
+      kind: "feedback",
+      estimatedMinutes: 1,
+      titleVi: "Sửa một lỗi rồi nói lại",
+      priorityOrder: [
+        "task_achievement",
+        "comprehensibility",
+        "interaction_repair",
+      ],
+      repairPromptsVi: [
+        "Bạn có nói đủ This is a... thay vì chỉ nói một từ không?",
+        "Màu có được nói rõ sau It is không?",
+        "Khi chỉ nhầm đồ, bạn có dùng This one? để xác nhận không?",
+      ],
+    },
+    {
+      id: "m03c-exit",
+      kind: "exit",
+      estimatedMinutes: 1,
+      titleVi: "Chốt trao đổi độc lập",
+      canDoCheckVi:
+        "Tôi hỏi và nói được tên, màu của một đồ vật quen thuộc trong trao đổi ngắn.",
+      reviewTargetIds: [
+        "m03-what-this",
+        "m03-this-is",
+        "m03-what-color",
+        "m03-it-is-color",
+      ],
+      confidencePromptVi: "Bạn làm được lượt hai mà không nhìn khung câu chứ?",
+    },
+  ],
+  tags: ["pre-a1", "module-03", "communicate", "objects", "colours"],
+};
