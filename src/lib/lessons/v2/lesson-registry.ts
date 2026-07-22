@@ -33,7 +33,13 @@ import {
   PRE_A1_M07_ENCOUNTER,
   PRE_A1_M07_RETAIN_TRANSFER,
 } from "./pre-a1-module-07";
+import {
+  PRE_A1_M08_COMMUNICATE,
+  PRE_A1_M08_ENCOUNTER,
+  PRE_A1_M08_RETAIN_TRANSFER,
+} from "./pre-a1-module-08";
 import { PRE_A1_CHECKPOINT_01 } from "./pre-a1-checkpoint-01";
+import { PRE_A1_CHECKPOINT_02 } from "./pre-a1-checkpoint-02";
 import type { ReviewUnlockRule } from "./review-unlock";
 import type { LessonV2 } from "./schema";
 
@@ -136,6 +142,24 @@ export const LESSON_V2_SECTIONS: LessonSectionV2[] = [
     descriptionVi:
       "Hỏi giờ, chọn ngày, xác nhận đầy đủ ngày–giờ và sửa lại lịch khi người kia nghe nhầm.",
   },
+  {
+    id: "pre-a1-m08",
+    order: 9,
+    kind: "module",
+    labelVi: "Module 8",
+    titleVi: "Xin giúp, nói vấn đề và vị trí",
+    descriptionVi:
+      "Nói đang bị lạc hoặc bị đau, yêu cầu đúng loại hỗ trợ, cho biết và sửa lại vị trí.",
+  },
+  {
+    id: "pre-a1-checkpoint-02",
+    order: 10,
+    kind: "checkpoint",
+    labelVi: "Checkpoint 2",
+    titleVi: "Tích hợp bốn module cuối",
+    descriptionVi:
+      "Cung cấp thông tin cá nhân, xác định người liên hệ, xác nhận lịch và xử lý một tình huống cần trợ giúp.",
+  },
 ];
 
 export const LESSON_V2_MODULES = LESSON_V2_SECTIONS.filter(
@@ -226,6 +250,12 @@ export const LESSON_V2_REGISTRY: RegisteredLessonV2[] = [
     PRE_A1_M07_COMMUNICATE,
     PRE_A1_M07_RETAIN_TRANSFER,
   ]),
+  ...registerModule("pre-a1-m08", 23, [
+    PRE_A1_M08_ENCOUNTER,
+    PRE_A1_M08_COMMUNICATE,
+    PRE_A1_M08_RETAIN_TRANSFER,
+  ]),
+  registerCheckpoint("pre-a1-checkpoint-02", 26, PRE_A1_CHECKPOINT_02),
 ];
 
 const BY_ID = new Map(
