@@ -48,7 +48,7 @@ jobs:
           import gzip
           from pathlib import Path
 
-          payload = Path("scripts/pilot-analytics-payload.yml").read_text(encoding="utf-8")
+          payload = Path(".github/workflows/pilot-analytics.yml").read_text(encoding="utf-8")
           start_marker = "          PATCH_B64'\n"
           end_marker = "\n          PATCH_B64"
           start = payload.index(start_marker) + len(start_marker)
@@ -70,12 +70,12 @@ jobs:
           path = Path("src/app/actions/pilot-analytics.ts")
           text = path.read_text(encoding="utf-8")
           old_guard = '''  const event = parsed.data;
-  if (!event.anonymousId) return { success: false };
-'''
+          if (!event.anonymousId) return { success: false };
+          '''
           new_guard = '''  const event = parsed.data;
-  const anonymousId = event.anonymousId;
-  if (!anonymousId) return { success: false };
-'''
+          const anonymousId = event.anonymousId;
+          if (!anonymousId) return { success: false };
+          '''
           if text.count(old_guard) != 1:
               raise SystemExit("Expected the anonymous-id guard exactly once")
           text = text.replace(old_guard, new_guard, 1)
@@ -123,7 +123,7 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
           if [ "$FAILED" -eq 0 ]; then
-            git rm -f .github/workflows/pilot-analytics-runner.yml scripts/pilot-analytics-payload.yml scripts/trigger-pilot-analytics-validator.txt
+            git rm -f .github/workflows/pilot-analytics.yml .pilot-analytics-trigger scripts/pilot-analytics-payload.yml scripts/trigger-pilot-analytics-validator.txt
             rm -f reports/pilot-analytics-validation-failure.txt
             git add -A
             git commit -m "feat: add minimal pilot analytics"
