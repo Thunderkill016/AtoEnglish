@@ -402,19 +402,19 @@ function LoginContent() {
                   {/* Headline */}
                   <div className="space-y-3">
                     <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-zinc-900 dark:text-zinc-50 leading-tight">
-                      Tạo lộ trình học tiếng Anh{" "}
+                      Bắt đầu hành trình nói{" "}
                       <span className="bg-gradient-to-r from-emerald-600 to-teal-500 bg-clip-text text-transparent dark:from-emerald-400 dark:to-teal-400">
-                        riêng cho bạn
+                        28 ngày
                       </span>
                     </h1>
                     <p className="text-sm text-zinc-500 dark:text-zinc-400 max-w-xs mx-auto leading-relaxed">
-                      Chỉ <strong className="text-zinc-700 dark:text-zinc-300">1 câu hỏi</strong> về trình độ — AtoEnglish sẽ gợi lộ trình phù hợp.
+                      Chọn trình độ gần nhất để AtoEnglish gợi ý điểm bắt đầu cho nhiệm vụ nói đầu tiên.
                     </p>
                   </div>
 
                   {/* Feature pills */}
                   <div className="flex flex-wrap justify-center gap-2">
-                    {["🎯 Lộ trình A1→C1", "⏱ 15 phút/ngày", "🔬 Thuật toán FSRS"].map((tag) => (
+                    {["🗓 28 ngày · 1 mục tiêu nói", "⏱ 10–15 phút/ngày", "🌱 Bắt đầu từ A0"].map((tag) => (
                       <span key={tag} className="text-xs font-semibold text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-100 dark:border-emerald-900/30 px-3 py-1.5 rounded-full">
                         {tag}
                       </span>
@@ -427,7 +427,7 @@ function LoginContent() {
                     fullWidth
                     className="max-w-xs"
                   >
-                    Bắt đầu — Miễn phí 🚀
+                    Chọn điểm bắt đầu 🚀
                   </MinimalButton>
 
                   {/* Already have account */}
@@ -510,7 +510,7 @@ function LoginContent() {
                       >
                         <div className="flex items-center gap-2 text-xs font-bold text-emerald-600 dark:text-emerald-400">
                           <Sparkles className="size-4" />
-                          <span>Đã thiết lập xong lộ trình tối ưu!</span>
+                          <span>Đã chọn điểm bắt đầu phù hợp</span>
                         </div>
                         <div className="flex flex-wrap gap-1.5">
                           <span className="inline-flex items-center text-[10px] sm:text-xs font-bold text-emerald-700 dark:text-emerald-400 bg-emerald-100/50 dark:bg-emerald-950/40 px-2.5 py-0.5 rounded-lg border border-emerald-200/30 dark:border-emerald-900/30">
@@ -525,16 +525,16 @@ function LoginContent() {
 
                     <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-zinc-900 dark:text-zinc-50 leading-tight">
                       {hasAnswers
-                        ? "Lộ trình của bạn đã sẵn sàng!"
+                        ? "Bài học đầu tiên đã sẵn sàng!"
                         : isSignUp
                         ? "Tạo tài khoản mới"
                         : "Chào mừng quay trở lại"}
                     </h1>
                     <p className="text-xs sm:text-sm text-zinc-500 dark:text-zinc-400 font-medium leading-relaxed">
                       {hasAnswers
-                        ? "Đăng ký hoặc đăng nhập để bắt đầu bài học đầu tiên thiết kế riêng cho bạn."
+                        ? "Đăng ký hoặc đăng nhập để bắt đầu luyện nhiệm vụ nói đầu tiên."
                         : isSignUp
-                        ? "Đăng ký nhanh để bắt đầu hành trình học tiếng Anh ngay hôm nay."
+                        ? "Đăng ký nhanh để bắt đầu bài học đầu tiên."
                         : "Đăng nhập để tiếp tục tiến trình học tập của bạn."}
                     </p>
                   </div>
@@ -614,7 +614,7 @@ function LoginContent() {
                         <span>
                           {isSignUp
                             ? hasAnswers
-                              ? "Kích hoạt lộ trình học"
+                              ? "Bắt đầu bài học đầu tiên"
                               : "Đăng ký tài khoản"
                             : "Đăng nhập bằng Email"}
                         </span>

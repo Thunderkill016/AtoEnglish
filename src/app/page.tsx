@@ -37,11 +37,11 @@ const FinalCtaSection = dynamic(
 export const metadata: Metadata = {
   title: "AtoEnglish — Học tiếng Anh để nói được, không chỉ để biết",
   description:
-    "Nền tảng tự học tiếng Anh cá nhân hóa với phương pháp IPOR, luyện nói phản xạ và ôn tập thông minh FSRS. Miễn phí hoàn toàn.",
+    "Hành trình luyện nói 28 ngày cho người Việt mất gốc: mỗi ngày 10–15 phút để luyện giới thiệu bản thân và công việc bằng tiếng Anh.",
   openGraph: {
     title: "AtoEnglish — Học tiếng Anh để nói được",
     description:
-      "Phương pháp khoa học giúp bạn tự tin giao tiếp thực tế từ con số 0. Miễn phí hoàn toàn trong giai đoạn Open Beta.",
+      "Hành trình luyện nói 28 ngày, mỗi ngày 10–15 phút, dành cho người Việt bắt đầu từ mất gốc.",
     url: "https://atoenglish.vercel.app",
     siteName: "AtoEnglish",
     locale: "vi_VN",
@@ -69,9 +69,9 @@ export const metadata: Metadata = {
 
 export default function LandingPage() {
   const stats = [
-    { value: "Open Beta", label: "Thử nghiệm mở" },
-    { value: "15 phút", label: "Mỗi bài học hàng ngày" },
-    { value: "A1 - C1", label: "Lộ trình đầy đủ" },
+    { value: "28 ngày", label: "Một mục tiêu nói thực tế" },
+    { value: "10–15 phút", label: "Mỗi ngày" },
+    { value: "A0", label: "Bắt đầu từ mất gốc" },
   ];
 
   const jsonLd = {
@@ -82,7 +82,7 @@ export default function LandingPage() {
         "@id": "https://atoenglish.vercel.app/#website",
         "url": "https://atoenglish.vercel.app",
         "name": "AtoEnglish",
-        "description": "Nền tảng tự học tiếng Anh cá nhân hóa với phương pháp IPOR và FSRS",
+        "description": "Hành trình luyện nói 28 ngày cho người Việt mất gốc, mỗi ngày 10–15 phút",
         "inLanguage": "vi",
         "potentialAction": {
           "@type": "SearchAction",
@@ -96,15 +96,8 @@ export default function LandingPage() {
         "name": "AtoEnglish",
         "url": "https://atoenglish.vercel.app",
         "logo": "https://atoenglish.vercel.app/icon-512.png",
-        "description": "Học tiếng Anh để nói được, không chỉ để biết",
+        "description": "Luyện nhiệm vụ nói công việc đầu tiên trong hành trình 28 ngày",
         "sameAs": [],
-        "offers": {
-          "@type": "Offer",
-          "price": "0",
-          "priceCurrency": "VND",
-          "availability": "https://schema.org/InStock",
-          "description": "Miễn phí hoàn toàn trong giai đoạn Open Beta",
-        },
       },
       {
         "@type": "FAQPage",
@@ -115,7 +108,7 @@ export default function LandingPage() {
             "name": "Người mất gốc hoặc mới bắt đầu từ con số 0 có học được không?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Hoàn toàn học được! Lộ trình của AtoEnglish được thiết kế đặc biệt từ cơ bản nhất (A1). Phương pháp 4 bước (IPOR) giúp chia nhỏ bài học: bạn sẽ tích lũy từ vựng qua hình ảnh/âm thanh, luyện tập viết câu phản xạ và thực hành nói nhại giọng (Shadowing) mà không bị áp lực ngữ pháp hàn lâm.",
+              "text": "Có. Hành trình đầu tiên bắt đầu từ A0 và tập trung vào một nhiệm vụ thực tế: giới thiệu bản thân, công việc và biết xin người đối diện nhắc lại hoặc nói chậm hơn.",
             },
           },
           {
@@ -123,7 +116,7 @@ export default function LandingPage() {
             "name": "Mỗi ngày tôi cần học bao lâu?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Chỉ 15–20 phút mỗi ngày là đủ để tạo ra tiến bộ thực sự. Mỗi bài học được thiết kế hoàn chỉnh trong khoảng 40 phút, nhưng bạn hoàn toàn có thể học theo từng phần nhỏ. Hệ thống nhắc nhở thông minh và streak sẽ giúp bạn duy trì thói quen học hàng ngày một cách tự nhiên.",
+              "text": "Mục tiêu là 10–15 phút mỗi ngày trong 28 ngày. Mỗi buổi tập trung vào một bước nhỏ: nghe mẫu, luyện cụm từ, nói có hướng dẫn và ôn lại nội dung cần nhớ.",
             },
           },
           {
@@ -144,10 +137,10 @@ export default function LandingPage() {
           },
           {
             "@type": "Question",
-            "name": "Sản phẩm có thực sự miễn phí không?",
+            "name": "Tôi có thể học thử trước khi tham gia chương trình 28 ngày không?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Có, hoàn toàn miễn phí! Hiện tại AtoEnglish đang trong giai đoạn thử nghiệm mở (Open Beta). Chúng tôi cam kết mở khóa toàn bộ các bài học giao tiếp, công cụ ôn tập lật thẻ SRS và bài tập luyện nói phản xạ cơ bản miễn phí 100% cho tất cả người học.",
+              "text": "Có. Bạn có thể học thử bài đầu tiên trước khi quyết định tham gia. Điều kiện, lịch học và chi phí của chương trình 28 ngày sẽ được thông báo rõ trước khi mở tuyển.",
             },
           },
           {
@@ -249,7 +242,7 @@ export default function LandingPage() {
               <div className="animate-fade-in-up">
                 <span className="inline-flex items-center gap-1.5 text-[11px] font-bold text-emerald-800 dark:text-emerald-400 bg-emerald-500/10 dark:bg-emerald-500/15 backdrop-blur-sm border border-emerald-500/20 dark:border-emerald-400/25 px-4 py-1.5 rounded-full uppercase tracking-[0.12em] shadow-sm">
                   <Sparkles className="size-3 text-emerald-600 dark:text-emerald-400 animate-pulse" />
-                  Phương pháp học thế hệ mới
+                  Thử nghiệm hành trình nói 28 ngày
                 </span>
               </div>
 
@@ -268,9 +261,9 @@ export default function LandingPage() {
 
               {/* Subheadline */}
               <p className="animate-fade-in-up animation-delay-150 text-base sm:text-lg lg:text-xl text-zinc-600 dark:text-zinc-350 max-w-2xl mx-auto leading-relaxed font-normal">
-                Luyện phản xạ nói thực tế cho người Việt.
+                Giới thiệu bản thân và công việc bằng tiếng Anh.
                 <br className="hidden sm:block" />
-                Học theo phương pháp IPOR + FSRS, thực hành ngay từ bài đầu.
+                Mỗi ngày 10–15 phút: nghe mẫu, luyện cụm từ và nói có hướng dẫn.
               </p>
 
               <HeroCTA />
@@ -299,7 +292,7 @@ export default function LandingPage() {
             </div>
             {/* Footnote */}
             <p className="text-[11px] text-zinc-450 dark:text-zinc-500 mt-5 text-center font-normal tracking-wide">
-              * Dự án đang trong giai đoạn thử nghiệm mở (Open Beta). Mọi bài học đều hoàn toàn miễn phí.
+              * AtoEnglish đang thử nghiệm hành trình đầu tiên. Đây là mục tiêu học tập, không phải cam kết kết quả cho mọi người.
             </p>
           </div>
         </section>

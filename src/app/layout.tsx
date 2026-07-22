@@ -32,14 +32,14 @@ export const metadata: Metadata = {
     template: "%s | AtoEnglish",
   },
   description:
-    "Nền tảng tự học tiếng Anh cá nhân hóa với phương pháp IPOR, luyện nói phản xạ và ôn tập thông minh FSRS. Miễn phí hoàn toàn.",
+    "Hành trình luyện nói 28 ngày cho người Việt mất gốc: mỗi ngày 10–15 phút để luyện giới thiệu bản thân và công việc bằng tiếng Anh.",
   keywords: [
     "học tiếng Anh",
     "luyện nói tiếng Anh",
     "FSRS",
     "spaced repetition",
     "CEFR",
-    "A1 B1 B2",
+    "tiếng Anh cho người mất gốc",
     "tiếng Anh giao tiếp",
     "AtoEnglish",
   ],
@@ -73,7 +73,7 @@ export const metadata: Metadata = {
     siteName: "AtoEnglish",
     title: "AtoEnglish — Học tiếng Anh để nói được, không chỉ để biết",
     description:
-      "Phương pháp khoa học giúp bạn tự tin giao tiếp thực tế từ con số 0. Miễn phí hoàn toàn.",
+      "Hành trình luyện nói 28 ngày, mỗi ngày 10–15 phút, dành cho người Việt bắt đầu từ mất gốc.",
     images: [
       {
         url: "https://atoenglish.vercel.app/og-image.png",
@@ -87,7 +87,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "AtoEnglish — Học tiếng Anh để nói được",
     description:
-      "Phương pháp khoa học giúp bạn tự tin giao tiếp thực tế từ con số 0.",
+      "Luyện giới thiệu bản thân và công việc bằng tiếng Anh trong hành trình 28 ngày.",
     creator: "@atoenglish",
     images: ["https://atoenglish.vercel.app/og-image.png"],
   },

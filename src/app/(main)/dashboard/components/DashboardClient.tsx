@@ -353,6 +353,9 @@ export default function DashboardClient({
               </span>
               !
             </h1>
+            <p data-testid="pilot-promise" className="mt-1 text-xs sm:text-sm text-zinc-500 dark:text-zinc-400 font-medium">
+              Mỗi ngày 10–15 phút: tiến thêm một bước trong hành trình nói 28 ngày.
+            </p>
           </div>
           {/* Guest persistence notice — vibrant glass + motion polish (TASK-151) */}
           {(() => {
