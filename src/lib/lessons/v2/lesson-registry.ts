@@ -18,13 +18,17 @@ import {
   PRE_A1_M04_ENCOUNTER,
   PRE_A1_M04_RETAIN_TRANSFER,
 } from "./pre-a1-module-04";
+import { PRE_A1_CHECKPOINT_01 } from "./pre-a1-checkpoint-01";
 import type { ReviewUnlockRule } from "./review-unlock";
 import type { LessonV2 } from "./schema";
 
 export type LessonSessionKind =
   | "encounter"
   | "communicate"
-  | "retain_transfer";
+  | "retain_transfer"
+  | "checkpoint";
+
+export type LessonSectionKind = "module" | "checkpoint";
 
 export interface RegisteredLessonV2 {
   lesson: LessonV2;
@@ -35,17 +39,21 @@ export interface RegisteredLessonV2 {
   unlockRule?: ReviewUnlockRule;
 }
 
-export interface LessonModuleV2 {
+export interface LessonSectionV2 {
   id: string;
   order: number;
+  kind: LessonSectionKind;
+  labelVi: string;
   titleVi: string;
   descriptionVi: string;
 }
 
-export const LESSON_V2_MODULES: LessonModuleV2[] = [
+export const LESSON_V2_SECTIONS: LessonSectionV2[] = [
   {
     id: "pre-a1-m01",
     order: 1,
+    kind: "module",
+    labelVi: "Module 1",
     titleVi: "Nói và đánh vần tên",
     descriptionVi:
       "Giới thiệu tên, đánh vần và dùng câu cứu nguy khi người khác nói quá nhanh.",
@@ -53,6 +61,8 @@ export const LESSON_V2_MODULES: LessonModuleV2[] = [
   {
     id: "pre-a1-m02",
     order: 2,
+    kind: "module",
+    labelVi: "Module 2",
     titleVi: "Số, giá và thanh toán",
     descriptionVi:
       "Hỏi giá, nghe số tiền và chọn tiền mặt hoặc thẻ trong giao dịch đơn giản.",
@@ -60,6 +70,8 @@ export const LESSON_V2_MODULES: LessonModuleV2[] = [
   {
     id: "pre-a1-m03",
     order: 3,
+    kind: "module",
+    labelVi: "Module 3",
     titleVi: "Nhận diện và mô tả đồ vật",
     descriptionVi:
       "Hỏi tên, nói màu và xác nhận đúng đồ vật trong tình huống đời sống.",
@@ -67,11 +79,26 @@ export const LESSON_V2_MODULES: LessonModuleV2[] = [
   {
     id: "pre-a1-m04",
     order: 4,
+    kind: "module",
+    labelVi: "Module 4",
     titleVi: "Chào hỏi và kết thúc trao đổi",
     descriptionVi:
       "Chào, hỏi thăm trạng thái, hỏi lại và kết thúc một cuộc gặp rất ngắn.",
   },
+  {
+    id: "pre-a1-checkpoint-01",
+    order: 5,
+    kind: "checkpoint",
+    labelVi: "Checkpoint 1",
+    titleVi: "Tích hợp bốn module đầu",
+    descriptionVi:
+      "Hoàn thành một giao dịch xã giao có chào hỏi, tên, đồ vật, màu, giá, thanh toán, repair và lời kết.",
+  },
 ];
+
+export const LESSON_V2_MODULES = LESSON_V2_SECTIONS.filter(
+  (section) => section.kind === "module",
+);
 
 const SESSION_KINDS = [
   "encounter",
@@ -106,6 +133,20 @@ function registerModule(
   });
 }
 
+function registerCheckpoint(
+  sectionId: string,
+  levelOrder: number,
+  lesson: LessonV2,
+): RegisteredLessonV2 {
+  return {
+    lesson,
+    moduleId: sectionId,
+    sessionKind: "checkpoint",
+    orderInModule: 1,
+    levelOrder,
+  };
+}
+
 export const LESSON_V2_REGISTRY: RegisteredLessonV2[] = [
   ...registerModule("pre-a1-m01", 1, [
     PRE_A1_M01_ENCOUNTER,
@@ -127,6 +168,7 @@ export const LESSON_V2_REGISTRY: RegisteredLessonV2[] = [
     PRE_A1_M04_COMMUNICATE,
     PRE_A1_M04_RETAIN_TRANSFER,
   ]),
+  registerCheckpoint("pre-a1-checkpoint-01", 13, PRE_A1_CHECKPOINT_01),
 ];
 
 const BY_ID = new Map(
@@ -139,13 +181,15 @@ export function getRegisteredLessonV2(
   return BY_ID.get(lessonId);
 }
 
-export function getLessonsForModuleV2(
-  moduleId: string,
+export function getLessonsForSectionV2(
+  sectionId: string,
 ): RegisteredLessonV2[] {
   return LESSON_V2_REGISTRY.filter(
-    (entry) => entry.moduleId === moduleId,
+    (entry) => entry.moduleId === sectionId,
   ).sort((a, b) => a.orderInModule - b.orderInModule);
 }
+
+export const getLessonsForModuleV2 = getLessonsForSectionV2;
 
 export function getNextLessonV2(
   lessonId: string,
