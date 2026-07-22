@@ -1,0 +1,4 @@
+Autopilot disabled by project owner on 2026-07-22.
+
+Do not run agent-orchestrator.sh or agent-daemon.sh while this file exists.
+Remove this file only through an intentional reviewed change.
