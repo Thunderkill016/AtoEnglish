@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 
+import PilotActivationLesson from "@/components/learn/PilotActivationLesson";
 import UnitTemplate from "@/components/learn/UnitTemplate";
 import type { UnitData } from "@/components/learn/UnitTemplate";
 // ── A0 Foundation units (Pre-CEFR) ─────────────────────────────────────────
@@ -59,6 +60,10 @@ import { unit40 } from "@/lib/data/units/unit40";
 import { unit41 } from "@/lib/data/units/unit41";
 import { unit42 } from "@/lib/data/units/unit42";
 import { UNITS } from "@/lib/constants/units";
+import {
+  UNIT_A0_1_ACTIVATION_META,
+  UNIT_A0_1_ID,
+} from "@/lib/pilot/unit-a0-1-activation";
 
 // ─── Unit registry ───────────────────────────────────────────────────────────
 // Single source of truth: all A0 + A1 + A2 + B1 + B2 units registered here.
@@ -133,7 +138,10 @@ export async function generateMetadata({
   params: Promise<{ unitSlug: string }>;
 }): Promise<Metadata> {
   const { unitSlug } = await params;
-  const meta = UNITS.find((u) => u.id === unitSlug);
+  const meta =
+    unitSlug === UNIT_A0_1_ID
+      ? UNIT_A0_1_ACTIVATION_META
+      : UNITS.find((unit) => unit.id === unitSlug);
   if (!meta) return { title: "Bài học không tìm thấy" };
 
   return {
@@ -145,21 +153,17 @@ export async function generateMetadata({
 
 export default async function UnitPage({
   params,
-  searchParams,
 }: {
   params: Promise<{ unitSlug: string }>;
-  searchParams: Promise<{ mini?: string }>;
 }) {
   const { unitSlug } = await params;
-  const { mini } = await searchParams;
   const entry = UNIT_DATA_MAP[unitSlug];
 
   if (!entry) notFound();
 
-  return (
-    <UnitTemplate
-      unit={entry.data}
-      nextRoute={entry.next}
-    />
-  );
+  if (unitSlug === UNIT_A0_1_ID) {
+    return <PilotActivationLesson nextRoute={entry.next} />;
+  }
+
+  return <UnitTemplate unit={entry.data} nextRoute={entry.next} />;
 }

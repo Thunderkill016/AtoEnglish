@@ -14,6 +14,12 @@ import {
 import { getRecentSpeakingSessions } from "@/app/actions/speaking";
 import { UNITS } from "@/lib/constants/units";
 import { UNIT_VOCABULARY } from "@/lib/constants/vocabulary";
+import {
+  UNIT_A0_1_ACTIVATION_META,
+  UNIT_A0_1_ID,
+  UNIT_A0_1_WORD_OF_DAY,
+  withPilotUnitOverrides,
+} from "@/lib/pilot/unit-a0-1-activation";
 import DashboardClient from "./components/DashboardClient";
 
 export const metadata: Metadata = {
@@ -25,6 +31,8 @@ export const metadata: Metadata = {
 // Eliminates full SSR on every navigation (was causing 200-400ms server latency per visit).
 // For real-time streak/XP after lesson completion, UnitTemplate calls router.refresh() directly.
 export const revalidate = 30;
+
+const DISPLAY_UNITS = withPilotUnitOverrides(UNITS);
 
 export default async function DashboardPage() {
   // Fetch all data in parallel — single round-trip batch
@@ -45,14 +53,14 @@ export default async function DashboardPage() {
   const recentSpeakingSessions = (
     speakingRes.success && speakingRes.sessions ? speakingRes.sessions : []
   )
-    .filter((s) => VALID_TYPES.includes(s.practice_type as SpeakingPracticeType))
-    .map((s) => ({
-      id: s.id,
-      practice_type: s.practice_type as SpeakingPracticeType,
-      duration: s.duration,
-      accuracy_score: s.accuracy_score,
-      scenario_id: s.scenario_id,
-      created_at: s.created_at,
+    .filter((session) => VALID_TYPES.includes(session.practice_type as SpeakingPracticeType))
+    .map((session) => ({
+      id: session.id,
+      practice_type: session.practice_type as SpeakingPracticeType,
+      duration: session.duration,
+      accuracy_score: session.accuracy_score,
+      scenario_id: session.scenario_id,
+      created_at: session.created_at,
     }));
 
   let userName = "Học viên";
@@ -64,16 +72,17 @@ export default async function DashboardPage() {
   let dailyXpGoal = 50;
   let streakFreezeCount = 0;
   const isGuest = !progressRes.success || !progressRes.progress;
+  void isGuest;
 
   if (progressRes.success && progressRes.progress) {
-    const p = progressRes.progress;
-    userName = p.display_name || "Học viên";
-    totalXp = p.total_xp || 0;
-    currentStreak = p.streak || 0;
-    bestStreak = (p as unknown as { best_streak?: number }).best_streak ?? 0;
-    lastActiveDate = (p as unknown as { last_active_date?: string | null }).last_active_date ?? null;
-    dailyXpGoal = p.daily_xp_goal || 50;
-    streakFreezeCount = (p as unknown as { streak_freeze_count?: number }).streak_freeze_count ?? 0;
+    const progress = progressRes.progress;
+    userName = progress.display_name || "Học viên";
+    totalXp = progress.total_xp || 0;
+    currentStreak = progress.streak || 0;
+    bestStreak = (progress as unknown as { best_streak?: number }).best_streak ?? 0;
+    lastActiveDate = (progress as unknown as { last_active_date?: string | null }).last_active_date ?? null;
+    dailyXpGoal = progress.daily_xp_goal || 50;
+    streakFreezeCount = (progress as unknown as { streak_freeze_count?: number }).streak_freeze_count ?? 0;
 
     const levelNames: Record<string, string> = {
       A0: "A0 Nền tảng",
@@ -83,33 +92,37 @@ export default async function DashboardPage() {
       B2: "B2 Upper-Intermediate",
       C1: "C1 Advanced",
     };
-    userLevel = levelNames[p.current_level] || `${p.current_level} Learner`;
+    userLevel = levelNames[progress.current_level] || `${progress.current_level} Learner`;
   }
 
   const dueCardsCount = cardsRes.success && cardsRes.cards ? cardsRes.cards.length : 0;
 
   const currentUnitData = {
-    unitId: "unit-1",
-    title: "Unit 1: Greetings & Self-Introduction",
-    description: "Học cách chào hỏi cơ bản, tự giới thiệu bản thân bằng tiếng Anh.",
-    currentPhase: "Pha 1: Input",
+    unitId: UNIT_A0_1_ID,
+    title: UNIT_A0_1_ACTIVATION_META.title,
+    description: UNIT_A0_1_ACTIVATION_META.description,
+    currentPhase: "Bài kích hoạt nói",
     progress: 0,
     completed: false,
-    route: "/learn/unit-1",
-    tags: UNITS.find(u => u.id === "unit-1")?.tags ?? [],
-    xp: UNITS.find(u => u.id === "unit-1")?.xp ?? 80,
+    route: UNIT_A0_1_ACTIVATION_META.route,
+    tags: UNIT_A0_1_ACTIVATION_META.tags,
+    xp: UNIT_A0_1_ACTIVATION_META.xp,
   };
 
   if (unitRes.success && unitRes.unitId) {
+    const displayUnit = DISPLAY_UNITS.find((unit) => unit.id === unitRes.unitId);
     currentUnitData.unitId = unitRes.unitId;
-    currentUnitData.title = unitRes.title || "";
-    currentUnitData.description = unitRes.description || "";
-    currentUnitData.currentPhase = unitRes.currentPhase || "";
+    currentUnitData.title = displayUnit?.title || unitRes.title || "";
+    currentUnitData.description = displayUnit?.description || unitRes.description || "";
+    currentUnitData.currentPhase =
+      unitRes.unitId === UNIT_A0_1_ID
+        ? "Bài kích hoạt nói"
+        : unitRes.currentPhase || "";
     currentUnitData.progress = unitRes.progress || 0;
-    currentUnitData.completed = !!unitRes.completed;
-    currentUnitData.route = unitRes.route || "/learn/unit-1";
-    currentUnitData.tags = UNITS.find(u => u.id === unitRes.unitId)?.tags ?? [];
-    currentUnitData.xp = UNITS.find(u => u.id === unitRes.unitId)?.xp ?? 80;
+    currentUnitData.completed = Boolean(unitRes.completed);
+    currentUnitData.route = displayUnit?.route || unitRes.route || "/learn/unit-a0-1";
+    currentUnitData.tags = displayUnit?.tags ?? [];
+    currentUnitData.xp = displayUnit?.xp ?? 80;
   }
 
   // Bulk unit completion data — already fetched in parallel above
@@ -120,7 +133,7 @@ export default async function DashboardPage() {
   const todayStr = new Date().toLocaleDateString("sv-SE", { timeZone: "Asia/Ho_Chi_Minh" });
   let todayXp = 0;
 
-  for (const unit of UNITS) {
+  for (const unit of DISPLAY_UNITS) {
     const entry = completedMap.get(unit.id);
     if (entry?.completedAt) {
       const completedDateStr = new Date(entry.completedAt).toLocaleDateString("sv-SE", { timeZone: "Asia/Ho_Chi_Minh" });
@@ -148,22 +161,23 @@ export default async function DashboardPage() {
   });
 
   // Completed unit IDs — for the unit progress grid on dashboard
-  const completedUnitIds = UNITS
-    .filter(u => completedMap.has(u.id))
-    .map(u => u.id);
+  const completedUnitIds = DISPLAY_UNITS
+    .filter((unit) => completedMap.has(unit.id))
+    .map((unit) => unit.id);
 
   // ── Word of the Day: deterministic by VN date, from current unit vocab ──────
-  const allVocab = UNITS.flatMap(u => UNIT_VOCABULARY[u.id] ?? []);
+  const allVocab = DISPLAY_UNITS.flatMap((unit) => UNIT_VOCABULARY[unit.id] ?? []);
   const currentUnitVocab = UNIT_VOCABULARY[currentUnitData.unitId] ?? [];
   const vocabPool = currentUnitVocab.length > 0 ? currentUnitVocab : allVocab;
   // P3-6 Fix: Use VN timezone date so word rotates at VN midnight (not UTC midnight = 07:00 VN)
   const vnDateStr = new Date().toLocaleDateString("sv-SE", { timeZone: "Asia/Ho_Chi_Minh" });
   const [vyear, vmonth, vday] = vnDateStr.split("-").map(Number);
   const dayIndex = vyear * 10000 + vmonth * 100 + (vday ?? 0);
-  const wordOfDay = vocabPool.length > 0
-    ? vocabPool[dayIndex % vocabPool.length]
-    : null;
-
+  const wordOfDay = currentUnitData.unitId === UNIT_A0_1_ID
+    ? UNIT_A0_1_WORD_OF_DAY
+    : vocabPool.length > 0
+      ? vocabPool[dayIndex % vocabPool.length]
+      : null;
 
   const weeklyData = weeklyRes.success && weeklyRes.data ? weeklyRes.data : [];
 
@@ -171,7 +185,7 @@ export default async function DashboardPage() {
   const calendarData = (activityRes.success && activityRes.days
     ? activityRes.days
     : []
-  ).slice(-49).map(d => ({ date: d.date, xp: d.xp }));
+  ).slice(-49).map((day) => ({ date: day.date, xp: day.xp }));
 
   return (
     <DashboardClient
@@ -192,9 +206,8 @@ export default async function DashboardPage() {
       streakFreezeCount={streakFreezeCount}
       weeklyData={weeklyData}
       calendarData={calendarData}
-      allUnits={UNITS.map(u => ({ id: u.id, title: u.title, level: u.level, route: u.route, xp: u.xp }))}
+      allUnits={DISPLAY_UNITS.map((unit) => ({ id: unit.id, title: unit.title, level: unit.level, route: unit.route, xp: unit.xp }))}
       recentSpeakingSessions={recentSpeakingSessions}
     />
   );
-
 }

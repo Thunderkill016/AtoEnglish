@@ -3,6 +3,7 @@ import { getUserProgress } from "@/app/actions/stats";
 import { getCurrentUnit } from "@/app/actions/unit";
 import { UNITS } from "@/lib/constants/units";
 import { UNIT_VOCABULARY } from "@/lib/constants/vocabulary";
+import { withPilotUnitOverrides } from "@/lib/pilot/unit-a0-1-activation";
 import LearnClient from "./components/LearnClient";
 import { createClient } from "@/lib/supabase/server";
 
@@ -13,12 +14,14 @@ export const metadata: Metadata = {
 
 export const revalidate = 0; // Disable caching
 
+const DISPLAY_UNITS = withPilotUnitOverrides(UNITS);
+
 export default async function LearnPage() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
   // Fetch user progress + active unit + completed lessons + saved vocab words in parallel
-  const allWords = user ? UNITS.flatMap(unit =>
+  const allWords = user ? DISPLAY_UNITS.flatMap(unit =>
     (UNIT_VOCABULARY[unit.id] || []).map(v => v.word.toLowerCase().trim())
   ) : [];
 
@@ -50,21 +53,21 @@ export default async function LearnPage() {
   const completedXpMap = new Map<string, number>();
   const completedLessons = completedLessonsRes.data;
   if (completedLessons) {
-    completedLessons.forEach((l: { unit_id: string; xp_earned: number | null }) => {
-      completedUnitIds.push(l.unit_id);
-      completedXpMap.set(l.unit_id, l.xp_earned || 0);
+    completedLessons.forEach((lesson: { unit_id: string; xp_earned: number | null }) => {
+      completedUnitIds.push(lesson.unit_id);
+      completedXpMap.set(lesson.unit_id, lesson.xp_earned || 0);
     });
   }
 
   const savedWords = new Set(
-    (userCardsRes.data || []).map((c: { word: string }) => c.word.toLowerCase().trim())
+    (userCardsRes.data || []).map((card: { word: string }) => card.word.toLowerCase().trim())
   );
 
-  const unitStatuses = UNITS.map((unit) => {
+  const unitStatuses = DISPLAY_UNITS.map((unit) => {
     const isCompleted = completedUnitIds.includes(unit.id);
     const vocab = UNIT_VOCABULARY[unit.id] || [];
     const savedCount = vocab.filter(v => savedWords.has(v.word.toLowerCase().trim())).length;
-    
+
     let progress = 0;
     if (isCompleted) {
       progress = 100;
@@ -95,7 +98,7 @@ export default async function LearnPage() {
     };
   });
 
-  const activeUnitId = activeUnitRes.success && activeUnitRes.unitId ? activeUnitRes.unitId : "unit-1";
+  const activeUnitId = activeUnitRes.success && activeUnitRes.unitId ? activeUnitRes.unitId : "unit-a0-1";
 
   return (
     <LearnClient
