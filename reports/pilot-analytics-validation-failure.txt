@@ -3,7 +3,10 @@ Pilot analytics validation failed.
 Last 200 log lines:
 ```text
 Traceback (most recent call last):
-  File "<stdin>", line 8, in <module>
-ValueError: substring not found
-HEAD is now at cd3219a ci: trigger PR pilot analytics validation
+  File "<stdin>", line 10, in <module>
+  File "/usr/lib/python3.12/gzip.py", line 632, in decompress
+    decompressed = do.decompress(data[fp.tell():])
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+zlib.error: Error -3 while decompressing data: invalid distance too far back
+HEAD is now at 96adceb ci: rerun corrected pilot analytics validator
 ```
