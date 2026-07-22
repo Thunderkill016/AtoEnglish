@@ -1,10 +1,15 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 
+const previewTitle = "Lesson System V2 Preview | AtoEnglish";
+const previewDescription =
+  "Bản thử nghiệm hệ thống bài học AtoEnglish V2 theo mission, retrieval, performance, delayed recall và transfer.";
+
 export const metadata: Metadata = {
-  title: "Lesson System V2 Preview | AtoEnglish",
-  description:
-    "Bản thử nghiệm hệ thống bài học AtoEnglish V2 theo mission, retrieval, performance, delayed recall và transfer.",
+  title: {
+    absolute: previewTitle,
+  },
+  description: previewDescription,
   robots: {
     index: false,
     follow: false,
@@ -12,6 +17,16 @@ export const metadata: Metadata = {
       index: false,
       follow: false,
     },
+  },
+  openGraph: {
+    title: previewTitle,
+    description: previewDescription,
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: previewTitle,
+    description: previewDescription,
   },
 };
 
