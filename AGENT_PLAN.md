@@ -1,30 +1,37 @@
 # Agent Plan — Current Work Only
 
-> Historical cleanup is recorded in merged pull requests and `reports/codebase-cleanup-inventory.md`.
+> Historical cleanup and product work are recorded in merged pull requests, issue #20, and durable reports.
 
 ## Current task
 
 | Field | Value |
 |---|---|
-| Task | CLEANUP-018 — Characterize UnitTemplate completion flow |
-| Status | in progress — test-only pull request |
-| Goal | Lock current completion, star, XP, guest, streak, achievement, and navigation behavior before any extraction |
+| Task | PILOT-P1A — Review Unit A0-1 against the 28-day speaking outcome |
+| Status | in progress — documentation-only pull request |
+| Goal | Decide how to shorten or split the current 40-minute first lesson without changing learner behavior yet |
 
-## Merged baseline
+## Verified baseline
 
-- Cleanup PRs #1–#16 are merged into `main`.
-- Conservative unreachable candidates are 0.
-- `UnitTemplate` types, section constants, presentation helpers, and progress persistence are already extracted.
-- Production-server lesson smoke coverage exists on desktop and mobile.
+- Login metadata/title repair is merged.
+- The 28-day, 10–15 minute pilot promise is aligned across entry surfaces.
+- Minimal privacy-safe pilot analytics is merged and has passed focused tests, TypeScript, lint, full unit tests, content-standard tests, production build, and desktop/mobile lesson smoke E2E.
+- The baseline/final speaking assessment exists in PR #23 but remains unmerged.
+- Unit A0-1 currently advertises 40 minutes and strongly teaches name introduction, spelling, and asking for repetition.
+- Unit A0-1 does not yet teach role, company/study context, one responsibility, five predictable work questions, or asking for slower speech through its core learning path.
 
 ## Scope
 
-This phase changes tests and cleanup documentation only. It must not move completion logic or change XP, star, guest, streak, achievement, storage, server-action, database, auth, FSRS, route, or curriculum behavior.
+This phase changes review and planning documentation only. It must not change:
 
-## Separate known issue
+- Unit A0-1 production content;
+- lesson routes, section order, or renderer behavior;
+- authentication, Supabase, RLS, migrations, or analytics taxonomy;
+- XP, stars, streaks, FSRS, completion, or storage keys.
 
-The direct `/login` E2E title assertion can observe an empty document title while the route still returns HTTP 200. Track and fix that independently; it is not part of lesson completion refactoring.
+## Decision
+
+Treat Unit A0-1 as a 10–15 minute activation lesson focused on name, spelling, and communication repair. Distribute role, company, responsibility, and five follow-up questions across the first-week pilot sequence, then assess the combined outcome at checkpoint and final.
 
 ## Next action
 
-Review the CLEANUP-018 characterization PR. Phase 2 remains blocked until this PR is explicitly reviewed and merged.
+Review `reports/unit-a0-1-pilot-review.md`. After the assessment boundary in PR #23 is accepted, add focused content characterization tests before making the first learner-visible A0-1 change.
