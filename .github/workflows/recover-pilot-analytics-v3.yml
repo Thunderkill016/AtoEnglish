@@ -1,7 +1,7 @@
 name: Recover pilot analytics v3
 
 on:
-  pull_request:
+  push:
     branches:
       - main
 
@@ -14,7 +14,7 @@ concurrency:
 
 jobs:
   recover:
-    if: github.head_ref == 'agent/pilot-analytics'
+    if: github.event.head_commit.message == 'ci: run stable pilot analytics recovery'
     runs-on: ubuntu-latest
     timeout-minutes: 35
     env:
