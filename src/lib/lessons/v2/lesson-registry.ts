@@ -18,6 +18,11 @@ import {
   PRE_A1_M04_ENCOUNTER,
   PRE_A1_M04_RETAIN_TRANSFER,
 } from "./pre-a1-module-04";
+import {
+  PRE_A1_M05_COMMUNICATE,
+  PRE_A1_M05_ENCOUNTER,
+  PRE_A1_M05_RETAIN_TRANSFER,
+} from "./pre-a1-module-05";
 import { PRE_A1_CHECKPOINT_01 } from "./pre-a1-checkpoint-01";
 import type { ReviewUnlockRule } from "./review-unlock";
 import type { LessonV2 } from "./schema";
@@ -94,6 +99,15 @@ export const LESSON_V2_SECTIONS: LessonSectionV2[] = [
     descriptionVi:
       "Hoàn thành một giao dịch xã giao có chào hỏi, tên, đồ vật, màu, giá, thanh toán, repair và lời kết.",
   },
+  {
+    id: "pre-a1-m05",
+    order: 6,
+    kind: "module",
+    labelVi: "Module 5",
+    titleVi: "Tuổi, quốc gia và nơi đang sống",
+    descriptionVi:
+      "Hỏi và cung cấp tuổi, quốc gia, thành phố; chủ động hỏi khi còn thiếu một chi tiết.",
+  },
 ];
 
 export const LESSON_V2_MODULES = LESSON_V2_SECTIONS.filter(
@@ -169,6 +183,11 @@ export const LESSON_V2_REGISTRY: RegisteredLessonV2[] = [
     PRE_A1_M04_RETAIN_TRANSFER,
   ]),
   registerCheckpoint("pre-a1-checkpoint-01", 13, PRE_A1_CHECKPOINT_01),
+  ...registerModule("pre-a1-m05", 14, [
+    PRE_A1_M05_ENCOUNTER,
+    PRE_A1_M05_COMMUNICATE,
+    PRE_A1_M05_RETAIN_TRANSFER,
+  ]),
 ];
 
 const BY_ID = new Map(

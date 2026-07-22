@@ -1,0 +1,131 @@
+import { PERSONAL_DETAILS_TARGETS } from "./pre-a1-module-05-targets";
+import type { LessonV2 } from "./schema";
+
+export const PRE_A1_M05_ENCOUNTER: LessonV2 = {
+  schemaVersion: 2,
+  id: "pre-a1-m05-encounter",
+  missionId: "pre-a1-m05",
+  legacyUnitId: "unit-a0-5",
+  titleVi: "Nhận ra tuổi, quốc gia và nơi đang sống",
+  titleEn: "Recognise age, country and city details",
+  level: "PRE_A1",
+  legacyLevel: "A0",
+  estimatedMinutes: 10,
+  primaryOutcome: {
+    id: "pre-a1-m05-encounter-outcome",
+    level: "PRE_A1",
+    activity: "reception",
+    domain: "personal",
+    statementEn:
+      "Can recognise a person's age, country and city when each detail is given in a short predictable exchange.",
+    statementVi:
+      "Có thể nhận ra tuổi, quốc gia và thành phố của một người khi từng thông tin được nói trong trao đổi ngắn, dễ đoán.",
+    source: "ato-adapted",
+    sourceReference: "CEFR Pre-A1 reception of basic personal details",
+  },
+  prerequisiteLessonIds: ["pre-a1-checkpoint-01"],
+  targets: PERSONAL_DETAILS_TARGETS,
+  steps: [
+    {
+      id: "m05e-scenario",
+      kind: "scenario",
+      estimatedMinutes: 1,
+      titleVi: "Đọc thẻ đăng ký câu lạc bộ",
+      roleVi: "Bạn nghe một người mới cung cấp thông tin cá nhân cơ bản.",
+      situationVi:
+        "Người phụ trách cần điền ba ô: tuổi, quốc gia và thành phố đang sống.",
+      goalVi: "Nhận ra đúng ba thông tin, không cần hiểu mọi từ.",
+    },
+    {
+      id: "m05e-model",
+      kind: "model",
+      estimatedMinutes: 2,
+      titleVi: "Nghe ba cặp hỏi–đáp",
+      replayRates: [0.7, 0.9],
+      turns: [
+        { speaker: "Staff", text: "How old are you?", translationVi: "Bạn bao nhiêu tuổi?", targetIds: ["m05-age-question"] },
+        { speaker: "Learner", text: "I am eighteen years old.", translationVi: "Tôi mười tám tuổi.", targetIds: ["m05-age-answer"] },
+        { speaker: "Staff", text: "Where are you from?", translationVi: "Bạn đến từ đâu?", targetIds: ["m05-from-question"] },
+        { speaker: "Learner", text: "I am from Vietnam.", translationVi: "Tôi đến từ Việt Nam.", targetIds: ["m05-from-answer"] },
+        { speaker: "Staff", text: "Where do you live?", translationVi: "Bạn sống ở đâu?", targetIds: ["m05-live-question"] },
+        { speaker: "Learner", text: "I live in Da Nang.", translationVi: "Tôi sống ở Đà Nẵng.", targetIds: ["m05-live-answer"] },
+      ],
+    },
+    {
+      id: "m05e-notice",
+      kind: "notice",
+      estimatedMinutes: 1,
+      titleVi: "Tách ba loại thông tin",
+      targetIds: ["m05-age-answer", "m05-from-answer", "m05-live-answer"],
+      explanationVi:
+        "Số đứng trước years old là tuổi. Sau from là quốc gia hoặc quê quán; sau live in là nơi đang sống. Nghe from, không đọc nhầm thành form.",
+    },
+    {
+      id: "m05e-practice",
+      kind: "practice",
+      estimatedMinutes: 2,
+      titleVi: "Nghe, chọn và tự nhớ từng chi tiết",
+      adaptive: true,
+      exercises: [
+        { id: "m05e-p1", kind: "listen", promptVi: "Người nói bao nhiêu tuổi?", audioText: "I am eighteen years old.", options: ["8 tuổi", "18 tuổi", "80 tuổi"], answer: "18 tuổi", targetIds: ["m05-age-answer"] },
+        { id: "m05e-p2", kind: "select", promptVi: "Chọn câu cho biết quốc gia.", options: ["I am from Vietnam.", "I live in Da Nang.", "I am eighteen years old."], answer: "I am from Vietnam.", targetIds: ["m05-from-answer"] },
+        { id: "m05e-p3", kind: "order", promptVi: "Xếp câu: Tôi sống ở Đà Nẵng.", tokens: ["Da Nang", "in", "live", "I"], answer: "I live in Da Nang", targetIds: ["m05-live-answer"] },
+        { id: "m05e-p4", kind: "recall", promptVi: "Tự nhớ câu: Tôi đến từ Việt Nam.", answer: "I am from Vietnam.", acceptedAnswers: ["I am from Vietnam"], targetIds: ["m05-from-answer"] },
+        { id: "m05e-p5", kind: "select", promptVi: "Câu hỏi nào yêu cầu nói nơi đang sống?", options: ["Where do you live?", "Where are you from?", "How old are you?"], answer: "Where do you live?", targetIds: ["m05-live-question"] },
+      ],
+    },
+    {
+      id: "m05e-rehearsal",
+      kind: "rehearsal",
+      estimatedMinutes: 1,
+      titleVi: "Điền ba ô bằng từ khóa",
+      promptVi:
+        "Nhìn thẻ AGE 18 — COUNTRY Vietnam — CITY Da Nang. Nói ba câu trả lời ngắn, không đọc bản dịch.",
+      keyWords: ["18", "Vietnam", "Da Nang"],
+      targetIds: ["m05-age-answer", "m05-from-answer", "m05-live-answer"],
+    },
+    {
+      id: "m05e-performance",
+      kind: "performance",
+      estimatedMinutes: 1,
+      titleVi: "Nói ba chi tiết trong 20 giây",
+      task: {
+        roleVi: "Người mới đăng ký câu lạc bộ",
+        contextVi: "Người phụ trách lần lượt hỏi tuổi, quốc gia và thành phố của bạn.",
+        goalVi: "Nói đủ ba thông tin để người nghe điền đúng thẻ.",
+        promptVi: "Lượt một dùng 18 — Vietnam — Da Nang. Lượt hai đổi thành 20 — Thailand — Bangkok.",
+        successCriteriaVi: [
+          "Người nghe xác định đúng tuổi, quốc gia và thành phố.",
+          "Bạn dùng đúng from cho quốc gia và live in cho nơi đang sống.",
+        ],
+        targetIds: ["m05-age-answer", "m05-from-answer", "m05-live-answer"],
+        evidence: ["task_checklist", "self_assessment"],
+        attempts: 2,
+        preparationSeconds: 15,
+        responseSeconds: 20,
+        rubric: ["task_achievement", "comprehensibility"],
+      },
+    },
+    {
+      id: "m05e-feedback",
+      kind: "feedback",
+      estimatedMinutes: 1,
+      titleVi: "Sửa thông tin gây nhầm",
+      priorityOrder: ["task_achievement", "comprehensibility"],
+      repairPromptsVi: [
+        "Số tuổi có được nói đủ rõ để không nhầm 18 với 80 không?",
+        "Bạn có phân biệt I am from... và I live in... không?",
+      ],
+    },
+    {
+      id: "m05e-exit",
+      kind: "exit",
+      estimatedMinutes: 1,
+      titleVi: "Chốt ba trường thông tin",
+      canDoCheckVi: "Tôi nhận ra và nói được tuổi, quốc gia và nơi đang sống trong mẫu trao đổi ngắn.",
+      reviewTargetIds: ["m05-age-answer", "m05-from-answer", "m05-live-answer"],
+      confidencePromptVi: "Không nhìn bản dịch, bạn còn phân biệt được from và live in chứ?",
+    },
+  ],
+  tags: ["pre-a1", "module-05", "encounter", "personal-details"],
+};
