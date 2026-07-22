@@ -38,15 +38,46 @@ describe("Lesson V2 session progress", () => {
     expect(state.performanceAttempts).toBe(1);
   });
 
-  it("derives progress from completed steps and final completion", () => {
-    let state = createLessonSessionState("lesson");
-    state = completeLessonStep(state, "one", 1, false);
-    state = completeLessonStep(state, "two", 2, false);
+  it("derives progress and records the first real completion timestamp", () => {
+    let state = createLessonSessionState(
+      "lesson",
+      new Date("2026-07-22T00:00:00.000Z"),
+    );
+    state = completeLessonStep(
+      state,
+      "one",
+      1,
+      false,
+      new Date("2026-07-22T00:01:00.000Z"),
+    );
+    state = completeLessonStep(
+      state,
+      "two",
+      2,
+      false,
+      new Date("2026-07-22T00:02:00.000Z"),
+    );
 
     expect(calculateLessonSessionProgress(state, 8)).toBe(25);
 
-    state = completeLessonStep(state, "eight", 7, true);
+    state = completeLessonStep(
+      state,
+      "eight",
+      7,
+      true,
+      new Date("2026-07-22T00:10:00.000Z"),
+    );
     expect(calculateLessonSessionProgress(state, 8)).toBe(100);
+    expect(state.completedAt).toBe("2026-07-22T00:10:00.000Z");
+
+    state = completeLessonStep(
+      state,
+      "eight",
+      7,
+      true,
+      new Date("2026-07-22T00:20:00.000Z"),
+    );
+    expect(state.completedAt).toBe("2026-07-22T00:10:00.000Z");
   });
 
   it("rejects incompatible stored versions instead of crashing", () => {
@@ -59,7 +90,7 @@ describe("Lesson V2 session progress", () => {
       "lesson",
     );
 
-    expect(state.version).toBe(1);
+    expect(state.version).toBe(2);
     expect(state.completedStepIds).toEqual([]);
   });
 });

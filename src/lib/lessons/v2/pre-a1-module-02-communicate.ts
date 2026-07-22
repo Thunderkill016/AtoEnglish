@@ -1,0 +1,177 @@
+import { PRICE_TARGETS } from "./pre-a1-module-02-targets";
+import type { LessonV2 } from "./schema";
+
+export const PRE_A1_M02_COMMUNICATE: LessonV2 = {
+  schemaVersion: 2,
+  id: "pre-a1-m02-communicate",
+  missionId: "pre-a1-m02",
+  legacyUnitId: "unit-a0-2",
+  titleVi: "Hỏi giá và thanh toán trong trao đổi thật",
+  titleEn: "Ask a price and pay in a short exchange",
+  level: "PRE_A1",
+  legacyLevel: "A0",
+  estimatedMinutes: 10,
+  primaryOutcome: {
+    id: "pre-a1-m02-communicate-outcome",
+    level: "PRE_A1",
+    activity: "interaction",
+    domain: "public",
+    statementEn:
+      "Can ask a basic price, understand a short amount and state cash or card in a simple purchase.",
+    statementVi:
+      "Có thể hỏi giá, hiểu một số tiền ngắn và nói chọn tiền mặt hoặc thẻ trong giao dịch đơn giản.",
+    source: "ato-adapted",
+    sourceReference: "CEFR Pre-A1 simple transactions",
+  },
+  prerequisiteLessonIds: ["pre-a1-m02-encounter"],
+  targets: PRICE_TARGETS,
+  steps: [
+    {
+      id: "m02c-scenario",
+      kind: "scenario",
+      estimatedMinutes: 1,
+      titleVi: "Mua vé xe buýt",
+      roleVi: "Bạn là hành khách.",
+      situationVi: "Bạn cần hỏi giá vé và nói cách thanh toán.",
+      goalVi: "Hoàn thành một trao đổi mua vé ngắn.",
+    },
+    {
+      id: "m02c-model",
+      kind: "model",
+      estimatedMinutes: 2,
+      titleVi: "Nghe mẫu rồi đổi dữ kiện",
+      replayRates: [0.75, 0.95],
+      turns: [
+        {
+          speaker: "Passenger",
+          text: "How much is it?",
+          translationVi: "Vé giá bao nhiêu?",
+          targetIds: ["m02-how-much"],
+        },
+        {
+          speaker: "Driver",
+          text: "It is eight dollars.",
+          translationVi: "Giá là tám đô-la.",
+          targetIds: ["m02-price"],
+        },
+        {
+          speaker: "Driver",
+          text: "Cash or card?",
+          translationVi: "Tiền mặt hay thẻ?",
+        },
+        {
+          speaker: "Passenger",
+          text: "Cash, please.",
+          translationVi: "Tiền mặt nhé.",
+          targetIds: ["m02-cash"],
+        },
+      ],
+    },
+    {
+      id: "m02c-notice",
+      kind: "notice",
+      estimatedMinutes: 1,
+      titleVi: "Giữ khung, đổi số và cách trả",
+      targetIds: ["m02-how-much", "m02-price", "m02-cash", "m02-card"],
+      explanationVi:
+        "Khung giao tiếp giữ nguyên; bạn chỉ đổi số tiền và cash/card theo tình huống.",
+    },
+    {
+      id: "m02c-practice",
+      kind: "practice",
+      estimatedMinutes: 2,
+      titleVi: "Luyện có hỗ trợ",
+      exercises: [
+        {
+          id: "m02c-p1",
+          kind: "listen",
+          promptVi: "Bạn nghe thấy giá bao nhiêu?",
+          audioText: "It is eight dollars.",
+          options: ["5 đô-la", "8 đô-la", "18 đô-la"],
+          answer: "8 đô-la",
+          targetIds: ["m02-price"],
+        },
+        {
+          id: "m02c-p2",
+          kind: "select",
+          promptVi: "Bạn muốn trả tiền mặt. Chọn câu phù hợp.",
+          options: ["Cash, please.", "Card, please.", "How much is it?"],
+          answer: "Cash, please.",
+          targetIds: ["m02-cash"],
+        },
+        {
+          id: "m02c-p3",
+          kind: "order",
+          promptVi: "Xếp câu hỏi giá.",
+          tokens: ["it", "much", "is", "How"],
+          answer: "How much is it",
+          targetIds: ["m02-how-much"],
+        },
+        {
+          id: "m02c-p4",
+          kind: "recall",
+          promptVi: "Nói bằng tiếng Anh: Thẻ nhé.",
+          answer: "Card, please.",
+          acceptedAnswers: ["Card please"],
+          targetIds: ["m02-card"],
+        },
+      ],
+    },
+    {
+      id: "m02c-rehearsal",
+      kind: "rehearsal",
+      estimatedMinutes: 1,
+      titleVi: "Tập ba lượt đổi nhanh",
+      promptVi:
+        "Lượt 1: 5 + cash. Lượt 2: 8 + card. Lượt 3: tự chọn số và cách trả.",
+      frameEn: "How much is it? It is __ dollars. __, please.",
+      keyWords: ["five", "eight", "cash", "card"],
+      targetIds: ["m02-how-much", "m02-price", "m02-cash", "m02-card"],
+    },
+    {
+      id: "m02c-performance",
+      kind: "performance",
+      estimatedMinutes: 1,
+      titleVi: "Mua hàng hai lượt",
+      task: {
+        roleVi: "Khách mua hàng",
+        contextVi: "Người bán đưa hai mức giá khác nhau ở hai lượt.",
+        goalVi: "Hỏi giá và kết thúc bằng cách thanh toán phù hợp.",
+        promptVi:
+          "Không đọc khung. Lượt hai phải đổi số tiền và đổi cash/card.",
+        successCriteriaVi: [
+          "Bạn hỏi được giá mà không cần nhìn câu mẫu.",
+          "Bạn phản hồi đúng số tiền và cách thanh toán ở cả hai lượt.",
+        ],
+        targetIds: ["m02-how-much", "m02-price", "m02-cash", "m02-card"],
+        evidence: ["task_checklist", "self_assessment"],
+        attempts: 2,
+        preparationSeconds: 15,
+        responseSeconds: 20,
+        rubric: ["task_achievement", "comprehensibility", "interaction_repair"],
+      },
+    },
+    {
+      id: "m02c-feedback",
+      kind: "feedback",
+      estimatedMinutes: 1,
+      titleVi: "Sửa một lỗi quan trọng",
+      priorityOrder: ["task_achievement", "comprehensibility", "interaction_repair"],
+      repairPromptsVi: [
+        "Số nào bị nghe nhầm? Hãy nói lại chậm hơn.",
+        "Bạn có kết thúc rõ bằng cash hoặc card không?",
+      ],
+    },
+    {
+      id: "m02c-exit",
+      kind: "exit",
+      estimatedMinutes: 1,
+      titleVi: "Chốt khả năng giao dịch",
+      canDoCheckVi:
+        "Tôi hỏi được giá và nói được cách thanh toán trong một trao đổi ngắn.",
+      reviewTargetIds: ["m02-how-much", "m02-price", "m02-cash", "m02-card"],
+      confidencePromptVi: "Bạn hoàn thành được cả hai lượt mà không đọc khung chưa?",
+    },
+  ],
+  tags: ["pre-a1", "module-02", "communicate", "transaction"],
+};

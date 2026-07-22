@@ -3,6 +3,12 @@ import {
   PRE_A1_M01_ENCOUNTER,
   PRE_A1_M01_RETAIN_TRANSFER,
 } from "./pre-a1-module-01";
+import {
+  PRE_A1_M02_COMMUNICATE,
+  PRE_A1_M02_ENCOUNTER,
+  PRE_A1_M02_RETAIN_TRANSFER,
+} from "./pre-a1-module-02";
+import type { ReviewUnlockRule } from "./review-unlock";
 import type { LessonV2 } from "./schema";
 
 export type LessonSessionKind =
@@ -16,30 +22,77 @@ export interface RegisteredLessonV2 {
   sessionKind: LessonSessionKind;
   orderInModule: number;
   levelOrder: number;
+  unlockRule?: ReviewUnlockRule;
+}
+
+export interface LessonModuleV2 {
+  id: string;
+  order: number;
+  titleVi: string;
+  descriptionVi: string;
+}
+
+export const LESSON_V2_MODULES: LessonModuleV2[] = [
+  {
+    id: "pre-a1-m01",
+    order: 1,
+    titleVi: "Nói và đánh vần tên",
+    descriptionVi:
+      "Giới thiệu tên, đánh vần và dùng câu cứu nguy khi người khác nói quá nhanh.",
+  },
+  {
+    id: "pre-a1-m02",
+    order: 2,
+    titleVi: "Số, giá và thanh toán",
+    descriptionVi:
+      "Hỏi giá, nghe số tiền và chọn tiền mặt hoặc thẻ trong giao dịch đơn giản.",
+  },
+];
+
+const SESSION_KINDS = [
+  "encounter",
+  "communicate",
+  "retain_transfer",
+] as const satisfies readonly LessonSessionKind[];
+
+function registerModule(
+  moduleId: string,
+  firstLevelOrder: number,
+  lessons: [LessonV2, LessonV2, LessonV2],
+): RegisteredLessonV2[] {
+  return lessons.map((lesson, index) => {
+    const sessionKind = SESSION_KINDS[index];
+    if (!sessionKind) {
+      throw new Error(
+        `Missing session kind for module ${moduleId} at index ${index}`,
+      );
+    }
+
+    return {
+      lesson,
+      moduleId,
+      sessionKind,
+      orderInModule: index + 1,
+      levelOrder: firstLevelOrder + index,
+      unlockRule:
+        index === 2
+          ? { prerequisiteLessonId: lessons[1].id, delayHours: 24 }
+          : undefined,
+    };
+  });
 }
 
 export const LESSON_V2_REGISTRY: RegisteredLessonV2[] = [
-  {
-    lesson: PRE_A1_M01_ENCOUNTER,
-    moduleId: "pre-a1-m01",
-    sessionKind: "encounter",
-    orderInModule: 1,
-    levelOrder: 1,
-  },
-  {
-    lesson: PRE_A1_M01_COMMUNICATE,
-    moduleId: "pre-a1-m01",
-    sessionKind: "communicate",
-    orderInModule: 2,
-    levelOrder: 2,
-  },
-  {
-    lesson: PRE_A1_M01_RETAIN_TRANSFER,
-    moduleId: "pre-a1-m01",
-    sessionKind: "retain_transfer",
-    orderInModule: 3,
-    levelOrder: 3,
-  },
+  ...registerModule("pre-a1-m01", 1, [
+    PRE_A1_M01_ENCOUNTER,
+    PRE_A1_M01_COMMUNICATE,
+    PRE_A1_M01_RETAIN_TRANSFER,
+  ]),
+  ...registerModule("pre-a1-m02", 4, [
+    PRE_A1_M02_ENCOUNTER,
+    PRE_A1_M02_COMMUNICATE,
+    PRE_A1_M02_RETAIN_TRANSFER,
+  ]),
 ];
 
 const BY_ID = new Map(
@@ -66,7 +119,15 @@ export function getNextLessonV2(
   const current = getRegisteredLessonV2(lessonId);
   if (!current) return undefined;
 
-  return getLessonsForModuleV2(current.moduleId).find(
-    (entry) => entry.orderInModule === current.orderInModule + 1,
+  return LESSON_V2_REGISTRY.find(
+    (entry) => entry.levelOrder === current.levelOrder + 1,
   );
+}
+
+export function getReviewDelayAfterLessonV2(
+  lessonId: string,
+): number | undefined {
+  return LESSON_V2_REGISTRY.find(
+    (entry) => entry.unlockRule?.prerequisiteLessonId === lessonId,
+  )?.unlockRule?.delayHours;
 }

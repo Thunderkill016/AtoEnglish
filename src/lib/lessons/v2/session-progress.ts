@@ -1,4 +1,4 @@
-export const LESSON_SESSION_STORAGE_VERSION = 1;
+export const LESSON_SESSION_STORAGE_VERSION = 2;
 
 export interface LessonSessionState {
   version: number;
@@ -11,6 +11,7 @@ export interface LessonSessionState {
   completed: boolean;
   startedAt: string;
   updatedAt: string;
+  completedAt?: string;
 }
 
 export function createLessonSessionState(
@@ -39,6 +40,11 @@ export function lessonSessionStorageKey(lessonId: string): string {
 
 function unique(values: string[]): string[] {
   return Array.from(new Set(values));
+}
+
+function validIsoTimestamp(value: unknown): string | undefined {
+  if (typeof value !== "string") return undefined;
+  return Number.isNaN(Date.parse(value)) ? undefined : value;
 }
 
 export function normaliseLessonSessionState(
@@ -98,6 +104,9 @@ export function normaliseLessonSessionState(
         : 0,
     ),
     completed: candidate.completed === true,
+    startedAt: validIsoTimestamp(candidate.startedAt) ?? fallback.startedAt,
+    updatedAt: validIsoTimestamp(candidate.updatedAt) ?? fallback.updatedAt,
+    completedAt: validIsoTimestamp(candidate.completedAt),
   };
 }
 
@@ -150,12 +159,18 @@ export function completeLessonStep(
   isFinalStep: boolean,
   now = new Date(),
 ): LessonSessionState {
+  const timestamp = now.toISOString();
+
   return {
     ...state,
     currentStepIndex: Math.max(0, nextStepIndex),
     completedStepIds: unique([...state.completedStepIds, stepId]),
     completed: isFinalStep || state.completed,
-    updatedAt: now.toISOString(),
+    completedAt:
+      isFinalStep || state.completed
+        ? state.completedAt ?? timestamp
+        : state.completedAt,
+    updatedAt: timestamp,
   };
 }
 

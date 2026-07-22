@@ -1,9 +1,10 @@
 import { notFound } from "next/navigation";
 
-import { LessonV2Runner } from "../../../components/lessons/v2/LessonV2Runner";
+import { LessonV2Runtime } from "../../../components/lessons/v2/LessonV2Runtime";
 import {
   getNextLessonV2,
   getRegisteredLessonV2,
+  getReviewDelayAfterLessonV2,
   type LessonSessionKind,
 } from "../../../lib/lessons/v2/lesson-registry";
 
@@ -30,10 +31,14 @@ export default async function LessonV2Page({
   const next = getNextLessonV2(lessonId);
 
   return (
-    <LessonV2Runner
+    <LessonV2Runtime
       lesson={registered.lesson}
+      moduleId={registered.moduleId}
+      sessionKind={registered.sessionKind}
       sessionLabel={SESSION_LABELS[registered.sessionKind]}
       nextLessonId={next?.lesson.id}
+      unlockRule={registered.unlockRule}
+      nextReviewDelayHours={getReviewDelayAfterLessonV2(lessonId)}
     />
   );
 }
