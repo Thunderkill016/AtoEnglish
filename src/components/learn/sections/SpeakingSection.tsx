@@ -11,6 +11,7 @@ import { toast } from "sonner";
 import { calcSpeechScore } from "@/lib/utils/speech";
 import { SpeechRecognitionFallback } from "@/lib/utils/speech-fallback";
 import type { UnitData } from "../UnitTemplate";
+import { trackPilotEventPersistentlyOnce } from "@/lib/pilot/pilot-analytics-client";
 
 interface SpeechRecognitionEvent {
   results: {
@@ -165,6 +166,12 @@ export default function SpeakingSection({
 
     rec.onstart = () => setIsRecognizing(true);
     recognitionRef.current = rec;
+    if (unit.unitId === "unit-a0-1") {
+      trackPilotEventPersistentlyOnce("first_speaking_started", unit.unitId, {
+        source: "lesson",
+        unitId: unit.unitId,
+      });
+    }
     rec.start();
   };
 
@@ -183,6 +190,14 @@ export default function SpeakingSection({
       setLevel2Recording(false);
       const score = calcSpeechScore(hintText, text);
       setLevel2Score(score);
+      if (unit.unitId === "unit-a0-1") {
+        trackPilotEventPersistentlyOnce("first_speaking_completed", unit.unitId, {
+          source: "lesson",
+          unitId: unit.unitId,
+          score,
+          passed: score >= 60,
+        });
+      }
       if (score >= 60) {
         setLevel2Done(true);
         toast.success(`Tốt lắm! ${score}%`);

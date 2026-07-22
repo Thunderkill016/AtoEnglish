@@ -5,6 +5,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/next";
 
 import { ThemeProvider } from "@/components/providers/theme-provider";
+import PilotLifecycleTracker from "@/components/analytics/PilotLifecycleTracker";
 import { cn } from "@/lib/utils";
 
 import "./globals.css";
@@ -129,6 +130,7 @@ export default function RootLayout({
           storageKey="ato-ui-white"
           disableTransitionOnChange
         >
+          <PilotLifecycleTracker />
           {children}
           <Toaster richColors position="top-center" closeButton />
           <SpeedInsights />

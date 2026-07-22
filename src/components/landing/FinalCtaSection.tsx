@@ -6,6 +6,7 @@ import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ScrollReveal from "@/components/ui/scroll-reveal";
 import { checkHasSession } from "@/lib/auth-check";
+import { trackPilotEventOnce } from "@/lib/pilot/pilot-analytics-client";
 
 export default function FinalCtaSection() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -51,6 +52,11 @@ export default function FinalCtaSection() {
             <Link
               href={isLoggedIn ? "/dashboard" : "/learn"}
               prefetch={false}
+              onClick={() =>
+                trackPilotEventOnce("pilot_started", "pilot", {
+                  source: "landing_final_cta",
+                })
+              }
               className="w-full sm:w-auto"
             >
               <Button className="w-full sm:w-auto sm:min-w-[280px] justify-center bg-emerald-600 hover:bg-emerald-500 dark:bg-emerald-600 dark:hover:bg-emerald-500 text-white font-bold h-14 px-10 rounded-2xl shadow-lg shadow-emerald-600/15 dark:shadow-emerald-500/10 hover:shadow-emerald-500/25 hover:scale-[1.01] active:scale-[0.97] transition-all duration-300 gap-2.5">
