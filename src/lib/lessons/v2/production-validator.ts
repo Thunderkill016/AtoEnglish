@@ -63,14 +63,18 @@ export function validateLessonExerciseDosage(
     const coreTargetIds = lesson.targets
       .filter((target) => target.priority === "core")
       .map((target) => target.id);
-    const missingReviewTargets = coreTargetIds.filter(
-      (targetId) => !exit.reviewTargetIds.includes(targetId),
+    const scheduledCoreTargets = coreTargetIds.filter((targetId) =>
+      exit.reviewTargetIds.includes(targetId),
+    ).length;
+    const minimumScheduledTargets = Math.max(
+      1,
+      Math.ceil(coreTargetIds.length * 0.5),
     );
 
-    if (missingReviewTargets.length > 0) {
+    if (scheduledCoreTargets < minimumScheduledTargets) {
       add(
         "steps.exit.reviewTargetIds",
-        `Exit review chưa lên lịch các core target: ${missingReviewTargets.join(", ")}`,
+        `Exit review phải lên lịch ít nhất ${minimumScheduledTargets}/${coreTargetIds.length} core target; hiện có ${scheduledCoreTargets}`,
       );
     }
   }
