@@ -10,6 +10,7 @@ import {
   EXERCISE_DOSAGE_BY_LEVEL,
   isTargetDosageComplete,
   summarizeTargetDosage,
+  type PracticeEncounterKind,
   type TargetEncounterRecord,
 } from "./exercise-dosage";
 import type { CefrLevel } from "./schema";
@@ -82,7 +83,7 @@ describe("Exercise dosage by level", () => {
   });
 
   it("does not mark massed same-session practice as complete learning", () => {
-    const records: TargetEncounterRecord[] = [
+    const kinds: PracticeEncounterKind[] = [
       "model_exposure",
       "noticing",
       "successful_retrieval",
@@ -90,9 +91,10 @@ describe("Exercise dosage by level", () => {
       "successful_retrieval",
       "guided_use",
       "independent_performance",
-    ].map((kind, index) => ({
+    ];
+    const records: TargetEncounterRecord[] = kinds.map((kind, index) => ({
       targetId: "name",
-      kind: kind as TargetEncounterRecord["kind"],
+      kind,
       contextId: `same-session-${Math.min(index, 1)}`,
       successful: true,
       delayed: false,
@@ -104,26 +106,63 @@ describe("Exercise dosage by level", () => {
 
   it("marks a target complete only after successful delayed recall and transfer", () => {
     const records: TargetEncounterRecord[] = [
-      { kind: "model_exposure", contextId: "reception", delayed: false },
-      { kind: "noticing", contextId: "reception", delayed: false },
-      { kind: "recognition", contextId: "practice", delayed: false },
-      { kind: "successful_retrieval", contextId: "practice", delayed: false },
-      { kind: "successful_retrieval", contextId: "practice", delayed: false },
-      { kind: "successful_retrieval", contextId: "guided-task", delayed: false },
-      { kind: "successful_retrieval", contextId: "guided-task", delayed: false },
-      { kind: "guided_use", contextId: "guided-task", delayed: false },
       {
-        kind: "independent_performance",
-        contextId: "performance",
+        targetId: "name",
+        kind: "model_exposure",
+        contextId: "reception",
+        successful: true,
         delayed: false,
       },
-      { kind: "delayed_recall", contextId: "day-1", delayed: true },
-      { kind: "transfer_use", contextId: "new-scenario", delayed: true },
-    ].map((record) => ({
-      targetId: "name",
-      successful: true,
-      ...record,
-    }));
+      {
+        targetId: "name",
+        kind: "noticing",
+        contextId: "reception",
+        successful: true,
+        delayed: false,
+      },
+      {
+        targetId: "name",
+        kind: "recognition",
+        contextId: "practice",
+        successful: true,
+        delayed: false,
+      },
+      ...Array.from({ length: 4 }, (_, index): TargetEncounterRecord => ({
+        targetId: "name",
+        kind: "successful_retrieval",
+        contextId: index < 2 ? "practice" : "guided-task",
+        successful: true,
+        delayed: false,
+      })),
+      {
+        targetId: "name",
+        kind: "guided_use",
+        contextId: "guided-task",
+        successful: true,
+        delayed: false,
+      },
+      {
+        targetId: "name",
+        kind: "independent_performance",
+        contextId: "performance",
+        successful: true,
+        delayed: false,
+      },
+      {
+        targetId: "name",
+        kind: "delayed_recall",
+        contextId: "day-1",
+        successful: true,
+        delayed: true,
+      },
+      {
+        targetId: "name",
+        kind: "transfer_use",
+        contextId: "new-scenario",
+        successful: true,
+        delayed: true,
+      },
+    ];
 
     const snapshot = summarizeTargetDosage("name", records);
     expect(isTargetDosageComplete("PRE_A1", snapshot)).toBe(true);
