@@ -12,6 +12,7 @@ const SESSION_LABELS: Record<LessonSessionKind, string> = {
   encounter: "Gặp và nhận ra",
   communicate: "Luyện và giao tiếp",
   retain_transfer: "Nhớ lại và chuyển giao",
+  checkpoint: "Checkpoint tích hợp",
 };
 
 interface LessonV2PageProps {
