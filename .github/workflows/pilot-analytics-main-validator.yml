@@ -69,13 +69,8 @@ jobs:
 
           path = Path("src/app/actions/pilot-analytics.ts")
           text = path.read_text(encoding="utf-8")
-          old_guard = '''  const event = parsed.data;
-          if (!event.anonymousId) return { success: false };
-          '''
-          new_guard = '''  const event = parsed.data;
-          const anonymousId = event.anonymousId;
-          if (!anonymousId) return { success: false };
-          '''
+          old_guard = "  const event = parsed.data;\n  if (!event.anonymousId) return { success: false };\n"
+          new_guard = "  const event = parsed.data;\n  const anonymousId = event.anonymousId;\n  if (!anonymousId) return { success: false };\n"
           if text.count(old_guard) != 1:
               raise SystemExit("Expected the anonymous-id guard exactly once")
           text = text.replace(old_guard, new_guard, 1)
