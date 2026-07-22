@@ -1,9 +1,0 @@
-Pilot analytics validation failed.
-
-Last 250 log lines:
-```text
-From https://github.com/Thunderkill016/AtoEnglish
- * branch            2f8f1107fb3d5c3879edd3f22e7dcf35e29f393f -> FETCH_HEAD
-Expected the anonymous-id guard exactly once
-HEAD is now at b62480b ci: trigger clean pilot analytics recovery
-```

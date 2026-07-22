@@ -26,6 +26,10 @@ import LessonProgress from "./lesson-ui/LessonProgress";
 import SessionBreakCard from "./lesson-ui/SessionBreakCard";
 import useLessonProgress from "./hooks/useLessonProgress";
 import {
+  trackPilotEventOnce,
+  trackPilotEventPersistentlyOnce,
+} from "@/lib/pilot/pilot-analytics-client";
+import {
   SECTION_LABELS,
   SECTION_ORDER,
   TOTAL_SECTIONS,
@@ -277,6 +281,13 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
     };
   }, []);
 
+  useEffect(() => {
+    trackPilotEventOnce("unit_started", normalizedUnit.unitId, {
+      source: "lesson",
+      unitId: normalizedUnit.unitId,
+    });
+  }, [normalizedUnit.unitId]);
+
 useLessonProgress({
   unitId: normalizedUnit.unitId,
   section,
@@ -509,6 +520,13 @@ useLessonProgress({
         vocabPreview: normalizedUnit.vocab.slice(0, 5).map(v => ({ word: v.word, meaning: v.meaning })),
         nextRoute,
       });
+      trackPilotEventPersistentlyOnce("unit_completed", normalizedUnit.unitId, {
+        source: "lesson",
+        unitId: normalizedUnit.unitId,
+        score: effectiveScore,
+        starCount: effectiveStarCount,
+        passed: true,
+      });
 
       // ── Achievement milestone toasts (staggered, zero extra DB queries) ──
       const totalCompleted = res.completedCount ?? 0;
@@ -617,6 +635,13 @@ useLessonProgress({
       } catch {}
       toast.success("🎉 Hoàn thành! (guest mode - local only)");
       setCompletionData({ xpEarned: xpToEarn, starCount: effectiveStarCount, effectiveScore, newStreak: 0, vocabPreview: normalizedUnit.vocab.slice(0,5).map(v=>({word:v.word,meaning:v.meaning})), nextRoute });
+      trackPilotEventPersistentlyOnce("unit_completed", normalizedUnit.unitId, {
+        source: "lesson",
+        unitId: normalizedUnit.unitId,
+        score: effectiveScore,
+        starCount: effectiveStarCount,
+        passed: true,
+      });
     } else {
       toast.error(res.error || "Có lỗi xảy ra");
     }
