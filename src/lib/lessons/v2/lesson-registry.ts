@@ -13,6 +13,11 @@ import {
   PRE_A1_M03_ENCOUNTER,
   PRE_A1_M03_RETAIN_TRANSFER,
 } from "./pre-a1-module-03";
+import {
+  PRE_A1_M04_COMMUNICATE,
+  PRE_A1_M04_ENCOUNTER,
+  PRE_A1_M04_RETAIN_TRANSFER,
+} from "./pre-a1-module-04";
 import type { ReviewUnlockRule } from "./review-unlock";
 import type { LessonV2 } from "./schema";
 
@@ -58,6 +63,13 @@ export const LESSON_V2_MODULES: LessonModuleV2[] = [
     titleVi: "Nhận diện và mô tả đồ vật",
     descriptionVi:
       "Hỏi tên, nói màu và xác nhận đúng đồ vật trong tình huống đời sống.",
+  },
+  {
+    id: "pre-a1-m04",
+    order: 4,
+    titleVi: "Chào hỏi và kết thúc trao đổi",
+    descriptionVi:
+      "Chào, hỏi thăm trạng thái, hỏi lại và kết thúc một cuộc gặp rất ngắn.",
   },
 ];
 
@@ -109,6 +121,11 @@ export const LESSON_V2_REGISTRY: RegisteredLessonV2[] = [
     PRE_A1_M03_ENCOUNTER,
     PRE_A1_M03_COMMUNICATE,
     PRE_A1_M03_RETAIN_TRANSFER,
+  ]),
+  ...registerModule("pre-a1-m04", 10, [
+    PRE_A1_M04_ENCOUNTER,
+    PRE_A1_M04_COMMUNICATE,
+    PRE_A1_M04_RETAIN_TRANSFER,
   ]),
 ];
 
