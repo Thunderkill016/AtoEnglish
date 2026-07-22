@@ -23,7 +23,7 @@ Both prompts measure the same five functions:
 2. state a role, company or study context;
 3. describe one work responsibility;
 4. answer five predictable follow-up questions;
-5. ask for repetition or slower speech when needed.
+5. ask for repetition or slower speech during a standardized repair check.
 
 The baseline and final scenarios are deliberately different. This reduces the chance that a memorized script is mistaken for transferable speaking improvement.
 
@@ -35,12 +35,27 @@ Use the same conditions at baseline and final:
 - 30 seconds of preparation;
 - up to 90 seconds for the main response;
 - five follow-up questions in the stored order;
+- one standardized repair check after the third follow-up question;
 - no grammar, vocabulary or pronunciation correction during the recording;
 - the first complete recording is the scored attempt;
 - do not show a full model answer;
 - do not show the final prompt before the final assessment day.
 
-The assessor reads the fourth follow-up question once at a clear conversational speed. When the learner asks for repetition or slower speech, the assessor follows that request. This creates a consistent opportunity to demonstrate a repair strategy without deliberately confusing the learner.
+### Standardized repair check
+
+The repair check exists because the assessment must observe whether the learner can independently ask for repetition or slower speech. Waiting for a naturally occurring misunderstanding would make this criterion inconsistent across learners.
+
+For each stage, use the stored `repairCheck` object exactly as written:
+
+1. After the third follow-up question, read the repair-check utterance once.
+2. Use a natural but slightly brisk pace.
+3. Do not display the utterance as text.
+4. Pause for up to five seconds.
+5. Repeat or slow down only after the learner independently asks in English.
+6. Do not teach, translate or suggest a repair phrase during the recording.
+7. Continue with the fourth and fifth follow-up questions whether or not the learner used a repair phrase.
+
+The baseline and final utterances are different but use the same delivery conditions. The learner is not scored on understanding the repair-check sentence itself; the evidence is whether they recognize a breakdown and use an appropriate repair request.
 
 ## Rubric
 
@@ -66,6 +81,7 @@ A high score in memorized chunks or fluency must not compensate for failure to c
 - Accept functional equivalents instead of requiring one exact sentence.
 - Ignore isolated grammar mistakes when the intended meaning remains clear.
 - Lower comprehensibility only when pronunciation, missing final sounds, stress or delivery makes the message harder to understand.
+- Give repair-language credit only when the learner produces it independently during the repair check.
 - Use evidence from the recording. Do not infer ability from lesson completion, XP or prior interaction with the learner.
 - Write one short evidence note per criterion before assigning the final score.
 
@@ -80,7 +96,8 @@ Report:
 - percentage-point change;
 - which criteria improved;
 - whether task completion or comprehensibility improved by at least one level;
-- whether the learner meets the minimum pilot outcome at final.
+- whether the learner meets the minimum pilot outcome at final;
+- whether the learner independently used a repair phrase at baseline and final.
 
 Do not claim broad English proficiency growth from this assessment. It measures one narrow work-speaking outcome.
 
