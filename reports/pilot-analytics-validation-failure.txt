@@ -1,0 +1,9 @@
+Pilot analytics validation failed.
+
+Last 200 log lines:
+```text
+Traceback (most recent call last):
+  File "<stdin>", line 8, in <module>
+ValueError: substring not found
+HEAD is now at cd3219a ci: trigger PR pilot analytics validation
+```
