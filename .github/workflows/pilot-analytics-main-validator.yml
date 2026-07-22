@@ -4,13 +4,18 @@ on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
 
 permissions:
   contents: write
 
 jobs:
   validate:
-    if: github.event.head_commit.message == 'ci: run pilot analytics validator'
+    if: >-
+      (github.event_name == 'push' && github.event.head_commit.message == 'ci: run pilot analytics validator') ||
+      (github.event_name == 'pull_request' && github.head_ref == 'agent/pilot-analytics')
     runs-on: ubuntu-latest
     timeout-minutes: 35
     env:
@@ -118,7 +123,7 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
           if [ "$FAILED" -eq 0 ]; then
-            git rm -f .github/workflows/pilot-analytics-runner.yml scripts/pilot-analytics-payload.yml
+            git rm -f .github/workflows/pilot-analytics-runner.yml scripts/pilot-analytics-payload.yml scripts/trigger-pilot-analytics-validator.txt
             rm -f reports/pilot-analytics-validation-failure.txt
             git add -A
             git commit -m "feat: add minimal pilot analytics"
