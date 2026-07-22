@@ -23,6 +23,11 @@ import {
   PRE_A1_M05_ENCOUNTER,
   PRE_A1_M05_RETAIN_TRANSFER,
 } from "./pre-a1-module-05";
+import {
+  PRE_A1_M06_COMMUNICATE,
+  PRE_A1_M06_ENCOUNTER,
+  PRE_A1_M06_RETAIN_TRANSFER,
+} from "./pre-a1-module-06";
 import { PRE_A1_CHECKPOINT_01 } from "./pre-a1-checkpoint-01";
 import type { ReviewUnlockRule } from "./review-unlock";
 import type { LessonV2 } from "./schema";
@@ -108,6 +113,15 @@ export const LESSON_V2_SECTIONS: LessonSectionV2[] = [
     descriptionVi:
       "Hỏi và cung cấp tuổi, quốc gia, thành phố; chủ động hỏi khi còn thiếu một chi tiết.",
   },
+  {
+    id: "pre-a1-m06",
+    order: 7,
+    kind: "module",
+    labelVi: "Module 6",
+    titleVi: "Gia đình và mối quan hệ",
+    descriptionVi:
+      "Hỏi một người là ai, nói mối quan hệ và tên, xác nhận đúng người khi ảnh có nhiều người.",
+  },
 ];
 
 export const LESSON_V2_MODULES = LESSON_V2_SECTIONS.filter(
@@ -187,6 +201,11 @@ export const LESSON_V2_REGISTRY: RegisteredLessonV2[] = [
     PRE_A1_M05_ENCOUNTER,
     PRE_A1_M05_COMMUNICATE,
     PRE_A1_M05_RETAIN_TRANSFER,
+  ]),
+  ...registerModule("pre-a1-m06", 17, [
+    PRE_A1_M06_ENCOUNTER,
+    PRE_A1_M06_COMMUNICATE,
+    PRE_A1_M06_RETAIN_TRANSFER,
   ]),
 ];
 
