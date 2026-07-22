@@ -9,6 +9,14 @@ export type SpeakingCriterionId = (typeof SPEAKING_CRITERIA)[number];
 export type SpeakingScore = 0 | 1 | 2 | 3;
 export type SpeakingAssessmentStage = "baseline" | "final";
 
+export interface SpeakingRepairCheck {
+  utterance: string;
+  delivery: "natural-brisk";
+  waitSeconds: 5;
+  showText: false;
+  repeatOnlyAfterLearnerRequest: true;
+}
+
 export interface SpeakingPrompt {
   id: string;
   stage: SpeakingAssessmentStage;
@@ -18,6 +26,7 @@ export interface SpeakingPrompt {
   responseSeconds: number;
   learnerInstructions: readonly string[];
   followUpQuestions: readonly string[];
+  repairCheck: SpeakingRepairCheck;
   requiredFunctions: readonly string[];
   assessorProtocol: readonly string[];
 }
@@ -55,8 +64,15 @@ export const PILOT_REQUIRED_FUNCTIONS = [
   "state role, company or study context",
   "describe one work responsibility",
   "answer five predictable follow-up questions",
-  "ask for repetition or slower speech when needed",
+  "ask for repetition or slower speech during the repair check",
 ] as const;
+
+const REPAIR_CHECK_CONDITIONS = {
+  delivery: "natural-brisk",
+  waitSeconds: 5,
+  showText: false,
+  repeatOnlyAfterLearnerRequest: true,
+} as const;
 
 export const PILOT_SPEAKING_PROMPTS: Record<
   SpeakingAssessmentStage,
@@ -84,12 +100,18 @@ export const PILOT_SPEAKING_PROMPTS: Record<
       "Where do you work or study?",
       "What do you do at work?",
     ],
+    repairCheck: {
+      utterance: "Please wait near meeting room fourteen after lunch.",
+      ...REPAIR_CHECK_CONDITIONS,
+    },
     requiredFunctions: PILOT_REQUIRED_FUNCTIONS,
     assessorProtocol: [
       "Không cho người học xem câu trả lời mẫu hoặc sửa câu trong lúc ghi âm.",
       "Cho 30 giây chuẩn bị và tối đa 90 giây trả lời chính.",
-      "Hỏi đủ năm câu theo đúng thứ tự; không đổi từ trừ khi người học yêu cầu giải thích bằng tiếng Việt sau khi bài đã kết thúc.",
-      "Đọc câu hỏi thứ tư một lần ở tốc độ hội thoại rõ ràng. Nếu người học yêu cầu nhắc lại hoặc nói chậm, hãy thực hiện yêu cầu đó.",
+      "Hỏi ba câu đầu theo đúng thứ tự; không đổi từ hoặc giải thích trong lúc ghi âm.",
+      "Sau câu thứ ba, đọc repair check đúng một lần với tốc độ tự nhiên nhưng hơi nhanh, không hiển thị câu chữ, rồi chờ tối đa năm giây.",
+      "Chỉ lặp lại hoặc nói chậm repair check khi người học tự yêu cầu bằng tiếng Anh; không gợi ý câu yêu cầu.",
+      "Tiếp tục hỏi câu thứ tư và thứ năm sau repair check, dù người học có dùng chiến lược sửa chữa hay không.",
       "Chấm bản ghi đầu tiên hoàn chỉnh; không chọn bản tốt nhất trong nhiều lần thử.",
     ],
   },
@@ -115,12 +137,18 @@ export const PILOT_SPEAKING_PROMPTS: Record<
       "What are you responsible for?",
       "What would you like help with today?",
     ],
+    repairCheck: {
+      utterance: "Please join the team meeting at three-thirty tomorrow.",
+      ...REPAIR_CHECK_CONDITIONS,
+    },
     requiredFunctions: PILOT_REQUIRED_FUNCTIONS,
     assessorProtocol: [
       "Không cho người học xem đề final trước ngày đánh giá và không cung cấp câu trả lời mẫu.",
       "Cho 30 giây chuẩn bị và tối đa 90 giây trả lời chính.",
-      "Hỏi đủ năm câu theo đúng thứ tự; không sửa ngữ pháp hoặc phát âm trong lúc ghi âm.",
-      "Đọc câu hỏi thứ tư một lần ở tốc độ hội thoại rõ ràng. Nếu người học yêu cầu nhắc lại hoặc nói chậm, hãy thực hiện yêu cầu đó.",
+      "Hỏi ba câu đầu theo đúng thứ tự; không sửa ngữ pháp hoặc phát âm trong lúc ghi âm.",
+      "Sau câu thứ ba, đọc repair check đúng một lần với tốc độ tự nhiên nhưng hơi nhanh, không hiển thị câu chữ, rồi chờ tối đa năm giây.",
+      "Chỉ lặp lại hoặc nói chậm repair check khi người học tự yêu cầu bằng tiếng Anh; không gợi ý câu yêu cầu.",
+      "Tiếp tục hỏi câu thứ tư và thứ năm sau repair check, dù người học có dùng chiến lược sửa chữa hay không.",
       "Chấm bản ghi đầu tiên hoàn chỉnh bằng cùng rubric và điều kiện thu âm như baseline.",
     ],
   },
@@ -136,7 +164,7 @@ export const PILOT_SPEAKING_RUBRIC: readonly SpeakingRubricCriterion[] = [
       0: "Không truyền đạt được thông tin cần thiết hoặc không thể bắt đầu nhiệm vụ.",
       1: "Chỉ cung cấp được một phần nhỏ như tên hoặc vài từ rời; cần nhắc và hỗ trợ liên tục.",
       2: "Giới thiệu được phần lớn thông tin và xử lý một số câu hỏi; còn thiếu một chức năng quan trọng.",
-      3: "Giới thiệu, đánh vần tên, nêu vai trò/trách nhiệm, xử lý đủ câu hỏi và dùng chiến lược sửa chữa khi cần.",
+      3: "Giới thiệu, đánh vần tên, nêu vai trò/trách nhiệm, xử lý đủ câu hỏi và tự dùng chiến lược sửa chữa trong repair check.",
     },
   },
   {
@@ -160,7 +188,7 @@ export const PILOT_SPEAKING_RUBRIC: readonly SpeakingRubricCriterion[] = [
       0: "Không sử dụng được cụm từ có chức năng phù hợp.",
       1: "Dùng được một hoặc hai cụm rời nhưng lỗi hoặc thiếu từ thường làm gián đoạn ý nghĩa.",
       2: "Dùng được nhiều cụm phù hợp; còn lỗi hình thức nhưng ý nghĩa chính vẫn rõ.",
-      3: "Dùng các cụm giới thiệu, công việc và sửa chữa giao tiếp phù hợp, tương đối linh hoạt và đúng ngữ cảnh.",
+      3: "Dùng các cụm giới thiệu, công việc và yêu cầu nhắc lại/nói chậm phù hợp, tương đối linh hoạt và đúng ngữ cảnh.",
     },
   },
   {
