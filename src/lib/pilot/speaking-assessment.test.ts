@@ -27,8 +27,12 @@ describe("pilot speaking prompts", () => {
     expect(baseline.id).not.toBe(final.id);
     expect(baseline.scenario).not.toBe(final.scenario);
     expect(baseline.followUpQuestions).not.toEqual(final.followUpQuestions);
+    expect(baseline.repairCheck.utterance).not.toBe(final.repairCheck.utterance);
     expect(baseline.requiredFunctions).toEqual(PILOT_REQUIRED_FUNCTIONS);
     expect(final.requiredFunctions).toEqual(PILOT_REQUIRED_FUNCTIONS);
+    expect(PILOT_REQUIRED_FUNCTIONS).toContain(
+      "ask for repetition or slower speech during the repair check",
+    );
   });
 
   it("keeps administration conditions comparable", () => {
@@ -41,6 +45,27 @@ describe("pilot speaking prompts", () => {
     expect(final.responseSeconds).toBe(90);
     expect(baseline.followUpQuestions).toHaveLength(5);
     expect(final.followUpQuestions).toHaveLength(5);
+
+    for (const prompt of Object.values(PILOT_SPEAKING_PROMPTS)) {
+      expect(prompt.repairCheck).toMatchObject({
+        delivery: "natural-brisk",
+        waitSeconds: 5,
+        showText: false,
+        repeatOnlyAfterLearnerRequest: true,
+      });
+    }
+  });
+
+  it("creates a standardized opportunity to demonstrate a repair phrase", () => {
+    for (const prompt of Object.values(PILOT_SPEAKING_PROMPTS)) {
+      expect(prompt.repairCheck.utterance.length).toBeGreaterThan(20);
+
+      const protocol = prompt.assessorProtocol.join(" ");
+      expect(protocol).toMatch(/repair check/i);
+      expect(protocol).toMatch(/không hiển thị/i);
+      expect(protocol).toMatch(/Chỉ lặp lại hoặc nói chậm/i);
+      expect(protocol).toMatch(/không gợi ý/i);
+    }
   });
 
   it("does not expose a full model answer in either prompt", () => {
@@ -49,6 +74,7 @@ describe("pilot speaking prompts", () => {
         prompt.scenario,
         ...prompt.learnerInstructions,
         ...prompt.followUpQuestions,
+        prompt.repairCheck.utterance,
       ].join(" ");
 
       expect(text).not.toMatch(/My name is .* I work/i);
@@ -79,6 +105,18 @@ describe("pilot speaking rubric", () => {
     );
 
     expect(criterion?.description).toMatch(/Không chấm.*giọng bản xứ/i);
+  });
+
+  it("requires independent repair language for the highest functional score", () => {
+    const taskCompletion = PILOT_SPEAKING_RUBRIC.find(
+      ({ id }) => id === "taskCompletion",
+    );
+    const targetChunks = PILOT_SPEAKING_RUBRIC.find(
+      ({ id }) => id === "targetChunks",
+    );
+
+    expect(taskCompletion?.anchors[3]).toMatch(/repair check/i);
+    expect(targetChunks?.anchors[3]).toMatch(/nhắc lại|nói chậm/i);
   });
 });
 
