@@ -6,7 +6,7 @@ on:
       - main
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   compact-flow:
@@ -313,32 +313,17 @@ jobs:
 
           warmup = Path("src/components/learn/sections/WarmupSection.tsx")
           warmup_text = warmup.read_text(encoding="utf-8")
-          warmup_text = require_replace(
-              warmup_text,
-              "<HowToLearnCard />",
-              '<HowToLearnCard compact={unit.unitId === "unit-a0-1"} />',
-              "warmup compact card",
-          )
+          warmup_text = require_replace(warmup_text, "<HowToLearnCard />", '<HowToLearnCard compact={unit.unitId === "unit-a0-1"} />', "warmup compact card")
           warmup.write_text(warmup_text, encoding="utf-8")
 
           unit_template = Path("src/components/learn/UnitTemplate.tsx")
           text = unit_template.read_text(encoding="utf-8")
           text = require_replace(text, "  SECTION_ORDER,\n  TOTAL_SECTIONS,\n", "  getSectionOrder,\n", "section imports")
-          text = require_replace(
-              text,
-              "  };\n\n  const VOCAB_LIMIT = normalizedUnit.vocab.length;",
-              '  };\n  const activeSectionOrder = getSectionOrder(normalizedUnit.unitId);\n  const totalSections = activeSectionOrder.length;\n  const isGoldDay1 = normalizedUnit.unitId === "unit-a0-1";\n\n  const VOCAB_LIMIT = normalizedUnit.vocab.length;',
-              "active section order",
-          )
+          text = require_replace(text, "  };\n\n  const VOCAB_LIMIT = normalizedUnit.vocab.length;", '  };\n  const activeSectionOrder = getSectionOrder(normalizedUnit.unitId);\n  const totalSections = activeSectionOrder.length;\n  const isGoldDay1 = normalizedUnit.unitId === "unit-a0-1";\n\n  const VOCAB_LIMIT = normalizedUnit.vocab.length;', "active section order")
           text = require_replace(text, "  setSection,\n});", "  setSection,\n  sectionOrder: activeSectionOrder,\n});", "progress hook order")
           text = require_replace(text, "if (miniSession && section === 4)", "if (!isGoldDay1 && miniSession && section === 4)", "mini session guard")
           text = require_replace(text, "if (section === 4 && !sessionBreak)", "if (!isGoldDay1 && section === 4 && !sessionBreak)", "session break guard")
-          text = require_replace(
-              text,
-              "const idx = SECTION_ORDER.indexOf(section as SectionNumber);\n    const nextSection = SECTION_ORDER[Math.min(idx + 1, SECTION_ORDER.length - 1)];",
-              "const idx = activeSectionOrder.indexOf(section as SectionNumber);\n    const nextSection = activeSectionOrder[Math.min(idx + 1, activeSectionOrder.length - 1)];",
-              "next section order",
-          )
+          text = require_replace(text, "const idx = SECTION_ORDER.indexOf(section as SectionNumber);\n    const nextSection = SECTION_ORDER[Math.min(idx + 1, SECTION_ORDER.length - 1)];", "const idx = activeSectionOrder.indexOf(section as SectionNumber);\n    const nextSection = activeSectionOrder[Math.min(idx + 1, activeSectionOrder.length - 1)];", "next section order")
           text = require_replace(text, "const sectionOrderIdx = SECTION_ORDER.indexOf(section as SectionNumber);", "const sectionOrderIdx = activeSectionOrder.indexOf(section as SectionNumber);", "section index")
           text = require_replace(text, "{miniSession ? (", "{!isGoldDay1 && miniSession ? (", "hide active mini session")
           text = require_replace(text, ") : section < 8 && (", ") : !isGoldDay1 && section < 8 && (", "hide mini session button")
@@ -368,21 +353,17 @@ jobs:
       - name: Production build
         run: npm run build
 
-      - name: Publish validated source
-        shell: bash
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add src/components/learn/UnitTemplate.tsx \
-            src/components/learn/lesson-sections.ts \
-            src/components/learn/lesson-ui/LessonProgress.tsx \
-            src/components/learn/hooks/useLessonProgress.ts \
-            src/components/learn/lesson-ui/HowToLearnCard.tsx \
-            src/components/learn/sections/WarmupSection.tsx \
+      - name: Upload validated source artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: gold-day-1-compact-source
+          if-no-files-found: error
+          retention-days: 1
+          path: |
+            src/components/learn/UnitTemplate.tsx
+            src/components/learn/lesson-sections.ts
+            src/components/learn/lesson-ui/LessonProgress.tsx
+            src/components/learn/hooks/useLessonProgress.ts
+            src/components/learn/lesson-ui/HowToLearnCard.tsx
+            src/components/learn/sections/WarmupSection.tsx
             src/__tests__/lesson-section-order.test.ts
-          if git diff --cached --quiet; then
-            echo 'Validated source already published.'
-            exit 0
-          fi
-          git commit -m "feat: give Gold Day 1 a focused seven-step flow"
-          git push origin HEAD:agent/gold-day-1-cefr
