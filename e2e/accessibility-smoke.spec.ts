@@ -34,7 +34,8 @@ async function findUnnamedInteractiveElements(page: Page): Promise<string[]> {
     };
 
     const labelledByText = (element: HTMLElement): string => {
-      const ids = element.getAttribute("aria-labelledby")?.trim().split(/\s+/) ?? [];
+      const ids =
+        element.getAttribute("aria-labelledby")?.trim().split(/\s+/).filter(Boolean) ?? [];
       return ids
         .map((id) => document.getElementById(id)?.textContent?.trim() ?? "")
         .filter(Boolean)
@@ -47,7 +48,7 @@ async function findUnnamedInteractiveElements(page: Page): Promise<string[]> {
         element instanceof HTMLSelectElement ||
         element instanceof HTMLTextAreaElement
       ) {
-        return [...element.labels]
+        return Array.from(element.labels ?? [])
           .map((label) => label.textContent?.trim() ?? "")
           .filter(Boolean)
           .join(" ");
@@ -59,7 +60,9 @@ async function findUnnamedInteractiveElements(page: Page): Promise<string[]> {
       const ariaLabel = element.getAttribute("aria-label")?.trim() ?? "";
       const title = element.getAttribute("title")?.trim() ?? "";
       const text = element.textContent?.trim() ?? "";
-      const imageAlt = [...element.querySelectorAll<HTMLImageElement>("img[alt]")]
+      const imageAlt = [
+        ...element.querySelectorAll<HTMLImageElement>("img[alt]"),
+      ]
         .map((image) => image.alt.trim())
         .filter(Boolean)
         .join(" ");
@@ -114,7 +117,9 @@ test.describe("Public accessibility smoke", () => {
     await expect(skipLink).toHaveAttribute("href", "#main-content");
   });
 
-  test("landing has no duplicate IDs or unnamed visible controls", async ({ page }) => {
+  test("landing has no duplicate IDs or unnamed visible controls", async ({
+    page,
+  }) => {
     await page.goto("/");
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
 
@@ -122,7 +127,9 @@ test.describe("Public accessibility smoke", () => {
     expect(await findUnnamedInteractiveElements(page)).toEqual([]);
   });
 
-  test("landing does not overflow the mobile viewport horizontally", async ({ page }) => {
+  test("landing does not overflow the mobile viewport horizontally", async ({
+    page,
+  }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto("/");
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
