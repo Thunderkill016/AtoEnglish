@@ -3,18 +3,80 @@
 > Vietnamese-first English learning web app.
 > Stack: Next.js 16, React 19, TypeScript, Tailwind CSS v4, Supabase, Vitest, Playwright, Vercel.
 
+This file is the default operating contract for coding agents working in this repository.
+
+## Mission
+
+AtoEnglish is the product. Coding agents are implementation workers. CycleWarden, GitHub, tests, and automation exist to help the owner develop AtoEnglish without losing product direction or repository control.
+
+The current product goal is deliberately narrow:
+
+> Help Vietnamese adults who know some English but freeze when speaking at work complete a 28-day, 10–15 minute-per-day journey and demonstrate a practical speaking improvement.
+
+Do not optimize for feature count, architectural novelty, autonomous operation, or broad A0–B2 coverage.
+
+## Mandatory reading order
+
+Before proposing or changing non-trivial code, read:
+
+1. `docs/product/PRODUCT_TRUTH.md`
+2. `docs/product/CURRENT_PRIORITY.md`
+3. `docs/product/DO_NOT_BUILD.md`
+4. `docs/curriculum/28-day-speaking-journey-contract.md` for curriculum or lesson work
+5. `CONTENT_STYLE.md` for learner-facing content
+6. the relevant implementation, tests, migrations, issues, and recent pull requests
+
+When these sources disagree, stop and report the conflict. Do not silently choose the broader or more ambitious interpretation.
+
 ## Working model
 
-1. Read this file before non-trivial work.
-2. Work on a branch; do not push autonomous changes directly to `main`.
-3. Use one branch per cleanup campaign and one logical concern per commit.
-4. Do not create commits whose only purpose is recording that checks passed.
-5. Do not generate placeholder maintenance tasks to keep an agent busy.
-6. Keep `AGENT_PLAN.md` limited to the current task.
-7. Keep `AGENT_BACKLOG.md` limited to open tasks.
-8. Git history and pull requests are the record of completed work; do not duplicate full history in Markdown logs.
-9. Runtime logs under `logs/agent/` must not be committed.
-10. When uncertain whether a file is used, classify it for manual verification instead of deleting it.
+1. Work on a dedicated branch; never push autonomous changes directly to `main`.
+2. Use one pull request for one bounded product or technical outcome.
+3. Do not create commits whose only purpose is recording successful checks.
+4. Do not generate placeholder maintenance work to keep an agent busy.
+5. Keep `AGENT_PLAN.md` limited to the current task and `AGENT_BACKLOG.md` limited to open work.
+6. Git history and pull requests are the record of completed work; do not duplicate full history in Markdown logs.
+7. Runtime logs under `logs/agent/` must not be committed.
+8. Stop and document ambiguity instead of guessing.
+9. Treat the approved scope as a permission boundary, not a suggestion.
+10. Never merge or deploy automatically. The owner makes the final authorization decision.
+
+## Product-first rules
+
+1. **Product priority beats technical interest.** Cleanup, abstraction, or infrastructure work is not justified unless it directly unblocks `docs/product/CURRENT_PRIORITY.md`.
+2. **Make the smallest coherent change.** Preserve working behavior outside the approved scope.
+3. **Do not mix systems.** Curriculum, authentication, database, analytics, XP, FSRS, payments, and architecture work require separate pull requests unless one cannot function without the other and the coupling is documented.
+4. **Separate technical evidence from learner evidence.** Passing checks proves repository consistency, not learning effectiveness or market demand.
+5. **Do not invent requirements.** Use visible assumptions or request a decision.
+6. **Stop when scope expands.** Open a follow-up issue instead of silently widening the current change.
+7. **Never expose secrets or perform unapproved production writes.** Never edit `.env.local` or commit credentials.
+
+## Task contract
+
+Every implementation task must state:
+
+- problem;
+- intended learner, user, or developer outcome;
+- current evidence;
+- allowed files or directories;
+- explicitly forbidden scope;
+- acceptance criteria;
+- required technical checks;
+- required product checks;
+- manual review questions;
+- rollback or recovery plan.
+
+Small fixes may keep this contract in the issue or pull-request description. Larger work should use a focused spec document.
+
+## Workflow depth
+
+Use the lightest safe process:
+
+- **Small:** isolated copy, metadata, or narrowly characterized bug — inspect, patch, targeted checks, pull request.
+- **Medium:** lesson or bounded feature — task contract, approved scope, implementation, technical and product checks, pull request.
+- **High risk:** auth, database, privacy, production, or broad architecture — explicit decision, risk review, migration or rollback plan, independent verification, pull request.
+
+Do not force every task through a large research lifecycle.
 
 ## Commands
 
@@ -32,6 +94,8 @@ npm run inventory
 ```
 
 Use `npm run build` as the final compilation check, not after every small edit.
+
+Do not claim a check passed unless it actually ran against the final committed state.
 
 ## Architecture
 
@@ -52,28 +116,34 @@ src/
 └── proxy.ts                     # Next.js route protection and rate limiting
 ```
 
-New product-specific code should normally live under `src/features/<feature>/`. Shared visual primitives belong under `src/components/ui/`. Avoid new catch-all folders such as `misc`, `helpers`, `old`, `backup`, or `temp`.
+New product-specific code should normally live under `src/features/<feature>/`. Shared visual primitives belong under `src/components/ui/`. Avoid catch-all folders such as `misc`, `helpers`, `old`, `backup`, or `temp`.
+
+Preserve the modular monolith unless a measured product blocker requires architectural change.
 
 ## Protected areas
 
-Ask before changing:
+Do not change these areas unless the task explicitly requires them:
 
-- Database schema, migrations, or RLS policies.
-- Authentication and onboarding behavior.
-- `src/proxy.ts` route-protection behavior.
-- FSRS scheduling parameters.
-- Lesson section order or pedagogical flow.
-- Dependencies with meaningful bundle, runtime, or infrastructure impact.
-
-Never edit secrets or `.env.local`.
+- database schema, migrations, functions, or RLS policies;
+- authentication, onboarding, and route protection;
+- `src/proxy.ts` behavior;
+- analytics event taxonomy or privacy boundary;
+- FSRS scheduling parameters;
+- XP, stars, streaks, leagues, and achievements;
+- payment or production deployment configuration;
+- lesson section order or pedagogical flow;
+- `src/components/learn/UnitTemplate.tsx` architecture;
+- unrelated curriculum units;
+- dependencies with meaningful bundle, runtime, or infrastructure impact;
+- raw audio, transcripts, names, employers, or learner free text in analytics.
 
 ## TypeScript and Next.js
 
 - Do not use `any` or `as any`.
 - In Next.js 16 server code, await asynchronous framework APIs such as `cookies()`, `headers()`, `params`, and the server Supabase client.
 - Use the correct Supabase client for the execution context:
-  - Server components, route handlers, and actions: server client.
-  - Client components: browser client.
+  - server components, route handlers, and actions: server client;
+  - client components: browser client;
   - `proxy.ts`: middleware client.
 - Prefer parallel independent database queries with `Promise.all`.
 - Do not use `dynamic(..., { ssr: false })` inside server components.
@@ -84,49 +154,71 @@ Never edit secrets or `.env.local`.
 - Derive the authenticated user with `supabase.auth.getUser()`; never trust a client-supplied user ID.
 - Validate external input with Zod.
 - Apply rate limiting to write actions where required by existing project patterns.
+- Make schema changes only through migrations.
 - After a migration, regenerate `src/types/supabase.ts` with `npm run db:types`.
 - Known table names include `user_progress` and `user_lesson_progress`; do not invent replacement names.
 
-## Curriculum
+## Curriculum and lesson work
 
 Before editing unit content, read:
 
-- `CONTENT_STYLE.md`
-- `src/lib/lessons/lesson-blueprint.ts`
-- `src/lib/lessons/learning-flow.ts`
-- `src/lib/lessons/content-standard.ts`
-- the current golden unit example
+- `docs/curriculum/28-day-speaking-journey-contract.md`;
+- `CONTENT_STYLE.md`;
+- `src/lib/lessons/lesson-blueprint.ts`;
+- `src/lib/lessons/learning-flow.ts`;
+- `src/lib/lessons/content-standard.ts`;
+- the current relevant unit and its tests.
+
+A lesson change must demonstrate more than valid TypeScript and required field counts. Confirm:
+
+- one measurable daily can-do outcome;
+- a required spoken output;
+- a credible 10–15 minute scope;
+- retrieval rather than only recognition or repetition;
+- lower prompt support by the final task;
+- a changed or meaningful speaking situation;
+- no language expansion beyond the daily task;
+- a completion path containing speaking evidence or the approved fallback;
+- alignment with the 28-day journey and later assessment.
 
 Do not change lesson order as part of content cleanup.
+
+Curriculum changes require, at minimum:
+
+```bash
+npm run test:content-standard
+bash scripts/audit-lesson-content.sh
+npx tsc --noEmit
+npm run lint
+npm run test
+npm run build
+```
+
+Also run targeted unit tests and relevant production lesson smoke checks.
 
 ## Cleanup rules
 
 Cleanup must be staged:
 
-1. Establish a passing baseline.
-2. Run `npm run inventory` and review its candidates.
-3. Classify each candidate as `safe_to_delete`, `likely_unused`, or `manual_verification`.
-4. Delete only verified items.
-5. Refactor large components through small behavior-preserving extractions.
-6. Run relevant checks after every batch.
-7. Review the diff before committing.
+1. establish a passing baseline;
+2. run `npm run inventory` and review its candidates;
+3. classify each candidate as `safe_to_delete`, `likely_unused`, or `manual_verification`;
+4. delete only verified items;
+5. refactor large components through small behavior-preserving extractions;
+6. run relevant checks after every batch;
+7. review the diff before committing.
 
-Do not combine cleanup with feature development.
+Do not combine cleanup with feature development. Do not refactor merely to reduce line count.
 
 ## Before a pull request
 
-```bash
-npm run inventory
-npx tsc --noEmit
-npm run lint
-npm run test
-```
+Run the checks appropriate to the changed surface and confirm:
 
-Run additional content, integration, E2E, or build checks when the touched area requires them.
+- no unrelated files changed;
+- no production `console.log` or `console.error` was introduced;
+- no generated or runtime artifact was committed;
+- no secrets or production data were exposed;
+- documentation describes the current repository rather than an old implementation;
+- the pull-request body explains what changed, why it serves the current priority, checks executed, remaining risks, and what the owner should manually review.
 
-Confirm:
-
-- No unrelated files changed.
-- No production `console.log` or `console.error` was introduced.
-- No generated or runtime artifact was committed.
-- Documentation describes the current repository rather than an old implementation.
+The ordered development direction is maintained in `docs/product/CURRENT_PRIORITY.md`. Agents must not choose a different roadmap item merely because it is easier or more technically interesting.
