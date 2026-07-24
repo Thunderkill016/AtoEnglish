@@ -58,7 +58,6 @@ import { unit39 } from "@/lib/data/units/unit39";
 import { unit40 } from "@/lib/data/units/unit40";
 import { unit41 } from "@/lib/data/units/unit41";
 import { unit42 } from "@/lib/data/units/unit42";
-import { UNITS } from "@/lib/constants/units";
 
 // ─── Unit registry ───────────────────────────────────────────────────────────
 // Single source of truth: all A0 + A1 + A2 + B1 + B2 units registered here.
@@ -133,12 +132,12 @@ export async function generateMetadata({
   params: Promise<{ unitSlug: string }>;
 }): Promise<Metadata> {
   const { unitSlug } = await params;
-  const meta = UNITS.find((u) => u.id === unitSlug);
-  if (!meta) return { title: "Bài học không tìm thấy" };
+  const entry = UNIT_DATA_MAP[unitSlug];
+  if (!entry) return { title: "Bài học không tìm thấy" };
 
   return {
-    title: meta.title,
-    description: meta.description,
+    title: entry.data.title,
+    description: entry.data.description,
     robots: { index: false }, // Protected page — no public indexing
   };
 }

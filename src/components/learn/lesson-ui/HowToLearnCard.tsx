@@ -1,6 +1,5 @@
 import {
   LESSON_BLUEPRINT,
-  REFERENCE_UNIT_ID,
   type ContentBlockId,
 } from "@/lib/lessons/lesson-blueprint";
 import { IPOR_META, type IporPhase } from "@/lib/lessons/learning-flow";
@@ -30,10 +29,10 @@ export default function HowToLearnCard() {
   return (
     <div className="mb-6 rounded-2xl border border-zinc-800/80 bg-zinc-900/60 p-4">
       <p className="text-[11px] font-black text-zinc-500 uppercase tracking-wider mb-1">
-        Cách học 1 bài (~30 phút)
+        Cách học một bài
       </p>
       <p className="text-[10px] text-zinc-600 mb-3">
-        Cùng khung với nội dung — tham chiếu {REFERENCE_UNIT_ID} (SDL + IPOR)
+        Đi theo 4 pha: tiếp nhận → xử lý → sản xuất → ôn tập.
       </p>
       <ol className="space-y-2.5">
         {STEPS.map(({ phase, text }, i) => (
