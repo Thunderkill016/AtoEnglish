@@ -301,122 +301,105 @@ jobs:
           python - <<'PY'
           from pathlib import Path
 
-          def replace_exact(path: str, old: str, new: str) -> None:
-              file = Path(path)
-              text = file.read_text(encoding="utf-8")
+          def require_replace(text: str, old: str, new: str, label: str) -> str:
               if old not in text:
-                  raise SystemExit(f"Expected text not found in {path}: {old!r}")
-              file.write_text(text.replace(old, new, 1), encoding="utf-8")
+                  raise SystemExit(f"Missing patch anchor: {label}")
+              return text.replace(old, new, 1)
 
-          replace_exact(
-              "src/components/learn/sections/WarmupSection.tsx",
-              "      <HowToLearnCard />",
-              '      <HowToLearnCard compact={unit.unitId === "unit-a0-1"} />',
+          warmup = Path("src/components/learn/sections/WarmupSection.tsx")
+          warmup_text = warmup.read_text(encoding="utf-8")
+          warmup_text = require_replace(
+              warmup_text,
+              "<HowToLearnCard />",
+              '<HowToLearnCard compact={unit.unitId === "unit-a0-1"} />',
+              "warmup compact card",
           )
+          warmup.write_text(warmup_text, encoding="utf-8")
 
-          path = "src/components/learn/UnitTemplate.tsx"
-          replace_exact(
-              path,
-              '''import {
-            SECTION_LABELS,
-            SECTION_ORDER,
-            TOTAL_SECTIONS,
-            type SectionNumber,
-          } from "./lesson-sections";''',
-              '''import {
-            SECTION_LABELS,
-            getSectionOrder,
-            type SectionNumber,
-          } from "./lesson-sections";''',
+          unit_template = Path("src/components/learn/UnitTemplate.tsx")
+          text = unit_template.read_text(encoding="utf-8")
+          text = require_replace(
+              text,
+              "  SECTION_ORDER,\n  TOTAL_SECTIONS,\n",
+              "  getSectionOrder,\n",
+              "section imports",
           )
-          replace_exact(
-              path,
-              '''  const normalizedUnit = {
-            ...unit,
-            dialogues: rawDialogues,
-          };
-
-          const VOCAB_LIMIT''',
-              '''  const normalizedUnit = {
-            ...unit,
-            dialogues: rawDialogues,
-          };
-          const activeSectionOrder = getSectionOrder(normalizedUnit.unitId);
-          const totalSections = activeSectionOrder.length;
-          const isGoldDay1 = normalizedUnit.unitId === "unit-a0-1";
-
-          const VOCAB_LIMIT''',
+          text = require_replace(
+              text,
+              "  };\n\n  const VOCAB_LIMIT = normalizedUnit.vocab.length;",
+              '  };\n  const activeSectionOrder = getSectionOrder(normalizedUnit.unitId);\n  const totalSections = activeSectionOrder.length;\n  const isGoldDay1 = normalizedUnit.unitId === "unit-a0-1";\n\n  const VOCAB_LIMIT = normalizedUnit.vocab.length;',
+              "active section order",
           )
-          replace_exact(
-              path,
-              '''useLessonProgress({
-            unitId: normalizedUnit.unitId,
-            section,
-            setSection,
-          });''',
-              '''useLessonProgress({
-            unitId: normalizedUnit.unitId,
-            section,
-            setSection,
-            sectionOrder: activeSectionOrder,
-          });''',
+          text = require_replace(
+              text,
+              "  setSection,\n});",
+              "  setSection,\n  sectionOrder: activeSectionOrder,\n});",
+              "progress hook order",
           )
-          replace_exact(
-              path,
-              '''    if (miniSession && section === 4) {''',
-              '''    if (!isGoldDay1 && miniSession && section === 4) {''',
+          text = require_replace(
+              text,
+              "if (miniSession && section === 4)",
+              "if (!isGoldDay1 && miniSession && section === 4)",
+              "mini session guard",
           )
-          replace_exact(
-              path,
-              '''    if (section === 4 && !sessionBreak) {''',
-              '''    if (!isGoldDay1 && section === 4 && !sessionBreak) {''',
+          text = require_replace(
+              text,
+              "if (section === 4 && !sessionBreak)",
+              "if (!isGoldDay1 && section === 4 && !sessionBreak)",
+              "session break guard",
           )
-          replace_exact(
-              path,
-              '''    const idx = SECTION_ORDER.indexOf(section as SectionNumber);
-              const nextSection = SECTION_ORDER[Math.min(idx + 1, SECTION_ORDER.length - 1)];''',
-              '''    const idx = activeSectionOrder.indexOf(section as SectionNumber);
-              const nextSection = activeSectionOrder[
-                Math.min(idx + 1, activeSectionOrder.length - 1)
-              ];''',
+          text = require_replace(
+              text,
+              "const idx = SECTION_ORDER.indexOf(section as SectionNumber);\n    const nextSection = SECTION_ORDER[Math.min(idx + 1, SECTION_ORDER.length - 1)];",
+              "const idx = activeSectionOrder.indexOf(section as SectionNumber);\n    const nextSection = activeSectionOrder[Math.min(idx + 1, activeSectionOrder.length - 1)];",
+              "next section order",
           )
-          replace_exact(
-              path,
-              '''  const sectionOrderIdx = SECTION_ORDER.indexOf(section as SectionNumber);''',
-              '''  const sectionOrderIdx = activeSectionOrder.indexOf(section as SectionNumber);''',
+          text = require_replace(
+              text,
+              "const sectionOrderIdx = SECTION_ORDER.indexOf(section as SectionNumber);",
+              "const sectionOrderIdx = activeSectionOrder.indexOf(section as SectionNumber);",
+              "section index",
           )
-          replace_exact(path, "              {miniSession ? (", "              {!isGoldDay1 && (miniSession ? (")
-          replace_exact(
-              path,
-              '''                  </button>
-              )}
-              <div>''',
-              '''                  </button>
-              ))}
-              <div>''',
+          text = require_replace(
+              text,
+              "{miniSession ? (",
+              "{!isGoldDay1 && miniSession ? (",
+              "hide active mini session",
           )
-          replace_exact(
-              path,
-              '''                  {sectionOrderIdx + 1}/{TOTAL_SECTIONS}''',
-              '''                  {sectionOrderIdx + 1}/{totalSections}''',
+          text = require_replace(
+              text,
+              ") : section < 8 && (",
+              ") : !isGoldDay1 && section < 8 && (",
+              "hide mini session button",
           )
-          replace_exact(
-              path,
-              '''          <LessonProgress sectionOrderIdx={sectionOrderIdx} />''',
-              '''          <LessonProgress
-                    sectionOrderIdx={sectionOrderIdx}
-                    sectionOrder={activeSectionOrder}
-                  />''',
+          text = require_replace(
+              text,
+              "{sectionOrderIdx + 1}/{TOTAL_SECTIONS}",
+              "{sectionOrderIdx + 1}/{totalSections}",
+              "header section total",
           )
-
-          file = Path(path)
-          text = file.read_text(encoding="utf-8")
+          text = require_replace(
+              text,
+              "<LessonProgress sectionOrderIdx={sectionOrderIdx} />",
+              "<LessonProgress sectionOrderIdx={sectionOrderIdx} sectionOrder={activeSectionOrder} />",
+              "dynamic progress bar",
+          )
           if "TOTAL_SECTIONS={TOTAL_SECTIONS}" not in text:
-              raise SystemExit("No section total props found to update")
-          file.write_text(
-              text.replace("TOTAL_SECTIONS={TOTAL_SECTIONS}", "TOTAL_SECTIONS={totalSections}"),
-              encoding="utf-8",
-          )
+              raise SystemExit("Missing section component totals")
+          text = text.replace("TOTAL_SECTIONS={TOTAL_SECTIONS}", "TOTAL_SECTIONS={totalSections}")
+
+          required = [
+              "getSectionOrder",
+              "activeSectionOrder",
+              "sectionOrder={activeSectionOrder}",
+              "!isGoldDay1 && miniSession",
+          ]
+          for marker in required:
+              if marker not in text:
+                  raise SystemExit(f"Compact flow marker missing: {marker}")
+          if "TOTAL_SECTIONS={TOTAL_SECTIONS}" in text:
+              raise SystemExit("Static section totals remain")
+          unit_template.write_text(text, encoding="utf-8")
           PY
 
       - name: Install dependencies
