@@ -14,6 +14,7 @@
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "e2e": "dotenv -e .env.local -- playwright test",
+    "e2e:a11y": "dotenv -e .env.local -- playwright test e2e/accessibility-smoke.spec.ts",
     "e2e:time-to-lesson": "dotenv -e .env.local -- playwright test e2e/time-to-lesson.spec.ts",
     "e2e:ui": "dotenv -e .env.local -- playwright test --ui",
     "db:types": "npx supabase@2 gen types typescript --project-id vhpfskkredizeazlyzsh > src/types/supabase.ts",
