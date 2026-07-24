@@ -1,0 +1,39 @@
+name: Gold Day 1 final validation
+
+on:
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    if: github.head_ref == 'agent/gold-day-1-cefr'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm install --legacy-peer-deps
+
+      - name: Check lesson content standard
+        run: npm run test:content-standard
+
+      - name: Type check
+        run: npx tsc --noEmit
+
+      - name: Lint changed source
+        run: npx eslint src/lib/data/units/unitA01.ts src/lib/constants/units.ts 'src/app/(main)/learn/[unitSlug]/page.tsx' src/components/learn/lesson-ui/HowToLearnCard.tsx
+
+      - name: Production build
+        run: npm run build
