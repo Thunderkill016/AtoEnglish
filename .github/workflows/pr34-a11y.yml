@@ -1,9 +1,9 @@
 name: PR 34 accessibility smoke
 
 on:
-  push:
+  pull_request:
     branches:
-      - agent/accessibility-smoke-gate
+      - main
   workflow_dispatch:
 
 permissions:
