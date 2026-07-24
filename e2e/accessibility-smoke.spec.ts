@@ -34,8 +34,7 @@ async function findUnnamedInteractiveElements(page: Page): Promise<string[]> {
     };
 
     const labelledByText = (element: HTMLElement): string => {
-      const ids =
-        element.getAttribute("aria-labelledby")?.trim().split(/\s+/).filter(Boolean) ?? [];
+      const ids = element.getAttribute("aria-labelledby")?.trim().split(/\s+/) ?? [];
       return ids
         .map((id) => document.getElementById(id)?.textContent?.trim() ?? "")
         .filter(Boolean)
@@ -48,7 +47,7 @@ async function findUnnamedInteractiveElements(page: Page): Promise<string[]> {
         element instanceof HTMLSelectElement ||
         element instanceof HTMLTextAreaElement
       ) {
-        return Array.from(element.labels ?? [])
+        return [...(element.labels ?? [])]
           .map((label) => label.textContent?.trim() ?? "")
           .filter(Boolean)
           .join(" ");
@@ -60,9 +59,7 @@ async function findUnnamedInteractiveElements(page: Page): Promise<string[]> {
       const ariaLabel = element.getAttribute("aria-label")?.trim() ?? "";
       const title = element.getAttribute("title")?.trim() ?? "";
       const text = element.textContent?.trim() ?? "";
-      const imageAlt = [
-        ...element.querySelectorAll<HTMLImageElement>("img[alt]"),
-      ]
+      const imageAlt = [...element.querySelectorAll<HTMLImageElement>("img[alt]")]
         .map((image) => image.alt.trim())
         .filter(Boolean)
         .join(" ");
@@ -86,6 +83,36 @@ async function findUnnamedInteractiveElements(page: Page): Promise<string[]> {
         const classSuffix = classes ? `.${classes}` : "";
         return `${element.tagName.toLowerCase()}${id}${classSuffix}`;
       });
+  });
+}
+
+async function findNestedInteractiveElements(page: Page): Promise<string[]> {
+  return page.evaluate(() => {
+    const nestedSelector = [
+      "a[href] a[href]",
+      "a[href] button",
+      "a[href] input:not([type='hidden'])",
+      "a[href] select",
+      "a[href] textarea",
+      "button a[href]",
+      "button button",
+      "button input:not([type='hidden'])",
+      "button select",
+      "button textarea",
+    ].join(", ");
+
+    return [...document.querySelectorAll<HTMLElement>(nestedSelector)].map(
+      (element) => {
+        const parent = element.parentElement;
+        const parentLabel = parent
+          ? `${parent.tagName.toLowerCase()}${parent.id ? `#${parent.id}` : ""}`
+          : "unknown";
+        const childLabel = `${element.tagName.toLowerCase()}${
+          element.id ? `#${element.id}` : ""
+        }`;
+        return `${parentLabel} > ${childLabel}`;
+      },
+    );
   });
 }
 
@@ -117,7 +144,7 @@ test.describe("Public accessibility smoke", () => {
     await expect(skipLink).toHaveAttribute("href", "#main-content");
   });
 
-  test("landing has no duplicate IDs or unnamed visible controls", async ({
+  test("landing has valid interactive structure and accessible names", async ({
     page,
   }) => {
     await page.goto("/");
@@ -125,11 +152,10 @@ test.describe("Public accessibility smoke", () => {
 
     expect(await findDuplicateIds(page)).toEqual([]);
     expect(await findUnnamedInteractiveElements(page)).toEqual([]);
+    expect(await findNestedInteractiveElements(page)).toEqual([]);
   });
 
-  test("landing does not overflow the mobile viewport horizontally", async ({
-    page,
-  }) => {
+  test("landing does not overflow the mobile viewport horizontally", async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto("/");
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
