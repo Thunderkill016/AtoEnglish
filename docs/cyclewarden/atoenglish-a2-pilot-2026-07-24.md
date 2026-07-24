@@ -2,143 +2,151 @@
 
 **Date:** 2026-07-24  
 **Cycle ID:** `atoenglish:20260724-a2-pilot`  
-**Objective:** Identify the highest-value bounded next experiment for validating AtoEnglish's 28-day work-speaking outcome.  
-**Autonomy:** A2 — research and decision only  
-**Risk:** R1 — documentation and user-research planning only  
+**Objective:** Identify the highest-value bounded repository experiment for the 28-day work-speaking product.  
+**Autonomy:** A2 — repository research and decision only  
+**Risk:** R1 — documentation and curriculum planning only  
 **Resulting stage:** `planned`
 
 ## Execution note
 
-This is a connector-backed dry run of the current CycleWarden A2 decision process against the private AtoEnglish repository. It does **not** claim that the local CycleWarden CLI executed repository checks: the CLI currently requires a local checkout and this run had read-only GitHub repository evidence. No product code, production data, secrets, deployment, or database state was modified.
+This is a connector-backed dry run of the current CycleWarden A2 decision process against the private AtoEnglish repository. It does **not** claim that the local CycleWarden CLI executed checks because the CLI currently requires a local checkout. No product code, production data, secrets, deployment, or database state was modified.
+
+This cycle intentionally excludes interviews, workflow observation, surveys, and other direct user-research work. The decision is constrained to repository evidence.
 
 ## Decision question
 
-Which bounded experiment should AtoEnglish run next to maximize decision value without treating repository evidence as proof of user demand?
+Which bounded repository change should AtoEnglish complete next before another lesson implementation is allowed?
 
 ## Repository evidence inspected
 
-- `README.md`: current stack, 50 lesson units, lesson surfaces, known `UnitTemplate` debt, cleanup policy, CI/deployment entry points.
-- `package.json`: deterministic scripts for TypeScript/lint, Vitest, content standards, Playwright, build, audit, inventory, integration tests, and lesson smoke checks.
-- Product roadmap issue #20: one 28-day speaking outcome, explicit stop conditions, ordered queue, and a ban on premature AI tutor/mobile/payment/gamification expansion.
-- Merged PR #21: deterministic `/login` metadata and production E2E coverage.
-- Merged PR #22: one consistent 28-day pilot promise.
-- Merged PR #23: baseline/final speaking assessment, rubric, privacy protocol, and deterministic comparison helpers.
-- Merged PR #28: recovered minimal privacy-safe pilot analytics implementation.
-- Merged PR #30: hardened Supabase/RLS and production database security.
-- Closed PR #31: rejected a narrow Unit A0-1 implementation in favor of a broader research-led rebuild.
+- `README.md`: current stack, 50 registered lesson units, lesson surfaces, known `UnitTemplate` debt, cleanup policy, and verification commands.
+- `package.json`: deterministic scripts for TypeScript, lint, Vitest, content standards, Playwright, production build, audit, inventory, and lesson smoke checks.
+- `CONTENT_STYLE.md`: one shared lesson blueprint, block order, speaking/output requirements, and curriculum quality gates.
+- `src/lib/data/units/unitA01.ts`: current first lesson content, estimated time, learning outcomes, dialogues, repair language, fluency drill, and speaking prompts.
+- Product roadmap issue #20: one 28-day work-speaking outcome, explicit constraints, ordered queue, and prohibited premature expansion.
+- Merged PRs #21, #22, #23, #28, and #30: login metadata, pilot promise, speaking assessment, analytics recovery, and database security.
+- Closed PR #31: a narrow Unit A0-1 implementation was rejected in favor of broader curriculum reasoning.
 - Current `main` observed at commit `bebef60bb8fcbaa6b9297a566e29036d2dbd4c05`.
 
 ## Evidence-backed claims
 
-1. **The repository already has enough engineering infrastructure to run a pilot.** It exposes a production app, lesson system, authentication, progress persistence, assessment primitives, analytics, database migrations, and broad verification scripts.
-2. **The product decision is explicit and durable.** Issue #20 defines one measurable 28-day outcome, success metrics, stop conditions, and a deliberately narrow implementation queue.
-3. **Several P0 prerequisites are already implemented.** Funnel messaging, assessment, analytics, login metadata, and database security have been addressed through merged PRs.
-4. **Current repository evidence does not establish demand or learning value.** Passing checks and having curriculum cannot prove that target learners will pay, complete speaking tasks, improve, or remain supportable.
-5. **Broad curriculum rebuilding has high opportunity cost.** The current roadmap says to validate one journey first, while PR #31 was closed after moving toward a complete A0–B2 rebuild before shipping one lesson.
-6. **Autonomous code execution should remain disabled for this cycle.** The project has recently removed autonomous agent runs, and CycleWarden itself is currently A2 rather than A3.
-
-## Uncertainty and contradiction
-
-There is a live tension between two directions:
-
-- issue #20 says to validate one focused 28-day pilot and build only measured blockers;
-- the reason recorded for closing PR #31 says the project is pivoting toward a research-led rebuild of the complete A0–B2 lesson system before an individual lesson ships.
-
-Repository evidence cannot resolve that contradiction. Direct target-user evidence must decide whether the next investment belongs in Unit A0-1, the first-week journey, the broader curriculum, or a product stop/pivot.
+1. **The engineering foundation is already sufficient for bounded curriculum work.** The repository exposes a production application, authentication, progress, assessment, analytics, database migrations, unit tests, content gates, Playwright, and production builds.
+2. **The product outcome is explicit.** After 28 days, the learner should introduce their name, role, company, and one responsibility; answer five predictable work questions; and independently request repetition or slower speech.
+3. **The current Unit A0-1 does not fully implement that outcome.** Its outcomes and final speaking prompt cover name, spelling, origin, and “say that again”, but not role, company, responsibility, five follow-up questions, or “Could you speak more slowly?”.
+4. **The current Unit A0-1 is structurally too large for the public promise.** It declares an estimated 40 minutes while the pilot promise is 10–15 minutes per day.
+5. **Existing content checks validate shape more strongly than journey coherence.** They can require fields, counts, order, job scenarios, and quiz structure without proving that 28 consecutive days build toward one final speaking performance.
+6. **Editing Unit A0-1 immediately would repeat the failure mode of PR #31.** A lesson patch without a durable journey contract risks optimizing one file while leaving the 28-day sequence undefined.
+7. **A complete A0–B2 rebuild is not a bounded experiment.** The selected action must define the pilot journey without reopening all 50 units or rewriting `UnitTemplate`.
+8. **Autonomous code execution remains outside this cycle.** CycleWarden is being used at A2 for research, decision, constraints, and handoff rather than unattended product modification.
 
 ## Opportunity portfolio
 
-### 1. Close the highest repository-readiness gap
+### 1. Run a fresh full technical baseline
 
-**Candidate:** run a fresh full verification baseline and publish the result.  
-**Value:** confirms that current `main` remains technically healthy after the latest merges.  
-**Limitation:** technical readiness is unlikely to change the main product decision.
+**Candidate:** execute TypeScript, lint, tests, content standards, build, and production smoke checks.  
+**Value:** confirms current `main` remains healthy.  
+**Limitation:** it does not resolve what the 28-day curriculum should contain.
 
-### 2. Publish a reproducible CycleWarden audit
+### 2. Patch Unit A0-1 directly
 
-**Candidate:** preserve this cycle's evidence, claims, alternatives, decision, guardrails, and stop reason.  
-**Value:** makes the reasoning reviewable and tests CycleWarden on a second real repository.  
-**Limitation:** auditability alone does not produce learner evidence.
+**Candidate:** shorten the lesson and add role, company, responsibility, follow-up questions, and slower-speech repair language.  
+**Value:** moves the first lesson closer to the target outcome.  
+**Limitation:** without a journey contract, the patch cannot determine what belongs on day 1 versus later days and may create another oversized lesson.
 
-### 3. Collect direct target-user evidence before feature expansion — **selected**
+### 3. Define the 28-day speaking-journey contract and first-week acceptance matrix — **selected**
 
-**Candidate:** observe five recent, consented workflows with Vietnamese adults who understand some English but freeze when speaking at work.  
-**Value:** can confirm, change, or stop the current product ranking before more curriculum or architecture work.  
-**Limitation:** five observations reveal direction but do not estimate the whole market.
+**Candidate:** create one repository-owned contract that maps each day to a measurable can-do outcome, required spoken output, prompt-reduction level, review dependency, and completion evidence.  
+**Value:** converts the roadmap into an implementation boundary that future lesson PRs can be checked against.  
+**Limitation:** the contract is a repository decision artifact, not proof of learning effectiveness.
 
 ## Decision
 
-Select **Opportunity 3: collect direct target-user evidence before feature expansion**.
+Select **Opportunity 3: define the 28-day speaking-journey contract and first-week acceptance matrix**.
 
-The repository is ready enough for research, while the largest decision-changing gap is not code quality. It is whether the focused speaking journey solves a painful problem strongly enough for learners to complete it, improve, pay, and refer others.
+The immediate blocker is not missing UI or infrastructure. It is the absence of a durable mapping between the final speaking assessment and the daily lesson sequence. The next implementation should not start until the repository can answer:
 
-Do **not** resume a complete A0–B2 rebuild from repository evidence alone. Do **not** add an AI tutor, mobile app, payment platform, broader gamification, or a major `UnitTemplate` rewrite during this experiment.
+- what the learner must say on each day;
+- which chunks are introduced, retrieved, and reused;
+- where prompts are reduced;
+- when the five predictable questions appear;
+- when repair phrases are required without prompting;
+- what belongs in Unit A0-1 and what must be deferred;
+- which checks demonstrate that the implementation matches the journey.
+
+Do **not** expand to a complete A0–B2 rebuild, add an AI tutor, create a mobile application, build custom payments, add broader gamification, or rewrite `UnitTemplate` during this experiment.
 
 ## Smallest reversible experiment
 
 ### Hypothesis
 
-Five observed target-user sessions will reveal whether the current opportunity ranking should remain focused on Unit A0-1 and the first-week pilot journey, shift to another learner problem, or stop expansion.
+A repository-owned 28-day journey contract will expose scope errors before code changes and allow Unit A0-1 and the first-week sequence to be implemented as small, testable lessons rather than one 40-minute content bundle.
 
 ### Method
 
-1. Recruit five people from the issue #20 target segment as the first batch within the planned 12–15 interviews.
-2. Obtain consent and record only the minimum decision-relevant evidence.
-3. Ask each person to complete the existing baseline speaking assessment.
-4. Observe the path from landing page to first speaking attempt without coaching unless they become blocked.
-5. Record atomic observations: time to start, point of confusion, whether first speaking is completed, support required, perceived work relevance, and willingness to pay for the 28-day pilot.
-6. Use existing privacy-safe analytics for bounded funnel events; do not send audio, transcripts, names, employer details, or free text into analytics.
-7. Rerank the next opportunity after all five sessions.
+1. Translate the final assessment functions from issue #20 and PR #23 into daily can-do outcomes.
+2. Allocate the required language across four weeks, with each day constrained to a 10–15 minute learning promise.
+3. Define explicit progression from model → supported rehearsal → reduced prompts → novel speaking task.
+4. Define first-week acceptance criteria for name, spelling, role, company, responsibility, five questions, and repair language.
+5. Mark which current Unit A0-1 material should remain, move to later days, or be removed from the first lesson.
+6. Preserve the existing lesson blueprint and content-standard gates rather than inventing a second content schema.
+7. Produce one later implementation handoff limited to Unit A0-1 and the minimum first-week data files needed by the contract.
 
 ### Success criteria
 
-- Five consented sessions are completed.
-- Every learner-problem claim links to a direct observation rather than an assumption.
-- The evidence clearly records one of three verdicts: **continue focused pilot**, **change segment/promise**, or **stop expansion**.
-- The next implementation task is tied to a repeated observed blocker, not a speculative architecture preference.
-- The work remains compatible with issue #20's goal of selling at least eight pilot seats before building payment infrastructure.
+- All 28 days have one measurable spoken can-do outcome.
+- Every day identifies the learner's required spoken output, not only vocabulary or grammar coverage.
+- Each day fits the 10–15 minute promise by scope rather than by changing the displayed estimate alone.
+- The five predictable questions and all three repair phrases have an explicit introduction, retrieval, and independent-use point.
+- Day 1 no longer attempts to carry the whole first-week outcome.
+- The baseline and final assessment functions are traceable to the daily sequence.
+- The implementation handoff touches no unrelated architecture, database, authentication, analytics, XP, FSRS, or gamification code.
 
 ### Guardrails
 
-- No secrets or unnecessary personal data.
-- No raw audio/transcript storage in product analytics.
-- No automatic merge, deployment, production write, or database migration.
-- No broad A0–B2 rebuild during the experiment.
-- No claim that five sessions prove market prevalence.
-- Keep human feedback and manual pilot operations within the roadmap's support-cost constraints.
+- No interviews or user observation are required by this cycle.
+- No claims that repository planning proves learner improvement or market demand.
+- No secrets, production writes, deployment, or database migration.
+- No complete A0–B2 reconstruction.
+- No major `UnitTemplate` refactor.
+- No automated merge or autonomous product-code execution.
+- Preserve the existing blueprint order and content-standard checks.
 
 ### Rollback
 
-Delete unauthorized personal data, retain only approved anonymized decision evidence, and make no product-code rollback necessary because this experiment changes no product behavior.
+Delete or revise the planning documents. No product rollback is required because the experiment changes no runtime behavior.
 
 ## Execution handoff
 
 **Allowed scope**
 
-- `docs/product-research/**`
-- consented interview/session notes with anonymization
-- issue #20 progress updates
-- a subsequent narrowly scoped Unit A0-1 or first-week PR only after repeated evidence identifies the blocker
+- `docs/curriculum/28-day-speaking-journey-contract.md`
+- `docs/cyclewarden/**`
+- a later focused PR for `src/lib/data/units/unitA01.ts`
+- only the smallest additional first-week unit data required by the approved contract
+- targeted tests or content-standard assertions that enforce the approved journey
 
 **Forbidden scope**
 
 - secrets and production credentials
-- production database writes outside the existing app flow
-- autonomous coding/merging/deployment
+- authentication, database, RLS, analytics infrastructure, payments, XP, leagues, streaks, or FSRS
+- automatic merge or deploy
 - complete A0–B2 reconstruction
-- AI tutor, mobile app, custom payments, new gamification breadth
-- unapproved audio, transcripts, names, employer information, or learner free text in analytics
+- AI tutor, mobile app, custom payment system, or new gamification breadth
+- major `UnitTemplate` or lesson-action refactor without a contract-level blocker
 
-**Verification plan**
+**Verification plan for the later code change**
 
-- review all five evidence records for consent, minimization, and source linkage;
-- compare observed blockers against issue #20 assumptions and stop conditions;
-- record rejected alternatives and remaining uncertainty;
-- create at most one bounded implementation handoff from repeated evidence;
-- run the normal AtoEnglish checks only when that later code change exists.
+- `npm run test:content-standard`
+- `bash scripts/audit-lesson-content.sh`
+- targeted Unit A0-1 tests
+- `npx tsc --noEmit`
+- `npm run lint`
+- `npm run test`
+- `npm run build`
+- relevant lesson production smoke checks
 
 ## CycleWarden verdict
 
-CycleWarden is useful here primarily as a **stop-building decision gate**. The A2 cycle correctly prevents the repository's size and test coverage from being mistaken for product proof and selects direct user evidence as the next highest-value action.
+CycleWarden is useful here as a **scope and sequencing gate**. The repository-only cycle rejects both extremes: immediately patching one large lesson without a journey model and reopening the complete A0–B2 curriculum. It selects a bounded contract that can govern the next code PR.
 
-The main product gap exposed by this dogfood run is that CycleWarden still needs a first-class remote/private-repository adapter or an installed local runner to execute its native `inspect → assess → research-repository` path without manually reconstructing evidence through GitHub.
+The main CycleWarden dogfood gap remains unchanged: a first-class remote/private-repository adapter or installed local runner is still needed to execute the native `inspect → assess → research-repository` path rather than reconstructing repository evidence through GitHub.
