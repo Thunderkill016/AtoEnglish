@@ -54,7 +54,7 @@ export default function WarmupSection({
         subtitle="Làm quen ngữ cảnh + ôn SRS"
       />
 
-      <HowToLearnCard />
+      <HowToLearnCard compact={unit.unitId === "unit-a0-1"} />
 
       {unit.situation && (
         <SituationCard situation={unit.situation} outcomes={unit.learningOutcomes} />

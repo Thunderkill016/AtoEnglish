@@ -1,11 +1,21 @@
-import { SECTION_ORDER, TOTAL_SECTIONS } from "../lesson-sections";
+import {
+  SECTION_ORDER,
+  type LessonSectionOrder,
+} from "../lesson-sections";
 
 interface LessonProgressProps {
   sectionOrderIdx: number;
+  sectionOrder?: LessonSectionOrder;
 }
 
-export default function LessonProgress({ sectionOrderIdx }: LessonProgressProps) {
-  const progress = Math.round((sectionOrderIdx / (TOTAL_SECTIONS - 1)) * 100);
+export default function LessonProgress({
+  sectionOrderIdx,
+  sectionOrder = SECTION_ORDER,
+}: LessonProgressProps) {
+  const totalSections = sectionOrder.length;
+  const progress = Math.round(
+    (sectionOrderIdx / Math.max(totalSections - 1, 1)) * 100,
+  );
 
   return (
     <div
@@ -14,9 +24,9 @@ export default function LessonProgress({ sectionOrderIdx }: LessonProgressProps)
       aria-valuenow={progress}
       aria-valuemin={0}
       aria-valuemax={100}
-      aria-label={`Tiến độ bài học: bước ${sectionOrderIdx + 1} / ${TOTAL_SECTIONS}`}
+      aria-label={`Tiến độ bài học: bước ${sectionOrderIdx + 1} / ${totalSections}`}
     >
-      {SECTION_ORDER.map((secNum, index) => {
+      {sectionOrder.map((secNum, index) => {
         const isSectionCompleted = index < sectionOrderIdx;
         const isSectionCurrent = index === sectionOrderIdx;
 
@@ -56,7 +66,7 @@ export default function LessonProgress({ sectionOrderIdx }: LessonProgressProps)
                 <span className="absolute inset-0 rounded-full bg-emerald-400/20 animate-ping" />
               )}
             </div>
-            {index < SECTION_ORDER.length - 1 && (
+            {index < sectionOrder.length - 1 && (
               <div
                 className={`h-px flex-1 mx-0.5 transition-all duration-500 ${
                   index < sectionOrderIdx ? "bg-emerald-700" : "bg-zinc-800"
