@@ -1,78 +1,38 @@
-name: Generate Gold Day 1 audio assets
+name: Validate Gold Day 1 with verification entry point
 
 on:
   pull_request:
     branches: [main]
     paths:
-      - src/lib/data/units/unitA01.ts
+      - src/**
+      - package.json
+      - public/audio/unit-a0-1/**
       - .github/workflows/validate-gold-day-1.yml
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
-  generate:
+  verify:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 30
+    env:
+      NEXT_PUBLIC_SUPABASE_URL: https://example.supabase.co
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: test-anon-key
+      NEXT_PUBLIC_APP_URL: http://127.0.0.1:3000
     steps:
-      - name: Checkout writable branch
+      - name: Checkout Gold Day 1 branch
+        uses: actions/checkout@v4
+      - name: Checkout verification entry point
         uses: actions/checkout@v4
         with:
-          ref: agent/gold-day-1-cefr
-          fetch-depth: 0
+          ref: agent/curriculum-verification-entrypoint
+          path: .verification-entrypoint
       - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
-      - name: Add exact audio paths
-        shell: python
-        run: |
-          from pathlib import Path
-
-          path = Path("src/lib/data/units/unitA01.ts")
-          text = path.read_text()
-
-          vocab_paths = {
-              'word: "Hi.",': '/audio/unit-a0-1/hi.mp3',
-              'word: "What\'s your name?",': '/audio/unit-a0-1/whats-your-name.mp3',
-              'word: "I\'m ...",': '/audio/unit-a0-1/im.mp3',
-              'word: "How do you spell that?",': '/audio/unit-a0-1/how-do-you-spell-that.mp3',
-              'word: "Sorry.",': '/audio/unit-a0-1/sorry.mp3',
-              'word: "Could you say that again, please?",': '/audio/unit-a0-1/could-you-say-that-again-please.mp3',
-              'word: "Nice to meet you.",': '/audio/unit-a0-1/nice-to-meet-you.mp3',
-              'word: "Thank you.",': '/audio/unit-a0-1/thank-you.mp3',
-          }
-
-          for marker, audio_path in vocab_paths.items():
-              if marker not in text:
-                  raise SystemExit(f"Missing vocab marker: {marker}")
-              start = text.index(marker)
-              block_end = text.index("    },", start)
-              block = text[start:block_end]
-              if "audio:" not in block:
-                  insert_at = text.index("\n", start) + 1
-                  text = text[:insert_at] + f'      audio: "{audio_path}",\n' + text[insert_at:]
-
-          dialogue_paths = {
-              'title: "Tên và đánh vần",': '/audio/unit-a0-1/dialogue-name-and-spelling.mp3',
-              'title: "Xin nói lại",': '/audio/unit-a0-1/dialogue-repeat-request.mp3',
-          }
-
-          for marker, audio_path in dialogue_paths.items():
-              start = text.index(marker)
-              audio_start = text.index('audio: "",', start)
-              text = text[:audio_start] + f'audio: "{audio_path}",' + text[audio_start + len('audio: "",'):]
-
-          path.write_text(text)
       - name: Install dependencies
         run: npm ci --ignore-scripts --legacy-peer-deps
-      - name: Generate exact MP3 assets
-        run: npm exec -- tsx scripts/generate-unit-audio.ts unit-a0-1
-      - name: Commit generated curriculum assets
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add src/lib/data/units/unitA01.ts public/audio/unit-a0-1
-          git diff --cached --stat
-          git commit -m "fix: add Gold Day 1 audio assets"
-          git push origin HEAD:agent/gold-day-1-cefr
+      - name: Run curriculum verification entry point
+        run: node .verification-entrypoint/scripts/verify-change.mjs --scope curriculum
