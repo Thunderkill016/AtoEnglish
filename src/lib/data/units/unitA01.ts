@@ -61,6 +61,7 @@ export const unitA01: UnitData = {
     {
       id: 1,
       word: "Hi.",
+      audio: "/audio/unit-a0-1/hi.mp3",
       phonetic: "/haɪ/",
       meaning: "Xin chào.",
       example: "Hi. I'm Minh.",
@@ -71,6 +72,7 @@ export const unitA01: UnitData = {
     {
       id: 2,
       word: "What's your name?",
+      audio: "/audio/unit-a0-1/whats-your-name.mp3",
       phonetic: "/wʌts jər neɪm/",
       meaning: "Tên bạn là gì?",
       example: "Hi. What's your name?",
@@ -81,6 +83,7 @@ export const unitA01: UnitData = {
     {
       id: 3,
       word: "I'm ...",
+      audio: "/audio/unit-a0-1/im.mp3",
       phonetic: "/aɪm/",
       meaning: "Tôi là ...",
       example: "I'm Linh.",
@@ -91,6 +94,7 @@ export const unitA01: UnitData = {
     {
       id: 4,
       word: "How do you spell that?",
+      audio: "/audio/unit-a0-1/how-do-you-spell-that.mp3",
       phonetic: "/haʊ də ju spel ðæt/",
       meaning: "Bạn đánh vần tên đó thế nào?",
       example: "How do you spell that?",
@@ -101,6 +105,7 @@ export const unitA01: UnitData = {
     {
       id: 5,
       word: "Sorry.",
+      audio: "/audio/unit-a0-1/sorry.mp3",
       phonetic: "/ˈsɒri/",
       meaning: "Xin lỗi.",
       example: "Sorry, could you say that again?",
@@ -111,6 +116,7 @@ export const unitA01: UnitData = {
     {
       id: 6,
       word: "Could you say that again, please?",
+      audio: "/audio/unit-a0-1/could-you-say-that-again-please.mp3",
       phonetic: "/kʊd ju seɪ ðæt əˈɡen pliːz/",
       meaning: "Bạn có thể nói lại được không?",
       example: "Sorry, could you say that again, please?",
@@ -121,6 +127,7 @@ export const unitA01: UnitData = {
     {
       id: 7,
       word: "Nice to meet you.",
+      audio: "/audio/unit-a0-1/nice-to-meet-you.mp3",
       phonetic: "/naɪs tə miːt ju/",
       meaning: "Rất vui được gặp bạn.",
       example: "Nice to meet you, Minh.",
@@ -131,6 +138,7 @@ export const unitA01: UnitData = {
     {
       id: 8,
       word: "Thank you.",
+      audio: "/audio/unit-a0-1/thank-you.mp3",
       phonetic: "/θæŋk ju/",
       meaning: "Cảm ơn bạn.",
       example: "Thank you. Nice to meet you.",
@@ -216,7 +224,7 @@ export const unitA01: UnitData = {
     {
       id: 1,
       title: "Tên và đánh vần",
-      audio: "",
+      audio: "/audio/unit-a0-1/dialogue-name-and-spelling.mp3",
       desc: "Một cuộc trao đổi ngắn tại quầy lễ tân ngày đầu đi làm.",
       lines: [
         {
@@ -248,7 +256,7 @@ export const unitA01: UnitData = {
     {
       id: 2,
       title: "Xin nói lại",
-      audio: "",
+      audio: "/audio/unit-a0-1/dialogue-repeat-request.mp3",
       desc: "Bạn chưa nghe rõ một câu và dùng repair phrase để tiếp tục.",
       lines: [
         {
