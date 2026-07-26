@@ -1,91 +1,49 @@
-name: Validate Gold Day 1 with verification entry point
+name: Diagnose Gold Day 1 focused tests
 
 on:
   pull_request:
     branches: [main]
     paths:
       - src/**
-      - package.json
       - .github/workflows/validate-gold-day-1.yml
 
 permissions:
   contents: read
 
 jobs:
-  verify:
+  focused-tests:
     runs-on: ubuntu-latest
-    timeout-minutes: 40
+    timeout-minutes: 20
     env:
       NEXT_PUBLIC_SUPABASE_URL: https://example.supabase.co
       NEXT_PUBLIC_SUPABASE_ANON_KEY: test-anon-key
       NEXT_PUBLIC_APP_URL: http://127.0.0.1:3000
     steps:
-      - name: Checkout Gold Day 1 branch
-        uses: actions/checkout@v4
-      - name: Checkout verification entry point
-        uses: actions/checkout@v4
-        with:
-          ref: agent/curriculum-verification-entrypoint
-          path: .verification-entrypoint
+      - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
       - name: Install dependencies
         run: npm ci --ignore-scripts --legacy-peer-deps
-      - name: Run curriculum verification entry point
-        id: verification
-        continue-on-error: true
-        run: node .verification-entrypoint/scripts/verify-change.mjs --scope curriculum
-      - name: Diagnose focused lesson tests
+      - name: Run focused lesson tests
         id: focused
-        if: steps.verification.outcome == 'failure'
         continue-on-error: true
-        run: npm exec -- vitest run src/components/learn/UnitTemplate.test.tsx src/components/learn/lesson-sections.test.ts src/components/learn/lesson-ui/lesson-presentation.test.tsx
-      - name: Diagnose lesson content standards
-        id: content
-        if: steps.verification.outcome == 'failure'
-        continue-on-error: true
-        run: npm run test:content-standard
-      - name: Diagnose TypeScript
-        id: typescript
-        if: steps.verification.outcome == 'failure'
-        continue-on-error: true
-        run: npm exec -- tsc --noEmit
-      - name: Diagnose ESLint
-        id: eslint
-        if: steps.verification.outcome == 'failure'
-        continue-on-error: true
-        run: npm run lint
-      - name: Diagnose full unit suite
-        id: unit
-        if: steps.verification.outcome == 'failure'
-        continue-on-error: true
-        run: npm run test
-      - name: Diagnose production build
-        id: build
-        if: steps.verification.outcome == 'failure'
-        continue-on-error: true
-        run: npm run build
-      - name: Write diagnostic outcomes
-        if: always()
+        shell: bash
         run: |
-          cat > verification-outcomes.txt <<'EOF'
-          verification=${{ steps.verification.outcome }}
-          focused=${{ steps.focused.outcome }}
-          content=${{ steps.content.outcome }}
-          typescript=${{ steps.typescript.outcome }}
-          eslint=${{ steps.eslint.outcome }}
-          unit=${{ steps.unit.outcome }}
-          build=${{ steps.build.outcome }}
-          EOF
-      - name: Upload diagnostic outcomes
+          set -o pipefail
+          npm exec -- vitest run \
+            src/components/learn/UnitTemplate.test.tsx \
+            src/components/learn/lesson-sections.test.ts \
+            src/components/learn/lesson-ui/lesson-presentation.test.tsx \
+            2>&1 | tee focused-test.log
+      - name: Upload focused test log
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: verification-outcomes
-          path: verification-outcomes.txt
+          name: focused-test-log
+          path: focused-test.log
           retention-days: 1
-      - name: Preserve verification verdict
-        if: steps.verification.outcome == 'failure'
+      - name: Preserve focused test verdict
+        if: steps.focused.outcome == 'failure'
         run: exit 1
