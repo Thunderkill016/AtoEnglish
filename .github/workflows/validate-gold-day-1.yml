@@ -1,20 +1,19 @@
-name: Diagnose remaining Gold Day 1 checks
+name: Diagnose Gold Day 1 full unit suite
 
 on:
   pull_request:
     branches: [main]
     paths:
       - src/**
-      - package.json
       - .github/workflows/validate-gold-day-1.yml
 
 permissions:
   contents: read
 
 jobs:
-  diagnose:
+  unit-tests:
     runs-on: ubuntu-latest
-    timeout-minutes: 35
+    timeout-minutes: 25
     env:
       NEXT_PUBLIC_SUPABASE_URL: https://example.supabase.co
       NEXT_PUBLIC_SUPABASE_ANON_KEY: test-anon-key
@@ -27,43 +26,20 @@ jobs:
           cache: npm
       - name: Install dependencies
         run: npm ci --ignore-scripts --legacy-peer-deps
-      - name: Lesson content standards
-        id: content
-        continue-on-error: true
-        run: npm run test:content-standard
-      - name: TypeScript
-        id: typescript
-        continue-on-error: true
-        run: npm exec -- tsc --noEmit
-      - name: ESLint
-        id: eslint
-        continue-on-error: true
-        run: npm run lint
-      - name: Full unit suite
+      - name: Run full unit suite
         id: unit
         continue-on-error: true
-        run: npm run test
-      - name: Production build
-        id: build
-        continue-on-error: true
-        run: npm run build
-      - name: Write diagnostic outcomes
-        if: always()
+        shell: bash
         run: |
-          cat > remaining-outcomes.txt <<'EOF'
-          content=${{ steps.content.outcome }}
-          typescript=${{ steps.typescript.outcome }}
-          eslint=${{ steps.eslint.outcome }}
-          unit=${{ steps.unit.outcome }}
-          build=${{ steps.build.outcome }}
-          EOF
-      - name: Upload diagnostic outcomes
+          set -o pipefail
+          npm run test 2>&1 | tee full-unit.log
+      - name: Upload full unit log
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: remaining-outcomes
-          path: remaining-outcomes.txt
+          name: full-unit-log
+          path: full-unit.log
           retention-days: 1
-      - name: Preserve diagnostic verdict
-        if: steps.content.outcome == 'failure' || steps.typescript.outcome == 'failure' || steps.eslint.outcome == 'failure' || steps.unit.outcome == 'failure' || steps.build.outcome == 'failure'
+      - name: Preserve full unit verdict
+        if: steps.unit.outcome == 'failure'
         run: exit 1
