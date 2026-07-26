@@ -2,12 +2,17 @@
 
 import { useEffect, type Dispatch, type SetStateAction } from "react";
 
-import { SECTION_ORDER, TOTAL_SECTIONS, type SectionNumber } from "../lesson-sections";
+import {
+  SECTION_ORDER,
+  type LessonSectionOrder,
+  type SectionNumber,
+} from "../lesson-sections";
 
 interface UseLessonProgressOptions {
   unitId: string;
   section: number;
   setSection: Dispatch<SetStateAction<number>>;
+  sectionOrder?: LessonSectionOrder;
 }
 
 const getProgressKey = (unitId: string) => `lesson-progress-${unitId}`;
@@ -16,24 +21,34 @@ export default function useLessonProgress({
   unitId,
   section,
   setSection,
+  sectionOrder = SECTION_ORDER,
 }: UseLessonProgressOptions) {
   useEffect(() => {
     try {
       const saved = localStorage.getItem(getProgressKey(unitId));
       if (saved) {
         const { section: savedSection } = JSON.parse(saved) as { section: number };
+        const savedIndex = sectionOrder.indexOf(savedSection as SectionNumber);
+        const preservesLegacyResumeBoundary =
+          Number.isInteger(savedSection) && savedSection > 1 && savedSection < 10;
 
-        if (savedSection > 1 && savedSection < TOTAL_SECTIONS) setSection(savedSection);
+        if (
+          preservesLegacyResumeBoundary &&
+          savedIndex > 0 &&
+          savedIndex < sectionOrder.length - 1
+        ) {
+          setSection(savedSection);
+        }
       }
     } catch {
       // Preserve the existing non-fatal behavior for malformed browser storage.
     }
-  }, [setSection, unitId]);
+  }, [sectionOrder, setSection, unitId]);
 
   useEffect(() => {
-    const orderIdx = SECTION_ORDER.indexOf(section as SectionNumber);
+    const orderIdx = sectionOrder.indexOf(section as SectionNumber);
     const isFirstSection = orderIdx === 0;
-    const isLastSection = orderIdx === SECTION_ORDER.length - 1;
+    const isLastSection = orderIdx === sectionOrder.length - 1;
     const progressKey = getProgressKey(unitId);
 
     if (isLastSection) {
@@ -41,5 +56,5 @@ export default function useLessonProgress({
     } else if (!isFirstSection && orderIdx > 0) {
       localStorage.setItem(progressKey, JSON.stringify({ section }));
     }
-  }, [section, unitId]);
+  }, [section, sectionOrder, unitId]);
 }

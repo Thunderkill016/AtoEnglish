@@ -22,13 +22,13 @@ export const UNITS: UnitMetadata[] = [
   // ─── A0 Foundation — 8 units ─────────────────────────────────────────────────
   {
     id: "unit-a0-1",
-    title: "Unit A0-1: Bảng Chữ Cái & Âm Cơ Bản",
-    description: "Học 26 chữ cái tiếng Anh và cách phát âm cơ bản — nền tảng đầu tiên của hành trình học tiếng Anh.",
+    title: "Day 1: Nói tên và đánh vần",
+    description: "Chào, nói tên, đánh vần tên và xin người đối diện nói lại trong một tình huống công việc ngắn.",
     level: "A0",
     route: "/learn/unit-a0-1",
-    xp: 60,
-    estimatedTime: 45,
-    tags: ["Từ vựng +10", "Bảng chữ cái", "My name is"],
+    xp: 30,
+    estimatedTime: 15,
+    tags: ["Luyện nói", "Tên & đánh vần", "Communication repair"],
   },
   {
     id: "unit-a0-2",

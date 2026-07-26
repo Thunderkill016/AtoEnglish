@@ -31,8 +31,7 @@ import {
 } from "@/lib/pilot/pilot-analytics-client";
 import {
   SECTION_LABELS,
-  SECTION_ORDER,
-  TOTAL_SECTIONS,
+  getSectionOrder,
   type SectionNumber,
 } from "./lesson-sections";
 import type {
@@ -253,6 +252,9 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
     ...unit,
     dialogues: rawDialogues,
   };
+  const activeSectionOrder = getSectionOrder(normalizedUnit.unitId);
+  const totalSections = activeSectionOrder.length;
+  const isGoldDay1 = normalizedUnit.unitId === "unit-a0-1";
 
   const VOCAB_LIMIT = normalizedUnit.vocab.length;
   const LISTEN_CHOOSE = normalizedUnit.listenAndChoose;
@@ -292,6 +294,7 @@ useLessonProgress({
   unitId: normalizedUnit.unitId,
   section,
   setSection,
+  sectionOrder: activeSectionOrder,
 });
 
   // Settings
@@ -378,20 +381,20 @@ useLessonProgress({
   const goNext = () => {
     window.speechSynthesis?.cancel();
     // S3-2: Micro-session mode — after Practice (4) jump straight to Quiz (8)
-    if (miniSession && section === 4) {
+    if (!isGoldDay1 && miniSession && section === 4) {
       setSection(8);
       window.scrollTo({ top: 0, behavior: "smooth" });
       return;
     }
     // Session-break checkpoint — show break card after Practice before Dialogue
-    if (section === 4 && !sessionBreak) {
+    if (!isGoldDay1 && section === 4 && !sessionBreak) {
       setSessionBreak(true);
       window.scrollTo({ top: 0, behavior: "smooth" });
       return;
     }
     setSessionBreak(false);
-    const idx = SECTION_ORDER.indexOf(section as SectionNumber);
-    const nextSection = SECTION_ORDER[Math.min(idx + 1, SECTION_ORDER.length - 1)];
+    const idx = activeSectionOrder.indexOf(section as SectionNumber);
+    const nextSection = activeSectionOrder[Math.min(idx + 1, activeSectionOrder.length - 1)];
     setSection(nextSection);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
@@ -648,7 +651,7 @@ useLessonProgress({
     setIsSubmitting(false);
   };
 
-  const sectionOrderIdx = SECTION_ORDER.indexOf(section as SectionNumber);
+  const sectionOrderIdx = activeSectionOrder.indexOf(section as SectionNumber);
   return (
     <div className="min-h-screen bg-gradient-to-br from-zinc-950 via-zinc-900 to-emerald-950/20">
       {/* Sticky Header */}
@@ -686,11 +689,11 @@ useLessonProgress({
                 </div>
               )}
               {/* S3-2: Mini-session toggle / active indicator */}
-              {miniSession ? (
+              {!isGoldDay1 && miniSession ? (
                 <div className="flex items-center gap-1 text-[11px] font-black px-2.5 py-1 rounded-xl bg-amber-500/15 border border-amber-500/40 text-amber-300">
                   ⚡ <span>5 phút</span>
                 </div>
-              ) : section < 8 && (
+              ) : !isGoldDay1 && section < 8 && (
                 <button
                   onClick={() => {
                     setMiniSession(true);
@@ -712,13 +715,13 @@ useLessonProgress({
               <div>
                 <p className="text-xs text-zinc-500">{SECTION_LABELS[section] ?? "Học"}</p>
                 <p className="text-sm font-bold text-emerald-400">
-                  {sectionOrderIdx + 1}/{TOTAL_SECTIONS}
+                  {sectionOrderIdx + 1}/{totalSections}
                 </p>
               </div>
             </div>
           </div>
 
-          <LessonProgress sectionOrderIdx={sectionOrderIdx} />
+          <LessonProgress sectionOrderIdx={sectionOrderIdx} sectionOrder={activeSectionOrder} />
         </div>
       </div>
 
@@ -732,7 +735,7 @@ useLessonProgress({
             <WarmupSection
               unit={normalizedUnit}
               sectionOrderIdx={sectionOrderIdx}
-              TOTAL_SECTIONS={TOTAL_SECTIONS}
+              TOTAL_SECTIONS={totalSections}
               playTTS={playTTS}
               warmupRated={warmupRated}
               setWarmupRated={setWarmupRated}
@@ -749,7 +752,7 @@ useLessonProgress({
             <VocabSection
               unit={normalizedUnit}
               sectionOrderIdx={sectionOrderIdx}
-              TOTAL_SECTIONS={TOTAL_SECTIONS}
+              TOTAL_SECTIONS={totalSections}
               playTTS={playTTSSlow}
               seenCards={seenCards}
               setSeenCards={setSeenCards}
@@ -764,7 +767,7 @@ useLessonProgress({
             <GrammarSection
               unit={normalizedUnit}
               sectionOrderIdx={sectionOrderIdx}
-              TOTAL_SECTIONS={TOTAL_SECTIONS}
+              TOTAL_SECTIONS={totalSections}
               playTTS={playTTS}
               ccqAnswer={ccqAnswer}
               setCcqAnswer={setCcqAnswer}
@@ -780,7 +783,7 @@ useLessonProgress({
             <PracticeSection
               unit={normalizedUnit}
               sectionOrderIdx={sectionOrderIdx}
-              TOTAL_SECTIONS={TOTAL_SECTIONS}
+              TOTAL_SECTIONS={totalSections}
               playCorrectSound={playCorrectSound}
               playWrongSound={playWrongSound}
               goNext={goNext}
@@ -792,7 +795,7 @@ useLessonProgress({
             <DialogueSection
               unit={normalizedUnit}
               sectionOrderIdx={sectionOrderIdx}
-              TOTAL_SECTIONS={TOTAL_SECTIONS}
+              TOTAL_SECTIONS={totalSections}
               lacAnswers={lacAnswers}
               setLacAnswers={setLacAnswers}
               lacSubmitted={lacSubmitted}
@@ -806,7 +809,7 @@ useLessonProgress({
             <FluencySection
               unit={normalizedUnit}
               sectionOrderIdx={sectionOrderIdx}
-              TOTAL_SECTIONS={TOTAL_SECTIONS}
+              TOTAL_SECTIONS={totalSections}
               goNext={goNext}
             />
           )}
@@ -815,7 +818,7 @@ useLessonProgress({
             <TranslateSection
               unit={normalizedUnit}
               sectionOrderIdx={sectionOrderIdx}
-              TOTAL_SECTIONS={TOTAL_SECTIONS}
+              TOTAL_SECTIONS={totalSections}
               goNext={goNext}
             />
           )}
@@ -828,7 +831,7 @@ useLessonProgress({
               <ShadowingSection
                 unit={normalizedUnit}
                 sectionOrderIdx={sectionOrderIdx}
-                TOTAL_SECTIONS={TOTAL_SECTIONS}
+                TOTAL_SECTIONS={totalSections}
                 shadowScores={shadowScores}
                 setShadowScores={setShadowScores}
                 shadowDone={shadowDone}
@@ -843,7 +846,7 @@ useLessonProgress({
             <SpeakingSection
               unit={normalizedUnit}
               sectionOrderIdx={sectionOrderIdx}
-              TOTAL_SECTIONS={TOTAL_SECTIONS}
+              TOTAL_SECTIONS={totalSections}
               playTTS={playTTS}
               goNext={goNext}
             />
@@ -853,7 +856,7 @@ useLessonProgress({
             <QuizSection
               unit={normalizedUnit}
               sectionOrderIdx={sectionOrderIdx}
-              TOTAL_SECTIONS={TOTAL_SECTIONS}
+              TOTAL_SECTIONS={totalSections}
               seenCards={seenCards}
               VOCAB_LIMIT={VOCAB_LIMIT}
               shadowAvg={shadowAvg}
