@@ -1,6 +1,6 @@
 export const SECTION_LABELS: Record<number, string> = {
   1: "Khởi động",
-  2: "Cụm nói",
+  2: "Từ vựng",
   3: "Ngữ pháp",
   4: "Luyện tập",
   5: "Hội thoại",
