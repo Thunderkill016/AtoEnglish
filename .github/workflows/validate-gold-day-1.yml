@@ -1,0 +1,37 @@
+name: Validate Gold Day 1 with verification entry point
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - src/**
+      - package.json
+      - .github/workflows/validate-gold-day-1.yml
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      NEXT_PUBLIC_SUPABASE_URL: https://example.supabase.co
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: test-anon-key
+      NEXT_PUBLIC_APP_URL: http://127.0.0.1:3000
+    steps:
+      - name: Checkout Gold Day 1 branch
+        uses: actions/checkout@v4
+      - name: Checkout verification entry point
+        uses: actions/checkout@v4
+        with:
+          ref: agent/curriculum-verification-entrypoint
+          path: .verification-entrypoint
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install dependencies
+        run: npm ci --ignore-scripts --legacy-peer-deps
+      - name: Run curriculum verification entry point
+        run: node .verification-entrypoint/scripts/verify-change.mjs --scope curriculum
