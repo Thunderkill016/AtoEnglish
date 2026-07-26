@@ -14,7 +14,7 @@ permissions:
 jobs:
   verify:
     runs-on: ubuntu-latest
-    timeout-minutes: 35
+    timeout-minutes: 40
     env:
       NEXT_PUBLIC_SUPABASE_URL: https://example.supabase.co
       NEXT_PUBLIC_SUPABASE_ANON_KEY: test-anon-key
@@ -38,29 +38,54 @@ jobs:
         continue-on-error: true
         run: node .verification-entrypoint/scripts/verify-change.mjs --scope curriculum
       - name: Diagnose focused lesson tests
+        id: focused
         if: steps.verification.outcome == 'failure'
         continue-on-error: true
         run: npm exec -- vitest run src/components/learn/UnitTemplate.test.tsx src/components/learn/lesson-sections.test.ts src/components/learn/lesson-ui/lesson-presentation.test.tsx
       - name: Diagnose lesson content standards
+        id: content
         if: steps.verification.outcome == 'failure'
         continue-on-error: true
         run: npm run test:content-standard
       - name: Diagnose TypeScript
+        id: typescript
         if: steps.verification.outcome == 'failure'
         continue-on-error: true
         run: npm exec -- tsc --noEmit
       - name: Diagnose ESLint
+        id: eslint
         if: steps.verification.outcome == 'failure'
         continue-on-error: true
         run: npm run lint
       - name: Diagnose full unit suite
+        id: unit
         if: steps.verification.outcome == 'failure'
         continue-on-error: true
         run: npm run test
       - name: Diagnose production build
+        id: build
         if: steps.verification.outcome == 'failure'
         continue-on-error: true
         run: npm run build
+      - name: Write diagnostic outcomes
+        if: always()
+        run: |
+          cat > verification-outcomes.txt <<'EOF'
+          verification=${{ steps.verification.outcome }}
+          focused=${{ steps.focused.outcome }}
+          content=${{ steps.content.outcome }}
+          typescript=${{ steps.typescript.outcome }}
+          eslint=${{ steps.eslint.outcome }}
+          unit=${{ steps.unit.outcome }}
+          build=${{ steps.build.outcome }}
+          EOF
+      - name: Upload diagnostic outcomes
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: verification-outcomes
+          path: verification-outcomes.txt
+          retention-days: 1
       - name: Preserve verification verdict
         if: steps.verification.outcome == 'failure'
         run: exit 1
