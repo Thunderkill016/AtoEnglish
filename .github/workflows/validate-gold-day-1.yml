@@ -14,7 +14,7 @@ permissions:
 jobs:
   verify:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 35
     env:
       NEXT_PUBLIC_SUPABASE_URL: https://example.supabase.co
       NEXT_PUBLIC_SUPABASE_ANON_KEY: test-anon-key
@@ -34,4 +34,33 @@ jobs:
       - name: Install dependencies
         run: npm ci --ignore-scripts --legacy-peer-deps
       - name: Run curriculum verification entry point
+        id: verification
+        continue-on-error: true
         run: node .verification-entrypoint/scripts/verify-change.mjs --scope curriculum
+      - name: Diagnose focused lesson tests
+        if: steps.verification.outcome == 'failure'
+        continue-on-error: true
+        run: npm exec -- vitest run src/components/learn/UnitTemplate.test.tsx src/components/learn/lesson-sections.test.ts src/components/learn/lesson-ui/lesson-presentation.test.tsx
+      - name: Diagnose lesson content standards
+        if: steps.verification.outcome == 'failure'
+        continue-on-error: true
+        run: npm run test:content-standard
+      - name: Diagnose TypeScript
+        if: steps.verification.outcome == 'failure'
+        continue-on-error: true
+        run: npm exec -- tsc --noEmit
+      - name: Diagnose ESLint
+        if: steps.verification.outcome == 'failure'
+        continue-on-error: true
+        run: npm run lint
+      - name: Diagnose full unit suite
+        if: steps.verification.outcome == 'failure'
+        continue-on-error: true
+        run: npm run test
+      - name: Diagnose production build
+        if: steps.verification.outcome == 'failure'
+        continue-on-error: true
+        run: npm run build
+      - name: Preserve verification verdict
+        if: steps.verification.outcome == 'failure'
+        run: exit 1
