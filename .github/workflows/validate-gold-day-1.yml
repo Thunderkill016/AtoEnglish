@@ -1,4 +1,4 @@
-name: Validate Gold Day 1 with verification entry point
+name: Diagnose remaining Gold Day 1 checks
 
 on:
   pull_request:
@@ -12,26 +12,58 @@ permissions:
   contents: read
 
 jobs:
-  verify:
+  diagnose:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 35
     env:
       NEXT_PUBLIC_SUPABASE_URL: https://example.supabase.co
       NEXT_PUBLIC_SUPABASE_ANON_KEY: test-anon-key
       NEXT_PUBLIC_APP_URL: http://127.0.0.1:3000
     steps:
-      - name: Checkout Gold Day 1 branch
-        uses: actions/checkout@v4
-      - name: Checkout verification entry point
-        uses: actions/checkout@v4
-        with:
-          ref: agent/curriculum-verification-entrypoint
-          path: .verification-entrypoint
+      - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
       - name: Install dependencies
         run: npm ci --ignore-scripts --legacy-peer-deps
-      - name: Run curriculum verification entry point
-        run: node .verification-entrypoint/scripts/verify-change.mjs --scope curriculum
+      - name: Lesson content standards
+        id: content
+        continue-on-error: true
+        run: npm run test:content-standard
+      - name: TypeScript
+        id: typescript
+        continue-on-error: true
+        run: npm exec -- tsc --noEmit
+      - name: ESLint
+        id: eslint
+        continue-on-error: true
+        run: npm run lint
+      - name: Full unit suite
+        id: unit
+        continue-on-error: true
+        run: npm run test
+      - name: Production build
+        id: build
+        continue-on-error: true
+        run: npm run build
+      - name: Write diagnostic outcomes
+        if: always()
+        run: |
+          cat > remaining-outcomes.txt <<'EOF'
+          content=${{ steps.content.outcome }}
+          typescript=${{ steps.typescript.outcome }}
+          eslint=${{ steps.eslint.outcome }}
+          unit=${{ steps.unit.outcome }}
+          build=${{ steps.build.outcome }}
+          EOF
+      - name: Upload diagnostic outcomes
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: remaining-outcomes
+          path: remaining-outcomes.txt
+          retention-days: 1
+      - name: Preserve diagnostic verdict
+        if: steps.content.outcome == 'failure' || steps.typescript.outcome == 'failure' || steps.eslint.outcome == 'failure' || steps.unit.outcome == 'failure' || steps.build.outcome == 'failure'
+        run: exit 1
