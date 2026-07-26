@@ -29,8 +29,14 @@ export default function useLessonProgress({
       if (saved) {
         const { section: savedSection } = JSON.parse(saved) as { section: number };
         const savedIndex = sectionOrder.indexOf(savedSection as SectionNumber);
+        const preservesLegacyResumeBoundary =
+          Number.isInteger(savedSection) && savedSection > 1 && savedSection < 10;
 
-        if (savedIndex > 0 && savedIndex < sectionOrder.length - 1) {
+        if (
+          preservesLegacyResumeBoundary &&
+          savedIndex > 0 &&
+          savedIndex < sectionOrder.length - 1
+        ) {
           setSection(savedSection);
         }
       }
