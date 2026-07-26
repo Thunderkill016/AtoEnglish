@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 
 import UnitTemplate from "@/components/learn/UnitTemplate";
 import type { UnitData } from "@/components/learn/UnitTemplate";
+import { resolveUnitPageMetadata } from "@/lib/lessons/unit-page-metadata";
 // ── A0 Foundation units (Pre-CEFR) ─────────────────────────────────────────
 import { unitA01 } from "@/lib/data/units/unitA01";
 import { unitA02 } from "@/lib/data/units/unitA02";
@@ -135,9 +136,12 @@ export async function generateMetadata({
   const entry = UNIT_DATA_MAP[unitSlug];
   if (!entry) return { title: "Bài học không tìm thấy" };
 
+  const metadata = resolveUnitPageMetadata(unitSlug, entry.data);
+  if (!metadata) return { title: "Bài học không tìm thấy" };
+
   return {
-    title: entry.data.title,
-    description: entry.data.description,
+    title: metadata.title,
+    description: metadata.description,
     robots: { index: false }, // Protected page — no public indexing
   };
 }
