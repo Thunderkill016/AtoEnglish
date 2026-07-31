@@ -1,9 +1,8 @@
 /**
- * Calculate pronunciation accuracy score comparing target text vs spoken text.
- * Uses word-level fuzzy matching (word overlap ratio).
- * @returns Score 0–100 (percentage of target words found in spoken text)
+ * Compare an ASR transcript with a target sentence.
+ * This measures word coverage in text. It is not a pronunciation assessment.
  */
-export function calcSpeechScore(target: string, spoken: string): number {
+export function calcTranscriptMatchScore(target: string, spoken: string): number {
   const clean = (s: string) =>
     s
       .toLowerCase()
@@ -15,8 +14,11 @@ export function calcSpeechScore(target: string, spoken: string): number {
   const targetWords = clean(target);
   const spokenWords = clean(spoken);
 
-  if (targetWords.length === 0) return 100;
+  if (targetWords.length === 0) return 0;
 
   const matches = targetWords.filter((w) => spokenWords.includes(w)).length;
   return Math.round((matches / targetWords.length) * 100);
 }
+
+/** @deprecated Use calcTranscriptMatchScore and label the result as transcript match. */
+export const calcSpeechScore = calcTranscriptMatchScore;

@@ -1,17 +1,14 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useSyncExternalStore } from "react";
 import { motion } from "framer-motion";
-import { Volume2, Mic, MicOff, Sparkles, ChevronRight } from "lucide-react";
+import { Volume2, Mic, MicOff, ChevronRight } from "lucide-react";
 import { MinimalButton } from "@/components/design-system";
 import LessonSectionHeader from "../lesson-ui/LessonSectionHeader";
 import LessonContinueButton from "../lesson-ui/LessonContinueButton";
 import { lessonSectionMotion } from "../lesson-ui/motion";
 import { toast } from "sonner";
-import { calcSpeechScore } from "@/lib/utils/speech";
-import { SpeechRecognitionFallback } from "@/lib/utils/speech-fallback";
-import { assessPronunciation } from "@/app/actions/phoneme";
-import type { PhonemeError } from "@/app/actions/phoneme";
+import { calcTranscriptMatchScore } from "@/lib/utils/speech";
 import type { UnitData } from "../UnitTemplate";
 
 interface SpeechRecognitionEvent {
@@ -44,6 +41,16 @@ interface SpeechRecognitionObj {
   abort: () => void;
 }
 
+const subscribeToSpeechSupport = () => () => {};
+
+function getSpeechRecognition() {
+  if (typeof window === "undefined") return null;
+  const browserWindow = window as unknown as Record<string, unknown>;
+  return (browserWindow.SpeechRecognition ?? browserWindow.webkitSpeechRecognition ?? null) as
+    | (new () => SpeechRecognitionObj)
+    | null;
+}
+
 interface ShadowingSectionProps {
   unit: UnitData;
   sectionOrderIdx: number;
@@ -54,41 +61,6 @@ interface ShadowingSectionProps {
   setShadowDone: React.Dispatch<React.SetStateAction<boolean>>;
   playTTS: (text: string, rate?: number) => void;
   goNext: () => void;
-}
-
-// Helper: detect specific missing English final consonants (codas) commonly deleted by Vietnamese learners
-function detectMissingCodas(expected: string, actual: string): string[] {
-  const missingWarnings: string[] = [];
-  const cleanExpected = expected.toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "").trim();
-  const cleanActual = actual.toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "").trim();
-
-  const expectedWords = cleanExpected.split(/\s+/);
-  const actualWords = cleanActual.split(/\s+/);
-
-  expectedWords.forEach((word) => {
-    // Check if the expected word ends in a target coda sound
-    if (word.endsWith("k") || word.endsWith("t") || word.endsWith("s") || word.endsWith("d") || word.endsWith("ce") || word.endsWith("se")) {
-      // Find matching word base in actual spoken phrase
-      const baseWordWithoutCoda = word.replace(/(k|t|s|d|ce|se)$/, "");
-      
-      // If user pronounced the base but omitted the ending
-      const foundOmission = actualWords.some(
-        (aWord) => aWord === baseWordWithoutCoda && aWord !== word
-      );
-
-      if (foundOmission) {
-        let soundExplanation = "";
-        if (word.endsWith("k")) soundExplanation = "âm /k/ (ví dụ: 'like' -> 'lai-kờ')";
-        else if (word.endsWith("t")) soundExplanation = "âm /t/ (ví dụ: 'cat' -> 'ca-tờ')";
-        else if (word.endsWith("s") || word.endsWith("ce") || word.endsWith("se")) soundExplanation = "âm /s/ (ví dụ: 'face' -> 'fây-sờ')";
-        else if (word.endsWith("d")) soundExplanation = "âm /d/ (ví dụ: 'red' -> 're-dờ')";
-
-        missingWarnings.push(`Từ "${word}" phát âm thiếu ${soundExplanation}`);
-      }
-    }
-  });
-
-  return missingWarnings;
 }
 
 export default function ShadowingSection({
@@ -111,16 +83,16 @@ export default function ShadowingSection({
 
   const recognitionRef = useRef<SpeechRecognitionObj | null>(null);
   const DIALOGUES = unit.dialogues;
+  const speechSupported = useSyncExternalStore(
+    subscribeToSpeechSupport,
+    () => getSpeechRecognition() !== null,
+    () => null,
+  );
 
-  // S4-3: Phoneme-level feedback state — per line index
-  const [phonemeData, setPhonemeData] = useState<Record<number, PhonemeError[]>>({});
-  const [phonemeLoading, setPhonemeLoading] = useState<Record<number, boolean>>({});
-
-  // Shadowing average
   const shadowValues = Object.values(shadowScores);
   const shadowAvg = shadowValues.length > 0
     ? Math.round(shadowValues.reduce((a, b) => a + b, 0) / shadowValues.length)
-    : 100;
+    : null;
 
   // Clean up speech recognition on unmount
   useEffect(() => {
@@ -133,23 +105,11 @@ export default function ShadowingSection({
     };
   }, []);
 
-  const getSpeechRecognition = () => {
-    if (typeof window === "undefined") return null;
-    const w = window as unknown as Record<string, unknown>;
-    return (w.SpeechRecognition ?? w.webkitSpeechRecognition ?? SpeechRecognitionFallback) as unknown as new () => SpeechRecognitionObj;
-  };
-
   const startRecognition = (onResult: (text: string) => void) => {
     const SpeechRecognitionAPI = getSpeechRecognition();
     if (!SpeechRecognitionAPI) {
       toast.error("Trình duyệt không hỗ trợ nhận diện giọng nói");
       return;
-    }
-
-    // Set fallback active transcript if using fallback
-    if (SpeechRecognitionAPI === SpeechRecognitionFallback && DIALOGUES.length > 0) {
-      const targetLine = DIALOGUES[shadowDialogueIdx].lines[shadowLineIdx];
-      SpeechRecognitionFallback.activeTranscript = targetLine.text;
     }
 
     const rec = new SpeechRecognitionAPI();
@@ -185,34 +145,15 @@ export default function ShadowingSection({
     const targetLine = DIALOGUES[shadowDialogueIdx].lines[shadowLineIdx];
     setIsRecording(true);
     startRecognition((text) => {
-      const score = calcSpeechScore(targetLine.text, text);
-      const missingCodas = detectMissingCodas(targetLine.text, text);
+      const score = calcTranscriptMatchScore(targetLine.text, text);
       setShadowScores((p) => ({ ...p, [shadowLineIdx]: score }));
       setShadowTranscripts((p) => ({ ...p, [shadowLineIdx]: text }));
       setIsRecording(false);
       if (score >= 70) {
-        if (missingCodas.length > 0) {
-          toast.warning(`Tốt! ${score}%. Lưu ý: ${missingCodas[0]}`);
-        } else {
-          toast.success(`Tốt lắm! ${score}%`);
-        }
+        toast.success(`Độ khớp câu đọc: ${score}%`);
       } else {
-        if (missingCodas.length > 0) {
-          toast.error(`Chưa đạt (${score}%). Lỗi: ${missingCodas.join(", ")}`);
-        } else {
-          toast.info(`${score}% — Không sao, thử lại nhé!`);
-        }
+        toast.info(`Độ khớp câu đọc: ${score}%. Nghe mẫu rồi thử lại nhé.`);
       }
-      // S4-3: Request AI phoneme breakdown (non-blocking)
-      setPhonemeLoading(p => ({ ...p, [shadowLineIdx]: true }));
-      assessPronunciation({ target: targetLine.text, spoken: text })
-        .then(res => {
-          if (res.success && res.result.phoneme_errors.length > 0) {
-            setPhonemeData(p => ({ ...p, [shadowLineIdx]: res.result.phoneme_errors }));
-          }
-        })
-        .catch(() => { /* silent */ })
-        .finally(() => setPhonemeLoading(p => ({ ...p, [shadowLineIdx]: false })));
     });
   };
 
@@ -346,31 +287,14 @@ export default function ShadowingSection({
                 &ldquo;{shadowTranscripts[shadowLineIdx]}&rdquo;
               </p>
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-bold border border-emerald-500/10 mb-3">
-                Độ chính xác: {shadowScores[shadowLineIdx]}%
+                Độ khớp câu đọc: {shadowScores[shadowLineIdx]}%
               </div>
-              {/* S4-3: Phoneme feedback cards */}
-              {phonemeLoading[shadowLineIdx] ? (
-                <div className="flex items-center justify-center gap-2 mt-2 text-violet-400">
-                  <Sparkles size={12} className="animate-pulse" />
-                  <span className="text-xs">AI đang phân tích phát âm...</span>
-                </div>
-              ) : phonemeData[shadowLineIdx]?.length ? (
-                <div className="space-y-2 mt-3 text-left">
-                  <p className="text-[10px] font-bold text-violet-400 uppercase tracking-wider flex items-center gap-1">
-                    <Sparkles size={10} /> Phân tích phát âm chi tiết
-                  </p>
-                  {phonemeData[shadowLineIdx].map((err, i) => (
-                    <div key={i} className="bg-violet-500/10 border border-violet-500/30 rounded-xl px-3 py-2.5 text-left">
-                      <p className="text-xs font-bold text-violet-700 mb-0.5">
-                        Từ: <span className="text-white">&ldquo;{err.word}&rdquo;</span>
-                        <span className="ml-2 text-violet-400 font-mono text-[11px]">{err.ipa_target}</span>
-                      </p>
-                      <p className="text-[11px] text-muted-foreground mb-0.5">{err.common_mistake_vn}</p>
-                      <p className="text-[11px] text-amber-300">💡 {err.tip_vn}</p>
-                    </div>
-                  ))}
-                </div>
-              ) : null}
+            </div>
+          )}
+
+          {speechSupported === false && (
+            <div className="border border-amber-500/30 bg-amber-500/10 rounded-xl p-4 mb-4 text-sm text-amber-200">
+              Trình duyệt này không hỗ trợ nhận diện giọng nói. Hãy nghe, nói lại thành tiếng rồi tiếp tục; phần này sẽ không được chấm điểm.
             </div>
           )}
 
@@ -387,12 +311,20 @@ export default function ShadowingSection({
               <ChevronRight size={16} />
             </MinimalButton>
           )}
+          {speechSupported === false && shadowScores[shadowLineIdx] === undefined && (
+            <MinimalButton type="button" fullWidth className="!rounded-xl" onClick={handleShadowNext}>
+              Tôi đã tự luyện, tiếp tục
+              <ChevronRight size={16} />
+            </MinimalButton>
+          )}
         </div>
       ) : (
         <div className="text-center mb-4 sm:mb-6 border border-border/60 bg-card rounded-2xl p-5 sm:p-8 shadow-md">
           <div className="text-4xl mb-3">🎉</div>
           <p className="text-emerald-400 font-bold text-lg mb-1">Hoàn thành Shadowing!</p>
-          <p className="text-muted-foreground text-sm mb-6">Điểm trung bình: {shadowAvg}%</p>
+          <p className="text-muted-foreground text-sm mb-6">
+            {shadowAvg === null ? "Đã luyện, không có điểm" : `Độ khớp câu đọc trung bình: ${shadowAvg}%`}
+          </p>
           <LessonContinueButton onClick={goNext}>Tiếp tục luyện nói</LessonContinueButton>
         </div>
       )}

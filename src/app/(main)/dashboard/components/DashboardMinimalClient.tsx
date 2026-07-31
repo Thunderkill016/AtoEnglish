@@ -38,7 +38,7 @@ export default function DashboardMinimalClient({
     }
   }, []);
 
-  const firstName = userName.split(" ")[0] || userName;
+  const firstName = userName === "Học viên" ? "bạn" : userName.split(" ")[0] || userName;
   const streakCaption =
     currentStreak === 0
       ? "Bắt đầu chuỗi học hôm nay"
@@ -69,13 +69,13 @@ export default function DashboardMinimalClient({
           <PrimaryRow
             href="/roadmap"
             label="Lộ trình"
-            description="Xem tiến độ A0 → B2"
+            description="Sáu giai đoạn từ A0 đến IELTS 6.5"
             icon={Map}
           />
           <PrimaryRow
             href="/learn"
-            label="Tất cả bài học"
-            description="Danh sách 50 unit"
+            label="Bài A0"
+            description="6 bài thử nghiệm đã kiểm tra tự động"
             icon={BookOpen}
           />
         </div>

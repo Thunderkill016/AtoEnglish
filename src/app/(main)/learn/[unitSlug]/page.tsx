@@ -1,15 +1,10 @@
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import type { Metadata } from "next";
 
 import UnitTemplate from "@/components/learn/UnitTemplate";
 import type { UnitData } from "@/components/learn/UnitTemplate";
-// ── A0 Foundation units (Pre-CEFR) ─────────────────────────────────────────
-import { unitA01 } from "@/lib/data/units/unitA01";
-import { unitA02 } from "@/lib/data/units/unitA02";
-import { unitA03 } from "@/lib/data/units/unitA03";
-import { unitA04 } from "@/lib/data/units/unitA04";
-import { unitA05 } from "@/lib/data/units/unitA05";
-import { unitA06 } from "@/lib/data/units/unitA06";
+import { PILOT_LESSON_SPECS } from "@/lib/lessons/pilot-lessons";
+// ── Legacy A0 units not yet admitted to the pilot ──────────────────────────
 import { unitA07 } from "@/lib/data/units/unitA07";
 import { unitA08 } from "@/lib/data/units/unitA08";
 // ── A1 — 12 units ───────────────────────────────────────────────────────────
@@ -59,18 +54,19 @@ import { unit40 } from "@/lib/data/units/unit40";
 import { unit41 } from "@/lib/data/units/unit41";
 import { unit42 } from "@/lib/data/units/unit42";
 import { UNITS } from "@/lib/constants/units";
+import { createClient } from "@/lib/supabase/server";
 
 // ─── Unit registry ───────────────────────────────────────────────────────────
 // Single source of truth: all A0 + A1 + A2 + B1 + B2 units registered here.
 // Add new units here to make them available at /learn/[unitSlug].
 const UNIT_DATA_MAP: Record<string, { data: UnitData; next: string }> = {
   // A0 Foundation — 8 units (pre-CEFR)
-  "unit-a0-1": { data: unitA01, next: "/learn/unit-a0-2" },
-  "unit-a0-2": { data: unitA02, next: "/learn/unit-a0-3" },
-  "unit-a0-3": { data: unitA03, next: "/learn/unit-a0-4" },
-  "unit-a0-4": { data: unitA04, next: "/learn/unit-a0-5" },
-  "unit-a0-5": { data: unitA05, next: "/learn/unit-a0-6" },
-  "unit-a0-6": { data: unitA06, next: "/learn/unit-a0-7" },
+  "unit-a0-1": { data: PILOT_LESSON_SPECS["unit-a0-1"], next: "/learn/unit-a0-2" },
+  "unit-a0-2": { data: PILOT_LESSON_SPECS["unit-a0-2"], next: "/learn/unit-a0-3" },
+  "unit-a0-3": { data: PILOT_LESSON_SPECS["unit-a0-3"], next: "/learn/unit-a0-4" },
+  "unit-a0-4": { data: PILOT_LESSON_SPECS["unit-a0-4"], next: "/learn/unit-a0-5" },
+  "unit-a0-5": { data: PILOT_LESSON_SPECS["unit-a0-5"], next: "/learn/unit-a0-6" },
+  "unit-a0-6": { data: PILOT_LESSON_SPECS["unit-a0-6"], next: "/learn" },
   "unit-a0-7": { data: unitA07, next: "/learn/unit-a0-8" },
   "unit-a0-8": { data: unitA08, next: "/learn/unit-1" }, // A0 complete → start A1
   // A1 — 12 units
@@ -156,10 +152,23 @@ export default async function UnitPage({
 
   if (!entry) notFound();
 
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user && unitSlug !== "unit-a0-1") {
+    redirect(`/login?mode=login&next=${encodeURIComponent(`/learn/${unitSlug}`)}`);
+  }
+
+  const nextRoute = !user
+    ? "/login?mode=login&next=%2Fcheckpoint%2Ftrial"
+    : entry.next;
+
   return (
     <UnitTemplate
       unit={entry.data}
-      nextRoute={entry.next}
+      nextRoute={nextRoute}
     />
   );
 }

@@ -5,6 +5,8 @@ import {
   getSectionPhase,
   LESSON_SECTIONS,
 } from "@/lib/lessons/learning-flow";
+import { combineEvidenceScores } from "@/lib/lessons/lesson-spec";
+import { scoreTrialCheckpoint } from "@/lib/lessons/trial-checkpoint";
 
 describe("learning-flow", () => {
   it("has 10 sections in evidence-based order (vocab before dialogue)", () => {
@@ -23,5 +25,46 @@ describe("learning-flow", () => {
 
   it("ends with review phase (quiz)", () => {
     expect(getSectionPhase(SECTION_ORDER[SECTION_ORDER.length - 1])).toBe("review");
+  });
+
+  it("returns unscored when no assessment evidence exists", () => {
+    const result = combineEvidenceScores([
+      { id: "listening", score: null, weight: 0.3 },
+      { id: "speaking", score: null, weight: 0.3 },
+    ]);
+
+    expect(result).toMatchObject({ status: "unscored", score: null, source: "none" });
+    expect(result.evidence).toEqual([]);
+  });
+
+  it("renormalizes weights instead of awarding missing evidence", () => {
+    const result = combineEvidenceScores([
+      { id: "listening", score: 80, weight: 0.3 },
+      { id: "speaking", score: null, weight: 0.3 },
+      { id: "quiz", score: 60, weight: 0.4 },
+    ]);
+
+    expect(result.status).toBe("scored");
+    expect(result.score).toBe(69);
+  });
+});
+
+describe("trial checkpoint", () => {
+  it("requires evidence from at least two of three transfer questions", () => {
+    expect(
+      scoreTrialCheckpoint({
+        "trial-1": "E",
+        "trial-2": "My name is Lan.",
+        "trial-3": "am",
+      }),
+    ).toEqual({ correctCount: 2, passed: true });
+
+    expect(
+      scoreTrialCheckpoint({
+        "trial-1": "E",
+        "trial-2": "I am fine.",
+        "trial-3": "am",
+      }),
+    ).toEqual({ correctCount: 1, passed: false });
   });
 });

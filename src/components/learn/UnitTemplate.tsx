@@ -9,6 +9,7 @@ import confetti from "canvas-confetti";
 
 import { completeUnit, getUnitCompletionStatus } from "@/app/actions/unit";
 import { getDueWarmupCards, seedUnitVocabToSRS, scheduleWrongWordsForReview } from "@/app/actions/cards";
+import { recordLearningAttempts } from "@/app/actions/learning-attempts";
 import { useStreakMilestone } from "@/features/streak/hooks/useStreakMilestone";
 import StreakMilestoneOverlay from "@/features/streak/components/StreakMilestoneOverlay";
 
@@ -22,222 +23,43 @@ import SpeakingSection from "./sections/SpeakingSection";
 import QuizSection from "./sections/QuizSection";
 import TranslateSection from "./sections/TranslateSection";
 import FluencySection from "./sections/FluencySection";
-import type { ReadingPassage } from "@/components/exercises/ReadingComprehensionExercise";
+import {
+  SECTION_LABELS,
+  SECTION_ORDER,
+  TOTAL_SECTIONS,
+  type SectionNumber,
+} from "@/lib/lessons/learning-flow";
+import {
+  combineEvidenceScores,
+  type LessonSpecV1,
+  type UnitData,
+  type WarmupCard,
+} from "@/lib/lessons/lesson-spec";
 
-// ─── Section order & labels (10 steps, Hybrid pedagogical flow) ───────────────
-const SECTION_LABELS: Record<number, string> = {
-  1: "Khởi động",
-  2: "Từ vựng",
-  3: "Ngữ pháp",
-  4: "Luyện tập",
-  5: "Hội thoại",
-  10: "Phản xạ",
-  9: "Dịch câu",
-  6: "Shadowing",
-  7: "Luyện nói",
-  8: "Hoàn thành",
-};
-const SECTION_ORDER = [1, 2, 3, 4, 5, 10, 9, 6, 7, 8] as const;
-type SectionNumber = (typeof SECTION_ORDER)[number];
-const TOTAL_SECTIONS = SECTION_ORDER.length;
+export type {
+  Dialogue,
+  DialogueLine,
+  FluencyDrill,
+  GrammarPoint,
+  ListenAndChooseItem,
+  ListenArrangeItem,
+  MatchingExercise,
+  PronunciationFocus,
+  QuizQuestion,
+  ReadingPassage,
+  SentenceCorrectionExercise,
+  SentenceScramble,
+  SpeakingData,
+  UnitData,
+  VocabItem,
+  WarmupCard,
+  WarmupGreeting,
+  WordBankQuestion,
+} from "@/lib/lessons/lesson-spec";
 
 // ─── Interfaces ──────────────────────────────────────────────────────────────
-export interface VocabItem {
-  id: number;
-  word: string;
-  phonetic: string;
-  meaning: string;
-  example: string;
-  example2?: string;
-  collocation?: string;
-  audio?: string;
-  emoji?: string;
-  image_url?: string; // S2-2: optional image for concrete nouns (Paivio dual coding)
-  l1_interference_vn?: string; // Vietnamese L1 interference note — specific error Vietnamese speakers make with this word
-}
-
-export interface WarmupCard {
-  id: string;
-  word: string;
-  phonetic?: string | null;
-  meaning_vn: string;
-  example_en?: string | null;
-}
-
-export interface DialogueLine {
-  id: string;
-  speaker: string;
-  text: string;
-  translation: string;
-}
-
-export interface Dialogue {
-  id: number;
-  title: string;
-  audio: string;
-  desc: string;
-  lines: DialogueLine[];
-}
-
-export interface WarmupGreeting {
-  emoji: string;
-  en: string;
-  vn: string;
-  context: string;
-}
-
-export interface ListenAndChooseItem {
-  id: string;
-  audio_text: string;
-  options: string[];
-  answer: string;
-}
-
-export interface QuizQuestion {
-  id: string;
-  question: string;
-  options?: string[];
-  answer: string;
-  type: "multiple-choice" | "cloze" | "translate" | "true-false"; // S2-4: true-false added
-  explanation_vn?: string; // Vietnamese grammar/vocab note shown on wrong answer (Babbel pattern)
-}
-
-export interface SpeakingData {
-  level1Prompt: string;
-  level1Placeholder: string;
-  level2Situation: string;
-  level2Hint: string;
-}
-
-export interface GrammarPoint {
-  title: string;
-  rule: string;
-  conjugation?: Array<{
-    subject: string;
-    form: string;
-    example: string;
-  }>;
-  examples: Array<{
-    en: string;
-    vn: string;
-  }>;
-  tip?: string;
-  vnNote?: string;
-  dialogueExample?: {
-    speaker: string;
-    text: string;
-    translation: string;
-    highlight: string;
-  };
-  ccq?: {
-    question: string;
-    options: string[];
-    answer: string;
-    explanation?: string;
-  };
-}
-
-export interface PronunciationFocus {
-  phoneme: string;
-  description: string;
-  examples: Array<{
-    word: string;
-    ipa: string;
-    tip: string;
-  }>;
-  minimalPairs?: Array<[string, string]>;
-}
-
-export interface FluencyDrill {
-  title?: string;
-  timeLimit?: number;
-  items: Array<{
-    en: string;
-    vn: string;
-  }>;
-}
-
-export interface MatchingPair {
-  left: string;
-  right: string;
-}
-
-export interface MatchingExercise {
-  title?: string;
-  pairs: MatchingPair[];
-}
-
-export interface SentenceScramble {
-  id: string;
-  prompt_vn: string;
-  words: string[];
-  answer: string;
-}
-
-export interface WordBankQuestion {
-  id: string;
-  prompt_vn: string;
-  words: string[];
-  answer: string;
-  hint?: string;
-}
-
-// S3-1: Sentence Correction Exercise (British Council "find the error" pattern)
-export interface SentenceCorrectionExercise {
-  id: string;
-  sentence: string;        // Sentence with exactly one grammatical error
-  errorWord: string;       // The wrong word/phrase (shown highlighted)
-  correction: string;      // Correct replacement
-  explanation_vn: string;  // Vietnamese explanation shown after answer
-  distractors?: string[];  // Wrong replacement options (if MCQ style)
-}
-
-// S4-1: Listen+Arrange Exercise (Duolingo tap-words-in-order audio-first pattern)
-export interface ListenArrangeItem {
-  id: string;
-  audio_text: string;    // English sentence spoken via TTS
-  prompt_vn: string;     // Vietnamese hint shown below speaker
-  words: string[];       // Shuffled word pool (may include 1-2 distractors)
-  answer: string;        // Correct space-joined answer
-}
-
-export interface UnitData {
-  unitId: string;
-  title: string;
-  level: string;
-  xp: number;
-  estimatedTime: number;
-  description: string;
-  badgeName: string;
-  badgeEmoji: string;
-  warmupGreetings: WarmupGreeting[];
-  culturalNote: string;
-  vocab: VocabItem[];
-  grammar?: GrammarPoint;
-  matchingExercise?: MatchingExercise;
-  scrambleExercises?: SentenceScramble[];
-  wordBankExercises?: WordBankQuestion[];
-  sentenceCorrectionExercises?: SentenceCorrectionExercise[]; // S3-1
-  listenAndArrangeExercises?: ListenArrangeItem[];            // S4-1
-  practiceQuiz?: QuizQuestion[];
-  practiceTranslate?: { id: string; prompt_vn: string; answer: string }[];
-  dialogues: Dialogue[];
-  dialogues_list?: Dialogue[]; // Fallback support for lists
-  listenAndChoose: ListenAndChooseItem[];
-  speaking: SpeakingData;
-  quiz: QuizQuestion[];
-  cumulativeReviewQuestions?: QuizQuestion[];
-  situation?: string;
-  learningOutcomes?: string[];
-  pronunciationFocus?: PronunciationFocus;
-  fluencyDrill?: FluencyDrill;
-  readingPassage?: ReadingPassage; // Optional reading comprehension (A2+)
-  shadowingVideoId?: string;       // Optional YouTube video ID for Video Shadowing section
-  jobScenarios?: Array<{ id: number; title: string; focus?: string; context?: string; l1Note?: string; example?: string }>; // TASK-153 world-class job content + VN L1 notes (optional)
-}
-
 interface UnitTemplateProps {
-  unit: UnitData;
+  unit: UnitData | LessonSpecV1;
   nextRoute?: string;
 }
 
@@ -248,6 +70,24 @@ interface CompletionData {
   newStreak: number;
   vocabPreview: Array<{ word: string; meaning: string }>;
   nextRoute: string;
+}
+
+function normalizeAnswer(value: string) {
+  return value
+    .trim()
+    .toLowerCase()
+    .replace(/\bi'm\b/g, "i am")
+    .replace(/\byou're\b/g, "you are")
+    .replace(/\bhe's\b/g, "he is")
+    .replace(/\bshe's\b/g, "she is")
+    .replace(/\bit's\b/g, "it is")
+    .replace(/\bwe're\b/g, "we are")
+    .replace(/\bthey're\b/g, "they are")
+    .replace(/\bdon't\b/g, "do not")
+    .replace(/\bdoesn't\b/g, "does not")
+    .replace(/[.,!?;:'"]/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
 }
 
 // ── Animated XP counter (counts 0 → target in 1.2 s) ──────────────────────
@@ -357,6 +197,11 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
   const [miniSession, setMiniSession] = useState(false);
   const [sessionBreak, setSessionBreak] = useState(false); // mid-lesson break after Practice
   const [completionData, setCompletionData] = useState<CompletionData | null>(null);
+  const [attemptSessionId] = useState<string | null>(() =>
+    typeof crypto !== "undefined" && "randomUUID" in crypto
+      ? crypto.randomUUID()
+      : null,
+  );
 
   // Streak milestone checker (Phase B — research doc)
   const streakMilestoneCheck = useStreakMilestone();
@@ -376,7 +221,6 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
   const [warmupCards, setWarmupCards] = useState<WarmupCard[]>([]);
   const [warmupFlipped, setWarmupFlipped] = useState<Set<number>>(new Set());
   const [warmupDone, setWarmupDone] = useState(false);
-  const [warmupRated, setWarmupRated] = useState<Record<number, "known" | "unknown">>({});
 
   const [lacAnswers, setLacAnswers] = useState<Record<number, string>>({});
   const [lacSubmitted, setLacSubmitted] = useState(false);
@@ -424,20 +268,16 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
     getUnitCompletionStatus(normalizedUnit.unitId).then((res) => {
       if (res.success && res.completed) setIsCompleted(true);
     });
-    // guest local from best pre-minimal version
-    try {
-      const g = JSON.parse(localStorage.getItem("guest_completed_units") || "[]");
-      if (Array.isArray(g) && g.includes(normalizedUnit.unitId)) {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        setIsCompleted(true);
-      }
-    } catch {}
     try {
       const saved = localStorage.getItem(`lesson-progress-${normalizedUnit.unitId}`);
       if (saved) {
         const { section: savedSection } = JSON.parse(saved) as { section: number };
          
-        if (savedSection > 1 && savedSection < TOTAL_SECTIONS) setSection(savedSection);
+        if (savedSection > 1 && savedSection < TOTAL_SECTIONS) {
+          // Restoring state from localStorage is the synchronization performed by this effect.
+          // eslint-disable-next-line react-hooks/set-state-in-effect
+          setSection(savedSection);
+        }
       }
     } catch { /* ignore */ }
   }, [normalizedUnit.unitId]);
@@ -580,23 +420,6 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
   }, [section]);
 
   // Score calculations
-  const normalizeAnswer = (s: string) =>
-    s
-      .trim()
-      .toLowerCase()
-      .replace(/[.,!?;:'"]/g, "")
-      .replace(/\s+/g, " ")
-      .replace(/\bi'm\b/g, "i am")
-      .replace(/\byou're\b/g, "you are")
-      .replace(/\bhe's\b/g, "he is")
-      .replace(/\bshe's\b/g, "she is")
-      .replace(/\bit's\b/g, "it is")
-      .replace(/\bwe're\b/g, "we are")
-      .replace(/\bthey're\b/g, "they are")
-      .replace(/\bdon't\b/g, "do not")
-      .replace(/\bdoesn't\b/g, "does not")
-      .trim();
-
   const finalQuizScore = FINAL_QS.filter((q) => {
     if (q.type === "cloze" || q.type === "translate") {
       return normalizeAnswer(quizClozeInputs[q.id] ?? "") === normalizeAnswer(q.answer);
@@ -609,11 +432,15 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
   const shadowValues = Object.values(shadowScores);
   const shadowAvg = shadowValues.length > 0
     ? Math.round(shadowValues.reduce((a, b) => a + b, 0) / shadowValues.length)
-    : 100;
+    : null;
 
-  const lacPct = LISTEN_CHOOSE.length > 0 ? (lacScore / LISTEN_CHOOSE.length) * 100 : 100;
-  const quizPct = FINAL_QS.length > 0 ? (finalQuizScore / FINAL_QS.length) * 100 : 100;
-  const overallScore = Math.round(lacPct * 0.3 + shadowAvg * 0.3 + quizPct * 0.4);
+  const lacPct = LISTEN_CHOOSE.length > 0 ? (lacScore / LISTEN_CHOOSE.length) * 100 : null;
+  const quizPct = FINAL_QS.length > 0 ? (finalQuizScore / FINAL_QS.length) * 100 : null;
+  const scoreResult = combineEvidenceScores([
+    { id: "listening", score: lacPct, weight: 0.3 },
+    { id: "transcript_match", score: shadowAvg, weight: 0.3 },
+    { id: "quiz", score: quizPct, weight: 0.4 },
+  ]);
 
   const wrongQuestions = quizSubmitted
     ? FINAL_QS.filter((q) =>
@@ -661,8 +488,14 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
       ? Math.round((retryCorrectCount / wrongQuestions.length) * 10)
       : 0;
 
-  const effectiveScore = Math.min(100, overallScore + retryBonusPct);
-  const effectiveStarCount: 1 | 2 | 3 = effectiveScore >= 85 ? 3 : effectiveScore >= 60 ? 2 : 1;
+  const effectiveScore =
+    scoreResult.score === null ? null : Math.min(100, scoreResult.score + retryBonusPct);
+  const effectiveStarCount: 1 | 2 | 3 =
+    effectiveScore !== null && effectiveScore >= 85
+      ? 3
+      : effectiveScore !== null && effectiveScore >= 60
+        ? 2
+        : 1;
   const xpToEarn =
     effectiveStarCount === 3
       ? normalizedUnit.xp
@@ -670,8 +503,53 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
       ? Math.round(normalizedUnit.xp * 0.85)
       : Math.round(normalizedUnit.xp * 0.7);
 
+  const persistQuizEvidence = () => {
+    if (!attemptSessionId) {
+      return Promise.resolve({
+        success: false as const,
+        error: "Trình duyệt không tạo được mã phiên học.",
+      });
+    }
+
+    return recordLearningAttempts({
+      sessionId: attemptSessionId,
+      lessonId: normalizedUnit.unitId,
+      attempts: FINAL_QS.map((question) => {
+        const answer =
+          question.type === "cloze" || question.type === "translate"
+            ? quizClozeInputs[question.id] ?? ""
+            : quizAnswers[question.id] ?? "";
+        const isCorrect = normalizeAnswer(answer) === normalizeAnswer(question.answer);
+
+        return {
+          activityId: `${normalizedUnit.unitId}:quiz:${question.id}`,
+          modality: "quiz" as const,
+          status: "scored" as const,
+          score: isCorrect ? 100 : 0,
+          errorTags: isCorrect ? [] : ["answer_mismatch"],
+          evaluator: "deterministic-answer-key",
+          evaluatorVersion: "1.0.0",
+          latencyMs: null,
+        };
+      }),
+    });
+  };
+
   const handleCompleteUnit = async () => {
+    if (effectiveScore === null) {
+      toast.error("Chưa có bài kiểm tra đủ bằng chứng để chấm điểm.");
+      return;
+    }
     setIsSubmitting(true);
+    const evidenceResult = await persistQuizEvidence();
+    const isGuestAttempt =
+      !evidenceResult.success && evidenceResult.error.includes("đăng nhập");
+    if (!evidenceResult.success && !isGuestAttempt) {
+      toast.error(evidenceResult.error);
+      setIsSubmitting(false);
+      return;
+    }
+
     confetti({ particleCount: 150, spread: 100, origin: { y: 0.5 } });
     const res = await completeUnit(normalizedUnit.unitId, effectiveStarCount);
     if (res.success) {
@@ -786,15 +664,20 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
       localStorage.setItem(xpSyncKey, String(prev + earnedXp));
       window.dispatchEvent(new CustomEvent("ato:xp-earned", { detail: { xp: earnedXp } }));
     } else if (res.error && res.error.includes("đăng nhập")) {
-      // guest fallback from rolled best version
       setIsCompleted(true);
       try {
-        const k = "guest_completed_units";
-        const a = JSON.parse(localStorage.getItem(k) || "[]");
-        localStorage.setItem(k, JSON.stringify(Array.isArray(a) ? [...new Set([...a, normalizedUnit.unitId])] : [normalizedUnit.unitId]));
+        localStorage.setItem(
+          "ato_guest_trial",
+          JSON.stringify({
+            unitId: normalizedUnit.unitId,
+            score: effectiveScore,
+            completedAt: new Date().toISOString(),
+            status: "checkpoint_required",
+          }),
+        );
       } catch {}
-      toast.success("🎉 Hoàn thành! (guest mode - local only)");
-      setCompletionData({ xpEarned: xpToEarn, starCount: effectiveStarCount, effectiveScore, newStreak: 0, vocabPreview: normalizedUnit.vocab.slice(0,5).map(v=>({word:v.word,meaning:v.meaning})), nextRoute });
+      toast.success("Đã hoàn thành bài học thử. Đăng nhập để làm kiểm tra ngắn.");
+      setCompletionData({ xpEarned: 0, starCount: effectiveStarCount, effectiveScore, newStreak: 0, vocabPreview: normalizedUnit.vocab.slice(0,5).map(v=>({word:v.word,meaning:v.meaning})), nextRoute });
     } else {
       toast.error(res.error || "Có lỗi xảy ra");
     }
@@ -1002,8 +885,6 @@ export default function UnitTemplate({ unit, nextRoute = "/dashboard" }: UnitTem
               sectionOrderIdx={sectionOrderIdx}
               TOTAL_SECTIONS={TOTAL_SECTIONS}
               playTTS={playTTS}
-              warmupRated={warmupRated}
-              setWarmupRated={setWarmupRated}
               warmupCards={warmupCards}
               warmupFlipped={warmupFlipped}
               setWarmupFlipped={setWarmupFlipped}

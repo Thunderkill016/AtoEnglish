@@ -19,7 +19,7 @@ interface QuizSectionProps {
   TOTAL_SECTIONS: number;
   seenCards: Set<number>;
   VOCAB_LIMIT: number;
-  shadowAvg: number;
+  shadowAvg: number | null;
   shadowDone: boolean;
   lacScore: number;
   LISTEN_CHOOSE_LENGTH: number;
@@ -58,7 +58,7 @@ interface QuizSectionProps {
   wrongQuestions: QuizQuestion[];
   retryCorrectCount: number;
   retryBonusPct: number;
-  effectiveScore: number;
+  effectiveScore: number | null;
   effectiveStarCount: number;
   xpToEarn: number;
   nextRoute: string;
@@ -709,7 +709,7 @@ export default function QuizSection({
                 },
                 {
                   label: "Shadowing",
-                  value: `${shadowAvg}% trung bình`,
+                  value: shadowAvg === null ? "Không chấm điểm" : `${shadowAvg}% khớp câu đọc`,
                   icon: "🎤",
                   done: shadowDone || unit.dialogues.length === 0,
                 },
@@ -753,7 +753,7 @@ export default function QuizSection({
               ))}
             </div>
             <p className="text-xs text-muted-foreground mb-2">
-              {effectiveScore}% tổng điểm
+              {effectiveScore === null ? "Chưa có điểm" : `${effectiveScore}% tổng điểm`}
               {retryBonusPct > 0 ? (
                 <span className="text-emerald-400 ml-1">(+{retryBonusPct}% bonus)</span>
               ) : null}

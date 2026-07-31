@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useSyncExternalStore } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Mic, MicOff, CheckCircle, Lightbulb, Volume2 } from "lucide-react";
 import { MinimalButton } from "@/components/design-system";
@@ -8,8 +8,7 @@ import LessonSectionHeader from "../lesson-ui/LessonSectionHeader";
 import LessonContinueButton from "../lesson-ui/LessonContinueButton";
 import { lessonSectionMotion } from "../lesson-ui/motion";
 import { toast } from "sonner";
-import { calcSpeechScore } from "@/lib/utils/speech";
-import { SpeechRecognitionFallback } from "@/lib/utils/speech-fallback";
+import { calcTranscriptMatchScore } from "@/lib/utils/speech";
 import type { UnitData } from "../UnitTemplate";
 
 interface SpeechRecognitionEvent {
@@ -42,47 +41,22 @@ interface SpeechRecognitionObj {
   abort: () => void;
 }
 
+const subscribeToSpeechSupport = () => () => {};
+
+function getSpeechRecognition() {
+  if (typeof window === "undefined") return null;
+  const browserWindow = window as unknown as Record<string, unknown>;
+  return (browserWindow.SpeechRecognition ?? browserWindow.webkitSpeechRecognition ?? null) as
+    | (new () => SpeechRecognitionObj)
+    | null;
+}
+
 interface SpeakingSectionProps {
   unit: UnitData;
   sectionOrderIdx: number;
   TOTAL_SECTIONS: number;
   playTTS: (text: string) => void;
   goNext: () => void;
-}
-
-// Helper: detect specific missing English final consonants (codas) commonly deleted by Vietnamese learners
-function detectMissingCodas(expected: string, actual: string): string[] {
-  const missingWarnings: string[] = [];
-  const cleanExpected = expected.toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "").trim();
-  const cleanActual = actual.toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "").trim();
-
-  const expectedWords = cleanExpected.split(/\s+/);
-  const actualWords = cleanActual.split(/\s+/);
-
-  expectedWords.forEach((word) => {
-    // Check if the expected word ends in a target coda sound
-    if (word.endsWith("k") || word.endsWith("t") || word.endsWith("s") || word.endsWith("d") || word.endsWith("ce") || word.endsWith("se")) {
-      // Find matching word base in actual spoken phrase
-      const baseWordWithoutCoda = word.replace(/(k|t|s|d|ce|se)$/, "");
-      
-      // If user pronounced the base but omitted the ending
-      const foundOmission = actualWords.some(
-        (aWord) => aWord === baseWordWithoutCoda && aWord !== word
-      );
-
-      if (foundOmission) {
-        let soundExplanation = "";
-        if (word.endsWith("k")) soundExplanation = "âm /k/ (ví dụ: 'like' -> 'lai-kờ')";
-        else if (word.endsWith("t")) soundExplanation = "âm /t/ (ví dụ: 'cat' -> 'ca-tờ')";
-        else if (word.endsWith("s") || word.endsWith("ce") || word.endsWith("se")) soundExplanation = "âm /s/ (ví dụ: 'face' -> 'fây-sờ')";
-        else if (word.endsWith("d")) soundExplanation = "âm /d/ (ví dụ: 'red' -> 're-dờ')";
-
-        missingWarnings.push(`Từ "${word}" phát âm thiếu ${soundExplanation}`);
-      }
-    }
-  });
-
-  return missingWarnings;
 }
 
 export default function SpeakingSection({
@@ -106,6 +80,11 @@ export default function SpeakingSection({
 
   const [isRecognizing, setIsRecognizing] = useState(false);
   const recognitionRef = useRef<SpeechRecognitionObj | null>(null);
+  const speechSupported = useSyncExternalStore(
+    subscribeToSpeechSupport,
+    () => getSpeechRecognition() !== null,
+    () => null,
+  );
 
   // Clean up speech recognition on unmount
   useEffect(() => {
@@ -118,24 +97,13 @@ export default function SpeakingSection({
     };
   }, []);
 
-  const getSpeechRecognition = () => {
-    if (typeof window === "undefined") return null;
-    const w = window as unknown as Record<string, unknown>;
-    return (w.SpeechRecognition ?? w.webkitSpeechRecognition ?? SpeechRecognitionFallback) as unknown as new () => SpeechRecognitionObj;
-  };
-
   const formattedL1Prompt = unit.speaking.level1Prompt.replace("{input}", nameInput || "______");
 
-  const startRecognition = (expectedTranscript: string, onResult: (text: string) => void) => {
+  const startRecognition = (onResult: (text: string) => void) => {
     const SpeechRecognitionAPI = getSpeechRecognition();
     if (!SpeechRecognitionAPI) {
       toast.error("Trình duyệt không hỗ trợ nhận diện giọng nói");
       return;
-    }
-
-    // Set fallback active transcript if using fallback
-    if (SpeechRecognitionAPI === SpeechRecognitionFallback) {
-      SpeechRecognitionFallback.activeTranscript = expectedTranscript;
     }
 
     const rec = new SpeechRecognitionAPI();
@@ -178,16 +146,16 @@ export default function SpeakingSection({
       .replace(/\[.*?\]/g, "") // strip [tên bạn] and similar placeholders
       .trim();
 
-    startRecognition(hintText, (text) => {
+    startRecognition((text) => {
       setLevel2Transcript(text);
       setLevel2Recording(false);
-      const score = calcSpeechScore(hintText, text);
+      const score = calcTranscriptMatchScore(hintText, text);
       setLevel2Score(score);
       if (score >= 60) {
         setLevel2Done(true);
-        toast.success(`Tốt lắm! ${score}%`);
+        toast.success(`Độ khớp câu đọc: ${score}%`);
       } else {
-        toast.info(`${score}% — Thử nói lại nhé!`);
+        toast.info(`Độ khớp câu đọc: ${score}%. Thử nói lại nhé.`);
       }
     });
   };
@@ -244,51 +212,49 @@ export default function SpeakingSection({
               >
                 <Volume2 size={16} /> Nghe mẫu
               </button>
-              <button
-                disabled={isLevel1Recording || isRecognizing}
-                onClick={() => {
-                  setIsLevel1Recording(true);
-                  startRecognition(formattedL1Prompt, (text) => {
-                    setLevel1Transcript(text);
-                    setIsLevel1Recording(false);
-                    const score = calcSpeechScore(formattedL1Prompt, text);
-                    const missingCodas = detectMissingCodas(formattedL1Prompt, text);
-                    setLevel1Score(score);
-                    if (score >= 60) {
-                      setLevel1Done(true);
-                      if (missingCodas.length > 0) {
-                        toast.warning(`Tốt! ${score}%. Lưu ý: ${missingCodas[0]}`);
+              {speechSupported === false ? (
+                <button
+                  onClick={() => setLevel1Done(true)}
+                  className="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-primary text-primary-foreground font-bold text-sm"
+                >
+                  <CheckCircle size={16} /> Tôi đã nói thành tiếng
+                </button>
+              ) : (
+                <button
+                  disabled={isLevel1Recording || isRecognizing}
+                  onClick={() => {
+                    setIsLevel1Recording(true);
+                    startRecognition((text) => {
+                      setLevel1Transcript(text);
+                      setIsLevel1Recording(false);
+                      const score = calcTranscriptMatchScore(formattedL1Prompt, text);
+                      setLevel1Score(score);
+                      if (score >= 60) {
+                        setLevel1Done(true);
+                        toast.success(`Độ khớp câu đọc: ${score}%`);
                       } else {
-                        toast.success(`Tốt lắm! ${score}%`);
+                        toast.info(`Độ khớp câu đọc: ${score}%. Nghe mẫu rồi thử lại nhé.`);
                       }
-                    } else {
-                      if (missingCodas.length > 0) {
-                        toast.error(
-                          `Chưa đạt (${score}%). Lỗi: ${missingCodas.join(", ")}`
-                        );
-                      } else {
-                        toast.info(`${score}% — Không sao, thử lại nhé!`);
-                      }
-                    }
-                  });
-                }}
-                aria-label="Luyện nói"
-                className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-bold text-sm transition-all duration-200 ${
-                  isLevel1Recording
-                    ? "bg-red-600 text-white animate-pulse"
-                    : "bg-primary hover:bg-primary/90 text-primary-foreground shadow-md active:scale-95"
-                }`}
-              >
-                {isLevel1Recording ? (
-                  <>
-                    <MicOff size={16} /> Đang nghe...
-                  </>
-                ) : (
-                  <>
-                    <Mic size={16} /> Luyện nói
-                  </>
-                )}
-              </button>
+                    });
+                  }}
+                  aria-label="Luyện nói"
+                  className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-bold text-sm transition-all duration-200 ${
+                    isLevel1Recording
+                      ? "bg-red-600 text-white animate-pulse"
+                      : "bg-primary hover:bg-primary/90 text-primary-foreground shadow-md active:scale-95"
+                  }`}
+                >
+                  {isLevel1Recording ? (
+                    <>
+                      <MicOff size={16} /> Đang nghe...
+                    </>
+                  ) : (
+                    <>
+                      <Mic size={16} /> Luyện nói
+                    </>
+                  )}
+                </button>
+              )}
             </div>
             {level1Transcript && (
               <div className="bg-muted/30 rounded-xl px-4 py-3 text-sm">
@@ -303,7 +269,7 @@ export default function SpeakingSection({
                           : "bg-amber-500/20 text-amber-400"
                       }`}
                     >
-                      {level1Score}% chính xác
+                      Độ khớp câu đọc: {level1Score}%
                     </span>
                     {level1Score < 60 && (
                       <button
@@ -397,7 +363,7 @@ export default function SpeakingSection({
                       : "bg-amber-500/10 text-amber-400 border-amber-500/20"
                   }`}
                 >
-                  Độ chính xác: {level2Score}%
+                  Độ khớp câu đọc: {level2Score}%
                 </div>
                 <span className="text-xs text-muted-foreground">
                   {level2Score >= 70 ? "Tốt lắm! 🎉" : "Thử lại sẽ tốt hơn 💪"}
@@ -408,23 +374,32 @@ export default function SpeakingSection({
         )}
 
         <div className="flex gap-3">
-          <button
-            onClick={
-              level2Recording
-                ? () => {
-                    recognitionRef.current?.stop();
-                    setLevel2Recording(false);
-                  }
-                : handleLevel2Record
-            }
-            aria-label={level2Recording ? "Dừng ghi âm" : "Bắt đầu ghi âm"}
-            className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-bold text-sm transition-colors ${
-              level2Recording ? "bg-red-600 text-white animate-pulse" : "bg-emerald-600 hover:bg-emerald-500 text-white"
-            }`}
-          >
-            {level2Recording ? <MicOff size={16} /> : <Mic size={16} />}
-            {level2Recording ? "Dừng" : "Bắt đầu nói"}
-          </button>
+          {speechSupported === false ? (
+            <button
+              onClick={() => setLevel2Done(true)}
+              className="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-emerald-600 text-white font-bold text-sm"
+            >
+              <CheckCircle size={16} /> Tôi đã tự luyện
+            </button>
+          ) : (
+            <button
+              onClick={
+                level2Recording
+                  ? () => {
+                      recognitionRef.current?.stop();
+                      setLevel2Recording(false);
+                    }
+                  : handleLevel2Record
+              }
+              aria-label={level2Recording ? "Dừng ghi âm" : "Bắt đầu ghi âm"}
+              className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-bold text-sm transition-colors ${
+                level2Recording ? "bg-red-600 text-white animate-pulse" : "bg-emerald-600 hover:bg-emerald-500 text-white"
+              }`}
+            >
+              {level2Recording ? <MicOff size={16} /> : <Mic size={16} />}
+              {level2Recording ? "Dừng" : "Bắt đầu nói"}
+            </button>
+          )}
           {level2Transcript && (
             <button
               onClick={() => setLevel2Done(true)}
@@ -435,9 +410,9 @@ export default function SpeakingSection({
           )}
         </div>
 
-        {!getSpeechRecognition() && (
+        {speechSupported === false && (
           <p className="text-yellow-400 text-xs mt-3 text-center">
-            ⚠️ Trình duyệt không hỗ trợ ghi âm. Thử Chrome hoặc Edge.
+            Trình duyệt không hỗ trợ nhận diện giọng nói. Hoạt động tự luyện không được chấm điểm.
           </p>
         )}
         <p className="text-muted-foreground/60 text-xs mt-2 text-center">

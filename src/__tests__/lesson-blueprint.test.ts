@@ -5,10 +5,16 @@ import {
   REFERENCE_UNIT_ID,
 } from "@/lib/lessons/lesson-blueprint";
 import { LESSON_SECTIONS, SECTION_ORDER } from "@/lib/lessons/learning-flow";
+import { PILOT_LESSON_SPECS } from "@/lib/lessons/pilot-lessons";
+import {
+  canPublishLesson,
+  evaluateLessonQuality,
+  LESSON_QUALITY_THRESHOLD,
+} from "@/lib/lessons/lesson-quality";
 
 describe("lesson-blueprint", () => {
-  it("references unit1 as golden template", () => {
-    expect(REFERENCE_UNIT_ID).toBe("unit-1");
+  it("references the first A0 pilot lesson as the template", () => {
+    expect(REFERENCE_UNIT_ID).toBe("unit-a0-1");
   });
 
   it("maps every app section (except meta) to at least one content block", () => {
@@ -26,5 +32,52 @@ describe("lesson-blueprint", () => {
 
   it("section order in app: vocab(2) before dialogue(5)", () => {
     expect(SECTION_ORDER.indexOf(2)).toBeLessThan(SECTION_ORDER.indexOf(5));
+  });
+});
+
+describe("pilot lesson quality gate", () => {
+  it("keeps exactly six A0 specs with stable activity IDs", () => {
+    const specs = Object.values(PILOT_LESSON_SPECS);
+    expect(specs).toHaveLength(6);
+
+    for (const spec of specs) {
+      expect(spec.schemaVersion).toBe(1);
+      expect(spec.cefr).toBe("A0");
+      expect(spec.activities).toHaveLength(10);
+      expect(new Set(spec.activities.map((activity) => activity.id)).size).toBe(10);
+    }
+  });
+
+  it("passes automated QA without claiming publication", () => {
+    for (const spec of Object.values(PILOT_LESSON_SPECS)) {
+      const report = evaluateLessonQuality(spec);
+      expect(report.total).toBeGreaterThanOrEqual(LESSON_QUALITY_THRESHOLD);
+      expect(report.mandatoryFailures).toEqual([]);
+      expect(report.automatedPass).toBe(true);
+      expect(spec.qaStatus).toBe("automated_pass");
+      expect(canPublishLesson(spec, report, null)).toBe(false);
+    }
+  });
+
+  it("requires an independent review of the same version to publish", () => {
+    const spec = PILOT_LESSON_SPECS["unit-a0-1"];
+    const report = evaluateLessonQuality(spec);
+
+    expect(
+      canPublishLesson(spec, report, {
+        reviewerId: "reviewer-2",
+        reviewedVersion: spec.version,
+        reviewedAt: "2026-07-31T00:00:00.000Z",
+        approved: true,
+      }),
+    ).toBe(true);
+    expect(
+      canPublishLesson(spec, report, {
+        reviewerId: "reviewer-2",
+        reviewedVersion: spec.version - 1,
+        reviewedAt: "2026-07-31T00:00:00.000Z",
+        approved: true,
+      }),
+    ).toBe(false);
   });
 });

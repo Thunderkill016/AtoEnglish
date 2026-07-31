@@ -12,10 +12,11 @@ export interface SpeechRecognitionEventMock {
 }
 
 /**
- * Browser-independent fallback for SpeechRecognition.
- * Simulates speech recognition in browsers where the Web Speech API is not supported.
+ * Honest unavailable adapter for browsers without the Web Speech API.
+ * It never fabricates a transcript or a score.
  */
 export class SpeechRecognitionFallback {
+  /** @deprecated Kept for compatibility. This value is never returned. */
   static activeTranscript = "";
 
   continuous = false;
@@ -28,14 +29,12 @@ export class SpeechRecognitionFallback {
   onend: ((event: Event) => void) | null = null;
   onerror: ((event: Event) => void) | null = null;
 
-  private timeoutId: NodeJS.Timeout | null = null;
   private isListening = false;
 
   start() {
     if (this.isListening) return;
     this.isListening = true;
 
-    // Asynchronously call onstart to match browser behavior
     setTimeout(() => {
       if (this.isListening && this.onstart) {
         this.onstart(new Event("start"));
@@ -47,38 +46,20 @@ export class SpeechRecognitionFallback {
     if (!this.isListening) return;
     this.isListening = false;
 
-    this.timeoutId = setTimeout(() => {
-      const transcript =
-        this.activeTranscript ||
-        SpeechRecognitionFallback.activeTranscript ||
-        "I would like to describe my day today. It was a very productive and interesting day...";
-
-      if (this.onresult) {
-        // Construct standard structure: event.results[i][0].transcript with isFinal: true
-        const item = [{ transcript }];
-        const resultList = [Object.assign(item, { isFinal: true })];
-        const event: SpeechRecognitionEventMock = {
-          results: Object.assign(resultList, { length: resultList.length }),
-          resultIndex: 0,
-        };
-        this.onresult(event);
+    setTimeout(() => {
+      if (this.onerror) {
+        this.onerror(Object.assign(new Event("error"), { error: "not-supported" }));
       }
-
       if (this.onend) {
         this.onend(new Event("end"));
       }
-    }, 1000);
+    }, 0);
   }
 
   abort() {
     this.isListening = false;
-    if (this.timeoutId) {
-      clearTimeout(this.timeoutId);
-      this.timeoutId = null;
-    }
     if (this.onend) {
       this.onend(new Event("end"));
     }
   }
 }
-

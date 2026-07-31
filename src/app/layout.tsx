@@ -100,6 +100,7 @@ export default function RootLayout({
 }>) {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseOrigin = supabaseUrl ? new URL(supabaseUrl).origin : null;
+  const isVercelDeployment = process.env.VERCEL === "1";
 
   return (
     <html lang="vi" suppressHydrationWarning className={cn("font-sans", sansFont.variable)}>
@@ -131,8 +132,8 @@ export default function RootLayout({
         >
           {children}
           <Toaster richColors position="top-center" closeButton />
-          <SpeedInsights />
-          <Analytics />
+          {isVercelDeployment && <SpeedInsights />}
+          {isVercelDeployment && <Analytics />}
         </ThemeProvider>
       </body>
     </html>
