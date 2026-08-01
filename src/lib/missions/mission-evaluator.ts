@@ -31,7 +31,7 @@ export interface MissionEvaluationResult {
     transcriptAvailable: boolean;
     acousticEvidenceAvailable: false;
     evaluator: "deterministic-intent-match";
-    evaluatorVersion: "1.0.0";
+    evaluatorVersion: "1.1.0";
   };
 }
 
@@ -41,7 +41,7 @@ function normalizeTranscript(value: string) {
     .toLowerCase()
     .replace(/[’‘]/g, "'")
     .replace(/\bi'm\b/g, "i am")
-    .replace(/\bi’ve\b/g, "i have")
+    .replace(/\bi've\b/g, "i have")
     .replace(/\bdidn't\b/g, "did not")
     .replace(/\bwhat's\b/g, "what is")
     .replace(/[.,!?;:"]/g, " ")
@@ -123,7 +123,7 @@ export function evaluateMissionTranscript(
         transcriptAvailable: false,
         acousticEvidenceAvailable: false,
         evaluator: "deterministic-intent-match",
-        evaluatorVersion: "1.0.0",
+        evaluatorVersion: "1.1.0",
       },
     };
   }
@@ -162,9 +162,8 @@ export function evaluateMissionTranscript(
     completedIntentIds: completedIntents.map((intent) => intent.id),
     missingIntentIds: missingRequired.map((intent) => intent.id),
     corrections,
-    retryRequired:
-      mission.retry.requiredAfterFeedback &&
-      (!taskCompleted || corrections.length > 0),
+    // Retrieval practice happens immediately even after a perfect first attempt.
+    retryRequired: mission.retry.requiredAfterFeedback,
     retryInstructionVi:
       corrections.length > 0
         ? `Hãy nói lại, tập trung vào: ${corrections
@@ -182,7 +181,7 @@ export function evaluateMissionTranscript(
       transcriptAvailable: true,
       acousticEvidenceAvailable: false,
       evaluator: "deterministic-intent-match",
-      evaluatorVersion: "1.0.0",
+      evaluatorVersion: "1.1.0",
     },
   };
 }
