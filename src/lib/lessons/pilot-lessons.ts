@@ -65,8 +65,40 @@ function toPilotSpec(
   unit: UnitData,
   prerequisites: string[],
 ): LessonSpecV1 {
-  const activities = buildActivities(unit);
   const mission = getMissionForLesson(unit.unitId) ?? undefined;
+  const missionActivityId = mission
+    ? `${unit.unitId}:mission:${mission.id}`
+    : null;
+  const activities: LessonActivity[] = [
+    ...buildActivities(unit),
+    ...(mission && missionActivityId
+      ? [
+          {
+            id: missionActivityId,
+            phase: "output" as const,
+            skill: "speaking" as const,
+            promptVi: mission.canDoVi,
+            input: {
+              missionId: mission.id,
+              requiredIntentIds: mission.intents
+                .filter((intent) => intent.required)
+                .map((intent) => intent.id),
+            },
+            feedback: {
+              correctVi:
+                "Bạn đã thể hiện đủ mục tiêu. Hãy thực hiện full-task retry.",
+              incorrectVi:
+                "Xem tối đa hai điểm sửa và thực hiện lại toàn bộ nhiệm vụ.",
+              unavailableVi:
+                "Không có transcript để kiểm tra nội dung; không suy đoán điểm phát âm.",
+            },
+            srsTargets: mission.targetChunks.map(
+              (chunk) => `${unit.unitId}:mission-chunk:${chunk.id}`,
+            ),
+          },
+        ]
+      : []),
+  ];
 
   return {
     ...unit,
@@ -89,9 +121,7 @@ function toPilotSpec(
     prerequisites,
     activities,
     assessment: {
-      activityIds: [
-        mission ? `${unit.unitId}:mission:${mission.id}` : `${unit.unitId}:section:8`,
-      ],
+      activityIds: [missionActivityId ?? `${unit.unitId}:section:8`],
       passThreshold: mission
         ? Math.round(mission.evaluation.requiredIntentPassRatio * 100)
         : 70,
@@ -138,7 +168,9 @@ const PILOT_SOURCE_UNITS = [
   unitA06,
 ];
 
-export const PILOT_LESSON_ORDER = PILOT_SOURCE_UNITS.map((unit) => unit.unitId);
+export const PILOT_LESSON_ORDER = PILOT_SOURCE_UNITS.map(
+  (unit) => unit.unitId,
+);
 
 export const PILOT_LESSON_SPECS = Object.fromEntries(
   PILOT_SOURCE_UNITS.map((unit, index) => [
