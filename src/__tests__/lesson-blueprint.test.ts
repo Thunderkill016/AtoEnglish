@@ -41,16 +41,19 @@ describe("lesson-blueprint", () => {
 });
 
 describe("pilot lesson quality gate", () => {
-  it("keeps exactly six A0 specs with stable activity IDs", () => {
+  it("keeps exactly six A0 specs with stable section and mission activity IDs", () => {
     const specs = Object.values(PILOT_LESSON_SPECS);
     expect(specs).toHaveLength(6);
 
     for (const spec of specs) {
       expect(spec.schemaVersion).toBe(1);
       expect(spec.cefr).toBe("A0");
-      expect(spec.activities).toHaveLength(10);
+      expect(spec.activities).toHaveLength(11);
       expect(new Set(spec.activities.map((activity) => activity.id)).size).toBe(
-        10,
+        11,
+      );
+      expect(spec.activities.at(-1)?.id).toBe(
+        `${spec.id}:mission:${spec.mission?.id}`,
       );
     }
   });
