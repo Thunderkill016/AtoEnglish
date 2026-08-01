@@ -56,7 +56,7 @@ export default async function LearnPage() {
     user
       ? supabase
           .from("learning_attempts")
-          .select("activity_id, score, created_at")
+          .select("activity_id, session_id, score, created_at")
           .eq("user_id", user.id)
           .eq("lesson_id", GOLD_MISSION_01.lessonId)
           .like(
