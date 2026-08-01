@@ -55,7 +55,7 @@ jobs:
               if index < 0:
                   raise SystemExit('Could not locate BASE_UNITS closing bracket')
               source = source[: index + len(marker)] + suffix + source[index + len(marker):]
-          units_path.write_text(source)
+          units_path.write_text(source.rstrip() + '\n')
 
           Path('src/__tests__/unit-metadata-consistency.test.ts').write_text('''import { describe, expect, it } from "vitest";\n\nimport { UNITS } from "@/lib/constants/units";\nimport { PILOT_LESSON_SPECS } from "@/lib/lessons/pilot-lessons";\n\ndescribe("canonical unit metadata", () => {\n  it("keeps every pilot surface aligned with the lesson specification", () => {\n    for (const [unitId, lesson] of Object.entries(PILOT_LESSON_SPECS)) {\n      const metadata = UNITS.find((unit) => unit.id === unitId);\n\n      expect(metadata, `${unitId} must exist in UNITS`).toBeDefined();\n      expect(metadata).toMatchObject({\n        title: lesson.title,\n        description: lesson.description,\n        estimatedTime: lesson.estimatedTime,\n      });\n      expect(metadata?.tags[0]).toBe("Nhiệm vụ giao tiếp");\n      expect(metadata?.tags.slice(1)).toEqual(\n        lesson.mission?.targetChunks.slice(0, 2).map((chunk) => chunk.english),\n      );\n    }\n  });\n\n  it("preserves metadata for lessons outside the pilot", () => {\n    expect(UNITS.find((unit) => unit.id === "unit-a0-7")).toMatchObject({\n      title: "Unit A0-7: Thời Gian, Ngày & Tháng",\n      estimatedTime: 40,\n    });\n  });\n});\n''')
 
