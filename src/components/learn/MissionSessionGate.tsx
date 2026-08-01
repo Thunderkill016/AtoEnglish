@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState, useSyncExternalStore } from "react";
 import { useRouter } from "next/navigation";
 import {
   ArrowRight,
@@ -34,12 +34,38 @@ interface MissionSessionGateProps {
 }
 
 const HABIT_CUE_STORAGE_KEY = "atoenglish:habit-cue";
+const HABIT_CUE_CHANGE_EVENT = "atoenglish:habit-cue-change";
 
 const HABIT_CUES = [
   { id: "after-breakfast", label: "Sau bữa sáng" },
   { id: "lunch-break", label: "Giờ nghỉ trưa" },
   { id: "evening", label: "Buổi tối" },
 ] as const;
+
+function subscribeToHabitCue(onStoreChange: () => void) {
+  if (typeof window === "undefined") return () => {};
+
+  const handleChange = () => onStoreChange();
+  window.addEventListener("storage", handleChange);
+  window.addEventListener(HABIT_CUE_CHANGE_EVENT, handleChange);
+
+  return () => {
+    window.removeEventListener("storage", handleChange);
+    window.removeEventListener(HABIT_CUE_CHANGE_EVENT, handleChange);
+  };
+}
+
+function getHabitCueSnapshot() {
+  if (typeof window === "undefined") return null;
+
+  try {
+    return window.localStorage.getItem(HABIT_CUE_STORAGE_KEY);
+  } catch {
+    return null;
+  }
+}
+
+const getServerHabitCueSnapshot = () => null;
 
 function speakText(text: string) {
   if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
@@ -58,7 +84,11 @@ export default function MissionSessionGate({
   const router = useRouter();
   const mission = lesson.mission;
   const [mode, setMode] = useState<LearningSessionMode | null>(null);
-  const [habitCue, setHabitCue] = useState<string | null>(null);
+  const habitCue = useSyncExternalStore(
+    subscribeToHabitCue,
+    getHabitCueSnapshot,
+    getServerHabitCueSnapshot,
+  );
   const [quickText, setQuickText] = useState("");
   const [quickError, setQuickError] = useState<string | null>(null);
   const [quickEvaluation, setQuickEvaluation] =
@@ -87,18 +117,10 @@ export default function MissionSessionGate({
     busyIntentIds.length > 0 &&
     completedBusyIntentIds.length === busyIntentIds.length;
 
-  useEffect(() => {
-    try {
-      setHabitCue(window.localStorage.getItem(HABIT_CUE_STORAGE_KEY));
-    } catch {
-      setHabitCue(null);
-    }
-  }, []);
-
   const selectHabitCue = (cueId: string) => {
-    setHabitCue(cueId);
     try {
       window.localStorage.setItem(HABIT_CUE_STORAGE_KEY, cueId);
+      window.dispatchEvent(new Event(HABIT_CUE_CHANGE_EVENT));
     } catch {
       // The preference is optional; learning must continue without storage.
     }
