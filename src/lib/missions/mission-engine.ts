@@ -62,20 +62,22 @@ export function transitionMissionSession(
 
     case "independent_roleplay": {
       if (event.type === "SUBMIT_TURN") {
-        const transcripts = [...state.transcripts, event.transcript.trim()];
-        const nextTurnIndex = state.currentTurnIndex + 1;
         return {
           ...state,
-          transcripts,
-          currentTurnIndex: nextTurnIndex,
-          attempts: state.attempts + 1,
+          transcripts: [...state.transcripts, event.transcript.trim()],
+          currentTurnIndex: state.currentTurnIndex + 1,
         };
       }
       if (
         event.type === "EVALUATE" &&
         state.currentTurnIndex >= mission.roleplayTurns.length
       ) {
-        return { ...state, stage: "feedback", evaluation: event.result };
+        return {
+          ...state,
+          stage: "feedback",
+          attempts: state.attempts + 1,
+          evaluation: event.result,
+        };
       }
       return state;
     }
@@ -92,13 +94,13 @@ export function transitionMissionSession(
         return {
           ...state,
           transcripts: [...state.transcripts, event.transcript.trim()],
-          attempts: state.attempts + 1,
         };
       }
       if (event.type === "RETRY_EVALUATED") {
         return {
           ...state,
           stage: "transfer",
+          attempts: state.attempts + 1,
           evaluation: event.result,
         };
       }
