@@ -1,3 +1,0 @@
-outcome=success
-commit=c9d806e5e5c3baa904d10c41123a1cc261c3db17
-workflow_run=30709363460
