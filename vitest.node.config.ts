@@ -13,6 +13,7 @@ export default defineProject({
       "src/__tests__/curriculum-quality.test.ts",
       "src/__tests__/gold-day-one.test.ts",
       "src/__tests__/learning-attempt-migration.test.ts",
+      "src/__tests__/session-budget.test.ts",
       "src/__tests__/unit-metadata-consistency.test.ts",
       "src/__tests__/lesson-content-standard.test.ts",
     ],
