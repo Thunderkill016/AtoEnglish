@@ -1,0 +1,45 @@
+name: Gold Day 1 E2E
+
+on:
+  push:
+    branches: [agent/gold-day-one]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  guest-journey:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      CI: true
+      HUSKY: 0
+      NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+      PLAYWRIGHT_BASE_URL: http://127.0.0.1:3000
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci --no-audit --prefer-offline
+      - run: npx playwright install --with-deps chromium
+
+      - name: Start application
+        run: |
+          npm run dev -- --hostname 127.0.0.1 > /tmp/gold-day-one-dev.log 2>&1 &
+          echo $! > /tmp/gold-day-one-dev.pid
+          npx wait-on http://127.0.0.1:3000/learn/unit-a0-1 --timeout 120000
+
+      - name: Run guest Gold Day 1 journey
+        run: npx playwright test e2e/gold-day-one.spec.ts --project=chromium
+
+      - name: Show server log on failure
+        if: failure()
+        run: cat /tmp/gold-day-one-dev.log
