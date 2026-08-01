@@ -1,22 +1,24 @@
 import { notFound, redirect } from "next/navigation";
 import type { Metadata } from "next";
 
+import MissionLessonTemplate from "@/components/learn/MissionLessonTemplate";
 import UnitTemplate from "@/components/learn/UnitTemplate";
-import type { UnitData } from "@/components/learn/UnitTemplate";
+import type { LessonSpecV1, UnitData } from "@/lib/lessons/lesson-spec";
+import type { MissionSpecV1 } from "@/lib/missions/mission-spec";
 import { PILOT_LESSON_SPECS } from "@/lib/lessons/pilot-lessons";
 // ── Legacy A0 units not yet admitted to the pilot ──────────────────────────
 import { unitA07 } from "@/lib/data/units/unitA07";
 import { unitA08 } from "@/lib/data/units/unitA08";
 // ── A1 — 12 units ───────────────────────────────────────────────────────────
-import { unit1 }  from "@/lib/data/units/unit1";
-import { unit2 }  from "@/lib/data/units/unit2";
-import { unit3 }  from "@/lib/data/units/unit3";
-import { unit4 }  from "@/lib/data/units/unit4";
-import { unit5 }  from "@/lib/data/units/unit5";
-import { unit6 }  from "@/lib/data/units/unit6";
-import { unit7 }  from "@/lib/data/units/unit7";
-import { unit8 }  from "@/lib/data/units/unit8";
-import { unit9 }  from "@/lib/data/units/unit9";
+import { unit1 } from "@/lib/data/units/unit1";
+import { unit2 } from "@/lib/data/units/unit2";
+import { unit3 } from "@/lib/data/units/unit3";
+import { unit4 } from "@/lib/data/units/unit4";
+import { unit5 } from "@/lib/data/units/unit5";
+import { unit6 } from "@/lib/data/units/unit6";
+import { unit7 } from "@/lib/data/units/unit7";
+import { unit8 } from "@/lib/data/units/unit8";
+import { unit9 } from "@/lib/data/units/unit9";
 import { unit10 } from "@/lib/data/units/unit10";
 import { unit11 } from "@/lib/data/units/unit11";
 import { unit12 } from "@/lib/data/units/unit12";
@@ -56,40 +58,58 @@ import { unit42 } from "@/lib/data/units/unit42";
 import { UNITS } from "@/lib/constants/units";
 import { createClient } from "@/lib/supabase/server";
 
-// ─── Unit registry ───────────────────────────────────────────────────────────
-// Single source of truth: all A0 + A1 + A2 + B1 + B2 units registered here.
-// Add new units here to make them available at /learn/[unitSlug].
-const UNIT_DATA_MAP: Record<string, { data: UnitData; next: string }> = {
-  // A0 Foundation — 8 units (pre-CEFR)
-  "unit-a0-1": { data: PILOT_LESSON_SPECS["unit-a0-1"], next: "/learn/unit-a0-2" },
-  "unit-a0-2": { data: PILOT_LESSON_SPECS["unit-a0-2"], next: "/learn/unit-a0-3" },
-  "unit-a0-3": { data: PILOT_LESSON_SPECS["unit-a0-3"], next: "/learn/unit-a0-4" },
-  "unit-a0-4": { data: PILOT_LESSON_SPECS["unit-a0-4"], next: "/learn/unit-a0-5" },
-  "unit-a0-5": { data: PILOT_LESSON_SPECS["unit-a0-5"], next: "/learn/unit-a0-6" },
+type RegisteredLesson = UnitData | LessonSpecV1;
+type MissionLesson = LessonSpecV1 & { mission: MissionSpecV1 };
+
+function isMissionLesson(lesson: RegisteredLesson): lesson is MissionLesson {
+  return "schemaVersion" in lesson && lesson.mission !== undefined;
+}
+
+const UNIT_DATA_MAP: Record<
+  string,
+  { data: RegisteredLesson; next: string }
+> = {
+  "unit-a0-1": {
+    data: PILOT_LESSON_SPECS["unit-a0-1"],
+    next: "/checkpoint/trial",
+  },
+  "unit-a0-2": {
+    data: PILOT_LESSON_SPECS["unit-a0-2"],
+    next: "/learn/unit-a0-3",
+  },
+  "unit-a0-3": {
+    data: PILOT_LESSON_SPECS["unit-a0-3"],
+    next: "/learn/unit-a0-4",
+  },
+  "unit-a0-4": {
+    data: PILOT_LESSON_SPECS["unit-a0-4"],
+    next: "/learn/unit-a0-5",
+  },
+  "unit-a0-5": {
+    data: PILOT_LESSON_SPECS["unit-a0-5"],
+    next: "/learn/unit-a0-6",
+  },
   "unit-a0-6": { data: PILOT_LESSON_SPECS["unit-a0-6"], next: "/learn" },
   "unit-a0-7": { data: unitA07, next: "/learn/unit-a0-8" },
-  "unit-a0-8": { data: unitA08, next: "/learn/unit-1" }, // A0 complete → start A1
-  // A1 — 12 units
-  "unit-1":  { data: unit1,  next: "/learn/unit-2" },
-  "unit-2":  { data: unit2,  next: "/learn/unit-3" },
-  "unit-3":  { data: unit3,  next: "/learn/unit-4" },
-  "unit-4":  { data: unit4,  next: "/learn/unit-5" },
-  "unit-5":  { data: unit5,  next: "/learn/unit-6" },
-  "unit-6":  { data: unit6,  next: "/learn/unit-7" },
-  "unit-7":  { data: unit7,  next: "/learn/unit-8" },
-  "unit-8":  { data: unit8,  next: "/learn/unit-9" },
-  "unit-9":  { data: unit9,  next: "/learn/unit-10" },
+  "unit-a0-8": { data: unitA08, next: "/learn/unit-1" },
+  "unit-1": { data: unit1, next: "/learn/unit-2" },
+  "unit-2": { data: unit2, next: "/learn/unit-3" },
+  "unit-3": { data: unit3, next: "/learn/unit-4" },
+  "unit-4": { data: unit4, next: "/learn/unit-5" },
+  "unit-5": { data: unit5, next: "/learn/unit-6" },
+  "unit-6": { data: unit6, next: "/learn/unit-7" },
+  "unit-7": { data: unit7, next: "/learn/unit-8" },
+  "unit-8": { data: unit8, next: "/learn/unit-9" },
+  "unit-9": { data: unit9, next: "/learn/unit-10" },
   "unit-10": { data: unit10, next: "/learn/unit-11" },
   "unit-11": { data: unit11, next: "/learn/unit-12" },
-  "unit-12": { data: unit12, next: "/learn/unit-13" }, // A1 complete → start A2
-  // A2 — 6 units
+  "unit-12": { data: unit12, next: "/learn/unit-13" },
   "unit-13": { data: unit13, next: "/learn/unit-14" },
   "unit-14": { data: unit14, next: "/learn/unit-15" },
   "unit-15": { data: unit15, next: "/learn/unit-16" },
   "unit-16": { data: unit16, next: "/learn/unit-17" },
   "unit-17": { data: unit17, next: "/learn/unit-18" },
-  "unit-18": { data: unit18, next: "/learn/unit-19" },  // A2 complete → start B1
-  // B1 — 14 units
+  "unit-18": { data: unit18, next: "/learn/unit-19" },
   "unit-19": { data: unit19, next: "/learn/unit-20" },
   "unit-20": { data: unit20, next: "/learn/unit-21" },
   "unit-21": { data: unit21, next: "/learn/unit-22" },
@@ -103,8 +123,7 @@ const UNIT_DATA_MAP: Record<string, { data: UnitData; next: string }> = {
   "unit-29": { data: unit29, next: "/learn/unit-30" },
   "unit-30": { data: unit30, next: "/learn/unit-31" },
   "unit-31": { data: unit31, next: "/learn/unit-32" },
-  "unit-32": { data: unit32, next: "/learn/unit-33" },  // B1 complete → start B2
-  // B2 — 10 units
+  "unit-32": { data: unit32, next: "/learn/unit-33" },
   "unit-33": { data: unit33, next: "/learn/unit-34" },
   "unit-34": { data: unit34, next: "/learn/unit-35" },
   "unit-35": { data: unit35, next: "/learn/unit-36" },
@@ -114,42 +133,38 @@ const UNIT_DATA_MAP: Record<string, { data: UnitData; next: string }> = {
   "unit-39": { data: unit39, next: "/learn/unit-40" },
   "unit-40": { data: unit40, next: "/learn/unit-41" },
   "unit-41": { data: unit41, next: "/learn/unit-42" },
-  "unit-42": { data: unit42, next: "/roadmap" },        // B2 complete → back to roadmap
+  "unit-42": { data: unit42, next: "/roadmap" },
 };
 
-// Pre-build all known unit slugs at build time (SSG)
 export function generateStaticParams() {
   return Object.keys(UNIT_DATA_MAP).map((slug) => ({ unitSlug: slug }));
 }
 
-// Per-unit SEO metadata
 export async function generateMetadata({
   params,
 }: {
   params: Promise<{ unitSlug: string }>;
 }): Promise<Metadata> {
   const { unitSlug } = await params;
-  const meta = UNITS.find((u) => u.id === unitSlug);
-  if (!meta) return { title: "Bài học không tìm thấy" };
+  const entry = UNIT_DATA_MAP[unitSlug];
+  const meta = UNITS.find((unit) => unit.id === unitSlug);
+  if (!entry || !meta) return { title: "Bài học không tìm thấy" };
 
   return {
-    title: meta.title,
-    description: meta.description,
-    robots: { index: false }, // Protected page — no public indexing
+    title: entry.data.title,
+    description: entry.data.description,
+    robots: { index: false },
   };
 }
 
 export default async function UnitPage({
   params,
-  searchParams,
 }: {
   params: Promise<{ unitSlug: string }>;
   searchParams: Promise<{ mini?: string }>;
 }) {
   const { unitSlug } = await params;
-  const { mini } = await searchParams;
   const entry = UNIT_DATA_MAP[unitSlug];
-
   if (!entry) notFound();
 
   const supabase = await createClient();
@@ -165,10 +180,11 @@ export default async function UnitPage({
     ? "/login?mode=login&next=%2Fcheckpoint%2Ftrial"
     : entry.next;
 
-  return (
-    <UnitTemplate
-      unit={entry.data}
-      nextRoute={nextRoute}
-    />
-  );
+  if (isMissionLesson(entry.data)) {
+    return (
+      <MissionLessonTemplate lesson={entry.data} nextRoute={nextRoute} />
+    );
+  }
+
+  return <UnitTemplate unit={entry.data} nextRoute={nextRoute} />;
 }
