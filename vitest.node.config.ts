@@ -11,6 +11,7 @@ export default defineProject({
       "src/lib/dashboard/word-of-day.test.ts",
       "src/__tests__/architecture-boundaries.test.ts",
       "src/__tests__/curriculum-quality.test.ts",
+      "src/__tests__/gold-day-one.test.ts",
       "src/__tests__/learning-attempt-migration.test.ts",
       "src/__tests__/unit-metadata-consistency.test.ts",
       "src/__tests__/lesson-content-standard.test.ts",
