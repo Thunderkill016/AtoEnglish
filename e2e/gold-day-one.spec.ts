@@ -8,21 +8,11 @@ function protectedPreviewPath(path: string) {
   return `${path}${separator}_vercel_share=${encodeURIComponent(shareToken)}`;
 }
 
-test.describe("Gold Day 1 guest journey", () => {
-  test.beforeEach(async ({ page }) => {
-    await page.addInitScript(() => {
-      Object.defineProperty(window, "SpeechRecognition", {
-        configurable: true,
-        value: undefined,
-      });
-      Object.defineProperty(window, "webkitSpeechRecognition", {
-        configurable: true,
-        value: undefined,
-      });
-    });
-  });
+const completeResponse =
+  "Hi, I'm Minh. I work as a developer. What's your name? Sorry, I didn't catch that. Could you say that again?";
 
-  test("finishes mission, mandatory retry and reaches checkpoint login", async ({
+test.describe("Autonomous mastery tutor guest journey", () => {
+  test("diagnoses, teaches only gaps and requires cold transfer", async ({
     page,
   }) => {
     await page.goto(protectedPreviewPath("/learn/unit-a0-1"));
@@ -30,58 +20,108 @@ test.describe("Gold Day 1 guest journey", () => {
     await expect(
       page.getByRole("heading", { name: "Gặp đồng nghiệp mới" }),
     ).toBeVisible();
-    await page.getByRole("button", { name: /Bắt đầu nhiệm vụ/ }).click();
-
-    await expect(
-      page.getByRole("heading", { name: "6 cụm dùng ngay" }),
-    ).toBeVisible();
     await page
-      .getByRole("button", { name: /Thực hành có hướng dẫn/ })
+      .getByPlaceholder("Tự viết bằng những gì bạn đang biết...")
+      .fill("Hi, I'm Minh. I work developer.");
+    await page
+      .getByRole("button", {
+        name: "Chẩn đoán phần tôi thực sự cần học",
+      })
       .click();
 
     await expect(
-      page.getByRole("heading", { name: "Xem 4 lượt hội thoại" }),
+      page.getByRole("heading", { name: "Chỉ học đúng phần bạn còn thiếu" }),
     ).toBeVisible();
+    await expect(page.getByText("Đã tự làm được")).toBeVisible();
+    await page.getByRole("button", { name: "Học đúng phần còn thiếu" }).click();
+
+    await expect(page.getByRole("heading", { name: /Chỉ 3 ý cần học/ })).toBeVisible();
     await page
-      .getByRole("button", { name: /Bỏ câu mẫu, bắt đầu roleplay/ })
+      .getByRole("button", { name: "Ẩn mẫu và bắt đầu tự nhớ" })
       .click();
 
-    const replies = [
-      "Hi, I'm Minh.",
+    const retrievalAnswers = [
       "I work as a developer.",
       "What's your name?",
       "Could you say that again?",
     ];
 
-    for (const reply of replies) {
+    for (const answer of retrievalAnswers) {
+      await page.getByPlaceholder("Tự viết câu trả lời...").fill(answer);
       await page
-        .getByPlaceholder("Nhập lại câu bạn vừa tự nói...")
-        .fill(reply);
-      await page.getByRole("button", { name: /Gửi câu vừa nói/ }).click();
+        .getByRole("button", { name: "Kiểm tra khả năng tự nhớ" })
+        .click();
     }
 
-    await expect(page.getByText("100% mục tiêu giao tiếp")).toBeVisible();
-    await expect(page.getByText("Đã thể hiện 4/4 mục tiêu bắt buộc.")).toBeVisible();
-    await page
-      .getByRole("button", { name: /Nói lại toàn bộ nhiệm vụ/ })
-      .click();
-
-    await page
-      .getByPlaceholder("Tự thực hiện lại toàn bộ nhiệm vụ rồi nhập lại...")
-      .fill(
-        "Hi, I'm Minh. I work as a developer. What's your name? Sorry, I didn't catch that. Could you say that again?",
-      );
-    await page.getByRole("button", { name: /Gửi câu vừa nói/ }).click();
-
     await expect(
-      page.getByRole("heading", { name: "Hoàn thành vòng luyện tập" }),
+      page.getByRole("heading", { name: "Không còn câu mẫu" }),
     ).toBeVisible();
     await page
-      .getByRole("button", { name: /Làm checkpoint xác nhận/ })
+      .getByPlaceholder("Tự hoàn thành toàn bộ nhiệm vụ...")
+      .fill(completeResponse);
+    await page
+      .getByRole("button", { name: "Kiểm tra và yêu cầu tôi tự sửa" })
+      .click();
+
+    await expect(
+      page.getByRole("heading", {
+        name: "Tình huống chưa được luyện nguyên mẫu",
+      }),
+    ).toBeVisible();
+    await page
+      .getByPlaceholder("Tự xử lý tình huống mới...")
+      .fill(completeResponse);
+    await page
+      .getByRole("button", { name: "Chấm khả năng chuyển giao" })
+      .click();
+
+    await expect(
+      page.getByRole("heading", {
+        name: "Bạn đã dùng được kỹ năng trong tình huống mới",
+      }),
+    ).toBeVisible();
+    await page
+      .getByRole("button", { name: "Lưu bằng chứng và đến checkpoint" })
       .click();
 
     await expect(page).toHaveURL(
       /\/login\?mode=login&next=%2Flearn%2Funit-a0-1%2Fcheckpoint/,
     );
+  });
+
+  test("does not pass a cold task that misses required intents", async ({
+    page,
+  }) => {
+    await page.goto(protectedPreviewPath("/learn/unit-a0-1"));
+    await page
+      .getByPlaceholder("Tự viết bằng những gì bạn đang biết...")
+      .fill(completeResponse);
+    await page
+      .getByRole("button", {
+        name: "Chẩn đoán phần tôi thực sự cần học",
+      })
+      .click();
+    await page.getByRole("button", { name: "Làm tình huống mới ngay" }).click();
+
+    await page
+      .getByPlaceholder("Tự xử lý tình huống mới...")
+      .fill("Hi, I'm Minh. I work as a developer.");
+    await page
+      .getByRole("button", { name: "Chấm khả năng chuyển giao" })
+      .click();
+
+    await expect(
+      page.getByRole("heading", {
+        name: "Chưa đạt chuyển giao — hệ thống không cho qua giả",
+      }),
+    ).toBeVisible();
+    await expect(
+      page.getByRole("button", {
+        name: "Chỉ học lại phần cold task còn thiếu",
+      }),
+    ).toBeVisible();
+    await expect(
+      page.getByRole("button", { name: "Lưu bằng chứng và đến checkpoint" }),
+    ).toHaveCount(0);
   });
 });
