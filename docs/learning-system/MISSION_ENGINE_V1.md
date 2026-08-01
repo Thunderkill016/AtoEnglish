@@ -189,3 +189,20 @@ The following are not part of v1:
 - Importing LibreLingo, Oppia, H5P, or another LMS.
 
 They may be evaluated after Gold Mission 01 produces real pilot data. Any AI evaluator must be added behind a structured schema and a prompt regression suite; it must not replace deterministic task evidence without human calibration.
+
+## 13. Verification status
+
+Verified on a Vercel production build of the implementation code:
+
+- Next.js production compilation.
+- TypeScript compilation.
+- Route generation, including `/learn/[unitSlug]/transfer/[variantId]`.
+- HTTP 200 server render for `/learn/unit-a0-1` with the mission title, scenario, can-do outcome, and guest entry.
+
+Not verified in the current execution environment:
+
+- The complete Vitest/content-standard suite after the latest changes.
+- Interactive click and microphone behavior, because the execution sandbox blocks direct browser navigation to protected Vercel preview domains.
+- Hosted Supabase migration application.
+- Authenticated transfer behavior against production-like learner data.
+- Independent pedagogical review or Vietnamese learner pilot outcomes.
