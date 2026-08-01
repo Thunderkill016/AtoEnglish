@@ -13,13 +13,13 @@ concurrency:
   cancel-in-progress: true
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   quality:
     name: Lint, types, and tests
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 20
     env:
       CI: true
       HUSKY: 0
@@ -27,48 +27,6 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.ref || github.ref_name }}
-          fetch-depth: 0
-
-      - name: Align canonical pilot metadata
-        if: github.event_name == 'pull_request' && github.event.pull_request.head.ref == 'agent/align-pilot-unit-metadata'
-        shell: bash
-        run: |
-          python <<'PY'
-          from pathlib import Path
-
-          units_path = Path('src/lib/constants/units.ts')
-          source = units_path.read_text()
-          import_line = 'import { getMissionForLesson } from "@/lib/missions/mission-catalog";\n\n'
-          if import_line not in source:
-              source = import_line + source
-          source = source.replace(
-              'export const UNITS: UnitMetadata[] = [',
-              'const BASE_UNITS: UnitMetadata[] = [',
-              1,
-          )
-          suffix = '''\n\n/**\n * Canonical unit catalog used by dashboard, roadmap and server actions.\n * Pilot mission metadata overrides legacy curriculum labels so every product\n * surface describes the same lesson the learner will actually open.\n */\nexport const UNITS: UnitMetadata[] = BASE_UNITS.map((unit) => {\n  const mission = getMissionForLesson(unit.id);\n  if (!mission) return unit;\n\n  return {\n    ...unit,\n    title: `Bài ${unit.id.replace("unit-", "").toUpperCase()}: ${mission.titleVi}`,\n    description: mission.canDoVi,\n    estimatedTime: mission.estimatedMinutes,\n    tags: [\n      "Nhiệm vụ giao tiếp",\n      ...mission.targetChunks.slice(0, 2).map((chunk) => chunk.english),\n    ],\n  };\n});\n'''
-          if 'export const UNITS: UnitMetadata[] = BASE_UNITS.map' not in source:
-              marker = '\n];'
-              index = source.rfind(marker)
-              if index < 0:
-                  raise SystemExit('Could not locate BASE_UNITS closing bracket')
-              source = source[: index + len(marker)] + suffix + source[index + len(marker):]
-          units_path.write_text(source.rstrip() + '\n')
-
-          Path('src/__tests__/unit-metadata-consistency.test.ts').write_text('''import { describe, expect, it } from "vitest";\n\nimport { UNITS } from "@/lib/constants/units";\nimport { PILOT_LESSON_SPECS } from "@/lib/lessons/pilot-lessons";\n\ndescribe("canonical unit metadata", () => {\n  it("keeps every pilot surface aligned with the lesson specification", () => {\n    for (const [unitId, lesson] of Object.entries(PILOT_LESSON_SPECS)) {\n      const metadata = UNITS.find((unit) => unit.id === unitId);\n\n      expect(metadata, `${unitId} must exist in UNITS`).toBeDefined();\n      expect(metadata).toMatchObject({\n        title: lesson.title,\n        description: lesson.description,\n        estimatedTime: lesson.estimatedTime,\n      });\n      expect(metadata?.tags[0]).toBe("Nhiệm vụ giao tiếp");\n      expect(metadata?.tags.slice(1)).toEqual(\n        lesson.mission?.targetChunks.slice(0, 2).map((chunk) => chunk.english),\n      );\n    }\n  });\n\n  it("preserves metadata for lessons outside the pilot", () => {\n    expect(UNITS.find((unit) => unit.id === "unit-a0-7")).toMatchObject({\n      title: "Unit A0-7: Thời Gian, Ngày & Tháng",\n      estimatedTime: 40,\n    });\n  });\n});\n''')
-
-          config_path = Path('vitest.node.config.ts')
-          config = config_path.read_text()
-          test_entry = '      "src/__tests__/unit-metadata-consistency.test.ts",\n'
-          if test_entry not in config:
-              anchor = '      "src/__tests__/learning-attempt-migration.test.ts",\n'
-              if anchor not in config:
-                  raise SystemExit('Could not locate Vitest include anchor')
-              config = config.replace(anchor, anchor + test_entry, 1)
-          config_path.write_text(config)
-          PY
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -90,22 +48,3 @@ jobs:
 
       - name: Content standards
         run: npm run test:content-standard
-
-      - name: Production build
-        if: github.event_name == 'pull_request' && github.event.pull_request.head.ref == 'agent/align-pilot-unit-metadata'
-        run: npm run build
-
-      - name: Commit validated metadata alignment
-        if: github.event_name == 'pull_request' && github.event.pull_request.head.ref == 'agent/align-pilot-unit-metadata'
-        shell: bash
-        run: |
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add src/lib/constants/units.ts src/__tests__/unit-metadata-consistency.test.ts vitest.node.config.ts
-          git diff --cached --check
-          if git diff --cached --quiet; then
-            echo 'Metadata already aligned'
-            exit 0
-          fi
-          git commit -m 'Align pilot unit metadata across product surfaces'
-          git push origin HEAD:agent/align-pilot-unit-metadata
