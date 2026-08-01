@@ -114,10 +114,10 @@ For transfer tests, completion requires:
 
 1. A first roleplay evaluation.
 2. Feedback.
-3. A retry evaluation.
+3. A retry evaluation in the same `session_id`.
 4. The latest retry score meeting the mission pass threshold.
 
-Abandoning a transfer test on the feedback screen does not clear it from the learning path.
+Evidence from separate sessions is never combined to manufacture a pass. Abandoning a transfer test on the feedback screen does not clear it from the learning path.
 
 ## 8. Delayed transfer
 
