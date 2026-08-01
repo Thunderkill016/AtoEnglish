@@ -1,6 +1,12 @@
 "use client";
 
-import { useRef, useState, useSyncExternalStore } from "react";
+import {
+  useRef,
+  useState,
+  useSyncExternalStore,
+  type Dispatch,
+  type SetStateAction,
+} from "react";
 import { useRouter } from "next/navigation";
 import {
   AlertTriangle,
@@ -48,9 +54,23 @@ interface SpeechRecognitionLike {
 type SpeechRecognitionConstructor = new () => SpeechRecognitionLike;
 type MissionLesson = LessonSpecV1 & { mission: MissionSpecV1 };
 
+type StartRecognition = (
+  onTranscript: (transcript: string) => void,
+) => void;
+
 interface MissionRunnerProps {
   lesson: MissionLesson;
   nextRoute: string;
+}
+
+interface SpeechInputPanelProps {
+  speechSupported: boolean;
+  isListening: boolean;
+  fallbackText: string;
+  setFallbackText: Dispatch<SetStateAction<string>>;
+  startRecognition: StartRecognition;
+  onSubmit: (value: string) => void;
+  placeholder: string;
 }
 
 const STAGE_ORDER = [
@@ -85,6 +105,51 @@ function speakText(text: string) {
 function scoreLabel(result: MissionEvaluationResult | null) {
   if (!result || result.taskScore === null) return "Chưa có bằng chứng để chấm";
   return `${result.taskScore}% mục tiêu giao tiếp`;
+}
+
+function SpeechInputPanel({
+  speechSupported,
+  isListening,
+  fallbackText,
+  setFallbackText,
+  startRecognition,
+  onSubmit,
+  placeholder,
+}: SpeechInputPanelProps) {
+  if (speechSupported) {
+    return (
+      <MinimalButton
+        fullWidth
+        disabled={isListening}
+        onClick={() => startRecognition(onSubmit)}
+      >
+        <Mic className="size-4" />
+        {isListening ? "Đang nghe..." : "Bắt đầu nói"}
+      </MinimalButton>
+    );
+  }
+
+  return (
+    <div className="space-y-3 rounded-xl border border-amber-500/30 bg-amber-500/10 p-4">
+      <div className="flex gap-2 text-sm text-amber-700 dark:text-amber-200">
+        <AlertTriangle className="mt-0.5 size-4 shrink-0" />
+        <p>
+          Trình duyệt chưa hỗ trợ nhận diện giọng nói. Hãy tự nói thành tiếng rồi nhập lại
+          điều vừa nói. Nội dung nhập chỉ kiểm tra mục tiêu giao tiếp, không phải phát âm.
+        </p>
+      </div>
+      <textarea
+        value={fallbackText}
+        onChange={(event) => setFallbackText(event.target.value)}
+        rows={3}
+        className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm"
+        placeholder={placeholder}
+      />
+      <MinimalButton fullWidth onClick={() => onSubmit(fallbackText)}>
+        Gửi câu vừa nói <ArrowRight className="size-4" />
+      </MinimalButton>
+    </div>
+  );
 }
 
 export default function MissionRunner({ lesson, nextRoute }: MissionRunnerProps) {
@@ -138,7 +203,7 @@ export default function MissionRunner({ lesson, nextRoute }: MissionRunnerProps)
     }
   };
 
-  const startRecognition = (onTranscript: (transcript: string) => void) => {
+  const startRecognition: StartRecognition = (onTranscript) => {
     const Constructor = getSpeechRecognitionConstructor();
     if (!Constructor) return;
 
@@ -148,9 +213,8 @@ export default function MissionRunner({ lesson, nextRoute }: MissionRunnerProps)
     recognition.interimResults = false;
     recognition.continuous = false;
     recognition.onresult = (event) => {
-      const transcript = event.results[0]?.[0]?.transcript?.trim() ?? "";
       setIsListening(false);
-      onTranscript(transcript);
+      onTranscript(event.results[0]?.[0]?.transcript?.trim() ?? "");
     };
     recognition.onerror = (event) => {
       setIsListening(false);
@@ -218,47 +282,23 @@ export default function MissionRunner({ lesson, nextRoute }: MissionRunnerProps)
     void persistEvaluation(evaluation);
   };
 
-  const SpeechInput = ({
-    onSubmit,
-    placeholder,
-  }: {
-    onSubmit: (value: string) => void;
-    placeholder: string;
-  }) =>
-    speechSupported ? (
-      <MinimalButton
-        fullWidth
-        disabled={isListening}
-        onClick={() => startRecognition(onSubmit)}
-      >
-        <Mic className="size-4" />
-        {isListening ? "Đang nghe..." : "Bắt đầu nói"}
-      </MinimalButton>
-    ) : (
-      <div className="space-y-3 rounded-xl border border-amber-500/30 bg-amber-500/10 p-4">
-        <div className="flex gap-2 text-sm text-amber-700 dark:text-amber-200">
-          <AlertTriangle className="mt-0.5 size-4 shrink-0" />
-          <p>
-            Trình duyệt chưa hỗ trợ nhận diện giọng nói. Hãy tự nói thành tiếng rồi nhập lại
-            điều vừa nói. Nội dung nhập chỉ kiểm tra mục tiêu giao tiếp, không phải phát âm.
-          </p>
-        </div>
-        <textarea
-          value={fallbackText}
-          onChange={(event) => setFallbackText(event.target.value)}
-          rows={3}
-          className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm"
-          placeholder={placeholder}
-        />
-        <MinimalButton fullWidth onClick={() => onSubmit(fallbackText)}>
-          Gửi câu vừa nói <ArrowRight className="size-4" />
-        </MinimalButton>
-      </div>
-    );
-
-  const progress = Math.max(1, STAGE_ORDER.indexOf(session.stage as (typeof STAGE_ORDER)[number]) + 1);
+  const progress = Math.max(
+    1,
+    STAGE_ORDER.indexOf(
+      session.stage as (typeof STAGE_ORDER)[number],
+    ) + 1,
+  );
   const currentTurn = mission.roleplayTurns[session.currentTurnIndex];
-  const requiredIntentCount = mission.intents.filter((intent) => intent.required).length;
+  const requiredIntentCount = mission.intents.filter(
+    (intent) => intent.required,
+  ).length;
+  const speechInputProps = {
+    speechSupported,
+    isListening,
+    fallbackText,
+    setFallbackText,
+    startRecognition,
+  };
 
   return (
     <main className="min-h-screen bg-background pb-24">
@@ -274,7 +314,9 @@ export default function MissionRunner({ lesson, nextRoute }: MissionRunnerProps)
           <div className="h-2 flex-1 overflow-hidden rounded-full bg-muted">
             <div
               className="h-full rounded-full bg-primary transition-all"
-              style={{ width: `${Math.round((progress / STAGE_ORDER.length) * 100)}%` }}
+              style={{
+                width: `${Math.round((progress / STAGE_ORDER.length) * 100)}%`,
+              }}
             />
           </div>
           <span className="text-xs font-bold text-muted-foreground">
@@ -301,8 +343,14 @@ export default function MissionRunner({ lesson, nextRoute }: MissionRunnerProps)
                 {mission.canDoVi}
               </p>
               <div className="mt-4 grid gap-2 text-xs text-muted-foreground sm:grid-cols-2">
-                <p><strong className="text-foreground">Vai của bạn:</strong> {mission.learnerRoleVi}</p>
-                <p><strong className="text-foreground">Đối tác:</strong> {mission.partnerName} — {mission.partnerRoleVi}</p>
+                <p>
+                  <strong className="text-foreground">Vai của bạn:</strong>{" "}
+                  {mission.learnerRoleVi}
+                </p>
+                <p>
+                  <strong className="text-foreground">Đối tác:</strong>{" "}
+                  {mission.partnerName} — {mission.partnerRoleVi}
+                </p>
               </div>
             </div>
             <MinimalButton
@@ -336,7 +384,9 @@ export default function MissionRunner({ lesson, nextRoute }: MissionRunnerProps)
                 <button
                   key={chunk.id}
                   type="button"
-                  onClick={() => speakText(chunk.english.replace("...", "Minh"))}
+                  onClick={() =>
+                    speakText(chunk.english.replace("...", "Minh"))
+                  }
                   className="rounded-xl border border-border/60 bg-card p-4 text-left transition-colors hover:border-primary/50"
                 >
                   <span className="flex items-center justify-between gap-3">
@@ -356,7 +406,9 @@ export default function MissionRunner({ lesson, nextRoute }: MissionRunnerProps)
               fullWidth
               onClick={() =>
                 setSession((current) =>
-                  transitionMissionSession(mission, current, { type: "MODEL_COMPLETE" }),
+                  transitionMissionSession(mission, current, {
+                    type: "MODEL_COMPLETE",
+                  }),
                 )
               }
             >
@@ -377,7 +429,10 @@ export default function MissionRunner({ lesson, nextRoute }: MissionRunnerProps)
             </div>
             <div className="space-y-3">
               {mission.roleplayTurns.map((turn, index) => (
-                <div key={turn.id} className="rounded-xl border border-border/60 bg-card p-4">
+                <div
+                  key={turn.id}
+                  className="rounded-xl border border-border/60 bg-card p-4"
+                >
                   <div className="flex items-start gap-3">
                     <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-black text-primary">
                       {index + 1}
@@ -388,10 +443,14 @@ export default function MissionRunner({ lesson, nextRoute }: MissionRunnerProps)
                         onClick={() => speakText(turn.partnerLine)}
                         className="flex w-full items-start justify-between gap-3 text-left"
                       >
-                        <strong className="text-sm">{mission.partnerName}: {turn.partnerLine}</strong>
+                        <strong className="text-sm">
+                          {mission.partnerName}: {turn.partnerLine}
+                        </strong>
                         <Volume2 className="size-4 shrink-0 text-primary" aria-hidden />
                       </button>
-                      <p className="mt-1 text-xs text-muted-foreground">{turn.partnerLineVi}</p>
+                      <p className="mt-1 text-xs text-muted-foreground">
+                        {turn.partnerLineVi}
+                      </p>
                       <p className="mt-3 rounded-lg bg-muted/50 px-3 py-2 text-xs text-muted-foreground">
                         Gợi ý: {turn.hintVi}
                       </p>
@@ -404,7 +463,9 @@ export default function MissionRunner({ lesson, nextRoute }: MissionRunnerProps)
               fullWidth
               onClick={() =>
                 setSession((current) =>
-                  transitionMissionSession(mission, current, { type: "GUIDED_COMPLETE" }),
+                  transitionMissionSession(mission, current, {
+                    type: "GUIDED_COMPLETE",
+                  }),
                 )
               }
             >
@@ -417,15 +478,22 @@ export default function MissionRunner({ lesson, nextRoute }: MissionRunnerProps)
           <section className="space-y-6">
             <div>
               <p className="text-xs font-black uppercase tracking-widest text-primary">
-                Roleplay {session.currentTurnIndex + 1}/{mission.roleplayTurns.length}
+                Roleplay {session.currentTurnIndex + 1}/
+                {mission.roleplayTurns.length}
               </p>
-              <h1 className="mt-1 text-2xl font-black">Trả lời không nhìn câu mẫu</h1>
+              <h1 className="mt-1 text-2xl font-black">
+                Trả lời không nhìn câu mẫu
+              </h1>
             </div>
             <div className="rounded-2xl border border-primary/30 bg-primary/5 p-5">
               <div className="flex items-start justify-between gap-4">
                 <div>
-                  <p className="text-xs font-bold text-primary">{mission.partnerName} nói</p>
-                  <p className="mt-2 text-lg font-bold">{currentTurn.partnerLine}</p>
+                  <p className="text-xs font-bold text-primary">
+                    {mission.partnerName} nói
+                  </p>
+                  <p className="mt-2 text-lg font-bold">
+                    {currentTurn.partnerLine}
+                  </p>
                 </div>
                 <button
                   type="button"
@@ -437,7 +505,8 @@ export default function MissionRunner({ lesson, nextRoute }: MissionRunnerProps)
                 </button>
               </div>
             </div>
-            <SpeechInput
+            <SpeechInputPanel
+              {...speechInputProps}
               onSubmit={submitRoleplayTurn}
               placeholder="Nhập lại câu bạn vừa tự nói..."
             />
@@ -467,25 +536,34 @@ export default function MissionRunner({ lesson, nextRoute }: MissionRunnerProps)
                     {scoreLabel(session.evaluation)}
                   </h1>
                   <p className="mt-2 text-sm text-muted-foreground">
-                    Đã thể hiện {session.evaluation.completedIntentIds.length}/{requiredIntentCount} mục tiêu bắt buộc.
+                    Đã thể hiện {session.evaluation.completedIntentIds.length}/
+                    {requiredIntentCount} mục tiêu bắt buộc.
                   </p>
                 </div>
               </div>
             </div>
+
             {session.evaluation.corrections.length > 0 ? (
               <div className="space-y-3">
                 <p className="text-sm font-bold">
                   Chỉ sửa {session.evaluation.corrections.length} điểm quan trọng nhất
                 </p>
                 {session.evaluation.corrections.map((correction, index) => (
-                  <div key={correction.code} className="rounded-xl border border-amber-500/30 bg-amber-500/10 p-4">
-                    <p className="text-xs font-black text-amber-500">Sửa {index + 1}</p>
+                  <div
+                    key={correction.code}
+                    className="rounded-xl border border-amber-500/30 bg-amber-500/10 p-4"
+                  >
+                    <p className="text-xs font-black text-amber-500">
+                      Sửa {index + 1}
+                    </p>
                     {correction.original && (
                       <p className="mt-2 text-sm text-muted-foreground line-through">
                         {correction.original}
                       </p>
                     )}
-                    <p className="mt-1 text-sm font-bold">{correction.suggestion}</p>
+                    <p className="mt-1 text-sm font-bold">
+                      {correction.suggestion}
+                    </p>
                     <p className="mt-1 text-xs text-muted-foreground">
                       {correction.explanationVi}
                     </p>
@@ -497,6 +575,7 @@ export default function MissionRunner({ lesson, nextRoute }: MissionRunnerProps)
                 Bạn đã thể hiện đủ mục tiêu giao tiếp trong transcript.
               </div>
             )}
+
             <div className="flex gap-2 rounded-xl border border-border/60 bg-muted/30 p-4 text-xs text-muted-foreground">
               <ShieldCheck className="size-4 shrink-0 text-primary" />
               <p>
@@ -508,7 +587,9 @@ export default function MissionRunner({ lesson, nextRoute }: MissionRunnerProps)
               fullWidth
               onClick={() =>
                 setSession((current) =>
-                  transitionMissionSession(mission, current, { type: "SHOW_FEEDBACK" }),
+                  transitionMissionSession(mission, current, {
+                    type: "SHOW_FEEDBACK",
+                  }),
                 )
               }
             >
@@ -523,12 +604,15 @@ export default function MissionRunner({ lesson, nextRoute }: MissionRunnerProps)
               <p className="text-xs font-black uppercase tracking-widest text-primary">
                 Retry bắt buộc
               </p>
-              <h1 className="mt-1 text-2xl font-black">Biến feedback thành kỹ năng</h1>
+              <h1 className="mt-1 text-2xl font-black">
+                Biến feedback thành kỹ năng
+              </h1>
               <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
                 {session.evaluation.retryInstructionVi}
               </p>
             </div>
-            <SpeechInput
+            <SpeechInputPanel
+              {...speechInputProps}
               onSubmit={submitRetry}
               placeholder="Tự thực hiện lại toàn bộ nhiệm vụ rồi nhập lại..."
             />
@@ -539,7 +623,9 @@ export default function MissionRunner({ lesson, nextRoute }: MissionRunnerProps)
           <section className="space-y-5">
             <div className="rounded-2xl border border-emerald-500/30 bg-emerald-500/10 p-5">
               <CheckCircle2 className="size-8 text-emerald-500" />
-              <h1 className="mt-3 text-2xl font-black">Hoàn thành vòng luyện tập</h1>
+              <h1 className="mt-3 text-2xl font-black">
+                Hoàn thành vòng luyện tập
+              </h1>
               <p className="mt-2 text-sm text-muted-foreground">
                 {scoreLabel(session.evaluation)}. Checkpoint tiếp theo mới xác nhận mastery;
                 transfer 1/7/30 ngày sẽ kiểm tra khả năng dùng trong bối cảnh mới.
@@ -549,13 +635,20 @@ export default function MissionRunner({ lesson, nextRoute }: MissionRunnerProps)
               <p className="text-sm font-bold">Lịch transfer test</p>
               <div className="mt-3 space-y-3">
                 {mission.transferVariants.map((variant) => (
-                  <div key={variant.id} className="flex items-start gap-3 text-sm">
+                  <div
+                    key={variant.id}
+                    className="flex items-start gap-3 text-sm"
+                  >
                     <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-black text-primary">
                       +{variant.dueAfterDays}
                     </span>
                     <div>
-                      <p className="font-semibold">Sau {variant.dueAfterDays} ngày</p>
-                      <p className="mt-1 text-xs text-muted-foreground">{variant.scenarioVi}</p>
+                      <p className="font-semibold">
+                        Sau {variant.dueAfterDays} ngày
+                      </p>
+                      <p className="mt-1 text-xs text-muted-foreground">
+                        {variant.scenarioVi}
+                      </p>
                     </div>
                   </div>
                 ))}
@@ -572,7 +665,9 @@ export default function MissionRunner({ lesson, nextRoute }: MissionRunnerProps)
               fullWidth
               onClick={() => {
                 setSession((current) =>
-                  transitionMissionSession(mission, current, { type: "COMPLETE" }),
+                  transitionMissionSession(mission, current, {
+                    type: "COMPLETE",
+                  }),
                 );
                 router.push(nextRoute);
               }}
