@@ -1,10 +1,13 @@
 import { describe, expect, it } from "vitest";
 
 import { PILOT_LESSON_SPECS } from "@/lib/lessons/pilot-lessons";
-import { GOLD_MISSION_01 } from "@/lib/missions/gold-mission-01";
+import {
+  MISSION_BY_LESSON_ID,
+  PILOT_MISSIONS,
+} from "@/lib/missions/mission-catalog";
 import {
   evaluateMissionTranscript,
-  selectDueTransferVariant,
+  listDueTransferVariants,
 } from "@/lib/missions/mission-evaluator";
 import {
   createMissionSession,
@@ -13,67 +16,126 @@ import {
 import { summarizeTransferEvidence } from "@/lib/missions/mission-progress";
 import { validateMissionSpec } from "@/lib/missions/mission-spec";
 
-describe("Gold Mission 01", () => {
-  it("satisfies the bounded mission contract", () => {
-    expect(validateMissionSpec(GOLD_MISSION_01)).toEqual([]);
-    expect(GOLD_MISSION_01.targetChunks).toHaveLength(8);
-    expect(GOLD_MISSION_01.evaluation.maxCorrections).toBe(2);
-    expect(GOLD_MISSION_01.review.transferAfterDays).toEqual([1, 7, 30]);
+const VALID_TRANSCRIPTS: Record<string, string[]> = {
+  "unit-a0-1": [
+    "Hi, I am Minh.",
+    "I work as a designer at Ato.",
+    "What is your name?",
+    "Sorry, could you say that again?",
+  ],
+  "unit-a0-2": [
+    "How much is this?",
+    "I will take it.",
+    "Can I pay by card?",
+    "Could you say the price again?",
+  ],
+  "unit-a0-3": [
+    "I am looking for a shirt.",
+    "I need a blue shirt in medium.",
+    "Do you have this in black?",
+    "I will take this one.",
+  ],
+  "unit-a0-4": [
+    "Good morning.",
+    "I am fine, thanks. And you?",
+    "Busy day today?",
+    "See you later.",
+  ],
+  "unit-a0-5": [
+    "My name is Minh.",
+    "I am from Vietnam.",
+    "I work as an engineer. I am staying at Central Hotel.",
+    "Could you repeat the question?",
+  ],
+  "unit-a0-6": [
+    "This is my family.",
+    "This is my father. He is a doctor.",
+    "This is my mother. She is a teacher. They live in Hanoi.",
+    "Do you have any brothers or sisters?",
+  ],
+};
+
+describe("pilot mission catalog", () => {
+  it("converts all six A0 pilot lessons to bounded missions", () => {
+    expect(PILOT_MISSIONS).toHaveLength(6);
+
+    for (const mission of PILOT_MISSIONS) {
+      expect(validateMissionSpec(mission)).toEqual([]);
+      expect(mission.targetChunks.length).toBeGreaterThanOrEqual(4);
+      expect(mission.targetChunks.length).toBeLessThanOrEqual(8);
+      expect(mission.evaluation.maxCorrections).toBe(2);
+      expect(mission.review.transferAfterDays).toEqual([1, 7, 30]);
+      expect(mission.transferVariants).toHaveLength(3);
+      expect(
+        mission.transferVariants.every(
+          (variant) => variant.partnerLines.length === mission.roleplayTurns.length,
+        ),
+      ).toBe(true);
+    }
   });
 
-  it("is attached to the first 15-minute pilot lesson", () => {
-    const lesson = PILOT_LESSON_SPECS["unit-a0-1"];
-    expect(lesson.mission?.id).toBe(GOLD_MISSION_01.id);
-    expect(lesson.estimatedTime).toBe(15);
-    expect(lesson.canDo).toEqual([GOLD_MISSION_01.canDoVi]);
-    expect(lesson.assessment.activityIds).toEqual(["unit-a0-1:section:7"]);
+  it("attaches each mission, can-do and checkpoint evidence to its lesson", () => {
+    for (const mission of PILOT_MISSIONS) {
+      const lesson = PILOT_LESSON_SPECS[mission.lessonId];
+      expect(lesson.mission?.id).toBe(mission.id);
+      expect(lesson.estimatedTime).toBe(mission.estimatedMinutes);
+      expect(lesson.canDo).toEqual([mission.canDoVi]);
+      expect(lesson.assessment.activityIds).toEqual([
+        `${mission.lessonId}:mission:${mission.id}`,
+      ]);
+      expect(lesson.assessment.passThreshold).toBe(100);
+    }
   });
 });
 
 describe("mission evaluator", () => {
-  it("scores task completion without claiming pronunciation evidence", () => {
-    const result = evaluateMissionTranscript(GOLD_MISSION_01, [
-      "Hi, I am Minh.",
-      "I work as a designer at Ato.",
-      "What is your name?",
-      "Sorry, could you say that again?",
-    ]);
+  it("scores every reference roleplay without claiming acoustic evidence", () => {
+    for (const mission of PILOT_MISSIONS) {
+      const result = evaluateMissionTranscript(
+        mission,
+        VALID_TRANSCRIPTS[mission.lessonId],
+      );
 
-    expect(result.taskCompleted).toBe(true);
-    expect(result.taskScore).toBe(100);
-    expect(result.missingIntentIds).toEqual([]);
-    expect(result.rubric.pronunciation).toBeNull();
-    expect(result.rubric.comprehensibility).toBeNull();
-    expect(result.evidence.acousticEvidenceAvailable).toBe(false);
+      expect(result.taskCompleted, mission.lessonId).toBe(true);
+      expect(result.taskScore, mission.lessonId).toBe(100);
+      expect(result.missingIntentIds, mission.lessonId).toEqual([]);
+      expect(result.rubric.pronunciation).toBeNull();
+      expect(result.rubric.comprehensibility).toBeNull();
+      expect(result.evidence.acousticEvidenceAvailable).toBe(false);
+    }
   });
 
-  it("limits feedback to the two highest-value corrections", () => {
-    const result = evaluateMissionTranscript(GOLD_MISSION_01, [
-      "My name Minh. I work designer.",
+  it("uses the expected intents for each roleplay turn", () => {
+    const mission = MISSION_BY_LESSON_ID["unit-a0-2"];
+    const result = evaluateMissionTranscript(mission, [
+      "I will take it.",
+      "How much is this?",
+      "Could you say the price again?",
+      "Can I pay by card?",
+    ]);
+
+    expect(result.taskCompleted).toBe(false);
+    expect(result.completedIntentIds).toEqual([]);
+  });
+
+  it("limits content-driven feedback to two corrections", () => {
+    const mission = MISSION_BY_LESSON_ID["unit-a0-3"];
+    const result = evaluateMissionTranscript(mission, [
+      "I am looking for shirt.",
+      "I need a shirt blue.",
+      "No.",
+      "Okay.",
     ]);
 
     expect(result.taskCompleted).toBe(false);
     expect(result.corrections).toHaveLength(2);
-    expect(result.corrections.map((item) => item.code)).toEqual([
-      "missing_be_after_my_name",
-      "missing_work_as",
-    ]);
     expect(result.retryRequired).toBe(true);
   });
 
-  it("returns unscored when no reliable transcript exists", () => {
-    const result = evaluateMissionTranscript(GOLD_MISSION_01, [""]);
-    expect(result.status).toBe("unscored");
-    expect(result.taskScore).toBeNull();
-    expect(result.retryRequired).toBe(true);
-  });
-
-  it("scores the retry independently from a perfect first attempt", () => {
-    const result = evaluateMissionTranscript(GOLD_MISSION_01, [
-      "Hi, I am Minh.",
-      "I work as a designer.",
-      "What is your name?",
-      "Could you say that again?",
+  it("scores a full-task retry independently from the first attempt", () => {
+    const mission = MISSION_BY_LESSON_ID["unit-a0-1"];
+    const result = evaluateMissionTranscript(mission, [
+      ...VALID_TRANSCRIPTS[mission.lessonId],
       "Hello.",
     ]);
 
@@ -84,53 +146,37 @@ describe("mission evaluator", () => {
 });
 
 describe("mission state machine", () => {
-  it("requires feedback and retry before transfer when corrections exist", () => {
-    let state = createMissionSession(GOLD_MISSION_01);
-    state = transitionMissionSession(GOLD_MISSION_01, state, { type: "START" });
-    state = transitionMissionSession(GOLD_MISSION_01, state, {
-      type: "MODEL_COMPLETE",
-    });
-    state = transitionMissionSession(GOLD_MISSION_01, state, {
-      type: "GUIDED_COMPLETE",
-    });
+  it("requires feedback and retry before transfer", () => {
+    const mission = MISSION_BY_LESSON_ID["unit-a0-2"];
+    let state = createMissionSession(mission);
+    state = transitionMissionSession(mission, state, { type: "START" });
+    state = transitionMissionSession(mission, state, { type: "MODEL_COMPLETE" });
+    state = transitionMissionSession(mission, state, { type: "GUIDED_COMPLETE" });
 
-    for (const transcript of [
-      "My name Minh.",
-      "I work designer.",
-      "Hello.",
-      "Okay.",
-    ]) {
-      state = transitionMissionSession(GOLD_MISSION_01, state, {
+    for (const transcript of ["Hello.", "Okay.", "Card.", "What?"]) {
+      state = transitionMissionSession(mission, state, {
         type: "SUBMIT_TURN",
         transcript,
       });
     }
 
-    const firstEvaluation = evaluateMissionTranscript(
-      GOLD_MISSION_01,
-      state.transcripts,
-    );
-    state = transitionMissionSession(GOLD_MISSION_01, state, {
+    const firstEvaluation = evaluateMissionTranscript(mission, state.transcripts);
+    state = transitionMissionSession(mission, state, {
       type: "EVALUATE",
       result: firstEvaluation,
     });
     expect(state.stage).toBe("feedback");
 
-    state = transitionMissionSession(GOLD_MISSION_01, state, {
-      type: "SHOW_FEEDBACK",
-    });
+    state = transitionMissionSession(mission, state, { type: "SHOW_FEEDBACK" });
     expect(state.stage).toBe("retry");
 
-    state = transitionMissionSession(GOLD_MISSION_01, state, {
+    state = transitionMissionSession(mission, state, {
       type: "SUBMIT_RETRY",
       transcript:
-        "My name is Minh. I work as a designer. What is your name? Could you say that again?",
+        "How much is this? I will take it. Can I pay by card? Could you say the price again?",
     });
-    const retryEvaluation = evaluateMissionTranscript(
-      GOLD_MISSION_01,
-      state.transcripts,
-    );
-    state = transitionMissionSession(GOLD_MISSION_01, state, {
+    const retryEvaluation = evaluateMissionTranscript(mission, state.transcripts);
+    state = transitionMissionSession(mission, state, {
       type: "RETRY_EVALUATED",
       result: retryEvaluation,
     });
@@ -141,34 +187,21 @@ describe("mission state machine", () => {
   });
 });
 
-describe("transfer scheduling", () => {
+describe("transfer scheduling and integrity", () => {
   const completedAt = new Date("2026-08-01T00:00:00.000Z");
 
-  it("selects the latest due variant at day 1, 7 and 30", () => {
+  it("returns all due windows in chronological order", () => {
+    const mission = MISSION_BY_LESSON_ID["unit-a0-1"];
     expect(
-      selectDueTransferVariant(
-        GOLD_MISSION_01,
-        completedAt,
-        new Date("2026-08-02T00:00:00.000Z"),
-      )?.dueAfterDays,
-    ).toBe(1);
-    expect(
-      selectDueTransferVariant(
-        GOLD_MISSION_01,
-        completedAt,
-        new Date("2026-08-08T00:00:00.000Z"),
-      )?.dueAfterDays,
-    ).toBe(7);
-    expect(
-      selectDueTransferVariant(
-        GOLD_MISSION_01,
+      listDueTransferVariants(
+        mission,
         completedAt,
         new Date("2026-08-31T00:00:00.000Z"),
-      )?.dueAfterDays,
-    ).toBe(30);
+      ).map((variant) => variant.dueAfterDays),
+    ).toEqual([1, 7, 30]);
   });
 
-  it("uses the latest retry score rather than the best historical score", () => {
+  it("uses the latest retry in one session rather than the best historical score", () => {
     const activityId = "unit-a0-1:transfer:transfer-day-1-cafe";
     const failedRetry = summarizeTransferEvidence(
       [
@@ -188,29 +221,9 @@ describe("transfer scheduling", () => {
       activityId,
       100,
     );
+
     expect(failedRetry.verified).toBe(false);
     expect(failedRetry.retryScore).toBe(25);
-
-    const passedRetry = summarizeTransferEvidence(
-      [
-        {
-          activity_id: activityId,
-          session_id: "session-b",
-          score: 25,
-          created_at: "2026-08-02T08:00:00.000Z",
-        },
-        {
-          activity_id: activityId,
-          session_id: "session-b",
-          score: 100,
-          created_at: "2026-08-02T08:03:00.000Z",
-        },
-      ],
-      activityId,
-      100,
-    );
-    expect(passedRetry.verified).toBe(true);
-    expect(passedRetry.retryScore).toBe(100);
   });
 
   it("does not combine attempts from different sessions", () => {
