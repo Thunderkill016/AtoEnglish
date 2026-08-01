@@ -3,6 +3,9 @@ name: Stabilize toolchain
 on:
   push:
     branches: [agent/stabilize-toolchain]
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened]
   workflow_dispatch:
 
 concurrency:
@@ -90,6 +93,7 @@ jobs:
         run: npm run build
 
       - name: Commit reproducible toolchain
+        if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
         shell: bash
         run: |
           rm .github/workflows/stabilize-toolchain.yml
