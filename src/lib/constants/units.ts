@@ -1,3 +1,5 @@
+import { getMissionForLesson } from "@/lib/missions/mission-catalog";
+
 export interface UnitMetadata {
   id: string;
   title: string;
@@ -18,7 +20,7 @@ export interface UnitMetadata {
 // Grammar progression: To be → Wh-Q → Possessives → Present Simple →
 //   like+V-ing → There is/are → How much → Countable/Uncountable →
 //   Prepositions → Can/Can't → have/feel → Review
-export const UNITS: UnitMetadata[] = [
+const BASE_UNITS: UnitMetadata[] = [
   // ─── A0 Foundation — 8 units ─────────────────────────────────────────────────
   {
     id: "unit-a0-1",
@@ -538,3 +540,24 @@ export const UNITS: UnitMetadata[] = [
     tags: ["Final Assessment", "IELTS 6.5", "TOEIC 785+"],
   },
 ];
+
+/**
+ * Canonical unit catalog used by dashboard, roadmap and server actions.
+ * Pilot mission metadata overrides legacy curriculum labels so every product
+ * surface describes the same lesson the learner will actually open.
+ */
+export const UNITS: UnitMetadata[] = BASE_UNITS.map((unit) => {
+  const mission = getMissionForLesson(unit.id);
+  if (!mission) return unit;
+
+  return {
+    ...unit,
+    title: `Bài ${unit.id.replace("unit-", "").toUpperCase()}: ${mission.titleVi}`,
+    description: mission.canDoVi,
+    estimatedTime: mission.estimatedMinutes,
+    tags: [
+      "Nhiệm vụ giao tiếp",
+      ...mission.targetChunks.slice(0, 2).map((chunk) => chunk.english),
+    ],
+  };
+});
