@@ -1,4 +1,5 @@
 {
+  "buildCommand": "npm run lint && npx tsc --noEmit && npm run test && npm run test:content-standard && npm run build",
   "crons": [
     {
       "path": "/api/cron/daily-reminder",
