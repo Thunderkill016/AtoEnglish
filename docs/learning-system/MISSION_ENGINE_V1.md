@@ -59,6 +59,10 @@ Automated QA rejects a mission when it lacks:
 
 Automated pass is not publication. Independent pedagogical review of the same lesson version is still required before release.
 
+## Main synchronization
+
+The Mission Engine branch is synchronized with the current `main` history. Mission routes use the dedicated mission runners, while the dashboard, root layout, `UnitTemplate` and legacy lesson section contracts continue to use the newer implementations from `main`. This prevents the A0 mission work from reverting unrelated product and lesson-runner refactors.
+
 ## Verified pipeline
 
 The Vercel preview for commit `a526f764848b0f557adf9e2747d6e88d8200b9be` completed the full release gate:
