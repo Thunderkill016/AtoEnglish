@@ -17,10 +17,8 @@ jobs:
     env:
       CI: true
       HUSKY: 0
-      NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
-      NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
-      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-      PLAYWRIGHT_BASE_URL: http://127.0.0.1:3000
+      PLAYWRIGHT_BASE_URL: https://atoenglish-lwocumvoo-thunderkill016s-projects.vercel.app
+      VERCEL_SHARE_TOKEN: qsn3Ew0S6mYt323X0w9Ws42Fqs4EGrJy
 
     steps:
       - uses: actions/checkout@v4
@@ -34,12 +32,6 @@ jobs:
 
       - run: npm ci --no-audit --prefer-offline
       - run: npx playwright install --with-deps chromium
-
-      - name: Start application
-        run: |
-          npm run dev -- --hostname 127.0.0.1 > /tmp/gold-day-one-dev.log 2>&1 &
-          echo $! > /tmp/gold-day-one-dev.pid
-          npx wait-on http://127.0.0.1:3000/learn/unit-a0-1 --timeout 120000
 
       - id: e2e
         name: Run guest Gold Day 1 journey
@@ -56,10 +48,6 @@ jobs:
             echo "outcome=${E2E_OUTCOME}"
             echo "commit=${GITHUB_SHA}"
             echo "workflow_run=${GITHUB_RUN_ID}"
-            if [ "${E2E_OUTCOME}" != "success" ]; then
-              echo "--- server log ---"
-              tail -n 120 /tmp/gold-day-one-dev.log || true
-            fi
           } > tmp/gold-day-one-e2e-result.txt
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
