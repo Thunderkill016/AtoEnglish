@@ -35,7 +35,7 @@ jobs:
           cache: npm
 
       - name: Install dependencies
-        run: npm install --no-audit --prefer-offline
+        run: npm ci --no-audit --prefer-offline
 
       - name: Lint
         run: npm run lint
