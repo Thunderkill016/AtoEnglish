@@ -7,6 +7,7 @@ import {
   getTodayMissionFlags,
 } from "@/app/actions/stats";
 import { buildDailyMissions } from "@/lib/dashboard/daily-missions";
+import { alignWordOfDayTopic } from "@/lib/dashboard/word-of-day";
 import {
   getAllUnitCompletionStatuses,
   getCurrentUnit,
@@ -18,7 +19,7 @@ import DashboardClient from "./components/DashboardClient";
 
 export const metadata: Metadata = {
   title: "Dashboard | AtoEnglish",
-  description: "Xem tiến độ học, streak, XP và tiếp tục bài học tiếng Anh của bạn. (Rollback best version + guest self-study)",
+  description: "Xem tiến độ học, streak, XP và tiếp tục bài học tiếng Anh của bạn.",
 };
 
 // P1-1 Fix: ISR 30s — fresh enough for daily dashboard use.
@@ -160,10 +161,10 @@ export default async function DashboardPage() {
   const vnDateStr = new Date().toLocaleDateString("sv-SE", { timeZone: "Asia/Ho_Chi_Minh" });
   const [vyear, vmonth, vday] = vnDateStr.split("-").map(Number);
   const dayIndex = vyear * 10000 + vmonth * 100 + (vday ?? 0);
-  const wordOfDay = vocabPool.length > 0
+  const selectedWord = vocabPool.length > 0
     ? vocabPool[dayIndex % vocabPool.length]
     : null;
-
+  const wordOfDay = alignWordOfDayTopic(currentUnitData.unitId, selectedWord);
 
   const weeklyData = weeklyRes.success && weeklyRes.data ? weeklyRes.data : [];
 
@@ -196,5 +197,4 @@ export default async function DashboardPage() {
       recentSpeakingSessions={recentSpeakingSessions}
     />
   );
-
 }

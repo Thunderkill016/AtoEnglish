@@ -8,6 +8,7 @@ export default defineProject({
     globals: true,
     include: [
       "scripts/lib/**/*.test.ts",
+      "src/lib/dashboard/word-of-day.test.ts",
       "src/__tests__/architecture-boundaries.test.ts",
       "src/__tests__/curriculum-quality.test.ts",
       "src/__tests__/learning-attempt-migration.test.ts",
