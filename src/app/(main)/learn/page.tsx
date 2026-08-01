@@ -4,15 +4,18 @@ import { getUserProgress } from "@/app/actions/stats";
 import { getCurrentUnit } from "@/app/actions/unit";
 import { UNITS } from "@/lib/constants/units";
 import { PILOT_LESSON_SPECS } from "@/lib/lessons/pilot-lessons";
-import { GOLD_MISSION_01 } from "@/lib/missions/gold-mission-01";
-import { selectDueTransferVariant } from "@/lib/missions/mission-evaluator";
+import {
+  getMissionForLesson,
+  MISSION_LESSON_IDS,
+} from "@/lib/missions/mission-catalog";
+import { listDueTransferVariants } from "@/lib/missions/mission-evaluator";
 import { summarizeTransferEvidence } from "@/lib/missions/mission-progress";
 import { createClient } from "@/lib/supabase/server";
 import LearnClient from "./components/LearnClient";
 
 export const metadata: Metadata = {
   title: "Bài A0 | AtoEnglish",
-  description: "Lộ trình A0 tối giản cho người Việt mới bắt đầu học tiếng Anh.",
+  description: "Lộ trình A0 theo nhiệm vụ giao tiếp cho người Việt mới bắt đầu.",
 };
 
 export const revalidate = 0;
@@ -58,15 +61,13 @@ export default async function LearnPage() {
           .from("learning_attempts")
           .select("activity_id, session_id, score, created_at")
           .eq("user_id", user.id)
-          .eq("lesson_id", GOLD_MISSION_01.lessonId)
-          .like(
-            "activity_id",
-            `${GOLD_MISSION_01.lessonId}:transfer:%`,
-          )
+          .in("lesson_id", MISSION_LESSON_IDS)
+          .like("activity_id", "%:transfer:%")
       : Promise.resolve({ data: null }),
   ]);
 
   const completedLessons = completedLessonsRes.data ?? [];
+  const transferAttempts = transferAttemptsRes.data ?? [];
   const completedUnitIds = completedLessons.map((lesson) => lesson.unit_id);
   const completedXp = new Map(
     completedLessons.map((lesson) => [lesson.unit_id, lesson.xp_earned || 0]),
@@ -80,35 +81,35 @@ export default async function LearnPage() {
       ? activeUnitRes.unitId!
       : firstIncomplete?.id || PILOT_UNITS[0].id;
 
-  const missionCompletion = completedLessons.find(
-    (lesson) => lesson.unit_id === GOLD_MISSION_01.lessonId,
-  );
-  const dueVariant = missionCompletion
-    ? selectDueTransferVariant(
-        GOLD_MISSION_01,
-        new Date(missionCompletion.completed_at),
-        new Date(),
-      )
-    : null;
-  const dueActivityId = dueVariant
-    ? `${GOLD_MISSION_01.lessonId}:transfer:${dueVariant.id}`
-    : null;
-  const dueEvidence = dueActivityId
-    ? summarizeTransferEvidence(
-        transferAttemptsRes.data ?? [],
-        dueActivityId,
-        GOLD_MISSION_01.evaluation.requiredIntentPassRatio * 100,
-      )
-    : null;
-  const dueTransfer =
-    dueVariant && !dueEvidence?.verified
-      ? {
-          id: dueVariant.id,
-          label: `Kiểm tra lại sau ${dueVariant.dueAfterDays} ngày`,
-          description: dueVariant.scenarioVi,
-          href: `/learn/${GOLD_MISSION_01.lessonId}/transfer/${dueVariant.id}`,
-        }
-      : null;
+  const now = new Date();
+  const dueTransfers = completedLessons.flatMap((completion) => {
+    const mission = getMissionForLesson(completion.unit_id);
+    if (!mission) return [];
+
+    const firstUnverified = listDueTransferVariants(
+      mission,
+      new Date(completion.completed_at),
+      now,
+    ).find((variant) => {
+      const activityId = `${mission.lessonId}:transfer:${variant.id}`;
+      return !summarizeTransferEvidence(
+        transferAttempts,
+        activityId,
+        mission.evaluation.requiredIntentPassRatio * 100,
+      ).verified;
+    });
+
+    if (!firstUnverified) return [];
+
+    return [
+      {
+        id: `${mission.lessonId}:${firstUnverified.id}`,
+        label: `${mission.titleVi} · +${firstUnverified.dueAfterDays} ngày`,
+        description: firstUnverified.scenarioVi,
+        href: `/learn/${mission.lessonId}/transfer/${firstUnverified.id}`,
+      },
+    ];
+  });
 
   return (
     <LearnClient
@@ -119,7 +120,7 @@ export default async function LearnPage() {
       completedUnitIds={completedUnitIds}
       activeUnitId={activeUnitId}
       isGuest={!user}
-      dueTransfer={dueTransfer}
+      dueTransfers={dueTransfers}
       unitStatuses={PILOT_UNITS.map((unit) => {
         const xpEarned = completedXp.get(unit.id) ?? 0;
         const completed = completedUnitIds.includes(unit.id);
@@ -127,12 +128,11 @@ export default async function LearnPage() {
         return {
           ...unit,
           completed,
-          progress:
-            completed
-              ? 100
-              : unit.id === activeUnitId
-                ? activeUnitRes.progress || 0
-                : 0,
+          progress: completed
+            ? 100
+            : unit.id === activeUnitId
+              ? activeUnitRes.progress || 0
+              : 0,
           starCount: completed
             ? xpEarned >= unit.xp
               ? 3
