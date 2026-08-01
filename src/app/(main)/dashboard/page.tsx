@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
+
 import { getUserProgress } from "@/app/actions/stats";
 import { getCurrentUnit } from "@/app/actions/unit";
 import { UNITS } from "@/lib/constants/units";
+import { PILOT_LESSON_SPECS } from "@/lib/lessons/pilot-lessons";
 import DashboardMinimalClient from "./components/DashboardMinimalClient";
 
 export const metadata: Metadata = {
@@ -11,7 +13,17 @@ export const metadata: Metadata = {
 
 export const revalidate = 30;
 
-const PILOT_UNITS = UNITS.slice(0, 6);
+const PILOT_UNITS = UNITS.slice(0, 6).map((unit) => {
+  const lesson = PILOT_LESSON_SPECS[unit.id];
+  return lesson
+    ? {
+        ...unit,
+        title: lesson.title,
+        description: lesson.description,
+        estimatedTime: lesson.estimatedTime,
+      }
+    : unit;
+});
 
 export default async function DashboardPage() {
   const [progressRes, unitRes] = await Promise.all([
