@@ -22,10 +22,19 @@ test.describe("Gold Day 1 guest journey", () => {
     });
   });
 
-  test("finishes mission, mandatory retry and reaches checkpoint login", async ({
+  test("selects a bounded session and reaches checkpoint login", async ({
     page,
   }) => {
     await page.goto(protectedPreviewPath("/learn/unit-a0-1"));
+
+    await expect(
+      page.getByRole("heading", {
+        name: "Hôm nay bạn có bao nhiêu thời gian?",
+      }),
+    ).toBeVisible();
+    await page
+      .getByRole("button", { name: "Chọn phiên chuẩn 12–15 phút" })
+      .click();
 
     await expect(
       page.getByRole("heading", { name: "Gặp đồng nghiệp mới" }),
@@ -83,5 +92,30 @@ test.describe("Gold Day 1 guest journey", () => {
     await expect(page).toHaveURL(
       /\/login\?mode=login&next=%2Flearn%2Funit-a0-1%2Fcheckpoint/,
     );
+  });
+
+  test("keeps the busy-day path review-only", async ({ page }) => {
+    await page.goto(protectedPreviewPath("/learn/unit-a0-1"));
+    await page
+      .getByRole("button", { name: "Chọn ngày bận 3–5 phút" })
+      .click();
+
+    await expect(
+      page.getByRole("heading", { name: "Ôn nhanh Gặp đồng nghiệp mới" }),
+    ).toBeVisible();
+    await expect(page.getByText(/không đánh dấu hoàn thành bài/i)).toBeVisible();
+
+    await page
+      .getByPlaceholder("Tự viết câu của bạn...")
+      .fill("Hi, I'm Minh. I work as a developer.");
+    await page.getByRole("button", { name: "Tự kiểm tra" }).click();
+
+    await expect(
+      page.getByRole("heading", { name: "Đã giữ nhịp học hôm nay" }),
+    ).toBeVisible();
+    await expect(page.getByText(/không thay đổi mastery hay tiến độ/i)).toBeVisible();
+    await expect(
+      page.getByRole("button", { name: /Làm checkpoint xác nhận/ }),
+    ).toHaveCount(0);
   });
 });
