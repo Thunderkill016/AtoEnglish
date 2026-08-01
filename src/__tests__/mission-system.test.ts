@@ -66,6 +66,20 @@ describe("mission evaluator", () => {
     expect(result.taskScore).toBeNull();
     expect(result.retryRequired).toBe(true);
   });
+
+  it("scores the retry independently from a perfect first attempt", () => {
+    const result = evaluateMissionTranscript(GOLD_MISSION_01, [
+      "Hi, I am Minh.",
+      "I work as a designer.",
+      "What is your name?",
+      "Could you say that again?",
+      "Hello.",
+    ]);
+
+    expect(result.taskCompleted).toBe(false);
+    expect(result.taskScore).toBe(0);
+    expect(result.completedIntentIds).toEqual([]);
+  });
 });
 
 describe("mission state machine", () => {
