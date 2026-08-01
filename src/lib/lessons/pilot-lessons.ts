@@ -5,7 +5,7 @@ import { unitA04 } from "@/lib/data/units/unitA04";
 import { unitA05 } from "@/lib/data/units/unitA05";
 import { unitA06 } from "@/lib/data/units/unitA06";
 import { LESSON_SECTIONS } from "@/lib/lessons/learning-flow";
-import { GOLD_MISSION_01 } from "@/lib/missions/gold-mission-01";
+import { getMissionForLesson } from "@/lib/missions/mission-catalog";
 import type {
   LessonActivity,
   LessonAsset,
@@ -48,7 +48,9 @@ function buildActivities(unit: UnitData): LessonActivity[] {
 
 function buildAssets(unit: UnitData): LessonAsset[] {
   const paths = [
-    ...unit.vocab.map((item) => item.audio).filter((path): path is string => Boolean(path)),
+    ...unit.vocab
+      .map((item) => item.audio)
+      .filter((path): path is string => Boolean(path)),
     ...unit.dialogues.map((dialogue) => dialogue.audio).filter(Boolean),
   ];
 
@@ -64,14 +66,14 @@ function toPilotSpec(
   prerequisites: string[],
 ): LessonSpecV1 {
   const activities = buildActivities(unit);
-  const mission = unit.unitId === GOLD_MISSION_01.lessonId ? GOLD_MISSION_01 : undefined;
+  const mission = getMissionForLesson(unit.unitId) ?? undefined;
 
   return {
     ...unit,
     ...(mission
       ? {
-          title: "Bài A0-1: Gặp đồng nghiệp mới",
-          estimatedTime: 15,
+          title: `Bài ${unit.unitId.replace("unit-", "").toUpperCase()}: ${mission.titleVi}`,
+          estimatedTime: mission.estimatedMinutes,
           description: mission.canDoVi,
           situation: mission.scenarioVi,
           learningOutcomes: [mission.canDoVi],
@@ -88,9 +90,11 @@ function toPilotSpec(
     activities,
     assessment: {
       activityIds: [
-        mission ? `${unit.unitId}:section:7` : `${unit.unitId}:section:8`,
+        mission ? `${unit.unitId}:mission:${mission.id}` : `${unit.unitId}:section:8`,
       ],
-      passThreshold: 70,
+      passThreshold: mission
+        ? Math.round(mission.evaluation.requiredIntentPassRatio * 100)
+        : 70,
       canDoEvidence: mission
         ? mission.intents
             .filter((intent) => intent.required)
@@ -115,7 +119,7 @@ function toPilotSpec(
               id: "mission-based-speaking-v1",
               title: "AtoEnglish mission-based speaking contract",
               note:
-                "Scenario, bounded chunks, controlled roleplay, feedback, retry and transfer testing.",
+                "Scenario, bounded chunks, controlled roleplay, feedback, retry, checkpoint and transfer testing.",
             },
           ]
         : []),
@@ -125,12 +129,24 @@ function toPilotSpec(
   };
 }
 
-const PILOT_SOURCE_UNITS = [unitA01, unitA02, unitA03, unitA04, unitA05, unitA06];
+const PILOT_SOURCE_UNITS = [
+  unitA01,
+  unitA02,
+  unitA03,
+  unitA04,
+  unitA05,
+  unitA06,
+];
+
+export const PILOT_LESSON_ORDER = PILOT_SOURCE_UNITS.map((unit) => unit.unitId);
 
 export const PILOT_LESSON_SPECS = Object.fromEntries(
   PILOT_SOURCE_UNITS.map((unit, index) => [
     unit.unitId,
-    toPilotSpec(unit, index === 0 ? [] : [PILOT_SOURCE_UNITS[index - 1].unitId]),
+    toPilotSpec(
+      unit,
+      index === 0 ? [] : [PILOT_SOURCE_UNITS[index - 1].unitId],
+    ),
   ]),
 ) as Record<string, LessonSpecV1>;
 
@@ -138,4 +154,10 @@ export const PILOT_LESSON_IDS = Object.keys(PILOT_LESSON_SPECS);
 
 export function getPilotLessonSpec(lessonId: string) {
   return PILOT_LESSON_SPECS[lessonId] ?? null;
+}
+
+export function getNextPilotLessonId(lessonId: string) {
+  const index = PILOT_LESSON_ORDER.indexOf(lessonId);
+  if (index < 0 || index >= PILOT_LESSON_ORDER.length - 1) return null;
+  return PILOT_LESSON_ORDER[index + 1];
 }
