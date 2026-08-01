@@ -57,25 +57,18 @@ jobs:
       - name: Regenerate package lock
         run: npm install --package-lock-only --ignore-scripts --no-audit
 
-      - name: Require clean installs in Verify
-        shell: bash
-        run: |
-          node <<'NODE'
-          const fs = require('node:fs');
-          const path = '.github/workflows/verify.yml';
-          const source = fs.readFileSync(path, 'utf8');
-          const previous = 'run: npm install --no-audit --prefer-offline';
-          const replacement = 'run: npm ci --no-audit --prefer-offline';
-          if (!source.includes(previous)) {
-            throw new Error(`Expected Verify install command not found: ${previous}`);
-          }
-          fs.writeFileSync(path, source.replace(previous, replacement));
-          NODE
-
       - name: Install from lockfile
         run: |
           rm -rf node_modules
           npm ci --no-audit --prefer-offline
+
+      - name: Explain dependency warnings
+        shell: bash
+        run: |
+          npm explain request || true
+          npm explain har-validator || true
+          npm explain uuid || true
+          npm explain @sentry/server-utils || true
 
       - name: Lint
         run: npm run lint
@@ -96,10 +89,9 @@ jobs:
         if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
         shell: bash
         run: |
-          rm .github/workflows/stabilize-toolchain.yml
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add package.json package-lock.json .nvmrc .github/workflows/verify.yml .github/workflows/stabilize-toolchain.yml
+          git add package.json package-lock.json .nvmrc
           git diff --cached --check
           git commit -m 'Stabilize Node and npm toolchain'
           git push origin HEAD:agent/stabilize-toolchain
