@@ -174,11 +174,13 @@ describe("transfer scheduling", () => {
       [
         {
           activity_id: activityId,
+          session_id: "session-a",
           score: 100,
           created_at: "2026-08-02T08:00:00.000Z",
         },
         {
           activity_id: activityId,
+          session_id: "session-a",
           score: 25,
           created_at: "2026-08-02T08:03:00.000Z",
         },
@@ -193,11 +195,13 @@ describe("transfer scheduling", () => {
       [
         {
           activity_id: activityId,
+          session_id: "session-b",
           score: 25,
           created_at: "2026-08-02T08:00:00.000Z",
         },
         {
           activity_id: activityId,
+          session_id: "session-b",
           score: 100,
           created_at: "2026-08-02T08:03:00.000Z",
         },
@@ -207,5 +211,32 @@ describe("transfer scheduling", () => {
     );
     expect(passedRetry.verified).toBe(true);
     expect(passedRetry.retryScore).toBe(100);
+  });
+
+  it("does not combine attempts from different sessions", () => {
+    const activityId = "unit-a0-1:transfer:transfer-day-1-cafe";
+    const summary = summarizeTransferEvidence(
+      [
+        {
+          activity_id: activityId,
+          session_id: "old-session",
+          score: 100,
+          created_at: "2026-08-02T08:00:00.000Z",
+        },
+        {
+          activity_id: activityId,
+          session_id: "new-session",
+          score: 100,
+          created_at: "2026-08-03T08:00:00.000Z",
+        },
+      ],
+      activityId,
+      100,
+    );
+
+    expect(summary.sessionId).toBe("new-session");
+    expect(summary.attemptCount).toBe(1);
+    expect(summary.retryScore).toBeNull();
+    expect(summary.verified).toBe(false);
   });
 });
