@@ -21,9 +21,11 @@ export type AssessPronunciationResponse =
   | {
       success: true;
       result: PhonemeResult;
+      error: null;
     }
   | {
       success: false;
+      result: null;
       error: string;
       feedback: ReturnType<typeof unavailableFeedback>;
     };
@@ -45,6 +47,7 @@ export async function assessPronunciation(params: {
 
   return {
     success: false,
+    result: null,
     error: feedback.errors[0].messageVi,
     feedback,
   };
