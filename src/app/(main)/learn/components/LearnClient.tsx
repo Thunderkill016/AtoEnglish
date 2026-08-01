@@ -1,6 +1,12 @@
 "use client";
 
-import { BookOpen, CheckCircle, ChevronDown, Lock } from "lucide-react";
+import {
+  BookOpen,
+  CheckCircle,
+  ChevronDown,
+  Lock,
+  RefreshCcw,
+} from "lucide-react";
 import {
   ContinueCard,
   ListSection,
@@ -21,12 +27,20 @@ interface UnitStatus {
   starCount?: number;
 }
 
+interface DueTransfer {
+  id: string;
+  label: string;
+  description: string;
+  href: string;
+}
+
 interface LearnClientProps {
   userLevel: string;
   totalXp: number;
   completedUnitIds: string[];
   activeUnitId: string;
   isGuest: boolean;
+  dueTransfer: DueTransfer | null;
   unitStatuses: UnitStatus[];
 }
 
@@ -44,6 +58,7 @@ export default function LearnClient({
   completedUnitIds,
   activeUnitId,
   isGuest,
+  dueTransfer,
   unitStatuses,
 }: LearnClientProps) {
   const activeUnit =
@@ -55,11 +70,22 @@ export default function LearnClient({
       subtitle={`${completedUnitIds.length}/6 bài A0 · ${userLevel} · ${totalXp.toLocaleString()} XP`}
     >
       <div className="space-y-6 pb-16">
+        {dueTransfer && (
+          <ListSection title="Kiểm tra giao tiếp đến hạn">
+            <PrimaryRow
+              href={dueTransfer.href}
+              label={dueTransfer.label}
+              description={dueTransfer.description}
+              icon={RefreshCcw}
+            />
+          </ListSection>
+        )}
+
         <ContinueCard
           title={activeUnit.title}
           description={
             isGuest
-              ? "Học thử bài đầu tiên. Đăng nhập từ bài 2 để lưu tiến độ và ôn SRS."
+              ? "Học thử bài đầu tiên. Đăng nhập để làm checkpoint, lưu evidence và ôn FSRS."
               : activeUnit.description
           }
           progress={activeUnit.progress}
@@ -108,11 +134,17 @@ export default function LearnClient({
         <details className="group border-t border-border/60 pt-4">
           <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between text-sm font-semibold text-muted-foreground">
             Các giai đoạn tiếp theo
-            <ChevronDown className="size-4 transition-transform group-open:rotate-180" aria-hidden />
+            <ChevronDown
+              className="size-4 transition-transform group-open:rotate-180"
+              aria-hidden
+            />
           </summary>
           <div className="mt-2 space-y-2">
             {FUTURE_STAGES.map((stage) => (
-              <div key={stage} className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-muted-foreground">
+              <div
+                key={stage}
+                className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-muted-foreground"
+              >
                 <Lock className="size-4" aria-hidden />
                 <span>{stage}</span>
                 <span className="ml-auto text-xs">Chưa phát hành</span>
