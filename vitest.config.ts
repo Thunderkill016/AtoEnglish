@@ -2,19 +2,44 @@ import { defineConfig } from "vitest/config";
 import react from "@vitejs/plugin-react";
 import { resolve } from "path";
 
+const NODE_TESTS = [
+  "src/__tests__/curriculum-quality.test.ts",
+  "src/__tests__/learning-attempt-migration.test.ts",
+];
+
 export default defineConfig({
   plugins: [react()],
   test: {
-    environment: "jsdom",
     globals: true,
     setupFiles: ["./src/__tests__/setup.ts"],
-    include: ["src/**/*.{test,spec}.{ts,tsx}"],
-    exclude: ["node_modules", ".next", ".next-dev", "src/__tests__/integration/**"],
+    projects: [
+      {
+        extends: true,
+        test: {
+          name: "node-filesystem",
+          environment: "node",
+          include: NODE_TESTS,
+        },
+      },
+      {
+        extends: true,
+        test: {
+          name: "jsdom-unit",
+          environment: "jsdom",
+          include: ["src/**/*.{test,spec}.{ts,tsx}"],
+          exclude: [
+            "node_modules",
+            ".next",
+            ".next-dev",
+            "src/__tests__/integration/**",
+            ...NODE_TESTS,
+          ],
+        },
+      },
+    ],
     coverage: {
       provider: "v8",
       reporter: ["text", "json", "html"],
-      // Only measure coverage for pure utility/logic files — not Server Components,
-      // Supabase clients, or React components that require live runtime/DB.
       include: [
         "src/lib/auth-check.ts",
         "src/lib/security/**/*.ts",
@@ -24,7 +49,7 @@ export default defineConfig({
       exclude: ["src/**/*.{test,spec}.{ts,tsx}", "src/__tests__/**"],
       thresholds: {
         lines: 70,
-        functions: 55,   // Upstash Redis impl can't be unit-tested without live Redis
+        functions: 55,
         branches: 60,
         statements: 70,
       },
