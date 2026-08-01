@@ -64,8 +64,9 @@ export default async function MissionTransferPage({
   if (!completion) redirect(`/learn/${unitSlug}`);
 
   const dueAt = new Date(completion.completed_at);
+  const requestTime = new Date();
   dueAt.setUTCDate(dueAt.getUTCDate() + variant.dueAfterDays);
-  if (dueAt.getTime() > Date.now()) redirect("/learn");
+  if (dueAt.getTime() > requestTime.getTime()) redirect("/learn");
 
   const passScore = lesson.mission.evaluation.requiredIntentPassRatio * 100;
   const orderedVariants = [...lesson.mission.transferVariants].sort(
