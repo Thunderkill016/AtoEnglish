@@ -10,6 +10,7 @@ import {
   createMissionSession,
   transitionMissionSession,
 } from "@/lib/missions/mission-engine";
+import { summarizeTransferEvidence } from "@/lib/missions/mission-progress";
 import { validateMissionSpec } from "@/lib/missions/mission-spec";
 
 describe("Gold Mission 01", () => {
@@ -165,5 +166,46 @@ describe("transfer scheduling", () => {
         new Date("2026-08-31T00:00:00.000Z"),
       )?.dueAfterDays,
     ).toBe(30);
+  });
+
+  it("uses the latest retry score rather than the best historical score", () => {
+    const activityId = "unit-a0-1:transfer:transfer-day-1-cafe";
+    const failedRetry = summarizeTransferEvidence(
+      [
+        {
+          activity_id: activityId,
+          score: 100,
+          created_at: "2026-08-02T08:00:00.000Z",
+        },
+        {
+          activity_id: activityId,
+          score: 25,
+          created_at: "2026-08-02T08:03:00.000Z",
+        },
+      ],
+      activityId,
+      100,
+    );
+    expect(failedRetry.verified).toBe(false);
+    expect(failedRetry.retryScore).toBe(25);
+
+    const passedRetry = summarizeTransferEvidence(
+      [
+        {
+          activity_id: activityId,
+          score: 25,
+          created_at: "2026-08-02T08:00:00.000Z",
+        },
+        {
+          activity_id: activityId,
+          score: 100,
+          created_at: "2026-08-02T08:03:00.000Z",
+        },
+      ],
+      activityId,
+      100,
+    );
+    expect(passedRetry.verified).toBe(true);
+    expect(passedRetry.retryScore).toBe(100);
   });
 });
