@@ -1,4 +1,5 @@
 import type { IporPhase } from "@/lib/lessons/learning-flow";
+import type { MissionSpecV1 } from "@/lib/missions/mission-spec";
 
 export type CefrLevel = "A0" | "Pre-A1" | "A1" | "A2" | "B1" | "B2" | "IELTS";
 
@@ -313,6 +314,8 @@ export interface LessonSpecV1 extends UnitData {
   assets: LessonAsset[];
   sourceRefs: LessonSourceRef[];
   qaStatus: LessonQaStatus;
+  /** Optional until each legacy lesson has been converted and piloted. */
+  mission?: MissionSpecV1;
 }
 
 export function unavailableFeedback(
