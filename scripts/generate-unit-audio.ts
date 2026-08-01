@@ -3,13 +3,14 @@
  * Usage: npx tsx scripts/generate-unit-audio.ts unit-a0-1
  *        npx tsx scripts/generate-unit-audio.ts list   # dry-run: list all 50 unit folders
  *
- * Requires: gtts (devDependency) — Google Translate TTS, British English voice.
+ * Uses Node 24's built-in fetch through the local Translate TTS adapter.
+ * Set AUDIO_TTS_LANGUAGE to override the default language code (en).
  */
 
 import { mkdir } from "fs/promises";
 import path from "path";
-import gtts from "gtts";
 
+import { saveMp3 } from "./lib/translate-tts";
 import { unitA01 } from "../src/lib/data/units/unitA01";
 import { unitA02 } from "../src/lib/data/units/unitA02";
 import { unitA03 } from "../src/lib/data/units/unitA03";
@@ -115,13 +116,6 @@ const UNITS: Record<string, UnitData> = {
   "unit-42": unit42,
 };
 
-function saveMp3(text: string, outPath: string): Promise<void> {
-  return new Promise((resolve, reject) => {
-    const tts = new gtts(text, "en");
-    tts.save(outPath, (err: Error | null) => (err ? reject(err) : resolve()));
-  });
-}
-
 function audioBasename(audioPath: string): string {
   return path.basename(audioPath);
 }
@@ -144,20 +138,27 @@ async function generateUnit(unitId: string) {
     }
   }
 
-  const dialogues = unit.dialogues_list ?? (Array.isArray(unit.dialogues) ? unit.dialogues : unit.dialogues ? [unit.dialogues] : []);
+  const dialogues =
+    unit.dialogues_list ??
+    (Array.isArray(unit.dialogues)
+      ? unit.dialogues
+      : unit.dialogues
+        ? [unit.dialogues]
+        : []);
   for (const d of dialogues) {
     if (d.audio && d.lines?.length) {
-      const text = d.lines.map((l) => l.text).join(" ");
+      const text = d.lines.map((line) => line.text).join(" ");
       jobs.push({ file: audioBasename(d.audio), text });
     }
   }
 
   console.log(`Generating ${jobs.length} clips → public/audio/${unitId}/`);
 
+  const language = process.env.AUDIO_TTS_LANGUAGE?.trim() || "en";
   for (const job of jobs) {
     const dest = path.join(outDir, job.file);
     process.stdout.write(`  ${job.file} ... `);
-    await saveMp3(job.text, dest);
+    await saveMp3(job.text, dest, { language });
     console.log("ok");
   }
 
