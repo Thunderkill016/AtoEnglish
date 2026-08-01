@@ -138,8 +138,8 @@ export async function claimTrialCheckpoint(input: unknown) {
     vocab: GOLD_MISSION_01.targetChunks.map((chunk) => ({
       word: chunk.english,
       phonetic: null,
-      meaning_vn: chunk.vietnamese,
-      example_en: chunk.useWhenVi,
+      meaning_vn: `${chunk.vietnamese} — ${chunk.useWhenVi}`,
+      example_en: chunk.english.replace("...", "Minh"),
     })),
     topic: GOLD_MISSION_01.titleVi,
     level: "A0",
