@@ -3,25 +3,10 @@
 import { useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CheckCircle, XCircle, BookOpen, ChevronDown, ChevronUp } from 'lucide-react';
+import type { ReadingPassage, ReadingQuestion } from '@/lib/lessons/lesson-spec';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
-
-export interface ReadingQuestion {
-  id: string;
-  question_vn: string;  // Question in Vietnamese
-  options: string[];    // 3-4 option strings (English)
-  answer: string;       // Correct option
-  explanation_vn?: string; // Vietnamese explanation shown after wrong answer
-}
-
-export interface ReadingPassage {
-  id: string;
-  title: string;
-  title_vn?: string;    // Vietnamese title/topic hint
-  text: string;         // Short English passage (4-8 sentences)
-  level: 'A0' | 'A1' | 'A2' | 'B1' | 'B2';
-  questions: ReadingQuestion[];
-}
+export type { ReadingPassage, ReadingQuestion } from '@/lib/lessons/lesson-spec';
 
 interface ReadingComprehensionExerciseProps {
   passage: ReadingPassage;

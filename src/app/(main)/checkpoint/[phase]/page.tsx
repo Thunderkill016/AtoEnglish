@@ -15,6 +15,12 @@ const PHASE_CONFIG: Record<string, {
   nextPhase: string | null;
   description: string;
 }> = {
+  trial: {
+    label: "Sau Bài Học Thử",
+    levels: ["A0"],
+    nextPhase: null,
+    description: "Ba câu kiểm tra nhanh trước khi ghi nhận kết quả bài A0 đầu tiên",
+  },
   a0: {
     label: "Nền Tảng A0",
     levels: ["A0"],
@@ -69,7 +75,10 @@ export default async function CheckpointPage({ params }: Props) {
   if (!user) redirect("/login");
 
   // Get completed units for this phase
-  const phaseUnits = UNITS.filter(u => cfg.levels.includes(u.level));
+  const phaseUnits =
+    phase === "trial"
+      ? UNITS.filter((unit) => unit.id === "unit-a0-1")
+      : UNITS.filter((unit) => cfg.levels.includes(unit.level));
   const phaseUnitIds = phaseUnits.map(u => u.id);
 
   const { data: completedRows } = await supabase
@@ -81,7 +90,7 @@ export default async function CheckpointPage({ params }: Props) {
   const completedUnitIds = new Set((completedRows ?? []).map(r => r.unit_id));
   const completedCount = completedUnitIds.size;
   const totalCount = phaseUnitIds.length;
-  const isUnlocked = completedCount === totalCount;
+  const isUnlocked = phase === "trial" || completedCount === totalCount;
 
   return (
     <CheckpointClient
