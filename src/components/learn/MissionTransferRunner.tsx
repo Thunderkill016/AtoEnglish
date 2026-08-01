@@ -1,6 +1,12 @@
 "use client";
 
-import { useRef, useState, useSyncExternalStore } from "react";
+import {
+  useRef,
+  useState,
+  useSyncExternalStore,
+  type Dispatch,
+  type SetStateAction,
+} from "react";
 import { useRouter } from "next/navigation";
 import {
   AlertTriangle,
@@ -45,6 +51,9 @@ interface SpeechRecognitionLike {
 }
 
 type SpeechRecognitionConstructor = new () => SpeechRecognitionLike;
+type StartRecognition = (
+  onTranscript: (transcript: string) => void,
+) => void;
 type MissionLesson = LessonSpecV1 & { mission: MissionSpecV1 };
 type TransferStage = "scenario" | "roleplay" | "feedback" | "retry" | "done";
 
@@ -52,6 +61,15 @@ interface MissionTransferRunnerProps {
   lesson: MissionLesson;
   variant: MissionTransferVariant;
   returnRoute?: string;
+}
+
+interface TransferSpeechInputProps {
+  speechSupported: boolean;
+  isListening: boolean;
+  fallbackText: string;
+  setFallbackText: Dispatch<SetStateAction<string>>;
+  startRecognition: StartRecognition;
+  onSubmit: (value: string) => void;
 }
 
 const subscribeToBrowserCapability = () => () => {};
@@ -71,6 +89,50 @@ function speakText(text: string) {
   utterance.lang = "en-US";
   utterance.rate = 1;
   window.speechSynthesis.speak(utterance);
+}
+
+function TransferSpeechInput({
+  speechSupported,
+  isListening,
+  fallbackText,
+  setFallbackText,
+  startRecognition,
+  onSubmit,
+}: TransferSpeechInputProps) {
+  if (speechSupported) {
+    return (
+      <MinimalButton
+        fullWidth
+        disabled={isListening}
+        onClick={() => startRecognition(onSubmit)}
+      >
+        <Mic className="size-4" />
+        {isListening ? "Đang nghe..." : "Bắt đầu nói"}
+      </MinimalButton>
+    );
+  }
+
+  return (
+    <div className="space-y-3 rounded-xl border border-amber-500/30 bg-amber-500/10 p-4">
+      <div className="flex gap-2 text-sm text-amber-700 dark:text-amber-200">
+        <AlertTriangle className="mt-0.5 size-4 shrink-0" />
+        <p>
+          Hãy tự nói thành tiếng rồi nhập lại điều vừa nói. Nội dung nhập chỉ kiểm tra mục tiêu
+          giao tiếp, không phải điểm phát âm.
+        </p>
+      </div>
+      <textarea
+        value={fallbackText}
+        onChange={(event) => setFallbackText(event.target.value)}
+        rows={3}
+        className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm"
+        placeholder="Nhập lại câu bạn vừa tự nói..."
+      />
+      <MinimalButton fullWidth onClick={() => onSubmit(fallbackText)}>
+        Gửi câu vừa nói <ArrowRight className="size-4" />
+      </MinimalButton>
+    </div>
+  );
 }
 
 export default function MissionTransferRunner({
@@ -168,7 +230,7 @@ export default function MissionTransferRunner({
     void persistEvaluation(result);
   };
 
-  const startRecognition = (onTranscript: (transcript: string) => void) => {
+  const startRecognition: StartRecognition = (onTranscript) => {
     const Constructor = getSpeechRecognitionConstructor();
     if (!Constructor) return;
     recognitionRef.current?.abort();
@@ -194,38 +256,6 @@ export default function MissionTransferRunner({
     recognition.start();
   };
 
-  const SpeechInput = ({ onSubmit }: { onSubmit: (value: string) => void }) =>
-    speechSupported ? (
-      <MinimalButton
-        fullWidth
-        disabled={isListening}
-        onClick={() => startRecognition(onSubmit)}
-      >
-        <Mic className="size-4" />
-        {isListening ? "Đang nghe..." : "Bắt đầu nói"}
-      </MinimalButton>
-    ) : (
-      <div className="space-y-3 rounded-xl border border-amber-500/30 bg-amber-500/10 p-4">
-        <div className="flex gap-2 text-sm text-amber-700 dark:text-amber-200">
-          <AlertTriangle className="mt-0.5 size-4 shrink-0" />
-          <p>
-            Hãy tự nói thành tiếng rồi nhập lại điều vừa nói. Nội dung nhập chỉ được dùng để
-            kiểm tra mục tiêu giao tiếp, không phải điểm phát âm.
-          </p>
-        </div>
-        <textarea
-          value={fallbackText}
-          onChange={(event) => setFallbackText(event.target.value)}
-          rows={3}
-          className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm"
-          placeholder="Nhập lại câu bạn vừa tự nói..."
-        />
-        <MinimalButton fullWidth onClick={() => onSubmit(fallbackText)}>
-          Gửi câu vừa nói <ArrowRight className="size-4" />
-        </MinimalButton>
-      </div>
-    );
-
   const currentTurn = turns[turnIndex];
   const progressByStage: Record<TransferStage, number> = {
     scenario: 10,
@@ -233,6 +263,13 @@ export default function MissionTransferRunner({
     feedback: 80,
     retry: 90,
     done: 100,
+  };
+  const speechInputProps = {
+    speechSupported,
+    isListening,
+    fallbackText,
+    setFallbackText,
+    startRecognition,
   };
 
   return (
@@ -294,13 +331,19 @@ export default function MissionTransferRunner({
               <p className="text-xs font-black uppercase tracking-widest text-primary">
                 Lượt {turnIndex + 1}/{turns.length}
               </p>
-              <h1 className="mt-1 text-2xl font-black">Trả lời không có câu mẫu</h1>
+              <h1 className="mt-1 text-2xl font-black">
+                Trả lời không có câu mẫu
+              </h1>
             </div>
             <div className="rounded-2xl border border-primary/30 bg-primary/5 p-5">
               <div className="flex items-start justify-between gap-4">
                 <div>
-                  <p className="text-xs font-bold text-primary">{mission.partnerName} nói</p>
-                  <p className="mt-2 text-lg font-bold">{currentTurn.partnerLine}</p>
+                  <p className="text-xs font-bold text-primary">
+                    {mission.partnerName} nói
+                  </p>
+                  <p className="mt-2 text-lg font-bold">
+                    {currentTurn.partnerLine}
+                  </p>
                 </div>
                 <button
                   type="button"
@@ -312,7 +355,7 @@ export default function MissionTransferRunner({
                 </button>
               </div>
             </div>
-            <SpeechInput onSubmit={submitTurn} />
+            <TransferSpeechInput {...speechInputProps} onSubmit={submitTurn} />
           </section>
         )}
 
@@ -346,8 +389,12 @@ export default function MissionTransferRunner({
                   key={correction.code}
                   className="rounded-xl border border-amber-500/30 bg-amber-500/10 p-4"
                 >
-                  <p className="text-xs font-black text-amber-500">Sửa {index + 1}</p>
-                  <p className="mt-2 text-sm font-bold">{correction.suggestion}</p>
+                  <p className="text-xs font-black text-amber-500">
+                    Sửa {index + 1}
+                  </p>
+                  <p className="mt-2 text-sm font-bold">
+                    {correction.suggestion}
+                  </p>
                   <p className="mt-1 text-xs text-muted-foreground">
                     {correction.explanationVi}
                   </p>
@@ -370,13 +417,17 @@ export default function MissionTransferRunner({
         {stage === "retry" && evaluation && (
           <section className="space-y-5">
             <div>
-              <p className="text-xs font-black uppercase tracking-widest text-primary">Retry</p>
-              <h1 className="mt-1 text-2xl font-black">Tự tạo một lượt trả lời hoàn chỉnh</h1>
+              <p className="text-xs font-black uppercase tracking-widest text-primary">
+                Retry
+              </p>
+              <h1 className="mt-1 text-2xl font-black">
+                Tự tạo một lượt trả lời hoàn chỉnh
+              </h1>
               <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
                 {evaluation.retryInstructionVi}
               </p>
             </div>
-            <SpeechInput onSubmit={submitRetry} />
+            <TransferSpeechInput {...speechInputProps} onSubmit={submitRetry} />
           </section>
         )}
 
