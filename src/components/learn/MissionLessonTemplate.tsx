@@ -1,4 +1,4 @@
-import MissionRunner from "@/components/learn/MissionRunner";
+import MissionSessionGate from "@/components/learn/MissionSessionGate";
 import type { LessonSpecV1 } from "@/lib/lessons/lesson-spec";
 import type { MissionSpecV1 } from "@/lib/missions/mission-spec";
 
@@ -13,7 +13,7 @@ export default function MissionLessonTemplate({
   lesson,
 }: MissionLessonTemplateProps) {
   return (
-    <MissionRunner
+    <MissionSessionGate
       lesson={lesson}
       nextRoute={`/learn/${lesson.id}/checkpoint`}
     />
