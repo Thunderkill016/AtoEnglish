@@ -31,7 +31,7 @@ export interface MissionEvaluationResult {
     transcriptAvailable: boolean;
     acousticEvidenceAvailable: false;
     evaluator: "deterministic-intent-match";
-    evaluatorVersion: "1.1.0";
+    evaluatorVersion: "1.2.0";
   };
 }
 
@@ -98,7 +98,16 @@ export function evaluateMissionTranscript(
   mission: MissionSpecV1,
   transcripts: string[],
 ): MissionEvaluationResult {
-  const combined = normalizeTranscript(transcripts.filter(Boolean).join(" "));
+  // A retry is submitted as one extra answer after the original roleplay turns.
+  // Score the retry independently so an earlier correct sentence cannot hide a bad retry.
+  const evidenceTranscripts =
+    transcripts.length > mission.roleplayTurns.length
+      ? [transcripts[transcripts.length - 1]]
+      : transcripts;
+  const combined = normalizeTranscript(
+    evidenceTranscripts.filter(Boolean).join(" "),
+  );
+
   if (!combined) {
     return {
       status: "unscored",
@@ -123,7 +132,7 @@ export function evaluateMissionTranscript(
         transcriptAvailable: false,
         acousticEvidenceAvailable: false,
         evaluator: "deterministic-intent-match",
-        evaluatorVersion: "1.1.0",
+        evaluatorVersion: "1.2.0",
       },
     };
   }
@@ -138,7 +147,8 @@ export function evaluateMissionTranscript(
   const completionRatio =
     requiredIntents.length === 0
       ? 1
-      : (requiredIntents.length - missingRequired.length) / requiredIntents.length;
+      : (requiredIntents.length - missingRequired.length) /
+        requiredIntents.length;
   const taskCompleted =
     completionRatio >= mission.evaluation.requiredIntentPassRatio;
 
@@ -147,13 +157,17 @@ export function evaluateMissionTranscript(
     ...missingRequired.map(missingIntentCorrection),
   ].slice(0, mission.evaluation.maxCorrections);
 
-  const hasQuestion = completedIntents.some((intent) => intent.id === "ask_name");
+  const hasQuestion = completedIntents.some(
+    (intent) => intent.id === "ask_name",
+  );
   const hasRepair = completedIntents.some(
     (intent) => intent.id === "repair_request",
   );
-  const interactionScore = hasQuestion && hasRepair ? 4 : hasQuestion || hasRepair ? 2 : 0;
+  const interactionScore =
+    hasQuestion && hasRepair ? 4 : hasQuestion || hasRepair ? 2 : 0;
   const taskRubric = Math.round(completionRatio * 4);
-  const languageControl = findLanguageCorrections(combined).length === 0 ? 4 : 2;
+  const languageControl =
+    findLanguageCorrections(combined).length === 0 ? 4 : 2;
 
   return {
     status: "scored",
@@ -162,14 +176,13 @@ export function evaluateMissionTranscript(
     completedIntentIds: completedIntents.map((intent) => intent.id),
     missingIntentIds: missingRequired.map((intent) => intent.id),
     corrections,
-    // Retrieval practice happens immediately even after a perfect first attempt.
     retryRequired: mission.retry.requiredAfterFeedback,
     retryInstructionVi:
       corrections.length > 0
-        ? `Hãy nói lại, tập trung vào: ${corrections
+        ? `Hãy thực hiện lại toàn bộ nhiệm vụ và sửa các điểm sau: ${corrections
             .map((correction) => correction.suggestion)
             .join(" / ")}`
-        : "Bạn đã hoàn thành nhiệm vụ. Hãy nói lại một lần nữa mà không nhìn câu mẫu.",
+        : "Hãy thực hiện lại toàn bộ nhiệm vụ một lần nữa mà không nhìn câu mẫu.",
     rubric: {
       taskCompletion: taskRubric,
       interaction: interactionScore,
@@ -181,7 +194,7 @@ export function evaluateMissionTranscript(
       transcriptAvailable: true,
       acousticEvidenceAvailable: false,
       evaluator: "deterministic-intent-match",
-      evaluatorVersion: "1.1.0",
+      evaluatorVersion: "1.2.0",
     },
   };
 }
