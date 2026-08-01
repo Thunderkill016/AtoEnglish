@@ -1,0 +1,101 @@
+name: Stabilize toolchain
+
+on:
+  push:
+    branches: [agent/stabilize-toolchain]
+  workflow_dispatch:
+
+concurrency:
+  group: stabilize-toolchain
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  regenerate-and-verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    env:
+      CI: true
+      HUSKY: 0
+
+    steps:
+      - name: Check out branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/stabilize-toolchain
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Pin npm
+        run: npm install --global npm@11.16.0
+
+      - name: Record toolchain contract
+        shell: bash
+        run: |
+          node <<'NODE'
+          const fs = require('node:fs');
+          const packageJson = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+          packageJson.packageManager = 'npm@11.16.0';
+          packageJson.engines = {
+            node: '24.x',
+            npm: '11.x'
+          };
+          fs.writeFileSync('package.json', `${JSON.stringify(packageJson, null, 2)}\n`);
+          NODE
+          printf '24\n' > .nvmrc
+
+      - name: Regenerate package lock
+        run: npm install --package-lock-only --ignore-scripts --no-audit
+
+      - name: Require clean installs in Verify
+        shell: bash
+        run: |
+          node <<'NODE'
+          const fs = require('node:fs');
+          const path = '.github/workflows/verify.yml';
+          const source = fs.readFileSync(path, 'utf8');
+          const previous = 'run: npm install --no-audit --prefer-offline';
+          const replacement = 'run: npm ci --no-audit --prefer-offline';
+          if (!source.includes(previous)) {
+            throw new Error(`Expected Verify install command not found: ${previous}`);
+          }
+          fs.writeFileSync(path, source.replace(previous, replacement));
+          NODE
+
+      - name: Install from lockfile
+        run: |
+          rm -rf node_modules
+          npm ci --no-audit --prefer-offline
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Type-check
+        run: npx tsc --noEmit
+
+      - name: Unit tests
+        run: npm run test
+
+      - name: Content standards
+        run: npm run test:content-standard
+
+      - name: Production build
+        run: npm run build
+
+      - name: Commit reproducible toolchain
+        shell: bash
+        run: |
+          rm .github/workflows/stabilize-toolchain.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add package.json package-lock.json .nvmrc .github/workflows/verify.yml .github/workflows/stabilize-toolchain.yml
+          git diff --cached --check
+          git commit -m 'Stabilize Node and npm toolchain'
+          git push origin HEAD:agent/stabilize-toolchain
