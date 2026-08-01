@@ -5,6 +5,7 @@ import { unitA04 } from "@/lib/data/units/unitA04";
 import { unitA05 } from "@/lib/data/units/unitA05";
 import { unitA06 } from "@/lib/data/units/unitA06";
 import { LESSON_SECTIONS } from "@/lib/lessons/learning-flow";
+import { GOLD_MISSION_01 } from "@/lib/missions/gold-mission-01";
 import type {
   LessonActivity,
   LessonAsset,
@@ -63,20 +64,38 @@ function toPilotSpec(
   prerequisites: string[],
 ): LessonSpecV1 {
   const activities = buildActivities(unit);
+  const mission = unit.unitId === GOLD_MISSION_01.lessonId ? GOLD_MISSION_01 : undefined;
 
   return {
     ...unit,
+    ...(mission
+      ? {
+          title: "Bài A0-1: Gặp đồng nghiệp mới",
+          estimatedTime: 15,
+          description: mission.canDoVi,
+          situation: mission.scenarioVi,
+          learningOutcomes: [mission.canDoVi],
+        }
+      : {}),
     schemaVersion: 1,
     id: unit.unitId,
-    version: 1,
+    version: mission ? 2 : 1,
     cefr: "A0",
-    canDo: (unit.learningOutcomes ?? [unit.description]).slice(0, 3),
+    canDo: mission
+      ? [mission.canDoVi]
+      : (unit.learningOutcomes ?? [unit.description]).slice(0, 3),
     prerequisites,
     activities,
     assessment: {
-      activityIds: [`${unit.unitId}:section:8`],
+      activityIds: [
+        mission ? `${unit.unitId}:section:7` : `${unit.unitId}:section:8`,
+      ],
       passThreshold: 70,
-      canDoEvidence: unit.quiz.map((question) => `${unit.unitId}:quiz:${question.id}`),
+      canDoEvidence: mission
+        ? mission.intents
+            .filter((intent) => intent.required)
+            .map((intent) => `${mission.id}:intent:${intent.id}`)
+        : unit.quiz.map((question) => `${unit.unitId}:quiz:${question.id}`),
     },
     assets: buildAssets(unit),
     sourceRefs: [
@@ -90,8 +109,19 @@ function toPilotSpec(
         title: "CEFR Companion Volume",
         url: "https://www.coe.int/en/web/common-european-framework-reference-languages",
       },
+      ...(mission
+        ? [
+            {
+              id: "mission-based-speaking-v1",
+              title: "AtoEnglish mission-based speaking contract",
+              note:
+                "Scenario, bounded chunks, controlled roleplay, feedback, retry and transfer testing.",
+            },
+          ]
+        : []),
     ],
     qaStatus: "automated_pass",
+    mission,
   };
 }
 
