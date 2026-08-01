@@ -1,9 +1,9 @@
-import { unitA01 } from "@/lib/data/units/unitA01";
 import { unitA02 } from "@/lib/data/units/unitA02";
 import { unitA03 } from "@/lib/data/units/unitA03";
 import { unitA04 } from "@/lib/data/units/unitA04";
 import { unitA05 } from "@/lib/data/units/unitA05";
 import { unitA06 } from "@/lib/data/units/unitA06";
+import { GOLD_DAY_ONE_UNIT } from "@/lib/lessons/gold-day-one";
 import { LESSON_SECTIONS } from "@/lib/lessons/learning-flow";
 import { getMissionForLesson } from "@/lib/missions/mission-catalog";
 import type {
@@ -160,7 +160,7 @@ function toPilotSpec(
 }
 
 const PILOT_SOURCE_UNITS = [
-  unitA01,
+  GOLD_DAY_ONE_UNIT,
   unitA02,
   unitA03,
   unitA04,

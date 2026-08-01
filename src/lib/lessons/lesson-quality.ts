@@ -94,32 +94,79 @@ export function evaluateLessonQuality(spec: LessonSpecV1): LessonQualityReport {
     }
   }
 
-  const scores: Record<LessonQualityCategory, number> = {
-    alignment:
-      (spec.canDo.length > 0 ? 6 : 0) +
-      (spec.activities.length >= 8 && spec.activities.length <= 12 ? 6 : 0) +
-      (assessmentIdsExist ? 8 : 0),
-    input:
-      (spec.vocab.length >= 8 && spec.vocab.length <= 12 ? 5 : 0) +
-      (spec.dialogues.length > 0 ? 5 : 0) +
-      (audioPaths.length > 0 ? 5 : 0),
-    retrievalOutput:
-      ((spec.practiceQuiz?.length ?? 0) > 0 ? 5 : 0) +
-      ((spec.practiceTranslate?.length ?? 0) > 0 ? 5 : 0) +
-      (spec.activities.some((activity) => activity.skill === "speaking") ? 5 : 0) +
-      (spec.activities.some((activity) => activity.srsTargets.length > 0) ? 5 : 0),
-    assessmentFeedback:
-      (spec.quiz.length >= 5 ? 5 : 0) +
+  const mission = spec.mission;
+  const missionInputScore = mission
+    ? (mission.targetChunks.length >= 6 && mission.targetChunks.length <= 8
+        ? 5
+        : 0) +
+      (mission.roleplayTurns.length >= 3 ? 5 : 0) +
+      (mission.targetChunks.every(
+        (chunk) => chunk.vietnamese.trim() && chunk.useWhenVi.trim(),
+      )
+        ? 5
+        : 0)
+    : null;
+  const missionRetrievalScore = mission
+    ? (mission.roleplayTurns.length > 0 ? 5 : 0) +
+      (mission.intents.some((intent) => intent.interactional) ? 5 : 0) +
+      (mission.retry.requiredAfterFeedback ? 5 : 0) +
+      (spec.activities.some((activity) => activity.srsTargets.length > 0)
+        ? 5
+        : 0)
+    : null;
+  const missionAssessmentScore = mission
+    ? (mission.checkpoint.questions.length >= 4 ? 5 : 0) +
       (quizAnswersUsable ? 5 : 0) +
       (unique(activityIds) ? 5 : 0) +
       (spec.activities.every((activity) =>
         activity.feedback.incorrectVi.trim(),
       )
         ? 5
-        : 0),
+        : 0)
+    : null;
+  const missionVietnameseSupportScore = mission
+    ? (mission.targetChunks.every(
+        (chunk) => chunk.vietnamese.trim() && chunk.useWhenVi.trim(),
+      )
+        ? 5
+        : 0) +
+      (mission.feedbackRules.every((rule) => rule.explanationVi.trim()) ? 5 : 0)
+    : null;
+
+  const scores: Record<LessonQualityCategory, number> = {
+    alignment:
+      (spec.canDo.length > 0 ? 6 : 0) +
+      (spec.activities.length >= 8 && spec.activities.length <= 12 ? 6 : 0) +
+      (assessmentIdsExist ? 8 : 0),
+    input:
+      missionInputScore ??
+      ((spec.vocab.length >= 8 && spec.vocab.length <= 12 ? 5 : 0) +
+        (spec.dialogues.length > 0 ? 5 : 0) +
+        (audioPaths.length > 0 ? 5 : 0)),
+    retrievalOutput:
+      missionRetrievalScore ??
+      (((spec.practiceQuiz?.length ?? 0) > 0 ? 5 : 0) +
+        ((spec.practiceTranslate?.length ?? 0) > 0 ? 5 : 0) +
+        (spec.activities.some((activity) => activity.skill === "speaking")
+          ? 5
+          : 0) +
+        (spec.activities.some((activity) => activity.srsTargets.length > 0)
+          ? 5
+          : 0)),
+    assessmentFeedback:
+      missionAssessmentScore ??
+      ((spec.quiz.length >= 5 ? 5 : 0) +
+        (quizAnswersUsable ? 5 : 0) +
+        (unique(activityIds) ? 5 : 0) +
+        (spec.activities.every((activity) =>
+          activity.feedback.incorrectVi.trim(),
+        )
+          ? 5
+          : 0)),
     vietnameseLearnerSupport:
-      (spec.vocab.some((item) => item.l1_interference_vn?.trim()) ? 5 : 0) +
-      (spec.grammar?.vnNote?.trim() ? 5 : 0),
+      missionVietnameseSupportScore ??
+      ((spec.vocab.some((item) => item.l1_interference_vn?.trim()) ? 5 : 0) +
+        (spec.grammar?.vnNote?.trim() ? 5 : 0)),
     accessibilityMedia:
       (allRequiredAudio.every((path) => audioPaths.includes(path)) ? 5 : 0) +
       (spec.activities.every((activity) => activity.promptVi.trim()) ? 5 : 0),
@@ -130,7 +177,7 @@ export function evaluateLessonQuality(spec: LessonSpecV1): LessonQualityReport {
 
   return {
     lessonId: spec.id,
-    evaluatorVersion: "lesson-quality-1.1.0",
+    evaluatorVersion: "lesson-quality-1.2.0",
     scores,
     total,
     mandatoryFailures,

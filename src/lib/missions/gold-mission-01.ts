@@ -27,12 +27,6 @@ export const GOLD_MISSION_01: MissionSpecV1 = {
       useWhenVi: "Nói nghề nghiệp hoặc vai trò.",
     },
     {
-      id: "state-workplace",
-      english: "I work at ...",
-      vietnamese: "Tôi làm tại ...",
-      useWhenVi: "Nói công ty hoặc nơi làm việc.",
-    },
-    {
       id: "ask-name",
       english: "What's your name?",
       vietnamese: "Bạn tên gì?",
@@ -49,12 +43,6 @@ export const GOLD_MISSION_01: MissionSpecV1 = {
       english: "Could you say that again?",
       vietnamese: "Bạn có thể nói lại không?",
       useWhenVi: "Bạn không nghe rõ và cần người kia nhắc lại.",
-    },
-    {
-      id: "spell",
-      english: "How do you spell that?",
-      vietnamese: "Bạn đánh vần từ đó thế nào?",
-      useWhenVi: "Bạn nghe được âm nhưng chưa biết cách viết tên hoặc từ.",
     },
     {
       id: "did-not-catch",
@@ -87,14 +75,6 @@ export const GOLD_MISSION_01: MissionSpecV1 = {
       ],
     },
     {
-      id: "state_workplace",
-      descriptionVi: "Nói nơi làm việc.",
-      required: false,
-      interactional: false,
-      examples: ["I work at Ato."],
-      matchers: ["\\bi work at\\s+[a-z0-9]+"],
-    },
-    {
       id: "ask_name",
       descriptionVi: "Hỏi tên người đối diện.",
       required: true,
@@ -110,13 +90,11 @@ export const GOLD_MISSION_01: MissionSpecV1 = {
       examples: [
         "Could you say that again?",
         "Sorry, I didn't catch that.",
-        "How do you spell that?",
       ],
       matchers: [
         "\\b(?:could|can) you say (?:that|it) again\\b",
         "\\bi did not catch that\\b",
         "\\bi didn't catch that\\b",
-        "\\bhow do you spell that\\b",
       ],
     },
   ],
@@ -147,8 +125,8 @@ export const GOLD_MISSION_01: MissionSpecV1 = {
       id: "turn-role",
       partnerLine: "Nice to meet you. What do you do?",
       partnerLineVi: "Rất vui được gặp bạn. Bạn làm công việc gì?",
-      expectedIntentIds: ["state_role", "state_workplace"],
-      hintVi: "Nói vai trò bằng I work as ...; nơi làm việc là tùy chọn.",
+      expectedIntentIds: ["state_role"],
+      hintVi: "Nói vai trò bằng I work as a/an ...",
     },
     {
       id: "turn-ask-name",
@@ -159,19 +137,24 @@ export const GOLD_MISSION_01: MissionSpecV1 = {
     },
     {
       id: "turn-repair",
-      partnerLine: "I'm Alex from the customer success enablement team.",
+      partnerLine: "I'm Alex from customer success operations.",
       partnerLineVi: "Người đối diện nói tên kèm một cụm dài và khó nghe.",
       expectedIntentIds: ["repair_request"],
-      hintVi: "Đừng đoán. Hãy yêu cầu nói lại hoặc đánh vần.",
+      hintVi: "Đừng đoán. Hãy báo chưa nghe rõ hoặc yêu cầu nói lại.",
     },
   ],
   checkpoint: {
-    passThreshold: 3,
+    passThreshold: 4,
     questions: [
       {
         id: "name",
         questionVi: "Câu nào trả lời đúng khi người khác hỏi tên bạn?",
-        options: ["I am fine.", "My name is Lan.", "I am ten.", "Good morning."],
+        options: [
+          "I am fine.",
+          "My name is Lan.",
+          "I am ten.",
+          "Good morning.",
+        ],
         answer: "My name is Lan.",
         explanationVi: "Dùng 'My name is...' hoặc 'I'm...' để nói tên.",
         evidenceIntentIds: ["introduce_name"],
@@ -192,7 +175,12 @@ export const GOLD_MISSION_01: MissionSpecV1 = {
       {
         id: "ask-name",
         questionVi: "Bạn chưa biết tên đồng nghiệp. Bạn hỏi thế nào?",
-        options: ["What is your name?", "How much is it?", "Where is it?", "Are you name?"],
+        options: [
+          "What is your name?",
+          "How much is it?",
+          "Where is it?",
+          "Are you name?",
+        ],
         answer: "What is your name?",
         explanationVi: "'What is your name?' dùng để hỏi tên.",
         evidenceIntentIds: ["ask_name"],
@@ -234,7 +222,7 @@ export const GOLD_MISSION_01: MissionSpecV1 = {
         "Hi, I don't think we've met. What's your name?",
         "What do you do on the team?",
         "We may work together next week.",
-        "I'm Maya from the international partner enablement group.",
+        "I'm Maya from international partnerships.",
       ],
     },
     {
@@ -246,7 +234,7 @@ export const GOLD_MISSION_01: MissionSpecV1 = {
         "Hello, this is operations. Who am I speaking with?",
         "And what is your role?",
         "I haven't introduced myself yet.",
-        "I'm Jordan from regional operations coordination.",
+        "I'm Jordan from regional operations.",
       ],
     },
     {
@@ -258,7 +246,7 @@ export const GOLD_MISSION_01: MissionSpecV1 = {
         "Good morning. I don't think we've met before. Could you introduce yourself?",
         "What do you do at your company?",
         "You can ask me one question before we begin.",
-        "I'm Christopher from strategic procurement transformation.",
+        "I'm Christopher from procurement.",
       ],
     },
   ],
