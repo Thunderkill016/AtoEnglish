@@ -4,7 +4,10 @@ import {
   CONTENT_BLOCK_ORDER,
   REFERENCE_UNIT_ID,
 } from "@/lib/lessons/lesson-blueprint";
-import { LESSON_SECTIONS, SECTION_ORDER } from "@/lib/lessons/learning-flow";
+import {
+  LESSON_SECTIONS,
+  SECTION_ORDER,
+} from "@/lib/lessons/learning-flow";
 import { PILOT_LESSON_SPECS } from "@/lib/lessons/pilot-lessons";
 import {
   canPublishLesson,
@@ -19,7 +22,9 @@ describe("lesson-blueprint", () => {
 
   it("maps every app section (except meta) to at least one content block", () => {
     for (const sec of LESSON_SECTIONS) {
-      const blocks = LESSON_BLUEPRINT.filter((b) => b.sectionIds.includes(sec.id));
+      const blocks = LESSON_BLUEPRINT.filter((b) =>
+        b.sectionIds.includes(sec.id),
+      );
       expect(blocks.length, `section ${sec.id} ${sec.label}`).toBeGreaterThan(0);
     }
   });
@@ -44,7 +49,9 @@ describe("pilot lesson quality gate", () => {
       expect(spec.schemaVersion).toBe(1);
       expect(spec.cefr).toBe("A0");
       expect(spec.activities).toHaveLength(10);
-      expect(new Set(spec.activities.map((activity) => activity.id)).size).toBe(10);
+      expect(new Set(spec.activities.map((activity) => activity.id)).size).toBe(
+        10,
+      );
     }
   });
 
@@ -57,6 +64,25 @@ describe("pilot lesson quality gate", () => {
       expect(spec.qaStatus).toBe("automated_pass");
       expect(canPublishLesson(spec, report, null)).toBe(false);
     }
+  });
+
+  it("rejects a lesson whose mission violates the authoring contract", () => {
+    const valid = PILOT_LESSON_SPECS["unit-a0-1"];
+    expect(valid.mission).toBeDefined();
+
+    const invalid = {
+      ...valid,
+      mission: {
+        ...valid.mission!,
+        targetChunks: valid.mission!.targetChunks.slice(0, 3),
+      },
+    };
+    const report = evaluateLessonQuality(invalid);
+
+    expect(report.mandatoryFailures).toContain(
+      "mission:target_chunks_out_of_range",
+    );
+    expect(report.automatedPass).toBe(false);
   });
 
   it("requires an independent review of the same version to publish", () => {
