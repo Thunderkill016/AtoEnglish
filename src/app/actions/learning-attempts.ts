@@ -11,6 +11,8 @@ import {
   TRIAL_CHECKPOINT_QUESTIONS,
   scoreTrialCheckpoint,
 } from "@/lib/lessons/trial-checkpoint";
+import { GOLD_MISSION_01 } from "@/lib/missions/gold-mission-01";
+import { seedUnitVocabToSRS } from "@/app/actions/cards";
 import { completeUnit } from "@/app/actions/unit";
 import { z } from "zod";
 
@@ -23,10 +25,15 @@ export async function recordLearningAttempts(input: LearningAttemptBatchInput) {
   }
 
   const requestHeaders = await headers();
-  const ip = requestHeaders.get("x-forwarded-for")?.split(",")[0]?.trim() || "127.0.0.1";
+  const ip =
+    requestHeaders.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+    "127.0.0.1";
   const rateCheck = await attemptLimiter.check(ip);
   if (!rateCheck.success) {
-    return { success: false as const, error: "Quá nhiều lần ghi nhận. Vui lòng thử lại sau." };
+    return {
+      success: false as const,
+      error: "Quá nhiều lần ghi nhận. Vui lòng thử lại sau.",
+    };
   }
 
   const supabase = await createClient();
@@ -78,7 +85,10 @@ export async function claimTrialCheckpoint(input: unknown) {
     (question) => parsed.data.answers[question.id] !== undefined,
   );
   if (!allAnswered) {
-    return { success: false as const, error: "Bạn cần trả lời đủ ba câu checkpoint." };
+    return {
+      success: false as const,
+      error: "Bạn cần trả lời đủ ba câu checkpoint.",
+    };
   }
 
   const { correctCount, passed } = scoreTrialCheckpoint(parsed.data.answers);
@@ -94,7 +104,7 @@ export async function claimTrialCheckpoint(input: unknown) {
         score: correct ? 100 : 0,
         errorTags: correct ? [] : ["answer_mismatch"],
         evaluator: "deterministic-answer-key",
-        evaluatorVersion: "1.0.0",
+        evaluatorVersion: "1.1.0",
         latencyMs: null,
       };
     }),
@@ -111,7 +121,10 @@ export async function claimTrialCheckpoint(input: unknown) {
     };
   }
 
-  const completion = await completeUnit("unit-a0-1", correctCount === 3 ? 3 : 2);
+  const completion = await completeUnit(
+    "unit-a0-1",
+    correctCount === 3 ? 3 : 2,
+  );
   if (!completion.success) {
     return {
       success: false as const,
@@ -119,10 +132,24 @@ export async function claimTrialCheckpoint(input: unknown) {
     };
   }
 
+  // Reuse the existing FSRS deck for communicative chunks after mastery is verified.
+  // Raw audio and transcripts are not persisted here.
+  const reviewSeed = await seedUnitVocabToSRS({
+    vocab: GOLD_MISSION_01.targetChunks.map((chunk) => ({
+      word: chunk.english,
+      phonetic: null,
+      meaning_vn: chunk.vietnamese,
+      example_en: chunk.useWhenVi,
+    })),
+    topic: GOLD_MISSION_01.titleVi,
+    level: "A0",
+  });
+
   return {
     success: true as const,
     passed: true,
     correctCount,
     masteryRecorded: true,
+    reviewTargetsAdded: reviewSeed.success ? reviewSeed.added : 0,
   };
 }
