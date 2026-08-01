@@ -40,7 +40,7 @@ interface LearnClientProps {
   completedUnitIds: string[];
   activeUnitId: string;
   isGuest: boolean;
-  dueTransfer: DueTransfer | null;
+  dueTransfers: DueTransfer[];
   unitStatuses: UnitStatus[];
 }
 
@@ -58,7 +58,7 @@ export default function LearnClient({
   completedUnitIds,
   activeUnitId,
   isGuest,
-  dueTransfer,
+  dueTransfers,
   unitStatuses,
 }: LearnClientProps) {
   const activeUnit =
@@ -70,14 +70,17 @@ export default function LearnClient({
       subtitle={`${completedUnitIds.length}/6 bài A0 · ${userLevel} · ${totalXp.toLocaleString()} XP`}
     >
       <div className="space-y-6 pb-16">
-        {dueTransfer && (
-          <ListSection title="Kiểm tra giao tiếp đến hạn">
-            <PrimaryRow
-              href={dueTransfer.href}
-              label={dueTransfer.label}
-              description={dueTransfer.description}
-              icon={RefreshCcw}
-            />
+        {dueTransfers.length > 0 && (
+          <ListSection title={`Kiểm tra giao tiếp đến hạn · ${dueTransfers.length}`}>
+            {dueTransfers.map((transfer) => (
+              <PrimaryRow
+                key={transfer.id}
+                href={transfer.href}
+                label={transfer.label}
+                description={transfer.description}
+                icon={RefreshCcw}
+              />
+            ))}
           </ListSection>
         )}
 
@@ -93,7 +96,7 @@ export default function LearnClient({
           xp={activeUnit.xp}
         />
 
-        <ListSection title="A0 nền tảng · pilot">
+        <ListSection title="A0 nền tảng · mission pilot">
           {unitStatuses.map((unit, index) => {
             const isCompleted = completedUnitIds.includes(unit.id);
             const isGuestLocked = isGuest && index > 0;
