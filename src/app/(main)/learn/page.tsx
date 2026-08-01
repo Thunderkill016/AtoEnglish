@@ -6,6 +6,7 @@ import { UNITS } from "@/lib/constants/units";
 import { PILOT_LESSON_SPECS } from "@/lib/lessons/pilot-lessons";
 import { GOLD_MISSION_01 } from "@/lib/missions/gold-mission-01";
 import { selectDueTransferVariant } from "@/lib/missions/mission-evaluator";
+import { summarizeTransferEvidence } from "@/lib/missions/mission-progress";
 import { createClient } from "@/lib/supabase/server";
 import LearnClient from "./components/LearnClient";
 
@@ -55,7 +56,7 @@ export default async function LearnPage() {
     user
       ? supabase
           .from("learning_attempts")
-          .select("activity_id, score")
+          .select("activity_id, score, created_at")
           .eq("user_id", user.id)
           .eq("lesson_id", GOLD_MISSION_01.lessonId)
           .like(
@@ -82,21 +83,6 @@ export default async function LearnPage() {
   const missionCompletion = completedLessons.find(
     (lesson) => lesson.unit_id === GOLD_MISSION_01.lessonId,
   );
-  const transferEvidence = new Map<
-    string,
-    { attemptCount: number; bestScore: number }
-  >();
-  for (const attempt of transferAttemptsRes.data ?? []) {
-    const current = transferEvidence.get(attempt.activity_id) ?? {
-      attemptCount: 0,
-      bestScore: 0,
-    };
-    transferEvidence.set(attempt.activity_id, {
-      attemptCount: current.attemptCount + 1,
-      bestScore: Math.max(current.bestScore, attempt.score ?? 0),
-    });
-  }
-
   const dueVariant = missionCompletion
     ? selectDueTransferVariant(
         GOLD_MISSION_01,
@@ -108,16 +94,14 @@ export default async function LearnPage() {
     ? `${GOLD_MISSION_01.lessonId}:transfer:${dueVariant.id}`
     : null;
   const dueEvidence = dueActivityId
-    ? transferEvidence.get(dueActivityId)
-    : undefined;
-  const transferVerified = Boolean(
-    dueEvidence &&
-      dueEvidence.attemptCount >= 2 &&
-      dueEvidence.bestScore >=
+    ? summarizeTransferEvidence(
+        transferAttemptsRes.data ?? [],
+        dueActivityId,
         GOLD_MISSION_01.evaluation.requiredIntentPassRatio * 100,
-  );
+      )
+    : null;
   const dueTransfer =
-    dueVariant && !transferVerified
+    dueVariant && !dueEvidence?.verified
       ? {
           id: dueVariant.id,
           label: `Kiểm tra lại sau ${dueVariant.dueAfterDays} ngày`,
