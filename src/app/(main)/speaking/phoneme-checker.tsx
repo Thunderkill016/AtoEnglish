@@ -99,11 +99,8 @@ export default function PhonemeChecker() {
           target: sentence.text,
           spoken: heard,
         });
-        if (res.success) {
-          setResult(res.result);
-        } else {
-          setError(res.error);
-        }
+        setResult(null);
+        setError(res.error);
       });
     };
 
@@ -141,8 +138,8 @@ export default function PhonemeChecker() {
           <Mic className="w-5 h-5 text-violet-400" />
         </div>
         <div>
-          <h2 className="text-white font-bold text-base">Phoneme Coach</h2>
-          <p className="text-zinc-500 text-xs">AI phân tích phát âm — tập trung vào lỗi của người Việt</p>
+          <h2 className="text-white font-bold text-base">Luyện phát âm theo mẫu</h2>
+          <p className="text-zinc-500 text-xs">Tự luyện có hướng dẫn, chưa chấm điểm phát âm</p>
         </div>
       </div>
 

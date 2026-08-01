@@ -254,6 +254,54 @@ export type Database = {
         }
         Relationships: []
       }
+      learning_attempts: {
+        Row: {
+          activity_id: string
+          created_at: string
+          error_tags: string[]
+          evaluator: string
+          evaluator_version: string
+          id: number
+          latency_ms: number | null
+          lesson_id: string
+          modality: string
+          score: number | null
+          session_id: string
+          status: string
+          user_id: string
+        }
+        Insert: {
+          activity_id: string
+          created_at?: string
+          error_tags?: string[]
+          evaluator: string
+          evaluator_version: string
+          id?: never
+          latency_ms?: number | null
+          lesson_id: string
+          modality: string
+          score?: number | null
+          session_id: string
+          status: string
+          user_id: string
+        }
+        Update: {
+          activity_id?: string
+          created_at?: string
+          error_tags?: string[]
+          evaluator?: string
+          evaluator_version?: string
+          id?: never
+          latency_ms?: number | null
+          lesson_id?: string
+          modality?: string
+          score?: number | null
+          session_id?: string
+          status?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       lesson_history: {
         Row: {
           completed_at: string

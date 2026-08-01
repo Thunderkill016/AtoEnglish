@@ -10,6 +10,11 @@ import {
 } from "lucide-react";
 import { SecondaryPageShell, MinimalButton } from "@/components/design-system";
 import { toast } from "sonner";
+import {
+  TRIAL_CHECKPOINT_PASS_THRESHOLD,
+  TRIAL_CHECKPOINT_QUESTIONS,
+} from "@/lib/lessons/trial-checkpoint";
+import { claimTrialCheckpoint } from "@/app/actions/learning-attempts";
 
 interface Props {
   phase: string;
@@ -31,6 +36,7 @@ const CHECKPOINT_QUESTIONS: Record<string, Array<{
   answer: string;
   explanation: string;
 }>> = {
+  trial: TRIAL_CHECKPOINT_QUESTIONS,
   a0: [
     { id: "a0-1", question: "Chữ cái nào đứng sau chữ 'D' trong bảng chữ cái tiếng Anh?", options: ["E", "F", "C", "G"], answer: "E", explanation: "Thứ tự bảng chữ cái: A B C D E F G H..." },
     { id: "a0-2", question: "Số 15 trong tiếng Anh là gì?", options: ["Fifty", "Fifteen", "Fifty-one", "Five"], answer: "Fifteen", explanation: "'Fifteen' = 15. Cần phân biệt với 'fifty' = 50." },
@@ -93,7 +99,7 @@ const CHECKPOINT_QUESTIONS: Record<string, Array<{
   ],
 };
 
-const PASS_THRESHOLD = 7; // 7/10 to pass
+const PHASE_PASS_THRESHOLD = 7;
 
 export default function CheckpointClient({
   phase,
@@ -106,6 +112,8 @@ export default function CheckpointClient({
 }: Props) {
   const router = useRouter();
   const questions = CHECKPOINT_QUESTIONS[phase] ?? [];
+  const passThreshold =
+    phase === "trial" ? TRIAL_CHECKPOINT_PASS_THRESHOLD : PHASE_PASS_THRESHOLD;
 
   const [started, setStarted] = useState(false);
   const [current, setCurrent] = useState(0);
@@ -115,21 +123,47 @@ export default function CheckpointClient({
   const [wrongAnswers, setWrongAnswers] = useState<string[]>([]);
   const [finished, setFinished] = useState(false);
   const [showExplanation, setShowExplanation] = useState(false);
+  const [answerRecord, setAnswerRecord] = useState<Record<string, string>>({});
+  const [trialClaimState, setTrialClaimState] = useState<
+    "idle" | "saving" | "saved" | "error"
+  >("idle");
 
   const q = questions[current];
   const isCorrect = selected === q?.answer;
-  const passed = score >= PASS_THRESHOLD;
+  const passed = score >= passThreshold;
 
   const handleConfirm = useCallback(() => {
     if (!selected || confirmed) return;
     setConfirmed(true);
     setShowExplanation(true);
+    setAnswerRecord((previous) => ({ ...previous, [q.id]: selected }));
     if (selected === q.answer) {
       setScore(prev => prev + 1);
     } else {
       setWrongAnswers(prev => [...prev, q.id]);
     }
   }, [selected, confirmed, q]);
+
+  const submitTrialClaim = useCallback(() => {
+    if (phase !== "trial") return;
+    if (typeof crypto === "undefined" || !("randomUUID" in crypto)) {
+      setTrialClaimState("error");
+      return;
+    }
+
+    setTrialClaimState("saving");
+    void claimTrialCheckpoint({
+      sessionId: crypto.randomUUID(),
+      answers: answerRecord,
+    }).then((result) => {
+      if (result.success) {
+        setTrialClaimState("saved");
+      } else {
+        setTrialClaimState("error");
+        toast.error(result.error);
+      }
+    });
+  }, [answerRecord, phase]);
 
   const handleNext = useCallback(() => {
     if (current < questions.length - 1) {
@@ -138,9 +172,10 @@ export default function CheckpointClient({
       setConfirmed(false);
       setShowExplanation(false);
     } else {
+      submitTrialClaim();
       setFinished(true);
     }
-  }, [current, questions.length]);
+  }, [current, questions.length, submitTrialClaim]);
 
   useEffect(() => {
     if (finished && passed) {
@@ -206,7 +241,7 @@ export default function CheckpointClient({
             </div>
             <h1 className="text-3xl font-black">Kiểm tra {phaseLabel}</h1>
             <p className="text-muted-foreground text-sm leading-relaxed">
-              Bài kiểm tra <span className="font-bold text-foreground">{questions.length} câu hỏi</span> tổng hợp toàn bộ kiến thức chặng {phaseLabel}. Cần đúng <span className="font-bold text-emerald-500">{PASS_THRESHOLD}/{questions.length} câu</span> để pass.
+              Bài kiểm tra <span className="font-bold text-foreground">{questions.length} câu hỏi</span> xác nhận kiến thức cốt lõi. Cần đúng <span className="font-bold text-emerald-500">{passThreshold}/{questions.length} câu</span> để tiếp tục.
             </p>
           </div>
 
@@ -216,7 +251,7 @@ export default function CheckpointClient({
               <li className="flex items-start gap-2"><CheckCircle2 className="size-4 text-emerald-500 shrink-0 mt-0.5" /> Nhấn chọn đáp án rồi nhấn <strong>&quot;Xác nhận&quot;</strong></li>
               <li className="flex items-start gap-2"><CheckCircle2 className="size-4 text-emerald-500 shrink-0 mt-0.5" /> Phím tắt: <strong>1-4</strong> chọn đáp án · <strong>Space/Enter</strong> xác nhận</li>
               <li className="flex items-start gap-2"><CheckCircle2 className="size-4 text-emerald-500 shrink-0 mt-0.5" /> Sau mỗi câu sẽ có giải thích tiếng Việt</li>
-              <li className="flex items-start gap-2"><Zap className="size-4 text-amber-500 shrink-0 mt-0.5" /> Đúng {PASS_THRESHOLD}+/{questions.length} câu để hoàn thành chặng!</li>
+              <li className="flex items-start gap-2"><Zap className="size-4 text-amber-500 shrink-0 mt-0.5" /> Đúng {passThreshold}/{questions.length} câu để tiếp tục học.</li>
             </ul>
           </div>
 
@@ -244,8 +279,8 @@ export default function CheckpointClient({
             <h1 className="text-2xl font-black">{passed ? "🎉 Xuất sắc! Bạn đã pass!" : "Cần ôn thêm một chút!"}</h1>
             <p className="text-muted-foreground text-sm">
               {passed
-                ? `Bạn đúng ${score}/${questions.length} câu — chặng ${phaseLabel} đã hoàn toàn nắm vững!`
-                : `Bạn đúng ${score}/${questions.length} câu. Cần ${PASS_THRESHOLD - score} câu nữa để pass.`}
+                ? `Bạn đúng ${score}/${questions.length} câu và đã đủ điều kiện học tiếp.`
+                : `Bạn đúng ${score}/${questions.length} câu. Cần ${passThreshold - score} câu nữa để tiếp tục.`}
             </p>
           </div>
 
@@ -264,6 +299,12 @@ export default function CheckpointClient({
           </div>
 
           <div className="flex flex-col gap-3">
+            {phase === "trial" && trialClaimState === "saving" && (
+              <p className="text-sm text-muted-foreground">Đang lưu bằng chứng checkpoint...</p>
+            )}
+            {phase === "trial" && trialClaimState === "error" && (
+              <p className="text-sm text-red-400">Chưa thể ghi nhận kết quả. Hãy làm lại checkpoint.</p>
+            )}
             {passed && nextPhase && (
               <MinimalButton
                 data-testid="continue-to-next-phase"
@@ -273,7 +314,7 @@ export default function CheckpointClient({
                 Xem checkpoint {nextPhase.toUpperCase()} <ArrowRight className="size-4" />
               </MinimalButton>
             )}
-            {passed && (
+            {passed && (phase !== "trial" || trialClaimState === "saved") && (
               <MinimalButton fullWidth onClick={() => router.push("/learn")}>
                 <BookOpen className="size-4" /> Học tiếp bài mới
               </MinimalButton>
@@ -282,7 +323,7 @@ export default function CheckpointClient({
               data-testid="retry-checkpoint"
               variant="secondary"
               fullWidth
-              onClick={() => { setCurrent(0); setSelected(null); setConfirmed(false); setScore(0); setWrongAnswers([]); setFinished(false); setShowExplanation(false); setStarted(true); }}
+              onClick={() => { setCurrent(0); setSelected(null); setConfirmed(false); setScore(0); setWrongAnswers([]); setAnswerRecord({}); setTrialClaimState("idle"); setFinished(false); setShowExplanation(false); setStarted(true); }}
             >
               <RotateCcw className="size-4" /> Làm lại
             </MinimalButton>

@@ -8,6 +8,54 @@ import {
   assertProductionEnv,
   ProductionEnvSchema,
 } from "@/lib/security/validation";
+import { LearningAttemptBatchSchema } from "@/lib/lessons/learning-attempt";
+
+const validAttemptBatch = {
+  sessionId: "16d8e0eb-67b7-4828-bb0d-5e28b15e5e9c",
+  lessonId: "unit-a0-1",
+  attempts: [
+    {
+      activityId: "unit-a0-1:quiz:q1",
+      modality: "quiz",
+      status: "scored",
+      score: 100,
+      errorTags: [],
+      evaluator: "deterministic-answer-key",
+      evaluatorVersion: "1.0.0",
+      latencyMs: 1200,
+    },
+  ],
+} as const;
+
+describe("LearningAttemptBatchSchema", () => {
+  it("accepts bounded evidence without raw learner media", () => {
+    expect(LearningAttemptBatchSchema.safeParse(validAttemptBatch).success).toBe(true);
+  });
+
+  it("requires a score only when status is scored", () => {
+    const invalid = {
+      ...validAttemptBatch,
+      attempts: [{ ...validAttemptBatch.attempts[0], status: "unscored", score: 100 }],
+    };
+
+    expect(LearningAttemptBatchSchema.safeParse(invalid).success).toBe(false);
+  });
+
+  it("rejects raw transcript fields and more than three error tags", () => {
+    const invalid = {
+      ...validAttemptBatch,
+      attempts: [
+        {
+          ...validAttemptBatch.attempts[0],
+          transcript: "learner speech",
+          errorTags: ["one", "two", "three", "four"],
+        },
+      ],
+    };
+
+    expect(LearningAttemptBatchSchema.safeParse(invalid).success).toBe(false);
+  });
+});
 
 // ─── LoginSchema ─────────────────────────────────────────────────────────────
 describe("LoginSchema", () => {

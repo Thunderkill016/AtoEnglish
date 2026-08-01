@@ -10,7 +10,7 @@
 
 import type { IporPhase } from "./learning-flow";
 
-export const REFERENCE_UNIT_ID = "unit-1";
+export const REFERENCE_UNIT_ID = "unit-a0-1";
 export const REFERENCE_UNIT_PATH = "src/lib/data/units/unit1.ts";
 
 /** Thứ tự field trong file unit*.ts (cách xây nội dung) */
