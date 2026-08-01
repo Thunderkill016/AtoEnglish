@@ -31,7 +31,7 @@ export interface MissionEvaluationResult {
     transcriptAvailable: boolean;
     acousticEvidenceAvailable: false;
     evaluator: "deterministic-intent-match";
-    evaluatorVersion: "1.2.0";
+    evaluatorVersion: "2.0.0";
   };
 }
 
@@ -41,6 +41,7 @@ function normalizeTranscript(value: string) {
     .toLowerCase()
     .replace(/[’‘]/g, "'")
     .replace(/\bi'm\b/g, "i am")
+    .replace(/\bi'll\b/g, "i will")
     .replace(/\bi've\b/g, "i have")
     .replace(/\bdidn't\b/g, "did not")
     .replace(/\bwhat's\b/g, "what is")
@@ -59,31 +60,26 @@ function matchesIntent(transcript: string, intent: MissionIntent) {
   });
 }
 
-function findLanguageCorrections(transcript: string): MissionCorrection[] {
-  const corrections: MissionCorrection[] = [];
-  const missingBe = transcript.match(/\bmy name\s+([a-z]+)\b/);
-  if (missingBe && !/\bmy name is\b/.test(transcript)) {
-    corrections.push({
-      code: "missing_be_after_my_name",
-      original: missingBe[0],
-      suggestion: `My name is ${missingBe[1]}.`,
-      explanationVi: "Tiếng Anh cần động từ 'is' sau 'My name'.",
-    });
-  }
-
-  const missingWorkAs = transcript.match(
-    /\bi work\s+(designer|developer|engineer|teacher|student|manager|accountant|marketer|salesperson|assistant)\b/,
-  );
-  if (missingWorkAs) {
-    corrections.push({
-      code: "missing_work_as",
-      original: missingWorkAs[0],
-      suggestion: `I work as a ${missingWorkAs[1]}.`,
-      explanationVi: "Dùng 'work as' trước nghề nghiệp hoặc vai trò.",
-    });
-  }
-
-  return corrections;
+function applyFeedbackRules(
+  mission: MissionSpecV1,
+  transcript: string,
+): MissionCorrection[] {
+  return mission.feedbackRules.flatMap((rule) => {
+    try {
+      const match = transcript.match(new RegExp(rule.pattern, "i"));
+      if (!match) return [];
+      return [
+        {
+          code: rule.code,
+          original: match[0],
+          suggestion: rule.suggestion,
+          explanationVi: rule.explanationVi,
+        },
+      ];
+    } catch {
+      return [];
+    }
+  });
 }
 
 function missingIntentCorrection(intent: MissionIntent): MissionCorrection {
@@ -94,19 +90,46 @@ function missingIntentCorrection(intent: MissionIntent): MissionCorrection {
   };
 }
 
+function completedIntentsFromTurns(
+  mission: MissionSpecV1,
+  transcripts: string[],
+): MissionIntent[] {
+  const completedIds = new Set<string>();
+
+  mission.roleplayTurns.forEach((turn, index) => {
+    const transcript = normalizeTranscript(transcripts[index] ?? "");
+    if (!transcript) return;
+
+    for (const intentId of turn.expectedIntentIds) {
+      const intent = mission.intents.find((candidate) => candidate.id === intentId);
+      if (intent && matchesIntent(transcript, intent)) completedIds.add(intent.id);
+    }
+  });
+
+  const combined = normalizeTranscript(transcripts.join(" "));
+  for (const intent of mission.intents.filter((candidate) => !candidate.required)) {
+    if (matchesIntent(combined, intent)) completedIds.add(intent.id);
+  }
+
+  return mission.intents.filter((intent) => completedIds.has(intent.id));
+}
+
+function completedIntentsFromFullTask(
+  mission: MissionSpecV1,
+  transcript: string,
+): MissionIntent[] {
+  return mission.intents.filter((intent) => matchesIntent(transcript, intent));
+}
+
 export function evaluateMissionTranscript(
   mission: MissionSpecV1,
   transcripts: string[],
 ): MissionEvaluationResult {
-  // A retry is submitted as one extra answer after the original roleplay turns.
-  // Score the retry independently so an earlier correct sentence cannot hide a bad retry.
-  const evidenceTranscripts =
-    transcripts.length > mission.roleplayTurns.length
-      ? [transcripts[transcripts.length - 1]]
-      : transcripts;
-  const combined = normalizeTranscript(
-    evidenceTranscripts.filter(Boolean).join(" "),
-  );
+  const isRetry = transcripts.length > mission.roleplayTurns.length;
+  const evidenceTranscripts = isRetry
+    ? [transcripts[transcripts.length - 1]]
+    : transcripts.slice(0, mission.roleplayTurns.length);
+  const combined = normalizeTranscript(evidenceTranscripts.filter(Boolean).join(" "));
 
   if (!combined) {
     return {
@@ -132,17 +155,18 @@ export function evaluateMissionTranscript(
         transcriptAvailable: false,
         acousticEvidenceAvailable: false,
         evaluator: "deterministic-intent-match",
-        evaluatorVersion: "1.2.0",
+        evaluatorVersion: "2.0.0",
       },
     };
   }
 
-  const completedIntents = mission.intents.filter((intent) =>
-    matchesIntent(combined, intent),
-  );
+  const completedIntents = isRetry
+    ? completedIntentsFromFullTask(mission, combined)
+    : completedIntentsFromTurns(mission, evidenceTranscripts);
+  const completedIds = new Set(completedIntents.map((intent) => intent.id));
   const requiredIntents = mission.intents.filter((intent) => intent.required);
   const missingRequired = requiredIntents.filter(
-    (intent) => !completedIntents.some((completed) => completed.id === intent.id),
+    (intent) => !completedIds.has(intent.id),
   );
   const completionRatio =
     requiredIntents.length === 0
@@ -152,22 +176,22 @@ export function evaluateMissionTranscript(
   const taskCompleted =
     completionRatio >= mission.evaluation.requiredIntentPassRatio;
 
+  const languageCorrections = applyFeedbackRules(mission, combined);
   const corrections = [
-    ...findLanguageCorrections(combined),
+    ...languageCorrections,
     ...missingRequired.map(missingIntentCorrection),
   ].slice(0, mission.evaluation.maxCorrections);
 
-  const hasQuestion = completedIntents.some(
-    (intent) => intent.id === "ask_name",
+  const requiredInteractional = requiredIntents.filter(
+    (intent) => intent.interactional,
   );
-  const hasRepair = completedIntents.some(
-    (intent) => intent.id === "repair_request",
+  const completedInteractional = requiredInteractional.filter((intent) =>
+    completedIds.has(intent.id),
   );
-  const interactionScore =
-    hasQuestion && hasRepair ? 4 : hasQuestion || hasRepair ? 2 : 0;
-  const taskRubric = Math.round(completionRatio * 4);
-  const languageControl =
-    findLanguageCorrections(combined).length === 0 ? 4 : 2;
+  const interactionRatio =
+    requiredInteractional.length === 0
+      ? 1
+      : completedInteractional.length / requiredInteractional.length;
 
   return {
     status: "scored",
@@ -184,9 +208,9 @@ export function evaluateMissionTranscript(
             .join(" / ")}`
         : "Hãy thực hiện lại toàn bộ nhiệm vụ một lần nữa mà không nhìn câu mẫu.",
     rubric: {
-      taskCompletion: taskRubric,
-      interaction: interactionScore,
-      languageControl,
+      taskCompletion: Math.round(completionRatio * 4),
+      interaction: Math.round(interactionRatio * 4),
+      languageControl: languageCorrections.length === 0 ? 4 : 2,
       comprehensibility: null,
       pronunciation: null,
     },
@@ -194,9 +218,23 @@ export function evaluateMissionTranscript(
       transcriptAvailable: true,
       acousticEvidenceAvailable: false,
       evaluator: "deterministic-intent-match",
-      evaluatorVersion: "1.2.0",
+      evaluatorVersion: "2.0.0",
     },
   };
+}
+
+export function listDueTransferVariants(
+  mission: MissionSpecV1,
+  completedAt: Date,
+  now: Date,
+): MissionTransferVariant[] {
+  const elapsedDays = Math.floor(
+    (now.getTime() - completedAt.getTime()) / (24 * 60 * 60 * 1000),
+  );
+
+  return [...mission.transferVariants]
+    .filter((variant) => elapsedDays >= variant.dueAfterDays)
+    .sort((left, right) => left.dueAfterDays - right.dueAfterDays);
 }
 
 export function selectDueTransferVariant(
@@ -204,13 +242,5 @@ export function selectDueTransferVariant(
   completedAt: Date,
   now: Date,
 ): MissionTransferVariant | null {
-  const elapsedDays = Math.floor(
-    (now.getTime() - completedAt.getTime()) / (24 * 60 * 60 * 1000),
-  );
-
-  return (
-    [...mission.transferVariants]
-      .sort((a, b) => b.dueAfterDays - a.dueAfterDays)
-      .find((variant) => elapsedDays >= variant.dueAfterDays) ?? null
-  );
+  return listDueTransferVariants(mission, completedAt, now).at(-1) ?? null;
 }
