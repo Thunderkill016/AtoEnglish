@@ -100,6 +100,9 @@ export function validateMissionSpec(mission: MissionSpecV1): string[] {
   const failures: string[] = [];
   const intentIds = new Set(mission.intents.map((intent) => intent.id));
   const chunkIds = mission.targetChunks.map((chunk) => chunk.id);
+  const roleplayIntentIds = mission.roleplayTurns.flatMap(
+    (turn) => turn.expectedIntentIds,
+  );
   const transferDays = new Set(
     mission.transferVariants.map((variant) => variant.dueAfterDays),
   );
@@ -128,6 +131,14 @@ export function validateMissionSpec(mission: MissionSpecV1): string[] {
   ) {
     failures.push("roleplay_references_unknown_intent");
   }
+  const requiredIntentIds = mission.intents
+    .filter((intent) => intent.required)
+    .map((intent) => intent.id);
+  if (
+    requiredIntentIds.some((intentId) => !roleplayIntentIds.includes(intentId))
+  ) {
+    failures.push("roleplay_missing_required_intent_evidence");
+  }
   if (mission.feedbackRules.length > mission.evaluation.maxCorrections * 3) {
     failures.push("too_many_feedback_rules");
   }
@@ -143,9 +154,6 @@ export function validateMissionSpec(mission: MissionSpecV1): string[] {
   if (checkpointIntentIds.some((intentId) => !intentIds.has(intentId))) {
     failures.push("checkpoint_references_unknown_intent");
   }
-  const requiredIntentIds = mission.intents
-    .filter((intent) => intent.required)
-    .map((intent) => intent.id);
   if (
     requiredIntentIds.some(
       (intentId) => !checkpointIntentIds.includes(intentId),
