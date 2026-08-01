@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import MissionTransferTemplate from "@/components/learn/MissionTransferTemplate";
 import { PILOT_LESSON_SPECS } from "@/lib/lessons/pilot-lessons";
 import type { LessonSpecV1 } from "@/lib/lessons/lesson-spec";
+import { summarizeTransferEvidence } from "@/lib/missions/mission-progress";
 import type { MissionSpecV1 } from "@/lib/missions/mission-spec";
 import { createClient } from "@/lib/supabase/server";
 
@@ -45,18 +46,52 @@ export default async function MissionTransferPage({
     );
   }
 
-  const { data: completion } = await supabase
-    .from("user_lesson_progress")
-    .select("completed_at")
-    .eq("user_id", user.id)
-    .eq("unit_id", unitSlug)
-    .maybeSingle();
+  const [{ data: completion }, { data: attempts }] = await Promise.all([
+    supabase
+      .from("user_lesson_progress")
+      .select("completed_at")
+      .eq("user_id", user.id)
+      .eq("unit_id", unitSlug)
+      .maybeSingle(),
+    supabase
+      .from("learning_attempts")
+      .select("activity_id, session_id, score, created_at")
+      .eq("user_id", user.id)
+      .eq("lesson_id", unitSlug)
+      .like("activity_id", `${unitSlug}:transfer:%`),
+  ]);
 
   if (!completion) redirect(`/learn/${unitSlug}`);
 
   const dueAt = new Date(completion.completed_at);
   dueAt.setUTCDate(dueAt.getUTCDate() + variant.dueAfterDays);
   if (dueAt.getTime() > Date.now()) redirect("/learn");
+
+  const passScore = lesson.mission.evaluation.requiredIntentPassRatio * 100;
+  const orderedVariants = [...lesson.mission.transferVariants].sort(
+    (left, right) => left.dueAfterDays - right.dueAfterDays,
+  );
+
+  for (const prior of orderedVariants) {
+    if (prior.dueAfterDays >= variant.dueAfterDays) break;
+    const priorActivityId = `${unitSlug}:transfer:${prior.id}`;
+    const priorEvidence = summarizeTransferEvidence(
+      attempts ?? [],
+      priorActivityId,
+      passScore,
+    );
+    if (!priorEvidence.verified) {
+      redirect(`/learn/${unitSlug}/transfer/${prior.id}`);
+    }
+  }
+
+  const currentActivityId = `${unitSlug}:transfer:${variant.id}`;
+  const currentEvidence = summarizeTransferEvidence(
+    attempts ?? [],
+    currentActivityId,
+    passScore,
+  );
+  if (currentEvidence.verified) redirect("/learn");
 
   return (
     <MissionTransferTemplate
