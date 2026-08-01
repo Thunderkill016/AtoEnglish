@@ -19,12 +19,16 @@ describe("learning-flow", () => {
 
   it("maps every section to an IPOR phase", () => {
     for (const s of LESSON_SECTIONS) {
-      expect(["input", "processing", "output", "review"]).toContain(getSectionPhase(s.id));
+      expect(["input", "processing", "output", "review"]).toContain(
+        getSectionPhase(s.id),
+      );
     }
   });
 
   it("ends with review phase (quiz)", () => {
-    expect(getSectionPhase(SECTION_ORDER[SECTION_ORDER.length - 1])).toBe("review");
+    expect(getSectionPhase(SECTION_ORDER[SECTION_ORDER.length - 1])).toBe(
+      "review",
+    );
   });
 
   it("returns unscored when no assessment evidence exists", () => {
@@ -33,7 +37,11 @@ describe("learning-flow", () => {
       { id: "speaking", score: null, weight: 0.3 },
     ]);
 
-    expect(result).toMatchObject({ status: "unscored", score: null, source: "none" });
+    expect(result).toMatchObject({
+      status: "unscored",
+      score: null,
+      source: "none",
+    });
     expect(result.evidence).toEqual([]);
   });
 
@@ -50,20 +58,20 @@ describe("learning-flow", () => {
 });
 
 describe("trial checkpoint", () => {
-  it("requires evidence from at least two of three transfer questions", () => {
+  it("requires evidence from at least two of three mission-aligned questions", () => {
     expect(
       scoreTrialCheckpoint({
-        "trial-1": "E",
-        "trial-2": "My name is Lan.",
-        "trial-3": "am",
+        "trial-1": "My name is Lan.",
+        "trial-2": "I work as a designer.",
+        "trial-3": "Nice yesterday.",
       }),
     ).toEqual({ correctCount: 2, passed: true });
 
     expect(
       scoreTrialCheckpoint({
-        "trial-1": "E",
-        "trial-2": "I am fine.",
-        "trial-3": "am",
+        "trial-1": "I am fine.",
+        "trial-2": "I work as a designer.",
+        "trial-3": "Nice yesterday.",
       }),
     ).toEqual({ correctCount: 1, passed: false });
   });
