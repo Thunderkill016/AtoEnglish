@@ -55,7 +55,7 @@ export default async function LearnPage() {
     user
       ? supabase
           .from("learning_attempts")
-          .select("activity_id")
+          .select("activity_id, score")
           .eq("user_id", user.id)
           .eq("lesson_id", GOLD_MISSION_01.lessonId)
           .like(
@@ -82,9 +82,21 @@ export default async function LearnPage() {
   const missionCompletion = completedLessons.find(
     (lesson) => lesson.unit_id === GOLD_MISSION_01.lessonId,
   );
-  const completedTransferActivityIds = new Set(
-    (transferAttemptsRes.data ?? []).map((attempt) => attempt.activity_id),
-  );
+  const transferEvidence = new Map<
+    string,
+    { attemptCount: number; bestScore: number }
+  >();
+  for (const attempt of transferAttemptsRes.data ?? []) {
+    const current = transferEvidence.get(attempt.activity_id) ?? {
+      attemptCount: 0,
+      bestScore: 0,
+    };
+    transferEvidence.set(attempt.activity_id, {
+      attemptCount: current.attemptCount + 1,
+      bestScore: Math.max(current.bestScore, attempt.score ?? 0),
+    });
+  }
+
   const dueVariant = missionCompletion
     ? selectDueTransferVariant(
         GOLD_MISSION_01,
@@ -92,11 +104,20 @@ export default async function LearnPage() {
         new Date(),
       )
     : null;
+  const dueActivityId = dueVariant
+    ? `${GOLD_MISSION_01.lessonId}:transfer:${dueVariant.id}`
+    : null;
+  const dueEvidence = dueActivityId
+    ? transferEvidence.get(dueActivityId)
+    : undefined;
+  const transferVerified = Boolean(
+    dueEvidence &&
+      dueEvidence.attemptCount >= 2 &&
+      dueEvidence.bestScore >=
+        GOLD_MISSION_01.evaluation.requiredIntentPassRatio * 100,
+  );
   const dueTransfer =
-    dueVariant &&
-    !completedTransferActivityIds.has(
-      `${GOLD_MISSION_01.lessonId}:transfer:${dueVariant.id}`,
-    )
+    dueVariant && !transferVerified
       ? {
           id: dueVariant.id,
           label: `Kiểm tra lại sau ${dueVariant.dueAfterDays} ngày`,
