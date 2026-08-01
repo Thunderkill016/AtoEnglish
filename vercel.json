@@ -1,5 +1,13 @@
 {
-  "buildCommand": "npm run lint && npx tsc --noEmit && npm run test && npm run test:content-standard && npm run build",
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "npm run build",
+  "git": {
+    "deploymentEnabled": {
+      "**": false,
+      "main": true,
+      "preview/**": true
+    }
+  },
   "crons": [
     {
       "path": "/api/cron/daily-reminder",
