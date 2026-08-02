@@ -27,8 +27,10 @@
 - [x] AI output is explicitly a draft and not source truth.
 - [x] Typed output validation is mandatory.
 - [x] Source-evidence validation is mandatory.
-- [x] Caption content is treated as untrusted prompt data.
-- [x] Unsupported English, timestamps, and references are rejected.
+- [x] Caption and oEmbed metadata are treated as untrusted prompt data.
+- [x] Untrusted metadata/caption values are encoded as escaped JSON/JSONL inside one delimiter pair.
+- [x] Instructions are repeated after the untrusted source boundary before output generation.
+- [x] Unsupported English, timestamps, speakers, indices, activities, and references are rejected.
 - [x] Human-review-only evidence is distinguished from automated evidence.
 - [x] The actual generation model must be recorded.
 - [x] Stable machine-readable failure codes are implemented across compiler, action, and editor UI.
@@ -82,14 +84,17 @@
 - [x] Required tests are listed before convergence.
 - [x] Transcript policy tests cover approved, default-blocked, non-production opt-in, production fail-closed, cue normalization, and direct-import bypass.
 - [x] Result-code and deterministic draft-identity regression tests exist in `src/__tests__/real-talk-generation-result.test.ts`.
-- [x] Authentication-ordering, happy-path, rate-limit, provider-failure propagation, evidence no-write, persistence-failure, and bounded-internal-error artifacts exist in `src/__tests__/real-talk-generation-action.test.ts`.
+- [x] Authentication-ordering, happy-path, rate-limit, provider-failure propagation, evidence no-write, persistence-failure, prompt-injection no-write, and bounded-internal-error artifacts exist in `src/__tests__/real-talk-generation-action.test.ts`.
+- [x] Invalid-schema, complete evidence-code matrix, duplicate-code, long-window, normalization, and escaped prompt-boundary artifacts exist in `src/__tests__/real-talk-generation-contract.test.ts`.
+- [x] Controlled long-source and adversarial source fixtures exist under `src/__fixtures__/real-talk/`.
 - [x] Real Talk server/domain suites are assigned to the Vitest Node project rather than jsdom.
-- [ ] All specified unit and contract fixtures exist.
+- [ ] All database/RLS, reload-mapping, and preview component fixtures exist.
 - [ ] Authentication ordering tests pass on the exact final head.
+- [ ] Evidence and prompt-boundary tests pass on the exact final head.
 - [ ] Provider and persistence failure tests pass on the exact final head.
 - [ ] RLS integration tests exist and pass.
 - [ ] Preview completion component tests exist and pass.
-- [ ] Live Gemini failure and success paths have been observed.
+- [ ] Live Gemini failure, success, and adversarial-source paths have been observed.
 - [ ] Full repository lint, typecheck, tests, content standards, and build pass on the exact final head.
 
 ## Cross-artifact consistency
@@ -99,7 +104,7 @@
 - [x] Data entities map to requirements and tasks.
 - [x] Open decisions are visible in research and tasks.
 - [x] An initial formal cross-artifact analysis is recorded in `analysis.md`.
-- [x] The cross-artifact analysis was rerun after transcript adapter extraction and failure/persistence design.
+- [x] The cross-artifact analysis was rerun after transcript, failure/persistence, orchestration, evidence-matrix, and prompt-boundary changes.
 - [ ] Every functional requirement maps to at least one task and observed acceptance result.
 - [ ] Every success criterion has a defined evidence source and final result.
 
@@ -115,8 +120,8 @@
 The feature cannot converge while any of these remain unresolved:
 
 1. at least one production-approved transcript acquisition mode or an explicit permanent non-production decision;
-2. exact-head execution of action/provider/persistence failure suites;
-3. complete automated fixture coverage;
+2. exact-head execution of compiler, evidence, prompt, action, provider, and persistence suites;
+3. database/RLS, reload-mapping, and preview component fixtures and execution;
 4. non-production RLS and migration verification;
 5. exact-head repository checks;
 6. live Gemini and browser verification;
