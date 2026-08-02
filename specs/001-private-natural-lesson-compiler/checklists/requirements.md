@@ -94,12 +94,12 @@
 - [x] Reload mapping coverage exists in `src/__tests__/real-talk-draft-mapping.test.ts`.
 - [x] Two-owner plus anonymous RLS integration scaffolding exists in `src/__tests__/integration/real-talk-draft-rls.integration.test.ts`.
 - [x] Real Talk domain/server/database contract suites are assigned to the Vitest Node project rather than jsdom.
-- [ ] Preview component fixtures exist.
+- [x] Controlled preview fixture and component artifacts cover environment-first order, every-phrase acknowledgement, transfer response/confirmation gating, final-callback ordering, and unsupported-claim absence.
 - [ ] Authentication ordering tests pass on the exact final head.
 - [ ] Evidence, prompt-boundary, migration-contract, and mapping tests pass on the exact final head.
 - [ ] Provider and persistence failure tests pass on the exact final head.
 - [ ] RLS integration tests pass against an authorized migrated non-production project.
-- [ ] Preview completion component tests exist and pass.
+- [ ] Preview completion component tests pass on the exact final head.
 - [ ] Live Gemini failure, success, and adversarial-source paths have been observed.
 - [ ] Full repository lint, typecheck, tests, content standards, and build pass on the exact final head.
 
@@ -110,7 +110,7 @@
 - [x] Data entities map to requirements and tasks.
 - [x] Open decisions are visible in research and tasks.
 - [x] An initial formal cross-artifact analysis is recorded in `analysis.md`.
-- [x] The cross-artifact analysis was rerun after transcript, failure/persistence, orchestration, evidence/prompt, and database-boundary changes.
+- [x] The cross-artifact analysis was rerun after transcript, failure/persistence, orchestration, evidence/prompt, database-boundary, and preview-test changes.
 - [ ] Every functional requirement maps to at least one task and observed acceptance result.
 - [ ] Every success criterion has a defined evidence source and final result.
 
@@ -126,9 +126,9 @@
 The feature cannot converge while any of these remain unresolved:
 
 1. at least one production-approved transcript acquisition mode or an explicit permanent non-production decision;
-2. exact-head execution of compiler, evidence, prompt, action, migration, mapping, provider, and persistence suites;
+2. exact-head execution of compiler, evidence, prompt, action, migration, mapping, preview, provider, and persistence suites;
 3. migration application, two-user RLS execution, repeated-generation, and partial-write verification;
-4. preview component fixtures and browser execution;
+4. desktop/mobile browser preview and human lesson review;
 5. generated Supabase type reconciliation;
 6. exact-head repository checks;
 7. live Gemini and human source/lesson review;
