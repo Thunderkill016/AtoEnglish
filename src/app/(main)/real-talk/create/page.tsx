@@ -17,7 +17,12 @@ import {
 
 import { generateRealTalkLesson } from "@/app/actions/real-talk";
 import RealTalkLessonComponent from "@/components/real-talk/RealTalkLesson";
-import type { RealTalkLesson, RealTalkLevel, RealTalkVideo } from "@/types/real-talk";
+import type { GenerationFailureCode } from "@/features/real-talk/domain/generation-result";
+import type {
+  RealTalkLesson,
+  RealTalkLevel,
+  RealTalkVideo,
+} from "@/types/real-talk";
 
 const LEVELS: Array<{ value: RealTalkLevel; label: string }> = [
   { value: "A0", label: "A0 · Mất gốc" },
@@ -32,20 +37,28 @@ const GENERATION_STEPS = [
   "Tìm đoạn có mật độ tương tác cao",
   "Gemini tạo environment lesson draft",
   "Kiểm tra schema và source evidence",
+  "Lưu owner-private draft",
 ];
 
 interface GeneratedState {
   video: RealTalkVideo;
   lesson: RealTalkLesson;
-  persistence: "preview_only" | "saved_private_draft";
+  persistence: "saved_private_draft";
   warnings: string[];
+}
+
+interface GenerationErrorState {
+  code: GenerationFailureCode;
+  message: string;
+  retryAfterSeconds?: number;
+  evidenceFailures?: string[];
 }
 
 export default function RealTalkCreatePage() {
   const [url, setUrl] = useState("");
   const [level, setLevel] = useState<RealTalkLevel>("A1");
   const [isGenerating, setIsGenerating] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<GenerationErrorState | null>(null);
   const [generated, setGenerated] = useState<GeneratedState | null>(null);
   const [showLesson, setShowLesson] = useState(false);
 
@@ -60,16 +73,21 @@ export default function RealTalkCreatePage() {
 
     try {
       const result = await generateRealTalkLesson(url.trim(), level);
-      if (!result.success || !result.video || !result.lesson) {
-        setError(result.error || "Không tạo được bản nháp từ video này.");
+      if (!result.success) {
+        setError({
+          code: result.code,
+          message: result.error,
+          retryAfterSeconds: result.retryAfterSeconds,
+          evidenceFailures: result.evidenceFailures,
+        });
         return;
       }
 
       setGenerated({
         video: result.video,
         lesson: result.lesson,
-        persistence: result.persistence ?? "preview_only",
-        warnings: result.warnings ?? [],
+        persistence: result.persistence,
+        warnings: result.warnings,
       });
     } finally {
       setIsGenerating(false);
@@ -98,7 +116,10 @@ export default function RealTalkCreatePage() {
             </button>
           </div>
         </div>
-        <RealTalkLessonComponent video={generated.video} lesson={generated.lesson} />
+        <RealTalkLessonComponent
+          video={generated.video}
+          lesson={generated.lesson}
+        />
       </div>
     );
   }
@@ -114,8 +135,9 @@ export default function RealTalkCreatePage() {
             Biến một cuộc trò chuyện thật thành bản nháp bài học
           </h1>
           <p className="mx-auto mt-4 max-w-2xl text-sm leading-6 text-zinc-400 sm:text-base">
-            Dán link YouTube có caption tiếng Anh. Hệ thống tìm một đoạn hội thoại tự nhiên,
-            phát hiện mục tiêu giao tiếp rồi mới tạo hoạt động học và transfer task.
+            Dán link YouTube có caption tiếng Anh. Hệ thống tìm một đoạn hội thoại
+            tự nhiên, phát hiện mục tiêu giao tiếp rồi mới tạo hoạt động học và
+            transfer task.
           </p>
         </header>
 
@@ -124,7 +146,10 @@ export default function RealTalkCreatePage() {
           className="mt-9 space-y-5 rounded-3xl border border-zinc-800 bg-zinc-900/70 p-5 shadow-2xl shadow-black/20 sm:p-7"
         >
           <div>
-            <label htmlFor="youtube-url" className="text-sm font-bold text-zinc-200">
+            <label
+              htmlFor="youtube-url"
+              className="text-sm font-bold text-zinc-200"
+            >
               Link video YouTube
             </label>
             <div className="relative mt-2">
@@ -141,7 +166,9 @@ export default function RealTalkCreatePage() {
           </div>
 
           <fieldset>
-            <legend className="text-sm font-bold text-zinc-200">Mức hỗ trợ cho người học</legend>
+            <legend className="text-sm font-bold text-zinc-200">
+              Mức hỗ trợ cho người học
+            </legend>
             <div className="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-5">
               {LEVELS.map((option) => (
                 <button
@@ -168,7 +195,8 @@ export default function RealTalkCreatePage() {
           >
             {isGenerating ? (
               <>
-                <Loader2 className="size-5 animate-spin" /> Đang biên dịch cuộc trò chuyện
+                <Loader2 className="size-5 animate-spin" /> Đang biên dịch cuộc
+                trò chuyện
               </>
             ) : (
               <>
@@ -180,11 +208,17 @@ export default function RealTalkCreatePage() {
 
         {isGenerating && (
           <section className="mt-6 rounded-2xl border border-teal-500/20 bg-teal-950/20 p-5">
-            <p className="text-sm font-bold text-teal-200">Pipeline đang chạy</p>
+            <p className="text-sm font-bold text-teal-200">
+              Pipeline đang chạy
+            </p>
             <div className="mt-4 grid gap-3 sm:grid-cols-2">
               {GENERATION_STEPS.map((step) => (
-                <div key={step} className="flex items-center gap-3 rounded-xl bg-black/20 p-3 text-sm text-zinc-300">
-                  <Loader2 className="size-4 shrink-0 animate-spin text-teal-400" /> {step}
+                <div
+                  key={step}
+                  className="flex items-center gap-3 rounded-xl bg-black/20 p-3 text-sm text-zinc-300"
+                >
+                  <Loader2 className="size-4 shrink-0 animate-spin text-teal-400" />{" "}
+                  {step}
                 </div>
               ))}
             </div>
@@ -194,9 +228,35 @@ export default function RealTalkCreatePage() {
         {error && !isGenerating && (
           <section className="mt-6 flex gap-3 rounded-2xl border border-red-500/30 bg-red-950/30 p-5">
             <AlertCircle className="mt-0.5 size-5 shrink-0 text-red-400" />
-            <div>
-              <p className="font-bold text-red-200">Không tạo được bản nháp</p>
-              <p className="mt-1 text-sm leading-6 text-red-200/70">{error}</p>
+            <div className="min-w-0">
+              <div className="flex flex-wrap items-center gap-2">
+                <p className="font-bold text-red-200">
+                  Không tạo được bản nháp
+                </p>
+                <code className="rounded bg-red-500/10 px-2 py-0.5 text-xs text-red-300">
+                  {error.code}
+                </code>
+              </div>
+              <p className="mt-1 text-sm leading-6 text-red-200/70">
+                {error.message}
+              </p>
+              {error.retryAfterSeconds && (
+                <p className="mt-2 text-xs text-red-300/70">
+                  Có thể thử lại sau khoảng {error.retryAfterSeconds} giây.
+                </p>
+              )}
+              {error.evidenceFailures?.length ? (
+                <div className="mt-3 space-y-1">
+                  {error.evidenceFailures.map((failure) => (
+                    <code
+                      key={failure}
+                      className="block break-all text-xs text-red-300/70"
+                    >
+                      {failure}
+                    </code>
+                  ))}
+                </div>
+              ) : null}
             </div>
           </section>
         )}
@@ -207,9 +267,12 @@ export default function RealTalkCreatePage() {
               <div className="flex flex-wrap items-start justify-between gap-4">
                 <div>
                   <div className="inline-flex items-center gap-2 rounded-full bg-amber-500/10 px-3 py-1 text-xs font-black uppercase tracking-wider text-amber-300">
-                    <ShieldCheck className="size-4" /> AI draft · không tự xuất bản
+                    <ShieldCheck className="size-4" /> AI draft · không tự xuất
+                    bản
                   </div>
-                  <h2 className="mt-4 text-2xl font-black">{generated.lesson.titleVi}</h2>
+                  <h2 className="mt-4 text-2xl font-black">
+                    {generated.lesson.titleVi}
+                  </h2>
                   <p className="mt-1 text-sm text-zinc-400">
                     {generated.video.channelName} · {generated.video.title}
                   </p>
@@ -217,9 +280,7 @@ export default function RealTalkCreatePage() {
                 <div className="rounded-xl border border-zinc-700 bg-zinc-900/70 px-4 py-2 text-right">
                   <p className="text-xs text-zinc-500">Trạng thái lưu</p>
                   <p className="text-sm font-bold text-zinc-200">
-                    {generated.persistence === "saved_private_draft"
-                      ? "Đã lưu private draft"
-                      : "Chỉ xem trong phiên này"}
+                    Đã lưu private draft
                   </p>
                 </div>
               </div>
@@ -230,7 +291,9 @@ export default function RealTalkCreatePage() {
                     <p className="flex items-center gap-2 text-xs font-black uppercase tracking-wider text-teal-300">
                       <Users className="size-4" /> Môi trường giao tiếp
                     </p>
-                    <p className="mt-2 font-bold">{generated.lesson.environment.titleVi}</p>
+                    <p className="mt-2 font-bold">
+                      {generated.lesson.environment.titleVi}
+                    </p>
                     <p className="mt-2 text-sm leading-6 text-zinc-400">
                       {generated.lesson.environment.situationVi}
                     </p>
@@ -251,12 +314,21 @@ export default function RealTalkCreatePage() {
 
               <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
                 {[
-                  ["Sự kiện giao tiếp", generated.lesson.communicationEvents?.length ?? 0],
+                  [
+                    "Sự kiện giao tiếp",
+                    generated.lesson.communicationEvents?.length ?? 0,
+                  ],
                   ["Từ/cụm", generated.lesson.preWatch.vocabulary.length],
-                  ["Bài nghe hiểu", generated.lesson.postWatch.comprehensionQuiz.length],
+                  [
+                    "Bài nghe hiểu",
+                    generated.lesson.postWatch.comprehensionQuiz.length,
+                  ],
                   ["Lượt nói", generated.lesson.postWatch.speakingDrills.length],
                 ].map(([label, value]) => (
-                  <div key={String(label)} className="rounded-xl bg-zinc-900/70 p-3 text-center">
+                  <div
+                    key={String(label)}
+                    className="rounded-xl bg-zinc-900/70 p-3 text-center"
+                  >
                     <p className="text-xl font-black text-white">{value}</p>
                     <p className="mt-1 text-[11px] text-zinc-500">{label}</p>
                   </div>
@@ -288,21 +360,31 @@ export default function RealTalkCreatePage() {
 
             {generated.warnings.length > 0 && (
               <div className="rounded-2xl border border-zinc-800 bg-zinc-900/60 p-5">
-                <p className="font-bold text-zinc-200">Cần kiểm tra trước khi dùng thật</p>
+                <p className="font-bold text-zinc-200">
+                  Cần kiểm tra trước khi dùng thật
+                </p>
                 <div className="mt-3 space-y-2">
                   {generated.warnings.map((warning) => (
-                    <p key={warning} className="flex gap-2 text-sm leading-6 text-zinc-400">
-                      <AlertCircle className="mt-1 size-4 shrink-0 text-amber-400" /> {warning}
+                    <p
+                      key={warning}
+                      className="flex gap-2 text-sm leading-6 text-zinc-400"
+                    >
+                      <AlertCircle className="mt-1 size-4 shrink-0 text-amber-400" />{" "}
+                      {warning}
                     </p>
                   ))}
                 </div>
                 <a
-                  href={generated.video.source?.watchUrl ?? `https://www.youtube.com/watch?v=${generated.video.youtubeId}`}
+                  href={
+                    generated.video.source?.watchUrl ??
+                    `https://www.youtube.com/watch?v=${generated.video.youtubeId}`
+                  }
                   target="_blank"
                   rel="noreferrer"
                   className="mt-4 inline-flex items-center gap-2 text-sm font-bold text-teal-300 hover:underline"
                 >
-                  Mở video nguồn để kiểm tra <ExternalLink className="size-4" />
+                  Mở video nguồn để kiểm tra{" "}
+                  <ExternalLink className="size-4" />
                 </a>
               </div>
             )}
