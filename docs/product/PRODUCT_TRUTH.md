@@ -1,87 +1,141 @@
 # AtoEnglish product truth
 
-**Status:** current product decision source  
+**Status:** product summary; governed by Spec Kit  
 **Updated:** 2026-08-02  
-**Primary product:** Real Talk
+**Primary product:** Natural Communication / Real Talk
 
-## What AtoEnglish is now
+## Authority order
 
-AtoEnglish is a Vietnamese-first web product that turns short, lawful YouTube
-conversation segments into guided English practice. It serves Vietnamese adults
-at A1–B1 who can recognize some English but struggle to follow and use it in
-daily or workplace conversations.
+When documents conflict, use this order:
 
-The core journey is a Real Talk lesson:
+1. `.specify/memory/constitution.md`
+2. the active feature under `specs/`
+3. `specs/000-atoenglish-rebuild-roadmap/roadmap.md`
+4. this product summary
+5. older blueprints, plans, comments, and legacy implementation
+
+The active feature is:
 
 ```text
-short real video
-→ Vietnamese scaffold
-→ active listening task
-→ controlled retrieval
-→ repeat key phrases
-→ immediate feedback and retry
-→ save useful vocabulary to FSRS
-→ return for review
+specs/001-private-natural-lesson-compiler/
 ```
 
-The legacy 28-day scripted-speaking pilot and broad unit curriculum are
-historical reference material. They are not the current product roadmap or
-implementation authority.
+No non-trivial implementation may bypass its requirements and task ledger.
+
+## What AtoEnglish is rebuilding into
+
+AtoEnglish is a Vietnamese-first web product that helps adults understand and
+act inside natural English communication environments.
+
+The learner sees:
+
+```text
+real situation
+→ people and practical goal
+→ short authentic interaction
+→ scaffolded listening
+→ retrieval of useful language
+→ spoken response
+→ changed-context transfer
+→ delayed return
+```
+
+The learner does not primarily navigate a grammar syllabus. Grammar, vocabulary,
+speech features, capability prerequisites, and review scheduling remain invisible
+infrastructure.
 
 ## Product promise
 
-Each lesson helps the learner understand a short real interaction and use a
-small set of useful phrases in a comparable situation. The product does not
-promise native pronunciation, CEFR certification, or IELTS results.
+Each reviewed lesson helps the learner understand one short real interaction and
+use a small set of source-supported language in a comparable but changed
+situation.
+
+AtoEnglish does not promise native pronunciation, CEFR certification, IELTS
+results, fluency, mastery from one lesson, or transcript correctness from AI
+alone.
+
+## Source and generation contract
+
+- A public URL is not automatically permission to store media, captions, or
+  derivatives.
+- Source playback uses an official embed or direct source link.
+- The system does not download or re-host YouTube media.
+- Timed transcript evidence is required for accurate lesson generation.
+- Transcript acquisition modes must be explicit and reviewed; unofficial methods
+  remain experimental until approved.
+- AI output is an owner-private `ai_draft`, not a public lesson.
+- Typed schema and source-evidence checks happen before persistence.
+- Human review is required for transcript accuracy, speakers, timestamps,
+  authenticity, rights, safety, level, translation, and pedagogy.
 
 ## Learning contract
 
-Every curated lesson must contain:
+Every core reviewed lesson must contain:
 
-- one observable can-do outcome;
-- a segment no longer than three minutes;
-- Pre-Watch, While-Watch, and Post-Watch activities;
-- 3–5 key phrases with Vietnamese meaning and use guidance;
-- a speaking task that moves from model to attempt;
-- a retrieval task, not recognition only;
-- concise Vietnamese feedback and an immediate retry opportunity;
-- FSRS-ready vocabulary selected for usefulness, not volume.
+- one natural communication environment;
+- learner role, partner role, and real-world goal;
+- observed communication events linked to source evidence;
+- a bounded source segment;
+- cold listening and scaffolded comprehension;
+- retrieval rather than recognition only;
+- source-backed spoken production;
+- reduced support before the final task;
+- a changed-context transfer attempt;
+- concise Vietnamese guidance and retry;
+- honest completion language;
+- later delayed transfer evidence when that roadmap phase exists.
 
-Curated video topics must progress from routine A1 transactions to A2/B1
-workplace communication. A lesson may simplify the task, but must not falsify
-the source video or manufacture a transcript.
+A lesson cannot become complete through video watching, multiple choice, cloze,
+or repetition alone.
 
 ## Speech evidence contract
 
-There are two distinct modes:
+There are separate evidence modes:
 
-1. **Transcript-match mode:** browser Web Speech compares recognized words with
-   the model phrase. It reports a `0–100` sentence-match score and missing or
-   extra words. It is not a pronunciation score.
-2. **Pronunciation-assessment mode:** an approved acoustic provider such as
-   Azure Speech returns accuracy, fluency, completeness, and prosody. This mode
-   is unavailable until valid credentials, provider tests, and calibration are
-   present.
+1. **Speak-and-confirm practice**: the learner says a phrase and confirms the
+   attempt. No score is claimed.
+2. **Transcript-match mode**: browser speech recognition compares recognized
+   words with a model phrase. It may report sentence match and missing words. It
+   is not pronunciation assessment.
+3. **Acoustic pronunciation assessment**: an approved provider may report
+   acoustic measures only after provider tests, calibration, privacy review, and
+   a separate specification.
 
-The UI must always name the active mode. When assessment is unavailable, the
-learner can still listen, record locally, replay, and self-practice without a
-fabricated score.
+The UI must always name the active mode and preserve a useful fallback.
 
-## Progress and privacy contract
+## Privacy and publication contract
 
-Completion records phase, quiz outcome, sentence-match evidence, learning time,
-and saved vocabulary. It can grant XP and update the learner's daily streak.
+- Generated drafts are private to their owner by default.
+- Ordinary authenticated users cannot approve or publish drafts.
+- Public publication belongs to a separate human-review feature.
+- RLS remains enabled and user identity is derived server-side.
+- Raw recordings, unrestricted learner transcripts, names, employers, and free
+  text are not stored by default.
+- Schema changes use versioned migrations; generated Supabase types are not
+  edited manually.
 
-Raw recordings, full transcripts, names, employers, and free learner text are
-not stored by default. Browser recordings stay local to the session unless a
-future, separately approved recording feature explicitly changes this policy.
+## Invisible curriculum contract
+
+Natural sources are annotated before they are mapped to capabilities.
+
+```text
+natural source
+→ observed communication events
+→ capability mapping
+→ prerequisites and coverage
+→ ordered learner experience
+```
+
+The system records a coverage gap when no suitable source exists. It does not
+force an irrelevant clip, manufacture dialogue, or hunt only for phrases from a
+prewritten lesson.
 
 ## Evidence hierarchy
 
-1. **Technical evidence:** schema, RLS, tests, and production behavior work.
-2. **Lesson evidence:** source, can-do outcome, activities, and assessment align.
-3. **Learner evidence:** learners complete a task, retry, return, and retain key phrases.
-4. **Product evidence:** learners choose and pay for recurring Real Talk practice.
+1. **Technical evidence**: schema, RLS, tests, and runtime behavior.
+2. **Lesson evidence**: source, activities, feedback, and outcome alignment.
+3. **Learner evidence**: completion, retry, return, delayed recall, and transfer.
+4. **Product evidence**: willingness to continue, pay, renew, and refer.
 
-Passing tests does not prove learning or market value. It only proves the
-implemented contract is internally consistent.
+Passing repository checks proves only internal consistency. It does not prove
+learning effectiveness or product-market fit.
