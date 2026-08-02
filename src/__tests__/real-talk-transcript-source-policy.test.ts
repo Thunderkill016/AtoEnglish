@@ -117,13 +117,18 @@ describe("Real Talk transcript source policy", () => {
     expect(acquire).not.toHaveBeenCalled();
   });
 
-  it("normalizes and bounds experimental provider cues", () => {
+  it("normalizes, bounds, sorts, and rejects invalid experimental provider cues", () => {
     expect(
       normalizeExperimentalYouTubeTranscriptItems([
         {
           text: "  <b>Hello</b> &amp; welcome  ",
           offset: 3_000,
           duration: 0,
+        },
+        {
+          text: "invalid timing",
+          offset: Number.NaN,
+          duration: 1_000,
         },
         {
           text: "How are you?",
