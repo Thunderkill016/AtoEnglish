@@ -29,6 +29,12 @@ export function normalizeExperimentalYouTubeTranscriptItems(
   items: readonly RawYouTubeTranscriptItem[],
 ): TranscriptCue[] {
   return items
+    .filter(
+      (item) =>
+        typeof item.text === "string" &&
+        Number.isFinite(item.offset) &&
+        Number.isFinite(item.duration),
+    )
     .map((item) => ({
       text: sanitizeCaptionText(item.text),
       offset: Math.max(0, item.offset / 1000),
