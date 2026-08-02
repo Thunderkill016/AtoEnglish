@@ -112,6 +112,37 @@ If a companion video is removed, blocked, made private, or has embedding disable
 - do not fail the capability or remove acquired evidence;
 - offer another optional companion when available.
 
+## Authority and interpretation
+
+This model combines external constraints with AtoEnglish product rules. They must not be confused.
+
+### Official platform constraints
+
+- YouTube IFrame Player API documents official embedded playback: <https://developers.google.com/youtube/iframe_api_reference>
+- YouTube captions API documents caption-list and download authorization boundaries: <https://developers.google.com/youtube/v3/docs/captions>
+- YouTube API Services policy governs use of player and API data: <https://developers.google.com/youtube/terms/developer-policies>
+
+These sources support using the official player and treating caption access as permission-sensitive. They do not by themselves define AtoEnglish's complete conservative companion policy.
+
+### Learning-framework alignment
+
+- CEFR action-oriented classroom guidance supports aligning capabilities, learning activities, and assessment around what learners can do: <https://www.coe.int/en/web/common-european-framework-reference-languages/cefr-in-the-classroom>
+
+CEFR does not prescribe the seven knowledge categories or the two-lane architecture. Those are AtoEnglish's product implementation of coherent teaching and assessment.
+
+### Internal product rules
+
+The following are explicit AtoEnglish rules, not international standards:
+
+- the licensed core must remain complete when every companion is removed;
+- companions contribute no mastery evidence;
+- every first-slice capability must cover all seven knowledge categories;
+- companion prompts remain transcript-free;
+- companion availability cannot block learner progression;
+- the exact number of companion choices will be tested during the pilot.
+
+These rules may change only through an explicit owner decision supported by source, learner, or operational evidence.
+
 ## Product consequence
 
 AtoEnglish can offer broad and interesting YouTube choice without making lesson completeness dependent on unlicensed transcripts.
