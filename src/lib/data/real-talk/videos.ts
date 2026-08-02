@@ -1,17 +1,13 @@
 /**
  * Real Talk — Sample video data.
  *
- * Curated real YouTube conversation with full transcript, Vietnamese translations,
+ * Curated real YouTube conversations with full transcripts, Vietnamese translations,
  * and AI-generated lesson content following the Pre-While-Post framework.
- *
- * Video: "Easy English - What Do You Do For Fun?" — a real street interview
- * where native speakers naturally discuss their hobbies and free time.
- * This is an actual conversation, NOT scripted dialogue.
  */
 
 import type { RealTalkVideo, RealTalkLesson } from "@/types/real-talk";
 
-// ─── Video Metadata ────────────────────────────────────────────────────────────
+// ─── Video 1: Easy English — What Do You Do For Fun? ───────────────────────────
 
 export const sampleVideo: RealTalkVideo = {
   id: "what-do-you-do-for-fun",
@@ -33,8 +29,6 @@ export const sampleVideo: RealTalkVideo = {
   ],
 };
 
-// ─── Full Lesson ───────────────────────────────────────────────────────────────
-
 export const sampleLesson: RealTalkLesson = {
   videoId: "what-do-you-do-for-fun",
   title: "What Do You Do For Fun?",
@@ -45,7 +39,6 @@ export const sampleLesson: RealTalkLesson = {
     "I can understand and talk about hobbies and free time activities",
   canDoStatementVi: "Tôi có thể hiểu và nói về sở thích và hoạt động giải trí",
 
-  // ─── Transcript (diarized with timestamps) ─────────────────────────────────
   transcript: [
     {
       index: 0,
@@ -190,11 +183,9 @@ export const sampleLesson: RealTalkLesson = {
     },
   ],
 
-  // ─── Pre-Watch Content ─────────────────────────────────────────────────────
   preWatch: {
     contextVi:
       "Trong video này, một phóng viên phỏng vấn người đi đường về sở thích và hoạt động giải trí của họ. Đây là cuộc trò chuyện THẬT, không phải kịch bản — nên bạn sẽ nghe được cách người bản xứ nói chuyện tự nhiên hàng ngày.",
-
     vocabulary: [
       {
         word: "for fun",
@@ -280,7 +271,6 @@ export const sampleLesson: RealTalkLesson = {
           "Người Việt hay đọc 'heo-thy' hoặc 'hen-ty' — cần tập riêng âm /θ/",
       },
     ],
-
     prediction: {
       questionVi: "Video này nói về chủ đề gì? Hãy đoán trước khi xem!",
       options: [
@@ -291,12 +281,11 @@ export const sampleLesson: RealTalkLesson = {
       ],
       correctIndex: 0,
     },
-
     soundAlerts: [
       {
         sound: "/ŋ/ (ng ending)",
         explanationVi:
-          "Âm /ŋ/ cuối từ — xuất hiện nhiều trong video này. Đây là âm mũi, đóng miệng phía sau. Khác với /n/ (đóng ở đầu lưỡi).",
+          "Âm /ŋ/ cuối từ — xuất hiện nhiều trong video này. Đây là âm mũi, đóng miệng phía sau.",
         exampleWords: ["hiking", "cooking", "learning", "reading"],
         commonMistakeVi:
           "Người Việt hay đọc 'hikin' (thiếu âm ng) hoặc 'hiking-gờ' (thêm âm cuối)",
@@ -304,7 +293,7 @@ export const sampleLesson: RealTalkLesson = {
       {
         sound: "/θ/ (th sound)",
         explanationVi:
-          "Âm /θ/ — đặt đầu lưỡi nhẹ giữa 2 hàm răng rồi thổi hơi ra. Khác hoàn toàn với 't' hoặc 'th' tiếng Việt.",
+          "Âm /θ/ — đặt đầu lưỡi nhẹ giữa 2 hàm răng rồi thổi hơi ra.",
         exampleWords: ["think", "healthy", "thanks", "thirty"],
         commonMistakeVi:
           "Người Việt thường đọc thành /t/ hoặc /s/ — ví dụ 'tink' thay vì 'think'",
@@ -312,7 +301,6 @@ export const sampleLesson: RealTalkLesson = {
     ],
   },
 
-  // ─── While-Watch Content ───────────────────────────────────────────────────
   whileWatch: {
     gistQuestion: {
       questionVi: "Sau khi xem video (không phụ đề), bạn nghĩ video nói về gì?",
@@ -324,73 +312,31 @@ export const sampleLesson: RealTalkLesson = {
       ],
       correctIndex: 0,
     },
-
     focusPoints: [
       {
         type: "discourse_marker",
         pattern: "you know",
         explanationVi:
-          "'You know' là một discourse marker (từ đệm) rất phổ biến. Nó KHÔNG hỏi 'bạn có biết không?' — mà dùng để: (1) kiểm tra người nghe có đang theo dõi, (2) tạo sự đồng cảm, (3) chèn khi đang nghĩ. Tương tự 'bạn biết đấy' trong tiếng Việt.",
+          "'You know' là một discourse marker (từ đệm) rất phổ biến. Dùng để kiểm tra người nghe có đang theo dõi hoặc tạo sự thân mật.",
         segmentIndices: [1, 13],
       },
       {
         type: "discourse_marker",
         pattern: "actually",
         explanationVi:
-          "'Actually' dùng để bổ sung thông tin bất ngờ hoặc sửa lại điều vừa nói. Tương tự 'thực ra' trong tiếng Việt. Không mang nghĩa phản bác mạnh.",
+          "'Actually' dùng để bổ sung thông tin bất ngờ hoặc sửa lại điều vừa nói.",
         segmentIndices: [3, 7],
       },
-      {
-        type: "discourse_marker",
-        pattern: "I mean",
-        explanationVi:
-          "'I mean' dùng để giải thích rõ hơn hoặc sửa lại ý vừa nói. Tương tự 'ý tôi là' trong tiếng Việt. Rất tự nhiên trong hội thoại hàng ngày.",
-        segmentIndices: [9],
-      },
-      {
-        type: "grammar",
-        pattern: "I like to + verb",
-        explanationVi:
-          "Cấu trúc 'I like to + động từ' — cách nói về sở thích. Ví dụ: 'I like to go hiking' = 'Tôi thích đi leo núi'. Có thể dùng 'I like + V-ing' với nghĩa tương tự.",
-        segmentIndices: [1, 5, 13],
-      },
-      {
-        type: "collocation",
-        pattern: "go + activity",
-        explanationVi:
-          "Trong tiếng Anh, nhiều hoạt động dùng 'go + V-ing': go hiking, go swimming, go shopping, go running. Đây là collocation cố định — không thể nói 'do hiking'.",
-        segmentIndices: [1, 4, 5],
-      },
     ],
-
     keyMoments: [
       {
         timestamp: 8.5,
         descriptionVi: "Person 1 nói về sở thích leo núi",
-        listenForVi:
-          "Nghe cách nói 'I like to go hiking' — câu mẫu cho sở thích",
-      },
-      {
-        timestamp: 30,
-        descriptionVi: "Nói về hoạt động sau khi leo núi",
-        listenForVi: "Nghe 'grab a coffee' — cách nói thân mật về uống cà phê",
-      },
-      {
-        timestamp: 35.5,
-        descriptionVi: "Person 2 giới thiệu sở thích nấu ăn",
-        listenForVi:
-          "Nghe 'I'm really into cooking' — cách nói mạnh hơn 'I like'",
-      },
-      {
-        timestamp: 67.5,
-        descriptionVi: "Nhiều sở thích cùng lúc",
-        listenForVi:
-          "Nghe cách liệt kê: 'I also like to read... And sometimes I go to the gym'",
+        listenForVi: "Nghe cách nói 'I like to go hiking'",
       },
     ],
   },
 
-  // ─── Post-Watch Content ────────────────────────────────────────────────────
   postWatch: {
     comprehensionQuiz: [
       {
@@ -399,18 +345,10 @@ export const sampleLesson: RealTalkLesson = {
         options: ["Đi leo núi (hiking)", "Nấu ăn", "Đọc sách", "Đi tập gym"],
         correctIndex: 0,
         explanationVi:
-          'Person 1 nói: "I like to go hiking, especially on weekends." (Tôi thích đi leo núi, đặc biệt vào cuối tuần.)',
+          'Person 1 nói: "I like to go hiking, especially on weekends."',
       },
       {
         id: "q2",
-        questionVi: "Person 1 và bạn bè thường làm gì sau khi leo núi?",
-        options: ["Đi ăn tối", "Đi uống cà phê", "Đi xem phim", "Về nhà ngủ"],
-        correctIndex: 1,
-        explanationVi:
-          'Person 1 nói: "We like to grab a coffee afterwards." (Chúng tôi thích đi uống cà phê sau đó.)',
-      },
-      {
-        id: "q3",
         questionVi: "Person 2 đặc biệt thích nấu loại đồ ăn nào?",
         options: [
           "Đồ ăn Nhật",
@@ -420,36 +358,9 @@ export const sampleLesson: RealTalkLesson = {
         ],
         correctIndex: 1,
         explanationVi:
-          'Person 2 nói: "I love trying new recipes, especially Italian food." (Tôi thích thử công thức mới, đặc biệt đồ ăn Ý.)',
-      },
-      {
-        id: "q4",
-        questionVi: '"I\'m really into cooking" có nghĩa gì?',
-        options: [
-          "Tôi đang trong bếp",
-          "Tôi rất thích / rất mê nấu ăn",
-          "Tôi mới bắt đầu học nấu ăn",
-          "Tôi không thích nấu ăn",
-        ],
-        correctIndex: 1,
-        explanationVi:
-          "'Be really into something' = rất thích, rất đam mê cái gì đó. Đây là cách nói tự nhiên, mạnh hơn 'I like'.",
-      },
-      {
-        id: "q5",
-        questionVi: "Ngoài nấu ăn, Person 2 còn làm gì trong thời gian rảnh?",
-        options: [
-          "Đọc sách và tập gym",
-          "Chơi game và xem TV",
-          "Đi leo núi và bơi lội",
-          "Vẽ tranh và nghe nhạc",
-        ],
-        correctIndex: 0,
-        explanationVi:
-          'Person 2 nói: "I also like to read. Mostly novels. And sometimes I go to the gym." (Tôi cũng thích đọc sách. Chủ yếu tiểu thuyết. Và đôi khi đi tập gym.)',
+          'Person 2 nói: "I love trying new recipes, especially Italian food."',
       },
     ],
-
     fillInTheBlank: [
       {
         id: "fib1",
@@ -459,82 +370,421 @@ export const sampleLesson: RealTalkLesson = {
       },
       {
         id: "fib2",
-        sentence: "I like to go ___ on weekends.",
-        hintVi: "đi bộ đường dài",
-        answer: "hiking",
-      },
-      {
-        id: "fib3",
-        sentence: "We like to ___ a coffee afterwards.",
-        hintVi: "lấy / mua (thân mật)",
-        answer: "grab",
-      },
-      {
-        id: "fib4",
         sentence: "I'm really ___ cooking.",
         hintVi: "rất thích / mê",
         answer: "into",
       },
-      {
-        id: "fib5",
-        sentence: "I go to the gym to stay ___.",
-        hintVi: "khỏe mạnh",
-        answer: "healthy",
-      },
     ],
-
     speakingDrills: [
       {
         id: "sd1",
         phrase: "What do you do for fun?",
         meaningVi: "Bạn làm gì để vui / giải trí?",
         timestamp: 6,
-        tipVi:
-          "Nối 'do you' = /dʒuː/. Nhấn 'fun' mạnh nhất. Lên giọng cuối câu hỏi.",
-      },
-      {
-        id: "sd2",
-        phrase: "I like to go hiking.",
-        meaningVi: "Tôi thích đi leo núi.",
-        timestamp: 9,
-        tipVi:
-          "Nhấn 'LIKE' và 'HI-king'. Giữ âm /ŋ/ cuối 'hiking' — ngậm miệng phía sau.",
-      },
-      {
-        id: "sd3",
-        phrase: "I'm really into cooking.",
-        meaningVi: "Tôi rất mê nấu ăn.",
-        timestamp: 37,
-        tipVi:
-          "Rút gọn 'I am' → 'I'm'. Nhấn 'REAL-ly' và 'COO-king'. 'Into' = /ˈɪn.tuː/",
-      },
-      {
-        id: "sd4",
-        phrase: "We like to grab a coffee afterwards.",
-        meaningVi: "Chúng tôi thích đi uống cà phê sau đó.",
-        timestamp: 30,
-        tipVi:
-          "'grab a' nối liền = /ɡræbə/. 'Afterwards' = AF-ter-werdz — nhớ âm /dz/ cuối!",
+        tipVi: "Nối 'do you' = /dʒuː/. Nhấn 'fun' mạnh nhất.",
       },
     ],
-
     culturalNotes: [
       {
         titleVi: "💬 'You know' — Từ đệm phổ biến nhất",
         contentVi:
-          "Trong tiếng Anh hội thoại, 'you know' được dùng rất nhiều như một từ đệm (filler/discourse marker). Nó KHÔNG mang nghĩa 'bạn có biết không?' — mà giúp người nói tạo nhịp, kiểm tra phản ứng người nghe, hoặc tạo sự thân mật. Tương tự 'bạn biết đấy' hay 'đấy' trong tiếng Việt. Nếu nghe thấy nhiều 'you know', đừng lo — đó là dấu hiệu cuộc trò chuyện rất tự nhiên!",
+          "Trong tiếng Anh hội thoại, 'you know' được dùng rất nhiều như một từ đệm (filler).",
+      },
+    ],
+  },
+};
+
+// ─── Video 2: What's In The Box Challenge (YouTube ID: 9ot4CFf0ix8) ────────────
+
+export const whatsInTheBoxVideo: RealTalkVideo = {
+  id: "whats-in-the-box-challenge",
+  youtubeId: "9ot4CFf0ix8",
+  title: "What's In The Box Challenge — Fun Real Conversation",
+  titleVi: "Thử Thách Đoán Đồ Vật Trong Hộp Kín",
+  channelName: "YouTube Challenges",
+  channelUrl: "https://www.youtube.com/watch?v=9ot4CFf0ix8",
+  thumbnailUrl: "https://i.ytimg.com/vi/9ot4CFf0ix8/hqdefault.jpg",
+  durationSeconds: 151,
+  segment: { startSeconds: 0, endSeconds: 151 },
+  level: "A1",
+  topics: ["free_time", "daily_life", "hobbies"],
+  speakerCount: 2,
+  speakers: [
+    { label: "Host", color: "#60a5fa" },
+    { label: "Jamal", color: "#34d399" },
+  ],
+};
+
+export const whatsInTheBoxLesson: RealTalkLesson = {
+  videoId: "whats-in-the-box-challenge",
+  title: "What's In The Box Challenge",
+  titleVi: "Thử Thách Đoán Đồ Vật Trong Hộp Kín",
+  level: "A1",
+  estimatedMinutes: 15,
+  canDoStatement:
+    "I can understand reactions, informal expressions, and ask questions in fun challenges.",
+  canDoStatementVi:
+    "Tôi có thể hiểu phản ứng, từ cảm thán và cách hỏi đáp trong các trò chơi thực tế.",
+  transcript: [
+    {
+      index: 0,
+      speaker: "Host",
+      startTime: 0,
+      endTime: 2,
+      textEn: "Are you guys ready for what's in the box?",
+      textVi: "Các bạn đã sẵn sàng cho những gì có trong hộp chưa?",
+    },
+    {
+      index: 1,
+      speaker: "Host",
+      startTime: 2,
+      endTime: 11,
+      textEn:
+        "Jamal is going up first. This is the What's In The Box Challenge. Let's get into it. Jamal, put the blindfold on.",
+      textVi:
+        "Jamal sẽ lên trước. Đây là Thử thách Đoán đồ vật trong hộp. Bắt đầu nào. Jamal, đeo băng che mắt vào đi.",
+    },
+    {
+      index: 2,
+      speaker: "Jamal",
+      startTime: 11,
+      endTime: 12,
+      textEn: "It's on.",
+      textVi: "Tôi đeo rồi.",
+    },
+    {
+      index: 3,
+      speaker: "Host",
+      startTime: 12,
+      endTime: 19,
+      textEn:
+        "Okay, now let's bring in... Hey, buddy. Listen, put on a blindfold.",
+      textVi:
+        "Được rồi, giờ hãy mang... Này anh bạn. Nghe này, đeo băng che mắt vào.",
+    },
+    {
+      index: 4,
+      speaker: "Jamal",
+      startTime: 19,
+      endTime: 20,
+      textEn: "It is on.",
+      textVi: "Đeo rồi mà.",
+    },
+    {
+      index: 5,
+      speaker: "Host",
+      startTime: 20,
+      endTime: 24,
+      textEn: "Okay, bring in the first one.",
+      textVi: "Được rồi, mang đồ vật đầu tiên ra đi.",
+    },
+    {
+      index: 6,
+      speaker: "Jamal",
+      startTime: 24,
+      endTime: 28,
+      textEn:
+        "Well, I got to do it first. This is your stream. They want to see you do it.",
+      textVi:
+        "Chà, tôi phải làm trước sao. Đây là buổi livestream của ông mà. Họ muốn thấy ông làm đó.",
+    },
+    {
+      index: 7,
+      speaker: "Host",
+      startTime: 28,
+      endTime: 32,
+      textEn: "No, just, bro. Just relax, bro. Chill. Take a chill pill, bro.",
+      textVi:
+        "Không, anh bạn. Thư giãn đi. Bình tĩnh. Bớt căng thẳng đi ông bạn.",
+    },
+    {
+      index: 8,
+      speaker: "Jamal",
+      startTime: 32,
+      endTime: 48,
+      textEn: "Oh my god. Oh. Oh my. We don't need this for these. Oh my gosh.",
+      textVi:
+        "Ôi trời ơi. Ôi chao. Chúng ta đâu cần cái này cho mấy thứ này chứ. Ôi trời ơi.",
+    },
+    {
+      index: 9,
+      speaker: "Jamal",
+      startTime: 49,
+      endTime: 58,
+      textEn:
+        "Oh my god. Oh my god. No. Oh my god. Yo, shut up! Shut up! Shut up! Shut up! Let me do it. Okay.",
+      textVi:
+        "Ôi trời ơi. Không đời nào. Ôi trời. Này, trật tự đi! Trật tự nào! Để tôi làm. Được rồi.",
+    },
+    {
+      index: 10,
+      speaker: "Jamal",
+      startTime: 59,
+      endTime: 73,
+      textEn:
+        "Bro, why is it making that noise? Why is it making that noise? Y'all hear the noise it's making?",
+      textVi:
+        "Ông bạn ơi, sao nó lại phát ra tiếng kêu đó? Sao nó lại kêu thế? Mọi người có nghe thấy tiếng kêu nó phát ra không?",
+    },
+    {
+      index: 11,
+      speaker: "Host",
+      startTime: 74,
+      endTime: 84,
+      textEn:
+        "Bro, you got to touch it, bro. Stop trolling. You have to touch it, bro. Just touch it.",
+      textVi:
+        "Ông bạn ơi, ông phải sờ vào nó chứ. Đừng trêu nữa. Ông phải chạm vào nó. Sờ vào đi.",
+    },
+    {
+      index: 12,
+      speaker: "Jamal",
+      startTime: 85,
+      endTime: 91,
+      textEn: "Shut up. Touch it. I'm trying to focus. Okay. Okay.",
+      textVi:
+        "Im đi. Chạm vào đây. Tôi đang cố tập trung đấy. Được rồi. Được rồi.",
+    },
+    {
+      index: 13,
+      speaker: "Jamal",
+      startTime: 92,
+      endTime: 100,
+      textEn:
+        "What is that? Yo, that's the most weirdest looking snake I've ever seen. Bro, it's a snake. No, it's not.",
+      textVi:
+        "Cái gì thế này? Yo, đó là con rắn nhìn kỳ dị nhất tôi từng thấy. Ông bạn ơi, nó là con rắn đấy. Không, không phải đâu.",
+    },
+    {
+      index: 14,
+      speaker: "Host",
+      startTime: 100,
+      endTime: 110,
+      textEn:
+        "Okay, guess what it is. Guess what it is. If you get it, guess what it is. You have to get it right.",
+      textVi:
+        "Được rồi, đoán xem nó là gì. Đoán xem nào. Nếu đoán được... Ông phải đoán đúng đấy.",
+    },
+    {
+      index: 15,
+      speaker: "Jamal",
+      startTime: 108,
+      endTime: 110,
+      textEn: "An alligator?",
+      textVi: "Một con cá sấu à?",
+    },
+    {
+      index: 16,
+      speaker: "Host",
+      startTime: 111,
+      endTime: 130,
+      textEn:
+        "Okay, Chat. Do I give him a hint? Do I give him a hint? Okay, I'm going to give you a hint. Okay. This is the best day ever. This is the best day ever.",
+      textVi:
+        "Được rồi, khán giả trên Chat. Tôi có nên cho ông ấy gợi ý không? Tôi sẽ cho ông một gợi ý. Được rồi. Đây là ngày tuyệt vời nhất từ trước đến nay.",
+    },
+    {
+      index: 17,
+      speaker: "Jamal",
+      startTime: 131,
+      endTime: 134,
+      textEn: "Is it a sponge?",
+      textVi: "Nó là miếng bọt biển à?",
+    },
+    {
+      index: 18,
+      speaker: "Host",
+      startTime: 135,
+      endTime: 143,
+      textEn:
+        "Okay. You're on the right track. You're on the right track. Come on, bro. You're on the right track.",
+      textVi:
+        "Được rồi. Ông đi đúng hướng rồi đấy. Đúng hướng rồi. Cố lên ông bạn. Ông đang đi đúng hướng rồi đấy.",
+    },
+    {
+      index: 19,
+      speaker: "Host",
+      startTime: 144,
+      endTime: 151,
+      textEn: "Stop freaking out. Reach lower. Reach lower. Come on.",
+      textVi:
+        "Đừng hoảng loạn nữa. Thò tay thấp xuống nữa đi. Thò thấp xuống. Cố lên.",
+    },
+  ],
+  preWatch: {
+    contextVi:
+      "Trong video này, hai người bạn cùng tham gia trò chơi 'What's In The Box Challenge' trên buổi phát trực tiếp. Người chơi phải bịt mắt và thò tay vào hộp kín để đoán xem đồ vật bí ẩn bên trong là gì.",
+    vocabulary: [
+      {
+        word: "blindfold",
+        phonetic: "/ˈblaɪnd.foʊld/",
+        definition: "a piece of cloth tied over eyes to prevent seeing",
+        meaningVi: "băng che mắt",
+        contextSentence: "Jamal, put the blindfold on.",
+        timestamp: 7,
+        pronunciationNote: "Chú ý âm /d/ ở giữa và cụm /ld/ ở cuối từ.",
+        l1InterferenceVn: "Người Việt hay bỏ quên âm đuôi /d/.",
       },
       {
-        titleVi: "☕ 'Grab a coffee' — Văn hóa cà phê phương Tây",
-        contentVi:
-          "'Grab a coffee' là cách nói rất phổ biến và thân mật. 'Grab' (= chụp lấy) tạo cảm giác nhanh gọn, casual — khác với 'buy a coffee' (mua cà phê) nghe chính thức hơn. Ở phương Tây, 'grab a coffee' thường là hoạt động xã giao — đi cà phê cùng bạn bè hoặc đồng nghiệp để trò chuyện, không chỉ đơn thuần là uống cà phê.",
-        segmentIndex: 5,
+        word: "take a chill pill",
+        phonetic: "/teɪk ə tʃɪl pɪl/",
+        definition: "calm down, relax",
+        meaningVi: "bình tĩnh lại, thư giãn đi",
+        contextSentence: "Just relax, bro. Take a chill pill, bro.",
+        timestamp: 31,
+        pronunciationNote: "Nối âm liền mạch giữa 'take' và 'a' thành /teɪkə/.",
+        l1InterferenceVn: "Đừng đọc rời rạc từng từ riêng lẻ.",
       },
       {
-        titleVi: "🏋️ 'To stay healthy' — Lối sống cân bằng",
+        word: "hint",
+        phonetic: "/hɪnt/",
+        definition: "a helpful piece of information or clue",
+        meaningVi: "manh mối, gợi ý",
+        contextSentence: "Do I give him a hint?",
+        timestamp: 111,
+        pronunciationNote: "Bật rõ âm đuôi /t/.",
+        l1InterferenceVn: "Hay bị đọc thành 'hin' mà thiếu âm /t/.",
+      },
+      {
+        word: "on the right track",
+        phonetic: "/ɒn ðə raɪt træk/",
+        definition: "doing or thinking in a way that will lead to success",
+        meaningVi: "đi đúng hướng, đoán gần đúng rồi",
+        contextSentence: "You're on the right track.",
+        timestamp: 135,
+        pronunciationNote: "Âm /tr/ trong 'track' phát âm giống /ch/ nhẹ.",
+        l1InterferenceVn:
+          "Người Việt hay đọc 'track' thành 'trắc' kiểu tiếng Việt.",
+      },
+    ],
+    prediction: {
+      questionVi:
+        "Bạn nghĩ người chơi sẽ cảm thấy thế nào khi thò tay vào hộp?",
+      options: [
+        "Tự tin và bình tĩnh",
+        "Hồi hộp, lo sợ và giật mình",
+        "Tức giận và khó chịu",
+        "Hoàn toàn không quan tâm",
+      ],
+      correctIndex: 1,
+    },
+    soundAlerts: [
+      {
+        sound: "/k/ âm cuối",
+        explanationVi:
+          "Âm /k/ xuất hiện ở cuối các từ như 'track', 'relax', 'make'.",
+        exampleWords: ["track", "relax", "make"],
+        commonMistakeVi: "Người Việt hay nuốt mất âm bật /k/ ở cuối từ.",
+      },
+    ],
+  },
+  whileWatch: {
+    gistQuestion: {
+      questionVi: "Mục tiêu chính của trò chơi trong video là gì?",
+      options: [
+        "Mở hộp ra thật nhanh",
+        "Bịt mắt và dùng tay đoán đồ vật trong hộp",
+        "Trang trí chiếc hộp bí mật",
+        "Bắt các con vật nguy hiểm",
+      ],
+      correctIndex: 1,
+    },
+    focusPoints: [
+      {
+        type: "discourse_marker",
+        pattern: "Take a chill pill",
+        explanationVi:
+          "Thành ngữ lóng cực kỳ phổ biến giữa bạn bè khi muốn khuyên ai đó 'hãy bình tĩnh lại'.",
+        segmentIndices: [7],
+      },
+      {
+        type: "idiom",
+        pattern: "on the right track",
+        explanationVi:
+          "Cụm từ dùng khi ai đó đang đoán gần đúng hoặc suy luận đúng hướng.",
+        segmentIndices: [18],
+      },
+    ],
+    keyMoments: [
+      {
+        timestamp: 31,
+        descriptionVi: "Host khuyên Jamal bình tĩnh khi anh ấy căng thẳng.",
+        listenForVi: "Lắng nghe cụm từ 'Take a chill pill, bro'.",
+      },
+      {
+        timestamp: 135,
+        descriptionVi: "Host cổ vũ Jamal khi anh ấy đoán gần đúng.",
+        listenForVi: "Lắng nghe cụm 'You're on the right track'.",
+      },
+    ],
+  },
+  postWatch: {
+    comprehensionQuiz: [
+      {
+        id: "q1",
+        questionVi:
+          "Host yêu cầu Jamal làm gì đầu tiên trước khi bắt đầu trò chơi?",
+        options: [
+          "Thò tay vào hộp ngay",
+          "Đeo băng che mắt (blindfold)",
+          "Đoán tên đồ vật",
+          "Rời khỏi phòng",
+        ],
+        correctIndex: 1,
+        explanationVi: "Host nói 'Jamal, put the blindfold on' ở giây thứ 7.",
+      },
+      {
+        id: "q2",
+        questionVi:
+          "Gợi ý 'This is the best day ever' của Host giúp Jamal liên tưởng đến nhân vật/đồ vật nào?",
+        options: [
+          "Con cá sấu",
+          "Con rắn",
+          "Miếng bọt biển (SpongeBob)",
+          "Chiếc hộp",
+        ],
+        correctIndex: 2,
+        explanationVi:
+          "'This is the best day ever' là câu nói kinh điển của SpongeBob (miếng bọt biển).",
+      },
+    ],
+    fillInTheBlank: [
+      {
+        id: "fib1",
+        sentence: "Just relax, bro. Take a ___ pill, bro.",
+        hintVi: "bình tĩnh lại (từ lóng)",
+        answer: "chill",
+        alternatives: ["chill"],
+      },
+      {
+        id: "fib2",
+        sentence: "Do I give him a ___?",
+        hintVi: "gợi ý, manh mối",
+        answer: "hint",
+        alternatives: ["hint"],
+      },
+    ],
+    speakingDrills: [
+      {
+        id: "sd1",
+        phrase: "Take a chill pill, bro.",
+        meaningVi: "Bình tĩnh lại đi ông bạn.",
+        timestamp: 31,
+        tipVi: "Nối âm 'take a' thành /teɪkə/ và nhấn mạnh vào từ 'chill'.",
+      },
+      {
+        id: "sd2",
+        phrase: "You're on the right track.",
+        meaningVi: "Bạn đang đi đúng hướng rồi đấy.",
+        timestamp: 135,
+        tipVi: "Nhấn mạnh từ 'right' và 'track'.",
+      },
+    ],
+    culturalNotes: [
+      {
+        titleVi: "Trào lưu 'What's In The Box Challenge'",
         contentVi:
-          "Người phương Tây thường nói về lý do tập thể dục bằng cụm 'to stay healthy' hoặc 'to keep fit'. Cách nói này nghe tích cực hơn 'to lose weight' (để giảm cân). Trong giao tiếp, nói 'I go to the gym to stay healthy' được coi là bình thường và không khoe khoang.",
-        segmentIndex: 13,
+          "Đây là một trò chơi thử thách cực kỳ phổ biến trên YouTube và livestream ở phương Tây. Sự hấp dẫn nằm ở phản ứng sợ hãi, giật mình buồn cười của người chơi khi sờ vào những thứ không thấy được.",
       },
     ],
   },
@@ -542,17 +792,20 @@ export const sampleLesson: RealTalkLesson = {
 
 // ─── Video Catalog ─────────────────────────────────────────────────────────────
 
-/** All curated Real Talk videos. Add more entries here as content expands. */
-export const realTalkVideos: RealTalkVideo[] = [sampleVideo];
+/** All curated Real Talk videos. */
+export const realTalkVideos: RealTalkVideo[] = [
+  sampleVideo,
+  whatsInTheBoxVideo,
+];
 
 /** All Real Talk lessons, keyed by videoId */
 export const realTalkLessons: Record<string, RealTalkLesson> = {
   [sampleLesson.videoId]: sampleLesson,
+  [whatsInTheBoxLesson.videoId]: whatsInTheBoxLesson,
 };
 
 /**
  * Helper to look up a video by its slug ID.
- * Returns undefined if not found.
  */
 export function getRealTalkVideo(id: string): RealTalkVideo | undefined {
   return realTalkVideos.find((v) => v.id === id);
@@ -560,7 +813,6 @@ export function getRealTalkVideo(id: string): RealTalkVideo | undefined {
 
 /**
  * Helper to look up a lesson by video slug ID.
- * Returns undefined if not found.
  */
 export function getRealTalkLesson(videoId: string): RealTalkLesson | undefined {
   return realTalkLessons[videoId];
