@@ -17,8 +17,7 @@ import {
 } from "@/features/real-talk/domain/real-talk";
 
 type LessonPhase = "watch" | "decode" | "practice" | "complete";
-
-type SaveState = "idle" | "saving" | "saved" | "guest" | "error";
+type SaveState = "idle" | "saving" | "saved" | "guest";
 
 interface RealTalkLessonPlayerProps {
   lesson: RealTalkLesson;
@@ -70,17 +69,11 @@ export default function RealTalkLessonPlayer({
     void video.play();
   };
 
-  const playWholeClip = () => {
-    playRange(lesson.clip.startSeconds, lesson.clip.endSeconds);
-  };
-
   const handleTimeUpdate = () => {
     const video = videoRef.current;
     if (!video) return;
     setCurrentTime(video.currentTime);
-    if (video.currentTime >= stopAtRef.current - 0.08) {
-      video.pause();
-    }
+    if (video.currentTime >= stopAtRef.current - 0.08) video.pause();
   };
 
   const saveChunks = async () => {
@@ -94,13 +87,7 @@ export default function RealTalkLessonPlayer({
       topic: `Real Talk: ${lesson.titleEn}`,
       level: lesson.level,
     });
-
-    if (result.success) {
-      setSaveState("saved");
-      return;
-    }
-
-    setSaveState("guest");
+    setSaveState(result.success ? "saved" : "guest");
   };
 
   return (
@@ -140,13 +127,16 @@ export default function RealTalkLessonPlayer({
               stopAtRef.current = lesson.clip.endSeconds;
             }}
             onPlay={(event) => {
-              if (
-                event.currentTarget.currentTime < lesson.clip.startSeconds ||
-                event.currentTarget.currentTime >= lesson.clip.endSeconds
-              ) {
-                event.currentTarget.currentTime = lesson.clip.startSeconds;
+              const video = event.currentTarget;
+              const outsideClip =
+                video.currentTime < lesson.clip.startSeconds ||
+                video.currentTime >= lesson.clip.endSeconds;
+              const exhaustedRange = stopAtRef.current <= video.currentTime + 0.08;
+
+              if (outsideClip) video.currentTime = lesson.clip.startSeconds;
+              if (outsideClip || exhaustedRange) {
+                stopAtRef.current = lesson.clip.endSeconds;
               }
-              stopAtRef.current = lesson.clip.endSeconds;
             }}
             onTimeUpdate={handleTimeUpdate}
           >
@@ -191,7 +181,9 @@ export default function RealTalkLessonPlayer({
 
             <button
               type="button"
-              onClick={playWholeClip}
+              onClick={() =>
+                playRange(lesson.clip.startSeconds, lesson.clip.endSeconds)
+              }
               className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 font-bold text-primary-foreground"
             >
               <Headphones className="size-4" /> Phát đúng đoạn cần nghe
@@ -226,6 +218,7 @@ export default function RealTalkLessonPlayer({
                   );
                 })}
               </div>
+
               {!gistChecked ? (
                 <button
                   type="button"
@@ -358,12 +351,7 @@ export default function RealTalkLessonPlayer({
                 >
                   {clozeCorrect
                     ? "Đúng — bạn đã lấy được tên sự kiện."
-                    : `Chưa đúng. Nghe lại đoạn ${formatTime(
-                        lesson.transcript.find(
-                          (segment) =>
-                            segment.id === lesson.cloze.evidenceSegmentId,
-                        )?.startSeconds ?? lesson.clip.startSeconds,
-                      )} rồi thử lại.`}
+                    : "Chưa đúng. Hãy nghe lại đúng timestamp rồi thử lại."}
                 </p>
               )}
             </div>
@@ -471,11 +459,6 @@ export default function RealTalkLessonPlayer({
               <p className="text-sm text-amber-700 dark:text-amber-200">
                 Bài học vẫn hoàn thành trong phiên này. Hãy đăng nhập để lưu cụm vào
                 lịch ôn dài hạn.
-              </p>
-            )}
-            {saveState === "error" && (
-              <p className="text-sm text-red-600">
-                Chưa lưu được cụm. Hãy thử lại sau.
               </p>
             )}
 
