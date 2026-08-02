@@ -202,6 +202,24 @@ describe("Real Talk generation contract", () => {
     expect(validateGeneratedDraftEvidence(validDraft, source)).toEqual([]);
   });
 
+  it("rejects invented transcript lines even when their timestamps look valid", () => {
+    const invalidDraft: GeneratedLessonDraft = {
+      ...validDraft,
+      transcript: validDraft.transcript.map((segment) =>
+        segment.index === 1
+          ? {
+              ...segment,
+              textEn: "Welcome to our advanced negotiation workshop.",
+            }
+          : segment,
+      ),
+    };
+
+    expect(validateGeneratedDraftEvidence(invalidDraft, source)).toContain(
+      "transcript_missing_source_evidence",
+    );
+  });
+
   it("rejects invented speaking phrases that are absent from the source", () => {
     const invalidDraft: GeneratedLessonDraft = {
       ...validDraft,
