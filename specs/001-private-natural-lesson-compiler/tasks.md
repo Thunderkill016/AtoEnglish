@@ -59,13 +59,13 @@ description: "Dependency-ordered implementation and verification tasks for the p
 - [x] T020 Implement generation request, lesson draft, environment, communication-event, and transfer schemas in `src/lib/real-talk/generation-contract.ts`
 - [x] T021 Implement deterministic interaction-window selection in `src/lib/real-talk/generation-contract.ts`
 - [x] T022 Implement source-evidence failure checks in `src/lib/real-talk/generation-contract.ts`
-- [ ] T023 Extract `TranscriptSourceAdapter` interface and acquisition metadata into `src/features/real-talk/domain/transcript-source.ts`
-- [ ] T024 Move the current `youtube-transcript` implementation behind an explicitly experimental adapter in `src/features/real-talk/server/transcript-sources/youtube-experimental.ts`
-- [ ] T025 Add a configuration gate preventing the experimental adapter from being treated as production-approved in `src/features/real-talk/server/transcript-source-policy.ts`
+- [x] T023 Extract `TranscriptSourceAdapter`, acquisition metadata, typed cues, trust, review status, and failures into `src/features/real-talk/domain/transcript-source.ts`
+- [x] T024 Move the current `youtube-transcript` implementation behind the explicitly experimental adapter in `src/features/real-talk/server/transcript-sources/youtube-experimental.ts`
+- [x] T025 Add and regression-test a fail-closed policy in `src/features/real-talk/server/transcript-source-policy.ts` and `src/__tests__/real-talk-transcript-source-policy.test.ts`; production always rejects the experimental adapter and non-production requires explicit opt-in
 - [x] T026 Extend Real Talk lesson and draft types with environment, communication events, transfer, warnings, and review state in `src/types/real-talk.ts`
 - [x] T027 Add app-level Supabase table types without editing generated types in `src/types/app-database.ts`
 - [x] T028 Update the server Supabase client to use app-level database types in `src/lib/supabase/server.ts`
-- [ ] T029 Replace remaining transport-level domain logic in `src/app/actions/real-talk.ts` with feature-owned compiler services under `src/features/real-talk/server/`
+- [x] T029 Extract transcript acquisition, source metadata, window selection, prompt construction, Gemini generation, schema validation, and evidence validation from `src/app/actions/real-talk.ts` into `src/features/real-talk/server/private-lesson-compiler.ts`; persistence remains tracked by T043
 
 **Checkpoint**: All user stories depend on typed input, typed model output, evidence validation, and explicit transcript-source policy.
 
@@ -88,14 +88,14 @@ description: "Dependency-ordered implementation and verification tasks for the p
 
 - [x] T034 [US1] Require Supabase authentication before generation work in `src/app/actions/real-talk.ts`
 - [x] T035 [US1] Validate URL and target level with Zod in `src/app/actions/real-talk.ts`
-- [x] T036 [US1] Bound and sanitize source cues before prompt construction in `src/app/actions/real-talk.ts`
-- [x] T037 [US1] Select an interaction-rich source window before Gemini generation in `src/app/actions/real-talk.ts`
-- [x] T038 [US1] Fetch honest source metadata through YouTube oEmbed in `src/app/actions/real-talk.ts`
-- [x] T039 [US1] Request structured environment-first output from Gemini in `src/app/actions/real-talk.ts`
-- [x] T040 [US1] Record the actual successful Gemini model in `src/app/actions/real-talk.ts`
+- [x] T036 [US1] Bound and sanitize source cues in `src/features/real-talk/server/transcript-sources/youtube-experimental.ts`
+- [x] T037 [US1] Select an interaction-rich source window in `src/features/real-talk/server/private-lesson-compiler.ts`
+- [x] T038 [US1] Fetch honest source metadata through YouTube oEmbed in `src/features/real-talk/server/private-lesson-compiler.ts`
+- [x] T039 [US1] Request structured environment-first output from Gemini in `src/features/real-talk/server/private-lesson-compiler.ts`
+- [x] T040 [US1] Record the actual successful Gemini model in `src/features/real-talk/server/private-lesson-compiler.ts`
 - [ ] T041 [US1] Return stable machine-readable generation failure codes defined by `contracts/generation-contract.md` from `src/app/actions/real-talk.ts`
 - [ ] T042 [US1] Make persistence failure explicit instead of silently reporting a fully saved draft in `src/app/actions/real-talk.ts`
-- [ ] T043 [US1] Define and implement deterministic repeated-generation/slug-collision behavior in `src/features/real-talk/server/draft-repository.ts`
+- [ ] T043 [US1] Define deterministic repeated-generation/slug-collision behavior and move private draft persistence into `src/features/real-talk/server/draft-repository.ts`
 
 **Checkpoint**: US1 can be demonstrated with mocked providers without publication or later roadmap features.
 
@@ -115,11 +115,11 @@ description: "Dependency-ordered implementation and verification tasks for the p
 
 ### Implementation for User Story 2
 
-- [x] T047 [US2] Parse model output with the runtime Zod schema in `src/app/actions/real-talk.ts`
+- [x] T047 [US2] Parse model output with the runtime Zod schema in `src/features/real-talk/server/private-lesson-compiler.ts`
 - [x] T048 [US2] Validate transcript text against selected source evidence in `src/lib/real-talk/generation-contract.ts`
 - [x] T049 [US2] Validate vocabulary, fill answers, speaking drills, transfer language, timestamps, speakers, and segment references in `src/lib/real-talk/generation-contract.ts`
-- [x] T050 [US2] Delimit caption content as untrusted data and instruct Gemini not to follow caption instructions in `src/app/actions/real-talk.ts`
-- [x] T051 [US2] Surface unresolved human-review warnings in the generation result from `src/app/actions/real-talk.ts`
+- [x] T050 [US2] Delimit caption content as untrusted data and instruct Gemini not to follow caption instructions in `src/features/real-talk/server/private-lesson-compiler.ts`
+- [x] T051 [US2] Surface unresolved AI and transcript-source review warnings from `src/features/real-talk/server/private-lesson-compiler.ts` through `src/app/actions/real-talk.ts`
 - [ ] T052 [US2] Add conservative normalization tests for contractions, punctuation, HTML entities, and caption artifacts in `src/__tests__/real-talk-generation-contract.test.ts`
 
 **Checkpoint**: US2 rejects unsupported content independently of database and preview concerns.
@@ -193,7 +193,7 @@ description: "Dependency-ordered implementation and verification tasks for the p
 - [ ] T081 Run targeted compiler and preview tests against the exact final commit
 - [ ] T082 Run non-production live Gemini happy path, invalid output, 429, and provider-failure checks
 - [ ] T083 Verify official source playback and oEmbed metadata on desktop and mobile
-- [ ] T084 Resolve transcript acquisition policy or retain an explicit merge blocker for the experimental adapter
+- [ ] T084 Approve at least one production transcript acquisition mode or retain the explicit merge blocker; the experimental adapter is already isolated and fail-closed in production
 - [ ] T085 Run the requirements checklist in `checklists/requirements.md` and check only observed items
 - [ ] T086 Run final cross-artifact analysis and remove spec/plan/task inconsistencies
 - [ ] T087 Run convergence review: map every FR and SC to implementation and observed evidence
@@ -251,6 +251,7 @@ Stop and verify this slice before expanding database or preview behavior.
 ## Notes
 
 - Checked code tasks do not imply verification passed.
+- `REAL_TALK_ALLOW_EXPERIMENTAL_TRANSCRIPTS=true` is permitted only in development or test; production ignores the flag and rejects the experimental adapter.
 - Do not mark T062 or RLS tasks complete without an authorized non-production database run.
 - Do not mark external API tasks complete from mocked results.
 - Do not mark manual review tasks complete from metadata or model output alone.
