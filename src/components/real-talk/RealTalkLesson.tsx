@@ -223,39 +223,43 @@ export default function RealTalkLessonComponent({
   return (
     <div className="min-h-screen bg-gradient-to-br from-zinc-950 via-zinc-900 to-teal-950/20">
       {/* ── Sticky Header ─────────────────────────────────────────────────── */}
-      <div className="sticky top-0 z-40 bg-zinc-950/80 backdrop-blur-xl border-b border-zinc-800/60">
-        <div className="max-w-3xl mx-auto px-4 py-3">
+      <div className="sticky top-0 z-40 bg-zinc-950/85 backdrop-blur-2xl border-b border-zinc-800/80 shadow-lg shadow-black/40">
+        <div className="max-w-3xl mx-auto px-4 py-3.5">
           {/* Top row */}
           <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center gap-2 min-w-0">
+            <div className="flex items-center gap-2.5 min-w-0">
               <Link
                 href="/real-talk"
                 aria-label="Trở về Real Talk"
-                className="shrink-0 flex items-center justify-center w-7 h-7 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-white transition-colors"
+                className="shrink-0 flex items-center justify-center w-8 h-8 rounded-xl bg-zinc-800/80 hover:bg-zinc-700 text-zinc-400 hover:text-white transition-all border border-zinc-700/40"
               >
-                <ChevronLeft size={16} />
+                <ChevronLeft size={18} />
               </Link>
               <div className="min-w-0">
-                <p className="text-[10px] font-bold text-teal-400 uppercase tracking-widest">
-                  🎬 Real Talk • {video.level}
+                <p className="text-[10px] font-bold text-teal-400 uppercase tracking-widest flex items-center gap-1">
+                  <span>🎬 Real Talk</span>
+                  <span className="text-zinc-600">•</span>
+                  <span className="px-1.5 py-0.2 rounded bg-teal-500/10 border border-teal-500/20 text-teal-300">
+                    {video.level}
+                  </span>
                 </p>
-                <p className="text-sm font-semibold text-white truncate max-w-[180px] sm:max-w-xs">
+                <p className="text-sm font-bold text-white truncate max-w-[200px] sm:max-w-xs">
                   {lesson.titleVi}
                 </p>
               </div>
             </div>
             <div className="text-right shrink-0">
-              <p className="text-xs text-zinc-500">
+              <p className="text-[11px] font-medium text-zinc-400">
                 {PHASES[currentPhaseIndex]?.label}
               </p>
-              <p className="text-sm font-bold text-teal-400">
-                {currentPhaseIndex + 1}/{PHASES.length}
+              <p className="text-xs font-black text-teal-400">
+                {currentPhaseIndex + 1} / {PHASES.length}
               </p>
             </div>
           </div>
 
-          {/* Phase progress dots */}
-          <div className="flex items-center gap-1">
+          {/* Phase progress indicators */}
+          <div className="flex items-center gap-1.5">
             {PHASES.map((p, i) => {
               const isCompleted = i < currentPhaseIndex;
               const isCurrent = i === currentPhaseIndex;
@@ -263,23 +267,23 @@ export default function RealTalkLessonComponent({
                 <div key={p.key} className="flex items-center flex-1">
                   <div
                     className={`
-                      relative flex items-center justify-center rounded-full shrink-0
+                      relative flex items-center justify-center rounded-xl shrink-0
                       transition-all duration-300
                       ${
                         isCurrent
-                          ? "w-8 h-8 bg-teal-500 ring-2 ring-teal-400/50 ring-offset-1 ring-offset-zinc-950 shadow-lg shadow-teal-900/60"
+                          ? "w-8 h-8 bg-gradient-to-r from-teal-500 to-emerald-500 ring-2 ring-teal-400/60 shadow-lg shadow-teal-900/60 border border-teal-300/40"
                           : isCompleted
-                            ? "w-6 h-6 bg-teal-800"
-                            : "w-6 h-6 bg-zinc-800"
+                            ? "w-6 h-6 bg-teal-900/80 border border-teal-500/40 text-teal-300"
+                            : "w-6 h-6 bg-zinc-800/80 border border-zinc-700/30 text-zinc-600"
                       }
                     `}
                   >
                     {isCompleted ? (
-                      <CheckCircle2 size={12} className="text-teal-400" />
+                      <CheckCircle2 size={13} className="text-teal-300" />
                     ) : (
                       <span
                         className={`leading-none select-none ${
-                          isCurrent ? "text-white" : "text-zinc-600"
+                          isCurrent ? "text-white" : "text-zinc-500"
                         }`}
                       >
                         {p.icon}
@@ -288,8 +292,10 @@ export default function RealTalkLessonComponent({
                   </div>
                   {i < PHASES.length - 1 && (
                     <div
-                      className={`flex-1 h-0.5 mx-1 rounded-full transition-colors duration-300 ${
-                        i < currentPhaseIndex ? "bg-teal-700" : "bg-zinc-800"
+                      className={`flex-1 h-1 mx-1.5 rounded-full transition-all duration-500 ${
+                        i < currentPhaseIndex
+                          ? "bg-gradient-to-r from-teal-600 to-emerald-500"
+                          : "bg-zinc-800/80"
                       }`}
                     />
                   )}

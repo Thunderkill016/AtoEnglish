@@ -72,12 +72,15 @@ function VideoCard({ video, index }: { video: RealTalkVideo; index: number }) {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.1 * index, duration: 0.4 }}
+      transition={{ delay: 0.08 * index, duration: 0.4 }}
     >
       <Link
         href={`/real-talk/${video.id}`}
-        className="group block rounded-2xl border border-zinc-800/60 bg-zinc-900/60 backdrop-blur-sm overflow-hidden hover:border-teal-500/40 hover:bg-zinc-800/60 transition-all duration-300"
+        className="group relative block rounded-3xl border border-zinc-800/80 bg-zinc-900/60 backdrop-blur-xl overflow-hidden hover:border-teal-500/50 hover:bg-zinc-800/70 transition-all duration-300 shadow-xl shadow-black/40 hover:shadow-teal-950/40 hover:-translate-y-1"
       >
+        {/* Ambient card glow on hover */}
+        <div className="absolute -top-10 -right-10 w-32 h-32 bg-teal-500/10 rounded-full blur-2xl group-hover:bg-teal-500/20 transition-all" />
+
         {/* Thumbnail */}
         <div className="relative aspect-video bg-zinc-950 overflow-hidden">
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -86,23 +89,27 @@ function VideoCard({ video, index }: { video: RealTalkVideo; index: number }) {
             alt={video.title}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           />
-          {/* Play overlay */}
-          <div className="absolute inset-0 bg-zinc-950/30 group-hover:bg-zinc-950/10 transition-colors" />
+          {/* Dark gradient overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/90 via-zinc-950/30 to-transparent group-hover:via-zinc-950/10 transition-colors" />
+
+          {/* Play button */}
           <div className="absolute inset-0 flex items-center justify-center">
-            <div className="flex size-14 items-center justify-center rounded-full bg-teal-500/90 shadow-xl shadow-teal-900/40 group-hover:scale-110 group-hover:bg-teal-400 transition-all duration-300">
-              <Play size={24} className="text-white ml-0.5" fill="white" />
+            <div className="flex size-14 items-center justify-center rounded-2xl bg-teal-500/90 backdrop-blur-md shadow-2xl shadow-teal-900/60 group-hover:scale-110 group-hover:bg-teal-400 border border-teal-300/30 transition-all duration-300">
+              <Play size={24} className="text-white ml-1" fill="white" />
             </div>
           </div>
+
           {/* Duration badge */}
-          <div className="absolute bottom-2 right-2 flex items-center gap-1 px-2 py-1 rounded-lg bg-zinc-950/80 backdrop-blur-sm text-xs font-bold text-zinc-200">
-            <Clock size={10} />
+          <div className="absolute bottom-3 right-3 flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-zinc-950/80 backdrop-blur-md border border-zinc-800/60 text-xs font-bold text-zinc-200">
+            <Clock size={11} className="text-teal-400" />
             {formatDuration(
               video.segment.endSeconds - video.segment.startSeconds,
             )}
           </div>
+
           {/* Level badge */}
           <div
-            className={`absolute top-2 left-2 px-2.5 py-1 rounded-lg ${level.bg} ${level.border} border backdrop-blur-sm`}
+            className={`absolute top-3 left-3 px-3 py-1 rounded-xl ${level.bg} ${level.border} border backdrop-blur-md shadow-md`}
           >
             <span className={`text-xs font-black ${level.text}`}>
               {video.level}
@@ -111,20 +118,20 @@ function VideoCard({ video, index }: { video: RealTalkVideo; index: number }) {
         </div>
 
         {/* Info */}
-        <div className="p-4">
-          <h3 className="text-sm font-bold text-white mb-1 line-clamp-1 group-hover:text-teal-300 transition-colors">
+        <div className="p-5">
+          <h3 className="text-base font-bold text-white mb-1.5 line-clamp-1 group-hover:text-teal-300 transition-colors">
             {video.titleVi}
           </h3>
-          <p className="text-xs text-zinc-500 mb-3 line-clamp-1">
+          <p className="text-xs text-zinc-400 mb-3.5 line-clamp-1">
             {video.channelName} • {video.title}
           </p>
 
           {/* Tags */}
-          <div className="flex flex-wrap gap-1.5 mb-3">
+          <div className="flex flex-wrap gap-1.5 mb-4">
             {video.topics.slice(0, 3).map((topic) => (
               <span
                 key={topic}
-                className="px-2 py-0.5 rounded-md bg-zinc-800/80 text-[10px] font-medium text-zinc-400"
+                className="px-2.5 py-1 rounded-lg bg-zinc-800/80 border border-zinc-700/40 text-[11px] font-medium text-zinc-300"
               >
                 {TOPIC_LABELS[topic] ?? topic}
               </span>
@@ -132,12 +139,12 @@ function VideoCard({ video, index }: { video: RealTalkVideo; index: number }) {
           </div>
 
           {/* Footer */}
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-1.5 text-xs text-zinc-500">
-              <Users size={12} />
+          <div className="flex items-center justify-between pt-3 border-t border-zinc-800/60">
+            <div className="flex items-center gap-1.5 text-xs text-zinc-400">
+              <Users size={13} className="text-zinc-500" />
               <span>{video.speakerCount} người nói</span>
             </div>
-            <span className="text-xs font-bold text-teal-400 group-hover:text-teal-300 transition-colors">
+            <span className="text-xs font-bold text-teal-400 group-hover:text-teal-300 transition-colors flex items-center gap-1">
               Bắt đầu học →
             </span>
           </div>
@@ -170,38 +177,42 @@ export default function RealTalkHub({ videos }: RealTalkHubProps) {
   const levels = [...new Set(videos.map((v) => v.level))];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-zinc-950 via-zinc-900 to-teal-950/20">
-      <div className="max-w-3xl mx-auto px-4 py-8 pb-24">
+    <div className="relative min-h-screen bg-gradient-to-br from-zinc-950 via-zinc-900 to-teal-950/30 overflow-hidden">
+      {/* Background Glow Orbs */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-teal-500/10 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-emerald-500/10 rounded-full blur-[140px] pointer-events-none" />
+
+      <div className="relative max-w-3xl mx-auto px-4 py-10 pb-28">
         {/* ── Hero Section ─────────────────────────────────────────────── */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-8"
+          className="text-center mb-10"
         >
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-teal-500/10 border border-teal-500/20 mb-4">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-teal-500/10 border border-teal-500/30 mb-5 shadow-lg shadow-teal-950/50">
             <Tv size={14} className="text-teal-400" />
-            <span className="text-xs font-bold text-teal-400 uppercase tracking-wider">
-              Real Talk
+            <span className="text-xs font-bold text-teal-300 uppercase tracking-widest">
+              Real Talk Immersion
             </span>
-            <Sparkles size={12} className="text-teal-400" />
+            <Sparkles size={13} className="text-teal-400" />
           </div>
-          <h1 className="text-2xl sm:text-3xl font-black text-white mb-2">
+          <h1 className="text-3xl sm:text-4xl font-black text-white mb-3 tracking-tight">
             Học từ cuộc trò chuyện{" "}
-            <span className="bg-gradient-to-r from-teal-400 to-emerald-400 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-teal-300 via-emerald-400 to-cyan-400 bg-clip-text text-transparent">
               thực tế
             </span>
           </h1>
-          <p className="text-sm text-zinc-400 max-w-md mx-auto mb-6">
-            Xem video trò chuyện thật từ YouTube, hiểu từng câu, học từ vựng
-            mới, và luyện nói theo người bản xứ.
+          <p className="text-sm sm:text-base text-zinc-300 max-w-lg mx-auto mb-8 leading-relaxed">
+            Xem video trò chuyện thật từ YouTube, hiểu từng câu thoại, nạp từ
+            vựng tự nhiên và luyện phản xạ nói với AI.
           </p>
 
           <Link
             href="/real-talk/create"
-            className="inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-400 hover:to-emerald-400 text-white font-bold text-sm shadow-lg shadow-teal-900/30 transition-all hover:scale-[1.02] active:scale-[0.98]"
+            className="inline-flex items-center gap-2.5 px-6 py-3.5 rounded-2xl bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-400 hover:to-emerald-400 text-white font-bold text-sm shadow-xl shadow-teal-900/40 transition-all hover:scale-[1.03] active:scale-[0.98] border border-teal-300/30"
           >
-            <Sparkles size={16} />
-            <span>Tạo bài học từ link YouTube</span>
+            <Sparkles size={18} />
+            <span>Tạo bài học từ link YouTube yêu thích</span>
           </Link>
         </motion.div>
 
