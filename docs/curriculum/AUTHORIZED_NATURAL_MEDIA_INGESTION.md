@@ -75,25 +75,42 @@ The system must reject:
 
 The demo performs two stages:
 
-1. fetch public metadata through the official YouTube Data API and build an official embed record;
+1. fetch public metadata and build an official embed record;
 2. optionally read a local, authorized caption file and generate an editor-only lesson draft.
 
-Metadata only:
+### No API key
+
+When `YOUTUBE_API_KEY` is absent, the CLI uses YouTube oEmbed:
+
+```bash
+npx tsx scripts/demo-youtube-companion.ts \
+  --url=https://www.youtube.com/watch?v=VIDEO_ID
+```
+
+The no-key response provides the title, creator name, thumbnail, and official embed representation. It does not provide duration, publication date, or license, so those fields remain unknown and cannot satisfy rights or duration review.
+
+### With YouTube Data API key
 
 ```bash
 YOUTUBE_API_KEY=your_key npx tsx scripts/demo-youtube-companion.ts \
   --url=https://www.youtube.com/watch?v=VIDEO_ID
 ```
 
-Metadata plus an authorized local caption file:
+The Data API path adds duration, publication date, embeddability, and the YouTube license field.
+
+### With an authorized local caption file
+
+The caption path works in both metadata modes:
 
 ```bash
-YOUTUBE_API_KEY=your_key npx tsx scripts/demo-youtube-companion.ts \
+npx tsx scripts/demo-youtube-companion.ts \
   --url=https://www.youtube.com/watch?v=VIDEO_ID \
   --caption=fixtures/media-ingestion/demo-authorized-caption.vtt \
   --caption-authorized \
   --rights-evidence=creator-upload-record-123
 ```
+
+Without Data API duration, caption cues are validated internally for order and overlap, but the final cue cannot be checked against the total video duration.
 
 The CLI rejects remote caption URLs. It does not download media, extract audio, or scrape YouTube captions.
 
