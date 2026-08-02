@@ -2,6 +2,7 @@ import {
   generationFailure,
   type GenerateLessonResult,
 } from "@/features/real-talk/domain/generation-result";
+import { canonicalYouTubeWatchUrl } from "@/features/real-talk/domain/youtube-source";
 import type { PersistPrivateDraftResult } from "@/features/real-talk/server/draft-repository";
 import type { PrivateLessonCompilationResult } from "@/features/real-talk/server/private-lesson-compiler";
 import { generateRealTalkInputSchema } from "@/lib/real-talk/generation-contract";
@@ -42,7 +43,11 @@ export async function generatePrivateLesson(
 ): Promise<GenerateLessonResult> {
   try {
     const parsedInput = generateRealTalkInputSchema.safeParse(input);
-    if (!parsedInput.success) {
+    const canonicalYoutubeUrl = parsedInput.success
+      ? canonicalYouTubeWatchUrl(parsedInput.data.youtubeUrl)
+      : null;
+
+    if (!parsedInput.success || !canonicalYoutubeUrl) {
       return generationFailure(
         "INVALID_INPUT",
         "Link YouTube hoặc cấp độ không hợp lệ.",
@@ -71,7 +76,7 @@ export async function generatePrivateLesson(
     }
 
     const compiled = await dependencies.compile({
-      youtubeUrl: parsedInput.data.youtubeUrl,
+      youtubeUrl: canonicalYoutubeUrl,
       level: parsedInput.data.level,
     });
     if (!compiled.success) return compiled;
@@ -100,7 +105,7 @@ export async function generatePrivateLesson(
         provider: "youtube",
         externalId: persisted.video.youtubeId,
         watchUrl:
-          persisted.video.source?.watchUrl ?? parsedInput.data.youtubeUrl,
+          persisted.video.source?.watchUrl ?? canonicalYoutubeUrl,
         embedUrl: `https://www.youtube.com/embed/${persisted.video.youtubeId}`,
         selectedStartSeconds: persisted.video.segment.startSeconds,
         selectedEndSeconds: persisted.video.segment.endSeconds,
