@@ -346,6 +346,13 @@ export function validateGeneratedDraftEvidence(
   if (draft.transcript.some((segment) => !speakerLabels.has(segment.speaker))) {
     failures.push("unknown_speaker_label");
   }
+  if (
+    draft.transcript.some(
+      (segment) => !phraseHasSourceEvidence(segment.textEn, sourceText),
+    )
+  ) {
+    failures.push("transcript_missing_source_evidence");
+  }
 
   const referencedIndices = [
     ...draft.communicationEvents.flatMap((event) => event.segmentIndices),
