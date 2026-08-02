@@ -231,8 +231,12 @@ Hãy tạo bài học tiếng Anh hoàn chỉnh từ transcript trên. Nhớ:
 - Tất cả giải thích bằng tiếng Việt
 - Tập trung vào từ vựng và patterns thực tế trong video`;
 
-  // Models to attempt in order of preference if rate limited (429)
-  const models = ["gemini-2.0-flash", "gemini-1.5-flash", "gemini-1.5-pro"];
+  // Models to attempt in order of preference (using official v1beta model IDs)
+  const models = [
+    "gemini-1.5-flash",
+    "gemini-2.0-flash",
+    "gemini-1.5-flash-8b",
+  ];
 
   let lastStatus = 0;
   let lastErrBody = "";
@@ -284,6 +288,11 @@ Hãy tạo bài học tiếng Anh hoàn chỉnh từ transcript trên. Nhớ:
 
         lastStatus = response.status;
         lastErrBody = await response.text();
+
+        // If model non-existent (404), break immediately to next model
+        if (response.status === 404) {
+          break;
+        }
 
         // If rate limited (429), wait 2s before retrying or switching model
         if (response.status === 429) {
