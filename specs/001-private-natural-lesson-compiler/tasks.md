@@ -7,7 +7,7 @@ description: "Dependency-ordered implementation and verification tasks for the p
 
 **Input**: Design documents from `/specs/001-private-natural-lesson-compiler/`
 
-**Prerequisites**: `spec.md`, `plan.md`, `research.md`, `data-model.md`, `contracts/generation-contract.md`
+**Prerequisites**: `plan.md`, `spec.md`, `research.md`, `data-model.md`, `contracts/generation-contract.md`
 
 **Tests**: Required because generation, evidence, authentication, RLS, and learner completion are product-critical contracts.
 
@@ -65,7 +65,7 @@ description: "Dependency-ordered implementation and verification tasks for the p
 - [x] T026 Extend Real Talk lesson and draft types with environment, communication events, transfer, warnings, and review state in `src/types/real-talk.ts`
 - [x] T027 Add app-level Supabase table types without editing generated types in `src/types/app-database.ts`
 - [x] T028 Update the server Supabase client to use app-level database types in `src/lib/supabase/server.ts`
-- [x] T029 Extract transcript acquisition, source metadata, window selection, prompt construction, Gemini generation, schema validation, and evidence validation from `src/app/actions/real-talk.ts` into `src/features/real-talk/server/private-lesson-compiler.ts`; persistence remains tracked by T043
+- [x] T029 Extract transcript acquisition, source metadata, window selection, prompt construction, Gemini generation, schema validation, and evidence validation from `src/app/actions/real-talk.ts` into `src/features/real-talk/server/private-lesson-compiler.ts`; persistence is isolated by T043
 
 **Checkpoint**: All user stories depend on typed input, typed model output, evidence validation, and explicit transcript-source policy.
 
@@ -81,7 +81,7 @@ description: "Dependency-ordered implementation and verification tasks for the p
 
 - [ ] T030 [P] [US1] Add mocked happy-path compiler test in `src/__tests__/real-talk-generation-action.test.ts`
 - [ ] T031 [P] [US1] Add anonymous rejection test proving transcript and Gemini adapters are not called in `src/__tests__/real-talk-generation-action.test.ts`
-- [ ] T032 [P] [US1] Add 429, invalid JSON, no-candidate, and network-failure tests in `src/__tests__/real-talk-generation-action.test.ts`
+- [ ] T032 [P] [US1] Add 429, invalid JSON, no-candidate, network-failure, and persistence-failure tests in `src/__tests__/real-talk-generation-action.test.ts`
 - [ ] T033 [P] [US1] Add long-transcript selection integration fixture in `src/__tests__/real-talk-generation-action.test.ts`
 
 ### Implementation for User Story 1
@@ -93,11 +93,11 @@ description: "Dependency-ordered implementation and verification tasks for the p
 - [x] T038 [US1] Fetch honest source metadata through YouTube oEmbed in `src/features/real-talk/server/private-lesson-compiler.ts`
 - [x] T039 [US1] Request structured environment-first output from Gemini in `src/features/real-talk/server/private-lesson-compiler.ts`
 - [x] T040 [US1] Record the actual successful Gemini model in `src/features/real-talk/server/private-lesson-compiler.ts`
-- [ ] T041 [US1] Return stable machine-readable generation failure codes defined by `contracts/generation-contract.md` from `src/app/actions/real-talk.ts`
-- [ ] T042 [US1] Make persistence failure explicit instead of silently reporting a fully saved draft in `src/app/actions/real-talk.ts`
-- [ ] T043 [US1] Define deterministic repeated-generation/slug-collision behavior and move private draft persistence into `src/features/real-talk/server/draft-repository.ts`
+- [x] T041 [US1] Define stable machine-readable result codes in `src/features/real-talk/domain/generation-result.ts`, propagate them through compiler/action/UI, and add unexecuted contract coverage in `src/__tests__/real-talk-generation-result.test.ts`
+- [x] T042 [US1] Remove silent preview fallback; required database failure now returns `DRAFT_PERSISTENCE_FAILED` from `src/features/real-talk/server/draft-repository.ts` and cannot render a saved draft in `src/app/(main)/real-talk/create/page.tsx`
+- [x] T043 [US1] Move persistence into `src/features/real-talk/server/draft-repository.ts` and use deterministic owner+YouTube+level identity from `src/features/real-talk/domain/draft-identity.ts`; repeated generation updates one current draft while different owners/levels remain separate
 
-**Checkpoint**: US1 can be demonstrated with mocked providers without publication or later roadmap features.
+**Checkpoint**: US1 implementation exists, but mocked action tests and exact-head execution remain required before it is independently demonstrated.
 
 ---
 
@@ -142,10 +142,10 @@ description: "Dependency-ordered implementation and verification tasks for the p
 
 - [x] T056 [US3] Add private-draft fields and owner-only RLS migration in `supabase/migrations/20260802190000_real_talk_private_draft_gate.sql`
 - [x] T057 [US3] Return existing user-created rows to private state in `supabase/migrations/20260802190000_real_talk_private_draft_gate.sql`
-- [x] T058 [US3] Persist environment, communication events, transfer, warnings, model, and review state in `src/app/actions/real-talk.ts`
+- [x] T058 [US3] Persist environment, communication events, transfer, warnings, model, and review state in `src/features/real-talk/server/draft-repository.ts`
 - [x] T059 [US3] Reload private lesson draft fields in `src/app/actions/real-talk.ts`
 - [x] T060 [US3] Exclude private drafts from public catalog queries in `src/app/actions/real-talk.ts`
-- [x] T061 [US3] Display private AI-draft status and review warnings in `src/app/(main)/real-talk/create/page.tsx`
+- [x] T061 [US3] Display private AI-draft status, stable failures, retry guidance, evidence codes, and review warnings in `src/app/(main)/real-talk/create/page.tsx`
 - [ ] T062 [US3] Apply or dry-run the migration in an authorized non-production Supabase project
 - [ ] T063 [US3] Regenerate `src/types/supabase.ts` after migration and remove temporary types only when equivalent coverage is proven
 - [ ] T064 [US3] Add owner draft list/delete UI only if required to verify retention; otherwise record as a follow-up spec decision
@@ -190,8 +190,8 @@ description: "Dependency-ordered implementation and verification tasks for the p
 - [ ] T078 Run `npm run test` against the exact final commit and record the result
 - [ ] T079 Run `npm run test:content-standard` against the exact final commit and record the result
 - [ ] T080 Run `npm run build` against the exact final commit and record the result
-- [ ] T081 Run targeted compiler and preview tests against the exact final commit
-- [ ] T082 Run non-production live Gemini happy path, invalid output, 429, and provider-failure checks
+- [ ] T081 Run targeted compiler, result-code, repository-identity, and preview tests against the exact final commit
+- [ ] T082 Run non-production live Gemini happy path, invalid output, 429, provider-failure, and persistence-failure checks
 - [ ] T083 Verify official source playback and oEmbed metadata on desktop and mobile
 - [ ] T084 Approve at least one production transcript acquisition mode or retain the explicit merge blocker; the experimental adapter is already isolated and fail-closed in production
 - [ ] T085 Run the requirements checklist in `checklists/requirements.md` and check only observed items
@@ -236,7 +236,7 @@ authenticated request
 → bounded source evidence
 → structured generation
 → schema and evidence validation
-→ private draft result
+→ persisted private draft result
 ```
 
 Stop and verify this slice before expanding database or preview behavior.
@@ -252,6 +252,8 @@ Stop and verify this slice before expanding database or preview behavior.
 
 - Checked code tasks do not imply verification passed.
 - `REAL_TALK_ALLOW_EXPERIMENTAL_TRANSCRIPTS=true` is permitted only in development or test; production ignores the flag and rejects the experimental adapter.
+- Repeated generation updates one current draft per owner+YouTube+level; immutable attempt history is deferred.
+- A persistence failure is never a successful preview in spec 001.
 - Do not mark T062 or RLS tasks complete without an authorized non-production database run.
 - Do not mark external API tasks complete from mocked results.
 - Do not mark manual review tasks complete from metadata or model output alone.
