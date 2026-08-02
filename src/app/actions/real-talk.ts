@@ -209,72 +209,111 @@ async function generateLessonWithAI(
   if (!apiKey)
     return { success: false, error: "GEMINI_API_KEY chưa cấu hình." };
 
-  // Format transcript for the prompt
-  const transcriptText = transcript
-    .map((item, i) => `[${formatTimestamp(item.offset)}] ${item.text}`)
+  // Limit transcript size to prevent exceeding token limit and high quota usage
+  const MAX_TRANSCRIPT_ITEMS = 60; // ~3-4 minutes of speech
+  const truncatedTranscript = transcript.slice(0, MAX_TRANSCRIPT_ITEMS);
+
+  // Format transcript for prompt
+  const transcriptText = truncatedTranscript
+    .map((item) => `[${formatTimestamp(item.offset)}] ${item.text}`)
     .join("\n");
 
   const userPrompt = `Video title: "${videoTitle}"
 Target level: ${level}
-Total duration: ${Math.ceil(transcript[transcript.length - 1].offset + transcript[transcript.length - 1].duration)}s
+Total duration: ${Math.ceil(truncatedTranscript[truncatedTranscript.length - 1].offset + truncatedTranscript[truncatedTranscript.length - 1].duration)}s
 
 TRANSCRIPT:
 ${transcriptText}
 
 Hãy tạo bài học tiếng Anh hoàn chỉnh từ transcript trên. Nhớ:
 - Diarize speakers (phân biệt người nói) dựa vào ngữ cảnh
-- Chọn segment hay nhất nếu video dài (tối đa 3 phút)
+- Chọn segment hay nhất (tối đa 3 phút)
 - Tất cả giải thích bằng tiếng Việt
 - Tập trung vào từ vựng và patterns thực tế trong video`;
 
-  try {
-    const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          contents: [
-            { role: "user", parts: [{ text: LESSON_GENERATION_PROMPT }] },
-            {
-              role: "model",
-              parts: [
+  // Models to attempt in order of preference if rate limited (429)
+  const models = ["gemini-2.0-flash", "gemini-1.5-flash", "gemini-1.5-pro"];
+
+  let lastStatus = 0;
+  let lastErrBody = "";
+
+  for (const model of models) {
+    // Retry loop per model (up to 2 attempts with delay for 429)
+    for (let attempt = 1; attempt <= 2; attempt++) {
+      try {
+        const response = await fetch(
+          `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              contents: [
+                { role: "user", parts: [{ text: LESSON_GENERATION_PROMPT }] },
                 {
-                  text: "Understood. Send me the transcript and I'll generate the lesson JSON.",
+                  role: "model",
+                  parts: [
+                    {
+                      text: "Understood. Send me the transcript and I'll generate the lesson JSON.",
+                    },
+                  ],
                 },
+                { role: "user", parts: [{ text: userPrompt }] },
               ],
-            },
-            { role: "user", parts: [{ text: userPrompt }] },
-          ],
-          generationConfig: {
-            responseMimeType: "application/json",
-            temperature: 0.4,
-            maxOutputTokens: 8192,
+              generationConfig: {
+                responseMimeType: "application/json",
+                temperature: 0.4,
+                maxOutputTokens: 8192,
+              },
+            }),
           },
-        }),
-      },
-    );
+        );
 
-    if (!response.ok) {
-      const errBody = await response.text();
-      console.error("[Real Talk] Gemini API error:", response.status, errBody);
-      return { success: false, error: `Gemini API lỗi (${response.status}).` };
+        if (response.ok) {
+          const resData = (await response.json()) as {
+            candidates?: Array<{
+              content?: { parts?: Array<{ text?: string }> };
+            }>;
+          };
+
+          const text = resData.candidates?.[0]?.content?.parts?.[0]?.text;
+          if (text) {
+            const parsed = JSON.parse(text.trim());
+            return { success: true, lessonData: parsed };
+          }
+        }
+
+        lastStatus = response.status;
+        lastErrBody = await response.text();
+
+        // If rate limited (429), wait 2s before retrying or switching model
+        if (response.status === 429) {
+          console.warn(
+            `[Real Talk] Gemini API Rate Limit (429) on model ${model}, attempt ${attempt}. Retrying...`,
+          );
+          await new Promise((r) => setTimeout(r, 2000));
+        } else {
+          // Non-429 error, break to next model
+          break;
+        }
+      } catch (err) {
+        console.error(`[Real Talk] Fetch error on model ${model}:`, err);
+      }
     }
-
-    const resData = (await response.json()) as {
-      candidates?: Array<{ content?: { parts?: Array<{ text?: string }> } }>;
-    };
-
-    const text = resData.candidates?.[0]?.content?.parts?.[0]?.text;
-    if (!text) return { success: false, error: "AI trả về phản hồi rỗng." };
-
-    const parsed = JSON.parse(text.trim());
-    return { success: true, lessonData: parsed };
-  } catch (err: unknown) {
-    console.error("[Real Talk] Lesson generation error:", err);
-    const msg = err instanceof Error ? err.message : "Lỗi khi tạo bài học.";
-    return { success: false, error: msg };
   }
+
+  // Provide human-friendly error messages based on status
+  if (lastStatus === 429) {
+    return {
+      success: false,
+      error:
+        "Hệ thống Gemini AI đang quá tải giới hạn lượt gọi (Lỗi 429 Quota Limit). Vui lòng thử lại sau 30-60 giây.",
+    };
+  }
+
+  return {
+    success: false,
+    error: `Không thể kết nối Gemini AI (${lastStatus || "Network Error"}). ${lastErrBody ? lastErrBody.slice(0, 100) : ""}`,
+  };
 }
 
 function formatTimestamp(seconds: number): string {
