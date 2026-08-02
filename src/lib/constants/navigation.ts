@@ -13,6 +13,7 @@ import {
   Play,
   Target,
   Zap,
+  Tv,
   type LucideIcon,
 } from "lucide-react";
 
@@ -95,6 +96,12 @@ export const desktopMoreItems: NavItem[] = [
     description: "Danh sách 50 unit",
   },
   {
+    title: "Real Talk",
+    href: "/real-talk",
+    icon: Tv,
+    description: "Học từ video trò chuyện thực tế",
+  },
+  {
     title: "Luyện nói",
     href: "/speaking",
     icon: Mic,
@@ -139,6 +146,7 @@ export const mobilePanelGroups: NavGroup[] = [
     items: [
       { title: "Trang chủ", href: "/dashboard", icon: LayoutDashboard, description: "Tổng quan hôm nay" },
       { title: "Bài học", href: "/learn", icon: BookOpen, description: "IPOR lessons" },
+      { title: "Real Talk", href: "/real-talk", icon: Tv, description: "Video trò chuyện thực tế" },
       { title: "Luyện nói", href: "/speaking", icon: Mic, description: "Shadowing & AI" },
       { title: "Viết văn", href: "/writing", icon: PenLine, description: "AI feedback" },
       { title: "Ôn tập", href: "/flashcards", icon: Layers, description: "Flashcard SRS" },

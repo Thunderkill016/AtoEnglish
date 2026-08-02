@@ -28,7 +28,8 @@ export function BottomNav({ dueCardsCount = 0 }: BottomNavProps) {
   const pathname = usePathname();
 
   // Hide during lesson pages (full-screen learning UI)
-  const isInLesson = /^\/learn\/unit/.test(pathname);
+  const isInLesson =
+    /^\/learn\/unit/.test(pathname) || /^\/real-talk\/[\w-]+$/.test(pathname);
   if (isInLesson) return null;
 
   return (
