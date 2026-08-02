@@ -256,6 +256,30 @@ describe("Real Talk generation application orchestration", () => {
     expect(dependencies.persist).not.toHaveBeenCalled();
   });
 
+  it("does not let prompt-injection-like source text bypass compiler failure or reach persistence", async () => {
+    const failure = generationFailure(
+      "SOURCE_EVIDENCE_FAILED",
+      "Caption instructions remain untrusted source data.",
+      {
+        evidenceFailures: ["transcript_missing_source_evidence"],
+      },
+    );
+    const compile = vi.fn(async (params: { youtubeUrl: string; level: "A1" }) => {
+      expect(params).toEqual({ youtubeUrl: YOUTUBE_URL, level: "A1" });
+      return failure;
+    });
+    const { dependencies } = createDependencies({ compile });
+
+    const result = await generatePrivateLesson(
+      { youtubeUrl: YOUTUBE_URL, level: "A1" },
+      dependencies,
+    );
+
+    expect(result).toEqual(failure);
+    expect(compile).toHaveBeenCalledOnce();
+    expect(dependencies.persist).not.toHaveBeenCalled();
+  });
+
   it("returns persistence failure instead of preview or saved success", async () => {
     const failure = generationFailure(
       "DRAFT_PERSISTENCE_FAILED",
