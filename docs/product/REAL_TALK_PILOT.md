@@ -2,7 +2,8 @@
 
 **Status:** owner-authorized internal product experiment  
 **Branch:** `agent/real-talk-public-domain-pilot`  
-**Public release:** blocked until transcript review and learner testing
+**Public release:** blocked until transcript review and learner testing  
+**Technical verification:** GitHub Verify run `30730678522` passed on the final source head
 
 ## Exception to the current roadmap
 
@@ -132,6 +133,18 @@ Measure:
 - whether learners prefer this lesson to a fabricated dialogue covering the same language.
 
 Continue only when the vertical slice works reliably and learners demonstrate better recall than passive video viewing.
+
+## Verification record
+
+GitHub Actions Verify run `30730678522` completed successfully on the implementation head:
+
+- dependency installation;
+- ESLint;
+- TypeScript;
+- unit tests, including the Real Talk provenance and recall tests;
+- existing content-standard suite.
+
+A production build, remote-media browser playback and authenticated FSRS save still require manual or preview verification. No preview or production deployment is part of this branch.
 
 ## Next implementation boundary
 
