@@ -38,9 +38,44 @@ WHERE EXISTS (
     AND video.created_by IS NOT NULL
 );
 
--- Replace the read boundary explicitly. Public catalog rows remain readable,
--- while authenticated owners can reload only their own private drafts.
-DROP POLICY IF EXISTS "real_talk_videos_select" ON public.real_talk_videos;
+ALTER TABLE public.real_talk_videos ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.real_talk_lessons ENABLE ROW LEVEL SECURITY;
+
+-- PostgreSQL combines permissive policies with OR. Remove every previous policy
+-- on these draft tables before installing the canonical boundary so an older,
+-- differently named policy cannot silently bypass the new rules.
+DO $$
+DECLARE
+  existing_policy RECORD;
+BEGIN
+  FOR existing_policy IN
+    SELECT policyname
+    FROM pg_policies
+    WHERE schemaname = 'public'
+      AND tablename = 'real_talk_videos'
+  LOOP
+    EXECUTE format(
+      'DROP POLICY IF EXISTS %I ON public.real_talk_videos',
+      existing_policy.policyname
+    );
+  END LOOP;
+
+  FOR existing_policy IN
+    SELECT policyname
+    FROM pg_policies
+    WHERE schemaname = 'public'
+      AND tablename = 'real_talk_lessons'
+  LOOP
+    EXECUTE format(
+      'DROP POLICY IF EXISTS %I ON public.real_talk_lessons',
+      existing_policy.policyname
+    );
+  END LOOP;
+END
+$$;
+
+-- Public catalog rows remain readable, while authenticated owners can reload
+-- only their own private drafts.
 CREATE POLICY "real_talk_videos_select" ON public.real_talk_videos
   FOR SELECT
   USING (
@@ -52,7 +87,6 @@ CREATE POLICY "real_talk_videos_select" ON public.real_talk_videos
     )
   );
 
-DROP POLICY IF EXISTS "real_talk_lessons_select" ON public.real_talk_lessons;
 CREATE POLICY "real_talk_lessons_select" ON public.real_talk_lessons
   FOR SELECT
   USING (
@@ -71,7 +105,6 @@ CREATE POLICY "real_talk_lessons_select" ON public.real_talk_lessons
     )
   );
 
-DROP POLICY IF EXISTS "real_talk_videos_insert" ON public.real_talk_videos;
 CREATE POLICY "real_talk_videos_insert" ON public.real_talk_videos
   FOR INSERT
   WITH CHECK (
@@ -83,7 +116,6 @@ CREATE POLICY "real_talk_videos_insert" ON public.real_talk_videos
     )
   );
 
-DROP POLICY IF EXISTS "real_talk_videos_update_owner" ON public.real_talk_videos;
 CREATE POLICY "real_talk_videos_update_owner" ON public.real_talk_videos
   FOR UPDATE
   USING (auth.role() = 'service_role' OR created_by = auth.uid())
@@ -92,12 +124,13 @@ CREATE POLICY "real_talk_videos_update_owner" ON public.real_talk_videos
     OR (created_by = auth.uid() AND is_public = false)
   );
 
-DROP POLICY IF EXISTS "real_talk_videos_delete_owner" ON public.real_talk_videos;
 CREATE POLICY "real_talk_videos_delete_owner" ON public.real_talk_videos
   FOR DELETE
-  USING (auth.role() = 'service_role' OR created_by = auth.uid());
+  USING (
+    auth.role() = 'service_role'
+    OR (created_by = auth.uid() AND is_public = false)
+  );
 
-DROP POLICY IF EXISTS "real_talk_lessons_insert" ON public.real_talk_lessons;
 CREATE POLICY "real_talk_lessons_insert" ON public.real_talk_lessons
   FOR INSERT
   WITH CHECK (
@@ -116,7 +149,6 @@ CREATE POLICY "real_talk_lessons_insert" ON public.real_talk_lessons
     )
   );
 
-DROP POLICY IF EXISTS "real_talk_lessons_update_owner" ON public.real_talk_lessons;
 CREATE POLICY "real_talk_lessons_update_owner" ON public.real_talk_lessons
   FOR UPDATE
   USING (
@@ -144,15 +176,18 @@ CREATE POLICY "real_talk_lessons_update_owner" ON public.real_talk_lessons
     )
   );
 
-DROP POLICY IF EXISTS "real_talk_lessons_delete_owner" ON public.real_talk_lessons;
 CREATE POLICY "real_talk_lessons_delete_owner" ON public.real_talk_lessons
   FOR DELETE
   USING (
     auth.role() = 'service_role'
-    OR EXISTS (
-      SELECT 1
-      FROM public.real_talk_videos video
-      WHERE video.id = real_talk_lessons.video_id
-        AND video.created_by = auth.uid()
+    OR (
+      generation_status = 'ai_draft'
+      AND EXISTS (
+        SELECT 1
+        FROM public.real_talk_videos video
+        WHERE video.id = real_talk_lessons.video_id
+          AND video.created_by = auth.uid()
+          AND video.is_public = false
+      )
     )
   );
