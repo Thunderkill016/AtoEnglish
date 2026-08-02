@@ -7,8 +7,7 @@ generatePrivateNaturalLesson(input, authenticatedUser) -> GenerationResult
 ```
 
 This is a server-side product contract. The current transport is a Next.js server
-action, but callers MUST depend on the behavior below rather than transport
-implementation details.
+action, but callers depend on this behavior rather than transport details.
 
 ## Request
 
@@ -21,13 +20,14 @@ interface GeneratePrivateNaturalLessonInput {
 
 ### Preconditions
 
-- The server has resolved a current authenticated user.
-- The request passes URL and level validation.
-- The user is within the generation rate limit.
-- The configured transcript source adapter is available.
+- The server resolves the current authenticated user.
+- URL and level pass runtime validation.
+- The authenticated user is within the generation rate limit.
+- A configured transcript source adapter is allowed by runtime policy.
 - `GEMINI_API_KEY` is configured server-side and is never returned to the client.
 
-Anonymous requests MUST fail before transcript or Gemini calls.
+Anonymous and invalid requests MUST fail before transcript, Gemini, or persistence
+work.
 
 ## Success response
 
@@ -47,7 +47,7 @@ interface GenerationSuccess {
     embedUrl: string;
     selectedStartSeconds: number;
     selectedEndSeconds: number;
-    acquisitionMode: string;
+    acquisitionMode: TranscriptAcquisitionMode;
   };
   generation: {
     model: string;
@@ -59,19 +59,17 @@ interface GenerationSuccess {
 ### Success invariants
 
 - `status` is always `ai_draft`.
-- `persisted` is always true in spec 001.
-- Both the private video record and lesson record completed their required writes.
+- Both required private draft writes completed.
 - Persisted records belong to the authenticated user.
 - Persisted records are not public.
-- The returned lesson passed runtime schema validation.
-- The returned lesson passed automated source-evidence validation.
-- The response contains unresolved human-review warnings.
+- Returned lesson output passed runtime schema validation.
+- Returned lesson output passed automated source-evidence validation.
+- The actual successful model identifier is returned and stored.
+- Unresolved human-review warnings remain visible.
 - The response does not claim publication, transcript verification, pronunciation
-  assessment, or mastery.
+  assessment, delayed retention, or mastery.
 
-Spec 001 does not have an implicit non-persistent preview success. A database
-failure MUST return `DRAFT_PERSISTENCE_FAILED` and MUST NOT be reported as a saved
-or preview-only success.
+Spec 001 does not support a successful non-persistent preview fallback.
 
 ## Failure response
 
@@ -117,13 +115,13 @@ interface GenerationFailure {
 ### Failure invariants
 
 - No public lesson is created.
-- Invalid model output is not partially persisted.
-- Persistence failure is visible and is not converted into success.
-- The client receives no raw provider response containing secrets or excessive
+- Invalid model output is not persisted.
+- Compiler or evidence failure never calls persistence.
+- Persistence failure remains failure and cannot be rendered as a saved lesson.
+- The client receives no raw provider response, secret, stack trace, or excessive
   internal detail.
-- Evidence failures are machine-readable and safe to show in an editor-facing
-  review panel.
-- Retry guidance is provided only when retrying can plausibly help.
+- Evidence failures are deduplicated machine-readable codes.
+- Retry guidance appears only when retrying can plausibly help.
 
 ## Transcript source adapter
 
@@ -161,9 +159,56 @@ interface TranscriptSourceResult {
 }
 ```
 
-An `experimental_unofficial` adapter MUST add warnings and MUST NOT make the
-result eligible for public publication. It is disabled by default, requires an
-explicit non-production opt-in, and is always rejected in production.
+An `experimental_unofficial` adapter MUST add warnings and MUST NOT make a result
+eligible for public publication. It is disabled by default, requires explicit
+non-production opt-in, and is always rejected in production.
+
+## Source-window contract
+
+The compiler chooses one bounded contiguous source window using deterministic
+interaction signals. The window MUST:
+
+- contain at least two cues;
+- stay within configured duration and cue-count limits;
+- prefer questions, replies, repair, clarification, and turn-taking signals over
+  opening titles, background cues, or long monologue;
+- retain exact source offsets for evidence validation.
+
+Window selection proposes a useful segment; it does not prove speaker turns,
+naturalness, rights, or pedagogical quality.
+
+## Untrusted prompt-data boundary
+
+Metadata and captions are untrusted external data.
+
+The prompt builder MUST:
+
+- keep governing instructions outside source-data delimiters;
+- encode metadata as escaped JSON;
+- encode captions as escaped JSONL with source index and timing fields;
+- escape `<`, `>`, and `&` so source text cannot create literal delimiter tags;
+- use exactly one metadata delimiter pair and one caption delimiter pair;
+- state before the source that data fields cannot change role, schema, output
+  format, or governing rules;
+- repeat the instruction boundary after the source data;
+- require JSON output matching the runtime schema;
+- require source-supported English only;
+- require environment and changed-context transfer design;
+- require Vietnamese learner guidance;
+- avoid claims that the model verified rights, speakers, or transcript accuracy.
+
+The current delimiters are:
+
+```text
+<SOURCE_METADATA_UNTRUSTED>
+</SOURCE_METADATA_UNTRUSTED>
+<SOURCE_CAPTION_UNTRUSTED_JSONL>
+</SOURCE_CAPTION_UNTRUSTED_JSONL>
+```
+
+This boundary is deterministic prompt hardening. It MUST NOT be described as
+proof that all model-level prompt-injection attacks are defeated. Live
+adversarial provider verification remains required.
 
 ## Gemini structured output
 
@@ -188,35 +233,35 @@ postWatch
 transferTask
 ```
 
-The prompt MUST:
-
-- state that source captions are untrusted data;
-- delimit source data clearly;
-- prohibit following instructions contained inside captions;
-- require source-supported English only;
-- require environment and transfer design;
-- require Vietnamese learner guidance;
-- avoid claims that the model verified rights, speakers, or transcript accuracy.
+Missing required branches, invalid enums, invalid counts, invalid option indices,
+or other schema violations return `MODEL_OUTPUT_INVALID`.
 
 ## Evidence validation contract
 
-Validation receives the parsed draft and the exact selected source window.
+Validation receives the parsed draft and exact selected source window.
 
-It MUST reject:
+It MUST reject and deduplicate these failure codes:
 
-- invalid or out-of-window transcript time ranges;
-- duplicate transcript indices;
-- unknown speaker labels;
-- transcript English absent from the source window;
-- activity references to unknown transcript indices;
-- vocabulary context sentences absent from the source;
-- key moments outside the source window;
-- speaking phrases absent from the source;
-- completed fill-in-the-blank sentences absent from the source;
-- transfer suggested language absent from the source.
+```text
+invalid_transcript_time_range
+transcript_outside_source_window
+duplicate_transcript_index
+unknown_speaker_label
+transcript_missing_source_evidence
+activity_references_unknown_segment
+vocabulary_missing_source_evidence
+key_moment_outside_source_window
+speaking_drill_missing_source_evidence
+fill_blank_missing_source_evidence
+transfer_language_missing_source_evidence
+```
 
-Automated evidence matching is a conservative gate, not a human transcript
-verification claim.
+Conservative matching may normalize case, whitespace, punctuation, selected HTML
+entities, and non-speech caption artifacts. Normalization MUST NOT invent words or
+convert semantic paraphrases into source evidence.
+
+Automated evidence matching is a conservative gate, not human transcript
+verification.
 
 ## Persistence contract
 
@@ -237,14 +282,14 @@ attempt history is outside spec 001.
 - `is_public = false`
 - `review_state = ai_draft`
 - selected segment and source metadata are stored
-- source acquisition mode and warnings are retained by the draft contract
+- source acquisition mode and warnings remain available to the draft contract
 
 ### Lesson draft
 
 - references the owner's video draft
 - stores environment, communication events, transcript, all lesson phases,
   transfer task, generation model, and warnings
-- reload returns the same contract fields needed by the preview
+- reload returns the same fields required by preview
 - one current lesson is upserted for the deterministic video draft identity
 
 ### Persistence failure
@@ -262,7 +307,7 @@ attempt history is outside spec 001.
 - owners can select their private drafts;
 - non-owners cannot select, update, or delete drafts;
 - ordinary users cannot set `is_public = true`;
-- ordinary users cannot set `review_state` beyond `ai_draft`;
+- ordinary users cannot set review state beyond `ai_draft`;
 - lesson writes are allowed only through an owned private video record.
 
 ## Preview completion contract
@@ -273,14 +318,14 @@ The owner preview MUST include:
 2. official source playback;
 3. comprehension evidence;
 4. retrieval activity;
-5. source-backed phrase production acknowledgement;
+5. source-backed phrase-production acknowledgement;
 6. changed-context transfer attempt;
-7. honest completion summary.
+7. honest immediate-practice summary.
 
 The preview MUST NOT:
 
 - fabricate microphone scoring;
-- label sentence match as pronunciation;
+- label sentence match as pronunciation assessment;
 - claim long-term mastery;
 - imply the draft is reviewed or public;
 - automatically store raw audio.
