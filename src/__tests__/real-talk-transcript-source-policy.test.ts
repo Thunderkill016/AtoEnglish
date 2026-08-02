@@ -1,3 +1,6 @@
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
+
 import { describe, expect, it, vi } from "vitest";
 
 import type {
@@ -132,5 +135,24 @@ describe("Real Talk transcript source policy", () => {
       { text: "How are you?", offset: 1, duration: 2 },
       { text: "Hello & welcome", offset: 3, duration: 0.1 },
     ]);
+  });
+
+  it("keeps the server action from importing the unofficial package directly", () => {
+    const actionSource = readFileSync(
+      join(process.cwd(), "src/app/actions/real-talk.ts"),
+      "utf8",
+    );
+    const compilerSource = readFileSync(
+      join(
+        process.cwd(),
+        "src/features/real-talk/server/private-lesson-compiler.ts",
+      ),
+      "utf8",
+    );
+
+    expect(actionSource).not.toContain("youtube-transcript");
+    expect(actionSource).toContain("compilePrivateNaturalLesson");
+    expect(compilerSource).toContain("acquireTranscriptForCompilation");
+    expect(compilerSource).toContain("experimentalYouTubeTranscriptSource");
   });
 });
