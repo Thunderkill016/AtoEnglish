@@ -57,7 +57,10 @@
 - [x] User identity is server-derived.
 - [x] Generated drafts are private by default.
 - [x] RLS ownership requirements are specified.
-- [x] Ordinary users cannot approve or publish drafts.
+- [x] The migration explicitly enables RLS and replaces every previous policy with one canonical set.
+- [x] Private video and lesson reads are limited to the owner while public rows remain readable.
+- [x] Ordinary users cannot approve or publish drafts through insert or update policies.
+- [x] Legacy user-created rows return to private `ai_draft` state and unverified review metadata is cleared.
 - [x] Versioned migration requirements are specified.
 - [x] Generated Supabase types must not be manually edited.
 - [ ] Two-user and anonymous RLS behavior has been observed in a non-production database.
@@ -87,12 +90,15 @@
 - [x] Authentication-ordering, happy-path, rate-limit, provider-failure propagation, evidence no-write, persistence-failure, prompt-injection no-write, and bounded-internal-error artifacts exist in `src/__tests__/real-talk-generation-action.test.ts`.
 - [x] Invalid-schema, complete evidence-code matrix, duplicate-code, long-window, normalization, and escaped prompt-boundary artifacts exist in `src/__tests__/real-talk-generation-contract.test.ts`.
 - [x] Controlled long-source and adversarial source fixtures exist under `src/__fixtures__/real-talk/`.
-- [x] Real Talk server/domain suites are assigned to the Vitest Node project rather than jsdom.
-- [ ] All database/RLS, reload-mapping, and preview component fixtures exist.
+- [x] Migration contract coverage exists in `src/__tests__/real-talk-migration-contract.test.ts`.
+- [x] Reload mapping coverage exists in `src/__tests__/real-talk-draft-mapping.test.ts`.
+- [x] Two-owner plus anonymous RLS integration scaffolding exists in `src/__tests__/integration/real-talk-draft-rls.integration.test.ts`.
+- [x] Real Talk domain/server/database contract suites are assigned to the Vitest Node project rather than jsdom.
+- [ ] Preview component fixtures exist.
 - [ ] Authentication ordering tests pass on the exact final head.
-- [ ] Evidence and prompt-boundary tests pass on the exact final head.
+- [ ] Evidence, prompt-boundary, migration-contract, and mapping tests pass on the exact final head.
 - [ ] Provider and persistence failure tests pass on the exact final head.
-- [ ] RLS integration tests exist and pass.
+- [ ] RLS integration tests pass against an authorized migrated non-production project.
 - [ ] Preview completion component tests exist and pass.
 - [ ] Live Gemini failure, success, and adversarial-source paths have been observed.
 - [ ] Full repository lint, typecheck, tests, content standards, and build pass on the exact final head.
@@ -104,7 +110,7 @@
 - [x] Data entities map to requirements and tasks.
 - [x] Open decisions are visible in research and tasks.
 - [x] An initial formal cross-artifact analysis is recorded in `analysis.md`.
-- [x] The cross-artifact analysis was rerun after transcript, failure/persistence, orchestration, evidence-matrix, and prompt-boundary changes.
+- [x] The cross-artifact analysis was rerun after transcript, failure/persistence, orchestration, evidence/prompt, and database-boundary changes.
 - [ ] Every functional requirement maps to at least one task and observed acceptance result.
 - [ ] Every success criterion has a defined evidence source and final result.
 
@@ -120,11 +126,11 @@
 The feature cannot converge while any of these remain unresolved:
 
 1. at least one production-approved transcript acquisition mode or an explicit permanent non-production decision;
-2. exact-head execution of compiler, evidence, prompt, action, provider, and persistence suites;
-3. database/RLS, reload-mapping, and preview component fixtures and execution;
-4. non-production RLS and migration verification;
-5. exact-head repository checks;
-6. live Gemini and browser verification;
-7. human source and lesson review;
+2. exact-head execution of compiler, evidence, prompt, action, migration, mapping, provider, and persistence suites;
+3. migration application, two-user RLS execution, repeated-generation, and partial-write verification;
+4. preview component fixtures and browser execution;
+5. generated Supabase type reconciliation;
+6. exact-head repository checks;
+7. live Gemini and human source/lesson review;
 8. draft retention/deletion decision;
 9. final requirement-to-evidence mapping.
