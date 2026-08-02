@@ -92,7 +92,7 @@
 - [x] Data entities map to requirements and tasks.
 - [x] Open decisions are visible in research and tasks.
 - [x] An initial formal cross-artifact analysis is recorded in `analysis.md`.
-- [ ] A formal cross-artifact analysis has been rerun after the transcript adapter extraction.
+- [x] The cross-artifact analysis was rerun after the transcript adapter extraction.
 - [ ] Every functional requirement maps to at least one task and observed acceptance result.
 - [ ] Every success criterion has a defined evidence source and final result.
 
@@ -114,4 +114,4 @@ The feature cannot converge while any of these remain unresolved:
 5. exact-head repository checks;
 6. live Gemini and browser verification;
 7. human source and lesson review;
-8. final cross-artifact analysis and requirement-to-evidence mapping.
+8. final requirement-to-evidence mapping.
