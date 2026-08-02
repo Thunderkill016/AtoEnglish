@@ -1,0 +1,257 @@
+---
+
+description: "Dependency-ordered implementation and verification tasks for the private natural lesson compiler"
+---
+
+# Tasks: Private Natural Lesson Compiler
+
+**Input**: Design documents from `/specs/001-private-natural-lesson-compiler/`
+
+**Prerequisites**: `spec.md`, `plan.md`, `research.md`, `data-model.md`, `contracts/generation-contract.md`
+
+**Tests**: Required because generation, evidence, authentication, RLS, and learner completion are product-critical contracts.
+
+**Status rule**: A checked implementation task means the code/artifact exists on the branch. It does not imply checks passed. Verification tasks remain unchecked until observed on the exact final commit.
+
+## Format: `[ID] [P?] [Story] Description`
+
+- **[P]**: Can run in parallel because it changes different files and has no unmet dependency.
+- **[Story]**: Maps the task to a user story from `spec.md`.
+- Every task names the exact file or verification surface.
+
+## Phase 1: Spec Kit foundation
+
+**Purpose**: Make product intent and delivery rules executable before further implementation.
+
+- [x] T001 Create project constitution in `.specify/memory/constitution.md`
+- [x] T002 Create rebuild specification in `specs/000-atoenglish-rebuild-roadmap/spec.md`
+- [x] T003 Create spec-of-specs decomposition in `specs/000-atoenglish-rebuild-roadmap/roadmap.md`
+- [x] T004 Create active feature specification in `specs/001-private-natural-lesson-compiler/spec.md`
+- [x] T005 [P] Create implementation plan in `specs/001-private-natural-lesson-compiler/plan.md`
+- [x] T006 [P] Record research decisions in `specs/001-private-natural-lesson-compiler/research.md`
+- [x] T007 [P] Define data model in `specs/001-private-natural-lesson-compiler/data-model.md`
+- [x] T008 [P] Define generation contract in `specs/001-private-natural-lesson-compiler/contracts/generation-contract.md`
+- [x] T009 [P] Add verification quickstart in `specs/001-private-natural-lesson-compiler/quickstart.md`
+- [ ] T010 Run a requirements clarification pass and resolve or explicitly defer all open decisions in `specs/001-private-natural-lesson-compiler/research.md`
+- [ ] T011 Run a cross-artifact analysis of constitution, spec, plan, data model, contract, and tasks; record corrections before further implementation
+
+**Checkpoint**: Product direction is governed by Spec Kit artifacts; implementation may proceed only inside spec 001.
+
+---
+
+## Phase 2: Foundational contracts and safety boundaries
+
+**Purpose**: Establish contracts that block all user stories if incorrect.
+
+### Tests first
+
+- [x] T012 [P] Add initial schema, evidence, and window-selection tests in `src/__tests__/real-talk-generation-contract.test.ts`
+- [ ] T013 [P] Add failing test for invalid Zod output shape in `src/__tests__/real-talk-generation-contract.test.ts`
+- [x] T014 [P] Add failing regression test for invented transcript text in `src/__tests__/real-talk-generation-contract.test.ts`
+- [x] T015 [P] Add failing regression test for invented speaking language in `src/__tests__/real-talk-generation-contract.test.ts`
+- [ ] T016 [P] Add failing tests for invented fill answer, transfer language, timestamp, and unknown segment references in `src/__tests__/real-talk-generation-contract.test.ts`
+- [ ] T017 [P] Add failing prompt-injection caption fixture test in `src/__tests__/real-talk-generation-contract.test.ts`
+- [ ] T018 [P] Add server-action contract tests for auth-before-external-call and typed failure codes in a new `src/__tests__/real-talk-generation-action.test.ts`
+- [ ] T019 [P] Add database/RLS integration test scaffolding for two users in a new `src/__tests__/real-talk-draft-rls.integration.test.ts`
+
+### Contract implementation
+
+- [x] T020 Implement generation request, lesson draft, environment, communication-event, and transfer schemas in `src/lib/real-talk/generation-contract.ts`
+- [x] T021 Implement deterministic interaction-window selection in `src/lib/real-talk/generation-contract.ts`
+- [x] T022 Implement source-evidence failure checks in `src/lib/real-talk/generation-contract.ts`
+- [ ] T023 Extract `TranscriptSourceAdapter` interface and acquisition metadata into `src/features/real-talk/domain/transcript-source.ts`
+- [ ] T024 Move the current `youtube-transcript` implementation behind an explicitly experimental adapter in `src/features/real-talk/server/transcript-sources/youtube-experimental.ts`
+- [ ] T025 Add a configuration gate preventing the experimental adapter from being treated as production-approved in `src/features/real-talk/server/transcript-source-policy.ts`
+- [x] T026 Extend Real Talk lesson and draft types with environment, communication events, transfer, warnings, and review state in `src/types/real-talk.ts`
+- [x] T027 Add app-level Supabase table types without editing generated types in `src/types/app-database.ts`
+- [x] T028 Update the server Supabase client to use app-level database types in `src/lib/supabase/server.ts`
+- [ ] T029 Replace remaining transport-level domain logic in `src/app/actions/real-talk.ts` with feature-owned compiler services under `src/features/real-talk/server/`
+
+**Checkpoint**: All user stories depend on typed input, typed model output, evidence validation, and explicit transcript-source policy.
+
+---
+
+## Phase 3: User Story 1 — Generate a private lesson draft (Priority: P1) 🎯 MVP
+
+**Goal**: An authenticated editor receives a complete private AI draft from supported source evidence.
+
+**Independent Test**: A mocked valid source and Gemini response produce one complete private draft; anonymous access and provider failures produce no draft.
+
+### Tests for User Story 1
+
+- [ ] T030 [P] [US1] Add mocked happy-path compiler test in `src/__tests__/real-talk-generation-action.test.ts`
+- [ ] T031 [P] [US1] Add anonymous rejection test proving transcript and Gemini adapters are not called in `src/__tests__/real-talk-generation-action.test.ts`
+- [ ] T032 [P] [US1] Add 429, invalid JSON, no-candidate, and network-failure tests in `src/__tests__/real-talk-generation-action.test.ts`
+- [ ] T033 [P] [US1] Add long-transcript selection integration fixture in `src/__tests__/real-talk-generation-action.test.ts`
+
+### Implementation for User Story 1
+
+- [x] T034 [US1] Require Supabase authentication before generation work in `src/app/actions/real-talk.ts`
+- [x] T035 [US1] Validate URL and target level with Zod in `src/app/actions/real-talk.ts`
+- [x] T036 [US1] Bound and sanitize source cues before prompt construction in `src/app/actions/real-talk.ts`
+- [x] T037 [US1] Select an interaction-rich source window before Gemini generation in `src/app/actions/real-talk.ts`
+- [x] T038 [US1] Fetch honest source metadata through YouTube oEmbed in `src/app/actions/real-talk.ts`
+- [x] T039 [US1] Request structured environment-first output from Gemini in `src/app/actions/real-talk.ts`
+- [x] T040 [US1] Record the actual successful Gemini model in `src/app/actions/real-talk.ts`
+- [ ] T041 [US1] Return stable machine-readable generation failure codes defined by `contracts/generation-contract.md` from `src/app/actions/real-talk.ts`
+- [ ] T042 [US1] Make persistence failure explicit instead of silently reporting a fully saved draft in `src/app/actions/real-talk.ts`
+- [ ] T043 [US1] Define and implement deterministic repeated-generation/slug-collision behavior in `src/features/real-talk/server/draft-repository.ts`
+
+**Checkpoint**: US1 can be demonstrated with mocked providers without publication or later roadmap features.
+
+---
+
+## Phase 4: User Story 2 — Reject unsupported AI content (Priority: P1)
+
+**Goal**: No unsupported model language or reference reaches persistence.
+
+**Independent Test**: Invalid controlled fixtures fail with stable evidence codes and no database writes.
+
+### Tests for User Story 2
+
+- [ ] T044 [P] [US2] Complete evidence rejection matrix in `src/__tests__/real-talk-generation-contract.test.ts`
+- [ ] T045 [P] [US2] Assert no persistence occurs after schema or evidence failure in `src/__tests__/real-talk-generation-action.test.ts`
+- [ ] T046 [P] [US2] Assert caption-contained instructions cannot change required output behavior in `src/__tests__/real-talk-generation-action.test.ts`
+
+### Implementation for User Story 2
+
+- [x] T047 [US2] Parse model output with the runtime Zod schema in `src/app/actions/real-talk.ts`
+- [x] T048 [US2] Validate transcript text against selected source evidence in `src/lib/real-talk/generation-contract.ts`
+- [x] T049 [US2] Validate vocabulary, fill answers, speaking drills, transfer language, timestamps, speakers, and segment references in `src/lib/real-talk/generation-contract.ts`
+- [x] T050 [US2] Delimit caption content as untrusted data and instruct Gemini not to follow caption instructions in `src/app/actions/real-talk.ts`
+- [x] T051 [US2] Surface unresolved human-review warnings in the generation result from `src/app/actions/real-talk.ts`
+- [ ] T052 [US2] Add conservative normalization tests for contractions, punctuation, HTML entities, and caption artifacts in `src/__tests__/real-talk-generation-contract.test.ts`
+
+**Checkpoint**: US2 rejects unsupported content independently of database and preview concerns.
+
+---
+
+## Phase 5: User Story 3 — Keep drafts private and reviewable (Priority: P1)
+
+**Goal**: Persist the full draft under owner-only RLS and visibly retain uncertainty.
+
+**Independent Test**: ownerA can reload their draft; ownerB and anonymous users cannot access or publish it.
+
+### Tests for User Story 3
+
+- [ ] T053 [P] [US3] Add migration assertion test for default-private and review-state constraints in `src/__tests__/real-talk-migration-contract.test.ts`
+- [ ] T054 [P] [US3] Run two-user RLS integration cases from `quickstart.md` and record exact evidence
+- [ ] T055 [P] [US3] Add reload mapping test preserving environment, events, transfer, warnings, and model in `src/__tests__/real-talk-draft-mapping.test.ts`
+
+### Implementation for User Story 3
+
+- [x] T056 [US3] Add private-draft fields and owner-only RLS migration in `supabase/migrations/20260802190000_real_talk_private_draft_gate.sql`
+- [x] T057 [US3] Return existing user-created rows to private state in `supabase/migrations/20260802190000_real_talk_private_draft_gate.sql`
+- [x] T058 [US3] Persist environment, communication events, transfer, warnings, model, and review state in `src/app/actions/real-talk.ts`
+- [x] T059 [US3] Reload private lesson draft fields in `src/app/actions/real-talk.ts`
+- [x] T060 [US3] Exclude private drafts from public catalog queries in `src/app/actions/real-talk.ts`
+- [x] T061 [US3] Display private AI-draft status and review warnings in `src/app/(main)/real-talk/create/page.tsx`
+- [ ] T062 [US3] Apply or dry-run the migration in an authorized non-production Supabase project
+- [ ] T063 [US3] Regenerate `src/types/supabase.ts` after migration and remove temporary types only when equivalent coverage is proven
+- [ ] T064 [US3] Add owner draft list/delete UI only if required to verify retention; otherwise record as a follow-up spec decision
+
+**Checkpoint**: US3 provides a reloadable private authoring artifact without any public publication path.
+
+---
+
+## Phase 6: User Story 4 — Preview a natural lesson loop (Priority: P2)
+
+**Goal**: Evaluate pedagogical coherence through environment, retrieval, speaking, and transfer preview.
+
+**Independent Test**: Preview cannot complete through recognition tasks alone and makes no unsupported speech claim.
+
+### Tests for User Story 4
+
+- [ ] T065 [P] [US4] Add component test showing environment and roles before lesson phases in `src/__tests__/real-talk-lesson-preview.test.tsx`
+- [ ] T066 [P] [US4] Add component test blocking completion until phrase production acknowledgements are complete in `src/__tests__/real-talk-post-watch.test.tsx`
+- [ ] T067 [P] [US4] Add component test blocking completion until transfer response attempt in `src/__tests__/real-talk-post-watch.test.tsx`
+- [ ] T068 [P] [US4] Add assertion that UI contains no pronunciation/mastery claim in `src/__tests__/real-talk-post-watch.test.tsx`
+
+### Implementation for User Story 4
+
+- [x] T069 [US4] Surface environment, learner role, partner role, and goal in `src/components/real-talk/RealTalkLesson.tsx`
+- [x] T070 [US4] Replace the mock microphone control with honest speak-and-confirm practice in `src/components/real-talk/PostWatchPhase.tsx`
+- [x] T071 [US4] Require source-backed phrase production acknowledgements in `src/components/real-talk/PostWatchPhase.tsx`
+- [x] T072 [US4] Require a changed-context transfer attempt in `src/components/real-talk/PostWatchPhase.tsx`
+- [x] T073 [US4] Replace mastery and automatic-SRS completion copy with immediate-practice evidence in `src/components/real-talk/RealTalkLesson.tsx`
+- [ ] T074 [US4] Run desktop and mobile Playwright preview flow against a controlled persisted draft
+- [ ] T075 [US4] Manually review one valid draft for situation fidelity, source language, speaker uncertainty, Vietnamese guidance, and transfer coherence
+
+**Checkpoint**: The draft is useful for human evaluation, but it remains unreviewed and private.
+
+---
+
+## Phase 7: Cross-cutting verification and convergence
+
+**Purpose**: Prove the exact final state; no unchecked item may be hidden by a green partial check.
+
+- [ ] T076 Run `npm run lint` against the exact final commit and record the result
+- [ ] T077 Run `npx tsc --noEmit` against the exact final commit and record the result
+- [ ] T078 Run `npm run test` against the exact final commit and record the result
+- [ ] T079 Run `npm run test:content-standard` against the exact final commit and record the result
+- [ ] T080 Run `npm run build` against the exact final commit and record the result
+- [ ] T081 Run targeted compiler and preview tests against the exact final commit
+- [ ] T082 Run non-production live Gemini happy path, invalid output, 429, and provider-failure checks
+- [ ] T083 Verify official source playback and oEmbed metadata on desktop and mobile
+- [ ] T084 Resolve transcript acquisition policy or retain an explicit merge blocker for the experimental adapter
+- [ ] T085 Run the requirements checklist in `checklists/requirements.md` and check only observed items
+- [ ] T086 Run final cross-artifact analysis and remove spec/plan/task inconsistencies
+- [ ] T087 Run convergence review: map every FR and SC to implementation and observed evidence
+- [ ] T088 Update PR #54 with exact final head, completed tasks, commands run, manual reviews, remaining blockers, and no unverified success claims
+- [ ] T089 Obtain owner acceptance; do not merge or deploy automatically
+
+## Dependencies & Execution Order
+
+### Phase dependencies
+
+- Phase 1 establishes governance.
+- Phase 2 blocks all product stories.
+- US1 and US2 share compiler contracts and should converge before persistence or preview is trusted.
+- US3 depends on valid compiler output and database design.
+- US4 can use fixtures but final reload verification depends on US3.
+- Phase 7 depends on all intended user stories and exact final code.
+
+### User story dependencies
+
+- **US1**: Depends on Phase 2; independently demonstrates private generation with mocks.
+- **US2**: Depends on Phase 2; independently demonstrates rejection with fixtures.
+- **US3**: Depends on US1/US2 contracts; independently demonstrates ownership and reload.
+- **US4**: Depends on the lesson draft contract; can use a static fixture before live persistence.
+
+### Parallel opportunities
+
+- Contract fixture tests can run in parallel across different test files.
+- RLS integration setup and UI component tests can proceed in parallel after schemas stabilize.
+- Documentation checklist and manual source review can proceed while technical checks run.
+- Tasks touching `src/app/actions/real-talk.ts` must remain sequential.
+
+## Implementation Strategy
+
+### MVP first
+
+The minimum accepted slice is US1 + US2:
+
+```text
+authenticated request
+→ bounded source evidence
+→ structured generation
+→ schema and evidence validation
+→ private draft result
+```
+
+Stop and verify this slice before expanding database or preview behavior.
+
+### Incremental delivery
+
+1. Converge contracts and compiler behavior.
+2. Converge owner-private persistence and RLS.
+3. Converge environment and transfer preview.
+4. Stop. Publication belongs to spec 002.
+
+## Notes
+
+- Checked code tasks do not imply verification passed.
+- Do not mark T062 or RLS tasks complete without an authorized non-production database run.
+- Do not mark external API tasks complete from mocked results.
+- Do not mark manual review tasks complete from metadata or model output alone.
+- Do not create implementation for spec 002 while spec 001 has unresolved critical tasks.
