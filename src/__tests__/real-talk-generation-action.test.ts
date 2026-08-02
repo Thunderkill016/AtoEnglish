@@ -292,6 +292,9 @@ describe("Real Talk generation application orchestration", () => {
       code: "INTERNAL_ERROR",
       retryAfterSeconds: 30,
     });
+    if (result.success) {
+      throw new Error("Expected generation failure");
+    }
     expect(result.error).not.toContain("secret provider detail");
     expect(dependencies.persist).not.toHaveBeenCalled();
   });
