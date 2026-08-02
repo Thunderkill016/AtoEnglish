@@ -1,7 +1,7 @@
 # Agent Plan — Current Work Only
 
 > Product truth: `docs/product/PRODUCT_TRUTH.md`  
-> Architecture direction: `docs/product/YOUTUBE_TO_CURRICULUM.md`  
+> Architecture: `docs/product/NATURAL_COMMUNICATION_LEARNING_SYSTEM.md`  
 > Ordered work: `docs/product/CURRENT_PRIORITY.md`  
 > Cross-session state: `PROJECT_MEMORY.md`
 
@@ -9,73 +9,77 @@
 
 | Field | Value |
 |---|---|
-| Task | CONTEXT-002 — Persist the canonical YouTube-to-Curriculum direction |
+| Task | PRODUCT-ENV-001 — Make natural communication environments canonical |
 | Status | draft pull request open |
-| Branch | `docs/persist-project-memory` |
-| Pull request | `#47` |
-| Goal | Make every new AI session recover the new product direction, current repository state, boundaries, and next safe action without the previous chat |
+| Branch | `product/natural-communication-environments` |
+| Pull request | `#53` |
+| Base | `feature/two-lane-content-model` / PR #50 |
+| Goal | Align repository truth, branch state, and next work around environment-first learning with an invisible curriculum |
 
 ## Owner decision
 
 Recorded on 2026-08-02:
 
-- authentic YouTube and other legally usable conversation sources are the primary language input;
-- AtoEnglish compiles short Communication Clips into a prerequisite-driven A0→B1 path;
-- the unit is a clip, not a video;
-- every complete treatment requires comprehension, acquisition, and transfer;
-- the first validation slice is seven days, 20–30 clips, and five A0 capabilities;
-- the old fixed 28-day workplace roadmap is superseded;
-- PR #46 is technical proof, not the final product shape;
-- mechanisms from PR #45 and merged Gold Day 1 may be reused inside the new core.
+- the website must feel like learning inside natural communication, not studying an academic syllabus;
+- source videos should capture real interaction rather than be arranged or selected only to match a predetermined phrase lesson;
+- curriculum remains necessary but should operate invisibly underneath the learner experience;
+- learner-facing organization should use environments and practical goals;
+- natural corpus collection begins from complete interactions and communication events;
+- grammar, vocabulary, and pronunciation remain support for communication rather than the roadmap;
+- transfer and delayed varied use remain mandatory evidence.
 
 ## Scope
 
-Documentation and agent operating guidance only:
+Update high-authority product and agent documents:
 
 - `PROJECT_MEMORY.md`;
 - `AGENTS.md`;
 - `AGENT_PLAN.md`;
 - `AGENT_BACKLOG.md`;
 - `docs/product/PRODUCT_TRUTH.md`;
-- `docs/product/YOUTUBE_TO_CURRICULUM.md`;
+- `docs/product/NATURAL_COMMUNICATION_LEARNING_SYSTEM.md`;
 - `docs/product/CURRENT_PRIORITY.md`;
 - `docs/product/DO_NOT_BUILD.md`;
-- `docs/handoffs/**`.
+- previous architecture references where needed.
 
-Forbidden:
+Also synchronize exact current branch and PR state.
 
-- runtime source changes;
-- source ingestion implementation;
-- curriculum corpus creation;
-- tests or dependencies;
-- database, auth, analytics, FSRS rules, payment, provider settings;
-- deployment, merge, or production promotion.
+Forbidden in this PR:
+
+- learner runtime implementation;
+- media scraping or downloading;
+- caption retrieval;
+- source acceptance;
+- database, auth, analytics, FSRS, XP, payment, or deployment changes;
+- merge or production promotion.
+
+## Current repository state
+
+- `main`: `961e779886ff95b1b5f67d5e6997520d1facdb1a`.
+- PR #47: `213e217a5f0e57b4f2aa0879716755b14381eaab`.
+- PR #48: `d1e8038584ea7963d3ab5a6ab6ae9ab4cf103d6a`.
+- PR #49: `0e96ba88400761e24953c6d2fd89b3e27210e033`.
+- PR #50: `4f94223bec700ca89afc42b47a01b84404585c5f`.
+- PR #51: `b0a009989385ba51663136b1efbcd2831a926562`.
+- PR #52: `a874120a389c451cc39ac7a4cbd1fb4692f0fcce`, base restored to PR #50, draft, Verify #78 passed.
+- PR #53: current active branch; final head must be recorded after all edits.
 
 ## Acceptance
 
-- High-authority documents agree on YouTube-to-Curriculum as canonical.
-- A new session cannot reasonably infer that the 28-day workplace roadmap remains active.
-- Communication Clip, prerequisite graph, three-layer lesson contract, rights boundary, and four learning-core responsibilities are explicit.
-- The seven-day A0 pilot scope and five capabilities are explicit.
-- PR #45, PR #46, merged #43, and stale #35 have correct roles.
-- Session start/end handoff protocol remains mandatory.
-- No secrets, learner data, raw chats, or temporary share tokens are committed.
-- Final diff is documentation-only.
+- High-authority documents agree that natural communication environments are the learner-facing product.
+- The invisible curriculum remains explicit and structured.
+- Source collection is environment-first and event-first, not phrase-search-first.
+- Earlier phrase-targeted batches are labelled exploratory rather than canonical.
+- Initial five environments are explicit.
+- Fixed clip quotas are replaced by coverage-quality and explicit-gap rules.
+- Rights and naturalness remain separate gates.
+- Current PR bases, branches, heads, draft states, and verification evidence are accurate.
+- PR #52 is restored to base PR #50 and draft.
+- PR #53 remains draft, unmerged, and undeployed.
 - GitHub Verify passes on the exact final head.
-
-## Current repository evidence
-
-- `main` snapshot head: `961e779886ff95b1b5f67d5e6997520d1facdb1a`.
-- PR #43 is merged and supplies reusable Gold Day 1 mechanisms.
-- PR #45 is an open draft mastery-mechanism experiment.
-- PR #46 is an open draft one-clip authentic-media technical proof.
-- PR #35 is older and stale.
-- PR #47 is this open draft documentation reset.
-
-Always verify live state before relying on this snapshot.
 
 ## Next action
 
-Finish document alignment, collapse the branch to one clean commit, update PR #47 with the exact head, and wait for GitHub Verify. Do not merge.
+Finish document alignment, compare PR #53 against PR #50, update PR #53 with exact final head and checks, run Verify, then return the PR to draft if it was temporarily marked ready for CI.
 
-After PR #47 is accepted, open a separate bounded task to define the Communication Clip, source-review, level-treatment, prerequisite, three-layer activity, and advancement contracts before collecting the 20–30 clip corpus.
+After owner acceptance, open a separate bounded contract task for `CommunicationEvent`, `EnvironmentExperience`, and invisible-curriculum selection. Do not implement a broad ingestion or learner runtime in this documentation PR.
