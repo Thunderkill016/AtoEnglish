@@ -52,7 +52,7 @@ description: "Dependency-ordered implementation and verification tasks for the p
 - [x] T016 [P] Add controlled fixtures for invalid/reversed/out-of-window timestamps, duplicate indices, unknown speakers, unknown segment references, invented vocabulary, fill answer, speaking language, and transfer language in `src/__tests__/real-talk-generation-contract.test.ts`; execution remains tracked by T081
 - [x] T017 [P] Add prompt-injection metadata/caption fixture in `src/__fixtures__/real-talk/prompt-injection-caption.ts` and delimiter/escaping assertions in `src/__tests__/real-talk-generation-contract.test.ts`; execution remains tracked by T081
 - [x] T018 [P] Add application/server-action contract tests for auth-before-external-call, invalid input, rate limiting, typed provider failures, and bounded internal errors in `src/__tests__/real-talk-generation-action.test.ts`; execution remains tracked by T081
-- [ ] T019 [P] Add database/RLS integration test scaffolding for two users in a new `src/__tests__/real-talk-draft-rls.integration.test.ts`
+- [x] T019 [P] Add two-owner plus anonymous Supabase RLS integration scaffolding in `src/__tests__/integration/real-talk-draft-rls.integration.test.ts`; execution against an authorized migrated non-production database remains tracked by T054 and T062
 
 ### Contract implementation
 
@@ -134,23 +134,23 @@ description: "Dependency-ordered implementation and verification tasks for the p
 
 ### Tests for User Story 3
 
-- [ ] T053 [P] [US3] Add migration assertion test for default-private and review-state constraints in `src/__tests__/real-talk-migration-contract.test.ts`
-- [ ] T054 [P] [US3] Run two-user RLS integration cases from `quickstart.md` and record exact evidence
-- [ ] T055 [P] [US3] Add reload mapping test preserving environment, events, transfer, warnings, and model in `src/__tests__/real-talk-draft-mapping.test.ts`
+- [x] T053 [P] [US3] Add migration assertions for private defaults, lifecycle constraints, canonical policy reset, owner-only reads/writes, publication denial, and review-state denial in `src/__tests__/real-talk-migration-contract.test.ts`; execution remains tracked by T081
+- [ ] T054 [P] [US3] Run the two-user/anonymous RLS integration scaffold in `src/__tests__/integration/real-talk-draft-rls.integration.test.ts` against an authorized migrated non-production Supabase project and record exact evidence
+- [x] T055 [P] [US3] Extract row mapping into `src/features/real-talk/server/draft-mapping.ts` and add reload mapping coverage for environment, events, transfer, warnings, model, status, segment, and safe fallbacks in `src/__tests__/real-talk-draft-mapping.test.ts`; execution remains tracked by T081
 
 ### Implementation for User Story 3
 
-- [x] T056 [US3] Add private-draft fields and owner-only RLS migration in `supabase/migrations/20260802190000_real_talk_private_draft_gate.sql`
-- [x] T057 [US3] Return existing user-created rows to private state in `supabase/migrations/20260802190000_real_talk_private_draft_gate.sql`
+- [x] T056 [US3] Add private-draft fields, explicitly enable RLS, remove all previous permissive policies, and install one canonical owner-private policy set in `supabase/migrations/20260802190000_real_talk_private_draft_gate.sql`
+- [x] T057 [US3] Return existing user-created rows to private `ai_draft` state and clear unverified review metadata in `supabase/migrations/20260802190000_real_talk_private_draft_gate.sql`
 - [x] T058 [US3] Persist environment, communication events, transfer, warnings, model, and review state in `src/features/real-talk/server/draft-repository.ts`
-- [x] T059 [US3] Reload private lesson draft fields in `src/app/actions/real-talk.ts`
+- [x] T059 [US3] Reload private lesson drafts through the isolated mapping boundary in `src/features/real-talk/server/draft-mapping.ts` and `src/app/actions/real-talk.ts`
 - [x] T060 [US3] Exclude private drafts from public catalog queries in `src/app/actions/real-talk.ts`
 - [x] T061 [US3] Display private AI-draft status, stable failures, retry guidance, evidence codes, and review warnings in `src/app/(main)/real-talk/create/page.tsx`
 - [ ] T062 [US3] Apply or dry-run the migration in an authorized non-production Supabase project
 - [ ] T063 [US3] Regenerate `src/types/supabase.ts` after migration and remove temporary types only when equivalent coverage is proven
 - [ ] T064 [US3] Add owner draft list/delete UI only if required to verify retention; otherwise record as a follow-up spec decision
 
-**Checkpoint**: US3 provides a reloadable private authoring artifact without any public publication path.
+**Checkpoint**: US3 code and database/mapping test artifacts exist, but migration application, exact-head execution, and observed ownerA/ownerB/anonymous behavior remain required.
 
 ---
 
@@ -190,7 +190,7 @@ description: "Dependency-ordered implementation and verification tasks for the p
 - [ ] T078 Run `npm run test` against the exact final commit and record the result
 - [ ] T079 Run `npm run test:content-standard` against the exact final commit and record the result
 - [ ] T080 Run `npm run build` against the exact final commit and record the result
-- [ ] T081 Run targeted compiler, prompt-boundary, transcript policy, orchestration, result-code, repository-identity, and preview tests against the exact final commit
+- [ ] T081 Run targeted compiler, prompt-boundary, transcript policy, orchestration, result-code, migration-contract, draft-mapping, repository-identity, and preview tests against the exact final commit
 - [ ] T082 Run non-production live Gemini happy path, invalid output, 429, provider-failure, adversarial prompt-source, and persistence-failure checks
 - [ ] T083 Verify official source playback and oEmbed metadata on desktop and mobile
 - [ ] T084 Approve at least one production transcript acquisition mode or retain the explicit merge blocker; the experimental adapter is already isolated and fail-closed in production
@@ -251,12 +251,13 @@ Stop and verify this slice before expanding database or preview behavior.
 ## Notes
 
 - Checked code/test-artifact tasks do not imply verification passed.
-- Real Talk domain/server orchestration suites are assigned to the Vitest Node project; component `.tsx` suites remain in jsdom.
+- Real Talk domain/server/database contract suites are assigned to the Vitest Node project; component `.tsx` suites remain in jsdom, and live RLS cases run only through the integration config.
+- The RLS migration removes all previous policies before creating the canonical set because PostgreSQL combines permissive policies with OR.
 - Untrusted metadata/captions are escaped JSON/JSONL data inside one delimiter pair; this is a prompt-hardening boundary, not proof against every model-level adversarial behavior.
 - `REAL_TALK_ALLOW_EXPERIMENTAL_TRANSCRIPTS=true` is permitted only in development or test; production ignores the flag and rejects the experimental adapter.
 - Repeated generation updates one current draft per owner+YouTube+level; immutable attempt history is deferred.
 - A persistence failure is never a successful preview in spec 001.
-- Do not mark T062 or RLS tasks complete without an authorized non-production database run.
+- Do not mark T054 or T062 complete without an authorized migrated non-production database run.
 - Do not mark external API tasks complete from mocked results.
 - Do not mark manual review tasks complete from metadata or model output alone.
 - Do not create implementation for spec 002 while spec 001 has unresolved critical tasks.
