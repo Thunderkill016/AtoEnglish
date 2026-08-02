@@ -58,7 +58,11 @@ does not satisfy the final-head gate.
 npx vitest run src/__tests__/real-talk-generation-contract.test.ts
 npx vitest run src/__tests__/real-talk-transcript-source-policy.test.ts
 npx vitest run src/__tests__/real-talk-generation-result.test.ts
+npx vitest run src/__tests__/real-talk-generation-action.test.ts
 ```
+
+The Real Talk domain, transcript-policy, and orchestration suites are assigned to
+the Vitest Node project. Future component `.tsx` suites remain in jsdom.
 
 Required fixture coverage:
 
@@ -78,7 +82,11 @@ Required fixture coverage:
 - documented generation failure-code set remains stable;
 - evidence failures are deduplicated and retry guidance is normalized;
 - private draft identity is deterministic for the same owner, video, and level;
-- different owners or levels receive different draft identities.
+- different owners or levels receive different draft identities;
+- anonymous requests stop before rate limit, compiler/provider, or persistence;
+- mocked Gemini/model failures never call persistence;
+- persistence failure cannot become preview or saved success;
+- unexpected dependency errors do not leak raw provider detail.
 
 The presence of these test files is not a passing result. Record their output on
 the exact final commit.
@@ -89,8 +97,8 @@ Using instrumented or mocked transcript/model/repository adapters:
 
 1. call generation while signed out;
 2. confirm `AUTH_REQUIRED` behavior;
-3. confirm transcript and Gemini adapters were not called;
-4. submit invalid input and confirm `INVALID_INPUT`;
+3. confirm rate limiting, transcript, Gemini, and repository adapters were not called;
+4. submit invalid input and confirm `INVALID_INPUT` before auth or external work;
 5. exceed the request limit and confirm `RATE_LIMITED` plus bounded retry guidance;
 6. simulate transcript unavailable/invalid cases and confirm the documented codes;
 7. simulate Gemini 429, unavailable, missing candidate, malformed JSON, and invalid schema;
