@@ -91,21 +91,38 @@ export default function PreWatchPhase({
             exit={{ opacity: 0, y: -20 }}
             className="space-y-6"
           >
-            <div className="rounded-2xl border border-zinc-800/60 bg-zinc-900/60 overflow-hidden backdrop-blur-xl">
-              {/* YouTube Warm-up Video Player */}
-              <div className="relative aspect-video bg-zinc-950">
-                <iframe
-                  src={`https://www.youtube.com/embed/${video.youtubeId}?start=${video.segment.startSeconds}&end=${video.segment.endSeconds}&autoplay=0&rel=0`}
-                  title={video.title}
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                  className="w-full h-full border-0"
+            <div className="rounded-3xl border border-zinc-800/80 bg-zinc-900/70 overflow-hidden backdrop-blur-xl shadow-2xl">
+              {/* YouTube Warm-up Video Card */}
+              <div className="relative aspect-video bg-zinc-950 overflow-hidden group">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={video.thumbnailUrl}
+                  alt={video.title}
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 />
+                <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/40 to-transparent" />
+
+                {/* Center Play & YouTube Launch buttons */}
+                <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 p-4">
+                  <a
+                    href={`https://www.youtube.com/watch?v=${video.youtubeId}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-6 py-3.5 rounded-2xl bg-teal-500 hover:bg-teal-400 text-white font-bold text-sm flex items-center gap-2.5 transition-all shadow-xl shadow-teal-950/60 hover:scale-105 active:scale-95 border border-teal-300/30"
+                  >
+                    <span className="text-lg">▶️</span>
+                    <span>Xem Video trên YouTube (2 phút) ↗</span>
+                  </a>
+                  <span className="text-[11px] font-medium text-zinc-400 bg-zinc-950/80 px-3 py-1 rounded-full backdrop-blur-md border border-zinc-800/60">
+                    Bấm để xem video khởi động trước khi học từ vựng
+                  </span>
+                </div>
               </div>
+
               <div className="p-6 space-y-3">
                 <div className="flex items-center gap-2">
-                  <span className="px-2.5 py-1 rounded-md bg-teal-500/10 border border-teal-500/20 text-xs font-bold text-teal-400">
-                    🎬 Bước 1/4: Xem lướt qua video (Warm-up)
+                  <span className="px-3 py-1 rounded-lg bg-teal-500/10 border border-teal-500/20 text-xs font-bold text-teal-400">
+                    🎬 Bước 1/4: Bối cảnh & Khởi động
                   </span>
                 </div>
                 <h2 className="text-xl font-bold text-white">
@@ -114,17 +131,22 @@ export default function PreWatchPhase({
                 <p className="text-sm text-zinc-300 leading-relaxed">
                   {content.contextVi}
                 </p>
-                <div className="p-3 rounded-xl bg-teal-500/5 border border-teal-500/10 text-xs text-teal-300">
-                  💡 <strong>Mẹo học:</strong> Bấm Play để xem lướt qua video 1
-                  lần (dài ~2-3 phút) để nắm bối cảnh trước khi học từ vựng!
+                <div className="p-3.5 rounded-2xl bg-teal-500/10 border border-teal-500/20 text-xs text-teal-300 flex items-start gap-2">
+                  <span className="text-base">💡</span>
+                  <span>
+                    <strong>Mẹo học:</strong> Xem lướt qua video 1 lần để nắm ý
+                    chính, cảm nhận ngữ điệu nhân vật trước khi bước vào học từ
+                    vựng cốt lõi!
+                  </span>
                 </div>
               </div>
             </div>
+
             <button
               onClick={nextStep}
-              className="w-full py-4 rounded-xl bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-400 hover:to-emerald-400 text-white font-bold flex items-center justify-center gap-2 transition-all min-h-[44px] shadow-lg shadow-teal-900/30"
+              className="w-full py-4 rounded-2xl bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-400 hover:to-emerald-400 text-white font-bold flex items-center justify-center gap-2 transition-all min-h-[48px] shadow-xl shadow-teal-950/50 border border-teal-300/30 text-base"
             >
-              Tiếp tục: Học từ vựng cốt lõi
+              <span>Tiếp tục: Học từ vựng cốt lõi</span>
               <ChevronRight size={18} />
             </button>
           </motion.div>
