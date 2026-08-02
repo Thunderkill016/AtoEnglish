@@ -22,20 +22,26 @@ owner-private AI lesson drafting and private preview. Publication, curriculum
 sequencing, delayed transfer scheduling, rewards, payments, and deployment remain
 outside spec 001.
 
-The feature is sufficiently specified for bounded implementation and testing. It
-is not ready for convergence or production. Critical implementation and evidence
-gaps remain visible in the task ledger.
+The transcript runtime now has an explicit adapter and fail-closed policy. The
+unofficial YouTube adapter is isolated, disabled by default, allowed only by
+explicit non-production opt-in, and rejected in production regardless of the
+flag. This resolves the previous implementation ambiguity around T023–T025.
+
+The feature remains sufficiently specified for bounded implementation and
+testing. It is not ready for convergence or production because no production
+transcript mode has been approved and major technical, database, browser,
+provider, and human evidence remains unchecked.
 
 ## Constitution alignment
 
 | Principle | Status | Evidence / gap |
 |---|---|---|
 | Natural Communication First | Aligned | Environment, roles, practical goal, communication events, and transfer are required across spec, schema, persistence, and preview |
-| Evidence-Bound Generation | Partially aligned | Zod and source checks exist; transcript adapter policy, complete fixtures, and human verification remain open |
+| Evidence-Bound Generation | Partially aligned | Zod, source checks, adapter metadata, and runtime policy exist; full fixtures, approved production source, and human verification remain open |
 | Transfer Before Completion | Aligned in code, unverified | Preview implementation requires a transfer response; component/browser tests remain open |
-| Rights, Privacy, Safety | Partially aligned | Official playback and private RLS design exist; transcript acquisition remains experimental and migration is unverified |
-| Small Independent Delivery | Aligned | Roadmap separates publication and later capabilities; spec 001 has independent stories |
-| Measurable Evidence | Aligned in requirements, unverified | Success criteria and exact-head checks exist; observed results are absent |
+| Rights, Privacy, Safety | Partially aligned | Official playback, private RLS design, and production transcript fail-closed policy exist; production acquisition and migration proof remain open |
+| Small Independent Delivery | Aligned | Roadmap separates publication and later capabilities; generation logic was extracted without broad architecture expansion |
+| Measurable Evidence | Aligned in requirements, unverified | Success criteria and exact-head checks exist; observed final results are absent |
 
 No constitution violation has been approved as an exception.
 
@@ -45,6 +51,16 @@ No constitution violation has been approved as an exception.
 
 - authenticated generation gate;
 - validated URL and level;
+- `TranscriptSourceAdapter` contract with cues, acquisition mode, trust, review
+  status, source reference, warnings, and typed failures;
+- isolated `experimental_unofficial` YouTube transcript adapter;
+- explicit non-production opt-in through
+  `REAL_TALK_ALLOW_EXPERIMENTAL_TRANSCRIPTS=true`;
+- unconditional production rejection of the experimental adapter;
+- architecture regression assertion preventing the server action from importing
+  `youtube-transcript` directly;
+- bounded and normalized transcript cues, including rejection of non-finite
+  timings;
 - bounded interaction-window selection;
 - structured environment-first model output;
 - Zod runtime validation;
@@ -63,22 +79,25 @@ verified unless the corresponding tasks are checked from an actual run.
 
 ### Requirements with incomplete implementation
 
-1. **FR-003/FR-004 — Transcript adapter and policy**
-   - Current action dynamically imports `youtube-transcript` directly.
-   - No explicit acquisition-mode contract is active in the runtime path.
-   - No development/production policy gate isolates the experimental adapter.
-   - Tasks T023–T025 remain blocking.
+1. **FR-003/FR-004 — Production transcript source**
+   - Adapter and policy boundaries are implemented.
+   - The only concrete adapter remains experimental and is blocked in production.
+   - At least one approved production mode still needs a separate adapter,
+     evidence, and operational decision.
+   - T084 remains convergence-blocking.
 
 2. **FR-019 and failure contract — Stable failures and persistence**
-   - Current behavior primarily returns human-readable error strings.
-   - The specified discriminated failure codes are not fully implemented.
-   - Persistence behavior must not silently downgrade to an in-memory success.
+   - Transcript source failures are typed internally.
+   - The public server-action result still primarily exposes human-readable
+     strings rather than the complete specified failure-code contract.
+   - Persistence can still downgrade to an in-memory preview while returning
+     overall generation success.
    - Tasks T041–T043 remain blocking.
 
 3. **FR-024 — Required tests**
-   - Initial domain tests exist.
-   - Action, auth-ordering, failure, RLS, mapping, prompt-injection, component,
-     and browser tests are missing.
+   - Initial domain and transcript policy tests exist.
+   - Action, auth-ordering, provider failure, RLS, mapping, prompt-injection,
+     component, and browser tests are missing.
    - Tasks T013–T019, T030–T033, T044–T046, T052–T055, and T065–T068 remain open.
 
 4. **Persistence schema proof**
@@ -105,16 +124,18 @@ verified unless the corresponding tasks are checked from an actual run.
 | SC-007 reload preserves fields | mapping test + DB reload | Code observed; not verified |
 | SC-008 transfer required | component/browser test | Code observed; not verified |
 | SC-009 exact-head checks pass | lint, tsc, tests, content, build | Not run on latest head |
-| SC-010 review can inspect provenance/warnings | manual draft inspection | Not run |
+| SC-010 review can inspect provenance/warnings | manual draft inspection | Metadata exists; manual review not run |
+
+The transcript policy tests exist in the repository, but no result is recorded
+until they run on the exact final commit.
 
 ## Ambiguities and decisions still needed
 
 ### Critical before merge consideration
 
-- Decide which transcript acquisition modes are production-approved.
-- Decide whether the experimental adapter is disabled outside development or
-  removed from the merge candidate.
-- Define persistence failure semantics and stable error codes.
+- Decide and implement at least one transcript acquisition mode approved for
+  production use, or keep this feature explicitly non-production.
+- Define persistence failure semantics and stable external error codes.
 
 ### Important before convergence
 
@@ -122,6 +143,13 @@ verified unless the corresponding tasks are checked from an actual run.
 - Define draft retention and owner deletion behavior.
 - Decide whether generation should be one draft per source/user or versioned
   attempts.
+
+### Resolved in this iteration
+
+- The experimental adapter remains available only for explicit development/test
+  work.
+- Production always rejects it even when the environment flag is set.
+- The server action no longer accesses the unofficial package directly.
 
 ### Deferred correctly to spec 002
 
@@ -135,8 +163,8 @@ These deferred decisions do not belong in spec 001 implementation.
 
 ## Duplication and terminology findings
 
-- `docs/product/PRODUCT_TRUTH.md` and `CURRENT_PRIORITY.md` now summarize and point
-  to Spec Kit artifacts rather than competing with them.
+- `docs/product/PRODUCT_TRUTH.md` and `CURRENT_PRIORITY.md` summarize and point to
+  Spec Kit artifacts rather than competing with them.
 - Older `docs/real-talk-spec.md`, `docs/real-talk-expansion-plan.md`, and full
   blueprints may contain obsolete authority language. They should be labelled
   historical or reconciled in a separate documentation-only task, not silently
@@ -146,8 +174,8 @@ These deferred decisions do not belong in spec 001 implementation.
   introduce an explicit reviewed/public contract rather than assuming draft and
   publication are the same entity.
 - Terms `source evidence`, `transcript evidence`, `ai_draft`, `review warning`,
-  `communication event`, and `transfer task` are consistent across active
-  artifacts.
+  `communication event`, `transfer task`, `experimental_unofficial`, and
+  `approved transcript source` are consistent across active artifacts.
 
 ## Task quality findings
 
@@ -155,7 +183,10 @@ These deferred decisions do not belong in spec 001 implementation.
 - Checked implementation tasks are separated from unchecked verification tasks.
 - Exact file paths are provided.
 - No task in spec 001 authorizes publication or later roadmap work.
-- T029 should be treated as a bounded extraction, not a broad folder refactor.
+- T023–T025 and the bounded compiler extraction in T029 match the implemented
+  file boundaries.
+- T043 remains responsible for moving persistence into a repository and deciding
+  repeated-generation behavior; T029 must not be interpreted as completing it.
 - T064 is deliberately conditional and must not become scope expansion unless
   retention verification requires it.
 
@@ -169,9 +200,10 @@ These deferred decisions do not belong in spec 001 implementation.
 
 **Critical next tasks**:
 
-1. T023–T025: transcript adapter and policy boundary;
-2. T041–T043: stable failure and persistence semantics;
-3. missing action/domain/RLS/component tests;
+1. T041–T043: stable failure, persistence, and repeated-generation semantics;
+2. missing action/domain/RLS/component tests;
+3. at least one approved production transcript adapter or an explicit permanent
+   non-production decision;
 4. authorized non-production migration and RLS verification;
 5. exact-head repository checks;
 6. live Gemini, browser, and human review evidence.
