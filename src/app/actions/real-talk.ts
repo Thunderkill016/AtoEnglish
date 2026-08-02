@@ -2,13 +2,10 @@
 
 import { headers } from "next/headers";
 
-import {
-  generationFailure,
-  type GenerateLessonResult as GenerateLessonResultContract,
-} from "@/features/real-talk/domain/generation-result";
+import { generatePrivateLesson } from "@/features/real-talk/application/generate-private-lesson";
+import type { GenerateLessonResult as GenerateLessonResultContract } from "@/features/real-talk/domain/generation-result";
 import { persistOwnerPrivateDraft } from "@/features/real-talk/server/draft-repository";
 import { compilePrivateNaturalLesson } from "@/features/real-talk/server/private-lesson-compiler";
-import { generateRealTalkInputSchema } from "@/lib/real-talk/generation-contract";
 import { createRateLimiter } from "@/lib/security/rate-limit";
 import { createClient } from "@/lib/supabase/server";
 import type {
@@ -25,92 +22,37 @@ export async function generateRealTalkLesson(
   youtubeUrl: string,
   level: RealTalkLevel = "A1",
 ): Promise<GenerateLessonResultContract> {
-  try {
-    const input = generateRealTalkInputSchema.safeParse({ youtubeUrl, level });
-    if (!input.success) {
-      return generationFailure(
-        "INVALID_INPUT",
-        "Link YouTube hoặc cấp độ không hợp lệ.",
-      );
-    }
+  return generatePrivateLesson(
+    { youtubeUrl, level },
+    {
+      getAuthenticatedUserId: async () => {
+        const supabase = await createClient();
+        const {
+          data: { user },
+          error,
+        } = await supabase.auth.getUser();
+        return error ? null : (user?.id ?? null);
+      },
+      checkRateLimit: async (userId) => {
+        const requestHeaders = await headers();
+        const ip =
+          requestHeaders.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+          "127.0.0.1";
+        const result = await generateLimiter.check(`${userId}:${ip}`);
+        if (result.success) return { success: true };
 
-    const supabase = await createClient();
-    const {
-      data: { user },
-      error: authError,
-    } = await supabase.auth.getUser();
-    if (authError || !user) {
-      return generationFailure(
-        "AUTH_REQUIRED",
-        "Bạn cần đăng nhập để tạo bài học bằng Gemini.",
-      );
-    }
-
-    const requestHeaders = await headers();
-    const ip =
-      requestHeaders.get("x-forwarded-for")?.split(",")[0]?.trim() ||
-      "127.0.0.1";
-    const rateCheck = await generateLimiter.check(`${user.id}:${ip}`);
-    if (!rateCheck.success) {
-      return generationFailure(
-        "RATE_LIMITED",
-        "Bạn đang tạo quá nhiều bài. Hãy thử lại sau.",
-        {
+        return {
+          success: false,
           retryAfterSeconds: Math.max(
             1,
-            Math.ceil((rateCheck.resetTime - Date.now()) / 1000),
+            Math.ceil((result.resetTime - Date.now()) / 1000),
           ),
-        },
-      );
-    }
-
-    const compiled = await compilePrivateNaturalLesson({
-      youtubeUrl: input.data.youtubeUrl,
-      level: input.data.level,
-    });
-    if (!compiled.success) return compiled;
-
-    const persisted = await persistOwnerPrivateDraft({
-      video: compiled.video,
-      draft: compiled.draft,
-      model: compiled.model,
-      warnings: compiled.warnings,
-      userId: user.id,
-    });
-    if (!persisted.success) return persisted;
-
-    const warnings =
-      persisted.lesson.generation?.warnings ?? compiled.warnings;
-
-    return {
-      success: true,
-      status: "ai_draft",
-      persisted: true,
-      persistence: "saved_private_draft",
-      video: persisted.video,
-      lesson: persisted.lesson,
-      warnings,
-      source: {
-        provider: "youtube",
-        externalId: persisted.video.youtubeId,
-        watchUrl: persisted.video.source?.watchUrl ?? input.data.youtubeUrl,
-        embedUrl: `https://www.youtube.com/embed/${persisted.video.youtubeId}`,
-        selectedStartSeconds: persisted.video.segment.startSeconds,
-        selectedEndSeconds: persisted.video.segment.endSeconds,
-        acquisitionMode: compiled.transcriptMetadata.acquisitionMode,
+        };
       },
-      generation: {
-        model: compiled.model,
-        warnings,
-      },
-    };
-  } catch {
-    return generationFailure(
-      "INTERNAL_ERROR",
-      "Đã xảy ra lỗi nội bộ khi tạo bài học. Không có bản nháp nào được xác nhận là đã lưu.",
-      { retryAfterSeconds: 30 },
-    );
-  }
+      compile: compilePrivateNaturalLesson,
+      persist: persistOwnerPrivateDraft,
+    },
+  );
 }
 
 export async function fetchCatalogVideos(): Promise<RealTalkVideo[]> {
