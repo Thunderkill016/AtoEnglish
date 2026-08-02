@@ -5,6 +5,7 @@ import {
   generationFailure,
   type GenerationFailure,
 } from "@/features/real-talk/domain/generation-result";
+import type { TranscriptSourceMetadata } from "@/features/real-talk/domain/transcript-source";
 import type { GeneratedLessonDraft } from "@/lib/real-talk/generation-contract";
 import { createClient } from "@/lib/supabase/server";
 import type {
@@ -51,9 +52,10 @@ export async function persistOwnerPrivateDraft(params: {
   draft: GeneratedLessonDraft;
   model: string;
   warnings: string[];
+  transcriptMetadata: TranscriptSourceMetadata;
   userId: string;
 }): Promise<PersistPrivateDraftResult> {
-  const { video, draft, model, warnings, userId } = params;
+  const { video, draft, model, warnings, transcriptMetadata, userId } = params;
   const generatedAt = new Date().toISOString();
   const privateSlug = derivePrivateDraftSlug({
     ownerId: userId,
@@ -92,6 +94,11 @@ export async function persistOwnerPrivateDraft(params: {
           speakers: privateVideo.speakers as unknown as Json,
           created_by: userId,
           is_public: false,
+          transcript_acquisition_mode: transcriptMetadata.acquisitionMode,
+          transcript_review_status: transcriptMetadata.reviewStatus,
+          transcript_source_metadata: transcriptMetadata as unknown as Json,
+          transcript_cue_digest:
+            transcriptMetadata.provenance?.cueDigestSha256 ?? null,
         },
         { onConflict: "slug" },
       )
