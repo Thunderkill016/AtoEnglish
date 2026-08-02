@@ -88,7 +88,7 @@
 - [x] No planned publication behavior is hidden in spec 001.
 - [x] Data entities map to requirements and tasks.
 - [x] Open decisions are visible in research and tasks.
-- [ ] A formal cross-artifact analysis has been run after the latest changes.
+- [x] An initial formal cross-artifact analysis is recorded in `analysis.md`.
 - [ ] Every functional requirement maps to at least one task and observed acceptance result.
 - [ ] Every success criterion has a defined evidence source and final result.
 
