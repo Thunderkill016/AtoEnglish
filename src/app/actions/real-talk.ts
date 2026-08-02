@@ -486,8 +486,8 @@ export async function generateRealTalkLesson(
       channelName,
       channelUrl: `https://www.youtube.com/channel/UC${videoId.slice(0, 8)}`,
       thumbnailUrl: `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`,
-      durationSeconds: totalDuration,
-      segment: { startSeconds: 0, endSeconds: Math.min(totalDuration, 180) },
+      durationSeconds: fullDuration,
+      segment: { startSeconds: 0, endSeconds: segmentDuration },
       level,
       topics: [],
       speakerCount: speakers.length,
@@ -599,9 +599,12 @@ export async function generateRealTalkLesson(
     return { success: true, video, lesson };
   } catch (err: unknown) {
     console.error("[Real Talk] generateRealTalkLesson error:", err);
+    const detail = err instanceof Error ? err.message : "";
     return {
       success: false,
-      error: "Đã xảy ra lỗi. Vui lòng thử lại.",
+      error: detail
+        ? `Lỗi tạo bài học: ${detail}`
+        : "Đã xảy ra lỗi. Vui lòng thử lại.",
     };
   }
 }
