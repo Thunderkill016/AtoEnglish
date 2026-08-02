@@ -65,16 +65,26 @@ source window. Preserve human-review warnings for everything else.
 - Block all drafts until human transcript review: deferred to the publication
   feature; private draft preview remains useful when uncertainty is explicit.
 
-## Decision 4 — Keep transcript acquisition behind an adapter boundary
+## Decision 4 — Keep transcript acquisition behind a fail-closed adapter boundary
 
-**Decision**: Represent transcript input as a `TranscriptSource` contract with
-acquisition mode, language, cues, and review status. The current
-`youtube-transcript` implementation is experimental and does not establish
-production rights or correctness.
+**Decision**: Represent transcript input as a `TranscriptSourceAdapter` contract
+with acquisition mode, language, cues, trust, review status, source reference,
+and warnings. The current `youtube-transcript` implementation is isolated as
+`experimental_unofficial`.
+
+The experimental adapter follows this runtime policy:
+
+- disabled by default;
+- may run only in development or test when
+  `REAL_TALK_ALLOW_EXPERIMENTAL_TRANSCRIPTS=true` is explicitly set;
+- always rejected in production, even when the flag is present;
+- never represented as approved, human-verified, rights-cleared, or suitable for
+  publication.
 
 **Rationale**: The product needs timed source evidence, but acquisition methods
 have different legal, reliability, and operational properties. The compiler
-should not be coupled to one unofficial mechanism.
+must not be coupled to one unofficial mechanism, and a forgotten environment
+flag must not silently enable it in production.
 
 **Approved future modes may include**:
 
@@ -88,6 +98,8 @@ should not be coupled to one unofficial mechanism.
 
 - Treat any available YouTube captions as approved: rejected because public
   availability does not itself prove permission, accuracy, or stability.
+- Permit the experimental flag in production: rejected because configuration
+  mistakes must fail closed.
 - Remove transcript support entirely: rejected because evidence-bound lesson
   generation cannot operate accurately without timed language evidence.
 
@@ -161,13 +173,12 @@ pronunciation quality or long-term transfer.
 ## Open decisions that block convergence
 
 1. Which transcript acquisition modes are approved for production use?
-2. Will the current experimental adapter remain behind a development-only flag or
-   be removed before merge?
-3. What exact authorized role will own publication in spec 002?
-4. How will slug collisions and repeated generation of the same source be handled
+2. What exact authorized role will own publication in spec 002?
+3. How will slug collisions and repeated generation of the same source be handled
    after the initial single-editor pilot?
-5. Will private drafts be retained indefinitely, manually deleted, or expired?
+4. Will private drafts be retained indefinitely, manually deleted, or expired?
 
-These decisions do not block private contract and UI work, but unresolved items
-must remain visible in tasks and PR review. They block any claim that the feature
-is production-ready.
+The experimental adapter runtime policy is resolved, but spec 001 still cannot
+converge until at least one production transcript mode is approved or the feature
+remains explicitly non-production. The other open decisions remain visible in
+tasks and PR review.
