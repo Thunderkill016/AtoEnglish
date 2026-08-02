@@ -61,7 +61,7 @@ export function findButton(container: ParentNode, text: string) {
 }
 
 export function expectTextOrder(
-  container: ParentNode,
+  container: ParentNode & Node,
   first: string,
   second: string,
 ) {
