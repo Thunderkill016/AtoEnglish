@@ -34,7 +34,7 @@ vi.mock("framer-motion", async () => {
           );
           return React.createElement(
             typeof property === "string" ? property : "div",
-            domProps,
+            domProps as never,
             props.children as ReactNode,
           );
         },
