@@ -184,19 +184,19 @@ description: "Dependency-ordered implementation and verification tasks for the p
 
 **Purpose**: Prove the exact final state; no unchecked item may be hidden by a green partial check.
 
-- [x] T076 Run `npm run lint`; passed on exact head `fe3cdbe75ae858c7190f763afd5e15d3b19c8182` in Verify run #117
-- [x] T077 Run `npx tsc --noEmit`; passed on exact head in Verify run #117
-- [x] T078 Run `npm run test`; 37 files and 355 tests passed on exact head in Verify run #117
-- [x] T079 Run `npm run test:content-standard`; 1 file and 50 tests passed on exact head in Verify run #117
-- [x] T080 Run `npm run build`; Next.js 16.2.9 production compilation and 89/89 page generation passed without deployment on exact head in Verify run #117
-- [x] T081 Run the targeted Real Talk contract, policy, provider, orchestration, result, URL, migration, mapping, and preview suites; 11 files and 91 tests passed on exact head in Verify run #117
+- [x] T076 Run `npm run lint`; passed on exact head `26b4ef00d4385ca9b59d03922f0b82cf3da83f01` in Verify run #118
+- [x] T077 Run `npx tsc --noEmit`; passed on exact head in Verify run #118
+- [x] T078 Run `npm run test`; 37 files and 355 tests passed on exact head in Verify run #118
+- [x] T079 Run `npm run test:content-standard`; 1 file and 50 tests passed on exact head in Verify run #118
+- [x] T080 Run `npm run build`; Next.js 16.2.9 production compilation and 89/89 page generation passed without deployment on exact head in Verify run #118
+- [x] T081 Run the targeted Real Talk contract, policy, provider, orchestration, result, URL, migration, mapping, and preview suites; 11 files and 91 tests passed on exact head in Verify run #118
 - [ ] T082 Run non-production live Gemini happy path, invalid output, 429, provider-failure, adversarial prompt-source, and persistence-failure checks; the live workflow stopped before provider work because `GEMINI_API_KEY` is absent from GitHub Actions secrets
 - [x] T083 Verify live YouTube oEmbed metadata and official IFrame playback on desktop and Android-mobile; run #1 retained transient mobile error 150 and run #2 passed the same controlled source, with evidence in `live-provider-verification.md`
 - [ ] T084 Approve at least one production transcript acquisition mode or retain the explicit merge blocker; the experimental adapter is isolated and fail-closed in production
 - [ ] T085 Run the requirements checklist and check only observed items
 - [ ] T086 Run final cross-artifact analysis and remove spec, plan, task, and evidence inconsistencies
 - [ ] T087 Run convergence review: map every functional requirement and success criterion to implementation and observed evidence
-- [ ] T088 Update PR #54 with the final exact head, final successful Verify run, commands, counts, warnings, manual reviews, and remaining blockers
+- [x] T088 Update PR #54 with exact head `26b4ef00d4385ca9b59d03922f0b82cf3da83f01`, successful Verify run #118, commands, counts, hosted database evidence, live YouTube evidence, blocked Gemini evidence, warnings, and remaining blockers
 - [ ] T089 Obtain owner acceptance; do not merge or deploy automatically
 
 ## Dependencies & execution order
