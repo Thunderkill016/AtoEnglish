@@ -264,10 +264,12 @@ describe("Real Talk generation application orchestration", () => {
         evidenceFailures: ["transcript_missing_source_evidence"],
       },
     );
-    const compile = vi.fn(async (params: { youtubeUrl: string; level: "A1" }) => {
-      expect(params).toEqual({ youtubeUrl: YOUTUBE_URL, level: "A1" });
-      return failure;
-    });
+    const compile: GeneratePrivateLessonDependencies["compile"] = vi.fn(
+      async (params) => {
+        expect(params).toEqual({ youtubeUrl: YOUTUBE_URL, level: "A1" });
+        return failure;
+      },
+    );
     const { dependencies } = createDependencies({ compile });
 
     const result = await generatePrivateLesson(
