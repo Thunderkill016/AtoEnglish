@@ -11,27 +11,37 @@ const shortText = z.string().trim().min(1).max(240);
 const mediumText = z.string().trim().min(1).max(800);
 const optionsSchema = z.array(shortText).min(2).max(4);
 
-const multipleChoiceSchema = z
-  .object({
-    questionVi: mediumText,
-    options: optionsSchema,
-    correctIndex: z.number().int().min(0).max(3),
-  })
-  .superRefine((value, ctx) => {
-    if (value.correctIndex >= value.options.length) {
-      ctx.addIssue({
-        code: "custom",
-        path: ["correctIndex"],
-        message: "correctIndex must reference an existing option",
-      });
-    }
-  });
+const multipleChoiceShape = {
+  questionVi: mediumText,
+  options: optionsSchema,
+  correctIndex: z.number().int().min(0).max(3),
+};
 
-const evidenceMultipleChoiceSchema = multipleChoiceSchema.extend({
-  id: z.string().trim().min(1).max(80),
-  explanationVi: mediumText,
-  evidenceSegmentIndices: z.array(z.number().int().min(0)).min(1).max(6),
-});
+function validCorrectIndex(
+  value: { options: string[]; correctIndex: number },
+  ctx: z.RefinementCtx,
+) {
+  if (value.correctIndex >= value.options.length) {
+    ctx.addIssue({
+      code: "custom",
+      path: ["correctIndex"],
+      message: "correctIndex must reference an existing option",
+    });
+  }
+}
+
+const multipleChoiceSchema = z
+  .object(multipleChoiceShape)
+  .superRefine(validCorrectIndex);
+
+const evidenceMultipleChoiceSchema = z
+  .object({
+    ...multipleChoiceShape,
+    id: z.string().trim().min(1).max(80),
+    explanationVi: mediumText,
+    evidenceSegmentIndices: z.array(z.number().int().min(0)).min(1).max(6),
+  })
+  .superRefine(validCorrectIndex);
 
 const transcriptSegmentSchema = z.object({
   index: z.number().int().min(0),
@@ -42,7 +52,7 @@ const transcriptSegmentSchema = z.object({
   textVi: z.string().trim().min(1).max(800),
 });
 
-export const generatedLessonDraftSchema = z.object({
+const generatedLessonDraftBaseSchema = z.object({
   title: shortText,
   titleVi: shortText,
   level: realTalkLevelSchema,
@@ -188,7 +198,16 @@ export const generatedLessonDraftSchema = z.object({
   }),
 });
 
-export type GeneratedLessonDraft = z.infer<typeof generatedLessonDraftSchema>;
+export const generatedLessonDraftSchema = Object.assign(
+  generatedLessonDraftBaseSchema,
+  {
+    toJSONSchema: () => z.toJSONSchema(generatedLessonDraftBaseSchema),
+  },
+);
+
+export type GeneratedLessonDraft = z.infer<
+  typeof generatedLessonDraftBaseSchema
+>;
 
 export interface SourceTranscriptItem {
   text: string;
@@ -209,8 +228,7 @@ function normalizeEvidenceText(value: string) {
 function phraseHasSourceEvidence(phrase: string, sourceText: string) {
   const normalizedPhrase = normalizeEvidenceText(phrase);
   const normalizedSource = normalizeEvidenceText(sourceText);
-  if (!normalizedPhrase) return false;
-  return normalizedSource.includes(normalizedPhrase);
+  return Boolean(normalizedPhrase) && normalizedSource.includes(normalizedPhrase);
 }
 
 function scoreConversationItem(text: string) {
@@ -219,14 +237,26 @@ function scoreConversationItem(text: string) {
   let score = 1;
 
   if (wordCount >= 2 && wordCount <= 18) score += 1;
-  if (/\?|\b(what|where|when|why|who|how|do you|did you|can you|could you|would you)\b/.test(normalized)) {
+  if (
+    /\?|\b(what|where|when|why|who|how|do you|did you|can you|could you|would you)\b/.test(
+      normalized,
+    )
+  ) {
     score += 2;
   }
   if (/\b(i|i'm|i've|we|you|your|my|me)\b/.test(normalized)) score += 1;
-  if (/\b(yeah|yes|no|okay|right|really|actually|well|so|but|because|thanks|thank you)\b/.test(normalized)) {
+  if (
+    /\b(yeah|yes|no|okay|right|really|actually|well|so|but|because|thanks|thank you)\b/.test(
+      normalized,
+    )
+  ) {
     score += 2;
   }
-  if (/\b(sorry|pardon|say that again|repeat|did you say|what do you mean)\b/.test(normalized)) {
+  if (
+    /\b(sorry|pardon|say that again|repeat|did you say|what do you mean)\b/.test(
+      normalized,
+    )
+  ) {
     score += 4;
   }
 
@@ -242,7 +272,11 @@ export function selectConversationWindow(
   if (transcript.length <= maxItems) {
     const first = transcript[0];
     const last = transcript[transcript.length - 1];
-    if (!first || !last || last.offset + last.duration - first.offset <= maxDurationSeconds) {
+    if (
+      !first ||
+      !last ||
+      last.offset + last.duration - first.offset <= maxDurationSeconds
+    ) {
       return [...transcript];
     }
   }
@@ -285,20 +319,28 @@ export function validateGeneratedDraftEvidence(
     sourceStart,
   );
   const sourceText = source.map((item) => item.text).join(" ");
-  const transcriptIndices = new Set(draft.transcript.map((segment) => segment.index));
-  const speakerLabels = new Set(draft.speakers.map((speaker) => speaker.label));
+  const transcriptIndices = new Set(
+    draft.transcript.map((segment) => segment.index),
+  );
+  const speakerLabels = new Set(
+    draft.speakers.map((speaker) => speaker.label),
+  );
 
   if (draft.transcript.some((segment) => segment.endTime <= segment.startTime)) {
     failures.push("invalid_transcript_time_range");
   }
   if (
     draft.transcript.some(
-      (segment) => segment.startTime < sourceStart || segment.endTime > sourceEnd + 1,
+      (segment) =>
+        segment.startTime < sourceStart || segment.endTime > sourceEnd + 1,
     )
   ) {
     failures.push("transcript_outside_source_window");
   }
-  if (new Set(draft.transcript.map((segment) => segment.index)).size !== draft.transcript.length) {
+  if (
+    new Set(draft.transcript.map((segment) => segment.index)).size !==
+    draft.transcript.length
+  ) {
     failures.push("duplicate_transcript_index");
   }
   if (draft.transcript.some((segment) => !speakerLabels.has(segment.speaker))) {
