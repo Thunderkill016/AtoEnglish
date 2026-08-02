@@ -71,15 +71,38 @@ The system must reject:
 - learner-facing lessons created before human alignment review;
 - sources whose rights were revoked or whose takedown status is active.
 
-## Supported caption formats
+## Runnable TypeScript demo
 
-The first implementation supports:
+The demo performs two stages:
 
-- WebVTT (`text/vtt`);
-- SubRip (`application/x-subrip`);
-- TTML (`application/ttml+xml`).
+1. fetch public metadata through the official YouTube Data API and build an official embed record;
+2. optionally read a local, authorized caption file and generate an editor-only lesson draft.
 
-Captions may come from the creator, an official source, or a reviewed manual transcription. Machine output remains a draft until checked against playback.
+Metadata only:
+
+```bash
+YOUTUBE_API_KEY=your_key npx tsx scripts/demo-youtube-companion.ts \
+  --url=https://www.youtube.com/watch?v=VIDEO_ID
+```
+
+Metadata plus an authorized local caption file:
+
+```bash
+YOUTUBE_API_KEY=your_key npx tsx scripts/demo-youtube-companion.ts \
+  --url=https://www.youtube.com/watch?v=VIDEO_ID \
+  --caption=fixtures/media-ingestion/demo-authorized-caption.vtt \
+  --caption-authorized \
+  --rights-evidence=creator-upload-record-123
+```
+
+The CLI rejects remote caption URLs. It does not download media, extract audio, or scrape YouTube captions.
+
+## Supported caption formats in this demo
+
+- WebVTT (`.vtt`);
+- SubRip (`.srt`).
+
+TTML support remains a later ingestion adapter rather than a claim of the current parser.
 
 ## Lesson-readiness rule
 
@@ -97,4 +120,4 @@ rights permit storage and derivatives
 
 ## Scope of this experiment
 
-This branch defines TypeScript contracts, validators, and tests. It does not add a downloader, OAuth flow, object storage adapter, media processor, player UI, production database migration, or deployment.
+This branch adds a TypeScript metadata client, URL parser, local timed-text parser, lesson-draft builder, CLI, fixture, and tests. It does not add a downloader, OAuth flow, object storage adapter, media processor, player UI, production database migration, or deployment.
