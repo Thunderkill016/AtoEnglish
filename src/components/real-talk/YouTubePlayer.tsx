@@ -94,15 +94,18 @@ export function YouTubePlayer({
     return () => clearTimeTracking();
   }, []);
 
+  const [hasError, setHasError] = useState(false);
+
   // Initialize Player when clicked
   const initPlayer = useCallback(() => {
     if (!isScriptLoaded || !window.YT) return;
 
     setIsPlaying(true);
+    setHasError(false);
 
     playerRef.current = new window.YT.Player(containerRef.current, {
       videoId: video.youtubeId,
-      host: "https://www.youtube-nocookie.com",
+      host: "https://www.youtube.com",
       playerVars: {
         autoplay: 1,
         modestbranding: 1,
@@ -111,6 +114,8 @@ export function YouTubePlayer({
         start: Math.floor(video.segment.startSeconds),
         end: Math.floor(video.segment.endSeconds),
         playsinline: 1,
+        origin:
+          typeof window !== "undefined" ? window.location.origin : undefined,
       },
       events: {
         onReady: (event: any) => {
@@ -123,6 +128,11 @@ export function YouTubePlayer({
           } else {
             clearTimeTracking();
           }
+        },
+        onError: (event: any) => {
+          console.warn("[YouTubePlayer] Embed error code:", event.data);
+          clearTimeTracking();
+          setHasError(true);
         },
       },
     });
@@ -276,8 +286,39 @@ export function YouTubePlayer({
       </div>
 
       {/* Video Area */}
-      <div className="relative aspect-video bg-zinc-950 flex flex-col">
-        {!isPlaying ? (
+      <div className="relative aspect-video bg-zinc-950 flex flex-col overflow-hidden">
+        {hasError ? (
+          <div className="absolute inset-0 z-20 flex flex-col items-center justify-center p-6 text-center bg-zinc-950/95 backdrop-blur-md space-y-4">
+            <div className="size-12 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 text-xl font-bold">
+              ⚠️
+            </div>
+            <div className="max-w-md">
+              <h4 className="text-base font-bold text-white mb-1">
+                Video bị giới hạn phát trên trang ngoài
+              </h4>
+              <p className="text-xs text-zinc-400 leading-relaxed">
+                Chủ sở hữu video YouTube này đã tắt tính năng nhúng. Bạn vẫn có
+                thể mở trực tiếp trên YouTube để xem hoặc chọn video khác.
+              </p>
+            </div>
+            <div className="flex flex-wrap items-center justify-center gap-3">
+              <a
+                href={`https://www.youtube.com/watch?v=${video.youtubeId}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-4 py-2.5 rounded-xl bg-teal-500 hover:bg-teal-400 text-white font-bold text-xs flex items-center gap-2 transition-all shadow-md shadow-teal-900/40"
+              >
+                Mở xem trên YouTube ↗
+              </a>
+              <button
+                onClick={() => setHasError(false)}
+                className="px-4 py-2.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-medium text-xs transition-colors"
+              >
+                Thử lại
+              </button>
+            </div>
+          </div>
+        ) : !isPlaying ? (
           <button
             onClick={initPlayer}
             className="absolute inset-0 w-full h-full group z-10"
@@ -300,8 +341,6 @@ export function YouTubePlayer({
 
         {/* The YouTube Iframe Container */}
         <div ref={containerRef} className="absolute inset-0 w-full h-full" />
-
-        {/* Internal Subtitle Overlay (positioned over bottom of video if desired, but we'll put it below the video player area for better UX on mobile) */}
       </div>
 
       {/* Subtitle / Focus Point Display Area (Below video) */}
