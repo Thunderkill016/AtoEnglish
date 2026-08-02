@@ -1,187 +1,23 @@
-import type { Database, Json } from "@/types/supabase";
+import type { RealTalkTables } from "@/types/real-talk-supabase.generated";
+import type { Database } from "@/types/supabase";
 
-type RealTalkVideoTable = {
-  Row: {
-    id: string;
-    slug: string;
-    youtube_id: string;
-    title: string;
-    title_vi: string;
-    channel_name: string | null;
-    channel_url: string | null;
-    thumbnail_url: string | null;
-    duration_seconds: number;
-    segment_start: number;
-    segment_end: number;
-    level: string;
-    topics: string[] | null;
-    speaker_count: number | null;
-    speakers: Json;
-    created_by: string | null;
-    is_public: boolean;
-    created_at: string;
-  };
-  Insert: {
-    id?: string;
-    slug: string;
-    youtube_id: string;
-    title: string;
-    title_vi: string;
-    channel_name?: string | null;
-    channel_url?: string | null;
-    thumbnail_url?: string | null;
-    duration_seconds?: number;
-    segment_start?: number;
-    segment_end?: number;
-    level?: string;
-    topics?: string[] | null;
-    speaker_count?: number | null;
-    speakers?: Json;
-    created_by?: string | null;
-    is_public?: boolean;
-    created_at?: string;
-  };
-  Update: {
-    id?: string;
-    slug?: string;
-    youtube_id?: string;
-    title?: string;
-    title_vi?: string;
-    channel_name?: string | null;
-    channel_url?: string | null;
-    thumbnail_url?: string | null;
-    duration_seconds?: number;
-    segment_start?: number;
-    segment_end?: number;
-    level?: string;
-    topics?: string[] | null;
-    speaker_count?: number | null;
-    speakers?: Json;
-    created_by?: string | null;
-    is_public?: boolean;
-    created_at?: string;
-  };
-  Relationships: [];
-};
+type GeneratedPublicTables = Database["public"]["Tables"];
+type PublicTablesWithRealTalk = Omit<
+  GeneratedPublicTables,
+  keyof RealTalkTables
+> &
+  RealTalkTables;
 
-type RealTalkLessonTable = {
-  Row: {
-    id: string;
-    video_id: string;
-    title: string;
-    title_vi: string;
-    level: string;
-    estimated_minutes: number;
-    can_do_statement: string | null;
-    can_do_statement_vi: string | null;
-    transcript: Json;
-    pre_watch: Json;
-    while_watch: Json;
-    post_watch: Json;
-    environment: Json;
-    communication_events: Json;
-    transfer_task: Json;
-    generation_model: string | null;
-    generation_status: string;
-    generation_warnings: Json;
-    reviewed_at: string | null;
-    reviewed_by: string | null;
-    created_at: string;
-  };
-  Insert: {
-    id?: string;
-    video_id: string;
-    title: string;
-    title_vi: string;
-    level?: string;
-    estimated_minutes?: number;
-    can_do_statement?: string | null;
-    can_do_statement_vi?: string | null;
-    transcript?: Json;
-    pre_watch?: Json;
-    while_watch?: Json;
-    post_watch?: Json;
-    environment?: Json;
-    communication_events?: Json;
-    transfer_task?: Json;
-    generation_model?: string | null;
-    generation_status?: string;
-    generation_warnings?: Json;
-    reviewed_at?: string | null;
-    reviewed_by?: string | null;
-    created_at?: string;
-  };
-  Update: {
-    id?: string;
-    video_id?: string;
-    title?: string;
-    title_vi?: string;
-    level?: string;
-    estimated_minutes?: number;
-    can_do_statement?: string | null;
-    can_do_statement_vi?: string | null;
-    transcript?: Json;
-    pre_watch?: Json;
-    while_watch?: Json;
-    post_watch?: Json;
-    environment?: Json;
-    communication_events?: Json;
-    transfer_task?: Json;
-    generation_model?: string | null;
-    generation_status?: string;
-    generation_warnings?: Json;
-    reviewed_at?: string | null;
-    reviewed_by?: string | null;
-    created_at?: string;
-  };
-  Relationships: [];
-};
-
-type RealTalkProgressTable = {
-  Row: {
-    id: string;
-    user_id: string;
-    video_id: string;
-    phase: string;
-    quiz_score: number | null;
-    speaking_scores: Json | null;
-    saved_vocab: string[] | null;
-    completed_at: string | null;
-    updated_at: string;
-  };
-  Insert: {
-    id?: string;
-    user_id: string;
-    video_id: string;
-    phase?: string;
-    quiz_score?: number | null;
-    speaking_scores?: Json | null;
-    saved_vocab?: string[] | null;
-    completed_at?: string | null;
-    updated_at?: string;
-  };
-  Update: {
-    id?: string;
-    user_id?: string;
-    video_id?: string;
-    phase?: string;
-    quiz_score?: number | null;
-    speaking_scores?: Json | null;
-    saved_vocab?: string[] | null;
-    completed_at?: string | null;
-    updated_at?: string;
-  };
-  Relationships: [];
-};
-
-type RealTalkTables = {
-  real_talk_videos: RealTalkVideoTable;
-  real_talk_lessons: RealTalkLessonTable;
-  real_talk_progress: RealTalkProgressTable;
-};
-
+/**
+ * App-level database type that reconciles the repository's full generated
+ * Supabase type with the hosted Real Talk schema fragment.
+ *
+ * `Omit` makes this forward-compatible: once a local full regeneration adds
+ * the same table names to `src/types/supabase.ts`, the hosted definitions here
+ * replace rather than intersect with stale copies.
+ */
 export type AppDatabase = Omit<Database, "public"> & {
   public: Omit<Database["public"], "Tables"> & {
-    Tables: Database["public"]["Tables"] & RealTalkTables;
+    Tables: PublicTablesWithRealTalk;
   };
 };
