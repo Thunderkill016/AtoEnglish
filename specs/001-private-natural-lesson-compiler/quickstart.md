@@ -24,6 +24,17 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY
 GEMINI_API_KEY
 ```
 
+The current unofficial YouTube transcript adapter is experimental. It is disabled
+by default and can be enabled only for an explicit development or test run:
+
+```text
+REAL_TALK_ALLOW_EXPERIMENTAL_TRANSCRIPTS=true
+```
+
+The flag is ignored in production. Production always rejects the experimental
+adapter and requires an approved transcript source. Enabling the flag does not
+approve caption accuracy, rights, reliability, or publication suitability.
+
 Use a non-production Supabase project and a quota-bounded Gemini key for live
 verification.
 
@@ -45,6 +56,7 @@ does not satisfy the final-head gate.
 
 ```bash
 npx vitest run src/__tests__/real-talk-generation-contract.test.ts
+npx vitest run src/__tests__/real-talk-transcript-source-policy.test.ts
 ```
 
 Required fixture coverage:
@@ -57,7 +69,11 @@ Required fixture coverage:
 - out-of-window timestamp;
 - unknown segment reference;
 - dense interaction-window selection;
-- prompt-injection-like caption text treated as data.
+- prompt-injection-like caption text treated as data;
+- experimental transcript blocked by default;
+- experimental transcript allowed only by explicit non-production opt-in;
+- experimental transcript blocked in production even when the flag is set;
+- server action cannot import the unofficial transcript package directly.
 
 ## 5. Verify authentication and quota ordering
 
@@ -107,7 +123,9 @@ Required checks:
 ## 8. Run live Gemini verification
 
 Use a controlled, non-sensitive source and a transcript mode approved for the test
-environment.
+environment. When the experimental adapter is used, verify that the explicit
+non-production flag is present and record that the result is not production
+approval.
 
 Verify:
 
