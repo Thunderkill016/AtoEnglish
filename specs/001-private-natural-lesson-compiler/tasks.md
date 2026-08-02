@@ -10,7 +10,7 @@ description: "Dependency-ordered implementation and verification tasks for the p
 
 **Tests**: Required because generation, evidence, authentication, RLS, and learner completion are product-critical contracts.
 
-**Status rule**: A checked implementation task means the code or artifact exists. A checked verification task means the command or evidence was observed on a named commit and recorded in `verification.md` or the final PR snapshot. Provider, database, browser, and human evidence remain separate gates.
+**Status rule**: A checked implementation task means the code or artifact exists. A checked verification task means the command or evidence was observed on a named commit and recorded in `verification.md`, a dedicated evidence document, or the final PR snapshot. Provider, database, browser, and human evidence remain separate gates.
 
 ## Format: `[ID] [P?] [Story] Description`
 
@@ -96,7 +96,7 @@ description: "Dependency-ordered implementation and verification tasks for the p
 - [x] T042 [US1] Remove silent preview fallback; required database failure returns `DRAFT_PERSISTENCE_FAILED`
 - [x] T043 [US1] Move persistence into `src/features/real-talk/server/draft-repository.ts` and use deterministic owner + YouTube + level identity
 
-**Checkpoint**: US1 mocked orchestration, source selection, URL validation, failure semantics, and technical execution pass. Live Gemini and real database proof remain open.
+**Checkpoint**: US1 mocked orchestration, source selection, URL validation, failure semantics, and technical execution pass. Live Gemini remains open; hosted database migration evidence is recorded separately.
 
 ---
 
@@ -145,11 +145,11 @@ description: "Dependency-ordered implementation and verification tasks for the p
 - [x] T059 [US3] Reload private lesson drafts through the isolated mapping boundary
 - [x] T060 [US3] Exclude private drafts from public catalog queries
 - [x] T061 [US3] Display private AI-draft status, stable failures, retry guidance, evidence codes, and review warnings
-- [ ] T062 [US3] Apply or dry-run the migration in an authorized non-production Supabase project
-- [ ] T063 [US3] Regenerate `src/types/supabase.ts` after migration and remove temporary types only when equivalent coverage is proven
+- [x] T062 [US3] Apply the migrations in the authorized connected AtoEnglish Supabase project and record hosted schema, rollback-only database-level RLS, cleanup, Advisor, and migration-history evidence in `hosted-database-verification.md`
+- [ ] T063 [US3] Regenerate `src/types/supabase.ts` after migration and remove temporary types only when equivalent coverage is proven; hosted generation and the reconciled Real Talk fragment are recorded, but full-file local replacement remains open
 - [ ] T064 [US3] Add owner draft list or delete UI only if required to verify retention; otherwise record the decision for a follow-up spec
 
-**Checkpoint**: Migration-contract and reload-mapping tests pass. Hosted migration, owner A/owner B/anonymous RLS, repeated generation, and partial-write evidence remain open.
+**Checkpoint**: Hosted migrations and database-level owner/anonymous RLS semantics are observed. The Vitest/PostgREST signed-session scaffold, repeated generation through the real server action, partial-write reconciliation, and full generated-type replacement remain open.
 
 ---
 
@@ -176,7 +176,7 @@ description: "Dependency-ordered implementation and verification tasks for the p
 - [ ] T074 [US4] Run desktop and mobile Playwright preview flow against a controlled persisted draft
 - [ ] T075 [US4] Manually review one valid draft for situation fidelity, source language, speaker uncertainty, Vietnamese guidance, and transfer coherence
 
-**Checkpoint**: US4 component suites pass. Browser preview and human pedagogical review remain open.
+**Checkpoint**: US4 component suites pass. Persisted-draft browser preview and human pedagogical review remain open.
 
 ---
 
@@ -184,14 +184,14 @@ description: "Dependency-ordered implementation and verification tasks for the p
 
 **Purpose**: Prove the exact final state; no unchecked item may be hidden by a green partial check.
 
-- [x] T076 Run `npm run lint`; passed in Verify runs #88 and #89, with evidence recorded in `verification.md`
-- [x] T077 Run `npx tsc --noEmit`; passed in Verify runs #88 and #89
-- [x] T078 Run `npm run test`; 35 files and 335 tests passed in Verify run #88, then passed again after the verification document commit in run #89
-- [x] T079 Run `npm run test:content-standard`; 1 file and 50 tests passed in Verify runs #88 and #89
-- [x] T080 Run `npm run build`; Next.js 16.2.9 production compilation and page generation passed without deployment in Verify runs #88 and #89
-- [x] T081 Run the targeted Real Talk contract, policy, orchestration, result, URL, migration, mapping, and preview suites; 9 files and 71 tests passed in Verify run #88 and passed again in run #89
-- [ ] T082 Run non-production live Gemini happy path, invalid output, 429, provider-failure, adversarial prompt-source, and persistence-failure checks
-- [ ] T083 Verify official source playback and oEmbed metadata on desktop and mobile
+- [x] T076 Run `npm run lint`; passed again in Verify run #110 on the Gemini-provider and YouTube-harness code state
+- [x] T077 Run `npx tsc --noEmit`; passed again in Verify run #110
+- [x] T078 Run `npm run test`; 37 files and 355 tests passed in Verify run #110
+- [x] T079 Run `npm run test:content-standard`; 1 file and 50 tests passed in Verify run #110
+- [x] T080 Run `npm run build`; Next.js 16.2.9 production compilation and 89/89 page generation passed without deployment in Verify run #110
+- [x] T081 Run the targeted Real Talk contract, policy, provider, orchestration, result, URL, migration, mapping, and preview suites; 11 files and 91 tests passed in Verify run #110
+- [ ] T082 Run non-production live Gemini happy path, invalid output, 429, provider-failure, adversarial prompt-source, and persistence-failure checks; the live workflow stopped before provider work because `GEMINI_API_KEY` is absent from GitHub Actions secrets
+- [x] T083 Verify live YouTube oEmbed metadata and official IFrame playback on desktop and Android-mobile; run #1 retained transient mobile error 150 and run #2 passed the same controlled source, with evidence in `live-provider-verification.md`
 - [ ] T084 Approve at least one production transcript acquisition mode or retain the explicit merge blocker; the experimental adapter is isolated and fail-closed in production
 - [ ] T085 Run the requirements checklist and check only observed items
 - [ ] T086 Run final cross-artifact analysis and remove spec, plan, task, and evidence inconsistencies
@@ -228,14 +228,14 @@ Stop after spec 001 convergence. Publication belongs to spec 002.
 
 ## Notes
 
-- `verification.md` records the exact technical evidence, failures found during verification, and non-blocking warnings.
-- Real Talk domain, server, URL, and database contract suites run in the Vitest Node project; component suites run in jsdom; live RLS runs only through the integration config.
+- `verification.md`, `hosted-database-verification.md`, and `live-provider-verification.md` record exact technical and external evidence, failures, and non-blocking warnings.
+- Real Talk domain, server, URL, provider, and database contract suites run in Vitest; component suites run in jsdom; live RLS and provider/browser evidence remain separately classified.
 - The RLS migration removes previous policies because PostgreSQL combines permissive policies with OR.
 - Untrusted metadata and captions are escaped data inside one prompt boundary; this is hardening, not proof of universal prompt-injection immunity.
 - `REAL_TALK_ALLOW_EXPERIMENTAL_TRANSCRIPTS=true` is allowed only in development or test; production rejects the experimental adapter regardless of the flag.
 - Repeated generation updates one current draft per owner + YouTube source + level; immutable attempt history is deferred.
 - A persistence failure is never a successful preview.
-- T076–T081 are technical evidence only. They do not satisfy T054, T062, T074, T075, T082, T083, or T084.
+- T076–T081 are technical evidence only. They do not satisfy T054, T063, T074, T075, T082, or T084.
 - Do not mark external API tasks complete from mocked results.
 - Do not mark human review complete from metadata or model output alone.
 - Do not create spec 002 implementation while spec 001 still has critical open evidence.
