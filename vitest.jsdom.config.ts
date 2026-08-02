@@ -10,6 +10,8 @@ const NODE_TESTS = [
   "src/__tests__/real-talk-generation-result.test.ts",
   "src/__tests__/real-talk-transcript-source-policy.test.ts",
   "src/__tests__/real-talk-generation-action.test.ts",
+  "src/__tests__/real-talk-migration-contract.test.ts",
+  "src/__tests__/real-talk-draft-mapping.test.ts",
 ];
 
 export default defineProject({
