@@ -134,6 +134,8 @@ export interface VocabItem {
   l1InterferenceVn?: string;
 }
 
+export type PreWatchVocab = VocabItem;
+
 export interface SoundAlert {
   /** The sound/phoneme */
   sound: string;

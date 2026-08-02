@@ -1,10 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
-import {
-  getRealTalkVideo,
-  getRealTalkLesson,
-} from "@/lib/data/real-talk/videos";
+import { fetchLessonBySlug } from "@/app/actions/real-talk";
 import RealTalkLessonComponent from "@/components/real-talk/RealTalkLesson";
 
 interface PageProps {
@@ -15,7 +12,7 @@ export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
   const { videoId } = await params;
-  const video = getRealTalkVideo(videoId);
+  const { video } = await fetchLessonBySlug(videoId);
   if (!video) {
     return { title: "Video không tìm thấy | AtoEnglish" };
   }
@@ -27,8 +24,7 @@ export async function generateMetadata({
 
 export default async function RealTalkVideoPage({ params }: PageProps) {
   const { videoId } = await params;
-  const video = getRealTalkVideo(videoId);
-  const lesson = getRealTalkLesson(videoId);
+  const { video, lesson } = await fetchLessonBySlug(videoId);
 
   if (!video || !lesson) {
     notFound();

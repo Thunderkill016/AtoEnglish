@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { realTalkVideos } from "@/lib/data/real-talk/videos";
+import { fetchCatalogVideos } from "@/app/actions/real-talk";
 import RealTalkHub from "@/components/real-talk/RealTalkHub";
 
 export const metadata: Metadata = {
@@ -8,6 +8,7 @@ export const metadata: Metadata = {
     "Xem video trò chuyện thật từ YouTube và biến thành bài học tiếng Anh. Học từ vựng, nghe hiểu, và luyện nói theo người bản xứ.",
 };
 
-export default function RealTalkPage() {
-  return <RealTalkHub videos={realTalkVideos} />;
+export default async function RealTalkPage() {
+  const videos = await fetchCatalogVideos();
+  return <RealTalkHub videos={videos} />;
 }

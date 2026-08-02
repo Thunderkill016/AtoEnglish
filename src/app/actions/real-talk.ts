@@ -494,6 +494,71 @@ export async function generateRealTalkLesson(
       },
     };
 
+    // 8. Attempt to persist to Supabase Database (best-effort, non-blocking)
+    try {
+      const { createClient } = await import("@/lib/supabase/server");
+      const supabase = (await createClient()) as any;
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      // Upsert video metadata
+      const { data: dbVideo } = await supabase
+        .from("real_talk_videos")
+        .upsert(
+          {
+            slug: video.id,
+            youtube_id: video.youtubeId,
+            title: video.title,
+            title_vi: video.titleVi,
+            channel_name: video.channelName,
+            channel_url: video.channelUrl,
+            thumbnail_url: video.thumbnailUrl,
+            duration_seconds: video.durationSeconds,
+            segment_start: video.segment.startSeconds,
+            segment_end: video.segment.endSeconds,
+            level: video.level,
+            topics: video.topics,
+            speaker_count: video.speakerCount,
+            speakers: video.speakers as unknown as Record<string, unknown>[],
+            created_by: user?.id ?? null,
+            is_public: true,
+          },
+          { onConflict: "slug" },
+        )
+        .select("id")
+        .maybeSingle();
+
+      if (dbVideo?.id) {
+        // Upsert lesson content
+        await supabase.from("real_talk_lessons").upsert(
+          {
+            video_id: dbVideo.id,
+            title: lesson.title,
+            title_vi: lesson.titleVi,
+            level: lesson.level,
+            estimated_minutes: lesson.estimatedMinutes,
+            can_do_statement: lesson.canDoStatement,
+            can_do_statement_vi: lesson.canDoStatementVi,
+            transcript: lesson.transcript as unknown as Record<
+              string,
+              unknown
+            >[],
+            pre_watch: lesson.preWatch as unknown as Record<string, unknown>,
+            while_watch: lesson.whileWatch as unknown as Record<
+              string,
+              unknown
+            >,
+            post_watch: lesson.postWatch as unknown as Record<string, unknown>,
+            generation_model: "gemini-3.6-flash",
+          },
+          { onConflict: "video_id" },
+        );
+      }
+    } catch {
+      // DB persistence is best-effort — silent fallback to memory/static OK
+    }
+
     return { success: true, video, lesson };
   } catch (err: unknown) {
     console.error("[Real Talk] generateRealTalkLesson error:", err);
@@ -501,5 +566,130 @@ export async function generateRealTalkLesson(
       success: false,
       error: "Đã xảy ra lỗi. Vui lòng thử lại.",
     };
+  }
+}
+
+/**
+ * Fetch all catalog videos combining static curated list + DB public videos.
+ */
+export async function fetchCatalogVideos(): Promise<RealTalkVideo[]> {
+  const { realTalkVideos } = await import("@/lib/data/real-talk/videos");
+  try {
+    const { createClient } = await import("@/lib/supabase/server");
+    const supabase = (await createClient()) as any;
+    const { data: dbVideos } = await supabase
+      .from("real_talk_videos")
+      .select("*")
+      .eq("is_public", true)
+      .order("created_at", { ascending: false });
+
+    if (!dbVideos || dbVideos.length === 0) return realTalkVideos;
+
+    const mappedDb: RealTalkVideo[] = (dbVideos as any[]).map((v) => ({
+      id: v.slug,
+      youtubeId: v.youtube_id,
+      title: v.title,
+      titleVi: v.title_vi,
+      channelName: v.channel_name ?? undefined,
+      channelUrl: v.channel_url ?? undefined,
+      thumbnailUrl:
+        v.thumbnail_url ??
+        `https://i.ytimg.com/vi/${v.youtube_id}/hqdefault.jpg`,
+      durationSeconds: v.duration_seconds,
+      segment: {
+        startSeconds: Number(v.segment_start ?? 0),
+        endSeconds: Number(v.segment_end ?? v.duration_seconds),
+      },
+      level: (v.level as RealTalkVideo["level"]) || "A1",
+      topics: v.topics ?? [],
+      speakerCount: v.speaker_count ?? 2,
+      speakers: (v.speakers as RealTalkVideo["speakers"]) ?? [],
+    }));
+
+    // Deduplicate by slug ID (static takes precedence if same slug)
+    const staticSlugs = new Set(realTalkVideos.map((v) => v.id));
+    const newFromDb = mappedDb.filter((v) => !staticSlugs.has(v.id));
+
+    return [...realTalkVideos, ...newFromDb];
+  } catch {
+    return realTalkVideos;
+  }
+}
+
+/**
+ * Fetch a single Real Talk lesson & video by videoId / slug.
+ * Checks static curated list first, then falls back to Supabase DB.
+ */
+export async function fetchLessonBySlug(slug: string): Promise<{
+  video?: RealTalkVideo;
+  lesson?: RealTalkLesson;
+}> {
+  const { getRealTalkVideo, getRealTalkLesson } =
+    await import("@/lib/data/real-talk/videos");
+  const staticVideo = getRealTalkVideo(slug);
+  const staticLesson = getRealTalkLesson(slug);
+
+  if (staticVideo && staticLesson) {
+    return { video: staticVideo, lesson: staticLesson };
+  }
+
+  try {
+    const { createClient } = await import("@/lib/supabase/server");
+    const supabase = (await createClient()) as any;
+
+    const { data: v } = await supabase
+      .from("real_talk_videos")
+      .select("*")
+      .eq("slug", slug)
+      .maybeSingle();
+
+    if (!v) return {};
+
+    const { data: l } = await supabase
+      .from("real_talk_lessons")
+      .select("*")
+      .eq("video_id", v.id)
+      .maybeSingle();
+
+    if (!l) return {};
+
+    const video: RealTalkVideo = {
+      id: v.slug,
+      youtubeId: v.youtube_id,
+      title: v.title,
+      titleVi: v.title_vi,
+      channelName: v.channel_name ?? undefined,
+      channelUrl: v.channel_url ?? undefined,
+      thumbnailUrl:
+        v.thumbnail_url ??
+        `https://i.ytimg.com/vi/${v.youtube_id}/hqdefault.jpg`,
+      durationSeconds: v.duration_seconds,
+      segment: {
+        startSeconds: Number(v.segment_start ?? 0),
+        endSeconds: Number(v.segment_end ?? v.duration_seconds),
+      },
+      level: (v.level as RealTalkVideo["level"]) || "A1",
+      topics: v.topics ?? [],
+      speakerCount: v.speaker_count ?? 2,
+      speakers: (v.speakers as RealTalkVideo["speakers"]) ?? [],
+    };
+
+    const lesson: RealTalkLesson = {
+      videoId: v.slug,
+      title: l.title,
+      titleVi: l.title_vi,
+      level: (l.level as RealTalkLesson["level"]) || "A1",
+      estimatedMinutes: l.estimated_minutes ?? 15,
+      canDoStatement: l.can_do_statement ?? "",
+      canDoStatementVi: l.can_do_statement_vi ?? "",
+      transcript: l.transcript as unknown as RealTalkLesson["transcript"],
+      preWatch: l.pre_watch as unknown as RealTalkLesson["preWatch"],
+      whileWatch: l.while_watch as unknown as RealTalkLesson["whileWatch"],
+      postWatch: l.post_watch as unknown as RealTalkLesson["postWatch"],
+    };
+
+    return { video, lesson };
+  } catch {
+    return {};
   }
 }
