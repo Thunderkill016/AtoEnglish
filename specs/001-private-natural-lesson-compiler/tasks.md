@@ -4,213 +4,269 @@ description: "Dependency-ordered implementation and verification tasks for the p
 
 # Tasks: Private Natural Lesson Compiler
 
-**Input**: Design documents from `/specs/001-private-natural-lesson-compiler/`
-
-**Prerequisites**: `plan.md`, `spec.md`, `research.md`, `data-model.md`, `contracts/generation-contract.md`
-
-**Tests**: Required because generation, evidence, authentication, RLS, and learner completion are product-critical contracts.
-
-**Status rule**: A checked implementation task means the code or artifact exists. A checked verification task means the command or evidence was observed on a named commit and recorded in `verification.md`, a dedicated evidence document, or the final PR snapshot. Provider, database, browser, and human evidence remain separate gates.
+**Input**: Design documents from `specs/001-private-natural-lesson-compiler/`  
+**Prerequisites**: `plan.md`, `spec.md`, `research.md`, `data-model.md`,
+`contracts/generation-contract.md`, `quickstart.md`
 
 ## Format: `[ID] [P?] [Story] Description`
 
-- **[P]**: Can run in parallel because it changes different files and has no unmet dependency.
-- **[Story]**: Maps the task to a user story from `spec.md`.
-- Every task names the exact file or verification surface.
+- **[P]**: Can run in parallel because it changes different files and has no
+  incomplete dependency.
+- **[Story]**: Maps work to a user story (`US1`, `US2`, `US3`, or `US4`).
+- Every task names the expected file or evidence location.
+- A checked implementation task means the artifact exists. It does not imply
+  hosted, provider, browser, or human verification unless the task explicitly
+  records that evidence.
 
-## Phase 1: Spec Kit foundation
+## Phase 1: Governance and specification baseline
 
-**Purpose**: Make product intent and delivery rules executable before further implementation.
+**Purpose**: Establish the governing product truth and keep later implementation
+inside one feature boundary.
 
-- [x] T001 Create project constitution in `.specify/memory/constitution.md`
-- [x] T002 Create rebuild specification in `specs/000-atoenglish-rebuild-roadmap/spec.md`
-- [x] T003 Create spec-of-specs decomposition in `specs/000-atoenglish-rebuild-roadmap/roadmap.md`
-- [x] T004 Create active feature specification in `specs/001-private-natural-lesson-compiler/spec.md`
-- [x] T005 [P] Create implementation plan in `specs/001-private-natural-lesson-compiler/plan.md`
-- [x] T006 [P] Record research decisions in `specs/001-private-natural-lesson-compiler/research.md`
-- [x] T007 [P] Define data model in `specs/001-private-natural-lesson-compiler/data-model.md`
-- [x] T008 [P] Define generation contract in `specs/001-private-natural-lesson-compiler/contracts/generation-contract.md`
-- [x] T009 [P] Add verification quickstart in `specs/001-private-natural-lesson-compiler/quickstart.md`
-- [x] T010 Run a requirements clarification pass and resolve or explicitly defer all open decisions in `specs/001-private-natural-lesson-compiler/research.md`
-- [x] T011 Run a cross-artifact analysis and record findings in `specs/001-private-natural-lesson-compiler/analysis.md`
-
-**Checkpoint**: Product direction is governed by Spec Kit artifacts; implementation may proceed only inside spec 001.
+- [x] T001 Adopt Spec Kit-compatible constitution and feature directory structure
+- [x] T002 Create the project rebuild roadmap as spec `000`
+- [x] T003 Create active spec `001` for the private natural lesson compiler
+- [x] T004 Align `AGENTS.md`, product truth, and current priority with spec 001
+- [x] T005 Record that publication, curriculum sequencing, delayed review,
+  rewards, payments, and deployment are outside spec 001
 
 ---
 
-## Phase 2: Foundational contracts and safety boundaries
+## Phase 2: Foundational contracts
 
-**Purpose**: Establish contracts that block all user stories if incorrect.
+**Purpose**: Build the typed and policy boundaries that every user story depends
+on.
 
-### Tests first
+- [x] T006 Define stable generation success and failure contracts in
+  `src/features/real-talk/domain/generation-result.ts`
+- [x] T007 Define canonical YouTube source parsing in
+  `src/features/real-talk/domain/youtube-source.ts`
+- [x] T008 Define deterministic private draft identity in
+  `src/features/real-talk/domain/draft-identity.ts`
+- [x] T009 Define transcript source adapter, acquisition mode, trust, and review
+  metadata in `src/features/real-talk/domain/transcript-source.ts`
+- [x] T010 Define the environment-first lesson prompt boundary in
+  `src/features/real-talk/domain/lesson-prompt.ts`
+- [x] T011 Define the strict generated draft schema and source-evidence validation
+  contract in `src/lib/real-talk/generation-contract.ts`
+- [x] T012 Separate the private generation application service from the Next.js
+  server action in `src/features/real-talk/application/generate-private-lesson.ts`
+- [x] T013 Isolate Gemini transport and provider failures in
+  `src/features/real-talk/server/gemini-lesson-provider.ts`
+- [x] T014 Isolate transcript policy and the experimental implementation in
+  `src/features/real-talk/server/transcript-source-policy.ts` and
+  `src/features/real-talk/server/transcript-sources/youtube-experimental.ts`
+- [x] T015 Isolate persistence and reload mapping in
+  `src/features/real-talk/server/draft-repository.ts` and
+  `src/features/real-talk/server/draft-mapping.ts`
 
-- [x] T012 [P] Add initial schema, evidence, and window-selection tests in `src/__tests__/real-talk-generation-contract.test.ts`
-- [x] T013 [P] Add invalid required-branch Zod output fixture in `src/__tests__/real-talk-generation-contract.test.ts`
-- [x] T014 [P] Add regression test for invented transcript text in `src/__tests__/real-talk-generation-contract.test.ts`
-- [x] T015 [P] Add regression test for invented speaking language in `src/__tests__/real-talk-generation-contract.test.ts`
-- [x] T016 [P] Add controlled fixtures for invalid or reversed timestamps, out-of-window references, duplicate indices, unknown speakers, unknown segment references, invented vocabulary, fill answers, speaking language, and transfer language in `src/__tests__/real-talk-generation-contract.test.ts`
-- [x] T017 [P] Add prompt-injection metadata and caption fixtures in `src/__fixtures__/real-talk/prompt-injection-caption.ts` with delimiter and escaping assertions in `src/__tests__/real-talk-generation-contract.test.ts`
-- [x] T018 [P] Add application contract tests for auth-before-external-call, invalid input, rate limiting, typed provider failures, and bounded internal errors in `src/__tests__/real-talk-generation-action.test.ts`
-- [x] T019 [P] Add two-owner plus anonymous Supabase RLS integration scaffolding in `src/__tests__/integration/real-talk-draft-rls.integration.test.ts`; execution remains tracked by T054 and T062
-
-### Contract implementation
-
-- [x] T020 Implement generation request, lesson draft, environment, communication-event, and transfer schemas in `src/lib/real-talk/generation-contract.ts`
-- [x] T021 Implement deterministic interaction-window selection in `src/lib/real-talk/generation-contract.ts`
-- [x] T022 Implement source-evidence failure checks in `src/lib/real-talk/generation-contract.ts`
-- [x] T023 Extract `TranscriptSourceAdapter`, acquisition metadata, typed cues, trust, review status, and failures into `src/features/real-talk/domain/transcript-source.ts`
-- [x] T024 Move the current `youtube-transcript` implementation behind the explicitly experimental adapter in `src/features/real-talk/server/transcript-sources/youtube-experimental.ts`
-- [x] T025 Add and regression-test a fail-closed policy in `src/features/real-talk/server/transcript-source-policy.ts`; production always rejects the experimental adapter and non-production requires explicit opt-in
-- [x] T026 Extend Real Talk types with environment, communication events, transfer, warnings, and review state in `src/types/real-talk.ts`
-- [x] T027 Add app-level Supabase table types without editing generated types in `src/types/app-database.ts`
-- [x] T028 Update the server Supabase client to use app-level database types in `src/lib/supabase/server.ts`
-- [x] T029 Extract transcript acquisition, metadata, window selection, Gemini generation, schema validation, evidence validation, and escaped prompt framing into bounded Real Talk domain and server modules
-
-**Checkpoint**: Typed input, typed output, evidence validation, explicit transcript-source policy, and bounded untrusted prompt data are implemented and covered by the targeted technical suite.
-
----
-
-## Phase 3: User Story 1 — Generate a private lesson draft (Priority: P1) 🎯 MVP
-
-**Goal**: An authenticated editor receives a complete private AI draft from supported source evidence.
-
-**Independent Test**: A mocked valid source and Gemini response produce one complete private draft; anonymous access and provider failures produce no draft.
-
-### Tests for User Story 1
-
-- [x] T030 [P] [US1] Add mocked happy-path application orchestration test in `src/__tests__/real-talk-generation-action.test.ts`
-- [x] T031 [P] [US1] Prove anonymous generation stops before rate limit, transcript, Gemini, or persistence work
-- [x] T032 [P] [US1] Cover Gemini 429, malformed JSON, missing candidate, network failure, and persistence failure propagation; live provider behavior remains T082
-- [x] T033 [P] [US1] Add `src/__fixtures__/real-talk/long-interaction-transcript.ts` and verify deterministic selection of a deep interaction-rich window
-
-### Implementation for User Story 1
-
-- [x] T034 [US1] Require Supabase authentication before generation work in `src/app/actions/real-talk.ts`
-- [x] T035 [US1] Validate level and canonical HTTPS YouTube watch, mobile, shorts, embed, or `youtu.be` URLs before auth; reject raw IDs, HTTP, invalid IDs, relative strings, and lookalike hosts through `src/features/real-talk/domain/youtube-source.ts`
-- [x] T036 [US1] Bound and sanitize source cues in `src/features/real-talk/server/transcript-sources/youtube-experimental.ts`
-- [x] T037 [US1] Select an interaction-rich source window in `src/features/real-talk/server/private-lesson-compiler.ts`
-- [x] T038 [US1] Fetch honest source metadata through YouTube oEmbed in `src/features/real-talk/server/private-lesson-compiler.ts`
-- [x] T039 [US1] Request structured environment-first output from Gemini in `src/features/real-talk/server/private-lesson-compiler.ts`
-- [x] T040 [US1] Record the actual successful Gemini model in `src/features/real-talk/server/private-lesson-compiler.ts`
-- [x] T041 [US1] Define stable machine-readable result codes in `src/features/real-talk/domain/generation-result.ts` and propagate them through compiler, action, and UI
-- [x] T042 [US1] Remove silent preview fallback; required database failure returns `DRAFT_PERSISTENCE_FAILED`
-- [x] T043 [US1] Move persistence into `src/features/real-talk/server/draft-repository.ts` and use deterministic owner + YouTube + level identity
-
-**Checkpoint**: US1 mocked orchestration, source selection, URL validation, failure semantics, and technical execution pass. Live Gemini remains open; hosted database migration evidence is recorded separately.
+**Checkpoint**: Typed contracts exist for request, source, model, persistence, and
+result semantics. External evidence is still required.
 
 ---
 
-## Phase 4: User Story 2 — Reject unsupported AI content (Priority: P1)
+## Phase 3: User Story 1 — Generate a private lesson draft
 
-**Goal**: No unsupported model language or reference reaches persistence.
+**Goal**: An authenticated editor can generate and save one owner-private lesson
+draft from bounded source evidence.
 
-**Independent Test**: Invalid controlled fixtures fail with stable evidence codes and no database writes.
+**Independent test**: A controlled source fixture and mocked provider produce one
+complete private `ai_draft` with environment, events, transfer, warnings, source,
+and actual model identifier.
 
-### Tests for User Story 2
+- [x] T016 [US1] Validate URL and requested level before authentication or
+  external work
+- [x] T017 [US1] Authenticate before rate limit, transcript, Gemini, or
+  persistence
+- [x] T018 [US1] Enforce rate-limit failure semantics and bounded retry guidance
+- [x] T019 [US1] Select one deterministic interaction-rich source window
+- [x] T020 [US1] Fetch YouTube oEmbed metadata with honest fallbacks
+- [x] T021 [US1] Request strict structured Gemini output and record the model that
+  succeeds
+- [x] T022 [US1] Persist one current private draft per owner, source, and level
+- [x] T023 [US1] Ensure persistence failure is returned as failure, not preview or
+  saved success
+- [x] T024 [US1] Reload environment, events, transfer, warnings, model, status, and
+  source window from persisted rows
+- [x] T025 [US1] Keep the public catalog query limited to public rows
 
-- [x] T044 [P] [US2] Complete the eleven-code evidence rejection matrix and duplicate-code assertion
-- [x] T045 [P] [US2] Assert no persistence occurs after model-output, schema, or source-evidence failure
-- [x] T046 [P] [US2] Assert prompt-injection-like source data stays inside the escaped prompt boundary and cannot reach persistence after compiler rejection
-
-### Implementation for User Story 2
-
-- [x] T047 [US2] Parse model output with the runtime Zod schema
-- [x] T048 [US2] Validate transcript text against selected source evidence
-- [x] T049 [US2] Validate vocabulary, fill answers, speaking drills, transfer language, timestamps, speakers, and segment references
-- [x] T050 [US2] Encode untrusted metadata and captions as escaped JSON or JSONL inside one bounded source section with governing instructions before and after it
-- [x] T051 [US2] Surface unresolved AI and transcript-source review warnings through the compiler, action, persistence, and editor UI
-- [x] T052 [US2] Add conservative evidence normalization for contractions, punctuation, selected HTML entities, and caption artifacts
-
-**Checkpoint**: US2 technical fixtures and no-write assertions pass. Live adversarial Gemini behavior and human evidence review remain open.
-
----
-
-## Phase 5: User Story 3 — Keep drafts private and reviewable (Priority: P1)
-
-**Goal**: Persist the full draft under owner-only RLS and visibly retain uncertainty.
-
-**Independent Test**: owner A can reload their draft; owner B and anonymous users cannot access or publish it.
-
-### Tests for User Story 3
-
-- [x] T053 [P] [US3] Add migration assertions for private defaults, lifecycle constraints, canonical policy reset, owner-only reads and writes, publication denial, and review-state denial
-- [ ] T054 [P] [US3] Run the two-user and anonymous RLS integration scaffold against an authorized migrated non-production Supabase project and record exact evidence
-- [x] T055 [P] [US3] Extract row mapping and cover environment, events, transfer, warnings, model, status, segment, and safe fallbacks in `src/__tests__/real-talk-draft-mapping.test.ts`
-
-### Implementation for User Story 3
-
-- [x] T056 [US3] Add private-draft fields, explicitly enable RLS, remove previous permissive policies, and install one canonical owner-private policy set
-- [x] T057 [US3] Return existing user-created rows to private `ai_draft` state and clear unverified review metadata
-- [x] T058 [US3] Persist environment, communication events, transfer, warnings, model, and review state
-- [x] T059 [US3] Reload private lesson drafts through the isolated mapping boundary
-- [x] T060 [US3] Exclude private drafts from public catalog queries
-- [x] T061 [US3] Display private AI-draft status, stable failures, retry guidance, evidence codes, and review warnings
-- [x] T062 [US3] Apply the migrations in the authorized connected AtoEnglish Supabase project and record hosted schema, rollback-only database-level RLS, cleanup, Advisor, and migration-history evidence in `hosted-database-verification.md`
-- [ ] T063 [US3] Regenerate `src/types/supabase.ts` after migration and remove temporary types only when equivalent coverage is proven; hosted generation and the reconciled Real Talk fragment are recorded, but full-file local replacement remains open
-- [ ] T064 [US3] Add owner draft list or delete UI only if required to verify retention; otherwise record the decision for a follow-up spec
-
-**Checkpoint**: Hosted migrations and database-level owner/anonymous RLS semantics are observed. The Vitest/PostgREST signed-session scaffold, repeated generation through the real server action, partial-write reconciliation, and full generated-type replacement remain open.
+**Checkpoint**: Mocked application behavior is implemented. Real provider and
+hosted persistence evidence remain separate gates.
 
 ---
 
-## Phase 6: User Story 4 — Preview a natural lesson loop (Priority: P2)
+## Phase 4: User Story 2 — Reject unsupported AI content
 
-**Goal**: Evaluate pedagogical coherence through environment, retrieval, speaking, and transfer preview.
+**Goal**: Model output can become a draft only when structure and source evidence
+are valid.
 
-**Independent Test**: Preview cannot complete through recognition tasks alone and makes no unsupported speech claim.
+**Independent test**: Invalid structure, invented text, invalid timing, unknown
+speakers, unknown segment references, unsupported answers, and prompt-like
+caption instructions all fail before persistence.
 
-### Tests for User Story 4
+- [x] T026 [US2] Generate the provider schema from the Zod contract
+- [x] T027 [US2] Sanitize request-time JSON Schema to the Gemini-supported subset
+  while preserving full Zod runtime validation
+- [x] T028 [US2] Reject unknown top-level model fields rather than silently
+  stripping them
+- [x] T029 [US2] Implement the complete source-evidence rejection matrix
+- [x] T030 [US2] Deduplicate evidence failure codes
+- [x] T031 [US2] Normalize conservative punctuation, contractions, entities, and
+  caption artifacts
+- [x] T032 [US2] Encode metadata as escaped JSON and cues as escaped JSONL inside
+  one untrusted-data boundary
+- [x] T033 [US2] Repeat governing instructions after the untrusted source block
+- [x] T034 [US2] Prevent prompt-injection-like source failures from reaching
+  persistence
+- [x] T035 [US2] Add controlled long-source and adversarial-caption fixtures
 
-- [x] T065 [P] [US4] Cover environment-first order, learner role, partner role, real-world goal, and AI-draft status
-- [x] T066 [P] [US4] Prove transfer and completion stay unavailable until every source-backed phrase is acknowledged as spoken
-- [x] T067 [P] [US4] Prove transfer remains disabled until a minimum response and independent-attempt confirmation exist; completion fires only from the final action
-- [x] T068 [P] [US4] Assert explicit no-audio-scoring disclosure and absence of unsupported pronunciation, mastery, automatic-SRS, or AI-voice-score claims
+**Checkpoint**: Deterministic schema and evidence gates exist and are exercised by
+unit/contract tests. Live adversarial provider behavior remains T082.
 
-### Implementation for User Story 4
+---
 
-- [x] T069 [US4] Surface environment, learner role, partner role, and goal before lesson phases
-- [x] T070 [US4] Replace the mock microphone control with honest speak-and-confirm practice
-- [x] T071 [US4] Require source-backed phrase production acknowledgements
-- [x] T072 [US4] Require a changed-context transfer attempt
-- [x] T073 [US4] Replace mastery and automatic-SRS completion copy with immediate-practice evidence
-- [ ] T074 [US4] Run desktop and mobile Playwright preview flow against a controlled persisted draft
-- [ ] T075 [US4] Manually review one valid draft for situation fidelity, source language, speaker uncertainty, Vietnamese guidance, and transfer coherence
+## Phase 5: User Story 3 — Keep drafts private and reviewable
 
-**Checkpoint**: US4 component suites pass. Persisted-draft browser preview and human pedagogical review remain open.
+**Goal**: Generated drafts remain owner-private and cannot be elevated to public
+or approved state by an ordinary user.
+
+**Independent test**: Owner A can insert/reload a private draft; anonymous and
+owner B cannot read or mutate it; owner A cannot publish or approve it.
+
+- [x] T036 [US3] Create the Real Talk private-draft schema migration
+- [x] T037 [US3] Default generated videos to private and lessons to `ai_draft`
+- [x] T038 [US3] Repair legacy user-created rows back to private unreviewed state
+- [x] T039 [US3] Replace previous Real Talk policies with one canonical RLS set
+- [x] T040 [US3] Prevent ordinary users from publishing or elevating review state
+- [x] T041 [US3] Add owner-private draft repository and one-current-draft identity
+- [x] T042 [US3] Add row-to-domain reload mapping
+- [x] T043 [US3] Add migration contract tests
+- [x] T044 [US3] Add owner A, owner B, and anonymous PostgREST integration
+  scaffolding
+- [x] T045 [US3] Apply the authorized private-draft migrations to hosted Supabase
+  project `zpiwddskhduuykpxltun`
+- [x] T046 [US3] Run a rollback-only PostgreSQL role/JWT matrix and confirm cleanup
+- [x] T047 [US3] Run Supabase Security and Performance Advisors and address Real
+  Talk findings
+- [x] T048 [US3] Generate and reconcile the exact hosted Real Talk type fragment
+- [ ] T049 [US3] Replace the full local generated `src/types/supabase.ts` and prove
+  equivalence before removing the reconciliation fragment
+- [ ] T050 [US3] Run the signed-session PostgREST integration scaffold against the
+  authorized migrated project
+- [ ] T051 [US3] Verify repeated generation, reload, and partial-write recovery
+  through the real server action and hosted database
+- [ ] T052 [US3] Decide retention, owner deletion UX, partial-write reconciliation,
+  and immutable attempt history
+
+**Checkpoint**: Hosted database invariants have strong role-level evidence. The
+signed-session and real server-action paths remain open.
+
+---
+
+## Phase 5B: Transcript provenance boundary
+
+**Goal**: A future production-approved transcript cannot be created merely by
+self-labelling browser data as trusted.
+
+- [x] T053 Define typed rights basis and provenance metadata, including canonical
+  source, rights reference, server-derived submitter/reviewer identities, review
+  time, and SHA-256 cue digest
+- [x] T054 Validate executing adapter identity/trust, acquisition-mode rights
+  compatibility, language, independent review, safe references, canonical source,
+  and cue integrity before compilation
+- [x] T055 Thread transcript metadata through compiler, application service, and
+  private-draft repository
+- [x] T056 Add versioned migration
+  `20260803010500_real_talk_transcript_provenance.sql` for acquisition mode,
+  review status, metadata, digest, constraints, and trusted-write trigger
+- [x] T057 Prevent ordinary authenticated clients from self-approving transcript
+  provenance and make approved provenance immutable outside the trusted service
+  path
+- [x] T058 Add forged adapter, missing provenance, self-review, secret reference,
+  cue-tamper, and migration contract tests
+- [x] T059 Include provenance tests in the targeted Real Talk suite; Verify #139
+  observed 12 files and 102 tests on head
+  `0bf8a46c2c9dab498b9c4bd677cf8a6d0015a1b4`
+- [ ] T060 Obtain owner authorization, apply the provenance migration to hosted
+  Supabase, rerun advisors, regenerate full hosted types, and execute trusted
+  write/tamper verification
+- [ ] T061 Implement one actual trusted transcript ingestion/reviewer flow and run
+  one controlled rights-reviewed source through it
+
+**Checkpoint**: The code and migration contract are implemented and tested. No
+production adapter is approved, and the migration has not been applied hosted.
+
+---
+
+## Phase 6: User Story 4 — Preview a natural lesson loop
+
+**Goal**: The editor can inspect whether a private draft behaves like a natural,
+production-oriented lesson without unsupported learning claims.
+
+- [x] T062 [US4] Surface environment, learner role, partner role, and goal before
+  lesson phases
+- [x] T063 [US4] Replace the mock microphone control with honest speak-and-confirm
+  practice
+- [x] T064 [US4] Require source-backed phrase production acknowledgements
+- [x] T065 [US4] Require a changed-context transfer attempt
+- [x] T066 [US4] Replace mastery and automatic-SRS completion copy with
+  immediate-practice evidence
+- [ ] T067 [US4] Run desktop and mobile Playwright preview flow against a
+  controlled persisted draft
+- [ ] T068 [US4] Manually review one valid draft for situation fidelity, source
+  language, speaker uncertainty, Vietnamese guidance, and transfer coherence
+
+**Checkpoint**: Component suites pass. Persisted-draft browser preview and human
+pedagogical review remain open.
 
 ---
 
 ## Phase 7: Cross-cutting verification and convergence
 
-**Purpose**: Prove the exact final state; no unchecked item may be hidden by a green partial check.
+**Purpose**: Prove the exact final state; no unchecked item may be hidden by a
+green partial check.
 
-- [x] T076 Run `npm run lint`; passed on implementation-and-evidence head `26b4ef00d4385ca9b59d03922f0b82cf3da83f01` in Verify run #118 and on subsequent task-ledger-only heads through run #124
-- [x] T077 Run `npx tsc --noEmit`; passed through Verify run #124
-- [x] T078 Run `npm run test`; 37 files and 355 tests passed through Verify run #124
-- [x] T079 Run `npm run test:content-standard`; 1 file and 50 tests passed through Verify run #124
-- [x] T080 Run `npm run build`; Next.js 16.2.9 production compilation and 89/89 page generation passed without deployment through Verify run #124
-- [x] T081 Run the targeted Real Talk contract, policy, provider, orchestration, result, URL, migration, mapping, and preview suites; 11 files and 91 tests passed through Verify run #124
-- [ ] T082 Run non-production live Gemini happy path, invalid output, 429, provider-failure, adversarial prompt-source, and persistence-failure checks; the live workflow stopped before provider work because `GEMINI_API_KEY` is absent from GitHub Actions secrets
-- [x] T083 Verify live YouTube oEmbed metadata and official IFrame playback on desktop and Android-mobile; run #1 retained transient mobile error 150 and run #2 passed the same controlled source, with evidence in `live-provider-verification.md`
-- [ ] T084 Approve at least one production transcript acquisition mode or retain the explicit merge blocker; the experimental adapter is isolated and fail-closed in production
-- [ ] T085 Run the requirements checklist and check only observed items
-- [ ] T086 Run final cross-artifact analysis and remove spec, plan, task, and evidence inconsistencies
-- [ ] T087 Run convergence review: map every functional requirement and success criterion to implementation and observed evidence
-- [x] T088 Update PR #54 with the successful Verify run on the current branch head, commands, counts, hosted database evidence, live YouTube evidence, blocked Gemini evidence, warnings, and remaining blockers
-- [ ] T089 Obtain owner acceptance; do not merge or deploy automatically
+- [x] T069 Run `npm run lint`; passed in Verify #139 on head
+  `0bf8a46c2c9dab498b9c4bd677cf8a6d0015a1b4`
+- [x] T070 Run `npx tsc --noEmit`; passed in Verify #139
+- [x] T071 Run `npm run test`; 38 files and 366 tests passed in Verify #139
+- [x] T072 Run `npm run test:content-standard`; 1 file and 50 tests passed in
+  Verify #139
+- [x] T073 Run `npm run build`; Next.js 16.2.9 compilation and 89/89 page
+  generation passed without deployment in Verify #139
+- [x] T074 Run the targeted Real Talk contract, policy, provenance, provider,
+  orchestration, result, migration, mapping, and preview suites; 12 files and 102
+  tests passed in Verify #139
+- [ ] T075 Run non-production live Gemini happy path, invalid output, 429,
+  provider-failure, adversarial source, and persistence-failure checks; the live
+  workflow stopped before provider work because `GEMINI_API_KEY` is absent from
+  GitHub Actions secrets
+- [x] T076 Verify live YouTube oEmbed metadata and official IFrame playback on
+  desktop and Android-mobile; run #1 retained transient mobile error 150 and run
+  #2 passed the same controlled source
+- [x] T077 Resolve the production transcript policy decision by retaining the
+  explicit merge blocker until a trusted provenance adapter is implemented and
+  verified
+- [x] T078 Run the requirements checklist review with observed evidence classes
+- [x] T079 Run final cross-artifact analysis
+- [x] T080 Run requirement-to-evidence convergence review; result remains NOT
+  CONVERGED
+- [x] T081 Update PR #54 with exact-head technical, hosted database, live YouTube,
+  blocked Gemini, provenance implementation, and remaining-blocker evidence
+- [ ] T082 Obtain owner acceptance; do not merge or deploy automatically
 
-## Dependencies & execution order
+## Dependencies and execution order
 
-- Phase 1 establishes governance.
-- Phase 2 blocks all product stories.
-- US1 and US2 converge compiler contracts before persistence or preview is trusted.
-- US3 depends on valid compiler output and database design.
-- US4 depends on the lesson draft contract; browser proof depends on a controlled persisted draft.
-- Phase 7 separates technical, provider, database, browser, and human evidence.
+- Governance and foundational contracts precede all stories.
+- Compiler/evidence gates precede persistence.
+- Private-database safety precedes browser preview.
+- Provenance schema and trusted-write enforcement precede any production transcript
+  adapter.
+- Hosted migration application requires explicit owner authorization.
+- Provider, database, browser, and human evidence cannot substitute for one
+  another.
 
-## Implementation strategy
-
-The bounded MVP remains:
+## Current convergence decision
 
 ```text
 authenticated request
@@ -224,18 +280,17 @@ authenticated request
 → changed-context transfer
 ```
 
-Stop after spec 001 convergence. Publication belongs to spec 002.
+Current result:
 
-## Notes
-
-- `verification.md`, `hosted-database-verification.md`, and `live-provider-verification.md` record exact technical and external evidence, failures, and non-blocking warnings.
-- Real Talk domain, server, URL, provider, and database contract suites run in Vitest; component suites run in jsdom; live RLS and provider/browser evidence remain separately classified.
-- The RLS migration removes previous policies because PostgreSQL combines permissive policies with OR.
-- Untrusted metadata and captions are escaped data inside one prompt boundary; this is hardening, not proof of universal prompt-injection immunity.
-- `REAL_TALK_ALLOW_EXPERIMENTAL_TRANSCRIPTS=true` is allowed only in development or test; production rejects the experimental adapter regardless of the flag.
-- Repeated generation updates one current draft per owner + YouTube source + level; immutable attempt history is deferred.
-- A persistence failure is never a successful preview.
-- T076–T081 are technical evidence only. They do not satisfy T054, T063, T074, T075, T082, or T084.
-- Do not mark external API tasks complete from mocked results.
-- Do not mark human review complete from metadata or model output alone.
-- Do not create spec 002 implementation while spec 001 still has critical open evidence.
+```text
+Technical checks:       PASS on Verify #139
+Provenance code/tests:  PASS
+Hosted provenance DDL: NOT APPLIED
+Production adapter:     NOT IMPLEMENTED
+Live Gemini:            BLOCKED
+Persisted browser flow: NOT RUN
+Human review:           NOT RUN
+Convergence:            FAIL / NOT CONVERGED
+Merge:                  DO NOT MERGE
+Deployment:             DO NOT DEPLOY
+```
