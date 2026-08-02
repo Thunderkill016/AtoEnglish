@@ -49,7 +49,7 @@ const nextConfig = {
       "frame-src https://www.youtube-nocookie.com; ",
       "font-src 'self' data: https://fonts.gstatic.com; ",
       "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://*.sentry.io https://*.upstash.io https://vitals.vercel-insights.com; ",
-      "media-src 'self' blob: data:; ",
+      "media-src 'self' blob: data: https://upload.wikimedia.org; ",
       "object-src 'none'; ",
       "worker-src 'self' blob:; ",
       "form-action 'self'; ",
