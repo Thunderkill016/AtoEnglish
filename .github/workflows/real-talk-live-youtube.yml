@@ -1,0 +1,46 @@
+name: Real Talk Live YouTube
+
+on:
+  workflow_dispatch:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+      - .github/live-verification/real-talk-youtube.trigger
+
+concurrency:
+  group: real-talk-live-youtube-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  live-youtube:
+    name: oEmbed and IFrame playback probes
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      CI: true
+      HUSKY: 0
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm install --no-audit --prefer-offline
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Run live YouTube probes
+        run: npm run test:real-talk:youtube-live
