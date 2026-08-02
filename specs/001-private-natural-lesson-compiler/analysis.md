@@ -27,12 +27,19 @@ unofficial YouTube adapter is isolated, disabled by default, allowed only by
 explicit non-production opt-in, and rejected in production regardless of the
 flag.
 
-The generation result contract is now discriminated and machine-readable.
-Compiler, action, repository, and editor UI use the same stable failure codes.
-Persistence is no longer allowed to silently downgrade to a successful in-memory
+The generation result contract is discriminated and machine-readable. Compiler,
+application orchestration, action, repository, and editor UI use the same stable
+failure codes. Persistence cannot silently downgrade to a successful in-memory
 preview. A successful response means both required draft writes completed.
 Repeated generation uses one deterministic current draft per owner, YouTube
 source, and requested level rather than an AI-title-based slug.
+
+Generation ordering now lives in a dependency-injected application service.
+Mocked test artifacts cover the happy path, invalid input, auth-before-rate/provider
+work, rate limiting, model failure propagation, evidence no-write behavior,
+persistence failure, and bounded unexpected errors. These artifacts have not run
+on the exact current head and do not replace direct Gemini-adapter or database
+failure tests.
 
 The feature remains sufficiently specified for bounded implementation and
 testing. It is not ready for convergence or production because no production
@@ -44,10 +51,10 @@ provider, and human evidence remains unchecked.
 | Principle | Status | Evidence / gap |
 |---|---|---|
 | Natural Communication First | Aligned | Environment, roles, practical goal, communication events, and transfer are required across spec, schema, persistence, and preview |
-| Evidence-Bound Generation | Partially aligned | Zod, source checks, stable evidence failures, adapter metadata, and runtime policy exist; full fixtures, approved production source, and human verification remain open |
+| Evidence-Bound Generation | Partially aligned | Zod, source checks, stable evidence failures, adapter metadata, runtime policy, and no-write orchestration artifacts exist; full fixtures, approved production source, and human verification remain open |
 | Transfer Before Completion | Aligned in code, unverified | Preview implementation requires a transfer response; component/browser tests remain open |
 | Rights, Privacy, Safety | Partially aligned | Official playback, explicit persistence failure, private RLS design, and production transcript fail-closed policy exist; production acquisition and migration proof remain open |
-| Small Independent Delivery | Aligned | Roadmap separates publication and later capabilities; compiler and repository boundaries were extracted without broad architecture expansion |
+| Small Independent Delivery | Aligned | Roadmap separates publication and later capabilities; compiler, application orchestration, and repository boundaries were extracted without broad architecture expansion |
 | Measurable Evidence | Aligned in requirements, unverified | Stable result codes, test artifacts, success criteria, and exact-head checks exist; observed final results are absent |
 
 No constitution violation has been approved as an exception.
@@ -58,6 +65,7 @@ No constitution violation has been approved as an exception.
 
 - authenticated generation gate;
 - validated URL and level;
+- dependency-injected application orchestration with explicit ordering;
 - stable `GenerationFailureCode` union and discriminated result contract;
 - retry guidance and deduplicated evidence-failure payloads;
 - editor-facing failure code, retry, and evidence display;
@@ -89,7 +97,7 @@ No constitution violation has been approved as an exception.
 - no fabricated microphone score or mastery copy.
 
 These are implementation observations only. They are not marked as technically
-verified unless the corresponding tasks are checked from an actual run.
+verified unless the corresponding verification tasks have an observed result.
 
 ### Requirements with incomplete implementation or evidence
 
@@ -102,17 +110,21 @@ verified unless the corresponding tasks are checked from an actual run.
 
 2. **FR-019 and failure contract — Execution proof**
    - Stable external codes and explicit persistence semantics are implemented.
-   - Result-code and deterministic-identity unit tests exist but have not been
-     executed on the exact final head.
-   - Auth ordering, provider failures, model 429/invalid output, no-persistence
-     after evidence failure, and controlled database failure tests remain missing.
-   - T030–T032, T045, T076–T082 remain blocking.
+   - Mocked application tests cover auth ordering, rate limiting, model failure
+     propagation, evidence no-write, persistence failure, and bounded internal
+     errors.
+   - The tests have not run on the exact final head.
+   - Raw Gemini HTTP/JSON mapping and controlled database failure behavior still
+     require provider/integration evidence.
+   - T076–T082 remain blocking.
 
 3. **FR-024 — Required tests**
-   - Initial domain, transcript policy, result-code, and draft-identity tests exist.
-   - Action, auth-ordering, provider failure, RLS, mapping, prompt-injection,
-     component, and browser tests remain missing.
-   - Tasks T013–T019, T030–T033, T044–T046, T052–T055, and T065–T068 remain open.
+   - Domain, transcript policy, result-code, draft-identity, and application
+     orchestration test artifacts exist.
+   - Invalid-schema/evidence matrix, prompt-injection behavior, long-source
+     integration, RLS, mapping, component, and browser coverage remains incomplete.
+   - Tasks T013, T016–T017, T019, T033, T044, T046, T052–T055, and T065–T068
+     remain open.
 
 4. **Persistence schema proof**
    - A repository, migration, deterministic identity, and app-level table types
@@ -131,13 +143,13 @@ verified unless the corresponding tasks are checked from an actual run.
 
 | Criterion | Planned evidence | Current result |
 |---|---|---|
-| SC-001 authenticated external calls | mocked action test with call spies | Not run / test missing |
+| SC-001 authenticated external calls | mocked application test with call spies | Artifact exists; not run on exact head |
 | SC-002 all persisted drafts private | migration + repository assertion + RLS test | Designed; not observed |
 | SC-003 no draft in public catalog | catalog query test and two-user DB run | Code observed; not verified |
-| SC-004 reject unsupported content | domain fixture matrix and action no-write assertion | Partial tests only |
-| SC-005 valid fixture produces complete persisted draft | mocked action happy path | Missing |
+| SC-004 reject unsupported content | domain fixture matrix and application no-write assertion | No-write artifact exists; fixture matrix incomplete and unexecuted |
+| SC-005 valid fixture produces complete persisted draft | mocked application happy path | Artifact exists; not run on exact head |
 | SC-006 cross-user access denied | non-production RLS integration | Not run |
-| SC-007 reload preserves fields and repeated generation updates same draft | mapping/repository test + DB reload | Identity unit test exists; DB behavior not verified |
+| SC-007 reload preserves fields and repeated generation updates same draft | mapping/repository test + DB reload | Identity unit artifact exists; DB behavior not verified |
 | SC-008 transfer required | component/browser test | Code observed; not verified |
 | SC-009 exact-head checks pass | lint, tsc, tests, content, build | Not run on latest head |
 | SC-010 review can inspect provenance/warnings/failures | manual draft and failure inspection | UI/code exists; manual review not run |
@@ -168,15 +180,23 @@ commit.
   work.
 - Production always rejects it even when the environment flag is set.
 - The server action no longer accesses the unofficial package directly.
-
-### Resolved in this iteration
-
 - Stable machine-readable external generation failure codes.
 - Retry and evidence-failure response shape.
 - Persistence failure is a failure, not a warning or preview success.
 - One current draft per owner, source, and level.
 - Persistence identity does not depend on model-generated titles.
 - Repeated generation updates the current draft; attempt history is deferred.
+
+### Resolved in this iteration
+
+- Generation ordering is isolated in
+  `src/features/real-talk/application/generate-private-lesson.ts`.
+- The Next.js server action supplies real auth, rate-limit, compiler, and
+  repository dependencies without owning orchestration semantics.
+- Mocked artifacts cover happy path, auth ordering, rate limiting, model failure
+  propagation, evidence no-write, persistence failure, and safe internal errors.
+- Real Talk domain/server tests are assigned to the Vitest Node project while
+  component tests remain in jsdom.
 
 ### Deferred correctly to spec 002
 
@@ -202,16 +222,18 @@ These deferred decisions do not belong in spec 001 implementation.
   publication are the same entity.
 - Terms `source evidence`, `transcript evidence`, `ai_draft`, `review warning`,
   `communication event`, `transfer task`, `experimental_unofficial`,
-  `GenerationFailureCode`, `DRAFT_PERSISTENCE_FAILED`, and `current draft` are
-  consistent across active artifacts.
+  `GenerationFailureCode`, `DRAFT_PERSISTENCE_FAILED`, `current draft`, and
+  `application orchestration` are consistent across active artifacts.
 
 ## Task quality findings
 
 - Tasks are ordered by foundation and independently testable user story.
-- Checked implementation tasks are separated from unchecked verification tasks.
+- Checked implementation/test-artifact tasks are separated from unchecked
+  exact-head execution tasks.
 - Exact file paths are provided.
 - No task in spec 001 authorizes publication or later roadmap work.
-- T023–T025, T029, and T041–T043 match the implemented file boundaries.
+- T018, T023–T025, T029–T032, T041–T043, and T045 match the implemented file
+  boundaries and artifacts.
 - T064 is deliberately conditional and must not become scope expansion unless
   retention verification requires it.
 
@@ -225,14 +247,14 @@ These deferred decisions do not belong in spec 001 implementation.
 
 **Critical next tasks**:
 
-1. T030–T032 and T045: action/provider/persistence failure tests;
-2. T013, T016–T018, T044, T046, T052: complete schema/evidence/prompt fixture coverage;
+1. T013, T016–T017, T033, T044, T046, and T052: complete schema, evidence,
+   long-source, normalization, and prompt-injection fixture coverage;
+2. T076–T082: run exact-head checks and direct provider failure verification;
 3. at least one approved production transcript adapter or an explicit permanent
    non-production decision;
 4. authorized non-production migration, repeated-generation, partial-write, and
    RLS verification;
-5. exact-head repository checks;
-6. live Gemini, browser, and human review evidence.
+5. component/browser preview tests and human review evidence.
 
 Re-run this analysis after those tasks or any material spec/plan change. Final
 convergence requires an updated requirement-to-evidence table with actual results.
