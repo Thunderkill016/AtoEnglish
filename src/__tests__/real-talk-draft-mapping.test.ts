@@ -33,6 +33,14 @@ const videoRow: VideoRow = {
   ],
   created_by: "11111111-2222-4333-8444-555555555555",
   is_public: false,
+  transcript_acquisition_mode: "experimental_unofficial",
+  transcript_review_status: "unreviewed",
+  transcript_source_metadata: {
+    adapterId: "youtube-transcript-unofficial-v1",
+    acquisitionMode: "experimental_unofficial",
+    trust: "experimental",
+  },
+  transcript_cue_digest: null,
   created_at: "2026-08-02T12:00:00.000Z",
 };
 
@@ -89,11 +97,19 @@ const lessonRow: LessonRow = {
   pre_watch: {
     contextVi: "Bạn sẽ nghe hai người làm quen.",
     vocabulary: [],
-    prediction: { questionVi: "Họ làm gì?", options: ["Làm quen", "Gọi món"], correctIndex: 0 },
+    prediction: {
+      questionVi: "Họ làm gì?",
+      options: ["Làm quen", "Gọi món"],
+      correctIndex: 0,
+    },
     soundAlerts: [],
   },
   while_watch: {
-    gistQuestion: { questionVi: "Ý chính?", options: ["Làm quen", "Tranh luận"], correctIndex: 0 },
+    gistQuestion: {
+      questionVi: "Ý chính?",
+      options: ["Làm quen", "Tranh luận"],
+      correctIndex: 0,
+    },
     focusPoints: [],
     keyMoments: [],
   },
