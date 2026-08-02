@@ -32,8 +32,8 @@ description: "Dependency-ordered implementation and verification tasks for the p
 - [x] T007 [P] Define data model in `specs/001-private-natural-lesson-compiler/data-model.md`
 - [x] T008 [P] Define generation contract in `specs/001-private-natural-lesson-compiler/contracts/generation-contract.md`
 - [x] T009 [P] Add verification quickstart in `specs/001-private-natural-lesson-compiler/quickstart.md`
-- [ ] T010 Run a requirements clarification pass and resolve or explicitly defer all open decisions in `specs/001-private-natural-lesson-compiler/research.md`
-- [ ] T011 Run a cross-artifact analysis of constitution, spec, plan, data model, contract, and tasks; record corrections before further implementation
+- [x] T010 Run a requirements clarification pass and resolve or explicitly defer all open decisions in `specs/001-private-natural-lesson-compiler/research.md`
+- [x] T011 Run a cross-artifact analysis and record findings in `specs/001-private-natural-lesson-compiler/analysis.md`
 
 **Checkpoint**: Product direction is governed by Spec Kit artifacts; implementation may proceed only inside spec 001.
 
