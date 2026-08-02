@@ -7,31 +7,21 @@ vi.mock("server-only", () => ({}));
 
 import type {
   TranscriptSourceAdapter,
+  TranscriptSourceMetadata,
   TranscriptSourceResult,
+  TranscriptSourceTrust,
 } from "@/features/real-talk/domain/transcript-source";
 import {
   acquireTranscriptForCompilation,
   resolveTranscriptSourcePolicy,
 } from "@/features/real-talk/server/transcript-source-policy";
+import { computeTranscriptCueDigest } from "@/features/real-talk/server/transcript-provenance";
 import { normalizeExperimentalYouTubeTranscriptItems } from "@/features/real-talk/server/transcript-sources/youtube-experimental";
 
-const sourceResult: TranscriptSourceResult = {
-  cues: [
-    { text: "Hi there.", offset: 1, duration: 1 },
-    { text: "How are you?", offset: 2, duration: 1 },
-  ],
-  metadata: {
-    adapterId: "fixture",
-    provider: "fixture",
-    acquisitionMode: "approved_provider_api",
-    trust: "approved",
-    language: "en",
-    reviewStatus: "machine_checked",
-    sourceReference: "fixture://transcript",
-    acquiredAt: "2026-08-02T00:00:00.000Z",
-    warnings: [],
-  },
-};
+const cues = [
+  { text: "Hi there.", offset: 1, duration: 1 },
+  { text: "How are you?", offset: 2, duration: 1 },
+];
 
 const request = {
   sourceId: "abcdefghijk",
@@ -39,16 +29,57 @@ const request = {
   requestedLanguage: "en",
 };
 
-function createAdapter(trust: "approved" | "experimental") {
-  const acquire = vi.fn(async () => ({
-    ...sourceResult,
-    metadata: { ...sourceResult.metadata, trust },
-  }));
-  const adapter = {
-    id: `${trust}-fixture`,
-    trust,
-    acquire,
-  } satisfies TranscriptSourceAdapter;
+function approvedMetadata(adapterId: string): TranscriptSourceMetadata {
+  return {
+    adapterId,
+    provider: "fixture",
+    acquisitionMode: "authorized_export",
+    trust: "approved",
+    language: "en",
+    reviewStatus: "human_verified",
+    sourceReference: "youtube-studio-export:caption-track-123",
+    acquiredAt: "2026-08-02T00:00:00.000Z",
+    warnings: [],
+    provenance: {
+      canonicalSourceUrl: request.sourceUrl,
+      rightsBasis: "authorized_editor_export",
+      rightsReference: "rights-review:real-talk-source-123",
+      submittedByUserId: "11111111-2222-4333-8444-555555555555",
+      reviewedByUserId: "99999999-8888-4777-8666-555555555555",
+      reviewedAt: "2026-08-02T01:00:00.000Z",
+      cueDigestSha256: computeTranscriptCueDigest(cues),
+    },
+  };
+}
+
+function createAdapter(
+  trust: TranscriptSourceTrust,
+  metadataOverride: Partial<TranscriptSourceMetadata> = {},
+  resultCues = cues,
+) {
+  const id = `${trust}-fixture`;
+  const metadata: TranscriptSourceMetadata =
+    trust === "approved"
+      ? { ...approvedMetadata(id), ...metadataOverride }
+      : {
+          adapterId: id,
+          provider: "fixture",
+          acquisitionMode: "experimental_unofficial",
+          trust: "experimental",
+          language: "en",
+          reviewStatus: "unreviewed",
+          sourceReference: request.sourceUrl,
+          acquiredAt: "2026-08-02T00:00:00.000Z",
+          warnings: ["Experimental fixture."],
+          ...metadataOverride,
+        };
+
+  const sourceResult: TranscriptSourceResult = {
+    cues: resultCues,
+    metadata,
+  };
+  const acquire = vi.fn(async () => sourceResult);
+  const adapter = { id, trust, acquire } satisfies TranscriptSourceAdapter;
   return { adapter, acquire };
 }
 
@@ -61,7 +92,7 @@ describe("Real Talk transcript source policy", () => {
     });
   });
 
-  it("allows an approved adapter in production", async () => {
+  it("allows a human-verified approved adapter with matching provenance in production", async () => {
     const { adapter, acquire } = createAdapter("approved");
 
     await expect(
@@ -70,8 +101,86 @@ describe("Real Talk transcript source policy", () => {
         request,
         environment: { NODE_ENV: "production" },
       }),
-    ).resolves.toMatchObject({ cues: sourceResult.cues });
+    ).resolves.toMatchObject({ cues });
     expect(acquire).toHaveBeenCalledOnce();
+  });
+
+  it("rejects an approved adapter that omits provenance", async () => {
+    const { adapter } = createAdapter("approved", { provenance: undefined });
+
+    await expect(
+      acquireTranscriptForCompilation({
+        adapter,
+        request,
+        environment: { NODE_ENV: "production" },
+      }),
+    ).rejects.toMatchObject({ code: "transcript_provenance_invalid" });
+  });
+
+  it("rejects adapter metadata that does not match the executing adapter", async () => {
+    const { adapter } = createAdapter("approved", {
+      adapterId: "forged-approved-adapter",
+    });
+
+    await expect(
+      acquireTranscriptForCompilation({
+        adapter,
+        request,
+        environment: { NODE_ENV: "production" },
+      }),
+    ).rejects.toMatchObject({ code: "transcript_provenance_invalid" });
+  });
+
+  it("rejects self-review for an approved transcript", async () => {
+    const metadata = approvedMetadata("approved-fixture");
+    const { adapter } = createAdapter("approved", {
+      provenance: {
+        ...metadata.provenance!,
+        reviewedByUserId: metadata.provenance!.submittedByUserId,
+      },
+    });
+
+    await expect(
+      acquireTranscriptForCompilation({
+        adapter,
+        request,
+        environment: { NODE_ENV: "production" },
+      }),
+    ).rejects.toMatchObject({ code: "transcript_provenance_invalid" });
+  });
+
+  it("rejects secret-bearing rights references", async () => {
+    const metadata = approvedMetadata("approved-fixture");
+    const { adapter } = createAdapter("approved", {
+      provenance: {
+        ...metadata.provenance!,
+        rightsReference: "https://example.com/review?access_token=secret",
+      },
+    });
+
+    await expect(
+      acquireTranscriptForCompilation({
+        adapter,
+        request,
+        environment: { NODE_ENV: "production" },
+      }),
+    ).rejects.toMatchObject({ code: "transcript_provenance_invalid" });
+  });
+
+  it("rejects cues changed after human review", async () => {
+    const changedCues = [
+      cues[0],
+      { ...cues[1], text: "This text changed after review." },
+    ];
+    const { adapter } = createAdapter("approved", {}, changedCues);
+
+    await expect(
+      acquireTranscriptForCompilation({
+        adapter,
+        request,
+        environment: { NODE_ENV: "production" },
+      }),
+    ).rejects.toMatchObject({ code: "transcript_integrity_mismatch" });
   });
 
   it("blocks an experimental adapter unless non-production explicitly opts in", async () => {
@@ -99,7 +208,7 @@ describe("Real Talk transcript source policy", () => {
           REAL_TALK_ALLOW_EXPERIMENTAL_TRANSCRIPTS: "true",
         },
       }),
-    ).resolves.toMatchObject({ cues: sourceResult.cues });
+    ).resolves.toMatchObject({ cues });
     expect(acquire).toHaveBeenCalledOnce();
   });
 
