@@ -38,6 +38,29 @@ export interface RealTalkTranscriptSegment {
   reviewStatus: TranscriptReviewStatus;
 }
 
+export interface RealTalkEnvironment {
+  id: string;
+  titleVi: string;
+  settingVi: string;
+  learnerRoleVi: string;
+  communicationGoalVi: string;
+}
+
+export type RealTalkCommunicationEventKind =
+  | "announce"
+  | "name_information"
+  | "give_time"
+  | "confirm_or_acknowledge"
+  | "repair";
+
+export interface RealTalkCommunicationEvent {
+  id: string;
+  kind: RealTalkCommunicationEventKind;
+  labelVi: string;
+  functionVi: string;
+  segmentIds: string[];
+}
+
 export interface RealTalkChunk {
   id: string;
   phrase: string;
@@ -61,6 +84,22 @@ export interface RealTalkCloze {
   evidenceSegmentId: string;
 }
 
+export interface RealTalkTransferIntent {
+  id: string;
+  labelVi: string;
+  /** One matching signal is enough for this intent. */
+  acceptedSignals: string[];
+}
+
+export interface RealTalkTransferTask {
+  situationVi: string;
+  promptVi: string;
+  changedContext: true;
+  minimumWords: number;
+  intents: RealTalkTransferIntent[];
+  exampleAnswer: string;
+}
+
 export interface RealTalkLesson {
   id: string;
   titleVi: string;
@@ -70,11 +109,13 @@ export interface RealTalkLesson {
   canDoVi: string;
   status: "internal_pilot" | "approved";
   source: RealTalkSource;
+  environment: RealTalkEnvironment;
   clip: {
     startSeconds: number;
     endSeconds: number;
   };
   transcript: RealTalkTranscriptSegment[];
+  communicationEvents: RealTalkCommunicationEvent[];
   gistQuestion: RealTalkQuestion;
   chunks: RealTalkChunk[];
   cloze: RealTalkCloze;
@@ -83,6 +124,14 @@ export interface RealTalkLesson {
     acceptedAnswers: string[];
     evidenceSegmentId: string;
   };
+  transfer: RealTalkTransferTask;
+}
+
+export interface RealTalkTransferEvaluation {
+  passed: boolean;
+  wordCount: number;
+  matchedIntentIds: string[];
+  missingIntentIds: string[];
 }
 
 function isHttpsUrl(value: string) {
@@ -98,7 +147,7 @@ export function normalizeRecallAnswer(value: string) {
     .normalize("NFKC")
     .toLowerCase()
     .replace(/[’‘]/g, "'")
-    .replace(/[.,!?;:]/g, "")
+    .replace(/[.,!?;:()[\]{}]/g, " ")
     .replace(/\s+/g, " ")
     .trim();
 }
@@ -111,6 +160,32 @@ export function recallAnswerMatches(
   return acceptedAnswers.some(
     (answer) => normalizeRecallAnswer(answer) === normalized,
   );
+}
+
+export function evaluateTransferResponse(
+  value: string,
+  task: RealTalkTransferTask,
+): RealTalkTransferEvaluation {
+  const normalized = normalizeRecallAnswer(value);
+  const words = normalized ? normalized.split(" ") : [];
+  const matchedIntentIds = task.intents
+    .filter((intent) =>
+      intent.acceptedSignals.some((signal) =>
+        normalized.includes(normalizeRecallAnswer(signal)),
+      ),
+    )
+    .map((intent) => intent.id);
+  const matched = new Set(matchedIntentIds);
+  const missingIntentIds = task.intents
+    .filter((intent) => !matched.has(intent.id))
+    .map((intent) => intent.id);
+
+  return {
+    passed: words.length >= task.minimumWords && missingIntentIds.length === 0,
+    wordCount: words.length,
+    matchedIntentIds,
+    missingIntentIds,
+  };
 }
 
 export function validateRealTalkLesson(lesson: RealTalkLesson): string[] {
@@ -135,10 +210,43 @@ export function validateRealTalkLesson(lesson: RealTalkLesson): string[] {
   if (!lesson.source.license.attribution.trim()) {
     failures.push("missing_attribution");
   }
-  if (lesson.status === "approved" && !lesson.source.transcript.reviewed) {
-    failures.push("approved_lesson_requires_reviewed_transcript");
+  if (
+    !lesson.environment.id.trim() ||
+    !lesson.environment.titleVi.trim() ||
+    !lesson.environment.settingVi.trim() ||
+    !lesson.environment.learnerRoleVi.trim() ||
+    !lesson.environment.communicationGoalVi.trim()
+  ) {
+    failures.push("incomplete_environment");
+  }
+  if (lesson.status === "approved") {
+    if (!lesson.source.license.publicCatalogAllowed) {
+      failures.push("approved_lesson_requires_catalog_permission");
+    }
+    if (!lesson.source.transcript.reviewed) {
+      failures.push("approved_lesson_requires_reviewed_transcript");
+    }
+    if (
+      lesson.transcript.some(
+        (segment) => segment.reviewStatus !== "human_verified",
+      )
+    ) {
+      failures.push("approved_lesson_requires_verified_segments");
+    }
   }
   if (lesson.transcript.length < 2) failures.push("transcript_too_short");
+  if (
+    lesson.transcript.some(
+      (segment) =>
+        !segment.id.trim() ||
+        !segment.speaker.trim() ||
+        !segment.sourceText.trim() ||
+        !segment.displayText.trim() ||
+        !segment.translationVi.trim(),
+    )
+  ) {
+    failures.push("incomplete_transcript_segment");
+  }
   if (
     lesson.transcript.some(
       (segment) =>
@@ -148,6 +256,14 @@ export function validateRealTalkLesson(lesson: RealTalkLesson): string[] {
     )
   ) {
     failures.push("transcript_outside_clip");
+  }
+  if (
+    lesson.transcript.some((segment, index) => {
+      const previous = lesson.transcript[index - 1];
+      return previous ? segment.startSeconds < previous.endSeconds : false;
+    })
+  ) {
+    failures.push("transcript_overlaps_or_unsorted");
   }
   if (lesson.chunks.length < 3 || lesson.chunks.length > 6) {
     failures.push("chunks_out_of_range");
@@ -160,6 +276,28 @@ export function validateRealTalkLesson(lesson: RealTalkLesson): string[] {
   ) {
     failures.push("activity_references_unknown_segment");
   }
+  if (lesson.communicationEvents.length < 3) {
+    failures.push("insufficient_communication_events");
+  }
+  if (
+    lesson.communicationEvents.some(
+      (event) =>
+        !event.id.trim() ||
+        !event.labelVi.trim() ||
+        !event.functionVi.trim() ||
+        event.segmentIds.length === 0 ||
+        event.segmentIds.some((id) => !segmentIds.has(id)),
+    )
+  ) {
+    failures.push("invalid_communication_event");
+  }
+  if (
+    !lesson.communicationEvents.some(
+      (event) => event.kind === "confirm_or_acknowledge" || event.kind === "repair",
+    )
+  ) {
+    failures.push("missing_interaction_event");
+  }
   if (
     lesson.gistQuestion.correctIndex < 0 ||
     lesson.gistQuestion.correctIndex >= lesson.gistQuestion.options.length
@@ -168,6 +306,22 @@ export function validateRealTalkLesson(lesson: RealTalkLesson): string[] {
   }
   if (lesson.recall.acceptedAnswers.length === 0) {
     failures.push("missing_recall_answer");
+  }
+  if (
+    !lesson.transfer.changedContext ||
+    !lesson.transfer.situationVi.trim() ||
+    !lesson.transfer.promptVi.trim() ||
+    lesson.transfer.minimumWords < 3 ||
+    lesson.transfer.intents.length < 2 ||
+    lesson.transfer.intents.some(
+      (intent) =>
+        !intent.id.trim() ||
+        !intent.labelVi.trim() ||
+        intent.acceptedSignals.length === 0 ||
+        intent.acceptedSignals.some((signal) => !signal.trim()),
+    )
+  ) {
+    failures.push("invalid_transfer_task");
   }
 
   return failures;
