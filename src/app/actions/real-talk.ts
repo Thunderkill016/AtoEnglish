@@ -2,167 +2,24 @@
 
 import { headers } from "next/headers";
 
-import { compilePrivateNaturalLesson } from "@/features/real-talk/server/private-lesson-compiler";
 import {
-  generateRealTalkInputSchema,
-  type GeneratedLessonDraft,
-} from "@/lib/real-talk/generation-contract";
+  generationFailure,
+  type GenerateLessonResult,
+} from "@/features/real-talk/domain/generation-result";
+import { persistOwnerPrivateDraft } from "@/features/real-talk/server/draft-repository";
+import { compilePrivateNaturalLesson } from "@/features/real-talk/server/private-lesson-compiler";
+import { generateRealTalkInputSchema } from "@/lib/real-talk/generation-contract";
 import { createRateLimiter } from "@/lib/security/rate-limit";
 import { createClient } from "@/lib/supabase/server";
 import type {
-  RealTalkGenerationMetadata,
   RealTalkLesson,
   RealTalkLevel,
   RealTalkVideo,
 } from "@/types/real-talk";
-import type { Json } from "@/types/supabase";
+
+export type { GenerateLessonResult } from "@/features/real-talk/domain/generation-result";
 
 const generateLimiter = createRateLimiter(5, 60 * 1000, "real-talk-generate");
-
-export interface GenerateLessonResult {
-  success: boolean;
-  video?: RealTalkVideo;
-  lesson?: RealTalkLesson;
-  persistence?: "preview_only" | "saved_private_draft";
-  warnings?: string[];
-  error?: string;
-}
-
-function buildLesson(
-  videoId: string,
-  draft: GeneratedLessonDraft,
-  generation: RealTalkGenerationMetadata,
-): RealTalkLesson {
-  return {
-    videoId,
-    title: draft.title,
-    titleVi: draft.titleVi,
-    level: draft.level,
-    estimatedMinutes: draft.estimatedMinutes,
-    canDoStatement: draft.canDoStatement,
-    canDoStatementVi: draft.canDoStatementVi,
-    transcript: draft.transcript,
-    preWatch: draft.preWatch,
-    whileWatch: draft.whileWatch,
-    postWatch: draft.postWatch,
-    environment: draft.environment,
-    communicationEvents: draft.communicationEvents,
-    transferTask: draft.transferTask,
-    generation,
-  };
-}
-
-async function persistOwnerPrivateDraft(params: {
-  video: RealTalkVideo;
-  draft: GeneratedLessonDraft;
-  model: string;
-  warnings: string[];
-  userId: string;
-}): Promise<{
-  persistence: "preview_only" | "saved_private_draft";
-  video: RealTalkVideo;
-  lesson: RealTalkLesson;
-}> {
-  const { video, draft, model, warnings, userId } = params;
-  const generatedAt = new Date().toISOString();
-  const previewGeneration: RealTalkGenerationMetadata = {
-    status: "ai_draft",
-    model,
-    generatedAt,
-    persistence: "preview_only",
-    warnings,
-  };
-
-  try {
-    const supabase = await createClient();
-    const privateSlug = `${video.id}-${userId.slice(0, 8)}`;
-    const privateVideo: RealTalkVideo = { ...video, id: privateSlug };
-
-    const { data: dbVideo, error: videoError } = await supabase
-      .from("real_talk_videos")
-      .upsert(
-        {
-          slug: privateSlug,
-          youtube_id: privateVideo.youtubeId,
-          title: privateVideo.title,
-          title_vi: privateVideo.titleVi,
-          channel_name: privateVideo.channelName,
-          channel_url: privateVideo.channelUrl,
-          thumbnail_url: privateVideo.thumbnailUrl,
-          duration_seconds: privateVideo.durationSeconds,
-          segment_start: privateVideo.segment.startSeconds,
-          segment_end: privateVideo.segment.endSeconds,
-          level: privateVideo.level,
-          topics: privateVideo.topics,
-          speaker_count: privateVideo.speakerCount,
-          speakers: privateVideo.speakers as unknown as Json,
-          created_by: userId,
-          is_public: false,
-        },
-        { onConflict: "slug" },
-      )
-      .select("id")
-      .single();
-
-    if (videoError || !dbVideo) {
-      throw videoError ?? new Error("Missing private video id");
-    }
-
-    const generation: RealTalkGenerationMetadata = {
-      ...previewGeneration,
-      persistence: "saved_private_draft",
-    };
-    const lesson = buildLesson(privateSlug, draft, generation);
-    const { error: lessonError } = await supabase
-      .from("real_talk_lessons")
-      .upsert(
-        {
-          video_id: dbVideo.id,
-          title: lesson.title,
-          title_vi: lesson.titleVi,
-          level: lesson.level,
-          estimated_minutes: lesson.estimatedMinutes,
-          can_do_statement: lesson.canDoStatement,
-          can_do_statement_vi: lesson.canDoStatementVi,
-          transcript: lesson.transcript as unknown as Json,
-          pre_watch: lesson.preWatch as unknown as Json,
-          while_watch: lesson.whileWatch as unknown as Json,
-          post_watch: lesson.postWatch as unknown as Json,
-          environment: lesson.environment as unknown as Json,
-          communication_events: lesson.communicationEvents as unknown as Json,
-          transfer_task: lesson.transferTask as unknown as Json,
-          generation_model: model,
-          generation_status: "ai_draft",
-          generation_warnings: warnings as unknown as Json,
-          reviewed_at: null,
-          reviewed_by: null,
-        },
-        { onConflict: "video_id" },
-      );
-
-    if (lessonError) throw lessonError;
-
-    return {
-      persistence: "saved_private_draft",
-      video: privateVideo,
-      lesson,
-    };
-  } catch (error) {
-    console.error("[Real Talk] Private draft persistence failed:", error);
-    const fallbackWarnings = [
-      ...warnings,
-      "Không lưu được bản nháp vào tài khoản; bản xem trước vẫn dùng được trong phiên hiện tại.",
-    ];
-    return {
-      persistence: "preview_only",
-      video,
-      lesson: buildLesson(video.id, draft, {
-        ...previewGeneration,
-        warnings: fallbackWarnings,
-      }),
-    };
-  }
-}
 
 export async function generateRealTalkLesson(
   youtubeUrl: string,
@@ -171,10 +28,10 @@ export async function generateRealTalkLesson(
   try {
     const input = generateRealTalkInputSchema.safeParse({ youtubeUrl, level });
     if (!input.success) {
-      return {
-        success: false,
-        error: "Link YouTube hoặc cấp độ không hợp lệ.",
-      };
+      return generationFailure(
+        "INVALID_INPUT",
+        "Link YouTube hoặc cấp độ không hợp lệ.",
+      );
     }
 
     const supabase = await createClient();
@@ -183,10 +40,10 @@ export async function generateRealTalkLesson(
       error: authError,
     } = await supabase.auth.getUser();
     if (authError || !user) {
-      return {
-        success: false,
-        error: "Bạn cần đăng nhập để tạo bài học bằng Gemini.",
-      };
+      return generationFailure(
+        "AUTH_REQUIRED",
+        "Bạn cần đăng nhập để tạo bài học bằng Gemini.",
+      );
     }
 
     const requestHeaders = await headers();
@@ -195,10 +52,16 @@ export async function generateRealTalkLesson(
       "127.0.0.1";
     const rateCheck = await generateLimiter.check(`${user.id}:${ip}`);
     if (!rateCheck.success) {
-      return {
-        success: false,
-        error: "Bạn đang tạo quá nhiều bài. Hãy thử lại sau một phút.",
-      };
+      return generationFailure(
+        "RATE_LIMITED",
+        "Bạn đang tạo quá nhiều bài. Hãy thử lại sau.",
+        {
+          retryAfterSeconds: Math.max(
+            1,
+            Math.ceil((rateCheck.resetTime - Date.now()) / 1000),
+          ),
+        },
+      );
     }
 
     const compiled = await compilePrivateNaturalLesson({
@@ -214,23 +77,39 @@ export async function generateRealTalkLesson(
       warnings: compiled.warnings,
       userId: user.id,
     });
+    if (!persisted.success) return persisted;
+
+    const warnings =
+      persisted.lesson.generation?.warnings ?? compiled.warnings;
 
     return {
       success: true,
+      status: "ai_draft",
+      persisted: true,
+      persistence: "saved_private_draft",
       video: persisted.video,
       lesson: persisted.lesson,
-      persistence: persisted.persistence,
-      warnings: persisted.lesson.generation?.warnings ?? compiled.warnings,
+      warnings,
+      source: {
+        provider: "youtube",
+        externalId: persisted.video.youtubeId,
+        watchUrl: persisted.video.source?.watchUrl ?? input.data.youtubeUrl,
+        embedUrl: `https://www.youtube.com/embed/${persisted.video.youtubeId}`,
+        selectedStartSeconds: persisted.video.segment.startSeconds,
+        selectedEndSeconds: persisted.video.segment.endSeconds,
+        acquisitionMode: compiled.transcriptMetadata.acquisitionMode,
+      },
+      generation: {
+        model: compiled.model,
+        warnings,
+      },
     };
-  } catch (error) {
-    console.error("[Real Talk] generateRealTalkLesson error:", error);
-    return {
-      success: false,
-      error:
-        error instanceof Error
-          ? `Lỗi tạo bài học: ${error.message}`
-          : "Đã xảy ra lỗi khi tạo bài học.",
-    };
+  } catch {
+    return generationFailure(
+      "INTERNAL_ERROR",
+      "Đã xảy ra lỗi nội bộ khi tạo bài học. Không có bản nháp nào được xác nhận là đã lưu.",
+      { retryAfterSeconds: 30 },
+    );
   }
 }
 
