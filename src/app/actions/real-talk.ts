@@ -385,6 +385,16 @@ export async function generateRealTalkLesson(
       };
     }
 
+    // Cap lesson segment to max 180 seconds (3 minutes) for optimal learner attention span
+    const MAX_SEGMENT_SECONDS = 180;
+    const trimmedTranscript = transcriptResult.transcript.filter(
+      (item) => item.offset <= MAX_SEGMENT_SECONDS,
+    );
+    const effectiveTranscript =
+      trimmedTranscript.length > 0
+        ? trimmedTranscript
+        : transcriptResult.transcript.slice(0, 40);
+
     // 4. Fetch video metadata via oEmbed (no API key needed)
     let videoTitle = "YouTube Video";
     let channelName = "Unknown Channel";
@@ -407,7 +417,7 @@ export async function generateRealTalkLesson(
 
     // 5. Generate lesson with AI
     const aiResult = await generateLessonWithAI(
-      transcriptResult.transcript,
+      effectiveTranscript,
       videoTitle,
       level,
     );
@@ -421,11 +431,13 @@ export async function generateRealTalkLesson(
     const data = aiResult.lessonData as Record<string, unknown>;
 
     // 6. Build video metadata
-    const transcript = transcriptResult.transcript;
-    const totalDuration = Math.ceil(
-      transcript[transcript.length - 1].offset +
-        transcript[transcript.length - 1].duration,
+    const fullDuration = Math.ceil(
+      transcriptResult.transcript[transcriptResult.transcript.length - 1]
+        .offset +
+        transcriptResult.transcript[transcriptResult.transcript.length - 1]
+          .duration,
     );
+    const segmentDuration = Math.min(fullDuration, MAX_SEGMENT_SECONDS);
 
     const slugId = videoTitle
       .toLowerCase()

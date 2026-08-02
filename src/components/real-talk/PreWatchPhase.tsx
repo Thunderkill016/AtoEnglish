@@ -92,24 +92,40 @@ export default function PreWatchPhase({
             className="space-y-6"
           >
             <div className="rounded-2xl border border-zinc-800/60 bg-zinc-900/60 overflow-hidden backdrop-blur-xl">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={video.thumbnailUrl}
-                alt={video.title}
-                className="w-full aspect-video object-cover"
-              />
-              <div className="p-6">
-                <h2 className="text-xl font-bold text-white mb-2">
+              {/* YouTube Warm-up Video Player */}
+              <div className="relative aspect-video bg-zinc-950">
+                <iframe
+                  src={`https://www.youtube.com/embed/${video.youtubeId}?start=${video.segment.startSeconds}&end=${video.segment.endSeconds}&autoplay=0&rel=0`}
+                  title={video.title}
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  className="w-full h-full border-0"
+                />
+              </div>
+              <div className="p-6 space-y-3">
+                <div className="flex items-center gap-2">
+                  <span className="px-2.5 py-1 rounded-md bg-teal-500/10 border border-teal-500/20 text-xs font-bold text-teal-400">
+                    🎬 Bước 1/4: Xem lướt qua video (Warm-up)
+                  </span>
+                </div>
+                <h2 className="text-xl font-bold text-white">
                   {video.titleVi}
                 </h2>
-                <p className="text-zinc-400">{content.contextVi}</p>
+                <p className="text-sm text-zinc-300 leading-relaxed">
+                  {content.contextVi}
+                </p>
+                <div className="p-3 rounded-xl bg-teal-500/5 border border-teal-500/10 text-xs text-teal-300">
+                  💡 <strong>Mẹo học:</strong> Bấm Play để xem lướt qua video 1
+                  lần (dài ~2-3 phút) để nắm bối cảnh trước khi học từ vựng!
+                </div>
               </div>
             </div>
             <button
               onClick={nextStep}
-              className="w-full py-4 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-bold flex items-center justify-center gap-2 transition-colors min-h-[44px]"
+              className="w-full py-4 rounded-xl bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-400 hover:to-emerald-400 text-white font-bold flex items-center justify-center gap-2 transition-all min-h-[44px] shadow-lg shadow-teal-900/30"
             >
-              Tiếp tục <ChevronRight size={20} />
+              Tiếp tục: Học từ vựng cốt lõi
+              <ChevronRight size={18} />
             </button>
           </motion.div>
         )}
