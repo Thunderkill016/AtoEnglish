@@ -51,7 +51,7 @@ description: "Dependency-ordered implementation and verification tasks for the p
 - [x] T015 [P] Add failing regression test for invented speaking language in `src/__tests__/real-talk-generation-contract.test.ts`
 - [ ] T016 [P] Add failing tests for invented fill answer, transfer language, timestamp, and unknown segment references in `src/__tests__/real-talk-generation-contract.test.ts`
 - [ ] T017 [P] Add failing prompt-injection caption fixture test in `src/__tests__/real-talk-generation-contract.test.ts`
-- [ ] T018 [P] Add server-action contract tests for auth-before-external-call and typed failure codes in a new `src/__tests__/real-talk-generation-action.test.ts`
+- [x] T018 [P] Add application/server-action contract tests for auth-before-external-call, invalid input, rate limiting, typed provider failures, and bounded internal errors in `src/__tests__/real-talk-generation-action.test.ts`; execution remains tracked by T081
 - [ ] T019 [P] Add database/RLS integration test scaffolding for two users in a new `src/__tests__/real-talk-draft-rls.integration.test.ts`
 
 ### Contract implementation
@@ -79,9 +79,9 @@ description: "Dependency-ordered implementation and verification tasks for the p
 
 ### Tests for User Story 1
 
-- [ ] T030 [P] [US1] Add mocked happy-path compiler test in `src/__tests__/real-talk-generation-action.test.ts`
-- [ ] T031 [P] [US1] Add anonymous rejection test proving transcript and Gemini adapters are not called in `src/__tests__/real-talk-generation-action.test.ts`
-- [ ] T032 [P] [US1] Add 429, invalid JSON, no-candidate, network-failure, and persistence-failure tests in `src/__tests__/real-talk-generation-action.test.ts`
+- [x] T030 [P] [US1] Add mocked happy-path application orchestration test in `src/__tests__/real-talk-generation-action.test.ts`
+- [x] T031 [P] [US1] Add anonymous rejection test proving rate limit, compiler/transcript/Gemini work, and persistence are not called in `src/__tests__/real-talk-generation-action.test.ts`
+- [x] T032 [P] [US1] Add mocked propagation cases for Gemini 429, malformed JSON, missing candidate, network failure, and persistence failure in `src/__tests__/real-talk-generation-action.test.ts`; direct provider mapping and execution remain required by T081–T082
 - [ ] T033 [P] [US1] Add long-transcript selection integration fixture in `src/__tests__/real-talk-generation-action.test.ts`
 
 ### Implementation for User Story 1
@@ -97,7 +97,7 @@ description: "Dependency-ordered implementation and verification tasks for the p
 - [x] T042 [US1] Remove silent preview fallback; required database failure now returns `DRAFT_PERSISTENCE_FAILED` from `src/features/real-talk/server/draft-repository.ts` and cannot render a saved draft in `src/app/(main)/real-talk/create/page.tsx`
 - [x] T043 [US1] Move persistence into `src/features/real-talk/server/draft-repository.ts` and use deterministic owner+YouTube+level identity from `src/features/real-talk/domain/draft-identity.ts`; repeated generation updates one current draft while different owners/levels remain separate
 
-**Checkpoint**: US1 implementation exists, but mocked action tests and exact-head execution remain required before it is independently demonstrated.
+**Checkpoint**: US1 implementation and mocked orchestration test artifacts exist, but exact-head execution and live provider verification remain required before the story is independently demonstrated.
 
 ---
 
@@ -110,7 +110,7 @@ description: "Dependency-ordered implementation and verification tasks for the p
 ### Tests for User Story 2
 
 - [ ] T044 [P] [US2] Complete evidence rejection matrix in `src/__tests__/real-talk-generation-contract.test.ts`
-- [ ] T045 [P] [US2] Assert no persistence occurs after schema or evidence failure in `src/__tests__/real-talk-generation-action.test.ts`
+- [x] T045 [P] [US2] Assert no persistence occurs after mocked model-output/schema or source-evidence failure in `src/__tests__/real-talk-generation-action.test.ts`; exact-head execution remains tracked by T081
 - [ ] T046 [P] [US2] Assert caption-contained instructions cannot change required output behavior in `src/__tests__/real-talk-generation-action.test.ts`
 
 ### Implementation for User Story 2
@@ -122,7 +122,7 @@ description: "Dependency-ordered implementation and verification tasks for the p
 - [x] T051 [US2] Surface unresolved AI and transcript-source review warnings from `src/features/real-talk/server/private-lesson-compiler.ts` through `src/app/actions/real-talk.ts`
 - [ ] T052 [US2] Add conservative normalization tests for contractions, punctuation, HTML entities, and caption artifacts in `src/__tests__/real-talk-generation-contract.test.ts`
 
-**Checkpoint**: US2 rejects unsupported content independently of database and preview concerns.
+**Checkpoint**: US2 rejection behavior exists in code and mocked orchestration artifacts, but complete evidence fixtures and exact-head execution remain required.
 
 ---
 
@@ -190,7 +190,7 @@ description: "Dependency-ordered implementation and verification tasks for the p
 - [ ] T078 Run `npm run test` against the exact final commit and record the result
 - [ ] T079 Run `npm run test:content-standard` against the exact final commit and record the result
 - [ ] T080 Run `npm run build` against the exact final commit and record the result
-- [ ] T081 Run targeted compiler, result-code, repository-identity, and preview tests against the exact final commit
+- [ ] T081 Run targeted compiler, transcript policy, orchestration, result-code, repository-identity, and preview tests against the exact final commit
 - [ ] T082 Run non-production live Gemini happy path, invalid output, 429, provider-failure, and persistence-failure checks
 - [ ] T083 Verify official source playback and oEmbed metadata on desktop and mobile
 - [ ] T084 Approve at least one production transcript acquisition mode or retain the explicit merge blocker; the experimental adapter is already isolated and fail-closed in production
@@ -251,6 +251,7 @@ Stop and verify this slice before expanding database or preview behavior.
 ## Notes
 
 - Checked code tasks do not imply verification passed.
+- Real Talk domain/server orchestration suites are assigned to the Vitest Node project; component `.tsx` suites remain in jsdom.
 - `REAL_TALK_ALLOW_EXPERIMENTAL_TRANSCRIPTS=true` is permitted only in development or test; production ignores the flag and rejects the experimental adapter.
 - Repeated generation updates one current draft per owner+YouTube+level; immutable attempt history is deferred.
 - A persistence failure is never a successful preview in spec 001.
