@@ -2,198 +2,195 @@
 
 **Updated:** 2026-08-02  
 **Owner:** Thunderkill016  
-**Primary product truth:** `docs/product/PRODUCT_TRUTH.md`  
-**Architecture direction:** `docs/product/YOUTUBE_TO_CURRICULUM.md`  
+**Product truth:** `docs/product/PRODUCT_TRUTH.md`  
+**Architecture:** `docs/product/NATURAL_COMMUNICATION_LEARNING_SYSTEM.md`  
 **Session continuity:** `PROJECT_MEMORY.md`
 
 ## North star
 
-Build a coherent path from near-zero English to practical high-A2/B1 communication by transforming authentic conversation clips into ordered comprehension, acquisition, and transfer experiences.
+Build a Vietnamese-first English-learning system that feels like participation in natural communication while using an invisible curriculum to create reliable progress from near-zero English to practical high-A2/B1 communication.
 
-The immediate goal is not a large catalog. It is to prove that multiple authentic clips can form one small curriculum whose lessons depend on and reinforce one another.
+The immediate goal is not a large catalog, a grammar syllabus, or a sophisticated scraper. It is to prove that one environment experience can transform natural interaction into comprehension, retrieval, multi-turn response, changed-context transfer, and delayed use.
 
 ## Current phase
 
-**Phase: encode the new canonical direction, then design and validate one seven-day A0 mini-curriculum.**
+**Phase: align the repository with environment-first learning, then define and validate the first environment experience.**
 
 Owner decision recorded on 2026-08-02:
 
-- YouTube and other authentic-media sources are language input, not the curriculum;
-- the curriculum unit is a short Communication Clip;
-- clips are ordered by communicative capability and prerequisites;
-- every full lesson treatment requires comprehension, acquisition, and transfer;
-- the old fixed 28-day workplace journey is no longer the canonical roadmap;
-- PR #46 is a technical proof of one authentic clip, not the final product shape;
-- useful mechanisms from PR #45 and the merged Gold Day 1 may be reused inside the new core.
-
-Do not create more standalone Real Talk lessons before the mini-curriculum and graph contracts exist.
+- the learner-facing product is a set of natural communication environments;
+- the curriculum remains structured but operates invisibly underneath;
+- source discovery begins from complete natural recordings and communication events;
+- source conversations must not be selected or arranged only to match a predetermined phrase lesson;
+- grammar, vocabulary, pronunciation, and discourse remain support for practical goals;
+- transfer and delayed varied performance remain required evidence;
+- naturalness and usage rights are separate gates.
 
 ## Ordered queue
 
-### 1. Persist the product decision and session continuity — current task
+### 1. Persist the environment-first product direction — current task
 
-Update repository-owned truth so a new AI session cannot mistakenly return to the old roadmap or treat PR #46 as the product endpoint.
-
-Required documents:
+PR #53 must align:
 
 - `PROJECT_MEMORY.md`;
 - `AGENTS.md`;
+- `AGENT_PLAN.md`;
+- `AGENT_BACKLOG.md`;
 - `docs/product/PRODUCT_TRUTH.md`;
+- `docs/product/NATURAL_COMMUNICATION_LEARNING_SYSTEM.md`;
 - this file;
 - `docs/product/DO_NOT_BUILD.md`;
-- `docs/product/YOUTUBE_TO_CURRICULUM.md`;
-- `AGENT_PLAN.md` and `AGENT_BACKLOG.md`.
+- previous architecture references where required.
 
-**Done when:** all high-authority documents agree on YouTube-to-Curriculum as the canonical direction and GitHub Verify passes on the exact documentation head.
+It must also record live branch/PR/SHA state and restore any temporarily retargeted PR to the correct stack.
 
-### 2. Define the bounded curriculum contracts
+**Done when:** all high-authority documents agree, PR #52 is restored to base PR #50 and draft, PR #53 records exact final head, and GitHub Verify passes on that head.
 
-Before implementing the learner-facing corpus, define the smallest stable contracts for:
+### 2. Define communication-event contracts
 
-- source, permission, attribution, and transcript provenance;
-- Communication Clip timestamps and speaker segments;
-- communicative functions;
-- prerequisite capabilities;
-- level-specific treatments;
-- comprehension, acquisition, and transfer activities;
-- advancement and delayed-retrieval evidence;
-- human review state.
+Create the smallest stable model for:
 
-Use a modular-monolith design. Do not build a generalized ingestion platform or database migration unless the pilot cannot function without it.
+- complete source recording;
+- participants and relationship;
+- setting, channel, and formality;
+- naturalness evidence;
+- communication-event boundaries;
+- observed interactional function;
+- transcript/source evidence;
+- suitability and rejection state;
+- rights and allowed uses;
+- human review.
 
-### 3. Build the reviewed A0 source corpus
+The contract must distinguish:
 
-Create a corpus of 20–30 short clips across multiple videos and speakers for five capabilities:
+```text
+what happened in the source
+from
+how AtoEnglish may teach from it
+```
 
-1. greet someone;
-2. say one's name;
-3. ask another person's name;
-4. say where one is from;
-5. ask someone to repeat.
+Do not implement a generalized ingestion platform or database migration unless the first environment cannot function without it.
 
-Each capability must appear in 3–5 clips from different speakers or contexts.
+### 3. Collect an environment-first corpus sample
 
-Source requirements:
+Review complete recordings across five environments:
 
-- documented permission, compatible license, or public-domain status;
-- exact source URL and timestamps;
+1. meet someone new;
+2. buy or order something;
+3. find a place;
+4. recover from a listening failure;
+5. talk briefly about oneself.
+
+Do not begin by searching for target sentences. Review the recording first, then annotate all useful events that occur.
+
+Per source/event record:
+
+- source and context;
+- naturalness evidence;
+- rights status and allowed uses;
 - transcript provenance;
-- human verification of transcript, speaker, names, translation, and learning value.
+- exact timestamps and speakers;
+- observed functions;
+- intelligibility and suitability;
+- rejection reasons where applicable.
 
-Start manually or semi-manually. Automation is not the product proof.
+Corpus size follows useful coverage, not a fixed quota.
 
-### 4. Compile the seven-day learning graph
+### 4. Define the environment experience and invisible curriculum
 
-Order the corpus into a coherent progression:
+The first complete experience must include:
 
-- explicit prerequisite edges;
-- recognition before productive use where appropriate;
-- controlled introduction of variants;
-- repeated exposure across speakers;
-- fading support;
-- delayed retrieval;
-- unseen-speaker recognition;
-- changed-situation transfer.
+- situation entry;
+- first encounter without transcript or answer exposure;
+- progressive support;
+- selected useful language and interactional behaviour;
+- retrieval/reconstruction;
+- learner response;
+- plausible follow-up or repair;
+- changed-context transfer;
+- delayed and varied re-exposure.
 
-The graph must prevent a learner from receiving a clip treatment that assumes missing prerequisites.
+The invisible graph must choose events and support based on prerequisites and evidence without exposing an academic roadmap to the learner.
 
-### 5. Implement the smallest learner runtime slice
+### 5. Implement `Meet someone new`
 
-Reuse existing application capabilities where possible:
+Build one bounded vertical slice using the new contracts.
 
-- bounded authentic-media playback;
-- synchronized transcript evidence;
-- gist and detail comprehension;
-- chunk recall and contextual replay;
-- shadowing or imitation when useful;
-- personal response tasks;
-- FSRS integration;
-- unseen transfer tests;
-- typed fallback when microphone capability fails.
+Required behaviour:
 
-Do not polish the existing radio lesson as a standalone destination. Refactor or reuse it only when that directly serves the seven-day sequence.
+- natural anchor interaction;
+- variations across speakers/contexts;
+- acknowledgement and follow-up, not just name exchange;
+- at least one misunderstanding or repair turn;
+- typed path that does not require microphone;
+- changed-context interaction;
+- delayed re-exposure;
+- source and activity evidence links.
 
-### 6. Run the learner pilot
+Reuse existing mechanisms only where they directly serve this experience.
 
-Test whether learners can:
+### 6. Run a small learner pilot
 
-- understand the five target functions across speakers;
-- answer with personal information;
-- recognize the functions in unseen clips;
-- retrieve selected chunks after several days;
-- complete changed communication tasks with reduced support;
-- progress without facilitator language help.
+Measure:
 
-Technical success, video playback, or quiz completion alone is insufficient.
+- first-encounter comprehension;
+- support required;
+- retrieval without answer exposure;
+- ability to produce the next turn;
+- ability to continue after misunderstanding;
+- performance with a different speaker;
+- changed-context transfer;
+- delayed retrieval/use;
+- abandonment and technical blockers.
 
-## Relationship to open pull requests
+Video completion or multiple-choice accuracy alone is insufficient.
 
-### PR #46 — authentic-media technical proof
+## Current branch stack
 
-- proves one licensed/public-domain clip can support timestamped playback, transcript evidence, active recall, and optional FSRS;
-- remains draft, unmerged, and non-production;
-- should not be completed as an isolated product;
-- its source, provenance, playback, transcript, and retrieval code may be corrected and reused in a later mini-curriculum task;
-- its known timestamp, approval-gate, save-state, browser, and human-review defects remain real.
-
-### PR #45 — mastery-mechanism experiment
-
-- diagnosis, gap-focused teaching, fading support, repair, cold transfer, and checkpoint gating may inform the new runtime;
-- it is not a competing canonical product direction after the owner decision;
-- keep, revise, extract, or close it based on what the mini-curriculum requires;
-- do not merge the entire experiment merely because its technical checks passed.
-
-### Merged PR #43 — Gold Day 1
-
-- supplies useful speaking-task, feedback, retry, checkpoint, and pilot evidence patterns;
-- its synthetic lesson source and fixed 28-day placement are not the future curriculum model.
-
-### PR #35
-
-- remains an older stale Gold Day 1 branch;
-- do not use it as the implementation baseline.
+- `main`: `961e779886ff95b1b5f67d5e6997520d1facdb1a`.
+- PR #47: previous documentation direction, head `213e217a...`.
+- PR #48: compiler contracts, head `d1e80385...`.
+- PR #49: first phrase-targeted source batch, head `0e96ba88...`.
+- PR #50: licensed-core/companion/source fallback base, head `4f94223b...`.
+- PR #51: natural candidate shortlist, head `b0a00998...`.
+- PR #52: authorized media/caption demo, head `a874120a...`, base restored to PR #50, draft, Verify #78 passed.
+- PR #53: current product reset, stacked on PR #50, draft.
 
 ## Decisions already completed
 
-- AtoEnglish will use authentic natural conversations as the primary language source.
-- The product is a YouTube-to-Curriculum Engine, not a video-to-quiz feature.
-- Communication Clip is the smallest curriculum unit.
-- Curriculum ordering follows communicative capability and prerequisites.
-- Full learning requires comprehension, acquisition, and transfer.
-- The initial destination is practical high-A2/B1, not a fluency claim.
-- The next validation slice is seven days, 20–30 clips, and five A0 capabilities.
-- The previous 28-day workplace journey is superseded as the canonical roadmap.
+- Natural communication environments are the learner-facing product.
+- Curriculum is invisible infrastructure, not the interface.
+- Complete natural recordings precede communication-event annotation.
+- Phrase-targeted source discovery is exploratory, not canonical corpus construction.
+- Communication clips remain reusable source excerpts but are not automatically lessons.
+- Learning evidence requires retrieval, interaction, transfer, and delayed varied use.
+- Rights and naturalness require separate review.
+- The long-range target remains practical high-A2/B1, not a fluency claim.
 
 Do not reopen these decisions without new owner instruction or learner evidence.
 
-## Work selection rule
+## Work-selection rule
 
-A task may enter the active queue only when it advances one of these:
+A task may enter the active queue only when it improves one of these:
 
-1. source rights, provenance, transcript, or human-review integrity;
-2. Communication Clip and curriculum-graph contracts;
-3. the reviewed five-capability A0 corpus;
-4. the seven-day prerequisite progression;
-5. comprehension, acquisition, retrieval, or transfer evidence;
-6. a production defect, security defect, privacy defect, or data-integrity defect;
-7. a repeated development blocker observed in real work.
+1. natural corpus quality or representativeness;
+2. source rights, provenance, transcript, or human-review integrity;
+3. communication-event analysis;
+4. environment-session coherence;
+5. invisible prerequisite and next-experience selection;
+6. retrieval, multi-turn response, transfer, or delayed evidence;
+7. a production, security, privacy, or data-integrity defect;
+8. a repeated development blocker observed in real work.
 
-Do not start:
-
-- unrelated standalone video lessons;
-- the full A0–B1 corpus;
-- unrestricted YouTube ingestion;
-- autonomous AI lesson publication;
-- another learning engine;
-- broad gamification, payment, or architecture work.
+Do not start unrelated ingestion, catalog scale, full A0–B1 breadth, broad gamification, payment, architecture, or autonomous publication work.
 
 ## Exit criteria for this phase
 
 This phase is complete when:
 
-- repository truth and memory reflect the new direction;
-- one reviewed 20–30 clip corpus exists for the five A0 capabilities;
-- clips have source, rights, transcript, metadata, and prerequisite evidence;
-- one seven-day graph connects lessons and repeated exposure;
-- learners complete comprehension, acquisition, delayed retrieval, unseen recognition, and transfer checks;
-- the owner has evidence to continue, revise, or reject the curriculum compiler approach.
+- repository truth and branch state reflect the environment-first direction;
+- communication-event and environment-experience contracts exist;
+- a small environment-first corpus sample has been reviewed from complete recordings;
+- one `Meet someone new` experience runs end to end;
+- learners demonstrate reduced-support comprehension, next-turn production, repair, changed-context transfer, and delayed use;
+- the owner has evidence to continue, revise, or reject the approach.
