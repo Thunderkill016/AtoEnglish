@@ -1,130 +1,58 @@
 # AtoEnglish current priority
 
-**Updated:** 2026-07-24  
+**Updated:** 2026-08-02  
 **Owner:** Thunderkill016  
-**Primary roadmap:** GitHub issue #20
+**Primary product:** Real Talk
 
 ## North star
 
-Prove that one Vietnamese adult beginner can follow a coherent 28-day, 10–15 minute-per-day journey and improve a practical work-speaking performance.
+Make a Vietnamese adult able to understand, repeat, and reuse useful English
+from a short real conversation, then return to review it.
 
-Everything else is secondary until the repository can support and measure that journey.
+## Active delivery sequence
 
-## Current phase
+### 1. Speaking evidence in Post-Watch
 
-**Phase: make AtoEnglish safe and legible for AI-assisted development, then implement the first gold lesson.**
+Replace the visual-only microphone with a working browser speech flow:
 
-The repository already has enough application, authentication, assessment, analytics, database, and testing infrastructure for bounded curriculum work. The immediate risk is not missing platform capability. It is allowing agents to choose work that does not serve the pilot outcome.
+- listen to a model phrase;
+- speak through Web Speech when supported;
+- show transcript-match score, missing words, and one Vietnamese retry tip;
+- provide local self-practice when browser speech is unavailable;
+- never label transcript match as pronunciation assessment.
 
-## Ordered queue
+### 2. Learner progress and rewards
 
-### 1. Product and agent truth — in progress
+Persist Real Talk completion with Supabase RLS. A completion record contains
+the completed phase, quiz score, sentence-match results, saved vocabulary, and
+learning time. Award XP and update the daily streak through one server-side,
+idempotent transaction.
 
-Establish repository-owned rules that every agent can read before proposing work:
+### 3. Curated catalog expansion
 
-- `AGENTS.md`;
-- `docs/product/PRODUCT_TRUTH.md`;
-- this current-priority document;
-- `docs/product/DO_NOT_BUILD.md`;
-- current `AGENT_PLAN.md` and `AGENT_BACKLOG.md`.
+Add five verified YouTube lessons:
 
-**Done when:** the repository has one discoverable product direction, stale cleanup plans no longer select work, and every future task must show how it serves the current priority.
+- ordering coffee, A1;
+- asking for directions, A1;
+- self-introduction at work, A2;
+- shopping for clothes, A2;
+- job interview basics, B1.
 
-### 2. One verification entry point — next
+Each source must be publicly playable, attributed, segmented to three minutes
+or less, and reviewed for a concrete can-do outcome before publishing.
 
-Create the smallest repository-owned verification wrapper or manifest that maps a changed surface to the checks already available.
+## Out of scope for this release
 
-Initial goal:
+- a general chatbot or open-ended conversation tutor;
+- claims of phoneme-level accuracy without an acoustic assessment provider;
+- storing raw learner audio or unrestricted transcripts;
+- downloading YouTube audio or video;
+- a broad A0–B2 curriculum rewrite;
+- payments, leagues, social features, or deployment automation.
 
-- preserve existing commands rather than inventing a new CI system;
-- support a focused curriculum slice first;
-- report which checks ran, passed, failed, or were unavailable;
-- distinguish technical checks from manual product review;
-- make the result usable by a coding agent and by the owner.
+## Completion criteria
 
-This task must not change product behavior.
-
-### 3. Gold Day 1 lesson — after verification entry point
-
-Implement the preferred Day 1 design from `docs/curriculum/28-day-speaking-journey-contract.md`.
-
-Day 1 should cover only:
-
-- greeting;
-- name;
-- spelling a Vietnamese name;
-- one lightweight request to repeat;
-- one final spoken output using name and spelling.
-
-It must fit 10–15 minutes and must not absorb role, company, responsibility, all five questions, or full repair training.
-
-Expected scope:
-
-- `src/lib/data/units/unitA01.ts`;
-- direct targeted tests;
-- the smallest relevant lesson smoke assertion.
-
-Explicitly out of scope:
-
-- authentication;
-- database and RLS;
-- analytics infrastructure;
-- XP, streak, league, and FSRS rules;
-- major `UnitTemplate` refactor;
-- unrelated units.
-
-### 4. First-week journey — later
-
-After Day 1 is proven coherent, implement Days 2–7 as separate bounded outcomes and add checkpoint 1.
-
-Do not build all 28 days in one pull request.
-
-### 5. Pilot operations and learner evidence
-
-Recruit target learners, run baseline assessment, sell or manually administer the initial pilot, observe failure points, and build only repeated P0 blockers.
-
-## Decisions already completed
-
-- `/login` metadata defect was fixed.
-- The pilot promise was aligned across the main funnel.
-- Baseline and final speaking assessment plus rubric were defined.
-- Minimal privacy-bounded pilot analytics were added and recovered correctly.
-- Supabase security findings were hardened.
-- The 28-day journey contract and Day 1 boundary were defined.
-
-Do not reopen these decisions without new evidence.
-
-## Work selection rule
-
-A proposed task may enter the active queue only when it does at least one of the following:
-
-1. directly advances the ordered queue above;
-2. fixes a production defect blocking the pilot journey;
-3. fixes a security, privacy, or data-integrity defect;
-4. removes a repeated development blocker observed in at least two real AtoEnglish tasks.
-
-Every proposal must name the learner, product, or development blocker it resolves.
-
-## Time allocation
-
-Until the first pilot is ready:
-
-- 80–90% of effort should improve AtoEnglish and the pilot journey;
-- no more than 10–20% should improve CycleWarden or development tooling;
-- tooling work must be justified by a current AtoEnglish blocker.
-
-## Exit criteria for this phase
-
-This phase is complete when the owner can take one approved AtoEnglish task through:
-
-```text
-current priority
-→ bounded task contract
-→ approved scope
-→ coding agent implementation
-→ technical and product checks
-→ understandable review summary
-→ draft pull request
-```
-
-without writing an ad hoc manifest, losing product context, changing unrelated systems, or automatically merging or deploying.
+This phase is complete only when the learner can finish a Real Talk lesson on a
+phone or desktop, receives honest speaking feedback, sees saved progress and
+XP after sign-in, and can open all seven curated lessons without broken media
+or malformed content.
