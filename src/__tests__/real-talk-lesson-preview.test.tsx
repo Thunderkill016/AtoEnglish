@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 
 import {
@@ -32,7 +33,7 @@ vi.mock("framer-motion", async () => {
           return React.createElement(
             typeof property === "string" ? property : "div",
             domProps,
-            props.children as React.ReactNode,
+            props.children as ReactNode,
           );
         },
     },
@@ -40,7 +41,7 @@ vi.mock("framer-motion", async () => {
 
   return {
     motion,
-    AnimatePresence: ({ children }: { children?: React.ReactNode }) =>
+    AnimatePresence: ({ children }: { children?: ReactNode }) =>
       React.createElement(React.Fragment, null, children),
   };
 });
@@ -53,7 +54,7 @@ vi.mock("next/link", async () => {
       href,
       ...props
     }: {
-      children?: React.ReactNode;
+      children?: ReactNode;
       href: string;
       [key: string]: unknown;
     }) => React.createElement("a", { href, ...props }, children),
