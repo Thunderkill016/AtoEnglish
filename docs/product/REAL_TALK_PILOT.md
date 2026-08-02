@@ -3,7 +3,7 @@
 **Status:** owner-authorized internal product experiment  
 **Branch:** `agent/real-talk-public-domain-pilot`  
 **Public release:** blocked until transcript review and learner testing  
-**Technical verification:** GitHub Verify run `30730678522` passed on the final source head
+**Technical verification:** GitHub Verify run `30730753352` passed on final head `696d6e21b59e96cd2aeb0ad34b6cdfb53a745b35`
 
 ## Exception to the current roadmap
 
@@ -136,7 +136,7 @@ Continue only when the vertical slice works reliably and learners demonstrate be
 
 ## Verification record
 
-GitHub Actions Verify run `30730678522` completed successfully on the implementation head:
+GitHub Actions Verify run `30730753352` completed successfully on final head `696d6e21b59e96cd2aeb0ad34b6cdfb53a745b35`:
 
 - dependency installation;
 - ESLint;
