@@ -4,6 +4,7 @@ import {
   type TranscriptSourceRequest,
   type TranscriptSourceResult,
 } from "@/features/real-talk/domain/transcript-source";
+import { assertTranscriptSourceResultTrusted } from "@/features/real-talk/server/transcript-provenance";
 
 const EXPERIMENTAL_FLAG = "REAL_TALK_ALLOW_EXPERIMENTAL_TRANSCRIPTS";
 
@@ -67,5 +68,12 @@ export async function acquireTranscriptForCompilation(params: {
 }): Promise<TranscriptSourceResult> {
   const policy = resolveTranscriptSourcePolicy(params.environment);
   assertTranscriptSourceAllowed(params.adapter, policy);
-  return params.adapter.acquire(params.request);
+
+  const result = await params.adapter.acquire(params.request);
+  assertTranscriptSourceResultTrusted({
+    adapter: params.adapter,
+    request: params.request,
+    result,
+  });
+  return result;
 }
