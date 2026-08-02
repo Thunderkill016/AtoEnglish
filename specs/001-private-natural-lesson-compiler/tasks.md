@@ -184,12 +184,12 @@ description: "Dependency-ordered implementation and verification tasks for the p
 
 **Purpose**: Prove the exact final state; no unchecked item may be hidden by a green partial check.
 
-- [x] T076 Run `npm run lint`; passed on implementation-and-evidence head `26b4ef00d4385ca9b59d03922f0b82cf3da83f01` in Verify run #118 and on subsequent task-ledger-only heads through run #122
-- [x] T077 Run `npx tsc --noEmit`; passed through Verify run #122
-- [x] T078 Run `npm run test`; 37 files and 355 tests passed through Verify run #122
-- [x] T079 Run `npm run test:content-standard`; 1 file and 50 tests passed through Verify run #122
-- [x] T080 Run `npm run build`; Next.js 16.2.9 production compilation and 89/89 page generation passed without deployment through Verify run #122
-- [x] T081 Run the targeted Real Talk contract, policy, provider, orchestration, result, URL, migration, mapping, and preview suites; 11 files and 91 tests passed through Verify run #122
+- [x] T076 Run `npm run lint`; passed on implementation-and-evidence head `26b4ef00d4385ca9b59d03922f0b82cf3da83f01` in Verify run #118 and on subsequent task-ledger-only heads through run #123
+- [x] T077 Run `npx tsc --noEmit`; passed through Verify run #123
+- [x] T078 Run `npm run test`; 37 files and 355 tests passed through Verify run #123
+- [x] T079 Run `npm run test:content-standard`; 1 file and 50 tests passed through Verify run #123
+- [x] T080 Run `npm run build`; Next.js 16.2.9 production compilation and 89/89 page generation passed without deployment through Verify run #123
+- [x] T081 Run the targeted Real Talk contract, policy, provider, orchestration, result, URL, migration, mapping, and preview suites; 11 files and 91 tests passed through Verify run #123
 - [ ] T082 Run non-production live Gemini happy path, invalid output, 429, provider-failure, adversarial prompt-source, and persistence-failure checks; the live workflow stopped before provider work because `GEMINI_API_KEY` is absent from GitHub Actions secrets
 - [x] T083 Verify live YouTube oEmbed metadata and official IFrame playback on desktop and Android-mobile; run #1 retained transient mobile error 150 and run #2 passed the same controlled source, with evidence in `live-provider-verification.md`
 - [ ] T084 Approve at least one production transcript acquisition mode or retain the explicit merge blocker; the experimental adapter is isolated and fail-closed in production
