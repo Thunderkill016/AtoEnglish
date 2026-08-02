@@ -4,7 +4,7 @@ import { headers } from "next/headers";
 
 import {
   generationFailure,
-  type GenerateLessonResult,
+  type GenerateLessonResult as GenerateLessonResultContract,
 } from "@/features/real-talk/domain/generation-result";
 import { persistOwnerPrivateDraft } from "@/features/real-talk/server/draft-repository";
 import { compilePrivateNaturalLesson } from "@/features/real-talk/server/private-lesson-compiler";
@@ -24,7 +24,7 @@ const generateLimiter = createRateLimiter(5, 60 * 1000, "real-talk-generate");
 export async function generateRealTalkLesson(
   youtubeUrl: string,
   level: RealTalkLevel = "A1",
-): Promise<GenerateLessonResult> {
+): Promise<GenerateLessonResultContract> {
   try {
     const input = generateRealTalkInputSchema.safeParse({ youtubeUrl, level });
     if (!input.success) {
