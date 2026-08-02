@@ -1,6 +1,10 @@
 // Generated from Supabase project zpiwddskhduuykpxltun after the Real Talk
 // private-draft migrations. Keep this file schema-shaped; do not add domain
 // behavior or UI-specific types here.
+//
+// The transcript provenance fields below mirror the pending versioned migration
+// in this branch. They must be regenerated from the hosted project after owner
+// authorization to apply that migration; this file does not claim hosted state.
 
 import type { Json } from "@/types/supabase";
 
@@ -104,6 +108,10 @@ export type RealTalkVideoTable = {
     title: string;
     title_vi: string;
     topics: string[];
+    transcript_acquisition_mode: string;
+    transcript_cue_digest: string | null;
+    transcript_review_status: string;
+    transcript_source_metadata: Json;
     youtube_id: string;
   };
   Insert: {
@@ -124,6 +132,10 @@ export type RealTalkVideoTable = {
     title: string;
     title_vi: string;
     topics?: string[];
+    transcript_acquisition_mode?: string;
+    transcript_cue_digest?: string | null;
+    transcript_review_status?: string;
+    transcript_source_metadata?: Json;
     youtube_id: string;
   };
   Update: {
@@ -144,6 +156,10 @@ export type RealTalkVideoTable = {
     title?: string;
     title_vi?: string;
     topics?: string[];
+    transcript_acquisition_mode?: string;
+    transcript_cue_digest?: string | null;
+    transcript_review_status?: string;
+    transcript_source_metadata?: Json;
     youtube_id?: string;
   };
   Relationships: [];
