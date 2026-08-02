@@ -24,6 +24,48 @@ export const GEMINI_LESSON_MODELS = [
 const DEFAULT_ENDPOINT =
   "https://generativelanguage.googleapis.com/v1beta/models";
 
+const GEMINI_SCHEMA_KEYS = new Set([
+  "$id",
+  "$defs",
+  "$ref",
+  "$anchor",
+  "type",
+  "format",
+  "title",
+  "description",
+  "enum",
+  "items",
+  "prefixItems",
+  "minItems",
+  "maxItems",
+  "minimum",
+  "maximum",
+  "anyOf",
+  "oneOf",
+  "properties",
+  "additionalProperties",
+  "required",
+  "propertyOrdering",
+]);
+
+const LESSON_TOP_LEVEL_KEYS = new Set([
+  "title",
+  "titleVi",
+  "level",
+  "estimatedMinutes",
+  "canDoStatement",
+  "canDoStatementVi",
+  "topics",
+  "environment",
+  "speakers",
+  "transcript",
+  "communicationEvents",
+  "preWatch",
+  "whileWatch",
+  "postWatch",
+  "transferTask",
+]);
+
 export type GeminiTextRequestResult =
   | {
       success: true;
@@ -53,6 +95,54 @@ export interface GeminiLessonProviderOptions {
     text: string,
     source: readonly TranscriptCue[],
   ) => ParsedLessonTextResult;
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+/**
+ * Gemini accepts only a documented subset of JSON Schema. Zod remains the
+ * authoritative runtime validator; this function removes unsupported prompt-
+ * time keywords so the provider cannot reject an otherwise valid request.
+ */
+export function sanitizeGeminiJsonSchema(schema: unknown): unknown {
+  if (!isRecord(schema)) return schema;
+
+  const sanitized: Record<string, unknown> = {};
+  for (const [key, value] of Object.entries(schema)) {
+    if (!GEMINI_SCHEMA_KEYS.has(key)) continue;
+
+    if ((key === "properties" || key === "$defs") && isRecord(value)) {
+      sanitized[key] = Object.fromEntries(
+        Object.entries(value).map(([name, child]) => [
+          name,
+          sanitizeGeminiJsonSchema(child),
+        ]),
+      );
+      continue;
+    }
+
+    if (
+      (key === "items" || key === "additionalProperties") &&
+      isRecord(value)
+    ) {
+      sanitized[key] = sanitizeGeminiJsonSchema(value);
+      continue;
+    }
+
+    if (
+      (key === "anyOf" || key === "oneOf" || key === "prefixItems") &&
+      Array.isArray(value)
+    ) {
+      sanitized[key] = value.map((child) => sanitizeGeminiJsonSchema(child));
+      continue;
+    }
+
+    sanitized[key] = value;
+  }
+
+  return sanitized;
 }
 
 export async function requestGeminiText(params: {
@@ -172,6 +262,16 @@ export function parseEvidenceBoundLessonText(
     );
   }
 
+  if (
+    isRecord(raw) &&
+    Object.keys(raw).some((key) => !LESSON_TOP_LEVEL_KEYS.has(key))
+  ) {
+    return generationFailure(
+      "MODEL_OUTPUT_INVALID",
+      "Bản nháp Gemini chứa trường cấp cao không được phép.",
+    );
+  }
+
   const parsed = generatedLessonDraftSchema.safeParse(raw);
   if (!parsed.success) {
     return generationFailure(
@@ -219,7 +319,9 @@ export async function generateEvidenceBoundLessonWithGemini(
       new Promise<void>((resolve) => setTimeout(resolve, milliseconds)));
   const parseText = options.parseText ?? parseEvidenceBoundLessonText;
   const prompt = buildNaturalLessonPrompt(params);
-  const responseJsonSchema = generatedLessonDraftSchema.toJSONSchema();
+  const responseJsonSchema = sanitizeGeminiJsonSchema(
+    generatedLessonDraftSchema.toJSONSchema(),
+  );
   let lastFailure: GenerationFailure = generationFailure(
     "MODEL_UNAVAILABLE",
     "Gemini chưa phản hồi thành công. Hãy thử lại sau.",
