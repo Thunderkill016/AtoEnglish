@@ -2,7 +2,6 @@ name: Verify
 
 on:
   pull_request:
-    branches: [main]
     types: [opened, synchronize, reopened, ready_for_review]
   push:
     branches: [main]
@@ -17,9 +16,9 @@ permissions:
 
 jobs:
   quality:
-    name: Lint, types, and tests
+    name: Lint, types, tests, and build
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 30
     env:
       CI: true
       HUSKY: 0
@@ -43,8 +42,14 @@ jobs:
       - name: Type-check
         run: npx tsc --noEmit
 
+      - name: Targeted Real Talk tests
+        run: npm run test:real-talk
+
       - name: Unit tests
         run: npm run test
 
       - name: Content standards
         run: npm run test:content-standard
+
+      - name: Build without deployment
+        run: npm run build
