@@ -1,4 +1,8 @@
 import {
+  generationFailure,
+  type GenerationFailure,
+} from "@/features/real-talk/domain/generation-result";
+import {
   TranscriptSourceError,
   type TranscriptCue,
   type TranscriptSourceMetadata,
@@ -11,10 +15,7 @@ import {
   validateGeneratedDraftEvidence,
   type GeneratedLessonDraft,
 } from "@/lib/real-talk/generation-contract";
-import type {
-  RealTalkLevel,
-  RealTalkVideo,
-} from "@/types/real-talk";
+import type { RealTalkLevel, RealTalkVideo } from "@/types/real-talk";
 
 const MAX_SOURCE_ITEMS = 80;
 const MAX_SEGMENT_SECONDS = 180;
@@ -40,7 +41,7 @@ export type PrivateLessonCompilationResult =
       warnings: string[];
       transcriptMetadata: TranscriptSourceMetadata;
     }
-  | { success: false; error: string };
+  | GenerationFailure;
 
 function extractYouTubeId(input: string): string | null {
   const trimmed = input.trim();
@@ -164,17 +165,23 @@ async function generateLessonWithGemini(
   level: RealTalkLevel,
 ): Promise<
   | { success: true; draft: GeneratedLessonDraft; model: string }
-  | { success: false; error: string }
+  | GenerationFailure
 > {
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) {
-    return { success: false, error: "GEMINI_API_KEY chưa được cấu hình." };
+    return generationFailure(
+      "MODEL_UNAVAILABLE",
+      "Gemini chưa được cấu hình cho môi trường này.",
+    );
   }
 
   const prompt = buildLessonPrompt(source, metadata, level);
   const jsonSchema = generatedLessonDraftSchema.toJSONSchema();
-  let lastStatus = 0;
-  let lastDetail = "";
+  let lastFailure: GenerationFailure = generationFailure(
+    "MODEL_UNAVAILABLE",
+    "Gemini chưa phản hồi thành công. Hãy thử lại sau.",
+    { retryAfterSeconds: 30 },
+  );
 
   for (const model of GEMINI_MODELS) {
     for (let attempt = 1; attempt <= 2; attempt += 1) {
@@ -197,10 +204,21 @@ async function generateLessonWithGemini(
           },
         );
 
-        lastStatus = response.status;
         if (!response.ok) {
-          lastDetail = (await response.text()).slice(0, 300);
-          if (response.status === 404) break;
+          if (response.status === 429) {
+            lastFailure = generationFailure(
+              "MODEL_RATE_LIMITED",
+              "Gemini đang vượt quota. Hãy đợi rồi thử lại.",
+              { retryAfterSeconds: 60 },
+            );
+          } else {
+            lastFailure = generationFailure(
+              "MODEL_UNAVAILABLE",
+              "Gemini tạm thời không khả dụng. Hãy thử lại sau.",
+              { retryAfterSeconds: response.status >= 500 ? 30 : undefined },
+            );
+          }
+
           if ([429, 503].includes(response.status) && attempt < 2) {
             await new Promise((resolve) =>
               setTimeout(resolve, 1_500 * attempt),
@@ -217,7 +235,10 @@ async function generateLessonWithGemini(
         };
         const text = payload.candidates?.[0]?.content?.parts?.[0]?.text;
         if (!text) {
-          lastDetail = "Gemini returned no text candidate";
+          lastFailure = generationFailure(
+            "MODEL_OUTPUT_INVALID",
+            "Gemini không trả về nội dung bài học hợp lệ.",
+          );
           break;
         }
 
@@ -225,16 +246,19 @@ async function generateLessonWithGemini(
         try {
           raw = JSON.parse(text.trim());
         } catch {
-          lastDetail = "Gemini returned malformed JSON";
+          lastFailure = generationFailure(
+            "MODEL_OUTPUT_INVALID",
+            "Gemini trả về JSON không hợp lệ.",
+          );
           break;
         }
 
         const parsed = generatedLessonDraftSchema.safeParse(raw);
         if (!parsed.success) {
-          lastDetail = parsed.error.issues
-            .slice(0, 5)
-            .map((issue) => `${issue.path.join(".")}: ${issue.message}`)
-            .join("; ");
+          lastFailure = generationFailure(
+            "MODEL_OUTPUT_INVALID",
+            "Bản nháp Gemini không đúng cấu trúc bài học bắt buộc.",
+          );
           break;
         }
 
@@ -243,51 +267,55 @@ async function generateLessonWithGemini(
           source,
         );
         if (evidenceFailures.length > 0) {
-          lastDetail = `Evidence gate failed: ${evidenceFailures.join(", ")}`;
+          lastFailure = generationFailure(
+            "SOURCE_EVIDENCE_FAILED",
+            "Bản nháp chứa nội dung không được transcript nguồn hỗ trợ.",
+            { evidenceFailures },
+          );
           break;
         }
 
         return { success: true, draft: parsed.data, model };
-      } catch (error) {
-        lastDetail = error instanceof Error ? error.message : "Network error";
+      } catch {
+        lastFailure = generationFailure(
+          "MODEL_UNAVAILABLE",
+          "Không thể kết nối với Gemini. Hãy thử lại sau.",
+          { retryAfterSeconds: 30 },
+        );
       }
     }
   }
 
-  if (lastStatus === 429) {
-    return {
-      success: false,
-      error: "Gemini đang vượt quota. Hãy đợi khoảng một phút rồi thử lại.",
-    };
-  }
-
-  return {
-    success: false,
-    error: `Gemini chưa tạo được bản nháp đạt evidence gate. ${lastDetail}`.trim(),
-  };
+  return lastFailure;
 }
 
-function slugify(value: string) {
-  return value
-    .normalize("NFKD")
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "")
-    .slice(0, 48);
-}
-
-function transcriptErrorMessage(error: TranscriptSourceError) {
+export function mapTranscriptSourceError(
+  error: TranscriptSourceError,
+): GenerationFailure {
   switch (error.code) {
     case "transcript_source_policy_blocked":
-      return process.env.NODE_ENV === "production"
-        ? "Nguồn transcript thử nghiệm đang bị chặn trong production. Cần dùng nguồn caption đã được phê duyệt."
-        : "Nguồn transcript thử nghiệm đang tắt. Chỉ bật trong môi trường phát triển bằng REAL_TALK_ALLOW_EXPERIMENTAL_TRANSCRIPTS=true.";
+      return generationFailure(
+        "SOURCE_UNSUPPORTED",
+        process.env.NODE_ENV === "production"
+          ? "Nguồn transcript thử nghiệm bị chặn trong production. Cần dùng nguồn caption đã được phê duyệt."
+          : "Nguồn transcript thử nghiệm đang tắt. Chỉ bật trong dev/test bằng REAL_TALK_ALLOW_EXPERIMENTAL_TRANSCRIPTS=true.",
+      );
     case "transcript_not_available":
-      return "Video này không có caption tiếng Anh có thể đọc được. Hãy chọn video có Subtitles/CC hoặc dùng nguồn transcript được cho phép.";
+      return generationFailure(
+        "TRANSCRIPT_UNAVAILABLE",
+        "Video này không có caption tiếng Anh có thể đọc được.",
+      );
     case "transcript_too_short":
-      return "Caption quá ngắn để tạo một bài hội thoại có ý nghĩa.";
+      return generationFailure(
+        "TRANSCRIPT_INVALID",
+        "Caption quá ngắn để tạo một bài hội thoại có ý nghĩa.",
+      );
     case "transcript_provider_error":
-      return "Adapter transcript thử nghiệm đang lỗi. Hãy thử lại hoặc dùng nguồn caption được phê duyệt.";
+      return generationFailure(
+        "TRANSCRIPT_UNAVAILABLE",
+        "Nguồn transcript tạm thời không khả dụng. Hãy thử lại hoặc dùng nguồn khác.",
+        { retryAfterSeconds: 30 },
+      );
   }
 }
 
@@ -297,10 +325,10 @@ export async function compilePrivateNaturalLesson(params: {
 }): Promise<PrivateLessonCompilationResult> {
   const videoId = extractYouTubeId(params.youtubeUrl);
   if (!videoId) {
-    return {
-      success: false,
-      error: "Link YouTube không hợp lệ hoặc không chứa video ID 11 ký tự.",
-    };
+    return generationFailure(
+      "SOURCE_UNSUPPORTED",
+      "Link không phải URL YouTube được hỗ trợ hoặc không chứa video ID hợp lệ.",
+    );
   }
 
   const watchUrl = `https://www.youtube.com/watch?v=${videoId}`;
@@ -316,12 +344,13 @@ export async function compilePrivateNaturalLesson(params: {
     });
   } catch (error) {
     if (error instanceof TranscriptSourceError) {
-      return { success: false, error: transcriptErrorMessage(error) };
+      return mapTranscriptSourceError(error);
     }
-    return {
-      success: false,
-      error: "Không thể lấy transcript từ nguồn đã chọn.",
-    };
+    return generationFailure(
+      "TRANSCRIPT_UNAVAILABLE",
+      "Không thể lấy transcript từ nguồn đã chọn.",
+      { retryAfterSeconds: 30 },
+    );
   }
 
   const selectedSource = selectConversationWindow(transcript.cues, {
@@ -329,10 +358,10 @@ export async function compilePrivateNaturalLesson(params: {
     maxItems: MAX_SOURCE_ITEMS,
   });
   if (selectedSource.length < 2) {
-    return {
-      success: false,
-      error: "Không tìm thấy một đoạn hội thoại đủ rõ để tạo bài học.",
-    };
+    return generationFailure(
+      "TRANSCRIPT_INVALID",
+      "Không tìm thấy một đoạn hội thoại đủ rõ để tạo bài học.",
+    );
   }
 
   const metadata = await fetchYouTubeMetadata(videoId);
@@ -354,7 +383,6 @@ export async function compilePrivateNaturalLesson(params: {
     (max, item) => Math.max(max, item.offset + item.duration),
     segmentStart,
   );
-  const baseSlug = `${slugify(generated.draft.title) || "real-talk"}-${videoId}`;
   const warnings = [
     "Đây là bản nháp do AI tạo, chưa được người biên tập xác minh.",
     "Speaker labels được suy luận từ caption và có thể sai.",
@@ -362,7 +390,7 @@ export async function compilePrivateNaturalLesson(params: {
   ];
 
   const video: RealTalkVideo = {
-    id: baseSlug,
+    id: videoId,
     youtubeId: videoId,
     title: metadata.title,
     titleVi: generated.draft.titleVi,
