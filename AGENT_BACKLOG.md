@@ -1,104 +1,137 @@
 # Agent Backlog — Active Tasks Only
 
-> Use `PROJECT_MEMORY.md` for cross-session state, `docs/product/CURRENT_PRIORITY.md` for ordering, `docs/product/YOUTUBE_TO_CURRICULUM.md` for architecture, and `docs/product/DO_NOT_BUILD.md` for deferred scope.
+> Use `PROJECT_MEMORY.md` for live state, `docs/product/CURRENT_PRIORITY.md` for ordering, `docs/product/NATURAL_COMMUNICATION_LEARNING_SYSTEM.md` for architecture, and `docs/product/DO_NOT_BUILD.md` for deferred scope.
 
 ## Rules
 
 1. Use a dedicated branch and reviewed PR.
 2. Never merge or deploy automatically.
 3. Keep one bounded outcome per PR.
-4. Every task must name the current learner, source, curriculum, or development blocker.
-5. Do not add infrastructure or abstraction without a current pilot need.
+4. Name the current learner, source, interaction, curriculum, or development blocker.
+5. Do not add infrastructure without a current product need.
 6. Stop and document ambiguity instead of guessing.
 7. Completed work belongs in Git history and PRs.
-8. Do not create standalone video lessons outside the seven-day graph.
-9. Do not silently return to the old 28-day roadmap.
-10. Do not allow AI to publish source-derived curriculum without human review.
+8. Do not create standalone phrase lessons outside an environment experience.
+9. Do not return to the fixed 28-day roadmap.
+10. Do not let AI publish source-derived curriculum without human review.
+11. Do not build the corpus by searching isolated target phrases.
+12. Do not confuse naturalness evidence with usage rights.
 
 ## Active queue
 
-### CONTEXT-002 — Canonical product memory and direction
+### PRODUCT-ENV-001 — Natural communication product reset
 
 - **Status:** `in_progress`
-- **Branch:** `docs/persist-project-memory`
-- **PR:** `#47`
-- **Outcome:** Every new session recovers YouTube-to-Curriculum as canonical, the current GitHub state, durable boundaries, and the next task.
-- **Scope:** Documentation and agent guidance only.
+- **Branch:** `product/natural-communication-environments`
+- **PR:** `#53`
+- **Base:** PR #50
+- **Outcome:** Make environment-first learning and the invisible curriculum canonical across product truth, agent instructions, project memory, and branch state.
+- **Forbidden:** runtime, scraping, database, deployment, merge.
 
-### CONTRACT-001 — Communication Clip and source contract
+### CONTRACT-ENV-001 — Communication event contract
 
-- **Status:** `next_after_context_002`
-- **Outcome:** Define the smallest stable model for source, permission, attribution, transcript provenance, timestamps, speaker segments, level treatments, functions, prerequisites, context, review state, and evidence links.
-- **Required:** Domain validation and targeted tests.
-- **Forbidden:** Full ingestion pipeline, database migration without proof, public catalog, autonomous publication.
+- **Status:** `next_after_product_env_001`
+- **Outcome:** Define bounded types and validation for source recordings, naturalness evidence, communication events, event boundaries, participants, interactional functions, and context.
+- **Required:** explicit separation of observed behaviour from inferred teaching use; targeted tests.
+- **Forbidden:** automatic source acceptance, phrase-search corpus generation, database migration without proof.
 
-### CONTRACT-002 — Curriculum graph and advancement contract
+### CONTRACT-ENV-002 — Environment experience and invisible curriculum
 
-- **Status:** `blocked_by_contract_001`
-- **Outcome:** Define capability nodes, prerequisite edges, clip-treatment eligibility, repeated exposure, fading support, delayed retrieval, unseen recognition, transfer evidence, and advancement rules.
-- **Scope:** Five A0 capabilities only.
-- **Forbidden:** Full A0–B1 graph or grammar-first ordering.
+- **Status:** `blocked_by_contract_env_001`
+- **Outcome:** Define environment goals, event/clip selection, prerequisites, support policy, multi-turn response, changed-context transfer, delayed evidence, and next-experience selection.
+- **Initial scope:** five environments only.
+- **Forbidden:** full A0–B1 graph, grammar-first navigation, autonomous publication.
 
-### CORPUS-001 — Reviewed seven-day A0 clip corpus
+### CORPUS-ENV-001 — Environment-first natural corpus sample
 
-- **Status:** `blocked_by_contract_001`
-- **Outcome:** Curate 20–30 reviewed clips from multiple videos, speakers, and contexts.
-- **Capabilities:** greeting, saying one's name, asking another's name, saying where one is from, asking for repetition.
-- **Required per clip:** rights evidence, source URL, timestamps, attribution, transcript provenance, human transcript/speaker/name/translation review, learning metadata.
-- **Default:** Manual or semi-manual authoring before automation.
+- **Status:** `blocked_by_contract_env_001`
+- **Outcome:** Review a small number of complete natural recordings across the five initial environments, then annotate every useful communication event that actually occurs.
+- **Required:** source context, naturalness evidence, rights status, transcript provenance, timestamps, speakers, suitability, and rejection reasons.
+- **Rule:** coverage quality determines size; preserve gaps instead of filling quotas with misleading sources.
+- **Forbidden:** starting from target sentence searches or treating PR #49/#51 as the canonical corpus.
 
-### GRAPH-001 — Compile the seven-day progression
+### EXPERIENCE-001 — Meet someone new
 
-- **Status:** `blocked_by_contract_002_and_corpus_001`
-- **Outcome:** Order clip treatments into a coherent prerequisite graph with 3–5 varied exposures per capability, controlled variants, support fading, delayed retrieval, unseen-speaker recognition, and transfer.
-- **Forbidden:** Independent video quizzes or random recommendation.
+- **Status:** `blocked_by_contract_env_002_and_corpus_env_001`
+- **Outcome:** Build one coherent learner-facing environment: enter situation, first encounter, support, retrieval, response, follow-up, repair, changed-context transfer, delayed re-exposure.
+- **Reuse:** playback/provenance from PR #46, fading/repair/cold-transfer from PR #45, speaking/retry/checkpoint patterns from merged #43.
+- **Forbidden:** standalone greeting phrase quiz.
 
-### RUNTIME-001 — Mini-curriculum learner slice
+### EXPERIENCE-002 — Buy or order something
 
-- **Status:** `blocked_by_graph_001`
-- **Outcome:** Deliver comprehension, acquisition, and transfer across the seven-day graph.
-- **Reuse:** Bounded playback and provenance ideas from PR #46; diagnosis/fading/repair/cold-transfer ideas from PR #45; speaking/feedback/retry/checkpoint patterns from merged #43.
-- **Required:** Typed fallback, FSRS integration where appropriate, exact evidence links, desktop/mobile browser checks.
-- **Forbidden:** Polishing the radio lesson as a standalone destination.
+- **Status:** `blocked_by_experience_001_evidence`
+- **Outcome:** Prove the environment contract generalizes to service interaction without rewriting the engine.
 
-### PILOT-OPS-001 — Test authentic-input curriculum acquisition
+### EXPERIENCE-003 — Find a place
 
-- **Status:** `blocked_by_runtime_001`
-- **Outcome:** Measure comprehension across speakers, delayed retrieval, unseen recognition, changed-situation transfer, completion, support needs, and media/microphone blockers.
-- **Default:** Small moderated pilot before scaling corpus or infrastructure.
+- **Status:** `blocked_by_experience_001_evidence`
+- **Outcome:** Test location information, clarification, confirmation, and changed-context listening.
 
-## Existing pull-request disposition
+### EXPERIENCE-004 — Recover from listening failure
 
-### PR #46
+- **Status:** `blocked_by_experience_001_evidence`
+- **Outcome:** Make repair a real continuation skill rather than an isolated phrase lesson.
 
-- **Role:** one-clip authentic-media technical proof;
-- **Status:** draft, unmerged;
-- **Action:** preserve evidence and reusable code; do not merge as the product endpoint; resolve or supersede through the mini-curriculum work.
+### EXPERIENCE-005 — Talk briefly about oneself
 
-### PR #45
+- **Status:** `blocked_by_experience_001_evidence`
+- **Outcome:** Answer, add one detail, return a question, and sustain several turns.
 
-- **Role:** mastery mechanisms experiment;
-- **Status:** draft, unmerged;
-- **Action:** extract only mechanisms required by the canonical runtime; do not adopt as a separate product direction.
+### PILOT-ENV-001 — Environment learning pilot
 
-### PR #43
+- **Status:** `blocked_by_initial_experiences`
+- **Outcome:** Measure first-encounter comprehension, support usage, retrieval, next-turn production, repair, changed-speaker performance, changed-context transfer, delayed use, abandonment, and technical blockers.
+- **Default:** small moderated pilot before scaling corpus or infrastructure.
 
-- **Role:** merged reusable speaking, feedback, retry, checkpoint, and pilot patterns;
-- **Action:** reuse selectively; do not preserve its synthetic source model as the roadmap.
+## Existing PR disposition
 
-### PR #35
+### PR #47
 
-- **Role:** stale older Gold Day 1 branch;
-- **Action:** close as superseded unless explicitly revived.
+- Previous YouTube-to-Curriculum documentation reset.
+- PR #53 supersedes its learner-facing product identity.
+- Preserve historical architecture evidence; do not merge both as conflicting canonical truth without reconciliation.
+
+### PR #48
+
+- Reusable compiler contracts and validation.
+- Extend later with communication-event and environment concepts rather than replacing blindly.
+
+### PR #49
+
+- First phrase/capability-targeted source batch.
+- Preserve as evidence of discovery bias and source-yield findings.
+- Do not promote directly to canonical corpus.
+
+### PR #50
+
+- Current stack base for licensed core, YouTube Companion, and source-library fallbacks.
+- Rights-safe completeness rules remain relevant.
+
+### PR #51
+
+- Natural-interaction candidates with stronger authenticity evidence.
+- Still shaped by predetermined A0 targets and not manually verified.
+- Use as exploratory comparison material only.
+
+### PR #52
+
+- Authorized media/caption TypeScript experiment.
+- Base restored to PR #50; draft; exact head `a874120a389c451cc39ac7a4cbd1fb4692f0fcce`; Verify #78 passed.
+- Not the canonical product direction.
+
+### PR #45 / #46 / merged #43
+
+- Mechanism and technical proofs only.
+- Reuse selectively inside environment sessions.
 
 ## Interrupt policy
 
 Only these may interrupt the queue:
 
 - source-rights or licensing risk;
-- transcript or attribution integrity defect;
+- naturalness, transcript, attribution, or speaker-integrity defect;
 - production defect blocking existing users;
 - security, privacy, or data-integrity defect;
 - repeated development blocker observed in at least two real tasks.
 
-An interrupt still requires explicit scope, acceptance criteria, verification, handoff, and a separate PR.
+Every interrupt still requires explicit scope, acceptance criteria, verification, handoff, and a separate PR.

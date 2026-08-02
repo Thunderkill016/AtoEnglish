@@ -1,239 +1,142 @@
 # AtoEnglish project memory
 
-**Status:** mandatory session-continuity source  
+**Status:** mandatory cross-session source  
 **Updated:** 2026-08-02  
 **Repository:** `Thunderkill016/AtoEnglish`  
 **Default branch:** `main`
 
-This file exists because chat memory is not a reliable project record. A new AI session must reconstruct AtoEnglish from GitHub without access to an earlier conversation or shared-chat link.
-
-Do not turn this file into a transcript archive. Keep only current operating state, durable owner decisions, unresolved blockers, and the exact handoff needed to continue safely. Git history, issues, pull requests, checks, and task handoffs remain the detailed historical record.
+This file stores only durable product decisions, live repository structure, unresolved blockers, and the next safe action. It is not a chat transcript.
 
 ## Authority order
 
-Use this order:
+1. Owner's latest explicit instruction.
+2. `docs/product/PRODUCT_TRUTH.md`.
+3. `docs/product/NATURAL_COMMUNICATION_LEARNING_SYSTEM.md`.
+4. `docs/product/CURRENT_PRIORITY.md`.
+5. `docs/product/DO_NOT_BUILD.md`.
+6. Live repository, pull requests, checks, source evidence, and this snapshot.
+7. `AGENT_PLAN.md`, `AGENT_BACKLOG.md`, and task handoffs.
 
-1. the owner's explicit current instruction;
-2. `docs/product/PRODUCT_TRUTH.md`;
-3. `docs/product/YOUTUBE_TO_CURRICULUM.md`;
-4. `docs/product/CURRENT_PRIORITY.md`;
-5. `docs/product/DO_NOT_BUILD.md`;
-6. this project-memory snapshot;
-7. live `main`, pull requests, issues, checks, deployments, and source evidence;
-8. `AGENT_PLAN.md`, `AGENT_BACKLOG.md`, and task-specific handoffs.
+`docs/product/YOUTUBE_TO_CURRICULUM.md` is retained as the previous architecture record. Its useful source, clip, prerequisite, and transfer ideas remain valid, but it is no longer the learner-facing product identity.
 
-When sources conflict, report the conflict. Do not silently follow an older document, a newer branch, or a technically attractive experiment.
+## Canonical product decision
 
-## Session-start protocol
+AtoEnglish is a Vietnamese-first system for learning English inside naturally occurring communication environments.
 
-Before non-trivial work:
+> Natural communication on the surface; an invisible structured curriculum underneath.
 
-1. Confirm the repository is **AtoEnglish**, not another project.
-2. Read `AGENTS.md`, this file, and the mandatory product documents.
-3. Fetch the live `main` head.
-4. Inspect active and recently merged pull requests touching the requested area.
-5. State the task, branch, PR, exact head, merge state, deployment state, verified checks, unverified checks, and next safe action.
-6. For multi-step work, show a short plan before execution.
-7. Continue from repository evidence, not remembered chat claims.
+The learner enters recognisable situations, understands people, responds, repairs misunderstandings, continues the interaction, and later succeeds with changed speakers and contexts.
 
-## Session-end protocol
-
-Before stopping:
-
-1. Update the PR body or task handoff with the exact final head.
-2. Record checks that actually ran against that head.
-3. Separate technical, source-rights, transcript, browser, learner, and production verification.
-4. Record unresolved blockers and one next safe action.
-5. Update this file when product direction, active work, or cross-session blockers change.
-6. Do not store secrets, cookies, learner data, raw chats, or temporary preview-share tokens.
-7. Never merge or promote production without explicit owner authorization.
-
-Use `docs/handoffs/README.md` for handoff fields.
-
-## Owner collaboration preferences
-
-- Communicate plans and status in Vietnamese.
-- Show a plan before complex or multi-step work.
-- Do not silently switch repository, branch, or product direction.
-- Use exact evidence: repo, branch, PR, SHA, workflow, deployment, source, and blocker.
-- Mark uncertainty and stale evidence clearly.
-- Treat research as cumulative: add new evidence to existing evidence, compare conflicts, and record the final decision and reason.
-
-## Durable owner decision — canonical product direction
-
-**Recorded:** 2026-08-02.
-
-AtoEnglish is now a **YouTube-to-Curriculum Engine**:
-
-> Use legally usable natural conversations from YouTube and other authentic-media sources as language input, then organize short clips into a systematic path from near-zero English to stable practical communication.
-
-This is not a module, a catalog of unrelated Real Talk lessons, or a video-to-quiz product.
-
-### Core product model
+The system must not present an academic grammar syllabus with videos attached. It must also not become a random feed of English clips.
 
 ```text
-authentic conversation sources
-→ bounded Communication Clips
-→ language, speech, context, and prerequisite analysis
-→ communicative capability graph
-→ level-specific support
-→ comprehension
-→ acquisition and active recall
-→ transfer to changed situations
+natural interaction corpus
+→ communication events
+→ capability mapping
+→ invisible prerequisite graph
+→ environment experience
+→ first encounter and progressive support
+→ retrieval and multi-turn response
+→ changed-context transfer
 → delayed and varied re-exposure
-→ practical communication ability
 ```
 
-### Curriculum unit
+## Source and curriculum separation
 
-The smallest unit is a **Communication Clip**, usually 3–60 seconds. A full video or podcast is a source container.
+Natural source collection and curriculum ordering are separate responsibilities.
 
-One clip may support different treatments at A0, A1, A2, and B1. The system teaches only what is appropriate at that learner state.
-
-### Curriculum organization
-
-Order clips by communicative capability and prerequisites, not video order or a grammar checklist.
-
-Simplified graph:
+Correct source process:
 
 ```text
-recognize greetings
-→ introduce oneself
-→ ask about another person
-→ answer and ask a follow-up
-→ sustain several turns
-→ repair misunderstanding
-→ describe and explain
-→ narrate and discuss
+select a real communication environment
+→ review complete recordings
+→ identify all useful communication events
+→ annotate what actually happened
+→ map events to reusable capabilities
+→ build progression
 ```
 
-### Complete learning contract
+Incorrect process:
 
-Every full treatment requires:
+```text
+choose a sentence or lesson first
+→ search for a video containing it
+→ call the result representative natural language
+```
 
-1. **Comprehension** — understand what real speakers mean and do.
-2. **Acquisition** — retrieve selected chunks, patterns, and speech features.
-3. **Transfer** — use the capability with personal information, changed situations, and unseen speakers.
+Phrase-targeted discoveries from earlier batches are exploratory evidence only. They do not define the canonical corpus.
 
-Without transfer, AtoEnglish is only an annotated video viewer.
+## Initial product slice
 
-### Long-range destination
+Build five learner-facing environments:
 
-The initial destination is practical high-A2 to B1 communication, not a claim of fluency.
+1. meet someone new;
+2. buy or order something;
+3. find a place;
+4. recover from a listening failure;
+5. talk briefly about oneself.
 
-### First validation slice
+Each environment should contain an accessible anchor, naturally occurring variations, multiple speakers or contexts, an unexpected or repair turn, guided response, changed-context transfer, and delayed re-exposure.
 
-Build a seven-day A0 mini-curriculum:
-
-- 20–30 reviewed clips;
-- multiple videos, speakers, and contexts;
-- five capabilities:
-  1. greet someone;
-  2. say one's name;
-  3. ask another person's name;
-  4. say where one is from;
-  5. ask someone to repeat;
-- each capability appears in 3–5 clips from different speakers or contexts;
-- final evidence includes delayed recall, unseen-speaker recognition, and changed-situation transfer.
-
-### Four learning-core responsibilities
-
-1. **Source Engine** — source, timestamps, speakers, permission, attribution, and transcript provenance.
-2. **Language Intelligence Engine** — level treatments, functions, chunks, patterns, speech features, context, prerequisites, and learning value.
-3. **Curriculum Graph** — ordering, next capability, repeated exposure, review, and advancement evidence.
-4. **Lesson Runtime** — playback, transcript evidence, comprehension, recall, imitation, response, FSRS, and transfer.
-
-Keep these as bounded modular-monolith responsibilities first. Do not prematurely split them into services.
-
-### Rights and review boundary
-
-A public YouTube URL does not automatically grant rights to copy transcripts, translate content, create derivative lessons, or sell access.
-
-A learner-facing clip requires documented permission, a compatible license, or public-domain status, plus source URL, timestamps, attribution, transcript provenance, and human review.
-
-AI may draft analysis and activities but cannot publish autonomously.
-
-## Superseded product direction
-
-The earlier fixed 28-day workplace-speaking journey is no longer the canonical curriculum roadmap after the owner's 2026-08-02 decision.
-
-Reusable parts remain valuable:
-
-- speaking-task definitions;
-- feedback and retry;
-- checkpoint and assessment patterns;
-- FSRS and progress infrastructure;
-- pilot evidence and privacy boundaries.
-
-Do not revert to the old roadmap because existing runtime copy or older documents still mention 28 days.
+Corpus size follows coverage quality. Do not fill quotas with unnatural, misleading, overly difficult, or unsuitable sources. Missing evidence remains an explicit coverage gap.
 
 ## Current repository snapshot
 
-Snapshot time: **2026-08-02**. Verify live state before relying on it.
+Snapshot time: **2026-08-02 18:11 +07:00**. Verify live state before relying on it.
 
-### Canonical main
+### `main`
 
-- `main` snapshot head: `961e779886ff95b1b5f67d5e6997520d1facdb1a`.
-- PR #43 merged the focused Gold Day 1 journey.
-- `main` does not yet implement the YouTube-to-Curriculum architecture.
-- No draft experiment below has been merged or promoted to production.
+- Head: `961e779886ff95b1b5f67d5e6997520d1facdb1a`.
+- Latest merged product PR: #43, focused Gold Day 1.
+- Main does not yet contain the natural-communication architecture or compiler contracts below.
+- No branch in the current stack has been merged or deployed to production.
 
-### PR #46 — authentic-media technical proof
+### Current stacked product work
 
-- Branch: `agent/real-talk-public-domain-pilot`.
-- Snapshot head: `bbffa43f9d24a79b2f8763229d64cd7ee56ee2a2`.
-- State: open, draft, mergeable, not merged, not production.
-- It proves one public-domain clip can support provenance, bounded playback, timestamped transcript, retrieval, and optional FSRS.
-- It is **not** the final product shape and should not be polished as an isolated destination.
-- Reusable code may later serve the seven-day mini-curriculum.
-- Known blockers:
-  - `p.m.` is moved across timestamp evidence in learner-facing text;
-  - approval validation needs catalog permission and human-verified segments;
-  - all FSRS save failures are displayed as guest state;
-  - browser playback, timestamp stopping, mobile layout, and authenticated save remain unverified;
-  - transcript, speakers, names, and translation require human listening review.
+| PR | Branch | Base | Head | State | Role |
+|---|---|---|---|---|---|
+| #47 | `docs/persist-project-memory` | `main` | `213e217a5f0e57b4f2aa0879716755b14381eaab` | open draft | Previous YouTube-to-Curriculum documentation reset |
+| #48 | `feature/curriculum-compiler-contracts` | PR #47 | `d1e8038584ea7963d3ab5a6ab6ae9ab4cf103d6a` | open draft | Source, clip, capability, treatment, evidence, validation contracts |
+| #49 | `content/a0-source-curation-batch-1` | PR #48 | `0e96ba88400761e24953c6d2fd89b3e27210e033` | open draft | Phrase/capability-targeted discovery batch; exploratory only |
+| #50 | `feature/two-lane-content-model` | PR #48 | `4f94223bec700ca89afc42b47a01b84404585c5f` | open draft | Licensed core, companion lane, source-library fallback |
+| #51 | `content/natural-a0-candidates-batch-2` | PR #50 | `b0a009989385ba51663136b1efbcd2831a926562` | open draft | Natural-interaction shortlist; still phrase-targeted and unverified |
+| #52 | `experiment/authorized-natural-media-ingestion` | PR #50 | `a874120a389c451cc39ac7a4cbd1fb4692f0fcce` | open draft | TypeScript demo: Data API/oEmbed metadata + authorized local captions |
+| #53 | `product/natural-communication-environments` | PR #50 | see live PR head | open draft | Current canonical product-surface reset and repository synchronization |
 
-### PR #45 — mastery-mechanism experiment
+### Verification evidence
 
-- Branch: `agent/autonomous-mastery-tutor`.
-- Snapshot head: `2970d4073ae89ec2aecf6a4d2ace1ead6ae8222b`.
-- State: open, draft, mergeable, not merged, not production.
-- Diagnosis, teaching only gaps, fading support, repair, cold transfer, and checkpoint gating may be reused inside the new learning core.
-- It is not a separate canonical product direction after the owner decision.
-- Do not merge the entire experiment solely because Verify passed.
+- PR #47 Verify #69 passed on `213e217...`.
+- PR #48 Verify #72 passed on `d1e803...`.
+- PR #49 Verify #73 passed on `0e96ba...`.
+- PR #50 Verify #75 passed on `4f9422...`.
+- PR #51 Verify #76 passed on `b0a009...`.
+- PR #52 Verify #78 passed on `a87412...` after adding no-key oEmbed fallback.
+- PR #53 requires a new exact-head Verify run after document alignment is complete.
 
-### Merged PR #43 — Gold Day 1
+CI proves repository consistency only. It does not prove source rights, naturalness, transcript accuracy, pedagogical suitability, browser playback, or learner outcomes.
 
-- Supplies useful speaking-task, feedback, retry, checkpoint, and pilot patterns.
-- Its synthetic source and fixed 28-day placement are not the long-term curriculum model.
+## Correct interpretation of existing branches
 
-### PR #35
+- PR #47 records the previous product name. PR #53 supersedes that learner-facing identity without discarding the useful authentic-input architecture.
+- PR #48 remains reusable domain infrastructure, but future extensions should add environment and communication-event concepts rather than treating clips as standalone lessons.
+- PR #49 and PR #51 exposed a discovery bias: starting from target phrases or predetermined capabilities can make a corpus look natural while still being curriculum-shaped. Preserve them as research evidence, not the canonical corpus.
+- PR #50 remains the current stack base because its rights-safe licensed-core and companion boundaries are still required.
+- PR #52 is an authoring/ingestion experiment for authorized captions, not the product roadmap.
+- PR #45 and PR #46 remain older unmerged mechanism/technical proofs. Reuse only what serves environment sessions.
 
-- Older, unmergeable Gold Day 1 branch.
-- Treat as stale unless explicitly revived.
+## Durable product boundaries
 
-### PR #47 — project memory and product-direction reset
+- Do not scrape or download unauthorized YouTube media or captions.
+- Do not represent scripted teaching dialogues as natural interaction.
+- Do not build the corpus by hunting isolated target phrases.
+- Do not organize learner navigation around grammar chapters.
+- Do not let a companion-only source become a full curriculum source.
+- Do not publish AI-generated source analysis without human rights, transcript, naturalness, suitability, and pedagogical review.
+- Do not merge, deploy, or promote production without explicit owner authorization.
+- Do not store secrets, cookies, raw chats, preview tokens, or learner-sensitive data in project memory.
 
-- Branch: `docs/persist-project-memory`.
-- State: open draft, not merged, not deployed.
-- Scope now includes session continuity and alignment of high-authority product documents with YouTube-to-Curriculum.
-- Adds `docs/product/YOUTUBE_TO_CURRICULUM.md`.
-- Does not change runtime, database, dependencies, or production.
-- Next safe action: finish document alignment, collapse to one clean commit, run Verify on the exact head, and leave merge authorization to the owner.
+## Current next action
 
-## Current next product action
+Finish PR #53 alignment across all high-authority documents, record the final exact head in the PR body, run GitHub Verify, and keep the PR draft.
 
-After PR #47 is accepted, create a separate bounded task to define the Communication Clip, source-review, level-treatment, prerequisite, three-layer lesson, and advancement contracts for the seven-day A0 pilot.
-
-Then build the reviewed 20–30 clip corpus before broad runtime or ingestion automation.
-
-## Durable boundaries
-
-- Work on a dedicated branch and reviewed PR.
-- Never automatically merge or deploy.
-- Never expose secrets or learner-sensitive data.
-- Preserve source rights, attribution, timestamps, transcript provenance, and human review.
-- Do not build unrestricted ingestion or autonomous publication.
-- Do not build the full A0–B1 graph before the seven-day pilot.
-- Passing CI proves repository consistency, not source integrity, curriculum coherence, or learning effectiveness.
-- No new standalone lesson engine may replace the canonical direction without owner instruction.
+After the owner accepts the direction, define the smallest environment and communication-event contracts, then collect a small environment-first corpus by reviewing complete natural recordings rather than phrase search results.
