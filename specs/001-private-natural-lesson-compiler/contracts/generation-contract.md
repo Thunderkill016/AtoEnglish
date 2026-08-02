@@ -35,9 +35,11 @@ Anonymous requests MUST fail before transcript or Gemini calls.
 interface GenerationSuccess {
   success: true;
   status: "ai_draft";
-  persisted: boolean;
+  persisted: true;
+  persistence: "saved_private_draft";
   video: RealTalkVideo;
   lesson: RealTalkLesson;
+  warnings: string[];
   source: {
     provider: "youtube";
     externalId: string;
@@ -57,6 +59,8 @@ interface GenerationSuccess {
 ### Success invariants
 
 - `status` is always `ai_draft`.
+- `persisted` is always true in spec 001.
+- Both the private video record and lesson record completed their required writes.
 - Persisted records belong to the authenticated user.
 - Persisted records are not public.
 - The returned lesson passed runtime schema validation.
@@ -65,9 +69,9 @@ interface GenerationSuccess {
 - The response does not claim publication, transcript verification, pronunciation
   assessment, or mastery.
 
-`persisted` may be false only when the system intentionally supports a
-non-persistent preview mode. Silent database failure MUST NOT be reported as a
-fully saved draft.
+Spec 001 does not have an implicit non-persistent preview success. A database
+failure MUST return `DRAFT_PERSISTENCE_FAILED` and MUST NOT be reported as a saved
+or preview-only success.
 
 ## Failure response
 
@@ -93,10 +97,28 @@ interface GenerationFailure {
 }
 ```
 
+### Failure mapping
+
+| Stage | Code |
+|---|---|
+| Missing authenticated user | AUTH_REQUIRED |
+| Invalid URL/level request | INVALID_INPUT |
+| Request rate limit exceeded | RATE_LIMITED |
+| Unsupported source or blocked transcript policy | SOURCE_UNSUPPORTED |
+| Missing/provider-failed transcript | TRANSCRIPT_UNAVAILABLE |
+| Too-short or unusable transcript/window | TRANSCRIPT_INVALID |
+| Missing/unreachable Gemini provider | MODEL_UNAVAILABLE |
+| Gemini quota exceeded | MODEL_RATE_LIMITED |
+| Missing candidate, malformed JSON, or invalid schema | MODEL_OUTPUT_INVALID |
+| Parsed output lacks source support | SOURCE_EVIDENCE_FAILED |
+| Required private draft write fails | DRAFT_PERSISTENCE_FAILED |
+| Unexpected uncategorized server failure | INTERNAL_ERROR |
+
 ### Failure invariants
 
 - No public lesson is created.
 - Invalid model output is not partially persisted.
+- Persistence failure is visible and is not converted into success.
 - The client receives no raw provider response containing secrets or excessive
   internal detail.
 - Evidence failures are machine-readable and safe to show in an editor-facing
@@ -108,30 +130,40 @@ interface GenerationFailure {
 ```ts
 interface TranscriptSourceAdapter {
   id: string;
-  acquisitionMode:
-    | "creator_provided"
-    | "authorized_export"
-    | "licensed_source"
-    | "public_domain"
-    | "human_reviewed_upload"
-    | "experimental_unofficial";
-  fetch(source: SourceReference): Promise<TranscriptSourceResult>;
+  trust: "approved" | "experimental";
+  acquire(source: SourceReference): Promise<TranscriptSourceResult>;
 }
 
 interface TranscriptSourceResult {
-  language: string;
-  reviewStatus: "unreviewed" | "machine_checked" | "human_verified";
   cues: Array<{
     text: string;
     offset: number;
     duration: number;
   }>;
-  warnings: string[];
+  metadata: {
+    adapterId: string;
+    provider: string;
+    acquisitionMode:
+      | "creator_provided"
+      | "authorized_export"
+      | "licensed_source"
+      | "public_domain"
+      | "human_reviewed_upload"
+      | "approved_provider_api"
+      | "experimental_unofficial";
+    trust: "approved" | "experimental";
+    language: string;
+    reviewStatus: "unreviewed" | "machine_checked" | "human_verified";
+    sourceReference: string;
+    acquiredAt: string;
+    warnings: string[];
+  };
 }
 ```
 
-An `experimental_unofficial` adapter MUST add a warning and MUST NOT make the
-result eligible for public publication.
+An `experimental_unofficial` adapter MUST add warnings and MUST NOT make the
+result eligible for public publication. It is disabled by default, requires an
+explicit non-production opt-in, and is always rejected in production.
 
 ## Gemini structured output
 
@@ -188,13 +220,24 @@ verification claim.
 
 ## Persistence contract
 
+### Current-draft identity
+
+```text
+privateDraftKey = authenticated owner ID + source video ID + requested level
+```
+
+The persisted slug MUST be deterministic from those fields and MUST NOT depend on
+an AI-generated title. Repeating generation with the same key updates one current
+private draft. Different owners or requested levels use distinct keys. Immutable
+attempt history is outside spec 001.
+
 ### Video draft
 
 - `created_by = auth.uid()`
 - `is_public = false`
 - `review_state = ai_draft`
 - selected segment and source metadata are stored
-- source acquisition mode and warnings are stored
+- source acquisition mode and warnings are retained by the draft contract
 
 ### Lesson draft
 
@@ -202,6 +245,16 @@ verification claim.
 - stores environment, communication events, transcript, all lesson phases,
   transfer task, generation model, and warnings
 - reload returns the same contract fields needed by the preview
+- one current lesson is upserted for the deterministic video draft identity
+
+### Persistence failure
+
+- failure to write the video returns `DRAFT_PERSISTENCE_FAILED`;
+- failure to write the lesson returns `DRAFT_PERSISTENCE_FAILED`;
+- the editor UI MUST NOT show a saved draft after either failure;
+- a partially written private record is not a successful generation result and
+  must be retried or reconciled before use;
+- no persistence failure may create or expose a public record.
 
 ### RLS contract
 
