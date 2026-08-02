@@ -47,6 +47,64 @@ function buildLesson(
   };
 }
 
+function buildVideoPayload(params: {
+  privateSlug: string;
+  video: RealTalkVideo;
+  transcriptMetadata: TranscriptSourceMetadata;
+}): Json {
+  const { privateSlug, video, transcriptMetadata } = params;
+
+  return {
+    slug: privateSlug,
+    youtube_id: video.youtubeId,
+    title: video.title,
+    title_vi: video.titleVi,
+    channel_name: video.channelName,
+    channel_url: video.channelUrl,
+    thumbnail_url: video.thumbnailUrl,
+    duration_seconds: video.durationSeconds,
+    segment_start: video.segment.startSeconds,
+    segment_end: video.segment.endSeconds,
+    level: video.level,
+    topics: video.topics,
+    speaker_count: video.speakerCount,
+    speakers: video.speakers as unknown as Json,
+    is_public: false,
+    transcript_acquisition_mode: transcriptMetadata.acquisitionMode,
+    transcript_review_status: transcriptMetadata.reviewStatus,
+    transcript_source_metadata: transcriptMetadata as unknown as Json,
+    transcript_cue_digest:
+      transcriptMetadata.provenance?.cueDigestSha256 ?? null,
+  };
+}
+
+function buildLessonPayload(params: {
+  lesson: RealTalkLesson;
+  model: string;
+  warnings: string[];
+}): Json {
+  const { lesson, model, warnings } = params;
+
+  return {
+    title: lesson.title,
+    title_vi: lesson.titleVi,
+    level: lesson.level,
+    estimated_minutes: lesson.estimatedMinutes,
+    can_do_statement: lesson.canDoStatement,
+    can_do_statement_vi: lesson.canDoStatementVi,
+    transcript: lesson.transcript as unknown as Json,
+    pre_watch: lesson.preWatch as unknown as Json,
+    while_watch: lesson.whileWatch as unknown as Json,
+    post_watch: lesson.postWatch as unknown as Json,
+    environment: lesson.environment as unknown as Json,
+    communication_events: lesson.communicationEvents as unknown as Json,
+    transfer_task: lesson.transferTask as unknown as Json,
+    generation_model: model,
+    generation_status: "ai_draft",
+    generation_warnings: warnings,
+  };
+}
+
 export async function persistOwnerPrivateDraft(params: {
   video: RealTalkVideo;
   draft: GeneratedLessonDraft;
@@ -74,75 +132,23 @@ export async function persistOwnerPrivateDraft(params: {
 
   try {
     const supabase = await createClient();
-    const { data: dbVideo, error: videoError } = await supabase
-      .from("real_talk_videos")
-      .upsert(
-        {
-          slug: privateSlug,
-          youtube_id: privateVideo.youtubeId,
-          title: privateVideo.title,
-          title_vi: privateVideo.titleVi,
-          channel_name: privateVideo.channelName,
-          channel_url: privateVideo.channelUrl,
-          thumbnail_url: privateVideo.thumbnailUrl,
-          duration_seconds: privateVideo.durationSeconds,
-          segment_start: privateVideo.segment.startSeconds,
-          segment_end: privateVideo.segment.endSeconds,
-          level: privateVideo.level,
-          topics: privateVideo.topics,
-          speaker_count: privateVideo.speakerCount,
-          speakers: privateVideo.speakers as unknown as Json,
-          created_by: userId,
-          is_public: false,
-          transcript_acquisition_mode: transcriptMetadata.acquisitionMode,
-          transcript_review_status: transcriptMetadata.reviewStatus,
-          transcript_source_metadata: transcriptMetadata as unknown as Json,
-          transcript_cue_digest:
-            transcriptMetadata.provenance?.cueDigestSha256 ?? null,
-        },
-        { onConflict: "slug" },
-      )
-      .select("id")
-      .single();
+    const { data, error } = await supabase.rpc(
+      "upsert_real_talk_private_draft",
+      {
+        p_video: buildVideoPayload({
+          privateSlug,
+          video: privateVideo,
+          transcriptMetadata,
+        }),
+        p_lesson: buildLessonPayload({ lesson, model, warnings }),
+      },
+    );
 
-    if (videoError || !dbVideo) {
+    if (error || !data?.[0]?.video_id || !data[0].lesson_id) {
       return generationFailure(
         "DRAFT_PERSISTENCE_FAILED",
-        "Không thể lưu nguồn của bản nháp vào tài khoản. Không có bài học nào được xác nhận là đã lưu.",
-      );
-    }
-
-    const { error: lessonError } = await supabase
-      .from("real_talk_lessons")
-      .upsert(
-        {
-          video_id: dbVideo.id,
-          title: lesson.title,
-          title_vi: lesson.titleVi,
-          level: lesson.level,
-          estimated_minutes: lesson.estimatedMinutes,
-          can_do_statement: lesson.canDoStatement,
-          can_do_statement_vi: lesson.canDoStatementVi,
-          transcript: lesson.transcript as unknown as Json,
-          pre_watch: lesson.preWatch as unknown as Json,
-          while_watch: lesson.whileWatch as unknown as Json,
-          post_watch: lesson.postWatch as unknown as Json,
-          environment: lesson.environment as unknown as Json,
-          communication_events: lesson.communicationEvents as unknown as Json,
-          transfer_task: lesson.transferTask as unknown as Json,
-          generation_model: model,
-          generation_status: "ai_draft",
-          generation_warnings: warnings as unknown as Json,
-          reviewed_at: null,
-          reviewed_by: null,
-        },
-        { onConflict: "video_id" },
-      );
-
-    if (lessonError) {
-      return generationFailure(
-        "DRAFT_PERSISTENCE_FAILED",
-        "Nguồn đã được ghi riêng tư nhưng nội dung bài học chưa lưu hoàn chỉnh. Hãy thử lại trước khi rời trang.",
+        "Không thể lưu trọn vẹn bản nháp vào tài khoản. Giao dịch đã bị hủy và không có bản nháp nửa vời nào được xác nhận là đã lưu.",
+        { retryAfterSeconds: 15 },
       );
     }
 
@@ -150,7 +156,7 @@ export async function persistOwnerPrivateDraft(params: {
   } catch {
     return generationFailure(
       "DRAFT_PERSISTENCE_FAILED",
-      "Không thể lưu bản nháp vào tài khoản do lỗi dữ liệu tạm thời. Hãy thử lại.",
+      "Không thể lưu bản nháp vào tài khoản do lỗi dữ liệu tạm thời. Giao dịch đã bị hủy; hãy thử lại.",
       { retryAfterSeconds: 15 },
     );
   }
