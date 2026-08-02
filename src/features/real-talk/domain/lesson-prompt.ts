@@ -19,7 +19,12 @@ function formatTimestamp(seconds: number) {
 }
 
 function escapeUntrustedJson(value: unknown) {
-  return JSON.stringify(value)
+  const json = JSON.stringify(value);
+  if (json === undefined) {
+    throw new TypeError("Untrusted prompt data must be JSON serializable");
+  }
+
+  return json
     .replace(/</g, "\\u003c")
     .replace(/>/g, "\\u003e")
     .replace(/&/g, "\\u0026");
