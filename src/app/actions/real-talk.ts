@@ -50,10 +50,32 @@ async function fetchTranscript(videoId: string): Promise<{
   try {
     // Dynamic import to avoid bundling issues
     const { YoutubeTranscript } = await import("youtube-transcript");
-    const items = await YoutubeTranscript.fetchTranscript(videoId);
+
+    // Attempt 1: Fetch default transcript
+    let items = await YoutubeTranscript.fetchTranscript(videoId).catch(
+      () => null,
+    );
+
+    // Attempt 2: Fetch explicitly for 'en'
+    if (!items || items.length === 0) {
+      items = await YoutubeTranscript.fetchTranscript(videoId, {
+        lang: "en",
+      }).catch(() => null);
+    }
+
+    // Attempt 3: Fetch for 'en-US'
+    if (!items || items.length === 0) {
+      items = await YoutubeTranscript.fetchTranscript(videoId, {
+        lang: "en-US",
+      }).catch(() => null);
+    }
 
     if (!items || items.length === 0) {
-      return { success: false, error: "Video không có phụ đề / captions." };
+      return {
+        success: false,
+        error:
+          "Video này không có phụ đề (Subtitles/CC) trên YouTube. AI cần phụ đề để phân tích thoại. Bạn hãy thử dán link video khác có phụ đề CC nhé!",
+      };
     }
 
     const mapped: RawTranscriptItem[] = items.map((item) => ({
@@ -65,8 +87,11 @@ async function fetchTranscript(videoId: string): Promise<{
     return { success: true, transcript: mapped };
   } catch (err: unknown) {
     const msg =
-      err instanceof Error ? err.message : "Không thể lấy transcript.";
-    return { success: false, error: msg };
+      err instanceof Error ? err.message : "Không thể lấy phụ đề từ video.";
+    return {
+      success: false,
+      error: `Không thể lấy phụ đề từ video: ${msg}. Hãy thử lại với video có phụ đề CC!`,
+    };
   }
 }
 
