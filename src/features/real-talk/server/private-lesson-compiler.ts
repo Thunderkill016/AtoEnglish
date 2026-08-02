@@ -1,7 +1,4 @@
-import {
-  buildNaturalLessonPrompt,
-  type NaturalLessonPromptMetadata,
-} from "@/features/real-talk/domain/lesson-prompt";
+import type { NaturalLessonPromptMetadata } from "@/features/real-talk/domain/lesson-prompt";
 import {
   generationFailure,
   type GenerationFailure,
@@ -10,24 +7,17 @@ import {
   TranscriptSourceError,
   type TranscriptSourceMetadata,
 } from "@/features/real-talk/domain/transcript-source";
+import { generateEvidenceBoundLessonWithGemini } from "@/features/real-talk/server/gemini-lesson-provider";
 import { acquireTranscriptForCompilation } from "@/features/real-talk/server/transcript-source-policy";
 import { experimentalYouTubeTranscriptSource } from "@/features/real-talk/server/transcript-sources/youtube-experimental";
 import {
-  generatedLessonDraftSchema,
   selectConversationWindow,
-  validateGeneratedDraftEvidence,
   type GeneratedLessonDraft,
 } from "@/lib/real-talk/generation-contract";
 import type { RealTalkLevel, RealTalkVideo } from "@/types/real-talk";
 
 const MAX_SOURCE_ITEMS = 80;
 const MAX_SEGMENT_SECONDS = 180;
-const GEMINI_MODELS = [
-  "gemini-3.6-flash",
-  "gemini-3.5-flash",
-  "gemini-2.5-flash",
-  "gemini-flash-latest",
-] as const;
 
 export type PrivateLessonCompilationResult =
   | {
@@ -103,136 +93,6 @@ async function fetchYouTubeMetadata(
   } catch {
     return fallback;
   }
-}
-
-async function generateLessonWithGemini(
-  source: Parameters<typeof buildNaturalLessonPrompt>[0]["source"],
-  metadata: NaturalLessonPromptMetadata,
-  level: RealTalkLevel,
-): Promise<
-  | { success: true; draft: GeneratedLessonDraft; model: string }
-  | GenerationFailure
-> {
-  const apiKey = process.env.GEMINI_API_KEY;
-  if (!apiKey) {
-    return generationFailure(
-      "MODEL_UNAVAILABLE",
-      "Gemini chưa được cấu hình cho môi trường này.",
-    );
-  }
-
-  const prompt = buildNaturalLessonPrompt({ source, metadata, level });
-  const jsonSchema = generatedLessonDraftSchema.toJSONSchema();
-  let lastFailure: GenerationFailure = generationFailure(
-    "MODEL_UNAVAILABLE",
-    "Gemini chưa phản hồi thành công. Hãy thử lại sau.",
-    { retryAfterSeconds: 30 },
-  );
-
-  for (const model of GEMINI_MODELS) {
-    for (let attempt = 1; attempt <= 2; attempt += 1) {
-      try {
-        const response = await fetch(
-          `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              contents: [{ role: "user", parts: [{ text: prompt }] }],
-              generationConfig: {
-                responseMimeType: "application/json",
-                responseJsonSchema: jsonSchema,
-                temperature: 0.2,
-                maxOutputTokens: 12_000,
-              },
-            }),
-            signal: AbortSignal.timeout(90_000),
-          },
-        );
-
-        if (!response.ok) {
-          if (response.status === 429) {
-            lastFailure = generationFailure(
-              "MODEL_RATE_LIMITED",
-              "Gemini đang vượt quota. Hãy đợi rồi thử lại.",
-              { retryAfterSeconds: 60 },
-            );
-          } else {
-            lastFailure = generationFailure(
-              "MODEL_UNAVAILABLE",
-              "Gemini tạm thời không khả dụng. Hãy thử lại sau.",
-              { retryAfterSeconds: response.status >= 500 ? 30 : undefined },
-            );
-          }
-
-          if ([429, 503].includes(response.status) && attempt < 2) {
-            await new Promise((resolve) =>
-              setTimeout(resolve, 1_500 * attempt),
-            );
-            continue;
-          }
-          break;
-        }
-
-        const payload = (await response.json()) as {
-          candidates?: Array<{
-            content?: { parts?: Array<{ text?: string }> };
-          }>;
-        };
-        const text = payload.candidates?.[0]?.content?.parts?.[0]?.text;
-        if (!text) {
-          lastFailure = generationFailure(
-            "MODEL_OUTPUT_INVALID",
-            "Gemini không trả về nội dung bài học hợp lệ.",
-          );
-          break;
-        }
-
-        let raw: unknown;
-        try {
-          raw = JSON.parse(text.trim());
-        } catch {
-          lastFailure = generationFailure(
-            "MODEL_OUTPUT_INVALID",
-            "Gemini trả về JSON không hợp lệ.",
-          );
-          break;
-        }
-
-        const parsed = generatedLessonDraftSchema.safeParse(raw);
-        if (!parsed.success) {
-          lastFailure = generationFailure(
-            "MODEL_OUTPUT_INVALID",
-            "Bản nháp Gemini không đúng cấu trúc bài học bắt buộc.",
-          );
-          break;
-        }
-
-        const evidenceFailures = validateGeneratedDraftEvidence(
-          parsed.data,
-          source,
-        );
-        if (evidenceFailures.length > 0) {
-          lastFailure = generationFailure(
-            "SOURCE_EVIDENCE_FAILED",
-            "Bản nháp chứa nội dung không được transcript nguồn hỗ trợ.",
-            { evidenceFailures },
-          );
-          break;
-        }
-
-        return { success: true, draft: parsed.data, model };
-      } catch {
-        lastFailure = generationFailure(
-          "MODEL_UNAVAILABLE",
-          "Không thể kết nối với Gemini. Hãy thử lại sau.",
-          { retryAfterSeconds: 30 },
-        );
-      }
-    }
-  }
-
-  return lastFailure;
 }
 
 export function mapTranscriptSourceError(
@@ -311,11 +171,11 @@ export async function compilePrivateNaturalLesson(params: {
   }
 
   const metadata = await fetchYouTubeMetadata(videoId);
-  const generated = await generateLessonWithGemini(
-    selectedSource,
+  const generated = await generateEvidenceBoundLessonWithGemini({
+    source: selectedSource,
     metadata,
-    params.level,
-  );
+    level: params.level,
+  });
   if (!generated.success) return generated;
 
   const fullDuration = Math.ceil(
