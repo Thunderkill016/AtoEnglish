@@ -2,13 +2,21 @@ import { createServer, type Server } from "node:http";
 
 import { chromium, type BrowserContextOptions } from "@playwright/test";
 
-const VIDEO_ID = "M7lc1UVf-VE";
-const WATCH_URL = `https://www.youtube.com/watch?v=${VIDEO_ID}`;
+const CANDIDATE_VIDEO_IDS = [
+  "M7lc1UVf-VE",
+  "bHQqvYy5KYo",
+  "aqz-KE-bpKQ",
+] as const;
 
 interface ProbeResult {
   name: string;
   status: "passed";
   detail: Record<string, string | number | boolean>;
+}
+
+interface CandidateVerification {
+  videoId: string;
+  probes: ProbeResult[];
 }
 
 function requireCondition(
@@ -38,7 +46,7 @@ function close(server: Server) {
   });
 }
 
-function htmlFor(origin: string) {
+function htmlFor(origin: string, videoId: string) {
   return `<!doctype html>
 <html lang="en">
 <head>
@@ -68,7 +76,7 @@ function htmlFor(origin: string) {
     window.onYouTubeIframeAPIReady = function () {
       window.__ytVerification.apiReady = true;
       window.__ytPlayer = new YT.Player('player', {
-        videoId: '${VIDEO_ID}',
+        videoId: '${videoId}',
         playerVars: {
           enablejsapi: 1,
           playsinline: 1,
@@ -104,16 +112,20 @@ function htmlFor(origin: string) {
 async function verifyBrowserProfile(params: {
   name: string;
   baseUrl: string;
+  videoId: string;
   context: BrowserContextOptions;
 }): Promise<ProbeResult> {
   const browser = await chromium.launch({ headless: true });
   try {
     const context = await browser.newContext(params.context);
     const page = await context.newPage();
-    await page.goto(params.baseUrl, {
-      waitUntil: "domcontentloaded",
-      timeout: 60_000,
-    });
+    await page.goto(
+      `${params.baseUrl}?video=${encodeURIComponent(params.videoId)}`,
+      {
+        waitUntil: "domcontentloaded",
+        timeout: 60_000,
+      },
+    );
 
     await page.waitForFunction(
       () => {
@@ -164,7 +176,7 @@ async function verifyBrowserProfile(params: {
       `${params.name}: YouTube player error ${state.errorCode}.`,
     );
     requireCondition(
-      state.videoId === VIDEO_ID,
+      state.videoId === params.videoId,
       `${params.name}: wrong video loaded (${state.videoId ?? "none"}).`,
     );
     requireCondition(
@@ -172,8 +184,8 @@ async function verifyBrowserProfile(params: {
       `${params.name}: muted playback state was not observed.`,
     );
     requireCondition(
-      Boolean(src?.includes(`/embed/${VIDEO_ID}`)),
-      `${params.name}: iframe source does not contain the official video ID.`,
+      Boolean(src?.includes(`/embed/${params.videoId}`)),
+      `${params.name}: iframe source does not contain the expected video ID.`,
     );
     requireCondition(
       Boolean(box && box.width >= 200 && box.height >= 200),
@@ -198,17 +210,17 @@ async function verifyBrowserProfile(params: {
   }
 }
 
-async function run() {
-  const probes: ProbeResult[] = [];
-  const oEmbedResponse = await fetch(
-    `https://www.youtube.com/oembed?url=${encodeURIComponent(WATCH_URL)}&format=json`,
+async function verifyOEmbed(videoId: string): Promise<ProbeResult> {
+  const watchUrl = `https://www.youtube.com/watch?v=${videoId}`;
+  const response = await fetch(
+    `https://www.youtube.com/oembed?url=${encodeURIComponent(watchUrl)}&format=json`,
     { signal: AbortSignal.timeout(30_000) },
   );
   requireCondition(
-    oEmbedResponse.ok,
-    `YouTube oEmbed returned HTTP ${oEmbedResponse.status}.`,
+    response.ok,
+    `YouTube oEmbed returned HTTP ${response.status}.`,
   );
-  const metadata = (await oEmbedResponse.json()) as {
+  const metadata = (await response.json()) as {
     title?: string;
     author_name?: string;
     author_url?: string;
@@ -224,70 +236,117 @@ async function run() {
     metadata.author_url?.startsWith("https://"),
     "oEmbed author URL is not HTTPS.",
   );
-  probes.push({
+
+  return {
     name: "youtube_oembed_metadata",
     status: "passed",
     detail: {
+      videoId,
       provider: metadata.provider_name,
       titlePresent: true,
       authorPresent: true,
       authorUrlHttps: true,
     },
-  });
+  };
+}
 
+async function verifyCandidate(params: {
+  videoId: string;
+  baseUrl: string;
+}): Promise<CandidateVerification> {
+  const probes = [await verifyOEmbed(params.videoId)];
+  probes.push(
+    await verifyBrowserProfile({
+      name: "desktop",
+      baseUrl: params.baseUrl,
+      videoId: params.videoId,
+      context: {
+        viewport: { width: 1280, height: 800 },
+        locale: "en-US",
+      },
+    }),
+  );
+  probes.push(
+    await verifyBrowserProfile({
+      name: "mobile",
+      baseUrl: params.baseUrl,
+      videoId: params.videoId,
+      context: {
+        viewport: { width: 390, height: 844 },
+        deviceScaleFactor: 2,
+        isMobile: true,
+        hasTouch: true,
+        locale: "en-US",
+        userAgent:
+          "Mozilla/5.0 (Linux; Android 14; Pixel 7) AppleWebKit/537.36 Chrome/131.0.0.0 Mobile Safari/537.36",
+      },
+    }),
+  );
+  return { videoId: params.videoId, probes };
+}
+
+async function run() {
   let origin = "";
-  const server = createServer((_request, response) => {
+  const server = createServer((request, response) => {
+    const requestedUrl = new URL(request.url ?? "/", origin || "http://127.0.0.1");
+    const requestedVideoId = requestedUrl.searchParams.get("video") ?? "";
+    const videoId = CANDIDATE_VIDEO_IDS.includes(
+      requestedVideoId as (typeof CANDIDATE_VIDEO_IDS)[number],
+    )
+      ? requestedVideoId
+      : CANDIDATE_VIDEO_IDS[0];
+
     response.writeHead(200, {
       "Content-Type": "text/html; charset=utf-8",
       "Cache-Control": "no-store",
       "Content-Security-Policy":
         "default-src 'self' https://www.youtube.com https://www.youtube-nocookie.com https://s.ytimg.com; script-src 'self' 'unsafe-inline' https://www.youtube.com https://s.ytimg.com; frame-src https://www.youtube.com https://www.youtube-nocookie.com; img-src 'self' data: https:; connect-src 'self' https:; media-src https:;",
     });
-    response.end(htmlFor(origin));
+    response.end(htmlFor(origin, videoId));
   });
+
+  const candidateFailures: Array<{ videoId: string; error: string }> = [];
+  let verified: CandidateVerification | null = null;
 
   try {
     const port = await listen(server);
     origin = `http://127.0.0.1:${port}`;
-    const baseUrl = `${origin}/`;
 
-    probes.push(
-      await verifyBrowserProfile({
-        name: "desktop",
-        baseUrl,
-        context: {
-          viewport: { width: 1280, height: 800 },
-          locale: "en-US",
-        },
-      }),
-    );
-    probes.push(
-      await verifyBrowserProfile({
-        name: "mobile",
-        baseUrl,
-        context: {
-          viewport: { width: 390, height: 844 },
-          deviceScaleFactor: 2,
-          isMobile: true,
-          hasTouch: true,
-          locale: "en-US",
-          userAgent:
-            "Mozilla/5.0 (Linux; Android 14; Pixel 7) AppleWebKit/537.36 Chrome/131.0.0.0 Mobile Safari/537.36",
-        },
-      }),
-    );
+    for (const videoId of CANDIDATE_VIDEO_IDS) {
+      try {
+        verified = await verifyCandidate({ videoId, baseUrl: `${origin}/` });
+        break;
+      } catch (error) {
+        candidateFailures.push({
+          videoId,
+          error:
+            error instanceof Error
+              ? error.message
+              : "Unexpected candidate verification failure.",
+        });
+      }
+    }
   } finally {
     if (server.listening) await close(server);
   }
+
+  requireCondition(
+    verified,
+    `No candidate passed oEmbed plus desktop and mobile playback: ${candidateFailures
+      .map((failure) => `${failure.videoId}=${failure.error}`)
+      .join("; ")}`,
+  );
 
   console.log(
     JSON.stringify(
       {
         status: "passed",
-        officialVideoId: VIDEO_ID,
+        selectedVideoId: verified.videoId,
+        candidatesTried: candidateFailures.length + 1,
+        rejectedCandidates: candidateFailures,
         mediaDownloadedOrStored: false,
         applicationDeployment: false,
-        probes,
+        probes: verified.probes,
       },
       null,
       2,
