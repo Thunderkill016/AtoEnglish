@@ -22,10 +22,17 @@ owner-private AI lesson drafting and private preview. Publication, curriculum
 sequencing, delayed transfer scheduling, rewards, payments, and deployment remain
 outside spec 001.
 
-The transcript runtime now has an explicit adapter and fail-closed policy. The
+The transcript runtime has an explicit adapter and fail-closed policy. The
 unofficial YouTube adapter is isolated, disabled by default, allowed only by
 explicit non-production opt-in, and rejected in production regardless of the
-flag. This resolves the previous implementation ambiguity around T023–T025.
+flag.
+
+The generation result contract is now discriminated and machine-readable.
+Compiler, action, repository, and editor UI use the same stable failure codes.
+Persistence is no longer allowed to silently downgrade to a successful in-memory
+preview. A successful response means both required draft writes completed.
+Repeated generation uses one deterministic current draft per owner, YouTube
+source, and requested level rather than an AI-title-based slug.
 
 The feature remains sufficiently specified for bounded implementation and
 testing. It is not ready for convergence or production because no production
@@ -37,11 +44,11 @@ provider, and human evidence remains unchecked.
 | Principle | Status | Evidence / gap |
 |---|---|---|
 | Natural Communication First | Aligned | Environment, roles, practical goal, communication events, and transfer are required across spec, schema, persistence, and preview |
-| Evidence-Bound Generation | Partially aligned | Zod, source checks, adapter metadata, and runtime policy exist; full fixtures, approved production source, and human verification remain open |
+| Evidence-Bound Generation | Partially aligned | Zod, source checks, stable evidence failures, adapter metadata, and runtime policy exist; full fixtures, approved production source, and human verification remain open |
 | Transfer Before Completion | Aligned in code, unverified | Preview implementation requires a transfer response; component/browser tests remain open |
-| Rights, Privacy, Safety | Partially aligned | Official playback, private RLS design, and production transcript fail-closed policy exist; production acquisition and migration proof remain open |
-| Small Independent Delivery | Aligned | Roadmap separates publication and later capabilities; generation logic was extracted without broad architecture expansion |
-| Measurable Evidence | Aligned in requirements, unverified | Success criteria and exact-head checks exist; observed final results are absent |
+| Rights, Privacy, Safety | Partially aligned | Official playback, explicit persistence failure, private RLS design, and production transcript fail-closed policy exist; production acquisition and migration proof remain open |
+| Small Independent Delivery | Aligned | Roadmap separates publication and later capabilities; compiler and repository boundaries were extracted without broad architecture expansion |
+| Measurable Evidence | Aligned in requirements, unverified | Stable result codes, test artifacts, success criteria, and exact-head checks exist; observed final results are absent |
 
 No constitution violation has been approved as an exception.
 
@@ -51,6 +58,9 @@ No constitution violation has been approved as an exception.
 
 - authenticated generation gate;
 - validated URL and level;
+- stable `GenerationFailureCode` union and discriminated result contract;
+- retry guidance and deduplicated evidence-failure payloads;
+- editor-facing failure code, retry, and evidence display;
 - `TranscriptSourceAdapter` contract with cues, acquisition mode, trust, review
   status, source reference, warnings, and typed failures;
 - isolated `experimental_unofficial` YouTube transcript adapter;
@@ -66,6 +76,10 @@ No constitution violation has been approved as an exception.
 - Zod runtime validation;
 - source-evidence checks for transcript and activities;
 - actual generation model tracking;
+- dedicated private draft repository;
+- deterministic owner+source+level draft identity independent of AI title;
+- repeated generation updating one current private draft;
+- explicit `DRAFT_PERSISTENCE_FAILED` behavior with no saved/preview-only success;
 - private `ai_draft` data model and migration intent;
 - environment, events, transfer, warnings, and model persistence fields;
 - owner-facing AI draft warnings;
@@ -77,7 +91,7 @@ No constitution violation has been approved as an exception.
 These are implementation observations only. They are not marked as technically
 verified unless the corresponding tasks are checked from an actual run.
 
-### Requirements with incomplete implementation
+### Requirements with incomplete implementation or evidence
 
 1. **FR-003/FR-004 — Production transcript source**
    - Adapter and policy boundaries are implemented.
@@ -86,29 +100,31 @@ verified unless the corresponding tasks are checked from an actual run.
      evidence, and operational decision.
    - T084 remains convergence-blocking.
 
-2. **FR-019 and failure contract — Stable failures and persistence**
-   - Transcript source failures are typed internally.
-   - The public server-action result still primarily exposes human-readable
-     strings rather than the complete specified failure-code contract.
-   - Persistence can still downgrade to an in-memory preview while returning
-     overall generation success.
-   - Tasks T041–T043 remain blocking.
+2. **FR-019 and failure contract — Execution proof**
+   - Stable external codes and explicit persistence semantics are implemented.
+   - Result-code and deterministic-identity unit tests exist but have not been
+     executed on the exact final head.
+   - Auth ordering, provider failures, model 429/invalid output, no-persistence
+     after evidence failure, and controlled database failure tests remain missing.
+   - T030–T032, T045, T076–T082 remain blocking.
 
 3. **FR-024 — Required tests**
-   - Initial domain and transcript policy tests exist.
+   - Initial domain, transcript policy, result-code, and draft-identity tests exist.
    - Action, auth-ordering, provider failure, RLS, mapping, prompt-injection,
-     component, and browser tests are missing.
+     component, and browser tests remain missing.
    - Tasks T013–T019, T030–T033, T044–T046, T052–T055, and T065–T068 remain open.
 
 4. **Persistence schema proof**
-   - A migration and app-level table types exist.
-   - Hosted/non-production application, RLS behavior, and generated-type
-     reconciliation have not been observed.
-   - Tasks T062–T063 remain blocking.
+   - A repository, migration, deterministic identity, and app-level table types
+     exist.
+   - Hosted/non-production application, repeated-generation behavior, RLS
+     behavior, partial-write handling, and generated-type reconciliation have
+     not been observed.
+   - Tasks T053–T055 and T062–T063 remain blocking.
 
 5. **Preview proof**
-   - Runtime code contains the required flow.
-   - No component or browser evidence proves completion is correctly blocked.
+   - Runtime code contains the required flow and explicit failure UI.
+   - No component or browser evidence proves completion or error rendering works.
    - Tasks T065–T075 remain open.
 
 ## Success-criteria evidence map
@@ -118,16 +134,16 @@ verified unless the corresponding tasks are checked from an actual run.
 | SC-001 authenticated external calls | mocked action test with call spies | Not run / test missing |
 | SC-002 all persisted drafts private | migration + repository assertion + RLS test | Designed; not observed |
 | SC-003 no draft in public catalog | catalog query test and two-user DB run | Code observed; not verified |
-| SC-004 reject unsupported content | domain fixture matrix | Partial tests only |
-| SC-005 valid fixture produces complete draft | mocked action happy path | Missing |
+| SC-004 reject unsupported content | domain fixture matrix and action no-write assertion | Partial tests only |
+| SC-005 valid fixture produces complete persisted draft | mocked action happy path | Missing |
 | SC-006 cross-user access denied | non-production RLS integration | Not run |
-| SC-007 reload preserves fields | mapping test + DB reload | Code observed; not verified |
+| SC-007 reload preserves fields and repeated generation updates same draft | mapping/repository test + DB reload | Identity unit test exists; DB behavior not verified |
 | SC-008 transfer required | component/browser test | Code observed; not verified |
 | SC-009 exact-head checks pass | lint, tsc, tests, content, build | Not run on latest head |
-| SC-010 review can inspect provenance/warnings | manual draft inspection | Metadata exists; manual review not run |
+| SC-010 review can inspect provenance/warnings/failures | manual draft and failure inspection | UI/code exists; manual review not run |
 
-The transcript policy tests exist in the repository, but no result is recorded
-until they run on the exact final commit.
+No test artifact is considered passing until it runs against the exact final
+commit.
 
 ## Ambiguities and decisions still needed
 
@@ -135,27 +151,38 @@ until they run on the exact final commit.
 
 - Decide and implement at least one transcript acquisition mode approved for
   production use, or keep this feature explicitly non-production.
-- Define persistence failure semantics and stable external error codes.
+- Verify explicit persistence failure and partial-write behavior in a controlled
+  non-production database.
 
 ### Important before convergence
 
-- Define repeated-generation and slug-collision behavior.
 - Define draft retention and owner deletion behavior.
-- Decide whether generation should be one draft per source/user or versioned
-  attempts.
+- Decide whether a future feature needs immutable generation-attempt history.
+- Decide whether a failed lesson write after a successful video upsert should be
+  reconciled by retry, cleanup, or a database transaction/RPC after observing the
+  current non-production behavior.
 
-### Resolved in this iteration
+### Resolved in previous iterations
 
 - The experimental adapter remains available only for explicit development/test
   work.
 - Production always rejects it even when the environment flag is set.
 - The server action no longer accesses the unofficial package directly.
 
+### Resolved in this iteration
+
+- Stable machine-readable external generation failure codes.
+- Retry and evidence-failure response shape.
+- Persistence failure is a failure, not a warning or preview success.
+- One current draft per owner, source, and level.
+- Persistence identity does not depend on model-generated titles.
+- Repeated generation updates the current draft; attempt history is deferred.
+
 ### Deferred correctly to spec 002
 
 - reviewer role and authorization;
 - approval checklist UI;
-- immutable review history;
+- immutable review history for publication decisions;
 - publication and retirement transitions;
 - public reviewed-lesson contract.
 
@@ -174,8 +201,9 @@ These deferred decisions do not belong in spec 001 implementation.
   introduce an explicit reviewed/public contract rather than assuming draft and
   publication are the same entity.
 - Terms `source evidence`, `transcript evidence`, `ai_draft`, `review warning`,
-  `communication event`, `transfer task`, `experimental_unofficial`, and
-  `approved transcript source` are consistent across active artifacts.
+  `communication event`, `transfer task`, `experimental_unofficial`,
+  `GenerationFailureCode`, `DRAFT_PERSISTENCE_FAILED`, and `current draft` are
+  consistent across active artifacts.
 
 ## Task quality findings
 
@@ -183,10 +211,7 @@ These deferred decisions do not belong in spec 001 implementation.
 - Checked implementation tasks are separated from unchecked verification tasks.
 - Exact file paths are provided.
 - No task in spec 001 authorizes publication or later roadmap work.
-- T023–T025 and the bounded compiler extraction in T029 match the implemented
-  file boundaries.
-- T043 remains responsible for moving persistence into a repository and deciding
-  repeated-generation behavior; T029 must not be interpreted as completing it.
+- T023–T025, T029, and T041–T043 match the implemented file boundaries.
 - T064 is deliberately conditional and must not become scope expansion unless
   retention verification requires it.
 
@@ -200,11 +225,12 @@ These deferred decisions do not belong in spec 001 implementation.
 
 **Critical next tasks**:
 
-1. T041–T043: stable failure, persistence, and repeated-generation semantics;
-2. missing action/domain/RLS/component tests;
+1. T030–T032 and T045: action/provider/persistence failure tests;
+2. T013, T016–T018, T044, T046, T052: complete schema/evidence/prompt fixture coverage;
 3. at least one approved production transcript adapter or an explicit permanent
    non-production decision;
-4. authorized non-production migration and RLS verification;
+4. authorized non-production migration, repeated-generation, partial-write, and
+   RLS verification;
 5. exact-head repository checks;
 6. live Gemini, browser, and human review evidence.
 
