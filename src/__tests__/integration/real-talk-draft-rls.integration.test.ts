@@ -8,6 +8,17 @@ const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 const SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY!;
 const TEST_PASSWORD = "RealTalkRls!2026";
 const RUN_ID = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+const VIDEO_TOKEN = Math.random()
+  .toString(36)
+  .replace(/[^a-z0-9]/g, "")
+  .slice(0, 8)
+  .padEnd(8, "0");
+const VIDEO_IDS = {
+  ownerA: `a${VIDEO_TOKEN}01`,
+  ownerAUnpaired: `b${VIDEO_TOKEN}02`,
+  ownerB: `c${VIDEO_TOKEN}03`,
+  anonymous: `d${VIDEO_TOKEN}04`,
+} as const;
 
 type Client = SupabaseClient<AppDatabase>;
 
@@ -139,7 +150,7 @@ beforeAll(async () => {
     .insert(
       videoInsert({
         slug: `rt-rls-owner-a-${RUN_ID}`,
-        youtubeId: "rlsownerA01",
+        youtubeId: VIDEO_IDS.ownerA,
         ownerId: ownerAId,
       }),
     )
@@ -158,7 +169,7 @@ beforeAll(async () => {
       .insert(
         videoInsert({
           slug: `rt-rls-owner-a-unpaired-${RUN_ID}`,
-          youtubeId: "rlsownerA02",
+          youtubeId: VIDEO_IDS.ownerAUnpaired,
           ownerId: ownerAId,
         }),
       )
@@ -176,7 +187,7 @@ beforeAll(async () => {
     .insert(
       videoInsert({
         slug: `rt-rls-owner-b-${RUN_ID}`,
-        youtubeId: "rlsownerB01",
+        youtubeId: VIDEO_IDS.ownerB,
         ownerId: ownerBId,
       }),
     )
@@ -221,7 +232,7 @@ describe("Real Talk owner-private draft RLS", () => {
     const { error } = await anonymousClient.from("real_talk_videos").insert(
       videoInsert({
         slug: `rt-rls-anonymous-${RUN_ID}`,
-        youtubeId: "rlsanon0001",
+        youtubeId: VIDEO_IDS.anonymous,
         ownerId: ownerAId,
       }),
     );
