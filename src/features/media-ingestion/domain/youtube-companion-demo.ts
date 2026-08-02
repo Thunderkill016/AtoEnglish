@@ -3,13 +3,13 @@ export type YouTubeMetadataSource = "youtube_data_api" | "youtube_oembed";
 
 export interface YouTubeCompanionMetadata {
   sourceMode: "youtube_companion";
-  metadataSource: YouTubeMetadataSource;
+  metadataSource?: YouTubeMetadataSource;
   videoId: string;
   title: string;
   channelTitle: string;
-  authorUrl: string | null;
-  publishedAt: string | null;
-  durationIso8601: string | null;
+  authorUrl?: string | null;
+  publishedAt: string;
+  durationIso8601: string;
   embeddable: boolean;
   license: YouTubeLicense | "unknown";
   watchUrl: string;
@@ -204,8 +204,8 @@ async function fetchViaOEmbed(
     title,
     channelTitle,
     authorUrl: payload.author_url?.trim() || null,
-    publishedAt: null,
-    durationIso8601: null,
+    publishedAt: "",
+    durationIso8601: "",
     embeddable: true,
     license: "unknown",
     watchUrl,
