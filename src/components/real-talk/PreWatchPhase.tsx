@@ -8,9 +8,16 @@ import {
   AlertTriangle,
   Lightbulb,
   CheckCircle2,
+  Bookmark,
+  BookmarkCheck,
 } from "lucide-react";
-import type { RealTalkVideo, PreWatchContent } from "@/types/real-talk";
+import type {
+  RealTalkVideo,
+  PreWatchContent,
+  PreWatchVocab,
+} from "@/types/real-talk";
 import { cn } from "@/lib/utils";
+import { saveRealTalkVocabToSRS } from "@/app/actions/real-talk-srs";
 
 interface PreWatchPhaseProps {
   video: RealTalkVideo;
@@ -25,9 +32,32 @@ export default function PreWatchPhase({
 }: PreWatchPhaseProps) {
   const [step, setStep] = useState<number>(0);
   const [flippedVocab, setFlippedVocab] = useState<Set<number>>(new Set());
+  const [savedVocab, setSavedVocab] = useState<Set<number>>(new Set());
+  const [savingIndex, setSavingIndex] = useState<number | null>(null);
   const [selectedPrediction, setSelectedPrediction] = useState<number | null>(
     null,
   );
+
+  const handleSaveVocab = async (
+    e: React.MouseEvent,
+    vocab: PreWatchVocab,
+    index: number,
+  ) => {
+    e.stopPropagation(); // prevent flipping card when clicking save button
+    if (savedVocab.has(index) || savingIndex !== null) return;
+
+    setSavingIndex(index);
+    const res = await saveRealTalkVocabToSRS({
+      vocab,
+      videoTitle: video.title,
+      level: video.level as "A0" | "A1" | "A2" | "B1" | "B2" | "C1",
+    });
+
+    setSavingIndex(null);
+    if (res.success) {
+      setSavedVocab((prev) => new Set(prev).add(index));
+    }
+  };
   const [predictionSubmitted, setPredictionSubmitted] = useState(false);
 
   const stepsCount = 4; // Context, Vocab, Prediction, SoundAlert
@@ -137,6 +167,28 @@ export default function PreWatchPhase({
                       </div>
                       {/* Back */}
                       <div className="absolute inset-0 backface-hidden rounded-2xl border border-emerald-500/30 bg-emerald-950/30 backdrop-blur-xl p-5 flex flex-col items-center justify-center text-center [transform:rotateY(180deg)]">
+                        <button
+                          type="button"
+                          onClick={(e) => handleSaveVocab(e, vocab, index)}
+                          title={
+                            savedVocab.has(index)
+                              ? "Đã lưu vào SRS"
+                              : "Lưu vào kho thẻ SRS"
+                          }
+                          className="absolute top-3 right-3 p-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 hover:bg-emerald-500/20 transition-all"
+                        >
+                          {savedVocab.has(index) ? (
+                            <BookmarkCheck
+                              size={16}
+                              className="text-emerald-400"
+                            />
+                          ) : (
+                            <Bookmark
+                              size={16}
+                              className="text-emerald-400/70"
+                            />
+                          )}
+                        </button>
                         <span className="text-lg font-bold text-white mb-1">
                           {vocab.meaningVi}
                         </span>
