@@ -57,6 +57,7 @@ does not satisfy the final-head gate.
 ```bash
 npx vitest run src/__tests__/real-talk-generation-contract.test.ts
 npx vitest run src/__tests__/real-talk-transcript-source-policy.test.ts
+npx vitest run src/__tests__/real-talk-generation-result.test.ts
 ```
 
 Required fixture coverage:
@@ -73,17 +74,32 @@ Required fixture coverage:
 - experimental transcript blocked by default;
 - experimental transcript allowed only by explicit non-production opt-in;
 - experimental transcript blocked in production even when the flag is set;
-- server action cannot import the unofficial transcript package directly.
+- server action cannot import the unofficial transcript package directly;
+- documented generation failure-code set remains stable;
+- evidence failures are deduplicated and retry guidance is normalized;
+- private draft identity is deterministic for the same owner, video, and level;
+- different owners or levels receive different draft identities.
 
-## 5. Verify authentication and quota ordering
+The presence of these test files is not a passing result. Record their output on
+the exact final commit.
 
-Using an instrumented or mocked transcript/model adapter:
+## 5. Verify authentication, failures, and quota ordering
+
+Using instrumented or mocked transcript/model/repository adapters:
 
 1. call generation while signed out;
 2. confirm `AUTH_REQUIRED` behavior;
 3. confirm transcript and Gemini adapters were not called;
-4. sign in and repeat with valid input;
-5. confirm rate limiting is applied to the authenticated request path.
+4. submit invalid input and confirm `INVALID_INPUT`;
+5. exceed the request limit and confirm `RATE_LIMITED` plus bounded retry guidance;
+6. simulate transcript unavailable/invalid cases and confirm the documented codes;
+7. simulate Gemini 429, unavailable, missing candidate, malformed JSON, and invalid schema;
+8. simulate source-evidence failure and confirm no repository write occurs;
+9. simulate video and lesson persistence failures and confirm
+   `DRAFT_PERSISTENCE_FAILED`;
+10. confirm the UI does not render a saved lesson after any failure.
+
+No raw provider response or secret-bearing detail should reach the client.
 
 ## 6. Verify database migration in a non-production project
 
@@ -104,7 +120,7 @@ npm run db:types
 Confirm generated types replace the temporary app-level extension cleanly before
 removing that extension.
 
-## 7. Verify RLS with two users
+## 7. Verify RLS, identity, and repeated generation
 
 Create `ownerA` and `ownerB` in the non-production project.
 
@@ -118,7 +134,15 @@ Required checks:
 - ownerA cannot set `is_public = true`;
 - ownerA cannot set `review_state = approved`;
 - lesson writes fail when the referenced video is not owned;
-- public catalog query excludes all private drafts.
+- public catalog query excludes all private drafts;
+- generating the same YouTube source twice for ownerA at A1 updates one current
+  draft rather than creating a title-dependent duplicate;
+- generating the same source at B1 creates a distinct level draft;
+- generating the same source for ownerB creates a distinct owner draft;
+- a lesson-write failure is returned as failure even if a private video row was
+  already written;
+- partial private rows never become public and are reconciled by retry or manual
+  cleanup during this verification phase.
 
 ## 8. Run live Gemini verification
 
@@ -132,8 +156,11 @@ Verify:
 - a valid response is parsed without manual JSON repair;
 - the actual successful model identifier is stored;
 - invalid model output is rejected before persistence;
-- a 429 response provides bounded retry guidance;
-- a provider failure does not create a public or partial draft;
+- a 429 response returns `MODEL_RATE_LIMITED` and bounded retry guidance;
+- a provider failure returns `MODEL_UNAVAILABLE` without creating a successful
+  draft response;
+- source-evidence failure returns `SOURCE_EVIDENCE_FAILED` with safe evidence
+  codes;
 - source captions cannot override generation instructions.
 
 Do not treat this step as transcript, rights, or pedagogy approval.
@@ -155,6 +182,16 @@ authenticated editor
 → speak source-backed phrases
 → make a changed-context response
 → see immediate-practice summary, not mastery
+```
+
+Failure flow expectations:
+
+```text
+failed required stage
+→ show stable machine-readable code
+→ show safe Vietnamese message
+→ show retry guidance only when applicable
+→ do not show saved-draft card or lesson preview
 ```
 
 Confirm reload preserves environment, events, transfer task, model, and warnings.
