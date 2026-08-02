@@ -231,11 +231,13 @@ Hãy tạo bài học tiếng Anh hoàn chỉnh từ transcript trên. Nhớ:
 - Tất cả giải thích bằng tiếng Việt
 - Tập trung vào từ vựng và patterns thực tế trong video`;
 
-  // Models to attempt in order of preference (using official v1beta model IDs)
+  // Models to attempt in order of preference (using official Google Gemini API model IDs)
   const models = [
-    "gemini-1.5-flash",
+    "gemini-2.5-flash",
     "gemini-2.0-flash",
-    "gemini-1.5-flash-8b",
+    "gemini-flash-latest",
+    "gemini-2.5-pro",
+    "gemini-pro-latest",
   ];
 
   let lastStatus = 0;
