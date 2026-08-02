@@ -5,6 +5,7 @@ import {
   CheckCircle,
   ChevronDown,
   Lock,
+  Radio,
   RefreshCcw,
 } from "lucide-react";
 import {
@@ -132,6 +133,15 @@ export default function LearnClient({
               />
             );
           })}
+        </ListSection>
+
+        <ListSection title="Thử nghiệm · nội dung giao tiếp thật">
+          <PrimaryRow
+            href="/real-talk"
+            label="Real Talk"
+            description="Video có nguồn rõ ràng → transcript timestamp → active recall → FSRS"
+            icon={Radio}
+          />
         </ListSection>
 
         <details className="group border-t border-border/60 pt-4">
