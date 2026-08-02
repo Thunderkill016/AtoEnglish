@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 
 import { privateDraftPreviewLesson } from "@/__fixtures__/real-talk/private-draft-preview";
@@ -34,7 +35,7 @@ vi.mock("framer-motion", async () => {
           return React.createElement(
             typeof property === "string" ? property : "div",
             domProps,
-            props.children as React.ReactNode,
+            props.children as ReactNode,
           );
         },
     },
@@ -42,7 +43,7 @@ vi.mock("framer-motion", async () => {
 
   return {
     motion,
-    AnimatePresence: ({ children }: { children?: React.ReactNode }) =>
+    AnimatePresence: ({ children }: { children?: ReactNode }) =>
       React.createElement(React.Fragment, null, children),
   };
 });
@@ -92,7 +93,11 @@ function completeRecognitionAndRecall(container: ParentNode) {
 }
 
 function acknowledgeAllSpeakingDrills(container: ParentNode) {
-  for (const _drill of privateDraftPreviewLesson.postWatch.speakingDrills) {
+  for (
+    let index = 0;
+    index < privateDraftPreviewLesson.postWatch.speakingDrills.length;
+    index += 1
+  ) {
     click(findButton(container, "Tôi đã nói thành tiếng"));
   }
 }
