@@ -1,14 +1,17 @@
 export type YouTubeLicense = "youtube" | "creativeCommon";
+export type YouTubeMetadataSource = "youtube_data_api" | "youtube_oembed";
 
 export interface YouTubeCompanionMetadata {
   sourceMode: "youtube_companion";
+  metadataSource: YouTubeMetadataSource;
   videoId: string;
   title: string;
   channelTitle: string;
-  publishedAt: string;
-  durationIso8601: string;
+  authorUrl: string | null;
+  publishedAt: string | null;
+  durationIso8601: string | null;
   embeddable: boolean;
-  license: YouTubeLicense;
+  license: YouTubeLicense | "unknown";
   watchUrl: string;
   embedUrl: string;
   thumbnailUrl: string | null;
@@ -38,6 +41,16 @@ interface YouTubeVideosListResponse {
   error?: {
     message?: string;
   };
+}
+
+interface YouTubeOEmbedResponse {
+  type?: string;
+  title?: string;
+  author_name?: string;
+  author_url?: string;
+  thumbnail_url?: string;
+  html?: string;
+  error?: string;
 }
 
 const VIDEO_ID_PATTERN = /^[A-Za-z0-9_-]{11}$/;
@@ -99,21 +112,15 @@ function pickThumbnail(
   );
 }
 
-export async function fetchYouTubeCompanionMetadata(
-  input: string,
+async function fetchViaDataApi(
+  videoId: string,
   apiKey: string,
-  fetchImpl: typeof fetch = fetch,
+  fetchImpl: typeof fetch,
 ): Promise<YouTubeCompanionMetadata> {
-  const normalizedKey = apiKey.trim();
-  if (!normalizedKey) {
-    throw new Error("Thiếu YOUTUBE_API_KEY.");
-  }
-
-  const videoId = extractYouTubeVideoId(input);
   const endpoint = new URL("https://www.googleapis.com/youtube/v3/videos");
   endpoint.searchParams.set("part", "snippet,status,contentDetails");
   endpoint.searchParams.set("id", videoId);
-  endpoint.searchParams.set("key", normalizedKey);
+  endpoint.searchParams.set("key", apiKey);
 
   const response = await fetchImpl(endpoint, {
     headers: { Accept: "application/json" },
@@ -144,9 +151,11 @@ export async function fetchYouTubeCompanionMetadata(
 
   return {
     sourceMode: "youtube_companion",
+    metadataSource: "youtube_data_api",
     videoId,
     title,
     channelTitle,
+    authorUrl: null,
     publishedAt,
     durationIso8601,
     embeddable: item.status?.embeddable === true,
@@ -155,4 +164,65 @@ export async function fetchYouTubeCompanionMetadata(
     embedUrl: `https://www.youtube.com/embed/${videoId}`,
     thumbnailUrl: pickThumbnail(item.snippet?.thumbnails),
   };
+}
+
+async function fetchViaOEmbed(
+  videoId: string,
+  fetchImpl: typeof fetch,
+): Promise<YouTubeCompanionMetadata> {
+  const watchUrl = `https://www.youtube.com/watch?v=${videoId}`;
+  const endpoint = new URL("https://www.youtube.com/oembed");
+  endpoint.searchParams.set("url", watchUrl);
+  endpoint.searchParams.set("format", "json");
+
+  const response = await fetchImpl(endpoint, {
+    headers: { Accept: "application/json" },
+  });
+  const payload = (await response.json()) as YouTubeOEmbedResponse;
+
+  if (!response.ok) {
+    throw new Error(
+      payload.error ?? `YouTube oEmbed trả về HTTP ${response.status}.`,
+    );
+  }
+
+  const title = payload.title?.trim();
+  const channelTitle = payload.author_name?.trim();
+  const hasEmbedRepresentation =
+    payload.type === "video" &&
+    typeof payload.html === "string" &&
+    /youtube(?:-nocookie)?\.com\/embed\//i.test(payload.html);
+
+  if (!title || !channelTitle || !hasEmbedRepresentation) {
+    throw new Error("YouTube oEmbed thiếu metadata hoặc mã nhúng hợp lệ.");
+  }
+
+  return {
+    sourceMode: "youtube_companion",
+    metadataSource: "youtube_oembed",
+    videoId,
+    title,
+    channelTitle,
+    authorUrl: payload.author_url?.trim() || null,
+    publishedAt: null,
+    durationIso8601: null,
+    embeddable: true,
+    license: "unknown",
+    watchUrl,
+    embedUrl: `https://www.youtube.com/embed/${videoId}`,
+    thumbnailUrl: payload.thumbnail_url?.trim() || null,
+  };
+}
+
+export async function fetchYouTubeCompanionMetadata(
+  input: string,
+  apiKey = "",
+  fetchImpl: typeof fetch = fetch,
+): Promise<YouTubeCompanionMetadata> {
+  const videoId = extractYouTubeVideoId(input);
+  const normalizedKey = apiKey.trim();
+
+  return normalizedKey
+    ? fetchViaDataApi(videoId, normalizedKey, fetchImpl)
+    : fetchViaOEmbed(videoId, fetchImpl);
 }
