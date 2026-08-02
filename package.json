@@ -13,7 +13,7 @@
     "verify:fast": "node scripts/verify-change.mjs --fast",
     "verify:plan": "node scripts/verify-change.mjs --plan",
     "test": "vitest run --exclude src/__tests__/lesson-content-standard.test.ts",
-    "test:real-talk": "vitest run src/__tests__/real-talk-youtube-source.test.ts src/__tests__/real-talk-generation-contract.test.ts src/__tests__/real-talk-transcript-source-policy.test.ts src/__tests__/real-talk-generation-result.test.ts src/__tests__/real-talk-generation-action.test.ts src/__tests__/real-talk-gemini-provider.test.ts src/__tests__/real-talk-migration-contract.test.ts src/__tests__/real-talk-rls-performance-migration.test.ts src/__tests__/real-talk-draft-mapping.test.ts src/__tests__/real-talk-lesson-preview.test.tsx src/__tests__/real-talk-post-watch.test.tsx",
+    "test:real-talk": "vitest run src/__tests__/real-talk-youtube-source.test.ts src/__tests__/real-talk-generation-contract.test.ts src/__tests__/real-talk-transcript-source-policy.test.ts src/__tests__/real-talk-transcript-provenance-migration.test.ts src/__tests__/real-talk-generation-result.test.ts src/__tests__/real-talk-generation-action.test.ts src/__tests__/real-talk-gemini-provider.test.ts src/__tests__/real-talk-migration-contract.test.ts src/__tests__/real-talk-rls-performance-migration.test.ts src/__tests__/real-talk-draft-mapping.test.ts src/__tests__/real-talk-lesson-preview.test.tsx src/__tests__/real-talk-post-watch.test.tsx",
     "test:real-talk:live": "tsx scripts/verify-real-talk-gemini-live.ts",
     "test:real-talk:youtube-live": "tsx scripts/verify-real-talk-youtube-live.ts",
     "test:content-standard": "vitest run src/__tests__/lesson-content-standard.test.ts",
