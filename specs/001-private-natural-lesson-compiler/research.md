@@ -170,15 +170,53 @@ pronunciation quality or long-term transfer.
 - Full acoustic assessment in this feature: rejected as a separate provider,
   calibration, privacy, and cost decision.
 
+## Decision 9 — Use one current draft per owner, source, and level
+
+**Decision**: The private draft identity is derived only from authenticated owner
+ID, source video ID, and requested level. Repeating generation for the same
+combination updates the same private video/lesson draft. A different owner or
+level receives a different draft identity.
+
+**Rationale**: AI titles are unstable and must not control persistence identity.
+A stable identity prevents title changes from creating duplicate drafts while
+preserving separate A1, A2, and B1 treatments for the same source.
+
+**Alternatives considered**:
+
+- Title-based slugs: rejected because regeneration can change the title.
+- A new row for every attempt: deferred because version history, comparison, and
+  retention would expand spec 001.
+- One draft per source regardless of level: rejected because treatments at
+  different levels are materially different.
+
+## Decision 10 — Persistence failure is a failure, not a preview success
+
+**Decision**: Spec 001 has no intentional non-persistent success mode. A request is
+successful only after both private video and lesson draft writes complete. Any
+write failure returns `DRAFT_PERSISTENCE_FAILED` and the editor UI must not claim
+that a draft was saved.
+
+**Rationale**: A generated in-memory lesson is not equivalent to an owner-private,
+reloadable draft. Silent fallback made success ambiguous and could cause the
+editor to leave the page believing work was retained.
+
+**Alternatives considered**:
+
+- Return `success: true` with `preview_only`: rejected because no explicit user
+  request selected that mode and persistence is part of spec 001's outcome.
+- Hide database failure behind a warning: rejected because warnings are for
+  uncertainty, not failed required behavior.
+
 ## Open decisions that block convergence
 
 1. Which transcript acquisition modes are approved for production use?
 2. What exact authorized role will own publication in spec 002?
-3. How will slug collisions and repeated generation of the same source be handled
-   after the initial single-editor pilot?
-4. Will private drafts be retained indefinitely, manually deleted, or expired?
+3. Will private drafts be retained indefinitely, manually deleted, or expired?
+4. Will a future spec add immutable generation-attempt history or keep only the
+   current draft?
 
-The experimental adapter runtime policy is resolved, but spec 001 still cannot
-converge until at least one production transcript mode is approved or the feature
-remains explicitly non-production. The other open decisions remain visible in
-tasks and PR review.
+The experimental adapter runtime policy, persistence semantics, and current-draft
+identity are resolved. Spec 001 still cannot converge until at least one
+production transcript mode is approved or the feature remains explicitly
+non-production. Retention and future history remain visible in tasks and PR
+review.
