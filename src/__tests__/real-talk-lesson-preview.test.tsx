@@ -32,7 +32,7 @@ vi.mock("framer-motion", async () => {
           );
           return React.createElement(
             typeof property === "string" ? property : "div",
-            domProps,
+            domProps as never,
             props.children as ReactNode,
           );
         },
@@ -57,7 +57,8 @@ vi.mock("next/link", async () => {
       children?: ReactNode;
       href: string;
       [key: string]: unknown;
-    }) => React.createElement("a", { href, ...props }, children),
+    }) =>
+      React.createElement("a", { href, ...props } as never, children),
   };
 });
 
