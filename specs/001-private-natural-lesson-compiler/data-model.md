@@ -14,6 +14,7 @@ request_received
 
 Any failure before ai_draft_persisted
 → generation_failed
+→ no successful draft response
 → no public record
 ```
 
@@ -40,7 +41,35 @@ Represents one authenticated request to compile a draft.
 | requestedAt | timestamp | Server generated |
 | requestKey | string | Rate-limit identity; must not expose secrets |
 | status | enum | received, rejected, generated, persisted, failed |
-| failureCode | string? | Machine-readable external or validation failure |
+| failureCode | GenerationFailureCode? | Machine-readable external or validation failure |
+
+### GenerationFailure
+
+Represents a failed required stage. A failure is never returned as a successful
+preview.
+
+| Field | Type | Rules |
+|---|---|---|
+| success | false | Discriminator |
+| code | GenerationFailureCode | Stable machine-readable code |
+| error | string | Safe Vietnamese editor message; no secret provider detail |
+| evidenceFailures | string[]? | Deduplicated source-evidence failures |
+| retryAfterSeconds | integer? | Present only when retry may plausibly help |
+
+`GenerationFailureCode` is one of:
+
+- AUTH_REQUIRED
+- INVALID_INPUT
+- RATE_LIMITED
+- SOURCE_UNSUPPORTED
+- TRANSCRIPT_UNAVAILABLE
+- TRANSCRIPT_INVALID
+- MODEL_UNAVAILABLE
+- MODEL_RATE_LIMITED
+- MODEL_OUTPUT_INVALID
+- SOURCE_EVIDENCE_FAILED
+- DRAFT_PERSISTENCE_FAILED
+- INTERNAL_ERROR
 
 ### TranscriptSource
 
@@ -50,7 +79,7 @@ correctness or rights.
 | Field | Type | Rules |
 |---|---|---|
 | adapter | string | Concrete provider/adapter identifier |
-| acquisitionMode | enum | creator_provided, authorized_export, licensed_source, public_domain, human_reviewed_upload, experimental_unofficial |
+| acquisitionMode | enum | creator_provided, authorized_export, licensed_source, public_domain, human_reviewed_upload, approved_provider_api, experimental_unofficial |
 | language | string | Expected English for this feature |
 | reviewStatus | enum | unreviewed, machine_checked, human_verified |
 | sourceReference | string | Stable source reference without secret tokens |
@@ -131,6 +160,20 @@ Expected failure codes include:
 - fill_blank_missing_source_evidence
 - transfer_language_missing_source_evidence
 
+### PrivateDraftIdentity
+
+Spec 001 keeps one current draft for each authenticated owner, source video, and
+requested level.
+
+```text
+privateDraftKey = ownerId + youtubeId + requestedLevel
+```
+
+The persisted slug is derived deterministically from those values and MUST NOT
+include an AI-generated title. Repeating generation with the same key updates the
+same private video/lesson pair. Different owners or levels create distinct keys.
+Versioned generation history is deferred.
+
 ### RealTalkVideoDraftRecord
 
 Maps to `real_talk_videos` for this feature.
@@ -138,9 +181,9 @@ Maps to `real_talk_videos` for this feature.
 | Field | Type | Rules |
 |---|---|---|
 | id | UUID | Database generated |
-| slug | string | Unique; collision behavior remains open decision |
+| slug | string | Deterministic from owner, YouTube ID, and level; unique |
 | youtubeId | string | Source external ID |
-| title/titleVi | string | Source and draft display titles |
+| title/titleVi | string | Source and draft display titles; not persistence identity |
 | channel fields | string? | From oEmbed, never fabricated |
 | durationSeconds | integer | Derived from transcript evidence, not guaranteed media duration |
 | segmentStart/End | decimal | Selected source window |
@@ -160,8 +203,8 @@ Maps to `real_talk_lessons`.
 
 | Field | Type | Rules |
 |---|---|---|
-| videoId | UUID | References owner-private video draft |
-| title/titleVi | string | Draft lesson identity |
+| videoId | UUID | References owner-private video draft; one current lesson per video draft |
+| title/titleVi | string | Draft lesson display identity |
 | level | string | Validated level |
 | estimatedMinutes | integer | Bounded 8–25 |
 | canDo fields | string | Observable communication outcome |
@@ -198,7 +241,11 @@ owner through the referenced video record.
 7. Every draft timestamp falls inside the selected source window.
 8. Every quoted learner-facing English item has source-text evidence.
 9. Environment, events, transfer, warnings, and model survive persistence and reload.
-10. Generation failure does not leave a public or ownerless record.
+10. The same owner/source/level deterministically updates one current private draft.
+11. An AI title change cannot create a new persistence identity.
+12. Success is returned only after both video and lesson writes complete.
+13. Persistence failure returns `DRAFT_PERSISTENCE_FAILED`; it is never represented as saved or preview-only success.
+14. Generation failure does not leave a public or ownerless record.
 
 ## Retention and deletion
 
@@ -207,4 +254,5 @@ Draft retention is unresolved. Until a later decision:
 - no automated expiry is specified;
 - owners may delete their own private drafts when an owner UI exists;
 - deleting a video draft cascades to its lesson draft;
+- repeated generation updates the current draft rather than preserving attempt history;
 - published/historical retention belongs to spec 002 and later learner evidence specs.
