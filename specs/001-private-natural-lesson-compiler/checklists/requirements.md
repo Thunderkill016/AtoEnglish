@@ -19,7 +19,7 @@
 - [x] Acceptance scenarios use Given/When/Then form.
 - [x] Anonymous, invalid-source, invalid-model, persistence, and privacy failures are covered.
 - [x] Preview requires transfer rather than recognition-only completion.
-- [ ] Slug collision and repeated-generation behavior is fully specified.
+- [x] Slug collision and repeated-generation behavior is fully specified for spec 001: one current draft per owner, source, and level.
 - [ ] Draft retention and owner deletion behavior is fully specified.
 
 ## AI generation and evidence
@@ -31,8 +31,10 @@
 - [x] Unsupported English, timestamps, and references are rejected.
 - [x] Human-review-only evidence is distinguished from automated evidence.
 - [x] The actual generation model must be recorded.
-- [ ] Stable machine-readable failure codes are implemented and verified.
-- [ ] Persistence failure behavior is explicit and verified.
+- [x] Stable machine-readable failure codes are implemented across compiler, action, and editor UI.
+- [ ] Stable failure codes have been executed and observed on the exact final head.
+- [x] Persistence failure behavior is explicit and cannot be returned as saved or preview-only success.
+- [ ] Persistence failure behavior has been exercised with controlled database failures.
 
 ## Source and rights boundary
 
@@ -78,8 +80,10 @@
 - [x] Mocked, integration, browser, provider, database, and manual evidence are distinguished.
 - [x] Required tests are listed before convergence.
 - [x] Transcript policy tests cover approved, default-blocked, non-production opt-in, production fail-closed, cue normalization, and direct-import bypass.
+- [x] Result-code and deterministic draft-identity regression tests exist in `src/__tests__/real-talk-generation-result.test.ts`.
 - [ ] All specified unit and contract fixtures exist.
 - [ ] Authentication ordering tests exist and pass.
+- [ ] Persistence failure tests exist and pass.
 - [ ] RLS integration tests exist and pass.
 - [ ] Preview completion component tests exist and pass.
 - [ ] Live Gemini failure and success paths have been observed.
@@ -92,7 +96,7 @@
 - [x] Data entities map to requirements and tasks.
 - [x] Open decisions are visible in research and tasks.
 - [x] An initial formal cross-artifact analysis is recorded in `analysis.md`.
-- [x] The cross-artifact analysis was rerun after the transcript adapter extraction.
+- [x] The cross-artifact analysis was rerun after transcript adapter extraction and failure/persistence design.
 - [ ] Every functional requirement maps to at least one task and observed acceptance result.
 - [ ] Every success criterion has a defined evidence source and final result.
 
@@ -107,11 +111,12 @@
 
 The feature cannot converge while any of these remain unresolved:
 
-1. at least one production-approved transcript acquisition mode;
-2. stable failure and persistence behavior;
+1. at least one production-approved transcript acquisition mode or an explicit permanent non-production decision;
+2. action/provider/persistence failure execution tests;
 3. complete automated fixture coverage;
 4. non-production RLS and migration verification;
 5. exact-head repository checks;
 6. live Gemini and browser verification;
 7. human source and lesson review;
-8. final requirement-to-evidence mapping.
+8. draft retention/deletion decision;
+9. final requirement-to-evidence mapping.
