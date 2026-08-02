@@ -1,0 +1,567 @@
+/**
+ * Real Talk — Sample video data.
+ *
+ * Curated real YouTube conversation with full transcript, Vietnamese translations,
+ * and AI-generated lesson content following the Pre-While-Post framework.
+ *
+ * Video: "Easy English - What Do You Do For Fun?" — a real street interview
+ * where native speakers naturally discuss their hobbies and free time.
+ * This is an actual conversation, NOT scripted dialogue.
+ */
+
+import type { RealTalkVideo, RealTalkLesson } from "@/types/real-talk";
+
+// ─── Video Metadata ────────────────────────────────────────────────────────────
+
+export const sampleVideo: RealTalkVideo = {
+  id: "what-do-you-do-for-fun",
+  youtubeId: "Z5MU-5_pBfY",
+  title: "What Do You Do For Fun? — Real Street Conversations",
+  titleVi: "Bạn làm gì để vui? — Trò chuyện thực tế ngoài đường",
+  channelName: "Easy English",
+  channelUrl: "https://www.youtube.com/@EasyEnglish",
+  thumbnailUrl: "https://i.ytimg.com/vi/Z5MU-5_pBfY/hqdefault.jpg",
+  durationSeconds: 372,
+  segment: { startSeconds: 0, endSeconds: 180 },
+  level: "A1",
+  topics: ["hobbies", "free_time", "daily_life", "introductions"],
+  speakerCount: 3,
+  speakers: [
+    { label: "Interviewer", color: "#60a5fa" },
+    { label: "Person 1", color: "#34d399" },
+    { label: "Person 2", color: "#f59e0b" },
+  ],
+};
+
+// ─── Full Lesson ───────────────────────────────────────────────────────────────
+
+export const sampleLesson: RealTalkLesson = {
+  videoId: "what-do-you-do-for-fun",
+  title: "What Do You Do For Fun?",
+  titleVi: "Bạn Làm Gì Để Giải Trí?",
+  level: "A1",
+  estimatedMinutes: 15,
+  canDoStatement:
+    "I can understand and talk about hobbies and free time activities",
+  canDoStatementVi: "Tôi có thể hiểu và nói về sở thích và hoạt động giải trí",
+
+  // ─── Transcript (diarized with timestamps) ─────────────────────────────────
+  transcript: [
+    {
+      index: 0,
+      speaker: "Interviewer",
+      startTime: 5,
+      endTime: 8,
+      textEn: "Hey! So, what do you do for fun?",
+      textVi: "Chào! Vậy, bạn làm gì để vui?",
+    },
+    {
+      index: 1,
+      speaker: "Person 1",
+      startTime: 8.5,
+      endTime: 14,
+      textEn: "Um, I like to go hiking, you know, especially on weekends.",
+      textVi: "Ờm, tôi thích đi leo núi, bạn biết đấy, đặc biệt vào cuối tuần.",
+    },
+    {
+      index: 2,
+      speaker: "Interviewer",
+      startTime: 14.5,
+      endTime: 16,
+      textEn: "Oh nice! Where do you usually go?",
+      textVi: "Ồ hay đấy! Bạn thường đi đâu?",
+    },
+    {
+      index: 3,
+      speaker: "Person 1",
+      startTime: 16.5,
+      endTime: 23,
+      textEn:
+        "There's this trail near my house, it's about thirty minutes away. It's really beautiful, actually.",
+      textVi:
+        "Có một con đường mòn gần nhà tôi, cách khoảng ba mươi phút. Thực ra rất đẹp.",
+    },
+    {
+      index: 4,
+      speaker: "Interviewer",
+      startTime: 23.5,
+      endTime: 25.5,
+      textEn: "That sounds great. Do you go alone?",
+      textVi: "Nghe tuyệt đấy. Bạn đi một mình à?",
+    },
+    {
+      index: 5,
+      speaker: "Person 1",
+      startTime: 26,
+      endTime: 32,
+      textEn:
+        "Sometimes, yeah. But usually I go with my friends. We like to grab a coffee afterwards.",
+      textVi:
+        "Đôi khi, ừ. Nhưng thường tôi đi với bạn bè. Chúng tôi thích đi uống cà phê sau đó.",
+    },
+    {
+      index: 6,
+      speaker: "Interviewer",
+      startTime: 32.5,
+      endTime: 35,
+      textEn: "Cool. And what about you? What do you do for fun?",
+      textVi: "Hay đấy. Còn bạn thì sao? Bạn làm gì để vui?",
+    },
+    {
+      index: 7,
+      speaker: "Person 2",
+      startTime: 35.5,
+      endTime: 42,
+      textEn:
+        "I'm really into cooking, actually. I love trying new recipes, especially Italian food.",
+      textVi:
+        "Thực ra tôi rất mê nấu ăn. Tôi thích thử các công thức mới, đặc biệt là đồ ăn Ý.",
+    },
+    {
+      index: 8,
+      speaker: "Interviewer",
+      startTime: 42.5,
+      endTime: 44.5,
+      textEn: "Oh, that's awesome! Are you a good cook?",
+      textVi: "Ồ, tuyệt vời! Bạn nấu ăn giỏi không?",
+    },
+    {
+      index: 9,
+      speaker: "Person 2",
+      startTime: 45,
+      endTime: 52,
+      textEn:
+        "I'd like to think so! My friends say my pasta is pretty good. I mean, I'm still learning though.",
+      textVi:
+        "Tôi muốn nghĩ vậy! Bạn bè nói pasta của tôi khá ngon. Ý tôi là, dù gì tôi vẫn đang học.",
+    },
+    {
+      index: 10,
+      speaker: "Interviewer",
+      startTime: 52.5,
+      endTime: 55.5,
+      textEn: "Do you watch cooking shows or YouTube videos?",
+      textVi: "Bạn có xem chương trình nấu ăn hoặc video YouTube không?",
+    },
+    {
+      index: 11,
+      speaker: "Person 2",
+      startTime: 56,
+      endTime: 63,
+      textEn:
+        "Yeah, all the time! There's this one channel I really like. They make everything look so easy.",
+      textVi:
+        "Có chứ, suốt! Có một kênh tôi rất thích. Họ làm mọi thứ trông thật dễ dàng.",
+    },
+    {
+      index: 12,
+      speaker: "Interviewer",
+      startTime: 63.5,
+      endTime: 67,
+      textEn:
+        "I know what you mean. Do you do anything else in your free time?",
+      textVi: "Tôi hiểu ý bạn. Bạn còn làm gì khác trong thời gian rảnh không?",
+    },
+    {
+      index: 13,
+      speaker: "Person 2",
+      startTime: 67.5,
+      endTime: 75,
+      textEn:
+        "I also like to read. Mostly novels. And sometimes I go to the gym, you know, to stay healthy.",
+      textVi:
+        "Tôi cũng thích đọc sách. Chủ yếu tiểu thuyết. Và đôi khi tôi đi tập gym, bạn biết đấy, để giữ sức khỏe.",
+    },
+    {
+      index: 14,
+      speaker: "Interviewer",
+      startTime: 75.5,
+      endTime: 78,
+      textEn: "That's a good balance! Thanks for sharing.",
+      textVi: "Đó là sự cân bằng tốt! Cảm ơn đã chia sẻ.",
+    },
+    {
+      index: 15,
+      speaker: "Person 1",
+      startTime: 78.5,
+      endTime: 80,
+      textEn: "Yeah, no problem! Have a good one.",
+      textVi: "Ừ, không có gì! Chúc một ngày tốt lành.",
+    },
+  ],
+
+  // ─── Pre-Watch Content ─────────────────────────────────────────────────────
+  preWatch: {
+    contextVi:
+      "Trong video này, một phóng viên phỏng vấn người đi đường về sở thích và hoạt động giải trí của họ. Đây là cuộc trò chuyện THẬT, không phải kịch bản — nên bạn sẽ nghe được cách người bản xứ nói chuyện tự nhiên hàng ngày.",
+
+    vocabulary: [
+      {
+        word: "for fun",
+        phonetic: "/fɔːr fʌn/",
+        definition: "for enjoyment or pleasure",
+        meaningVi: "để vui / để giải trí",
+        contextSentence: "What do you do for fun?",
+        timestamp: 6,
+        pronunciationNote:
+          "Chú ý: 'for' phát âm nhẹ = /fər/, nối với 'fun' = /fər.fʌn/",
+        l1InterferenceVn: "Người Việt thường nói 'fo fun' — thiếu âm /r/ nhẹ",
+      },
+      {
+        word: "hiking",
+        phonetic: "/ˈhaɪ.kɪŋ/",
+        definition: "walking in nature for exercise",
+        meaningVi: "đi bộ đường dài / leo núi",
+        contextSentence: "I like to go hiking, especially on weekends.",
+        timestamp: 10,
+        pronunciationNote:
+          "HAI-king — nhấn âm đầu. Âm /ŋ/ cuối = ngậm miệng, không phải /n/",
+      },
+      {
+        word: "trail",
+        phonetic: "/treɪl/",
+        definition: "a path through nature",
+        meaningVi: "đường mòn (trong thiên nhiên)",
+        contextSentence: "There's this trail near my house.",
+        timestamp: 17,
+        l1InterferenceVn:
+          "Người Việt hay đọc 'trây-ồ' — cần giữ 1 âm tiết: /treɪl/",
+      },
+      {
+        word: "grab a coffee",
+        phonetic: "/ɡræb ə ˈkɒf.i/",
+        definition: "to get a coffee (informal)",
+        meaningVi: "đi uống / lấy cà phê (thân mật)",
+        contextSentence: "We like to grab a coffee afterwards.",
+        timestamp: 30,
+        pronunciationNote:
+          "'grab a' nối liền = /ɡræbə/. Đây là cách nói thân mật thay vì 'buy a coffee'",
+      },
+      {
+        word: "really into",
+        phonetic: "/ˈrɪə.li ˈɪn.tuː/",
+        definition: "very interested in, passionate about",
+        meaningVi: "rất thích / rất mê",
+        contextSentence: "I'm really into cooking, actually.",
+        timestamp: 37,
+        pronunciationNote:
+          "'really' = REE-lee, 2 âm tiết. Không phải 'ri-a-ly'",
+        l1InterferenceVn:
+          "Cấu trúc 'be into + noun/gerund' = cách nói tự nhiên cho 'thích' — thay vì chỉ dùng 'like'",
+      },
+      {
+        word: "recipe",
+        phonetic: "/ˈres.ɪ.piː/",
+        definition: "instructions for cooking a dish",
+        meaningVi: "công thức nấu ăn",
+        contextSentence: "I love trying new recipes.",
+        timestamp: 39,
+        pronunciationNote:
+          "RES-uh-pee — 3 âm tiết! Không phải 're-CIPE' (2 âm tiết)",
+      },
+      {
+        word: "free time",
+        phonetic: "/friː taɪm/",
+        definition: "time when you are not working",
+        meaningVi: "thời gian rảnh",
+        contextSentence: "Do you do anything else in your free time?",
+        timestamp: 65,
+      },
+      {
+        word: "stay healthy",
+        phonetic: "/steɪ ˈhel.θi/",
+        definition: "to remain in good health",
+        meaningVi: "giữ sức khỏe",
+        contextSentence: "I go to the gym to stay healthy.",
+        timestamp: 73,
+        pronunciationNote:
+          "'healthy' = HEL-thee. Âm /θ/ (th) = đặt lưỡi giữa 2 hàm răng",
+        l1InterferenceVn:
+          "Người Việt hay đọc 'heo-thy' hoặc 'hen-ty' — cần tập riêng âm /θ/",
+      },
+    ],
+
+    prediction: {
+      questionVi: "Video này nói về chủ đề gì? Hãy đoán trước khi xem!",
+      options: [
+        "Sở thích và hoạt động giải trí",
+        "Công việc và sự nghiệp",
+        "Du lịch và khám phá",
+        "Gia đình và bạn bè",
+      ],
+      correctIndex: 0,
+    },
+
+    soundAlerts: [
+      {
+        sound: "/ŋ/ (ng ending)",
+        explanationVi:
+          "Âm /ŋ/ cuối từ — xuất hiện nhiều trong video này. Đây là âm mũi, đóng miệng phía sau. Khác với /n/ (đóng ở đầu lưỡi).",
+        exampleWords: ["hiking", "cooking", "learning", "reading"],
+        commonMistakeVi:
+          "Người Việt hay đọc 'hikin' (thiếu âm ng) hoặc 'hiking-gờ' (thêm âm cuối)",
+      },
+      {
+        sound: "/θ/ (th sound)",
+        explanationVi:
+          "Âm /θ/ — đặt đầu lưỡi nhẹ giữa 2 hàm răng rồi thổi hơi ra. Khác hoàn toàn với 't' hoặc 'th' tiếng Việt.",
+        exampleWords: ["think", "healthy", "thanks", "thirty"],
+        commonMistakeVi:
+          "Người Việt thường đọc thành /t/ hoặc /s/ — ví dụ 'tink' thay vì 'think'",
+      },
+    ],
+  },
+
+  // ─── While-Watch Content ───────────────────────────────────────────────────
+  whileWatch: {
+    gistQuestion: {
+      questionVi: "Sau khi xem video (không phụ đề), bạn nghĩ video nói về gì?",
+      options: [
+        "Hai người nói về sở thích của họ",
+        "Hai người đang lên kế hoạch đi du lịch",
+        "Hai người đang thảo luận về công việc",
+        "Hai người đang nói về gia đình",
+      ],
+      correctIndex: 0,
+    },
+
+    focusPoints: [
+      {
+        type: "discourse_marker",
+        pattern: "you know",
+        explanationVi:
+          "'You know' là một discourse marker (từ đệm) rất phổ biến. Nó KHÔNG hỏi 'bạn có biết không?' — mà dùng để: (1) kiểm tra người nghe có đang theo dõi, (2) tạo sự đồng cảm, (3) chèn khi đang nghĩ. Tương tự 'bạn biết đấy' trong tiếng Việt.",
+        segmentIndices: [1, 13],
+      },
+      {
+        type: "discourse_marker",
+        pattern: "actually",
+        explanationVi:
+          "'Actually' dùng để bổ sung thông tin bất ngờ hoặc sửa lại điều vừa nói. Tương tự 'thực ra' trong tiếng Việt. Không mang nghĩa phản bác mạnh.",
+        segmentIndices: [3, 7],
+      },
+      {
+        type: "discourse_marker",
+        pattern: "I mean",
+        explanationVi:
+          "'I mean' dùng để giải thích rõ hơn hoặc sửa lại ý vừa nói. Tương tự 'ý tôi là' trong tiếng Việt. Rất tự nhiên trong hội thoại hàng ngày.",
+        segmentIndices: [9],
+      },
+      {
+        type: "grammar",
+        pattern: "I like to + verb",
+        explanationVi:
+          "Cấu trúc 'I like to + động từ' — cách nói về sở thích. Ví dụ: 'I like to go hiking' = 'Tôi thích đi leo núi'. Có thể dùng 'I like + V-ing' với nghĩa tương tự.",
+        segmentIndices: [1, 5, 13],
+      },
+      {
+        type: "collocation",
+        pattern: "go + activity",
+        explanationVi:
+          "Trong tiếng Anh, nhiều hoạt động dùng 'go + V-ing': go hiking, go swimming, go shopping, go running. Đây là collocation cố định — không thể nói 'do hiking'.",
+        segmentIndices: [1, 4, 5],
+      },
+    ],
+
+    keyMoments: [
+      {
+        timestamp: 8.5,
+        descriptionVi: "Person 1 nói về sở thích leo núi",
+        listenForVi:
+          "Nghe cách nói 'I like to go hiking' — câu mẫu cho sở thích",
+      },
+      {
+        timestamp: 30,
+        descriptionVi: "Nói về hoạt động sau khi leo núi",
+        listenForVi: "Nghe 'grab a coffee' — cách nói thân mật về uống cà phê",
+      },
+      {
+        timestamp: 35.5,
+        descriptionVi: "Person 2 giới thiệu sở thích nấu ăn",
+        listenForVi:
+          "Nghe 'I'm really into cooking' — cách nói mạnh hơn 'I like'",
+      },
+      {
+        timestamp: 67.5,
+        descriptionVi: "Nhiều sở thích cùng lúc",
+        listenForVi:
+          "Nghe cách liệt kê: 'I also like to read... And sometimes I go to the gym'",
+      },
+    ],
+  },
+
+  // ─── Post-Watch Content ────────────────────────────────────────────────────
+  postWatch: {
+    comprehensionQuiz: [
+      {
+        id: "q1",
+        questionVi: "Person 1 thích làm gì vào cuối tuần?",
+        options: ["Đi leo núi (hiking)", "Nấu ăn", "Đọc sách", "Đi tập gym"],
+        correctIndex: 0,
+        explanationVi:
+          'Person 1 nói: "I like to go hiking, especially on weekends." (Tôi thích đi leo núi, đặc biệt vào cuối tuần.)',
+      },
+      {
+        id: "q2",
+        questionVi: "Person 1 và bạn bè thường làm gì sau khi leo núi?",
+        options: ["Đi ăn tối", "Đi uống cà phê", "Đi xem phim", "Về nhà ngủ"],
+        correctIndex: 1,
+        explanationVi:
+          'Person 1 nói: "We like to grab a coffee afterwards." (Chúng tôi thích đi uống cà phê sau đó.)',
+      },
+      {
+        id: "q3",
+        questionVi: "Person 2 đặc biệt thích nấu loại đồ ăn nào?",
+        options: [
+          "Đồ ăn Nhật",
+          "Đồ ăn Ý (Italian)",
+          "Đồ ăn Trung Quốc",
+          "Đồ ăn Mexico",
+        ],
+        correctIndex: 1,
+        explanationVi:
+          'Person 2 nói: "I love trying new recipes, especially Italian food." (Tôi thích thử công thức mới, đặc biệt đồ ăn Ý.)',
+      },
+      {
+        id: "q4",
+        questionVi: '"I\'m really into cooking" có nghĩa gì?',
+        options: [
+          "Tôi đang trong bếp",
+          "Tôi rất thích / rất mê nấu ăn",
+          "Tôi mới bắt đầu học nấu ăn",
+          "Tôi không thích nấu ăn",
+        ],
+        correctIndex: 1,
+        explanationVi:
+          "'Be really into something' = rất thích, rất đam mê cái gì đó. Đây là cách nói tự nhiên, mạnh hơn 'I like'.",
+      },
+      {
+        id: "q5",
+        questionVi: "Ngoài nấu ăn, Person 2 còn làm gì trong thời gian rảnh?",
+        options: [
+          "Đọc sách và tập gym",
+          "Chơi game và xem TV",
+          "Đi leo núi và bơi lội",
+          "Vẽ tranh và nghe nhạc",
+        ],
+        correctIndex: 0,
+        explanationVi:
+          'Person 2 nói: "I also like to read. Mostly novels. And sometimes I go to the gym." (Tôi cũng thích đọc sách. Chủ yếu tiểu thuyết. Và đôi khi đi tập gym.)',
+      },
+    ],
+
+    fillInTheBlank: [
+      {
+        id: "fib1",
+        sentence: "What do you do ___ fun?",
+        hintVi: "để (mục đích)",
+        answer: "for",
+      },
+      {
+        id: "fib2",
+        sentence: "I like to go ___ on weekends.",
+        hintVi: "đi bộ đường dài",
+        answer: "hiking",
+      },
+      {
+        id: "fib3",
+        sentence: "We like to ___ a coffee afterwards.",
+        hintVi: "lấy / mua (thân mật)",
+        answer: "grab",
+      },
+      {
+        id: "fib4",
+        sentence: "I'm really ___ cooking.",
+        hintVi: "rất thích / mê",
+        answer: "into",
+      },
+      {
+        id: "fib5",
+        sentence: "I go to the gym to stay ___.",
+        hintVi: "khỏe mạnh",
+        answer: "healthy",
+      },
+    ],
+
+    speakingDrills: [
+      {
+        id: "sd1",
+        phrase: "What do you do for fun?",
+        meaningVi: "Bạn làm gì để vui / giải trí?",
+        timestamp: 6,
+        tipVi:
+          "Nối 'do you' = /dʒuː/. Nhấn 'fun' mạnh nhất. Lên giọng cuối câu hỏi.",
+      },
+      {
+        id: "sd2",
+        phrase: "I like to go hiking.",
+        meaningVi: "Tôi thích đi leo núi.",
+        timestamp: 9,
+        tipVi:
+          "Nhấn 'LIKE' và 'HI-king'. Giữ âm /ŋ/ cuối 'hiking' — ngậm miệng phía sau.",
+      },
+      {
+        id: "sd3",
+        phrase: "I'm really into cooking.",
+        meaningVi: "Tôi rất mê nấu ăn.",
+        timestamp: 37,
+        tipVi:
+          "Rút gọn 'I am' → 'I'm'. Nhấn 'REAL-ly' và 'COO-king'. 'Into' = /ˈɪn.tuː/",
+      },
+      {
+        id: "sd4",
+        phrase: "We like to grab a coffee afterwards.",
+        meaningVi: "Chúng tôi thích đi uống cà phê sau đó.",
+        timestamp: 30,
+        tipVi:
+          "'grab a' nối liền = /ɡræbə/. 'Afterwards' = AF-ter-werdz — nhớ âm /dz/ cuối!",
+      },
+    ],
+
+    culturalNotes: [
+      {
+        titleVi: "💬 'You know' — Từ đệm phổ biến nhất",
+        contentVi:
+          "Trong tiếng Anh hội thoại, 'you know' được dùng rất nhiều như một từ đệm (filler/discourse marker). Nó KHÔNG mang nghĩa 'bạn có biết không?' — mà giúp người nói tạo nhịp, kiểm tra phản ứng người nghe, hoặc tạo sự thân mật. Tương tự 'bạn biết đấy' hay 'đấy' trong tiếng Việt. Nếu nghe thấy nhiều 'you know', đừng lo — đó là dấu hiệu cuộc trò chuyện rất tự nhiên!",
+      },
+      {
+        titleVi: "☕ 'Grab a coffee' — Văn hóa cà phê phương Tây",
+        contentVi:
+          "'Grab a coffee' là cách nói rất phổ biến và thân mật. 'Grab' (= chụp lấy) tạo cảm giác nhanh gọn, casual — khác với 'buy a coffee' (mua cà phê) nghe chính thức hơn. Ở phương Tây, 'grab a coffee' thường là hoạt động xã giao — đi cà phê cùng bạn bè hoặc đồng nghiệp để trò chuyện, không chỉ đơn thuần là uống cà phê.",
+        segmentIndex: 5,
+      },
+      {
+        titleVi: "🏋️ 'To stay healthy' — Lối sống cân bằng",
+        contentVi:
+          "Người phương Tây thường nói về lý do tập thể dục bằng cụm 'to stay healthy' hoặc 'to keep fit'. Cách nói này nghe tích cực hơn 'to lose weight' (để giảm cân). Trong giao tiếp, nói 'I go to the gym to stay healthy' được coi là bình thường và không khoe khoang.",
+        segmentIndex: 13,
+      },
+    ],
+  },
+};
+
+// ─── Video Catalog ─────────────────────────────────────────────────────────────
+
+/** All curated Real Talk videos. Add more entries here as content expands. */
+export const realTalkVideos: RealTalkVideo[] = [sampleVideo];
+
+/** All Real Talk lessons, keyed by videoId */
+export const realTalkLessons: Record<string, RealTalkLesson> = {
+  [sampleLesson.videoId]: sampleLesson,
+};
+
+/**
+ * Helper to look up a video by its slug ID.
+ * Returns undefined if not found.
+ */
+export function getRealTalkVideo(id: string): RealTalkVideo | undefined {
+  return realTalkVideos.find((v) => v.id === id);
+}
+
+/**
+ * Helper to look up a lesson by video slug ID.
+ * Returns undefined if not found.
+ */
+export function getRealTalkLesson(videoId: string): RealTalkLesson | undefined {
+  return realTalkLessons[videoId];
+}
