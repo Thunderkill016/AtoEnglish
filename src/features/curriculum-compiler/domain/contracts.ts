@@ -128,6 +128,7 @@ export interface CommunicationClip {
   segmentIds: string[];
   startMs: number;
   endMs: number;
+  /** Main curriculum use, while treatments may also target secondary capabilities. */
   primaryCapabilityId: string;
   secondaryCapabilityIds: string[];
   lexicalItems: string[];
@@ -143,6 +144,7 @@ export interface CapabilityEvidencePolicy {
   requiresProductiveRecall: true;
   requiresInteractionalUse: true;
   requiresDelayedTransfer: true;
+  minimumDistinctClips: number;
   minimumDistinctSpeakers: number;
 }
 
@@ -151,6 +153,7 @@ export interface CommunicativeCapability {
   level: CurriculumLevel;
   canDoVi: string;
   canDoEn: string;
+  /** Editorial order is not automatically a hard prerequisite. */
   recommendedOrder: number;
   prerequisiteIds: string[];
   communicativeFunctions: string[];
@@ -205,12 +208,30 @@ export interface TreatmentSupportPolicy {
   scaffoldOrder: ScaffoldStep[];
 }
 
+export type ClipRole =
+  | "anchor"
+  | "variation"
+  | "natural_speech"
+  | "interaction"
+  | "cold_transfer";
+
+export interface LearnerChoiceMetadata {
+  titleVi: string;
+  summaryVi: string;
+  difficulty: "core" | "stretch";
+  estimatedMinutes: number;
+  accentTags: string[];
+  topicTags: string[];
+}
+
 export interface ClipTreatment {
   id: string;
   clipId: string;
   level: CurriculumLevel;
   targetCapabilityId: string;
   requiredCapabilityIds: string[];
+  role: ClipRole;
+  learnerChoice: LearnerChoiceMetadata;
   activities: LearningActivity[];
   supportPolicy: TreatmentSupportPolicy;
   reviewStatus: HumanReviewStatus;
