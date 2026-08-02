@@ -122,6 +122,16 @@ export function mapTranscriptSourceError(
         "Nguồn transcript tạm thời không khả dụng. Hãy thử lại hoặc dùng nguồn khác.",
         { retryAfterSeconds: 30 },
       );
+    case "transcript_provenance_invalid":
+      return generationFailure(
+        "SOURCE_UNSUPPORTED",
+        "Nguồn caption chưa có provenance và quyền sử dụng hợp lệ để được xem là nguồn đã phê duyệt.",
+      );
+    case "transcript_integrity_mismatch":
+      return generationFailure(
+        "TRANSCRIPT_INVALID",
+        "Caption đã thay đổi sau lần review hoặc không khớp digest đã xác minh.",
+      );
   }
 }
 
