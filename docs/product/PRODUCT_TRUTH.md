@@ -2,195 +2,231 @@
 
 **Status:** canonical product decision source  
 **Updated:** 2026-08-02  
-**Architecture direction:** `docs/product/YOUTUBE_TO_CURRICULUM.md`  
-**Session continuity:** `PROJECT_MEMORY.md`
+**Architecture:** `docs/product/NATURAL_COMMUNICATION_LEARNING_SYSTEM.md`  
+**Previous architecture record:** `docs/product/YOUTUBE_TO_CURRICULUM.md`
 
-## What AtoEnglish is now
+## What AtoEnglish is
 
-AtoEnglish is a Vietnamese-first learning system that turns legally usable natural conversations from YouTube and other authentic-media sources into a structured path from near-zero English to stable practical communication.
+AtoEnglish is a Vietnamese-first English-learning environment built around naturally occurring communication.
 
-YouTube is raw language material, not the curriculum.
+The learner enters recognisable situations, understands what people are doing, responds, repairs misunderstandings, continues conversations, and later succeeds with different speakers and contexts.
 
-AtoEnglish must select short authentic communication clips, analyze their language and social function, place them in a prerequisite graph, provide level-appropriate support, and convert comprehension into retrieval and real communication output.
+The product has a curriculum, but the curriculum is not the learner-facing experience.
 
-The product is not:
+> Natural communication on the surface; an invisible structured curriculum underneath.
 
-- a collection of unrelated video quizzes;
-- an annotated video viewer;
-- a synthetic-dialogue library;
-- an open-ended chatbot;
-- a grammar list ordered independently of communication needs.
-
-## Product advantage
-
-The defensible value is:
-
-> Take the right short piece of real communication, place it at the right point in a learner's journey, and turn it into a capability the learner can reuse outside that clip.
+## Product model
 
 ```text
-authentic input
-+ structured progression
-+ active recall
-+ repeated exposure across speakers
-+ real communication output
-= practical language acquisition
+natural interaction corpus
+→ communication events
+→ capability mapping
+→ invisible prerequisite graph
+→ environment-based session
+→ comprehension
+→ retrieval and response
+→ changed-context interaction
+→ delayed and varied re-exposure
 ```
 
-## Target learner
+AtoEnglish does not begin with an academic lesson title and then hunt for a video containing the desired sentence. It begins with complete natural interaction sources, identifies what actually happens, and builds progression from reusable communication events.
 
-The initial learner is:
+## Learner-facing experience
 
-- a Vietnamese adult beginner or false beginner;
-- able to recognize some English but unable to retrieve it reliably;
-- overwhelmed by unstructured natural media;
-- better served by Vietnamese guidance, controlled progression, and repeated exposure;
-- willing to practice in short sessions;
-- seeking practical everyday or workplace communication rather than exam certification.
+The learner should see practical environments and goals:
 
-## Learner destination
+- meet someone new;
+- order or buy something;
+- find a place;
+- recover when they do not understand;
+- talk briefly about themselves;
+- keep a conversation going.
 
-The initial long-range destination is practical high-A2 to B1 communication, not a claim of fluency.
+The learner should not be required to navigate grammar chapters, isolated phrase lists, or CEFR descriptors.
 
-The learner should progressively become able to:
+Grammar, vocabulary, pronunciation, and discourse knowledge are still taught when they solve a real communication problem. They remain visible as help, not as the organising identity of the product.
 
-1. recognize common communication functions across different speakers;
-2. respond without translating every sentence internally;
-3. maintain an ordinary conversation for several minutes;
-4. ask follow-up questions;
-5. describe experiences, routines, problems, and plans;
-6. give simple reasons and opinions;
-7. repair misunderstandings and request clarification;
-8. understand varied speakers at moderately natural speed;
-9. reuse learned language in unseen situations.
+## Source truth
 
-## Unit of curriculum
+A source recording is raw communication evidence, not a ready-made lesson.
 
-The smallest curriculum unit is a **Communication Clip**, normally 3–60 seconds long. A full video or podcast episode is only a source container.
+Preferred sources capture real goals and real turn-taking:
 
-A clip may support different lessons at A0, A1, A2, and B1. Each treatment teaches only the language and capability appropriate to that learner state.
+- unscripted creator conversations;
+- vlogs containing genuine interactions;
+- podcasts and interviews with responsive dialogue;
+- livestreams;
+- naturally occurring workplace or service encounters;
+- public events and street interactions;
+- AtoEnglish-owned unscripted recordings;
+- licensed or public-domain natural media.
 
-Curriculum ordering is based on communicative prerequisites:
+A polished recording can still be natural. A public recording can still be staged. Naturalness must be reviewed from context and interaction evidence rather than inferred from platform, popularity, production quality, or the presence of a target phrase.
 
-```text
-recognize greetings
-→ introduce oneself
-→ ask about another person
-→ answer and ask a follow-up
-→ sustain several turns
-→ repair misunderstanding
-→ describe and explain
-→ narrate and discuss
-```
+## Unit hierarchy
 
-Vocabulary, grammar, pronunciation, reductions, and discourse features support these capabilities; they do not define the roadmap by themselves.
+1. **Source recording** — a complete video, audio recording, livestream, interview, or conversation.
+2. **Communication event** — a bounded real action such as opening, asking, acknowledging, confirming, repairing, following up, or closing.
+3. **Communication clip** — a playable excerpt containing one or more events.
+4. **Communicative capability** — a reusable practical ability.
+5. **Environment experience** — the learner-facing session that turns source evidence into comprehension, retrieval, response, interaction, and transfer.
 
 ## Learning contract
 
-Every complete clip treatment has three layers.
+Every complete environment experience must include:
 
-### 1. Comprehension
+### First encounter
 
-The learner understands what real speakers are doing through gist, key evidence, bounded replay, and synchronized transcript support.
+The learner sees or hears the situation before the transcript or answer is revealed and identifies purpose, relationship, intention, or outcome.
 
-### 2. Acquisition
+### Progressive support
 
-The learner begins to own selected chunks, collocations, patterns, and speech features through active recall, imitation where useful, contextual replay, and later spaced retrieval.
+Help appears only as needed:
 
-### 3. Transfer
+```text
+replay
+→ context hint
+→ keyword
+→ English caption
+→ chunking
+→ Vietnamese meaning
+→ slower playback when available
+```
 
-The learner uses the capability beyond the source clip through personal substitution, parallel questions, changed situations, connected turns, and unseen-speaker tests.
+### Acquisition
 
-Without transfer, completion is not evidence of learning.
+The learner retrieves useful chunks, patterns, speech features, and interactional behaviour from memory rather than only recognising them.
 
-## Learning core
+### Interaction
 
-The product direction contains four connected systems:
+The learner produces the next plausible turn and reacts to a follow-up, confirmation, misunderstanding, or conversational change.
 
-1. **Source Engine** — records approved source metadata, permission, attribution, transcript provenance, speakers, and timestamps.
-2. **Language Intelligence Engine** — proposes levels, communication functions, chunks, structures, speech features, social context, prerequisites, and learning value.
-3. **Curriculum Graph** — orders capabilities, chooses what comes next, schedules varied exposure, and defines advancement evidence.
-4. **Lesson Runtime** — delivers bounded playback, transcript evidence, comprehension, recall, shadowing, response tasks, FSRS, and transfer tests.
+### Transfer
 
-AI may assist analysis and drafting but must not publish curriculum autonomously.
+The system changes the speaker, wording, setting, relationship, information, speed, or conversational problem. Success on the original clip alone is not mastery.
+
+### Delayed evidence
+
+The learner must later recognise or use the capability again with reduced support.
+
+## Invisible curriculum
+
+The internal graph tracks:
+
+- capability prerequisites;
+- vocabulary, chunks, and grammar required for a practical goal;
+- connected-speech and listening features;
+- relationships, settings, and formality;
+- speaker and accent diversity;
+- support used;
+- productive retrieval;
+- interactional use;
+- delayed transfer;
+- unseen-speaker and changed-context evidence.
+
+The graph determines what experience appears next. It must not force natural source material into a misleading textbook sequence.
+
+## Initial learner
+
+The first learner is a Vietnamese adult beginner or false beginner who:
+
+- recognises some English but cannot retrieve it reliably;
+- finds natural media overwhelming;
+- needs Vietnamese guidance and controlled support;
+- wants everyday and workplace communication rather than exam certification;
+- can practise in short sessions;
+- needs repeated exposure across speakers and situations.
+
+## Initial destination
+
+The long-range target is stable practical high-A2 to B1 communication, not a claim of fluency.
+
+The learner should progressively become able to:
+
+- understand common functions across speakers;
+- respond without translating every sentence internally;
+- ask follow-up questions;
+- maintain ordinary conversations for several minutes;
+- describe routines, experiences, problems, and plans;
+- give simple reasons and opinions;
+- confirm information and repair misunderstandings;
+- cope with moderately natural speed and varied speakers;
+- reuse learned behaviour in unseen situations.
 
 ## First validation slice
 
-The next product slice is a seven-day A0 mini-curriculum:
+Build five environment experiences:
 
-- 20–30 reviewed communication clips;
-- multiple videos, speakers, and contexts;
-- five capabilities:
-  1. greet someone;
-  2. say one's name;
-  3. ask another person's name;
-  4. say where one is from;
-  5. ask someone to repeat;
-- each capability appears in 3–5 clips from different speakers or contexts;
-- support fades across the sequence;
-- final evidence includes recognition in an unseen clip and personal transfer.
+1. **Meet someone new** — open, exchange names, acknowledge, and ask one follow-up.
+2. **Buy or order something** — get attention, request, confirm, and close.
+3. **Find a place** — ask, identify key location information, and confirm.
+4. **Recover from a listening failure** — signal difficulty, request repetition or clarification, and continue.
+5. **Talk briefly about oneself** — answer, add one detail, and return a question.
 
-This pilot validates curriculum coherence, not catalog size.
+Each environment requires:
+
+- an accessible anchor interaction;
+- naturally occurring variations;
+- multiple speakers or contexts;
+- at least one unexpected or repair turn;
+- guided learner response;
+- changed-context transfer;
+- delayed re-exposure.
+
+Corpus size follows coverage quality. Do not force a fixed clip quota with unrepresentative or unsuitable sources.
+
+## Product advantage
+
+The defensible value is not the number of videos, transcripts, generated lessons, or AI features.
+
+It is the ability to:
+
+> turn messy real communication into a coherent learner journey without making the experience feel like an academic syllabus.
 
 ## Source and rights boundary
 
-A public YouTube URL does not automatically grant permission to copy transcripts, translate content, create derivative lessons, or sell access.
+Naturalness and usage rights are separate gates.
 
-A learner-facing clip requires documented permission or a compatible license, or public-domain status. Every published clip must preserve:
+A source may be natural but unavailable for transcript storage, translation, clip extraction, self-hosting, or derivative lesson creation. Full curriculum use requires ownership, documented permission, public-domain status, or a compatible licence.
 
-- source URL and exact timestamps;
-- creator or publisher attribution;
-- license or permission evidence;
-- transcript provenance;
-- human review of transcript, speaker boundaries, names, translation, and learning activities.
+Embed-only or companion sources must not silently become stored transcript curriculum.
 
-Embedding and media access must comply with the source platform's terms and technical constraints.
+Every learner-facing source must preserve applicable provenance, attribution, review, and takedown state.
 
 ## Evidence hierarchy
 
-Decisions distinguish:
+1. **Repository evidence** — code, data, tests, routes, and current behaviour.
+2. **Source evidence** — rights, provenance, naturalness, transcript, speakers, and timestamps.
+3. **Usability evidence** — learners can enter and complete the environment.
+4. **Learning evidence** — reduced support, retrieval, interaction, delayed use, and transfer improve.
+5. **Market evidence** — learners pay, complete, renew, or refer.
 
-1. **Repository evidence:** code, data, tests, routes, and current behavior.
-2. **Source evidence:** permission, provenance, transcript accuracy, and timestamp accuracy.
-3. **Usability evidence:** learners can reach and complete the intended flow.
-4. **Learning evidence:** delayed retrieval, unseen-speaker recognition, and transfer improve.
-5. **Market evidence:** target learners pay, complete, renew, or refer others.
+Passing CI proves repository consistency, not source suitability or learning effectiveness.
 
-Passing CI proves repository consistency, not curriculum validity or learning effectiveness.
+## Product non-goals
 
-## Existing foundation
+AtoEnglish is not:
 
-The repository already contains useful capabilities:
+- an academic grammar course with videos attached;
+- a feed of random English clips;
+- a phrase-search engine;
+- a library of scripted teaching dialogues presented as authentic;
+- an annotated video viewer;
+- an unrestricted chatbot;
+- an autonomous lesson-publication system.
 
-- Next.js and responsive lesson surfaces;
-- authentication, progress, RLS, and pilot analytics;
-- FSRS and review flows;
-- speaking tasks, feedback, retry, and checkpoint infrastructure;
-- a large legacy synthetic curriculum;
-- Vitest, content checks, builds, and Playwright coverage;
-- PR #46's authentic-media technical proof;
-- PR #45's diagnosis, fading support, repair, and cold-transfer experiment.
+## Work-selection rule
 
-These are reusable parts, not the product roadmap by themselves.
+Prefer the smallest change that improves one of these:
 
-## Superseded direction
-
-The focused 28-day workplace-speaking journey is no longer the canonical curriculum roadmap after the owner's 2026-08-02 decision.
-
-Its useful task definitions, speaking evidence, feedback, retry, assessment, and pilot operations may be reused. Future curriculum selection and ordering must follow authentic-input communication capabilities and prerequisites.
-
-Do not silently revert to the old roadmap because existing code or documents still mention 28 days.
-
-## Product decision rule
-
-When choosing work, prefer the smallest change that improves one of these:
-
-- source legality and provenance;
-- clip analysis quality;
-- prerequisite and curriculum coherence;
-- comprehension-to-acquisition progression;
-- delayed retrieval;
-- exposure across speakers and contexts;
-- transfer to unseen communication;
+- natural corpus quality and representativeness;
+- source rights and provenance;
+- communication-event analysis;
+- environment-session coherence;
+- invisible prerequisite selection;
+- comprehension-to-retrieval progression;
+- multi-turn interaction;
+- varied and delayed transfer;
 - trustworthy learner evidence.
 
-Do not optimize for video count, feature count, quiz count, or autonomous generation.
+Do not optimise for video count, quiz count, grammar coverage charts, generated lesson count, or novelty alone.
