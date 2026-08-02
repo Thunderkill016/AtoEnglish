@@ -191,10 +191,18 @@ export default function RealTalkHub({ videos }: RealTalkHubProps) {
               thực tế
             </span>
           </h1>
-          <p className="text-sm text-zinc-400 max-w-md mx-auto">
+          <p className="text-sm text-zinc-400 max-w-md mx-auto mb-6">
             Xem video trò chuyện thật từ YouTube, hiểu từng câu, học từ vựng
             mới, và luyện nói theo người bản xứ.
           </p>
+
+          <Link
+            href="/real-talk/create"
+            className="inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-400 hover:to-emerald-400 text-white font-bold text-sm shadow-lg shadow-teal-900/30 transition-all hover:scale-[1.02] active:scale-[0.98]"
+          >
+            <Sparkles size={16} />
+            <span>Tạo bài học từ link YouTube</span>
+          </Link>
         </motion.div>
 
         {/* ── Search & Filter ──────────────────────────────────────────── */}
