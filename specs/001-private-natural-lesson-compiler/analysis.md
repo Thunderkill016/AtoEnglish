@@ -240,9 +240,11 @@ These deferred decisions do not belong in spec 001 implementation.
 ## Exact-head snapshot
 
 - Branch: `agent/rebuild-learning-core`
-- Head observed after this analysis update: pending the resulting documentation commit
+- Head before this documentation-only pin: `280ec45fe30b171fb3d05846b7b5235c7aa4124e`
 - Base snapshot: `aaaae5f6dca42d1d30ad2a1b7c67d7dee77b61f6`
-- GitHub status checks observed before this update: none
+- Ahead before this pin: 78 commits
+- Changed files: 40
+- GitHub status checks observed: none
 - This snapshot does not claim lint, typecheck, tests, build, database, provider,
   browser, or human review success.
 
