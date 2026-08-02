@@ -1,130 +1,199 @@
 # AtoEnglish current priority
 
-**Updated:** 2026-07-24  
+**Updated:** 2026-08-02  
 **Owner:** Thunderkill016  
-**Primary roadmap:** GitHub issue #20
+**Primary product truth:** `docs/product/PRODUCT_TRUTH.md`  
+**Architecture direction:** `docs/product/YOUTUBE_TO_CURRICULUM.md`  
+**Session continuity:** `PROJECT_MEMORY.md`
 
 ## North star
 
-Prove that one Vietnamese adult beginner can follow a coherent 28-day, 10–15 minute-per-day journey and improve a practical work-speaking performance.
+Build a coherent path from near-zero English to practical high-A2/B1 communication by transforming authentic conversation clips into ordered comprehension, acquisition, and transfer experiences.
 
-Everything else is secondary until the repository can support and measure that journey.
+The immediate goal is not a large catalog. It is to prove that multiple authentic clips can form one small curriculum whose lessons depend on and reinforce one another.
 
 ## Current phase
 
-**Phase: make AtoEnglish safe and legible for AI-assisted development, then implement the first gold lesson.**
+**Phase: encode the new canonical direction, then design and validate one seven-day A0 mini-curriculum.**
 
-The repository already has enough application, authentication, assessment, analytics, database, and testing infrastructure for bounded curriculum work. The immediate risk is not missing platform capability. It is allowing agents to choose work that does not serve the pilot outcome.
+Owner decision recorded on 2026-08-02:
+
+- YouTube and other authentic-media sources are language input, not the curriculum;
+- the curriculum unit is a short Communication Clip;
+- clips are ordered by communicative capability and prerequisites;
+- every full lesson treatment requires comprehension, acquisition, and transfer;
+- the old fixed 28-day workplace journey is no longer the canonical roadmap;
+- PR #46 is a technical proof of one authentic clip, not the final product shape;
+- useful mechanisms from PR #45 and the merged Gold Day 1 may be reused inside the new core.
+
+Do not create more standalone Real Talk lessons before the mini-curriculum and graph contracts exist.
 
 ## Ordered queue
 
-### 1. Product and agent truth — in progress
+### 1. Persist the product decision and session continuity — current task
 
-Establish repository-owned rules that every agent can read before proposing work:
+Update repository-owned truth so a new AI session cannot mistakenly return to the old roadmap or treat PR #46 as the product endpoint.
 
+Required documents:
+
+- `PROJECT_MEMORY.md`;
 - `AGENTS.md`;
 - `docs/product/PRODUCT_TRUTH.md`;
-- this current-priority document;
+- this file;
 - `docs/product/DO_NOT_BUILD.md`;
-- current `AGENT_PLAN.md` and `AGENT_BACKLOG.md`.
+- `docs/product/YOUTUBE_TO_CURRICULUM.md`;
+- `AGENT_PLAN.md` and `AGENT_BACKLOG.md`.
 
-**Done when:** the repository has one discoverable product direction, stale cleanup plans no longer select work, and every future task must show how it serves the current priority.
+**Done when:** all high-authority documents agree on YouTube-to-Curriculum as the canonical direction and GitHub Verify passes on the exact documentation head.
 
-### 2. One verification entry point — next
+### 2. Define the bounded curriculum contracts
 
-Create the smallest repository-owned verification wrapper or manifest that maps a changed surface to the checks already available.
+Before implementing the learner-facing corpus, define the smallest stable contracts for:
 
-Initial goal:
+- source, permission, attribution, and transcript provenance;
+- Communication Clip timestamps and speaker segments;
+- communicative functions;
+- prerequisite capabilities;
+- level-specific treatments;
+- comprehension, acquisition, and transfer activities;
+- advancement and delayed-retrieval evidence;
+- human review state.
 
-- preserve existing commands rather than inventing a new CI system;
-- support a focused curriculum slice first;
-- report which checks ran, passed, failed, or were unavailable;
-- distinguish technical checks from manual product review;
-- make the result usable by a coding agent and by the owner.
+Use a modular-monolith design. Do not build a generalized ingestion platform or database migration unless the pilot cannot function without it.
 
-This task must not change product behavior.
+### 3. Build the reviewed A0 source corpus
 
-### 3. Gold Day 1 lesson — after verification entry point
+Create a corpus of 20–30 short clips across multiple videos and speakers for five capabilities:
 
-Implement the preferred Day 1 design from `docs/curriculum/28-day-speaking-journey-contract.md`.
+1. greet someone;
+2. say one's name;
+3. ask another person's name;
+4. say where one is from;
+5. ask someone to repeat.
 
-Day 1 should cover only:
+Each capability must appear in 3–5 clips from different speakers or contexts.
 
-- greeting;
-- name;
-- spelling a Vietnamese name;
-- one lightweight request to repeat;
-- one final spoken output using name and spelling.
+Source requirements:
 
-It must fit 10–15 minutes and must not absorb role, company, responsibility, all five questions, or full repair training.
+- documented permission, compatible license, or public-domain status;
+- exact source URL and timestamps;
+- transcript provenance;
+- human verification of transcript, speaker, names, translation, and learning value.
 
-Expected scope:
+Start manually or semi-manually. Automation is not the product proof.
 
-- `src/lib/data/units/unitA01.ts`;
-- direct targeted tests;
-- the smallest relevant lesson smoke assertion.
+### 4. Compile the seven-day learning graph
 
-Explicitly out of scope:
+Order the corpus into a coherent progression:
 
-- authentication;
-- database and RLS;
-- analytics infrastructure;
-- XP, streak, league, and FSRS rules;
-- major `UnitTemplate` refactor;
-- unrelated units.
+- explicit prerequisite edges;
+- recognition before productive use where appropriate;
+- controlled introduction of variants;
+- repeated exposure across speakers;
+- fading support;
+- delayed retrieval;
+- unseen-speaker recognition;
+- changed-situation transfer.
 
-### 4. First-week journey — later
+The graph must prevent a learner from receiving a clip treatment that assumes missing prerequisites.
 
-After Day 1 is proven coherent, implement Days 2–7 as separate bounded outcomes and add checkpoint 1.
+### 5. Implement the smallest learner runtime slice
 
-Do not build all 28 days in one pull request.
+Reuse existing application capabilities where possible:
 
-### 5. Pilot operations and learner evidence
+- bounded authentic-media playback;
+- synchronized transcript evidence;
+- gist and detail comprehension;
+- chunk recall and contextual replay;
+- shadowing or imitation when useful;
+- personal response tasks;
+- FSRS integration;
+- unseen transfer tests;
+- typed fallback when microphone capability fails.
 
-Recruit target learners, run baseline assessment, sell or manually administer the initial pilot, observe failure points, and build only repeated P0 blockers.
+Do not polish the existing radio lesson as a standalone destination. Refactor or reuse it only when that directly serves the seven-day sequence.
+
+### 6. Run the learner pilot
+
+Test whether learners can:
+
+- understand the five target functions across speakers;
+- answer with personal information;
+- recognize the functions in unseen clips;
+- retrieve selected chunks after several days;
+- complete changed communication tasks with reduced support;
+- progress without facilitator language help.
+
+Technical success, video playback, or quiz completion alone is insufficient.
+
+## Relationship to open pull requests
+
+### PR #46 — authentic-media technical proof
+
+- proves one licensed/public-domain clip can support timestamped playback, transcript evidence, active recall, and optional FSRS;
+- remains draft, unmerged, and non-production;
+- should not be completed as an isolated product;
+- its source, provenance, playback, transcript, and retrieval code may be corrected and reused in a later mini-curriculum task;
+- its known timestamp, approval-gate, save-state, browser, and human-review defects remain real.
+
+### PR #45 — mastery-mechanism experiment
+
+- diagnosis, gap-focused teaching, fading support, repair, cold transfer, and checkpoint gating may inform the new runtime;
+- it is not a competing canonical product direction after the owner decision;
+- keep, revise, extract, or close it based on what the mini-curriculum requires;
+- do not merge the entire experiment merely because its technical checks passed.
+
+### Merged PR #43 — Gold Day 1
+
+- supplies useful speaking-task, feedback, retry, checkpoint, and pilot evidence patterns;
+- its synthetic lesson source and fixed 28-day placement are not the future curriculum model.
+
+### PR #35
+
+- remains an older stale Gold Day 1 branch;
+- do not use it as the implementation baseline.
 
 ## Decisions already completed
 
-- `/login` metadata defect was fixed.
-- The pilot promise was aligned across the main funnel.
-- Baseline and final speaking assessment plus rubric were defined.
-- Minimal privacy-bounded pilot analytics were added and recovered correctly.
-- Supabase security findings were hardened.
-- The 28-day journey contract and Day 1 boundary were defined.
+- AtoEnglish will use authentic natural conversations as the primary language source.
+- The product is a YouTube-to-Curriculum Engine, not a video-to-quiz feature.
+- Communication Clip is the smallest curriculum unit.
+- Curriculum ordering follows communicative capability and prerequisites.
+- Full learning requires comprehension, acquisition, and transfer.
+- The initial destination is practical high-A2/B1, not a fluency claim.
+- The next validation slice is seven days, 20–30 clips, and five A0 capabilities.
+- The previous 28-day workplace journey is superseded as the canonical roadmap.
 
-Do not reopen these decisions without new evidence.
+Do not reopen these decisions without new owner instruction or learner evidence.
 
 ## Work selection rule
 
-A proposed task may enter the active queue only when it does at least one of the following:
+A task may enter the active queue only when it advances one of these:
 
-1. directly advances the ordered queue above;
-2. fixes a production defect blocking the pilot journey;
-3. fixes a security, privacy, or data-integrity defect;
-4. removes a repeated development blocker observed in at least two real AtoEnglish tasks.
+1. source rights, provenance, transcript, or human-review integrity;
+2. Communication Clip and curriculum-graph contracts;
+3. the reviewed five-capability A0 corpus;
+4. the seven-day prerequisite progression;
+5. comprehension, acquisition, retrieval, or transfer evidence;
+6. a production defect, security defect, privacy defect, or data-integrity defect;
+7. a repeated development blocker observed in real work.
 
-Every proposal must name the learner, product, or development blocker it resolves.
+Do not start:
 
-## Time allocation
-
-Until the first pilot is ready:
-
-- 80–90% of effort should improve AtoEnglish and the pilot journey;
-- no more than 10–20% should improve CycleWarden or development tooling;
-- tooling work must be justified by a current AtoEnglish blocker.
+- unrelated standalone video lessons;
+- the full A0–B1 corpus;
+- unrestricted YouTube ingestion;
+- autonomous AI lesson publication;
+- another learning engine;
+- broad gamification, payment, or architecture work.
 
 ## Exit criteria for this phase
 
-This phase is complete when the owner can take one approved AtoEnglish task through:
+This phase is complete when:
 
-```text
-current priority
-→ bounded task contract
-→ approved scope
-→ coding agent implementation
-→ technical and product checks
-→ understandable review summary
-→ draft pull request
-```
-
-without writing an ad hoc manifest, losing product context, changing unrelated systems, or automatically merging or deploying.
+- repository truth and memory reflect the new direction;
+- one reviewed 20–30 clip corpus exists for the five A0 capabilities;
+- clips have source, rights, transcript, metadata, and prerequisite evidence;
+- one seven-day graph connects lessons and repeated exposure;
+- learners complete comprehension, acquisition, delayed retrieval, unseen recognition, and transfer checks;
+- the owner has evidence to continue, revise, or reject the curriculum compiler approach.
