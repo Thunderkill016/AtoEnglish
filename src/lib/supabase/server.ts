@@ -1,13 +1,13 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 
-import type { Database } from "@/types/supabase";
+import type { AppDatabase } from "@/types/app-database";
 
-// Next.js 15+: cookies() is now async — must be awaited
+// Next.js 15+: cookies() is async and must be awaited.
 export async function createClient() {
   const cookieStore = await cookies();
 
-  return createServerClient<Database>(
+  return createServerClient<AppDatabase>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
@@ -18,14 +18,13 @@ export async function createClient() {
         setAll(cookiesToSet) {
           try {
             cookiesToSet.forEach(({ name, value, options }) =>
-              cookieStore.set(name, value, options)
+              cookieStore.set(name, value, options),
             );
           } catch {
-            // Called from a Server Component — safe to ignore when
-            // middleware handles session refresh.
+            // Server Components cannot write cookies. Middleware refreshes them.
           }
         },
       },
-    }
+    },
   );
 }
