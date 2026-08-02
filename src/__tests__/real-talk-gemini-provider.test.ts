@@ -4,6 +4,7 @@ import {
   generateEvidenceBoundLessonWithGemini,
   parseEvidenceBoundLessonText,
   requestGeminiText,
+  sanitizeGeminiJsonSchema,
 } from "@/features/real-talk/server/gemini-lesson-provider";
 import type { GeneratedLessonDraft } from "@/lib/real-talk/generation-contract";
 
@@ -71,6 +72,45 @@ describe("Gemini lesson provider", () => {
       model: "gemini-test",
     });
     expect(parseText).toHaveBeenCalledOnce();
+  });
+
+  it("removes unsupported Gemini JSON Schema keywords while preserving property schemas", () => {
+    const sanitized = sanitizeGeminiJsonSchema({
+      $schema: "https://json-schema.org/draft/2020-12/schema",
+      type: "object",
+      minLength: 1,
+      properties: {
+        phrase: {
+          type: "string",
+          pattern: "^[a-z]+$",
+          minLength: 2,
+          description: "Source-backed phrase",
+        },
+        score: {
+          type: "number",
+          exclusiveMinimum: 0,
+          maximum: 10,
+        },
+      },
+      required: ["phrase", "score"],
+      additionalProperties: false,
+    });
+
+    expect(sanitized).toEqual({
+      type: "object",
+      properties: {
+        phrase: {
+          type: "string",
+          description: "Source-backed phrase",
+        },
+        score: {
+          type: "number",
+          maximum: 10,
+        },
+      },
+      required: ["phrase", "score"],
+      additionalProperties: false,
+    });
   });
 
   it("retries a 429 once and then accepts a valid response", async () => {
@@ -150,6 +190,17 @@ describe("Gemini lesson provider", () => {
 
   it("rejects malformed model text before schema or evidence acceptance", () => {
     const result = parseEvidenceBoundLessonText("NOT_JSON", source);
+    expect(result).toMatchObject({
+      success: false,
+      code: "MODEL_OUTPUT_INVALID",
+    });
+  });
+
+  it("rejects instruction-induced top-level fields instead of silently stripping them", () => {
+    const result = parseEvidenceBoundLessonText(
+      JSON.stringify({ hacked: true }),
+      source,
+    );
     expect(result).toMatchObject({
       success: false,
       code: "MODEL_OUTPUT_INVALID",
