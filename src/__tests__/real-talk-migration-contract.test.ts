@@ -31,6 +31,24 @@ describe("Real Talk private draft migration contract", () => {
     expect(normalized).toContain("reviewed_by = null");
   });
 
+  it("enables RLS and removes every previous policy before installing the canonical set", () => {
+    expect(normalized).toContain(
+      "alter table public.real_talk_videos enable row level security",
+    );
+    expect(normalized).toContain(
+      "alter table public.real_talk_lessons enable row level security",
+    );
+    expect(normalized).toContain("from pg_policies");
+    expect(normalized).toContain("tablename = 'real_talk_videos'");
+    expect(normalized).toContain("tablename = 'real_talk_lessons'");
+    expect(normalized).toContain(
+      "drop policy if exists %i on public.real_talk_videos",
+    );
+    expect(normalized).toContain(
+      "drop policy if exists %i on public.real_talk_lessons",
+    );
+  });
+
   it("constrains lesson review state to explicit lifecycle values", () => {
     expect(normalized).toContain(
       "check (generation_status in ('ai_draft', 'human_reviewed', 'approved'))",
@@ -84,5 +102,16 @@ describe("Real Talk private draft migration contract", () => {
     expect(lessonUpdate).toContain("reviewed_by is null");
     expect(lessonUpdate).toContain("video.created_by = auth.uid()");
     expect(lessonUpdate).toContain("video.is_public = false");
+  });
+
+  it("limits owner deletion to private video and ai_draft lesson rows", () => {
+    const videoDelete = policy("real_talk_videos_delete_owner");
+    const lessonDelete = policy("real_talk_lessons_delete_owner");
+
+    expect(videoDelete).toContain("created_by = auth.uid()");
+    expect(videoDelete).toContain("is_public = false");
+    expect(lessonDelete).toContain("generation_status = 'ai_draft'");
+    expect(lessonDelete).toContain("video.created_by = auth.uid()");
+    expect(lessonDelete).toContain("video.is_public = false");
   });
 });
