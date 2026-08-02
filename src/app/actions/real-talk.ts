@@ -12,7 +12,12 @@ import {
 } from "@/lib/real-talk/generation-contract";
 import { createRateLimiter } from "@/lib/security/rate-limit";
 import { createClient } from "@/lib/supabase/server";
-import type { RealTalkLesson, RealTalkLevel, RealTalkVideo } from "@/types/real-talk";
+import type {
+  RealTalkGenerationMetadata,
+  RealTalkLesson,
+  RealTalkLevel,
+  RealTalkVideo,
+} from "@/types/real-talk";
 import type { Json } from "@/types/supabase";
 
 const generateLimiter = createRateLimiter(5, 60 * 1000, "real-talk-generate");
@@ -25,7 +30,7 @@ const GEMINI_MODELS = [
   "gemini-flash-latest",
 ] as const;
 
-interface RawTranscriptItem extends SourceTranscriptItem {}
+type RawTranscriptItem = SourceTranscriptItem;
 
 interface YouTubeMetadata {
   title: string;
@@ -89,15 +94,16 @@ async function fetchTranscript(videoId: string): Promise<
 > {
   try {
     const { YoutubeTranscript } = await import("youtube-transcript");
-    const languageAttempts = [undefined, "en", "en-US"] as const;
+    const languageAttempts = [null, "en", "en-US"] as const;
     let items: Awaited<ReturnType<typeof YoutubeTranscript.fetchTranscript>> | null =
       null;
 
-    for (const lang of languageAttempts) {
-      items = await YoutubeTranscript.fetchTranscript(
-        videoId,
-        lang ? { lang } : undefined,
-      ).catch(() => null);
+    for (const language of languageAttempts) {
+      items = language
+        ? await YoutubeTranscript.fetchTranscript(videoId, {
+            lang: language,
+          }).catch(() => null)
+        : await YoutubeTranscript.fetchTranscript(videoId).catch(() => null);
       if (items?.length) break;
     }
 
@@ -342,9 +348,7 @@ function slugify(value: string) {
 function buildLesson(
   videoId: string,
   draft: GeneratedLessonDraft,
-  model: string,
-  persistence: "preview_only" | "saved_private_draft",
-  warnings: string[],
+  generation: RealTalkGenerationMetadata,
 ): RealTalkLesson {
   return {
     videoId,
@@ -361,44 +365,34 @@ function buildLesson(
     environment: draft.environment,
     communicationEvents: draft.communicationEvents,
     transferTask: draft.transferTask,
-    generation: {
-      status: "ai_draft",
-      model,
-      generatedAt: new Date().toISOString(),
-      persistence,
-      warnings,
-    },
+    generation,
   };
 }
 
-async function persistPrivateDraft(
-  video: RealTalkVideo,
-  draft: GeneratedLessonDraft,
-  model: string,
-  warnings: string[],
-): Promise<
-  | { persistence: "preview_only"; video: RealTalkVideo; lesson: RealTalkLesson }
-  | {
-      persistence: "saved_private_draft";
-      video: RealTalkVideo;
-      lesson: RealTalkLesson;
-    }
-> {
+async function persistOwnerPrivateDraft(params: {
+  video: RealTalkVideo;
+  draft: GeneratedLessonDraft;
+  model: string;
+  warnings: string[];
+  userId: string;
+}): Promise<{
+  persistence: "preview_only" | "saved_private_draft";
+  video: RealTalkVideo;
+  lesson: RealTalkLesson;
+}> {
+  const { video, draft, model, warnings, userId } = params;
+  const generatedAt = new Date().toISOString();
+  const previewGeneration: RealTalkGenerationMetadata = {
+    status: "ai_draft",
+    model,
+    generatedAt,
+    persistence: "preview_only",
+    warnings,
+  };
+
   try {
     const supabase = await createClient();
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
-    if (!user) {
-      return {
-        persistence: "preview_only",
-        video,
-        lesson: buildLesson(video.id, draft, model, "preview_only", warnings),
-      };
-    }
-
-    const privateSlug = `${video.id}-${user.id.slice(0, 8)}`;
+    const privateSlug = `${video.id}-${userId.slice(0, 8)}`;
     const privateVideo: RealTalkVideo = { ...video, id: privateSlug };
 
     const { data: dbVideo, error: videoError } = await supabase
@@ -419,7 +413,7 @@ async function persistPrivateDraft(
           topics: privateVideo.topics,
           speaker_count: privateVideo.speakerCount,
           speakers: privateVideo.speakers as unknown as Json,
-          created_by: user.id,
+          created_by: userId,
           is_public: false,
         },
         { onConflict: "slug" },
@@ -427,15 +421,15 @@ async function persistPrivateDraft(
       .select("id")
       .single();
 
-    if (videoError || !dbVideo) throw videoError ?? new Error("Missing video id");
+    if (videoError || !dbVideo) {
+      throw videoError ?? new Error("Missing private video id");
+    }
 
-    const lesson = buildLesson(
-      privateSlug,
-      draft,
-      model,
-      "saved_private_draft",
-      warnings,
-    );
+    const generation: RealTalkGenerationMetadata = {
+      ...previewGeneration,
+      persistence: "saved_private_draft",
+    };
+    const lesson = buildLesson(privateSlug, draft, generation);
     const { error: lessonError } = await supabase
       .from("real_talk_lessons")
       .upsert(
@@ -451,7 +445,14 @@ async function persistPrivateDraft(
           pre_watch: lesson.preWatch as unknown as Json,
           while_watch: lesson.whileWatch as unknown as Json,
           post_watch: lesson.postWatch as unknown as Json,
+          environment: lesson.environment as unknown as Json,
+          communication_events: lesson.communicationEvents as unknown as Json,
+          transfer_task: lesson.transferTask as unknown as Json,
           generation_model: model,
+          generation_status: "ai_draft",
+          generation_warnings: warnings as unknown as Json,
+          reviewed_at: null,
+          reviewed_by: null,
         },
         { onConflict: "video_id" },
       );
@@ -465,20 +466,17 @@ async function persistPrivateDraft(
     };
   } catch (error) {
     console.error("[Real Talk] Private draft persistence failed:", error);
-    const persistenceWarnings = [
+    const fallbackWarnings = [
       ...warnings,
       "Không lưu được bản nháp vào tài khoản; bản xem trước vẫn dùng được trong phiên hiện tại.",
     ];
     return {
       persistence: "preview_only",
       video,
-      lesson: buildLesson(
-        video.id,
-        draft,
-        model,
-        "preview_only",
-        persistenceWarnings,
-      ),
+      lesson: buildLesson(video.id, draft, {
+        ...previewGeneration,
+        warnings: fallbackWarnings,
+      }),
     };
   }
 }
@@ -496,11 +494,23 @@ export async function generateRealTalkLesson(
       };
     }
 
+    const supabase = await createClient();
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
+    if (authError || !user) {
+      return {
+        success: false,
+        error: "Bạn cần đăng nhập để tạo bài học bằng Gemini.",
+      };
+    }
+
     const requestHeaders = await headers();
     const ip =
       requestHeaders.get("x-forwarded-for")?.split(",")[0]?.trim() ||
       "127.0.0.1";
-    const rateCheck = await generateLimiter.check(ip);
+    const rateCheck = await generateLimiter.check(`${user.id}:${ip}`);
     if (!rateCheck.success) {
       return {
         success: false,
@@ -580,12 +590,13 @@ export async function generateRealTalkLesson(
       },
     };
 
-    const persisted = await persistPrivateDraft(
+    const persisted = await persistOwnerPrivateDraft({
       video,
-      { ...generated.draft, level: input.data.level },
-      generated.model,
+      draft: { ...generated.draft, level: input.data.level },
+      model: generated.model,
       warnings,
-    );
+      userId: user.id,
+    });
 
     return {
       success: true,
@@ -713,6 +724,16 @@ export async function fetchLessonBySlug(slug: string): Promise<{
       },
     };
 
+    const status = lessonRow.generation_status as
+      | "ai_draft"
+      | "human_reviewed"
+      | "approved";
+    const warnings = Array.isArray(lessonRow.generation_warnings)
+      ? lessonRow.generation_warnings.filter(
+          (warning): warning is string => typeof warning === "string",
+        )
+      : [];
+
     const lesson: RealTalkLesson = {
       videoId: video.id,
       title: lessonRow.title,
@@ -725,14 +746,17 @@ export async function fetchLessonBySlug(slug: string): Promise<{
       preWatch: lessonRow.pre_watch as unknown as RealTalkLesson["preWatch"],
       whileWatch: lessonRow.while_watch as unknown as RealTalkLesson["whileWatch"],
       postWatch: lessonRow.post_watch as unknown as RealTalkLesson["postWatch"],
+      environment: lessonRow.environment as unknown as RealTalkLesson["environment"],
+      communicationEvents:
+        lessonRow.communication_events as unknown as RealTalkLesson["communicationEvents"],
+      transferTask:
+        lessonRow.transfer_task as unknown as RealTalkLesson["transferTask"],
       generation: {
-        status: videoRow.is_public ? "approved" : "ai_draft",
+        status,
         model: lessonRow.generation_model ?? "unknown",
         generatedAt: lessonRow.created_at,
         persistence: "saved_private_draft",
-        warnings: videoRow.is_public
-          ? []
-          : ["Bản nháp AI chưa được phê duyệt cho catalog công khai."],
+        warnings,
       },
     };
 
