@@ -162,10 +162,10 @@ description: "Dependency-ordered implementation and verification tasks for the p
 
 ### Tests for User Story 4
 
-- [ ] T065 [P] [US4] Add component test showing environment and roles before lesson phases in `src/__tests__/real-talk-lesson-preview.test.tsx`
-- [ ] T066 [P] [US4] Add component test blocking completion until phrase production acknowledgements are complete in `src/__tests__/real-talk-post-watch.test.tsx`
-- [ ] T067 [P] [US4] Add component test blocking completion until transfer response attempt in `src/__tests__/real-talk-post-watch.test.tsx`
-- [ ] T068 [P] [US4] Add assertion that UI contains no pronunciation/mastery claim in `src/__tests__/real-talk-post-watch.test.tsx`
+- [x] T065 [P] [US4] Add environment-first component coverage with learner role, partner role, real-world goal, AI-draft status, and DOM order assertions in `src/__tests__/real-talk-lesson-preview.test.tsx`; execution remains tracked by T081
+- [x] T066 [P] [US4] Add component coverage proving transfer and completion stay unavailable until every source-backed phrase is acknowledged as spoken in `src/__tests__/real-talk-post-watch.test.tsx`; execution remains tracked by T081
+- [x] T067 [P] [US4] Add component coverage proving transfer remains disabled until a minimum response plus independent-attempt confirmation, and completion callback fires only from the final button in `src/__tests__/real-talk-post-watch.test.tsx`; execution remains tracked by T081
+- [x] T068 [P] [US4] Add assertions for explicit no-audio-scoring disclosure and absence of unsupported pronunciation, mastery, automatic-SRS, or AI-voice-score claims in `src/__tests__/real-talk-post-watch.test.tsx`; execution remains tracked by T081
 
 ### Implementation for User Story 4
 
@@ -177,7 +177,7 @@ description: "Dependency-ordered implementation and verification tasks for the p
 - [ ] T074 [US4] Run desktop and mobile Playwright preview flow against a controlled persisted draft
 - [ ] T075 [US4] Manually review one valid draft for situation fidelity, source language, speaker uncertainty, Vietnamese guidance, and transfer coherence
 
-**Checkpoint**: The draft is useful for human evaluation, but it remains unreviewed and private.
+**Checkpoint**: US4 component artifacts now cover environment-first order, phrase production, transfer gating, and claim boundaries. Exact-head execution, browser preview, and human review remain open.
 
 ---
 
@@ -252,12 +252,14 @@ Stop and verify this slice before expanding database or preview behavior.
 
 - Checked code/test-artifact tasks do not imply verification passed.
 - Real Talk domain/server/database contract suites are assigned to the Vitest Node project; component `.tsx` suites remain in jsdom, and live RLS cases run only through the integration config.
+- Preview suites use a controlled private-draft fixture and a dependency-free React `createRoot + act` harness; no unrecorded test dependency or lockfile change was introduced.
 - The RLS migration removes all previous policies before creating the canonical set because PostgreSQL combines permissive policies with OR.
 - Untrusted metadata/captions are escaped JSON/JSONL data inside one delimiter pair; this is a prompt-hardening boundary, not proof against every model-level adversarial behavior.
 - `REAL_TALK_ALLOW_EXPERIMENTAL_TRANSCRIPTS=true` is permitted only in development or test; production ignores the flag and rejects the experimental adapter.
 - Repeated generation updates one current draft per owner+YouTube+level; immutable attempt history is deferred.
 - A persistence failure is never a successful preview in spec 001.
 - Do not mark T054 or T062 complete without an authorized migrated non-production database run.
+- Do not mark T074, T075, or T081 complete from component test files alone.
 - Do not mark external API tasks complete from mocked results.
 - Do not mark manual review tasks complete from metadata or model output alone.
 - Do not create implementation for spec 002 while spec 001 has unresolved critical tasks.
