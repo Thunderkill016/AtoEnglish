@@ -41,8 +41,30 @@ export interface CurriculumValidationIssue {
   message: string;
 }
 
+type Identified = { id: string };
+
+function addIssue(
+  issues: CurriculumValidationIssue[],
+  code: CurriculumValidationCode,
+  path: string,
+  message: string,
+) {
+  issues.push({ code, path, message });
+}
+
 function isLearnerFacing(status: PublicationStatus) {
   return status === "pilot" || status === "approved";
+}
+
+function statusMeetsPackage(
+  packageStatus: PublicationStatus,
+  itemStatus: PublicationStatus,
+) {
+  if (packageStatus === "pilot") {
+    return itemStatus === "pilot" || itemStatus === "approved";
+  }
+  if (packageStatus === "approved") return itemStatus === "approved";
+  return true;
 }
 
 function isHttpsUrl(value: string) {
@@ -53,22 +75,7 @@ function isHttpsUrl(value: string) {
   }
 }
 
-function statusMeetsPackage(
-  packageStatus: PublicationStatus,
-  itemStatus: PublicationStatus,
-) {
-  if (packageStatus === "pilot") {
-    return itemStatus === "pilot" || itemStatus === "approved";
-  }
-
-  if (packageStatus === "approved") {
-    return itemStatus === "approved";
-  }
-
-  return true;
-}
-
-function duplicateIds<T extends { id: string }>(items: readonly T[]) {
+function duplicateIds(items: readonly Identified[]) {
   const seen = new Set<string>();
   const duplicates = new Set<string>();
 
@@ -78,15 +85,6 @@ function duplicateIds<T extends { id: string }>(items: readonly T[]) {
   }
 
   return [...duplicates];
-}
-
-function addIssue(
-  issues: CurriculumValidationIssue[],
-  code: CurriculumValidationCode,
-  path: string,
-  message: string,
-) {
-  issues.push({ code, path, message });
 }
 
 function validateCapabilityGraph(
@@ -107,7 +105,6 @@ function validateCapabilityGraph(
           `Unknown prerequisite: ${prerequisiteId}`,
         );
       }
-
       if (prerequisiteId === capability.id) {
         addIssue(
           issues,
@@ -121,23 +118,20 @@ function validateCapabilityGraph(
 
   const state = new Map<string, "visiting" | "visited">();
   const stack: string[] = [];
-  const reportedCycles = new Set<string>();
+  const reported = new Set<string>();
 
   function visit(capabilityId: string) {
     if (state.get(capabilityId) === "visited") return;
-
     if (state.get(capabilityId) === "visiting") {
-      const cycleStart = stack.indexOf(capabilityId);
-      const cycle = [...stack.slice(cycleStart), capabilityId];
-      const key = cycle.join(" -> ");
-
-      if (!reportedCycles.has(key)) {
-        reportedCycles.add(key);
+      const start = stack.indexOf(capabilityId);
+      const cycle = [...stack.slice(start), capabilityId].join(" -> ");
+      if (!reported.has(cycle)) {
+        reported.add(cycle);
         addIssue(
           issues,
           "prerequisite_cycle",
           "capabilities",
-          `Prerequisite cycle: ${key}`,
+          `Prerequisite cycle: ${cycle}`,
         );
       }
       return;
@@ -148,11 +142,9 @@ function validateCapabilityGraph(
 
     state.set(capabilityId, "visiting");
     stack.push(capabilityId);
-
     for (const prerequisiteId of capability.prerequisiteIds) {
       if (capabilityById.has(prerequisiteId)) visit(prerequisiteId);
     }
-
     stack.pop();
     state.set(capabilityId, "visited");
   }
@@ -180,33 +172,29 @@ function validateSource(
         issues,
         "invalid_url",
         `${path}.${field}`,
-        `${field} must be an HTTPS URL.`,
+        `${field} must be HTTPS.`,
       );
     }
   }
 
-  if (
-    source.transcriptSourceUrl &&
-    !isHttpsUrl(source.transcriptSourceUrl)
-  ) {
+  if (source.transcriptSourceUrl && !isHttpsUrl(source.transcriptSourceUrl)) {
     addIssue(
       issues,
       "invalid_url",
       `${path}.transcriptSourceUrl`,
-      "Transcript source must be an HTTPS URL.",
+      "Transcript source must be HTTPS.",
     );
   }
 
   if (
-    (source.transcriptProvenance === "official" ||
-      source.transcriptProvenance === "creator_provided") &&
+    ["official", "creator_provided"].includes(source.transcriptProvenance) &&
     !source.transcriptSourceUrl
   ) {
     addIssue(
       issues,
       "missing_field",
       `${path}.transcriptSourceUrl`,
-      "Official or creator-provided transcripts require a source URL.",
+      "Declared external transcripts require a source URL.",
     );
   }
 
@@ -215,7 +203,7 @@ function validateSource(
       issues,
       "invalid_duration",
       `${path}.durationMs`,
-      "Source duration must be a positive number of milliseconds.",
+      "Source duration must be positive.",
     );
   }
 
@@ -224,7 +212,7 @@ function validateSource(
       issues,
       "invalid_publication_status",
       `${path}.publicationStatus`,
-      `Source status ${source.publicationStatus} cannot ship in a ${packageStatus} package.`,
+      `Source cannot ship in a ${packageStatus} package.`,
     );
   }
 
@@ -263,43 +251,21 @@ function validateSource(
       issues,
       "invalid_rights",
       `${path}.rights.allowedUses`,
-      "The source must permit transcript storage and derived lessons.",
+      "Transcript storage and derived lessons must both be permitted.",
     );
   }
 
-  if (
-    source.mediaAccess === "youtube_embed" &&
-    !rights.allowedUses.canEmbed
-  ) {
-    addIssue(
-      issues,
-      "invalid_media_permission",
-      `${path}.rights.allowedUses.canEmbed`,
-      "YouTube playback requires confirmed embed permission.",
-    );
-  }
+  const playbackAllowed =
+    source.mediaAccess === "self_hosted"
+      ? rights.allowedUses.canSelfHostMedia
+      : rights.allowedUses.canEmbed;
 
-  if (
-    source.mediaAccess === "external_embed" &&
-    !rights.allowedUses.canEmbed
-  ) {
+  if (!playbackAllowed) {
     addIssue(
       issues,
       "invalid_media_permission",
-      `${path}.rights.allowedUses.canEmbed`,
-      "External playback requires confirmed embed permission.",
-    );
-  }
-
-  if (
-    source.mediaAccess === "self_hosted" &&
-    !rights.allowedUses.canSelfHostMedia
-  ) {
-    addIssue(
-      issues,
-      "invalid_media_permission",
-      `${path}.rights.allowedUses.canSelfHostMedia`,
-      "Self-hosted playback requires explicit media-hosting permission.",
+      `${path}.rights.allowedUses`,
+      "The declared playback method is not permitted.",
     );
   }
 
@@ -344,7 +310,7 @@ function validateSegment(
       issues,
       "invalid_timestamp",
       path,
-      "Transcript timestamps must form a positive window.",
+      "Segment timestamps must form a positive window.",
     );
   }
 
@@ -353,7 +319,7 @@ function validateSegment(
       issues,
       "segment_outside_source",
       path,
-      "Transcript segment exceeds source duration.",
+      "Segment exceeds source duration.",
     );
   }
 
@@ -403,7 +369,7 @@ function validateClip(
       issues,
       "invalid_duration",
       path,
-      "Communication Clips must be between 3 and 60 seconds.",
+      "Communication Clips must be 3–60 seconds.",
     );
   }
 
@@ -416,33 +382,32 @@ function validateClip(
     );
   }
 
-  if (!capabilityById.has(clip.primaryCapabilityId)) {
-    addIssue(
-      issues,
-      "unknown_reference",
-      `${path}.primaryCapabilityId`,
-      `Unknown capability: ${clip.primaryCapabilityId}`,
-    );
-  }
-
-  if (clip.secondaryCapabilityIds.includes(clip.primaryCapabilityId)) {
-    addIssue(
-      issues,
-      "duplicate_id",
-      `${path}.secondaryCapabilityIds`,
-      "Primary capability cannot also be secondary.",
-    );
-  }
-
-  for (const capabilityId of clip.secondaryCapabilityIds) {
+  const declaredCapabilities = [
+    clip.primaryCapabilityId,
+    ...clip.secondaryCapabilityIds,
+  ];
+  for (const capabilityId of declaredCapabilities) {
     if (!capabilityById.has(capabilityId)) {
       addIssue(
         issues,
         "unknown_reference",
-        `${path}.secondaryCapabilityIds`,
+        `${path}.capabilities`,
         `Unknown capability: ${capabilityId}`,
       );
     }
+  }
+
+  if (
+    clip.secondaryCapabilityIds.includes(clip.primaryCapabilityId) ||
+    new Set(clip.secondaryCapabilityIds).size !==
+      clip.secondaryCapabilityIds.length
+  ) {
+    addIssue(
+      issues,
+      "duplicate_id",
+      `${path}.secondaryCapabilityIds`,
+      "Clip capability IDs must be unique.",
+    );
   }
 
   if (new Set(clip.segmentIds).size !== clip.segmentIds.length) {
@@ -450,14 +415,11 @@ function validateClip(
       issues,
       "duplicate_id",
       `${path}.segmentIds`,
-      "A clip cannot reference the same segment twice.",
+      "Clip segment IDs must be unique.",
     );
   }
 
-  const clipSegments = clip.segmentIds
-    .map((segmentId) => segmentById.get(segmentId))
-    .filter((segment): segment is TranscriptSegment => Boolean(segment));
-
+  const segments: TranscriptSegment[] = [];
   for (const segmentId of clip.segmentIds) {
     const segment = segmentById.get(segmentId);
     if (!segment) {
@@ -465,20 +427,20 @@ function validateClip(
         issues,
         "unknown_reference",
         `${path}.segmentIds`,
-        `Unknown transcript segment: ${segmentId}`,
+        `Unknown segment: ${segmentId}`,
       );
       continue;
     }
 
+    segments.push(segment);
     if (segment.sourceAssetId !== clip.sourceAssetId) {
       addIssue(
         issues,
         "unknown_reference",
         `${path}.segmentIds`,
-        `Segment ${segmentId} belongs to a different source.`,
+        `Segment ${segmentId} belongs to another source.`,
       );
     }
-
     if (segment.startMs < clip.startMs || segment.endMs > clip.endMs) {
       addIssue(
         issues,
@@ -489,16 +451,15 @@ function validateClip(
     }
   }
 
-  const sortedSegmentIds = [...clipSegments]
+  const sortedIds = [...segments]
     .sort((left, right) => left.startMs - right.startMs)
     .map((segment) => segment.id);
-
-  if (sortedSegmentIds.join("|") !== clip.segmentIds.join("|")) {
+  if (sortedIds.join("|") !== clip.segmentIds.join("|")) {
     addIssue(
       issues,
       "segment_order_mismatch",
       `${path}.segmentIds`,
-      "Segment IDs must follow transcript timestamp order.",
+      "Segments must follow timestamp order.",
     );
   }
 
@@ -507,33 +468,33 @@ function validateClip(
       issues,
       "invalid_publication_status",
       `${path}.publicationStatus`,
-      `Clip status ${clip.publicationStatus} cannot ship in a ${packageStatus} package.`,
+      `Clip cannot ship in a ${packageStatus} package.`,
     );
   }
 
-  if (isLearnerFacing(packageStatus)) {
-    if (clip.reviewStatus !== "human_verified") {
+  if (!isLearnerFacing(packageStatus)) return;
+
+  if (clip.reviewStatus !== "human_verified") {
+    addIssue(
+      issues,
+      "missing_human_review",
+      `${path}.reviewStatus`,
+      "Learner-facing clips require human review.",
+    );
+  }
+
+  for (const segment of segments) {
+    if (
+      segment.transcriptStatus !== "human_verified" ||
+      segment.translationStatus !== "human_verified" ||
+      !segment.speakerId?.trim()
+    ) {
       addIssue(
         issues,
         "missing_human_review",
-        `${path}.reviewStatus`,
-        "Learner-facing clips require human review.",
+        `transcriptSegments.${segment.id}`,
+        "Learner-facing segments require verified text, translation, and speaker labels.",
       );
-    }
-
-    for (const segment of clipSegments) {
-      if (
-        segment.transcriptStatus !== "human_verified" ||
-        segment.translationStatus !== "human_verified" ||
-        !segment.speakerId?.trim()
-      ) {
-        addIssue(
-          issues,
-          "missing_human_review",
-          `transcriptSegments.${segment.id}`,
-          "Learner-facing segments require verified transcript, translation, and speaker identity.",
-        );
-      }
     }
   }
 }
@@ -558,7 +519,6 @@ function validateTreatment(
       `Unknown clip: ${treatment.clipId}`,
     );
   }
-
   if (!capability) {
     addIssue(
       issues,
@@ -579,7 +539,7 @@ function validateTreatment(
       issues,
       "unknown_reference",
       `${path}.targetCapabilityId`,
-      "Treatment target must be declared on its clip.",
+      "Treatment target must be declared by the clip.",
     );
   }
 
@@ -588,7 +548,7 @@ function validateTreatment(
       issues,
       "unknown_reference",
       `${path}.level`,
-      `Treatment level ${treatment.level} does not match capability level ${capability.level}.`,
+      "Treatment and capability levels do not match.",
     );
   }
 
@@ -601,13 +561,12 @@ function validateTreatment(
         `Unknown required capability: ${prerequisiteId}`,
       );
     }
-
     if (prerequisiteId === treatment.targetCapabilityId) {
       addIssue(
         issues,
         "prerequisite_cycle",
         `${path}.requiredCapabilityIds`,
-        "A treatment cannot require its own target capability.",
+        "A treatment cannot require its target capability.",
       );
     }
   }
@@ -630,27 +589,35 @@ function validateTreatment(
       issues,
       "duplicate_id",
       `${path}.activities`,
-      "Activity IDs must be unique within a treatment.",
+      "Activity IDs must be unique.",
     );
   }
 
-  const layers = new Set(treatment.activities.map((activity) => activity.layer));
+  const byLayer = {
+    comprehension: treatment.activities.filter(
+      (activity) => activity.layer === "comprehension",
+    ),
+    acquisition: treatment.activities.filter(
+      (activity) => activity.layer === "acquisition",
+    ),
+    transfer: treatment.activities.filter(
+      (activity) => activity.layer === "transfer",
+    ),
+  };
+
   for (const layer of ["comprehension", "acquisition", "transfer"] as const) {
-    if (!layers.has(layer)) {
+    if (byLayer[layer].length === 0) {
       addIssue(
         issues,
         "missing_activity_layer",
         `${path}.activities`,
-        `Missing required ${layer} layer.`,
+        `Missing ${layer} layer.`,
       );
     }
   }
 
-  const acquisitionActivities = treatment.activities.filter(
-    (activity) => activity.layer === "acquisition",
-  );
   if (
-    !acquisitionActivities.some(
+    !byLayer.acquisition.some(
       (activity) =>
         activity.requiresRetrieval && activity.requiresLearnerProduction,
     )
@@ -659,15 +626,12 @@ function validateTreatment(
       issues,
       "missing_retrieval",
       `${path}.activities`,
-      "Acquisition must include productive retrieval, not recognition alone.",
+      "Acquisition requires productive retrieval.",
     );
   }
 
-  const transferActivities = treatment.activities.filter(
-    (activity) => activity.layer === "transfer",
-  );
   if (
-    !transferActivities.some(
+    !byLayer.transfer.some(
       (activity) =>
         activity.requiresLearnerProduction &&
         !activity.exposesFullAnswer &&
@@ -678,7 +642,7 @@ function validateTreatment(
       issues,
       "invalid_transfer",
       `${path}.activities`,
-      "Transfer must require production without the full answer in a changed or unseen situation.",
+      "Transfer requires independent production in changed or unseen input.",
     );
   }
 
@@ -698,54 +662,44 @@ function validateTreatment(
 
   if (
     treatment.role === "cold_transfer" &&
-    !transferActivities.some((activity) => activity.unseenInput)
+    !byLayer.transfer.some((activity) => activity.unseenInput)
   ) {
     addIssue(
       issues,
       "invalid_cold_transfer",
       `${path}.activities`,
-      "Cold-transfer treatments require unseen input.",
+      "Cold transfer requires unseen input.",
     );
   }
 
   if (
     new Set(treatment.supportPolicy.scaffoldOrder).size !==
-    treatment.supportPolicy.scaffoldOrder.length
-  ) {
-    addIssue(
-      issues,
-      "invalid_scaffold",
-      `${path}.supportPolicy.scaffoldOrder`,
-      "Scaffold steps must not repeat.",
-    );
-  }
-
-  if (
-    treatment.supportPolicy.scaffoldOrder.includes("slow_playback") &&
-    !treatment.supportPolicy.allowSlowPlayback
+      treatment.supportPolicy.scaffoldOrder.length ||
+    (treatment.supportPolicy.scaffoldOrder.includes("slow_playback") &&
+      !treatment.supportPolicy.allowSlowPlayback)
   ) {
     addIssue(
       issues,
       "invalid_scaffold",
       `${path}.supportPolicy`,
-      "Slow playback cannot appear when it is disabled.",
+      "Scaffold order is inconsistent.",
     );
   }
 
-  const learnerChoice = treatment.learnerChoice;
+  const choice = treatment.learnerChoice;
   if (
-    !learnerChoice.titleVi.trim() ||
-    !learnerChoice.summaryVi.trim() ||
-    learnerChoice.estimatedMinutes < 5 ||
-    learnerChoice.estimatedMinutes > 20 ||
-    learnerChoice.accentTags.length === 0 ||
-    learnerChoice.topicTags.length === 0
+    !choice.titleVi.trim() ||
+    !choice.summaryVi.trim() ||
+    choice.estimatedMinutes < 5 ||
+    choice.estimatedMinutes > 20 ||
+    choice.accentTags.length === 0 ||
+    choice.topicTags.length === 0
   ) {
     addIssue(
       issues,
       "invalid_learner_choice",
       `${path}.learnerChoice`,
-      "Learner choice metadata must describe a 5–20 minute option with accent and topic tags.",
+      "Learner choice metadata is incomplete.",
     );
   }
 
@@ -757,17 +711,16 @@ function validateTreatment(
           issues,
           "missing_field",
           `${path}.activities.${activity.id}`,
-          "Every activity needs a prompt and source evidence.",
+          "Activity prompt and source evidence are required.",
         );
       }
-
       for (const segmentId of activity.evidenceSegmentIds) {
         if (!segmentById.has(segmentId) || !clipSegmentIds.has(segmentId)) {
           addIssue(
             issues,
             "unknown_reference",
             `${path}.activities.${activity.id}.evidenceSegmentIds`,
-            `Activity evidence must belong to the clip: ${segmentId}`,
+            `Evidence must belong to the clip: ${segmentId}`,
           );
         }
       }
@@ -779,7 +732,7 @@ function validateTreatment(
       issues,
       "invalid_publication_status",
       `${path}.publicationStatus`,
-      `Treatment status ${treatment.publicationStatus} cannot ship in a ${packageStatus} package.`,
+      `Treatment cannot ship in a ${packageStatus} package.`,
     );
   }
 
@@ -796,7 +749,7 @@ function validateTreatment(
   }
 }
 
-function validateCapabilityCoverage(
+function validateCoverage(
   curriculum: CurriculumPackage,
   segmentById: ReadonlyMap<string, TranscriptSegment>,
   clipById: ReadonlyMap<string, CommunicationClip>,
@@ -815,7 +768,6 @@ function validateCapabilityCoverage(
     for (const clipId of clipIds) {
       const clip = clipById.get(clipId);
       if (!clip) continue;
-
       for (const segmentId of clip.segmentIds) {
         const speakerId = segmentById.get(segmentId)?.speakerId;
         if (speakerId) speakerIds.add(speakerId);
@@ -827,26 +779,24 @@ function validateCapabilityCoverage(
         issues,
         "insufficient_clip_coverage",
         `capabilities.${capability.id}`,
-        `Capability requires at least ${capability.evidencePolicy.minimumDistinctClips} distinct clips; found ${clipIds.size}.`,
+        `Expected ${capability.evidencePolicy.minimumDistinctClips} clips; found ${clipIds.size}.`,
       );
     }
-
     if (speakerIds.size < capability.evidencePolicy.minimumDistinctSpeakers) {
       addIssue(
         issues,
         "insufficient_speaker_coverage",
         `capabilities.${capability.id}`,
-        `Capability requires at least ${capability.evidencePolicy.minimumDistinctSpeakers} distinct speakers; found ${speakerIds.size}.`,
+        `Expected ${capability.evidencePolicy.minimumDistinctSpeakers} speakers; found ${speakerIds.size}.`,
       );
     }
-
-    for (const requiredRole of ["anchor", "interaction", "cold_transfer"] as const) {
-      if (!roles.has(requiredRole)) {
+    for (const role of ["anchor", "interaction", "cold_transfer"] as const) {
+      if (!roles.has(role)) {
         addIssue(
           issues,
           "missing_clip_role",
           `capabilities.${capability.id}`,
-          `Capability is missing the ${requiredRole} treatment role.`,
+          `Missing ${role} treatment.`,
         );
       }
     }
@@ -867,20 +817,16 @@ export function validateCurriculumPackage(
     );
   }
 
-  for (const [collectionName, items] of [
+  const collections: Array<[string, readonly Identified[]]> = [
     ["capabilities", curriculum.capabilities],
     ["sourceAssets", curriculum.sourceAssets],
     ["transcriptSegments", curriculum.transcriptSegments],
     ["clips", curriculum.clips],
     ["treatments", curriculum.treatments],
-  ] as const) {
-    for (const duplicateId of duplicateIds(items)) {
-      addIssue(
-        issues,
-        "duplicate_id",
-        collectionName,
-        `Duplicate ID: ${duplicateId}`,
-      );
+  ];
+  for (const [name, items] of collections) {
+    for (const id of duplicateIds(items)) {
+      addIssue(issues, "duplicate_id", name, `Duplicate ID: ${id}`);
     }
   }
 
@@ -908,21 +854,18 @@ export function validateCurriculumPackage(
         issues,
         "missing_field",
         `capabilities.${capability.id}`,
-        "Capability metadata and evidence policy are incomplete.",
+        "Capability metadata or evidence policy is incomplete.",
       );
     }
   }
 
   validateCapabilityGraph(curriculum.capabilities, issues);
-
   for (const source of curriculum.sourceAssets) {
     validateSource(source, curriculum.publicationStatus, issues);
   }
-
   for (const segment of curriculum.transcriptSegments) {
     validateSegment(segment, sourceById, issues);
   }
-
   for (const clip of curriculum.clips) {
     validateClip(
       clip,
@@ -933,7 +876,6 @@ export function validateCurriculumPackage(
       issues,
     );
   }
-
   for (const treatment of curriculum.treatments) {
     validateTreatment(
       treatment,
@@ -944,8 +886,7 @@ export function validateCurriculumPackage(
       issues,
     );
   }
-
-  validateCapabilityCoverage(curriculum, segmentById, clipById, issues);
+  validateCoverage(curriculum, segmentById, clipById, issues);
 
   return issues;
 }
