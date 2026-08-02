@@ -38,10 +38,12 @@
 
 - [x] Official playback is required.
 - [x] Media downloading and re-hosting are out of scope.
-- [x] Transcript acquisition is represented as a replaceable concern.
-- [x] The current unofficial transcript adapter is identified as experimental.
-- [ ] Production-approved transcript acquisition modes are decided.
-- [ ] The experimental adapter is isolated behind a configuration/policy gate.
+- [x] Transcript acquisition is represented as a replaceable adapter concern.
+- [x] The current unofficial transcript adapter is explicitly identified as experimental.
+- [x] The server action no longer imports the unofficial package directly.
+- [x] The experimental adapter is disabled by default and requires explicit non-production opt-in.
+- [x] Production rejects the experimental adapter even when the opt-in flag is present.
+- [ ] At least one production-approved transcript acquisition mode is decided and implemented.
 - [ ] Source rights and caption-use review criteria are verified with a real test source.
 
 ## Privacy, authentication, and database
@@ -75,6 +77,7 @@
 - [x] Exact-head verification is required.
 - [x] Mocked, integration, browser, provider, database, and manual evidence are distinguished.
 - [x] Required tests are listed before convergence.
+- [x] Transcript policy tests cover approved, default-blocked, non-production opt-in, production fail-closed, cue normalization, and direct-import bypass.
 - [ ] All specified unit and contract fixtures exist.
 - [ ] Authentication ordering tests exist and pass.
 - [ ] RLS integration tests exist and pass.
@@ -89,6 +92,7 @@
 - [x] Data entities map to requirements and tasks.
 - [x] Open decisions are visible in research and tasks.
 - [x] An initial formal cross-artifact analysis is recorded in `analysis.md`.
+- [ ] A formal cross-artifact analysis has been rerun after the transcript adapter extraction.
 - [ ] Every functional requirement maps to at least one task and observed acceptance result.
 - [ ] Every success criterion has a defined evidence source and final result.
 
@@ -103,7 +107,7 @@
 
 The feature cannot converge while any of these remain unresolved:
 
-1. transcript acquisition policy and experimental adapter isolation;
+1. at least one production-approved transcript acquisition mode;
 2. stable failure and persistence behavior;
 3. complete automated fixture coverage;
 4. non-production RLS and migration verification;
