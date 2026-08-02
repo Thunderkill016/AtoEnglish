@@ -2,9 +2,9 @@
 // private-draft migrations. Keep this file schema-shaped; do not add domain
 // behavior or UI-specific types here.
 //
-// The transcript provenance fields below mirror the pending versioned migration
-// in this branch. They must be regenerated from the hosted project after owner
-// authorization to apply that migration; this file does not claim hosted state.
+// The transcript provenance fields and atomic draft RPC below mirror pending
+// versioned migrations in this branch. They must be regenerated from the hosted
+// project after owner authorization; this file does not claim hosted state.
 
 import type { Json } from "@/types/supabase";
 
@@ -168,4 +168,17 @@ export type RealTalkVideoTable = {
 export type RealTalkTables = {
   real_talk_lessons: RealTalkLessonTable;
   real_talk_videos: RealTalkVideoTable;
+};
+
+export type RealTalkFunctions = {
+  upsert_real_talk_private_draft: {
+    Args: {
+      p_lesson: Json;
+      p_video: Json;
+    };
+    Returns: {
+      lesson_id: string;
+      video_id: string;
+    }[];
+  };
 };
