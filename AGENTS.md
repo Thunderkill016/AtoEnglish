@@ -7,264 +7,246 @@ This file is the operating contract for coding agents in this repository.
 
 ## Mission
 
-AtoEnglish is a **YouTube-to-Curriculum Engine**.
+AtoEnglish is a natural-communication learning system.
 
-The product uses legally usable natural conversations from YouTube and other authentic-media sources as language input, then organizes bounded Communication Clips into a prerequisite-driven path from near-zero English to practical high-A2/B1 communication.
+> Natural communication on the surface; an invisible structured curriculum underneath.
 
-The product is not a video quiz catalog, synthetic-dialogue library, open chatbot, grammar list, or autonomous lesson generator.
+The learner enters recognisable situations, understands real speakers, responds, repairs misunderstandings, continues the interaction, and later succeeds with different speakers and contexts.
 
-The current validation target is deliberately narrow:
+The product is not:
 
-> Build and test a seven-day A0 mini-curriculum containing 20–30 reviewed authentic clips across multiple speakers for five communication capabilities.
-
-Do not optimize for clip count, feature count, architectural novelty, autonomous publication, or full A0–B1 breadth.
+- an academic grammar syllabus with videos attached;
+- a random feed of English clips;
+- a phrase-search engine;
+- a scripted-dialogue library presented as authentic;
+- an annotated video viewer;
+- an unrestricted chatbot;
+- an autonomous lesson generator.
 
 ## Mandatory reading order
 
-Before proposing or changing non-trivial work, read:
+Before non-trivial work, read:
 
 1. `PROJECT_MEMORY.md`
 2. `docs/product/PRODUCT_TRUTH.md`
-3. `docs/product/YOUTUBE_TO_CURRICULUM.md`
+3. `docs/product/NATURAL_COMMUNICATION_LEARNING_SYSTEM.md`
 4. `docs/product/CURRENT_PRIORITY.md`
 5. `docs/product/DO_NOT_BUILD.md`
 6. `CONTENT_STYLE.md` for learner-facing content
-7. the relevant implementation, tests, migrations, issues, recent pull requests, source records, and task handoff
+7. relevant implementation, tests, active PRs, source records, and handoff
 
-The old `docs/curriculum/28-day-speaking-journey-contract.md` is historical/reusable evidence, not the canonical roadmap. Read it only when reusing its speaking-task, feedback, assessment, or pilot patterns.
+`docs/product/YOUTUBE_TO_CURRICULUM.md` is a previous architecture record. Reuse its authentic-input, clip, prerequisite, retrieval, and transfer ideas where compatible, but do not treat its product name or fixed clip quota as canonical.
 
-`PROJECT_MEMORY.md` is the cross-session entry point, not a substitute for live GitHub evidence. Verify its snapshot against `main`, active PRs, checks, deployments, and source evidence.
+## Session protocol
 
-When sources disagree, stop and report the conflict. Do not silently follow an older document, newer branch, or more ambitious interpretation.
+At session start:
 
-## Session continuity
-
-For every new non-trivial session:
-
-1. confirm the repository is `Thunderkill016/AtoEnglish`;
-2. read the mandatory documents;
-3. fetch the current `main` head;
-4. inspect active and recently merged PRs touching the requested surface;
-5. state the task, branch, PR, exact head, merge state, deployment state, verified checks, unverified checks, and next safe action;
-6. present a short plan before multi-step execution;
-7. continue from repository evidence, not remembered chat claims.
+1. Confirm repository `Thunderkill016/AtoEnglish`.
+2. Read mandatory documents.
+3. Fetch live `main` head.
+4. Inspect active/recent PRs touching the surface.
+5. State task, branch, PR, exact head, base, merge/deploy state, verified checks, unverified checks, and next safe action.
+6. Show a short plan before multi-step work.
+7. Continue from repository evidence, not remembered chat claims.
 
 Before stopping:
 
-1. update the PR body or handoff with the exact final head;
-2. record only checks that ran against that head;
-3. separate technical, source-rights, transcript, browser, learner, and production evidence;
-4. record blockers and one next safe action;
-5. update `PROJECT_MEMORY.md` when direction or project-level state changed.
+1. Update PR body or handoff with exact final head.
+2. Record only checks that ran on that head.
+3. Separate technical, rights, naturalness, transcript, browser, learner, and production evidence.
+4. Record blockers and one next safe action.
+5. Update `PROJECT_MEMORY.md` when direction or project-wide state changes.
+6. Never store secrets, cookies, raw chats, temporary preview tokens, or learner-sensitive data.
+7. Never merge or deploy without explicit owner authorization.
 
-Follow `docs/handoffs/README.md`. Never store secrets, credentials, cookies, temporary preview tokens, learner-sensitive data, or raw chat transcripts in project memory.
+## Current branch map
 
-## Working model
+Verify live state before using this snapshot:
 
-1. Work on a dedicated branch; never push autonomous changes directly to `main`.
-2. Use one PR for one bounded outcome.
-3. Never merge or deploy automatically; the owner authorizes both.
-4. Keep `AGENT_PLAN.md` limited to current work and `AGENT_BACKLOG.md` limited to open work.
-5. Git history, issues, PRs, checks, and handoffs are the detailed record; do not create duplicate journals.
-6. Do not commit runtime logs under `logs/agent/`.
-7. Stop and document ambiguity instead of guessing.
-8. Treat approved scope as a permission boundary.
-9. Do not create placeholder work to keep an agent busy.
-10. Keep project memory sufficient for a new session to recover repo, direction, task, PR, SHA, blocker, and next action.
+- `main`: `961e779886ff95b1b5f67d5e6997520d1facdb1a`;
+- PR #47 `docs/persist-project-memory`: `213e217a5f0e57b4f2aa0879716755b14381eaab`;
+- PR #48 `feature/curriculum-compiler-contracts`: `d1e8038584ea7963d3ab5a6ab6ae9ab4cf103d6a`;
+- PR #49 `content/a0-source-curation-batch-1`: `0e96ba88400761e24953c6d2fd89b3e27210e033`;
+- PR #50 `feature/two-lane-content-model`: `4f94223bec700ca89afc42b47a01b84404585c5f`;
+- PR #51 `content/natural-a0-candidates-batch-2`: `b0a009989385ba51663136b1efbcd2831a926562`;
+- PR #52 `experiment/authorized-natural-media-ingestion`: `a874120a389c451cc39ac7a4cbd1fb4692f0fcce`;
+- PR #53 `product/natural-communication-environments`: current active product reset.
+
+All are unmerged unless live GitHub evidence says otherwise.
 
 ## Product-first rules
 
-1. **Product direction beats technical interest.** Work must serve source integrity, curriculum coherence, acquisition, transfer, or learner evidence.
-2. **Make the smallest coherent change.** Preserve working behavior outside scope.
-3. **Do not mix unrelated systems.** Auth, database, analytics, XP, FSRS rules, payment, and deployment require separate scope unless essential coupling is documented.
-4. **Separate evidence types.** CI does not prove source rights, transcript accuracy, curriculum validity, or learning effectiveness.
-5. **Do not invent requirements.** State assumptions or request a decision.
-6. **Stop when scope expands.** Open a follow-up issue instead of silently broadening.
-7. **Never expose secrets or perform unapproved production writes.**
-8. **Do not revert to the old 28-day roadmap.** It was superseded by the owner decision recorded on 2026-08-02.
-9. **Do not treat PR #46 as the final product.** It is one-clip technical evidence.
-10. **Do not treat PR #45 as a competing product.** Reuse only mechanisms needed by the canonical curriculum core.
+1. Product direction beats technical novelty.
+2. Make the smallest coherent change.
+3. Keep unrelated systems out of scope.
+4. CI does not prove source rights, naturalness, transcript accuracy, curriculum validity, or learning effectiveness.
+5. Do not invent requirements.
+6. Stop when scope expands.
+7. Never expose secrets or perform unapproved production writes.
+8. Do not return to the fixed 28-day roadmap.
+9. Do not treat a YouTube/clip pipeline as the learner-facing product.
+10. Do not build source corpora by searching isolated target phrases.
 
-## Task contract
+## Source model
 
-Every implementation task must state:
+The source workflow begins with environments and complete natural recordings.
 
-- problem and learner outcome;
-- current evidence;
-- allowed files/directories;
-- forbidden scope;
-- acceptance criteria;
-- technical checks;
-- source, transcript, and rights checks where applicable;
-- product and learner checks;
-- manual review questions;
-- rollback or recovery plan.
-
-Larger work should use a focused spec. The first curriculum compiler implementation must remain a bounded vertical slice.
-
-## Workflow depth
-
-Use the lightest safe process:
-
-- **Small:** isolated copy, metadata, source record, or characterized bug — inspect, patch, targeted checks, PR.
-- **Medium:** clip contract, corpus batch, graph slice, or lesson treatment — task contract, approved scope, implementation, technical and source/product checks, PR.
-- **High risk:** rights, auth, database, privacy, production, or broad architecture — explicit decision, risk review, rollback plan, independent verification, PR.
-
-Do not force every task through a large research lifecycle, but do not skip source and human-review evidence for authentic media.
-
-## Commands
-
-```bash
-npm run dev
-npx tsc --noEmit
-npm run lint
-npm run test
-npm run test:content-standard
-npm run test:integration
-npm run e2e
-npm run build
-npm run audit
-npm run inventory
+```text
+select environment
+→ review complete source
+→ identify communication events
+→ annotate actual behaviour
+→ map to reusable capabilities
+→ sequence in invisible curriculum
 ```
 
-Use `npm run build` as a final compilation check, not after every tiny edit. Do not claim a check passed unless it ran on the exact final state.
+A `CommunicationEvent` is a real action such as opening, identifying, asking, acknowledging, confirming, following up, repairing, buying time, changing topic, or closing.
+
+A `CommunicationClip` is a playable excerpt containing one or more events. It is not automatically a lesson.
+
+A learner-facing `EnvironmentExperience` combines source evidence, comprehension, progressive support, retrieval, multi-turn response, transfer, and delayed review.
+
+## Naturalness rules
+
+Do not mark a source natural merely because it is popular, polished, public, or contains a target sentence.
+
+Review whether:
+
+- participants have a real goal beyond demonstrating English;
+- no learning script was supplied;
+- turns depend on prior turns;
+- hesitation, follow-up, overlap, repair, or timing fit real interaction;
+- recording context is understood;
+- editing has not made the interaction misleading;
+- spoken audio is English when used for English listening;
+- context is suitable for the target learner.
+
+Natural does not automatically mean pedagogically suitable.
+
+## Rights rules
+
+Naturalness and rights are separate gates.
+
+A public URL is not permission. Full transcript storage, translation, clip extraction, self-hosting, audio processing, or derivative lesson creation requires ownership, documented permission, public-domain status, or a compatible licence.
+
+Every learner-facing source must preserve applicable:
+
+- source URL and timestamps;
+- media access method;
+- attribution;
+- rights evidence and allowed uses;
+- transcript provenance;
+- speaker boundaries;
+- source text separate from learner-facing normalization;
+- human review state;
+- takedown/retirement state.
+
+Do not scrape unauthorized captions or download unauthorized media.
+
+## Environment-session rules
+
+A complete environment session should include:
+
+1. situation entry without a grammar lecture;
+2. first encounter without transcript/answer exposure;
+3. progressive support;
+4. selected useful language and interactional behaviour;
+5. retrieval or reconstruction;
+6. learner response;
+7. a plausible next turn;
+8. changed-context transfer;
+9. delayed and varied re-exposure where mastery is claimed.
+
+Support normally fades in this order:
+
+```text
+replay
+→ context hint
+→ keyword
+→ English caption
+→ chunking
+→ Vietnamese meaning
+→ slower playback when available
+```
+
+Grammar and vocabulary are tools for the practical goal, not the learner-facing roadmap.
+
+## Initial validation slice
+
+Build five environments:
+
+1. meet someone new;
+2. buy or order something;
+3. find a place;
+4. recover from a listening failure;
+5. talk briefly about oneself.
+
+Each needs an accessible anchor, natural variations, speaker/context diversity, an unexpected or repair turn, guided response, changed-context transfer, and delayed re-exposure.
+
+Do not force a fixed source count. Record coverage gaps instead of filling them with misleading material.
 
 ## Architecture
 
-```text
-src/
-├── app/                         # routes, layouts, handlers, actions
-├── components/                  # shared UI and layout
-├── features/                    # feature-owned logic and UI
-├── lib/
-│   ├── supabase/                # context-specific clients
-│   ├── security/                # validation and rate limiting
-│   ├── lessons/                 # lesson contracts and flow
-│   ├── data/units/              # legacy/current lesson content
-│   └── constants/
-├── types/
-│   ├── supabase.ts              # generated; never edit manually
-│   └── index.ts
-└── proxy.ts                     # route protection and rate limiting
-```
+Keep a modular monolith with four bounded responsibilities:
 
-Represent Source Engine, Language Intelligence, Curriculum Graph, and Lesson Runtime as bounded modules inside the modular monolith first. Do not split them into microservices during the pilot.
+1. **Natural Corpus** — source, rights, context, naturalness evidence, recording review.
+2. **Communication Intelligence** — event segmentation, functions, speech, social context, capability mapping.
+3. **Invisible Curriculum** — prerequisites, diversity, support fading, evidence, next-experience selection.
+4. **Environment Runtime** — situation entry, playback, support, retrieval, response, transfer, review.
 
-New product-specific code normally belongs under `src/features/<feature>/`. Avoid catch-all folders such as `misc`, `helpers`, `old`, `backup`, or `temp`.
+New product-specific code belongs under `src/features/<feature>/`. Avoid generic catch-all folders.
 
 ## Protected areas
 
-Do not change unless explicitly required:
+Do not change without explicit scope:
 
 - database schema, migrations, functions, or RLS;
 - auth, onboarding, route protection, or `src/proxy.ts`;
 - analytics taxonomy or privacy boundary;
 - FSRS scheduling parameters;
-- XP, stars, streaks, leagues, achievements;
+- XP, streaks, leagues, achievements;
 - payment or deployment configuration;
 - unrelated legacy lessons;
-- major shared lesson architecture;
+- broad shared architecture;
 - meaningful dependency changes;
 - raw learner audio, transcripts, names, employers, or free text in analytics.
 
-## TypeScript, Next.js, database, and security
+## Engineering rules
 
 - Do not use `any` or `as any`.
-- Await Next.js 16 asynchronous APIs such as `cookies()`, `headers()`, `params`, and server Supabase clients.
-- Use the correct Supabase client for server, browser, and middleware contexts.
+- Await Next.js 16 asynchronous APIs.
+- Use the correct Supabase client per context.
 - Prefer `Promise.all` for independent queries.
-- Do not use `dynamic(..., { ssr: false })` in server components.
 - Keep RLS enabled.
-- Derive users with `supabase.auth.getUser()`; never trust client user IDs.
+- Derive users with `supabase.auth.getUser()`.
 - Validate external input with Zod.
 - Rate-limit writes following existing patterns.
-- Make schema changes through migrations and regenerate `src/types/supabase.ts`.
+- Make schema changes only through migrations and regenerate types.
 
-## Authentic-source rules
-
-A public URL is not evidence of permission.
-
-A learner-facing Communication Clip must preserve:
-
-- source URL and exact start/end timestamps;
-- media access method;
-- creator/publisher attribution;
-- license or permission evidence;
-- transcript provenance;
-- speaker boundaries;
-- source text separate from learner-facing normalization;
-- human review status;
-- activities linked to source evidence.
-
-Do not scrape unauthorized captions, republish media without rights, or allow AI to publish directly.
-
-AI may draft segmentation, metadata, level treatment, prerequisites, translation, chunks, and activities. Human review is mandatory for source accuracy and publication.
-
-## Curriculum and lesson rules
-
-The curriculum unit is a Communication Clip, not a full video.
-
-Order learning by communicative capability and prerequisites. A clip may have different treatments at A0, A1, A2, and B1; do not teach every linguistic feature at once.
-
-Every full lesson treatment must contain:
-
-1. **Comprehension** — gist and source-grounded evidence.
-2. **Acquisition** — selected chunks/patterns, active recall, contextual replay, and later spaced retrieval.
-3. **Transfer** — personal response, changed situation, connected turns, or unseen-speaker test.
-
-Confirm:
-
-- one measurable communicative outcome;
-- explicit prerequisites;
-- appropriate clip length and support for the level;
-- repeated exposure across speakers or contexts;
-- retrieval rather than only recognition;
-- support fading;
-- transfer beyond the source clip;
-- delayed evidence where claimed;
-- source and transcript review;
-- a typed fallback when microphone capability is unavailable.
-
-Do not build unrelated standalone video lessons before the seven-day graph exists.
-
-Curriculum changes generally require:
+## Checks
 
 ```bash
-npm run test:content-standard
-npx tsc --noEmit
 npm run lint
+npx tsc --noEmit
 npm run test
+npm run test:content-standard
 npm run build
+npm run e2e
 ```
 
-Also run targeted contract tests, source/provenance validation, and relevant browser checks.
+Run only relevant checks during iteration, then the required exact-head checks before review. Never claim a check passed unless it ran on the final state.
 
-## Cleanup rules
+## Pull-request requirements
 
-Cleanup must be staged:
+Before review, confirm:
 
-1. establish a passing baseline;
-2. run inventory when relevant;
-3. classify candidates;
-4. delete only verified items;
-5. refactor through small behavior-preserving changes;
-6. run checks after each batch;
-7. review the final diff.
-
-Do not combine unrelated cleanup with product work.
-
-## Before a pull request
-
-Confirm:
-
-- no unrelated files changed;
-- no production debug logging was introduced;
-- no generated/runtime artifact was committed;
-- no secret, source credential, protected-preview token, or learner data was exposed;
-- source records and rights evidence are complete where relevant;
-- documentation reflects the current direction;
-- the PR explains outcome, scope, evidence, checks, remaining risks, and manual review;
-- the exact head, merge/deployment state, blockers, and next safe action are recorded;
-- `PROJECT_MEMORY.md` was updated when project-wide state or direction changed.
-
-The ordered development direction is maintained in `docs/product/CURRENT_PRIORITY.md`. Agents must not choose a different roadmap item because it is easier or more technically interesting.
+- one bounded outcome;
+- correct base and head branches;
+- exact final SHA recorded;
+- no unrelated files or generated artifacts;
+- no secrets or learner data;
+- rights/naturalness/transcript evidence clearly separated from technical checks;
+- remaining risks and manual review stated;
+- `PROJECT_MEMORY.md` updated when project direction or branch state changed;
+- PR remains draft unless the owner explicitly requests readiness;
+- no merge or deployment occurred.
