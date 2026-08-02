@@ -1,8 +1,23 @@
 # Real Talk public-domain pilot
 
-**Status:** internal product experiment  
+**Status:** owner-authorized internal product experiment  
 **Branch:** `agent/real-talk-public-domain-pilot`  
 **Public release:** blocked until transcript review and learner testing
+
+## Exception to the current roadmap
+
+This experiment conflicts with the repository's existing 28-day speaking priority and do-not-build list. It exists only because the owner explicitly requested research and implementation of the authentic-video lesson idea.
+
+The exception is bounded as follows:
+
+1. **Current blocker:** the owner repeatedly rejected fabricated dialogue and engagement-first lesson flows because they do not feel like credible progress. The unresolved product question is whether authentic input plus retrieval produces a lesson worth returning to.
+2. **Evidence available:** direct owner feedback identifies real spoken content and spaced retrieval as more trustworthy than generated conversation. This is product-direction evidence, not learner-effectiveness evidence.
+3. **Why a simpler video embed is insufficient:** passive viewing cannot test whether the learner understood, located evidence, or retrieved language. It also does not solve transcript provenance or copyright boundaries.
+4. **Smallest reversible implementation:** one public-domain clip, one route, one lesson record, no new database schema, no AI generation pipeline, no production release, and one removable entry in the learning hub.
+5. **Acceptance criteria:** media playback, bounded clip replay, timestamp evidence, gist task, cloze retrieval, productive recall, source attribution, and technical validation.
+6. **Explicitly excluded systems:** authentication changes, RLS, analytics taxonomy, XP, payments, AI publication, speech scoring, broad curriculum changes, and production deployment.
+
+This document does not silently replace `PRODUCT_TRUTH.md` or `CURRENT_PRIORITY.md`. A separate owner decision is required before Real Talk becomes the primary product direction.
 
 ## Product hypothesis
 
@@ -20,7 +35,7 @@ licensed real media
 → contextual chunks
 → cloze retrieval
 → Vietnamese-to-English recall
-→ optional FSRS seeding
+→ optional FSRS seeding through the existing deck
 ```
 
 ## Source policy
@@ -68,7 +83,7 @@ The first pilot does not claim broad speaking improvement. It tests whether a le
 3. notice a small number of reusable chunks;
 4. reconstruct one missing word;
 5. recall one complete sentence from Vietnamese meaning;
-6. add the resulting chunks to the existing FSRS deck.
+6. optionally add the resulting chunks to the existing FSRS deck without changing FSRS rules.
 
 Completion is blocked until both retrieval items are correct. Watching the clip or selecting the gist answer alone is not completion evidence.
 
@@ -84,7 +99,8 @@ The first slice does not include:
 - storing raw learner audio or transcript;
 - a new database schema;
 - a large video catalog;
-- replacing the current Mission Engine.
+- replacing the current Mission Engine;
+- changing FSRS parameters or review behavior.
 
 ## Human review gate
 
