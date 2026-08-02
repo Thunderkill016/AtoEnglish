@@ -2,6 +2,7 @@ import {
   generationFailure,
   type GenerateLessonResult,
 } from "@/features/real-talk/domain/generation-result";
+import type { TranscriptSourceMetadata } from "@/features/real-talk/domain/transcript-source";
 import { canonicalYouTubeWatchUrl } from "@/features/real-talk/domain/youtube-source";
 import type { PersistPrivateDraftResult } from "@/features/real-talk/server/draft-repository";
 import type { PrivateLessonCompilationResult } from "@/features/real-talk/server/private-lesson-compiler";
@@ -25,6 +26,7 @@ export interface GeneratePrivateLessonDependencies {
     draft: Extract<PrivateLessonCompilationResult, { success: true }>["draft"];
     model: string;
     warnings: string[];
+    transcriptMetadata: TranscriptSourceMetadata;
     userId: string;
   }): Promise<PersistPrivateDraftResult>;
 }
@@ -86,6 +88,7 @@ export async function generatePrivateLesson(
       draft: compiled.draft,
       model: compiled.model,
       warnings: compiled.warnings,
+      transcriptMetadata: compiled.transcriptMetadata,
       userId,
     });
     if (!persisted.success) return persisted;
