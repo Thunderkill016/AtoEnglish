@@ -3,7 +3,8 @@
 > **Idea:** Lấy video trò chuyện thực tế từ YouTube, xử lý bằng AI, và biến thành bài học tiếng Anh có cấu trúc cho người Việt mất gốc.
 
 > [!IMPORTANT]
-> Đây là tính năng **mở rộng sau MVP** — MVP hiện tại tập trung scripted speaking cho Pre-A1/A0. Feature này phù hợp cho giai đoạn **A1 → A2+** hoặc như một module bổ sung "Real Talk / Immersion Lab".
+> Real Talk là sản phẩm chính từ 2026-08-02. Đối tượng ưu tiên là người Việt
+> trưởng thành A1–B1; scripted-speaking legacy không còn là roadmap điều khiển.
 
 ---
 

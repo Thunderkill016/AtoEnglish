@@ -158,23 +158,24 @@ YouTube URL
 
 ## 3. Lộ Trình Triển Khai (Execution Roadmap)
 
-### Phase 1: Storage & Public Library (Đã hoàn thành phần cốt lõi)
+### Phase 1: Storage & Public Library (đã có nền tảng)
 
 - [x] Data Model & Types (`src/types/real-talk.ts`)
 - [x] Complete UI Component Suite (Pre/While/Post phases, YouTube player, Transcript)
 - [x] AI Generator Server Action via Gemini 2.0 Flash (`src/app/actions/real-talk.ts`)
 - [x] Creator UI (`/real-talk/create`)
-- [ ] Tích hợp Supabase Client & RLS Policies cho Real Talk tables
+- [x] Migration SQL & RLS baseline cho Real Talk tables
 
-### Phase 2: SRS & Learner Retention
+### Phase 2: Speaking evidence and learner retention (current)
 
-- [ ] Thêm nút "Lưu từ vựng" vào Flashcard queue
-- [ ] Đẩy tiến độ hoàn thành bài học Real Talk vào Streak & XP System
+- [x] Thêm nút lưu từ vựng vào Flashcard queue
+- [ ] Ghi transcript-match hoặc assessment result trung thực cho speaking drill
+- [ ] Đẩy tiến độ hoàn thành bài học Real Talk vào Streak & XP System bằng transaction idempotent
 
-### Phase 3: Advanced Speaking & Pronunciation Scoring
+### Phase 3: Provider-backed pronunciation assessment
 
-- [ ] Tích hợp Azure Pronunciation Assessment / Web Speech Assessment vào phần Post-Watch Speaking Drills
-- [ ] Shadowing mode: Thu âm và so sánh trực tiếp sóng âm/ngữ điệu với câu gốc
+- [ ] Tích hợp Azure Pronunciation Assessment khi có credential, calibration và provider tests
+- [ ] Shadowing mode: local recording/replay. Không tự suy ra ngữ điệu từ transcript.
 
 ---
 

@@ -9,22 +9,25 @@ This file is the default operating contract for coding agents working in this re
 
 AtoEnglish is the product. Coding agents are implementation workers. CycleWarden, GitHub, tests, and automation exist to help the owner develop AtoEnglish without losing product direction or repository control.
 
-The current product goal is deliberately narrow:
+The current product goal is Real Talk: help Vietnamese adults at A1–B1 learn
+from short real conversations through Vietnamese scaffolding, active listening,
+controlled speaking, honest feedback, and FSRS review.
 
-> Help Vietnamese adults who know some English but freeze when speaking at work complete a 28-day, 10–15 minute-per-day journey and demonstrate a practical speaking improvement.
-
-Do not optimize for feature count, architectural novelty, autonomous operation, or broad A0–B2 coverage.
+Do not optimize for feature count, architectural novelty, or broad A0–B2
+coverage. Improve the Real Talk lesson loop first.
 
 ## Mandatory reading order
 
 Before proposing or changing non-trivial code, read:
 
-1. `docs/product/PRODUCT_TRUTH.md`
-2. `docs/product/CURRENT_PRIORITY.md`
-3. `docs/product/DO_NOT_BUILD.md`
-4. `docs/curriculum/28-day-speaking-journey-contract.md` for curriculum or lesson work
-5. `CONTENT_STYLE.md` for learner-facing content
-6. the relevant implementation, tests, migrations, issues, and recent pull requests
+1. `docs/FULL_PRODUCT_BLUEPRINT_VN.md`
+2. `docs/real-talk-spec.md`
+3. `docs/real-talk-expansion-plan.md`
+4. `docs/product/PRODUCT_TRUTH.md`
+5. `docs/product/CURRENT_PRIORITY.md`
+6. `docs/product/DO_NOT_BUILD.md`
+7. `CONTENT_STYLE.md` for learner-facing content
+8. the relevant implementation, tests, migrations, issues, and recent pull requests
 
 When these sources disagree, stop and report the conflict. Do not silently choose the broader or more ambitious interpretation.
 
@@ -124,14 +127,14 @@ Preserve the modular monolith unless a measured product blocker requires archite
 
 Do not change these areas unless the task explicitly requires them:
 
-- database schema, migrations, functions, or RLS policies;
+- database schema, migrations, functions, or RLS policies without a versioned migration and tests;
 - authentication, onboarding, and route protection;
 - `src/proxy.ts` behavior;
 - analytics event taxonomy or privacy boundary;
 - FSRS scheduling parameters;
-- XP, stars, streaks, leagues, and achievements;
+- XP, stars, streaks, leagues, and achievements outside an approved Real Talk progress transaction;
 - payment or production deployment configuration;
-- lesson section order or pedagogical flow;
+- legacy lesson section order or pedagogical flow;
 - `src/components/learn/UnitTemplate.tsx` architecture;
 - unrelated curriculum units;
 - dependencies with meaningful bundle, runtime, or infrastructure impact;
@@ -159,6 +162,11 @@ Do not change these areas unless the task explicitly requires them:
 - Known table names include `user_progress` and `user_lesson_progress`; do not invent replacement names.
 
 ## Curriculum and lesson work
+
+The legacy 28-day journey and `src/lib/data/units/` are historical references,
+not the current Real Talk product contract. For Real Talk content, use the
+Pre-While-Post requirements in `docs/real-talk-spec.md` and the current
+priority document.
 
 Before editing unit content, read:
 

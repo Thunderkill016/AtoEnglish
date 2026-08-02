@@ -109,7 +109,6 @@ export function YouTubePlayer({
     }
 
     setIsPlaying(true);
-    setHasError(false);
 
     try {
       playerRef.current = new window.YT.Player(containerRef.current, {
