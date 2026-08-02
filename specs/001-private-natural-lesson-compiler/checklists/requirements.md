@@ -34,6 +34,7 @@
 - [x] Stable machine-readable failure codes are implemented across compiler, action, and editor UI.
 - [ ] Stable failure codes have been executed and observed on the exact final head.
 - [x] Persistence failure behavior is explicit and cannot be returned as saved or preview-only success.
+- [x] A mocked orchestration test asserts persistence failure remains a failure result.
 - [ ] Persistence failure behavior has been exercised with controlled database failures.
 
 ## Source and rights boundary
@@ -81,9 +82,11 @@
 - [x] Required tests are listed before convergence.
 - [x] Transcript policy tests cover approved, default-blocked, non-production opt-in, production fail-closed, cue normalization, and direct-import bypass.
 - [x] Result-code and deterministic draft-identity regression tests exist in `src/__tests__/real-talk-generation-result.test.ts`.
+- [x] Authentication-ordering, happy-path, rate-limit, provider-failure propagation, evidence no-write, persistence-failure, and bounded-internal-error artifacts exist in `src/__tests__/real-talk-generation-action.test.ts`.
+- [x] Real Talk server/domain suites are assigned to the Vitest Node project rather than jsdom.
 - [ ] All specified unit and contract fixtures exist.
-- [ ] Authentication ordering tests exist and pass.
-- [ ] Persistence failure tests exist and pass.
+- [ ] Authentication ordering tests pass on the exact final head.
+- [ ] Provider and persistence failure tests pass on the exact final head.
 - [ ] RLS integration tests exist and pass.
 - [ ] Preview completion component tests exist and pass.
 - [ ] Live Gemini failure and success paths have been observed.
@@ -112,7 +115,7 @@
 The feature cannot converge while any of these remain unresolved:
 
 1. at least one production-approved transcript acquisition mode or an explicit permanent non-production decision;
-2. action/provider/persistence failure execution tests;
+2. exact-head execution of action/provider/persistence failure suites;
 3. complete automated fixture coverage;
 4. non-production RLS and migration verification;
 5. exact-head repository checks;
