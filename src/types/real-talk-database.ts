@@ -97,3 +97,34 @@ export interface SaveRealTalkAttemptRpcClient {
     error: { message: string; code?: string } | null;
   }>;
 }
+
+export interface GetRealTalkAttemptRpcRow {
+  attempt_id: string;
+  attempt_status: "started" | "in_progress" | "completed";
+  attempt_checkpoint:
+    | "environment"
+    | "first_listen"
+    | "support"
+    | "retrieval"
+    | "speaking"
+    | "transfer"
+    | "completed";
+  first_listen_completed: boolean;
+  comprehension_correct: number;
+  comprehension_total: number;
+  max_support_level: number;
+  retrieval_attempted: boolean;
+  speak_confirmed: boolean;
+  transfer_attempted: boolean;
+  attempt_completed_at: string | null;
+}
+
+export interface GetRealTalkAttemptRpcClient {
+  rpc(
+    functionName: "get_real_talk_attempt",
+    args: { p_lesson_slug: string },
+  ): Promise<{
+    data: GetRealTalkAttemptRpcRow[] | null;
+    error: { message: string; code?: string } | null;
+  }>;
+}
