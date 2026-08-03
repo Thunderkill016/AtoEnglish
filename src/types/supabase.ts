@@ -585,6 +585,75 @@ while_watch?: Json
 },
         ]
       }
+      real_talk_transcript_sources: {
+        Row: {
+          acquisition_mode: string
+          adapter_id: string
+          canonical_source_url: string
+          created_at: string
+          cue_digest: string
+          cues: Json
+          id: string
+          language: string
+          provider: string
+          review_status: string
+          reviewed_at: string | null
+          reviewed_by: string | null
+          rights_basis: string
+          rights_reference: string
+          source_external_id: string
+          source_reference: string
+          submitted_at: string
+          submitted_by: string
+          updated_at: string
+          warnings: Json
+        }
+        Insert: {
+          acquisition_mode: string
+          adapter_id?: string
+          canonical_source_url: string
+          created_at?: string
+          cue_digest: string
+          cues: Json
+          id?: string
+          language: string
+          provider: string
+          review_status?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          rights_basis: string
+          rights_reference: string
+          source_external_id: string
+          source_reference: string
+          submitted_at?: string
+          submitted_by: string
+          updated_at?: string
+          warnings?: Json
+        }
+        Update: {
+          acquisition_mode?: string
+          adapter_id?: string
+          canonical_source_url?: string
+          created_at?: string
+          cue_digest?: string
+          cues?: Json
+          id?: string
+          language?: string
+          provider?: string
+          review_status?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          rights_basis?: string
+          rights_reference?: string
+          source_external_id?: string
+          source_reference?: string
+          submitted_at?: string
+          submitted_by?: string
+          updated_at?: string
+          warnings?: Json
+        }
+        Relationships: []
+      }
       real_talk_videos: {
         Row: {
 channel_name: string | null
