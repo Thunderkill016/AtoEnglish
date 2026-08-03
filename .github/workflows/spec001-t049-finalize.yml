@@ -9,7 +9,7 @@ permissions:
 
 jobs:
   finalize:
-    if: github.head_ref == 'agent/rebuild-learning-core' && github.actor != 'github-actions[bot]'
+    if: github.head_ref == 'agent/rebuild-learning-core'
     runs-on: ubuntu-latest
     steps:
       - name: Check out working branch
