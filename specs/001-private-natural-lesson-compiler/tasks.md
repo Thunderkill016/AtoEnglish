@@ -151,15 +151,18 @@ owner B cannot read or mutate it; owner A cannot publish or approve it.
 - [x] T048 [US3] Generate and reconcile the exact hosted Real Talk type fragment
 - [ ] T049 [US3] Replace the full local generated `src/types/supabase.ts` and prove
   equivalence before removing the reconciliation fragment
-- [ ] T050 [US3] Run the signed-session PostgREST integration scaffold against the
-  authorized migrated project
+- [x] T050 [US3] Run the signed-session PostgREST integration scaffold against the
+  authorized migrated project; observed on 2026-08-03 through two real Supabase
+  Auth sessions with all owner, anonymous, cross-owner, publication, review-state,
+  and public-catalog assertions passing; cleanup returned zero test users, videos,
+  and lessons; evidence is recorded in `t050-signed-session-verification.md`
 - [ ] T051 [US3] Apply and verify the atomic private-draft RPC, then run repeated
   generation, reload, and rollback behavior through the real server action and
   hosted database
 - [ ] T052 [US3] Decide retention, owner deletion UX, and immutable attempt history
 
-**Checkpoint**: Hosted database invariants have strong role-level evidence. The
-signed-session and real server-action paths remain open.
+**Checkpoint**: Hosted database invariants now have role-level and signed-session
+PostgREST evidence. The real server-action path remains open.
 
 ---
 
@@ -306,6 +309,7 @@ Current result:
 Technical checks:       PASS on Verify #147
 Provenance code/tests:  PASS
 Atomic RPC code/tests:  PASS
+Signed-session RLS:     PASS through hosted Auth + PostgREST
 Hosted new DDL:         NOT APPLIED
 Production adapter:     NOT IMPLEMENTED
 Live Gemini:            BLOCKED
