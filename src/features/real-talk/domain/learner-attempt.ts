@@ -15,19 +15,33 @@ export type RealTalkAttemptEvidence = z.infer<
   typeof realTalkAttemptEvidenceSchema
 >;
 
+export interface RestoredRealTalkAttempt {
+  attemptId: string;
+  status: "started" | "in_progress" | "completed";
+  checkpoint:
+    | "environment"
+    | "first_listen"
+    | "support"
+    | "retrieval"
+    | "speaking"
+    | "transfer"
+    | "completed";
+  firstListenCompleted: boolean;
+  comprehensionCorrect: number;
+  comprehensionTotal: number;
+  maxSupportLevel: 0 | 1 | 2 | 3;
+  retrievalAttempted: boolean;
+  speakConfirmed: boolean;
+  transferAttempted: boolean;
+  completedAt: string | null;
+}
+
 export type SaveAttemptResult =
   | {
       success: true;
       attemptId: string;
       status: "started" | "in_progress" | "completed";
-      checkpoint:
-        | "environment"
-        | "first_listen"
-        | "support"
-        | "retrieval"
-        | "speaking"
-        | "transfer"
-        | "completed";
+      checkpoint: RestoredRealTalkAttempt["checkpoint"];
       completedAt: string | null;
     }
   | {
