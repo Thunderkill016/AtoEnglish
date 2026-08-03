@@ -11,7 +11,7 @@ jobs:
   sync:
     if: github.head_ref == 'agent/rebuild-learning-core' && github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 30
     env:
       CI: true
       HUSKY: 0
@@ -356,8 +356,11 @@ jobs:
       - name: Type-check
         run: npx tsc --noEmit
 
-      - name: Targeted schema tests
-        run: npx vitest run --config vitest.node.config.ts src/__tests__/real-talk-atomic-draft-migration.test.ts src/__tests__/real-talk-atomic-draft-hosted-fix-migration.test.ts src/__tests__/supabase-pending-schema-contract.test.ts src/__tests__/real-talk-transcript-provenance-migration.test.ts
+      - name: Targeted Real Talk tests
+        run: npm run test:real-talk
+
+      - name: Full unit tests
+        run: npm run test
 
       - name: Commit hosted schema sync
         shell: bash
