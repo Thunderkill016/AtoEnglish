@@ -163,12 +163,16 @@ owner B cannot read or mutate it; owner A cannot publish or approve it.
 - [ ] T051 [US3] Apply and verify the atomic private-draft RPC, then run repeated
   generation, reload, and rollback behavior through the real server action and
   hosted database
-- [ ] T052 [US3] Decide retention, owner deletion UX, and immutable attempt history
+- [x] T052 [US3] Decide retention, owner deletion UX, and immutable attempt history;
+  retain one current private draft without automatic expiry, require deliberate
+  owner-only hard deletion in the first draft-management surface, and defer full
+  immutable generation history; decision recorded in
+  `retention-deletion-history-decision.md`
 
 **Checkpoint**: Hosted database invariants now have role-level and signed-session
 PostgREST evidence. The full generated type baseline matches hosted truth; pending
-DDL remains visible only through named overlays. The real server-action path
-remains open.
+DDL remains visible only through named overlays. Retention and history boundaries
+are resolved. The real server-action path remains open.
 
 ---
 
@@ -312,12 +316,13 @@ authenticated request
 Current result:
 
 ```text
-Technical checks:       PASS on Verify #169
+Technical checks:       PASS on Verify #176
 Provenance code/tests:  PASS
 Atomic RPC code/tests:  PASS
 Hosted type baseline:   PASS against generated project snapshot
 Learning attempts DDL: NOT APPLIED; explicit typed overlay only
 Signed-session RLS:     PASS through hosted Auth + PostgREST
+Retention/history:      DECIDED; one current draft, owner hard-delete contract
 Hosted new DDL:         NOT APPLIED
 Production adapter:     NOT IMPLEMENTED
 Live Gemini:            BLOCKED
