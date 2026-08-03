@@ -177,7 +177,7 @@ describe("Real Talk post-watch production and transfer gates", () => {
 
     click(findButton(container, "Hoàn thành bài học"));
     expect(onComplete).toHaveBeenCalledTimes(1);
-    expect(onComplete).toHaveBeenCalledWith(100);
+    expect(onComplete).toHaveBeenCalledWith(100, expect.any(Array));
   });
 
   it("states the speech limitation honestly and makes no unsupported pronunciation or mastery claim", () => {

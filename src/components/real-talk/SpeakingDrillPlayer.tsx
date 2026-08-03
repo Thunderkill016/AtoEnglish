@@ -210,34 +210,47 @@ export function SpeakingDrillPlayer({
         </div>
       )}
 
+      <div className="mt-4 p-4 rounded-2xl border border-amber-500/20 bg-amber-500/5 text-left text-xs leading-5 text-amber-100/80 w-full mb-4">
+        <Info className="mr-2 inline size-4" />
+        Trang này chưa chấm âm thanh. Chỉ bấm tiếp sau khi bạn đã thực sự nói câu trên thành tiếng; hệ thống không giả vờ rằng nút mic là điểm phát âm.
+      </div>
+
       {isSupported ? (
         <div className="w-full flex flex-col items-center">
           {!result ? (
-            <button
-              onClick={toggleRecording}
-              className={cn(
-                "flex items-center gap-3 py-4 px-8 rounded-full font-bold text-lg transition-all mb-4",
-                isRecording
-                  ? "bg-red-500/20 text-red-500 border border-red-500/50 shadow-[0_0_15px_rgba(239,68,68,0.5)]"
-                  : "bg-blue-600 text-white hover:bg-blue-500 shadow-lg hover:shadow-blue-500/20"
-              )}
-            >
-              {isRecording ? (
-                <>
-                  <motion.div
-                    animate={{ scale: [1, 1.2, 1] }}
-                    transition={{ repeat: Infinity, duration: 1.5 }}
-                  >
-                    <Mic size={24} className="fill-red-500" />
-                  </motion.div>
-                  Đang nghe...
-                </>
-              ) : (
-                <>
-                  <Mic size={24} /> Nhấn để nói
-                </>
-              )}
-            </button>
+            <div className="w-full flex flex-col items-center gap-3">
+              <button
+                onClick={toggleRecording}
+                className={cn(
+                  "flex items-center gap-3 py-4 px-8 rounded-full font-bold text-lg transition-all",
+                  isRecording
+                    ? "bg-red-500/20 text-red-500 border border-red-500/50 shadow-[0_0_15px_rgba(239,68,68,0.5)]"
+                    : "bg-blue-600 text-white hover:bg-blue-500 shadow-lg hover:shadow-blue-500/20"
+                )}
+              >
+                {isRecording ? (
+                  <>
+                    <motion.div
+                      animate={{ scale: [1, 1.2, 1] }}
+                      transition={{ repeat: Infinity, duration: 1.5 }}
+                    >
+                      <Mic size={24} className="fill-red-500" />
+                    </motion.div>
+                    Đang nghe...
+                  </>
+                ) : (
+                  <>
+                    <Mic size={24} /> Nhấn để nói
+                  </>
+                )}
+              </button>
+              <button
+                onClick={handleSkip}
+                className="w-full py-3.5 rounded-2xl bg-teal-500 hover:bg-teal-400 text-white font-bold flex items-center justify-center gap-2 transition-all mt-2"
+              >
+                Tôi đã nói thành tiếng <ChevronRight size={18} />
+              </button>
+            </div>
           ) : (
             <AnimatePresence>
               <motion.div
@@ -250,8 +263,8 @@ export function SpeakingDrillPlayer({
                   <div className="text-zinc-500 hover:text-zinc-300 cursor-help">
                     <Info size={14} />
                   </div>
-                  <div className="absolute bottom-full mb-2 w-48 p-2 bg-zinc-800 text-xs text-zinc-300 rounded-lg shadow-xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10 left-1/2 -translate-x-1/2 text-center">
-                    Đây là điểm so sánh từ ngữ, không phải chấm phát âm
+                  <div className="absolute bottom-full mb-2 w-56 p-2 bg-zinc-800 text-xs text-zinc-300 rounded-lg shadow-xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10 left-1/2 -translate-x-1/2 text-center">
+                    Trang này chưa chấm âm thanh. Đây là điểm so sánh từ ngữ; hệ thống không giả vờ rằng nút mic là điểm phát âm.
                   </div>
                 </div>
 
@@ -281,36 +294,27 @@ export function SpeakingDrillPlayer({
                     onClick={handleContinue}
                     className="flex-1 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-bold flex items-center justify-center gap-2 transition-colors"
                   >
-                    Tiếp tục <ChevronRight size={18} />
+                    Tôi đã nói thành tiếng <ChevronRight size={18} />
                   </button>
                 </div>
               </motion.div>
             </AnimatePresence>
           )}
-
-          {!result && !isRecording && (
-            <button
-              onClick={handleSkip}
-              className="mt-4 text-sm text-zinc-500 hover:text-zinc-300"
-            >
-              Bỏ qua
-            </button>
-          )}
         </div>
       ) : (
         <div className="w-full flex flex-col items-center p-6 bg-zinc-950/50 rounded-xl border border-zinc-800 text-center">
-          <p className="text-amber-400 mb-6 font-medium">
+          <p className="text-amber-400 mb-4 font-medium">
             Trình duyệt không hỗ trợ nhận diện giọng nói
           </p>
-          <p className="text-zinc-400 mb-8 text-sm">
+          <p className="text-zinc-400 mb-6 text-sm">
             Bạn có thể tự nghe mẫu và luyện tập đọc to nhé.
           </p>
           
           <button
             onClick={handleSkip}
-            className="w-full py-4 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold flex items-center justify-center gap-2 shadow-lg transition-colors"
+            className="w-full py-4 rounded-xl bg-teal-500 hover:bg-teal-400 text-white font-bold flex items-center justify-center gap-2 shadow-lg transition-colors"
           >
-            Đã tự luyện xong <ChevronRight size={20} />
+            Tôi đã nói thành tiếng <ChevronRight size={20} />
           </button>
         </div>
       )}
