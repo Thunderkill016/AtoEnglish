@@ -5,8 +5,13 @@ const REAL_TALK_NODE_TESTS = [
   "src/__tests__/real-talk-generation-contract.test.ts",
   "src/__tests__/real-talk-generation-result.test.ts",
   "src/__tests__/real-talk-transcript-source-policy.test.ts",
+  "src/__tests__/real-talk-transcript-provenance-migration.test.ts",
+  "src/__tests__/real-talk-trusted-transcript-ingestion.test.ts",
+  "src/__tests__/real-talk-reviewed-transcript-adapter.test.ts",
   "src/__tests__/real-talk-generation-action.test.ts",
   "src/__tests__/real-talk-migration-contract.test.ts",
+  "src/__tests__/real-talk-atomic-draft-migration.test.ts",
+  "src/__tests__/real-talk-rls-performance-migration.test.ts",
   "src/__tests__/real-talk-draft-mapping.test.ts",
   "src/__tests__/real-talk-youtube-source.test.ts",
 ];
