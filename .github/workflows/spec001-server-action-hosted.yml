@@ -1,0 +1,255 @@
+name: Spec 001 Server Action Hosted
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: write
+  id-token: write
+
+jobs:
+  hosted-server-action:
+    if: github.head_ref == 'agent/rebuild-learning-core' && github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      CI: true
+      HUSKY: 0
+      SPEC001_SESSION_FUNCTION_URL: https://zpiwddskhduuykpxltun.supabase.co/functions/v1/spec001-server-action-session
+      SPEC001_OIDC_AUDIENCE: atoenglish-spec001-server-action
+      SPEC001_EVIDENCE_PATH: ${{ runner.temp }}/spec001-server-action-evidence.json
+    steps:
+      - name: Check out working branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/rebuild-learning-core
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm install --no-audit --prefer-offline
+
+      - name: Acquire bounded hosted test session
+        shell: bash
+        run: |
+          set -euo pipefail
+          separator='&'
+          if [[ "$ACTIONS_ID_TOKEN_REQUEST_URL" != *'?'* ]]; then
+            separator='?'
+          fi
+          oidc_json=$(curl -fsS \
+            -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
+            "${ACTIONS_ID_TOKEN_REQUEST_URL}${separator}audience=${SPEC001_OIDC_AUDIENCE}")
+          oidc_token=$(OIDC_JSON="$oidc_json" node -e '
+            const value = JSON.parse(process.env.OIDC_JSON || "{}").value;
+            if (!value) process.exit(1);
+            process.stdout.write(value);
+          ')
+          session_json=$(curl -fsS \
+            -H "Authorization: Bearer $oidc_token" \
+            -H 'content-type: application/json' \
+            --data '{"action":"create"}' \
+            "$SPEC001_SESSION_FUNCTION_URL")
+          SESSION_JSON="$session_json" node <<'NODE'
+          const fs = require('node:fs');
+          const session = JSON.parse(process.env.SESSION_JSON || '{}');
+          const required = [
+            'userId',
+            'email',
+            'password',
+            'supabaseUrl',
+            'publishableKey',
+          ];
+          for (const key of required) {
+            if (!session[key]) throw new Error(`Missing session field: ${key}`);
+          }
+          console.log(`::add-mask::${session.email}`);
+          console.log(`::add-mask::${session.password}`);
+          console.log(`::add-mask::${session.userId}`);
+          fs.appendFileSync(
+            process.env.GITHUB_ENV,
+            [
+              `SPEC001_TEST_USER_ID=${session.userId}`,
+              `SPEC001_TEST_EMAIL=${session.email}`,
+              `SPEC001_TEST_PASSWORD=${session.password}`,
+              `SPEC001_SUPABASE_URL=${session.supabaseUrl}`,
+              `SPEC001_SUPABASE_PUBLISHABLE_KEY=${session.publishableKey}`,
+            ].join('\n') + '\n',
+          );
+          NODE
+
+      - name: Run real server action with hosted Auth and database
+        run: npx vitest run --config vitest.hosted-real-talk.config.ts
+
+      - name: Cleanup bounded hosted fixtures
+        if: always() && env.SPEC001_TEST_USER_ID != ''
+        shell: bash
+        run: |
+          set -euo pipefail
+          separator='&'
+          if [[ "$ACTIONS_ID_TOKEN_REQUEST_URL" != *'?'* ]]; then
+            separator='?'
+          fi
+          oidc_json=$(curl -fsS \
+            -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
+            "${ACTIONS_ID_TOKEN_REQUEST_URL}${separator}audience=${SPEC001_OIDC_AUDIENCE}")
+          oidc_token=$(OIDC_JSON="$oidc_json" node -e '
+            const value = JSON.parse(process.env.OIDC_JSON || "{}").value;
+            if (!value) process.exit(1);
+            process.stdout.write(value);
+          ')
+          cleanup_json=$(curl -fsS \
+            -H "Authorization: Bearer $oidc_token" \
+            -H 'content-type: application/json' \
+            --data "{\"action\":\"cleanup\",\"userId\":\"$SPEC001_TEST_USER_ID\"}" \
+            "$SPEC001_SESSION_FUNCTION_URL")
+          CLEANUP_JSON="$cleanup_json" node -e '
+            const result = JSON.parse(process.env.CLEANUP_JSON || "{}");
+            if (result.cleaned !== true) process.exit(1);
+          '
+          printf '%s\n' "$cleanup_json" > "$RUNNER_TEMP/spec001-server-action-cleanup.json"
+
+      - name: Record T051 and T068 evidence
+        shell: python
+        run: |
+          import json
+          import os
+          from pathlib import Path
+
+          evidence = json.loads(Path(os.environ["SPEC001_EVIDENCE_PATH"]).read_text())
+          cleanup = json.loads(
+              Path(os.environ["RUNNER_TEMP"])
+              .joinpath("spec001-server-action-cleanup.json")
+              .read_text()
+          )
+          if cleanup.get("cleaned") is not True:
+              raise SystemExit("Hosted cleanup evidence is missing")
+
+          tasks_path = Path("specs/001-private-natural-lesson-compiler/tasks.md")
+          tasks = tasks_path.read_text()
+          old_t051 = '''- [ ] T051 [US3] Apply and verify the atomic private-draft RPC, then run repeated
+            generation, reload, and rollback behavior through the real server action and
+            hosted database
+          '''.replace("          ", "")
+          new_t051 = '''- [x] T051 [US3] Apply and verify the atomic private-draft RPC, then run repeated
+            generation, reload, and rollback behavior through the real server action and
+            hosted database; `generateRealTalkLesson` ran with a controlled compiler,
+            real hosted Auth, repository, RPC, RLS, reload mapping, rollback, and cleanup;
+            evidence is recorded in `t051-t068-server-action-hosted-verification.md`
+          '''.replace("          ", "")
+          old_t068 = '''- [ ] T068 Run repeated generation twice through the real server action and prove
+            one video/lesson pair is updated rather than duplicated
+          '''.replace("          ", "")
+          new_t068 = '''- [x] T068 Run repeated generation twice through the real server action and prove
+            one video/lesson pair is updated rather than duplicated; two calls retained
+            one video ID and one lesson identity, updated v2 content, reloaded through
+            `fetchLessonBySlug`, and left no row after a controlled failed lesson write
+          '''.replace("          ", "")
+          if old_t051 not in tasks or old_t068 not in tasks:
+              raise SystemExit("Expected unchecked T051/T068 blocks were not found")
+          tasks = tasks.replace(old_t051, new_t051, 1)
+          tasks = tasks.replace(old_t068, new_t068, 1)
+          tasks = tasks.replace(
+              "The real server-action path remains open.",
+              "The real server-action persistence and reload path is now observed; production transcript ingestion remains open.",
+              1,
+          )
+          tasks = tasks.replace(
+              "Hosted transactional behavior remains unclaimed.",
+              "Hosted transaction and real server-action repeat/reload/rollback behavior are observed.",
+              1,
+          )
+          tasks_path.write_text(tasks)
+
+          report = f'''# T051 and T068 Real Server Action Hosted Verification
+
+          **Observed:** 2026-08-03  
+          **Supabase project:** `zpiwddskhduuykpxltun`  
+          **Workflow:** Spec 001 Server Action Hosted #{os.environ["GITHUB_RUN_NUMBER"]}  
+          **Run ID:** `{os.environ["GITHUB_RUN_ID"]}`  
+          **Input head:** `{os.environ["GITHUB_SHA"]}`  
+          **Application deployment:** none
+
+          ## Credential boundary
+
+          GitHub Actions requested a short-lived OIDC token with audience
+          `atoenglish-spec001-server-action`. A temporary Supabase Edge Function
+          verified issuer, audience, repository, pull-request subject, PR ref, and
+          workflow name before creating one confirmed test user. No service-role key,
+          password, or session token was committed or printed. Credentials were masked
+          immediately and the user was deleted after the test.
+
+          ## Executed path
+
+          The integration test invoked the exported Next.js server actions directly:
+
+          ```text
+          generateRealTalkLesson
+          → generatePrivateLesson orchestration
+          → authenticated hosted Supabase client
+          → persistOwnerPrivateDraft
+          → upsert_real_talk_private_draft RPC
+          → hosted RLS tables
+          → fetchLessonBySlug reload mapping
+          ```
+
+          Transcript/Gemini compilation was replaced by a deterministic controlled
+          compiler fixture. This isolates the persistence outcome; live Gemini remains
+          a separate evidence class under T082. Auth, request headers, rate limiting,
+          server-action orchestration, repository mapping, RPC, RLS, database writes,
+          reload, and rollback were real.
+
+          ## Observed results
+
+          ```json
+          {json.dumps(evidence, indent=2, ensure_ascii=False)}
+          ```
+
+          Two server-action calls for the same owner, YouTube source, and level kept
+          one private video/lesson identity and updated the stored titles to v2. The
+          persisted draft reloaded through `fetchLessonBySlug`.
+
+          A third call used a different source and a controlled invalid lesson payload.
+          It returned `DRAFT_PERSISTENCE_FAILED`; a hosted lookup found zero video rows
+          for that source, proving the failed lesson write left no partial video through
+          the real action path.
+
+          ## Cleanup
+
+          The OIDC-protected cleanup removed every Real Talk row owned by the temporary
+          user and then deleted the Auth user. Cleanup returned:
+
+          ```json
+          {json.dumps(cleanup, indent=2, ensure_ascii=False)}
+          ```
+
+          ## Boundary
+
+          - T051: complete for real server-action persistence, reload, rollback, and cleanup.
+          - T068: complete for repeated-generation identity and update behavior.
+          - Live Gemini/provider behavior: not claimed.
+          - Production-approved transcript ingestion: not implemented.
+          - Browser Playwright flow: not run by this harness.
+          - Application deployment: not performed.
+          '''.replace("          ", "")
+          Path(
+              "specs/001-private-natural-lesson-compiler/"
+              "t051-t068-server-action-hosted-verification.md"
+          ).write_text(report)
+
+          Path(".github/workflows/spec001-server-action-hosted.yml").unlink()
+
+      - name: Commit verified server-action evidence
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "test(spec001): verify real hosted server action persistence"
+          git push origin HEAD:agent/rebuild-learning-core
