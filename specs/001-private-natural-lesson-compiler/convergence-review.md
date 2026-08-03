@@ -230,3 +230,17 @@ T051 and T068 are now observed through the exported Next.js server actions with 
 This closes the real persistence-process gap. It does not close live Gemini, production-approved transcript ingestion, persisted browser Playwright, or human review. The convergence decision remains **NOT CONVERGED** and the PR remains **DO NOT MERGE / DO NOT DEPLOY**.
 
 Detailed evidence: `t051-t068-server-action-hosted-verification.md`.
+
+## 2026-08-03 T061 trusted transcript follow-up
+
+T061 now has hosted evidence for a trusted registry, server-derived
+submitter/reviewer identities, reviewer authorization, public-domain rights
+metadata, server-computed cue digest, approved-adapter reload through the
+production policy, immutable reviewed state, and complete cleanup.
+
+This closes the missing trusted-ingestion mechanism. It does not close the
+public routing gap, live Gemini, persisted browser flow, T075 human review,
+or owner acceptance. Convergence remains **NOT CONVERGED** and the PR remains
+**DO NOT MERGE / DO NOT DEPLOY**.
+
+Evidence: `t061-trusted-transcript-ingestion-verification.md`.

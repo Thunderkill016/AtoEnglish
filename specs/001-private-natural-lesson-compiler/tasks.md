@@ -207,11 +207,17 @@ self-labelling browser data as trusted.
   write/tamper verification; hosted migration `20260803011348`, service-role
   trusted write, owner read, tamper rejection, cleanup, and generated types
   are recorded in `t060-t067-hosted-schema-verification.md`
-- [ ] T061 Implement one actual trusted transcript ingestion/reviewer flow and run
-  one controlled rights-reviewed source through it
+- [x] T061 Implement one actual trusted transcript ingestion/reviewer flow and run
+  one controlled rights-reviewed source through it; hosted migrations
+  `20260803023053`, `20260803023140`, and `20260803023221`, the
+  JWT-authenticated reviewer function, two distinct Auth identities, source
+  `1000496`, approved-adapter reload, tamper rejection, and cleanup are
+  recorded in `t061-trusted-transcript-ingestion-verification.md`
 
-**Checkpoint**: The code and migration contract are implemented and tested. No
-production adapter is approved, and the migration has not been applied hosted.
+**Checkpoint**: The trusted registry, reviewer function, and approved adapter are
+implemented and verified on hosted Supabase with a controlled public-domain
+source. The public compiler/UI is not routed to the adapter, and T075 human
+lesson review is not claimed.
 
 ---
 
@@ -293,8 +299,9 @@ green partial check.
   desktop and Android-mobile; run #1 retained transient mobile error 150 and run
   #2 passed the same controlled source
 - [x] T084 Resolve the production transcript policy decision by retaining the
-  explicit merge blocker until a trusted provenance adapter is implemented and
-  verified
+  explicit merge blocker; T061 now verifies a trusted adapter and reviewer flow,
+  but public routing, live Gemini, persisted browser evidence, and human review
+  remain required before merge or deployment
 - [x] T085 Run the requirements checklist review with observed evidence classes
 - [x] T086 Run final cross-artifact analysis
 - [x] T087 Run requirement-to-evidence convergence review; result remains NOT
@@ -338,6 +345,7 @@ Learning attempts DDL: NOT APPLIED; explicit typed overlay only
 Signed-session RLS:     PASS through hosted Auth + PostgREST
 Retention/history:      DECIDED; one current draft, owner hard-delete contract
 Hosted provenance/RPC:  PASS; migrations applied and verified
+Trusted transcript flow: PASS; hosted reviewer + approved adapter
 Real server action:     PASS with controlled compiler + hosted Auth/RPC/RLS
 Production adapter:     NOT IMPLEMENTED
 Live Gemini:            BLOCKED

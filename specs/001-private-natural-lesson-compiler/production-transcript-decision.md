@@ -114,34 +114,44 @@ true:
 12. integration tests cover tampering, missing provenance, changed cues after
     review, cross-owner access, and persistence failure.
 
-## Current implementation gap
+## Current implementation state — 2026-08-03 T061 follow-up
 
-The current database stores lesson content, generation warnings, model, and
-private ownership, but it does not yet persist the complete provenance contract
-above. The current server action is also wired only to the production-blocked
-experimental acquisition path.
+The earlier implementation-gap section is superseded by the hosted T061
+evidence. The project now has:
 
-Therefore:
+- a hosted `real_talk_transcript_sources` provenance registry;
+- authenticated read-only client access and no direct client write grants;
+- a JWT-authenticated submit/reviewer Edge Function that derives identities
+  from Supabase Auth and computes the cue digest server-side;
+- independent reviewer authorization through server-written `app_metadata`;
+- immutable `human_verified` records;
+- the approved `supabase-reviewed-transcript-v1` adapter;
+- hosted evidence using controlled public-domain source `1000496`;
+- generated hosted types, policy tests, adapter tests, and signed-session
+  integration evidence.
 
-- no production transcript mode is active;
-- T084 is resolved as an explicit merge blocker, not as provider approval;
-- T082 live Gemini verification remains independently blocked by the missing
-  GitHub Actions secret;
-- T074 persisted-draft browser verification and T075 human review remain open;
-- publication remains outside spec 001.
+Detailed evidence is recorded in
+`t061-trusted-transcript-ingestion-verification.md`.
 
-## Work required to remove the blocker
+The controlled integration used a dedicated reviewer test identity. This proves
+the authorization and provenance state transition, but it does not claim the
+human pedagogical/source-language review required by T075.
 
-A later implementation within spec 001 must:
+## Remaining production blockers
 
-1. add a validated authorized-caption submission contract;
-2. implement a registered approved adapter;
-3. persist provenance and cue digest through a forward migration;
-4. reload and display provenance to the draft owner/reviewer;
-5. add policy, mapping, persistence, RLS, and tamper tests;
-6. run the signed-session PostgREST integration suite;
-7. perform one controlled human-reviewed source ingestion;
-8. update this decision record with exact observed evidence.
+The merge blocker remains, but its reason has narrowed:
 
-Until those steps are complete, the correct production behavior is rejection,
-not fallback to unofficial caption acquisition.
+1. the public private-lesson compiler and UI are still wired to the
+   production-blocked experimental YouTube path rather than the reviewed
+   registry adapter;
+2. T082 live Gemini verification is blocked by the missing GitHub Actions
+   secret;
+3. T074 persisted authenticated desktop/mobile browser verification is open;
+4. T075 human source-language, timing, situation, Vietnamese-guidance, and
+   transfer-coherence review is open;
+5. owner acceptance T088 is open;
+6. publication remains outside spec 001.
+
+Therefore no automatic public-YouTube transcript mode is approved, no fallback
+to unofficial caption acquisition is permitted, and the PR remains
+**DO NOT MERGE / DO NOT DEPLOY**.
