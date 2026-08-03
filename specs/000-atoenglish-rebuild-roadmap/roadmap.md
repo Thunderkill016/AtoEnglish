@@ -1,199 +1,148 @@
 # AtoEnglish Rebuild — Spec of Specs
 
-## Why this roadmap exists
+## Roadmap Purpose
 
-The rebuild is too large and too interdependent for one specification and one
-implementation pass. This roadmap decomposes the product into independently
-valuable feature specs. Each child spec MUST run through its own specification,
-clarification, plan, tasks, analysis, implementation, and convergence cycle.
+The rebuild is decomposed into independently testable specs. No child spec may
+silently absorb another, and no agent may merge or deploy automatically.
 
-No child spec may silently absorb another. A later feature may depend on an
-approved contract from an earlier feature, but it must remain independently
-reviewable and stoppable.
+## Owner Correction — 2026-08-03
 
-## Proposed owner reprioritization — 2026-08-03
-
-Repository and infrastructure audit found that AtoEnglish already has substantial
-compiler, auth, database, UI, learning, analytics, and deployment infrastructure,
-but it does not yet present one coherent usable product. The Real Talk branch is
-also diverged hundreds of commits from `main`, and the current learner surface
-contains conflicting product promises and unreviewed static lesson fallbacks.
-
-The proposed next active feature is therefore:
+The core AtoEnglish idea is confirmed as:
 
 ```text
-002 — MVP Product Convergence
+learner pastes a YouTube URL
+→ AtoEnglish generates a private personal English lesson
 ```
 
-This is a bounded orchestration spec, not permission for a broad rewrite. It
-combines only the minimum slices required to prove one complete learner value
-loop:
+A fixed reviewed lesson catalog must not replace this interaction. The roadmap is
+therefore ordered around making the private URL-to-lesson workflow usable first.
 
-- truthful landing and authentication;
-- focused dashboard/navigation;
-- one environment with at least three human-reviewed lessons;
-- reviewed learner catalog and lawful playback;
-- environment-first runtime with retrieval, speech confirmation, and transfer;
-- bounded private progress and return;
-- privacy-safe pilot evidence and one preview.
-
-This reprioritization remains **proposed** until the owner accepts
-`specs/002-mvp-product-convergence/`. Until that decision, no implementation,
-hosted migration, preview, merge, or deployment is authorized by this roadmap
-change.
-
-## Ordered feature specs
+## Ordered Feature Specs
 
 ### 001 — Private Natural Lesson Compiler
 
-**Outcome**: An authenticated editor turns approved source evidence into a typed,
-evidence-bound, owner-private AI lesson draft.
+**Outcome:** An authenticated user turns supported YouTube transcript evidence into
+a typed, evidence-bound, owner-private AI lesson draft.
 
-**Independent value**: Safe creation and preview of one draft without public
-publication.
+**Current evidence:** Substantial implementation exists on
+`agent/rebuild-learning-core`: authentication ordering, transcript adapter/policy,
+bounded segment selection, Gemini structured output, evidence validation, atomic
+private persistence, RLS, provenance, stable failures, and desktop/mobile persisted
+preview.
 
-**Current evidence status**: Substantial implementation and hosted verification
-exist on `agent/rebuild-learning-core`, including private drafts, provenance,
-trusted transcript review, an approved source adapter, RLS, atomic persistence,
-and desktop/mobile persisted preview. The spec is not fully converged because
-live Gemini, final human lesson review, public learner routing, and owner
-acceptance remain open.
+**Remaining blockers:** final private-production transcript decision, live Gemini
+key/path, clean integration with current main, exact-head hosted/Vercel learner
+journey, and owner release acceptance.
 
-**Relationship to MVP**: Spec 001 is a source of contracts, security mechanisms,
-tests, and evidence. Its diverged branch MUST NOT be merged wholesale. Spec 002
-selectively ports only accepted work onto current `main`.
-
-**Hard boundary**: No automatic publication and no production claim that an
-experimental transcript path is approved.
+**Hard boundary:** generated lessons remain private AI drafts; no automatic
+publication and no claim that every YouTube video is supported.
 
 ---
 
-### 002 — MVP Product Convergence
+### 002 — YouTube-to-Private-Lesson MVP Convergence
 
-**Outcome**: A Vietnamese beginner completes one coherent hosted product journey
-from truthful landing and authentication through one reviewed natural lesson,
-changed-context transfer, bounded persistence, and return.
+**Outcome:** A Vietnamese learner completes the full hosted product journey:
 
-**Independent value**: A small real product can be tested with learners instead
-of continuing to accumulate disconnected routes, tools, and experiments.
+```text
+landing
+→ auth
+→ paste supported YouTube URL
+→ transcript + live Gemini generation
+→ private ai_draft
+→ transfer-gated lesson
+→ private progress/library
+→ return
+```
 
-**Depends on**:
+**Independent value:** The actual product idea becomes usable instead of remaining
+a disconnected compiler branch beside a legacy course application.
 
-- current `main` product/auth/database foundation;
-- selected Spec 001 provenance, private-draft, reviewed-source, and runtime work;
-- actual human review of at least three lessons in one environment;
-- connected Supabase and Vercel projects.
+**Depends on:** current main foundation, selected Spec 001 code/evidence, hosted
+Supabase/Vercel, an accepted transcript adapter decision, and live Gemini access.
 
-**Hard boundary**:
+**Hard boundary:**
 
-- one environment and a tiny reviewed corpus;
-- no whole-branch merge of the diverged Real Talk work;
-- no arbitrary learner-facing generation;
-- no broad curriculum graph;
-- no XP/streak/league, writing, notification, payment, social, or native-app
-  expansion;
+- supported YouTube subset only;
+- official playback, no media re-hosting;
+- owner-private drafts and owner-only RLS;
+- no whole-branch merge of PR #54;
+- no public catalog/publication requirement;
+- no broad curriculum, gamification, writing, social, payment, or native-app expansion;
 - no automatic merge or deployment.
 
-**Status**: Planning artifacts prepared on `spec/mvp-product-convergence`; owner
-acceptance is required before implementation.
+**Status:** Planning corrected on `spec/mvp-product-convergence`. Core direction is
+confirmed; implementation authorization is still a separate decision.
 
 ---
 
-### 003 — Full Human Review and Publication Operations
+### 003 — Human Review, Sharing, and Publication
 
-**Outcome**: Authorized reviewers can inspect, correct, approve, reject, publish,
-unpublish, and audit source/lesson packages through a durable operational
-interface.
+**Outcome:** Authorized reviewers can inspect, correct, approve, reject, publish,
+unpublish, and audit selected generated/source lesson packages.
 
-**Independent value**: The owner can grow a trustworthy reviewed catalog without
-controlled scripts or ad-hoc database operations.
+**Independent value:** Private lessons can later become trustworthy shared/catalog
+content without making every generated draft public.
 
-**Depends on**: Spec 001 evidence contracts and the minimal controlled
-publication boundary proven by Spec 002.
+**Depends on:** private draft/provenance contracts from Specs 001–002.
 
-**Hard boundary**: No automatic approval, no bulk autonomous publishing, and no
-curriculum sequencing.
+**Hard boundary:** no automatic approval or mass autonomous publication.
 
 ---
 
-### 004 — Invisible Capability Graph
+### 004 — Private Library Intelligence and Capability Progression
 
-**Outcome**: Reviewed lessons map to communication capabilities and prerequisites.
-The system recommends the next environment while hiding academic curriculum
-machinery from the learner.
+**Outcome:** Private/generated and reviewed lessons map to communication
+capabilities; the product can recommend what to generate, revisit, or learn next
+without presenting a grammar syllabus.
 
-**Independent value**: Natural content becomes a coherent progression rather than
-a random catalog.
+**Depends on:** real learner attempt evidence from Spec 002 and reviewed metadata
+when available.
 
-**Depends on**: Reviewed metadata and the learner runtime/attempt evidence proven
-by Specs 002–003.
-
-**Hard boundary**: No automatic source fabrication to fill coverage gaps. No
-visible grammar-unit navigation as the primary journey.
+**Hard boundary:** no fabrication to fill coverage gaps and no grammar-first
+learner navigation.
 
 ---
 
-### 005 — Delayed Transfer and Learner Evidence
+### 005 — Delayed Transfer and Retention Evidence
 
-**Outcome**: The learner returns for reduced-support tasks with a new speaker or
-changed context. Immediate comprehension, recall, interactional use, and delayed
-transfer are recorded separately.
+**Outcome:** Learners return for reduced-support tasks with changed speakers/data
+and the product separates immediate completion from delayed retention/transfer.
 
-**Independent value**: The product can distinguish lesson completion from
-retention and transfer.
+**Depends on:** bounded attempts from Spec 002 and capability mapping from Spec 004.
 
-**Depends on**: Spec 002 attempts and Spec 004 capability mapping.
-
-**Hard boundary**: No raw audio retention by default and no mastery claims from a
-single attempt.
+**Hard boundary:** no raw audio retention by default and no mastery claims from one
+attempt.
 
 ---
 
 ### 006 — Pilot Expansion and Product Evidence
 
-**Outcome**: The owner expands beyond the first environment only when activation,
-completion, retry, return, transfer, support cost, willingness to pay, and renewal
-signals justify it.
+**Outcome:** Use activation, successful generation, unsupported-source rate,
+lesson completion, return, support cost, willingness to pay, and renewal evidence
+to decide whether to expand.
 
-**Independent value**: Evidence determines whether to continue, narrow, or stop
-the product direction.
+**Hard boundary:** no broad catalog, payments platform, social system, or vanity
+roadmap before evidence.
 
-**Depends on**: A converged Spec 002 MVP and, when needed, Specs 003–005.
+## Delivery Gates
 
-**Hard boundary**: No broad catalog expansion, payments platform, social system,
-or vanity-metric roadmap before pilot evidence.
+A spec may enter implementation only when its product decision is accepted, user
+stories are testable, plan/tasks/analysis are consistent, exact dependencies are
+visible, and the owner grants implementation permission when required.
 
-## Delivery gates
+A spec is complete only after exact-head repository, hosted database, required
+live-provider, browser, security, and owner evidence. Merge and deployment remain
+separate owner decisions.
 
-A child spec may enter implementation only when:
-
-1. its user stories are independently testable;
-2. unresolved decisions are visible or clarified;
-3. its plan passes the constitution check;
-4. tasks have exact file paths and dependency order;
-5. cross-artifact analysis has no unresolved critical conflict;
-6. the pull request names what remains unverified; and
-7. the owner accepts the scope when the spec changes roadmap priority.
-
-A child spec may be considered complete only when:
-
-1. all required tasks and acceptance scenarios have observed evidence;
-2. technical checks ran against the exact final head;
-3. required browser, database, external-service, and human review checks ran;
-4. no later spec is being used to hide incomplete scope;
-5. the owner accepts the result; and
-6. no automatic merge or deployment occurred.
-
-## Current decision boundary
-
-Planning for Spec 002 is complete enough for owner review. Implementation remains
-blocked until the owner explicitly accepts its promise, scope, first environment,
-and fresh-main selective-port strategy.
+## Current State
 
 ```text
-Planning branch:        spec/mvp-product-convergence
-Implementation branch:  not created
-Merge:                  not authorized
-Preview deployment:     not authorized
-Production deployment:  not authorized
+Planning branch:          spec/mvp-product-convergence
+Core product direction:   confirmed
+Implementation branch:    not created
+Implementation:           not yet explicitly authorized
+Hosted migration:         not authorized
+Preview:                  not authorized
+Merge:                    not authorized
+Production deployment:    not authorized
 ```
