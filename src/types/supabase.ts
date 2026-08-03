@@ -604,6 +604,10 @@ thumbnail_url: string | null
 title: string
 title_vi: string
 topics: string[]
+transcript_acquisition_mode: string
+transcript_cue_digest: string | null
+transcript_review_status: string
+transcript_source_metadata: Json
 youtube_id: string
         }
         Insert: {
@@ -624,6 +628,10 @@ thumbnail_url?: string | null
 title: string
 title_vi: string
 topics?: string[]
+transcript_acquisition_mode?: string
+transcript_cue_digest?: string | null
+transcript_review_status?: string
+transcript_source_metadata?: Json
 youtube_id: string
         }
         Update: {
@@ -644,6 +652,10 @@ thumbnail_url?: string | null
 title?: string
 title_vi?: string
 topics?: string[]
+transcript_acquisition_mode?: string
+transcript_cue_digest?: string | null
+transcript_review_status?: string
+transcript_source_metadata?: Json
 youtube_id?: string
         }
         Relationships: []
@@ -1044,6 +1056,13 @@ user_id?: string
       }
       next_cefr_level: { Args: { level: string }; Returns: string }
       units_required_for_level: { Args: { level: string }; Returns: number }
+      upsert_real_talk_private_draft: {
+        Args: { p_lesson: Json; p_video: Json }
+        Returns: {
+          lesson_id: string
+          video_id: string
+        }[]
+      }
       use_streak_freeze: { Args: { p_user_id: string }; Returns: Json }
     }
     Enums: {

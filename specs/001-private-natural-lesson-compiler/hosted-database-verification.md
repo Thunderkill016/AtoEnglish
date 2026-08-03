@@ -152,3 +152,16 @@ Full T049 evidence is recorded in `t049-hosted-types-verification.md`.
 - GitHub-hosted Vitest process: **not run; protected service-role secret absent**
 - Real application persistence through browser/server action: **not run**
 - Production deployment: **not performed**
+
+
+## 2026-08-03 provenance and atomic RPC follow-up
+
+With explicit owner authorization, hosted migrations
+`20260803011348`, `20260803011431`, and corrective migration
+`20260803011736` were applied. Trusted provenance write/tamper checks and
+authenticated atomic repeat/rollback checks passed with full fixture cleanup.
+Full generated types now contain the hosted provenance columns and RPC; the
+old Real Talk reconciliation fragment is no longer used.
+
+Detailed evidence is recorded in
+`t060-t067-hosted-schema-verification.md`.

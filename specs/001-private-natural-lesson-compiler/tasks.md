@@ -150,11 +150,10 @@ owner B cannot read or mutate it; owner A cannot publish or approve it.
   Talk findings
 - [x] T048 [US3] Generate and reconcile the exact hosted Real Talk type fragment
 - [x] T049 [US3] Replace the full local generated `src/types/supabase.ts` and prove
-  hosted-schema equivalence; the generated baseline now matches project
-  `zpiwddskhduuykpxltun`, while explicit app-level overlays remain for unapplied
-  migration `20260731162613_learning_attempts.sql`, T060 provenance fields, and
-  the T067 atomic RPC; evidence is recorded in
-  `t049-hosted-types-verification.md`
+  hosted-schema equivalence; the generated baseline matches project
+  `zpiwddskhduuykpxltun`. After T060 and T067, only the unapplied
+  `20260731162613_learning_attempts.sql` remains as an app-level overlay;
+  evidence is recorded in `t049-hosted-types-verification.md`
 - [x] T050 [US3] Run the signed-session PostgREST integration scaffold against the
   authorized migrated project; observed on 2026-08-03 through two real Supabase
   Auth sessions with all owner, anonymous, cross-owner, publication, review-state,
@@ -198,9 +197,11 @@ self-labelling browser data as trusted.
 - [x] T058 Add forged adapter, missing provenance, self-review, secret reference,
   cue-tamper, and migration contract tests
 - [x] T059 Include provenance tests in the targeted Real Talk suite
-- [ ] T060 Obtain owner authorization, apply the provenance migration to hosted
+- [x] T060 Obtain owner authorization, apply the provenance migration to hosted
   Supabase, rerun advisors, regenerate full hosted types, and execute trusted
-  write/tamper verification
+  write/tamper verification; hosted migration `20260803011348`, service-role
+  trusted write, owner read, tamper rejection, cleanup, and generated types
+  are recorded in `t060-t067-hosted-schema-verification.md`
 - [ ] T061 Implement one actual trusted transcript ingestion/reviewer flow and run
   one controlled rights-reviewed source through it
 
@@ -222,8 +223,12 @@ production adapter is approved, and the migration has not been applied hosted.
 - [x] T065 Reconcile the pending RPC type through `AppDatabase`
 - [x] T066 Add contract tests for caller RLS, one-transaction writes, repeat
   identity, private state, grants, and repository architecture
-- [ ] T067 Apply the atomic RPC migration to hosted Supabase with explicit owner
-  authorization and verify rollback after a controlled lesson failure
+- [x] T067 Apply the atomic RPC migration to hosted Supabase with explicit owner
+  authorization and verify rollback after a controlled lesson failure; the
+  initial hosted probe exposed an ambiguous `video_id` conflict target, fixed by
+  migration `20260803011736`; repeat identity, update, rollback, publication
+  rejection, and cleanup evidence is recorded in
+  `t060-t067-hosted-schema-verification.md`
 - [ ] T068 Run repeated generation twice through the real server action and prove
   one video/lesson pair is updated rather than duplicated
 
@@ -323,7 +328,7 @@ Hosted type baseline:   PASS against generated project snapshot
 Learning attempts DDL: NOT APPLIED; explicit typed overlay only
 Signed-session RLS:     PASS through hosted Auth + PostgREST
 Retention/history:      DECIDED; one current draft, owner hard-delete contract
-Hosted new DDL:         NOT APPLIED
+Hosted provenance/RPC:  PASS; migrations applied and verified
 Production adapter:     NOT IMPLEMENTED
 Live Gemini:            BLOCKED
 Persisted browser flow: NOT RUN

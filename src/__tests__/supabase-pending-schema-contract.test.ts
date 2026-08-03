@@ -44,10 +44,14 @@ describe("Supabase hosted and pending schema boundary", () => {
     );
   });
 
-  it("retains the pending Real Talk provenance and atomic RPC overlay", () => {
-    expect(appDatabase).toContain("RealTalkTables");
-    expect(appDatabase).toContain("RealTalkFunctions");
-    expect(appDatabase).toContain("T060");
-    expect(appDatabase).toContain("T067");
+  it("uses hosted generated Real Talk provenance and RPC types", () => {
+    expect(hostedTypes).toContain("transcript_acquisition_mode: string");
+    expect(hostedTypes).toContain("transcript_review_status: string");
+    expect(hostedTypes).toContain("transcript_source_metadata: Json");
+    expect(hostedTypes).toContain("upsert_real_talk_private_draft:");
+    expect(appDatabase).not.toContain("RealTalkTables");
+    expect(appDatabase).not.toContain("RealTalkFunctions");
+    expect(appDatabase).not.toContain("T060");
+    expect(appDatabase).not.toContain("T067");
   });
 });

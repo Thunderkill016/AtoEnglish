@@ -1,8 +1,6 @@
--- Atomically upsert one owner-private Real Talk video and lesson draft.
---
--- SECURITY INVOKER is intentional: the function runs with the authenticated
--- caller's privileges and remains subject to the canonical Real Talk RLS
--- policies. Any failure aborts the function statement and rolls back both writes.
+-- Fix PL/pgSQL ambiguity between the RETURNS TABLE output column `video_id`
+-- and the real_talk_lessons conflict target. Naming the unique constraint keeps
+-- the upsert deterministic without changing RPC inputs, outputs, privileges, or RLS.
 
 CREATE OR REPLACE FUNCTION public.upsert_real_talk_private_draft(
   p_video JSONB,

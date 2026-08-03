@@ -47,7 +47,9 @@ describe("Real Talk atomic private draft persistence", () => {
     expect(sql).toContain("on conflict (slug) do update");
     expect(sql).toContain("public.real_talk_videos.created_by = v_owner_id");
     expect(sql).toContain("public.real_talk_videos.is_public = false");
-    expect(sql).toContain("on conflict (video_id) do update");
+    expect(sql).toContain(
+      "on conflict on constraint real_talk_lessons_video_id_key do update",
+    );
   });
 
   it("cannot publish or elevate review state", () => {
