@@ -16,7 +16,10 @@ const SOURCES = [
 async function acquire(
   request: TranscriptSourceRequest,
 ): Promise<TranscriptSourceResult> {
-  const failures: TranscriptSourceError[] = [];
+  const failures: Array<{
+    sourceId: string;
+    error: TranscriptSourceError;
+  }> = [];
 
   for (const source of SOURCES) {
     try {
@@ -34,35 +37,38 @@ async function acquire(
         },
       };
     } catch (error) {
-      if (error instanceof TranscriptSourceError) {
-        failures.push(error);
-        continue;
-      }
-      failures.push(
-        new TranscriptSourceError({
-          code: "transcript_provider_error",
-          message: `${source.id} failed unexpectedly.`,
-          retryable: true,
-          cause: error,
-        }),
-      );
+      failures.push({
+        sourceId: source.id,
+        error:
+          error instanceof TranscriptSourceError
+            ? error
+            : new TranscriptSourceError({
+                code: "transcript_provider_error",
+                message: `${source.id} failed unexpectedly.`,
+                retryable: true,
+                cause: error,
+              }),
+      });
     }
   }
 
-  const retryable = failures.some((failure) => failure.retryable);
+  const retryable = failures.some(({ error }) => error.retryable);
   const allUnavailable = failures.every(
-    (failure) =>
-      failure.code === "transcript_not_available" ||
-      failure.code === "transcript_too_short",
+    ({ error }) =>
+      error.code === "transcript_not_available" ||
+      error.code === "transcript_too_short",
   );
+  const diagnostic = failures
+    .map(({ sourceId, error }) => `${sourceId}:${error.code}`)
+    .join(",");
 
   throw new TranscriptSourceError({
     code: allUnavailable
       ? "transcript_not_available"
       : "transcript_provider_error",
     message: allUnavailable
-      ? "No supported English caption track was returned by the available YouTube adapters."
-      : "All private YouTube caption adapters failed.",
+      ? `No supported English caption track was returned (${diagnostic}).`
+      : `All private YouTube caption adapters failed (${diagnostic}).`,
     retryable,
   });
 }
