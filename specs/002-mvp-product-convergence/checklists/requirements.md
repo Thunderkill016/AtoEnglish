@@ -1,92 +1,106 @@
-# Requirements Quality Checklist: AtoEnglish MVP Product Convergence
+# Requirements Quality Checklist: YouTube-to-Private-Lesson MVP
 
-**Purpose**: Verify that the MVP specification is complete, testable, bounded, and
-consistent before implementation begins.
+## Core Product Definition
 
-## Product Definition
+- [x] Owner decision explicitly preserves paste-YouTube-URL → private lesson as the core product.
+- [x] The specification does not replace generation with a fixed reviewed catalog.
+- [x] The critical journey is one complete private generation, learning, persistence, and return loop.
+- [x] The promise says `supported YouTube videos`, not every video.
+- [x] Generated lessons are explicitly owner-private AI drafts.
+- [x] Public sharing/catalog and full reviewer operations are deferred.
+- [x] Broad curriculum, gamification, writing, notifications, payments, social, and native apps are outside MVP.
 
-- [x] The specification defines one complete learner value loop rather than a list of existing features.
-- [x] The learner promise is consistent with natural communication and avoids fluency, CEFR, pronunciation, and mastery overclaims.
-- [x] The initial corpus scope is bounded to one environment and at least three human-reviewed lessons.
-- [x] The primary learner navigation and deferred product surfaces are explicit.
-- [x] Editor-only generation is separated from the learner product.
-- [x] MVP success can be demonstrated independently of broad curriculum, gamification, writing, notification, payment, or social systems.
+## Authentication and Dashboard
 
-## User Stories and Acceptance
+- [x] Authentication is required before transcript, metadata, or Gemini work.
+- [x] Email and OAuth share one idempotent server bootstrap contract.
+- [x] Client-supplied user identity and publication/review state are not trusted.
+- [x] The dashboard's primary action is a YouTube URL form.
+- [x] Recent private lessons expose start/continue/review/failure states.
+- [x] Landing, auth, dashboard, private lesson, account, and return paths are independently testable.
 
-- [x] User stories are prioritized and independently testable.
-- [x] Landing/auth/dashboard acceptance includes new, returning, unauthenticated, and failure paths.
-- [x] Catalog acceptance fails closed when no reviewed content exists.
-- [x] Lesson acceptance requires first encounter, retrieval, speaking confirmation, and changed-context transfer.
-- [x] Persistence acceptance includes reload, new session, idempotency, privacy, and cross-user denial.
-- [x] Pilot acceptance includes exact-head preview, desktop/mobile, hosted database, runtime logs, and owner review.
+## YouTube and Transcript Boundary
 
-## Source, Rights, and Content Integrity
+- [x] URL normalization/validation and supported host forms are specified.
+- [x] Official YouTube playback is required; media download/re-hosting is forbidden.
+- [x] Transcript acquisition is behind a replaceable adapter with explicit mode/status/warnings.
+- [x] Timed English cues are required.
+- [x] Unsupported/private/age-restricted/embed-disabled/transcriptless/non-English paths fail honestly.
+- [x] Transcript text is bounded, normalized, and treated as untrusted prompt data.
+- [x] The exact private-production transcript adapter decision is a release gate.
+- [x] Controlled supported and unsupported live checks are required.
 
-- [x] Learner-visible content requires human-reviewed source, transcript, speaker, timing, translation, safety, and pedagogy evidence.
-- [x] Static fixture/sample lessons are explicitly forbidden as production catalog fallback.
-- [x] A public URL is not treated as permission for transcript storage or derivatives.
-- [x] Playback is provider-neutral and limited to reviewed official/direct/external modes.
-- [x] Media download and re-hosting are outside scope.
-- [x] Missing evidence creates an empty state or publication block rather than fabrication.
+## AI Generation and Evidence
 
-## Learning Contract
+- [x] Gemini generation occurs only after authentication and rate limiting.
+- [x] Interaction selection is bounded to <=180 seconds and configured cue limits.
+- [x] Model output uses a typed structured schema and runtime validation.
+- [x] Source-dependent phrases, answers, timestamps, references, and transfer targets require evidence validation.
+- [x] Invalid output is rejected before persistence.
+- [x] Actual model, adapter/mode, selected window, digest, warnings, and failure codes are persisted/observable.
+- [x] Live Gemini success and failure are required; mocks do not satisfy the release gate.
+- [x] Absence of `GEMINI_API_KEY` remains a blocker.
 
-- [x] Situation, roles, and practical goal appear before academic explanation.
-- [x] First encounter does not expose transcript or answer by default.
-- [x] Support is progressive rather than permanently showing the full answer.
+## Private Draft and Security
+
+- [x] Successful generation is atomic and deterministic/idempotent.
+- [x] Generated video/lesson state remains private `ai_draft`.
+- [x] Ordinary users cannot approve or publish generated drafts.
+- [x] Owner-only read/write/delete and cross-user denial are required.
+- [x] Failed generation/persistence creates no partial lesson.
+- [x] Static fixtures cannot appear as generated private-library content.
+- [x] Hosted anonymous/ownerA/ownerB verification is required.
+
+## Learning Runtime
+
+- [x] Environment, roles, practical goal, source, AI label, and warnings precede activities.
+- [x] First encounter hides transcript/answers by default.
+- [x] Support reveals progressively.
 - [x] Productive retrieval is required.
 - [x] Speak-and-confirm works without microphone permission and produces no pronunciation score.
 - [x] Changed-context transfer is a completion gate.
-- [x] Completion language distinguishes immediate practice from retention/mastery.
+- [x] Completion copy distinguishes immediate practice from mastery/retention.
 
-## Authentication and Privacy
+## Persistence and Privacy
 
-- [x] Authentication precedes protected learner routes.
-- [x] Account bootstrap derives user identity server-side and is idempotent.
-- [x] Email and OAuth bootstrap share one contract.
-- [x] No client-supplied user ID or reviewer/publication role is trusted.
-- [x] Learner attempt storage is bounded and excludes raw audio, unrestricted transcripts, names, employers, and free text.
-- [x] Cross-user access is covered by RLS acceptance scenarios.
-- [x] Analytics payloads are bounded and privacy-safe.
+- [x] Progress storage is bounded to IDs, enums, booleans, counts, support level, and timestamps.
+- [x] Raw audio, unrestricted speech transcript, learner response text, names, employers, and arbitrary analytics are forbidden by default.
+- [x] Attempt writes derive the owner, validate lesson ownership, enforce RLS, and remain idempotent.
+- [x] Reload and new-session return behavior are acceptance requirements.
 
-## Repository and Infrastructure Convergence
+## Repository and Infrastructure
 
-- [x] Implementation must start from current `main`.
-- [x] Whole-branch merge of the diverged Real Talk branch is prohibited.
+- [x] Implementation starts from current `main`.
+- [x] Whole-branch merge of PR #54/Real Talk is prohibited.
 - [x] A file-level port manifest is required.
-- [x] Main toolchain and lockfile decisions remain authoritative.
-- [x] Supabase types, environment documentation, preview, and production must reference the same hosted project.
-- [x] Existing Vercel and Supabase projects are reused.
-- [x] Migrations, preview deployment, merge, and production deployment require explicit owner authorization at their respective gates.
+- [x] Main Node/npm/package-lock decisions remain authoritative.
+- [x] Repo types/environment/preview use Supabase `zpiwddskhduuykpxltun`.
+- [x] Existing Vercel project `atoenglish` is reused.
+- [x] Hosted migrations, preview, merge, and production deploy remain separately owner-gated.
 
-## Verification and Evidence
+## Verification
 
-- [x] Technical gates include lint, TypeScript, unit/contract tests, content standards, integration checks, and production build.
-- [x] Hosted database verification includes anonymous and two-user behavior.
-- [x] Browser verification covers the full journey on desktop and mobile.
-- [x] Runtime error inspection is required after preview deployment.
-- [x] Human lesson review is not replaced by automated checks.
-- [x] Product/learning effectiveness is not inferred from CI.
-- [x] Owner acceptance is a separate final gate.
+- [x] Exact-head lint, TypeScript, targeted tests, full tests, content checks, integration, and build are required.
+- [x] Live transcript and Gemini matrices are required.
+- [x] Desktop/mobile Playwright covers supported generation, unsupported failure, lesson, completion, logout/login, return, and cross-user denial.
+- [x] Vercel runtime error/log inspection is required.
+- [x] CI is not treated as proof of transcript correctness, learning effectiveness, or market demand.
+- [x] Owner acceptance is a separate release gate.
 
-## Explicit Decisions Required Before or During Implementation
+## Open Authorization/Implementation Decisions
 
-- [ ] Owner accepts this MVP promise and scope.
-- [ ] Owner confirms the initial environment, defaulting to **Meet someone new**.
-- [ ] At least three source packages are identified as feasible for full human review and lawful learner use.
-- [ ] Existing evidence storage is accepted or a bounded `real_talk_attempts` table is approved after schema analysis.
-- [ ] Exact reviewed/public status values and the controlled publication operation are approved.
-- [ ] The treatment of deferred routes is chosen: hidden only, authenticated redirect, or temporary feature flag where needed.
+- [x] Owner confirms paste-YouTube-URL → private personal lesson as the core MVP.
+- [ ] Owner explicitly authorizes implementation to begin.
+- [ ] Exact transcript adapter/private-production decision is accepted after technical/legal/reliability review.
+- [ ] `GEMINI_API_KEY` is available through a bounded secret workflow for live verification.
+- [ ] Existing progress storage is accepted or a bounded `real_talk_attempts` migration is approved.
 - [ ] Any hosted migration application is explicitly authorized.
-- [ ] The intentional Vercel preview is explicitly authorized after technical gates.
-- [ ] Final merge and production deployment are separately authorized.
+- [ ] Intentional Vercel preview is explicitly authorized after prerequisite gates.
+- [ ] Exact preview is accepted by the owner.
+- [ ] Merge and production deployment are separately authorized.
 
-## Checklist Result
+## Result
 
-Specification quality: **PASS**  
-Implementation authorization: **NOT YET GRANTED**
-
-No unchecked item above may be silently assumed. Implementation may perform
-research and propose a decision, but owner-gated writes and release actions remain
-blocked until explicitly authorized.
+Specification quality: **PASS AFTER OWNER CORRECTION**  
+Core product decision: **CONFIRMED**  
+Implementation authorization: **NOT YET RECORDED**
