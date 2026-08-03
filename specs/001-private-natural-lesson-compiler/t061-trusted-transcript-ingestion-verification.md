@@ -1,3 +1,3 @@
 # T061 Trusted Transcript Ingestion Verification
 
-Hosted integration evidence is pending.
+The hosted integration harness is being staged. Final evidence is pending.
