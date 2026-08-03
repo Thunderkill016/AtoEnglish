@@ -1,21 +1,25 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import {
   AlertTriangle,
   ArrowLeft,
   CheckCircle2,
+  CloudOff,
+  CloudUpload,
   Eye,
   EyeOff,
   Headphones,
   Lightbulb,
+  Loader2,
   MessageCircle,
   RefreshCw,
   Sparkles,
   Volume2,
 } from "lucide-react";
 
+import { saveRealTalkAttempt } from "@/app/actions/real-talk-attempt";
 import type { RealTalkLesson, RealTalkVideo } from "@/types/real-talk";
 
 interface PrivateLessonRuntimeProps {
@@ -24,6 +28,7 @@ interface PrivateLessonRuntimeProps {
 }
 
 type SupportLevel = 0 | 1 | 2 | 3;
+type SaveState = "idle" | "saving" | "saved" | "error";
 
 function formatTime(seconds: number) {
   const minutes = Math.floor(seconds / 60);
@@ -42,8 +47,11 @@ export default function PrivateLessonRuntime({
   const [answerVisible, setAnswerVisible] = useState(false);
   const [speakConfirmed, setSpeakConfirmed] = useState(false);
   const [transferAttempted, setTransferAttempted] = useState(false);
+  const [saveState, setSaveState] = useState<SaveState>("idle");
+  const [saveError, setSaveError] = useState<string | null>(null);
 
-  const targetPhrase = lesson.postWatch.speakingDrills[0]?.phrase ??
+  const targetPhrase =
+    lesson.postWatch.speakingDrills[0]?.phrase ??
     lesson.transcript[0]?.textEn ??
     "";
   const firstKeyword = lesson.preWatch.vocabulary[0]?.word ?? "";
@@ -55,6 +63,13 @@ export default function PrivateLessonRuntime({
     retrievalAttempted &&
     speakConfirmed &&
     transferAttempted;
+  const hasActivity =
+    firstListenDone ||
+    gistAnswer !== null ||
+    supportLevel > 0 ||
+    retrievalAttempted ||
+    speakConfirmed ||
+    transferAttempted;
 
   const embedUrl = useMemo(() => {
     const parameters = new URLSearchParams({
@@ -65,6 +80,47 @@ export default function PrivateLessonRuntime({
     });
     return `https://www.youtube-nocookie.com/embed/${video.youtubeId}?${parameters.toString()}`;
   }, [video]);
+
+  useEffect(() => {
+    if (!hasActivity) return;
+
+    const timeout = window.setTimeout(() => {
+      setSaveState("saving");
+      setSaveError(null);
+
+      void saveRealTalkAttempt({
+        lessonSlug: video.id,
+        firstListenCompleted: firstListenDone,
+        comprehensionCorrect:
+          gistAnswer === lesson.whileWatch.gistQuestion.correctIndex ? 1 : 0,
+        comprehensionTotal: gistAnswer === null ? 0 : 1,
+        maxSupportLevel: supportLevel,
+        retrievalAttempted,
+        speakConfirmed,
+        transferAttempted,
+      }).then((result) => {
+        if (result.success) {
+          setSaveState("saved");
+          return;
+        }
+
+        setSaveState("error");
+        setSaveError(result.error);
+      });
+    }, 350);
+
+    return () => window.clearTimeout(timeout);
+  }, [
+    firstListenDone,
+    gistAnswer,
+    hasActivity,
+    lesson.whileWatch.gistQuestion.correctIndex,
+    retrievalAttempted,
+    speakConfirmed,
+    supportLevel,
+    transferAttempted,
+    video.id,
+  ]);
 
   return (
     <main className="min-h-screen bg-zinc-950 pb-24 text-white">
@@ -87,10 +143,34 @@ export default function PrivateLessonRuntime({
           >
             <ArrowLeft className="size-4" /> Thư viện của tôi
           </Link>
-          <span className="rounded-full border border-zinc-700 px-3 py-1 text-xs font-bold text-zinc-300">
-            {lesson.level} · {lesson.estimatedMinutes} phút
-          </span>
+          <div className="flex flex-wrap items-center gap-2">
+            {saveState === "saving" ? (
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-cyan-400/25 bg-cyan-400/10 px-3 py-1 text-xs font-bold text-cyan-200">
+                <Loader2 className="size-3.5 animate-spin" /> Đang lưu
+              </span>
+            ) : null}
+            {saveState === "saved" ? (
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-400/25 bg-emerald-400/10 px-3 py-1 text-xs font-bold text-emerald-200">
+                <CloudUpload className="size-3.5" /> Đã lưu checkpoint
+              </span>
+            ) : null}
+            {saveState === "error" ? (
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-red-400/25 bg-red-400/10 px-3 py-1 text-xs font-bold text-red-200">
+                <CloudOff className="size-3.5" /> Chưa lưu được
+              </span>
+            ) : null}
+            <span className="rounded-full border border-zinc-700 px-3 py-1 text-xs font-bold text-zinc-300">
+              {lesson.level} · {lesson.estimatedMinutes} phút
+            </span>
+          </div>
         </div>
+
+        {saveError ? (
+          <div className="mt-4 rounded-xl border border-red-500/20 bg-red-500/5 px-4 py-3 text-xs text-red-200">
+            {saveError} Lượt luyện tập vẫn tiếp tục trên trang này nhưng chưa được
+            xác nhận là đã lưu.
+          </div>
+        ) : null}
 
         <header className="mt-7">
           <p className="text-xs font-black uppercase tracking-[0.18em] text-emerald-400">
@@ -278,7 +358,11 @@ export default function PrivateLessonRuntime({
             }}
             className="mt-4 inline-flex min-h-11 items-center gap-2 rounded-xl bg-purple-500 px-4 text-sm font-black"
           >
-            {answerVisible ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+            {answerVisible ? (
+              <EyeOff className="size-4" />
+            ) : (
+              <Eye className="size-4" />
+            )}
             {answerVisible ? "Ẩn lại và thử lần nữa" : "Tôi đã thử — xem đáp án"}
           </button>
         </section>
@@ -313,7 +397,8 @@ export default function PrivateLessonRuntime({
             <h2 className="font-black">6. Thử trong tình huống đã thay đổi</h2>
           </div>
           <p className="mt-4 font-bold text-white">
-            {transfer?.situationVi ?? "Dùng câu vừa học trong một tình huống khác."}
+            {transfer?.situationVi ??
+              "Dùng câu vừa học trong một tình huống khác."}
           </p>
           <p className="mt-2 text-sm leading-6 text-zinc-400">
             {transfer?.promptVi ??
@@ -363,6 +448,16 @@ export default function PrivateLessonRuntime({
                 Đây là bằng chứng luyện tập ngay lúc này, chưa chứng minh ghi nhớ
                 lâu dài, độ trôi chảy hay phát âm chính xác.
               </p>
+              {saveState === "saved" ? (
+                <p className="mt-3 text-xs font-bold text-emerald-300">
+                  Completion evidence đã được lưu vào tài khoản.
+                </p>
+              ) : (
+                <p className="mt-3 text-xs font-bold text-amber-300">
+                  Lượt luyện tập đã xong trên trang, nhưng completion chưa được xác
+                  nhận là đã lưu.
+                </p>
+              )}
               <Link
                 href="/real-talk/create"
                 className="mt-5 inline-flex min-h-11 items-center gap-2 rounded-xl bg-emerald-500 px-4 font-bold text-zinc-950"
