@@ -1,9 +1,9 @@
 # Cross-Artifact Analysis: AtoEnglish MVP Product Convergence
 
 **Analyzed:** 2026-08-03  
-**Artifacts:** constitution, roadmap, Spec 001 evidence, Spec 002 specification,
-plan, research, data model, product contract, quickstart, requirements checklist,
-and task ledger
+**Artifacts:** constitution, proposed roadmap reprioritization, Spec 001 evidence,
+Spec 002 specification, plan, research, data model, product contract, quickstart,
+requirements checklist, current priority, and task ledger
 
 ## Executive Result
 
@@ -11,14 +11,16 @@ and task ledger
 Specification completeness: PASS
 Constitution alignment:     PASS
 Task coverage:              PASS
+Roadmap consistency:        PASS AS PROPOSAL
 Implementation readiness:   CONDITIONAL
-Critical contradictions:    1 roadmap numbering conflict to reconcile
+Critical contradictions:    0
 Owner authorization:        NOT GRANTED
 ```
 
-The MVP has a coherent product boundary and dependency-ordered plan. It is not yet
-authorized for implementation because owner decisions, initial source feasibility,
-and roadmap priority must be confirmed.
+The MVP has a coherent product boundary, dependency-ordered plan, and proposed
+roadmap position. It is not yet authorized for implementation because owner
+acceptance, initial source feasibility, and owner-gated infrastructure actions
+remain open.
 
 ## Product Consistency
 
@@ -147,25 +149,26 @@ All artifacts agree that:
 No artifact authorizes branch-level merge, automatic deployment, or replacement
 infrastructure.
 
-## Critical Conflict: Roadmap Numbering
+## Roadmap Consistency
 
-The existing rebuild roadmap defines its planned `002` as **Human Review and
-Publication Gate**. This planning branch introduces `002-mvp-product-convergence`.
-The new MVP spec includes only the minimum controlled publication operation and
-runtime necessary for a usable product; it does not implement the future full
-reviewer/publication system.
+The planning branch now proposes the following ordered roadmap:
 
-**Required resolution before implementation**:
+```text
+001 — Private Natural Lesson Compiler
+002 — MVP Product Convergence
+003 — Full Human Review and Publication Operations
+004 — Invisible Capability Graph
+005 — Delayed Transfer and Learner Evidence
+006 — Pilot Expansion and Product Evidence
+```
 
-- update `specs/000-atoenglish-rebuild-roadmap/roadmap.md` to record the owner
-  reprioritization;
-- make `002 — MVP Product Convergence` the active spec;
-- move the full reviewer/publication operations to a later spec number;
-- preserve Spec 001 as reusable compiler/provenance evidence rather than claiming
-  it converged.
+This resolves the previous duplicate `002` numbering without claiming owner
+approval. The roadmap and current-priority documents explicitly label Spec 002 as
+a proposal and keep implementation blocked until owner acceptance.
 
-Task T008 covers this change after owner acceptance. Until then, implementation
-readiness remains conditional.
+Spec 002 uses only a controlled publication operation and one reviewed runtime
+slice. It does not silently absorb the future full reviewer/publication operations
+now assigned to Spec 003.
 
 ## Non-Critical Open Decisions
 
@@ -220,10 +223,10 @@ browser, hosted, human, or owner evidence.
 ## Planning Convergence Decision
 
 ```text
-Planning artifacts:       CONVERGED
-Implementation scope:     WELL-BOUNDED
-Implementation start:     BLOCKED ON OWNER ACCEPTANCE + ROADMAP RECONCILIATION
-Merge recommendation:     NOT APPLICABLE — PLANNING ONLY
+Planning artifacts:        CONVERGED
+Implementation scope:      WELL-BOUNDED
+Implementation start:      BLOCKED ON OWNER ACCEPTANCE
+Merge recommendation:      NOT APPLICABLE — PLANNING ONLY
 Deployment recommendation: DO NOT DEPLOY
 ```
 
