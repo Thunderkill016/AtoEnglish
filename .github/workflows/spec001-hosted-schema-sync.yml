@@ -1,0 +1,191 @@
+name: Spec 001 Hosted Schema Sync
+
+on:
+  push:
+    branches: [agent/rebuild-learning-core]
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+
+jobs:
+  build-artifact:
+    if: github.ref == 'refs/heads/agent/rebuild-learning-core' || github.head_ref == 'agent/rebuild-learning-core'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/rebuild-learning-core
+
+      - name: Build hosted schema sync artifact
+        shell: python
+        run: |
+          from pathlib import Path
+          import shutil
+
+          root = Path.cwd()
+          out = root / "output" / "spec001-hosted-schema-sync"
+
+          def replace_once(text: str, old: str, new: str, label: str) -> str:
+              count = text.count(old)
+              if count != 1:
+                  raise SystemExit(f"{label}: expected one match, found {count}")
+              return text.replace(old, new, 1)
+
+          # 1. Update the full hosted generated snapshot with the exact post-migration
+          # fields and RPC returned by Supabase type generation.
+          types_path = root / "src/types/supabase.ts"
+          types = types_path.read_text()
+          types = replace_once(
+              types,
+              "topics: string[]\nyoutube_id: string",
+              "topics: string[]\ntranscript_acquisition_mode: string\ntranscript_cue_digest: string | null\ntranscript_review_status: string\ntranscript_source_metadata: Json\nyoutube_id: string",
+              "real_talk_videos Row provenance",
+          )
+          types = replace_once(
+              types,
+              "topics?: string[]\nyoutube_id: string",
+              "topics?: string[]\ntranscript_acquisition_mode?: string\ntranscript_cue_digest?: string | null\ntranscript_review_status?: string\ntranscript_source_metadata?: Json\nyoutube_id: string",
+              "real_talk_videos Insert provenance",
+          )
+          types = replace_once(
+              types,
+              "topics?: string[]\nyoutube_id?: string",
+              "topics?: string[]\ntranscript_acquisition_mode?: string\ntranscript_cue_digest?: string | null\ntranscript_review_status?: string\ntranscript_source_metadata?: Json\nyoutube_id?: string",
+              "real_talk_videos Update provenance",
+          )
+          types = replace_once(
+              types,
+              "      units_required_for_level: { Args: { level: string }; Returns: number }\n      use_streak_freeze: { Args: { p_user_id: string }; Returns: Json }",
+              "      units_required_for_level: { Args: { level: string }; Returns: number }\n      upsert_real_talk_private_draft: {\n        Args: { p_lesson: Json; p_video: Json }\n        Returns: {\n          lesson_id: string\n          video_id: string\n        }[]\n      }\n      use_streak_freeze: { Args: { p_user_id: string }; Returns: Json }",
+              "atomic RPC generated type",
+          )
+          if types.count("transcript_acquisition_mode: string") != 1:
+              raise SystemExit("generated Row provenance count mismatch")
+          if types.count("upsert_real_talk_private_draft:") != 1:
+              raise SystemExit("generated RPC count mismatch")
+          types_path.write_text(types)
+
+          # 2. Correct the fresh-install migration and create a follow-up migration
+          # for the already-hosted function. The named constraint avoids collision
+          # with RETURNS TABLE output column `video_id`.
+          atomic_path = root / "supabase/migrations/20260803013000_real_talk_atomic_private_draft.sql"
+          atomic = atomic_path.read_text()
+          atomic = replace_once(
+              atomic,
+              "  ON CONFLICT (video_id) DO UPDATE",
+              "  ON CONFLICT ON CONSTRAINT real_talk_lessons_video_id_key DO UPDATE",
+              "atomic lesson conflict target",
+          )
+          atomic_path.write_text(atomic)
+
+          function_start = atomic.index("CREATE OR REPLACE FUNCTION")
+          fix = """-- Fix PL/pgSQL ambiguity between the RETURNS TABLE output column `video_id`
+          -- and the real_talk_lessons conflict target. Naming the unique constraint keeps
+          -- the upsert deterministic without changing RPC inputs, outputs, privileges, or RLS.
+
+          """ + atomic[function_start:]
+          fix = "\n".join(line[10:] if line.startswith("          ") else line for line in fix.splitlines()) + "\n"
+          fix_path = root / "supabase/migrations/20260803081500_fix_real_talk_atomic_private_draft_conflict.sql"
+          fix_path.write_text(fix)
+
+          # 3. AppDatabase now overlays only the unrelated learning_attempts migration,
+          # because provenance fields and the RPC are hosted generated truth.
+          app_db_path = root / "src/types/app-database.ts"
+          app_db_path.write_text("""import type { PendingLearningAttemptTable } from \"@/types/pending-learning-attempts\";
+          import type { Database } from \"@/types/supabase\";
+
+          type GeneratedPublicTables = Database[\"public\"][\"Tables\"];
+          type PublicTablesWithPendingMigrations = Omit<
+            GeneratedPublicTables,
+            \"learning_attempts\"
+          > & {
+            learning_attempts: PendingLearningAttemptTable;
+          };
+
+          /**
+           * App-level database type layered on the full hosted Supabase snapshot.
+           *
+           * The only remaining overlay is `learning_attempts`, whose versioned
+           * migration `20260731162613_learning_attempts.sql` is not present in the
+           * hosted project. Real Talk provenance fields and the atomic draft RPC are
+           * generated directly from hosted schema truth.
+           */
+          export type AppDatabase = Omit<Database, \"public\"> & {
+            public: Omit<Database[\"public\"], \"Tables\"> & {
+              Tables: PublicTablesWithPendingMigrations;
+            };
+          };
+          """.replace("          ", ""))
+
+          # 4. Update the migration contract to require the non-ambiguous target.
+          test_path = root / "src/__tests__/real-talk-atomic-draft-migration.test.ts"
+          test = test_path.read_text()
+          test = replace_once(
+              test,
+              'expect(sql).toContain("on conflict (video_id) do update");',
+              'expect(sql).toContain(\n      "on conflict on constraint real_talk_lessons_video_id_key do update",\n    );',
+              "atomic migration test conflict target",
+          )
+          test_path.write_text(test)
+
+          fix_test_path = root / "src/__tests__/real-talk-atomic-draft-hosted-fix-migration.test.ts"
+          fix_test_path.write_text("""import { readFileSync } from \"node:fs\";
+          import { join } from \"node:path\";
+
+          import { describe, expect, it } from \"vitest\";
+
+          const sql = readFileSync(
+            join(
+              process.cwd(),
+              \"supabase/migrations/20260803081500_fix_real_talk_atomic_private_draft_conflict.sql\",
+            ),
+            \"utf8\",
+          )
+            .replace(/\\s+/g, \" \" )
+            .trim()
+            .toLowerCase();
+
+          describe(\"hosted Real Talk atomic RPC conflict fix\", () => {
+            it(\"replaces the function with a named lesson uniqueness target\", () => {
+              expect(sql).toContain(
+                \"create or replace function public.upsert_real_talk_private_draft\",
+              );
+              expect(sql).toContain(
+                \"on conflict on constraint real_talk_lessons_video_id_key do update\",
+              );
+              expect(sql).not.toContain(\"on conflict (video_id) do update\");
+            });
+
+            it(\"preserves security-invoker execution and explicit grants\", () => {
+              expect(sql).toContain(\"security invoker\");
+              expect(sql).toContain(\"from public\");
+              expect(sql).toContain(\"from anon\");
+              expect(sql).toContain(\"to authenticated\");
+              expect(sql).toContain(\"to service_role\");
+            });
+          });
+          """.replace("          ", ""))
+
+          # Copy only files that will be reviewed and committed.
+          files = [
+              types_path,
+              atomic_path,
+              fix_path,
+              app_db_path,
+              test_path,
+              fix_test_path,
+          ]
+          for path in files:
+              destination = out / path.relative_to(root)
+              destination.parent.mkdir(parents=True, exist_ok=True)
+              shutil.copy2(path, destination)
+
+      - name: Upload schema sync artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: spec001-hosted-schema-sync
+          path: output/spec001-hosted-schema-sync
+          if-no-files-found: error
