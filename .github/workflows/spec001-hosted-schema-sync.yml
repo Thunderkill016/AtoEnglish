@@ -1,15 +1,15 @@
 name: Spec 001 Hosted Schema Sync
 
 on:
-  push:
-    branches: [agent/rebuild-learning-core]
+  pull_request:
+    types: [opened, synchronize, reopened]
 
 permissions:
   contents: write
 
 jobs:
   sync:
-    if: github.actor != 'github-actions[bot]'
+    if: github.head_ref == 'agent/rebuild-learning-core' && github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     timeout-minutes: 25
     env:
@@ -287,16 +287,16 @@ jobs:
           The repeated probe then observed:
 
           ```text
-          same_video_id             = true
-          same_lesson_id            = true
-          one_current_video         = true
-          updated_video_title       = true
-          updated_lesson_title      = true
+          same_video_id              = true
+          same_lesson_id             = true
+          one_current_video          = true
+          updated_video_title        = true
+          updated_lesson_title       = true
           failed_write_left_no_video = true
-          publication_rejected      = true
-          cleanup_auth_user         = true
-          cleanup_videos            = true
-          cleanup_lessons           = true
+          publication_rejected       = true
+          cleanup_auth_user          = true
+          cleanup_videos             = true
+          cleanup_lessons            = true
           ```
 
           This proves hosted RPC transaction and RLS behavior. It does not claim that
