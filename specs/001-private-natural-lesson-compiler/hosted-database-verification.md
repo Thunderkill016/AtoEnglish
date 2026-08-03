@@ -120,15 +120,25 @@ After the migration, those findings disappeared. Remaining Real Talk notices are
 
 ## Hosted type generation
 
-Supabase TypeScript generation was run after all three migrations. It returned both Real Talk tables with the hosted columns and the one-to-one lesson-to-video relationship.
+Supabase TypeScript generation was run repeatedly against the hosted project. The full local generated baseline now matches the observed PostgREST `14.5` schema, including both Real Talk tables and their one-to-one relationship.
 
-Because the GitHub connector cannot patch a long generated file in place, the hosted Real Talk fragment is committed as:
+The replacement exposed one older repository migration that has never been applied hosted:
 
 ```text
-src/types/real-talk-supabase.generated.ts
+supabase/migrations/20260731162613_learning_attempts.sql
 ```
 
-`src/types/app-database.ts` now reconciles the repository's full generated type with that hosted fragment using `Omit` plus replacement. This avoids intersecting stale table definitions and remains forward-compatible with a later full local regeneration of `src/types/supabase.ts`.
+`src/types/supabase.ts` deliberately excludes that table because it represents hosted truth. `src/types/pending-learning-attempts.ts` and `src/types/app-database.ts` expose the migration-shaped type explicitly for compile-time compatibility without claiming hosted availability.
+
+`AppDatabase` also retains explicit overlays for the unapplied T060 provenance columns and T067 atomic private-draft RPC. Those overlays must be removed only after separately authorized hosted migration, verification, and regeneration.
+
+The generated/overlay boundary is protected by:
+
+```text
+src/__tests__/supabase-pending-schema-contract.test.ts
+```
+
+Full T049 evidence is recorded in `t049-hosted-types-verification.md`.
 
 ## Evidence classification
 
@@ -137,7 +147,8 @@ src/types/real-talk-supabase.generated.ts
 - Signed-session Auth and PostgREST RLS matrix: **observed**
 - Rollback and fixture cleanup: **observed**
 - Supabase Advisor after DDL: **observed**
-- Hosted TypeScript generation: **observed**
+- Full hosted TypeScript baseline replacement: **observed**
+- Pending schema overlays: **explicit; not claimed hosted**
 - GitHub-hosted Vitest process: **not run; protected service-role secret absent**
 - Real application persistence through browser/server action: **not run**
 - Production deployment: **not performed**
