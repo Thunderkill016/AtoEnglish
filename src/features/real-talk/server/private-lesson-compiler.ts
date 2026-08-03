@@ -10,7 +10,7 @@ import {
 import { extractYouTubeVideoId } from "@/features/real-talk/domain/youtube-source";
 import { generateEvidenceBoundLessonWithGemini } from "@/features/real-talk/server/gemini-lesson-provider";
 import { acquireTranscriptForCompilation } from "@/features/real-talk/server/transcript-source-policy";
-import { privateYouTubeTranscriptSource } from "@/features/real-talk/server/transcript-sources/youtube-private";
+import { geminiYouTubeVideoTranscriptSource } from "@/features/real-talk/server/transcript-sources/gemini-youtube-video";
 import {
   selectConversationWindow,
   type GeneratedLessonDraft,
@@ -74,34 +74,34 @@ export function mapTranscriptSourceError(
       return generationFailure(
         "SOURCE_UNSUPPORTED",
         process.env.NODE_ENV === "production"
-          ? "Tạo bài riêng tư từ caption YouTube chưa được bật cho production."
-          : "Nguồn transcript thử nghiệm đang tắt. Bật REAL_TALK_ALLOW_EXPERIMENTAL_TRANSCRIPTS=true trong dev/test.",
+          ? "Gemini YouTube video preview chưa được bật cho private draft trong production."
+          : "Gemini YouTube video preview đang tắt. Bật REAL_TALK_ALLOW_EXPERIMENTAL_TRANSCRIPTS=true trong dev/test.",
       );
     case "transcript_not_available":
       return generationFailure(
         "TRANSCRIPT_UNAVAILABLE",
-        "Video này không có caption tiếng Anh có thể đọc được.",
+        "Gemini không tìm thấy một đoạn hội thoại tiếng Anh phù hợp trong video công khai này.",
       );
     case "transcript_too_short":
       return generationFailure(
         "TRANSCRIPT_INVALID",
-        "Caption quá ngắn để tạo một bài hội thoại có ý nghĩa.",
+        "Đoạn lời thoại trích xuất quá ngắn để tạo bài học.",
       );
     case "transcript_provider_error":
       return generationFailure(
-        "TRANSCRIPT_UNAVAILABLE",
-        "Nguồn transcript tạm thời không khả dụng. Hãy thử lại hoặc dùng video khác.",
-        { retryAfterSeconds: 30 },
+        "MODEL_UNAVAILABLE",
+        "Gemini video analysis tạm thời không khả dụng. Hãy thử lại sau.",
+        { retryAfterSeconds: error.retryable ? 30 : undefined },
       );
     case "transcript_provenance_invalid":
       return generationFailure(
         "SOURCE_UNSUPPORTED",
-        "Nguồn caption chưa có provenance hợp lệ cho chế độ nội dung đã duyệt.",
+        "Nguồn video analysis chưa có provenance hợp lệ cho nội dung công khai.",
       );
     case "transcript_integrity_mismatch":
       return generationFailure(
         "TRANSCRIPT_INVALID",
-        "Caption không khớp digest đã xác minh.",
+        "Transcript không khớp digest đã xác minh.",
       );
   }
 }
@@ -118,11 +118,18 @@ export async function compilePrivateNaturalLesson(params: {
     );
   }
 
+  if (!process.env.GEMINI_API_KEY) {
+    return generationFailure(
+      "MODEL_UNAVAILABLE",
+      "Gemini chưa được cấu hình cho môi trường này.",
+    );
+  }
+
   const watchUrl = `https://www.youtube.com/watch?v=${videoId}`;
   let transcript;
   try {
     transcript = await acquireTranscriptForCompilation({
-      adapter: privateYouTubeTranscriptSource,
+      adapter: geminiYouTubeVideoTranscriptSource,
       useCase: "private_draft",
       request: {
         sourceId: videoId,
@@ -135,8 +142,8 @@ export async function compilePrivateNaturalLesson(params: {
       return mapTranscriptSourceError(error);
     }
     return generationFailure(
-      "TRANSCRIPT_UNAVAILABLE",
-      "Không thể lấy transcript từ nguồn đã chọn.",
+      "MODEL_UNAVAILABLE",
+      "Không thể phân tích video bằng Gemini.",
       { retryAfterSeconds: 30 },
     );
   }
@@ -160,12 +167,6 @@ export async function compilePrivateNaturalLesson(params: {
   });
   if (!generated.success) return generated;
 
-  const fullDuration = Math.ceil(
-    transcript.cues.reduce(
-      (max, item) => Math.max(max, item.offset + item.duration),
-      0,
-    ),
-  );
   const segmentStart = selectedSource[0]?.offset ?? 0;
   const segmentEnd = selectedSource.reduce(
     (max, item) => Math.max(max, item.offset + item.duration),
@@ -173,7 +174,7 @@ export async function compilePrivateNaturalLesson(params: {
   );
   const warnings = [
     "Đây là bản nháp do AI tạo cho riêng bạn, chưa được biên tập viên xác minh.",
-    "Caption, speaker labels và timestamp có thể sai; hãy đối chiếu với video gốc.",
+    "Transcript và timestamp được Gemini trích xuất trực tiếp từ video công khai; hãy đối chiếu với video gốc.",
     ...transcript.metadata.warnings,
   ];
 
@@ -185,7 +186,7 @@ export async function compilePrivateNaturalLesson(params: {
     channelName: metadata.channelName,
     channelUrl: metadata.channelUrl,
     thumbnailUrl: `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`,
-    durationSeconds: fullDuration,
+    durationSeconds: Math.ceil(segmentEnd),
     segment: {
       startSeconds: segmentStart,
       endSeconds: segmentEnd,
