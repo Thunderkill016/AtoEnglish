@@ -1,233 +1,136 @@
-# Cross-Artifact Analysis: AtoEnglish MVP Product Convergence
+# Cross-Artifact Analysis: YouTube-to-Private-Lesson MVP
 
-**Analyzed:** 2026-08-03  
-**Artifacts:** constitution, proposed roadmap reprioritization, Spec 001 evidence,
-Spec 002 specification, plan, research, data model, product contract, quickstart,
-requirements checklist, current priority, and task ledger
+**Analyzed:** 2026-08-03 after owner correction  
+**Artifacts:** constitution, roadmap, Spec 001 evidence, revised Spec 002 spec/plan/research/data model/contract/quickstart/tasks/checklist, current priority, owner decision
 
 ## Executive Result
 
 ```text
-Specification completeness: PASS
-Constitution alignment:     PASS
-Task coverage:              PASS
-Roadmap consistency:        PASS AS PROPOSAL
-Implementation readiness:   CONDITIONAL
-Critical contradictions:    0
-Owner authorization:        NOT GRANTED
+Core owner product decision: CONFIRMED
+Specification completeness:  PASS
+Constitution alignment:      PASS FOR PRIVATE AI-DRAFT FLOW
+Task coverage:               PASS
+Critical contradictions:     0
+Implementation readiness:    CONDITIONAL
+Implementation authorization: NOT YET RECORDED
 ```
 
-The MVP has a coherent product boundary, dependency-ordered plan, and proposed
-roadmap position. It is not yet authorized for implementation because owner
-acceptance, initial source feasibility, and owner-gated infrastructure actions
-remain open.
+## Corrected Product Consistency
 
-## Product Consistency
-
-All Spec 002 artifacts define the same critical learner journey:
+Every revised artifact now defines the same journey:
 
 ```text
-truthful landing
-→ authentication and idempotent bootstrap
-→ focused dashboard
-→ database-only reviewed catalog
-→ environment-first lesson
-→ first encounter
-→ progressive support
-→ productive retrieval
-→ speak-and-confirm
-→ changed-context transfer
-→ bounded private persistence
-→ return/continue/review
+truthful YouTube-to-lesson landing
+→ authentication
+→ URL-first dashboard
+→ supported YouTube validation
+→ timed transcript acquisition
+→ bounded natural interaction selection
+→ live Gemini structured generation
+→ source-evidence validation
+→ atomic owner-private ai_draft
+→ first listen / support / retrieval / speech / transfer
+→ bounded progress
+→ private library and return
 ```
 
-No artifact requires XP, streak, leagues, flashcards, grammar, writing, broad
-speaking tools, notifications, payments, or social systems for MVP completion.
+No artifact treats a fixed public catalog as the MVP. Human review/publication is
+reserved for later sharing/catalog scope.
 
-## Constitution Alignment Matrix
+## Constitution Alignment
 
-| Constitution principle | Spec 002 implementation |
+| Principle | Revised MVP response |
 | --- | --- |
-| Natural Communication First | One environment and reviewed natural lessons are the entire learner-facing learning surface. |
-| Evidence-Bound Generation | Database catalog fails closed; static samples and unreviewed drafts are forbidden. |
-| Transfer Before Completion | Runtime and database completion require a changed-context attempt. |
-| Rights, Privacy, Safety | Provider-neutral lawful playback, human review, RLS, bounded attempt data, no raw audio/free text. |
-| Small Independently Testable Delivery | One environment, three lessons, one complete journey, legacy modules deferred. |
-| Measurable Learner/Product Evidence | Funnel events and attempts are bounded; CI is not treated as effectiveness evidence. |
+| Natural Communication First | The learner chooses a real YouTube interaction; the lesson begins from its situation and practical goal. |
+| Evidence-Bound Generation | Source-dependent generated content validates against bounded timed cues; unsupported output is rejected. |
+| Transfer Before Completion | Retrieval, speak confirmation, and changed-context transfer are completion gates. |
+| Rights, Privacy, Safety | Official playback, no re-hosting, private AI drafts, visible warnings, owner RLS, no raw learner audio/free text. |
+| Small Testable Delivery | One supported URL-to-private-lesson vertical slice. |
+| Measurable Evidence | Repo checks, live provider evidence, browser behavior, and product/learning outcomes remain distinct. |
 
-No constitutional waiver is required.
+Potential tension between human review and learner-visible AI content is resolved by
+the existing private-draft boundary: generated content is visibly unreviewed,
+owner-private, source-evidence checked, and not eligible for public publication.
+Public/shared use still requires human review.
 
 ## Requirement-to-Task Coverage
 
-| Requirement | Primary tasks | Coverage result |
+| Requirement area | Primary tasks | Result |
 | --- | --- | --- |
-| FR-001 truthful promise | T011–T014, T075 | Covered |
-| FR-002 protected MVP routes | T020–T021, T027 | Covered |
-| FR-003 server/idempotent bootstrap | T015–T019 | Covered |
-| FR-004 focused navigation | T022, T075–T076 | Covered |
-| FR-005 DB-only catalog/no static fallback | T035–T037, T043 | Covered |
-| FR-006 reviewed publication eligibility | T035, T039–T044 | Covered |
-| FR-007 lawful official playback | T030–T034 | Covered |
-| FR-008 provider-neutral sources | T030–T034, T044 | Covered |
-| FR-009 traceable learner claims | T039–T043, T091 | Covered |
-| FR-010 completion gates | T049–T055, T089–T090 | Covered |
-| FR-011 microphone-independent speech | T052, T056 | Covered |
-| FR-012 bounded owner-private persistence | T058–T068 | Covered |
-| FR-013 idempotent writes | T016–T017, T059–T066 | Covered |
-| FR-014 focused dashboard | T023–T025 | Covered |
-| FR-015 deferred routes not MVP | T022, T075–T076 | Covered |
-| FR-016 reuse hosted infrastructure | T006–T007, T044, T079 | Covered |
-| FR-017 same project/types/environment | T006–T007, T079 | Covered |
-| FR-018 fresh-main selective port | T002–T005, T028 | Covered |
-| FR-019 disable experimental ingestion/generation | T036–T038, T043 | Covered |
-| FR-020 three human-reviewed lessons | T039–T044, T091 | Covered |
-| FR-021 privacy-safe events | T070–T073 | Covered |
-| FR-022 complete verification gate | T080–T093 | Covered |
-| FR-023 preview runtime health | T094–T097 | Covered |
-| FR-024 owner release gates | T098–T104 | Covered |
+| Owner decision/fresh-main integration | T001–T010 | Covered |
+| Truthful landing/auth/bootstrap | T011–T020 | Covered |
+| URL-first dashboard/navigation | T021–T025 | Covered |
+| YouTube URL/source/playback | T026–T029 | Covered |
+| Transcript adapter/policy/failures | T030–T040 | Covered |
+| Compiler/Gemini/schema/evidence | T041–T048 | Covered |
+| Deterministic atomic private draft | T049–T058 | Covered |
+| Environment-first lesson runtime | T059–T069 | Covered |
+| Bounded progress/private library/return | T070–T076 | Covered |
+| Privacy-safe analytics/resilience/pruning | T077–T082 | Covered |
+| Exact-head repo/hosted/live/browser gates | T083–T096 | Covered |
+| Convergence/owner/merge/deploy gates | T097–T102 | Covered |
 
-All functional requirements map to one or more exact implementation/verification
-tasks. No orphan requirement was found.
+No functional requirement is orphaned.
 
 ## User Story Independence
 
-### US1 — Entry/auth/dashboard
-
-Can be developed and demonstrated with controlled reviewed-lesson fixtures before
-hosted publication. It creates value by proving activation and shell coherence.
-
-### US2 — Reviewed catalog
-
-Can be verified independently with hosted reviewed/public/private rows. It does
-not require learner attempt persistence.
-
-### US3 — Lesson runtime
-
-Can be tested against a reviewed immutable fixture/package before final hosted
-publication. Completion semantics are independent of dashboard complexity.
-
-### US4 — Persistence/return
-
-Can be tested with one reviewed lesson and two authenticated users. It does not
-require analytics or broad catalog expansion.
-
-### US5 — Pilot operations
-
-Depends on the first four stories but does not change their product semantics. It
-adds bounded instrumentation, resilience, preview, and operational evidence.
-
-The story split is independently stoppable and respects the constitution.
-
-## Data-Model Consistency
-
-The product contract requires bounded progress fields. The data model offers two
-valid implementation paths:
-
-1. strict typed reuse of existing evidence storage; or
-2. a small `real_talk_attempts` table.
-
-Task T058 forces a recorded decision before DDL. This is not a contradiction; it
-is an intentionally deferred implementation choice with the same external
-contract.
-
-Provider-neutral source fields are required because the verified source pipeline
-already uses Wikimedia/DVIDS while the current video table requires YouTube
-identity. Tasks T030–T034 and T044 cover the migration, playback, and hosted
-verification.
+- **US1** can prove landing/auth/URL-first dashboard with controlled generation stubs while preserving provider gates.
+- **US2** can prove supported/unsupported source handling, transcript, live compiler, evidence validation, and atomic private persistence.
+- **US3** can run against one persisted controlled private draft and prove learning completion semantics.
+- **US4** can prove library/return and two-user isolation with one generated lesson.
+- **US5** adds final hosted/live/Vercel evidence without changing product semantics.
 
 ## Branch and Toolchain Consistency
 
-All artifacts agree that:
+All artifacts agree:
 
 - implementation begins from current `main`;
-- PR #54/Real Talk branch is not merged wholesale;
-- the current main package/lock/toolchain baseline is retained;
-- selected Real Talk security/domain/runtime work is ported through a manifest;
-- hosted Supabase and Vercel projects are reused;
-- deployment and migration remain owner-gated.
+- PR #54 is not merged wholesale;
+- main's Node/npm/package-lock baseline is retained;
+- selected Spec 001 code is ported through a manifest;
+- hosted Supabase/Vercel projects are reused;
+- environment/types must point to the same Supabase project;
+- migration, preview, merge, and production deploy remain owner-gated.
 
-No artifact authorizes branch-level merge, automatic deployment, or replacement
-infrastructure.
+## Data Consistency
 
-## Roadmap Consistency
+The revised data model reuses the hosted private draft tables and atomic RPC rather
+than designing around a public catalog. A bounded attempt table is conditional on
+an explicit storage decision. Static fixtures cannot satisfy live generation or
+private-library acceptance.
 
-The planning branch now proposes the following ordered roadmap:
+## Remaining Hard Decisions
 
-```text
-001 — Private Natural Lesson Compiler
-002 — MVP Product Convergence
-003 — Full Human Review and Publication Operations
-004 — Invisible Capability Graph
-005 — Delayed Transfer and Learner Evidence
-006 — Pilot Expansion and Product Evidence
-```
+1. Exact transcript adapter/private-production decision: mode, supported video conditions, reliability/terms/rights risks, warnings, rollback.
+2. Availability of a bounded `GEMINI_API_KEY` workflow for live success/failure verification.
+3. Existing progress/evidence storage versus a small `real_talk_attempts` table.
+4. Exact treatment of legacy routes outside primary navigation.
+5. Explicit authorization to begin implementation.
 
-This resolves the previous duplicate `002` numbering without claiming owner
-approval. The roadmap and current-priority documents explicitly label Spec 002 as
-a proposal and keep implementation blocked until owner acceptance.
-
-Spec 002 uses only a controlled publication operation and one reviewed runtime
-slice. It does not silently absorb the future full reviewer/publication operations
-now assigned to Spec 003.
-
-## Non-Critical Open Decisions
-
-These decisions are bounded and do not change the MVP promise:
-
-1. **Initial environment** — default `Meet someone new`; owner/source feasibility
-   may select another initial environment.
-2. **Three source packages** — must pass lawful-use and human-review gates.
-3. **Attempt storage** — strict reuse versus new bounded table.
-4. **Publication status values** — reconcile exact existing constraints before
-   writing the public query/migration.
-5. **Deferred routes** — hide only versus redirect/feature flag when direct access
-   creates a critical contradiction.
-6. **Playback composition** — final mix of YouTube embed versus direct reviewed
-   public-domain/owned media.
-
-Each decision has an explicit owner/task gate and no task assumes its outcome.
+Each decision has a task gate; none is silently assumed.
 
 ## Scope-Escape Checks
 
-The following potential expansions are explicitly blocked:
+Blocked without a new approved spec:
 
-- broad curriculum/capability graph;
-- five-environment catalog;
-- delayed transfer scheduler;
-- full reviewer dashboard;
-- arbitrary source ingestion;
-- pronunciation assessment;
-- raw audio/transcript retention;
-- XP/streak/league redesign;
-- removal/refactor of every legacy route;
-- new microservice or analytics platform;
-- payments/social/native apps.
-
-A task requiring one of these must stop and create a separate approved spec.
-
-## Verification Completeness
-
-The task ledger distinguishes:
-
-- local/unit/contract evidence;
-- hosted Supabase migration/RLS/advisor/type evidence;
-- human content review;
-- production-build browser evidence;
-- Vercel preview/runtime-log evidence;
-- owner product acceptance;
-- merge and production deployment authorization.
-
-No mock or old branch check is accepted as a substitute for final exact-head
-browser, hosted, human, or owner evidence.
+- public/shared lesson catalog;
+- automatic publication;
+- full reviewer UI;
+- bulk YouTube crawling/generation;
+- support for every YouTube video;
+- media download/re-hosting;
+- broad curriculum/gamification/social/payment/native-app expansion;
+- pronunciation scoring or raw learner audio retention.
 
 ## Planning Convergence Decision
 
 ```text
-Planning artifacts:        CONVERGED
-Implementation scope:      WELL-BOUNDED
-Implementation start:      BLOCKED ON OWNER ACCEPTANCE
-Merge recommendation:      NOT APPLICABLE — PLANNING ONLY
-Deployment recommendation: DO NOT DEPLOY
+Planning artifacts:         CONVERGED AFTER OWNER CORRECTION
+Core product direction:     YOUTUBE URL → PRIVATE LESSON
+Implementation scope:       WELL-BOUNDED
+Implementation start:       BLOCKED UNTIL EXPLICIT AUTHORIZATION
+Merge recommendation:       NOT APPLICABLE — PLANNING ONLY
+Deployment recommendation:  DO NOT DEPLOY
 ```
 
-After owner acceptance, complete T001–T010 before changing learner-facing code.
+After implementation authorization, execute T003–T010 before changing learner-facing code.
