@@ -1,0 +1,367 @@
+name: Spec 001 T049 Hosted Types
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: write
+
+jobs:
+  regenerate:
+    if: github.head_ref == 'agent/rebuild-learning-core' && github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out working branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/rebuild-learning-core
+          fetch-depth: 0
+
+      - name: Reconcile full hosted type snapshot
+        shell: python
+        run: |
+          from pathlib import Path
+
+          path = Path("src/types/supabase.ts")
+          source = path.read_text()
+
+          def remove_table(text: str, name: str, next_name: str) -> str:
+              start_marker = f"      {name}: {{\n"
+              end_marker = f"      {next_name}: {{\n"
+              start = text.find(start_marker)
+              if start == -1:
+                  raise SystemExit(f"missing table block: {name}")
+              end = text.find(end_marker, start)
+              if end == -1:
+                  raise SystemExit(f"missing next table marker: {next_name}")
+              return text[:start] + text[end:]
+
+          def insert_before(text: str, marker_name: str, block: str) -> str:
+              marker = f"      {marker_name}: {{\n"
+              index = text.find(marker)
+              if index == -1:
+                  raise SystemExit(f"missing insertion marker: {marker_name}")
+              return text[:index] + block + text[index:]
+
+          for absent in (
+              "lesson_v2_evidence",
+              "pilot_events",
+              "real_talk_lessons",
+              "real_talk_videos",
+              "user_v2_lesson_progress",
+          ):
+              if f"      {absent}: {{\n" in source:
+                  raise SystemExit(f"hosted table already present: {absent}")
+
+          source = remove_table(source, "learning_attempts", "lesson_history")
+
+          lesson_v2_evidence = '''      lesson_v2_evidence: {
+        Row: {
+          anonymous_id: string
+          completed_at: string
+          evidence: Json
+          id: number
+          lesson_id: string
+          module_id: string
+          next_review_at: string | null
+          occurred_at: string
+          session_kind: string
+          source: string
+          user_id: string | null
+        }
+        Insert: {
+          anonymous_id: string
+          completed_at: string
+          evidence?: Json
+          id?: number
+          lesson_id: string
+          module_id: string
+          next_review_at?: string | null
+          occurred_at?: string
+          session_kind: string
+          source?: string
+          user_id?: string | null
+        }
+        Update: {
+          anonymous_id?: string
+          completed_at?: string
+          evidence?: Json
+          id?: number
+          lesson_id?: string
+          module_id?: string
+          next_review_at?: string | null
+          occurred_at?: string
+          session_kind?: string
+          source?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+'''
+
+          pilot_events = '''      pilot_events: {
+        Row: {
+          anonymous_id: string
+          day_number: number | null
+          event_name: string
+          id: number
+          occurred_at: string
+          passed: boolean | null
+          score: number | null
+          source: string | null
+          star_count: number | null
+          unit_id: string | null
+          user_id: string | null
+        }
+        Insert: {
+          anonymous_id: string
+          day_number?: number | null
+          event_name: string
+          id?: number
+          occurred_at?: string
+          passed?: boolean | null
+          score?: number | null
+          source?: string | null
+          star_count?: number | null
+          unit_id?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          anonymous_id?: string
+          day_number?: number | null
+          event_name?: string
+          id?: number
+          occurred_at?: string
+          passed?: boolean | null
+          score?: number | null
+          source?: string | null
+          star_count?: number | null
+          unit_id?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+'''
+
+          real_talk = '''      real_talk_lessons: {
+        Row: {
+          can_do_statement: string | null
+          can_do_statement_vi: string | null
+          communication_events: Json
+          created_at: string
+          environment: Json
+          estimated_minutes: number
+          generation_model: string | null
+          generation_status: string
+          generation_warnings: Json
+          id: string
+          level: string
+          post_watch: Json
+          pre_watch: Json
+          reviewed_at: string | null
+          reviewed_by: string | null
+          title: string
+          title_vi: string
+          transcript: Json
+          transfer_task: Json
+          video_id: string
+          while_watch: Json
+        }
+        Insert: {
+          can_do_statement?: string | null
+          can_do_statement_vi?: string | null
+          communication_events?: Json
+          created_at?: string
+          environment?: Json
+          estimated_minutes?: number
+          generation_model?: string | null
+          generation_status?: string
+          generation_warnings?: Json
+          id?: string
+          level?: string
+          post_watch?: Json
+          pre_watch?: Json
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          title: string
+          title_vi: string
+          transcript?: Json
+          transfer_task?: Json
+          video_id: string
+          while_watch?: Json
+        }
+        Update: {
+          can_do_statement?: string | null
+          can_do_statement_vi?: string | null
+          communication_events?: Json
+          created_at?: string
+          environment?: Json
+          estimated_minutes?: number
+          generation_model?: string | null
+          generation_status?: string
+          generation_warnings?: Json
+          id?: string
+          level?: string
+          post_watch?: Json
+          pre_watch?: Json
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          title?: string
+          title_vi?: string
+          transcript?: Json
+          transfer_task?: Json
+          video_id?: string
+          while_watch?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "real_talk_lessons_video_id_fkey"
+            columns: ["video_id"]
+            isOneToOne: true
+            referencedRelation: "real_talk_videos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      real_talk_videos: {
+        Row: {
+          channel_name: string | null
+          channel_url: string | null
+          created_at: string
+          created_by: string | null
+          duration_seconds: number
+          id: string
+          is_public: boolean
+          level: string
+          segment_end: number
+          segment_start: number
+          slug: string
+          speaker_count: number | null
+          speakers: Json
+          thumbnail_url: string | null
+          title: string
+          title_vi: string
+          topics: string[]
+          youtube_id: string
+        }
+        Insert: {
+          channel_name?: string | null
+          channel_url?: string | null
+          created_at?: string
+          created_by?: string | null
+          duration_seconds?: number
+          id?: string
+          is_public?: boolean
+          level?: string
+          segment_end?: number
+          segment_start?: number
+          slug: string
+          speaker_count?: number | null
+          speakers?: Json
+          thumbnail_url?: string | null
+          title: string
+          title_vi: string
+          topics?: string[]
+          youtube_id: string
+        }
+        Update: {
+          channel_name?: string | null
+          channel_url?: string | null
+          created_at?: string
+          created_by?: string | null
+          duration_seconds?: number
+          id?: string
+          is_public?: boolean
+          level?: string
+          segment_end?: number
+          segment_start?: number
+          slug?: string
+          speaker_count?: number | null
+          speakers?: Json
+          thumbnail_url?: string | null
+          title?: string
+          title_vi?: string
+          topics?: string[]
+          youtube_id?: string
+        }
+        Relationships: []
+      }
+'''
+
+          user_v2 = '''      user_v2_lesson_progress: {
+        Row: {
+          completed_at: string
+          created_at: string
+          id: string
+          lesson_id: string
+          quiz_correct: number
+          quiz_total: number
+          task_done: boolean
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string
+          created_at?: string
+          id?: string
+          lesson_id: string
+          quiz_correct?: number
+          quiz_total?: number
+          task_done?: boolean
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          completed_at?: string
+          created_at?: string
+          id?: string
+          lesson_id?: string
+          quiz_correct?: number
+          quiz_total?: number
+          task_done?: boolean
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+'''
+
+          source = insert_before(source, "notification_logs", lesson_v2_evidence)
+          source = insert_before(source, "project_memories", pilot_events)
+          source = insert_before(source, "speaking_sessions", real_talk)
+          source = insert_before(source, "users", user_v2)
+
+          expected = (
+              "lesson_v2_evidence",
+              "pilot_events",
+              "real_talk_lessons",
+              "real_talk_videos",
+              "user_v2_lesson_progress",
+          )
+          for name in expected:
+              if source.count(f"      {name}: {{\n") != 1:
+                  raise SystemExit(f"unexpected generated table count: {name}")
+          if "      learning_attempts: {\n" in source:
+              raise SystemExit("stale learning_attempts table remains")
+
+          path.write_text(source)
+
+          app_path = Path("src/types/app-database.ts")
+          app = app_path.read_text()
+          app = app.replace(
+              "App-level database type that reconciles the repository's full generated\n * Supabase type with the hosted Real Talk schema fragment and pending versioned\n * migrations in this branch.",
+              "App-level database type layered on the full hosted Supabase snapshot.\n * The Real Talk fragment now contributes only the pending provenance columns and\n * atomic RPC until T060 and T067 are authorized and applied hosted.",
+          )
+          app_path.write_text(app)
+
+          Path(".github/workflows/spec001-t049-types.yml").unlink()
+
+      - name: Commit regenerated snapshot
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/types/supabase.ts src/types/app-database.ts .github/workflows/spec001-t049-types.yml
+          git commit -m "chore(spec001): replace hosted Supabase type snapshot"
+          git push origin HEAD:agent/rebuild-learning-core
