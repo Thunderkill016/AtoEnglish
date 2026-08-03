@@ -57,8 +57,11 @@ vi.mock(
         titleVi: `Nguồn server action v${version}`,
         level: params.level,
         source: {
-          ...privateDraftPreviewVideo.source,
           watchUrl: params.youtubeUrl,
+          metadataSource:
+            privateDraftPreviewVideo.source?.metadataSource ?? "curated",
+          transcriptSource:
+            privateDraftPreviewVideo.source?.transcriptSource ?? "manual",
         },
       };
 
