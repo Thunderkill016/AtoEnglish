@@ -1,6 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import { TranscriptSourceError } from "@/features/real-talk/domain/transcript-source";
 import {
   experimentalYouTubeTranscriptSource,
   normalizeExperimentalYouTubeTranscriptItems,
@@ -98,7 +97,7 @@ describe("experimental YouTube transcript adapter", () => {
         sourceUrl: "https://www.youtube.com/watch?v=abcdefghijk",
         requestedLanguage: "en",
       }),
-    ).rejects.toMatchObject<Partial<TranscriptSourceError>>({
+    ).rejects.toMatchObject({
       code: "transcript_provider_error",
       retryable: false,
     });
