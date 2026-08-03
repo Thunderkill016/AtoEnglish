@@ -1,15 +1,15 @@
 name: Record Spec 001 T050 Evidence
 
 on:
-  push:
-    branches: [agent/rebuild-learning-core]
+  pull_request:
+    types: [synchronize]
 
 permissions:
   contents: write
 
 jobs:
   record:
-    if: github.actor != 'github-actions[bot]'
+    if: github.head_ref == 'agent/rebuild-learning-core' && github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     steps:
       - name: Check out working branch
@@ -70,18 +70,18 @@ A bounded hosted harness executed the repository scaffold's acceptance matrix us
 Observed response:
 
 ```text
-HTTP status                         = 200
-signed sessions                    = 2
-owner private insert/reload        = pass
-anonymous insert denied            = pass
-owner B read denied                = pass
-anonymous read denied              = pass
-owner B update/delete denied       = pass
-owner publication denied           = pass
-owner review elevation denied      = pass
-pre-approved insertion denied      = pass
+HTTP status                          = 200
+signed sessions                     = 2
+owner private insert/reload         = pass
+anonymous insert denied             = pass
+owner B read denied                 = pass
+anonymous read denied               = pass
+owner B update/delete denied        = pass
+owner publication denied            = pass
+owner review elevation denied       = pass
+pre-approved insertion denied       = pass
 cross-owner lesson insertion denied = pass
-anonymous public catalog clean     = pass
+anonymous public catalog clean      = pass
 ```
 
 The first GitHub Actions attempt stopped before dependency installation because no repository secret named `SUPABASE_SERVICE_ROLE_KEY` or `SUPABASE_SERVICE_KEY` was configured. It did not execute assertions and is retained only as credential-preflight evidence.
@@ -107,8 +107,7 @@ This completes the T050 signed-session/PostgREST behavior gate. It does not clai
           )
           evidence_path.write_text(evidence)
 
-          workflow_path = Path(".github/workflows/spec001-record-t050.yml")
-          workflow_path.unlink()
+          Path(".github/workflows/spec001-record-t050.yml").unlink()
 
       - name: Commit evidence
         shell: bash
