@@ -156,6 +156,21 @@ verify_jwt: true
 The one-shot GitHub workflow was removed. No service-role key, password, access
 token, or session token was committed or printed.
 
+
+## Repository finalization
+
+```text
+Workflow: Spec 001 T074 Finalize
+Run ID:   30782680412
+Input:    df3586935370967dcec897d8ff3e1ef75ee7fa5c
+Result:   full repository gates passed before the finalizer commit
+```
+
+The one-shot finalizer updated `tasks.md`, the production transcript
+decision, and convergence review, then passed ESLint, TypeScript, targeted
+Real Talk tests, the full unit suite, content standards, and the Next.js
+production build before removing itself.
+
 ## Honest boundary
 
 - T074 is complete for authenticated persisted-draft desktop/mobile browser

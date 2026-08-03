@@ -146,7 +146,7 @@ The merge blocker remains, but its reason has narrowed:
    registry adapter;
 2. T082 live Gemini verification is blocked by the missing GitHub Actions
    secret;
-3. T074 persisted authenticated desktop/mobile browser verification is open;
+3. T074 persisted authenticated desktop/mobile browser verification is complete;
 4. T075 human source-language, timing, situation, Vietnamese-guidance, and
    transfer-coherence review is open;
 5. owner acceptance T088 is open;

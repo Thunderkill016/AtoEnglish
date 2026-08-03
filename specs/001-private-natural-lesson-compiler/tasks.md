@@ -265,13 +265,19 @@ production-oriented lesson without unsupported learning claims.
 - [x] T072 [US4] Require a changed-context transfer attempt
 - [x] T073 [US4] Replace mastery and automatic-SRS completion copy with
   immediate-practice evidence
-- [ ] T074 [US4] Run desktop and mobile Playwright preview flow against a
-  controlled persisted draft
+- [x] T074 [US4] Run desktop and mobile Playwright preview flow against a
+  controlled persisted draft; authenticated Desktop Chrome and Pixel 5
+  completed the owner-private persisted lesson loop through transfer and
+  completion in workflow run #4 (`30782424355`), with no page errors,
+  Next.js error overlay, or horizontal overflow; cleanup returned zero
+  bounded users/videos/lessons and evidence is recorded in
+  `t074-persisted-preview-verification.md`
 - [ ] T075 [US4] Manually review one valid draft for situation fidelity, source
   language, speaker uncertainty, Vietnamese guidance, and transfer coherence
 
-**Checkpoint**: Component suites pass. Persisted-draft browser preview and human
-pedagogical review remain open.
+**Checkpoint**: Component suites and the authenticated owner-private persisted
+draft browser flow pass on desktop and mobile. Human pedagogical/source
+review remains open.
 
 ---
 

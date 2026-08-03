@@ -244,3 +244,20 @@ or owner acceptance. Convergence remains **NOT CONVERGED** and the PR remains
 **DO NOT MERGE / DO NOT DEPLOY**.
 
 Evidence: `t061-trusted-transcript-ingestion-verification.md`.
+
+
+## 2026-08-03 T074 persisted browser follow-up
+
+T074 now has authenticated desktop and Pixel 5 evidence against one
+owner-private draft persisted through hosted Auth, the exported server
+action, atomic RPC, RLS, and reload mapping. Both viewports completed the
+environment-first lesson, retrieval, speak-and-confirm, and changed-context
+transfer loop without a Next.js error overlay, page exception, or horizontal
+overflow. All bounded hosted fixtures were removed.
+
+This closes the persisted browser gap. It does not close live Gemini T082,
+public routing to the reviewed transcript registry, T075 human review, or
+owner acceptance. Convergence remains **NOT CONVERGED** and the PR remains
+**DO NOT MERGE / DO NOT DEPLOY**.
+
+Evidence: `t074-persisted-preview-verification.md`.
