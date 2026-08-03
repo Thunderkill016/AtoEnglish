@@ -66,6 +66,20 @@ const LESSON_TOP_LEVEL_KEYS = new Set([
   "transferTask",
 ]);
 
+export type GeminiRequestPart =
+  | { text: string }
+  | {
+      file_data: {
+        file_uri: string;
+        mime_type?: string;
+      };
+      video_metadata?: {
+        start_offset?: string;
+        end_offset?: string;
+        fps?: number;
+      };
+    };
+
 export type GeminiTextRequestResult =
   | {
       success: true;
@@ -145,10 +159,28 @@ export function sanitizeGeminiJsonSchema(schema: unknown): unknown {
   return sanitized;
 }
 
+function normalizeRequestParts(params: {
+  prompt?: string;
+  parts?: readonly GeminiRequestPart[];
+}) {
+  const parts = params.parts?.length
+    ? [...params.parts]
+    : params.prompt
+      ? [{ text: params.prompt }]
+      : [];
+
+  if (parts.length === 0) {
+    throw new TypeError("Gemini request requires at least one content part.");
+  }
+
+  return parts;
+}
+
 export async function requestGeminiText(params: {
   apiKey: string;
   model: string;
-  prompt: string;
+  prompt?: string;
+  parts?: readonly GeminiRequestPart[];
   responseJsonSchema?: unknown;
   maxOutputTokens?: number;
   fetchImpl?: typeof fetch;
@@ -170,6 +202,7 @@ export async function requestGeminiText(params: {
   }
 
   try {
+    const parts = normalizeRequestParts(params);
     const response = await fetchImpl(
       `${endpointBase}/${encodeURIComponent(params.model)}:generateContent`,
       {
@@ -179,7 +212,7 @@ export async function requestGeminiText(params: {
           "x-goog-api-key": params.apiKey,
         },
         body: JSON.stringify({
-          contents: [{ role: "user", parts: [{ text: params.prompt }] }],
+          contents: [{ role: "user", parts }],
           generationConfig,
         }),
         signal: AbortSignal.timeout(params.timeoutMs ?? 90_000),
