@@ -1,0 +1,140 @@
+name: Spec 001 T061 Hosted Integration
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  hosted-review:
+    if: github.head_ref == 'agent/rebuild-learning-core' && github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      CI: true
+      HUSKY: 0
+      SPEC001_T061_BROKER_URL: https://zpiwddskhduuykpxltun.supabase.co/functions/v1/spec001-t061-review-session
+      SPEC001_T061_OIDC_AUDIENCE: atoenglish-spec001-t061
+    steps:
+      - name: Check out working branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/rebuild-learning-core
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm install --no-audit --prefer-offline
+
+      - name: Acquire bounded submitter and reviewer sessions
+        shell: bash
+        run: |
+          set -euo pipefail
+          separator='&'
+          if [[ "$ACTIONS_ID_TOKEN_REQUEST_URL" != *'?'* ]]; then
+            separator='?'
+          fi
+          oidc_json=$(curl -fsS \
+            -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
+            "${ACTIONS_ID_TOKEN_REQUEST_URL}${separator}audience=${SPEC001_T061_OIDC_AUDIENCE}")
+          oidc_token=$(OIDC_JSON="$oidc_json" node -e '
+            const token = JSON.parse(process.env.OIDC_JSON || "{}").value;
+            if (!token) process.exit(1);
+            process.stdout.write(token);
+          ')
+          status=$(curl -sS \
+            -o "$RUNNER_TEMP/spec001-t061-session.json" \
+            -w '%{http_code}' \
+            -H "Authorization: Bearer $oidc_token" \
+            -H 'content-type: application/json' \
+            --data '{"action":"create"}' \
+            "$SPEC001_T061_BROKER_URL")
+          if [[ "$status" != '200' ]]; then
+            SESSION_FILE="$RUNNER_TEMP/spec001-t061-session.json" node -e '
+              const fs = require("node:fs");
+              const value = JSON.parse(fs.readFileSync(process.env.SESSION_FILE, "utf8"));
+              console.error(`Broker rejected session creation: ${value.error || "unknown"}`);
+            '
+            exit 1
+          fi
+          SESSION_FILE="$RUNNER_TEMP/spec001-t061-session.json" node <<'NODE'
+          const fs = require('node:fs');
+          const session = JSON.parse(fs.readFileSync(process.env.SESSION_FILE, 'utf8'));
+          for (const side of ['submitter', 'reviewer']) {
+            for (const key of ['id', 'email', 'password']) {
+              if (!session[side]?.[key]) throw new Error(`Missing ${side}.${key}`);
+              console.log(`::add-mask::${session[side][key]}`);
+            }
+          }
+          if (!session.supabaseUrl || !session.publishableKey) {
+            throw new Error('Missing hosted project settings');
+          }
+          const values = {
+            SPEC001_T061_SUPABASE_URL: session.supabaseUrl,
+            SPEC001_T061_PUBLISHABLE_KEY: session.publishableKey,
+            SPEC001_T061_SUBMITTER_ID: session.submitter.id,
+            SPEC001_T061_SUBMITTER_EMAIL: session.submitter.email,
+            SPEC001_T061_SUBMITTER_PASSWORD: session.submitter.password,
+            SPEC001_T061_REVIEWER_ID: session.reviewer.id,
+            SPEC001_T061_REVIEWER_EMAIL: session.reviewer.email,
+            SPEC001_T061_REVIEWER_PASSWORD: session.reviewer.password,
+            SPEC001_T061_EVIDENCE_PATH: `${process.env.RUNNER_TEMP}/spec001-t061-evidence.json`,
+          };
+          fs.appendFileSync(
+            process.env.GITHUB_ENV,
+            Object.entries(values).map(([key, value]) => `${key}=${value}`).join('\n') + '\n',
+          );
+          NODE
+
+      - name: Run hosted trusted transcript reviewer flow
+        run: npx vitest run --config vitest.hosted-transcript-review.config.ts
+
+      - name: Cleanup bounded hosted fixtures
+        if: always() && env.SPEC001_T061_SUBMITTER_ID != ''
+        shell: bash
+        run: |
+          set -euo pipefail
+          separator='&'
+          if [[ "$ACTIONS_ID_TOKEN_REQUEST_URL" != *'?'* ]]; then
+            separator='?'
+          fi
+          oidc_json=$(curl -fsS \
+            -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
+            "${ACTIONS_ID_TOKEN_REQUEST_URL}${separator}audience=${SPEC001_T061_OIDC_AUDIENCE}")
+          oidc_token=$(OIDC_JSON="$oidc_json" node -e '
+            const token = JSON.parse(process.env.OIDC_JSON || "{}").value;
+            if (!token) process.exit(1);
+            process.stdout.write(token);
+          ')
+          status=$(curl -sS \
+            -o "$RUNNER_TEMP/spec001-t061-cleanup.json" \
+            -w '%{http_code}' \
+            -H "Authorization: Bearer $oidc_token" \
+            -H 'content-type: application/json' \
+            --data "{\"action\":\"cleanup\",\"submitterId\":\"$SPEC001_T061_SUBMITTER_ID\",\"reviewerId\":\"$SPEC001_T061_REVIEWER_ID\"}" \
+            "$SPEC001_T061_BROKER_URL")
+          if [[ "$status" != '200' ]]; then
+            exit 1
+          fi
+          CLEANUP_FILE="$RUNNER_TEMP/spec001-t061-cleanup.json" node -e '
+            const fs = require("node:fs");
+            const value = JSON.parse(fs.readFileSync(process.env.CLEANUP_FILE, "utf8"));
+            if (value.cleaned !== true || value.remainingSources !== 0) process.exit(1);
+          '
+
+      - name: Upload hosted T061 evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: spec001-t061-hosted-evidence
+          path: |
+            ${{ runner.temp }}/spec001-t061-evidence.json
+            ${{ runner.temp }}/spec001-t061-cleanup.json
+          if-no-files-found: warn
