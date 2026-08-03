@@ -68,3 +68,32 @@ export interface AtomicPrivateDraftRpcClient {
     error: { message: string; code?: string } | null;
   }>;
 }
+
+export interface SaveRealTalkAttemptRpcArgs {
+  p_lesson_slug: string;
+  p_evidence: Json;
+}
+
+export interface SaveRealTalkAttemptRpcRow {
+  attempt_id: string;
+  attempt_status: "started" | "in_progress" | "completed";
+  attempt_checkpoint:
+    | "environment"
+    | "first_listen"
+    | "support"
+    | "retrieval"
+    | "speaking"
+    | "transfer"
+    | "completed";
+  attempt_completed_at: string | null;
+}
+
+export interface SaveRealTalkAttemptRpcClient {
+  rpc(
+    functionName: "save_real_talk_attempt",
+    args: SaveRealTalkAttemptRpcArgs,
+  ): Promise<{
+    data: SaveRealTalkAttemptRpcRow[] | null;
+    error: { message: string; code?: string } | null;
+  }>;
+}
