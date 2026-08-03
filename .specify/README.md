@@ -1,87 +1,65 @@
 # AtoEnglish Spec Kit Workflow
 
-This repository uses GitHub Spec Kit's spec-driven sequence as its development
-control plane:
+This repository uses the sequence:
 
 ```text
 constitution
-→ specify
-→ clarify/checklist
-→ plan
-→ tasks
-→ analyze
-→ implement
-→ converge
+→ specification
+→ clarification/checklist
+→ plan/research/data/contracts
+→ dependency-ordered tasks
+→ cross-artifact analysis
+→ implementation by user story
+→ convergence and owner review
 ```
 
-## Repository layout
+## Governing product decision
+
+The owner confirmed on 2026-08-03 that the core product remains:
+
+```text
+Paste a YouTube URL
+→ generate an owner-private personal English lesson
+→ learn, save, and return
+```
+
+A fixed reviewed catalog does not replace this workflow. Public sharing and human
+publication review are later features.
+
+## Current artifacts
 
 ```text
 .specify/memory/constitution.md
-specs/<feature>/spec.md
-specs/<feature>/plan.md
-specs/<feature>/research.md
-specs/<feature>/data-model.md
-specs/<feature>/quickstart.md
-specs/<feature>/contracts/
-specs/<feature>/checklists/
-specs/<feature>/tasks.md
-specs/<feature>/analysis.md
-```
-
-The repository was initially bootstrapped manually because the first agent session
-did not have a local working tree or the `specify` CLI. The manual bootstrap does
-not claim that CLI integration files, scripts, or slash commands are installed.
-
-## Governing specs
-
-Rebuild roadmap:
-
-```text
 specs/000-atoenglish-rebuild-roadmap/
-```
-
-Existing compiler/provenance feature and evidence:
-
-```text
 specs/001-private-natural-lesson-compiler/
-```
-
-Proposed MVP convergence feature:
-
-```text
 specs/002-mvp-product-convergence/
 ```
 
-Spec 002 planning artifacts are prepared for owner review. They do not authorize
-implementation, hosted migration, preview deployment, merge, or production
-deployment. After owner acceptance, its `tasks.md` becomes the only active MVP
-implementation queue.
+- Spec 001 contains reusable compiler, transcript, Gemini, evidence, private-draft,
+  RLS, hosted, and browser work.
+- Spec 002 converges that work onto current main as the learner-facing
+  YouTube-to-private-lesson MVP.
 
-Spec 001 remains reusable evidence and source code material. Its diverged branch
-must not be merged wholesale into the future MVP branch.
+Implementation must start from current `main` and selectively port accepted work.
+The diverged Real Talk branch/PR #54 must not be merged wholesale.
 
-## Optional local CLI initialization
+## Repository Rules
 
-When working from a local clone, verify the official CLI and initialize the
-preferred agent integration without discarding existing artifacts. Review the
-CLI's proposed changes before accepting them.
+- No non-trivial implementation begins without an active spec and task mapping.
+- Checked tasks require observed evidence, not code existence.
+- Live transcript/Gemini/browser/hosted checks are not replaced by mocks.
+- Generated lessons remain private AI drafts unless a later human-review feature
+  approves publication.
+- Hosted migrations, Vercel preview, merge, and production deployment require
+  explicit authorization at their respective gates.
+- Agents do not merge or deploy automatically.
 
-Example:
+## Planning State
 
-```bash
-specify version
-specify init --here --force --integration codex --integration-options="--skills"
+```text
+Core direction:           confirmed
+Spec 002 planning:        revised and converged
+Implementation permission: not yet recorded
+Implementation branch:    not created
+Preview/merge/deploy:     not authorized
 ```
-
-Do not overwrite `.specify/memory/constitution.md` or feature artifacts without an
-explicit constitution amendment or approved spec update.
-
-## Repository rule
-
-No non-trivial implementation begins from an ad-hoc prompt alone. It must map to
-an accepted feature under `specs/`, and its pull request must state which tasks are
-complete, which evidence was observed, and which blockers remain.
-
-A planning document is not implementation permission. Migrations, previews,
-merge, and production deployment remain separate owner-gated actions.
