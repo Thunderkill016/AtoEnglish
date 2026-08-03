@@ -1,126 +1,231 @@
-name: Spec 001 Server Action Hosted
+name: Spec 001 Server Action Finalize
 
 on:
   pull_request:
     types: [opened, synchronize, reopened]
 
 permissions:
-  contents: read
-  id-token: write
+  contents: write
 
 jobs:
-  hosted-server-action:
+  finalize:
     if: github.head_ref == 'agent/rebuild-learning-core' && github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
-    timeout-minutes: 20
-    env:
-      CI: true
-      HUSKY: 0
-      SPEC001_SESSION_FUNCTION_URL: https://zpiwddskhduuykpxltun.supabase.co/functions/v1/spec001-server-action-session
-      SPEC001_OIDC_AUDIENCE: atoenglish-spec001-server-action
     steps:
       - name: Check out working branch
         uses: actions/checkout@v4
         with:
           ref: agent/rebuild-learning-core
+          fetch-depth: 0
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 24
-          cache: npm
-
-      - name: Install dependencies
-        run: npm install --no-audit --prefer-offline
-
-      - name: Acquire bounded hosted test session
-        shell: bash
+      - name: Record T051 and T068 evidence
+        shell: python
         run: |
-          set -euo pipefail
-          separator='&'
-          if [[ "$ACTIONS_ID_TOKEN_REQUEST_URL" != *'?'* ]]; then
-            separator='?'
-          fi
-          oidc_json=$(curl -fsS \
-            -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
-            "${ACTIONS_ID_TOKEN_REQUEST_URL}${separator}audience=${SPEC001_OIDC_AUDIENCE}")
-          oidc_token=$(OIDC_JSON="$oidc_json" node -e '
-            const value = JSON.parse(process.env.OIDC_JSON || "{}").value;
-            if (!value) process.exit(1);
-            process.stdout.write(value);
-          ')
-          session_json=$(curl -fsS \
-            -H "Authorization: Bearer $oidc_token" \
-            -H 'content-type: application/json' \
-            --data '{"action":"create"}' \
-            "$SPEC001_SESSION_FUNCTION_URL")
-          SESSION_JSON="$session_json" node <<'NODE'
-          const fs = require('node:fs');
-          const session = JSON.parse(process.env.SESSION_JSON || '{}');
-          const required = [
-            'userId',
-            'email',
-            'password',
-            'supabaseUrl',
-            'publishableKey',
-          ];
-          for (const key of required) {
-            if (!session[key]) throw new Error(`Missing session field: ${key}`);
+          from pathlib import Path
+
+          def replace_once(text: str, old: str, new: str, label: str) -> str:
+              count = text.count(old)
+              if count != 1:
+                  raise SystemExit(f"{label}: expected one match, found {count}")
+              return text.replace(old, new, 1)
+
+          tasks_path = Path("specs/001-private-natural-lesson-compiler/tasks.md")
+          tasks = tasks_path.read_text()
+          tasks = replace_once(
+              tasks,
+              '''- [ ] T051 [US3] Apply and verify the atomic private-draft RPC, then run repeated
+          generation, reload, and rollback behavior through the real server action and
+          hosted database''',
+              '''- [x] T051 [US3] Apply and verify the atomic private-draft RPC, then run repeated
+          generation, reload, and rollback behavior through the real server action and
+          hosted database; `generateRealTalkLesson` ran with a controlled compiler and
+          real hosted Auth, rate-limit ordering, repository, RPC, RLS, reload mapping,
+          rollback, and cleanup; evidence is recorded in
+          `t051-t068-server-action-hosted-verification.md`''',
+              "T051",
+          )
+          tasks = replace_once(
+              tasks,
+              '''Retention and history boundaries
+          are resolved. The real server-action path remains open.''',
+              '''Retention and history boundaries
+          are resolved. The real server-action persistence, reload, repeat-identity,
+          and rollback path is observed with a controlled compiler; production source
+          ingestion remains open.''',
+              "Phase 5 checkpoint",
+          )
+          tasks = replace_once(
+              tasks,
+              '''- [ ] T068 Run repeated generation twice through the real server action and prove
+          one video/lesson pair is updated rather than duplicated''',
+              '''- [x] T068 Run repeated generation twice through the real server action and prove
+          one video/lesson pair is updated rather than duplicated; two calls retained
+          one video ID and lesson identity, updated v2 content, reloaded through
+          `fetchLessonBySlug`, and left no row after a controlled failed lesson write''',
+              "T068",
+          )
+          tasks = replace_once(
+              tasks,
+              '''**Checkpoint**: Code and migration contracts remove the known two-write path.
+          Hosted transactional behavior remains unclaimed.''',
+              '''**Checkpoint**: Code and migration contracts remove the known two-write path.
+          Hosted RPC behavior and the real server-action repeat, reload, rollback, and
+          cleanup path are observed. Live provider and trusted source evidence remain
+          separate gates.''',
+              "Phase 5C checkpoint",
+          )
+          tasks = replace_once(
+              tasks,
+              '''Hosted provenance/RPC:  PASS; migrations applied and verified
+          Production adapter:     NOT IMPLEMENTED''',
+              '''Hosted provenance/RPC:  PASS; migrations applied and verified
+          Real server action:     PASS with controlled compiler + hosted Auth/RPC/RLS
+          Production adapter:     NOT IMPLEMENTED''',
+              "Current convergence result",
+          )
+          tasks_path.write_text(tasks)
+
+          evidence = '''# T051 and T068 Real Server Action Hosted Verification
+
+          **Observed:** 2026-08-03  
+          **Supabase project:** `zpiwddskhduuykpxltun`  
+          **Workflow:** `Spec 001 Server Action Hosted` run #6  
+          **Run ID:** `30777932924`  
+          **Successful job ID:** `91577135273`  
+          **Input head:** `98c786c86092b1f50fee366b62edad20287168c3`  
+          **Application deployment:** none
+
+          ## Credential boundary
+
+          GitHub Actions requested a short-lived OIDC token with audience
+          `atoenglish-spec001-server-action`. A temporary Supabase Edge Function
+          verified issuer, audience, repository, pull-request subject, PR ref, and
+          workflow name before creating one confirmed test user.
+
+          No service-role key, password, access token, or session token was committed
+          or printed. Credentials were masked immediately. The broker was replaced
+          after verification by version 3, which returns `410 Gone` and requires a
+          valid Supabase JWT.
+
+          ## Retained preflight failure
+
+          Attempt 1 stopped before a user was created because the generated password
+          was 75 bytes and Supabase Auth bcrypt accepts at most 72 bytes. Auth logs
+          recorded `bcrypt: password length exceeds 72 bytes`. Hosted inspection
+          returned zero matching users, videos, and lessons.
+
+          The broker was corrected to generate a 35-byte password. Only the failed job
+          was rerun; OIDC restrictions were unchanged.
+
+          ## Executed application path
+
+          Attempt 2 invoked the exported Next.js server actions directly:
+
+          ```text
+          generateRealTalkLesson
+          → generatePrivateLesson orchestration
+          → real hosted Supabase Auth session
+          → request-header and rate-limit boundary
+          → persistOwnerPrivateDraft
+          → upsert_real_talk_private_draft RPC
+          → hosted RLS tables
+          → fetchLessonBySlug reload mapping
+          ```
+
+          Transcript/Gemini compilation was replaced by a deterministic controlled
+          compiler fixture. This isolates persistence behavior; live Gemini remains a
+          separate evidence class under T082. Authentication, server-action
+          orchestration, repository mapping, RPC, RLS, database writes, reload, and
+          rollback were real.
+
+          ## Artifact evidence
+
+          Artifact `spec001-server-action-hosted-evidence` (`8842712985`) recorded:
+
+          ```json
+          {
+            "realServerActionInvoked": true,
+            "realHostedAuthSession": true,
+            "repeatedGenerationSameVideoIdentity": true,
+            "repeatedGenerationSameLessonIdentity": true,
+            "hostedVideoRows": 1,
+            "hostedLessonRows": 1,
+            "reloadObserved": true,
+            "controlledPersistenceFailureCode": "DRAFT_PERSISTENCE_FAILED",
+            "failedWriteLeftNoVideo": true,
+            "compilerBoundary": "controlled_fixture",
+            "persistenceBoundary": "real_hosted_rpc_rls"
           }
-          console.log(`::add-mask::${session.email}`);
-          console.log(`::add-mask::${session.password}`);
-          console.log(`::add-mask::${session.userId}`);
-          fs.appendFileSync(
-            process.env.GITHUB_ENV,
-            [
-              `SPEC001_TEST_USER_ID=${session.userId}`,
-              `SPEC001_TEST_EMAIL=${session.email}`,
-              `SPEC001_TEST_PASSWORD=${session.password}`,
-              `SPEC001_SUPABASE_URL=${session.supabaseUrl}`,
-              `SPEC001_SUPABASE_PUBLISHABLE_KEY=${session.publishableKey}`,
-            ].join('\n') + '\n',
-          );
-          NODE
+          ```
 
-      - name: Run real server action with hosted Auth and database
-        env:
-          SPEC001_EVIDENCE_PATH: ${{ runner.temp }}/spec001-server-action-evidence.json
-        run: npx vitest run --config vitest.hosted-real-talk.config.ts
+          Two calls for the same owner, source, and level retained one private
+          video/lesson identity and updated the stored v2 content. The result reloaded
+          through `fetchLessonBySlug`.
 
-      - name: Cleanup bounded hosted fixtures
-        if: always() && env.SPEC001_TEST_USER_ID != ''
+          A third call used a separate source and a controlled lesson constraint
+          failure. It returned `DRAFT_PERSISTENCE_FAILED`; hosted lookup found zero
+          video rows for that source, so no partial video survived.
+
+          ## Cleanup
+
+          The OIDC-protected cleanup returned:
+
+          ```json
+          {"cleaned": true}
+          ```
+
+          An independent SQL query after the workflow observed:
+
+          ```text
+          matching_users   = 0
+          matching_videos  = 0
+          matching_lessons = 0
+          ```
+
+          ## Boundary
+
+          - T051: complete for real server-action persistence, reload, rollback, and cleanup.
+          - T068: complete for repeated-generation identity and update behavior.
+          - Live Gemini/provider behavior: not claimed.
+          - Production-approved transcript ingestion: not implemented.
+          - Browser Playwright flow: not run by this harness.
+          - Application deployment: not performed.
+          '''.replace("          ", "")
+          Path(
+              "specs/001-private-natural-lesson-compiler/"
+              "t051-t068-server-action-hosted-verification.md"
+          ).write_text(evidence)
+
+          convergence_path = Path(
+              "specs/001-private-natural-lesson-compiler/convergence-review.md"
+          )
+          convergence = convergence_path.read_text()
+          convergence += '''
+
+          ## 2026-08-03 real server-action hosted follow-up
+
+          T051 and T068 are now observed through the exported Next.js server actions
+          with a controlled compiler and real hosted Auth, repository, atomic RPC,
+          RLS, reload mapping, rollback, and cleanup. Repeated generation retained one
+          video/lesson identity; a controlled lesson failure left no video-only row.
+
+          This closes the real persistence-process gap. It does not close live Gemini,
+          production-approved transcript ingestion, persisted browser Playwright, or
+          human review. The convergence decision remains **NOT CONVERGED** and the PR
+          remains **DO NOT MERGE / DO NOT DEPLOY**.
+
+          Detailed evidence:
+          `t051-t068-server-action-hosted-verification.md`.
+          '''.replace("          ", "")
+          convergence_path.write_text(convergence)
+
+          Path(".github/workflows/spec001-server-action-hosted.yml").unlink()
+
+      - name: Commit final evidence
         shell: bash
         run: |
-          set -euo pipefail
-          separator='&'
-          if [[ "$ACTIONS_ID_TOKEN_REQUEST_URL" != *'?'* ]]; then
-            separator='?'
-          fi
-          oidc_json=$(curl -fsS \
-            -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
-            "${ACTIONS_ID_TOKEN_REQUEST_URL}${separator}audience=${SPEC001_OIDC_AUDIENCE}")
-          oidc_token=$(OIDC_JSON="$oidc_json" node -e '
-            const value = JSON.parse(process.env.OIDC_JSON || "{}").value;
-            if (!value) process.exit(1);
-            process.stdout.write(value);
-          ')
-          cleanup_json=$(curl -fsS \
-            -H "Authorization: Bearer $oidc_token" \
-            -H 'content-type: application/json' \
-            --data "{\"action\":\"cleanup\",\"userId\":\"$SPEC001_TEST_USER_ID\"}" \
-            "$SPEC001_SESSION_FUNCTION_URL")
-          CLEANUP_JSON="$cleanup_json" node -e '
-            const result = JSON.parse(process.env.CLEANUP_JSON || "{}");
-            if (result.cleaned !== true) process.exit(1);
-          '
-          printf '%s\n' "$cleanup_json" > "$RUNNER_TEMP/spec001-server-action-cleanup.json"
-
-      - name: Upload hosted server-action evidence
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: spec001-server-action-hosted-evidence
-          path: |
-            ${{ runner.temp }}/spec001-server-action-evidence.json
-            ${{ runner.temp }}/spec001-server-action-cleanup.json
-          if-no-files-found: warn
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "docs(spec001): record hosted server-action verification"
+          git push origin HEAD:agent/rebuild-learning-core
