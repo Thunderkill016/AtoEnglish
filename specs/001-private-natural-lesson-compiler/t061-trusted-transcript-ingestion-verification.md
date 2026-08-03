@@ -135,8 +135,17 @@ transcript source rows   = 0
 ```
 
 The temporary OIDC broker was replaced by version 2, which returns `410 Gone` and
-requires a valid Supabase JWT. The one-shot GitHub workflow was removed. The real
-JWT-authenticated `real-talk-transcript-review` function remains active.
+requires a valid Supabase JWT:
+
+```text
+name:       spec001-t061-review-session
+function:   618c301c-f022-44d9-a33e-eca5e2dacf49
+version:    2
+verify_jwt: true
+```
+
+The one-shot GitHub workflow was removed. The real JWT-authenticated
+`real-talk-transcript-review` function remains active.
 
 ## Honest boundary
 
