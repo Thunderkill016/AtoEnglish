@@ -1,239 +1,266 @@
-# Implementation Plan: AtoEnglish MVP Product Convergence
+# Implementation Plan: AtoEnglish MVP — YouTube to Private Lesson
 
-**Branch for this plan:** `spec/mvp-product-convergence`  
-**Future implementation branch:** `integration/mvp-product-convergence` created from then-current `main`  
-**Application deployment:** none in planning phase
+**Planning branch:** `spec/mvp-product-convergence`  
+**Future implementation branch:** `integration/mvp-youtube-to-lesson`, created from then-current `main`  
+**Planning deployment:** none
+
+## Owner-Corrected Product Goal
+
+The product's core interaction is:
+
+```text
+paste YouTube URL
+→ generate a private evidence-bound lesson
+→ learn from that selected interaction
+→ save and revisit it
+```
+
+A fixed reviewed catalog is not the MVP. Human review/publication belongs to a
+later shared-content feature. The MVP serves the authenticated owner with a
+private `ai_draft` and visible transcript/AI uncertainty.
 
 ## Technical Context
 
-- Framework: Next.js 16.2.9 App Router, React 19.2, TypeScript 6
-- Styling/UI: Tailwind CSS v4, Base UI, Framer Motion, existing AtoEnglish design system
-- Database/Auth: hosted Supabase project `zpiwddskhduuykpxltun`, PostgreSQL 17, RLS
-- Hosting: Vercel project `atoenglish`, Node 24
-- Tests: Vitest, Playwright, content-standard checks, hosted Supabase integration checks
-- Monitoring: Sentry, Vercel Analytics/Speed Insights; current Vercel seven-day runtime error query returned no grouped errors
-- Current repository state:
-  - `main`: `961e779886ff95b1b5f67d5e6997520d1facdb1a`
-  - Real Talk branch: `e1642db1540046271f520f72f1b20a04e5d84f09`
-  - comparison: diverged, Real Talk branch 420 commits ahead and 7 commits behind `main`
-  - active Real Talk PR #54 targets a non-main baseline and MUST NOT be merged wholesale
+- Next.js 16.2.9 App Router, React 19, TypeScript, Tailwind CSS v4
+- Hosted Supabase: `zpiwddskhduuykpxltun`, Auth, PostgreSQL, RLS
+- Vercel project: `atoenglish`, Node 24
+- Generation provider: Gemini behind the existing typed provider contract
+- Source: supported public YouTube URL, official embed/watch playback
+- Transcript: replaceable timed-transcript adapter with explicit mode and failure codes
+- Tests: Vitest, Playwright, content checks, hosted RLS/integration, live bounded provider checks
+- Branch state: `agent/rebuild-learning-core` contains valuable Spec 001 work but is diverged 420 commits ahead and 7 behind `main`; it MUST NOT be merged wholesale
 
-## Constitution Check — Before Design
+## Constitution Check
 
 | Principle | Plan response |
 | --- | --- |
-| Natural Communication First | MVP surface is one reviewed natural environment, not the existing grammar/unit catalog. |
-| Evidence-Bound Generation | Learner catalog excludes static samples and unreviewed AI drafts. |
-| Transfer Before Completion | Transfer attempt is a hard completion gate. |
-| Rights, Privacy, Safety | Reviewed source packages only; official playback; no raw audio/free text. |
-| Small Testable Delivery | One environment, three reviewed lessons, one end-to-end loop. |
-| Measurable Evidence | Technical, lesson, learner-funnel, and owner-acceptance evidence remain separate. |
+| Natural Communication First | The compiler selects a bounded natural interaction from the learner's chosen video and builds the lesson around its situation and practical goal. |
+| Evidence-Bound Generation | All source-dependent generated claims validate against timed transcript cues; invalid output is rejected. |
+| Transfer Before Completion | The private lesson cannot complete without changed-context production. |
+| Rights, Privacy, Safety | Official playback only, no media re-hosting, owner-private drafts, visible warnings, RLS, no raw learner audio/free text. |
+| Small Testable Delivery | One supported YouTube-to-private-lesson journey, not a catalog/curriculum rebuild. |
+| Measurable Evidence | Technical, provider, browser, learner-flow, and owner evidence remain distinct. |
 
-**Gate result:** PASS for planning. Implementation remains blocked until the owner accepts this specification and the initial source-review capacity is confirmed.
+**Result:** PASS as a private-generation MVP. Public sharing remains blocked behind human review.
 
-## Repository Findings Driving the Plan
+## Repository Findings Driving the Revised Plan
 
-1. The production-shaped build exposes more than forty routes and 89 generated pages, while the product north star needs one focused learner loop.
-2. The current landing page still promises a 28-day speaking journey, while the governing product truth is natural communication / Real Talk.
-3. Login combines onboarding and authentication; the UI declares four survey questions but the current three-step path asks one and silently defaults the others.
-4. Signup performs profile/progress inserts directly from the browser, creating duplicated email/OAuth bootstrap paths and partial-state risk.
-5. The dashboard depends on legacy XP, streak, flashcards, speaking sessions, word-of-day, fifty-unit metadata, and multiple action calls; this is not required for MVP activation.
-6. Navigation still exposes lessons, speaking, writing, progress, leaderboard, roadmap, business, challenge, and pronunciation as product surfaces.
-7. The learner Real Talk catalog mixes database rows with static sample lessons. Static data includes transcript/speaker/pronunciation claims that did not pass the hosted review registry.
-8. The Real Talk hub exposes arbitrary YouTube lesson generation to learners, while the approved compiler is owner-private and the current transcript adapter remains experimental.
-9. Hosted Supabase has 26 public tables with RLS enabled; most application tables have zero rows. It has 3 Auth users, 16 pilot events, and no persisted learner progress or Real Talk catalog rows at audit time.
-10. Hosted Real Talk migrations and reviewed-source infrastructure are applied, but the current video schema remains YouTube-specific even though the controlled approved source is Wikimedia/DVIDS.
-11. `main` and the Real Talk branch do not share one dependency/type baseline. `main` removed the old `gtts` chain and pins Node/npm; the Real Talk branch still carries older package state. `main` also points `db:types` at a different Supabase project ID.
-12. Vercel is connected and recent preview deployments are READY, but the project reports no active production deployment for the current work.
+1. The existing Real Talk compiler already implements much of the desired product: authenticated generation, bounded transcript selection, Gemini structured output, evidence validation, private persistence, RLS, and a learner-like preview.
+2. The previous MVP plan incorrectly demoted `/real-talk/create` and arbitrary YouTube input. Owner correction makes that flow the primary learner action.
+3. Current landing/auth/dashboard/navigation still describe legacy 28-day, unit, XP, flashcard, writing, and gamification experiences instead of URL-to-lesson generation.
+4. The current create flow is production-blocked by transcript acquisition policy and missing live Gemini-key evidence, not by lack of UI or database infrastructure.
+5. Static sample lessons must not be mistaken for lessons generated from the user's URL. They may remain only as controlled fixtures/demos.
+6. The hosted database already contains private Real Talk schema, atomic persistence, transcript provenance, RLS, and reviewed-source infrastructure.
+7. Main and the Real Talk branch have different package/type baselines; implementation must preserve main's Node/npm/lockfile and selectively port only required files.
+8. The hosted Supabase project is mostly empty, so product convergence can focus on correct private-generation semantics without a large user-data migration.
 
-## MVP Architecture Decision
-
-Preserve the modular monolith and reduce the learner shell.
+## Target Product Architecture
 
 ```text
 src/app/
-├── page.tsx                         # truthful landing
-├── login/                           # auth only; no fake personalization
+├── page.tsx                              # promise: paste YouTube, get a private lesson
+├── login/                                # auth only
 └── (main)/
-    ├── dashboard/                   # one next action + continue/review
-    ├── real-talk/                   # reviewed catalog
-    ├── real-talk/[lessonSlug]/      # environment runtime
-    └── me/                          # account, logout, bounded history
-
-src/features/mvp/
-├── domain/                          # learner state and route decisions
-├── server/                          # account bootstrap and dashboard query
-└── components/                      # focused shell/empty/error states
+    ├── dashboard/                        # URL form + recent/continue/review lessons
+    ├── real-talk/create/                 # focused generation surface, or embedded in dashboard
+    ├── real-talk/[lessonSlug]/            # owner-private lesson runtime
+    └── me/                               # account/logout/private history
 
 src/features/real-talk/
-├── domain/                          # reviewed lesson/playback/attempt contracts
-├── server/                          # catalog, lesson, attempt repositories
-├── client/                          # bounded browser progress state
-└── components/                      # runtime phases
+├── application/generate-private-lesson.ts
+├── domain/                               # URL, transcript, result, prompt, draft identity, runtime
+├── server/                               # YouTube source, transcript adapter, Gemini, compiler, persistence
+├── components/                           # generation form/status + lesson runtime
+└── client/                               # bounded progress/checkpoint state
+
+src/features/mvp/
+├── domain/                               # dashboard/account states
+└── server/                               # bootstrap + recent private lesson query
 ```
 
-Legacy routes remain outside the primary shell. They are not rewritten during the
-MVP unless a route can leak an unsupported promise or bypass the MVP access model.
+No public catalog is required. `/real-talk` may become the owner's private lesson
+library or redirect to the dashboard.
 
-## Integration Strategy
+## Selective-Port Strategy
 
-### Do not merge PR #54 wholesale
+Create the implementation branch from current `main`. Build a file-level manifest
+with `port`, `adapt`, `reference`, or `reject` classifications.
 
-Create `integration/mvp-product-convergence` from current `main`. Produce a port
-manifest with each Real Talk file classified as:
+### High-priority port/adapt candidates
 
-- **port unchanged** — contract/security code already independently verified;
-- **port with adaptation** — useful behavior but tied to static samples, YouTube,
-  old navigation, or private-preview assumptions;
-- **reference only** — tests/evidence that guide a new implementation;
-- **reject** — experimental, conflicting, stale, or outside MVP.
-
-### Default port candidates
-
+- `src/features/real-talk/application/generate-private-lesson.ts`
 - `src/features/real-talk/domain/**`
-- `src/features/real-talk/server/transcript-provenance.ts`
+- `src/features/real-talk/server/private-lesson-compiler.ts`
+- `src/features/real-talk/server/gemini-lesson-provider.ts`
 - `src/features/real-talk/server/transcript-source-policy.ts`
-- `src/features/real-talk/server/transcript-sources/supabase-reviewed.ts`
+- `src/features/real-talk/server/transcript-sources/youtube-experimental.ts`
+- `src/features/real-talk/server/draft-repository.ts`
 - `src/features/real-talk/server/draft-mapping.ts`
-- selected lesson runtime components and their tests
-- reviewed-source Edge Function and versioned Real Talk migrations
-- Spec 001 security, RLS, hosted, and browser evidence
+- `src/app/actions/real-talk.ts`
+- `src/app/(main)/real-talk/create/page.tsx`
+- private lesson runtime components/tests
+- atomic private-draft/provenance migrations already applied to hosted Supabase
+- Spec 001 hosted/browser verification artifacts as evidence references
 
-### Default reject or isolate candidates
+### Reject/isolate from the MVP critical path
 
-- learner-facing `/real-talk/create`
-- `youtube-transcript` in production paths
-- static `src/lib/data/real-talk/videos.ts` as catalog fallback
-- static sample transcript, speaker, translation, pronunciation, and answer claims
-- old package/lockfile state and `gtts` dependency chain
-- broad mission, XP, streak, league, writing, notification, and curriculum changes
-- unapplied `20260731162613_learning_attempts.sql` unless a new data-model review explicitly adopts it
+- public static sample catalog fallback
+- automatic publication or shared catalog
+- broad mission/curriculum/gamification work
+- stale package/lockfile state and the `gtts` dependency chain
+- unapplied `20260731162613_learning_attempts.sql` unless separately adopted after model review
+
+## Transcript Acquisition Decision
+
+The URL-only product depends on timed transcript evidence. The implementation must
+make a production/private-MVP decision before release:
+
+1. identify the exact adapter used for supported YouTube videos;
+2. document acquisition mode, reliability, terms/rights risk, language/timing limits, and failure modes;
+3. keep the adapter replaceable;
+4. label generated lessons with acquisition mode and warnings;
+5. fail unsupported videos honestly;
+6. keep generated output owner-private;
+7. never download/re-host video or treat a URL as permission for public derivatives.
+
+The current experimental adapter may be used in a controlled preview only after
+this decision is documented. It cannot silently be promoted because tests pass.
 
 ## Data Strategy
 
-1. Align repository generated types and environment documentation to the hosted project `zpiwddskhduuykpxltun`.
-2. Add a provider-neutral playback/source migration rather than forcing Wikimedia or owned sources into `youtube_id`.
-3. Keep reviewed source provenance in `real_talk_transcript_sources`.
-4. Keep public lesson content in `real_talk_videos` and `real_talk_lessons`, with public eligibility enforced by database/query constraints.
-5. Add a dedicated bounded attempt/progress record only if existing `user_v2_lesson_progress` and `lesson_v2_evidence` cannot meet transfer/support/privacy requirements cleanly.
-6. Do not store raw speech, learner free text, names, or employers.
-7. Create one controlled publication/seed operation for the initial reviewed corpus; full reviewer/publication UI is deferred.
+Reuse the existing private draft tables and atomic persistence where their hosted
+schema matches the Spec 001 contracts:
+
+- `real_talk_videos`: source identity, owner, URL/video metadata, selected window, transcript provenance, private/public state
+- `real_talk_lessons`: generated structured lesson, model, warnings, environment, activities, transfer task, `ai_draft` state
+- `real_talk_transcript_sources`: optional reviewed/registered source evidence; not required for every private user-generated lesson if acquisition provenance is stored elsewhere
+
+Add or adapt a bounded learner-attempt record only when existing progress tables
+cannot express first listen, support, retrieval, speech confirmation, and transfer.
+
+Do not store raw recordings, unrestricted speech/transfer text, names, employers,
+or arbitrary analytics payloads.
 
 ## UI and Information Architecture
 
-### Public
+### Landing
 
-- Landing
-- Login/signup
-- Privacy/terms
+- Headline: turn a YouTube video into a personal English lesson
+- Explain supported-video limitations and AI/transcript uncertainty honestly
+- Primary CTA: paste a link after authentication
 
-### Authenticated primary shell
+### Authenticated dashboard
 
-- **Học**: dashboard and reviewed lesson catalog
-- **Ôn lại**: completed/in-progress lessons; no FSRS or mastery claim required
-- **Tôi**: account, logout, minimal history/settings
+- YouTube URL input is the primary action
+- Generation state: validating → reading transcript → selecting interaction → generating → validating → saving
+- Recent private lessons with `continue`, `review`, `retry`, or `failed` states
+- Clear supported/unsupported error guidance
 
-### Hidden/deferred from MVP primary navigation
+### Private lesson
 
-- `/learn` legacy unit catalog
-- `/flashcards` legacy SRS
-- `/grammar`
-- `/speaking/*` broad tools
-- `/writing/*`
-- `/leaderboard`
-- `/challenge`
-- `/certificate/*`
-- `/business`
-- `/roadmap`
-- `/pronunciation`
-- notifications/push engagement surfaces
+- Source and official playback
+- AI draft/transcript-mode warnings
+- environment briefing
+- first listening encounter
+- progressive support
+- productive retrieval
+- speak-and-confirm
+- changed-context transfer
+- honest completion
 
-Routes may remain reachable to developers during convergence, but the preview
-acceptance environment must expose one coherent product story.
+### Minimal navigation
+
+- Tạo bài / Học
+- Bài của tôi
+- Tôi
+
+Legacy modules stay out of the primary MVP shell.
 
 ## Delivery Phases
 
-### Phase 0 — Governance and branch convergence
+### Phase 0 — Governance and baseline
 
-- approve MVP spec;
-- freeze exact source SHAs;
-- create integration branch from current `main`;
-- create and review selective port manifest;
-- align toolchain, lockfile, Supabase project reference, and CI.
+- record owner correction;
+- create fresh-main implementation branch;
+- build selective-port manifest;
+- align package, Supabase types/project reference, CI, and environment docs.
 
-### Phase 1 — Product shell
+### Phase 1 — Entry, auth, and generation dashboard
 
-- replace landing promise and CTA;
-- simplify auth and create server-side account bootstrap;
-- protect dashboard/catalog/account routes;
-- reduce primary navigation;
-- replace dashboard with one next-action experience and honest empty/error states.
+- rewrite landing promise;
+- simplify auth and server-side bootstrap;
+- protect private routes;
+- make URL form/recent lessons the dashboard core;
+- remove fake personalization and unrelated navigation.
 
-### Phase 2 — Reviewed content and publication boundary
+### Phase 2 — YouTube source and transcript boundary
 
-- select one environment;
-- human-review at least three source packages;
-- generalize source playback fields;
-- create authorized public catalog records;
-- remove static sample fallback and learner-facing generation controls.
+- validate/normalize YouTube URLs;
+- verify official playback/embed availability;
+- finalize transcript adapter decision and failure codes;
+- implement supported-video checks and bounded transcript acquisition;
+- preserve source metadata/provenance/warnings.
 
-### Phase 3 — Learner runtime and persistence
+### Phase 3 — Private compiler and persistence
 
-- adapt reviewed lesson runtime to shared product layout;
-- implement cold listen, progressive support, retrieval, speaking confirmation,
-  transfer, and honest completion;
-- persist bounded attempt/progress evidence with RLS and idempotency;
-- surface continue/completed/review state on dashboard.
+- port compiler/Gemini/evidence contracts;
+- authenticate before provider calls;
+- run structured generation and source validation;
+- atomically persist deterministic owner-private `ai_draft`;
+- expose actionable generation status and retry behavior;
+- verify live Gemini success/failure with a bounded key.
 
-### Phase 4 — Pilot instrumentation and hardening
+### Phase 4 — Lesson runtime and return
 
-- reuse or narrow `pilot_events` for the MVP funnel;
-- add loading, empty, offline/media, auth, and persistence failure behavior;
-- run security/performance advisors;
-- verify no legacy or editor-only route is presented as the MVP.
+- adapt the environment-first preview into the owner learner runtime;
+- enforce retrieval, speaking confirmation, and transfer completion gates;
+- persist bounded progress;
+- build recent/private library and return states;
+- prove cross-user denial.
 
-### Phase 5 — Preview, owner acceptance, and release decision
+### Phase 5 — Preview and release gates
 
 - exact-head technical gates;
-- hosted two-user RLS checks;
-- desktop/mobile full-journey Playwright;
-- one Vercel preview and runtime-log inspection;
-- human lesson review evidence;
+- hosted Auth/RLS/atomic-persistence checks;
+- controlled supported/unsupported YouTube checks;
+- desktop/mobile end-to-end preview;
+- Vercel runtime error inspection;
 - owner acceptance;
-- only then prepare a main-targeted merge PR and separately authorize production deployment.
+- separate merge and production-deployment authorization.
 
 ## Risk Register
 
 | Risk | Impact | Mitigation |
 | --- | --- | --- |
-| Whole-branch merge reintroduces removed dependencies and conflicts | High | Fresh integration branch plus exact port manifest. |
-| Static samples leak unreviewed content | High | Database-only catalog; fail closed with empty state. |
-| No human-reviewed three-lesson corpus | High | Content review is a release blocker, not post-launch cleanup. |
-| YouTube-specific schema blocks safer public-domain sources | High | Provider-neutral playback migration before corpus seed. |
-| Auth bootstrap creates partial rows | High | One server-side idempotent transaction/RPC. |
-| Legacy dashboard/navigation confuses product test | High | MVP shell replaces primary paths; deferred features hidden. |
-| Progress schema stores excessive learner content | High | Bounded evidence schema and privacy contract tests. |
-| CI passes but preview product is incoherent | High | Full browser journey and owner acceptance required. |
-| Vercel/Supabase envs point at different projects | High | Environment/type equivalence gate before preview. |
-| MVP expands into curriculum/gamification rewrite | Medium | Explicit route and task allow-list; stop on scope escape. |
+| Transcript adapter cannot reliably support arbitrary YouTube URLs | Critical | Promise only supported videos; explicit adapter decision, failure codes, replacement boundary. |
+| Live Gemini key/provider path missing | Critical | Treat live success/failure as release blocker; never substitute mocks. |
+| Whole-branch merge reintroduces stale dependencies/product state | High | Fresh-main integration and exact port manifest. |
+| Generated transcript/lesson contains errors | High | Timed-cue evidence validation, AI-draft label, warnings, private-only state. |
+| User expects every video to work | High | Supported-video requirements and actionable failure copy on landing/form. |
+| Partial lesson persists after provider/database failure | High | Atomic deterministic persistence and cleanup tests. |
+| Cross-user private lesson leak | Critical | RLS, owner-derived queries, two-user hosted/browser tests. |
+| Static fixtures appear as user-generated output | High | Remove fixture fallback from private library/production generation paths. |
+| Legacy dashboard obscures core action | High | URL form and recent private lessons become the entire primary dashboard. |
+| CI passes without provider/browser reality | High | Live adapter/Gemini/hosted/preview evidence required. |
 
 ## Constitution Check — After Design
 
-- Natural communication remains the learner surface: PASS.
-- All learner content requires reviewed evidence: PASS.
-- Transfer is required before completion: PASS.
-- Privacy and source rights fail closed: PASS.
-- Delivery is one independently testable vertical slice: PASS.
-- Product evidence is not inferred from CI: PASS.
+- Natural interaction chosen by the learner is the content source: PASS.
+- Generated claims remain bounded to transcript evidence: PASS.
+- Private AI draft is not confused with reviewed/public content: PASS.
+- Transfer remains a completion gate: PASS.
+- Official playback and privacy boundaries remain intact: PASS.
+- One vertical slice can be independently tested: PASS.
 
 ## Stop Conditions
 
-Implementation stops and returns to planning when:
+Return to planning if:
 
-- fewer than three source packages can pass human review;
-- the integration requires merging the Real Talk branch wholesale;
-- a new service or broad schema rewrite is proposed without a measured blocker;
-- playback or derivative rights are unresolved;
-- a required learner quote or answer cannot be traced to reviewed source evidence;
-- preview and hosted database cannot be made to use the same project/environment;
-- the owner changes the target environment or MVP promise.
+- no acceptable transcript acquisition method can support the URL-only workflow;
+- implementation would require a whole-branch merge;
+- hosted schema differs materially from the private-draft contract;
+- live Gemini cannot be tested safely;
+- source-dependent output cannot be validated against timed cues;
+- generated lessons cannot remain owner-private;
+- the product promise expands to every YouTube video rather than supported videos;
+- the owner changes the paste-URL core idea.
