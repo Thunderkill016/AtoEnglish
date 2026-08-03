@@ -20,7 +20,7 @@
     "e2e:a11y": "dotenv -e .env.local -- playwright test e2e/accessibility-smoke.spec.ts",
     "e2e:time-to-lesson": "dotenv -e .env.local -- playwright test e2e/time-to-lesson.spec.ts",
     "e2e:ui": "dotenv -e .env.local -- playwright test --ui",
-    "db:types": "npx supabase@2 gen types typescript --project-id vhpfskkredizeazlyzsh > src/types/supabase.ts",
+    "db:types": "npx supabase@2 gen types typescript --project-id zpiwddskhduuykpxltun > src/types/supabase.ts",
     "prepare": "husky",
     "test:integration": "dotenv -e .env.local -- vitest run --config vitest.integration.config.ts",
     "audio:generate": "tsx scripts/generate-unit-audio.ts",
@@ -60,7 +60,7 @@
     "sonner": "^2.0.7",
     "tailwind-merge": "^3.6.0",
     "ts-fsrs": "^5.4.1",
-    "web-push": "^3.6.7",
+    "web-push": "^3.6.4",
     "zod": "^4.4.3"
   },
   "devDependencies": {
