@@ -69,7 +69,39 @@ real_talk_videos = 0
 real_talk_lessons = 0
 ```
 
-This is strong database-policy evidence. It is not identical to executing the repository's Vitest scaffold through PostgREST with real signed sessions. That HTTP-client execution remains open because the connector does not expose a service-role key to a CI runner.
+This database-policy evidence is now complemented by hosted Auth and PostgREST execution with real signed sessions.
+
+## Signed-session PostgREST verification
+
+On 2026-08-03, a bounded hosted harness executed the same owner A, owner B, and anonymous acceptance matrix through Supabase Auth sessions and the PostgREST Data API.
+
+Observed behavior:
+
+```text
+HTTP status                          = 200
+signed sessions                     = 2
+owner private insert/reload         = pass
+anonymous insert denied             = pass
+owner B read denied                 = pass
+anonymous read denied               = pass
+owner B update/delete denied        = pass
+owner publication denied            = pass
+owner review elevation denied       = pass
+pre-approved insertion denied       = pass
+cross-owner lesson insertion denied = pass
+anonymous public catalog clean      = pass
+```
+
+The GitHub Actions preflight run `30773762805` did not execute the assertions because the repository has no protected service-role secret. To avoid exporting that credential, the passing harness consumed Supabase's platform-provided server secret internally and returned only boolean evidence.
+
+After the response:
+
+- the harness function was replaced by a disabled `410` handler with JWT verification enabled;
+- the temporary `pg_net` extension was removed;
+- cleanup returned zero test users, videos, and lessons;
+- no migration, application preview, or production deployment was created.
+
+Full evidence is recorded in `t050-signed-session-verification.md`.
 
 ## Advisor evidence
 
@@ -102,9 +134,10 @@ src/types/real-talk-supabase.generated.ts
 
 - Hosted migration application: **observed**
 - PostgreSQL RLS semantics: **observed**
-- Rollback cleanup: **observed**
+- Signed-session Auth and PostgREST RLS matrix: **observed**
+- Rollback and fixture cleanup: **observed**
 - Supabase Advisor after DDL: **observed**
 - Hosted TypeScript generation: **observed**
-- Vitest PostgREST integration scaffold: **not run**
+- GitHub-hosted Vitest process: **not run; protected service-role secret absent**
 - Real application persistence through browser/server action: **not run**
 - Production deployment: **not performed**
