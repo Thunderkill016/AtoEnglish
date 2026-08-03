@@ -149,8 +149,12 @@ owner B cannot read or mutate it; owner A cannot publish or approve it.
 - [x] T047 [US3] Run Supabase Security and Performance Advisors and address Real
   Talk findings
 - [x] T048 [US3] Generate and reconcile the exact hosted Real Talk type fragment
-- [ ] T049 [US3] Replace the full local generated `src/types/supabase.ts` and prove
-  equivalence before removing the reconciliation fragment
+- [x] T049 [US3] Replace the full local generated `src/types/supabase.ts` and prove
+  hosted-schema equivalence; the generated baseline now matches project
+  `zpiwddskhduuykpxltun`, while explicit app-level overlays remain for unapplied
+  migration `20260731162613_learning_attempts.sql`, T060 provenance fields, and
+  the T067 atomic RPC; evidence is recorded in
+  `t049-hosted-types-verification.md`
 - [x] T050 [US3] Run the signed-session PostgREST integration scaffold against the
   authorized migrated project; observed on 2026-08-03 through two real Supabase
   Auth sessions with all owner, anonymous, cross-owner, publication, review-state,
@@ -162,7 +166,9 @@ owner B cannot read or mutate it; owner A cannot publish or approve it.
 - [ ] T052 [US3] Decide retention, owner deletion UX, and immutable attempt history
 
 **Checkpoint**: Hosted database invariants now have role-level and signed-session
-PostgREST evidence. The real server-action path remains open.
+PostgREST evidence. The full generated type baseline matches hosted truth; pending
+DDL remains visible only through named overlays. The real server-action path
+remains open.
 
 ---
 
@@ -306,9 +312,11 @@ authenticated request
 Current result:
 
 ```text
-Technical checks:       PASS on Verify #147
+Technical checks:       PASS on Verify #169
 Provenance code/tests:  PASS
 Atomic RPC code/tests:  PASS
+Hosted type baseline:   PASS against generated project snapshot
+Learning attempts DDL: NOT APPLIED; explicit typed overlay only
 Signed-session RLS:     PASS through hosted Auth + PostgREST
 Hosted new DDL:         NOT APPLIED
 Production adapter:     NOT IMPLEMENTED
