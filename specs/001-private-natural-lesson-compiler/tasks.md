@@ -305,9 +305,10 @@ green partial check.
   desktop and Android-mobile; run #1 retained transient mobile error 150 and run
   #2 passed the same controlled source
 - [x] T084 Resolve the production transcript policy decision by retaining the
-  explicit merge blocker; T061 now verifies a trusted adapter and reviewer flow,
-  but public routing, live Gemini, persisted browser evidence, and human review
-  remain required before merge or deployment
+  explicit merge blocker; T061 now verifies a trusted adapter and reviewer flow
+  and T074 verifies the authenticated persisted browser loop, while public
+  routing, live Gemini, and human review remain required before merge or
+  deployment
 - [x] T085 Run the requirements checklist review with observed evidence classes
 - [x] T086 Run final cross-artifact analysis
 - [x] T087 Run requirement-to-evidence convergence review; result remains NOT

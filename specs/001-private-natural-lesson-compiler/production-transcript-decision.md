@@ -146,11 +146,10 @@ The merge blocker remains, but its reason has narrowed:
    registry adapter;
 2. T082 live Gemini verification is blocked by the missing GitHub Actions
    secret;
-3. T074 persisted authenticated desktop/mobile browser verification is complete;
-4. T075 human source-language, timing, situation, Vietnamese-guidance, and
+3. T075 human source-language, timing, situation, Vietnamese-guidance, and
    transfer-coherence review is open;
-5. owner acceptance T088 is open;
-6. publication remains outside spec 001.
+4. owner acceptance T088 is open;
+5. publication remains outside spec 001.
 
 Therefore no automatic public-YouTube transcript mode is approved, no fallback
 to unofficial caption acquisition is permitted, and the PR remains

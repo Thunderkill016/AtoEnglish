@@ -163,6 +163,7 @@ token, or session token was committed or printed.
 Workflow: Spec 001 T074 Finalize
 Run ID:   30782680412
 Input:    df3586935370967dcec897d8ff3e1ef75ee7fa5c
+Output:   81fa9c5cad1c941ebb44909e7d9d6f68ad4abed5
 Result:   full repository gates passed before the finalizer commit
 ```
 
