@@ -246,13 +246,30 @@ owner through the referenced video record.
 12. Success is returned only after both video and lesson writes complete.
 13. Persistence failure returns `DRAFT_PERSISTENCE_FAILED`; it is never represented as saved or preview-only success.
 14. Generation failure does not leave a public or ownerless record.
+15. A private draft does not expire automatically in Spec 001.
+16. Owner deletion removes the private video row and its one lesson row through the verified cascade.
+17. Spec 001 retains no immutable full generation-attempt history.
 
 ## Retention and deletion
 
-Draft retention is unresolved. Until a later decision:
+The Spec 001 policy is resolved in
+`retention-deletion-history-decision.md`:
 
-- no automated expiry is specified;
-- owners may delete their own private drafts when an owner UI exists;
-- deleting a video draft cascades to its lesson draft;
-- repeated generation updates the current draft rather than preserving attempt history;
-- published/historical retention belongs to spec 002 and later learner evidence specs.
+- one current private draft is retained until its owner explicitly deletes it or
+  a later approved retention policy replaces this rule;
+- there is no silent automatic expiry in this feature;
+- the first owner draft-management surface must identify the exact source and
+  level, warn that the lesson will also be deleted, require deliberate
+  confirmation, and report success only after the database confirms deletion;
+- deleting the owner-private video draft cascades to its one lesson draft;
+- ordinary users never delete through a service-role bypass, and cross-owner RLS
+  remains authoritative;
+- repeated generation atomically replaces the current draft rather than creating
+  immutable versions;
+- failed and superseded attempts are not stored as full prompts, transcripts,
+  model outputs, or lesson payloads;
+- a future immutable history feature requires its own approved use case,
+  minimization, retention, owner visibility/deletion, migration, RLS, and
+  tamper-evidence requirements;
+- published and reviewed-record retention belongs to spec 002 or a later approved
+  evidence spec.
