@@ -21,12 +21,15 @@ jobs:
         shell: python
         run: |
           from pathlib import Path
-          import textwrap
 
           workflow = Path('.github/workflows/spec001-t049-types.yml').read_text()
           start = workflow.index('          from pathlib import Path\n')
           end = workflow.index('\n      - name: Commit regenerated snapshot', start)
-          program = textwrap.dedent(workflow[start:end])
+          raw_program = workflow[start:end]
+          program = '\n'.join(
+              line[10:] if line.startswith('          ') else line
+              for line in raw_program.splitlines()
+          )
           program = program.replace(
               'Path(".github/workflows/spec001-t049-types.yml").unlink()',
               'pass',
