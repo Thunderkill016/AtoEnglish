@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, LockKeyhole, Plus, Sparkles } from "lucide-react";
 
@@ -9,6 +8,8 @@ export const metadata: Metadata = {
   title: "Bài học YouTube của tôi | AtoEnglish",
   description: "Tạo, tiếp tục và xem lại các bài học riêng tư từ video YouTube.",
 };
+
+export const dynamic = "force-dynamic";
 
 export default async function RealTalkLibraryPage() {
   const drafts = await listOwnerPrivateDrafts();
@@ -65,12 +66,11 @@ export default async function RealTalkLibraryPage() {
                 className="group overflow-hidden rounded-3xl border border-zinc-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl dark:border-zinc-800 dark:bg-zinc-900"
               >
                 <div className="relative aspect-video overflow-hidden bg-zinc-200 dark:bg-zinc-800">
-                  <Image
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
                     src={draft.thumbnailUrl}
                     alt=""
-                    fill
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                    className="object-cover transition duration-300 group-hover:scale-105"
+                    className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
                   />
                   <div className="absolute left-3 top-3 rounded-full bg-zinc-950/80 px-2.5 py-1 text-[11px] font-bold text-white backdrop-blur">
                     {draft.level}
