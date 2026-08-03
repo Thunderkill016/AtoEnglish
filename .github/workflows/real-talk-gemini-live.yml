@@ -1,0 +1,56 @@
+name: Real Talk Gemini Live Gate
+
+on:
+  workflow_dispatch:
+    inputs:
+      youtube_url:
+        description: Supported YouTube URL with readable English captions
+        required: true
+        default: https://www.youtube.com/watch?v=Z5MU-5_pBfY
+        type: string
+      level:
+        description: Learner support level
+        required: true
+        default: A1
+        type: choice
+        options: [A0, A1, A2, B1, B2]
+
+concurrency:
+  group: real-talk-gemini-live-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  live-gemini:
+    name: Live YouTube → Gemini lesson compiler
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      CI: true
+      HUSKY: 0
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+      REAL_TALK_ALLOW_EXPERIMENTAL_TRANSCRIPTS: true
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci --no-audit --prefer-offline
+
+      - name: Require Gemini secret
+        run: test -n "$GEMINI_API_KEY"
+
+      - name: Compile one live evidence-bound private lesson
+        run: >-
+          npx tsx scripts/verify-real-talk-gemini-live.ts
+          "${{ inputs.youtube_url }}"
+          "${{ inputs.level }}"

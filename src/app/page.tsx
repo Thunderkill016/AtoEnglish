@@ -1,47 +1,27 @@
 import type { Metadata } from "next";
-import dynamic from "next/dynamic";
 import Link from "next/link";
-import { Sparkles, Sprout } from "lucide-react";
+import {
+  ArrowRight,
+  Captions,
+  CheckCircle2,
+  Link2,
+  LockKeyhole,
+  Play,
+  ShieldCheck,
+  Sparkles,
+  Sprout,
+} from "lucide-react";
 
-import { Spotlight } from "@/components/ui/spotlight";
 import NavbarAuth from "@/components/landing/NavbarAuth";
-import { MobileMenuButton, MobileMenu } from "@/components/landing/MobileMenu";
-import HeroCTA from "@/components/landing/HeroCTA";
-import ProblemSection from "@/components/landing/ProblemSection";
-import HowItWorksSection from "@/components/landing/HowItWorksSection";
-import BenefitsSection from "@/components/landing/BenefitsSection";
-import ScienceSection from "@/components/landing/ScienceSection";
-
-// Lazy load heavy client components below the fold
-const ProductPreview = dynamic(
-  () => import("@/components/landing/ProductPreview"),
-  {
-    loading: () => (
-      <div className="w-full max-w-4xl mx-auto mt-12 sm:mt-16 h-[400px] rounded-[2rem] border border-zinc-200/60 dark:border-zinc-800/60 bg-zinc-50/50 dark:bg-zinc-900/20 animate-pulse" />
-    ),
-  }
-);
-
-const FaqSection = dynamic(
-  () => import("@/components/landing/FaqSection")
-);
-
-const TestimonialsSection = dynamic(
-  () => import("@/components/landing/TestimonialsSection")
-);
-
-const FinalCtaSection = dynamic(
-  () => import("@/components/landing/FinalCtaSection")
-);
 
 export const metadata: Metadata = {
-  title: "AtoEnglish — Học tiếng Anh để nói được, không chỉ để biết",
+  title: "AtoEnglish — Biến video YouTube thành bài học tiếng Anh riêng",
   description:
-    "Hành trình luyện nói 28 ngày cho người Việt mất gốc: mỗi ngày 10–15 phút để luyện giới thiệu bản thân và công việc bằng tiếng Anh.",
+    "Dán video YouTube có caption tiếng Anh. AtoEnglish tạo bài nghe–nói riêng tư bằng AI từ chính đoạn hội thoại trong video.",
   openGraph: {
-    title: "AtoEnglish — Học tiếng Anh để nói được",
+    title: "AtoEnglish — Học tiếng Anh từ video bạn thực sự muốn hiểu",
     description:
-      "Hành trình luyện nói 28 ngày, mỗi ngày 10–15 phút, dành cho người Việt bắt đầu từ mất gốc.",
+      "YouTube → transcript → bài nghe–nói AI riêng tư → lưu và học lại.",
     url: "https://atoenglish.vercel.app",
     siteName: "AtoEnglish",
     locale: "vi_VN",
@@ -51,314 +31,274 @@ export const metadata: Metadata = {
         url: "https://atoenglish.vercel.app/og-image.png",
         width: 1200,
         height: 630,
-        alt: "AtoEnglish — Học tiếng Anh để nói được, không chỉ để biết",
+        alt: "AtoEnglish — tạo bài học riêng từ video YouTube",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "AtoEnglish — Học tiếng Anh để nói được",
+    title: "AtoEnglish — YouTube thành bài học riêng",
     description:
-      "Phương pháp khoa học giúp bạn tự tin giao tiếp thực tế từ con số 0.",
+      "Dán video có caption tiếng Anh và tạo bài nghe–nói riêng tư bằng AI.",
     images: ["https://atoenglish.vercel.app/og-image.png"],
   },
-  alternates: {
-    canonical: "https://atoenglish.vercel.app",
+  alternates: { canonical: "https://atoenglish.vercel.app" },
+};
+
+const STEPS = [
+  {
+    icon: Link2,
+    title: "Dán link YouTube",
+    description:
+      "Chọn video bạn thực sự quan tâm. MVP hỗ trợ URL YouTube HTTPS có caption tiếng Anh đọc được.",
   },
+  {
+    icon: Captions,
+    title: "AI tạo bài từ lời thoại",
+    description:
+      "Hệ thống chọn một đoạn hội thoại ngắn, tạo bài nghe hiểu, nhớ lại câu, luyện nói và transfer.",
+  },
+  {
+    icon: LockKeyhole,
+    title: "Lưu riêng trong tài khoản",
+    description:
+      "Bài là AI draft riêng tư. Nó không tự động xuất bản hoặc xuất hiện trong catalog công khai.",
+  },
+];
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  name: "AtoEnglish",
+  applicationCategory: "EducationalApplication",
+  operatingSystem: "Web",
+  url: "https://atoenglish.vercel.app",
+  inLanguage: "vi",
+  description:
+    "Ứng dụng tạo bài học tiếng Anh riêng tư từ video YouTube có caption tiếng Anh.",
 };
 
 export default function LandingPage() {
-  const stats = [
-    { value: "28 ngày", label: "Một mục tiêu nói thực tế" },
-    { value: "10–15 phút", label: "Mỗi ngày" },
-    { value: "A0", label: "Bắt đầu từ mất gốc" },
-  ];
-
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "WebSite",
-        "@id": "https://atoenglish.vercel.app/#website",
-        "url": "https://atoenglish.vercel.app",
-        "name": "AtoEnglish",
-        "description": "Hành trình luyện nói 28 ngày cho người Việt mất gốc, mỗi ngày 10–15 phút",
-        "inLanguage": "vi",
-        "potentialAction": {
-          "@type": "SearchAction",
-          "target": "https://atoenglish.vercel.app/learn?q={search_term_string}",
-          "query-input": "required name=search_term_string",
-        },
-      },
-      {
-        "@type": "EducationalOrganization",
-        "@id": "https://atoenglish.vercel.app/#organization",
-        "name": "AtoEnglish",
-        "url": "https://atoenglish.vercel.app",
-        "logo": "https://atoenglish.vercel.app/icon-512.png",
-        "description": "Luyện nhiệm vụ nói công việc đầu tiên trong hành trình 28 ngày",
-        "sameAs": [],
-      },
-      {
-        "@type": "FAQPage",
-        "@id": "https://atoenglish.vercel.app/#faq",
-        "mainEntity": [
-          {
-            "@type": "Question",
-            "name": "Người mất gốc hoặc mới bắt đầu từ con số 0 có học được không?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Có. Hành trình đầu tiên bắt đầu từ A0 và tập trung vào một nhiệm vụ thực tế: giới thiệu bản thân, công việc và biết xin người đối diện nhắc lại hoặc nói chậm hơn.",
-            },
-          },
-          {
-            "@type": "Question",
-            "name": "Mỗi ngày tôi cần học bao lâu?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Mục tiêu là 10–15 phút mỗi ngày trong 28 ngày. Mỗi buổi tập trung vào một bước nhỏ: nghe mẫu, luyện cụm từ, nói có hướng dẫn và ôn lại nội dung cần nhớ.",
-            },
-          },
-          {
-            "@type": "Question",
-            "name": "AtoEnglish khác gì so với Duolingo hay Babbel?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "AtoEnglish tập trung vào giao tiếp thực tế cho người Việt — không gamification hời hợt. Bạn học theo phương pháp khoa học PPP kết hợp FSRS, thực hành nói Shadowing thực sự và roleplay tình huống. Nội dung được thiết kế sát nhu cầu của người học Việt Nam.",
-            },
-          },
-          {
-            "@type": "Question",
-            "name": "Tôi có phải cài đặt ứng dụng vào điện thoại không?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Không cần. AtoEnglish là một nền tảng Web-App hiện đại, chạy trực tiếp trên trình duyệt web của bạn. Giao diện được tối ưu hóa mượt mà cho cả điện thoại di động, máy tính bảng lẫn máy tính cá nhân. Chỉ cần mở trình duyệt, đăng nhập nhanh bằng Google là học được ngay.",
-            },
-          },
-          {
-            "@type": "Question",
-            "name": "Tôi có thể học thử trước khi tham gia chương trình 28 ngày không?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Có. Bạn có thể học thử bài đầu tiên trước khi quyết định tham gia. Điều kiện, lịch học và chi phí của chương trình 28 ngày sẽ được thông báo rõ trước khi mở tuyển.",
-            },
-          },
-          {
-            "@type": "Question",
-            "name": "Thuật toán Ôn tập ngắt quãng (FSRS) là gì?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "FSRS (Free Spaced Repetition Scheduler) là thuật toán khoa học ghi nhớ tiên tiến bậc nhất hiện nay. FSRS đo lường mức độ ghi nhớ của bạn và tự động lên lịch nhắc nhở ôn tập vào đúng thời điểm vàng ngay trước khi bạn chuẩn bị quên. Nhờ đó, bạn ghi nhớ từ vựng lâu hơn đáng kể so với cách học vẹt truyền thống.",
-            },
-          },
-          {
-            "@type": "Question",
-            "name": "Dữ liệu và tiến độ học của tôi có được bảo mật không?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Hoàn toàn bảo mật. AtoEnglish sử dụng Supabase với Row Level Security (RLS) — dữ liệu của bạn chỉ có thể được truy cập bởi chính bạn. Đăng nhập qua Google OAuth 2.0 được mã hóa an toàn. Chúng tôi không bán hay chia sẻ dữ liệu cá nhân với bên thứ ba.",
-            },
-          },
-        ],
-      },
-    ],
-  };
-
   return (
-    <div className="min-h-screen bg-white text-zinc-900 dark:bg-zinc-950 dark:text-zinc-50 font-sans selection:bg-emerald-100 dark:selection:bg-emerald-900/40 selection:text-emerald-900 dark:selection:text-emerald-100 overflow-x-hidden antialiased">
-      {/* JSON-LD Structured Data */}
+    <div className="min-h-screen overflow-x-hidden bg-white text-zinc-950 selection:bg-emerald-200 dark:bg-zinc-950 dark:text-white">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      {/* ===== Navigation Bar ===== */}
-      <nav className="sticky top-0 z-50 w-full bg-white/70 dark:bg-zinc-950/70 backdrop-blur-md border-b border-zinc-200/40 dark:border-zinc-800/40 transition-colors duration-300">
-        <div className="max-w-6xl mx-auto h-16 flex items-center justify-between px-5 sm:px-8">
-          <Link href="/" className="flex items-center gap-2.5 group">
-            <span className="flex size-8 items-center justify-center rounded-lg bg-emerald-600 text-white shadow-md shadow-emerald-500/10 group-hover:scale-105 transition-transform duration-200">
-              <Sprout className="size-4.5" />
-            </span>
-            <div className="flex flex-col leading-none text-left">
-              <span className="text-sm font-bold tracking-tight text-zinc-900 dark:text-zinc-50 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors duration-200">
-                AtoEnglish
-              </span>
-              <span className="text-[9px] text-zinc-500 dark:text-zinc-400 font-medium">
-                Grow every day
-              </span>
-            </div>
-          </Link>
 
-          {/* Middle links - desktop only */}
-          <div className="hidden md:flex items-center gap-8">
+      <nav className="sticky top-0 z-50 border-b border-zinc-200/70 bg-white/85 backdrop-blur-xl dark:border-zinc-800 dark:bg-zinc-950/85">
+        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-8">
+          <Link href="/" className="flex items-center gap-2.5">
+            <span className="flex size-9 items-center justify-center rounded-xl bg-emerald-600 text-white">
+              <Sprout className="size-5" />
+            </span>
+            <span className="font-black tracking-tight">AtoEnglish</span>
+          </Link>
+          <div className="flex items-center gap-2">
             <a
               href="#how-it-works"
-              className="text-sm font-bold text-zinc-650 hover:text-emerald-600 dark:text-zinc-400 dark:hover:text-emerald-400 transition-colors duration-200"
+              className="hidden text-sm font-bold text-zinc-600 hover:text-emerald-700 dark:text-zinc-400 dark:hover:text-emerald-300 sm:block"
             >
-              Cách học
+              Cách hoạt động
             </a>
-            <a
-              href="#science"
-              className="text-sm font-bold text-zinc-650 hover:text-emerald-600 dark:text-zinc-400 dark:hover:text-emerald-400 transition-colors duration-200"
-            >
-              Phương pháp
-            </a>
-            <a
-              href="#faq"
-              className="text-sm font-bold text-zinc-650 hover:text-emerald-600 dark:text-zinc-400 dark:hover:text-emerald-400 transition-colors duration-200"
-            >
-              Hỏi đáp
-            </a>
-          </div>
-
-          <div className="flex items-center gap-2">
             <NavbarAuth />
-            {/* Hamburger button - mobile only */}
-            <MobileMenuButton />
           </div>
         </div>
-
-        {/* Mobile drawer menu */}
-        <MobileMenu />
       </nav>
 
-      <main id="main-content">
-        {/* ===== Hero Section ===== */}
-        <section className="relative px-5 sm:px-8 pt-20 pb-16 sm:pt-32 sm:pb-24 lg:pt-36 lg:pb-28 overflow-hidden">
-          {/* Spotlight light beam — hidden on mobile to save GPU paint cost */}
-          <div className="hidden sm:block">
-            <Spotlight className="-top-40 left-0 md:left-60 md:-top-20" fill="rgb(16 185 129 / 0.15)" />
+      <main>
+        <section className="relative px-4 pb-20 pt-16 sm:px-8 sm:pb-28 sm:pt-24">
+          <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+            <div className="absolute left-1/2 top-0 h-80 w-[50rem] -translate-x-1/2 rounded-full bg-emerald-400/10 blur-3xl" />
           </div>
 
-          {/* Mesh gradient backdrops — hidden on mobile to save GPU */}
-          <div className="absolute inset-0 overflow-hidden pointer-events-none -z-10">
-            <div className="hidden sm:block absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-emerald-500/8 dark:bg-emerald-500/4 blur-[120px]" />
-            <div className="hidden sm:block absolute bottom-[20%] right-[-10%] w-[60%] h-[60%] rounded-full bg-teal-500/8 dark:bg-teal-500/4 blur-[150px]" />
-            <div className="hidden md:block absolute top-[40%] left-[30%] w-[40%] h-[40%] rounded-full bg-indigo-500/5 dark:bg-indigo-500/3 blur-[100px]" />
-          </div>
-
-          <div className="relative max-w-4xl mx-auto flex flex-col items-center text-center">
-            <div className="space-y-6 sm:space-y-8">
-              {/* Badge */}
-              <div className="animate-fade-in-up">
-                <span className="inline-flex items-center gap-1.5 text-[11px] font-bold text-emerald-800 dark:text-emerald-400 bg-emerald-500/10 dark:bg-emerald-500/15 backdrop-blur-sm border border-emerald-500/20 dark:border-emerald-400/25 px-4 py-1.5 rounded-full uppercase tracking-[0.12em] shadow-sm">
-                  <Sparkles className="size-3 text-emerald-600 dark:text-emerald-400 animate-pulse" />
-                  Thử nghiệm hành trình nói 28 ngày
-                </span>
+          <div className="mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-[1.05fr_0.95fr]">
+            <div>
+              <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/25 bg-emerald-500/10 px-3 py-1.5 text-xs font-black text-emerald-700 dark:text-emerald-300">
+                <Sparkles className="size-4" /> Video của bạn. Bài học của bạn.
               </div>
-
-              {/* Headline */}
-              <h1 className="animate-fade-in-up animation-delay-75 flex flex-col items-center gap-y-2 sm:gap-y-3 text-xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-zinc-900 dark:text-zinc-50 max-w-4xl mx-auto px-4">
-                <span className="block lg:whitespace-nowrap">
-                  Học tiếng Anh để{" "}
-                  <span className="bg-gradient-to-r from-emerald-600 via-teal-500 to-emerald-500 bg-clip-text text-transparent dark:from-emerald-400 dark:via-teal-400 dark:to-emerald-300">
-                    nói được
-                  </span>
-                </span>
-                <span className="block lg:whitespace-nowrap">
-                  không chỉ để biết.
-                </span>
+              <h1 className="mt-6 max-w-4xl text-4xl font-black leading-[1.06] tracking-[-0.04em] sm:text-6xl lg:text-7xl">
+                Biến video YouTube thành bài học tiếng Anh riêng.
               </h1>
-
-              {/* Subheadline */}
-              <p className="animate-fade-in-up animation-delay-150 text-base sm:text-lg lg:text-xl text-zinc-600 dark:text-zinc-350 max-w-2xl mx-auto leading-relaxed font-normal">
-                Giới thiệu bản thân và công việc bằng tiếng Anh.
-                <br className="hidden sm:block" />
-                Mỗi ngày 10–15 phút: nghe mẫu, luyện cụm từ và nói có hướng dẫn.
+              <p className="mt-6 max-w-2xl text-base leading-7 text-zinc-600 dark:text-zinc-400 sm:text-lg">
+                Dán video bạn thực sự muốn hiểu. AtoEnglish dùng caption của video
+                để tạo một bài nghe–nói bằng AI, kiểm tra câu với nguồn rồi lưu
+                riêng vào tài khoản của bạn.
               </p>
 
-              <HeroCTA />
-            </div>
-          </div>
-
-          {/* Product Preview Mockup */}
-          <ProductPreview />
-
-          {/* Stats bar */}
-          <div className="animate-fade-in-up animation-delay-300 relative max-w-3xl mx-auto mt-16 sm:mt-24">
-            <div className="p-6 sm:p-8 rounded-2xl bg-zinc-50/50 dark:bg-zinc-900/20 backdrop-blur-md border border-zinc-200/50 dark:border-zinc-800/40 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-6 sm:gap-0 divide-y sm:divide-y-0 sm:divide-x divide-zinc-200/60 dark:divide-zinc-800/60">
-              {stats.map((stat, index) => (
-                <div
-                  key={index}
-                  className="flex flex-col items-center flex-1 w-full pt-4 sm:pt-0 sm:px-6 first:pt-0"
+              <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+                <Link
+                  href="/login?next=%2Freal-talk%2Fcreate"
+                  className="inline-flex min-h-14 items-center justify-center gap-2 rounded-2xl bg-emerald-600 px-6 font-black text-white shadow-xl shadow-emerald-900/15 transition hover:bg-emerald-500"
                 >
-                  <span className="text-2xl sm:text-3xl font-black text-zinc-900 dark:text-zinc-50 tracking-tight">
-                    {stat.value}
-                  </span>
-                  <span className="text-[11px] sm:text-xs text-zinc-500 dark:text-zinc-400 font-semibold mt-1.5 uppercase tracking-wider text-center">
-                    {stat.label}
-                  </span>
-                </div>
-              ))}
+                  Dán video đầu tiên <ArrowRight className="size-5" />
+                </Link>
+                <a
+                  href="#how-it-works"
+                  className="inline-flex min-h-14 items-center justify-center gap-2 rounded-2xl border border-zinc-300 px-6 font-bold text-zinc-700 hover:border-zinc-500 dark:border-zinc-700 dark:text-zinc-300"
+                >
+                  Xem cách hoạt động
+                </a>
+              </div>
+
+              <div className="mt-7 flex flex-wrap gap-x-6 gap-y-2 text-xs font-medium text-zinc-500">
+                <span className="inline-flex items-center gap-1.5">
+                  <CheckCircle2 className="size-4 text-emerald-600" /> Không tải
+                  xuống video
+                </span>
+                <span className="inline-flex items-center gap-1.5">
+                  <CheckCircle2 className="size-4 text-emerald-600" /> AI draft
+                  riêng tư
+                </span>
+                <span className="inline-flex items-center gap-1.5">
+                  <CheckCircle2 className="size-4 text-emerald-600" /> Có transfer
+                  trước khi hoàn thành
+                </span>
+              </div>
             </div>
-            {/* Footnote */}
-            <p className="text-[11px] text-zinc-450 dark:text-zinc-500 mt-5 text-center font-normal tracking-wide">
-              * AtoEnglish đang thử nghiệm hành trình đầu tiên. Đây là mục tiêu học tập, không phải cam kết kết quả cho mọi người.
-            </p>
+
+            <div className="relative">
+              <div className="rounded-[2rem] border border-zinc-200 bg-zinc-950 p-4 shadow-2xl shadow-zinc-950/20 dark:border-zinc-800">
+                <div className="flex items-center gap-2 px-2 pb-4 text-xs text-zinc-500">
+                  <span className="size-2.5 rounded-full bg-red-400" />
+                  <span className="size-2.5 rounded-full bg-amber-400" />
+                  <span className="size-2.5 rounded-full bg-emerald-400" />
+                  <div className="ml-2 flex-1 truncate rounded-lg bg-zinc-900 px-3 py-2">
+                    youtube.com/watch?v=your-video
+                  </div>
+                </div>
+                <div className="relative aspect-video overflow-hidden rounded-2xl bg-gradient-to-br from-zinc-800 to-emerald-950">
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <span className="flex size-16 items-center justify-center rounded-2xl bg-emerald-500 text-white shadow-xl shadow-emerald-950/50">
+                      <Play className="ml-1 size-7" fill="currentColor" />
+                    </span>
+                  </div>
+                  <div className="absolute bottom-4 left-4 right-4 rounded-xl border border-white/10 bg-black/55 p-3 text-sm text-white backdrop-blur">
+                    “Could you say that again, please?”
+                  </div>
+                </div>
+                <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                  <div className="rounded-2xl bg-zinc-900 p-4">
+                    <p className="text-xs font-bold text-emerald-400">
+                      Mục tiêu giao tiếp
+                    </p>
+                    <p className="mt-2 text-sm font-bold text-white">
+                      Xin người đối diện nhắc lại và tiếp tục cuộc nói chuyện
+                    </p>
+                  </div>
+                  <div className="rounded-2xl bg-zinc-900 p-4">
+                    <p className="text-xs font-bold text-purple-400">
+                      Transfer
+                    </p>
+                    <p className="mt-2 text-sm font-bold text-white">
+                      Thử câu tương tự với người và thông tin khác
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div className="absolute -bottom-5 -right-3 rounded-2xl border border-amber-400/25 bg-amber-50 px-4 py-3 text-xs font-bold text-amber-900 shadow-xl dark:bg-amber-950 dark:text-amber-200">
+                AI draft · chỉ bạn xem
+              </div>
+            </div>
           </div>
         </section>
 
-        <div className="[content-visibility:auto] [contain-intrinsic-size:auto_600px]">
-          <ProblemSection />
-        </div>
-        <div className="[content-visibility:auto] [contain-intrinsic-size:auto_800px]">
-          <HowItWorksSection />
-        </div>
-        <div className="[content-visibility:auto] [contain-intrinsic-size:auto_600px]">
-          <BenefitsSection />
-        </div>
-        <div className="[content-visibility:auto] [contain-intrinsic-size:auto_700px]">
-          <ScienceSection />
-        </div>
+        <section
+          id="how-it-works"
+          className="border-y border-zinc-200 bg-zinc-50 px-4 py-20 dark:border-zinc-800 dark:bg-zinc-900/30 sm:px-8 sm:py-28"
+        >
+          <div className="mx-auto max-w-6xl">
+            <div className="max-w-3xl">
+              <p className="text-sm font-black uppercase tracking-[0.18em] text-emerald-700 dark:text-emerald-300">
+                Một vòng giá trị rõ ràng
+              </p>
+              <h2 className="mt-4 text-3xl font-black tracking-tight sm:text-5xl">
+                Từ link video đến một lượt luyện tập hoàn chỉnh
+              </h2>
+              <p className="mt-4 text-base leading-7 text-zinc-600 dark:text-zinc-400">
+                Không phải chatbot mở hay kho unit cố định. MVP tập trung làm tốt
+                một việc: biến nội dung bạn chọn thành bài học riêng có bằng chứng
+                từ caption.
+              </p>
+            </div>
 
-        {/* Below-fold lazy sections — browser can defer rendering */}
-        <div className="[content-visibility:auto] [contain-intrinsic-size:auto_800px]">
-          <TestimonialsSection />
-          <FaqSection />
-          <FinalCtaSection />
-        </div>
-      </main>
-
-      {/* ===== Footer ===== */}
-      <footer className="border-t border-zinc-200/40 dark:border-zinc-800/40 py-10 sm:py-12 px-5 sm:px-8 bg-zinc-50/20 dark:bg-zinc-950/20">
-        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-5">
-          <div className="flex items-center gap-2.5">
-            <span className="flex size-8 items-center justify-center rounded-lg bg-emerald-600 text-white shadow-sm">
-              <Sprout className="size-4.5" />
-            </span>
-            <div className="flex flex-col leading-none text-left">
-              <span className="text-sm font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
-                AtoEnglish
-              </span>
-              <span className="text-[9px] text-zinc-500 dark:text-zinc-400 font-medium">
-                Grow every day
-              </span>
+            <div className="mt-10 grid gap-4 md:grid-cols-3">
+              {STEPS.map(({ icon: Icon, title, description }, index) => (
+                <article
+                  key={title}
+                  className="rounded-3xl border border-zinc-200 bg-white p-6 dark:border-zinc-800 dark:bg-zinc-950"
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="flex size-11 items-center justify-center rounded-2xl bg-emerald-500/10 text-emerald-700 dark:text-emerald-300">
+                      <Icon className="size-5" />
+                    </span>
+                    <span className="text-sm font-black text-zinc-300 dark:text-zinc-700">
+                      0{index + 1}
+                    </span>
+                  </div>
+                  <h3 className="mt-5 text-xl font-black">{title}</h3>
+                  <p className="mt-3 text-sm leading-6 text-zinc-600 dark:text-zinc-400">
+                    {description}
+                  </p>
+                </article>
+              ))}
             </div>
           </div>
+        </section>
 
-          <span className="text-xs text-zinc-500 dark:text-zinc-400 font-normal">
-            &copy; {new Date().getFullYear()} AtoEnglish. Bảo lưu mọi quyền.
-          </span>
+        <section className="px-4 py-20 sm:px-8 sm:py-28">
+          <div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-2">
+            <div className="rounded-3xl border border-zinc-200 p-7 dark:border-zinc-800 sm:p-9">
+              <ShieldCheck className="size-8 text-emerald-600" />
+              <h2 className="mt-5 text-2xl font-black">Nói thật về giới hạn AI</h2>
+              <p className="mt-3 text-sm leading-7 text-zinc-600 dark:text-zinc-400">
+                Caption tự động, người nói, bản dịch và timestamp có thể sai. Mỗi
+                bài hiển thị nhãn AI draft và cảnh báo nguồn. AtoEnglish không gọi
+                một lượt luyện tập là “thành thạo”, “trôi chảy” hay điểm phát âm.
+              </p>
+            </div>
+            <div className="rounded-3xl border border-zinc-200 p-7 dark:border-zinc-800 sm:p-9">
+              <LockKeyhole className="size-8 text-purple-600" />
+              <h2 className="mt-5 text-2xl font-black">Riêng tư trước, chia sẻ sau</h2>
+              <p className="mt-3 text-sm leading-7 text-zinc-600 dark:text-zinc-400">
+                Bài tạo ra gắn với tài khoản và được bảo vệ bằng Row Level Security.
+                Việc công khai hoặc đưa vào catalog cần một quy trình review riêng;
+                generation cá nhân không tự cấp quyền xuất bản.
+              </p>
+            </div>
+          </div>
+        </section>
 
-          <div className="flex items-center gap-5">
+        <section className="px-4 pb-20 sm:px-8 sm:pb-28">
+          <div className="mx-auto max-w-5xl rounded-[2rem] bg-zinc-950 px-6 py-12 text-center text-white sm:px-12 sm:py-16">
+            <Sparkles className="mx-auto size-8 text-emerald-400" />
+            <h2 className="mt-5 text-3xl font-black sm:text-5xl">
+              Bắt đầu bằng video bạn đang muốn hiểu
+            </h2>
+            <p className="mx-auto mt-4 max-w-2xl text-sm leading-7 text-zinc-400 sm:text-base">
+              Không cần cam kết một lộ trình dài trước. Hãy thử tạo một bài từ nội
+              dung thật sự có ý nghĩa với bạn.
+            </p>
             <Link
-              href="/privacy"
-              className="text-xs text-zinc-550 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors font-normal"
+              href="/login?next=%2Freal-talk%2Fcreate"
+              className="mt-7 inline-flex min-h-14 items-center gap-2 rounded-2xl bg-emerald-500 px-6 font-black text-zinc-950 hover:bg-emerald-400"
             >
-              Bảo mật
+              Tạo bài học riêng <ArrowRight className="size-5" />
             </Link>
-            <Link
-              href="/terms"
-              className="text-xs text-zinc-550 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors font-normal"
-            >
+          </div>
+        </section>
+      </main>
+
+      <footer className="border-t border-zinc-200 px-4 py-8 text-sm text-zinc-500 dark:border-zinc-800 sm:px-8">
+        <div className="mx-auto flex max-w-6xl flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <p>© 2026 AtoEnglish</p>
+          <div className="flex gap-5">
+            <Link href="/privacy" className="hover:text-zinc-950 dark:hover:text-white">
+              Quyền riêng tư
+            </Link>
+            <Link href="/terms" className="hover:text-zinc-950 dark:hover:text-white">
               Điều khoản
             </Link>
-            <Link
-              href="mailto:support@atoenglish.com"
-              className="text-xs text-zinc-550 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors font-normal"
-            >
-              Hỗ trợ
-            </Link>
-
           </div>
         </div>
       </footer>

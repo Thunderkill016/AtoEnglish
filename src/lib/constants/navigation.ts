@@ -1,17 +1,11 @@
 import {
   BookOpen,
   LayoutDashboard,
-  Layers,
-  Map,
-  TrendingUp,
-  Mic,
-  PenLine,
-  Trophy,
-  Briefcase,
-  User,
+  Library,
+  PlusCircle,
   Settings,
-  Play,
-  Target,
+  Sparkles,
+  User,
   Zap,
   type LucideIcon,
 } from "lucide-react";
@@ -28,7 +22,6 @@ export type NavGroup = {
   items: NavItem[];
 };
 
-/** In-dashboard section anchors (sticky hub nav on /dashboard) */
 export type DashboardSection = {
   id: string;
   label: string;
@@ -37,167 +30,118 @@ export type DashboardSection = {
 
 export const dashboardSections: DashboardSection[] = [
   { id: "dash-today", label: "Hôm nay", icon: Zap },
-  { id: "dash-practice", label: "Luyện tập", icon: Layers },
-  { id: "dash-progress", label: "Tiến độ", icon: TrendingUp },
+  { id: "dash-practice", label: "Bài của tôi", icon: Library },
 ];
 
-// ─── Tier 1 — Bottom Nav (mobile) — 3-tab Hick-compliant shell (P1) ────────
-// Học (home + continue) · Ôn (SRS) · Tôi (settings/profile)
 export const bottomNavItems: NavItem[] = [
   {
-    title: "Học",
-    href: "/dashboard",
-    icon: BookOpen,
-    description: "Tiếp tục bài học",
+    title: "Tạo bài",
+    href: "/real-talk/create",
+    icon: PlusCircle,
+    description: "Dán video YouTube",
   },
   {
-    title: "Ôn",
-    href: "/flashcards",
-    icon: Layers,
-    description: "Ôn tập flashcard SRS",
+    title: "Bài của tôi",
+    href: "/real-talk",
+    icon: Library,
+    description: "Tiếp tục hoặc xem lại",
   },
   {
     title: "Tôi",
     href: "/me",
     icon: User,
-    description: "Tiến độ, luyện tập & cài đặt",
+    description: "Tài khoản và cài đặt",
   },
 ];
 
-// ─── Tier 2 — Desktop Primary Nav — matches 3-tab shell ─────────────────────
 export const desktopPrimaryNav: NavItem[] = [
   {
-    title: "Học",
-    href: "/dashboard",
-    icon: BookOpen,
-    description: "Tiếp tục bài học",
+    title: "Tạo bài",
+    href: "/real-talk/create",
+    icon: PlusCircle,
+    description: "Biến video YouTube thành bài học riêng",
   },
   {
-    title: "Ôn",
-    href: "/flashcards",
-    icon: Layers,
-    description: "Ôn tập flashcard SRS",
+    title: "Bài của tôi",
+    href: "/real-talk",
+    icon: Library,
+    description: "Tiếp tục hoặc xem lại bài đã tạo",
   },
   {
     title: "Tôi",
     href: "/me",
     icon: User,
-    description: "Tiến độ, luyện tập & cài đặt",
+    description: "Tài khoản và cài đặt",
   },
 ];
 
-/** @deprecated V2 — links live on /me hub; kept for command palette / legacy */
-export const desktopMoreItems: NavItem[] = [
-  {
-    title: "Bài học",
-    href: "/learn",
-    icon: BookOpen,
-    description: "Danh sách 50 unit",
-  },
-  {
-    title: "Luyện nói",
-    href: "/speaking",
-    icon: Mic,
-    description: "Shadowing & AI Roleplay",
-  },
-  {
-    title: "Viết",
-    href: "/writing",
-    icon: PenLine,
-    description: "Viết & cải thiện với AI",
-  },
-  {
-    title: "Tiến độ",
-    href: "/progress",
-    icon: TrendingUp,
-    description: "Thống kê và thành tích",
-  },
-  {
-    title: "Bảng xếp hạng",
-    href: "/leaderboard",
-    icon: Trophy,
-    description: "Top học viên theo XP",
-  },
-  {
-    title: "Lộ trình",
-    href: "/roadmap",
-    icon: Map,
-    description: "Lộ trình A0 → C1",
-  },
-  {
-    title: "Business",
-    href: "/business",
-    icon: Briefcase,
-    description: "Tiếng Anh công sở",
-  },
-];
+/**
+ * Legacy routes remain deployed during convergence but are intentionally absent
+ * from primary learner navigation. This keeps the MVP promise coherent without
+ * deleting unrelated code in the same change.
+ */
+export const desktopMoreItems: NavItem[] = [];
 
-// ─── Mobile slide panel (grouped drawer) ─────────────────────────────────────
 export const mobilePanelGroups: NavGroup[] = [
   {
-    label: "HỌC TẬP",
+    label: "HỌC TỪ VIDEO",
     items: [
-      { title: "Trang chủ", href: "/dashboard", icon: LayoutDashboard, description: "Tổng quan hôm nay" },
-      { title: "Bài học", href: "/learn", icon: BookOpen, description: "IPOR lessons" },
-      { title: "Luyện nói", href: "/speaking", icon: Mic, description: "Shadowing & AI" },
-      { title: "Viết văn", href: "/writing", icon: PenLine, description: "AI feedback" },
-      { title: "Ôn tập", href: "/flashcards", icon: Layers, description: "Flashcard SRS" },
+      {
+        title: "Tổng quan",
+        href: "/dashboard",
+        icon: LayoutDashboard,
+        description: "Hành động tiếp theo",
+      },
+      {
+        title: "Tạo bài mới",
+        href: "/real-talk/create",
+        icon: Sparkles,
+        description: "Dán link YouTube",
+      },
+      {
+        title: "Thư viện riêng",
+        href: "/real-talk",
+        icon: Library,
+        description: "Bài AI draft của bạn",
+      },
     ],
   },
   {
-    label: "THEO DÕI",
+    label: "TÀI KHOẢN",
     items: [
-      { title: "Tiến độ", href: "/progress", icon: TrendingUp, description: "Stats & XP" },
-      { title: "Bảng xếp hạng", href: "/leaderboard", icon: Trophy, description: "Top learners" },
-      { title: "Lộ trình", href: "/roadmap", icon: Map, description: "A0 → C1" },
-    ],
-  },
-  {
-    label: "KHÁC",
-    items: [
-      { title: "Business English", href: "/business", icon: Briefcase, description: "Công sở & sự nghiệp" },
-      { title: "Cài đặt", href: "/settings", icon: Settings, description: "Tài khoản" },
+      {
+        title: "Tôi",
+        href: "/me",
+        icon: User,
+        description: "Tài khoản",
+      },
+      {
+        title: "Cài đặt",
+        href: "/settings",
+        icon: Settings,
+        description: "Tùy chọn tài khoản",
+      },
     ],
   },
 ];
 
-/** Secondary shortcuts at bottom of dashboard (explore, not daily loop) */
-export function getDashboardExploreActions(unitRoute: string): NavItem[] {
+export function getDashboardExploreActions(_unitRoute: string): NavItem[] {
   return [
     {
-      title: "Học 10 phút",
-      href: unitRoute,
-      icon: Play,
-      description: "Tiếp tục bài đang học",
+      title: "Tạo bài từ YouTube",
+      href: "/real-talk/create",
+      icon: PlusCircle,
+      description: "Dán video bạn muốn hiểu",
     },
     {
-      title: "Thử Thách",
-      href: "/challenge",
-      icon: Target,
-      description: "Daily vocab challenge",
-    },
-    {
-      title: "Viết & Cải thiện",
-      href: "/writing",
-      icon: PenLine,
-      description: "AI writing feedback",
-    },
-    {
-      title: "Phát âm IPA",
-      href: "/pronunciation",
-      icon: Mic,
-      description: "IPA drills",
-    },
-    {
-      title: "Bảng xếp hạng",
-      href: "/leaderboard",
-      icon: Trophy,
-      description: "XP leaderboard",
+      title: "Mở thư viện riêng",
+      href: "/real-talk",
+      icon: BookOpen,
+      description: "Tiếp tục bài đã tạo",
     },
   ];
 }
 
-// ─── Legacy export — backward compat for components importing mainNavItems ────
 export const mainNavItems: NavItem[] = [
   ...desktopPrimaryNav,
   ...desktopMoreItems,
