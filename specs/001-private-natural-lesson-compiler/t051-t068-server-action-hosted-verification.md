@@ -1,3 +1,3 @@
 # T051 and T068 Real Server Action Hosted Verification
 
-This placeholder is replaced after the validated read-only OIDC workflow succeeds.
+Final evidence is being recorded from successful workflow run 30777932924.
