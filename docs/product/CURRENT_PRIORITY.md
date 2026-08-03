@@ -1,115 +1,105 @@
-# AtoEnglish current priority
+# AtoEnglish Current Priority
 
 **Updated:** 2026-08-03  
 **Owner:** Thunderkill016  
-**Development method:** GitHub Spec Kit / Spec-Driven Development
+**Method:** GitHub Spec Kit / Spec-Driven Development
 
-## Governing artifacts
+## Confirmed Product Direction
+
+AtoEnglish's core product remains:
 
 ```text
-.specify/memory/constitution.md
-specs/000-atoenglish-rebuild-roadmap/roadmap.md
-specs/001-private-natural-lesson-compiler/
-specs/002-mvp-product-convergence/
+Dán link video YouTube
+→ tạo bài học tiếng Anh cá nhân từ video đó
+→ học, lưu và quay lại
 ```
 
-## North star
+The MVP must make this private URL-to-lesson workflow reliable and usable. It must
+not replace it with a fixed reviewed catalog.
 
-Help a Vietnamese adult understand and respond inside a natural English
-communication environment, then attempt the same practical goal with changed data
-or context.
-
-## Proposed active feature: 002 — MVP Product Convergence
-
-The repository already contains substantial UI, authentication, Supabase,
-learning, Real Talk, analytics, test, and Vercel infrastructure. The current
-problem is not a missing platform. It is that the product surface is fragmented
-across conflicting landing promises, legacy curriculum/navigation, broad feature
-routes, experimental authoring, and unreviewed static lesson fallback.
-
-The proposed MVP outcome is:
+## Proposed Active Feature: 002 — YouTube-to-Private-Lesson MVP
 
 ```text
 truthful landing
 → signup/login
-→ idempotent account bootstrap
-→ focused dashboard
-→ reviewed natural lesson catalog
-→ first listening encounter
-→ progressive support
-→ productive retrieval
-→ speak-and-confirm
-→ changed-context transfer
-→ bounded private progress
-→ return and continue/review
+→ URL-first dashboard
+→ validate supported YouTube source
+→ timed English transcript acquisition
+→ bounded interaction selection
+→ live Gemini structured generation
+→ source-evidence validation
+→ atomic owner-private ai_draft
+→ first listen / support / retrieval / speech / transfer
+→ bounded progress
+→ private library and return
 ```
-
-The first release is intentionally small:
-
-- one natural communication environment;
-- at least three human-reviewed lessons;
-- at least two speakers or contexts;
-- one complete desktop/mobile learner journey;
-- the existing hosted Supabase and Vercel projects;
-- one owner-reviewed preview.
 
 ## Relationship to Spec 001
 
-Spec 001 produced valuable verified contracts and infrastructure for:
+Spec 001 already produced the strongest reusable foundation:
 
-- authenticated private generation;
-- evidence validation;
-- owner-private draft persistence and RLS;
-- transcript provenance and independent review;
-- approved reviewed-source adapter;
-- persisted desktop/mobile preview.
+- authentication before transcript/Gemini work;
+- URL/source and transcript adapter contracts;
+- bounded interaction selection;
+- Gemini structured output;
+- schema and source-evidence validation;
+- stable failure codes;
+- deterministic owner-private identity;
+- atomic private persistence and RLS;
+- provenance/warnings;
+- persisted desktop/mobile private preview.
 
-It is not a branch that should be merged wholesale. Its current implementation
-branch is diverged hundreds of commits from `main` and carries conflicting legacy
-state. Spec 002 requires a fresh integration branch from current `main` and a
-file-level port manifest.
+Its branch is diverged from main and cannot be merged wholesale. Spec 002 ports
+only accepted files/contracts/tests onto a fresh branch from current main.
 
-## Ordered next actions
+## Ordered Next Actions
 
-1. Owner reviews and accepts or changes the MVP promise and scope.
-2. Confirm the initial environment, defaulting to **Meet someone new**.
-3. Confirm that at least three source packages can receive lawful-use and full
-   human review.
-4. Create a fresh implementation branch from current `main`.
-5. Complete Phase 1 of `specs/002-mvp-product-convergence/tasks.md` before learner
-   code changes.
-6. Implement by user story and stop at each independent checkpoint.
-7. Create exactly one intentional Vercel preview only after technical and hosted
-   gates pass.
-8. Obtain owner acceptance before preparing a main-targeted merge PR.
+1. Record explicit implementation authorization separately from the already
+   confirmed product correction.
+2. Freeze current main and create `integration/mvp-youtube-to-lesson`.
+3. Build the file-level port manifest.
+4. Align package/toolchain and Supabase types/project reference.
+5. Make landing/auth/dashboard center on the YouTube URL form.
+6. Finalize the private-production transcript adapter decision and supported-video
+   failure behavior.
+7. Verify live Gemini success/failure with a bounded secret.
+8. Integrate atomic private generation, lesson runtime, progress, and private library.
+9. Run hosted RLS, live provider, desktop/mobile Vercel preview, and runtime checks.
+10. Obtain owner acceptance before any merge/deployment decision.
 
-## Explicit MVP exclusions
+## Hard Release Blockers
 
-- broad A0–B2 curriculum or capability graph;
-- arbitrary YouTube generation in the learner product;
-- automatic transcript approval/publication;
-- unrestricted chatbot;
-- pronunciation scoring;
-- raw learner audio or free-text storage;
-- XP, streak, league, achievement, challenge, certificate, or social expansion;
-- grammar, writing, broad speaking tools, business track, and push-notification
-  systems as core MVP surfaces;
-- subscriptions, payments, native apps;
-- whole-branch merge of PR #54;
-- automatic merge or deployment.
+- no accepted transcript adapter/private-production decision;
+- missing live `GEMINI_API_KEY` verification;
+- generation not cleanly integrated onto current main;
+- unsupported-video failures not proven;
+- atomic owner-private persistence/RLS not proven on final head;
+- no complete desktop/mobile URL-to-lesson/return preview;
+- owner acceptance missing.
 
-## Decision status
+## Explicit MVP Exclusions
+
+- public/shared catalog as the primary product;
+- automatic publication;
+- full reviewer UI;
+- bulk crawling/generation;
+- support for every YouTube video;
+- media downloading/re-hosting;
+- broad curriculum, XP/streak/league, writing, grammar, business, broad speaking,
+  notifications, payments, social, or native apps;
+- pronunciation scoring or raw learner audio/transcript storage;
+- wholesale merge of PR #54;
+- autonomous merge/deployment.
+
+## Decision Status
 
 ```text
-Spec quality:             prepared
-Planning convergence:     pass
-Implementation approval:  pending owner acceptance
-Implementation branch:    not created
-Hosted migration:         not authorized
-Vercel preview:           not authorized
-Merge:                    not authorized
-Production deployment:    not authorized
+Core product direction:    confirmed
+Planning artifacts:        revised and converged
+Implementation permission: not yet recorded
+Implementation branch:     not created
+Hosted migration:          not authorized
+Vercel preview:            not authorized
+Merge:                     not authorized
+Production deployment:     not authorized
 ```
-
-Until the owner accepts Spec 002, the repository remains in planning/review mode.
-No task may infer implementation permission merely because the plan exists.
