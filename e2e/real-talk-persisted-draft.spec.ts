@@ -127,10 +127,13 @@ test("authenticated owner previews and completes one persisted private draft", a
   await completeWhileWatch(page);
   await completePostWatch(page);
 
-  await expect(
-    page.getByRole("heading", { name: "Đã hoàn thành chu trình Real Talk" }),
-  ).toBeVisible();
+  const completionHeading = page.getByRole("heading", {
+    name: "Đã hoàn thành chu trình Real Talk",
+  });
+  await expect(completionHeading).toBeVisible();
   await expect(page.getByText(/Mục tiêu luyện tập:/i)).toBeVisible();
+  await page.waitForTimeout(1_500);
+  await expect(completionHeading).toHaveCSS("opacity", "1");
   await expect(page.locator("[data-nextjs-dialog]")).toHaveCount(0);
   expect(pageErrors).toEqual([]);
   expect(
@@ -156,6 +159,7 @@ test("authenticated owner previews and completes one persisted private draft", a
         fullLessonLoopCompleted: true,
         transferCompleted: true,
         completionScreenVisible: true,
+        completionAnimationSettled: true,
         noNextErrorOverlay: true,
         noPageErrors: pageErrors.length === 0,
         noHorizontalOverflow: true,
