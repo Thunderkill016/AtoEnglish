@@ -4,6 +4,7 @@ import { expect, test, type Page } from "@playwright/test";
 
 import { loginAsE2ETestUser } from "./helpers/auth";
 
+// Permanent regression coverage retained after the hosted T074 desktop/mobile run.
 function requiredEnv(name: string): string {
   const value = process.env[name];
   if (!value) throw new Error(`Missing required environment variable: ${name}`);
