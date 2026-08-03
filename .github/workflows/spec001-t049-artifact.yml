@@ -1,0 +1,44 @@
+name: Spec 001 T049 Types Artifact
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+
+jobs:
+  generate:
+    if: github.head_ref == 'agent/rebuild-learning-core'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out working branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/rebuild-learning-core
+
+      - name: Generate reconciled files
+        shell: python
+        run: |
+          from pathlib import Path
+          import textwrap
+
+          workflow = Path('.github/workflows/spec001-t049-types.yml').read_text()
+          start = workflow.index('          from pathlib import Path\n')
+          end = workflow.index('\n      - name: Commit regenerated snapshot', start)
+          program = textwrap.dedent(workflow[start:end])
+          program = program.replace(
+              'Path(".github/workflows/spec001-t049-types.yml").unlink()',
+              'pass',
+          )
+          exec(compile(program, '<t049-reconcile>', 'exec'))
+
+      - name: Upload reconciled snapshot
+        uses: actions/upload-artifact@v4
+        with:
+          name: spec001-t049-hosted-types
+          path: |
+            src/types/supabase.ts
+            src/types/app-database.ts
+          if-no-files-found: error
+          retention-days: 1
