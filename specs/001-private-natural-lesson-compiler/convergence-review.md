@@ -1,10 +1,12 @@
 # Requirement-to-Evidence Convergence Review — Spec 001
 
 **Review date:** 2026-08-03  
-**Evidence baseline:** Verify run #140 on exact head
-`e7a5120bb320507bba8704a6150d3d3923abb50a`  
+**Evidence baseline:** Verify run #180 on exact head
+`e6685fb7e0f7b43fc9ee594e848cbe65d50ba86b`  
 **Decision:** NOT CONVERGED  
-**Production readiness:** NOT CLAIMED
+**Production readiness:** NOT CLAIMED  
+**Merge recommendation:** DO NOT MERGE  
+**Deployment recommendation:** DO NOT DEPLOY
 
 ## Review method
 
@@ -13,7 +15,8 @@ Each requirement is classified by the strongest evidence actually observed:
 - **PASS** — implementation exists and its required evidence class was observed;
 - **PARTIAL** — implementation or some evidence exists, but integration,
   provider, browser, hosted migration, or human evidence remains missing;
-- **BLOCKED** — a required secret, trusted workflow, source, or decision is absent.
+- **BLOCKED** — a required secret, trusted workflow, source, authorization, or
+  decision is absent.
 
 A green unit suite cannot substitute for database, provider, browser, or human
 evidence. A repository migration cannot be described as hosted state. A typed
@@ -23,17 +26,21 @@ provenance contract cannot be described as an approved production adapter.
 
 | Evidence class | Observed state |
 | --- | --- |
-| Exact-head lint and TypeScript | PASS — Verify #140 |
-| Targeted Real Talk suite | PASS — 12 files, 102 tests |
-| Full unit suite | PASS — 38 files, 366 tests |
-| Content standards | PASS — 1 file, 50 tests |
-| Next.js production build without deployment | PASS — 89/89 pages |
+| Exact-head lint and TypeScript | PASS — Verify #180 |
+| Targeted Real Talk suite | PASS |
+| Full unit suite | PASS, including generated/pending schema boundary |
+| Content standards | PASS |
+| Next.js production build without deployment | PASS |
 | Hosted private-draft migrations | PASS for the earlier three authorized migrations |
+| Full hosted generated type baseline | PASS — T049 |
 | PostgreSQL role/JWT rollback RLS matrix | PASS |
-| Signed-session PostgREST RLS suite | NOT RUN |
+| Signed-session PostgREST RLS behavior | PASS — T050 |
+| Retention, owner deletion, and attempt-history policy | DECIDED — T052 |
 | Transcript provenance domain/policy/repository contract | PASS in code/tests |
 | Provenance migration contract | PASS in static tests |
 | Provenance migration applied to hosted Supabase | NOT APPLIED |
+| Atomic private-draft RPC migration applied hosted | NOT APPLIED |
+| `learning_attempts` migration applied hosted | NOT APPLIED; explicit app type overlay only |
 | Trusted approved transcript adapter/reviewer workflow | NOT IMPLEMENTED |
 | Controlled rights-reviewed transcript source | NOT RUN |
 | Live YouTube oEmbed and desktop/mobile IFrame playback | PASS after retaining one transient failure |
@@ -42,12 +49,47 @@ provenance contract cannot be described as an approved production adapter.
 | Human source-rights and lesson-coherence review | NOT RUN |
 | Application deployment | NOT PERFORMED |
 
+## Closed since the previous review
+
+### T049 — hosted generated type truth
+
+`src/types/supabase.ts` now represents the generated hosted PostgREST schema.
+Versioned but unapplied schema is separated into named app-level overlays:
+
+- `20260731162613_learning_attempts.sql`;
+- T060 Real Talk transcript-provenance columns;
+- T067 atomic private-draft RPC.
+
+The boundary is protected by
+`src/__tests__/supabase-pending-schema-contract.test.ts`. Full evidence is in
+`t049-hosted-types-verification.md`.
+
+### T050 — signed-session RLS
+
+Two real Supabase Auth password sessions and anonymous access exercised the hosted
+PostgREST Data API. Owner A private access passed; anonymous and cross-owner
+access, publication, review elevation, and invalid insertion were denied. Cleanup
+returned zero test users, videos, and lessons. Full evidence is in
+`t050-signed-session-verification.md`.
+
+### T052 — retention, deletion, and history
+
+Spec 001 now has a bounded policy:
+
+- retain one current private draft without silent automatic expiry;
+- require deliberate owner-only hard deletion in the first draft-management
+  surface;
+- cascade-delete the one lesson through the private video relationship;
+- do not preserve immutable full prompts, transcripts, model outputs, or lesson
+  payloads for failed or superseded attempts;
+- require a later approved spec for immutable history.
+
+Full rationale is in `retention-deletion-history-decision.md`.
+
 ## Transcript provenance implementation
 
-The branch now implements the technical boundary required before any production
-transcript adapter can be approved.
-
-### Domain and runtime enforcement
+The branch implements the technical boundary required before a production
+transcript adapter can be approved:
 
 - typed rights bases and provenance metadata;
 - canonical HTTPS source URL;
@@ -62,85 +104,59 @@ transcript adapter can be approved.
 - secret-like rights references are rejected;
 - cue changes after review fail with `transcript_integrity_mismatch`.
 
-### Persistence and database design
-
-Transcript metadata now travels through:
-
-```text
-adapter
-→ transcript policy
-→ compiler
-→ application service
-→ private draft repository
-```
-
 Pending migration:
 
 ```text
 supabase/migrations/20260803010500_real_talk_transcript_provenance.sql
 ```
 
-It adds acquisition mode, review status, source metadata, and cue digest;
-constrains approved provenance; prevents ordinary authenticated clients from
-self-approving it; and makes approved provenance immutable outside the trusted
-service path.
-
-### Tamper evidence
-
-Exact-head tests reject:
-
-- missing provenance;
-- forged adapter identity;
-- self-review;
-- secret-bearing references;
-- changed cues after review;
-- invalid migration states;
-- ordinary-client approval attempts;
-- ordinary-role mutation of approved provenance.
-
-### Honest boundary
-
 This implementation does **not** establish a production transcript source:
 
-- the migration has not been applied to hosted Supabase;
-- hosted types have not been regenerated for it;
+- the migration has not been authorized or applied hosted;
 - no trusted reviewer/service ingestion path exists;
 - no rights-reviewed source has been run;
 - the unofficial adapter remains production-blocked.
 
+## Atomic persistence implementation
+
+The branch contains a versioned `SECURITY INVOKER` atomic private-draft RPC and
+repository integration that replace the known two-write path in code.
+
+Pending migration:
+
+```text
+supabase/migrations/20260803013000_real_talk_atomic_private_draft.sql
+```
+
+The code and static tests pass, but hosted transactional behavior, controlled
+rollback, repeated generation, and the real server-action path remain unclaimed
+until explicit owner authorization permits T067/T051.
+
 ## Functional requirements
 
-| Result | Count |
-| --- | ---: |
-| PASS | 15 |
-| PARTIAL | 9 |
-| BLOCKED as written | 0 |
-
-The provenance work strengthens FR-003, FR-012, FR-017, FR-018, and FR-023, but
-FR-003 and FR-018 remain PARTIAL until hosted application, type regeneration,
-and a real approved adapter are observed.
+The private compiler, evidence gates, privacy policies, type boundary, preview
+loop, and repository checks remain technically coherent. Requirements that depend
+on hosted pending DDL, a live provider, trusted source access, persisted browser
+behavior, or human review remain PARTIAL or BLOCKED.
 
 ## Success criteria
 
-| Result | Count |
-| --- | ---: |
-| PASS | 3 |
-| PARTIAL | 6 |
-| BLOCKED | 1 |
-
-SC-010 remains BLOCKED because a human reviewer cannot yet inspect one complete,
-hosted, trusted provenance record without server logs.
+Technical and deterministic success criteria have strong repository and hosted
+RLS evidence. Success criteria requiring a complete hosted trusted provenance
+record, live provider output, persisted browser journey, or human review remain
+open. No learning-effectiveness or market-demand claim is made.
 
 ## Constitution review
 
 | Principle | Status | Remaining gap |
 | --- | --- | --- |
 | Natural Communication First | PARTIAL | human lesson-coherence review |
-| AI Drafts Must Be Evidence-Bound | PARTIAL | live Gemini observation |
+| Evidence-Bound Generation | PARTIAL | live Gemini and trusted source flow |
 | Transfer Before Completion | PARTIAL | persisted browser flow |
-| Rights, Privacy, and Safety by Default | PARTIAL | hosted provenance migration, trusted adapter, signed-session integration |
-| Small Independently Testable Delivery | PASS | none for current scope boundary |
-| Honest Claims and Layered Evidence | PASS | evidence classes remain distinct |
+| Rights, Privacy, and Safety by Default | PARTIAL | hosted provenance/atomic DDL, trusted flow, human rights review |
+| Small Independently Testable Delivery | PASS | T049, T050, and T052 closed independently |
+| Honest Claims and Layered Evidence | PASS | hosted truth and pending schema are explicitly separated |
+| Measurable Learner and Product Evidence | NOT APPLICABLE FOR CONVERGENCE | Spec 001 is an editor compiler; no learning-effectiveness claim is made |
 
 No constitution exception is approved.
 
@@ -148,10 +164,9 @@ No constitution exception is approved.
 
 ```text
 Workflow: Verify
-Run:      #140
-Run ID:   30760646783
-Job ID:   91530380973
-Head:     e7a5120bb320507bba8704a6150d3d3923abb50a
+Run:      #180
+Run ID:   30775677864
+Head:     e6685fb7e0f7b43fc9ee594e848cbe65d50ba86b
 Result:   success
 ```
 
@@ -160,44 +175,47 @@ Observed:
 - dependency installation: pass;
 - ESLint: pass;
 - TypeScript: pass;
-- targeted Real Talk: 12 files / 102 tests;
-- full unit suite: 38 files / 366 tests;
-- content standards: 1 file / 50 tests;
-- Next.js 16.2.9 build: pass;
-- page generation: 89/89;
+- targeted Real Talk tests: pass;
+- full unit suite: pass;
+- content standards: pass;
+- Next.js production build: pass;
 - no deployment.
 
-## Blocking gates
+## Remaining blocking gates
 
-1. Apply the provenance migration to the authorized hosted project only after
-   explicit owner authorization; rerun advisors and regenerate full types.
-2. Implement a trusted transcript submission/reviewer flow and run one controlled
-   rights-reviewed source.
-3. Run the signed-session owner A / owner B / anonymous PostgREST suite.
-4. Verify repeated generation, reload, and partial-write recovery through the real
-   server action and hosted database.
-5. Decide retention, owner deletion, partial-write recovery, and immutable
-   attempt history.
-6. Configure an authorized server-only Gemini secret and run the live provider
-   matrix.
-7. Run authenticated persisted-draft Playwright on desktop and mobile.
-8. Perform human source-rights, transcript, speaker, pragmatic, Vietnamese, and
-   transfer-coherence review.
-9. Demonstrate manual provenance review without server logs.
-10. Obtain explicit owner acceptance.
+1. **T060** — obtain explicit owner authorization, apply the transcript-provenance
+   migration, rerun advisors, regenerate full hosted types, and verify trusted
+   writes and cue-tamper rejection.
+2. **T067 / T051** — obtain explicit owner authorization, apply and verify the
+   atomic private-draft RPC, then run controlled rollback and repeated generation
+   through the real server action and hosted database.
+3. **T082** — configure an authorized server-only Gemini secret and run the live
+   provider matrix.
+4. **T061** — implement and run one trusted transcript submission/reviewer flow
+   with a controlled rights-reviewed source.
+5. **T074** — run authenticated persisted-draft Playwright on desktop and mobile.
+6. **T075** — perform human source-rights, transcript, speaker, pragmatic,
+   Vietnamese-guidance, and transfer-coherence review.
+7. Demonstrate manual provenance review without server logs.
+8. **T088** — obtain explicit owner acceptance.
 
 ## Final decision
 
 ```text
 Specification quality:       PASS
 Implementation completeness: PARTIAL
-Exact-head technical checks: PASS
-Provenance code/tests:       PASS
+Exact-head technical checks: PASS on Verify #180
+Hosted type baseline:        PASS
+Signed-session RLS:          PASS
+Retention/history:           DECIDED
 Hosted provenance DDL:       NOT APPLIED
+Hosted atomic RPC DDL:       NOT APPLIED
+Learning attempts DDL:       NOT APPLIED; explicit overlay only
 Production transcript path:  NOT IMPLEMENTED
 Live Gemini:                 BLOCKED
-Browser evidence:            PARTIAL
-Human evidence:              BLOCKED
+Persisted browser evidence:  NOT RUN
+Human evidence:              NOT RUN
+Owner acceptance:            NOT OBTAINED
 Convergence:                 FAIL / NOT CONVERGED
 Production readiness:        NOT CLAIMED
 Merge recommendation:        DO NOT MERGE
