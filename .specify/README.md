@@ -14,11 +14,7 @@ constitution
 → converge
 ```
 
-## Current bootstrap
-
-The repository was bootstrapped manually on `agent/rebuild-learning-core` because
-this agent session did not have a local working tree or the `specify` CLI. The
-file layout and artifacts follow the official Spec Kit structure:
+## Repository layout
 
 ```text
 .specify/memory/constitution.md
@@ -30,10 +26,40 @@ specs/<feature>/quickstart.md
 specs/<feature>/contracts/
 specs/<feature>/checklists/
 specs/<feature>/tasks.md
+specs/<feature>/analysis.md
 ```
 
-The manual bootstrap does not claim that CLI integration files, scripts, or agent
-slash commands are installed.
+The repository was initially bootstrapped manually because the first agent session
+did not have a local working tree or the `specify` CLI. The manual bootstrap does
+not claim that CLI integration files, scripts, or slash commands are installed.
+
+## Governing specs
+
+Rebuild roadmap:
+
+```text
+specs/000-atoenglish-rebuild-roadmap/
+```
+
+Existing compiler/provenance feature and evidence:
+
+```text
+specs/001-private-natural-lesson-compiler/
+```
+
+Proposed MVP convergence feature:
+
+```text
+specs/002-mvp-product-convergence/
+```
+
+Spec 002 planning artifacts are prepared for owner review. They do not authorize
+implementation, hosted migration, preview deployment, merge, or production
+deployment. After owner acceptance, its `tasks.md` becomes the only active MVP
+implementation queue.
+
+Spec 001 remains reusable evidence and source code material. Its diverged branch
+must not be merged wholesale into the future MVP branch.
 
 ## Optional local CLI initialization
 
@@ -41,30 +67,21 @@ When working from a local clone, verify the official CLI and initialize the
 preferred agent integration without discarding existing artifacts. Review the
 CLI's proposed changes before accepting them.
 
-Example for Codex skills mode:
+Example:
 
 ```bash
 specify version
 specify init --here --force --integration codex --integration-options="--skills"
 ```
 
-Do not overwrite `.specify/memory/constitution.md` or active feature artifacts
-without an explicit constitution amendment or spec update.
+Do not overwrite `.specify/memory/constitution.md` or feature artifacts without an
+explicit constitution amendment or approved spec update.
 
 ## Repository rule
 
 No non-trivial implementation begins from an ad-hoc prompt alone. It must map to
-an active feature under `specs/`, and the pull request must state which tasks are
+an accepted feature under `specs/`, and its pull request must state which tasks are
 complete, which evidence was observed, and which blockers remain.
 
-The active feature is:
-
-```text
-specs/001-private-natural-lesson-compiler/
-```
-
-The rebuild roadmap is:
-
-```text
-specs/000-atoenglish-rebuild-roadmap/
-```
+A planning document is not implementation permission. Migrations, previews,
+merge, and production deployment remain separate owner-gated actions.
