@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   ChevronLeft,
@@ -15,7 +15,9 @@ import type {
   RealTalkVideo,
   RealTalkLesson,
   LessonPhase,
+  SpeakingDrillResult,
 } from "@/types/real-talk";
+import { completeRealTalkLesson } from "@/app/actions/completeRealTalk";
 
 import PreWatchPhase from "./PreWatchPhase";
 import WhileWatchPhase from "./WhileWatchPhase";
@@ -68,9 +70,13 @@ const phaseVariants = {
 function CompletionScreen({
   lesson,
   score,
+  xpEarned,
+  newStreak,
 }: {
   lesson: RealTalkLesson;
   score: number;
+  xpEarned?: number;
+  newStreak?: number;
 }) {
   const starCount = score >= 85 ? 3 : score >= 60 ? 2 : 1;
   const vocabCount = lesson.preWatch.vocabulary.length;
@@ -119,6 +125,20 @@ function CompletionScreen({
         </h2>
         <p className="text-4xl font-black text-emerald-400 mb-1">{score}%</p>
         <p className="text-sm text-zinc-400">điểm hiểu bài</p>
+        {(xpEarned || newStreak) && (
+          <div className="flex items-center justify-center gap-4 mt-3">
+            {xpEarned ? (
+              <span className="px-3 py-1 rounded-lg bg-amber-500/10 border border-amber-500/20 text-amber-400 text-sm font-bold">
+                +{xpEarned} XP
+              </span>
+            ) : null}
+            {newStreak ? (
+              <span className="px-3 py-1 rounded-lg bg-orange-500/10 border border-orange-500/20 text-orange-400 text-sm font-bold">
+                🔥 {newStreak} ngày
+              </span>
+            ) : null}
+          </div>
+        )}
       </motion.div>
 
       {/* Stats */}
@@ -200,11 +220,18 @@ export default function RealTalkLessonComponent({
 }: RealTalkLessonProps) {
   const [phase, setPhase] = useState<LessonPhase>("pre_watch");
   const [finalScore, setFinalScore] = useState<number>(0);
+  const [savedVocabWords, setSavedVocabWords] = useState<string[]>([]);
+  const [completionXp, setCompletionXp] = useState<number | undefined>();
+  const lessonStartRef = useRef<number>(0);
+  useEffect(() => {
+    lessonStartRef.current = Date.now();
+  }, []);
 
   const currentPhaseIndex = PHASES.findIndex((p) => p.key === phase);
   const progress = Math.round((currentPhaseIndex / (PHASES.length - 1)) * 100);
 
-  const handlePreWatchComplete = () => {
+  const handlePreWatchComplete = (savedWords: string[]) => {
+    setSavedVocabWords(savedWords);
     setPhase("while_watch");
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
@@ -214,10 +241,36 @@ export default function RealTalkLessonComponent({
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const handlePostWatchComplete = (score: number) => {
+  const handlePostWatchComplete = async (
+    score: number,
+    speakingResults: SpeakingDrillResult[],
+  ) => {
     setFinalScore(score);
     setPhase("completed");
     window.scrollTo({ top: 0, behavior: "smooth" });
+
+    // Calculate learning time (capped at 30 min = 1800s)
+    const learningSeconds = Math.min(
+      Math.round((Date.now() - lessonStartRef.current) / 1000),
+      1800,
+    );
+
+    // Fire completion server action (non-blocking for UI)
+    try {
+      const result = await completeRealTalkLesson({
+        videoSlug: video.id,
+        quizScore: score,
+        speakingResults,
+        savedVocab: savedVocabWords,
+        learningSeconds,
+      });
+      if (result.success) {
+        setCompletionXp(result.xpEarned);
+        setCompletionStreak(result.newStreak);
+      }
+    } catch {
+      // Completion save failure is non-fatal — lesson UI already shows results
+    }
   };
 
   return (
@@ -339,7 +392,12 @@ export default function RealTalkLessonComponent({
               />
             )}
             {phase === "completed" && (
-              <CompletionScreen lesson={lesson} score={finalScore} />
+              <CompletionScreen
+                lesson={lesson}
+                score={finalScore}
+                xpEarned={completionXp}
+                newStreak={completionStreak}
+              />
             )}
           </motion.div>
         </AnimatePresence>

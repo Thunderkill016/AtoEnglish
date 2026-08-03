@@ -245,6 +245,21 @@ export interface CulturalNote {
 export type LessonPhase =
   "pre_watch" | "while_watch" | "post_watch" | "completed";
 
+/** Evidence emitted by one speaking drill. It never contains raw audio or text. */
+export interface SpeakingDrillResult {
+  drillId: string;
+  status: "matched" | "unscored";
+  /** Transcript-to-prompt word match, not a pronunciation or IELTS score. */
+  matchScore: number | null;
+}
+
+export interface RealTalkCompletion {
+  quizScore: number;
+  fillInBlankScore: number;
+  comprehensionScore: number;
+  speakingResults: SpeakingDrillResult[];
+}
+
 export interface RealTalkProgress {
   lessonId: string;
   currentPhase: LessonPhase;

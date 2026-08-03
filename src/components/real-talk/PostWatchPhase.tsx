@@ -10,13 +10,14 @@ import {
   Mic,
   Info,
 } from "lucide-react";
-import type { PostWatchContent, CulturalNote } from "@/types/real-talk";
+import type { PostWatchContent, CulturalNote, SpeakingDrillResult } from "@/types/real-talk";
 import { cn } from "@/lib/utils";
+import { SpeakingDrillPlayer } from "./SpeakingDrillPlayer";
 
 interface PostWatchPhaseProps {
   content: PostWatchContent;
   culturalNotes: CulturalNote[];
-  onComplete: (score: number) => void;
+  onComplete: (score: number, speakingResults: SpeakingDrillResult[]) => void;
 }
 
 type PhaseSection = "quiz" | "fill" | "speaking" | "summary";
@@ -43,6 +44,7 @@ export default function PostWatchPhase({
 
   // Speaking drills
   const [currentDrillIdx, setCurrentDrillIdx] = useState(0);
+  const [speakingResults, setSpeakingResults] = useState<SpeakingDrillResult[]>([]);
 
   const playTTS = (text: string) => {
     if (!window.speechSynthesis) return;
@@ -101,6 +103,15 @@ export default function PostWatchPhase({
   };
 
   const nextDrill = () => {
+    if (currentDrillIdx < content.speakingDrills.length - 1) {
+      setCurrentDrillIdx((i) => i + 1);
+    } else {
+      setSection("summary");
+    }
+  };
+
+  const handleDrillComplete = (result: SpeakingDrillResult) => {
+    setSpeakingResults((prev) => [...prev, result]);
     if (currentDrillIdx < content.speakingDrills.length - 1) {
       setCurrentDrillIdx((i) => i + 1);
     } else {
@@ -299,42 +310,10 @@ export default function PostWatchPhase({
               </span>
             </div>
 
-            <div className="rounded-2xl border border-zinc-800/60 bg-zinc-900/60 p-8 backdrop-blur-xl text-center flex flex-col items-center">
-              <button
-                onClick={() =>
-                  playTTS(content.speakingDrills[currentDrillIdx].phrase)
-                }
-                className="size-16 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center hover:bg-emerald-500/30 transition-colors mb-6"
-              >
-                <Volume2 size={32} />
-              </button>
-
-              <h3 className="text-2xl font-bold text-white mb-2">
-                {content.speakingDrills[currentDrillIdx].phrase}
-              </h3>
-              <p className="text-zinc-400 mb-6">
-                {content.speakingDrills[currentDrillIdx].meaningVi}
-              </p>
-
-              <div className="bg-amber-950/30 border border-amber-500/30 p-4 rounded-xl text-sm text-amber-200/90 w-full mb-8">
-                <span className="font-bold text-amber-500 block mb-1">
-                  Mẹo phát âm:
-                </span>
-                {content.speakingDrills[currentDrillIdx].tipVi}
-              </div>
-
-              {/* Mock microphone button for visual */}
-              <button className="flex items-center gap-2 py-3 px-6 rounded-full bg-zinc-800 text-zinc-300 hover:bg-zinc-700 transition-colors">
-                <Mic size={18} /> Nhấn để thu âm (Minh họa)
-              </button>
-            </div>
-
-            <button
-              onClick={nextDrill}
-              className="w-full py-4 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-bold flex items-center justify-center gap-2"
-            >
-              Tiếp tục <ChevronRight size={20} />
-            </button>
+            <SpeakingDrillPlayer
+              drill={content.speakingDrills[currentDrillIdx]}
+              onComplete={handleDrillComplete}
+            />
           </motion.div>
         )}
 
@@ -368,6 +347,40 @@ export default function PostWatchPhase({
               </div>
             </div>
 
+            {content.speakingDrills.length > 0 && speakingResults.length === content.speakingDrills.length && (
+              <div className="bg-zinc-900/60 border border-zinc-800 p-6 rounded-2xl mb-8 max-w-sm mx-auto">
+                <h3 className="text-lg font-bold text-white mb-4 text-left">Kết quả Luyện nói</h3>
+                <div className="space-y-3">
+                  {content.speakingDrills.map((drill, idx) => {
+                    const result = speakingResults[idx];
+                    if (!result) return null;
+                    
+                    return (
+                      <div key={drill.id} className="flex justify-between items-center bg-zinc-950/50 p-3 rounded-lg">
+                        <span className="text-zinc-300 text-sm truncate max-w-[60%] text-left" title={drill.phrase}>
+                          {drill.phrase}
+                        </span>
+                        {result.status === "matched" ? (
+                          <span className={cn(
+                            "font-bold px-2 py-1 rounded text-sm",
+                            (result.matchScore || 0) >= 80 ? "bg-emerald-500/20 text-emerald-400" :
+                            (result.matchScore || 0) >= 50 ? "bg-amber-500/20 text-amber-400" :
+                            "bg-red-500/20 text-red-400"
+                          )}>
+                            {result.matchScore} đ
+                          </span>
+                        ) : (
+                          <span className="text-xs bg-zinc-800 text-zinc-400 px-2 py-1 rounded">
+                            Tự luyện
+                          </span>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
             {culturalNotes.length > 0 && (
               <div className="text-left bg-zinc-900/60 border border-zinc-800 p-6 rounded-2xl mb-8">
                 <h3 className="text-lg font-bold text-white mb-4">
@@ -395,6 +408,7 @@ export default function PostWatchPhase({
                         content.fillInTheBlank.length)) *
                       100,
                   ),
+                  speakingResults
                 )
               }
               className="w-full py-4 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-lg"

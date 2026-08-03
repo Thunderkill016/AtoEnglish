@@ -22,7 +22,7 @@ import { saveRealTalkVocabToSRS } from "@/app/actions/real-talk-srs";
 interface PreWatchPhaseProps {
   video: RealTalkVideo;
   content: PreWatchContent;
-  onComplete: () => void;
+  onComplete: (savedWords: string[]) => void;
 }
 
 export default function PreWatchPhase({
@@ -56,9 +56,12 @@ export default function PreWatchPhase({
     setSavingIndex(null);
     if (res.success) {
       setSavedVocab((prev) => new Set(prev).add(index));
+      setSaveToast(vocab.word);
+      setTimeout(() => setSaveToast(null), 2000);
     }
   };
   const [predictionSubmitted, setPredictionSubmitted] = useState(false);
+  const [saveToast, setSaveToast] = useState<string | null>(null);
 
   const stepsCount = 4; // Context, Vocab, Prediction, SoundAlert
 
@@ -76,12 +79,30 @@ export default function PreWatchPhase({
       setStep(step + 1);
       window.scrollTo({ top: 0, behavior: "smooth" });
     } else {
-      onComplete();
+      // Collect saved vocab words for completion evidence
+      const savedWords = content.vocabulary
+        .filter((_, i) => savedVocab.has(i))
+        .map((v) => v.word);
+      onComplete(savedWords);
     }
   };
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-8">
+      {/* Save toast notification */}
+      <AnimatePresence>
+        {saveToast && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="fixed top-4 left-1/2 -translate-x-1/2 z-50 px-5 py-3 rounded-2xl bg-emerald-500/90 text-white text-sm font-medium backdrop-blur-xl shadow-xl shadow-emerald-900/40 flex items-center gap-2"
+          >
+            <BookmarkCheck size={16} />
+            Đã lưu &ldquo;{saveToast}&rdquo; vào hàng đợi ôn tập!
+          </motion.div>
+        )}
+      </AnimatePresence>
       <AnimatePresence mode="wait">
         {step === 0 && (
           <motion.div

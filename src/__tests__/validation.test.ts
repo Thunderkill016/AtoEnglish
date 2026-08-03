@@ -4,6 +4,7 @@ import {
   SaveCardSchema,
   ReviewCardSchema,
   CompleteUnitSchema,
+  RealTalkCompletionSchema,
   SpeakingSessionSchema,
   assertProductionEnv,
   ProductionEnvSchema,
@@ -54,6 +55,33 @@ describe("LearningAttemptBatchSchema", () => {
     };
 
     expect(LearningAttemptBatchSchema.safeParse(invalid).success).toBe(false);
+  });
+});
+
+describe("RealTalkCompletionSchema", () => {
+  const validCompletion = {
+    videoSlug: "coffee-order-at-a-cafe",
+    quizScore: 75,
+    speakingResults: [
+      { drillId: "sd-1", status: "matched", matchScore: 92 },
+      { drillId: "sd-2", status: "unscored", matchScore: null },
+    ],
+    savedVocab: ["take away", "still or sparkling"],
+    learningSeconds: 900,
+  };
+
+  it("accepts bounded completion evidence without a transcript", () => {
+    expect(RealTalkCompletionSchema.safeParse(validCompletion).success).toBe(true);
+  });
+
+  it("rejects raw transcript fields and an invalid lesson slug", () => {
+    const invalid = {
+      ...validCompletion,
+      videoSlug: "Coffee lesson",
+      transcript: "learner speech must not be stored here",
+    };
+
+    expect(RealTalkCompletionSchema.safeParse(invalid).success).toBe(false);
   });
 });
 

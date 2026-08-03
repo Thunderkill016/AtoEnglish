@@ -1,12 +1,16 @@
 "use server";
 
 import { headers } from "next/headers";
+import { revalidatePath } from "next/cache";
+import { createClient } from "@/lib/supabase/server";
 import { createRateLimiter } from "@/lib/security/rate-limit";
+import { toRealTalkLesson, validateGeneratedLesson } from "@/lib/real-talk/lesson-schema";
 import type { RealTalkLesson, RealTalkVideo } from "@/types/real-talk";
 
 // ─── Rate Limiting ─────────────────────────────────────────────────────────────
 
 const generateLimiter = createRateLimiter(5, 60 * 1000, "real-talk-generate");
+const MAX_SEGMENT_SECONDS = 180;
 
 // ─── YouTube Helpers ───────────────────────────────────────────────────────────
 
@@ -228,6 +232,7 @@ async function generateLessonWithAI(
 ): Promise<{
   success: boolean;
   lessonData?: Record<string, unknown>;
+  model?: string;
   error?: string;
 }> {
   const apiKey = process.env.GEMINI_API_KEY;
@@ -309,7 +314,7 @@ Hãy tạo bài học tiếng Anh hoàn chỉnh từ transcript trên. Nhớ:
           const text = resData.candidates?.[0]?.content?.parts?.[0]?.text;
           if (text) {
             const parsed = JSON.parse(text.trim());
-            return { success: true, lessonData: parsed };
+            return { success: true, lessonData: parsed, model };
           }
         }
 
@@ -364,7 +369,112 @@ export interface GenerateLessonResult {
   success: boolean;
   video?: RealTalkVideo;
   lesson?: RealTalkLesson;
+  slug?: string;
   error?: string;
+}
+
+interface MutationResponse<T> {
+  data: T | null;
+  error: { message: string } | null;
+}
+
+interface RealTalkWriteClient {
+  from: (table: "real_talk_videos" | "real_talk_lessons") => {
+    upsert: (
+      values: Record<string, unknown>,
+      options: { onConflict: string },
+    ) => {
+      select: (columns: string) => {
+        maybeSingle: () => Promise<MutationResponse<{ id: string }>>;
+      };
+    };
+  };
+}
+
+function buildLessonSlug(videoId: string, level: RealTalkVideo["level"], userId: string): string {
+  return `real-talk-${videoId.toLowerCase()}-${level.toLowerCase()}-${userId.slice(0, 8)}`;
+}
+
+async function persistGeneratedLesson({
+  supabase,
+  userId,
+  video,
+  lesson,
+  generationModel,
+}: {
+  supabase: Awaited<ReturnType<typeof createClient>>;
+  userId: string;
+  video: RealTalkVideo;
+  lesson: RealTalkLesson;
+  generationModel: string;
+}): Promise<{ success: true } | { success: false; error: string }> {
+  // Generated lesson tables are added by the Real Talk migration. The client
+  // type is narrowed locally until database types are regenerated from Supabase.
+  const db = supabase as unknown as RealTalkWriteClient;
+  const videoResult = await db
+    .from("real_talk_videos")
+    .upsert(
+      {
+        slug: video.id,
+        youtube_id: video.youtubeId,
+        title: video.title,
+        title_vi: video.titleVi,
+        channel_name: video.channelName,
+        channel_url: video.channelUrl,
+        thumbnail_url: video.thumbnailUrl,
+        duration_seconds: video.durationSeconds,
+        segment_start: video.segment.startSeconds,
+        segment_end: video.segment.endSeconds,
+        level: video.level,
+        topics: video.topics,
+        speaker_count: video.speakerCount,
+        speakers: video.speakers,
+        created_by: userId,
+        is_public: false,
+        qa_status: "draft",
+      },
+      { onConflict: "slug" },
+    )
+    .select("id")
+    .maybeSingle();
+
+  if (videoResult.error || !videoResult.data) {
+    return {
+      success: false,
+      error: videoResult.error?.message ?? "Không thể lưu video nguồn.",
+    };
+  }
+
+  const lessonResult = await db
+    .from("real_talk_lessons")
+    .upsert(
+      {
+        video_id: videoResult.data.id,
+        title: lesson.title,
+        title_vi: lesson.titleVi,
+        level: lesson.level,
+        estimated_minutes: lesson.estimatedMinutes,
+        can_do_statement: lesson.canDoStatement,
+        can_do_statement_vi: lesson.canDoStatementVi,
+        transcript: lesson.transcript,
+        pre_watch: lesson.preWatch,
+        while_watch: lesson.whileWatch,
+        post_watch: lesson.postWatch,
+        generation_model: generationModel,
+      },
+      { onConflict: "video_id" },
+    )
+    .select("id")
+    .maybeSingle();
+
+  if (lessonResult.error || !lessonResult.data) {
+    return {
+      success: false,
+      error: lessonResult.error?.message ?? "Không thể lưu nội dung bài học.",
+    };
+  }
+
+  return { success: true };
 }
 
 /**
@@ -390,6 +500,18 @@ export async function generateRealTalkLesson(
       };
     }
 
+    const supabase = await createClient();
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
+    if (authError || !user) {
+      return {
+        success: false,
+        error: "Bạn cần đăng nhập để tạo và lưu bài học của riêng mình.",
+      };
+    }
+
     // 2. Extract video ID
     const videoId = extractYouTubeId(youtubeUrl);
     if (!videoId) {
@@ -410,8 +532,7 @@ export async function generateRealTalkLesson(
       };
     }
 
-    // Cap lesson segment to max 180 seconds (3 minutes) for optimal learner attention span
-    const MAX_SEGMENT_SECONDS = 180;
+    // Limit one study session to a digestible three-minute input segment.
     const trimmedTranscript = transcriptResult.transcript.filter(
       (item) => item.offset <= MAX_SEGMENT_SECONDS,
     );
@@ -423,6 +544,7 @@ export async function generateRealTalkLesson(
     // 4. Fetch video metadata via oEmbed (no API key needed)
     let videoTitle = "YouTube Video";
     let channelName = "Unknown Channel";
+    let channelUrl = `https://www.youtube.com/watch?v=${videoId}`;
     try {
       const oembedRes = await fetch(
         `https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${videoId}&format=json`,
@@ -435,6 +557,7 @@ export async function generateRealTalkLesson(
         };
         videoTitle = oembed.title || videoTitle;
         channelName = oembed.author_name || channelName;
+        channelUrl = oembed.author_url || channelUrl;
       }
     } catch {
       // oEmbed failure is non-fatal, continue with defaults
@@ -453,7 +576,19 @@ export async function generateRealTalkLesson(
       };
     }
 
-    const data = aiResult.lessonData as Record<string, unknown>;
+    const validation = validateGeneratedLesson(aiResult.lessonData);
+    if (!validation.success) {
+      return {
+        success: false,
+        error: `AI tạo bài chưa đạt cấu trúc cần học. Hãy thử lại. (${validation.error})`,
+      };
+    }
+    if (validation.lesson.level !== level) {
+      return {
+        success: false,
+        error: "AI trả về sai cấp độ đã chọn. Hãy tạo lại bài học.",
+      };
+    }
 
     // 6. Build video metadata
     const fullDuration = Math.ceil(
@@ -464,139 +599,44 @@ export async function generateRealTalkLesson(
     );
     const segmentDuration = Math.min(fullDuration, MAX_SEGMENT_SECONDS);
 
-    const slugId = videoTitle
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/^-|-$/g, "")
-      .slice(0, 50);
-
-    const speakers = (data.speakers as Array<{
-      label: string;
-      color: string;
-    }>) || [
-      { label: "Speaker A", color: "#60a5fa" },
-      { label: "Speaker B", color: "#34d399" },
-    ];
+    const slugId = buildLessonSlug(videoId, level, user.id);
+    const generated = validation.lesson;
 
     const video: RealTalkVideo = {
       id: slugId || videoId,
       youtubeId: videoId,
       title: videoTitle,
-      titleVi: (data.titleVi as string) || videoTitle,
+      titleVi: generated.titleVi,
       channelName,
-      channelUrl: `https://www.youtube.com/channel/UC${videoId.slice(0, 8)}`,
+      channelUrl,
       thumbnailUrl: `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`,
       durationSeconds: fullDuration,
       segment: { startSeconds: 0, endSeconds: segmentDuration },
       level,
-      topics: [],
-      speakerCount: speakers.length,
-      speakers,
+      topics: ["my-library"],
+      speakerCount: generated.speakers.length,
+      speakers: generated.speakers,
     };
 
-    // 7. Build lesson from AI data
-    const lesson: RealTalkLesson = {
-      videoId: video.id,
-      title: (data.title as string) || videoTitle,
-      titleVi: (data.titleVi as string) || videoTitle,
-      level,
-      estimatedMinutes: (data.estimatedMinutes as number) || 15,
-      canDoStatement: (data.canDoStatement as string) || "",
-      canDoStatementVi: (data.canDoStatementVi as string) || "",
-      transcript: (data.transcript as RealTalkLesson["transcript"]) || [],
-      preWatch: (data.preWatch as RealTalkLesson["preWatch"]) || {
-        contextVi: "",
-        vocabulary: [],
-        prediction: {
-          questionVi: "",
-          options: [],
-          correctIndex: 0,
-        },
-        soundAlerts: [],
-      },
-      whileWatch: (data.whileWatch as RealTalkLesson["whileWatch"]) || {
-        gistQuestion: {
-          questionVi: "",
-          options: [],
-          correctIndex: 0,
-        },
-        focusPoints: [],
-        keyMoments: [],
-      },
-      postWatch: (data.postWatch as RealTalkLesson["postWatch"]) || {
-        comprehensionQuiz: [],
-        fillInTheBlank: [],
-        speakingDrills: [],
-        culturalNotes: [],
-      },
-    };
-
-    // 8. Attempt to persist to Supabase Database (best-effort, non-blocking)
-    try {
-      const { createClient } = await import("@/lib/supabase/server");
-      const supabase = (await createClient()) as any;
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-
-      // Upsert video metadata
-      const { data: dbVideo } = await supabase
-        .from("real_talk_videos")
-        .upsert(
-          {
-            slug: video.id,
-            youtube_id: video.youtubeId,
-            title: video.title,
-            title_vi: video.titleVi,
-            channel_name: video.channelName,
-            channel_url: video.channelUrl,
-            thumbnail_url: video.thumbnailUrl,
-            duration_seconds: video.durationSeconds,
-            segment_start: video.segment.startSeconds,
-            segment_end: video.segment.endSeconds,
-            level: video.level,
-            topics: video.topics,
-            speaker_count: video.speakerCount,
-            speakers: video.speakers as unknown as Record<string, unknown>[],
-            created_by: user?.id ?? null,
-            is_public: true,
-          },
-          { onConflict: "slug" },
-        )
-        .select("id")
-        .maybeSingle();
-
-      if (dbVideo?.id) {
-        // Upsert lesson content
-        await supabase.from("real_talk_lessons").upsert(
-          {
-            video_id: dbVideo.id,
-            title: lesson.title,
-            title_vi: lesson.titleVi,
-            level: lesson.level,
-            estimated_minutes: lesson.estimatedMinutes,
-            can_do_statement: lesson.canDoStatement,
-            can_do_statement_vi: lesson.canDoStatementVi,
-            transcript: lesson.transcript as unknown as Record<
-              string,
-              unknown
-            >[],
-            pre_watch: lesson.preWatch as unknown as Record<string, unknown>,
-            while_watch: lesson.whileWatch as unknown as Record<
-              string,
-              unknown
-            >,
-            post_watch: lesson.postWatch as unknown as Record<string, unknown>,
-            generation_model: "gemini-3.6-flash",
-          },
-          { onConflict: "video_id" },
-        );
-      }
-    } catch {
-      // DB persistence is best-effort — silent fallback to memory/static OK
+    // 7. Save before announcing success. A learner must be able to resume this
+    // lesson from its own URL instead of losing it when the page refreshes.
+    const persistence = await persistGeneratedLesson({
+      supabase,
+      userId: user.id,
+      video,
+      lesson: toRealTalkLesson(video.id, generated),
+      generationModel: aiResult.model ?? "gemini-3.6-flash",
+    });
+    if (!persistence.success) {
+      return {
+        success: false,
+        error: `Bài học đã được tạo nhưng chưa thể lưu vào thư viện: ${persistence.error}`,
+      };
     }
 
-    return { success: true, video, lesson };
+    const lesson = toRealTalkLesson(video.id, generated);
+    revalidatePath("/real-talk");
+    return { success: true, video, lesson, slug: video.id };
   } catch (err: unknown) {
     console.error("[Real Talk] generateRealTalkLesson error:", err);
     const detail = err instanceof Error ? err.message : "";
