@@ -18,9 +18,9 @@ type PublicFunctionsWithRealTalk = Omit<
   RealTalkFunctions;
 
 /**
- * App-level database type that reconciles the repository's full generated
- * Supabase type with the hosted Real Talk schema fragment and pending versioned
- * migrations in this branch.
+ * App-level database type layered on the full hosted Supabase snapshot.
+ * The Real Talk fragment now contributes only the pending provenance columns and
+ * atomic RPC until T060 and T067 are authorized and applied hosted.
  *
  * `Omit` makes this forward-compatible: once a full local regeneration adds the
  * same table or function names to `src/types/supabase.ts`, these definitions

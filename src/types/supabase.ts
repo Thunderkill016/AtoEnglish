@@ -254,54 +254,6 @@ export type Database = {
         }
         Relationships: []
       }
-      learning_attempts: {
-        Row: {
-          activity_id: string
-          created_at: string
-          error_tags: string[]
-          evaluator: string
-          evaluator_version: string
-          id: number
-          latency_ms: number | null
-          lesson_id: string
-          modality: string
-          score: number | null
-          session_id: string
-          status: string
-          user_id: string
-        }
-        Insert: {
-          activity_id: string
-          created_at?: string
-          error_tags?: string[]
-          evaluator: string
-          evaluator_version: string
-          id?: never
-          latency_ms?: number | null
-          lesson_id: string
-          modality: string
-          score?: number | null
-          session_id: string
-          status: string
-          user_id: string
-        }
-        Update: {
-          activity_id?: string
-          created_at?: string
-          error_tags?: string[]
-          evaluator?: string
-          evaluator_version?: string
-          id?: never
-          latency_ms?: number | null
-          lesson_id?: string
-          modality?: string
-          score?: number | null
-          session_id?: string
-          status?: string
-          user_id?: string
-        }
-        Relationships: []
-      }
       lesson_history: {
         Row: {
           completed_at: string
@@ -337,6 +289,48 @@ export type Database = {
           },
         ]
       }
+      lesson_v2_evidence: {
+        Row: {
+anonymous_id: string
+completed_at: string
+evidence: Json
+id: number
+lesson_id: string
+module_id: string
+next_review_at: string | null
+occurred_at: string
+session_kind: string
+source: string
+user_id: string | null
+        }
+        Insert: {
+anonymous_id: string
+completed_at: string
+evidence?: Json
+id?: number
+lesson_id: string
+module_id: string
+next_review_at?: string | null
+occurred_at?: string
+session_kind: string
+source?: string
+user_id?: string | null
+        }
+        Update: {
+anonymous_id?: string
+completed_at?: string
+evidence?: Json
+id?: number
+lesson_id?: string
+module_id?: string
+next_review_at?: string | null
+occurred_at?: string
+session_kind?: string
+source?: string
+user_id?: string | null
+        }
+        Relationships: []
+      }
       notification_logs: {
         Row: {
           body: string
@@ -367,6 +361,48 @@ export type Database = {
           type?: string
           url?: string | null
           user_id?: string
+        }
+        Relationships: []
+      }
+      pilot_events: {
+        Row: {
+anonymous_id: string
+day_number: number | null
+event_name: string
+id: number
+occurred_at: string
+passed: boolean | null
+score: number | null
+source: string | null
+star_count: number | null
+unit_id: string | null
+user_id: string | null
+        }
+        Insert: {
+anonymous_id: string
+day_number?: number | null
+event_name: string
+id?: number
+occurred_at?: string
+passed?: boolean | null
+score?: number | null
+source?: string | null
+star_count?: number | null
+unit_id?: string | null
+user_id?: string | null
+        }
+        Update: {
+anonymous_id?: string
+day_number?: number | null
+event_name?: string
+id?: number
+occurred_at?: string
+passed?: boolean | null
+score?: number | null
+source?: string | null
+star_count?: number | null
+unit_id?: string | null
+user_id?: string | null
         }
         Relationships: []
       }
@@ -466,6 +502,149 @@ export type Database = {
           updated_at?: string
           user_id?: string
           xp_earned?: number
+        }
+        Relationships: []
+      }
+      real_talk_lessons: {
+        Row: {
+can_do_statement: string | null
+can_do_statement_vi: string | null
+communication_events: Json
+created_at: string
+environment: Json
+estimated_minutes: number
+generation_model: string | null
+generation_status: string
+generation_warnings: Json
+id: string
+level: string
+post_watch: Json
+pre_watch: Json
+reviewed_at: string | null
+reviewed_by: string | null
+title: string
+title_vi: string
+transcript: Json
+transfer_task: Json
+video_id: string
+while_watch: Json
+        }
+        Insert: {
+can_do_statement?: string | null
+can_do_statement_vi?: string | null
+communication_events?: Json
+created_at?: string
+environment?: Json
+estimated_minutes?: number
+generation_model?: string | null
+generation_status?: string
+generation_warnings?: Json
+id?: string
+level?: string
+post_watch?: Json
+pre_watch?: Json
+reviewed_at?: string | null
+reviewed_by?: string | null
+title: string
+title_vi: string
+transcript?: Json
+transfer_task?: Json
+video_id: string
+while_watch?: Json
+        }
+        Update: {
+can_do_statement?: string | null
+can_do_statement_vi?: string | null
+communication_events?: Json
+created_at?: string
+environment?: Json
+estimated_minutes?: number
+generation_model?: string | null
+generation_status?: string
+generation_warnings?: Json
+id?: string
+level?: string
+post_watch?: Json
+pre_watch?: Json
+reviewed_at?: string | null
+reviewed_by?: string | null
+title?: string
+title_vi?: string
+transcript?: Json
+transfer_task?: Json
+video_id?: string
+while_watch?: Json
+        }
+        Relationships: [
+{
+  foreignKeyName: "real_talk_lessons_video_id_fkey"
+  columns: ["video_id"]
+  isOneToOne: true
+  referencedRelation: "real_talk_videos"
+  referencedColumns: ["id"]
+},
+        ]
+      }
+      real_talk_videos: {
+        Row: {
+channel_name: string | null
+channel_url: string | null
+created_at: string
+created_by: string | null
+duration_seconds: number
+id: string
+is_public: boolean
+level: string
+segment_end: number
+segment_start: number
+slug: string
+speaker_count: number | null
+speakers: Json
+thumbnail_url: string | null
+title: string
+title_vi: string
+topics: string[]
+youtube_id: string
+        }
+        Insert: {
+channel_name?: string | null
+channel_url?: string | null
+created_at?: string
+created_by?: string | null
+duration_seconds?: number
+id?: string
+is_public?: boolean
+level?: string
+segment_end?: number
+segment_start?: number
+slug: string
+speaker_count?: number | null
+speakers?: Json
+thumbnail_url?: string | null
+title: string
+title_vi: string
+topics?: string[]
+youtube_id: string
+        }
+        Update: {
+channel_name?: string | null
+channel_url?: string | null
+created_at?: string
+created_by?: string | null
+duration_seconds?: number
+id?: string
+is_public?: boolean
+level?: string
+segment_end?: number
+segment_start?: number
+slug?: string
+speaker_count?: number | null
+speakers?: Json
+thumbnail_url?: string | null
+title?: string
+title_vi?: string
+topics?: string[]
+youtube_id?: string
         }
         Relationships: []
       }
@@ -744,6 +923,42 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      user_v2_lesson_progress: {
+        Row: {
+completed_at: string
+created_at: string
+id: string
+lesson_id: string
+quiz_correct: number
+quiz_total: number
+task_done: boolean
+updated_at: string
+user_id: string
+        }
+        Insert: {
+completed_at?: string
+created_at?: string
+id?: string
+lesson_id: string
+quiz_correct?: number
+quiz_total?: number
+task_done?: boolean
+updated_at?: string
+user_id: string
+        }
+        Update: {
+completed_at?: string
+created_at?: string
+id?: string
+lesson_id?: string
+quiz_correct?: number
+quiz_total?: number
+task_done?: boolean
+updated_at?: string
+user_id?: string
+        }
+        Relationships: []
       }
       users: {
         Row: {
