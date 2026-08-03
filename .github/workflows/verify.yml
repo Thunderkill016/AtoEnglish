@@ -17,9 +17,9 @@ permissions:
 
 jobs:
   quality:
-    name: Lint, types, and tests
+    name: Lint, types, tests, and build
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
     env:
       CI: true
       HUSKY: 0
@@ -48,3 +48,6 @@ jobs:
 
       - name: Content standards
         run: npm run test:content-standard
+
+      - name: Production build
+        run: npm run build
