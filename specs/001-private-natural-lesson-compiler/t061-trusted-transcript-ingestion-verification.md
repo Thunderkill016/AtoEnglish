@@ -147,6 +147,22 @@ verify_jwt: true
 The one-shot GitHub workflow was removed. The real JWT-authenticated
 `real-talk-transcript-review` function remains active.
 
+## Repository finalization
+
+```text
+Workflow: Spec 001 T061 Finalize
+Run:      #2
+Run ID:   30780669532
+Job ID:   91584516785
+Input:    a08cd6f8541ca6006c3ade6d89a063d137ede9d1
+Output:   8af812386d1b4a193fcfd953d5fd9ab2af6e2c3f
+Result:   success
+```
+
+Before committing the final Spec Kit state, the one-shot finalizer passed ESLint,
+TypeScript, the targeted Real Talk suite, the full unit suite, content standards,
+and the Next.js production build. It then removed itself.
+
 ## Honest boundary
 
 - T061 is complete for the implemented trusted submit/reviewer mechanism and a
