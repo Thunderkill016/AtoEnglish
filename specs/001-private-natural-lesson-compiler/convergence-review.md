@@ -221,3 +221,12 @@ Production readiness:        NOT CLAIMED
 Merge recommendation:        DO NOT MERGE
 Deployment recommendation:   DO NOT DEPLOY
 ```
+
+
+## 2026-08-03 real server-action hosted follow-up
+
+T051 and T068 are now observed through the exported Next.js server actions with a controlled compiler and real hosted Auth, repository, atomic RPC, RLS, reload mapping, rollback, and cleanup. Repeated generation retained one video/lesson identity; a controlled lesson failure left no video-only row.
+
+This closes the real persistence-process gap. It does not close live Gemini, production-approved transcript ingestion, persisted browser Playwright, or human review. The convergence decision remains **NOT CONVERGED** and the PR remains **DO NOT MERGE / DO NOT DEPLOY**.
+
+Detailed evidence: `t051-t068-server-action-hosted-verification.md`.

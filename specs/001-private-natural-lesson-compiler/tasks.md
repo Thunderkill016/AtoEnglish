@@ -159,9 +159,12 @@ owner B cannot read or mutate it; owner A cannot publish or approve it.
   Auth sessions with all owner, anonymous, cross-owner, publication, review-state,
   and public-catalog assertions passing; cleanup returned zero test users, videos,
   and lessons; evidence is recorded in `t050-signed-session-verification.md`
-- [ ] T051 [US3] Apply and verify the atomic private-draft RPC, then run repeated
+- [x] T051 [US3] Apply and verify the atomic private-draft RPC, then run repeated
   generation, reload, and rollback behavior through the real server action and
-  hosted database
+  hosted database; `generateRealTalkLesson` ran with a controlled compiler and
+  real hosted Auth, rate-limit ordering, repository, RPC, RLS, reload mapping,
+  rollback, and cleanup; evidence is recorded in
+  `t051-t068-server-action-hosted-verification.md`
 - [x] T052 [US3] Decide retention, owner deletion UX, and immutable attempt history;
   retain one current private draft without automatic expiry, require deliberate
   owner-only hard deletion in the first draft-management surface, and defer full
@@ -171,7 +174,9 @@ owner B cannot read or mutate it; owner A cannot publish or approve it.
 **Checkpoint**: Hosted database invariants now have role-level and signed-session
 PostgREST evidence. The full generated type baseline matches hosted truth; pending
 DDL remains visible only through named overlays. Retention and history boundaries
-are resolved. The real server-action path remains open.
+are resolved. The real server-action persistence, reload, repeat-identity,
+and rollback path is observed with a controlled compiler; production source
+ingestion remains open.
 
 ---
 
@@ -229,11 +234,15 @@ production adapter is approved, and the migration has not been applied hosted.
   migration `20260803011736`; repeat identity, update, rollback, publication
   rejection, and cleanup evidence is recorded in
   `t060-t067-hosted-schema-verification.md`
-- [ ] T068 Run repeated generation twice through the real server action and prove
-  one video/lesson pair is updated rather than duplicated
+- [x] T068 Run repeated generation twice through the real server action and prove
+  one video/lesson pair is updated rather than duplicated; two calls retained
+  one video ID and lesson identity, updated v2 content, reloaded through
+  `fetchLessonBySlug`, and left no row after a controlled failed lesson write
 
 **Checkpoint**: Code and migration contracts remove the known two-write path.
-Hosted transactional behavior remains unclaimed.
+Hosted RPC behavior and the real server-action repeat, reload, rollback, and
+cleanup path are observed. Live provider and trusted source evidence remain
+separate gates.
 
 ---
 
@@ -329,6 +338,7 @@ Learning attempts DDL: NOT APPLIED; explicit typed overlay only
 Signed-session RLS:     PASS through hosted Auth + PostgREST
 Retention/history:      DECIDED; one current draft, owner hard-delete contract
 Hosted provenance/RPC:  PASS; migrations applied and verified
+Real server action:     PASS with controlled compiler + hosted Auth/RPC/RLS
 Production adapter:     NOT IMPLEMENTED
 Live Gemini:            BLOCKED
 Persisted browser flow: NOT RUN
