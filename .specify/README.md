@@ -1,70 +1,65 @@
 # AtoEnglish Spec Kit Workflow
 
-This repository uses GitHub Spec Kit's spec-driven sequence as its development
-control plane:
+This repository uses the sequence:
 
 ```text
 constitution
-→ specify
-→ clarify/checklist
-→ plan
-→ tasks
-→ analyze
-→ implement
-→ converge
+→ specification
+→ clarification/checklist
+→ plan/research/data/contracts
+→ dependency-ordered tasks
+→ cross-artifact analysis
+→ implementation by user story
+→ convergence and owner review
 ```
 
-## Current bootstrap
+## Governing product decision
 
-The repository was bootstrapped manually on `agent/rebuild-learning-core` because
-this agent session did not have a local working tree or the `specify` CLI. The
-file layout and artifacts follow the official Spec Kit structure:
+The owner confirmed on 2026-08-03 that the core product remains:
+
+```text
+Paste a YouTube URL
+→ generate an owner-private personal English lesson
+→ learn, save, and return
+```
+
+A fixed reviewed catalog does not replace this workflow. Public sharing and human
+publication review are later features.
+
+## Current artifacts
 
 ```text
 .specify/memory/constitution.md
-specs/<feature>/spec.md
-specs/<feature>/plan.md
-specs/<feature>/research.md
-specs/<feature>/data-model.md
-specs/<feature>/quickstart.md
-specs/<feature>/contracts/
-specs/<feature>/checklists/
-specs/<feature>/tasks.md
-```
-
-The manual bootstrap does not claim that CLI integration files, scripts, or agent
-slash commands are installed.
-
-## Optional local CLI initialization
-
-When working from a local clone, verify the official CLI and initialize the
-preferred agent integration without discarding existing artifacts. Review the
-CLI's proposed changes before accepting them.
-
-Example for Codex skills mode:
-
-```bash
-specify version
-specify init --here --force --integration codex --integration-options="--skills"
-```
-
-Do not overwrite `.specify/memory/constitution.md` or active feature artifacts
-without an explicit constitution amendment or spec update.
-
-## Repository rule
-
-No non-trivial implementation begins from an ad-hoc prompt alone. It must map to
-an active feature under `specs/`, and the pull request must state which tasks are
-complete, which evidence was observed, and which blockers remain.
-
-The active feature is:
-
-```text
-specs/001-private-natural-lesson-compiler/
-```
-
-The rebuild roadmap is:
-
-```text
 specs/000-atoenglish-rebuild-roadmap/
+specs/001-private-natural-lesson-compiler/
+specs/002-mvp-product-convergence/
+```
+
+- Spec 001 contains reusable compiler, transcript, Gemini, evidence, private-draft,
+  RLS, hosted, and browser work.
+- Spec 002 converges that work onto current main as the learner-facing
+  YouTube-to-private-lesson MVP.
+
+Implementation must start from current `main` and selectively port accepted work.
+The diverged Real Talk branch/PR #54 must not be merged wholesale.
+
+## Repository Rules
+
+- No non-trivial implementation begins without an active spec and task mapping.
+- Checked tasks require observed evidence, not code existence.
+- Live transcript/Gemini/browser/hosted checks are not replaced by mocks.
+- Generated lessons remain private AI drafts unless a later human-review feature
+  approves publication.
+- Hosted migrations, Vercel preview, merge, and production deployment require
+  explicit authorization at their respective gates.
+- Agents do not merge or deploy automatically.
+
+## Planning State
+
+```text
+Core direction:           confirmed
+Spec 002 planning:        revised and converged
+Implementation permission: not yet recorded
+Implementation branch:    not created
+Preview/merge/deploy:     not authorized
 ```
