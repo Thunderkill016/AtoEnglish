@@ -1,0 +1,158 @@
+name: Spec 001 T074 Finalize
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    if: github.head_ref == 'agent/rebuild-learning-core' && github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      CI: true
+      HUSKY: 0
+
+    steps:
+      - name: Check out working branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/rebuild-learning-core
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Finalize T074 records
+        env:
+          T074_RUN_ID: "30782424355"
+          T074_JOB_ID: "91589586090"
+          T074_HEAD: "b922ec9c3af51b53739b37e80997761aebc4bfbc"
+          T074_ARTIFACT_ID: "8844141988"
+        run: |
+          python <<'PY'
+          import os
+          from pathlib import Path
+
+          tasks_path = Path("specs/001-private-natural-lesson-compiler/tasks.md")
+          tasks = tasks_path.read_text()
+          old_task = """- [ ] T074 [US4] Run desktop and mobile Playwright preview flow against a
+            controlled persisted draft"""
+          new_task = """- [x] T074 [US4] Run desktop and mobile Playwright preview flow against a
+            controlled persisted draft; authenticated Desktop Chrome and Pixel 5
+            completed the owner-private persisted lesson loop through transfer and
+            completion in workflow run #4 (`30782424355`), with no page errors,
+            Next.js error overlay, or horizontal overflow; cleanup returned zero
+            bounded users/videos/lessons and evidence is recorded in
+            `t074-persisted-preview-verification.md`"""
+          if tasks.count(old_task) != 1:
+              raise SystemExit("T074 task marker mismatch")
+          tasks = tasks.replace(old_task, new_task)
+
+          old_checkpoint = """**Checkpoint**: Component suites pass. Persisted-draft browser preview and human
+          pedagogical review remain open."""
+          new_checkpoint = """**Checkpoint**: Component suites and the authenticated owner-private persisted
+          draft browser flow pass on desktop and mobile. Human pedagogical/source
+          review remains open."""
+          if tasks.count(old_checkpoint) != 1:
+              raise SystemExit("Phase 6 checkpoint mismatch")
+          tasks = tasks.replace(old_checkpoint, new_checkpoint)
+          tasks_path.write_text(tasks)
+
+          convergence_path = Path(
+              "specs/001-private-natural-lesson-compiler/convergence-review.md"
+          )
+          convergence = convergence_path.read_text()
+          marker = "## 2026-08-03 T074 persisted browser follow-up"
+          if marker not in convergence:
+              convergence += """
+
+          ## 2026-08-03 T074 persisted browser follow-up
+
+          T074 now has authenticated desktop and Pixel 5 evidence against one
+          owner-private draft persisted through hosted Auth, the exported server
+          action, atomic RPC, RLS, and reload mapping. Both viewports completed the
+          environment-first lesson, retrieval, speak-and-confirm, and changed-context
+          transfer loop without a Next.js error overlay, page exception, or horizontal
+          overflow. All bounded hosted fixtures were removed.
+
+          This closes the persisted browser gap. It does not close live Gemini T082,
+          public routing to the reviewed transcript registry, T075 human review, or
+          owner acceptance. Convergence remains **NOT CONVERGED** and the PR remains
+          **DO NOT MERGE / DO NOT DEPLOY**.
+
+          Evidence: `t074-persisted-preview-verification.md`.
+          """
+              convergence_path.write_text(convergence)
+
+          decision_path = Path(
+              "specs/001-private-natural-lesson-compiler/production-transcript-decision.md"
+          )
+          decision = decision_path.read_text()
+          old = "3. T074 persisted authenticated desktop/mobile browser verification is open;"
+          new = "3. T074 persisted authenticated desktop/mobile browser verification is complete;"
+          if old in decision:
+              decision = decision.replace(old, new)
+          decision_path.write_text(decision)
+
+          evidence_path = Path(
+              "specs/001-private-natural-lesson-compiler/t074-persisted-preview-verification.md"
+          )
+          evidence = evidence_path.read_text()
+          pending = "\nRepository finalization is pending.\n"
+          evidence = evidence.replace(pending, "\n")
+          finalization = f"""
+
+          ## Repository finalization
+
+          ```text
+          Workflow: Spec 001 T074 Finalize
+          Run ID:   {os.environ['GITHUB_RUN_ID']}
+          Input:    {os.environ['GITHUB_SHA']}
+          Result:   full repository gates passed before the finalizer commit
+          ```
+
+          The one-shot finalizer updated `tasks.md`, the production transcript
+          decision, and convergence review, then passed ESLint, TypeScript, targeted
+          Real Talk tests, the full unit suite, content standards, and the Next.js
+          production build before removing itself.
+          """
+          anchor = "\n## Honest boundary\n"
+          if "## Repository finalization" not in evidence:
+              if anchor not in evidence:
+                  raise SystemExit("T074 evidence anchor missing")
+              evidence = evidence.replace(anchor, finalization + anchor)
+          evidence_path.write_text(evidence)
+          PY
+
+      - name: Install dependencies
+        run: npm install --no-audit --prefer-offline
+
+      - name: Verify finalized repository
+        run: |
+          npm run lint
+          npx tsc --noEmit
+          npm run test:real-talk
+          npm run test
+          npm run test:content-standard
+          npm run build
+
+      - name: Commit finalized T074 state
+        run: |
+          set -euo pipefail
+          rm .github/workflows/spec001-t074-finalize.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            .github/workflows/spec001-t074-finalize.yml \
+            specs/001-private-natural-lesson-compiler/tasks.md \
+            specs/001-private-natural-lesson-compiler/convergence-review.md \
+            specs/001-private-natural-lesson-compiler/production-transcript-decision.md \
+            specs/001-private-natural-lesson-compiler/t074-persisted-preview-verification.md
+          git commit -m "docs(spec001): finalize T074 persisted preview evidence"
+          git push origin HEAD:agent/rebuild-learning-core
