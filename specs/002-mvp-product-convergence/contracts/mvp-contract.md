@@ -1,54 +1,35 @@
-# Contract: AtoEnglish MVP Product Boundary
-
-## Purpose
-
-This contract defines what may be called the AtoEnglish MVP and prevents a green
-build, a large feature list, or an experimental content tool from being mistaken
-for a usable product.
+# Contract: AtoEnglish YouTube-to-Private-Lesson MVP
 
 ## Learner Promise
 
-AtoEnglish helps a Vietnamese beginner understand one short reviewed English
-interaction and attempt the same practical communication goal in a changed
-situation.
+AtoEnglish lets a Vietnamese learner paste a supported YouTube video and receive a
+private AI-generated English lesson built from one useful interaction in that
+video.
 
-The MVP does not promise:
+The product does not promise that every YouTube video is supported, that captions
+are perfect, that AI output is human-reviewed, or that one lesson proves fluency,
+pronunciation, CEFR level, mastery, or long-term retention.
 
-- fluency;
-- CEFR certification;
-- native pronunciation;
-- pronunciation scoring;
-- mastery or long-term retention from one lesson;
-- automatic personalization;
-- a complete A0–B2 curriculum;
-- correctness of AI-generated or unreviewed transcripts.
-
-## Critical User Journey
+## Critical Journey
 
 ```text
-GET /
-→ primary CTA
-→ /login
-→ authenticated bootstrap
-→ /dashboard
-→ reviewed lesson catalog/action
-→ /real-talk/[lessonSlug]
-→ first encounter
-→ progressive support
-→ retrieval
-→ speak-and-confirm
-→ changed-context transfer
-→ bounded completion persistence
-→ dashboard continue/review state
-→ logout and later return
+landing
+→ authentication
+→ paste supported YouTube URL
+→ source/transcript validation
+→ bounded interaction selection
+→ Gemini structured generation
+→ source-evidence validation
+→ atomic owner-private ai_draft persistence
+→ private lesson runtime
+→ retrieval + speak-and-confirm + transfer
+→ bounded progress
+→ private library / return
 ```
 
-Every production release candidate must demonstrate this journey on desktop and
-mobile against hosted Supabase.
+## Route Contract
 
-## Public Route Contract
-
-Public without authentication:
+Public:
 
 - `/`
 - `/login`
@@ -57,131 +38,149 @@ Public without authentication:
 - `/terms`
 - `/api/health`
 
-Authenticated MVP routes:
+Authenticated MVP:
 
 - `/dashboard`
-- `/real-talk`
-- `/real-talk/[lessonSlug]`
+- `/real-talk/create` or the equivalent dashboard generation form
+- `/real-talk/[lessonSlug]` for owner-private lessons
+- `/real-talk` if used as the owner's private library
 - `/me`
-- the chosen review/continue route if separate
 
-Editor-only or disabled in learner production:
+No public catalog is required. Another user's private slug must resolve as denied
+or not found without confirming existence.
 
-- `/real-talk/create`
-- source submission/review operations
-- private draft preview routes not owned by the user
+## URL Submission Contract
 
-Deferred routes are not part of the product contract even if they remain deployed.
-They must not appear in primary learner navigation or landing promises.
-
-## Catalog Contract
-
-The catalog response contains only reviewed public lessons.
-
-Pseudo-query contract:
+Input:
 
 ```text
-select reviewed lesson + source
-where video.is_public = true
-  and lesson reviewed/approved
-  and transcript human_verified
-  and reviewed_by/reviewed_at present
-  and provenance/playback pass policy
+youtubeUrl
+approved target level
 ```
 
-Forbidden behavior:
+The server must:
 
-- static fallback lessons;
-- merging fixture lessons into production output;
-- displaying private drafts;
-- displaying unreviewed transcripts;
-- displaying a lesson because a model response passed schema validation only;
-- exposing arbitrary generation as a learner CTA.
+1. authenticate before external/provider work;
+2. validate and normalize a supported YouTube URL;
+3. derive video identity server-side;
+4. rate-limit by authenticated user and safe request bucket;
+5. return stable actionable failure codes;
+6. never trust a client user ID, owner ID, review state, or publication state.
 
-If no lesson qualifies, return an honest empty state.
+## Supported Source Contract
 
-## Reviewed Lesson Contract
+MVP supports only public YouTube videos that satisfy the selected adapter policy:
 
-A learner-visible lesson package must include:
+- canonical YouTube identity can be resolved;
+- official embed/watch playback is permitted/available;
+- usable timed English transcript evidence is obtainable;
+- transcript is non-empty and within configured safety/size limits;
+- source is not private, age-restricted, or otherwise unsupported by policy.
 
-- reviewed source identity and lawful playback boundary;
-- environment/setting;
-- learner role and partner role;
-- practical goal;
-- bounded source segment;
-- reviewed transcript and speaker/timing state;
-- source-backed communication events;
-- first-listen task without answer exposure;
-- progressive support;
-- two to five useful source-backed chunks;
-- productive retrieval;
-- speak-and-confirm fallback;
-- changed-context transfer task;
-- concise reviewed Vietnamese guidance;
-- honest completion copy.
+Unsupported videos fail honestly. The system must not fabricate a transcript,
+convert the whole video blindly, download media, or re-host video/audio.
 
-Human review must explicitly cover:
+## Transcript Contract
 
-- source availability and context;
-- rights/provenance;
-- audio language;
-- exact words;
-- timestamps;
-- speaker uncertainty;
-- translation/guidance;
-- answer evidence;
-- safety and age suitability;
-- level and task coherence;
-- transfer coherence.
+Every transcript result exposes:
 
-## Runtime Completion Contract
+- adapter ID;
+- acquisition mode;
+- language;
+- review status;
+- normalized timed cues;
+- cue digest;
+- warnings;
+- source identity.
 
-The runtime may record `completed` only when:
+Caption text is untrusted prompt data. It is normalized, bounded, delimited, and
+must not override generation rules.
+
+The exact production/private adapter decision is a release gate. Passing unit
+tests does not automatically approve an experimental acquisition mechanism.
+
+## Compiler Contract
+
+The compiler:
+
+- selects a deterministic interaction-rich window no longer than 180 seconds;
+- sends only bounded transcript/source context to Gemini;
+- requests structured output through the typed generation schema;
+- validates structure with Zod;
+- validates every source-dependent phrase, transcript reference, timestamp,
+  answer, and transfer target against selected cues;
+- rejects unsupported output before persistence;
+- records the actual model and warnings.
+
+## Private Draft Contract
+
+Every successful generation is:
 
 ```text
-first listen completed
-AND retrieval attempted
+owner = authenticated user
+is_public = false
+state = ai_draft
+reviewed_by = null
+reviewed_at = null
+```
+
+It persists atomically:
+
+- source/video identity and URL;
+- official playback identity;
+- selected window;
+- transcript adapter/mode/status/digest;
+- structured lesson;
+- model;
+- warnings;
+- deterministic owner-private identity.
+
+Ordinary users cannot approve, publish, or access another user's draft.
+
+## Learner UI Contract
+
+The private lesson always shows:
+
+- source identity and official playback;
+- `AI draft` label;
+- transcript/acquisition warning when not human-verified;
+- environment, roles, and practical goal;
+- honest failure/retry behavior.
+
+The UI must not imply that the lesson was human-reviewed or guaranteed correct.
+
+## Runtime Contract
+
+Completion requires:
+
+```text
+first encounter completed
+AND productive retrieval attempted
 AND speaking self-confirmed
 AND changed-context transfer attempted
 ```
 
-Comprehension score alone is insufficient.
-Watching alone is insufficient.
-Repetition alone is insufficient.
+Watching, multiple choice, cloze, or repetition alone is insufficient.
 
-Completion copy must use language such as:
-
-- “Bạn đã hoàn thành lượt luyện tập này.”
-- “Đây là bằng chứng luyện tập ngay lúc này, chưa chứng minh ghi nhớ lâu dài.”
-
-It must not use:
-
-- mastered;
-- fluent;
-- pronunciation score;
-- CEFR passed;
-- permanently learned.
+Support must reveal progressively. The first encounter does not expose transcript
+or answers by default.
 
 ## Speech Contract
 
-MVP speech mode is `speak_and_confirm`.
+MVP speech is `speak_and_confirm`.
 
-The learner:
+- Microphone/browser STT is optional.
+- No pronunciation score is required or claimed.
+- Optional transcript matching, if retained, must be labelled sentence match and
+  cannot block the fallback.
+- Raw audio and unrestricted speech transcript are not stored.
 
-1. sees or recalls the target prompt according to the current support level;
-2. says the response aloud;
-3. confirms that an attempt occurred.
+## Progress Contract
 
-No score is produced. Browser speech recognition may be used only as an optional
-sentence-match aid under a separate explicit label. It is not required for MVP
-completion and is not pronunciation assessment.
-
-## Persistence Contract
-
-Stored evidence is bounded:
+Stored learner evidence is bounded:
 
 - lesson ID;
-- current checkpoint/status;
+- checkpoint/status;
 - first-listen boolean;
 - comprehension counts;
 - maximum support level;
@@ -190,111 +189,63 @@ Stored evidence is bounded:
 - transfer-attempt boolean;
 - timestamps.
 
-Never store by default:
+No learner free-text transfer response is stored by default. Writes derive the
+user server-side, enforce RLS, validate lesson ownership, and remain idempotent.
 
-- raw microphone recording;
-- full speech transcript;
-- learner free-text transfer response;
-- name/employer in attempt data;
-- arbitrary analytics JSON.
+## Dashboard and Library Contract
 
-Writes derive the user server-side, enforce RLS, and are idempotent.
+The dashboard has one primary action: paste a YouTube URL.
 
-## Account Bootstrap Contract
+It also shows the owner's recent private lessons with states:
 
-Email and OAuth use the same server-owned bootstrap.
+- ready to start;
+- continue;
+- completed/review;
+- failed generation with safe retry guidance.
 
-The operation must:
+It does not require a public catalog, XP, streak, league, flashcards, writing,
+challenge, or fifty-unit progression.
 
-- authenticate first;
-- derive user ID from Supabase Auth;
-- create missing minimum records transactionally/idempotently;
-- return a safe route;
-- tolerate retry;
-- expose an actionable failure.
+## Static Fixture Contract
 
-It must not:
+Static sample lessons may be used only for tests, controlled demos, or development
+fixtures with explicit labeling. They must not:
 
-- trust a client user ID;
-- silently claim personalization from defaulted answers;
-- directly grant reviewer/publication permissions;
-- leave partial rows after failure.
+- appear as if generated from the user's URL;
+- be merged into the owner's private library;
+- satisfy hosted/live generation acceptance;
+- replace live Gemini or transcript verification.
 
-## Dashboard Contract
+## Analytics Contract
 
-The dashboard answers one question:
+Allowed events answer whether users authenticate, submit a URL, reach transcript,
+generate successfully/fail by bounded code, open a lesson, attempt required
+learning steps, complete, and return.
 
-> What should I do next?
-
-It must render exactly one primary state:
-
-- start the first reviewed lesson;
-- continue an in-progress lesson;
-- review/retry a completed lesson;
-- honest no-content state.
-
-Secondary content is limited to the small reviewed corpus and account access.
-XP, streak, league, word-of-day, writing, challenge, and notification status are
-not required.
-
-## Navigation Contract
-
-Primary learner navigation:
-
-- Học
-- Ôn lại / Tiếp tục
-- Tôi
-
-Do not include editor generation or deferred product modules.
-
-## Pilot Analytics Contract
-
-The analytics layer may answer:
-
-- did the learner understand the promise and start auth?;
-- did auth complete?;
-- did they start a lesson?;
-- where did they abandon?;
-- how much support was used?;
-- did they attempt retrieval, speech, and transfer?;
-- did they complete?;
-- did they return?;
-
-It may not collect learner answer text, speech transcript, audio, names, employers,
-or unrestricted metadata.
+Payloads may contain bounded IDs, enum codes, counts, booleans, durations, and
+timestamps. They may not contain source transcript text, learner answers, audio,
+email/name/employer, full URLs with sensitive query data, or provider secrets.
 
 ## Integration Contract
 
-Implementation begins from current `main`.
+Implementation starts from current `main`. For every Real Talk path from open
+branches, a manifest records source SHA, classification (`port`, `adapt`,
+`reference`, `reject`), reason, destination, and required evidence.
 
-For each candidate file or migration from open branches, the port manifest records:
-
-```text
-source branch and SHA
-path
-classification: port / adapt / reference / reject
-reason
-required tests
-destination path
-```
-
-A branch-level merge of `agent/rebuild-learning-core` is forbidden by this
-contract because it is diverged and carries stale/conflicting toolchain and product
-surface state.
+A branch-level merge of `agent/rebuild-learning-core` is forbidden.
 
 ## Release Contract
 
-A merge candidate requires:
+A release candidate requires:
 
-- approved requirements checklist;
-- all required task evidence;
-- exact-head lint, TypeScript, unit, content, and build gates;
-- hosted database/type equivalence;
-- hosted RLS two-user verification;
-- three human-reviewed lessons;
-- desktop/mobile full journey;
-- Vercel preview and runtime-error inspection;
+- accepted product scope;
+- documented transcript adapter/private-production decision;
+- live bounded Gemini success and failure evidence;
+- exact-head lint, TypeScript, tests, content checks, and build;
+- hosted atomic private persistence and two-user RLS evidence;
+- supported and unsupported YouTube browser paths;
+- desktop/mobile URL-to-lesson/return journey on Vercel preview;
+- no critical runtime errors;
 - owner acceptance.
 
-Merge to `main` and production deployment are separate explicit owner decisions.
-A successful preview does not authorize either action.
+Merge and production deployment remain separate explicit owner decisions.
