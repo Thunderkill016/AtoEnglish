@@ -207,16 +207,54 @@ editor to leave the page believing work was retained.
 - Hide database failure behind a warning: rejected because warnings are for
   uncertainty, not failed required behavior.
 
+## Decision 11 — Retain one current draft until explicit owner deletion
+
+**Decision**: Spec 001 retains one current private draft per owner, source, and
+level without automatic expiry. Repeated generation atomically replaces that
+current draft. Full immutable attempt history is not stored.
+
+The first owner draft-management surface must provide a deliberate **Delete
+private draft** action that identifies the source and level, warns that the lesson
+will also be deleted, executes under the owner session and RLS, and reports
+success only after the database confirms deletion. The video row is hard-deleted
+and its one lesson row is removed through the verified cascade.
+
+**Rationale**:
+
+- automatic expiry without warnings or recovery would create surprising data
+  loss;
+- retaining every model attempt would create unbounded sensitive derivative data
+  without a proven reviewer use case;
+- one current draft bounds storage while preserving editor work;
+- a separate management surface is safer than placing an easy-to-trigger delete
+  control beside generation;
+- soft deletion would retain data after the owner believes it was deleted and
+  requires recovery semantics outside this spec.
+
+Failed and superseded attempts are not persisted as full prompts, captions,
+transcripts, model outputs, or lesson payloads. Safe bounded telemetry may retain
+only machine-readable outcome metadata without secrets, personal data, or
+unrestricted free text.
+
+**Alternatives considered**:
+
+- Automatic 30-, 60-, or 90-day expiry: rejected for Spec 001 because there is no
+  approved warning, recovery, management UI, or scheduler.
+- Immutable history for every generation: rejected because no audit/comparison
+  need justifies the privacy, RLS, deletion, and storage obligations.
+- Soft-delete drafts: rejected for the current private-only state.
+- Immediate delete control in the generation form: deferred to the first proper
+  owner draft-management surface.
+
+Full consequences and future requirements are recorded in
+`retention-deletion-history-decision.md`.
+
 ## Open decisions that block convergence
 
 1. Which transcript acquisition modes are approved for production use?
 2. What exact authorized role will own publication in spec 002?
-3. Will private drafts be retained indefinitely, manually deleted, or expired?
-4. Will a future spec add immutable generation-attempt history or keep only the
-   current draft?
 
-The experimental adapter runtime policy, persistence semantics, and current-draft
-identity are resolved. Spec 001 still cannot converge until at least one
-production transcript mode is approved or the feature remains explicitly
-non-production. Retention and future history remain visible in tasks and PR
-review.
+The experimental adapter runtime policy, persistence semantics, current-draft
+identity, private-draft retention, deletion contract, and attempt-history boundary
+are resolved. Spec 001 still cannot converge until at least one production
+transcript mode is approved or the feature remains explicitly non-production.
