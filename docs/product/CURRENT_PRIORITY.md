@@ -2,57 +2,120 @@
 
 **Updated:** 2026-08-02  
 **Owner:** Thunderkill016  
-**Primary product:** Real Talk
+**Development method:** GitHub Spec Kit / Spec-Driven Development
+
+## Governing artifacts
+
+```text
+.specify/memory/constitution.md
+specs/000-atoenglish-rebuild-roadmap/spec.md
+specs/000-atoenglish-rebuild-roadmap/roadmap.md
+specs/001-private-natural-lesson-compiler/
+```
+
+The task ledger at
+`specs/001-private-natural-lesson-compiler/tasks.md` is the only active delivery
+queue. This document summarizes it; it does not replace it.
 
 ## North star
 
-Make a Vietnamese adult able to understand, repeat, and reuse useful English
-from a short real conversation, then return to review it.
+Help a Vietnamese adult understand and respond inside a natural English
+communication environment, then demonstrate the same goal with changed data or
+context.
 
-## Active delivery sequence
+## Active feature: 001 — Private Natural Lesson Compiler
 
-### 1. Speaking evidence in Post-Watch
+The immediate outcome is:
 
-Replace the visual-only microphone with a working browser speech flow:
+```text
+authenticated editor
+→ approved source evidence
+→ bounded natural interaction window
+→ Gemini environment lesson proposal
+→ typed and source-evidence validation
+→ owner-private ai_draft
+→ human-reviewable preview with transfer
+```
 
-- listen to a model phrase;
-- speak through Web Speech when supported;
-- show transcript-match score, missing words, and one Vietnamese retry tip;
-- provide local self-practice when browser speech is unavailable;
-- never label transcript match as pronunciation assessment.
+The current branch already contains substantial implementation. It is not
+converged and not production-ready.
 
-### 2. Learner progress and rewards
+## Ordered work
 
-Persist Real Talk completion with Supabase RLS. A completion record contains
-the completed phase, quiz score, sentence-match results, saved vocabulary, and
-learning time. Award XP and update the daily streak through one server-side,
-idempotent transaction.
+### 1. Complete compiler contracts and tests
 
-### 3. Curated catalog expansion
+- extract a real `TranscriptSourceAdapter` boundary;
+- isolate the current unofficial transcript mechanism as experimental;
+- add stable machine-readable failure codes;
+- make persistence failure explicit;
+- complete the invalid-output and prompt-injection fixture matrix;
+- test that authentication happens before transcript/Gemini calls.
 
-Add five verified YouTube lessons:
+### 2. Verify owner-private persistence
 
-- ordering coffee, A1;
-- asking for directions, A1;
-- self-introduction at work, A2;
-- shopping for clothes, A2;
-- job interview basics, B1.
+- run the migration in an authorized non-production Supabase project;
+- verify anonymous, ownerA, and ownerB RLS behavior;
+- verify ordinary users cannot approve or publish drafts;
+- verify environment, communication events, transfer, warnings, and model survive reload;
+- regenerate Supabase types after migration.
 
-Each source must be publicly playable, attributed, segmented to three minutes
-or less, and reviewed for a concrete can-do outcome before publishing.
+### 3. Verify the natural lesson preview
 
-## Out of scope for this release
+- add component tests for environment-first presentation;
+- require source-backed phrase production acknowledgement;
+- require a changed-context response before completion;
+- verify no pronunciation or mastery claim appears;
+- run desktop and mobile browser preview with one controlled draft.
 
-- a general chatbot or open-ended conversation tutor;
-- claims of phoneme-level accuracy without an acoustic assessment provider;
-- storing raw learner audio or unrestricted transcripts;
-- downloading YouTube audio or video;
-- a broad A0–B2 curriculum rewrite;
-- payments, leagues, social features, or deployment automation.
+### 4. Run exact-head convergence checks
 
-## Completion criteria
+- lint;
+- TypeScript;
+- unit tests;
+- content-standard tests;
+- production build;
+- live Gemini success and failure paths with a bounded test key;
+- manual source, transcript, speaker, translation, safety, and pedagogy review;
+- final requirement-to-evidence mapping.
 
-This phase is complete only when the learner can finish a Real Talk lesson on a
-phone or desktop, receives honest speaking feedback, sees saved progress and
-XP after sign-in, and can open all seven curated lessons without broken media
-or malformed content.
+## Explicit blockers
+
+Spec 001 cannot converge while any of these remain unresolved:
+
+1. production policy for transcript acquisition;
+2. experimental adapter isolation;
+3. stable failure and persistence behavior;
+4. full automated test coverage;
+5. non-production RLS and migration evidence;
+6. exact-head repository checks;
+7. live Gemini and browser evidence;
+8. human source and lesson review.
+
+## What comes next
+
+Only after spec 001 converges may work start on:
+
+```text
+002 — Human Review and Publication Gate
+```
+
+Specs for curriculum sequencing, delayed transfer, analytics, rewards, payments,
+social systems, or catalog expansion are not active.
+
+## Out of scope now
+
+- automatic publication;
+- broad source scraping infrastructure;
+- downloading or re-hosting YouTube media;
+- visible grammar-first curriculum rebuild;
+- unrestricted AI conversation tutor;
+- phoneme or pronunciation claims without an approved acoustic provider;
+- XP, streak, league, payment, or social expansion;
+- production migration, merge, or deployment by an agent.
+
+## Completion rule
+
+The active phase is complete only when all required tasks in
+`specs/001-private-natural-lesson-compiler/tasks.md` are checked from observed
+evidence, the requirements checklist is complete, cross-artifact analysis finds
+no critical conflict, and the owner accepts the exact final state.

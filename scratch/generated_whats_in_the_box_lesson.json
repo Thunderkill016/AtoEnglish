@@ -1,0 +1,359 @@
+{
+  "title": "What's In The Box Challenge",
+  "titleVi": "Thử thách Đoán đồ vật trong hộp kín",
+  "level": "A1",
+  "estimatedMinutes": 15,
+  "canDoStatement": "I can understand reactions, informal expressions, and ask questions in fun challenges.",
+  "canDoStatementVi": "Tôi có thể hiểu phản ứng, từ cảm thán và cách hỏi đáp trong các trò chơi thực tế.",
+  "speakers": [
+    {
+      "label": "Host",
+      "color": "#60a5fa"
+    },
+    {
+      "label": "Jamal",
+      "color": "#34d399"
+    }
+  ],
+  "transcript": [
+    {
+      "index": 0,
+      "speaker": "Host",
+      "startTime": 0,
+      "endTime": 2,
+      "textEn": "Are you guys ready for what's in the box?",
+      "textVi": "Các bạn đã sẵn sàng cho những gì có trong hộp chưa?"
+    },
+    {
+      "index": 1,
+      "speaker": "Host",
+      "startTime": 2,
+      "endTime": 11,
+      "textEn": "Jamal is going up first. This is the What's In The Box Challenge. Let's get into it. Jamal, put the blindfold on.",
+      "textVi": "Jamal sẽ lên trước. Đây là Thử thách Đoán đồ vật trong hộp. Bắt đầu nào. Jamal, đeo băng che mắt vào đi."
+    },
+    {
+      "index": 2,
+      "speaker": "Jamal",
+      "startTime": 11,
+      "endTime": 12,
+      "textEn": "It's on.",
+      "textVi": "Tôi đeo rồi."
+    },
+    {
+      "index": 3,
+      "speaker": "Host",
+      "startTime": 12,
+      "endTime": 19,
+      "textEn": "Okay, now let's bring in... Hey, buddy. Listen, put on a blindfold.",
+      "textVi": "Được rồi, giờ hãy mang... Này anh bạn. Nghe này, đeo băng che mắt vào."
+    },
+    {
+      "index": 4,
+      "speaker": "Jamal",
+      "startTime": 19,
+      "endTime": 20,
+      "textEn": "It is on.",
+      "textVi": "Đeo rồi mà."
+    },
+    {
+      "index": 5,
+      "speaker": "Host",
+      "startTime": 20,
+      "endTime": 24,
+      "textEn": "Okay, bring in the first one.",
+      "textVi": "Được rồi, mang đồ vật đầu tiên ra đi."
+    },
+    {
+      "index": 6,
+      "speaker": "Jamal",
+      "startTime": 24,
+      "endTime": 28,
+      "textEn": "Well, I got to do it first. This is your stream. They want to see you do it.",
+      "textVi": "Chà, tôi phải làm trước sao. Đây là buổi livestream của ông mà. Họ muốn thấy ông làm đó."
+    },
+    {
+      "index": 7,
+      "speaker": "Host",
+      "startTime": 28,
+      "endTime": 32,
+      "textEn": "No, just, bro. Just relax, bro. Chill. Take a chill pill, bro.",
+      "textVi": "Không, anh bạn. Thư giãn đi. Bình tĩnh. Bớt căng thẳng đi ông bạn."
+    },
+    {
+      "index": 8,
+      "speaker": "Jamal",
+      "startTime": 32,
+      "endTime": 48,
+      "textEn": "Oh my god. Oh. Oh my. We don't need this for these. Oh my gosh.",
+      "textVi": "Ôi trời ơi. Ôi chao. Chúng ta đâu cần cái này cho mấy thứ này chứ. Ôi trời ơi."
+    },
+    {
+      "index": 9,
+      "speaker": "Jamal",
+      "startTime": 49,
+      "endTime": 58,
+      "textEn": "Oh my god. Oh my god. No. Oh my god. Yo, shut up! Shut up! Shut up! Shut up! Let me do it. Okay.",
+      "textVi": "Ôi trời ơi. Không đời nào. Ôi trời. Này, trật tự đi! Trật tự nào! Để tôi làm. Được rồi."
+    },
+    {
+      "index": 10,
+      "speaker": "Jamal",
+      "startTime": 59,
+      "endTime": 73,
+      "textEn": "Bro, why is it making that noise? Why is it making that noise? Y'all hear the noise it's making?",
+      "textVi": "Ông bạn ơi, sao nó lại phát ra tiếng kêu đó? Sao nó lại kêu thế? Mọi người có nghe thấy tiếng kêu nó phát ra không?"
+    },
+    {
+      "index": 11,
+      "speaker": "Host",
+      "startTime": 74,
+      "endTime": 84,
+      "textEn": "Bro, you got to touch it, bro. Stop trolling. You have to touch it, bro. Just touch it.",
+      "textVi": "Ông bạn ơi, ông phải sờ vào nó chứ. Đừng trêu nữa. Ông phải chạm vào nó. Sờ vào đi."
+    },
+    {
+      "index": 12,
+      "speaker": "Jamal",
+      "startTime": 85,
+      "endTime": 91,
+      "textEn": "Shut up. Touch it. I'm trying to focus. Okay. Okay.",
+      "textVi": "Im đi. Chạm vào đây. Tôi đang cố tập trung đấy. Được rồi. Được rồi."
+    },
+    {
+      "index": 13,
+      "speaker": "Jamal",
+      "startTime": 92,
+      "endTime": 100,
+      "textEn": "What is that? Yo, that's the most weirdest looking snake I've ever seen. Bro, it's a snake. No, it's not.",
+      "textVi": "Cái gì thế này? Yo, đó là con rắn nhìn kỳ dị nhất tôi từng thấy. Ông bạn ơi, nó là con rắn đấy. Không, không phải đâu."
+    },
+    {
+      "index": 14,
+      "speaker": "Host",
+      "startTime": 100,
+      "endTime": 110,
+      "textEn": "Okay, guess what it is. Guess what it is. If you get it, guess what it is. You have to get it right.",
+      "textVi": "Được rồi, đoán xem nó là gì. Đoán xem nào. Nếu đoán được... Ông phải đoán đúng đấy."
+    },
+    {
+      "index": 15,
+      "speaker": "Jamal",
+      "startTime": 108,
+      "endTime": 110,
+      "textEn": "An alligator?",
+      "textVi": "Một con cá sấu à?"
+    },
+    {
+      "index": 16,
+      "speaker": "Host",
+      "startTime": 111,
+      "endTime": 130,
+      "textEn": "Okay, Chat. Do I give him a hint? Do I give him a hint? Okay, I'm going to give you a hint. Okay. This is the best day ever. This is the best day ever.",
+      "textVi": "Được rồi, khán giả trên Chat. Tôi có nên cho ông ấy gợi ý không? Tôi sẽ cho ông một gợi ý. Được rồi. Đây là ngày tuyệt vời nhất từ trước đến nay (câu nói nổi tiếng của SpongeBob)."
+    },
+    {
+      "index": 17,
+      "speaker": "Jamal",
+      "startTime": 131,
+      "endTime": 134,
+      "textEn": "Is it a sponge?",
+      "textVi": "Nó là miếng bọt biển à?"
+    },
+    {
+      "index": 18,
+      "speaker": "Host",
+      "startTime": 135,
+      "endTime": 143,
+      "textEn": "Okay. You're on the right track. You're on the right track. Come on, bro. You're on the right track.",
+      "textVi": "Được rồi. Ông đi đúng hướng rồi đấy. Đúng hướng rồi. Cố lên ông bạn. Ông đang đi đúng hướng rồi đấy."
+    },
+    {
+      "index": 19,
+      "speaker": "Host",
+      "startTime": 144,
+      "endTime": 151,
+      "textEn": "Stop freaking out. Reach lower. Reach lower. Come on.",
+      "textVi": "Đừng hoảng loạn nữa. Thò tay thấp xuống nữa đi. Thò thấp xuống. Cố lên."
+    }
+  ],
+  "preWatch": {
+    "contextVi": "Trong video này, hai người bạn cùng tham gia trò chơi 'What's In The Box Challenge' trên buổi phát trực tiếp. Người chơi phải bịt mắt và thò tay vào hộp kín để đoán xem đồ vật bí ẩn bên trong là gì.",
+    "vocabulary": [
+      {
+        "word": "blindfold",
+        "phonetic": "/ˈblaɪnd.foʊld/",
+        "definition": "a piece of cloth tied over eyes to prevent seeing",
+        "meaningVi": "băng che mắt",
+        "contextSentence": "Jamal, put the blindfold on.",
+        "timestamp": 7,
+        "pronunciationNote": "Chú ý âm /d/ ở giữa và cụm /ld/ ở cuối từ.",
+        "l1InterferenceVn": "Người Việt hay bỏ quên âm đuôi /d/."
+      },
+      {
+        "word": "take a chill pill",
+        "phonetic": "/teɪk ə tʃɪl pɪl/",
+        "definition": "calm down, relax",
+        "meaningVi": "bình tĩnh lại, thư giãn đi",
+        "contextSentence": "Just relax, bro. Take a chill pill, bro.",
+        "timestamp": 31,
+        "pronunciationNote": "Nối âm liền mạch giữa 'take' và 'a' thành /teɪkə/.",
+        "l1InterferenceVn": "Đừng đọc rời rạc từng từ riêng lẻ."
+      },
+      {
+        "word": "hint",
+        "phonetic": "/hɪnt/",
+        "definition": "a helpful piece of information or clue",
+        "meaningVi": "manh mối, gợi ý",
+        "contextSentence": "Do I give him a hint?",
+        "timestamp": 111,
+        "pronunciationNote": "Bật rõ âm đuôi /t/.",
+        "l1InterferenceVn": "Hay bị đọc thành 'hin' mà thiếu âm /t/."
+      },
+      {
+        "word": "on the right track",
+        "phonetic": "/ɒn ðə raɪt træk/",
+        "definition": "doing or thinking in a way that will lead to success",
+        "meaningVi": "đi đúng hướng, đoán gần đúng rồi",
+        "contextSentence": "You're on the right track.",
+        "timestamp": 135,
+        "pronunciationNote": "Âm /tr/ trong 'track' phát âm giống /ch/ nhẹ.",
+        "l1InterferenceVn": "Người Việt hay đọc 'track' thành 'trắc' kiểu tiếng Việt."
+      }
+    ],
+    "prediction": {
+      "questionVi": "Bạn nghĩ người chơi sẽ cảm thấy thế nào khi thò tay vào hộp?",
+      "options": [
+        "Tự tin và bình tĩnh",
+        "Hồi hộp, lo sợ và giật mình",
+        "Tức giận và khó chịu",
+        "Hoàn toàn không quan tâm"
+      ],
+      "correctIndex": 1
+    },
+    "soundAlerts": [
+      {
+        "sound": "/k/ âm cuối",
+        "explanationVi": "Âm /k/ xuất hiện ở cuối các từ như 'track', 'relax', 'make'.",
+        "exampleWords": [
+          "track",
+          "relax",
+          "make"
+        ],
+        "commonMistakeVi": "Người Việt hay nuốt mất âm bật /k/ ở cuối từ."
+      }
+    ]
+  },
+  "whileWatch": {
+    "gistQuestion": {
+      "questionVi": "Mục tiêu chính của trò chơi trong video là gì?",
+      "options": [
+        "Mở hộp ra thật nhanh",
+        "Bịt mắt và dùng tay đoán đồ vật trong hộp",
+        "Trang trí chiếc hộp bí mật",
+        "Bắt các con vật nguy hiểm"
+      ],
+      "correctIndex": 1
+    },
+    "focusPoints": [
+      {
+        "type": "discourse_marker",
+        "pattern": "Take a chill pill",
+        "explanationVi": "Thành ngữ lóng cực kỳ phổ biến giữa bạn bè khi muốn khuyên ai đó 'hãy bình tĩnh lại'.",
+        "segmentIndices": [
+          7
+        ]
+      },
+      {
+        "type": "idiom",
+        "pattern": "on the right track",
+        "explanationVi": "Cụm từ dùng khi ai đó đang đoán gần đúng hoặc suy luận đúng hướng.",
+        "segmentIndices": [
+          18
+        ]
+      }
+    ],
+    "keyMoments": [
+      {
+        "timestamp": 31,
+        "descriptionVi": "Host khuyên Jamal bình tĩnh khi anh ấy căng thẳng.",
+        "listenForVi": "Lắng nghe cụm từ 'Take a chill pill, bro'."
+      },
+      {
+        "timestamp": 135,
+        "descriptionVi": "Host cổ vũ Jamal khi anh ấy đoán gần đúng.",
+        "listenForVi": "Lắng nghe cụm 'You're on the right track'."
+      }
+    ]
+  },
+  "postWatch": {
+    "comprehensionQuiz": [
+      {
+        "id": "q1",
+        "questionVi": "Host yêu cầu Jamal làm gì đầu tiên trước khi bắt đầu trò chơi?",
+        "options": [
+          "Thò tay vào hộp ngay",
+          "Đeo băng che mắt (blindfold)",
+          "Đoán tên đồ vật",
+          "Rời khỏi phòng"
+        ],
+        "correctIndex": 1,
+        "explanationVi": "Host nói 'Jamal, put the blindfold on' ở giây thứ 7."
+      },
+      {
+        "id": "q2",
+        "questionVi": "Gợi ý 'This is the best day ever' của Host giúp Jamal liên tưởng đến nhân vật/đồ vật nào?",
+        "options": [
+          "Con cá sấu",
+          "Con rắn",
+          "Miếng bọt biển (SpongeBob)",
+          "Chiếc hộp"
+        ],
+        "correctIndex": 2,
+        "explanationVi": "'This is the best day ever' là câu nói kinh điển của SpongeBob (miếng bọt biển)."
+      }
+    ],
+    "fillInTheBlank": [
+      {
+        "id": "fib1",
+        "sentence": "Just relax, bro. Take a ___ pill, bro.",
+        "hintVi": "bình tĩnh lại (từ lóng)",
+        "answer": "chill",
+        "alternatives": [
+          "chill"
+        ]
+      },
+      {
+        "id": "fib2",
+        "sentence": "Do I give him a ___?",
+        "hintVi": "gợi ý, manh mối",
+        "answer": "hint",
+        "alternatives": [
+          "hint"
+        ]
+      }
+    ],
+    "speakingDrills": [
+      {
+        "id": "sd1",
+        "phrase": "Take a chill pill, bro.",
+        "meaningVi": "Bình tĩnh lại đi ông bạn.",
+        "timestamp": 31,
+        "tipVi": "Nối âm 'take a' thành /teɪkə/ và nhấn mạnh vào từ 'chill'."
+      },
+      {
+        "id": "sd2",
+        "phrase": "You're on the right track.",
+        "meaningVi": "Bạn đang đi đúng hướng rồi đấy.",
+        "timestamp": 135,
+        "tipVi": "Nhấn mạnh từ 'right' và 'track'."
+      }
+    ],
+    "culturalNotes": [
+      {
+        "titleVi": "Trào lưu 'What's In The Box Challenge'",
+        "contentVi": "Đây là một trò chơi thử thách cực kỳ phổ biến trên YouTube và livestream ở phương Tây. Sự hấp dẫn nằm ở phản ứng sợ hãi, giật mình buồn cười của người chơi khi sờ vào những thứ không thấy được."
+      }
+    ]
+  }
+}

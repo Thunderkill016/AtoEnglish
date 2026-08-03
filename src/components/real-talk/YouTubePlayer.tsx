@@ -94,9 +94,7 @@ export function YouTubePlayer({
     return () => clearTimeTracking();
   }, []);
 
-  const [playerEngine, setPlayerEngine] = useState<"api" | "direct" | "proxy">(
-    "api",
-  );
+  const [playerEngine, setPlayerEngine] = useState<"api" | "direct">("api");
 
   // Initialize Player when clicked
   const initPlayer = useCallback(() => {
@@ -141,7 +139,8 @@ export function YouTubePlayer({
               event.data,
             );
             clearTimeTracking();
-            // Automatically switch to Fallback Engine 1 (Direct Embed) or Fallback Engine 2 (Proxy)
+            // A direct YouTube embed is the only compliant fallback. Proxying a
+            // YouTube player can bypass its playback and policy controls.
             setPlayerEngine("direct");
           },
         },
@@ -307,15 +306,7 @@ export function YouTubePlayer({
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
             className="absolute inset-0 w-full h-full border-0 z-10"
-            onError={() => setPlayerEngine("proxy")}
-          />
-        ) : playerEngine === "proxy" ? (
-          <iframe
-            src={`https://yewtu.be/embed/${video.youtubeId}?autoplay=1`}
-            title={video.title}
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-            className="absolute inset-0 w-full h-full border-0 z-10"
+            onError={() => setPlayerEngine("api")}
           />
         ) : !isPlaying ? (
           <button

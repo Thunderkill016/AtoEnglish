@@ -108,6 +108,34 @@ export const WrongWordsSchema = z.object({
 export const RecordFlashcardSessionSchema = z.object({
   cardsReviewed: z.number().int().positive("Số thẻ ôn tập phải lớn hơn 0"),
 });
+
+/**
+ * Completion evidence for a Real Talk lesson. Deliberately excludes raw speech
+ * and transcripts: this product only stores the result needed for progress.
+ */
+export const RealTalkCompletionSchema = z
+  .object({
+    videoSlug: z
+      .string()
+      .trim()
+      .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "Bài học không hợp lệ"),
+    quizScore: z.number().int().min(0).max(100),
+    speakingResults: z
+      .array(
+        z
+          .object({
+            drillId: z.string().trim().regex(/^[a-z0-9-]{1,64}$/),
+            status: z.enum(["matched", "unscored"]),
+            matchScore: z.number().int().min(0).max(100).nullable(),
+          })
+          .strict(),
+      )
+      .max(3),
+    savedVocab: z.array(z.string().trim().min(1).max(100)).max(8),
+    // A Real Talk lesson is intentionally capped at 30 minutes in the UI.
+    learningSeconds: z.number().int().min(0).max(1_800),
+  })
+  .strict();
 /**
  * P0-3: Production environment validation.
  * Call assertProductionEnv() at module init in any file that creates rate limiters.
