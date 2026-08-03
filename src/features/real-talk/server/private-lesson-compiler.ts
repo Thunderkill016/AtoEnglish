@@ -10,7 +10,7 @@ import {
 import { extractYouTubeVideoId } from "@/features/real-talk/domain/youtube-source";
 import { generateEvidenceBoundLessonWithGemini } from "@/features/real-talk/server/gemini-lesson-provider";
 import { acquireTranscriptForCompilation } from "@/features/real-talk/server/transcript-source-policy";
-import { experimentalYouTubeTranscriptSource } from "@/features/real-talk/server/transcript-sources/youtube-experimental";
+import { privateYouTubeTranscriptSource } from "@/features/real-talk/server/transcript-sources/youtube-private";
 import {
   selectConversationWindow,
   type GeneratedLessonDraft,
@@ -122,7 +122,7 @@ export async function compilePrivateNaturalLesson(params: {
   let transcript;
   try {
     transcript = await acquireTranscriptForCompilation({
-      adapter: experimentalYouTubeTranscriptSource,
+      adapter: privateYouTubeTranscriptSource,
       useCase: "private_draft",
       request: {
         sourceId: videoId,
