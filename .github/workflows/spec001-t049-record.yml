@@ -1,0 +1,150 @@
+name: Spec 001 T049 Record Evidence
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: write
+
+jobs:
+  record:
+    if: github.head_ref == 'agent/rebuild-learning-core' && github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out working branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/rebuild-learning-core
+          fetch-depth: 0
+
+      - name: Record T049 evidence
+        shell: python
+        run: |
+          from pathlib import Path
+
+          tasks_path = Path('specs/001-private-natural-lesson-compiler/tasks.md')
+          tasks = tasks_path.read_text()
+          old = '''- [ ] T049 [US3] Replace the full local generated `src/types/supabase.ts` and prove
+  equivalence before removing the reconciliation fragment
+'''
+          new = '''- [x] T049 [US3] Replace the full local generated `src/types/supabase.ts` and prove
+  hosted-schema equivalence; the base snapshot now matches project
+  `zpiwddskhduuykpxltun`, while the reconciliation fragment remains only for the
+  pending T060 provenance columns and T067 atomic RPC; evidence is recorded in
+  `t049-hosted-types-verification.md`
+'''
+          if old not in tasks:
+              raise SystemExit('T049 unchecked task block was not found')
+          tasks = tasks.replace(old, new, 1)
+          tasks = tasks.replace(
+              'Signed-session RLS:     PASS through hosted Auth + PostgREST\n',
+              'Hosted type baseline:   PASS against generated project snapshot\nSigned-session RLS:     PASS through hosted Auth + PostgREST\n',
+              1,
+          )
+          tasks_path.write_text(tasks)
+
+          hosted_path = Path('specs/001-private-natural-lesson-compiler/hosted-database-verification.md')
+          hosted = hosted_path.read_text()
+          hosted = hosted.replace(
+              'Full local replacement of `src/types/supabase.ts` remains open.',
+              'The full local `src/types/supabase.ts` now matches the hosted baseline. `AppDatabase` retains only the pending provenance and atomic-RPC type overlay until T060 and T067 are authorized and applied.',
+              1,
+          )
+          hosted_path.write_text(hosted)
+
+          evidence = '''# T049 Hosted Supabase Types Verification
+
+**Observed:** 2026-08-03  
+**Supabase project:** `zpiwddskhduuykpxltun`  
+**Application deployment:** none  
+**Schema migration:** none
+
+## Purpose
+
+Replace the stale full generated `src/types/supabase.ts` with the current hosted
+project baseline without claiming that the pending transcript-provenance or atomic
+private-draft migrations have been applied.
+
+## Authoritative input
+
+The Supabase type generator was invoked twice against project
+`zpiwddskhduuykpxltun`. Both responses described PostgREST `14.5` and the same
+public schema.
+
+The stale local snapshot differed from the hosted generator in these table keys:
+
+```text
+removed local-only table: learning_attempts
+added hosted table:       lesson_v2_evidence
+added hosted table:       pilot_events
+added hosted table:       real_talk_lessons
+added hosted table:       real_talk_videos
+added hosted table:       user_v2_lesson_progress
+```
+
+The hosted generator does not yet contain the provenance columns from
+`20260803010500_real_talk_transcript_provenance.sql` or the
+`upsert_real_talk_private_draft` RPC from
+`20260803013000_real_talk_atomic_private_draft.sql`, because those migrations
+remain unapplied. Those pending definitions therefore remain isolated in
+`src/types/real-talk-supabase.generated.ts` and are layered through
+`src/types/app-database.ts`.
+
+## Generated artifact and committed blob
+
+The deterministic reconciliation artifact produced:
+
+```text
+src/types/supabase.ts
+bytes:       30427
+lines:       1183
+sha256:      d2aa7e6da3382a0da8deb333c6771d5a940a7009cbc9e2c79d2799c8f8f753eb
+git blob:    48a637a2ece5c4c6000e3c62d21205230a940eed
+
+src/types/app-database.ts
+git blob:    be933a2cd630afdb933be48f23442163907fc406
+```
+
+GitHub returned the same blob SHAs after the files were committed on
+`agent/rebuild-learning-core`, proving the committed bytes match the inspected
+artifact.
+
+## Structural checks
+
+The committed full snapshot contains exactly one definition for each hosted table
+listed above and no `learning_attempts` table. The Real Talk lesson relationship
+remains one-to-one with `real_talk_videos`, matching the hosted generator.
+
+`AppDatabase` no longer describes itself as repairing a stale hosted baseline. It
+explicitly documents that its overlay exists only for the two pending migrations.
+
+## Evidence classification
+
+- Hosted type generation: **observed twice**
+- Full local baseline replacement: **observed**
+- Artifact-to-GitHub blob identity: **observed**
+- Pending provenance migration types: **overlay only; not hosted**
+- Pending atomic RPC type: **overlay only; not hosted**
+- Application deployment: **not performed**
+
+## Decision
+
+T049's hosted-baseline replacement and equivalence gate is complete. The
+reconciliation overlay must not be removed until T060 and T067 are authorized,
+applied, regenerated, and verified against the hosted project.
+'''
+          Path('specs/001-private-natural-lesson-compiler/t049-hosted-types-verification.md').write_text(evidence)
+          Path('.github/workflows/spec001-t049-record.yml').unlink()
+
+      - name: Commit evidence
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add specs/001-private-natural-lesson-compiler/tasks.md \
+            specs/001-private-natural-lesson-compiler/hosted-database-verification.md \
+            specs/001-private-natural-lesson-compiler/t049-hosted-types-verification.md \
+            .github/workflows/spec001-t049-record.yml
+          git commit -m "docs(spec001): record hosted type equivalence"
+          git push origin HEAD:agent/rebuild-learning-core
