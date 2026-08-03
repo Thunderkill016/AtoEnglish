@@ -51,3 +51,29 @@ jobs:
 
       - name: Production build
         run: npm run build
+
+  live-youtube-caption:
+    name: Live YouTube caption acquisition
+    if: github.event_name == 'pull_request' && github.head_ref == 'integration/mvp-youtube-to-lesson'
+    needs: quality
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      CI: true
+      HUSKY: 0
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci --no-audit --prefer-offline
+
+      - name: Acquire live timed English captions
+        run: npx tsx scripts/verify-real-talk-youtube-live.ts
