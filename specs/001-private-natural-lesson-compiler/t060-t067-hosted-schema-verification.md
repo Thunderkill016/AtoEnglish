@@ -33,10 +33,10 @@ Result:
 
 ```text
 trusted_write_persisted = true
-owner_can_read= true
+owner_can_read          = true
 owner_tamper_rejected   = true
 digest_unchanged        = true
-cleanup_video = true
+cleanup_video           = true
 cleanup_auth_user       = true
 ```
 
@@ -56,29 +56,54 @@ constraint `real_talk_lessons_video_id_key`.
 The repeated probe then observed:
 
 ```text
-same_video_id    = true
-same_lesson_id   = true
-one_current_video= true
+same_video_id              = true
+same_lesson_id             = true
+one_current_video          = true
 updated_video_title        = true
 updated_lesson_title       = true
 failed_write_left_no_video = true
 publication_rejected       = true
-cleanup_auth_user= true
-cleanup_videos   = true
-cleanup_lessons  = true
+cleanup_auth_user          = true
+cleanup_videos             = true
+cleanup_lessons            = true
 ```
 
 This proves hosted RPC transaction and RLS behavior. It does not claim that
 the Next.js server action itself was executed; T051 and T068 remain open for
 that separate application-process evidence.
 
-## Generated types and advisors
+## Generated types and repository sync
 
 Supabase TypeScript generation after the migrations returned PostgREST `14.5`
 types containing the four provenance fields and
 `upsert_real_talk_private_draft`. The obsolete Real Talk type overlay was
 removed; `AppDatabase` now overlays only the unapplied `learning_attempts`
 migration.
+
+The one-shot repository sync ran as:
+
+```text
+Workflow: Spec 001 Hosted Schema Sync
+Run:      #6
+Run ID:   30777093905
+Input:    8ceb883c395b2b6e6db55492500d86e20e927c4a
+Output:   34bd0394283f2a7b6748d46faff95da2a429bb84
+Result:   success
+```
+
+Before committing, it passed:
+
+- dependency installation;
+- ESLint;
+- TypeScript;
+- the canonical targeted Real Talk suite;
+- the full unit suite.
+
+The generated snapshot, original fresh-install migration, corrective hosted
+migration, migration tests, pending-schema boundary test, task status, and hosted
+evidence were committed together. The temporary workflow deleted itself.
+
+## Advisors
 
 Security Advisor reported no Real Talk finding. The remaining warning is the
 project-level leaked-password-protection setting. Performance Advisor added
