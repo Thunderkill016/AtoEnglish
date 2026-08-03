@@ -1,6 +1,6 @@
 import { writeFileSync } from "node:fs";
 
-import { expect, test } from "@playwright/test";
+import { expect, test, type Page } from "@playwright/test";
 
 import { loginAsE2ETestUser } from "./helpers/auth";
 
@@ -10,31 +10,38 @@ function requiredEnv(name: string): string {
   return value;
 }
 
-async function completePreWatch(page: import("@playwright/test").Page) {
+async function completePreWatch(page: Page) {
   await page
     .getByRole("button", { name: /Tiếp tục: Học từ vựng cốt lõi/i })
     .click();
-  await expect(page.getByRole("heading", { name: "Từ vựng quan trọng" })).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "Từ vựng quan trọng" }),
+  ).toBeVisible();
   await page.getByRole("button", { name: "Tiếp tục", exact: true }).click();
 
   await expect(page.getByRole("heading", { name: "Dự đoán" })).toBeVisible();
-  const prediction = page.locator("button:visible").filter({
-    hasNotText: /Kiểm tra|Tiếp tục/,
-  });
-  await prediction.first().click();
+  await page.getByRole("button", { name: "Làm quen", exact: true }).click();
   await page.getByRole("button", { name: "Kiểm tra", exact: true }).click();
   await page.getByRole("button", { name: "Tiếp tục", exact: true }).click();
 
-  await expect(page.getByRole("heading", { name: "Chú ý phát âm" })).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "Chú ý phát âm" }),
+  ).toBeVisible();
   await page.locator("button:visible").last().click();
 }
 
-async function completeWhileWatch(page: import("@playwright/test").Page) {
-  await expect(page.getByText("Xem hiểu ý chính", { exact: true })).toBeVisible();
-  const gistOptions = page.locator("button:visible").filter({
-    hasNotText: /Kiểm tra|Tiếp tục/,
-  });
-  await gistOptions.first().click();
+async function completeWhileWatch(page: Page) {
+  await expect(
+    page.getByRole("heading", {
+      name: "Điều gì xảy ra trong cuộc trò chuyện?",
+    }),
+  ).toBeVisible();
+  await page
+    .getByRole("button", {
+      name: "Một người yêu cầu nhắc lại",
+      exact: true,
+    })
+    .click();
   await page.getByRole("button", { name: "Kiểm tra", exact: true }).click();
   await page
     .getByRole("button", { name: /Tiếp tục: Xem chi tiết/i })
@@ -45,42 +52,37 @@ async function completeWhileWatch(page: import("@playwright/test").Page) {
   await page.getByRole("button", { name: /Làm bài tập/i }).click();
 }
 
-async function completePostWatch(page: import("@playwright/test").Page) {
-  while (await page.getByText(/^Câu \d+\/\d+$/).isVisible()) {
-    const section = page
-      .locator("section")
-      .filter({ has: page.getByText(/^Câu \d+\/\d+$/) })
-      .first();
-    await section.locator("button").first().click();
-    await section.getByRole("button", { name: "Kiểm tra", exact: true }).click();
-    await section
-      .getByRole("button", { name: "Câu tiếp theo", exact: true })
-      .click();
-  }
-
-  while (await page.getByText(/^Tự gọi lại \d+\/\d+$/).isVisible()) {
-    const section = page
-      .locator("section")
-      .filter({ has: page.getByText(/^Tự gọi lại \d+\/\d+$/) })
-      .first();
-    await section.getByPlaceholder("Nhập phần còn thiếu").fill("controlled answer");
-    await section.getByRole("button", { name: "Kiểm tra", exact: true }).click();
-    await section.getByRole("button", { name: "Tiếp tục", exact: true }).click();
-  }
-
-  while (await page.getByText(/^Nói thành tiếng \d+\/\d+$/).isVisible()) {
-    const section = page
-      .locator("section")
-      .filter({ has: page.getByText(/^Nói thành tiếng \d+\/\d+$/) })
-      .first();
-    await section
-      .getByRole("button", { name: /Tôi đã nói thành tiếng/i })
-      .click();
-  }
-
+async function completePostWatch(page: Page) {
+  await expect(page.getByText("Câu 1/1", { exact: true })).toBeVisible();
+  await page.getByRole("button", { name: "Alex", exact: true }).click();
+  await page.getByRole("button", { name: "Kiểm tra", exact: true }).click();
   await page
-    .getByPlaceholder(/Tự phản hồi theo tình huống mới/i)
-    .fill("I can respond differently now");
+    .getByRole("button", { name: "Câu tiếp theo", exact: true })
+    .click();
+
+  await expect(page.getByText("Tự gọi lại 1/1", { exact: true })).toBeVisible();
+  await page.getByPlaceholder("Nhập phần còn thiếu").fill("repeat");
+  await page.getByRole("button", { name: "Kiểm tra", exact: true }).click();
+  await page.getByRole("button", { name: "Tiếp tục", exact: true }).click();
+
+  await expect(
+    page.getByText("Nói thành tiếng 1/2", { exact: true }),
+  ).toBeVisible();
+  await page
+    .getByRole("button", { name: /Tôi đã nói thành tiếng/i })
+    .click();
+  await expect(
+    page.getByText("Nói thành tiếng 2/2", { exact: true }),
+  ).toBeVisible();
+  await page
+    .getByRole("button", { name: /Tôi đã nói thành tiếng/i })
+    .click();
+
+  const transfer = page.getByPlaceholder(
+    /Tự phản hồi theo tình huống mới/i,
+  );
+  await expect(transfer).toBeVisible();
+  await transfer.fill("I can respond differently now");
   await page
     .getByLabel(/Tôi đã tự tạo phản hồi trước khi xem lại transcript/i)
     .check();
@@ -93,6 +95,8 @@ async function completePostWatch(page: import("@playwright/test").Page) {
 test("authenticated owner previews and completes one persisted private draft", async ({
   page,
 }, testInfo) => {
+  test.setTimeout(90_000);
+
   const slug = requiredEnv("SPEC001_T074_SLUG");
   const pageErrors: string[] = [];
   page.on("pageerror", (error) => pageErrors.push(error.message));
@@ -101,8 +105,12 @@ test("authenticated owner previews and completes one persisted private draft", a
   await page.goto(`/real-talk/${slug}`, { waitUntil: "networkidle" });
 
   await expect(page.getByText("AI draft", { exact: true })).toBeVisible();
-  await expect(page.getByText("Môi trường giao tiếp", { exact: true })).toBeVisible();
-  await expect(page.getByText("Việc cần làm ngoài đời", { exact: true })).toBeVisible();
+  await expect(
+    page.getByText("Môi trường giao tiếp", { exact: true }),
+  ).toBeVisible();
+  await expect(
+    page.getByText("Việc cần làm ngoài đời", { exact: true }),
+  ).toBeVisible();
   await expect(page.locator("[data-nextjs-dialog]")).toHaveCount(0);
   expect(
     await page.evaluate(
