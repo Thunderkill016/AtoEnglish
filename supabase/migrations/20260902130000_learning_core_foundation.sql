@@ -17,21 +17,36 @@ UPDATE public.cards
 SET scheduled_days = GREATEST(COALESCE(interval, 0), 0)
 WHERE scheduled_days = 0;
 
--- In ts-fsrs v5.4.1 Card.elapsed_days means the interval between the two most recent
--- reviews. It is NOT `now() - last_review`. Recover it only when append-only history exists.
-WITH latest_review AS (
-  SELECT DISTINCT ON (card_id)
+-- Legacy card_review_logs.elapsed_days was previously derived from next_review-last_review,
+-- so it cannot be trusted as historical elapsed time. Reconstruct Card.elapsed_days from
+-- accurate review timestamps instead. In ts-fsrs v5.4.1 this is the interval between the
+-- two most recent completed reviews, not `now() - last_review`.
+WITH ordered_reviews AS (
+  SELECT
     card_id,
-    elapsed_days
+    review,
+    LAG(review) OVER (PARTITION BY card_id ORDER BY review, created_at) AS previous_review,
+    ROW_NUMBER() OVER (PARTITION BY card_id ORDER BY review DESC, created_at DESC) AS newest_rank
   FROM public.card_review_logs
-  ORDER BY card_id, review DESC, created_at DESC
+), latest_intervals AS (
+  SELECT
+    card_id,
+    CASE
+      WHEN previous_review IS NULL THEN 0
+      ELSE GREATEST(
+        FLOOR(EXTRACT(EPOCH FROM (review - previous_review)) / 86400)::integer,
+        0
+      )
+    END AS elapsed_days
+  FROM ordered_reviews
+  WHERE newest_rank = 1
 )
 UPDATE public.cards AS c
-SET elapsed_days = GREATEST(COALESCE(latest_review.elapsed_days, 0), 0)
-FROM latest_review
-WHERE c.id = latest_review.card_id;
+SET elapsed_days = latest_intervals.elapsed_days
+FROM latest_intervals
+WHERE c.id = latest_intervals.card_id;
 
--- Unknown legacy elapsed history stays neutral rather than fabricated.
+-- Cards without sufficient history stay neutral rather than receiving fabricated history.
 UPDATE public.cards AS c
 SET elapsed_days = 0
 WHERE NOT EXISTS (
@@ -40,12 +55,19 @@ WHERE NOT EXISTS (
   WHERE l.card_id = c.id
 );
 
--- A lapse is an Again rating while the card was in Review state.
-WITH lapse_counts AS (
+-- Legacy logs stored post-review card state. The state before a review is therefore the
+-- previous log's state. Count only recoverable Again events whose prior state was Review.
+WITH review_sequence AS (
   SELECT
     card_id,
-    COUNT(*) FILTER (WHERE rating = 1 AND state = 2)::integer AS lapses
+    rating,
+    LAG(state) OVER (PARTITION BY card_id ORDER BY review, created_at) AS previous_state
   FROM public.card_review_logs
+), lapse_counts AS (
+  SELECT
+    card_id,
+    COUNT(*) FILTER (WHERE rating = 1 AND previous_state = 2)::integer AS lapses
+  FROM review_sequence
   GROUP BY card_id
 )
 UPDATE public.cards AS c
@@ -53,14 +75,17 @@ SET lapses = GREATEST(COALESCE(lapse_counts.lapses, 0), 0)
 FROM lapse_counts
 WHERE c.id = lapse_counts.card_id;
 
+-- learning_steps cannot be reconstructed safely because legacy logs did not persist it.
+-- Existing Learning/Relearning cards restart from step 0 once; all future steps are durable.
+
 COMMENT ON COLUMN public.cards.elapsed_days IS
-  'ts-fsrs v5 legacy field: days between the two most recent reviews; current elapsed time is recalculated from last_review.';
+  'ts-fsrs v5 field: days between the two most recent reviews; current elapsed time is recalculated from last_review.';
 COMMENT ON COLUMN public.cards.scheduled_days IS
   'Days scheduled by FSRS at the previous review.';
 COMMENT ON COLUMN public.cards.lapses IS
-  'Count of Again ratings from Review state.';
+  'Count of recoverable Again reviews from Review state; fully durable after the learning-core migration.';
 COMMENT ON COLUMN public.cards.learning_steps IS
-  'Current short-term (re)learning step index used by ts-fsrs.';
+  'Current short-term (re)learning step index used by ts-fsrs; fully durable after the learning-core migration.';
 COMMENT ON COLUMN public.card_review_logs.last_elapsed_days IS
   'Native ts-fsrs ReviewLog.last_elapsed_days value.';
 COMMENT ON COLUMN public.card_review_logs.learning_steps IS
