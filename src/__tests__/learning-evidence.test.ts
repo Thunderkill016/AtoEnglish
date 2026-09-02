@@ -25,9 +25,21 @@ describe("learning evidence invariants", () => {
     expect(event).toBeNull();
   });
 
-  it("does not award oral production from typed fallback", () => {
+  it("does not award evidence to a target the attempt did not address", () => {
     const event = materializeEvidence({
       attempt: baseAttempt,
+      candidate: { type: "retrieval", targetId: "word:lend", success: true },
+    });
+    expect(event).toBeNull();
+  });
+
+  it("does not award oral production from typed fallback", () => {
+    const event = materializeEvidence({
+      attempt: {
+        ...baseAttempt,
+        capabilityId: "cap:introduce-self",
+        responseModality: "text",
+      },
       candidate: { type: "production", targetId: "cap:introduce-self", success: true },
     });
     expect(event).toBeNull();
@@ -88,5 +100,21 @@ describe("learning evidence invariants", () => {
     expect(next.retrieval).toBe(0);
     expect(next.transfer).toBe(0);
     expect(next.evidenceCount).toBe(1);
+  });
+
+  it("discounts supported evidence instead of treating it as independent performance", () => {
+    const state = createEmptyLearnerSkillState("word:borrow");
+    const independent = materializeEvidence({
+      attempt: { ...baseAttempt, supportLevel: 0 },
+      candidate: { type: "retrieval", targetId: "word:borrow", success: true },
+    });
+    const supported = materializeEvidence({
+      attempt: { ...baseAttempt, supportLevel: 3 },
+      candidate: { type: "retrieval", targetId: "word:borrow", success: true },
+    });
+
+    const independentState = applyEvidenceToSkillState(state, independent!, "2026-09-02T12:00:00.000Z");
+    const supportedState = applyEvidenceToSkillState(state, supported!, "2026-09-02T12:00:00.000Z");
+    expect(supportedState.retrieval).toBeLessThan(independentState.retrieval);
   });
 });
