@@ -34,6 +34,8 @@ export type LessonAction = {
   model?: string;
   supportVi?: string;
   targetSignals?: string[];
+  /** Every group is required; one signal from each group must be observed. */
+  requiredSignalGroups?: string[][];
   changedContext?: boolean;
   revealsAnswer?: boolean;
   assessment?: LessonAssessment;
@@ -76,6 +78,10 @@ const evaluatedKinds = new Set<LessonActionKind>([
   "retry",
   "transfer",
 ]);
+
+function hasEvaluatorTargets(action: LessonAction) {
+  return (action.targetSignals?.length ?? 0) > 0 || (action.requiredSignalGroups?.some((group) => group.length > 0) ?? false);
+}
 
 export function qaLesson(lesson: LessonContract): QaIssue[] {
   const issues: QaIssue[] = [];
@@ -123,6 +129,9 @@ export function qaLesson(lesson: LessonContract): QaIssue[] {
       issues.push({ severity: "error", code: "ASSESSMENT_TARGET_REQUIRED", message: `${action.id} must declare its learning-core assessment target.`, provenance: "product_inference" });
       continue;
     }
+    if (evaluatedKinds.has(action.kind) && !hasEvaluatorTargets(action)) {
+      issues.push({ severity: "error", code: "EVALUATOR_TARGET_REQUIRED", message: `${action.id} must declare deterministic target signals for evaluation.`, provenance: "product_inference" });
+    }
     if (action.assessment && !declaredTargets.has(action.assessment.targetCapabilityId)) {
       issues.push({ severity: "error", code: "ASSESSMENT_TARGET_UNDECLARED", message: `${action.id} targets ${action.assessment.targetCapabilityId}, which is not the lesson capability or an embedded capability.`, provenance: "product_inference" });
     }
@@ -155,12 +164,18 @@ export function qaLesson(lesson: LessonContract): QaIssue[] {
     if (production?.assessment && transfer.assessment.contextId === production.assessment.contextId) {
       issues.push({ severity: "error", code: "TRANSFER_CONTEXT_NOT_CHANGED", message: "Transfer must declare a context different from the earlier successful production context.", provenance: "source_derived" });
     }
+    if ((transfer.requiredSignalGroups?.length ?? 0) < 2) {
+      issues.push({ severity: "error", code: "TRANSFER_REQUIRES_MULTI_DEMAND_EVALUATION", message: "This transfer task must require both the repair move and the transferred introduction response.", provenance: "product_inference" });
+    }
   }
   if (lesson.actions.some((action) => /this is a pen|that is the phone/i.test(action.model ?? action.prompt ?? ""))) {
     issues.push({ severity: "warning", code: "TEXTBOOK_LIKE_LANGUAGE", message: "Editorial review: language resembles isolated textbook examples.", provenance: "product_inference" });
   }
   return issues;
 }
+
+const introduceSignals = ["my name is", "i'm", "i am"];
+const repairSignals = ["could you say that again", "say that again", "sorry"];
 
 export const firstMeetingLessonV1: LessonContract = {
   id: "LESSON-CAP002-FIRST-MEETING-V1",
@@ -228,7 +243,8 @@ export const firstMeetingLessonV1: LessonContract = {
       modality: "speech",
       prompt: "Chào. Tôi tên là Hoàng.",
       supportVi: "Không hiện đáp án trước lần thử đầu.",
-      targetSignals: ["my name is", "i'm", "i am"],
+      targetSignals: introduceSignals,
+      requiredSignalGroups: [introduceSignals],
       assessment: {
         targetCapabilityId: "CAP-002",
         evidenceType: "retrieval",
@@ -239,11 +255,12 @@ export const firstMeetingLessonV1: LessonContract = {
     {
       id: "produce",
       kind: "produce",
-      title: "Introduce yourself and spell your name",
-      instruction: "Say the whole response aloud. Browser transcript is used only to check target-language coverage.",
+      title: "Introduce yourself aloud",
+      instruction: "Say the response aloud. Browser transcript is used only to check target-language coverage.",
       modality: "speech",
       prompt: "Hi, I'm Maya. What's your name?",
-      targetSignals: ["my name is", "i'm", "i am", "that's"],
+      targetSignals: introduceSignals,
+      requiredSignalGroups: [introduceSignals],
       assessment: {
         targetCapabilityId: "CAP-002",
         evidenceType: "production",
@@ -267,7 +284,8 @@ export const firstMeetingLessonV1: LessonContract = {
       instruction: "The colleague's next turn is unclear. Ask for repetition before continuing.",
       modality: "speech",
       prompt: "Sorry — [you missed the question].",
-      targetSignals: ["could you say that again", "say that again", "sorry"],
+      targetSignals: repairSignals,
+      requiredSignalGroups: [repairSignals],
       assessment: {
         targetCapabilityId: "CAP-003",
         evidenceType: "repair",
@@ -282,7 +300,8 @@ export const firstMeetingLessonV1: LessonContract = {
       instruction: "Use the repair move, then introduce yourself again.",
       modality: "speech",
       prompt: "Let's try that again. What's your name?",
-      targetSignals: ["could you say that again", "my name is", "i'm", "i am"],
+      targetSignals: [...repairSignals, ...introduceSignals],
+      requiredSignalGroups: [repairSignals, introduceSignals],
       assessment: {
         targetCapabilityId: "CAP-002",
         evidenceType: null,
@@ -297,7 +316,8 @@ export const firstMeetingLessonV1: LessonContract = {
       instruction: "This time you must ask for repetition first, then answer a differently phrased name question.",
       modality: "speech",
       prompt: "I didn't catch that. And what should I call you?",
-      targetSignals: ["could you say that again", "my name is", "i'm", "i am"],
+      targetSignals: [...repairSignals, ...introduceSignals],
+      requiredSignalGroups: [repairSignals, introduceSignals],
       changedContext: true,
       assessment: {
         targetCapabilityId: "CAP-002",
