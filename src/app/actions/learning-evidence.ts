@@ -3,10 +3,12 @@
 import { headers } from "next/headers";
 
 import { materializeEvidence, type EvidenceEvent } from "@/lib/learning/evidence";
+import type { RecordLearningAttemptInput } from "@/lib/learning/validation";
 import {
-  RecordLearningAttemptSchema,
-  type RecordLearningAttemptInput,
-} from "@/lib/learning/validation";
+  compileCanonicalNếpPracticeAttempt,
+  NếpPracticeSubmissionSchema,
+  type NếpPracticeSubmission,
+} from "@/lib/nep/practice-execution.v1";
 import { createRateLimiter } from "@/lib/security/rate-limit";
 import { createClient } from "@/lib/supabase/server";
 
@@ -19,7 +21,7 @@ type RpcClient = {
 
 function rpcArgs(
   attempt: RecordLearningAttemptInput["attempt"],
-  evidence: EvidenceEvent | null
+  evidence: EvidenceEvent | null,
 ): Record<string, unknown> {
   return {
     p_knowledge_item_id: attempt.knowledgeItemId ?? null,
@@ -47,15 +49,19 @@ function rpcArgs(
 }
 
 function isTransferPolicyRejection(message: string): boolean {
-  return message.includes("Transfer requires") || message.includes("Evidence context must match attempted context");
+  return message.includes("Transfer requires")
+    || message.includes("Evidence context must match attempted context");
 }
 
 /**
- * Canonical write path for the new learning core.
- * UI records what happened; domain policy decides which evidence is structurally eligible;
- * PostgreSQL is authoritative for persisted-history invariants such as changed-context transfer.
+ * Trusted Nếp execution boundary.
+ *
+ * The browser sends only observed interaction data plus canonical action identity. The server
+ * resolves the versioned lesson/action and recomputes correctness, target, evidence type,
+ * evaluator, reveal semantics and remediation metadata. Raw learner response is used transiently
+ * for deterministic evaluation and is never passed to the persistence RPC.
  */
-export async function recordLearningAttempt(input: RecordLearningAttemptInput) {
+export async function recordNếpPracticeAttempt(input: NếpPracticeSubmission) {
   try {
     const reqHeaders = await headers();
     const ip = reqHeaders.get("x-forwarded-for")?.split(",")[0].trim() || "127.0.0.1";
@@ -64,20 +70,26 @@ export async function recordLearningAttempt(input: RecordLearningAttemptInput) {
       return { success: false, error: "Yêu cầu quá thường xuyên. Vui lòng thử lại sau." };
     }
 
-    const parsed = RecordLearningAttemptSchema.safeParse(input);
+    const parsed = NếpPracticeSubmissionSchema.safeParse(input);
     if (!parsed.success) {
       return {
         success: false,
-        error: `Dữ liệu attempt không hợp lệ: ${parsed.error.issues.map((issue) => issue.message).join(", ")}`,
+        error: `Dữ liệu practice không hợp lệ: ${parsed.error.issues.map((issue) => issue.message).join(", ")}`,
       };
     }
 
-    const { attempt, candidate } = parsed.data;
+    const compiled = compileCanonicalNếpPracticeAttempt(parsed.data);
+    if (!compiled) {
+      return { success: false, error: "Lesson/action không tồn tại trong canonical Nếp contract." };
+    }
+
+    const { record, evaluation, feedback } = compiled;
+    const { attempt, candidate } = record;
     const evidence = candidate
       ? materializeEvidence({
           attempt,
           candidate,
-          // Transfer depends on persisted history, not a caller-provided previous context.
+          // Transfer depends on persisted history, not caller-provided previous context.
           deferTransferContextCheck: candidate.type === "transfer",
         })
       : null;
@@ -85,7 +97,16 @@ export async function recordLearningAttempt(input: RecordLearningAttemptInput) {
     const supabase = await createClient();
     const { data: { user }, error: authError } = await supabase.auth.getUser();
     if (authError || !user) {
-      return { success: false, error: "Bạn cần đăng nhập để ghi nhận tiến trình học." };
+      return {
+        success: true,
+        persisted: false,
+        persistence: "local-only" as const,
+        evaluation,
+        feedback,
+        evidenceRecorded: false,
+        evidenceType: null,
+        evidenceRejection: null,
+      };
     }
 
     const rpcClient = supabase as unknown as RpcClient;
@@ -95,7 +116,7 @@ export async function recordLearningAttempt(input: RecordLearningAttemptInput) {
 
     // A changed-context decision depends on persisted history and can lose a race between
     // concurrent requests. Preserve the immutable attempt even when the DB correctly rejects
-    // only the transfer evidence. Infrastructure/permission errors are never downgraded.
+    // only transfer evidence. Infrastructure/permission errors are never downgraded.
     if (error && evidence?.type === "transfer" && isTransferPolicyRejection(error.message)) {
       evidenceRejection = error.message;
       const retry = await rpcClient.rpc("record_learning_attempt", rpcArgs(attempt, null));
@@ -105,12 +126,21 @@ export async function recordLearningAttempt(input: RecordLearningAttemptInput) {
     }
 
     if (error) {
-      return { success: false, error: `Không thể lưu learning event: ${error.message}` };
+      return {
+        success: false,
+        error: `Không thể lưu learning event: ${error.message}`,
+        evaluation,
+        feedback,
+      };
     }
 
     return {
       success: true,
+      persisted: true,
+      persistence: "database" as const,
       attemptId: typeof data === "string" ? data : null,
+      evaluation,
+      feedback,
       evidenceRecorded,
       evidenceType: evidenceRecorded ? evidence?.type ?? null : null,
       evidenceRejection,
