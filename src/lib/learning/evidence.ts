@@ -51,6 +51,11 @@ export interface EvidencePolicyContext {
   candidate: EvidenceCandidate;
   /** Context used by the immediately preceding successful production of the same target. */
   previousSuccessfulContextId?: string | null;
+  /**
+   * Used only by the server persistence boundary. The database then validates transfer
+   * against stored evidence history; callers must never use this to claim transfer locally.
+   */
+  deferTransferContextCheck?: boolean;
 }
 
 /**
@@ -58,7 +63,12 @@ export interface EvidencePolicyContext {
  * Completion, button taps and typed fallbacks must not silently become speaking/transfer evidence.
  */
 export function materializeEvidence(context: EvidencePolicyContext): EvidenceEvent | null {
-  const { attempt, candidate, previousSuccessfulContextId } = context;
+  const {
+    attempt,
+    candidate,
+    previousSuccessfulContextId,
+    deferTransferContextCheck = false,
+  } = context;
 
   if (!attempt.knowledgeItemId && !attempt.capabilityId) return null;
 
@@ -77,7 +87,7 @@ export function materializeEvidence(context: EvidencePolicyContext): EvidenceEve
 
   if (candidate.type === "retrieval" && attempt.responseModality === "none") return null;
 
-  if (candidate.type === "transfer") {
+  if (candidate.type === "transfer" && !deferTransferContextCheck) {
     if (!attempt.contextId || !previousSuccessfulContextId || attempt.contextId === previousSuccessfulContextId) {
       return null;
     }
