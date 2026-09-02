@@ -251,19 +251,30 @@ function scoreCandidate(input: {
   };
 }
 
+/**
+ * Explicit remediation hints override same-action fallback. This allows a recurring transfer
+ * failure such as "missing repair move" to pressure the dedicated repair candidate (even when it
+ * targets a different embedded capability) without teaching the generic planner what group 0 means.
+ * Older error-memory rows without hints keep the previous same-action behavior for compatibility.
+ */
 function matchingRecurringErrorCount(candidate: PlannerCandidate, entries: ErrorMemoryEntry[]) {
   const lessonId = metadataString(candidate.metadata, "lessonId");
   const lessonVersion = metadataString(candidate.metadata, "lessonVersion");
   const actionId = metadataString(candidate.metadata, "actionId");
-  if (!lessonId || !lessonVersion || !actionId) return 0;
 
   return entries.reduce((count, entry) => {
-    const matches = entry.status === "recurring"
-      && entry.targetId === candidate.targetId
+    if (entry.status !== "recurring") return count;
+
+    if (entry.remediationCandidateIds.length > 0) {
+      return count + (entry.remediationCandidateIds.includes(candidate.id) ? 1 : 0);
+    }
+
+    if (!lessonId || !lessonVersion || !actionId) return count;
+    const legacySameActionMatch = entry.targetId === candidate.targetId
       && entry.lessonId === lessonId
       && entry.lessonVersion === lessonVersion
       && entry.actionId === actionId;
-    return count + (matches ? 1 : 0);
+    return count + (legacySameActionMatch ? 1 : 0);
   }, 0);
 }
 
