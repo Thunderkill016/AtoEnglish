@@ -7,6 +7,8 @@ import {
   deriveRecentPlannerHistory,
   mapLearnerSkillStateRow,
   normalizeSessionSize,
+  PLANNER_RECENT_ATTEMPT_SELECT,
+  PLANNER_SKILL_STATE_SELECT,
   type LearnerSkillStateRow,
   type RecentLearningAttemptRow,
 } from "@/lib/learning/session-input";
@@ -64,7 +66,7 @@ export async function getNếpSessionPlan(input: GetNếpSessionPlanInput = {}) 
 
     const stateQuery = readClient
       .from<LearnerSkillStateRow>("learner_skill_states")
-      .select("target_id, recognition, retrieval, listening, production, repair, transfer, retention, evidence_count, last_evidence_at")
+      .select(PLANNER_SKILL_STATE_SELECT)
       .eq("user_id", user.id)
       .in("target_id", targetIds)
       .limit(100);
@@ -73,7 +75,7 @@ export async function getNếpSessionPlan(input: GetNếpSessionPlanInput = {}) 
     // do not fetch response_text or the full metadata object.
     const recentAttemptQuery = readClient
       .from<RecentLearningAttemptRow>("learning_attempts")
-      .select("capability_id, knowledge_item_id, prompt_id, lesson_id:metadata->>lessonId, action_id:metadata->>actionId, created_at")
+      .select(PLANNER_RECENT_ATTEMPT_SELECT)
       .eq("user_id", user.id)
       .in("capability_id", targetIds)
       .order("created_at", { ascending: false })
