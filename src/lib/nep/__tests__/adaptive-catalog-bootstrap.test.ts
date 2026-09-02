@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 
+import type { LearnerSkillState } from "../../learning/evidence";
 import { planSession } from "../../learning/session-planner";
 import { greetCloseLessonV1 } from "../bootstrap-lessons.v1";
 import { qaLesson } from "../lesson-contract";
@@ -11,6 +12,22 @@ import {
 } from "../practice-execution.v1";
 import { plannerCandidateId } from "../remediation-map.v1";
 import { nepSessionCatalogV1, validateNếpSessionCatalog } from "../session-catalog.v1";
+
+function state(overrides: Partial<LearnerSkillState> = {}): LearnerSkillState {
+  return {
+    targetId: "CAP-001",
+    recognition: 0,
+    retrieval: 0,
+    listening: 0,
+    production: 0,
+    repair: 0,
+    transfer: 0,
+    retention: 0,
+    evidenceCount: 0,
+    lastEvidenceAt: null,
+    ...overrides,
+  };
+}
 
 describe("adaptive catalog bootstrap V1", () => {
   it("keeps every canonical lesson free of blocking QA issues", () => {
@@ -26,16 +43,38 @@ describe("adaptive catalog bootstrap V1", () => {
     expect(nepSessionCatalogV1.some((candidate) => candidate.targetId === "CAP-002")).toBe(true);
   });
 
-  it("gives a cold-start learner eligible CAP-001 practice instead of an empty plan", () => {
+  it("starts a target with recognition when the catalog provides a recognition candidate", () => {
     const plan = planSession({
       candidates: nepSessionCatalogV1,
       states: [],
-      sessionSize: 2,
+      sessionSize: 3,
       now: "2026-09-03T00:00:00.000Z",
     });
 
-    expect(plan.opportunities.length).toBeGreaterThan(0);
-    expect(plan.opportunities.every((item) => item.candidate.targetId === "CAP-001")).toBe(true);
+    expect(plan.opportunities).toHaveLength(1);
+    expect(plan.opportunities[0]?.candidate).toMatchObject({
+      targetId: "CAP-001",
+      evidenceType: "recognition",
+    });
+    expect(plan.blocked.some((item) =>
+      item.candidate.targetId === "CAP-001"
+      && item.candidate.evidenceType === "retrieval"
+      && item.reasons.includes("cold-start-needs-recognition"),
+    )).toBe(true);
+    expect(plan.blocked.some((item) => item.reasons.includes("prerequisite-not-ready:CAP-001"))).toBe(true);
+  });
+
+  it("allows retrieval after persisted recognition instead of simulating unlock inside the same plan", () => {
+    const plan = planSession({
+      candidates: nepSessionCatalogV1,
+      states: [state({ recognition: 0.35, evidenceCount: 1, lastEvidenceAt: "2026-09-03T00:01:00.000Z" })],
+      sessionSize: 2,
+      now: "2026-09-03T00:02:00.000Z",
+    });
+
+    expect(plan.opportunities.some((item) =>
+      item.candidate.targetId === "CAP-001" && item.candidate.evidenceType === "retrieval",
+    )).toBe(true);
     expect(plan.blocked.some((item) => item.reasons.includes("prerequisite-not-ready:CAP-001"))).toBe(true);
   });
 
