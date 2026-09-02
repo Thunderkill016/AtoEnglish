@@ -2,11 +2,24 @@
 -- The RPC performs these checks for clearer errors, while this trigger protects the table
 -- from future write paths that accidentally bypass application/domain validation.
 
+-- Supabase recommends an empty search_path for SECURITY DEFINER functions. All relation
+-- references in these functions are schema-qualified.
+ALTER FUNCTION private.apply_fsrs_card_review_core(
+  uuid, integer, double precision, double precision, integer, integer, integer, integer,
+  timestamptz, timestamptz, integer, smallint, smallint, timestamptz, double precision,
+  double precision, integer, integer, timestamptz
+) SET search_path = '';
+
+ALTER FUNCTION private.record_learning_attempt_core(
+  text, text, uuid, text, text, text, text, text, boolean, integer, integer, boolean,
+  integer, jsonb, text, text, boolean, double precision, text, text, jsonb
+) SET search_path = '';
+
 CREATE OR REPLACE FUNCTION private.enforce_learning_evidence_event()
 RETURNS trigger
 LANGUAGE plpgsql
 SECURITY DEFINER
-SET search_path = public, pg_temp
+SET search_path = ''
 AS $$
 DECLARE
   v_attempt_user_id uuid;
