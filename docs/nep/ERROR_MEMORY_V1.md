@@ -36,12 +36,27 @@ It deliberately ignores:
 
 Each memory entry has one of four states:
 
-- `supported-only` — observed only while support was active;
+- `supported-only` — the pattern has only been observed on assisted attempts;
 - `observed` — one independent failure since the last repair;
 - `recurring` — at least two independent failures since the last repair;
 - `repaired` — a later independent successful response completed the same versioned action.
 
-Supported failures are counted diagnostically but do not promote a pattern to `recurring`.
+An attempt is assisted when either optional support was used or the answer had already been revealed. Assisted failures are counted diagnostically but do not promote a pattern to `recurring`.
+
+This prevents retry-after-feedback from becoming fake independent evidence simply because the learner did not open the optional support control.
+
+## Remediation hints
+
+Each actionable error entry may carry zero or more `remediationCandidateIds`. These IDs are derived from the versioned Nếp content remediation map, not inferred by the generic learner model.
+
+Examples:
+
+```text
+transfer + missing-target-group:0 -> ...:repair
+transfer + missing-target-group:1 -> ...:produce
+```
+
+Historical rows without hints remain valid. Planner logic can use same-action fallback only when an entry has no explicit remediation candidate.
 
 ## Repair semantics
 
@@ -56,19 +71,25 @@ This prevents the learner model from becoming a permanent collection of past mis
 `getNếpErrorMemory()` is authenticated and read-only. It reads the learner's own `learning_attempts` rows through existing RLS and projects only:
 
 - target identity;
-- correctness/support level;
+- correctness/support/reveal state;
 - lesson/action/version identity;
 - `errorSignals.observedResponse`;
 - `errorSignals.errorTags`;
+- `errorSignals.remediationHints`;
 - timestamp.
 
 It does not SELECT `response_text` or the full attempt `metadata` object.
 
+## Planner integration
+
+Session Planner receives Error Memory entries but only `recurring` entries create error-repair pressure.
+
+`observed`, `supported-only`, `repaired`, and `no-response` observations have zero ranking effect. Explicit remediation hints can route that pressure to a different evidence-bearing action; hard gates remain authoritative.
+
 ## What V1 does not do
 
-Error Memory V1 does not yet:
+Error Memory V1 does not:
 
-- change Session Planner scores;
 - create a new database table;
 - claim an error is a misconception;
 - infer grammar or pronunciation problems;
@@ -77,14 +98,3 @@ Error Memory V1 does not yet:
 - persist a permanent learner label.
 
 The snapshot is rebuilt deterministically from immutable attempts.
-
-## Next boundary
-
-A later planner integration can derive an explicit `errorRepairPressure` only from `recurring` entries. The planner should not receive pressure from `supported-only`, `observed`, `repaired`, or `no-response` events.
-
-Before adding that term, tests should lock:
-
-- one-off failures do not alter planning;
-- two independent recurrent failures increase priority for the relevant repair opportunity;
-- a successful independent repair removes that pressure;
-- unrelated targets/actions are unaffected.
