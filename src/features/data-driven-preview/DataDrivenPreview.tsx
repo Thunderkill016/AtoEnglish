@@ -71,11 +71,17 @@ export function DataDrivenPreview() {
   const [evidence, setEvidence] = useState<EvidenceState>(initialEvidence);
   const [persistenceState, setPersistenceState] = useState<PersistenceState>("idle");
   const attemptStartedAt = useRef(Date.now());
+  const lastSubmissionKey = useRef<string | null>(null);
 
   const action = lesson.actions[step];
   const progress = Math.round(((step + 1) / lesson.actions.length) * 100);
   const speechAvailable = typeof window !== "undefined" && recognitionCtor() !== null;
   const persistedLabel = persistenceLabel(persistenceState);
+
+  const markResponseChanged = () => {
+    lastSubmissionKey.current = null;
+    setPersistenceState("idle");
+  };
 
   const resetAttempt = () => {
     setAnswer("");
@@ -83,6 +89,7 @@ export function DataDrivenPreview() {
     setFeedback(null);
     setSupportUsed(false);
     setPersistenceState("idle");
+    lastSubmissionKey.current = null;
     attemptStartedAt.current = Date.now();
   };
 
@@ -101,7 +108,7 @@ export function DataDrivenPreview() {
       setAnswerSource("speech");
       setListening(false);
       setFeedback(null);
-      setPersistenceState("idle");
+      markResponseChanged();
     };
     recognition.onerror = () => { setListening(false); setFeedback("Không lấy được transcript. Thử lại hoặc dùng text fallback; fallback không tạo speaking evidence."); };
     recognition.onend = () => setListening(false);
@@ -110,6 +117,9 @@ export function DataDrivenPreview() {
   };
 
   const persistEvaluation = async (correct: boolean) => {
+    const submissionKey = `${action.id}|${answerSource ?? "none"}|${answer.trim()}`;
+    if (lastSubmissionKey.current === submissionKey) return;
+
     const record = toLearningAttemptRecord({
       lesson,
       action,
@@ -121,6 +131,7 @@ export function DataDrivenPreview() {
     });
     if (!record) return;
 
+    lastSubmissionKey.current = submissionKey;
     setPersistenceState("saving");
     const result = await recordLearningAttempt(record);
     if (result.success) {
@@ -128,7 +139,12 @@ export function DataDrivenPreview() {
       return;
     }
     const error = "error" in result ? result.error : "";
-    setPersistenceState(error.includes("đăng nhập") ? "local-only" : "error");
+    if (error.includes("đăng nhập")) {
+      setPersistenceState("local-only");
+      return;
+    }
+    lastSubmissionKey.current = null;
+    setPersistenceState("error");
   };
 
   const evaluate = async () => {
@@ -233,11 +249,11 @@ export function DataDrivenPreview() {
             {action.prompt && <div className="mb-5 rounded-2xl bg-[#f5f3ec] p-5"><p className="text-xs font-bold uppercase tracking-[.18em] text-black/35">Prompt</p><p className="mt-2 text-xl font-medium">{action.prompt}</p></div>}
 
             {action.kind === "comprehend" ? (
-              <div className="grid gap-3 sm:grid-cols-3">{["name", "job", "country"].map((choice) => <button key={choice} type="button" onClick={() => { setAnswer(choice); setAnswerSource("text"); setFeedback(null); setPersistenceState("idle"); }} className={`rounded-2xl border px-4 py-4 text-left font-semibold ${answer === choice ? "border-[#2d6a4f] bg-[#edf5ef]" : "border-black/10"}`}>{choice}</button>)}</div>
+              <div className="grid gap-3 sm:grid-cols-3">{["name", "job", "country"].map((choice) => <button key={choice} type="button" onClick={() => { setAnswer(choice); setAnswerSource("text"); setFeedback(null); markResponseChanged(); }} className={`rounded-2xl border px-4 py-4 text-left font-semibold ${answer === choice ? "border-[#2d6a4f] bg-[#edf5ef]" : "border-black/10"}`}>{choice}</button>)}</div>
             ) : action.modality === "speech" ? (
               <>
                 <div className="flex flex-wrap gap-3"><button type="button" onClick={startSpeech} disabled={listening || persistenceState === "saving"} className="flex items-center gap-2 rounded-full bg-[#171713] px-5 py-3 text-sm font-semibold text-white disabled:opacity-40"><Mic2 className="size-4" /> {listening ? "Đang nghe…" : "Nói bằng mic"}</button>{!speechAvailable && <span className="flex items-center gap-2 text-xs text-[#8a5b00]"><CircleAlert className="size-4" /> Browser không hỗ trợ speech recognition</span>}</div>
-                <textarea value={answer} onChange={(event) => { setAnswer(event.target.value); setAnswerSource("text"); setFeedback(null); setPersistenceState("idle"); }} placeholder="Transcript hoặc text fallback…" className="mt-4 min-h-24 w-full resize-none rounded-2xl border border-black/10 bg-[#faf9f5] p-4 outline-none focus:border-[#2d6a4f]/60" />
+                <textarea value={answer} onChange={(event) => { setAnswer(event.target.value); setAnswerSource("text"); setFeedback(null); markResponseChanged(); }} placeholder="Transcript hoặc text fallback…" className="mt-4 min-h-24 w-full resize-none rounded-2xl border border-black/10 bg-[#faf9f5] p-4 outline-none focus:border-[#2d6a4f]/60" />
                 <div className="mt-3 flex flex-wrap gap-2"><button type="button" onClick={evaluate} disabled={!answer || answerSource !== "speech" || persistenceState === "saving"} className="rounded-full bg-[#2d6a4f] px-4 py-2 text-xs font-bold text-white disabled:opacity-30">Đánh giá speech transcript</button><button type="button" onClick={evaluate} disabled={!answer || persistenceState === "saving"} className="rounded-full border border-black/10 px-4 py-2 text-xs font-bold text-black/55 disabled:opacity-30">Text fallback</button></div>
               </>
             ) : null}
