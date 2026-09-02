@@ -100,6 +100,11 @@ const EVIDENCE_TIE_ORDER: Record<EvidenceType, number> = {
 export function planSession(input: SessionPlannerInput): SessionPlan {
   const config = { ...DEFAULT_SESSION_PLANNER_CONFIG, ...input.config };
   const states = new Map(input.states.map((state) => [state.targetId, state]));
+  const recognitionTargets = new Set(
+    input.candidates
+      .filter((candidate) => candidate.evidenceType === "recognition")
+      .map((candidate) => candidate.targetId),
+  );
   const now = parseTime(input.now) ?? Date.now();
   const recentTargetIds = input.recentTargetIds ?? [];
   const recentCandidateIds = input.recentCandidateIds ?? [];
@@ -122,7 +127,12 @@ export function planSession(input: SessionPlannerInput): SessionPlan {
         continue;
       }
 
-      const eligibility = checkEligibility(candidate, states, config);
+      const eligibility = checkEligibility(
+        candidate,
+        states,
+        config,
+        recognitionTargets.has(candidate.targetId),
+      );
       if (!eligibility.eligible) {
         blocked.set(candidate.id, { candidate, reasons: eligibility.reasons });
         continue;
@@ -161,6 +171,7 @@ function checkEligibility(
   candidate: PlannerCandidate,
   states: Map<string, LearnerSkillState>,
   config: SessionPlannerConfig,
+  targetHasRecognitionCandidate: boolean,
 ): { eligible: boolean; reasons: string[] } {
   const reasons: string[] = [];
 
@@ -172,6 +183,13 @@ function checkEligibility(
   }
 
   const targetState = states.get(candidate.targetId) ?? createEmptyLearnerSkillState(candidate.targetId);
+  if (
+    targetHasRecognitionCandidate
+    && targetState.evidenceCount === 0
+    && candidate.evidenceType !== "recognition"
+  ) {
+    reasons.push("cold-start-needs-recognition");
+  }
   if (candidate.evidenceType === "transfer" && targetState.production < config.transferProductionFloor) {
     reasons.push("transfer-needs-prior-production");
   }
