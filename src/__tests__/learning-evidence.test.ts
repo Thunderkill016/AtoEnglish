@@ -58,7 +58,17 @@ describe("learning evidence invariants", () => {
     expect(event?.success).toBe(true);
   });
 
-  it("requires a changed context for transfer", () => {
+  it("requires a changed context for transfer by default", () => {
+    const missingHistory = materializeEvidence({
+      attempt: {
+        ...baseAttempt,
+        capabilityId: "cap:introduce-self",
+        responseModality: "speech",
+      },
+      candidate: { type: "transfer", targetId: "cap:introduce-self", success: true },
+    });
+    expect(missingHistory).toBeNull();
+
     const sameContext = materializeEvidence({
       attempt: {
         ...baseAttempt,
@@ -81,6 +91,38 @@ describe("learning evidence invariants", () => {
       previousSuccessfulContextId: "ctx-a",
     });
     expect(changedContext?.type).toBe("transfer");
+  });
+
+  it("can defer only the transfer-history check to the database boundary", () => {
+    const event = materializeEvidence({
+      attempt: {
+        ...baseAttempt,
+        capabilityId: "cap:introduce-self",
+        responseModality: "speech",
+        contextId: "ctx-b",
+        responseText: "Hi, I'm Hoang.",
+      },
+      candidate: { type: "transfer", targetId: "cap:introduce-self", success: true },
+      deferTransferContextCheck: true,
+    });
+
+    expect(event?.type).toBe("transfer");
+    expect(event?.contextId).toBe("ctx-b");
+  });
+
+  it("still rejects typed transfer even when history validation is deferred", () => {
+    const event = materializeEvidence({
+      attempt: {
+        ...baseAttempt,
+        capabilityId: "cap:introduce-self",
+        responseModality: "text",
+        contextId: "ctx-b",
+      },
+      candidate: { type: "transfer", targetId: "cap:introduce-self", success: true },
+      deferTransferContextCheck: true,
+    });
+
+    expect(event).toBeNull();
   });
 
   it("keeps evidence channels independent in the learner snapshot", () => {
