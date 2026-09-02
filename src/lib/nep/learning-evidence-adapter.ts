@@ -51,7 +51,7 @@ export function toLearningAttemptRecord(input: EvaluatedNếpAction): RecordLear
     actionId: action.id,
     actionKind: action.kind,
     responseSource,
-    responseLength: response.trim().length,
+    responseLength: evaluation.observedResponse ? response.trim().length : 0,
     rawResponsePersisted: false,
     supportUsed,
     changedContext: action.changedContext ?? false,
