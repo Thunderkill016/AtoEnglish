@@ -16,6 +16,12 @@ const baseAttempt: LearningAttemptInput = {
   supportLevel: 0,
 };
 
+const observedSpeech = {
+  responseSource: "speech",
+  responseLength: 18,
+  rawResponsePersisted: false,
+};
+
 describe("learning evidence invariants", () => {
   it("does not award retrieval after reveal", () => {
     const event = materializeEvidence({
@@ -45,17 +51,44 @@ describe("learning evidence invariants", () => {
     expect(event).toBeNull();
   });
 
-  it("awards production from an observed speech attempt", () => {
+  it("does not award oral evidence when speech modality has no observed response", () => {
     const event = materializeEvidence({
       attempt: {
         ...baseAttempt,
         capabilityId: "cap:introduce-self",
         responseModality: "speech",
       },
+      candidate: { type: "production", targetId: "cap:introduce-self", success: false },
+    });
+    expect(event).toBeNull();
+  });
+
+  it("awards production from privacy-safe derived speech observation without raw text", () => {
+    const event = materializeEvidence({
+      attempt: {
+        ...baseAttempt,
+        capabilityId: "cap:introduce-self",
+        responseModality: "speech",
+        responseText: null,
+        metadata: observedSpeech,
+      },
       candidate: { type: "production", targetId: "cap:introduce-self", success: true },
     });
     expect(event?.type).toBe("production");
     expect(event?.success).toBe(true);
+  });
+
+  it("also accepts an explicit captured response when a caller intentionally persists one", () => {
+    const event = materializeEvidence({
+      attempt: {
+        ...baseAttempt,
+        capabilityId: "cap:introduce-self",
+        responseModality: "speech",
+        responseText: "Hi, I'm Hoang.",
+      },
+      candidate: { type: "production", targetId: "cap:introduce-self", success: true },
+    });
+    expect(event?.type).toBe("production");
   });
 
   it("requires a changed context for transfer by default", () => {
@@ -64,6 +97,7 @@ describe("learning evidence invariants", () => {
         ...baseAttempt,
         capabilityId: "cap:introduce-self",
         responseModality: "speech",
+        metadata: observedSpeech,
       },
       candidate: { type: "transfer", targetId: "cap:introduce-self", success: true },
     });
@@ -74,6 +108,7 @@ describe("learning evidence invariants", () => {
         ...baseAttempt,
         capabilityId: "cap:introduce-self",
         responseModality: "speech",
+        metadata: observedSpeech,
       },
       candidate: { type: "transfer", targetId: "cap:introduce-self", success: true },
       previousSuccessfulContextId: "ctx-a",
@@ -86,6 +121,7 @@ describe("learning evidence invariants", () => {
         capabilityId: "cap:introduce-self",
         responseModality: "speech",
         contextId: "ctx-b",
+        metadata: observedSpeech,
       },
       candidate: { type: "transfer", targetId: "cap:introduce-self", success: true },
       previousSuccessfulContextId: "ctx-a",
@@ -100,7 +136,8 @@ describe("learning evidence invariants", () => {
         capabilityId: "cap:introduce-self",
         responseModality: "speech",
         contextId: "ctx-b",
-        responseText: "Hi, I'm Hoang.",
+        responseText: null,
+        metadata: observedSpeech,
       },
       candidate: { type: "transfer", targetId: "cap:introduce-self", success: true },
       deferTransferContextCheck: true,
@@ -132,6 +169,7 @@ describe("learning evidence invariants", () => {
         ...baseAttempt,
         capabilityId: "cap:introduce-self",
         responseModality: "speech",
+        metadata: observedSpeech,
       },
       candidate: { type: "production", targetId: "cap:introduce-self", success: true },
     });
