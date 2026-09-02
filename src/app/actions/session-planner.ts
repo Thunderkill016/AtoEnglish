@@ -18,6 +18,7 @@ import {
   type RecentLearningAttemptRow,
 } from "@/lib/learning/session-input";
 import { planSession } from "@/lib/learning/session-planner";
+import { resolveNếpPlannedPractice } from "@/lib/nep/practice-execution.v1";
 import { nepSessionCatalogV1 } from "@/lib/nep/session-catalog.v1";
 import { createRateLimiter } from "@/lib/security/rate-limit";
 import { createClient } from "@/lib/supabase/server";
@@ -46,7 +47,8 @@ export type GetNếpSessionPlanInput = {
 /**
  * Read-only authenticated boundary for Session Planner V1.
  * It deliberately selects no raw response/transcript content and does not mutate learner state.
- * This action is not yet wired to the learner-facing route.
+ * Alongside diagnostic planner data it returns learner-safe practice envelopes whose hidden
+ * evaluator targets/evidence metadata have been stripped by the canonical execution compiler.
  */
 export async function getNếpSessionPlan(input: GetNếpSessionPlanInput = {}) {
   try {
@@ -121,19 +123,26 @@ export async function getNếpSessionPlan(input: GetNếpSessionPlanInput = {}) 
       recentCandidateIds: recentHistory.recentCandidateIds,
       errorMemory: errorMemory.entries,
     });
+    const practices = plan.opportunities.flatMap((opportunity) => {
+      const practice = resolveNếpPlannedPractice(opportunity.candidate.id);
+      return practice ? [practice] : [];
+    });
 
     return {
       success: true,
       plan,
+      practices,
       diagnostics: {
         sessionSize,
         catalogSize: nepSessionCatalogV1.length,
+        practiceEnvelopeCount: practices.length,
         stateCount: states.length,
         recentAttemptCount: recentAttemptResult.data?.length ?? 0,
         errorMemoryAttemptCount: errorMemoryResult.data?.length ?? 0,
         recurringErrorCount: errorMemory.recurring.length,
         rawResponseSelected: false,
         fullMetadataSelected: false,
+        hiddenEvaluatorTargetsExposedInPractices: false,
       },
     };
   } catch (error) {
