@@ -3,6 +3,11 @@
 import { headers } from "next/headers";
 
 import {
+  ERROR_MEMORY_ATTEMPT_SELECT,
+  buildErrorMemory,
+  type ErrorMemoryAttemptRow,
+} from "@/lib/learning/error-memory";
+import {
   collectPlannerTargetIds,
   deriveRecentPlannerHistory,
   mapLearnerSkillStateRow,
@@ -71,8 +76,7 @@ export async function getNếpSessionPlan(input: GetNếpSessionPlanInput = {}) 
       .in("target_id", targetIds)
       .limit(100);
 
-    // Attempts are exposure history only. Project just the semantic planner keys from JSON;
-    // do not fetch response_text or the full metadata object.
+    // Recent attempts are exposure history only. Project semantic planner keys, not raw content.
     const recentAttemptQuery = readClient
       .from<RecentLearningAttemptRow>("learning_attempts")
       .select(PLANNER_RECENT_ATTEMPT_SELECT)
@@ -81,16 +85,33 @@ export async function getNếpSessionPlan(input: GetNếpSessionPlanInput = {}) 
       .order("created_at", { ascending: false })
       .limit(40);
 
-    const [stateResult, recentAttemptResult] = await Promise.all([stateQuery, recentAttemptQuery]);
+    // Error memory needs a wider history window, but still only derived structured metadata.
+    const errorMemoryQuery = readClient
+      .from<ErrorMemoryAttemptRow>("learning_attempts")
+      .select(ERROR_MEMORY_ATTEMPT_SELECT)
+      .eq("user_id", user.id)
+      .in("capability_id", targetIds)
+      .order("created_at", { ascending: false })
+      .limit(200);
+
+    const [stateResult, recentAttemptResult, errorMemoryResult] = await Promise.all([
+      stateQuery,
+      recentAttemptQuery,
+      errorMemoryQuery,
+    ]);
     if (stateResult.error) {
       return { success: false, error: `Không thể đọc learner state: ${stateResult.error.message}` };
     }
     if (recentAttemptResult.error) {
       return { success: false, error: `Không thể đọc lịch sử practice gần đây: ${recentAttemptResult.error.message}` };
     }
+    if (errorMemoryResult.error) {
+      return { success: false, error: `Không thể đọc error memory: ${errorMemoryResult.error.message}` };
+    }
 
     const states = (stateResult.data ?? []).map(mapLearnerSkillStateRow);
     const recentHistory = deriveRecentPlannerHistory(recentAttemptResult.data ?? []);
+    const errorMemory = buildErrorMemory(errorMemoryResult.data ?? []);
     const plan = planSession({
       candidates: nepSessionCatalogV1,
       states,
@@ -98,6 +119,7 @@ export async function getNếpSessionPlan(input: GetNếpSessionPlanInput = {}) 
       now: new Date().toISOString(),
       recentTargetIds: recentHistory.recentTargetIds,
       recentCandidateIds: recentHistory.recentCandidateIds,
+      errorMemory: errorMemory.entries,
     });
 
     return {
@@ -108,6 +130,8 @@ export async function getNếpSessionPlan(input: GetNếpSessionPlanInput = {}) 
         catalogSize: nepSessionCatalogV1.length,
         stateCount: states.length,
         recentAttemptCount: recentAttemptResult.data?.length ?? 0,
+        errorMemoryAttemptCount: errorMemoryResult.data?.length ?? 0,
+        recurringErrorCount: errorMemory.recurring.length,
         rawResponseSelected: false,
         fullMetadataSelected: false,
       },
