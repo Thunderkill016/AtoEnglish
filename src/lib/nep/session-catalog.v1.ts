@@ -1,5 +1,6 @@
 import type { PlannerCandidate } from "../learning/session-planner";
-import { firstMeetingLessonV1, type LessonActionKind, type LessonContract } from "./lesson-contract";
+import type { LessonActionKind, LessonContract } from "./lesson-contract";
+import { nepLessonRegistryV1 } from "./lesson-registry.v1";
 import { plannerCandidateId } from "./remediation-map.v1";
 
 const IMPORTANCE_BY_ACTION: Partial<Record<LessonActionKind, number>> = {
@@ -47,4 +48,27 @@ export function buildLessonPlannerCandidates(lesson: LessonContract): PlannerCan
   });
 }
 
-export const nepSessionCatalogV1 = buildLessonPlannerCandidates(firstMeetingLessonV1);
+export const nepSessionCatalogV1 = nepLessonRegistryV1.flatMap(buildLessonPlannerCandidates);
+
+/**
+ * The adaptive catalog must contain a learnable source for every declared prerequisite.
+ * Otherwise a new learner can be permanently blocked by a target that the planner can never serve.
+ */
+export function validateNếpSessionCatalog(candidates: PlannerCandidate[] = nepSessionCatalogV1) {
+  const issues: string[] = [];
+  const candidateIds = new Set<string>();
+  const targetIds = new Set(candidates.map((candidate) => candidate.targetId));
+
+  for (const candidate of candidates) {
+    if (candidateIds.has(candidate.id)) issues.push(`duplicate-candidate-id:${candidate.id}`);
+    candidateIds.add(candidate.id);
+
+    for (const prerequisite of candidate.prerequisiteTargetIds ?? []) {
+      if (!targetIds.has(prerequisite)) {
+        issues.push(`missing-prerequisite-practice:${candidate.id}:${prerequisite}`);
+      }
+    }
+  }
+
+  return [...new Set(issues)].sort();
+}
