@@ -43,6 +43,7 @@ function errorMemoryEntry(overrides: Partial<ErrorMemoryEntry> = {}): ErrorMemor
     actionId: "produce",
     errorTag: "missing-target-group:0",
     remediationCandidateIds: [],
+    remediationSatisfiedAt: null,
     status,
     independentFailureCount: status === "recurring" ? 2 : 1,
     supportedFailureCount: 0,
@@ -226,6 +227,7 @@ describe("session planner v1", () => {
 
     expect(result.opportunities[0]?.candidate.id).toBe("z-candidate");
     expect(result.opportunities[0]?.breakdown.errorRepairPressure).toBe(1);
+    expect(result.opportunities[0]?.breakdown.errorReprobePressure).toBe(0);
     expect(result.opportunities[0]?.reasons).toContain("recurring-error-repair:1");
   });
 
@@ -244,6 +246,7 @@ describe("session planner v1", () => {
 
       expect(result.opportunities[0]?.candidate.id).toBe("a-candidate");
       expect(result.opportunities[0]?.breakdown.errorRepairPressure).toBe(0);
+      expect(result.opportunities[0]?.breakdown.errorReprobePressure).toBe(0);
     },
   );
 
@@ -259,6 +262,7 @@ describe("session planner v1", () => {
     for (const entry of mismatches) {
       const result = plan({ candidates: [target], states: [], sessionSize: 1, errorMemory: [entry] });
       expect(result.opportunities[0]?.breakdown.errorRepairPressure).toBe(0);
+      expect(result.opportunities[0]?.breakdown.errorReprobePressure).toBe(0);
     }
   });
 
@@ -298,7 +302,65 @@ describe("session planner v1", () => {
     const repairOpportunity = result.opportunities.find((item) => item.candidate.id === repairId);
     const transferOpportunity = result.opportunities.find((item) => item.candidate.id === transferId);
     expect(repairOpportunity?.breakdown.errorRepairPressure).toBe(1);
+    expect(repairOpportunity?.breakdown.errorReprobePressure).toBe(0);
     expect(transferOpportunity?.breakdown.errorRepairPressure).toBe(0);
+    expect(transferOpportunity?.breakdown.errorReprobePressure).toBe(0);
+  });
+
+  it("switches from remediation pressure to source re-probe after remediation succeeds", () => {
+    const lessonId = "LESSON-CAP002-FIRST-MEETING-V1";
+    const repairId = `${lessonId}:repair`;
+    const transferId = `${lessonId}:transfer`;
+    const repair = candidate({
+      id: repairId,
+      targetId: "CAP-003",
+      evidenceType: "repair",
+      metadata: { lessonId, lessonVersion: "1", actionId: "repair" },
+    });
+    const transfer = candidate({
+      id: transferId,
+      targetId: "CAP-002",
+      evidenceType: "transfer",
+      transferValue: 1,
+      metadata: { lessonId, lessonVersion: "1", actionId: "transfer" },
+    });
+    const satisfiedError = errorMemoryEntry({
+      key: "CAP-002|LESSON-CAP002-FIRST-MEETING-V1|1|transfer|missing-target-group:0",
+      targetId: "CAP-002",
+      lessonId,
+      lessonVersion: "1",
+      actionId: "transfer",
+      remediationCandidateIds: [repairId],
+      remediationSatisfiedAt: "2026-09-02T12:00:00.000Z",
+    });
+
+    const result = plan({
+      candidates: [transfer, repair],
+      states: [state("CAP-002", { production: 0.3, evidenceCount: 1 })],
+      sessionSize: 2,
+      errorMemory: [satisfiedError],
+    });
+
+    const repairOpportunity = result.opportunities.find((item) => item.candidate.id === repairId);
+    const transferOpportunity = result.opportunities.find((item) => item.candidate.id === transferId);
+    expect(repairOpportunity?.breakdown.errorRepairPressure).toBe(0);
+    expect(repairOpportunity?.breakdown.errorReprobePressure).toBe(0);
+    expect(transferOpportunity?.breakdown.errorRepairPressure).toBe(0);
+    expect(transferOpportunity?.breakdown.errorReprobePressure).toBe(1);
+    expect(transferOpportunity?.reasons).toContain("recurring-error-reprobe:1");
+  });
+
+  it("does not leak re-probe pressure to a different source action", () => {
+    const source = plannerCandidate("lesson-b:produce", "cap-b", "lesson-b", "produce");
+    const other = plannerCandidate("lesson-b:retrieve", "cap-b", "lesson-b", "retrieve");
+    const entry = errorMemoryEntry({
+      remediationCandidateIds: ["lesson-b:retrieve"],
+      remediationSatisfiedAt: "2026-09-02T12:00:00.000Z",
+    });
+
+    const result = plan({ candidates: [source, other], states: [], sessionSize: 2, errorMemory: [entry] });
+    expect(result.opportunities.find((item) => item.candidate.id === source.id)?.breakdown.errorReprobePressure).toBe(1);
+    expect(result.opportunities.find((item) => item.candidate.id === other.id)?.breakdown.errorReprobePressure).toBe(0);
   });
 
   it("explicit remediation hints override the legacy same-action fallback", () => {
@@ -317,7 +379,7 @@ describe("session planner v1", () => {
     expect(result.opportunities.find((item) => item.candidate.id === remediation.id)?.breakdown.errorRepairPressure).toBe(1);
   });
 
-  it("keeps recurring error pressure binary even when multiple tags route to one candidate", () => {
+  it("keeps recurring repair pressure binary even when multiple tags route to one candidate", () => {
     const matchingCandidate = plannerCandidate("candidate", "cap-b", "lesson-b");
     const first = errorMemoryEntry({ remediationCandidateIds: [matchingCandidate.id] });
     const second = errorMemoryEntry({
@@ -334,5 +396,19 @@ describe("session planner v1", () => {
 
     expect(result.opportunities[0]?.breakdown.errorRepairPressure).toBe(1);
     expect(result.opportunities[0]?.reasons).toContain("recurring-error-repair:2");
+  });
+
+  it("keeps recurring re-probe pressure binary when multiple satisfied errors share one source", () => {
+    const source = plannerCandidate("lesson-b:produce", "cap-b", "lesson-b");
+    const first = errorMemoryEntry({ remediationSatisfiedAt: "2026-09-02T12:00:00.000Z" });
+    const second = errorMemoryEntry({
+      key: "cap-b|lesson-b|1.0.0|produce|incorrect-choice",
+      errorTag: "incorrect-choice",
+      remediationSatisfiedAt: "2026-09-02T12:30:00.000Z",
+    });
+
+    const result = plan({ candidates: [source], states: [], sessionSize: 1, errorMemory: [first, second] });
+    expect(result.opportunities[0]?.breakdown.errorReprobePressure).toBe(1);
+    expect(result.opportunities[0]?.reasons).toContain("recurring-error-reprobe:2");
   });
 });
