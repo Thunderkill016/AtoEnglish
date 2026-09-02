@@ -33,10 +33,13 @@ export const EvidenceCandidateSchema = z.object({
   metadata: z.record(z.string(), z.unknown()).optional(),
 });
 
+/**
+ * previousSuccessfulContextId is intentionally not accepted from the caller.
+ * Transfer history is authoritative only when it comes from persisted evidence.
+ */
 export const RecordLearningAttemptSchema = z.object({
   attempt: LearningAttemptSchema,
   candidate: EvidenceCandidateSchema.nullable().optional(),
-  previousSuccessfulContextId: nullableShortText,
 });
 
 export type RecordLearningAttemptInput = z.infer<typeof RecordLearningAttemptSchema>;
