@@ -2,8 +2,13 @@
 
 import { headers } from "next/headers";
 
-import { materializeEvidence, type EvidenceEvent } from "@/lib/learning/evidence";
+import {
+  materializeEvidence,
+  type EvidenceEvent,
+  type EvidenceType,
+} from "@/lib/learning/evidence";
 import type { RecordLearningAttemptInput } from "@/lib/learning/validation";
+import type { NếpEvaluationResult } from "@/lib/nep/evaluator";
 import {
   compileCanonicalNếpPracticeAttempt,
   NếpPracticeSubmissionSchema,
@@ -18,6 +23,36 @@ type RpcError = { message: string } | null;
 type RpcClient = {
   rpc: (fn: string, args: Record<string, unknown>) => Promise<{ data: unknown; error: RpcError }>;
 };
+
+export type RecordNếpPracticeAttemptResult =
+  | {
+      success: false;
+      error: string;
+      evaluation?: NếpEvaluationResult;
+      feedback?: string;
+    }
+  | {
+      success: true;
+      persisted: false;
+      persistence: "local-only";
+      attemptId: null;
+      evaluation: NếpEvaluationResult;
+      feedback: string;
+      evidenceRecorded: false;
+      evidenceType: null;
+      evidenceRejection: null;
+    }
+  | {
+      success: true;
+      persisted: true;
+      persistence: "database";
+      attemptId: string | null;
+      evaluation: NếpEvaluationResult;
+      feedback: string;
+      evidenceRecorded: boolean;
+      evidenceType: EvidenceType | null;
+      evidenceRejection: string | null;
+    };
 
 function rpcArgs(
   attempt: RecordLearningAttemptInput["attempt"],
@@ -61,7 +96,9 @@ function isTransferPolicyRejection(message: string): boolean {
  * evaluator, reveal semantics and remediation metadata. Raw learner response is used transiently
  * for deterministic evaluation and is never passed to the persistence RPC.
  */
-export async function recordNếpPracticeAttempt(input: NếpPracticeSubmission) {
+export async function recordNếpPracticeAttempt(
+  input: NếpPracticeSubmission,
+): Promise<RecordNếpPracticeAttemptResult> {
   try {
     const reqHeaders = await headers();
     const ip = reqHeaders.get("x-forwarded-for")?.split(",")[0].trim() || "127.0.0.1";
@@ -100,7 +137,8 @@ export async function recordNếpPracticeAttempt(input: NếpPracticeSubmission)
       return {
         success: true,
         persisted: false,
-        persistence: "local-only" as const,
+        persistence: "local-only",
+        attemptId: null,
         evaluation,
         feedback,
         evidenceRecorded: false,
@@ -137,7 +175,7 @@ export async function recordNếpPracticeAttempt(input: NếpPracticeSubmission)
     return {
       success: true,
       persisted: true,
-      persistence: "database" as const,
+      persistence: "database",
       attemptId: typeof data === "string" ? data : null,
       evaluation,
       feedback,
