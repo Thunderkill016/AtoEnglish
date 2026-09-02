@@ -1,0 +1,92 @@
+import { describe, expect, it } from "vitest";
+import {
+  applyEvidenceToSkillState,
+  createEmptyLearnerSkillState,
+  materializeEvidence,
+  type LearningAttemptInput,
+} from "@/lib/learning/evidence";
+
+const baseAttempt: LearningAttemptInput = {
+  knowledgeItemId: "word:borrow",
+  exerciseType: "recall",
+  responseModality: "text",
+  correct: true,
+  contextId: "ctx-a",
+  revealUsed: false,
+  supportLevel: 0,
+};
+
+describe("learning evidence invariants", () => {
+  it("does not award retrieval after reveal", () => {
+    const event = materializeEvidence({
+      attempt: { ...baseAttempt, revealUsed: true },
+      candidate: { type: "retrieval", targetId: "word:borrow", success: true },
+    });
+    expect(event).toBeNull();
+  });
+
+  it("does not award oral production from typed fallback", () => {
+    const event = materializeEvidence({
+      attempt: baseAttempt,
+      candidate: { type: "production", targetId: "cap:introduce-self", success: true },
+    });
+    expect(event).toBeNull();
+  });
+
+  it("awards production from an observed speech attempt", () => {
+    const event = materializeEvidence({
+      attempt: {
+        ...baseAttempt,
+        capabilityId: "cap:introduce-self",
+        responseModality: "speech",
+      },
+      candidate: { type: "production", targetId: "cap:introduce-self", success: true },
+    });
+    expect(event?.type).toBe("production");
+    expect(event?.success).toBe(true);
+  });
+
+  it("requires a changed context for transfer", () => {
+    const sameContext = materializeEvidence({
+      attempt: {
+        ...baseAttempt,
+        capabilityId: "cap:introduce-self",
+        responseModality: "speech",
+      },
+      candidate: { type: "transfer", targetId: "cap:introduce-self", success: true },
+      previousSuccessfulContextId: "ctx-a",
+    });
+    expect(sameContext).toBeNull();
+
+    const changedContext = materializeEvidence({
+      attempt: {
+        ...baseAttempt,
+        capabilityId: "cap:introduce-self",
+        responseModality: "speech",
+        contextId: "ctx-b",
+      },
+      candidate: { type: "transfer", targetId: "cap:introduce-self", success: true },
+      previousSuccessfulContextId: "ctx-a",
+    });
+    expect(changedContext?.type).toBe("transfer");
+  });
+
+  it("keeps evidence channels independent in the learner snapshot", () => {
+    const state = createEmptyLearnerSkillState("cap:introduce-self");
+    const event = materializeEvidence({
+      attempt: {
+        ...baseAttempt,
+        capabilityId: "cap:introduce-self",
+        responseModality: "speech",
+      },
+      candidate: { type: "production", targetId: "cap:introduce-self", success: true },
+    });
+    expect(event).not.toBeNull();
+
+    const next = applyEvidenceToSkillState(state, event!, "2026-09-02T12:00:00.000Z");
+    expect(next.production).toBeGreaterThan(0);
+    expect(next.retrieval).toBe(0);
+    expect(next.transfer).toBe(0);
+    expect(next.evidenceCount).toBe(1);
+  });
+});
