@@ -33,6 +33,8 @@ export type LessonAction = {
   prompt?: string;
   model?: string;
   supportVi?: string;
+  /** Learner-visible options. Correctness is still determined from hidden targetSignals. */
+  choices?: string[];
   targetSignals?: string[];
   /** Every group is required; one signal from each group must be observed. */
   requiredSignalGroups?: string[][];
@@ -88,11 +90,18 @@ export function qaLesson(lesson: LessonContract): QaIssue[] {
   const kinds = lesson.actions.map((action) => action.kind);
   const firstRetrieve = kinds.indexOf("retrieve");
   const firstReveal = lesson.actions.findIndex((action) => action.revealsAnswer === true);
+  const comprehension = lesson.actions.find((action) => action.kind === "comprehend");
+  const retrieval = lesson.actions.find((action) => action.kind === "retrieve");
   const production = lesson.actions.find((action) => action.kind === "produce");
   const repair = lesson.actions.find((action) => action.kind === "repair");
   const retry = lesson.actions.find((action) => action.kind === "retry");
   const transfer = lesson.actions.find((action) => action.kind === "transfer");
   const declaredTargets = new Set([lesson.capabilityId, ...lesson.embeddedCapabilityIds]);
+  const needsRetrieval = lesson.evidenceChannels.includes("retrieval");
+  const needsProduction = lesson.evidenceChannels.includes("production");
+  const needsRepairCycle = lesson.evidenceChannels.includes("repair");
+  const needsTransfer = lesson.evidenceChannels.includes("transfer");
+  const needsRetention = lesson.evidenceChannels.includes("retention");
 
   if (!lesson.capabilityId) {
     issues.push({ severity: "error", code: "CAPABILITY_REQUIRED", message: "Lesson must declare a capability ID.", provenance: "product_inference" });
@@ -103,22 +112,24 @@ export function qaLesson(lesson: LessonContract): QaIssue[] {
   if (lesson.newItems.length > lesson.productInference.maxNewItems) {
     issues.push({ severity: "error", code: "TOO_MANY_NEW_ITEMS", message: `Lesson introduces ${lesson.newItems.length} items; V1 preview cap is ${lesson.productInference.maxNewItems}.`, provenance: "product_inference" });
   }
-  if (firstRetrieve === -1 || (firstReveal !== -1 && firstReveal < firstRetrieve)) {
+  if (needsRetrieval && (firstRetrieve === -1 || (firstReveal !== -1 && firstReveal < firstRetrieve))) {
     issues.push({ severity: "error", code: "ATTEMPT_BEFORE_REVEAL", message: "Retrieval attempt must happen before answer-bearing reveal.", provenance: "source_derived" });
   }
-  if (!production || production.modality !== "speech") {
+  if (needsProduction && (!production || production.modality !== "speech")) {
     issues.push({ severity: "error", code: "SPEAKING_NEEDS_SPEECH", message: "A speaking claim requires an observable speech response path.", provenance: "source_derived" });
   }
-  for (const required of ["feedback", "repair", "retry"] as const) {
-    if (!kinds.includes(required)) {
-      issues.push({ severity: "error", code: `MISSING_${required.toUpperCase()}`, message: `Lesson must include ${required}.`, provenance: "source_derived" });
+  if (needsRepairCycle) {
+    for (const required of ["feedback", "repair", "retry"] as const) {
+      if (!kinds.includes(required)) {
+        issues.push({ severity: "error", code: `MISSING_${required.toUpperCase()}`, message: `Lesson with repair evidence must include ${required}.`, provenance: "source_derived" });
+      }
     }
   }
-  if (!transfer || transfer.modality !== "speech" || !transfer.changedContext) {
+  if (needsTransfer && (!transfer || transfer.modality !== "speech" || !transfer.changedContext)) {
     issues.push({ severity: "error", code: "TRANSFER_NEEDS_CHANGED_SPEECH", message: "Transfer requires productive speech in a changed context.", provenance: "source_derived" });
   }
-  if (lesson.reviewTargets.length === 0 || !lesson.evidenceChannels.includes("retention")) {
-    issues.push({ severity: "error", code: "DELAYED_REVIEW_REQUIRED", message: "Lesson must publish review targets and a retention evidence channel.", provenance: "source_derived" });
+  if (needsRetention && lesson.reviewTargets.length === 0) {
+    issues.push({ severity: "error", code: "DELAYED_REVIEW_REQUIRED", message: "A lesson with retention evidence must publish review targets.", provenance: "source_derived" });
   }
   if (lesson.sourceDerived.principleIds.length === 0 || lesson.sourceDerived.claimIds.length === 0) {
     issues.push({ severity: "error", code: "EVIDENCE_TRACE_REQUIRED", message: "Lesson must trace to research principle and claim IDs.", provenance: "product_inference" });
@@ -135,10 +146,21 @@ export function qaLesson(lesson: LessonContract): QaIssue[] {
     if (action.assessment && !declaredTargets.has(action.assessment.targetCapabilityId)) {
       issues.push({ severity: "error", code: "ASSESSMENT_TARGET_UNDECLARED", message: `${action.id} targets ${action.assessment.targetCapabilityId}, which is not the lesson capability or an embedded capability.`, provenance: "product_inference" });
     }
+    if (action.modality === "choice") {
+      const choices = action.choices ?? [];
+      if (choices.length < 2) {
+        issues.push({ severity: "error", code: "CHOICE_OPTIONS_REQUIRED", message: `${action.id} must expose at least two learner-visible choices.`, provenance: "product_inference" });
+      }
+      const choiceSet = new Set(choices.map((choice) => choice.trim().toLowerCase()));
+      for (const signal of action.targetSignals ?? []) {
+        if (!choiceSet.has(signal.trim().toLowerCase())) {
+          issues.push({ severity: "error", code: "CHOICE_TARGET_NOT_PRESENT", message: `${action.id} target signal must exist among learner-visible choices.`, provenance: "product_inference" });
+          break;
+        }
+      }
+    }
   }
 
-  const comprehension = lesson.actions.find((action) => action.kind === "comprehend");
-  const retrieval = lesson.actions.find((action) => action.kind === "retrieve");
   if (comprehension?.assessment && comprehension.assessment.evidenceType !== "recognition") {
     issues.push({ severity: "error", code: "COMPREHENSION_PERSISTS_MODAL_EVIDENCE", message: "Choice comprehension in this slice must persist low-level recognition evidence, not a product-level comprehension label.", provenance: "product_inference" });
   }
@@ -218,6 +240,7 @@ export const firstMeetingLessonV1: LessonContract = {
       instruction: "Choose the information the question is asking for.",
       modality: "choice",
       prompt: "What's your name?",
+      choices: ["name", "job", "country"],
       targetSignals: ["name"],
       assessment: {
         targetCapabilityId: "CAP-002",
