@@ -19,8 +19,8 @@ type RpcClient = {
 
 /**
  * Canonical write path for the new learning core.
- * UI records what happened; domain policy decides what that attempt is allowed to prove;
- * PostgreSQL then commits Attempt -> Evidence -> LearnerSkillState atomically.
+ * UI records what happened; domain policy decides which evidence is structurally eligible;
+ * PostgreSQL is authoritative for persisted-history invariants such as changed-context transfer.
  */
 export async function recordLearningAttempt(input: RecordLearningAttemptInput) {
   try {
@@ -39,9 +39,14 @@ export async function recordLearningAttempt(input: RecordLearningAttemptInput) {
       };
     }
 
-    const { attempt, candidate, previousSuccessfulContextId } = parsed.data;
+    const { attempt, candidate } = parsed.data;
     const evidence = candidate
-      ? materializeEvidence({ attempt, candidate, previousSuccessfulContextId })
+      ? materializeEvidence({
+          attempt,
+          candidate,
+          // Transfer depends on persisted history, not a caller-provided previous context.
+          deferTransferContextCheck: candidate.type === "transfer",
+        })
       : null;
 
     const supabase = await createClient();
