@@ -1,11 +1,10 @@
 import { z } from "zod";
 
 import { evaluateNếpAction, feedbackForNếpEvaluation } from "./evaluator";
-import { firstMeetingLessonV1, type LessonAction, type LessonContract } from "./lesson-contract";
+import type { LessonAction } from "./lesson-contract";
+import { resolveNếpLessonFromRegistry } from "./lesson-registry.v1";
 import { toLearningAttemptRecord, type NếpResponseSource } from "./learning-evidence-adapter";
 import { nepSessionCatalogV1 } from "./session-catalog.v1";
-
-const lessonRegistryV1: LessonContract[] = [firstMeetingLessonV1];
 
 export const NếpPracticeSubmissionSchema = z.object({
   lessonId: z.string().trim().min(1).max(160),
@@ -29,14 +28,13 @@ export type NếpPracticeEnvelope = {
   title: string;
   instruction: string;
   prompt: string | null;
+  choices: string[];
   supportVi: string | null;
   changedContext: boolean;
 };
 
 export function resolveNếpLesson(lessonId: string, lessonVersion: number) {
-  return lessonRegistryV1.find(
-    (lesson) => lesson.id === lessonId && lesson.version === lessonVersion,
-  ) ?? null;
+  return resolveNếpLessonFromRegistry(lessonId, lessonVersion);
 }
 
 export function resolveNếpAction(lessonId: string, lessonVersion: number, actionId: string) {
@@ -50,7 +48,8 @@ export function resolveNếpAction(lessonId: string, lessonVersion: number, acti
 /**
  * Resolve a planner candidate to a learner-safe presentation envelope.
  * Hidden evaluator targets, expected target signals, evidence type/target and remediation rules
- * are deliberately excluded from this DTO.
+ * are deliberately excluded from this DTO. Choice labels are learner-visible content, but no
+ * correctness marker is exposed.
  */
 export function resolveNếpPlannedPractice(candidateId: string): NếpPracticeEnvelope | null {
   const candidate = nepSessionCatalogV1.find((item) => item.id === candidateId);
@@ -79,6 +78,7 @@ export function resolveNếpPlannedPractice(candidateId: string): NếpPracticeE
     title: resolved.action.title,
     instruction: resolved.action.instruction,
     prompt: resolved.action.prompt ?? null,
+    choices: [...(resolved.action.choices ?? [])],
     supportVi: resolved.action.supportVi ?? null,
     changedContext: resolved.action.changedContext ?? false,
   };
