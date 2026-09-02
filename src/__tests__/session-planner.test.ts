@@ -42,6 +42,7 @@ function errorMemoryEntry(overrides: Partial<ErrorMemoryEntry> = {}): ErrorMemor
     lessonVersion: "1.0.0",
     actionId: "produce",
     errorTag: "missing-target-group:0",
+    remediationCandidateIds: [],
     status,
     independentFailureCount: status === "recurring" ? 2 : 1,
     supportedFailureCount: 0,
@@ -246,7 +247,7 @@ describe("session planner v1", () => {
     },
   );
 
-  it("does not leak error pressure across target, lesson version, or action identity", () => {
+  it("does not leak legacy same-action pressure across target, lesson version, or action identity", () => {
     const target = plannerCandidate("a-candidate", "cap-a", "lesson-a");
     const mismatches = [
       errorMemoryEntry({ targetId: "cap-x" }),
@@ -261,12 +262,68 @@ describe("session planner v1", () => {
     }
   });
 
-  it("keeps recurring error pressure binary even when multiple tags match one action", () => {
+  it("routes recurring pressure to an explicit cross-action remediation candidate", () => {
+    const lessonId = "LESSON-CAP002-FIRST-MEETING-V1";
+    const repairId = `${lessonId}:repair`;
+    const transferId = `${lessonId}:transfer`;
+    const repair = candidate({
+      id: repairId,
+      targetId: "CAP-003",
+      evidenceType: "repair",
+      metadata: { lessonId, lessonVersion: "1", actionId: "repair" },
+    });
+    const transfer = candidate({
+      id: transferId,
+      targetId: "CAP-002",
+      evidenceType: "transfer",
+      transferValue: 1,
+      metadata: { lessonId, lessonVersion: "1", actionId: "transfer" },
+    });
+    const recurringTransferError = errorMemoryEntry({
+      key: "CAP-002|LESSON-CAP002-FIRST-MEETING-V1|1|transfer|missing-target-group:0",
+      targetId: "CAP-002",
+      lessonId,
+      lessonVersion: "1",
+      actionId: "transfer",
+      remediationCandidateIds: [repairId],
+    });
+
+    const result = plan({
+      candidates: [transfer, repair],
+      states: [state("CAP-002", { production: 0.3, evidenceCount: 1 })],
+      sessionSize: 2,
+      errorMemory: [recurringTransferError],
+    });
+
+    const repairOpportunity = result.opportunities.find((item) => item.candidate.id === repairId);
+    const transferOpportunity = result.opportunities.find((item) => item.candidate.id === transferId);
+    expect(repairOpportunity?.breakdown.errorRepairPressure).toBe(1);
+    expect(transferOpportunity?.breakdown.errorRepairPressure).toBe(0);
+  });
+
+  it("explicit remediation hints override the legacy same-action fallback", () => {
+    const source = plannerCandidate("lesson-b:produce", "cap-b", "lesson-b");
+    const remediation = plannerCandidate("lesson-b:retrieve", "cap-b", "lesson-b", "retrieve");
+    const entry = errorMemoryEntry({ remediationCandidateIds: [remediation.id] });
+
+    const result = plan({
+      candidates: [source, remediation],
+      states: [],
+      sessionSize: 2,
+      errorMemory: [entry],
+    });
+
+    expect(result.opportunities.find((item) => item.candidate.id === source.id)?.breakdown.errorRepairPressure).toBe(0);
+    expect(result.opportunities.find((item) => item.candidate.id === remediation.id)?.breakdown.errorRepairPressure).toBe(1);
+  });
+
+  it("keeps recurring error pressure binary even when multiple tags route to one candidate", () => {
     const matchingCandidate = plannerCandidate("candidate", "cap-b", "lesson-b");
-    const first = errorMemoryEntry();
+    const first = errorMemoryEntry({ remediationCandidateIds: [matchingCandidate.id] });
     const second = errorMemoryEntry({
       key: "cap-b|lesson-b|1.0.0|produce|incorrect-choice",
       errorTag: "incorrect-choice",
+      remediationCandidateIds: [matchingCandidate.id],
     });
     const result = plan({
       candidates: [matchingCandidate],

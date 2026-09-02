@@ -1,6 +1,7 @@
 import type { RecordLearningAttemptInput } from "../learning/validation";
 import type { NếpEvaluationResult } from "./evaluator";
 import type { LessonAction, LessonContract } from "./lesson-contract";
+import { remediationHintsForEvaluation } from "./remediation-map.v1";
 
 export type NếpResponseSource = "speech" | "text" | null;
 
@@ -21,7 +22,11 @@ function responseModality(action: LessonAction, source: NếpResponseSource) {
   return "none" as const;
 }
 
-function structuredErrorSignals(evaluation: NếpEvaluationResult) {
+function structuredErrorSignals(
+  lesson: LessonContract,
+  action: LessonAction,
+  evaluation: NếpEvaluationResult,
+) {
   return {
     version: 1,
     evaluator: evaluation.evaluator,
@@ -29,6 +34,7 @@ function structuredErrorSignals(evaluation: NếpEvaluationResult) {
     matchedTargetGroupIndexes: evaluation.matchedTargetGroupIndexes,
     missingTargetGroupIndexes: evaluation.missingTargetGroupIndexes,
     errorTags: evaluation.errorTags,
+    remediationHints: remediationHintsForEvaluation({ lesson, action, evaluation }),
   };
 }
 
@@ -44,7 +50,10 @@ export function toLearningAttemptRecord(input: EvaluatedNếpAction): RecordLear
 
   const modality = responseModality(action, responseSource);
   const safeLatency = Math.min(60 * 60 * 1000, Math.max(0, Math.round(latencyMs)));
-  const errorSignals = structuredErrorSignals(evaluation);
+  const errorSignals = structuredErrorSignals(lesson, action, evaluation);
+  // Retry happens after answer-bearing feedback in this contract. It remains attempt-only and
+  // must never be replayed by Error Memory as an independent learner failure.
+  const revealUsed = action.kind === "retry";
   const metadata = {
     lessonId: lesson.id,
     lessonVersion: lesson.version,
@@ -69,7 +78,7 @@ export function toLearningAttemptRecord(input: EvaluatedNếpAction): RecordLear
       correct: evaluation.success,
       latencyMs: safeLatency,
       hintCount: 0,
-      revealUsed: false,
+      revealUsed,
       supportLevel: supportUsed ? 1 : 0,
       metadata,
     },

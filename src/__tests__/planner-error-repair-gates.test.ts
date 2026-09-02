@@ -10,6 +10,7 @@ const recurringError: ErrorMemoryEntry = {
   lessonVersion: "1.0.0",
   actionId: "produce",
   errorTag: "missing-target-group:0",
+  remediationCandidateIds: ["candidate-b"],
   status: "recurring",
   independentFailureCount: 2,
   supportedFailureCount: 0,
@@ -33,7 +34,7 @@ const gatedCandidate: PlannerCandidate = {
 };
 
 describe("planner recurring-error hard gates", () => {
-  it("does not let recurring error pressure bypass an unmet prerequisite", () => {
+  it("does not let explicit recurring remediation pressure bypass an unmet prerequisite", () => {
     const result = planSession({
       candidates: [gatedCandidate],
       states: [],

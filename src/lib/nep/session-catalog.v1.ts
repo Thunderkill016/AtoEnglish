@@ -1,5 +1,6 @@
 import type { PlannerCandidate } from "../learning/session-planner";
 import { firstMeetingLessonV1, type LessonActionKind, type LessonContract } from "./lesson-contract";
+import { plannerCandidateId } from "./remediation-map.v1";
 
 const IMPORTANCE_BY_ACTION: Partial<Record<LessonActionKind, number>> = {
   comprehend: 0.8,
@@ -27,7 +28,7 @@ export function buildLessonPlannerCandidates(lesson: LessonContract): PlannerCan
     if (!assessment?.evidenceType) return [];
 
     return [{
-      id: `${lesson.id}:${action.id}`,
+      id: plannerCandidateId(lesson.id, action.id),
       targetId: assessment.targetCapabilityId,
       evidenceType: assessment.evidenceType,
       prerequisiteTargetIds: lesson.prerequisites,

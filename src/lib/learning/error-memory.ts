@@ -3,11 +3,13 @@ export const ERROR_MEMORY_ATTEMPT_SELECT = [
   "knowledge_item_id",
   "correct",
   "support_level",
+  "reveal_used",
   "lesson_id:metadata->>lessonId",
   "lesson_version:metadata->>lessonVersion",
   "action_id:metadata->>actionId",
   "observed_response:metadata->errorSignals->observedResponse",
   "error_tags:metadata->errorSignals->errorTags",
+  "remediation_hints:metadata->errorSignals->remediationHints",
   "created_at",
 ].join(", ");
 
@@ -16,11 +18,13 @@ export type ErrorMemoryAttemptRow = {
   knowledge_item_id: string | null;
   correct: boolean | null;
   support_level: number;
+  reveal_used: boolean;
   lesson_id: string | null;
   lesson_version: string | null;
   action_id: string | null;
   observed_response: unknown;
   error_tags: unknown;
+  remediation_hints: unknown;
   created_at: string;
 };
 
@@ -34,6 +38,7 @@ export type ErrorMemoryEntry = {
   lessonVersion: string;
   actionId: string;
   errorTag: ActionableErrorTag;
+  remediationCandidateIds: string[];
   status: ErrorMemoryStatus;
   independentFailureCount: number;
   supportedFailureCount: number;
@@ -54,8 +59,8 @@ type MutableEntry = ErrorMemoryEntry;
 
 /**
  * Error Memory V1 turns repeated, independent task-coverage failures into a temporary pattern.
- * One failure is only an observation. Supported failures do not promote recurrence. A later
- * independent success on the same versioned action repairs all active tags for that action.
+ * One failure is only an observation. Assisted failures (support or answer reveal) do not promote
+ * recurrence. A later independent success on the same versioned action repairs all active tags.
  */
 export function buildErrorMemory(rows: ErrorMemoryAttemptRow[]): ErrorMemorySnapshot {
   const entries = new Map<string, MutableEntry>();
@@ -73,9 +78,9 @@ export function buildErrorMemory(rows: ErrorMemoryAttemptRow[]): ErrorMemorySnap
     if (!targetId || !lessonId || !lessonVersion || !actionId) continue;
 
     const observedResponse = row.observed_response === true;
-    const supported = Number.isFinite(row.support_level) && row.support_level > 0;
+    const assisted = (Number.isFinite(row.support_level) && row.support_level > 0) || row.reveal_used === true;
 
-    if (row.correct === true && observedResponse && !supported) {
+    if (row.correct === true && observedResponse && !assisted) {
       repairActionEntries(entries, targetId, lessonId, lessonVersion, actionId, row.created_at);
       continue;
     }
@@ -84,6 +89,7 @@ export function buildErrorMemory(rows: ErrorMemoryAttemptRow[]): ErrorMemorySnap
 
     for (const errorTag of actionableErrorTags(row.error_tags)) {
       const key = memoryKey(targetId, lessonId, lessonVersion, actionId, errorTag);
+      const remediationCandidateIds = remediationCandidateIdsForTag(row.remediation_hints, errorTag);
       const existing = entries.get(key);
       if (!existing) {
         entries.set(key, {
@@ -93,10 +99,11 @@ export function buildErrorMemory(rows: ErrorMemoryAttemptRow[]): ErrorMemorySnap
           lessonVersion,
           actionId,
           errorTag,
-          status: supported ? "supported-only" : "observed",
-          independentFailureCount: supported ? 0 : 1,
-          supportedFailureCount: supported ? 1 : 0,
-          independentFailuresSinceRepair: supported ? 0 : 1,
+          remediationCandidateIds,
+          status: assisted ? "supported-only" : "observed",
+          independentFailureCount: assisted ? 0 : 1,
+          supportedFailureCount: assisted ? 1 : 0,
+          independentFailuresSinceRepair: assisted ? 0 : 1,
           firstSeenAt: row.created_at,
           lastSeenAt: row.created_at,
           repairedAt: null,
@@ -105,7 +112,11 @@ export function buildErrorMemory(rows: ErrorMemoryAttemptRow[]): ErrorMemorySnap
       }
 
       existing.lastSeenAt = row.created_at;
-      if (supported) {
+      existing.remediationCandidateIds = mergeCandidateIds(
+        existing.remediationCandidateIds,
+        remediationCandidateIds,
+      );
+      if (assisted) {
         existing.supportedFailureCount += 1;
       } else {
         existing.independentFailureCount += 1;
@@ -117,7 +128,11 @@ export function buildErrorMemory(rows: ErrorMemoryAttemptRow[]): ErrorMemorySnap
   }
 
   const allEntries = [...entries.values()]
-    .map((entry) => ({ ...entry, status: statusFor(entry) }))
+    .map((entry) => ({
+      ...entry,
+      remediationCandidateIds: [...entry.remediationCandidateIds].sort(),
+      status: statusFor(entry),
+    }))
     .sort(compareEntries);
 
   return {
@@ -142,6 +157,21 @@ export function actionableErrorTags(value: unknown): ActionableErrorTag[] {
     tags.add(`missing-target-group:${Number(match[1])}`);
   }
   return [...tags].sort();
+}
+
+export function remediationCandidateIdsForTag(value: unknown, errorTag: ActionableErrorTag) {
+  if (!Array.isArray(value)) return [];
+  const candidateIds = new Set<string>();
+
+  for (const item of value) {
+    if (!item || typeof item !== "object" || Array.isArray(item)) continue;
+    const hint = item as Record<string, unknown>;
+    if (hint.errorTag !== errorTag) continue;
+    const candidateId = typeof hint.candidateId === "string" ? hint.candidateId.trim() : "";
+    if (candidateId) candidateIds.add(candidateId);
+  }
+
+  return [...candidateIds].sort();
 }
 
 function repairActionEntries(
@@ -191,7 +221,11 @@ function rowIdentity(row: ErrorMemoryAttemptRow) {
     row.lesson_id ?? "",
     row.lesson_version ?? "",
     row.action_id ?? "",
+    String(row.correct),
+    String(row.support_level),
+    String(row.reveal_used),
     JSON.stringify(row.error_tags),
+    JSON.stringify(row.remediation_hints),
   ].join("|");
 }
 
@@ -206,6 +240,10 @@ function compareEntries(a: ErrorMemoryEntry, b: ErrorMemoryEntry) {
     || b.independentFailuresSinceRepair - a.independentFailuresSinceRepair
     || Date.parse(b.lastSeenAt) - Date.parse(a.lastSeenAt)
     || a.key.localeCompare(b.key);
+}
+
+function mergeCandidateIds(first: string[], second: string[]) {
+  return [...new Set([...first, ...second])].sort();
 }
 
 function nonEmpty(value: string | null) {

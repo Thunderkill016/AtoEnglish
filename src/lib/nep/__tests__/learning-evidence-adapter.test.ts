@@ -72,12 +72,29 @@ describe("Nếp → learning-core adapter", () => {
         matchedTargetGroupIndexes: [0],
         missingTargetGroupIndexes: [1],
         errorTags: ["partial-target-coverage", "missing-target-group:1"],
+        remediationHints: [{
+          errorTag: "missing-target-group:1",
+          candidateId: "LESSON-CAP002-FIRST-MEETING-V1:produce",
+        }],
       },
     });
     expect(record?.candidate?.metadata).toMatchObject({
       errorSignals: {
         missingTargetGroupIndexes: [1],
         errorTags: ["partial-target-coverage", "missing-target-group:1"],
+      },
+    });
+  });
+
+  it("routes a missing transfer repair move to the dedicated repair candidate", () => {
+    const record = recordFor("transfer", "My name is Hoang.", "speech");
+
+    expect(record?.attempt.metadata).toMatchObject({
+      errorSignals: {
+        remediationHints: [{
+          errorTag: "missing-target-group:0",
+          candidateId: "LESSON-CAP002-FIRST-MEETING-V1:repair",
+        }],
       },
     });
   });
@@ -110,6 +127,19 @@ describe("Nếp → learning-core adapter", () => {
     expect(materializeEvidence({ attempt: record!.attempt, candidate: record!.candidate! })).toBeNull();
   });
 
+  it("marks retry after answer-bearing feedback as revealed even when support was not opened", () => {
+    const record = recordFor(
+      "retry",
+      "Could you say that again? My name is Hoang.",
+      "speech",
+      false,
+    );
+
+    expect(record?.attempt.revealUsed).toBe(true);
+    expect(record?.attempt.supportLevel).toBe(0);
+    expect(record?.candidate).toBeNull();
+  });
+
   it("stores supported retry as attempt-only while retaining derived evaluation signals", () => {
     const record = recordFor(
       "retry",
@@ -119,9 +149,10 @@ describe("Nếp → learning-core adapter", () => {
     );
 
     expect(record?.attempt.supportLevel).toBe(1);
+    expect(record?.attempt.revealUsed).toBe(true);
     expect(record?.attempt.correct).toBe(true);
     expect(record?.attempt.metadata).toMatchObject({
-      errorSignals: { errorTags: [], missingTargetGroupIndexes: [] },
+      errorSignals: { errorTags: [], missingTargetGroupIndexes: [], remediationHints: [] },
     });
     expect(record?.candidate).toBeNull();
   });
