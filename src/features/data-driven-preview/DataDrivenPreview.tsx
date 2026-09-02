@@ -70,7 +70,7 @@ export function DataDrivenPreview() {
   const [supportUsed, setSupportUsed] = useState(false);
   const [evidence, setEvidence] = useState<EvidenceState>(initialEvidence);
   const [persistenceState, setPersistenceState] = useState<PersistenceState>("idle");
-  const attemptStartedAt = useRef(Date.now());
+  const attemptStartedAt = useRef<number | null>(null);
   const lastSubmissionKey = useRef<string | null>(null);
 
   const action = lesson.actions[step];
@@ -134,6 +134,8 @@ export function DataDrivenPreview() {
     const submissionKey = `${action.id}|${answerSource ?? "none"}|support:${supportUsed ? 1 : 0}|${answer.trim()}`;
     if (lastSubmissionKey.current === submissionKey) return;
 
+    const now = Date.now();
+    const latencyMs = attemptStartedAt.current === null ? 0 : now - attemptStartedAt.current;
     const record = toLearningAttemptRecord({
       lesson,
       action,
@@ -141,7 +143,7 @@ export function DataDrivenPreview() {
       responseSource: answerSource,
       correct,
       supportUsed,
-      latencyMs: Date.now() - attemptStartedAt.current,
+      latencyMs,
     });
     if (!record) return;
 
