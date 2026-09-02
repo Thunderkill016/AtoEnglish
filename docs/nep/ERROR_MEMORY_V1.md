@@ -32,22 +32,31 @@ It deliberately ignores:
 - `no-response` — this may reflect microphone/STT/UI failure rather than learner knowledge;
 - `partial-target-coverage` — this is a broad summary already represented by the specific missing-group tag.
 
+## Independent vs diagnostic attempts
+
+An observation only counts as an independent Error Memory event when it is unassisted **and** the response modality can support that action.
+
+Assistance includes:
+
+- optional support (`support_level > 0`);
+- answer already revealed (`reveal_used = true`).
+
+For Nếp speaking actions (`retrieve`, `produce`, `repair`, `transfer`, `retry`), independent Error Memory evidence requires `response_modality = speech`. Typed fallback is diagnostic only: it can receive target-language feedback but cannot create, satisfy, or repair a recurring speaking pattern.
+
+For Nếp comprehension, the independent modality is `choice`. Historical rows without `actionKind` keep legacy behavior for compatibility.
+
 ## States
 
-Each memory entry has one of four states:
+Each memory entry has one of four primary states:
 
-- `supported-only` — the pattern has only been observed on assisted attempts;
+- `supported-only` — only diagnostic/assisted observations exist;
 - `observed` — one independent failure since the last repair;
 - `recurring` — at least two independent failures since the last repair;
-- `repaired` — a later independent successful response completed the same versioned action.
-
-An attempt is assisted when either optional support was used or the answer had already been revealed. Assisted failures are counted diagnostically but do not promote a pattern to `recurring`.
-
-This prevents retry-after-feedback from becoming fake independent evidence simply because the learner did not open the optional support control.
+- `repaired` — a later independent source success completed the same versioned action.
 
 ## Remediation hints
 
-Each actionable error entry may carry zero or more `remediationCandidateIds`. These IDs are derived from the versioned Nếp content remediation map, not inferred by the generic learner model.
+Each actionable error entry may carry zero or more `remediationCandidateIds`. These IDs come from the versioned Nếp content remediation map, not from planner inference.
 
 Examples:
 
@@ -58,21 +67,43 @@ transfer + missing-target-group:1 -> ...:produce
 
 Historical rows without hints remain valid. Planner logic can use same-action fallback only when an entry has no explicit remediation candidate.
 
-## Repair semantics
+## Remediation satisfaction and re-probe
 
-A later independent successful attempt on the same target + lesson version + action repairs all active error tags for that action.
+A recurring entry also carries:
 
-After repair, the old recurrence is not permanent. A new independent failure becomes `observed` again, and only another independent failure promotes it back to `recurring`.
+```ts
+remediationSatisfiedAt: string | null
+```
 
-This prevents the learner model from becoming a permanent collection of past mistakes.
+An independent success on one of the declared remediation candidates sets this timestamp, but **does not** mark the source error repaired. It only means the narrower remediation task has been completed and the original task should be re-probed.
+
+If the source re-probe succeeds independently, the source entry becomes `repaired`. If the source re-probe fails independently, `remediationSatisfiedAt` is cleared and remediation pressure reopens.
+
+An assisted remediation/source attempt cannot satisfy or repair this cycle.
+
+## Direct repair semantics
+
+A later independent successful attempt on the same target + lesson version + action repairs all active error tags for that action:
+
+```text
+status = repaired
+independentFailuresSinceRepair = 0
+repairedAt = success time
+remediationSatisfiedAt = null
+```
+
+After repair, a new independent failure becomes `observed` again, and only another independent failure promotes it back to `recurring`.
 
 ## Read boundary
 
 `getNếpErrorMemory()` is authenticated and read-only. It reads the learner's own `learning_attempts` rows through existing RLS and projects only:
 
 - target identity;
-- correctness/support/reveal state;
+- correctness;
+- response modality;
+- support/reveal state;
 - lesson/action/version identity;
+- `actionKind`;
 - `errorSignals.observedResponse`;
 - `errorSignals.errorTags`;
 - `errorSignals.remediationHints`;
@@ -82,9 +113,13 @@ It does not SELECT `response_text` or the full attempt `metadata` object.
 
 ## Planner integration
 
-Session Planner receives Error Memory entries but only `recurring` entries create error-repair pressure.
+Only `recurring` entries influence adaptive ranking:
 
-`observed`, `supported-only`, `repaired`, and `no-response` observations have zero ranking effect. Explicit remediation hints can route that pressure to a different evidence-bearing action; hard gates remain authoritative.
+- unresolved recurring error -> remediation pressure;
+- recurring error with `remediationSatisfiedAt` -> source re-probe pressure;
+- `observed`, `supported-only`, `repaired`, and `no-response` -> zero error pressure.
+
+All pressure terms remain below normal planner eligibility gates.
 
 ## What V1 does not do
 
@@ -95,6 +130,9 @@ Error Memory V1 does not:
 - infer grammar or pronunciation problems;
 - use LLM classification;
 - use RL/bandits;
-- persist a permanent learner label.
+- persist a permanent learner label;
+- treat typed fallback as speaking evidence.
 
 The snapshot is rebuilt deterministically from immutable attempts.
+
+See `REMEDIATION_REPROBE_V1.md` for the repair → re-probe state machine.
