@@ -20,6 +20,7 @@ export type SessionPlannerConfig = {
   recentCandidatePenalty: number;
   inSessionRepeatPenalty: number;
   recurringErrorRepairWeight: number;
+  recurringErrorReprobeWeight: number;
 };
 
 export type SessionPlannerInput = {
@@ -40,6 +41,7 @@ export type PlannerScoreBreakdown = {
   importance: number;
   transferValue: number;
   errorRepairPressure: number;
+  errorReprobePressure: number;
   recentTargetPenalty: number;
   recentCandidatePenalty: number;
   inSessionRepeatPenalty: number;
@@ -72,6 +74,7 @@ export const DEFAULT_SESSION_PLANNER_CONFIG: SessionPlannerConfig = {
   recentCandidatePenalty: 0.75,
   inSessionRepeatPenalty: 0.8,
   recurringErrorRepairWeight: 0.65,
+  recurringErrorReprobeWeight: 0.6,
 };
 
 const COLD_START_BONUS: Record<EvidenceType, number> = {
@@ -205,7 +208,9 @@ function scoreCandidate(input: {
   const importance = clamp01(candidate.importance ?? 0.5);
   const transferValue = clamp01(candidate.transferValue ?? 0);
   const recurringErrorCount = matchingRecurringErrorCount(candidate, errorMemory);
+  const recurringReprobeCount = matchingRecurringReprobeCount(candidate, errorMemory);
   const errorRepairPressure = recurringErrorCount > 0 ? 1 : 0;
+  const errorReprobePressure = recurringReprobeCount > 0 ? 1 : 0;
   const recentTargetPenalty = countMatches(recentTargetIds, candidate.targetId) * config.recentTargetPenalty;
   const recentCandidatePenalty = countMatches(recentCandidateIds, candidate.id) * config.recentCandidatePenalty;
   const inSessionRepeatPenalty = selectedForTarget * config.inSessionRepeatPenalty;
@@ -217,6 +222,7 @@ function scoreCandidate(input: {
     + importance * 0.45
     + transferValue * 0.25
     + errorRepairPressure * config.recurringErrorRepairWeight
+    + errorReprobePressure * config.recurringErrorReprobeWeight
     - recentTargetPenalty
     - recentCandidatePenalty
     - inSessionRepeatPenalty;
@@ -229,6 +235,7 @@ function scoreCandidate(input: {
   if (staleness > 0) reasons.push(`staleness:${round(staleness)}`);
   if (transferValue > 0) reasons.push(`transfer-value:${round(transferValue)}`);
   if (errorRepairPressure > 0) reasons.push(`recurring-error-repair:${recurringErrorCount}`);
+  if (errorReprobePressure > 0) reasons.push(`recurring-error-reprobe:${recurringReprobeCount}`);
   if (recentTargetPenalty > 0 || recentCandidatePenalty > 0) reasons.push("recent-practice-penalty");
   if (inSessionRepeatPenalty > 0) reasons.push("in-session-diversity-penalty");
 
@@ -242,6 +249,7 @@ function scoreCandidate(input: {
       importance,
       transferValue,
       errorRepairPressure,
+      errorReprobePressure,
       recentTargetPenalty,
       recentCandidatePenalty,
       inSessionRepeatPenalty,
@@ -252,10 +260,9 @@ function scoreCandidate(input: {
 }
 
 /**
- * Explicit remediation hints override same-action fallback. This allows a recurring transfer
- * failure such as "missing repair move" to pressure the dedicated repair candidate (even when it
- * targets a different embedded capability) without teaching the generic planner what group 0 means.
- * Older error-memory rows without hints keep the previous same-action behavior for compatibility.
+ * Explicit remediation hints override same-action fallback. Repair pressure stays active only until
+ * an independent successful attempt on one of the declared remediation candidates has occurred.
+ * At that point the source task receives re-probe pressure instead.
  */
 function matchingRecurringErrorCount(candidate: PlannerCandidate, entries: ErrorMemoryEntry[]) {
   const lessonId = metadataString(candidate.metadata, "lessonId");
@@ -263,7 +270,7 @@ function matchingRecurringErrorCount(candidate: PlannerCandidate, entries: Error
   const actionId = metadataString(candidate.metadata, "actionId");
 
   return entries.reduce((count, entry) => {
-    if (entry.status !== "recurring") return count;
+    if (entry.status !== "recurring" || entry.remediationSatisfiedAt) return count;
 
     if (entry.remediationCandidateIds.length > 0) {
       return count + (entry.remediationCandidateIds.includes(candidate.id) ? 1 : 0);
@@ -275,6 +282,23 @@ function matchingRecurringErrorCount(candidate: PlannerCandidate, entries: Error
       && entry.lessonVersion === lessonVersion
       && entry.actionId === actionId;
     return count + (legacySameActionMatch ? 1 : 0);
+  }, 0);
+}
+
+function matchingRecurringReprobeCount(candidate: PlannerCandidate, entries: ErrorMemoryEntry[]) {
+  const lessonId = metadataString(candidate.metadata, "lessonId");
+  const lessonVersion = metadataString(candidate.metadata, "lessonVersion");
+  const actionId = metadataString(candidate.metadata, "actionId");
+  if (!lessonId || !lessonVersion || !actionId) return 0;
+
+  return entries.reduce((count, entry) => {
+    const matchesSource = entry.status === "recurring"
+      && entry.remediationSatisfiedAt !== null
+      && entry.targetId === candidate.targetId
+      && entry.lessonId === lessonId
+      && entry.lessonVersion === lessonVersion
+      && entry.actionId === actionId;
+    return count + (matchesSource ? 1 : 0);
   }, 0);
 }
 
