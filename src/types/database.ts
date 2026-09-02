@@ -5,7 +5,7 @@ export type { Database } from "./supabase";
 // ─── App-level named types ───────────────────────────────────────────────────
 // Kept for convenience — imported directly in actions & components.
 
-export type CEFRLevel = "A1" | "A2" | "B1" | "B2" | "C1";
+export type CEFRLevel = "A0" | "A1" | "A2" | "B1" | "B2" | "C1";
 
 export type Json =
   | string
@@ -51,8 +51,12 @@ export type Card = {
   state: number;
   difficulty: number;
   stability: number;
-  last_review: string | null;   // actual DB column name
+  last_review: string | null;
   next_review: string | null;
+  elapsed_days: number;
+  scheduled_days: number;
+  lapses: number;
+  learning_steps: number;
 };
 
 export type LessonHistory = {
