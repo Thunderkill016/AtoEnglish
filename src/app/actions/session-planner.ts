@@ -69,10 +69,11 @@ export async function getNếpSessionPlan(input: GetNếpSessionPlanInput = {}) 
       .in("target_id", targetIds)
       .limit(100);
 
-    // Attempts are used only as recent exposure history. Do not select response_text.
+    // Attempts are exposure history only. Project just the semantic planner keys from JSON;
+    // do not fetch response_text or the full metadata object.
     const recentAttemptQuery = readClient
       .from<RecentLearningAttemptRow>("learning_attempts")
-      .select("capability_id, knowledge_item_id, prompt_id, metadata, created_at")
+      .select("capability_id, knowledge_item_id, prompt_id, lesson_id:metadata->>lessonId, action_id:metadata->>actionId, created_at")
       .eq("user_id", user.id)
       .in("capability_id", targetIds)
       .order("created_at", { ascending: false })
@@ -106,6 +107,7 @@ export async function getNếpSessionPlan(input: GetNếpSessionPlanInput = {}) 
         stateCount: states.length,
         recentAttemptCount: recentAttemptResult.data?.length ?? 0,
         rawResponseSelected: false,
+        fullMetadataSelected: false,
       },
     };
   } catch (error) {
