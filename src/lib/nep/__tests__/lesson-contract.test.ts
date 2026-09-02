@@ -64,6 +64,19 @@ describe("Nếp lesson contract QA", () => {
     expect(qaLesson(broken).map((issue) => issue.code)).toContain("TRANSFER_CONTEXT_NOT_CHANGED");
   });
 
+  it("rejects transfer whose evaluator can satisfy only one demand", () => {
+    const broken = {
+      ...firstMeetingLessonV1,
+      actions: firstMeetingLessonV1.actions.map((action) =>
+        action.kind === "transfer"
+          ? { ...action, requiredSignalGroups: [action.requiredSignalGroups![0]] }
+          : action,
+      ),
+    };
+
+    expect(qaLesson(broken).map((issue) => issue.code)).toContain("TRANSFER_REQUIRES_MULTI_DEMAND_EVALUATION");
+  });
+
   it("keeps the supported retry attempt-only after answer-bearing feedback", () => {
     const broken = {
       ...firstMeetingLessonV1,
