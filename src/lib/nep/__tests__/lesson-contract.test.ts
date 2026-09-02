@@ -65,11 +65,15 @@ describe("Nếp lesson contract QA", () => {
   });
 
   it("rejects transfer whose evaluator can satisfy only one demand", () => {
+    const transfer = firstMeetingLessonV1.actions.find((action) => action.kind === "transfer")!;
+    const firstDemand = transfer.requiredSignalGroups?.[0];
+    expect(firstDemand).toBeDefined();
+
     const broken = {
       ...firstMeetingLessonV1,
       actions: firstMeetingLessonV1.actions.map((action) =>
         action.kind === "transfer"
-          ? { ...action, requiredSignalGroups: [action.requiredSignalGroups![0]] }
+          ? { ...action, requiredSignalGroups: [firstDemand!] }
           : action,
       ),
     };
