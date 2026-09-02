@@ -77,8 +77,10 @@ export function DataDrivenPreview() {
   const progress = Math.round(((step + 1) / lesson.actions.length) * 100);
   const speechAvailable = typeof window !== "undefined" && recognitionCtor() !== null;
   const persistedLabel = persistenceLabel(persistenceState);
+  const saving = persistenceState === "saving";
 
   const markResponseChanged = () => {
+    if (lastSubmissionKey.current !== null) attemptStartedAt.current = Date.now();
     lastSubmissionKey.current = null;
     setPersistenceState("idle");
   };
@@ -93,12 +95,24 @@ export function DataDrivenPreview() {
     attemptStartedAt.current = Date.now();
   };
 
+  const toggleSupport = () => {
+    if (saving) return;
+    if (lastSubmissionKey.current !== null) attemptStartedAt.current = Date.now();
+    lastSubmissionKey.current = null;
+    setPersistenceState("idle");
+    setSupportUsed((value) => !value);
+  };
+
   const startSpeech = () => {
     const Recognition = recognitionCtor();
     if (!Recognition) {
       setFeedback("Browser này không có speech recognition. Text fallback chỉ demo flow và không được tính speaking evidence.");
       return;
     }
+    if (lastSubmissionKey.current !== null) attemptStartedAt.current = Date.now();
+    lastSubmissionKey.current = null;
+    setPersistenceState("idle");
+
     const recognition = new Recognition();
     recognition.lang = "en-US";
     recognition.interimResults = false;
@@ -117,7 +131,7 @@ export function DataDrivenPreview() {
   };
 
   const persistEvaluation = async (correct: boolean) => {
-    const submissionKey = `${action.id}|${answerSource ?? "none"}|${answer.trim()}`;
+    const submissionKey = `${action.id}|${answerSource ?? "none"}|support:${supportUsed ? 1 : 0}|${answer.trim()}`;
     if (lastSubmissionKey.current === submissionKey) return;
 
     const record = toLearningAttemptRecord({
@@ -148,7 +162,7 @@ export function DataDrivenPreview() {
   };
 
   const evaluate = async () => {
-    if (persistenceState === "saving") return;
+    if (saving) return;
 
     const ok = evaluateNếpActionResponse(action, answer);
     if (action.kind === "comprehend") {
@@ -249,23 +263,23 @@ export function DataDrivenPreview() {
             {action.prompt && <div className="mb-5 rounded-2xl bg-[#f5f3ec] p-5"><p className="text-xs font-bold uppercase tracking-[.18em] text-black/35">Prompt</p><p className="mt-2 text-xl font-medium">{action.prompt}</p></div>}
 
             {action.kind === "comprehend" ? (
-              <div className="grid gap-3 sm:grid-cols-3">{["name", "job", "country"].map((choice) => <button key={choice} type="button" onClick={() => { setAnswer(choice); setAnswerSource("text"); setFeedback(null); markResponseChanged(); }} className={`rounded-2xl border px-4 py-4 text-left font-semibold ${answer === choice ? "border-[#2d6a4f] bg-[#edf5ef]" : "border-black/10"}`}>{choice}</button>)}</div>
+              <div className="grid gap-3 sm:grid-cols-3">{["name", "job", "country"].map((choice) => <button key={choice} type="button" disabled={saving} onClick={() => { setAnswer(choice); setAnswerSource("text"); setFeedback(null); markResponseChanged(); }} className={`rounded-2xl border px-4 py-4 text-left font-semibold disabled:opacity-40 ${answer === choice ? "border-[#2d6a4f] bg-[#edf5ef]" : "border-black/10"}`}>{choice}</button>)}</div>
             ) : action.modality === "speech" ? (
               <>
-                <div className="flex flex-wrap gap-3"><button type="button" onClick={startSpeech} disabled={listening || persistenceState === "saving"} className="flex items-center gap-2 rounded-full bg-[#171713] px-5 py-3 text-sm font-semibold text-white disabled:opacity-40"><Mic2 className="size-4" /> {listening ? "Đang nghe…" : "Nói bằng mic"}</button>{!speechAvailable && <span className="flex items-center gap-2 text-xs text-[#8a5b00]"><CircleAlert className="size-4" /> Browser không hỗ trợ speech recognition</span>}</div>
-                <textarea value={answer} onChange={(event) => { setAnswer(event.target.value); setAnswerSource("text"); setFeedback(null); markResponseChanged(); }} placeholder="Transcript hoặc text fallback…" className="mt-4 min-h-24 w-full resize-none rounded-2xl border border-black/10 bg-[#faf9f5] p-4 outline-none focus:border-[#2d6a4f]/60" />
-                <div className="mt-3 flex flex-wrap gap-2"><button type="button" onClick={evaluate} disabled={!answer || answerSource !== "speech" || persistenceState === "saving"} className="rounded-full bg-[#2d6a4f] px-4 py-2 text-xs font-bold text-white disabled:opacity-30">Đánh giá speech transcript</button><button type="button" onClick={evaluate} disabled={!answer || persistenceState === "saving"} className="rounded-full border border-black/10 px-4 py-2 text-xs font-bold text-black/55 disabled:opacity-30">Text fallback</button></div>
+                <div className="flex flex-wrap gap-3"><button type="button" onClick={startSpeech} disabled={listening || saving} className="flex items-center gap-2 rounded-full bg-[#171713] px-5 py-3 text-sm font-semibold text-white disabled:opacity-40"><Mic2 className="size-4" /> {listening ? "Đang nghe…" : "Nói bằng mic"}</button>{!speechAvailable && <span className="flex items-center gap-2 text-xs text-[#8a5b00]"><CircleAlert className="size-4" /> Browser không hỗ trợ speech recognition</span>}</div>
+                <textarea value={answer} disabled={saving} onChange={(event) => { setAnswer(event.target.value); setAnswerSource("text"); setFeedback(null); markResponseChanged(); }} placeholder="Transcript hoặc text fallback…" className="mt-4 min-h-24 w-full resize-none rounded-2xl border border-black/10 bg-[#faf9f5] p-4 outline-none focus:border-[#2d6a4f]/60 disabled:opacity-50" />
+                <div className="mt-3 flex flex-wrap gap-2"><button type="button" onClick={evaluate} disabled={!answer || answerSource !== "speech" || saving} className="rounded-full bg-[#2d6a4f] px-4 py-2 text-xs font-bold text-white disabled:opacity-30">Đánh giá speech transcript</button><button type="button" onClick={evaluate} disabled={!answer || saving} className="rounded-full border border-black/10 px-4 py-2 text-xs font-bold text-black/55 disabled:opacity-30">Text fallback</button></div>
               </>
             ) : null}
 
-            {action.kind === "comprehend" && <button type="button" onClick={evaluate} disabled={!answer || persistenceState === "saving"} className="mt-4 rounded-full bg-[#171713] px-5 py-2.5 text-sm font-semibold text-white disabled:opacity-30">Kiểm tra</button>}
-            {action.supportVi && <div className="mt-5 border-t border-black/[0.07] pt-5"><button type="button" onClick={() => setSupportUsed((value) => !value)} className="text-sm font-semibold text-black/45">{supportUsed ? "Ẩn hỗ trợ" : "Xem hỗ trợ tiếng Việt"}</button>{supportUsed && <p className="mt-2 text-sm leading-6 text-black/55">{action.supportVi}</p>}</div>}
+            {action.kind === "comprehend" && <button type="button" onClick={evaluate} disabled={!answer || saving} className="mt-4 rounded-full bg-[#171713] px-5 py-2.5 text-sm font-semibold text-white disabled:opacity-30">Kiểm tra</button>}
+            {action.supportVi && <div className="mt-5 border-t border-black/[0.07] pt-5"><button type="button" disabled={saving} onClick={toggleSupport} className="text-sm font-semibold text-black/45 disabled:opacity-40">{supportUsed ? "Ẩn hỗ trợ" : "Xem hỗ trợ tiếng Việt"}</button>{supportUsed && <p className="mt-2 text-sm leading-6 text-black/55">{action.supportVi}</p>}</div>}
             {feedback && <div className="mt-5 flex gap-3 rounded-2xl bg-[#fff7e6] p-4 text-sm leading-6"><CircleAlert className="mt-0.5 size-4 shrink-0 text-[#8a5b00]" /><p>{feedback}</p></div>}
             {persistedLabel && <p className="mt-3 text-xs leading-5 text-black/40">{persistedLabel}</p>}
           </div>
 
           <div className="mt-6 grid grid-cols-5 gap-2">{(Object.keys(evidence) as EvidenceKey[]).map((key) => <div key={key} className={`rounded-xl border px-2 py-2 text-center text-[10px] font-bold uppercase tracking-wide ${evidence[key] ? "border-[#2d6a4f]/30 bg-[#edf5ef] text-[#24583f]" : "border-black/[0.07] text-black/25"}`}>{key}</div>)}</div>
-          <div className="mt-8 flex items-center justify-between"><button type="button" onClick={() => { setStep((value) => Math.max(0, value - 1)); resetAttempt(); }} disabled={step === 0 || persistenceState === "saving"} className="rounded-full px-4 py-3 text-sm font-semibold text-black/45 disabled:opacity-20"><RefreshCw className="mr-2 inline size-3" />Quay lại</button><button type="button" onClick={next} disabled={persistenceState === "saving"} className="flex items-center gap-2 rounded-full bg-[#2d6a4f] px-6 py-3 text-sm font-semibold text-white disabled:opacity-40">{step === lesson.actions.length - 1 ? "Kết thúc slice" : "Tiếp theo"}<ArrowRight className="size-4" /></button></div>
+          <div className="mt-8 flex items-center justify-between"><button type="button" onClick={() => { setStep((value) => Math.max(0, value - 1)); resetAttempt(); }} disabled={step === 0 || saving} className="rounded-full px-4 py-3 text-sm font-semibold text-black/45 disabled:opacity-20"><RefreshCw className="mr-2 inline size-3" />Quay lại</button><button type="button" onClick={next} disabled={saving} className="flex items-center gap-2 rounded-full bg-[#2d6a4f] px-6 py-3 text-sm font-semibold text-white disabled:opacity-40">{step === lesson.actions.length - 1 ? "Kết thúc slice" : "Tiếp theo"}<ArrowRight className="size-4" /></button></div>
         </section>
 
         <footer className="pb-4 text-center text-[11px] leading-5 text-black/35"><Headphones className="mr-1 inline size-3" /> Transcript feedback ≠ pronunciation score. Raw transcript không được persist. Text fallback ≠ speaking evidence.{supportUsed && " Vietnamese support usage is tracked separately."}</footer>
