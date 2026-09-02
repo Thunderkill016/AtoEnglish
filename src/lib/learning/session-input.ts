@@ -1,6 +1,12 @@
 import type { LearnerSkillState } from "./evidence";
 import type { PlannerCandidate } from "./session-planner";
 
+export const PLANNER_SKILL_STATE_SELECT =
+  "target_id, recognition, retrieval, listening, production, repair, transfer, retention, evidence_count, last_evidence_at";
+
+export const PLANNER_RECENT_ATTEMPT_SELECT =
+  "capability_id, knowledge_item_id, prompt_id, lesson_id:metadata->>lessonId, action_id:metadata->>actionId, created_at";
+
 export type LearnerSkillStateRow = {
   target_id: string;
   recognition: number;
