@@ -1,3 +1,4 @@
+import type { ErrorMemoryEntry } from "./error-memory";
 import type { EvidenceType, LearnerSkillState } from "./evidence";
 import { createEmptyLearnerSkillState } from "./evidence";
 
@@ -18,6 +19,7 @@ export type SessionPlannerConfig = {
   recentTargetPenalty: number;
   recentCandidatePenalty: number;
   inSessionRepeatPenalty: number;
+  recurringErrorRepairWeight: number;
 };
 
 export type SessionPlannerInput = {
@@ -27,6 +29,7 @@ export type SessionPlannerInput = {
   now?: string;
   recentTargetIds?: string[];
   recentCandidateIds?: string[];
+  errorMemory?: ErrorMemoryEntry[];
   config?: Partial<SessionPlannerConfig>;
 };
 
@@ -36,6 +39,7 @@ export type PlannerScoreBreakdown = {
   staleness: number;
   importance: number;
   transferValue: number;
+  errorRepairPressure: number;
   recentTargetPenalty: number;
   recentCandidatePenalty: number;
   inSessionRepeatPenalty: number;
@@ -67,6 +71,7 @@ export const DEFAULT_SESSION_PLANNER_CONFIG: SessionPlannerConfig = {
   recentTargetPenalty: 0.55,
   recentCandidatePenalty: 0.75,
   inSessionRepeatPenalty: 0.8,
+  recurringErrorRepairWeight: 0.65,
 };
 
 const COLD_START_BONUS: Record<EvidenceType, number> = {
@@ -95,6 +100,7 @@ export function planSession(input: SessionPlannerInput): SessionPlan {
   const now = parseTime(input.now) ?? Date.now();
   const recentTargetIds = input.recentTargetIds ?? [];
   const recentCandidateIds = input.recentCandidateIds ?? [];
+  const errorMemory = input.errorMemory ?? [];
   const selected: PlannedOpportunity[] = [];
   const selectedIds = new Set<string>();
   const targetCounts = new Map<string, number>();
@@ -125,6 +131,7 @@ export function planSession(input: SessionPlannerInput): SessionPlan {
         now,
         recentTargetIds,
         recentCandidateIds,
+        errorMemory,
         selectedForTarget,
         config,
       }));
@@ -178,15 +185,27 @@ function scoreCandidate(input: {
   now: number;
   recentTargetIds: string[];
   recentCandidateIds: string[];
+  errorMemory: ErrorMemoryEntry[];
   selectedForTarget: number;
   config: SessionPlannerConfig;
 }): PlannedOpportunity {
-  const { candidate, state, now, recentTargetIds, recentCandidateIds, selectedForTarget, config } = input;
+  const {
+    candidate,
+    state,
+    now,
+    recentTargetIds,
+    recentCandidateIds,
+    errorMemory,
+    selectedForTarget,
+    config,
+  } = input;
   const skillGap = 1 - clamp01(state[candidate.evidenceType]);
   const coldStart = state.evidenceCount === 0 ? COLD_START_BONUS[candidate.evidenceType] : 0;
   const staleness = calculateStaleness(state.lastEvidenceAt, now);
   const importance = clamp01(candidate.importance ?? 0.5);
   const transferValue = clamp01(candidate.transferValue ?? 0);
+  const recurringErrorCount = matchingRecurringErrorCount(candidate, errorMemory);
+  const errorRepairPressure = recurringErrorCount > 0 ? 1 : 0;
   const recentTargetPenalty = countMatches(recentTargetIds, candidate.targetId) * config.recentTargetPenalty;
   const recentCandidatePenalty = countMatches(recentCandidateIds, candidate.id) * config.recentCandidatePenalty;
   const inSessionRepeatPenalty = selectedForTarget * config.inSessionRepeatPenalty;
@@ -197,6 +216,7 @@ function scoreCandidate(input: {
     + staleness * 0.35
     + importance * 0.45
     + transferValue * 0.25
+    + errorRepairPressure * config.recurringErrorRepairWeight
     - recentTargetPenalty
     - recentCandidatePenalty
     - inSessionRepeatPenalty;
@@ -208,6 +228,7 @@ function scoreCandidate(input: {
   if (coldStart > 0) reasons.push(`cold-start:${candidate.evidenceType}`);
   if (staleness > 0) reasons.push(`staleness:${round(staleness)}`);
   if (transferValue > 0) reasons.push(`transfer-value:${round(transferValue)}`);
+  if (errorRepairPressure > 0) reasons.push(`recurring-error-repair:${recurringErrorCount}`);
   if (recentTargetPenalty > 0 || recentCandidatePenalty > 0) reasons.push("recent-practice-penalty");
   if (inSessionRepeatPenalty > 0) reasons.push("in-session-diversity-penalty");
 
@@ -220,6 +241,7 @@ function scoreCandidate(input: {
       staleness,
       importance,
       transferValue,
+      errorRepairPressure,
       recentTargetPenalty,
       recentCandidatePenalty,
       inSessionRepeatPenalty,
@@ -227,6 +249,27 @@ function scoreCandidate(input: {
     },
     reasons,
   };
+}
+
+function matchingRecurringErrorCount(candidate: PlannerCandidate, entries: ErrorMemoryEntry[]) {
+  const lessonId = metadataString(candidate.metadata, "lessonId");
+  const lessonVersion = metadataString(candidate.metadata, "lessonVersion");
+  const actionId = metadataString(candidate.metadata, "actionId");
+  if (!lessonId || !lessonVersion || !actionId) return 0;
+
+  return entries.reduce((count, entry) => {
+    const matches = entry.status === "recurring"
+      && entry.targetId === candidate.targetId
+      && entry.lessonId === lessonId
+      && entry.lessonVersion === lessonVersion
+      && entry.actionId === actionId;
+    return count + (matches ? 1 : 0);
+  }, 0);
+}
+
+function metadataString(metadata: Record<string, unknown> | undefined, key: string) {
+  const value = metadata?.[key];
+  return typeof value === "string" && value.length > 0 ? value : null;
 }
 
 function readiness(state: LearnerSkillState) {
