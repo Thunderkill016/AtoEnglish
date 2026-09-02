@@ -11,6 +11,7 @@ const recurringError: ErrorMemoryEntry = {
   actionId: "produce",
   errorTag: "missing-target-group:0",
   remediationCandidateIds: ["candidate-b"],
+  remediationSatisfiedAt: null,
   status: "recurring",
   independentFailureCount: 2,
   supportedFailureCount: 0,
