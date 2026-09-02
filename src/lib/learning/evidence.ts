@@ -59,6 +59,8 @@ export interface EvidencePolicyContext {
   deferTransferContextCheck?: boolean;
 }
 
+const ORAL_EVIDENCE_TYPES: readonly EvidenceType[] = ["production", "repair", "transfer"];
+
 /**
  * Product invariant: a response may only create evidence that its observed modality can support.
  * Completion, button taps and typed fallbacks must not silently become speaking/transfer evidence.
@@ -83,12 +85,13 @@ export function materializeEvidence(context: EvidencePolicyContext): EvidenceEve
   if (candidate.contextId && attempt.contextId && candidate.contextId !== attempt.contextId) return null;
   const evidenceContextId = attempt.contextId ?? candidate.contextId ?? null;
 
-  if (attempt.revealUsed && ["retrieval", "production", "repair", "transfer"].includes(candidate.type)) {
+  if (attempt.revealUsed && ["retrieval", ...ORAL_EVIDENCE_TYPES].includes(candidate.type)) {
     return null;
   }
 
-  if (["production", "repair", "transfer"].includes(candidate.type) && attempt.responseModality !== "speech") {
-    return null;
+  if (ORAL_EVIDENCE_TYPES.includes(candidate.type)) {
+    if (attempt.responseModality !== "speech") return null;
+    if (!hasObservedOralResponse(attempt)) return null;
   }
 
   if (candidate.type === "retrieval" && attempt.responseModality === "none") return null;
@@ -161,6 +164,14 @@ export function applyEvidenceToSkillState(
     evidenceCount: current.evidenceCount + 1,
     lastEvidenceAt: occurredAt,
   };
+}
+
+function hasObservedOralResponse(attempt: LearningAttemptInput) {
+  if (typeof attempt.responseText === "string" && attempt.responseText.trim().length > 0) return true;
+
+  const source = attempt.metadata?.responseSource;
+  const length = attempt.metadata?.responseLength;
+  return source === "speech" && typeof length === "number" && Number.isFinite(length) && length > 0;
 }
 
 function clamp(value: number, min: number, max: number): number {
