@@ -33,6 +33,7 @@ export interface EvidenceCandidate {
   targetId: string;
   success: boolean;
   confidence?: number;
+  /** Optional evaluator echo. It may not contradict the attempt's context. */
   contextId?: string | null;
   evaluator?: string;
   metadata?: Record<string, unknown>;
@@ -77,6 +78,11 @@ export function materializeEvidence(context: EvidencePolicyContext): EvidenceEve
     candidate.targetId === attempt.knowledgeItemId || candidate.targetId === attempt.capabilityId;
   if (!targetMatchesAttempt) return null;
 
+  // Context describes the prompt/task that was actually attempted. An evaluator may echo it,
+  // but it cannot replace it with a different context to manufacture transfer evidence.
+  if (candidate.contextId && attempt.contextId && candidate.contextId !== attempt.contextId) return null;
+  const evidenceContextId = attempt.contextId ?? candidate.contextId ?? null;
+
   if (attempt.revealUsed && ["retrieval", "production", "repair", "transfer"].includes(candidate.type)) {
     return null;
   }
@@ -88,7 +94,7 @@ export function materializeEvidence(context: EvidencePolicyContext): EvidenceEve
   if (candidate.type === "retrieval" && attempt.responseModality === "none") return null;
 
   if (candidate.type === "transfer" && !deferTransferContextCheck) {
-    if (!attempt.contextId || !previousSuccessfulContextId || attempt.contextId === previousSuccessfulContextId) {
+    if (!evidenceContextId || !previousSuccessfulContextId || evidenceContextId === previousSuccessfulContextId) {
       return null;
     }
   }
@@ -99,7 +105,7 @@ export function materializeEvidence(context: EvidencePolicyContext): EvidenceEve
     success: candidate.success,
     confidence: clamp(candidate.confidence ?? 1, 0, 1),
     supportLevel: Math.max(0, attempt.supportLevel ?? 0),
-    contextId: candidate.contextId ?? attempt.contextId ?? null,
+    contextId: evidenceContextId,
     evaluator: candidate.evaluator ?? "deterministic",
     metadata: candidate.metadata ?? {},
   };
