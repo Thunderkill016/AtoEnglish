@@ -2,7 +2,7 @@
 
 import { headers } from "next/headers";
 
-import { materializeEvidence } from "@/lib/learning/evidence";
+import { materializeEvidence, type EvidenceEvent } from "@/lib/learning/evidence";
 import {
   RecordLearningAttemptSchema,
   type RecordLearningAttemptInput,
@@ -16,6 +16,39 @@ type RpcError = { message: string } | null;
 type RpcClient = {
   rpc: (fn: string, args: Record<string, unknown>) => Promise<{ data: unknown; error: RpcError }>;
 };
+
+function rpcArgs(
+  attempt: RecordLearningAttemptInput["attempt"],
+  evidence: EvidenceEvent | null
+): Record<string, unknown> {
+  return {
+    p_knowledge_item_id: attempt.knowledgeItemId ?? null,
+    p_capability_id: attempt.capabilityId ?? null,
+    p_session_id: attempt.sessionId ?? null,
+    p_exercise_type: attempt.exerciseType,
+    p_response_modality: attempt.responseModality,
+    p_prompt_id: attempt.promptId ?? null,
+    p_context_id: attempt.contextId ?? null,
+    p_response_text: attempt.responseText ?? null,
+    p_correct: attempt.correct ?? null,
+    p_latency_ms: attempt.latencyMs ?? null,
+    p_hint_count: attempt.hintCount ?? 0,
+    p_reveal_used: attempt.revealUsed ?? false,
+    p_support_level: attempt.supportLevel ?? 0,
+    p_metadata: attempt.metadata ?? {},
+    p_evidence_type: evidence?.type ?? null,
+    p_evidence_target_id: evidence?.targetId ?? null,
+    p_evidence_success: evidence?.success ?? null,
+    p_evidence_confidence: evidence?.confidence ?? null,
+    p_evidence_context_id: evidence?.contextId ?? null,
+    p_evaluator: evidence?.evaluator ?? null,
+    p_evidence_metadata: evidence?.metadata ?? {},
+  };
+}
+
+function isTransferPolicyRejection(message: string): boolean {
+  return message.includes("Transfer requires") || message.includes("Evidence context must match attempted context");
+}
 
 /**
  * Canonical write path for the new learning core.
@@ -56,29 +89,20 @@ export async function recordLearningAttempt(input: RecordLearningAttemptInput) {
     }
 
     const rpcClient = supabase as unknown as RpcClient;
-    const { data, error } = await rpcClient.rpc("record_learning_attempt", {
-      p_knowledge_item_id: attempt.knowledgeItemId ?? null,
-      p_capability_id: attempt.capabilityId ?? null,
-      p_session_id: attempt.sessionId ?? null,
-      p_exercise_type: attempt.exerciseType,
-      p_response_modality: attempt.responseModality,
-      p_prompt_id: attempt.promptId ?? null,
-      p_context_id: attempt.contextId ?? null,
-      p_response_text: attempt.responseText ?? null,
-      p_correct: attempt.correct ?? null,
-      p_latency_ms: attempt.latencyMs ?? null,
-      p_hint_count: attempt.hintCount ?? 0,
-      p_reveal_used: attempt.revealUsed ?? false,
-      p_support_level: attempt.supportLevel ?? 0,
-      p_metadata: attempt.metadata ?? {},
-      p_evidence_type: evidence?.type ?? null,
-      p_evidence_target_id: evidence?.targetId ?? null,
-      p_evidence_success: evidence?.success ?? null,
-      p_evidence_confidence: evidence?.confidence ?? null,
-      p_evidence_context_id: evidence?.contextId ?? null,
-      p_evaluator: evidence?.evaluator ?? null,
-      p_evidence_metadata: evidence?.metadata ?? {},
-    });
+    let { data, error } = await rpcClient.rpc("record_learning_attempt", rpcArgs(attempt, evidence));
+    let evidenceRecorded = evidence !== null;
+    let evidenceRejection: string | null = null;
+
+    // A changed-context decision depends on persisted history and can lose a race between
+    // concurrent requests. Preserve the immutable attempt even when the DB correctly rejects
+    // only the transfer evidence. Infrastructure/permission errors are never downgraded.
+    if (error && evidence?.type === "transfer" && isTransferPolicyRejection(error.message)) {
+      evidenceRejection = error.message;
+      const retry = await rpcClient.rpc("record_learning_attempt", rpcArgs(attempt, null));
+      data = retry.data;
+      error = retry.error;
+      evidenceRecorded = false;
+    }
 
     if (error) {
       return { success: false, error: `Không thể lưu learning event: ${error.message}` };
@@ -87,8 +111,9 @@ export async function recordLearningAttempt(input: RecordLearningAttemptInput) {
     return {
       success: true,
       attemptId: typeof data === "string" ? data : null,
-      evidenceRecorded: evidence !== null,
-      evidenceType: evidence?.type ?? null,
+      evidenceRecorded,
+      evidenceType: evidenceRecorded ? evidence?.type ?? null : null,
+      evidenceRejection,
     };
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
