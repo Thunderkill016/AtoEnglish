@@ -4,6 +4,7 @@ import {
   ERROR_MEMORY_ATTEMPT_SELECT,
   actionableErrorTags,
   buildErrorMemory,
+  remediationCandidateIdsForTag,
   type ErrorMemoryAttemptRow,
 } from "@/lib/learning/error-memory";
 
@@ -13,11 +14,16 @@ function row(overrides: Partial<ErrorMemoryAttemptRow> = {}): ErrorMemoryAttempt
     knowledge_item_id: null,
     correct: false,
     support_level: 0,
+    reveal_used: false,
     lesson_id: "nep-first-meeting-v1",
     lesson_version: "1.0.0",
     action_id: "transfer",
     observed_response: true,
     error_tags: ["partial-target-coverage", "missing-target-group:1"],
+    remediation_hints: [{
+      errorTag: "missing-target-group:1",
+      candidateId: "nep-first-meeting-v1:produce",
+    }],
     created_at: "2026-09-02T10:00:00.000Z",
     ...overrides,
   };
@@ -30,6 +36,7 @@ describe("Error Memory V1", () => {
     expect(memory.recurring).toHaveLength(0);
     expect(memory.entries[0]).toMatchObject({
       errorTag: "missing-target-group:1",
+      remediationCandidateIds: ["nep-first-meeting-v1:produce"],
       status: "observed",
       independentFailureCount: 1,
       independentFailuresSinceRepair: 1,
@@ -66,6 +73,21 @@ describe("Error Memory V1", () => {
     });
   });
 
+  it("does not let a failure after answer reveal manufacture recurrence", () => {
+    const memory = buildErrorMemory([
+      row({ reveal_used: true, created_at: "2026-09-02T10:00:00.000Z" }),
+      row({ reveal_used: true, created_at: "2026-09-02T11:00:00.000Z" }),
+      row({ reveal_used: false, created_at: "2026-09-02T12:00:00.000Z" }),
+    ]);
+
+    expect(memory.recurring).toHaveLength(0);
+    expect(memory.entries[0]).toMatchObject({
+      status: "observed",
+      independentFailureCount: 1,
+      supportedFailureCount: 2,
+    });
+  });
+
   it("ignores no-response and broad partial-coverage tags as persistent error patterns", () => {
     const memory = buildErrorMemory([
       row({ observed_response: false, error_tags: ["no-response", "missing-target-group:1"] }),
@@ -78,11 +100,38 @@ describe("Error Memory V1", () => {
     ]);
   });
 
+  it("keeps only remediation hints that belong to the exact actionable error tag", () => {
+    const hints = [
+      { errorTag: "missing-target-group:1", candidateId: "lesson:produce" },
+      { errorTag: "missing-target-group:0", candidateId: "lesson:repair" },
+      { errorTag: "missing-target-group:1", candidateId: "lesson:produce" },
+      { errorTag: "missing-target-group:1", candidateId: "" },
+      { bad: true },
+    ];
+
+    expect(remediationCandidateIdsForTag(hints, "missing-target-group:1")).toEqual(["lesson:produce"]);
+  });
+
+  it("merges remediation candidate hints across compatible historical rows", () => {
+    const memory = buildErrorMemory([
+      row({ remediation_hints: [], created_at: "2026-09-02T10:00:00.000Z" }),
+      row({
+        remediation_hints: [{
+          errorTag: "missing-target-group:1",
+          candidateId: "nep-first-meeting-v1:produce",
+        }],
+        created_at: "2026-09-02T11:00:00.000Z",
+      }),
+    ]);
+
+    expect(memory.recurring[0]?.remediationCandidateIds).toEqual(["nep-first-meeting-v1:produce"]);
+  });
+
   it("marks a recurring error repaired after a later independent success on the same action", () => {
     const memory = buildErrorMemory([
       row({ created_at: "2026-09-02T10:00:00.000Z" }),
       row({ created_at: "2026-09-02T11:00:00.000Z" }),
-      row({ correct: true, error_tags: [], created_at: "2026-09-02T12:00:00.000Z" }),
+      row({ correct: true, error_tags: [], remediation_hints: [], created_at: "2026-09-02T12:00:00.000Z" }),
     ]);
 
     expect(memory.recurring).toHaveLength(0);
@@ -98,7 +147,7 @@ describe("Error Memory V1", () => {
     const memory = buildErrorMemory([
       row({ created_at: "2026-09-02T10:00:00.000Z" }),
       row({ created_at: "2026-09-02T11:00:00.000Z" }),
-      row({ correct: true, error_tags: [], created_at: "2026-09-02T12:00:00.000Z" }),
+      row({ correct: true, error_tags: [], remediation_hints: [], created_at: "2026-09-02T12:00:00.000Z" }),
       row({ created_at: "2026-09-02T13:00:00.000Z" }),
     ]);
 
@@ -126,15 +175,17 @@ describe("Error Memory V1", () => {
     const chronological = [
       row({ created_at: "2026-09-02T10:00:00.000Z" }),
       row({ created_at: "2026-09-02T11:00:00.000Z" }),
-      row({ correct: true, error_tags: [], created_at: "2026-09-02T12:00:00.000Z" }),
+      row({ correct: true, error_tags: [], remediation_hints: [], created_at: "2026-09-02T12:00:00.000Z" }),
     ];
 
     expect(buildErrorMemory([...chronological].reverse())).toEqual(buildErrorMemory(chronological));
   });
 
-  it("locks the read projection to derived metadata and excludes raw learner content", () => {
+  it("locks the read projection to derived metadata and assisted-state fields", () => {
     expect(ERROR_MEMORY_ATTEMPT_SELECT).toContain("error_tags:metadata->errorSignals->errorTags");
     expect(ERROR_MEMORY_ATTEMPT_SELECT).toContain("observed_response:metadata->errorSignals->observedResponse");
+    expect(ERROR_MEMORY_ATTEMPT_SELECT).toContain("remediation_hints:metadata->errorSignals->remediationHints");
+    expect(ERROR_MEMORY_ATTEMPT_SELECT).toContain("reveal_used");
     expect(ERROR_MEMORY_ATTEMPT_SELECT).not.toContain("response_text");
     expect(ERROR_MEMORY_ATTEMPT_SELECT).not.toMatch(/(^|,\s*)metadata($|,)/);
   });
