@@ -73,8 +73,8 @@ export function deriveRecentPlannerHistory(rows: RecentLearningAttemptRow[]): Re
 }
 
 export function normalizeSessionSize(value: number | undefined, fallback = 5) {
-  if (!Number.isFinite(value)) return fallback;
-  return Math.min(12, Math.max(1, Math.floor(value!)));
+  if (typeof value !== "number" || !Number.isFinite(value)) return fallback;
+  return Math.min(12, Math.max(1, Math.floor(value)));
 }
 
 function asRecord(value: unknown): Record<string, unknown> | null {
