@@ -18,7 +18,8 @@ export type RecentLearningAttemptRow = {
   capability_id: string | null;
   knowledge_item_id: string | null;
   prompt_id: string | null;
-  metadata: unknown;
+  lesson_id: string | null;
+  action_id: string | null;
   created_at: string;
 };
 
@@ -63,9 +64,8 @@ export function deriveRecentPlannerHistory(rows: RecentLearningAttemptRow[]): Re
     const targetId = row.capability_id ?? row.knowledge_item_id;
     if (targetId) recentTargetIds.push(targetId);
 
-    const metadata = asRecord(row.metadata);
-    const lessonId = asNonEmptyString(metadata?.lessonId);
-    const actionId = asNonEmptyString(metadata?.actionId) ?? asNonEmptyString(row.prompt_id);
+    const lessonId = asNonEmptyString(row.lesson_id);
+    const actionId = asNonEmptyString(row.action_id) ?? asNonEmptyString(row.prompt_id);
     if (lessonId && actionId) recentCandidateIds.push(`${lessonId}:${actionId}`);
   }
 
@@ -75,11 +75,6 @@ export function deriveRecentPlannerHistory(rows: RecentLearningAttemptRow[]): Re
 export function normalizeSessionSize(value: number | undefined, fallback = 5) {
   if (typeof value !== "number" || !Number.isFinite(value)) return fallback;
   return Math.min(12, Math.max(1, Math.floor(value)));
-}
-
-function asRecord(value: unknown): Record<string, unknown> | null {
-  if (!value || typeof value !== "object" || Array.isArray(value)) return null;
-  return value as Record<string, unknown>;
 }
 
 function asNonEmptyString(value: unknown) {
