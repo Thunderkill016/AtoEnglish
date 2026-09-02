@@ -154,7 +154,7 @@ export function DataDrivenPreview() {
       setPersistenceState(result.evidenceRecorded ? "evidence-saved" : "attempt-saved");
       return;
     }
-    const error = "error" in result ? result.error : "";
+    const error = "error" in result ? result.error ?? "" : "";
     if (error.includes("đăng nhập")) {
       setPersistenceState("local-only");
       return;
