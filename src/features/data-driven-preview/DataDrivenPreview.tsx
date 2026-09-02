@@ -5,7 +5,7 @@ import { useMemo, useRef, useState } from "react";
 
 import { recordLearningAttempt } from "@/app/actions/learning-evidence";
 import { capabilityGraphV1 } from "@/lib/nep/capabilities.v1";
-import { evaluateNếpActionResponse } from "@/lib/nep/evaluator";
+import { evaluateNếpAction, feedbackForNếpEvaluation, type NếpEvaluationResult } from "@/lib/nep/evaluator";
 import { firstMeetingLessonV1, qaLesson } from "@/lib/nep/lesson-contract";
 import { toLearningAttemptRecord } from "@/lib/nep/learning-evidence-adapter";
 
@@ -130,7 +130,7 @@ export function DataDrivenPreview() {
     recognition.start();
   };
 
-  const persistEvaluation = async (correct: boolean) => {
+  const persistEvaluation = async (evaluation: NếpEvaluationResult) => {
     const submissionKey = `${action.id}|${answerSource ?? "none"}|support:${supportUsed ? 1 : 0}|${answer.trim()}`;
     if (lastSubmissionKey.current === submissionKey) return;
 
@@ -141,7 +141,7 @@ export function DataDrivenPreview() {
       action,
       response: answer,
       responseSource: answerSource,
-      correct,
+      evaluation,
       supportUsed,
       latencyMs,
     });
@@ -166,11 +166,12 @@ export function DataDrivenPreview() {
   const evaluate = async () => {
     if (saving) return;
 
-    const ok = evaluateNếpActionResponse(action, answer);
+    const evaluation = evaluateNếpAction(action, answer);
+    const ok = evaluation.success;
     if (action.kind === "comprehend") {
       setEvidence((current) => ({ ...current, comprehension: ok }));
-      setFeedback(ok ? "Đúng: Maya đang hỏi tên." : "Chưa đúng. Câu hỏi đang cần một thông tin cá nhân cụ thể.");
-      await persistEvaluation(ok);
+      setFeedback(ok ? "Đúng: Maya đang hỏi tên." : feedbackForNếpEvaluation(action, evaluation));
+      await persistEvaluation(evaluation);
       return;
     }
 
@@ -183,19 +184,23 @@ export function DataDrivenPreview() {
     }
 
     if (channel && answerSource !== "speech") {
-      setFeedback(ok ? "Text có target language, nhưng không cộng speaking evidence vì không có oral response quan sát được." : "Text chưa đáp ứng đủ target language của task. Đây không phải pronunciation feedback.");
-      await persistEvaluation(ok);
+      setFeedback(
+        ok
+          ? "Text có đủ target language, nhưng không cộng speaking evidence vì không có oral response quan sát được."
+          : `${feedbackForNếpEvaluation(action, evaluation)} Text fallback không tạo speaking evidence.`,
+      );
+      await persistEvaluation(evaluation);
       return;
     }
 
     if (channel === "transfer" && ok && !evidence.production) {
       setFeedback("Transcript đáp ứng task, nhưng chưa có production evidence độc lập trước đó nên chưa thể gọi đây là transfer.");
-      await persistEvaluation(ok);
+      await persistEvaluation(evaluation);
       return;
     }
 
-    setFeedback(ok ? "Transcript đáp ứng đủ target language cần cho task. Đây là language/transcript feedback, không phải điểm phát âm." : "Transcript chưa đáp ứng đủ target language của task. Tự sửa rồi thử lại.");
-    await persistEvaluation(ok);
+    setFeedback(feedbackForNếpEvaluation(action, evaluation));
+    await persistEvaluation(evaluation);
   };
 
   const next = () => {
