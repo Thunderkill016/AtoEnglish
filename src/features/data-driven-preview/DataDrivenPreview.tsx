@@ -3,11 +3,9 @@
 import { ArrowLeft, ArrowRight, CircleAlert, Headphones, Mic2, RefreshCw, ShieldCheck, Sparkles, Target, Volume2 } from "lucide-react";
 import { useMemo, useRef, useState } from "react";
 
-import { recordLearningAttempt } from "@/app/actions/learning-evidence";
+import { recordNếpPracticeAttempt } from "@/app/actions/learning-evidence";
 import { capabilityGraphV1 } from "@/lib/nep/capabilities.v1";
-import { evaluateNếpAction, feedbackForNếpEvaluation, type NếpEvaluationResult } from "@/lib/nep/evaluator";
 import { firstMeetingLessonV1, qaLesson } from "@/lib/nep/lesson-contract";
-import { toLearningAttemptRecord } from "@/lib/nep/learning-evidence-adapter";
 
 type EvidenceKey = "comprehension" | "retrieval" | "production" | "repair" | "transfer";
 type EvidenceState = Record<EvidenceKey, boolean>;
@@ -49,10 +47,10 @@ function evidenceKeyForAction(kind: string): EvidenceKey | null {
 }
 
 function persistenceLabel(state: PersistenceState) {
-  if (state === "saving") return "Đang lưu learning event…";
+  if (state === "saving") return "Đang đánh giá và lưu learning event…";
   if (state === "evidence-saved") return "Attempt + evidence đã được lưu vào learner model.";
   if (state === "attempt-saved") return "Attempt đã được lưu; lần này không tạo mastery evidence.";
-  if (state === "local-only") return "Preview công khai: kết quả đang chỉ giữ trong phiên này.";
+  if (state === "local-only") return "Preview công khai: server đã đánh giá, nhưng kết quả không được persist.";
   if (state === "error") return "Flow vẫn tiếp tục, nhưng learning event chưa lưu được.";
   return null;
 }
@@ -130,77 +128,84 @@ export function DataDrivenPreview() {
     recognition.start();
   };
 
-  const persistEvaluation = async (evaluation: NếpEvaluationResult) => {
-    const submissionKey = `${action.id}|${answerSource ?? "none"}|support:${supportUsed ? 1 : 0}|${answer.trim()}`;
+  const evaluate = async () => {
+    if (saving || !action.assessment) return;
+
+    const submissionKey = `${lesson.id}|${lesson.version}|${action.id}|${answerSource ?? "none"}|support:${supportUsed ? 1 : 0}|${answer.trim()}`;
     if (lastSubmissionKey.current === submissionKey) return;
 
     const now = Date.now();
     const latencyMs = attemptStartedAt.current === null ? 0 : now - attemptStartedAt.current;
-    const record = toLearningAttemptRecord({
-      lesson,
-      action,
+    lastSubmissionKey.current = submissionKey;
+    setPersistenceState("saving");
+
+    const result = await recordNếpPracticeAttempt({
+      lessonId: lesson.id,
+      lessonVersion: lesson.version,
+      actionId: action.id,
       response: answer,
       responseSource: answerSource,
-      evaluation,
       supportUsed,
       latencyMs,
     });
-    if (!record) return;
 
-    lastSubmissionKey.current = submissionKey;
-    setPersistenceState("saving");
-    const result = await recordLearningAttempt(record);
-    if (result.success) {
-      setPersistenceState(result.evidenceRecorded ? "evidence-saved" : "attempt-saved");
+    if (!result.success) {
+      lastSubmissionKey.current = null;
+      setPersistenceState("error");
+      if ("feedback" in result && typeof result.feedback === "string") {
+        setFeedback(result.feedback);
+      }
       return;
     }
-    const error = "error" in result ? result.error ?? "" : "";
-    if (error.includes("đăng nhập")) {
-      setPersistenceState("local-only");
-      return;
-    }
-    lastSubmissionKey.current = null;
-    setPersistenceState("error");
-  };
 
-  const evaluate = async () => {
-    if (saving) return;
+    setPersistenceState(
+      result.persisted
+        ? result.evidenceRecorded
+          ? "evidence-saved"
+          : "attempt-saved"
+        : "local-only",
+    );
 
-    const evaluation = evaluateNếpAction(action, answer);
-    const ok = evaluation.success;
+    const ok = result.evaluation.success;
     if (action.kind === "comprehend") {
-      setEvidence((current) => ({ ...current, comprehension: ok }));
-      setFeedback(ok ? "Đúng: Maya đang hỏi tên." : feedbackForNếpEvaluation(action, evaluation));
-      await persistEvaluation(evaluation);
+      const observedEvidence = result.persisted ? result.evidenceRecorded : ok;
+      setEvidence((current) => ({ ...current, comprehension: observedEvidence }));
+      setFeedback(ok ? "Đúng: Maya đang hỏi tên." : result.feedback);
       return;
     }
 
     const channel = evidenceKeyForAction(action.kind);
-    const observedSpeech = answerSource === "speech";
-    const canShowEvidence = channel && observedSpeech && ok && (channel !== "transfer" || evidence.production);
-
-    if (canShowEvidence && channel) {
-      setEvidence((current) => ({ ...current, [channel]: true }));
-    }
-
     if (channel && answerSource !== "speech") {
       setFeedback(
         ok
           ? "Text có đủ target language, nhưng không cộng speaking evidence vì không có oral response quan sát được."
-          : `${feedbackForNếpEvaluation(action, evaluation)} Text fallback không tạo speaking evidence.`,
+          : `${result.feedback} Text fallback không tạo speaking evidence.`,
       );
-      await persistEvaluation(evaluation);
       return;
     }
 
-    if (channel === "transfer" && ok && !evidence.production) {
-      setFeedback("Transcript đáp ứng task, nhưng chưa có production evidence độc lập trước đó nên chưa thể gọi đây là transfer.");
-      await persistEvaluation(evaluation);
+    const locallyEligible = Boolean(
+      channel
+      && answerSource === "speech"
+      && ok
+      && (channel !== "transfer" || evidence.production),
+    );
+    const observedEvidence = result.persisted ? result.evidenceRecorded : locallyEligible;
+
+    if (channel && observedEvidence) {
+      setEvidence((current) => ({ ...current, [channel]: true }));
+    }
+
+    if (channel === "transfer" && ok && !observedEvidence) {
+      if (result.persisted && result.evidenceRejection) {
+        setFeedback("Transcript đáp ứng task, nhưng persisted history chưa đủ điều kiện để ghi transfer evidence.");
+      } else {
+        setFeedback("Transcript đáp ứng task, nhưng chưa có production evidence độc lập trước đó nên chưa thể gọi đây là transfer.");
+      }
       return;
     }
 
-    setFeedback(feedbackForNếpEvaluation(action, evaluation));
-    await persistEvaluation(evaluation);
+    setFeedback(result.feedback);
   };
 
   const next = () => {
@@ -289,7 +294,7 @@ export function DataDrivenPreview() {
           <div className="mt-8 flex items-center justify-between"><button type="button" onClick={() => { setStep((value) => Math.max(0, value - 1)); resetAttempt(); }} disabled={step === 0 || saving} className="rounded-full px-4 py-3 text-sm font-semibold text-black/45 disabled:opacity-20"><RefreshCw className="mr-2 inline size-3" />Quay lại</button><button type="button" onClick={next} disabled={saving} className="flex items-center gap-2 rounded-full bg-[#2d6a4f] px-6 py-3 text-sm font-semibold text-white disabled:opacity-40">{step === lesson.actions.length - 1 ? "Kết thúc slice" : "Tiếp theo"}<ArrowRight className="size-4" /></button></div>
         </section>
 
-        <footer className="pb-4 text-center text-[11px] leading-5 text-black/35"><Headphones className="mr-1 inline size-3" /> Transcript feedback ≠ pronunciation score. Raw transcript không được persist. Text fallback ≠ speaking evidence.{supportUsed && " Vietnamese support usage is tracked separately."}</footer>
+        <footer className="pb-4 text-center text-[11px] leading-5 text-black/35"><Headphones className="mr-1 inline size-3" /> Server resolves canonical task/evaluator. Transcript feedback ≠ pronunciation score. Raw transcript không được persist. Text fallback ≠ speaking evidence.{supportUsed && " Vietnamese support usage is tracked separately."}</footer>
       </div>
     </main>
   );
