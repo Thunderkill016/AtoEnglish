@@ -199,7 +199,7 @@ function compareEntries(a: ErrorMemoryEntry, b: ErrorMemoryEntry) {
   const statusRank: Record<ErrorMemoryStatus, number> = {
     recurring: 0,
     observed: 1,
-    supported-only: 2,
+    "supported-only": 2,
     repaired: 3,
   };
   return statusRank[a.status] - statusRank[b.status]
