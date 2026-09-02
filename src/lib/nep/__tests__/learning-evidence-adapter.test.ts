@@ -97,8 +97,8 @@ describe("Nếp → learning-core adapter", () => {
     expect(materializeEvidence({ attempt: record!.attempt, candidate: record!.candidate! })).toBeNull();
   });
 
-  it("does not manufacture oral evidence when no response was observed", () => {
-    const record = recordFor("produce", "", "speech");
+  it("does not manufacture oral evidence when only non-language punctuation was observed", () => {
+    const record = recordFor("produce", "...", "speech");
 
     expect(record?.attempt.metadata).toMatchObject({
       responseLength: 0,
