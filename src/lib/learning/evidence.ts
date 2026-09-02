@@ -61,6 +61,12 @@ export function materializeEvidence(context: EvidencePolicyContext): EvidenceEve
   const { attempt, candidate, previousSuccessfulContextId } = context;
 
   if (!attempt.knowledgeItemId && !attempt.capabilityId) return null;
+
+  // An attempt may only prove the knowledge item/capability it actually targeted.
+  const targetMatchesAttempt =
+    candidate.targetId === attempt.knowledgeItemId || candidate.targetId === attempt.capabilityId;
+  if (!targetMatchesAttempt) return null;
+
   if (attempt.revealUsed && ["retrieval", "production", "repair", "transfer"].includes(candidate.type)) {
     return null;
   }
