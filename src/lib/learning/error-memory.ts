@@ -2,11 +2,13 @@ export const ERROR_MEMORY_ATTEMPT_SELECT = [
   "capability_id",
   "knowledge_item_id",
   "correct",
+  "response_modality",
   "support_level",
   "reveal_used",
   "lesson_id:metadata->>lessonId",
   "lesson_version:metadata->>lessonVersion",
   "action_id:metadata->>actionId",
+  "action_kind:metadata->>actionKind",
   "observed_response:metadata->errorSignals->observedResponse",
   "error_tags:metadata->errorSignals->errorTags",
   "remediation_hints:metadata->errorSignals->remediationHints",
@@ -17,11 +19,13 @@ export type ErrorMemoryAttemptRow = {
   capability_id: string | null;
   knowledge_item_id: string | null;
   correct: boolean | null;
+  response_modality: string | null;
   support_level: number;
   reveal_used: boolean;
   lesson_id: string | null;
   lesson_version: string | null;
   action_id: string | null;
+  action_kind: string | null;
   observed_response: unknown;
   error_tags: unknown;
   remediation_hints: unknown;
@@ -39,6 +43,7 @@ export type ErrorMemoryEntry = {
   actionId: string;
   errorTag: ActionableErrorTag;
   remediationCandidateIds: string[];
+  remediationSatisfiedAt: string | null;
   status: ErrorMemoryStatus;
   independentFailureCount: number;
   supportedFailureCount: number;
@@ -59,8 +64,10 @@ type MutableEntry = ErrorMemoryEntry;
 
 /**
  * Error Memory V1 turns repeated, independent task-coverage failures into a temporary pattern.
- * One failure is only an observation. Assisted failures (support or answer reveal) do not promote
- * recurrence. A later independent success on the same versioned action repairs all active tags.
+ * One failure is only an observation. Assisted/ineligible-modality attempts do not promote
+ * recurrence. A later independent success on the same versioned action repairs active tags.
+ * A successful explicit remediation candidate satisfies repair pressure until the source is
+ * re-probed; it does not itself prove the original source task repaired.
  */
 export function buildErrorMemory(rows: ErrorMemoryAttemptRow[]): ErrorMemorySnapshot {
   const entries = new Map<string, MutableEntry>();
@@ -78,10 +85,14 @@ export function buildErrorMemory(rows: ErrorMemoryAttemptRow[]): ErrorMemorySnap
     if (!targetId || !lessonId || !lessonVersion || !actionId) continue;
 
     const observedResponse = row.observed_response === true;
-    const assisted = (Number.isFinite(row.support_level) && row.support_level > 0) || row.reveal_used === true;
+    const supportOrReveal = (Number.isFinite(row.support_level) && row.support_level > 0) || row.reveal_used === true;
+    const modalityEligible = isIndependentModality(row);
+    const independent = observedResponse && !supportOrReveal && modalityEligible;
+    const diagnosticOnly = observedResponse && !independent;
 
-    if (row.correct === true && observedResponse && !assisted) {
+    if (row.correct === true && independent) {
       repairActionEntries(entries, targetId, lessonId, lessonVersion, actionId, row.created_at);
+      satisfyRemediationEntries(entries, candidateIdForAttempt(lessonId, actionId), row.created_at);
       continue;
     }
 
@@ -100,10 +111,11 @@ export function buildErrorMemory(rows: ErrorMemoryAttemptRow[]): ErrorMemorySnap
           actionId,
           errorTag,
           remediationCandidateIds,
-          status: assisted ? "supported-only" : "observed",
-          independentFailureCount: assisted ? 0 : 1,
-          supportedFailureCount: assisted ? 1 : 0,
-          independentFailuresSinceRepair: assisted ? 0 : 1,
+          remediationSatisfiedAt: null,
+          status: diagnosticOnly ? "supported-only" : "observed",
+          independentFailureCount: diagnosticOnly ? 0 : 1,
+          supportedFailureCount: diagnosticOnly ? 1 : 0,
+          independentFailuresSinceRepair: diagnosticOnly ? 0 : 1,
           firstSeenAt: row.created_at,
           lastSeenAt: row.created_at,
           repairedAt: null,
@@ -116,12 +128,15 @@ export function buildErrorMemory(rows: ErrorMemoryAttemptRow[]): ErrorMemorySnap
         existing.remediationCandidateIds,
         remediationCandidateIds,
       );
-      if (assisted) {
+      if (diagnosticOnly) {
         existing.supportedFailureCount += 1;
       } else {
         existing.independentFailureCount += 1;
         existing.independentFailuresSinceRepair += 1;
         existing.repairedAt = null;
+        // A new independent source failure is the re-probe result. Any prior remediation success
+        // has been tested and failed to eliminate this source error, so remediation must reopen.
+        existing.remediationSatisfiedAt = null;
       }
       existing.status = statusFor(existing);
     }
@@ -194,7 +209,20 @@ function repairActionEntries(
     if (entry.independentFailureCount === 0) continue;
     entry.independentFailuresSinceRepair = 0;
     entry.repairedAt = repairedAt;
+    entry.remediationSatisfiedAt = null;
     entry.status = "repaired";
+  }
+}
+
+function satisfyRemediationEntries(
+  entries: Map<string, MutableEntry>,
+  successfulCandidateId: string,
+  occurredAt: string,
+) {
+  for (const entry of entries.values()) {
+    if (entry.status !== "recurring") continue;
+    if (!entry.remediationCandidateIds.includes(successfulCandidateId)) continue;
+    entry.remediationSatisfiedAt = occurredAt;
   }
 }
 
@@ -203,6 +231,19 @@ function statusFor(entry: ErrorMemoryEntry): ErrorMemoryStatus {
   if (entry.independentFailuresSinceRepair >= 2) return "recurring";
   if (entry.independentFailuresSinceRepair === 1) return "observed";
   return "supported-only";
+}
+
+function isIndependentModality(row: ErrorMemoryAttemptRow) {
+  const actionKind = nonEmpty(row.action_kind);
+  if (!actionKind) return true;
+
+  if (["retrieve", "produce", "repair", "transfer", "retry"].includes(actionKind)) {
+    return row.response_modality === "speech";
+  }
+  if (actionKind === "comprehend") {
+    return row.response_modality === "choice";
+  }
+  return true;
 }
 
 function memoryKey(
@@ -215,12 +256,18 @@ function memoryKey(
   return [targetId, lessonId, lessonVersion, actionId, errorTag].join("|");
 }
 
+function candidateIdForAttempt(lessonId: string, actionId: string) {
+  return `${lessonId}:${actionId}`;
+}
+
 function rowIdentity(row: ErrorMemoryAttemptRow) {
   return [
     row.capability_id ?? row.knowledge_item_id ?? "",
     row.lesson_id ?? "",
     row.lesson_version ?? "",
     row.action_id ?? "",
+    row.action_kind ?? "",
+    row.response_modality ?? "",
     String(row.correct),
     String(row.support_level),
     String(row.reveal_used),
