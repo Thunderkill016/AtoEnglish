@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 
+import type { ErrorMemoryEntry, ErrorMemoryStatus } from "@/lib/learning/error-memory";
 import type { LearnerSkillState } from "@/lib/learning/evidence";
 import {
   planSession,
@@ -30,6 +31,35 @@ function candidate(overrides: Partial<PlannerCandidate> & Pick<PlannerCandidate,
     prerequisiteTargetIds: [],
     ...overrides,
   };
+}
+
+function errorMemoryEntry(overrides: Partial<ErrorMemoryEntry> = {}): ErrorMemoryEntry {
+  const status: ErrorMemoryStatus = overrides.status ?? "recurring";
+  return {
+    key: "cap-b|lesson-b|1.0.0|produce|missing-target-group:0",
+    targetId: "cap-b",
+    lessonId: "lesson-b",
+    lessonVersion: "1.0.0",
+    actionId: "produce",
+    errorTag: "missing-target-group:0",
+    status,
+    independentFailureCount: status === "recurring" ? 2 : 1,
+    supportedFailureCount: 0,
+    independentFailuresSinceRepair: status === "recurring" ? 2 : status === "repaired" ? 0 : 1,
+    firstSeenAt: "2026-09-01T10:00:00.000Z",
+    lastSeenAt: "2026-09-02T10:00:00.000Z",
+    repairedAt: status === "repaired" ? "2026-09-02T11:00:00.000Z" : null,
+    ...overrides,
+  };
+}
+
+function plannerCandidate(id: string, targetId: string, lessonId: string, actionId = "produce") {
+  return candidate({
+    id,
+    targetId,
+    evidenceType: "production",
+    metadata: { lessonId, lessonVersion: "1.0.0", actionId },
+  });
 }
 
 const fixedNow = "2026-09-03T00:00:00.000Z";
@@ -180,5 +210,72 @@ describe("session planner v1", () => {
 
     expect(result.opportunities[0]?.candidate.targetId).toBe("old");
     expect(result.opportunities[0]?.reasons.some((reason) => reason.startsWith("staleness:"))).toBe(true);
+  });
+
+  it("boosts only the matching candidate when a recurring error needs repair", () => {
+    const result = plan({
+      candidates: [
+        plannerCandidate("a-candidate", "cap-a", "lesson-a"),
+        plannerCandidate("z-candidate", "cap-b", "lesson-b"),
+      ],
+      states: [],
+      sessionSize: 1,
+      errorMemory: [errorMemoryEntry()],
+    });
+
+    expect(result.opportunities[0]?.candidate.id).toBe("z-candidate");
+    expect(result.opportunities[0]?.breakdown.errorRepairPressure).toBe(1);
+    expect(result.opportunities[0]?.reasons).toContain("recurring-error-repair:1");
+  });
+
+  it.each(["observed", "supported-only", "repaired"] as const)(
+    "does not alter ranking for %s error memory",
+    (status) => {
+      const result = plan({
+        candidates: [
+          plannerCandidate("a-candidate", "cap-a", "lesson-a"),
+          plannerCandidate("z-candidate", "cap-b", "lesson-b"),
+        ],
+        states: [],
+        sessionSize: 1,
+        errorMemory: [errorMemoryEntry({ status })],
+      });
+
+      expect(result.opportunities[0]?.candidate.id).toBe("a-candidate");
+      expect(result.opportunities[0]?.breakdown.errorRepairPressure).toBe(0);
+    },
+  );
+
+  it("does not leak error pressure across target, lesson version, or action identity", () => {
+    const target = plannerCandidate("a-candidate", "cap-a", "lesson-a");
+    const mismatches = [
+      errorMemoryEntry({ targetId: "cap-x" }),
+      errorMemoryEntry({ lessonId: "lesson-x" }),
+      errorMemoryEntry({ lessonVersion: "2.0.0" }),
+      errorMemoryEntry({ actionId: "repair" }),
+    ];
+
+    for (const entry of mismatches) {
+      const result = plan({ candidates: [target], states: [], sessionSize: 1, errorMemory: [entry] });
+      expect(result.opportunities[0]?.breakdown.errorRepairPressure).toBe(0);
+    }
+  });
+
+  it("keeps recurring error pressure binary even when multiple tags match one action", () => {
+    const matchingCandidate = plannerCandidate("candidate", "cap-b", "lesson-b");
+    const first = errorMemoryEntry();
+    const second = errorMemoryEntry({
+      key: "cap-b|lesson-b|1.0.0|produce|incorrect-choice",
+      errorTag: "incorrect-choice",
+    });
+    const result = plan({
+      candidates: [matchingCandidate],
+      states: [],
+      sessionSize: 1,
+      errorMemory: [first, second],
+    });
+
+    expect(result.opportunities[0]?.breakdown.errorRepairPressure).toBe(1);
+    expect(result.opportunities[0]?.reasons).toContain("recurring-error-repair:2");
   });
 });
