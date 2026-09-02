@@ -96,15 +96,19 @@ export function evaluateNếpActionResponse(action: LessonAction, response: stri
 
 export function feedbackForNếpEvaluation(action: LessonAction, result: NếpEvaluationResult) {
   if (result.success) {
+    if (action.kind === "comprehend") {
+      return "Đúng. Bạn đã nhận ra đúng ý định hoặc loại thông tin mà prompt yêu cầu.";
+    }
     return "Transcript đáp ứng đủ target language cần cho task. Đây là language/transcript feedback, không phải điểm phát âm.";
   }
 
   if (!result.observedResponse) {
+    if (action.kind === "comprehend") return "Chưa có lựa chọn để đánh giá.";
     return "Chưa quan sát được câu trả lời. Lần này không nên tạo oral mastery evidence.";
   }
 
   if (action.kind === "comprehend") {
-    return "Chưa đúng. Câu hỏi đang cần thông tin về tên.";
+    return "Chưa đúng. Hãy xác định lại ý định hoặc loại thông tin mà prompt đang yêu cầu.";
   }
 
   if (action.kind === "transfer" || action.kind === "retry") {
@@ -119,7 +123,7 @@ export function feedbackForNếpEvaluation(action: LessonAction, result: NếpEv
 
   if (action.kind === "repair") return "Chưa có repair move cần thiết để xin người đối thoại nhắc lại.";
   if (action.kind === "retrieve" || action.kind === "produce") {
-    return "Chưa có cụm tự giới thiệu cần thiết cho task.";
+    return "Câu trả lời chưa chứa đủ các cụm cần thiết cho task. Tự sửa rồi thử lại.";
   }
 
   return "Câu trả lời chưa đáp ứng đủ target language của task. Tự sửa rồi thử lại.";
