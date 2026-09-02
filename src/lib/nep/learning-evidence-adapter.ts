@@ -1,4 +1,5 @@
 import type { RecordLearningAttemptInput } from "../learning/validation";
+import type { NếpEvaluationResult } from "./evaluator";
 import type { LessonAction, LessonContract } from "./lesson-contract";
 
 export type NếpResponseSource = "speech" | "text" | null;
@@ -8,7 +9,7 @@ export type EvaluatedNếpAction = {
   action: LessonAction;
   response: string;
   responseSource: NếpResponseSource;
-  correct: boolean;
+  evaluation: NếpEvaluationResult;
   supportUsed: boolean;
   latencyMs: number;
 };
@@ -20,18 +21,30 @@ function responseModality(action: LessonAction, source: NếpResponseSource) {
   return "none" as const;
 }
 
+function structuredErrorSignals(evaluation: NếpEvaluationResult) {
+  return {
+    version: 1,
+    evaluator: evaluation.evaluator,
+    observedResponse: evaluation.observedResponse,
+    matchedTargetGroupIndexes: evaluation.matchedTargetGroupIndexes,
+    missingTargetGroupIndexes: evaluation.missingTargetGroupIndexes,
+    errorTags: evaluation.errorTags,
+  };
+}
+
 /**
- * Adapts an evaluated Nếp action to the canonical Attempt → Evidence write contract.
- * Raw learner responses are deliberately not persisted here; the deterministic evaluator
- * has already reduced the response to success/failure plus non-sensitive metadata.
+ * Adapts one deterministic Nếp evaluation to the canonical Attempt → Evidence write contract.
+ * Raw learner responses are deliberately not persisted. Only derived target-coverage/error
+ * signals, response length, modality and task identity cross the persistence boundary.
  */
 export function toLearningAttemptRecord(input: EvaluatedNếpAction): RecordLearningAttemptInput | null {
-  const { lesson, action, response, responseSource, correct, supportUsed, latencyMs } = input;
+  const { lesson, action, response, responseSource, evaluation, supportUsed, latencyMs } = input;
   const assessment = action.assessment;
   if (!assessment) return null;
 
   const modality = responseModality(action, responseSource);
   const safeLatency = Math.min(60 * 60 * 1000, Math.max(0, Math.round(latencyMs)));
+  const errorSignals = structuredErrorSignals(evaluation);
   const metadata = {
     lessonId: lesson.id,
     lessonVersion: lesson.version,
@@ -42,6 +55,7 @@ export function toLearningAttemptRecord(input: EvaluatedNếpAction): RecordLear
     rawResponsePersisted: false,
     supportUsed,
     changedContext: action.changedContext ?? false,
+    errorSignals,
   };
 
   return {
@@ -52,7 +66,7 @@ export function toLearningAttemptRecord(input: EvaluatedNếpAction): RecordLear
       promptId: action.id,
       contextId: assessment.contextId,
       responseText: null,
-      correct,
+      correct: evaluation.success,
       latencyMs: safeLatency,
       hintCount: 0,
       revealUsed: false,
@@ -63,14 +77,16 @@ export function toLearningAttemptRecord(input: EvaluatedNếpAction): RecordLear
       ? {
           type: assessment.evidenceType,
           targetId: assessment.targetCapabilityId,
-          success: correct,
+          success: evaluation.success,
           contextId: assessment.contextId,
           evaluator: assessment.evaluator,
           metadata: {
             lessonId: lesson.id,
+            lessonVersion: lesson.version,
             actionId: action.id,
             responseSource,
             rawResponsePersisted: false,
+            errorSignals,
           },
         }
       : null,
