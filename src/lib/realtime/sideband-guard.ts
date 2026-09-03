@@ -25,12 +25,11 @@ type GuardReason =
 
 function decodeSidebandMessage(data: RawData): unknown {
   try {
-    const text =
-      typeof data === "string"
-        ? data
-        : Array.isArray(data)
-          ? Buffer.concat(data).toString("utf8")
-          : Buffer.from(data).toString("utf8");
+    const text = Array.isArray(data)
+      ? Buffer.concat(data).toString("utf8")
+      : data instanceof ArrayBuffer
+        ? Buffer.from(new Uint8Array(data)).toString("utf8")
+        : data.toString("utf8");
     return JSON.parse(text) as unknown;
   } catch {
     return null;
