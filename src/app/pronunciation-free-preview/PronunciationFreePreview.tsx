@@ -28,13 +28,7 @@ import type {
 const MODEL_ID = "onnx-community/wav2vec2-lv-60-espeak-cv-ft-ONNX";
 const MODEL_REVISION = "c69750f";
 
-type Phase =
-  | "idle"
-  | "recording"
-  | "ready"
-  | "analyzing"
-  | "result"
-  | "error";
+type Phase = "idle" | "recording" | "ready" | "analyzing" | "result" | "error";
 
 type PreviewTarget = {
   word: string;
@@ -89,11 +83,8 @@ export function PronunciationFreePreview({ target }: { target: PreviewTarget }) 
   const [message, setMessage] = useState<string | null>(null);
   const [recording, setRecording] = useState<LocalRecordingResult | null>(null);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
-  const [observation, setObservation] = useState<LocalPhonemeObservation | null>(
-    null,
-  );
-  const [workerProgress, setWorkerProgress] =
-    useState<PhonemeWorkerProgress | null>(null);
+  const [observation, setObservation] = useState<LocalPhonemeObservation | null>(null);
+  const [workerProgress, setWorkerProgress] = useState<PhonemeWorkerProgress | null>(null);
   const [runtime, setRuntime] = useState<LocalPhonemeRuntime | null>(null);
   const [runtimeMessage, setRuntimeMessage] = useState<string | null>(null);
 
@@ -103,55 +94,11 @@ export function PronunciationFreePreview({ target }: { target: PreviewTarget }) 
   const audioUrlRef = useRef<string | null>(null);
 
   useEffect(() => {
-    const handleWorkerEvent = (event: PhonemeWorkerEvent) => {
-      if (event.type === "progress") {
-        setWorkerProgress(event.progress);
-        return;
-      }
-
-      setRuntime(event.runtime);
-
-      if (event.state === "fallback") {
-        setRuntimeMessage(
-          event.runtime.device === "webgpu"
-            ? "WebGPU không dùng được; đang thử WASM trên CPU."
-            : "WASM cũng không khởi tạo được.",
-        );
-        return;
-      }
-
-      if (event.state === "ready") {
-        setRuntimeMessage(
-          event.runtime.device === "webgpu"
-            ? "Model đang chạy cục bộ bằng WebGPU."
-            : "Model đang chạy cục bộ bằng WASM trên CPU.",
-        );
-      }
-    };
-
-    try {
-      recognizerRef.current = new BrowserPhonemeRecognizer(handleWorkerEvent);
-    } catch {
-      setPhase("error");
-      setMessage("Không khởi tạo được Web Worker cho pronunciation sensor.");
-    }
-
     return () => {
-      if (timerRef.current) {
-        clearTimeout(timerRef.current);
-        timerRef.current = null;
-      }
-
+      if (timerRef.current) clearTimeout(timerRef.current);
       sessionRef.current?.cancel();
-      sessionRef.current = null;
-
       recognizerRef.current?.terminate();
-      recognizerRef.current = null;
-
-      if (audioUrlRef.current) {
-        URL.revokeObjectURL(audioUrlRef.current);
-        audioUrlRef.current = null;
-      }
+      if (audioUrlRef.current) URL.revokeObjectURL(audioUrlRef.current);
     };
   }, []);
 
@@ -167,6 +114,40 @@ export function PronunciationFreePreview({ target }: { target: PreviewTarget }) 
       URL.revokeObjectURL(audioUrlRef.current);
       audioUrlRef.current = null;
     }
+  };
+
+  const handleWorkerEvent = (event: PhonemeWorkerEvent) => {
+    if (event.type === "progress") {
+      setWorkerProgress(event.progress);
+      return;
+    }
+
+    setRuntime(event.runtime);
+
+    if (event.state === "fallback") {
+      setRuntimeMessage(
+        event.runtime.device === "webgpu"
+          ? "WebGPU không dùng được; đang thử WASM trên CPU."
+          : "WASM cũng không khởi tạo được.",
+      );
+      return;
+    }
+
+    if (event.state === "ready") {
+      setRuntimeMessage(
+        event.runtime.device === "webgpu"
+          ? "Model đang chạy cục bộ bằng WebGPU."
+          : "Model đang chạy cục bộ bằng WASM trên CPU.",
+      );
+    }
+  };
+
+  const getRecognizer = () => {
+    if (!recognizerRef.current) {
+      recognizerRef.current = new BrowserPhonemeRecognizer(handleWorkerEvent);
+    }
+
+    return recognizerRef.current;
   };
 
   const stopRecording = async () => {
@@ -227,12 +208,7 @@ export function PronunciationFreePreview({ target }: { target: PreviewTarget }) 
   };
 
   const analyze = async () => {
-    const currentRecording = recording;
-    const recognizer = recognizerRef.current;
-
-    if (!currentRecording || !recognizer || phase === "analyzing") {
-      return;
-    }
+    if (!recording || phase === "analyzing") return;
 
     setPhase("analyzing");
     setMessage(
@@ -242,7 +218,7 @@ export function PronunciationFreePreview({ target }: { target: PreviewTarget }) 
     setWorkerProgress(null);
 
     try {
-      const result = await recognizer.recognize(currentRecording.samples);
+      const result = await getRecognizer().recognize(recording.samples);
       const expectedPhones = tokenizeExpectedIpa(target.ipa);
       const observedPhones = parseObservedPhonemes(result.text);
 
@@ -297,7 +273,7 @@ export function PronunciationFreePreview({ target }: { target: PreviewTarget }) 
 
   return (
     <main className="min-h-screen bg-background text-foreground">
-      <div className="mx-auto flex min-h-screen w-full max-w-3xl flex-col px-4 py-8 sm:px-6 sm:py-12">
+      <div className="mx-auto w-full max-w-3xl px-4 py-8 sm:px-6 sm:py-12">
         <header className="flex items-start justify-between gap-5">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
@@ -317,13 +293,9 @@ export function PronunciationFreePreview({ target }: { target: PreviewTarget }) 
             </p>
             <div className="mt-3 flex flex-wrap items-end gap-x-4 gap-y-2">
               <p className="text-5xl font-semibold tracking-tight">{target.word}</p>
-              <p className="pb-1 font-mono text-xl text-muted-foreground">
-                {target.ipa}
-              </p>
+              <p className="pb-1 font-mono text-xl text-muted-foreground">{target.ipa}</p>
             </div>
-            <p className="mt-4 text-sm leading-6 text-muted-foreground">
-              {target.howTo}
-            </p>
+            <p className="mt-4 text-sm leading-6 text-muted-foreground">{target.howTo}</p>
             {target.vietnameseTip ? (
               <p className="mt-2 text-sm leading-6">{target.vietnameseTip}</p>
             ) : null}
@@ -336,8 +308,7 @@ export function PronunciationFreePreview({ target }: { target: PreviewTarget }) 
               disabled={phase === "recording" || phase === "analyzing"}
               className="inline-flex items-center gap-2 rounded-full bg-foreground px-5 py-3 text-sm font-semibold text-background disabled:cursor-not-allowed disabled:opacity-40"
             >
-              <Mic className="size-4" />
-              Ghi một lượt
+              <Mic className="size-4" /> Ghi một lượt
             </button>
 
             <button
@@ -346,16 +317,13 @@ export function PronunciationFreePreview({ target }: { target: PreviewTarget }) 
               disabled={phase !== "recording"}
               className="inline-flex items-center gap-2 rounded-full border px-5 py-3 text-sm font-semibold disabled:cursor-not-allowed disabled:opacity-40"
             >
-              <Square className="size-4" />
-              Dừng
+              <Square className="size-4" /> Dừng
             </button>
 
             <button
               type="button"
               onClick={() => void analyze()}
-              disabled={
-                !recording || phase === "recording" || phase === "analyzing"
-              }
+              disabled={!recording || phase === "recording" || phase === "analyzing"}
               className="inline-flex items-center gap-2 rounded-full border px-5 py-3 text-sm font-semibold disabled:cursor-not-allowed disabled:opacity-40"
             >
               <Cpu className="size-4" />
@@ -368,19 +336,11 @@ export function PronunciationFreePreview({ target }: { target: PreviewTarget }) 
               disabled={phase === "analyzing"}
               className="inline-flex items-center gap-2 rounded-full border px-4 py-3 text-sm font-semibold disabled:cursor-not-allowed disabled:opacity-40"
             >
-              <RotateCcw className="size-4" />
-              Reset
+              <RotateCcw className="size-4" /> Reset
             </button>
           </div>
 
-          {audioUrl ? (
-            <audio
-              className="mt-6 w-full"
-              controls
-              preload="metadata"
-              src={audioUrl}
-            />
-          ) : null}
+          {audioUrl ? <audio className="mt-6 w-full" controls preload="metadata" src={audioUrl} /> : null}
 
           {message ? (
             <div className="mt-5 rounded-2xl border bg-muted/40 p-4 text-sm leading-6">
@@ -392,9 +352,7 @@ export function PronunciationFreePreview({ target }: { target: PreviewTarget }) 
             <div className="mt-5 rounded-2xl border p-4">
               <div className="flex items-center justify-between gap-4 text-xs text-muted-foreground">
                 <span>{workerProgress.status}</span>
-                {progressPercent !== null ? (
-                  <span>{progressPercent.toFixed(0)}%</span>
-                ) : null}
+                {progressPercent !== null ? <span>{progressPercent.toFixed(0)}%</span> : null}
               </div>
               {progressPercent !== null ? (
                 <div className="mt-3 h-2 overflow-hidden rounded-full bg-muted">
@@ -405,25 +363,19 @@ export function PronunciationFreePreview({ target }: { target: PreviewTarget }) 
                 </div>
               ) : null}
               {workerProgress.file ? (
-                <p className="mt-2 break-all text-xs text-muted-foreground">
-                  {workerProgress.file}
-                </p>
+                <p className="mt-2 break-all text-xs text-muted-foreground">{workerProgress.file}</p>
               ) : null}
             </div>
           ) : null}
 
           {runtimeMessage ? (
-            <p className="mt-4 text-xs leading-5 text-muted-foreground">
-              {runtimeMessage}
-            </p>
+            <p className="mt-4 text-xs leading-5 text-muted-foreground">{runtimeMessage}</p>
           ) : null}
 
           {observation ? (
             <div className="mt-7 space-y-5 rounded-2xl border p-5">
               <div>
-                <p className="text-sm font-semibold">
-                  Candidate phoneme evidence · chưa hiệu chuẩn
-                </p>
+                <p className="text-sm font-semibold">Candidate phoneme evidence · chưa hiệu chuẩn</p>
                 <p className="mt-1 text-sm leading-6 text-muted-foreground">
                   Đây là điều model nghe được, không phải kết luận bạn phát âm đúng hay sai.
                 </p>
@@ -434,17 +386,13 @@ export function PronunciationFreePreview({ target }: { target: PreviewTarget }) 
                   <p className="text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">
                     Expected
                   </p>
-                  <p className="mt-2 font-mono text-xl">
-                    {observation.expectedPhones.join(" ")}
-                  </p>
+                  <p className="mt-2 font-mono text-xl">{observation.expectedPhones.join(" ")}</p>
                 </div>
                 <div className="rounded-xl bg-muted/40 p-4">
                   <p className="text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">
                     Model observed
                   </p>
-                  <p className="mt-2 font-mono text-xl">
-                    {observation.observedPhones.join(" ")}
-                  </p>
+                  <p className="mt-2 font-mono text-xl">{observation.observedPhones.join(" ")}</p>
                 </div>
               </div>
 
@@ -456,26 +404,18 @@ export function PronunciationFreePreview({ target }: { target: PreviewTarget }) 
                   >
                     <span className="font-mono">{item.expected ?? "—"}</span>
                     <span className="font-mono">{item.observed ?? "—"}</span>
-                    <span
-                      className={
-                        item.kind === "match"
-                          ? "text-muted-foreground"
-                          : "font-medium"
-                      }
-                    >
+                    <span className={item.kind === "match" ? "text-muted-foreground" : "font-medium"}>
                       {alignmentLabel(item)}
                     </span>
                   </div>
                 ))}
               </div>
 
-              <div className="text-xs leading-5 text-muted-foreground">
+              <p className="text-xs leading-5 text-muted-foreground">
                 Model: {observation.model.id} · revision {observation.model.revision}
-                {runtime
-                  ? ` · ${runtime.device}/${runtime.dtype}`
-                  : ""}
+                {runtime ? ` · ${runtime.device}/${runtime.dtype}` : ""}
                 {` · calibration: ${observation.calibration}`}
-              </div>
+              </p>
             </div>
           ) : null}
         </section>
