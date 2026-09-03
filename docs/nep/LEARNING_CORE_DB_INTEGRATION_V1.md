@@ -2,21 +2,34 @@
 
 ## Purpose
 
-This slice makes the adaptive learning data path verifiable against a real, disposable Postgres/Supabase database before any production migration is applied.
+This slice makes the adaptive learning data path verifiable against a real, disposable Postgres/Supabase database before hosted rollout, then records the hosted verification once the same learning-core contract is applied.
 
-Production is not part of this test path. CI starts a fresh local Postgres 17 database, replays every repository migration, lints database functions, runs pgTAP tests, then discards the runner.
+CI remains isolated from production: it starts a fresh local Postgres 17 database, replays every repository migration, lints database functions, runs pgTAP tests, then discards the runner.
 
-## Production status at implementation time
+## Hosted production status
 
-On 2026-09-03 the hosted AtoEnglish project `zpiwddskhduuykpxltun` was inspected read-only.
+On 2026-09-03 the AtoEnglish Supabase project `zpiwddskhduuykpxltun` was inspected before deployment. It did not contain the canonical learning-core tables and had not applied the July learning-attempt migration or the September learning-core migrations.
 
-The hosted database did not contain:
+After local CI and hosted advisor review passed, the four canonical learning-core migrations were applied to production and the migration history was aligned to repository versions:
 
-- `public.learning_attempts`
-- `public.learning_evidence_events`
-- `public.learner_skill_states`
+- `20260902130000_learning_core_foundation`
+- `20260902133000_record_learning_attempt`
+- `20260902133500_learning_evidence_constraints`
+- `20260902134000_privacy_safe_oral_observation`
 
-The July `20260731162613_learning_attempts` migration and the September learning-core migrations were also absent from hosted migration history. No production schema or data was changed while building this gate.
+Hosted verification then confirmed:
+
+- `public.learning_attempts`, `public.learning_evidence_events`, and `public.learner_skill_states` exist;
+- all three learner-data tables have RLS enabled;
+- `authenticated` has SELECT but no direct INSERT/UPDATE/DELETE on the canonical learner-data tables;
+- `public.record_learning_attempt(...)` exists;
+- `private.has_observed_oral_response(text, jsonb)` exists;
+- the defense-in-depth `enforce_learning_evidence_event` trigger exists;
+- an authenticated speech-production RPC call succeeds with `response_text = NULL` and derived `responseSource='speech'` / `responseLength>0` metadata;
+- the hosted smoke test ran inside a transaction and rollback left zero attempt, evidence, or learner-state test rows;
+- post-deployment Supabase advisors produced no new learning-core security or performance WARN findings. Remaining WARN findings are pre-existing and outside this slice.
+
+The application route is still activated separately through the GitHub/Vercel integration gate so database deployment and learner-facing traffic are not coupled into one irreversible step.
 
 ## Migration-chain compatibility issue found
 
@@ -53,6 +66,12 @@ Its legacy indexes/identity sequence are renamed as well. Learner-facing `anon`/
 
 The canonical `public.learning_attempts` table is then created under the stable name expected by the new learning core.
 
+## Historical migration dependency issue found
+
+The first fresh-database CI run exposed an older migration-order problem before the September migrations were reached. `20260620031600_cefr_progression.sql` attempted to attach a trigger to `public.user_lesson_progress`, but that table is only created later by `20260621160000_schema_consolidation.sql`.
+
+The earlier migration now defines the CEFR functions and only attaches the trigger when the table already exists. The consolidation migration explicitly installs the same trigger after creating the table. This preserves the feature while making full migration replay deterministic.
+
 ## Local Supabase harness
 
 `supabase/config.toml` intentionally contains no hosted project reference or credentials.
@@ -72,7 +91,7 @@ npm run db:types
 
 ## CI gate
 
-The `Verify` workflow now has a separate database job:
+The `Verify` workflow has a separate database job:
 
 1. install Supabase CLI 2.116.0;
 2. `supabase db start` on a clean GitHub runner;
@@ -81,6 +100,8 @@ The `Verify` workflow now has a separate database job:
 5. `supabase test db --local`.
 
 The database gate runs independently from lint/TypeScript/Vitest/content checks so migration failures are visible as database failures rather than application-test noise.
+
+GitHub Verify run #385 passed both the application and database jobs for the full stack against `main`.
 
 ## pgTAP invariants
 
@@ -104,13 +125,13 @@ The database gate runs independently from lint/TypeScript/Vitest/content checks 
 - failed same-context transfer leaves no orphan attempt;
 - successful production and transfer update separate learner-state channels.
 
-## Deployment rule
+## Activation rule
 
-A green repository `Verify` workflow is necessary but not sufficient to deploy learning-core migrations to the hosted project.
+The hosted database is ready for the learning-core contract. Learner-facing activation still requires:
 
-Before production migration:
+1. a Vercel preview built from the full integration head;
+2. `/adaptive-preview` smoke verification against the hosted backend;
+3. no blocking runtime/build errors;
+4. merge to `main` only after those checks pass.
 
-1. this local migration/RLS gate must be green;
-2. Supabase database/security advisors must be reviewed on the hosted project;
-3. migration diff/apply plan must be reviewed explicitly;
-4. production mutation requires a separate deliberate deployment action.
+This keeps the adaptive route rollout reversible even though its database foundation is already present.
