@@ -24,6 +24,11 @@ export type OperatingPoint = {
   metrics: BinaryClassificationMetrics;
 };
 
+type OperatingPointCosts = {
+  falseAcceptanceCost: number;
+  falseRejectionCost: number;
+};
+
 function candidateThresholds(probabilities: readonly number[]) {
   const unique = [...new Set(probabilities)].sort((left, right) => left - right);
   const candidates = new Set<number>([0, 1]);
@@ -50,7 +55,7 @@ function finiteMetric(value: number | null, fallback: number) {
 function objectiveValue(
   metrics: BinaryClassificationMetrics,
   objective: OperatingPointObjective,
-  options: Required<Pick<OperatingPointOptions, "falseAcceptanceCost" | "falseRejectionCost">>,
+  costs: OperatingPointCosts,
 ) {
   switch (objective) {
     case "mcc":
@@ -66,9 +71,9 @@ function objectiveValue(
       const far = finiteMetric(metrics.falseAcceptanceRate, 1);
       const frr = finiteMetric(metrics.falseRejectionRate, 1);
       return -(
-        options.falseAcceptanceCost * far +
-        options.falseRejectionCost * frr
+        costs.falseAcceptanceCost * far + costs.falseRejectionCost * frr
       );
+    }
   }
 }
 
@@ -135,7 +140,8 @@ export function selectOperatingThreshold(
       if (
         candidateError < bestError - 1e-12 ||
         (Math.abs(candidateError - bestError) <= 1e-12 &&
-          Math.abs(candidate.threshold - 0.5) < Math.abs(best.threshold - 0.5))
+          Math.abs(candidate.threshold - 0.5) <
+            Math.abs(best.threshold - 0.5))
       ) {
         best = candidate;
       }
