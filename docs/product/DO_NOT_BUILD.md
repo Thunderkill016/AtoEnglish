@@ -1,118 +1,183 @@
 # AtoEnglish do-not-build list
 
-**Updated:** 2026-07-24  
-**Applies until:** the focused 28-day pilot has learner, learning, and market evidence
+**Updated:** 2026-09-03  
+**Purpose:** prevent wasted complexity while AtoEnglish deliberately pushes toward the current learning-technology frontier.
 
-This document prevents technically attractive work from displacing the current product priority.
+This document no longer bans advanced technology merely because it is advanced. Realtime voice, speech diagnostics, adaptive planning and AI-assisted learning are allowed when they close a measurable learner-outcome gap and preserve evidence integrity.
 
-Items below are not necessarily bad ideas. They are deferred because they do not currently provide the shortest path to validating the first learner outcome.
+The rules below prevent AtoEnglish from confusing frontier development with indiscriminate feature accumulation.
 
-## Product breadth
+## Do not build parallel learning truth
 
-Do not build yet:
+Do not create another independent system for:
 
-- a complete rebuild or expansion of the A0–B2/C1 curriculum;
-- broad interview English, travel English, or general conversation tracks;
-- a native mobile application;
-- a curriculum CMS or visual lesson editor;
-- social feeds, friend systems, clubs, or multiplayer learning;
-- more leagues, badges, achievements, streak mechanics, or XP breadth;
-- a custom payment platform;
-- complex subscriptions, entitlement systems, or pricing experiments before paid demand exists.
+- learner mastery;
+- attempt history;
+- evidence events;
+- error memory;
+- session planning;
+- transfer/retention state;
+- FSRS-compatible memory scheduling.
 
-## AI and speaking technology
+Main already contains canonical foundations for these areas. Extend or replace them only through a bounded migration with explicit reasons and compatibility/rollback plans.
 
-Do not build yet:
+## Do not build technology for its own sake
 
-- an open-ended AI conversation tutor;
-- unrestricted chatbot practice detached from the current lesson;
-- a proprietary speech-recognition model;
-- phoneme-level pronunciation scoring infrastructure;
-- native-accent imitation scoring;
-- autonomous curriculum generation or publication;
-- storing raw audio, transcripts, names, employers, or learner free text in analytics.
+Do not add:
 
-Use controlled lesson tasks, existing browser capabilities, bounded feedback, immediate retry, and human assessment where they are sufficient.
+- AI agents that do not improve a specific learning loop;
+- multi-agent orchestration because it looks more advanced;
+- neural knowledge tracing without enough valid data to calibrate and beat a simpler baseline;
+- reinforcement learning/contextual bandits before reliable reward/evaluation data exists;
+- a custom ASR/TTS/foundation model when maintained external systems satisfy the requirement more safely/economically;
+- a microservice split without a measured runtime/ownership blocker;
+- a monorepo/package architecture without a real second deployment/reuse boundary;
+- speculative scale infrastructure before a measured bottleneck;
+- a second analytics or database platform without a concrete requirement the current stack cannot satisfy.
 
-## Architecture and infrastructure
+## Do not fake learning evidence
 
-Do not build yet:
+Never:
 
-- a major rewrite of `UnitTemplate`;
-- a microservice migration;
-- a new generic workflow engine;
-- infrastructure solely for hypothetical scale;
-- a second database or event platform;
-- a new design system unrelated to pilot blockers;
-- broad dependency upgrades mixed with product work;
-- generalized abstractions without two real use cases;
-- remote sandbox infrastructure for ordinary trusted repository work;
-- automated merge or production deployment by an agent.
+- equate completion with mastery;
+- count an answer-bearing reveal as independent retrieval/production/repair/transfer evidence;
+- count typed text fallback as speaking evidence;
+- derive pronunciation mastery from transcript matching alone;
+- report a phoneme/pronunciation/comprehensibility score without an acoustic evidence path and calibration appropriate to the claim;
+- manufacture prerequisite mastery to fill an adaptive queue;
+- let the browser declare correctness, evidence type, evaluator identity or target mastery when the server can resolve them canonically;
+- silently reinterpret missing evidence as failure or success when the correct state is unknown.
 
-Preserve the current modular monolith and extract only when a measured blocker requires it.
+## Do not turn AI into an unconstrained teacher
 
-## CycleWarden and developer tooling
+Do not expose a generic open-ended chatbot as the core learning experience with no task/evidence policy.
 
-Do not expand CycleWarden with:
+Realtime or generative AI must operate inside explicit boundaries such as:
 
-- generic multi-agent orchestration;
-- additional coding-agent adapters before the primary Codex flow is useful on AtoEnglish;
-- enterprise RBAC, SSO, compliance mappings, or organization governance;
-- general web-research or product-research platforms;
-- release and deployment automation;
-- outcome-learning or self-improvement engines;
-- new journals, records, digests, or abstractions without a current AtoEnglish blocker;
-- work that cannot be demonstrated on a real AtoEnglish task.
+- current capability/task;
+- allowed difficulty/language resources;
+- learner-state inputs;
+- support/reveal policy;
+- feedback budget;
+- transfer conditions;
+- privacy boundary;
+- trusted server-side evidence compilation.
 
-CycleWarden is an internal development supervisor for AtoEnglish in this phase, not a second product that competes for equal attention.
+Generated content must not become canonical curriculum or mastery truth solely because a model produced it.
 
-## Premature measurement
+## Do not optimize the wrong metric
 
-Do not treat these as primary proof of product value:
+Do not treat these as proof of learning effectiveness:
 
-- total registered accounts;
-- page views without speaking-task activation;
-- XP earned;
+- DAU/MAU alone;
+- time in app;
 - streak length;
-- lesson screens opened;
+- XP;
+- lessons/screens opened;
+- number of generated conversations;
+- number of AI tokens/minutes consumed;
 - repository test counts;
 - CI success;
-- positive comments about visual design without completion or speaking evidence.
+- visual-design preference without task success;
+- learner satisfaction without ability evidence.
 
-The important evidence is activation, return, journey completion, speaking improvement, support cost, payment, renewal, and referral.
+They may be useful operational metrics, but the product north star is durable transferable learning gain per learner minute.
 
-## Scope mixing
+## Do not overcorrect pronunciation toward nativeness
 
-Do not combine a lesson outcome with changes to:
+Do not build or market:
 
-- authentication or onboarding;
-- database schema or RLS;
-- analytics infrastructure;
-- XP, stars, streaks, leagues, achievements, or FSRS;
-- payment;
-- deployment;
-- broad architecture;
-- unrelated lessons.
+- native-accent imitation as the default goal;
+- a single opaque pronunciation percentage presented as ground truth;
+- punitive correction of harmless accent features that do not materially affect intelligibility/comprehensibility;
+- speech feedback that overwhelms the communication task.
 
-Create separate tasks with separate evidence.
+Prioritize high-impact intelligibility, comprehensibility, fluency and repair needs, with Vietnamese-specific calibration where possible.
 
-## Exception rule
+## Do not persist sensitive learner speech by default
 
-A deferred item may be reconsidered only when all of the following are documented:
+Do not persist raw audio, full transcripts, names, employers or free-form learner speech in analytics by default.
 
-1. the exact current AtoEnglish blocker;
-2. evidence that the blocker occurred in a real learner or development flow;
-3. why an existing simpler solution is insufficient;
-4. the smallest reversible implementation;
-5. acceptance criteria and rollback plan;
-6. the systems explicitly left out of scope.
+Prefer:
 
-Security, privacy, or data-integrity defects may bypass the normal product queue, but they still require bounded scope and verification.
+- transient processing;
+- derived structured evidence;
+- bounded error tags/signals;
+- explicit retention and access rules.
 
-## Default response to new ideas
+Richer speech data may be collected only under a separately reviewed research/calibration protocol with a clear reason, consent/notice as required, retention policy and deletion path.
 
-When a new feature idea appears, ask:
+## Do not copy external code blindly
 
-> Does this help a target learner start, complete, improve, pay for, or return to the current 28-day speaking journey?
+External/open-source reuse is encouraged, but never copy or vendor code without checking:
 
-If the answer is not supported by current evidence, record the idea and continue the active priority instead of implementing it.
+- license compatibility;
+- repository/activity/maintenance state;
+- security implications and dependency surface;
+- framework/runtime compatibility;
+- bundle/client cost;
+- privacy/data routing;
+- operational/API cost;
+- whether adaptation is actually cheaper than a small local implementation.
+
+Prefer official SDK/reference implementations when they directly match the task.
+
+## Do not broaden curriculum before the engine needs it
+
+Do not expand large curriculum breadth merely to create the appearance of completeness.
+
+New capabilities/content should be added when they:
+
+- exercise a missing learning mechanism;
+- serve a validated learner need;
+- are required for transfer/retention measurement;
+- extend a proven engine to the next meaningful learner outcome.
+
+The existing 50-unit catalog is an asset but not a mandate to preserve unit-first product behavior.
+
+## Do not mix unrelated risk domains in one change
+
+Keep separate pull requests for materially independent work such as:
+
+- product policy/docs;
+- canonical evidence/runtime convergence;
+- realtime voice dependency/infrastructure;
+- pronunciation/speech scoring;
+- database/RLS migrations;
+- analytics taxonomy;
+- curriculum expansion;
+- gamification;
+- deployment infrastructure.
+
+A task may cross boundaries only when the feature cannot function otherwise and the coupling, verification and rollback are explicit.
+
+## Do not auto-merge or auto-deploy frontier changes
+
+Agents may create branches, commits, tests and pull requests. The owner retains final merge/deployment authorization.
+
+Production behavior involving authentication, learner evidence, speech privacy, database schema, AI providers or scoring must have a reversible rollout path.
+
+## Current allowed frontier work
+
+The following are explicitly allowed when implemented as bounded, reversible slices:
+
+- converging legacy learning UI onto the canonical Nếp Attempt/Evidence runtime;
+- realtime WebRTC voice using maintained SDK/reference implementations;
+- conversation turn-taking and interruption handling;
+- acoustic pronunciation/speech diagnostics behind calibration gates;
+- Vietnamese-specific speech benchmarking/calibration;
+- improved listening/decoding practice;
+- Error Memory and remediation improvements;
+- transfer and delayed-retention practice;
+- explainable adaptive session planning;
+- external open-source/library reuse;
+- experiments that can measure learner outcome differences;
+- more advanced learner models after real data supports them.
+
+## Default decision rule
+
+For a proposed frontier feature ask:
+
+> What current learner/evidence limitation does this remove, what simpler existing option was considered, what outcome should improve, and how will we know whether it actually did?
+
+If those answers are weak, do not build it yet. If they are strong, build the smallest reversible version and measure it.
