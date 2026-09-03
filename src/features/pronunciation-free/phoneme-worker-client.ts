@@ -1,4 +1,6 @@
 import type {
+  LocalCtcPosteriorSummary,
+  LocalObservedPhone,
   LocalPhonemeRuntime,
   PhonemeWorkerProgress,
 } from "./types";
@@ -17,6 +19,8 @@ export type PhonemeWorkerEvent =
 
 export type PhonemeRecognitionResult = {
   text: string;
+  observations: LocalObservedPhone[];
+  posterior: LocalCtcPosteriorSummary;
   runtime: LocalPhonemeRuntime;
 };
 
@@ -59,6 +63,111 @@ function parseProgress(value: unknown): PhonemeWorkerProgress | null {
       typeof value.progress === "number" && Number.isFinite(value.progress)
         ? value.progress
         : null,
+  };
+}
+
+function finiteNumber(value: unknown) {
+  return typeof value === "number" && Number.isFinite(value) ? value : null;
+}
+
+function unitNumber(value: unknown) {
+  const number = finiteNumber(value);
+  return number !== null && number >= 0 && number <= 1 ? number : null;
+}
+
+function nonNegativeNumber(value: unknown) {
+  const number = finiteNumber(value);
+  return number !== null && number >= 0 ? number : null;
+}
+
+function positiveInteger(value: unknown) {
+  const number = finiteNumber(value);
+  return number !== null && Number.isInteger(number) && number > 0
+    ? number
+    : null;
+}
+
+function nonNegativeInteger(value: unknown) {
+  const number = finiteNumber(value);
+  return number !== null && Number.isInteger(number) && number >= 0
+    ? number
+    : null;
+}
+
+function parseObservation(value: unknown): LocalObservedPhone | null {
+  if (!isWorkerMessage(value) || !Array.isArray(value.candidates)) return null;
+
+  const startMs = nonNegativeNumber(value.startMs);
+  const endMs = nonNegativeNumber(value.endMs);
+  if (startMs === null || endMs === null || endMs <= startMs) return null;
+
+  const candidates = value.candidates
+    .map((candidate) => {
+      if (!isWorkerMessage(candidate) || typeof candidate.phone !== "string") {
+        return null;
+      }
+      const phone = candidate.phone.normalize("NFC").trim();
+      const probability = unitNumber(candidate.probability);
+      if (!phone || probability === null) return null;
+      return { phone, probability };
+    })
+    .filter(
+      (candidate): candidate is { phone: string; probability: number } =>
+        candidate !== null,
+    );
+
+  if (candidates.length === 0 || candidates.length > 32) return null;
+
+  const probabilityMass = candidates.reduce(
+    (sum, candidate) => sum + candidate.probability,
+    0,
+  );
+  if (probabilityMass > 1.001) return null;
+
+  return {
+    candidates,
+    startMs,
+    endMs,
+    source: typeof value.source === "string" ? value.source : null,
+  };
+}
+
+function parsePosterior(value: unknown): LocalCtcPosteriorSummary | null {
+  if (!isWorkerMessage(value)) return null;
+
+  const frameCount = positiveInteger(value.frameCount);
+  const vocabularySize = positiveInteger(value.vocabularySize);
+  const blankTokenId = nonNegativeInteger(value.blankTokenId);
+  const meanEntropy = nonNegativeNumber(value.meanEntropy);
+  const normalizedMeanEntropy = unitNumber(value.normalizedMeanEntropy);
+  const meanPeakPosterior = unitNumber(value.meanPeakPosterior);
+  const meanTop2Margin = unitNumber(value.meanTop2Margin);
+  const meanBlankPosterior =
+    value.meanBlankPosterior === null ? null : unitNumber(value.meanBlankPosterior);
+
+  if (
+    frameCount === null ||
+    vocabularySize === null ||
+    blankTokenId === null ||
+    blankTokenId >= vocabularySize ||
+    meanEntropy === null ||
+    normalizedMeanEntropy === null ||
+    meanPeakPosterior === null ||
+    meanTop2Margin === null ||
+    meanBlankPosterior === undefined
+  ) {
+    return null;
+  }
+
+  return {
+    frameCount,
+    vocabularySize,
+    blankTokenId,
+    meanEntropy,
+    normalizedMeanEntropy,
+    meanPeakPosterior,
+    meanTop2Margin,
+    meanBlankPosterior,
   };
 }
 
@@ -110,15 +219,29 @@ export class BrowserPhonemeRecognizer {
       if (message.type === "result") {
         const runtime = parseRuntime(message.runtime);
         const text = message.text;
+        const observations = Array.isArray(message.observations)
+          ? message.observations
+              .map(parseObservation)
+              .filter(
+                (observation): observation is LocalObservedPhone =>
+                  observation !== null,
+              )
+          : [];
+        const posterior = parsePosterior(message.posterior);
 
-        if (!runtime || typeof text !== "string") {
+        if (
+          !runtime ||
+          typeof text !== "string" ||
+          observations.length === 0 ||
+          !posterior
+        ) {
           this.pending.delete(id);
           request.reject(new Error("invalid_phoneme_worker_result"));
           return;
         }
 
         this.pending.delete(id);
-        request.resolve({ text, runtime });
+        request.resolve({ text, observations, posterior, runtime });
         return;
       }
 
