@@ -7,6 +7,7 @@ import {
   isOpenAIRealtimeMode,
   isPlausibleRealtimeSdpOffer,
 } from "@/lib/realtime/openai-session";
+import { resolveRealtimeConversationInstructions } from "@/lib/realtime/session-task";
 import { createRateLimiter } from "@/lib/security/rate-limit";
 import { createClient } from "@/lib/supabase/server";
 
@@ -60,6 +61,20 @@ export async function POST(request: Request) {
   }
   const mode = modeCandidate;
 
+  const conversationInstructions =
+    mode === "conversation"
+      ? (resolveRealtimeConversationInstructions(request.headers) ?? undefined)
+      : undefined;
+  if (mode === "conversation" && !conversationInstructions) {
+    return NextResponse.json(
+      {
+        success: false,
+        error: "Realtime conversation chỉ mở cho task Nếp hợp lệ được resolve trên server.",
+      },
+      { status: 400 },
+    );
+  }
+
   const contentType = request.headers.get("content-type")?.split(";")[0]?.trim();
   if (contentType !== "application/sdp") {
     return NextResponse.json(
@@ -80,9 +95,10 @@ export async function POST(request: Request) {
   formData.set("sdp", new Blob([sdp], { type: "application/sdp" }), "offer.sdp");
   formData.set(
     "session",
-    new Blob([JSON.stringify(buildOpenAIRealtimeSessionConfig(mode))], {
-      type: "application/json",
-    }),
+    new Blob(
+      [JSON.stringify(buildOpenAIRealtimeSessionConfig(mode, conversationInstructions))],
+      { type: "application/json" },
+    ),
     "session.json",
   );
 
