@@ -293,6 +293,7 @@ function mergeCandidateIds(first: string[], second: string[]) {
   return [...new Set([...first, ...second])].sort();
 }
 
-function nonEmpty(value: string | null) {
-  return typeof value === "string" && value.trim().length > 0 ? value : null;
+function nonEmpty(value: unknown) {
+  if (typeof value === "number" && Number.isFinite(value)) return String(value);
+  return typeof value === "string" && value.trim().length > 0 ? value.trim() : null;
 }
