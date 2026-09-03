@@ -1,151 +1,284 @@
 # AtoEnglish product truth
 
 **Status:** current product decision source  
-**Updated:** 2026-07-24  
-**Primary roadmap:** GitHub issue #20  
-**Journey contract:** `docs/curriculum/28-day-speaking-journey-contract.md`
+**Updated:** 2026-09-03  
+**Frontier rule:** use the best currently available learning science, language-learning research, product design, AI, speech, adaptive-learning and assessment technology when it can improve learner outcomes.
 
 ## What AtoEnglish is now
 
-AtoEnglish is a Vietnamese-first guided speaking product for adults who know some English but freeze when they need to speak at work.
+AtoEnglish is a Vietnamese-first adaptive English-learning system whose job is to make a learner measurably better at understanding and using English in the real world.
 
-The first product is not the complete A0–B2 curriculum already present in the repository. It is one focused, measurable 28-day work-speaking pilot.
+AtoEnglish is not defined by a 50-unit catalog, a named teaching method, a chatbot, FSRS, gamification, a CEFR label, or a fixed 28-day course. Those may be useful subsystems or bounded experiments. The product is the closed learning loop that continuously observes learner evidence, chooses the next useful learning action, helps the learner perform it, and verifies whether the ability survives reduced support, changed context and delay.
 
-## Target learner
+The long-term product goal is deliberately ambitious:
 
-The initial learner is:
+> Push AtoEnglish to the practical frontier of what current science and technology can do for English learning, then let learner outcomes determine whether it deserves to be considered the best English-learning product.
 
-- a Vietnamese adult beginner or false beginner;
-- able to recognize some common English but unable to retrieve it reliably while speaking;
-- likely to need English for a colleague, client, receptionist, interview, service, or workplace interaction;
-- willing to practice for 10–15 minutes per day;
-- better served by clear Vietnamese guidance and controlled speaking progression than by open-ended conversation.
+This is an engineering and research direction, not a marketing claim.
 
-The current target segment is a product hypothesis. Interviews, paid pilot participation, completion, and learning evidence must validate it.
+## Initial learner and proving ground
 
-## Product promise
+The first proving ground remains narrow enough to measure well:
 
-> In 28 days, practice 10–15 minutes per day to introduce yourself and your work, handle five predictable follow-up questions, and ask for repetition or slower speech.
+- Vietnamese adults who know some English but freeze when they need to speak;
+- beginner or false-beginner learners who recognize more language than they can retrieve;
+- learners who benefit from Vietnamese guidance, controlled difficulty and repeated real-use practice;
+- an initial emphasis on practical spoken interaction because speaking exposes retrieval, listening, repair and transfer failures clearly.
 
-This promise must remain consistent across landing, onboarding, dashboard, lessons, assessment, and support communication.
+A narrow proving ground is a validation strategy, not the permanent boundary of AtoEnglish. The system may expand to broader levels, skills and goals only when the underlying learning engine can support them without weakening measurement quality.
 
-## Final learner outcome
+## North-star outcome
 
-At the end of the pilot, the learner should be able to:
+The primary optimization target is:
 
-1. greet and close a short workplace interaction;
-2. state and spell their name;
-3. state their role;
-4. state their company or workplace type;
-5. state one responsibility;
-6. answer five predictable questions about their work;
-7. independently ask for repetition or slower speech when needed;
-8. deliver a 30–45 second work introduction without a full-script prompt.
+> **Durable Transferable Learning Gain per Minute**
 
-This is a narrow product outcome, not a CEFR certification claim.
+Meaning:
 
-## Learning model
+- **learning gain:** the learner can do more than before;
+- **durable:** the gain survives meaningful delay;
+- **transferable:** the learner succeeds in changed or unseen conditions;
+- **per minute:** learner time is treated as a scarce resource.
 
-Every meaningful lesson should move through a controlled progression:
+Engagement, streaks, XP, lesson completion, session length and retention are secondary unless they help produce durable transferable learning.
+
+## Definition of learned
+
+A correct answer is not automatically evidence that something was learned.
+
+A stronger claim requires progressively stronger evidence:
 
 ```text
-real situation
-→ short comprehensible model
-→ notice useful chunks
-→ controlled retrieval
-→ supported speaking
-→ reduced prompts
-→ changed situation
-→ concise feedback
-→ immediate retry
-→ later spaced retrieval
+recognition
+→ retrieval without reveal
+→ production
+→ self-repair after useful feedback
+→ success with less support
+→ changed-context transfer
+→ delayed retention
+→ real-world task success where practical
 ```
 
-Vocabulary, grammar, XP, streaks, and quizzes support this progression. They are not the final learner outcome.
+The product must preserve uncertainty when evidence is missing. Unknown is preferable to a fabricated mastery or pronunciation score.
 
-## Daily lesson contract
+## Core learning loop
 
-A daily lesson should:
+Every learner-facing system should ultimately serve this loop:
 
-- have one measurable can-do outcome;
-- fit a credible 10–15 minute session;
-- end in required spoken output;
-- use only the language needed for that task;
-- retrieve earlier chunks where relevant;
-- reduce support over time;
-- avoid showing the complete answer during the final performance;
-- give no more than one or two high-impact feedback points;
-- provide an immediate opportunity to speak again;
-- preserve an explicit fallback when browser speech capability is unavailable.
+```text
+observe
+→ infer learner state
+→ select next learning action
+→ create a meaningful task
+→ learner attempts before answer-bearing help
+→ evaluate available evidence
+→ give the smallest useful feedback
+→ learner self-repairs and retries
+→ vary context for transfer
+→ schedule delayed retrieval
+→ update learner state
+→ repeat
+```
+
+This loop may use deterministic rules, statistical models, AI reasoning, speech models, retrieval scheduling and human calibration. No component is allowed to override evidence integrity merely because it is more sophisticated.
+
+## Capability-first curriculum
+
+The curriculum is a graph of useful capabilities and supporting language resources, not one compulsory list of lessons.
+
+Examples of capabilities include:
+
+- greet and close an interaction;
+- introduce yourself;
+- ask for repetition or clarification;
+- confirm understanding;
+- ask and answer practical information;
+- express a need or problem;
+- sustain and repair an interaction.
+
+Vocabulary, chunks, grammar, pronunciation and listening representations support capabilities. They are not the sole course spine.
+
+A fixed journey may still be used when it is the best cold-start path or an experiment needs a controlled sequence. Once learner evidence exists, the planner may choose different practice for different learners.
+
+## Learner model
+
+AtoEnglish should maintain a rebuildable, evidence-backed learner model rather than a single level or completion percentage.
+
+At minimum it should distinguish independent evidence channels such as:
+
+- recognition/comprehension;
+- retrieval;
+- listening;
+- production;
+- repair;
+- transfer;
+- retention.
+
+As validated measurement becomes available, the learner model may add speech/intelligibility, fluency, latency, error patterns, condition-specific performance and uncertainty. New dimensions must have an observable evidence path.
+
+The immutable attempt/evidence history is more authoritative than a mutable learner-state snapshot.
+
+## AI role
+
+AI is a controlled learning component, not the product authority.
+
+AI may be used to:
+
+- converse naturally with low latency;
+- generate or vary scenarios under constraints;
+- diagnose likely learner problems;
+- select or propose remediation;
+- produce concise feedback;
+- create changed-context transfer tasks;
+- adapt language, speaker behavior and difficulty;
+- assist content QA and research synthesis.
+
+AI must not be allowed to:
+
+- invent mastery without evidence;
+- treat a typed fallback as speaking evidence;
+- treat ASR transcript matching as pronunciation assessment;
+- expose hidden answer/evaluator targets to the learner surface;
+- publish unconstrained generated curriculum without validation;
+- silently change the learning policy in production.
+
+## Speech and pronunciation
+
+AtoEnglish should use the strongest practical speech technology available when it improves learning, but claims must match evidence.
+
+The target is intelligible, comprehensible English for real communication, not forced imitation of a native accent.
+
+Speech capabilities may include realtime conversation, turn detection, acoustic analysis, phoneme/stress/prosody feedback and intelligibility estimation. Pronunciation scoring remains gated until the chosen system is calibrated well enough for the intended Vietnamese learner population and task.
+
+Raw audio/transcript persistence is not the default. Prefer transient processing and derived, privacy-safe evidence unless a separately approved research protocol requires richer data.
+
+## Retrieval and memory
+
+FSRS remains useful for item/chunk review timing. It is a subsystem, not the complete learning model.
+
+The system separately decides:
+
+- what capability or resource is weak;
+- what kind of evidence is missing;
+- how the learner should practice it;
+- which context should change;
+- when delayed retrieval should occur.
+
+## Planner evolution
+
+Planner sophistication must follow evidence availability.
+
+Preferred progression:
+
+1. explainable evidence-backed rules;
+2. calibrated heuristics from real learner data;
+3. probabilistic/knowledge-tracing models where they outperform simpler baselines;
+4. learning-gain prediction;
+5. contextual-bandit or other adaptive policy only when enough trustworthy data exists and offline/online evaluation supports it.
+
+Do not adopt a complex model merely because it is newer.
 
 ## Product experience
 
-The intended learner journey is:
+The learner should not need to manage the learning algorithm.
 
-```text
-clear promise
-→ start with minimal friction
-→ learn today's small speaking task
-→ perform the task
-→ receive understandable feedback
-→ retry
-→ see the next step
-→ return for spaced practice and the next daily outcome
-```
+The ideal surface increasingly answers one question:
 
-The product must make the speaking task more important than browsing curriculum breadth or collecting points.
+> What is the most useful thing for me to do next?
+
+The UI may be simple even when the engine is sophisticated. Browsing course catalogs, collecting points and configuring AI behavior must not displace the next useful learning action.
 
 ## Evidence hierarchy
 
-Decisions should distinguish four evidence levels:
+Decisions must distinguish:
 
-1. **Repository evidence:** code, tests, docs, routes, data, and current behavior.
-2. **Usability evidence:** a learner can reach and complete the intended flow.
-3. **Learning evidence:** baseline-to-checkpoint or baseline-to-final speaking performance improves.
-4. **Market evidence:** target learners pay, complete, renew, or refer others.
+1. **research evidence:** what current learning/language science suggests;
+2. **repository evidence:** what the implementation actually does;
+3. **usability evidence:** learners can reach and complete the flow;
+4. **learning evidence:** baseline-to-later ability improves under valid measurement;
+5. **transfer/retention evidence:** gains survive changed conditions and delay;
+6. **market evidence:** learners pay, return, renew or refer without masking weak learning outcomes.
 
-A technical check cannot substitute for learner or market evidence.
+Passing tests proves software consistency, not learner improvement.
 
-## Existing foundation
+## Frontier development rule
 
-The repository already contains substantial infrastructure:
+AtoEnglish follows a reuse-first frontier strategy:
 
-- Next.js application and responsive lesson surfaces;
-- Supabase authentication, progress, migrations, and RLS;
-- 50 registered A0–B2 curriculum units;
-- vocabulary, grammar, dialogue, translation, shadowing, speaking, quiz, and review sections;
-- FSRS, XP, streak, league, progress, and guest flows;
-- baseline/final speaking assessment and rubric;
-- privacy-bounded pilot analytics;
-- Vitest, content-standard checks, production build, and Playwright smoke coverage.
+1. use existing AtoEnglish code when it already satisfies the requirement;
+2. adopt or adapt maintained external libraries/open-source implementations when they are safer or faster than rebuilding;
+3. use current commercial/model APIs where they provide capabilities that cannot be reproduced economically;
+4. custom-build the parts that create AtoEnglish-specific learning advantage or evidence integrity;
+5. verify licenses, security, privacy, maintenance, compatibility, cost and learner value before adoption.
 
-This foundation is available but not equivalent to a validated product. The current bottleneck is proving one coherent learner outcome.
+The goal is not architectural novelty. The goal is to shorten the distance to the best achievable learner outcome.
 
-## Product boundaries
+## Frontier Ledger
 
-Until the pilot is validated:
+Every material frontier capability should be tracked in one of these states:
 
-- keep the existing 50 units available but do not treat breadth as proof of value;
-- build the 28-day journey in small, testable slices;
-- preserve the modular monolith;
-- use manual operations when they are cheaper and safer than building infrastructure;
-- collect only bounded analytics required to answer activation, completion, learning, and support questions;
-- do not store raw audio, transcripts, names, employers, or learner free text in analytics;
-- do not claim learner improvement until baseline and later performance evidence exists.
+- **KNOWN_NOT_IMPLEMENTED** — supported by useful evidence/technology but absent;
+- **AVAILABLE_NOT_INTEGRATED** — implementation exists externally but is not yet safely integrated;
+- **IMPLEMENTED_NOT_VALIDATED** — product capability exists but learner benefit is not yet demonstrated;
+- **VALIDATED** — implementation has sufficient technical and learner evidence for its claim;
+- **CURRENTLY_UNSOLVED** — blocked by current science, measurement, data or practical technology.
 
-## Success questions
+AtoEnglish may be considered **current-frontier complete** only when no material item remains in the first three states without an explicit decision and the remaining open problems are genuinely CURRENTLY_UNSOLVED or not worth their learner-time/cost tradeoff.
 
-AtoEnglish must be able to answer with evidence:
+## How “best” is proved
 
-- who starts the first speaking task;
-- who completes it;
-- who returns after seven days;
-- who completes the 28-day journey;
-- whether speaking performance improves;
-- which lesson or UX failures block learners;
-- how much human support each learner requires;
-- whether the target learner will pay, renew, or refer another learner.
+AtoEnglish must not declare itself the best because it has more features, newer models or stronger internal architecture.
+
+The claim can only emerge from repeated learner evidence such as:
+
+- unseen-task success;
+- independent production;
+- listening comprehension;
+- response latency;
+- successful communication repair;
+- comprehensibility/intelligibility;
+- transfer to new situations;
+- 1/7/30-day retention where appropriate;
+- improvement per minute of practice;
+- eventually external or blinded human evaluation for high-value speaking claims.
+
+Competitor benchmarking is useful as a technology/product reference, not the product objective.
+
+## Current foundation
+
+The repository already contains substantial reusable infrastructure, including:
+
+- Next.js/React/TypeScript application surfaces;
+- Supabase authentication, RLS and migrations;
+- canonical Attempt → Evidence → LearnerSkillState storage;
+- privacy-safe oral-observation rules;
+- Nếp capability contracts and trusted server-side evaluation;
+- Error Memory V1;
+- deterministic Session Planner V1 and adaptive practice preview;
+- mission engine, retry and transfer structures;
+- FSRS card scheduling;
+- existing curriculum/content assets;
+- testing, CI and production observability foundations.
+
+This code should be reused rather than replaced unless measured limitations justify replacement.
+
+## Immediate product direction
+
+The next work is not broad content expansion. It is closing the shortest gaps between the existing adaptive core and a high-quality learner loop:
+
+1. make repository product guidance match this frontier objective;
+2. verify and use the canonical adaptive/evidence runtime rather than legacy parallel paths;
+3. turn the adaptive preview into the primary proving surface for a small capability slice;
+4. benchmark and integrate realtime voice/turn-taking without surrendering server-authoritative learning evidence;
+5. establish a calibrated speech-diagnostics path before exposing pronunciation scores;
+6. collect real attempts and learner outcomes;
+7. improve planner/model policy only as data can justify it;
+8. maintain the Frontier Ledger so new work is selected by learner value rather than novelty.
 
 ## Product decision rule
 
-When choosing between building more breadth and improving the validated journey, choose the smallest change that increases the chance of obtaining trustworthy learner evidence.
+For every proposed change ask:
+
+> Does this use current evidence or technology to create a plausible, measurable improvement in durable transferable English ability per learner minute, and can we validate that improvement without corrupting learner evidence?
+
+If yes, make the smallest reversible implementation and test it. If no, do not build it merely because it is technically impressive.
