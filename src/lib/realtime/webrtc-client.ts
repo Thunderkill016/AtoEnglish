@@ -21,10 +21,6 @@ export interface ConnectRealtimeVoiceOptions {
 }
 
 export interface RealtimeVoiceConnection {
-  peerConnection: RTCPeerConnection;
-  dataChannel: RTCDataChannel;
-  microphoneStream: MediaStream;
-  send: (event: Record<string, unknown>) => boolean;
   close: () => void;
 }
 
@@ -55,6 +51,9 @@ async function readSessionError(response: Response): Promise<string> {
  * The browser sends only its SDP offer and, for conversation mode, canonical task identifiers to
  * AtoEnglish. The server resolves the actual roleplay instructions. Realtime transcript events are
  * surfaced transiently to the caller; this module does not persist raw audio or transcript text.
+ *
+ * The returned handle intentionally exposes only `close()`. Peer/data-channel primitives stay
+ * private so learner UI code cannot accidentally add per-response instruction overrides.
  */
 export async function connectRealtimeVoice(
   options: ConnectRealtimeVoiceOptions,
@@ -184,19 +183,7 @@ export async function connectRealtimeVoice(
 
     await peerConnection.setRemoteDescription({ type: "answer", sdp: answerSdp });
 
-    const send = (event: Record<string, unknown>) => {
-      if (dataChannel.readyState !== "open") return false;
-      dataChannel.send(JSON.stringify(event));
-      return true;
-    };
-
-    return {
-      peerConnection,
-      dataChannel,
-      microphoneStream,
-      send,
-      close,
-    };
+    return { close };
   } catch (error) {
     options.onStateChange?.("failed");
     close();
