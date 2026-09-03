@@ -5,17 +5,19 @@ import {
   resolveNếpRealtimeTutorContext,
 } from "@/lib/realtime/nep-tutor-context";
 
+const lessonId = "LESSON-CAP002-FIRST-MEETING-V1";
+
 describe("Nếp realtime tutor context", () => {
   it("resolves a canonical production action using learner-safe roleplay context", () => {
     const context = resolveNếpRealtimeTutorContext({
-      lessonId: "nep-first-meeting",
+      lessonId,
       lessonVersion: 1,
       actionId: "produce",
     });
 
     expect(context).not.toBeNull();
     expect(context).toMatchObject({
-      lessonId: "nep-first-meeting",
+      lessonId,
       lessonVersion: 1,
       actionId: "produce",
       actionKind: "produce",
@@ -30,7 +32,7 @@ describe("Nếp realtime tutor context", () => {
   it("allows repair and changed-context transfer but rejects retrieval and unknown actions", () => {
     expect(
       resolveNếpRealtimeTutorContext({
-        lessonId: "nep-first-meeting",
+        lessonId,
         lessonVersion: 1,
         actionId: "repair",
       }),
@@ -38,7 +40,7 @@ describe("Nếp realtime tutor context", () => {
 
     expect(
       resolveNếpRealtimeTutorContext({
-        lessonId: "nep-first-meeting",
+        lessonId,
         lessonVersion: 1,
         actionId: "transfer",
       }),
@@ -46,7 +48,7 @@ describe("Nếp realtime tutor context", () => {
 
     expect(
       resolveNếpRealtimeTutorContext({
-        lessonId: "nep-first-meeting",
+        lessonId,
         lessonVersion: 1,
         actionId: "retrieve",
       }),
@@ -54,7 +56,7 @@ describe("Nếp realtime tutor context", () => {
 
     expect(
       resolveNếpRealtimeTutorContext({
-        lessonId: "nep-first-meeting",
+        lessonId,
         lessonVersion: 1,
         actionId: "missing",
       }),
@@ -63,7 +65,7 @@ describe("Nếp realtime tutor context", () => {
 
   it("instructs the model to act as a partner without teaching or grading", () => {
     const context = resolveNếpRealtimeTutorContext({
-      lessonId: "nep-first-meeting",
+      lessonId,
       lessonVersion: 1,
       actionId: "repair",
     });
