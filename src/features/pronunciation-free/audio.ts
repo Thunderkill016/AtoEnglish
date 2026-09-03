@@ -177,6 +177,29 @@ async function decodeRecording(recording: Blob): Promise<LocalRecordingResult> {
   }
 }
 
+async function openMicrophoneStream() {
+  try {
+    return await navigator.mediaDevices.getUserMedia({
+      audio: {
+        channelCount: 1,
+        echoCancellation: false,
+        noiseSuppression: false,
+        autoGainControl: false,
+      },
+      video: false,
+    });
+  } catch (error) {
+    if (error instanceof DOMException && error.name === "OverconstrainedError") {
+      return navigator.mediaDevices.getUserMedia({
+        audio: true,
+        video: false,
+      });
+    }
+
+    throw error;
+  }
+}
+
 export async function startLocalPronunciationRecording(): Promise<LocalRecordingSession> {
   if (
     typeof navigator === "undefined" ||
@@ -186,14 +209,13 @@ export async function startLocalPronunciationRecording(): Promise<LocalRecording
     throw new Error("microphone_recording_unavailable");
   }
 
-  const stream = await navigator.mediaDevices.getUserMedia({
-    audio: {
-      echoCancellation: true,
-      noiseSuppression: true,
-      autoGainControl: true,
-    },
-    video: false,
-  });
+  const stream = await openMicrophoneStream();
+  const audioTrack = stream.getAudioTracks()[0];
+
+  if (!audioTrack || audioTrack.readyState !== "live") {
+    for (const track of stream.getTracks()) track.stop();
+    throw new Error("microphone_track_unavailable");
+  }
 
   const mimeType = preferredRecorderMimeType();
   const recorder = mimeType
@@ -276,7 +298,7 @@ export async function startLocalPronunciationRecording(): Promise<LocalRecording
     stopTracks();
   };
 
-  recorder.start();
+  recorder.start(250);
 
   return { stop, cancel };
 }
