@@ -46,6 +46,8 @@ const DEFAULT_OPTIONS: Required<ProsodyOptions> = {
   minPitchCorrelation: 0.45,
 };
 
+const FUNDAMENTAL_PEAK_SCORE_TOLERANCE = 0.03;
+
 function percentile(values: readonly number[], probability: number) {
   if (values.length === 0) return null;
   const sorted = [...values].sort((left, right) => left - right);
@@ -89,6 +91,44 @@ function normalizedAutocorrelationAtLag(
   return denominator <= 1e-12 ? 0 : numerator / denominator;
 }
 
+function chooseFundamentalLag(
+  scores: ReadonlyMap<number, number>,
+  minLag: number,
+  maxLag: number,
+  bestLag: number,
+  bestScore: number,
+  minimumCorrelation: number,
+) {
+  // Periodic signals can have equally strong autocorrelation peaks at 2x/3x
+  // the true period. Taking the absolute maximum therefore creates false
+  // subharmonics. Prefer the earliest strong local maximum whose score is
+  // essentially tied with the global best; this is a transparent YIN-like
+  // fundamental prior without hiding the confidence value.
+  const qualifyingScore = Math.max(
+    minimumCorrelation,
+    bestScore - FUNDAMENTAL_PEAK_SCORE_TOLERANCE,
+  );
+
+  for (let lag = minLag + 1; lag < maxLag; lag += 1) {
+    const left = scores.get(lag - 1);
+    const center = scores.get(lag);
+    const right = scores.get(lag + 1);
+
+    if (
+      left !== undefined &&
+      center !== undefined &&
+      right !== undefined &&
+      center >= qualifyingScore &&
+      center >= left &&
+      center >= right
+    ) {
+      return lag;
+    }
+  }
+
+  return bestLag;
+}
+
 function estimatePitch(
   frame: Float32Array,
   sampleRate: number,
@@ -124,22 +164,31 @@ function estimatePitch(
     return null;
   }
 
-  const left = scores.get(bestLag - 1);
-  const center = scores.get(bestLag);
-  const right = scores.get(bestLag + 1);
-  let refinedLag = bestLag;
+  const selectedLag = chooseFundamentalLag(
+    scores,
+    minLag,
+    maxLag,
+    bestLag,
+    bestScore,
+    options.minPitchCorrelation,
+  );
+  const selectedScore = scores.get(selectedLag) ?? bestScore;
+  const left = scores.get(selectedLag - 1);
+  const center = scores.get(selectedLag);
+  const right = scores.get(selectedLag + 1);
+  let refinedLag = selectedLag;
 
   if (left !== undefined && center !== undefined && right !== undefined) {
     const denominator = left - 2 * center + right;
     if (Math.abs(denominator) > 1e-8) {
-      const adjustment = 0.5 * (left - right) / denominator;
+      const adjustment = (0.5 * (left - right)) / denominator;
       refinedLag += Math.max(-0.5, Math.min(0.5, adjustment));
     }
   }
 
   return {
     pitchHz: sampleRate / refinedLag,
-    confidence: Math.max(0, Math.min(1, bestScore)),
+    confidence: Math.max(0, Math.min(1, selectedScore)),
   };
 }
 
