@@ -8,32 +8,25 @@ export const fsrsInstance = fsrs({
 });
 
 /**
- * Ánh xạ một DbCard từ database sang FSRSCard của thư viện ts-fsrs.
+ * Ánh xạ DbCard sang FSRSCard bằng state đã persist đầy đủ.
+ * Không suy ngược lapse/learning-step từ due dates hoặc review logs rời rạc.
  */
 export function mapDbCardToFSRSCard(dbCard: DbCard): FSRSCard {
   return {
     due: dbCard.next_review ? new Date(dbCard.next_review) : new Date(dbCard.due_date),
     stability: dbCard.stability || 0,
     difficulty: dbCard.difficulty || 0,
-    elapsed_days: dbCard.last_review && dbCard.next_review
-      ? Math.max(0, Math.round((new Date(dbCard.next_review).getTime() - new Date(dbCard.last_review).getTime()) / (1000 * 60 * 60 * 24)))
-      : 0,
-    scheduled_days: dbCard.interval || 0,
+    elapsed_days: Math.max(0, dbCard.elapsed_days || 0),
+    scheduled_days: Math.max(0, dbCard.scheduled_days || 0),
     reps: dbCard.repetitions || 0,
     state: (dbCard.state as State) ?? State.New,
     last_review: dbCard.last_review ? new Date(dbCard.last_review) : undefined,
-    // defaults from library required fields
-    lapses: 0,
-    learning_steps: 0,
+    lapses: Math.max(0, dbCard.lapses || 0),
+    learning_steps: Math.max(0, dbCard.learning_steps || 0),
   };
 }
 
-/**
- * Đánh giá thẻ từ vựng theo FSRS.
- * @param dbCard Dữ liệu thẻ hiện tại từ Database
- * @param rating Đánh giá của người dùng ("Again" | "Hard" | "Good" | "Easy")
- * @returns Đối tượng chứa thông tin cập nhật cho Database và thông tin debug
- */
+/** Đánh giá thẻ từ vựng và trả về state + native ReviewLog của ts-fsrs. */
 export function reviewCardFSRS(
   dbCard: DbCard,
   rating: "Again" | "Hard" | "Good" | "Easy",
@@ -42,7 +35,6 @@ export function reviewCardFSRS(
   const fsrsCard = mapDbCardToFSRSCard(dbCard);
   const now = new Date();
 
-  // Ánh xạ rating sang ts-fsrs Rating enum
   let fsrsRating: Rating;
   switch (rating) {
     case "Again":
@@ -61,57 +53,59 @@ export function reviewCardFSRS(
       fsrsRating = Rating.Good;
   }
 
-  // Thực hiện lên lịch lại (repeat/review) bằng ts-fsrs
   const customFsrs = retentionRate
     ? fsrs({ request_retention: retentionRate, enable_fuzz: false })
     : fsrsInstance;
   const schedulingCards = customFsrs.repeat(fsrsCard, now);
-  const updatedCard = schedulingCards[fsrsRating].card;
-
-  // Tính toán interval mới từ FSRS
+  const scheduled = schedulingCards[fsrsRating];
+  const updatedCard = scheduled.card;
+  const nativeLog = scheduled.log;
   const nextInterval = updatedCard.scheduled_days;
 
-  // ReviewLog — lưu lại để tối ưu hóa tham số FSRS theo từng người dùng
   const reviewLog: ReviewLogEntry = {
-    rating: fsrsRating,
-    state: updatedCard.state,
-    due: fsrsCard.due.toISOString(),
-    stability: fsrsCard.stability,
-    difficulty: fsrsCard.difficulty,
-    elapsed_days: fsrsCard.elapsed_days,
-    last_elapsed_days: fsrsCard.elapsed_days,
-    scheduled_days: nextInterval,
-    review: now.toISOString(),
+    rating: nativeLog.rating,
+    state: nativeLog.state,
+    due: nativeLog.due.toISOString(),
+    stability: nativeLog.stability,
+    difficulty: nativeLog.difficulty,
+    elapsed_days: nativeLog.elapsed_days,
+    last_elapsed_days: nativeLog.last_elapsed_days,
+    scheduled_days: nativeLog.scheduled_days,
+    learning_steps: nativeLog.learning_steps,
+    review: nativeLog.review.toISOString(),
   };
 
   return {
-    // FSRS fields
     state: updatedCard.state,
     difficulty: updatedCard.difficulty,
     stability: updatedCard.stability,
-    last_review: now.toISOString(),
+    elapsed_days: updatedCard.elapsed_days,
+    scheduled_days: updatedCard.scheduled_days,
+    lapses: updatedCard.lapses,
+    learning_steps: updatedCard.learning_steps,
+    last_review: updatedCard.last_review?.toISOString() ?? now.toISOString(),
     next_review: updatedCard.due.toISOString(),
 
-    // Tương thích ngược với SM-2 fields
+    // Legacy compatibility fields. These remain synchronized until a later migration removes them.
     interval: nextInterval,
     repetitions: updatedCard.reps,
-    due_date: updatedCard.due.toISOString(), // Đồng bộ due_date để query filter thẻ đến hạn
+    due_date: updatedCard.due.toISOString(),
 
-    // ReviewLog cho FSRS optimization
     reviewLog,
 
-    // Thông tin debug để hiển thị lên UI
     debug: {
       rating,
       stateName: State[updatedCard.state],
       stability: Math.round(updatedCard.stability * 100) / 100,
       difficulty: Math.round(updatedCard.difficulty * 100) / 100,
       interval: nextInterval,
-    }
+      lapses: updatedCard.lapses,
+      learningSteps: updatedCard.learning_steps,
+    },
   };
 }
 
-/** Một bản ghi review event dùng cho FSRS parameter optimization */
+/** Native review event fields needed for rollback/rescheduling/optimization. */
 export interface ReviewLogEntry {
   rating: Rating;
   state: State;
@@ -121,5 +115,6 @@ export interface ReviewLogEntry {
   elapsed_days: number;
   last_elapsed_days: number;
   scheduled_days: number;
+  learning_steps: number;
   review: string;
 }

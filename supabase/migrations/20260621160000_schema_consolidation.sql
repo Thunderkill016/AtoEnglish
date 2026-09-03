@@ -81,6 +81,18 @@ CREATE POLICY "Users can update their own lesson progress"
   USING (auth.uid() = user_id)
   WITH CHECK (auth.uid() = user_id);
 
+-- `check_cefr_progression()` is defined by an earlier migration, which historically ran before
+-- this table existed on a clean database. Ensure the trigger is present once the dependency has
+-- actually been created. This is idempotent for environments that already attached it earlier.
+DO $$
+BEGIN
+  IF to_regprocedure('public.check_cefr_progression()') IS NOT NULL THEN
+    EXECUTE 'DROP TRIGGER IF EXISTS on_unit_complete_check_cefr ON public.user_lesson_progress';
+    EXECUTE 'CREATE TRIGGER on_unit_complete_check_cefr AFTER INSERT ON public.user_lesson_progress FOR EACH ROW EXECUTE FUNCTION public.check_cefr_progression()';
+  END IF;
+END;
+$$;
+
 -- ---------------------------------------------------------------------------
 -- 3. speaking_sessions (was only in manual schema_v6.sql)
 -- ---------------------------------------------------------------------------

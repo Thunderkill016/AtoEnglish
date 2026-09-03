@@ -1,0 +1,7 @@
+# Local-only Supabase CLI configuration used by database migration/RLS tests.
+# Remote project linkage is intentionally absent: CI must never depend on production credentials.
+project_id = "atoenglish-local"
+
+[db]
+# Keep local migration behavior aligned with the hosted AtoEnglish database (Postgres 17).
+major_version = 17

@@ -22,70 +22,94 @@ interface SaveCardParams {
   level?: "A0" | "A1" | "A2" | "B1" | "B2" | "C1";
 }
 
+type FsrsReviewResult = ReturnType<typeof reviewCardFSRS>;
+type RpcError = { message: string } | null;
+type RpcClient = {
+  rpc: (fn: string, args: Record<string, unknown>) => Promise<{ error: RpcError }>;
+};
+
 /**
- * Server Action lưu một từ vựng mới vào bảng cards (SRS) của người dùng.
+ * Persist card state + review log in one PostgreSQL transaction.
+ * Generated Supabase types intentionally lag this migration until `npm run db:types` is run,
+ * so the narrow RPC boundary is typed locally instead of weakening the whole client.
  */
+async function persistFsrsReview(
+  supabase: unknown,
+  cardId: string,
+  result: FsrsReviewResult
+): Promise<{ success: true } | { success: false; error: string }> {
+  const rpcClient = supabase as RpcClient;
+  const { error } = await rpcClient.rpc("apply_fsrs_card_review", {
+    p_card_id: cardId,
+    p_state: result.state,
+    p_difficulty: result.difficulty,
+    p_stability: result.stability,
+    p_elapsed_days: result.elapsed_days,
+    p_scheduled_days: result.scheduled_days,
+    p_lapses: result.lapses,
+    p_learning_steps: result.learning_steps,
+    p_last_review: result.last_review,
+    p_next_review: result.next_review,
+    p_repetitions: result.repetitions,
+    p_log_rating: result.reviewLog.rating,
+    p_log_state: result.reviewLog.state,
+    p_log_due: result.reviewLog.due,
+    p_log_stability: result.reviewLog.stability,
+    p_log_difficulty: result.reviewLog.difficulty,
+    p_log_elapsed_days: result.reviewLog.elapsed_days,
+    p_log_scheduled_days: result.reviewLog.scheduled_days,
+    p_log_review: result.reviewLog.review,
+  });
+
+  return error
+    ? { success: false, error: error.message }
+    : { success: true };
+}
+
+/** Server Action lưu một từ vựng mới vào bảng cards (SRS) của người dùng. */
 export async function saveCardToSRS(params: SaveCardParams) {
   try {
-    // Rate Limiting
     const reqHeaders = await headers();
     const ip = reqHeaders.get("x-forwarded-for")?.split(",")[0].trim() || "127.0.0.1";
     const rateLimitCheck = await saveCardLimiter.check(ip);
     if (!rateLimitCheck.success) {
-      return {
-        success: false,
-        error: "Yêu cầu quá thường xuyên. Vui lòng thử lại sau."
-      };
+      return { success: false, error: "Yêu cầu quá thường xuyên. Vui lòng thử lại sau." };
     }
 
-    // Input Validation
     const validated = SaveCardSchema.safeParse(params);
     if (!validated.success) {
       return {
         success: false,
-        error: `Dữ liệu không hợp lệ: ${validated.error.issues.map(e => e.message).join(", ")}`
+        error: `Dữ liệu không hợp lệ: ${validated.error.issues.map((e) => e.message).join(", ")}`,
       };
     }
     const cleanParams = validated.data;
-
     const supabase = await createClient();
-    
-    // 1. Kiểm tra trạng thái đăng nhập của người dùng
     const { data: { user }, error: authError } = await supabase.auth.getUser();
-    
     if (authError || !user) {
-      return {
-        success: false,
-        error: "Bạn cần đăng nhập để lưu từ vựng vào hệ thống SRS."
-      };
+      return { success: false, error: "Bạn cần đăng nhập để lưu từ vựng vào hệ thống SRS." };
     }
-    
+
     const formattedWord = cleanParams.word.toLowerCase().trim();
-    
-    // 2. Kiểm tra xem từ này đã tồn tại trong danh sách của user chưa
     const { data: existingCard, error: selectError } = await supabase
       .from("cards")
       .select("id, word")
       .eq("user_id", user.id)
       .eq("word", formattedWord)
       .maybeSingle();
-      
+
     if (selectError) {
-      return {
-        success: false,
-        error: `Lỗi kiểm tra thẻ trùng lặp: ${selectError.message}`
-      };
+      return { success: false, error: `Lỗi kiểm tra thẻ trùng lặp: ${selectError.message}` };
     }
-    
     if (existingCard) {
       return {
         success: true,
         message: `Từ "${cleanParams.word}" đã được lưu trong tủ thẻ của bạn trước đây.`,
-        existed: true
+        existed: true,
       };
     }
-    
-    // 3. Nếu chưa có, tiến hành chèn bản ghi mới
+
+    const now = new Date().toISOString();
     const { error: insertError } = await supabase
       .from("cards")
       .insert({
@@ -98,65 +122,42 @@ export async function saveCardToSRS(params: SaveCardParams) {
         level: cleanParams.level || "A1",
         interval: 0,
         repetitions: 0,
-        due_date: new Date().toISOString(),
+        due_date: now,
         state: 0,
         difficulty: 0.0,
         stability: 0.0,
         last_review: null,
-        next_review: new Date().toISOString(),
+        next_review: now,
       });
-      
-    if (insertError) {
-      return {
-        success: false,
-        error: `Lỗi khi lưu thẻ mới: ${insertError.message}`
-      };
-    }
-    
-    // Làm mới cache các route liên quan
+
+    if (insertError) return { success: false, error: `Lỗi khi lưu thẻ mới: ${insertError.message}` };
+
     revalidatePath("/dashboard");
     revalidatePath("/flashcards");
     revalidatePath("/learn");
-    
     return {
       success: true,
       message: `Lưu từ "${params.word}" vào hộp thẻ SRS thành công!`,
-      existed: false
+      existed: false,
     };
-    
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
-    return {
-      success: false,
-      error: `Lỗi hệ thống: ${errorMessage}`
-    };
+    return { success: false, error: `Lỗi hệ thống: ${errorMessage}` };
   }
 }
 
-/**
- * Server Action lấy tất cả thẻ cần ôn tập hôm nay (due_date <= hiện tại) của user.
- * Giới hạn thẻ MỚI (state=0) tối đa MAX_NEW_PER_DAY để tránh bị ngập trong thẻ mới.
- */
+/** Lấy tất cả thẻ đến hạn; review cards luôn ưu tiên trước new cards. */
 export async function getDueCards(maxNewCards?: number) {
-  const MAX_NEW_PER_DAY = maxNewCards ?? 15; // Maximum new (unseen) cards per review session
+  const MAX_NEW_PER_DAY = maxNewCards ?? 15;
   try {
     const supabase = await createClient();
-    
-    // 1. Kiểm tra trạng thái đăng nhập
     const { data: { user }, error: authError } = await supabase.auth.getUser();
-    
     if (authError || !user) {
-      return {
-        success: false,
-        error: "Bạn cần đăng nhập để lấy các thẻ ôn tập đến hạn."
-      };
+      return { success: false, error: "Bạn cần đăng nhập để lấy các thẻ ôn tập đến hạn." };
     }
-    
+
     const now = new Date().toISOString();
-    
-    // 2. Fetch review cards (state >= 1, due today) + new cards (state = 0) separately
     const [reviewRes, newRes] = await Promise.all([
-      // Cards previously seen — always include when due
       supabase
         .from("cards")
         .select("*")
@@ -164,7 +165,6 @@ export async function getDueCards(maxNewCards?: number) {
         .gte("state", 1)
         .lte("due_date", now)
         .order("due_date", { ascending: true }),
-      // Unseen cards — cap at MAX_NEW_PER_DAY
       supabase
         .from("cards")
         .select("*")
@@ -174,34 +174,22 @@ export async function getDueCards(maxNewCards?: number) {
         .order("due_date", { ascending: true })
         .limit(MAX_NEW_PER_DAY),
     ]);
-    
+
     if (reviewRes.error) {
-      return {
-        success: false,
-        error: `Lỗi truy vấn thẻ đến hạn: ${reviewRes.error.message}`
-      };
+      return { success: false, error: `Lỗi truy vấn thẻ đến hạn: ${reviewRes.error.message}` };
     }
-    
-    // Merge: review cards first (higher priority), then new cards
-    const cards = [...(reviewRes.data ?? []), ...(newRes.data ?? [])];
-    
-    return {
-      success: true,
-      cards
-    };
+    if (newRes.error) {
+      return { success: false, error: `Lỗi truy vấn thẻ mới: ${newRes.error.message}` };
+    }
+
+    return { success: true, cards: [...(reviewRes.data ?? []), ...(newRes.data ?? [])] };
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
-    return {
-      success: false,
-      error: `Lỗi hệ thống khi lấy thẻ: ${errorMessage}`
-    };
+    return { success: false, error: `Lỗi hệ thống khi lấy thẻ: ${errorMessage}` };
   }
 }
 
-/**
- * Lấy tối đa N thẻ đến hạn ôn tập để hiển thị ở phần Khởi động (SRS warm-up).
- * Chỉ lấy state >= 1 (đã từng học, không lấy thẻ mới hoàn toàn).
- */
+/** Chỉ lấy cards đã từng học và đang đến hạn cho SRS warm-up. */
 export async function getDueWarmupCards(limit: number = 5) {
   try {
     const supabase = await createClient();
@@ -213,8 +201,8 @@ export async function getDueWarmupCards(limit: number = 5) {
       .from("cards")
       .select("id, word, phonetic, meaning_vn, example_en")
       .eq("user_id", user.id)
-      .gte("state", 1)          // Only cards that have been seen before (not brand new)
-      .lte("due_date", now)     // Only cards that are due
+      .gte("state", 1)
+      .lte("due_date", now)
       .order("due_date", { ascending: true })
       .limit(limit);
 
@@ -225,111 +213,57 @@ export async function getDueWarmupCards(limit: number = 5) {
   }
 }
 
-/**
- * Server Action chấm điểm độ nhớ của thẻ từ vựng và lên lịch ôn tập theo thuật toán SM-2 (SuperMemo-2)
- */
+/** Chấm card bằng FSRS và persist đủ state/history atomically. */
 export async function reviewCard(
   cardId: string,
   rating: "Again" | "Hard" | "Good" | "Easy",
   retentionRate?: number
 ) {
   try {
-    // Rate Limiting
     const reqHeaders = await headers();
     const ip = reqHeaders.get("x-forwarded-for")?.split(",")[0].trim() || "127.0.0.1";
     const rateLimitCheck = await reviewCardLimiter.check(ip);
     if (!rateLimitCheck.success) {
-      return {
-        success: false,
-        error: "Yêu cầu quá thường xuyên. Vui lòng thử lại sau."
-      };
+      return { success: false, error: "Yêu cầu quá thường xuyên. Vui lòng thử lại sau." };
     }
 
-    // Input Validation
     const validated = ReviewCardSchema.safeParse({ cardId, rating, retentionRate });
     if (!validated.success) {
       return {
         success: false,
-        error: `Dữ liệu không hợp lệ: ${validated.error.issues.map(e => e.message).join(", ")}`
+        error: `Dữ liệu không hợp lệ: ${validated.error.issues.map((e) => e.message).join(", ")}`,
       };
     }
     const cleanParams = validated.data;
-
     const supabase = await createClient();
-    
-    // 1. Kiểm tra trạng thái đăng nhập
     const { data: { user }, error: authError } = await supabase.auth.getUser();
     if (authError || !user) {
-      return {
-        success: false,
-        error: "Bạn cần đăng nhập để thực hiện đánh giá thẻ."
-      };
+      return { success: false, error: "Bạn cần đăng nhập để thực hiện đánh giá thẻ." };
     }
-    
-    // 2. Lấy dữ liệu thẻ hiện tại của user
+
+    // select(*) is deliberate: after the migration it includes the complete persisted FSRS state.
     const { data: card, error: fetchError } = await supabase
       .from("cards")
-      .select("id, interval, repetitions, state, difficulty, stability, last_review, next_review, due_date")
+      .select("*")
       .eq("id", cleanParams.cardId)
       .eq("user_id", user.id)
       .single();
-      
+
     if (fetchError || !card) {
       return {
         success: false,
-        error: `Không thể tìm thấy thẻ: ${fetchError?.message || "Thẻ không thuộc về user này"}`
+        error: `Không thể tìm thấy thẻ: ${fetchError?.message || "Thẻ không thuộc về user này"}`,
       };
     }
-    
-    // 3. Áp dụng thuật toán FSRS
-    const fsrsUpdates = reviewCardFSRS(card as unknown as Card, cleanParams.rating, cleanParams.retentionRate);
-    
-    // 4. Cập nhật các chỉ số mới vào Database
-    const { error: updateError } = await supabase
-      .from("cards")
-      .update({
-        // FSRS fields
-        state: fsrsUpdates.state,
-        difficulty: fsrsUpdates.difficulty,
-        stability: fsrsUpdates.stability,
-        last_review: fsrsUpdates.last_review,
-        next_review: fsrsUpdates.next_review,
 
-        // SM-2 fields (giữ tương thích)
-        interval: fsrsUpdates.interval,
-        repetitions: fsrsUpdates.repetitions,
-        due_date: fsrsUpdates.due_date,
-      })
-      .eq("id", cleanParams.cardId)
-      .eq("user_id", user.id);
-      
-    if (updateError) {
-      return {
-        success: false,
-        error: `Lỗi cập nhật tiến trình thẻ: ${updateError.message}`
-      };
+    const fsrsUpdates = reviewCardFSRS(card as unknown as Card, cleanParams.rating, cleanParams.retentionRate);
+    const persisted = await persistFsrsReview(supabase, cleanParams.cardId, fsrsUpdates);
+    if (!persisted.success) {
+      return { success: false, error: `Không thể lưu review FSRS: ${persisted.error}` };
     }
-    
-    // Refresh cache các route liên quan
+
     revalidatePath("/dashboard");
     revalidatePath("/flashcards");
-
-    // 5. Lưu ReviewLog để tối ưu hóa tham số FSRS theo từng người dùng (best-effort)
-    void supabase
-      .from("card_review_logs")
-      .insert({
-        user_id: user.id,
-        card_id: cleanParams.cardId,
-        rating: fsrsUpdates.reviewLog.rating,
-        state: fsrsUpdates.reviewLog.state,
-        due: fsrsUpdates.reviewLog.due,
-        stability: fsrsUpdates.reviewLog.stability,
-        difficulty: fsrsUpdates.reviewLog.difficulty,
-        elapsed_days: fsrsUpdates.reviewLog.elapsed_days,
-        scheduled_days: fsrsUpdates.reviewLog.scheduled_days,
-        review: fsrsUpdates.reviewLog.review,
-      }); // fire-and-forget — non-blocking, silent fail OK
-
     return {
       success: true,
       message: `Đã đánh giá "${cleanParams.rating}". Lên lịch ôn tiếp theo sau ${fsrsUpdates.interval} ngày.`,
@@ -337,26 +271,18 @@ export async function reviewCard(
       next_due_date: fsrsUpdates.next_review,
       debug: fsrsUpdates.debug,
     };
-    
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
-    return {
-      success: false,
-      error: `Lỗi hệ thống khi đánh giá thẻ: ${errorMessage}`
-    };
+    return { success: false, error: `Lỗi hệ thống khi đánh giá thẻ: ${errorMessage}` };
   }
 }
 
-/**
- * Lấy TẤT CẢ thẻ của user (Cram Mode - không lọc theo due_date).
- */
+/** Lấy TẤT CẢ thẻ của user (Cram Mode - không lọc theo due_date). */
 export async function getAllCards(topic?: string) {
   try {
     const supabase = await createClient();
     const { data: { user }, error: authError } = await supabase.auth.getUser();
-    if (authError || !user) {
-      return { success: false, error: "Bạn cần đăng nhập.", cards: [] };
-    }
+    if (authError || !user) return { success: false, error: "Bạn cần đăng nhập.", cards: [] };
 
     let query = supabase
       .from("cards")
@@ -364,9 +290,7 @@ export async function getAllCards(topic?: string) {
       .eq("user_id", user.id)
       .order("word", { ascending: true });
 
-    if (topic) {
-      query = query.eq("topic", topic);
-    }
+    if (topic) query = query.eq("topic", topic);
 
     const { data: cards, error } = await query;
     if (error) return { success: false, error: error.message, cards: [] };
@@ -376,9 +300,7 @@ export async function getAllCards(topic?: string) {
   }
 }
 
-/**
- * Lấy danh sách topics của user từ bảng cards.
- */
+/** Lấy danh sách topics của user từ bảng cards. */
 export async function getCardTopics() {
   try {
     const supabase = await createClient();
@@ -391,17 +313,14 @@ export async function getCardTopics() {
       .eq("user_id", user.id);
 
     if (error) return { success: false, topics: [] };
-    const topics = Array.from(new Set((data || []).map(c => c.topic).filter((t): t is string => !!t)));
+    const topics = Array.from(new Set((data || []).map((c) => c.topic).filter((t): t is string => !!t)));
     return { success: true, topics };
   } catch {
     return { success: false, topics: [] };
   }
 }
 
-/**
- * Tự động thêm toàn bộ từ vựng của một unit vào FSRS sau khi hoàn thành bài học.
- * Bỏ qua từ đã tồn tại (ON CONFLICT DO NOTHING). Fire-and-forget friendly.
- */
+/** Tự động thêm vocab unit vào FSRS sau khi hoàn thành bài. */
 export async function seedUnitVocabToSRS(params: {
   vocab: Array<{ word: string; phonetic?: string | null; meaning_vn: string; example_en?: string | null }>;
   topic: string;
@@ -422,9 +341,7 @@ export async function seedUnitVocabToSRS(params: {
     if (authError || !user) return { success: false, added: 0 };
 
     const now = new Date().toISOString();
-
-    // Build batch insert rows — unique per (user_id, word)
-    const rows = vocab.map(v => ({
+    const rows = vocab.map((v) => ({
       user_id: user.id,
       word: v.word.toLowerCase().trim(),
       phonetic: v.phonetic ?? null,
@@ -442,13 +359,11 @@ export async function seedUnitVocabToSRS(params: {
       next_review: now,
     }));
 
-    // upsert with ignoreDuplicates — skip words already in the user's deck
     const { error } = await supabase
       .from("cards")
       .upsert(rows, { onConflict: "user_id,word", ignoreDuplicates: true });
 
     if (error) return { success: false, added: 0 };
-
     revalidatePath("/flashcards");
     revalidatePath("/dashboard");
     return { success: true, added: rows.length };
@@ -458,8 +373,8 @@ export async function seedUnitVocabToSRS(params: {
 }
 
 /**
- * Khi người dùng trả lời sai trong quiz/scramble/translate,
- * tìm card tương ứng và đánh giá lại với rating "Again" → đẩy lên đầu hàng ôn tập.
+ * Quiz/scramble/translate failures become real FSRS Again reviews.
+ * Each card update + log is atomic and preserves lapse/learning-step history.
  */
 export async function scheduleWrongWordsForReview(words: string[]) {
   try {
@@ -472,91 +387,38 @@ export async function scheduleWrongWordsForReview(words: string[]) {
 
     const validated = WrongWordsSchema.safeParse({ words });
     if (!validated.success) return { success: false, updated: 0 };
-    const cleanWords = validated.data.words.map(w => w.toLowerCase().trim());
+    const cleanWords = validated.data.words.map((w) => w.toLowerCase().trim());
 
     const supabase = await createClient();
     const { data: { user }, error: authError } = await supabase.auth.getUser();
     if (authError || !user) return { success: false, updated: 0 };
 
-    // Fetch matching cards from user's deck
     const { data: cards, error: fetchErr } = await supabase
       .from("cards")
-      .select("id, interval, repetitions, state, difficulty, stability, last_review, next_review, due_date")
+      .select("*")
       .eq("user_id", user.id)
       .in("word", cleanWords);
 
     if (fetchErr || !cards?.length) return { success: true, updated: 0 };
 
-    // Apply FSRS "Again" rating to each card and bulk update
-    const now = new Date().toISOString();
-    const updates = cards.map(card => {
-      const fsrsResult = reviewCardFSRS(card as unknown as Card, "Again");
-      return {
-        id: card.id,
-        user_id: user.id,
-        state: fsrsResult.state,
-        difficulty: fsrsResult.difficulty,
-        stability: fsrsResult.stability,
-        last_review: fsrsResult.last_review,
-        next_review: fsrsResult.next_review,
-        interval: fsrsResult.interval,
-        repetitions: fsrsResult.repetitions,
-        due_date: now, // Due immediately for re-review
-      };
-    });
-
-    // Update each card's FSRS fields individually (update, not upsert, to avoid required-field violations)
-    const updateResults = await Promise.all(
-      updates.map(u =>
-        supabase
-          .from("cards")
-          .update({
-            state: u.state,
-            difficulty: u.difficulty,
-            stability: u.stability,
-            last_review: u.last_review,
-            next_review: u.next_review,
-            interval: u.interval,
-            repetitions: u.repetitions,
-            due_date: u.due_date,
-          })
-          .eq("id", u.id)
-          .eq("user_id", user.id)
-      )
-    );
-
-    if (updateResults.some(r => r.error)) return { success: false, updated: 0 };
-
-    // Fire-and-forget: insert review logs for each card (best-effort)
-    void supabase.from("card_review_logs").insert(
-      cards.map(card => {
+    const results = await Promise.all(
+      cards.map(async (card) => {
         const fsrsResult = reviewCardFSRS(card as unknown as Card, "Again");
-        return {
-          user_id: user.id,
-          card_id: card.id,
-          rating: fsrsResult.reviewLog.rating,
-          state: fsrsResult.reviewLog.state,
-          due: fsrsResult.reviewLog.due,
-          stability: fsrsResult.reviewLog.stability,
-          difficulty: fsrsResult.reviewLog.difficulty,
-          elapsed_days: fsrsResult.reviewLog.elapsed_days,
-          scheduled_days: fsrsResult.reviewLog.scheduled_days,
-          review: fsrsResult.reviewLog.review,
-        };
+        return persistFsrsReview(supabase, card.id, fsrsResult);
       })
     );
 
+    const updated = results.filter((result) => result.success).length;
+    if (updated !== results.length) return { success: false, updated };
+
     revalidatePath("/flashcards");
-    return { success: true, updated: updates.length };
+    return { success: true, updated };
   } catch {
     return { success: false, updated: 0 };
   }
 }
-/**
- * Lấy top N từ khó nhất của user dựa trên số lần bấm "Again" (rating=1) trong card_review_logs.
- * Kết quả được sắp xếp từ khó nhất → dễ hơn.
- * Không cần migration DB mới — chỉ đọc card_review_logs + cards.
- */
+
+/** Lấy top N từ khó nhất dựa trên số lần Again trong append-only review logs. */
 export async function getHardWords(limit: number = 20): Promise<{
   success: boolean;
   words?: Array<{
@@ -577,7 +439,6 @@ export async function getHardWords(limit: number = 20): Promise<{
     const { data: { user }, error: authError } = await supabase.auth.getUser();
     if (authError || !user) return { success: false, error: "Unauthenticated" };
 
-    // 1. Fetch all "Again" (rating=1) logs for this user
     const { data: againLogs, error: logErr } = await supabase
       .from("card_review_logs")
       .select("card_id")
@@ -587,19 +448,16 @@ export async function getHardWords(limit: number = 20): Promise<{
     if (logErr) return { success: false, error: logErr.message };
     if (!againLogs || againLogs.length === 0) return { success: true, words: [] };
 
-    // 2. Count Again per card_id in JS
     const againMap = new Map<string, number>();
     for (const log of againLogs) {
       againMap.set(log.card_id, (againMap.get(log.card_id) ?? 0) + 1);
     }
 
-    // 3. Sort by again count descending, take top N IDs
     const topIds = [...againMap.entries()]
       .sort(([, a], [, b]) => b - a)
       .slice(0, limit)
       .map(([id]) => id);
 
-    // 4. Fetch card details (word, phonetic, meaning, level, example, repetitions)
     const { data: cards, error: cardErr } = await supabase
       .from("cards")
       .select("id, word, phonetic, meaning_vn, level, example_en, repetitions")
@@ -609,10 +467,9 @@ export async function getHardWords(limit: number = 20): Promise<{
     if (cardErr) return { success: false, error: cardErr.message };
     if (!cards || cards.length === 0) return { success: true, words: [] };
 
-    // 5. Merge and compute mastery %
-    const words = topIds
-      .map(id => {
-        const card = cards.find(c => c.id === id);
+    const hardWords = topIds
+      .map((id) => {
+        const card = cards.find((c) => c.id === id);
         if (!card) return null;
         const again_count = againMap.get(id) ?? 0;
         const total_reviews = Math.max(card.repetitions ?? 1, again_count);
@@ -629,9 +486,9 @@ export async function getHardWords(limit: number = 20): Promise<{
           mastery_pct,
         };
       })
-      .filter((w): w is NonNullable<typeof w> => w !== null);
+      .filter((word): word is NonNullable<typeof word> => word !== null);
 
-    return { success: true, words };
+    return { success: true, words: hardWords };
   } catch (err) {
     return { success: false, error: String(err) };
   }

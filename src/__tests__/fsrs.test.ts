@@ -3,7 +3,7 @@ import { reviewCardFSRS, mapDbCardToFSRSCard } from "@/lib/srs/fsrs";
 import { State } from "ts-fsrs";
 import type { Card } from "@/types/database";
 
-// Minimal mock card for testing
+// Minimal mock card for testing. Keep this aligned with the persisted FSRS state.
 function makeCard(overrides: Partial<Card> = {}): Card {
   return {
     id: "test-uuid",
@@ -22,6 +22,10 @@ function makeCard(overrides: Partial<Card> = {}): Card {
     due_date: new Date().toISOString(),
     last_review: null,
     next_review: null,
+    elapsed_days: 0,
+    scheduled_days: 0,
+    lapses: 0,
+    learning_steps: 0,
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
     ...overrides,
@@ -42,23 +46,32 @@ describe("reviewCardFSRS", () => {
     expect(result.last_review).toBeTruthy();
   });
 
-  it("returns a ReviewLog with correct shape", () => {
+  it("returns the native ReviewLog fields needed to rebuild history", () => {
     const card = makeCard();
     const result = reviewCardFSRS(card, "Good");
 
-    expect(result.reviewLog).toBeDefined();
     expect(result.reviewLog.rating).toBeTypeOf("number");
     expect(result.reviewLog.state).toBeTypeOf("number");
-    // New card in learning step — scheduled_days is 0 until promoted to Review
+    expect(result.reviewLog.elapsed_days).toBeGreaterThanOrEqual(0);
+    expect(result.reviewLog.last_elapsed_days).toBeGreaterThanOrEqual(0);
     expect(result.reviewLog.scheduled_days).toBeGreaterThanOrEqual(0);
+    expect(result.reviewLog.learning_steps).toBeGreaterThanOrEqual(0);
     expect(result.reviewLog.review).toBeTruthy();
     expect(result.reviewLog.due).toBeTruthy();
   });
 
-  it("'Again' rating results in short interval (relearning)", () => {
-    const card = makeCard({ state: State.Review, stability: 5, difficulty: 3 });
+  it("'Again' rating on a review card increments lapses", () => {
+    const card = makeCard({
+      state: State.Review,
+      stability: 5,
+      difficulty: 3,
+      repetitions: 3,
+      lapses: 2,
+      last_review: new Date(Date.now() - 5 * 86_400_000).toISOString(),
+    });
     const result = reviewCardFSRS(card, "Again");
-    // Relearning should have short interval
+    expect(result.lapses).toBe(3);
+    // Relearning should stay short-term before promotion back to Review.
     expect(result.interval).toBeLessThanOrEqual(3);
   });
 
@@ -86,18 +99,20 @@ describe("reviewCardFSRS", () => {
       stability: expect.any(Number),
       difficulty: expect.any(Number),
       interval: expect.any(Number),
+      lapses: expect.any(Number),
+      learningSteps: expect.any(Number),
     });
   });
 
-  it("handles default rating fallthrough", () => {
-    const card = makeCard();
-    // cast to any to test the default block
-    const result = reviewCardFSRS(card, "invalid-rating" as any);
-    expect(result.debug.rating).toBe("invalid-rating");
-  });
-
   it("uses custom retentionRate when provided (lower retention yields longer intervals)", () => {
-    const card = makeCard({ state: State.Review, stability: 10, difficulty: 4 });
+    const lastReview = new Date(Date.now() - 10 * 86_400_000).toISOString();
+    const card = makeCard({
+      state: State.Review,
+      stability: 10,
+      difficulty: 4,
+      repetitions: 4,
+      last_review: lastReview,
+    });
     const resultLow = reviewCardFSRS(card, "Good", 0.8);
     const resultHigh = reviewCardFSRS(card, "Good", 0.95);
     expect(resultLow.interval).toBeGreaterThanOrEqual(resultHigh.interval);
@@ -111,11 +126,23 @@ describe("mapDbCardToFSRSCard", () => {
     expect(fsrsCard.reps).toBe(0);
     expect(fsrsCard.state).toBe(State.New);
     expect(fsrsCard.stability).toBe(0);
+    expect(fsrsCard.lapses).toBe(0);
+    expect(fsrsCard.learning_steps).toBe(0);
   });
 
-  it("sets elapsed_days to 0 for new cards", () => {
-    const dbCard = makeCard();
+  it("preserves persisted FSRS history instead of reconstructing it from due dates", () => {
+    const dbCard = makeCard({
+      elapsed_days: 12,
+      scheduled_days: 9,
+      lapses: 3,
+      learning_steps: 2,
+      last_review: "2026-08-20T00:00:00.000Z",
+      next_review: "2026-09-10T00:00:00.000Z",
+    });
     const fsrsCard = mapDbCardToFSRSCard(dbCard);
-    expect(fsrsCard.elapsed_days).toBe(0);
+    expect(fsrsCard.elapsed_days).toBe(12);
+    expect(fsrsCard.scheduled_days).toBe(9);
+    expect(fsrsCard.lapses).toBe(3);
+    expect(fsrsCard.learning_steps).toBe(2);
   });
 });
