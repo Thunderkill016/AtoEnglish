@@ -1,10 +1,7 @@
 import type { ErrorMemoryEntry } from "./error-memory";
 import type { EvidenceType, LearnerSkillState } from "./evidence";
 import { createEmptyLearnerSkillState } from "./evidence";
-import {
-  hasObservedLearnerDimension,
-  readLearnerDimension,
-} from "./learner-state-read";
+import { readLearnerDimension } from "./learner-state-read";
 
 export type PlannerCandidate = {
   id: string;
