@@ -47,6 +47,8 @@ export function deriveUncalibratedSegmentalEvidence(
       ? null
       : posteriorMargins.reduce((sum, value) => sum + value, 0) /
         posteriorMargins.length;
+  const minimumPosteriorMargin =
+    posteriorMargins.length === 0 ? null : Math.min(...posteriorMargins);
 
   return {
     calibration: "unvalidated",
@@ -57,6 +59,7 @@ export function deriveUncalibratedSegmentalEvidence(
         ? 0
         : clampUnit(retainedCanonicalPhones / expectedPhoneCount),
     meanPosteriorMargin,
+    minimumPosteriorMargin,
     deletionCount,
     insertionCount,
     substitutionCount,
