@@ -3,6 +3,7 @@ const MIN_RECORDING_SECONDS = 0.15;
 const MAX_RECORDING_SECONDS = 8;
 const SILENCE_PEAK_THRESHOLD = 0.001;
 const SILENCE_RMS_THRESHOLD = 0.0001;
+const PROCESSOR_BUFFER_SIZE = 4096;
 
 export type LocalRecordingResult = {
   recording: Blob;
@@ -17,21 +18,6 @@ export type LocalRecordingSession = {
   cancel(): void;
 };
 
-function preferredRecorderMimeType() {
-  if (typeof MediaRecorder === "undefined") return "";
-
-  const candidates = [
-    "audio/webm;codecs=opus",
-    "audio/webm",
-    "audio/ogg;codecs=opus",
-    "audio/mp4",
-  ];
-
-  return (
-    candidates.find((candidate) => MediaRecorder.isTypeSupported(candidate)) ?? ""
-  );
-}
-
 function downmixToMono(audioBuffer: AudioBuffer) {
   const mono = new Float32Array(audioBuffer.length);
 
@@ -44,6 +30,18 @@ function downmixToMono(audioBuffer: AudioBuffer) {
   }
 
   return mono;
+}
+
+function concatenateChunks(chunks: Float32Array[], totalLength: number) {
+  const samples = new Float32Array(totalLength);
+  let offset = 0;
+
+  for (const chunk of chunks) {
+    samples.set(chunk, offset);
+    offset += chunk.length;
+  }
+
+  return samples;
 }
 
 async function resampleMono(
@@ -129,62 +127,14 @@ function encodePcm16Wav(samples: Float32Array, sampleRate: number) {
   return new Blob([new Uint8Array(buffer)], { type: "audio/wav" });
 }
 
-async function decodeRecording(recording: Blob): Promise<LocalRecordingResult> {
-  const AudioContextClass = globalThis.AudioContext;
-
-  if (!AudioContextClass) {
-    throw new Error("audio_context_unavailable");
-  }
-
-  const context = new AudioContextClass();
-
-  try {
-    const encoded = await recording.arrayBuffer();
-    const decoded = await context.decodeAudioData(encoded.slice(0));
-
-    if (!Number.isFinite(decoded.duration) || decoded.duration < MIN_RECORDING_SECONDS) {
-      throw new Error("recording_too_short");
-    }
-
-    if (decoded.duration > MAX_RECORDING_SECONDS + 0.5) {
-      throw new Error("recording_too_long");
-    }
-
-    const mono = downmixToMono(decoded);
-    const samples = await resampleMono(
-      mono,
-      decoded.sampleRate,
-      TARGET_SAMPLE_RATE,
-    );
-    const { peakAmplitude, rmsAmplitude } = measureSignal(samples);
-
-    if (
-      peakAmplitude < SILENCE_PEAK_THRESHOLD &&
-      rmsAmplitude < SILENCE_RMS_THRESHOLD
-    ) {
-      throw new Error("recording_signal_missing");
-    }
-
-    return {
-      recording: encodePcm16Wav(samples, TARGET_SAMPLE_RATE),
-      samples,
-      durationSeconds: samples.length / TARGET_SAMPLE_RATE,
-      peakAmplitude,
-      rmsAmplitude,
-    };
-  } finally {
-    await context.close();
-  }
-}
-
 async function openMicrophoneStream() {
   try {
     return await navigator.mediaDevices.getUserMedia({
       audio: {
-        channelCount: 1,
-        echoCancellation: false,
-        noiseSuppression: false,
-        autoGainControl: false,
+        channelCount: { ideal: 1 },
+        echoCancellation: { ideal: false },
+        noiseSuppression: { ideal: false },
+        autoGainControl: { ideal: false },
       },
       video: false,
     });
@@ -201,10 +151,12 @@ async function openMicrophoneStream() {
 }
 
 export async function startLocalPronunciationRecording(): Promise<LocalRecordingSession> {
+  const AudioContextClass = globalThis.AudioContext;
+
   if (
     typeof navigator === "undefined" ||
     !navigator.mediaDevices?.getUserMedia ||
-    typeof MediaRecorder === "undefined"
+    !AudioContextClass
   ) {
     throw new Error("microphone_recording_unavailable");
   }
@@ -217,71 +169,102 @@ export async function startLocalPronunciationRecording(): Promise<LocalRecording
     throw new Error("microphone_track_unavailable");
   }
 
-  const mimeType = preferredRecorderMimeType();
-  const recorder = mimeType
-    ? new MediaRecorder(stream, { mimeType })
-    : new MediaRecorder(stream);
+  const context = new AudioContextClass();
+  const source = context.createMediaStreamSource(stream);
+  const processor = context.createScriptProcessor(PROCESSOR_BUFFER_SIZE, 1, 1);
+  const mute = context.createGain();
+  mute.gain.value = 0;
 
-  const chunks: Blob[] = [];
+  const chunks: Float32Array[] = [];
+  let totalSamples = 0;
   let finalized = false;
   let stopPromise: Promise<LocalRecordingResult> | null = null;
 
-  const stopTracks = () => {
+  processor.onaudioprocess = (event) => {
+    if (finalized) return;
+
+    const chunk = downmixToMono(event.inputBuffer);
+    chunks.push(chunk);
+    totalSamples += chunk.length;
+  };
+
+  source.connect(processor);
+  processor.connect(mute);
+  mute.connect(context.destination);
+
+  if (context.state === "suspended") {
+    await context.resume();
+  }
+
+  const cleanup = () => {
+    processor.onaudioprocess = null;
+
+    try {
+      source.disconnect();
+      processor.disconnect();
+      mute.disconnect();
+    } catch {
+      // Nodes may already be disconnected during browser teardown.
+    }
+
     for (const track of stream.getTracks()) {
       track.stop();
     }
   };
 
-  recorder.addEventListener("dataavailable", (event) => {
-    if (event.data.size > 0) {
-      chunks.push(event.data);
-    }
-  });
-
   const stop = () => {
     if (stopPromise) return stopPromise;
 
-    if (finalized || recorder.state !== "recording") {
+    if (finalized) {
       return Promise.reject(new Error("recorder_not_recording"));
     }
 
     finalized = true;
 
-    stopPromise = new Promise<LocalRecordingResult>((resolve, reject) => {
-      recorder.addEventListener(
-        "stop",
-        async () => {
-          stopTracks();
+    stopPromise = (async () => {
+      cleanup();
 
-          const recording = new Blob(chunks, {
-            type: recorder.mimeType || chunks[0]?.type || "audio/webm",
-          });
+      try {
+        if (totalSamples === 0) {
+          throw new Error("empty_audio_recording");
+        }
 
-          if (recording.size === 0) {
-            reject(new Error("empty_audio_recording"));
-            return;
-          }
+        const sourceSamples = concatenateChunks(chunks, totalSamples);
+        const sourceDuration = sourceSamples.length / context.sampleRate;
 
-          try {
-            resolve(await decodeRecording(recording));
-          } catch (error) {
-            reject(error);
-          }
-        },
-        { once: true },
-      );
+        if (sourceDuration < MIN_RECORDING_SECONDS) {
+          throw new Error("recording_too_short");
+        }
 
-      recorder.addEventListener(
-        "error",
-        () => {
-          stopTracks();
-          reject(new Error("media_recorder_error"));
-        },
-        { once: true },
-      );
+        if (sourceDuration > MAX_RECORDING_SECONDS + 0.75) {
+          throw new Error("recording_too_long");
+        }
 
-      recorder.stop();
-    });
+        const samples = await resampleMono(
+          sourceSamples,
+          context.sampleRate,
+          TARGET_SAMPLE_RATE,
+        );
+        const { peakAmplitude, rmsAmplitude } = measureSignal(samples);
+
+        if (
+          peakAmplitude < SILENCE_PEAK_THRESHOLD &&
+          rmsAmplitude < SILENCE_RMS_THRESHOLD
+        ) {
+          throw new Error("recording_signal_missing");
+        }
+
+        return {
+          recording: encodePcm16Wav(samples, TARGET_SAMPLE_RATE),
+          samples,
+          durationSeconds: samples.length / TARGET_SAMPLE_RATE,
+          peakAmplitude,
+          rmsAmplitude,
+        };
+      } finally {
+        await context.close();
+      }
+    })();
 
     return stopPromise;
   };
@@ -290,15 +273,9 @@ export async function startLocalPronunciationRecording(): Promise<LocalRecording
     if (finalized) return;
 
     finalized = true;
-
-    if (recorder.state === "recording") {
-      recorder.stop();
-    }
-
-    stopTracks();
+    cleanup();
+    void context.close();
   };
-
-  recorder.start(250);
 
   return { stop, cancel };
 }
