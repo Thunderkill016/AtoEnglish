@@ -90,6 +90,7 @@ export async function POST(request: Request) {
     const upstream = await fetch(OPENAI_REALTIME_CALLS_URL, {
       method: "POST",
       headers: {
+        Accept: "application/sdp",
         Authorization: `Bearer ${apiKey}`,
         "OpenAI-Safety-Identifier": safetyIdentifier(user.id),
       },
