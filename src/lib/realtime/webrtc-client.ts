@@ -2,6 +2,7 @@ import {
   parseOpenAIRealtimeServerEvent,
   type AtoEnglishRealtimeSignal,
 } from "@/lib/realtime/events";
+import type { OpenAIRealtimeMode } from "@/lib/realtime/openai-session";
 
 export type RealtimeVoiceConnectionState =
   | "connecting"
@@ -11,6 +12,7 @@ export type RealtimeVoiceConnectionState =
 
 export interface ConnectRealtimeVoiceOptions {
   audioElement: HTMLAudioElement;
+  mode?: OpenAIRealtimeMode;
   onSignal?: (signal: AtoEnglishRealtimeSignal) => void;
   onRawEvent?: (event: unknown) => void;
   onStateChange?: (state: RealtimeVoiceConnectionState) => void;
@@ -140,7 +142,10 @@ export async function connectRealtimeVoice(
 
     const sessionResponse = await fetch("/api/realtime/session", {
       method: "POST",
-      headers: { "Content-Type": "application/sdp" },
+      headers: {
+        "Content-Type": "application/sdp",
+        "X-AtoEnglish-Realtime-Mode": options.mode ?? "capture",
+      },
       body: localSdp,
       credentials: "same-origin",
       cache: "no-store",
