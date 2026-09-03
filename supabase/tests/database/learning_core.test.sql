@@ -3,7 +3,7 @@ begin;
 create extension if not exists pgtap with schema extensions;
 set local search_path = public, extensions;
 
-select plan(43);
+select plan(46);
 
 -- The July 2026 attempt schema must survive a fresh migration replay as an inaccessible archive,
 -- while the stable public name is reclaimed by the canonical Attempt -> Evidence contract.
@@ -471,12 +471,34 @@ select ok(
   'authenticated can call get_learner_evidence_coverage'
 );
 select ok(
+  has_function_privilege(
+    'service_role',
+    to_regprocedure('public.get_learner_evidence_coverage(text[])'),
+    'EXECUTE'
+  ),
+  'service_role can call get_learner_evidence_coverage'
+);
+select ok(
   not has_function_privilege(
     'anon',
     to_regprocedure('public.get_learner_evidence_coverage(text[])'),
     'EXECUTE'
   ),
   'anon cannot call get_learner_evidence_coverage'
+);
+select ok(
+  (select not p.prosecdef
+   from pg_proc p
+   join pg_namespace n on n.oid = p.pronamespace
+   where n.nspname = 'public' and p.proname = 'get_learner_evidence_coverage'),
+  'get_learner_evidence_coverage is SECURITY INVOKER'
+);
+select ok(
+  (select 'search_path=' = any(p.proconfig)
+   from pg_proc p
+   join pg_namespace n on n.oid = p.pronamespace
+   where n.nspname = 'public' and p.proname = 'get_learner_evidence_coverage'),
+  'get_learner_evidence_coverage enforces empty search_path'
 );
 
 -- Authenticated User 1 coverage query
