@@ -322,7 +322,8 @@ function matchingRecurringReprobeCount(candidate: PlannerCandidate, entries: Err
 
 function metadataString(metadata: Record<string, unknown> | undefined, key: string) {
   const value = metadata?.[key];
-  return typeof value === "string" && value.length > 0 ? value : null;
+  if (typeof value === "number" && Number.isFinite(value)) return String(value);
+  return typeof value === "string" && value.trim().length > 0 ? value.trim() : null;
 }
 
 function readiness(state: LearnerSkillState) {
