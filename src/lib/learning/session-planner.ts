@@ -1,6 +1,10 @@
 import type { ErrorMemoryEntry } from "./error-memory";
 import type { EvidenceType, LearnerSkillState } from "./evidence";
 import { createEmptyLearnerSkillState } from "./evidence";
+import {
+  hasObservedLearnerDimension,
+  readLearnerDimension,
+} from "./learner-state-read";
 
 export type PlannerCandidate = {
   id: string;
@@ -190,8 +194,13 @@ function checkEligibility(
   ) {
     reasons.push("cold-start-needs-recognition");
   }
-  if (candidate.evidenceType === "transfer" && targetState.production < config.transferProductionFloor) {
-    reasons.push("transfer-needs-prior-production");
+  if (candidate.evidenceType === "transfer") {
+    const production = readLearnerDimension(targetState, "production");
+    if (production.status === "unknown") {
+      reasons.push("transfer-needs-observed-production");
+    } else if ((production.estimate ?? 0) < config.transferProductionFloor) {
+      reasons.push("transfer-needs-prior-production");
+    }
   }
   if (candidate.evidenceType === "retention" && targetState.evidenceCount === 0) {
     reasons.push("retention-needs-prior-evidence");
@@ -220,8 +229,9 @@ function scoreCandidate(input: {
     selectedForTarget,
     config,
   } = input;
-  const skillGap = 1 - clamp01(state[candidate.evidenceType]);
-  const coldStart = state.evidenceCount === 0 ? COLD_START_BONUS[candidate.evidenceType] : 0;
+  const dimension = readLearnerDimension(state, candidate.evidenceType);
+  const skillGap = dimension.estimate === null ? 0 : 1 - clamp01(dimension.estimate);
+  const coldStart = dimension.status === "unknown" ? COLD_START_BONUS[candidate.evidenceType] : 0;
   const staleness = calculateStaleness(state.lastEvidenceAt, now);
   const importance = clamp01(candidate.importance ?? 0.5);
   const transferValue = clamp01(candidate.transferValue ?? 0);
@@ -246,7 +256,9 @@ function scoreCandidate(input: {
     - inSessionRepeatPenalty;
 
   const reasons = [
-    `skill-gap:${round(skillGap)}`,
+    dimension.status === "unknown"
+      ? `evidence-unknown:${candidate.evidenceType}`
+      : `skill-gap:${round(skillGap)}`,
     `importance:${round(importance)}`,
   ];
   if (coldStart > 0) reasons.push(`cold-start:${candidate.evidenceType}`);
@@ -326,14 +338,16 @@ function metadataString(metadata: Record<string, unknown> | undefined, key: stri
 }
 
 function readiness(state: LearnerSkillState) {
-  return Math.max(
-    state.retrieval,
-    state.production,
-    state.transfer,
-    state.retention,
-    state.recognition * 0.5,
-    state.listening * 0.5,
-  );
+  const observed = (["retrieval", "production", "transfer", "retention"] as const)
+    .flatMap((type) => {
+      const dimension = readLearnerDimension(state, type);
+      return dimension.estimate === null ? [] : [dimension.estimate];
+    });
+  const recognition = readLearnerDimension(state, "recognition");
+  const listening = readLearnerDimension(state, "listening");
+  if (recognition.estimate !== null) observed.push(recognition.estimate * 0.5);
+  if (listening.estimate !== null) observed.push(listening.estimate * 0.5);
+  return observed.length > 0 ? Math.max(...observed) : 0;
 }
 
 function calculateStaleness(lastEvidenceAt: string | null, now: number) {
