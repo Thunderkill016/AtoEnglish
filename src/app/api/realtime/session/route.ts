@@ -4,7 +4,9 @@ import { NextResponse } from "next/server";
 
 import {
   buildOpenAIRealtimeSessionConfig,
+  isOpenAIRealtimeMode,
   isPlausibleRealtimeSdpOffer,
+  type OpenAIRealtimeMode,
 } from "@/lib/realtime/openai-session";
 import { createRateLimiter } from "@/lib/security/rate-limit";
 import { createClient } from "@/lib/supabase/server";
@@ -50,6 +52,15 @@ export async function POST(request: Request) {
     );
   }
 
+  const requestedMode = request.headers.get("x-atoenglish-realtime-mode");
+  const mode: OpenAIRealtimeMode = requestedMode === null ? "capture" : requestedMode;
+  if (!isOpenAIRealtimeMode(mode)) {
+    return NextResponse.json(
+      { success: false, error: "Realtime mode không hợp lệ." },
+      { status: 400 },
+    );
+  }
+
   const contentType = request.headers.get("content-type")?.split(";")[0]?.trim();
   if (contentType !== "application/sdp") {
     return NextResponse.json(
@@ -67,8 +78,14 @@ export async function POST(request: Request) {
   }
 
   const formData = new FormData();
-  formData.set("sdp", sdp);
-  formData.set("session", JSON.stringify(buildOpenAIRealtimeSessionConfig()));
+  formData.set("sdp", new Blob([sdp], { type: "application/sdp" }), "offer.sdp");
+  formData.set(
+    "session",
+    new Blob([JSON.stringify(buildOpenAIRealtimeSessionConfig(mode))], {
+      type: "application/json",
+    }),
+    "session.json",
+  );
 
   try {
     const upstream = await fetch(OPENAI_REALTIME_CALLS_URL, {
