@@ -23,12 +23,25 @@ describe("realtime session policy", () => {
     expect(config.instructions).toContain("Do not grade, score, declare mastery");
   });
 
-  it("enables model responses only in explicit conversation mode", () => {
-    const config = buildOpenAIRealtimeSessionConfig("conversation");
+  it("fails closed when conversation mode has no canonical server instructions", () => {
+    expect(() => buildOpenAIRealtimeSessionConfig("conversation")).toThrow(
+      "canonical server-resolved task instructions",
+    );
+    expect(() => buildOpenAIRealtimeSessionConfig("conversation", "   ")).toThrow(
+      "canonical server-resolved task instructions",
+    );
+  });
+
+  it("enables responses only when conversation mode has canonical task instructions", () => {
+    const config = buildOpenAIRealtimeSessionConfig(
+      "conversation",
+      "Roleplay the current first-meeting task. Keep the next turn short.",
+    );
 
     expect(config.audio.input.turn_detection.create_response).toBe(true);
     expect(config.audio.input.turn_detection.interrupt_response).toBe(true);
-    expect(config.instructions).toContain("realtime English speaking partner");
+    expect(config.instructions).toContain("server-resolved roleplay context");
+    expect(config.instructions).toContain("Roleplay the current first-meeting task");
     expect(config.instructions).toContain("trusted server evaluates learning evidence separately");
   });
 
