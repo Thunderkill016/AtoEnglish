@@ -17,8 +17,11 @@ import {
   type LearnerSkillStateRow,
   type RecentLearningAttemptRow,
 } from "@/lib/learning/session-input";
-import { planSession } from "@/lib/learning/session-planner";
-import { resolveNếpPlannedPractice } from "@/lib/nep/practice-execution.v1";
+import { planSession, type SessionPlan } from "@/lib/learning/session-planner";
+import {
+  resolveNếpPlannedPractice,
+  type NếpPracticeEnvelope,
+} from "@/lib/nep/practice-execution.v1";
 import { nepSessionCatalogV1 } from "@/lib/nep/session-catalog.v1";
 import { createRateLimiter } from "@/lib/security/rate-limit";
 import { createClient } from "@/lib/supabase/server";
@@ -44,13 +47,38 @@ export type GetNếpSessionPlanInput = {
   sessionSize?: number;
 };
 
+export type GetNếpSessionPlanResult =
+  | {
+      success: false;
+      error: string;
+    }
+  | {
+      success: true;
+      plan: SessionPlan;
+      practices: NếpPracticeEnvelope[];
+      diagnostics: {
+        sessionSize: number;
+        catalogSize: number;
+        practiceEnvelopeCount: number;
+        stateCount: number;
+        recentAttemptCount: number;
+        errorMemoryAttemptCount: number;
+        recurringErrorCount: number;
+        rawResponseSelected: false;
+        fullMetadataSelected: false;
+        hiddenEvaluatorTargetsExposedInPractices: false;
+      };
+    };
+
 /**
  * Read-only authenticated boundary for Session Planner V1.
  * It deliberately selects no raw response/transcript content and does not mutate learner state.
  * Alongside diagnostic planner data it returns learner-safe practice envelopes whose hidden
  * evaluator targets/evidence metadata have been stripped by the canonical execution compiler.
  */
-export async function getNếpSessionPlan(input: GetNếpSessionPlanInput = {}) {
+export async function getNếpSessionPlan(
+  input: GetNếpSessionPlanInput = {},
+): Promise<GetNếpSessionPlanResult> {
   try {
     const reqHeaders = await headers();
     const ip = reqHeaders.get("x-forwarded-for")?.split(",")[0].trim() || "127.0.0.1";
