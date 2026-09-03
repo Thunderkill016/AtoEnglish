@@ -54,9 +54,12 @@ export type LocalPhonemeObservation = {
   };
   expectedPhones: string[];
   observedPhones: string[];
-  /** Top-k CTC segment evidence with original posterior mass preserved. */
-  phoneEvidence: LocalObservedPhone[];
-  posterior: LocalCtcPosteriorSummary;
+  /**
+   * V2 CTC evidence. Optional only while the old top-1 preview is being
+   * replaced; BrowserPhonemeRecognizer itself requires these fields.
+   */
+  phoneEvidence?: LocalObservedPhone[];
+  posterior?: LocalCtcPosteriorSummary;
   alignment: PhoneAlignment[];
 };
 
