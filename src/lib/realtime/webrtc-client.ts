@@ -2,6 +2,7 @@ import {
   parseOpenAIRealtimeServerEvent,
   type AtoEnglishRealtimeSignal,
 } from "@/lib/realtime/events";
+import type { NếpRealtimeTutorIdentity } from "@/lib/realtime/nep-tutor-context";
 import type { OpenAIRealtimeMode } from "@/lib/realtime/openai-session";
 
 export type RealtimeVoiceConnectionState =
@@ -13,6 +14,7 @@ export type RealtimeVoiceConnectionState =
 export interface ConnectRealtimeVoiceOptions {
   audioElement: HTMLAudioElement;
   mode?: OpenAIRealtimeMode;
+  taskIdentity?: NếpRealtimeTutorIdentity;
   onSignal?: (signal: AtoEnglishRealtimeSignal) => void;
   onRawEvent?: (event: unknown) => void;
   onStateChange?: (state: RealtimeVoiceConnectionState) => void;
@@ -50,9 +52,9 @@ async function readSessionError(response: Response): Promise<string> {
 /**
  * Minimal native-WebRTC transport for AtoEnglish realtime voice.
  *
- * The browser sends only its SDP offer to AtoEnglish. The OpenAI API key remains server-side in
- * `/api/realtime/session`. Realtime transcript events are surfaced transiently to the caller; this
- * module does not persist raw audio or transcript text.
+ * The browser sends only its SDP offer and, for conversation mode, canonical task identifiers to
+ * AtoEnglish. The server resolves the actual roleplay instructions. Realtime transcript events are
+ * surfaced transiently to the caller; this module does not persist raw audio or transcript text.
  */
 export async function connectRealtimeVoice(
   options: ConnectRealtimeVoiceOptions,
@@ -62,6 +64,11 @@ export async function connectRealtimeVoice(
   }
   if (!navigator.mediaDevices?.getUserMedia) {
     throw new Error("Browser này không hỗ trợ microphone capture cần cho realtime voice.");
+  }
+
+  const mode = options.mode ?? "capture";
+  if (mode === "conversation" && !options.taskIdentity) {
+    throw new Error("Realtime conversation cần canonical Nếp task identity.");
   }
 
   options.onStateChange?.("connecting");
@@ -106,6 +113,12 @@ export async function connectRealtimeVoice(
       }
     });
 
+    dataChannel.addEventListener("open", () => {
+      if (mode === "conversation") {
+        dataChannel.send(JSON.stringify({ type: "response.create" }));
+      }
+    });
+
     dataChannel.addEventListener("message", (message) => {
       let event: unknown = message.data;
       if (typeof message.data === "string") {
@@ -139,12 +152,22 @@ export async function connectRealtimeVoice(
     const localSdp = peerConnection.localDescription?.sdp;
     if (!localSdp) throw new Error("Không tạo được SDP offer cho realtime voice.");
 
+    const sessionHeaders = new Headers({
+      "Content-Type": "application/sdp",
+      "X-AtoEnglish-Realtime-Mode": mode,
+    });
+    if (mode === "conversation" && options.taskIdentity) {
+      sessionHeaders.set("X-AtoEnglish-Lesson-Id", options.taskIdentity.lessonId);
+      sessionHeaders.set(
+        "X-AtoEnglish-Lesson-Version",
+        String(options.taskIdentity.lessonVersion),
+      );
+      sessionHeaders.set("X-AtoEnglish-Action-Id", options.taskIdentity.actionId);
+    }
+
     const sessionResponse = await fetch("/api/realtime/session", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/sdp",
-        "X-AtoEnglish-Realtime-Mode": options.mode ?? "capture",
-      },
+      headers: sessionHeaders,
       body: localSdp,
       credentials: "same-origin",
       cache: "no-store",
