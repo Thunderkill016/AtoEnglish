@@ -27,12 +27,16 @@ describe("pronunciation-engine posterior evidence", () => {
       },
       "θ",
     );
+    const expectedMeanMargin = (0.65 + 0.5 + 0.3) / 3;
 
     expect(summary.expected?.phone).toBe("θ");
     expect(summary.expected?.meanPosterior).toBeCloseTo(0.7, 8);
     expect(summary.expected?.top1Occupancy).toBe(1);
-    expect(summary.expected?.meanMarginToBestCompetitor).toBeCloseTo(0.5, 8);
-    expect(summary.meanTop2Margin).toBeCloseTo(0.5, 8);
+    expect(summary.expected?.meanMarginToBestCompetitor).toBeCloseTo(
+      expectedMeanMargin,
+      8,
+    );
+    expect(summary.meanTop2Margin).toBeCloseTo(expectedMeanMargin, 8);
   });
 
   it("reports uncertainty when a confusion dominates some frames", () => {
