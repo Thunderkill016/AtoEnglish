@@ -4,22 +4,38 @@ import {
   MAX_REALTIME_SDP_BYTES,
   OPENAI_REALTIME_MODEL,
   buildOpenAIRealtimeSessionConfig,
+  isOpenAIRealtimeMode,
   isPlausibleRealtimeSdpOffer,
 } from "@/lib/realtime/openai-session";
 
 describe("realtime session policy", () => {
-  it("uses semantic VAD and keeps mastery authority outside the voice model", () => {
+  it("defaults to capture-only semantic VAD for canonical Nếp practice", () => {
     const config = buildOpenAIRealtimeSessionConfig();
 
     expect(config.model).toBe(OPENAI_REALTIME_MODEL);
     expect(config.audio.input.turn_detection).toEqual({
       type: "semantic_vad",
       eagerness: "low",
-      create_response: true,
-      interrupt_response: true,
+      create_response: false,
+      interrupt_response: false,
     });
+    expect(config.instructions).toContain("capture-only");
     expect(config.instructions).toContain("Do not grade, score, declare mastery");
+  });
+
+  it("enables model responses only in explicit conversation mode", () => {
+    const config = buildOpenAIRealtimeSessionConfig("conversation");
+
+    expect(config.audio.input.turn_detection.create_response).toBe(true);
+    expect(config.audio.input.turn_detection.interrupt_response).toBe(true);
+    expect(config.instructions).toContain("realtime English speaking partner");
     expect(config.instructions).toContain("trusted server evaluates learning evidence separately");
+  });
+
+  it("validates supported transport modes", () => {
+    expect(isOpenAIRealtimeMode("capture")).toBe(true);
+    expect(isOpenAIRealtimeMode("conversation")).toBe(true);
+    expect(isOpenAIRealtimeMode("anything-else")).toBe(false);
   });
 
   it("accepts a normal audio SDP offer", () => {
