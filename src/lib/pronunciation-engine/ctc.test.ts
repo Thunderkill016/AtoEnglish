@@ -48,10 +48,10 @@ describe("pronunciation-engine CTC posterior collapse", () => {
       { topK: 2 },
     );
 
-    expect(segment?.candidates).toEqual([
-      { phone: "θ", probability: 0.45 },
-      { phone: "s", probability: 0.325 },
-    ]);
+    expect(segment?.candidates[0]?.phone).toBe("θ");
+    expect(segment?.candidates[0]?.probability).toBeCloseTo(0.45, 10);
+    expect(segment?.candidates[1]?.phone).toBe("s");
+    expect(segment?.candidates[1]?.probability).toBeCloseTo(0.325, 10);
     expect(segment?.capturedProbabilityMass).toBeCloseTo(0.775, 10);
   });
 
