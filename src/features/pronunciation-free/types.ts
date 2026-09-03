@@ -17,6 +17,30 @@ export type LocalPhonemeRuntime = {
   dtype: "q4f16" | "q8";
 };
 
+export type LocalPhoneCandidate = {
+  phone: string;
+  /** Real posterior probability from the CTC model; top-k is not renormalized. */
+  probability: number;
+};
+
+export type LocalObservedPhone = {
+  candidates: LocalPhoneCandidate[];
+  startMs: number;
+  endMs: number;
+  source: string | null;
+};
+
+export type LocalCtcPosteriorSummary = {
+  frameCount: number;
+  vocabularySize: number;
+  blankTokenId: number;
+  meanEntropy: number;
+  normalizedMeanEntropy: number;
+  meanPeakPosterior: number;
+  meanTop2Margin: number;
+  meanBlankPosterior: number | null;
+};
+
 export type LocalPhonemeObservation = {
   calibration: PronunciationSensorCalibration;
   model: {
@@ -30,6 +54,9 @@ export type LocalPhonemeObservation = {
   };
   expectedPhones: string[];
   observedPhones: string[];
+  /** Top-k CTC segment evidence with original posterior mass preserved. */
+  phoneEvidence: LocalObservedPhone[];
+  posterior: LocalCtcPosteriorSummary;
   alignment: PhoneAlignment[];
 };
 
