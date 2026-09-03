@@ -16,6 +16,8 @@
     "test:content-standard": "vitest run src/__tests__/lesson-content-standard.test.ts",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
+    "benchmark:learner-model": "tsx scripts/run-learner-model-benchmark.ts",
+    "benchmark:learner-model:synthetic": "tsx scripts/run-learner-model-benchmark.ts --synthetic",
     "e2e": "dotenv -e .env.local -- playwright test",
     "e2e:a11y": "dotenv -e .env.local -- playwright test e2e/accessibility-smoke.spec.ts",
     "e2e:time-to-lesson": "dotenv -e .env.local -- playwright test e2e/time-to-lesson.spec.ts",
