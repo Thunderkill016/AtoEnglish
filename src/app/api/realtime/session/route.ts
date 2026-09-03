@@ -6,7 +6,6 @@ import {
   buildOpenAIRealtimeSessionConfig,
   isOpenAIRealtimeMode,
   isPlausibleRealtimeSdpOffer,
-  type OpenAIRealtimeMode,
 } from "@/lib/realtime/openai-session";
 import { createRateLimiter } from "@/lib/security/rate-limit";
 import { createClient } from "@/lib/supabase/server";
@@ -52,14 +51,14 @@ export async function POST(request: Request) {
     );
   }
 
-  const requestedMode = request.headers.get("x-atoenglish-realtime-mode");
-  const mode: OpenAIRealtimeMode = requestedMode === null ? "capture" : requestedMode;
-  if (!isOpenAIRealtimeMode(mode)) {
+  const modeCandidate = request.headers.get("x-atoenglish-realtime-mode") ?? "capture";
+  if (!isOpenAIRealtimeMode(modeCandidate)) {
     return NextResponse.json(
       { success: false, error: "Realtime mode không hợp lệ." },
       { status: 400 },
     );
   }
+  const mode = modeCandidate;
 
   const contentType = request.headers.get("content-type")?.split(";")[0]?.trim();
   if (contentType !== "application/sdp") {
