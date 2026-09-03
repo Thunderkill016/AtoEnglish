@@ -27,7 +27,7 @@ function normalizeTokenLabel(value: string) {
   return value.normalize("NFC").trim();
 }
 
-function validateMatrix(matrix: CtcPosteriorMatrix) {
+export function validateCtcPosteriorMatrix(matrix: CtcPosteriorMatrix) {
   if (matrix.tokenLabels.length < 2) {
     throw new Error("ctc_vocabulary_too_small");
   }
@@ -139,7 +139,7 @@ export function collapseCtcPosteriorSegments(
   matrix: CtcPosteriorMatrix,
   options: CtcCollapseOptions = {},
 ): CtcPosteriorSegment[] {
-  validateMatrix(matrix);
+  validateCtcPosteriorMatrix(matrix);
 
   const topK = options.topK ?? 5;
   if (!Number.isInteger(topK) || topK < 1 || topK > 32) {
