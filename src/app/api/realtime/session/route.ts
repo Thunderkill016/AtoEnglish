@@ -1,17 +1,20 @@
 import { createHash } from "node:crypto";
 
-import { NextResponse } from "next/server";
+import { after, NextResponse } from "next/server";
 
 import {
   buildOpenAIRealtimeSessionConfig,
   isOpenAIRealtimeMode,
   isPlausibleRealtimeSdpOffer,
 } from "@/lib/realtime/openai-session";
+import { startRealtimeConversationGuard } from "@/lib/realtime/sideband-guard";
+import { realtimeCallIdFromLocation } from "@/lib/realtime/sideband-policy";
 import { resolveRealtimeConversationInstructions } from "@/lib/realtime/session-task";
 import { createRateLimiter } from "@/lib/security/rate-limit";
 import { createClient } from "@/lib/supabase/server";
 
 export const runtime = "nodejs";
+export const maxDuration = 60;
 
 const sessionLimiter = createRateLimiter(6, 60_000, "realtime-session");
 const OPENAI_REALTIME_CALLS_URL = "https://api.openai.com/v1/realtime/calls";
@@ -135,6 +138,33 @@ export async function POST(request: Request) {
         { success: false, error: "Realtime provider trả dữ liệu không hợp lệ." },
         { status: 502 },
       );
+    }
+
+    if (mode === "conversation") {
+      const callId = realtimeCallIdFromLocation(upstream.headers.get("location"));
+      if (!callId) {
+        console.error("OpenAI realtime conversation missing valid call location", {
+          requestId: upstream.headers.get("x-request-id"),
+        });
+        return NextResponse.json(
+          { success: false, error: "Realtime provider không trả call identity hợp lệ." },
+          { status: 502 },
+        );
+      }
+
+      try {
+        const guard = await startRealtimeConversationGuard({ callId, apiKey });
+        after(() => guard.done);
+      } catch (guardError) {
+        console.error("OpenAI realtime conversation guard attachment failed", {
+          callId,
+          reason: guardError instanceof Error ? guardError.message : "unknown",
+        });
+        return NextResponse.json(
+          { success: false, error: "Không mở được realtime conversation an toàn." },
+          { status: 502 },
+        );
+      }
     }
 
     return new Response(answerSdp, {

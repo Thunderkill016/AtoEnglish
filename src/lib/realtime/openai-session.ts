@@ -1,3 +1,5 @@
+import { REALTIME_CONVERSATION_MAX_OUTPUT_TOKENS } from "@/lib/realtime/sideband-policy";
+
 export const OPENAI_REALTIME_MODEL = "gpt-realtime-2.1" as const;
 export const OPENAI_REALTIME_TRANSCRIPTION_MODEL = "gpt-4o-mini-transcribe" as const;
 export const OPENAI_REALTIME_VOICE = "marin" as const;
@@ -70,7 +72,7 @@ export function buildOpenAIRealtimeSessionConfig(
     instructions: conversation
       ? `${CONVERSATION_GUARDRAILS} ${taskInstructions}`
       : CAPTURE_ONLY_INSTRUCTIONS,
-    max_output_tokens: conversation ? 128 : 1,
+    max_output_tokens: conversation ? REALTIME_CONVERSATION_MAX_OUTPUT_TOKENS : 1,
     audio: {
       input: {
         transcription: {
