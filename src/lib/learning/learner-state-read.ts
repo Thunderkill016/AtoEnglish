@@ -23,11 +23,16 @@ export function readLearnerDimension(
   evidenceType: EvidenceType,
 ): LearnerDimensionRead {
   const typedCoverage = state.evidenceByType;
-  const evidenceCount = typedCoverage
-    ? normalizeCount(typedCoverage[evidenceType])
-    : state.evidenceCount > 0
-      ? state.evidenceCount
-      : 0;
+  const rawValue = clamp01(state[evidenceType]);
+
+  let evidenceCount = 0;
+  if (typedCoverage) {
+    evidenceCount = normalizeCount(typedCoverage[evidenceType]);
+  } else if (rawValue > 0) {
+    // When typed coverage is absent, only an explicit positive score proves prior observation.
+    // A default zero must fail closed to unknown, not borrow total evidence from other dimensions.
+    evidenceCount = Math.max(1, state.evidenceCount);
+  }
 
   if (evidenceCount === 0) {
     return {

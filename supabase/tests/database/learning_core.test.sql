@@ -3,7 +3,7 @@ begin;
 create extension if not exists pgtap with schema extensions;
 set local search_path = public, extensions;
 
-select plan(36);
+select plan(43);
 
 -- The July 2026 attempt schema must survive a fresh migration replay as an inaccessible archive,
 -- while the stable public name is reclaimed by the canonical Attempt -> Evidence contract.
@@ -460,6 +460,76 @@ select ok(
   ),
   'production and transfer update separate learner-state channels atomically'
 );
+
+-- Function privileges on evidence coverage RPC
+select ok(
+  has_function_privilege(
+    'authenticated',
+    to_regprocedure('public.get_learner_evidence_coverage(text[])'),
+    'EXECUTE'
+  ),
+  'authenticated can call get_learner_evidence_coverage'
+);
+select ok(
+  not has_function_privilege(
+    'anon',
+    to_regprocedure('public.get_learner_evidence_coverage(text[])'),
+    'EXECUTE'
+  ),
+  'anon cannot call get_learner_evidence_coverage'
+);
+
+-- Authenticated User 1 coverage query
+select set_config(
+  'request.jwt.claims',
+  '{"sub":"11111111-1111-4111-8111-111111111111","role":"authenticated"}',
+  true
+);
+select set_config('request.jwt.claim.sub', '11111111-1111-4111-8111-111111111111', true);
+select set_config('request.jwt.claim.role', 'authenticated', true);
+set local role authenticated;
+
+select is(
+  (select count(*) from public.get_learner_evidence_coverage(array['CAP-TRANSFER'])),
+  2::bigint,
+  'authenticated user gets own aggregate evidence coverage rows'
+);
+
+select is(
+  (select count(*) from public.get_learner_evidence_coverage(array[]::text[])),
+  0::bigint,
+  'empty target array returns 0 coverage rows'
+);
+
+select is(
+  (select count(*) from public.get_learner_evidence_coverage(array['NON_EXISTENT_TARGET'])),
+  0::bigint,
+  'nonexistent target returns 0 coverage rows'
+);
+
+select is(
+  (select count(*) from public.get_learner_evidence_coverage(array['CAP-TRANSFER', 'CAP-TRANSFER'])),
+  2::bigint,
+  'duplicate target ids in input do not duplicate aggregate rows'
+);
+
+-- User 2 cross-user isolation
+select set_config(
+  'request.jwt.claims',
+  '{"sub":"22222222-2222-4222-8222-222222222222","role":"authenticated"}',
+  true
+);
+select set_config('request.jwt.claim.sub', '22222222-2222-4222-8222-222222222222', true);
+select set_config('request.jwt.claim.role', 'authenticated', true);
+set local role authenticated;
+
+select is(
+  (select count(*) from public.get_learner_evidence_coverage(array['CAP-TRANSFER'])),
+  0::bigint,
+  'user 2 cannot observe user 1 aggregate evidence coverage'
+);
+
+reset role;
 
 select * from finish();
 rollback;
