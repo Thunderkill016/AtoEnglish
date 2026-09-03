@@ -84,7 +84,6 @@ export async function connectRealtimeVoice(
 
   try {
     options.audioElement.autoplay = true;
-    options.audioElement.playsInline = true;
 
     peerConnection.addEventListener("track", (event) => {
       const stream = event.streams[0] ?? new MediaStream([event.track]);
