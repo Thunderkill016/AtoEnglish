@@ -34,6 +34,11 @@ jobs:
           node-version: 24
           cache: npm
 
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
       - name: Install dependencies
         run: npm ci --no-audit --prefer-offline
 
@@ -48,6 +53,9 @@ jobs:
 
       - name: Content standards
         run: npm run test:content-standard
+
+      - name: OpenPronounce shadow service syntax
+        run: python -m py_compile services/openpronounce-shadow/app.py
 
   database:
     name: Fresh migrations, database lint, and RLS tests
