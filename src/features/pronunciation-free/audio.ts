@@ -1,11 +1,15 @@
 const TARGET_SAMPLE_RATE = 16_000;
 const MIN_RECORDING_SECONDS = 0.15;
 const MAX_RECORDING_SECONDS = 8;
+const SILENCE_PEAK_THRESHOLD = 0.001;
+const SILENCE_RMS_THRESHOLD = 0.0001;
 
 export type LocalRecordingResult = {
   recording: Blob;
   samples: Float32Array;
   durationSeconds: number;
+  peakAmplitude: number;
+  rmsAmplitude: number;
 };
 
 export type LocalRecordingSession = {
@@ -72,6 +76,59 @@ async function resampleMono(
   return Float32Array.from(rendered.getChannelData(0));
 }
 
+function measureSignal(samples: Float32Array) {
+  let peakAmplitude = 0;
+  let squareSum = 0;
+
+  for (const sample of samples) {
+    const absolute = Math.abs(sample);
+    if (absolute > peakAmplitude) peakAmplitude = absolute;
+    squareSum += sample * sample;
+  }
+
+  return {
+    peakAmplitude,
+    rmsAmplitude: samples.length > 0 ? Math.sqrt(squareSum / samples.length) : 0,
+  };
+}
+
+function writeAscii(view: DataView, offset: number, value: string) {
+  for (let index = 0; index < value.length; index += 1) {
+    view.setUint8(offset + index, value.charCodeAt(index));
+  }
+}
+
+function encodePcm16Wav(samples: Float32Array, sampleRate: number) {
+  const bytesPerSample = 2;
+  const dataSize = samples.length * bytesPerSample;
+  const buffer = new ArrayBuffer(44 + dataSize);
+  const view = new DataView(buffer);
+
+  writeAscii(view, 0, "RIFF");
+  view.setUint32(4, 36 + dataSize, true);
+  writeAscii(view, 8, "WAVE");
+  writeAscii(view, 12, "fmt ");
+  view.setUint32(16, 16, true);
+  view.setUint16(20, 1, true);
+  view.setUint16(22, 1, true);
+  view.setUint32(24, sampleRate, true);
+  view.setUint32(28, sampleRate * bytesPerSample, true);
+  view.setUint16(32, bytesPerSample, true);
+  view.setUint16(34, 16, true);
+  writeAscii(view, 36, "data");
+  view.setUint32(40, dataSize, true);
+
+  let offset = 44;
+  for (const value of samples) {
+    const sample = Math.max(-1, Math.min(1, value));
+    const pcm = sample < 0 ? Math.round(sample * 0x8000) : Math.round(sample * 0x7fff);
+    view.setInt16(offset, pcm, true);
+    offset += bytesPerSample;
+  }
+
+  return new Blob([new Uint8Array(buffer)], { type: "audio/wav" });
+}
+
 async function decodeRecording(recording: Blob): Promise<LocalRecordingResult> {
   const AudioContextClass = globalThis.AudioContext;
 
@@ -99,11 +156,21 @@ async function decodeRecording(recording: Blob): Promise<LocalRecordingResult> {
       decoded.sampleRate,
       TARGET_SAMPLE_RATE,
     );
+    const { peakAmplitude, rmsAmplitude } = measureSignal(samples);
+
+    if (
+      peakAmplitude < SILENCE_PEAK_THRESHOLD &&
+      rmsAmplitude < SILENCE_RMS_THRESHOLD
+    ) {
+      throw new Error("recording_signal_missing");
+    }
 
     return {
-      recording,
+      recording: encodePcm16Wav(samples, TARGET_SAMPLE_RATE),
       samples,
       durationSeconds: samples.length / TARGET_SAMPLE_RATE,
+      peakAmplitude,
+      rmsAmplitude,
     };
   } finally {
     await context.close();
