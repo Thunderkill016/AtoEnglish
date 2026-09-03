@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 
 import { ALL_SOUNDS } from "@/lib/data/ipa-sounds";
 
-import { PronunciationFreePreview } from "./PronunciationFreePreview";
+import { PronunciationEvidencePreview } from "./PronunciationEvidencePreview";
 
 export default function PronunciationFreePreviewPage() {
   const sound = ALL_SOUNDS.find(
@@ -14,7 +14,7 @@ export default function PronunciationFreePreviewPage() {
   }
 
   return (
-    <PronunciationFreePreview
+    <PronunciationEvidencePreview
       target={{
         word: sound.exampleWord,
         ipa: sound.exampleIpa,
