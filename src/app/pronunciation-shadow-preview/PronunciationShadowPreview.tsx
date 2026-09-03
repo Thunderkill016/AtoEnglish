@@ -50,6 +50,7 @@ export function PronunciationShadowPreview({
   const [message, setMessage] = useState<string | null>(null);
   const [observation, setObservation] = useState<PronunciationShadowObservation | null>(null);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
+  const [hasRecording, setHasRecording] = useState(false);
   const [needsLogin, setNeedsLogin] = useState(false);
 
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
@@ -97,6 +98,7 @@ export function PronunciationShadowPreview({
     chunksRef.current = [];
     recordingBlobRef.current = null;
     setAudioUrl(null);
+    setHasRecording(false);
     setObservation(null);
     setMessage(null);
     setNeedsLogin(false);
@@ -132,6 +134,7 @@ export function PronunciationShadowPreview({
       chunksRef.current = [];
       recordingBlobRef.current = null;
       setAudioUrl(null);
+      setHasRecording(false);
 
       const stream = await navigator.mediaDevices.getUserMedia({
         audio: {
@@ -161,6 +164,7 @@ export function PronunciationShadowPreview({
 
         if (blob.size === 0) {
           recordingBlobRef.current = null;
+          setHasRecording(false);
           setPhase("error");
           setMessage("Recording rỗng. Thử lại và nói gần microphone hơn.");
           return;
@@ -170,6 +174,7 @@ export function PronunciationShadowPreview({
         const nextAudioUrl = URL.createObjectURL(blob);
         audioUrlRef.current = nextAudioUrl;
         setAudioUrl(nextAudioUrl);
+        setHasRecording(true);
         setPhase("ready");
         setMessage("Audio chỉ đang nằm trong browser. Bấm phân tích để gửi transiently tới shadow service.");
       });
@@ -268,11 +273,11 @@ export function PronunciationShadowPreview({
                 </button>
               )}
 
-              {phase === "ready" || phase === "result" || phase === "error" ? (
+              {hasRecording && phase !== "recording" ? (
                 <button
                   type="button"
                   onClick={analyze}
-                  disabled={!recordingBlobRef.current || phase === "analyzing"}
+                  disabled={phase === "analyzing"}
                   className="flex items-center gap-2 rounded-full bg-[#2d6a4f] px-5 py-3 text-sm font-semibold text-white disabled:opacity-30"
                 >
                   {phase === "analyzing" ? <Loader2 className="size-4 animate-spin" /> : <Headphones className="size-4" />}
