@@ -5,6 +5,7 @@ export * from "./evidence";
 export * from "./metrics";
 export * from "./operating-point";
 export * from "./phonology";
+export * from "./posterior";
 export * from "./prosody";
 export * from "./signal";
 export type * from "./types";
