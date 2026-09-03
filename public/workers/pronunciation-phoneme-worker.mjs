@@ -14,20 +14,11 @@ function errorMessage(error) {
 }
 
 function sanitizeProgress(progress) {
-  const value =
-    progress && typeof progress === "object"
-      ? progress
-      : {};
+  const value = progress && typeof progress === "object" ? progress : {};
 
   return {
-    status:
-      typeof value.status === "string"
-        ? value.status
-        : "loading",
-    file:
-      typeof value.file === "string"
-        ? value.file
-        : null,
+    status: typeof value.status === "string" ? value.status : "loading",
+    file: typeof value.file === "string" ? value.file : null,
     progress:
       typeof value.progress === "number" && Number.isFinite(value.progress)
         ? value.progress
@@ -79,9 +70,12 @@ async function createRecognizer() {
     });
   }
 
+  // q8 is the safer/default quantized path for WASM in Transformers.js.
+  // The previous q4 fallback was smaller, but more aggressive quantization is
+  // not worth sacrificing browser compatibility for this falsification test.
   attempts.push({
     device: "wasm",
-    dtype: "q4",
+    dtype: "q8",
   });
 
   let lastError = null;
@@ -106,16 +100,19 @@ async function createRecognizer() {
 
 function getRecognizer() {
   if (!recognizerPromise) {
-    recognizerPromise = createRecognizer();
+    recognizerPromise = createRecognizer().catch((error) => {
+      // A failed first load must not permanently poison the worker. This lets a
+      // later retry succeed after a transient network/cache/runtime failure.
+      recognizerPromise = null;
+      throw error;
+    });
   }
 
   return recognizerPromise;
 }
 
 function extractText(output) {
-  const candidate = Array.isArray(output)
-    ? output[0]
-    : output;
+  const candidate = Array.isArray(output) ? output[0] : output;
 
   if (
     !candidate ||
