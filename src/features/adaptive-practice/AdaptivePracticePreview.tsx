@@ -12,11 +12,15 @@ import {
   ShieldCheck,
   Sparkles,
 } from "lucide-react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { getNếpAdaptivePracticeQueue } from "@/app/actions/adaptive-practice";
 import { recordNếpPracticeAttempt } from "@/app/actions/learning-evidence";
 import type { NếpPracticeEnvelope } from "@/lib/nep/practice-execution.v1";
+import {
+  connectRealtimeVoice,
+  type RealtimeVoiceConnection,
+} from "@/lib/realtime/webrtc-client";
 
 type SurfacePhase =
   | "idle"
@@ -28,6 +32,7 @@ type SurfacePhase =
   | "error";
 
 type SaveState = "idle" | "saving" | "evidence" | "attempt" | "not-saved" | "error";
+type SpeechTransport = "realtime" | "browser" | null;
 
 type RecognitionCtor = new () => {
   lang: string;
@@ -48,6 +53,15 @@ function recognitionCtor(): RecognitionCtor | null {
   return browserWindow.SpeechRecognition ?? browserWindow.webkitSpeechRecognition ?? null;
 }
 
+function realtimeVoiceSupported() {
+  return (
+    typeof window !== "undefined" &&
+    typeof RTCPeerConnection !== "undefined" &&
+    typeof navigator !== "undefined" &&
+    Boolean(navigator.mediaDevices?.getUserMedia)
+  );
+}
+
 function saveLabel(state: SaveState) {
   if (state === "saving") return "Đang lưu attempt…";
   if (state === "evidence") return "Attempt + mastery evidence đã được ghi.";
@@ -65,23 +79,47 @@ export function AdaptivePracticePreview() {
   const [answerSource, setAnswerSource] = useState<"speech" | "text" | null>(null);
   const [supportUsed, setSupportUsed] = useState(false);
   const [listening, setListening] = useState(false);
+  const [speechTransport, setSpeechTransport] = useState<SpeechTransport>(null);
   const [feedback, setFeedback] = useState<string | null>(null);
   const [evaluationSuccess, setEvaluationSuccess] = useState<boolean | null>(null);
   const [saveState, setSaveState] = useState<SaveState>("idle");
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const attemptStartedAt = useRef<number | null>(null);
+  const realtimeConnectionRef = useRef<RealtimeVoiceConnection | null>(null);
+  const realtimeCaptureTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const audioElementRef = useRef<HTMLAudioElement | null>(null);
 
   const practice = practices[index] ?? null;
   const saving = saveState === "saving";
-  const speechAvailable = typeof window !== "undefined" && recognitionCtor() !== null;
+  const speechAvailable = realtimeVoiceSupported() || recognitionCtor() !== null;
   const persistedLabel = saveLabel(saveState);
 
+  const stopRealtimeCapture = () => {
+    if (realtimeCaptureTimeoutRef.current) {
+      clearTimeout(realtimeCaptureTimeoutRef.current);
+      realtimeCaptureTimeoutRef.current = null;
+    }
+    realtimeConnectionRef.current?.close();
+    realtimeConnectionRef.current = null;
+  };
+
+  useEffect(() => {
+    return () => {
+      if (realtimeCaptureTimeoutRef.current) {
+        clearTimeout(realtimeCaptureTimeoutRef.current);
+      }
+      realtimeConnectionRef.current?.close();
+    };
+  }, []);
+
   const resetResponse = () => {
+    stopRealtimeCapture();
     setAnswer("");
     setAnswerSource(null);
     setSupportUsed(false);
     setListening(false);
+    setSpeechTransport(null);
     setFeedback(null);
     setEvaluationSuccess(null);
     setSaveState("idle");
@@ -122,13 +160,9 @@ export function AdaptivePracticePreview() {
     setSaveState("idle");
   };
 
-  const startSpeech = () => {
-    if (!practice || saving || submitted) return;
+  const startBrowserSpeech = (fallbackMessage?: string) => {
     const Recognition = recognitionCtor();
-    if (!Recognition) {
-      setFeedback("Browser này không hỗ trợ speech recognition. Có thể dùng text fallback, nhưng text không tạo speaking evidence.");
-      return;
-    }
+    if (!Recognition) return false;
 
     const recognition = new Recognition();
     recognition.lang = "en-US";
@@ -138,6 +172,7 @@ export function AdaptivePracticePreview() {
       setAnswer(event.results[0]?.[0]?.transcript ?? "");
       setAnswerSource("speech");
       setListening(false);
+      setSpeechTransport("browser");
       setFeedback(null);
       setEvaluationSuccess(null);
       setSaveState("idle");
@@ -147,8 +182,93 @@ export function AdaptivePracticePreview() {
       setFeedback("Không lấy được transcript. Thử mic lại hoặc dùng text fallback.");
     };
     recognition.onend = () => setListening(false);
+
+    setSpeechTransport("browser");
     setListening(true);
+    if (fallbackMessage) setFeedback(fallbackMessage);
     recognition.start();
+    return true;
+  };
+
+  const startSpeech = async () => {
+    if (!practice || saving || submitted || listening) return;
+
+    setFeedback(null);
+    setEvaluationSuccess(null);
+    setSaveState("idle");
+
+    if (!realtimeVoiceSupported()) {
+      if (!startBrowserSpeech()) {
+        setFeedback(
+          "Browser này không hỗ trợ realtime voice hoặc speech recognition. Có thể dùng text fallback, nhưng text không tạo speaking evidence.",
+        );
+      }
+      return;
+    }
+
+    stopRealtimeCapture();
+    setSpeechTransport("realtime");
+    setListening(true);
+    setFeedback("Đang mở realtime speech capture…");
+
+    try {
+      if (!audioElementRef.current) {
+        audioElementRef.current = document.createElement("audio");
+      }
+
+      const connection = await connectRealtimeVoice({
+        audioElement: audioElementRef.current,
+        mode: "capture",
+        onSignal: (signal) => {
+          if (signal.kind === "learner-transcript") {
+            const transcript = signal.transcript.trim();
+            stopRealtimeCapture();
+            setListening(false);
+            setSpeechTransport("realtime");
+
+            if (!transcript) {
+              setFeedback("Realtime không nghe rõ câu vừa nói. Thử lại một lần nữa.");
+              return;
+            }
+
+            setAnswer(transcript);
+            setAnswerSource("speech");
+            setFeedback(null);
+            setEvaluationSuccess(null);
+            setSaveState("idle");
+            return;
+          }
+
+          if (signal.kind === "provider-error") {
+            stopRealtimeCapture();
+            setListening(false);
+            setFeedback("Realtime voice gặp lỗi. Có thể thử lại hoặc dùng text fallback.");
+          }
+        },
+        onStateChange: (state) => {
+          if (state === "connected") {
+            setFeedback("Realtime đang nghe. Nói tự nhiên và kết thúc câu khi sẵn sàng.");
+          }
+        },
+      });
+
+      realtimeConnectionRef.current = connection;
+      realtimeCaptureTimeoutRef.current = setTimeout(() => {
+        stopRealtimeCapture();
+        setListening(false);
+        setFeedback("Không nhận được câu nói sau 25 giây. Thử mic lại khi sẵn sàng.");
+      }, 25_000);
+    } catch (captureError) {
+      stopRealtimeCapture();
+      setListening(false);
+      const message = captureError instanceof Error ? captureError.message : "Realtime voice chưa dùng được.";
+      const browserFallback = startBrowserSpeech(
+        `Realtime chưa dùng được (${message}). Đã chuyển sang speech recognition của browser.`,
+      );
+      if (!browserFallback) {
+        setFeedback(`${message} Có thể dùng text fallback, nhưng text không tạo speaking evidence.`);
+      }
+    }
   };
 
   const submit = async () => {
@@ -295,11 +415,11 @@ export function AdaptivePracticePreview() {
               ) : practice.modality === "speech" ? (
                 <>
                   <div className="flex flex-wrap items-center gap-3">
-                    <button type="button" onClick={startSpeech} disabled={listening || saving || submitted} className="flex items-center gap-2 rounded-full bg-[#171713] px-5 py-3 text-sm font-semibold text-white disabled:opacity-40"><Mic2 className="size-4" /> {listening ? "Đang nghe…" : "Nói bằng mic"}</button>
-                    {!speechAvailable && <span className="text-xs text-[#8a5b00]">Browser không hỗ trợ speech recognition.</span>}
+                    <button type="button" onClick={startSpeech} disabled={listening || saving || submitted} className="flex items-center gap-2 rounded-full bg-[#171713] px-5 py-3 text-sm font-semibold text-white disabled:opacity-40"><Mic2 className="size-4" /> {listening ? (speechTransport === "realtime" ? "Realtime đang nghe…" : "Đang nghe…") : "Nói bằng mic"}</button>
+                    {!speechAvailable && <span className="text-xs text-[#8a5b00]">Browser không hỗ trợ speech capture.</span>}
                   </div>
-                  <textarea value={answer} disabled={saving || submitted} onChange={(event) => { setAnswer(event.target.value); setAnswerSource("text"); setFeedback(null); setEvaluationSuccess(null); setSaveState("idle"); }} placeholder="Transcript hoặc text fallback…" className="mt-4 min-h-24 w-full resize-none rounded-2xl border border-black/10 bg-[#faf9f5] p-4 outline-none focus:border-[#2d6a4f]/60 disabled:opacity-50" />
-                  <p className="mt-2 text-xs leading-5 text-black/40">Gõ text chỉ là fallback để kiểm language coverage; không được tính speaking evidence.</p>
+                  <textarea value={answer} disabled={saving || submitted} onChange={(event) => { setAnswer(event.target.value); setAnswerSource("text"); setSpeechTransport(null); setFeedback(null); setEvaluationSuccess(null); setSaveState("idle"); }} placeholder="Transcript hoặc text fallback…" className="mt-4 min-h-24 w-full resize-none rounded-2xl border border-black/10 bg-[#faf9f5] p-4 outline-none focus:border-[#2d6a4f]/60 disabled:opacity-50" />
+                  <p className="mt-2 text-xs leading-5 text-black/40">{answerSource === "speech" && speechTransport === "realtime" ? "Transcript từ Realtime được dùng tạm thời để đánh giá language coverage; không phải điểm phát âm và không persist raw transcript." : answerSource === "speech" ? "Transcript từ browser speech recognition; không phải điểm phát âm." : "Gõ text chỉ là fallback để kiểm language coverage; không được tính speaking evidence."}</p>
                 </>
               ) : (
                 <textarea value={answer} disabled={saving || submitted} onChange={(event) => { setAnswer(event.target.value); setAnswerSource("text"); }} className="min-h-24 w-full rounded-2xl border border-black/10 p-4" />
@@ -346,7 +466,7 @@ export function AdaptivePracticePreview() {
         )}
 
         <footer className="mt-auto pt-6 text-center text-[11px] leading-5 text-black/35">
-          <Headphones className="mr-1 inline size-3" /> Planner chọn task; server đánh giá; DB quyết định evidence. Transcript thô không được persist. Text fallback ≠ speaking evidence.
+          <Headphones className="mr-1 inline size-3" /> Planner chọn task; server đánh giá; DB quyết định evidence. Realtime/browser transcript chỉ là language signal; text fallback ≠ speaking evidence.
         </footer>
       </div>
     </main>
