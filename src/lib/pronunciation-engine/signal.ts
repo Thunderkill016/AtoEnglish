@@ -42,13 +42,6 @@ const DEFAULT_OPTIONS: Required<SignalQualityOptions> = {
   frameDurationMs: 20,
 };
 
-function rms(values: readonly number[]) {
-  if (values.length === 0) return 0;
-  let squareSum = 0;
-  for (const value of values) squareSum += value * value;
-  return Math.sqrt(squareSum / values.length);
-}
-
 function percentile(sorted: readonly number[], probability: number) {
   if (sorted.length === 0) return 0;
   const bounded = Math.min(1, Math.max(0, probability));
@@ -134,18 +127,29 @@ export function analyzeSignalQuality(
   const activeRms = percentile(sortedFrames, 0.8);
   const activeThreshold = Math.max(
     config.minRms,
-    noiseFloorRms > 0 ? noiseFloorRms * 2 : config.minRms,
+    Math.min(
+      noiseFloorRms > 0 ? noiseFloorRms * 2 : config.minRms,
+      activeRms > 0 ? activeRms * 0.5 : config.minRms,
+    ),
   );
   const activeFrameCount = frames.filter((value) => value >= activeThreshold).length;
   const activeSpeechFraction =
     frames.length === 0 ? 0 : activeFrameCount / frames.length;
 
+  const activityContrast =
+    noiseFloorRms <= 1e-8 ? Number.POSITIVE_INFINITY : activeRms / noiseFloorRms;
+
+  // If virtually every frame has similar energy, the recording may simply be
+  // continuously voiced. In that case a percentile-based noise estimate is
+  // not identifiable, so return null rather than inventing a low SNR value.
   const snrProxyDb =
     noiseFloorRms <= 1e-8
       ? activeRms > config.minRms
         ? 60
         : null
-      : 20 * Math.log10(Math.max(activeRms, 1e-8) / noiseFloorRms);
+      : activityContrast < 1.25
+        ? null
+        : 20 * Math.log10(Math.max(activeRms, 1e-8) / noiseFloorRms);
 
   const warnings: SignalQualityWarning[] = [];
   if (durationSeconds < config.minDurationSeconds) warnings.push("too_short");
