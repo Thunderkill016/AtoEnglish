@@ -40,7 +40,7 @@ function parseRuntime(value: unknown): LocalPhonemeRuntime | null {
     return { device, dtype };
   }
 
-  if (device === "wasm" && dtype === "q4") {
+  if (device === "wasm" && dtype === "q8") {
     return { device, dtype };
   }
 
