@@ -1,4 +1,9 @@
-import type { LearnerSkillState } from "./evidence";
+import {
+  EVIDENCE_TYPES,
+  type EvidenceCoverage,
+  type EvidenceType,
+  type LearnerSkillState,
+} from "./evidence";
 import type { PlannerCandidate } from "./session-planner";
 
 export const PLANNER_SKILL_STATE_SELECT =
@@ -20,6 +25,12 @@ export type LearnerSkillStateRow = {
   last_evidence_at: string | null;
 };
 
+export type LearnerEvidenceCoverageRow = {
+  target_id: string;
+  evidence_type: string;
+  evidence_count: number | string;
+};
+
 export type RecentLearningAttemptRow = {
   capability_id: string | null;
   knowledge_item_id: string | null;
@@ -34,7 +45,10 @@ export type RecentPlannerHistory = {
   recentCandidateIds: string[];
 };
 
-export function mapLearnerSkillStateRow(row: LearnerSkillStateRow): LearnerSkillState {
+export function mapLearnerSkillStateRow(
+  row: LearnerSkillStateRow,
+  evidenceByType?: EvidenceCoverage,
+): LearnerSkillState {
   return {
     targetId: row.target_id,
     recognition: clamp01(row.recognition),
@@ -45,8 +59,25 @@ export function mapLearnerSkillStateRow(row: LearnerSkillStateRow): LearnerSkill
     transfer: clamp01(row.transfer),
     retention: clamp01(row.retention),
     evidenceCount: Math.max(0, Math.floor(row.evidence_count)),
+    evidenceByType,
     lastEvidenceAt: row.last_evidence_at,
   };
+}
+
+export function buildLearnerEvidenceCoverage(rows: LearnerEvidenceCoverageRow[]) {
+  const coverageByTarget = new Map<string, EvidenceCoverage>();
+
+  for (const row of rows) {
+    if (!isEvidenceType(row.evidence_type)) continue;
+    const evidenceCount = normalizeCount(row.evidence_count);
+    if (evidenceCount === 0) continue;
+
+    const coverage = coverageByTarget.get(row.target_id) ?? {};
+    coverage[row.evidence_type] = evidenceCount;
+    coverageByTarget.set(row.target_id, coverage);
+  }
+
+  return coverageByTarget;
 }
 
 export function collectPlannerTargetIds(candidates: PlannerCandidate[]): string[] {
@@ -81,6 +112,16 @@ export function deriveRecentPlannerHistory(rows: RecentLearningAttemptRow[]): Re
 export function normalizeSessionSize(value: number | undefined, fallback = 5) {
   if (typeof value !== "number" || !Number.isFinite(value)) return fallback;
   return Math.min(12, Math.max(1, Math.floor(value)));
+}
+
+function isEvidenceType(value: string): value is EvidenceType {
+  return (EVIDENCE_TYPES as readonly string[]).includes(value);
+}
+
+function normalizeCount(value: number | string) {
+  const parsed = typeof value === "number" ? value : Number(value);
+  if (!Number.isFinite(parsed)) return 0;
+  return Math.max(0, Math.floor(parsed));
 }
 
 function asNonEmptyString(value: unknown) {
