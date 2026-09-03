@@ -1,5 +1,6 @@
 export * from "./alignment";
 export * from "./assessment";
+export * from "./benchmark";
 export * from "./calibration";
 export * from "./evidence";
 export * from "./metrics";
