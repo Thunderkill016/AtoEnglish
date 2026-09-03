@@ -19,6 +19,7 @@ export type UnvalidatedPronunciationAssessment = {
   uncertainty: {
     reasons: PronunciationUncertaintyReason[];
     meanPosteriorMargin: number | null;
+    minimumPosteriorMargin: number | null;
   };
   /**
    * Numeric learner-facing scores stay null until a human-rated calibration
@@ -36,8 +37,9 @@ export type UnvalidatedPronunciationAssessment = {
 
 export type UnvalidatedAssessmentOptions = {
   /**
-   * Optional research threshold. Leave null until a sensor has calibrated
-   * probabilities and a validation split establishes a useful operating point.
+   * Optional research threshold applied to the weakest observed phone margin.
+   * Leave null until a sensor has calibrated probabilities and a validation
+   * split establishes a useful operating point.
    */
   minPosteriorMargin?: number | null;
 };
@@ -46,7 +48,7 @@ export type UnvalidatedAssessmentOptions = {
  * Composes independent evidence streams without pretending they are already a
  * calibrated pronunciation score. Signal-quality failure forces abstention;
  * model uncertainty is exposed explicitly and can also trigger abstention when
- * a validated margin threshold is supplied by an experiment.
+ * a validated weakest-phone margin threshold is supplied by an experiment.
  */
 export function composeUnvalidatedPronunciationAssessment(
   input: {
@@ -67,8 +69,8 @@ export function composeUnvalidatedPronunciationAssessment(
   const minPosteriorMargin = options.minPosteriorMargin ?? null;
   if (
     minPosteriorMargin !== null &&
-    input.segmental.meanPosteriorMargin !== null &&
-    input.segmental.meanPosteriorMargin < minPosteriorMargin
+    input.segmental.minimumPosteriorMargin !== null &&
+    input.segmental.minimumPosteriorMargin < minPosteriorMargin
   ) {
     reasons.push("weak_sensor_margin");
   }
@@ -86,6 +88,7 @@ export function composeUnvalidatedPronunciationAssessment(
     uncertainty: {
       reasons,
       meanPosteriorMargin: input.segmental.meanPosteriorMargin,
+      minimumPosteriorMargin: input.segmental.minimumPosteriorMargin,
     },
     scores: {
       pronunciation: null,
