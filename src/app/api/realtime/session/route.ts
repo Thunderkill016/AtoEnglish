@@ -62,7 +62,9 @@ export async function POST(request: Request) {
   const mode = modeCandidate;
 
   const conversationInstructions =
-    mode === "conversation" ? resolveRealtimeConversationInstructions(request.headers) : undefined;
+    mode === "conversation"
+      ? (resolveRealtimeConversationInstructions(request.headers) ?? undefined)
+      : undefined;
   if (mode === "conversation" && !conversationInstructions) {
     return NextResponse.json(
       {
