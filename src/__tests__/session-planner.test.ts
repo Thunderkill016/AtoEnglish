@@ -188,7 +188,7 @@ describe("session planner v1", () => {
         candidate({ id: "a:retrieval", targetId: "a", evidenceType: "retrieval" }),
         candidate({ id: "a:listening", targetId: "a", evidenceType: "listening" }),
       ],
-      states: [],
+      states: [state("a", { recognition: 0.3, evidenceCount: 1 })],
       sessionSize: 3,
       config: { maxPerTarget: 2 },
     });
