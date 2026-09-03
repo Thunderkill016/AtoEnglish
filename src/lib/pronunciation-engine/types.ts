@@ -77,7 +77,10 @@ export type UncalibratedSegmentalEvidence = {
   rawAccuracySignal: number;
   /** Research-only completeness signal based on canonical phone retention. */
   rawCompletenessSignal: number;
+  /** Mean confidence margin is useful globally but can hide one weak phone. */
   meanPosteriorMargin: number | null;
+  /** Weakest available phone margin; used by conservative abstention gates. */
+  minimumPosteriorMargin: number | null;
   deletionCount: number;
   insertionCount: number;
   substitutionCount: number;
