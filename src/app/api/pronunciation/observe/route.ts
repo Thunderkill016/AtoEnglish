@@ -13,9 +13,11 @@ import { createRateLimiter } from "@/lib/security/rate-limit";
 import { createClient } from "@/lib/supabase/server";
 
 export const runtime = "nodejs";
-export const maxDuration = 30;
+export const maxDuration = 60;
 
 const observationLimiter = createRateLimiter(10, 60_000, "pronunciation-shadow");
+const PROVIDER_WAKE_RETRY_DELAY_MS = 1_500;
+const PROVIDER_ATTEMPT_TIMEOUTS_MS = [8_000, 42_000] as const;
 
 function rateLimitIdentity(userId: string) {
   return createHash("sha256")
@@ -45,6 +47,67 @@ function resolveProviderEndpoint() {
 function providerHeaders() {
   const token = process.env.OPENPRONOUNCE_SERVICE_TOKEN?.trim();
   return token ? { Authorization: `Bearer ${token}` } : undefined;
+}
+
+function sleep(ms: number) {
+  return new Promise<void>((resolve) => setTimeout(resolve, ms));
+}
+
+function buildProviderForm(
+  audioBytes: ArrayBuffer,
+  audioType: string,
+  audioName: string,
+  expectedWord: string,
+) {
+  const providerForm = new FormData();
+  providerForm.set(
+    "file",
+    new Blob([audioBytes], { type: audioType }),
+    audioName || "recording.webm",
+  );
+  providerForm.set("expected_text", expectedWord);
+  providerForm.set("lang", "en");
+  return providerForm;
+}
+
+async function fetchProviderWithWakeRetry(input: {
+  endpoint: string;
+  audioBytes: ArrayBuffer;
+  audioType: string;
+  audioName: string;
+  expectedWord: string;
+}) {
+  let lastError: unknown = null;
+  let lastResponse: Response | null = null;
+
+  for (let attempt = 0; attempt < PROVIDER_ATTEMPT_TIMEOUTS_MS.length; attempt += 1) {
+    if (attempt > 0) await sleep(PROVIDER_WAKE_RETRY_DELAY_MS);
+
+    try {
+      const response = await fetch(input.endpoint, {
+        method: "POST",
+        headers: providerHeaders(),
+        body: buildProviderForm(
+          input.audioBytes,
+          input.audioType,
+          input.audioName,
+          input.expectedWord,
+        ),
+        cache: "no-store",
+        signal: AbortSignal.timeout(PROVIDER_ATTEMPT_TIMEOUTS_MS[attempt]),
+      });
+
+      lastResponse = response;
+      if (response.ok || (response.status !== 502 && response.status !== 503)) {
+        return response;
+      }
+    } catch (error) {
+      lastError = error;
+    }
+  }
+
+  if (lastResponse) return lastResponse;
+  throw lastError instanceof Error ? lastError : new Error("provider_unreachable");
 }
 
 export async function POST(request: Request) {
@@ -150,22 +213,15 @@ export async function POST(request: Request) {
     );
   }
 
-  const providerForm = new FormData();
-  providerForm.set(
-    "file",
-    new Blob([await audioValue.arrayBuffer()], { type: audioValue.type }),
-    audioValue.name || "recording.webm",
-  );
-  providerForm.set("expected_text", target.word);
-  providerForm.set("lang", "en");
+  const audioBytes = await audioValue.arrayBuffer();
 
   try {
-    const upstream = await fetch(endpoint, {
-      method: "POST",
-      headers: providerHeaders(),
-      body: providerForm,
-      cache: "no-store",
-      signal: AbortSignal.timeout(25_000),
+    const upstream = await fetchProviderWithWakeRetry({
+      endpoint,
+      audioBytes,
+      audioType: audioValue.type,
+      audioName: audioValue.name,
+      expectedWord: target.word,
     });
 
     if (!upstream.ok) {
