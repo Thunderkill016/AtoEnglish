@@ -54,8 +54,13 @@ jobs:
       - name: Content standards
         run: npm run test:content-standard
 
-      - name: OpenPronounce shadow service syntax
-        run: python -m py_compile services/openpronounce-shadow/app.py
+      - name: OpenPronounce shadow service contract
+        run: |
+          python -m py_compile \
+            services/openpronounce-shadow/app.py \
+            services/openpronounce-shadow/provider_contract.py \
+            services/openpronounce-shadow/test_provider_contract.py
+          python services/openpronounce-shadow/test_provider_contract.py
 
   database:
     name: Fresh migrations, database lint, and RLS tests
