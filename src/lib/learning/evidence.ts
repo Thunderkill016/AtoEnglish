@@ -9,6 +9,7 @@ export const EVIDENCE_TYPES = [
 ] as const;
 
 export type EvidenceType = (typeof EVIDENCE_TYPES)[number];
+export type EvidenceCoverage = Partial<Record<EvidenceType, number>>;
 export type ResponseModality = "choice" | "text" | "speech" | "gesture" | "none";
 
 export interface LearningAttemptInput {
@@ -124,6 +125,11 @@ export interface LearnerSkillState {
   transfer: number;
   retention: number;
   evidenceCount: number;
+  /**
+   * Coverage is derived from append-only evidence history. Numeric skill values remain a fast
+   * routing snapshot; a zero with no typed evidence is unknown, not observed failure.
+   */
+  evidenceByType?: EvidenceCoverage;
   lastEvidenceAt: string | null;
 }
 
@@ -138,6 +144,15 @@ export function createEmptyLearnerSkillState(targetId: string): LearnerSkillStat
     transfer: 0,
     retention: 0,
     evidenceCount: 0,
+    evidenceByType: {
+      recognition: 0,
+      retrieval: 0,
+      listening: 0,
+      production: 0,
+      repair: 0,
+      transfer: 0,
+      retention: 0,
+    },
     lastEvidenceAt: null,
   };
 }
@@ -157,11 +172,16 @@ export function applyEvidenceToSkillState(
   const observation = evidence.success ? effectiveConfidence : 0;
   const alpha = evidence.success ? 0.35 : 0.5;
   const nextValue = clamp(oldValue * (1 - alpha) + observation * alpha, 0, 1);
+  const typedEvidenceCount = Math.max(0, Math.floor(current.evidenceByType?.[evidence.type] ?? 0));
 
   return {
     ...current,
     [evidence.type]: nextValue,
     evidenceCount: current.evidenceCount + 1,
+    evidenceByType: {
+      ...current.evidenceByType,
+      [evidence.type]: typedEvidenceCount + 1,
+    },
     lastEvidenceAt: occurredAt,
   };
 }
