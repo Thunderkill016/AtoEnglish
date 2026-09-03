@@ -14,7 +14,7 @@ export type PhoneAlignment = {
 
 export type LocalPhonemeRuntime = {
   device: "webgpu" | "wasm";
-  dtype: "q4f16" | "q4";
+  dtype: "q4f16" | "q8";
 };
 
 export type LocalPhonemeObservation = {
