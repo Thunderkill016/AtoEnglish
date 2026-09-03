@@ -7,13 +7,16 @@ import {
   buildErrorMemory,
   type ErrorMemoryAttemptRow,
 } from "@/lib/learning/error-memory";
+import { LEARNER_STATE_MODEL_VERSION } from "@/lib/learning/learner-state-read";
 import {
+  buildLearnerEvidenceCoverage,
   collectPlannerTargetIds,
   deriveRecentPlannerHistory,
   mapLearnerSkillStateRow,
   normalizeSessionSize,
   PLANNER_RECENT_ATTEMPT_SELECT,
   PLANNER_SKILL_STATE_SELECT,
+  type LearnerEvidenceCoverageRow,
   type LearnerSkillStateRow,
   type RecentLearningAttemptRow,
 } from "@/lib/learning/session-input";
@@ -41,6 +44,10 @@ type PlannerQuery<T> = {
 
 type PlannerReadClient = {
   from: <T>(table: string) => PlannerQuery<T>;
+  rpc: <T>(
+    functionName: string,
+    args: Record<string, unknown>,
+  ) => QueryResult<T>;
 };
 
 export type GetNếpSessionPlanInput = {
@@ -61,6 +68,9 @@ export type GetNếpSessionPlanResult =
         catalogSize: number;
         practiceEnvelopeCount: number;
         stateCount: number;
+        evidenceCoverageRowCount: number;
+        learnerStateModelVersion: typeof LEARNER_STATE_MODEL_VERSION;
+        learnerStateConfidenceCalibrated: false;
         recentAttemptCount: number;
         errorMemoryAttemptCount: number;
         recurringErrorCount: number;
@@ -106,6 +116,12 @@ export async function getNếpSessionPlan(
       .in("target_id", targetIds)
       .limit(100);
 
+    // Aggregate coverage comes from append-only evidence history, not the EMA routing snapshot.
+    const evidenceCoverageQuery = readClient.rpc<LearnerEvidenceCoverageRow>(
+      "get_learner_evidence_coverage",
+      { p_target_ids: targetIds },
+    );
+
     // Recent attempts are exposure history only. Project semantic planner keys, not raw content.
     const recentAttemptQuery = readClient
       .from<RecentLearningAttemptRow>("learning_attempts")
@@ -124,13 +140,21 @@ export async function getNếpSessionPlan(
       .order("created_at", { ascending: false })
       .limit(200);
 
-    const [stateResult, recentAttemptResult, errorMemoryResult] = await Promise.all([
-      stateQuery,
-      recentAttemptQuery,
-      errorMemoryQuery,
-    ]);
+    const [stateResult, evidenceCoverageResult, recentAttemptResult, errorMemoryResult] =
+      await Promise.all([
+        stateQuery,
+        evidenceCoverageQuery,
+        recentAttemptQuery,
+        errorMemoryQuery,
+      ]);
     if (stateResult.error) {
       return { success: false, error: `Không thể đọc learner state: ${stateResult.error.message}` };
+    }
+    if (evidenceCoverageResult.error) {
+      return {
+        success: false,
+        error: `Không thể đọc evidence coverage: ${evidenceCoverageResult.error.message}`,
+      };
     }
     if (recentAttemptResult.error) {
       return { success: false, error: `Không thể đọc lịch sử practice gần đây: ${recentAttemptResult.error.message}` };
@@ -139,7 +163,10 @@ export async function getNếpSessionPlan(
       return { success: false, error: `Không thể đọc error memory: ${errorMemoryResult.error.message}` };
     }
 
-    const states = (stateResult.data ?? []).map(mapLearnerSkillStateRow);
+    const evidenceCoverage = buildLearnerEvidenceCoverage(evidenceCoverageResult.data ?? []);
+    const states = (stateResult.data ?? []).map((row) =>
+      mapLearnerSkillStateRow(row, evidenceCoverage.get(row.target_id) ?? {}),
+    );
     const recentHistory = deriveRecentPlannerHistory(recentAttemptResult.data ?? []);
     const errorMemory = buildErrorMemory(errorMemoryResult.data ?? []);
     const plan = planSession({
@@ -165,6 +192,9 @@ export async function getNếpSessionPlan(
         catalogSize: nepSessionCatalogV1.length,
         practiceEnvelopeCount: practices.length,
         stateCount: states.length,
+        evidenceCoverageRowCount: evidenceCoverageResult.data?.length ?? 0,
+        learnerStateModelVersion: LEARNER_STATE_MODEL_VERSION,
+        learnerStateConfidenceCalibrated: false,
         recentAttemptCount: recentAttemptResult.data?.length ?? 0,
         errorMemoryAttemptCount: errorMemoryResult.data?.length ?? 0,
         recurringErrorCount: errorMemory.recurring.length,
