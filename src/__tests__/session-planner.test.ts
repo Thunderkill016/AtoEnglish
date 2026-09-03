@@ -134,11 +134,11 @@ describe("session planner v1", () => {
 
     const blocked = plan({ candidates: [transfer], states: [state("cap-a")], sessionSize: 1 });
     expect(blocked.opportunities).toEqual([]);
-    expect(blocked.blocked[0]?.reasons).toContain("transfer-needs-prior-production");
+    expect(blocked.blocked[0]?.reasons).toContain("transfer-needs-observed-production");
 
     const allowed = plan({
       candidates: [transfer],
-      states: [state("cap-a", { production: 0.35, evidenceCount: 2 })],
+      states: [state("cap-a", { production: 0.35, evidenceCount: 2, evidenceByType: { production: 2 } })],
       sessionSize: 1,
     });
     expect(allowed.opportunities[0]?.candidate.id).toBe("cap-a:transfer");
