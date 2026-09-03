@@ -140,8 +140,9 @@ def _sanitize_result(result: Any) -> dict[str, Any]:
 
 
 @app.get("/health")
-def health(authorization: str | None = Header(default=None)) -> dict[str, str]:
-    _require_service_token(authorization)
+def health() -> dict[str, str]:
+    # Intentionally unauthenticated: deployment platforms need a health check that does not know
+    # AtoEnglish's service token. This exposes no learner data, model paths or environment values.
     return {
         "status": "ok",
         "provider": "openpronounce",
