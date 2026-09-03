@@ -14,10 +14,13 @@ import type {
 const DEFAULT_DELETION_COST = 0.95;
 const DEFAULT_INSERTION_COST = 0.9;
 const COST_EPSILON = 1e-9;
+const PROBABILITY_MASS_EPSILON = 1e-3;
 
 type WeightedCandidate = {
   phone: string;
+  /** Weight used by the alignment expectation. */
   weight: number;
+  /** Original sensor probability. Never renormalized for learner evidence. */
   probability: number | null;
 };
 
@@ -26,6 +29,8 @@ type CandidateView = {
   topPhone: string;
   topProbability: number | null;
   posteriorMargin: number | null;
+  /** Sum of probability mass actually supplied by the sensor. */
+  capturedProbabilityMass: number | null;
 };
 
 type AlignmentOptions = {
@@ -62,11 +67,11 @@ function normalizePhoneCandidates(candidates: readonly PhoneCandidate[]): Candid
     throw new Error("phone_observation_has_no_candidates");
   }
 
-  const hasCompleteProbabilityDistribution = cleaned.every(
+  const hasProbabilities = cleaned.every(
     (candidate) => candidate.probability !== null,
   );
 
-  if (hasCompleteProbabilityDistribution) {
+  if (hasProbabilities) {
     const merged = new Map<string, number>();
 
     for (const candidate of cleaned) {
@@ -78,12 +83,13 @@ function normalizePhoneCandidates(candidates: readonly PhoneCandidate[]): Candid
 
     const total = [...merged.values()].reduce((sum, value) => sum + value, 0);
 
+    if (total > 1 + PROBABILITY_MASS_EPSILON) {
+      throw new Error("phone_observation_probability_mass_exceeds_one");
+    }
+
     if (total > 0) {
       const ranked = [...merged.entries()]
-        .map(([phone, probability]) => ({
-          phone,
-          probability: probability / total,
-        }))
+        .map(([phone, probability]) => ({ phone, probability }))
         .sort((left, right) => right.probability - left.probability);
 
       const first = ranked[0];
@@ -92,6 +98,9 @@ function normalizePhoneCandidates(candidates: readonly PhoneCandidate[]): Candid
       const second = ranked[1];
 
       return {
+        // The weights intentionally preserve the original probability mass.
+        // If a worker returns top-k only, omitted mass is handled conservatively
+        // in substitutionEvidence instead of being silently renormalized to 1.
         weighted: ranked.map((candidate) => ({
           phone: candidate.phone,
           weight: candidate.probability,
@@ -102,6 +111,7 @@ function normalizePhoneCandidates(candidates: readonly PhoneCandidate[]): Candid
         posteriorMargin: clampUnit(
           first.probability - (second?.probability ?? 0),
         ),
+        capturedProbabilityMass: clampUnit(total),
       };
     }
   }
@@ -133,16 +143,28 @@ function normalizePhoneCandidates(candidates: readonly PhoneCandidate[]): Candid
     topPhone,
     topProbability: null,
     posteriorMargin: null,
+    capturedProbabilityMass: null,
   };
 }
 
 function substitutionEvidence(expected: string, observed: ObservedPhone) {
   const candidates = normalizePhoneCandidates(observed.candidates);
-  const cost = candidates.weighted.reduce(
+  const knownCost = candidates.weighted.reduce(
     (sum, candidate) =>
       sum + candidate.weight * phonologicalDistance(expected, candidate.phone),
     0,
   );
+
+  // For top-k posterior evidence, unknown tail mass must not disappear. A
+  // conservative unit-distance tail prevents a truncated list such as 0.4/0.3
+  // from masquerading as a complete 57%/43% distribution. Full distributions
+  // have captured mass 1 and therefore no tail penalty. Rank-only observations
+  // keep their internal normalized heuristic weights and expose no probability.
+  const omittedProbabilityMass =
+    candidates.capturedProbabilityMass === null
+      ? 0
+      : 1 - candidates.capturedProbabilityMass;
+  const cost = knownCost + omittedProbabilityMass;
 
   return {
     cost: clampUnit(cost),
