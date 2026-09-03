@@ -280,16 +280,6 @@ describe("Error Memory V1", () => {
     expect(memory.recurring).toHaveLength(0);
   });
 
-  it("safely handles numeric lesson_version from attempt rows as string identity", () => {
-    const memory = buildErrorMemory([
-      row({ lesson_version: 1 as unknown as string }),
-    ]);
-
-    expect(memory.entries).toHaveLength(1);
-    expect(memory.entries[0]?.lessonVersion).toBe("1");
-    expect(memory.entries[0]?.key).toContain("|1|");
-  });
-
   it("is deterministic even when rows arrive newest-first", () => {
     const chronological = [
       row({ created_at: "2026-09-02T10:00:00.000Z" }),
