@@ -4,6 +4,63 @@
 
 CREATE SCHEMA IF NOT EXISTS private;
 
+-- The repository previously shipped a different `learning_attempts` contract in
+-- 20260731162613_learning_attempts.sql. A fresh migration replay therefore reaches this file with
+-- that legacy table already present. `CREATE TABLE IF NOT EXISTS` alone would silently keep the
+-- incompatible bigint/lesson/activity schema and make the canonical RPC fail later.
+--
+-- Preserve any legacy evidence instead of dropping it. The archive becomes API-inaccessible and
+-- service-role-only; the canonical table can then be created under the stable `learning_attempts`
+-- name. Production AtoEnglish has not applied either migration as of 2026-09-03, but this upgrade
+-- path keeps local reset/staging environments deterministic if the July migration is present.
+DO $$
+BEGIN
+  IF to_regclass('public.learning_attempts') IS NOT NULL
+     AND EXISTS (
+       SELECT 1
+       FROM information_schema.columns
+       WHERE table_schema = 'public'
+         AND table_name = 'learning_attempts'
+         AND column_name = 'lesson_id'
+     )
+     AND NOT EXISTS (
+       SELECT 1
+       FROM information_schema.columns
+       WHERE table_schema = 'public'
+         AND table_name = 'learning_attempts'
+         AND column_name = 'exercise_type'
+     ) THEN
+    IF to_regclass('public.learning_attempts_legacy_202607') IS NOT NULL THEN
+      RAISE EXCEPTION 'Cannot archive legacy learning_attempts: target archive already exists';
+    END IF;
+
+    ALTER TABLE public.learning_attempts
+      RENAME TO learning_attempts_legacy_202607;
+
+    IF to_regclass('public.learning_attempts_user_created_idx') IS NOT NULL THEN
+      ALTER INDEX public.learning_attempts_user_created_idx
+        RENAME TO learning_attempts_legacy_202607_user_created_idx;
+    END IF;
+
+    IF to_regclass('public.learning_attempts_user_activity_idx') IS NOT NULL THEN
+      ALTER INDEX public.learning_attempts_user_activity_idx
+        RENAME TO learning_attempts_legacy_202607_user_activity_idx;
+    END IF;
+
+    IF to_regclass('public.learning_attempts_id_seq') IS NOT NULL THEN
+      ALTER SEQUENCE public.learning_attempts_id_seq
+        RENAME TO learning_attempts_legacy_202607_id_seq;
+    END IF;
+
+    REVOKE ALL ON TABLE public.learning_attempts_legacy_202607 FROM anon, authenticated;
+    GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE public.learning_attempts_legacy_202607 TO service_role;
+
+    COMMENT ON TABLE public.learning_attempts_legacy_202607 IS
+      'Archived July 2026 learning-attempt contract. Read only through privileged maintenance paths; superseded by canonical Attempt -> Evidence schema.';
+  END IF;
+END;
+$$;
+
 CREATE TABLE IF NOT EXISTS public.learning_attempts (
   id                  uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id             uuid NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,

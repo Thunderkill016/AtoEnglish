@@ -1,6 +1,10 @@
--- Migration: CEFR Level Auto-Progression (fixed)
--- Uses user_lesson_progress table (actual table name in this DB)
--- current_level is text (not an enum type)
+-- Migration: CEFR Level Auto-Progression
+--
+-- Historical note: `user_lesson_progress` was introduced later by
+-- 20260621160000_schema_consolidation.sql. Hosted environments that already had the table could
+-- attach this trigger immediately, while a clean migration replay could not. Keep the functions
+-- available here and attach the trigger only when the dependency already exists; the consolidation
+-- migration also installs the trigger after it creates the missing table.
 
 -- Function: units required before advancing from a given level
 CREATE OR REPLACE FUNCTION public.units_required_for_level(level text)
@@ -30,7 +34,9 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql IMMUTABLE;
 
--- Trigger: run after each unit completion
+-- Trigger function: run after each unit completion.
+-- PL/pgSQL resolves the table reference when the function executes, so defining the function is
+-- safe before the table exists.
 CREATE OR REPLACE FUNCTION public.check_cefr_progression()
 RETURNS TRIGGER AS $$
 DECLARE
@@ -39,7 +45,6 @@ DECLARE
   v_required int;
   v_next_level text;
 BEGIN
-  -- Get user's current CEFR level
   SELECT current_level INTO v_current_level
   FROM public.user_progress
   WHERE user_id = NEW.user_id;
@@ -48,7 +53,6 @@ BEGIN
     RETURN NEW;
   END IF;
 
-  -- Count distinct completed units
   SELECT COUNT(DISTINCT unit_id) INTO v_completed_count
   FROM public.user_lesson_progress
   WHERE user_id = NEW.user_id;
@@ -67,9 +71,13 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
--- Attach trigger to user_lesson_progress
-DROP TRIGGER IF EXISTS on_unit_complete_check_cefr ON public.user_lesson_progress;
-CREATE TRIGGER on_unit_complete_check_cefr
-  AFTER INSERT ON public.user_lesson_progress
-  FOR EACH ROW
-  EXECUTE FUNCTION public.check_cefr_progression();
+-- Some historical/hosted databases already had user_lesson_progress before this migration. Attach
+-- there, but do not make fresh migration replay depend on a table that is created later.
+DO $$
+BEGIN
+  IF to_regclass('public.user_lesson_progress') IS NOT NULL THEN
+    EXECUTE 'DROP TRIGGER IF EXISTS on_unit_complete_check_cefr ON public.user_lesson_progress';
+    EXECUTE 'CREATE TRIGGER on_unit_complete_check_cefr AFTER INSERT ON public.user_lesson_progress FOR EACH ROW EXECUTE FUNCTION public.check_cefr_progression()';
+  END IF;
+END;
+$$;
