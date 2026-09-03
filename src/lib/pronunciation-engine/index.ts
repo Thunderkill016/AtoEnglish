@@ -3,6 +3,7 @@ export * from "./assessment";
 export * from "./calibration";
 export * from "./evidence";
 export * from "./metrics";
+export * from "./operating-point";
 export * from "./phonology";
 export * from "./prosody";
 export * from "./signal";
