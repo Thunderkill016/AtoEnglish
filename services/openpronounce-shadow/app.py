@@ -3,16 +3,44 @@ from __future__ import annotations
 import math
 import os
 import tempfile
+from contextlib import asynccontextmanager
 from importlib.metadata import version
 from pathlib import Path
 from typing import Any
 
+import numpy as np
 from fastapi import FastAPI, File, Form, Header, HTTPException, UploadFile
-from openpronounce import compare_audio_with_text, load_audio
+from openpronounce import (
+    compare_audio_with_text,
+    load_audio,
+    transcribe,
+    transcribe_phones,
+)
 
 MAX_AUDIO_BYTES = 5 * 1024 * 1024
 SERVICE_TOKEN = os.getenv("OPENPRONOUNCE_SERVICE_TOKEN", "").strip()
 PROVIDER_VERSION = version("openpronounce")
+WARMUP_ENABLED = os.getenv("OPENPRONOUNCE_WARMUP", "0").strip().lower() in {
+    "1",
+    "true",
+    "yes",
+    "on",
+}
+
+
+@asynccontextmanager
+async def lifespan(_: FastAPI):
+    if WARMUP_ENABLED:
+        # Trigger both lazy Wav2Vec2 loaders before the deployment health check can pass.
+        # A one-second silent waveform is sufficient to initialize model + processor caches;
+        # the output is intentionally discarded and never becomes learner evidence.
+        silence = np.zeros(16_000, dtype=np.float32)
+        print("openpronounce_shadow_warmup_started", flush=True)
+        transcribe(silence, lang="en")
+        transcribe_phones(silence, lang="en")
+        print("openpronounce_shadow_warmup_ready", flush=True)
+    yield
+
 
 app = FastAPI(
     title="AtoEnglish OpenPronounce Shadow",
@@ -20,6 +48,7 @@ app = FastAPI(
     docs_url=None,
     redoc_url=None,
     openapi_url=None,
+    lifespan=lifespan,
 )
 
 
