@@ -4,6 +4,8 @@ export const OPENAI_REALTIME_VOICE = "marin" as const;
 
 export const MAX_REALTIME_SDP_BYTES = 64 * 1024;
 
+export type OpenAIRealtimeMode = "capture" | "conversation";
+
 export type OpenAIRealtimeSessionConfig = {
   type: "realtime";
   model: typeof OPENAI_REALTIME_MODEL;
@@ -18,8 +20,8 @@ export type OpenAIRealtimeSessionConfig = {
       turn_detection: {
         type: "semantic_vad";
         eagerness: "low";
-        create_response: true;
-        interrupt_response: true;
+        create_response: boolean;
+        interrupt_response: boolean;
       };
     };
     output: {
@@ -31,24 +33,35 @@ export type OpenAIRealtimeSessionConfig = {
 /**
  * Transport-level policy only.
  *
- * Canonical Nếp actions remain the authority for what the learner should practice and what counts
- * as evidence. The realtime model is deliberately prohibited from declaring mastery or producing
- * pronunciation scores. Task-specific instructions can be layered on later from server-resolved
- * canonical practice metadata.
+ * `capture` is the safe default for canonical Nếp practice: Realtime performs microphone transport,
+ * semantic turn detection and input transcription but does not generate a model response.
+ * `conversation` is reserved for a later server-resolved tutor layer that can inject the current
+ * canonical task context without giving the model mastery authority.
  */
-export function buildOpenAIRealtimeSessionConfig(): OpenAIRealtimeSessionConfig {
+export function buildOpenAIRealtimeSessionConfig(
+  mode: OpenAIRealtimeMode = "capture",
+): OpenAIRealtimeSessionConfig {
+  const conversation = mode === "conversation";
+
   return {
     type: "realtime",
     model: OPENAI_REALTIME_MODEL,
-    instructions: [
-      "You are AtoEnglish's realtime English speaking partner.",
-      "Keep each reply concise and natural, normally one short conversational turn.",
-      "Let the learner finish speaking; beginners may pause while formulating an answer.",
-      "Do not grade, score, declare mastery, or claim pronunciation accuracy.",
-      "Do not reveal hidden answer keys or invent learner progress.",
-      "AtoEnglish's trusted server evaluates learning evidence separately.",
-    ].join(" "),
-    max_output_tokens: 128,
+    instructions: conversation
+      ? [
+          "You are AtoEnglish's realtime English speaking partner.",
+          "Keep each reply concise and natural, normally one short conversational turn.",
+          "Let the learner finish speaking; beginners may pause while formulating an answer.",
+          "Do not grade, score, declare mastery, or claim pronunciation accuracy.",
+          "Do not reveal hidden answer keys or invent learner progress.",
+          "AtoEnglish's trusted server evaluates learning evidence separately.",
+        ].join(" ")
+      : [
+          "This session is capture-only for AtoEnglish learning evidence.",
+          "Do not produce a conversational response.",
+          "Do not grade, score, declare mastery, or claim pronunciation accuracy.",
+          "AtoEnglish's trusted server evaluates the transient input transcript separately.",
+        ].join(" "),
+    max_output_tokens: conversation ? 128 : 1,
     audio: {
       input: {
         transcription: {
@@ -58,8 +71,8 @@ export function buildOpenAIRealtimeSessionConfig(): OpenAIRealtimeSessionConfig 
         turn_detection: {
           type: "semantic_vad",
           eagerness: "low",
-          create_response: true,
-          interrupt_response: true,
+          create_response: conversation,
+          interrupt_response: conversation,
         },
       },
       output: {
@@ -67,6 +80,10 @@ export function buildOpenAIRealtimeSessionConfig(): OpenAIRealtimeSessionConfig 
       },
     },
   };
+}
+
+export function isOpenAIRealtimeMode(value: string | null): value is OpenAIRealtimeMode {
+  return value === "capture" || value === "conversation";
 }
 
 export function isPlausibleRealtimeSdpOffer(sdp: string): boolean {
