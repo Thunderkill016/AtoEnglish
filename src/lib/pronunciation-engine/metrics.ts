@@ -314,7 +314,7 @@ export function rocAuc(
   if (positiveCount === 0 || negativeCount === 0) return null;
 
   const ranks = averageRanks(probabilities);
-  const positiveRankSum = targets.reduce(
+  const positiveRankSum = targets.reduce<number>(
     (sum, target, index) => sum + (target === 1 ? (ranks[index] as number) : 0),
     0,
   );
