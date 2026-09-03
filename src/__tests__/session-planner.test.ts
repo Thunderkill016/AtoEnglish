@@ -530,8 +530,8 @@ describe("session planner v1", () => {
       expect(result.opportunities[0]?.reasons).not.toContain("recurring-error-reprobe:1");
     });
 
-    it("case 3: invalid/malformed candidate lessonVersion values evaluate safely to null with 0 pressure", () => {
-      const invalidVersions = [null, undefined, Number.NaN, Number.POSITIVE_INFINITY, true, {}, "   "];
+    it("case 3: invalid/malformed candidate lessonVersion values (floats, negative, zero, non-numeric) evaluate safely to null with 0 pressure", () => {
+      const invalidVersions = [null, undefined, 0, -1, 1.5, -2.4, Number.NaN, Number.POSITIVE_INFINITY, true, {}, "   "];
 
       for (const badVersion of invalidVersions) {
         const candidateBad = candidate({
@@ -607,6 +607,35 @@ describe("session planner v1", () => {
       const result = plan({ candidates: [source], states: [], sessionSize: 1, errorMemory: [directlyRepaired] });
       expect(result.opportunities[0]?.breakdown.errorReprobePressure).toBe(0);
       expect(result.opportunities[0]?.breakdown.errorRepairPressure).toBe(0);
+    });
+
+    it("case 6: non-version metadata fields (lessonId, actionId) do not coerce numbers to strings", () => {
+      const numericLessonIdCandidate = candidate({
+        id: "source:transfer",
+        targetId: "cap-b",
+        evidenceType: "production",
+        metadata: { lessonId: 101, lessonVersion: 1, actionId: "transfer" },
+      });
+      const numericActionIdCandidate = candidate({
+        id: "source:transfer",
+        targetId: "cap-b",
+        evidenceType: "production",
+        metadata: { lessonId: "lesson-b", lessonVersion: 1, actionId: 202 },
+      });
+      const satisfiedError = errorMemoryEntry({
+        targetId: "cap-b",
+        lessonId: "lesson-b",
+        lessonVersion: "1",
+        actionId: "transfer",
+        remediationCandidateIds: ["remediation:action"],
+        remediationSatisfiedAt: "2026-09-02T12:00:00.000Z",
+      });
+
+      const planLesson = plan({ candidates: [numericLessonIdCandidate], states: [], sessionSize: 1, errorMemory: [satisfiedError] });
+      const planAction = plan({ candidates: [numericActionIdCandidate], states: [], sessionSize: 1, errorMemory: [satisfiedError] });
+
+      expect(planLesson.opportunities[0]?.breakdown.errorReprobePressure).toBe(0);
+      expect(planAction.opportunities[0]?.breakdown.errorReprobePressure).toBe(0);
     });
   });
 });
