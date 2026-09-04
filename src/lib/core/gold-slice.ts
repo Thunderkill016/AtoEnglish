@@ -10,9 +10,9 @@ import { readLearnerDimension } from "@/lib/learning/learner-state-read";
 import { planSession } from "@/lib/learning/session-planner";
 
 import {
-  certifyCoreEvidence,
-  type CertifiedCoreEvidence,
-  type EvidenceCertificationResult,
+  type CoreEvidenceForRouting,
+  type ReferenceEvidenceValidationResult,
+  validateReferenceCoreEvidence,
 } from "./certified-evidence";
 import type { ControlledResponseDiagnosticPayload } from "./diagnostics";
 import type { SkillGraph, SkillNode } from "./domain";
@@ -57,7 +57,7 @@ export type GoldSliceAnalysis =
       status: "observed";
       reason: "deterministic-target-match" | "deterministic-target-missing";
       observation: CoreObservation<ControlledResponseDiagnosticPayload>;
-      candidate: Parameters<typeof certifyCoreEvidence>[2];
+      candidate: Parameters<typeof validateReferenceCoreEvidence>[2];
     };
 
 export type GoldSliceFeedback = {
@@ -82,7 +82,7 @@ export type RetrievalSchedulePrescription = {
 export type GoldSliceTransition = {
   step: string;
   reasonCodes: string[];
-  certification: "certified" | "rejected" | "not-attempted";
+  certification: "reference-validated" | "rejected" | "not-attempted";
   production: ReturnType<typeof readLearnerDimension>;
   transfer: ReturnType<typeof readLearnerDimension>;
 };
@@ -205,9 +205,9 @@ export function analyzeGoldSliceResponse(
     },
     confidence: 1,
     calibration: {
-      validationState: "benchmarked",
-      decision: "assessment",
-      benchmarkId: REFERENCE_BENCHMARK_ID,
+      validationState: "unvalidated",
+      decision: "shadow",
+      benchmarkId: null,
       modelFingerprint: `${EVALUATOR_ID}@1`,
       scope: {
         activity: attempt.task.activity,
@@ -215,9 +215,9 @@ export function analyzeGoldSliceResponse(
         requiredPopulationTags: [...attempt.populationTags],
         allowedPromptContexts: [attempt.contextId],
       },
-      metrics: { sampleSize: 4 },
+      metrics: { sampleSize: 0 },
     },
-    authority: "assessment-candidate",
+    authority: "none",
     provenance: {
       evaluator: EVALUATOR_ID,
       evaluatorKind: "deterministic",
@@ -260,19 +260,22 @@ export function analyzeGoldSliceResponse(
   };
 }
 
-export function applyCertifiedEvidenceToRoutingState(
+export function applyValidatedEvidenceToRoutingState(
   state: LearnerSkillState,
-  evidence: CertifiedCoreEvidence,
+  evidence: CoreEvidenceForRouting,
 ): { state: LearnerSkillState; reasonCode: string } {
   const evidenceType = evidenceTypeForRole(evidence.role);
   if (!evidenceType) return { state, reasonCode: `unsupported-role:${evidence.role}` };
   if (evidence.evaluatorConfidence === null) {
     return { state, reasonCode: "evaluator-confidence-unknown" };
   }
+  if (evidence.outcome.kind !== "binary") {
+    return { state, reasonCode: "bounded-score-mapping-required" };
+  }
   const event: EvidenceEvent = {
     type: evidenceType,
     targetId: evidence.targetId,
-    success: evidence.outcome.kind === "binary" && evidence.outcome.success,
+    success: evidence.outcome.success,
     confidence: evidence.evaluatorConfidence,
     supportLevel: evidence.attempt.supportLevel,
     contextId: evidence.attempt.contextId,
@@ -280,6 +283,7 @@ export function applyCertifiedEvidenceToRoutingState(
     metadata: {
       coreEvidenceRole: evidence.role,
       calibrationBenchmarkId: evidence.calibrationBenchmarkId,
+      authorityScope: evidence.authorityScope,
       decisionScope: "routing-only",
     },
   };
@@ -312,7 +316,7 @@ export function selectGoldSliceFeedback(
 
 export function prescribeDeclarativeRetrieval(input: {
   capability: GoldSliceCapability;
-  evidence: CertifiedCoreEvidence;
+  evidence: CoreEvidenceForRouting;
   now: string;
   provisionalDelayMs: number;
 }): RetrievalSchedulePrescription {
@@ -479,7 +483,11 @@ function processAttempt(state: LearnerSkillState, capability: GoldSliceCapabilit
   if (analysis.status === "unavailable") {
     return { state, analysis, certification: null, reasonCodes: [analysis.reason, "no-evidence-created"] };
   }
-  const certification = certifyCoreEvidence(input.task, analysis.observation, analysis.candidate);
+  const certification = validateReferenceCoreEvidence(
+    input.task,
+    analysis.observation,
+    analysis.candidate,
+  );
   if (!certification.ok) {
     return {
       state,
@@ -488,12 +496,12 @@ function processAttempt(state: LearnerSkillState, capability: GoldSliceCapabilit
       reasonCodes: [analysis.reason, ...certification.problems.map((problem) => `certification:${problem.type}`)],
     };
   }
-  const updated = applyCertifiedEvidenceToRoutingState(state, certification.evidence);
+  const updated = applyValidatedEvidenceToRoutingState(state, certification.evidence);
   return {
     state: updated.state,
     analysis,
     certification,
-    reasonCodes: [analysis.reason, "evidence-certified", updated.reasonCode],
+    reasonCodes: [analysis.reason, "reference-evidence-validated", updated.reasonCode],
   };
 }
 
@@ -553,9 +561,11 @@ function stateSnapshot(state: LearnerSkillState): GoldSliceStateSnapshot {
   };
 }
 
-function certificationStatus(result: EvidenceCertificationResult | null | undefined): GoldSliceTransition["certification"] {
+function certificationStatus(
+  result: ReferenceEvidenceValidationResult | null | undefined,
+): GoldSliceTransition["certification"] {
   if (!result) return "not-attempted";
-  return result.ok ? "certified" : "rejected";
+  return result.ok ? "reference-validated" : "rejected";
 }
 
 function evidenceTypeForRole(role: CoreEvidenceRole): EvidenceType | null {

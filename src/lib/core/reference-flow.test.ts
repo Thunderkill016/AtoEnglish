@@ -81,6 +81,12 @@ describe("pure core reference flow", () => {
         contextId: "minimal-pair-set-a",
       },
       occurredAt: "2026-09-04T00:00:01.000Z",
+    }, {
+      benchmarkId: "vi-adult-minpair-v1",
+      modelFingerprint: "deterministic-choice@v1",
+      authority: "assessment-candidate",
+      decision: "assessment",
+      scope: observation.calibration.scope,
     });
 
     expect(certified.ok).toBe(true);
@@ -164,6 +170,12 @@ describe("pure core reference flow", () => {
         contextId: "ctx",
       },
       occurredAt: "2026-09-04T00:00:01.000Z",
+    }, {
+      benchmarkId: "bench-1",
+      modelFingerprint: "deterministic@v1",
+      authority: "assessment-candidate",
+      decision: "assessment",
+      scope: observation.calibration.scope,
     });
 
     expect(result).toMatchObject({

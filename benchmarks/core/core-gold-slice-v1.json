@@ -61,10 +61,10 @@
       "step": "supported-success",
       "reasonCodes": [
         "deterministic-target-match",
-        "evidence-certified",
+        "reference-evidence-validated",
         "routing-state-updated:production"
       ],
-      "certification": "certified",
+      "certification": "reference-validated",
       "production": {
         "estimate": 0.315,
         "evidenceCount": 1,
@@ -86,10 +86,10 @@
       "step": "independent-failure",
       "reasonCodes": [
         "deterministic-target-missing",
-        "evidence-certified",
+        "reference-evidence-validated",
         "routing-state-updated:production"
       ],
-      "certification": "certified",
+      "certification": "reference-validated",
       "production": {
         "estimate": 0.1575,
         "evidenceCount": 2,
@@ -111,10 +111,10 @@
       "step": "independent-retry-success",
       "reasonCodes": [
         "deterministic-target-match",
-        "evidence-certified",
+        "reference-evidence-validated",
         "routing-state-updated:production"
       ],
-      "certification": "certified",
+      "certification": "reference-validated",
       "production": {
         "estimate": 0.45237499999999997,
         "evidenceCount": 3,
@@ -136,10 +136,10 @@
       "step": "changed-context-transfer",
       "reasonCodes": [
         "deterministic-target-match",
-        "evidence-certified",
+        "reference-evidence-validated",
         "routing-state-updated:transfer"
       ],
-      "certification": "certified",
+      "certification": "reference-validated",
       "production": {
         "estimate": 0.45237499999999997,
         "evidenceCount": 3,
