@@ -1,5 +1,8 @@
 # Planned Practice Execution V1
 
+> **Document status:** reference
+> **Governing authority:** [constitution](../../.specify/memory/constitution.md); it wins on conflict
+
 ## Problem
 
 Session Planner can rank a canonical practice candidate, but ranking alone is not a trustworthy execution boundary.

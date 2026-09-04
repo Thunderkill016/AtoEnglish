@@ -1,9 +1,12 @@
 # AtoEnglish product truth
 
-**Status:** current product decision source  
+> **Document status:** historical; superseded and retained for provenance
+> **Governing authority:** [constitution](../../../.specify/memory/constitution.md); it wins on conflict
+
+**Prior status:** current product decision source before Spec Kit migration
 **Updated:** 2026-07-24  
 **Primary roadmap:** GitHub issue #20  
-**Journey contract:** `docs/curriculum/28-day-speaking-journey-contract.md`
+**Journey contract:** `28-day-speaking-journey-contract.md`
 
 ## What AtoEnglish is now
 

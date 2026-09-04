@@ -1,5 +1,8 @@
 # UI Guidelines — AtoEnglish
 
+> **Document status:** reference
+> **Governing authority:** [constitution](../../../.specify/memory/constitution.md); it wins on conflict
+
 > Hướng dẫn cách dùng component, layout pattern, và responsive design.  
 > Đọc cùng với `DESIGN_SYSTEM.md`.
 

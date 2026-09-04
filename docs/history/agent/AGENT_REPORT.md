@@ -1,5 +1,8 @@
 # Báo cáo Autopilot — AtoEnglish
 
+> **Document status:** historical; superseded and retained for provenance
+> **Governing authority:** [constitution](../../../.specify/memory/constitution.md); it wins on conflict
+
 > Cập nhật: **2026-07-01 22:57:27 +07**
 > Đọc file này khi về — agent tự ghi sau mỗi phiên.
 

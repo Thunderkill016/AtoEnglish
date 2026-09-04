@@ -9,7 +9,7 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 LOG_DIR="$ROOT/logs/agent"
 HEALTH_LOG="$LOG_DIR/watchdog.log"
-BACKLOG="$ROOT/AGENT_BACKLOG.md"
+BACKLOG="$ROOT/docs/history/agent/AGENT_BACKLOG.md"
 STATE_FILE="$LOG_DIR/.orchestrator-state"
 STALE_MINUTES="${STALE_MINUTES:-45}"
 MAX_STASHES="${MAX_STASHES:-15}"

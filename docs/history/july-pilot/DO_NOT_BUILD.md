@@ -1,5 +1,8 @@
 # AtoEnglish do-not-build list
 
+> **Document status:** historical; superseded and retained for provenance
+> **Governing authority:** [constitution](../../../.specify/memory/constitution.md); it wins on conflict
+
 **Updated:** 2026-07-24  
 **Applies until:** the focused 28-day pilot has learner, learning, and market evidence
 

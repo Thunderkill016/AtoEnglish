@@ -1,5 +1,8 @@
 # Learning Core Database Integration V1
 
+> **Document status:** reference
+> **Governing authority:** [constitution](../../.specify/memory/constitution.md); it wins on conflict
+
 ## Purpose
 
 This slice makes the adaptive learning data path verifiable against a real, disposable Postgres/Supabase database before hosted rollout, then records the hosted verification once the same learning-core contract is applied.

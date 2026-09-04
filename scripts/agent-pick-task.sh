@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
-# Pick the next ready task from AGENT_BACKLOG.md
+# Legacy disabled picker for the archived agent backlog.
 # Writes JSON to logs/agent/.next-task.json
 
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-BACKLOG="$ROOT/AGENT_BACKLOG.md"
+BACKLOG="$ROOT/docs/history/agent/AGENT_BACKLOG.md"
 OUT="$ROOT/logs/agent/.next-task.json"
 mkdir -p "$(dirname "$OUT")"
 

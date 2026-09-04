@@ -1,5 +1,8 @@
 # Structured Error Signals V1
 
+> **Document status:** reference
+> **Governing authority:** [constitution](../../.specify/memory/constitution.md); it wins on conflict
+
 ## Purpose
 
 AtoEnglish needs to know more than whether one task passed or failed. Session planning and later error repair need a compact, privacy-safe description of **which declared task demand was missing**.

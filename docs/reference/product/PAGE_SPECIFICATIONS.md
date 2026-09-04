@@ -1,5 +1,8 @@
 # Page Specifications — AtoEnglish
 
+> **Document status:** reference
+> **Governing authority:** [constitution](../../../.specify/memory/constitution.md); it wins on conflict
+
 > Mô tả chi tiết từng trang trong app. Dùng làm tài liệu tham khảo khi thiết kế/build trang mới hoặc refactor.
 
 ---

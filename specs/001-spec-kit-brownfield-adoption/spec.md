@@ -153,7 +153,8 @@ passes without changing product behavior.
 
 - Issue #133 is the owner authorization for this migration and supplies all material scope choices.
 - The exact base `32e204882303707facb92af72d5f13b99f370119` already includes accepted PR #131.
-- Open PR #132 is grandfathered and its implementation files remain untouched.
+- PR #132 merged into the frontier after this work began; its authority-registry implementation
+  and provenance reference are inherited unchanged by the synchronized base.
 - Durable technical/domain documents may remain in an explicitly labeled directory when moving
   them would create disproportionate conflict or link churn.
 - Existing disabled agent automation may retain historical records, but it cannot define active

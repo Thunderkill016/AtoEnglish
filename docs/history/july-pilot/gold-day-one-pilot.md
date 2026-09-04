@@ -1,5 +1,8 @@
 # Gold Day 1 user pilot
 
+> **Document status:** historical; superseded and retained for provenance
+> **Governing authority:** [constitution](../../../.specify/memory/constitution.md); it wins on conflict
+
 ## Product question
 
 Can a Vietnamese beginner complete one useful workplace-English outcome in 10–15 minutes, receive understandable feedback, and perform the full task better on the required retry?

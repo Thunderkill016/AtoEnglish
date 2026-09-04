@@ -1,5 +1,8 @@
 # Planner Error Repair Pressure V1
 
+> **Document status:** reference
+> **Governing authority:** [constitution](../../.specify/memory/constitution.md); it wins on conflict
+
 ## Goal
 
 Session Planner ranks practice using skill gap, cold start, staleness, importance, transfer value and anti-repetition penalties. Error Memory adds two bounded adaptive questions:

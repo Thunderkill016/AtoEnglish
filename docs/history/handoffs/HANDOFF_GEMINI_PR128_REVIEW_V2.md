@@ -1,5 +1,8 @@
 # Gemini / Antigravity Handoff — PR #128 Adversarial Review v2
 
+> **Document status:** historical; superseded and retained for provenance
+> **Governing authority:** [constitution](../../../.specify/memory/constitution.md); it wins on conflict
+
 ```text
 TASK_ID: CORE-128-ADVERSARIAL-V2
 REPO: Thunderkill016/AtoEnglish

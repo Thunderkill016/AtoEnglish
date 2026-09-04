@@ -1,5 +1,8 @@
 # AtoEnglish — Minimal Redesign V2 (Toàn bộ)
 
+> **Document status:** reference
+> **Governing authority:** [constitution](../../../.specify/memory/constitution.md); it wins on conflict
+
 > **Mandate:** 2026-06-26 — Thiết kế lại toàn bộ app theo nguyên tắc tối giản research-backed.
 > **Thay thế:** UI-001..007 (P0–P6) = spine only (~15% routes). V2 = 100% surfaces.
 

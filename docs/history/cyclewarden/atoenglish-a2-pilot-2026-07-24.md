@@ -1,5 +1,8 @@
 # CycleWarden A2 pilot — AtoEnglish
 
+> **Document status:** historical; superseded and retained for provenance
+> **Governing authority:** [constitution](../../../.specify/memory/constitution.md); it wins on conflict
+
 **Date:** 2026-07-24  
 **Cycle ID:** `atoenglish:20260724-a2-pilot`  
 **Objective:** Identify the highest-value bounded repository experiment for the 28-day work-speaking product.  
@@ -21,7 +24,7 @@ Which bounded repository change should AtoEnglish complete next before another l
 
 - `README.md`: current stack, 50 registered lesson units, lesson surfaces, known `UnitTemplate` debt, cleanup policy, and verification commands.
 - `package.json`: deterministic scripts for TypeScript, lint, Vitest, content standards, Playwright, production build, audit, inventory, and lesson smoke checks.
-- `CONTENT_STYLE.md`: one shared lesson blueprint, block order, speaking/output requirements, and curriculum quality gates.
+- `../../reference/product/CONTENT_STYLE.md`: one shared lesson blueprint, block order, speaking/output requirements, and curriculum quality gates.
 - `src/lib/data/units/unitA01.ts`: current first lesson content, estimated time, learning outcomes, dialogues, repair language, fluency drill, and speaking prompts.
 - Product roadmap issue #20: one 28-day work-speaking outcome, explicit constraints, ordered queue, and prohibited premature expansion.
 - Merged PRs #21, #22, #23, #28, and #30: login metadata, pilot promise, speaking assessment, analytics recovery, and database security.
@@ -119,7 +122,7 @@ Delete or revise the planning documents. No product rollback is required because
 
 **Allowed scope**
 
-- `docs/curriculum/28-day-speaking-journey-contract.md`
+- `../july-pilot/28-day-speaking-journey-contract.md`
 - `docs/cyclewarden/**`
 - a later focused PR for `src/lib/data/units/unitA01.ts`
 - only the smallest additional first-week unit data required by the approved contract

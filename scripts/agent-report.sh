@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 # Tạo báo cáo ngắn cho user sau mỗi phiên autopilot.
-# Output: AGENT_REPORT.md (đọc khi về) + append logs/agent/reports.log
+# Output: archived historical report + append logs/agent/reports.log
 
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-REPORT="$ROOT/AGENT_REPORT.md"
+REPORT="$ROOT/docs/history/agent/AGENT_REPORT.md"
 LOG="$ROOT/logs/agent/reports.log"
 mkdir -p "$ROOT/logs/agent"
 
@@ -18,17 +18,17 @@ elif [[ -f "$ROOT/logs/agent/.daemon.pid" ]] && kill -0 "$(cat "$ROOT/logs/agent
 fi
 
 LAST_COMMIT=$(cd "$ROOT" && git log -1 --format='%h %ci %s' 2>/dev/null || echo "unknown")
-READY_TASKS=$(grep -c '\*\*Status:\*\* `ready`' "$ROOT/AGENT_BACKLOG.md" 2>/dev/null || true)
+READY_TASKS=$(grep -c '\*\*Status:\*\* `ready`' "$ROOT/docs/history/agent/AGENT_BACKLOG.md" 2>/dev/null || true)
 READY_TASKS=${READY_TASKS:-0}
-IN_PROGRESS=$(grep -B5 '\*\*Status:\*\* `in_progress`' "$ROOT/AGENT_BACKLOG.md" 2>/dev/null | grep '^### TASK-' | head -1 | sed 's/^### //; s/ —.*//' || echo "none")
-DONE_TODAY=$(grep "$(date +%Y-%m-%d)" "$ROOT/AGENT_BACKLOG.md" 2>/dev/null | grep -c 'done' || echo 0)
+IN_PROGRESS=$(grep -B5 '\*\*Status:\*\* `in_progress`' "$ROOT/docs/history/agent/AGENT_BACKLOG.md" 2>/dev/null | grep '^### TASK-' | head -1 | sed 's/^### //; s/ —.*//' || echo "none")
+DONE_TODAY=$(grep "$(date +%Y-%m-%d)" "$ROOT/docs/history/agent/AGENT_BACKLOG.md" 2>/dev/null | grep -c 'done' || echo 0)
 
 LAST_CYCLE=""
 if [[ -f "$ROOT/logs/agent/daemon.log" ]]; then
   LAST_CYCLE=$(grep -E 'Agent session:|Cycle OK|Cycle fail|deploy OK|deploy FAILED|Orchestrator cycle done' "$ROOT/logs/agent/daemon.log" 2>/dev/null | tail -6 | sed 's/^/- /')
 fi
 
-RECENT_LOG=$(grep '|' "$ROOT/AGENT_BACKLOG.md" 2>/dev/null | grep "$(date +%Y-%m-%d)" | tail -5 | sed 's/^/| /' || true)
+RECENT_LOG=$(grep '|' "$ROOT/docs/history/agent/AGENT_BACKLOG.md" 2>/dev/null | grep "$(date +%Y-%m-%d)" | tail -5 | sed 's/^/| /' || true)
 
 DEPLOY_STATUS="unknown"
 if [[ -f "$ROOT/logs/agent/deploy-check.log" ]]; then

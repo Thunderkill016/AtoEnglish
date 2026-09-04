@@ -1,5 +1,8 @@
 # Explicit Error Remediation V1
 
+> **Document status:** reference
+> **Governing authority:** [constitution](../../.specify/memory/constitution.md); it wins on conflict
+
 ## Goal
 
 Recurring Error Memory should not force the learner to repeat the exact task that exposed the error.

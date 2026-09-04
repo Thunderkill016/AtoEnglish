@@ -1,5 +1,8 @@
 # AtoEnglish 28-day work-speaking journey contract
 
+> **Document status:** historical; superseded and retained for provenance
+> **Governing authority:** [constitution](../../../.specify/memory/constitution.md); it wins on conflict
+
 **Status:** CycleWarden A2 planning artifact  
 **Product boundary:** Vietnamese adult beginners who know some English but freeze when speaking at work  
 **Daily promise:** 10–15 minutes  

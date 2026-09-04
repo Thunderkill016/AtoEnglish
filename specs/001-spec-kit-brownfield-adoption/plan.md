@@ -1,113 +1,74 @@
-# Implementation Plan: [FEATURE]
+# Implementation Plan: Spec Kit Brownfield Adoption
 
-**Branch**: `[###-feature-name]` | **Date**: [DATE] | **Spec**: [link]
-
-**Input**: Feature specification from `/specs/[###-feature-name]/spec.md`
-
-**Note**: This template is filled in by the `$speckit-plan` command; its definition describes the execution workflow.
+**Branch**: `codex/spec-kit-brownfield-bootstrap-v1` | **Date**: 2026-09-04 | **Spec**: [spec.md](./spec.md)
 
 ## Summary
 
-[Extract from feature spec: primary requirement + technical approach from research]
+Adopt official GitHub Spec Kit v1.0.4 for Codex and Gemini, establish one constitution,
+inventory every pre-migration root and `docs/**` Markdown file, archive stale July/agent
+authority, label durable references, and enforce the resulting hierarchy with a deterministic
+Node.js check. The change is documentation and process scaffolding only.
 
 ## Technical Context
 
-<!--
-  ACTION REQUIRED: Replace the content in this section with the technical details
-  for the project. The structure here is presented in advisory capacity to guide
-  the iteration process.
--->
-
-**Language/Version**: [e.g., Python 3.11, Swift 5.9, Rust 1.75 or NEEDS CLARIFICATION]
-
-**Primary Dependencies**: [e.g., FastAPI, UIKit, LLVM or NEEDS CLARIFICATION]
-
-**Storage**: [if applicable, e.g., PostgreSQL, CoreData, files or N/A]
-
-**Testing**: [e.g., pytest, XCTest, cargo test or NEEDS CLARIFICATION]
-
-**Target Platform**: [e.g., Linux server, iOS 15+, WASM or NEEDS CLARIFICATION]
-
-**Project Type**: [e.g., library/cli/web-service/mobile-app/compiler/desktop-app or NEEDS CLARIFICATION]
-
-**Performance Goals**: [domain-specific, e.g., 1000 req/s, 10k lines/sec, 60 fps or NEEDS CLARIFICATION]
-
-**Constraints**: [domain-specific, e.g., <200ms p95, <100MB memory, offline-capable or NEEDS CLARIFICATION]
-
-**Scale/Scope**: [domain-specific, e.g., 10k users, 1M LOC, 50 screens or NEEDS CLARIFICATION]
+**Language/Version**: Node.js >=22 for validation; Python 3.12 for official Spec Kit scripts
+**Primary Dependencies**: github/spec-kit v1.0.4, repository Node.js toolchain
+**Storage**: Git-tracked Markdown and JSON manifests; no database changes
+**Testing**: source-of-truth check/self-test, TypeScript, ESLint, Vitest, content standard, build
+**Target Platform**: Linux development and GitHub pull-request workflow
+**Project Type**: Brownfield Next.js repository with documentation/process-only scope
+**Performance Goals**: deterministic validation finishes within normal local CI time
+**Constraints**: no learner runtime, UI, database, auth, analytics, deployment, model, or provider changes; Draft PR only
+**Scale/Scope**: 42 pre-migration root/docs Markdown artifacts plus Spec Kit managed scaffolding
 
 ## Constitution Check
 
-*GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
+### Pre-design gate
 
-[Gates determined based on constitution file]
+- **Core-first**: PASS — this migration changes governance, not learner-facing breadth.
+- **Evidence integrity**: PASS — references cannot promote claims or override the constitution.
+- **Provenance/privacy/replaceability**: PASS — official release is pinned; no learner data is touched.
+- **Deterministic/falsifiable**: PASS — the hierarchy has a fail-closed check and seeded self-test.
+- **Human-controlled delivery**: PASS — branch and PR remain Draft; no merge or deployment.
+
+### Post-design gate
+
+PASS. The inventory, status-header contract, source-of-truth map, and deterministic validation
+preserve all five principles without an exception or complexity waiver.
 
 ## Project Structure
 
-### Documentation (this feature)
+### Documentation for this feature
 
 ```text
-specs/[###-feature]/
-├── plan.md              # This file ($speckit-plan command output)
-├── research.md          # Phase 0 output ($speckit-plan command)
-├── data-model.md        # Phase 1 output ($speckit-plan command)
-├── quickstart.md        # Phase 1 output ($speckit-plan command)
-├── contracts/           # Phase 1 output ($speckit-plan command)
-└── tasks.md             # Phase 2 output ($speckit-tasks command - NOT created by $speckit-plan)
+specs/001-spec-kit-brownfield-adoption/
+├── plan.md
+├── research.md
+├── data-model.md
+├── document-inventory.md
+├── quickstart.md
+├── contracts/document-governance.md
+├── checklists/requirements.md
+└── tasks.md
 ```
 
-### Source Code (repository root)
-<!--
-  ACTION REQUIRED: Replace the placeholder tree below with the concrete layout
-  for this feature. Delete unused options and expand the chosen structure with
-  real paths (e.g., apps/admin, packages/something). The delivered plan must
-  not include Option labels.
--->
+### Repository touch points
 
 ```text
-# [REMOVE IF UNUSED] Option 1: Single project (DEFAULT)
-src/
-├── models/
-├── services/
-├── cli/
-└── lib/
-
-tests/
-├── contract/
-├── integration/
-└── unit/
-
-# [REMOVE IF UNUSED] Option 2: Web application (when "frontend" + "backend" detected)
-backend/
-├── src/
-│   ├── models/
-│   ├── services/
-│   └── api/
-└── tests/
-
-frontend/
-├── src/
-│   ├── components/
-│   ├── pages/
-│   └── services/
-└── tests/
-
-# [REMOVE IF UNUSED] Option 3: Mobile + API (when "iOS/Android" detected)
-api/
-└── [same as backend above]
-
-ios/ or android/
-└── [platform-specific structure: feature modules, UI flows, platform tests]
+.agents/skills/                  # Codex managed Spec Kit skills
+.gemini/commands/                # Gemini managed Spec Kit commands
+.specify/                        # pinned manifests, templates, scripts, constitution
+docs/README.md                   # source-of-truth map
+docs/core/, docs/nep/            # durable references, explicitly labeled
+docs/reference/                  # non-governing product references
+docs/history/                    # superseded records
+scripts/check-source-of-truth.mjs
+AGENTS.md, README.md, SECURITY.md
 ```
 
-**Structure Decision**: [Document the selected structure and reference the real
-directories captured above]
+**Structure Decision**: Extend the official scaffold in place and reconcile existing documents
+without introducing an alternate planner, runtime service, or data store.
 
 ## Complexity Tracking
 
-> **Fill ONLY if Constitution Check has violations that must be justified**
-
-| Violation | Why Needed | Simpler Alternative Rejected Because |
-|-----------|------------|-------------------------------------|
-| [e.g., 4th project] | [current need] | [why 3 projects insufficient] |
-| [e.g., Repository pattern] | [specific problem] | [why direct DB access insufficient] |
+No constitution violations require justification.

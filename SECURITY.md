@@ -1,5 +1,8 @@
 # Security Policy
 
+> **Document status:** canonical security disclosure and operational policy
+> **Governing authority:** [.specify/memory/constitution.md](.specify/memory/constitution.md)
+
 ## Supported Versions
 
 | Version | Supported |

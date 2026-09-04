@@ -12,10 +12,10 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-BACKLOG="$ROOT/AGENT_BACKLOG.md"
+BACKLOG="$ROOT/docs/history/agent/AGENT_BACKLOG.md"
 
 if [[ ! -f "$BACKLOG" ]]; then
-  echo "ERROR: missing AGENT_BACKLOG.md" >&2
+  echo "ERROR: missing archived AGENT_BACKLOG.md" >&2
   exit 1
 fi
 

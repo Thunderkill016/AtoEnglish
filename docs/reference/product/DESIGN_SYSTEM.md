@@ -1,5 +1,8 @@
 # Design System — AtoEnglish
 
+> **Document status:** reference
+> **Governing authority:** [constitution](../../../.specify/memory/constitution.md); it wins on conflict
+
 > **Single Source of Truth** cho toàn bộ thiết kế AtoEnglish.  
 > Mọi AI agent và developer phải tuân thủ file này để đảm bảo giao diện nhất quán.
 

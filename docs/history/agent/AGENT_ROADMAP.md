@@ -1,5 +1,8 @@
 # Agent Roadmap — Task pool (tự động)
 
+> **Document status:** historical; superseded and retained for provenance
+> **Governing authority:** [constitution](../../../.specify/memory/constitution.md); it wins on conflict
+
 > **Không sửa tay khi đang autopilot.** Daemon đọc file này khi backlog có ít hơn 2 task `ready`,
 > tự chèn task mới vào `AGENT_BACKLOG.md` và tiếp tục làm — **không cần user nhắc**.
 

@@ -1,5 +1,8 @@
 # Content Style Guide — AtoEnglish
 
+> **Document status:** reference
+> **Governing authority:** [constitution](../../../.specify/memory/constitution.md); it wins on conflict
+
 > Hướng dẫn viết nội dung cho toàn bộ app: UI text, bài học, thông báo, và marketing copy.
 
 ---

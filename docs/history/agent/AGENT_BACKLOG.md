@@ -1,6 +1,10 @@
 # Agent Backlog — Active Tasks Only
 
-> Use `docs/product/CURRENT_PRIORITY.md` for ordering and `docs/product/DO_NOT_BUILD.md` for deferred scope.
+> **Document status:** historical; superseded and retained for provenance
+> **Governing authority:** [constitution](../../../.specify/memory/constitution.md); it wins on conflict
+
+> Historical ordering referenced `../july-pilot/CURRENT_PRIORITY.md` and
+> `../july-pilot/DO_NOT_BUILD.md`; neither governs current work.
 
 ## Rules
 

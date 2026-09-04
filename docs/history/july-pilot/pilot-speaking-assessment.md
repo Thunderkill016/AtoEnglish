@@ -1,5 +1,8 @@
 # Pilot speaking assessment protocol
 
+> **Document status:** historical; superseded and retained for provenance
+> **Governing authority:** [constitution](../../../.specify/memory/constitution.md); it wins on conflict
+
 This document defines the manual baseline and final speaking assessment for the first 28-day AtoEnglish program.
 
 The source of truth for prompt text, rubric anchors, scoring and comparison logic is:

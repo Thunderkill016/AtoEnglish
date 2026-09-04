@@ -1,6 +1,10 @@
 # Agent Plan — Current Work Only
 
-> Product direction is defined in `docs/product/PRODUCT_TRUTH.md`. Ordered work is defined in `docs/product/CURRENT_PRIORITY.md`.
+> **Document status:** historical; superseded and retained for provenance
+> **Governing authority:** [constitution](../../../.specify/memory/constitution.md); it wins on conflict
+
+> Historical direction was defined in `../july-pilot/PRODUCT_TRUTH.md` and
+> `../july-pilot/CURRENT_PRIORITY.md`; neither governs current work.
 
 ## Current task
 

@@ -1,5 +1,8 @@
 # AtoEnglish current priority
 
+> **Document status:** historical; superseded and retained for provenance
+> **Governing authority:** [constitution](../../../.specify/memory/constitution.md); it wins on conflict
+
 **Updated:** 2026-07-24  
 **Owner:** Thunderkill016  
 **Primary roadmap:** GitHub issue #20
@@ -23,10 +26,10 @@ The repository already has enough application, authentication, assessment, analy
 Establish repository-owned rules that every agent can read before proposing work:
 
 - `AGENTS.md`;
-- `docs/product/PRODUCT_TRUTH.md`;
+- `PRODUCT_TRUTH.md`;
 - this current-priority document;
-- `docs/product/DO_NOT_BUILD.md`;
-- current `AGENT_PLAN.md` and `AGENT_BACKLOG.md`.
+- `DO_NOT_BUILD.md`;
+- archived `../agent/AGENT_PLAN.md` and `../agent/AGENT_BACKLOG.md`.
 
 **Done when:** the repository has one discoverable product direction, stale cleanup plans no longer select work, and every future task must show how it serves the current priority.
 
@@ -46,7 +49,7 @@ This task must not change product behavior.
 
 ### 3. Gold Day 1 lesson — after verification entry point
 
-Implement the preferred Day 1 design from `docs/curriculum/28-day-speaking-journey-contract.md`.
+Implement the preferred Day 1 design from `28-day-speaking-journey-contract.md`.
 
 Day 1 should cover only:
 

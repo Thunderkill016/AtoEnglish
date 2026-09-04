@@ -18,7 +18,7 @@ TASK_ID=$(python3 -c "import json; print(json.load(open('$TASK_FILE'))['task_id'
 TASK_DESC=$(python3 -c "import json; print(json.load(open('$TASK_FILE'))['task_desc'])")
 
 if [[ -z "$TASK_ID" ]]; then
-  echo "✅ Không còn task ready trong AGENT_BACKLOG.md"
+  echo "✅ Không còn task ready trong archived AGENT_BACKLOG.md"
   exit 0
 fi
 
@@ -67,18 +67,18 @@ CHUẨN BÀI HỌC (bắt buộc khi sửa unit*.ts):
 prompt = f"""Bạn là autopilot agent 24/7 cho AtoEnglish tại {root}. User KHÔNG có mặt — tuyệt đối không hỏi, tự quyết.
 
 PHASE 1 — NGHIÊN CỨU (5 phút):
-- Đọc AGENTS.md, AGENT_BACKLOG.md, AGENT_PLAN.md, CONTENT_STYLE.md §6–7
+- Đọc AGENTS.md, docs/history/agent/AGENT_BACKLOG.md, docs/history/agent/AGENT_PLAN.md, docs/reference/product/CONTENT_STYLE.md §6–7
 - Grep codebase liên quan task; xác định file cần sửa
 {content_rules}{ui_rules}
 PHASE 2 — LẬP KẾ HOẠCH:
-- Cập nhật AGENT_PLAN.md: mục tiêu, bước, rủi ro cho {task_id}
-- Backlog thấp: chạy `bash scripts/agent-refill-backlog.sh` (đọc AGENT_ROADMAP.md) — KHÔNG hỏi user
+- Cập nhật docs/history/agent/AGENT_PLAN.md: mục tiêu, bước, rủi ro cho {task_id}
+- Backlog thấp: chạy `bash scripts/agent-refill-backlog.sh` (đọc docs/history/agent/AGENT_ROADMAP.md) — KHÔNG hỏi user
 
 PHASE 3 — TRIỂN KHAI (task duy nhất): {task_id}
 {task_desc}
 
 Quy trình:
-1. Status → in_progress trong AGENT_BACKLOG.md
+1. Status → in_progress trong docs/history/agent/AGENT_BACKLOG.md
 2. Implement tối thiểu, đúng phạm vi
 3. npm run lint && npm run test
 4. Pass → commit + `bash scripts/git-push.sh main` (GitLab primary); status done + nhật ký + SHA
