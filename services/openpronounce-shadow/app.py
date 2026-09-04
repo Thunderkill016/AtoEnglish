@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import asyncio
 import os
-import secrets
 import tempfile
 import time
 from contextlib import asynccontextmanager
@@ -19,7 +18,10 @@ from openpronounce import (
 )
 from openpronounce.audio import text2speech
 
-from provider_contract import sanitize_openpronounce_result
+from provider_contract import (
+    check_service_authorization,
+    sanitize_openpronounce_result,
+)
 
 MAX_AUDIO_BYTES = 5 * 1024 * 1024
 MIN_AUDIO_SECONDS = 0.15
@@ -57,16 +59,12 @@ def _normalized_content_type(value: str | None) -> str:
 
 
 def _require_service_token(authorization: str | None) -> None:
-    if not SERVICE_TOKEN:
-        return
-
-    scheme, separator, candidate = (authorization or "").partition(" ")
-    if (
-        separator != " "
-        or scheme.lower() != "bearer"
-        or not secrets.compare_digest(candidate, SERVICE_TOKEN)
-    ):
-        raise HTTPException(status_code=401, detail="unauthorized")
+    authorized, status_code, detail = check_service_authorization(
+        authorization,
+        SERVICE_TOKEN,
+    )
+    if not authorized:
+        raise HTTPException(status_code=status_code, detail=detail)
 
 
 def _analyze_file(temp_path: str, expected: str) -> dict[str, Any]:

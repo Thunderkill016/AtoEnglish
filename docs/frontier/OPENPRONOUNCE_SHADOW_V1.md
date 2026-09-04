@@ -77,6 +77,6 @@ shadow observation
 AtoEnglish Next.js:
 
 - `OPENPRONOUNCE_URL` — private base URL of the Python service.
-- `OPENPRONOUNCE_SERVICE_TOKEN` — optional shared bearer token for the private service.
+- `OPENPRONOUNCE_SERVICE_TOKEN` — shared bearer token for the private service; the Python provider requires this token and fails closed (503) if unconfigured.
 
 The Python service lives under `services/openpronounce-shadow/` and is deliberately isolated from the Vercel runtime so PyTorch/model weights never become Next.js dependencies.

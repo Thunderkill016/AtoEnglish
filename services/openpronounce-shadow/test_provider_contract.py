@@ -3,7 +3,10 @@ from __future__ import annotations
 import json
 import unittest
 
-from provider_contract import sanitize_openpronounce_result
+from provider_contract import (
+    check_service_authorization,
+    sanitize_openpronounce_result,
+)
 
 
 class ProviderContractTests(unittest.TestCase):
@@ -158,6 +161,64 @@ class ProviderContractTests(unittest.TestCase):
         self.assertIsNone(bounded["candidate_score"])
         self.assertLessEqual(len(bounded["errors"]), 16)
         self.assertLessEqual(len(bounded["errors"][0]["phones"]), 32)
+
+
+class ServiceAuthorizationTests(unittest.TestCase):
+    def test_missing_or_blank_service_token_fails_closed_with_503(self) -> None:
+        for empty_token in (None, "", "   ", "\t\n"):
+            authorized, status_code, detail = check_service_authorization(
+                authorization="Bearer test-token",
+                service_token=empty_token,
+            )
+            self.assertFalse(authorized)
+            self.assertEqual(status_code, 503)
+            self.assertEqual(detail, "service_token_unconfigured")
+
+            authorized, status_code, detail = check_service_authorization(
+                authorization=None,
+                service_token=empty_token,
+            )
+            self.assertFalse(authorized)
+            self.assertEqual(status_code, 503)
+            self.assertEqual(detail, "service_token_unconfigured")
+
+    def test_configured_token_with_missing_or_invalid_header_fails_with_401(self) -> None:
+        token = "secret-token-12345"
+        invalid_headers = [
+            None,
+            "",
+            "   ",
+            "Bearer",
+            "Bearer ",
+            "Token secret-token-12345",
+            "Basic c2VjcmV0LXRva2VuLTEyMzQ1",
+            "Bearer wrong-token",
+            "Bearer  secret-token-12345",
+            "bearer: secret-token-12345",
+        ]
+        for header in invalid_headers:
+            authorized, status_code, detail = check_service_authorization(
+                authorization=header,
+                service_token=token,
+            )
+            self.assertFalse(authorized, f"Expected header {header!r} to fail authorization")
+            self.assertEqual(status_code, 401)
+            self.assertEqual(detail, "unauthorized")
+
+    def test_matching_bearer_token_authorizes_with_200(self) -> None:
+        token = "secret-token-12345"
+        for valid_header in (
+            f"Bearer {token}",
+            f"bearer {token}",
+            f"BEARER {token}",
+        ):
+            authorized, status_code, detail = check_service_authorization(
+                authorization=valid_header,
+                service_token=token,
+            )
+            self.assertTrue(authorized, f"Expected header {valid_header!r} to succeed")
+            self.assertEqual(status_code, 200)
+            self.assertEqual(detail, "authorized")
 
 
 if __name__ == "__main__":

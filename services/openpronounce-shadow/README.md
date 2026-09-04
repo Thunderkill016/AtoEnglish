@@ -67,7 +67,7 @@ curl -X POST \
 - Maximum upload: 5 MiB.
 - Decoded audio duration: 0.15–12 seconds.
 - Provider-side MIME allowlist mirrors the AtoEnglish API boundary.
-- A shared bearer token is optional locally and strongly recommended on any networked deployment.
+- A shared bearer token is required: `OPENPRONOUNCE_SERVICE_TOKEN` must be configured. If unconfigured or empty, `/pronunciation` fails closed with `503 service_token_unconfigured` (the health check at `/health` remains intentionally unauthenticated).
 - Do not expose this service directly to browsers; browsers call AtoEnglish `/api/pronunciation/observe` instead.
 - Inference is serialized inside one process so concurrent requests do not multiply CPU/RAM pressure; requests waiting too long fail with `503 provider_busy`.
 - Heavy decoding/inference runs off the FastAPI event loop so `/health` can remain responsive during analysis.

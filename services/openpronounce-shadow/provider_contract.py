@@ -1,7 +1,34 @@
 from __future__ import annotations
 
 import math
+import secrets
 from typing import Any
+
+
+def check_service_authorization(
+    authorization: str | None,
+    service_token: str | None,
+) -> tuple[bool, int, str]:
+    """Validate Bearer service token authorization for provider endpoints.
+
+    Fails closed:
+    - If service_token is unset or whitespace-only -> (False, 503, "service_token_unconfigured")
+    - If authorization header is missing, not Bearer, or invalid -> (False, 401, "unauthorized")
+    - If matching Bearer token -> (True, 200, "authorized")
+    """
+    cleaned_token = (service_token or "").strip()
+    if not cleaned_token:
+        return False, 503, "service_token_unconfigured"
+
+    scheme, separator, candidate = (authorization or "").partition(" ")
+    if (
+        separator != " "
+        or scheme.lower() != "bearer"
+        or not secrets.compare_digest(candidate, cleaned_token)
+    ):
+        return False, 401, "unauthorized"
+
+    return True, 200, "authorized"
 
 
 def _finite_number(
