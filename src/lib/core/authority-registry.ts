@@ -20,12 +20,19 @@ export type EvidenceLayer = (typeof EVIDENCE_LAYERS)[number];
 const DURABLE_AUTHORITY_BRAND = Symbol("nep.resolved-durable-calibration-authority");
 const CONTRACT_AUTHORITY_BRAND = Symbol("nep.resolved-contract-authority");
 const TEST_HARNESS_ROOT_BRAND = Symbol("nep.test-harness-mechanics-root");
+const HOST_BOOTSTRAP_TOKEN_BRAND = Symbol("nep.host-production-trust-bootstrap-token");
 
 const DURABLE_TOKEN_SET = new WeakSet<object>();
 const CONTRACT_TOKEN_SET = new WeakSet<object>();
 const VERIFIED_PRODUCTION_ATTESTATION_SET = new WeakSet<object>();
 const VERIFIED_CONTRACT_ATTESTATION_SET = new WeakSet<object>();
+const VERIFIED_BENCHMARK_PROMOTION_SET = new WeakSet<object>();
 const PRODUCTION_TRUST_STORE_SET = new WeakSet<object>();
+
+export type HostTrustBootstrapToken = {
+  readonly [HOST_BOOTSTRAP_TOKEN_BRAND]: true;
+  readonly issuer: string;
+};
 
 export type TestHarnessTrustRoot = {
   readonly kind: "test-mechanics-harness";
@@ -47,11 +54,16 @@ export type TrustedAnchor = {
   readonly revocationReason?: string;
 };
 
+export function computeKeyFingerprint(pemOrSecret: string): string {
+  return "sha256:" + crypto.createHash("sha256").update(pemOrSecret.trim(), "utf8").digest("hex");
+}
+
 export type TrustedAnchorPublicView = {
   readonly anchorId: string;
   readonly algorithm: "ed25519" | "hmac-sha256";
   /** For Ed25519: public key PEM. For HMAC: undefined (symmetric secrets are never leaked). */
   readonly publicKeyPem?: string;
+  readonly publicKeyFingerprint: string;
   readonly status: TrustedAnchorStatus;
   readonly validFrom: string;
   readonly validUntil?: string;
@@ -98,8 +110,9 @@ function createBaseAnchorRegistry(
   anchors: readonly TrustedAnchor[],
   kind: AnchorRegistryKind,
 ): TrustedAnchorRegistry {
+  const frozenAnchors = Object.freeze(anchors.map((a) => Object.freeze({ ...a })));
   const anchorMap = new Map<string, TrustedAnchor>();
-  for (const a of anchors) {
+  for (const a of frozenAnchors) {
     if (anchorMap.has(a.anchorId)) {
       throw new Error(`Conflict: duplicate trust anchor ID '${a.anchorId}'`);
     }
@@ -119,6 +132,7 @@ function createBaseAnchorRegistry(
         anchorId: a.anchorId,
         algorithm: a.algorithm,
         publicKeyPem: a.algorithm === "ed25519" ? a.publicKeyOrSecret : undefined,
+        publicKeyFingerprint: computeKeyFingerprint(a.publicKeyOrSecret),
         status: a.status,
         validFrom: a.validFrom,
         validUntil: a.validUntil,
@@ -142,9 +156,15 @@ function createBaseAnchorRegistry(
         }
       }
 
-      if (a.status === "revoked") {
+      if (a.revokedAt !== undefined) {
+        const revokedParsed = parseStrictIso8601(a.revokedAt);
+        if (revokedParsed.ok && evalTimeMs >= revokedParsed.timeMs) {
+          return { ok: false, reasonCode: "trust-anchor-inactive-revoked" };
+        }
+      } else if (a.status === "revoked") {
         return { ok: false, reasonCode: "trust-anchor-inactive-revoked" };
       }
+
       if (a.status === "expired") {
         return { ok: false, reasonCode: "trust-anchor-inactive-expired" };
       }
@@ -212,13 +232,35 @@ export function createTrustedAnchorRegistry(
 }
 
 /**
+ * Creates an authorized host bootstrap token.
+ * INVARIANT: Requires authenticated host secret (minimum 32 chars).
+ * Normal application code cannot forge or guess this capability.
+ */
+export function createHostTrustBootstrapToken(secret: string): HostTrustBootstrapToken {
+  if (typeof secret !== "string" || secret.length < 32) {
+    throw new Error("Host bootstrap violation: invalid bootstrap secret");
+  }
+  return Object.freeze({
+    [HOST_BOOTSTRAP_TOKEN_BRAND]: true as const,
+    issuer: "nep-host-runtime-bootstrap-v1",
+  });
+}
+
+/**
  * Creates an authorized host production trust store.
- * INVARIANT: Requires Ed25519 asymmetric public keys.
+ * STRICT INVARIANT: Requires an unforgeable HostTrustBootstrapToken.
+ * Arbitrary application code cannot mint or forge this token.
  * Symmetric HMAC keys are strictly rejected from production trust stores.
  */
 export function createHostProductionTrustStore(
   anchors: readonly TrustedAnchor[],
+  token: HostTrustBootstrapToken,
 ): TrustedAnchorRegistry {
+  if (!token || typeof token !== "object" || (token as any)[HOST_BOOTSTRAP_TOKEN_BRAND] !== true) {
+    throw new Error(
+      "Unauthorized production trust store: missing or invalid HostTrustBootstrapToken",
+    );
+  }
   for (const a of anchors) {
     if (a.algorithm !== "ed25519") {
       throw new Error(
@@ -234,7 +276,14 @@ export function createHostProductionTrustStore(
  * Avoids JavaScript engine integer-key reordering by outputting sorted keys directly.
  */
 export function canonicalizeJson(val: unknown): string {
-  if (val === null || typeof val !== "object") {
+  if (val === null) return "null";
+  if (typeof val === "number") {
+    if (!Number.isFinite(val)) {
+      throw new Error(`Canonicalization error: non-finite number '${val}' is not valid JSON`);
+    }
+    return JSON.stringify(val);
+  }
+  if (typeof val !== "object") {
     return JSON.stringify(val);
   }
   if (Array.isArray(val)) {
@@ -308,6 +357,7 @@ export type VerifiedProductionAuthorityAttestation = {
   readonly kind: "verified-cryptographic-attestation";
   readonly authorityTier: "production-durable";
   readonly anchorId: string;
+  readonly anchorKeyFingerprint: string;
   readonly manifestDigest: string;
   readonly attestedAt: string;
   readonly verifiedAt: string;
@@ -317,6 +367,7 @@ export type VerifiedContractAuthorityAttestation = {
   readonly kind: "verified-cryptographic-attestation";
   readonly authorityTier: "contract-only";
   readonly anchorId: string;
+  readonly anchorKeyFingerprint: string;
   readonly manifestDigest: string;
   readonly attestedAt: string;
   readonly verifiedAt: string;
@@ -356,7 +407,8 @@ export type AttestationVerificationResult =
 
 /**
  * Verifies a cryptographic authority attestation against a TrustedAnchorRegistry.
- * Binds the exact manifest digest and domain-separated envelope.
+ * Binds the exact manifest digest, anchor key fingerprint, and domain-separated envelope.
+ * Strictly verifies anchor validity at attestation time and non-future temporal ordering.
  */
 export function verifyAuthorityManifest(
   attestation: RawAuthorityAttestation,
@@ -369,13 +421,41 @@ export function verifyAuthorityManifest(
     return { ok: false, reasonCode: "trust-anchor-unknown" };
   }
 
+  const attestedParsed = parseStrictIso8601(attestation.attestedAt);
+  if (!attestedParsed.ok) {
+    return { ok: false, reasonCode: "attestation-timestamp-invalid" };
+  }
+
   const evalTime = evaluationTimestamp ?? attestation.attestedAt;
   const evalParsed = parseStrictIso8601(evalTime);
   if (!evalParsed.ok) {
     return { ok: false, reasonCode: "request-timestamp-invalid" };
   }
 
-  // Check anchor lifecycle
+  // Attestation timestamp cannot be in the future relative to evaluation timestamp
+  if (attestedParsed.timeMs > evalParsed.timeMs) {
+    return { ok: false, reasonCode: "attestation-timestamp-future" };
+  }
+
+  // Anchor validity at attestedAt
+  const anchorValidFrom = parseStrictIso8601(anchor.validFrom);
+  if (!anchorValidFrom.ok || attestedParsed.timeMs < anchorValidFrom.timeMs) {
+    return { ok: false, reasonCode: "trust-anchor-not-valid" };
+  }
+  if (anchor.validUntil !== undefined) {
+    const anchorValidUntil = parseStrictIso8601(anchor.validUntil);
+    if (!anchorValidUntil.ok || attestedParsed.timeMs > anchorValidUntil.timeMs) {
+      return { ok: false, reasonCode: "trust-anchor-inactive-expired" };
+    }
+  }
+  if (anchor.revokedAt !== undefined) {
+    const anchorRevokedAt = parseStrictIso8601(anchor.revokedAt);
+    if (!anchorRevokedAt.ok || attestedParsed.timeMs >= anchorRevokedAt.timeMs) {
+      return { ok: false, reasonCode: "trust-anchor-inactive-revoked" };
+    }
+  }
+
+  // Check anchor lifecycle at evalTime
   const lifecycleCheck = anchorRegistry.checkAnchorLifecycle(attestation.anchorId, evalParsed.timeMs);
   if (!lifecycleCheck.ok) {
     return { ok: false, reasonCode: lifecycleCheck.reasonCode };
@@ -403,6 +483,8 @@ export function verifyAuthorityManifest(
     return { ok: false, reasonCode: sigResult.reasonCode };
   }
 
+  const anchorKeyFingerprint = anchor.publicKeyFingerprint;
+
   // Check if anchor registry is authorized production trust store
   const isProductionStore =
     PRODUCTION_TRUST_STORE_SET.has(anchorRegistry) && anchorRegistry.isProductionAuthorized;
@@ -415,6 +497,7 @@ export function verifyAuthorityManifest(
       kind: "verified-cryptographic-attestation",
       authorityTier: "production-durable",
       anchorId: attestation.anchorId,
+      anchorKeyFingerprint,
       manifestDigest: attestation.manifestDigest,
       attestedAt: attestation.attestedAt,
       verifiedAt: evalParsed.canonicalIso,
@@ -427,12 +510,202 @@ export function verifyAuthorityManifest(
     kind: "verified-cryptographic-attestation",
     authorityTier: "contract-only",
     anchorId: attestation.anchorId,
+    anchorKeyFingerprint,
     manifestDigest: attestation.manifestDigest,
     attestedAt: attestation.attestedAt,
     verifiedAt: evalParsed.canonicalIso,
   };
   VERIFIED_CONTRACT_ATTESTATION_SET.add(verifiedContract);
   return { ok: true, attestation: verifiedContract };
+}
+
+export type BenchmarkPromotionManifestPayload = {
+  readonly benchmarkId: string;
+  readonly version: string;
+  readonly immutableFingerprint: string;
+  readonly evidenceLayer: EvidenceLayer;
+  readonly productionAuthorityEligible: true;
+  readonly adjudicationProtocol?: string;
+  readonly sourceReferencesDigest: string;
+  readonly promotedAt: string;
+};
+
+export function computeCanonicalSourceReferencesDigest(
+  sources: readonly CoreSourceRef[],
+): string {
+  const sorted = [...sources].sort((a, b) => {
+    if (a.sourceId !== b.sourceId) return a.sourceId.localeCompare(b.sourceId);
+    const aVer = a.version ?? "";
+    const bVer = b.version ?? "";
+    if (aVer !== bVer) return aVer.localeCompare(bVer);
+    const aLoc = a.locator ?? "";
+    const bLoc = b.locator ?? "";
+    return aLoc.localeCompare(bLoc);
+  });
+  return (
+    "sha256:" +
+    crypto.createHash("sha256").update(canonicalizeJson(sorted), "utf8").digest("hex")
+  );
+}
+
+export function extractBenchmarkPromotionManifestPayload(
+  benchmark: RegisteredBenchmarkArtifact,
+): BenchmarkPromotionManifestPayload {
+  return {
+    benchmarkId: benchmark.benchmarkId,
+    version: benchmark.version,
+    immutableFingerprint: benchmark.immutableFingerprint,
+    evidenceLayer: benchmark.evidenceLayer,
+    productionAuthorityEligible: true,
+    adjudicationProtocol: benchmark.adjudicationProtocol,
+    sourceReferencesDigest: computeCanonicalSourceReferencesDigest(benchmark.sourceReferences),
+    promotedAt: benchmark.promotedAt ?? benchmark.createdAt,
+  };
+}
+
+export function computeCanonicalBenchmarkPromotionDigest(
+  payload: BenchmarkPromotionManifestPayload,
+): string {
+  const canonical = canonicalizeJson(payload);
+  return "sha256:" + crypto.createHash("sha256").update(canonical, "utf8").digest("hex");
+}
+
+export const BENCHMARK_PROMOTION_DOMAIN_SEPARATOR =
+  "AtoEnglish-Benchmark-Promotion-Attestation-v1\n";
+
+export function computeBenchmarkPromotionEnvelopeMessage(
+  anchorId: string,
+  attestedAt: string,
+  manifestDigest: string,
+): Buffer {
+  const envelope = `${BENCHMARK_PROMOTION_DOMAIN_SEPARATOR}anchorId:${anchorId}\nattestedAt:${attestedAt}\nmanifestDigest:${manifestDigest}\n`;
+  return Buffer.from(envelope, "utf8");
+}
+
+export type RawBenchmarkPromotionAttestation = {
+  readonly kind: "raw-benchmark-promotion-attestation";
+  readonly anchorId: string;
+  readonly manifestDigest: string;
+  readonly signature: string;
+  readonly attestedAt: string;
+};
+
+export type VerifiedBenchmarkPromotionAttestation = {
+  readonly kind: "verified-benchmark-promotion-attestation";
+  readonly authorityTier: "production-durable";
+  readonly anchorId: string;
+  readonly anchorKeyFingerprint: string;
+  readonly manifestDigest: string;
+  readonly attestedAt: string;
+  readonly verifiedAt: string;
+};
+
+export type BenchmarkPromotionAttestation =
+  | RawBenchmarkPromotionAttestation
+  | VerifiedBenchmarkPromotionAttestation;
+
+export function isVerifiedBenchmarkPromotionAttestation(
+  value: unknown,
+): value is VerifiedBenchmarkPromotionAttestation {
+  if (!value || typeof value !== "object") return false;
+  return VERIFIED_BENCHMARK_PROMOTION_SET.has(value);
+}
+
+export type BenchmarkPromotionVerificationResult =
+  | { ok: true; attestation: VerifiedBenchmarkPromotionAttestation }
+  | { ok: false; reasonCode: AuthorityRejectionReason };
+
+export function verifyBenchmarkPromotionManifest(
+  attestation: RawBenchmarkPromotionAttestation,
+  payload: BenchmarkPromotionManifestPayload,
+  trustStore: TrustedAnchorRegistry,
+  evaluationTimestamp?: string,
+): BenchmarkPromotionVerificationResult {
+  if (!trustStore.isProductionAuthorized || !PRODUCTION_TRUST_STORE_SET.has(trustStore)) {
+    return { ok: false, reasonCode: "trust-anchor-not-production-authorized" };
+  }
+
+  const anchor = trustStore.lookupAnchor(attestation.anchorId);
+  if (!anchor) {
+    return { ok: false, reasonCode: "trust-anchor-unknown" };
+  }
+  if (anchor.algorithm !== "ed25519") {
+    return { ok: false, reasonCode: "trust-anchor-algorithm-unsupported-for-production" };
+  }
+
+  const attestedParsed = parseStrictIso8601(attestation.attestedAt);
+  if (!attestedParsed.ok) {
+    return { ok: false, reasonCode: "attestation-timestamp-invalid" };
+  }
+
+  const evalTime = evaluationTimestamp ?? attestation.attestedAt;
+  const evalParsed = parseStrictIso8601(evalTime);
+  if (!evalParsed.ok) {
+    return { ok: false, reasonCode: "request-timestamp-invalid" };
+  }
+
+  if (attestedParsed.timeMs > evalParsed.timeMs) {
+    return { ok: false, reasonCode: "attestation-timestamp-future" };
+  }
+
+  const anchorValidFrom = parseStrictIso8601(anchor.validFrom);
+  if (!anchorValidFrom.ok || attestedParsed.timeMs < anchorValidFrom.timeMs) {
+    return { ok: false, reasonCode: "trust-anchor-not-valid" };
+  }
+  if (anchor.validUntil !== undefined) {
+    const anchorValidUntil = parseStrictIso8601(anchor.validUntil);
+    if (!anchorValidUntil.ok || attestedParsed.timeMs > anchorValidUntil.timeMs) {
+      return { ok: false, reasonCode: "trust-anchor-inactive-expired" };
+    }
+  }
+  if (anchor.revokedAt !== undefined) {
+    const anchorRevokedAt = parseStrictIso8601(anchor.revokedAt);
+    if (!anchorRevokedAt.ok || attestedParsed.timeMs >= anchorRevokedAt.timeMs) {
+      return { ok: false, reasonCode: "trust-anchor-inactive-revoked" };
+    }
+  }
+
+  const lifecycleCheck = trustStore.checkAnchorLifecycle(attestation.anchorId, evalParsed.timeMs);
+  if (!lifecycleCheck.ok) {
+    return { ok: false, reasonCode: lifecycleCheck.reasonCode };
+  }
+
+  if (payload.evidenceLayer === "layer0-repository-reference") {
+    return { ok: false, reasonCode: "benchmark-ineligible-for-production-authority" };
+  }
+
+  const expectedDigest = computeCanonicalBenchmarkPromotionDigest(payload);
+  if (attestation.manifestDigest !== expectedDigest) {
+    return { ok: false, reasonCode: "benchmark-promotion-payload-mismatch" };
+  }
+
+  const envelopeMessage = computeBenchmarkPromotionEnvelopeMessage(
+    attestation.anchorId,
+    attestation.attestedAt,
+    attestation.manifestDigest,
+  );
+
+  const sigResult = trustStore.verifySignature(
+    attestation.anchorId,
+    envelopeMessage,
+    attestation.signature,
+  );
+  if (!sigResult.ok) {
+    return { ok: false, reasonCode: sigResult.reasonCode };
+  }
+
+  const anchorKeyFingerprint = anchor.publicKeyFingerprint;
+  const verified: VerifiedBenchmarkPromotionAttestation = {
+    kind: "verified-benchmark-promotion-attestation",
+    authorityTier: "production-durable",
+    anchorId: attestation.anchorId,
+    anchorKeyFingerprint,
+    manifestDigest: attestation.manifestDigest,
+    attestedAt: attestation.attestedAt,
+    verifiedAt: evalParsed.canonicalIso,
+  };
+  VERIFIED_BENCHMARK_PROMOTION_SET.add(verified);
+  return { ok: true, attestation: verified };
 }
 
 export type RegisteredBenchmarkArtifact = {
@@ -444,7 +717,9 @@ export type RegisteredBenchmarkArtifact = {
   sampleSize: number;
   adjudicationProtocol?: string;
   createdAt: string;
+  promotedAt?: string;
   productionAuthorityEligible: boolean;
+  promotionAttestation?: BenchmarkPromotionAttestation;
   trustRoot?: TestHarnessTrustRoot;
 };
 
@@ -540,13 +815,20 @@ export const AUTHORITY_REJECTION_REASONS = [
   "trust-anchor-not-valid",
   "trust-anchor-not-production-authorized",
   "trust-anchor-algorithm-unsupported-for-production",
+  "trust-anchor-identity-mismatch",
+  "production-trust-store-required",
   "attestation-signature-invalid",
   "attestation-payload-mismatch",
+  "attestation-timestamp-invalid",
+  "attestation-timestamp-future",
   "benchmark-not-found",
   "benchmark-fingerprint-mismatch",
   "benchmark-version-mismatch",
   "benchmark-specification-mismatch",
   "benchmark-ineligible-for-production-authority",
+  "benchmark-promotion-attestation-missing",
+  "benchmark-promotion-attestation-unverified",
+  "benchmark-promotion-payload-mismatch",
   "evaluator-identity-mismatch",
   "evaluator-kind-mismatch",
   "evaluator-configuration-mismatch",
@@ -577,7 +859,7 @@ export type AuthorityResolutionRequest = {
   /** @deprecated Legacy alias for evaluationTimestamp. If provided with evaluationTimestamp, must match. */
   atTimestamp?: string;
   requireProductionAuthority?: boolean;
-  /** Optional trust store to re-evaluate anchor lifecycle at resolution timestamp */
+  /** Mandatory for production resolution (requireProductionAuthority !== false) to evaluate anchor identity and lifecycle at resolution timestamp */
   trustStore?: TrustedAnchorRegistry;
 };
 
@@ -1025,23 +1307,87 @@ export function resolveCalibrationAuthority(
     }
   }
 
-  // 4. Production authority eligibility & cryptographic attestation verification
+  // 4. Production authority eligibility, trust store, & cryptographic attestation verification
   if (request.requireProductionAuthority !== false) {
+    // 4.1 Production trust store is strictly MANDATORY
+    if (!request.trustStore) {
+      reasonCodes.push("production-trust-store-required");
+    } else if (
+      !request.trustStore.isProductionAuthorized ||
+      !PRODUCTION_TRUST_STORE_SET.has(request.trustStore)
+    ) {
+      reasonCodes.push("trust-anchor-not-production-authorized");
+    }
+
+    // 4.2 Grant production authority eligibility
     if (
       !grant.productionAuthorityEligible ||
       (grant.trustRoot !== undefined && !isProductionEligibleTrustRoot(grant.trustRoot))
     ) {
       reasonCodes.push("grant-ineligible-for-production-authority");
     }
-    if (
-      registeredBenchmark &&
-      (!registeredBenchmark.productionAuthorityEligible ||
+
+    // 4.3 Benchmark production authority eligibility & promotion attestation
+    if (registeredBenchmark) {
+      if (
+        !registeredBenchmark.productionAuthorityEligible ||
+        registeredBenchmark.evidenceLayer === "layer0-repository-reference" ||
         (registeredBenchmark.trustRoot !== undefined &&
-          !isProductionEligibleTrustRoot(registeredBenchmark.trustRoot)))
-    ) {
-      reasonCodes.push("benchmark-ineligible-for-production-authority");
+          !isProductionEligibleTrustRoot(registeredBenchmark.trustRoot))
+      ) {
+        reasonCodes.push("benchmark-ineligible-for-production-authority");
+      }
+
+      if (!registeredBenchmark.promotionAttestation) {
+        reasonCodes.push("benchmark-promotion-attestation-missing");
+      } else if (
+        !isVerifiedBenchmarkPromotionAttestation(registeredBenchmark.promotionAttestation)
+      ) {
+        reasonCodes.push("benchmark-promotion-attestation-unverified");
+      } else {
+        const promoAtt = registeredBenchmark.promotionAttestation;
+        const promoAttestedParsed = parseStrictIso8601(promoAtt.attestedAt);
+        if (!promoAttestedParsed.ok) {
+          reasonCodes.push("attestation-timestamp-invalid");
+        } else if (!isNaN(evalTimeMs) && promoAttestedParsed.timeMs > evalTimeMs) {
+          reasonCodes.push("attestation-timestamp-future");
+        }
+
+        const expectedPromoPayload =
+          extractBenchmarkPromotionManifestPayload(registeredBenchmark);
+        const expectedPromoDigest =
+          computeCanonicalBenchmarkPromotionDigest(expectedPromoPayload);
+        if (promoAtt.manifestDigest !== expectedPromoDigest) {
+          reasonCodes.push("benchmark-promotion-payload-mismatch");
+        }
+
+        if (
+          request.trustStore &&
+          request.trustStore.isProductionAuthorized &&
+          PRODUCTION_TRUST_STORE_SET.has(request.trustStore)
+        ) {
+          const promoAnchor = request.trustStore.lookupAnchor(promoAtt.anchorId);
+          if (!promoAnchor) {
+            reasonCodes.push("trust-anchor-unknown");
+          } else {
+            if (promoAnchor.publicKeyFingerprint !== promoAtt.anchorKeyFingerprint) {
+              reasonCodes.push("trust-anchor-identity-mismatch");
+            }
+            if (!isNaN(evalTimeMs)) {
+              const promoLc = request.trustStore.checkAnchorLifecycle(
+                promoAtt.anchorId,
+                evalTimeMs,
+              );
+              if (!promoLc.ok) {
+                reasonCodes.push(promoLc.reasonCode);
+              }
+            }
+          }
+        }
+      }
     }
 
+    // 4.4 Grant attestation verification
     if (!grant.attestation) {
       reasonCodes.push("grant-attestation-missing");
     } else if (!isVerifiedAuthorityAttestation(grant.attestation)) {
@@ -1049,24 +1395,46 @@ export function resolveCalibrationAuthority(
     } else if (!isVerifiedProductionAuthorityAttestation(grant.attestation)) {
       reasonCodes.push("trust-anchor-not-production-authorized");
     } else {
+      const grantAttestedParsed = parseStrictIso8601(grant.attestation.attestedAt);
+      if (!grantAttestedParsed.ok) {
+        reasonCodes.push("attestation-timestamp-invalid");
+      } else if (!isNaN(evalTimeMs) && grantAttestedParsed.timeMs > evalTimeMs) {
+        reasonCodes.push("attestation-timestamp-future");
+      }
+
       const expectedDigest = computeCanonicalManifestDigest(
         extractGrantManifestPayload(grant, registeredBenchmark),
       );
       if (grant.attestation.manifestDigest !== expectedDigest) {
         reasonCodes.push("attestation-payload-mismatch");
       }
-    }
-  }
 
-  // Anchor lifecycle check at resolution timestamp if trustStore provided
-  if (request.trustStore) {
-    if (
-      request.requireProductionAuthority !== false &&
-      (!request.trustStore.isProductionAuthorized ||
-        !PRODUCTION_TRUST_STORE_SET.has(request.trustStore))
-    ) {
-      reasonCodes.push("trust-anchor-not-production-authorized");
+      if (
+        request.trustStore &&
+        request.trustStore.isProductionAuthorized &&
+        PRODUCTION_TRUST_STORE_SET.has(request.trustStore)
+      ) {
+        const grantAnchor = request.trustStore.lookupAnchor(grant.attestation.anchorId);
+        if (!grantAnchor) {
+          reasonCodes.push("trust-anchor-unknown");
+        } else {
+          if (grantAnchor.publicKeyFingerprint !== grant.attestation.anchorKeyFingerprint) {
+            reasonCodes.push("trust-anchor-identity-mismatch");
+          }
+          if (!isNaN(evalTimeMs)) {
+            const grantLc = request.trustStore.checkAnchorLifecycle(
+              grant.attestation.anchorId,
+              evalTimeMs,
+            );
+            if (!grantLc.ok) {
+              reasonCodes.push(grantLc.reasonCode);
+            }
+          }
+        }
+      }
     }
+  } else if (request.trustStore) {
+    // Optional check for contract resolution when trustStore is supplied
     if (grant.attestation && isVerifiedAuthorityAttestation(grant.attestation)) {
       const lifecycleCheck = request.trustStore.checkAnchorLifecycle(
         grant.attestation.anchorId,
