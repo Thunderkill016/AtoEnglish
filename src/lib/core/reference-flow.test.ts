@@ -1,5 +1,20 @@
+import crypto from "node:crypto";
 import { describe, expect, it } from "vitest";
 
+import {
+  type RegisteredBenchmarkArtifact,
+  type RegisteredAuthorityGrant,
+  type TrustedAnchor,
+  createProvenanceAuthorityRegistry,
+  createTrustedAnchorRegistry,
+  computeCanonicalManifestDigest,
+  computeAttestationEnvelopeMessage,
+  extractGrantManifestPayload,
+  verifyAuthorityManifest,
+  isResolvedContractAuthority,
+  isResolvedDurableCalibrationAuthority,
+  resolveCalibrationAuthority,
+} from "./authority-registry";
 import { certifyCoreEvidence } from "./certified-evidence";
 import type { CoreObservation } from "./observation";
 import { estimateThetaEap } from "./psychometrics";
@@ -65,37 +80,157 @@ describe("pure core reference flow", () => {
       createdAt: "2026-09-04T00:00:00.000Z",
     };
 
-    const certified = certifyCoreEvidence(task, observation, {
-      eventId: "ev-1",
-      taskId: task.id,
-      targetId: "listen-ih-vs-iy",
-      role: "receptive-discrimination",
-      observationId: observation.observationId,
-      outcome: { kind: "binary", success: true },
-      evaluatorConfidence: 1,
-      attempt: {
-        supportLevel: 0,
-        revealUsed: false,
-        responseLatencyMs: 820,
-        responseModality: "choice",
-        contextId: "minimal-pair-set-a",
-      },
-      occurredAt: "2026-09-04T00:00:01.000Z",
-    }, {
+    const testBenchmark: RegisteredBenchmarkArtifact = {
       benchmarkId: "vi-adult-minpair-v1",
-      modelFingerprint: "deterministic-choice@v1",
-      authority: "assessment-candidate",
-      decision: "assessment",
-      scope: observation.calibration.scope,
+      version: "1.0.0",
+      immutableFingerprint: "sha256-bench-minpair-v1-abc",
+      evidenceLayer: "layer1-benchmark-calibration",
+      sourceReferences: [],
+      sampleSize: 100,
+      createdAt: "2026-09-01T00:00:00.000Z",
+      productionAuthorityEligible: true,
+    };
+
+    const { publicKey: edPublicKey, privateKey: edPrivateKey } = crypto.generateKeyPairSync("ed25519", {
+      publicKeyEncoding: { type: "spki", format: "pem" },
+      privateKeyEncoding: { type: "pkcs8", format: "pem" },
     });
 
-    expect(certified.ok).toBe(true);
-    if (!certified.ok) return;
+    const testAnchor: TrustedAnchor = {
+      anchorId: "anchor-ref-flow-01",
+      algorithm: "ed25519",
+      publicKeyOrSecret: edPublicKey,
+      status: "active",
+      validFrom: "2026-01-01T00:00:00.000Z",
+    };
+    const anchorRegistry = createTrustedAnchorRegistry([testAnchor]);
 
+    const grantBase: RegisteredAuthorityGrant = {
+      grantId: "grant-minpair-001",
+      grantVersion: "1.0.0",
+      status: "active",
+      benchmarkArtifactId: "vi-adult-minpair-v1",
+      expectedBenchmarkFingerprint: "sha256-bench-minpair-v1-abc",
+      expectedBenchmarkVersion: "1.0.0",
+      productionAuthorityEligible: true,
+      evaluatorBinding: {
+        evaluatorId: "binary-answer-key",
+        evaluatorKind: "deterministic",
+        modelFingerprint: "deterministic-choice@v1",
+      },
+      scope: observation.calibration.scope,
+      decision: "assessment",
+      authority: "assessment-candidate",
+      validFrom: "2026-01-01T00:00:00.000Z",
+    };
+
+    const payload = extractGrantManifestPayload(grantBase, testBenchmark);
+    const digest = computeCanonicalManifestDigest(payload);
+    const attestedAt = "2026-09-01T00:00:00.000Z";
+    const envelope = computeAttestationEnvelopeMessage(
+      "anchor-ref-flow-01",
+      attestedAt,
+      digest,
+    );
+    const signature = crypto.sign(null, envelope, edPrivateKey).toString("hex");
+    const verifyRes = verifyAuthorityManifest(
+      {
+        kind: "raw-cryptographic-attestation",
+        anchorId: "anchor-ref-flow-01",
+        manifestDigest: digest,
+        signature,
+        attestedAt,
+      },
+      payload,
+      anchorRegistry,
+      "2026-09-04T00:00:01.000Z",
+    );
+    if (!verifyRes.ok) throw new Error("verification failed in test setup");
+
+    const grant: RegisteredAuthorityGrant = {
+      ...grantBase,
+      attestation: verifyRes.attestation,
+    };
+
+    const registry = createProvenanceAuthorityRegistry({
+      benchmarks: [testBenchmark],
+      grants: [grant],
+    });
+
+    // Production durable authority fails closed by default in Core V1
+    const prodAttempt = resolveCalibrationAuthority(
+      {
+        grantId: "grant-minpair-001",
+        observation,
+        task,
+        evaluationTimestamp: "2026-09-04T00:00:01.000Z",
+        trustStore: anchorRegistry,
+      },
+      registry,
+    );
+    expect(prodAttempt.ok).toBe(false);
+    if (!prodAttempt.ok) {
+      expect(prodAttempt.reasonCodes).toContain("production-authority-not-available");
+    }
+
+    // Contract authority resolution succeeds when requireProductionAuthority: false
+    const resolved = resolveCalibrationAuthority(
+      {
+        grantId: "grant-minpair-001",
+        observation,
+        task,
+        evaluationTimestamp: "2026-09-04T00:00:01.000Z",
+        requireProductionAuthority: false,
+        trustStore: anchorRegistry,
+      },
+      registry,
+    );
+
+    expect(resolved.ok).toBe(true);
+    if (!resolved.ok) return;
+    expect(isResolvedContractAuthority(resolved.resolvedGrant)).toBe(true);
+    expect(isResolvedDurableCalibrationAuthority(resolved.resolvedGrant)).toBe(false);
+    if (!isResolvedContractAuthority(resolved.resolvedGrant)) return;
+
+    // Durable evidence certification strictly rejects contract-only authority
+    const certified = certifyCoreEvidence(
+      task,
+      observation,
+      {
+        eventId: "ev-1",
+        taskId: task.id,
+        targetId: "listen-ih-vs-iy",
+        role: "receptive-discrimination",
+        observationId: observation.observationId,
+        outcome: { kind: "binary", success: true },
+        evaluatorConfidence: 1,
+        attempt: {
+          supportLevel: 0,
+          revealUsed: false,
+          responseLatencyMs: 820,
+          responseModality: "choice",
+          contextId: "minimal-pair-set-a",
+        },
+        occurredAt: "2026-09-04T00:00:01.000Z",
+      },
+      resolved.resolvedGrant as never,
+    );
+
+    expect(certified.ok).toBe(false);
+    if (!certified.ok) {
+      expect(certified.problems).toContainEqual({
+        type: "independent-authority-not-durable",
+      });
+    }
+
+    // Measurement estimation remains operational on observed items
     const theta = estimateThetaEap([
       {
         item: { id: task.id, difficulty: 0.4, discrimination: 1.1 },
-        correct: certified.evidence.outcome.kind === "binary" && certified.evidence.outcome.success,
+        correct: Boolean(
+          observation.payload.kind === "comprehension" &&
+            observation.payload.responseCorrect,
+        ),
       },
     ]);
 
@@ -154,29 +289,78 @@ describe("pure core reference flow", () => {
       createdAt: "2026-09-04T00:00:00.000Z",
     };
 
-    const result = certifyCoreEvidence(task, observation, {
-      eventId: "ev-2",
-      taskId: "task-1",
-      targetId: "target-1",
-      role: "meaning-recognition",
-      observationId: "obs-2",
-      outcome: { kind: "binary", success: true },
-      evaluatorConfidence: 1,
-      attempt: {
-        supportLevel: 0,
-        revealUsed: false,
-        responseLatencyMs: null,
-        responseModality: "choice",
-        contextId: "ctx",
-      },
-      occurredAt: "2026-09-04T00:00:01.000Z",
-    }, {
+    const testBenchmark: RegisteredBenchmarkArtifact = {
       benchmarkId: "bench-1",
-      modelFingerprint: "deterministic@v1",
-      authority: "assessment-candidate",
-      decision: "assessment",
-      scope: observation.calibration.scope,
+      version: "1.0.0",
+      immutableFingerprint: "sha256-bench-1",
+      evidenceLayer: "layer1-benchmark-calibration",
+      sourceReferences: [],
+      sampleSize: 100,
+      createdAt: "2026-09-01T00:00:00.000Z",
+      productionAuthorityEligible: true,
+    };
+
+    const registry = createProvenanceAuthorityRegistry({
+      benchmarks: [testBenchmark],
+      grants: [
+        {
+          grantId: "grant-bench-1",
+          grantVersion: "1.0.0",
+          status: "active",
+          benchmarkArtifactId: "bench-1",
+          expectedBenchmarkFingerprint: "sha256-bench-1",
+          expectedBenchmarkVersion: "1.0.0",
+          productionAuthorityEligible: true,
+          evaluatorBinding: {
+            evaluatorId: "test",
+            evaluatorKind: "deterministic",
+            modelFingerprint: "deterministic@v1",
+          },
+          scope: observation.calibration.scope,
+          decision: "assessment",
+          authority: "assessment-candidate",
+          validFrom: "2026-01-01T00:00:00.000Z",
+        },
+      ],
     });
+
+    const resolved = resolveCalibrationAuthority(
+      {
+        grantId: "grant-bench-1",
+        observation,
+        task,
+        evaluationTimestamp: "2026-09-04T00:00:01.000Z",
+      },
+      registry,
+    );
+
+    expect(resolved.ok).toBe(false);
+    if (!resolved.ok) {
+      expect(resolved.reasonCodes).toContain("population-scope-mismatch");
+    }
+
+    const result = certifyCoreEvidence(
+      task,
+      observation,
+      {
+        eventId: "ev-2",
+        taskId: "task-1",
+        targetId: "target-1",
+        role: "meaning-recognition",
+        observationId: "obs-2",
+        outcome: { kind: "binary", success: true },
+        evaluatorConfidence: 1,
+        attempt: {
+          supportLevel: 0,
+          revealUsed: false,
+          responseLatencyMs: null,
+          responseModality: "choice",
+          contextId: "ctx",
+        },
+        occurredAt: "2026-09-04T00:00:01.000Z",
+      },
+      (resolved as { resolvedGrant?: never }).resolvedGrant as never,
+    );
 
     expect(result).toMatchObject({
       ok: false,
