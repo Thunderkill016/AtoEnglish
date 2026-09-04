@@ -22,11 +22,18 @@
   - Every vetted engine MUST have pinned upstream repository URL, release tag, and an immutable full 40-character hexadecimal git commit SHA (`/^[0-9a-f]{40}$/i`). Tag strings or short SHAs are strictly prohibited.
   - Upstream copyright notices, licenses, and author citations MUST be preserved in the third-party notice registry.
   - Code and model/data licenses MUST be evaluated independently; permissive code never auto-approves incompatible model/data terms under direct linking.
-- **Adapter Contract Invariants**:
-  - All adapter contracts (`AsrAdapterContract`, `VadAdapterContract`, `LinguisticAdapterContract`, `AlignmentAdapterContract`, `BktAdapterContract`) MUST be pure TypeScript interfaces emitting typed raw observation payloads.
-  - Adapter failures MUST produce typed problem codes, never unhandled exceptions.
-  - The Nếp-owned constructor `createVettedCoreObservation` wraps raw payloads into canonical `CoreObservation` envelopes with explicit `authority: "none"` and unvalidated shadow calibration.
-  - Injected authority, mastery, or calibration fields MUST trigger immediate fail-closed rejection.
+- **Model/Data Artifact Provenance Invariants (GEMINI-ACCEL-003)**:
+  - Code and model/data weights/data artifacts MUST maintain strict provenance separation via explicit `ModelArtifactRecord` (`artifactId`, `upstreamSource`, `revision`, `license`, `status`).
+  - Permissive source code (MIT, Apache-2.0, BSD) MUST NOT imply approved model/data weights.
+  - Any package with `modelArtifact.status: "unapproved"` or `modelLicense: "unapproved"` MUST fail closed and is strictly rejected for production-capable integration (`direct-library`, `source-adaptation`, `isolated-service`).
+  - Baseline-only packages (`montreal-forced-aligner`, `speechbrain`, `stanfordnlp-stanza`, `openai-whisper`) MUST explicitly declare that no runtime model artifact is approved for production (`status: "unapproved"` or `"not-applicable"`).
+- **Runtime Boundary & Payload Immutability Invariants (GEMINI-ACCEL-003)**:
+  - `createVettedCoreObservation` MUST act as a fail-closed runtime boundary, not merely a TypeScript generic.
+  - Accepted payloads MUST undergo discriminated schema validation with exact key whitelisting and finite/range validation on all numeric fields (timing, probabilities, durations, confidences).
+  - All 5 adapter families MUST cross into canonical `CoreObservation` envelopes without `as any` or parallel observation ontologies; linguistic maps to `SyntaxDiagnosticPayload` and alignment maps to `AcousticDiagnosticPayload`.
+  - Recursive anti-injection scanner MUST detect and reject forbidden authority/mastery/calibration fields at any nesting depth.
+  - Runtime activity MUST be validated against canonical `COMMUNICATION_ACTIVITIES`.
+  - The accepted payload and resulting observation envelope MUST be deeply cloned and deeply frozen (`deepFreeze`) to guarantee complete post-construction immutability.
 - **Purity & Determinism**:
   - The registry, policy engine, adapters, and observation wrapper MUST be pure and deterministic with zero ambient time (`new Date()`, `Date.now()`) or network dependencies.
   - Given identical semantic inputs and explicit ISO timestamp string, adapter execution MUST replay byte-deterministically.

@@ -52,3 +52,15 @@
 - [x] T033: Add byte-deterministic replay tests and adversarial injection tests in `vetted-oss.test.ts`.
 - [x] T034: Run full verification suite and exact-head CI.
 
+## Phase 8: GEMINI-ACCEL-003 Review Remediation (Review ID: 5116089948)
+- [x] T035: Implement fail-closed runtime discriminated schema validation for all accepted adapter payloads in `createVettedCoreObservation`.
+- [x] T036: Enforce exact key whitelisting and numeric finite/range checks (probabilities [0, 1], timing endMs >= startMs, finite durations).
+- [x] T037: Implement canonical diagnostic mappings (`mapLinguisticToSyntaxDiagnostic`, `mapAlignmentToAcousticDiagnostic`) allowing all 5 adapter families to cross into `CoreObservation` without `as any` or parallel ontologies.
+- [x] T038: Validate runtime activity against canonical `COMMUNICATION_ACTIVITIES`.
+- [x] T039: Implement recursive anti-injection scanner (`checkForForbiddenFields`) and deep clone/freeze (`deepFreeze`) for complete post-construction immutability.
+- [x] T040: Introduce explicit `ModelArtifactRecord` (`artifactId`, `upstreamSource`, `revision`, `license`, `status`) and decouple code vs model artifact provenance across all 12 registered packages.
+- [x] T041: Enforce fail-closed gate: unapproved model license or artifact rejects production-capable integration modes (`direct-library`, `source-adaptation`, `isolated-service`).
+- [x] T042: Explicitly declare that baseline-donor packages (`mfa`, `speechbrain`, `stanza`, `whisper`) have no runtime model artifact approved for production.
+- [x] T043: Add comprehensive adversarial tests for runtime payload boundary, injection attempts, and model provenance gates in `vetted-oss.test.ts` (35 tests).
+- [x] T044: Run full local verification gate (`vitest`, `tsc`, `lint`, `npm test`, `test:content-standard`, `agent_verify.mjs`, `build`).
+

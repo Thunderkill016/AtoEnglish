@@ -505,3 +505,498 @@ describe("nep.vetted-oss-matrix.v1: Canonical CoreObservation Envelope & Anti-In
   });
 });
 
+describe("nep.vetted-oss-matrix.v1: Model/Data Artifact Provenance & Fail-Closed Gating (GEMINI-ACCEL-003)", () => {
+  it("proves permissive source code + unapproved model artifact cannot achieve production-capable approval", () => {
+    const validVad = getVettedPackage("silero-vad")!;
+
+    // Scenario A: Permissive code + unapproved model artifact under direct-library
+    const unapprovedDirect = {
+      ...validVad,
+      modelLicense: "unapproved" as const,
+      modelArtifact: {
+        ...validVad.modelArtifact,
+        status: "unapproved" as const,
+        license: "unapproved" as const,
+      },
+    };
+    const decisionA = evaluateReuseDecision(unapprovedDirect);
+    expect(decisionA.status).toBe("rejected");
+    expect(decisionA.decisionTier).toBe(5);
+    expect(decisionA.justification).toContain("cannot be approved for production-capable integration");
+
+    // Scenario B: Permissive code + unapproved model artifact under isolated-service
+    const unapprovedIsolated: VettedPackageDescriptor = {
+      ...validVad,
+      integrationMode: "isolated-service",
+      modelLicense: "unapproved" as const,
+      modelArtifact: {
+        ...validVad.modelArtifact,
+        status: "unapproved" as const,
+        license: "unapproved" as const,
+      },
+    };
+    const decisionB = evaluateReuseDecision(unapprovedIsolated);
+    expect(decisionB.status).toBe("rejected");
+    expect(decisionB.decisionTier).toBe(5);
+
+    // Scenario C: Permissive code + unapproved model artifact under source-adaptation
+    const unapprovedAdapted: VettedPackageDescriptor = {
+      ...validVad,
+      integrationMode: "source-adaptation",
+      modelLicense: "unapproved" as const,
+      modelArtifact: {
+        ...validVad.modelArtifact,
+        status: "unapproved" as const,
+        license: "unapproved" as const,
+      },
+    };
+    const decisionC = evaluateReuseDecision(unapprovedAdapted);
+    expect(decisionC.status).toBe("rejected");
+    expect(decisionC.decisionTier).toBe(5);
+  });
+
+  it("verifies all baseline-donor packages explicitly declare no runtime model artifact is approved", () => {
+    const baselineDonors = listVettedPackages({ mode: "baseline-donor" });
+    expect(baselineDonors.length).toBeGreaterThanOrEqual(4);
+
+    for (const pkg of baselineDonors) {
+      const decision = evaluateReuseDecision(pkg);
+      expect(decision.status).toBe("approved");
+      expect(decision.decisionTier).toBe(4);
+      expect(decision.justification).toContain("no runtime model artifact is approved for production");
+    }
+  });
+
+  it("rejects descriptors with missing, unapproved, or malformed modelArtifact records", () => {
+    const validPkg = getVettedPackage("silero-vad")!;
+
+    // Case 1: Missing modelArtifact
+    const noArtifact = { ...validPkg, modelArtifact: undefined as any };
+    expect(validateVettedPackageDescriptor(noArtifact).valid).toBe(false);
+
+    // Case 2: Blank artifactId
+    const blankArtifactId = {
+      ...validPkg,
+      modelArtifact: { ...validPkg.modelArtifact, artifactId: "   " },
+    };
+    expect(validateVettedPackageDescriptor(blankArtifactId).valid).toBe(false);
+
+    // Case 3: Invalid status
+    const badStatus = {
+      ...validPkg,
+      modelArtifact: { ...validPkg.modelArtifact, status: "pending" as any },
+    };
+    expect(validateVettedPackageDescriptor(badStatus).valid).toBe(false);
+  });
+});
+
+describe("nep.vetted-oss-matrix.v1: createVettedCoreObservation Adversarial Validation & Immutability (GEMINI-ACCEL-003)", () => {
+  const fixedTimestamp = "2026-09-05T00:00:00.000Z";
+
+  it("strictly fails closed on unknown top-level options", () => {
+    const payload = {
+      kind: "asr-transcription" as const,
+      text: "hello",
+      durationMs: 500,
+      tokens: [],
+      noSpeechProbability: 0.1,
+      engine: "mock",
+    };
+
+    expect(() =>
+      createVettedCoreObservation({
+        targetId: "learner_1",
+        activity: "spoken-production",
+        payload,
+        evaluator: "mock",
+        construct: "test",
+        occurredAt: fixedTimestamp,
+        ...({ unexpectedOption: "malicious" } as any),
+      })
+    ).toThrowError(/Unknown top-level option: 'unexpectedOption'/);
+  });
+
+  it("strictly fails closed on unknown top-level keys in payload", () => {
+    const maliciousPayload = {
+      kind: "asr-transcription" as const,
+      text: "hello",
+      durationMs: 500,
+      tokens: [],
+      noSpeechProbability: 0.1,
+      engine: "mock",
+      unknownPayloadKey: "unwhitelisted",
+    };
+
+    expect(() =>
+      createVettedCoreObservation({
+        targetId: "learner_1",
+        activity: "spoken-production",
+        payload: maliciousPayload as any,
+        evaluator: "mock",
+        construct: "test",
+        occurredAt: fixedTimestamp,
+      })
+    ).toThrowError(/Unknown key 'unknownPayloadKey' in asr-transcription payload/);
+  });
+
+  it("strictly fails closed on deeply nested forbidden authority/mastery fields", () => {
+    const payloadWithNestedAuthority = {
+      kind: "asr-transcription" as const,
+      text: "hello",
+      durationMs: 500,
+      tokens: [
+        {
+          token: "hello",
+          startMs: 0,
+          endMs: 500,
+          confidence: 0.9,
+          ...({ authority: "mastery-candidate" } as any),
+        },
+      ],
+      noSpeechProbability: 0.1,
+      engine: "mock",
+    };
+
+    expect(() =>
+      createVettedCoreObservation({
+        targetId: "learner_1",
+        activity: "spoken-production",
+        payload: payloadWithNestedAuthority as any,
+        evaluator: "mock",
+        construct: "test",
+        occurredAt: fixedTimestamp,
+      })
+    ).toThrowError(/Forbidden authority\/mastery field injected/);
+  });
+
+  it("strictly fails closed on invalid communication activity", () => {
+    const payload = {
+      kind: "asr-transcription" as const,
+      text: "hello",
+      durationMs: 500,
+      tokens: [],
+      noSpeechProbability: 0.1,
+      engine: "mock",
+    };
+
+    expect(() =>
+      createVettedCoreObservation({
+        targetId: "learner_1",
+        activity: "not-a-valid-activity" as any,
+        payload,
+        evaluator: "mock",
+        construct: "test",
+        occurredAt: fixedTimestamp,
+      })
+    ).toThrowError(/is not a valid canonical CommunicationActivity/);
+  });
+
+  it("strictly fails closed on NaN, negative, or out-of-range confidence, probabilities, and timing", () => {
+    // NaN confidence
+    expect(() =>
+      createVettedCoreObservation({
+        targetId: "learner_1",
+        activity: "spoken-production",
+        payload: {
+          kind: "asr-transcription",
+          text: "hi",
+          durationMs: 100,
+          tokens: [],
+          noSpeechProbability: 0,
+          engine: "mock",
+        },
+        confidence: NaN,
+        evaluator: "mock",
+        construct: "test",
+        occurredAt: fixedTimestamp,
+      })
+    ).toThrowError(/confidence must be a finite number between 0 and 1/);
+
+    // Out-of-range confidence (>1)
+    expect(() =>
+      createVettedCoreObservation({
+        targetId: "learner_1",
+        activity: "spoken-production",
+        payload: {
+          kind: "asr-transcription",
+          text: "hi",
+          durationMs: 100,
+          tokens: [],
+          noSpeechProbability: 0,
+          engine: "mock",
+        },
+        confidence: 1.5,
+        evaluator: "mock",
+        construct: "test",
+        occurredAt: fixedTimestamp,
+      })
+    ).toThrowError(/confidence must be a finite number between 0 and 1/);
+
+    // Negative duration in ASR
+    expect(() =>
+      createVettedCoreObservation({
+        targetId: "learner_1",
+        activity: "spoken-production",
+        payload: {
+          kind: "asr-transcription",
+          text: "hi",
+          durationMs: -50,
+          tokens: [],
+          noSpeechProbability: 0,
+          engine: "mock",
+        },
+        evaluator: "mock",
+        construct: "test",
+        occurredAt: fixedTimestamp,
+      })
+    ).toThrowError(/durationMs must be a non-negative finite number/);
+
+    // Negative speechDuration in VAD
+    expect(() =>
+      createVettedCoreObservation({
+        targetId: "learner_1",
+        activity: "spoken-production",
+        payload: {
+          kind: "vad-speech",
+          isSpeech: true,
+          speechProbability: 0.9,
+          intervals: [],
+          totalDurationMs: 1000,
+          speechDurationMs: -10,
+          engine: "mock",
+        },
+        evaluator: "mock",
+        construct: "test",
+        occurredAt: fixedTimestamp,
+      })
+    ).toThrowError(/speechDurationMs must be a finite number between 0 and totalDurationMs/);
+
+    // Out-of-range probability in BKT
+    expect(() =>
+      createVettedCoreObservation({
+        targetId: "learner_1",
+        activity: "spoken-production",
+        payload: {
+          kind: "bkt-comparator",
+          constructId: "phoneme-th",
+          priorMastery: 1.5,
+          posteriorMastery: 0.8,
+          pNextState: 0.8,
+          predictedCorrectProbability: 0.7,
+          correct: true,
+          parameters: { pInit: 0.2, pTransit: 0.1, pGuess: 0.2, pSlip: 0.1 },
+          engine: "mock",
+        },
+        evaluator: "mock",
+        construct: "test",
+        occurredAt: fixedTimestamp,
+      })
+    ).toThrowError(/priorMastery must be a finite number in \[0, 1\]/);
+  });
+
+  it("strictly fails closed on malformed token, interval, or phoneme shapes", () => {
+    // Malformed token timing (endMs < startMs)
+    expect(() =>
+      createVettedCoreObservation({
+        targetId: "learner_1",
+        activity: "spoken-production",
+        payload: {
+          kind: "asr-transcription",
+          text: "hi",
+          durationMs: 500,
+          tokens: [{ token: "hi", startMs: 300, endMs: 100, confidence: 0.9 }],
+          noSpeechProbability: 0,
+          engine: "mock",
+        },
+        evaluator: "mock",
+        construct: "test",
+        occurredAt: fixedTimestamp,
+      })
+    ).toThrowError(/token.endMs must be a finite number >= startMs/);
+
+    // Malformed VAD interval (endMs < startMs)
+    expect(() =>
+      createVettedCoreObservation({
+        targetId: "learner_1",
+        activity: "spoken-production",
+        payload: {
+          kind: "vad-speech",
+          isSpeech: true,
+          speechProbability: 0.8,
+          intervals: [{ startMs: 500, endMs: 200 }],
+          totalDurationMs: 1000,
+          speechDurationMs: 300,
+          engine: "mock",
+        },
+        evaluator: "mock",
+        construct: "test",
+        occurredAt: fixedTimestamp,
+      })
+    ).toThrowError(/vad interval.endMs must be a finite number >= startMs/);
+  });
+
+  it("proves complete deep immutability: any post-validation mutation throws TypeError", () => {
+    const coreObs = createVettedCoreObservation({
+      targetId: "learner_immutable",
+      activity: "spoken-production",
+      payload: {
+        kind: "asr-transcription",
+        text: "hello world",
+        durationMs: 1000,
+        tokens: [{ token: "hello", startMs: 0, endMs: 500, confidence: 0.9 }],
+        noSpeechProbability: 0.05,
+        engine: "systran-faster-whisper",
+      },
+      confidence: 0.9,
+      evaluator: "systran-faster-whisper",
+      construct: "speech-transcription",
+      occurredAt: fixedTimestamp,
+    });
+
+    // 1. Root observation is frozen
+    expect(Object.isFrozen(coreObs)).toBe(true);
+    expect(() => {
+      (coreObs as any).confidence = 0.1;
+    }).toThrow(TypeError);
+
+    // 2. Nested payload is frozen
+    expect(Object.isFrozen(coreObs.payload)).toBe(true);
+    expect(() => {
+      (coreObs.payload as any).text = "mutated text";
+    }).toThrow(TypeError);
+
+    // 3. Deeply nested tokens are frozen
+    const tokens = (coreObs.payload as any).tokens;
+    expect(Object.isFrozen(tokens)).toBe(true);
+    expect(Object.isFrozen(tokens[0])).toBe(true);
+    expect(() => {
+      tokens[0].token = "hacked";
+    }).toThrow(TypeError);
+
+    // 4. Calibration profile and scope are frozen
+    expect(Object.isFrozen(coreObs.calibration)).toBe(true);
+    expect(Object.isFrozen(coreObs.calibration.scope)).toBe(true);
+    expect(Object.isFrozen(coreObs.calibration.scope.requiredPopulationTags)).toBe(true);
+    expect(() => {
+      (coreObs.calibration.scope.requiredPopulationTags as any).push("injected-tag");
+    }).toThrow(TypeError);
+
+    // 5. Provenance is frozen
+    expect(Object.isFrozen(coreObs.provenance)).toBe(true);
+    expect(() => {
+      (coreObs.provenance as any).evaluator = "attacker";
+    }).toThrow(TypeError);
+  });
+
+  it("canonically maps all 5 adapter families into CoreObservation without 'as any' or parallel ontology", async () => {
+    // 1. ASR
+    const asr = createMockAsrAdapter("speech test");
+    const asrRes = await asr.transcribe({
+      audioData: new Uint8Array([1, 2]),
+      sampleRateHz: 16000,
+      durationMs: 1000,
+      occurredAt: fixedTimestamp,
+    });
+    expect(asrRes.ok).toBe(true);
+    if (asrRes.ok) {
+      const asrObs = createVettedCoreObservation({
+        targetId: "learner_1",
+        activity: "spoken-production",
+        payload: asrRes.payload,
+        evaluator: "faster-whisper",
+        construct: "asr-transcription",
+        occurredAt: fixedTimestamp,
+      });
+      expect(asrObs.payload.kind).toBe("asr-transcription");
+      expect(asrObs.activity).toBe("spoken-production");
+    }
+
+    // 2. VAD
+    const vad = createMockVadAdapter();
+    const vadRes = await vad.detectActivity({
+      audioData: new Float32Array([0.1]),
+      sampleRateHz: 16000,
+      durationMs: 2000,
+      occurredAt: fixedTimestamp,
+    });
+    expect(vadRes.ok).toBe(true);
+    if (vadRes.ok) {
+      const vadObs = createVettedCoreObservation({
+        targetId: "learner_1",
+        activity: "spoken-production",
+        payload: vadRes.payload,
+        evaluator: "silero-vad",
+        construct: "vad-speech",
+        occurredAt: fixedTimestamp,
+      });
+      expect(vadObs.payload.kind).toBe("vad-speech");
+    }
+
+    // 3. BKT
+    const bkt = createBktBaselineComparator();
+    const bktRes = bkt.step({
+      constructId: "phoneme-th",
+      priorMastery: 0.3,
+      correct: true,
+      occurredAt: fixedTimestamp,
+    });
+    const bktObs = createVettedCoreObservation({
+      targetId: "learner_1",
+      activity: "spoken-production",
+      payload: bktRes,
+      evaluator: "pybkt",
+      construct: "bkt-comparator",
+      occurredAt: fixedTimestamp,
+    });
+    expect(bktObs.payload.kind).toBe("bkt-comparator");
+
+    // 4. Linguistic (maps to SyntaxDiagnosticPayload)
+    const linguistic = createMockLinguisticAdapter();
+    const lingRes = await linguistic.analyze({
+      text: "she go to school",
+      enableGrammarCheck: true,
+      occurredAt: fixedTimestamp,
+    });
+    expect(lingRes.ok).toBe(true);
+    if (lingRes.ok) {
+      // Direct pass without 'as any'
+      const lingObs = createVettedCoreObservation({
+        targetId: "learner_1",
+        activity: "written-production",
+        payload: lingRes.payload,
+        evaluator: "spacy-languagetool",
+        construct: "grammar-syntax",
+        occurredAt: fixedTimestamp,
+      });
+      expect(lingObs.payload.kind).toBe("syntax"); // Canonically mapped to syntax!
+      expect((lingObs.payload as any).tokens).toBeDefined();
+      expect((lingObs.payload as any).detectedErrors).toBeDefined();
+    }
+
+    // 5. Alignment (maps to AcousticDiagnosticPayload)
+    const aligner = createMockAlignmentAdapter();
+    const alignRes = await aligner.align({
+      audioData: new Uint8Array([10, 20]),
+      sampleRateHz: 16000,
+      durationMs: 1200,
+      transcript: "cat",
+      occurredAt: fixedTimestamp,
+    });
+    expect(alignRes.ok).toBe(true);
+    if (alignRes.ok) {
+      // Direct pass without 'as any'
+      const alignObs = createVettedCoreObservation({
+        targetId: "learner_1",
+        activity: "spoken-production",
+        payload: alignRes.payload,
+        evaluator: "montreal-forced-aligner",
+        construct: "phoneme-alignment",
+        occurredAt: fixedTimestamp,
+      });
+      expect(alignObs.payload.kind).toBe("acoustic"); // Canonically mapped to acoustic!
+      expect((alignObs.payload as any).phonemeAlignments.length).toBeGreaterThan(0);
+      expect((alignObs.payload as any).utteranceDurationSec).toBe(1.2);
+    }
+  });
+});
+
