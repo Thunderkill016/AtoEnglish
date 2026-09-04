@@ -46,33 +46,35 @@ python benchmarks/reality-slam-v1/scripts/validate_artifacts.py \
 
 The validator compares the repository-provided checksum type/value first, then records a separate local SHA-256 fingerprint. A mismatch fails closed.
 
-## 4. R0 before modern reimplementation
+## 4. R0 establishes B1
 
 ```bash
-python benchmarks/reality-slam-v1/scripts/run_r0_oracle.py --track en_es --split dev
+python benchmarks/reality-slam-v1/scripts/run_r0_b1_oracle.py --track en_es --split dev
 ```
 
-R0 executes the exact staged official starter/evaluation artifact. The historical starter uses unseeded random initialization/shuffling, so the runner records repeated oracle results, runtime, artifact hash, and any compatibility patch. Do not call upstream output byte-deterministic.
+R0 executes the exact staged official starter/evaluation artifact and records B1. The historical starter uses unseeded random initialization/shuffling, so the runner records repeated oracle results, runtime, artifact hash, and any compatibility patch. Do not call upstream output byte-deterministic and do not substitute sklearn while retaining the B1 label.
 
-Only after R0 freezes the oracle protocol may the modern B0/B1/B2 lane run:
+After R0/B1 is frozen, run the modern Nếp-owned baselines:
 
 ```bash
 python benchmarks/reality-slam-v1/scripts/run_b0.py --track en_es --split dev
-python benchmarks/reality-slam-v1/scripts/run_b1.py --track en_es --split dev
 python benchmarks/reality-slam-v1/scripts/run_b2.py --track en_es --split dev
 ```
 
-## 5. Leakage tests
+B2/B3 use the same vetted modern estimator stack; B1 remains the historical official lane.
+
+## 5. Leakage / chronology tests
 
 ```bash
-pytest benchmarks/reality-slam-v1/tests/ -k 'leakage or parser or history'
+pytest benchmarks/reality-slam-v1/tests/ -k 'leakage or parser or history or chronology'
 ```
 
 Required cases include:
 - source-faithful parser fixtures (`+`/`/`, pipe countries, fractional days, null/negative time, 7-vs-6 rows);
 - invert DEV/TEST gold labels and prove prediction-time features do not change;
 - prove TRAIN-derived error counts/rates remain present on first and later DEV/TEST predictions;
-- mutate future rows and prove earlier feature vectors do not change.
+- mutate future rows and prove earlier feature vectors do not change;
+- prove the parser/feature stream preserves source file order and never globally sorts tied/fractional `days` values.
 
 ## 6. B3 gate
 

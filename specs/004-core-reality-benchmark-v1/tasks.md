@@ -11,22 +11,23 @@
 - [x] T007 Separate dataset license, starter artifact license, upstream checksum, local SHA-256, and Nếp quarantine policy.
 - [x] T008 Define Dataverse file-ID resolution + Guestbook fail-closed staging.
 - [x] T009 Replace pseudo-JCS with RFC 8785 package contract; drop custom DeLong from V1.
-- [x] T010 Define historical starter nondeterminism audit before any modern sklearn reproduction lane.
-- [ ] T011 Independent exact-head review PASS for Spec #004.
+- [x] T010 Define historical starter nondeterminism audit and freeze B1 as the exact staged official starter lane rather than a lookalike sklearn solver.
+- [x] T011 Define source file order as canonical chronology; `days` is a fractional lag feature and never a global sort key.
+- [ ] T012 Independent exact-head review PASS for Spec #004.
 
-## Phase B — B0/B1/B2 implementation (unblocked after T011)
+## Phase B — B0/B1/B2 implementation (unblocked after T012)
 
 - [ ] T020 Create isolated `benchmarks/reality-slam-v1/` workspace from the then-current frontier and record exact base SHA.
 - [ ] T021 Add `.cache/benchmarks/` quarantine guard and automated tracked-file check.
 - [ ] T022 Implement Dataverse metadata resolver/validator; do not bypass Guestbook requirements.
 - [ ] T023 Stage/fingerprint official starter artifact after legitimate access acceptance; record source license as unverified unless artifact proves otherwise.
-- [ ] T024 Implement R0 runner that records repeated unmodified oracle runs, runtime, metrics, and compatibility patches.
-- [ ] T025 Implement source-faithful streaming parser + fixtures (`+`/`/` user, pipe countries, fractional days, null/negative time, TRAIN/DEV rows).
+- [ ] T024 Implement R0/B1 runner that records repeated unmodified official-starter DEV runs, runtime, metrics, and compatibility patches.
+- [ ] T025 Implement source-faithful streaming parser + fixtures (`+`/`/` user, pipe countries, fractional days, null/negative time, TRAIN/DEV rows) preserving source order.
 - [ ] T026 Implement B0 prevalence baseline.
-- [ ] T027 Implement B1 modern reproduction lane only after R0 oracle freeze.
+- [ ] T027 Emit the B1 manifest/card from R0; do not substitute a different estimator.
 - [ ] T028 Implement B2 dual-history causal features preserving TRAIN labels while masking current evaluation labels.
-- [ ] T029 Add adversarial leakage tests: label inversion, future-row mutation, TRAIN-history preservation.
-- [ ] T030 Implement AUC/F1@0.5/log-loss with vetted packages and report counts/prevalence/coverage.
+- [ ] T029 Add adversarial leakage tests: label inversion, future-row mutation, TRAIN-history preservation, and no sorting by `days`.
+- [ ] T030 Implement B2/B3 AUC/F1@0.5/log-loss with vetted packages and report counts/prevalence/coverage.
 - [ ] T031 Implement RFC 8785 manifest + SHA-256 integrity verification.
 - [ ] T032 Emit baseline card and exact-head verification evidence.
 

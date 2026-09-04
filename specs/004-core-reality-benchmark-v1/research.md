@@ -40,6 +40,8 @@ Fields:
 
 TRAIN token rows have seven columns including label. Original DEV/TEST input rows have six columns; gold labels are separate scoring keys. Do not manufacture online evaluation labels.
 
+**Chronology rule:** the released files are longitudinal/time-series artifacts and are consumed in source file order. Fractional `days` is a course-age feature useful for lag calculations, but tied/same-day values mean it is not a lossless event-order key. The harness therefore streams source order and never globally sorts by `days`.
+
 Published rounded counts from papers/pages MUST be labeled with their exact split/source. The harness computes staged artifact totals after ingestion and records them in manifests; this spec does not reinterpret rounded TRAIN figures as exact whole-track totals.
 
 ## Dataverse provenance snapshot
@@ -59,26 +61,29 @@ The Dataverse dataset-level license is CC BY-NC 4.0. The metadata snapshot does 
 
 ## Official starter reproducibility caveat
 
-The official Python starter implements its own L2-regularized logistic regression using SGD. It initializes weights with `random.uniform` and shuffles training instances with `random.shuffle`; the published starter exposes no seed parameter. Therefore the unmodified upstream program is not byte-deterministic.
+The historical starter implements its own L2-regularized logistic regression using SGD. Public copies of the starter source show weight initialization through `random.uniform` and per-iteration `random.shuffle`, with no exposed seed argument. Therefore the unmodified upstream program is not byte-deterministic.
 
-R0 policy:
-1. fingerprint the exact staged starter artifact;
-2. audit its runtime requirements before patching anything;
-3. run the unmodified oracle repeatedly on DEV and record every run/metric;
+The accompanying evaluator computes accuracy, average log-loss, AUC, and F1@0.5 itself. R0 uses these staged official artifacts to establish **B1**; a modern sklearn logistic model is not substituted and mislabeled “official baseline.”
+
+R0/B1 policy:
+1. fingerprint the exact staged starter/evaluator artifacts;
+2. audit runtime requirements before patching anything;
+3. run the unmodified B1 oracle repeatedly on DEV and record every run/metric;
 4. if a compatibility patch is necessary, preserve the original bytes, store the patch fingerprint outside Git, and report both the original and patched execution contract;
-5. freeze an R0 comparison tolerance from the audited oracle protocol before comparing Nếp-owned implementations.
+5. freeze an R0 comparison tolerance/reference statistic from the audited oracle protocol before any downstream benchmark interpretation.
 
 The default Nếp tolerance remains ±0.005 AUC around the frozen DEV oracle reference statistic, but the oracle statistic and repeat count are manifest fields rather than unstated assumptions.
 
 ## B2 causal semantics
 
-`days` supplies course-age ordering/lag information. For an event in DEV/TEST:
+For an event in DEV/TEST:
+- source file order is canonical; do not resort by `days`;
 - label-dependent TRAIN history remains valid and available;
 - earlier events in the current blind evaluation pass may update encounter counts and course-age lag only;
 - current/earlier gold evaluation labels cannot update error counts/rates during that pass;
 - DEV labels become training information only in a separately declared `train-plus-dev` fit phase for final TEST evaluation.
 
-A mandatory adversarial test inverts every DEV/TEST gold label and proves prediction-time features are unchanged. A second test proves non-zero TRAIN-derived error history is preserved at the first and later DEV/TEST events.
+A mandatory adversarial test inverts every DEV/TEST gold label and proves prediction-time features are unchanged. A second test proves non-zero TRAIN-derived error history is preserved at the first and later DEV/TEST events. A third test guards against accidental global sorting by fractional `days`.
 
 ## B3 compatibility boundary
 
@@ -92,8 +97,8 @@ The V1 audit therefore starts pessimistically:
 
 ## Reuse-first implementation choices
 
-R0 uses the staged official starter/evaluation artifact as oracle. R1+ may use a separately pinned modern environment after R0 is frozen. Candidate V1 packages:
-- `scikit-learn==1.6.1` — estimator/metrics, BSD-style license;
+B1 remains the staged official starter/evaluator artifact. B2 and B3 use a separately pinned modern environment so their common-predictor comparison is maintainable and package-tested. Candidate V1 packages:
+- `scikit-learn==1.6.1` — B2/B3 estimator + standard metrics, BSD-style license;
 - `scipy==1.15.2` — numerical support, BSD-style license;
 - `rfc8785==0.1.4` — RFC 8785 canonicalization, Apache-2.0;
 - `pyBKT==1.4.3` — optional B4 comparator, MIT.

@@ -13,9 +13,11 @@ Canonical track mapping:
 
 Prompt fields are exactly `user countries days client session format time`. `days` is fractional course age. `countries` is pipe-delimited. `time:null` is valid; negative time is normalized to missing. TRAIN token rows contain labels; blind DEV/TEST rows do not.
 
+**Sequence invariant:** source file order is the canonical within-split event sequence. `days` is a course-age/lag feature and may contain ties; it must never be used to resort events or create a synthetic chronology.
+
 ## 3. Leakage contract
 
-For prediction event `e_k`, features may use only information available before `e_k` under the declared fit phase.
+For prediction event `e_k`, features may use only information available before `e_k` in source order under the declared fit phase.
 
 - TRAIN labels remain valid historical information when predicting DEV/TEST after fitting on TRAIN.
 - Earlier events in a blind DEV/TEST pass may update label-free encounter and course-age-lag features only.
@@ -26,32 +28,33 @@ For prediction event `e_k`, features may use only information available before `
 Adversarial gates:
 1. invert blind-split gold labels -> prediction-time features unchanged;
 2. preserve non-zero TRAIN error history at the first and subsequent evaluation events;
-3. shuffle future rows -> earlier features unchanged;
-4. fit/evaluation learner IDs and counts remain auditable.
+3. mutate/reorder future rows in a copied fixture -> already-emitted earlier features unchanged;
+4. reject any implementation that globally sorts a split by `days` instead of streaming source order;
+5. fit/evaluation learner IDs and counts remain auditable.
 
 ## 4. Baseline hierarchy
 
 - **B0**: constant probability equal to labeled TRAIN prevalence.
-- **B1**: official/reproduced SLAM starter baseline.
-- **B2**: transparent causal learner-history baseline.
+- **B1**: exact staged official/reproduced SLAM starter baseline, established by R0.
+- **B2**: transparent causal learner-history baseline using a vetted modern estimator.
 - **B3**: same B2 predictor plus final canonical #137 state outputs / `nep.reality-derived-features.v1`.
 - **B4**: pyBKT comparator only where a defensible skill mapping exists.
 
-B0/B1/B2 are required before judging B3.
+B0/B1/B2 are required before judging B3. A sklearn model that merely resembles the starter is not B1.
 
-## 5. R0 oracle protocol
+## 5. R0 / B1 oracle protocol
 
 The official starter and evaluation artifacts are staged outside Git and fingerprinted. Their separate code license is not assumed from dataset licensing.
 
-The historical starter uses unseeded random initialization/shuffling, so R0 does not assert byte determinism. The manifest records the exact oracle artifact, runtime, repeat count, each DEV result, and the frozen reference statistic used for the ±0.005 AUC reproduction policy. Any compatibility patch is a separately fingerprinted derivative kept in quarantine with an explicit diff/justification.
+The historical starter uses unseeded random initialization/shuffling, so R0 does not assert byte determinism. The manifest records the exact B1 oracle artifact, runtime, repeat count, each DEV result, and the frozen reference statistic used for the ±0.005 AUC reproduction policy. Any compatibility patch is a separately fingerprinted derivative kept in quarantine with an explicit diff/justification.
 
 Published TEST AUCs are post-freeze verification points only; DEV is never compared to those TEST values.
 
 ## 6. B2 causal feature contract
 
-Permitted feature families are prior labeled user/token error history, prior encounter counts, course-age-day recency, exercise format, and normalized response time. Error-rate denominators with no labeled history yield `null`, not zero-as-failure.
+Permitted feature families are prior labeled user/token error history, prior encounter counts, course-age-day recency, exercise format, and normalized response time. Error-rate denominators with no labeled history yield `null`, not zero-as-failure. Events are streamed in source file order.
 
-No custom estimator or metric primitive is justified here; use vetted packages after R0 is frozen.
+B2/B3 use vetted package estimators/metrics. No custom solver or metric primitive is justified here.
 
 ## 7. B3 compatibility and ablation contract
 

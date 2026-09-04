@@ -11,9 +11,8 @@ benchmarks/reality-slam-v1/
   scripts/
     resolve_dataverse.py
     validate_artifacts.py
-    run_r0_oracle.py
+    run_r0_b1_oracle.py
     run_b0.py
-    run_b1.py
     run_b2.py
     audit_b3_compatibility.py
     run_b3.py          # blocked until #140 merge + rebase
@@ -36,38 +35,38 @@ No benchmark implementation belongs in production `src/lib/` except a thin B3 br
 4. Ensure `.cache/benchmarks/` is gitignored before staging bytes.
 5. Record starter-code license as unverified unless the artifact itself carries separate terms.
 
-## Phase 1 — R0 historical oracle audit
+## Phase 1 — R0 / B1 historical oracle audit
 
-Do not begin by replacing the starter with sklearn.
+B1 is the exact staged official starter/evaluator lane. Do not begin by replacing it with sklearn.
 
 1. Stage the exact official starter/evaluation artifact outside Git; compute local SHA-256.
 2. Audit the source and runtime requirements.
-3. Execute the unmodified starter on DEV repeatedly because upstream uses unseeded randomized initialization/shuffling.
+3. Execute the unmodified B1 starter on DEV repeatedly because upstream uses unseeded randomized initialization/shuffling.
 4. Record every result and freeze the oracle reference statistic, repeat count, and ±0.005 AUC reproduction tolerance.
 5. If old runtime incompatibility requires a patch, preserve original bytes; apply a minimal quarantined patch; fingerprint the patch and diff; report that the run is compatibility-patched rather than original.
 
-R0 failure blocks model claims but does not justify changing the benchmark until the failure is understood.
+R0 failure blocks B2/B3 model claims but does not justify silently replacing the baseline.
 
-## Phase 2 — B0/B1/B2 infrastructure
+## Phase 2 — B0/B2 infrastructure
 
 Unblocked after Spec #004 independent PASS, even if #140 remains open.
 
 - **B0**: TRAIN prevalence constant.
-- **B1**: Nếp-owned reproduction lane after R0; modern packages may be used only with explicit environment/version manifest.
-- **B2**: causal simple-history model.
+- **B1**: already supplied by the frozen R0 official-starter lane; emit its manifest/result card, do not rebuild it with a different solver.
+- **B2**: causal simple-history model using a vetted modern estimator.
 
-Candidate modern environment after R0 freeze:
+Candidate B2/B3 environment:
 - Python 3.x version pinned in lockfile;
 - `scikit-learn==1.6.1`;
 - `scipy==1.15.2`;
 - `rfc8785==0.1.4`;
 - no custom logistic-regression/AUC/log-loss/bootstrap/DeLong implementations.
 
-B2 state machine keeps two separate histories:
+B2 streams source file order and keeps two separate histories:
 1. labeled history from source splits authorized by `fitPhase`;
 2. label-free encounter/lag history from all past rows in the current blind pass.
 
-Mandatory tests prove TRAIN label history survives DEV/TEST while evaluation labels have zero online influence.
+`days` is a fractional course-age lag input only; tied/same-day rows are not resorted. Mandatory tests prove TRAIN label history survives DEV/TEST, evaluation labels have zero online influence, and source-order causality is preserved.
 
 ## Phase 3 — Pre-R2 compatibility audit
 
