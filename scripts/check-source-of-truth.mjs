@@ -7,6 +7,7 @@ const root = process.cwd();
 const requiredPaths = [
   ".specify/memory/constitution.md",
   ".specify/integration.json",
+  ".agent-autopilot-disabled",
   "specs/001-spec-kit-brownfield-adoption/spec.md",
   "specs/001-spec-kit-brownfield-adoption/plan.md",
   "specs/001-spec-kit-brownfield-adoption/tasks.md",
@@ -15,6 +16,20 @@ const requiredPaths = [
   "AGENTS.md",
   "README.md",
   "SECURITY.md",
+];
+const retiredAutomationPaths = [
+  "scripts/agent-pick-task.sh",
+  "scripts/agent-run-headless.sh",
+  "scripts/agent-refill-backlog.sh",
+  "scripts/agent-watchdog.sh",
+  "scripts/agent-report.sh",
+];
+const retiredAutomationForbidden = [
+  "docs/history/",
+  "grok --",
+  "git-push.sh",
+  "systemctl",
+  "stash drop",
 ];
 const statusPolicies = [
   { directory: "docs/architecture", status: "reference" },
@@ -73,6 +88,23 @@ export function inspectSourceOfTruth(baseDir = root) {
     if (!constitution.includes("**Version**: 1.0.0")) problems.push("constitution-version-missing");
     if (!constitution.includes("highest project governance artifact")) {
       problems.push("constitution-precedence-missing");
+    }
+  }
+
+  for (const relativePath of retiredAutomationPaths) {
+    const absolutePath = path.join(baseDir, relativePath);
+    if (!existsSync(absolutePath)) {
+      problems.push(`retired-automation-stub-missing:${relativePath}`);
+      continue;
+    }
+    const script = readFileSync(absolutePath, "utf8");
+    if (!script.includes(".agent-autopilot-disabled") || !script.includes("exit 2")) {
+      problems.push(`retired-automation-not-fail-closed:${relativePath}`);
+    }
+    for (const forbidden of retiredAutomationForbidden) {
+      if (script.includes(forbidden)) {
+        problems.push(`retired-automation-capability-present:${relativePath}->${forbidden}`);
+      }
     }
   }
 

@@ -13,7 +13,7 @@ with frontier `8f709ba0d35c0a5d6ce01840d8b41aa66c893234`, before reconciliation.
 | `AGENT_ROADMAP.md` | historical | move, label | `docs/history/agent/AGENT_ROADMAP.md` | Superseded task pool |
 | `CONTENT_STYLE.md` | reference | move, label | `docs/reference/product/CONTENT_STYLE.md` | Durable content guidance |
 | `DESIGN_SYSTEM.md` | reference | move, label | `docs/reference/product/DESIGN_SYSTEM.md` | Durable UI reference |
-| `MINIMAL_REDESIGN_V2.md` | historical | move, label | `docs/reference/product/MINIMAL_REDESIGN_V2.md` | Prior redesign context |
+| `MINIMAL_REDESIGN_V2.md` | reference | move, label | `docs/reference/product/MINIMAL_REDESIGN_V2.md` | Retained redesign reference |
 | `PAGE_SPECIFICATIONS.md` | reference | move, label | `docs/reference/product/PAGE_SPECIFICATIONS.md` | Durable page reference |
 | `README.md` | canonical | update | same / constitution | Repository entry point |
 | `SECURITY.md` | canonical | update | same / constitution | Security policy |
@@ -52,6 +52,6 @@ with frontier `8f709ba0d35c0a5d6ce01840d8b41aa66c893234`, before reconciliation.
 
 - 42 original files inventoried exactly once.
 - 3 canonical entry/governance files retained or rewritten.
-- 26 durable references retained or moved and labeled.
-- 13 historical/generated records moved and labeled.
+- 27 durable references retained or moved and labeled.
+- 12 historical/generated records moved and labeled.
 - 0 files deleted; no research or audit provenance was discarded.
