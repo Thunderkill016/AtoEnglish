@@ -22,7 +22,15 @@ def payload() -> dict:
                 }
             }
         )
-    return {"data": {"latestVersion": {"files": files}}}
+    return {
+        "data": {
+            "latestVersion": {
+                "versionNumber": 4,
+                "versionMinorNumber": 0,
+                "files": files,
+            }
+        }
+    }
 
 
 class ProvenanceTest(unittest.TestCase):
@@ -40,6 +48,20 @@ class ProvenanceTest(unittest.TestCase):
     def test_missing_required_artifact_fails_closed(self) -> None:
         bad = payload()
         bad["data"]["latestVersion"]["files"].pop()
+        with self.assertRaises(ProvenanceError):
+            validate_metadata_payload(bad)
+
+    def test_version_drift_fails_closed(self) -> None:
+        bad = payload()
+        bad["data"]["latestVersion"]["versionNumber"] = 5
+        with self.assertRaises(ProvenanceError):
+            validate_metadata_payload(bad)
+
+    def test_duplicate_frozen_filename_fails_closed(self) -> None:
+        bad = payload()
+        bad["data"]["latestVersion"]["files"].append(
+            dict(bad["data"]["latestVersion"]["files"][0])
+        )
         with self.assertRaises(ProvenanceError):
             validate_metadata_payload(bad)
 
