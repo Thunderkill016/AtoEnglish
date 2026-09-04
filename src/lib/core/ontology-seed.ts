@@ -4,10 +4,13 @@ import {
   buildOntologyGraph,
   type CommunicationActivity,
   type CommunicationActivityOntologyNode,
+  type CoreEvidenceRole,
   type LanguageSystemFamily,
   type LanguageSystemOntologyNode,
   type OntologyBuildResult,
+  type OntologyModality,
   type OntologyNode,
+  type SkillNodeKind,
 } from "./ontology";
 
 const HUMAN_LABELS: Record<LanguageSystemFamily | CommunicationActivity, string> = {
@@ -51,11 +54,72 @@ function languageSystemNode(family: LanguageSystemFamily): LanguageSystemOntolog
   };
 }
 
+export type CanonicalActivityProfile = {
+  readonly kind: SkillNodeKind;
+  readonly modalities: readonly OntologyModality[];
+  readonly allowedEvidenceRoles: readonly CoreEvidenceRole[];
+};
+
+export const CANONICAL_ACTIVITY_PROFILES: Record<CommunicationActivity, CanonicalActivityProfile> = {
+  "listening-reception": {
+    kind: "perception",
+    modalities: ["audio-input"],
+    allowedEvidenceRoles: ["receptive-discrimination", "meaning-recognition"],
+  },
+  "audiovisual-reception": {
+    kind: "perception",
+    modalities: ["audiovisual-input"],
+    allowedEvidenceRoles: ["receptive-discrimination", "meaning-recognition"],
+  },
+  "reading-reception": {
+    kind: "perception",
+    modalities: ["text-input"],
+    allowedEvidenceRoles: ["receptive-discrimination", "meaning-recognition"],
+  },
+  "spoken-production": {
+    kind: "production",
+    modalities: ["speech-output"],
+    allowedEvidenceRoles: ["controlled-production", "free-production", "near-transfer"],
+  },
+  "written-production": {
+    kind: "production",
+    modalities: ["text-output"],
+    allowedEvidenceRoles: ["controlled-production", "free-production", "near-transfer"],
+  },
+  "spoken-interaction": {
+    kind: "interaction",
+    modalities: ["live-interaction"],
+    allowedEvidenceRoles: ["free-production", "interactional-repair", "near-transfer"],
+  },
+  "written-interaction": {
+    kind: "interaction",
+    modalities: ["text-input", "text-output"],
+    allowedEvidenceRoles: ["free-production", "interactional-repair", "near-transfer"],
+  },
+  "multimodal-interaction": {
+    kind: "interaction",
+    modalities: ["multimodal"],
+    allowedEvidenceRoles: ["free-production", "interactional-repair", "near-transfer"],
+  },
+  "text-mediation": {
+    kind: "mediation",
+    modalities: ["text-input", "text-output"],
+    allowedEvidenceRoles: ["controlled-production", "free-production", "near-transfer"],
+  },
+  "concept-mediation": {
+    kind: "mediation",
+    modalities: ["multimodal"],
+    allowedEvidenceRoles: ["controlled-production", "free-production", "near-transfer"],
+  },
+  "communication-mediation": {
+    kind: "mediation",
+    modalities: ["multimodal"],
+    allowedEvidenceRoles: ["controlled-production", "free-production", "near-transfer"],
+  },
+};
+
 function activityNode(activity: CommunicationActivity): CommunicationActivityOntologyNode {
-  const receptive = activity.includes("reception");
-  const interaction = activity.includes("interaction");
-  const spoken = activity.includes("spoken");
-  const written = activity.includes("written");
+  const profile = CANONICAL_ACTIVITY_PROFILES[activity];
   return {
     id: `nep.en.v1.communication-activity.${activity}`,
     contractVersion: 1,
@@ -63,28 +127,12 @@ function activityNode(activity: CommunicationActivity): CommunicationActivityOnt
     activity,
     label: HUMAN_LABELS[activity],
     definition: `Top-level scope for ${HUMAN_LABELS[activity].toLowerCase()} tasks.`,
-    kind: receptive ? "perception" : interaction ? "interaction" : activity.includes("mediation") ? "mediation" : "production",
+    kind: profile.kind,
     granularity: "task-capability",
-    modalities: receptive
-      ? activity === "reading-reception"
-        ? ["text-input"]
-        : activity === "audiovisual-reception"
-          ? ["audiovisual-input"]
-          : ["audio-input"]
-      : interaction
-        ? ["live-interaction"]
-        : spoken
-          ? ["speech-output"]
-          : written
-            ? ["text-output"]
-            : ["multimodal"],
+    modalities: profile.modalities,
     taskConstraints: [],
     contextConstraints: [],
-    allowedEvidenceRoles: receptive
-      ? ["receptive-discrimination", "meaning-recognition"]
-      : interaction
-        ? ["free-production", "interactional-repair", "near-transfer"]
-        : ["controlled-production", "free-production", "near-transfer"],
+    allowedEvidenceRoles: profile.allowedEvidenceRoles,
     sources: [],
   };
 }

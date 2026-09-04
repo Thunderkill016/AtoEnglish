@@ -49,14 +49,11 @@ from self-certifying any higher evidence state.
 
 ### Functional Requirements
 
-- **FR-001**: IDs MUST be stable, namespaced, and explicitly contract-versioned.
-- **FR-002**: Nodes MUST distinguish language-system families from communication activities.
-- **FR-003**: The canonical seed MUST cover all nine issue-defined language-system families and all
-  eleven communication activities without claiming exhaustive English coverage.
-- **FR-004**: Nodes MUST declare kind, granularity, modalities, task/context constraints, and allowed
-  evidence roles.
-- **FR-005**: Relations MUST cover prerequisite, component, enables, contrast, confusion, variation,
-  realization, context, transfer, remediation, and assessment semantics.
+- **FR-001**: IDs MUST be stable, namespaced, and explicitly contract-versioned. Node ID domain segment MUST strictly match the node discriminator (`nep.en.v1.language-system.*` for `language-system` nodes, and `nep.en.v1.communication-activity.*` for `communication-activity` nodes).
+- **FR-002**: Nodes MUST distinguish language-system families from communication activities. Discriminator fields (`family` vs `activity`) MUST NOT be swapped or mixed across domains.
+- **FR-003**: The canonical seed MUST cover all nine issue-defined language-system families and all eleven communication activities via an explicit declarative profile table without substring heuristics. Written interaction MUST preserve text input/output semantics; multimodal interaction MUST preserve multimodal semantics.
+- **FR-004**: Nodes MUST declare kind, granularity, modalities, task/context constraints, and allowed evidence roles.
+- **FR-005**: Relations MUST cover prerequisite, component, enables, contrast, confusion, variation, realization, context, transfer, remediation, and assessment semantics.
 - **FR-006**: Prerequisite, component, and enables relations MUST reject direct and multi-node cycles.
 - **FR-007**: Illegal self-relations and dangling endpoints MUST fail closed.
 - **FR-008**: Declared symmetric relations MUST be canonicalized and reject malformed duplicates.
@@ -66,10 +63,11 @@ from self-certifying any higher evidence state.
 - **FR-012**: Vietnamese learner knowledge MUST remain a hypothesis overlay and MUST NOT mutate universal nodes.
 - **FR-013**: Ontology metadata MUST NOT represent observation, calibrated evidence, mastery, or authority grants.
 - **FR-014**: Invalid modality/context/evidence-role combinations defined by the contract MUST fail closed.
-- **FR-015**: Existing evidence, learner-state, ErrorMemory, FSRS, and authority-registry semantics MUST remain unchanged.
-- **FR-016**: The kernel MUST have no ambient time, randomness, network, provider, database, or browser dependency.
-- **FR-017**: This change MUST NOT modify UI, DB, auth, analytics, deployment, or model/provider behavior.
-- **FR-018**: Delivery MUST stop at Draft PR and repository evidence.
+- **FR-015**: Nested metadata (task constraints, context constraints, source refs, external crosswalks, learner overlays, provenance, license objects) MUST be structurally validated with fail-closed key whitelisting and enum checking.
+- **FR-016**: Existing evidence, learner-state, ErrorMemory, FSRS, and authority-registry semantics MUST remain unchanged.
+- **FR-017**: The kernel MUST have no ambient time, randomness, network, provider, database, or browser dependency.
+- **FR-018**: This change MUST NOT modify UI, DB, auth, analytics, deployment, or model/provider behavior.
+- **FR-019**: Delivery MUST stop at Draft PR and repository evidence.
 
 ### Key Entities
 

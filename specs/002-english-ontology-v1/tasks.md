@@ -30,7 +30,16 @@
 - [X] T014 Run focused/full repository gates from `specs/002-english-ontology-v1/quickstart.md`
 - [X] T015 Run Spec Kit converge and prepare exact-head Draft PR handoff
 
+## Phase 6: CODEX-ONTOLOGY-002 — Fix Independent-Review Blockers
+
+- [X] T016 [CODEX-ONTOLOGY-002] Bind canonical ID namespace to node discriminator and validate discriminator-specific fields in `src/lib/core/ontology.ts`
+- [X] T017 [CODEX-ONTOLOGY-002] Implement structural fail-closed shape validation for nested metadata (constraints, sources, provenance, license, crosswalks, overlays) in `src/lib/core/ontology.ts`
+- [X] T018 [CODEX-ONTOLOGY-002] Correct canonical activity-to-modality mapping via declarative table in `src/lib/core/ontology-seed.ts` and add exact seed tests
+- [X] T019 [CODEX-ONTOLOGY-002] Add comprehensive runtime adversarial tests with malformed payloads (`unknown`/casts) in `src/lib/core/ontology.test.ts`
+- [X] T020 [CODEX-ONTOLOGY-002] Re-verify full repository gates, build, and exact-head CI
+
 ## Dependencies
 
 T001–T003 precede implementation. US1 types precede US2 validation and US3 overlays. Validation
-follows all stories.
+follows all stories. Phase 6 addresses independent-review blocking findings on V1 foundation.
+

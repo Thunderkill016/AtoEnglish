@@ -12,7 +12,11 @@ import {
   type OntologyNode,
   type OntologyRelation,
 } from "./ontology";
-import { ENGLISH_ONTOLOGY_V1_SEED_NODES, buildEnglishOntologyV1 } from "./ontology-seed";
+import {
+  CANONICAL_ACTIVITY_PROFILES,
+  ENGLISH_ONTOLOGY_V1_SEED_NODES,
+  buildEnglishOntologyV1,
+} from "./ontology-seed";
 
 function node(id: string, overrides: Partial<OntologyNode> = {}): OntologyNode {
   return {
@@ -134,3 +138,379 @@ describe("non-authoritative overlays", () => {
     expect(LEGACY_EVIDENCE_ROLES).toContain("near-transfer");
   });
 });
+
+describe("CODEX-ONTOLOGY-002: discriminator and namespace binding", () => {
+  const validSystemId = "nep.en.v1.language-system.syntax-grammar";
+  const validActivityId = "nep.en.v1.communication-activity.reading-reception";
+
+  it("rejects missing or unknown domain at runtime", () => {
+    const raw = node(validSystemId, {
+      domain: "unknown-domain" as unknown as "language-system",
+    });
+    expectProblem(buildOntologyGraph({ nodes: [raw] }), "invalid-node");
+  });
+
+  it("rejects language-system ID on communication-activity node", () => {
+    const raw = {
+      ...node(validSystemId),
+      domain: "communication-activity",
+      activity: "reading-reception",
+    } as unknown as OntologyNode;
+    expectProblem(buildOntologyGraph({ nodes: [raw] }), "invalid-id");
+  });
+
+  it("rejects communication-activity ID on language-system node", () => {
+    const raw = {
+      ...node(validActivityId),
+      domain: "language-system",
+      family: "syntax-grammar",
+    } as unknown as OntologyNode;
+    expectProblem(buildOntologyGraph({ nodes: [raw] }), "invalid-id");
+  });
+
+  it("rejects language-system node with discriminator activity property", () => {
+    const raw = {
+      ...node(validSystemId),
+      activity: "reading-reception",
+    } as unknown as OntologyNode;
+    expectProblem(buildOntologyGraph({ nodes: [raw] }), "invalid-node");
+  });
+
+  it("rejects communication-activity node with discriminator family property", () => {
+    const raw = {
+      ...node(validActivityId),
+      domain: "communication-activity",
+      activity: "reading-reception",
+      family: "syntax-grammar",
+    } as unknown as OntologyNode;
+    expectProblem(buildOntologyGraph({ nodes: [raw] }), "invalid-node");
+  });
+
+  it("rejects invalid family or activity enumerations", () => {
+    const badFamily = {
+      ...node(validSystemId),
+      family: "not-a-real-family",
+    } as unknown as OntologyNode;
+    expectProblem(buildOntologyGraph({ nodes: [badFamily] }), "invalid-family");
+
+    const badActivity = {
+      ...node(validActivityId),
+      domain: "communication-activity",
+      activity: "not-a-real-activity",
+    } as unknown as OntologyNode;
+    expectProblem(buildOntologyGraph({ nodes: [badActivity] }), "invalid-activity");
+  });
+});
+
+describe("CODEX-ONTOLOGY-002: structural fail-closed metadata validation", () => {
+  const canonical = node("nep.en.v1.language-system.semantics");
+  const baseProv = {
+    sourceId: "coe.cefr",
+    version: "2020",
+    locator: "companion-volume",
+    license: {
+      classification: "copyrighted-reference" as const,
+      permittedUse: "reference-only" as const,
+    },
+  };
+
+  it.each([
+    ["authority", { authority: "granted" }],
+    ["calibration", { calibration: "gold" }],
+    ["evidence", { evidence: "observed" }],
+    ["mastery", { mastery: true }],
+    ["observation", { observation: "pass" }],
+    ["promotion", { promotion: "certified" }],
+    ["replacementNode", { replacementNode: "alt" }],
+  ])("rejects forbidden authority in taskConstraints: %s", (_name, injected) => {
+    const target = {
+      ...canonical,
+      taskConstraints: [{ taskType: "drill", ...injected }],
+    } as unknown as OntologyNode;
+    expectProblem(buildOntologyGraph({ nodes: [target] }), "forbidden-authority-field");
+  });
+
+  it.each([
+    ["authority", { authority: "evaluator" }],
+    ["mastery", { mastery: 0.95 }],
+  ])("rejects forbidden authority in contextConstraints: %s", (_name, injected) => {
+    const target = {
+      ...canonical,
+      contextConstraints: [{ dimension: "register", value: "formal", ...injected }],
+    } as unknown as OntologyNode;
+    expectProblem(buildOntologyGraph({ nodes: [target] }), "forbidden-authority-field");
+  });
+
+  it.each([
+    ["calibration", { calibration: "calibrated" }],
+    ["evidence", { evidence: "layer0" }],
+  ])("rejects forbidden authority in source refs: %s", (_name, injected) => {
+    const target = {
+      ...canonical,
+      sources: [{ sourceId: "src", version: "1", ...injected }],
+    } as unknown as OntologyNode;
+    expectProblem(buildOntologyGraph({ nodes: [target] }), "forbidden-authority-field");
+  });
+
+  it.each([
+    ["mastery", { mastery: "full" }],
+    ["promotion", { promotion: true }],
+  ])("rejects forbidden authority in provenance and license: %s", (_name, injected) => {
+    const provWithInjected = {
+      ...baseProv,
+      ...injected,
+    };
+    const cw = {
+      id: "cw.prov.inject",
+      nodeId: canonical.id,
+      frameworkId: "cefr",
+      frameworkVersion: "2020",
+      externalTargetId: "ref",
+      mapping: "related",
+      provenance: provWithInjected,
+    } as unknown as FrameworkCrosswalk;
+    expectProblem(buildOntologyGraph({ nodes: [canonical], crosswalks: [cw] }), "forbidden-authority-field");
+
+    const provWithLicInjected = {
+      ...baseProv,
+      license: {
+        ...baseProv.license,
+        ...injected,
+      },
+    };
+    const cwLic = {
+      id: "cw.lic.inject",
+      nodeId: canonical.id,
+      frameworkId: "cefr",
+      frameworkVersion: "2020",
+      externalTargetId: "ref",
+      mapping: "related",
+      provenance: provWithLicInjected,
+    } as unknown as FrameworkCrosswalk;
+    expectProblem(buildOntologyGraph({ nodes: [canonical], crosswalks: [cwLic] }), "forbidden-authority-field");
+  });
+
+  it("rejects forbidden authority on relations", () => {
+    const target = node("nep.en.v1.language-system.b");
+    const relation = {
+      from: canonical.id,
+      to: target.id,
+      type: "enables",
+      authority: "admin",
+    } as unknown as OntologyRelation;
+    expectProblem(buildOntologyGraph({ nodes: [canonical, target], relations: [relation] }), "forbidden-authority-field");
+  });
+
+  it("rejects unexpected properties in nested metadata", () => {
+    const badTc = {
+      ...canonical,
+      taskConstraints: [{ taskType: "drill", rogueProperty: true }],
+    } as unknown as OntologyNode;
+    expectProblem(buildOntologyGraph({ nodes: [badTc] }), "invalid-compatibility");
+
+    const badCc = {
+      ...canonical,
+      contextConstraints: [{ dimension: "audience", value: "peers", rogueProperty: true }],
+    } as unknown as OntologyNode;
+    expectProblem(buildOntologyGraph({ nodes: [badCc] }), "invalid-compatibility");
+
+    const badSrc = {
+      ...canonical,
+      sources: [{ sourceId: "s", version: "1", rogueProperty: true }],
+    } as unknown as OntologyNode;
+    expectProblem(buildOntologyGraph({ nodes: [badSrc] }), "invalid-provenance");
+  });
+
+  it("validates runtime enums and non-empty required fields across metadata", () => {
+    // Task supportLevel
+    const badSupport = {
+      ...canonical,
+      taskConstraints: [{ taskType: "drill", supportLevel: "invalid-level" }],
+    } as unknown as OntologyNode;
+    expectProblem(buildOntologyGraph({ nodes: [badSupport] }), "invalid-compatibility");
+
+    // Task empty taskType
+    const emptyTask = {
+      ...canonical,
+      taskConstraints: [{ taskType: "   " }],
+    } as unknown as OntologyNode;
+    expectProblem(buildOntologyGraph({ nodes: [emptyTask] }), "invalid-compatibility");
+
+    // Context dimension
+    const badDimension = {
+      ...canonical,
+      contextConstraints: [{ dimension: "not-a-dimension", value: "x" }],
+    } as unknown as OntologyNode;
+    expectProblem(buildOntologyGraph({ nodes: [badDimension] }), "invalid-compatibility");
+
+    // Context value
+    const emptyContextVal = {
+      ...canonical,
+      contextConstraints: [{ dimension: "domain", value: "  " }],
+    } as unknown as OntologyNode;
+    expectProblem(buildOntologyGraph({ nodes: [emptyContextVal] }), "invalid-compatibility");
+
+    // Crosswalk mapping
+    const badMapping = {
+      id: "cw.map.bad",
+      nodeId: canonical.id,
+      frameworkId: "cefr",
+      frameworkVersion: "2020",
+      externalTargetId: "ref",
+      mapping: "invalid-mapping",
+      provenance: baseProv,
+    } as unknown as FrameworkCrosswalk;
+    expectProblem(buildOntologyGraph({ nodes: [canonical], crosswalks: [badMapping] }), "invalid-compatibility");
+
+    // Crosswalk empty identifiers
+    const emptyFw = {
+      id: "cw.fw.empty",
+      nodeId: canonical.id,
+      frameworkId: "",
+      frameworkVersion: "2020",
+      externalTargetId: "ref",
+      mapping: "exact",
+      provenance: baseProv,
+    } as unknown as FrameworkCrosswalk;
+    expectProblem(buildOntologyGraph({ nodes: [canonical], crosswalks: [emptyFw] }), "invalid-provenance");
+
+    // Overlay reviewStatus
+    const badReview = {
+      id: "ov.rev.bad",
+      nodeId: canonical.id,
+      populationTag: "vi-L1",
+      hypothesis: "h",
+      reviewStatus: "approved-prod",
+      provenance: baseProv,
+    } as unknown as LearnerHypothesisOverlay;
+    expectProblem(buildOntologyGraph({ nodes: [canonical], overlays: [badReview] }), "invalid-node");
+
+    // Overlay empty populationTag
+    const emptyPop = {
+      id: "ov.pop.empty",
+      nodeId: canonical.id,
+      populationTag: "  ",
+      hypothesis: "h",
+      reviewStatus: "unreviewed",
+      provenance: baseProv,
+    } as unknown as LearnerHypothesisOverlay;
+    expectProblem(buildOntologyGraph({ nodes: [canonical], overlays: [emptyPop] }), "invalid-node");
+
+    // License classification & permittedUse enums
+    const badLicClass = {
+      id: "cw.lic.bad",
+      nodeId: canonical.id,
+      frameworkId: "cefr",
+      frameworkVersion: "2020",
+      externalTargetId: "ref",
+      mapping: "exact",
+      provenance: {
+        ...baseProv,
+        license: { classification: "public-domain-unverified", permittedUse: "reference-only" },
+      },
+    } as unknown as FrameworkCrosswalk;
+    expectProblem(buildOntologyGraph({ nodes: [canonical], crosswalks: [badLicClass] }), "invalid-provenance");
+  });
+});
+
+describe("CODEX-ONTOLOGY-002: canonical activity-to-modality semantics", () => {
+  it("verifies exact canonical kind and modality mapping for every communication activity in the seed", () => {
+    const seed = buildEnglishOntologyV1();
+    expect(seed.ok).toBe(true);
+    if (!seed.ok) return;
+
+    const activityNodes = seed.graph.nodes.filter(
+      (n) => n.domain === "communication-activity",
+    );
+    expect(activityNodes).toHaveLength(COMMUNICATION_ACTIVITIES.length);
+
+    // Written interaction preserves text input and text output semantics
+    const writtenInteraction = activityNodes.find(
+      (n) => n.id === "nep.en.v1.communication-activity.written-interaction",
+    );
+    expect(writtenInteraction).toBeDefined();
+    expect(writtenInteraction?.kind).toBe("interaction");
+    expect([...(writtenInteraction?.modalities ?? [])].sort()).toEqual(["text-input", "text-output"]);
+
+    // Multimodal interaction preserves multimodal semantics
+    const multimodalInteraction = activityNodes.find(
+      (n) => n.id === "nep.en.v1.communication-activity.multimodal-interaction",
+    );
+    expect(multimodalInteraction).toBeDefined();
+    expect(multimodalInteraction?.kind).toBe("interaction");
+    expect(multimodalInteraction?.modalities).toEqual(["multimodal"]);
+
+    // Spoken interaction preserves live interaction semantics
+    const spokenInteraction = activityNodes.find(
+      (n) => n.id === "nep.en.v1.communication-activity.spoken-interaction",
+    );
+    expect(spokenInteraction).toBeDefined();
+    expect(spokenInteraction?.kind).toBe("interaction");
+    expect(spokenInteraction?.modalities).toEqual(["live-interaction"]);
+
+    // Text mediation preserves text input and text output semantics
+    const textMediation = activityNodes.find(
+      (n) => n.id === "nep.en.v1.communication-activity.text-mediation",
+    );
+    expect(textMediation).toBeDefined();
+    expect(textMediation?.kind).toBe("mediation");
+    expect([...(textMediation?.modalities ?? [])].sort()).toEqual(["text-input", "text-output"]);
+  });
+
+  it.each(COMMUNICATION_ACTIVITIES)(
+    "preserves exact declarative kind, modalities, and roles for %s",
+    (activity) => {
+      const seed = buildEnglishOntologyV1();
+      expect(seed.ok).toBe(true);
+      if (!seed.ok) return;
+
+      const node = seed.graph.nodes.find(
+        (n) => n.id === `nep.en.v1.communication-activity.${activity}`,
+      );
+      expect(node).toBeDefined();
+      const expected = CANONICAL_ACTIVITY_PROFILES[activity];
+      expect(node?.kind).toBe(expected.kind);
+      expect([...(node?.modalities ?? [])].sort()).toEqual([...expected.modalities].sort());
+      expect([...(node?.allowedEvidenceRoles ?? [])].sort()).toEqual(
+        [...expected.allowedEvidenceRoles].sort(),
+      );
+    },
+  );
+
+  it("validates interaction compatibility requires interaction modality or bidirectional input/output", () => {
+    const baseInteraction = {
+      id: "nep.en.v1.communication-activity.written-interaction",
+      contractVersion: 1 as const,
+      domain: "communication-activity" as const,
+      activity: "written-interaction" as const,
+      label: "Written interaction",
+      definition: "Written interaction",
+      kind: "interaction" as const,
+      granularity: "task-capability" as const,
+      modalities: ["text-input", "text-output"] as const,
+      taskConstraints: [],
+      contextConstraints: [],
+      allowedEvidenceRoles: ["free-production" as const],
+      sources: [],
+    };
+
+    // Valid bidirectional written interaction
+    const validResult = buildOntologyGraph({ nodes: [baseInteraction] });
+    expect(validResult.ok).toBe(true);
+
+    // Invalid: interaction with only text-input (unidirectional input)
+    const unidirectionalInput = {
+      ...baseInteraction,
+      modalities: ["text-input"] as const,
+    };
+    expectProblem(buildOntologyGraph({ nodes: [unidirectionalInput] }), "invalid-compatibility");
+
+    // Invalid: interaction with only text-output (unidirectional output)
+    const unidirectionalOutput = {
+      ...baseInteraction,
+      modalities: ["text-output"] as const,
+    };
+    expectProblem(buildOntologyGraph({ nodes: [unidirectionalOutput] }), "invalid-compatibility");
+  });
+});
+

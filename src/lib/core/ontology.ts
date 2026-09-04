@@ -67,13 +67,25 @@ export const ACYCLIC_ONTOLOGY_RELATION_TYPES = [
   "enables",
 ] as const;
 
+export const ONTOLOGY_SUPPORT_LEVELS = ["none", "limited", "guided"] as const;
+export type OntologySupportLevel = (typeof ONTOLOGY_SUPPORT_LEVELS)[number];
+
+export const CONTEXT_DIMENSIONS = [
+  "audience",
+  "channel",
+  "domain",
+  "register",
+  "setting",
+] as const;
+export type ContextDimension = (typeof CONTEXT_DIMENSIONS)[number];
+
 export type OntologyTaskConstraint = {
   readonly taskType: string;
-  readonly supportLevel?: "none" | "limited" | "guided";
+  readonly supportLevel?: OntologySupportLevel;
 };
 
 export type OntologyContextConstraint = {
-  readonly dimension: "audience" | "channel" | "domain" | "register" | "setting";
+  readonly dimension: ContextDimension;
   readonly value: string;
 };
 
@@ -117,8 +129,35 @@ export type OntologyRelation = {
   readonly contextTags?: readonly string[];
 };
 
-export type LicenseClassification = "open" | "copyrighted-reference" | "proprietary";
-export type PermittedExternalUse = "reference-only" | "research" | "redistribution" | "production";
+export const LICENSE_CLASSIFICATIONS = [
+  "open",
+  "copyrighted-reference",
+  "proprietary",
+] as const;
+export type LicenseClassification = (typeof LICENSE_CLASSIFICATIONS)[number];
+
+export const PERMITTED_EXTERNAL_USES = [
+  "reference-only",
+  "research",
+  "redistribution",
+  "production",
+] as const;
+export type PermittedExternalUse = (typeof PERMITTED_EXTERNAL_USES)[number];
+
+export const FRAMEWORK_MAPPINGS = [
+  "exact",
+  "close",
+  "broad",
+  "narrow",
+  "related",
+] as const;
+export type FrameworkMapping = (typeof FRAMEWORK_MAPPINGS)[number];
+
+export const OVERLAY_REVIEW_STATUSES = [
+  "unreviewed",
+  "reviewed-reference",
+] as const;
+export type OverlayReviewStatus = (typeof OVERLAY_REVIEW_STATUSES)[number];
 
 export type ExternalProvenance = {
   readonly sourceId: string;
@@ -136,7 +175,7 @@ export type FrameworkCrosswalk = {
   readonly frameworkId: string;
   readonly frameworkVersion: string;
   readonly externalTargetId: string;
-  readonly mapping: "exact" | "close" | "broad" | "narrow" | "related";
+  readonly mapping: FrameworkMapping;
   readonly provenance: ExternalProvenance;
 };
 
@@ -145,7 +184,7 @@ export type LearnerHypothesisOverlay = {
   readonly nodeId: string;
   readonly populationTag: string;
   readonly hypothesis: string;
-  readonly reviewStatus: "unreviewed" | "reviewed-reference";
+  readonly reviewStatus: OverlayReviewStatus;
   readonly provenance: ExternalProvenance;
 };
 
@@ -215,7 +254,7 @@ const PRODUCTIVE_EVIDENCE = new Set<CoreEvidenceRole>([
   "near-transfer",
   "far-transfer",
 ]);
-const FORBIDDEN_AUTHORITY_FIELDS = new Set([
+export const FORBIDDEN_AUTHORITY_FIELDS = new Set([
   "authority",
   "authorityGrant",
   "calibration",
@@ -225,6 +264,44 @@ const FORBIDDEN_AUTHORITY_FIELDS = new Set([
   "promotion",
   "replacementNode",
 ]);
+
+const LANGUAGE_SYSTEM_NODE_KEYS = new Set([
+  "id",
+  "contractVersion",
+  "domain",
+  "family",
+  "label",
+  "definition",
+  "kind",
+  "granularity",
+  "modalities",
+  "taskConstraints",
+  "contextConstraints",
+  "allowedEvidenceRoles",
+  "sources",
+]);
+
+const COMMUNICATION_ACTIVITY_NODE_KEYS = new Set([
+  "id",
+  "contractVersion",
+  "domain",
+  "activity",
+  "label",
+  "definition",
+  "kind",
+  "granularity",
+  "modalities",
+  "taskConstraints",
+  "contextConstraints",
+  "allowedEvidenceRoles",
+  "sources",
+]);
+
+const TASK_CONSTRAINT_KEYS = new Set(["taskType", "supportLevel"]);
+const CONTEXT_CONSTRAINT_KEYS = new Set(["dimension", "value"]);
+const SOURCE_REF_KEYS = new Set(["sourceId", "version", "locator"]);
+const PROVENANCE_KEYS = new Set(["sourceId", "version", "locator", "license"]);
+const LICENSE_KEYS = new Set(["classification", "permittedUse"]);
 const CROSSWALK_KEYS = new Set([
   "id",
   "nodeId",
@@ -242,6 +319,7 @@ const OVERLAY_KEYS = new Set([
   "reviewStatus",
   "provenance",
 ]);
+const RELATION_KEYS = new Set(["from", "to", "type", "contextTags"]);
 
 export function buildOntologyGraph(input: OntologyGraphInput): OntologyBuildResult {
   const problems: OntologyProblem[] = [];
@@ -273,19 +351,69 @@ export function buildOntologyGraph(input: OntologyGraphInput): OntologyBuildResu
 function validateNodes(nodes: readonly OntologyNode[], problems: OntologyProblem[]): Set<string> {
   const ids = new Set<string>();
   for (const node of nodes) {
-    if (ids.has(node.id)) addProblem(problems, "duplicate-node", node.id, "Node ID occurs more than once");
-    ids.add(node.id);
-    if (!ONTOLOGY_NODE_ID_PATTERN.test(node.id)) {
-      addProblem(problems, "invalid-id", node.id, "Node ID must use the nep.en.v1 namespace");
+    if (typeof node !== "object" || node === null || Array.isArray(node)) {
+      addProblem(problems, "invalid-node", "unknown", "Node must be an object");
+      continue;
     }
-    for (const key of Object.keys(node)) {
-      if (FORBIDDEN_AUTHORITY_FIELDS.has(key)) {
-        addProblem(problems, "forbidden-authority-field", node.id, key);
+    const raw = node as unknown as Record<string, unknown>;
+    const id = typeof raw.id === "string" ? raw.id : "unknown";
+    if (ids.has(id)) addProblem(problems, "duplicate-node", id, "Node ID occurs more than once");
+    ids.add(id);
+
+    const domain = raw.domain;
+    if (domain !== "language-system" && domain !== "communication-activity") {
+      addProblem(problems, "invalid-node", id, `Unknown or missing domain: ${String(domain)}`);
+    }
+
+    if (!ONTOLOGY_NODE_ID_PATTERN.test(id)) {
+      addProblem(problems, "invalid-id", id, "Node ID must use the nep.en.v1 namespace");
+    } else {
+      if (domain === "language-system" && !id.startsWith("nep.en.v1.language-system.")) {
+        addProblem(problems, "invalid-id", id, "Node ID domain segment must match node.domain 'language-system'");
+      } else if (domain === "communication-activity" && !id.startsWith("nep.en.v1.communication-activity.")) {
+        addProblem(problems, "invalid-id", id, "Node ID domain segment must match node.domain 'communication-activity'");
       }
     }
+
+    const allowedKeys =
+      domain === "communication-activity"
+        ? COMMUNICATION_ACTIVITY_NODE_KEYS
+        : LANGUAGE_SYSTEM_NODE_KEYS;
+    for (const key of Object.keys(raw)) {
+      if (FORBIDDEN_AUTHORITY_FIELDS.has(key)) {
+        addProblem(problems, "forbidden-authority-field", id, key);
+      } else if (!allowedKeys.has(key)) {
+        addProblem(problems, "invalid-node", id, `Unexpected property: ${key}`);
+      }
+    }
+
+    if (domain === "language-system") {
+      if (raw.activity !== undefined) {
+        addProblem(problems, "invalid-node", id, "Language-system node must not have activity property");
+      }
+      if (
+        typeof raw.family !== "string" ||
+        !LANGUAGE_SYSTEM_FAMILIES.includes(raw.family as LanguageSystemFamily)
+      ) {
+        addProblem(problems, "invalid-family", id, `Unknown or missing family: ${String(raw.family)}`);
+      }
+    } else if (domain === "communication-activity") {
+      if (raw.family !== undefined) {
+        addProblem(problems, "invalid-node", id, "Communication-activity node must not have family property");
+      }
+      if (
+        typeof raw.activity !== "string" ||
+        !COMMUNICATION_ACTIVITIES.includes(raw.activity as CommunicationActivity)
+      ) {
+        addProblem(problems, "invalid-activity", id, `Unknown or missing activity: ${String(raw.activity)}`);
+      }
+    }
+
     if (
       node.contractVersion !== 1 ||
+      typeof node.label !== "string" ||
       !node.label.trim() ||
+      typeof node.definition !== "string" ||
       !node.definition.trim() ||
       !SKILL_NODE_KINDS.includes(node.kind) ||
       !ONTOLOGY_GRANULARITIES.includes(node.granularity)
@@ -293,26 +421,132 @@ function validateNodes(nodes: readonly OntologyNode[], problems: OntologyProblem
       addProblem(
         problems,
         "invalid-node",
-        node.id,
+        id,
         "Version, label, definition, kind, or granularity is invalid",
       );
     }
-    if (node.domain === "language-system" && !LANGUAGE_SYSTEM_FAMILIES.includes(node.family)) {
-      addProblem(problems, "invalid-family", node.id, `Unknown family: ${String(node.family)}`);
-    }
-    if (
-      node.domain === "communication-activity" &&
-      !COMMUNICATION_ACTIVITIES.includes(node.activity)
-    ) {
-      addProblem(problems, "invalid-activity", node.id, `Unknown activity: ${String(node.activity)}`);
-    }
+
+    validateTaskConstraints(node, problems);
+    validateContextConstraints(node, problems);
+    validateSourceRefs(node, problems);
     validateCompatibility(node, problems);
   }
   return ids;
 }
 
+function validateTaskConstraints(node: OntologyNode, problems: OntologyProblem[]): void {
+  if (!Array.isArray(node.taskConstraints)) {
+    addProblem(problems, "invalid-compatibility", node.id, "taskConstraints must be an array");
+    return;
+  }
+  for (const tc of node.taskConstraints) {
+    if (typeof tc !== "object" || tc === null || Array.isArray(tc)) {
+      addProblem(problems, "invalid-compatibility", node.id, "Task constraint must be an object");
+      continue;
+    }
+    const raw = tc as Record<string, unknown>;
+    for (const key of Object.keys(raw)) {
+      if (FORBIDDEN_AUTHORITY_FIELDS.has(key)) {
+        addProblem(problems, "forbidden-authority-field", node.id, `taskConstraints.${key}`);
+      } else if (!TASK_CONSTRAINT_KEYS.has(key)) {
+        addProblem(problems, "invalid-compatibility", node.id, `Unexpected property in task constraint: ${key}`);
+      }
+    }
+    if (typeof raw.taskType !== "string" || !raw.taskType.trim()) {
+      addProblem(problems, "invalid-compatibility", node.id, "Task constraint requires non-empty taskType");
+    }
+    if (
+      raw.supportLevel !== undefined &&
+      (typeof raw.supportLevel !== "string" ||
+        !(ONTOLOGY_SUPPORT_LEVELS as readonly string[]).includes(raw.supportLevel))
+    ) {
+      addProblem(
+        problems,
+        "invalid-compatibility",
+        node.id,
+        `Invalid task constraint supportLevel: ${String(raw.supportLevel)}`,
+      );
+    }
+  }
+}
+
+function validateContextConstraints(node: OntologyNode, problems: OntologyProblem[]): void {
+  if (!Array.isArray(node.contextConstraints)) {
+    addProblem(problems, "invalid-compatibility", node.id, "contextConstraints must be an array");
+    return;
+  }
+  for (const cc of node.contextConstraints) {
+    if (typeof cc !== "object" || cc === null || Array.isArray(cc)) {
+      addProblem(problems, "invalid-compatibility", node.id, "Context constraint must be an object");
+      continue;
+    }
+    const raw = cc as Record<string, unknown>;
+    for (const key of Object.keys(raw)) {
+      if (FORBIDDEN_AUTHORITY_FIELDS.has(key)) {
+        addProblem(problems, "forbidden-authority-field", node.id, `contextConstraints.${key}`);
+      } else if (!CONTEXT_CONSTRAINT_KEYS.has(key)) {
+        addProblem(problems, "invalid-compatibility", node.id, `Unexpected property in context constraint: ${key}`);
+      }
+    }
+    if (
+      typeof raw.dimension !== "string" ||
+      !(CONTEXT_DIMENSIONS as readonly string[]).includes(raw.dimension as ContextDimension)
+    ) {
+      addProblem(
+        problems,
+        "invalid-compatibility",
+        node.id,
+        `Invalid context constraint dimension: ${String(raw.dimension)}`,
+      );
+    }
+    if (typeof raw.value !== "string" || !raw.value.trim()) {
+      addProblem(problems, "invalid-compatibility", node.id, "Context constraint requires non-empty value");
+    }
+  }
+}
+
+function validateSourceRefs(node: OntologyNode, problems: OntologyProblem[]): void {
+  if (!Array.isArray(node.sources)) {
+    addProblem(problems, "invalid-provenance", node.id, "sources must be an array");
+    return;
+  }
+  for (const src of node.sources) {
+    if (typeof src !== "object" || src === null || Array.isArray(src)) {
+      addProblem(problems, "invalid-provenance", node.id, "Source ref must be an object");
+      continue;
+    }
+    const raw = src as Record<string, unknown>;
+    for (const key of Object.keys(raw)) {
+      if (FORBIDDEN_AUTHORITY_FIELDS.has(key)) {
+        addProblem(problems, "forbidden-authority-field", node.id, `sources.${key}`);
+      } else if (!SOURCE_REF_KEYS.has(key)) {
+        addProblem(problems, "invalid-provenance", node.id, `Unexpected property in source ref: ${key}`);
+      }
+    }
+    if (typeof raw.sourceId !== "string" || !raw.sourceId.trim()) {
+      addProblem(problems, "invalid-provenance", node.id, "Source ref requires non-empty sourceId");
+    }
+    if (typeof raw.version !== "string" || !raw.version.trim()) {
+      addProblem(problems, "invalid-provenance", node.id, "Source ref requires non-empty version");
+    }
+    if (raw.locator !== undefined && (typeof raw.locator !== "string" || !raw.locator.trim())) {
+      addProblem(
+        problems,
+        "invalid-provenance",
+        node.id,
+        "Source ref locator must be a non-empty string when provided",
+      );
+    }
+  }
+}
+
 function validateCompatibility(node: OntologyNode, problems: OntologyProblem[]): void {
-  if (node.modalities.length === 0 || node.allowedEvidenceRoles.length === 0) {
+  if (
+    !Array.isArray(node.modalities) ||
+    node.modalities.length === 0 ||
+    !Array.isArray(node.allowedEvidenceRoles) ||
+    node.allowedEvidenceRoles.length === 0
+  ) {
     addProblem(problems, "invalid-compatibility", node.id, "Modalities and evidence roles must be non-empty");
     return;
   }
@@ -321,9 +555,6 @@ function validateCompatibility(node: OntologyNode, problems: OntologyProblem[]):
   }
   if (!node.allowedEvidenceRoles.every((value) => CORE_EVIDENCE_ROLES.includes(value))) {
     addProblem(problems, "invalid-compatibility", node.id, "Unknown evidence role");
-  }
-  if (node.contextConstraints.some((constraint) => constraint.value.trim().length === 0)) {
-    addProblem(problems, "invalid-compatibility", node.id, "Context constraint values must be non-empty");
   }
   if (node.kind === "perception" && !node.modalities.some((value) => INPUT_MODALITIES.has(value))) {
     addProblem(problems, "invalid-compatibility", node.id, "Perception requires an input modality");
@@ -337,8 +568,17 @@ function validateCompatibility(node: OntologyNode, problems: OntologyProblem[]):
   if (node.kind === "production" && !node.allowedEvidenceRoles.some((value) => PRODUCTIVE_EVIDENCE.has(value))) {
     addProblem(problems, "invalid-compatibility", node.id, "Production requires a productive evidence role");
   }
-  if (node.kind === "interaction" && !node.modalities.some((value) => value === "live-interaction" || value === "multimodal")) {
-    addProblem(problems, "invalid-compatibility", node.id, "Interaction requires an interaction modality");
+  const hasInteractionModality =
+    node.modalities.some((value) => value === "live-interaction" || value === "multimodal") ||
+    (node.modalities.some((value) => INPUT_MODALITIES.has(value)) &&
+      node.modalities.some((value) => OUTPUT_MODALITIES.has(value)));
+  if (node.kind === "interaction" && !hasInteractionModality) {
+    addProblem(
+      problems,
+      "invalid-compatibility",
+      node.id,
+      "Interaction requires an interaction modality or bidirectional input/output modalities",
+    );
   }
 }
 
@@ -350,11 +590,24 @@ function normalizeRelations(
   const normalized: OntologyRelation[] = [];
   const keys = new Set<string>();
   for (const relation of relations) {
+    if (typeof relation !== "object" || relation === null || Array.isArray(relation)) {
+      addProblem(problems, "invalid-relation", "unknown", "Relation must be an object");
+      continue;
+    }
+    const raw = relation as unknown as Record<string, unknown>;
+    const subject = `${String(raw.from)}->${String(raw.to)}`;
+    for (const key of Object.keys(raw)) {
+      if (FORBIDDEN_AUTHORITY_FIELDS.has(key)) {
+        addProblem(problems, "forbidden-authority-field", subject, key);
+      } else if (!RELATION_KEYS.has(key)) {
+        addProblem(problems, "invalid-relation", subject, `Unexpected property in relation: ${key}`);
+      }
+    }
     if (!ONTOLOGY_RELATION_TYPES.includes(relation.type)) {
       addProblem(
         problems,
         "invalid-relation",
-        `${relation.from}->${relation.to}`,
+        subject,
         String(relation.type),
       );
       continue;
@@ -426,28 +679,141 @@ function validateExternalRecords(
   const ids = new Set<string>();
   const allowedKeys = kind === "crosswalk" ? CROSSWALK_KEYS : OVERLAY_KEYS;
   for (const record of records) {
-    if (ids.has(record.id)) addProblem(problems, kind === "crosswalk" ? "duplicate-crosswalk" : "duplicate-overlay", record.id, "ID occurs more than once");
-    ids.add(record.id);
-    if (!nodeIds.has(record.nodeId)) addProblem(problems, "missing-node", record.nodeId, kind);
-    for (const key of Object.keys(record)) {
+    if (typeof record !== "object" || record === null || Array.isArray(record)) {
+      addProblem(problems, "invalid-node", "unknown", `${kind} record must be an object`);
+      continue;
+    }
+    const raw = record as unknown as Record<string, unknown>;
+    const id = typeof raw.id === "string" ? raw.id : "unknown";
+    if (ids.has(id)) {
+      addProblem(
+        problems,
+        kind === "crosswalk" ? "duplicate-crosswalk" : "duplicate-overlay",
+        id,
+        "ID occurs more than once",
+      );
+    }
+    ids.add(id);
+
+    for (const key of Object.keys(raw)) {
       if (FORBIDDEN_AUTHORITY_FIELDS.has(key) || !allowedKeys.has(key)) {
-        addProblem(problems, "forbidden-authority-field", record.id, key);
+        addProblem(problems, "forbidden-authority-field", id, key);
       }
     }
-    if (!validProvenance(record.provenance)) {
-      addProblem(problems, "invalid-provenance", record.id, "Complete versioned provenance and permitted use are required");
+
+    if (typeof raw.nodeId !== "string" || !raw.nodeId.trim()) {
+      addProblem(problems, "invalid-node", id, `${kind} requires non-empty nodeId`);
+    } else if (!nodeIds.has(raw.nodeId)) {
+      addProblem(problems, "missing-node", raw.nodeId, kind);
     }
+
+    if (kind === "crosswalk") {
+      if (typeof raw.frameworkId !== "string" || !raw.frameworkId.trim()) {
+        addProblem(problems, "invalid-provenance", id, "Crosswalk requires non-empty frameworkId");
+      }
+      if (typeof raw.frameworkVersion !== "string" || !raw.frameworkVersion.trim()) {
+        addProblem(problems, "invalid-provenance", id, "Crosswalk requires non-empty frameworkVersion");
+      }
+      if (typeof raw.externalTargetId !== "string" || !raw.externalTargetId.trim()) {
+        addProblem(problems, "invalid-provenance", id, "Crosswalk requires non-empty externalTargetId");
+      }
+      if (
+        typeof raw.mapping !== "string" ||
+        !(FRAMEWORK_MAPPINGS as readonly string[]).includes(raw.mapping as FrameworkMapping)
+      ) {
+        addProblem(problems, "invalid-compatibility", id, `Invalid crosswalk mapping: ${String(raw.mapping)}`);
+      }
+    } else {
+      if (typeof raw.populationTag !== "string" || !raw.populationTag.trim()) {
+        addProblem(problems, "invalid-node", id, "Overlay requires non-empty populationTag");
+      }
+      if (typeof raw.hypothesis !== "string" || !raw.hypothesis.trim()) {
+        addProblem(problems, "invalid-node", id, "Overlay requires non-empty hypothesis");
+      }
+      if (
+        typeof raw.reviewStatus !== "string" ||
+        !(OVERLAY_REVIEW_STATUSES as readonly string[]).includes(raw.reviewStatus as OverlayReviewStatus)
+      ) {
+        addProblem(problems, "invalid-node", id, `Invalid overlay reviewStatus: ${String(raw.reviewStatus)}`);
+      }
+    }
+
+    validateExternalProvenance(raw.provenance, id, problems);
   }
 }
 
-function validProvenance(value: ExternalProvenance): boolean {
-  return Boolean(
-    value?.sourceId?.trim() &&
-      value.version?.trim() &&
-      value.locator?.trim() &&
-      value.license?.classification &&
-      value.license?.permittedUse,
-  );
+function validateExternalProvenance(
+  provenance: unknown,
+  subjectId: string,
+  problems: OntologyProblem[],
+): void {
+  if (typeof provenance !== "object" || provenance === null || Array.isArray(provenance)) {
+    addProblem(
+      problems,
+      "invalid-provenance",
+      subjectId,
+      "Complete versioned provenance and permitted use are required",
+    );
+    return;
+  }
+  const raw = provenance as Record<string, unknown>;
+  for (const key of Object.keys(raw)) {
+    if (FORBIDDEN_AUTHORITY_FIELDS.has(key)) {
+      addProblem(problems, "forbidden-authority-field", subjectId, `provenance.${key}`);
+    } else if (!PROVENANCE_KEYS.has(key)) {
+      addProblem(problems, "invalid-provenance", subjectId, `Unexpected property in provenance: ${key}`);
+    }
+  }
+  const hasStrings =
+    typeof raw.sourceId === "string" &&
+    raw.sourceId.trim().length > 0 &&
+    typeof raw.version === "string" &&
+    raw.version.trim().length > 0 &&
+    typeof raw.locator === "string" &&
+    raw.locator.trim().length > 0;
+  if (!hasStrings) {
+    addProblem(
+      problems,
+      "invalid-provenance",
+      subjectId,
+      "Complete versioned provenance and permitted use are required",
+    );
+  }
+
+  if (typeof raw.license !== "object" || raw.license === null || Array.isArray(raw.license)) {
+    addProblem(problems, "invalid-provenance", subjectId, "Provenance license must be an object");
+    return;
+  }
+  const lic = raw.license as Record<string, unknown>;
+  for (const key of Object.keys(lic)) {
+    if (FORBIDDEN_AUTHORITY_FIELDS.has(key)) {
+      addProblem(problems, "forbidden-authority-field", subjectId, `provenance.license.${key}`);
+    } else if (!LICENSE_KEYS.has(key)) {
+      addProblem(problems, "invalid-provenance", subjectId, `Unexpected property in provenance license: ${key}`);
+    }
+  }
+  if (
+    typeof lic.classification !== "string" ||
+    !(LICENSE_CLASSIFICATIONS as readonly string[]).includes(lic.classification as LicenseClassification)
+  ) {
+    addProblem(
+      problems,
+      "invalid-provenance",
+      subjectId,
+      `Invalid license classification: ${String(lic.classification)}`,
+    );
+  }
+  if (
+    typeof lic.permittedUse !== "string" ||
+    !(PERMITTED_EXTERNAL_USES as readonly string[]).includes(lic.permittedUse as PermittedExternalUse)
+  ) {
+    addProblem(
+      problems,
+      "invalid-provenance",
+      subjectId,
+      `Invalid permitted external use: ${String(lic.permittedUse)}`,
+    );
+  }
 }
 
 function freezeNode(node: OntologyNode): Readonly<OntologyNode> {
