@@ -133,23 +133,17 @@ def _predict_blind(
     predictions: list[float] = []
     feature_batch: list[dict[str, float]] = []
     id_batch: list[str] = []
-    encounter_batch: list[tuple[SlamExercise, SlamTokenRow]] = []
 
     def flush() -> None:
-        nonlocal feature_batch, id_batch, encounter_batch
+        nonlocal feature_batch, id_batch
         if not feature_batch:
             return
         matrix = hasher.transform(feature_batch)
         probabilities = model.predict_proba(matrix)[:, 1]
         predictions.extend(float(value) for value in probabilities)
         token_ids.extend(id_batch)
-        # Blind current-split labels are never consulted. Encounter-only history advances
-        # after prediction, preserving causal recency/count features for later rows.
-        for exercise, token in encounter_batch:
-            history.observe_encounter(exercise, token)
         feature_batch = []
         id_batch = []
-        encounter_batch = []
 
     for exercise, token in _iter_token_rows(exercises):
         if token.label is not None:
@@ -157,7 +151,11 @@ def _predict_blind(
         before = history.features_before(exercise, token)
         feature_batch.append(_feature_dict(exercise, token, before))
         id_batch.append(token.token_id)
-        encounter_batch.append((exercise, token))
+
+        # Prediction-time batching is an execution detail, not part of learner history.
+        # Advance encounter-only history immediately after freezing this row's features so
+        # later rows see prior blind encounters regardless of --batch-size.
+        history.observe_encounter(exercise, token)
         if len(feature_batch) >= batch_size:
             flush()
     flush()
