@@ -1,0 +1,30 @@
+# Contract: Learner Evidence State V1
+
+- **Contract Identifier**: `nep.learner-evidence-state.v1`.
+- **Contract Version**: `1`.
+- **Construct Key Grammar**: `nep.en.v1.<domain>.<slug>` where `<domain>` is `language-system` or `communication-activity`.
+- **Ontology Invariant**: Every evaluated construct key MUST resolve to a valid node in the provided `nep.english-ontology.v1` graph. Unknown nodes are rejected fail-closed with `unknown-ontology-node`.
+- **Evidence Certification Boundary**:
+  - Raw observations, UI clicks, and uncertified model predictions are strictly rejected (`unvalidated-evidence-rejected`).
+  - Only validated/certified evidence records (`CertifiedCoreEvidence` or `ReferenceCoreEvidence`) can update learner state.
+- **Modality & Role Invariant**:
+  - Event `role` must be declared in the target node's `allowedEvidenceRoles`. Violation yields `incompatible-evidence-role`.
+  - Event `responseModality` must be compatible with the target node's declared `modalities`. Violation yields `incompatible-modality`.
+  - Receptive/recognition evidence can never increment productive or transfer support.
+- **Transfer Boundary**:
+  - Transfer claims require `transferDistance: "near-transfer" | "far-transfer"` and a distinct `contextId`.
+  - Same-context repetition (`transferDistance: "same-context"` or duplicate `contextId`) cannot increment transfer statistics.
+- **Sufficiency & Epistemic Uncertainty**:
+  - Zero events evaluate strictly to `status: "unknown"`, `provisionalRoutingScore: null`, `uncertainty: "maximal"`.
+  - Conflicting positive and negative events evaluate to `status: "conflicted-support"`, suppressing scalar score to prevent false neutral averaging.
+  - State projection outputs `decisionScope: "routing-only"`. It contains NO boolean `mastered: boolean` flag.
+  - Repository-reference evidence can only support provisional routing projections; it cannot claim durable assessment authority.
+- **Event Identity & Idempotency**:
+  - Every event MUST have a non-empty string `eventId`.
+  - Duplicate `eventId` occurrences in the same ledger are rejected fail-closed with `duplicate-event-id`.
+- **Determinism & Reducer Equivalence**:
+  - Events are sorted canonically by `(occurredAt, eventId)` prior to reduction, guaranteeing that array insertion order does not affect output.
+  - Iterative reduction via `reduceLearnerState` produces byte-identical output to batch `projectLearnerState`.
+- **Purity**:
+  - Zero ambient clock reads (`Date.now()`); all timestamps are supplied as explicit ISO 8601 strings.
+  - Pure deterministic computation with zero database, network, browser, or random dependencies.
