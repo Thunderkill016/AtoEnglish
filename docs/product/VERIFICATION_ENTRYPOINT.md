@@ -1,5 +1,8 @@
 # Curriculum verification entry point
 
+> **Document status:** reference
+> **Governing authority:** [constitution](../../.specify/memory/constitution.md)
+
 AtoEnglish uses one repository-owned command for curriculum-facing changes:
 
 ```bash

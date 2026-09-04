@@ -1,5 +1,8 @@
 # Adaptive Practice Surface V1
 
+> **Document status:** reference
+> **Governing authority:** [constitution](../../.specify/memory/constitution.md); it wins on conflict
+
 ## Goal
 
 Turn the adaptive core into an inspectable learner-facing preview without replacing the fixed Nếp vertical slice or exposing planner internals to the browser.

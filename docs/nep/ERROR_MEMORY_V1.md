@@ -1,5 +1,8 @@
 # Error Memory V1
 
+> **Document status:** reference
+> **Governing authority:** [constitution](../../.specify/memory/constitution.md); it wins on conflict
+
 ## Goal
 
 Structured Error Signals describe one attempt. Error Memory V1 decides when repeated observations are strong enough to call an error a **temporary recurring pattern**.

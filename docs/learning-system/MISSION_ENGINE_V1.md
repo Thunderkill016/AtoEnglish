@@ -1,5 +1,8 @@
 # AtoEnglish Mission Engine v1
 
+> **Document status:** reference
+> **Governing authority:** [constitution](../../.specify/memory/constitution.md)
+
 Mission Engine v1 translates the repository research into one enforceable learning system for all six A0 pilot lessons. Every lesson has a bounded can-do outcome, context-first chunks, guided and independent speaking, deterministic intent evaluation, at most two corrections, a mandatory full-task retry, an aligned checkpoint, FSRS review, and delayed transfer tests after 1/7/30 days.
 
 ## Six pilot missions
