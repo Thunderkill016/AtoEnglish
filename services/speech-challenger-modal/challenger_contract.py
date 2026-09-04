@@ -2,12 +2,12 @@ from __future__ import annotations
 
 import math
 import os
-import secrets
 import tempfile
 import time
 from abc import ABC, abstractmethod
 from dataclasses import asdict, dataclass, field
-from typing import Any
+from importlib.metadata import PackageNotFoundError
+from typing import Any, Literal
 
 from fingerprint import compute_model_fingerprint, compute_runtime_fingerprint
 
@@ -26,32 +26,6 @@ AUDIO_SUFFIX_BY_TYPE: dict[str, str] = {
     "audio/ogg": ".ogg",
     "audio/aac": ".aac",
 }
-
-
-def check_service_authorization(
-    authorization: str | None,
-    service_token: str | None,
-) -> tuple[bool, int, str]:
-    """Validate Bearer service token authorization for challenger endpoints.
-
-    Fails closed:
-    - If service_token is unset or whitespace-only -> (False, 503, "service_token_unconfigured")
-    - If authorization header is missing, not Bearer, or invalid -> (False, 401, "unauthorized")
-    - If matching Bearer token -> (True, 200, "authorized")
-    """
-    cleaned_token = (service_token or "").strip()
-    if not cleaned_token:
-        return False, 503, "service_token_unconfigured"
-
-    scheme, separator, candidate = (authorization or "").partition(" ")
-    if (
-        separator != " "
-        or scheme.lower() != "bearer"
-        or not secrets.compare_digest(candidate, cleaned_token)
-    ):
-        return False, 401, "unauthorized"
-
-    return True, 200, "authorized"
 
 
 def _finite_number(
@@ -78,9 +52,7 @@ def _summary(values: Any) -> tuple[float | None, float | None]:
         return None, None
 
     cleaned = [
-        number
-        for value in values
-        if (number := _finite_number(value)) is not None
+        number for value in values if (number := _finite_number(value)) is not None
     ]
     if not cleaned:
         return None, None
@@ -105,8 +77,14 @@ class ModelFingerprint:
     version: str
     sha256: str
     configuration_id: str
+    fingerprint_scope: Literal[
+        "package-configuration-only",
+        "package-configuration-plus-checkpoint-bytes",
+        "synthetic-mock-identity",
+    ]
+    checkpoint_sha256: str | None
 
-    def to_dict(self) -> dict[str, str]:
+    def to_dict(self) -> dict[str, Any]:
         return asdict(self)
 
 
@@ -116,8 +94,10 @@ class RuntimeFingerprint:
     python_version: str
     sha256: str
     hardware_tier: str
+    packages: dict[str, str]
+    code_sha256: str
 
-    def to_dict(self) -> dict[str, str]:
+    def to_dict(self) -> dict[str, Any]:
         return asdict(self)
 
 
@@ -174,11 +154,13 @@ class ChallengerDiagnosticResult:
     - Never contains a 0-100 score or learner mastery attribution.
     - Contains traceable model and runtime fingerprints.
     """
+
     provider_name: str
     provider_version: str
     model_fingerprint: ModelFingerprint
     runtime_fingerprint: RuntimeFingerprint
-    success: bool
+    execution_status: Literal["completed", "unavailable"]
+    evaluation_status: Literal["not_evaluated", "synthetic_mock_only"]
     error_code: str | None
     latency_ms: int
     acoustic_distance: float | None
@@ -197,7 +179,8 @@ class ChallengerDiagnosticResult:
             },
             "model_fingerprint": self.model_fingerprint.to_dict(),
             "runtime_fingerprint": self.runtime_fingerprint.to_dict(),
-            "success": self.success,
+            "execution_status": self.execution_status,
+            "evaluation_status": self.evaluation_status,
             "error_code": self.error_code,
             "latency_ms": self.latency_ms,
             "acoustic_distance": self.acoustic_distance,
@@ -232,7 +215,8 @@ def sanitize_openpronounce_raw(
             provider_version=provider_version,
             model_fingerprint=model_fingerprint,
             runtime_fingerprint=runtime_fingerprint,
-            success=False,
+            execution_status="unavailable",
+            evaluation_status="not_evaluated",
             error_code="invalid_raw_result_shape",
             latency_ms=latency_ms,
             acoustic_distance=None,
@@ -265,14 +249,18 @@ def sanitize_openpronounce_raw(
                     if exp is None and hrd is None:
                         continue
                     conf = _finite_number(p.get("confidence"), minimum=0.0, maximum=1.0)
-                    phones.append(PhoneAlignment(expected=exp, heard=hrd, confidence=conf))
+                    phones.append(
+                        PhoneAlignment(expected=exp, heard=hrd, confidence=conf)
+                    )
 
             errors.append(
                 WordError(
                     word=word,
                     expected=_bounded_text(raw_err.get("expected"), 160),
                     actual=_bounded_text(raw_err.get("actual"), 160),
-                    confidence=_finite_number(raw_err.get("confidence"), minimum=0.0, maximum=1.0),
+                    confidence=_finite_number(
+                        raw_err.get("confidence"), minimum=0.0, maximum=1.0
+                    ),
                     phones=phones,
                 )
             )
@@ -289,11 +277,16 @@ def sanitize_openpronounce_raw(
         provider_version=provider_version,
         model_fingerprint=model_fingerprint,
         runtime_fingerprint=runtime_fingerprint,
-        success=True,
+        execution_status="completed",
+        evaluation_status="not_evaluated",
         error_code=None,
         latency_ms=latency_ms,
-        acoustic_distance=_finite_number(raw_result.get("acoustic_distance"), minimum=0.0),
-        phoneme_error_rate=_finite_number(differences.get("phoneme_error_rate"), minimum=0.0),
+        acoustic_distance=_finite_number(
+            raw_result.get("acoustic_distance"), minimum=0.0
+        ),
+        phoneme_error_rate=_finite_number(
+            differences.get("phoneme_error_rate"), minimum=0.0
+        ),
         word_error_rate=_finite_number(differences.get("word_error_rate"), minimum=0.0),
         errors=errors,
         prosody_summary=ProsodySummary(
@@ -316,23 +309,19 @@ class SpeechChallengerProvider(ABC):
     @abstractmethod
     def name(self) -> str:
         """Vendor-neutral identifier for the challenger."""
-        pass
 
     @property
     @abstractmethod
     def version(self) -> str:
         """Version string of the challenger package or implementation."""
-        pass
 
     @abstractmethod
     def get_model_fingerprint(self) -> ModelFingerprint:
-        """Returns deterministic model fingerprint (weights, commit, config)."""
-        pass
+        """Returns model/package identity and explicit checkpoint fingerprint scope."""
 
     @abstractmethod
     def get_runtime_fingerprint(self) -> RuntimeFingerprint:
         """Returns deterministic runtime environment fingerprint."""
-        pass
 
     @abstractmethod
     def analyze(
@@ -342,7 +331,6 @@ class SpeechChallengerProvider(ABC):
         content_type: str = "audio/wav",
     ) -> ChallengerDiagnosticResult:
         """Perform acoustic pronunciation diagnosis on ephemeral audio."""
-        pass
 
 
 class OpenPronounceBaselineProvider(SpeechChallengerProvider):
@@ -365,8 +353,9 @@ class OpenPronounceBaselineProvider(SpeechChallengerProvider):
     def version(self) -> str:
         try:
             from importlib.metadata import version
+
             return version("openpronounce")
-        except Exception:
+        except PackageNotFoundError:
             return "0.3.0"
 
     def get_model_fingerprint(self) -> ModelFingerprint:
@@ -403,7 +392,8 @@ class OpenPronounceBaselineProvider(SpeechChallengerProvider):
                 provider_version=self.version,
                 model_fingerprint=model_fp,
                 runtime_fingerprint=runtime_fp,
-                success=False,
+                execution_status="unavailable",
+                evaluation_status="not_evaluated",
                 error_code="invalid_target_text",
                 latency_ms=0,
                 acoustic_distance=None,
@@ -417,7 +407,8 @@ class OpenPronounceBaselineProvider(SpeechChallengerProvider):
                 provider_version=self.version,
                 model_fingerprint=model_fp,
                 runtime_fingerprint=runtime_fp,
-                success=False,
+                execution_status="unavailable",
+                evaluation_status="not_evaluated",
                 error_code="audio_empty_or_too_large",
                 latency_ms=0,
                 acoustic_distance=None,
@@ -425,7 +416,22 @@ class OpenPronounceBaselineProvider(SpeechChallengerProvider):
                 word_error_rate=None,
             )
 
-        suffix = AUDIO_SUFFIX_BY_TYPE.get(content_type.split(";")[0].strip().lower(), ".wav")
+        normalized_content_type = content_type.split(";")[0].strip().lower()
+        suffix = AUDIO_SUFFIX_BY_TYPE.get(normalized_content_type)
+        if suffix is None:
+            return ChallengerDiagnosticResult(
+                provider_name=self.name,
+                provider_version=self.version,
+                model_fingerprint=model_fp,
+                runtime_fingerprint=runtime_fp,
+                execution_status="unavailable",
+                evaluation_status="not_evaluated",
+                error_code="unsupported_media_type",
+                latency_ms=0,
+                acoustic_distance=None,
+                phoneme_error_rate=None,
+                word_error_rate=None,
+            )
         temp_path: str | None = None
 
         try:
@@ -450,7 +456,8 @@ class OpenPronounceBaselineProvider(SpeechChallengerProvider):
                     provider_version=self.version,
                     model_fingerprint=model_fp,
                     runtime_fingerprint=runtime_fp,
-                    success=False,
+                    execution_status="unavailable",
+                    evaluation_status="not_evaluated",
                     error_code="invalid_decoded_audio",
                     latency_ms=duration_ms,
                     acoustic_distance=None,
@@ -459,14 +466,18 @@ class OpenPronounceBaselineProvider(SpeechChallengerProvider):
                 )
 
             duration_seconds = sound.size / SAMPLING_RATE
-            if duration_seconds < MIN_AUDIO_SECONDS or duration_seconds > MAX_AUDIO_SECONDS:
+            if (
+                duration_seconds < MIN_AUDIO_SECONDS
+                or duration_seconds > MAX_AUDIO_SECONDS
+            ):
                 duration_ms = round((time.monotonic() - started) * 1000)
                 return ChallengerDiagnosticResult(
                     provider_name=self.name,
                     provider_version=self.version,
                     model_fingerprint=model_fp,
                     runtime_fingerprint=runtime_fp,
-                    success=False,
+                    execution_status="unavailable",
+                    evaluation_status="not_evaluated",
                     error_code="audio_duration_out_of_bounds",
                     latency_ms=duration_ms,
                     acoustic_distance=None,
@@ -485,14 +496,15 @@ class OpenPronounceBaselineProvider(SpeechChallengerProvider):
                 runtime_fingerprint=runtime_fp,
                 latency_ms=duration_ms,
             )
-        except Exception as error:
+        except Exception as error:  # noqa: BLE001 - provider failures must become unavailable
             duration_ms = round((time.monotonic() - started) * 1000)
             return ChallengerDiagnosticResult(
                 provider_name=self.name,
                 provider_version=self.version,
                 model_fingerprint=model_fp,
                 runtime_fingerprint=runtime_fp,
-                success=False,
+                execution_status="unavailable",
+                evaluation_status="not_evaluated",
                 error_code=f"inference_error:{type(error).__name__}",
                 latency_ms=duration_ms,
                 acoustic_distance=None,
@@ -501,10 +513,7 @@ class OpenPronounceBaselineProvider(SpeechChallengerProvider):
             )
         finally:
             if temp_path and os.path.exists(temp_path):
-                try:
-                    os.remove(temp_path)
-                except Exception:
-                    pass
+                os.remove(temp_path)
 
 
 class MockChallengerProvider(SpeechChallengerProvider):
@@ -513,7 +522,9 @@ class MockChallengerProvider(SpeechChallengerProvider):
     Does not require PyTorch or weights; emits valid ChallengerDiagnosticResult.
     """
 
-    def __init__(self, provider_name: str = "mock-challenger", version: str = "1.0.0") -> None:
+    def __init__(
+        self, provider_name: str = "mock-challenger", version: str = "1.0.0"
+    ) -> None:
         self._name = provider_name
         self._version = version
 
@@ -531,6 +542,8 @@ class MockChallengerProvider(SpeechChallengerProvider):
             version=self.version,
             sha256="0000000000000000000000000000000000000000000000000000000000000000",
             configuration_id="mock-baseline",
+            fingerprint_scope="synthetic-mock-identity",
+            checkpoint_sha256=None,
         )
 
     def get_runtime_fingerprint(self) -> RuntimeFingerprint:
@@ -539,6 +552,8 @@ class MockChallengerProvider(SpeechChallengerProvider):
             python_version="3.11",
             sha256="ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
             hardware_tier="cpu",
+            packages={},
+            code_sha256="ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
         )
 
     def analyze(
@@ -557,7 +572,8 @@ class MockChallengerProvider(SpeechChallengerProvider):
                 provider_version=self.version,
                 model_fingerprint=self.get_model_fingerprint(),
                 runtime_fingerprint=self.get_runtime_fingerprint(),
-                success=False,
+                execution_status="unavailable",
+                evaluation_status="not_evaluated",
                 error_code="empty_target_text",
                 latency_ms=duration_ms,
                 acoustic_distance=None,
@@ -570,7 +586,8 @@ class MockChallengerProvider(SpeechChallengerProvider):
             provider_version=self.version,
             model_fingerprint=self.get_model_fingerprint(),
             runtime_fingerprint=self.get_runtime_fingerprint(),
-            success=True,
+            execution_status="completed",
+            evaluation_status="synthetic_mock_only",
             error_code=None,
             latency_ms=duration_ms,
             acoustic_distance=3.14,
@@ -578,7 +595,9 @@ class MockChallengerProvider(SpeechChallengerProvider):
             word_error_rate=0.0,
             errors=[
                 WordError(
-                    word=target_text.strip().split()[0] if target_text.strip() else "sample",
+                    word=target_text.strip().split()[0]
+                    if target_text.strip()
+                    else "sample",
                     expected="θ",
                     actual="t",
                     confidence=0.95,

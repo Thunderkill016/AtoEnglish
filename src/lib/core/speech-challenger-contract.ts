@@ -11,6 +11,11 @@ export type SpeechChallengerModelFingerprint = {
   version: string;
   sha256: string;
   configuration_id: string;
+  fingerprint_scope:
+    | "package-configuration-only"
+    | "package-configuration-plus-checkpoint-bytes"
+    | "synthetic-mock-identity";
+  checkpoint_sha256: string | null;
 };
 
 export type SpeechChallengerRuntimeFingerprint = {
@@ -18,6 +23,8 @@ export type SpeechChallengerRuntimeFingerprint = {
   python_version: string;
   sha256: string;
   hardware_tier: string;
+  packages: Record<string, string>;
+  code_sha256: string;
 };
 
 export type SpeechChallengerPhone = {
@@ -48,7 +55,8 @@ export type SpeechChallengerResult = {
   };
   model_fingerprint: SpeechChallengerModelFingerprint;
   runtime_fingerprint: SpeechChallengerRuntimeFingerprint;
-  success: boolean;
+  execution_status: "completed" | "unavailable";
+  evaluation_status: "not_evaluated" | "synthetic_mock_only";
   error_code?: string | null;
   latency_ms: number;
   acoustic_distance: number | null;
@@ -79,9 +87,32 @@ export function validateChallengerDiagnosticIntegrity(record: unknown): record i
     return false;
   }
 
-  if (typeof candidate.success !== "boolean") return false;
+  if (candidate.execution_status !== "completed" && candidate.execution_status !== "unavailable") {
+    return false;
+  }
+  if (candidate.evaluation_status !== "not_evaluated" && candidate.evaluation_status !== "synthetic_mock_only") {
+    return false;
+  }
+  if (
+    candidate.execution_status === "unavailable" &&
+    (candidate.acoustic_distance !== null ||
+      candidate.phoneme_error_rate !== null ||
+      candidate.word_error_rate !== null)
+  ) {
+    return false;
+  }
   if (!candidate.model_fingerprint || typeof candidate.model_fingerprint !== "object") return false;
   if (!candidate.runtime_fingerprint || typeof candidate.runtime_fingerprint !== "object") return false;
+
+  const modelFingerprint = candidate.model_fingerprint as Record<string, unknown>;
+  if (
+    (modelFingerprint.fingerprint_scope !== "package-configuration-only" &&
+      modelFingerprint.fingerprint_scope !== "package-configuration-plus-checkpoint-bytes" &&
+      modelFingerprint.fingerprint_scope !== "synthetic-mock-identity") ||
+    !("checkpoint_sha256" in modelFingerprint)
+  ) {
+    return false;
+  }
 
   return true;
 }
@@ -99,6 +130,9 @@ export function createChallengerObservation(
   challengerResult: SpeechChallengerResult,
   context: ObservationContext,
 ): CoreObservation<AcousticDiagnosticPayload> {
+  if (challengerResult.execution_status !== "completed") {
+    throw new Error("Unavailable challenger inference cannot become an observation");
+  }
   const alignments: PhonemeAlignmentDetail[] = [];
 
   for (const err of challengerResult.errors) {

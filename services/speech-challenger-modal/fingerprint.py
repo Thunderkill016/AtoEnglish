@@ -5,6 +5,7 @@ import json
 import os
 import platform
 import sys
+from importlib.metadata import PackageNotFoundError
 from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
@@ -28,17 +29,21 @@ def compute_runtime_fingerprint(
     from challenger_contract import RuntimeFingerprint
 
     # Gather invariant environment descriptors
-    py_ver = f"{sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}"
+    py_ver = (
+        f"{sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}"
+    )
     plat = platform.platform()
     machine = platform.machine()
 
-    # Collect pinned key libraries if present
+    # Collect resolved key libraries as run provenance. Resolution alone does not
+    # make dependency ranges reproducible.
     pkg_signatures: dict[str, str] = {}
     for pkg in ("openpronounce", "torch", "fastapi", "uvicorn", "numpy", "modal"):
         try:
             from importlib.metadata import version
+
             pkg_signatures[pkg] = version(pkg)
-        except Exception:
+        except PackageNotFoundError:
             pkg_signatures[pkg] = "not_installed"
 
     raw_signature = {
@@ -50,6 +55,18 @@ def compute_runtime_fingerprint(
         "packages": sorted(pkg_signatures.items()),
     }
 
+    code_files = [
+        __file__,
+        os.path.join(os.path.dirname(__file__), "challenger_contract.py"),
+    ]
+    code_hashes = [
+        f"{os.path.basename(path)}:{_hash_file(path)}" for path in code_files
+    ]
+    code_sha256 = hashlib.sha256(
+        ";".join(sorted(code_hashes)).encode("utf-8")
+    ).hexdigest()
+    raw_signature["code_sha256"] = code_sha256
+
     digest = hashlib.sha256(
         json.dumps(raw_signature, sort_keys=True).encode("utf-8")
     ).hexdigest()
@@ -59,6 +76,8 @@ def compute_runtime_fingerprint(
         python_version=py_ver,
         sha256=digest,
         hardware_tier=hardware_tier,
+        packages=dict(sorted(pkg_signatures.items())),
+        code_sha256=code_sha256,
     )
 
 
@@ -70,8 +89,8 @@ def compute_model_fingerprint(
 ) -> ModelFingerprint:
     """Compute deterministic fingerprint of model artifacts and configuration.
 
-    If checkpoint_paths are provided and exist, hashes their contents;
-    otherwise produces a deterministic hash of the model signature and configuration.
+    The identity digest always covers package/configuration metadata. A separate
+    checkpoint digest is present only when exact checkpoint bytes were resolved.
     """
     from challenger_contract import ModelFingerprint
 
@@ -85,23 +104,30 @@ def compute_model_fingerprint(
             if os.path.isfile(p):
                 file_hashes.append(f"{os.path.basename(p)}:{_hash_file(p)}")
 
+    seed = f"{model_name}:{model_version}:{config_str}"
+    sha256 = hashlib.sha256(seed.encode("utf-8")).hexdigest()
+    checkpoint_sha256 = None
     if file_hashes:
-        combined = ";".join(sorted(file_hashes)) + f";config={config_str}"
-        sha256 = hashlib.sha256(combined.encode("utf-8")).hexdigest()
-    else:
-        seed = f"{model_name}:{model_version}:{config_str}"
-        sha256 = hashlib.sha256(seed.encode("utf-8")).hexdigest()
+        checkpoint_sha256 = hashlib.sha256(
+            ";".join(sorted(file_hashes)).encode("utf-8")
+        ).hexdigest()
 
     return ModelFingerprint(
         artifact_id=f"nep-model-{model_name}",
         version=model_version,
         sha256=sha256,
         configuration_id=f"cfg-{config_id}",
+        fingerprint_scope=(
+            "package-configuration-plus-checkpoint-bytes"
+            if checkpoint_sha256
+            else "package-configuration-only"
+        ),
+        checkpoint_sha256=checkpoint_sha256,
     )
 
 
 def compute_dataset_fingerprint(data: bytes | list[dict[str, Any]]) -> str:
-    """Compute SHA-256 for benchmark test data reproducibility."""
+    """Compute SHA-256 for a canonical manifest, including audio hashes."""
     if isinstance(data, bytes):
         return hashlib.sha256(data).hexdigest()
     serialized = json.dumps(data, sort_keys=True, ensure_ascii=False)

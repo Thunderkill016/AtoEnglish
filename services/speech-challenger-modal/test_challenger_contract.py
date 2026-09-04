@@ -1,23 +1,21 @@
 from __future__ import annotations
 
+import importlib.util
 import json
 import os
 import sys
+import tempfile
 import unittest
+import wave
 
 sys.path.insert(0, os.path.dirname(__file__))
 
 from challenger_contract import (
-    ChallengerDiagnosticResult,
     MockChallengerProvider,
     ModelFingerprint,
     OpenPronounceBaselineProvider,
-    PhoneAlignment,
-    ProsodySummary,
     RuntimeFingerprint,
     SpeechChallengerProvider,
-    WordError,
-    check_service_authorization,
     sanitize_openpronounce_raw,
 )
 from fingerprint import (
@@ -34,12 +32,16 @@ class ChallengerContractTests(unittest.TestCase):
             version="1.0.0",
             sha256="abc123def456",
             configuration_id="cfg-test",
+            fingerprint_scope="package-configuration-only",
+            checkpoint_sha256=None,
         )
         self.runtime_fp = RuntimeFingerprint(
             runtime="test-runtime",
             python_version="3.11.0",
             sha256="fff000fff000",
             hardware_tier="cpu",
+            packages={},
+            code_sha256="fff000fff000",
         )
 
     def test_sanitization_discards_raw_transcripts_scores_and_vectors(self) -> None:
@@ -84,7 +86,8 @@ class ChallengerContractTests(unittest.TestCase):
             latency_ms=145,
         )
 
-        self.assertTrue(sanitized.success)
+        self.assertEqual(sanitized.execution_status, "completed")
+        self.assertEqual(sanitized.evaluation_status, "not_evaluated")
         self.assertIsNone(sanitized.error_code)
         self.assertEqual(sanitized.latency_ms, 145)
         self.assertEqual(sanitized.acoustic_distance, 5.4)
@@ -129,9 +132,7 @@ class ChallengerContractTests(unittest.TestCase):
                     {
                         "word": "think",
                         "confidence": 1.5,  # > 1.0 invalid
-                        "phones": [
-                            {"expected": "θ", "heard": "t", "confidence": -0.2}
-                        ],
+                        "phones": [{"expected": "θ", "heard": "t", "confidence": -0.2}],
                     }
                 ],
             },
@@ -151,7 +152,9 @@ class ChallengerContractTests(unittest.TestCase):
         self.assertIsNone(sanitized.errors[0].phones[0].confidence)
 
     def test_mock_challenger_polymorphism(self) -> None:
-        mock_provider = MockChallengerProvider(provider_name="wavlm-challenger", version="0.1.0")
+        mock_provider = MockChallengerProvider(
+            provider_name="wavlm-challenger", version="0.1.0"
+        )
         self.assertIsInstance(mock_provider, SpeechChallengerProvider)
         self.assertEqual(mock_provider.name, "wavlm-challenger")
         self.assertEqual(mock_provider.version, "0.1.0")
@@ -159,16 +162,19 @@ class ChallengerContractTests(unittest.TestCase):
         dummy_audio = b"\x00\x00" * 8000
         result = mock_provider.analyze(dummy_audio, target_text="thought")
 
-        self.assertTrue(result.success)
+        self.assertEqual(result.execution_status, "completed")
+        self.assertEqual(result.evaluation_status, "synthetic_mock_only")
         self.assertEqual(result.provider_name, "wavlm-challenger")
-        self.assertEqual(result.model_fingerprint.artifact_id, "nep-model-wavlm-challenger")
+        self.assertEqual(
+            result.model_fingerprint.artifact_id, "nep-model-wavlm-challenger"
+        )
         self.assertEqual(result.runtime_fingerprint.runtime, "local-mock")
         self.assertIsNotNone(result.acoustic_distance)
         self.assertIsNotNone(result.phoneme_error_rate)
 
         # Empty target text fails gracefully without exception
         err_res = mock_provider.analyze(dummy_audio, target_text="   ")
-        self.assertFalse(err_res.success)
+        self.assertEqual(err_res.execution_status, "unavailable")
         self.assertEqual(err_res.error_code, "empty_target_text")
 
     def test_fingerprint_deterministic_stability(self) -> None:
@@ -181,37 +187,96 @@ class ChallengerContractTests(unittest.TestCase):
         mod_fp2 = compute_model_fingerprint("openpronounce", "0.3.0", {"tts": "piper"})
         self.assertEqual(mod_fp1.sha256, mod_fp2.sha256)
         self.assertEqual(len(mod_fp1.sha256), 64)
+        self.assertEqual(mod_fp1.fingerprint_scope, "package-configuration-only")
+        self.assertIsNone(mod_fp1.checkpoint_sha256)
 
         ds_fp1 = compute_dataset_fingerprint(b"synthetic_audio_bytes")
         ds_fp2 = compute_dataset_fingerprint(b"synthetic_audio_bytes")
         self.assertEqual(ds_fp1, ds_fp2)
 
-    def test_service_token_authorization_fails_closed(self) -> None:
-        # Unconfigured token
-        auth, code, msg = check_service_authorization("Bearer any", None)
-        self.assertFalse(auth)
-        self.assertEqual(code, 503)
-
-        # Configured token, missing header
-        auth, code, msg = check_service_authorization(None, "secret-token")
-        self.assertFalse(auth)
-        self.assertEqual(code, 401)
-
-        # Wrong token
-        auth, code, msg = check_service_authorization("Bearer wrong", "secret-token")
-        self.assertFalse(auth)
-        self.assertEqual(code, 401)
-
-        # Valid token
-        auth, code, msg = check_service_authorization("Bearer secret-token", "secret-token")
-        self.assertTrue(auth)
-        self.assertEqual(code, 200)
-
     def test_openpronounce_empty_audio_fails_closed(self) -> None:
         provider = OpenPronounceBaselineProvider(hardware_tier="cpu")
         res = provider.analyze(b"", target_text="think")
-        self.assertFalse(res.success)
+        self.assertEqual(res.execution_status, "unavailable")
         self.assertEqual(res.error_code, "audio_empty_or_too_large")
+
+    def test_openpronounce_unsupported_media_is_unavailable(self) -> None:
+        provider = OpenPronounceBaselineProvider(hardware_tier="cpu")
+        result = provider.analyze(
+            b"not-an-audio-payload",
+            target_text="think",
+            content_type="application/octet-stream",
+        )
+
+        self.assertEqual(result.execution_status, "unavailable")
+        self.assertEqual(result.evaluation_status, "not_evaluated")
+        self.assertEqual(result.error_code, "unsupported_media_type")
+        self.assertIsNone(result.phoneme_error_rate)
+
+    def test_runtime_smoke_never_reports_model_quality(self) -> None:
+        script_path = os.path.join(
+            os.path.dirname(__file__), "..", "..", "scripts", "run-speech-benchmark.py"
+        )
+        spec = importlib.util.spec_from_file_location("speech_benchmark", script_path)
+        self.assertIsNotNone(spec)
+        self.assertIsNotNone(spec.loader if spec else None)
+        module = importlib.util.module_from_spec(spec)
+        assert spec and spec.loader
+        spec.loader.exec_module(module)
+
+        for malformed in (
+            None,
+            {},
+            {"execution_status": "completed"},
+            {
+                "execution_status": "unavailable",
+                "evaluation_status": "not_evaluated",
+                "phoneme_error_rate": 0,
+            },
+        ):
+            with self.assertRaises((TypeError, ValueError)):
+                module.validate_remote_result(malformed)
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            audio_path = os.path.join(temp_dir, "tone.wav")
+            with wave.open(audio_path, "wb") as wav_file:
+                wav_file.setnchannels(1)
+                wav_file.setsampwidth(2)
+                wav_file.setframerate(16_000)
+                wav_file.writeframes(b"\x00\x00" * 8_000)
+            cases = [
+                {
+                    "case_id": "runtime-only",
+                    "target_text": "think",
+                    "audio_file": "tone.wav",
+                    "fixture_class": "non_speech_synthetic",
+                }
+            ]
+            artifact = module.run_benchmark(cases, temp_dir, "local-mock")
+            first_dataset_fingerprint = artifact["dataset_fingerprint"]
+
+            with wave.open(audio_path, "wb") as wav_file:
+                wav_file.setnchannels(1)
+                wav_file.setsampwidth(2)
+                wav_file.setframerate(16_000)
+                wav_file.writeframes(b"\x01\x00" * 8_000)
+            changed_audio_artifact = module.run_benchmark(cases, temp_dir, "local-mock")
+
+        self.assertEqual(artifact["artifact_class"], "runtime_smoke")
+        self.assertEqual(artifact["summary"]["inference_completion_rate"], 1.0)
+        self.assertEqual(artifact["summary"]["quality_evaluated_cases"], 0)
+        self.assertNotIn("success_rate", artifact["summary"])
+        self.assertEqual(
+            artifact["records"][0]["evaluation_status"], "synthetic_mock_only"
+        )
+        self.assertEqual(
+            artifact["dataset_manifest"][0]["audio_sha256"],
+            artifact["records"][0]["audio_sha256"],
+        )
+        self.assertNotEqual(
+            first_dataset_fingerprint,
+            changed_audio_artifact["dataset_fingerprint"],
+        )
 
 
 if __name__ == "__main__":

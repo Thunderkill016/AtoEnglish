@@ -20,14 +20,21 @@ describe("Speech Challenger Core Contract", () => {
       version: "0.3.0",
       sha256: "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       configuration_id: "cfg-piper-en",
+      fingerprint_scope: "package-configuration-only",
+      checkpoint_sha256: null,
     },
     runtime_fingerprint: {
       runtime: "modal-container",
       python_version: "3.11.0",
       sha256: "ca978112ca1bbdcafac231b39a23dc4da786eff8147c4e72b9807785afee48bb",
       hardware_tier: "cpu",
+      packages: {
+        openpronounce: "0.3.0",
+      },
+      code_sha256: "a54d88e06612d820bc3be72877c74f257b561b19",
     },
-    success: true,
+    execution_status: "completed",
+    evaluation_status: "not_evaluated",
     latency_ms: 210,
     acoustic_distance: 4.2,
     phoneme_error_rate: 0.1,
@@ -66,6 +73,17 @@ describe("Speech Challenger Core Contract", () => {
     // Reject raw transcribe
     const withTranscribe = { ...validMockResult, transcribe: "TINK" };
     expect(validateChallengerDiagnosticIntegrity(withTranscribe)).toBe(false);
+
+    const missingEvaluationStatus = { ...validMockResult } as Record<string, unknown>;
+    delete missingEvaluationStatus.evaluation_status;
+    expect(validateChallengerDiagnosticIntegrity(missingEvaluationStatus)).toBe(false);
+
+    const unavailableWithZeroMetric = {
+      ...validMockResult,
+      execution_status: "unavailable",
+      acoustic_distance: 0,
+    };
+    expect(validateChallengerDiagnosticIntegrity(unavailableWithZeroMetric)).toBe(false);
   });
 
   it("creates observation with authority 'none' and shadow calibration", () => {
@@ -101,5 +119,26 @@ describe("Speech Challenger Core Contract", () => {
     expect(obs.payload.phonemeAlignments[0].expectedPhoneme).toBe("θ");
     expect(obs.payload.phonemeAlignments[0].observedPhoneme).toBe("t");
     expect(obs.payload.phonemeAlignments[0].operation).toBe("substitution");
+  });
+
+  it("keeps unavailable inference out of the observation boundary", () => {
+    const unavailable: SpeechChallengerResult = {
+      ...validMockResult,
+      execution_status: "unavailable",
+      error_code: "provider_unavailable:TimeoutError",
+      acoustic_distance: null,
+      phoneme_error_rate: null,
+      word_error_rate: null,
+      errors: [],
+    };
+
+    expect(() =>
+      createChallengerObservation("obs-unavailable", "target-sound-th", unavailable, {
+        populationTags: ["l1-vi", "learner-adult"],
+        construct: "phonology.segmental.acoustic-alignment",
+        noiseClass: "clean",
+        snrDb: null,
+      }),
+    ).toThrow("Unavailable challenger inference cannot become an observation");
   });
 });

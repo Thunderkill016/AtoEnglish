@@ -1,35 +1,72 @@
 {
   "benchmark_id": "nep-speech-challenger-v1",
+  "artifact_class": "runtime_smoke",
   "mode": "local-mock",
-  "started_at": "2026-09-04T08:18:41.954514+00:00",
-  "completed_at": "2026-09-04T08:18:41.985534+00:00",
-  "dataset_fingerprint": "48a458ad9d96ed32e265ee26b1d11e6992f6a490feb74487a288c44bd1bd8adb",
+  "started_at": "2026-09-04T08:52:04.318433+00:00",
+  "completed_at": "2026-09-04T08:52:04.339518+00:00",
+  "dataset_fingerprint": "600d31f848da153c7a483a357b78385accaa0622a5932b642ab255197db105fa",
+  "dataset_manifest": [
+    {
+      "case_id": "runtime-tone-001",
+      "target_text": "think",
+      "audio_file": "synthetic_sample.wav",
+      "fixture_class": "non_speech_synthetic",
+      "generator": {
+        "name": "python-sine-wave",
+        "version": "stdlib",
+        "parameters": "440Hz,1s,16kHz,mono,PCM16"
+      },
+      "audio_sha256": "e6f3e91de44c4ee9623ddff38a228b42aaa048895bc8f7bd362834cf33c241a9"
+    },
+    {
+      "case_id": "runtime-speech-001",
+      "target_text": "think",
+      "audio_file": "synthetic_speech_think.wav",
+      "fixture_class": "synthetic_speech",
+      "generator": {
+        "name": "espeak-ng",
+        "version": "1.51+dfsg-12build1",
+        "generator_license": "GPL-3.0-or-later",
+        "voice": "en-us",
+        "parameters": "speed=140,16-bit PCM WAV",
+        "source_text": "repository-authored single word"
+      },
+      "audio_sha256": "b0bf3fc3e177c60810ee7800b450be984751aa954f9e911715bc565cdb896089"
+    }
+  ],
   "summary": {
-    "total_cases": 3,
-    "successful_cases": 3,
-    "failed_cases": 0,
-    "success_rate": 1.0,
+    "total_cases": 2,
+    "inference_completed_cases": 2,
+    "inference_unavailable_cases": 0,
+    "inference_completion_rate": 1.0,
+    "quality_evaluated_cases": 0,
     "p50_latency_ms": 10,
     "p95_latency_ms": 10
   },
   "records": [
     {
-      "case_id": "case-001",
+      "case_id": "runtime-tone-001",
       "target_text": "think",
-      "success": true,
-      "error": null,
+      "fixture_class": "non_speech_synthetic",
+      "audio_sha256": "e6f3e91de44c4ee9623ddff38a228b42aaa048895bc8f7bd362834cf33c241a9",
+      "execution_status": "completed",
+      "evaluation_status": "synthetic_mock_only",
+      "error_code": null,
       "latency_ms": 10,
       "model_fingerprint": {
         "artifact_id": "nep-model-mock-challenger",
         "version": "1.0.0",
         "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
-        "configuration_id": "mock-baseline"
+        "configuration_id": "mock-baseline",
+        "fingerprint_scope": "synthetic-mock-identity",
+        "checkpoint_sha256": null
       },
       "runtime_fingerprint": {
         "runtime": "local-mock",
         "python_version": "3.11",
         "sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
-        "hardware_tier": "cpu"
+        "hardware_tier": "cpu",
+        "packages": {}
       },
       "acoustic_distance": 3.14,
       "phoneme_error_rate": 0.05,
@@ -57,72 +94,35 @@
       }
     },
     {
-      "case_id": "case-002",
-      "target_text": "thought",
-      "success": true,
-      "error": null,
+      "case_id": "runtime-speech-001",
+      "target_text": "think",
+      "fixture_class": "synthetic_speech",
+      "audio_sha256": "b0bf3fc3e177c60810ee7800b450be984751aa954f9e911715bc565cdb896089",
+      "execution_status": "completed",
+      "evaluation_status": "synthetic_mock_only",
+      "error_code": null,
       "latency_ms": 10,
       "model_fingerprint": {
         "artifact_id": "nep-model-mock-challenger",
         "version": "1.0.0",
         "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
-        "configuration_id": "mock-baseline"
+        "configuration_id": "mock-baseline",
+        "fingerprint_scope": "synthetic-mock-identity",
+        "checkpoint_sha256": null
       },
       "runtime_fingerprint": {
         "runtime": "local-mock",
         "python_version": "3.11",
         "sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
-        "hardware_tier": "cpu"
+        "hardware_tier": "cpu",
+        "packages": {}
       },
       "acoustic_distance": 3.14,
       "phoneme_error_rate": 0.05,
       "word_error_rate": 0.0,
       "errors": [
         {
-          "word": "thought",
-          "expected": "θ",
-          "actual": "t",
-          "confidence": 0.95,
-          "phones": [
-            {
-              "expected": "θ",
-              "heard": "t",
-              "confidence": 0.95
-            }
-          ]
-        }
-      ],
-      "prosody_summary": {
-        "f0_mean": 140.0,
-        "f0_std": 12.5,
-        "energy_mean": 25.0,
-        "energy_std": 4.2
-      }
-    },
-    {
-      "case_id": "case-003",
-      "target_text": "through",
-      "success": true,
-      "error": null,
-      "latency_ms": 10,
-      "model_fingerprint": {
-        "artifact_id": "nep-model-mock-challenger",
-        "version": "1.0.0",
-        "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
-        "configuration_id": "mock-baseline"
-      },
-      "runtime_fingerprint": {
-        "runtime": "local-mock",
-        "python_version": "3.11",
-        "sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
-        "hardware_tier": "cpu"
-      },
-      "acoustic_distance": 3.14,
-      "phoneme_error_rate": 0.05,
-      "word_error_rate": 0.0,
-      "errors": [
-        {
-          "word": "through",
+          "word": "think",
           "expected": "θ",
           "actual": "t",
           "confidence": 0.95,

@@ -1,34 +1,80 @@
 {
   "benchmark_id": "nep-speech-challenger-v1",
+  "artifact_class": "runtime_smoke",
   "mode": "modal",
-  "started_at": "2026-09-04T08:31:34.725931+00:00",
-  "completed_at": "2026-09-04T08:32:53.822645+00:00",
-  "dataset_fingerprint": "48a458ad9d96ed32e265ee26b1d11e6992f6a490feb74487a288c44bd1bd8adb",
+  "started_at": "2026-09-04T09:01:27.482196+00:00",
+  "completed_at": "2026-09-04T09:01:34.752067+00:00",
+  "dataset_fingerprint": "600d31f848da153c7a483a357b78385accaa0622a5932b642ab255197db105fa",
+  "dataset_manifest": [
+    {
+      "case_id": "runtime-tone-001",
+      "target_text": "think",
+      "audio_file": "synthetic_sample.wav",
+      "fixture_class": "non_speech_synthetic",
+      "generator": {
+        "name": "python-sine-wave",
+        "version": "stdlib",
+        "parameters": "440Hz,1s,16kHz,mono,PCM16"
+      },
+      "audio_sha256": "e6f3e91de44c4ee9623ddff38a228b42aaa048895bc8f7bd362834cf33c241a9"
+    },
+    {
+      "case_id": "runtime-speech-001",
+      "target_text": "think",
+      "audio_file": "synthetic_speech_think.wav",
+      "fixture_class": "synthetic_speech",
+      "generator": {
+        "name": "espeak-ng",
+        "version": "1.51+dfsg-12build1",
+        "generator_license": "GPL-3.0-or-later",
+        "voice": "en-us",
+        "parameters": "speed=140,16-bit PCM WAV",
+        "source_text": "repository-authored single word"
+      },
+      "audio_sha256": "b0bf3fc3e177c60810ee7800b450be984751aa954f9e911715bc565cdb896089"
+    }
+  ],
   "summary": {
-    "total_cases": 3,
-    "successful_cases": 3,
-    "failed_cases": 0,
-    "success_rate": 1.0,
-    "p50_latency_ms": 7673,
-    "p95_latency_ms": 68343
+    "total_cases": 2,
+    "inference_completed_cases": 2,
+    "inference_unavailable_cases": 0,
+    "inference_completion_rate": 1.0,
+    "quality_evaluated_cases": 0,
+    "p50_latency_ms": 4811,
+    "p95_latency_ms": 4811
   },
   "records": [
     {
-      "case_id": "case-001",
+      "case_id": "runtime-tone-001",
       "target_text": "think",
-      "success": true,
-      "latency_ms": 68343,
+      "fixture_class": "non_speech_synthetic",
+      "audio_sha256": "e6f3e91de44c4ee9623ddff38a228b42aaa048895bc8f7bd362834cf33c241a9",
+      "execution_status": "completed",
+      "evaluation_status": "not_evaluated",
+      "error_code": null,
+      "latency_ms": 4811,
       "model_fingerprint": {
         "artifact_id": "nep-model-openpronounce",
         "version": "0.3.0",
         "sha256": "dac15fd3e35db6c115277eeb5ce43a17dec9db39774f9323b313d4b917aead5f",
-        "configuration_id": "cfg-fa9b92e3acf2316a"
+        "configuration_id": "cfg-fa9b92e3acf2316a",
+        "fingerprint_scope": "package-configuration-only",
+        "checkpoint_sha256": null
       },
       "runtime_fingerprint": {
         "runtime": "modal-container",
         "python_version": "3.11.12",
-        "sha256": "62635dd44191e158a62a02a078fe6bf7700b0e637820e2cf7b419044abbca2ad",
-        "hardware_tier": "cpu-2core-4gb"
+        "sha256": "cd5b41d1a1da0b427b57ae0b5732b3299b74827545767768e189ac9738f98bc4",
+        "hardware_tier": "cpu-2core-4gb",
+        "packages": {
+          "fastapi": "0.141.1",
+          "modal": "not_installed",
+          "numpy": "2.4.6",
+          "openpronounce": "0.3.0",
+          "torch": "2.14.0+cpu",
+          "uvicorn": "0.52.4"
+        },
+        "code_sha256": "f2c33dc1266da573872c394a52745fd38d456d86b3fd903a918740b65d60ecbc"
       },
       "acoustic_distance": 17.649,
       "phoneme_error_rate": 1.0,
@@ -71,107 +117,46 @@
       }
     },
     {
-      "case_id": "case-002",
-      "target_text": "thought",
-      "success": true,
-      "latency_ms": 7673,
+      "case_id": "runtime-speech-001",
+      "target_text": "think",
+      "fixture_class": "synthetic_speech",
+      "audio_sha256": "b0bf3fc3e177c60810ee7800b450be984751aa954f9e911715bc565cdb896089",
+      "execution_status": "completed",
+      "evaluation_status": "not_evaluated",
+      "error_code": null,
+      "latency_ms": 2459,
       "model_fingerprint": {
         "artifact_id": "nep-model-openpronounce",
         "version": "0.3.0",
         "sha256": "dac15fd3e35db6c115277eeb5ce43a17dec9db39774f9323b313d4b917aead5f",
-        "configuration_id": "cfg-fa9b92e3acf2316a"
+        "configuration_id": "cfg-fa9b92e3acf2316a",
+        "fingerprint_scope": "package-configuration-only",
+        "checkpoint_sha256": null
       },
       "runtime_fingerprint": {
         "runtime": "modal-container",
         "python_version": "3.11.12",
-        "sha256": "62635dd44191e158a62a02a078fe6bf7700b0e637820e2cf7b419044abbca2ad",
-        "hardware_tier": "cpu-2core-4gb"
+        "sha256": "cd5b41d1a1da0b427b57ae0b5732b3299b74827545767768e189ac9738f98bc4",
+        "hardware_tier": "cpu-2core-4gb",
+        "packages": {
+          "fastapi": "0.141.1",
+          "modal": "not_installed",
+          "numpy": "2.4.6",
+          "openpronounce": "0.3.0",
+          "torch": "2.14.0+cpu",
+          "uvicorn": "0.52.4"
+        },
+        "code_sha256": "f2c33dc1266da573872c394a52745fd38d456d86b3fd903a918740b65d60ecbc"
       },
-      "acoustic_distance": 17.17,
-      "phoneme_error_rate": 1.0,
-      "word_error_rate": 1.0,
-      "errors": [
-        {
-          "word": "thought",
-          "expected": "θɑt",
-          "actual": null,
-          "confidence": 1.0,
-          "phones": [
-            {
-              "expected": "θ",
-              "heard": null,
-              "confidence": 0.989
-            },
-            {
-              "expected": "ɑ",
-              "heard": null,
-              "confidence": 0.996
-            },
-            {
-              "expected": "t",
-              "heard": null,
-              "confidence": 0.455
-            }
-          ]
-        }
-      ],
+      "acoustic_distance": 8.202,
+      "phoneme_error_rate": 0.0,
+      "word_error_rate": 0.0,
+      "errors": [],
       "prosody_summary": {
-        "f0_mean": 220.63576443274914,
-        "f0_std": 1.4210854715202004e-13,
-        "energy_mean": 233.3255406429893,
-        "energy_std": 51.331370084387686
-      }
-    },
-    {
-      "case_id": "case-003",
-      "target_text": "through",
-      "success": true,
-      "latency_ms": 3080,
-      "model_fingerprint": {
-        "artifact_id": "nep-model-openpronounce",
-        "version": "0.3.0",
-        "sha256": "dac15fd3e35db6c115277eeb5ce43a17dec9db39774f9323b313d4b917aead5f",
-        "configuration_id": "cfg-fa9b92e3acf2316a"
-      },
-      "runtime_fingerprint": {
-        "runtime": "modal-container",
-        "python_version": "3.11.12",
-        "sha256": "62635dd44191e158a62a02a078fe6bf7700b0e637820e2cf7b419044abbca2ad",
-        "hardware_tier": "cpu-2core-4gb"
-      },
-      "acoustic_distance": 16.71,
-      "phoneme_error_rate": 1.0,
-      "word_error_rate": 1.0,
-      "errors": [
-        {
-          "word": "through",
-          "expected": "θɹu",
-          "actual": null,
-          "confidence": 1.0,
-          "phones": [
-            {
-              "expected": "θ",
-              "heard": null,
-              "confidence": 0.989
-            },
-            {
-              "expected": "ɹ",
-              "heard": null,
-              "confidence": 0.985
-            },
-            {
-              "expected": "u",
-              "heard": null,
-              "confidence": 0.333
-            }
-          ]
-        }
-      ],
-      "prosody_summary": {
-        "f0_mean": 220.63576443274914,
-        "f0_std": 1.4210854715202004e-13,
-        "energy_mean": 233.3255406429893,
-        "energy_std": 51.331370084387686
+        "f0_mean": 85.68058833795172,
+        "f0_std": 13.043331089097563,
+        "energy_mean": 60.49397722880045,
+        "energy_std": 81.43692997237827
       }
     }
   ]
