@@ -218,3 +218,7 @@ A subsystem may affect durable learner assessment only when:
 10. monitoring can detect drift after model/data/device changes.
 
 Changing a model, checkpoint, threshold, prompt, feature extractor, major preprocessing path or calibration population creates a new evaluation fingerprint and may require recalibration.
+
+## Repository reference artifacts
+
+A deterministic artifact may benchmark contract behavior for the exact repository cases it executes, but its observations remain `unvalidated`, `shadow`, and authority `none`. Reference validation is a separate path from durable certification and cannot grant learner-facing or production authority. Such an artifact must state its repository-only scope, retain residual unknowns, and avoid presenting fixture weights, schedules, or state transitions as empirically calibrated learner parameters. Durable certification additionally requires an independently resolved authority grant that matches the benchmark, evaluator fingerprint, decision, authority, and calibration scope. Promotion still requires the production-authority evidence above.

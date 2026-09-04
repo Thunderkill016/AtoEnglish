@@ -192,3 +192,9 @@ Before further web feature work, establish:
 9. one pure-core end-to-end reference test.
 
 Only after those contracts are stable should product surfaces consume them.
+
+## First executable reference slice
+
+Issue #124 exercises one deliberately narrow written-production capability: independently recalling a formulaic request for repetition. The deterministic repository fixture covers unavailable evaluation, supported success, independent failure, bounded feedback and retry, independent success, a provisional declarative-retrieval prescription, and a materially changed near-transfer context.
+
+This slice is contract evidence only. It does not establish learner calibration, production authority, spontaneous communicative transfer, or validity of the legacy EMA routing weights. Public benchmark state is emitted through uncertainty-aware learner-state reads so an unobserved dimension remains `unknown` with a null estimate rather than appearing as zero. The one-day retrieval delay is an explicit fixture input, not an optimized FSRS/DSR interval.
