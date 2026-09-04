@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+import math
 from typing import Sequence
 
 from sklearn.metrics import f1_score, log_loss, roc_auc_score
@@ -23,8 +24,8 @@ def evaluate_binary_probabilities(labels: Sequence[int], probabilities: Sequence
         raise ValueError("cannot evaluate an empty prediction set")
     if any(label not in {0, 1} for label in labels):
         raise ValueError("labels must be binary 0/1")
-    if any(probability < 0.0 or probability > 1.0 for probability in probabilities):
-        raise ValueError("probabilities must be within [0, 1]")
+    if any(not math.isfinite(probability) or probability < 0.0 or probability > 1.0 for probability in probabilities):
+        raise ValueError("probabilities must be finite and within [0, 1]")
     if len(set(labels)) < 2:
         raise ValueError("AUC is undefined when only one class is present")
 
