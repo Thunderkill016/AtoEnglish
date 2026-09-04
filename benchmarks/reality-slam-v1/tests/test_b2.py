@@ -1,0 +1,74 @@
+from __future__ import annotations
+
+from pathlib import Path
+import sys
+import unittest
+
+SCRIPTS = Path(__file__).resolve().parents[1] / "scripts"
+sys.path.insert(0, str(SCRIPTS))
+
+from history import CausalHistory  # noqa: E402
+from run_b2 import DEFAULT_ALPHA, DEFAULT_SEED, HASH_DIMENSIONS, _fit_rows, _predict_blind  # noqa: E402
+from slam_io import parse_slam_lines  # noqa: E402
+from sklearn.feature_extraction import FeatureHasher  # noqa: E402
+from sklearn.linear_model import SGDClassifier  # noqa: E402
+
+
+TRAIN = """# user:D2inSf5+ countries:MX days:1.0 client:web session:lesson format:reverse_translate time:3
+8rgJEAPw1001 word NOUN Number=Sing ROOT 0 1
+8rgJEAPw1002 other NOUN Number=Sing ROOT 0 0
+
+# user:D2inSf5+ countries:MX days:1.5 client:web session:practice format:reverse_translate time:2
+8rgJEAPw1101 word NOUN Number=Sing ROOT 0 0
+8rgJEAPw1102 other NOUN Number=Sing ROOT 0 1
+
+"""
+
+DEV = """# user:D2inSf5+ countries:MX days:2.0 client:web session:practice format:reverse_translate time:2
+8rgJEAPw1201 word NOUN Number=Sing ROOT 0
+8rgJEAPw1202 other NOUN Number=Sing ROOT 0
+
+"""
+
+
+class B2SmokeTest(unittest.TestCase):
+    def test_blind_predictions_do_not_require_dev_labels(self) -> None:
+        train_exercises = list(parse_slam_lines(TRAIN.splitlines(keepends=True), "train"))
+        dev_exercises = list(parse_slam_lines(DEV.splitlines(keepends=True), "dev"))
+
+        hasher = FeatureHasher(n_features=HASH_DIMENSIONS, input_type="dict", alternate_sign=False)
+        model = SGDClassifier(
+            loss="log_loss",
+            penalty="l2",
+            alpha=DEFAULT_ALPHA,
+            random_state=DEFAULT_SEED,
+            shuffle=False,
+            average=True,
+            fit_intercept=True,
+        )
+        history = CausalHistory()
+        did_fit = _fit_rows(
+            model,
+            hasher,
+            history,
+            train_exercises,
+            labels_by_token=None,
+            batch_size=2,
+            first_fit=True,
+        )
+        self.assertTrue(did_fit)
+
+        token_ids, probabilities = _predict_blind(
+            model,
+            hasher,
+            history,
+            dev_exercises,
+            batch_size=1,
+        )
+        self.assertEqual(token_ids, ["8rgJEAPw1201", "8rgJEAPw1202"])
+        self.assertEqual(len(probabilities), 2)
+        self.assertTrue(all(0.0 <= p <= 1.0 for p in probabilities))
+
+
+if __name__ == "__main__":
+    unittest.main()
