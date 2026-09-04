@@ -1,57 +1,52 @@
 # Contract: Learner Evidence State V1
 
-- **Contract Identifier**: `nep.learner-evidence-state.v1`.
-- **Contract Version**: `1`.
-- **Construct Key Grammar**: `nep.en.v1.<domain>.<slug>` where `<domain>` is `language-system` or `communication-activity`.
-- **Ontology Invariant**: Every evaluated construct key MUST resolve to a valid node in the provided `nep.english-ontology.v1` graph. Unknown nodes are rejected fail-closed with `unknown-ontology-node`.
-- **Evidence Certification Boundary & Ingress Authentication**:
-  - Raw observations, UI clicks, and uncertified model predictions are strictly rejected (`unvalidated-evidence-rejected`).
-  - Evidence ingress strictly consumes in-process branded `CoreEvidenceForRouting` authenticated by `src/lib/core/certified-evidence.ts` (`certifyCoreEvidence()` or `validateReferenceCoreEvidence()`).
-  - Detached evidence envelopes (`CoreEvidenceEnvelope`, `nep.core-evidence-envelope.v1`) are strictly untrusted transport artifacts. Unhydrated envelopes or raw objects directly submitted to learner-state ingress fail closed (`unvalidated-evidence-rejected`).
-  - Hydration of detached reference envelopes requires an explicit, authenticated in-process validation step (`hydrateReferenceCoreEvidenceFromEnvelope(rawEnvelope, task, observation)`) against authentic task and observation objects before entering learner state.
-  - Recomputing public SHA-256 digests on detached envelopes does NOT upgrade them into in-process branded evidence; public digests provide content integrity only, not origin authentication.
-  - Trust markers (`markCertifiedCoreEvidence`, `markReferenceCoreEvidence`) are module-private and strictly non-exported; external callers cannot mark arbitrary objects.
-  - All certified and reference evidence objects are deeply immutable (`deepFreeze` applied recursively across `evidence`, `attempt`, `outcome`, `contextTags`); attempted mutation throws `TypeError` in strict mode, and cloned objects fail validation.
-  - Sealing evidence via `sealCoreEvidence` produces canonical envelopes for both durable and reference evidence scopes symmetrically, requiring an explicit, valid ISO 8601 `sealedAt` timestamp parameter with zero ambient clock reads (`new Date()`).
-  - Parser `parseCoreEvidenceEnvelope()` is a total, non-throwing validator across all primitive and nested structures, verifying SHA-256 integrity digests symmetrically without upgrading transport data into in-process branded evidence.
-  - Durable assessment evidence strictly requires non-empty `calibrationBenchmarkId`, valid `grantId`, and authentic `modelFingerprint` (cannot be empty, whitespace, or 'unknown').
-  - Repository reference evidence strictly requires `calibrationBenchmarkId: null`, `grantId: null`, and authentic `modelFingerprint`.
-  - Caller self-asserted or fabricated evidence objects and invalid authority scopes fail closed with `unvalidated-evidence-rejected`.
-- **Activity Compatibility**:
-  - If target node is a communication-activity (`domain: "communication-activity"`), event `activity` MUST match `targetNode.activity`. Violation yields `incompatible-activity`.
-- **Modality & Role Invariant**:
-  - Event `role` must be declared in the target node's `allowedEvidenceRoles`. Violation yields `incompatible-evidence-role`.
-  - Event `responseModality` must be compatible with the target node's declared `modalities`. Violation yields `incompatible-modality`.
-  - Receptive/recognition evidence can never increment productive or transfer support.
-- **Transfer Boundary & Strict 1:1 Gating**:
-  - Strict 1:1 pairing between transfer role and transfer distance:
-    - `near-transfer` distance strictly requires `near-transfer` evidence role.
-    - `far-transfer` distance strictly requires `far-transfer` evidence role.
-    - `same-context` distance cannot be paired with transfer roles (`near-transfer` or `far-transfer`).
-    - Violation fails closed with `incompatible-evidence-role` or `invalid-transfer-distance`.
-  - Transfer claims require a non-empty `contextId` and demonstrable prior distinct baseline context (`prev.contextIds.length >= 1`).
-  - First-ever events labeled near/far-transfer fail closed with `invalid-transfer-distance` due to absence of prior comparison baseline context.
-  - Attempted transfer evidence NEVER converts into `sameContextCount`. Failed near/far-transfer attempts increment `nearTransferFailedCount` or `farTransferFailedCount`.
-  - Transfer claims with duplicate already-seen `contextId` fail closed with `invalid-transfer-distance` and leave `sameContextCount` unchanged.
-- **Sufficiency & Epistemic Uncertainty**:
-  - Zero events evaluate strictly to `status: "unknown"`, `provisionalRoutingScore: null`, `uncertainty: "maximal"`.
-  - Conflicting positive and negative events evaluate to `status: "conflicted-support"`, suppressing scalar score to prevent false neutral averaging.
-  - State projection outputs `decisionScope: "routing-only"`. It contains NO boolean `mastered: boolean` flag.
-  - Repository-reference evidence can only support provisional routing projections; it cannot claim durable assessment authority.
-- **Event Identity & Replay Idempotency**:
-  - Every event MUST have a non-empty string `eventId`.
-  - Duplicate `eventId` occurrences against both accepted events and rejected audits are rejected fail-closed with `duplicate-event-id`.
-  - Conflicting records with identical `(occurredAt, eventId)` are resolved deterministically via canonical JSON tie-breaking.
-- **Determinism & Reducer Equivalence**:
-  - Events are sorted canonically by `(occurredAt, eventId)` prior to reduction.
-  - Iterative reduction via `reduceLearnerState` produces byte-identical output to batch `projectLearnerState` even under arbitrary or reverse arrival order.
-- **Lineage Preservation & Replay Provenance Fidelity**:
-  - State projections retain authentic accepted event lineage audits (`acceptedEvents`) including `observationId`, `taskId`, `contextTags`, `outcome: EvidenceOutcome`, and `grantId`.
-  - Replay reconstruction (`reconstructAcceptedRecord`) uses actual lineage fields rather than synthetic ID placeholders.
-  - Retains support level distributions (`supportDistribution`), reveal usage (`revealUsedCount`), and durable vs reference evidence counts.
-- **Legacy Compatibility Adapter**:
-  - Adapter `readConstructFromLearnerState` and `adaptLearnerStateToLegacyRead` preserve `modelVersion: "nep.learner-evidence-state.v1"` (never `"ema-routing-v1"`).
-  - Explicitly distinguishes `insufficient-support` (`legacyStatus: "insufficient"`) and `conflicted-support` (`legacyStatus: "conflicted"`), never collapsing them into `unknown`.
-- **Purity**:
-  - Zero ambient clock reads (`Date.now()`); all timestamps are supplied as explicit ISO 8601 strings.
-  - Pure deterministic computation with zero database, network, browser, or random dependencies.
+**ID**: `nep.learner-evidence-state.v1`  
+**Version**: 1
+
+## Evidence ingress
+
+- Raw observations, UI events, model scores, arbitrary records, detached envelopes, and parsed payloads are not learner evidence.
+- Learner state accepts only in-process branded `CoreEvidenceForRouting` issued by `certifyCoreEvidence()` or `validateReferenceCoreEvidence()`.
+- Trust markers are module-private; branded evidence is recursively frozen and loses trust identity when cloned/serialized.
+- Repository-reference evidence may affect provisional routing only; durable evidence requires the independent authority path already owned by `certified-evidence.ts` / authority registry.
+
+## Detached transport
+
+- `sealCoreEvidence(evidence, sealedAt)` requires genuine branded evidence and an explicit valid timestamp.
+- `parseCoreEvidenceEnvelope()` is total/non-throwing and validates structure + SHA-256 integrity for durable and reference envelopes without branding the result.
+- Public SHA-256 is integrity, not provenance authentication.
+- **No detached transport payload can acquire learner-state branding in V1.**
+- `hydrateReferenceCoreEvidenceFromEnvelope()` is compatibility-only and succeeds solely when the supplied in-process envelope still contains an already-branded reference evidence object. A detached/JSON-cloned/rehashed envelope returns `invalid-envelope`.
+- A future persisted-envelope authentication/hydration design is a separate contract and benchmark/review task.
+
+## Ontology / activity / modality / role
+
+- Every target resolves to a canonical executable ontology node.
+- Communication-activity target requires matching event activity.
+- Role and response modality must be allowed by the target node.
+- Recognition/receptive evidence cannot silently create retrieval, production, retention, or transfer support.
+
+## Transfer
+
+- `near-transfer` role <-> `near-transfer` distance; `far-transfer` role <-> `far-transfer` distance; non-transfer roles use `same-context`.
+- Transfer requires non-empty context, an already accepted prior distinct baseline context, and a changed context.
+- First-event, duplicate-context, or role/distance-mismatched transfer fails closed.
+- Failed near/far transfer increments the corresponding failed counter and never becomes same-context support.
+
+## State / uncertainty
+
+- No evidence -> explicit unknown, null routing score, maximal uncertainty.
+- Conflict remains `conflicted-support`; no false neutral scalar.
+- Projection declares `decisionScope: "routing-only"`; no `mastered` flag.
+
+## Replay / lineage
+
+- Accepted event identity and original lineage are retained.
+- Duplicate IDs are rejected.
+- Canonical ordering by `(occurredAt,eventId)` plus deterministic tie-breaking yields byte-equivalent batch/incremental replay.
+- Support/reveal, transfer failure, and durable/reference statistics remain auditable.
+
+## Compatibility / purity
+
+- Legacy read adapters preserve `modelVersion: "nep.learner-evidence-state.v1"` and do not collapse insufficient/conflicted into unknown.
+- No ambient clock, random source, DB, network, browser, provider, UI, deploy, or production-write dependency.

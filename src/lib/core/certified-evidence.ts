@@ -1,5 +1,4 @@
 import crypto from "node:crypto";
-import { CORE_EVIDENCE_ROLES, type CoreEvidenceRole } from "./evidence-role";
 import type { ResponseModality } from "@/lib/learning/evidence";
 import {
   type ResolvedDurableCalibrationAuthority,
@@ -10,6 +9,7 @@ import {
   COMMUNICATION_ACTIVITIES,
   type CommunicationActivity,
 } from "./domain";
+import { CORE_EVIDENCE_ROLES, type CoreEvidenceRole } from "./evidence-role";
 import {
   canAffectDurableAssessment,
   type CalibrationProfile,
@@ -103,26 +103,20 @@ export type ReferenceEvidenceValidationResult =
 
 const CERTIFIED_CORE_EVIDENCE_BRAND = Symbol("nep.certified-core-evidence");
 const REFERENCE_CORE_EVIDENCE_BRAND = Symbol("nep.reference-core-evidence");
-
 const CERTIFIED_CORE_EVIDENCE_SET = new WeakSet<object>();
 const REFERENCE_CORE_EVIDENCE_SET = new WeakSet<object>();
 
-/** Recursively freezes an object and its nested properties. */
 function deepFreeze<T extends object>(obj: T): Readonly<T> {
   Object.freeze(obj);
   for (const key of Object.getOwnPropertyNames(obj)) {
-    const val = (obj as Record<string, unknown>)[key];
-    if (val && typeof val === "object" && !Object.isFrozen(val)) {
-      deepFreeze(val);
+    const value = (obj as Record<string, unknown>)[key];
+    if (value && typeof value === "object" && !Object.isFrozen(value)) {
+      deepFreeze(value);
     }
   }
   return obj;
 }
 
-/**
- * Module-private trust marker. Never exported.
- * Deeply freezes evidence and marks it in the module-private WeakSet and symbol brand.
- */
 function markCertifiedCoreEvidence<T extends CertifiedCoreEvidence>(evidence: T): Readonly<T> {
   Object.defineProperty(evidence, CERTIFIED_CORE_EVIDENCE_BRAND, {
     value: true,
@@ -135,10 +129,6 @@ function markCertifiedCoreEvidence<T extends CertifiedCoreEvidence>(evidence: T)
   return frozen;
 }
 
-/**
- * Module-private trust marker. Never exported.
- * Deeply freezes evidence and marks it in the module-private WeakSet and symbol brand.
- */
 function markReferenceCoreEvidence<T extends ReferenceCoreEvidence>(evidence: T): Readonly<T> {
   Object.defineProperty(evidence, REFERENCE_CORE_EVIDENCE_BRAND, {
     value: true,
@@ -151,24 +141,24 @@ function markReferenceCoreEvidence<T extends ReferenceCoreEvidence>(evidence: T)
   return frozen;
 }
 
-export function isCertifiedCoreEvidence(val: unknown): val is CertifiedCoreEvidence {
-  if (!val || typeof val !== "object" || !Object.isFrozen(val)) return false;
+export function isCertifiedCoreEvidence(value: unknown): value is CertifiedCoreEvidence {
+  if (!value || typeof value !== "object" || !Object.isFrozen(value)) return false;
   return (
-    CERTIFIED_CORE_EVIDENCE_SET.has(val) &&
-    (val as Record<string, unknown>)[CERTIFIED_CORE_EVIDENCE_BRAND as unknown as string] === true
+    CERTIFIED_CORE_EVIDENCE_SET.has(value) &&
+    (value as Record<string, unknown>)[CERTIFIED_CORE_EVIDENCE_BRAND as unknown as string] === true
   );
 }
 
-export function isReferenceCoreEvidence(val: unknown): val is ReferenceCoreEvidence {
-  if (!val || typeof val !== "object" || !Object.isFrozen(val)) return false;
+export function isReferenceCoreEvidence(value: unknown): value is ReferenceCoreEvidence {
+  if (!value || typeof value !== "object" || !Object.isFrozen(value)) return false;
   return (
-    REFERENCE_CORE_EVIDENCE_SET.has(val) &&
-    (val as Record<string, unknown>)[REFERENCE_CORE_EVIDENCE_BRAND as unknown as string] === true
+    REFERENCE_CORE_EVIDENCE_SET.has(value) &&
+    (value as Record<string, unknown>)[REFERENCE_CORE_EVIDENCE_BRAND as unknown as string] === true
   );
 }
 
-export function isCoreEvidenceForRouting(val: unknown): val is CoreEvidenceForRouting {
-  return isCertifiedCoreEvidence(val) || isReferenceCoreEvidence(val);
+export function isCoreEvidenceForRouting(value: unknown): value is CoreEvidenceForRouting {
+  return isCertifiedCoreEvidence(value) || isReferenceCoreEvidence(value);
 }
 
 const INDEPENDENT_EVIDENCE_ROLES: readonly CoreEvidenceRole[] = [
@@ -178,10 +168,6 @@ const INDEPENDENT_EVIDENCE_ROLES: readonly CoreEvidenceRole[] = [
   "far-transfer",
 ];
 
-/**
- * Converts a typed observation into durable evidence only when task semantics, support state and
- * the scoped calibration envelope all agree. Failure is explicit and produces no evidence.
- */
 export function certifyCoreEvidence(
   task: CoreTaskSpec,
   observation: CoreObservation,
@@ -205,13 +191,13 @@ export function certifyCoreEvidence(
   ) {
     problems.push({ type: "independent-authority-mismatch" });
   }
+
   if (!canAffectDurableAssessment(observation)) {
     problems.push({ type: "observation-not-authoritative" });
   }
   if (!observation.calibration.benchmarkId) {
     problems.push({ type: "missing-calibration-benchmark" });
   }
-
   if (problems.length > 0) return { ok: false, problems };
 
   return {
@@ -230,7 +216,6 @@ export function certifyCoreEvidence(
   };
 }
 
-/** Validates a deterministic repository fixture without granting durable learner authority. */
 export function validateReferenceCoreEvidence(
   task: CoreTaskSpec,
   observation: CoreObservation,
@@ -381,9 +366,7 @@ export type CoreEvidenceEnvelope = {
 export function computeCanonicalEvidenceDigest(
   evidence: CoreEvidenceForRouting | CoreEvidencePayload,
 ): string {
-  const contextTags = Array.isArray(evidence.contextTags)
-    ? [...evidence.contextTags].sort()
-    : [];
+  const contextTags = Array.isArray(evidence.contextTags) ? [...evidence.contextTags].sort() : [];
   const canonicalPayload = {
     eventId: evidence.eventId,
     taskId: evidence.taskId,
@@ -408,7 +391,7 @@ export function computeCanonicalEvidenceDigest(
     modelFingerprint: evidence.modelFingerprint,
     grantId: evidence.grantId,
   };
-  return "sha256:" + crypto.createHash("sha256").update(JSON.stringify(canonicalPayload), "utf8").digest("hex");
+  return `sha256:${crypto.createHash("sha256").update(JSON.stringify(canonicalPayload), "utf8").digest("hex")}`;
 }
 
 export function sealCoreEvidence(
@@ -418,18 +401,13 @@ export function sealCoreEvidence(
   if (!isCoreEvidenceForRouting(evidence)) {
     throw new Error("Cannot seal evidence that is not authenticated by certified-evidence module");
   }
-  if (
-    typeof sealedAt !== "string" ||
-    !sealedAt.trim() ||
-    !Number.isFinite(Date.parse(sealedAt))
-  ) {
+  if (!isValidIsoTimestamp(sealedAt)) {
     throw new Error("sealCoreEvidence requires an explicit valid ISO 8601 sealedAt timestamp");
   }
-  const digest = computeCanonicalEvidenceDigest(evidence);
   return deepFreeze({
     contractId: CORE_EVIDENCE_ENVELOPE_CONTRACT,
     evidence,
-    digest,
+    digest: computeCanonicalEvidenceDigest(evidence),
     authorityScope: evidence.authorityScope,
     sealedAt,
   });
@@ -441,82 +419,46 @@ export type ParsedCoreEvidenceEnvelopeResult =
       readonly envelope: Readonly<CoreEvidenceEnvelope>;
       readonly evidence: Readonly<CoreEvidencePayload>;
     }
-  | {
-      readonly ok: false;
-      readonly error: string;
-    };
+  | { readonly ok: false; readonly error: string };
 
-export function parseCoreEvidenceEnvelope(
-  raw: unknown,
-): ParsedCoreEvidenceEnvelopeResult {
-  if (!raw || typeof raw !== "object" || Array.isArray(raw)) {
-    return { ok: false, error: "Envelope must be a non-null object" };
+export function parseCoreEvidenceEnvelope(raw: unknown): ParsedCoreEvidenceEnvelopeResult {
+  try {
+    return parseCoreEvidenceEnvelopeUnsafe(raw);
+  } catch {
+    return { ok: false, error: "Malformed envelope" };
   }
-  const env = raw as Record<string, unknown>;
+}
+
+function parseCoreEvidenceEnvelopeUnsafe(raw: unknown): ParsedCoreEvidenceEnvelopeResult {
+  if (!isPlainRecord(raw)) return { ok: false, error: "Envelope must be a non-null object" };
+  const env = raw;
+
   if (env.contractId !== CORE_EVIDENCE_ENVELOPE_CONTRACT) {
     return { ok: false, error: `Invalid envelope contractId: ${String(env.contractId)}` };
   }
-  if (
-    typeof env.sealedAt !== "string" ||
-    !env.sealedAt.trim() ||
-    !Number.isFinite(Date.parse(env.sealedAt))
-  ) {
+  if (!isValidIsoTimestamp(env.sealedAt)) {
     return { ok: false, error: "Envelope requires a valid ISO 8601 sealedAt timestamp" };
   }
-  if (
-    env.authorityScope !== "durable-assessment" &&
-    env.authorityScope !== "repository-reference"
-  ) {
-    return {
-      ok: false,
-      error: "Envelope authorityScope must be 'durable-assessment' or 'repository-reference'",
-    };
+  if (!isAuthorityScope(env.authorityScope)) {
+    return { ok: false, error: "Invalid envelope authorityScope" };
   }
-  if (
-    typeof env.digest !== "string" ||
-    !env.digest.startsWith("sha256:") ||
-    env.digest.length !== 71
-  ) {
-    return { ok: false, error: "Envelope requires a valid sha256: digest string" };
+  if (typeof env.digest !== "string" || !/^sha256:[0-9a-f]{64}$/.test(env.digest)) {
+    return { ok: false, error: "Envelope requires a valid sha256 digest" };
   }
-
-  const ev = env.evidence as Record<string, unknown> | undefined;
-  if (!ev || typeof ev !== "object" || Array.isArray(ev)) {
+  if (!isPlainRecord(env.evidence)) {
     return { ok: false, error: "Envelope must contain an evidence object" };
   }
 
-  // Validate structural evidence properties
-  if (typeof ev.eventId !== "string" || !ev.eventId.trim()) {
-    return { ok: false, error: "Invalid eventId" };
-  }
-  if (typeof ev.taskId !== "string" || !ev.taskId.trim()) {
-    return { ok: false, error: "Invalid taskId" };
-  }
-  if (typeof ev.targetId !== "string" || !ev.targetId.trim()) {
-    return { ok: false, error: "Invalid targetId" };
-  }
-  if (typeof ev.observationId !== "string" || !ev.observationId.trim()) {
-    return { ok: false, error: "Invalid observationId" };
-  }
-  if (
-    typeof ev.occurredAt !== "string" ||
-    !ev.occurredAt.trim() ||
-    !Number.isFinite(Date.parse(ev.occurredAt))
-  ) {
-    return { ok: false, error: "Invalid occurredAt" };
-  }
-  if (
-    typeof ev.modelFingerprint !== "string" ||
-    !ev.modelFingerprint.trim() ||
-    ev.modelFingerprint.trim().toLowerCase() === "unknown"
-  ) {
+  const ev = env.evidence;
+  if (!isNonEmptyString(ev.eventId)) return { ok: false, error: "Invalid eventId" };
+  if (!isNonEmptyString(ev.taskId)) return { ok: false, error: "Invalid taskId" };
+  if (!isNonEmptyString(ev.targetId)) return { ok: false, error: "Invalid targetId" };
+  if (!isNonEmptyString(ev.observationId)) return { ok: false, error: "Invalid observationId" };
+  if (!isValidIsoTimestamp(ev.occurredAt)) return { ok: false, error: "Invalid occurredAt" };
+  if (!isNonEmptyString(ev.modelFingerprint) || ev.modelFingerprint.trim().toLowerCase() === "unknown") {
     return { ok: false, error: "Invalid modelFingerprint" };
   }
-
-  if (
-    typeof ev.role !== "string" ||
-    !CORE_EVIDENCE_ROLES.includes(ev.role as CoreEvidenceRole)
-  ) {
+  if (typeof ev.role !== "string" || !CORE_EVIDENCE_ROLES.includes(ev.role as CoreEvidenceRole)) {
     return { ok: false, error: `Invalid role: ${String(ev.role)}` };
   }
   if (
@@ -525,10 +467,7 @@ export function parseCoreEvidenceEnvelope(
   ) {
     return { ok: false, error: `Invalid activity: ${String(ev.activity)}` };
   }
-  if (
-    typeof ev.responseModality !== "string" ||
-    !VALID_RESPONSE_MODALITIES.has(ev.responseModality)
-  ) {
+  if (typeof ev.responseModality !== "string" || !VALID_RESPONSE_MODALITIES.has(ev.responseModality)) {
     return { ok: false, error: `Invalid responseModality: ${String(ev.responseModality)}` };
   }
   if (
@@ -537,25 +476,21 @@ export function parseCoreEvidenceEnvelope(
   ) {
     return { ok: false, error: `Invalid transferDistance: ${String(ev.transferDistance)}` };
   }
-  if (
-    !Array.isArray(ev.contextTags) ||
-    !ev.contextTags.every((t) => typeof t === "string")
-  ) {
+  if (!Array.isArray(ev.contextTags) || !ev.contextTags.every((tag) => typeof tag === "string")) {
     return { ok: false, error: "Invalid contextTags: must be an array of strings" };
   }
-
-  // Check authorityScope coherence
-  if (ev.authorityScope !== env.authorityScope) {
+  if (ev.authorityScope !== env.authorityScope || !isAuthorityScope(ev.authorityScope)) {
     return { ok: false, error: "Evidence authorityScope does not match envelope authorityScope" };
   }
+
   if (ev.authorityScope === "durable-assessment") {
-    if (typeof ev.calibrationBenchmarkId !== "string" || !ev.calibrationBenchmarkId.trim()) {
+    if (!isNonEmptyString(ev.calibrationBenchmarkId)) {
       return { ok: false, error: "Durable evidence requires non-empty calibrationBenchmarkId" };
     }
-    if (typeof ev.grantId !== "string" || !ev.grantId.trim()) {
+    if (!isNonEmptyString(ev.grantId)) {
       return { ok: false, error: "Durable evidence requires non-empty grantId" };
     }
-  } else if (ev.authorityScope === "repository-reference") {
+  } else {
     if (ev.calibrationBenchmarkId !== null) {
       return { ok: false, error: "Reference evidence must have null calibrationBenchmarkId" };
     }
@@ -564,11 +499,8 @@ export function parseCoreEvidenceEnvelope(
     }
   }
 
-  // Check attempt
-  const attempt = ev.attempt as Record<string, unknown> | undefined;
-  if (!attempt || typeof attempt !== "object" || Array.isArray(attempt)) {
-    return { ok: false, error: "Invalid attempt object" };
-  }
+  if (!isPlainRecord(ev.attempt)) return { ok: false, error: "Invalid attempt object" };
+  const attempt = ev.attempt;
   if (
     typeof attempt.supportLevel !== "number" ||
     !Number.isInteger(attempt.supportLevel) ||
@@ -597,12 +529,15 @@ export function parseCoreEvidenceEnvelope(
     return { ok: false, error: "Invalid attempt.contextId" };
   }
 
-  // Check outcome
-  const outcome = ev.outcome as Record<string, unknown> | undefined;
-  if (!outcome || typeof outcome !== "object" || Array.isArray(outcome)) {
-    return { ok: false, error: "Invalid outcome object" };
-  }
-  if (outcome.kind === "bounded-score") {
+  if (!isPlainRecord(ev.outcome)) return { ok: false, error: "Invalid outcome object" };
+  const outcome = ev.outcome;
+  let typedOutcome: EvidenceOutcome;
+  if (outcome.kind === "binary") {
+    if (typeof outcome.success !== "boolean") {
+      return { ok: false, error: "Invalid binary outcome" };
+    }
+    typedOutcome = { kind: "binary", success: outcome.success };
+  } else if (outcome.kind === "bounded-score") {
     const { value, min, max } = outcome;
     if (
       typeof value !== "number" ||
@@ -617,15 +552,11 @@ export function parseCoreEvidenceEnvelope(
     ) {
       return { ok: false, error: "Invalid score range in outcome" };
     }
-  } else if (outcome.kind === "binary") {
-    if (typeof outcome.success !== "boolean") {
-      return { ok: false, error: "Invalid binary outcome: success must be boolean" };
-    }
+    typedOutcome = { kind: "bounded-score", value, min, max };
   } else {
-    return { ok: false, error: "Invalid outcome kind: must be 'binary' or 'bounded-score'" };
+    return { ok: false, error: "Invalid outcome kind" };
   }
 
-  // Check independent roles cannot have supportLevel > 0 or revealUsed === true
   if (
     INDEPENDENT_EVIDENCE_ROLES.includes(ev.role as CoreEvidenceRole) &&
     (attempt.revealUsed === true || (attempt.supportLevel as number) > 0)
@@ -633,98 +564,102 @@ export function parseCoreEvidenceEnvelope(
     return { ok: false, error: "Support invalidates independent evidence role" };
   }
 
-  // Reconstruct typed payload and verify digest
-  const validatedPayload: CoreEvidencePayload = {
-    eventId: ev.eventId as string,
-    taskId: ev.taskId as string,
-    targetId: ev.targetId as string,
+  const payload: CoreEvidencePayload = {
+    eventId: ev.eventId,
+    taskId: ev.taskId,
+    targetId: ev.targetId,
     role: ev.role as CoreEvidenceRole,
-    observationId: ev.observationId as string,
+    observationId: ev.observationId,
     activity: ev.activity as CommunicationActivity,
     responseModality: ev.responseModality as ResponseModality,
     transferDistance: ev.transferDistance as TransferDistance,
-    contextTags: [...(ev.contextTags as string[])],
-    outcome: outcome.kind === "binary"
-      ? { kind: "binary", success: outcome.success as boolean }
-      : {
-          kind: "bounded-score",
-          value: outcome.value as number,
-          min: outcome.min as number,
-          max: outcome.max as number,
-        },
+    contextTags: [...ev.contextTags],
+    outcome: typedOutcome,
     attempt: {
-      supportLevel: attempt.supportLevel as number,
-      revealUsed: attempt.revealUsed as boolean,
+      supportLevel: attempt.supportLevel,
+      revealUsed: attempt.revealUsed,
       responseLatencyMs: attempt.responseLatencyMs as number | null,
       responseModality: attempt.responseModality as ResponseModality,
       contextId: (attempt.contextId as string | null) ?? null,
     },
-    occurredAt: ev.occurredAt as string,
-    authorityScope: ev.authorityScope as "durable-assessment" | "repository-reference",
+    occurredAt: ev.occurredAt,
+    authorityScope: ev.authorityScope,
     calibrationBenchmarkId: (ev.calibrationBenchmarkId as string | null) ?? null,
-    modelFingerprint: ev.modelFingerprint as string,
+    modelFingerprint: ev.modelFingerprint,
     grantId: (ev.grantId as string | null) ?? null,
   };
 
-  const expectedDigest = computeCanonicalEvidenceDigest(validatedPayload);
+  const expectedDigest = computeCanonicalEvidenceDigest(payload);
   if (env.digest !== expectedDigest) {
-    return {
-      ok: false,
-      error: `Digest mismatch: expected ${expectedDigest}, got ${String(env.digest)}`,
-    };
+    return { ok: false, error: `Digest mismatch: expected ${expectedDigest}, got ${env.digest}` };
   }
 
-  const parsedEnvelope: CoreEvidenceEnvelope = {
+  const envelope: CoreEvidenceEnvelope = {
     contractId: CORE_EVIDENCE_ENVELOPE_CONTRACT,
-    evidence: validatedPayload,
-    digest: env.digest as string,
-    authorityScope: env.authorityScope as "durable-assessment" | "repository-reference",
-    sealedAt: env.sealedAt as string,
+    evidence: payload,
+    digest: env.digest,
+    authorityScope: env.authorityScope,
+    sealedAt: env.sealedAt,
   };
-
-  // Explicitly deeply freeze the unbranded envelope and unbranded payload
-  deepFreeze(parsedEnvelope);
-
-  // NOTE: Neither parsedEnvelope nor validatedPayload is marked in CERTIFIED_CORE_EVIDENCE_SET
-  // or REFERENCE_CORE_EVIDENCE_SET. Detached envelopes remain unbranded transport artifacts.
-  return {
-    ok: true,
-    envelope: parsedEnvelope,
-    evidence: validatedPayload,
-  };
+  deepFreeze(envelope);
+  return { ok: true, envelope, evidence: payload };
 }
 
 /**
- * Hydrates and validates a detached repository-reference evidence envelope against authoritative task and observation specifications.
- * This performs the required in-process authentication and semantic validation step before the evidence can enter learner state.
+ * Compatibility helper for an in-process sealed reference envelope only.
+ *
+ * V1 intentionally does NOT hydrate detached JSON into branded evidence. A serialized/cloned
+ * envelope loses private WeakSet membership and fails here even if its public SHA-256 digest is
+ * recomputed. Public digests prove content integrity, not provenance. The helper succeeds only
+ * when the supplied envelope still contains the original in-process branded reference evidence.
  */
 export function hydrateReferenceCoreEvidenceFromEnvelope(
   rawEnvelope: unknown,
   task: CoreTaskSpec,
   observation: CoreObservation,
 ): ReferenceEvidenceValidationResult {
-  const parseRes = parseCoreEvidenceEnvelope(rawEnvelope);
-  if (!parseRes.ok) {
-    return {
-      ok: false,
-      problems: [{ type: "invalid-envelope" }],
-    };
+  if (!isPlainRecord(rawEnvelope) || !isReferenceCoreEvidence(rawEnvelope.evidence)) {
+    return { ok: false, problems: [{ type: "invalid-envelope" }] };
   }
-  if (parseRes.envelope.authorityScope !== "repository-reference") {
-    return {
-      ok: false,
-      problems: [{ type: "reference-observation-claims-authority" }],
-    };
+
+  const originalEvidence = rawEnvelope.evidence;
+  const parsed = parseCoreEvidenceEnvelope(rawEnvelope);
+  if (!parsed.ok || parsed.envelope.authorityScope !== "repository-reference") {
+    return { ok: false, problems: [{ type: "invalid-envelope" }] };
   }
-  return validateReferenceCoreEvidence(task, observation, {
-    eventId: parseRes.evidence.eventId,
-    taskId: parseRes.evidence.taskId,
-    targetId: parseRes.evidence.targetId,
-    role: parseRes.evidence.role,
-    observationId: parseRes.evidence.observationId,
-    attempt: parseRes.evidence.attempt,
-    outcome: parseRes.evidence.outcome,
-    evaluatorConfidence: null,
-    occurredAt: parseRes.evidence.occurredAt,
+
+  const revalidated = validateReferenceCoreEvidence(task, observation, {
+    eventId: originalEvidence.eventId,
+    taskId: originalEvidence.taskId,
+    targetId: originalEvidence.targetId,
+    role: originalEvidence.role,
+    observationId: originalEvidence.observationId,
+    outcome: originalEvidence.outcome,
+    evaluatorConfidence: originalEvidence.evaluatorConfidence,
+    attempt: originalEvidence.attempt,
+    occurredAt: originalEvidence.occurredAt,
   });
+  if (!revalidated.ok) return revalidated;
+
+  if (computeCanonicalEvidenceDigest(revalidated.evidence) !== computeCanonicalEvidenceDigest(originalEvidence)) {
+    return { ok: false, problems: [{ type: "invalid-envelope" }] };
+  }
+
+  return { ok: true, evidence: originalEvidence };
+}
+
+function isPlainRecord(value: unknown): value is Record<string, unknown> {
+  return !!value && typeof value === "object" && !Array.isArray(value);
+}
+
+function isNonEmptyString(value: unknown): value is string {
+  return typeof value === "string" && value.trim().length > 0;
+}
+
+function isValidIsoTimestamp(value: unknown): value is string {
+  return isNonEmptyString(value) && Number.isFinite(Date.parse(value));
+}
+
+function isAuthorityScope(value: unknown): value is CoreEvidencePayload["authorityScope"] {
+  return value === "durable-assessment" || value === "repository-reference";
 }
