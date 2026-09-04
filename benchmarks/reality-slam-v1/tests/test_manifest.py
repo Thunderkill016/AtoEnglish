@@ -83,6 +83,57 @@ class ManifestTest(unittest.TestCase):
         with self.assertRaises(ValueError):
             finalize_manifest(bad)
 
+    def test_non_finite_or_inconsistent_metrics_fail_closed(self) -> None:
+        cases = []
+        nan_auc = draft()
+        nan_auc["metrics"]["auc"] = float("nan")
+        cases.append(nan_auc)
+
+        bad_prevalence = draft()
+        bad_prevalence["metrics"]["positivePrevalence"] = 0.9
+        cases.append(bad_prevalence)
+
+        zero_tokens = draft()
+        zero_tokens["metrics"]["tokenCount"] = 0
+        cases.append(zero_tokens)
+
+        for bad in cases:
+            with self.subTest(metrics=bad["metrics"]):
+                with self.assertRaises(ValueError):
+                    finalize_manifest(bad)
+
+    def test_dataverse_version_and_artifact_integrity_fields_fail_closed(self) -> None:
+        version_drift = draft()
+        version_drift["dataset"]["dataverseVersion"] = "5.0"
+        with self.assertRaises(ValueError):
+            finalize_manifest(version_drift)
+
+        invalid_sha = draft()
+        invalid_sha["dataset"]["artifacts"][0]["localSha256Fingerprint"] = "not-a-sha"
+        with self.assertRaises(ValueError):
+            finalize_manifest(invalid_sha)
+
+        commit_allowed = draft()
+        commit_allowed["dataset"]["artifacts"][0]["repositoryCommitAllowed"] = True
+        with self.assertRaises(ValueError):
+            finalize_manifest(commit_allowed)
+
+    def test_invalid_commit_sha_and_dev_fit_phase_fail_closed(self) -> None:
+        bad_sha = draft()
+        bad_sha["codeCommitSha"] = "short"
+        with self.assertRaises(ValueError):
+            finalize_manifest(bad_sha)
+
+        dev_leak = draft()
+        dev_leak["fitPhase"] = "train-plus-dev"
+        with self.assertRaises(ValueError):
+            finalize_manifest(dev_leak)
+
+    def test_malformed_digest_does_not_verify(self) -> None:
+        final = finalize_manifest(draft())
+        final["manifestDigest"] = "sha256:not-hex"
+        self.assertFalse(verify_manifest(final))
+
 
 if __name__ == "__main__":
     unittest.main()
