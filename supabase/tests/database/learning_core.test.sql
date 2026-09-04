@@ -493,19 +493,12 @@ select ok(
    where n.nspname = 'public' and p.proname = 'get_learner_evidence_coverage'),
   'get_learner_evidence_coverage is SECURITY INVOKER'
 );
-select ok(
-  exists (
-    select 1
-    from pg_proc p
-    join pg_namespace n on n.oid = p.pronamespace
-    where n.nspname = 'public'
-      and p.proname = 'get_learner_evidence_coverage'
-      and exists (
-        select 1
-        from unnest(p.proconfig) as cfg
-        where cfg ~ '^search_path=(|""|'''')$' or cfg ~ '^search_path='
-      )
-  ),
+select is(
+  (select p.proconfig
+   from pg_proc p
+   join pg_namespace n on n.oid = p.pronamespace
+   where n.nspname = 'public' and p.proname = 'get_learner_evidence_coverage'),
+  array['search_path=""']::text[],
   'get_learner_evidence_coverage enforces empty search_path'
 );
 
