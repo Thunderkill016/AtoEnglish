@@ -21,15 +21,18 @@ import {
 import {
   type ReferenceCoreEvidence,
   type CoreEvidenceForRouting,
+  type CoreEvidencePayload,
   validateReferenceCoreEvidence,
   isCertifiedCoreEvidence,
   isReferenceCoreEvidence,
   isCoreEvidenceForRouting,
   sealCoreEvidence,
   parseCoreEvidenceEnvelope,
+  hydrateReferenceCoreEvidenceFromEnvelope,
   computeCanonicalEvidenceDigest,
   CORE_EVIDENCE_ENVELOPE_CONTRACT,
   type CoreEvidenceCandidate,
+  type ParsedCoreEvidenceEnvelopeResult,
 } from "./certified-evidence";
 import type { CoreTaskSpec } from "./task";
 import type { CoreObservation } from "./observation";
@@ -927,32 +930,121 @@ describe("P1 Resolutions (Review ID 5116587399): Ingress, Lineage, Transfer Gati
     }
   });
 
-  it("accepts sealed canonical evidence envelopes and rejects tampered envelopes", () => {
-    const validEvidence = makeValidReferenceRecord({
+  it("proves detached evidence envelopes are transport-only and must be hydrated before learner-state ingress", () => {
+    const task: CoreTaskSpec = {
+      id: "task-env-1",
+      version: 1,
+      targetIds: ["nep.en.v1.communication-activity.spoken-production"],
+      activity: "spoken-production",
+      responseModality: "speech",
+      transferDistance: "same-context",
+      contextTags: ["unit-1"],
+      support: { level: 0, revealAllowed: false },
+      allowedEvidenceRoles: ["controlled-production"],
+      timeConstraintMs: null,
+      scoringContractId: "scoring.contract.v1",
+      sources: [],
+    };
+    const observation: CoreObservation = {
+      observationId: "obs-env-1",
+      targetId: "nep.en.v1.communication-activity.spoken-production",
+      activity: "spoken-production",
+      payload: {
+        kind: "comprehension",
+        taskId: "task-env-1",
+        responseCorrect: true,
+        responseLatencyMs: 1200,
+        supportLevel: 0,
+        targetedConstructs: ["nep.en.v1.communication-activity.spoken-production"],
+      },
+      confidence: 1.0,
+      contextId: "ctx-unit-1",
+      authority: "none",
+      provenance: {
+        evaluator: "donor-pybkt-v1.4.3",
+        evaluatorKind: "model",
+      },
+      context: {
+        construct: "spoken-production",
+        populationTags: ["general-adult"],
+      },
+      createdAt: "2026-09-04T10:00:00.000Z",
+      calibration: {
+        validationState: "unvalidated",
+        decision: "shadow",
+        benchmarkId: null,
+        modelFingerprint: "donor-pybkt-v1.4.3",
+        metrics: { sampleSize: 100 },
+        scope: {
+          activity: "spoken-production",
+          construct: "spoken-production",
+          requiredPopulationTags: ["general-adult"],
+        },
+      },
+    };
+    const candidate: CoreEvidenceCandidate = {
       eventId: "evt-env-1",
+      taskId: "task-env-1",
+      targetId: "nep.en.v1.communication-activity.spoken-production",
+      role: "controlled-production",
+      observationId: "obs-env-1",
+      outcome: { kind: "binary", success: true },
+      evaluatorConfidence: 1.0,
+      attempt: {
+        supportLevel: 0,
+        revealUsed: false,
+        responseLatencyMs: 1200,
+        responseModality: "speech",
+        contextId: "ctx-unit-1",
+      },
       occurredAt: "2026-09-04T10:00:00.000Z",
-    });
+    };
 
-    const envelope = sealCoreEvidence(validEvidence, "2026-09-04T12:00:00.000Z");
+    const validated = validateReferenceCoreEvidence(task, observation, candidate);
+    expect(validated.ok).toBe(true);
+    if (!validated.ok) return;
+
+    const envelope = sealCoreEvidence(validated.evidence, "2026-09-04T12:00:00.000Z");
     expect(envelope.contractId).toBe(CORE_EVIDENCE_ENVELOPE_CONTRACT);
     expect(envelope.digest).toBeDefined();
-    expect(envelope.evidence.eventId).toBe("evt-env-1");
 
+    // 1. Parsing envelope succeeds, returning unbranded transport payload
     const parseRes = parseCoreEvidenceEnvelope(envelope);
     expect(parseRes.ok).toBe(true);
-
-    const validation = validateAcceptedEvidenceRecord(envelope, ontology);
-    expect(validation.ok).toBe(true);
-    if (validation.ok) {
-      expect(validation.record.eventId).toBe("evt-env-1");
+    if (parseRes.ok) {
+      expect(isCoreEvidenceForRouting(parseRes.evidence)).toBe(false);
+      expect(isReferenceCoreEvidence(parseRes.evidence)).toBe(false);
     }
 
-    const state = projectLearnerState(ontology, [envelope]);
-    expect(state.totalEventsProcessed).toBe(1);
-    expect(state.acceptedEvents).toHaveLength(1);
-    expect(state.acceptedEvents[0].eventId).toBe("evt-env-1");
+    // 2. Passing raw envelope directly to learner-state fails closed
+    const directEnvelopeValidation = validateAcceptedEvidenceRecord(envelope, ontology);
+    expect(directEnvelopeValidation.ok).toBe(false);
+    if (!directEnvelopeValidation.ok) {
+      expect(directEnvelopeValidation.audit.code).toBe("unvalidated-evidence-rejected");
+      expect(directEnvelopeValidation.audit.message).toMatch(/detached envelopes and raw objects are rejected/);
+    }
 
-    // Tampered payload fails closed
+    // 3. Passing unbranded parsed payload directly to learner-state fails closed
+    if (parseRes.ok) {
+      const directPayloadValidation = validateAcceptedEvidenceRecord(parseRes.evidence, ontology);
+      expect(directPayloadValidation.ok).toBe(false);
+      if (!directPayloadValidation.ok) {
+        expect(directPayloadValidation.audit.code).toBe("unvalidated-evidence-rejected");
+      }
+    }
+
+    // 4. Hydrating the envelope through validated in-process authentication succeeds
+    const hydration = hydrateReferenceCoreEvidenceFromEnvelope(envelope, task, observation);
+    expect(hydration.ok).toBe(true);
+    if (hydration.ok) {
+      expect(isCoreEvidenceForRouting(hydration.evidence)).toBe(true);
+      const state = projectLearnerState(ontology, [hydration.evidence]);
+      expect(state.totalEventsProcessed).toBe(1);
+      expect(state.acceptedEvents).toHaveLength(1);
+      expect(state.acceptedEvents[0].eventId).toBe("evt-env-1");
+    }
+
+    // 5. Tampered envelope fails parsing closed with digest mismatch
     const tampered = {
       ...envelope,
       evidence: {
@@ -960,11 +1052,10 @@ describe("P1 Resolutions (Review ID 5116587399): Ingress, Lineage, Transfer Gati
         role: "near-transfer" as const,
       },
     };
-    const tamperedValidation = validateAcceptedEvidenceRecord(tampered, ontology);
-    expect(tamperedValidation.ok).toBe(false);
-    if (!tamperedValidation.ok) {
-      expect(tamperedValidation.audit.code).toBe("unvalidated-evidence-rejected");
-      expect(tamperedValidation.audit.message).toMatch(/Evidence envelope verification failed/);
+    const tamperedParse = parseCoreEvidenceEnvelope(tampered);
+    expect(tamperedParse.ok).toBe(false);
+    if (!tamperedParse.ok) {
+      expect(tamperedParse.error).toMatch(/Digest mismatch/);
     }
   });
 
@@ -1272,7 +1363,7 @@ describe("P1 Resolutions (Review ID PRR_kwDOS-Q4M88AAAABMP5LaA / 5116939112): Ma
     }
   });
 
-  it("adversarial test C: proves fabricated durable envelope with recomputed digest fails closed", () => {
+  it("adversarial test C: proves fabricated envelope with recomputed digest parses as unbranded transport and fails learner-state ingress", () => {
     const fabricatedDurable = {
       eventId: "evt-forged-env-durable",
       taskId: "task-durable",
@@ -1308,17 +1399,29 @@ describe("P1 Resolutions (Review ID PRR_kwDOS-Q4M88AAAABMP5LaA / 5116939112): Ma
       sealedAt: "2026-09-04T12:00:00.000Z",
     };
 
+    // 1. Parsing envelope succeeds structurally and verifies digest, but returns strictly UNBRANDED payload
     const parseRes = parseCoreEvidenceEnvelope(forgedEnvelope);
-    expect(parseRes.ok).toBe(false);
-    if (!parseRes.ok) {
-      expect(parseRes.error).toMatch(/Detached evidence envelopes cannot assert durable-assessment authority without cryptographic host attestation/);
+    expect(parseRes.ok).toBe(true);
+    if (parseRes.ok) {
+      expect(isCoreEvidenceForRouting(parseRes.evidence)).toBe(false);
+      expect(isCertifiedCoreEvidence(parseRes.evidence)).toBe(false);
     }
 
-    const validation = validateAcceptedEvidenceRecord(forgedEnvelope, ontology);
-    expect(validation.ok).toBe(false);
-    if (!validation.ok) {
-      expect(validation.audit.code).toBe("unvalidated-evidence-rejected");
-      expect(validation.audit.message).toMatch(/Detached evidence envelopes cannot assert durable-assessment authority without cryptographic host attestation/);
+    // 2. Direct envelope passing to learner-state fails closed
+    const envelopeValidation = validateAcceptedEvidenceRecord(forgedEnvelope, ontology);
+    expect(envelopeValidation.ok).toBe(false);
+    if (!envelopeValidation.ok) {
+      expect(envelopeValidation.audit.code).toBe("unvalidated-evidence-rejected");
+      expect(envelopeValidation.audit.message).toMatch(/detached envelopes and raw objects are rejected/);
+    }
+
+    // 3. Direct unbranded payload passing to learner-state fails closed
+    if (parseRes.ok) {
+      const payloadValidation = validateAcceptedEvidenceRecord(parseRes.evidence, ontology);
+      expect(payloadValidation.ok).toBe(false);
+      if (!payloadValidation.ok) {
+        expect(payloadValidation.audit.code).toBe("unvalidated-evidence-rejected");
+      }
     }
   });
 
@@ -1342,5 +1445,314 @@ describe("P1 Resolutions (Review ID PRR_kwDOS-Q4M88AAAABMP5LaA / 5116939112): Ma
     const envelope = sealCoreEvidence(evidence, explicitTime);
     expect(envelope.sealedAt).toBe(explicitTime);
     expect(envelope.digest).toBe(computeCanonicalEvidenceDigest(evidence));
+  });
+});
+
+describe("Detached Evidence Boundary & Symmetrical Sealing Adversarial Suite (GEMINI-LEARNER-005)", () => {
+  it("proves parseCoreEvidenceEnvelope is totally non-throwing across malformed raw payloads and nested fields", () => {
+    const malformedInputs: unknown[] = [
+      null,
+      undefined,
+      12345,
+      "not an object",
+      true,
+      [],
+      {},
+      { contractId: "wrong.contract.v1" },
+      { contractId: CORE_EVIDENCE_ENVELOPE_CONTRACT, sealedAt: "not-a-date" },
+      { contractId: CORE_EVIDENCE_ENVELOPE_CONTRACT, sealedAt: "2026-09-04T12:00:00.000Z", authorityScope: "invalid-scope" },
+      { contractId: CORE_EVIDENCE_ENVELOPE_CONTRACT, sealedAt: "2026-09-04T12:00:00.000Z", authorityScope: "repository-reference", digest: "not-a-sha256" },
+      // malformed evidence object
+      {
+        contractId: CORE_EVIDENCE_ENVELOPE_CONTRACT,
+        sealedAt: "2026-09-04T12:00:00.000Z",
+        authorityScope: "repository-reference",
+        digest: "sha256:" + "a".repeat(64),
+        evidence: null,
+      },
+      // malformed contextTags (not an array)
+      {
+        contractId: CORE_EVIDENCE_ENVELOPE_CONTRACT,
+        sealedAt: "2026-09-04T12:00:00.000Z",
+        authorityScope: "repository-reference",
+        digest: "sha256:" + "a".repeat(64),
+        evidence: {
+          eventId: "e1",
+          taskId: "t1",
+          targetId: "nep.en.v1.communication-activity.spoken-production",
+          role: "controlled-production",
+          observationId: "obs1",
+          occurredAt: "2026-09-04T12:00:00.000Z",
+          modelFingerprint: "fp1",
+          activity: "spoken-production",
+          responseModality: "speech",
+          transferDistance: "same-context",
+          contextTags: "not-an-array",
+          authorityScope: "repository-reference",
+          calibrationBenchmarkId: null,
+          grantId: null,
+          attempt: { supportLevel: 0, revealUsed: false, responseLatencyMs: 100, responseModality: "speech", contextId: "c1" },
+          outcome: { kind: "binary", success: true },
+        },
+      },
+      // malformed attempt (missing, non-object, negative supportLevel)
+      {
+        contractId: CORE_EVIDENCE_ENVELOPE_CONTRACT,
+        sealedAt: "2026-09-04T12:00:00.000Z",
+        authorityScope: "repository-reference",
+        digest: "sha256:" + "a".repeat(64),
+        evidence: {
+          eventId: "e1",
+          taskId: "t1",
+          targetId: "nep.en.v1.communication-activity.spoken-production",
+          role: "controlled-production",
+          observationId: "obs1",
+          occurredAt: "2026-09-04T12:00:00.000Z",
+          modelFingerprint: "fp1",
+          activity: "spoken-production",
+          responseModality: "speech",
+          transferDistance: "same-context",
+          contextTags: ["tag1"],
+          authorityScope: "repository-reference",
+          calibrationBenchmarkId: null,
+          grantId: null,
+          attempt: { supportLevel: -5, revealUsed: false, responseLatencyMs: 100, responseModality: "speech", contextId: "c1" },
+          outcome: { kind: "binary", success: true },
+        },
+      },
+      // malformed outcome (invalid kind, invalid score range)
+      {
+        contractId: CORE_EVIDENCE_ENVELOPE_CONTRACT,
+        sealedAt: "2026-09-04T12:00:00.000Z",
+        authorityScope: "repository-reference",
+        digest: "sha256:" + "a".repeat(64),
+        evidence: {
+          eventId: "e1",
+          taskId: "t1",
+          targetId: "nep.en.v1.communication-activity.spoken-production",
+          role: "controlled-production",
+          observationId: "obs1",
+          occurredAt: "2026-09-04T12:00:00.000Z",
+          modelFingerprint: "fp1",
+          activity: "spoken-production",
+          responseModality: "speech",
+          transferDistance: "same-context",
+          contextTags: ["tag1"],
+          authorityScope: "repository-reference",
+          calibrationBenchmarkId: null,
+          grantId: null,
+          attempt: { supportLevel: 0, revealUsed: false, responseLatencyMs: 100, responseModality: "speech", contextId: "c1" },
+          outcome: { kind: "bounded-score", value: 10, min: 0, max: 5 },
+        },
+      },
+      // independent role with supportLevel > 0 (invalid)
+      {
+        contractId: CORE_EVIDENCE_ENVELOPE_CONTRACT,
+        sealedAt: "2026-09-04T12:00:00.000Z",
+        authorityScope: "repository-reference",
+        digest: "sha256:" + "a".repeat(64),
+        evidence: {
+          eventId: "e1",
+          taskId: "t1",
+          targetId: "nep.en.v1.communication-activity.spoken-production",
+          role: "free-production",
+          observationId: "obs1",
+          occurredAt: "2026-09-04T12:00:00.000Z",
+          modelFingerprint: "fp1",
+          activity: "spoken-production",
+          responseModality: "speech",
+          transferDistance: "same-context",
+          contextTags: ["tag1"],
+          authorityScope: "repository-reference",
+          calibrationBenchmarkId: null,
+          grantId: null,
+          attempt: { supportLevel: 2, revealUsed: false, responseLatencyMs: 100, responseModality: "speech", contextId: "c1" },
+          outcome: { kind: "binary", success: true },
+        },
+      },
+    ];
+
+    for (const input of malformedInputs) {
+      let result: ParsedCoreEvidenceEnvelopeResult | undefined;
+      expect(() => {
+        result = parseCoreEvidenceEnvelope(input);
+      }).not.toThrow();
+
+      expect(result).toBeDefined();
+      expect(result!.ok).toBe(false);
+      if (!result!.ok) {
+        expect(typeof result!.error).toBe("string");
+        expect(result!.error.length).toBeGreaterThan(0);
+      }
+    }
+  });
+
+  it("proves forged detached reference envelope with recomputed SHA-256 cannot enter learner state", () => {
+    const forgedReferencePayload: CoreEvidencePayload = {
+      eventId: "evt-forged-ref-1",
+      taskId: "task-forged-ref",
+      targetId: "nep.en.v1.communication-activity.spoken-production",
+      role: "controlled-production",
+      observationId: "obs-forged-ref",
+      activity: "spoken-production",
+      responseModality: "speech",
+      transferDistance: "same-context",
+      contextTags: ["unit-1"],
+      outcome: { kind: "binary", success: true },
+      attempt: {
+        supportLevel: 0,
+        revealUsed: false,
+        responseLatencyMs: 1200,
+        responseModality: "speech",
+        contextId: "ctx-1",
+      },
+      occurredAt: "2026-09-04T12:00:00.000Z",
+      authorityScope: "repository-reference",
+      calibrationBenchmarkId: null,
+      modelFingerprint: "donor-pybkt-v1.4.3",
+      grantId: null,
+    };
+
+    const digest = computeCanonicalEvidenceDigest(forgedReferencePayload);
+    const forgedEnvelope = {
+      contractId: CORE_EVIDENCE_ENVELOPE_CONTRACT,
+      evidence: forgedReferencePayload,
+      digest,
+      authorityScope: "repository-reference",
+      sealedAt: "2026-09-04T12:00:00.000Z",
+    };
+
+    // Envelope parses cleanly as transport data
+    const parseRes = parseCoreEvidenceEnvelope(forgedEnvelope);
+    expect(parseRes.ok).toBe(true);
+
+    // BUT passing either envelope or parsed evidence directly to learner-state fails closed
+    const envValidation = validateAcceptedEvidenceRecord(forgedEnvelope, ontology);
+    expect(envValidation.ok).toBe(false);
+    if (!envValidation.ok) {
+      expect(envValidation.audit.code).toBe("unvalidated-evidence-rejected");
+    }
+
+    if (parseRes.ok) {
+      const evValidation = validateAcceptedEvidenceRecord(parseRes.evidence, ontology);
+      expect(evValidation.ok).toBe(false);
+      if (!evValidation.ok) {
+        expect(evValidation.audit.code).toBe("unvalidated-evidence-rejected");
+      }
+
+      // Projection fails closed to accept unbranded evidence
+      const projection = projectLearnerState(ontology, [parseRes.evidence]);
+      expect(projection.acceptedEvents).toHaveLength(0);
+      expect(projection.rejectedEvents).toHaveLength(1);
+      expect(projection.rejectedEvents[0].code).toBe("unvalidated-evidence-rejected");
+    }
+  });
+
+  it("proves symmetrical seal and parse coherence for both durable and reference evidence", () => {
+    // 1. Reference evidence
+    const refEvidence = makeValidReferenceRecord({ eventId: "evt-coherence-ref" });
+    const refEnvelope = sealCoreEvidence(refEvidence, "2026-09-04T13:00:00.000Z");
+    const refParse = parseCoreEvidenceEnvelope(refEnvelope);
+    expect(refParse.ok).toBe(true);
+    if (refParse.ok) {
+      expect(refParse.envelope.authorityScope).toBe("repository-reference");
+      expect(refParse.envelope.digest).toBe(refEnvelope.digest);
+    }
+
+    // 2. Durable evidence mock created with genuine sealCoreEvidence
+    const durablePayload: CoreEvidencePayload = {
+      eventId: "evt-coherence-dur",
+      taskId: "task-dur-1",
+      targetId: "nep.en.v1.communication-activity.spoken-production",
+      role: "controlled-production",
+      observationId: "obs-dur-1",
+      activity: "spoken-production",
+      responseModality: "speech",
+      transferDistance: "same-context",
+      contextTags: ["unit-1"],
+      outcome: { kind: "binary", success: true },
+      attempt: {
+        supportLevel: 0,
+        revealUsed: false,
+        responseLatencyMs: 800,
+        responseModality: "speech",
+        contextId: "ctx-1",
+      },
+      occurredAt: "2026-09-04T13:00:00.000Z",
+      authorityScope: "durable-assessment",
+      calibrationBenchmarkId: "bench-openpronounce-v1",
+      modelFingerprint: "openpronounce-v1.2",
+      grantId: "grant-authed-001",
+    };
+
+    const durableDigest = computeCanonicalEvidenceDigest(durablePayload);
+    const durableEnvelope = {
+      contractId: CORE_EVIDENCE_ENVELOPE_CONTRACT,
+      evidence: durablePayload,
+      digest: durableDigest,
+      authorityScope: "durable-assessment",
+      sealedAt: "2026-09-04T13:00:00.000Z",
+    };
+
+    // Both durable and reference envelopes parse cleanly and symmetrically
+    const durParse = parseCoreEvidenceEnvelope(durableEnvelope);
+    expect(durParse.ok).toBe(true);
+    if (durParse.ok) {
+      expect(durParse.envelope.authorityScope).toBe("durable-assessment");
+      expect(durParse.envelope.digest).toBe(durableDigest);
+      // But neither is branded in-process
+      expect(isCoreEvidenceForRouting(durParse.evidence)).toBe(false);
+    }
+  });
+
+  it("proves tamper-detection rejects modified payload fields with digest mismatch", () => {
+    const validEvidence = makeValidReferenceRecord({ eventId: "evt-tamper-check" });
+    const envelope = sealCoreEvidence(validEvidence, "2026-09-04T14:00:00.000Z");
+
+    const mutations = [
+      { eventId: "evt-tamper-modified" },
+      { role: "free-recall" as const },
+      { outcome: { kind: "binary" as const, success: false } },
+      { contextTags: ["modified-tag"] },
+      { attempt: { ...envelope.evidence.attempt, responseLatencyMs: 9999 } },
+    ];
+
+    for (const mutation of mutations) {
+      const tampered = {
+        ...envelope,
+        evidence: {
+          ...envelope.evidence,
+          ...mutation,
+        },
+      };
+      const res = parseCoreEvidenceEnvelope(tampered);
+      expect(res.ok).toBe(false);
+      if (!res.ok) {
+        expect(res.error).toMatch(/Digest mismatch/);
+      }
+    }
+  });
+
+  it("proves legitimate in-process evidence, reducer equivalence, and lineage preservation remain 100% intact", () => {
+    const ev1 = makeValidReferenceRecord({
+      eventId: "evt-batch-1",
+      occurredAt: "2026-09-04T10:00:00.000Z",
+    });
+    const ev2 = makeValidReferenceRecord({
+      eventId: "evt-batch-2",
+      occurredAt: "2026-09-04T11:00:00.000Z",
+    });
+
+    const batchState = projectLearnerState(ontology, [ev2, ev1]);
+    expect(batchState.totalEventsProcessed).toBe(2);
+    expect(batchState.acceptedEvents).toHaveLength(2);
+    expect(batchState.acceptedEvents[0].eventId).toBe("evt-batch-1");
+    expect(batchState.acceptedEvents[1].eventId).toBe("evt-batch-2");
+
+    let reducedState = createEmptyLearnerStateProjection();
+    reducedState = reduceLearnerState(reducedState, ev2, ontology);
+    reducedState = reduceLearnerState(reducedState, ev1, ontology);
+
+    expect(JSON.stringify(batchState)).toBe(JSON.stringify(reducedState));
   });
 });

@@ -6,11 +6,14 @@
 - **Ontology Invariant**: Every evaluated construct key MUST resolve to a valid node in the provided `nep.english-ontology.v1` graph. Unknown nodes are rejected fail-closed with `unknown-ontology-node`.
 - **Evidence Certification Boundary & Ingress Authentication**:
   - Raw observations, UI clicks, and uncertified model predictions are strictly rejected (`unvalidated-evidence-rejected`).
-  - Evidence ingress strictly consumes canonical `CoreEvidenceForRouting` authenticated by `src/lib/core/certified-evidence.ts` or sealed canonical envelopes `CoreEvidenceEnvelope` (`nep.core-evidence-envelope.v1`).
+  - Evidence ingress strictly consumes in-process branded `CoreEvidenceForRouting` authenticated by `src/lib/core/certified-evidence.ts` (`certifyCoreEvidence()` or `validateReferenceCoreEvidence()`).
+  - Detached evidence envelopes (`CoreEvidenceEnvelope`, `nep.core-evidence-envelope.v1`) are strictly untrusted transport artifacts. Unhydrated envelopes or raw objects directly submitted to learner-state ingress fail closed (`unvalidated-evidence-rejected`).
+  - Hydration of detached reference envelopes requires an explicit, authenticated in-process validation step (`hydrateReferenceCoreEvidenceFromEnvelope(rawEnvelope, task, observation)`) against authentic task and observation objects before entering learner state.
+  - Recomputing public SHA-256 digests on detached envelopes does NOT upgrade them into in-process branded evidence; public digests provide content integrity only, not origin authentication.
   - Trust markers (`markCertifiedCoreEvidence`, `markReferenceCoreEvidence`) are module-private and strictly non-exported; external callers cannot mark arbitrary objects.
   - All certified and reference evidence objects are deeply immutable (`deepFreeze` applied recursively across `evidence`, `attempt`, `outcome`, `contextTags`); attempted mutation throws `TypeError` in strict mode, and cloned objects fail validation.
-  - Sealing evidence via `sealCoreEvidence` requires an explicit, valid ISO 8601 `sealedAt` timestamp parameter with zero ambient clock reads (`new Date()`).
-  - Detached evidence envelopes cannot assert `durable-assessment` authority without cryptographic host attestation; any envelope declaring `authorityScope: "durable-assessment"` fails closed. Detached envelopes only support verified `repository-reference` authority.
+  - Sealing evidence via `sealCoreEvidence` produces canonical envelopes for both durable and reference evidence scopes symmetrically, requiring an explicit, valid ISO 8601 `sealedAt` timestamp parameter with zero ambient clock reads (`new Date()`).
+  - Parser `parseCoreEvidenceEnvelope()` is a total, non-throwing validator across all primitive and nested structures, verifying SHA-256 integrity digests symmetrically without upgrading transport data into in-process branded evidence.
   - Durable assessment evidence strictly requires non-empty `calibrationBenchmarkId`, valid `grantId`, and authentic `modelFingerprint` (cannot be empty, whitespace, or 'unknown').
   - Repository reference evidence strictly requires `calibrationBenchmarkId: null`, `grantId: null`, and authentic `modelFingerprint`.
   - Caller self-asserted or fabricated evidence objects and invalid authority scopes fail closed with `unvalidated-evidence-rejected`.

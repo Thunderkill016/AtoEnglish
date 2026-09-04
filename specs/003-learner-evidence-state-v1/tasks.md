@@ -87,3 +87,12 @@
 - [x] T052: Update contracts and tasks in `specs/003-learner-evidence-state-v1/contracts/learner-state-contract.md` and `specs/003-learner-evidence-state-v1/tasks.md`.
 - [x] T053: Run complete verification gates (`npm run check:source-of-truth`, `npx tsc --noEmit`, `npm run lint`, `npm test`, `npm run test:content-standard`, `node /home/thunder/Code/NEP/agent_verify.mjs`, `npm run build -- --webpack`), commit, push, trigger CI, and hand off for review.
 
+## Phase 11: Resolution of Review ID 5117203120 / 5117205515 Blockers (GEMINI-LEARNER-005)
+- [x] T054: Total Non-Throwing Detached Envelope Parser & Canonicalizer: rewrite `parseCoreEvidenceEnvelope` and `computeCanonicalEvidenceDigest` to never throw on malformed raw inputs (safe null/type guarding of primitive, nested, attempt, outcome, contextTags, and authority metadata).
+- [x] T055: Fail-Closed Learner State Ingress & In-Process Branding Only: restrict learner state ingress strictly to in-process branded evidence created by `certifyCoreEvidence` or `validateReferenceCoreEvidence`. Direct submission of detached envelopes or raw records fails closed with `unvalidated-evidence-rejected`.
+- [x] T056: Explicit Hydration Step for Transport Envelopes: introduce `hydrateReferenceCoreEvidenceFromEnvelope(rawEnvelope, task, observation)` performing structural validation, digest integrity check, and in-process reference validation.
+- [x] T057: Symmetrical Sealing and Parsing: ensure `sealCoreEvidence` and `parseCoreEvidenceEnvelope` handle both durable and reference evidence envelopes symmetrically without throwing.
+- [x] T058: Adversarial Test Suite for Detached Envelopes: add tests in `src/lib/core/learner-state.test.ts` verifying malformed nested payloads never throw, forged SHA-256 reference envelopes cannot enter learner state without hydration, and symmetrical durable/reference round-trips.
+- [x] T059: Re-converge Spec Kit #003: update `spec.md`, `data-model.md`, `contracts/learner-state-contract.md`, `plan.md`, `checklists/requirements.md`, and `tasks.md` to reflect the current unified contracts.
+- [x] T060: Run full verification gates (`npm run check:source-of-truth`, `npx tsc --noEmit`, `npm run lint`, `npm test`, `npm run test:content-standard`, `npm run build -- --webpack`, `agent_verify.mjs`), commit, push, trigger CI, and hand off.
+

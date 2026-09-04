@@ -19,3 +19,6 @@
 - [x] Pure deterministic core with zero ambient time or network dependencies is specified
 - [x] Scope and non-goals are bounded
 - [x] Repository-only evidence boundary is explicit
+- [x] Ingress accepts strictly in-process branded evidence; detached transport envelopes require explicit hydration
+- [x] Detached envelope parser is total and non-throwing across malformed nested payloads
+- [x] Symmetrical sealing and parsing for both durable and reference evidence envelopes

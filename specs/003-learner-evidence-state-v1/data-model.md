@@ -26,6 +26,8 @@ The immutable unit of certified learner evidence:
 export type AcceptedEvidenceRecord = {
   readonly eventId: string;
   readonly targetId: string;
+  readonly taskId: string;
+  readonly observationId: string;
   readonly role: CoreEvidenceRole;
   readonly activity: CommunicationActivity;
   readonly responseModality: ResponseModality;
@@ -37,6 +39,7 @@ export type AcceptedEvidenceRecord = {
   readonly outcome: EvidenceOutcome;
   readonly occurredAt: string; // Valid ISO 8601
   readonly authorityScope: "durable-assessment" | "repository-reference";
+  readonly grantId: string | null;
   readonly provenance: {
     readonly observationId: string;
     readonly taskId: string;
@@ -49,8 +52,14 @@ export type AcceptedEvidenceRecord = {
 ---
 
 ### 1.3 Construct Sufficient Statistics (`ConstructSufficientStatistics`)
-Deterministic aggregation of evidence across roles, modalities, activities, and contexts:
+Deterministic aggregation of evidence across roles, modalities, activities, contexts, scaffolding, and authority:
 ```typescript
+export type SupportDistribution = {
+  readonly level0: number;
+  readonly level1: number;
+  readonly level2Plus: number;
+};
+
 export type ConstructSufficientStatistics = {
   readonly totalEvents: number;
   readonly positiveCount: number;
@@ -64,8 +73,14 @@ export type ConstructSufficientStatistics = {
   readonly transfer: {
     readonly sameContextCount: number;
     readonly nearTransferCount: number;
+    readonly nearTransferFailedCount: number;
     readonly farTransferCount: number;
+    readonly farTransferFailedCount: number;
   };
+  readonly supportDistribution: Readonly<SupportDistribution>;
+  readonly revealUsedCount: number;
+  readonly durableEvidenceCount: number;
+  readonly referenceEvidenceCount: number;
   readonly firstObservedAt: string | null;
   readonly lastObservedAt: string | null;
 };
@@ -97,23 +112,106 @@ export type ConstructProjection = {
 
 ---
 
-### 1.5 Overall Learner State Projection (`LearnerStateProjection`)
-The aggregate projection of all active construct states:
+### 1.5 Accepted & Rejected Event Audits (`AcceptedEventAudit`, `RejectedEvidenceAudit`)
+
 ```typescript
-export type RejectedEvidenceAudit = {
+export type LearnerStateProblemCode =
+  | "invalid-event-id"
+  | "duplicate-event-id"
+  | "unknown-ontology-node"
+  | "incompatible-activity"
+  | "incompatible-evidence-role"
+  | "incompatible-modality"
+  | "invalid-timestamp"
+  | "invalid-transfer-distance"
+  | "unvalidated-evidence-rejected"
+  | "forbidden-authority-field"
+  | "invalid-outcome";
+
+export type AcceptedEventAudit = {
   readonly eventId: string;
-  readonly reason: string;
-  readonly targetId?: string;
+  readonly targetId: string;
+  readonly taskId: string;
+  readonly observationId: string;
+  readonly occurredAt: string;
+  readonly role: CoreEvidenceRole;
+  readonly activity: CommunicationActivity;
+  readonly responseModality: ResponseModality;
+  readonly transferDistance: TransferDistance;
+  readonly contextId: string | null;
+  readonly contextTags: readonly string[];
+  readonly authorityScope: "durable-assessment" | "repository-reference";
+  readonly outcome: EvidenceOutcome;
+  readonly outcomeSuccess: boolean;
+  readonly supportLevel: number;
+  readonly revealUsed: boolean;
+  readonly modelFingerprint: string;
+  readonly calibrationBenchmarkId: string | null;
+  readonly grantId: string | null;
 };
 
+export type RejectedEvidenceAudit = {
+  readonly eventId: string;
+  readonly code: LearnerStateProblemCode;
+  readonly message: string;
+  readonly targetId?: string;
+};
+```
+
+---
+
+### 1.6 Overall Learner State Projection (`LearnerStateProjection`)
+The aggregate projection of all active construct states preserving full accepted event lineage:
+```typescript
 export type LearnerStateProjection = {
   readonly contractId: "nep.learner-evidence-state.v1";
   readonly contractVersion: 1;
   readonly constructs: Readonly<Record<string, ConstructProjection>>;
   readonly totalEventsProcessed: number;
+  readonly acceptedEvents: readonly AcceptedEventAudit[];
   readonly rejectedEvents: readonly RejectedEvidenceAudit[];
 };
 ```
+
+---
+
+### 1.7 Detached Evidence Transport Envelope (`CoreEvidenceEnvelope`)
+Detached serialized transport envelope secured by canonical SHA-256 integrity fingerprint:
+```typescript
+export type CoreEvidencePayload = {
+  readonly eventId: string;
+  readonly taskId: string;
+  readonly targetId: string;
+  readonly role: CoreEvidenceRole;
+  readonly observationId: string;
+  readonly activity: CommunicationActivity;
+  readonly responseModality: ResponseModality;
+  readonly transferDistance: TransferDistance;
+  readonly contextTags: readonly string[];
+  readonly outcome: EvidenceOutcome;
+  readonly attempt: {
+    readonly supportLevel: number;
+    readonly revealUsed: boolean;
+    readonly responseLatencyMs: number | null;
+    readonly responseModality: ResponseModality;
+    readonly contextId: string | null;
+  };
+  readonly occurredAt: string;
+  readonly authorityScope: "durable-assessment" | "repository-reference";
+  readonly calibrationBenchmarkId: string | null;
+  readonly modelFingerprint: string;
+  readonly grantId: string | null;
+};
+
+export type CoreEvidenceEnvelope = {
+  readonly contractId: "nep.core-evidence-envelope.v1";
+  readonly evidence: CoreEvidencePayload;
+  readonly digest: string;
+  readonly authorityScope: "durable-assessment" | "repository-reference";
+  readonly sealedAt: string; // Explicit ISO 8601, zero ambient time
+};
+```
+* **Transport-Only Invariant**: Envelopes and parsed payloads are strictly unbranded transport artifacts. They CANNOT enter learner state directly without in-process authentication (`validateReferenceCoreEvidence` or `certifyCoreEvidence`). Direct envelope passing fails closed with `unvalidated-evidence-rejected`.
 
 ---
 

@@ -73,10 +73,10 @@ Downstream consumers are protected against premature mastery claims: the state p
 
 - **FR-001**: Construct keys MUST be strictly bound to canonical executable ontology node IDs conforming to `nep.en.v1.<domain>.<slug>` from contract `nep.english-ontology.v1`.
 - **FR-002**: Target nodes MUST exist in the provided `OntologyGraph`. Non-existent targets MUST fail closed with `unknown-ontology-node`.
-- **FR-003**: Raw uncertified observations, evaluator scores, UI clicks, or unvalidated attempts MUST NOT enter learner state directly. Only validated/certified evidence records are accepted.
+- **FR-003**: Raw uncertified observations, evaluator scores, UI clicks, unvalidated attempts, or detached transport envelopes MUST NOT enter learner state directly. In Core V1, learner state strictly consumes in-process branded evidence records (`isCoreEvidenceForRouting`) produced by `certifyCoreEvidence()` or `validateReferenceCoreEvidence()`. Detached envelopes and raw objects fail closed with `unvalidated-evidence-rejected`.
 - **FR-004**: Constructs with zero evidence MUST evaluate to `status: "unknown"`, `provisionalRoutingScore: null`, `evidenceCount: 0`, and `uncertainty: "maximal"`.
 - **FR-005**: Evidence roles MUST NOT cross boundaries: recognition events cannot increment retrieval, production, or transfer statistics.
-- **FR-006**: Transfer evidence MUST require changed context (`contextId` divergence and `transferDistance !== "same-context"`). Same-context repetition MUST NOT increment transfer counts.
+- **FR-006**: Transfer evidence MUST enforce strict 1:1 pairing between transfer distance and role (`near-transfer` distance <-> `near-transfer` role, `far-transfer` distance <-> `far-transfer` role; non-transfer roles require `same-context`), non-empty `contextId`, and demonstrable prior baseline context (`contextIds.length >= 1`). First-ever events or duplicate contexts fail closed with `invalid-transfer-distance`, and failed attempts increment `nearTransferFailedCount` or `farTransferFailedCount` rather than falling back to `sameContextCount`.
 - **FR-007**: Duplicate event IDs MUST fail closed or be idempotently rejected with problem code `duplicate-event-id`.
 - **FR-008**: Full batch ledger projection MUST be byte-equivalent to incremental sequential reduction.
 - **FR-009**: Output ordering and problem reporting MUST be deterministic and independent of input array order.
@@ -86,9 +86,11 @@ Downstream consumers are protected against premature mastery claims: the state p
 - **FR-013**: Repository-reference evidence MUST NOT create durable assessment authority or claim psychometric calibration.
 - **FR-014**: Event evidence role MUST be compatible with the target node's `allowedEvidenceRoles`. Incompatible roles MUST fail closed with `incompatible-evidence-role`.
 - **FR-015**: Event response modality MUST be compatible with the target node's declared `modalities`. Incompatible modalities MUST fail closed with `incompatible-modality`.
-- **FR-016**: Bounded legacy adapters MUST preserve existing `readLearnerDimension` behavior without converting unknown states into observed zero.
+- **FR-016**: Bounded legacy adapters MUST preserve existing `readLearnerDimension` behavior without converting unknown states into observed zero, preserving model version `nep.learner-evidence-state.v1`.
 - **FR-017**: The core module MUST be pure and deterministic with zero DB, network, browser, or provider dependencies.
 - **FR-018**: This feature MUST NOT modify database schemas, UI components, authentication, or live provider integrations.
+- **FR-019**: State projections MUST preserve complete accepted event lineage in `acceptedEvents` (`observationId`, `taskId`, `occurredAt`, `contextTags`, `outcome: EvidenceOutcome`, `grantId`, `modelFingerprint`, `calibrationBenchmarkId`).
+- **FR-020**: Detached evidence envelopes (`CoreEvidenceEnvelope`) are transport-only artifacts; parsing validates structure and SHA-256 digest without granting in-process branding. Direct envelope passing into learner state fails closed.
 
 ---
 
@@ -96,9 +98,11 @@ Downstream consumers are protected against premature mastery claims: the state p
 
 - **LearnerConstructKey**: Strongly-typed pair of canonical `ontologyNodeId` and `contractVersion: 1`.
 - **AcceptedEvidenceRecord**: Immutable certified evidence event accepted into the ledger.
-- **ConstructSufficientStatistics**: Deterministic counts of positive, negative, and conflicted events partitioned by role, activity, modality, and context.
+- **ConstructSufficientStatistics**: Deterministic counts of positive, negative, and conflicted events partitioned by role, activity, modality, context, scaffolding distribution, and authority scope.
 - **ConstructProjection**: Read snapshot for a single construct exposing sufficiency status, provisional score, uncertainty, and statistics.
-- **LearnerStateProjection**: Aggregate projection across all active constructs with metadata, processed counts, and rejected event audit logs.
+- **AcceptedEventAudit**: Complete lineage record for an accepted event retained in the state projection.
+- **LearnerStateProjection**: Aggregate projection across all active constructs with metadata, processed counts, accepted event lineage, and rejected event audit logs.
+- **CoreEvidenceEnvelope**: Detached transport container pairing evidence payload with a SHA-256 integrity digest and explicit ISO `sealedAt`.
 
 ---
 

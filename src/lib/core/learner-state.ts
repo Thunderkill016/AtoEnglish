@@ -7,11 +7,8 @@ import {
   type CertifiedCoreEvidence,
   type ReferenceCoreEvidence,
   type CoreEvidenceForRouting,
-  type CoreEvidenceEnvelope,
   type EvidenceOutcome,
   isCoreEvidenceForRouting,
-  parseCoreEvidenceEnvelope,
-  CORE_EVIDENCE_ENVELOPE_CONTRACT,
 } from "./certified-evidence";
 import type { OntologyGraph, OntologyNode } from "./ontology";
 import { ONTOLOGY_NODE_ID_PATTERN } from "./ontology";
@@ -388,33 +385,18 @@ export function validateAcceptedEvidenceRecord(
     }
   }
 
-  // 1. Evidence Ingress: Must be canonical CoreEvidenceForRouting or valid sealed CoreEvidenceEnvelope
-  let canonicalEvidence: CoreEvidenceForRouting;
-  if (record.contractId === CORE_EVIDENCE_ENVELOPE_CONTRACT) {
-    const parseRes = parseCoreEvidenceEnvelope(raw);
-    if (!parseRes.ok) {
-      return {
-        ok: false,
-        audit: Object.freeze({
-          eventId,
-          code: "unvalidated-evidence-rejected",
-          message: `Evidence envelope verification failed: ${parseRes.error}`,
-        }),
-      };
-    }
-    canonicalEvidence = parseRes.evidence;
-  } else if (isCoreEvidenceForRouting(raw)) {
-    canonicalEvidence = raw as CoreEvidenceForRouting;
-  } else {
+  // 1. Evidence Ingress: Must be in-process branded CoreEvidenceForRouting
+  if (!isCoreEvidenceForRouting(raw)) {
     return {
       ok: false,
       audit: Object.freeze({
         eventId,
         code: "unvalidated-evidence-rejected",
-        message: "Evidence record must be certified or reference-validated through certified-evidence module (CoreEvidenceForRouting)",
+        message: "Evidence record must be certified or reference-validated through certified-evidence module (CoreEvidenceForRouting); detached envelopes and raw objects are rejected",
       }),
     };
   }
+  const canonicalEvidence = raw as CoreEvidenceForRouting;
 
   // Also verify inner attempt of canonical evidence does not have forbidden properties
   if (canonicalEvidence.attempt && typeof canonicalEvidence.attempt === "object") {
