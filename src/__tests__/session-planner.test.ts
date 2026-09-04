@@ -7,6 +7,7 @@ import {
   type PlannerCandidate,
   type SessionPlannerInput,
 } from "@/lib/learning/session-planner";
+import { nepSessionCatalogV1 } from "@/lib/nep/session-catalog.v1";
 
 function state(targetId: string, overrides: Partial<LearnerSkillState> = {}): LearnerSkillState {
   return {
@@ -410,5 +411,231 @@ describe("session planner v1", () => {
     const result = plan({ candidates: [source], states: [], sessionSize: 1, errorMemory: [first, second] });
     expect(result.opportunities[0]?.breakdown.errorReprobePressure).toBe(1);
     expect(result.opportunities[0]?.reasons).toContain("recurring-error-reprobe:2");
+  });
+
+  it("applies re-probe pressure to canonical catalog candidates with numeric lessonVersion", () => {
+    const satisfiedError: ErrorMemoryEntry = {
+      key: "CAP-002|LESSON-CAP002-FIRST-MEETING-V1|1|transfer|missing-target-group:0",
+      targetId: "CAP-002",
+      lessonId: "LESSON-CAP002-FIRST-MEETING-V1",
+      lessonVersion: "1",
+      actionId: "transfer",
+      errorTag: "missing-target-group:0",
+      remediationCandidateIds: ["LESSON-CAP002-FIRST-MEETING-V1:repair"],
+      remediationSatisfiedAt: "2026-09-02T12:00:00.000Z",
+      status: "recurring",
+      independentFailureCount: 2,
+      supportedFailureCount: 0,
+      independentFailuresSinceRepair: 2,
+      firstSeenAt: "2026-09-01T10:00:00.000Z",
+      lastSeenAt: "2026-09-02T10:00:00.000Z",
+      repairedAt: null,
+    };
+
+    const result = plan({
+      candidates: nepSessionCatalogV1,
+      states: [
+        state("CAP-001", { recognition: 0.8, retrieval: 0.8, listening: 0.8, production: 0.8, repair: 0.8, transfer: 0.8, retention: 0.8, evidenceCount: 5 }),
+        state("CAP-002", { recognition: 0.8, retrieval: 0.8, listening: 0.8, production: 0.8, repair: 0.8, transfer: 0.8, retention: 0.8, evidenceCount: 5 }),
+        state("CAP-003", { recognition: 0.8, retrieval: 0.8, listening: 0.8, production: 0.8, repair: 0.8, transfer: 0.8, retention: 0.8, evidenceCount: 5 }),
+      ],
+      sessionSize: 5,
+      errorMemory: [satisfiedError],
+    });
+
+    const transferOpportunity = result.opportunities.find(
+      (item) => item.candidate.id === "LESSON-CAP002-FIRST-MEETING-V1:transfer",
+    );
+    expect(transferOpportunity).toBeDefined();
+    expect(transferOpportunity?.breakdown.errorReprobePressure).toBe(1);
+    expect(transferOpportunity?.reasons).toContain("recurring-error-reprobe:1");
+  });
+
+  it("applies legacy same-action repair pressure to candidates with numeric lessonVersion", () => {
+    const numericCandidate = candidate({
+      id: "lesson-b:produce",
+      targetId: "cap-b",
+      evidenceType: "production",
+      metadata: { lessonId: "lesson-b", lessonVersion: 1, actionId: "produce" },
+    });
+    const unmappedRecurringError = errorMemoryEntry({
+      key: "cap-b|lesson-b|1|produce|missing-target-group:0",
+      targetId: "cap-b",
+      lessonId: "lesson-b",
+      lessonVersion: "1",
+      actionId: "produce",
+      errorTag: "missing-target-group:0",
+      remediationCandidateIds: [],
+      remediationSatisfiedAt: null,
+    });
+
+    const result = plan({
+      candidates: [numericCandidate],
+      states: [],
+      sessionSize: 1,
+      errorMemory: [unmappedRecurringError],
+    });
+
+    expect(result.opportunities[0]?.breakdown.errorRepairPressure).toBe(1);
+    expect(result.opportunities[0]?.reasons).toContain("recurring-error-repair:1");
+  });
+
+  describe("adversarial: lessonVersion type and value boundaries", () => {
+    it("case 1: numeric 1 and string '1' match symmetrically across error memory and candidate metadata", () => {
+      const candidateNumeric = candidate({
+        id: "source:transfer",
+        targetId: "cap-b",
+        evidenceType: "production",
+        metadata: { lessonId: "lesson-b", lessonVersion: 1, actionId: "transfer" },
+      });
+      const satisfiedError = errorMemoryEntry({
+        lessonVersion: "1",
+        actionId: "transfer",
+        remediationCandidateIds: ["remediation:action"],
+        remediationSatisfiedAt: "2026-09-02T12:00:00.000Z",
+      });
+
+      const result = plan({
+        candidates: [candidateNumeric],
+        states: [],
+        sessionSize: 1,
+        errorMemory: [satisfiedError],
+      });
+
+      expect(result.opportunities[0]?.breakdown.errorReprobePressure).toBe(1);
+    });
+
+    it("case 2: version mismatch does not leak re-probe pressure (version 2 candidate vs version 1 error)", () => {
+      const candidateV2 = candidate({
+        id: "source:transfer",
+        targetId: "cap-b",
+        evidenceType: "production",
+        metadata: { lessonId: "lesson-b", lessonVersion: 2, actionId: "transfer" },
+      });
+      const satisfiedErrorV1 = errorMemoryEntry({
+        lessonVersion: "1",
+        actionId: "transfer",
+        remediationCandidateIds: ["remediation:action"],
+        remediationSatisfiedAt: "2026-09-02T12:00:00.000Z",
+      });
+
+      const result = plan({
+        candidates: [candidateV2],
+        states: [],
+        sessionSize: 1,
+        errorMemory: [satisfiedErrorV1],
+      });
+
+      expect(result.opportunities[0]?.breakdown.errorReprobePressure).toBe(0);
+      expect(result.opportunities[0]?.reasons).not.toContain("recurring-error-reprobe:1");
+    });
+
+    it("case 3: invalid/malformed candidate lessonVersion values (floats, negative, zero, non-numeric) evaluate safely to null with 0 pressure", () => {
+      const invalidVersions = [null, undefined, 0, -1, 1.5, -2.4, Number.NaN, Number.POSITIVE_INFINITY, true, {}, "   "];
+
+      for (const badVersion of invalidVersions) {
+        const candidateBad = candidate({
+          id: "source:transfer",
+          targetId: "cap-b",
+          evidenceType: "production",
+          metadata: { lessonId: "lesson-b", lessonVersion: badVersion, actionId: "transfer" },
+        });
+        const satisfiedError = errorMemoryEntry({
+          lessonVersion: "1",
+          actionId: "transfer",
+          remediationCandidateIds: ["remediation:action"],
+          remediationSatisfiedAt: "2026-09-02T12:00:00.000Z",
+        });
+
+        const result = plan({
+          candidates: [candidateBad],
+          states: [],
+          sessionSize: 1,
+          errorMemory: [satisfiedError],
+        });
+
+        expect(result.opportunities[0]?.breakdown.errorReprobePressure).toBe(0);
+      }
+    });
+
+    it("case 4: action or target mismatch with numeric version does not receive re-probe pressure", () => {
+      const differentAction = candidate({
+        id: "source:produce",
+        targetId: "cap-b",
+        evidenceType: "production",
+        metadata: { lessonId: "lesson-b", lessonVersion: 1, actionId: "produce" },
+      });
+      const differentTarget = candidate({
+        id: "source:transfer",
+        targetId: "cap-other",
+        evidenceType: "production",
+        metadata: { lessonId: "lesson-b", lessonVersion: 1, actionId: "transfer" },
+      });
+      const satisfiedError = errorMemoryEntry({
+        targetId: "cap-b",
+        lessonId: "lesson-b",
+        lessonVersion: "1",
+        actionId: "transfer",
+        remediationCandidateIds: ["remediation:action"],
+        remediationSatisfiedAt: "2026-09-02T12:00:00.000Z",
+      });
+
+      const planAction = plan({ candidates: [differentAction], states: [], sessionSize: 1, errorMemory: [satisfiedError] });
+      const planTarget = plan({ candidates: [differentTarget], states: [], sessionSize: 1, errorMemory: [satisfiedError] });
+
+      expect(planAction.opportunities[0]?.breakdown.errorReprobePressure).toBe(0);
+      expect(planTarget.opportunities[0]?.breakdown.errorReprobePressure).toBe(0);
+    });
+
+    it("case 5: directly repaired error does not receive re-probe pressure on numeric version candidate", () => {
+      const source = candidate({
+        id: "source:transfer",
+        targetId: "cap-b",
+        evidenceType: "production",
+        metadata: { lessonId: "lesson-b", lessonVersion: 1, actionId: "transfer" },
+      });
+      const directlyRepaired = errorMemoryEntry({
+        targetId: "cap-b",
+        lessonId: "lesson-b",
+        lessonVersion: "1",
+        actionId: "transfer",
+        status: "repaired",
+        repairedAt: "2026-09-02T12:00:00.000Z",
+        remediationSatisfiedAt: null,
+      });
+
+      const result = plan({ candidates: [source], states: [], sessionSize: 1, errorMemory: [directlyRepaired] });
+      expect(result.opportunities[0]?.breakdown.errorReprobePressure).toBe(0);
+      expect(result.opportunities[0]?.breakdown.errorRepairPressure).toBe(0);
+    });
+
+    it("case 6: non-version metadata fields (lessonId, actionId) do not coerce numbers to strings", () => {
+      const numericLessonIdCandidate = candidate({
+        id: "source:transfer",
+        targetId: "cap-b",
+        evidenceType: "production",
+        metadata: { lessonId: 101, lessonVersion: 1, actionId: "transfer" },
+      });
+      const numericActionIdCandidate = candidate({
+        id: "source:transfer",
+        targetId: "cap-b",
+        evidenceType: "production",
+        metadata: { lessonId: "lesson-b", lessonVersion: 1, actionId: 202 },
+      });
+      const satisfiedError = errorMemoryEntry({
+        targetId: "cap-b",
+        lessonId: "lesson-b",
+        lessonVersion: "1",
+        actionId: "transfer",
+        remediationCandidateIds: ["remediation:action"],
+        remediationSatisfiedAt: "2026-09-02T12:00:00.000Z",
+      });
+
+      const planLesson = plan({ candidates: [numericLessonIdCandidate], states: [], sessionSize: 1, errorMemory: [satisfiedError] });
+      const planAction = plan({ candidates: [numericActionIdCandidate], states: [], sessionSize: 1, errorMemory: [satisfiedError] });
+
+      expect(planLesson.opportunities[0]?.breakdown.errorReprobePressure).toBe(0);
+      expect(planAction.opportunities[0]?.breakdown.errorReprobePressure).toBe(0);
+    });
   });
 });

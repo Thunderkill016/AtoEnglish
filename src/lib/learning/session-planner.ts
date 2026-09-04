@@ -284,7 +284,7 @@ function scoreCandidate(input: {
  */
 function matchingRecurringErrorCount(candidate: PlannerCandidate, entries: ErrorMemoryEntry[]) {
   const lessonId = metadataString(candidate.metadata, "lessonId");
-  const lessonVersion = metadataString(candidate.metadata, "lessonVersion");
+  const lessonVersion = metadataLessonVersion(candidate.metadata);
   const actionId = metadataString(candidate.metadata, "actionId");
 
   return entries.reduce((count, entry) => {
@@ -305,7 +305,7 @@ function matchingRecurringErrorCount(candidate: PlannerCandidate, entries: Error
 
 function matchingRecurringReprobeCount(candidate: PlannerCandidate, entries: ErrorMemoryEntry[]) {
   const lessonId = metadataString(candidate.metadata, "lessonId");
-  const lessonVersion = metadataString(candidate.metadata, "lessonVersion");
+  const lessonVersion = metadataLessonVersion(candidate.metadata);
   const actionId = metadataString(candidate.metadata, "actionId");
   if (!lessonId || !lessonVersion || !actionId) return 0;
 
@@ -322,7 +322,15 @@ function matchingRecurringReprobeCount(candidate: PlannerCandidate, entries: Err
 
 function metadataString(metadata: Record<string, unknown> | undefined, key: string) {
   const value = metadata?.[key];
-  return typeof value === "string" && value.length > 0 ? value : null;
+  return typeof value === "string" && value.trim().length > 0 ? value.trim() : null;
+}
+
+function metadataLessonVersion(metadata: Record<string, unknown> | undefined) {
+  const value = metadata?.lessonVersion;
+  if (typeof value === "number" && Number.isInteger(value) && value > 0) {
+    return String(value);
+  }
+  return typeof value === "string" && value.trim().length > 0 ? value.trim() : null;
 }
 
 function readiness(state: LearnerSkillState) {
