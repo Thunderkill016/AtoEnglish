@@ -1,3 +1,4 @@
+import crypto from "node:crypto";
 import type { CommunicationActivity, CoreSourceRef } from "./domain";
 import {
   type CalibrationProfile,
@@ -15,31 +16,214 @@ export const EVIDENCE_LAYERS = [
 
 export type EvidenceLayer = (typeof EVIDENCE_LAYERS)[number];
 
-export const TEST_HARNESS_ROOT_BRAND = Symbol("nep.test-harness-mechanics-root");
+// Module-private capability brands and tracking sets. NEVER exported.
+const DURABLE_AUTHORITY_BRAND = Symbol("nep.resolved-durable-calibration-authority");
+const CONTRACT_AUTHORITY_BRAND = Symbol("nep.resolved-contract-authority");
+const TEST_HARNESS_ROOT_BRAND = Symbol("nep.test-harness-mechanics-root");
+
+const DURABLE_TOKEN_SET = new WeakSet<object>();
+const CONTRACT_TOKEN_SET = new WeakSet<object>();
+const VERIFIED_ATTESTATION_SET = new WeakSet<object>();
 
 export type TestHarnessTrustRoot = {
   readonly kind: "test-mechanics-harness";
-  readonly [TEST_HARNESS_ROOT_BRAND]: true;
   readonly scope: "unit-and-contract-testing-only";
   readonly empiricalValidityClaim: "none-proves-mechanics-only";
 };
 
-export type ProductionAttestationTrustRoot = {
-  readonly kind: "cryptographic-attestation";
-  readonly authorityAnchorId: string;
-  readonly attestationDigest: string;
+export type TrustedAnchorStatus = "active" | "revoked" | "expired";
+
+export type TrustedAnchor = {
+  readonly anchorId: string;
+  readonly algorithm: "ed25519" | "hmac-sha256";
+  readonly publicKeyOrSecret: string;
+  readonly status: TrustedAnchorStatus;
+  readonly validFrom: string;
+  readonly validUntil?: string;
+  readonly revokedAt?: string;
+  readonly revocationReason?: string;
+};
+
+export interface TrustedAnchorRegistry {
+  lookupAnchor(anchorId: string): TrustedAnchor | undefined;
+}
+
+export function createTrustedAnchorRegistry(
+  anchors: readonly TrustedAnchor[],
+): TrustedAnchorRegistry {
+  const anchorMap = new Map<string, TrustedAnchor>();
+  for (const a of anchors) {
+    if (anchorMap.has(a.anchorId)) {
+      throw new Error(`Conflict: duplicate trust anchor ID '${a.anchorId}'`);
+    }
+    if (!parseStrictIso8601(a.validFrom).ok) {
+      throw new Error(
+        `Invalid trust anchor: validFrom is not a valid strict ISO-8601 timestamp for '${a.anchorId}'`,
+      );
+    }
+    if (a.validUntil !== undefined && !parseStrictIso8601(a.validUntil).ok) {
+      throw new Error(
+        `Invalid trust anchor: validUntil is not a valid strict ISO-8601 timestamp for '${a.anchorId}'`,
+      );
+    }
+    anchorMap.set(a.anchorId, a);
+  }
+  return {
+    lookupAnchor(anchorId: string) {
+      return anchorMap.get(anchorId);
+    },
+  };
+}
+
+export type AuthorityManifestPayload = {
+  readonly benchmarkArtifactId: string;
+  readonly expectedBenchmarkFingerprint: string;
+  readonly expectedBenchmarkVersion: string;
+  readonly grantId: string;
+  readonly grantVersion: string;
+  readonly evaluatorBinding: EvaluatorBinding;
+  readonly scope: AuthorityScope;
+  readonly decision: "assessment" | "mastery";
+  readonly authority: "assessment-candidate" | "mastery-candidate";
+  readonly validFrom: string;
+  readonly validUntil?: string;
+  readonly calibratedScoreMappingPolicyId?: string;
+};
+
+function canonicalizeJsonValue(val: unknown): unknown {
+  if (val === null || typeof val !== "object") return val;
+  if (Array.isArray(val)) return val.map(canonicalizeJsonValue);
+  const obj = val as Record<string, unknown>;
+  const sortedKeys = Object.keys(obj).sort();
+  const result: Record<string, unknown> = {};
+  for (const key of sortedKeys) {
+    const v = obj[key];
+    if (v !== undefined) {
+      result[key] = canonicalizeJsonValue(v);
+    }
+  }
+  return result;
+}
+
+export function canonicalizeJson(val: unknown): string {
+  return JSON.stringify(canonicalizeJsonValue(val));
+}
+
+export function computeCanonicalManifestDigest(payload: AuthorityManifestPayload): string {
+  const canonical = canonicalizeJson(payload);
+  return "sha256:" + crypto.createHash("sha256").update(canonical, "utf8").digest("hex");
+}
+
+export type RawAuthorityAttestation = {
+  readonly kind: "raw-cryptographic-attestation";
+  readonly anchorId: string;
+  readonly manifestDigest: string;
+  readonly signature: string;
   readonly attestedAt: string;
 };
 
-export type RepositoryFixtureTrustRoot = {
-  readonly kind: "repository-fixture";
-  readonly fixtureId: string;
+export type VerifiedAuthorityAttestation = {
+  readonly kind: "verified-cryptographic-attestation";
+  readonly anchorId: string;
+  readonly manifestDigest: string;
+  readonly attestedAt: string;
+  readonly verifiedAt: string;
 };
 
-export type AuthorityTrustRoot =
-  | TestHarnessTrustRoot
-  | ProductionAttestationTrustRoot
-  | RepositoryFixtureTrustRoot;
+export function isVerifiedAuthorityAttestation(
+  value: unknown,
+): value is VerifiedAuthorityAttestation {
+  if (!value || typeof value !== "object") return false;
+  return VERIFIED_ATTESTATION_SET.has(value);
+}
+
+export type AttestationVerificationResult =
+  | { ok: true; attestation: VerifiedAuthorityAttestation }
+  | { ok: false; reasonCode: AuthorityRejectionReason };
+
+/**
+ * Verifies a cryptographic authority attestation against a TrustedAnchorRegistry.
+ * Binds the exact manifest digest covering the benchmark identity and grant scope.
+ */
+export function verifyAuthorityManifest(
+  attestation: RawAuthorityAttestation,
+  payload: AuthorityManifestPayload,
+  anchorRegistry: TrustedAnchorRegistry,
+  evaluationTimestamp?: string,
+): AttestationVerificationResult {
+  const anchor = anchorRegistry.lookupAnchor(attestation.anchorId);
+  if (!anchor) {
+    return { ok: false, reasonCode: "trust-anchor-unknown" };
+  }
+
+  const evalTime = evaluationTimestamp ?? attestation.attestedAt;
+  const evalParsed = parseStrictIso8601(evalTime);
+  if (!evalParsed.ok) {
+    return { ok: false, reasonCode: "request-timestamp-invalid" };
+  }
+
+  const anchorFrom = parseStrictIso8601(anchor.validFrom);
+  if (!anchorFrom.ok || evalParsed.timeMs < anchorFrom.timeMs) {
+    return { ok: false, reasonCode: "trust-anchor-not-valid" };
+  }
+
+  if (anchor.validUntil !== undefined) {
+    const anchorUntil = parseStrictIso8601(anchor.validUntil);
+    if (!anchorUntil.ok || evalParsed.timeMs > anchorUntil.timeMs) {
+      return { ok: false, reasonCode: "trust-anchor-inactive-expired" };
+    }
+  }
+
+  if (anchor.status === "revoked") {
+    return { ok: false, reasonCode: "trust-anchor-inactive-revoked" };
+  }
+  if (anchor.status === "expired") {
+    return { ok: false, reasonCode: "trust-anchor-inactive-expired" };
+  }
+
+  const expectedDigest = computeCanonicalManifestDigest(payload);
+  if (attestation.manifestDigest !== expectedDigest) {
+    return { ok: false, reasonCode: "attestation-payload-mismatch" };
+  }
+
+  // Cryptographic signature check
+  if (anchor.algorithm === "hmac-sha256") {
+    const expectedSig = crypto
+      .createHmac("sha256", anchor.publicKeyOrSecret)
+      .update(attestation.manifestDigest, "utf8")
+      .digest("hex");
+    if (attestation.signature !== expectedSig) {
+      return { ok: false, reasonCode: "attestation-signature-invalid" };
+    }
+  } else if (anchor.algorithm === "ed25519") {
+    try {
+      const isValid = crypto.verify(
+        null,
+        Buffer.from(attestation.manifestDigest, "utf8"),
+        anchor.publicKeyOrSecret,
+        Buffer.from(attestation.signature, "hex"),
+      );
+      if (!isValid) {
+        return { ok: false, reasonCode: "attestation-signature-invalid" };
+      }
+    } catch {
+      return { ok: false, reasonCode: "attestation-signature-invalid" };
+    }
+  } else {
+    return { ok: false, reasonCode: "attestation-signature-invalid" };
+  }
+
+  const verified: VerifiedAuthorityAttestation = {
+    kind: "verified-cryptographic-attestation",
+    anchorId: attestation.anchorId,
+    manifestDigest: attestation.manifestDigest,
+    attestedAt: attestation.attestedAt,
+    verifiedAt: evalParsed.canonicalIso,
+  };
+
+  VERIFIED_ATTESTATION_SET.add(verified);
+  return { ok: true, attestation: verified };
+}
 
 export type RegisteredBenchmarkArtifact = {
   benchmarkId: string;
@@ -51,7 +235,7 @@ export type RegisteredBenchmarkArtifact = {
   adjudicationProtocol?: string;
   createdAt: string;
   productionAuthorityEligible: boolean;
-  trustRoot?: AuthorityTrustRoot;
+  trustRoot?: TestHarnessTrustRoot;
 };
 
 export const AUTHORITY_GRANT_STATUSES = [
@@ -91,8 +275,28 @@ export type RegisteredAuthorityGrant = {
   revokedAt?: string;
   revocationReason?: string;
   calibratedScoreMappingPolicyId?: string;
-  trustRoot?: AuthorityTrustRoot;
+  attestation?: VerifiedAuthorityAttestation | RawAuthorityAttestation;
+  trustRoot?: TestHarnessTrustRoot;
 };
+
+export function extractGrantManifestPayload(
+  grant: RegisteredAuthorityGrant,
+): AuthorityManifestPayload {
+  return {
+    benchmarkArtifactId: grant.benchmarkArtifactId,
+    expectedBenchmarkFingerprint: grant.expectedBenchmarkFingerprint,
+    expectedBenchmarkVersion: grant.expectedBenchmarkVersion,
+    grantId: grant.grantId,
+    grantVersion: grant.grantVersion,
+    evaluatorBinding: grant.evaluatorBinding,
+    scope: grant.scope,
+    decision: grant.decision,
+    authority: grant.authority,
+    validFrom: grant.validFrom,
+    validUntil: grant.validUntil,
+    calibratedScoreMappingPolicyId: grant.calibratedScoreMappingPolicyId,
+  };
+}
 
 export const AUTHORITY_REJECTION_REASONS = [
   "grant-not-found",
@@ -103,6 +307,14 @@ export const AUTHORITY_REJECTION_REASONS = [
   "grant-ineligible-for-production-authority",
   "grant-malformed-timestamps",
   "grant-lifecycle-incoherent",
+  "grant-attestation-missing",
+  "grant-attestation-unverified",
+  "trust-anchor-unknown",
+  "trust-anchor-inactive-revoked",
+  "trust-anchor-inactive-expired",
+  "trust-anchor-not-valid",
+  "attestation-signature-invalid",
+  "attestation-payload-mismatch",
   "benchmark-not-found",
   "benchmark-fingerprint-mismatch",
   "benchmark-version-mismatch",
@@ -139,9 +351,6 @@ export type AuthorityResolutionRequest = {
   requireProductionAuthority?: boolean;
 };
 
-export const DURABLE_AUTHORITY_BRAND = Symbol("nep.resolved-durable-calibration-authority");
-export const CONTRACT_AUTHORITY_BRAND = Symbol("nep.resolved-contract-authority");
-
 export type ResolvedDurableCalibrationAuthority = {
   readonly [DURABLE_AUTHORITY_BRAND]: true;
   readonly grantId: string;
@@ -155,7 +364,7 @@ export type ResolvedDurableCalibrationAuthority = {
   readonly resolvedAt: string;
   readonly isProductionEligible: true;
   readonly calibratedScoreMappingPolicyId?: string;
-  readonly trustRoot?: AuthorityTrustRoot;
+  readonly attestation?: VerifiedAuthorityAttestation;
 };
 
 export type ResolvedContractAuthority = {
@@ -171,7 +380,7 @@ export type ResolvedContractAuthority = {
   readonly resolvedAt: string;
   readonly isProductionEligible: false;
   readonly calibratedScoreMappingPolicyId?: string;
-  readonly trustRoot?: AuthorityTrustRoot;
+  readonly trustRoot?: TestHarnessTrustRoot;
 };
 
 export type ResolvedCalibrationAuthority =
@@ -230,54 +439,37 @@ export function parseStrictIso8601(value: unknown): StrictIsoParseResult {
 
 export function isTestHarnessTrustRoot(root: unknown): root is TestHarnessTrustRoot {
   if (!root || typeof root !== "object") return false;
-  const candidate = root as Record<string | symbol, unknown>;
+  const candidate = root as Record<string, unknown>;
   return (
     candidate.kind === "test-mechanics-harness" &&
-    candidate[TEST_HARNESS_ROOT_BRAND] === true &&
     candidate.scope === "unit-and-contract-testing-only" &&
     candidate.empiricalValidityClaim === "none-proves-mechanics-only"
   );
 }
 
-export function isProductionEligibleTrustRoot(root: unknown): boolean {
-  if (!root || typeof root !== "object") return false;
-  const candidate = root as Record<string | symbol, unknown>;
-  if (isTestHarnessTrustRoot(candidate)) {
-    return true;
-  }
-  if (candidate.kind === "cryptographic-attestation") {
-    return (
-      typeof candidate.authorityAnchorId === "string" &&
-      candidate.authorityAnchorId.length > 0 &&
-      typeof candidate.attestationDigest === "string" &&
-      candidate.attestationDigest.length > 0 &&
-      typeof candidate.attestedAt === "string" &&
-      parseStrictIso8601(candidate.attestedAt).ok
-    );
-  }
+/**
+ * Evaluates whether a trust root is eligible for durable learner authority.
+ * STRICT INVARIANT: TestHarnessTrustRoot and unverified shapes are NEVER production eligible.
+ */
+export function isProductionEligibleTrustRoot(_root: unknown): boolean {
   return false;
 }
 
 export function createTestMechanicsTrustRoot(): TestHarnessTrustRoot {
   return {
     kind: "test-mechanics-harness",
-    [TEST_HARNESS_ROOT_BRAND]: true,
     scope: "unit-and-contract-testing-only",
     empiricalValidityClaim: "none-proves-mechanics-only",
   };
 }
 
 /**
- * Creates an in-memory benchmark with an explicit test-mechanics-only trust root.
- *
- * Epistemic Boundary:
- * Proves resolver and certifier mechanics only.
- * Has zero empirical validity.
- * Structurally impossible to serialize to JSON or confuse with production authority.
+ * Creates an in-memory benchmark for test mechanics testing.
+ * Strictly non-durable and non-authoritative.
  */
 export function createTestMechanicsBenchmark(
   params: Omit<RegisteredBenchmarkArtifact, "trustRoot"> & {
-    trustRoot?: AuthorityTrustRoot;
+    trustRoot?: TestHarnessTrustRoot;
   },
 ): RegisteredBenchmarkArtifact {
   return {
@@ -287,21 +479,17 @@ export function createTestMechanicsBenchmark(
 }
 
 /**
- * Creates an in-memory authority grant with an explicit test-mechanics-only trust root.
- *
- * Epistemic Boundary:
- * Proves resolver and certifier mechanics only.
- * Has zero empirical validity.
- * Structurally impossible to serialize to JSON or confuse with production authority.
+ * Creates an in-memory authority grant for test mechanics testing.
+ * Strictly non-durable and non-authoritative unless an authentic VerifiedAuthorityAttestation is attached.
  */
 export function createTestMechanicsAuthorityGrant(
   params: Omit<RegisteredAuthorityGrant, "trustRoot"> & {
-    trustRoot?: AuthorityTrustRoot;
+    trustRoot?: TestHarnessTrustRoot;
   },
 ): RegisteredAuthorityGrant {
   return {
     ...params,
-    trustRoot: createTestMechanicsTrustRoot(),
+    trustRoot: params.trustRoot ?? createTestMechanicsTrustRoot(),
   };
 }
 
@@ -309,9 +497,8 @@ export function isResolvedDurableCalibrationAuthority(
   value: unknown,
 ): value is ResolvedDurableCalibrationAuthority {
   if (!value || typeof value !== "object") return false;
-  const candidate = value as Record<string | symbol, unknown>;
-  if (candidate[DURABLE_AUTHORITY_BRAND] !== true) return false;
-  if (candidate[CONTRACT_AUTHORITY_BRAND] !== undefined) return false;
+  if (!DURABLE_TOKEN_SET.has(value)) return false;
+  const candidate = value as Record<string, unknown>;
 
   return (
     candidate.isProductionEligible === true &&
@@ -337,9 +524,8 @@ export function isResolvedContractAuthority(
   value: unknown,
 ): value is ResolvedContractAuthority {
   if (!value || typeof value !== "object") return false;
-  const candidate = value as Record<string | symbol, unknown>;
-  if (candidate[CONTRACT_AUTHORITY_BRAND] !== true) return false;
-  if (candidate[DURABLE_AUTHORITY_BRAND] !== undefined) return false;
+  if (!CONTRACT_TOKEN_SET.has(value)) return false;
+  const candidate = value as Record<string, unknown>;
 
   return (
     candidate.isProductionEligible === false &&
@@ -478,12 +664,12 @@ export function createProvenanceAuthorityRegistry(
  *    by ID and immutable digest. Grants cannot synthesize missing benchmarks.
  * 3. Immutable provenance binding: Benchmark fingerprint, model weights fingerprint,
  *    evaluator configuration, and runtime environment must match the registered grant exactly.
- * 4. Scope containment: Activity, construct, population tags (learner context must contain all
+ * 4. Cryptographic attestation binding: Production authority requires a verified cryptographic
+ *    attestation bound to the exact authority manifest digest under an active trust anchor.
+ * 5. Scope containment: Activity, construct, population tags (learner context must contain all
  *    required tags), and physical audio constraints must fall entirely within the calibrated envelope.
- * 5. Deterministic time semantics: Strict ISO-8601 evaluation timestamp;
+ * 6. Deterministic time semantics: Strict ISO-8601 evaluation timestamp;
  *    resolvedAt derives strictly and canonically from the request timestamp, never ambient wall-clock.
- * 6. Production authority gate: Checked-in repository fixtures are marked ineligible for production
- *    authority and fail closed unless explicitly resolving in contract-only reference mode.
  * 7. Durable brand separation: Non-production resolution strictly produces ResolvedContractAuthority.
  *    Only verified production-eligible grants with authenticated trust roots produce
  *    ResolvedDurableCalibrationAuthority.
@@ -591,21 +777,32 @@ export function resolveCalibrationAuthority(
     }
   }
 
-  // 4. Production authority eligibility and trust-root verification
-  const isGrantEligible = Boolean(
-    grant.productionAuthorityEligible && isProductionEligibleTrustRoot(grant.trustRoot),
-  );
-  const isBenchmarkEligible = Boolean(
-    registeredBenchmark?.productionAuthorityEligible &&
-      isProductionEligibleTrustRoot(registeredBenchmark.trustRoot),
-  );
-
+  // 4. Production authority eligibility & cryptographic attestation verification
   if (request.requireProductionAuthority !== false) {
-    if (!isGrantEligible) {
+    if (
+      !grant.productionAuthorityEligible ||
+      (grant.trustRoot !== undefined && !isProductionEligibleTrustRoot(grant.trustRoot))
+    ) {
       reasonCodes.push("grant-ineligible-for-production-authority");
     }
-    if (registeredBenchmark && !isBenchmarkEligible) {
+    if (
+      registeredBenchmark &&
+      (!registeredBenchmark.productionAuthorityEligible ||
+        (registeredBenchmark.trustRoot !== undefined &&
+          !isProductionEligibleTrustRoot(registeredBenchmark.trustRoot)))
+    ) {
       reasonCodes.push("benchmark-ineligible-for-production-authority");
+    }
+
+    if (!grant.attestation) {
+      reasonCodes.push("grant-attestation-missing");
+    } else if (!isVerifiedAuthorityAttestation(grant.attestation)) {
+      reasonCodes.push("grant-attestation-unverified");
+    } else {
+      const expectedDigest = computeCanonicalManifestDigest(extractGrantManifestPayload(grant));
+      if (grant.attestation.manifestDigest !== expectedDigest) {
+        reasonCodes.push("attestation-payload-mismatch");
+      }
     }
   }
 
@@ -720,10 +917,11 @@ export function resolveCalibrationAuthority(
       calibratedScoreMappingPolicyId: grant.calibratedScoreMappingPolicyId,
       trustRoot: grant.trustRoot,
     };
+    CONTRACT_TOKEN_SET.add(resolvedGrant);
     return { ok: true, resolvedGrant };
   }
 
-  // Production-eligible resolution returns durable brand.
+  // Production-eligible resolution returns durable brand verified via capability set.
   const resolvedGrant: ResolvedDurableCalibrationAuthority = {
     [DURABLE_AUTHORITY_BRAND]: true,
     grantId: grant.grantId,
@@ -737,8 +935,9 @@ export function resolveCalibrationAuthority(
     resolvedAt: canonicalTimestamp!,
     isProductionEligible: true,
     calibratedScoreMappingPolicyId: grant.calibratedScoreMappingPolicyId,
-    trustRoot: grant.trustRoot,
+    attestation: grant.attestation as VerifiedAuthorityAttestation,
   };
+  DURABLE_TOKEN_SET.add(resolvedGrant);
 
   return { ok: true, resolvedGrant };
 }

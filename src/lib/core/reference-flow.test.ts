@@ -1,10 +1,15 @@
+import crypto from "node:crypto";
 import { describe, expect, it } from "vitest";
 
 import {
   type RegisteredBenchmarkArtifact,
+  type RegisteredAuthorityGrant,
+  type TrustedAnchor,
   createProvenanceAuthorityRegistry,
-  createTestMechanicsBenchmark,
-  createTestMechanicsAuthorityGrant,
+  createTrustedAnchorRegistry,
+  computeCanonicalManifestDigest,
+  extractGrantManifestPayload,
+  verifyAuthorityManifest,
   isResolvedDurableCalibrationAuthority,
   resolveCalibrationAuthority,
 } from "./authority-registry";
@@ -73,7 +78,7 @@ describe("pure core reference flow", () => {
       createdAt: "2026-09-04T00:00:00.000Z",
     };
 
-    const testBenchmark: RegisteredBenchmarkArtifact = createTestMechanicsBenchmark({
+    const testBenchmark: RegisteredBenchmarkArtifact = {
       benchmarkId: "vi-adult-minpair-v1",
       version: "1.0.0",
       immutableFingerprint: "sha256-bench-minpair-v1-abc",
@@ -82,30 +87,62 @@ describe("pure core reference flow", () => {
       sampleSize: 100,
       createdAt: "2026-09-01T00:00:00.000Z",
       productionAuthorityEligible: true,
-    });
+    };
+
+    const testSecret = "test-anchor-secret-reference-flow-32b";
+    const testAnchor: TrustedAnchor = {
+      anchorId: "anchor-ref-flow-01",
+      algorithm: "hmac-sha256",
+      publicKeyOrSecret: testSecret,
+      status: "active",
+      validFrom: "2026-01-01T00:00:00.000Z",
+    };
+    const anchorRegistry = createTrustedAnchorRegistry([testAnchor]);
+
+    const grantBase: RegisteredAuthorityGrant = {
+      grantId: "grant-minpair-001",
+      grantVersion: "1.0.0",
+      status: "active",
+      benchmarkArtifactId: "vi-adult-minpair-v1",
+      expectedBenchmarkFingerprint: "sha256-bench-minpair-v1-abc",
+      expectedBenchmarkVersion: "1.0.0",
+      productionAuthorityEligible: true,
+      evaluatorBinding: {
+        evaluatorId: "binary-answer-key",
+        evaluatorKind: "deterministic",
+        modelFingerprint: "deterministic-choice@v1",
+      },
+      scope: observation.calibration.scope,
+      decision: "assessment",
+      authority: "assessment-candidate",
+      validFrom: "2026-01-01T00:00:00.000Z",
+    };
+
+    const payload = extractGrantManifestPayload(grantBase);
+    const digest = computeCanonicalManifestDigest(payload);
+    const signature = crypto.createHmac("sha256", testSecret).update(digest, "utf8").digest("hex");
+    const verifyRes = verifyAuthorityManifest(
+      {
+        kind: "raw-cryptographic-attestation",
+        anchorId: "anchor-ref-flow-01",
+        manifestDigest: digest,
+        signature,
+        attestedAt: "2026-09-01T00:00:00.000Z",
+      },
+      payload,
+      anchorRegistry,
+      "2026-09-04T00:00:01.000Z",
+    );
+    if (!verifyRes.ok) throw new Error("verification failed in test setup");
+
+    const grant: RegisteredAuthorityGrant = {
+      ...grantBase,
+      attestation: verifyRes.attestation,
+    };
 
     const registry = createProvenanceAuthorityRegistry({
       benchmarks: [testBenchmark],
-      grants: [
-        createTestMechanicsAuthorityGrant({
-          grantId: "grant-minpair-001",
-          grantVersion: "1.0.0",
-          status: "active",
-          benchmarkArtifactId: "vi-adult-minpair-v1",
-          expectedBenchmarkFingerprint: "sha256-bench-minpair-v1-abc",
-          expectedBenchmarkVersion: "1.0.0",
-          productionAuthorityEligible: true,
-          evaluatorBinding: {
-            evaluatorId: "binary-answer-key",
-            evaluatorKind: "deterministic",
-            modelFingerprint: "deterministic-choice@v1",
-          },
-          scope: observation.calibration.scope,
-          decision: "assessment",
-          authority: "assessment-candidate",
-          validFrom: "2026-01-01T00:00:00.000Z",
-        }),
-      ],
+      grants: [grant],
     });
 
     const resolved = resolveCalibrationAuthority(
