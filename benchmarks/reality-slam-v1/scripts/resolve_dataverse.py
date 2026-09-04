@@ -9,6 +9,8 @@ from urllib.request import Request, urlopen
 
 DOI = "doi:10.7910/DVN/8SWHNO"
 EXPECTED_VERSION = "4.0"
+EXPECTED_VERSION_MAJOR = 4
+EXPECTED_VERSION_MINOR = 0
 EXPECTED_ARTIFACTS = {
     "data_en_es.tar.gz": (3357629, "MD5", "444e0d9e45bdc19822938cffb9fbcc7a"),
     "data_es_en.tar.gz": (3357630, "MD5", "3c0bc0019ef772050482c570e0626447"),
@@ -21,15 +23,37 @@ class ProvenanceError(RuntimeError):
     pass
 
 
-def _extract_files(payload: dict[str, Any]) -> list[dict[str, Any]]:
+def _extract_latest_version(payload: dict[str, Any]) -> dict[str, Any]:
     try:
-        return payload["data"]["latestVersion"]["files"]
+        latest = payload["data"]["latestVersion"]
     except (KeyError, TypeError) as exc:
-        raise ProvenanceError("Dataverse metadata payload does not contain data.latestVersion.files") from exc
+        raise ProvenanceError("Dataverse metadata payload does not contain data.latestVersion") from exc
+    if not isinstance(latest, dict):
+        raise ProvenanceError("Dataverse data.latestVersion must be an object")
+    return latest
+
+
+def _extract_files(payload: dict[str, Any]) -> list[dict[str, Any]]:
+    latest = _extract_latest_version(payload)
+    files = latest.get("files")
+    if not isinstance(files, list):
+        raise ProvenanceError("Dataverse metadata payload does not contain data.latestVersion.files")
+    return files
+
+
+def _validate_version(payload: dict[str, Any]) -> None:
+    latest = _extract_latest_version(payload)
+    major = latest.get("versionNumber")
+    minor = latest.get("versionMinorNumber")
+    if major != EXPECTED_VERSION_MAJOR or minor != EXPECTED_VERSION_MINOR:
+        raise ProvenanceError(
+            f"Dataverse version drift: expected {EXPECTED_VERSION}, got {major!r}.{minor!r}"
+        )
 
 
 def validate_metadata_payload(payload: dict[str, Any]) -> dict[str, dict[str, Any]]:
-    """Resolve exact artifact IDs/checksums from metadata; never downloads file bytes."""
+    """Resolve exact frozen artifact IDs/checksums from metadata; never downloads file bytes."""
+    _validate_version(payload)
     files = _extract_files(payload)
     by_name: dict[str, dict[str, Any]] = {}
     for entry in files:
@@ -38,6 +62,8 @@ def validate_metadata_payload(payload: dict[str, Any]) -> dict[str, dict[str, An
             continue
         filename = data_file.get("filename")
         if isinstance(filename, str):
+            if filename in by_name:
+                raise ProvenanceError(f"duplicate Dataverse filename in frozen metadata: {filename}")
             by_name[filename] = data_file
 
     resolved: dict[str, dict[str, Any]] = {}
