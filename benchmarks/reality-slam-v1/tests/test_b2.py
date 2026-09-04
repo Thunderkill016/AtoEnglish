@@ -54,21 +54,26 @@ class _ConstantModel:
         return np.tile(np.array([[0.5, 0.5]], dtype=float), (len(matrix), 1))
 
 
+def _new_model() -> tuple[SGDClassifier, FeatureHasher]:
+    model = SGDClassifier(
+        loss="log_loss",
+        penalty="l2",
+        alpha=DEFAULT_ALPHA,
+        random_state=DEFAULT_SEED,
+        shuffle=False,
+        average=True,
+        fit_intercept=True,
+    )
+    hasher = FeatureHasher(n_features=HASH_DIMENSIONS, input_type="dict", alternate_sign=False)
+    return model, hasher
+
+
 class B2SmokeTest(unittest.TestCase):
     def test_blind_predictions_do_not_require_dev_labels(self) -> None:
         train_exercises = list(parse_slam_lines(TRAIN.splitlines(keepends=True), "train"))
         dev_exercises = list(parse_slam_lines(DEV.splitlines(keepends=True), "dev"))
 
-        hasher = FeatureHasher(n_features=HASH_DIMENSIONS, input_type="dict", alternate_sign=False)
-        model = SGDClassifier(
-            loss="log_loss",
-            penalty="l2",
-            alpha=DEFAULT_ALPHA,
-            random_state=DEFAULT_SEED,
-            shuffle=False,
-            average=True,
-            fit_intercept=True,
-        )
+        model, hasher = _new_model()
         history = CausalHistory()
         did_fit = _fit_rows(
             model,
@@ -112,6 +117,37 @@ class B2SmokeTest(unittest.TestCase):
         self.assertEqual(row_by_row, one_large_batch)
         self.assertEqual(row_by_row[0]["prior_encounter_count"], 0.0)
         self.assertEqual(row_by_row[1]["prior_encounter_count"], math.log1p(1))
+
+    def test_fold_in_gold_must_match_blind_input_exactly(self) -> None:
+        dev_exercises = list(parse_slam_lines(DEV.splitlines(keepends=True), "dev"))
+
+        missing_model, missing_hasher = _new_model()
+        with self.assertRaisesRegex(ValueError, "lacks an authorized label"):
+            _fit_rows(
+                missing_model,
+                missing_hasher,
+                CausalHistory(),
+                dev_exercises,
+                labels_by_token={"8rgJEAPw1201": 1},
+                batch_size=2,
+                first_fit=True,
+            )
+
+        extra_model, extra_hasher = _new_model()
+        with self.assertRaisesRegex(ValueError, "absent from the blind input"):
+            _fit_rows(
+                extra_model,
+                extra_hasher,
+                CausalHistory(),
+                dev_exercises,
+                labels_by_token={
+                    "8rgJEAPw1201": 1,
+                    "8rgJEAPw1202": 0,
+                    "8rgJEAPw9999": 1,
+                },
+                batch_size=2,
+                first_fit=True,
+            )
 
 
 if __name__ == "__main__":
