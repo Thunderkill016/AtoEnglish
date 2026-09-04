@@ -136,6 +136,29 @@ class ProviderContractTests(unittest.TestCase):
                 provider_version="0.3.0",
             )
 
+    def test_bounds_on_errors_and_phones_lists(self) -> None:
+        raw_errors = [
+            {
+                "word": "think",
+                "expected": "θ",
+                "actual": "t",
+                "confidence": 0.8,
+                "phones": [{"expected": "θ", "heard": "t", "confidence": 0.8}] * 40,
+            }
+        ] * 25
+
+        bounded = sanitize_openpronounce_result(
+            {
+                "score": True,  # booleans must not be treated as finite numbers (True == 1.0)
+                "differences": {"errors": raw_errors},
+            },
+            provider_version="0.3.0",
+        )
+
+        self.assertIsNone(bounded["candidate_score"])
+        self.assertLessEqual(len(bounded["errors"]), 16)
+        self.assertLessEqual(len(bounded["errors"][0]["phones"]), 32)
+
 
 if __name__ == "__main__":
     unittest.main()

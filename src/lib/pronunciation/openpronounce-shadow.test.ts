@@ -88,4 +88,110 @@ describe("OpenPronounce shadow boundary", () => {
       }),
     ).toBeNull();
   });
+
+  it("enforces that client cannot author canonical target word or IPA", () => {
+    // Target resolution strictly relies on soundId; client cannot supply an arbitrary word
+    const valid = resolvePronunciationShadowTarget("th-voiceless");
+    expect(valid).toEqual({
+      soundId: "th-voiceless",
+      word: "think",
+      ipa: "/θɪŋk/",
+    });
+
+    // Malformed, oversized, or malicious soundIds fail closed
+    expect(resolvePronunciationShadowTarget("")).toBeNull();
+    expect(resolvePronunciationShadowTarget("   ")).toBeNull();
+    expect(resolvePronunciationShadowTarget("a".repeat(81))).toBeNull();
+    expect(resolvePronunciationShadowTarget("<script>alert(1)</script>")).toBeNull();
+    expect(resolvePronunciationShadowTarget("DROP TABLE sounds;")).toBeNull();
+  });
+
+  it("strictly rejects executable, script, html, or arbitrary MIME types", () => {
+    expect(isAllowedPronunciationAudioType("")).toBe(false);
+    expect(isAllowedPronunciationAudioType("application/javascript")).toBe(false);
+    expect(isAllowedPronunciationAudioType("text/html")).toBe(false);
+    expect(isAllowedPronunciationAudioType("application/x-sh")).toBe(false);
+    expect(isAllowedPronunciationAudioType("application/json")).toBe(false);
+    expect(isAllowedPronunciationAudioType("image/png")).toBe(false);
+    expect(isAllowedPronunciationAudioType("video/mp4")).toBe(false);
+  });
+
+  it("strips all raw scores, waveforms, transcripts, vectors, and feedback from the learner observation", () => {
+    const target = resolvePronunciationShadowTarget("th-voiceless");
+    expect(target).not.toBeNull();
+    if (!target) return;
+
+    const providerPayload = parseOpenPronounceProviderPayload({
+      provider: { name: "openpronounce", version: "0.3.0" },
+      candidate_score: 95.0,
+      acoustic_distance: 3.5,
+      phoneme_error_rate: 0.05,
+      word_error_rate: 0.0,
+      errors: [],
+      // Adversarial extra fields injected by untrusted provider
+      raw_score: 95,
+      score: 95,
+      transcript: "THINK",
+      transcribe: "THINK",
+      feedback: "Great job!",
+      expected_vector: [0.1, 0.2],
+      transcribed_vector: [0.1, 0.25],
+      waveform: [0.01, -0.02],
+      alignment: { start: 0, end: 100 },
+    });
+
+    expect(providerPayload).not.toBeNull();
+    if (!providerPayload) return;
+
+    const observation = toPronunciationShadowObservation(target, providerPayload);
+    const serialized = JSON.stringify(observation);
+
+    // Verify bounded fields exist
+    expect(observation.source).toBe("openpronounce");
+    expect(observation.calibration).toBe("shadow-unvalidated");
+    expect(observation.diagnostics.acousticDistance).toBe(3.5);
+
+    // Verify zero leakage of scores, vectors, or transcripts
+    const forbiddenStrings = [
+      "candidate_score",
+      "raw_score",
+      "95",
+      "THINK",
+      "transcript",
+      "transcribe",
+      "feedback",
+      "expected_vector",
+      "transcribed_vector",
+      "waveform",
+      "alignment",
+    ];
+
+    for (const forbidden of forbiddenStrings) {
+      expect(serialized).not.toContain(forbidden);
+    }
+  });
+
+  it("handles null or missing prosody gracefully without fabricating values", () => {
+    const target = resolvePronunciationShadowTarget("th-voiceless");
+    expect(target).not.toBeNull();
+    if (!target) return;
+
+    const providerPayload = parseOpenPronounceProviderPayload({
+      provider: { name: "openpronounce", version: "0.3.0" },
+      acoustic_distance: null,
+      phoneme_error_rate: null,
+      word_error_rate: null,
+      errors: [],
+      prosody_summary: null,
+    });
+
+    expect(providerPayload).not.toBeNull();
+    if (!providerPayload) return;
+
+    const observation = toPronunciationShadowObservation(target, providerPayload);
+    expect(observation.diagnostics.prosody).toBeNull();
+    expect(observation.diagnostics.acousticDistance).toBeNull();
+    expect(observation.diagnostics.phonemeErrorRate).toBeNull();
+    expect(observation.diagnostics.wordErrorRate).toBeNull();
+  });
 });
