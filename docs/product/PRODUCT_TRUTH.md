@@ -1,151 +1,196 @@
 # AtoEnglish product truth
 
-**Status:** current product decision source  
-**Updated:** 2026-07-24  
-**Primary roadmap:** GitHub issue #20  
-**Journey contract:** `docs/curriculum/28-day-speaking-journey-contract.md`
+**Status:** canonical product decision source  
+**Updated:** 2026-08-02  
+**Architecture direction:** `docs/product/YOUTUBE_TO_CURRICULUM.md`  
+**Session continuity:** `PROJECT_MEMORY.md`
 
 ## What AtoEnglish is now
 
-AtoEnglish is a Vietnamese-first guided speaking product for adults who know some English but freeze when they need to speak at work.
+AtoEnglish is a Vietnamese-first learning system that turns legally usable natural conversations from YouTube and other authentic-media sources into a structured path from near-zero English to stable practical communication.
 
-The first product is not the complete A0–B2 curriculum already present in the repository. It is one focused, measurable 28-day work-speaking pilot.
+YouTube is raw language material, not the curriculum.
+
+AtoEnglish must select short authentic communication clips, analyze their language and social function, place them in a prerequisite graph, provide level-appropriate support, and convert comprehension into retrieval and real communication output.
+
+The product is not:
+
+- a collection of unrelated video quizzes;
+- an annotated video viewer;
+- a synthetic-dialogue library;
+- an open-ended chatbot;
+- a grammar list ordered independently of communication needs.
+
+## Product advantage
+
+The defensible value is:
+
+> Take the right short piece of real communication, place it at the right point in a learner's journey, and turn it into a capability the learner can reuse outside that clip.
+
+```text
+authentic input
++ structured progression
++ active recall
++ repeated exposure across speakers
++ real communication output
+= practical language acquisition
+```
 
 ## Target learner
 
 The initial learner is:
 
 - a Vietnamese adult beginner or false beginner;
-- able to recognize some common English but unable to retrieve it reliably while speaking;
-- likely to need English for a colleague, client, receptionist, interview, service, or workplace interaction;
-- willing to practice for 10–15 minutes per day;
-- better served by clear Vietnamese guidance and controlled speaking progression than by open-ended conversation.
+- able to recognize some English but unable to retrieve it reliably;
+- overwhelmed by unstructured natural media;
+- better served by Vietnamese guidance, controlled progression, and repeated exposure;
+- willing to practice in short sessions;
+- seeking practical everyday or workplace communication rather than exam certification.
 
-The current target segment is a product hypothesis. Interviews, paid pilot participation, completion, and learning evidence must validate it.
+## Learner destination
 
-## Product promise
+The initial long-range destination is practical high-A2 to B1 communication, not a claim of fluency.
 
-> In 28 days, practice 10–15 minutes per day to introduce yourself and your work, handle five predictable follow-up questions, and ask for repetition or slower speech.
+The learner should progressively become able to:
 
-This promise must remain consistent across landing, onboarding, dashboard, lessons, assessment, and support communication.
+1. recognize common communication functions across different speakers;
+2. respond without translating every sentence internally;
+3. maintain an ordinary conversation for several minutes;
+4. ask follow-up questions;
+5. describe experiences, routines, problems, and plans;
+6. give simple reasons and opinions;
+7. repair misunderstandings and request clarification;
+8. understand varied speakers at moderately natural speed;
+9. reuse learned language in unseen situations.
 
-## Final learner outcome
+## Unit of curriculum
 
-At the end of the pilot, the learner should be able to:
+The smallest curriculum unit is a **Communication Clip**, normally 3–60 seconds long. A full video or podcast episode is only a source container.
 
-1. greet and close a short workplace interaction;
-2. state and spell their name;
-3. state their role;
-4. state their company or workplace type;
-5. state one responsibility;
-6. answer five predictable questions about their work;
-7. independently ask for repetition or slower speech when needed;
-8. deliver a 30–45 second work introduction without a full-script prompt.
+A clip may support different lessons at A0, A1, A2, and B1. Each treatment teaches only the language and capability appropriate to that learner state.
 
-This is a narrow product outcome, not a CEFR certification claim.
-
-## Learning model
-
-Every meaningful lesson should move through a controlled progression:
+Curriculum ordering is based on communicative prerequisites:
 
 ```text
-real situation
-→ short comprehensible model
-→ notice useful chunks
-→ controlled retrieval
-→ supported speaking
-→ reduced prompts
-→ changed situation
-→ concise feedback
-→ immediate retry
-→ later spaced retrieval
+recognize greetings
+→ introduce oneself
+→ ask about another person
+→ answer and ask a follow-up
+→ sustain several turns
+→ repair misunderstanding
+→ describe and explain
+→ narrate and discuss
 ```
 
-Vocabulary, grammar, XP, streaks, and quizzes support this progression. They are not the final learner outcome.
+Vocabulary, grammar, pronunciation, reductions, and discourse features support these capabilities; they do not define the roadmap by themselves.
 
-## Daily lesson contract
+## Learning contract
 
-A daily lesson should:
+Every complete clip treatment has three layers.
 
-- have one measurable can-do outcome;
-- fit a credible 10–15 minute session;
-- end in required spoken output;
-- use only the language needed for that task;
-- retrieve earlier chunks where relevant;
-- reduce support over time;
-- avoid showing the complete answer during the final performance;
-- give no more than one or two high-impact feedback points;
-- provide an immediate opportunity to speak again;
-- preserve an explicit fallback when browser speech capability is unavailable.
+### 1. Comprehension
 
-## Product experience
+The learner understands what real speakers are doing through gist, key evidence, bounded replay, and synchronized transcript support.
 
-The intended learner journey is:
+### 2. Acquisition
 
-```text
-clear promise
-→ start with minimal friction
-→ learn today's small speaking task
-→ perform the task
-→ receive understandable feedback
-→ retry
-→ see the next step
-→ return for spaced practice and the next daily outcome
-```
+The learner begins to own selected chunks, collocations, patterns, and speech features through active recall, imitation where useful, contextual replay, and later spaced retrieval.
 
-The product must make the speaking task more important than browsing curriculum breadth or collecting points.
+### 3. Transfer
+
+The learner uses the capability beyond the source clip through personal substitution, parallel questions, changed situations, connected turns, and unseen-speaker tests.
+
+Without transfer, completion is not evidence of learning.
+
+## Learning core
+
+The product direction contains four connected systems:
+
+1. **Source Engine** — records approved source metadata, permission, attribution, transcript provenance, speakers, and timestamps.
+2. **Language Intelligence Engine** — proposes levels, communication functions, chunks, structures, speech features, social context, prerequisites, and learning value.
+3. **Curriculum Graph** — orders capabilities, chooses what comes next, schedules varied exposure, and defines advancement evidence.
+4. **Lesson Runtime** — delivers bounded playback, transcript evidence, comprehension, recall, shadowing, response tasks, FSRS, and transfer tests.
+
+AI may assist analysis and drafting but must not publish curriculum autonomously.
+
+## First validation slice
+
+The next product slice is a seven-day A0 mini-curriculum:
+
+- 20–30 reviewed communication clips;
+- multiple videos, speakers, and contexts;
+- five capabilities:
+  1. greet someone;
+  2. say one's name;
+  3. ask another person's name;
+  4. say where one is from;
+  5. ask someone to repeat;
+- each capability appears in 3–5 clips from different speakers or contexts;
+- support fades across the sequence;
+- final evidence includes recognition in an unseen clip and personal transfer.
+
+This pilot validates curriculum coherence, not catalog size.
+
+## Source and rights boundary
+
+A public YouTube URL does not automatically grant permission to copy transcripts, translate content, create derivative lessons, or sell access.
+
+A learner-facing clip requires documented permission or a compatible license, or public-domain status. Every published clip must preserve:
+
+- source URL and exact timestamps;
+- creator or publisher attribution;
+- license or permission evidence;
+- transcript provenance;
+- human review of transcript, speaker boundaries, names, translation, and learning activities.
+
+Embedding and media access must comply with the source platform's terms and technical constraints.
 
 ## Evidence hierarchy
 
-Decisions should distinguish four evidence levels:
+Decisions distinguish:
 
-1. **Repository evidence:** code, tests, docs, routes, data, and current behavior.
-2. **Usability evidence:** a learner can reach and complete the intended flow.
-3. **Learning evidence:** baseline-to-checkpoint or baseline-to-final speaking performance improves.
-4. **Market evidence:** target learners pay, complete, renew, or refer others.
+1. **Repository evidence:** code, data, tests, routes, and current behavior.
+2. **Source evidence:** permission, provenance, transcript accuracy, and timestamp accuracy.
+3. **Usability evidence:** learners can reach and complete the intended flow.
+4. **Learning evidence:** delayed retrieval, unseen-speaker recognition, and transfer improve.
+5. **Market evidence:** target learners pay, complete, renew, or refer others.
 
-A technical check cannot substitute for learner or market evidence.
+Passing CI proves repository consistency, not curriculum validity or learning effectiveness.
 
 ## Existing foundation
 
-The repository already contains substantial infrastructure:
+The repository already contains useful capabilities:
 
-- Next.js application and responsive lesson surfaces;
-- Supabase authentication, progress, migrations, and RLS;
-- 50 registered A0–B2 curriculum units;
-- vocabulary, grammar, dialogue, translation, shadowing, speaking, quiz, and review sections;
-- FSRS, XP, streak, league, progress, and guest flows;
-- baseline/final speaking assessment and rubric;
-- privacy-bounded pilot analytics;
-- Vitest, content-standard checks, production build, and Playwright smoke coverage.
+- Next.js and responsive lesson surfaces;
+- authentication, progress, RLS, and pilot analytics;
+- FSRS and review flows;
+- speaking tasks, feedback, retry, and checkpoint infrastructure;
+- a large legacy synthetic curriculum;
+- Vitest, content checks, builds, and Playwright coverage;
+- PR #46's authentic-media technical proof;
+- PR #45's diagnosis, fading support, repair, and cold-transfer experiment.
 
-This foundation is available but not equivalent to a validated product. The current bottleneck is proving one coherent learner outcome.
+These are reusable parts, not the product roadmap by themselves.
 
-## Product boundaries
+## Superseded direction
 
-Until the pilot is validated:
+The focused 28-day workplace-speaking journey is no longer the canonical curriculum roadmap after the owner's 2026-08-02 decision.
 
-- keep the existing 50 units available but do not treat breadth as proof of value;
-- build the 28-day journey in small, testable slices;
-- preserve the modular monolith;
-- use manual operations when they are cheaper and safer than building infrastructure;
-- collect only bounded analytics required to answer activation, completion, learning, and support questions;
-- do not store raw audio, transcripts, names, employers, or learner free text in analytics;
-- do not claim learner improvement until baseline and later performance evidence exists.
+Its useful task definitions, speaking evidence, feedback, retry, assessment, and pilot operations may be reused. Future curriculum selection and ordering must follow authentic-input communication capabilities and prerequisites.
 
-## Success questions
-
-AtoEnglish must be able to answer with evidence:
-
-- who starts the first speaking task;
-- who completes it;
-- who returns after seven days;
-- who completes the 28-day journey;
-- whether speaking performance improves;
-- which lesson or UX failures block learners;
-- how much human support each learner requires;
-- whether the target learner will pay, renew, or refer another learner.
+Do not silently revert to the old roadmap because existing code or documents still mention 28 days.
 
 ## Product decision rule
 
-When choosing between building more breadth and improving the validated journey, choose the smallest change that increases the chance of obtaining trustworthy learner evidence.
+When choosing work, prefer the smallest change that improves one of these:
+
+- source legality and provenance;
+- clip analysis quality;
+- prerequisite and curriculum coherence;
+- comprehension-to-acquisition progression;
+- delayed retrieval;
+- exposure across speakers and contexts;
+- transfer to unseen communication;
+- trustworthy learner evidence.
+
+Do not optimize for video count, feature count, quiz count, or autonomous generation.
