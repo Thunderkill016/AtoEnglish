@@ -1,4 +1,6 @@
-import type { EvidenceType, ResponseModality } from "@/lib/learning/evidence";
+import type { ResponseModality } from "@/lib/learning/evidence";
+
+import type { CoreEvidenceRole } from "./evidence-role";
 
 export const LANGUAGE_SYSTEMS = [
   "phonetics",
@@ -71,6 +73,12 @@ export const SKILL_RELATION_TYPES = [
 
 export type SkillRelationType = (typeof SKILL_RELATION_TYPES)[number];
 
+export const ACYCLIC_SKILL_RELATION_TYPES = [
+  "prerequisite-of",
+  "component-of",
+  "enables",
+] as const satisfies readonly SkillRelationType[];
+
 export type CoreSourceRef = {
   sourceId: string;
   version?: string;
@@ -85,7 +93,7 @@ export type SkillNode = {
   kind: SkillNodeKind;
   systems: LanguageSystem[];
   activities: CommunicationActivity[];
-  allowedEvidence: EvidenceType[];
+  allowedEvidence: CoreEvidenceRole[];
   allowedResponses: ResponseModality[];
   tags: string[];
   sources: CoreSourceRef[];
@@ -108,11 +116,13 @@ export type SkillGraph = {
 export type SkillGraphProblem =
   | { type: "duplicate-node"; nodeId: string }
   | { type: "self-relation"; nodeId: string; relation: SkillRelationType }
-  | { type: "missing-node"; nodeId: string; relation: SkillRelationType };
+  | { type: "missing-node"; nodeId: string; relation: SkillRelationType }
+  | { type: "dependency-cycle"; relation: SkillRelationType; path: string[] };
 
 /**
  * Persistence-neutral structural validation. Pedagogical validity and benchmark validity are
- * separate gates; this function only prevents malformed graph topology from entering the core.
+ * separate gates; this function prevents malformed or cyclic dependency topology from entering
+ * the core. Associative relations such as `confusable-with` are intentionally allowed to cycle.
  */
 export function validateSkillGraph(graph: SkillGraph): SkillGraphProblem[] {
   const problems: SkillGraphProblem[] = [];
@@ -138,5 +148,60 @@ export function validateSkillGraph(graph: SkillGraph): SkillGraphProblem[] {
     }
   }
 
+  for (const relationType of ACYCLIC_SKILL_RELATION_TYPES) {
+    const cycle = findDirectedCycle(graph, relationType, seen);
+    if (cycle) {
+      problems.push({ type: "dependency-cycle", relation: relationType, path: cycle });
+    }
+  }
+
   return problems;
+}
+
+function findDirectedCycle(
+  graph: SkillGraph,
+  relationType: SkillRelationType,
+  knownNodes: Set<string>,
+): string[] | null {
+  const adjacency = new Map<string, string[]>();
+
+  for (const relation of graph.relations) {
+    if (relation.type !== relationType) continue;
+    if (!knownNodes.has(relation.from) || !knownNodes.has(relation.to)) continue;
+    const targets = adjacency.get(relation.from) ?? [];
+    targets.push(relation.to);
+    adjacency.set(relation.from, targets);
+  }
+
+  const visiting = new Set<string>();
+  const visited = new Set<string>();
+  const stack: string[] = [];
+
+  const visit = (nodeId: string): string[] | null => {
+    if (visiting.has(nodeId)) {
+      const start = stack.indexOf(nodeId);
+      return [...stack.slice(start), nodeId];
+    }
+    if (visited.has(nodeId)) return null;
+
+    visiting.add(nodeId);
+    stack.push(nodeId);
+
+    for (const next of adjacency.get(nodeId) ?? []) {
+      const cycle = visit(next);
+      if (cycle) return cycle;
+    }
+
+    stack.pop();
+    visiting.delete(nodeId);
+    visited.add(nodeId);
+    return null;
+  };
+
+  for (const nodeId of knownNodes) {
+    const cycle = visit(nodeId);
+    if (cycle) return cycle;
+  }
+
+  return null;
 }
