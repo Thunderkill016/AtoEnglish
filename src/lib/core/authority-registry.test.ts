@@ -4,6 +4,7 @@ import * as authorityRegistryModule from "./authority-registry";
 
 import {
   type AuthorityResolutionRequest,
+  type AuthorityManifestPayload,
   type RegisteredAuthorityGrant,
   type RegisteredBenchmarkArtifact,
   type TrustedAnchor,
@@ -1861,13 +1862,14 @@ describe("Provenance Authority Registry V1", () => {
     const payloadA = extractGrantManifestPayload(activeGrantBase);
 
     // Construct payloadB with reverse key insertion order
-    const payloadB: any = {};
-    for (const key of Object.keys(payloadA).reverse()) {
-      payloadB[key] = (payloadA as any)[key];
+    const payloadB: Record<string, unknown> = {};
+    const recordPayloadA: Record<string, unknown> = { ...payloadA };
+    for (const key of Object.keys(recordPayloadA).reverse()) {
+      payloadB[key] = recordPayloadA[key];
     }
 
     const digestA = computeCanonicalManifestDigest(payloadA);
-    const digestB = computeCanonicalManifestDigest(payloadB);
+    const digestB = computeCanonicalManifestDigest(payloadB as unknown as AuthorityManifestPayload);
 
     expect(digestA).toBe(digestB);
     expect(digestA.startsWith("sha256:")).toBe(true);
@@ -1951,8 +1953,10 @@ describe("Provenance Authority Registry V1", () => {
 
   it("42. adversarial A2: HMAC symmetric keys cannot yield production authority and production factories are unexported", () => {
     // 1. Production trust factories are strictly NOT exported
-    expect((authorityRegistryModule as any).createHostProductionTrustStore).toBeUndefined();
-    expect((authorityRegistryModule as any).createHostTrustBootstrapToken).toBeUndefined();
+    expect(Object.hasOwn(authorityRegistryModule, "createHostProductionTrustStore")).toBe(false);
+    expect(Object.hasOwn(authorityRegistryModule, "createHostTrustBootstrapToken")).toBe(false);
+    expect((authorityRegistryModule as Record<string, unknown>).createHostProductionTrustStore).toBeUndefined();
+    expect((authorityRegistryModule as Record<string, unknown>).createHostTrustBootstrapToken).toBeUndefined();
 
     // 2. An ad-hoc registry with HMAC key only verifies at contract tier
     const hmacPayload = extractGrantManifestPayload(activeGrantBase);
@@ -2300,7 +2304,8 @@ describe("Provenance Authority Registry V1", () => {
     expect(publicView.anchorId).toBe("anchor-test-hmac-01");
     expect(publicView.algorithm).toBe("hmac-sha256");
     expect(publicView.publicKeyPem).toBeUndefined();
-    expect((publicView as any).publicKeyOrSecret).toBeUndefined();
+    expect(Object.hasOwn(publicView, "publicKeyOrSecret")).toBe(false);
+    expect((publicView as Record<string, unknown>).publicKeyOrSecret).toBeUndefined();
     expect(JSON.stringify(publicView)).not.toContain(testSecret);
 
     // For Ed25519, public key PEM is safely returned
@@ -2338,8 +2343,10 @@ describe("Provenance Authority Registry V1", () => {
 
   it("53. adversarial A13: ambient caller cannot mint host production trust store — factories are unexported", () => {
     // Attempt 1: Production trust factories are strictly NOT exported from the module
-    expect((authorityRegistryModule as any).createHostProductionTrustStore).toBeUndefined();
-    expect((authorityRegistryModule as any).createHostTrustBootstrapToken).toBeUndefined();
+    expect(Object.hasOwn(authorityRegistryModule, "createHostProductionTrustStore")).toBe(false);
+    expect(Object.hasOwn(authorityRegistryModule, "createHostTrustBootstrapToken")).toBe(false);
+    expect((authorityRegistryModule as Record<string, unknown>).createHostProductionTrustStore).toBeUndefined();
+    expect((authorityRegistryModule as Record<string, unknown>).createHostTrustBootstrapToken).toBeUndefined();
 
     // Attempt 2: Calling resolveCalibrationAuthority with caller-crafted registry fails closed
     const callerStore = createTrustedAnchorRegistry([testAnchorEd25519]);
@@ -2684,8 +2691,10 @@ describe("Provenance Authority Registry V1", () => {
 
   it("62. adversarial A22: complete attacker exploit chain — caller using only exported APIs cannot obtain production durable authority", () => {
     // Step 1: Attacker attempts to import production root factories -> strictly undefined
-    expect((authorityRegistryModule as any).createHostTrustBootstrapToken).toBeUndefined();
-    expect((authorityRegistryModule as any).createHostProductionTrustStore).toBeUndefined();
+    expect(Object.hasOwn(authorityRegistryModule, "createHostTrustBootstrapToken")).toBe(false);
+    expect(Object.hasOwn(authorityRegistryModule, "createHostProductionTrustStore")).toBe(false);
+    expect((authorityRegistryModule as Record<string, unknown>).createHostTrustBootstrapToken).toBeUndefined();
+    expect((authorityRegistryModule as Record<string, unknown>).createHostProductionTrustStore).toBeUndefined();
 
     // Step 2: Attacker generates their own Ed25519 keypair
     const { publicKey: attackerPub, privateKey: attackerPriv } = crypto.generateKeyPairSync("ed25519", {
