@@ -8,17 +8,55 @@ import shlex
 import subprocess
 import time
 
+from resolve_dataverse import EXPECTED_ARTIFACTS
+
+STARTER_FILENAME = "starter_code.tar.gz"
+
 
 class OracleRunError(RuntimeError):
     pass
 
 
-def sha256(path: Path) -> str:
-    digest = hashlib.sha256()
+def _digest(path: Path, algorithm: str) -> str:
+    digest = hashlib.new(algorithm)
     with path.open("rb") as handle:
         for chunk in iter(lambda: handle.read(1024 * 1024), b""):
             digest.update(chunk)
     return digest.hexdigest()
+
+
+def sha256(path: Path) -> str:
+    return _digest(path, "sha256")
+
+
+def validate_starter_archive(path: Path, expected_sha256: str) -> dict[str, str]:
+    if path.name != STARTER_FILENAME:
+        raise OracleRunError(
+            f"official B1 starter archive must retain filename {STARTER_FILENAME!r}; got {path.name!r}"
+        )
+    if not path.is_file():
+        raise OracleRunError("starter archive is missing")
+
+    file_id, checksum_type, checksum_value = EXPECTED_ARTIFACTS[STARTER_FILENAME]
+    if checksum_type != "MD5":
+        raise OracleRunError(f"unsupported frozen upstream checksum type: {checksum_type}")
+    observed_md5 = _digest(path, "md5")
+    if observed_md5.lower() != checksum_value.lower():
+        raise OracleRunError(
+            f"starter archive upstream MD5 mismatch: expected {checksum_value}, got {observed_md5}"
+        )
+
+    observed_sha256 = sha256(path)
+    if observed_sha256.lower() != expected_sha256.lower():
+        raise OracleRunError(
+            f"starter archive SHA-256 mismatch: expected {expected_sha256}, got {observed_sha256}"
+        )
+    return {
+        "upstreamFileId": str(file_id),
+        "upstreamChecksumType": checksum_type,
+        "upstreamChecksumValue": checksum_value.lower(),
+        "localSha256Fingerprint": observed_sha256,
+    }
 
 
 def main() -> int:
@@ -39,13 +77,7 @@ def main() -> int:
 
     if args.repeats <= 0:
         raise OracleRunError("repeats must be positive")
-    if not args.starter_archive.is_file():
-        raise OracleRunError("starter archive is missing")
-    observed = sha256(args.starter_archive)
-    if observed.lower() != args.expected_sha256.lower():
-        raise OracleRunError(
-            f"starter archive SHA-256 mismatch: expected {args.expected_sha256}, got {observed}"
-        )
+    starter_provenance = validate_starter_archive(args.starter_archive, args.expected_sha256)
     if not args.working_dir.is_dir():
         raise OracleRunError("working directory is missing")
 
@@ -81,18 +113,28 @@ def main() -> int:
     payload = {
         "baselineId": "B1",
         "oracleKind": "exact-staged-official-starter",
-        "starterArchiveSha256": observed,
+        "starterArtifact": starter_provenance,
         "command": argv,
         "repeatCount": args.repeats,
         "historicalRandomness": "unseeded-upstream-initialization-and-shuffle",
         "runs": runs,
         "note": (
-            "This record captures exact upstream execution. It does not relabel a modern sklearn model as the official B1 baseline."
+            "This record captures execution of the frozen upstream starter artifact after official MD5 and local SHA-256 validation. "
+            "It does not relabel a modern sklearn model as the official B1 baseline."
         ),
     }
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-    print(json.dumps({"baselineId": "B1", "repeatCount": args.repeats, "starterArchiveSha256": observed}))
+    print(
+        json.dumps(
+            {
+                "baselineId": "B1",
+                "repeatCount": args.repeats,
+                "starterArchiveSha256": starter_provenance["localSha256Fingerprint"],
+                "upstreamFileId": starter_provenance["upstreamFileId"],
+            }
+        )
+    )
     return 0
 
 
