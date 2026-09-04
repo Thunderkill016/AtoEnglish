@@ -1,8 +1,11 @@
 from __future__ import annotations
 
+import math
 from pathlib import Path
 import sys
 import unittest
+
+import numpy as np
 
 SCRIPTS = Path(__file__).resolve().parents[1] / "scripts"
 sys.path.insert(0, str(SCRIPTS))
@@ -29,6 +32,26 @@ DEV = """# user:D2inSf5+ countries:MX days:2.0 client:web session:practice forma
 8rgJEAPw1202 other NOUN Number=Sing ROOT 0
 
 """
+
+DEV_REPEAT = """# user:D2inSf5+ countries:MX days:2.0 client:web session:practice format:reverse_translate time:2
+8rgJEAPw1301 word NOUN Number=Sing ROOT 0
+8rgJEAPw1302 word NOUN Number=Sing ROOT 0
+
+"""
+
+
+class _RecordingHasher:
+    def __init__(self) -> None:
+        self.rows: list[dict[str, float]] = []
+
+    def transform(self, rows: list[dict[str, float]]) -> np.ndarray:
+        self.rows.extend(dict(row) for row in rows)
+        return np.zeros((len(rows), 1), dtype=float)
+
+
+class _ConstantModel:
+    def predict_proba(self, matrix: np.ndarray) -> np.ndarray:
+        return np.tile(np.array([[0.5, 0.5]], dtype=float), (len(matrix), 1))
 
 
 class B2SmokeTest(unittest.TestCase):
@@ -68,6 +91,27 @@ class B2SmokeTest(unittest.TestCase):
         self.assertEqual(token_ids, ["8rgJEAPw1201", "8rgJEAPw1202"])
         self.assertEqual(len(probabilities), 2)
         self.assertTrue(all(0.0 <= p <= 1.0 for p in probabilities))
+
+    def test_blind_encounter_features_are_batch_size_invariant(self) -> None:
+        exercises = list(parse_slam_lines(DEV_REPEAT.splitlines(keepends=True), "dev"))
+
+        def capture(batch_size: int) -> list[dict[str, float]]:
+            hasher = _RecordingHasher()
+            _predict_blind(
+                _ConstantModel(),  # type: ignore[arg-type]
+                hasher,  # type: ignore[arg-type]
+                CausalHistory(),
+                exercises,
+                batch_size=batch_size,
+            )
+            return hasher.rows
+
+        row_by_row = capture(1)
+        one_large_batch = capture(100)
+
+        self.assertEqual(row_by_row, one_large_batch)
+        self.assertEqual(row_by_row[0]["prior_encounter_count"], 0.0)
+        self.assertEqual(row_by_row[1]["prior_encounter_count"], math.log1p(1))
 
 
 if __name__ == "__main__":
