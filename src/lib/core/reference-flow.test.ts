@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
 
+import {
+  createProvenanceAuthorityRegistry,
+  resolveCalibrationAuthority,
+} from "./authority-registry";
 import { certifyCoreEvidence } from "./certified-evidence";
 import type { CoreObservation } from "./observation";
 import { estimateThetaEap } from "./psychometrics";
@@ -65,29 +69,66 @@ describe("pure core reference flow", () => {
       createdAt: "2026-09-04T00:00:00.000Z",
     };
 
-    const certified = certifyCoreEvidence(task, observation, {
-      eventId: "ev-1",
-      taskId: task.id,
-      targetId: "listen-ih-vs-iy",
-      role: "receptive-discrimination",
-      observationId: observation.observationId,
-      outcome: { kind: "binary", success: true },
-      evaluatorConfidence: 1,
-      attempt: {
-        supportLevel: 0,
-        revealUsed: false,
-        responseLatencyMs: 820,
-        responseModality: "choice",
-        contextId: "minimal-pair-set-a",
+    const registry = createProvenanceAuthorityRegistry([
+      {
+        grantId: "grant-minpair-001",
+        grantVersion: "1.0.0",
+        status: "active",
+        benchmarkArtifact: {
+          benchmarkId: "vi-adult-minpair-v1",
+          version: "1.0.0",
+          immutableFingerprint: "sha256-bench-minpair-v1-abc",
+          evidenceLayer: "layer1-benchmark-calibration",
+          sourceReferences: [],
+          sampleSize: 100,
+          createdAt: "2026-09-01T00:00:00.000Z",
+        },
+        evaluatorBinding: {
+          evaluatorId: "binary-answer-key",
+          evaluatorKind: "deterministic",
+          modelFingerprint: "deterministic-choice@v1",
+        },
+        scope: observation.calibration.scope,
+        decision: "assessment",
+        authority: "assessment-candidate",
+        validFrom: "2026-01-01T00:00:00.000Z",
       },
-      occurredAt: "2026-09-04T00:00:01.000Z",
-    }, {
-      benchmarkId: "vi-adult-minpair-v1",
-      modelFingerprint: "deterministic-choice@v1",
-      authority: "assessment-candidate",
-      decision: "assessment",
-      scope: observation.calibration.scope,
-    });
+    ]);
+
+    const resolved = resolveCalibrationAuthority(
+      {
+        grantId: "grant-minpair-001",
+        observation,
+        task,
+      },
+      registry,
+    );
+
+    expect(resolved.ok).toBe(true);
+    if (!resolved.ok) return;
+
+    const certified = certifyCoreEvidence(
+      task,
+      observation,
+      {
+        eventId: "ev-1",
+        taskId: task.id,
+        targetId: "listen-ih-vs-iy",
+        role: "receptive-discrimination",
+        observationId: observation.observationId,
+        outcome: { kind: "binary", success: true },
+        evaluatorConfidence: 1,
+        attempt: {
+          supportLevel: 0,
+          revealUsed: false,
+          responseLatencyMs: 820,
+          responseModality: "choice",
+          contextId: "minimal-pair-set-a",
+        },
+        occurredAt: "2026-09-04T00:00:01.000Z",
+      },
+      resolved.resolvedGrant,
+    );
 
     expect(certified.ok).toBe(true);
     if (!certified.ok) return;
@@ -154,29 +195,68 @@ describe("pure core reference flow", () => {
       createdAt: "2026-09-04T00:00:00.000Z",
     };
 
-    const result = certifyCoreEvidence(task, observation, {
-      eventId: "ev-2",
-      taskId: "task-1",
-      targetId: "target-1",
-      role: "meaning-recognition",
-      observationId: "obs-2",
-      outcome: { kind: "binary", success: true },
-      evaluatorConfidence: 1,
-      attempt: {
-        supportLevel: 0,
-        revealUsed: false,
-        responseLatencyMs: null,
-        responseModality: "choice",
-        contextId: "ctx",
+    const registry = createProvenanceAuthorityRegistry([
+      {
+        grantId: "grant-bench-1",
+        grantVersion: "1.0.0",
+        status: "active",
+        benchmarkArtifact: {
+          benchmarkId: "bench-1",
+          version: "1.0.0",
+          immutableFingerprint: "sha256-bench-1",
+          evidenceLayer: "layer1-benchmark-calibration",
+          sourceReferences: [],
+          sampleSize: 100,
+          createdAt: "2026-09-01T00:00:00.000Z",
+        },
+        evaluatorBinding: {
+          evaluatorId: "test",
+          evaluatorKind: "deterministic",
+          modelFingerprint: "deterministic@v1",
+        },
+        scope: observation.calibration.scope,
+        decision: "assessment",
+        authority: "assessment-candidate",
+        validFrom: "2026-01-01T00:00:00.000Z",
       },
-      occurredAt: "2026-09-04T00:00:01.000Z",
-    }, {
-      benchmarkId: "bench-1",
-      modelFingerprint: "deterministic@v1",
-      authority: "assessment-candidate",
-      decision: "assessment",
-      scope: observation.calibration.scope,
-    });
+    ]);
+
+    const resolved = resolveCalibrationAuthority(
+      {
+        grantId: "grant-bench-1",
+        observation,
+        task,
+      },
+      registry,
+    );
+
+    expect(resolved.ok).toBe(false);
+    if (!resolved.ok) {
+      expect(resolved.reasonCodes).toContain("population-scope-mismatch");
+    }
+
+    const result = certifyCoreEvidence(
+      task,
+      observation,
+      {
+        eventId: "ev-2",
+        taskId: "task-1",
+        targetId: "target-1",
+        role: "meaning-recognition",
+        observationId: "obs-2",
+        outcome: { kind: "binary", success: true },
+        evaluatorConfidence: 1,
+        attempt: {
+          supportLevel: 0,
+          revealUsed: false,
+          responseLatencyMs: null,
+          responseModality: "choice",
+          contextId: "ctx",
+        },
+        occurredAt: "2026-09-04T00:00:01.000Z",
+      },
+      (resolved as { resolvedGrant?: never }).resolvedGrant as never,
+    );
 
     expect(result).toMatchObject({
       ok: false,

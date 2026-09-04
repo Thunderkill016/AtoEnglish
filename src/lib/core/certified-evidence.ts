@@ -1,6 +1,10 @@
 import type { CoreEvidenceRole } from "./evidence-role";
 import type { ResponseModality } from "@/lib/learning/evidence";
 import {
+  type ResolvedCalibrationAuthority,
+  isResolvedCalibrationAuthority,
+} from "./authority-registry";
+import {
   canAffectDurableAssessment,
   type CalibrationProfile,
   type CoreObservation,
@@ -52,13 +56,7 @@ export type ReferenceCoreEvidence = CoreEvidenceCandidate & {
 export type CoreEvidenceForRouting = CertifiedCoreEvidence | ReferenceCoreEvidence;
 
 /** Must be resolved independently from the evaluator observation being certified. */
-export type CalibrationAuthorityGrant = {
-  benchmarkId: string;
-  modelFingerprint: string;
-  authority: "assessment-candidate" | "mastery-candidate";
-  decision: "assessment" | "mastery";
-  scope: CalibrationProfile["scope"];
-};
+export type CalibrationAuthorityGrant = ResolvedCalibrationAuthority;
 
 export type EvidenceCertificationProblem =
   | { type: "invalid-task" }
@@ -76,6 +74,7 @@ export type EvidenceCertificationProblem =
   | { type: "invalid-score-range" }
   | { type: "missing-calibration-benchmark" }
   | { type: "independent-authority-missing" }
+  | { type: "independent-authority-not-resolved" }
   | { type: "independent-authority-mismatch" }
   | { type: "reference-observation-claims-authority" };
 
@@ -102,12 +101,15 @@ export function certifyCoreEvidence(
   task: CoreTaskSpec,
   observation: CoreObservation,
   candidate: CoreEvidenceCandidate,
-  authorityGrant: CalibrationAuthorityGrant,
+  authorityGrant: ResolvedCalibrationAuthority | CalibrationAuthorityGrant,
 ): EvidenceCertificationResult {
   const problems = validateEvidenceSemantics(task, observation, candidate);
 
-  if (!authorityGrant) problems.push({ type: "independent-authority-missing" });
-  else if (
+  if (!authorityGrant) {
+    problems.push({ type: "independent-authority-missing" });
+  } else if (!isResolvedCalibrationAuthority(authorityGrant)) {
+    problems.push({ type: "independent-authority-not-resolved" });
+  } else if (
     authorityGrant.benchmarkId !== observation.calibration.benchmarkId ||
     authorityGrant.modelFingerprint !== observation.calibration.modelFingerprint ||
     authorityGrant.authority !== observation.authority ||
