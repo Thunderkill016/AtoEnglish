@@ -161,6 +161,7 @@ def parse_slam_lines(lines: Iterable[str], split: SourceSplit) -> Iterator[SlamE
 
     header: SlamPromptHeader | None = None
     tokens: list[SlamTokenRow] = []
+    seen_token_ids: set[str] = set()
 
     def flush() -> SlamExercise | None:
         nonlocal header, tokens
@@ -191,7 +192,11 @@ def parse_slam_lines(lines: Iterable[str], split: SourceSplit) -> Iterator[SlamE
             continue
         if header is None:
             raise SlamFormatError(f"line {line_number}: token row encountered before header")
-        tokens.append(_parse_token(line, split, line_number))
+        token = _parse_token(line, split, line_number)
+        if token.token_id in seen_token_ids:
+            raise SlamFormatError(f"line {line_number}: duplicate token instance id {token.token_id!r}")
+        seen_token_ids.add(token.token_id)
+        tokens.append(token)
 
     exercise = flush()
     if exercise is not None:
