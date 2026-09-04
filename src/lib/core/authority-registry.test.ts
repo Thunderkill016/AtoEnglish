@@ -1,5 +1,6 @@
 import crypto from "node:crypto";
 import { describe, expect, it } from "vitest";
+import * as authorityRegistryModule from "./authority-registry";
 
 import {
   type AuthorityResolutionRequest,
@@ -21,8 +22,6 @@ import {
   createTestMechanicsBenchmark,
   createTestMechanicsTrustRoot,
   createTrustedAnchorRegistry,
-  createHostTrustBootstrapToken,
-  createHostProductionTrustStore,
   computeCanonicalManifestDigest,
   computeAttestationEnvelopeMessage,
   extractGrantManifestPayload,
@@ -104,22 +103,13 @@ describe("Provenance Authority Registry V1", () => {
     testAnchorExpired,
   ]);
 
-  const testBootstrapToken = createHostTrustBootstrapToken(
-    "test-host-bootstrap-secret-32-bytes-long",
-  );
-
-  const testProductionTrustStore = createHostProductionTrustStore(
-    [testAnchorEd25519],
-    testBootstrapToken,
-  );
-
   function signAndVerifyTestGrant(
     grant: RegisteredAuthorityGrant,
     anchor: TrustedAnchor = testAnchorEd25519,
     secretOrPrivKey: string = edPrivateKey,
     attestedAt = "2026-09-01T00:00:00.000Z",
     evalTime = "2026-09-04T00:00:01.000Z",
-    registry: TrustedAnchorRegistry = testProductionTrustStore,
+    registry: TrustedAnchorRegistry = testAnchorRegistry,
   ): VerifiedAuthorityAttestation {
     const payload = extractGrantManifestPayload(grant);
     const digest = computeCanonicalManifestDigest(payload);
@@ -140,32 +130,6 @@ describe("Provenance Authority Registry V1", () => {
     const res = verifyAuthorityManifest(raw, payload, registry, evalTime);
     if (!res.ok) {
       throw new Error(`Failed to verify test attestation: ${res.reasonCode}`);
-    }
-    return res.attestation;
-  }
-
-  function signAndVerifyTestBenchmarkPromotion(
-    benchmark: RegisteredBenchmarkArtifact,
-    anchor: TrustedAnchor = testAnchorEd25519,
-    secretOrPrivKey: string = edPrivateKey,
-    attestedAt = "2026-09-01T00:00:00.000Z",
-    evalTime = "2026-09-04T00:00:01.000Z",
-    trustStore: TrustedAnchorRegistry = testProductionTrustStore,
-  ): VerifiedBenchmarkPromotionAttestation {
-    const payload = extractBenchmarkPromotionManifestPayload(benchmark);
-    const digest = computeCanonicalBenchmarkPromotionDigest(payload);
-    const envelope = computeBenchmarkPromotionEnvelopeMessage(anchor.anchorId, attestedAt, digest);
-    const signature = crypto.sign(null, envelope, secretOrPrivKey).toString("hex");
-    const raw: RawBenchmarkPromotionAttestation = {
-      kind: "raw-benchmark-promotion-attestation",
-      anchorId: anchor.anchorId,
-      manifestDigest: digest,
-      signature,
-      attestedAt,
-    };
-    const res = verifyBenchmarkPromotionManifest(raw, payload, trustStore, evalTime);
-    if (!res.ok) {
-      throw new Error(`Failed to verify test benchmark promotion: ${res.reasonCode}`);
     }
     return res.attestation;
   }
@@ -191,7 +155,6 @@ describe("Provenance Authority Registry V1", () => {
 
   const sampleBenchmark: RegisteredBenchmarkArtifact = {
     ...sampleBenchmarkBase,
-    promotionAttestation: signAndVerifyTestBenchmarkPromotion(sampleBenchmarkBase),
   };
 
   const activeGrantBase: RegisteredAuthorityGrant = {
@@ -491,21 +454,35 @@ describe("Provenance Authority Registry V1", () => {
     }
   });
 
-  it("8. resolves active exact matching grant and allows durable certification", () => {
-    const request: AuthorityResolutionRequest = {
+  it("8. resolves active exact matching grant at contract tier, fails closed under production durable authority", () => {
+    // Production resolution fails closed by default in Core V1
+    const prodRequest: AuthorityResolutionRequest = {
       grantId: "grant-phonology-active-001",
       observation: validAuthoritativeObservation,
       task: validTask,
       evaluationTimestamp: "2026-09-04T00:00:01.000Z",
-      trustStore: testProductionTrustStore,
+      trustStore: testAnchorRegistry,
     };
-    const resolved = resolveCalibrationAuthority(request, registry);
+    const prodRes = resolveCalibrationAuthority(prodRequest, registry);
+    expect(prodRes.ok).toBe(false);
+    if (!prodRes.ok) {
+      expect(prodRes.reasonCodes).toContain("production-authority-not-available");
+    }
+
+    // Contract resolution succeeds when requireProductionAuthority: false
+    const contractRequest: AuthorityResolutionRequest = {
+      ...prodRequest,
+      requireProductionAuthority: false,
+    };
+    const resolved = resolveCalibrationAuthority(contractRequest, registry);
     expect(resolved.ok).toBe(true);
     if (!resolved.ok) return;
 
     expect(resolved.resolvedGrant.grantId).toBe("grant-phonology-active-001");
     expect(resolved.resolvedGrant.authority).toBe("assessment-candidate");
     expect(resolved.resolvedGrant.decision).toBe("assessment");
+    expect(isResolvedContractAuthority(resolved.resolvedGrant)).toBe(true);
+    expect(isResolvedDurableCalibrationAuthority(resolved.resolvedGrant)).toBe(false);
 
     const candidate = {
       eventId: "ev-spk-001",
@@ -525,20 +502,18 @@ describe("Provenance Authority Registry V1", () => {
       occurredAt: "2026-09-04T00:00:01.000Z",
     };
 
-    expect(isResolvedDurableCalibrationAuthority(resolved.resolvedGrant)).toBe(true);
-    if (!isResolvedDurableCalibrationAuthority(resolved.resolvedGrant)) return;
-
+    // Contract authority cannot be used for durable certification
     const certResult = certifyCoreEvidence(
       validTask,
       validAuthoritativeObservation,
       candidate,
-      resolved.resolvedGrant,
+      resolved.resolvedGrant as never,
     );
-    expect(certResult.ok).toBe(true);
-    if (certResult.ok) {
-      expect(certResult.evidence.authorityScope).toBe("durable-assessment");
-      expect(certResult.evidence.calibrationBenchmarkId).toBe("bench-phonology-v1");
-      expect(certResult.evidence.modelFingerprint).toBe("sha256-model-weights-abcde");
+    expect(certResult.ok).toBe(false);
+    if (!certResult.ok) {
+      expect(certResult.problems).toContainEqual({
+        type: "independent-authority-not-durable",
+      });
     }
   });
 
@@ -667,11 +642,13 @@ describe("Provenance Authority Registry V1", () => {
       observation: validAuthoritativeObservation,
       task: validTask,
       evaluationTimestamp: "2026-09-04T00:00:01.000Z",
-      trustStore: testProductionTrustStore,
+      requireProductionAuthority: false,
+      trustStore: testAnchorRegistry,
     };
     const resolved = resolveCalibrationAuthority(request, registry);
     expect(resolved.ok).toBe(true);
     if (!resolved.ok) return;
+    expect(isResolvedContractAuthority(resolved.resolvedGrant)).toBe(true);
 
     const boundedScoreCandidate = {
       eventId: "ev-score-001",
@@ -691,24 +668,31 @@ describe("Provenance Authority Registry V1", () => {
       occurredAt: "2026-09-04T00:00:01.000Z",
     };
 
-    expect(isResolvedDurableCalibrationAuthority(resolved.resolvedGrant)).toBe(true);
-    if (!isResolvedDurableCalibrationAuthority(resolved.resolvedGrant)) return;
+    const refObservation: CoreObservation = {
+      ...validAuthoritativeObservation,
+      calibration: {
+        ...validAuthoritativeObservation.calibration,
+        validationState: "unvalidated",
+        decision: "shadow",
+        benchmarkId: null,
+      },
+      authority: "none",
+    };
 
-    const certResult = certifyCoreEvidence(
+    const refResult = validateReferenceCoreEvidence(
       validTask,
-      validAuthoritativeObservation,
+      refObservation,
       boundedScoreCandidate,
-      resolved.resolvedGrant,
     );
 
-    expect(certResult.ok).toBe(true);
-    if (certResult.ok) {
-      expect(certResult.evidence.outcome.kind).toBe("bounded-score");
-      if (certResult.evidence.outcome.kind === "bounded-score") {
-        expect(certResult.evidence.outcome.value).toBe(84.5);
+    expect(refResult.ok).toBe(true);
+    if (refResult.ok) {
+      expect(refResult.evidence.outcome.kind).toBe("bounded-score");
+      if (refResult.evidence.outcome.kind === "bounded-score") {
+        expect(refResult.evidence.outcome.value).toBe(84.5);
       }
       // Strictly asserts no synthesized boolean property exists on the outcome
-      expect("success" in certResult.evidence.outcome).toBe(false);
+      expect("success" in refResult.evidence.outcome).toBe(false);
     }
   });
 
@@ -1020,7 +1004,8 @@ describe("Provenance Authority Registry V1", () => {
       observation: validAuthoritativeObservation,
       task: validTask,
       evaluationTimestamp: "2026-09-04T12:34:56.789Z",
-      trustStore: testProductionTrustStore,
+      requireProductionAuthority: false,
+      trustStore: testAnchorRegistry,
     };
 
     const res1 = resolveCalibrationAuthority(request, registry);
@@ -1739,6 +1724,9 @@ describe("Provenance Authority Registry V1", () => {
       "2026-09-04T00:00:01.000Z",
     );
 
+    expect(isVerifiedContractAuthorityAttestation(verifiedAttestation)).toBe(true);
+    expect(isVerifiedProductionAuthorityAttestation(verifiedAttestation)).toBe(false);
+
     const edGrant: RegisteredAuthorityGrant = {
       ...edGrantBase,
       attestation: verifiedAttestation,
@@ -1749,22 +1737,40 @@ describe("Provenance Authority Registry V1", () => {
       grants: [edGrant],
     });
 
-    const res = resolveCalibrationAuthority(
+    // Production resolution fails closed in Core V1
+    const prodRes = resolveCalibrationAuthority(
       {
         grantId: "grant-phonology-ed25519-01",
         observation: validAuthoritativeObservation,
         task: validTask,
         evaluationTimestamp: "2026-09-04T00:00:01.000Z",
-        trustStore: testProductionTrustStore,
+        trustStore: testAnchorRegistry,
+      },
+      edRegistry,
+    );
+    expect(prodRes.ok).toBe(false);
+    if (!prodRes.ok) {
+      expect(prodRes.reasonCodes).toContain("production-authority-not-available");
+    }
+
+    // Contract resolution succeeds with ResolvedContractAuthority
+    const contractRes = resolveCalibrationAuthority(
+      {
+        grantId: "grant-phonology-ed25519-01",
+        observation: validAuthoritativeObservation,
+        task: validTask,
+        evaluationTimestamp: "2026-09-04T00:00:01.000Z",
+        requireProductionAuthority: false,
+        trustStore: testAnchorRegistry,
       },
       edRegistry,
     );
 
-    expect(res.ok).toBe(true);
-    if (!res.ok) return;
+    expect(contractRes.ok).toBe(true);
+    if (!contractRes.ok) return;
 
-    expect(isResolvedDurableCalibrationAuthority(res.resolvedGrant)).toBe(true);
-    if (!isResolvedDurableCalibrationAuthority(res.resolvedGrant)) return;
+    expect(isResolvedContractAuthority(contractRes.resolvedGrant)).toBe(true);
+    expect(isResolvedDurableCalibrationAuthority(contractRes.resolvedGrant)).toBe(false);
 
     const candidate = {
       eventId: "ev-ed25519-001",
@@ -1784,10 +1790,12 @@ describe("Provenance Authority Registry V1", () => {
       occurredAt: "2026-09-04T00:00:01.000Z",
     };
 
-    const cert = certifyCoreEvidence(validTask, validAuthoritativeObservation, candidate, res.resolvedGrant);
-    expect(cert.ok).toBe(true);
-    if (cert.ok) {
-      expect(cert.evidence.authorityScope).toBe("durable-assessment");
+    const cert = certifyCoreEvidence(validTask, validAuthoritativeObservation, candidate, contractRes.resolvedGrant as never);
+    expect(cert.ok).toBe(false);
+    if (!cert.ok) {
+      expect(cert.problems).toContainEqual({
+        type: "independent-authority-not-durable",
+      });
     }
   });
 
@@ -1941,10 +1949,33 @@ describe("Provenance Authority Registry V1", () => {
     }
   });
 
-  it("42. adversarial A2: HMAC symmetric keys strictly rejected from host production trust store", () => {
-    expect(() => {
-      createHostProductionTrustStore([testAnchorHmac], testBootstrapToken);
-    }).toThrow(/Production trust violation.*requires asymmetric 'ed25519'/);
+  it("42. adversarial A2: HMAC symmetric keys cannot yield production authority and production factories are unexported", () => {
+    // 1. Production trust factories are strictly NOT exported
+    expect((authorityRegistryModule as any).createHostProductionTrustStore).toBeUndefined();
+    expect((authorityRegistryModule as any).createHostTrustBootstrapToken).toBeUndefined();
+
+    // 2. An ad-hoc registry with HMAC key only verifies at contract tier
+    const hmacPayload = extractGrantManifestPayload(activeGrantBase);
+    const digest = computeCanonicalManifestDigest(hmacPayload);
+    const envelope = computeAttestationEnvelopeMessage(testAnchorHmac.anchorId, "2026-09-01T00:00:00.000Z", digest);
+    const hmacSig = crypto.createHmac("sha256", testSecret).update(envelope).digest("hex");
+    const hmacVerify = verifyAuthorityManifest(
+      {
+        kind: "raw-cryptographic-attestation",
+        anchorId: testAnchorHmac.anchorId,
+        manifestDigest: digest,
+        signature: hmacSig,
+        attestedAt: "2026-09-01T00:00:00.000Z",
+      },
+      hmacPayload,
+      testAnchorRegistry,
+      "2026-09-04T00:00:01.000Z",
+    );
+    expect(hmacVerify.ok).toBe(true);
+    if (hmacVerify.ok) {
+      expect(isVerifiedProductionAuthorityAttestation(hmacVerify.attestation)).toBe(false);
+      expect(isVerifiedContractAuthorityAttestation(hmacVerify.attestation)).toBe(true);
+    }
   });
 
   it("43. adversarial A3: tampered grant status (revoked -> active) invalidates canonical manifest digest", () => {
@@ -1978,7 +2009,8 @@ describe("Provenance Authority Registry V1", () => {
         observation: validAuthoritativeObservation,
         task: validTask,
         evaluationTimestamp: "2026-09-04T00:00:01.000Z",
-        trustStore: testProductionTrustStore,
+        requireProductionAuthority: false,
+        trustStore: testAnchorRegistry,
       },
       provRegistry,
     );
@@ -2016,7 +2048,8 @@ describe("Provenance Authority Registry V1", () => {
         observation: validAuthoritativeObservation,
         task: validTask,
         evaluationTimestamp: "2026-09-04T00:00:01.000Z",
-        trustStore: testProductionTrustStore,
+        requireProductionAuthority: false,
+        trustStore: testAnchorRegistry,
       },
       provRegistry,
     );
@@ -2056,7 +2089,8 @@ describe("Provenance Authority Registry V1", () => {
         observation: validAuthoritativeObservation,
         task: validTask,
         evaluationTimestamp: "2026-09-04T00:00:01.000Z",
-        trustStore: testProductionTrustStore,
+        requireProductionAuthority: false,
+        trustStore: testAnchorRegistry,
       },
       provRegistry,
     );
@@ -2096,7 +2130,8 @@ describe("Provenance Authority Registry V1", () => {
         observation: validAuthoritativeObservation,
         task: validTask,
         evaluationTimestamp: "2026-09-04T00:00:01.000Z",
-        trustStore: testProductionTrustStore,
+        requireProductionAuthority: false,
+        trustStore: testAnchorRegistry,
       },
       provRegistry,
     );
@@ -2131,7 +2166,7 @@ describe("Provenance Authority Registry V1", () => {
     const verifyResult = verifyAuthorityManifest(
       rawTampered,
       payload,
-      testProductionTrustStore,
+      testAnchorRegistry,
       "2026-09-04T00:00:01.000Z",
     );
 
@@ -2152,7 +2187,7 @@ describe("Provenance Authority Registry V1", () => {
     );
     const signature = crypto.sign(null, envelope, edPrivateKey).toString("hex");
 
-    // Second anchor in production store
+    // Second anchor in registry
     const { publicKey: ed2Pub } = crypto.generateKeyPairSync("ed25519", {
       publicKeyEncoding: { type: "spki", format: "pem" },
       privateKeyEncoding: { type: "pkcs8", format: "pem" },
@@ -2164,10 +2199,7 @@ describe("Provenance Authority Registry V1", () => {
       status: "active",
       validFrom: "2026-01-01T00:00:00.000Z",
     };
-    const multiStore = createHostProductionTrustStore(
-      [testAnchorEd25519, secondAnchor],
-      testBootstrapToken,
-    );
+    const multiStore = createTrustedAnchorRegistry([testAnchorEd25519, secondAnchor]);
 
     // Attacker claims the signature was from secondAnchor
     const rawReplayed: RawAuthorityAttestation = {
@@ -2206,10 +2238,7 @@ describe("Provenance Authority Registry V1", () => {
       revokedAt: "2026-09-02T00:00:00.000Z",
       revocationReason: "key-compromise",
     };
-    const updatedTrustStore = createHostProductionTrustStore(
-      [revokedEdAnchor],
-      testBootstrapToken,
-    );
+    const updatedTrustStore = createTrustedAnchorRegistry([revokedEdAnchor]);
 
     // Evaluation occurs at 2026-09-04 (after revocation)
     const res = resolveCalibrationAuthority(
@@ -2218,6 +2247,7 @@ describe("Provenance Authority Registry V1", () => {
         observation: validAuthoritativeObservation,
         task: validTask,
         evaluationTimestamp: "2026-09-04T00:00:01.000Z",
+        requireProductionAuthority: false,
         trustStore: updatedTrustStore,
       },
       provRegistry,
@@ -2241,10 +2271,7 @@ describe("Provenance Authority Registry V1", () => {
       ...testAnchorEd25519,
       validUntil: "2026-09-02T00:00:00.000Z",
     };
-    const updatedTrustStore = createHostProductionTrustStore(
-      [expiredEdAnchor],
-      testBootstrapToken,
-    );
+    const updatedTrustStore = createTrustedAnchorRegistry([expiredEdAnchor]);
 
     // Evaluation occurs at 2026-09-04 (after expiration)
     const res = resolveCalibrationAuthority(
@@ -2253,6 +2280,7 @@ describe("Provenance Authority Registry V1", () => {
         observation: validAuthoritativeObservation,
         task: validTask,
         evaluationTimestamp: "2026-09-04T00:00:01.000Z",
+        requireProductionAuthority: false,
         trustStore: updatedTrustStore,
       },
       provRegistry,
@@ -2308,33 +2336,29 @@ describe("Provenance Authority Registry V1", () => {
     }
   });
 
-  it("53. adversarial A13: ambient caller cannot mint host production trust store without unforgeable bootstrap token", () => {
-    // Attempt 1: Calling without token throws
-    expect(() => {
-      createHostProductionTrustStore([testAnchorEd25519], undefined as any);
-    }).toThrow(/Unauthorized production trust store: missing or invalid HostTrustBootstrapToken/);
+  it("53. adversarial A13: ambient caller cannot mint host production trust store — factories are unexported", () => {
+    // Attempt 1: Production trust factories are strictly NOT exported from the module
+    expect((authorityRegistryModule as any).createHostProductionTrustStore).toBeUndefined();
+    expect((authorityRegistryModule as any).createHostTrustBootstrapToken).toBeUndefined();
 
-    // Attempt 2: Calling with forged plain object throws (brand symbol cannot be forged externally)
-    const forgedToken = {
-      issuer: "nep-host-runtime-bootstrap-v1",
-      brand: true,
-    };
-    expect(() => {
-      createHostProductionTrustStore([testAnchorEd25519], forgedToken as any);
-    }).toThrow(/Unauthorized production trust store: missing or invalid HostTrustBootstrapToken/);
-
-    // Attempt 3: Calling createHostTrustBootstrapToken with insufficient secret length throws
-    expect(() => {
-      createHostTrustBootstrapToken("short-secret");
-    }).toThrow(/Host bootstrap violation: invalid bootstrap secret/);
-
-    // Legitimate bootstrap with >=32 chars secret succeeds
-    const legitToken = createHostTrustBootstrapToken(
-      "legitimate-production-secret-must-be-32-chars-long",
+    // Attempt 2: Calling resolveCalibrationAuthority with caller-crafted registry fails closed
+    const callerStore = createTrustedAnchorRegistry([testAnchorEd25519]);
+    const res = resolveCalibrationAuthority(
+      {
+        grantId: "grant-phonology-active-001",
+        observation: validAuthoritativeObservation,
+        task: validTask,
+        evaluationTimestamp: "2026-09-04T00:00:01.000Z",
+        requireProductionAuthority: true,
+        trustStore: callerStore,
+      },
+      registry,
     );
-    expect(legitToken.issuer).toBe("nep-host-runtime-bootstrap-v1");
-    const legitStore = createHostProductionTrustStore([testAnchorEd25519], legitToken);
-    expect(legitStore.isProductionAuthorized).toBe(true);
+    expect(res.ok).toBe(false);
+    if (!res.ok) {
+      expect(res.reasonCodes).toContain("production-authority-not-available");
+      expect(res.reasonCodes).toContain("trust-anchor-not-production-authorized");
+    }
   });
 
   it("54. adversarial A14: stale attestation omission bypass fails closed when trustStore is omitted", () => {
@@ -2351,6 +2375,7 @@ describe("Provenance Authority Registry V1", () => {
     expect(result.ok).toBe(false);
     if (!result.ok) {
       expect(result.reasonCodes).toContain("production-trust-store-required");
+      expect(result.reasonCodes).toContain("production-authority-not-available");
     }
   });
 
@@ -2369,23 +2394,34 @@ describe("Provenance Authority Registry V1", () => {
       validFrom: "2026-01-01T00:00:00.000Z",
     };
 
-    const attackerTrustStore = createHostProductionTrustStore(
-      [substitutedAnchor],
-      testBootstrapToken,
+    const attackerTrustStore = createTrustedAnchorRegistry([substitutedAnchor]);
+
+    // 1. Key fingerprint check detects substitution
+    const legitAnchorView = testAnchorRegistry.lookupAnchor(testAnchorEd25519.anchorId);
+    const substitutedAnchorView = attackerTrustStore.lookupAnchor(testAnchorEd25519.anchorId);
+    expect(legitAnchorView?.publicKeyFingerprint).not.toBe(substitutedAnchorView?.publicKeyFingerprint);
+
+    // 2. Cryptographic verification with substituted key fails closed
+    const payload = extractGrantManifestPayload(activeGrantBase);
+    const digest = computeCanonicalManifestDigest(payload);
+    const envelope = computeAttestationEnvelopeMessage(testAnchorEd25519.anchorId, "2026-09-01T00:00:00.000Z", digest);
+    const legitSig = crypto.sign(null, envelope, edPrivateKey).toString("hex");
+
+    const verifyResult = verifyAuthorityManifest(
+      {
+        kind: "raw-cryptographic-attestation",
+        anchorId: testAnchorEd25519.anchorId,
+        manifestDigest: digest,
+        signature: legitSig,
+        attestedAt: "2026-09-01T00:00:00.000Z",
+      },
+      payload,
+      attackerTrustStore,
+      "2026-09-04T00:00:01.000Z",
     );
-
-    const request: AuthorityResolutionRequest = {
-      grantId: "grant-phonology-active-001",
-      observation: validAuthoritativeObservation,
-      task: validTask,
-      evaluationTimestamp: "2026-09-04T00:00:01.000Z",
-      trustStore: attackerTrustStore,
-    };
-
-    const result = resolveCalibrationAuthority(request, registry);
-    expect(result.ok).toBe(false);
-    if (!result.ok) {
-      expect(result.reasonCodes).toContain("trust-anchor-identity-mismatch");
+    expect(verifyResult.ok).toBe(false);
+    if (!verifyResult.ok) {
+      expect(verifyResult.reasonCode).toBe("attestation-signature-invalid");
     }
   });
 
@@ -2427,14 +2463,14 @@ describe("Provenance Authority Registry V1", () => {
         },
         task: validTask,
         evaluationTimestamp: "2026-09-04T00:00:01.000Z",
-        trustStore: testProductionTrustStore,
+        trustStore: testAnchorRegistry,
       },
       customRegistry,
     );
 
     expect(res.ok).toBe(false);
     if (!res.ok) {
-      expect(res.reasonCodes).toContain("benchmark-promotion-attestation-missing");
+      expect(res.reasonCodes).toContain("production-authority-not-available");
     }
   });
 
@@ -2457,59 +2493,29 @@ describe("Provenance Authority Registry V1", () => {
       attestedAt: "2026-09-01T00:00:00.000Z",
     };
 
-    const unverifiedBenchmark: RegisteredBenchmarkArtifact = {
-      ...sampleBenchmarkBase,
-      benchmarkId: "bench-unverified-promo-01",
-      promotionAttestation: forgedRawPromotion, // Raw, not verified
-    };
+    // 1. WeakSet brand check rejects forged raw attestation
+    expect(isVerifiedBenchmarkPromotionAttestation(forgedRawPromotion)).toBe(false);
 
-    const grantBase: RegisteredAuthorityGrant = {
-      ...activeGrantBase,
-      grantId: "grant-unverified-promo-01",
-      benchmarkArtifactId: "bench-unverified-promo-01",
-    };
-    const attestation = signAndVerifyTestGrant(grantBase);
-    const grant: RegisteredAuthorityGrant = {
-      ...grantBase,
-      attestation,
-    };
-
-    const customRegistry = createProvenanceAuthorityRegistry({
-      benchmarks: [unverifiedBenchmark],
-      grants: [grant],
-    });
-
-    const res = resolveCalibrationAuthority(
-      {
-        grantId: "grant-unverified-promo-01",
-        observation: {
-          ...validAuthoritativeObservation,
-          calibration: {
-            ...validAuthoritativeObservation.calibration,
-            benchmarkId: "bench-unverified-promo-01",
-          },
-        },
-        task: validTask,
-        evaluationTimestamp: "2026-09-04T00:00:01.000Z",
-        trustStore: testProductionTrustStore,
-      },
-      customRegistry,
+    // 2. Attempting to verify through non-production trust store fails closed
+    const verifyPromoResult = verifyBenchmarkPromotionManifest(
+      forgedRawPromotion,
+      payload,
+      testAnchorRegistry,
+      "2026-09-04T00:00:01.000Z",
     );
-
-    expect(res.ok).toBe(false);
-    if (!res.ok) {
-      expect(res.reasonCodes).toContain("benchmark-promotion-attestation-unverified");
+    expect(verifyPromoResult.ok).toBe(false);
+    if (!verifyPromoResult.ok) {
+      expect(verifyPromoResult.reasonCode).toBe("trust-anchor-not-production-authorized");
     }
   });
 
   it("58. adversarial A18: tampered benchmark sourceReferences or fingerprint invalidates promotion manifest", () => {
-    // Benchmark was promoted with sampleBenchmarkBase
-    const verifiedPromotion = signAndVerifyTestBenchmarkPromotion(sampleBenchmarkBase);
+    const originalPayload = extractBenchmarkPromotionManifestPayload(sampleBenchmarkBase);
+    const originalDigest = computeCanonicalBenchmarkPromotionDigest(originalPayload);
 
-    // Attacker mutates sourceReferences after promotion attestation was signed
+    // Attacker mutates sourceReferences
     const tamperedBenchmark: RegisteredBenchmarkArtifact = {
       ...sampleBenchmarkBase,
-      benchmarkId: "bench-tampered-sources-01",
       sourceReferences: [
         {
           sourceId: "tampered-unauthorized-corpus",
@@ -2517,45 +2523,38 @@ describe("Provenance Authority Registry V1", () => {
           locator: "https://evil.com/corpus",
         },
       ],
-      promotionAttestation: verifiedPromotion,
     };
 
-    const grantBase: RegisteredAuthorityGrant = {
-      ...activeGrantBase,
-      grantId: "grant-tampered-sources-01",
-      benchmarkArtifactId: "bench-tampered-sources-01",
-    };
-    const attestation = signAndVerifyTestGrant(grantBase);
-    const grant: RegisteredAuthorityGrant = {
-      ...grantBase,
-      attestation,
-    };
+    const tamperedPayload = extractBenchmarkPromotionManifestPayload(tamperedBenchmark);
+    const tamperedDigest = computeCanonicalBenchmarkPromotionDigest(tamperedPayload);
 
-    const customRegistry = createProvenanceAuthorityRegistry({
-      benchmarks: [tamperedBenchmark],
-      grants: [grant],
-    });
+    // Cryptographic binding detects tampering
+    expect(originalDigest).not.toBe(tamperedDigest);
 
-    const res = resolveCalibrationAuthority(
+    // Verification of signed original against tampered payload fails with mismatch
+    const envelope = computeBenchmarkPromotionEnvelopeMessage(
+      testAnchorEd25519.anchorId,
+      "2026-09-01T00:00:00.000Z",
+      originalDigest,
+    );
+    const signature = crypto.sign(null, envelope, edPrivateKey).toString("hex");
+
+    const res = verifyBenchmarkPromotionManifest(
       {
-        grantId: "grant-tampered-sources-01",
-        observation: {
-          ...validAuthoritativeObservation,
-          calibration: {
-            ...validAuthoritativeObservation.calibration,
-            benchmarkId: "bench-tampered-sources-01",
-          },
-        },
-        task: validTask,
-        evaluationTimestamp: "2026-09-04T00:00:01.000Z",
-        trustStore: testProductionTrustStore,
+        kind: "raw-benchmark-promotion-attestation",
+        anchorId: testAnchorEd25519.anchorId,
+        manifestDigest: originalDigest,
+        signature,
+        attestedAt: "2026-09-01T00:00:00.000Z",
       },
-      customRegistry,
+      tamperedPayload,
+      testAnchorRegistry,
+      "2026-09-04T00:00:01.000Z",
     );
 
     expect(res.ok).toBe(false);
     if (!res.ok) {
-      expect(res.reasonCodes).toContain("benchmark-promotion-payload-mismatch");
+      expect(res.reasonCode).toBe("benchmark-promotion-payload-mismatch");
     }
   });
 
@@ -2594,7 +2593,7 @@ describe("Provenance Authority Registry V1", () => {
     const verifyResult = verifyBenchmarkPromotionManifest(
       replayedPromoAttestation,
       promoPayload,
-      testProductionTrustStore,
+      testAnchorRegistry,
       "2026-09-04T00:00:01.000Z",
     );
 
@@ -2629,7 +2628,7 @@ describe("Provenance Authority Registry V1", () => {
     const verifyResult = verifyAuthorityManifest(
       rawFuture,
       payload,
-      testProductionTrustStore,
+      testAnchorRegistry,
       evalTime,
     );
 
@@ -2648,10 +2647,7 @@ describe("Provenance Authority Registry V1", () => {
       revokedAt: "2026-09-02T00:00:00.000Z",
       revocationReason: "compromised-key",
     };
-    const storeWithRevoked = createHostProductionTrustStore(
-      [revokedAnchor],
-      testBootstrapToken,
-    );
+    const storeWithRevoked = createTrustedAnchorRegistry([revokedAnchor]);
 
     const payload = extractGrantManifestPayload(activeGrantBase);
     const digest = computeCanonicalManifestDigest(payload);
@@ -2683,6 +2679,165 @@ describe("Provenance Authority Registry V1", () => {
     expect(verifyResult.ok).toBe(false);
     if (!verifyResult.ok) {
       expect(verifyResult.reasonCode).toBe("trust-anchor-inactive-revoked");
+    }
+  });
+
+  it("62. adversarial A22: complete attacker exploit chain — caller using only exported APIs cannot obtain production durable authority", () => {
+    // Step 1: Attacker attempts to import production root factories -> strictly undefined
+    expect((authorityRegistryModule as any).createHostTrustBootstrapToken).toBeUndefined();
+    expect((authorityRegistryModule as any).createHostProductionTrustStore).toBeUndefined();
+
+    // Step 2: Attacker generates their own Ed25519 keypair
+    const { publicKey: attackerPub, privateKey: attackerPriv } = crypto.generateKeyPairSync("ed25519", {
+      publicKeyEncoding: { type: "spki", format: "pem" },
+      privateKeyEncoding: { type: "pkcs8", format: "pem" },
+    });
+
+    const attackerAnchor: TrustedAnchor = {
+      anchorId: "attacker-root-01",
+      algorithm: "ed25519",
+      publicKeyOrSecret: attackerPub,
+      status: "active",
+      validFrom: "2026-01-01T00:00:00.000Z",
+    };
+
+    // Step 3: Attacker creates an ad-hoc registry using public API
+    const attackerRegistry = createTrustedAnchorRegistry([attackerAnchor]);
+    expect(attackerRegistry.isProductionAuthorized).toBe(false);
+
+    // Step 4: Attacker crafts and signs an authority grant
+    const attackerGrantBase: RegisteredAuthorityGrant = {
+      ...activeGrantBase,
+      grantId: "grant-exploit-chain-01",
+      productionAuthorityEligible: true,
+    };
+    const grantPayload = extractGrantManifestPayload(attackerGrantBase);
+    const grantDigest = computeCanonicalManifestDigest(grantPayload);
+    const attestedAt = "2026-09-01T00:00:00.000Z";
+    const grantEnvelope = computeAttestationEnvelopeMessage(attackerAnchor.anchorId, attestedAt, grantDigest);
+    const grantSig = crypto.sign(null, grantEnvelope, attackerPriv).toString("hex");
+
+    const grantVerify = verifyAuthorityManifest(
+      {
+        kind: "raw-cryptographic-attestation",
+        anchorId: attackerAnchor.anchorId,
+        manifestDigest: grantDigest,
+        signature: grantSig,
+        attestedAt,
+      },
+      grantPayload,
+      attackerRegistry,
+      "2026-09-04T00:00:01.000Z",
+    );
+    expect(grantVerify.ok).toBe(true);
+    if (!grantVerify.ok) return;
+
+    // The verified attestation is STRICTLY contract-tier, never production
+    expect(isVerifiedProductionAuthorityAttestation(grantVerify.attestation)).toBe(false);
+    expect(isVerifiedContractAuthorityAttestation(grantVerify.attestation)).toBe(true);
+
+    // Step 5: Attacker crafts and attempts to verify a benchmark promotion attestation
+    const promoPayload: BenchmarkPromotionManifestPayload = {
+      benchmarkId: sampleBenchmarkBase.benchmarkId,
+      version: sampleBenchmarkBase.version,
+      immutableFingerprint: sampleBenchmarkBase.immutableFingerprint,
+      evidenceLayer: "layer1-benchmark-calibration",
+      productionAuthorityEligible: true,
+      sourceReferencesDigest: computeCanonicalSourceReferencesDigest(sampleBenchmarkBase.sourceReferences),
+      promotedAt: attestedAt,
+    };
+    const promoDigest = computeCanonicalBenchmarkPromotionDigest(promoPayload);
+    const promoEnvelope = computeBenchmarkPromotionEnvelopeMessage(attackerAnchor.anchorId, attestedAt, promoDigest);
+    const promoSig = crypto.sign(null, promoEnvelope, attackerPriv).toString("hex");
+
+    const promoVerify = verifyBenchmarkPromotionManifest(
+      {
+        kind: "raw-benchmark-promotion-attestation",
+        anchorId: attackerAnchor.anchorId,
+        manifestDigest: promoDigest,
+        signature: promoSig,
+        attestedAt,
+      },
+      promoPayload,
+      attackerRegistry,
+      "2026-09-04T00:00:01.000Z",
+    );
+    // Promotion attestation FAILS CLOSED — cannot be verified through non-production trust store
+    expect(promoVerify.ok).toBe(false);
+    if (!promoVerify.ok) {
+      expect(promoVerify.reasonCode).toBe("trust-anchor-not-production-authorized");
+    }
+
+    // Step 6: Attacker registers grant and attempts production resolution
+    const attackerProvRegistry = createProvenanceAuthorityRegistry({
+      benchmarks: [sampleBenchmarkBase],
+      grants: [{ ...attackerGrantBase, attestation: grantVerify.attestation }],
+    });
+
+    const prodResolution = resolveCalibrationAuthority(
+      {
+        grantId: "grant-exploit-chain-01",
+        observation: validAuthoritativeObservation,
+        task: validTask,
+        evaluationTimestamp: "2026-09-04T00:00:01.000Z",
+        requireProductionAuthority: true,
+        trustStore: attackerRegistry,
+      },
+      attackerProvRegistry,
+    );
+    // Production resolution FAILS CLOSED
+    expect(prodResolution.ok).toBe(false);
+    if (!prodResolution.ok) {
+      expect(prodResolution.reasonCodes).toContain("production-authority-not-available");
+    }
+
+    // Step 7: Contract resolution succeeds but durable certification fails closed
+    const contractResolution = resolveCalibrationAuthority(
+      {
+        grantId: "grant-exploit-chain-01",
+        observation: validAuthoritativeObservation,
+        task: validTask,
+        evaluationTimestamp: "2026-09-04T00:00:01.000Z",
+        requireProductionAuthority: false,
+        trustStore: attackerRegistry,
+      },
+      attackerProvRegistry,
+    );
+    expect(contractResolution.ok).toBe(true);
+    if (!contractResolution.ok) return;
+
+    expect(isResolvedContractAuthority(contractResolution.resolvedGrant)).toBe(true);
+    expect(isResolvedDurableCalibrationAuthority(contractResolution.resolvedGrant)).toBe(false);
+
+    const candidate = {
+      eventId: "ev-attacker-001",
+      taskId: validTask.id,
+      targetId: "target-th-sound",
+      role: "free-production" as const,
+      observationId: validAuthoritativeObservation.observationId,
+      outcome: { kind: "binary" as const, success: true },
+      evaluatorConfidence: 0.95,
+      attempt: {
+        supportLevel: 0,
+        revealUsed: false,
+        responseLatencyMs: 1200,
+        responseModality: "speech" as const,
+        contextId: "ctx-word-01",
+      },
+      occurredAt: "2026-09-04T00:00:01.000Z",
+    };
+
+    const certResult = certifyCoreEvidence(
+      validTask,
+      validAuthoritativeObservation,
+      candidate,
+      contractResolution.resolvedGrant as never,
+    );
+    expect(certResult.ok).toBe(false);
+    if (!certResult.ok) {
+      expect(certResult.problems).toContainEqual({
+        type: "independent-authority-not-durable",
+      });
     }
   });
 });

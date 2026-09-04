@@ -20,7 +20,6 @@ export type EvidenceLayer = (typeof EVIDENCE_LAYERS)[number];
 const DURABLE_AUTHORITY_BRAND = Symbol("nep.resolved-durable-calibration-authority");
 const CONTRACT_AUTHORITY_BRAND = Symbol("nep.resolved-contract-authority");
 const TEST_HARNESS_ROOT_BRAND = Symbol("nep.test-harness-mechanics-root");
-const HOST_BOOTSTRAP_TOKEN_BRAND = Symbol("nep.host-production-trust-bootstrap-token");
 
 const DURABLE_TOKEN_SET = new WeakSet<object>();
 const CONTRACT_TOKEN_SET = new WeakSet<object>();
@@ -29,10 +28,6 @@ const VERIFIED_CONTRACT_ATTESTATION_SET = new WeakSet<object>();
 const VERIFIED_BENCHMARK_PROMOTION_SET = new WeakSet<object>();
 const PRODUCTION_TRUST_STORE_SET = new WeakSet<object>();
 
-export type HostTrustBootstrapToken = {
-  readonly [HOST_BOOTSTRAP_TOKEN_BRAND]: true;
-  readonly issuer: string;
-};
 
 export type TestHarnessTrustRoot = {
   readonly kind: "test-mechanics-harness";
@@ -232,44 +227,26 @@ export function createTrustedAnchorRegistry(
 }
 
 /**
- * Creates an authorized host bootstrap token.
- * INVARIANT: Requires authenticated host secret (minimum 32 chars).
- * Normal application code cannot forge or guess this capability.
+ * PRODUCTION AUTHORITY STATUS — Core V1
+ *
+ * Production durable authority is intentionally UNAVAILABLE in Core V1.
+ * No public API in this module can create a production trust store.
+ * Production resolution (requireProductionAuthority !== false) always fails
+ * closed with "production-authority-not-available".
+ *
+ * This is by design: a production root of trust must originate from an
+ * independently controlled host boundary (KMS/Vault/pinned trust policy),
+ * not from public core APIs callable by arbitrary application code.
+ *
+ * Contract and reference mechanics remain fully operational:
+ * - createTrustedAnchorRegistry() → ad-hoc registry, contract tokens only
+ * - verifyAuthorityManifest() → VerifiedContractAuthorityAttestation
+ * - resolveCalibrationAuthority(... requireProductionAuthority: false ...) → ResolvedContractAuthority
+ * - validateReferenceCoreEvidence() → ReferenceCoreEvidence
+ *
+ * Future host adapter milestone will implement HostTrustAnchorProvider
+ * to inject genuine production trust stores at service bootstrap.
  */
-export function createHostTrustBootstrapToken(secret: string): HostTrustBootstrapToken {
-  if (typeof secret !== "string" || secret.length < 32) {
-    throw new Error("Host bootstrap violation: invalid bootstrap secret");
-  }
-  return Object.freeze({
-    [HOST_BOOTSTRAP_TOKEN_BRAND]: true as const,
-    issuer: "nep-host-runtime-bootstrap-v1",
-  });
-}
-
-/**
- * Creates an authorized host production trust store.
- * STRICT INVARIANT: Requires an unforgeable HostTrustBootstrapToken.
- * Arbitrary application code cannot mint or forge this token.
- * Symmetric HMAC keys are strictly rejected from production trust stores.
- */
-export function createHostProductionTrustStore(
-  anchors: readonly TrustedAnchor[],
-  token: HostTrustBootstrapToken,
-): TrustedAnchorRegistry {
-  if (!token || typeof token !== "object" || (token as any)[HOST_BOOTSTRAP_TOKEN_BRAND] !== true) {
-    throw new Error(
-      "Unauthorized production trust store: missing or invalid HostTrustBootstrapToken",
-    );
-  }
-  for (const a of anchors) {
-    if (a.algorithm !== "ed25519") {
-      throw new Error(
-        `Production trust violation: anchor '${a.anchorId}' uses algorithm '${a.algorithm}'. Production authority strictly requires asymmetric 'ed25519'.`,
-      );
-    }
-  }
-  return createBaseAnchorRegistry(anchors, "host-production-trust-store");
-}
 
 /**
  * Pure, deterministic stringifier for canonical JSON.
@@ -621,10 +598,6 @@ export function verifyBenchmarkPromotionManifest(
   trustStore: TrustedAnchorRegistry,
   evaluationTimestamp?: string,
 ): BenchmarkPromotionVerificationResult {
-  if (!trustStore.isProductionAuthorized || !PRODUCTION_TRUST_STORE_SET.has(trustStore)) {
-    return { ok: false, reasonCode: "trust-anchor-not-production-authorized" };
-  }
-
   const anchor = trustStore.lookupAnchor(attestation.anchorId);
   if (!anchor) {
     return { ok: false, reasonCode: "trust-anchor-unknown" };
@@ -692,6 +665,10 @@ export function verifyBenchmarkPromotionManifest(
   );
   if (!sigResult.ok) {
     return { ok: false, reasonCode: sigResult.reasonCode };
+  }
+
+  if (!trustStore.isProductionAuthorized || !PRODUCTION_TRUST_STORE_SET.has(trustStore)) {
+    return { ok: false, reasonCode: "trust-anchor-not-production-authorized" };
   }
 
   const anchorKeyFingerprint = anchor.publicKeyFingerprint;
@@ -846,6 +823,7 @@ export const AUTHORITY_REJECTION_REASONS = [
   "observation-not-authoritative",
   "unvalidated-reference-cannot-claim-authority",
   "request-timestamp-invalid",
+  "production-authority-not-available",
 ] as const;
 
 export type AuthorityRejectionReason = (typeof AUTHORITY_REJECTION_REASONS)[number];
@@ -1309,14 +1287,16 @@ export function resolveCalibrationAuthority(
 
   // 4. Production authority eligibility, trust store, & cryptographic attestation verification
   if (request.requireProductionAuthority !== false) {
-    // 4.1 Production trust store is strictly MANDATORY
+    // 4.1 Production trust store is strictly MANDATORY and must be host-authorized
     if (!request.trustStore) {
       reasonCodes.push("production-trust-store-required");
+      reasonCodes.push("production-authority-not-available");
     } else if (
       !request.trustStore.isProductionAuthorized ||
       !PRODUCTION_TRUST_STORE_SET.has(request.trustStore)
     ) {
       reasonCodes.push("trust-anchor-not-production-authorized");
+      reasonCodes.push("production-authority-not-available");
     }
 
     // 4.2 Grant production authority eligibility
@@ -1392,9 +1372,11 @@ export function resolveCalibrationAuthority(
       reasonCodes.push("grant-attestation-missing");
     } else if (!isVerifiedAuthorityAttestation(grant.attestation)) {
       reasonCodes.push("grant-attestation-unverified");
-    } else if (!isVerifiedProductionAuthorityAttestation(grant.attestation)) {
-      reasonCodes.push("trust-anchor-not-production-authorized");
     } else {
+      if (!isVerifiedProductionAuthorityAttestation(grant.attestation)) {
+        reasonCodes.push("trust-anchor-not-production-authorized");
+      }
+
       const grantAttestedParsed = parseStrictIso8601(grant.attestation.attestedAt);
       if (!grantAttestedParsed.ok) {
         reasonCodes.push("attestation-timestamp-invalid");
@@ -1433,15 +1415,24 @@ export function resolveCalibrationAuthority(
         }
       }
     }
-  } else if (request.trustStore) {
-    // Optional check for contract resolution when trustStore is supplied
+  } else {
+    // Contract resolution (requireProductionAuthority: false)
     if (grant.attestation && isVerifiedAuthorityAttestation(grant.attestation)) {
-      const lifecycleCheck = request.trustStore.checkAnchorLifecycle(
-        grant.attestation.anchorId,
-        evalTimeMs,
+      const expectedDigest = computeCanonicalManifestDigest(
+        extractGrantManifestPayload(grant, registeredBenchmark),
       );
-      if (!lifecycleCheck.ok) {
-        reasonCodes.push(lifecycleCheck.reasonCode);
+      if (grant.attestation.manifestDigest !== expectedDigest) {
+        reasonCodes.push("attestation-payload-mismatch");
+      }
+
+      if (request.trustStore) {
+        const lifecycleCheck = request.trustStore.checkAnchorLifecycle(
+          grant.attestation.anchorId,
+          evalTimeMs,
+        );
+        if (!lifecycleCheck.ok) {
+          reasonCodes.push(lifecycleCheck.reasonCode);
+        }
       }
     }
   }

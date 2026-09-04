@@ -6,16 +6,12 @@ import {
   type RegisteredAuthorityGrant,
   type TrustedAnchor,
   createProvenanceAuthorityRegistry,
-  createHostTrustBootstrapToken,
-  createHostProductionTrustStore,
+  createTrustedAnchorRegistry,
   computeCanonicalManifestDigest,
   computeAttestationEnvelopeMessage,
   extractGrantManifestPayload,
   verifyAuthorityManifest,
-  extractBenchmarkPromotionManifestPayload,
-  computeCanonicalBenchmarkPromotionDigest,
-  computeBenchmarkPromotionEnvelopeMessage,
-  verifyBenchmarkPromotionManifest,
+  isResolvedContractAuthority,
   isResolvedDurableCalibrationAuthority,
   resolveCalibrationAuthority,
 } from "./authority-registry";
@@ -84,7 +80,7 @@ describe("pure core reference flow", () => {
       createdAt: "2026-09-04T00:00:00.000Z",
     };
 
-    const testBenchmarkBase: RegisteredBenchmarkArtifact = {
+    const testBenchmark: RegisteredBenchmarkArtifact = {
       benchmarkId: "vi-adult-minpair-v1",
       version: "1.0.0",
       immutableFingerprint: "sha256-bench-minpair-v1-abc",
@@ -107,38 +103,7 @@ describe("pure core reference flow", () => {
       status: "active",
       validFrom: "2026-01-01T00:00:00.000Z",
     };
-    const bootstrapToken = createHostTrustBootstrapToken(
-      "test-host-bootstrap-secret-32-bytes-long",
-    );
-    const anchorRegistry = createHostProductionTrustStore([testAnchor], bootstrapToken);
-
-    // Sign and verify benchmark promotion attestation
-    const promoPayload = extractBenchmarkPromotionManifestPayload(testBenchmarkBase);
-    const promoDigest = computeCanonicalBenchmarkPromotionDigest(promoPayload);
-    const promoEnvelope = computeBenchmarkPromotionEnvelopeMessage(
-      "anchor-ref-flow-01",
-      "2026-09-01T00:00:00.000Z",
-      promoDigest,
-    );
-    const promoSig = crypto.sign(null, promoEnvelope, edPrivateKey).toString("hex");
-    const promoVerifyRes = verifyBenchmarkPromotionManifest(
-      {
-        kind: "raw-benchmark-promotion-attestation",
-        anchorId: "anchor-ref-flow-01",
-        manifestDigest: promoDigest,
-        signature: promoSig,
-        attestedAt: "2026-09-01T00:00:00.000Z",
-      },
-      promoPayload,
-      anchorRegistry,
-      "2026-09-04T00:00:01.000Z",
-    );
-    if (!promoVerifyRes.ok) throw new Error("benchmark promotion verification failed");
-
-    const testBenchmark: RegisteredBenchmarkArtifact = {
-      ...testBenchmarkBase,
-      promotionAttestation: promoVerifyRes.attestation,
-    };
+    const anchorRegistry = createTrustedAnchorRegistry([testAnchor]);
 
     const grantBase: RegisteredAuthorityGrant = {
       grantId: "grant-minpair-001",
@@ -192,7 +157,8 @@ describe("pure core reference flow", () => {
       grants: [grant],
     });
 
-    const resolved = resolveCalibrationAuthority(
+    // Production durable authority fails closed by default in Core V1
+    const prodAttempt = resolveCalibrationAuthority(
       {
         grantId: "grant-minpair-001",
         observation,
@@ -202,12 +168,31 @@ describe("pure core reference flow", () => {
       },
       registry,
     );
+    expect(prodAttempt.ok).toBe(false);
+    if (!prodAttempt.ok) {
+      expect(prodAttempt.reasonCodes).toContain("production-authority-not-available");
+    }
+
+    // Contract authority resolution succeeds when requireProductionAuthority: false
+    const resolved = resolveCalibrationAuthority(
+      {
+        grantId: "grant-minpair-001",
+        observation,
+        task,
+        evaluationTimestamp: "2026-09-04T00:00:01.000Z",
+        requireProductionAuthority: false,
+        trustStore: anchorRegistry,
+      },
+      registry,
+    );
 
     expect(resolved.ok).toBe(true);
     if (!resolved.ok) return;
-    expect(isResolvedDurableCalibrationAuthority(resolved.resolvedGrant)).toBe(true);
-    if (!isResolvedDurableCalibrationAuthority(resolved.resolvedGrant)) return;
+    expect(isResolvedContractAuthority(resolved.resolvedGrant)).toBe(true);
+    expect(isResolvedDurableCalibrationAuthority(resolved.resolvedGrant)).toBe(false);
+    if (!isResolvedContractAuthority(resolved.resolvedGrant)) return;
 
+    // Durable evidence certification strictly rejects contract-only authority
     const certified = certifyCoreEvidence(
       task,
       observation,
@@ -228,16 +213,24 @@ describe("pure core reference flow", () => {
         },
         occurredAt: "2026-09-04T00:00:01.000Z",
       },
-      resolved.resolvedGrant,
+      resolved.resolvedGrant as never,
     );
 
-    expect(certified.ok).toBe(true);
-    if (!certified.ok) return;
+    expect(certified.ok).toBe(false);
+    if (!certified.ok) {
+      expect(certified.problems).toContainEqual({
+        type: "independent-authority-not-durable",
+      });
+    }
 
+    // Measurement estimation remains operational on observed items
     const theta = estimateThetaEap([
       {
         item: { id: task.id, difficulty: 0.4, discrimination: 1.1 },
-        correct: certified.evidence.outcome.kind === "binary" && certified.evidence.outcome.success,
+        correct: Boolean(
+          observation.payload.kind === "comprehension" &&
+            observation.payload.responseCorrect,
+        ),
       },
     ]);
 
