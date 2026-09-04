@@ -44,7 +44,7 @@ type RpcClient = {
 export async function recordLearningAttempts(input: LearningAttemptBatchInput) {
   const parsed = LearningAttemptBatchSchema.safeParse(input);
   if (!parsed.success) {
-    return { success: false as const, error: "Dữ liệu lần học không hợp lệ." };
+    return { success: false as const, error: "Dữ liệu lần học không hợp lệ.", inserted: 0 };
   }
 
   const requestHeaders = await headers();
@@ -56,6 +56,7 @@ export async function recordLearningAttempts(input: LearningAttemptBatchInput) {
     return {
       success: false as const,
       error: "Quá nhiều lần ghi nhận. Vui lòng thử lại sau.",
+      inserted: 0,
     };
   }
 
@@ -65,7 +66,7 @@ export async function recordLearningAttempts(input: LearningAttemptBatchInput) {
     error: authError,
   } = await supabase.auth.getUser();
   if (authError || !user) {
-    return { success: false as const, error: "Bạn cần đăng nhập để lưu tiến độ." };
+    return { success: false as const, error: "Bạn cần đăng nhập để lưu tiến độ.", inserted: 0 };
   }
 
   const rpcClient = supabase as unknown as RpcClient;
@@ -84,6 +85,7 @@ export async function recordLearningAttempts(input: LearningAttemptBatchInput) {
       return {
         success: false as const,
         error: `Không thể lưu attempt tương thích (${inserted}/${parsed.data.attempts.length}): ${error.message}`,
+        inserted,
       };
     }
     inserted += 1;

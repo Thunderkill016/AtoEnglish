@@ -3,7 +3,7 @@ begin;
 create extension if not exists pgtap with schema extensions;
 set local search_path = public, extensions;
 
-select plan(46);
+select plan(49);
 
 -- The July 2026 attempt schema must survive a fresh migration replay as an inaccessible archive,
 -- while the stable public name is reclaimed by the canonical Attempt -> Evidence contract.
@@ -550,6 +550,63 @@ select is(
   (select count(*) from public.get_learner_evidence_coverage(array['CAP-TRANSFER'])),
   0::bigint,
   'user 2 cannot observe user 1 aggregate evidence coverage'
+);
+
+reset role;
+
+-- Legacy attempt compatibility path (attempt-only, no evidence, no skill state mutation)
+select set_config(
+  'request.jwt.claims',
+  '{"sub":"11111111-1111-4111-8111-111111111111","role":"authenticated"}',
+  true
+);
+select set_config('request.jwt.claim.sub', '11111111-1111-4111-8111-111111111111', true);
+select set_config('request.jwt.claim.role', 'authenticated', true);
+set local role authenticated;
+
+select lives_ok(
+  $$
+    select public.record_learning_attempt(
+      p_knowledge_item_id => 'legacy:unit-a0-1:checkpoint:q1',
+      p_capability_id => null,
+      p_session_id => '11111111-1111-4111-8111-111111111111',
+      p_exercise_type => 'legacy:checkpoint',
+      p_response_modality => 'choice',
+      p_prompt_id => 'unit-a0-1:checkpoint:q1',
+      p_context_id => null,
+      p_response_text => null,
+      p_correct => true,
+      p_latency_ms => 1200,
+      p_hint_count => 0,
+      p_reveal_used => false,
+      p_support_level => 0,
+      p_metadata => '{"compatibilitySource":"legacy-learning-attempt-v1","lessonId":"unit-a0-1"}'::jsonb,
+      p_evidence_type => null,
+      p_evidence_target_id => null,
+      p_evidence_success => null,
+      p_evidence_confidence => null,
+      p_evidence_context_id => null,
+      p_evaluator => null,
+      p_evidence_metadata => '{}'::jsonb
+    );
+  $$,
+  'authenticated user can record compatibility attempt-only history'
+);
+
+select is(
+  (select count(*) from public.learning_evidence_events
+   where user_id = '11111111-1111-4111-8111-111111111111'
+     and attempt_id in (select id from public.learning_attempts where knowledge_item_id = 'legacy:unit-a0-1:checkpoint:q1')),
+  0::bigint,
+  'compatibility attempt creates zero evidence events'
+);
+
+select is(
+  (select count(*) from public.learner_skill_states
+   where user_id = '11111111-1111-4111-8111-111111111111'
+     and target_id = 'legacy:unit-a0-1:checkpoint:q1'),
+  0::bigint,
+  'compatibility attempt creates zero learner skill state mutations'
 );
 
 reset role;

@@ -4,6 +4,7 @@ import { compileLegacyAttemptRpcArgs } from "@/lib/learning/legacy-attempt-adapt
 
 const baseAttempt = {
   activityId: "unit-a0-1:checkpoint:q1",
+  modality: "checkpoint" as const,
   status: "scored" as const,
   score: 100,
   errorTags: [],
@@ -76,5 +77,122 @@ describe("compileLegacyAttemptRpcArgs", () => {
     expect(result.p_response_modality).toBe("none");
     expect(result.p_correct).toBe(false);
     expect(result.p_evidence_type).toBeNull();
+  });
+
+  it("maps a failed checkpoint (score 0) to binary false while keeping evidence null", () => {
+    const result = compileLegacyAttemptRpcArgs({
+      sessionId: "11111111-1111-4111-8111-111111111111",
+      lessonId: "unit-a0-1",
+      attempt: {
+        ...baseAttempt,
+        modality: "checkpoint",
+        score: 0,
+        errorTags: ["answer_mismatch"],
+      },
+    });
+
+    expect(result.p_correct).toBe(false);
+    expect(result.p_response_modality).toBe("choice");
+    expect(result.p_evidence_type).toBeNull();
+    expect(result.p_response_text).toBeNull();
+  });
+
+  it("maps speaking and shadowing to speech modality without oral evidence or response text", () => {
+    for (const modality of ["speaking", "shadowing"] as const) {
+      const result = compileLegacyAttemptRpcArgs({
+        sessionId: "11111111-1111-4111-8111-111111111111",
+        lessonId: "unit-a0-1",
+        attempt: {
+          ...baseAttempt,
+          activityId: `unit-a0-1:${modality}:1`,
+          modality,
+          score: 100,
+        },
+      });
+
+      expect(result.p_response_modality).toBe("speech");
+      expect(result.p_response_text).toBeNull();
+      expect(result.p_evidence_type).toBeNull();
+      expect(result.p_evidence_target_id).toBeNull();
+      expect(result.p_capability_id).toBeNull();
+      expect(result.p_metadata.legacyModality).toBe(modality);
+    }
+  });
+
+  it("maps writing to text modality and quiz/checkpoint to choice modality", () => {
+    const writing = compileLegacyAttemptRpcArgs({
+      sessionId: "11111111-1111-4111-8111-111111111111",
+      lessonId: "unit-a0-1",
+      attempt: { ...baseAttempt, modality: "writing", score: 100 },
+    });
+    expect(writing.p_response_modality).toBe("text");
+    expect(writing.p_response_text).toBeNull();
+
+    const quiz = compileLegacyAttemptRpcArgs({
+      sessionId: "11111111-1111-4111-8111-111111111111",
+      lessonId: "unit-a0-1",
+      attempt: { ...baseAttempt, modality: "quiz", score: 100 },
+    });
+    expect(quiz.p_response_modality).toBe("choice");
+    expect(quiz.p_response_text).toBeNull();
+  });
+
+  it("does not infer observable response modalities for non-interactive passive modalities", () => {
+    for (const modality of ["listening", "reading", "vocabulary", "grammar"] as const) {
+      const result = compileLegacyAttemptRpcArgs({
+        sessionId: "11111111-1111-4111-8111-111111111111",
+        lessonId: "unit-a0-1",
+        attempt: {
+          ...baseAttempt,
+          activityId: `unit-a0-1:${modality}:1`,
+          modality,
+          score: 100,
+        },
+      });
+
+      expect(result.p_response_modality).toBe("none");
+      expect(result.p_response_text).toBeNull();
+      expect(result.p_evidence_type).toBeNull();
+    }
+  });
+
+  it("keeps p_correct null for unscored attempts regardless of score value", () => {
+    for (const status of ["unscored", "skipped", "unavailable"] as const) {
+      const result = compileLegacyAttemptRpcArgs({
+        sessionId: "11111111-1111-4111-8111-111111111111",
+        lessonId: "unit-a0-1",
+        attempt: {
+          ...baseAttempt,
+          status,
+          score: 100,
+        },
+      });
+
+      expect(result.p_correct).toBeNull();
+      expect(result.p_evidence_type).toBeNull();
+      expect(result.p_metadata.legacyStatus).toBe(status);
+    }
+  });
+
+  it("guarantees universal null evidence fields and null capability_id across all calls", () => {
+    const result = compileLegacyAttemptRpcArgs({
+      sessionId: "11111111-1111-4111-8111-111111111111",
+      lessonId: "unit-a0-1",
+      attempt: baseAttempt,
+    });
+
+    expect(result.p_capability_id).toBeNull();
+    expect(result.p_evidence_type).toBeNull();
+    expect(result.p_evidence_target_id).toBeNull();
+    expect(result.p_evidence_success).toBeNull();
+    expect(result.p_evidence_confidence).toBeNull();
+    expect(result.p_evidence_context_id).toBeNull();
+    expect(result.p_evaluator).toBeNull();
+    expect(result.p_evidence_metadata).toEqual({});
+    expect(result.p_response_text).toBeNull();
+    expect(result.p_context_id).toBeNull();
+    expect(result.p_hint_count).toBe(0);
+    expect(result.p_reveal_used).toBe(false);
+    expect(result.p_support_level).toBe(0);
   });
 });
