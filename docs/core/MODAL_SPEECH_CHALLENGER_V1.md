@@ -93,7 +93,8 @@ Currently, OpenPronounce v0.3.0 remains in `validationState: "shadow"` with zero
   - Measured second-case end-to-end latency: 2.459s.
 - **Fingerprint Verification**:
   - `model_fingerprint`: `dac15fd3e35db6c115277eeb5ce43a17dec9db39774f9323b313d4b917aead5f`
-  - `runtime_fingerprint`: `62635dd44191e158a62a02a078fe6bf7700b0e637820e2cf7b419044abbca2ad`
+  - `runtime_fingerprint`: `cd5b41d1a1da0b427b57ae0b5732b3299b74827545767768e189ac9738f98bc4`
+  - `code_sha256`: `f2c33dc1266da573872c394a52745fd38d456d86b3fd903a918740b65d60ecbc`
 - **Epistemic Invariant Confirmed**:
   - Zero raw transcriptions, zero raw audio, and zero 0–100 scores persisted.
   - Model diagnostic output remains strictly in `validationState: "shadow"` with `authority: "none"`.
