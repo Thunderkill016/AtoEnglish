@@ -61,3 +61,13 @@
 - [x] T032: Run full repository tests (`npm test`) and content standards (`npm run test:content-standard`).
 - [x] T033: Run Next.js build (`npm run build -- --webpack`) and NEP gate (`agent_verify.mjs`).
 - [x] T034: Commit, push, trigger GitHub Actions CI, and verify 100% green.
+
+## Phase 8: Resolution of Independent Review Blockers (GEMINI-LEARNER-002)
+- [x] T035: Enforce real certified/reference evidence acceptance boundary (validate calibrationBenchmarkId and non-unknown modelFingerprint; reject forged self-asserted authority and raw observations).
+- [x] T036: Enforce communication-activity target compatibility (`event.activity === targetNode.activity`).
+- [x] T037: Enforce rigorous transfer semantics (transfer evidence role required, demonstrable prior distinct context required, failed transfer tracked as `nearTransferFailedCount` rather than same-context).
+- [x] T038: Persist accepted event lineage audits (`acceptedEvents`), support distributions, and reveal counts in `ConstructSufficientStatistics` and `LearnerStateProjection`.
+- [x] T039: Implement replay-safe, idempotent incremental reducer (`reduceLearnerState`) checking duplicates against accepted events and achieving byte-equivalence under reverse/arbitrary arrival order.
+- [x] T040: Add bounded compatibility reader `readConstructFromLearnerState` in `src/lib/learning/learner-state-read.ts` and `adaptLearnerStateToLegacyRead`.
+- [x] T041: Expand test suite to 40 tests in `src/lib/core/learner-state.test.ts` covering all P1 adversarial conditions.
+- [x] T042: Run complete local verification gates, commit, push, trigger CI, and hand off for re-review.

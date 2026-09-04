@@ -7,24 +7,34 @@
 - **Evidence Certification Boundary**:
   - Raw observations, UI clicks, and uncertified model predictions are strictly rejected (`unvalidated-evidence-rejected`).
   - Only validated/certified evidence records (`CertifiedCoreEvidence` or `ReferenceCoreEvidence`) can update learner state.
+  - Durable assessment evidence strictly requires non-empty `calibrationBenchmarkId` and authentic `modelFingerprint` (cannot be 'unknown').
+  - Repository reference evidence strictly requires `calibrationBenchmarkId: null` and authentic `modelFingerprint`.
+  - Self-asserted authority scopes fail closed.
+- **Activity Compatibility**:
+  - If target node is a communication-activity (`domain: "communication-activity"`), event `activity` MUST match `targetNode.activity`. Violation yields `incompatible-activity`.
 - **Modality & Role Invariant**:
   - Event `role` must be declared in the target node's `allowedEvidenceRoles`. Violation yields `incompatible-evidence-role`.
   - Event `responseModality` must be compatible with the target node's declared `modalities`. Violation yields `incompatible-modality`.
   - Receptive/recognition evidence can never increment productive or transfer support.
 - **Transfer Boundary**:
-  - Transfer claims require `transferDistance: "near-transfer" | "far-transfer"` and a distinct `contextId`.
+  - Transfer claims require transfer-capable role (`role: "near-transfer" | "far-transfer"`), a non-empty `contextId`, and demonstrable prior distinct context (`prev.contextIds.length >= 1`).
+  - First-ever events labeled near/far-transfer cannot establish transfer support due to absence of prior baseline context.
   - Same-context repetition (`transferDistance: "same-context"` or duplicate `contextId`) cannot increment transfer statistics.
+  - Failed near/far-transfer attempts remain failed transfer evidence (`nearTransferFailedCount`), never relabeled as same-context.
 - **Sufficiency & Epistemic Uncertainty**:
   - Zero events evaluate strictly to `status: "unknown"`, `provisionalRoutingScore: null`, `uncertainty: "maximal"`.
   - Conflicting positive and negative events evaluate to `status: "conflicted-support"`, suppressing scalar score to prevent false neutral averaging.
   - State projection outputs `decisionScope: "routing-only"`. It contains NO boolean `mastered: boolean` flag.
   - Repository-reference evidence can only support provisional routing projections; it cannot claim durable assessment authority.
-- **Event Identity & Idempotency**:
+- **Event Identity & Replay Idempotency**:
   - Every event MUST have a non-empty string `eventId`.
-  - Duplicate `eventId` occurrences in the same ledger are rejected fail-closed with `duplicate-event-id`.
+  - Duplicate `eventId` occurrences against both accepted events and rejected audits are rejected fail-closed with `duplicate-event-id`.
+  - Conflicting records with identical `(occurredAt, eventId)` are resolved deterministically via canonical JSON tie-breaking.
 - **Determinism & Reducer Equivalence**:
-  - Events are sorted canonically by `(occurredAt, eventId)` prior to reduction, guaranteeing that array insertion order does not affect output.
-  - Iterative reduction via `reduceLearnerState` produces byte-identical output to batch `projectLearnerState`.
+  - Events are sorted canonically by `(occurredAt, eventId)` prior to reduction.
+  - Iterative reduction via `reduceLearnerState` produces byte-identical output to batch `projectLearnerState` even under arbitrary or reverse arrival order.
+- **Lineage & Support Tracking**:
+  - State projections retain accepted event lineage audits (`acceptedEvents`), support level distributions (`supportDistribution`), and reveal usage (`revealUsedCount`).
 - **Purity**:
   - Zero ambient clock reads (`Date.now()`); all timestamps are supplied as explicit ISO 8601 strings.
   - Pure deterministic computation with zero database, network, browser, or random dependencies.

@@ -62,6 +62,36 @@ export function hasObservedLearnerDimension(
   return readLearnerDimension(state, evidenceType).status === "observed";
 }
 
+/**
+ * Bounded read adapter connecting the V1 ontology-bound learner state projection
+ * to legacy learner dimension readers without turning unknown into zero or provisional routing into mastery.
+ */
+export function readConstructFromLearnerState(
+  projection: { constructs: Record<string, any> },
+  targetId: string,
+): LearnerDimensionRead {
+  const construct = projection.constructs[targetId];
+  if (!construct || construct.status === "unknown" || construct.provisionalRoutingScore === null) {
+    return {
+      estimate: null,
+      evidenceCount: construct?.statistics?.totalEvents ?? 0,
+      status: "unknown",
+      confidence: null,
+      modelVersion: LEARNER_STATE_MODEL_VERSION,
+      decisionScope: "routing",
+    };
+  }
+
+  return {
+    estimate: construct.provisionalRoutingScore,
+    evidenceCount: construct.statistics.totalEvents,
+    status: "observed",
+    confidence: null,
+    modelVersion: LEARNER_STATE_MODEL_VERSION,
+    decisionScope: "routing",
+  };
+}
+
 function normalizeCount(value: number | undefined) {
   if (typeof value !== "number" || !Number.isFinite(value)) return 0;
   return Math.max(0, Math.floor(value));

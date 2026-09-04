@@ -3,9 +3,16 @@ import { COMMUNICATION_ACTIVITIES } from "./domain";
 import type { CoreEvidenceRole } from "./evidence-role";
 import { CORE_EVIDENCE_ROLES } from "./evidence-role";
 import type { ResponseModality } from "@/lib/learning/evidence";
-import type { EvidenceOutcome } from "./certified-evidence";
+import type {
+  CertifiedCoreEvidence,
+  ReferenceCoreEvidence,
+  CoreEvidenceForRouting,
+  EvidenceOutcome,
+} from "./certified-evidence";
 import type { OntologyGraph, OntologyNode } from "./ontology";
 import { ONTOLOGY_NODE_ID_PATTERN } from "./ontology";
+import type { LearnerDimensionRead } from "@/lib/learning/learner-state-read";
+import { LEARNER_STATE_MODEL_VERSION } from "@/lib/learning/learner-state-read";
 
 export const LEARNER_STATE_CONTRACT_ID = "nep.learner-evidence-state.v1" as const;
 export const LEARNER_STATE_CONTRACT_VERSION = 1 as const;
@@ -83,7 +90,15 @@ export type ModalityEvidenceCounts = {
 export type TransferEvidenceCounts = {
   readonly sameContextCount: number;
   readonly nearTransferCount: number;
+  readonly nearTransferFailedCount: number;
   readonly farTransferCount: number;
+  readonly farTransferFailedCount: number;
+};
+
+export type SupportDistribution = {
+  readonly level0: number;
+  readonly level1: number;
+  readonly level2Plus: number;
 };
 
 export type ConstructSufficientStatistics = {
@@ -97,6 +112,10 @@ export type ConstructSufficientStatistics = {
   readonly byActivity: Readonly<Record<CommunicationActivity, ActivityEvidenceCounts>>;
   readonly byModality: Readonly<Record<ResponseModality, ModalityEvidenceCounts>>;
   readonly transfer: TransferEvidenceCounts;
+  readonly supportDistribution: Readonly<SupportDistribution>;
+  readonly revealUsedCount: number;
+  readonly durableEvidenceCount: number;
+  readonly referenceEvidenceCount: number;
   readonly firstObservedAt: string | null;
   readonly lastObservedAt: string | null;
 };
@@ -114,6 +133,7 @@ export type LearnerStateProblemCode =
   | "invalid-event-id"
   | "duplicate-event-id"
   | "unknown-ontology-node"
+  | "incompatible-activity"
   | "incompatible-evidence-role"
   | "incompatible-modality"
   | "invalid-timestamp"
@@ -129,11 +149,29 @@ export type RejectedEvidenceAudit = {
   readonly targetId?: string;
 };
 
+export type AcceptedEventAudit = {
+  readonly eventId: string;
+  readonly targetId: string;
+  readonly occurredAt: string;
+  readonly role: CoreEvidenceRole;
+  readonly activity: CommunicationActivity;
+  readonly responseModality: ResponseModality;
+  readonly transferDistance: TransferDistance;
+  readonly contextId: string | null;
+  readonly authorityScope: "durable-assessment" | "repository-reference";
+  readonly outcomeSuccess: boolean;
+  readonly supportLevel: number;
+  readonly revealUsed: boolean;
+  readonly modelFingerprint: string;
+  readonly calibrationBenchmarkId: string | null;
+};
+
 export type LearnerStateProjection = {
   readonly contractId: typeof LEARNER_STATE_CONTRACT_ID;
   readonly contractVersion: typeof LEARNER_STATE_CONTRACT_VERSION;
   readonly constructs: Readonly<Record<string, ConstructProjection>>;
   readonly totalEventsProcessed: number;
+  readonly acceptedEvents: readonly AcceptedEventAudit[];
   readonly rejectedEvents: readonly RejectedEvidenceAudit[];
 };
 
@@ -198,8 +236,18 @@ export function createEmptyConstructStatistics(): ConstructSufficientStatistics 
     transfer: Object.freeze({
       sameContextCount: 0,
       nearTransferCount: 0,
+      nearTransferFailedCount: 0,
       farTransferCount: 0,
+      farTransferFailedCount: 0,
     }),
+    supportDistribution: Object.freeze({
+      level0: 0,
+      level1: 0,
+      level2Plus: 0,
+    }),
+    revealUsedCount: 0,
+    durableEvidenceCount: 0,
+    referenceEvidenceCount: 0,
     firstObservedAt: null,
     lastObservedAt: null,
   });
@@ -234,10 +282,16 @@ export function createEmptyLearnerStateProjection(
     contractVersion: LEARNER_STATE_CONTRACT_VERSION,
     constructs: Object.freeze(constructs),
     totalEventsProcessed: 0,
+    acceptedEvents: Object.freeze([]),
     rejectedEvents: Object.freeze([]),
   });
 }
 
+/**
+ * Validates that an evidence record conforms strictly to the certified or reference evidence contract.
+ * Rejects raw observations, forged authority assertions, missing model fingerprints,
+ * uncalibrated durable claims, or incompatible ontology roles/activities.
+ */
 export function validateAcceptedEvidenceRecord(
   raw: unknown,
   ontology: OntologyGraph,
@@ -255,6 +309,23 @@ export function validateAcceptedEvidenceRecord(
   }
 
   const record = raw as Record<string, unknown>;
+
+  // Check raw observation shape - raw observations have channel/calibration but lack role/outcome
+  if (
+    "calibration" in record &&
+    !("role" in record) &&
+    !("outcome" in record)
+  ) {
+    return {
+      ok: false,
+      audit: Object.freeze({
+        eventId: String(record.observationId ?? "unknown"),
+        code: "unvalidated-evidence-rejected",
+        message: "Raw observation cannot update learner state directly without certification/reference validation",
+      }),
+    };
+  }
+
   const rawEventId = record.eventId;
   const eventId = typeof rawEventId === "string" && rawEventId.trim().length > 0 ? rawEventId.trim() : "invalid";
 
@@ -269,6 +340,7 @@ export function validateAcceptedEvidenceRecord(
     };
   }
 
+  // Check top-level forbidden properties
   for (const forbidden of FORBIDDEN_EVIDENCE_PROPERTIES) {
     if (Object.hasOwn(record, forbidden)) {
       return {
@@ -282,7 +354,7 @@ export function validateAcceptedEvidenceRecord(
     }
   }
 
-  // Check attempt nested property for forbidden properties if present
+  // Check attempt nested object for forbidden properties
   if (record.attempt && typeof record.attempt === "object") {
     const attemptObj = record.attempt as Record<string, unknown>;
     for (const forbidden of FORBIDDEN_EVIDENCE_PROPERTIES) {
@@ -299,6 +371,88 @@ export function validateAcceptedEvidenceRecord(
     }
   }
 
+  // 1. Validate authorityScope and provenance integrity
+  const authorityScope = record.authorityScope;
+  if (authorityScope !== "durable-assessment" && authorityScope !== "repository-reference") {
+    return {
+      ok: false,
+      audit: Object.freeze({
+        eventId,
+        code: "unvalidated-evidence-rejected",
+        message: `authorityScope must be 'durable-assessment' or 'repository-reference': ${String(authorityScope)}`,
+      }),
+    };
+  }
+
+  // Extract modelFingerprint and calibrationBenchmarkId from flat or nested provenance
+  const prov = record.provenance as Record<string, unknown> | undefined;
+  const rawFingerprint = prov?.modelFingerprint ?? record.modelFingerprint;
+  if (
+    typeof rawFingerprint !== "string" ||
+    rawFingerprint.trim().length === 0 ||
+    rawFingerprint.trim().toLowerCase() === "unknown"
+  ) {
+    return {
+      ok: false,
+      audit: Object.freeze({
+        eventId,
+        code: "unvalidated-evidence-rejected",
+        message: "Evidence record requires an authentic, non-empty modelFingerprint (cannot be 'unknown')",
+      }),
+    };
+  }
+  const modelFingerprint = rawFingerprint.trim();
+
+  const rawBenchmarkId =
+    prov?.calibrationBenchmarkId !== undefined
+      ? prov.calibrationBenchmarkId
+      : record.calibrationBenchmarkId !== undefined
+      ? record.calibrationBenchmarkId
+      : undefined;
+
+  if (authorityScope === "durable-assessment") {
+    // Durable assessment strictly requires an authentic non-empty calibration benchmark ID
+    if (typeof rawBenchmarkId !== "string" || rawBenchmarkId.trim().length === 0) {
+      return {
+        ok: false,
+        audit: Object.freeze({
+          eventId,
+          code: "unvalidated-evidence-rejected",
+          message: "Durable assessment evidence strictly requires a non-empty calibrationBenchmarkId",
+        }),
+      };
+    }
+  } else {
+    // Repository-reference evidence must NOT claim a calibration benchmark ID
+    if (rawBenchmarkId !== null && rawBenchmarkId !== undefined) {
+      return {
+        ok: false,
+        audit: Object.freeze({
+          eventId,
+          code: "unvalidated-evidence-rejected",
+          message: "Repository reference evidence cannot declare a calibrationBenchmarkId (must be null)",
+        }),
+      };
+    }
+  }
+
+  const calibrationBenchmarkId = typeof rawBenchmarkId === "string" ? rawBenchmarkId.trim() : null;
+
+  // Extract observationId and taskId
+  const observationId = String(prov?.observationId ?? record.observationId ?? "");
+  const taskId = String(prov?.taskId ?? record.taskId ?? "");
+  if (!observationId || !taskId) {
+    return {
+      ok: false,
+      audit: Object.freeze({
+        eventId,
+        code: "unvalidated-evidence-rejected",
+        message: "provenance must contain observationId and taskId",
+      }),
+    };
+  }
+
+  // 2. Validate targetId and ontology existence
   const targetId = record.targetId;
   if (typeof targetId !== "string" || !ONTOLOGY_NODE_ID_PATTERN.test(targetId)) {
     return {
@@ -325,6 +479,39 @@ export function validateAcceptedEvidenceRecord(
     };
   }
 
+  // 3. Activity Validation & Target Binding
+  const activity = record.activity as CommunicationActivity;
+  if (
+    typeof activity !== "string" ||
+    !(COMMUNICATION_ACTIVITIES as readonly string[]).includes(activity)
+  ) {
+    return {
+      ok: false,
+      audit: Object.freeze({
+        eventId,
+        code: "unvalidated-evidence-rejected",
+        message: `Invalid activity: ${String(activity)}`,
+        targetId,
+      }),
+    };
+  }
+
+  // If target node is a communication-activity, event activity MUST match the target node's canonical activity
+  if (targetNode.domain === "communication-activity") {
+    if (activity !== targetNode.activity) {
+      return {
+        ok: false,
+        audit: Object.freeze({
+          eventId,
+          code: "incompatible-activity",
+          message: `Event activity '${activity}' does not match target node communication activity '${targetNode.activity}'`,
+          targetId,
+        }),
+      };
+    }
+  }
+
+  // 4. Role Validation & Node Compatibility
   const role = record.role as CoreEvidenceRole;
   if (
     typeof role !== "string" ||
@@ -342,7 +529,7 @@ export function validateAcceptedEvidenceRecord(
     };
   }
 
-  // Support responseModality either at root or inside attempt
+  // 5. Modality Validation & Compatibility
   const attempt = record.attempt && typeof record.attempt === "object" ? (record.attempt as Record<string, unknown>) : null;
   const rawModality = record.responseModality ?? attempt?.responseModality;
   const responseModality = rawModality as ResponseModality;
@@ -373,22 +560,7 @@ export function validateAcceptedEvidenceRecord(
     };
   }
 
-  const activity = record.activity as CommunicationActivity;
-  if (
-    typeof activity !== "string" ||
-    !(COMMUNICATION_ACTIVITIES as readonly string[]).includes(activity)
-  ) {
-    return {
-      ok: false,
-      audit: Object.freeze({
-        eventId,
-        code: "unvalidated-evidence-rejected",
-        message: `Invalid activity: ${String(activity)}`,
-        targetId,
-      }),
-    };
-  }
-
+  // 6. Timestamp Validation
   const occurredAt = record.occurredAt;
   if (typeof occurredAt !== "string" || !ISO_DATE_PATTERN.test(occurredAt)) {
     return {
@@ -430,6 +602,7 @@ export function validateAcceptedEvidenceRecord(
     }
   }
 
+  // 7. Transfer Distance & Semantic Role Gating
   const transferDistance = record.transferDistance as TransferDistance;
   if (
     typeof transferDistance !== "string" ||
@@ -460,21 +633,34 @@ export function validateAcceptedEvidenceRecord(
     };
   }
 
-  if (
-    (transferDistance === "near-transfer" || transferDistance === "far-transfer") &&
-    (!contextId || contextId.trim().length === 0)
-  ) {
-    return {
-      ok: false,
-      audit: Object.freeze({
-        eventId,
-        code: "invalid-transfer-distance",
-        message: `Transfer distance '${transferDistance}' requires a non-empty contextId`,
-        targetId,
-      }),
-    };
+  if (transferDistance === "near-transfer" || transferDistance === "far-transfer") {
+    if (!contextId || contextId.trim().length === 0) {
+      return {
+        ok: false,
+        audit: Object.freeze({
+          eventId,
+          code: "invalid-transfer-distance",
+          message: `Transfer distance '${transferDistance}' requires a non-empty contextId`,
+          targetId,
+        }),
+      };
+    }
+
+    // Role must be a transfer role if transferDistance is near/far-transfer
+    if (role !== "near-transfer" && role !== "far-transfer") {
+      return {
+        ok: false,
+        audit: Object.freeze({
+          eventId,
+          code: "incompatible-evidence-role",
+          message: `Evidence role '${role}' cannot claim transfer distance '${transferDistance}' (transfer requires near-transfer or far-transfer role)`,
+          targetId,
+        }),
+      };
+    }
   }
 
+  // 8. Outcome Validation
   const outcome = record.outcome as EvidenceOutcome;
   if (!isValidEvidenceOutcome(outcome)) {
     return {
@@ -487,44 +673,6 @@ export function validateAcceptedEvidenceRecord(
       }),
     };
   }
-
-  const authorityScope = record.authorityScope;
-  if (authorityScope !== "durable-assessment" && authorityScope !== "repository-reference") {
-    return {
-      ok: false,
-      audit: Object.freeze({
-        eventId,
-        code: "unvalidated-evidence-rejected",
-        message: `authorityScope must be 'durable-assessment' or 'repository-reference': ${String(authorityScope)}`,
-        targetId,
-      }),
-    };
-  }
-
-  // Provenance can be flat or structured
-  const prov = record.provenance as Record<string, unknown> | undefined;
-  const observationId = prov?.observationId ?? record.observationId;
-  const taskId = prov?.taskId ?? record.taskId;
-  if (typeof observationId !== "string" || typeof taskId !== "string") {
-    return {
-      ok: false,
-      audit: Object.freeze({
-        eventId,
-        code: "unvalidated-evidence-rejected",
-        message: "provenance must contain observationId and taskId",
-        targetId,
-      }),
-    };
-  }
-
-  const calibrationBenchmarkId =
-    prov?.calibrationBenchmarkId !== undefined
-      ? (prov.calibrationBenchmarkId as string | null)
-      : record.calibrationBenchmarkId !== undefined
-      ? (record.calibrationBenchmarkId as string | null)
-      : null;
-
-  const modelFingerprint = String(prov?.modelFingerprint ?? record.modelFingerprint ?? "unknown");
 
   let contextTags: readonly string[] = Object.freeze([]);
   if (record.contextTags !== undefined) {
@@ -557,7 +705,13 @@ export function validateAcceptedEvidenceRecord(
     contextTags = Object.freeze([...cleanTags].sort());
   }
 
-  const supportLevel = typeof record.supportLevel === "number" ? record.supportLevel : typeof attempt?.supportLevel === "number" ? attempt.supportLevel : 0;
+  const supportLevel =
+    typeof record.supportLevel === "number"
+      ? record.supportLevel
+      : typeof attempt?.supportLevel === "number"
+      ? attempt.supportLevel
+      : 0;
+
   const revealUsed = Boolean(record.revealUsed ?? attempt?.revealUsed);
 
   const validRecord: AcceptedEvidenceRecord = Object.freeze({
@@ -575,12 +729,9 @@ export function validateAcceptedEvidenceRecord(
     occurredAt,
     authorityScope,
     provenance: Object.freeze({
-      observationId: String(observationId),
-      taskId: String(taskId),
-      calibrationBenchmarkId:
-        calibrationBenchmarkId === null || typeof calibrationBenchmarkId === "string"
-          ? calibrationBenchmarkId
-          : null,
+      observationId,
+      taskId,
+      calibrationBenchmarkId,
       modelFingerprint,
     }),
   });
@@ -645,7 +796,7 @@ function isModalityCompatibleWithNode(
   return false;
 }
 
-function evaluateOutcomeSuccess(outcome: EvidenceOutcome): boolean {
+export function evaluateOutcomeSuccess(outcome: EvidenceOutcome): boolean {
   if (outcome.kind === "binary") {
     return outcome.success;
   }
@@ -683,18 +834,33 @@ function updateConstructStatistics(
     negative: prevModality.negative + (isPositive ? 0 : 1),
   });
 
+  // Transfer semantics:
+  // Transfer support requires:
+  // 1. Transfer evidence role ('near-transfer' or 'far-transfer')
+  // 2. Demonstrable prior context (prev.contextIds.length >= 1)
+  // 3. Changed distinct context (!prev.contextIds.includes(event.contextId))
+  // Failed near/far-transfer attempts remain failed transfer evidence, NEVER relabeled as same-context!
   const transfer = { ...prev.transfer };
+  const hasPriorContext = prev.contextIds.length >= 1;
+  const isChangedContext = event.contextId !== null && !prev.contextIds.includes(event.contextId);
+
   if (event.transferDistance === "same-context") {
     transfer.sameContextCount += 1;
   } else if (event.transferDistance === "near-transfer") {
-    if (isPositive && event.contextId && !prev.contextIds.includes(event.contextId)) {
+    const isTransferRole = event.role === "near-transfer";
+    if (isPositive && isTransferRole && hasPriorContext && isChangedContext) {
       transfer.nearTransferCount += 1;
+    } else if (!isPositive && isTransferRole) {
+      transfer.nearTransferFailedCount += 1;
     } else {
       transfer.sameContextCount += 1;
     }
   } else if (event.transferDistance === "far-transfer") {
-    if (isPositive && event.contextId && !prev.contextIds.includes(event.contextId)) {
+    const isTransferRole = event.role === "far-transfer";
+    if (isPositive && isTransferRole && hasPriorContext && isChangedContext) {
       transfer.farTransferCount += 1;
+    } else if (!isPositive && isTransferRole) {
+      transfer.farTransferFailedCount += 1;
     } else {
       transfer.sameContextCount += 1;
     }
@@ -717,6 +883,20 @@ function updateConstructStatistics(
 
   const conflictedCount = nextPositive > 0 && nextNegative > 0 ? Math.min(nextPositive, nextNegative) : 0;
 
+  // Support distribution & reveal tracking
+  const supportDist = { ...prev.supportDistribution };
+  if (event.supportLevel === 0) {
+    supportDist.level0 += 1;
+  } else if (event.supportLevel === 1) {
+    supportDist.level1 += 1;
+  } else {
+    supportDist.level2Plus += 1;
+  }
+
+  const revealUsedCount = prev.revealUsedCount + (event.revealUsed ? 1 : 0);
+  const durableEvidenceCount = prev.durableEvidenceCount + (event.authorityScope === "durable-assessment" ? 1 : 0);
+  const referenceEvidenceCount = prev.referenceEvidenceCount + (event.authorityScope === "repository-reference" ? 1 : 0);
+
   return Object.freeze({
     totalEvents: nextTotal,
     positiveCount: nextPositive,
@@ -728,6 +908,10 @@ function updateConstructStatistics(
     byActivity: Object.freeze(byActivity),
     byModality: Object.freeze(byModality),
     transfer: Object.freeze(transfer),
+    supportDistribution: Object.freeze(supportDist),
+    revealUsedCount,
+    durableEvidenceCount,
+    referenceEvidenceCount,
     firstObservedAt,
     lastObservedAt,
   });
@@ -813,6 +997,7 @@ export function projectLearnerState(
 ): LearnerStateProjection {
   const sortedEvents = [...evidenceEvents].sort(compareRawEvidence);
   const seenEventIds = new Set<string>();
+  const acceptedEventsAudit: AcceptedEventAudit[] = [];
   const rejectedEvents: RejectedEvidenceAudit[] = [];
   const validEventsByTarget: Record<string, AcceptedEvidenceRecord[]> = {};
 
@@ -835,6 +1020,26 @@ export function projectLearnerState(
       continue;
     }
     seenEventIds.add(event.eventId);
+
+    const isPositive = evaluateOutcomeSuccess(event.outcome);
+    acceptedEventsAudit.push(
+      Object.freeze({
+        eventId: event.eventId,
+        targetId: event.targetId,
+        occurredAt: event.occurredAt,
+        role: event.role,
+        activity: event.activity,
+        responseModality: event.responseModality,
+        transferDistance: event.transferDistance,
+        contextId: event.contextId,
+        authorityScope: event.authorityScope,
+        outcomeSuccess: isPositive,
+        supportLevel: event.supportLevel,
+        revealUsed: event.revealUsed,
+        modelFingerprint: event.provenance.modelFingerprint,
+        calibrationBenchmarkId: event.provenance.calibrationBenchmarkId,
+      })
+    );
 
     if (!validEventsByTarget[event.targetId]) {
       validEventsByTarget[event.targetId] = [];
@@ -864,10 +1069,16 @@ export function projectLearnerState(
     contractVersion: LEARNER_STATE_CONTRACT_VERSION,
     constructs: Object.freeze(constructs),
     totalEventsProcessed: sortedEvents.length,
+    acceptedEvents: Object.freeze(acceptedEventsAudit),
     rejectedEvents: Object.freeze(rejectedEvents),
   });
 }
 
+/**
+ * Incremental step reducer for streaming learner evidence.
+ * Retains accepted event metadata to guarantee full idempotency, duplicate detection
+ * across both accepted and rejected events, and byte-equivalence with batch projection.
+ */
 export function reduceLearnerState(
   currentState: LearnerStateProjection,
   newEvent: unknown,
@@ -885,51 +1096,152 @@ export function reduceLearnerState(
 
   const event = validation.record;
 
-  for (const rejected of currentState.rejectedEvents) {
-    if (rejected.eventId === event.eventId) {
-      return Object.freeze({
-        ...currentState,
-        totalEventsProcessed: currentState.totalEventsProcessed + 1,
-        rejectedEvents: Object.freeze([
-          ...currentState.rejectedEvents,
-          Object.freeze({
-            eventId: event.eventId,
-            code: "duplicate-event-id" as const,
-            message: `Duplicate eventId detected: ${event.eventId}`,
-            targetId: event.targetId,
-          }),
-        ]),
-      });
-    }
+  // Check duplicate eventId against previously accepted events
+  if (currentState.acceptedEvents.some((e) => e.eventId === event.eventId)) {
+    return Object.freeze({
+      ...currentState,
+      totalEventsProcessed: currentState.totalEventsProcessed + 1,
+      rejectedEvents: Object.freeze([
+        ...currentState.rejectedEvents,
+        Object.freeze({
+          eventId: event.eventId,
+          code: "duplicate-event-id" as const,
+          message: `Duplicate eventId detected in accepted ledger: ${event.eventId}`,
+          targetId: event.targetId,
+        }),
+      ]),
+    });
   }
 
-  const prevConstruct = currentState.constructs[event.targetId];
-  const existingStats = prevConstruct?.statistics ?? createEmptyConstructStatistics();
+  // Check duplicate eventId against previously rejected events
+  if (currentState.rejectedEvents.some((e) => e.eventId === event.eventId)) {
+    return Object.freeze({
+      ...currentState,
+      totalEventsProcessed: currentState.totalEventsProcessed + 1,
+      rejectedEvents: Object.freeze([
+        ...currentState.rejectedEvents,
+        Object.freeze({
+          eventId: event.eventId,
+          code: "duplicate-event-id" as const,
+          message: `Duplicate eventId detected in rejected audits: ${event.eventId}`,
+          targetId: event.targetId,
+        }),
+      ]),
+    });
+  }
 
-  const updatedStats = updateConstructStatistics(existingStats, event);
-  const updatedConstruct = projectConstruct(event.targetId, updatedStats);
+  // To guarantee general replay equivalence across arbitrary arrival order,
+  // we rebuild construct projections canonically from all accepted records.
+  const isPositive = evaluateOutcomeSuccess(event.outcome);
+  const newAcceptedAudit: AcceptedEventAudit = Object.freeze({
+    eventId: event.eventId,
+    targetId: event.targetId,
+    occurredAt: event.occurredAt,
+    role: event.role,
+    activity: event.activity,
+    responseModality: event.responseModality,
+    transferDistance: event.transferDistance,
+    contextId: event.contextId,
+    authorityScope: event.authorityScope,
+    outcomeSuccess: isPositive,
+    supportLevel: event.supportLevel,
+    revealUsed: event.revealUsed,
+    modelFingerprint: event.provenance.modelFingerprint,
+    calibrationBenchmarkId: event.provenance.calibrationBenchmarkId,
+  });
 
-  const constructs = {
-    ...currentState.constructs,
-    [event.targetId]: updatedConstruct,
-  };
+  const allAccepted = [...currentState.acceptedEvents, newAcceptedAudit].sort(compareAcceptedAudits);
+
+  // Group by targetId and compute sufficient statistics
+  const targetEvents: Record<string, AcceptedEvidenceRecord[]> = {};
+  for (const accepted of allAccepted) {
+    if (!targetEvents[accepted.targetId]) {
+      targetEvents[accepted.targetId] = [];
+    }
+    targetEvents[accepted.targetId].push(reconstructAcceptedRecord(accepted));
+  }
+
+  const constructs: Record<string, ConstructProjection> = { ...currentState.constructs };
+  for (const targetId of Object.keys(targetEvents)) {
+    let stats = createEmptyConstructStatistics();
+    for (const ev of targetEvents[targetId]) {
+      stats = updateConstructStatistics(stats, ev);
+    }
+    constructs[targetId] = projectConstruct(targetId, stats);
+  }
 
   return Object.freeze({
     contractId: LEARNER_STATE_CONTRACT_ID,
     contractVersion: LEARNER_STATE_CONTRACT_VERSION,
     constructs: Object.freeze(constructs),
     totalEventsProcessed: currentState.totalEventsProcessed + 1,
+    acceptedEvents: Object.freeze(allAccepted),
     rejectedEvents: currentState.rejectedEvents,
   });
+}
+
+function reconstructAcceptedRecord(audit: AcceptedEventAudit): AcceptedEvidenceRecord {
+  return Object.freeze({
+    eventId: audit.eventId,
+    targetId: audit.targetId,
+    role: audit.role,
+    activity: audit.activity,
+    responseModality: audit.responseModality,
+    transferDistance: audit.transferDistance,
+    contextId: audit.contextId,
+    supportLevel: audit.supportLevel,
+    revealUsed: audit.revealUsed,
+    outcome: Object.freeze({ kind: "binary", success: audit.outcomeSuccess }),
+    occurredAt: audit.occurredAt,
+    authorityScope: audit.authorityScope,
+    provenance: Object.freeze({
+      observationId: `obs-${audit.eventId}`,
+      taskId: `task-${audit.eventId}`,
+      calibrationBenchmarkId: audit.calibrationBenchmarkId,
+      modelFingerprint: audit.modelFingerprint,
+    }),
+  });
+}
+
+function compareAcceptedAudits(a: AcceptedEventAudit, b: AcceptedEventAudit): number {
+  const timeCmp = a.occurredAt.localeCompare(b.occurredAt);
+  if (timeCmp !== 0) return timeCmp;
+  return a.eventId.localeCompare(b.eventId);
+}
+
+/**
+ * Bounded compatibility adapter mapping a V1 ConstructProjection into legacy LearnerDimensionRead.
+ * Invariants:
+ * 1. Unknown state (totalEvents === 0 or score === null) NEVER becomes numeric zero.
+ * 2. Decision scope is strictly 'routing' and NEVER claims mastery or certification.
+ */
+export function adaptLearnerStateToLegacyRead(
+  construct?: ConstructProjection
+): LearnerDimensionRead {
+  if (!construct || construct.status === "unknown" || construct.provisionalRoutingScore === null) {
+    return {
+      estimate: null,
+      evidenceCount: construct?.statistics.totalEvents ?? 0,
+      status: "unknown",
+      confidence: null,
+      modelVersion: LEARNER_STATE_MODEL_VERSION,
+      decisionScope: "routing",
+    };
+  }
+
+  return {
+    estimate: construct.provisionalRoutingScore,
+    evidenceCount: construct.statistics.totalEvents,
+    status: "observed",
+    confidence: null,
+    modelVersion: LEARNER_STATE_MODEL_VERSION,
+    decisionScope: "routing",
+  };
 }
 
 /**
  * Comparative reference implementation of Bayesian Knowledge Tracing (BKT)
  * based on CAHLR/pyBKT (MIT License, Tag 1.4.3, Commit 06fc180ae72c117458acc527f8ec90cc8e0581c1).
- *
- * NOTE: BKT represents single-skill mastery as a scalar probability. In Nếp Core V1,
- * this is strictly an offline evaluation and comparative baseline donor.
- * It is subordinate to Nếp's multi-dimensional sufficiency and epistemic uncertainty state.
  */
 export type BktParameters = {
   readonly pL0: number;
@@ -1010,7 +1322,13 @@ function compareRawEvidence(a: unknown, b: unknown): number {
 
   const ida = typeof ra?.eventId === "string" ? ra.eventId : "";
   const idb = typeof rb?.eventId === "string" ? rb.eventId : "";
-  return ida.localeCompare(idb);
+  const idCmp = ida.localeCompare(idb);
+  if (idCmp !== 0) return idCmp;
+
+  // Deterministic tie-breaker for identical (occurredAt, eventId)
+  const sa = JSON.stringify(a);
+  const sb = JSON.stringify(b);
+  return sa.localeCompare(sb);
 }
 
 function clamp01(val: number): number {
