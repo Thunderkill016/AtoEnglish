@@ -1,3 +1,2 @@
-{"case_id": "case-001", "target_text": "think", "audio_file": "synthetic_sample.wav"}
-{"case_id": "case-002", "target_text": "thought", "audio_file": "synthetic_sample.wav"}
-{"case_id": "case-003", "target_text": "through", "audio_file": "synthetic_sample.wav"}
+{"case_id":"runtime-tone-001","target_text":"think","audio_file":"synthetic_sample.wav","fixture_class":"non_speech_synthetic","generator":{"name":"python-sine-wave","version":"stdlib","parameters":"440Hz,1s,16kHz,mono,PCM16"}}
+{"case_id":"runtime-speech-001","target_text":"think","audio_file":"synthetic_speech_think.wav","fixture_class":"synthetic_speech","generator":{"name":"espeak-ng","version":"1.51+dfsg-12build1","generator_license":"GPL-3.0-or-later","voice":"en-us","parameters":"speed=140,16-bit PCM WAV","source_text":"repository-authored single word"}}
