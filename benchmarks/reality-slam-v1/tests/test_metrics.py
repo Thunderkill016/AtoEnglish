@@ -22,6 +22,12 @@ class MetricTest(unittest.TestCase):
         with self.assertRaises(ValueError):
             evaluate_binary_probabilities([0, 0], [0.1, 0.2])
 
+    def test_non_finite_probabilities_fail_closed(self) -> None:
+        for bad in (float("nan"), float("inf"), float("-inf")):
+            with self.subTest(probability=bad):
+                with self.assertRaises(ValueError):
+                    evaluate_binary_probabilities([0, 1], [0.1, bad])
+
 
 if __name__ == "__main__":
     unittest.main()
