@@ -7,7 +7,6 @@ import {
   sealCoreEvidence,
   validateReferenceCoreEvidence,
   type CoreEvidenceCandidate,
-  type CoreEvidenceEnvelope,
   type CoreEvidencePayload,
 } from "./certified-evidence";
 import { buildEnglishOntologyV1 } from "./ontology-seed";
@@ -111,7 +110,7 @@ describe("detached evidence provenance boundary", () => {
   it("refuses an unmodified detached clone even when its integrity digest is valid", () => {
     const { task, observation, evidence } = makeReferenceFixture();
     const envelope = sealCoreEvidence(evidence, "2026-09-04T12:01:00.000Z");
-    const detached = JSON.parse(JSON.stringify(envelope)) as CoreEvidenceEnvelope;
+    const detached: unknown = JSON.parse(JSON.stringify(envelope));
 
     expect(parseCoreEvidenceEnvelope(detached).ok).toBe(true);
     const hydrated = hydrateReferenceCoreEvidenceFromEnvelope(detached, task, observation);
@@ -122,30 +121,38 @@ describe("detached evidence provenance boundary", () => {
   it("refuses a forged detached clone after outcome/provenance mutation and public rehash", () => {
     const { task, observation, evidence } = makeReferenceFixture();
     const envelope = sealCoreEvidence(evidence, "2026-09-04T12:01:00.000Z");
-    const detached = JSON.parse(JSON.stringify(envelope)) as CoreEvidenceEnvelope & {
+    const detached = JSON.parse(JSON.stringify(envelope)) as {
+      contractId: string;
       evidence: CoreEvidencePayload;
+      digest: string;
+      authorityScope: "durable-assessment" | "repository-reference";
+      sealedAt: string;
     };
 
-    detached.evidence = {
+    const forgedPayload: CoreEvidencePayload = {
       ...detached.evidence,
       outcome: { kind: "binary", success: false },
       occurredAt: "2026-09-04T12:05:00.000Z",
       modelFingerprint: "attacker-rewritten-model",
       contextTags: ["attacker-context"],
     };
-    detached.digest = computeCanonicalEvidenceDigest(detached.evidence);
+    const forgedEnvelope = {
+      ...detached,
+      evidence: forgedPayload,
+      digest: computeCanonicalEvidenceDigest(forgedPayload),
+    };
 
-    const parsed = parseCoreEvidenceEnvelope(detached);
-    expect(parsed.ok).toBe(true); // integrity is valid; provenance is not.
+    const parsed = parseCoreEvidenceEnvelope(forgedEnvelope);
+    expect(parsed.ok).toBe(true); // Integrity can be valid while provenance remains untrusted.
 
-    const hydrated = hydrateReferenceCoreEvidenceFromEnvelope(detached, task, observation);
+    const hydrated = hydrateReferenceCoreEvidenceFromEnvelope(forgedEnvelope, task, observation);
     expect(hydrated.ok).toBe(false);
 
-    const direct = validateAcceptedEvidenceRecord(detached.evidence, ontology);
+    const direct = validateAcceptedEvidenceRecord(forgedPayload, ontology);
     expect(direct.ok).toBe(false);
     if (!direct.ok) expect(direct.audit.code).toBe("unvalidated-evidence-rejected");
 
-    const projected = projectLearnerState(ontology, [detached.evidence]);
+    const projected = projectLearnerState(ontology, [forgedPayload]);
     expect(projected.acceptedEvents).toHaveLength(0);
     expect(projected.rejectedEvents).toHaveLength(1);
   });
