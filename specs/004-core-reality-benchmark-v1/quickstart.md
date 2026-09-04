@@ -1,113 +1,108 @@
 # Quickstart: Reality Benchmark Harness V1
 
-- **Contract Identifier**: `nep.reality-benchmark.v1`.
-- **Governing Purpose**: Guide researchers and maintainers through environment setup, dataset staging, running adversarial leakage tests, executing stage gates, and verifying tamper-evident experiment manifests.
+This document defines the intended execution contract. Commands become executable when Phase B is implemented.
 
----
+## 1. Quarantine first
 
-## 1. Prerequisites & Environment Setup
-
-- **Node.js**: Version $\ge 22.0.0$ (for repository quality gates and B3 learner-state bridge).
-- **Python**: Version $\ge 3.10$ (for official baseline reproduction, estimator fitting, and statistical testing).
-- **Disk Space**: $\approx 2.5\text{ GB}$ for compressed SLAM archives and cached feature buffers.
-- **RAM**: Minimum $4\text{ GB}$ available (streaming parser keeps heap/RSS $\le 1.5\text{ GB}$).
-
-### Setup Isolated Python Environment
-In accordance with the reuse-first policy (#138), benchmark estimators run in an isolated offline environment:
+Before downloading anything, verify the repository ignores benchmark cache bytes:
 
 ```bash
-cd benchmarks/reality-slam-v1
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
+git check-ignore -v .cache/benchmarks/slam-2018/example || true
 ```
 
----
+Expected quarantine root:
 
-## 2. Dataset Staging, License Terms & Quarantine
+```text
+.cache/benchmarks/slam-2018/
+```
 
-The Duolingo SLAM 2018 dataset is distributed on Harvard Dataverse under **Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)**.
-- **Usage Boundary**: Research only (`commercialUseAllowed: false`).
-- **Quarantine Policy**: `redistributionAllowed: false` is an explicit **Nếp project quarantine policy** (raw learner traces must not be committed to Git or redistributed).
-- **Production Isolation**: The raw dataset, feature caches, and directly derived model weights MUST NOT enter the production database, application, or commercial feature services.
-- **Fail Closed**: Dataset terms and checksums must be verified at retrieval time; if terms cannot be verified, execution halts.
+No raw SLAM archive, extracted trace, starter artifact, feature cache, or derived research weight belongs in Git or production stores.
 
-Download the official dataset into the isolated, gitignored cache directory:
+## 2. Resolve Dataverse metadata before download
+
+The resolver MUST query DOI `10.7910/DVN/8SWHNO`, verify the current dataset version/license/access metadata, and map expected filenames to exact file IDs and upstream checksums.
+
+Metadata snapshot verified 2026-09-05:
+
+```text
+data_en_es.tar.gz   fileId=3357629   MD5=444e0d9e45bdc19822938cffb9fbcc7a
+data_es_en.tar.gz   fileId=3357630   MD5=3c0bc0019ef772050482c570e0626447
+data_fr_en.tar.gz   fileId=3357627   MD5=4b395106d5414cd78ceb4101ad6e4f0d
+starter_code.tar.gz fileId=3357628   MD5=1e77023c89091557d4c28b881425ab49
+```
+
+Do not construct download URLs by concatenating the DOI and filename. Resolve file IDs from metadata, then use the Dataverse datafile endpoint for that exact ID.
+
+If Dataverse requires a Guestbook response (currently observed for the starter artifact), stop and complete the legitimate access/terms flow. The harness MUST NOT bypass the gate.
+
+## 3. Verify artifact integrity
+
+After legitimate staging:
 
 ```bash
-mkdir -p .cache/benchmarks/slam-2018
-cd .cache/benchmarks/slam-2018
-
-# Download language tracks (Harvard Dataverse DOI: 10.7910/DVN/8SWHNO)
-curl -O https://dataverse.harvard.edu/api/access/datafile/:persistentId?persistentId=doi:10.7910/DVN/8SWHNO/data_es_en.tar.gz
-curl -O https://dataverse.harvard.edu/api/access/datafile/:persistentId?persistentId=doi:10.7910/DVN/8SWHNO/data_en_es.tar.gz
-curl -O https://dataverse.harvard.edu/api/access/datafile/:persistentId?persistentId=doi:10.7910/DVN/8SWHNO/data_fr_en.tar.gz
-
-# Extract archives locally
-tar -xzf data_es_en.tar.gz
-tar -xzf data_en_es.tar.gz
-tar -xzf data_fr_en.tar.gz
+python benchmarks/reality-slam-v1/scripts/validate_artifacts.py \
+  --cache .cache/benchmarks/slam-2018
 ```
 
-Verify that `.cache/` remains strictly gitignored.
+The validator compares the repository-provided checksum type/value first, then records a separate local SHA-256 fingerprint. A mismatch fails closed.
 
----
-
-## 3. Running Unit & Adversarial Tests
-
-Run the test suite verifying parser fidelity, zero-leakage chronological tracking, split-aware evaluation label masking, cluster bootstrap calculations, and integrity digest generation:
+## 4. R0 before modern reimplementation
 
 ```bash
-# Test benchmark components
-pytest benchmarks/reality-slam-v1/tests/
+python benchmarks/reality-slam-v1/scripts/run_r0_oracle.py --track en_es --split dev
 ```
 
----
+R0 executes the exact staged official starter/evaluation artifact. The historical starter uses unseeded random initialization/shuffling, so the runner records repeated oracle results, runtime, artifact hash, and any compatibility patch. Do not call upstream output byte-deterministic.
 
-## 4. Executing Benchmark Stage Gates
-
-### Gate R0: Reproduce Official Baseline on DEV
-Reproduces the official Duolingo baseline against the Python starter oracle on the `dev` split scored against `dev.key`:
-```bash
-python benchmarks/reality-slam-v1/scripts/run_gate_r0.py --track en_es --split dev
-```
-
-### Gate R1: Simple History Baseline B2
-Establishes the transparent recency & repetition baseline under split-aware masking:
-```bash
-python benchmarks/reality-slam-v1/scripts/run_gate_r1.py --track en_es --split dev
-```
-
-### Gate R2: Nếp Representation Ablation (Blocked on PR #140 Rebase)
-*Note: Gate R2 requires rebasing onto the frontier after PR #140 is merged.*
-```bash
-python benchmarks/reality-slam-v1/scripts/run_gate_r2.py --track en_es --split dev --compare B2
-```
-
-### Full Benchmark Sweep (All Tracks)
-```bash
-python benchmarks/reality-slam-v1/scripts/run_gate_r4.py --sweep --output reports/reality-benchmark-v1.json
-```
-
----
-
-## 5. Verifying Experiment Manifest Integrity (RFC 8785 JCS)
-
-Verify that the emitted manifest has a valid SHA-256 integrity fingerprint computed over its canonical RFC 8785 JSON representation:
+Only after R0 freezes the oracle protocol may the modern B0/B1/B2 lane run:
 
 ```bash
-python -c '
-import json, hashlib, canonicaljson
-with open("reports/reality-benchmark-v1.json", "r") as f:
-    manifest = json.load(f)
-embedded_digest = manifest.pop("manifestDigest", None)
-canonical_bytes = canonicaljson.encode_canonical_json(manifest)
-computed_digest = hashlib.sha256(canonical_bytes).hexdigest()
-print(f"Embedded Integrity Digest: {embedded_digest}")
-print(f"Computed Digest:          {computed_digest}")
-print(f"Content Integrity Verified: {embedded_digest == computed_digest}")
-assert embedded_digest == computed_digest, "Digest mismatch!"
-'
+python benchmarks/reality-slam-v1/scripts/run_b0.py --track en_es --split dev
+python benchmarks/reality-slam-v1/scripts/run_b1.py --track en_es --split dev
+python benchmarks/reality-slam-v1/scripts/run_b2.py --track en_es --split dev
 ```
 
-*Note*: The manifest digest provides tamper-evident, content-addressed data integrity. It does NOT constitute cryptographic origin authentication.
+## 5. Leakage tests
+
+```bash
+pytest benchmarks/reality-slam-v1/tests/ -k 'leakage or parser or history'
+```
+
+Required cases include:
+- source-faithful parser fixtures (`+`/`/`, pipe countries, fractional days, null/negative time, 7-vs-6 rows);
+- invert DEV/TEST gold labels and prove prediction-time features do not change;
+- prove TRAIN-derived error counts/rates remain present on first and later DEV/TEST predictions;
+- mutate future rows and prove earlier feature vectors do not change.
+
+## 6. B3 gate
+
+Do not run B3 until #140 independently passes, merges to frontier, and this branch is rebased/reverified.
+
+```bash
+python benchmarks/reality-slam-v1/scripts/audit_b3_compatibility.py --track en_es
+```
+
+If required canonical evidence semantics are unavailable, the correct result is:
+
+```text
+b3-not-applicable-on-slam
+```
+
+Do not invent `supportLevel`, `revealUsed`, evidence role, or transfer semantics.
+
+## 7. RFC 8785 manifest integrity
+
+Use pinned `rfc8785==0.1.4` (Apache-2.0). The digest is calculated over the manifest with `manifestDigest` removed:
+
+```python
+import hashlib
+import rfc8785
+
+unsigned = dict(manifest)
+unsigned.pop("manifestDigest", None)
+canonical_bytes = rfc8785.dumps(unsigned)
+digest = "sha256:" + hashlib.sha256(canonical_bytes).hexdigest()
+assert digest == manifest["manifestDigest"]
+```
+
+This verifies content integrity only; it does not authenticate who produced the manifest.

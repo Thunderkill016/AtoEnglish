@@ -1,104 +1,71 @@
 # Feature Specification: Reality Benchmark Harness V1
 
-**Feature Branch**: `gemini/core-reality-benchmark-v1`  
-**Created**: 2026-09-05  
+**Contract**: `nep.reality-benchmark.v1`  
 **Status**: Draft  
-**Input**: Issue #141 and Owner Directives on `CORE-REALITY-001`.
+**Source of truth**: Issue #141 + repository constitution
 
----
+## Purpose
 
-## User Scenarios & Testing
+Build a reproducible, offline benchmark lane that can falsify learner-model assumptions before more core architecture is added. The first scientific question is narrow: **does `nep.learner-evidence-state.v1` add useful predictive/routing signal beyond a strong simple learner-history baseline on real longitudinal second-language traces?**
 
-### User Story 1 - Reproduce Official Benchmark Baseline (Priority: P1)
+This benchmark does not establish mastery, CEFR level, retention, transfer, Vietnamese-learner validity, instructional efficacy, or market value.
 
-A core researcher or auditor can run the benchmark harness against the frozen Duolingo SLAM 2018 dataset and reproduce the official logistic regression baseline (B1) on the `dev` split across all three language tracks against the official competition Python starter code oracle within the Nếp deterministic reproduction policy ($\pm 0.005$ AUC).
+## Canonical SLAM track map
 
-**Independent Test**: Running the benchmark on the `dev` split with baseline B1 matches the official Python starter oracle metrics on `dev` against `dev.key` within the $\pm 0.005$ policy window. (Published Table 2 points: `es_en` $\approx 0.774$, `en_es` $\approx 0.746$, `fr_en` $\approx 0.771$ are on the TEST split and may be verified on TEST only after model/protocol freeze).
+| Track | Learner target language | Learner known language | Published TEST baseline AUC |
+| --- | --- | --- | ---: |
+| `en_es` | English | Spanish | 0.774 |
+| `es_en` | Spanish | English | 0.746 |
+| `fr_en` | French | English | 0.771 |
 
-**Acceptance Scenarios**:
-1. **Given** the frozen SLAM dataset, **When** running Gate R0 evaluation for B1 on the `dev` split, **Then** the reproduced AUC matches the official Python starter script oracle on `dev` within $\pm 0.005$ AUC under identical solver configurations.
-2. **Given** any discrepancy exceeding tolerance, **When** Gate R0 completes, **Then** the run fails closed with status `invalid-run` and halts further Nếp evaluation until baseline parity is restored.
-3. **Given** model freeze and post-selection evaluation on `test`, **When** evaluated against `test.key`, **Then** TEST metrics are reported in a distinct evaluation phase and compared against published Table 2 points.
+The published values above are TEST results. They MUST NOT be used as DEV reproduction targets.
 
----
+## User stories
 
-### User Story 2 - Establish Transparent Simple History Baseline (Priority: P1)
+### US1 — Reproduce the official baseline
+Stage the official SLAM artifacts outside Git, verify provenance/checksums/access terms, run the original starter/evaluation artifacts on DEV, and record the empirical oracle metrics. Because the historical starter uses randomized weight initialization and shuffling without an explicit seed input, R0 records repeated oracle runs rather than pretending the upstream program is byte-deterministic.
 
-A researcher can establish a transparent, leakage-free simple history baseline (B2) modeling user historical error rates, token error rates, and recency/lag time without Nếp state machinery.
+**Acceptance**: the benchmark records the exact starter artifact fingerprint, runtime/compatibility notes, every oracle run, and a frozen reproduction tolerance. If the baseline cannot be reproduced, the run is `invalid-run` and B2/B3 claims stop.
 
-**Independent Test**: B2 computes feature vectors strictly chronologically ($t' < t$) under split-aware masking and produces an interpretable benchmark score for subsequent ablation.
+### US2 — Establish B0/B1/B2 reality baselines
+B0 is a train-prevalence constant baseline. B1 is the official/reproduced logistic baseline lane. B2 is a transparent causal learner-history baseline. B2 may use label-dependent history from source splits whose labels are legitimately available to the fit phase, but MUST NOT use labels from the current evaluation pass.
 
-**Acceptance Scenarios**:
-1. **Given** a learner's past exercise history, **When** computing B2 features for token at time $t$, **Then** only events occurring strictly before $t$ are considered.
-2. **Given** sequential processing of the DEV or TEST split, **When** generating predictions, **Then** earlier evaluation split events update only label-free encounter counts and lag times, strictly masking ground truth labels. Gold `.key` labels are used solely for batch scoring after predictions are emitted.
-3. **Given** identical input traces, **When** running B2, **Then** feature generation and model predictions replay byte-deterministically.
+**Acceptance**: TRAIN-derived error history remains available for DEV/TEST predictions; earlier DEV/TEST events in a blind pass may update label-free encounter/lag features only. Gold `.key` labels are scoring inputs after predictions are emitted, except when DEV is explicitly promoted into a later `train-plus-dev` fit phase.
 
----
+### US3 — Evaluate Nếp only by common-predictor ablation
+B3 is `B2 features + versioned Nếp-derived features` under the exact same downstream estimator, fit data, optimization settings, and seed inputs as B2. B3 uses final canonical #137 outputs only: `ConstructEvidenceSufficiency`, `ConstructUncertaintyLevel`, nullable `provisionalRoutingScore`, and `ConstructSufficientStatistics`. Any numerical encoding belongs to `nep.reality-derived-features.v1`; it is not renamed as a canonical learner-state field.
 
-### User Story 3 - Isolate Nếp Representation Value via Symmetrical Ablation (Priority: P1)
+Only tracks passing the Pre-R2 compatibility audit are eligible. AtoEnglish owns an English ontology, therefore `en_es` is the only SLAM track that can even be considered for canonical ontology mapping in V1. `es_en` and `fr_en` are B3 `not-applicable` unless a future version adds matching target-language ontologies.
 
-A researcher can evaluate the incremental predictive value of Nếp learner-state features (`nep.learner-evidence-state.v1`) by projecting canonical state fields into the identical downstream estimator used in B2 (yielding Baseline B3), without smuggling unmerged external memory models.
+If required Nếp evidence semantics such as support/reveal state, evidence role, or transfer context cannot be known without guessing, B3 is `not-applicable-on-slam`. That is a valid result and activates the bounded first-party lane in #143 rather than semantic fabrication.
 
-**Independent Test**: B3 and B2 share identical estimators, hyperparameters, and feature budgets (except for canonical Nếp state features); the difference $\Delta \text{AUC} = \text{AUC}(B3) - \text{AUC}(B2)$ is calculated alongside paired cluster bootstrap by learner (2,000 resamples) and 95% confidence intervals.
+### US4 — Emit falsifiable, tamper-evident experiment records
+Every run emits a machine-readable manifest. RFC 8785 canonical bytes are produced with a vetted implementation, excluding `manifestDigest`; SHA-256 is then computed over those bytes and embedded as `manifestDigest`. This digest proves content integrity, not origin authentication.
 
-**Acceptance Scenarios**:
-1. **Given** the B2 feature pipeline and estimator configuration, **When** executing B3, **Then** B3 ingests $[X_{B2} \,\|\, X_{\text{Nếp}}]$ into the same estimator without altering loss, regularization, or optimization settings.
-2. **Given** the B3 feature pipeline, **When** projecting state, **Then** B3 projects strictly canonical fields from `nep.learner-evidence-state.v1` (`status: ConstructEvidenceSufficiency`, `uncertainty: ConstructUncertaintyLevel`, nullable `provisionalRoutingScore`, and `statistics: ConstructSufficientStatistics`). Any derived features have an explicit `derivedFeatureId` (`nep.reality-derived-features.v1`), frozen formulas, and source fields. External models (FSRS, BKT) are excluded.
-3. **Given** a positive uplift with 95% bootstrap confidence interval strictly above zero and per-track consistency, **When** Gate R2 completes, **Then** the run is marked `candidate-better` and preserves the state representation.
-4. **Given** $\Delta \text{AUC} \le 0$ or confidence interval overlapping zero, **When** Gate R2 completes, **Then** the run is marked `no-evidence-of-improvement` or `candidate-worse`, blocking premature promotion claims.
+## Functional requirements
 
----
+- **FR-001**: Implement contract `nep.reality-benchmark.v1` version 1.
+- **FR-002**: Preserve the canonical track mapping table above in one versioned constant/table used by reports and tests.
+- **FR-003**: Model the primary-source prompt grammar exactly: `user`, `countries`, `days`, `client`, `session`, `format`, `time`. User IDs are B64-style 8-character identifiers and may contain `+` or `/`; countries are pipe-delimited; `days` is fractional; `time` is integer or `null`, and documented negative values normalize to missing.
+- **FR-004**: Model TRAIN token lines as 7 columns and original DEV/TEST input lines as 6 columns with labels in separate key artifacts.
+- **FR-005**: Enforce strict causal cutoffs. No event may inspect its own label or future events.
+- **FR-006**: Preserve label-available TRAIN history during DEV/TEST prediction. The current blind evaluation split contributes only label-free history until a distinct later fit phase explicitly grants those labels.
+- **FR-007**: B0 uses TRAIN prevalence only and is reported for every track/split evaluated.
+- **FR-008**: R0 stages the official starter/evaluation artifact outside Git and fingerprints it. Upstream randomness is recorded honestly; no deterministic claim may be made about unmodified upstream code that has no explicit seed control.
+- **FR-009**: B2 remains transparent and leakage-safe: prior user error count/rate, prior token error count/rate, encounter count, course-age lag derived from fractional `days`, format, and normalized response time are permitted when causally available.
+- **FR-010**: B3 appends only canonical #137 state outputs and frozen `nep.reality-derived-features.v1` encodings to B2. FSRS/BKT parameters are not part of B3.
+- **FR-011**: Pre-R2 compatibility audit reports eligible tracks, mapped/unmapped coverage, every unavailable semantic field, and `proceed | b3-not-applicable-on-slam`.
+- **FR-012**: B3-vs-B2 uncertainty uses paired cluster bootstrap by learner as the primary comparison. Promotion logic is evaluated only over eligible/mapped tracks; `eligibleTrackCount` and mapping coverage are mandatory. If only `en_es` is eligible, no cross-language generalization claim is permitted.
+- **FR-013**: Report AUC primary, F1@0.5 and log-loss secondary, plus token count, positive prevalence, learner count, and coverage.
+- **FR-014**: Dataset and starter artifacts are resolved from Harvard Dataverse metadata to exact file IDs/checksums before download. Access/guestbook requirements are obeyed; the harness fails closed when access or terms cannot be verified.
+- **FR-015**: Raw SLAM data, starter artifacts, feature caches, and derived research weights stay under `.cache/benchmarks/slam-2018/` or another explicitly quarantined untracked path and never enter production stores.
+- **FR-016**: Dataset license/access classification is per artifact. The Dataverse dataset is CC BY-NC 4.0 and non-commercial. `redistributionAllowed: false` is a Nếp quarantine policy, not a claim that CC BY-NC universally forbids redistribution. The starter-code artifact's separate code license remains `unverified` unless the staged artifact itself proves it; do not commit upstream starter code on an assumed MIT license.
+- **FR-017**: Reuse-first: use the official starter as R0 oracle; after R0, use vetted package implementations for estimators/metrics/canonicalization. Do not write custom logistic-regression, ROC-AUC, log-loss, bootstrap primitives, or DeLong code. DeLong is out of V1 unless a vetted package is later justified.
+- **FR-018**: After Spec #004 independent PASS, B0/B1/B2 infrastructure may proceed from the current frontier before #140 merges. B3 remains blocked on #140 independent PASS + merge + benchmark-branch rebase.
+- **FR-019**: Every report carries explicit claim-boundary text: offline prediction is not learning efficacy, mastery calibration, retention, transfer, or Vietnamese-learner validation.
 
-### User Story 4 - Audit pyBKT OSS Comparator Within Defensible Limits (Priority: P2)
+## Promotion statuses
 
-A researcher can execute `CAHLR/pyBKT` as an external baseline (B4) on a defensible lemma-level or grammatical construct mapping, without distorting token-level sequence semantics.
+`reproduced | candidate-better | no-evidence-of-improvement | candidate-worse | invalid-run | not-applicable`
 
-**Independent Test**: pyBKT evaluates tokens mapped to verified skill categories; unmapped tokens output `not-applicable`.
-
-**Acceptance Scenarios**:
-1. **Given** SLAM tokens, **When** a token matches an audited lemma or syntactic skill, **Then** pyBKT predicts correct probability via standard forward stepping.
-2. **Given** punctuation or unmapped tokens, **When** evaluated, **Then** pyBKT outputs `not-applicable` rather than fabricating arbitrary skill models.
-
----
-
-### User Story 5 - Emit Cryptographic Manifests & Falsifiable Decision (Priority: P1)
-
-A compliance or governance auditor can verify that every benchmark run produces an immutable, canonical RFC 8785 JSON manifest with a SHA-256 integrity fingerprint (content digest), recording exact dataset checksums, license breakdown, code commit SHA, hyperparameters, per-track metrics, and paired cluster bootstrap statistics.
-
-**Independent Test**: Re-computing SHA-256 over canonicalized RFC 8785 manifest JSON matches the embedded `manifestDigest`.
-
-**Acceptance Scenarios**:
-1. **Given** a completed benchmark run, **When** emitting results, **Then** an `ExperimentManifest` is saved to disk with `manifestDigest` and strict status classifications.
-2. **Given** any mutation to manifest fields, **When** validated, **Then** the integrity digest verification fails closed.
-
----
-
-## Requirements
-
-### Functional Requirements
-
-- **FR-001**: The harness MUST implement contract `nep.reality-benchmark.v1` (version 1).
-- **FR-002**: The harness MUST support all three official SLAM 2018 language tracks with accurate primary-source metadata:
-  * `en_es`: English learners who already speak Spanish (L1 Spanish, target English; 2,593 users; ~2.60M tokens).
-  * `es_en`: Spanish learners who already speak English (L1 English, target Spanish; 2,643 users; ~2.62M tokens).
-  * `fr_en`: French learners who already speak English (L1 English, target French; 1,213 users; ~1.97M tokens).
-- **FR-003**: The harness MUST strictly enforce the frozen split hierarchy (`train`, `dev`, `test`). Hyperparameter selection and vocabulary indexing MUST occur exclusively on `train` and `dev`.
-- **FR-004**: Feature extraction MUST be strictly causal / chronological ($t' < t$ or $k' < k$). In addition, the harness MUST enforce split-aware label availability:
-  * While generating predictions on `dev` or `test`, earlier events in that split ($t' < t_{\text{eval}}$) MUST NOT update label-dependent history or state; only label-free encounter counts, lag times, and formats.
-  * Gold `.key` labels MUST be used solely for offline scoring and threshold tuning after predictions are emitted.
-  * Both B2 and B3 MUST receive the exact same mask.
-  * The harness MUST include an automated adversarial test proving label inversion of earlier evaluation events produces zero feature delta for subsequent events.
-  * If `dev` is subsequently folded into training data for final `test` evaluation, that MUST be recorded as a separate, distinct fit phase (`fitPhase: "train-plus-dev"`).
-- **FR-005**: Gate R0 MUST target reproduction of the official competition Python starter code oracle baseline B1 on the `dev` split scored against `dev.key` within the Nếp deterministic reproduction policy ($\pm 0.005$ AUC) before Nếp evaluation is permitted. Published Table 2 points (Settles et al., 2018: English `0.774`, Spanish `0.746`, French `0.771`) are on the TEST split and may only be evaluated on `test` against `test.key` after model/protocol freeze.
-- **FR-006**: Baseline B2 MUST implement simple, transparent learner history features (user historical error rate, token error rate, elapsed seconds since last seen, prompt format, response time) under the split-aware label masking policy. Missing or negative response times MUST be treated as missing/invalid (`null`).
-- **FR-007**: Baseline B3 MUST evaluate Nếp learner-state features via symmetrical ablation: appending strictly canonical outputs from the merged #137 contract (`nep.learner-evidence-state.v1`)—`status: ConstructEvidenceSufficiency`, `uncertainty: ConstructUncertaintyLevel`, nullable `provisionalRoutingScore`, and `statistics: ConstructSufficientStatistics`—to the exact B2 feature vector under an identical downstream estimator. Any derived features (one-hot status indicators, ratios, elapsed horizons) MUST have an explicit `derivedFeatureId` (`nep.reality-derived-features.v1`), frozen formulas, and source fields. External memory models (FSRS, BKT) belong strictly to separate comparators.
-- **FR-008**: Metric reporting MUST include ROC AUC (primary), F1 at threshold 0.5 (secondary), and binary cross-entropy log-loss (secondary), along with total token count and positive class prevalence.
-- **FR-009**: Statistical significance for $\Delta \text{AUC} = \text{AUC}(B3) - \text{AUC}(B2)$ MUST use **paired cluster bootstrap by learner** (e.g. 2,000 resamples clustered by learner ID) as the primary uncertainty procedure, reporting effect size, 95% bootstrap confidence intervals, and per-track consistency. Token-level DeLong test is retained as a secondary diagnostic. Promotion decisions MUST NOT be based on $p < 0.05$ alone.
-- **FR-010**: Every execution run MUST emit an immutable JSON experiment manifest with a SHA-256 integrity fingerprint (unkeyed content digest) over its canonical RFC 8785 representation.
-- **FR-011**: Dataset licensing terms MUST be strictly classified: Harvard Dataverse DOI `10.7910/DVN/8SWHNO` is CC BY-NC 4.0 (Non-Commercial research only); `codeLicense: "MIT"`, `datasetLicense: "CC-BY-NC-4.0"`, `commercialUseAllowed: false`. `redistributionAllowed: false` is classified as **Nếp project quarantine policy** (not a statutory CC BY-NC 4.0 restriction). Raw dataset archives MUST be quarantined in `.cache/benchmarks/slam-2018/` and terms verified at retrieval time; repository-provided checksums (`upstreamChecksumType` and `upstreamChecksumValue`) must be stored separately from locally computed `localSha256Fingerprint`. SLAM data and directly derived weights MUST NOT enter production runtimes.
-- **FR-012**: Benchmark reports MUST explicitly disclaim human learning efficacy, Vietnamese learner validity, and mastery calibration.
-- **FR-013**: Pre-R2 Compatibility & Coverage Audit: A formal compatibility and coverage audit MUST be executed prior to Gate R2. Only track `en_es` (where learners acquire English) can map to AtoEnglish English ontology nodes; `es_en` and `fr_en` have no English ontology nodes and MUST remain strictly `unmapped / not-applicable`. Exercise formats and modalities map only where defensible; unavailable fields (`supportLevel`, `revealUsed`) must not be fabricated. If sufficient canonical evidence cannot be constructed without unfounded assumptions, the harness MUST report **B3 not-applicable on SLAM** and use SLAM only for B0/B1/B2 rather than distorting the learner-state contract.
-- **FR-014**: Reuse-First Acceleration Architecture (#138): The harness MUST reuse the official Python starter scripts as reproduction oracle, pinned `scikit-learn` (v1.6.1) / `scipy` (v1.15.2) for estimator fitting and metric calculations, and pinned `CAHLR/pyBKT` (v1.4.3) for the optional comparator. Benchmark code resides in isolated workspace `benchmarks/reality-slam-v1/`, not in production `src/lib/`. Node/TypeScript code is restricted to thin parser/audit glue, feature extraction, manifest generation, and executing the `#137` state projection contract.
-- **FR-015**: Scheduling Invariant (Issue #141 Reality-First Rule):
-  * Convergence of this Spec Kit unblocks immediate implementation and execution of **B0/B1/B2 and benchmark infrastructure before PR #140 merges**.
-  * **B3 remains strictly blocked on PR #140 reaching independent review PASS, merging into `frontier/nep-core-foundation-v1`, and rebasing onto the resulting frontier**.
+A positive B3 result requires a positive effect with a 95% learner-cluster bootstrap interval strictly above zero on eligible mapped track(s), plus predeclared mapping coverage and no leakage/provenance failure. Otherwise retain the null/negative result without protecting the architecture.

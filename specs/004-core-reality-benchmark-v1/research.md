@@ -1,147 +1,105 @@
 # Research: Reality Benchmark Harness V1
 
-- **Contract Identifier**: `nep.reality-benchmark.v1`.
-- **Governing Purpose**: Document empirical foundations, dataset provenance, official SLAM 2018 metrics, baseline tolerances, and methodological limits for evaluating `nep.learner-evidence-state.v1`.
+## Primary sources
 
----
+1. Settles, B., Brust, C., Gustafson, E., Hagiwara, M., & Madnani, N. (2018), *Second Language Acquisition Modeling*, BEA/NAACL-HLT 2018, ACL Anthology W18-0506.
+2. Official shared-task site: `https://sharedtask.duolingo.com/2018.html`.
+3. Harvard Dataverse DOI: `10.7910/DVN/8SWHNO`.
+4. Optional learner-model comparator: `CAHLR/pyBKT` v1.4.3 (MIT) where a defensible skill mapping exists.
 
-## 1. Primary Sources & Citations
+## Source-faithful task facts
 
-1. **Duolingo SLAM 2018 Shared Task**:
-   - **Citation**: Settles, B., Brust, C., Gustafson, E., Hagiwara, M., & Madnani, N. (2018). *Second Language Acquisition Modeling*. In Proceedings of the Thirteenth Workshop on Innovative Use of NLP for Building Educational Applications (BEA13), pages 56–65, New Orleans, Louisiana. Association for Computational Linguistics.
-   - **ACL Anthology**: [W18-0506](https://aclanthology.org/W18-0506/)
-   - **DOI**: `10.18653/v1/W18-0506`
-   - **Official Website & Starter Code**: `https://sharedtask.duolingo.com/2018.html`
+The shared task predicts token-level future mistakes from longitudinal traces. The source defines three written-production-oriented formats: `reverse_translate`, `reverse_tap`, and `listen`. The positive class is mistake label `1`. Primary metric is ROC AUC; F1 at threshold 0.5 is also official, and leaderboards additionally report average log-loss.
 
-2. **Dataset Accession & Harvard Dataverse Archive**:
-   - **Repository**: Harvard Dataverse
-   - **Persistent Identifier (DOI)**: [`doi:10.7910/DVN/8SWHNO`](https://doi.org/10.7910/DVN/8SWHNO)
-   - **Dataset License**: **Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)**.
-   - **Terms & Quarantine Classification**:
-     * `codeLicense`: `MIT` (Official starter code and evaluation scripts).
-     * `datasetLicense`: `CC-BY-NC-4.0` (Harvard Dataverse release).
-     * `commercialUseAllowed`: `false` (Non-commercial license requirement).
-     * `redistributionAllowed`: `false` (**Nếp project quarantine policy**; CC BY-NC 4.0 allows non-commercial redistribution with attribution, but Nếp policy forbids repository check-in or redistribution of raw learner traces).
-   - **Checksum & Provenance Discipline**:
-     * Upstream checksums from repository metadata (`upstreamChecksumType` and `upstreamChecksumValue`) must be recorded separately from locally computed `localSha256Fingerprint`.
-     * Raw dataset archives are quarantined in untracked local cache (`.cache/benchmarks/slam-2018/`) and never committed to Git.
-     * The dataset and directly derived model artifacts are strictly research-only and MUST NOT enter production runtimes, live databases, or commercial feature services.
+Canonical track semantics and published TEST baseline results:
 
-3. **Bayesian Knowledge Tracing (BKT)**:
-   - **Citation**: Corbett, A. T., & Anderson, J. R. (1994). *Knowledge tracing: Modeling the acquisition of procedural knowledge*. User Modeling and User-Adapted Interaction, 4(4), 253–278.
-   - **OSS Reference**: `CAHLR/pyBKT` (Bhatnagar et al., 2020), MIT License, pinned version `1.4.3`.
+| Track | Target | Known language | TEST AUC | TEST F1 |
+| --- | --- | --- | ---: | ---: |
+| `en_es` | English | Spanish | 0.774 | 0.190 |
+| `es_en` | Spanish | English | 0.746 | 0.175 |
+| `fr_en` | French | English | 0.771 | 0.281 |
 
-4. **Statistical Evaluation & Clustered Uncertainty**:
-   - **Primary Longitudinal Procedure (Paired Cluster Bootstrap by Learner)**:
-     * Davison, A. C., & Hinkley, D. V. (1997). *Bootstrap Methods and their Application*. Cambridge University Press.
-     * Because multiple token responses are generated longitudinally by the same learner, observations within a learner are correlated. The primary statistical significance procedure is a **paired cluster bootstrap by learner** (e.g. 2,000 resamples clustered by learner ID) to estimate the empirical distribution and 95% confidence interval of $\Delta \text{AUC} = \text{AUC}(B3) - \text{AUC}(B2)$.
-   - **Secondary Diagnostic (Token-Level DeLong Test)**:
-     * DeLong, E. R., DeLong, D. M., & Clarke-Pearson, D. L. (1988). *Comparing the areas under two or more correlated receiver operating characteristic curves: a nonparametric approach*. Biometrics, 837–845. Token-level DeLong test is retained as a fast secondary diagnostic but does not replace cluster bootstrap.
+These are TEST results, not DEV targets.
 
----
+### Raw prompt grammar
 
-## 2. Official SLAM 2018 Benchmark Metrics & Targets
-
-### Official Published Results (Settles et al., 2018, Table 2)
-The points published by Settles et al. (2018) in Table 2 are evaluated on the held-out blind **TEST** split across 15 competing systems and the official Duolingo baseline:
-
-| System / Model | English (`es_en`) AUC | English F1 | Spanish (`en_es`) AUC | Spanish F1 | French (`fr_en`) AUC | French F1 | Avg Rank |
-|---|---|---|---|---|---|---|---|
-| **SanaLabs** (Osika et al.) | 0.861 | 0.561 | 0.838 | 0.530 | 0.857 | 0.573 | 1.0 |
-| **singsound** (Xu et al.) | 0.861 | 0.559 | 0.835 | 0.524 | 0.854 | 0.569 | 1.7 |
-| **NYU** (Rich et al.) | 0.859 | 0.468 | 0.835 | 0.420 | 0.854 | 0.493 | 2.3 |
-| **TMU** (Kaneko et al.) | 0.848 | 0.476 | 0.824 | 0.439 | 0.839 | 0.502 | 4.3 |
-| **Cambridge** (Yuan et al.) | 0.841 | 0.479 | 0.807 | 0.435 | 0.835 | 0.508 | 6.0 |
-| **Official Logistic Baseline (`SLAM_baseline`)** | **0.774** | **0.190** | **0.746** | **0.175** | **0.771** | **0.281** | **14.7** |
-
-### Gate R0: DEV Oracle Baseline Reproduction Target
-- **Critical Methodological Separation**:
-  * The published Table 2 numbers (`es_en`: $0.774$, `en_es`: $0.746$, `fr_en`: $0.771$) are on the **TEST** split.
-  * Requiring the baseline to hit published TEST numbers on the `dev` split is invalid.
-  * **Gate R0 Protocol**: The official competition Python starter code (`baseline.py` / `evaluation.py`) serves as the reproduction oracle. Gate R0 trains the official baseline on `train`, generates predictions on `dev`, scores against the official `dev.key` file, and records the actual empirical DEV oracle metrics.
-  * Reproduction tolerance: The Nếp reproduction policy requires the reproduced baseline to match the official Python starter oracle on `dev` within $\pm 0.005$ AUC under identical feature extraction and solver configuration.
-  * Verification on TEST points occurs strictly after model/protocol freeze in a dedicated post-selection evaluation phase using the post-workshop TEST key.
-
----
-
-## 3. Dataset Characteristics & Information Budget Discipline
-
-The SLAM dataset captures learner exercise traces over their first 30 days on Duolingo (Settles et al., 2018, Table 1):
+Example shape from the primary source:
 
 ```text
-Track 1 (en_es): 2,593 learners | ~2.60M tokens | English learners who already speak Spanish (L1 Spanish, Target English)
-Track 2 (es_en): 2,643 learners | ~2.62M tokens | Spanish learners who already speak English (L1 English, Target Spanish)
-Track 3 (fr_en): 1,213 learners | ~1.97M tokens | French learners who already speak English (L1 English, Target French)
-Total Tokens:    ~7.19M tokens
+# user:D2inSf5+ countries:MX days:1.793 client:web session:lesson format:reverse_translate time:16
 ```
 
-### Ontological Alignment Boundary for Nếp
-- AtoEnglish's ontology is an **English** domain ontology.
-- Therefore, **only `en_es` (where learners are acquiring English) can map to English ontology nodes**.
-- The `es_en` (target: Spanish) and `fr_en` (target: French) tracks target non-English languages; they have no corresponding English ontology nodes and MUST remain strictly `unmapped / not-applicable` for Nếp construct projection.
+Fields:
+- `user`: anonymized B64-style 8-character ID; `/` and `+` are valid characters.
+- `countries`: pipe-delimited ISO-style country codes.
+- `days`: fractional course age in days, not a wall-clock timestamp.
+- `client`: `android | ios | web`.
+- `session`: `lesson | practice | test`.
+- `format`: `reverse_translate | reverse_tap | listen`.
+- `time`: integer seconds or `null`; the source documents a small number of negative logging errors and advises treating them as missing.
 
-### Raw Prompt Header Format
-Each exercise prompt in the raw data files begins with a metadata line prefixed by `#` containing 7 key-value pairs:
-```text
-# user:u:bkmM countries:US,MX days:1 client:web session:lesson format:reverse_translate time:12
-```
-- `user`: Anonymized student identifier (e.g. `u:bkmM`).
-- `countries`: Learner country code list (e.g. `US`, `MX`).
-- `days`: Integer days since starting on Duolingo.
-- `client`: Device platform (`web`, `ios`, `android`).
-- `session`: Session context (`lesson`, `practice`, `test`).
-- `format`: Exercise interaction mode (`reverse_translate`, `reverse_tap`, `listen`).
-- `time`: Response duration in seconds. Note: `time` can be `null` or missing, and negative values are documented logging anomalies that must be treated as missing/invalid (`null`).
-- *Note*: There is NO separate `session_id` header field in the primary source.
+TRAIN token rows have seven columns including label. Original DEV/TEST input rows have six columns; gold labels are separate scoring keys. Do not manufacture online evaluation labels.
 
-### Raw Token Lines & Split-Aware Label Availability
-- In the `train` split, token lines contain 7 whitespace-separated fields:
-  `tokenId token pos morphology depEdge depHead label`
-- In raw `dev` and `test` evaluation input files, token lines contain 6 fields (**omitting `label`**). The ground-truth binary error labels are distributed in separate `.key` files (`dev.key`, `test.key`).
-- **Single-Pass Prediction Without Online Labels**:
-  * During sequential DEV evaluation, earlier DEV events ($t' < t_{\text{DEV}}$) update only label-free encounter counts, lag times, and formats. The `dev.key` is used exclusively for batch scoring after all DEV predictions are emitted.
-  * For final TEST, labels remain fully masked during prediction.
-  * If DEV is subsequently folded into training data for final TEST fitting, that must be modeled as a distinct, separate fit phase (`fitPhase: "train-plus-dev"`).
+Published rounded counts from papers/pages MUST be labeled with their exact split/source. The harness computes staged artifact totals after ingestion and records them in manifests; this spec does not reinterpret rounded TRAIN figures as exact whole-track totals.
 
----
+## Dataverse provenance snapshot
 
-## 4. Methodological Grounding of B3 Feature Family
+Dataverse metadata verified for dataset version 4 on 2026-09-05 reports CC BY-NC 4.0 and the following artifacts:
 
-### Canonical Nếp State Contract Alignment
-`nep.learner-evidence-state.v1` under Issue #137 produces an ontology-bound, uncertainty-aware evidence ledger:
-- **Canonical Output Types** (from `src/lib/core/learner-state.ts`):
-  * `status`: `ConstructEvidenceSufficiency` (`"unknown" | "insufficient-support" | "provisional-support" | "provisional-weakness" | "conflicted-support"`).
-  * `uncertainty`: `ConstructUncertaintyLevel` (`"maximal" | "high" | "moderate" | "low"`).
-  * `provisionalRoutingScore`: `number | null` (in $[0, 1]$ or `null` if evidence is insufficient).
-  * `decisionScope`: `"routing-only"`.
-  * `statistics`: `ConstructSufficientStatistics` (`totalEvents`, `positiveCount`, `negativeCount`, `conflictedCount`, `distinctContextCount`, `transfer`, `supportDistribution`, `revealUsedCount`, `durableEvidenceCount`, `referenceEvidenceCount`, `firstObservedAt`, `lastObservedAt`).
-- **Derived Feature Hygiene**:
-  * Any derived one-hot indicators, ratios, or lag features must be assigned a unique `derivedFeatureId` (e.g. `nep.reality-derived-features.v1`), with frozen formulas and explicit source fields. They must never be conflated with canonical state fields.
-- **External Model Exclusion**:
-  * FSRS parameters ($S$, $R$), IRT item difficulty ($\beta$), or BKT parameters are not part of `nep.learner-evidence-state.v1` and must not be smuggled into B3.
+| File | Dataverse file ID | Upstream checksum |
+| --- | ---: | --- |
+| `data_en_es.tar.gz` | `3357629` | MD5 `444e0d9e45bdc19822938cffb9fbcc7a` |
+| `data_es_en.tar.gz` | `3357630` | MD5 `3c0bc0019ef772050482c570e0626447` |
+| `data_fr_en.tar.gz` | `3357627` | MD5 `4b395106d5414cd78ceb4101ad6e4f0d` |
+| `starter_code.tar.gz` | `3357628` | MD5 `1e77023c89091557d4c28b881425ab49` |
 
-### Defensible SLAM → Nếp Evidence Mapping & Pre-R2 Compatibility Audit
-Raw SLAM tokens are not `CoreEvidenceForRouting` records. Nếp requires:
-- `targetId`: Must match an ontology node ID in `OntologyGraph`. (Only possible for English track `en_es`).
-- `activity`: `CommunicationActivity` (must be a valid member of `COMMUNICATION_ACTIVITIES`).
-- `responseModality`: `ResponseModality` (`"text" | "speech" | "choice" | "gesture" | "none"`).
-- `role`: `CoreEvidenceRole` (`"direct-production" | "guided-practice" | "receptive-recognition" | ...`).
-- `supportLevel`: Scaffolding support level (unavailable in SLAM; must not be fabricated).
-- `revealUsed`: Hint/solution reveal (unavailable in SLAM; must not be fabricated).
-- `transferDistance`: `"same-context" | "near-transfer" | "far-transfer"`.
+Direct anonymous access to the starter artifact currently reports a required Dataverse Guestbook response (guestbook ID 205). The benchmark MUST obey that access gate. Metadata inspection is not permission to bypass guestbook/terms acceptance.
 
-**Pre-R2 Compatibility Audit Gate**:
-A formal compatibility audit must be performed before executing Gate R2. If SLAM observables cannot be mapped to canonical Nếp evidence fields without unfounded assumptions, the harness MUST report **B3 not-applicable on SLAM** and use SLAM only for B0/B1/B2 rather than distorting the learner-state contract.
+The Dataverse dataset-level license is CC BY-NC 4.0. The metadata snapshot does not establish a separate permissive license for `starter_code.tar.gz`; its code license therefore remains **unverified** for repository redistribution. Stage it outside Git. Do not copy it into this repository on an assumed MIT classification.
 
----
+## Official starter reproducibility caveat
 
-## 5. Reuse-First Acceleration Architecture (#138)
+The official Python starter implements its own L2-regularized logistic regression using SGD. It initializes weights with `random.uniform` and shuffles training instances with `random.shuffle`; the published starter exposes no seed parameter. Therefore the unmodified upstream program is not byte-deterministic.
 
-In accordance with Issue #138 and the repository reuse-first policy:
-1. **No Greenfield Commodity Re-implementation**: Do not write custom TypeScript logistic regression solvers, ROC-AUC calculators, DeLong test implementations, or BKT solvers.
-2. **Offline Benchmark Workspace**: The benchmark environment is located in `benchmarks/reality-slam-v1/`, completely isolated from production `src/lib/`.
-3. **Pinned Standard Tooling**:
-   - Official competition Python starter scripts as reproduction oracle.
-   - Pinned Python virtual environment (`scikit-learn==1.6.1`, `scipy==1.15.2`) for estimator fitting and metric calculations.
-   - Pinned `CAHLR/pyBKT==1.4.3` for optional BKT comparison where skill mappings are defensible.
-   - A thin Node/TypeScript bridge is used solely to execute the canonical `nep.learner-evidence-state.v1` projection logic for B3.
+R0 policy:
+1. fingerprint the exact staged starter artifact;
+2. audit its runtime requirements before patching anything;
+3. run the unmodified oracle repeatedly on DEV and record every run/metric;
+4. if a compatibility patch is necessary, preserve the original bytes, store the patch fingerprint outside Git, and report both the original and patched execution contract;
+5. freeze an R0 comparison tolerance from the audited oracle protocol before comparing Nếp-owned implementations.
+
+The default Nếp tolerance remains ±0.005 AUC around the frozen DEV oracle reference statistic, but the oracle statistic and repeat count are manifest fields rather than unstated assumptions.
+
+## B2 causal semantics
+
+`days` supplies course-age ordering/lag information. For an event in DEV/TEST:
+- label-dependent TRAIN history remains valid and available;
+- earlier events in the current blind evaluation pass may update encounter counts and course-age lag only;
+- current/earlier gold evaluation labels cannot update error counts/rates during that pass;
+- DEV labels become training information only in a separately declared `train-plus-dev` fit phase for final TEST evaluation.
+
+A mandatory adversarial test inverts every DEV/TEST gold label and proves prediction-time features are unchanged. A second test proves non-zero TRAIN-derived error history is preserved at the first and later DEV/TEST events.
+
+## B3 compatibility boundary
+
+SLAM rows are not `CoreEvidenceForRouting`. The final #137 contract requires ontology-bound targets plus task/activity/modality/evidence-role/support/reveal/context/transfer/provenance semantics. Several are not directly present in SLAM.
+
+The V1 audit therefore starts pessimistically:
+- `en_es` is the only track whose target language matches the English ontology;
+- `es_en` and `fr_en` are B3 `not-applicable` in V1;
+- missing `supportLevel`, `revealUsed`, evidence role, or changed-context transfer semantics remain unavailable, never defaulted to `0`, `false`, or a guessed role;
+- if a valid reference-evidence construction cannot be justified from prospectively known task semantics, B3 is `not-applicable-on-slam` and #143 becomes the bounded first-party falsification lane.
+
+## Reuse-first implementation choices
+
+R0 uses the staged official starter/evaluation artifact as oracle. R1+ may use a separately pinned modern environment after R0 is frozen. Candidate V1 packages:
+- `scikit-learn==1.6.1` — estimator/metrics, BSD-style license;
+- `scipy==1.15.2` — numerical support, BSD-style license;
+- `rfc8785==0.1.4` — RFC 8785 canonicalization, Apache-2.0;
+- `pyBKT==1.4.3` — optional B4 comparator, MIT.
+
+These packages are Nếp implementation choices, not claims about the historical starter environment. No custom DeLong implementation is planned in V1; paired cluster bootstrap by learner is the primary B3 uncertainty procedure.
+
+## Statistical claim boundary
+
+B3 vs B2 reports effect size and a paired learner-cluster bootstrap 95% interval. Significance is evaluated only over `eligibleTrackCount` mapped tracks. If only `en_es` is eligible, the report explicitly forbids cross-language generalization. Offline predictive uplift does not prove teaching effectiveness or learning.
