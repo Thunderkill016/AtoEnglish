@@ -14,7 +14,20 @@ import {
   adaptLearnerStateToLegacyRead,
   type AcceptedEvidenceRecord,
 } from "./learner-state";
-import { readConstructFromLearnerState } from "@/lib/learning/learner-state-read";
+import {
+  readConstructFromLearnerState,
+  LEARNER_STATE_LEDGER_MODEL_VERSION,
+} from "@/lib/learning/learner-state-read";
+import {
+  type CertifiedCoreEvidence,
+  type ReferenceCoreEvidence,
+  type CoreEvidenceForRouting,
+  markCertifiedCoreEvidence,
+  markReferenceCoreEvidence,
+  sealCoreEvidence,
+  parseCoreEvidenceEnvelope,
+  CORE_EVIDENCE_ENVELOPE_CONTRACT,
+} from "./certified-evidence";
 
 const buildResult = buildEnglishOntologyV1();
 if (!buildResult.ok) {
@@ -22,41 +35,136 @@ if (!buildResult.ok) {
 }
 const ontology = buildResult.graph;
 
-function makeValidReferenceRecord(overrides: Partial<AcceptedEvidenceRecord> = {}): AcceptedEvidenceRecord {
-  return {
-    eventId: "evt-001",
-    targetId: "nep.en.v1.communication-activity.spoken-production",
-    role: "controlled-production",
-    activity: "spoken-production",
-    responseModality: "speech",
-    transferDistance: "same-context",
-    contextId: "ctx-unit-1",
-    supportLevel: 0,
-    revealUsed: false,
-    outcome: { kind: "binary", success: true },
-    occurredAt: "2026-09-04T12:00:00.000Z",
-    authorityScope: "repository-reference",
-    provenance: {
-      observationId: "obs-001",
-      taskId: "task-001",
-      calibrationBenchmarkId: null,
-      modelFingerprint: "donor-pybkt-v1.4.3",
+type ReferenceCandidateOverrides = Partial<ReferenceCoreEvidence> & {
+  contextId?: string | null;
+  supportLevel?: number;
+  revealUsed?: boolean;
+};
+
+type DurableCandidateOverrides = Partial<CertifiedCoreEvidence> & {
+  contextId?: string | null;
+  supportLevel?: number;
+  revealUsed?: boolean;
+};
+
+function makeValidReferenceRecord(overrides: ReferenceCandidateOverrides = {}): ReferenceCoreEvidence {
+  const eventId = overrides.eventId ?? "evt-001";
+  const taskId = overrides.taskId ?? "task-001";
+  const observationId = overrides.observationId ?? "obs-001";
+  const targetId = overrides.targetId ?? "nep.en.v1.communication-activity.spoken-production";
+  const role = overrides.role ?? "controlled-production";
+  const activity = overrides.activity ?? "spoken-production";
+  const responseModality = overrides.responseModality ?? "speech";
+  const transferDistance = overrides.transferDistance ?? "same-context";
+  const contextId =
+    overrides.attempt?.contextId !== undefined
+      ? overrides.attempt.contextId
+      : overrides.contextId !== undefined
+        ? overrides.contextId
+        : "ctx-unit-1";
+  const supportLevel =
+    overrides.attempt?.supportLevel !== undefined
+      ? overrides.attempt.supportLevel
+      : overrides.supportLevel !== undefined
+        ? overrides.supportLevel
+        : 0;
+  const revealUsed =
+    overrides.attempt?.revealUsed !== undefined
+      ? overrides.attempt.revealUsed
+      : overrides.revealUsed !== undefined
+        ? overrides.revealUsed
+        : false;
+  const outcome = overrides.outcome ?? { kind: "binary", success: true };
+  const occurredAt = overrides.occurredAt ?? "2026-09-04T12:00:00.000Z";
+  const contextTags = overrides.contextTags ? [...overrides.contextTags] : ["unit-1"];
+
+  const record: ReferenceCoreEvidence = {
+    eventId,
+    taskId,
+    targetId,
+    role,
+    observationId,
+    outcome,
+    evaluatorConfidence: 1.0,
+    attempt: {
+      supportLevel,
+      revealUsed,
+      responseLatencyMs: 1200,
+      responseModality,
+      contextId,
     },
+    occurredAt,
+    activity,
+    responseModality,
+    transferDistance,
+    contextTags,
+    calibrationBenchmarkId: null,
+    modelFingerprint: overrides.modelFingerprint ?? "donor-pybkt-v1.4.3",
+    authorityScope: "repository-reference",
+    grantId: null,
     ...overrides,
   };
+  return markReferenceCoreEvidence(record);
 }
 
-function makeValidDurableRecord(overrides: Partial<AcceptedEvidenceRecord> = {}): AcceptedEvidenceRecord {
-  return makeValidReferenceRecord({
-    authorityScope: "durable-assessment",
-    provenance: {
-      observationId: "obs-durable-001",
-      taskId: "task-durable-001",
-      calibrationBenchmarkId: "bench-core-pronunciation-v1",
-      modelFingerprint: "openpronounce-acoustic-v1.2",
+function makeValidDurableRecord(overrides: DurableCandidateOverrides = {}): CertifiedCoreEvidence {
+  const eventId = overrides.eventId ?? "evt-durable-001";
+  const taskId = overrides.taskId ?? "task-durable-001";
+  const observationId = overrides.observationId ?? "obs-durable-001";
+  const targetId = overrides.targetId ?? "nep.en.v1.communication-activity.spoken-production";
+  const role = overrides.role ?? "controlled-production";
+  const activity = overrides.activity ?? "spoken-production";
+  const responseModality = overrides.responseModality ?? "speech";
+  const transferDistance = overrides.transferDistance ?? "same-context";
+  const contextId =
+    overrides.attempt?.contextId !== undefined
+      ? overrides.attempt.contextId
+      : overrides.contextId !== undefined
+        ? overrides.contextId
+        : "ctx-unit-1";
+  const supportLevel =
+    overrides.attempt?.supportLevel !== undefined
+      ? overrides.attempt.supportLevel
+      : overrides.supportLevel !== undefined
+        ? overrides.supportLevel
+        : 0;
+  const revealUsed =
+    overrides.attempt?.revealUsed !== undefined
+      ? overrides.attempt.revealUsed
+      : overrides.revealUsed !== undefined
+        ? overrides.revealUsed
+        : false;
+  const outcome = overrides.outcome ?? { kind: "binary", success: true };
+  const occurredAt = overrides.occurredAt ?? "2026-09-04T12:00:00.000Z";
+  const contextTags = overrides.contextTags ? [...overrides.contextTags] : ["unit-1"];
+
+  const record: CertifiedCoreEvidence = {
+    eventId,
+    taskId,
+    targetId,
+    role,
+    observationId,
+    outcome,
+    evaluatorConfidence: 1.0,
+    attempt: {
+      supportLevel,
+      revealUsed,
+      responseLatencyMs: 1200,
+      responseModality,
+      contextId,
     },
+    occurredAt,
+    activity,
+    responseModality,
+    transferDistance,
+    contextTags,
+    calibrationBenchmarkId: overrides.calibrationBenchmarkId ?? "bench-core-pronunciation-v1",
+    modelFingerprint: overrides.modelFingerprint ?? "openpronounce-acoustic-v1.2",
+    authorityScope: "durable-assessment",
+    grantId: overrides.grantId ?? "grant-durable-001",
     ...overrides,
-  });
+  };
+  return markCertifiedCoreEvidence(record);
 }
 
 describe("Core Learner Model V1: Contract & Entity Basics", () => {
@@ -129,15 +237,9 @@ describe("P1: Real Certified & Reference Evidence Acceptance Boundary", () => {
   });
 
   it("fails closed on durable assessment evidence with null or missing calibrationBenchmarkId", () => {
-    const forgedDurable = makeValidReferenceRecord({
+    const forgedDurable = makeValidDurableRecord({
       eventId: "evt-forged-durable-1",
-      authorityScope: "durable-assessment",
-      provenance: {
-        observationId: "obs-01",
-        taskId: "task-01",
-        calibrationBenchmarkId: null,
-        modelFingerprint: "fingerprint-1",
-      },
+      calibrationBenchmarkId: "" as any,
     });
 
     const validation = validateAcceptedEvidenceRecord(forgedDurable, ontology);
@@ -151,13 +253,7 @@ describe("P1: Real Certified & Reference Evidence Acceptance Boundary", () => {
   it("fails closed on repository reference evidence asserting a calibrationBenchmarkId", () => {
     const forgedReference = makeValidReferenceRecord({
       eventId: "evt-forged-ref-1",
-      authorityScope: "repository-reference",
-      provenance: {
-        observationId: "obs-01",
-        taskId: "task-01",
-        calibrationBenchmarkId: "bench-fake-id",
-        modelFingerprint: "fingerprint-1",
-      },
+      calibrationBenchmarkId: "bench-fake-id" as any,
     });
 
     const validation = validateAcceptedEvidenceRecord(forgedReference, ontology);
@@ -173,12 +269,7 @@ describe("P1: Real Certified & Reference Evidence Acceptance Boundary", () => {
     for (const fp of badFingerprints) {
       const bad = makeValidReferenceRecord({
         eventId: `evt-fp-${fp}`,
-        provenance: {
-          observationId: "obs-01",
-          taskId: "task-01",
-          calibrationBenchmarkId: null,
-          modelFingerprint: fp,
-        },
+        modelFingerprint: fp,
       });
       const validation = validateAcceptedEvidenceRecord(bad, ontology);
       expect(validation.ok).toBe(false);
@@ -289,10 +380,11 @@ describe("P1: Transfer Semantics & Epistemic Boundaries", () => {
     });
 
     const state = projectLearnerState(ontology, [firstEvent]);
-    const construct = state.constructs["nep.en.v1.communication-activity.spoken-production"];
-
-    expect(construct.statistics.transfer.nearTransferCount).toBe(0);
-    expect(construct.statistics.transfer.sameContextCount).toBe(1);
+    expect(state.totalEventsProcessed).toBe(1);
+    expect(state.acceptedEvents).toHaveLength(0);
+    expect(state.rejectedEvents).toHaveLength(1);
+    expect(state.rejectedEvents[0].code).toBe("invalid-transfer-distance");
+    expect(state.constructs["nep.en.v1.communication-activity.spoken-production"]).toBeUndefined();
   });
 
   it("rejects receptive or non-transfer roles claiming near/far transfer distance", () => {
@@ -438,9 +530,12 @@ describe("P1: Activity Compatibility, Lineage Metadata & Legacy Adapter", () => 
     );
 
     expect(unknownRead.status).toBe("unknown");
+    expect(unknownRead.legacyStatus).toBe("unknown");
     expect(unknownRead.estimate).toBeNull();
     expect(unknownRead.evidenceCount).toBe(0);
     expect(unknownRead.decisionScope).toBe("routing");
+    expect(unknownRead.modelVersion).toBe(LEARNER_STATE_LEDGER_MODEL_VERSION);
+    expect(unknownRead.sourceModel).toBe(LEARNER_STATE_LEDGER_MODEL_VERSION);
 
     const events = [
       makeValidReferenceRecord({ eventId: "evt-leg-1", occurredAt: "2026-09-04T10:00:00.000Z" }),
@@ -453,9 +548,12 @@ describe("P1: Activity Compatibility, Lineage Metadata & Legacy Adapter", () => 
     );
 
     expect(observedRead.status).toBe("observed");
+    expect(observedRead.legacyStatus).toBe("observed");
     expect(observedRead.estimate).toBe(1);
     expect(observedRead.evidenceCount).toBe(2);
     expect(observedRead.decisionScope).toBe("routing");
+    expect(observedRead.modelVersion).toBe(LEARNER_STATE_LEDGER_MODEL_VERSION);
+    expect(observedRead.sourceModel).toBe(LEARNER_STATE_LEDGER_MODEL_VERSION);
   });
 });
 
@@ -734,5 +832,318 @@ describe("Comparative pyBKT Baseline Donor (CAHLR/pyBKT MIT Tag 1.4.3)", () => {
     const nepZeroProj = projectConstruct("nep.en.v1.communication-activity.spoken-production", nepZeroStats);
     expect(nepZeroProj.status).toBe("unknown");
     expect(nepZeroProj.provisionalRoutingScore).toBeNull();
+  });
+});
+
+describe("P1 Resolutions (Review ID 5116587399): Ingress, Lineage, Transfer Gating & Provenance", () => {
+  it("rejects unauthenticated/fabricated evidence objects that bypass certified-evidence module", () => {
+    const fabricated = {
+      eventId: "evt-fab-1",
+      taskId: "task-fab-1",
+      targetId: "nep.en.v1.communication-activity.spoken-production",
+      role: "controlled-production",
+      observationId: "obs-fab-1",
+      outcome: { kind: "binary", success: true },
+      evaluatorConfidence: 1.0,
+      attempt: {
+        supportLevel: 0,
+        revealUsed: false,
+        responseLatencyMs: 1200,
+        responseModality: "speech",
+        contextId: "ctx-1",
+      },
+      occurredAt: "2026-09-04T12:00:00.000Z",
+      activity: "spoken-production",
+      responseModality: "speech",
+      transferDistance: "same-context",
+      contextTags: ["unit-1"],
+      calibrationBenchmarkId: null,
+      modelFingerprint: "donor-pybkt-v1.4.3",
+      authorityScope: "repository-reference",
+      grantId: null,
+    };
+
+    const validation = validateAcceptedEvidenceRecord(fabricated, ontology);
+    expect(validation.ok).toBe(false);
+    if (!validation.ok) {
+      expect(validation.audit.code).toBe("unvalidated-evidence-rejected");
+      expect(validation.audit.message).toMatch(/must be certified or reference-validated through certified-evidence module/);
+    }
+  });
+
+  it("accepts sealed canonical evidence envelopes and rejects tampered envelopes", () => {
+    const validEvidence = makeValidReferenceRecord({
+      eventId: "evt-env-1",
+      occurredAt: "2026-09-04T10:00:00.000Z",
+    });
+
+    const envelope = sealCoreEvidence(validEvidence);
+    expect(envelope.contractId).toBe(CORE_EVIDENCE_ENVELOPE_CONTRACT);
+    expect(envelope.digest).toBeDefined();
+    expect(envelope.evidence.eventId).toBe("evt-env-1");
+
+    const parseRes = parseCoreEvidenceEnvelope(envelope);
+    expect(parseRes.ok).toBe(true);
+
+    const validation = validateAcceptedEvidenceRecord(envelope, ontology);
+    expect(validation.ok).toBe(true);
+    if (validation.ok) {
+      expect(validation.record.eventId).toBe("evt-env-1");
+    }
+
+    const state = projectLearnerState(ontology, [envelope]);
+    expect(state.totalEventsProcessed).toBe(1);
+    expect(state.acceptedEvents).toHaveLength(1);
+    expect(state.acceptedEvents[0].eventId).toBe("evt-env-1");
+
+    // Tampered payload fails closed
+    const tampered = {
+      ...envelope,
+      evidence: {
+        ...envelope.evidence,
+        role: "near-transfer" as const,
+      },
+    };
+    const tamperedValidation = validateAcceptedEvidenceRecord(tampered, ontology);
+    expect(tamperedValidation.ok).toBe(false);
+    if (!tamperedValidation.ok) {
+      expect(tamperedValidation.audit.code).toBe("unvalidated-evidence-rejected");
+      expect(tamperedValidation.audit.message).toMatch(/Evidence envelope verification failed/);
+    }
+  });
+
+  it("preserves exact full lineage (observationId, taskId, contextTags, outcome, grantId) across batch and incremental reduce", () => {
+    const ev1 = makeValidReferenceRecord({
+      eventId: "evt-lin-1",
+      taskId: "task-spec-unit1",
+      observationId: "obs-real-uuid-001",
+      contextTags: ["tag-a", "tag-b"],
+      outcome: { kind: "binary", success: true },
+      occurredAt: "2026-09-04T10:00:00.000Z",
+    });
+    const ev2 = makeValidDurableRecord({
+      eventId: "evt-lin-2",
+      taskId: "task-spec-unit2",
+      observationId: "obs-real-uuid-002",
+      contextTags: ["tag-c"],
+      outcome: { kind: "bounded-score", value: 85, min: 0, max: 100 },
+      grantId: "grant-canonical-999",
+      occurredAt: "2026-09-04T10:01:00.000Z",
+    });
+
+    const batchState = projectLearnerState(ontology, [ev1, ev2]);
+    let reduceState = createEmptyLearnerStateProjection();
+    reduceState = reduceLearnerState(reduceState, ev1, ontology);
+    reduceState = reduceLearnerState(reduceState, ev2, ontology);
+
+    expect(batchState.acceptedEvents).toHaveLength(2);
+    expect(reduceState.acceptedEvents).toHaveLength(2);
+
+    for (let i = 0; i < 2; i++) {
+      const b = batchState.acceptedEvents[i];
+      const r = reduceState.acceptedEvents[i];
+      expect(b.eventId).toBe(r.eventId);
+      expect(b.observationId).toBe(r.observationId);
+      expect(b.taskId).toBe(r.taskId);
+      expect(b.contextTags).toEqual(r.contextTags);
+      expect(b.outcome).toEqual(r.outcome);
+      expect(b.grantId).toBe(r.grantId);
+    }
+
+    expect(batchState.acceptedEvents[0].observationId).toBe("obs-real-uuid-001");
+    expect(batchState.acceptedEvents[0].taskId).toBe("task-spec-unit1");
+    expect(batchState.acceptedEvents[0].grantId).toBeNull();
+    expect(batchState.acceptedEvents[1].observationId).toBe("obs-real-uuid-002");
+    expect(batchState.acceptedEvents[1].taskId).toBe("task-spec-unit2");
+    expect(batchState.acceptedEvents[1].grantId).toBe("grant-canonical-999");
+  });
+
+  it("strictly enforces 1:1 pairing between transfer role and transfer distance", () => {
+    // 1. far-transfer role with near-transfer distance
+    const mismatch1 = makeValidReferenceRecord({
+      eventId: "evt-mismatch-1",
+      role: "far-transfer",
+      transferDistance: "near-transfer",
+      contextId: "ctx-transfer-1",
+    });
+    const val1 = validateAcceptedEvidenceRecord(mismatch1, ontology);
+    expect(val1.ok).toBe(false);
+    if (!val1.ok) {
+      expect(val1.audit.code).toBe("incompatible-evidence-role");
+      expect(val1.audit.message).toMatch(/near-transfer transferDistance requires near-transfer evidence role/);
+    }
+
+    // 2. near-transfer role with far-transfer distance
+    const mismatch2 = makeValidReferenceRecord({
+      eventId: "evt-mismatch-2",
+      role: "near-transfer",
+      transferDistance: "far-transfer",
+      contextId: "ctx-transfer-2",
+    });
+    const val2 = validateAcceptedEvidenceRecord(mismatch2, ontology);
+    expect(val2.ok).toBe(false);
+    if (!val2.ok) {
+      expect(val2.audit.code).toBe("incompatible-evidence-role");
+      expect(val2.audit.message).toMatch(/far-transfer transferDistance requires far-transfer evidence role/);
+    }
+
+    // 3. controlled-production role with far-transfer distance
+    const mismatch3 = makeValidReferenceRecord({
+      eventId: "evt-mismatch-3",
+      role: "controlled-production",
+      transferDistance: "far-transfer",
+      contextId: "ctx-transfer-3",
+    });
+    const val3 = validateAcceptedEvidenceRecord(mismatch3, ontology);
+    expect(val3.ok).toBe(false);
+    if (!val3.ok) {
+      expect(val3.audit.code).toBe("incompatible-evidence-role");
+    }
+
+    // 4. near-transfer role with same-context distance
+    const mismatch4 = makeValidReferenceRecord({
+      eventId: "evt-mismatch-4",
+      role: "near-transfer",
+      transferDistance: "same-context",
+      contextId: "ctx-transfer-4",
+    });
+    const val4 = validateAcceptedEvidenceRecord(mismatch4, ontology);
+    expect(val4.ok).toBe(false);
+    if (!val4.ok) {
+      expect(val4.audit.code).toBe("invalid-transfer-distance");
+      expect(val4.audit.message).toMatch(/Transfer role 'near-transfer' requires matching transfer distance/);
+    }
+  });
+
+  it("fails closed on transfer attempts with duplicate context and never increments sameContextCount", () => {
+    const baseEvent = makeValidReferenceRecord({
+      eventId: "evt-dupctx-base",
+      occurredAt: "2026-09-04T10:00:00.000Z",
+      contextId: "ctx-shared-unit",
+      transferDistance: "same-context",
+      role: "controlled-production",
+    });
+    const duplicateTransfer = makeValidReferenceRecord({
+      eventId: "evt-dupctx-transfer",
+      occurredAt: "2026-09-04T10:01:00.000Z",
+      contextId: "ctx-shared-unit",
+      transferDistance: "near-transfer",
+      role: "near-transfer",
+      outcome: { kind: "binary", success: true },
+    });
+
+    const batch = projectLearnerState(ontology, [baseEvent, duplicateTransfer]);
+    expect(batch.totalEventsProcessed).toBe(2);
+    expect(batch.acceptedEvents).toHaveLength(1);
+    expect(batch.rejectedEvents).toHaveLength(1);
+    expect(batch.rejectedEvents[0].code).toBe("invalid-transfer-distance");
+    expect(batch.rejectedEvents[0].message).toMatch(/Transfer evidence requires a distinct changed context/);
+
+    const construct = batch.constructs["nep.en.v1.communication-activity.spoken-production"];
+    expect(construct.statistics.transfer.sameContextCount).toBe(1);
+    expect(construct.statistics.transfer.nearTransferCount).toBe(0);
+    expect(construct.statistics.transfer.nearTransferFailedCount).toBe(0);
+
+    // Incremental reducer also rejects and does not increment sameContextCount
+    let redState = createEmptyLearnerStateProjection();
+    redState = reduceLearnerState(redState, baseEvent, ontology);
+    expect(redState.acceptedEvents).toHaveLength(1);
+
+    redState = reduceLearnerState(redState, duplicateTransfer, ontology);
+    expect(redState.totalEventsProcessed).toBe(2);
+    expect(redState.acceptedEvents).toHaveLength(1);
+    expect(redState.rejectedEvents).toHaveLength(1);
+    expect(redState.rejectedEvents[0].code).toBe("invalid-transfer-distance");
+
+    const redConstruct = redState.constructs["nep.en.v1.communication-activity.spoken-production"];
+    expect(redConstruct.statistics.transfer.sameContextCount).toBe(1);
+    expect(redConstruct.statistics.transfer.nearTransferCount).toBe(0);
+    expect(redConstruct.statistics.transfer.nearTransferFailedCount).toBe(0);
+  });
+
+  it("fails closed on far-transfer without prior baseline context and never increments sameContextCount", () => {
+    const farWithoutBase = makeValidReferenceRecord({
+      eventId: "evt-far-nobase",
+      role: "far-transfer",
+      transferDistance: "far-transfer",
+      contextId: "ctx-lonely",
+      outcome: { kind: "binary", success: true },
+    });
+
+    const batch = projectLearnerState(ontology, [farWithoutBase]);
+    expect(batch.totalEventsProcessed).toBe(1);
+    expect(batch.acceptedEvents).toHaveLength(0);
+    expect(batch.rejectedEvents).toHaveLength(1);
+    expect(batch.rejectedEvents[0].code).toBe("invalid-transfer-distance");
+    expect(batch.constructs["nep.en.v1.communication-activity.spoken-production"]).toBeUndefined();
+
+    let redState = createEmptyLearnerStateProjection();
+    redState = reduceLearnerState(redState, farWithoutBase, ontology);
+    expect(redState.totalEventsProcessed).toBe(1);
+    expect(redState.acceptedEvents).toHaveLength(0);
+    expect(redState.rejectedEvents).toHaveLength(1);
+    expect(redState.rejectedEvents[0].code).toBe("invalid-transfer-distance");
+    expect(redState.constructs["nep.en.v1.communication-activity.spoken-production"]).toBeUndefined();
+  });
+
+  it("strictly reports modelVersion as nep.learner-evidence-state.v1 and distinguishes insufficient-support and conflicted-support", () => {
+    // 1 event -> insufficient-support
+    const singleEvent = makeValidReferenceRecord({
+      eventId: "evt-insuff-1",
+      occurredAt: "2026-09-04T10:00:00.000Z",
+      outcome: { kind: "binary", success: true },
+    });
+    const singleState = projectLearnerState(ontology, [singleEvent]);
+    const singleRead = readConstructFromLearnerState(
+      singleState,
+      "nep.en.v1.communication-activity.spoken-production"
+    );
+    expect(singleRead.status).toBe("insufficient-support");
+    expect(singleRead.legacyStatus).toBe("insufficient");
+    expect(singleRead.estimate).toBeNull();
+    expect(singleRead.evidenceCount).toBe(1);
+    expect(singleRead.modelVersion).toBe(LEARNER_STATE_LEDGER_MODEL_VERSION);
+    expect(singleRead.sourceModel).toBe("nep.learner-evidence-state.v1");
+    expect(singleRead.sourceStatus).toBe("insufficient-support");
+
+    const singleAdapted = adaptLearnerStateToLegacyRead(
+      singleState.constructs["nep.en.v1.communication-activity.spoken-production"]
+    );
+    expect(singleAdapted.status).toBe("insufficient-support");
+    expect(singleAdapted.legacyStatus).toBe("insufficient");
+    expect(singleAdapted.modelVersion).toBe("nep.learner-evidence-state.v1");
+
+    // 1 pos + 1 neg -> conflicted-support
+    const conflictEvents = [
+      makeValidReferenceRecord({
+        eventId: "evt-conf-1",
+        occurredAt: "2026-09-04T10:00:00.000Z",
+        outcome: { kind: "binary", success: true },
+      }),
+      makeValidReferenceRecord({
+        eventId: "evt-conf-2",
+        occurredAt: "2026-09-04T10:01:00.000Z",
+        outcome: { kind: "binary", success: false },
+      }),
+    ];
+    const confState = projectLearnerState(ontology, conflictEvents);
+    const confRead = readConstructFromLearnerState(
+      confState,
+      "nep.en.v1.communication-activity.spoken-production"
+    );
+    expect(confRead.status).toBe("conflicted-support");
+    expect(confRead.legacyStatus).toBe("conflicted");
+    expect(confRead.estimate).toBeNull();
+    expect(confRead.evidenceCount).toBe(2);
+    expect(confRead.modelVersion).toBe("nep.learner-evidence-state.v1");
+    expect(confRead.sourceModel).toBe("nep.learner-evidence-state.v1");
+    expect(confRead.sourceStatus).toBe("conflicted-support");
+
+    const confAdapted = adaptLearnerStateToLegacyRead(
+      confState.constructs["nep.en.v1.communication-activity.spoken-production"]
+    );
+    expect(confAdapted.status).toBe("conflicted-support");
+    expect(confAdapted.legacyStatus).toBe("conflicted");
+    expect(confAdapted.modelVersion).toBe("nep.learner-evidence-state.v1");
   });
 });

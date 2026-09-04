@@ -71,3 +71,12 @@
 - [x] T040: Add bounded compatibility reader `readConstructFromLearnerState` in `src/lib/learning/learner-state-read.ts` and `adaptLearnerStateToLegacyRead`.
 - [x] T041: Expand test suite to 40 tests in `src/lib/core/learner-state.test.ts` covering all P1 adversarial conditions.
 - [x] T042: Run complete local verification gates, commit, push, trigger CI, and hand off for re-review.
+
+## Phase 9: Resolution of Review ID 5116587399 Blockers (GEMINI-LEARNER-003)
+- [x] T043: Learner-State Ingress Evidence Verification: eliminate caller self-asserted `authorityScope`, `calibrationBenchmarkId`, and `modelFingerprint`. Authenticate via `isCoreEvidenceForRouting` (module-private WeakSet and brand symbols) or sealed canonical `CoreEvidenceEnvelope` (`nep.core-evidence-envelope.v1`). Reject fabricated/ad-hoc objects with `unvalidated-evidence-rejected`.
+- [x] T044: Lineage Preservation & Replay Provenance Fidelity: retain full evidence lineage in `AcceptedEventAudit` (`observationId`, `taskId`, `contextTags`, `outcome: EvidenceOutcome`, `grantId`). In `reconstructAcceptedRecord()`, use actual lineage fields rather than synthetic ID placeholders.
+- [x] T045: Strict 1:1 Transfer Semantics Gating & Anti-Fallback: enforce 1:1 pairing (`near-transfer` role <-> `near-transfer` distance, `far-transfer` role <-> `far-transfer` distance, non-transfer roles <-> `same-context` distance). Fail closed on transfer attempts without prior comparison baseline context or with duplicate context with `invalid-transfer-distance`, and NEVER convert attempted transfer into `sameContextCount`.
+- [x] T046: Legacy Compatibility Adapter Provenance & State Distinction: in `learner-state-read.ts` and `learner-state.ts`, preserve `modelVersion: "nep.learner-evidence-state.v1"` across all states (never `"ema-routing-v1"`), and distinguish `insufficient-support` and `conflicted-support` without collapsing them into `status: "unknown"`.
+- [x] T047: Expand test suite in `src/lib/core/learner-state.test.ts` to 47 tests covering all 4 P1 resolution vectors.
+- [x] T048: Execute full verification gates (`npm run check:source-of-truth`, `npx tsc --noEmit`, `npm run lint`, `npm test`, `npm run test:content-standard`, `node /home/thunder/Code/NEP/agent_verify.mjs`, `npm run build -- --webpack`), commit, push, trigger CI, and update PR #140.
+

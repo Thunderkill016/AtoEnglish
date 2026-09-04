@@ -3,16 +3,25 @@ import { COMMUNICATION_ACTIVITIES } from "./domain";
 import type { CoreEvidenceRole } from "./evidence-role";
 import { CORE_EVIDENCE_ROLES } from "./evidence-role";
 import type { ResponseModality } from "@/lib/learning/evidence";
-import type {
-  CertifiedCoreEvidence,
-  ReferenceCoreEvidence,
-  CoreEvidenceForRouting,
-  EvidenceOutcome,
+import {
+  type CertifiedCoreEvidence,
+  type ReferenceCoreEvidence,
+  type CoreEvidenceForRouting,
+  type CoreEvidenceEnvelope,
+  type EvidenceOutcome,
+  isCoreEvidenceForRouting,
+  parseCoreEvidenceEnvelope,
+  CORE_EVIDENCE_ENVELOPE_CONTRACT,
 } from "./certified-evidence";
 import type { OntologyGraph, OntologyNode } from "./ontology";
 import { ONTOLOGY_NODE_ID_PATTERN } from "./ontology";
-import type { LearnerDimensionRead } from "@/lib/learning/learner-state-read";
-import { LEARNER_STATE_MODEL_VERSION } from "@/lib/learning/learner-state-read";
+import type {
+  LearnerConstructRead,
+  LearnerConstructSufficiencyStatus,
+} from "@/lib/learning/learner-state-read";
+import {
+  LEARNER_STATE_LEDGER_MODEL_VERSION,
+} from "@/lib/learning/learner-state-read";
 
 export const LEARNER_STATE_CONTRACT_ID = "nep.learner-evidence-state.v1" as const;
 export const LEARNER_STATE_CONTRACT_VERSION = 1 as const;
@@ -44,17 +53,20 @@ export type LearnerConstructKey = {
 export type AcceptedEvidenceRecord = {
   readonly eventId: string;
   readonly targetId: string;
+  readonly taskId: string;
+  readonly observationId: string;
   readonly role: CoreEvidenceRole;
   readonly activity: CommunicationActivity;
   readonly responseModality: ResponseModality;
   readonly transferDistance: TransferDistance;
   readonly contextId: string | null;
-  readonly contextTags?: readonly string[];
+  readonly contextTags: readonly string[];
   readonly supportLevel: number;
   readonly revealUsed: boolean;
   readonly outcome: EvidenceOutcome;
   readonly occurredAt: string;
   readonly authorityScope: "durable-assessment" | "repository-reference";
+  readonly grantId: string | null;
   readonly provenance: {
     readonly observationId: string;
     readonly taskId: string;
@@ -152,18 +164,23 @@ export type RejectedEvidenceAudit = {
 export type AcceptedEventAudit = {
   readonly eventId: string;
   readonly targetId: string;
+  readonly taskId: string;
+  readonly observationId: string;
   readonly occurredAt: string;
   readonly role: CoreEvidenceRole;
   readonly activity: CommunicationActivity;
   readonly responseModality: ResponseModality;
   readonly transferDistance: TransferDistance;
   readonly contextId: string | null;
+  readonly contextTags: readonly string[];
   readonly authorityScope: "durable-assessment" | "repository-reference";
+  readonly outcome: EvidenceOutcome;
   readonly outcomeSuccess: boolean;
   readonly supportLevel: number;
   readonly revealUsed: boolean;
   readonly modelFingerprint: string;
   readonly calibrationBenchmarkId: string | null;
+  readonly grantId: string | null;
 };
 
 export type LearnerStateProjection = {
@@ -289,8 +306,8 @@ export function createEmptyLearnerStateProjection(
 
 /**
  * Validates that an evidence record conforms strictly to the certified or reference evidence contract.
- * Rejects raw observations, forged authority assertions, missing model fingerprints,
- * uncalibrated durable claims, or incompatible ontology roles/activities.
+ * Rejects raw observations, unauthenticated objects, forged authority assertions,
+ * missing model fingerprints, or incompatible ontology roles/activities.
  */
 export function validateAcceptedEvidenceRecord(
   raw: unknown,
@@ -326,7 +343,7 @@ export function validateAcceptedEvidenceRecord(
     };
   }
 
-  const rawEventId = record.eventId;
+  const rawEventId = record.eventId ?? (record.evidence as Record<string, unknown> | undefined)?.eventId;
   const eventId = typeof rawEventId === "string" && rawEventId.trim().length > 0 ? rawEventId.trim() : "invalid";
 
   if (eventId === "invalid") {
@@ -371,89 +388,106 @@ export function validateAcceptedEvidenceRecord(
     }
   }
 
-  // 1. Validate authorityScope and provenance integrity
-  const authorityScope = record.authorityScope;
-  if (authorityScope !== "durable-assessment" && authorityScope !== "repository-reference") {
+  // 1. Evidence Ingress: Must be canonical CoreEvidenceForRouting or valid sealed CoreEvidenceEnvelope
+  let canonicalEvidence: CoreEvidenceForRouting;
+  if (record.contractId === CORE_EVIDENCE_ENVELOPE_CONTRACT) {
+    const parseRes = parseCoreEvidenceEnvelope(raw);
+    if (!parseRes.ok) {
+      return {
+        ok: false,
+        audit: Object.freeze({
+          eventId,
+          code: "unvalidated-evidence-rejected",
+          message: `Evidence envelope verification failed: ${parseRes.error}`,
+        }),
+      };
+    }
+    canonicalEvidence = parseRes.evidence;
+  } else if (isCoreEvidenceForRouting(raw)) {
+    canonicalEvidence = raw as CoreEvidenceForRouting;
+  } else {
     return {
       ok: false,
       audit: Object.freeze({
         eventId,
         code: "unvalidated-evidence-rejected",
-        message: `authorityScope must be 'durable-assessment' or 'repository-reference': ${String(authorityScope)}`,
+        message: "Evidence record must be certified or reference-validated through certified-evidence module (CoreEvidenceForRouting)",
       }),
     };
   }
 
-  // Extract modelFingerprint and calibrationBenchmarkId from flat or nested provenance
-  const prov = record.provenance as Record<string, unknown> | undefined;
-  const rawFingerprint = prov?.modelFingerprint ?? record.modelFingerprint;
+  // Also verify inner attempt of canonical evidence does not have forbidden properties
+  if (canonicalEvidence.attempt && typeof canonicalEvidence.attempt === "object") {
+    for (const forbidden of FORBIDDEN_EVIDENCE_PROPERTIES) {
+      if (Object.hasOwn(canonicalEvidence.attempt, forbidden)) {
+        return {
+          ok: false,
+          audit: Object.freeze({
+            eventId,
+            code: "forbidden-authority-field",
+            message: `Evidence record attempt contains forbidden authority property: ${forbidden}`,
+          }),
+        };
+      }
+    }
+  }
+
+  // Verify canonical evidence authorityScope, benchmarkId, and modelFingerprint invariants
+  if (canonicalEvidence.authorityScope === "durable-assessment") {
+    if (
+      !canonicalEvidence.calibrationBenchmarkId ||
+      typeof canonicalEvidence.calibrationBenchmarkId !== "string" ||
+      canonicalEvidence.calibrationBenchmarkId.trim().length === 0
+    ) {
+      return {
+        ok: false,
+        audit: Object.freeze({
+          eventId,
+          code: "unvalidated-evidence-rejected",
+          message: "Durable assessment evidence must specify a valid non-empty calibrationBenchmarkId",
+        }),
+      };
+    }
+  } else if (canonicalEvidence.authorityScope === "repository-reference") {
+    if (canonicalEvidence.calibrationBenchmarkId !== null) {
+      return {
+        ok: false,
+        audit: Object.freeze({
+          eventId,
+          code: "unvalidated-evidence-rejected",
+          message: "Repository reference evidence cannot declare a calibrationBenchmarkId",
+        }),
+      };
+    }
+  } else {
+    return {
+      ok: false,
+      audit: Object.freeze({
+        eventId,
+        code: "unvalidated-evidence-rejected",
+        message: `Unsupported authorityScope: ${String((canonicalEvidence as { authorityScope?: unknown }).authorityScope)}`,
+      }),
+    };
+  }
+
   if (
-    typeof rawFingerprint !== "string" ||
-    rawFingerprint.trim().length === 0 ||
-    rawFingerprint.trim().toLowerCase() === "unknown"
+    !canonicalEvidence.modelFingerprint ||
+    typeof canonicalEvidence.modelFingerprint !== "string" ||
+    canonicalEvidence.modelFingerprint.trim().length === 0 ||
+    canonicalEvidence.modelFingerprint.trim().toLowerCase() === "unknown"
   ) {
     return {
       ok: false,
       audit: Object.freeze({
         eventId,
         code: "unvalidated-evidence-rejected",
-        message: "Evidence record requires an authentic, non-empty modelFingerprint (cannot be 'unknown')",
-      }),
-    };
-  }
-  const modelFingerprint = rawFingerprint.trim();
-
-  const rawBenchmarkId =
-    prov?.calibrationBenchmarkId !== undefined
-      ? prov.calibrationBenchmarkId
-      : record.calibrationBenchmarkId !== undefined
-      ? record.calibrationBenchmarkId
-      : undefined;
-
-  if (authorityScope === "durable-assessment") {
-    // Durable assessment strictly requires an authentic non-empty calibration benchmark ID
-    if (typeof rawBenchmarkId !== "string" || rawBenchmarkId.trim().length === 0) {
-      return {
-        ok: false,
-        audit: Object.freeze({
-          eventId,
-          code: "unvalidated-evidence-rejected",
-          message: "Durable assessment evidence strictly requires a non-empty calibrationBenchmarkId",
-        }),
-      };
-    }
-  } else {
-    // Repository-reference evidence must NOT claim a calibration benchmark ID
-    if (rawBenchmarkId !== null && rawBenchmarkId !== undefined) {
-      return {
-        ok: false,
-        audit: Object.freeze({
-          eventId,
-          code: "unvalidated-evidence-rejected",
-          message: "Repository reference evidence cannot declare a calibrationBenchmarkId (must be null)",
-        }),
-      };
-    }
-  }
-
-  const calibrationBenchmarkId = typeof rawBenchmarkId === "string" ? rawBenchmarkId.trim() : null;
-
-  // Extract observationId and taskId
-  const observationId = String(prov?.observationId ?? record.observationId ?? "");
-  const taskId = String(prov?.taskId ?? record.taskId ?? "");
-  if (!observationId || !taskId) {
-    return {
-      ok: false,
-      audit: Object.freeze({
-        eventId,
-        code: "unvalidated-evidence-rejected",
-        message: "provenance must contain observationId and taskId",
+        message: `Evidence record requires a known, non-empty modelFingerprint (got '${String(canonicalEvidence.modelFingerprint)}')`,
       }),
     };
   }
 
   // 2. Validate targetId and ontology existence
-  const targetId = record.targetId;
+  const targetId = canonicalEvidence.targetId;
   if (typeof targetId !== "string" || !ONTOLOGY_NODE_ID_PATTERN.test(targetId)) {
     return {
       ok: false,
@@ -480,7 +514,7 @@ export function validateAcceptedEvidenceRecord(
   }
 
   // 3. Activity Validation & Target Binding
-  const activity = record.activity as CommunicationActivity;
+  const activity = canonicalEvidence.activity;
   if (
     typeof activity !== "string" ||
     !(COMMUNICATION_ACTIVITIES as readonly string[]).includes(activity)
@@ -512,7 +546,7 @@ export function validateAcceptedEvidenceRecord(
   }
 
   // 4. Role Validation & Node Compatibility
-  const role = record.role as CoreEvidenceRole;
+  const role = canonicalEvidence.role;
   if (
     typeof role !== "string" ||
     !(CORE_EVIDENCE_ROLES as readonly string[]).includes(role) ||
@@ -530,9 +564,7 @@ export function validateAcceptedEvidenceRecord(
   }
 
   // 5. Modality Validation & Compatibility
-  const attempt = record.attempt && typeof record.attempt === "object" ? (record.attempt as Record<string, unknown>) : null;
-  const rawModality = record.responseModality ?? attempt?.responseModality;
-  const responseModality = rawModality as ResponseModality;
+  const responseModality = canonicalEvidence.responseModality ?? canonicalEvidence.attempt.responseModality;
   if (
     typeof responseModality !== "string" ||
     !(RESPONSE_MODALITIES as readonly string[]).includes(responseModality)
@@ -561,7 +593,7 @@ export function validateAcceptedEvidenceRecord(
   }
 
   // 6. Timestamp Validation
-  const occurredAt = record.occurredAt;
+  const occurredAt = canonicalEvidence.occurredAt;
   if (typeof occurredAt !== "string" || !ISO_DATE_PATTERN.test(occurredAt)) {
     return {
       ok: false,
@@ -602,8 +634,8 @@ export function validateAcceptedEvidenceRecord(
     }
   }
 
-  // 7. Transfer Distance & Semantic Role Gating
-  const transferDistance = record.transferDistance as TransferDistance;
+  // 7. Transfer Distance & Semantic Role Gating (1:1 strict pairing)
+  const transferDistance = canonicalEvidence.transferDistance;
   if (
     typeof transferDistance !== "string" ||
     !(TRANSFER_DISTANCES as readonly string[]).includes(transferDistance)
@@ -619,21 +651,20 @@ export function validateAcceptedEvidenceRecord(
     };
   }
 
-  const rawContextId = record.contextId !== undefined ? record.contextId : attempt?.contextId;
-  const contextId = rawContextId === null || typeof rawContextId === "string" ? rawContextId : undefined;
-  if (contextId === undefined) {
-    return {
-      ok: false,
-      audit: Object.freeze({
-        eventId,
-        code: "unvalidated-evidence-rejected",
-        message: "contextId must be a string or null",
-        targetId,
-      }),
-    };
-  }
+  const contextId = canonicalEvidence.attempt.contextId;
 
-  if (transferDistance === "near-transfer" || transferDistance === "far-transfer") {
+  if (transferDistance === "near-transfer") {
+    if (role !== "near-transfer") {
+      return {
+        ok: false,
+        audit: Object.freeze({
+          eventId,
+          code: "incompatible-evidence-role",
+          message: `near-transfer transferDistance requires near-transfer evidence role (got '${role}')`,
+          targetId,
+        }),
+      };
+    }
     if (!contextId || contextId.trim().length === 0) {
       return {
         ok: false,
@@ -645,94 +676,71 @@ export function validateAcceptedEvidenceRecord(
         }),
       };
     }
-
-    // Role must be a transfer role if transferDistance is near/far-transfer
-    if (role !== "near-transfer" && role !== "far-transfer") {
+  } else if (transferDistance === "far-transfer") {
+    if (role !== "far-transfer") {
       return {
         ok: false,
         audit: Object.freeze({
           eventId,
           code: "incompatible-evidence-role",
-          message: `Evidence role '${role}' cannot claim transfer distance '${transferDistance}' (transfer requires near-transfer or far-transfer role)`,
+          message: `far-transfer transferDistance requires far-transfer evidence role (got '${role}')`,
           targetId,
         }),
       };
     }
-  }
-
-  // 8. Outcome Validation
-  const outcome = record.outcome as EvidenceOutcome;
-  if (!isValidEvidenceOutcome(outcome)) {
-    return {
-      ok: false,
-      audit: Object.freeze({
-        eventId,
-        code: "invalid-outcome",
-        message: "outcome must be valid binary or bounded-score outcome",
-        targetId,
-      }),
-    };
-  }
-
-  let contextTags: readonly string[] = Object.freeze([]);
-  if (record.contextTags !== undefined) {
-    if (!Array.isArray(record.contextTags)) {
+    if (!contextId || contextId.trim().length === 0) {
       return {
         ok: false,
         audit: Object.freeze({
           eventId,
-          code: "unvalidated-evidence-rejected",
-          message: "contextTags must be an array of strings",
+          code: "invalid-transfer-distance",
+          message: `Transfer distance '${transferDistance}' requires a non-empty contextId`,
           targetId,
         }),
       };
     }
-    const cleanTags: string[] = [];
-    for (const tag of record.contextTags) {
-      if (typeof tag !== "string" || !tag.trim()) {
-        return {
-          ok: false,
-          audit: Object.freeze({
-            eventId,
-            code: "unvalidated-evidence-rejected",
-            message: "contextTags elements must be non-empty strings",
-            targetId,
-          }),
-        };
-      }
-      cleanTags.push(tag.trim());
+  } else if (transferDistance === "same-context") {
+    if (role === "near-transfer" || role === "far-transfer") {
+      return {
+        ok: false,
+        audit: Object.freeze({
+          eventId,
+          code: "invalid-transfer-distance",
+          message: `Transfer role '${role}' requires matching transfer distance (cannot be same-context)`,
+          targetId,
+        }),
+      };
     }
-    contextTags = Object.freeze([...cleanTags].sort());
   }
 
-  const supportLevel =
-    typeof record.supportLevel === "number"
-      ? record.supportLevel
-      : typeof attempt?.supportLevel === "number"
-      ? attempt.supportLevel
-      : 0;
-
-  const revealUsed = Boolean(record.revealUsed ?? attempt?.revealUsed);
+  const contextTags = Object.freeze(
+    Array.isArray(canonicalEvidence.contextTags)
+      ? [...canonicalEvidence.contextTags].sort()
+      : []
+  );
 
   const validRecord: AcceptedEvidenceRecord = Object.freeze({
     eventId,
     targetId,
+    taskId: canonicalEvidence.taskId,
+    observationId: canonicalEvidence.observationId,
     role,
     activity,
     responseModality,
     transferDistance,
     contextId: contextId ? contextId.trim() : null,
-    ...(contextTags.length > 0 ? { contextTags } : {}),
-    supportLevel: Math.max(0, supportLevel),
-    revealUsed,
-    outcome: Object.freeze(outcome),
+    contextTags,
+    supportLevel: canonicalEvidence.attempt.supportLevel,
+    revealUsed: canonicalEvidence.attempt.revealUsed,
+    outcome: Object.freeze(canonicalEvidence.outcome),
     occurredAt,
-    authorityScope,
+    authorityScope: canonicalEvidence.authorityScope,
+    grantId: (canonicalEvidence as { grantId?: string | null }).grantId ?? null,
     provenance: Object.freeze({
-      observationId,
-      taskId,
-      calibrationBenchmarkId,
-      modelFingerprint,
+      observationId: canonicalEvidence.observationId,
+      taskId: canonicalEvidence.taskId,
+      calibrationBenchmarkId: canonicalEvidence.calibrationBenchmarkId,
+      modelFingerprint: canonicalEvidence.modelFingerprint,
     }),
   });
 
@@ -847,22 +855,16 @@ function updateConstructStatistics(
   if (event.transferDistance === "same-context") {
     transfer.sameContextCount += 1;
   } else if (event.transferDistance === "near-transfer") {
-    const isTransferRole = event.role === "near-transfer";
-    if (isPositive && isTransferRole && hasPriorContext && isChangedContext) {
+    if (isPositive && hasPriorContext && isChangedContext) {
       transfer.nearTransferCount += 1;
-    } else if (!isPositive && isTransferRole) {
-      transfer.nearTransferFailedCount += 1;
     } else {
-      transfer.sameContextCount += 1;
+      transfer.nearTransferFailedCount += 1;
     }
   } else if (event.transferDistance === "far-transfer") {
-    const isTransferRole = event.role === "far-transfer";
-    if (isPositive && isTransferRole && hasPriorContext && isChangedContext) {
+    if (isPositive && hasPriorContext && isChangedContext) {
       transfer.farTransferCount += 1;
-    } else if (!isPositive && isTransferRole) {
-      transfer.farTransferFailedCount += 1;
     } else {
-      transfer.sameContextCount += 1;
+      transfer.farTransferFailedCount += 1;
     }
   }
 
@@ -1019,6 +1021,38 @@ export function projectLearnerState(
       );
       continue;
     }
+
+    // Enforce transfer baseline context requirement
+    if (event.transferDistance === "near-transfer" || event.transferDistance === "far-transfer") {
+      const priorContexts =
+        validEventsByTarget[event.targetId]
+          ?.map((e) => e.contextId)
+          .filter((c): c is string => c !== null) ?? [];
+      const distinctPriorContexts = [...new Set(priorContexts)];
+      if (distinctPriorContexts.length === 0) {
+        rejectedEvents.push(
+          Object.freeze({
+            eventId: event.eventId,
+            code: "invalid-transfer-distance",
+            message: `Transfer evidence requires prior baseline context; initial context cannot establish ${event.transferDistance}`,
+            targetId: event.targetId,
+          })
+        );
+        continue;
+      }
+      if (event.contextId && distinctPriorContexts.includes(event.contextId)) {
+        rejectedEvents.push(
+          Object.freeze({
+            eventId: event.eventId,
+            code: "invalid-transfer-distance",
+            message: `Transfer evidence requires a distinct changed context; cannot claim ${event.transferDistance} on already-seen context '${event.contextId}'`,
+            targetId: event.targetId,
+          })
+        );
+        continue;
+      }
+    }
+
     seenEventIds.add(event.eventId);
 
     const isPositive = evaluateOutcomeSuccess(event.outcome);
@@ -1026,18 +1060,23 @@ export function projectLearnerState(
       Object.freeze({
         eventId: event.eventId,
         targetId: event.targetId,
+        taskId: event.taskId,
+        observationId: event.observationId,
         occurredAt: event.occurredAt,
         role: event.role,
         activity: event.activity,
         responseModality: event.responseModality,
         transferDistance: event.transferDistance,
         contextId: event.contextId,
+        contextTags: event.contextTags,
         authorityScope: event.authorityScope,
+        outcome: event.outcome,
         outcomeSuccess: isPositive,
         supportLevel: event.supportLevel,
         revealUsed: event.revealUsed,
         modelFingerprint: event.provenance.modelFingerprint,
         calibrationBenchmarkId: event.provenance.calibrationBenchmarkId,
+        grantId: event.grantId,
       })
     );
 
@@ -1130,24 +1169,64 @@ export function reduceLearnerState(
     });
   }
 
+  // Enforce transfer baseline context requirement
+  if (event.transferDistance === "near-transfer" || event.transferDistance === "far-transfer") {
+    const priorContexts = currentState.constructs[event.targetId]?.statistics.contextIds ?? [];
+    if (priorContexts.length === 0) {
+      return Object.freeze({
+        ...currentState,
+        totalEventsProcessed: currentState.totalEventsProcessed + 1,
+        rejectedEvents: Object.freeze([
+          ...currentState.rejectedEvents,
+          Object.freeze({
+            eventId: event.eventId,
+            code: "invalid-transfer-distance" as const,
+            message: `Transfer evidence requires prior baseline context; initial context cannot establish ${event.transferDistance}`,
+            targetId: event.targetId,
+          }),
+        ]),
+      });
+    }
+    if (event.contextId && priorContexts.includes(event.contextId)) {
+      return Object.freeze({
+        ...currentState,
+        totalEventsProcessed: currentState.totalEventsProcessed + 1,
+        rejectedEvents: Object.freeze([
+          ...currentState.rejectedEvents,
+          Object.freeze({
+            eventId: event.eventId,
+            code: "invalid-transfer-distance" as const,
+            message: `Transfer evidence requires a distinct changed context; cannot claim ${event.transferDistance} on already-seen context '${event.contextId}'`,
+            targetId: event.targetId,
+          }),
+        ]),
+      });
+    }
+  }
+
   // To guarantee general replay equivalence across arbitrary arrival order,
   // we rebuild construct projections canonically from all accepted records.
   const isPositive = evaluateOutcomeSuccess(event.outcome);
   const newAcceptedAudit: AcceptedEventAudit = Object.freeze({
     eventId: event.eventId,
     targetId: event.targetId,
+    taskId: event.taskId,
+    observationId: event.observationId,
     occurredAt: event.occurredAt,
     role: event.role,
     activity: event.activity,
     responseModality: event.responseModality,
     transferDistance: event.transferDistance,
     contextId: event.contextId,
+    contextTags: event.contextTags,
     authorityScope: event.authorityScope,
+    outcome: event.outcome,
     outcomeSuccess: isPositive,
     supportLevel: event.supportLevel,
     revealUsed: event.revealUsed,
     modelFingerprint: event.provenance.modelFingerprint,
     calibrationBenchmarkId: event.provenance.calibrationBenchmarkId,
+    grantId: event.grantId,
   });
 
   const allAccepted = [...currentState.acceptedEvents, newAcceptedAudit].sort(compareAcceptedAudits);
@@ -1184,19 +1263,23 @@ function reconstructAcceptedRecord(audit: AcceptedEventAudit): AcceptedEvidenceR
   return Object.freeze({
     eventId: audit.eventId,
     targetId: audit.targetId,
+    taskId: audit.taskId,
+    observationId: audit.observationId,
     role: audit.role,
     activity: audit.activity,
     responseModality: audit.responseModality,
     transferDistance: audit.transferDistance,
     contextId: audit.contextId,
+    contextTags: audit.contextTags,
     supportLevel: audit.supportLevel,
     revealUsed: audit.revealUsed,
-    outcome: Object.freeze({ kind: "binary", success: audit.outcomeSuccess }),
+    outcome: audit.outcome,
     occurredAt: audit.occurredAt,
     authorityScope: audit.authorityScope,
+    grantId: audit.grantId,
     provenance: Object.freeze({
-      observationId: `obs-${audit.eventId}`,
-      taskId: `task-${audit.eventId}`,
+      observationId: audit.observationId,
+      taskId: audit.taskId,
       calibrationBenchmarkId: audit.calibrationBenchmarkId,
       modelFingerprint: audit.modelFingerprint,
     }),
@@ -1210,32 +1293,76 @@ function compareAcceptedAudits(a: AcceptedEventAudit, b: AcceptedEventAudit): nu
 }
 
 /**
- * Bounded compatibility adapter mapping a V1 ConstructProjection into legacy LearnerDimensionRead.
+ * Bounded compatibility adapter mapping a V1 ConstructProjection into legacy LearnerConstructRead.
  * Invariants:
  * 1. Unknown state (totalEvents === 0 or score === null) NEVER becomes numeric zero.
- * 2. Decision scope is strictly 'routing' and NEVER claims mastery or certification.
+ * 2. Conflicted and insufficient support states are explicitly distinguished and never collapsed into unknown.
+ * 3. Model version is strictly 'nep.learner-evidence-state.v1' (never mislabeled as 'ema-routing-v1').
+ * 4. Decision scope is strictly 'routing' and NEVER claims mastery or certification.
  */
 export function adaptLearnerStateToLegacyRead(
   construct?: ConstructProjection
-): LearnerDimensionRead {
-  if (!construct || construct.status === "unknown" || construct.provisionalRoutingScore === null) {
+): LearnerConstructRead {
+  if (!construct || construct.status === "unknown") {
     return {
       estimate: null,
-      evidenceCount: construct?.statistics.totalEvents ?? 0,
+      evidenceCount: 0,
       status: "unknown",
+      legacyStatus: "unknown",
       confidence: null,
-      modelVersion: LEARNER_STATE_MODEL_VERSION,
+      modelVersion: LEARNER_STATE_LEDGER_MODEL_VERSION,
       decisionScope: "routing",
+      sourceModel: LEARNER_STATE_LEDGER_MODEL_VERSION,
+      sourceStatus: "unknown",
+      uncertainty: "maximal",
+    };
+  }
+
+  const sourceStatus = construct.status as LearnerConstructSufficiencyStatus;
+  const evidenceCount = construct.statistics.totalEvents;
+  const uncertainty = construct.uncertainty;
+
+  if (sourceStatus === "insufficient-support") {
+    return {
+      estimate: null,
+      evidenceCount,
+      status: "insufficient-support",
+      legacyStatus: "insufficient",
+      confidence: null,
+      modelVersion: LEARNER_STATE_LEDGER_MODEL_VERSION,
+      decisionScope: "routing",
+      sourceModel: LEARNER_STATE_LEDGER_MODEL_VERSION,
+      sourceStatus,
+      uncertainty,
+    };
+  }
+
+  if (sourceStatus === "conflicted-support") {
+    return {
+      estimate: null,
+      evidenceCount,
+      status: "conflicted-support",
+      legacyStatus: "conflicted",
+      confidence: null,
+      modelVersion: LEARNER_STATE_LEDGER_MODEL_VERSION,
+      decisionScope: "routing",
+      sourceModel: LEARNER_STATE_LEDGER_MODEL_VERSION,
+      sourceStatus,
+      uncertainty,
     };
   }
 
   return {
     estimate: construct.provisionalRoutingScore,
-    evidenceCount: construct.statistics.totalEvents,
+    evidenceCount,
     status: "observed",
+    legacyStatus: "observed",
     confidence: null,
-    modelVersion: LEARNER_STATE_MODEL_VERSION,
+    modelVersion: LEARNER_STATE_LEDGER_MODEL_VERSION,
     decisionScope: "routing",
+    sourceModel: LEARNER_STATE_LEDGER_MODEL_VERSION,
+    sourceStatus,
+    uncertainty,
   };
 }
 

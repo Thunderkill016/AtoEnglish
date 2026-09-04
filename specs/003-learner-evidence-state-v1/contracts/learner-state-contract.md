@@ -4,11 +4,11 @@
 - **Contract Version**: `1`.
 - **Construct Key Grammar**: `nep.en.v1.<domain>.<slug>` where `<domain>` is `language-system` or `communication-activity`.
 - **Ontology Invariant**: Every evaluated construct key MUST resolve to a valid node in the provided `nep.english-ontology.v1` graph. Unknown nodes are rejected fail-closed with `unknown-ontology-node`.
-- **Evidence Certification Boundary**:
+- **Evidence Certification Boundary & Ingress Authentication**:
   - Raw observations, UI clicks, and uncertified model predictions are strictly rejected (`unvalidated-evidence-rejected`).
-  - Only validated/certified evidence records (`CertifiedCoreEvidence` or `ReferenceCoreEvidence`) can update learner state.
-  - Durable assessment evidence strictly requires non-empty `calibrationBenchmarkId` and authentic `modelFingerprint` (cannot be 'unknown').
-  - Repository reference evidence strictly requires `calibrationBenchmarkId: null` and authentic `modelFingerprint`.
+  - Evidence ingress strictly consumes canonical `CoreEvidenceForRouting` authenticated by `src/lib/core/certified-evidence.ts` (module-private WeakSet and brand symbols) or sealed canonical envelopes `CoreEvidenceEnvelope` (`nep.core-evidence-envelope.v1`). Caller self-asserted or fabricated evidence objects fail closed with `unvalidated-evidence-rejected`.
+  - Durable assessment evidence strictly requires non-empty `calibrationBenchmarkId`, valid `grantId`, and authentic `modelFingerprint` (cannot be empty, whitespace, or 'unknown').
+  - Repository reference evidence strictly requires `calibrationBenchmarkId: null`, `grantId: null`, and authentic `modelFingerprint`.
   - Self-asserted authority scopes fail closed.
 - **Activity Compatibility**:
   - If target node is a communication-activity (`domain: "communication-activity"`), event `activity` MUST match `targetNode.activity`. Violation yields `incompatible-activity`.
@@ -16,11 +16,16 @@
   - Event `role` must be declared in the target node's `allowedEvidenceRoles`. Violation yields `incompatible-evidence-role`.
   - Event `responseModality` must be compatible with the target node's declared `modalities`. Violation yields `incompatible-modality`.
   - Receptive/recognition evidence can never increment productive or transfer support.
-- **Transfer Boundary**:
-  - Transfer claims require transfer-capable role (`role: "near-transfer" | "far-transfer"`), a non-empty `contextId`, and demonstrable prior distinct context (`prev.contextIds.length >= 1`).
-  - First-ever events labeled near/far-transfer cannot establish transfer support due to absence of prior baseline context.
-  - Same-context repetition (`transferDistance: "same-context"` or duplicate `contextId`) cannot increment transfer statistics.
-  - Failed near/far-transfer attempts remain failed transfer evidence (`nearTransferFailedCount`), never relabeled as same-context.
+- **Transfer Boundary & Strict 1:1 Gating**:
+  - Strict 1:1 pairing between transfer role and transfer distance:
+    - `near-transfer` distance strictly requires `near-transfer` evidence role.
+    - `far-transfer` distance strictly requires `far-transfer` evidence role.
+    - `same-context` distance cannot be paired with transfer roles (`near-transfer` or `far-transfer`).
+    - Violation fails closed with `incompatible-evidence-role` or `invalid-transfer-distance`.
+  - Transfer claims require a non-empty `contextId` and demonstrable prior distinct baseline context (`prev.contextIds.length >= 1`).
+  - First-ever events labeled near/far-transfer fail closed with `invalid-transfer-distance` due to absence of prior comparison baseline context.
+  - Attempted transfer evidence NEVER converts into `sameContextCount`. Failed near/far-transfer attempts increment `nearTransferFailedCount` or `farTransferFailedCount`.
+  - Transfer claims with duplicate already-seen `contextId` fail closed with `invalid-transfer-distance` and leave `sameContextCount` unchanged.
 - **Sufficiency & Epistemic Uncertainty**:
   - Zero events evaluate strictly to `status: "unknown"`, `provisionalRoutingScore: null`, `uncertainty: "maximal"`.
   - Conflicting positive and negative events evaluate to `status: "conflicted-support"`, suppressing scalar score to prevent false neutral averaging.
@@ -33,8 +38,13 @@
 - **Determinism & Reducer Equivalence**:
   - Events are sorted canonically by `(occurredAt, eventId)` prior to reduction.
   - Iterative reduction via `reduceLearnerState` produces byte-identical output to batch `projectLearnerState` even under arbitrary or reverse arrival order.
-- **Lineage & Support Tracking**:
-  - State projections retain accepted event lineage audits (`acceptedEvents`), support level distributions (`supportDistribution`), and reveal usage (`revealUsedCount`).
+- **Lineage Preservation & Replay Provenance Fidelity**:
+  - State projections retain authentic accepted event lineage audits (`acceptedEvents`) including `observationId`, `taskId`, `contextTags`, `outcome: EvidenceOutcome`, and `grantId`.
+  - Replay reconstruction (`reconstructAcceptedRecord`) uses actual lineage fields rather than synthetic ID placeholders.
+  - Retains support level distributions (`supportDistribution`), reveal usage (`revealUsedCount`), and durable vs reference evidence counts.
+- **Legacy Compatibility Adapter**:
+  - Adapter `readConstructFromLearnerState` and `adaptLearnerStateToLegacyRead` preserve `modelVersion: "nep.learner-evidence-state.v1"` (never `"ema-routing-v1"`).
+  - Explicitly distinguishes `insufficient-support` (`legacyStatus: "insufficient"`) and `conflicted-support` (`legacyStatus: "conflicted"`), never collapsing them into `unknown`.
 - **Purity**:
   - Zero ambient clock reads (`Date.now()`); all timestamps are supplied as explicit ISO 8601 strings.
   - Pure deterministic computation with zero database, network, browser, or random dependencies.
