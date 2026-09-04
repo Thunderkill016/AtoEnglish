@@ -1,8 +1,9 @@
 import type { CoreEvidenceRole } from "./evidence-role";
 import type { ResponseModality } from "@/lib/learning/evidence";
 import {
-  type ResolvedCalibrationAuthority,
-  isResolvedCalibrationAuthority,
+  type ResolvedDurableCalibrationAuthority,
+  isResolvedDurableCalibrationAuthority,
+  isResolvedContractAuthority,
 } from "./authority-registry";
 import {
   canAffectDurableAssessment,
@@ -55,8 +56,8 @@ export type ReferenceCoreEvidence = CoreEvidenceCandidate & {
 
 export type CoreEvidenceForRouting = CertifiedCoreEvidence | ReferenceCoreEvidence;
 
-/** Must be resolved independently from the evaluator observation being certified. */
-export type CalibrationAuthorityGrant = ResolvedCalibrationAuthority;
+/** Must be resolved independently from the evaluator observation being certified as durable authority. */
+export type CalibrationAuthorityGrant = ResolvedDurableCalibrationAuthority;
 
 export type EvidenceCertificationProblem =
   | { type: "invalid-task" }
@@ -75,6 +76,7 @@ export type EvidenceCertificationProblem =
   | { type: "missing-calibration-benchmark" }
   | { type: "independent-authority-missing" }
   | { type: "independent-authority-not-resolved" }
+  | { type: "independent-authority-not-durable" }
   | { type: "independent-authority-mismatch" }
   | { type: "reference-observation-claims-authority" };
 
@@ -101,13 +103,15 @@ export function certifyCoreEvidence(
   task: CoreTaskSpec,
   observation: CoreObservation,
   candidate: CoreEvidenceCandidate,
-  authorityGrant: ResolvedCalibrationAuthority | CalibrationAuthorityGrant,
+  authorityGrant: ResolvedDurableCalibrationAuthority | CalibrationAuthorityGrant,
 ): EvidenceCertificationResult {
   const problems = validateEvidenceSemantics(task, observation, candidate);
 
   if (!authorityGrant) {
     problems.push({ type: "independent-authority-missing" });
-  } else if (!isResolvedCalibrationAuthority(authorityGrant)) {
+  } else if (isResolvedContractAuthority(authorityGrant)) {
+    problems.push({ type: "independent-authority-not-durable" });
+  } else if (!isResolvedDurableCalibrationAuthority(authorityGrant)) {
     problems.push({ type: "independent-authority-not-resolved" });
   } else if (
     authorityGrant.benchmarkId !== observation.calibration.benchmarkId ||

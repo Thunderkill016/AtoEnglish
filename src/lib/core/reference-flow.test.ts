@@ -3,6 +3,9 @@ import { describe, expect, it } from "vitest";
 import {
   type RegisteredBenchmarkArtifact,
   createProvenanceAuthorityRegistry,
+  createTestMechanicsBenchmark,
+  createTestMechanicsAuthorityGrant,
+  isResolvedDurableCalibrationAuthority,
   resolveCalibrationAuthority,
 } from "./authority-registry";
 import { certifyCoreEvidence } from "./certified-evidence";
@@ -70,7 +73,7 @@ describe("pure core reference flow", () => {
       createdAt: "2026-09-04T00:00:00.000Z",
     };
 
-    const testBenchmark: RegisteredBenchmarkArtifact = {
+    const testBenchmark: RegisteredBenchmarkArtifact = createTestMechanicsBenchmark({
       benchmarkId: "vi-adult-minpair-v1",
       version: "1.0.0",
       immutableFingerprint: "sha256-bench-minpair-v1-abc",
@@ -79,12 +82,12 @@ describe("pure core reference flow", () => {
       sampleSize: 100,
       createdAt: "2026-09-01T00:00:00.000Z",
       productionAuthorityEligible: true,
-    };
+    });
 
     const registry = createProvenanceAuthorityRegistry({
       benchmarks: [testBenchmark],
       grants: [
-        {
+        createTestMechanicsAuthorityGrant({
           grantId: "grant-minpair-001",
           grantVersion: "1.0.0",
           status: "active",
@@ -101,7 +104,7 @@ describe("pure core reference flow", () => {
           decision: "assessment",
           authority: "assessment-candidate",
           validFrom: "2026-01-01T00:00:00.000Z",
-        },
+        }),
       ],
     });
 
@@ -117,6 +120,8 @@ describe("pure core reference flow", () => {
 
     expect(resolved.ok).toBe(true);
     if (!resolved.ok) return;
+    expect(isResolvedDurableCalibrationAuthority(resolved.resolvedGrant)).toBe(true);
+    if (!isResolvedDurableCalibrationAuthority(resolved.resolvedGrant)) return;
 
     const certified = certifyCoreEvidence(
       task,

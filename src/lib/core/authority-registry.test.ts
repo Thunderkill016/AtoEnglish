@@ -4,7 +4,18 @@ import {
   type AuthorityResolutionRequest,
   type RegisteredAuthorityGrant,
   type RegisteredBenchmarkArtifact,
+  CONTRACT_AUTHORITY_BRAND,
+  DURABLE_AUTHORITY_BRAND,
+  TEST_HARNESS_ROOT_BRAND,
   createProvenanceAuthorityRegistry,
+  createTestMechanicsAuthorityGrant,
+  createTestMechanicsBenchmark,
+  createTestMechanicsTrustRoot,
+  isProductionEligibleTrustRoot,
+  isResolvedContractAuthority,
+  isResolvedDurableCalibrationAuthority,
+  isTestHarnessTrustRoot,
+  parseStrictIso8601,
   resolveCalibrationAuthority,
 } from "./authority-registry";
 import {
@@ -17,8 +28,9 @@ import checkedInFixtures from "../../../benchmarks/core/authority-registry-fixtu
 
 describe("Provenance Authority Registry V1", () => {
   // TEST-ONLY trusted registry fixture: used strictly to verify resolver mechanics in memory.
-  // Cannot be serialized or used as production calibration.
-  const sampleBenchmark: RegisteredBenchmarkArtifact = {
+  // Bound to an in-memory Symbol that cannot be serialized to JSON or confused with production calibration.
+  // Epistemic validity claim: proves mechanics only, zero empirical validity.
+  const sampleBenchmark: RegisteredBenchmarkArtifact = createTestMechanicsBenchmark({
     benchmarkId: "bench-phonology-v1",
     version: "1.0.0",
     immutableFingerprint: "sha256-bench-phonology-digest-12345",
@@ -33,17 +45,17 @@ describe("Provenance Authority Registry V1", () => {
     sampleSize: 150,
     adjudicationProtocol: "synthetic-test-harness",
     createdAt: "2026-09-01T00:00:00.000Z",
-    productionAuthorityEligible: true, // test-only fixture
-  };
+    productionAuthorityEligible: true, // test mechanics fixture
+  });
 
-  const activeGrant: RegisteredAuthorityGrant = {
+  const activeGrant: RegisteredAuthorityGrant = createTestMechanicsAuthorityGrant({
     grantId: "grant-phonology-active-001",
     grantVersion: "1.0.0",
     status: "active",
     benchmarkArtifactId: "bench-phonology-v1",
     expectedBenchmarkFingerprint: "sha256-bench-phonology-digest-12345",
     expectedBenchmarkVersion: "1.0.0",
-    productionAuthorityEligible: true, // test-only fixture
+    productionAuthorityEligible: true, // test mechanics fixture
     evaluatorBinding: {
       evaluatorId: "acoustic-classifier-v1",
       evaluatorKind: "model",
@@ -63,7 +75,7 @@ describe("Provenance Authority Registry V1", () => {
     authority: "assessment-candidate",
     validFrom: "2026-01-01T00:00:00.000Z",
     validUntil: "2027-01-01T00:00:00.000Z",
-  };
+  });
 
   const revokedGrant: RegisteredAuthorityGrant = {
     ...activeGrant,
@@ -358,6 +370,9 @@ describe("Provenance Authority Registry V1", () => {
       occurredAt: "2026-09-04T00:00:01.000Z",
     };
 
+    expect(isResolvedDurableCalibrationAuthority(resolved.resolvedGrant)).toBe(true);
+    if (!isResolvedDurableCalibrationAuthority(resolved.resolvedGrant)) return;
+
     const certResult = certifyCoreEvidence(
       validTask,
       validAuthoritativeObservation,
@@ -424,7 +439,7 @@ describe("Provenance Authority Registry V1", () => {
     }
   });
 
-  it("10. rejects ad-hoc un-resolved object passed directly into certifyCoreEvidence", () => {
+  it("10. rejects ad-hoc un-resolved object and forged isProductionEligible object passed directly into certifyCoreEvidence", () => {
     const unbrandedFakeGrant = {
       grantId: "grant-phonology-active-001",
       grantVersion: "1.0.0",
@@ -433,6 +448,13 @@ describe("Provenance Authority Registry V1", () => {
       authority: "assessment-candidate" as const,
       decision: "assessment" as const,
       scope: validAuthoritativeObservation.calibration.scope,
+    };
+
+    const forgedEligibleGrant = {
+      ...unbrandedFakeGrant,
+      isProductionEligible: true,
+      benchmarkFingerprint: "sha256-bench-phonology-digest-12345",
+      resolvedAt: "2026-09-04T00:00:01.000Z",
     };
 
     const candidate = {
@@ -454,16 +476,31 @@ describe("Provenance Authority Registry V1", () => {
     };
 
     // Cast unbranded object to bypass TS compiler; runtime brand check MUST fail closed
-    const certResult = certifyCoreEvidence(
+    const certResult1 = certifyCoreEvidence(
       validTask,
       validAuthoritativeObservation,
       candidate,
       unbrandedFakeGrant as never,
     );
 
-    expect(certResult.ok).toBe(false);
-    if (!certResult.ok) {
-      expect(certResult.problems).toContainEqual({
+    expect(certResult1.ok).toBe(false);
+    if (!certResult1.ok) {
+      expect(certResult1.problems).toContainEqual({
+        type: "independent-authority-not-resolved",
+      });
+    }
+
+    // Forged object with isProductionEligible: true but lacking DURABLE_AUTHORITY_BRAND symbol MUST fail closed
+    const certResult2 = certifyCoreEvidence(
+      validTask,
+      validAuthoritativeObservation,
+      candidate,
+      forgedEligibleGrant as never,
+    );
+
+    expect(certResult2.ok).toBe(false);
+    if (!certResult2.ok) {
+      expect(certResult2.problems).toContainEqual({
         type: "independent-authority-not-resolved",
       });
     }
@@ -497,6 +534,9 @@ describe("Provenance Authority Registry V1", () => {
       },
       occurredAt: "2026-09-04T00:00:01.000Z",
     };
+
+    expect(isResolvedDurableCalibrationAuthority(resolved.resolvedGrant)).toBe(true);
+    if (!isResolvedDurableCalibrationAuthority(resolved.resolvedGrant)) return;
 
     const certResult = certifyCoreEvidence(
       validTask,
@@ -778,6 +818,45 @@ describe("Provenance Authority Registry V1", () => {
       expect(resolution.resolvedGrant.isProductionEligible).toBe(false);
       expect(resolution.resolvedGrant.benchmarkId).toBe("vi-adult-minpair-v1");
       expect(resolution.resolvedGrant.resolvedAt).toBe("2026-09-04T00:00:01.000Z");
+
+      // Verify contract brand exists and durable brand does not
+      expect(isResolvedContractAuthority(resolution.resolvedGrant)).toBe(true);
+      expect(isResolvedDurableCalibrationAuthority(resolution.resolvedGrant)).toBe(false);
+      expect((resolution.resolvedGrant as Record<symbol, unknown>)[CONTRACT_AUTHORITY_BRAND]).toBe(true);
+      expect((resolution.resolvedGrant as Record<symbol, unknown>)[DURABLE_AUTHORITY_BRAND]).toBeUndefined();
+
+      // Adversarial test: attempting to pass contract authority token to certifyCoreEvidence MUST fail closed
+      const candidate = {
+        eventId: "ev-fixture-001",
+        taskId: fixtureTask.id,
+        targetId: "listen-ih-vs-iy",
+        role: "receptive-discrimination" as const,
+        observationId: fixtureObservation.observationId,
+        outcome: { kind: "binary" as const, success: true },
+        evaluatorConfidence: 1,
+        attempt: {
+          supportLevel: 0,
+          revealUsed: false,
+          responseLatencyMs: 500,
+          responseModality: "choice" as const,
+          contextId: "ctx-01",
+        },
+        occurredAt: "2026-09-04T00:00:01.000Z",
+      };
+
+      const certResult = certifyCoreEvidence(
+        fixtureTask,
+        fixtureObservation,
+        candidate,
+        resolution.resolvedGrant as never,
+      );
+
+      expect(certResult.ok).toBe(false);
+      if (!certResult.ok) {
+        expect(certResult.problems).toContainEqual({
+          type: "independent-authority-not-durable",
+        });
+      }
     }
   });
 
@@ -863,7 +942,7 @@ describe("Provenance Authority Registry V1", () => {
     }).toThrow(/duplicate grant ID/);
   });
 
-  it("20. registry construction throws on conflicting benchmark fingerprints", () => {
+  it("20. registry construction throws unconditionally on duplicate benchmark IDs (order-independent fail-closed)", () => {
     const conflictingBenchmark: RegisteredBenchmarkArtifact = {
       ...sampleBenchmark,
       immutableFingerprint: "sha256-conflicting-fingerprint",
@@ -874,7 +953,14 @@ describe("Provenance Authority Registry V1", () => {
         benchmarks: [sampleBenchmark, conflictingBenchmark],
         grants: [],
       });
-    }).toThrow(/duplicate benchmark ID.*conflicting fingerprint/);
+    }).toThrow(/Conflict: duplicate benchmark ID/);
+
+    expect(() => {
+      createProvenanceAuthorityRegistry({
+        benchmarks: [conflictingBenchmark, sampleBenchmark],
+        grants: [],
+      });
+    }).toThrow(/Conflict: duplicate benchmark ID/);
   });
 
   it("21. registry construction throws on invalid lifecycle range (validUntil <= validFrom)", () => {
@@ -978,6 +1064,172 @@ describe("Provenance Authority Registry V1", () => {
     expect(result.ok).toBe(false);
     if (!result.ok) {
       expect(result.reasonCodes).toContain("runtime-fingerprint-mismatch");
+    }
+  });
+
+  it("25. property: JSON serialization strips in-memory TEST_HARNESS_ROOT_BRAND and fails production eligibility", () => {
+    const testGrant = createTestMechanicsAuthorityGrant(activeGrant);
+    expect(isTestHarnessTrustRoot(testGrant.trustRoot)).toBe(true);
+    expect(isProductionEligibleTrustRoot(testGrant.trustRoot)).toBe(true);
+
+    // Round-trip through JSON serializer
+    const serialized = JSON.stringify(testGrant);
+    const deserialized = JSON.parse(serialized);
+
+    // Symbols cannot survive JSON serialization
+    expect(deserialized[TEST_HARNESS_ROOT_BRAND]).toBeUndefined();
+    if (deserialized.trustRoot) {
+      expect(deserialized.trustRoot[TEST_HARNESS_ROOT_BRAND]).toBeUndefined();
+    }
+    expect(isTestHarnessTrustRoot(deserialized.trustRoot)).toBe(false);
+    expect(isProductionEligibleTrustRoot(deserialized.trustRoot)).toBe(false);
+
+    // Loading deserialized grant into registry fails closed under production authority gate
+    const untrustedRegistry = createProvenanceAuthorityRegistry({
+      benchmarks: [sampleBenchmark],
+      grants: [deserialized],
+    });
+
+    const res = resolveCalibrationAuthority(
+      {
+        grantId: testGrant.grantId,
+        observation: validAuthoritativeObservation,
+        task: validTask,
+        evaluationTimestamp: "2026-09-04T00:00:01.000Z",
+      },
+      untrustedRegistry,
+    );
+
+    expect(res.ok).toBe(false);
+    if (!res.ok) {
+      expect(res.reasonCodes).toContain("grant-ineligible-for-production-authority");
+    }
+  });
+
+  it("26. duplicate benchmark ID with identical version and fingerprint but conflicting eligibility or layer throws unconditionally", () => {
+    const benchmarkA: RegisteredBenchmarkArtifact = createTestMechanicsBenchmark({
+      ...sampleBenchmark,
+      benchmarkId: "bench-dupe-check-01",
+      evidenceLayer: "layer1-benchmark-calibration",
+      productionAuthorityEligible: true,
+    });
+
+    const benchmarkB: RegisteredBenchmarkArtifact = {
+      ...sampleBenchmark,
+      benchmarkId: "bench-dupe-check-01",
+      evidenceLayer: "layer0-repository-reference",
+      productionAuthorityEligible: false,
+    };
+
+    expect(() => {
+      createProvenanceAuthorityRegistry({
+        benchmarks: [benchmarkA, benchmarkB],
+        grants: [],
+      });
+    }).toThrow(/Conflict: duplicate benchmark ID 'bench-dupe-check-01'/);
+
+    expect(() => {
+      createProvenanceAuthorityRegistry({
+        benchmarks: [benchmarkB, benchmarkA],
+        grants: [],
+      });
+    }).toThrow(/Conflict: duplicate benchmark ID 'bench-dupe-check-01'/);
+  });
+
+  it("27. strict ISO 8601 validation rejects Date.parse-accepted non-ISO formats and conflicting dual timestamps", () => {
+    const nonIsoFormatsAcceptedByDateParse = [
+      "2026/09/04",
+      "Sep 4, 2026",
+      "2026-09-04 12:00:00",
+      "2026-02-30T00:00:00.000Z",
+      "2026-13-01T00:00:00.000Z",
+      "2025-02-29T00:00:00.000Z",
+    ];
+
+    for (const ts of nonIsoFormatsAcceptedByDateParse) {
+      expect(parseStrictIso8601(ts).ok).toBe(false);
+
+      const res = resolveCalibrationAuthority(
+        {
+          grantId: "grant-phonology-active-001",
+          observation: validAuthoritativeObservation,
+          task: validTask,
+          evaluationTimestamp: ts,
+        },
+        registry,
+      );
+      expect(res.ok).toBe(false);
+      if (!res.ok) {
+        expect(res.reasonCodes).toContain("request-timestamp-invalid");
+      }
+    }
+
+    // Conflicting dual timestamps (evaluationTimestamp vs atTimestamp)
+    const conflictingDualRequest: AuthorityResolutionRequest = {
+      grantId: "grant-phonology-active-001",
+      observation: validAuthoritativeObservation,
+      task: validTask,
+      evaluationTimestamp: "2026-09-04T00:00:01.000Z",
+      atTimestamp: "2026-09-04T00:00:02.000Z",
+    };
+
+    const resDual = resolveCalibrationAuthority(conflictingDualRequest, registry);
+    expect(resDual.ok).toBe(false);
+    if (!resDual.ok) {
+      expect(resDual.reasonCodes).toContain("request-timestamp-invalid");
+    }
+  });
+
+  it("28. passing requireProductionAuthority: false on production-eligible grant returns ResolvedContractAuthority and fails durable certification", () => {
+    const resolution = resolveCalibrationAuthority(
+      {
+        grantId: "grant-phonology-active-001",
+        observation: validAuthoritativeObservation,
+        task: validTask,
+        evaluationTimestamp: "2026-09-04T00:00:01.000Z",
+        requireProductionAuthority: false,
+      },
+      registry,
+    );
+
+    expect(resolution.ok).toBe(true);
+    if (resolution.ok) {
+      expect(resolution.resolvedGrant.isProductionEligible).toBe(false);
+      expect(isResolvedContractAuthority(resolution.resolvedGrant)).toBe(true);
+      expect(isResolvedDurableCalibrationAuthority(resolution.resolvedGrant)).toBe(false);
+      expect((resolution.resolvedGrant as Record<symbol, unknown>)[CONTRACT_AUTHORITY_BRAND]).toBe(true);
+
+      const candidate = {
+        eventId: "ev-spk-001",
+        taskId: validTask.id,
+        targetId: "target-th-sound",
+        role: "free-production" as const,
+        observationId: validAuthoritativeObservation.observationId,
+        outcome: { kind: "binary" as const, success: true },
+        evaluatorConfidence: 0.95,
+        attempt: {
+          supportLevel: 0,
+          revealUsed: false,
+          responseLatencyMs: 1200,
+          responseModality: "speech" as const,
+          contextId: "ctx-word-01",
+        },
+        occurredAt: "2026-09-04T00:00:01.000Z",
+      };
+
+      const certResult = certifyCoreEvidence(
+        validTask,
+        validAuthoritativeObservation,
+        candidate,
+        resolution.resolvedGrant as never,
+      );
+
+      expect(certResult.ok).toBe(false);
+      if (!certResult.ok) {
+        expect(certResult.problems).toContainEqual({
+          type: "independent-authority-not-durable",
+        });
+      }
     }
   });
 });
