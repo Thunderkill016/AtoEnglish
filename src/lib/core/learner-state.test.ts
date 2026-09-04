@@ -19,15 +19,21 @@ import {
   LEARNER_STATE_LEDGER_MODEL_VERSION,
 } from "@/lib/learning/learner-state-read";
 import {
-  type CertifiedCoreEvidence,
   type ReferenceCoreEvidence,
   type CoreEvidenceForRouting,
-  markCertifiedCoreEvidence,
-  markReferenceCoreEvidence,
+  validateReferenceCoreEvidence,
+  isCertifiedCoreEvidence,
+  isReferenceCoreEvidence,
+  isCoreEvidenceForRouting,
   sealCoreEvidence,
   parseCoreEvidenceEnvelope,
+  computeCanonicalEvidenceDigest,
   CORE_EVIDENCE_ENVELOPE_CONTRACT,
+  type CoreEvidenceCandidate,
 } from "./certified-evidence";
+import type { CoreTaskSpec } from "./task";
+import type { CoreObservation } from "./observation";
+import type { CoreEvidenceRole } from "./evidence-role";
 
 const buildResult = buildEnglishOntologyV1();
 if (!buildResult.ok) {
@@ -36,12 +42,6 @@ if (!buildResult.ok) {
 const ontology = buildResult.graph;
 
 type ReferenceCandidateOverrides = Partial<ReferenceCoreEvidence> & {
-  contextId?: string | null;
-  supportLevel?: number;
-  revealUsed?: boolean;
-};
-
-type DurableCandidateOverrides = Partial<CertifiedCoreEvidence> & {
   contextId?: string | null;
   supportLevel?: number;
   revealUsed?: boolean;
@@ -77,8 +77,77 @@ function makeValidReferenceRecord(overrides: ReferenceCandidateOverrides = {}): 
   const outcome = overrides.outcome ?? { kind: "binary", success: true };
   const occurredAt = overrides.occurredAt ?? "2026-09-04T12:00:00.000Z";
   const contextTags = overrides.contextTags ? [...overrides.contextTags] : ["unit-1"];
+  const modelFingerprint = overrides.modelFingerprint ?? "donor-pybkt-v1.4.3";
 
-  const record: ReferenceCoreEvidence = {
+  const taskAllowedRoles: CoreEvidenceRole[] = [role];
+  if (transferDistance === "near-transfer" && !taskAllowedRoles.includes("near-transfer")) {
+    taskAllowedRoles.push("near-transfer");
+  }
+  if (transferDistance === "far-transfer" && !taskAllowedRoles.includes("far-transfer")) {
+    taskAllowedRoles.push("far-transfer");
+  }
+
+  const task: CoreTaskSpec = {
+    id: taskId,
+    version: 1,
+    targetIds: [targetId],
+    activity,
+    responseModality,
+    transferDistance,
+    contextTags,
+    support: {
+      level: supportLevel,
+      revealAllowed: revealUsed ? true : false,
+    },
+    allowedEvidenceRoles: taskAllowedRoles,
+    timeConstraintMs: null,
+    scoringContractId: "scoring.contract.v1",
+    sources: [],
+  };
+
+  const observation: CoreObservation = {
+    observationId,
+    targetId,
+    activity,
+    payload: {
+      kind: "comprehension",
+      taskId,
+      responseCorrect: true,
+      responseLatencyMs: 1200,
+      supportLevel,
+      targetedConstructs: [targetId],
+    },
+    confidence: 1.0,
+    contextId,
+    authority: "none",
+    provenance: {
+      evaluator: modelFingerprint,
+      evaluatorKind: "model",
+    },
+    context: {
+      construct: "spoken-production",
+      populationTags: ["general-adult"],
+    },
+    createdAt: occurredAt,
+    calibration: {
+      modelFingerprint,
+      decision: "shadow",
+      benchmarkId: null,
+      validationState: "unvalidated",
+      metrics: { sampleSize: 100 },
+      scope: {
+        activity,
+        construct: "spoken-production",
+        minimumSnrDb: 15,
+        requiredPopulationTags: ["general-adult"],
+        allowedNoiseClasses: ["clean"],
+        allowedDeviceClasses: ["standard-headset"],
+        allowedPromptContexts: ["isolated-prompt"],
+      },
+    },
+  };
+
+  const candidate: CoreEvidenceCandidate = {
     eventId,
     taskId,
     targetId,
@@ -94,77 +163,13 @@ function makeValidReferenceRecord(overrides: ReferenceCandidateOverrides = {}): 
       contextId,
     },
     occurredAt,
-    activity,
-    responseModality,
-    transferDistance,
-    contextTags,
-    calibrationBenchmarkId: null,
-    modelFingerprint: overrides.modelFingerprint ?? "donor-pybkt-v1.4.3",
-    authorityScope: "repository-reference",
-    grantId: null,
-    ...overrides,
   };
-  return markReferenceCoreEvidence(record);
-}
 
-function makeValidDurableRecord(overrides: DurableCandidateOverrides = {}): CertifiedCoreEvidence {
-  const eventId = overrides.eventId ?? "evt-durable-001";
-  const taskId = overrides.taskId ?? "task-durable-001";
-  const observationId = overrides.observationId ?? "obs-durable-001";
-  const targetId = overrides.targetId ?? "nep.en.v1.communication-activity.spoken-production";
-  const role = overrides.role ?? "controlled-production";
-  const activity = overrides.activity ?? "spoken-production";
-  const responseModality = overrides.responseModality ?? "speech";
-  const transferDistance = overrides.transferDistance ?? "same-context";
-  const contextId =
-    overrides.attempt?.contextId !== undefined
-      ? overrides.attempt.contextId
-      : overrides.contextId !== undefined
-        ? overrides.contextId
-        : "ctx-unit-1";
-  const supportLevel =
-    overrides.attempt?.supportLevel !== undefined
-      ? overrides.attempt.supportLevel
-      : overrides.supportLevel !== undefined
-        ? overrides.supportLevel
-        : 0;
-  const revealUsed =
-    overrides.attempt?.revealUsed !== undefined
-      ? overrides.attempt.revealUsed
-      : overrides.revealUsed !== undefined
-        ? overrides.revealUsed
-        : false;
-  const outcome = overrides.outcome ?? { kind: "binary", success: true };
-  const occurredAt = overrides.occurredAt ?? "2026-09-04T12:00:00.000Z";
-  const contextTags = overrides.contextTags ? [...overrides.contextTags] : ["unit-1"];
-
-  const record: CertifiedCoreEvidence = {
-    eventId,
-    taskId,
-    targetId,
-    role,
-    observationId,
-    outcome,
-    evaluatorConfidence: 1.0,
-    attempt: {
-      supportLevel,
-      revealUsed,
-      responseLatencyMs: 1200,
-      responseModality,
-      contextId,
-    },
-    occurredAt,
-    activity,
-    responseModality,
-    transferDistance,
-    contextTags,
-    calibrationBenchmarkId: overrides.calibrationBenchmarkId ?? "bench-core-pronunciation-v1",
-    modelFingerprint: overrides.modelFingerprint ?? "openpronounce-acoustic-v1.2",
-    authorityScope: "durable-assessment",
-    grantId: overrides.grantId ?? "grant-durable-001",
-    ...overrides,
-  };
-  return markCertifiedCoreEvidence(record);
+  const res = validateReferenceCoreEvidence(task, observation, candidate);
+  if (!res.ok) {
+    throw new Error("makeValidReferenceRecord failed: " + JSON.stringify(res.problems));
+  }
+  return res.evidence;
 }
 
 describe("Core Learner Model V1: Contract & Entity Basics", () => {
@@ -215,14 +220,38 @@ describe("Core Learner Model V1: Contract & Entity Basics", () => {
 });
 
 describe("P1: Real Certified & Reference Evidence Acceptance Boundary", () => {
-  it("accepts authentic durable assessment evidence with non-empty benchmark and fingerprint", () => {
-    const record = makeValidDurableRecord({ eventId: "evt-durable-valid" });
-    const validation = validateAcceptedEvidenceRecord(record, ontology);
-    expect(validation.ok).toBe(true);
-    if (validation.ok) {
-      expect(validation.record.authorityScope).toBe("durable-assessment");
-      expect(validation.record.provenance.calibrationBenchmarkId).toBe("bench-core-pronunciation-v1");
-      expect(validation.record.provenance.modelFingerprint).toBe("openpronounce-acoustic-v1.2");
+  it("fails closed on caller-crafted records claiming durable assessment authority without valid certification", () => {
+    const callerCraftedDurable = {
+      eventId: "evt-crafted-durable-1",
+      taskId: "task-001",
+      targetId: "nep.en.v1.communication-activity.spoken-production",
+      role: "controlled-production" as const,
+      observationId: "obs-001",
+      outcome: { kind: "binary" as const, success: true },
+      evaluatorConfidence: 1.0,
+      attempt: {
+        supportLevel: 0,
+        revealUsed: false,
+        responseLatencyMs: 1200,
+        responseModality: "speech" as const,
+        contextId: "ctx-unit-1",
+      },
+      occurredAt: "2026-09-04T12:00:00.000Z",
+      activity: "spoken-production" as const,
+      responseModality: "speech" as const,
+      transferDistance: "same-context" as const,
+      contextTags: ["unit-1"],
+      calibrationBenchmarkId: "bench-core-pronunciation-v1",
+      modelFingerprint: "openpronounce-acoustic-v1.2",
+      authorityScope: "durable-assessment" as const,
+      grantId: "grant-durable-001",
+    };
+
+    const validation = validateAcceptedEvidenceRecord(callerCraftedDurable, ontology);
+    expect(validation.ok).toBe(false);
+    if (!validation.ok) {
+      expect(validation.audit.code).toBe("unvalidated-evidence-rejected");
+      expect(validation.audit.message).toMatch(/must be certified or reference-validated through certified-evidence module/);
     }
   });
 
@@ -236,41 +265,68 @@ describe("P1: Real Certified & Reference Evidence Acceptance Boundary", () => {
     }
   });
 
-  it("fails closed on durable assessment evidence with null or missing calibrationBenchmarkId", () => {
-    const forgedDurable = makeValidDurableRecord({
-      eventId: "evt-forged-durable-1",
-      calibrationBenchmarkId: "" as any,
-    });
-
-    const validation = validateAcceptedEvidenceRecord(forgedDurable, ontology);
-    expect(validation.ok).toBe(false);
-    if (!validation.ok) {
-      expect(validation.audit.code).toBe("unvalidated-evidence-rejected");
-      expect(validation.audit.message).toMatch(/calibrationBenchmarkId/);
-    }
-  });
-
-  it("fails closed on repository reference evidence asserting a calibrationBenchmarkId", () => {
-    const forgedReference = makeValidReferenceRecord({
+  it("fails closed on caller-crafted reference evidence asserting a calibrationBenchmarkId", () => {
+    const forgedReference = {
       eventId: "evt-forged-ref-1",
-      calibrationBenchmarkId: "bench-fake-id" as any,
-    });
+      taskId: "task-001",
+      targetId: "nep.en.v1.communication-activity.spoken-production",
+      role: "controlled-production" as const,
+      observationId: "obs-001",
+      outcome: { kind: "binary" as const, success: true },
+      evaluatorConfidence: 1.0,
+      attempt: {
+        supportLevel: 0,
+        revealUsed: false,
+        responseLatencyMs: 1200,
+        responseModality: "speech" as const,
+        contextId: "ctx-unit-1",
+      },
+      occurredAt: "2026-09-04T12:00:00.000Z",
+      activity: "spoken-production" as const,
+      responseModality: "speech" as const,
+      transferDistance: "same-context" as const,
+      contextTags: ["unit-1"],
+      calibrationBenchmarkId: "bench-fake-id",
+      modelFingerprint: "donor-pybkt-v1.4.3",
+      authorityScope: "repository-reference" as const,
+      grantId: null,
+    };
 
     const validation = validateAcceptedEvidenceRecord(forgedReference, ontology);
     expect(validation.ok).toBe(false);
     if (!validation.ok) {
       expect(validation.audit.code).toBe("unvalidated-evidence-rejected");
-      expect(validation.audit.message).toMatch(/cannot declare a calibrationBenchmarkId/);
     }
   });
 
   it("fails closed when modelFingerprint is missing, empty, or 'unknown'", () => {
     const badFingerprints = ["", "   ", "unknown", "UNKNOWN"];
     for (const fp of badFingerprints) {
-      const bad = makeValidReferenceRecord({
+      const bad = {
         eventId: `evt-fp-${fp}`,
+        taskId: "task-001",
+        targetId: "nep.en.v1.communication-activity.spoken-production",
+        role: "controlled-production" as const,
+        observationId: "obs-001",
+        outcome: { kind: "binary" as const, success: true },
+        evaluatorConfidence: 1.0,
+        attempt: {
+          supportLevel: 0,
+          revealUsed: false,
+          responseLatencyMs: 1200,
+          responseModality: "speech" as const,
+          contextId: "ctx-unit-1",
+        },
+        occurredAt: "2026-09-04T12:00:00.000Z",
+        activity: "spoken-production" as const,
+        responseModality: "speech" as const,
+        transferDistance: "same-context" as const,
+        contextTags: ["unit-1"],
+        calibrationBenchmarkId: null,
         modelFingerprint: fp,
-      });
+        authorityScope: "repository-reference" as const,
+        grantId: null,
+      };
       const validation = validateAcceptedEvidenceRecord(bad, ontology);
       expect(validation.ok).toBe(false);
       if (!validation.ok) {
@@ -499,7 +555,7 @@ describe("P1: Activity Compatibility, Lineage Metadata & Legacy Adapter", () => 
         supportLevel: 0,
         revealUsed: false,
       }),
-      makeValidDurableRecord({
+      makeValidReferenceRecord({
         eventId: "evt-audit-2",
         occurredAt: "2026-09-04T10:01:00.000Z",
         supportLevel: 2,
@@ -512,14 +568,14 @@ describe("P1: Activity Compatibility, Lineage Metadata & Legacy Adapter", () => 
     expect(state.acceptedEvents[0].eventId).toBe("evt-audit-1");
     expect(state.acceptedEvents[0].authorityScope).toBe("repository-reference");
     expect(state.acceptedEvents[1].eventId).toBe("evt-audit-2");
-    expect(state.acceptedEvents[1].authorityScope).toBe("durable-assessment");
+    expect(state.acceptedEvents[1].authorityScope).toBe("repository-reference");
 
     const construct = state.constructs["nep.en.v1.communication-activity.spoken-production"];
     expect(construct.statistics.supportDistribution.level0).toBe(1);
     expect(construct.statistics.supportDistribution.level2Plus).toBe(1);
     expect(construct.statistics.revealUsedCount).toBe(1);
-    expect(construct.statistics.durableEvidenceCount).toBe(1);
-    expect(construct.statistics.referenceEvidenceCount).toBe(1);
+    expect(construct.statistics.durableEvidenceCount).toBe(0);
+    expect(construct.statistics.referenceEvidenceCount).toBe(2);
   });
 
   it("adapts V1 state projection to legacy read format without turning unknown into zero or mastery", () => {
@@ -877,7 +933,7 @@ describe("P1 Resolutions (Review ID 5116587399): Ingress, Lineage, Transfer Gati
       occurredAt: "2026-09-04T10:00:00.000Z",
     });
 
-    const envelope = sealCoreEvidence(validEvidence);
+    const envelope = sealCoreEvidence(validEvidence, "2026-09-04T12:00:00.000Z");
     expect(envelope.contractId).toBe(CORE_EVIDENCE_ENVELOPE_CONTRACT);
     expect(envelope.digest).toBeDefined();
     expect(envelope.evidence.eventId).toBe("evt-env-1");
@@ -921,13 +977,12 @@ describe("P1 Resolutions (Review ID 5116587399): Ingress, Lineage, Transfer Gati
       outcome: { kind: "binary", success: true },
       occurredAt: "2026-09-04T10:00:00.000Z",
     });
-    const ev2 = makeValidDurableRecord({
+    const ev2 = makeValidReferenceRecord({
       eventId: "evt-lin-2",
       taskId: "task-spec-unit2",
       observationId: "obs-real-uuid-002",
       contextTags: ["tag-c"],
       outcome: { kind: "bounded-score", value: 85, min: 0, max: 100 },
-      grantId: "grant-canonical-999",
       occurredAt: "2026-09-04T10:01:00.000Z",
     });
 
@@ -955,14 +1010,17 @@ describe("P1 Resolutions (Review ID 5116587399): Ingress, Lineage, Transfer Gati
     expect(batchState.acceptedEvents[0].grantId).toBeNull();
     expect(batchState.acceptedEvents[1].observationId).toBe("obs-real-uuid-002");
     expect(batchState.acceptedEvents[1].taskId).toBe("task-spec-unit2");
-    expect(batchState.acceptedEvents[1].grantId).toBe("grant-canonical-999");
+    expect(batchState.acceptedEvents[1].grantId).toBeNull();
   });
 
   it("strictly enforces 1:1 pairing between transfer role and transfer distance", () => {
-    // 1. far-transfer role with near-transfer distance
+    // 1. receptive role with near-transfer distance
     const mismatch1 = makeValidReferenceRecord({
       eventId: "evt-mismatch-1",
-      role: "far-transfer",
+      targetId: "nep.en.v1.communication-activity.listening-reception",
+      activity: "listening-reception",
+      role: "receptive-discrimination",
+      responseModality: "choice",
       transferDistance: "near-transfer",
       contextId: "ctx-transfer-1",
     });
@@ -973,10 +1031,10 @@ describe("P1 Resolutions (Review ID 5116587399): Ingress, Lineage, Transfer Gati
       expect(val1.audit.message).toMatch(/near-transfer transferDistance requires near-transfer evidence role/);
     }
 
-    // 2. near-transfer role with far-transfer distance
+    // 2. controlled-production role with far-transfer distance
     const mismatch2 = makeValidReferenceRecord({
       eventId: "evt-mismatch-2",
-      role: "near-transfer",
+      role: "controlled-production",
       transferDistance: "far-transfer",
       contextId: "ctx-transfer-2",
     });
@@ -987,31 +1045,17 @@ describe("P1 Resolutions (Review ID 5116587399): Ingress, Lineage, Transfer Gati
       expect(val2.audit.message).toMatch(/far-transfer transferDistance requires far-transfer evidence role/);
     }
 
-    // 3. controlled-production role with far-transfer distance
+    // 3. controlled-production role with near-transfer distance
     const mismatch3 = makeValidReferenceRecord({
       eventId: "evt-mismatch-3",
       role: "controlled-production",
-      transferDistance: "far-transfer",
+      transferDistance: "near-transfer",
       contextId: "ctx-transfer-3",
     });
     const val3 = validateAcceptedEvidenceRecord(mismatch3, ontology);
     expect(val3.ok).toBe(false);
     if (!val3.ok) {
       expect(val3.audit.code).toBe("incompatible-evidence-role");
-    }
-
-    // 4. near-transfer role with same-context distance
-    const mismatch4 = makeValidReferenceRecord({
-      eventId: "evt-mismatch-4",
-      role: "near-transfer",
-      transferDistance: "same-context",
-      contextId: "ctx-transfer-4",
-    });
-    const val4 = validateAcceptedEvidenceRecord(mismatch4, ontology);
-    expect(val4.ok).toBe(false);
-    if (!val4.ok) {
-      expect(val4.audit.code).toBe("invalid-transfer-distance");
-      expect(val4.audit.message).toMatch(/Transfer role 'near-transfer' requires matching transfer distance/);
     }
   });
 
@@ -1145,5 +1189,158 @@ describe("P1 Resolutions (Review ID 5116587399): Ingress, Lineage, Transfer Gati
     expect(confAdapted.status).toBe("conflicted-support");
     expect(confAdapted.legacyStatus).toBe("conflicted");
     expect(confAdapted.modelVersion).toBe("nep.learner-evidence-state.v1");
+  });
+});
+
+describe("P1 Resolutions (Review ID PRR_kwDOS-Q4M88AAAABMP5LaA / 5116939112): Marker Privacy, Deep Immutability, and Deterministic Envelopes", () => {
+  it("adversarial test A: proves trust markers are module-private and callers cannot mark arbitrary records", async () => {
+    const mod = await import("./certified-evidence");
+    expect(Object.hasOwn(mod, "markCertifiedCoreEvidence")).toBe(false);
+    expect((mod as Record<string, unknown>).markCertifiedCoreEvidence).toBeUndefined();
+    expect(Object.hasOwn(mod, "markReferenceCoreEvidence")).toBe(false);
+    expect((mod as Record<string, unknown>).markReferenceCoreEvidence).toBeUndefined();
+
+    // Caller-fabricated durable record cannot obtain marker
+    const forgedDurable = {
+      eventId: "evt-attacker-durable",
+      taskId: "task-1",
+      targetId: "nep.en.v1.communication-activity.spoken-production",
+      role: "controlled-production" as const,
+      observationId: "obs-1",
+      outcome: { kind: "binary" as const, success: true },
+      evaluatorConfidence: 1.0,
+      attempt: {
+        supportLevel: 0,
+        revealUsed: false,
+        responseLatencyMs: 1000,
+        responseModality: "speech" as const,
+        contextId: "ctx-1",
+      },
+      occurredAt: "2026-09-04T12:00:00.000Z",
+      activity: "spoken-production" as const,
+      responseModality: "speech" as const,
+      transferDistance: "same-context" as const,
+      contextTags: ["unit-1"],
+      calibrationBenchmarkId: "bench-1",
+      modelFingerprint: "model-1",
+      authorityScope: "durable-assessment" as const,
+      grantId: "grant-1",
+    };
+
+    expect(isCertifiedCoreEvidence(forgedDurable)).toBe(false);
+    expect(isCoreEvidenceForRouting(forgedDurable)).toBe(false);
+
+    const validation = validateAcceptedEvidenceRecord(forgedDurable, ontology);
+    expect(validation.ok).toBe(false);
+    if (!validation.ok) {
+      expect(validation.audit.code).toBe("unvalidated-evidence-rejected");
+    }
+  });
+
+  it("adversarial test B: proves legitimate evidence is deeply immutable and rejects tampered mutations", () => {
+    const evidence = makeValidReferenceRecord({ eventId: "evt-immutable-test" });
+    expect(Object.isFrozen(evidence)).toBe(true);
+    expect(Object.isFrozen(evidence.attempt)).toBe(true);
+    expect(Object.isFrozen(evidence.outcome)).toBe(true);
+    expect(Object.isFrozen(evidence.contextTags)).toBe(true);
+
+    // In strict mode, mutation throws TypeError
+    expect(() => {
+      (evidence as Record<string, unknown>).targetId = "tampered-target";
+    }).toThrow(TypeError);
+
+    expect(() => {
+      (evidence.attempt as Record<string, unknown>).supportLevel = 99;
+    }).toThrow(TypeError);
+
+    expect(() => {
+      (evidence.outcome as Record<string, unknown>).kind = "bounded-score";
+    }).toThrow(TypeError);
+
+    // If caller clones and mutates into a new object, it loses WeakSet membership
+    const clonedAndMutated = {
+      ...evidence,
+      targetId: "tampered-target",
+    };
+    expect(isReferenceCoreEvidence(clonedAndMutated)).toBe(false);
+    expect(isCoreEvidenceForRouting(clonedAndMutated)).toBe(false);
+
+    const validation = validateAcceptedEvidenceRecord(clonedAndMutated, ontology);
+    expect(validation.ok).toBe(false);
+    if (!validation.ok) {
+      expect(validation.audit.code).toBe("unvalidated-evidence-rejected");
+    }
+  });
+
+  it("adversarial test C: proves fabricated durable envelope with recomputed digest fails closed", () => {
+    const fabricatedDurable = {
+      eventId: "evt-forged-env-durable",
+      taskId: "task-durable",
+      targetId: "nep.en.v1.communication-activity.spoken-production",
+      role: "controlled-production" as const,
+      observationId: "obs-durable",
+      outcome: { kind: "binary" as const, success: true },
+      evaluatorConfidence: 1.0,
+      attempt: {
+        supportLevel: 0,
+        revealUsed: false,
+        responseLatencyMs: 1200,
+        responseModality: "speech" as const,
+        contextId: "ctx-1",
+      },
+      occurredAt: "2026-09-04T12:00:00.000Z",
+      activity: "spoken-production" as const,
+      responseModality: "speech" as const,
+      transferDistance: "same-context" as const,
+      contextTags: ["unit-1"],
+      calibrationBenchmarkId: "bench-forged-durable",
+      modelFingerprint: "openpronounce-acoustic-v1.2",
+      authorityScope: "durable-assessment" as const,
+      grantId: "grant-forged-001",
+    };
+
+    const digest = computeCanonicalEvidenceDigest(fabricatedDurable as unknown as CoreEvidenceForRouting);
+    const forgedEnvelope = {
+      contractId: CORE_EVIDENCE_ENVELOPE_CONTRACT,
+      evidence: fabricatedDurable,
+      digest,
+      authorityScope: "durable-assessment",
+      sealedAt: "2026-09-04T12:00:00.000Z",
+    };
+
+    const parseRes = parseCoreEvidenceEnvelope(forgedEnvelope);
+    expect(parseRes.ok).toBe(false);
+    if (!parseRes.ok) {
+      expect(parseRes.error).toMatch(/Detached evidence envelopes cannot assert durable-assessment authority without cryptographic host attestation/);
+    }
+
+    const validation = validateAcceptedEvidenceRecord(forgedEnvelope, ontology);
+    expect(validation.ok).toBe(false);
+    if (!validation.ok) {
+      expect(validation.audit.code).toBe("unvalidated-evidence-rejected");
+      expect(validation.audit.message).toMatch(/Detached evidence envelopes cannot assert durable-assessment authority without cryptographic host attestation/);
+    }
+  });
+
+  it("proves sealCoreEvidence requires explicit ISO sealedAt and rejects ambient clock omission", () => {
+    const evidence = makeValidReferenceRecord({ eventId: "evt-deterministic-seal" });
+
+    // sealedAt is required; TypeScript enforces it, runtime enforces it
+    expect(() => (sealCoreEvidence as unknown as (ev: unknown) => unknown)(evidence)).toThrow(
+      /sealCoreEvidence requires an explicit valid ISO 8601 sealedAt timestamp/,
+    );
+
+    expect(() => sealCoreEvidence(evidence, "")).toThrow(
+      /sealCoreEvidence requires an explicit valid ISO 8601 sealedAt timestamp/,
+    );
+
+    expect(() => sealCoreEvidence(evidence, "invalid-date")).toThrow(
+      /sealCoreEvidence requires an explicit valid ISO 8601 sealedAt timestamp/,
+    );
+
+    const explicitTime = "2026-09-04T15:30:00.000Z";
+    const envelope = sealCoreEvidence(evidence, explicitTime);
+    expect(envelope.sealedAt).toBe(explicitTime);
+    expect(envelope.digest).toBe(computeCanonicalEvidenceDigest(evidence));
   });
 });

@@ -97,40 +97,62 @@ const REFERENCE_CORE_EVIDENCE_BRAND = Symbol("nep.reference-core-evidence");
 const CERTIFIED_CORE_EVIDENCE_SET = new WeakSet<object>();
 const REFERENCE_CORE_EVIDENCE_SET = new WeakSet<object>();
 
-export function markCertifiedCoreEvidence<T extends CertifiedCoreEvidence>(evidence: T): T {
-  CERTIFIED_CORE_EVIDENCE_SET.add(evidence);
+/** Recursively freezes an object and its nested properties. */
+function deepFreeze<T extends object>(obj: T): Readonly<T> {
+  Object.freeze(obj);
+  for (const key of Object.getOwnPropertyNames(obj)) {
+    const val = (obj as Record<string, unknown>)[key];
+    if (val && typeof val === "object" && !Object.isFrozen(val)) {
+      deepFreeze(val);
+    }
+  }
+  return obj;
+}
+
+/**
+ * Module-private trust marker. Never exported.
+ * Deeply freezes evidence and marks it in the module-private WeakSet and symbol brand.
+ */
+function markCertifiedCoreEvidence<T extends CertifiedCoreEvidence>(evidence: T): Readonly<T> {
   Object.defineProperty(evidence, CERTIFIED_CORE_EVIDENCE_BRAND, {
     value: true,
     enumerable: false,
     configurable: false,
     writable: false,
   });
-  return evidence;
+  const frozen = deepFreeze(evidence);
+  CERTIFIED_CORE_EVIDENCE_SET.add(frozen);
+  return frozen;
 }
 
-export function markReferenceCoreEvidence<T extends ReferenceCoreEvidence>(evidence: T): T {
-  REFERENCE_CORE_EVIDENCE_SET.add(evidence);
+/**
+ * Module-private trust marker. Never exported.
+ * Deeply freezes evidence and marks it in the module-private WeakSet and symbol brand.
+ */
+function markReferenceCoreEvidence<T extends ReferenceCoreEvidence>(evidence: T): Readonly<T> {
   Object.defineProperty(evidence, REFERENCE_CORE_EVIDENCE_BRAND, {
     value: true,
     enumerable: false,
     configurable: false,
     writable: false,
   });
-  return evidence;
+  const frozen = deepFreeze(evidence);
+  REFERENCE_CORE_EVIDENCE_SET.add(frozen);
+  return frozen;
 }
 
 export function isCertifiedCoreEvidence(val: unknown): val is CertifiedCoreEvidence {
-  if (!val || typeof val !== "object") return false;
+  if (!val || typeof val !== "object" || !Object.isFrozen(val)) return false;
   return (
-    CERTIFIED_CORE_EVIDENCE_SET.has(val) ||
+    CERTIFIED_CORE_EVIDENCE_SET.has(val) &&
     (val as Record<string, unknown>)[CERTIFIED_CORE_EVIDENCE_BRAND as unknown as string] === true
   );
 }
 
 export function isReferenceCoreEvidence(val: unknown): val is ReferenceCoreEvidence {
-  if (!val || typeof val !== "object") return false;
+  if (!val || typeof val !== "object" || !Object.isFrozen(val)) return false;
   return (
-    REFERENCE_CORE_EVIDENCE_SET.has(val) ||
+    REFERENCE_CORE_EVIDENCE_SET.has(val) &&
     (val as Record<string, unknown>)[REFERENCE_CORE_EVIDENCE_BRAND as unknown as string] === true
   );
 }
@@ -343,10 +365,17 @@ export function computeCanonicalEvidenceDigest(evidence: CoreEvidenceForRouting)
 
 export function sealCoreEvidence(
   evidence: CoreEvidenceForRouting,
-  sealedAt = new Date().toISOString()
+  sealedAt: string,
 ): CoreEvidenceEnvelope {
   if (!isCoreEvidenceForRouting(evidence)) {
     throw new Error("Cannot seal evidence that is not authenticated by certified-evidence module");
+  }
+  if (
+    typeof sealedAt !== "string" ||
+    !sealedAt.trim() ||
+    !Number.isFinite(Date.parse(sealedAt))
+  ) {
+    throw new Error("sealCoreEvidence requires an explicit valid ISO 8601 sealedAt timestamp");
   }
   const digest = computeCanonicalEvidenceDigest(evidence);
   return Object.freeze({
@@ -368,9 +397,27 @@ export function parseCoreEvidenceEnvelope(
   if (env.contractId !== CORE_EVIDENCE_ENVELOPE_CONTRACT) {
     return { ok: false, error: `Invalid envelope contractId: ${String(env.contractId)}` };
   }
+  if (
+    typeof env.sealedAt !== "string" ||
+    !env.sealedAt.trim() ||
+    !Number.isFinite(Date.parse(env.sealedAt))
+  ) {
+    return { ok: false, error: "Envelope requires a valid ISO 8601 sealedAt timestamp" };
+  }
   const ev = env.evidence as CoreEvidenceForRouting | undefined;
   if (!ev || typeof ev !== "object" || Array.isArray(ev)) {
     return { ok: false, error: "Envelope must contain evidence object" };
+  }
+
+  // Detached envelopes cannot assert durable-assessment authority without cryptographic host attestation
+  if (ev.authorityScope === "durable-assessment" || env.authorityScope === "durable-assessment") {
+    return {
+      ok: false,
+      error: "Detached evidence envelopes cannot assert durable-assessment authority without cryptographic host attestation",
+    };
+  }
+  if (ev.authorityScope !== "repository-reference" || env.authorityScope !== "repository-reference") {
+    return { ok: false, error: "Invalid authorityScope: detached envelopes only support repository-reference" };
   }
 
   // Validate structural evidence properties
@@ -386,7 +433,7 @@ export function parseCoreEvidenceEnvelope(
   if (typeof ev.observationId !== "string" || !ev.observationId.trim()) {
     return { ok: false, error: "Invalid observationId" };
   }
-  if (typeof ev.occurredAt !== "string" || !ev.occurredAt.trim()) {
+  if (typeof ev.occurredAt !== "string" || !ev.occurredAt.trim() || !Number.isFinite(Date.parse(ev.occurredAt))) {
     return { ok: false, error: "Invalid occurredAt" };
   }
   if (
@@ -430,23 +477,12 @@ export function parseCoreEvidenceEnvelope(
     return { ok: false, error: "Support invalidates independent evidence role" };
   }
 
-  // Check authorityScope
-  if (ev.authorityScope === "durable-assessment") {
-    if (typeof ev.calibrationBenchmarkId !== "string" || !ev.calibrationBenchmarkId.trim()) {
-      return { ok: false, error: "Durable evidence requires calibrationBenchmarkId" };
-    }
-    if (typeof ev.grantId !== "string" || !ev.grantId.trim()) {
-      return { ok: false, error: "Durable evidence requires grantId" };
-    }
-  } else if (ev.authorityScope === "repository-reference") {
-    if (ev.calibrationBenchmarkId !== null) {
-      return { ok: false, error: "Reference evidence must have null calibrationBenchmarkId" };
-    }
-    if ((ev as { grantId?: unknown }).grantId !== null && (ev as { grantId?: unknown }).grantId !== undefined) {
-      return { ok: false, error: "Reference evidence must have null grantId" };
-    }
-  } else {
-    return { ok: false, error: "Invalid authorityScope" };
+  // Reference evidence requirements
+  if (ev.calibrationBenchmarkId !== null) {
+    return { ok: false, error: "Reference evidence must have null calibrationBenchmarkId" };
+  }
+  if ((ev as { grantId?: unknown }).grantId !== null && (ev as { grantId?: unknown }).grantId !== undefined) {
+    return { ok: false, error: "Reference evidence must have null grantId" };
   }
 
   // Verify digest
@@ -455,12 +491,8 @@ export function parseCoreEvidenceEnvelope(
     return { ok: false, error: `Digest mismatch: expected ${expectedDigest}, got ${String(env.digest)}` };
   }
 
-  // Mark in appropriate WeakSet
-  if (ev.authorityScope === "durable-assessment") {
-    markCertifiedCoreEvidence(ev as CertifiedCoreEvidence);
-  } else {
-    markReferenceCoreEvidence(ev as ReferenceCoreEvidence);
-  }
+  // Mark in module-private WeakSet and deeply freeze
+  markReferenceCoreEvidence(ev as ReferenceCoreEvidence);
 
   return { ok: true, evidence: ev };
 }
