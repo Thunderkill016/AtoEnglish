@@ -17,10 +17,11 @@ export type PhonemeAlignmentRequest = {
   readonly sampleRateHz: number;
   readonly durationMs: number;
   readonly transcript: string;
+  readonly occurredAt: string;
 };
 
-export type PhonemeAlignmentObservation = {
-  readonly observationType: "phoneme-alignment";
+export type PhonemeAlignmentRawPayload = {
+  readonly kind: "phoneme-alignment";
   readonly transcript: string;
   readonly words: readonly AlignedWord[];
   readonly totalDurationMs: number;
@@ -28,9 +29,12 @@ export type PhonemeAlignmentObservation = {
   readonly occurredAt: string;
 };
 
+/** @deprecated Alias for PhonemeAlignmentRawPayload for transition compatibility */
+export type PhonemeAlignmentObservation = PhonemeAlignmentRawPayload;
+
 export type AlignmentAdapterResult =
-  | { readonly ok: true; readonly observation: PhonemeAlignmentObservation }
-  | { readonly ok: false; readonly error: string; readonly code: "audio-transcript-mismatch" | "audio-corrupt" };
+  | { readonly ok: true; readonly payload: PhonemeAlignmentRawPayload; readonly observation?: PhonemeAlignmentRawPayload }
+  | { readonly ok: false; readonly error: string; readonly code: "audio-transcript-mismatch" | "audio-corrupt" | "invalid-timestamp" };
 
 export interface AlignmentAdapterContract {
   readonly engineName: string;
@@ -43,6 +47,14 @@ export function createMockAlignmentAdapter(
   return {
     engineName,
     async align(request: PhonemeAlignmentRequest): Promise<AlignmentAdapterResult> {
+      if (!request.occurredAt || typeof request.occurredAt !== "string" || Number.isNaN(Date.parse(request.occurredAt))) {
+        return Object.freeze({
+          ok: false,
+          error: "Valid occurredAt ISO timestamp is required",
+          code: "invalid-timestamp",
+        });
+      }
+
       if (request.durationMs <= 0) {
         return Object.freeze({
           ok: false,
@@ -76,17 +88,21 @@ export function createMockAlignmentAdapter(
         });
       });
 
+      const payload: PhonemeAlignmentRawPayload = Object.freeze({
+        kind: "phoneme-alignment",
+        transcript: request.transcript,
+        words: Object.freeze(alignedWords),
+        totalDurationMs: request.durationMs,
+        engine: engineName,
+        occurredAt: request.occurredAt,
+      });
+
       return Object.freeze({
         ok: true,
-        observation: Object.freeze({
-          observationType: "phoneme-alignment",
-          transcript: request.transcript,
-          words: Object.freeze(alignedWords),
-          totalDurationMs: request.durationMs,
-          engine: engineName,
-          occurredAt: new Date().toISOString(),
-        }),
+        payload,
+        observation: payload,
       });
     },
   };
 }
+

@@ -16,7 +16,7 @@ A core engineer or architect can consult a versioned, audited adoption matrix to
 **Independent Test**: The adoption matrix records exact upstream repositories, pinned tags/commits, separate code vs model licenses, runtime requirements, resource footprints, latency profiles, and integration modes for all 11 candidate projects.
 
 **Acceptance Scenarios**:
-1. **Given** a need for speech transcription, **When** evaluating the adoption matrix, **Then** `SYSTRAN/faster-whisper` and `openai/whisper` are selected as isolated local service adapters under MIT license, avoiding reinvention of ASR models.
+1. **Given** a need for speech transcription, **When** evaluating the adoption matrix, **Then** `SYSTRAN/faster-whisper` is selected as an isolated local service adapter (`isolated-service`) and `openai/whisper` is selected as an offline baseline/benchmark donor (`baseline-donor`) under MIT license, avoiding reinvention of commodity ASR models.
 2. **Given** a need for grammar checking, **When** evaluating `languagetool`, **Then** it is assigned to an isolated local service boundary to prevent LGPL-2.1 copyleft contamination of the core TypeScript library.
 3. **Given** `bootphon/phonemizer`, **When** evaluated, **Then** it is strictly marked `reject` or isolated due to GPLv3 copyleft contamination risks on direct linkage.
 

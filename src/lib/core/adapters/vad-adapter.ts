@@ -7,11 +7,12 @@ export type VadAudioSegmentRequest = {
   readonly audioData: Uint8Array | Float32Array;
   readonly sampleRateHz: number;
   readonly durationMs: number;
+  readonly occurredAt: string;
   readonly threshold?: number;
 };
 
-export type VadSpeechObservation = {
-  readonly observationType: "vad-speech-detection";
+export type VadSpeechRawPayload = {
+  readonly kind: "vad-speech";
   readonly isSpeech: boolean;
   readonly speechProbability: number;
   readonly intervals: readonly VadSpeechInterval[];
@@ -21,9 +22,12 @@ export type VadSpeechObservation = {
   readonly occurredAt: string;
 };
 
+/** @deprecated Alias for VadSpeechRawPayload for transition compatibility */
+export type VadSpeechObservation = VadSpeechRawPayload;
+
 export type VadAdapterResult =
-  | { readonly ok: true; readonly observation: VadSpeechObservation }
-  | { readonly ok: false; readonly error: string; readonly code: "audio-corrupt" | "invalid-sample-rate" };
+  | { readonly ok: true; readonly payload: VadSpeechRawPayload; readonly observation?: VadSpeechRawPayload }
+  | { readonly ok: false; readonly error: string; readonly code: "audio-corrupt" | "invalid-sample-rate" | "invalid-timestamp" };
 
 export interface VadAdapterContract {
   readonly engineName: string;
@@ -37,6 +41,14 @@ export function createMockVadAdapter(
   return {
     engineName,
     async detectActivity(request: VadAudioSegmentRequest): Promise<VadAdapterResult> {
+      if (!request.occurredAt || typeof request.occurredAt !== "string" || Number.isNaN(Date.parse(request.occurredAt))) {
+        return Object.freeze({
+          ok: false,
+          error: "Valid occurredAt ISO timestamp is required",
+          code: "invalid-timestamp",
+        });
+      }
+
       if (request.durationMs <= 0) {
         return Object.freeze({
           ok: false,
@@ -50,19 +62,23 @@ export function createMockVadAdapter(
         0
       );
 
+      const payload: VadSpeechRawPayload = Object.freeze({
+        kind: "vad-speech",
+        isSpeech: defaultIntervals.length > 0,
+        speechProbability: defaultIntervals.length > 0 ? 0.98 : 0.05,
+        intervals: Object.freeze(defaultIntervals),
+        totalDurationMs: request.durationMs,
+        speechDurationMs: totalSpeechMs,
+        engine: engineName,
+        occurredAt: request.occurredAt,
+      });
+
       return Object.freeze({
         ok: true,
-        observation: Object.freeze({
-          observationType: "vad-speech-detection",
-          isSpeech: defaultIntervals.length > 0,
-          speechProbability: defaultIntervals.length > 0 ? 0.98 : 0.05,
-          intervals: Object.freeze(defaultIntervals),
-          totalDurationMs: request.durationMs,
-          speechDurationMs: totalSpeechMs,
-          engine: engineName,
-          occurredAt: new Date().toISOString(),
-        }),
+        payload,
+        observation: payload,
       });
     },
   };
 }
+

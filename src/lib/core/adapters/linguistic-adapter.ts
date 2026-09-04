@@ -18,12 +18,13 @@ export type GrammarDiagnostic = {
 
 export type LinguisticAnalysisRequest = {
   readonly text: string;
+  readonly occurredAt: string;
   readonly language?: string;
   readonly enableGrammarCheck?: boolean;
 };
 
-export type LinguisticAnnotationObservation = {
-  readonly observationType: "linguistic-annotation";
+export type LinguisticAnnotationRawPayload = {
+  readonly kind: "linguistic-annotation";
   readonly text: string;
   readonly tokens: readonly LinguisticToken[];
   readonly grammarDiagnostics?: readonly GrammarDiagnostic[];
@@ -31,9 +32,12 @@ export type LinguisticAnnotationObservation = {
   readonly occurredAt: string;
 };
 
+/** @deprecated Alias for LinguisticAnnotationRawPayload for transition compatibility */
+export type LinguisticAnnotationObservation = LinguisticAnnotationRawPayload;
+
 export type LinguisticAdapterResult =
-  | { readonly ok: true; readonly observation: LinguisticAnnotationObservation }
-  | { readonly ok: false; readonly error: string; readonly code: "empty-text" | "service-unavailable" };
+  | { readonly ok: true; readonly payload: LinguisticAnnotationRawPayload; readonly observation?: LinguisticAnnotationRawPayload }
+  | { readonly ok: false; readonly error: string; readonly code: "empty-text" | "service-unavailable" | "invalid-timestamp" };
 
 export interface LinguisticAdapterContract {
   readonly engineName: string;
@@ -46,6 +50,14 @@ export function createMockLinguisticAdapter(
   return {
     engineName,
     async analyze(request: LinguisticAnalysisRequest): Promise<LinguisticAdapterResult> {
+      if (!request.occurredAt || typeof request.occurredAt !== "string" || Number.isNaN(Date.parse(request.occurredAt))) {
+        return Object.freeze({
+          ok: false,
+          error: "Valid occurredAt ISO timestamp is required",
+          code: "invalid-timestamp",
+        });
+      }
+
       if (!request.text || !request.text.trim()) {
         return Object.freeze({
           ok: false,
@@ -81,17 +93,21 @@ export function createMockLinguisticAdapter(
         );
       }
 
+      const payload: LinguisticAnnotationRawPayload = Object.freeze({
+        kind: "linguistic-annotation",
+        text: request.text,
+        tokens: Object.freeze(tokens),
+        grammarDiagnostics: Object.freeze(grammarDiagnostics),
+        engine: engineName,
+        occurredAt: request.occurredAt,
+      });
+
       return Object.freeze({
         ok: true,
-        observation: Object.freeze({
-          observationType: "linguistic-annotation",
-          text: request.text,
-          tokens: Object.freeze(tokens),
-          grammarDiagnostics: Object.freeze(grammarDiagnostics),
-          engine: engineName,
-          occurredAt: new Date().toISOString(),
-        }),
+        payload,
+        observation: payload,
       });
     },
   };
 }
+

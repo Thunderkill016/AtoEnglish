@@ -57,9 +57,10 @@ export type VettedPackageDescriptor = {
   readonly capability: string;
   readonly upstreamUrl: string;
   readonly pinnedTag: string;
-  readonly pinnedCommit: string;
+  readonly pinnedCommit: string; // Strictly validated 40-character hexadecimal git commit SHA
   readonly codeLicense: LicenseClassification;
   readonly modelLicense: LicenseClassification | "not-applicable";
+  readonly modelLicenseNotes?: string; // Explicit per-model/per-checkpoint license notes
   readonly runtime: string;
   readonly offlineSelfHostable: boolean;
   readonly footprint: {
@@ -67,16 +68,29 @@ export type VettedPackageDescriptor = {
     readonly diskMb: number;
     readonly gpuRequired: boolean;
   };
+  readonly footprintNotes?: string; // Explicit hardware/model-size scaling notes
   readonly latencyProfile: string;
+  readonly latencyNotes?: string;
   readonly integrationMode: IntegrationMode;
   readonly attributionRequired: boolean;
   readonly adapterContract: string;
+  readonly attributionNotice: string;
 };
 ```
 
 ---
 
-### 1.4 Reuse Evaluation & Decision
+### 1.4 Descriptor Validation Result
+```typescript
+export type DescriptorValidationResult = {
+  readonly valid: boolean;
+  readonly reason?: string;
+};
+```
+
+---
+
+### 1.5 Reuse Evaluation & Decision
 ```typescript
 export type ReuseDecision = {
   readonly packageId: VettedPackageId;
@@ -89,13 +103,15 @@ export type ReuseDecision = {
 
 ---
 
-### 1.5 External Engine Adapter Observation Payloads (Strictly Observational)
-All adapter outputs conform to typed `CoreObservation` extensions and are forbidden from containing authority or mastery fields:
+### 1.6 External Engine Raw Payloads & Canonical CoreObservation Envelope
+
+Adapters emit pure, deterministic raw payloads without ambient time or authority semantics.
+Then, the Nếp-owned constructor `createVettedCoreObservation` wraps the raw payload into a canonical `CoreObservation` envelope with `authority: "none"` and unvalidated shadow calibration, failing closed against any injected authority or mastery fields.
 
 ```typescript
-// 1. ASR Transcription
-export type AsrTranscriptionObservation = {
-  readonly observationType: "asr-transcription";
+// 1. Raw ASR Transcription Payload
+export type AsrTranscriptionRawPayload = {
+  readonly kind: "asr-transcription";
   readonly text: string;
   readonly durationMs: number;
   readonly tokens: readonly {
@@ -106,11 +122,12 @@ export type AsrTranscriptionObservation = {
   }[];
   readonly noSpeechProbability: number;
   readonly engine: string;
+  readonly occurredAt: string;
 };
 
-// 2. VAD Speech Activity
-export type VadSpeechObservation = {
-  readonly observationType: "vad-speech-detection";
+// 2. Raw VAD Speech Activity Payload
+export type VadSpeechRawPayload = {
+  readonly kind: "vad-speech";
   readonly isSpeech: boolean;
   readonly speechProbability: number;
   readonly intervals: readonly {
@@ -118,11 +135,15 @@ export type VadSpeechObservation = {
     readonly endMs: number;
   }[];
   readonly totalDurationMs: number;
+  readonly speechDurationMs: number;
+  readonly engine: string;
+  readonly occurredAt: string;
 };
 
-// 3. Linguistic & Grammar Diagnostics
-export type LinguisticAnnotationObservation = {
-  readonly observationType: "linguistic-annotation";
+// 3. Raw Linguistic & Grammar Diagnostics Payload
+export type LinguisticAnnotationRawPayload = {
+  readonly kind: "linguistic-annotation";
+  readonly text: string;
   readonly tokens: readonly {
     readonly text: string;
     readonly lemma: string;
@@ -137,12 +158,16 @@ export type LinguisticAnnotationObservation = {
     readonly offset: number;
     readonly length: number;
     readonly replacements: readonly string[];
+    readonly category: string;
   }[];
+  readonly engine: string;
+  readonly occurredAt: string;
 };
 
-// 4. Phoneme Alignment
-export type PhonemeAlignmentObservation = {
-  readonly observationType: "phoneme-alignment";
+// 4. Raw Phoneme Alignment Payload
+export type PhonemeAlignmentRawPayload = {
+  readonly kind: "phoneme-alignment";
+  readonly transcript: string;
   readonly words: readonly {
     readonly word: string;
     readonly startMs: number;
@@ -154,19 +179,34 @@ export type PhonemeAlignmentObservation = {
       readonly score?: number;
     }[];
   }[];
+  readonly totalDurationMs: number;
+  readonly engine: string;
+  readonly occurredAt: string;
 };
 
-// 5. BKT Baseline Comparator
-export type BktBaselineObservation = {
-  readonly observationType: "bkt-baseline-comparator";
+// 5. Raw BKT Baseline Comparator Payload
+export type BktStepRawPayload = {
+  readonly kind: "bkt-comparator";
   readonly constructId: string;
   readonly priorMastery: number;
   readonly posteriorMastery: number;
+  readonly pNextState: number;
+  readonly predictedCorrectProbability: number;
+  readonly correct: boolean;
   readonly parameters: {
-    readonly pLearn: number;
+    readonly pInit: number;
+    readonly pTransit: number;
     readonly pGuess: number;
     readonly pSlip: number;
-    readonly pForget: number;
+    readonly pForget?: number;
   };
+  readonly engine: string;
+  readonly occurredAt: string;
 };
+
+// Nếp-Owned Envelope Constructor
+export function createVettedCoreObservation<TPayload extends DiagnosticPayload = DiagnosticPayload>(
+  options: CreateVettedCoreObservationOptions<TPayload>
+): CoreObservation<TPayload>;
 ```
+

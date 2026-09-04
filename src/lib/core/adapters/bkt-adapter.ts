@@ -6,8 +6,8 @@ export type BktModelParameters = {
   readonly pForget?: number; // P(F) default 0
 };
 
-export type BktStepObservation = {
-  readonly observationType: "bkt-baseline-comparator";
+export type BktStepRawPayload = {
+  readonly kind: "bkt-comparator";
   readonly constructId: string;
   readonly priorMastery: number;
   readonly posteriorMastery: number;
@@ -17,6 +17,17 @@ export type BktStepObservation = {
   readonly parameters: BktModelParameters;
   readonly engine: string;
   readonly occurredAt: string;
+};
+
+/** @deprecated Alias for BktStepRawPayload for transition compatibility */
+export type BktStepObservation = BktStepRawPayload;
+
+export type BktStepRequest = {
+  readonly constructId: string;
+  readonly priorMastery: number;
+  readonly correct: boolean;
+  readonly occurredAt: string;
+  readonly params?: Partial<BktModelParameters>;
 };
 
 export type BktForwardResult = {
@@ -67,8 +78,10 @@ export interface BktAdapterContract {
     constructId: string,
     priorMastery: number,
     correct: boolean,
+    occurredAt: string,
     params?: Partial<BktModelParameters>
-  ): BktStepObservation;
+  ): BktStepRawPayload;
+  step(request: BktStepRequest): BktStepRawPayload;
 }
 
 export function createBktBaselineComparator(
@@ -84,11 +97,36 @@ export function createBktBaselineComparator(
   return {
     engineName,
     step(
-      constructId: string,
-      priorMastery: number,
-      correct: boolean,
-      paramsOverride?: Partial<BktModelParameters>
-    ): BktStepObservation {
+      constructIdOrRequest: string | BktStepRequest,
+      priorMasteryArg?: number,
+      correctArg?: boolean,
+      occurredAtArg?: string,
+      paramsOverrideArg?: Partial<BktModelParameters>
+    ): BktStepRawPayload {
+      let constructId: string;
+      let priorMastery: number;
+      let correct: boolean;
+      let occurredAt: string;
+      let paramsOverride: Partial<BktModelParameters> | undefined;
+
+      if (typeof constructIdOrRequest === "object" && constructIdOrRequest !== null) {
+        constructId = constructIdOrRequest.constructId;
+        priorMastery = constructIdOrRequest.priorMastery;
+        correct = constructIdOrRequest.correct;
+        occurredAt = constructIdOrRequest.occurredAt;
+        paramsOverride = constructIdOrRequest.params;
+      } else {
+        constructId = constructIdOrRequest;
+        priorMastery = priorMasteryArg!;
+        correct = correctArg!;
+        occurredAt = occurredAtArg!;
+        paramsOverride = paramsOverrideArg;
+      }
+
+      if (!occurredAt || typeof occurredAt !== "string" || Number.isNaN(Date.parse(occurredAt))) {
+        throw new Error("Valid occurredAt ISO timestamp is required for BKT step");
+      }
+
       const mergedParams: BktModelParameters = Object.freeze({
         ...defaultParams,
         ...paramsOverride,
@@ -97,7 +135,7 @@ export function createBktBaselineComparator(
       const forward = computeBktForwardStep(priorMastery, correct, mergedParams);
 
       return Object.freeze({
-        observationType: "bkt-baseline-comparator",
+        kind: "bkt-comparator",
         constructId,
         priorMastery,
         posteriorMastery: forward.posteriorMastery,
@@ -106,8 +144,9 @@ export function createBktBaselineComparator(
         correct,
         parameters: mergedParams,
         engine: engineName,
-        occurredAt: new Date().toISOString(),
+        occurredAt,
       });
     },
   };
 }
+

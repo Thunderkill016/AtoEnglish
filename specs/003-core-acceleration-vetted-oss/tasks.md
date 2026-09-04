@@ -41,3 +41,14 @@
 - [x] T024: Run full repository tests (`npm test`) and content standards (`npm run test:content-standard`).
 - [x] T025: Run Next.js build (`npm run build -- --webpack`) and NEP gate (`agent_verify.mjs`).
 - [x] T026: Commit, push, trigger GitHub Actions CI, and verify 100% green.
+
+## Phase 7: GEMINI-ACCEL-002 Review Remediation (Review ID: 5115926494)
+- [x] T027: Remove ambient time (`new Date()`, `Date.now()`) from all 5 pure adapters; require explicit `occurredAt: string`.
+- [x] T028: Implement `createVettedCoreObservation` canonical wrapper with fail-closed anti-injection defense against authority/mastery fields.
+- [x] T029: Resolve and update full 40-character hexadecimal commit SHAs for all 12 audited packages.
+- [x] T030: Implement `validateVettedPackageDescriptor` runtime descriptor verification.
+- [x] T031: Upgrade `validateLicenseCompatibility` with independent code vs model/data license evaluation.
+- [x] T032: Reconcile `openai/whisper` to `baseline-donor` across spec, research, registry, and tests.
+- [x] T033: Add byte-deterministic replay tests and adversarial injection tests in `vetted-oss.test.ts`.
+- [x] T034: Run full verification suite and exact-head CI.
+

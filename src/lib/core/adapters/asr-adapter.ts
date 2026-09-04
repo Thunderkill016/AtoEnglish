@@ -9,12 +9,13 @@ export type AsrTranscriptionRequest = {
   readonly audioData: Uint8Array | ArrayBuffer;
   readonly sampleRateHz: number;
   readonly durationMs: number;
+  readonly occurredAt: string;
   readonly language?: string;
   readonly promptContext?: string;
 };
 
-export type AsrTranscriptionObservation = {
-  readonly observationType: "asr-transcription";
+export type AsrTranscriptionRawPayload = {
+  readonly kind: "asr-transcription";
   readonly text: string;
   readonly durationMs: number;
   readonly tokens: readonly AsrToken[];
@@ -23,9 +24,12 @@ export type AsrTranscriptionObservation = {
   readonly occurredAt: string;
 };
 
+/** @deprecated Alias for AsrTranscriptionRawPayload for transition compatibility */
+export type AsrTranscriptionObservation = AsrTranscriptionRawPayload;
+
 export type AsrAdapterResult =
-  | { readonly ok: true; readonly observation: AsrTranscriptionObservation }
-  | { readonly ok: false; readonly error: string; readonly code: "audio-corrupt" | "unsupported-format" | "timeout" };
+  | { readonly ok: true; readonly payload: AsrTranscriptionRawPayload; readonly observation?: AsrTranscriptionRawPayload }
+  | { readonly ok: false; readonly error: string; readonly code: "audio-corrupt" | "unsupported-format" | "timeout" | "invalid-timestamp" };
 
 export interface AsrAdapterContract {
   readonly engineName: string;
@@ -39,6 +43,14 @@ export function createMockAsrAdapter(
   return {
     engineName,
     async transcribe(request: AsrTranscriptionRequest): Promise<AsrAdapterResult> {
+      if (!request.occurredAt || typeof request.occurredAt !== "string" || Number.isNaN(Date.parse(request.occurredAt))) {
+        return Object.freeze({
+          ok: false,
+          error: "Valid occurredAt ISO timestamp is required",
+          code: "invalid-timestamp",
+        });
+      }
+
       if (request.durationMs <= 0) {
         return Object.freeze({
           ok: false,
@@ -58,18 +70,22 @@ export function createMockAsrAdapter(
         })
       );
 
+      const payload: AsrTranscriptionRawPayload = Object.freeze({
+        kind: "asr-transcription",
+        text: defaultTranscript,
+        durationMs: request.durationMs,
+        tokens: Object.freeze(tokens),
+        noSpeechProbability: 0.02,
+        engine: engineName,
+        occurredAt: request.occurredAt,
+      });
+
       return Object.freeze({
         ok: true,
-        observation: Object.freeze({
-          observationType: "asr-transcription",
-          text: defaultTranscript,
-          durationMs: request.durationMs,
-          tokens: Object.freeze(tokens),
-          noSpeechProbability: 0.02,
-          engine: engineName,
-          occurredAt: new Date().toISOString(),
-        }),
+        payload,
+        observation: payload,
       });
     },
   };
 }
+
