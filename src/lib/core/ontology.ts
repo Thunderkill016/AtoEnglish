@@ -595,7 +595,9 @@ function normalizeRelations(
       continue;
     }
     const raw = relation as unknown as Record<string, unknown>;
-    const subject = `${String(raw.from)}->${String(raw.to)}`;
+    const rawFrom = raw.from;
+    const rawTo = raw.to;
+    const subject = `${String(rawFrom ?? "unknown")}->${String(rawTo ?? "unknown")}`;
     for (const key of Object.keys(raw)) {
       if (FORBIDDEN_AUTHORITY_FIELDS.has(key)) {
         addProblem(problems, "forbidden-authority-field", subject, key);
@@ -603,29 +605,98 @@ function normalizeRelations(
         addProblem(problems, "invalid-relation", subject, `Unexpected property in relation: ${key}`);
       }
     }
-    if (!ONTOLOGY_RELATION_TYPES.includes(relation.type)) {
+
+    let hasFieldProblem = false;
+    if (typeof raw.type !== "string" || !(ONTOLOGY_RELATION_TYPES as readonly string[]).includes(raw.type as OntologyRelationType)) {
       addProblem(
         problems,
         "invalid-relation",
         subject,
-        String(relation.type),
+        `Invalid relation type: ${String(raw.type)}`,
       );
+      hasFieldProblem = true;
+    }
+
+    if (typeof rawFrom !== "string" || !rawFrom.trim()) {
+      addProblem(problems, "invalid-relation", subject, "Relation 'from' must be a non-empty string");
+      hasFieldProblem = true;
+    }
+
+    if (typeof rawTo !== "string" || !rawTo.trim()) {
+      addProblem(problems, "invalid-relation", subject, "Relation 'to' must be a non-empty string");
+      hasFieldProblem = true;
+    }
+
+    let validatedTags: string[] | undefined = undefined;
+    if (raw.contextTags !== undefined) {
+      if (!Array.isArray(raw.contextTags)) {
+        addProblem(problems, "invalid-relation", subject, "Relation 'contextTags' must be an array of strings");
+        hasFieldProblem = true;
+      } else {
+        const cleanTags: string[] = [];
+        for (const tag of raw.contextTags) {
+          if (typeof tag !== "string" || !tag.trim()) {
+            addProblem(
+              problems,
+              "invalid-relation",
+              subject,
+              "Relation 'contextTags' elements must be non-empty strings",
+            );
+            hasFieldProblem = true;
+            break;
+          }
+          cleanTags.push(tag.trim());
+        }
+        if (!hasFieldProblem) {
+          validatedTags = cleanTags.sort();
+        }
+      }
+    }
+
+    if (hasFieldProblem) {
       continue;
     }
-    let from = relation.from;
-    let to = relation.to;
-    if ((SYMMETRIC_ONTOLOGY_RELATION_TYPES as readonly OntologyRelationType[]).includes(relation.type) && from.localeCompare(to) > 0) {
+
+    let from = rawFrom as string;
+    let to = rawTo as string;
+    const type = raw.type as OntologyRelationType;
+
+    if (
+      (SYMMETRIC_ONTOLOGY_RELATION_TYPES as readonly OntologyRelationType[]).includes(type) &&
+      from.localeCompare(to) > 0
+    ) {
       [from, to] = [to, from];
     }
-    if (from === to) addProblem(problems, "self-relation", from, relation.type);
-    if (!nodeIds.has(from)) addProblem(problems, "missing-node", from, relation.type);
-    if (!nodeIds.has(to)) addProblem(problems, "missing-node", to, relation.type);
-    const contextTags = [...(relation.contextTags ?? [])].sort();
-    const key = `${relation.type}\u0000${from}\u0000${to}\u0000${contextTags.join("\u0000")}`;
-    if (keys.has(key)) addProblem(problems, "duplicate-relation", `${from}->${to}`, relation.type);
-    else {
+    let hasTopologyProblem = false;
+    if (from === to) {
+      addProblem(problems, "self-relation", from, type);
+      hasTopologyProblem = true;
+    }
+    if (!nodeIds.has(from)) {
+      addProblem(problems, "missing-node", from, type);
+      hasTopologyProblem = true;
+    }
+    if (!nodeIds.has(to)) {
+      addProblem(problems, "missing-node", to, type);
+      hasTopologyProblem = true;
+    }
+    const key = `${type}\u0000${from}\u0000${to}\u0000${(validatedTags ?? []).join("\u0000")}`;
+    if (keys.has(key)) {
+      addProblem(problems, "duplicate-relation", `${from}->${to}`, type);
+    } else {
       keys.add(key);
-      normalized.push({ from, to, type: relation.type, ...(contextTags.length ? { contextTags } : {}) });
+      if (!hasTopologyProblem) {
+        normalized.push(
+          Object.freeze({
+            from,
+            to,
+            type,
+            ...(validatedTags && validatedTags.length > 0
+              ? { contextTags: Object.freeze(validatedTags) }
+              : {}),
+          }),
+        );
+      }
     }
   }
   return normalized.sort(compareRelations);

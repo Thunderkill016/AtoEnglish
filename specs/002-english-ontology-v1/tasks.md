@@ -38,8 +38,15 @@
 - [X] T019 [CODEX-ONTOLOGY-002] Add comprehensive runtime adversarial tests with malformed payloads (`unknown`/casts) in `src/lib/core/ontology.test.ts`
 - [X] T020 [CODEX-ONTOLOGY-002] Re-verify full repository gates, build, and exact-head CI
 
+## Phase 7: GEMINI-ONTOLOGY-003 — Close Remaining Relation Fail-Closed Boundary
+
+- [X] T021 [GEMINI-ONTOLOGY-003] Runtime-validate relation endpoints (`from`, `to`) as non-empty strings before canonicalization and validate `contextTags` as string arrays in `src/lib/core/ontology.ts`
+- [X] T022 [GEMINI-ONTOLOGY-003] Add adversarial tests for malformed relation payloads (numeric/object endpoints, malformed tags) in `src/lib/core/ontology.test.ts` (65/65 PASS)
+- [X] T023 [GEMINI-ONTOLOGY-003] Re-verify full repository gates, Next.js build, and exact-head CI
+
 ## Dependencies
 
 T001–T003 precede implementation. US1 types precede US2 validation and US3 overlays. Validation
-follows all stories. Phase 6 addresses independent-review blocking findings on V1 foundation.
+follows all stories. Phase 6 & Phase 7 address independent-review blocking findings on V1 foundation.
+
 

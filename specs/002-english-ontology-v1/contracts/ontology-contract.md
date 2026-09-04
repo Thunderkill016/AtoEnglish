@@ -13,4 +13,6 @@
 - Discriminator properties (`family` for `language-system`, `activity` for `communication-activity`) are mutually exclusive and strictly required.
 - All nested metadata (task constraints, context constraints, sources, provenance, licenses, crosswalks, overlays) are subject to structural fail-closed shape, enum, and forbidden authority key validation.
 - Interaction nodes require either an interaction modality (`live-interaction`, `multimodal`) or bidirectional input/output modalities (e.g. `text-input` and `text-output`).
+- Relation endpoints `from` and `to` MUST be non-empty strings before canonicalization; `contextTags`, when present, MUST be an array of non-empty strings. Malformed relation payloads fail closed with typed `invalid-relation` problems without throwing.
+
 

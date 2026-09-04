@@ -514,3 +514,92 @@ describe("CODEX-ONTOLOGY-002: canonical activity-to-modality semantics", () => {
   });
 });
 
+describe("GEMINI-ONTOLOGY-003: relation runtime validation fail-closed boundary", () => {
+  const a = node("nep.en.v1.language-system.a");
+  const b = node("nep.en.v1.language-system.b");
+
+  it("does not throw and fails closed on numeric or object from/to on symmetric relations", () => {
+    const numericFrom = { from: 42, to: b.id, type: "confusable-with" } as unknown as OntologyRelation;
+    const res1 = buildOntologyGraph({ nodes: [a, b], relations: [numericFrom] });
+    expectProblem(res1, "invalid-relation");
+
+    const objectTo = { from: a.id, to: { id: "bad" }, type: "confusable-with" } as unknown as OntologyRelation;
+    const res2 = buildOntologyGraph({ nodes: [a, b], relations: [objectTo] });
+    expectProblem(res2, "invalid-relation");
+
+    const emptyFrom = { from: "   ", to: b.id, type: "confusable-with" } as unknown as OntologyRelation;
+    const res3 = buildOntologyGraph({ nodes: [a, b], relations: [emptyFrom] });
+    expectProblem(res3, "invalid-relation");
+
+    const missingTo = { from: a.id, type: "confusable-with" } as unknown as OntologyRelation;
+    const res4 = buildOntologyGraph({ nodes: [a, b], relations: [missingTo] });
+    expectProblem(res4, "invalid-relation");
+  });
+
+  it("does not throw and fails closed on non-array contextTags: 42", () => {
+    const relNumberTags = {
+      from: a.id,
+      to: b.id,
+      type: "enables",
+      contextTags: 42,
+    } as unknown as OntologyRelation;
+    const res = buildOntologyGraph({ nodes: [a, b], relations: [relNumberTags] });
+    expectProblem(res, "invalid-relation");
+  });
+
+  it("fails closed on contextTags: 'ab' instead of treating string as character tag iterable", () => {
+    const relStringTags = {
+      from: a.id,
+      to: b.id,
+      type: "enables",
+      contextTags: "ab",
+    } as unknown as OntologyRelation;
+    const res = buildOntologyGraph({ nodes: [a, b], relations: [relStringTags] });
+    expectProblem(res, "invalid-relation");
+  });
+
+  it("fails closed on contextTags containing non-string or empty entries", () => {
+    const relNonStringEntry = {
+      from: a.id,
+      to: b.id,
+      type: "enables",
+      contextTags: ["valid-tag", 123],
+    } as unknown as OntologyRelation;
+    expectProblem(buildOntologyGraph({ nodes: [a, b], relations: [relNonStringEntry] }), "invalid-relation");
+
+    const relEmptyEntry = {
+      from: a.id,
+      to: b.id,
+      type: "enables",
+      contextTags: ["valid-tag", "   "],
+    } as unknown as OntologyRelation;
+    expectProblem(buildOntologyGraph({ nodes: [a, b], relations: [relEmptyEntry] }), "invalid-relation");
+  });
+
+  it("keeps valid string tags sorted and deterministic", () => {
+    const rel = {
+      from: a.id,
+      to: b.id,
+      type: "enables" as const,
+      contextTags: ["z-tag", "a-tag", "m-tag"],
+    };
+    const res = buildOntologyGraph({ nodes: [a, b], relations: [rel] });
+    expect(res.ok).toBe(true);
+    if (res.ok) {
+      expect(res.graph.relations[0].contextTags).toEqual(["a-tag", "m-tag", "z-tag"]);
+      expect(Object.isFrozen(res.graph.relations[0])).toBe(true);
+      expect(Object.isFrozen(res.graph.relations[0].contextTags)).toBe(true);
+    }
+  });
+
+  it("ensures malformed relations never appear in a successful graph", () => {
+    const malformed = { from: 123, to: 456, type: "unknown-type" } as unknown as OntologyRelation;
+    const valid = { from: a.id, to: b.id, type: "enables" as const };
+    const res = buildOntologyGraph({ nodes: [a, b], relations: [valid, malformed] });
+    expect(res.ok).toBe(false);
+    if (!res.ok) {
+      expect(res.problems.some((p) => p.code === "invalid-relation")).toBe(true);
+    }
+  });
+});
+
