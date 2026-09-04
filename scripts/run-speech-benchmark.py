@@ -82,7 +82,7 @@ def run_benchmark(
     elif mode == "modal":
         try:
             import modal
-            modal_service = modal.Cls.lookup("nep-speech-challenger", "OpenPronounceChallengerService")
+            modal_service = modal.Cls.from_name("nep-speech-challenger", "OpenPronounceChallengerService")
         except Exception as e:
             raise RuntimeError(
                 f"Failed to lookup Modal service 'nep-speech-challenger': {e}. "

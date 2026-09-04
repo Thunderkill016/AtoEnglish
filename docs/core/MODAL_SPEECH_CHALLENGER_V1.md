@@ -80,11 +80,18 @@ Currently, OpenPronounce v0.3.0 remains in `validationState: "shadow"` with zero
 
 ## 4. Empirical Cloud Smoke Status
 
-- **Environment State**: Modal token credentials (`MODAL_TOKEN_ID` / `MODAL_TOKEN_SECRET`) are currently unconfigured in the local environment (`Token missing. Could not authenticate client`).
-- **Policy Compliance**: Per task constitution: *"If current model artifacts cannot legally or technically be obtained, stop and document the exact blocker instead of substituting fake output."*
-- **Verification Evidence**:
-  - Full local synthetic benchmark harness executed: `scripts/run-speech-benchmark.py --mode=local-mock` (PASS, 3 cases, 100% success rate, artifact written to `benchmarks/runs/`).
-  - Python contract and privacy tests: `services/speech-challenger-modal/test_challenger_contract.py` (PASS, 6/6 tests).
-  - TypeScript core contracts and invariants: `src/lib/core/speech-challenger-contract.test.ts` (PASS, 2/2 tests).
-  - Repository quality gates: `tsc` (0 errors), `lint` (0 errors), `npm test` (56/56 files, 436/436 tests passed).
-  - As soon as Modal credentials are provided via `modal token set`, running `uvx modal run services/speech-challenger-modal/app.py` or `scripts/run-speech-benchmark.py --mode=modal` will immediately execute the cloud smoke.
+- **Environment State**: Modal token credentials verified and active under workspace `thunderkill016`.
+- **Live Deployment**: [`nep-speech-challenger` deployed on Modal](https://modal.com/apps/thunderkill016/main/deployed/nep-speech-challenger).
+- **Web Endpoint**: `https://thunderkill016--nep-speech-challenger-analyze-endpoint.modal.run`
+- **Cloud Run Evidence**:
+  - Direct smoke run: [`ap-OHc4TQaBnuJ0YCpshy4TSd`](https://modal.com/apps/thunderkill016/main/ap-OHc4TQaBnuJ0YCpshy4TSd) (PASS, target: `think`).
+  - Full cloud benchmark trial: `scripts/run-speech-benchmark.py --mode=modal` (PASS, 3/3 cases, 100% success rate, artifact saved to `benchmarks/runs/speech-benchmark-modal-cloud.json`).
+  - Measured cold start latency: 68.3s (initial container provision + volume mount + checkpoint load).
+  - Measured warm inference latency: 3.08s.
+- **Fingerprint Verification**:
+  - `model_fingerprint`: `dac15fd3e35db6c115277eeb5ce43a17dec9db39774f9323b313d4b917aead5f`
+  - `runtime_fingerprint`: `62635dd44191e158a62a02a078fe6bf7700b0e637820e2cf7b419044abbca2ad`
+- **Epistemic Invariant Confirmed**:
+  - Zero raw transcriptions, zero raw audio, and zero 0–100 scores persisted.
+  - Model diagnostic output remains strictly in `validationState: "shadow"` with `authority: "none"`.
+
