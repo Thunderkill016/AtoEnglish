@@ -80,6 +80,7 @@ def _fit_rows(
 ) -> bool:
     feature_batch: list[dict[str, float]] = []
     label_batch: list[int] = []
+    external_token_ids_seen: set[str] = set()
     did_fit = False
 
     def flush() -> None:
@@ -97,9 +98,13 @@ def _fit_rows(
         label_batch = []
 
     for exercise, token in _iter_token_rows(exercises):
-        label = token.label
-        if label is None and labels_by_token is not None:
+        if labels_by_token is not None:
+            if token.label is not None:
+                raise ValueError("external fold-in gold may only be applied to a blind input split")
+            external_token_ids_seen.add(token.token_id)
             label = labels_by_token.get(token.token_id)
+        else:
+            label = token.label
         if label is None:
             raise ValueError(f"training/fold-in row lacks an authorized label: {token.token_id}")
 
@@ -114,6 +119,10 @@ def _fit_rows(
             flush()
 
     flush()
+    if labels_by_token is not None:
+        extras = sorted(set(labels_by_token) - external_token_ids_seen)
+        if extras:
+            raise ValueError(f"fold-in gold contains {len(extras)} token ids absent from the blind input")
     return did_fit
 
 
