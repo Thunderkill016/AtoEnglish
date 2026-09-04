@@ -62,6 +62,16 @@ oMGsnnH/0101 When ADV PronType=Int advmod 4
         self.assertEqual([e.tokens[0].token for e in exercises], ["first", "second"])
         self.assertEqual([e.header.days for e in exercises], [2.0, 1.5])
 
+    def test_duplicate_token_instance_id_fails_closed_across_exercises(self) -> None:
+        text = """# user:D2inSf5+ countries:MX days:1.0 client:web session:lesson format:reverse_translate time:1
+8rgJEAPw1001 first NOUN _ ROOT 0 0
+
+# user:D2inSf5+ countries:MX days:1.1 client:web session:practice format:reverse_translate time:1
+8rgJEAPw1001 repeated NOUN _ ROOT 0 1
+"""
+        with self.assertRaisesRegex(SlamFormatError, "duplicate token instance id"):
+            list(parse_slam_lines(text.splitlines(keepends=True), "train"))
+
 
 if __name__ == "__main__":
     unittest.main()
