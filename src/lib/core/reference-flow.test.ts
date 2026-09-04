@@ -77,6 +77,8 @@ describe("pure core reference flow", () => {
         supportLevel: 0,
         revealUsed: false,
         responseLatencyMs: 820,
+        responseModality: "choice",
+        contextId: "minimal-pair-set-a",
       },
       occurredAt: "2026-09-04T00:00:01.000Z",
     });
@@ -154,7 +156,13 @@ describe("pure core reference flow", () => {
       observationId: "obs-2",
       outcome: { kind: "binary", success: true },
       evaluatorConfidence: 1,
-      attempt: { supportLevel: 0, revealUsed: false, responseLatencyMs: null },
+      attempt: {
+        supportLevel: 0,
+        revealUsed: false,
+        responseLatencyMs: null,
+        responseModality: "choice",
+        contextId: "ctx",
+      },
       occurredAt: "2026-09-04T00:00:01.000Z",
     });
 

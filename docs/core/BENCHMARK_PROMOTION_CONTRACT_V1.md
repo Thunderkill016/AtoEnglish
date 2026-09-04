@@ -218,3 +218,7 @@ A subsystem may affect durable learner assessment only when:
 10. monitoring can detect drift after model/data/device changes.
 
 Changing a model, checkpoint, threshold, prompt, feature extractor, major preprocessing path or calibration population creates a new evaluation fingerprint and may require recalibration.
+
+## Repository reference artifacts
+
+A deterministic contract fixture may identify itself as benchmarked for the exact repository cases it executes, but that label grants no learner-facing or production authority. Such an artifact must state its repository-only authority scope, retain residual unknowns, and avoid presenting fixture weights, schedules, or state transitions as empirically calibrated learner parameters. Promotion still requires the production-authority evidence above.

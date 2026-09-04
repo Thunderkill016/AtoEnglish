@@ -1,4 +1,5 @@
 import type { CoreEvidenceRole } from "./evidence-role";
+import type { ResponseModality } from "@/lib/learning/evidence";
 import {
   canAffectDurableAssessment,
   type CoreObservation,
@@ -21,6 +22,8 @@ export type CoreEvidenceCandidate = {
     supportLevel: number;
     revealUsed: boolean;
     responseLatencyMs: number | null;
+    responseModality: ResponseModality;
+    contextId: string | null;
   };
   occurredAt: string;
 };
@@ -39,6 +42,10 @@ export type EvidenceCertificationProblem =
   | { type: "task-mismatch" }
   | { type: "target-mismatch" }
   | { type: "activity-mismatch" }
+  | { type: "response-modality-mismatch" }
+  | { type: "context-mismatch" }
+  | { type: "support-level-mismatch" }
+  | { type: "reveal-not-allowed" }
   | { type: "role-not-allowed"; role: CoreEvidenceRole }
   | { type: "observation-not-authoritative" }
   | { type: "support-invalidates-strong-evidence"; role: CoreEvidenceRole }
@@ -73,6 +80,18 @@ export function certifyCoreEvidence(
     problems.push({ type: "target-mismatch" });
   }
   if (observation.activity !== task.activity) problems.push({ type: "activity-mismatch" });
+  if (candidate.attempt.responseModality !== task.responseModality) {
+    problems.push({ type: "response-modality-mismatch" });
+  }
+  if (candidate.attempt.contextId !== observation.contextId) {
+    problems.push({ type: "context-mismatch" });
+  }
+  if (candidate.attempt.supportLevel !== task.support.level) {
+    problems.push({ type: "support-level-mismatch" });
+  }
+  if (candidate.attempt.revealUsed && !task.support.revealAllowed) {
+    problems.push({ type: "reveal-not-allowed" });
+  }
   if (!task.allowedEvidenceRoles.includes(candidate.role)) {
     problems.push({ type: "role-not-allowed", role: candidate.role });
   }

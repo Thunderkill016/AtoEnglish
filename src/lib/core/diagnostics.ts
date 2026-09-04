@@ -93,6 +93,17 @@ export type ComprehensionDiagnosticPayload = {
   targetedConstructs: string[];
 };
 
+export type ControlledResponseDiagnosticPayload = {
+  kind: "controlled-response";
+  taskId: string;
+  observedResponse: boolean;
+  responseCorrect: boolean | null;
+  matchedTargetIds: string[];
+  missingTargetIds: string[];
+  /** Raw learner text is transient evaluator input and never enters this payload. */
+  evaluatorRuleId: string;
+};
+
 export type DiscoursePragmaticDiagnosticPayload = {
   kind: "discourse-pragmatic";
   speechActs: string[];
@@ -112,4 +123,5 @@ export type DiagnosticPayload =
   | SyntaxDiagnosticPayload
   | LexicalDiagnosticPayload
   | ComprehensionDiagnosticPayload
+  | ControlledResponseDiagnosticPayload
   | DiscoursePragmaticDiagnosticPayload;
