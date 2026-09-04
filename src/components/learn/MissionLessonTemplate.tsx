@@ -1,3 +1,4 @@
+import AutonomousMissionTutor from "@/components/learn/AutonomousMissionTutor";
 import MissionRunner from "@/components/learn/MissionRunner";
 import type { LessonSpecV1 } from "@/lib/lessons/lesson-spec";
 import type { MissionSpecV1 } from "@/lib/missions/mission-spec";
@@ -12,10 +13,16 @@ interface MissionLessonTemplateProps {
 export default function MissionLessonTemplate({
   lesson,
 }: MissionLessonTemplateProps) {
-  return (
-    <MissionRunner
-      lesson={lesson}
-      nextRoute={`/learn/${lesson.id}/checkpoint`}
-    />
-  );
+  const checkpointRoute = `/learn/${lesson.id}/checkpoint`;
+
+  if (lesson.id === "unit-a0-1") {
+    return (
+      <AutonomousMissionTutor
+        lesson={lesson}
+        nextRoute={checkpointRoute}
+      />
+    );
+  }
+
+  return <MissionRunner lesson={lesson} nextRoute={checkpointRoute} />;
 }
