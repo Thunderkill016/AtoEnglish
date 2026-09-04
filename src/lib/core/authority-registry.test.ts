@@ -6,14 +6,20 @@ import {
   type RegisteredAuthorityGrant,
   type RegisteredBenchmarkArtifact,
   type TrustedAnchor,
+  type TrustedAnchorRegistry,
+  type TrustedAnchorPublicView,
   type RawAuthorityAttestation,
   type VerifiedAuthorityAttestation,
+  type VerifiedProductionAuthorityAttestation,
+  type VerifiedContractAuthorityAttestation,
   createProvenanceAuthorityRegistry,
   createTestMechanicsAuthorityGrant,
   createTestMechanicsBenchmark,
   createTestMechanicsTrustRoot,
   createTrustedAnchorRegistry,
+  createHostProductionTrustStore,
   computeCanonicalManifestDigest,
+  computeAttestationEnvelopeMessage,
   extractGrantManifestPayload,
   verifyAuthorityManifest,
   isProductionEligibleTrustRoot,
@@ -21,6 +27,8 @@ import {
   isResolvedDurableCalibrationAuthority,
   isTestHarnessTrustRoot,
   isVerifiedAuthorityAttestation,
+  isVerifiedProductionAuthorityAttestation,
+  isVerifiedContractAuthorityAttestation,
   parseStrictIso8601,
   resolveCalibrationAuthority,
 } from "./authority-registry";
@@ -83,20 +91,26 @@ describe("Provenance Authority Registry V1", () => {
     testAnchorExpired,
   ]);
 
+  const testProductionTrustStore = createHostProductionTrustStore([
+    testAnchorEd25519,
+  ]);
+
   function signAndVerifyTestGrant(
     grant: RegisteredAuthorityGrant,
-    anchor: TrustedAnchor = testAnchorHmac,
-    secretOrPrivKey: string = testSecret,
+    anchor: TrustedAnchor = testAnchorEd25519,
+    secretOrPrivKey: string = edPrivateKey,
     attestedAt = "2026-09-01T00:00:00.000Z",
     evalTime = "2026-09-04T00:00:01.000Z",
+    registry: TrustedAnchorRegistry = testProductionTrustStore,
   ): VerifiedAuthorityAttestation {
     const payload = extractGrantManifestPayload(grant);
     const digest = computeCanonicalManifestDigest(payload);
+    const envelope = computeAttestationEnvelopeMessage(anchor.anchorId, attestedAt, digest);
     let signature: string;
     if (anchor.algorithm === "hmac-sha256") {
-      signature = crypto.createHmac("sha256", secretOrPrivKey).update(digest, "utf8").digest("hex");
+      signature = crypto.createHmac("sha256", secretOrPrivKey).update(envelope).digest("hex");
     } else {
-      signature = crypto.sign(null, Buffer.from(digest, "utf8"), secretOrPrivKey).toString("hex");
+      signature = crypto.sign(null, envelope, secretOrPrivKey).toString("hex");
     }
     const raw: RawAuthorityAttestation = {
       kind: "raw-cryptographic-attestation",
@@ -105,7 +119,7 @@ describe("Provenance Authority Registry V1", () => {
       signature,
       attestedAt,
     };
-    const res = verifyAuthorityManifest(raw, payload, testAnchorRegistry, evalTime);
+    const res = verifyAuthorityManifest(raw, payload, registry, evalTime);
     if (!res.ok) {
       throw new Error(`Failed to verify test attestation: ${res.reasonCode}`);
     }
@@ -138,6 +152,9 @@ describe("Provenance Authority Registry V1", () => {
     benchmarkArtifactId: "bench-phonology-v1",
     expectedBenchmarkFingerprint: "sha256-bench-phonology-digest-12345",
     expectedBenchmarkVersion: "1.0.0",
+    expectedBenchmarkEvidenceLayer: "layer1-benchmark-calibration",
+    expectedBenchmarkProductionEligible: true,
+    expectedBenchmarkAdjudicationProtocol: "synthetic-test-harness",
     productionAuthorityEligible: true,
     evaluatorBinding: {
       evaluatorId: "acoustic-classifier-v1",
@@ -1794,5 +1811,433 @@ describe("Provenance Authority Registry V1", () => {
     expect(digestA).toBe(digestB);
     expect(digestA.startsWith("sha256:")).toBe(true);
     expect(digestA.length).toBe(71); // "sha256:" + 64 hex chars
+  });
+
+  // --- GEMINI-PROVENANCE-005 Adversarial Security Matrix (A1–A12) ---
+
+  it("41. adversarial A1: self-selected ad-hoc trust anchor cannot mint production durable authority", () => {
+    const { publicKey: attackerPub, privateKey: attackerPriv } = crypto.generateKeyPairSync("ed25519", {
+      publicKeyEncoding: { type: "spki", format: "pem" },
+      privateKeyEncoding: { type: "pkcs8", format: "pem" },
+    });
+    const attackerAnchor: TrustedAnchor = {
+      anchorId: "attacker-self-selected-anchor-01",
+      algorithm: "ed25519",
+      publicKeyOrSecret: attackerPub,
+      status: "active",
+      validFrom: "2026-01-01T00:00:00.000Z",
+    };
+
+    // Attacker instantiates their own ad-hoc registry
+    const attackerRegistry = createTrustedAnchorRegistry([attackerAnchor]);
+    expect(attackerRegistry.kind).toBe("ad-hoc-registry");
+    expect(attackerRegistry.isProductionAuthorized).toBe(false);
+
+    const attackerGrantBase: RegisteredAuthorityGrant = {
+      ...activeGrantBase,
+      grantId: "grant-attacker-forged-01",
+      productionAuthorityEligible: true,
+    };
+
+    const payload = extractGrantManifestPayload(attackerGrantBase);
+    const digest = computeCanonicalManifestDigest(payload);
+    const attestedAt = "2026-09-01T00:00:00.000Z";
+    const envelope = computeAttestationEnvelopeMessage(attackerAnchor.anchorId, attestedAt, digest);
+    const signature = crypto.sign(null, envelope, attackerPriv).toString("hex");
+
+    const verifyResult = verifyAuthorityManifest(
+      {
+        kind: "raw-cryptographic-attestation",
+        anchorId: attackerAnchor.anchorId,
+        manifestDigest: digest,
+        signature,
+        attestedAt,
+      },
+      payload,
+      attackerRegistry,
+      "2026-09-04T00:00:01.000Z",
+    );
+
+    expect(verifyResult.ok).toBe(true);
+    if (!verifyResult.ok) return;
+
+    // Attestation minted by ad-hoc registry is contract-tier only
+    expect(isVerifiedContractAuthorityAttestation(verifyResult.attestation)).toBe(true);
+    expect(isVerifiedProductionAuthorityAttestation(verifyResult.attestation)).toBe(false);
+
+    const attackerProvRegistry = createProvenanceAuthorityRegistry({
+      benchmarks: [sampleBenchmark],
+      grants: [{ ...attackerGrantBase, attestation: verifyResult.attestation }],
+    });
+
+    const res = resolveCalibrationAuthority(
+      {
+        grantId: "grant-attacker-forged-01",
+        observation: validAuthoritativeObservation,
+        task: validTask,
+        evaluationTimestamp: "2026-09-04T00:00:01.000Z",
+        requireProductionAuthority: true,
+      },
+      attackerProvRegistry,
+    );
+
+    expect(res.ok).toBe(false);
+    if (!res.ok) {
+      expect(res.reasonCodes).toContain("trust-anchor-not-production-authorized");
+    }
+  });
+
+  it("42. adversarial A2: HMAC symmetric keys strictly rejected from host production trust store", () => {
+    expect(() => {
+      createHostProductionTrustStore([testAnchorHmac]);
+    }).toThrow(/Production trust violation.*requires asymmetric 'ed25519'/);
+  });
+
+  it("43. adversarial A3: tampered grant status (revoked -> active) invalidates canonical manifest digest", () => {
+    // Grant was originally revoked when signed
+    const revokedGrantBase: RegisteredAuthorityGrant = {
+      ...activeGrantBase,
+      grantId: "grant-tampered-status-01",
+      status: "revoked",
+      revokedAt: "2026-08-01T00:00:00.000Z",
+      revocationReason: "key-leak",
+    };
+    const legitRevokedAttestation = signAndVerifyTestGrant(revokedGrantBase);
+
+    // Attacker mutates status in-memory to active, removing revokedAt/revocationReason
+    const mutatedGrant: RegisteredAuthorityGrant = {
+      ...revokedGrantBase,
+      status: "active",
+      revokedAt: undefined,
+      revocationReason: undefined,
+      attestation: legitRevokedAttestation,
+    };
+
+    const provRegistry = createProvenanceAuthorityRegistry({
+      benchmarks: [sampleBenchmark],
+      grants: [mutatedGrant],
+    });
+
+    const res = resolveCalibrationAuthority(
+      {
+        grantId: "grant-tampered-status-01",
+        observation: validAuthoritativeObservation,
+        task: validTask,
+        evaluationTimestamp: "2026-09-04T00:00:01.000Z",
+      },
+      provRegistry,
+    );
+
+    expect(res.ok).toBe(false);
+    if (!res.ok) {
+      expect(res.reasonCodes).toContain("attestation-payload-mismatch");
+    }
+  });
+
+  it("44. adversarial A4: tampered productionAuthorityEligible (false -> true) invalidates canonical manifest digest", () => {
+    // Grant was originally non-production when signed
+    const nonProdGrantBase: RegisteredAuthorityGrant = {
+      ...activeGrantBase,
+      grantId: "grant-tampered-eligibility-01",
+      productionAuthorityEligible: false,
+    };
+    const legitAttestation = signAndVerifyTestGrant(nonProdGrantBase);
+
+    // Attacker mutates productionAuthorityEligible to true
+    const mutatedGrant: RegisteredAuthorityGrant = {
+      ...nonProdGrantBase,
+      productionAuthorityEligible: true,
+      attestation: legitAttestation,
+    };
+
+    const provRegistry = createProvenanceAuthorityRegistry({
+      benchmarks: [sampleBenchmark],
+      grants: [mutatedGrant],
+    });
+
+    const res = resolveCalibrationAuthority(
+      {
+        grantId: "grant-tampered-eligibility-01",
+        observation: validAuthoritativeObservation,
+        task: validTask,
+        evaluationTimestamp: "2026-09-04T00:00:01.000Z",
+      },
+      provRegistry,
+    );
+
+    expect(res.ok).toBe(false);
+    if (!res.ok) {
+      expect(res.reasonCodes).toContain("attestation-payload-mismatch");
+    }
+  });
+
+  it("45. adversarial A5: benchmark promotion forgery with tampered evidenceLayer fails with benchmark-specification-mismatch", () => {
+    const grantBase: RegisteredAuthorityGrant = {
+      ...activeGrantBase,
+      grantId: "grant-tampered-layer-01",
+      expectedBenchmarkEvidenceLayer: "layer1-benchmark-calibration",
+    };
+    const attestation = signAndVerifyTestGrant(grantBase);
+    const grant: RegisteredAuthorityGrant = {
+      ...grantBase,
+      attestation,
+    };
+
+    // Benchmark registered with lower/downgraded layer
+    const downgradedBenchmark: RegisteredBenchmarkArtifact = {
+      ...sampleBenchmark,
+      evidenceLayer: "layer0-repository-reference",
+    };
+
+    const provRegistry = createProvenanceAuthorityRegistry({
+      benchmarks: [downgradedBenchmark],
+      grants: [grant],
+    });
+
+    const res = resolveCalibrationAuthority(
+      {
+        grantId: "grant-tampered-layer-01",
+        observation: validAuthoritativeObservation,
+        task: validTask,
+        evaluationTimestamp: "2026-09-04T00:00:01.000Z",
+      },
+      provRegistry,
+    );
+
+    expect(res.ok).toBe(false);
+    if (!res.ok) {
+      expect(res.reasonCodes).toContain("benchmark-specification-mismatch");
+    }
+  });
+
+  it("46. adversarial A6: benchmark promotion forgery with tampered productionAuthorityEligible fails with benchmark-specification-mismatch", () => {
+    const grantBase: RegisteredAuthorityGrant = {
+      ...activeGrantBase,
+      grantId: "grant-tampered-bench-prod-01",
+      expectedBenchmarkProductionEligible: true,
+    };
+    const attestation = signAndVerifyTestGrant(grantBase);
+    const grant: RegisteredAuthorityGrant = {
+      ...grantBase,
+      attestation,
+    };
+
+    // Benchmark registered with productionAuthorityEligible: false
+    const ineligibleBenchmark: RegisteredBenchmarkArtifact = {
+      ...sampleBenchmark,
+      productionAuthorityEligible: false,
+    };
+
+    const provRegistry = createProvenanceAuthorityRegistry({
+      benchmarks: [ineligibleBenchmark],
+      grants: [grant],
+    });
+
+    const res = resolveCalibrationAuthority(
+      {
+        grantId: "grant-tampered-bench-prod-01",
+        observation: validAuthoritativeObservation,
+        task: validTask,
+        evaluationTimestamp: "2026-09-04T00:00:01.000Z",
+      },
+      provRegistry,
+    );
+
+    expect(res.ok).toBe(false);
+    if (!res.ok) {
+      expect(res.reasonCodes).toContain("benchmark-specification-mismatch");
+    }
+  });
+
+  it("47. adversarial A7: attestation envelope binds attestedAt and cannot be replayed at altered timestamp", () => {
+    const payload = extractGrantManifestPayload(activeGrantBase);
+    const digest = computeCanonicalManifestDigest(payload);
+    const legitAttestedAt = "2026-09-01T00:00:00.000Z";
+    const legitEnvelope = computeAttestationEnvelopeMessage(
+      testAnchorEd25519.anchorId,
+      legitAttestedAt,
+      digest,
+    );
+    const validSignature = crypto.sign(null, legitEnvelope, edPrivateKey).toString("hex");
+
+    // Attacker modifies attestedAt to replay or shift validity window
+    const tamperedAttestedAt = "2026-09-02T00:00:00.000Z";
+    const rawTampered: RawAuthorityAttestation = {
+      kind: "raw-cryptographic-attestation",
+      anchorId: testAnchorEd25519.anchorId,
+      manifestDigest: digest,
+      signature: validSignature,
+      attestedAt: tamperedAttestedAt,
+    };
+
+    const verifyResult = verifyAuthorityManifest(
+      rawTampered,
+      payload,
+      testProductionTrustStore,
+      "2026-09-04T00:00:01.000Z",
+    );
+
+    expect(verifyResult.ok).toBe(false);
+    if (!verifyResult.ok) {
+      expect(verifyResult.reasonCode).toBe("attestation-signature-invalid");
+    }
+  });
+
+  it("48. adversarial A8: attestation envelope binds anchorId and cannot be replayed under different anchor", () => {
+    const payload = extractGrantManifestPayload(activeGrantBase);
+    const digest = computeCanonicalManifestDigest(payload);
+    const attestedAt = "2026-09-01T00:00:00.000Z";
+    const envelope = computeAttestationEnvelopeMessage(
+      testAnchorEd25519.anchorId,
+      attestedAt,
+      digest,
+    );
+    const signature = crypto.sign(null, envelope, edPrivateKey).toString("hex");
+
+    // Second anchor in production store
+    const { publicKey: ed2Pub } = crypto.generateKeyPairSync("ed25519", {
+      publicKeyEncoding: { type: "spki", format: "pem" },
+      privateKeyEncoding: { type: "pkcs8", format: "pem" },
+    });
+    const secondAnchor: TrustedAnchor = {
+      anchorId: "anchor-test-ed25519-02",
+      algorithm: "ed25519",
+      publicKeyOrSecret: ed2Pub,
+      status: "active",
+      validFrom: "2026-01-01T00:00:00.000Z",
+    };
+    const multiStore = createHostProductionTrustStore([testAnchorEd25519, secondAnchor]);
+
+    // Attacker claims the signature was from secondAnchor
+    const rawReplayed: RawAuthorityAttestation = {
+      kind: "raw-cryptographic-attestation",
+      anchorId: secondAnchor.anchorId,
+      manifestDigest: digest,
+      signature,
+      attestedAt,
+    };
+
+    const verifyResult = verifyAuthorityManifest(
+      rawReplayed,
+      payload,
+      multiStore,
+      "2026-09-04T00:00:01.000Z",
+    );
+
+    expect(verifyResult.ok).toBe(false);
+    if (!verifyResult.ok) {
+      expect(verifyResult.reasonCode).toBe("attestation-signature-invalid");
+    }
+  });
+
+  it("49. adversarial A9: trust anchor lifecycle re-evaluated at evaluationTimestamp fails closed if revoked after attestation", () => {
+    // Attestation created when anchor was active
+    const grant = activeGrant;
+    const provRegistry = createProvenanceAuthorityRegistry({
+      benchmarks: [sampleBenchmark],
+      grants: [grant],
+    });
+
+    // Updated trust store where anchor has been revoked
+    const revokedEdAnchor: TrustedAnchor = {
+      ...testAnchorEd25519,
+      status: "revoked",
+      revokedAt: "2026-09-02T00:00:00.000Z",
+      revocationReason: "key-compromise",
+    };
+    const updatedTrustStore = createHostProductionTrustStore([revokedEdAnchor]);
+
+    // Evaluation occurs at 2026-09-04 (after revocation)
+    const res = resolveCalibrationAuthority(
+      {
+        grantId: grant.grantId,
+        observation: validAuthoritativeObservation,
+        task: validTask,
+        evaluationTimestamp: "2026-09-04T00:00:01.000Z",
+        trustStore: updatedTrustStore,
+      },
+      provRegistry,
+    );
+
+    expect(res.ok).toBe(false);
+    if (!res.ok) {
+      expect(res.reasonCodes).toContain("trust-anchor-inactive-revoked");
+    }
+  });
+
+  it("50. adversarial A10: trust anchor lifecycle re-evaluated at evaluationTimestamp fails closed if expired after attestation", () => {
+    const grant = activeGrant;
+    const provRegistry = createProvenanceAuthorityRegistry({
+      benchmarks: [sampleBenchmark],
+      grants: [grant],
+    });
+
+    // Updated trust store where anchor has expired
+    const expiredEdAnchor: TrustedAnchor = {
+      ...testAnchorEd25519,
+      validUntil: "2026-09-02T00:00:00.000Z",
+    };
+    const updatedTrustStore = createHostProductionTrustStore([expiredEdAnchor]);
+
+    // Evaluation occurs at 2026-09-04 (after expiration)
+    const res = resolveCalibrationAuthority(
+      {
+        grantId: grant.grantId,
+        observation: validAuthoritativeObservation,
+        task: validTask,
+        evaluationTimestamp: "2026-09-04T00:00:01.000Z",
+        trustStore: updatedTrustStore,
+      },
+      provRegistry,
+    );
+
+    expect(res.ok).toBe(false);
+    if (!res.ok) {
+      expect(res.reasonCodes).toContain("trust-anchor-inactive-expired");
+    }
+  });
+
+  it("51. adversarial A11: HMAC symmetric secret cannot be extracted via public view API", () => {
+    const publicView = testAnchorRegistry.lookupAnchor("anchor-test-hmac-01");
+    expect(publicView).toBeDefined();
+    if (!publicView) return;
+
+    expect(publicView.anchorId).toBe("anchor-test-hmac-01");
+    expect(publicView.algorithm).toBe("hmac-sha256");
+    expect(publicView.publicKeyPem).toBeUndefined();
+    expect((publicView as any).publicKeyOrSecret).toBeUndefined();
+    expect(JSON.stringify(publicView)).not.toContain(testSecret);
+
+    // For Ed25519, public key PEM is safely returned
+    const edPublicView = testAnchorRegistry.lookupAnchor("anchor-test-ed25519-01");
+    expect(edPublicView).toBeDefined();
+    if (!edPublicView) return;
+    expect(edPublicView.publicKeyPem).toBe(edPublicKey);
+  });
+
+  it("52. adversarial A12: timing-safe signature comparison prevents side-channel forgery on symmetric checks", () => {
+    const message = Buffer.from("test-message-for-timing-safety", "utf8");
+    const validHmac = crypto.createHmac("sha256", testSecret).update(message).digest("hex");
+
+    // Matching signature passes
+    const passResult = testAnchorRegistry.verifySignature("anchor-test-hmac-01", message, validHmac);
+    expect(passResult.ok).toBe(true);
+
+    // Flip single character in signature
+    const corruptChar = validHmac[0] === "a" ? "b" : "a";
+    const corruptedHmac = corruptChar + validHmac.slice(1);
+    const failResult = testAnchorRegistry.verifySignature("anchor-test-hmac-01", message, corruptedHmac);
+    expect(failResult.ok).toBe(false);
+    if (!failResult.ok) {
+      expect(failResult.reasonCode).toBe("attestation-signature-invalid");
+    }
+
+    // Different length signature fails closed
+    const shortHmac = validHmac.slice(0, 10);
+    const failShort = testAnchorRegistry.verifySignature("anchor-test-hmac-01", message, shortHmac);
+    expect(failShort.ok).toBe(false);
+    if (!failShort.ok) {
+      expect(failShort.reasonCode).toBe("attestation-signature-invalid");
+    }
   });
 });

@@ -6,8 +6,9 @@ import {
   type RegisteredAuthorityGrant,
   type TrustedAnchor,
   createProvenanceAuthorityRegistry,
-  createTrustedAnchorRegistry,
+  createHostProductionTrustStore,
   computeCanonicalManifestDigest,
+  computeAttestationEnvelopeMessage,
   extractGrantManifestPayload,
   verifyAuthorityManifest,
   isResolvedDurableCalibrationAuthority,
@@ -89,15 +90,19 @@ describe("pure core reference flow", () => {
       productionAuthorityEligible: true,
     };
 
-    const testSecret = "test-anchor-secret-reference-flow-32b";
+    const { publicKey: edPublicKey, privateKey: edPrivateKey } = crypto.generateKeyPairSync("ed25519", {
+      publicKeyEncoding: { type: "spki", format: "pem" },
+      privateKeyEncoding: { type: "pkcs8", format: "pem" },
+    });
+
     const testAnchor: TrustedAnchor = {
       anchorId: "anchor-ref-flow-01",
-      algorithm: "hmac-sha256",
-      publicKeyOrSecret: testSecret,
+      algorithm: "ed25519",
+      publicKeyOrSecret: edPublicKey,
       status: "active",
       validFrom: "2026-01-01T00:00:00.000Z",
     };
-    const anchorRegistry = createTrustedAnchorRegistry([testAnchor]);
+    const anchorRegistry = createHostProductionTrustStore([testAnchor]);
 
     const grantBase: RegisteredAuthorityGrant = {
       grantId: "grant-minpair-001",
@@ -118,16 +123,22 @@ describe("pure core reference flow", () => {
       validFrom: "2026-01-01T00:00:00.000Z",
     };
 
-    const payload = extractGrantManifestPayload(grantBase);
+    const payload = extractGrantManifestPayload(grantBase, testBenchmark);
     const digest = computeCanonicalManifestDigest(payload);
-    const signature = crypto.createHmac("sha256", testSecret).update(digest, "utf8").digest("hex");
+    const attestedAt = "2026-09-01T00:00:00.000Z";
+    const envelope = computeAttestationEnvelopeMessage(
+      "anchor-ref-flow-01",
+      attestedAt,
+      digest,
+    );
+    const signature = crypto.sign(null, envelope, edPrivateKey).toString("hex");
     const verifyRes = verifyAuthorityManifest(
       {
         kind: "raw-cryptographic-attestation",
         anchorId: "anchor-ref-flow-01",
         manifestDigest: digest,
         signature,
-        attestedAt: "2026-09-01T00:00:00.000Z",
+        attestedAt,
       },
       payload,
       anchorRegistry,

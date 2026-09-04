@@ -23,7 +23,9 @@ const TEST_HARNESS_ROOT_BRAND = Symbol("nep.test-harness-mechanics-root");
 
 const DURABLE_TOKEN_SET = new WeakSet<object>();
 const CONTRACT_TOKEN_SET = new WeakSet<object>();
-const VERIFIED_ATTESTATION_SET = new WeakSet<object>();
+const VERIFIED_PRODUCTION_ATTESTATION_SET = new WeakSet<object>();
+const VERIFIED_CONTRACT_ATTESTATION_SET = new WeakSet<object>();
+const PRODUCTION_TRUST_STORE_SET = new WeakSet<object>();
 
 export type TestHarnessTrustRoot = {
   readonly kind: "test-mechanics-harness";
@@ -36,6 +38,7 @@ export type TrustedAnchorStatus = "active" | "revoked" | "expired";
 export type TrustedAnchor = {
   readonly anchorId: string;
   readonly algorithm: "ed25519" | "hmac-sha256";
+  /** PEM string for Ed25519 public key, or secret string for HMAC-SHA256 test mechanics */
   readonly publicKeyOrSecret: string;
   readonly status: TrustedAnchorStatus;
   readonly validFrom: string;
@@ -44,74 +47,253 @@ export type TrustedAnchor = {
   readonly revocationReason?: string;
 };
 
+export type TrustedAnchorPublicView = {
+  readonly anchorId: string;
+  readonly algorithm: "ed25519" | "hmac-sha256";
+  /** For Ed25519: public key PEM. For HMAC: undefined (symmetric secrets are never leaked). */
+  readonly publicKeyPem?: string;
+  readonly status: TrustedAnchorStatus;
+  readonly validFrom: string;
+  readonly validUntil?: string;
+  readonly revokedAt?: string;
+  readonly revocationReason?: string;
+};
+
+export type AnchorRegistryKind = "ad-hoc-registry" | "host-production-trust-store";
+
 export interface TrustedAnchorRegistry {
-  lookupAnchor(anchorId: string): TrustedAnchor | undefined;
+  readonly kind: AnchorRegistryKind;
+  readonly isProductionAuthorized: boolean;
+  lookupAnchor(anchorId: string): TrustedAnchorPublicView | undefined;
+  checkAnchorLifecycle(
+    anchorId: string,
+    evaluationTimestampMs: number,
+  ): { ok: true } | { ok: false; reasonCode: AuthorityRejectionReason };
+  verifySignature(
+    anchorId: string,
+    message: Buffer,
+    signatureHex: string,
+  ): { ok: true } | { ok: false; reasonCode: AuthorityRejectionReason };
 }
 
-export function createTrustedAnchorRegistry(
+function validateAnchorTimestamps(a: TrustedAnchor): void {
+  if (!parseStrictIso8601(a.validFrom).ok) {
+    throw new Error(
+      `Invalid trust anchor: validFrom is not a valid strict ISO-8601 timestamp for '${a.anchorId}'`,
+    );
+  }
+  if (a.validUntil !== undefined && !parseStrictIso8601(a.validUntil).ok) {
+    throw new Error(
+      `Invalid trust anchor: validUntil is not a valid strict ISO-8601 timestamp for '${a.anchorId}'`,
+    );
+  }
+  if (a.revokedAt !== undefined && !parseStrictIso8601(a.revokedAt).ok) {
+    throw new Error(
+      `Invalid trust anchor: revokedAt is not a valid strict ISO-8601 timestamp for '${a.anchorId}'`,
+    );
+  }
+}
+
+function createBaseAnchorRegistry(
   anchors: readonly TrustedAnchor[],
+  kind: AnchorRegistryKind,
 ): TrustedAnchorRegistry {
   const anchorMap = new Map<string, TrustedAnchor>();
   for (const a of anchors) {
     if (anchorMap.has(a.anchorId)) {
       throw new Error(`Conflict: duplicate trust anchor ID '${a.anchorId}'`);
     }
-    if (!parseStrictIso8601(a.validFrom).ok) {
-      throw new Error(
-        `Invalid trust anchor: validFrom is not a valid strict ISO-8601 timestamp for '${a.anchorId}'`,
-      );
-    }
-    if (a.validUntil !== undefined && !parseStrictIso8601(a.validUntil).ok) {
-      throw new Error(
-        `Invalid trust anchor: validUntil is not a valid strict ISO-8601 timestamp for '${a.anchorId}'`,
-      );
-    }
+    validateAnchorTimestamps(a);
     anchorMap.set(a.anchorId, a);
   }
-  return {
-    lookupAnchor(anchorId: string) {
-      return anchorMap.get(anchorId);
+
+  const isProduction = kind === "host-production-trust-store";
+
+  const registry: TrustedAnchorRegistry = {
+    kind,
+    isProductionAuthorized: isProduction,
+    lookupAnchor(anchorId: string): TrustedAnchorPublicView | undefined {
+      const a = anchorMap.get(anchorId);
+      if (!a) return undefined;
+      return {
+        anchorId: a.anchorId,
+        algorithm: a.algorithm,
+        publicKeyPem: a.algorithm === "ed25519" ? a.publicKeyOrSecret : undefined,
+        status: a.status,
+        validFrom: a.validFrom,
+        validUntil: a.validUntil,
+        revokedAt: a.revokedAt,
+        revocationReason: a.revocationReason,
+      };
+    },
+    checkAnchorLifecycle(anchorId: string, evalTimeMs: number) {
+      const a = anchorMap.get(anchorId);
+      if (!a) return { ok: false, reasonCode: "trust-anchor-unknown" };
+
+      const fromParsed = parseStrictIso8601(a.validFrom);
+      if (!fromParsed.ok || evalTimeMs < fromParsed.timeMs) {
+        return { ok: false, reasonCode: "trust-anchor-not-valid" };
+      }
+
+      if (a.validUntil !== undefined) {
+        const untilParsed = parseStrictIso8601(a.validUntil);
+        if (!untilParsed.ok || evalTimeMs > untilParsed.timeMs) {
+          return { ok: false, reasonCode: "trust-anchor-inactive-expired" };
+        }
+      }
+
+      if (a.status === "revoked") {
+        return { ok: false, reasonCode: "trust-anchor-inactive-revoked" };
+      }
+      if (a.status === "expired") {
+        return { ok: false, reasonCode: "trust-anchor-inactive-expired" };
+      }
+
+      return { ok: true };
+    },
+    verifySignature(anchorId: string, message: Buffer, signatureHex: string) {
+      const a = anchorMap.get(anchorId);
+      if (!a) return { ok: false, reasonCode: "trust-anchor-unknown" };
+
+      if (a.algorithm === "hmac-sha256") {
+        const expectedSigBuf = crypto
+          .createHmac("sha256", a.publicKeyOrSecret)
+          .update(message)
+          .digest();
+        let actualSigBuf: Buffer;
+        try {
+          actualSigBuf = Buffer.from(signatureHex, "hex");
+        } catch {
+          return { ok: false, reasonCode: "attestation-signature-invalid" };
+        }
+        if (
+          expectedSigBuf.length !== actualSigBuf.length ||
+          !crypto.timingSafeEqual(expectedSigBuf, actualSigBuf)
+        ) {
+          return { ok: false, reasonCode: "attestation-signature-invalid" };
+        }
+        return { ok: true };
+      }
+
+      if (a.algorithm === "ed25519") {
+        try {
+          const isValid = crypto.verify(
+            null,
+            message,
+            a.publicKeyOrSecret,
+            Buffer.from(signatureHex, "hex"),
+          );
+          if (!isValid) return { ok: false, reasonCode: "attestation-signature-invalid" };
+          return { ok: true };
+        } catch {
+          return { ok: false, reasonCode: "attestation-signature-invalid" };
+        }
+      }
+
+      return { ok: false, reasonCode: "attestation-signature-invalid" };
     },
   };
+
+  if (isProduction) {
+    PRODUCTION_TRUST_STORE_SET.add(registry);
+  }
+
+  return registry;
+}
+
+/**
+ * Creates an ad-hoc trust anchor registry for testing and contract flows.
+ * INVARIANT: Ad-hoc registries can NEVER mint production durable authority.
+ */
+export function createTrustedAnchorRegistry(
+  anchors: readonly TrustedAnchor[],
+): TrustedAnchorRegistry {
+  return createBaseAnchorRegistry(anchors, "ad-hoc-registry");
+}
+
+/**
+ * Creates an authorized host production trust store.
+ * INVARIANT: Requires Ed25519 asymmetric public keys.
+ * Symmetric HMAC keys are strictly rejected from production trust stores.
+ */
+export function createHostProductionTrustStore(
+  anchors: readonly TrustedAnchor[],
+): TrustedAnchorRegistry {
+  for (const a of anchors) {
+    if (a.algorithm !== "ed25519") {
+      throw new Error(
+        `Production trust violation: anchor '${a.anchorId}' uses algorithm '${a.algorithm}'. Production authority strictly requires asymmetric 'ed25519'.`,
+      );
+    }
+  }
+  return createBaseAnchorRegistry(anchors, "host-production-trust-store");
+}
+
+/**
+ * Pure, deterministic stringifier for canonical JSON.
+ * Avoids JavaScript engine integer-key reordering by outputting sorted keys directly.
+ */
+export function canonicalizeJson(val: unknown): string {
+  if (val === null || typeof val !== "object") {
+    return JSON.stringify(val);
+  }
+  if (Array.isArray(val)) {
+    return `[${val.map(canonicalizeJson).join(",")}]`;
+  }
+  const obj = val as Record<string, unknown>;
+  const sortedKeys = Object.keys(obj).sort();
+  const parts: string[] = [];
+  for (const key of sortedKeys) {
+    const v = obj[key];
+    if (v !== undefined) {
+      parts.push(`${JSON.stringify(key)}:${canonicalizeJson(v)}`);
+    }
+  }
+  return `{${parts.join(",")}}`;
 }
 
 export type AuthorityManifestPayload = {
-  readonly benchmarkArtifactId: string;
-  readonly expectedBenchmarkFingerprint: string;
-  readonly expectedBenchmarkVersion: string;
+  // Grant identity & lifecycle
   readonly grantId: string;
   readonly grantVersion: string;
+  readonly status: AuthorityGrantStatus;
+  readonly productionAuthorityEligible: boolean;
+  readonly supersededByGrantId?: string;
+  readonly revokedAt?: string;
+  readonly revocationReason?: string;
+  readonly validFrom: string;
+  readonly validUntil?: string;
+
+  // Evaluator binding & scope
   readonly evaluatorBinding: EvaluatorBinding;
   readonly scope: AuthorityScope;
   readonly decision: "assessment" | "mastery";
   readonly authority: "assessment-candidate" | "mastery-candidate";
-  readonly validFrom: string;
-  readonly validUntil?: string;
   readonly calibratedScoreMappingPolicyId?: string;
+
+  // Expected Benchmark Specification
+  readonly benchmarkArtifactId: string;
+  readonly expectedBenchmarkFingerprint: string;
+  readonly expectedBenchmarkVersion: string;
+  readonly expectedBenchmarkEvidenceLayer: EvidenceLayer;
+  readonly expectedBenchmarkProductionEligible: boolean;
+  readonly expectedBenchmarkAdjudicationProtocol?: string;
 };
-
-function canonicalizeJsonValue(val: unknown): unknown {
-  if (val === null || typeof val !== "object") return val;
-  if (Array.isArray(val)) return val.map(canonicalizeJsonValue);
-  const obj = val as Record<string, unknown>;
-  const sortedKeys = Object.keys(obj).sort();
-  const result: Record<string, unknown> = {};
-  for (const key of sortedKeys) {
-    const v = obj[key];
-    if (v !== undefined) {
-      result[key] = canonicalizeJsonValue(v);
-    }
-  }
-  return result;
-}
-
-export function canonicalizeJson(val: unknown): string {
-  return JSON.stringify(canonicalizeJsonValue(val));
-}
 
 export function computeCanonicalManifestDigest(payload: AuthorityManifestPayload): string {
   const canonical = canonicalizeJson(payload);
   return "sha256:" + crypto.createHash("sha256").update(canonical, "utf8").digest("hex");
+}
+
+export const ATTESTATION_DOMAIN_SEPARATOR = "AtoEnglish-Authority-Attestation-v1\n";
+
+export function computeAttestationEnvelopeMessage(
+  anchorId: string,
+  attestedAt: string,
+  manifestDigest: string,
+): Buffer {
+  const envelope = `${ATTESTATION_DOMAIN_SEPARATOR}anchorId:${anchorId}\nattestedAt:${attestedAt}\nmanifestDigest:${manifestDigest}\n`;
+  return Buffer.from(envelope, "utf8");
 }
 
 export type RawAuthorityAttestation = {
@@ -122,19 +304,50 @@ export type RawAuthorityAttestation = {
   readonly attestedAt: string;
 };
 
-export type VerifiedAuthorityAttestation = {
+export type VerifiedProductionAuthorityAttestation = {
   readonly kind: "verified-cryptographic-attestation";
+  readonly authorityTier: "production-durable";
   readonly anchorId: string;
   readonly manifestDigest: string;
   readonly attestedAt: string;
   readonly verifiedAt: string;
 };
 
+export type VerifiedContractAuthorityAttestation = {
+  readonly kind: "verified-cryptographic-attestation";
+  readonly authorityTier: "contract-only";
+  readonly anchorId: string;
+  readonly manifestDigest: string;
+  readonly attestedAt: string;
+  readonly verifiedAt: string;
+};
+
+export type VerifiedAuthorityAttestation =
+  | VerifiedProductionAuthorityAttestation
+  | VerifiedContractAuthorityAttestation;
+
+export function isVerifiedProductionAuthorityAttestation(
+  value: unknown,
+): value is VerifiedProductionAuthorityAttestation {
+  if (!value || typeof value !== "object") return false;
+  return VERIFIED_PRODUCTION_ATTESTATION_SET.has(value);
+}
+
+export function isVerifiedContractAuthorityAttestation(
+  value: unknown,
+): value is VerifiedContractAuthorityAttestation {
+  if (!value || typeof value !== "object") return false;
+  return VERIFIED_CONTRACT_ATTESTATION_SET.has(value);
+}
+
 export function isVerifiedAuthorityAttestation(
   value: unknown,
 ): value is VerifiedAuthorityAttestation {
   if (!value || typeof value !== "object") return false;
-  return VERIFIED_ATTESTATION_SET.has(value);
+  return (
+    VERIFIED_PRODUCTION_ATTESTATION_SET.has(value) ||
+    VERIFIED_CONTRACT_ATTESTATION_SET.has(value)
+  );
 }
 
 export type AttestationVerificationResult =
@@ -143,7 +356,7 @@ export type AttestationVerificationResult =
 
 /**
  * Verifies a cryptographic authority attestation against a TrustedAnchorRegistry.
- * Binds the exact manifest digest covering the benchmark identity and grant scope.
+ * Binds the exact manifest digest and domain-separated envelope.
  */
 export function verifyAuthorityManifest(
   attestation: RawAuthorityAttestation,
@@ -162,67 +375,64 @@ export function verifyAuthorityManifest(
     return { ok: false, reasonCode: "request-timestamp-invalid" };
   }
 
-  const anchorFrom = parseStrictIso8601(anchor.validFrom);
-  if (!anchorFrom.ok || evalParsed.timeMs < anchorFrom.timeMs) {
-    return { ok: false, reasonCode: "trust-anchor-not-valid" };
+  // Check anchor lifecycle
+  const lifecycleCheck = anchorRegistry.checkAnchorLifecycle(attestation.anchorId, evalParsed.timeMs);
+  if (!lifecycleCheck.ok) {
+    return { ok: false, reasonCode: lifecycleCheck.reasonCode };
   }
 
-  if (anchor.validUntil !== undefined) {
-    const anchorUntil = parseStrictIso8601(anchor.validUntil);
-    if (!anchorUntil.ok || evalParsed.timeMs > anchorUntil.timeMs) {
-      return { ok: false, reasonCode: "trust-anchor-inactive-expired" };
-    }
-  }
-
-  if (anchor.status === "revoked") {
-    return { ok: false, reasonCode: "trust-anchor-inactive-revoked" };
-  }
-  if (anchor.status === "expired") {
-    return { ok: false, reasonCode: "trust-anchor-inactive-expired" };
-  }
-
+  // Verify manifest digest matches canonical hash of payload
   const expectedDigest = computeCanonicalManifestDigest(payload);
   if (attestation.manifestDigest !== expectedDigest) {
     return { ok: false, reasonCode: "attestation-payload-mismatch" };
   }
 
-  // Cryptographic signature check
-  if (anchor.algorithm === "hmac-sha256") {
-    const expectedSig = crypto
-      .createHmac("sha256", anchor.publicKeyOrSecret)
-      .update(attestation.manifestDigest, "utf8")
-      .digest("hex");
-    if (attestation.signature !== expectedSig) {
-      return { ok: false, reasonCode: "attestation-signature-invalid" };
-    }
-  } else if (anchor.algorithm === "ed25519") {
-    try {
-      const isValid = crypto.verify(
-        null,
-        Buffer.from(attestation.manifestDigest, "utf8"),
-        anchor.publicKeyOrSecret,
-        Buffer.from(attestation.signature, "hex"),
-      );
-      if (!isValid) {
-        return { ok: false, reasonCode: "attestation-signature-invalid" };
-      }
-    } catch {
-      return { ok: false, reasonCode: "attestation-signature-invalid" };
-    }
-  } else {
-    return { ok: false, reasonCode: "attestation-signature-invalid" };
+  // Verify domain-separated envelope message
+  const envelopeMessage = computeAttestationEnvelopeMessage(
+    attestation.anchorId,
+    attestation.attestedAt,
+    attestation.manifestDigest,
+  );
+
+  const sigResult = anchorRegistry.verifySignature(
+    attestation.anchorId,
+    envelopeMessage,
+    attestation.signature,
+  );
+  if (!sigResult.ok) {
+    return { ok: false, reasonCode: sigResult.reasonCode };
   }
 
-  const verified: VerifiedAuthorityAttestation = {
+  // Check if anchor registry is authorized production trust store
+  const isProductionStore =
+    PRODUCTION_TRUST_STORE_SET.has(anchorRegistry) && anchorRegistry.isProductionAuthorized;
+
+  if (isProductionStore) {
+    if (anchor.algorithm !== "ed25519") {
+      return { ok: false, reasonCode: "trust-anchor-algorithm-unsupported-for-production" };
+    }
+    const verifiedProd: VerifiedProductionAuthorityAttestation = {
+      kind: "verified-cryptographic-attestation",
+      authorityTier: "production-durable",
+      anchorId: attestation.anchorId,
+      manifestDigest: attestation.manifestDigest,
+      attestedAt: attestation.attestedAt,
+      verifiedAt: evalParsed.canonicalIso,
+    };
+    VERIFIED_PRODUCTION_ATTESTATION_SET.add(verifiedProd);
+    return { ok: true, attestation: verifiedProd };
+  }
+
+  const verifiedContract: VerifiedContractAuthorityAttestation = {
     kind: "verified-cryptographic-attestation",
+    authorityTier: "contract-only",
     anchorId: attestation.anchorId,
     manifestDigest: attestation.manifestDigest,
     attestedAt: attestation.attestedAt,
     verifiedAt: evalParsed.canonicalIso,
   };
-
-  VERIFIED_ATTESTATION_SET.add(verified);
-  return { ok: true, attestation: verified };
+  VERIFIED_CONTRACT_ATTESTATION_SET.add(verifiedContract);
+  return { ok: true, attestation: verifiedContract };
 }
 
 export type RegisteredBenchmarkArtifact = {
@@ -264,6 +474,9 @@ export type RegisteredAuthorityGrant = {
   benchmarkArtifactId: string;
   expectedBenchmarkFingerprint: string;
   expectedBenchmarkVersion: string;
+  expectedBenchmarkEvidenceLayer?: EvidenceLayer;
+  expectedBenchmarkProductionEligible?: boolean;
+  expectedBenchmarkAdjudicationProtocol?: string;
   productionAuthorityEligible: boolean;
   evaluatorBinding: EvaluatorBinding;
   scope: AuthorityScope;
@@ -281,20 +494,32 @@ export type RegisteredAuthorityGrant = {
 
 export function extractGrantManifestPayload(
   grant: RegisteredAuthorityGrant,
+  benchmark?: RegisteredBenchmarkArtifact,
 ): AuthorityManifestPayload {
   return {
-    benchmarkArtifactId: grant.benchmarkArtifactId,
-    expectedBenchmarkFingerprint: grant.expectedBenchmarkFingerprint,
-    expectedBenchmarkVersion: grant.expectedBenchmarkVersion,
     grantId: grant.grantId,
     grantVersion: grant.grantVersion,
+    status: grant.status,
+    productionAuthorityEligible: grant.productionAuthorityEligible,
+    supersededByGrantId: grant.supersededByGrantId,
+    revokedAt: grant.revokedAt,
+    revocationReason: grant.revocationReason,
+    validFrom: grant.validFrom,
+    validUntil: grant.validUntil,
     evaluatorBinding: grant.evaluatorBinding,
     scope: grant.scope,
     decision: grant.decision,
     authority: grant.authority,
-    validFrom: grant.validFrom,
-    validUntil: grant.validUntil,
     calibratedScoreMappingPolicyId: grant.calibratedScoreMappingPolicyId,
+    benchmarkArtifactId: grant.benchmarkArtifactId,
+    expectedBenchmarkFingerprint: grant.expectedBenchmarkFingerprint,
+    expectedBenchmarkVersion: grant.expectedBenchmarkVersion,
+    expectedBenchmarkEvidenceLayer:
+      grant.expectedBenchmarkEvidenceLayer ?? benchmark?.evidenceLayer ?? "layer1-benchmark-calibration",
+    expectedBenchmarkProductionEligible:
+      grant.expectedBenchmarkProductionEligible ?? benchmark?.productionAuthorityEligible ?? true,
+    expectedBenchmarkAdjudicationProtocol:
+      grant.expectedBenchmarkAdjudicationProtocol ?? benchmark?.adjudicationProtocol,
   };
 }
 
@@ -313,11 +538,14 @@ export const AUTHORITY_REJECTION_REASONS = [
   "trust-anchor-inactive-revoked",
   "trust-anchor-inactive-expired",
   "trust-anchor-not-valid",
+  "trust-anchor-not-production-authorized",
+  "trust-anchor-algorithm-unsupported-for-production",
   "attestation-signature-invalid",
   "attestation-payload-mismatch",
   "benchmark-not-found",
   "benchmark-fingerprint-mismatch",
   "benchmark-version-mismatch",
+  "benchmark-specification-mismatch",
   "benchmark-ineligible-for-production-authority",
   "evaluator-identity-mismatch",
   "evaluator-kind-mismatch",
@@ -349,6 +577,8 @@ export type AuthorityResolutionRequest = {
   /** @deprecated Legacy alias for evaluationTimestamp. If provided with evaluationTimestamp, must match. */
   atTimestamp?: string;
   requireProductionAuthority?: boolean;
+  /** Optional trust store to re-evaluate anchor lifecycle at resolution timestamp */
+  trustStore?: TrustedAnchorRegistry;
 };
 
 export type ResolvedDurableCalibrationAuthority = {
@@ -775,6 +1005,24 @@ export function resolveCalibrationAuthority(
     if (registeredBenchmark.benchmarkId !== observation.calibration.benchmarkId) {
       reasonCodes.push("benchmark-fingerprint-mismatch");
     }
+    if (
+      grant.expectedBenchmarkEvidenceLayer !== undefined &&
+      registeredBenchmark.evidenceLayer !== grant.expectedBenchmarkEvidenceLayer
+    ) {
+      reasonCodes.push("benchmark-specification-mismatch");
+    }
+    if (
+      grant.expectedBenchmarkProductionEligible !== undefined &&
+      registeredBenchmark.productionAuthorityEligible !== grant.expectedBenchmarkProductionEligible
+    ) {
+      reasonCodes.push("benchmark-specification-mismatch");
+    }
+    if (
+      grant.expectedBenchmarkAdjudicationProtocol !== undefined &&
+      registeredBenchmark.adjudicationProtocol !== grant.expectedBenchmarkAdjudicationProtocol
+    ) {
+      reasonCodes.push("benchmark-specification-mismatch");
+    }
   }
 
   // 4. Production authority eligibility & cryptographic attestation verification
@@ -798,10 +1046,34 @@ export function resolveCalibrationAuthority(
       reasonCodes.push("grant-attestation-missing");
     } else if (!isVerifiedAuthorityAttestation(grant.attestation)) {
       reasonCodes.push("grant-attestation-unverified");
+    } else if (!isVerifiedProductionAuthorityAttestation(grant.attestation)) {
+      reasonCodes.push("trust-anchor-not-production-authorized");
     } else {
-      const expectedDigest = computeCanonicalManifestDigest(extractGrantManifestPayload(grant));
+      const expectedDigest = computeCanonicalManifestDigest(
+        extractGrantManifestPayload(grant, registeredBenchmark),
+      );
       if (grant.attestation.manifestDigest !== expectedDigest) {
         reasonCodes.push("attestation-payload-mismatch");
+      }
+    }
+  }
+
+  // Anchor lifecycle check at resolution timestamp if trustStore provided
+  if (request.trustStore) {
+    if (
+      request.requireProductionAuthority !== false &&
+      (!request.trustStore.isProductionAuthorized ||
+        !PRODUCTION_TRUST_STORE_SET.has(request.trustStore))
+    ) {
+      reasonCodes.push("trust-anchor-not-production-authorized");
+    }
+    if (grant.attestation && isVerifiedAuthorityAttestation(grant.attestation)) {
+      const lifecycleCheck = request.trustStore.checkAnchorLifecycle(
+        grant.attestation.anchorId,
+        evalTimeMs,
+      );
+      if (!lifecycleCheck.ok) {
+        reasonCodes.push(lifecycleCheck.reasonCode);
       }
     }
   }
