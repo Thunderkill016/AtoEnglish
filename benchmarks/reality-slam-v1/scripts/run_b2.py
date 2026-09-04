@@ -22,33 +22,28 @@ DEFAULT_BATCH_SIZE = 8192
 
 
 def _feature_dict(exercise: SlamExercise, token: SlamTokenRow, h: LearnerHistoryFeatures) -> dict[str, float]:
+    del token  # token identity/linguistic attributes are intentionally outside the frozen B2 budget.
+
     def rate(value: float | None, name: str, out: dict[str, float]) -> None:
         if value is None:
             out[f"{name}:missing"] = 1.0
         else:
             out[name] = value
 
+    # Frozen B2 information budget from Spec #004 / data-model.md:
+    # prior labeled user/token history, prior encounter count, course-age lag,
+    # exercise format, and normalized prompt response time. No direct user ID,
+    # token identity, POS/morphology/dependency features, country/client/session,
+    # or absolute course-age feature is allowed in B2.
     out: dict[str, float] = {
         "bias": 1.0,
-        f"user={exercise.header.user_id}": 1.0,
-        f"token={token.token}": 1.0,
-        f"pos={token.pos}": 1.0,
-        f"dep_edge={token.dep_edge}": 1.0,
-        f"client={exercise.header.client}": 1.0,
-        f"session={exercise.header.session}": 1.0,
-        f"format={exercise.header.format}": 1.0,
-        "dep_head": float(token.dep_head),
-        "course_age_days": math.log1p(exercise.header.days),
+        f"exercise_format={h.exercise_format}": 1.0,
         "prior_labeled_user_token_count": math.log1p(h.prior_labeled_user_token_count),
         "prior_labeled_user_error_count": math.log1p(h.prior_labeled_user_error_count),
         "prior_labeled_token_count": math.log1p(h.prior_labeled_token_count),
         "prior_labeled_token_error_count": math.log1p(h.prior_labeled_token_error_count),
         "prior_encounter_count": math.log1p(h.prior_encounter_count),
     }
-    for country in exercise.header.countries:
-        out[f"country={country}"] = 1.0
-    for morph in token.morphology:
-        out[f"morph={morph}"] = 1.0
 
     rate(h.prior_labeled_user_error_rate, "prior_labeled_user_error_rate", out)
     rate(h.prior_labeled_token_error_rate, "prior_labeled_token_error_rate", out)
