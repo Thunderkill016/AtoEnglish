@@ -1,0 +1,1 @@
+openpronounce[app,tts-piper]==0.3.0

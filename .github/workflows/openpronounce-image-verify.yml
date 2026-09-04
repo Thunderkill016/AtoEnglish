@@ -1,0 +1,156 @@
+name: OpenPronounce image verify
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths:
+      - "services/openpronounce-shadow/**"
+      - ".github/workflows/openpronounce-image-verify.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: openpronounce-image-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  image:
+    name: Build and boot provider image
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Build Railway provider image
+        run: |
+          docker build \
+            --progress=plain \
+            -t atoenglish-openpronounce-shadow:verify \
+            services/openpronounce-shadow
+
+      - name: Verify CPU Torch and Piper extra
+        run: |
+          docker run --rm atoenglish-openpronounce-shadow:verify \
+            python -c 'import openpronounce, piper, torch; assert not torch.cuda.is_available(); print("runtime_imports_ok", torch.__version__)'
+
+      - name: Boot service without model warm-up
+        run: |
+          docker run -d \
+            --name openpronounce-shadow-verify \
+            -p 8000:8000 \
+            -e OPENPRONOUNCE_SERVICE_TOKEN=ci-private-token \
+            -e OPENPRONOUNCE_WARMUP=0 \
+            atoenglish-openpronounce-shadow:verify
+
+          cleanup() {
+            docker logs openpronounce-shadow-verify || true
+            docker rm -f openpronounce-shadow-verify >/dev/null 2>&1 || true
+          }
+          trap cleanup EXIT
+
+          ready=0
+          for _ in $(seq 1 45); do
+            if curl --fail --silent --show-error http://127.0.0.1:8000/health > /tmp/health.json; then
+              ready=1
+              break
+            fi
+            sleep 1
+          done
+
+          if [ "$ready" -ne 1 ]; then
+            echo "Provider did not become healthy" >&2
+            exit 1
+          fi
+
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          payload = json.loads(Path('/tmp/health.json').read_text())
+          assert payload['status'] == 'ok'
+          assert payload['provider'] == 'openpronounce'
+          assert payload['version'] == '0.3.0'
+          PY
+
+          unauthorized_status=$(curl --silent --show-error \
+            --output /tmp/unauthorized.json \
+            --write-out '%{http_code}' \
+            --request POST \
+            --form 'file=@services/openpronounce-shadow/calibration/example.synthetic.jsonl;type=audio/wav' \
+            --form 'expected_text=think' \
+            --form 'lang=en' \
+            http://127.0.0.1:8000/pronunciation)
+          test "$unauthorized_status" = "401"
+
+          unsupported_status=$(curl --silent --show-error \
+            --output /tmp/unsupported.json \
+            --write-out '%{http_code}' \
+            --request POST \
+            --header 'Authorization: Bearer ci-private-token' \
+            --form 'file=@services/openpronounce-shadow/calibration/example.synthetic.jsonl;type=text/plain' \
+            --form 'expected_text=think' \
+            --form 'lang=en' \
+            http://127.0.0.1:8000/pronunciation)
+          test "$unsupported_status" = "415"
+
+          if docker logs openpronounce-shadow-verify 2>&1 | grep -Fq 'think'; then
+            echo "Expected text leaked into provider logs" >&2
+            exit 1
+          fi
+
+      - name: Verify unconfigured service token fails closed with 503
+        run: |
+          docker run -d \
+            --name openpronounce-shadow-unconfigured \
+            -p 8001:8000 \
+            -e OPENPRONOUNCE_WARMUP=0 \
+            atoenglish-openpronounce-shadow:verify
+
+          cleanup_unconfigured() {
+            docker logs openpronounce-shadow-unconfigured || true
+            docker rm -f openpronounce-shadow-unconfigured >/dev/null 2>&1 || true
+          }
+          trap cleanup_unconfigured EXIT
+
+          ready=0
+          for _ in $(seq 1 45); do
+            if curl --fail --silent --show-error http://127.0.0.1:8001/health > /dev/null; then
+              ready=1
+              break
+            fi
+            sleep 1
+          done
+
+          if [ "$ready" -ne 1 ]; then
+            echo "Unconfigured provider did not become healthy" >&2
+            exit 1
+          fi
+
+          # Unauthenticated request to unconfigured provider must fail closed with 503
+          status_no_auth=$(curl --silent --show-error \
+            --output /tmp/unconfigured_no_auth.json \
+            --write-out '%{http_code}' \
+            --request POST \
+            --form 'file=@services/openpronounce-shadow/calibration/example.synthetic.jsonl;type=audio/wav' \
+            --form 'expected_text=think' \
+            --form 'lang=en' \
+            http://127.0.0.1:8001/pronunciation)
+          test "$status_no_auth" = "503"
+
+          # Request with any Bearer token to unconfigured provider must ALSO fail closed with 503
+          status_with_auth=$(curl --silent --show-error \
+            --output /tmp/unconfigured_with_auth.json \
+            --write-out '%{http_code}' \
+            --request POST \
+            --header 'Authorization: Bearer any-token' \
+            --form 'file=@services/openpronounce-shadow/calibration/example.synthetic.jsonl;type=audio/wav' \
+            --form 'expected_text=think' \
+            --form 'lang=en' \
+            http://127.0.0.1:8001/pronunciation)
+          test "$status_with_auth" = "503"
+
