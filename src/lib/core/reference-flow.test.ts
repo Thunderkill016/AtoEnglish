@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import {
+  type RegisteredBenchmarkArtifact,
   createProvenanceAuthorityRegistry,
   resolveCalibrationAuthority,
 } from "./authority-registry";
@@ -69,37 +70,47 @@ describe("pure core reference flow", () => {
       createdAt: "2026-09-04T00:00:00.000Z",
     };
 
-    const registry = createProvenanceAuthorityRegistry([
-      {
-        grantId: "grant-minpair-001",
-        grantVersion: "1.0.0",
-        status: "active",
-        benchmarkArtifact: {
-          benchmarkId: "vi-adult-minpair-v1",
-          version: "1.0.0",
-          immutableFingerprint: "sha256-bench-minpair-v1-abc",
-          evidenceLayer: "layer1-benchmark-calibration",
-          sourceReferences: [],
-          sampleSize: 100,
-          createdAt: "2026-09-01T00:00:00.000Z",
+    const testBenchmark: RegisteredBenchmarkArtifact = {
+      benchmarkId: "vi-adult-minpair-v1",
+      version: "1.0.0",
+      immutableFingerprint: "sha256-bench-minpair-v1-abc",
+      evidenceLayer: "layer1-benchmark-calibration",
+      sourceReferences: [],
+      sampleSize: 100,
+      createdAt: "2026-09-01T00:00:00.000Z",
+      productionAuthorityEligible: true,
+    };
+
+    const registry = createProvenanceAuthorityRegistry({
+      benchmarks: [testBenchmark],
+      grants: [
+        {
+          grantId: "grant-minpair-001",
+          grantVersion: "1.0.0",
+          status: "active",
+          benchmarkArtifactId: "vi-adult-minpair-v1",
+          expectedBenchmarkFingerprint: "sha256-bench-minpair-v1-abc",
+          expectedBenchmarkVersion: "1.0.0",
+          productionAuthorityEligible: true,
+          evaluatorBinding: {
+            evaluatorId: "binary-answer-key",
+            evaluatorKind: "deterministic",
+            modelFingerprint: "deterministic-choice@v1",
+          },
+          scope: observation.calibration.scope,
+          decision: "assessment",
+          authority: "assessment-candidate",
+          validFrom: "2026-01-01T00:00:00.000Z",
         },
-        evaluatorBinding: {
-          evaluatorId: "binary-answer-key",
-          evaluatorKind: "deterministic",
-          modelFingerprint: "deterministic-choice@v1",
-        },
-        scope: observation.calibration.scope,
-        decision: "assessment",
-        authority: "assessment-candidate",
-        validFrom: "2026-01-01T00:00:00.000Z",
-      },
-    ]);
+      ],
+    });
 
     const resolved = resolveCalibrationAuthority(
       {
         grantId: "grant-minpair-001",
         observation,
         task,
+        evaluationTimestamp: "2026-09-04T00:00:01.000Z",
       },
       registry,
     );
@@ -195,37 +206,47 @@ describe("pure core reference flow", () => {
       createdAt: "2026-09-04T00:00:00.000Z",
     };
 
-    const registry = createProvenanceAuthorityRegistry([
-      {
-        grantId: "grant-bench-1",
-        grantVersion: "1.0.0",
-        status: "active",
-        benchmarkArtifact: {
-          benchmarkId: "bench-1",
-          version: "1.0.0",
-          immutableFingerprint: "sha256-bench-1",
-          evidenceLayer: "layer1-benchmark-calibration",
-          sourceReferences: [],
-          sampleSize: 100,
-          createdAt: "2026-09-01T00:00:00.000Z",
+    const testBenchmark: RegisteredBenchmarkArtifact = {
+      benchmarkId: "bench-1",
+      version: "1.0.0",
+      immutableFingerprint: "sha256-bench-1",
+      evidenceLayer: "layer1-benchmark-calibration",
+      sourceReferences: [],
+      sampleSize: 100,
+      createdAt: "2026-09-01T00:00:00.000Z",
+      productionAuthorityEligible: true,
+    };
+
+    const registry = createProvenanceAuthorityRegistry({
+      benchmarks: [testBenchmark],
+      grants: [
+        {
+          grantId: "grant-bench-1",
+          grantVersion: "1.0.0",
+          status: "active",
+          benchmarkArtifactId: "bench-1",
+          expectedBenchmarkFingerprint: "sha256-bench-1",
+          expectedBenchmarkVersion: "1.0.0",
+          productionAuthorityEligible: true,
+          evaluatorBinding: {
+            evaluatorId: "test",
+            evaluatorKind: "deterministic",
+            modelFingerprint: "deterministic@v1",
+          },
+          scope: observation.calibration.scope,
+          decision: "assessment",
+          authority: "assessment-candidate",
+          validFrom: "2026-01-01T00:00:00.000Z",
         },
-        evaluatorBinding: {
-          evaluatorId: "test",
-          evaluatorKind: "deterministic",
-          modelFingerprint: "deterministic@v1",
-        },
-        scope: observation.calibration.scope,
-        decision: "assessment",
-        authority: "assessment-candidate",
-        validFrom: "2026-01-01T00:00:00.000Z",
-      },
-    ]);
+      ],
+    });
 
     const resolved = resolveCalibrationAuthority(
       {
         grantId: "grant-bench-1",
         observation,
         task,
+        evaluationTimestamp: "2026-09-04T00:00:01.000Z",
       },
       registry,
     );

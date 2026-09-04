@@ -56,18 +56,18 @@ To design the provenance registry on sound foundations, we reviewed core provena
 
 1. **No Self-Certification**:
    Evaluator output, task context, or observation metadata cannot create or assert a durable authority grant.
-2. **Independent Provenance**:
-   Every durable grant references an independently registered benchmark artifact (`RegisteredBenchmarkArtifact`) with an immutable SHA-256 fingerprint.
-3. **Exact Evaluator Binding**:
-   A grant binds to `evaluatorId`, `evaluatorKind`, `modelFingerprint`, and optional `runtimeFingerprint`. Any drift invalidates the grant fail-closed.
+2. **Independent Benchmark Provenance (Decoupled Identity)**:
+   Every durable grant references an independently registered benchmark artifact by its identifier (`benchmarkArtifactId`), immutable SHA-256 fingerprint (`expectedBenchmarkFingerprint`), and version (`expectedBenchmarkVersion`). Grants cannot synthesize, auto-register, or bootstrap benchmarks into existence.
+3. **Exact Evaluator & Configuration Binding**:
+   A grant binds to `evaluatorId`, `evaluatorKind`, `modelFingerprint`, optional `configurationId`, and canonical `runtimeFingerprint` (`artifact.runtime`). Any drift invalidates the grant fail-closed.
 4. **Scoped Authority**:
-   Construct, activity, population, prompt context, device, and noise constraints must match fail-closed.
-5. **Lifecycle-Aware**:
-   Grants in status `revoked`, `superseded`, or `expired` immediately resolve to `{ ok: false }`.
+   Construct, activity, population (learner context must contain all required tags), prompt context, device, and noise constraints must match fail-closed.
+5. **Deterministic Time Semantics & Lifecycle Coherence**:
+   Evaluation timestamp is explicit and validated via numeric parsing (`Date.parse()`). Ambient wall clock is strictly forbidden. `resolvedAt` derives from the request timestamp. Grants in status `revoked`, `superseded`, or `expired` immediately resolve to `{ ok: false }`. Incoherent lifecycle states (e.g. revoked without `revokedAt`/`revocationReason` or `validUntil <= validFrom`) throw upon construction and fail closed upon resolution.
 6. **Reference Separation**:
    `validateReferenceCoreEvidence()` remains strictly non-authoritative (`authorityScope: "repository-reference"`). Even if a reference observation matches a grant, it cannot gain durable authority.
-7. **No Lower Layer Substitution**:
-   Repository unit tests or synthetic fixtures (Layer 0) cannot substitute for empirical benchmark calibration (Layer 1) or human adjudication (Layer 2).
+7. **No Lower Layer Substitution & Production Authority Eligibility**:
+   Repository unit tests or synthetic fixtures (Layer 0) cannot substitute for empirical benchmark calibration (Layer 1) or human adjudication (Layer 2). All repository fixtures are marked `productionAuthorityEligible: false` and fail closed by default (`grant-ineligible-for-production-authority`).
 8. **No Implicit Score Thresholding**:
    Registry authority does not define bounded-score -> boolean mappings unless an explicit calibrated mapping policy (`calibratedScoreMappingPolicyId`) is registered.
 
@@ -82,11 +82,12 @@ export type RegisteredBenchmarkArtifact = {
   benchmarkId: string;
   version: string;
   immutableFingerprint: string;
-  evidenceLayer: "layer1-benchmark-calibration" | "layer2-human-adjudicated";
+  evidenceLayer: EvidenceLayer;
   sourceReferences: CoreSourceRef[];
   sampleSize: number;
   adjudicationProtocol?: string;
   createdAt: string;
+  productionAuthorityEligible: boolean;
 };
 
 export type EvaluatorBinding = {
@@ -101,7 +102,10 @@ export type RegisteredAuthorityGrant = {
   grantId: string;
   grantVersion: string;
   status: "active" | "revoked" | "superseded" | "expired";
-  benchmarkArtifact: RegisteredBenchmarkArtifact;
+  benchmarkArtifactId: string;
+  expectedBenchmarkFingerprint: string;
+  expectedBenchmarkVersion: string;
+  productionAuthorityEligible: boolean;
   evaluatorBinding: EvaluatorBinding;
   scope: CalibrationProfile["scope"];
   decision: "assessment" | "mastery";
@@ -118,6 +122,15 @@ export type RegisteredAuthorityGrant = {
 ### 4.2 Resolver & Runtime Brand
 
 ```typescript
+export type AuthorityResolutionRequest = {
+  grantId: string;
+  observation: CoreObservation;
+  task: CoreTaskSpec;
+  evaluationTimestamp?: string;
+  atTimestamp?: string;
+  requireProductionAuthority?: boolean;
+};
+
 export function resolveCalibrationAuthority(
   request: AuthorityResolutionRequest,
   registry: ProvenanceAuthorityRegistry,
@@ -128,7 +141,7 @@ export function isResolvedCalibrationAuthority(
 ): value is ResolvedCalibrationAuthority;
 ```
 
-`ResolvedCalibrationAuthority` carries a runtime symbol brand (`[RESOLVED_BRAND]: true`) and validated properties. `certifyCoreEvidence()` asserts `isResolvedCalibrationAuthority(authorityGrant)` and fails closed with `{ type: "independent-authority-not-resolved" }` if an arbitrary unbranded object is supplied.
+`ResolvedCalibrationAuthority` carries a runtime symbol brand (`[RESOLVED_BRAND]: true`), `isProductionEligible: boolean`, and validated properties. `certifyCoreEvidence()` asserts `isResolvedCalibrationAuthority(authorityGrant)` and fails closed with `{ type: "independent-authority-not-resolved" }` if an arbitrary unbranded object is supplied.
 
 ---
 
@@ -141,12 +154,18 @@ export function isResolvedCalibrationAuthority(
 | `grant-inactive-superseded` | The grant has been replaced by a newer grant version. |
 | `grant-inactive-expired` | The current timestamp is past `validUntil` or status is `expired`. |
 | `grant-not-yet-valid` | The current timestamp precedes `validFrom`. |
-| `benchmark-not-found` | The referenced benchmark artifact is missing from the registry. |
-| `benchmark-fingerprint-mismatch` | The benchmark ID or immutable SHA-256 fingerprint differs from the grant. |
+| `grant-ineligible-for-production-authority` | Grant is marked `productionAuthorityEligible: false` while resolving under production authority. |
+| `grant-malformed-timestamps` | Grant contains unparseable ISO 8601 timestamps or `validUntil <= validFrom`. |
+| `grant-lifecycle-incoherent` | Grant status is revoked without revocation metadata, or superseded without successor. |
+| `benchmark-not-found` | The referenced benchmark artifact is missing from the registry (cannot be self-registered). |
+| `benchmark-fingerprint-mismatch` | The registered benchmark's SHA-256 fingerprint differs from expected value in grant. |
+| `benchmark-version-mismatch` | The registered benchmark's version differs from expected value in grant. |
+| `benchmark-ineligible-for-production-authority` | Benchmark is marked `productionAuthorityEligible: false` while resolving under production authority. |
 | `evaluator-identity-mismatch` | Observation `provenance.evaluator` does not match grant `evaluatorBinding.evaluatorId`. |
 | `evaluator-kind-mismatch` | Observation `provenance.evaluatorKind` differs from grant binding. |
+| `evaluator-configuration-mismatch` | Evaluator artifact configuration differs from grant binding `configurationId`. |
 | `model-fingerprint-mismatch` | Observation model checkpoint SHA-256 differs from registered binding. |
-| `runtime-fingerprint-mismatch` | Container or runtime environment SHA-256 differs from registered binding. |
+| `runtime-fingerprint-mismatch` | Canonical runtime environment (`artifact.runtime`) differs from registered binding. |
 | `activity-scope-mismatch` | Task or observation `activity` does not match grant scope. |
 | `construct-scope-mismatch` | Observation construct does not match grant scope. |
 | `population-scope-mismatch` | Required population tags in grant are missing from learner context. |
@@ -158,6 +177,7 @@ export function isResolvedCalibrationAuthority(
 | `authority-mismatch` | Observation authority differs from grant `authority`. |
 | `observation-not-authoritative` | `canAffectDurableAssessment(observation)` evaluates to `false`. |
 | `unvalidated-reference-cannot-claim-authority` | Observation in `unvalidated` or `authority: "none"` attempts durable resolution. |
+| `request-timestamp-invalid` | Evaluation timestamp is missing or not a valid parseable ISO 8601 string. |
 
 ---
 
@@ -166,3 +186,5 @@ export function isResolvedCalibrationAuthority(
 1. **Storage Persistence**: Registry V1 is pure and persistence-neutral (in-memory interface). In a later milestone, grants will be backed by signed cryptographic authority manifests on disk/lakehouse.
 2. **Dynamic Recalibration Trigger**: When an upstream model weights digest changes, the registry currently fails closed. An automated pipeline to trigger re-benchmarking against frozen gold sets is not yet implemented.
 3. **Calibrated Score Mapping Policies**: Mapping continuous GOP/acoustic scores or edit distances to discrete CEFR/binary pass/fail remains an open research task requiring double-rater empirical calibration on Vietnamese-English learners.
+4. **Zero Empirical Claims from Repository Fixtures**: All checked-in fixtures in `benchmarks/core/` are synthetic contract fixtures (`evidenceLayer: "layer0-repository-reference"`) used solely to test resolver mechanics in CI. They provide zero empirical, psychometric, or pedagogical validity evidence for Nếp learner measurement.
+

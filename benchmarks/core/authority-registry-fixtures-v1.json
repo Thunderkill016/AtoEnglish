@@ -5,35 +5,35 @@
     {
       "benchmarkId": "vi-adult-minpair-v1",
       "version": "1.0.0",
-      "immutableFingerprint": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "evidenceLayer": "layer1-benchmark-calibration",
+      "immutableFingerprint": "sha256-synthetic-minpair-fixture-v1-hash-abc01",
+      "evidenceLayer": "layer0-repository-reference",
+      "productionAuthorityEligible": false,
       "sourceReferences": [
         {
-          "corpusId": "nep-corpus-l1-vi-phonology-v1",
-          "uri": "https://corpus.atoryn.internal/phonology/minimal-pairs-l1-vi-v1.parquet",
-          "license": "research-internal",
-          "retrievedAt": "2026-09-01T00:00:00.000Z"
+          "sourceId": "synthetic-fixture-l1-vi-phonology-v1",
+          "version": "1.0.0",
+          "locator": "synthetic://fixtures/phonology/minimal-pairs-l1-vi-v1.json"
         }
       ],
-      "sampleSize": 100,
-      "adjudicationProtocol": "dual-phonetician-consensus-v1",
+      "sampleSize": 0,
+      "adjudicationProtocol": "synthetic-test-fixture-no-production-validity",
       "createdAt": "2026-09-01T00:00:00.000Z"
     },
     {
       "benchmarkId": "vi-adult-repetition-v1",
       "version": "1.0.0",
-      "immutableFingerprint": "8f434346648f6b96df89dda901c5176b10a6d83961dd3c1ac88b59b2dc327aa4",
-      "evidenceLayer": "layer2-human-adjudicated",
+      "immutableFingerprint": "sha256-synthetic-repetition-fixture-v1-hash-def02",
+      "evidenceLayer": "layer0-repository-reference",
+      "productionAuthorityEligible": false,
       "sourceReferences": [
         {
-          "corpusId": "nep-corpus-l1-vi-written-v1",
-          "uri": "https://corpus.atoryn.internal/written/repetition-request-l1-vi-v1.parquet",
-          "license": "research-internal",
-          "retrievedAt": "2026-09-02T00:00:00.000Z"
+          "sourceId": "synthetic-fixture-l1-vi-written-v1",
+          "version": "1.0.0",
+          "locator": "synthetic://fixtures/written/repetition-request-l1-vi-v1.json"
         }
       ],
-      "sampleSize": 120,
-      "adjudicationProtocol": "cefr-aligned-blind-adjudication",
+      "sampleSize": 0,
+      "adjudicationProtocol": "synthetic-test-fixture-no-production-validity",
       "createdAt": "2026-09-02T00:00:00.000Z"
     }
   ],
@@ -43,6 +43,9 @@
       "grantVersion": "1.0.0",
       "status": "active",
       "benchmarkArtifactId": "vi-adult-minpair-v1",
+      "expectedBenchmarkFingerprint": "sha256-synthetic-minpair-fixture-v1-hash-abc01",
+      "expectedBenchmarkVersion": "1.0.0",
+      "productionAuthorityEligible": false,
       "evaluatorBinding": {
         "evaluatorId": "binary-answer-key",
         "evaluatorKind": "deterministic",
@@ -66,6 +69,9 @@
       "grantVersion": "1.0.0",
       "status": "revoked",
       "benchmarkArtifactId": "vi-adult-minpair-v1",
+      "expectedBenchmarkFingerprint": "sha256-synthetic-minpair-fixture-v1-hash-abc01",
+      "expectedBenchmarkVersion": "1.0.0",
+      "productionAuthorityEligible": false,
       "evaluatorBinding": {
         "evaluatorId": "binary-answer-key",
         "evaluatorKind": "deterministic",
@@ -87,6 +93,9 @@
       "grantVersion": "0.9.0",
       "status": "superseded",
       "benchmarkArtifactId": "vi-adult-minpair-v1",
+      "expectedBenchmarkFingerprint": "sha256-synthetic-minpair-fixture-v1-hash-abc01",
+      "expectedBenchmarkVersion": "1.0.0",
+      "productionAuthorityEligible": false,
       "supersededByGrantId": "grant-minpair-active-v1",
       "evaluatorBinding": {
         "evaluatorId": "binary-answer-key",
@@ -107,6 +116,9 @@
       "grantVersion": "1.0.0",
       "status": "expired",
       "benchmarkArtifactId": "vi-adult-minpair-v1",
+      "expectedBenchmarkFingerprint": "sha256-synthetic-minpair-fixture-v1-hash-abc01",
+      "expectedBenchmarkVersion": "1.0.0",
+      "productionAuthorityEligible": false,
       "evaluatorBinding": {
         "evaluatorId": "binary-answer-key",
         "evaluatorKind": "deterministic",
@@ -127,6 +139,9 @@
       "grantVersion": "1.0.0",
       "status": "active",
       "benchmarkArtifactId": "vi-adult-repetition-v1",
+      "expectedBenchmarkFingerprint": "sha256-synthetic-repetition-fixture-v1-hash-def02",
+      "expectedBenchmarkVersion": "1.0.0",
+      "productionAuthorityEligible": false,
       "evaluatorBinding": {
         "evaluatorId": "written-production-exact",
         "evaluatorKind": "deterministic",
