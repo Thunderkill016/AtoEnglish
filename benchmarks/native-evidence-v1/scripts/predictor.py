@@ -4,8 +4,10 @@ from dataclasses import asdict, dataclass
 from hashlib import sha256
 import json
 from typing import Mapping, Sequence
+import warnings
 
 import numpy as np
+from sklearn.exceptions import ConvergenceWarning
 from sklearn.linear_model import LogisticRegression
 
 from .preprocessing import FeatureRow, FrozenFeatureTransform, fit_feature_transform
@@ -85,6 +87,25 @@ class FrozenPredictor:
         return probabilities[:, positive_index].astype(np.float64, copy=False)
 
 
+def _unavailable_predictor(
+    *,
+    transform: FrozenFeatureTransform,
+    train_row_count: int,
+    train_positive_count: int,
+    spec: PredictorSpec,
+    reason: str,
+) -> FrozenPredictor:
+    return FrozenPredictor(
+        feature_transform=transform,
+        model=None,
+        availability="not-estimable",
+        unavailable_reason=reason,
+        train_row_count=train_row_count,
+        train_positive_count=train_positive_count,
+        spec=spec,
+    )
+
+
 def fit_common_logistic_predictor(
     train_rows: Sequence[FeatureRow],
     train_labels: Sequence[int],
@@ -102,24 +123,20 @@ def fit_common_logistic_predictor(
     transform = fit_feature_transform(train_rows, categorical_domains=categorical_domains)
     positives = int(sum(train_labels))
     if len(set(train_labels)) < 2:
-        return FrozenPredictor(
-            feature_transform=transform,
-            model=None,
-            availability="not-estimable",
-            unavailable_reason="one-class-train",
+        return _unavailable_predictor(
+            transform=transform,
             train_row_count=len(train_rows),
             train_positive_count=positives,
             spec=spec,
+            reason="one-class-train",
         )
     if not transform.retained_columns:
-        return FrozenPredictor(
-            feature_transform=transform,
-            model=None,
-            availability="not-estimable",
-            unavailable_reason="no-nonconstant-features",
+        return _unavailable_predictor(
+            transform=transform,
             train_row_count=len(train_rows),
             train_positive_count=positives,
             spec=spec,
+            reason="no-nonconstant-features",
         )
 
     matrix = transform.transform(train_rows)
@@ -132,7 +149,24 @@ def fit_common_logistic_predictor(
         max_iter=spec.max_iter,
         tol=spec.tol,
     )
-    model.fit(matrix, np.asarray(train_labels, dtype=np.int64))
+    with warnings.catch_warnings(record=True) as caught:
+        warnings.simplefilter("always", ConvergenceWarning)
+        model.fit(matrix, np.asarray(train_labels, dtype=np.int64))
+
+    convergence_warning = any(
+        issubclass(warning.category, ConvergenceWarning) for warning in caught
+    )
+    hit_iteration_limit = bool(
+        model.n_iter_.size > 0 and np.any(model.n_iter_.astype(np.int64) >= spec.max_iter)
+    )
+    if convergence_warning or hit_iteration_limit:
+        return _unavailable_predictor(
+            transform=transform,
+            train_row_count=len(train_rows),
+            train_positive_count=positives,
+            spec=spec,
+            reason="nonconvergence",
+        )
 
     return FrozenPredictor(
         feature_transform=transform,
