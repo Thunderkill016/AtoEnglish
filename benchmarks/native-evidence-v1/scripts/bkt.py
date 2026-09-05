@@ -1,10 +1,17 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from hashlib import sha256
+from importlib.metadata import version as package_version
+import inspect
+import json
+from pathlib import Path
+from threading import Lock
 from typing import Sequence
 
 import numpy as np
 import pandas as pd
+from pyBKT.fit import EM_fit, E_step
 from pyBKT.models import Model
 
 PYBKT_SOURCE_REVISION = "06fc180ae72c117458acc527f8ec90cc8e0581c1"
@@ -20,6 +27,23 @@ BKT_DEFAULTS = {
 }
 
 REQUIRED_COLUMNS = ("order_id", "skill_name", "correct", "user_id")
+_OBSERVER_LOCK = Lock()
+
+
+@dataclass(frozen=True)
+class BktBackendInspection:
+    source_revision: str
+    package_version: str
+    backend_kind: str
+    model_source_path: str
+    em_source_path: str
+    e_step_source_path: str
+    model_source_sha256: str | None
+    em_source_sha256: str | None
+    e_step_source_sha256: str | None
+    effective_em_tolerance: float | None
+    effective_em_max_iterations: int | None
+    tolerance_comparison: str
 
 
 @dataclass(frozen=True)
@@ -32,6 +56,33 @@ class BktComparatorMetadata:
     forgets: bool
     backend_default_num_fits: int
     backend_default_forgets: bool
+    model_type: tuple[bool, ...]
+    parameterization: str
+    backend: BktBackendInspection
+
+
+@dataclass(frozen=True)
+class BktStartDiagnostic:
+    start_index: int
+    iteration_count: int
+    final_log_likelihood: float
+    final_delta: float | None
+    finite_likelihood_trace: bool
+    stopping_reason: str
+    initial_parameter_fingerprint: str
+    final_parameter_fingerprint: str
+
+
+@dataclass(frozen=True)
+class BktDiagnosticRun:
+    backend: BktBackendInspection
+    starts: tuple[BktStartDiagnostic, ...]
+    selected_start_index: int | None
+    parity_parameters_equal: bool
+    parity_predictions_equal: bool
+    selected_predictions_finite: bool
+    convergence_assurance: str
+    stability_assurance: str
 
 
 @dataclass
@@ -51,6 +102,75 @@ class FrozenBktComparator:
 
     def fitted_parameters(self) -> pd.DataFrame:
         return self.model.params().copy()
+
+
+def _sha256_file(path: str) -> str | None:
+    if not path:
+        return None
+    try:
+        return sha256(Path(path).read_bytes()).hexdigest()
+    except OSError:
+        return None
+
+
+def _resolve_effective_em_defaults(source: str) -> tuple[float | None, int | None, str]:
+    signature = inspect.signature(EM_fit.EM_fit)
+    tolerance_default = signature.parameters["tol"].default
+    maxiter_default = signature.parameters["maxiter"].default
+
+    tolerance: float | None
+    if isinstance(tolerance_default, (int, float)):
+        tolerance = float(tolerance_default)
+    elif tolerance_default is None and "tol = 1e-3" in source:
+        tolerance = 1e-3
+    elif tolerance_default is None and "tol = 0.005" in source:
+        tolerance = 0.005
+    else:
+        tolerance = None
+
+    max_iterations: int | None
+    if isinstance(maxiter_default, int):
+        max_iterations = maxiter_default
+    elif maxiter_default is None and "maxiter = 100" in source:
+        max_iterations = 100
+    else:
+        max_iterations = None
+
+    if "<= tol" in source:
+        comparison = "<="
+    elif "< tol" in source:
+        comparison = "<"
+    else:
+        comparison = "unknown"
+    return tolerance, max_iterations, comparison
+
+
+def inspect_installed_bkt_backend() -> BktBackendInspection:
+    installed_version = package_version("pyBKT")
+    model_source_path = inspect.getsourcefile(Model) or ""
+    em_source_path = inspect.getsourcefile(EM_fit.EM_fit) or ""
+    e_step_source_path = str(getattr(E_step, "__file__", "") or "")
+    em_source = inspect.getsource(EM_fit.EM_fit)
+    tolerance, max_iterations, comparison = _resolve_effective_em_defaults(em_source)
+
+    suffix = Path(e_step_source_path).suffix.lower()
+    compiled_suffixes = {".so", ".pyd", ".dll", ".dylib"}
+    backend_kind = "compiled-e-step" if suffix in compiled_suffixes else "python-e-step"
+
+    return BktBackendInspection(
+        source_revision=PYBKT_SOURCE_REVISION,
+        package_version=installed_version,
+        backend_kind=backend_kind,
+        model_source_path=model_source_path,
+        em_source_path=em_source_path,
+        e_step_source_path=e_step_source_path,
+        model_source_sha256=_sha256_file(model_source_path),
+        em_source_sha256=_sha256_file(em_source_path),
+        e_step_source_sha256=_sha256_file(e_step_source_path),
+        effective_em_tolerance=tolerance,
+        effective_em_max_iterations=max_iterations,
+        tolerance_comparison=comparison,
+    )
 
 
 def validate_bkt_frame(data: pd.DataFrame) -> pd.DataFrame:
@@ -79,20 +199,176 @@ def validate_bkt_frame(data: pd.DataFrame) -> pd.DataFrame:
 
 def fit_source_faithful_bkt(train_data: pd.DataFrame) -> FrozenBktComparator:
     frame = validate_bkt_frame(train_data)
+    backend = inspect_installed_bkt_backend()
+    if backend.package_version != PYBKT_PACKAGE_VERSION:
+        raise RuntimeError(
+            f"pyBKT package version mismatch: expected {PYBKT_PACKAGE_VERSION}, got {backend.package_version}"
+        )
+
     model = Model(seed=PYBKT_SEED, num_fits=PYBKT_NUM_FITS, parallel=False)
     model.fit(data=frame, defaults=BKT_DEFAULTS, forgets=False)
+    model_type = tuple(bool(value) for value in model.model_type)
+    if any(model_type):
+        raise RuntimeError("BKT-native must remain the pooled four-parameter model without variants")
 
     metadata = BktComparatorMetadata(
         source_revision=PYBKT_SOURCE_REVISION,
-        package_version=PYBKT_PACKAGE_VERSION,
+        package_version=backend.package_version,
         seed=PYBKT_SEED,
         num_fits=PYBKT_NUM_FITS,
         parallel=False,
         forgets=False,
         backend_default_num_fits=int(Model.DEFAULTS["num_fits"]),
         backend_default_forgets=bool(Model.DEFAULTS["forgets"]),
+        model_type=model_type,
+        parameterization="prior-learn-guess-slip-no-forgetting",
+        backend=backend,
     )
     return FrozenBktComparator(model=model, metadata=metadata)
+
+
+def _parameter_fingerprint(model: dict[str, object]) -> str:
+    payload: dict[str, object] = {}
+    for name in ("prior", "learns", "guesses", "slips", "forgets"):
+        value = model.get(name)
+        if isinstance(value, np.ndarray):
+            payload[name] = np.asarray(value, dtype=np.float64).reshape(-1).tolist()
+        elif isinstance(value, (int, float, np.floating, np.integer)):
+            payload[name] = float(value)
+    encoded = json.dumps(payload, sort_keys=True, separators=(",", ":"), allow_nan=False).encode("utf-8")
+    return f"sha256:{sha256(encoded).hexdigest()}"
+
+
+def _stopping_reason(
+    trace: np.ndarray,
+    backend: BktBackendInspection,
+) -> tuple[float | None, str]:
+    flat = np.asarray(trace, dtype=np.float64).reshape(-1)
+    if flat.size == 0 or not np.all(np.isfinite(flat)):
+        return None, "nonfinite-likelihood"
+
+    final_delta = None if flat.size < 2 else float(abs(flat[-1] - flat[-2]))
+    if backend.effective_em_max_iterations is not None and flat.size >= backend.effective_em_max_iterations:
+        return final_delta, "max-iterations"
+
+    tolerance = backend.effective_em_tolerance
+    if tolerance is not None and final_delta is not None and flat.size >= 3:
+        passed = final_delta <= tolerance if backend.tolerance_comparison == "<=" else final_delta < tolerance
+        if passed:
+            return final_delta, "backend-tolerance"
+    return final_delta, "backend-returned-early-unclassified"
+
+
+def _selected_start_index(starts: Sequence[BktStartDiagnostic]) -> int | None:
+    best_index: int | None = None
+    best_likelihood = float("-inf")
+    for start in starts:
+        if start.final_log_likelihood > best_likelihood:
+            best_likelihood = start.final_log_likelihood
+            best_index = start.start_index
+    return best_index
+
+
+def _parameters_equal(left: pd.DataFrame, right: pd.DataFrame) -> bool:
+    left_sorted = left.sort_index()
+    right_sorted = right.sort_index()
+    if not left_sorted.index.equals(right_sorted.index):
+        return False
+    if list(left_sorted.columns) != list(right_sorted.columns):
+        return False
+    try:
+        return bool(
+            np.allclose(
+                left_sorted.to_numpy(dtype=np.float64),
+                right_sorted.to_numpy(dtype=np.float64),
+                atol=1e-12,
+                rtol=1e-12,
+            )
+        )
+    except (TypeError, ValueError):
+        return left_sorted.equals(right_sorted)
+
+
+def fit_bkt_with_diagnostics(
+    train_data: pd.DataFrame,
+    *,
+    parity_data: pd.DataFrame | None = None,
+) -> BktDiagnosticRun:
+    """Observe the pinned EM traces without changing initialization, EM, selection, or prediction.
+
+    This observer is diagnostic only. A parity failure makes the observer untrustworthy; it must not
+    make the untouched source-faithful comparator unavailable.
+    """
+
+    frame = validate_bkt_frame(train_data)
+    parity_frame = frame if parity_data is None else validate_bkt_frame(parity_data)
+    backend = inspect_installed_bkt_backend()
+    starts: list[BktStartDiagnostic] = []
+
+    with _OBSERVER_LOCK:
+        original_em_fit = EM_fit.EM_fit
+
+        def observed_em_fit(model: dict[str, object], data: dict[str, object], *args: object, **kwargs: object):
+            initial_fingerprint = _parameter_fingerprint(model)
+            fitted_model, trace = original_em_fit(model, data, *args, **kwargs)
+            flat = np.asarray(trace, dtype=np.float64).reshape(-1)
+            final_delta, stopping_reason = _stopping_reason(flat, backend)
+            final_log_likelihood = float(flat[-1]) if flat.size else float("nan")
+            starts.append(
+                BktStartDiagnostic(
+                    start_index=len(starts),
+                    iteration_count=int(flat.size),
+                    final_log_likelihood=final_log_likelihood,
+                    final_delta=final_delta,
+                    finite_likelihood_trace=bool(flat.size > 0 and np.all(np.isfinite(flat))),
+                    stopping_reason=stopping_reason,
+                    initial_parameter_fingerprint=initial_fingerprint,
+                    final_parameter_fingerprint=_parameter_fingerprint(fitted_model),
+                )
+            )
+            return fitted_model, trace
+
+        EM_fit.EM_fit = observed_em_fit
+        try:
+            instrumented = fit_source_faithful_bkt(frame)
+        finally:
+            EM_fit.EM_fit = original_em_fit
+
+    untouched = fit_source_faithful_bkt(frame)
+    instrumented_predictions = instrumented.predict_error_probabilities(parity_frame)
+    untouched_predictions = untouched.predict_error_probabilities(parity_frame)
+    parity_predictions_equal = bool(
+        np.allclose(instrumented_predictions, untouched_predictions, atol=1e-12, rtol=1e-12)
+    )
+    parity_parameters_equal = _parameters_equal(
+        instrumented.fitted_parameters(),
+        untouched.fitted_parameters(),
+    )
+    selected_predictions_finite = bool(
+        np.all(np.isfinite(instrumented_predictions))
+        and np.all((instrumented_predictions >= 0) & (instrumented_predictions <= 1))
+    )
+
+    tolerance_starts = sum(
+        1
+        for start in starts
+        if start.finite_likelihood_trace and start.stopping_reason == "backend-tolerance"
+    )
+    if parity_parameters_equal and parity_predictions_equal and selected_predictions_finite and tolerance_starts >= 2:
+        convergence_assurance = "convergence-observed"
+    else:
+        convergence_assurance = "convergence-unverified"
+
+    return BktDiagnosticRun(
+        backend=backend,
+        starts=tuple(starts),
+        selected_start_index=_selected_start_index(starts),
+        parity_parameters_equal=parity_parameters_equal,
+        parity_predictions_equal=parity_predictions_equal,
+        selected_predictions_finite=selected_predictions_finite,
+        convergence_assurance=convergence_assurance,
+        stability_assurance="unresolved-pending-reviewed-train-only-tolerances",
+    )
 
 
 def build_bkt_frame(
