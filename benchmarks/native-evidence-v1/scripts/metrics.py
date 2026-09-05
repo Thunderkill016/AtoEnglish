@@ -36,6 +36,7 @@ class BinaryMetricBundle:
 class LearnerMetricBundle:
     learner_count: int
     learner_with_outcome_count: int
+    planned_learner_ids: tuple[str, ...]
     planned_row_count: int
     observed_row_count: int
     learner_outcome_coverage: float | None
@@ -145,7 +146,8 @@ def evaluate_by_learner(
         participant_id: evaluate_binary_probabilities(learner_labels, learner_probabilities)
         for participant_id, (learner_labels, learner_probabilities) in sorted(grouped.items())
     }
-    learner_count = len(planned_learners)
+    planned_learner_tuple = tuple(sorted(planned_learners))
+    learner_count = len(planned_learner_tuple)
 
     if by_learner:
         mean_log_loss = float(np.mean([bundle.log_loss for bundle in by_learner.values()]))
@@ -166,6 +168,7 @@ def evaluate_by_learner(
     return LearnerMetricBundle(
         learner_count=learner_count,
         learner_with_outcome_count=len(by_learner),
+        planned_learner_ids=planned_learner_tuple,
         planned_row_count=resolved_planned_row_count,
         observed_row_count=len(labels),
         learner_outcome_coverage=learner_coverage,
@@ -192,6 +195,44 @@ class PairedContrastInterval:
     descriptive_brier_difference: float | None
 
 
+def _assert_paired_metric_alignment(
+    target: LearnerMetricBundle,
+    control: LearnerMetricBundle,
+    control_name: str,
+) -> None:
+    if target.planned_learner_ids != control.planned_learner_ids:
+        raise ValueError(
+            f"paired comparison requires identical planned learners: {control_name}"
+        )
+    if target.planned_row_count != control.planned_row_count:
+        raise ValueError(
+            f"paired comparison requires identical planned row count: {control_name}"
+        )
+    if target.observed_row_count != control.observed_row_count:
+        raise ValueError(
+            f"paired comparison refuses complete-case row selection: {control_name}"
+        )
+
+    target_ids = set(target.by_learner)
+    control_ids = set(control.by_learner)
+    if target_ids != control_ids:
+        raise ValueError(
+            f"paired comparison refuses complete-case learner selection: {control_name}"
+        )
+
+    for learner_id in sorted(target_ids):
+        target_metric = target.by_learner[learner_id]
+        control_metric = control.by_learner[learner_id]
+        if target_metric.row_count != control_metric.row_count:
+            raise ValueError(
+                f"paired comparison requires identical rows per learner: {control_name}:{learner_id}"
+            )
+        if target_metric.positive_count != control_metric.positive_count:
+            raise ValueError(
+                f"paired comparison requires identical labels per learner: {control_name}:{learner_id}"
+            )
+
+
 def paired_learner_bootstrap(
     target: LearnerMetricBundle,
     controls: Mapping[str, LearnerMetricBundle],
@@ -203,11 +244,10 @@ def paired_learner_bootstrap(
         raise ValueError("draws must be positive")
 
     control_names = tuple(sorted(controls))
-    shared_ids = set(target.by_learner)
-    for control in controls.values():
-        shared_ids &= set(control.by_learner)
-    learner_ids = tuple(sorted(shared_ids))
+    for name in control_names:
+        _assert_paired_metric_alignment(target, controls[name], name)
 
+    learner_ids = tuple(sorted(target.by_learner))
     if not learner_ids:
         return {
             name: PairedContrastInterval(0, None, None, None, None)
