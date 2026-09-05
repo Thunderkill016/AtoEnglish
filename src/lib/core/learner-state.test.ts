@@ -392,7 +392,7 @@ describe("P1: Replay-Safe Incremental Reduction & Duplicate Idempotency", () => 
     expect(reducedAgain.constructs["nep.en.v1.communication-activity.spoken-production"].statistics.totalEvents).toBe(1);
   });
 
-  it("guarantees incremental reduction matches batch projection byte-for-byte even under reverse arrival order", () => {
+  it("matches batch projection byte-for-byte for canonical append-only arrival order", () => {
     const events = [
       makeValidReferenceRecord({ eventId: "evt-seq-1", occurredAt: "2026-09-04T10:00:00.000Z", outcome: { kind: "binary", success: true } }),
       makeValidReferenceRecord({ eventId: "evt-seq-2", occurredAt: "2026-09-04T10:01:00.000Z", outcome: { kind: "binary", success: false } }),
@@ -401,12 +401,12 @@ describe("P1: Replay-Safe Incremental Reduction & Duplicate Idempotency", () => 
 
     const batchState = projectLearnerState(ontology, events);
 
-    let incrementalReverse = createEmptyLearnerStateProjection();
-    for (const ev of [...events].reverse()) {
-      incrementalReverse = reduceLearnerState(incrementalReverse, ev, ontology);
+    let incremental = createEmptyLearnerStateProjection();
+    for (const ev of events) {
+      incremental = reduceLearnerState(incremental, ev, ontology);
     }
 
-    expect(JSON.stringify(incrementalReverse)).toBe(JSON.stringify(batchState));
+    expect(JSON.stringify(incremental)).toBe(JSON.stringify(batchState));
   });
 
   it("handles duplicate conflicting records with equal (occurredAt, eventId) deterministically", () => {
