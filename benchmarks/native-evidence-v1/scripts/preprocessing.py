@@ -45,7 +45,13 @@ class FrozenFeatureTransform:
 
 
 def _is_nonnegative_transform(name: str) -> bool:
-    return name.endswith("_count") or name.startswith("seconds_since_") or "_seconds_" in name
+    return (
+        name.endswith("_count")
+        or name.endswith("_positive")
+        or name.endswith("_negative")
+        or name.startswith("seconds_since_")
+        or "_seconds_" in name
+    )
 
 
 def _preferred_column_order(name: str) -> tuple[int, str]:
