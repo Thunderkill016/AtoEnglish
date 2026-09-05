@@ -22,4 +22,4 @@
 - [x] Durable/reference envelope parsing is symmetric but remains untrusted.
 - [ ] Exact-head focused/full verification and independent re-review PASS.
 
-Replay closure is staged on the branch; the final checkbox remains open until the generated stale-test correction is present at the exact head, CI is green, and an independent review passes.
+The stale reverse-arrival assertion has now been replaced by the canonical append-only equivalence assertion. The final checkbox remains open until exact-head CI is green and an independent review passes.
