@@ -66,8 +66,8 @@ def _validate_numeric(value: FeatureValue, name: str) -> float | None:
     return number
 
 
-def _is_availability_mask(name: str) -> bool:
-    return name.startswith("missing:")
+def _is_unknown_channel(name: str) -> bool:
+    return name.startswith("missing:") or (name.startswith("cat:") and name.endswith("=unknown"))
 
 
 def fit_feature_transform(
@@ -131,11 +131,10 @@ def fit_feature_transform(
     candidate_indices: list[int] = []
     for index, name in enumerate(raw_names):
         column = raw_matrix[:, index]
-        # Availability is a semantic property, not a candidate model signal. Preserve every
-        # numeric missingness mask even when TRAIN happens to contain no missing values, otherwise
-        # a future missing value collapses to standardized zero and becomes indistinguishable from
-        # an observed mean value.
-        if _is_availability_mask(name):
+        # Missing/unknown is a semantic state, not an observed zero. Preserve these channels even
+        # when TRAIN contains no missing or unknown values; otherwise a future unknown can collapse
+        # to a zero vector or observed mean after TRAIN-only constant pruning.
+        if _is_unknown_channel(name):
             candidate_indices.append(index)
         elif column.size == 0 or np.all(column == column[0]):
             dropped_constants.append(name)
@@ -146,7 +145,7 @@ def fit_feature_transform(
     dropped_duplicates: list[tuple[str, str]] = []
     for index in candidate_indices:
         name = raw_names[index]
-        if _is_availability_mask(name):
+        if _is_unknown_channel(name):
             retained_indices.append(index)
             continue
 
@@ -154,7 +153,7 @@ def fit_feature_transform(
         duplicate_of: str | None = None
         for retained_index in retained_indices:
             retained_name = raw_names[retained_index]
-            if _is_availability_mask(retained_name):
+            if _is_unknown_channel(retained_name):
                 continue
             if np.array_equal(column, raw_matrix[:, retained_index]):
                 duplicate_of = retained_name
