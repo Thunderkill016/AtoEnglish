@@ -51,7 +51,7 @@ def contrast(
 
 
 class FrozenPreprocessingTests(unittest.TestCase):
-    def test_transform_is_train_frozen_and_unseen_category_maps_to_unknown(self) -> None:
+    def test_transform_is_train_frozen_and_unseen_category_maps_to_declared_unknown(self) -> None:
         train = [
             {
                 "prior_eligible_attempt_count": 0,
@@ -74,21 +74,23 @@ class FrozenPreprocessingTests(unittest.TestCase):
         ]
         transform = fit_feature_transform(train, categorical_domains=CATEGORIES)
         before = transform
-        matrix = transform.transform(
-            [
-                {
-                    "prior_eligible_attempt_count": 8,
-                    "prior_success_rate": None,
-                    "previous_outcome": "future-new-category",
-                    "current_task_family": "free-recall",
-                }
-            ]
-        )
+        unseen = {
+            "prior_eligible_attempt_count": 8,
+            "prior_success_rate": None,
+            "previous_outcome": "future-new-category",
+            "current_task_family": "free-recall",
+        }
+        explicit_unknown = {**unseen, "previous_outcome": "unknown"}
+        unseen_matrix = transform.transform([unseen])
+        unknown_matrix = transform.transform([explicit_unknown])
+
         self.assertIs(transform, before)
-        self.assertEqual(matrix.shape[0], 1)
-        unknown_name = "cat:previous_outcome=unknown"
-        self.assertIn(unknown_name, transform.retained_columns)
-        self.assertEqual(matrix[0, transform.retained_columns.index(unknown_name)], 1.0)
+        self.assertEqual(unseen_matrix.shape[0], 1)
+        previous_transform = next(
+            item for item in transform.categorical if item.source_name == "previous_outcome"
+        )
+        self.assertIn("unknown", previous_transform.categories)
+        np.testing.assert_array_equal(unseen_matrix, unknown_matrix)
 
     def test_missing_numeric_is_explicit_and_not_serialized_as_zero_observation(self) -> None:
         train = [
@@ -183,11 +185,12 @@ class MetricTests(unittest.TestCase):
 
 class DecisionTests(unittest.TestCase):
     def setUp(self) -> None:
+        # Fixture-only approved margins exercise the gate; these are not Spec #005 real utility values.
         self.utility = UtilityMargins(
             delta_history=0.01,
             delta_basis=0.005,
             approved=True,
-            justification_artifact="utility-review.json",
+            justification_artifact="synthetic-fixture-utility-review.json",
         )
 
     def test_unresolved_utility_disables_keep_and_simplify(self) -> None:
@@ -210,15 +213,27 @@ class DecisionTests(unittest.TestCase):
         )
         self.assertEqual(result.decision, RealityDecision.KEEP)
 
-    def test_history_win_without_basis_win_is_representation_only(self) -> None:
+    def test_history_win_with_exact_basis_prediction_equivalence_is_representation_only(self) -> None:
         result = decide_native_representation(
             DecisionInput(
                 history=contrast(-0.08, -0.03, -0.03, -0.001),
-                basis=contrast(-0.01, 0.01, -0.01, 0.01),
+                basis=contrast(0.0, 0.0, 0.0, 0.0),
                 utility=self.utility,
+                basis_prediction_equivalent=True,
             )
         )
         self.assertEqual(result.decision, RealityDecision.KEEP_REPRESENTATION_ONLY)
+
+    def test_unresolved_basis_attribution_never_becomes_representation_only(self) -> None:
+        result = decide_native_representation(
+            DecisionInput(
+                history=contrast(-0.08, -0.03, -0.03, -0.001),
+                basis=contrast(None, None, None, None),
+                utility=self.utility,
+                basis_prediction_equivalent=False,
+            )
+        )
+        self.assertEqual(result.decision, RealityDecision.GATHER_MORE_EVIDENCE)
 
     def test_simplify_requires_material_benefit_excluded_against_both_controls(self) -> None:
         result = decide_native_representation(
