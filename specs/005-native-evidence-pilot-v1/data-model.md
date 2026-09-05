@@ -24,7 +24,7 @@ type FrozenPilotTaskDefinition = Readonly<PilotTaskDefinition> & {
 };
 ```
 
-The task definition is frozen before response observation. `definitionFingerprint` is computed deterministically over the exact pilot family, every `CoreTaskSpec` field including `id` and `version`, `contentFingerprint`, `contextId`, and `scoringContractId`. `contentFingerprint` identifies prompt/stimulus content without putting participant data into task identity.
+The task definition is frozen before response observation. `definitionFingerprint` is computed over the `PilotTaskDefinition` payload before the fingerprint field exists. Canonical encoding recursively sorts object keys lexicographically, preserves frozen array order, rejects values outside finite JSON data, emits UTF-8 JSON without insignificant whitespace, and hashes those bytes with SHA-256 as lowercase `sha256:<64-hex>`. Object insertion order therefore cannot alter identity, while any frozen semantic field or array-order change does. `contentFingerprint` identifies prompt/stimulus content without putting participant data into task identity.
 
 The pilot does not assume the merged core evidence object preserves this whole identity. `ReferenceCoreEvidence` carries `taskId` and context but not task version or content fingerprint, so the wrapper-level definition fingerprint and lineage record below are mandatory research-integrity bindings.
 
