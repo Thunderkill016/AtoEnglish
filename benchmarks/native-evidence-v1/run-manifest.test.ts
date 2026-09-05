@@ -42,6 +42,10 @@ function buildFixture() {
       "manifest-cold": [],
     },
     blindTargetEventIds: [`${participantId}:e05`, "manifest-cold:target"],
+    blindTargetParticipantIdByEventId: {
+      [`${participantId}:e05`]: participantId,
+      "manifest-cold:target": "manifest-cold",
+    },
   });
 
   const store = new SyntheticPilotStore();
@@ -153,6 +157,10 @@ describe("native pilot full synthetic run manifest", () => {
     expect(first.split.digest).toMatch(/^sha256:[0-9a-f]{64}$/);
     expect(first.split.trainingParticipantIds).toEqual(["manifest-p"]);
     expect(first.split.heldOutParticipantIds).toEqual(["manifest-cold"]);
+    expect(first.split.blindTargetParticipantIdByEventId).toEqual({
+      "manifest-cold:target": "manifest-cold",
+      "manifest-p:e05": "manifest-p",
+    });
     expect(first.causalPolicy.blindBlockFeedbackForbidden).toBe(true);
     expect(first.featureRows[0]?.predictionBindingDigest).toMatch(/^sha256:[0-9a-f]{64}$/);
     expect(first.artifacts.find((artifact) => artifact.artifactId === "result:synthetic")?.participantIds).toEqual([
