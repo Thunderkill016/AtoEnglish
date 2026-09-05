@@ -13,15 +13,19 @@ This is an instrumentation/falsification pilot, not a new learner-model architec
 
 ## Scientific question
 
-Can the merged `nep.learner-evidence-state.v1` representation be emitted faithfully from prospectively specified tasks, and—only after a separately approved bounded human pilot—does adding its pre-attempt state features provide useful next-attempt error signal beyond a strong simple causal history baseline under the same estimator?
+Can the merged `nep.learner-evidence-state.v1` representation be emitted faithfully from prospectively specified tasks, and—only after a separately approved bounded human pilot—does adding its pre-attempt state representation provide useful next-attempt error signal beyond a strong simple causal history baseline under the same estimator?
 
 ## Frozen V1 scope
 
-Use exactly one ontology target:
+Use exactly one canonical ontology target:
 
 `nep.en.v1.language-system.syntax-grammar`
 
-This node is intentionally broad. V1 tests evidence/state mechanics on a narrow task family; it does **not** claim fine-grained grammar mastery or CEFR coverage. If this granularity destroys useful signal, that is an accepted falsification outcome.
+Constrain content to one non-canonical pilot slice tag:
+
+`pilot-slice:present-subject-verb-agreement`
+
+The slice tag narrows stimulus content but **does not create a new ontology node or mastery claim**. The canonical target remains broad. If that granularity destroys useful signal, that is an accepted falsification outcome.
 
 Task families:
 
@@ -52,6 +56,7 @@ Before any response is observed, each task instance must freeze:
 
 - task ID/version and content fingerprint;
 - canonical target ID;
+- pilot content-slice tag;
 - communication activity;
 - response modality;
 - allowed evidence role;
@@ -65,9 +70,15 @@ Actual `revealUsed`, response latency, response content and outcome are attempt-
 
 ## Prediction protocol
 
-Primary future label: next-attempt binary error (`1 = incorrect`, `0 = correct`) on eligible independently scored attempts. A prediction is frozen immediately before the target attempt begins.
+Primary future label: next-attempt binary error (`1 = incorrect`, `0 = correct`) on independently scored target families:
 
-### B2-native — simple causal history baseline
+- `free-recall`;
+- `delayed-free-recall`;
+- `near-transfer`.
+
+Recognition families contribute causal history but are not primary prediction targets in V1. A prediction row is frozen immediately before the target attempt begins.
+
+### B2-native — strong simple causal history baseline
 
 Only information available before the target attempt:
 
@@ -76,10 +87,16 @@ Only information available before the target attempt:
 - prior success rate, null when no labeled history exists;
 - previous outcome with explicit missing state;
 - seconds since previous attempt, null when none;
+- prior support-level bucket counts;
+- prior reveal-used count;
+- prior distinct-context count;
+- prior counts by the five pilot task families;
 - current task family;
 - current planned support level;
 - current reveal-allowed flag;
 - current transfer distance.
+
+B2 deliberately receives obvious causal support/reveal/context history so B3 is not compared against a strawman that merely lacks information already known to the host.
 
 ### B3-native — same estimator + Nếp state features
 
@@ -96,9 +113,13 @@ Use the exact same rows, labels, split/cutoff policy and estimator as B2-native,
 - same-context / near-transfer success and failure counts;
 - seconds since first and last accepted evidence, derived against the explicit prediction timestamp.
 
-Train-constant columns are removed identically from B2/B3 preprocessing. No B3 feature may include the current attempt outcome, actual reveal use, current response latency, or any future event.
+Redundant B3 columns that are byte-identical to already-present B2 columns across the training split are removed before fitting and recorded in the manifest. Train-constant columns are removed identically from B2/B3 preprocessing.
 
-The comparison of interest is B3-native vs B2-native, not `provisionalRoutingScore` vs labels.
+No B3 feature may include the current attempt outcome, actual reveal use, current response latency, or any future event. The comparison of interest is B3-native vs B2-native, not `provisionalRoutingScore` vs labels.
+
+## Estimator freeze gate
+
+N2 must freeze `nep.native-predictor.v1` **before any human N3 outcome exists**. The estimator/hyperparameters may be chosen using synthetic scale/stability tests and reuse of the #141 research stack, but never by optimizing on pilot human labels. B2 and B3 must use the same frozen estimator and preprocessing.
 
 ## Synthetic N2 only
 
@@ -113,7 +134,8 @@ Synthetic actors may exercise:
 - delayed-attempt causal cutoffs;
 - changed-context transfer gate;
 - deletion/export plumbing;
-- B2/B3 feature extraction and manifest generation.
+- B2/B3 feature extraction and manifest generation;
+- deterministic estimator plumbing after `nep.native-predictor.v1` is frozen.
 
 Synthetic traces may prove plumbing correctness only. They MUST NOT produce a learner-model validity, predictive-quality, efficacy, retention, or transfer claim.
 

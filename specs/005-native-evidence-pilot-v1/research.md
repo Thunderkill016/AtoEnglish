@@ -10,7 +10,7 @@ A native trace changes only one thing: the experiment owns the task definition b
 
 The executable ontology currently exposes broad top-level language-system nodes. `syntax-grammar` permits `meaning-recognition`, `free-recall`, `near-transfer` and `far-transfer`, which is enough to exercise supported exposure, independent retrieval and changed-context evidence without speech/media.
 
-The node is coarse. This pilot therefore tests instrumentation and state representation mechanics, not fine-grained grammar knowledge. A result showing that the node is too coarse is useful evidence to refine ontology granularity later.
+The node is coarse. To reduce content heterogeneity without inventing ontology authority, V1 uses the non-canonical context/content tag `pilot-slice:present-subject-verb-agreement`. This tag is experimental metadata only. A result showing that the canonical node remains too coarse is useful evidence to refine ontology granularity later.
 
 ## Why text/choice only
 
@@ -19,6 +19,16 @@ Text/choice minimizes privacy burden and avoids coupling the learner-state exper
 ## Why delayed free recall instead of a `retention-probe` role
 
 The selected ontology target does not currently advertise `retention-probe` as an allowed evidence role. V1 therefore uses a later `free-recall` opportunity with an explicit causal cutoff. The delay is part of experiment timing, not a claim of certified retention.
+
+## Why recognition is history, not the primary label
+
+The main target is future independent performance. Recognition tasks are useful because they create controlled supported/unsupported history and reveal-use variation. Primary prediction rows are therefore free-recall, delayed-free-recall and near-transfer attempts; recognition outcomes remain lawful past evidence but are not used to inflate the number of primary evaluation targets.
+
+## Strong-baseline principle
+
+B2-native receives obvious causal support/reveal/context aggregates in addition to generic success/recency history. Otherwise any B3 improvement could simply mean that B3 had access to known host information deliberately withheld from B2. B3 must earn improvement from the semantic/state representation on top of a competent simple history baseline.
+
+Because several B3 sufficient statistics may duplicate B2 aggregates, exact duplicate/train-constant columns are removed and reported. A null B3 gain is an acceptable signal to simplify the representation.
 
 ## Falsification targets
 
@@ -30,7 +40,12 @@ N2 should try to break these assumptions:
 4. learner state can preserve conflict/support/reveal/context history without ambient time;
 5. transfer requires an intentional prior context and changed-context task;
 6. B3 feature extraction can be frozen before the target outcome and remain leakage-free;
-7. participant deletion can deterministically remove all participant-scoped synthetic artifacts.
+7. participant deletion can deterministically remove all participant-scoped synthetic artifacts;
+8. B2 and B3 can share one frozen predictor without label-budget or preprocessing asymmetry.
+
+## Estimator selection
+
+Do not copy #141 hyperparameters merely because code already exists. Reuse its vetted libraries, manifest conventions and causal evaluation patterns, but select/freeze `nep.native-predictor.v1` during N2 using synthetic numerical/stability checks only. The choice and hyperparameters are locked before any human N3 labels exist.
 
 ## Human pilot sizing
 
