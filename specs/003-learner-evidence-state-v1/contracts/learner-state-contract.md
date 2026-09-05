@@ -43,7 +43,11 @@
 
 - Accepted event identity and original lineage are retained.
 - Duplicate IDs are rejected.
-- Canonical ordering by `(occurredAt,eventId)` plus deterministic tie-breaking yields byte-equivalent batch/incremental replay.
+- Batch projection is canonical and order-independent: it sorts a supplied evidence set by `(occurredAt,eventId)` before applying evidence semantics.
+- Incremental reduction is deliberately **canonical append-only** in V1. It does not promise equivalence for arbitrary arrival order.
+- A validated event whose `(occurredAt,eventId)` precedes the latest processed canonical key fails closed with typed `out-of-order-event` and cannot rewrite prior state.
+- Post-validation semantic rejections retain `occurredAt` in their audit record so rejected transfer evidence also advances the incremental stream cursor; a later-arriving earlier baseline therefore cannot retroactively make that transfer valid.
+- Canonically ordered append-only reduction must remain byte-equivalent to batch projection, including valid near/far-transfer sequences.
 - Support/reveal, transfer failure, and durable/reference statistics remain auditable.
 
 ## Compatibility / purity
