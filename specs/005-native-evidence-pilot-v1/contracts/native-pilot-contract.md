@@ -46,8 +46,8 @@ predictor, human collection or fit is implemented by this documentation change.
 | B3-native       | Mandatory representation test | B2 plus the reviewed projector feature groups; same estimator                                                                                 |
 | BKT-native      | Conditional benchmark-only    | Pooled classical BKT on independent same-context text recall and delayed recall; compare all mandatory lanes on that identical subset as well |
 
-Primary contrast is B3 minus B2. B3 minus B2-basis diagnoses whether a gain is simply an explicit
-basis expansion. An algebraic reconstruction is an analysis control only, never a parallel
+Primary contrast is B3 minus B2; the mandatory attribution contrast is B3 minus B2-basis.
+Both enter the decision gate below. An algebraic reconstruction is an analysis control only, never a parallel
 learner model or evidence issuer. No fitted native model is selected by synthetic accuracy.
 
 **Common estimator:** scikit-learn 1.6.1 `LogisticRegression(penalty="l2", C=1.0,
@@ -131,28 +131,47 @@ Record `fitCompletedAt` explicitly; fail the row if timing cannot establish this
 ### Classical comparator gate
 
 BKT uses the pyBKT source pinned in research.md; source pin alone is not an execution lock.
-Before enabling it, N2 must record package/dependency hashes, a four-parameter model without
-per-learner parameters, constraints `0 < p < 1` and `1-slip > guess`, deterministic initializations,
-and explicit predict-before-update ordering. Recovery/initialization and degenerate/all-one-label
+Before enabling it, N2 must record package/dependency hashes, the installed backend and source paths,
+a four-parameter model without per-learner parameters, and explicit predict-before-update ordering.
+Recovery/initialization and degenerate/all-one-label
 synthetic tests establish plumbing and numerical behavior only. Fit on the same TRAIN-prefix
 independent recall subset; compare B0/B2/B2-basis/B3 on exactly its evaluation subset too.
 
 Choice recognition and near-transfer are excluded from this comparator because a single shared
 emission/transition model would assume equivalence the pilot has not established. Report this
-reduced coverage. Boundary fits or materially initialization-sensitive predictions produce
-`not-estimable`, not a new hyperparameter search or fabricated latent knowledge estimate. No
+reduced coverage. Boundary or reversed-emission fits are diagnostics, not automatic exclusions
+of finite predictive probabilities; they prohibit interpreting parameters as identified knowledge. No
 universal minimum cohort size is claimed. Full IRT, FSRS and neural KT remain outside N2.
 
-Proposed numerical gate, fixed before native outcomes: no forgetting; initialize
-`(prior, learn, slip, guess)` at `(0.2,0.1,0.1,0.2)`, `(0.5,0.05,0.2,0.2)` and
-`(0.8,0.2,0.1,0.1)`. Bound each fit to 1000 EM iterations and require absolute TRAIN
-log-likelihood change <= 1e-8 for convergence. Reject a parameter within 1e-6 of 0 or 1, or a
-known-minus-unknown correctness gap <= 1e-6. Compare all converged fits' pre-update probabilities
-on TRAIN-prefix rows only; maximum pairwise absolute difference > 0.01 is initialization-sensitive.
-Require all three fits to pass; select the greatest TRAIN likelihood with initialization order
-as tie-break. These are conservative engineering diagnostics, not universal identifiability
-criteria. If the pinned API cannot enforce/report them, mark the comparator unavailable and
-review a wrapper before enabling it; no silent replacement or TEST-based inclusion.
+Use the supported `Model(seed=143, num_fits=5, parallel=False)` and `fit(..., forgets=False)`
+surface, with no custom initial parameter tuples. Five starts follow the pinned library default;
+seed 143 is a reproducibility convention and serial execution simplifies replay. The inspected
+`source-py` implementation selects the greatest final TRAIN likelihood, retaining the first fit
+on a tie; its EM defaults are `maxiter=100`, `tol=0.005`. Do not transplant the logistic solver's
+settings into BKT. N2 must verify these semantics against the installed backend before fitting.
+
+Record fitted `coef_`/`params()` plus per-start likelihood traces, finite-probability checks and
+actual stopping reasons. The public fitted object does not expose all these diagnostics. A narrow,
+separately reviewed observer around the pinned EM call may capture its returned traces unchanged;
+it must not change initialization, updates, selection, stopping or predictions. Synthetic parity
+tests must compare instrumented and untouched seeded multi-fit results. Missing telemetry means
+`diagnostics-pending`, not "BKT unavailable" and not a claim that convergence was verified.
+
+For convergence assurance require at least two of the five starts to satisfy the backend's own
+stopping condition with finite likelihoods and probabilities; two is the minimum allowing a
+between-start check, not an identifiability theorem. One failed start does not veto the others.
+Keep the library-selected finite predictive result reportable even if this assurance is unmet;
+label it `convergence-unverified` and forbid a strong comparative conclusion. Do not silently
+replace the selected fit with a worse converged fit. N035 must freeze and independently review
+TRAIN-only near-best-likelihood and predictive-stability tolerances using synthetic numerical
+stress cases before N3; report all starts and best/near-best prediction differences. Until that
+review passes, stability is unresolved, not unavailable. No TEST-based inclusion or tuning.
+
+Only reproducible semantic/data incompatibility or a verified implementation failure preventing
+valid predictions may yield `inapplicable`/`not-estimable`. Record the minimal reproducer and
+distinguish library failure from observer/wrapper failure; unsupported preferred diagnostics,
+boundary parameters or a poor start alone cannot remove a working baseline. No native superiority
+claim may rely on a comparator excluded by an unresolved wrapper defect.
 
 BKT receives less information than B2/B3: omitted recognition/instruction events cause no
 transition in this opportunity-index comparator. Matched evaluation rows do not make it an
@@ -191,18 +210,49 @@ report descriptive differences only. Small-cluster intervals remain exploratory.
 sizing review must justify sufficient precision and recruitment for the fixed estimand; otherwise
 N4 returns `GATHER_MORE_EVIDENCE`, even if a nominal interval looks favorable.
 
-Proposed material gain margin: 0.01 nats in the equal-learner-weighted mean of within-learner
-per-attempt losses, frozen as an engineering usefulness criterion, not a published efficacy
-threshold. Apply these rules in order:
+**Utility gate (currently unresolved):** there is no approved material-gain margin. The previous
+`0.01` nat proposal is withdrawn as a decision threshold. Before N3, N044 must document a bounded
+analysis without human pilot outcomes: specify the downstream decision and false/missed-intervention
+cost assumptions, test synthetic probability/error scenarios and a prospectively fixed sensitivity
+grid (including zero and values below/at/above the former proposal), and report when decisions
+change. Log-loss improvement alone has no universal mapping to intervention benefit. A grid alone
+does not justify utility: explain why its selected effect matters under those cost assumptions,
+or explicitly record that no defensible mapping exists. Synthetic utility is assumption-dependent,
+not learner evidence. Do not run an intervention or expand this observational pilot.
+
+Independent review must freeze positive primary margins `delta_history` and `delta_basis` for the
+two contrasts, their rationale, analysis artifact/hash, assumptions and sensitivity alternatives
+before N3. Alternatives are descriptive, never alternate success criteria. They may differ only
+with a documented utility reason. If justification fails, N044 may approve descriptive-only
+collection with explicit owner approval; all predictive KEEP/SIMPLIFY decisions remain disabled.
+No margins may be chosen or revised using N3 outcomes.
+
+Report paired log-loss and Brier intervals for **both** B3-minus-B2 and B3-minus-B2-basis using the
+same learner draws. Define `win(control)` as log-loss upper bound strictly below its negative
+approved margin and Brier upper bound <= 0. Apply these rules in order:
 
 1. `REDESIGN` for semantic/lineage failures or uncontrolled form/difficulty confounding.
 2. `SIMPLIFY` predictor columns proven exactly redundant, without a predictive claim.
-3. `GATHER_MORE_EVIDENCE` if sizing or frozen matched-coverage gates are absent/unmet.
-4. `KEEP` augmentation if the paired B3-minus-B2 primary log-loss interval upper bound < -0.01
-   and paired Brier interval upper bound <= 0.
-5. `SIMPLIFY` augmentation if the primary interval lower bound > -0.01 (material gain excluded).
-6. Otherwise `GATHER_MORE_EVIDENCE`, including exact margin equality and a log-loss win with
-   worsening/inconclusive Brier. Do not switch the primary metric after seeing this conflict.
+3. `GATHER_MORE_EVIDENCE` if sizing, matched coverage or approved utility margins are absent/unmet.
+4. `KEEP representation-beyond-basis` only if `win(B2)` **and** `win(B2-basis)` hold. This supports
+   incremental predictive representation beyond the specified control, not newly observed information.
+5. If only `win(B2)` holds, report `representation-only benefit vs history; beyond-basis unproven`.
+   Exact B3/B2-basis equivalence permits `KEEP representation-only` with no preference for the
+   projector over the equivalent basis. Otherwise return `GATHER_MORE_EVIDENCE` about retaining
+   B3 rather than the basis; a nonsignificant contrast is not evidence of equivalence.
+6. `SIMPLIFY` predictive augmentation only if material benefit is excluded against **both**
+   controls (each log-loss lower bound strictly above its negative approved margin) and neither
+   Brier interval demonstrates a benefit (upper bound < 0). This is scoped to predictor features,
+   not the evidence architecture. Preserve contrary Brier evidence as `GATHER_MORE_EVIDENCE`.
+7. Otherwise `GATHER_MORE_EVIDENCE`, including exact margin equality, discordant contrasts or
+   worsening/inconclusive Brier on a claimed win. Do not switch metrics after seeing a conflict.
+
+Numerically approximate equality alone does not license an equivalence claim. Statistical
+equivalence requires a separately justified pre-N3 equivalence bound and the entire paired
+interval inside that bound; absent this, report the observed difference with unresolved attribution.
+Even wins against both controls cannot demonstrate new learner-state information: all V1 features
+are deterministic functions of shared history. A new-information claim requires distinct observed
+inputs and a separately reviewed information-budget experiment, outside this pilot.
 
 Never remove authority, privacy or unknown-handling safeguards because they fail to improve AUC.
 
@@ -213,11 +263,17 @@ late-label availability; equal-time exclusion; pooled-fit availability; fit-tran
 one-class log loss/Brier with null AUC; one-class TRAIN non-estimability; paired-cluster draws;
 missing vs observed zero; no-additional-feature equivalence; complete-case selection refusal;
 and deletion invalidating all dependent feature/model/result artifacts before reproducible rerun.
+Decision fixtures must include: B3 wins B2 but equals basis; wins both; wins only basis; neither
+material win; inconclusive attribution versus actual equivalence; Brier conflicts; absent utility
+justification; and exact margin equality. BKT fixtures must cover untouched/instrumented parity,
+one bad start among valid starts, missing diagnostics, boundaries, and genuine invalid predictions.
 
 The manifest binds source/data rights, code/dependency versions, estimator/settings, feature
 derivations/groups/column pruning, TRAIN IDs and cutoff/availability policy, prediction IDs/hashes,
 task/content versions, split membership, model/prediction artifact hashes, missingness/coverage,
-metric/clip/bin/bootstrap settings, non-estimability reasons, and decision rule version.
+metric/clip/bin/bootstrap settings, non-estimability reasons, both paired contrasts, attribution
+classification, utility approval/margins (nullable), justification/sensitivity artifact hashes,
+BKT backend/fit diagnostics and assurance status, and decision rule version.
 Every N2 output states `synthetic-plumbing-only`; no synthetic metric is a model-ranking result.
 
 ## Human-data prohibition

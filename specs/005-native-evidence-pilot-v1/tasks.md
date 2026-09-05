@@ -38,22 +38,24 @@
 - [ ] N032 Implement B0 and B2-basis controls, algebraic duplicate audit and stable TRAIN-only preprocessing per predictor contract.
 - [ ] N033 Add late-label/equal-time, blind-block, participant-isolation and future-label mutation adversarial tests.
 - [ ] N034 Adapt metric/manifest donor for one-class Brier/log loss, nullable AUC, complete coverage and paired learner resampling.
-- [ ] N035 Implement conditional BKT package/parameter/recovery gate or record an explicit non-estimability/inapplicability result without expanding the mandatory ladder.
+- [ ] N035 Verify installed pinned pyBKT backend and supported seeded multi-fit; parity-test a diagnostic observer, record per-start stopping/likelihoods, and review TRAIN-only near-best/stability tolerances. Missing diagnostics or one poor start must not exclude working BKT; retain unresolved assurance explicitly.
 - [ ] N036 Verify deletion invalidates dependent model/prediction/result artifacts; no participant survives through a stale fitted artifact.
+- [ ] N037 Test the two-contrast attribution decision table, exact versus unproven equivalence, missing utility margins, Brier conflicts and equality boundaries; no synthetic validity claims.
 
 ## N3 — human pilot
 
 - [ ] N040 BLOCKED: separately review final consent/privacy/deletion/retention protocol.
 - [ ] N041 BLOCKED: explicit owner approval to collect adult human pilot data.
 - [ ] N043 BLOCKED: review precision-based sizing, numeric coverage gates, prospective task-form allocation and prefix/holdout boundaries before any N3 outcomes.
-- [ ] N042 Only after N040/N041/N043: execute bounded pilot.
+- [ ] N044 BLOCKED: before human outcomes, independently review bounded utility/sensitivity analysis and freeze justified history/basis margins and alternatives, or approve descriptive-only analysis with predictive KEEP/SIMPLIFY disabled. No arbitrary default margin.
+- [ ] N042 Only after N040/N041/N043/N044 and N030/N031: execute bounded pilot.
 
 ## N4 — future reality decision
 
 - [ ] N050 Verify adherence to split/cutoff protocol frozen before N3; never select a favorable partition after inspecting outcomes.
-- [ ] N051 Compare same-estimator B3-native vs B2-native with learner-clustered uncertainty where sample supports it.
+- [ ] N051 Report B3-minus-B2 and B3-minus-B2-basis with the same learner-cluster draws; separate representation-only/beyond-basis conclusions and prohibit new-information claims.
 - [ ] N052 Report retain/simplify/redesign/gather-more-evidence; no mastery/CEFR/efficacy promotion.
 
-Dependencies: N010/N015 precede every N2 task. N032–N036 are part of the N030/N031 verification
-gate. N040/N041/N043 precede N042. None of these implementation/human gates is completed by
+Dependencies: N010/N015 precede every N2 task. N032–N037 are part of the N030/N031 verification
+gate. N030/N031/N040/N041/N043/N044 precede N042. None of these implementation/human gates is completed by
 the comparative research amendment.

@@ -64,8 +64,12 @@ Execute the frozen native predictor contract separately for within-learner predi
 new-learner cold start. Report every mandatory lane and conditional-lane exclusion, sample and
 coverage denominators, paired effect sizes, uncertainty and group ablations. If the pilot lacks
 the precision justified at the N3 sizing gate, return `GATHER_MORE_EVIDENCE`; do not optimize the
-protocol on pilot outcomes. The 0.01-nat usefulness margin remains a reviewable engineering
-proposal, not a learner efficacy threshold.
+protocol on pilot outcomes. Both B3-minus-B2 and B3-minus-B2-basis enter the decision gate;
+representation-only benefit cannot establish new learner-state information. The former 0.01-nat
+threshold is withdrawn. N044 must review a pre-N3 utility/sensitivity justification; absent
+defensible approved margins, predictive KEEP/SIMPLIFY is disabled even with precise intervals.
+N035 verifies the pinned supported pyBKT multi-fit API and a parity-tested diagnostic observer,
+not bespoke initialization/convergence requirements. Missing diagnostics cannot exclude BKT.
 
 ## Reuse map
 

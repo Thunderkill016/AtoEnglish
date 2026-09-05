@@ -9,6 +9,11 @@ of `contracts/native-pilot-contract.md` for exact baseline/split/metric settings
 B2-basis control distinguishes count re-encoding from additional information. N010/N015 in
 `tasks.md` remain pending; this amendment is not an N2 execution handoff.
 
+Review 5120933538 remains CHANGES REQUIRED pending fresh independent exact-head review.
+Check both attribution contrasts in the decision table, supported pyBKT multi-fit plus diagnostic
+parity requirements, and N044's utility justification/descriptive-only lock. The old 0.01-nat
+threshold cannot authorize KEEP/SIMPLIFY. No N2 or N3 command is authorized by this correction.
+
 Documentation checks (no native benchmark is implemented yet):
 
 ```bash

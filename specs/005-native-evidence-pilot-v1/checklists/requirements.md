@@ -26,3 +26,6 @@
 - [ ] Review fixed-prefix versus new-learner estimands, TRAIN-only transforms and label-availability rules.
 - [ ] Review metric/coverage denominators, small-cluster uncertainty, material-gain margin and pre-N3 sizing gate.
 - [ ] Confirm no N2 implementation, human collection or predictive-validation claim is authorized by the comparative amendment.
+- [ ] Re-review review 5120933538: both attribution contrasts govern KEEP; equivalence is not inferred from a nonsignificant result; no new-information claim from shared-history transforms.
+- [ ] Re-review source-faithful pyBKT multi-fit and diagnostic parity plan; missing API telemetry, boundary fits or one bad start cannot exclude valid predictions.
+- [ ] Re-review withdrawal of the 0.01-nat threshold and mandatory pre-N3 utility justification or descriptive-only decision lock (N044).

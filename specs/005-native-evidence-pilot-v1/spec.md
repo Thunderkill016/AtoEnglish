@@ -130,6 +130,10 @@ alone has no success/failure split. Every added column must disclose whether it 
 deterministic transform, or additional causal summary. B2-basis-native reconstructs the pinned
 projector's count-derived status/uncertainty/routing transforms as an attribution control.
 It has no evidence authority. If no additional features survive, report that explicitly.
+Both B3-minus-B2 and B3-minus-B2-basis MUST enter the decision rule. Winning only against B2
+cannot establish value beyond the explicit basis. Exact equivalence supports at most a
+representation-only conclusion; lack of significance is not equivalence. Even winning both
+contrasts cannot create new observed information from deterministic shared-history transforms.
 
 No B3 feature may include the current attempt outcome, actual reveal use, current response latency, or any future event. The comparison of interest is B3-native vs B2-native, not `provisionalRoutingScore` vs labels.
 
@@ -151,8 +155,13 @@ timestamps must prove prior knowledge, not merely a retrospectively earlier even
 
 Report learner-averaged log loss, Brier, AUC where defined, calibration diagnostics, coverage and
 learner-clustered uncertainty under the contract. One-class subsets still have log loss/Brier.
-Insufficient sample precision is `GATHER_MORE_EVIDENCE`; redundant/unhelpful predictor dimensions
-can be `SIMPLIFY` without weakening evidence/authority safeguards. A native predictive win cannot
+Insufficient sample precision or unjustified utility margins is `GATHER_MORE_EVIDENCE`.
+Only proven redundant columns may be simplified without predictive evidence; predictive removal
+requires the contract's two-contrast utility gate, without weakening evidence/authority safeguards.
+The former 0.01-nat threshold has no decision authority. Before N3, review a bounded synthetic
+utility/sensitivity analysis and freeze justified margins, or explicitly choose descriptive-only
+analysis with no predictive KEEP/SIMPLIFY. BKT uses source-faithful seeded multi-fit; missing
+preferred diagnostics cannot by itself exclude a working comparator. A native predictive win cannot
 be inferred from a foreign benchmark, source popularity, or synthetic data.
 
 ## Synthetic N2 only

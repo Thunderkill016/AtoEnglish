@@ -185,6 +185,30 @@ an algebraic-reconstruction control so re-encoding counts cannot be marketed as 
 
 No Nếp-specific predictive mechanism has been empirically tested by this research amendment.
 
+### Review 5120933538 corrections — pending independent approval
+
+The decision contract now requires both history and basis contrasts. A history-only win supports
+at most representation usefulness; deterministic shared-history transforms cannot supply newly
+observed learner information. Nonsignificance is not equivalence. Predictive removal also requires
+both contrasts and approved utility margins; exact redundant-column removal is a separate,
+non-empirical simplification.
+
+The pinned pyBKT [Model implementation](https://github.com/CAHLR/pyBKT/blob/06fc180ae72c117458acc527f8ec90cc8e0581c1/source-py/pyBKT/models/Model.py)
+exposes `seed`/`num_fits` (default five), parameter inspection/fixing and best-final-likelihood
+selection across starts. Its [EM implementation](https://github.com/CAHLR/pyBKT/blob/06fc180ae72c117458acc527f8ec90cc8e0581c1/source-py/pyBKT/fit/EM_fit.py)
+defaults to 100 iterations and absolute likelihood-change tolerance 0.005. The public fitted
+object does not retain every start's likelihood trace. Therefore the previous handpicked tuples,
+1000-iteration/1e-8 requirement and all-start veto are withdrawn. N035 must verify the installed
+backend, use supported seeded multi-fit and parity-test any telemetry observer; absent telemetry
+is unresolved assurance, not proof of comparator unavailability. Boundary parameters do not alone
+invalidate finite predictions. This is source inspection, not an executed pyBKT fit or recovery test.
+
+The former 0.01-nat margin is withdrawn as an architecture decision criterion. N044 requires a
+pre-N3 utility/sensitivity analysis, explicit cost assumptions and independent approval of both
+contrast margins. Sensitivity curves alone are insufficient without a defensible utility rationale.
+If that rationale remains absent, results stay descriptive with `GATHER_MORE_EVIDENCE`; no
+predictive KEEP/SIMPLIFY. No human-outcome tuning or synthetic efficacy claim is allowed.
+
 ## Human pilot sizing
 
 No round-number sample size is frozen in N1. Before N3, a sizing note must connect participant/attempt count to a specific falsification or estimation target and state what result will be reported when precision is inadequate. A small pilot must not be stretched into an efficacy claim.

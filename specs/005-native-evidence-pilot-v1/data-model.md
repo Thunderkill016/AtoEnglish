@@ -102,6 +102,12 @@ boundaries, predictor settings, source feature derivations, conditional BKT excl
 coverage, metric/uncertainty settings and artifact hashes. IDs/timestamps are supplied by the host.
 The manifest is research metadata, not a calibration/authority grant.
 
+Decision metadata includes both paired contrasts, scoped attribution conclusion, nullable
+`delta_history`/`delta_basis`, utility-review status and justification/sensitivity artifact hashes.
+Null or unapproved margins disable predictive KEEP/SIMPLIFY. BKT metadata separates installed
+backend, selected fit, per-start diagnostics and convergence/stability assurance from actual
+prediction availability; absent telemetry is not model unavailability.
+
 ## Privacy-separated artifacts
 
 Human N3, if separately approved, must separate:
