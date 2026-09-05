@@ -19,11 +19,13 @@ function buildFixture() {
   const participantId = "manifest-p";
   const tasks = buildFrozenPilotTaskMatrix();
   const trace = buildSyntheticTrace(participantId);
+  const delayedTask = buildPilotTaskDefinition("delayed-free-recall");
+  const coldTask = buildPilotTaskDefinition("free-recall");
   const row = buildPredictionFeatureRow({
     participantId,
     targetEventId: `${participantId}:e05`,
     predictionTimestamp: "2026-09-02T09:00:00.000Z",
-    currentTask: buildPilotTaskDefinition("delayed-free-recall"),
+    currentTask: delayedTask,
     history: trace,
   });
   const protocol = buildFrozenNativeSplitProtocol({
@@ -42,9 +44,21 @@ function buildFixture() {
       "manifest-cold": [],
     },
     blindTargetEventIds: [`${participantId}:e05`, "manifest-cold:target"],
-    blindTargetParticipantIdByEventId: {
-      [`${participantId}:e05`]: participantId,
-      "manifest-cold:target": "manifest-cold",
+    blindTargetBindings: {
+      [`${participantId}:e05`]: {
+        participantId,
+        predictionTimestamp: "2026-09-02T09:00:00.000Z",
+        taskId: delayedTask.task.id,
+        taskVersion: delayedTask.task.version,
+        contentFingerprint: delayedTask.contentFingerprint,
+      },
+      "manifest-cold:target": {
+        participantId: "manifest-cold",
+        predictionTimestamp: "2026-09-02T10:00:00.000Z",
+        taskId: coldTask.task.id,
+        taskVersion: coldTask.task.version,
+        contentFingerprint: coldTask.contentFingerprint,
+      },
     },
   });
 
@@ -157,9 +171,21 @@ describe("native pilot full synthetic run manifest", () => {
     expect(first.split.digest).toMatch(/^sha256:[0-9a-f]{64}$/);
     expect(first.split.trainingParticipantIds).toEqual(["manifest-p"]);
     expect(first.split.heldOutParticipantIds).toEqual(["manifest-cold"]);
-    expect(first.split.blindTargetParticipantIdByEventId).toEqual({
-      "manifest-cold:target": "manifest-cold",
-      "manifest-p:e05": "manifest-p",
+    expect(first.split.blindTargetBindings).toEqual({
+      "manifest-cold:target": {
+        participantId: "manifest-cold",
+        predictionTimestamp: "2026-09-02T10:00:00.000Z",
+        taskId: buildPilotTaskDefinition("free-recall").task.id,
+        taskVersion: 1,
+        contentFingerprint: buildPilotTaskDefinition("free-recall").contentFingerprint,
+      },
+      "manifest-p:e05": {
+        participantId: "manifest-p",
+        predictionTimestamp: "2026-09-02T09:00:00.000Z",
+        taskId: buildPilotTaskDefinition("delayed-free-recall").task.id,
+        taskVersion: 1,
+        contentFingerprint: buildPilotTaskDefinition("delayed-free-recall").contentFingerprint,
+      },
     });
     expect(first.causalPolicy.blindBlockFeedbackForbidden).toBe(true);
     expect(first.featureRows[0]?.predictionBindingDigest).toMatch(/^sha256:[0-9a-f]{64}$/);
