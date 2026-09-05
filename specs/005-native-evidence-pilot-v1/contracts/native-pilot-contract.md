@@ -2,9 +2,10 @@
 
 ## Authority
 
-This contract specifies N1 and conditional N2 synthetic plumbing. N2 starts only after independent
-approval of amended Spec #005. It does not authorize human recruitment, production ingestion,
-durable assessment, UI deployment, or data reuse.
+This contract specifies N1 and conditional N2 synthetic plumbing. The reviewed parent N1 contract
+has landed; this comparative amendment still requires fresh exact-head N015 approval before its N2
+work is accepted. It does not authorize human recruitment, production ingestion, durable assessment,
+UI deployment, or data reuse.
 
 ## Ontology target
 
@@ -13,7 +14,13 @@ Exactly one V1 target is permitted: `nep.en.v1.language-system.syntax-grammar`.
 ## Evidence issuance
 
 - Every task is a valid `CoreTaskSpec` frozen before the response.
+- The pilot wrapper MUST freeze a `FrozenPilotTaskDefinition` before the response and compute a deterministic definition fingerprint over the exact pilot family, all `CoreTaskSpec` fields including `id` and `version`, content fingerprint, context ID, and scoring contract ID.
+- The definition fingerprint encoding is fixed: construct the `PilotTaskDefinition` payload without `definitionFingerprint`; recursively order object keys lexicographically; preserve array order exactly as frozen; reject `undefined`, non-finite numbers, functions, symbols, and non-JSON values; encode the resulting canonical JSON as UTF-8 with no insignificant whitespace; hash those bytes with SHA-256; serialize as lowercase `sha256:<64-hex>`. Object insertion order must not affect the fingerprint, while any frozen semantic field or array-order change must.
+- `CoreTaskSpec` / `ReferenceCoreEvidence` do not by themselves preserve every pilot identity field: `ReferenceCoreEvidence` does not carry task version or content fingerprint, and core validation does not compare the pilot wrapper's planned context ID. Therefore the pilot MUST NOT treat `validateReferenceCoreEvidence()` alone as proof of prospective task identity.
+- Before calling `validateReferenceCoreEvidence()`, the pilot wrapper MUST fail closed unless the attempt's task ID, task version, content fingerprint, context ID, and definition fingerprint exactly match the frozen definition. No post-response substitution or repair is permitted.
 - Every pilot update enters learner state only as in-process `ReferenceCoreEvidence` issued by `validateReferenceCoreEvidence()`.
+- After successful validation, the research trace MUST persist a `PilotEvidenceLineage` binding the evidence `eventId` and `observationId` to the frozen definition fingerprint, task ID/version, content fingerprint, context ID, and `computeCanonicalEvidenceDigest(evidence)`. Missing or mismatched lineage makes the event ineligible for pilot feature rows/results.
+- `PilotEvidenceLineage` is research-integrity metadata only. It never becomes learner-state authority and cannot make detached evidence trusted; only the in-process branded `ReferenceCoreEvidence` enters `projectLearnerState()`.
 - `authorityScope` is always `repository-reference` in V1.
 - Detached transport artifacts never acquire trust by parsing or hashing.
 
@@ -23,7 +30,7 @@ Exactly one V1 target is permitted: `nep.en.v1.language-system.syntax-grammar`.
 
 ## Transfer
 
-Near-transfer is prospective: task family, transfer distance, changed context and prior baseline context are defined independently of the target outcome. A first-event transfer or unchanged-context transfer is rejected and remains visible in audit output.
+Near-transfer is prospective: task family, transfer distance, changed context and prior baseline context are defined independently of the target outcome. The target attempt's context ID MUST equal the frozen pilot task definition's context ID before evidence validation. A first-event transfer, unchanged-context transfer, or post-response context substitution is rejected and remains visible in audit output.
 
 ## Time
 
@@ -64,7 +71,8 @@ hyperparameter search or post-hoc calibration. Nonconvergence or one-class TRAIN
 ### Shared information budget and feature audit
 
 B2 and B3 consume the same accepted TRAIN evidence and the same prospective current-task fields.
-Record rejected, unobserved and unlabeled attempts in the audit ledger, not as negative examples.
+Only events with valid `PilotEvidenceLineage` may contribute to pilot feature rows; rejected,
+unobserved, unlabeled, or lineage-invalid attempts remain in the audit ledger, not as negative examples.
 Add to the existing B2 budget: positive/negative counts by pilot task family, role and support
 bucket; near-transfer successes/failures; same-context successes/failures; elapsed seconds since
 first accepted evidence; current planned context tag and stimulus-form group. All are host-known
@@ -258,22 +266,26 @@ Never remove authority, privacy or unknown-handling safeguards because they fail
 
 ### Additional N2 acceptance cases and manifest
 
-Synthetic tests must cover: algebraic reconstruction/duplicate pruning; role-specific history;
-late-label availability; equal-time exclusion; pooled-fit availability; fit-transform leakage; learner split isolation;
-one-class log loss/Brier with null AUC; one-class TRAIN non-estimability; paired-cluster draws;
-missing vs observed zero; no-additional-feature equivalence; complete-case selection refusal;
-and deletion invalidating all dependent feature/model/result artifacts before reproducible rerun.
+Synthetic tests must cover: canonical task-fingerprint object-insertion-order invariance and frozen
+semantic/array-order mutation sensitivity; task-version/content/definition/context substitution;
+missing or mismatched `PilotEvidenceLineage`; algebraic reconstruction/duplicate pruning; role-specific
+history; late-label availability; equal-time exclusion; pooled-fit availability; fit-transform leakage;
+learner split isolation; one-class log loss/Brier with null AUC; one-class TRAIN non-estimability;
+paired-cluster draws; missing vs observed zero; no-additional-feature equivalence; complete-case
+selection refusal; and deletion invalidating all dependent lineage/feature/model/prediction/result
+artifacts before reproducible rerun.
 Decision fixtures must include: B3 wins B2 but equals basis; wins both; wins only basis; neither
 material win; inconclusive attribution versus actual equivalence; Brier conflicts; absent utility
 justification; and exact margin equality. BKT fixtures must cover untouched/instrumented parity,
 one bad start among valid starts, missing diagnostics, boundaries, and genuine invalid predictions.
 
-The manifest binds source/data rights, code/dependency versions, estimator/settings, feature
-derivations/groups/column pruning, TRAIN IDs and cutoff/availability policy, prediction IDs/hashes,
-task/content versions, split membership, model/prediction artifact hashes, missingness/coverage,
-metric/clip/bin/bootstrap settings, non-estimability reasons, both paired contrasts, attribution
-classification, utility approval/margins (nullable), justification/sensitivity artifact hashes,
-BKT backend/fit diagnostics and assurance status, and decision rule version.
+The manifest binds source/data rights, code/dependency versions, estimator/settings, frozen task-definition
+fingerprints, evidence-lineage digests, feature derivations/groups/column pruning, TRAIN IDs and
+cutoff/availability policy, prediction IDs/hashes, task/content versions, split membership,
+model/prediction artifact hashes, missingness/coverage, metric/clip/bin/bootstrap settings,
+non-estimability reasons, both paired contrasts, attribution classification, utility approval/margins
+(nullable), justification/sensitivity artifact hashes, BKT backend/fit diagnostics and assurance
+status, and decision rule version.
 Every N2 output states `synthetic-plumbing-only`; no synthetic metric is a model-ranking result.
 
 ## Human-data prohibition
