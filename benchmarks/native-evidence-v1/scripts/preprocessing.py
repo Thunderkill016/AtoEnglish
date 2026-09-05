@@ -66,6 +66,10 @@ def _validate_numeric(value: FeatureValue, name: str) -> float | None:
     return number
 
 
+def _is_availability_mask(name: str) -> bool:
+    return name.startswith("missing:")
+
+
 def fit_feature_transform(
     rows: Sequence[FeatureRow],
     *,
@@ -127,7 +131,13 @@ def fit_feature_transform(
     candidate_indices: list[int] = []
     for index, name in enumerate(raw_names):
         column = raw_matrix[:, index]
-        if column.size == 0 or np.all(column == column[0]):
+        # Availability is a semantic property, not a candidate model signal. Preserve every
+        # numeric missingness mask even when TRAIN happens to contain no missing values, otherwise
+        # a future missing value collapses to standardized zero and becomes indistinguishable from
+        # an observed mean value.
+        if _is_availability_mask(name):
+            candidate_indices.append(index)
+        elif column.size == 0 or np.all(column == column[0]):
             dropped_constants.append(name)
         else:
             candidate_indices.append(index)
@@ -135,16 +145,24 @@ def fit_feature_transform(
     retained_indices: list[int] = []
     dropped_duplicates: list[tuple[str, str]] = []
     for index in candidate_indices:
+        name = raw_names[index]
+        if _is_availability_mask(name):
+            retained_indices.append(index)
+            continue
+
         column = raw_matrix[:, index]
         duplicate_of: str | None = None
         for retained_index in retained_indices:
+            retained_name = raw_names[retained_index]
+            if _is_availability_mask(retained_name):
+                continue
             if np.array_equal(column, raw_matrix[:, retained_index]):
-                duplicate_of = raw_names[retained_index]
+                duplicate_of = retained_name
                 break
         if duplicate_of is None:
             retained_indices.append(index)
         else:
-            dropped_duplicates.append((raw_names[index], duplicate_of))
+            dropped_duplicates.append((name, duplicate_of))
 
     return FrozenFeatureTransform(
         numeric=tuple(numeric_transforms),
