@@ -11,7 +11,12 @@ Exactly one V1 target is permitted: `nep.en.v1.language-system.syntax-grammar`.
 ## Evidence issuance
 
 - Every task is a valid `CoreTaskSpec` frozen before the response.
+- The pilot wrapper MUST freeze a `FrozenPilotTaskDefinition` before the response and compute a deterministic definition fingerprint over the exact pilot family, all `CoreTaskSpec` fields including `id` and `version`, content fingerprint, context ID, and scoring contract ID.
+- `CoreTaskSpec` / `ReferenceCoreEvidence` do not by themselves preserve every pilot identity field: `ReferenceCoreEvidence` does not carry task version or content fingerprint, and core validation does not compare the pilot wrapper's planned context ID. Therefore the pilot MUST NOT treat `validateReferenceCoreEvidence()` alone as proof of prospective task identity.
+- Before calling `validateReferenceCoreEvidence()`, the pilot wrapper MUST fail closed unless the attempt's task ID, task version, content fingerprint, context ID, and definition fingerprint exactly match the frozen definition. No post-response substitution or repair is permitted.
 - Every pilot update enters learner state only as in-process `ReferenceCoreEvidence` issued by `validateReferenceCoreEvidence()`.
+- After successful validation, the research trace MUST persist a `PilotEvidenceLineage` binding the evidence `eventId` and `observationId` to the frozen definition fingerprint, task ID/version, content fingerprint, context ID, and `computeCanonicalEvidenceDigest(evidence)`. Missing or mismatched lineage makes the event ineligible for pilot feature rows/results.
+- `PilotEvidenceLineage` is research-integrity metadata only. It never becomes learner-state authority and cannot make detached evidence trusted; only the in-process branded `ReferenceCoreEvidence` enters `projectLearnerState()`.
 - `authorityScope` is always `repository-reference` in V1.
 - Detached transport artifacts never acquire trust by parsing or hashing.
 
@@ -21,7 +26,7 @@ Exactly one V1 target is permitted: `nep.en.v1.language-system.syntax-grammar`.
 
 ## Transfer
 
-Near-transfer is prospective: task family, transfer distance, changed context and prior baseline context are defined independently of the target outcome. A first-event transfer or unchanged-context transfer is rejected and remains visible in audit output.
+Near-transfer is prospective: task family, transfer distance, changed context and prior baseline context are defined independently of the target outcome. The target attempt's context ID MUST equal the frozen pilot task definition's context ID before evidence validation. A first-event transfer, unchanged-context transfer, or post-response context substitution is rejected and remains visible in audit output.
 
 ## Time
 
