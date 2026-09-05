@@ -31,12 +31,14 @@ def _iter_train_labels(path: Path) -> Iterable[int]:
                 yield token.label
 
 
-def _token_ids_from_blind(path: Path, split: str) -> list[str]:
+def _blind_population(path: Path, split: str) -> tuple[list[str], int]:
     token_ids: list[str] = []
+    learner_ids: set[str] = set()
     with path.open("r", encoding="utf-8") as handle:
         for exercise in parse_slam_lines(handle, split):  # type: ignore[arg-type]
+            learner_ids.add(exercise.header.user_id)
             token_ids.extend(token.token_id for token in exercise.tokens)
-    return token_ids
+    return token_ids, len(learner_ids)
 
 
 def main() -> int:
@@ -49,7 +51,9 @@ def main() -> int:
     args = parser.parse_args()
 
     prevalence = prevalence_probability(_iter_train_labels(args.train))
-    token_ids = _token_ids_from_blind(args.eval, args.split)
+    token_ids, learner_count = _blind_population(args.eval, args.split)
+    if not token_ids or learner_count == 0:
+        raise ValueError("B0 evaluation split must contain at least one token and learner")
     with args.gold.open("r", encoding="utf-8") as handle:
         gold = parse_gold_key(handle)
 
@@ -73,8 +77,10 @@ def main() -> int:
             "f1At05": metrics.f1_at_05,
             "logLoss": metrics.log_loss,
             "tokenCount": metrics.token_count,
+            "learnerCount": learner_count,
             "positiveCount": metrics.positive_count,
             "positivePrevalence": metrics.positive_prevalence,
+            "coverage": 1.0,
         },
     }
     args.output.parent.mkdir(parents=True, exist_ok=True)
