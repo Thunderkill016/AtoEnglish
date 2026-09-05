@@ -39,6 +39,14 @@ DEV_REPEAT = """# user:D2inSf5+ countries:MX days:2.0 client:web session:practic
 
 """
 
+DEV_TWO_USERS = """# user:D2inSf5+ countries:MX days:2.0 client:web session:practice format:reverse_translate time:2
+8rgJEAPw1401 word NOUN Number=Sing ROOT 0
+
+# user:oMGsnnH/ countries:US days:2.0 client:ios session:practice format:listen time:3
+oMGsnnH/1401 other NOUN Number=Sing ROOT 0
+
+"""
+
 
 class _RecordingHasher:
     def __init__(self) -> None:
@@ -86,7 +94,7 @@ class B2SmokeTest(unittest.TestCase):
         )
         self.assertTrue(did_fit)
 
-        token_ids, probabilities = _predict_blind(
+        token_ids, probabilities, learner_count = _predict_blind(
             model,
             hasher,
             history,
@@ -95,6 +103,7 @@ class B2SmokeTest(unittest.TestCase):
         )
         self.assertEqual(token_ids, ["8rgJEAPw1201", "8rgJEAPw1202"])
         self.assertEqual(len(probabilities), 2)
+        self.assertEqual(learner_count, 1)
         self.assertTrue(all(0.0 <= p <= 1.0 for p in probabilities))
 
     def test_blind_encounter_features_are_batch_size_invariant(self) -> None:
@@ -117,6 +126,19 @@ class B2SmokeTest(unittest.TestCase):
         self.assertEqual(row_by_row, one_large_batch)
         self.assertEqual(row_by_row[0]["prior_encounter_count"], 0.0)
         self.assertEqual(row_by_row[1]["prior_encounter_count"], math.log1p(1))
+
+    def test_blind_prediction_counts_unique_learners(self) -> None:
+        exercises = list(parse_slam_lines(DEV_TWO_USERS.splitlines(keepends=True), "dev"))
+        token_ids, probabilities, learner_count = _predict_blind(
+            _ConstantModel(),  # type: ignore[arg-type]
+            _RecordingHasher(),  # type: ignore[arg-type]
+            CausalHistory(),
+            exercises,
+            batch_size=10,
+        )
+        self.assertEqual(len(token_ids), 2)
+        self.assertEqual(len(probabilities), 2)
+        self.assertEqual(learner_count, 2)
 
     def test_fold_in_gold_must_match_blind_input_exactly(self) -> None:
         dev_exercises = list(parse_slam_lines(DEV.splitlines(keepends=True), "dev"))

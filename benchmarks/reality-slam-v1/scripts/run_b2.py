@@ -132,9 +132,10 @@ def _predict_blind(
     history: CausalHistory,
     exercises: Iterable[SlamExercise],
     batch_size: int,
-) -> tuple[list[str], list[float]]:
+) -> tuple[list[str], list[float], int]:
     token_ids: list[str] = []
     predictions: list[float] = []
+    learner_ids: set[str] = set()
     feature_batch: list[dict[str, float]] = []
     id_batch: list[str] = []
 
@@ -152,6 +153,7 @@ def _predict_blind(
     for exercise, token in _iter_token_rows(exercises):
         if token.label is not None:
             raise ValueError("blind DEV/TEST input unexpectedly contains labels")
+        learner_ids.add(exercise.header.user_id)
         before = history.features_before(exercise, token)
         feature_batch.append(_feature_dict(exercise, token, before))
         id_batch.append(token.token_id)
@@ -163,7 +165,7 @@ def _predict_blind(
         if len(feature_batch) >= batch_size:
             flush()
     flush()
-    return token_ids, predictions
+    return token_ids, predictions, len(learner_ids)
 
 
 def main() -> int:
@@ -225,13 +227,15 @@ def main() -> int:
         )
         fit_phase = "train-plus-dev"
 
-    token_ids, probabilities = _predict_blind(
+    token_ids, probabilities, learner_count = _predict_blind(
         model,
         hasher,
         history,
         _iter_exercises(args.eval, args.split),
         batch_size=args.batch_size,
     )
+    if not token_ids or learner_count == 0:
+        raise ValueError("B2 evaluation split must contain at least one token and learner")
 
     # Gold is loaded only after all current-split predictions are frozen.
     with args.gold.open("r", encoding="utf-8") as handle:
@@ -263,8 +267,10 @@ def main() -> int:
             "f1At05": metrics.f1_at_05,
             "logLoss": metrics.log_loss,
             "tokenCount": metrics.token_count,
+            "learnerCount": learner_count,
             "positiveCount": metrics.positive_count,
             "positivePrevalence": metrics.positive_prevalence,
+            "coverage": 1.0,
         },
     }
     args.output.parent.mkdir(parents=True, exist_ok=True)
