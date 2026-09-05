@@ -35,6 +35,19 @@ Accepted learner-state records preserve the actual `eventId`, `targetId`, `taskI
 
 `AcceptedEventAudit` retains those lineage fields in `LearnerStateProjection.acceptedEvents` so duplicates and canonical replay remain auditable.
 
+`RejectedEvidenceAudit` has a typed problem code and may retain `occurredAt` for evidence that passed ingress validation but was rejected by post-validation sequence/transfer semantics. V1 adds `out-of-order-event` so the incremental reducer can fail closed rather than retroactively rewriting history.
+
+## Replay ordering model
+
+Two execution modes are intentionally different at the input boundary:
+
+- `projectLearnerState()` accepts an evidence set and canonicalizes it by `(occurredAt,eventId)` before projection. Input array order is not authoritative.
+- `reduceLearnerState()` is a streaming, canonical append-only reducer. Every validated event must be at or after the latest processed canonical key. A lower key is rejected as `out-of-order-event`.
+- Validated semantic rejections with a known canonical timestamp retain that timestamp and therefore advance the incremental ordering cursor. This prevents a transfer attempt that arrived first from later becoming valid merely because an earlier baseline arrives late.
+- Same-timestamp ordering uses `eventId` as the deterministic tiebreaker.
+
+Canonical append-only streams must produce the same learner projection and audits as batch replay, including valid near/far transfer evidence. Arbitrary arrival-order equivalence is explicitly not a V1 reducer guarantee.
+
 ## Sufficient statistics
 
 `ConstructSufficientStatistics` includes total/positive/negative/conflicted counts; counts by role/activity/modality; distinct context IDs; `sameContextCount`, `nearTransferCount`, `nearTransferFailedCount`, `farTransferCount`, `farTransferFailedCount`; support distribution; reveal-use count; durable/reference counts; and first/last observed timestamps.
