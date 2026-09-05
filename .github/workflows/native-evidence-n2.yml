@@ -45,7 +45,7 @@ jobs:
         run: npx tsc --noEmit
 
       - name: Run focused N2 tests
-        run: npx vitest run benchmarks/native-evidence-v1/native-evidence-v1.test.ts
+        run: npx vitest run 'benchmarks/native-evidence-v1/*.test.ts'
 
   predictor-plumbing:
     name: Frozen predictor and metric checks
