@@ -16,6 +16,7 @@ export type FrozenNativeSplitProtocol = {
   readonly heldOutParticipantIds: readonly string[];
   readonly trainPrefixEventIdsByParticipant: Readonly<Record<string, readonly string[]>>;
   readonly blindTargetEventIds: readonly string[];
+  readonly blindTargetParticipantIdByEventId: Readonly<Record<string, string>>;
 };
 
 export type BuildFrozenNativeSplitProtocolInput = Omit<FrozenNativeSplitProtocol, "protocolId">;
@@ -94,6 +95,26 @@ export function buildFrozenNativeSplitProtocol(
     }
   }
 
+  const frozenBlindTargetIds = new Set(input.blindTargetEventIds);
+  const targetBindingEntries = Object.entries(input.blindTargetParticipantIdByEventId);
+  for (const [targetEventId, participantId] of targetBindingEntries) {
+    if (!frozenBlindTargetIds.has(targetEventId)) {
+      throw new Error(`blind target participant binding references unknown target: ${targetEventId}`);
+    }
+    if (!knownParticipants.has(participantId)) {
+      throw new Error(`blind target references unallocated participant: ${targetEventId}:${participantId}`);
+    }
+  }
+
+  const blindTargetParticipantIdByEventId: Record<string, string> = {};
+  for (const targetEventId of [...input.blindTargetEventIds].sort()) {
+    const participantId = input.blindTargetParticipantIdByEventId[targetEventId];
+    if (!participantId) {
+      throw new Error(`blind target is missing frozen participant binding: ${targetEventId}`);
+    }
+    blindTargetParticipantIdByEventId[targetEventId] = participantId;
+  }
+
   const sortedPrefix: Record<string, readonly string[]> = {};
   for (const participantId of [...knownParticipants].sort()) {
     sortedPrefix[participantId] = Object.freeze([
@@ -110,6 +131,7 @@ export function buildFrozenNativeSplitProtocol(
     heldOutParticipantIds: Object.freeze([...input.heldOutParticipantIds].sort()),
     trainPrefixEventIdsByParticipant: Object.freeze(sortedPrefix),
     blindTargetEventIds: Object.freeze([...input.blindTargetEventIds].sort()),
+    blindTargetParticipantIdByEventId: Object.freeze(blindTargetParticipantIdByEventId),
   });
 }
 
@@ -192,6 +214,16 @@ export function buildBlindPredictionFeatureRow(
 ): PredictionFeatureRow {
   if (!input.protocol.blindTargetEventIds.includes(input.targetEventId)) {
     throw new Error(`targetEventId is not in frozen blind block: ${input.targetEventId}`);
+  }
+  const frozenParticipantId =
+    input.protocol.blindTargetParticipantIdByEventId[input.targetEventId];
+  if (!frozenParticipantId) {
+    throw new Error(`blind target is missing frozen participant binding: ${input.targetEventId}`);
+  }
+  if (frozenParticipantId !== input.participantId) {
+    throw new Error(
+      `blind target is frozen to participant ${frozenParticipantId}: ${input.targetEventId}`,
+    );
   }
 
   const predictionMs = parseTimestamp(input.predictionTimestamp, "predictionTimestamp");
