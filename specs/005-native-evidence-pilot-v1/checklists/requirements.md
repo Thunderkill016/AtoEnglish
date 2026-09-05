@@ -2,14 +2,15 @@
 
 - [x] Public-corpus incompatibility is treated as a scientific result, not patched with guessed fields.
 - [x] Exactly one canonical V1 ontology target is named; the narrower content tag is explicitly non-canonical.
-- [x] Task semantics are prospective, versioned and fingerprinted.
+- [x] Task semantics are prospective, versioned, fingerprinted, and fail-closed bound across task ID/version/content/context before evidence issuance.
+- [x] The spec compensates for task version/content fingerprint fields not preserved inside `ReferenceCoreEvidence` with a canonical frozen-definition fingerprint and separate non-authoritative evidence-lineage binding.
 - [x] Recognition, retrieval and transfer roles remain distinct.
 - [x] Independent evidence cannot use support/reveal.
 - [x] Primary prediction targets are independent free-recall/delayed-recall/near-transfer attempts; recognition is causal history.
 - [x] Delayed retrieval does not claim canonical retention authority.
-- [x] Transfer requires intentional changed context and prior baseline context.
+- [x] Transfer requires intentional changed context, exact frozen context binding and prior baseline context.
 - [x] Pilot evidence is repository-reference only.
-- [x] Detached JSON cannot enter learner state as trusted evidence.
+- [x] Detached JSON or lineage metadata cannot enter learner state as trusted evidence.
 - [x] B2 is a strong causal baseline with simple support/reveal/context history rather than an information-starved strawman.
 - [x] B2/B3 share rows, labels, cutoff, preprocessing and estimator.
 - [x] B3 duplicate/train-constant columns are removed/reportable rather than counted as invented signal.
@@ -20,12 +21,14 @@
 - [x] Human collection is blocked behind separate privacy/consent review and owner approval.
 - [x] Adults-only, text/choice-only V1 boundary is explicit.
 - [x] Negative/null/insufficient-evidence outcomes are valid.
-- [ ] Independent exact-head review PASS before N2 implementation.
+- [x] Parent Spec #005 exact head `7181bc219ec7dacb14599552c359b0fe8950d972` received independent PASS and exact-head Verify before landing.
+- [ ] Fresh independent exact-head review PASS for this comparative amendment after parent carry-forward.
 - [ ] Review comparative source pins, code/data rights and candidate applicability without importing foreign benchmark claims.
 - [ ] Review the B0/B2/B2-basis/B3 ladder and conditional BKT subset for shared information and causal cutoff fairness.
 - [ ] Review fixed-prefix versus new-learner estimands, TRAIN-only transforms and label-availability rules.
-- [ ] Review metric/coverage denominators, small-cluster uncertainty, material-gain margin and pre-N3 sizing gate.
+- [ ] Review metric/coverage denominators, small-cluster uncertainty, utility margins and pre-N3 sizing gate.
 - [ ] Confirm no N2 implementation, human collection or predictive-validation claim is authorized by the comparative amendment.
 - [ ] Re-review review 5120933538: both attribution contrasts govern KEEP; equivalence is not inferred from a nonsignificant result; no new-information claim from shared-history transforms.
 - [ ] Re-review source-faithful pyBKT multi-fit and diagnostic parity plan; missing API telemetry, boundary fits or one bad start cannot exclude valid predictions.
 - [ ] Re-review withdrawal of the 0.01-nat threshold and mandatory pre-N3 utility justification or descriptive-only decision lock (N044).
+- [ ] Verify amendment N2 acceptance cases include canonical task-fingerprint invariance/mutation tests and task/version/content/context/lineage substitution failures.
