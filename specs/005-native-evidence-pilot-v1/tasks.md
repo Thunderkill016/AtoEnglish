@@ -11,13 +11,13 @@
 - [x] N007 Define delayed-retrieval and changed-context causal rules; primary prediction targets are free-recall/delayed-free-recall/near-transfer.
 - [x] N008 Draft privacy/consent/retention requirements; human collection remains disabled.
 - [x] N009 Require `nep.native-predictor.v1` estimator/hyperparameter freeze during N2 before any human N3 outcomes.
-- [x] N009A Explicitly compensate for fields not preserved by `ReferenceCoreEvidence`: freeze a deterministic pilot task-definition fingerprint and require fail-closed task ID/version/content fingerprint/context binding plus adjacent `PilotEvidenceLineage`.
+- [x] N009A Explicitly compensate for fields not preserved by `ReferenceCoreEvidence`: freeze a canonical deterministic pilot task-definition fingerprint and require fail-closed task ID/version/content fingerprint/context binding plus adjacent `PilotEvidenceLineage`.
 - [ ] N010 Independent review PASS for Spec #005 exact head. Draft N2 work started before this temporal gate completed remains provisional and must be revalidated against the reviewed exact head; the review is not backdated.
 
 ## N2 — synthetic plumbing only
 
 - [ ] N020 Create `benchmarks/native-evidence-v1/` from reviewed Spec #005.
-- [ ] N021 Implement immutable versioned task definitions using existing `CoreTaskSpec`, plus deterministic `FrozenPilotTaskDefinition.definitionFingerprint`.
+- [ ] N021 Implement immutable versioned task definitions using existing `CoreTaskSpec`, plus canonical deterministic `FrozenPilotTaskDefinition.definitionFingerprint`; prove object insertion order does not alter it and every frozen semantic/array-order mutation does.
 - [ ] N022 Before `validateReferenceCoreEvidence()`, fail closed unless attempt task ID/version/content fingerprint/context ID/definition fingerprint exactly match the frozen definition; after successful issuance persist matching `PilotEvidenceLineage` with canonical evidence digest.
 - [ ] N023 Add cold-start, support/reveal, free-recall, delayed-recall, valid/invalid transfer scenarios.
 - [ ] N024 Add duplicate and out-of-order reducer adversarial scenarios.
