@@ -33,12 +33,21 @@ class BinaryMetricBundle:
 
 
 @dataclass(frozen=True)
+class RowOutcomeBinding:
+    row_id: str
+    participant_id: str
+    label: int
+
+
+@dataclass(frozen=True)
 class LearnerMetricBundle:
     learner_count: int
     learner_with_outcome_count: int
     planned_learner_ids: tuple[str, ...]
     planned_row_count: int
+    planned_row_ids: tuple[str, ...] | None
     observed_row_count: int
+    observed_row_bindings: tuple[RowOutcomeBinding, ...] | None
     learner_outcome_coverage: float | None
     row_outcome_coverage: float | None
     mean_per_learner_log_loss: float | None
@@ -55,6 +64,15 @@ def _validate(labels: Sequence[int], probabilities: Sequence[float]) -> None:
     for probability in probabilities:
         if not math.isfinite(probability) or probability < 0.0 or probability > 1.0:
             raise ValueError("probabilities must be finite and within [0, 1]")
+
+
+def _validate_row_ids(row_ids: Sequence[str], field: str) -> tuple[str, ...]:
+    normalized = tuple(str(row_id).strip() for row_id in row_ids)
+    if any(not row_id for row_id in normalized):
+        raise ValueError(f"{field} must contain only non-empty row ids")
+    if len(set(normalized)) != len(normalized):
+        raise ValueError(f"{field} must contain unique row ids")
+    return normalized
 
 
 def evaluate_binary_probabilities(
@@ -114,12 +132,23 @@ def evaluate_by_learner(
     labels: Sequence[int],
     probabilities: Sequence[float],
     *,
+    row_ids: Sequence[str] | None = None,
     planned_learner_ids: Sequence[str] | None = None,
     planned_row_count: int | None = None,
+    planned_row_ids: Sequence[str] | None = None,
 ) -> LearnerMetricBundle:
     if not (len(participant_ids) == len(labels) == len(probabilities)):
         raise ValueError("participant_ids, labels and probabilities must have equal length")
+    if row_ids is not None and len(row_ids) != len(labels):
+        raise ValueError("row_ids, labels and probabilities must have equal length")
     _validate(labels, probabilities)
+
+    normalized_row_ids = _validate_row_ids(row_ids, "row_ids") if row_ids is not None else None
+    normalized_planned_row_ids = (
+        _validate_row_ids(planned_row_ids, "planned_row_ids")
+        if planned_row_ids is not None
+        else None
+    )
 
     grouped: dict[str, tuple[list[int], list[float]]] = {}
     for participant_id, label, probability in zip(participant_ids, labels, probabilities, strict=True):
@@ -136,11 +165,42 @@ def evaluate_by_learner(
             f"observed outcomes include learners outside the frozen plan: {sorted(unexpected_learners)}"
         )
 
-    resolved_planned_row_count = len(labels) if planned_row_count is None else planned_row_count
+    if normalized_planned_row_ids is not None:
+        resolved_planned_row_count = len(normalized_planned_row_ids)
+        if planned_row_count is not None and planned_row_count != resolved_planned_row_count:
+            raise ValueError("planned_row_count must equal the number of planned_row_ids")
+    else:
+        resolved_planned_row_count = len(labels) if planned_row_count is None else planned_row_count
+
     if resolved_planned_row_count < 0:
         raise ValueError("planned_row_count must be nonnegative")
     if len(labels) > resolved_planned_row_count:
         raise ValueError("observed outcome rows cannot exceed planned_row_count")
+
+    observed_row_bindings: tuple[RowOutcomeBinding, ...] | None = None
+    if normalized_row_ids is not None:
+        if normalized_planned_row_ids is not None:
+            planned_row_id_set = set(normalized_planned_row_ids)
+            unexpected_rows = set(normalized_row_ids) - planned_row_id_set
+            if unexpected_rows:
+                raise ValueError(
+                    f"observed outcomes include rows outside the frozen plan: {sorted(unexpected_rows)}"
+                )
+        observed_row_bindings = tuple(
+            sorted(
+                (
+                    RowOutcomeBinding(
+                        row_id=row_id,
+                        participant_id=participant_id,
+                        label=label,
+                    )
+                    for row_id, participant_id, label in zip(
+                        normalized_row_ids, participant_ids, labels, strict=True
+                    )
+                ),
+                key=lambda binding: binding.row_id,
+            )
+        )
 
     by_learner = {
         participant_id: evaluate_binary_probabilities(learner_labels, learner_probabilities)
@@ -170,7 +230,13 @@ def evaluate_by_learner(
         learner_with_outcome_count=len(by_learner),
         planned_learner_ids=planned_learner_tuple,
         planned_row_count=resolved_planned_row_count,
+        planned_row_ids=(
+            tuple(sorted(normalized_planned_row_ids))
+            if normalized_planned_row_ids is not None
+            else None
+        ),
         observed_row_count=len(labels),
+        observed_row_bindings=observed_row_bindings,
         learner_outcome_coverage=learner_coverage,
         row_outcome_coverage=row_coverage,
         mean_per_learner_log_loss=mean_log_loss,
@@ -208,9 +274,25 @@ def _assert_paired_metric_alignment(
         raise ValueError(
             f"paired comparison requires identical planned row count: {control_name}"
         )
+    if target.planned_row_ids is None or control.planned_row_ids is None:
+        raise ValueError(
+            f"paired comparison requires explicit frozen planned row ids: {control_name}"
+        )
+    if target.planned_row_ids != control.planned_row_ids:
+        raise ValueError(
+            f"paired comparison requires identical planned row ids: {control_name}"
+        )
     if target.observed_row_count != control.observed_row_count:
         raise ValueError(
             f"paired comparison refuses complete-case row selection: {control_name}"
+        )
+    if target.observed_row_bindings is None or control.observed_row_bindings is None:
+        raise ValueError(
+            f"paired comparison requires explicit observed row ids: {control_name}"
+        )
+    if target.observed_row_bindings != control.observed_row_bindings:
+        raise ValueError(
+            f"paired comparison requires identical observed row identity, learner and label bindings: {control_name}"
         )
 
     target_ids = set(target.by_learner)
