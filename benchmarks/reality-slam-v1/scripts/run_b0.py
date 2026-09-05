@@ -9,28 +9,34 @@ from metrics import evaluate_binary_probabilities
 from slam_io import parse_gold_key, parse_slam_lines
 
 
-def _labels_from_train(path: Path) -> list[int]:
+def prevalence_probability(train_labels: Iterable[int]) -> float:
+    seen = 0
+    errors = 0
+    for label in train_labels:
+        if label not in {0, 1}:
+            raise ValueError("B0 TRAIN labels must be 0/1")
+        seen += 1
+        errors += label
+    if seen == 0:
+        raise ValueError("B0 requires at least one TRAIN label")
+    return errors / seen
+
+
+def _iter_train_labels(path: Path) -> Iterable[int]:
     with path.open("r", encoding="utf-8") as handle:
-        exercises = list(parse_slam_lines(handle, "train"))
-    labels = [token.label for exercise in exercises for token in exercise.tokens]
-    if any(label is None for label in labels):
-        raise ValueError("TRAIN parser produced an unlabeled row")
-    return [int(label) for label in labels if label is not None]
+        for exercise in parse_slam_lines(handle, "train"):
+            for token in exercise.tokens:
+                if token.label is None:
+                    raise ValueError("TRAIN parser produced an unlabeled row")
+                yield token.label
 
 
 def _token_ids_from_blind(path: Path, split: str) -> list[str]:
+    token_ids: list[str] = []
     with path.open("r", encoding="utf-8") as handle:
-        exercises = list(parse_slam_lines(handle, split))
-    return [token.token_id for exercise in exercises for token in exercise.tokens]
-
-
-def prevalence_probability(train_labels: Iterable[int]) -> float:
-    labels = list(train_labels)
-    if not labels:
-        raise ValueError("B0 requires at least one TRAIN label")
-    if any(label not in {0, 1} for label in labels):
-        raise ValueError("B0 TRAIN labels must be 0/1")
-    return sum(labels) / len(labels)
+        for exercise in parse_slam_lines(handle, split):  # type: ignore[arg-type]
+            token_ids.extend(token.token_id for token in exercise.tokens)
+    return token_ids
 
 
 def main() -> int:
@@ -42,8 +48,7 @@ def main() -> int:
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
 
-    train_labels = _labels_from_train(args.train)
-    prevalence = prevalence_probability(train_labels)
+    prevalence = prevalence_probability(_iter_train_labels(args.train))
     token_ids = _token_ids_from_blind(args.eval, args.split)
     with args.gold.open("r", encoding="utf-8") as handle:
         gold = parse_gold_key(handle)
