@@ -36,6 +36,22 @@ class DecisionBoundaryTests(unittest.TestCase):
             justification_artifact="synthetic-fixture-only.json",
         )
 
+    def test_zero_margin_is_sensitivity_only_and_cannot_resolve_utility_gate(self) -> None:
+        zero_history = UtilityMargins(
+            delta_history=0.0,
+            delta_basis=0.005,
+            approved=True,
+            justification_artifact="synthetic-fixture-only.json",
+        )
+        zero_basis = UtilityMargins(
+            delta_history=0.01,
+            delta_basis=0.0,
+            approved=True,
+            justification_artifact="synthetic-fixture-only.json",
+        )
+        self.assertFalse(zero_history.resolved)
+        self.assertFalse(zero_basis.resolved)
+
     def test_brier_conflict_blocks_keep_even_when_both_log_loss_intervals_win(self) -> None:
         result = decide_native_representation(
             DecisionInput(

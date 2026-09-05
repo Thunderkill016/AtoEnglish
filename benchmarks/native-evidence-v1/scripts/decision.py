@@ -23,12 +23,14 @@ class UtilityMargins:
 
     @property
     def resolved(self) -> bool:
+        # Spec #005 requires independently approved *positive* primary margins. Zero remains a
+        # sensitivity alternative only and cannot silently enable predictive KEEP/SIMPLIFY.
         return (
             self.approved
             and self.delta_history is not None
             and self.delta_basis is not None
-            and self.delta_history >= 0
-            and self.delta_basis >= 0
+            and self.delta_history > 0
+            and self.delta_basis > 0
             and bool(self.justification_artifact)
         )
 

@@ -1,0 +1,51 @@
+name: Native Evidence N044
+
+on:
+  push:
+    branches:
+      - "frontier/native-evidence-n044-utility-v1"
+  workflow_dispatch:
+
+concurrency:
+  group: native-evidence-n044-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  utility-analysis:
+    name: Pre-N3 utility sensitivity checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: benchmarks/native-evidence-v1/requirements.lock
+
+      - name: Install isolated research dependencies
+        run: python -m pip install --disable-pip-version-check -r benchmarks/native-evidence-v1/requirements.lock
+
+      - name: Compile native research scripts and tests
+        run: python -m compileall -q benchmarks/native-evidence-v1/scripts benchmarks/native-evidence-v1/tests
+
+      - name: Run native predictor and N044 tests
+        run: python -m unittest discover -v -s benchmarks/native-evidence-v1/tests -p 'test_*.py'
+
+      - name: Emit deterministic N044 utility report
+        run: python benchmarks/native-evidence-v1/scripts/emit_utility_analysis.py --output "$RUNNER_TEMP/native-n044-utility-analysis.json"
+
+      - name: Upload synthetic N044 utility report
+        uses: actions/upload-artifact@v4
+        with:
+          name: native-n044-utility-${{ github.sha }}
+          path: ${{ runner.temp }}/native-n044-utility-analysis.json
+          if-no-files-found: error
+          retention-days: 14

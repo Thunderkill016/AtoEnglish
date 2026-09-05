@@ -15,7 +15,7 @@
 
 ## Comparative amendment — CODEX-CORE-FRONTIER-001
 
-- [x] N011 Audit primary/official candidates, immutable source pins and separate code/data/model rights in `research.md`.
+- [x] N011 Audit primary/official candidates, immutable source pins and separate code/data rights in `research.md`.
 - [x] N012 Propose baseline ladder, common estimator and conditional classical comparator in `contracts/native-pilot-contract.md`.
 - [x] N013 Map B3 columns to canonical code and expose duplicate/count-derived transforms; specify B2-basis attribution control.
 - [x] N014 Propose causal split/availability, metrics/coverage, uncertainty, sizing and removal criteria before N3.
@@ -47,7 +47,7 @@
 - [ ] N040 BLOCKED: separately review final consent/privacy/deletion/retention protocol.
 - [ ] N041 BLOCKED: explicit owner approval to collect adult human pilot data.
 - [ ] N043 BLOCKED: review precision-based sizing, numeric coverage gates, prospective task-form allocation and prefix/holdout boundaries before any N3 outcomes.
-- [ ] N044 BLOCKED: before human outcomes, independently review bounded utility/sensitivity analysis and freeze justified history/basis margins and alternatives, or approve descriptive-only analysis with predictive KEEP/SIMPLIFY disabled. No arbitrary default margin.
+- [ ] N044 Implementation candidate exists on `frontier/native-evidence-n044-utility-v1`: bounded pre-N3 synthetic cost/decision sensitivity analysis, deterministic artifact emission, and zero-margin fail-closed guard are implemented. The candidate proposes `delta_history = null` and `delta_basis = null` because no product-specific utility mapping is currently grounded; independent exact-head review must either justify positive margins or approve descriptive-only analysis with predictive KEEP/SIMPLIFY disabled.
 - [ ] N042 Only after N040/N041/N043/N044 and N030/N031: execute bounded pilot.
 
 ## N4 — future reality decision
