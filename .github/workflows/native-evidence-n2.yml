@@ -71,3 +71,14 @@ jobs:
 
       - name: Run predictor contract tests
         run: python -m unittest discover -v -s benchmarks/native-evidence-v1/tests -p 'test_*.py'
+
+      - name: Emit synthetic pyBKT diagnostic report
+        run: python benchmarks/native-evidence-v1/scripts/emit_bkt_diagnostics.py --output "$RUNNER_TEMP/native-bkt-diagnostics.json"
+
+      - name: Upload synthetic pyBKT diagnostic report
+        uses: actions/upload-artifact@v4
+        with:
+          name: native-bkt-diagnostics-${{ github.sha }}
+          path: ${{ runner.temp }}/native-bkt-diagnostics.json
+          if-no-files-found: error
+          retention-days: 14
