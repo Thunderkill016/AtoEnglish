@@ -1,8 +1,15 @@
 # Autopilot — Disabled
 
+> **Document status:** reference operational safeguard
+> **Governing authority:** [.specify/memory/constitution.md](.specify/memory/constitution.md)
+
 Autonomous agent execution for AtoEnglish is disabled as of 2026-07-22.
 
-The repository contains `.agent-autopilot-disabled`. Both `scripts/agent-orchestrator.sh` and `scripts/agent-daemon.sh` refuse to run while autonomous operation is disabled. The scheduled GitHub agent-health workflow has also been removed.
+The repository contains `.agent-autopilot-disabled`. The legacy orchestrator and daemon refuse
+to run while autonomous operation is disabled. The picker, headless runner, backlog refill,
+watchdog, and report commands are permanent fail-closed compatibility stubs: they do not read or
+write archived Markdown, start providers, alter Git state, or mutate production state. The
+scheduled GitHub agent-health workflow has also been removed.
 
 Do not restore cron, daemon, headless agent sessions, automatic backlog refill, automatic pushes, or automatic pull-request creation without an explicit reviewed decision from the project owner.
 

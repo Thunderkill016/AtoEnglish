@@ -1,5 +1,8 @@
 # Nếp Session Planner V1
 
+> **Document status:** reference
+> **Governing authority:** [constitution](../../.specify/memory/constitution.md); it wins on conflict
+
 Status: deterministic product policy for engineering validation. **Not a validated mastery model and not an efficacy claim.**
 
 ## Why this exists

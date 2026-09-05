@@ -1,5 +1,8 @@
 # Remediation Re-probe V1
 
+> **Document status:** reference
+> **Governing authority:** [constitution](../../.specify/memory/constitution.md); it wins on conflict
+
 ## Goal
 
 Explicit remediation routing fixes one problem: a recurring error can be sent to a narrower practice action instead of repeating the whole source task.

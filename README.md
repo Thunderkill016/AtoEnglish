@@ -1,10 +1,16 @@
 # AtoEnglish 🇻🇳→🇬🇧
 
 > Học tiếng Anh và luyện phản xạ nói dành cho người Việt.
+>
+> **Repository entry point.** Project governance lives in the
+> [constitution](.specify/memory/constitution.md); use the [documentation map](docs/README.md) to
+> find active specs, durable references, and history.
 
 [![Live](https://img.shields.io/badge/live-atoenglish.vercel.app-emerald)](https://atoenglish.vercel.app)
 
-AtoEnglish is a Vietnamese-first English-learning web application focused on structured lessons, speaking practice, pronunciation feedback, vocabulary review, and learning progress.
+AtoEnglish is the existing Vietnamese-first web client and research surface for the core-first Nếp
+English Intelligence Engine. The web runtime remains intact while versioned core contracts become
+the owner of learning semantics.
 
 ## Current stack
 
@@ -67,6 +73,7 @@ npm run build                  # production compilation check
 npm run audit                  # project-specific static checks
 npm run inventory              # conservative cleanup inventory; no file deletion
 npm run inventory -- --write   # write generated inventory report
+npm run check:source-of-truth  # governance/source-of-truth validation
 ```
 
 Test totals are intentionally not written into this README because they change as the suite evolves. The test runner and CI output are the source of truth.
@@ -109,13 +116,13 @@ src/
 
 The cleanup inventory and evidence are documented in `reports/codebase-cleanup-inventory.md`.
 
-## Curriculum source of truth
+## Curriculum implementation
 
 The active lesson route imports the A0–B2 unit data from `src/lib/data/units/` and registers it for `/learn/[unitSlug]`.
 
 When editing curriculum data:
 
-1. follow `CONTENT_STYLE.md`
+1. follow `docs/reference/product/CONTENT_STYLE.md`
 2. preserve the lesson blueprint and learning-flow order
 3. run `npm run test:content-standard`
 4. run `bash scripts/audit-lesson-content.sh`

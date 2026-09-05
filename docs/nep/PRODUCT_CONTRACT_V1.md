@@ -1,5 +1,8 @@
 # Nếp Product Contract V1
 
+> **Document status:** reference
+> **Governing authority:** [constitution](../../.specify/memory/constitution.md); it wins on conflict
+
 Status: preview contract. Evidence-backed constraints, not an efficacy claim.
 
 ## Product job

@@ -1,5 +1,8 @@
 # Public repository architecture benchmark
 
+> **Document status:** reference
+> **Governing authority:** [constitution](../../.specify/memory/constitution.md)
+
 > Snapshot date: 2026-08-01
 >
 > This document records architecture patterns observed in public repositories and the decisions AtoEnglish takes from them. It is a reference log, not permission to copy source code. Re-check the referenced repository, commit history, license and current framework guidance before adopting implementation details.

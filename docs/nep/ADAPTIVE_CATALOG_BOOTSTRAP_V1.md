@@ -1,5 +1,8 @@
 # Adaptive Catalog Bootstrap V1
 
+> **Document status:** reference
+> **Governing authority:** [constitution](../../.specify/memory/constitution.md); it wins on conflict
+
 ## Problem
 
 Session Planner V1 originally compiled only the CAP-002 first-meeting lesson. That lesson declares `CAP-001` as a prerequisite.
