@@ -10,9 +10,16 @@ export const NATIVE_SPLIT_PROTOCOL_ID = "nep.native-split.v1" as const;
 export type FrozenBlindTargetBinding = {
   readonly participantId: string;
   readonly predictionTimestamp: string;
+  readonly family: PilotTaskDefinition["family"];
   readonly taskId: string;
   readonly taskVersion: number;
   readonly contentFingerprint: `sha256:${string}`;
+  readonly supportLevel: number;
+  readonly revealAllowed: boolean;
+  readonly transferDistance: PilotTaskDefinition["task"]["transferDistance"];
+  readonly contextId: string;
+  readonly stimulusFormGroup: string;
+  readonly scoringContractId: string;
 };
 
 export type FrozenNativeSplitProtocol = {
@@ -82,7 +89,38 @@ function freezeBlindTargetBinding(
   if (!/^sha256:[0-9a-f]{64}$/.test(binding.contentFingerprint)) {
     throw new Error(`blind target contentFingerprint must be sha256: ${targetEventId}`);
   }
+  if (!Number.isInteger(binding.supportLevel) || binding.supportLevel < 0) {
+    throw new Error(`blind target supportLevel must be a nonnegative integer: ${targetEventId}`);
+  }
+  if (!binding.contextId) {
+    throw new Error(`blind target contextId must be non-empty: ${targetEventId}`);
+  }
+  if (!binding.stimulusFormGroup) {
+    throw new Error(`blind target stimulusFormGroup must be non-empty: ${targetEventId}`);
+  }
+  if (!binding.scoringContractId) {
+    throw new Error(`blind target scoringContractId must be non-empty: ${targetEventId}`);
+  }
   return Object.freeze({ ...binding });
+}
+
+function currentTaskMatchesBinding(
+  currentTask: PilotTaskDefinition,
+  binding: FrozenBlindTargetBinding,
+): boolean {
+  return (
+    binding.family === currentTask.family &&
+    binding.taskId === currentTask.task.id &&
+    binding.taskVersion === currentTask.task.version &&
+    binding.contentFingerprint === currentTask.contentFingerprint &&
+    binding.supportLevel === currentTask.task.support.level &&
+    binding.revealAllowed === currentTask.task.support.revealAllowed &&
+    binding.transferDistance === currentTask.task.transferDistance &&
+    binding.contextId === currentTask.contextId &&
+    binding.stimulusFormGroup === currentTask.stimulusFormGroup &&
+    binding.scoringContractId === currentTask.scoringContractId &&
+    binding.scoringContractId === currentTask.task.scoringContractId
+  );
 }
 
 export function buildFrozenNativeSplitProtocol(
@@ -271,11 +309,7 @@ export function buildBlindPredictionFeatureRow(
   if (targetBinding.predictionTimestamp !== input.predictionTimestamp) {
     throw new Error(`predictionTimestamp differs from frozen blind target: ${input.targetEventId}`);
   }
-  if (
-    targetBinding.taskId !== input.currentTask.task.id ||
-    targetBinding.taskVersion !== input.currentTask.task.version ||
-    targetBinding.contentFingerprint !== input.currentTask.contentFingerprint
-  ) {
+  if (!currentTaskMatchesBinding(input.currentTask, targetBinding)) {
     throw new Error(`currentTask differs from frozen blind target: ${input.targetEventId}`);
   }
 
