@@ -21,3 +21,5 @@
 - [x] Envelope compatibility helper accepts only still-branded in-process sealed evidence.
 - [x] Durable/reference envelope parsing is symmetric but remains untrusted.
 - [ ] Exact-head focused/full verification and independent re-review PASS.
+
+Replay closure is staged on the branch; the final checkbox remains open until the generated stale-test correction is present at the exact head, CI is green, and an independent review passes.
