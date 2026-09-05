@@ -8,6 +8,21 @@ import {
 import { buildPilotTaskDefinition } from "./task-matrix";
 import { buildSyntheticTrace, issueSyntheticPilotEvent } from "./synthetic";
 
+function targetBinding(
+  participantId: string,
+  predictionTimestamp: string,
+  family: Parameters<typeof buildPilotTaskDefinition>[0],
+) {
+  const definition = buildPilotTaskDefinition(family);
+  return {
+    participantId,
+    predictionTimestamp,
+    taskId: definition.task.id,
+    taskVersion: definition.task.version,
+    contentFingerprint: definition.contentFingerprint,
+  } as const;
+}
+
 function makeProtocol() {
   return buildFrozenNativeSplitProtocol({
     frozenAt: "2026-09-01T08:00:00.000Z",
@@ -24,10 +39,22 @@ function makeProtocol() {
       "p-train:e05",
       "p-heldout:cold-target",
     ],
-    blindTargetParticipantIdByEventId: {
-      "p-train:e04": "p-train",
-      "p-train:e05": "p-train",
-      "p-heldout:cold-target": "p-heldout",
+    blindTargetBindings: {
+      "p-train:e04": targetBinding(
+        "p-train",
+        "2026-09-01T09:20:00.000Z",
+        "free-recall",
+      ),
+      "p-train:e05": targetBinding(
+        "p-train",
+        "2026-09-02T09:00:00.000Z",
+        "delayed-free-recall",
+      ),
+      "p-heldout:cold-target": targetBinding(
+        "p-heldout",
+        "2026-09-02T10:00:00.000Z",
+        "free-recall",
+      ),
     },
   });
 }
@@ -98,7 +125,7 @@ describe("native pilot frozen split and blind block", () => {
     ).toThrow(/duplicate prefix eventId: p-train:e02/);
   });
 
-  it("binds every blind target to the prospectively frozen participant", () => {
+  it("binds every blind target to its participant, timestamp and frozen task identity", () => {
     const protocol = makeProtocol();
 
     expect(() =>
@@ -113,6 +140,30 @@ describe("native pilot frozen split and blind block", () => {
     ).toThrow(/frozen to participant p-heldout: p-heldout:cold-target/);
 
     expect(() =>
+      buildBlindPredictionFeatureRow({
+        protocol,
+        participantId: "p-train",
+        targetEventId: "p-train:e05",
+        predictionTimestamp: "2026-09-02T09:00:00.001Z",
+        currentTask: buildPilotTaskDefinition("delayed-free-recall"),
+        history: buildSyntheticTrace("p-train"),
+      }),
+    ).toThrow(/predictionTimestamp differs from frozen blind target: p-train:e05/);
+
+    expect(() =>
+      buildBlindPredictionFeatureRow({
+        protocol,
+        participantId: "p-train",
+        targetEventId: "p-train:e05",
+        predictionTimestamp: "2026-09-02T09:00:00.000Z",
+        currentTask: buildPilotTaskDefinition("free-recall"),
+        history: buildSyntheticTrace("p-train"),
+      }),
+    ).toThrow(/currentTask differs from frozen blind target: p-train:e05/);
+  });
+
+  it("fails closed on missing, extra or unallocated blind-target bindings", () => {
+    expect(() =>
       buildFrozenNativeSplitProtocol({
         frozenAt: "2026-09-01T08:00:00.000Z",
         fitCutoff: "2026-09-01T09:15:00.000Z",
@@ -121,9 +172,9 @@ describe("native pilot frozen split and blind block", () => {
         heldOutParticipantIds: ["p-heldout"],
         trainPrefixEventIdsByParticipant: { "p-train": [], "p-heldout": [] },
         blindTargetEventIds: ["target-a"],
-        blindTargetParticipantIdByEventId: {},
+        blindTargetBindings: {},
       }),
-    ).toThrow(/missing frozen participant binding: target-a/);
+    ).toThrow(/missing frozen binding: target-a/);
 
     expect(() =>
       buildFrozenNativeSplitProtocol({
@@ -134,12 +185,16 @@ describe("native pilot frozen split and blind block", () => {
         heldOutParticipantIds: [],
         trainPrefixEventIdsByParticipant: { "p-train": [] },
         blindTargetEventIds: ["target-a"],
-        blindTargetParticipantIdByEventId: {
-          "target-a": "p-train",
-          "target-extra": "p-train",
+        blindTargetBindings: {
+          "target-a": targetBinding("p-train", "2026-09-01T09:20:00.000Z", "free-recall"),
+          "target-extra": targetBinding(
+            "p-train",
+            "2026-09-01T09:21:00.000Z",
+            "free-recall",
+          ),
         },
       }),
-    ).toThrow(/participant binding references unknown target: target-extra/);
+    ).toThrow(/blind target binding references unknown target: target-extra/);
 
     expect(() =>
       buildFrozenNativeSplitProtocol({
@@ -150,7 +205,13 @@ describe("native pilot frozen split and blind block", () => {
         heldOutParticipantIds: [],
         trainPrefixEventIdsByParticipant: { "p-train": [] },
         blindTargetEventIds: ["target-a"],
-        blindTargetParticipantIdByEventId: { "target-a": "not-allocated" },
+        blindTargetBindings: {
+          "target-a": targetBinding(
+            "not-allocated",
+            "2026-09-01T09:20:00.000Z",
+            "free-recall",
+          ),
+        },
       }),
     ).toThrow(/blind target references unallocated participant: target-a:not-allocated/);
   });
@@ -216,7 +277,7 @@ describe("native pilot frozen split and blind block", () => {
     expect(row.b3.nep_uncertainty).toBe("maximal");
   });
 
-  it("rejects held-out TRAIN contribution and fitting that completes at prediction time", () => {
+  it("rejects held-out TRAIN contribution and noncausal frozen prediction timing", () => {
     expect(() =>
       buildFrozenNativeSplitProtocol({
         frozenAt: "2026-09-01T08:00:00.000Z",
@@ -229,30 +290,25 @@ describe("native pilot frozen split and blind block", () => {
           "p-heldout": ["p-heldout:e01"],
         },
         blindTargetEventIds: ["target"],
-        blindTargetParticipantIdByEventId: { target: "p-train" },
+        blindTargetBindings: {
+          target: targetBinding("p-train", "2026-09-01T09:20:00.000Z", "free-recall"),
+        },
       }),
     ).toThrow(/held-out participant cannot contribute TRAIN prefix events/);
 
-    const protocol = buildFrozenNativeSplitProtocol({
-      frozenAt: "2026-09-01T08:00:00.000Z",
-      fitCutoff: "2026-09-01T09:15:00.000Z",
-      fitCompletedAt: "2026-09-01T09:20:00.000Z",
-      trainingParticipantIds: ["p-train"],
-      heldOutParticipantIds: [],
-      trainPrefixEventIdsByParticipant: { "p-train": [] },
-      blindTargetEventIds: ["target"],
-      blindTargetParticipantIdByEventId: { target: "p-train" },
-    });
-
     expect(() =>
-      buildBlindPredictionFeatureRow({
-        protocol,
-        participantId: "p-train",
-        targetEventId: "target",
-        predictionTimestamp: "2026-09-01T09:20:00.000Z",
-        currentTask: buildPilotTaskDefinition("free-recall"),
-        history: [],
+      buildFrozenNativeSplitProtocol({
+        frozenAt: "2026-09-01T08:00:00.000Z",
+        fitCutoff: "2026-09-01T09:15:00.000Z",
+        fitCompletedAt: "2026-09-01T09:20:00.000Z",
+        trainingParticipantIds: ["p-train"],
+        heldOutParticipantIds: [],
+        trainPrefixEventIdsByParticipant: { "p-train": [] },
+        blindTargetEventIds: ["target"],
+        blindTargetBindings: {
+          target: targetBinding("p-train", "2026-09-01T09:20:00.000Z", "free-recall"),
+        },
       }),
-    ).toThrow(/fitCompletedAt must strictly precede predictionTimestamp/);
+    ).toThrow(/blind target prediction must occur after fitCompletedAt: target/);
   });
 });
