@@ -40,6 +40,7 @@ class DecisionInput:
     utility: UtilityMargins
     instrumentation_valid: bool = True
     semantic_mapping_valid: bool = True
+    basis_prediction_equivalent: bool = False
 
 
 @dataclass(frozen=True)
@@ -102,20 +103,15 @@ def decide_native_representation(input_: DecisionInput) -> DecisionResult:
             ),
         )
 
-    if history_win and history_brier_ok and not basis_win:
-        basis_equivalent_or_unresolved = (
-            input_.basis.log_loss is None
-            or input_.basis.log_loss.lower <= 0 <= input_.basis.log_loss.upper
+    if history_win and history_brier_ok and input_.basis_prediction_equivalent:
+        return DecisionResult(
+            decision=RealityDecision.KEEP_REPRESENTATION_ONLY,
+            attribution="history-reencoding-not-new-information",
+            reason=(
+                "B3 beats the strong history lane while its frozen predictions are exactly equivalent to B2-basis. "
+                "At most the representation/encoding is useful; no incremental learner-state information is established."
+            ),
         )
-        if basis_equivalent_or_unresolved:
-            return DecisionResult(
-                decision=RealityDecision.KEEP_REPRESENTATION_ONLY,
-                attribution="history-reencoding-not-new-information",
-                reason=(
-                    "B3 beats the strong history lane but does not beat the algebraic B2-basis control. "
-                    "At most the representation/encoding is useful; no new learner-state information is established."
-                ),
-            )
 
     history_excluded = _log_loss_material_benefit_excluded(input_.history.log_loss, history_margin)
     basis_excluded = _log_loss_material_benefit_excluded(input_.basis.log_loss, basis_margin)
