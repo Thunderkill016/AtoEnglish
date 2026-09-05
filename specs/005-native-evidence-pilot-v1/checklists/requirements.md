@@ -22,13 +22,13 @@
 - [x] Adults-only, text/choice-only V1 boundary is explicit.
 - [x] Negative/null/insufficient-evidence outcomes are valid.
 - [x] Parent Spec #005 exact head `7181bc219ec7dacb14599552c359b0fe8950d972` received independent PASS and exact-head Verify before landing.
-- [ ] Fresh independent exact-head review PASS for this comparative amendment after parent carry-forward.
-- [ ] Review comparative source pins, code/data rights and candidate applicability without importing foreign benchmark claims.
-- [ ] Review the B0/B2/B2-basis/B3 ladder and conditional BKT subset for shared information and causal cutoff fairness.
-- [ ] Review fixed-prefix versus new-learner estimands, TRAIN-only transforms and label-availability rules.
-- [ ] Review metric/coverage denominators, small-cluster uncertainty, utility margins and pre-N3 sizing gate.
-- [ ] Confirm no N2 implementation, human collection or predictive-validation claim is authorized by the comparative amendment.
-- [ ] Re-review review 5120933538: both attribution contrasts govern KEEP; equivalence is not inferred from a nonsignificant result; no new-information claim from shared-history transforms.
-- [ ] Re-review source-faithful pyBKT multi-fit and diagnostic parity plan; missing API telemetry, boundary fits or one bad start cannot exclude valid predictions.
-- [ ] Re-review withdrawal of the 0.01-nat threshold and mandatory pre-N3 utility justification or descriptive-only decision lock (N044).
-- [ ] Verify amendment N2 acceptance cases include canonical task-fingerprint invariance/mutation tests and task/version/content/context/lineage substitution failures.
+- [x] Fresh independent adversarial review `5122059395` PASS for integrated amendment semantics on `b14e69d5e5458ba6558cd9096de2abc12841b6cb`; bookkeeping-only final head requires exact-head confirmation + Verify before merge.
+- [x] Comparative source pins, code/data rights and candidate applicability are kept separate from foreign benchmark claims.
+- [x] B0/B2/B2-basis/B3 ladder and conditional BKT subset preserve shared-information and causal-cutoff fairness constraints.
+- [x] Fixed-prefix versus new-learner estimands, TRAIN-only transforms and label-availability rules are explicit.
+- [x] Metric/coverage denominators, small-cluster uncertainty, utility margins and pre-N3 sizing gate remain prospective.
+- [x] No N2 implementation, human collection or predictive-validation claim is authorized by the comparative amendment.
+- [x] Review 5120933538 corrections remain closed: both attribution contrasts govern KEEP; equivalence is not inferred from a nonsignificant result; no new-information claim from shared-history transforms.
+- [x] Source-faithful pyBKT multi-fit and diagnostic parity plan keeps missing API telemetry, boundary fits or one bad start from excluding valid predictions.
+- [x] Former 0.01-nat threshold is withdrawn; N044 requires pre-N3 utility justification or descriptive-only decision lock.
+- [x] Amendment N2 acceptance cases include canonical task-fingerprint invariance/mutation tests and task/version/content/context/lineage substitution failures.
