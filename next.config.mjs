@@ -36,10 +36,11 @@ const nextConfig = {
   async headers() {
     const isDev = process.env.NODE_ENV === "development";
 
-    // In production: no unsafe-eval. In dev: Next.js HMR needs it.
+    // Dev keeps unsafe-eval for Next.js HMR. Production only permits the
+    // narrower wasm-unsafe-eval needed by the local pronunciation WASM fallback.
     const scriptSrc = isDev
-      ? "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://browser.sentry-cdn.com; "
-      : "script-src 'self' 'unsafe-inline' https://browser.sentry-cdn.com https://va.vercel-scripts.com; ";
+      ? "script-src 'self' 'unsafe-eval' 'wasm-unsafe-eval' 'unsafe-inline' https://browser.sentry-cdn.com https://cdn.jsdelivr.net; "
+      : "script-src 'self' 'wasm-unsafe-eval' 'unsafe-inline' https://browser.sentry-cdn.com https://va.vercel-scripts.com https://cdn.jsdelivr.net; ";
 
     const csp = [
       "default-src 'self'; ",
@@ -48,7 +49,7 @@ const nextConfig = {
       "img-src 'self' blob: data: https://lh3.googleusercontent.com https://*.supabase.co https://i.ytimg.com; ",
       "frame-src https://www.youtube-nocookie.com; ",
       "font-src 'self' data: https://fonts.gstatic.com; ",
-      "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://*.sentry.io https://*.upstash.io https://vitals.vercel-insights.com; ",
+      "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://*.sentry.io https://*.upstash.io https://vitals.vercel-insights.com https://cdn.jsdelivr.net https://huggingface.co https://*.huggingface.co https://*.hf.co https://*.xethub.hf.co; ",
       "media-src 'self' blob: data:; ",
       "object-src 'none'; ",
       "worker-src 'self' blob:; ",
