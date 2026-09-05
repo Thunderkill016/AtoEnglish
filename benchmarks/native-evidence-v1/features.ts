@@ -65,16 +65,25 @@ export function selectCausalAcceptedHistory(
   predictionTimestamp: string,
 ): readonly SyntheticPilotEvent[] {
   const cutoffMs = parseTimestamp(predictionTimestamp, "predictionTimestamp");
-  return Object.freeze(
-    history
-      .filter((event) => {
-        if (event.participantId !== participantId) return false;
-        const occurredMs = parseTimestamp(event.evidence.occurredAt, "occurredAt");
-        const availableMs = parseTimestamp(event.availableAt, "availableAt");
-        return occurredMs < cutoffMs && availableMs < cutoffMs;
-      })
-      .sort(sortHistory),
+  const causallyAvailable = history
+    .filter((event) => {
+      if (event.participantId !== participantId) return false;
+      const occurredMs = parseTimestamp(event.evidence.occurredAt, "occurredAt");
+      const availableMs = parseTimestamp(event.availableAt, "availableAt");
+      return occurredMs < cutoffMs && availableMs < cutoffMs;
+    })
+    .sort(sortHistory);
+
+  if (causallyAvailable.length === 0) return Object.freeze([]);
+
+  const projected = projectLearnerState(
+    ontology,
+    causallyAvailable.map((event) => event.evidence),
+    { evaluationTimestamp: predictionTimestamp },
   );
+  const acceptedIds = new Set(projected.acceptedEvents.map((event) => event.eventId));
+
+  return Object.freeze(causallyAvailable.filter((event) => acceptedIds.has(event.evidence.eventId)));
 }
 
 function buildB2(
