@@ -11,6 +11,26 @@ export type CanonicalCtcForwardResult = {
   minimumRequiredFrames: number;
 };
 
+export type CanonicalCtcPhoneOccupancy = {
+  /** Zero-based position in the canonical target, including repeated tokens. */
+  canonicalPhonePosition: number;
+  tokenId: number;
+  stateIndex: number;
+  expectedOccupiedFrames: number;
+  expectedDurationMs: number;
+  /** Earliest frame wins when posterior support is tied. */
+  peakSupportFrame: number;
+  peakPosterior: number;
+};
+
+export type CanonicalCtcForwardBackwardResult = CanonicalCtcForwardResult & {
+  /** gamma[frame][extended-state], conditional on the complete target. */
+  statePosteriors: number[][];
+  /** Indexed by extended state; null denotes a blank state. */
+  canonicalPhonePositionByState: (number | null)[];
+  phones: CanonicalCtcPhoneOccupancy[];
+};
+
 function logProbability(probability: number) {
   return probability <= 0 ? NEGATIVE_INFINITY : Math.log(probability);
 }
@@ -104,6 +124,14 @@ export function canonicalCtcLogLikelihood(
   matrix: CtcPosteriorMatrix,
   targetTokenIds: readonly number[],
 ): CanonicalCtcForwardResult {
+  return forwardLattice(matrix, targetTokenIds);
+}
+
+function forwardLattice(
+  matrix: CtcPosteriorMatrix,
+  targetTokenIds: readonly number[],
+  retainRow?: (row: number[]) => void,
+): CanonicalCtcForwardResult {
   validateCtcPosteriorMatrix(matrix);
 
   const minimumFrames = validateTarget(matrix, targetTokenIds);
@@ -132,6 +160,7 @@ export function canonicalCtcLogLikelihood(
 
     previous[1] = logProbability(firstFrame[firstTargetToken] ?? 0);
   }
+  retainRow?.(previous);
 
   for (
     let frameIndex = 1;
@@ -173,6 +202,7 @@ export function canonicalCtcLogLikelihood(
     }
 
     previous = current;
+    retainRow?.(current);
   }
 
   const finalBlankState = stateCount - 1;
@@ -192,4 +222,83 @@ export function canonicalCtcLogLikelihood(
     extendedTarget,
     minimumRequiredFrames: minimumFrames,
   };
+}
+
+/**
+ * Research-only state occupancy conditional on the supplied canonical target.
+ * Alpha includes the current emission; beta excludes it. Neither gamma nor the
+ * input emissions are post-hoc normalized. Occupancy is not correctness evidence:
+ * even an acoustically unlikely target is conditioned to have been uttered here.
+ * Timing assumes uniformly spaced frames, as in the existing CTC matrix contract.
+ */
+export function canonicalCtcForwardBackward(
+  matrix: CtcPosteriorMatrix,
+  targetTokenIds: readonly number[],
+): CanonicalCtcForwardBackwardResult {
+  const alpha: number[][] = [];
+  const forward = forwardLattice(matrix, targetTokenIds, (row) => alpha.push(row));
+  const { extendedTarget, logLikelihood } = forward;
+  const stateCount = extendedTarget.length;
+  const frameCount = matrix.frames.length;
+  const statePosteriors: number[][] = Array(frameCount);
+
+  let beta = Array<number>(stateCount).fill(NEGATIVE_INFINITY);
+  beta[stateCount - 1] = 0;
+  beta[stateCount - 2] = 0;
+
+  for (let frameIndex = frameCount - 1; frameIndex >= 0; frameIndex -= 1) {
+    statePosteriors[frameIndex] = alpha[frameIndex].map((value, state) =>
+      Math.exp(value + beta[state] - logLikelihood),
+    );
+    if (frameIndex === 0) break;
+
+    // Moving beta back one frame consumes this frame's destination emission.
+    const frame = matrix.frames[frameIndex];
+    const previousBeta = Array<number>(stateCount).fill(NEGATIVE_INFINITY);
+    for (let state = 0; state < stateCount; state += 1) {
+      const suffixes = [logProbability(frame[extendedTarget[state]]) + beta[state]];
+      if (state + 1 < stateCount) {
+        suffixes.push(logProbability(frame[extendedTarget[state + 1]]) + beta[state + 1]);
+      }
+      if (
+        state + 2 < stateCount &&
+        extendedTarget[state + 2] !== matrix.blankTokenId &&
+        extendedTarget[state + 2] !== extendedTarget[state]
+      ) {
+        suffixes.push(logProbability(frame[extendedTarget[state + 2]]) + beta[state + 2]);
+      }
+      previousBeta[state] = logSumExp(suffixes);
+    }
+    beta = previousBeta;
+  }
+
+  const canonicalPhonePositionByState = extendedTarget.map((tokenId, state) =>
+    tokenId === matrix.blankTokenId ? null : (state - 1) / 2,
+  );
+  const frameDurationMs = matrix.audioDurationMs / frameCount;
+  const phones = targetTokenIds.map((tokenId, canonicalPhonePosition) => {
+    const stateIndex = canonicalPhonePosition * 2 + 1;
+    let expectedOccupiedFrames = 0;
+    let peakSupportFrame = 0;
+    let peakPosterior = 0;
+    for (let frameIndex = 0; frameIndex < frameCount; frameIndex += 1) {
+      const posterior = statePosteriors[frameIndex][stateIndex];
+      expectedOccupiedFrames += posterior;
+      if (posterior > peakPosterior) {
+        peakPosterior = posterior;
+        peakSupportFrame = frameIndex;
+      }
+    }
+    return {
+      canonicalPhonePosition,
+      tokenId,
+      stateIndex,
+      expectedOccupiedFrames,
+      expectedDurationMs: expectedOccupiedFrames * frameDurationMs,
+      peakSupportFrame,
+      peakPosterior,
+    };
+  });
+
+  return { ...forward, statePosteriors, canonicalPhonePositionByState, phones };
 }
