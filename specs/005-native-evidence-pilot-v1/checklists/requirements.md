@@ -21,3 +21,8 @@
 - [x] Adults-only, text/choice-only V1 boundary is explicit.
 - [x] Negative/null/insufficient-evidence outcomes are valid.
 - [ ] Independent exact-head review PASS before N2 implementation.
+- [ ] Review comparative source pins, code/data rights and candidate applicability without importing foreign benchmark claims.
+- [ ] Review the B0/B2/B2-basis/B3 ladder and conditional BKT subset for shared information and causal cutoff fairness.
+- [ ] Review fixed-prefix versus new-learner estimands, TRAIN-only transforms and label-availability rules.
+- [ ] Review metric/coverage denominators, small-cluster uncertainty, material-gain margin and pre-N3 sizing gate.
+- [ ] Confirm no N2 implementation, human collection or predictive-validation claim is authorized by the comparative amendment.

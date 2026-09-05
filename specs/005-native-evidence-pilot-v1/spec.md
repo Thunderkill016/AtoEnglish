@@ -5,6 +5,11 @@
 **Base**: `frontier/nep-core-foundation-v1` @ `ef42f2cf96f9aa079505ad73c83c0555a470bfab`  
 **Stage**: N1/N2 only — no human collection is authorized by this spec.
 
+**Amendment status**: `CODEX-CORE-FRONTIER-001` comparative research proposal, based on PR #145
+at `cfee784beb82937d4d73a154c1722d4ba58f425c`. Independent approval of this amended spec is
+required before N2 implementation. The comparison matrix is in `research.md`; the proposed
+predictor/split/metric freeze is in `contracts/native-pilot-contract.md`.
+
 ## Problem
 
 The SLAM B3 compatibility gate can test strong longitudinal baselines but cannot construct canonical Nếp learner evidence without inventing ontology target, role/activity/modality, support/reveal, transfer-context, or validated provenance semantics. The next experiment therefore needs a tiny first-party trace whose task semantics are known before the learner responds.
@@ -96,6 +101,11 @@ Only information available before the target attempt:
 - current reveal-allowed flag;
 - current transfer distance.
 
+The comparative amendment strengthens this same budget with positive/negative counts by task
+family, role and support bucket; transfer/same-context outcome counts; elapsed time since first
+accepted evidence; and prospective context/form-group metadata. All lanes use the same accepted
+TRAIN history. Rejected/unobserved attempts remain audit records rather than negative examples.
+
 B2 deliberately receives obvious causal support/reveal/context history so B3 is not compared against a strawman that merely lacks information already known to the host.
 
 ### B3-native — same estimator + Nếp state features
@@ -115,11 +125,35 @@ Use the exact same rows, labels, split/cutoff policy and estimator as B2-native,
 
 Redundant B3 columns that are byte-identical to already-present B2 columns across the training split are removed before fitting and recorded in the manifest. Train-constant columns are removed identically from B2/B3 preprocessing.
 
+For same-context outcome counts, use accepted-event outcomes: the projector's `sameContextCount`
+alone has no success/failure split. Every added column must disclose whether it is a duplicate,
+deterministic transform, or additional causal summary. B2-basis-native reconstructs the pinned
+projector's count-derived status/uncertainty/routing transforms as an attribution control.
+It has no evidence authority. If no additional features survive, report that explicitly.
+
 No B3 feature may include the current attempt outcome, actual reveal use, current response latency, or any future event. The comparison of interest is B3-native vs B2-native, not `provisionalRoutingScore` vs labels.
 
 ## Estimator freeze gate
 
-N2 must freeze `nep.native-predictor.v1` **before any human N3 outcome exists**. The estimator/hyperparameters may be chosen using synthetic scale/stability tests and reuse of the #141 research stack, but never by optimizing on pilot human labels. B2 and B3 must use the same frozen estimator and preprocessing.
+The comparison now proposes `nep.native-predictor.v1` in the existing contract: B0 prevalence,
+strong causal B2, B2-basis attribution control, and same-estimator B3. L2 logistic settings,
+preprocessing, label policy, metric definitions and decision rules are explicit. N2 must verify
+and fingerprint that protocol **before any human N3 outcome exists**. Synthetic outcomes may
+test numerical behavior but cannot select a scientifically superior learner model. BKT is a
+conditional benchmark on a clearly reported recall subset; IRT/FSRS/neural KT are deferred.
+
+### Evaluation questions and decisions
+
+Primary: fixed-prefix future prediction within learners. Secondary: strict new-learner cold start
+using whole-learner holdout and no held-out-label history. Keep the two estimands separate;
+TEST-block labels remain blind until every prediction in that block is frozen. Availability
+timestamps must prove prior knowledge, not merely a retrospectively earlier event timestamp.
+
+Report learner-averaged log loss, Brier, AUC where defined, calibration diagnostics, coverage and
+learner-clustered uncertainty under the contract. One-class subsets still have log loss/Brier.
+Insufficient sample precision is `GATHER_MORE_EVIDENCE`; redundant/unhelpful predictor dimensions
+can be `SIMPLIFY` without weakening evidence/authority safeguards. A native predictive win cannot
+be inferred from a foreign benchmark, source popularity, or synthetic data.
 
 ## Synthetic N2 only
 

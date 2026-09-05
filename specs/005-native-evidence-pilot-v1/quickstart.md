@@ -2,6 +2,21 @@
 
 Current stage is documentation/N1. There is no human-data command.
 
+## Review comparative amendment
+
+Read `research.md` for candidate decisions and source/license pins, then the predictor section
+of `contracts/native-pilot-contract.md` for exact baseline/split/metric settings. Confirm the
+B2-basis control distinguishes count re-encoding from additional information. N010/N015 in
+`tasks.md` remain pending; this amendment is not an N2 execution handoff.
+
+Documentation checks (no native benchmark is implemented yet):
+
+```bash
+SPECIFY_FEATURE_DIRECTORY=specs/005-native-evidence-pilot-v1 python3 .specify/scripts/python/check_prerequisites.py --json --require-spec --require-tasks --include-tasks
+npm run check:source-of-truth
+git diff --check
+```
+
 ## Review the frozen target and task matrix
 
 ```text
@@ -21,12 +36,11 @@ Expected high-level sequence:
 
 ```text
 CoreTaskSpec (prospective)
-  -> synthetic CoreObservation + CoreEvidenceCandidate
-  -> validateReferenceCoreEvidence()
-  -> project/reduce learner state from past evidence
-  -> freeze pre-attempt B2/B3 feature row
-  -> synthetic outcome arrives
-  -> emit next reference evidence
+  -> load only authorized past TRAIN-prefix evidence available before the cutoff
+  -> project/reduce past learner state
+  -> freeze B0/B2/B2-basis/B3 predictions for the blind target block
+  -> synthetic outcome arrives and is scored after predictions are sealed
+  -> validateReferenceCoreEvidence() for later audit/replay, outside this blind block
 ```
 
 ## Prohibited at this stage

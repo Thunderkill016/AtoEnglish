@@ -4,13 +4,29 @@
 
 Use existing merged contracts as the experiment substrate. Do not build a parallel learner model, analytics stack, UI, persistence system, or evaluator.
 
+## Current amendment gate
+
+`CODEX-CORE-FRONTIER-001` is research/specification only, pending independent review of PR #145
+and these amendments. Implementing the future sections below is not authorized by this change.
+The comparison matrix/source ledger lives in `research.md`; the existing native pilot contract
+owns the baseline ladder and detailed predictor protocol. No second architecture document.
+
+Technical decision: adapt the pinned scikit-learn 1.6.1 research stack from PR #144 for a small,
+explicit L2 logistic table rather than its hashed SGD configuration. PR #144 is a donor under
+review, not code already available in this base. Future N2 must pin approved donor revisions and
+dependency artifacts. pyBKT is conditional benchmark-only; no adapter framework from PR #139.
+
+Constitution review: I–V preserved. Only existing Spec #005 documents change; no runtime,
+authority, data collection or promotion change. Unknowns concerning native predictive value
+remain empirical questions and are not filled with synthetic results.
+
 ## Stage N1 — contract and task matrix
 
 1. Freeze `nep.native-evidence-pilot.v1` and one ontology target: `nep.en.v1.language-system.syntax-grammar`.
 2. Implement five prospective task-family definitions from `CoreTaskSpec`.
 3. Define deterministic task/content fingerprints and context IDs before outcomes.
 4. Define reference-only evidence issuance through `validateReferenceCoreEvidence()`.
-5. Freeze B2-native and B3-native feature budgets before human outcomes exist.
+5. Freeze B0/B2/B2-basis/B3 budgets, shared estimator and conditional BKT applicability from the comparison.
 6. Freeze the prediction cutoff and leakage rules.
 7. Write draft privacy/consent/retention protocol but leave human collection disabled.
 
@@ -30,6 +46,12 @@ Create a local/offline synthetic harness under `benchmarks/native-evidence-v1/` 
 - deletion/export of one pseudonymous synthetic participant;
 - pre-attempt B2/B3 feature extraction proving no current/future label leakage.
 
+Also implement the additional N2 acceptance cases in the contract: accepted-history parity,
+count-transform equivalence, role/support history, outcome availability, strict blind blocks,
+whole-learner holdouts, TRAIN-only preprocessing, one-class metrics, paired learner uncertainty,
+non-estimability, and model/result invalidation on deletion. Compare the causal feature rows
+before and after adversarial future-label changes byte-for-byte.
+
 N2 outputs only contract-test artifacts and machine-readable synthetic manifests. Do not report predictive metrics as empirical learner evidence.
 
 ## Stage N3 — bounded human pilot (NOT AUTHORIZED HERE)
@@ -38,7 +60,12 @@ Only after separate owner approval of the privacy/consent protocol. No code path
 
 ## Stage N4 — reality decision (future)
 
-Use a common estimator for B2-native and B3-native. Freeze learner/temporal split policy before outcomes are inspected. Report sample size, learner count, coverage, effect size and uncertainty. If the pilot is too small for a defensible predictive comparison, report `insufficient-evidence` rather than optimizing on the pilot.
+Execute the frozen native predictor contract separately for within-learner prediction and
+new-learner cold start. Report every mandatory lane and conditional-lane exclusion, sample and
+coverage denominators, paired effect sizes, uncertainty and group ablations. If the pilot lacks
+the precision justified at the N3 sizing gate, return `GATHER_MORE_EVIDENCE`; do not optimize the
+protocol on pilot outcomes. The 0.01-nat usefulness margin remains a reviewable engineering
+proposal, not a learner efficacy threshold.
 
 ## Reuse map
 
@@ -48,6 +75,10 @@ Use a common estimator for B2-native and B3-native. Freeze learner/temporal spli
 - reference validation: `src/lib/core/certified-evidence.ts`;
 - learner projection: `src/lib/core/learner-state.ts`;
 - research manifests/statistical conventions: reuse patterns from `benchmarks/reality-slam-v1/` where compatible.
+
+Adapt the donor's metric boundary to retain log loss/Brier for one-class subsets and return null
+AUC with a reason. Reuse library metrics and whole-learner resampling; do not develop a new
+generic statistics framework. Preserve code/data/checkpoint license separation at adoption.
 
 ## Stop conditions
 
