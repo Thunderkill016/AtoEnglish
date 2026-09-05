@@ -24,6 +24,11 @@ function makeProtocol() {
       "p-train:e05",
       "p-heldout:cold-target",
     ],
+    blindTargetParticipantIdByEventId: {
+      "p-train:e04": "p-train",
+      "p-train:e05": "p-train",
+      "p-heldout:cold-target": "p-heldout",
+    },
   });
 }
 
@@ -91,6 +96,63 @@ describe("native pilot frozen split and blind block", () => {
         history: [...trace, duplicate],
       }),
     ).toThrow(/duplicate prefix eventId: p-train:e02/);
+  });
+
+  it("binds every blind target to the prospectively frozen participant", () => {
+    const protocol = makeProtocol();
+
+    expect(() =>
+      buildBlindPredictionFeatureRow({
+        protocol,
+        participantId: "p-train",
+        targetEventId: "p-heldout:cold-target",
+        predictionTimestamp: "2026-09-02T10:00:00.000Z",
+        currentTask: buildPilotTaskDefinition("free-recall"),
+        history: buildSyntheticTrace("p-train"),
+      }),
+    ).toThrow(/frozen to participant p-heldout: p-heldout:cold-target/);
+
+    expect(() =>
+      buildFrozenNativeSplitProtocol({
+        frozenAt: "2026-09-01T08:00:00.000Z",
+        fitCutoff: "2026-09-01T09:15:00.000Z",
+        fitCompletedAt: "2026-09-01T09:16:00.000Z",
+        trainingParticipantIds: ["p-train"],
+        heldOutParticipantIds: ["p-heldout"],
+        trainPrefixEventIdsByParticipant: { "p-train": [], "p-heldout": [] },
+        blindTargetEventIds: ["target-a"],
+        blindTargetParticipantIdByEventId: {},
+      }),
+    ).toThrow(/missing frozen participant binding: target-a/);
+
+    expect(() =>
+      buildFrozenNativeSplitProtocol({
+        frozenAt: "2026-09-01T08:00:00.000Z",
+        fitCutoff: "2026-09-01T09:15:00.000Z",
+        fitCompletedAt: "2026-09-01T09:16:00.000Z",
+        trainingParticipantIds: ["p-train"],
+        heldOutParticipantIds: [],
+        trainPrefixEventIdsByParticipant: { "p-train": [] },
+        blindTargetEventIds: ["target-a"],
+        blindTargetParticipantIdByEventId: {
+          "target-a": "p-train",
+          "target-extra": "p-train",
+        },
+      }),
+    ).toThrow(/participant binding references unknown target: target-extra/);
+
+    expect(() =>
+      buildFrozenNativeSplitProtocol({
+        frozenAt: "2026-09-01T08:00:00.000Z",
+        fitCutoff: "2026-09-01T09:15:00.000Z",
+        fitCompletedAt: "2026-09-01T09:16:00.000Z",
+        trainingParticipantIds: ["p-train"],
+        heldOutParticipantIds: [],
+        trainPrefixEventIdsByParticipant: { "p-train": [] },
+        blindTargetEventIds: ["target-a"],
+        blindTargetParticipantIdByEventId: { "target-a": "not-allocated" },
+      }),
+    ).toThrow(/blind target references unallocated participant: target-a:not-allocated/);
   });
 
   it("never feeds an earlier blind-block outcome into a later blind-block prediction", () => {
@@ -167,6 +229,7 @@ describe("native pilot frozen split and blind block", () => {
           "p-heldout": ["p-heldout:e01"],
         },
         blindTargetEventIds: ["target"],
+        blindTargetParticipantIdByEventId: { target: "p-train" },
       }),
     ).toThrow(/held-out participant cannot contribute TRAIN prefix events/);
 
@@ -178,6 +241,7 @@ describe("native pilot frozen split and blind block", () => {
       heldOutParticipantIds: [],
       trainPrefixEventIdsByParticipant: { "p-train": [] },
       blindTargetEventIds: ["target"],
+      blindTargetParticipantIdByEventId: { target: "p-train" },
     });
 
     expect(() =>
