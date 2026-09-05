@@ -29,13 +29,13 @@
 - [x] T029 Add adversarial leakage tests: label inversion, future-row mutation, TRAIN-history preservation, and no sorting by `days`.
 - [x] T030 Implement B2/B3 metric plumbing with vetted packages; B3 may stop before metrics when compatibility is not applicable.
 - [x] T031 Implement RFC 8785 manifest + SHA-256 integrity verification.
-- [ ] T032 Baseline card exists; close only after the current exact head is green and verification evidence is recorded.
+- [x] T032 Harness/card + post-B3 compatibility closure verified at functional head `523b1181f6f22623a652b9e56a21ebeea38d34a7`: Reality Benchmark Harness `33945366885` SUCCESS and Verify `33945366860` SUCCESS. No corpus score is implied.
 
 ## Phase C — Pre-R2 audit / B3
 
 - [x] T040 #140 received independent PASS and merged into frontier (`ef42f2cf96f9aa079505ad73c83c0555a470bfab`).
-- [ ] T041 Benchmark branch integrated the new frontier at `1db7a38ae58d4bc75dc42c2b8884fb2688c565e8`; close after all Phase B gates are green on the current post-audit head.
-- [x] T042 Bind the B3 compatibility gate to the exact merged #137 source contract and fail if the expected ingress/state markers drift.
+- [x] T041 Benchmark branch integrated the new frontier at `1db7a38ae58d4bc75dc42c2b8884fb2688c565e8`; post-audit functional head `523b1181...` is green in both benchmark and repository CI.
+- [x] T042 Bind the B3 compatibility gate to a frozen descriptor of the independently reviewed/merged #137 contract; keep the Python research harness isolated from production TypeScript runtime modules.
 - [x] T043 Execute per-track schema compatibility audit: `es_en`/`fr_en` are ontology-language-ineligible and even `en_es` cannot construct canonical Nếp evidence without guessing.
 - [x] T044 `nep.reality-derived-features.v1` is deliberately **not** invented/frozen because T043 yields zero eligible mapping coverage.
 - [x] T045 Emit `b3-not-applicable-on-slam` and activate Issue #143 instead of forcing a B3 score.
