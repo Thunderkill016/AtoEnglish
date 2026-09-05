@@ -1,0 +1,5 @@
+# Research-only dependencies for Spec #005 N2 synthetic predictor plumbing.
+# Keep isolated from the production Next.js runtime.
+numpy==2.2.3
+scipy==1.15.2
+scikit-learn==1.6.1
