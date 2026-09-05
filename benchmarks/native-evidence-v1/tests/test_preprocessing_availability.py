@@ -48,6 +48,32 @@ class AvailabilityMaskTests(unittest.TestCase):
         self.assertNotIn("missing:feature_a", dropped)
         self.assertNotIn("missing:feature_b", dropped)
 
+    def test_train_seen_only_category_still_retains_explicit_unknown_channel(self) -> None:
+        train = [
+            {"current_task_family": "free-recall"},
+            {"current_task_family": "free-recall"},
+        ]
+        transform = fit_feature_transform(
+            train,
+            categorical_domains={
+                "current_task_family": ("free-recall", "near-transfer", "unknown"),
+            },
+        )
+
+        unknown_name = "cat:current_task_family=unknown"
+        self.assertIn(unknown_name, transform.retained_columns)
+        self.assertNotIn(unknown_name, transform.dropped_constant_columns)
+
+        known = transform.transform([{"current_task_family": "free-recall"}])
+        unseen = transform.transform([{"current_task_family": "future-new-family"}])
+        explicit_unknown = transform.transform([{"current_task_family": "unknown"}])
+        unknown_index = transform.retained_columns.index(unknown_name)
+
+        self.assertEqual(known[0, unknown_index], 0.0)
+        self.assertEqual(unseen[0, unknown_index], 1.0)
+        np.testing.assert_array_equal(unseen, explicit_unknown)
+        self.assertFalse(np.array_equal(known, unseen))
+
 
 if __name__ == "__main__":
     unittest.main()
