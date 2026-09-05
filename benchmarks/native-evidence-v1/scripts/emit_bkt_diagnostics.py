@@ -4,11 +4,16 @@ import argparse
 from dataclasses import asdict
 import json
 from pathlib import Path
+import sys
 from typing import Any
 
 import numpy as np
 
-from .bkt import build_bkt_frame, fit_bkt_with_diagnostics, fit_source_faithful_bkt
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from scripts.bkt import build_bkt_frame, fit_bkt_with_diagnostics, fit_source_faithful_bkt  # noqa: E402
 
 
 def _training_frame():
@@ -33,9 +38,9 @@ def _training_frame():
 
 
 def _json_value(value: Any) -> Any:
-    if isinstance(value, (np.integer,)):
+    if isinstance(value, np.integer):
         return int(value)
-    if isinstance(value, (np.floating,)):
+    if isinstance(value, np.floating):
         return float(value)
     if isinstance(value, np.ndarray):
         return value.tolist()
