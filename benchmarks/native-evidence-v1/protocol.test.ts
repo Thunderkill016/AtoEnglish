@@ -64,6 +64,35 @@ describe("native pilot frozen split and blind block", () => {
     );
   });
 
+  it("rejects duplicate frozen TRAIN-prefix evidence instead of last-write-wins", () => {
+    const protocol = makeProtocol();
+    const trace = buildSyntheticTrace("p-train");
+    const duplicate = issueSyntheticPilotEvent({
+      participantId: "p-train",
+      family: "recognition-supported",
+      eventId: "p-train:e02",
+      occurredAt: "2026-09-01T09:05:00.000Z",
+      availableAt: "2026-09-01T09:05:02.000Z",
+      success: true,
+      responseLatencyMs: 900,
+    });
+
+    expect(() => selectAuthorizedTrainPrefixEvents(protocol, [...trace, duplicate])).toThrow(
+      /ambiguous due to duplicate eventId: p-train:e02/,
+    );
+
+    expect(() =>
+      buildBlindPredictionFeatureRow({
+        protocol,
+        participantId: "p-train",
+        targetEventId: "p-train:e05",
+        predictionTimestamp: "2026-09-02T09:00:00.000Z",
+        currentTask: buildPilotTaskDefinition("delayed-free-recall"),
+        history: [...trace, duplicate],
+      }),
+    ).toThrow(/duplicate prefix eventId: p-train:e02/);
+  });
+
   it("never feeds an earlier blind-block outcome into a later blind-block prediction", () => {
     const protocol = makeProtocol();
     const original = buildSyntheticTrace("p-train");
