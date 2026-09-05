@@ -7,6 +7,14 @@ import type {
 
 export const NATIVE_SPLIT_PROTOCOL_ID = "nep.native-split.v1" as const;
 
+export type FrozenBlindTargetBinding = {
+  readonly participantId: string;
+  readonly predictionTimestamp: string;
+  readonly taskId: string;
+  readonly taskVersion: number;
+  readonly contentFingerprint: `sha256:${string}`;
+};
+
 export type FrozenNativeSplitProtocol = {
   readonly protocolId: typeof NATIVE_SPLIT_PROTOCOL_ID;
   readonly frozenAt: string;
@@ -16,7 +24,7 @@ export type FrozenNativeSplitProtocol = {
   readonly heldOutParticipantIds: readonly string[];
   readonly trainPrefixEventIdsByParticipant: Readonly<Record<string, readonly string[]>>;
   readonly blindTargetEventIds: readonly string[];
-  readonly blindTargetParticipantIdByEventId: Readonly<Record<string, string>>;
+  readonly blindTargetBindings: Readonly<Record<string, FrozenBlindTargetBinding>>;
 };
 
 export type BuildFrozenNativeSplitProtocolInput = Omit<FrozenNativeSplitProtocol, "protocolId">;
@@ -41,6 +49,40 @@ function assertUnique(values: readonly string[], field: string): void {
   if (new Set(values).size !== values.length) {
     throw new Error(`${field} must contain unique values`);
   }
+}
+
+function freezeBlindTargetBinding(
+  targetEventId: string,
+  binding: FrozenBlindTargetBinding,
+  knownParticipants: ReadonlySet<string>,
+  fitCutoffMs: number,
+  fitCompletedAtMs: number,
+): FrozenBlindTargetBinding {
+  if (!knownParticipants.has(binding.participantId)) {
+    throw new Error(
+      `blind target references unallocated participant: ${targetEventId}:${binding.participantId}`,
+    );
+  }
+  const predictionMs = parseTimestamp(
+    binding.predictionTimestamp,
+    `blindTargetBindings.${targetEventId}.predictionTimestamp`,
+  );
+  if (predictionMs <= fitCutoffMs) {
+    throw new Error(`blind target prediction must occur after fitCutoff: ${targetEventId}`);
+  }
+  if (predictionMs <= fitCompletedAtMs) {
+    throw new Error(`blind target prediction must occur after fitCompletedAt: ${targetEventId}`);
+  }
+  if (!binding.taskId) {
+    throw new Error(`blind target taskId must be non-empty: ${targetEventId}`);
+  }
+  if (!Number.isInteger(binding.taskVersion) || binding.taskVersion <= 0) {
+    throw new Error(`blind target taskVersion must be a positive integer: ${targetEventId}`);
+  }
+  if (!/^sha256:[0-9a-f]{64}$/.test(binding.contentFingerprint)) {
+    throw new Error(`blind target contentFingerprint must be sha256: ${targetEventId}`);
+  }
+  return Object.freeze({ ...binding });
 }
 
 export function buildFrozenNativeSplitProtocol(
@@ -96,23 +138,25 @@ export function buildFrozenNativeSplitProtocol(
   }
 
   const frozenBlindTargetIds = new Set(input.blindTargetEventIds);
-  const targetBindingEntries = Object.entries(input.blindTargetParticipantIdByEventId);
-  for (const [targetEventId, participantId] of targetBindingEntries) {
+  for (const targetEventId of Object.keys(input.blindTargetBindings)) {
     if (!frozenBlindTargetIds.has(targetEventId)) {
-      throw new Error(`blind target participant binding references unknown target: ${targetEventId}`);
-    }
-    if (!knownParticipants.has(participantId)) {
-      throw new Error(`blind target references unallocated participant: ${targetEventId}:${participantId}`);
+      throw new Error(`blind target binding references unknown target: ${targetEventId}`);
     }
   }
 
-  const blindTargetParticipantIdByEventId: Record<string, string> = {};
+  const blindTargetBindings: Record<string, FrozenBlindTargetBinding> = {};
   for (const targetEventId of [...input.blindTargetEventIds].sort()) {
-    const participantId = input.blindTargetParticipantIdByEventId[targetEventId];
-    if (!participantId) {
-      throw new Error(`blind target is missing frozen participant binding: ${targetEventId}`);
+    const binding = input.blindTargetBindings[targetEventId];
+    if (!binding) {
+      throw new Error(`blind target is missing frozen binding: ${targetEventId}`);
     }
-    blindTargetParticipantIdByEventId[targetEventId] = participantId;
+    blindTargetBindings[targetEventId] = freezeBlindTargetBinding(
+      targetEventId,
+      binding,
+      knownParticipants,
+      fitCutoffMs,
+      fitCompletedAtMs,
+    );
   }
 
   const sortedPrefix: Record<string, readonly string[]> = {};
@@ -131,7 +175,7 @@ export function buildFrozenNativeSplitProtocol(
     heldOutParticipantIds: Object.freeze([...input.heldOutParticipantIds].sort()),
     trainPrefixEventIdsByParticipant: Object.freeze(sortedPrefix),
     blindTargetEventIds: Object.freeze([...input.blindTargetEventIds].sort()),
-    blindTargetParticipantIdByEventId: Object.freeze(blindTargetParticipantIdByEventId),
+    blindTargetBindings: Object.freeze(blindTargetBindings),
   });
 }
 
@@ -215,15 +259,24 @@ export function buildBlindPredictionFeatureRow(
   if (!input.protocol.blindTargetEventIds.includes(input.targetEventId)) {
     throw new Error(`targetEventId is not in frozen blind block: ${input.targetEventId}`);
   }
-  const frozenParticipantId =
-    input.protocol.blindTargetParticipantIdByEventId[input.targetEventId];
-  if (!frozenParticipantId) {
-    throw new Error(`blind target is missing frozen participant binding: ${input.targetEventId}`);
+  const targetBinding = input.protocol.blindTargetBindings[input.targetEventId];
+  if (!targetBinding) {
+    throw new Error(`blind target is missing frozen binding: ${input.targetEventId}`);
   }
-  if (frozenParticipantId !== input.participantId) {
+  if (targetBinding.participantId !== input.participantId) {
     throw new Error(
-      `blind target is frozen to participant ${frozenParticipantId}: ${input.targetEventId}`,
+      `blind target is frozen to participant ${targetBinding.participantId}: ${input.targetEventId}`,
     );
+  }
+  if (targetBinding.predictionTimestamp !== input.predictionTimestamp) {
+    throw new Error(`predictionTimestamp differs from frozen blind target: ${input.targetEventId}`);
+  }
+  if (
+    targetBinding.taskId !== input.currentTask.task.id ||
+    targetBinding.taskVersion !== input.currentTask.task.version ||
+    targetBinding.contentFingerprint !== input.currentTask.contentFingerprint
+  ) {
+    throw new Error(`currentTask differs from frozen blind target: ${input.targetEventId}`);
   }
 
   const predictionMs = parseTimestamp(input.predictionTimestamp, "predictionTimestamp");
