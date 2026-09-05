@@ -11,22 +11,23 @@
 - [x] N007 Define delayed-retrieval and changed-context causal rules; primary prediction targets are free-recall/delayed-free-recall/near-transfer.
 - [x] N008 Draft privacy/consent/retention requirements; human collection remains disabled.
 - [x] N009 Require `nep.native-predictor.v1` estimator/hyperparameter freeze during N2 before any human N3 outcomes.
-- [ ] N010 Independent review PASS for Spec #005 exact head.
+- [x] N009A Explicitly compensate for fields not preserved by `ReferenceCoreEvidence`: freeze a deterministic pilot task-definition fingerprint and require fail-closed task ID/version/content fingerprint/context binding plus adjacent `PilotEvidenceLineage`.
+- [ ] N010 Independent review PASS for Spec #005 exact head. Draft N2 work started before this temporal gate completed remains provisional and must be revalidated against the reviewed exact head; the review is not backdated.
 
 ## N2 — synthetic plumbing only
 
 - [ ] N020 Create `benchmarks/native-evidence-v1/` from reviewed Spec #005.
-- [ ] N021 Implement versioned task definitions using existing `CoreTaskSpec`.
-- [ ] N022 Implement synthetic observations/candidates and issue evidence only through `validateReferenceCoreEvidence()`.
+- [ ] N021 Implement immutable versioned task definitions using existing `CoreTaskSpec`, plus deterministic `FrozenPilotTaskDefinition.definitionFingerprint`.
+- [ ] N022 Before `validateReferenceCoreEvidence()`, fail closed unless attempt task ID/version/content fingerprint/context ID/definition fingerprint exactly match the frozen definition; after successful issuance persist matching `PilotEvidenceLineage` with canonical evidence digest.
 - [ ] N023 Add cold-start, support/reveal, free-recall, delayed-recall, valid/invalid transfer scenarios.
 - [ ] N024 Add duplicate and out-of-order reducer adversarial scenarios.
-- [ ] N025 Add detached/cloned evidence rejection scenario.
-- [ ] N026 Implement strong B2/B3 pre-attempt feature extraction with explicit prediction timestamp and no future/current label feedback.
+- [ ] N025 Add detached/cloned evidence rejection plus task-version, content-fingerprint, definition-fingerprint, and context-substitution adversarial scenarios.
+- [ ] N026 Implement strong B2/B3 pre-attempt feature extraction with explicit prediction timestamp and no future/current label feedback; events with missing/mismatched pilot lineage are ineligible.
 - [ ] N027 Freeze `nep.native-predictor.v1` using synthetic stability checks only; same estimator/preprocessing for B2/B3.
-- [ ] N028 Implement synthetic participant export/delete and prove participant-scoped artifacts are removed.
-- [ ] N029 Reuse benchmark manifest/integrity conventions; clearly mark every artifact `synthetic-plumbing-only`.
+- [ ] N028 Implement synthetic participant export/delete and prove participant-scoped raw/derived/lineage artifacts are removed.
+- [ ] N029 Reuse benchmark manifest/integrity conventions; bind task-definition and evidence-lineage fingerprints and clearly mark every artifact `synthetic-plumbing-only`.
 - [ ] N030 Exact-head Verify + focused native harness CI green.
-- [ ] N031 Opposite-agent independent review PASS of N2 implementation.
+- [ ] N031 Opposite-agent independent review PASS of N2 implementation against the reviewed Spec #005 exact head.
 
 ## N3 — human pilot
 
