@@ -1733,26 +1733,111 @@ describe("Detached Evidence Boundary & Symmetrical Sealing Adversarial Suite (GE
     }
   });
 
-  it("proves legitimate in-process evidence, reducer equivalence, and lineage preservation remain 100% intact", () => {
+  it("keeps batch replay order-independent while incremental reduction rejects an earlier late arrival", () => {
     const ev1 = makeValidReferenceRecord({
-      eventId: "evt-batch-1",
+      eventId: "evt-order-a",
       occurredAt: "2026-09-04T10:00:00.000Z",
     });
     const ev2 = makeValidReferenceRecord({
-      eventId: "evt-batch-2",
+      eventId: "evt-order-b",
       occurredAt: "2026-09-04T11:00:00.000Z",
     });
 
     const batchState = projectLearnerState(ontology, [ev2, ev1]);
-    expect(batchState.totalEventsProcessed).toBe(2);
-    expect(batchState.acceptedEvents).toHaveLength(2);
-    expect(batchState.acceptedEvents[0].eventId).toBe("evt-batch-1");
-    expect(batchState.acceptedEvents[1].eventId).toBe("evt-batch-2");
+    expect(batchState.acceptedEvents.map((event) => event.eventId)).toEqual([
+      "evt-order-a",
+      "evt-order-b",
+    ]);
 
     let reducedState = createEmptyLearnerStateProjection();
     reducedState = reduceLearnerState(reducedState, ev2, ontology);
     reducedState = reduceLearnerState(reducedState, ev1, ontology);
 
-    expect(JSON.stringify(batchState)).toBe(JSON.stringify(reducedState));
+    expect(reducedState.totalEventsProcessed).toBe(2);
+    expect(reducedState.acceptedEvents.map((event) => event.eventId)).toEqual(["evt-order-b"]);
+    expect(reducedState.rejectedEvents).toHaveLength(1);
+    expect(reducedState.rejectedEvents[0].code).toBe("out-of-order-event");
+    expect(reducedState.rejectedEvents[0].occurredAt).toBe("2026-09-04T10:00:00.000Z");
+  });
+
+  it("rejects a same-timestamp lower eventId as an out-of-order append", () => {
+    const laterKey = makeValidReferenceRecord({
+      eventId: "evt-same-b",
+      occurredAt: "2026-09-04T10:00:00.000Z",
+    });
+    const earlierKey = makeValidReferenceRecord({
+      eventId: "evt-same-a",
+      occurredAt: "2026-09-04T10:00:00.000Z",
+    });
+
+    let state = createEmptyLearnerStateProjection();
+    state = reduceLearnerState(state, laterKey, ontology);
+    state = reduceLearnerState(state, earlierKey, ontology);
+
+    expect(state.acceptedEvents.map((event) => event.eventId)).toEqual(["evt-same-b"]);
+    expect(state.rejectedEvents.at(-1)?.code).toBe("out-of-order-event");
+  });
+
+  it("matches canonical batch replay for append-only baseline, near-transfer, and far-transfer evidence", () => {
+    const baseline = makeValidReferenceRecord({
+      eventId: "evt-transfer-base",
+      occurredAt: "2026-09-04T10:00:00.000Z",
+      role: "controlled-production",
+      transferDistance: "same-context",
+      contextId: "ctx-base",
+    });
+    const near = makeValidReferenceRecord({
+      eventId: "evt-transfer-near",
+      occurredAt: "2026-09-04T11:00:00.000Z",
+      role: "near-transfer",
+      transferDistance: "near-transfer",
+      contextId: "ctx-near",
+    });
+    const far = makeValidReferenceRecord({
+      eventId: "evt-transfer-far",
+      occurredAt: "2026-09-04T12:00:00.000Z",
+      role: "far-transfer",
+      transferDistance: "far-transfer",
+      contextId: "ctx-far",
+    });
+
+    const batchState = projectLearnerState(ontology, [far, near, baseline]);
+    let reducedState = createEmptyLearnerStateProjection();
+    for (const event of [baseline, near, far]) {
+      reducedState = reduceLearnerState(reducedState, event, ontology);
+    }
+
+    expect(JSON.stringify(reducedState)).toBe(JSON.stringify(batchState));
+    const stats = reducedState.constructs[
+      "nep.en.v1.communication-activity.spoken-production"
+    ].statistics;
+    expect(stats.transfer.nearTransferCount).toBe(1);
+    expect(stats.transfer.farTransferCount).toBe(1);
+  });
+
+  it("retains a rejected transfer order key so a later-arriving earlier baseline fails closed", () => {
+    const transferFirst = makeValidReferenceRecord({
+      eventId: "evt-transfer-first",
+      occurredAt: "2026-09-04T11:00:00.000Z",
+      role: "near-transfer",
+      transferDistance: "near-transfer",
+      contextId: "ctx-transfer",
+    });
+    const earlierBaseline = makeValidReferenceRecord({
+      eventId: "evt-earlier-base",
+      occurredAt: "2026-09-04T10:00:00.000Z",
+      role: "controlled-production",
+      transferDistance: "same-context",
+      contextId: "ctx-base",
+    });
+
+    let state = createEmptyLearnerStateProjection();
+    state = reduceLearnerState(state, transferFirst, ontology);
+    expect(state.rejectedEvents[0].code).toBe("invalid-transfer-distance");
+    expect(state.rejectedEvents[0].occurredAt).toBe("2026-09-04T11:00:00.000Z");
+
+    state = reduceLearnerState(state, earlierBaseline, ontology);
+    expect(state.acceptedEvents).toHaveLength(0);
+    expect(state.rejectedEvents.at(-1)?.code).toBe("out-of-order-event");
   });
 });

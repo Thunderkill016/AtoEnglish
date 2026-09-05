@@ -146,6 +146,7 @@ export type LearnerStateProblemCode =
   | "incompatible-evidence-role"
   | "incompatible-modality"
   | "invalid-timestamp"
+  | "out-of-order-event"
   | "invalid-transfer-distance"
   | "unvalidated-evidence-rejected"
   | "forbidden-authority-field"
@@ -153,6 +154,7 @@ export type LearnerStateProblemCode =
 
 export type RejectedEvidenceAudit = {
   readonly eventId: string;
+  readonly occurredAt?: string;
   readonly code: LearnerStateProblemCode;
   readonly message: string;
   readonly targetId?: string;
@@ -996,6 +998,7 @@ export function projectLearnerState(
       rejectedEvents.push(
         Object.freeze({
           eventId: event.eventId,
+          occurredAt: event.occurredAt,
           code: "duplicate-event-id",
           message: `Duplicate eventId detected: ${event.eventId}`,
           targetId: event.targetId,
@@ -1015,6 +1018,7 @@ export function projectLearnerState(
         rejectedEvents.push(
           Object.freeze({
             eventId: event.eventId,
+            occurredAt: event.occurredAt,
             code: "invalid-transfer-distance",
             message: `Transfer evidence requires prior baseline context; initial context cannot establish ${event.transferDistance}`,
             targetId: event.targetId,
@@ -1026,6 +1030,7 @@ export function projectLearnerState(
         rejectedEvents.push(
           Object.freeze({
             eventId: event.eventId,
+            occurredAt: event.occurredAt,
             code: "invalid-transfer-distance",
             message: `Transfer evidence requires a distinct changed context; cannot claim ${event.transferDistance} on already-seen context '${event.contextId}'`,
             targetId: event.targetId,
@@ -1151,6 +1156,44 @@ export function reduceLearnerState(
     });
   }
 
+  // V1 incremental reduction is canonical append-only. Batch projection may sort an
+  // unordered evidence set, but a streaming reducer must not rewrite already-observed
+  // history when an earlier canonical event arrives later. Validated semantic rejections
+  // retain their order key so they also advance the stream cursor.
+  let latestOrderKey: EvidenceOrderKey | null = null;
+  for (const accepted of currentState.acceptedEvents) {
+    if (latestOrderKey === null || compareEvidenceOrder(accepted, latestOrderKey) > 0) {
+      latestOrderKey = accepted;
+    }
+  }
+  for (const rejected of currentState.rejectedEvents) {
+    if (!rejected.occurredAt) continue;
+    const rejectedOrderKey: EvidenceOrderKey = {
+      occurredAt: rejected.occurredAt,
+      eventId: rejected.eventId,
+    };
+    if (latestOrderKey === null || compareEvidenceOrder(rejectedOrderKey, latestOrderKey) > 0) {
+      latestOrderKey = rejectedOrderKey;
+    }
+  }
+
+  if (latestOrderKey !== null && compareEvidenceOrder(event, latestOrderKey) < 0) {
+    return Object.freeze({
+      ...currentState,
+      totalEventsProcessed: currentState.totalEventsProcessed + 1,
+      rejectedEvents: Object.freeze([
+        ...currentState.rejectedEvents,
+        Object.freeze({
+          eventId: event.eventId,
+          occurredAt: event.occurredAt,
+          code: "out-of-order-event" as const,
+          message: `Incremental reducer is append-only: event (${event.occurredAt}, ${event.eventId}) precedes the latest processed canonical key (${latestOrderKey.occurredAt}, ${latestOrderKey.eventId})`,
+          targetId: event.targetId,
+        }),
+      ]),
+    });
+  }
+
   // Enforce transfer baseline context requirement
   if (event.transferDistance === "near-transfer" || event.transferDistance === "far-transfer") {
     const priorContexts = currentState.constructs[event.targetId]?.statistics.contextIds ?? [];
@@ -1162,6 +1205,7 @@ export function reduceLearnerState(
           ...currentState.rejectedEvents,
           Object.freeze({
             eventId: event.eventId,
+            occurredAt: event.occurredAt,
             code: "invalid-transfer-distance" as const,
             message: `Transfer evidence requires prior baseline context; initial context cannot establish ${event.transferDistance}`,
             targetId: event.targetId,
@@ -1177,6 +1221,7 @@ export function reduceLearnerState(
           ...currentState.rejectedEvents,
           Object.freeze({
             eventId: event.eventId,
+            occurredAt: event.occurredAt,
             code: "invalid-transfer-distance" as const,
             message: `Transfer evidence requires a distinct changed context; cannot claim ${event.transferDistance} on already-seen context '${event.contextId}'`,
             targetId: event.targetId,
@@ -1186,8 +1231,9 @@ export function reduceLearnerState(
     }
   }
 
-  // To guarantee general replay equivalence across arbitrary arrival order,
-  // we rebuild construct projections canonically from all accepted records.
+  // Canonical append order means accepted events are already monotonic. Rebuilding
+  // projections from retained accepted lineage preserves deterministic batch equivalence
+  // for valid append-only streams without pretending arbitrary arrival order is supported.
   const isPositive = evaluateOutcomeSuccess(event.outcome);
   const newAcceptedAudit: AcceptedEventAudit = Object.freeze({
     eventId: event.eventId,
@@ -1268,10 +1314,19 @@ function reconstructAcceptedRecord(audit: AcceptedEventAudit): AcceptedEvidenceR
   });
 }
 
-function compareAcceptedAudits(a: AcceptedEventAudit, b: AcceptedEventAudit): number {
+type EvidenceOrderKey = {
+  readonly occurredAt: string;
+  readonly eventId: string;
+};
+
+function compareEvidenceOrder(a: EvidenceOrderKey, b: EvidenceOrderKey): number {
   const timeCmp = a.occurredAt.localeCompare(b.occurredAt);
   if (timeCmp !== 0) return timeCmp;
   return a.eventId.localeCompare(b.eventId);
+}
+
+function compareAcceptedAudits(a: AcceptedEventAudit, b: AcceptedEventAudit): number {
+  return compareEvidenceOrder(a, b);
 }
 
 /**
