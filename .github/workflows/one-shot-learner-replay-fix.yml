@@ -1,0 +1,114 @@
+name: One-shot learner replay correction
+
+on:
+  push:
+    branches:
+      - "gemini/learner-evidence-state-v1"
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: gemini/learner-evidence-state-v1
+          fetch-depth: 0
+      - name: Apply bounded append-only replay correction
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          source_path = Path("src/lib/core/learner-state.ts")
+          test_path = Path("src/lib/core/learner-state.test.ts")
+          source = source_path.read_text(encoding="utf-8")
+          tests = test_path.read_text(encoding="utf-8")
+
+          def replace_once(text: str, old: str, new: str, label: str) -> str:
+              count = text.count(old)
+              if count != 1:
+                  raise SystemExit(f"{label}: expected exactly one match, found {count}")
+              return text.replace(old, new, 1)
+
+          source = replace_once(
+              source,
+              '  | "invalid-timestamp"\n  | "invalid-transfer-distance"',
+              '  | "invalid-timestamp"\n  | "out-of-order-event"\n  | "invalid-transfer-distance"',
+              "problem-code",
+          )
+          source = replace_once(
+              source,
+              'export type RejectedEvidenceAudit = {\n  readonly eventId: string;\n  readonly code: LearnerStateProblemCode;',
+              'export type RejectedEvidenceAudit = {\n  readonly eventId: string;\n  readonly occurredAt?: string;\n  readonly code: LearnerStateProblemCode;',
+              "rejected-audit-order-key",
+          )
+
+          # Post-validation batch rejections retain canonical order metadata.
+          batch_start = source.index("export function projectLearnerState(")
+          reducer_start = source.index("export function reduceLearnerState(")
+          batch = source[batch_start:reducer_start]
+          for label, needle in (
+              ("batch-duplicate", 'eventId: event.eventId,\n          code: "duplicate-event-id",'),
+              ("batch-transfer-no-base", 'eventId: event.eventId,\n            code: "invalid-transfer-distance",\n            message: `Transfer evidence requires prior baseline context;'),
+              ("batch-transfer-same-context", 'eventId: event.eventId,\n            code: "invalid-transfer-distance",\n            message: `Transfer evidence requires a distinct changed context;'),
+          ):
+              if batch.count(needle) != 1:
+                  raise SystemExit(f"{label}: expected exactly one match, found {batch.count(needle)}")
+              batch = batch.replace(needle, needle.replace("\n", "\n          occurredAt: event.occurredAt,\n", 1) if label == "batch-duplicate" else needle.replace("\n", "\n            occurredAt: event.occurredAt,\n", 1), 1)
+          source = source[:batch_start] + batch + source[reducer_start:]
+
+          reducer_start = source.index("export function reduceLearnerState(")
+          reducer_end = source.index("\nfunction reconstructAcceptedRecord", reducer_start)
+          reducer = source[reducer_start:reducer_end]
+          marker = "  // Enforce transfer baseline context requirement\n"
+          if reducer.count(marker) != 1:
+              raise SystemExit(f"reducer-marker: expected one match, found {reducer.count(marker)}")
+          order_block = '''  // V1 incremental reduction is canonical append-only. Batch projection may sort an\n  // unordered evidence set, but a streaming reducer must not rewrite already-observed\n  // history when an earlier canonical event arrives later. Validated semantic rejections\n  // retain their order key so they also advance the stream cursor.\n  let latestOrderKey: EvidenceOrderKey | null = null;\n  for (const accepted of currentState.acceptedEvents) {\n    if (latestOrderKey === null || compareEvidenceOrder(accepted, latestOrderKey) > 0) {\n      latestOrderKey = accepted;\n    }\n  }\n  for (const rejected of currentState.rejectedEvents) {\n    if (!rejected.occurredAt) continue;\n    const rejectedOrderKey: EvidenceOrderKey = {\n      occurredAt: rejected.occurredAt,\n      eventId: rejected.eventId,\n    };\n    if (latestOrderKey === null || compareEvidenceOrder(rejectedOrderKey, latestOrderKey) > 0) {\n      latestOrderKey = rejectedOrderKey;\n    }\n  }\n\n  if (latestOrderKey !== null && compareEvidenceOrder(event, latestOrderKey) < 0) {\n    return Object.freeze({\n      ...currentState,\n      totalEventsProcessed: currentState.totalEventsProcessed + 1,\n      rejectedEvents: Object.freeze([\n        ...currentState.rejectedEvents,\n        Object.freeze({\n          eventId: event.eventId,\n          occurredAt: event.occurredAt,\n          code: "out-of-order-event" as const,\n          message: `Incremental reducer is append-only: event (${event.occurredAt}, ${event.eventId}) precedes the latest processed canonical key (${latestOrderKey.occurredAt}, ${latestOrderKey.eventId})`,\n          targetId: event.targetId,\n        }),\n      ]),\n    });\n  }\n\n'''
+          reducer = reducer.replace(marker, order_block + marker, 1)
+          reducer = reducer.replace(
+              'eventId: event.eventId,\n            code: "invalid-transfer-distance" as const,\n            message: `Transfer evidence requires prior baseline context;',
+              'eventId: event.eventId,\n            occurredAt: event.occurredAt,\n            code: "invalid-transfer-distance" as const,\n            message: `Transfer evidence requires prior baseline context;',
+              1,
+          )
+          reducer = reducer.replace(
+              'eventId: event.eventId,\n            code: "invalid-transfer-distance" as const,\n            message: `Transfer evidence requires a distinct changed context;',
+              'eventId: event.eventId,\n            occurredAt: event.occurredAt,\n            code: "invalid-transfer-distance" as const,\n            message: `Transfer evidence requires a distinct changed context;',
+              1,
+          )
+          reducer = reducer.replace(
+              '  // To guarantee general replay equivalence across arbitrary arrival order,\n  // we rebuild construct projections canonically from all accepted records.\n',
+              '  // Canonical append order means accepted events are already monotonic. Rebuilding\n  // projections from retained accepted lineage preserves deterministic batch equivalence\n  // for valid append-only streams without pretending arbitrary arrival order is supported.\n',
+              1,
+          )
+          source = source[:reducer_start] + reducer + source[reducer_end:]
+
+          old_compare = '''function compareAcceptedAudits(a: AcceptedEventAudit, b: AcceptedEventAudit): number {\n  const timeCmp = a.occurredAt.localeCompare(b.occurredAt);\n  if (timeCmp !== 0) return timeCmp;\n  return a.eventId.localeCompare(b.eventId);\n}\n'''
+          new_compare = '''type EvidenceOrderKey = {\n  readonly occurredAt: string;\n  readonly eventId: string;\n};\n\nfunction compareEvidenceOrder(a: EvidenceOrderKey, b: EvidenceOrderKey): number {\n  const timeCmp = a.occurredAt.localeCompare(b.occurredAt);\n  if (timeCmp !== 0) return timeCmp;\n  return a.eventId.localeCompare(b.eventId);\n}\n\nfunction compareAcceptedAudits(a: AcceptedEventAudit, b: AcceptedEventAudit): number {\n  return compareEvidenceOrder(a, b);\n}\n'''
+          source = replace_once(source, old_compare, new_compare, "order-helper")
+
+          # Replace the stale arbitrary-arrival reducer-equivalence test with bounded append-only proofs.
+          pattern = re.compile(
+              r'  it\("proves legitimate in-process evidence, reducer equivalence, and lineage preservation remain 100% intact", \(\) => \{.*?\n  \}\);\n\}\);\s*$',
+              re.S,
+          )
+          replacement = '''  it("keeps batch replay order-independent while incremental reduction rejects an earlier late arrival", () => {\n    const ev1 = makeValidReferenceRecord({\n      eventId: "evt-order-a",\n      occurredAt: "2026-09-04T10:00:00.000Z",\n    });\n    const ev2 = makeValidReferenceRecord({\n      eventId: "evt-order-b",\n      occurredAt: "2026-09-04T11:00:00.000Z",\n    });\n\n    const batchState = projectLearnerState(ontology, [ev2, ev1]);\n    expect(batchState.acceptedEvents.map((event) => event.eventId)).toEqual([\n      "evt-order-a",\n      "evt-order-b",\n    ]);\n\n    let reducedState = createEmptyLearnerStateProjection();\n    reducedState = reduceLearnerState(reducedState, ev2, ontology);\n    reducedState = reduceLearnerState(reducedState, ev1, ontology);\n\n    expect(reducedState.totalEventsProcessed).toBe(2);\n    expect(reducedState.acceptedEvents.map((event) => event.eventId)).toEqual(["evt-order-b"]);\n    expect(reducedState.rejectedEvents).toHaveLength(1);\n    expect(reducedState.rejectedEvents[0].code).toBe("out-of-order-event");\n    expect(reducedState.rejectedEvents[0].occurredAt).toBe("2026-09-04T10:00:00.000Z");\n  });\n\n  it("rejects a same-timestamp lower eventId as an out-of-order append", () => {\n    const laterKey = makeValidReferenceRecord({\n      eventId: "evt-same-b",\n      occurredAt: "2026-09-04T10:00:00.000Z",\n    });\n    const earlierKey = makeValidReferenceRecord({\n      eventId: "evt-same-a",\n      occurredAt: "2026-09-04T10:00:00.000Z",\n    });\n\n    let state = createEmptyLearnerStateProjection();\n    state = reduceLearnerState(state, laterKey, ontology);\n    state = reduceLearnerState(state, earlierKey, ontology);\n\n    expect(state.acceptedEvents.map((event) => event.eventId)).toEqual(["evt-same-b"]);\n    expect(state.rejectedEvents.at(-1)?.code).toBe("out-of-order-event");\n  });\n\n  it("matches canonical batch replay for append-only baseline, near-transfer, and far-transfer evidence", () => {\n    const baseline = makeValidReferenceRecord({\n      eventId: "evt-transfer-base",\n      occurredAt: "2026-09-04T10:00:00.000Z",\n      role: "controlled-production",\n      transferDistance: "same-context",\n      contextId: "ctx-base",\n    });\n    const near = makeValidReferenceRecord({\n      eventId: "evt-transfer-near",\n      occurredAt: "2026-09-04T11:00:00.000Z",\n      role: "near-transfer",\n      transferDistance: "near-transfer",\n      contextId: "ctx-near",\n    });\n    const far = makeValidReferenceRecord({\n      eventId: "evt-transfer-far",\n      occurredAt: "2026-09-04T12:00:00.000Z",\n      role: "far-transfer",\n      transferDistance: "far-transfer",\n      contextId: "ctx-far",\n    });\n\n    const batchState = projectLearnerState(ontology, [far, near, baseline]);\n    let reducedState = createEmptyLearnerStateProjection();\n    for (const event of [baseline, near, far]) {\n      reducedState = reduceLearnerState(reducedState, event, ontology);\n    }\n\n    expect(JSON.stringify(reducedState)).toBe(JSON.stringify(batchState));\n    const stats = reducedState.constructs[\n      "nep.en.v1.communication-activity.spoken-production"\n    ].statistics;\n    expect(stats.transfer.nearTransferCount).toBe(1);\n    expect(stats.transfer.farTransferCount).toBe(1);\n  });\n\n  it("retains a rejected transfer order key so a later-arriving earlier baseline fails closed", () => {\n    const transferFirst = makeValidReferenceRecord({\n      eventId: "evt-transfer-first",\n      occurredAt: "2026-09-04T11:00:00.000Z",\n      role: "near-transfer",\n      transferDistance: "near-transfer",\n      contextId: "ctx-transfer",\n    });\n    const earlierBaseline = makeValidReferenceRecord({\n      eventId: "evt-earlier-base",\n      occurredAt: "2026-09-04T10:00:00.000Z",\n      role: "controlled-production",\n      transferDistance: "same-context",\n      contextId: "ctx-base",\n    });\n\n    let state = createEmptyLearnerStateProjection();\n    state = reduceLearnerState(state, transferFirst, ontology);\n    expect(state.rejectedEvents[0].code).toBe("invalid-transfer-distance");\n    expect(state.rejectedEvents[0].occurredAt).toBe("2026-09-04T11:00:00.000Z");\n\n    state = reduceLearnerState(state, earlierBaseline, ontology);\n    expect(state.acceptedEvents).toHaveLength(0);\n    expect(state.rejectedEvents.at(-1)?.code).toBe("out-of-order-event");\n  });\n});\n'''
+          tests, count = pattern.subn(replacement, tests, count=1)
+          if count != 1:
+              raise SystemExit(f"test-tail: expected one replacement, found {count}")
+
+          source_path.write_text(source, encoding="utf-8")
+          test_path.write_text(tests, encoding="utf-8")
+          PY
+
+          git rm .github/workflows/one-shot-learner-replay-fix.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/lib/core/learner-state.ts src/lib/core/learner-state.test.ts
+          git commit -m "fix(core): make learner reducer canonical append-only"
+          git push origin HEAD:gemini/learner-evidence-state-v1
