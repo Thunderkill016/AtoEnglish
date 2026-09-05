@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from hashlib import sha256
+import importlib.util
 from importlib.metadata import version as package_version
 import inspect
 import json
@@ -11,7 +12,7 @@ from typing import Sequence
 
 import numpy as np
 import pandas as pd
-from pyBKT.fit import EM_fit, E_step
+from pyBKT.fit import EM_fit
 from pyBKT.models import Model
 
 PYBKT_SOURCE_REVISION = "06fc180ae72c117458acc527f8ec90cc8e0581c1"
@@ -145,17 +146,24 @@ def _resolve_effective_em_defaults(source: str) -> tuple[float | None, int | Non
     return tolerance, max_iterations, comparison
 
 
+def _resolve_e_step_source(em_source: str, em_source_path: str) -> tuple[str, str]:
+    if "E_step.run(" in em_source:
+        spec = importlib.util.find_spec("pyBKT.fit.E_step")
+        origin = "" if spec is None or spec.origin is None else str(spec.origin)
+        return "compiled-e-step", origin
+    if "def run(" in em_source:
+        # The pure-Python package embeds the E-step implementation in EM_fit.py itself.
+        return "python-e-step", em_source_path
+    return "unknown", ""
+
+
 def inspect_installed_bkt_backend() -> BktBackendInspection:
     installed_version = package_version("pyBKT")
     model_source_path = inspect.getsourcefile(Model) or ""
     em_source_path = inspect.getsourcefile(EM_fit.EM_fit) or ""
-    e_step_source_path = str(getattr(E_step, "__file__", "") or "")
     em_source = inspect.getsource(EM_fit.EM_fit)
     tolerance, max_iterations, comparison = _resolve_effective_em_defaults(em_source)
-
-    suffix = Path(e_step_source_path).suffix.lower()
-    compiled_suffixes = {".so", ".pyd", ".dll", ".dylib"}
-    backend_kind = "compiled-e-step" if suffix in compiled_suffixes else "python-e-step"
+    backend_kind, e_step_source_path = _resolve_e_step_source(em_source, em_source_path)
 
     return BktBackendInspection(
         source_revision=PYBKT_SOURCE_REVISION,
