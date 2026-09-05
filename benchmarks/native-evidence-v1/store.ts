@@ -60,14 +60,36 @@ export class SyntheticPilotStore {
     artifactId: string,
     kind: SyntheticArtifactKind,
     participantIds: readonly string[],
+    dependsOnArtifactIds: readonly string[] = [],
   ): SyntheticArtifactRecord {
     if (this.artifacts.has(artifactId)) {
       throw new Error(`Duplicate synthetic artifact id: ${artifactId}`);
     }
+
+    const dependencyIds = [...new Set(dependsOnArtifactIds)].sort();
+    if (dependencyIds.includes(artifactId)) {
+      throw new Error(`Synthetic artifact cannot depend on itself: ${artifactId}`);
+    }
+
+    const effectiveParticipantIds = new Set(participantIds);
+    for (const dependencyId of dependencyIds) {
+      const dependency = this.artifacts.get(dependencyId);
+      if (!dependency) {
+        throw new Error(`Synthetic artifact dependency is missing: ${dependencyId}`);
+      }
+      if (!dependency.valid) {
+        throw new Error(`Synthetic artifact dependency is invalidated: ${dependencyId}`);
+      }
+      for (const participantId of dependency.participantIds) {
+        effectiveParticipantIds.add(participantId);
+      }
+    }
+
     const record: SyntheticArtifactRecord = Object.freeze({
       artifactId,
       kind,
-      participantIds: Object.freeze([...new Set(participantIds)].sort()),
+      participantIds: Object.freeze([...effectiveParticipantIds].sort()),
+      dependsOnArtifactIds: Object.freeze(dependencyIds),
       valid: true,
       invalidatedReason: null,
     });
