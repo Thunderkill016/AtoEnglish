@@ -1,6 +1,8 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
+from hashlib import sha256
+import json
 from typing import Mapping, Sequence
 
 import numpy as np
@@ -18,7 +20,24 @@ class PredictorSpec:
     class_weight: None = None
     max_iter: int = 1000
     tol: float = 1e-8
-    random_state: int = 143
+
+
+def _fingerprint_json(value: object) -> str:
+    encoded = json.dumps(
+        value,
+        sort_keys=True,
+        separators=(",", ":"),
+        allow_nan=False,
+    ).encode("utf-8")
+    return f"sha256:{sha256(encoded).hexdigest()}"
+
+
+def fingerprint_predictor_spec(spec: PredictorSpec) -> str:
+    return _fingerprint_json(asdict(spec))
+
+
+def fingerprint_feature_transform(transform: FrozenFeatureTransform) -> str:
+    return _fingerprint_json(asdict(transform))
 
 
 @dataclass(frozen=True)
@@ -30,6 +49,31 @@ class FrozenPredictor:
     train_row_count: int
     train_positive_count: int
     spec: PredictorSpec
+
+    @property
+    def spec_fingerprint(self) -> str:
+        return fingerprint_predictor_spec(self.spec)
+
+    @property
+    def transform_fingerprint(self) -> str:
+        return fingerprint_feature_transform(self.feature_transform)
+
+    @property
+    def fitted_artifact_fingerprint(self) -> str:
+        payload: dict[str, object] = {
+            "availability": self.availability,
+            "unavailable_reason": self.unavailable_reason,
+            "train_row_count": self.train_row_count,
+            "train_positive_count": self.train_positive_count,
+            "spec_fingerprint": self.spec_fingerprint,
+            "transform_fingerprint": self.transform_fingerprint,
+        }
+        if self.model is not None:
+            payload["classes"] = self.model.classes_.astype(np.int64).tolist()
+            payload["coef"] = self.model.coef_.astype(np.float64).tolist()
+            payload["intercept"] = self.model.intercept_.astype(np.float64).tolist()
+            payload["n_iter"] = self.model.n_iter_.astype(np.int64).tolist()
+        return _fingerprint_json(payload)
 
     def predict_error_probability(self, rows: Sequence[FeatureRow]) -> np.ndarray:
         if self.model is None:
@@ -87,7 +131,6 @@ def fit_common_logistic_predictor(
         class_weight=spec.class_weight,
         max_iter=spec.max_iter,
         tol=spec.tol,
-        random_state=spec.random_state,
     )
     model.fit(matrix, np.asarray(train_labels, dtype=np.int64))
 
