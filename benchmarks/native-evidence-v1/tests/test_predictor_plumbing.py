@@ -173,9 +173,31 @@ class MetricTests(unittest.TestCase):
     def test_paired_bootstrap_uses_shared_learner_units_and_is_reproducible(self) -> None:
         ids = ["a", "b", "c", "d"]
         labels = [0, 1, 0, 1]
-        target = evaluate_by_learner(ids, labels, [0.1, 0.8, 0.2, 0.7])
-        history = evaluate_by_learner(ids, labels, [0.2, 0.7, 0.3, 0.6])
-        basis = evaluate_by_learner(ids, labels, [0.15, 0.75, 0.25, 0.65])
+        row_ids = ["a:r1", "b:r1", "c:r1", "d:r1"]
+        target = evaluate_by_learner(
+            ids,
+            labels,
+            [0.1, 0.8, 0.2, 0.7],
+            row_ids=row_ids,
+            planned_learner_ids=ids,
+            planned_row_ids=row_ids,
+        )
+        history = evaluate_by_learner(
+            ids,
+            labels,
+            [0.2, 0.7, 0.3, 0.6],
+            row_ids=row_ids,
+            planned_learner_ids=ids,
+            planned_row_ids=row_ids,
+        )
+        basis = evaluate_by_learner(
+            ids,
+            labels,
+            [0.15, 0.75, 0.25, 0.65],
+            row_ids=row_ids,
+            planned_learner_ids=ids,
+            planned_row_ids=row_ids,
+        )
         first = paired_learner_bootstrap(target, {"history": history, "basis": basis})
         second = paired_learner_bootstrap(target, {"history": history, "basis": basis})
         self.assertEqual(first, second)
