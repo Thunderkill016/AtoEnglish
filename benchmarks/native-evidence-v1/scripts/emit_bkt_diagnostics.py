@@ -14,6 +14,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from scripts.bkt import build_bkt_frame, fit_bkt_with_diagnostics, fit_source_faithful_bkt  # noqa: E402
+from scripts.bkt_stability import build_train_only_stability_stress_report  # noqa: E402
 
 
 def _training_frame():
@@ -58,18 +59,21 @@ def build_report() -> dict[str, object]:
         {str(key): _json_value(value) for key, value in record.items()}
         for record in parameter_frame.to_dict(orient="records")
     ]
+    stability_stress = build_train_only_stability_stress_report()
 
     return {
         "status": "synthetic-plumbing-only",
-        "purpose": "pyBKT-backend-observer-parity",
+        "purpose": "pyBKT-backend-observer-parity-and-TRAIN-only-stability-review",
         "forbiddenClaims": [
             "learner-model-validity",
             "predictive-superiority",
             "mastery",
             "calibrated",
+            "stability-approved",
         ],
         "diagnostic": asdict(diagnostic),
         "selectedParameters": parameter_records,
+        "stabilityStress": asdict(stability_stress),
     }
 
 
