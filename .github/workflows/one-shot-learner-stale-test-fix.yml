@@ -1,0 +1,74 @@
+name: One-shot learner stale replay test correction
+
+on:
+  push:
+    branches:
+      - "gemini/learner-evidence-state-v1"
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: gemini/learner-evidence-state-v1
+          fetch-depth: 0
+      - name: Replace superseded arbitrary-arrival replay assertion
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path("src/lib/core/learner-state.test.ts")
+          text = path.read_text(encoding="utf-8")
+          old = '''  it("guarantees incremental reduction matches batch projection byte-for-byte even under reverse arrival order", () => {
+    const events = [
+      makeValidReferenceRecord({ eventId: "evt-seq-1", occurredAt: "2026-09-04T10:00:00.000Z", outcome: { kind: "binary", success: true } }),
+      makeValidReferenceRecord({ eventId: "evt-seq-2", occurredAt: "2026-09-04T10:01:00.000Z", outcome: { kind: "binary", success: false } }),
+      makeValidReferenceRecord({ eventId: "evt-seq-3", occurredAt: "2026-09-04T10:02:00.000Z", outcome: { kind: "binary", success: true } }),
+    ];
+
+    const batchState = projectLearnerState(ontology, events);
+
+    let incrementalReverse = createEmptyLearnerStateProjection();
+    for (const ev of [...events].reverse()) {
+      incrementalReverse = reduceLearnerState(incrementalReverse, ev, ontology);
+    }
+
+    expect(JSON.stringify(incrementalReverse)).toBe(JSON.stringify(batchState));
+  });
+'''
+          new = '''  it("matches batch projection byte-for-byte for canonical append-only arrival order", () => {
+    const events = [
+      makeValidReferenceRecord({ eventId: "evt-seq-1", occurredAt: "2026-09-04T10:00:00.000Z", outcome: { kind: "binary", success: true } }),
+      makeValidReferenceRecord({ eventId: "evt-seq-2", occurredAt: "2026-09-04T10:01:00.000Z", outcome: { kind: "binary", success: false } }),
+      makeValidReferenceRecord({ eventId: "evt-seq-3", occurredAt: "2026-09-04T10:02:00.000Z", outcome: { kind: "binary", success: true } }),
+    ];
+
+    const batchState = projectLearnerState(ontology, events);
+
+    let incremental = createEmptyLearnerStateProjection();
+    for (const ev of events) {
+      incremental = reduceLearnerState(incremental, ev, ontology);
+    }
+
+    expect(JSON.stringify(incremental)).toBe(JSON.stringify(batchState));
+  });
+'''
+          count = text.count(old)
+          if count != 1:
+              raise SystemExit(f"expected exactly one stale replay test, found {count}")
+          path.write_text(text.replace(old, new, 1), encoding="utf-8")
+          PY
+
+          git rm .github/workflows/one-shot-learner-stale-test-fix.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/lib/core/learner-state.test.ts
+          git commit -m "test(core): align replay assertion with append-only reducer"
+          git push origin HEAD:gemini/learner-evidence-state-v1
