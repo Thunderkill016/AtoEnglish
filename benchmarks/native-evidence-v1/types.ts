@@ -55,6 +55,7 @@ export type SyntheticArtifactRecord = {
   readonly artifactId: string;
   readonly kind: SyntheticArtifactKind;
   readonly participantIds: readonly string[];
+  readonly dependsOnArtifactIds: readonly string[];
   readonly valid: boolean;
   readonly invalidatedReason: string | null;
 };
