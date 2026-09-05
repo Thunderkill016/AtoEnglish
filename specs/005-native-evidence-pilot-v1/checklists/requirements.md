@@ -29,3 +29,5 @@
 - [ ] Re-review review 5120933538: both attribution contrasts govern KEEP; equivalence is not inferred from a nonsignificant result; no new-information claim from shared-history transforms.
 - [ ] Re-review source-faithful pyBKT multi-fit and diagnostic parity plan; missing API telemetry, boundary fits or one bad start cannot exclude valid predictions.
 - [ ] Re-review withdrawal of the 0.01-nat threshold and mandatory pre-N3 utility justification or descriptive-only decision lock (N044).
+- [ ] Review MAX-LEVEL-002/C data counts, estimability-versus-fit distinction, intervening practice and repeated transfer-context limitations.
+- [ ] Review new source/version/license records and falsification gates; no new model, sample size or utility margin is approved by this research package.

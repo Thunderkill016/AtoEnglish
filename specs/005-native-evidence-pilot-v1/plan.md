@@ -73,6 +73,17 @@ not bespoke initialization/convergence requirements. Missing diagnostics cannot 
 
 ## Reuse map
 
+### Frontier audit execution boundary
+
+Use N2 `aedaa72b3689671ac8f1dd4906a168ce345aa382` as the isolated research base.
+Read N043 `832e62efc17b7d2aec1e515917bb275fe6e4bd6b` and N044
+`9a20f99dfdeb2c4aad8596a975d72eec7afa2fe4` as separate proposed inputs, not merged or
+independently approved dependencies. Update existing research/spec/task/checklist documents only;
+do not cherry-pick sibling implementations or revise their review bookkeeping. Compare native
+estimability, observable-data support, external results and resource/rights costs separately.
+Validate schedule counts, source provenance, cross-artifact consistency, formatting and repository
+source-of-truth. No new library or algorithm is needed for this research deliverable.
+
 - ontology: `src/lib/core/ontology*`, `ontology-seed.ts`;
 - task semantics: `src/lib/core/task.ts`;
 - evidence roles: `src/lib/core/evidence-role.ts`;

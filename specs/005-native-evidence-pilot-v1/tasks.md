@@ -59,3 +59,10 @@
 Dependencies: N010/N015 precede every N2 task. N032–N037 are part of the N030/N031 verification
 gate. N030/N031/N040/N041/N043/N044 precede N042. None of these implementation/human gates is completed by
 the comparative research amendment.
+
+## Bounded frontier audit — CODEX-CORE-MAX-LEVEL-002/C
+
+- [x] N060 Reconcile immutable N2/N043/N044 snapshots and proposed observation counts by family; distinguish actual evidence from planned capacity.
+- [x] N061 Extend research with candidate estimability, current primary-source challengers, separate rights and reuse dispositions.
+- [x] N062 Map delay/transfer/latent-state/uncertainty gaps to missing instrumentation and falsification gates without changing the frozen ladder.
+- [ ] N063 Independent review of the research-only exact head and its schedule-based interpretation limits; no N031/N035/N043/N044 self-approval.

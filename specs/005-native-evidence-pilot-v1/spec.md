@@ -22,6 +22,16 @@ Can the merged `nep.learner-evidence-state.v1` representation be emitted faithfu
 
 ## Frozen V1 scope
 
+### Bounded frontier audit — CODEX-CORE-MAX-LEVEL-002/C
+
+Research-only follow-up: identify the strongest defensible candidate ladder for proposed N3
+delayed-recall and near-transfer observations, not a proven best model. Reconcile pinned
+N2/N043/N044 artifacts, compare primary sources and reuse rights, then map deferred models to
+missing observations/designs and falsification criteria in `research.md`. Independent review
+remains required. No model fitting, predictor changes, human collection or completion of
+N031/N035/N043/N044 is authorized. The owner leaves merge/review handling to GPT separately.
+This package is not completion of the entire standing frontier mission.
+
 Use exactly one canonical ontology target:
 
 `nep.en.v1.language-system.syntax-grammar`
