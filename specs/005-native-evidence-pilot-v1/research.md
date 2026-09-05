@@ -213,11 +213,19 @@ predictive KEEP/SIMPLIFY. No human-outcome tuning or synthetic efficacy claim is
 
 ### Estimable frontier audit — CODEX-CORE-MAX-LEVEL-002/C
 
-Research snapshot: 2026-09-05. Preserve PR #147 at `aedaa72b3689671ac8f1dd4906a168ce345aa382`,
+Historical research snapshot: 2026-09-05, N2 `aedaa72b3689671ac8f1dd4906a168ce345aa382`,
 N044 PR #148 at `9a20f99dfdeb2c4aad8596a975d72eec7afa2fe4`, and N043 PR #149 at
 `832e62efc17b7d2aec1e515917bb275fe6e4bd6b`. Sibling proposals are inspected, not integrated.
 The owner leaves merge/review handling separate. Branch governance remains the constitution and
 active Spec #005; July `docs/product/*` material is historical under `docs/history/july-pilot/`.
+
+Integration correction for review `5122120052`: research semantics passed on `698ed7cb...`,
+but that tree lacked the landed identity/lineage safeguards. This branch now includes N2
+`79009730cbb49524387f9bd8ecab01034a9143e5` and its current Spec #005. The N043/N044
+pins above remain historical evidence for the analysis, not assertions of current branch heads.
+All native history/manifests/results require valid `PilotEvidenceLineage` bound to the canonical
+evidence digest and prospectively frozen task definition; core validation alone is insufficient.
+Research conclusions do not waive these guards. Integrated N063 awaits fresh exact-head review.
 
 **Disposition: ADAPT the existing causal logistic/basis comparison; BENCHMARK_ONLY pooled BKT;
 GATHER_MORE_EVIDENCE before adding a model.** Even the current logistic fit is not proven reliably

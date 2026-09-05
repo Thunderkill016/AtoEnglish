@@ -6,10 +6,16 @@ import {
 import type { DiagnosticPayload } from "@/lib/core/diagnostics";
 import type { CoreObservation } from "@/lib/core/observation";
 
+import {
+  assertPilotAttemptMatchesDefinition,
+  buildPilotAttemptIdentity,
+  createPilotEvidenceLineage,
+} from "./identity";
 import { buildPilotTaskDefinition, type BuildPilotTaskOptions } from "./task-matrix";
 import {
   NATIVE_PILOT_TARGET_ID,
-  type PilotTaskDefinition,
+  type FrozenPilotTaskDefinition,
+  type PilotAttemptIdentity,
   type PilotTaskFamily,
   type SyntheticPilotEvent,
 } from "./types";
@@ -26,17 +32,18 @@ export type SyntheticAttemptInput = {
   readonly revealUsed?: boolean;
   readonly responseLatencyMs?: number | null;
   readonly taskOptions?: BuildPilotTaskOptions;
+  readonly attemptIdentity?: PilotAttemptIdentity;
 };
 
 export type SyntheticEvidenceFixture = {
-  readonly taskDefinition: PilotTaskDefinition;
+  readonly taskDefinition: FrozenPilotTaskDefinition;
   readonly observation: CoreObservation;
   readonly candidate: CoreEvidenceCandidate;
   readonly validation: ReferenceEvidenceValidationResult;
 };
 
 function buildPayload(
-  taskDefinition: PilotTaskDefinition,
+  taskDefinition: FrozenPilotTaskDefinition,
   success: boolean,
   responseLatencyMs: number | null,
 ): DiagnosticPayload {
@@ -67,6 +74,11 @@ function buildPayload(
 
 export function createSyntheticEvidenceFixture(input: SyntheticAttemptInput): SyntheticEvidenceFixture {
   const taskDefinition = buildPilotTaskDefinition(input.family, input.taskOptions);
+  const attemptIdentity = input.attemptIdentity ?? buildPilotAttemptIdentity(taskDefinition);
+
+  // This wrapper identity gate deliberately runs before any response/outcome object is constructed.
+  assertPilotAttemptMatchesDefinition(attemptIdentity, taskDefinition);
+
   const role = taskDefinition.task.allowedEvidenceRoles[0];
   if (!role) throw new Error(`Native pilot task ${taskDefinition.task.id} has no evidence role`);
 
@@ -141,10 +153,12 @@ export function issueSyntheticPilotEvent(input: SyntheticAttemptInput): Syntheti
     );
   }
 
+  const lineage = createPilotEvidenceLineage(fixture.taskDefinition, fixture.validation.evidence);
   return Object.freeze({
     participantId: input.participantId,
     taskDefinition: fixture.taskDefinition,
     evidence: fixture.validation.evidence,
+    lineage,
     availableAt: input.availableAt,
   });
 }

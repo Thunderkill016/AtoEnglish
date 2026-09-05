@@ -28,10 +28,34 @@ export type PilotTaskDefinition = {
   readonly scoringContractId: typeof NATIVE_PILOT_SCORING_CONTRACT_ID;
 };
 
+export type FrozenPilotTaskDefinition = Readonly<PilotTaskDefinition> & {
+  readonly definitionFingerprint: `sha256:${string}`;
+};
+
+export type PilotAttemptIdentity = {
+  readonly taskId: string;
+  readonly taskVersion: number;
+  readonly contentFingerprint: `sha256:${string}`;
+  readonly definitionFingerprint: `sha256:${string}`;
+  readonly contextId: string;
+};
+
+export type PilotEvidenceLineage = {
+  readonly eventId: string;
+  readonly observationId: string;
+  readonly taskId: string;
+  readonly taskVersion: number;
+  readonly contentFingerprint: `sha256:${string}`;
+  readonly contextId: string;
+  readonly definitionFingerprint: `sha256:${string}`;
+  readonly evidenceDigest: `sha256:${string}`;
+};
+
 export type SyntheticPilotEvent = {
   readonly participantId: string;
-  readonly taskDefinition: PilotTaskDefinition;
+  readonly taskDefinition: FrozenPilotTaskDefinition;
   readonly evidence: ReferenceCoreEvidence;
+  readonly lineage: PilotEvidenceLineage;
   readonly availableAt: string;
 };
 
@@ -44,6 +68,7 @@ export type PredictionFeatureRow = {
   readonly predictionTimestamp: string;
   readonly label: 0 | 1 | null;
   readonly acceptedHistoryEventIds: readonly string[];
+  readonly acceptedHistoryLineageDigests: readonly `sha256:${string}`[];
   readonly b2: FeatureVector;
   readonly b2Basis: FeatureVector;
   readonly b3: FeatureVector;

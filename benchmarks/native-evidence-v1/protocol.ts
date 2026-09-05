@@ -1,6 +1,7 @@
 import { buildPredictionFeatureRow } from "./features";
+import { assertFrozenPilotTaskDefinition } from "./identity";
 import type {
-  PilotTaskDefinition,
+  FrozenPilotTaskDefinition,
   PredictionFeatureRow,
   SyntheticPilotEvent,
 } from "./types";
@@ -10,13 +11,14 @@ export const NATIVE_SPLIT_PROTOCOL_ID = "nep.native-split.v1" as const;
 export type FrozenBlindTargetBinding = {
   readonly participantId: string;
   readonly predictionTimestamp: string;
-  readonly family: PilotTaskDefinition["family"];
+  readonly family: FrozenPilotTaskDefinition["family"];
   readonly taskId: string;
   readonly taskVersion: number;
   readonly contentFingerprint: `sha256:${string}`;
+  readonly definitionFingerprint: `sha256:${string}`;
   readonly supportLevel: number;
   readonly revealAllowed: boolean;
-  readonly transferDistance: PilotTaskDefinition["task"]["transferDistance"];
+  readonly transferDistance: FrozenPilotTaskDefinition["task"]["transferDistance"];
   readonly contextId: string;
   readonly stimulusFormGroup: string;
   readonly scoringContractId: string;
@@ -41,7 +43,7 @@ export type BuildBlindPredictionRowInput = {
   readonly participantId: string;
   readonly targetEventId: string;
   readonly predictionTimestamp: string;
-  readonly currentTask: PilotTaskDefinition;
+  readonly currentTask: FrozenPilotTaskDefinition;
   readonly history: readonly SyntheticPilotEvent[];
   readonly label?: 0 | 1 | null;
 };
@@ -80,21 +82,20 @@ function freezeBlindTargetBinding(
   if (predictionMs <= fitCompletedAtMs) {
     throw new Error(`blind target prediction must occur after fitCompletedAt: ${targetEventId}`);
   }
-  if (!binding.taskId) {
-    throw new Error(`blind target taskId must be non-empty: ${targetEventId}`);
-  }
+  if (!binding.taskId) throw new Error(`blind target taskId must be non-empty: ${targetEventId}`);
   if (!Number.isInteger(binding.taskVersion) || binding.taskVersion <= 0) {
     throw new Error(`blind target taskVersion must be a positive integer: ${targetEventId}`);
   }
   if (!/^sha256:[0-9a-f]{64}$/.test(binding.contentFingerprint)) {
     throw new Error(`blind target contentFingerprint must be sha256: ${targetEventId}`);
   }
+  if (!/^sha256:[0-9a-f]{64}$/.test(binding.definitionFingerprint)) {
+    throw new Error(`blind target definitionFingerprint must be sha256: ${targetEventId}`);
+  }
   if (!Number.isInteger(binding.supportLevel) || binding.supportLevel < 0) {
     throw new Error(`blind target supportLevel must be a nonnegative integer: ${targetEventId}`);
   }
-  if (!binding.contextId) {
-    throw new Error(`blind target contextId must be non-empty: ${targetEventId}`);
-  }
+  if (!binding.contextId) throw new Error(`blind target contextId must be non-empty: ${targetEventId}`);
   if (!binding.stimulusFormGroup) {
     throw new Error(`blind target stimulusFormGroup must be non-empty: ${targetEventId}`);
   }
@@ -105,14 +106,16 @@ function freezeBlindTargetBinding(
 }
 
 function currentTaskMatchesBinding(
-  currentTask: PilotTaskDefinition,
+  currentTask: FrozenPilotTaskDefinition,
   binding: FrozenBlindTargetBinding,
 ): boolean {
+  assertFrozenPilotTaskDefinition(currentTask);
   return (
     binding.family === currentTask.family &&
     binding.taskId === currentTask.task.id &&
     binding.taskVersion === currentTask.task.version &&
     binding.contentFingerprint === currentTask.contentFingerprint &&
+    binding.definitionFingerprint === currentTask.definitionFingerprint &&
     binding.supportLevel === currentTask.task.support.level &&
     binding.revealAllowed === currentTask.task.support.revealAllowed &&
     binding.transferDistance === currentTask.task.transferDistance &&
@@ -129,9 +132,7 @@ export function buildFrozenNativeSplitProtocol(
   const frozenAtMs = parseTimestamp(input.frozenAt, "frozenAt");
   const fitCutoffMs = parseTimestamp(input.fitCutoff, "fitCutoff");
   const fitCompletedAtMs = parseTimestamp(input.fitCompletedAt, "fitCompletedAt");
-  if (frozenAtMs > fitCutoffMs) {
-    throw new Error("split protocol must be frozen no later than fitCutoff");
-  }
+  if (frozenAtMs > fitCutoffMs) throw new Error("split protocol must be frozen no later than fitCutoff");
   if (fitCompletedAtMs < fitCutoffMs) {
     throw new Error("fitCompletedAt cannot precede the global fitCutoff");
   }
@@ -142,9 +143,7 @@ export function buildFrozenNativeSplitProtocol(
 
   const training = new Set(input.trainingParticipantIds);
   for (const heldOut of input.heldOutParticipantIds) {
-    if (training.has(heldOut)) {
-      throw new Error(`participant cannot be both TRAIN and held out: ${heldOut}`);
-    }
+    if (training.has(heldOut)) throw new Error(`participant cannot be both TRAIN and held out: ${heldOut}`);
   }
 
   const knownParticipants = new Set([
@@ -185,9 +184,7 @@ export function buildFrozenNativeSplitProtocol(
   const blindTargetBindings: Record<string, FrozenBlindTargetBinding> = {};
   for (const targetEventId of [...input.blindTargetEventIds].sort()) {
     const binding = input.blindTargetBindings[targetEventId];
-    if (!binding) {
-      throw new Error(`blind target is missing frozen binding: ${targetEventId}`);
-    }
+    if (!binding) throw new Error(`blind target is missing frozen binding: ${targetEventId}`);
     blindTargetBindings[targetEventId] = freezeBlindTargetBinding(
       targetEventId,
       binding,
@@ -298,9 +295,7 @@ export function buildBlindPredictionFeatureRow(
     throw new Error(`targetEventId is not in frozen blind block: ${input.targetEventId}`);
   }
   const targetBinding = input.protocol.blindTargetBindings[input.targetEventId];
-  if (!targetBinding) {
-    throw new Error(`blind target is missing frozen binding: ${input.targetEventId}`);
-  }
+  if (!targetBinding) throw new Error(`blind target is missing frozen binding: ${input.targetEventId}`);
   if (targetBinding.participantId !== input.participantId) {
     throw new Error(
       `blind target is frozen to participant ${targetBinding.participantId}: ${input.targetEventId}`,
@@ -316,15 +311,11 @@ export function buildBlindPredictionFeatureRow(
   const predictionMs = parseTimestamp(input.predictionTimestamp, "predictionTimestamp");
   const fitCutoffMs = parseTimestamp(input.protocol.fitCutoff, "fitCutoff");
   const fitCompletedAtMs = parseTimestamp(input.protocol.fitCompletedAt, "fitCompletedAt");
-  if (predictionMs <= fitCutoffMs) {
-    throw new Error("evaluated prediction must occur after the global fitCutoff");
-  }
+  if (predictionMs <= fitCutoffMs) throw new Error("evaluated prediction must occur after the global fitCutoff");
   if (predictionMs <= fitCompletedAtMs) {
     throw new Error("fitCompletedAt must strictly precede predictionTimestamp");
   }
 
-  // A blind-block row may replay only the prospectively frozen TRAIN prefix. Earlier TEST labels,
-  // even if already available in wall-clock time, are intentionally excluded from every later row.
   const frozenHistory = selectFrozenPredictionHistory(
     input.protocol,
     input.participantId,

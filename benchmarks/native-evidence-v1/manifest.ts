@@ -1,6 +1,6 @@
 import crypto from "node:crypto";
 
-import type { PilotTaskDefinition, PredictionFeatureRow } from "./types";
+import type { FrozenPilotTaskDefinition, PredictionFeatureRow } from "./types";
 import {
   NATIVE_PILOT_CONTRACT_ID,
   NATIVE_PREDICTOR_CONTRACT_ID,
@@ -63,6 +63,7 @@ export type SyntheticNativePilotManifest = {
     readonly taskId: string;
     readonly taskVersion: number;
     readonly contentFingerprint: string;
+    readonly definitionFingerprint: string;
     readonly contextId: string;
     readonly stimulusFormGroup: string;
   }[];
@@ -71,13 +72,14 @@ export type SyntheticNativePilotManifest = {
     readonly targetEventId: string;
     readonly predictionTimestamp: string;
     readonly acceptedHistoryEventIds: readonly string[];
+    readonly acceptedHistoryLineageDigests: readonly string[];
     readonly featureDigest: string;
   }[];
   readonly forbiddenClaims: readonly string[];
 };
 
 export function buildSyntheticNativePilotManifest(
-  tasks: readonly PilotTaskDefinition[],
+  tasks: readonly FrozenPilotTaskDefinition[],
   rows: readonly PredictionFeatureRow[],
 ): SyntheticNativePilotManifest {
   const taskDefinitions = tasks
@@ -86,6 +88,7 @@ export function buildSyntheticNativePilotManifest(
       taskId: definition.task.id,
       taskVersion: definition.task.version,
       contentFingerprint: definition.contentFingerprint,
+      definitionFingerprint: definition.definitionFingerprint,
       contextId: definition.contextId,
       stimulusFormGroup: definition.stimulusFormGroup,
     }))
@@ -97,6 +100,7 @@ export function buildSyntheticNativePilotManifest(
       targetEventId: row.targetEventId,
       predictionTimestamp: row.predictionTimestamp,
       acceptedHistoryEventIds: Object.freeze([...row.acceptedHistoryEventIds]),
+      acceptedHistoryLineageDigests: Object.freeze([...row.acceptedHistoryLineageDigests]),
       featureDigest: digestJson({ b2: row.b2, b2Basis: row.b2Basis, b3: row.b3 }),
     }))
     .sort((left, right) => left.targetEventId.localeCompare(right.targetEventId));
@@ -107,8 +111,8 @@ export function buildSyntheticNativePilotManifest(
     pilotContractId: NATIVE_PILOT_CONTRACT_ID,
     predictorContractId: NATIVE_PREDICTOR_CONTRACT_ID,
     sourcePins: Object.freeze({
-      coreFrontier: "ef42f2cf96f9aa079505ad73c83c0555a470bfab",
-      nativeSpecAmendment: "34013121cb9ab6850d15fa09a06ed3a46da44486",
+      integratedFrontier: "db7ffc87154d4509b936bea95694c3c5dc623b0c",
+      nativeSpecAmendment: "8250d0f4b6498c2ee9e4dba7bfc662bd9625491d",
       slamDonor: "490fbcd0fcfbf161a475a17463445410ef67e99e",
       scikitLearn: "f159b78dc59f250cdde8fe391a21f0bc871960ad",
       pyBKT: "06fc180ae72c117458acc527f8ec90cc8e0581c1",

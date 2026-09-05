@@ -6,12 +6,14 @@ import type { CoreTaskSpec, TransferDistance } from "@/lib/core/task";
 import { validateCoreTask } from "@/lib/core/task";
 import type { ResponseModality } from "@/lib/learning/evidence";
 
+import { freezePilotTaskDefinition } from "./identity";
 import {
   NATIVE_PILOT_CONTENT_SLICE,
   NATIVE_PILOT_CONTRACT_ID,
   NATIVE_PILOT_SCORING_CONTRACT_ID,
   NATIVE_PILOT_TARGET_ID,
   PILOT_TASK_FAMILIES,
+  type FrozenPilotTaskDefinition,
   type PilotTaskDefinition,
   type PilotTaskFamily,
 } from "./types";
@@ -93,7 +95,7 @@ export type BuildPilotTaskOptions = {
 export function buildPilotTaskDefinition(
   family: PilotTaskFamily,
   options: BuildPilotTaskOptions = {},
-): PilotTaskDefinition {
+): FrozenPilotTaskDefinition {
   const semantics = FAMILY_SEMANTICS[family];
   const contextId = options.contextId ?? semantics.defaultContextId;
   const stimulusFormGroup = options.stimulusFormGroup ?? semantics.stimulusFormGroup;
@@ -134,7 +136,7 @@ export function buildPilotTaskDefinition(
     throw new Error(`Invalid native pilot task ${taskId}: ${JSON.stringify(problems)}`);
   }
 
-  return Object.freeze({
+  const definition: PilotTaskDefinition = Object.freeze({
     pilotContractId: NATIVE_PILOT_CONTRACT_ID,
     family,
     task,
@@ -143,8 +145,9 @@ export function buildPilotTaskDefinition(
     stimulusFormGroup,
     scoringContractId: NATIVE_PILOT_SCORING_CONTRACT_ID,
   });
+  return freezePilotTaskDefinition(definition);
 }
 
-export function buildFrozenPilotTaskMatrix(): readonly PilotTaskDefinition[] {
+export function buildFrozenPilotTaskMatrix(): readonly FrozenPilotTaskDefinition[] {
   return Object.freeze(PILOT_TASK_FAMILIES.map((family) => buildPilotTaskDefinition(family)));
 }

@@ -2,13 +2,14 @@
 
 **Issue**: #143 (`CORE-REALITY-002`)  
 **Contract**: `nep.native-evidence-pilot.v1`  
-**Base**: `frontier/nep-core-foundation-v1` @ `ef42f2cf96f9aa079505ad73c83c0555a470bfab`  
+**Landed parent**: PR #145 on `frontier/nep-core-foundation-v1` @ `30435f3ff7206a20ba3366ed68bd17a27fef6c3b`  
+**Reviewed parent exact head**: `7181bc219ec7dacb14599552c359b0fe8950d972`  
 **Stage**: N1/N2 only — no human collection is authorized by this spec.
 
-**Amendment status**: `CODEX-CORE-FRONTIER-001` comparative research proposal, based on PR #145
-at `cfee784beb82937d4d73a154c1722d4ba58f425c`. Independent approval of this amended spec is
-required before N2 implementation. The comparison matrix is in `research.md`; the proposed
-predictor/split/metric freeze is in `contracts/native-pilot-contract.md`.
+**Amendment status**: `CODEX-CORE-FRONTIER-001` comparative research proposal layered on the
+reviewed and landed Spec #005 parent. Parent N010 is complete; this comparative amendment requires
+fresh exact-head N015 approval before its N2 work is accepted. The comparison matrix is in
+`research.md`; the proposed predictor/split/metric freeze is in `contracts/native-pilot-contract.md`.
 
 ## Problem
 
@@ -83,6 +84,29 @@ Before any response is observed, each task instance must freeze:
 
 Actual `revealUsed`, response latency, response content and outcome are attempt-time observations and cannot be used as current-attempt prediction features.
 
+### Prospective identity binding
+
+The core reference-evidence object does not preserve every pilot identity field. In particular,
+`ReferenceCoreEvidence` does not carry task version or content fingerprint, and core validation does
+not prove that the pilot wrapper's planned context was the one frozen before the response. Therefore
+successful `validateReferenceCoreEvidence()` alone is **not** proof of prospective pilot identity.
+
+Before a response, the pilot wrapper MUST freeze a canonical `FrozenPilotTaskDefinition` and its
+`definitionFingerprint` over the exact pilot family, every `CoreTaskSpec` field including task ID and
+version, content fingerprint, context ID, and scoring contract. Canonical encoding and hashing are
+specified in `contracts/native-pilot-contract.md` and `data-model.md`.
+
+Before reference-evidence issuance, the wrapper MUST fail closed unless the attempt's task ID,
+task version, content fingerprint, context ID, and definition fingerprint exactly match that frozen
+definition. No outcome-time or post-response substitution/repair is permitted.
+
+After successful core validation, the research trace MUST persist non-authoritative
+`PilotEvidenceLineage` binding the evidence event/observation IDs to the frozen definition identity
+and `computeCanonicalEvidenceDigest(evidence)`. Missing or mismatched lineage makes that event
+ineligible for pilot feature rows, manifests, and results. Lineage metadata never authenticates a
+detached object and never becomes learner-state authority; `projectLearnerState()` still consumes
+only in-process branded core evidence.
+
 ## Prediction protocol
 
 Primary future label: next-attempt binary error (`1 = incorrect`, `0 = correct`) on independently scored target families:
@@ -113,8 +137,9 @@ Only information available before the target attempt:
 
 The comparative amendment strengthens this same budget with positive/negative counts by task
 family, role and support bucket; transfer/same-context outcome counts; elapsed time since first
-accepted evidence; and prospective context/form-group metadata. All lanes use the same accepted
-TRAIN history. Rejected/unobserved attempts remain audit records rather than negative examples.
+accepted evidence; and prospective context/form-group metadata. All lanes use the same accepted,
+lineage-valid TRAIN history. Rejected, unobserved, or lineage-invalid attempts remain audit records
+rather than negative examples.
 
 B2 deliberately receives obvious causal support/reveal/context history so B3 is not compared against a strawman that merely lacks information already known to the host.
 
@@ -178,16 +203,17 @@ be inferred from a foreign benchmark, source popularity, or synthetic data.
 
 Synthetic actors may exercise:
 
-- task validation;
-- reference-evidence issuance;
+- frozen task-definition fingerprint invariance/mutation behavior;
+- fail-closed task ID/version/content/context/definition binding;
+- reference-evidence issuance and adjacent evidence-lineage binding;
 - canonical ordering / append-only rejection;
 - duplicate handling;
 - unknown-vs-zero behavior;
 - support/reveal accounting;
 - delayed-attempt causal cutoffs;
 - changed-context transfer gate;
-- deletion/export plumbing;
-- B2/B3 feature extraction and manifest generation;
+- deletion/export plumbing including lineage artifacts;
+- B2/B3 feature extraction and manifest generation only from lineage-valid evidence;
 - deterministic estimator plumbing after `nep.native-predictor.v1` is frozen.
 
 Synthetic traces may prove plumbing correctness only. They MUST NOT produce a learner-model validity, predictive-quality, efficacy, retention, or transfer claim.
