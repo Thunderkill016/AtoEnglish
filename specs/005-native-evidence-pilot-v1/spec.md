@@ -2,8 +2,14 @@
 
 **Issue**: #143 (`CORE-REALITY-002`)  
 **Contract**: `nep.native-evidence-pilot.v1`  
-**Base**: `frontier/nep-core-foundation-v1` @ `ef42f2cf96f9aa079505ad73c83c0555a470bfab`  
+**Landed parent**: PR #145 on `frontier/nep-core-foundation-v1` @ `30435f3ff7206a20ba3366ed68bd17a27fef6c3b`  
+**Reviewed parent exact head**: `7181bc219ec7dacb14599552c359b0fe8950d972`  
 **Stage**: N1/N2 only — no human collection is authorized by this spec.
+
+**Amendment status**: `CODEX-CORE-FRONTIER-001` comparative research proposal layered on the
+reviewed and landed Spec #005 parent. Parent N010 is complete; this comparative amendment requires
+fresh exact-head N015 approval before its N2 work is accepted. The comparison matrix is in
+`research.md`; the proposed predictor/split/metric freeze is in `contracts/native-pilot-contract.md`.
 
 ## Problem
 
@@ -68,6 +74,29 @@ Before any response is observed, each task instance must freeze:
 
 Actual `revealUsed`, response latency, response content and outcome are attempt-time observations and cannot be used as current-attempt prediction features.
 
+### Prospective identity binding
+
+The core reference-evidence object does not preserve every pilot identity field. In particular,
+`ReferenceCoreEvidence` does not carry task version or content fingerprint, and core validation does
+not prove that the pilot wrapper's planned context was the one frozen before the response. Therefore
+successful `validateReferenceCoreEvidence()` alone is **not** proof of prospective pilot identity.
+
+Before a response, the pilot wrapper MUST freeze a canonical `FrozenPilotTaskDefinition` and its
+`definitionFingerprint` over the exact pilot family, every `CoreTaskSpec` field including task ID and
+version, content fingerprint, context ID, and scoring contract. Canonical encoding and hashing are
+specified in `contracts/native-pilot-contract.md` and `data-model.md`.
+
+Before reference-evidence issuance, the wrapper MUST fail closed unless the attempt's task ID,
+task version, content fingerprint, context ID, and definition fingerprint exactly match that frozen
+definition. No outcome-time or post-response substitution/repair is permitted.
+
+After successful core validation, the research trace MUST persist non-authoritative
+`PilotEvidenceLineage` binding the evidence event/observation IDs to the frozen definition identity
+and `computeCanonicalEvidenceDigest(evidence)`. Missing or mismatched lineage makes that event
+ineligible for pilot feature rows, manifests, and results. Lineage metadata never authenticates a
+detached object and never becomes learner-state authority; `projectLearnerState()` still consumes
+only in-process branded core evidence.
+
 ## Prediction protocol
 
 Primary future label: next-attempt binary error (`1 = incorrect`, `0 = correct`) on independently scored target families:
@@ -96,6 +125,12 @@ Only information available before the target attempt:
 - current reveal-allowed flag;
 - current transfer distance.
 
+The comparative amendment strengthens this same budget with positive/negative counts by task
+family, role and support bucket; transfer/same-context outcome counts; elapsed time since first
+accepted evidence; and prospective context/form-group metadata. All lanes use the same accepted,
+lineage-valid TRAIN history. Rejected, unobserved, or lineage-invalid attempts remain audit records
+rather than negative examples.
+
 B2 deliberately receives obvious causal support/reveal/context history so B3 is not compared against a strawman that merely lacks information already known to the host.
 
 ### B3-native — same estimator + Nếp state features
@@ -115,26 +150,60 @@ Use the exact same rows, labels, split/cutoff policy and estimator as B2-native,
 
 Redundant B3 columns that are byte-identical to already-present B2 columns across the training split are removed before fitting and recorded in the manifest. Train-constant columns are removed identically from B2/B3 preprocessing.
 
+For same-context outcome counts, use accepted-event outcomes: the projector's `sameContextCount`
+alone has no success/failure split. Every added column must disclose whether it is a duplicate,
+deterministic transform, or additional causal summary. B2-basis-native reconstructs the pinned
+projector's count-derived status/uncertainty/routing transforms as an attribution control.
+It has no evidence authority. If no additional features survive, report that explicitly.
+Both B3-minus-B2 and B3-minus-B2-basis MUST enter the decision rule. Winning only against B2
+cannot establish value beyond the explicit basis. Exact equivalence supports at most a
+representation-only conclusion; lack of significance is not equivalence. Even winning both
+contrasts cannot create new observed information from deterministic shared-history transforms.
+
 No B3 feature may include the current attempt outcome, actual reveal use, current response latency, or any future event. The comparison of interest is B3-native vs B2-native, not `provisionalRoutingScore` vs labels.
 
 ## Estimator freeze gate
 
-N2 must freeze `nep.native-predictor.v1` **before any human N3 outcome exists**. The estimator/hyperparameters may be chosen using synthetic scale/stability tests and reuse of the #141 research stack, but never by optimizing on pilot human labels. B2 and B3 must use the same frozen estimator and preprocessing.
+The comparison now proposes `nep.native-predictor.v1` in the existing contract: B0 prevalence,
+strong causal B2, B2-basis attribution control, and same-estimator B3. L2 logistic settings,
+preprocessing, label policy, metric definitions and decision rules are explicit. N2 must verify
+and fingerprint that protocol **before any human N3 outcome exists**. Synthetic outcomes may
+test numerical behavior but cannot select a scientifically superior learner model. BKT is a
+conditional benchmark on a clearly reported recall subset; IRT/FSRS/neural KT are deferred.
+
+### Evaluation questions and decisions
+
+Primary: fixed-prefix future prediction within learners. Secondary: strict new-learner cold start
+using whole-learner holdout and no held-out-label history. Keep the two estimands separate;
+TEST-block labels remain blind until every prediction in that block is frozen. Availability
+timestamps must prove prior knowledge, not merely a retrospectively earlier event timestamp.
+
+Report learner-averaged log loss, Brier, AUC where defined, calibration diagnostics, coverage and
+learner-clustered uncertainty under the contract. One-class subsets still have log loss/Brier.
+Insufficient sample precision or unjustified utility margins is `GATHER_MORE_EVIDENCE`.
+Only proven redundant columns may be simplified without predictive evidence; predictive removal
+requires the contract's two-contrast utility gate, without weakening evidence/authority safeguards.
+The former 0.01-nat threshold has no decision authority. Before N3, review a bounded synthetic
+utility/sensitivity analysis and freeze justified margins, or explicitly choose descriptive-only
+analysis with no predictive KEEP/SIMPLIFY. BKT uses source-faithful seeded multi-fit; missing
+preferred diagnostics cannot by itself exclude a working comparator. A native predictive win cannot
+be inferred from a foreign benchmark, source popularity, or synthetic data.
 
 ## Synthetic N2 only
 
 Synthetic actors may exercise:
 
-- task validation;
-- reference-evidence issuance;
+- frozen task-definition fingerprint invariance/mutation behavior;
+- fail-closed task ID/version/content/context/definition binding;
+- reference-evidence issuance and adjacent evidence-lineage binding;
 - canonical ordering / append-only rejection;
 - duplicate handling;
 - unknown-vs-zero behavior;
 - support/reveal accounting;
 - delayed-attempt causal cutoffs;
 - changed-context transfer gate;
-- deletion/export plumbing;
-- B2/B3 feature extraction and manifest generation;
+- deletion/export plumbing including lineage artifacts;
+- B2/B3 feature extraction and manifest generation only from lineage-valid evidence;
 - deterministic estimator plumbing after `nep.native-predictor.v1` is frozen.
 
 Synthetic traces may prove plumbing correctness only. They MUST NOT produce a learner-model validity, predictive-quality, efficacy, retention, or transfer claim.
