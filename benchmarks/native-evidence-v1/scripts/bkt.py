@@ -104,6 +104,14 @@ class FrozenBktComparator:
     metadata: BktComparatorMetadata
 
     def predict_error_probabilities(self, causal_sequence: pd.DataFrame) -> np.ndarray:
+        """Return source-faithful one-step predictions for a fully observed causal sequence.
+
+        This surface is intended for TRAIN-only diagnostics and replay. Outcomes supplied in earlier
+        rows update pyBKT's state for later rows, so callers MUST NOT pass a blind evaluation block
+        here and then treat every row as pre-outcome. Use `predict_blind_next_error_probability()`
+        for a frozen target whose label must not affect any other target prediction.
+        """
+
         frame = validate_bkt_frame(causal_sequence)
         predicted = self.model.predict(data=frame.copy())
         if "correct_predictions" not in predicted.columns:
@@ -112,6 +120,38 @@ class FrozenBktComparator:
         if not np.all(np.isfinite(correct)) or np.any(correct < 0) or np.any(correct > 1):
             raise RuntimeError("pyBKT emitted invalid correctness probabilities")
         return 1.0 - correct
+
+    def predict_blind_next_error_probability(
+        self,
+        *,
+        participant_id: str,
+        skill_name: str,
+        authorized_history: pd.DataFrame | None = None,
+    ) -> float:
+        """Predict one target without consuming its outcome or another blind-block outcome.
+
+        `authorized_history` contains only outcomes that the frozen protocol permits before this
+        target. The target itself is appended with an internal placeholder outcome because pyBKT's
+        public prediction API requires an observed-row shape; one-step prediction for that target
+        is computed before that placeholder can update state. No target outcome is accepted by this
+        API, which prevents accidental current-label or prior blind-block-label feedback.
+        """
+
+        if not participant_id:
+            raise ValueError("participant_id must be non-empty")
+        if not skill_name:
+            raise ValueError("skill_name must be non-empty")
+        fitted = self.model.fit_model
+        if not isinstance(fitted, dict) or skill_name not in fitted:
+            raise ValueError(f"pyBKT target skill {skill_name!r} is not fitted")
+
+        sequence = _build_blind_prediction_sequence(
+            participant_id=participant_id,
+            skill_name=skill_name,
+            authorized_history=authorized_history,
+        )
+        probabilities = self.predict_error_probabilities(sequence)
+        return float(probabilities[-1])
 
     def fitted_parameters(self) -> pd.DataFrame:
         return self.model.params().copy()
@@ -217,6 +257,42 @@ def validate_bkt_frame(data: pd.DataFrame) -> pd.DataFrame:
             raise ValueError("pyBKT order_id must be unique within learner")
 
     return frame
+
+
+def _build_blind_prediction_sequence(
+    *,
+    participant_id: str,
+    skill_name: str,
+    authorized_history: pd.DataFrame | None,
+) -> pd.DataFrame:
+    if authorized_history is None or authorized_history.empty:
+        history_rows: list[dict[str, object]] = []
+    else:
+        history = validate_bkt_frame(authorized_history)
+        if any(value != participant_id for value in history["user_id"].tolist()):
+            raise ValueError("blind pyBKT history must contain exactly the target participant")
+        if any(value != skill_name for value in history["skill_name"].tolist()):
+            raise ValueError("blind pyBKT history must contain exactly the target skill")
+        history_rows = [
+            {
+                "order_id": index,
+                "skill_name": skill_name,
+                "correct": int(row.correct),
+                "user_id": participant_id,
+            }
+            for index, row in enumerate(history.itertuples(index=False))
+        ]
+
+    rows = [
+        *history_rows,
+        {
+            "order_id": len(history_rows),
+            "skill_name": skill_name,
+            "correct": 0,
+            "user_id": participant_id,
+        },
+    ]
+    return validate_bkt_frame(pd.DataFrame(rows))
 
 
 def fit_source_faithful_bkt(
@@ -357,9 +433,12 @@ def _compare_start_predictions(
     starts: Sequence[BktStartDiagnostic],
     selected_start_index: int | None,
     parity_frame: pd.DataFrame,
+    train_observation_count: int,
 ) -> tuple[tuple[BktStartPredictionComparison, ...], bool]:
     if selected_start_index is None or len(captured_models) != len(starts):
         return tuple(), False
+    if train_observation_count <= 0:
+        raise ValueError("train_observation_count must be positive")
 
     public_predictions = comparator.predict_error_probabilities(parity_frame)
     selected_predictions = _predict_observed_start(
@@ -371,7 +450,6 @@ def _compare_start_predictions(
         np.allclose(selected_predictions, public_predictions, atol=1e-12, rtol=1e-12)
     )
     selected_likelihood = starts[selected_start_index].final_log_likelihood
-    observation_count = len(parity_frame)
 
     comparisons: list[BktStartPredictionComparison] = []
     for start, raw_model in zip(starts, captured_models, strict=True):
@@ -382,7 +460,9 @@ def _compare_start_predictions(
             BktStartPredictionComparison(
                 start_index=start.start_index,
                 final_log_likelihood_gap_from_selected=float(likelihood_gap),
-                final_log_likelihood_gap_per_observation=float(likelihood_gap / observation_count),
+                final_log_likelihood_gap_per_observation=float(
+                    likelihood_gap / train_observation_count
+                ),
                 mean_abs_error_probability_difference_from_selected=float(
                     np.mean(absolute_difference)
                 ),
@@ -463,6 +543,7 @@ def fit_bkt_with_diagnostics(
         starts,
         selected_start_index,
         parity_frame,
+        len(frame),
     )
 
     tolerance_starts = sum(
