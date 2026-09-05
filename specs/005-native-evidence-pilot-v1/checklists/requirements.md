@@ -2,12 +2,13 @@
 
 - [x] Public-corpus incompatibility is treated as a scientific result, not patched with guessed fields.
 - [x] Exactly one canonical V1 ontology target is named; the narrower content tag is explicitly non-canonical.
-- [x] Task semantics are prospective, versioned and fingerprinted.
+- [x] Task semantics are prospective, versioned, fingerprinted, and fail-closed bound across task ID/version/content/context before evidence issuance.
+- [x] The spec explicitly compensates for task version/content fingerprint fields not preserved inside `ReferenceCoreEvidence` by requiring separate frozen-definition and evidence-lineage bindings without granting them learner-state authority.
 - [x] Recognition, retrieval and transfer roles remain distinct.
 - [x] Independent evidence cannot use support/reveal.
 - [x] Primary prediction targets are independent free-recall/delayed-recall/near-transfer attempts; recognition is causal history.
 - [x] Delayed retrieval does not claim canonical retention authority.
-- [x] Transfer requires intentional changed context and prior baseline context.
+- [x] Transfer requires intentional changed context, exact frozen context binding, and prior baseline context.
 - [x] Pilot evidence is repository-reference only.
 - [x] Detached JSON cannot enter learner state as trusted evidence.
 - [x] B2 is a strong causal baseline with simple support/reveal/context history rather than an information-starved strawman.
@@ -20,4 +21,4 @@
 - [x] Human collection is blocked behind separate privacy/consent review and owner approval.
 - [x] Adults-only, text/choice-only V1 boundary is explicit.
 - [x] Negative/null/insufficient-evidence outcomes are valid.
-- [ ] Independent exact-head review PASS before N2 implementation.
+- [ ] Independent exact-head review PASS before N2 implementation is accepted for integration. Existing draft N2 work is provisional until this review completes and is revalidated; no review is backdated.
