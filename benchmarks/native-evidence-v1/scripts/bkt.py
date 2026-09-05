@@ -116,15 +116,17 @@ def _sha256_file(path: str) -> str | None:
 
 def _resolve_effective_em_defaults(source: str) -> tuple[float | None, int | None, str]:
     signature = inspect.signature(EM_fit.EM_fit)
-    tolerance_default = signature.parameters["tol"].default
-    maxiter_default = signature.parameters["maxiter"].default
+    tolerance_parameter = signature.parameters.get("tol")
+    maxiter_parameter = signature.parameters.get("maxiter")
+    tolerance_default = None if tolerance_parameter is None else tolerance_parameter.default
+    maxiter_default = None if maxiter_parameter is None else maxiter_parameter.default
 
     tolerance: float | None
     if isinstance(tolerance_default, (int, float)):
         tolerance = float(tolerance_default)
-    elif tolerance_default is None and "tol = 1e-3" in source:
+    elif "tol = 1e-3" in source or "tol=1e-3" in source:
         tolerance = 1e-3
-    elif tolerance_default is None and "tol = 0.005" in source:
+    elif "tol = 0.005" in source or "tol=0.005" in source:
         tolerance = 0.005
     else:
         tolerance = None
@@ -132,7 +134,7 @@ def _resolve_effective_em_defaults(source: str) -> tuple[float | None, int | Non
     max_iterations: int | None
     if isinstance(maxiter_default, int):
         max_iterations = maxiter_default
-    elif maxiter_default is None and "maxiter = 100" in source:
+    elif "maxiter = 100" in source or "maxiter=100" in source:
         max_iterations = 100
     else:
         max_iterations = None
@@ -146,12 +148,12 @@ def _resolve_effective_em_defaults(source: str) -> tuple[float | None, int | Non
     return tolerance, max_iterations, comparison
 
 
-def _resolve_e_step_source(em_source: str, em_source_path: str) -> tuple[str, str]:
-    if "E_step.run(" in em_source:
+def _resolve_e_step_source(em_module_source: str, em_source_path: str) -> tuple[str, str]:
+    if "E_step.run(" in em_module_source:
         spec = importlib.util.find_spec("pyBKT.fit.E_step")
         origin = "" if spec is None or spec.origin is None else str(spec.origin)
         return "compiled-e-step", origin
-    if "def run(" in em_source:
+    if "def run(" in em_module_source:
         # The pure-Python package embeds the E-step implementation in EM_fit.py itself.
         return "python-e-step", em_source_path
     return "unknown", ""
@@ -160,10 +162,10 @@ def _resolve_e_step_source(em_source: str, em_source_path: str) -> tuple[str, st
 def inspect_installed_bkt_backend() -> BktBackendInspection:
     installed_version = package_version("pyBKT")
     model_source_path = inspect.getsourcefile(Model) or ""
-    em_source_path = inspect.getsourcefile(EM_fit.EM_fit) or ""
-    em_source = inspect.getsource(EM_fit.EM_fit)
-    tolerance, max_iterations, comparison = _resolve_effective_em_defaults(em_source)
-    backend_kind, e_step_source_path = _resolve_e_step_source(em_source, em_source_path)
+    em_source_path = inspect.getsourcefile(EM_fit) or inspect.getsourcefile(EM_fit.EM_fit) or ""
+    em_module_source = inspect.getsource(EM_fit)
+    tolerance, max_iterations, comparison = _resolve_effective_em_defaults(em_module_source)
+    backend_kind, e_step_source_path = _resolve_e_step_source(em_module_source, em_source_path)
 
     return BktBackendInspection(
         source_revision=PYBKT_SOURCE_REVISION,
@@ -205,12 +207,16 @@ def validate_bkt_frame(data: pd.DataFrame) -> pd.DataFrame:
     return frame
 
 
-def fit_source_faithful_bkt(train_data: pd.DataFrame) -> FrozenBktComparator:
+def fit_source_faithful_bkt(
+    train_data: pd.DataFrame,
+    *,
+    backend: BktBackendInspection | None = None,
+) -> FrozenBktComparator:
     frame = validate_bkt_frame(train_data)
-    backend = inspect_installed_bkt_backend()
-    if backend.package_version != PYBKT_PACKAGE_VERSION:
+    resolved_backend = inspect_installed_bkt_backend() if backend is None else backend
+    if resolved_backend.package_version != PYBKT_PACKAGE_VERSION:
         raise RuntimeError(
-            f"pyBKT package version mismatch: expected {PYBKT_PACKAGE_VERSION}, got {backend.package_version}"
+            f"pyBKT package version mismatch: expected {PYBKT_PACKAGE_VERSION}, got {resolved_backend.package_version}"
         )
 
     model = Model(seed=PYBKT_SEED, num_fits=PYBKT_NUM_FITS, parallel=False)
@@ -221,7 +227,7 @@ def fit_source_faithful_bkt(train_data: pd.DataFrame) -> FrozenBktComparator:
 
     metadata = BktComparatorMetadata(
         source_revision=PYBKT_SOURCE_REVISION,
-        package_version=backend.package_version,
+        package_version=resolved_backend.package_version,
         seed=PYBKT_SEED,
         num_fits=PYBKT_NUM_FITS,
         parallel=False,
@@ -230,7 +236,7 @@ def fit_source_faithful_bkt(train_data: pd.DataFrame) -> FrozenBktComparator:
         backend_default_forgets=bool(Model.DEFAULTS["forgets"]),
         model_type=model_type,
         parameterization="prior-learn-guess-slip-no-forgetting",
-        backend=backend,
+        backend=resolved_backend,
     )
     return FrozenBktComparator(model=model, metadata=metadata)
 
@@ -338,11 +344,11 @@ def fit_bkt_with_diagnostics(
 
         EM_fit.EM_fit = observed_em_fit
         try:
-            instrumented = fit_source_faithful_bkt(frame)
+            instrumented = fit_source_faithful_bkt(frame, backend=backend)
         finally:
             EM_fit.EM_fit = original_em_fit
 
-    untouched = fit_source_faithful_bkt(frame)
+    untouched = fit_source_faithful_bkt(frame, backend=backend)
     instrumented_predictions = instrumented.predict_error_probabilities(parity_frame)
     untouched_predictions = untouched.predict_error_probabilities(parity_frame)
     parity_predictions_equal = bool(
