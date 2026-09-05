@@ -7,19 +7,16 @@ import unittest
 SCRIPTS = Path(__file__).resolve().parents[1] / "scripts"
 sys.path.insert(0, str(SCRIPTS))
 
-from audit_b3_compatibility import (  # noqa: E402
-    LEARNER_STATE_CONTRACT_ID,
-    audit_track,
-    verify_merged_learner_contract,
-)
+from audit_b3_compatibility import audit_track, frozen_learner_contract  # noqa: E402
 
 
 class B3CompatibilityAuditTest(unittest.TestCase):
-    def test_audit_is_bound_to_the_merged_learner_state_contract(self) -> None:
-        contract = verify_merged_learner_contract()
-        self.assertEqual(contract["contractId"], LEARNER_STATE_CONTRACT_ID)
+    def test_audit_is_bound_to_the_reviewed_merged_learner_state_contract_descriptor(self) -> None:
+        contract = frozen_learner_contract()
+        self.assertEqual(contract["contractId"], "nep.learner-evidence-state.v1")
         self.assertEqual(contract["frontierMergeCommit"], "ef42f2cf96f9aa079505ad73c83c0555a470bfab")
-        self.assertGreaterEqual(contract["sourceMarkerCount"], 9)
+        self.assertEqual(contract["evidenceIngress"], "in-process-branded-core-evidence-for-routing")
+        self.assertEqual(len(contract["requiredSemantics"]), 6)
 
     def test_language_compatibility_does_not_auto_promote_en_es(self) -> None:
         result = audit_track("en_es", 100)

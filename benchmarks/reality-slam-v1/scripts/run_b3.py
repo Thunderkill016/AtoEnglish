@@ -4,9 +4,10 @@ import argparse
 import json
 from pathlib import Path
 
-from audit_b3_compatibility import REPO_ROOT, TRACK_LANGUAGE, audit_track
+from audit_b3_compatibility import TRACK_LANGUAGE, audit_track
 
-DEFAULT_OUTPUT = REPO_ROOT / "benchmarks" / "reality-slam-v1" / "reports" / "b3-schema-compatibility.json"
+BENCHMARK_ROOT = Path(__file__).resolve().parents[1]
+DEFAULT_OUTPUT = BENCHMARK_ROOT / "reports" / "b3-schema-compatibility.json"
 
 
 def build_summary(track: str = "all", total_rows: int | None = None) -> dict[str, object]:
