@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from copy import deepcopy
 from dataclasses import dataclass
 from hashlib import sha256
 import importlib.util
@@ -75,10 +76,21 @@ class BktStartDiagnostic:
 
 
 @dataclass(frozen=True)
+class BktStartPredictionComparison:
+    start_index: int
+    final_log_likelihood_gap_from_selected: float
+    final_log_likelihood_gap_per_observation: float
+    mean_abs_error_probability_difference_from_selected: float
+    max_abs_error_probability_difference_from_selected: float
+
+
+@dataclass(frozen=True)
 class BktDiagnosticRun:
     backend: BktBackendInspection
     starts: tuple[BktStartDiagnostic, ...]
     selected_start_index: int | None
+    start_prediction_comparisons: tuple[BktStartPredictionComparison, ...]
+    selected_start_prediction_matches_public: bool
     parity_parameters_equal: bool
     parity_predictions_equal: bool
     selected_predictions_finite: bool
@@ -303,6 +315,85 @@ def _parameters_equal(left: pd.DataFrame, right: pd.DataFrame) -> bool:
         return left_sorted.equals(right_sorted)
 
 
+def _finalize_observed_start_model(
+    raw_model: dict[str, object],
+    selected_model: dict[str, object],
+) -> dict[str, object]:
+    finalized = deepcopy(raw_model)
+    transitions = np.asarray(finalized["As"], dtype=np.float64)
+    prior = np.asarray(finalized["pi_0"], dtype=np.float64)
+    finalized["learns"] = transitions[:, 1, 0].copy()
+    finalized["forgets"] = transitions[:, 0, 1].copy()
+    finalized["prior"] = float(prior[1][0])
+    finalized["resource_names"] = deepcopy(selected_model["resource_names"])
+    finalized["gs_names"] = deepcopy(selected_model["gs_names"])
+    return finalized
+
+
+def _predict_observed_start(
+    comparator: FrozenBktComparator,
+    raw_model: dict[str, object],
+    causal_sequence: pd.DataFrame,
+) -> np.ndarray:
+    fitted = comparator.model.fit_model
+    if not isinstance(fitted, dict) or len(fitted) != 1:
+        raise RuntimeError("BKT-native stability observer expects exactly one fitted skill")
+    skill = next(iter(fitted))
+    selected_model = fitted[skill]
+    if not isinstance(selected_model, dict):
+        raise RuntimeError("BKT-native selected model has unexpected shape")
+
+    replay_model = deepcopy(comparator.model)
+    replay_model.fit_model = {
+        skill: _finalize_observed_start_model(raw_model, selected_model),
+    }
+    replay = FrozenBktComparator(model=replay_model, metadata=comparator.metadata)
+    return replay.predict_error_probabilities(causal_sequence)
+
+
+def _compare_start_predictions(
+    comparator: FrozenBktComparator,
+    captured_models: Sequence[dict[str, object]],
+    starts: Sequence[BktStartDiagnostic],
+    selected_start_index: int | None,
+    parity_frame: pd.DataFrame,
+) -> tuple[tuple[BktStartPredictionComparison, ...], bool]:
+    if selected_start_index is None or len(captured_models) != len(starts):
+        return tuple(), False
+
+    public_predictions = comparator.predict_error_probabilities(parity_frame)
+    selected_predictions = _predict_observed_start(
+        comparator,
+        captured_models[selected_start_index],
+        parity_frame,
+    )
+    selected_matches_public = bool(
+        np.allclose(selected_predictions, public_predictions, atol=1e-12, rtol=1e-12)
+    )
+    selected_likelihood = starts[selected_start_index].final_log_likelihood
+    observation_count = len(parity_frame)
+
+    comparisons: list[BktStartPredictionComparison] = []
+    for start, raw_model in zip(starts, captured_models, strict=True):
+        predictions = _predict_observed_start(comparator, raw_model, parity_frame)
+        absolute_difference = np.abs(predictions - selected_predictions)
+        likelihood_gap = selected_likelihood - start.final_log_likelihood
+        comparisons.append(
+            BktStartPredictionComparison(
+                start_index=start.start_index,
+                final_log_likelihood_gap_from_selected=float(likelihood_gap),
+                final_log_likelihood_gap_per_observation=float(likelihood_gap / observation_count),
+                mean_abs_error_probability_difference_from_selected=float(
+                    np.mean(absolute_difference)
+                ),
+                max_abs_error_probability_difference_from_selected=float(
+                    np.max(absolute_difference)
+                ),
+            )
+        )
+    return tuple(comparisons), selected_matches_public
+
+
 def fit_bkt_with_diagnostics(
     train_data: pd.DataFrame,
     *,
@@ -310,14 +401,16 @@ def fit_bkt_with_diagnostics(
 ) -> BktDiagnosticRun:
     """Observe the pinned EM traces without changing initialization, EM, selection, or prediction.
 
-    This observer is diagnostic only. A parity failure makes the observer untrustworthy; it must not
-    make the untouched source-faithful comparator unavailable.
+    `parity_data` is a TRAIN-only numerical replay surface, not an evaluation set. The observer is
+    diagnostic only. A parity failure makes the observer untrustworthy; it must not make the
+    untouched source-faithful comparator unavailable.
     """
 
     frame = validate_bkt_frame(train_data)
     parity_frame = frame if parity_data is None else validate_bkt_frame(parity_data)
     backend = inspect_installed_bkt_backend()
     starts: list[BktStartDiagnostic] = []
+    captured_models: list[dict[str, object]] = []
 
     with _OBSERVER_LOCK:
         original_em_fit = EM_fit.EM_fit
@@ -325,6 +418,7 @@ def fit_bkt_with_diagnostics(
         def observed_em_fit(model: dict[str, object], data: dict[str, object], *args: object, **kwargs: object):
             initial_fingerprint = _parameter_fingerprint(model)
             fitted_model, trace = original_em_fit(model, data, *args, **kwargs)
+            captured_models.append(deepcopy(fitted_model))
             flat = np.asarray(trace, dtype=np.float64).reshape(-1)
             final_delta, stopping_reason = _stopping_reason(flat, backend)
             final_log_likelihood = float(flat[-1]) if flat.size else float("nan")
@@ -362,13 +456,27 @@ def fit_bkt_with_diagnostics(
         np.all(np.isfinite(instrumented_predictions))
         and np.all((instrumented_predictions >= 0) & (instrumented_predictions <= 1))
     )
+    selected_start_index = _selected_start_index(starts)
+    start_prediction_comparisons, selected_start_prediction_matches_public = _compare_start_predictions(
+        instrumented,
+        captured_models,
+        starts,
+        selected_start_index,
+        parity_frame,
+    )
 
     tolerance_starts = sum(
         1
         for start in starts
         if start.finite_likelihood_trace and start.stopping_reason == "backend-tolerance"
     )
-    if parity_parameters_equal and parity_predictions_equal and selected_predictions_finite and tolerance_starts >= 2:
+    if (
+        parity_parameters_equal
+        and parity_predictions_equal
+        and selected_predictions_finite
+        and selected_start_prediction_matches_public
+        and tolerance_starts >= 2
+    ):
         convergence_assurance = "convergence-observed"
     else:
         convergence_assurance = "convergence-unverified"
@@ -376,7 +484,9 @@ def fit_bkt_with_diagnostics(
     return BktDiagnosticRun(
         backend=backend,
         starts=tuple(starts),
-        selected_start_index=_selected_start_index(starts),
+        selected_start_index=selected_start_index,
+        start_prediction_comparisons=start_prediction_comparisons,
+        selected_start_prediction_matches_public=selected_start_prediction_matches_public,
         parity_parameters_equal=parity_parameters_equal,
         parity_predictions_equal=parity_predictions_equal,
         selected_predictions_finite=selected_predictions_finite,
