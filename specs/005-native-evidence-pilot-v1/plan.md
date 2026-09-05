@@ -80,6 +80,23 @@ not bespoke initialization/convergence requirements. Missing diagnostics cannot 
 
 ## Reuse map
 
+### Frontier audit execution boundary
+
+The initial research base was N2 `aedaa72b3689671ac8f1dd4906a168ce345aa382`.
+Review `5122120052` accepted research semantics but rejected integrated N063 on that stale base.
+The integration now carries N2 `79009730cbb49524387f9bd8ecab01034a9143e5` unchanged,
+including the current Spec #005 and canonical task-definition/evidence-digest lineage safeguards.
+This changes only the #150 branch; it does not update #147/#148/#149 or approve their gates.
+Read N043 `832e62efc17b7d2aec1e515917bb275fe6e4bd6b` and N044
+`9a20f99dfdeb2c4aad8596a975d72eec7afa2fe4` as separate proposed inputs, not merged or
+independently approved dependencies. Update existing research/spec/task/checklist documents only;
+do not cherry-pick sibling implementations or revise their review bookkeeping. Compare native
+estimability, observable-data support, external results and resource/rights costs separately.
+Validate schedule counts, source provenance, cross-artifact consistency, formatting and repository
+source-of-truth. For the integrated head also run typecheck, focused N2 identity/lineage tests,
+Native Evidence N2 and standard exact-head Verify; old research-head CI cannot stand in for them.
+No new library or algorithm is needed for this research deliverable.
+
 - ontology: `src/lib/core/ontology*`, `ontology-seed.ts`;
 - task semantics: `src/lib/core/task.ts`;
 - evidence roles: `src/lib/core/evidence-role.ts`;

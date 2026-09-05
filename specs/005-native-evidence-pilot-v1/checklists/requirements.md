@@ -32,3 +32,5 @@
 - [x] Source-faithful pyBKT multi-fit and diagnostic parity plan keeps missing API telemetry, boundary fits or one bad start from excluding valid predictions.
 - [x] Former 0.01-nat threshold is withdrawn; N044 requires pre-N3 utility justification or descriptive-only decision lock.
 - [x] Amendment N2 acceptance cases include canonical task-fingerprint invariance/mutation tests and task/version/content/context/lineage substitution failures.
+- [x] Review 5122120052 accepts MAX-LEVEL-002/C research semantics and source spot checks on `698ed7cb103a22425af1fb96ef4a070e226b5d87`; this is not integrated N063 approval.
+- [ ] Fresh N063 confirmation on the integrated exact head: preserve current task-definition identity, evidence-digest lineage and research interpretation limits together.

@@ -58,3 +58,10 @@
 - [ ] N052 Report retain/simplify/redesign/gather-more-evidence; no mastery/CEFR/efficacy promotion.
 
 Dependencies: N015 precedes acceptance of every N2 task. N032–N037 are part of the N030/N031 verification gate. N030/N031/N035/N040/N041/N043/N044 precede N042. Synthetic plumbing cannot authorize human collection, production writes, learner validity, mastery, CEFR, efficacy, deployment, or a main-branch change.
+
+## Bounded frontier audit — CODEX-CORE-MAX-LEVEL-002/C
+
+- [x] N060 Reconcile immutable N2/N043/N044 snapshots and proposed observation counts by family; distinguish actual evidence from planned capacity.
+- [x] N061 Extend research with candidate estimability, current primary-source challengers, separate rights and reuse dispositions.
+- [x] N062 Map delay/transfer/latent-state/uncertainty gaps to missing instrumentation and falsification gates without changing the frozen ladder.
+- [ ] N063 Research semantics PASS in review `5122120052` on `698ed7cb103a22425af1fb96ef4a070e226b5d87`; integrated exact-head NOT PASS until fresh confirmation after carrying current Spec #005 and identity/lineage implementation from `79009730cbb49524387f9bd8ecab01034a9143e5`. No N031/N035/N043/N044 self-approval.

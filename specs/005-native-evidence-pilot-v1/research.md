@@ -211,6 +211,141 @@ predictive KEEP/SIMPLIFY. No human-outcome tuning or synthetic efficacy claim is
 
 ## Human pilot sizing
 
+### Estimable frontier audit — CODEX-CORE-MAX-LEVEL-002/C
+
+Historical research snapshot: 2026-09-05, N2 `aedaa72b3689671ac8f1dd4906a168ce345aa382`,
+N044 PR #148 at `9a20f99dfdeb2c4aad8596a975d72eec7afa2fe4`, and N043 PR #149 at
+`832e62efc17b7d2aec1e515917bb275fe6e4bd6b`. Sibling proposals are inspected, not integrated.
+The owner leaves merge/review handling separate. Branch governance remains the constitution and
+active Spec #005; July `docs/product/*` material is historical under `docs/history/july-pilot/`.
+
+Integration correction for review `5122120052`: research semantics passed on `698ed7cb...`,
+but that tree lacked the landed identity/lineage safeguards. This branch now includes N2
+`79009730cbb49524387f9bd8ecab01034a9143e5` and its current Spec #005. The N043/N044
+pins above remain historical evidence for the analysis, not assertions of current branch heads.
+All native history/manifests/results require valid `PilotEvidenceLineage` bound to the canonical
+evidence digest and prospectively frozen task definition; core validation alone is insufficient.
+Research conclusions do not waive these guards. Integrated N063 awaits fresh exact-head review.
+
+**Disposition: ADAPT the existing causal logistic/basis comparison; BENCHMARK_ONLY pooled BKT;
+GATHER_MORE_EVIDENCE before adding a model.** Even the current logistic fit is not proven reliably
+estimable on native data: no native outcomes or predictive cohort size are approved. Regularized
+numerical convergence is not parameter identification, calibrated prediction or intervention utility.
+B0 stays a floor, not the sole opponent. No new algorithm is justified by the observed gap.
+
+#### Proposed observation budget, not collected evidence
+
+Source: [N043 sizing.py](https://github.com/Thunderkill016/AtoEnglish/blob/832e62efc17b7d2aec1e515917bb275fe6e4bd6b/benchmarks/native-evidence-v1/scripts/sizing.py),
+`TRAIN_TEMPLATE`, `TEST_TEMPLATE`, `_form_group`, and `build_n043_design_report`.
+
+| Per learner             | TRAIN opportunities | Blind TEST opportunities | Limit                                                |
+| ----------------------- | ------------------: | -----------------------: | ---------------------------------------------------- |
+| Recognition-independent |                   2 |                        0 | Causal history only                                  |
+| Recognition-supported   |                   1 |                        0 | Support not crossed within every family              |
+| Free recall             |                   2 |                        1 | Sparse independent text outcomes                     |
+| Delayed free recall     |                   1 |                        1 | Not an individual forgetting curve                   |
+| Near transfer           |                   2 |                        1 | TRAIN and TEST both use context B                    |
+| Total                   |                   8 |                        3 | Five primary TRAIN labels, three primary TEST labels |
+
+For L fully observed learners: 5L primary TRAIN rows and 3L TEST rows, but L learner clusters.
+BKT's independent same-context subset has 3L TRAIN and 2L TEST opportunities. Missing/rejected
+observations reduce these counts. Five cyclic form groups are allocation metadata, not calibrated
+items. One ontology target cannot identify between-skill graph edges; family labels are not skills.
+
+Two source-grounded interpretation limits require review, not silent schedule edits:
+
+1. TEST near-transfer context B already appears at TRAIN ordinals 4 and 8. It may remain changed
+   relative to baseline A, but does not test a context unseen in prior practice. Different form-group
+   labels do not by themselves prove novel linguistic content or equivalent item difficulty.
+2. TEST free recall at ordinal 9 precedes delayed recall at ordinal 10. Blinding its label prevents
+   computational feedback, not its effect on the learner. The estimand is fixed-prefix prediction
+   under the scheduled practice sequence, not isolated forgetting without intervening practice.
+   TRAIN delay also covaries with opportunity order; do not interpret a delay coefficient causally.
+
+#### Candidate ladder under this budget
+
+S1–S9 retain the source/rights records above; F1–F5 below extend them. Every native performance
+entry is **not measured**. Reject means reject activation here, not claim external inferiority.
+
+| Candidate                                            | Role / disposition                       | Supported bounded use                                                                                              | Missing evidence / cost before expansion                                                                                                                                                                        |
+| ---------------------------------------------------- | ---------------------------------------- | ------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| B0; regularized PFA/AFM-style history [S1,S2]        | adapter-candidate / ADAPT                | Existing fixed pooled logistic estimator; success/failure counts include the simpler total-practice representation | Report TRAIN rank, retained columns, separation and learner-level precision. CPU, no fitted personal abilities; no second logistic implementation                                                               |
+| B2-basis / canonical B3                              | adapter-candidate / ADAPT                | Mandatory two-control same-estimator test; exact reconstruction is a valid null                                    | New encoding is not new information. No predictive KEEP without approved utility and precision                                                                                                                  |
+| Pooled classical BKT [S3]                            | benchmark-only / BENCHMARK_ONLY          | Supported five-fit comparator on matched recall subset                                                             | Three eligible TRAIN events per learner; an adequate pooled cohort may permit fitting, but individualized transitions/slip/guess are not established. Keep N035 uncertainty explicit, not baseline exclusion    |
+| Constrained / individualized BKT [S3]                | reject activation / GATHER_MORE_EVIDENCE | Assumptions/recovery reference only                                                                                | Repeated independent sequences, justified constraints and parameter sensitivity; restrictions cannot invent observations. Never replace the classical comparator to favor B3                                    |
+| DAS3H temporal windows [S4]                          | benchmark-only / GATHER_MORE_EVIDENCE    | Reference for separating practice amount and elapsed time                                                          | Delay variation crossed with practice count, stable item/skill mapping, non-collinear windows; first test a small same-estimator temporal basis, not full latent student/item terms                             |
+| Rasch / 2PL / MIRT [S5]                              | benchmark-only / GATHER_MORE_EVIDENCE    | Existing fixed task/form controls available to all lanes                                                           | Connected repeated item-person design and identification/uncertainty checks; one target/form rotation does not validate a multidimensional Q-matrix. Extra estimation/runtime cost                              |
+| HLR / FSRS / survival retention [S6,F2]              | reject activation / GATHER_MORE_EVIDENCE | Existing elapsed-time features; external methodology                                                               | Stable memory-item units, comparable lagged probes, intervening-exposure records; survival also needs event/censoring definitions. Grammar correctness is neither an FSRS grade nor observed time-to-forgetting |
+| DKT / SAKT / SAINT / AKT / simpleKT [S7,F1]          | reject activation / GATHER_MORE_EVIDENCE | Source comparison only                                                                                             | Native learner-count/sequence-length learning curves, equal label/tuning budget and untouched learner holdouts; record measured GPU/parameter costs before any adoption                                         |
+| DKT2 xLSTM / UKT stochastic attention [F3,F4]        | reject activation / GATHER_MORE_EVIDENCE | Current challenger references                                                                                      | Repeated context/skill variation and independent validation; latent distributions do not prove calibrated epistemic uncertainty                                                                                 |
+| Graph / retrieval / state-space KT [F1,F3]           | reject activation / GATHER_MORE_EVIDENCE | Data-needs comparison only                                                                                         | One target provides no between-skill edges; retrieval needs rights-cleared corpus/identity controls. Linear sequence complexity is not statistical estimability                                                 |
+| Calibration / abstention / intervention [S8,S9,N044] | benchmark-only / GATHER_MORE_EVIDENCE    | Descriptive errors, Brier/log loss, coverage and unknown preservation                                              | Independent calibration population and justified dependence assumptions; observational prediction does not estimate intervention effect/cost. No new calibrator, coverage guarantee or bandit policy            |
+
+#### Current primary-source additions
+
+No code/data/weights copied, installed or trained. External results are author-reported, not
+reproduced; different datasets/protocols make cross-paper score ranking invalid.
+
+- **F1 — simpleKT / pyKT.** [Paper v1](https://arxiv.org/abs/2302.06881v1),
+  [official MIT toolkit pin](https://github.com/pykt-team/pykt-toolkit/tree/2fc4d64880956f21155a238d0b0302ac42cb5196).
+  Abstract reports 57 wins, 3 ties, 16 losses against 12 deep baselines on seven datasets by AUC,
+  not universal superiority. Toolkit offers several prediction scenarios; native blind-block
+  parity must be checked separately. S7 records the protocol reference. Data/checkpoint rights
+  unapproved. Role: benchmark-only methodology; defer native training.
+- **F2 — half-life regression.** [ACL 2016 paper](https://aclanthology.org/P16-1174/),
+  [official MIT code pin](https://github.com/duolingo/halflife-regression/tree/0041df0dcd436bf1b4aa7a17a020d9c670db70d8).
+  README describes 13 million Duolingo lexeme traces with elapsed time and recall proportions;
+  evaluation uses MAE/AUC/half-life correlation. `experiment.py` splits 90/10 by row order, not
+  an established native learner-disjoint protocol. No numeric performance extracted here.
+  Linked Dataverse data terms require separate audit; no weights selected. Role: benchmark-only
+  method; reject grammar-to-memory-item substitution.
+- **F3 — DKT2.** [Paper v1](https://arxiv.org/html/2501.14256v1),
+  [official migrated MIT implementation](https://github.com/zyy-2001/DKT2/tree/68b42fc9e8a8fa14a664d1a49676fc0f6adbd466),
+  reached through the [old repository redirect](https://github.com/codebase-2025/DKT2/tree/738f95ce3dfea7753b17f8b546c6b3e270aa61ca).
+  Five-fold student-divided Assist17/EdNet/Comp evaluation, TRAIN validation/early stopping.
+  Table 1 reports Assist17 AUC 0.7042 versus AKT 0.6789 under its input settings, not native
+  blind-block or learner-state validity. Data/checkpoint terms unapproved. Role: benchmark-only
+  reference; reject initial-pilot fitting. No implementation reproduction performed.
+- **F4 — UKT.** [Paper v1](https://arxiv.org/html/2501.05415v1),
+  [author code pin](https://github.com/UncertaintyForKnowledgeTracing/UKT/tree/86ad9d8f76ee2c761e116fcadc43705f66ffd0b6).
+  Author repo license endpoint returned 404: code rights unresolved, not inherited from paper
+  CC BY 4.0 or separate MIT pyKT code. Data/checkpoint terms unapproved. Six math/programming
+  datasets; Table 1 AS2009 AUC 0.8563 versus AKT 0.8474. Full split/reproduction parity was not
+  established here, so no rank claim. Role: benchmark-only paper; reject activation. Distributional
+  embeddings remain hypotheses, not observed epistemic/aleatory state or evidence authority.
+- **F5 — KTBench, CSEDU 2026.** [Author paper](https://germain-forestier.info/publis/csedu2026.pdf),
+  [publisher artifact](https://www.scitepress.org/publishedPapers/2026/148231/pdf/index.html).
+  Educational/synthetic datasets, AUC/F1/accuracy plus runtime/model size and repeated seeds;
+  reports tradeoffs rather than one model dominating every criterion. Retains standard splits
+  or describes 80/20 sequence splitting with learner separation. Source version and code/data/
+  weight rights not established; paper reference only, no numeric reproduction. Require explicit
+  learner-identity checks before copying any sequence-splitting approach. Role: benchmark-only.
+
+This bounded 2025–2026 shortlist is not an exhaustive SOTA survey. Commercial product behavior,
+speech and broad policy-learning research are deferred because this task is text/choice prediction.
+
+#### Instrumentation and falsification before a more advanced model
+
+Prerequisites for future separately reviewed work, not additions authorized here:
+
+| Desired claim               | Missing design/observations                                                                                                             | Falsification / stop criterion                                                                                                                    |
+| --------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Delay signal beyond history | Cross comparable forms, practice counts and allocated lags; record intervening exposure independently of outcome labels                 | Collinearity with schedule/order means no causal forgetting claim; no useful held-out gain beyond basis means no extra mechanism                  |
+| Unseen-context transfer     | Prospectively hold out contexts from the learner's TRAIN and audit linguistic novelty plus common construct                             | Renaming/reusing context or prompt cannot establish novelty; invalid construct/change mapping means REDESIGN measurement                          |
+| Personal latent parameters  | Repeated sequences, connected items, identification constraints and recovery/uncertainty checks                                         | Optimizer success with unidentifiable or start-sensitive parameters cannot justify personal state claims                                          |
+| Neural/graph advantage      | Approved learning-curve design, equal causal/tuning budgets, learner/temporal holdouts, compute budget and utility rationale            | Indistinguishable from a simpler basis at justified precision/utility means no justified complexity; inadequate power means unknown, not equality |
+| Calibrated intervention     | Independent calibration data; defined abstention/coverage unit; grounded burden/effect/cost and separately approved intervention design | Log-loss gain with zero/negative utility is a counterexample; no causal policy claim from observational accuracy                                  |
+
+Preserve existing adversarial coverage: current/future labels, late/equal-time availability,
+cross-learner/aggregate-preserving row swaps, unknown versus zero, blind feedback, schedule drift,
+nonconvergence and deletion lineage. No runtime test or new gate is implemented by this package.
+Report pooled, delayed, transfer and cold-start errors separately alongside support/conflict,
+calibration diagnostics and coverage. One per-family TEST outcome per learner is not personal
+calibration evidence. No model/threshold added; independent review of these limitations and
+existing N043/N044 packets remains the next evidence requirement. Human N3 stays gated.
+
+### Existing sizing gate
+
 No round-number sample size is frozen in N1. Before N3, a sizing note must connect participant/attempt count to a specific falsification or estimation target and state what result will be reported when precision is inadequate. A small pilot must not be stretched into an efficacy claim.
 
 ## Proposed privacy policy for later review
