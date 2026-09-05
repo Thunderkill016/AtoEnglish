@@ -7,15 +7,18 @@ Current stage is documentation/N1. There is no human-data command.
 Read `research.md` for candidate decisions and source/license pins, then the predictor section
 of `contracts/native-pilot-contract.md` for exact baseline/split/metric settings. Confirm the
 B2-basis control distinguishes count re-encoding from additional information. Parent N010 is
-complete on reviewed #145; N015 remains pending for this comparative amendment. This branch is
-not an N2 execution handoff until N015 passes on its exact head.
+complete on reviewed #145. Integrated amendment semantics received fresh N015 PASS in review
+`5122059395` on `b14e69d5e5458ba6558cd9096de2abc12841b6cb`; the final bookkeeping head still requires
+exact-head confirmation and Verify before merge. This branch is not an N2 execution handoff until
+those final integration gates are green.
 
 Review 5120933538 is historical CHANGES REQUIRED evidence and its three blockers were corrected on
-the earlier #146 head. The earlier PASS is also historical because it predates the reviewed #145
-identity/lineage correction. Fresh N015 review must check both attribution contrasts, supported
-pyBKT multi-fit plus diagnostic parity requirements, N044's utility justification/descriptive-only
-lock, and preservation of the parent task-identity/lineage gate. The old 0.01-nat threshold cannot
-authorize KEEP/SIMPLIFY. No N2 or N3 command is authorized by this amendment alone.
+the earlier #146 head. The earlier PASS on `34013121...` is historical because it predates the
+reviewed #145 identity/lineage correction. The fresh N015 review confirmed both attribution
+contrasts, supported pyBKT multi-fit plus diagnostic parity requirements, N044's utility
+justification/descriptive-only lock, and preservation of the parent task-identity/lineage gate.
+The old 0.01-nat threshold cannot authorize KEEP/SIMPLIFY. No N2 or N3 command is authorized by
+this amendment alone.
 
 Documentation checks (no native benchmark is implemented yet):
 
