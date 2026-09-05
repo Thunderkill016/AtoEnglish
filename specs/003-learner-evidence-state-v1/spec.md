@@ -15,8 +15,8 @@ Provide a pure, persistence-neutral, ontology-bound evidence ledger and uncertai
 3. Zero evidence is `status: "unknown"`, `provisionalRoutingScore: null`, `uncertainty: "maximal"`; unknown is never numeric zero.
 4. Role, activity, modality, support/reveal, context, and transfer boundaries remain explicit. Recognition cannot become production/transfer evidence.
 5. Near/far transfer requires exact role-distance pairing, a prior distinct baseline context, and a genuinely changed context. Failed transfer remains failed transfer evidence.
-6. Duplicate event IDs are rejected; accepted lineage is retained; batch projection and incremental reduction replay canonically and byte-equivalently.
-7. Accepted lineage includes event/task/observation IDs, outcome, context tags, support/reveal, model fingerprint, calibration benchmark, authority scope, and grant ID where applicable.
+6. Duplicate event IDs are rejected; accepted lineage is retained. Batch projection canonically sorts an evidence set by `(occurredAt,eventId)`. Incremental reduction is canonical append-only and rejects a lower late-arriving key with typed `out-of-order-event`; arbitrary arrival-order equivalence is not a V1 reducer guarantee.
+7. Accepted lineage includes event/task/observation IDs, outcome, context tags, support/reveal, model fingerprint, calibration benchmark, authority scope, and grant ID where applicable. Post-validation semantic rejection audits retain `occurredAt` when needed to preserve the incremental ordering cursor.
 8. Projection authority is expressed only as `decisionScope: "routing-only"`; there is no projection-level `authorityScope` and no boolean `mastered` flag.
 9. Legacy compatibility preserves `modelVersion: "nep.learner-evidence-state.v1"` and distinguishes unknown, insufficient, conflicted, support, and weakness states without silently reinterpreting them.
 10. All timestamps are explicit inputs. Core code has no ambient clock, random, DB, network, browser, or provider dependency.
@@ -39,7 +39,11 @@ Provide a pure, persistence-neutral, ontology-bound evidence ledger and uncertai
 - Recognition evidence -> no production/transfer support.
 - First-event or same-context transfer -> rejected as invalid transfer.
 - Failed near/far transfer -> failure counter, never same-context support.
-- Duplicate accepted ID or late/out-of-order arrival -> deterministic replay with no double counting.
+- Batch input may arrive shuffled; batch replay sorts canonically and remains deterministic.
+- Incremental input that arrives below the latest processed `(occurredAt,eventId)` -> `out-of-order-event`; it does not retroactively rewrite accepted/rejected history.
+- A transfer received before its earlier baseline is rejected for missing baseline; its canonical order key is retained, so the later earlier baseline is then rejected as out-of-order.
+- Canonical append-only baseline -> near-transfer -> far-transfer reduction is byte-equivalent to canonical batch replay.
+- Duplicate IDs never double count.
 - Conflicting positive/negative evidence -> `conflicted-support` and no false scalar average.
 
 ## Canonical entities
@@ -47,6 +51,7 @@ Provide a pure, persistence-neutral, ontology-bound evidence ledger and uncertai
 - `LearnerConstructKey`
 - `AcceptedEvidenceRecord`
 - `AcceptedEventAudit`
+- `RejectedEvidenceAudit`
 - `ConstructSufficientStatistics`
 - `ConstructProjection`
 - `LearnerStateProjection`
