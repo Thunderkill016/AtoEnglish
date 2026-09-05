@@ -220,11 +220,11 @@ export function buildSyntheticNativeRunManifest(input: BuildSyntheticNativeRunMa
         .map(([participantId, eventIds]) => [participantId, Object.freeze([...eventIds].sort())]),
     ),
   );
-  const blindTargetParticipantIdByEventId = Object.freeze(
+  const blindTargetBindings = Object.freeze(
     Object.fromEntries(
-      Object.entries(input.protocol.blindTargetParticipantIdByEventId).sort(([left], [right]) =>
-        left.localeCompare(right),
-      ),
+      Object.entries(input.protocol.blindTargetBindings)
+        .sort(([left], [right]) => left.localeCompare(right))
+        .map(([targetEventId, binding]) => [targetEventId, Object.freeze({ ...binding })]),
     ),
   );
   const splitPayload = Object.freeze({
@@ -236,7 +236,7 @@ export function buildSyntheticNativeRunManifest(input: BuildSyntheticNativeRunMa
     heldOutParticipantIds: Object.freeze([...input.protocol.heldOutParticipantIds].sort()),
     trainPrefixEventIdsByParticipant,
     blindTargetEventIds: Object.freeze([...input.protocol.blindTargetEventIds].sort()),
-    blindTargetParticipantIdByEventId,
+    blindTargetBindings,
   });
   const split = Object.freeze({ ...splitPayload, digest: digestJson(splitPayload) });
 
