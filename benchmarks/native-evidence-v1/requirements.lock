@@ -3,3 +3,6 @@
 numpy==2.2.3
 scipy==1.15.2
 scikit-learn==1.6.1
+pandas==2.2.3
+requests==2.32.3
+pyBKT @ git+https://github.com/CAHLR/pyBKT.git@06fc180ae72c117458acc527f8ec90cc8e0581c1
