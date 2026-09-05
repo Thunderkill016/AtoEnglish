@@ -30,17 +30,17 @@
 - [x] N024 Add duplicate and out-of-order reducer adversarial scenarios.
 - [x] N025 Add detached/cloned evidence rejection scenario.
 - [x] N026 Implement strong B2/B3 pre-attempt feature extraction with explicit prediction timestamp and no future/current label feedback.
-- [ ] N027 Verify and fingerprint the reviewed `nep.native-predictor.v1` configuration using synthetic stability checks only; same estimator/preprocessing for B2/B2-basis/B3.
+- [x] N027 Verify and fingerprint the reviewed `nep.native-predictor.v1` configuration using synthetic stability checks only; same estimator/preprocessing for B2/B2-basis/B3.
 - [x] N028 Implement synthetic participant export/delete and prove participant-scoped artifacts are removed.
 - [x] N029 Reuse benchmark manifest/integrity conventions; clearly mark every artifact `synthetic-plumbing-only`.
-- [ ] N030 Exact-head Verify + focused native harness CI green.
+- [ ] N030 Exact-head Verify + focused native harness CI green. Focused Native Evidence N2 run `33965408898` is green at `cadcc0bc2b50936f5f90e6f55d7a533e5eee94a8`; standard exact-head Verify remains required.
 - [ ] N031 Opposite-agent independent review PASS of N2 implementation.
 - [x] N032 Implement B0 and B2-basis controls, algebraic duplicate audit and stable TRAIN-only preprocessing per predictor contract.
-- [ ] N033 Add late-label/equal-time, blind-block, participant-isolation and future-label mutation adversarial tests.
-- [ ] N034 Adapt metric/manifest donor for one-class Brier/log loss, nullable AUC, complete coverage and paired learner resampling.
-- [ ] N035 Verify installed pinned pyBKT backend and supported seeded multi-fit; parity-test a diagnostic observer, record per-start stopping/likelihoods, and review TRAIN-only near-best/stability tolerances. Missing diagnostics or one poor start must not exclude working BKT; retain unresolved assurance explicitly.
+- [x] N033 Add late-label/equal-time, blind-block, participant-isolation and future-label mutation adversarial tests.
+- [x] N034 Adapt metric/manifest donor for one-class Brier/log loss, nullable AUC, explicit missing-outcome coverage and paired learner resampling.
+- [ ] N035 Verify installed pinned pyBKT backend and supported seeded multi-fit; parity-test a diagnostic observer, record per-start stopping/likelihoods, and review TRAIN-only near-best/stability tolerances. Backend/observer/parity/convergence telemetry is implemented and emitted as a `synthetic-plumbing-only` CI artifact; TRAIN-only near-best/predictive-stability tolerances remain deliberately unresolved pending independent review.
 - [x] N036 Verify deletion invalidates dependent model/prediction/result artifacts; no participant survives through a stale fitted artifact.
-- [ ] N037 Test the two-contrast attribution decision table, exact versus unproven equivalence, missing utility margins, Brier conflicts and equality boundaries; no synthetic validity claims.
+- [x] N037 Test the two-contrast attribution decision table, exact versus unproven equivalence, missing utility margins, Brier conflicts and equality boundaries; no synthetic validity claims.
 
 ## N3 — human pilot
 
