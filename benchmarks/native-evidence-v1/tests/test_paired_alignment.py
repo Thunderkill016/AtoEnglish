@@ -17,56 +17,104 @@ class PairedAlignmentTests(unittest.TestCase):
             ["a", "b"],
             [0, 1],
             [0.2, 0.8],
+            row_ids=["a:r1", "b:r1"],
             planned_learner_ids=["a", "b"],
-            planned_row_count=2,
+            planned_row_ids=["a:r1", "b:r1"],
         )
         control = evaluate_by_learner(
             ["a"],
             [0],
             [0.3],
+            row_ids=["a:r1"],
             planned_learner_ids=["a", "b"],
-            planned_row_count=2,
+            planned_row_ids=["a:r1", "b:r1"],
         )
 
         with self.assertRaisesRegex(ValueError, "complete-case row selection"):
             paired_learner_bootstrap(target, {"history": control})
 
-    def test_changed_label_budget_is_rejected_even_when_row_counts_match(self) -> None:
+    def test_changed_label_binding_is_rejected_even_when_per_learner_counts_match(self) -> None:
+        row_ids = ["a:r1", "a:r2", "b:r1", "b:r2"]
         target = evaluate_by_learner(
             ["a", "a", "b", "b"],
             [0, 1, 0, 1],
             [0.2, 0.8, 0.3, 0.7],
+            row_ids=row_ids,
             planned_learner_ids=["a", "b"],
-            planned_row_count=4,
+            planned_row_ids=row_ids,
         )
         control = evaluate_by_learner(
             ["a", "a", "b", "b"],
-            [0, 1, 1, 1],
-            [0.25, 0.75, 0.6, 0.8],
+            [1, 0, 1, 0],
+            [0.75, 0.25, 0.6, 0.4],
+            row_ids=row_ids,
             planned_learner_ids=["a", "b"],
-            planned_row_count=4,
+            planned_row_ids=row_ids,
         )
 
-        with self.assertRaisesRegex(ValueError, "identical labels per learner"):
+        with self.assertRaisesRegex(ValueError, "row identity, learner and label bindings"):
             paired_learner_bootstrap(target, {"basis": control})
 
-    def test_different_frozen_plan_is_rejected_even_if_observed_rows_happen_to_match(self) -> None:
+    def test_same_counts_and_labels_cannot_hide_different_observed_rows(self) -> None:
+        planned_rows = ["a:r1", "a:r2", "a:r3", "b:r1"]
+        target = evaluate_by_learner(
+            ["a", "a", "b"],
+            [0, 1, 0],
+            [0.2, 0.8, 0.3],
+            row_ids=["a:r1", "a:r2", "b:r1"],
+            planned_learner_ids=["a", "b"],
+            planned_row_ids=planned_rows,
+        )
+        control = evaluate_by_learner(
+            ["a", "a", "b"],
+            [0, 1, 0],
+            [0.25, 0.75, 0.35],
+            row_ids=["a:r1", "a:r3", "b:r1"],
+            planned_learner_ids=["a", "b"],
+            planned_row_ids=planned_rows,
+        )
+
+        with self.assertRaisesRegex(ValueError, "row identity, learner and label bindings"):
+            paired_learner_bootstrap(target, {"history": control})
+
+    def test_different_frozen_row_plan_is_rejected_even_if_observed_rows_match(self) -> None:
         target = evaluate_by_learner(
             ["a"],
             [0],
             [0.2],
-            planned_learner_ids=["a", "missing-a"],
-            planned_row_count=2,
+            row_ids=["a:r1"],
+            planned_learner_ids=["a", "missing"],
+            planned_row_ids=["a:r1", "missing:r1"],
         )
         control = evaluate_by_learner(
             ["a"],
             [0],
             [0.3],
-            planned_learner_ids=["a", "missing-b"],
-            planned_row_count=2,
+            row_ids=["a:r1"],
+            planned_learner_ids=["a", "missing"],
+            planned_row_ids=["a:r1", "missing:r2"],
         )
 
-        with self.assertRaisesRegex(ValueError, "identical planned learners"):
+        with self.assertRaisesRegex(ValueError, "identical planned row ids"):
+            paired_learner_bootstrap(target, {"history": control})
+
+    def test_paired_comparison_requires_explicit_row_identity(self) -> None:
+        target = evaluate_by_learner(
+            ["a"],
+            [0],
+            [0.2],
+            planned_learner_ids=["a"],
+            planned_row_count=1,
+        )
+        control = evaluate_by_learner(
+            ["a"],
+            [0],
+            [0.3],
+            planned_learner_ids=["a"],
+            planned_row_count=1,
+        )
+
+        with self.assertRaisesRegex(ValueError, "explicit frozen planned row ids"):
             paired_learner_bootstrap(target, {"history": control})
 
 
