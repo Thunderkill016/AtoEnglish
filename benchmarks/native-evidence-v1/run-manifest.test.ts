@@ -15,6 +15,21 @@ const SHA_B = `sha256:${"b".repeat(64)}` as const;
 const SHA_C = `sha256:${"c".repeat(64)}` as const;
 const SHA_D = `sha256:${"d".repeat(64)}` as const;
 
+function frozenTaskBinding(definition: ReturnType<typeof buildPilotTaskDefinition>) {
+  return {
+    family: definition.family,
+    taskId: definition.task.id,
+    taskVersion: definition.task.version,
+    contentFingerprint: definition.contentFingerprint,
+    supportLevel: definition.task.support.level,
+    revealAllowed: definition.task.support.revealAllowed,
+    transferDistance: definition.task.transferDistance,
+    contextId: definition.contextId,
+    stimulusFormGroup: definition.stimulusFormGroup,
+    scoringContractId: definition.scoringContractId,
+  } as const;
+}
+
 function buildFixture() {
   const participantId = "manifest-p";
   const tasks = buildFrozenPilotTaskMatrix();
@@ -48,16 +63,12 @@ function buildFixture() {
       [`${participantId}:e05`]: {
         participantId,
         predictionTimestamp: "2026-09-02T09:00:00.000Z",
-        taskId: delayedTask.task.id,
-        taskVersion: delayedTask.task.version,
-        contentFingerprint: delayedTask.contentFingerprint,
+        ...frozenTaskBinding(delayedTask),
       },
       "manifest-cold:target": {
         participantId: "manifest-cold",
         predictionTimestamp: "2026-09-02T10:00:00.000Z",
-        taskId: coldTask.task.id,
-        taskVersion: coldTask.task.version,
-        contentFingerprint: coldTask.contentFingerprint,
+        ...frozenTaskBinding(coldTask),
       },
     },
   });
@@ -164,6 +175,8 @@ describe("native pilot full synthetic run manifest", () => {
       predictorArtifacts: [...input.predictorArtifacts].reverse(),
     });
 
+    const coldTask = buildPilotTaskDefinition("free-recall");
+    const delayedTask = buildPilotTaskDefinition("delayed-free-recall");
     expect(first.manifestDigest).toMatch(/^sha256:[0-9a-f]{64}$/);
     expect(first.manifestDigest).toBe(second.manifestDigest);
     expect(first.status).toBe("synthetic-plumbing-only");
@@ -175,16 +188,12 @@ describe("native pilot full synthetic run manifest", () => {
       "manifest-cold:target": {
         participantId: "manifest-cold",
         predictionTimestamp: "2026-09-02T10:00:00.000Z",
-        taskId: buildPilotTaskDefinition("free-recall").task.id,
-        taskVersion: 1,
-        contentFingerprint: buildPilotTaskDefinition("free-recall").contentFingerprint,
+        ...frozenTaskBinding(coldTask),
       },
       "manifest-p:e05": {
         participantId: "manifest-p",
         predictionTimestamp: "2026-09-02T09:00:00.000Z",
-        taskId: buildPilotTaskDefinition("delayed-free-recall").task.id,
-        taskVersion: 1,
-        contentFingerprint: buildPilotTaskDefinition("delayed-free-recall").contentFingerprint,
+        ...frozenTaskBinding(delayedTask),
       },
     });
     expect(first.causalPolicy.blindBlockFeedbackForbidden).toBe(true);
