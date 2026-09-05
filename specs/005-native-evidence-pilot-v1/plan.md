@@ -9,10 +9,11 @@ Use existing merged contracts as the experiment substrate. Do not build a parall
 1. Freeze `nep.native-evidence-pilot.v1` and one ontology target: `nep.en.v1.language-system.syntax-grammar`.
 2. Implement five prospective task-family definitions from `CoreTaskSpec`.
 3. Define deterministic task/content fingerprints and context IDs before outcomes.
-4. Define reference-only evidence issuance through `validateReferenceCoreEvidence()`.
-5. Freeze B2-native and B3-native feature budgets before human outcomes exist.
-6. Freeze the prediction cutoff and leakage rules.
-7. Write draft privacy/consent/retention protocol but leave human collection disabled.
+4. Because `ReferenceCoreEvidence` does not preserve every pilot identity field, freeze a deterministic `FrozenPilotTaskDefinition.definitionFingerprint` over task ID/version/all task fields, content fingerprint, context ID, family and scoring contract; require exact wrapper binding before evidence issuance.
+5. Define reference-only evidence issuance through `validateReferenceCoreEvidence()` and adjacent non-authoritative `PilotEvidenceLineage` binding each accepted event to the frozen definition and canonical evidence digest.
+6. Freeze B2-native and B3-native feature budgets before human outcomes exist.
+7. Freeze the prediction cutoff and leakage rules.
+8. Write draft privacy/consent/retention protocol but leave human collection disabled.
 
 ## Stage N2 — synthetic plumbing
 
@@ -27,7 +28,12 @@ Create a local/offline synthetic harness under `benchmarks/native-evidence-v1/` 
 - duplicate event ID;
 - late out-of-order event for append-only reducer;
 - detached/cloned evidence rejection;
-- deletion/export of one pseudonymous synthetic participant;
+- task-version substitution rejection;
+- content-fingerprint substitution rejection;
+- definition-fingerprint substitution rejection;
+- planned-context substitution rejection before reference evidence issuance;
+- missing/mismatched `PilotEvidenceLineage` rejection from pilot feature/results generation;
+- deletion/export of one pseudonymous synthetic participant including lineage artifacts;
 - pre-attempt B2/B3 feature extraction proving no current/future label leakage.
 
 N2 outputs only contract-test artifacts and machine-readable synthetic manifests. Do not report predictive metrics as empirical learner evidence.
@@ -45,7 +51,7 @@ Use a common estimator for B2-native and B3-native. Freeze learner/temporal spli
 - ontology: `src/lib/core/ontology*`, `ontology-seed.ts`;
 - task semantics: `src/lib/core/task.ts`;
 - evidence roles: `src/lib/core/evidence-role.ts`;
-- reference validation: `src/lib/core/certified-evidence.ts`;
+- reference validation and canonical evidence digest: `src/lib/core/certified-evidence.ts`;
 - learner projection: `src/lib/core/learner-state.ts`;
 - research manifests/statistical conventions: reuse patterns from `benchmarks/reality-slam-v1/` where compatible.
 
@@ -54,8 +60,10 @@ Use a common estimator for B2-native and B3-native. Freeze learner/temporal spli
 Stop/redesign before human collection if any of these fail in N2:
 
 - task semantics cannot be validated prospectively;
+- task ID/version/content/context can be substituted after freeze without fail-closed rejection;
+- accepted pilot events cannot be bound deterministically to their frozen task definition and canonical evidence digest;
 - reference evidence requires guessed fields;
 - unknown collapses to zero;
 - current/future outcomes enter pre-attempt features;
 - changed-context transfer can be manufactured without prior baseline context;
-- deletion cannot remove a participant's synthetic raw/derived artifacts deterministically.
+- deletion cannot remove a participant's synthetic raw/derived/lineage artifacts deterministically.
