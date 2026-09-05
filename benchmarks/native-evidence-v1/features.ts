@@ -2,6 +2,7 @@ import {
   createEmptyConstructProjection,
   evaluateOutcomeSuccess,
   projectLearnerState,
+  type AcceptedEventAudit,
   type ConstructProjection,
 } from "@/lib/core/learner-state";
 import { buildEnglishOntologyV1 } from "@/lib/core/ontology-seed";
@@ -9,6 +10,7 @@ import { buildEnglishOntologyV1 } from "@/lib/core/ontology-seed";
 import {
   PILOT_TASK_FAMILIES,
   NATIVE_PILOT_TARGET_ID,
+  NATIVE_PILOT_CONTRACT_ID,
   type FeatureVector,
   type PilotTaskDefinition,
   type PredictionFeatureRow,
@@ -51,12 +53,102 @@ function secondsBetween(later: string, earlier: string): number {
   return Math.max(0, (parseTimestamp(later, "later") - parseTimestamp(earlier, "earlier")) / 1000);
 }
 
-function sortHistory(left: SyntheticPilotEvent, right: SyntheticPilotEvent): number {
-  const occurred = left.evidence.occurredAt.localeCompare(right.evidence.occurredAt);
-  if (occurred !== 0) return occurred;
-  const available = left.availableAt.localeCompare(right.availableAt);
-  if (available !== 0) return available;
-  return left.evidence.eventId.localeCompare(right.evidence.eventId);
+function normalizeContextId(value: string | null): string | null {
+  if (value === null) return null;
+  const trimmed = value.trim();
+  return trimmed.length > 0 ? trimmed : null;
+}
+
+function assertSyntheticEventBinding(event: SyntheticPilotEvent): void {
+  const taskDefinition = event.taskDefinition;
+  const task = taskDefinition.task;
+  const evidence = event.evidence;
+  const problems: string[] = [];
+
+  if (taskDefinition.pilotContractId !== NATIVE_PILOT_CONTRACT_ID) {
+    problems.push("pilot-contract-id");
+  }
+  if (!task.id.startsWith(`native-pilot-v1:${taskDefinition.family}:`)) {
+    problems.push("task-family");
+  }
+  if (task.id !== evidence.taskId) problems.push("task-id");
+  if (evidence.targetId !== NATIVE_PILOT_TARGET_ID || !task.targetIds.includes(evidence.targetId)) {
+    problems.push("target-id");
+  }
+  if (task.activity !== evidence.activity) problems.push("activity");
+  if (
+    task.responseModality !== evidence.responseModality ||
+    task.responseModality !== evidence.attempt.responseModality
+  ) {
+    problems.push("response-modality");
+  }
+  if (task.allowedEvidenceRoles.length !== 1 || task.allowedEvidenceRoles[0] !== evidence.role) {
+    problems.push("evidence-role");
+  }
+  if (task.support.level !== evidence.attempt.supportLevel) problems.push("support-level");
+  if (task.transferDistance !== evidence.transferDistance) problems.push("transfer-distance");
+  if (normalizeContextId(taskDefinition.contextId) !== normalizeContextId(evidence.attempt.contextId)) {
+    problems.push("context-id");
+  }
+  if (taskDefinition.scoringContractId !== task.scoringContractId) {
+    problems.push("scoring-contract-id");
+  }
+  if (JSON.stringify([...task.contextTags].sort()) !== JSON.stringify([...evidence.contextTags].sort())) {
+    problems.push("context-tags");
+  }
+
+  if (problems.length > 0) {
+    throw new Error(
+      `Synthetic event wrapper does not match validated evidence ${evidence.eventId}: ${problems.join(",")}`,
+    );
+  }
+}
+
+function acceptanceKeyFromEvent(event: SyntheticPilotEvent): string {
+  const evidence = event.evidence;
+  return JSON.stringify({
+    eventId: evidence.eventId,
+    targetId: evidence.targetId,
+    taskId: evidence.taskId,
+    observationId: evidence.observationId,
+    occurredAt: evidence.occurredAt,
+    role: evidence.role,
+    activity: evidence.activity,
+    responseModality: evidence.responseModality,
+    transferDistance: evidence.transferDistance,
+    contextId: normalizeContextId(evidence.attempt.contextId),
+    contextTags: [...evidence.contextTags].sort(),
+    authorityScope: evidence.authorityScope,
+    outcome: evidence.outcome,
+    supportLevel: evidence.attempt.supportLevel,
+    revealUsed: evidence.attempt.revealUsed,
+    modelFingerprint: evidence.modelFingerprint,
+    calibrationBenchmarkId: evidence.calibrationBenchmarkId,
+    grantId: evidence.grantId,
+  });
+}
+
+function acceptanceKeyFromAudit(audit: AcceptedEventAudit): string {
+  return JSON.stringify({
+    eventId: audit.eventId,
+    targetId: audit.targetId,
+    taskId: audit.taskId,
+    observationId: audit.observationId,
+    occurredAt: audit.occurredAt,
+    role: audit.role,
+    activity: audit.activity,
+    responseModality: audit.responseModality,
+    transferDistance: audit.transferDistance,
+    contextId: normalizeContextId(audit.contextId),
+    contextTags: [...audit.contextTags].sort(),
+    authorityScope: audit.authorityScope,
+    outcome: audit.outcome,
+    supportLevel: audit.supportLevel,
+    revealUsed: audit.revealUsed,
+    modelFingerprint: audit.modelFingerprint,
+    calibrationBenchmarkId: audit.calibrationBenchmarkId,
+    grantId: audit.grantId,
+  });
 }
 
 export function selectCausalAcceptedHistory(
@@ -65,25 +157,44 @@ export function selectCausalAcceptedHistory(
   predictionTimestamp: string,
 ): readonly SyntheticPilotEvent[] {
   const cutoffMs = parseTimestamp(predictionTimestamp, "predictionTimestamp");
-  const causallyAvailable = history
-    .filter((event) => {
-      if (event.participantId !== participantId) return false;
-      const occurredMs = parseTimestamp(event.evidence.occurredAt, "occurredAt");
-      const availableMs = parseTimestamp(event.availableAt, "availableAt");
-      return occurredMs < cutoffMs && availableMs < cutoffMs;
-    })
-    .sort(sortHistory);
+  const causallyAvailable = history.filter((event) => {
+    if (event.participantId !== participantId) return false;
+    const occurredMs = parseTimestamp(event.evidence.occurredAt, "occurredAt");
+    const availableMs = parseTimestamp(event.availableAt, "availableAt");
+    return occurredMs < cutoffMs && availableMs < cutoffMs;
+  });
 
   if (causallyAvailable.length === 0) return Object.freeze([]);
+  for (const event of causallyAvailable) assertSyntheticEventBinding(event);
 
   const projected = projectLearnerState(
     ontology,
     causallyAvailable.map((event) => event.evidence),
     { evaluationTimestamp: predictionTimestamp },
   );
-  const acceptedIds = new Set(projected.acceptedEvents.map((event) => event.eventId));
 
-  return Object.freeze(causallyAvailable.filter((event) => acceptedIds.has(event.evidence.eventId)));
+  const wrappersByAcceptedKey = new Map<string, SyntheticPilotEvent[]>();
+  for (const event of causallyAvailable) {
+    const key = acceptanceKeyFromEvent(event);
+    const wrappers = wrappersByAcceptedKey.get(key) ?? [];
+    wrappers.push(event);
+    wrappersByAcceptedKey.set(key, wrappers);
+  }
+
+  const acceptedHistory: SyntheticPilotEvent[] = [];
+  for (const accepted of projected.acceptedEvents) {
+    const key = acceptanceKeyFromAudit(accepted);
+    const wrappers = wrappersByAcceptedKey.get(key);
+    const wrapper = wrappers?.shift();
+    if (!wrapper) {
+      throw new Error(
+        `Accepted core evidence could not be rebound to exactly one synthetic event wrapper: ${accepted.eventId}`,
+      );
+    }
+    acceptedHistory.push(wrapper);
+  }
+
+  return Object.freeze(acceptedHistory);
 }
 
 function buildB2(
@@ -218,7 +329,9 @@ function buildB2(
   return Object.freeze(features);
 }
 
-function deriveBasisProjection(b2: FeatureVector): Pick<ConstructProjection, "status" | "uncertainty" | "provisionalRoutingScore"> {
+function deriveBasisProjection(
+  b2: FeatureVector,
+): Pick<ConstructProjection, "status" | "uncertainty" | "provisionalRoutingScore"> {
   const total = Number(b2.prior_eligible_attempt_count ?? 0);
   const positive = Number(b2.prior_positive_count ?? 0);
   const negative = Number(b2.prior_negative_count ?? 0);
@@ -274,7 +387,9 @@ function buildB3(
     causalHistory.map((event) => event.evidence),
     { evaluationTimestamp: predictionTimestamp, populateAllOntologyNodes: true },
   );
-  const projection = state.constructs[NATIVE_PILOT_TARGET_ID] ?? createEmptyConstructProjection(NATIVE_PILOT_TARGET_ID);
+  const projection =
+    state.constructs[NATIVE_PILOT_TARGET_ID] ??
+    createEmptyConstructProjection(NATIVE_PILOT_TARGET_ID);
   const stats = projection.statistics;
   const first = stats.firstObservedAt;
   const last = stats.lastObservedAt;
