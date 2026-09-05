@@ -36,6 +36,10 @@ class BinaryMetricBundle:
 class LearnerMetricBundle:
     learner_count: int
     learner_with_outcome_count: int
+    planned_row_count: int
+    observed_row_count: int
+    learner_outcome_coverage: float | None
+    row_outcome_coverage: float | None
     mean_per_learner_log_loss: float | None
     mean_per_learner_brier: float | None
     attempt_weighted: BinaryMetricBundle | None
@@ -110,6 +114,7 @@ def evaluate_by_learner(
     probabilities: Sequence[float],
     *,
     planned_learner_ids: Sequence[str] | None = None,
+    planned_row_count: int | None = None,
 ) -> LearnerMetricBundle:
     if not (len(participant_ids) == len(labels) == len(probabilities)):
         raise ValueError("participant_ids, labels and probabilities must have equal length")
@@ -121,11 +126,26 @@ def evaluate_by_learner(
         learner_labels.append(label)
         learner_probabilities.append(probability)
 
+    planned_learners = (
+        set(planned_learner_ids) if planned_learner_ids is not None else set(grouped)
+    )
+    unexpected_learners = set(grouped) - planned_learners
+    if unexpected_learners:
+        raise ValueError(
+            f"observed outcomes include learners outside the frozen plan: {sorted(unexpected_learners)}"
+        )
+
+    resolved_planned_row_count = len(labels) if planned_row_count is None else planned_row_count
+    if resolved_planned_row_count < 0:
+        raise ValueError("planned_row_count must be nonnegative")
+    if len(labels) > resolved_planned_row_count:
+        raise ValueError("observed outcome rows cannot exceed planned_row_count")
+
     by_learner = {
         participant_id: evaluate_binary_probabilities(learner_labels, learner_probabilities)
         for participant_id, (learner_labels, learner_probabilities) in sorted(grouped.items())
     }
-    learner_count = len(set(planned_learner_ids)) if planned_learner_ids is not None else len(grouped)
+    learner_count = len(planned_learners)
 
     if by_learner:
         mean_log_loss = float(np.mean([bundle.log_loss for bundle in by_learner.values()]))
@@ -136,9 +156,20 @@ def evaluate_by_learner(
         mean_brier = None
         attempt_weighted = None
 
+    learner_coverage = len(by_learner) / learner_count if learner_count > 0 else None
+    row_coverage = (
+        len(labels) / resolved_planned_row_count
+        if resolved_planned_row_count > 0
+        else None
+    )
+
     return LearnerMetricBundle(
         learner_count=learner_count,
         learner_with_outcome_count=len(by_learner),
+        planned_row_count=resolved_planned_row_count,
+        observed_row_count=len(labels),
+        learner_outcome_coverage=learner_coverage,
+        row_outcome_coverage=row_coverage,
         mean_per_learner_log_loss=mean_log_loss,
         mean_per_learner_brier=mean_brier,
         attempt_weighted=attempt_weighted,
