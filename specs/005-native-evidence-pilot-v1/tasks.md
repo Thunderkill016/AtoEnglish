@@ -20,7 +20,7 @@
 - [x] N012 Propose baseline ladder, common estimator and conditional classical comparator in `contracts/native-pilot-contract.md`.
 - [x] N013 Map B3 columns to canonical code and expose duplicate/count-derived transforms; specify B2-basis attribution control.
 - [x] N014 Propose causal split/availability, metrics/coverage, uncertainty, sizing and removal criteria before N3.
-- [ ] N015 Independently re-review the amended Spec #005 exact head after carrying forward the reviewed #145 task-identity/lineage contract. Prior #146 PASS predates that parent change and is stale for integration.
+- [x] N015 Independent adversarial re-review PASS on integrated amendment head `b14e69d5e5458ba6558cd9096de2abc12841b6cb`, review `5122059395`; final bookkeeping head still requires exact-head confirmation + Verify before merge.
 
 ## N2 — synthetic plumbing only
 
