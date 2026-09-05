@@ -53,3 +53,8 @@ supabase/.temp/
 test-results/
 .playwright-cli/
 /output/playwright/
+
+# python
+__pycache__/
+*.py[cod]
+*$py.class
