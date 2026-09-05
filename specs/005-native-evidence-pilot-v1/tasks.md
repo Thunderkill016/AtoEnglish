@@ -46,7 +46,7 @@
 
 - [ ] N040 BLOCKED: separately review final consent/privacy/deletion/retention protocol.
 - [ ] N041 BLOCKED: explicit owner approval to collect adult human pilot data.
-- [ ] N043 BLOCKED: review precision-based sizing, numeric coverage gates, prospective task-form allocation and prefix/holdout boundaries before any N3 outcomes.
+- [ ] N043 Implementation candidate exists on `frontier/native-evidence-n043-sizing-v1`: it freezes a five-slot prospective form counterbalance, explicit TRAIN-prefix/blind-TEST schedule and whole-learner cold-start folds, plus fail-closed predictive coverage gates. Because no human learner-level variance or independently approved positive utility margin currently identifies a precision target, the candidate leaves the predictive participant count null and predictive KEEP/SIMPLIFY disabled pending independent exact-head review.
 - [ ] N044 BLOCKED: before human outcomes, independently review bounded utility/sensitivity analysis and freeze justified history/basis margins and alternatives, or approve descriptive-only analysis with predictive KEEP/SIMPLIFY disabled. No arbitrary default margin.
 - [ ] N042 Only after N040/N041/N043/N044 and N030/N031: execute bounded pilot.
 
