@@ -7,6 +7,11 @@
 - [x] Changed-context transfer requires exact role/distance pairing and prior baseline context.
 - [x] Failed transfer remains failed transfer evidence.
 - [x] Accepted lineage and duplicate identity are retained for deterministic replay.
+- [x] Batch replay is order-independent through canonical `(occurredAt,eventId)` sorting.
+- [x] Incremental reducer is explicitly canonical append-only, not arbitrary-arrival replay.
+- [x] Typed `out-of-order-event` fails closed for late earlier arrivals, including same-timestamp lower event IDs.
+- [x] Post-validation semantic rejections retain their order key so transfer-first/earlier-baseline-later cannot rewrite history.
+- [x] Canonical append-only batch/reducer equivalence covers near/far transfer.
 - [x] Projection uses `decisionScope: "routing-only"`; no projection `authorityScope` or mastery flag.
 - [x] Legacy compatibility preserves V1 model/status provenance.
 - [x] Core has no ambient time/random/network/DB/provider dependency.
