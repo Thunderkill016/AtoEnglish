@@ -3,7 +3,7 @@ import crypto from "node:crypto";
 import { NATIVE_METRIC_SETTINGS, NATIVE_PREDICTOR_SETTINGS } from "./manifest";
 import type { FrozenNativeSplitProtocol } from "./protocol";
 import type {
-  PilotTaskDefinition,
+  FrozenPilotTaskDefinition,
   PredictionFeatureRow,
   SyntheticArtifactRecord,
 } from "./types";
@@ -16,7 +16,7 @@ import {
 export const NATIVE_DECISION_RULE_ID = "nep.native-decision.v1" as const;
 
 export const NATIVE_FEATURE_AUDIT_POLICY = Object.freeze({
-  acceptedHistory: "reference-evidence-only",
+  acceptedHistory: "reference-evidence-plus-pilot-lineage",
   b2: "strong-causal-history",
   b2Basis: "deterministic-projector-basis-from-b2-counts",
   b3: "projectLearnerState-over-the-same-accepted-history",
@@ -29,15 +29,15 @@ export const NATIVE_FEATURE_AUDIT_POLICY = Object.freeze({
 
 export const NATIVE_SOURCE_RIGHTS = Object.freeze([
   Object.freeze({
-    id: "core-frontier",
-    revision: "ef42f2cf96f9aa079505ad73c83c0555a470bfab",
-    role: "canonical-core-contract-donor",
+    id: "integrated-frontier",
+    revision: "db7ffc87154d4509b936bea95694c3c5dc623b0c",
+    role: "reviewed-core-and-native-spec-contract-donor",
     rights: "repository-owned",
   }),
   Object.freeze({
     id: "native-spec-amendment",
-    revision: "34013121cb9ab6850d15fa09a06ed3a46da44486",
-    role: "reviewed-experiment-contract",
+    revision: "8250d0f4b6498c2ee9e4dba7bfc662bd9625491d",
+    role: "final-reviewed-experiment-contract",
     rights: "repository-owned",
   }),
   Object.freeze({
@@ -98,7 +98,7 @@ export type SyntheticBktRunBinding = {
 };
 
 export type BuildSyntheticNativeRunManifestInput = {
-  readonly tasks: readonly PilotTaskDefinition[];
+  readonly tasks: readonly FrozenPilotTaskDefinition[];
   readonly rows: readonly PredictionFeatureRow[];
   readonly protocol: FrozenNativeSplitProtocol;
   readonly artifacts: readonly SyntheticArtifactRecord[];
@@ -112,15 +112,11 @@ function digestJson(value: unknown): `sha256:${string}` {
 }
 
 function assertNonnegativeInteger(value: number, field: string): void {
-  if (!Number.isInteger(value) || value < 0) {
-    throw new Error(`${field} must be a nonnegative integer`);
-  }
+  if (!Number.isInteger(value) || value < 0) throw new Error(`${field} must be a nonnegative integer`);
 }
 
 function validateCoverage(coverage: SyntheticCoverageSummary): void {
-  for (const [field, value] of Object.entries(coverage)) {
-    assertNonnegativeInteger(value, `coverage.${field}`);
-  }
+  for (const [field, value] of Object.entries(coverage)) assertNonnegativeInteger(value, `coverage.${field}`);
   if (coverage.observedOutcomeCount > coverage.eligibleOpportunityCount) {
     throw new Error("coverage.observedOutcomeCount cannot exceed eligibleOpportunityCount");
   }
@@ -140,9 +136,7 @@ function freezePredictorArtifacts(
     "bkt-native",
   ];
   const byLane = new Map(bindings.map((binding) => [binding.lane, binding]));
-  if (byLane.size !== bindings.length) {
-    throw new Error("predictorArtifacts must contain unique lanes");
-  }
+  if (byLane.size !== bindings.length) throw new Error("predictorArtifacts must contain unique lanes");
   for (const lane of expected) {
     if (!byLane.has(lane)) throw new Error(`predictorArtifacts missing lane: ${lane}`);
   }
@@ -184,6 +178,7 @@ export function buildSyntheticNativeRunManifest(input: BuildSyntheticNativeRunMa
           taskId: definition.task.id,
           taskVersion: definition.task.version,
           contentFingerprint: definition.contentFingerprint,
+          definitionFingerprint: definition.definitionFingerprint,
           contextId: definition.contextId,
           stimulusFormGroup: definition.stimulusFormGroup,
         }),
@@ -200,12 +195,14 @@ export function buildSyntheticNativeRunManifest(input: BuildSyntheticNativeRunMa
           targetEventId: row.targetEventId,
           predictionTimestamp: row.predictionTimestamp,
           acceptedHistoryEventIds: Object.freeze([...row.acceptedHistoryEventIds]),
+          acceptedHistoryLineageDigests: Object.freeze([...row.acceptedHistoryLineageDigests]),
           featureDigest,
           predictionBindingDigest: digestJson({
             participantId: row.participantId,
             targetEventId: row.targetEventId,
             predictionTimestamp: row.predictionTimestamp,
             acceptedHistoryEventIds: row.acceptedHistoryEventIds,
+            acceptedHistoryLineageDigests: row.acceptedHistoryLineageDigests,
             featureDigest,
           }),
         });

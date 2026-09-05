@@ -7,12 +7,13 @@ import {
 } from "@/lib/core/learner-state";
 import { buildEnglishOntologyV1 } from "@/lib/core/ontology-seed";
 
+import { assertPilotEvidenceLineage } from "./identity";
 import {
   PILOT_TASK_FAMILIES,
   NATIVE_PILOT_TARGET_ID,
   NATIVE_PILOT_CONTRACT_ID,
   type FeatureVector,
-  type PilotTaskDefinition,
+  type FrozenPilotTaskDefinition,
   type PredictionFeatureRow,
   type SyntheticPilotEvent,
 } from "./types";
@@ -32,7 +33,7 @@ export type BuildPredictionRowInput = {
   readonly participantId: string;
   readonly targetEventId: string;
   readonly predictionTimestamp: string;
-  readonly currentTask: PilotTaskDefinition;
+  readonly currentTask: FrozenPilotTaskDefinition;
   readonly history: readonly SyntheticPilotEvent[];
   readonly label?: 0 | 1 | null;
 };
@@ -65,6 +66,11 @@ function assertSyntheticEventBinding(event: SyntheticPilotEvent): void {
   const evidence = event.evidence;
   const problems: string[] = [];
 
+  try {
+    assertPilotEvidenceLineage(event);
+  } catch {
+    problems.push("pilot-lineage");
+  }
   if (taskDefinition.pilotContractId !== NATIVE_PILOT_CONTRACT_ID) {
     problems.push("pilot-contract-id");
   }
@@ -199,7 +205,7 @@ export function selectCausalAcceptedHistory(
 
 function buildB2(
   causalHistory: readonly SyntheticPilotEvent[],
-  currentTask: PilotTaskDefinition,
+  currentTask: FrozenPilotTaskDefinition,
   predictionTimestamp: string,
 ): FeatureVector {
   let positive = 0;
@@ -442,6 +448,9 @@ export function buildPredictionFeatureRow(input: BuildPredictionRowInput): Predi
     predictionTimestamp: input.predictionTimestamp,
     label: input.label ?? null,
     acceptedHistoryEventIds: Object.freeze(causalHistory.map((event) => event.evidence.eventId)),
+    acceptedHistoryLineageDigests: Object.freeze(
+      causalHistory.map((event) => event.lineage.evidenceDigest),
+    ),
     b2,
     b2Basis,
     b3,

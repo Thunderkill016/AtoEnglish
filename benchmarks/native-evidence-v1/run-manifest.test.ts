@@ -21,6 +21,7 @@ function frozenTaskBinding(definition: ReturnType<typeof buildPilotTaskDefinitio
     taskId: definition.task.id,
     taskVersion: definition.task.version,
     contentFingerprint: definition.contentFingerprint,
+    definitionFingerprint: definition.definitionFingerprint,
     supportLevel: definition.task.support.level,
     revealAllowed: definition.task.support.revealAllowed,
     transferDistance: definition.task.transferDistance,
@@ -85,60 +86,14 @@ function buildFixture() {
   store.registerArtifact("result:synthetic", "result", [], [prediction.artifactId]);
 
   const predictorArtifacts: readonly SyntheticPredictorArtifactBinding[] = [
-    {
-      lane: "b0-native",
-      availability: "available",
-      specFingerprint: SHA_A,
-      transformFingerprint: null,
-      fittedModelFingerprint: SHA_B,
-      predictionFingerprint: SHA_C,
-      nonEstimabilityReason: null,
-    },
-    {
-      lane: "b2-native",
-      availability: "available",
-      specFingerprint: SHA_A,
-      transformFingerprint: SHA_B,
-      fittedModelFingerprint: SHA_C,
-      predictionFingerprint: SHA_D,
-      nonEstimabilityReason: null,
-    },
-    {
-      lane: "b2-basis-native",
-      availability: "available",
-      specFingerprint: SHA_A,
-      transformFingerprint: SHA_B,
-      fittedModelFingerprint: SHA_C,
-      predictionFingerprint: SHA_D,
-      nonEstimabilityReason: null,
-    },
-    {
-      lane: "b3-native",
-      availability: "available",
-      specFingerprint: SHA_A,
-      transformFingerprint: SHA_B,
-      fittedModelFingerprint: SHA_C,
-      predictionFingerprint: SHA_D,
-      nonEstimabilityReason: null,
-    },
-    {
-      lane: "bkt-native",
-      availability: "available",
-      specFingerprint: SHA_A,
-      transformFingerprint: null,
-      fittedModelFingerprint: SHA_C,
-      predictionFingerprint: SHA_D,
-      nonEstimabilityReason: null,
-    },
+    { lane: "b0-native", availability: "available", specFingerprint: SHA_A, transformFingerprint: null, fittedModelFingerprint: SHA_B, predictionFingerprint: SHA_C, nonEstimabilityReason: null },
+    { lane: "b2-native", availability: "available", specFingerprint: SHA_A, transformFingerprint: SHA_B, fittedModelFingerprint: SHA_C, predictionFingerprint: SHA_D, nonEstimabilityReason: null },
+    { lane: "b2-basis-native", availability: "available", specFingerprint: SHA_A, transformFingerprint: SHA_B, fittedModelFingerprint: SHA_C, predictionFingerprint: SHA_D, nonEstimabilityReason: null },
+    { lane: "b3-native", availability: "available", specFingerprint: SHA_A, transformFingerprint: SHA_B, fittedModelFingerprint: SHA_C, predictionFingerprint: SHA_D, nonEstimabilityReason: null },
+    { lane: "bkt-native", availability: "available", specFingerprint: SHA_A, transformFingerprint: null, fittedModelFingerprint: SHA_C, predictionFingerprint: SHA_D, nonEstimabilityReason: null },
   ];
 
-  return {
-    tasks,
-    row,
-    protocol,
-    artifacts: store.listValidArtifacts(),
-    predictorArtifacts,
-  };
+  return { tasks, row, protocol, artifacts: store.listValidArtifacts(), predictorArtifacts };
 }
 
 describe("native pilot full synthetic run manifest", () => {
@@ -197,16 +152,14 @@ describe("native pilot full synthetic run manifest", () => {
       },
     });
     expect(first.causalPolicy.blindBlockFeedbackForbidden).toBe(true);
+    expect(first.taskDefinitions.every((task) => /^sha256:[0-9a-f]{64}$/.test(task.definitionFingerprint))).toBe(true);
+    expect(first.featureRows[0]?.acceptedHistoryLineageDigests).toEqual(
+      fixture.row.acceptedHistoryLineageDigests,
+    );
     expect(first.featureRows[0]?.predictionBindingDigest).toMatch(/^sha256:[0-9a-f]{64}$/);
-    expect(first.artifacts.find((artifact) => artifact.artifactId === "result:synthetic")?.participantIds).toEqual([
-      "manifest-p",
-    ]);
+    expect(first.artifacts.find((artifact) => artifact.artifactId === "result:synthetic")?.participantIds).toEqual(["manifest-p"]);
     expect(first.predictorArtifacts).toHaveLength(5);
-    expect(first.contrasts).toEqual({
-      b3MinusB2: null,
-      b3MinusB2Basis: null,
-      reason: "synthetic-data-cannot-rank-models",
-    });
+    expect(first.contrasts).toEqual({ b3MinusB2: null, b3MinusB2Basis: null, reason: "synthetic-data-cannot-rank-models" });
     expect(first.utilityGate.predictiveKeepSimplifyEnabled).toBe(false);
     expect(first.decision.status).toBe("disabled-synthetic-only");
     expect(first.forbiddenClaims).toContain("learner-model-validity");
@@ -255,11 +208,7 @@ describe("native pilot full synthetic run manifest", () => {
     expect(() =>
       buildSyntheticNativeRunManifest({
         ...base,
-        bkt: {
-          ...base.bkt,
-          diagnosticsArtifactDigest: null,
-          diagnosticsUnavailableReason: null,
-        },
+        bkt: { ...base.bkt, diagnosticsArtifactDigest: null, diagnosticsUnavailableReason: null },
       }),
     ).toThrow("missing BKT diagnostics digest requires diagnosticsUnavailableReason");
   });

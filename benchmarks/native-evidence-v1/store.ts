@@ -1,5 +1,4 @@
-import { computeCanonicalEvidenceDigest } from "@/lib/core/certified-evidence";
-
+import { assertPilotEvidenceLineage } from "./identity";
 import {
   SYNTHETIC_ONLY_STATUS,
   type SyntheticArtifactKind,
@@ -15,7 +14,8 @@ export type SyntheticParticipantExport = {
     readonly family: string;
     readonly occurredAt: string;
     readonly availableAt: string;
-    readonly evidenceDigest: string;
+    readonly definitionFingerprint: `sha256:${string}`;
+    readonly evidenceDigest: `sha256:${string}`;
   }[];
 };
 
@@ -24,6 +24,7 @@ export class SyntheticPilotStore {
   private readonly artifacts = new Map<string, SyntheticArtifactRecord>();
 
   addEvent(event: SyntheticPilotEvent): void {
+    assertPilotEvidenceLineage(event);
     const current = this.eventsByParticipant.get(event.participantId) ?? [];
     current.push(event);
     this.eventsByParticipant.set(event.participantId, current);
@@ -43,15 +44,17 @@ export class SyntheticPilotStore {
       status: SYNTHETIC_ONLY_STATUS,
       participantId,
       events: Object.freeze(
-        events.map((event) =>
-          Object.freeze({
+        events.map((event) => {
+          assertPilotEvidenceLineage(event);
+          return Object.freeze({
             eventId: event.evidence.eventId,
             family: event.taskDefinition.family,
             occurredAt: event.evidence.occurredAt,
             availableAt: event.availableAt,
-            evidenceDigest: computeCanonicalEvidenceDigest(event.evidence),
-          }),
-        ),
+            definitionFingerprint: event.lineage.definitionFingerprint,
+            evidenceDigest: event.lineage.evidenceDigest,
+          });
+        }),
       ),
     });
   }
@@ -74,15 +77,11 @@ export class SyntheticPilotStore {
     const effectiveParticipantIds = new Set(participantIds);
     for (const dependencyId of dependencyIds) {
       const dependency = this.artifacts.get(dependencyId);
-      if (!dependency) {
-        throw new Error(`Synthetic artifact dependency is missing: ${dependencyId}`);
-      }
+      if (!dependency) throw new Error(`Synthetic artifact dependency is missing: ${dependencyId}`);
       if (!dependency.valid) {
         throw new Error(`Synthetic artifact dependency is invalidated: ${dependencyId}`);
       }
-      for (const participantId of dependency.participantIds) {
-        effectiveParticipantIds.add(participantId);
-      }
+      for (const participantId of dependency.participantIds) effectiveParticipantIds.add(participantId);
     }
 
     const record: SyntheticArtifactRecord = Object.freeze({
