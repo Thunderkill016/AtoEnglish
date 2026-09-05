@@ -17,9 +17,16 @@ function targetBinding(
   return {
     participantId,
     predictionTimestamp,
+    family: definition.family,
     taskId: definition.task.id,
     taskVersion: definition.task.version,
     contentFingerprint: definition.contentFingerprint,
+    supportLevel: definition.task.support.level,
+    revealAllowed: definition.task.support.revealAllowed,
+    transferDistance: definition.task.transferDistance,
+    contextId: definition.contextId,
+    stimulusFormGroup: definition.stimulusFormGroup,
+    scoringContractId: definition.scoringContractId,
   } as const;
 }
 
