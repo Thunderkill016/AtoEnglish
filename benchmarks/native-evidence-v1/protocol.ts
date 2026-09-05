@@ -118,7 +118,20 @@ export function selectAuthorizedTrainPrefixEvents(
   events: readonly SyntheticPilotEvent[],
 ): readonly SyntheticPilotEvent[] {
   const fitCutoffMs = parseTimestamp(protocol.fitCutoff, "fitCutoff");
-  const eventsById = new Map(events.map((event) => [event.evidence.eventId, event]));
+  const requiredPrefixIds = new Set(
+    protocol.trainingParticipantIds.flatMap(
+      (participantId) => protocol.trainPrefixEventIdsByParticipant[participantId] ?? [],
+    ),
+  );
+  const eventsById = new Map<string, SyntheticPilotEvent>();
+  for (const event of events) {
+    const eventId = event.evidence.eventId;
+    if (!requiredPrefixIds.has(eventId)) continue;
+    if (eventsById.has(eventId)) {
+      throw new Error(`frozen TRAIN prefix event is ambiguous due to duplicate eventId: ${eventId}`);
+    }
+    eventsById.set(eventId, event);
+  }
   const selected: SyntheticPilotEvent[] = [];
 
   for (const participantId of protocol.trainingParticipantIds) {
@@ -158,15 +171,20 @@ export function selectFrozenPredictionHistory(
   }
 
   const allowedIds = new Set(protocol.trainPrefixEventIdsByParticipant[participantId] ?? []);
-  const selected = events.filter(
-    (event) => event.participantId === participantId && allowedIds.has(event.evidence.eventId),
-  );
-  if (selected.length !== allowedIds.size) {
-    const present = new Set(selected.map((event) => event.evidence.eventId));
-    const missing = [...allowedIds].filter((eventId) => !present.has(eventId));
+  const selectedById = new Map<string, SyntheticPilotEvent>();
+  for (const event of events) {
+    const eventId = event.evidence.eventId;
+    if (event.participantId !== participantId || !allowedIds.has(eventId)) continue;
+    if (selectedById.has(eventId)) {
+      throw new Error(`frozen prediction history has duplicate prefix eventId: ${eventId}`);
+    }
+    selectedById.set(eventId, event);
+  }
+  if (selectedById.size !== allowedIds.size) {
+    const missing = [...allowedIds].filter((eventId) => !selectedById.has(eventId));
     throw new Error(`frozen prediction history is missing prefix events: ${missing.join(",")}`);
   }
-  return Object.freeze([...selected]);
+  return Object.freeze([...selectedById.values()]);
 }
 
 export function buildBlindPredictionFeatureRow(
