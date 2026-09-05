@@ -11,7 +11,7 @@
 - [x] N007 Define delayed-retrieval and changed-context causal rules; primary prediction targets are free-recall/delayed-free-recall/near-transfer.
 - [x] N008 Draft privacy/consent/retention requirements; human collection remains disabled.
 - [x] N009 Require `nep.native-predictor.v1` estimator/hyperparameter freeze before any human N3 outcomes; comparative proposal specifies the configuration for N2 verification.
-- [ ] N010 Independent review PASS for Spec #005 exact head.
+- [x] N010 Independent review PASS for Spec #005 exact head `34013121cb9ab6850d15fa09a06ed3a46da44486` (PR #146 review `5120984278`).
 
 ## Comparative amendment — CODEX-CORE-FRONTIER-001
 
@@ -19,27 +19,27 @@
 - [x] N012 Propose baseline ladder, common estimator and conditional classical comparator in `contracts/native-pilot-contract.md`.
 - [x] N013 Map B3 columns to canonical code and expose duplicate/count-derived transforms; specify B2-basis attribution control.
 - [x] N014 Propose causal split/availability, metrics/coverage, uncertainty, sizing and removal criteria before N3.
-- [ ] N015 Independently approve amended Spec #005 and its statistical choices; N010 remains required.
+- [x] N015 Independently approve amended Spec #005 and its statistical choices on exact head `34013121cb9ab6850d15fa09a06ed3a46da44486`; N010 recorded above.
 
 ## N2 — synthetic plumbing only
 
-- [ ] N020 Create `benchmarks/native-evidence-v1/` from reviewed Spec #005.
-- [ ] N021 Implement versioned task definitions using existing `CoreTaskSpec`.
-- [ ] N022 Implement synthetic observations/candidates and issue evidence only through `validateReferenceCoreEvidence()`.
-- [ ] N023 Add cold-start, support/reveal, free-recall, delayed-recall, valid/invalid transfer scenarios.
-- [ ] N024 Add duplicate and out-of-order reducer adversarial scenarios.
-- [ ] N025 Add detached/cloned evidence rejection scenario.
-- [ ] N026 Implement strong B2/B3 pre-attempt feature extraction with explicit prediction timestamp and no future/current label feedback.
+- [x] N020 Create `benchmarks/native-evidence-v1/` from reviewed Spec #005.
+- [x] N021 Implement versioned task definitions using existing `CoreTaskSpec`.
+- [x] N022 Implement synthetic observations/candidates and issue evidence only through `validateReferenceCoreEvidence()`.
+- [x] N023 Add cold-start, support/reveal, free-recall, delayed-recall, valid/invalid transfer scenarios.
+- [x] N024 Add duplicate and out-of-order reducer adversarial scenarios.
+- [x] N025 Add detached/cloned evidence rejection scenario.
+- [x] N026 Implement strong B2/B3 pre-attempt feature extraction with explicit prediction timestamp and no future/current label feedback.
 - [ ] N027 Verify and fingerprint the reviewed `nep.native-predictor.v1` configuration using synthetic stability checks only; same estimator/preprocessing for B2/B2-basis/B3.
-- [ ] N028 Implement synthetic participant export/delete and prove participant-scoped artifacts are removed.
-- [ ] N029 Reuse benchmark manifest/integrity conventions; clearly mark every artifact `synthetic-plumbing-only`.
+- [x] N028 Implement synthetic participant export/delete and prove participant-scoped artifacts are removed.
+- [x] N029 Reuse benchmark manifest/integrity conventions; clearly mark every artifact `synthetic-plumbing-only`.
 - [ ] N030 Exact-head Verify + focused native harness CI green.
 - [ ] N031 Opposite-agent independent review PASS of N2 implementation.
-- [ ] N032 Implement B0 and B2-basis controls, algebraic duplicate audit and stable TRAIN-only preprocessing per predictor contract.
+- [x] N032 Implement B0 and B2-basis controls, algebraic duplicate audit and stable TRAIN-only preprocessing per predictor contract.
 - [ ] N033 Add late-label/equal-time, blind-block, participant-isolation and future-label mutation adversarial tests.
 - [ ] N034 Adapt metric/manifest donor for one-class Brier/log loss, nullable AUC, complete coverage and paired learner resampling.
 - [ ] N035 Verify installed pinned pyBKT backend and supported seeded multi-fit; parity-test a diagnostic observer, record per-start stopping/likelihoods, and review TRAIN-only near-best/stability tolerances. Missing diagnostics or one poor start must not exclude working BKT; retain unresolved assurance explicitly.
-- [ ] N036 Verify deletion invalidates dependent model/prediction/result artifacts; no participant survives through a stale fitted artifact.
+- [x] N036 Verify deletion invalidates dependent model/prediction/result artifacts; no participant survives through a stale fitted artifact.
 - [ ] N037 Test the two-contrast attribution decision table, exact versus unproven equivalence, missing utility margins, Brier conflicts and equality boundaries; no synthetic validity claims.
 
 ## N3 — human pilot
