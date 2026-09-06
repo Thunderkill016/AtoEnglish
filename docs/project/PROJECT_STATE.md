@@ -17,9 +17,7 @@ Do not infer product value, learner efficacy or future priority merely because a
 
 ## Production consistency
 
-### GitHub + Supabase
-
-The September canonical learning-attempt boundary has been reconciled:
+The September canonical learning-attempt boundary is reconciled across repository and production:
 
 - legacy attempt logging routes through `record_learning_attempt(...)` rather than direct authenticated table inserts;
 - compatibility attempts are attempt-only and do not fabricate canonical evidence/mastery;
@@ -27,17 +25,16 @@ The September canonical learning-attempt boundary has been reconciled:
 - repository migration history uses the same version;
 - authenticated callers can execute `get_learner_evidence_coverage(text[])`; anonymous callers cannot.
 
-### Remaining release blocker — Vercel
+The Vercel release path was restored by PR #157:
 
-Issue #152 remains the active release-consistency tracker.
+- reviewed pushes to `main` create production deployments through the Vercel Git integration;
+- `preview/**` branches create preview deployments;
+- other Git branches remain disabled by default in `vercel.json`;
+- the restored path was verified against exact Git metadata, production aliases, `/api/health`, `/learn`, `/login`, Supabase connectivity and Vercel runtime logs.
 
-The last verified Vercel production deployment observed during the reset is still based on Git commit:
+Issue #152 is resolved by this reconciled release path. The release invariant is now: **production must be traceable to an exact reviewed `main` commit, the required Supabase state must exist, and the resulting Vercel deployment must be verified after promotion.**
 
-`1e462367d365d03e01d2b211da2499ac612a57ff`
-
-Do not assume the live site matches current `main`. A future production release must verify the exact GitHub commit, Supabase state and resulting Vercel production deployment together.
-
-The previous GitHub Actions deployment experiment also established that the repository does not currently have a usable `VERCEL_TOKEN` secret for that workflow, so do not silently re-enable it and create a permanently failing deploy gate.
+Do not silently re-enable the old GitHub Actions Vercel deployment experiment. The repository does not rely on a `VERCEL_TOKEN` workflow for the current release path.
 
 ## Governance
 
@@ -49,7 +46,6 @@ The previous GitHub Actions deployment experiment also established that the repo
 
 ## Active work
 
-1. **#152 — P0 release consistency:** reconcile and verify the next Vercel production release.
-2. Newly discovered security/privacy/data-integrity/release-blocking defects, if any.
+There is no inherited P0 release-consistency task remaining after #152. Only newly discovered security/privacy/data-integrity/release-blocking defects may interrupt the next explicit product decision.
 
-After #152 is resolved, product direction should be researched and selected from current learner needs, product evidence and repository reality rather than inherited historical momentum.
+Product direction should now be researched and selected from current learner needs, product evidence and repository reality rather than inherited historical momentum.
