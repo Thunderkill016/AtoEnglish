@@ -1,80 +1,56 @@
-# AtoEnglish Source of Truth
-
-**Status:** canonical during and after the 2026-09-06 project reset unless superseded by an explicit reviewed owner decision.
+# AtoEnglish — Source of Truth
 
 ## Authority order
 
-When repository sources disagree, use this order:
+When sources disagree, use this order:
 
-1. **Current owner decision recorded in `docs/project/PROJECT_STATE.md`**.
-2. **Current `main` runtime code, migrations, configuration, and read-only verified production facts** for statements about what the system actually does.
-3. **Explicitly active GitHub issues/PRs listed in `PROJECT_STATE.md`** for bounded work currently in progress.
-4. **Durable technical/research references** for implementation knowledge, provided they do not claim current product authority.
-5. **Historical product documents, old roadmaps, closed/open archived PRs, old issues, experiment branches, agent logs and specs** as evidence/history only.
+1. explicit current owner decision recorded in `docs/project/PROJECT_STATE.md`;
+2. current `main` code, migrations, configuration and tests for what the repository actually does;
+3. directly verified production state for what production actually does;
+4. explicitly active GitHub issue/PR for bounded work in progress;
+5. Git history, closed PRs/issues and old branches as historical evidence only.
 
-A lower-ranked source may not silently override a higher-ranked source.
+A lower-ranked source cannot silently override a higher-ranked source.
 
-## Product identity rule
+## Product identity
 
 The project is **AtoEnglish**.
 
-Any source that describes **Nếp** as the current product, current engine mandate, current roadmap, or current governing source is historical/superseded unless `PROJECT_STATE.md` explicitly reactivates a bounded part of it.
-
-## Historical work is not deleted
-
-Historical work can remain valuable. Archiving means:
-
-- preserve Git commits and branches;
-- preserve useful research, tests, experiments and findings;
-- remove the work from the active queue;
-- prevent old docs/issues from automatically selecting new work;
-- require an explicit future AtoEnglish task to reuse it.
-
-Archived does not mean incorrect. It means **non-authoritative now**.
-
-## GitHub work-selection rule
-
-Only work explicitly named active in `PROJECT_STATE.md` may be treated as the current queue.
-
-An old open issue, Draft PR, branch name, spec checklist, agent backlog, or research TODO is not enough to make work active.
-
-During reset the active set is limited to:
-
-- #151 project reset;
-- #152 production/release consistency;
-- PR #87 compatibility review;
-- newly discovered P0 security/privacy/data-integrity defects.
+Historical names, roadmaps, experiments and R&D programs do not become current product authority merely because their branches/commits still exist.
 
 ## Documentation rule
 
-Documents that remain useful but represent an old product direction must carry a visible historical/reference status and point back to `docs/project/PROJECT_STATE.md`.
+The working tree intentionally keeps only a small current documentation set:
 
-Do not maintain parallel current roadmaps in:
+- `README.md`
+- `SECURITY.md`
+- `AGENTS.md`
+- `docs/project/PROJECT_STATE.md`
+- `docs/project/SOURCE_OF_TRUTH.md`
 
-- `AGENT_ROADMAP.md`;
-- `AGENT_BACKLOG.md`;
-- `AGENT_PLAN.md`;
-- `docs/product/**`;
-- experiment/spec directories;
-- PR descriptions.
+Do not recreate parallel roadmap, backlog, reset-report, archive-index, design-mandate or research-spec documents unless a current bounded task genuinely requires a durable artifact.
 
-Those files may describe scope/history, but `PROJECT_STATE.md` decides whether the scope is active.
+Historical material belongs in Git history/closed PRs/issues, not in a second active documentation tree.
 
-## Production truth rule
+## Work selection
 
-Never infer production state from GitHub alone.
+Only an explicit current owner decision or active issue/task can authorize new work. A detailed old branch, spec, TODO, experiment or architecture is not a task queue.
 
-For release-sensitive decisions reconcile all three:
+If no current task exists, stop rather than manufacture work.
+
+## Production truth
+
+Never infer production state from GitHub alone. For release-sensitive work reconcile:
 
 1. exact GitHub commit;
-2. exact Supabase migration/runtime contract state;
+2. exact Supabase migration/runtime state;
 3. exact Vercel production deployment.
 
-A green preview, green CI, or migration file in the repo does not prove production synchronization.
+CI green, preview green, or a migration file present in the repo does not prove production is synchronized.
 
-## Evidence rule
+## Evidence levels
 
-Keep evidence levels separate:
+Keep separate:
 
 - repository correctness;
 - infrastructure/runtime correctness;
@@ -85,33 +61,17 @@ Keep evidence levels separate:
 
 No lower level substitutes for a higher one.
 
-## Agent rule
+## Autonomy
 
-Agents must not generate work merely to remain busy.
-
-Before non-trivial work they must identify:
-
-- the active issue/task that authorizes it;
-- why it is active under `PROJECT_STATE.md`;
-- exact scope;
-- prohibited scope;
-- verification needed;
-- rollback/recovery path where relevant.
-
-If none exists, stop. Do not revive historical roadmaps automatically.
-
-## Autonomy rule
-
-`.agent-autopilot-disabled` remains authoritative. Old daemon/backlog-refill/task-pool material is historical and must not be executed.
+`.agent-autopilot-disabled` is authoritative. Autonomous daemon/backlog-refill/push/PR/deploy behavior must not be restored without an explicit reviewed owner decision.
 
 ## Conflict handling
 
-When a conflict is discovered:
+When a conflict appears:
 
-1. do not guess;
-2. record the conflicting sources;
-3. prefer verified runtime facts for descriptive questions;
-4. prefer `PROJECT_STATE.md` for current project/roadmap authority;
-5. create or update one bounded issue when a real decision is required.
+1. identify the conflicting sources;
+2. use current code/verified production facts for descriptive reality;
+3. use `PROJECT_STATE.md` for current project authority;
+4. create or update one bounded issue only if a real unresolved decision remains.
 
-Do not solve documentation conflict by creating another competing roadmap.
+Do not solve a source-of-truth conflict by creating another competing roadmap.

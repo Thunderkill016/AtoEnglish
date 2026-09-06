@@ -1,135 +1,55 @@
 # AtoEnglish — Current Project State
 
-**Status:** canonical during project reset  
 **Effective:** 2026-09-06  
-**Reset issue:** #151  
-**Base audited:** `main@b6db4731471f5e454b1c732cac595fd538f89c1a`
+**Project:** AtoEnglish
 
-## Project identity
+## Current state
 
-The current project is **AtoEnglish**.
+The repository has completed the source-of-truth and stale-document cleanup phase. Historical product/R&D programs are no longer kept as active documentation in the working tree.
 
-**Nếp is historical/R&D work.** It is not the current product name, product identity, roadmap, architecture mandate, or automatic source of future tasks. Nếp branches, issues, pull requests, specs, benchmarks, and research remain available as historical evidence and reusable R&D only.
+There is intentionally **no automatic product roadmap**. Existing features and curriculum describe what the codebase currently contains, not what AtoEnglish must build next.
 
-## Current mode
+## Runtime reality
 
-AtoEnglish is in **project reset / audit mode**.
+`main` contains the current Next.js/React/TypeScript/Supabase application, existing A0–B2 curriculum data, learning surfaces, progress/review systems, tests and migrations.
 
-No new product roadmap is active during this reset. In particular, none of the following historical directions is currently authoritative:
+Do not infer product value, learner efficacy or future priority merely because a subsystem already exists.
 
-- the 28-day work-speaking pilot;
-- YouTube-to-Curriculum / private lesson generation;
-- Real Talk / authentic-media product directions;
-- adaptive Nếp runtime and learner-model expansion;
-- Realtime tutor expansion;
-- OpenPronounce/pronunciation-engine expansion;
-- Nếp English Intelligence Engine / ontology / provenance / benchmark / native-evidence programs.
+## Production consistency
 
-These may contain useful work. Reuse requires a new bounded AtoEnglish decision after the reset; history does not grant current authority.
+### GitHub + Supabase
 
-## Runtime repository baseline
+The September canonical learning-attempt boundary has been reconciled:
 
-`main` remains the production-oriented AtoEnglish web codebase and currently contains:
+- legacy attempt logging routes through `record_learning_attempt(...)` rather than direct authenticated table inserts;
+- compatibility attempts are attempt-only and do not fabricate canonical evidence/mastery;
+- production includes migration `20260906115406_learner_evidence_coverage`;
+- repository migration history uses the same version;
+- authenticated callers can execute `get_learner_evidence_coverage(text[])`; anonymous callers cannot.
 
-- Next.js 16 / React 19 / TypeScript application;
-- Supabase authentication and PostgreSQL integration;
-- the existing A0–B2 curriculum data and lesson surfaces;
-- speaking, vocabulary, grammar, dialogue, translation, shadowing, quiz, review and progress features;
-- FSRS, XP/streak/progress and existing learner-state/planner code that already reached `main`;
-- Vitest, content-standard checks, Playwright coverage and GitHub Verify workflow.
+### Remaining release blocker — Vercel
 
-This inventory describes what exists. It does **not** declare every existing subsystem valuable, validated, or part of the next roadmap.
+Issue #152 remains the active release-consistency tracker.
 
-## Confirmed production consistency blockers
-
-### P0 — GitHub / Supabase mismatch
-
-Supabase production project `AtoEnglish` is healthy and currently has the September learning-core migrations through:
-
-- `20260902130000_learning_core_foundation`;
-- `20260902133000_record_learning_attempt`;
-- `20260902133500_learning_evidence_constraints`;
-- `20260902134000_privacy_safe_oral_observation`.
-
-Repository `main` also contains `20260903090000_learner_evidence_coverage`, but production does not currently expose `get_learner_evidence_coverage(text[])`.
-
-Authenticated direct INSERT/UPDATE/DELETE on `learning_attempts`, `learning_evidence_events`, and `learner_skill_states` is revoked. The `record_learning_attempt(...)` RPC exists and authenticated callers can execute it.
-
-Current `main` still has a legacy `recordLearningAttempts()` path that performs direct table inserts. Draft PR #87 is therefore a concrete compatibility candidate, not speculative R&D. It remains open for independent review under release-consistency issue #152.
-
-### P0 — Vercel / GitHub mismatch
-
-The latest observed Vercel **production** deployment is commit:
+The last verified Vercel production deployment observed during the reset is still based on Git commit:
 
 `1e462367d365d03e01d2b211da2499ac612a57ff`
 
-while audited GitHub `main` is:
+Do not assume the live site matches current `main`. A future production release must verify the exact GitHub commit, Supabase state and resulting Vercel production deployment together.
 
-`b6db4731471f5e454b1c732cac595fd538f89c1a`
+The previous GitHub Actions deployment experiment also established that the repository does not currently have a usable `VERCEL_TOKEN` secret for that workflow, so do not silently re-enable it and create a permanently failing deploy gate.
 
-Newer Vercel deployments observed during the audit are previews (`target: null`), not production promotions. No deployment is authorized by this reset.
+## Governance
 
-### P1 governance — `main` is unprotected
+- `.agent-autopilot-disabled` remains authoritative.
+- No historical roadmap/spec/agent backlog in Git history automatically becomes active work.
+- `main` code/migrations/tests are implementation truth; verified production facts are production truth.
+- New product work requires an explicit current decision and bounded task.
+- Security/privacy/data-integrity defects may interrupt normal prioritization.
 
-GitHub reports `main` branch protection disabled and no required status checks enforced at branch-protection level. The repository does have `.github/workflows/verify.yml`, but workflow existence is not equivalent to protected merge policy.
+## Active work
 
-The current connector does not expose a safe branch-protection write path, so this remains an explicit governance finding rather than a falsely claimed fix.
+1. **#152 — P0 release consistency:** reconcile and verify the next Vercel production release.
+2. Newly discovered security/privacy/data-integrity/release-blocking defects, if any.
 
-## Production learner-data reality
-
-Read-only production counts on 2026-09-06:
-
-- `learning_attempts`: **0**;
-- `learning_evidence_events`: **0**;
-- `learner_skill_states`: **0**;
-- `card_review_logs`: **0**;
-- `pilot_events`: **44**.
-
-Therefore learner-model, calibration, predictive-value, retention, transfer, or efficacy claims cannot be inferred from production usage. Synthetic and repository tests remain technical evidence only.
-
-## Autonomy state
-
-Repository autopilot is already disabled through `.agent-autopilot-disabled`. `AGENT_AUTOPILOT.md` records that daemon/orchestrator flows must remain disabled unless the owner intentionally restores them through review.
-
-The old `AGENT_ROADMAP.md` auto-refill task-pool semantics are superseded by this reset and must not select work.
-
-## What may happen during the reset
-
-Allowed:
-
-- read-only audit;
-- documentation/source-of-truth cleanup;
-- closing or archiving superseded GitHub issues and Draft PRs while preserving history and branches;
-- isolating real P0 production/security/data-integrity blockers;
-- verification of the reset branch.
-
-Not allowed:
-
-- choosing a new product roadmap;
-- adding new learner-facing features;
-- expanding Nếp/Core R&D;
-- deploying previews or `main` to production;
-- writing or migrating production data/schema as part of cleanup;
-- merging the reset automatically;
-- re-enabling autonomous backlog/task generation.
-
-## Active work during reset
-
-Only these are active by default:
-
-1. **#151 — PROJECT-RESET-001**: audit, synchronize, and clean the project.
-2. **#152 — P0-RELEASE-CONSISTENCY**: reconcile GitHub, Supabase and Vercel before the next production release.
-3. **PR #87**: retain as a concrete compatibility candidate until reviewed against current main + production RPC.
-
-Any security/privacy defect discovered during the reset may also interrupt this list.
-
-## Exit condition
-
-The reset is complete when:
-
-- AtoEnglish has one unambiguous source-of-truth hierarchy;
-- Nếp is clearly historical/R&D everywhere it can otherwise be mistaken for current authority;
-- stale automated planning documents cannot create work;
-- superseded PR/issue clutter is archived without deleting useful history;
-- production/repository divergence is explicitly bounded;
-- the repository is clean enough to research and decide the next AtoEnglish product direction from evidence rather than inherited momentum.
+After #152 is resolved, product direction should be researched and selected from current learner needs, product evidence and repository reality rather than inherited historical momentum.
