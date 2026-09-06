@@ -1,224 +1,130 @@
 # AGENTS.md — AtoEnglish
 
-> Vietnamese-first English learning web app.
-> Stack: Next.js 16, React 19, TypeScript, Tailwind CSS v4, Supabase, Vitest, Playwright, Vercel.
+> Current project: **AtoEnglish**.  
+> Current mode: **project reset / audit**.  
+> Canonical state: `docs/project/PROJECT_STATE.md`.
 
 This file is the default operating contract for coding agents working in this repository.
 
-## Mission
+## Identity
 
-AtoEnglish is the product. Coding agents are implementation workers. CycleWarden, GitHub, tests, and automation exist to help the owner develop AtoEnglish without losing product direction or repository control.
+AtoEnglish is the project.
 
-The current product goal is deliberately narrow:
-
-> Help Vietnamese adults who know some English but freeze when speaking at work complete a 28-day, 10–15 minute-per-day journey and demonstrate a practical speaking improvement.
-
-Do not optimize for feature count, architectural novelty, autonomous operation, or broad A0–B2 coverage.
+**Nếp is historical/R&D work, not the current product identity or roadmap.** A branch, issue, PR, spec, benchmark, namespace, or old document containing Nếp does not authorize new work by itself.
 
 ## Mandatory reading order
 
-Before proposing or changing non-trivial code, read:
+Before any non-trivial work:
 
-1. `docs/product/PRODUCT_TRUTH.md`
-2. `docs/product/CURRENT_PRIORITY.md`
-3. `docs/product/DO_NOT_BUILD.md`
-4. `docs/curriculum/28-day-speaking-journey-contract.md` for curriculum or lesson work
-5. `CONTENT_STYLE.md` for learner-facing content
-6. the relevant implementation, tests, migrations, issues, and recent pull requests
+1. `docs/project/PROJECT_STATE.md`
+2. `docs/project/SOURCE_OF_TRUTH.md`
+3. the explicitly active GitHub issue/PR named by `PROJECT_STATE.md`
+4. the exact current implementation, tests, migrations and production facts relevant to that task
+5. `docs/project/ARCHIVE_INDEX.md` only when reusing historical work
 
-When these sources disagree, stop and report the conflict. Do not silently choose the broader or more ambitious interpretation.
+Historical `docs/product/**`, old curriculum roadmaps, experiment specs, agent roadmaps and archived PRs are reference/history only unless a current bounded task explicitly reactivates them.
 
-## Working model
+## Reset mode
 
-1. Work on a dedicated branch; never push autonomous changes directly to `main`.
-2. Use one pull request for one bounded product or technical outcome.
-3. Do not create commits whose only purpose is recording successful checks.
-4. Do not generate placeholder maintenance work to keep an agent busy.
-5. Keep `AGENT_PLAN.md` limited to the current task and `AGENT_BACKLOG.md` limited to open work.
-6. Git history and pull requests are the record of completed work; do not duplicate full history in Markdown logs.
-7. Runtime logs under `logs/agent/` must not be committed.
-8. Stop and document ambiguity instead of guessing.
-9. Treat the approved scope as a permission boundary, not a suggestion.
-10. Never merge or deploy automatically. The owner makes the final authorization decision.
+Until PROJECT-RESET-001 (#151) is complete:
 
-## Product-first rules
+- do not choose a new product roadmap;
+- do not add learner-facing features;
+- do not expand Nếp/Core, learner-model, Realtime, OpenPronounce or pronunciation R&D;
+- do not revive the 28-day pilot, Real Talk, YouTube-to-Curriculum, or another historical direction automatically;
+- do not deploy or write/migrate production state as part of cleanup;
+- do not merge automatically.
 
-1. **Product priority beats technical interest.** Cleanup, abstraction, or infrastructure work is not justified unless it directly unblocks `docs/product/CURRENT_PRIORITY.md`.
-2. **Make the smallest coherent change.** Preserve working behavior outside the approved scope.
-3. **Do not mix systems.** Curriculum, authentication, database, analytics, XP, FSRS, payments, and architecture work require separate pull requests unless one cannot function without the other and the coupling is documented.
-4. **Separate technical evidence from learner evidence.** Passing checks proves repository consistency, not learning effectiveness or market demand.
-5. **Do not invent requirements.** Use visible assumptions or request a decision.
-6. **Stop when scope expands.** Open a follow-up issue instead of silently widening the current change.
-7. **Never expose secrets or perform unapproved production writes.** Never edit `.env.local` or commit credentials.
+Active work is limited to #151, #152, PR #87 review, and newly discovered P0 security/privacy/data-integrity defects.
 
-## Task contract
+## Work selection
 
-Every implementation task must state:
+An agent may work only when it can name:
 
-- problem;
-- intended learner, user, or developer outcome;
-- current evidence;
-- allowed files or directories;
-- explicitly forbidden scope;
-- acceptance criteria;
-- required technical checks;
-- required product checks;
-- manual review questions;
-- rollback or recovery plan.
+- the active issue/task authorizing the work;
+- the current blocker;
+- exact scope;
+- forbidden scope;
+- required verification;
+- rollback/recovery boundary where relevant.
 
-Small fixes may keep this contract in the issue or pull-request description. Larger work should use a focused spec document.
+If no active task exists, stop. Do not invent maintenance, refactors, research, benchmarks, task-pool items, or “next logical steps” to stay busy.
 
-## Workflow depth
+## Git and production safety
 
-Use the lightest safe process:
+1. Work on a dedicated branch from the intended exact base.
+2. Never force-update a branch unless an explicit recovery decision requires it.
+3. Never push autonomous changes directly to `main`.
+4. Never merge or deploy automatically.
+5. Never write to production DB during ordinary audit/review work.
+6. Never expose secrets or commit local environment files.
+7. Treat Vercel preview success, CI success, GitHub `main`, and Supabase production as separate states until reconciled.
+8. Before any release, identify the exact GitHub commit, Supabase migration head/runtime contract, and Vercel production deployment.
 
-- **Small:** isolated copy, metadata, or narrowly characterized bug — inspect, patch, targeted checks, pull request.
-- **Medium:** lesson or bounded feature — task contract, approved scope, implementation, technical and product checks, pull request.
-- **High risk:** auth, database, privacy, production, or broad architecture — explicit decision, risk review, migration or rollback plan, independent verification, pull request.
+## Autonomy
 
-Do not force every task through a large research lifecycle.
+`.agent-autopilot-disabled` remains authoritative.
 
-## Commands
+Do not restore cron, daemon, headless sessions, auto-refill, automatic pushes, automatic PR creation, or old `AGENT_ROADMAP.md` task-pool behavior without an explicit reviewed owner decision.
+
+## Evidence discipline
+
+Keep these levels separate:
+
+1. repository correctness;
+2. infrastructure/runtime correctness;
+3. model/measurement validity;
+4. usability;
+5. learner/learning evidence;
+6. market evidence.
+
+Passing tests proves repository behavior, not learning effectiveness. Synthetic data proves only what the synthetic experiment actually tests.
+
+## Current known P0 release consistency facts
+
+See #152 and `docs/project/PROJECT_STATE.md`.
+
+At reset start:
+
+- GitHub `main` = `b6db4731471f5e454b1c732cac595fd538f89c1a`;
+- Vercel production is still on `1e462367d365d03e01d2b211da2499ac612a57ff`;
+- Supabase production lacks repository migration `20260903090000_learner_evidence_coverage`;
+- production canonical learner tables reject authenticated direct writes;
+- `record_learning_attempt(...)` is the production write RPC;
+- PR #87 is retained as a concrete compatibility candidate.
+
+Do not “fix” these opportunistically inside unrelated work.
+
+## Technical baseline
+
+The current repository remains a Next.js/React/TypeScript/Supabase application with Vitest, Playwright and GitHub Verify checks.
+
+Use the existing scripts and current code as the implementation source of truth. Do not resurrect a historical architecture merely because its docs are more detailed.
+
+Common checks:
 
 ```bash
-npm run dev
 npx tsc --noEmit
 npm run lint
 npm run test
 npm run test:content-standard
-npm run test:integration
-npm run e2e
-npm run build
-npm run audit
-npm run inventory
-```
-
-Use `npm run build` as the final compilation check, not after every small edit.
-
-Do not claim a check passed unless it actually ran against the final committed state.
-
-## Architecture
-
-```text
-src/
-├── app/                         # App Router pages, layouts, route handlers, actions
-├── components/                  # Shared UI and layout components
-├── features/                    # Feature-owned logic and components
-├── lib/
-│   ├── supabase/                # Browser, server, and middleware clients
-│   ├── security/                # Rate limiting and validation
-│   ├── lessons/                 # Lesson blueprint and learning flow
-│   ├── data/units/              # Curriculum content
-│   └── constants/               # Shared constants
-├── types/
-│   ├── supabase.ts              # Generated; never edit manually
-│   └── index.ts
-└── proxy.ts                     # Next.js route protection and rate limiting
-```
-
-New product-specific code should normally live under `src/features/<feature>/`. Shared visual primitives belong under `src/components/ui/`. Avoid catch-all folders such as `misc`, `helpers`, `old`, `backup`, or `temp`.
-
-Preserve the modular monolith unless a measured product blocker requires architectural change.
-
-## Protected areas
-
-Do not change these areas unless the task explicitly requires them:
-
-- database schema, migrations, functions, or RLS policies;
-- authentication, onboarding, and route protection;
-- `src/proxy.ts` behavior;
-- analytics event taxonomy or privacy boundary;
-- FSRS scheduling parameters;
-- XP, stars, streaks, leagues, and achievements;
-- payment or production deployment configuration;
-- lesson section order or pedagogical flow;
-- `src/components/learn/UnitTemplate.tsx` architecture;
-- unrelated curriculum units;
-- dependencies with meaningful bundle, runtime, or infrastructure impact;
-- raw audio, transcripts, names, employers, or learner free text in analytics.
-
-## TypeScript and Next.js
-
-- Do not use `any` or `as any`.
-- In Next.js 16 server code, await asynchronous framework APIs such as `cookies()`, `headers()`, `params`, and the server Supabase client.
-- Use the correct Supabase client for the execution context:
-  - server components, route handlers, and actions: server client;
-  - client components: browser client;
-  - `proxy.ts`: middleware client.
-- Prefer parallel independent database queries with `Promise.all`.
-- Do not use `dynamic(..., { ssr: false })` inside server components.
-
-## Database and security
-
-- Keep RLS enabled.
-- Derive the authenticated user with `supabase.auth.getUser()`; never trust a client-supplied user ID.
-- Validate external input with Zod.
-- Apply rate limiting to write actions where required by existing project patterns.
-- Make schema changes only through migrations.
-- After a migration, regenerate `src/types/supabase.ts` with `npm run db:types`.
-- Known table names include `user_progress` and `user_lesson_progress`; do not invent replacement names.
-
-## Curriculum and lesson work
-
-Before editing unit content, read:
-
-- `docs/curriculum/28-day-speaking-journey-contract.md`;
-- `CONTENT_STYLE.md`;
-- `src/lib/lessons/lesson-blueprint.ts`;
-- `src/lib/lessons/learning-flow.ts`;
-- `src/lib/lessons/content-standard.ts`;
-- the current relevant unit and its tests.
-
-A lesson change must demonstrate more than valid TypeScript and required field counts. Confirm:
-
-- one measurable daily can-do outcome;
-- a required spoken output;
-- a credible 10–15 minute scope;
-- retrieval rather than only recognition or repetition;
-- lower prompt support by the final task;
-- a changed or meaningful speaking situation;
-- no language expansion beyond the daily task;
-- a completion path containing speaking evidence or the approved fallback;
-- alignment with the 28-day journey and later assessment.
-
-Do not change lesson order as part of content cleanup.
-
-Curriculum changes require, at minimum:
-
-```bash
-npm run test:content-standard
-bash scripts/audit-lesson-content.sh
-npx tsc --noEmit
-npm run lint
-npm run test
 npm run build
 ```
 
-Also run targeted unit tests and relevant production lesson smoke checks.
+Database-sensitive changes additionally require fresh migration replay, database lint and pgTAP/RLS checks through the existing verification path.
 
-## Cleanup rules
+Do not claim a check passed unless it actually ran against the exact committed state being reviewed.
 
-Cleanup must be staged:
+## Cleanup rule
 
-1. establish a passing baseline;
-2. run `npm run inventory` and review its candidates;
-3. classify each candidate as `safe_to_delete`, `likely_unused`, or `manual_verification`;
-4. delete only verified items;
-5. refactor large components through small behavior-preserving extractions;
-6. run relevant checks after every batch;
-7. review the diff before committing.
+Cleanup is allowed only under the reset task and must remain reversible:
 
-Do not combine cleanup with feature development. Do not refactor merely to reduce line count.
+- prefer status stubs and archive indexes over destructive history deletion;
+- preserve useful branches/commits;
+- close superseded GitHub work instead of pretending it is current;
+- separate genuine production bugs from speculative R&D;
+- do not combine cleanup with feature development.
 
-## Before a pull request
+## After reset
 
-Run the checks appropriate to the changed surface and confirm:
-
-- no unrelated files changed;
-- no production `console.log` or `console.error` was introduced;
-- no generated or runtime artifact was committed;
-- no secrets or production data were exposed;
-- documentation describes the current repository rather than an old implementation;
-- the pull-request body explains what changed, why it serves the current priority, checks executed, remaining risks, and what the owner should manually review.
-
-The ordered development direction is maintained in `docs/product/CURRENT_PRIORITY.md`. Agents must not choose a different roadmap item merely because it is easier or more technically interesting.
+A new AtoEnglish product direction must be researched and selected explicitly after #151 is complete. Historical projects may inform that decision, but none is automatically reinstated.
