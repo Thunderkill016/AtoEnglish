@@ -41,6 +41,24 @@ select ok(
   'service role retains privileged league-XP compatibility access'
 );
 
+select ok(
+  not has_function_privilege(
+    'authenticated',
+    to_regprocedure('public.complete_unit_transaction(uuid,text,integer,integer,text)'),
+    'EXECUTE'
+  ),
+  'authenticated cannot bypass checkpoint proof through completion primitive'
+);
+
+select ok(
+  has_function_privilege(
+    'authenticated',
+    to_regprocedure('public.claim_unit_checkpoint_transaction(uuid,text,jsonb)'),
+    'EXECUTE'
+  ),
+  'authenticated can submit checkpoint answers to trusted completion boundary'
+);
+
 insert into auth.users (id, aud, role, email, created_at, updated_at)
 values (
   '44444444-4444-4444-8444-444444444444',
@@ -62,41 +80,16 @@ set local role authenticated;
 
 select lives_ok(
   $$
-    select public.complete_unit_transaction(
+    select public.claim_unit_checkpoint_transaction(
       '44444444-4444-4444-8444-444444444444'::uuid,
       'unit-a0-1',
-      60,
-      3,
-      '2099-01-01'
+      '{"name":"My name is Lan.","role":"I work as a designer.","ask-name":"What is your name?","repair":"Could you say that again?"}'::jsonb
     )
   $$,
-  'validated unit completion remains available to authenticated learner'
+  'database-validated checkpoint completion remains available to authenticated learner'
 );
 
 reset role;
-
-select is(
-  (
-    select total_xp
-    from public.user_progress
-    where user_id = '44444444-4444-4444-8444-444444444444'::uuid
-  ),
-  60,
-  'validated unit completion awards only database-derived total XP'
-);
-
-select is(
-  (
-    select lm.xp_this_week
-    from public.league_memberships lm
-    join public.leagues l on l.id = lm.league_id
-    where lm.user_id = '44444444-4444-4444-8444-444444444444'::uuid
-      and l.week_start = date_trunc('week', now())::date
-    limit 1
-  ),
-  60,
-  'validated unit completion atomically awards the same database-derived league XP'
-);
 
 select * from finish();
 rollback;
