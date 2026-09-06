@@ -37,8 +37,7 @@
     "check-deploy": "bash scripts/check-vercel-deploy.sh",
     "check-deploy:wait": "sleep 30 && bash scripts/check-vercel-deploy.sh",
     "smoke:learn": "bash scripts/smoke-learn.sh",
-    "ci:local": "bash scripts/ci-local.sh",
-    "ci:gitlab": "gitlab-ci-local lint-test"
+    "ci:local": "bash scripts/ci-local.sh"
   },
   "dependencies": {
     "@base-ui/react": "^1.6.0",
@@ -81,7 +80,6 @@
     "dotenv-cli": "^11.0.0",
     "eslint": "^9",
     "eslint-config-next": "16.2.9",
-    "gitlab-ci-local": "^4.73.0",
     "husky": "^9.1.7",
     "jsdom": "^29.1.1",
     "lint-staged": "^17.0.7",

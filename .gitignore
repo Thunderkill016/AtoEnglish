@@ -12,9 +12,6 @@
 # testing
 /coverage
 
-# generated gitlab-ci-local cache (temporary until the package dependency is removed)
-/.gitlab-ci-local/
-
 # next.js
 /.next/
 /.next-dev/
