@@ -1,5 +1,28 @@
--- Close the authenticated execution bypass around privileged gamification helpers.
--- Browser/Data API callers must enter through public wrappers that enforce JWT self scope.
+-- Close authenticated execution bypasses around private implementation helpers.
+-- Browser/Data API callers must enter through explicit public authorization boundaries.
+
+-- Functions grant EXECUTE to PUBLIC by default unless explicitly revoked. Because
+-- authenticated has USAGE on the private schema for controlled wrapper internals,
+-- audit and revoke every existing private-schema function from browser roles here.
+-- Explicit service-role grants are preserved unless a function is deliberately
+-- re-declared below with a narrower privilege set.
+DO $migration$
+DECLARE
+  v_function regprocedure;
+BEGIN
+  FOR v_function IN
+    SELECT p.oid::regprocedure
+    FROM pg_catalog.pg_proc AS p
+    JOIN pg_catalog.pg_namespace AS n ON n.oid = p.pronamespace
+    WHERE n.nspname = 'private'
+  LOOP
+    EXECUTE pg_catalog.format(
+      'REVOKE ALL ON FUNCTION %s FROM PUBLIC, anon, authenticated',
+      v_function
+    );
+  END LOOP;
+END
+$migration$;
 
 REVOKE ALL ON FUNCTION private.assign_league_for_user_internal(uuid)
   FROM PUBLIC, anon, authenticated, service_role;
