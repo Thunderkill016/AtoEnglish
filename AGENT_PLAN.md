@@ -1,45 +1,37 @@
 # Agent Plan — Current Work Only
 
-> Product direction is defined in `docs/product/PRODUCT_TRUTH.md`. Ordered work is defined in `docs/product/CURRENT_PRIORITY.md`.
+**Canonical state:** `docs/project/PROJECT_STATE.md`  
+**Current task:** PROJECT-RESET-001 (#151)
 
-## Current task
+## Goal
 
-| Field | Value |
-|---|---|
-| Task | PRODUCT-001 — Encode AtoEnglish product truth and agent development rules |
-| Status | in progress — documentation-only pull request |
-| Goal | Make the current 28-day pilot direction discoverable and prevent agents from selecting stale cleanup or premature feature work |
+Audit, synchronize and clean AtoEnglish before any new product development.
 
-## Scope
+## Current scope
 
-This task may change only repository guidance and planning documents:
+- establish one AtoEnglish source of truth;
+- mark Nếp and other competing product directions historical/R&D;
+- clean stale agent planning state;
+- archive superseded Draft PRs/issues while preserving branches/history;
+- isolate real production/security/data-integrity blockers;
+- verify the reset branch.
 
-- `AGENTS.md`
-- `AGENT_PLAN.md`
-- `AGENT_BACKLOG.md`
-- `docs/product/**`
+## Active P0 follow-up
 
-It must not change product runtime, lesson data, tests, dependencies, database, authentication, analytics, XP, FSRS, payment, or deployment behavior.
+Release consistency is tracked separately in #152.
 
-## Acceptance
+PR #87 remains open as a concrete compatibility candidate because production canonical learner tables reject authenticated direct inserts while current `main` still contains a legacy direct-insert path.
 
-- The target learner, 28-day promise, final speaking outcome, and evidence hierarchy are explicit.
-- Agents have one mandatory reading order and one task-contract format.
-- The active priority and deferred scope are explicit.
-- Historical cleanup tasks no longer appear as current work.
-- No runtime source or configuration changes are included.
+## Forbidden during reset
 
-## Completed baseline
+- no new product roadmap;
+- no learner-facing feature development;
+- no Nếp/Core expansion;
+- no OpenPronounce/pronunciation expansion;
+- no production migration/write/deploy;
+- no automatic merge;
+- no automated backlog refill.
 
-The repository already contains:
+## Done when
 
-- aligned pilot promise;
-- baseline/final speaking assessment and rubric;
-- privacy-bounded pilot analytics;
-- Supabase security hardening;
-- a repository-owned 28-day speaking-journey contract;
-- an explicit Day 1 lesson boundary.
-
-## Next action
-
-Review and merge this documentation reset. The next separate task is TOOLING-001: create one small verification entry point for a focused AtoEnglish curriculum slice without changing product behavior.
+`docs/project/PROJECT_STATE.md` and `SOURCE_OF_TRUTH.md` accurately describe the cleaned repository, stale active work is archived, genuine P0 blockers are isolated, and the reset PR is reviewable against current `main`.
