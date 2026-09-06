@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { compileLegacyAttemptRpcArgs } from "@/lib/learning/legacy-attempt-adapter";
+import type { LearningAttemptItem } from "@/lib/lessons/learning-attempt";
 
 const baseAttempt = {
   activityId: "unit-a0-1:checkpoint:q1",
@@ -64,23 +65,25 @@ describe("compileLegacyAttemptRpcArgs", () => {
   });
 
   it("maps modalities conservatively without creating evidence", () => {
-    const expected = {
-      speaking: "speech",
-      shadowing: "speech",
-      writing: "text",
-      quiz: "choice",
-      checkpoint: "choice",
-      listening: "none",
-      reading: "none",
-      vocabulary: "none",
-      grammar: "none",
-    } as const;
+    const modalityCases: Array<
+      [LearningAttemptItem["modality"], "choice" | "text" | "speech" | "none"]
+    > = [
+      ["speaking", "speech"],
+      ["shadowing", "speech"],
+      ["writing", "text"],
+      ["quiz", "choice"],
+      ["checkpoint", "choice"],
+      ["listening", "none"],
+      ["reading", "none"],
+      ["vocabulary", "none"],
+      ["grammar", "none"],
+    ];
 
-    for (const [modality, responseModality] of Object.entries(expected)) {
+    for (const [modality, responseModality] of modalityCases) {
       const result = compileLegacyAttemptRpcArgs({
         sessionId: "11111111-1111-4111-8111-111111111111",
         lessonId: "unit-a0-1",
-        attempt: { ...baseAttempt, modality: modality as typeof baseAttempt.modality },
+        attempt: { ...baseAttempt, modality },
       });
       expect(result.p_response_modality).toBe(responseModality);
       expect(result.p_evidence_type).toBeNull();
