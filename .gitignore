@@ -6,18 +6,13 @@
 .pnp.js
 .yarn/install-state.gz
 
-# agent autopilot logs (keep dir via .gitkeep)
-/logs/agent/*.log
-/logs/agent/cron.log
-/logs/agent/.orchestrator-state
-
 # generated cleanup reports
 /reports/codebase-inventory.generated.md
 
 # testing
 /coverage
 
-# generated gitlab-ci-local cache and build worktrees
+# generated gitlab-ci-local cache (temporary until the package dependency is removed)
 /.gitlab-ci-local/
 
 # next.js
