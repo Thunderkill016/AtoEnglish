@@ -14,11 +14,13 @@ select ok(
   'authenticated cannot execute the privileged learning-attempt core directly'
 );
 
-select like(
-  pg_get_functiondef(
-    to_regprocedure('public.record_learning_attempt(text,text,uuid,text,text,text,text,text,boolean,integer,integer,boolean,integer,jsonb,text,text,boolean,double precision,text,text,jsonb)')
-  ),
-  '%session_user = ''authenticator'' AND p_evidence_type IS NOT NULL%',
+select ok(
+  position(
+    'session_user = ''authenticator'' AND p_evidence_type IS NOT NULL'
+    in pg_get_functiondef(
+      to_regprocedure('public.record_learning_attempt(text,text,uuid,text,text,text,text,text,boolean,integer,integer,boolean,integer,jsonb,text,text,boolean,double precision,text,text,jsonb)')
+    )
+  ) > 0,
   'public learning-attempt RPC rejects evidence-bearing calls at the PostgREST authenticator boundary'
 );
 
