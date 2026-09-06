@@ -1,53 +1,29 @@
 # AtoEnglish 🇻🇳→🇬🇧
 
-> Học tiếng Anh và luyện phản xạ nói dành cho người Việt.
+> Ứng dụng học tiếng Anh dành cho người Việt.
 
-## Project status — reset in progress
+## Trạng thái dự án
 
-AtoEnglish is undergoing a controlled project audit/reset before further product development.
+AtoEnglish đã được dọn lại source-of-truth ngày 2026-09-06. Repository hiện **không có product roadmap tự động**; hướng sản phẩm tiếp theo phải được quyết định từ trạng thái code hiện tại và bằng chứng người học, không từ các roadmap/R&D lịch sử.
 
-- Current project identity: **AtoEnglish**.
-- Nếp and other competing historical directions are **R&D/history, not the current roadmap**.
-- Canonical current state: [`docs/project/PROJECT_STATE.md`](docs/project/PROJECT_STATE.md).
-- Source-of-truth rules: [`docs/project/SOURCE_OF_TRUTH.md`](docs/project/SOURCE_OF_TRUTH.md).
-- Reset audit: [`docs/project/RESET_AUDIT_2026-09-06.md`](docs/project/RESET_AUDIT_2026-09-06.md).
-- Reusable historical work: [`docs/project/ARCHIVE_INDEX.md`](docs/project/ARCHIVE_INDEX.md).
-- Reset tracking: GitHub issue #151.
-- Release consistency: GitHub issue #152.
+- Trạng thái hiện tại: [`docs/project/PROJECT_STATE.md`](docs/project/PROJECT_STATE.md)
+- Quy tắc source-of-truth: [`docs/project/SOURCE_OF_TRUTH.md`](docs/project/SOURCE_OF_TRUTH.md)
+- Quy tắc cho coding agents: [`AGENTS.md`](AGENTS.md)
+- Chính sách bảo mật: [`SECURITY.md`](SECURITY.md)
 
-Do not infer that the live Vercel deployment matches current `main`; the reset found deployment/database/repository divergence that must be reconciled before the next release.
+Các tài liệu Nếp, 28-day pilot, Real Talk, YouTube-to-Curriculum, CycleWarden, OpenPronounce, learner-model và các roadmap/spec cũ đã được bỏ khỏi working tree. Lịch sử của chúng vẫn tồn tại trong Git/PR/issue history nếu cần tra cứu.
 
-[![Live](https://img.shields.io/badge/live-atoenglish.vercel.app-emerald)](https://atoenglish.vercel.app)
+## Stack
 
-AtoEnglish is a Vietnamese-first English-learning web application focused on structured lessons, speaking practice, pronunciation feedback, vocabulary review, and learning progress.
+- Next.js 16 / React 19 / TypeScript
+- Tailwind CSS v4
+- Supabase Auth + PostgreSQL
+- Vitest + Playwright
+- Vercel
 
-## Current stack
+Phiên bản chính xác nằm trong `package.json` và `package-lock.json`.
 
-- Next.js 16 with App Router
-- React 19 and TypeScript 6
-- Tailwind CSS v4 and Framer Motion
-- Supabase Auth and PostgreSQL
-- FSRS scheduling through `ts-fsrs`
-- Vitest and Playwright
-- Sentry, Vercel Analytics, and Speed Insights
-- Upstash Redis rate limiting
-
-Exact versions are defined in `package.json` and `package-lock.json`.
-
-## Existing product areas
-
-These describe the current codebase; they are not automatically the next roadmap:
-
-- CEFR-oriented roadmap from A0 foundation through B2
-- 50 lesson units stored as TypeScript curriculum data
-- vocabulary, grammar, dialogue, translation, shadowing, speaking, and quiz sections
-- speaking practice with Vietnamese-specific feedback
-- FSRS flashcard review
-- XP, streak, progress, and league features
-- guest progress through browser storage where supported
-- Supabase-backed progress for authenticated users
-
-## Quick start
+## Chạy local
 
 ```bash
 git clone https://github.com/Thunderkill016/AtoEnglish.git
@@ -57,114 +33,47 @@ cp .env.example .env.local
 npm run dev
 ```
 
-The development server normally runs at `http://localhost:3000`.
-
-## Environment
-
-At minimum, local authenticated flows require:
+Các flow dùng Supabase cần tối thiểu:
 
 ```text
 NEXT_PUBLIC_SUPABASE_URL
 NEXT_PUBLIC_SUPABASE_ANON_KEY
 ```
 
-Optional production integrations use variables for Upstash, Sentry, VAPID push notifications, Resend, and deployment tooling. Use `.env.example` and the relevant integration code as the source of truth. Never commit `.env.local` or secrets.
+Không commit secret hoặc `.env.local`.
 
-## Commands
-
-```bash
-npm run dev                    # development server
-npx tsc --noEmit               # TypeScript validation
-npm run lint                   # ESLint
-npm run test                   # unit tests
-npm run test:content-standard  # curriculum content gate
-npm run test:integration       # Supabase integration tests; requires environment
-npm run e2e                    # Playwright; requires environment and app runtime
-npm run build                  # production compilation check
-npm run audit                  # project-specific static checks
-npm run inventory              # conservative cleanup inventory; no file deletion
-npm run inventory -- --write   # write generated inventory report
-```
-
-Test totals are intentionally not written into this README because they change as the suite evolves. The test runner and CI output are the source of truth.
-
-## Project structure
-
-```text
-src/
-├── app/
-│   ├── page.tsx
-│   ├── login/
-│   ├── auth/
-│   ├── actions/
-│   └── (main)/
-│       ├── dashboard/
-│       ├── learn/[unitSlug]/
-│       ├── flashcards/
-│       ├── speaking/
-│       ├── progress/
-│       └── roadmap/
-├── components/
-│   ├── landing/
-│   ├── layout/
-│   ├── learn/
-│   └── ui/
-├── features/
-├── lib/
-│   ├── data/units/
-│   ├── lessons/
-│   ├── security/
-│   ├── srs/
-│   └── supabase/
-├── types/
-└── proxy.ts
-```
-
-### Known architecture debt
-
-`src/components/learn/UnitTemplate.tsx` is active and central to the lesson experience, but it currently owns too many responsibilities. Do not refactor it merely to reduce line count; a future change requires a current measured blocker and behavior-preserving verification.
-
-The cleanup inventory and evidence are documented in `reports/codebase-cleanup-inventory.md`.
-
-## Curriculum implementation source
-
-The active lesson route imports A0–B2 unit data from `src/lib/data/units/` and registers it for `/learn/[unitSlug]`.
-
-During project reset, existing curriculum data is implementation reality, not an approved future curriculum strategy. Historical product/curriculum contracts are indexed under `docs/project/ARCHIVE_INDEX.md`.
-
-## Database implementation source
-
-Repository schema sources are:
-
-- `supabase/migrations/`
-- generated database types in `src/types/supabase.ts`
-- server actions and queries under `src/app/actions/` and `src/lib/`
-
-For production-sensitive decisions, repository migrations must also be reconciled against the actual Supabase production migration/runtime state; see #152.
-
-All schema changes must be made through migrations. Regenerate types with:
+## Các lệnh chính
 
 ```bash
-npm run db:types
+npm run dev
+npx tsc --noEmit
+npm run lint
+npm run test
+npm run test:content-standard
+npm run test:integration
+npm run e2e
+npm run build
+npm run audit
+npm run inventory
 ```
 
-Never disable RLS to work around an application bug.
+Không ghi số lượng test cố định vào tài liệu; output CI/test runner là nguồn đúng.
 
-## Cleanup policy
+## Source kỹ thuật
 
-- Use a dedicated branch and reviewed pull request.
-- Do not push automated cleanup directly to `main`.
-- Do not combine cleanup with feature development.
-- Preserve useful Git history and branches; archive stale work instead of destructive rewriting.
-- Do not remove a file or dependency from an import-only guess.
-- Verify framework conventions, dynamic imports, scripts, config, migrations, and operational usage.
-- Run checks appropriate to the changed surface before review.
+- Runtime: `src/`
+- Curriculum đang tồn tại: `src/lib/data/units/`
+- Database migrations: `supabase/migrations/`
+- Generated DB types: `src/types/supabase.ts`
+- CI chính: `.github/workflows/verify.yml`
 
-## Deployment and CI
+Code, migrations, config và tests mô tả hệ thống đang chạy; tài liệu không được phép ghi đè thực tế đó.
 
-`.github/workflows/verify.yml` is the current repository Verify workflow for PRs/pushes involving `main`.
+## Release consistency
 
-The reset found that GitHub `main`, Supabase production migration/runtime state and Vercel production are not currently synchronized. No deployment should be promoted until #152 records an exact synchronized release state.
+GitHub + Supabase đã được đồng bộ lại trong đợt reset 2026-09-06. Vercel production vẫn phải được đối chiếu với exact `main` trước lần release tiếp theo; theo dõi tại issue #152.
+
+Không coi preview deployment hoặc CI xanh là bằng chứng production đã đồng bộ.
 
 ## License
 
