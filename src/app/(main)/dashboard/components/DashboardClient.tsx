@@ -20,10 +20,6 @@ import LevelProgressBar from "./LevelProgressBar";
 
 interface DashboardClientProps {
   userName: string;
-  currentStreak: number;
-  bestStreak: number;
-  lastActiveDate: string | null;
-  totalXp: number;
   userLevel: string;
   completedUnits: number;
   dueCardsCount: number;
@@ -38,9 +34,7 @@ interface DashboardClientProps {
     tags: string[];
     xp: number;
   };
-  initialXpCurrent: number;
   dailyMissions: DailyMission[];
-  dailyXpGoal: number;
   wordOfDay: {
     word: string;
     phonetic: string;
@@ -50,9 +44,6 @@ interface DashboardClientProps {
     level: "A0" | "A1" | "A2" | "B1" | "B2" | "C1";
   } | null;
   completedUnitIds: string[];
-  streakFreezeCount: number;
-  weeklyData: Array<{ day: string; label: string; xp: number; pct: number }>;
-  calendarData: Array<{ date: string; xp: number }>;
   allUnits: Array<{ id: string; title: string; level: string; route: string; xp: number }>;
   recentSpeakingSessions: Array<{
     id: string;
