@@ -1,7 +1,6 @@
 "use client";
 
 import { useCallback } from "react";
-import { MILESTONE_REWARDS } from "../utils/streakCalculator";
 
 export interface MilestoneState {
   pendingMilestone: number | null;
@@ -12,9 +11,9 @@ export interface MilestoneState {
 }
 
 /**
- * Streak milestone celebrations are outside the active product surface.
- * Keep this no-op compatibility hook until callers are removed from the large
- * lesson orchestrator; do not add milestone rewards or engagement behavior here.
+ * Compatibility hook only.
+ * Streak milestone celebrations and rewards are outside the active product scope.
+ * Keep the return shape until the large lesson orchestrator drops its legacy wiring.
  */
 export function useStreakMilestone(): MilestoneState {
   const dismissMilestone = useCallback(async () => {}, []);
@@ -27,9 +26,4 @@ export function useStreakMilestone(): MilestoneState {
     checkMilestone,
     isAwarding: false,
   };
-}
-
-/** Compatibility lookup for legacy callers; not an active product surface. */
-export function getMilestoneReward(milestone: number) {
-  return MILESTONE_REWARDS[milestone] ?? null;
 }
