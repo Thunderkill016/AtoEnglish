@@ -84,6 +84,10 @@ for (const retiredRoute of [
   fs.unlinkSync(retiredRoute);
 }
 
+const levelUpModalFile = "src/components/learn/LevelUpModal.tsx";
+if (!fs.existsSync(levelUpModalFile)) throw new Error("Missing orphan LevelUpModal");
+fs.unlinkSync(levelUpModalFile);
+
 const vercelFile = "vercel.json";
 const vercel = JSON.parse(fs.readFileSync(vercelFile, "utf8"));
 if (!Array.isArray(vercel.crons)) throw new Error("Missing vercel crons array");
