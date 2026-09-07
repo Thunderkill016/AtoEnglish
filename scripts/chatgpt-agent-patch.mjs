@@ -29,6 +29,36 @@ patchFile("src/components/learn/sections/PracticeSection.tsx", [
     "        playCorrectSound();\n        addSessionXp?.(3); // S2-3: +3 XP per matched pair\n        recordAttempt(unit.unitId, \"matching\", true); // S3-3\n",
     "        playCorrectSound();\n        recordAttempt(unit.unitId, \"matching\", true); // S3-3\n",
   ],
+  [
+    "scramble XP award",
+    "                        playCorrectSound();\n                        addSessionXp?.(5); // S2-3: +5 XP for correct scramble\n                        recordAttempt(unit.unitId, \"scramble\", true); // S3-3\n",
+    "                        playCorrectSound();\n                        recordAttempt(unit.unitId, \"scramble\", true); // S3-3\n",
+  ],
+  [
+    "sentence correction XP award",
+    "                if (correct) { playCorrectSound(); addSessionXp?.(5); }\n                else playWrongSound();\n                recordAttempt(unit.unitId, \"correction\", correct); // S3-3\n",
+    "                if (correct) playCorrectSound();\n                else playWrongSound();\n                recordAttempt(unit.unitId, \"correction\", correct); // S3-3\n",
+  ],
+  [
+    "listen arrange XP award",
+    "              setArrangeScore(s => s + 1);\n              addSessionXp?.(8); // S2-3: +8 XP per audio arrangement\n              recordAttempt(unit.unitId, \"listen-arrange\", true);\n",
+    "              setArrangeScore(s => s + 1);\n              recordAttempt(unit.unitId, \"listen-arrange\", true);\n",
+  ],
+  [
+    "word bank XP award",
+    "              if (correct) { playCorrectSound(); addSessionXp?.(5); } // S2-3\n              else playWrongSound();\n              recordAttempt(unit.unitId, \"wordbank\", correct); // S3-3\n",
+    "              if (correct) playCorrectSound();\n              else playWrongSound();\n              recordAttempt(unit.unitId, \"wordbank\", correct); // S3-3\n",
+  ],
+  [
+    "dictation XP award",
+    "              if (correct) { playCorrectSound(); addSessionXp?.(5); } // S2-3\n              else playWrongSound();\n              recordAttempt(unit.unitId, \"dictation\", correct); // S3-3\n",
+    "              if (correct) playCorrectSound();\n              else playWrongSound();\n              recordAttempt(unit.unitId, \"dictation\", correct); // S3-3\n",
+  ],
+  [
+    "practice pass XP award",
+    "            if (practiceScore >= Math.ceil(PRACTICE_QS.length * 0.7)) {\n              playCorrectSound();\n              addSessionXp?.(10); // S2-3: +10 XP for passing quiz\n            } else playWrongSound();\n",
+    "            if (practiceScore >= Math.ceil(PRACTICE_QS.length * 0.7)) {\n              playCorrectSound();\n            } else playWrongSound();\n",
+  ],
 ]);
 
 patchFile("src/components/learn/sections/QuizSection.tsx", [
@@ -46,6 +76,11 @@ patchFile("src/components/learn/sections/QuizSection.tsx", [
     "XP completion subtitle",
     "        subtitle=\"Hoàn thành để nhận XP\"\n",
     "        subtitle=\"Hoàn thành bài và xem kết quả học tập\"\n",
+  ],
+  [
+    "XP completion button label",
+    "                : `🎉 Hoàn thành bài học (+${xpToEarn} XP)`}\n",
+    "                : \"Hoàn thành bài học\"}\n",
   ],
 ]);
 
