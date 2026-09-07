@@ -98,7 +98,6 @@ export default async function DashboardPage() {
       title: currentUnitData.title,
       progress: currentUnitData.progress,
       route: currentUnitData.route,
-      xp: currentUnitData.xp,
     },
     dueCardsCount,
     lessonCompletedToday: flags.lessonCompletedOnCurrentUnit,
