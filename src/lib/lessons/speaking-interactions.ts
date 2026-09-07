@@ -13,7 +13,7 @@ export interface SpeakingInteractionTurn {
   goalVi: string;
   /** Optional language scaffold. The learner must explicitly reveal it. */
   hint?: string;
-  /** Deterministic transcript used only by the local SpeechRecognition fallback. */
+  /** Deterministic transcript used only by test/dev call sites; never evidence by itself. */
   fallback: string;
   /** Transfer is practice in a changed context, not a mastery/proficiency claim. */
   phase?: "guided" | "transfer";
@@ -30,6 +30,8 @@ export interface SpeakingInteractionConfig {
   title: string;
   turns: SpeakingInteractionTurn[];
   criteria: SpeakingInteractionCriterion[];
+  /** Criteria evaluated only against the authored transfer turn. */
+  transferCriteria?: SpeakingInteractionCriterion[];
 }
 
 const UNIT_A0_1_INTERACTION: SpeakingInteractionConfig = {
@@ -117,6 +119,23 @@ const UNIT_A0_1_INTERACTION: SpeakingInteractionConfig = {
       id: "closing",
       labelVi: "Kết thúc cuộc gặp lịch sự.",
       patterns: [/\b(nice to meet you too|nice meeting you|goodbye|bye|see you|see you later)\b/],
+    },
+  ],
+  transferCriteria: [
+    {
+      id: "greeting",
+      labelVi: "Ở bối cảnh mới, tự mở đầu bằng lời chào phù hợp.",
+      patterns: [/\b(hi|hello|hey|good morning|good afternoon|good evening)\b/],
+    },
+    {
+      id: "identity",
+      labelVi: "Ở bối cảnh mới, tự nói tên của bạn.",
+      patterns: [/\bmy name is\b/, /\bi(?:'m| am)\s+(?!from\b)[a-z]+\b/],
+    },
+    {
+      id: "spelling",
+      labelVi: "Ở bối cảnh mới, tự đánh vần tên bằng ít nhất ba chữ cái tách rời.",
+      patterns: [/(?:\b[a-z]\b\s*){3,}/],
     },
   ],
 };
