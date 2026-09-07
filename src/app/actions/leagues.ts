@@ -133,5 +133,5 @@ function getWeekMonday(): string {
   const diff = day === 0 ? -6 : 1 - day; // shift to Monday
   const monday = new Date(now);
   monday.setDate(now.getDate() + diff);
-  return monday.toISOString().split("T")[0];
+  return monday.toISOString().split("-")[0];
 }
