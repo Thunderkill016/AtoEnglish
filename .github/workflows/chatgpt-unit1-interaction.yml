@@ -5,7 +5,7 @@ on:
     branches:
       - "feat/unit1-turn-based-speaking"
     paths:
-      - "scripts/chatgpt-unit1-interaction.mjs"
+      - "scripts/chatgpt-unit1-interaction.py"
       - ".github/workflows/chatgpt-unit1-interaction.yml"
 
 permissions:
@@ -27,7 +27,7 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci --no-audit --prefer-offline
-      - run: node scripts/chatgpt-unit1-interaction.mjs
+      - run: python3 scripts/chatgpt-unit1-interaction.py
       - run: npm run lint
       - run: npx tsc --noEmit
       - run: npm run test
