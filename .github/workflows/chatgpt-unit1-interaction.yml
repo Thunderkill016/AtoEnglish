@@ -1,0 +1,42 @@
+name: ChatGPT Unit 1 Interaction
+
+on:
+  push:
+    branches:
+      - "feat/unit1-turn-based-speaking"
+    paths:
+      - "scripts/chatgpt-unit1-interaction.mjs"
+      - ".github/workflows/chatgpt-unit1-interaction.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  patch-and-verify:
+    runs-on: ubuntu-latest
+    env:
+      CI: true
+      HUSKY: 0
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci --no-audit --prefer-offline
+      - run: node scripts/chatgpt-unit1-interaction.mjs
+      - run: npm run lint
+      - run: npx tsc --noEmit
+      - run: npm run test
+      - run: npm run test:content-standard
+      - name: Commit verified product patch
+        run: |
+          git config user.name "chatgpt-agent"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/components/learn/sections/SpeakingSection.tsx src/lib/data/units/unit1.ts
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "feat(learn): make Unit 1 speaking turn-based"
+          git push origin HEAD:${{ github.ref_name }}
