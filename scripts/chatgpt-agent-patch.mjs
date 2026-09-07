@@ -1,19 +1,67 @@
 import fs from "node:fs";
+import path from "node:path";
 
-function patchFile(path, edits) {
-  let text = fs.readFileSync(path, "utf8");
+function read(file) {
+  return fs.readFileSync(file, "utf8");
+}
+
+function write(file, text) {
+  fs.writeFileSync(file, text);
+}
+
+function patchFile(file, edits) {
+  let text = read(file);
   for (const [label, before, after] of edits) {
     const first = text.indexOf(before);
-    if (first === -1) throw new Error(`${path}: missing expected block: ${label}`);
+    if (first === -1) throw new Error(`${file}: missing expected block: ${label}`);
     if (text.indexOf(before, first + before.length) !== -1) {
-      throw new Error(`${path}: expected unique block but found duplicate: ${label}`);
+      throw new Error(`${file}: expected unique block but found duplicate: ${label}`);
     }
     text = text.replace(before, after);
   }
-  fs.writeFileSync(path, text);
+  write(file, text);
 }
 
-patchFile("src/components/learn/sections/PracticeSection.tsx", [
+function patchBetween(file, label, start, end, replacement = "") {
+  const text = read(file);
+  const startIndex = text.indexOf(start);
+  if (startIndex === -1) throw new Error(`${file}: missing start marker: ${label}`);
+  const endIndex = text.indexOf(end, startIndex + start.length);
+  if (endIndex === -1) throw new Error(`${file}: missing end marker: ${label}`);
+  if (text.indexOf(start, startIndex + start.length) !== -1) {
+    throw new Error(`${file}: duplicate start marker: ${label}`);
+  }
+  write(file, text.slice(0, startIndex) + replacement + text.slice(endIndex));
+}
+
+function assertAbsent(file, terms) {
+  const text = read(file);
+  for (const term of terms) {
+    if (text.includes(term)) throw new Error(`${file}: retired term still present: ${term}`);
+  }
+}
+
+function assertAbsentInTree(root, terms) {
+  const extensions = new Set([".ts", ".tsx", ".js", ".jsx", ".mjs", ".cjs"]);
+  const walk = (dir) => {
+    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+      const full = path.join(dir, entry.name);
+      if (entry.isDirectory()) {
+        walk(full);
+        continue;
+      }
+      if (!extensions.has(path.extname(entry.name))) continue;
+      const text = read(full);
+      for (const term of terms) {
+        if (text.includes(term)) throw new Error(`${full}: retired dependency reference still present: ${term}`);
+      }
+    }
+  };
+  walk(root);
+}
+
+const practice = "src/components/learn/sections/PracticeSection.tsx";
+patchFile(practice, [
   [
     "live XP prop declaration",
     "  goNext: () => void;\n  addSessionXp?: (amount?: number) => void; // S2-3: live XP counter\n",
@@ -60,8 +108,10 @@ patchFile("src/components/learn/sections/PracticeSection.tsx", [
     "            if (practiceScore >= Math.ceil(PRACTICE_QS.length * 0.7)) {\n              playCorrectSound();\n            } else playWrongSound();\n",
   ],
 ]);
+assertAbsent(practice, ["addSessionXp"]);
 
-patchFile("src/components/learn/sections/QuizSection.tsx", [
+const quiz = "src/components/learn/sections/QuizSection.tsx";
+patchFile(quiz, [
   [
     "XP completion prop declaration",
     "  effectiveScore: number;\n  effectiveStarCount: number;\n  xpToEarn: number;\n  nextRoute: string;\n",
@@ -83,12 +133,58 @@ patchFile("src/components/learn/sections/QuizSection.tsx", [
     "                : \"Hoàn thành bài học\"}\n",
   ],
 ]);
+patchBetween(quiz, "share achievement handler", "  const handleShare = async () => {", "\n\n  return (");
+patchBetween(
+  quiz,
+  "share achievement button",
+  "                <button\n                  onClick={handleShare}",
+  "                <Link\n                  href=\"/quiz\"",
+);
+assertAbsent(quiz, ["xpToEarn", "handleShare", "Chia sẻ thành tích", "Hoàn thành để nhận XP"]);
 
-patchFile("src/components/learn/UnitTemplate.tsx", [
+const unitTemplate = "src/components/learn/UnitTemplate.tsx";
+patchFile(unitTemplate, [
+  [
+    "retired icon imports",
+    "import { ChevronLeft, Star, BookOpen, Zap, Flame, ChevronRight } from \"lucide-react\";\n",
+    "import { ChevronLeft, Star, BookOpen, ChevronRight } from \"lucide-react\";\n",
+  ],
+  ["confetti import", "import confetti from \"canvas-confetti\";\n", ""],
+  [
+    "streak milestone imports",
+    "import { useStreakMilestone } from \"@/features/streak/hooks/useStreakMilestone\";\nimport StreakMilestoneOverlay from \"@/features/streak/components/StreakMilestoneOverlay\";\n",
+    "",
+  ],
+  [
+    "completion data gamification fields",
+    "interface CompletionData {\n  xpEarned: number;\n  starCount: 1 | 2 | 3;\n  effectiveScore: number;\n  newStreak: number;\n  vocabPreview: Array<{ word: string; meaning: string }>;\n  nextRoute: string;\n}\n",
+    "interface CompletionData {\n  starCount: 1 | 2 | 3;\n  effectiveScore: number;\n  vocabPreview: Array<{ word: string; meaning: string }>;\n  nextRoute: string;\n}\n",
+  ],
+  [
+    "streak milestone checker",
+    "  // Streak milestone checker (Phase B — research doc)\n  const streakMilestoneCheck = useStreakMilestone();\n\n",
+    "",
+  ],
   [
     "live XP state and popup handler",
     "  // S2-3: Live in-lesson XP counter (Duolingo real-time reinforcement)\n  const [sessionXp, setSessionXp] = useState(0);\n  const [xpPopup, setXpPopup] = useState<{ id: number; value: number } | null>(null);\n  const addSessionXp = (amount = 5) => {\n    setSessionXp(p => p + amount);\n    const id = Date.now();\n    setXpPopup({ id, value: amount });\n    setTimeout(() => setXpPopup(p => p?.id === id ? null : p), 1200);\n  };\n\n",
     "",
+  ],
+  ["completion confetti", "    confetti({ particleCount: 150, spread: 100, origin: { y: 0.5 } });\n", ""],
+  [
+    "XP completion toast",
+    "      toast.success(`🎉 Chúc mừng! Bạn nhận được ${res.xpEarned ?? xpToEarn} XP!`);\n",
+    "      toast.success(\"Đã hoàn thành bài học.\");\n",
+  ],
+  [
+    "completion overlay data",
+    "      setCompletionData({\n        xpEarned: res.xpEarned ?? xpToEarn,\n        starCount: effectiveStarCount,\n        effectiveScore,\n        newStreak: res.newStreak ?? 0,\n        vocabPreview: normalizedUnit.vocab.slice(0, 5).map(v => ({ word: v.word, meaning: v.meaning })),\n        nextRoute,\n      });",
+    "      setCompletionData({\n        starCount: effectiveStarCount,\n        effectiveScore,\n        vocabPreview: normalizedUnit.vocab.slice(0, 5).map(v => ({ word: v.word, meaning: v.meaning })),\n        nextRoute,\n      });",
+  ],
+  [
+    "guest completion overlay data",
+    "      setCompletionData({ xpEarned: xpToEarn, starCount: effectiveStarCount, effectiveScore, newStreak: 0, vocabPreview: normalizedUnit.vocab.slice(0,5).map(v=>({word:v.word,meaning:v.meaning})), nextRoute });\n",
+    "      setCompletionData({ starCount: effectiveStarCount, effectiveScore, vocabPreview: normalizedUnit.vocab.slice(0,5).map(v=>({word:v.word,meaning:v.meaning})), nextRoute });\n",
   ],
   [
     "live XP header widget",
@@ -106,5 +202,125 @@ patchFile("src/components/learn/UnitTemplate.tsx", [
     "              effectiveScore={effectiveScore}\n              effectiveStarCount={effectiveStarCount}\n              nextRoute={nextRoute}\n",
   ],
 ]);
+patchBetween(
+  unitTemplate,
+  "animated XP counter",
+  "// ── Animated XP counter (counts 0 → target in 1.2 s) ──────────────────────",
+  "// ── Video Shadowing Card (lite-embed: thumbnail click → iframe) ──────────────",
+);
+patchBetween(unitTemplate, "XP calculation", "  const xpToEarn =\n", "\n\n  const handleCompleteUnit = async () => {");
+patchBetween(
+  unitTemplate,
+  "achievement and streak milestone side effects",
+  "      // ── Achievement milestone toasts (staggered, zero extra DB queries) ──",
+  "      if (res.leveledUp && res.newLevel) {",
+);
+patchBetween(
+  unitTemplate,
+  "local XP synchronization",
+  "      const earnedXp = res.xpEarned ?? xpToEarn;",
+  "    } else if (res.error && res.error.includes(\"đăng nhập\")) {",
+);
+patchBetween(
+  unitTemplate,
+  "XP and streak completion cards",
+  "                {/* XP + Streak stats row */}",
+  "                {/* Vocab recap */}",
+);
+patchBetween(
+  unitTemplate,
+  "streak milestone overlay",
+  "      {/* Streak Milestone Overlay — fires after lesson completes on milestone days */}",
+  "    </div>\n  );\n}",
+);
+assertAbsent(unitTemplate, [
+  "canvas-confetti",
+  "useStreakMilestone",
+  "StreakMilestoneOverlay",
+  "streakMilestoneCheck",
+  "sessionXp",
+  "xpPopup",
+  "addSessionXp",
+  "xpToEarn",
+  "XpCounter",
+  "XP kiếm được",
+  "ato:xp-earned",
+  "ato_xp_sync_",
+]);
 
-console.log("Applied lesson live-XP cleanup patch successfully.");
+const unitTest = "src/components/learn/UnitTemplate.test.tsx";
+patchFile(unitTest, [
+  [
+    "streak mock state",
+    "const streakMocks = vi.hoisted(() => ({\n  checkMilestone: vi.fn(),\n  dismissMilestone: vi.fn(),\n}));\n\n",
+    "",
+  ],
+  ["confetti mock", "vi.mock(\"canvas-confetti\", () => ({ default: vi.fn() }));\n\n", ""],
+  [
+    "streak module mocks",
+    "vi.mock(\"@/features/streak/hooks/useStreakMilestone\", () => ({\n  useStreakMilestone: () => ({\n    showOverlay: false,\n    pendingMilestone: null,\n    checkMilestone: streakMocks.checkMilestone,\n    dismissMilestone: streakMocks.dismissMilestone,\n  }),\n}));\n\nvi.mock(\"@/features/streak/components/StreakMilestoneOverlay\", () => ({\n  default: () => null,\n}));\n\n",
+    "",
+  ],
+  ["test mock XP prop", "  effectiveStarCount?: number;\n  xpToEarn?: number;\n", "  effectiveStarCount?: number;\n"],
+  [
+    "quiz mock XP destructuring",
+    "      effectiveScore,\n      effectiveStarCount,\n      xpToEarn,\n    }: SectionMockProps) =>",
+    "      effectiveScore,\n      effectiveStarCount,\n    }: SectionMockProps) =>",
+  ],
+  ["quiz mock XP data attribute", "          \"data-star-count\": effectiveStarCount,\n          \"data-xp-to-earn\": xpToEarn,\n", "          \"data-star-count\": effectiveStarCount,\n"],
+  ["three-star XP fixture", "    stars: \"3\",\n    xp: \"100\",\n", "    stars: \"3\",\n"],
+  ["two-star XP fixture", "    stars: \"2\",\n    xp: \"85\",\n", "    stars: \"2\",\n"],
+  ["one-star XP fixture", "    stars: \"1\",\n    xp: \"70\",\n", "    stars: \"1\",\n"],
+  [
+    "star contract test args",
+    "]) (\"derives $name and preserves the completeUnit action contract\", async ({ unit, score, stars, xp }) => {",
+    "]) (\"derives $name and preserves the completeUnit action contract\", async ({ unit, score, stars }) => {",
+  ],
+  ["XP expectation", "  expect(quiz).toHaveAttribute(\"data-xp-to-earn\", xp);\n\n", "\n"],
+]);
+patchFile(unitTest, [
+  [
+    "authenticated completion test setup",
+    "it(\"coordinates authenticated completion data, streak checks, XP sync, vocab seeding, and nextRoute\", async () => {\n  const xpEvent = vi.fn();\n  window.addEventListener(\"ato:xp-earned\", xpEvent as EventListener);\n  actionMocks.completeUnit.mockResolvedValue({\n    success: true,\n    xpEarned: 123,\n    newStreak: 7,\n    completedCount: 5,\n    newTotalXp: 500,\n    leveledUp: true,\n    newLevel: \"A2\",\n  });",
+    "it(\"coordinates authenticated completion data, vocab seeding, and nextRoute\", async () => {\n  actionMocks.completeUnit.mockResolvedValue({\n    success: true,\n    leveledUp: true,\n    newLevel: \"A2\",\n  });",
+  ],
+  ["streak completion assertion", "  expect(streakMocks.checkMilestone).toHaveBeenCalledWith(7);\n", ""],
+  ["XP sync assertion", "  expect(localStorage.getItem(`ato_xp_sync_${new Date().toDateString()}`)).toBe(\"123\");\n  expect(xpEvent).toHaveBeenCalled();\n", ""],
+  ["XP event listener cleanup", "  window.removeEventListener(\"ato:xp-earned\", xpEvent as EventListener);\n", ""],
+  ["failed completion streak assertion", "  expect(streakMocks.checkMilestone).not.toHaveBeenCalled();\n", ""],
+]);
+assertAbsent(unitTest, [
+  "streakMocks",
+  "canvas-confetti",
+  "useStreakMilestone",
+  "StreakMilestoneOverlay",
+  "xpToEarn",
+  "data-xp-to-earn",
+  "ato:xp-earned",
+  "ato_xp_sync_",
+]);
+
+for (const retired of [
+  "src/features/streak/hooks/useStreakMilestone.ts",
+  "src/features/streak/components/StreakMilestoneOverlay.tsx",
+]) {
+  if (!fs.existsSync(retired)) throw new Error(`Missing expected retired file: ${retired}`);
+  fs.rmSync(retired);
+}
+
+if (fs.existsSync("src/features/streak")) {
+  const remaining = [];
+  const collect = (dir) => {
+    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+      const full = path.join(dir, entry.name);
+      if (entry.isDirectory()) collect(full);
+      else remaining.push(full);
+    }
+  };
+  collect("src/features/streak");
+  if (remaining.length > 0) throw new Error(`Unexpected streak files remain: ${remaining.join(", ")}`);
+}
+
+assertAbsentInTree("src", ["canvas-confetti", "web-push"]);
+
+console.log("Applied verified lesson gamification runtime cleanup patch.");
