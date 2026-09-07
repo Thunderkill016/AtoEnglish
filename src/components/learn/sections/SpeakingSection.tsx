@@ -15,6 +15,7 @@ import {
   evaluateSpeakingTask,
   type SpeakingTaskEvaluation,
 } from "@/lib/lessons/speaking-task-evaluation";
+import { getSpeakingInteraction } from "@/lib/lessons/speaking-interactions";
 
 interface SpeechRecognitionEvent {
   results: {
@@ -53,29 +54,6 @@ interface SpeakingSectionProps {
   playTTS: (text: string) => void;
   goNext: () => void;
 }
-
-const UNIT1_INTERACTION_TURNS = [
-  {
-    alex: "Hi! I'm Alex. What's your name?",
-    promptVi: "Chào Alex và nói tên của bạn.",
-    fallback: "Hi! My name is Minh.",
-  },
-  {
-    alex: "Nice to meet you. Where are you from?",
-    promptVi: "Trả lời bạn đến từ đâu.",
-    fallback: "I'm from Vietnam.",
-  },
-  {
-    alex: "I'm from Canada. Now ask me how I am.",
-    promptVi: "Hỏi thăm Alex bằng một câu đơn giản.",
-    fallback: "How are you?",
-  },
-  {
-    alex: "I'm good, thank you! It was nice meeting you.",
-    promptVi: "Kết thúc cuộc gặp một cách lịch sự.",
-    fallback: "Nice meeting you too. Goodbye.",
-  },
-] as const;
 
 function detectMissingCodas(expected: string, actual: string): string[] {
   const missingWarnings: string[] = [];
@@ -134,11 +112,12 @@ export default function SpeakingSection({
     useState<SpeakingTaskEvaluation | null>(null);
   const [level2Done, setLevel2Done] = useState(false);
   const [showHint, setShowHint] = useState(false);
-  const [unit1InteractionIndex, setUnit1InteractionIndex] = useState(0);
-  const [unit1LearnerTurns, setUnit1LearnerTurns] = useState<string[]>([]);
+  const [interactionIndex, setInteractionIndex] = useState(0);
+  const [interactionLearnerTurns, setInteractionLearnerTurns] = useState<string[]>([]);
 
   const [isRecognizing, setIsRecognizing] = useState(false);
   const recognitionRef = useRef<SpeechRecognitionObj | null>(null);
+  const speakingInteraction = getSpeakingInteraction(unit.unitId);
 
   useEffect(() => {
     return () => {
@@ -218,32 +197,37 @@ export default function SpeakingSection({
     recognition.start();
   };
 
-  const handleUnit1InteractionRecord = () => {
+  const handleInteractionRecord = () => {
+    if (!speakingInteraction) return;
+
     const restarting = level2TaskEvaluation !== null;
-    const currentIndex = restarting ? 0 : unit1InteractionIndex;
+    const currentIndex = restarting ? 0 : interactionIndex;
 
     if (restarting) {
-      setUnit1LearnerTurns([]);
-      setUnit1InteractionIndex(0);
+      setInteractionLearnerTurns([]);
+      setInteractionIndex(0);
       setLevel2Transcript("");
       setLevel2TaskEvaluation(null);
       setLevel2Done(false);
+      setShowHint(false);
     }
 
-    const turn = UNIT1_INTERACTION_TURNS[currentIndex];
-    setLevel2Recording(true);
+    const turn = speakingInteraction.turns[currentIndex];
+    if (!turn) return;
 
+    setLevel2Recording(true);
     startRecognition(turn.fallback, (text) => {
-      const nextTurns = restarting ? [] : [...unit1LearnerTurns];
+      const nextTurns = restarting ? [] : [...interactionLearnerTurns];
       nextTurns[currentIndex] = text;
-      setUnit1LearnerTurns(nextTurns);
+      setInteractionLearnerTurns(nextTurns);
       setLevel2Recording(false);
+      setShowHint(false);
 
       const combinedTranscript = nextTurns.filter(Boolean).join(" ");
       setLevel2Transcript(combinedTranscript);
 
-      if (currentIndex < UNIT1_INTERACTION_TURNS.length - 1) {
-        setUnit1InteractionIndex(currentIndex + 1);
+      if (currentIndex < speakingInteraction.turns.length - 1) {
+        setInteractionIndex(currentIndex + 1);
         return;
       }
 
@@ -252,6 +236,17 @@ export default function SpeakingSection({
 
       setLevel2TaskEvaluation(taskEvaluation);
       setLevel2Done(taskEvaluation.accomplished);
+
+      if (unit.unitId === "unit-a0-1") {
+        const taskScore = Math.round((taskEvaluation.metCount / taskEvaluation.total) * 100);
+        trackPilotEventPersistentlyOnce("first_speaking_completed", unit.unitId, {
+          source: "lesson",
+          unitId: unit.unitId,
+          score: taskScore,
+          passed: taskEvaluation.accomplished,
+        });
+      }
+
       if (taskEvaluation.accomplished) {
         toast.success(`Hoàn thành hội thoại: ${taskEvaluation.metCount}/${taskEvaluation.total} tiêu chí`);
       } else {
@@ -263,10 +258,11 @@ export default function SpeakingSection({
   };
 
   const handleLevel2Record = () => {
-    if (unit.unitId === "unit-1") {
-      handleUnit1InteractionRecord();
+    if (speakingInteraction) {
+      handleInteractionRecord();
       return;
     }
+
     setLevel2Recording(true);
     setLevel2Transcript("");
     setLevel2Score(null);
@@ -316,6 +312,8 @@ export default function SpeakingSection({
       }
     });
   };
+
+  const currentInteractionTurn = speakingInteraction?.turns[interactionIndex];
 
   return (
     <motion.div
@@ -469,7 +467,9 @@ export default function SpeakingSection({
           <span className="px-2 py-0.5 text-xs font-bold bg-teal-600/20 text-teal-400 rounded-full">
             Cấp độ 2
           </span>
-          <p className="text-foreground font-semibold">Thực hiện nhiệm vụ giao tiếp</p>
+          <p className="text-foreground font-semibold">
+            {speakingInteraction ? speakingInteraction.title : "Thực hiện nhiệm vụ giao tiếp"}
+          </p>
           {level2Done && <CheckCircle size={16} className="text-emerald-400 ml-auto" />}
         </div>
 
@@ -491,7 +491,7 @@ export default function SpeakingSection({
         </div>
 
         <AnimatePresence>
-          {showHint && (
+          {showHint && !speakingInteraction && (
             <motion.div
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
@@ -506,29 +506,43 @@ export default function SpeakingSection({
           )}
         </AnimatePresence>
 
-        {unit.unitId === "unit-1" && (
-          <div className="space-y-3 mb-4" aria-label="Hội thoại với Alex">
-            {UNIT1_INTERACTION_TURNS.map((turn, index) => {
-              const learnerText = unit1LearnerTurns[index];
-              const isCurrent = index === unit1InteractionIndex && !level2TaskEvaluation;
-              if (index > unit1InteractionIndex && !learnerText && !level2TaskEvaluation) return null;
+        {speakingInteraction && (
+          <div className="space-y-3 mb-4" aria-label={speakingInteraction.title}>
+            {speakingInteraction.turns.map((turn, index) => {
+              const learnerText = interactionLearnerTurns[index];
+              const isCurrent = index === interactionIndex && !level2TaskEvaluation;
+              if (index > interactionIndex && !learnerText && !level2TaskEvaluation) return null;
 
               return (
-                <div key={turn.alex} className="space-y-2">
+                <div key={`${turn.speaker}-${index}-${turn.text}`} className="space-y-2">
+                  {turn.phase === "transfer" && (
+                    <div className="rounded-xl border border-violet-500/25 bg-violet-500/10 px-3 py-2">
+                      <p className="text-[10px] font-black uppercase tracking-wider text-violet-300">
+                        Chuyển cảnh · Thử độc lập
+                      </p>
+                      <p className="mt-1 text-xs text-muted-foreground">
+                        Cùng năng lực, bối cảnh mới. Lượt này không có câu mẫu để đọc theo.
+                      </p>
+                    </div>
+                  )}
+
                   <div className="max-w-[88%] rounded-2xl rounded-tl-md bg-muted/60 border border-border/60 px-4 py-3">
                     <div className="mb-1 flex items-center justify-between gap-3">
-                      <p className="text-[10px] font-black uppercase tracking-wider text-teal-400">Alex</p>
+                      <p className="text-[10px] font-black uppercase tracking-wider text-teal-400">
+                        {turn.speaker}
+                      </p>
                       <button
                         type="button"
-                        onClick={() => playTTS(turn.alex)}
-                        aria-label={`Nghe Alex: ${turn.alex}`}
+                        onClick={() => playTTS(turn.text)}
+                        aria-label={`Nghe ${turn.speaker}: ${turn.text}`}
                         className="inline-flex items-center gap-1 text-[10px] font-bold text-muted-foreground hover:text-foreground"
                       >
-                        <Volume2 size={12} /> Nghe Alex
+                        <Volume2 size={12} /> Nghe {turn.speaker}
                       </button>
                     </div>
-                    <p className="text-sm text-foreground">{turn.alex}</p>
+                    <p className="text-sm text-foreground">{turn.text}</p>
                   </div>
+
                   {learnerText ? (
                     <div className="ml-auto max-w-[88%] rounded-2xl rounded-tr-md bg-primary/10 border border-primary/20 px-4 py-3">
                       <p className="text-[10px] font-black uppercase tracking-wider text-primary mb-1">Bạn</p>
@@ -536,7 +550,12 @@ export default function SpeakingSection({
                     </div>
                   ) : isCurrent ? (
                     <div className="ml-auto max-w-[88%] rounded-2xl rounded-tr-md border border-dashed border-primary/30 bg-primary/5 px-4 py-3">
-                      <p className="text-xs text-muted-foreground">{turn.promptVi}</p>
+                      <p className="text-xs text-muted-foreground">{turn.goalVi}</p>
+                      {showHint && turn.hint && (
+                        <p className="mt-2 border-t border-primary/10 pt-2 text-xs font-semibold text-foreground">
+                          Gợi ý: {turn.hint}
+                        </p>
+                      )}
                     </div>
                   ) : null}
                 </div>
@@ -547,25 +566,38 @@ export default function SpeakingSection({
               <div className="mt-3 space-y-2 rounded-xl border border-border/60 bg-muted/30 p-3">
                 <div className="flex items-center justify-between gap-3">
                   <p className="text-xs font-bold text-foreground">Kết quả nhiệm vụ giao tiếp</p>
-                  <span className={`text-xs font-black px-2.5 py-1 rounded-full ${level2TaskEvaluation.accomplished ? "bg-emerald-500/15 text-emerald-400" : "bg-amber-500/15 text-amber-400"}`}>
+                  <span
+                    className={`text-xs font-black px-2.5 py-1 rounded-full ${
+                      level2TaskEvaluation.accomplished
+                        ? "bg-emerald-500/15 text-emerald-400"
+                        : "bg-amber-500/15 text-amber-400"
+                    }`}
+                  >
                     {level2TaskEvaluation.metCount}/{level2TaskEvaluation.total}
                   </span>
                 </div>
                 {level2TaskEvaluation.criteria.map((criterion) => (
-                  <div key={criterion.id} className="flex items-start gap-2 rounded-lg border border-border/50 bg-background/30 px-3 py-2">
-                    {criterion.met ? <CheckCircle size={14} className="mt-0.5 shrink-0 text-emerald-400" /> : <XCircle size={14} className="mt-0.5 shrink-0 text-amber-400" />}
+                  <div
+                    key={criterion.id}
+                    className="flex items-start gap-2 rounded-lg border border-border/50 bg-background/30 px-3 py-2"
+                  >
+                    {criterion.met ? (
+                      <CheckCircle size={14} className="mt-0.5 shrink-0 text-emerald-400" />
+                    ) : (
+                      <XCircle size={14} className="mt-0.5 shrink-0 text-amber-400" />
+                    )}
                     <span className="text-xs text-muted-foreground">{criterion.labelVi}</span>
                   </div>
                 ))}
                 <p className="text-[11px] leading-relaxed text-muted-foreground/70">
-                  Đây là phản hồi luyện tập theo nhiệm vụ giao tiếp, không phải chứng nhận bạn đã đạt CEFR A1.
+                  Đây là phản hồi luyện tập theo nhiệm vụ giao tiếp. Lượt chuyển cảnh là transfer practice, không phải chứng nhận CEFR hay mastery.
                 </p>
               </div>
             )}
           </div>
         )}
 
-        {unit.unitId !== "unit-1" && level2Transcript && (
+        {!speakingInteraction && level2Transcript && (
           <div className="bg-muted/30 rounded-xl p-3 mb-3">
             <p className="text-xs text-muted-foreground mb-1">Bạn vừa nói:</p>
             <p className="text-foreground text-sm">&ldquo;{level2Transcript}&rdquo;</p>
@@ -640,15 +672,17 @@ export default function SpeakingSection({
             {level2Recording ? <MicOff size={16} /> : <Mic size={16} />}
             {level2Recording
               ? "Dừng"
-              : unit.unitId === "unit-1"
+              : speakingInteraction
                 ? level2TaskEvaluation
                   ? "Thử lại từ đầu"
-                  : `Trả lời Alex (${unit1InteractionIndex + 1}/${UNIT1_INTERACTION_TURNS.length})`
+                  : currentInteractionTurn?.phase === "transfer"
+                    ? "Thử độc lập"
+                    : `Trả lời (${interactionIndex + 1}/${speakingInteraction.turns.length})`
                 : level2Transcript
                   ? "Thử lại"
                   : "Bắt đầu nói"}
           </button>
-          {unit.unitId !== "unit-1" && level2Transcript && (
+          {!speakingInteraction && level2Transcript && (
             <button
               onClick={() => setLevel2Done(true)}
               className="px-4 py-3 rounded-xl bg-muted hover:bg-muted/80 text-foreground font-semibold text-sm transition-colors"
@@ -668,10 +702,10 @@ export default function SpeakingSection({
         </p>
       </div>
 
-      {level1Done && (level2Done || (unit.unitId !== "unit-1" && level2Transcript !== "")) && (
+      {level1Done && (level2Done || (!speakingInteraction && level2Transcript !== "")) && (
         <LessonContinueButton onClick={goNext}>Xem kết quả</LessonContinueButton>
       )}
-      {level1Done && !level2Done && (unit.unitId === "unit-1" || level2Transcript === "") && (
+      {level1Done && !level2Done && (Boolean(speakingInteraction) || level2Transcript === "") && (
         <p className="text-center text-muted-foreground text-sm">
           Thử nói ở Cấp độ 2 trước khi tiếp tục 🎤
         </p>
