@@ -75,4 +75,16 @@ shadowing = shadowing
   .replace(shadowingXpToast, shadowingNeutralToast);
 fs.writeFileSync(shadowingFile, shadowing);
 
-console.log("Corrected patch markers and retired stale celebration code.");
+const dailyReminderFile = "src/app/api/cron/daily-reminder/route.ts";
+if (!fs.existsSync(dailyReminderFile)) throw new Error("Missing daily reminder cron route");
+fs.unlinkSync(dailyReminderFile);
+
+const vercelFile = "vercel.json";
+const vercel = JSON.parse(fs.readFileSync(vercelFile, "utf8"));
+if (!Array.isArray(vercel.crons)) throw new Error("Missing vercel crons array");
+const beforeCronCount = vercel.crons.length;
+vercel.crons = vercel.crons.filter((cron) => cron.path !== "/api/cron/daily-reminder");
+if (vercel.crons.length !== beforeCronCount - 1) throw new Error("Daily reminder cron entry not found exactly once");
+fs.writeFileSync(vercelFile, `${JSON.stringify(vercel, null, 2)}\n`);
+
+console.log("Corrected patch markers and retired stale celebration/engagement code.");
