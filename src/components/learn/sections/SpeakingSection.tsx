@@ -8,7 +8,7 @@ import LessonContinueButton from "../lesson-ui/LessonContinueButton";
 import { lessonSectionMotion } from "../lesson-ui/motion";
 import { toast } from "sonner";
 import { calcSpeechScore } from "@/lib/utils/speech";
-import { SpeechRecognitionFallback } from "@/lib/utils/speech-fallback";
+import { getNativeSpeechRecognitionConstructor } from "@/lib/utils/native-speech-recognition";
 import type { UnitData } from "../UnitTemplate";
 import { trackPilotEventPersistentlyOnce } from "@/lib/pilot/pilot-analytics-client";
 import {
@@ -116,6 +116,7 @@ export default function SpeakingSection({
   const [interactionLearnerTurns, setInteractionLearnerTurns] = useState<string[]>([]);
 
   const [isRecognizing, setIsRecognizing] = useState(false);
+  const [speechRecognitionUnavailable, setSpeechRecognitionUnavailable] = useState(false);
   const recognitionRef = useRef<SpeechRecognitionObj | null>(null);
   const speakingInteraction = getSpeakingInteraction(unit.unitId);
 
@@ -133,12 +134,9 @@ export default function SpeakingSection({
 
   const getSpeechRecognition = () => {
     if (typeof window === "undefined") return null;
-    const windowWithSpeech = window as unknown as Record<string, unknown>;
-    return (
-      windowWithSpeech.SpeechRecognition ??
-      windowWithSpeech.webkitSpeechRecognition ??
-      SpeechRecognitionFallback
-    ) as unknown as new () => SpeechRecognitionObj;
+    return getNativeSpeechRecognitionConstructor<SpeechRecognitionObj>(
+      window as unknown as Record<string, unknown>
+    );
   };
 
   const formattedL1Prompt = unit.speaking.level1Prompt.replace(
@@ -152,12 +150,18 @@ export default function SpeakingSection({
   ) => {
     const SpeechRecognitionAPI = getSpeechRecognition();
     if (!SpeechRecognitionAPI) {
+      setIsLevel1Recording(false);
+      setLevel2Recording(false);
+      setIsRecognizing(false);
+      setSpeechRecognitionUnavailable(true);
       toast.error("Trình duyệt không hỗ trợ nhận diện giọng nói");
       return;
     }
 
+    setSpeechRecognitionUnavailable(false);
+
     // Retain the expected transcript at call sites for scoring/test readability.
-    // The honest fallback no longer fabricates a transcript from it.
+    // It is never used to fabricate learner evidence.
     void expectedTranscript;
 
     const recognition = new SpeechRecognitionAPI();
@@ -231,7 +235,7 @@ export default function SpeakingSection({
         return;
       }
 
-      const taskEvaluation = evaluateSpeakingTask(unit.unitId, combinedTranscript);
+      const taskEvaluation = evaluateSpeakingTask(unit.unitId, combinedTranscript, nextTurns);
       if (!taskEvaluation) return;
 
       setLevel2TaskEvaluation(taskEvaluation);
@@ -249,6 +253,8 @@ export default function SpeakingSection({
 
       if (taskEvaluation.accomplished) {
         toast.success(`Hoàn thành hội thoại: ${taskEvaluation.metCount}/${taskEvaluation.total} tiêu chí`);
+      } else if (taskEvaluation.transfer && !taskEvaluation.transfer.accomplished) {
+        toast.info("Phần có hướng dẫn đã ổn hơn, nhưng lượt chuyển cảnh vẫn cần thử lại.");
       } else {
         toast.info(
           `Đã làm được ${taskEvaluation.metCount}/${taskEvaluation.total} tiêu chí — thử lại cuộc hội thoại.`
@@ -368,7 +374,7 @@ export default function SpeakingSection({
                 <Volume2 size={16} /> Nghe mẫu
               </button>
               <button
-                disabled={isLevel1Recording || isRecognizing}
+                disabled={isLevel1Recording || isRecognizing || speechRecognitionUnavailable}
                 onClick={() => {
                   setIsLevel1Recording(true);
                   startRecognition(formattedL1Prompt, (text) => {
@@ -396,7 +402,7 @@ export default function SpeakingSection({
                   isLevel1Recording
                     ? "bg-red-600 text-white animate-pulse"
                     : "bg-primary hover:bg-primary/90 text-primary-foreground shadow-md active:scale-95"
-                }`}
+                } ${speechRecognitionUnavailable ? "cursor-not-allowed opacity-50" : ""}`}
               >
                 {isLevel1Recording ? (
                   <>
@@ -592,6 +598,34 @@ export default function SpeakingSection({
                     <span className="text-xs text-muted-foreground">{criterion.labelVi}</span>
                   </div>
                 ))}
+
+                {level2TaskEvaluation.transfer && (
+                  <div className="mt-3 space-y-2 rounded-lg border border-violet-500/20 bg-violet-500/5 p-3">
+                    <div className="flex items-center justify-between gap-3">
+                      <p className="text-xs font-bold text-violet-300">Chuyển cảnh · Thử độc lập</p>
+                      <span
+                        className={`text-xs font-black ${
+                          level2TaskEvaluation.transfer.accomplished
+                            ? "text-emerald-400"
+                            : "text-amber-400"
+                        }`}
+                      >
+                        {level2TaskEvaluation.transfer.metCount}/{level2TaskEvaluation.transfer.total}
+                      </span>
+                    </div>
+                    {level2TaskEvaluation.transfer.criteria.map((criterion) => (
+                      <div key={`transfer-${criterion.id}`} className="flex items-start gap-2">
+                        {criterion.met ? (
+                          <CheckCircle size={14} className="mt-0.5 shrink-0 text-emerald-400" />
+                        ) : (
+                          <XCircle size={14} className="mt-0.5 shrink-0 text-amber-400" />
+                        )}
+                        <span className="text-xs text-muted-foreground">{criterion.labelVi}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
                 <p className="text-[11px] leading-relaxed text-muted-foreground/70">
                   Đây là phản hồi luyện tập theo nhiệm vụ giao tiếp. Lượt chuyển cảnh là transfer practice, không phải chứng nhận CEFR hay mastery.
                 </p>
@@ -657,6 +691,7 @@ export default function SpeakingSection({
 
         <div className="flex gap-3">
           <button
+            disabled={speechRecognitionUnavailable}
             onClick={
               level2Recording
                 ? () => {
@@ -670,7 +705,7 @@ export default function SpeakingSection({
               level2Recording
                 ? "bg-red-600 text-white animate-pulse"
                 : "bg-emerald-600 hover:bg-emerald-500 text-white"
-            }`}
+            } ${speechRecognitionUnavailable ? "cursor-not-allowed opacity-50" : ""}`}
           >
             {level2Recording ? <MicOff size={16} /> : <Mic size={16} />}
             {level2Recording
@@ -695,9 +730,9 @@ export default function SpeakingSection({
           )}
         </div>
 
-        {!getSpeechRecognition() && (
+        {speechRecognitionUnavailable && (
           <p className="text-yellow-400 text-xs mt-3 text-center">
-            ⚠️ Trình duyệt không hỗ trợ ghi âm. Thử Chrome hoặc Edge.
+            ⚠️ Trình duyệt này không có Web Speech API để thu bằng chứng nói. Hãy dùng Chrome hoặc Edge có hỗ trợ nhận diện giọng nói.
           </p>
         )}
         <p className="text-muted-foreground/60 text-xs mt-2 text-center">
