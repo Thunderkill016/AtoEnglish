@@ -36,4 +36,13 @@ if (!checkpoint.includes(confettiEffect)) throw new Error("Missing checkpoint co
 checkpoint = checkpoint.replace(confettiImport, "").replace(confettiEffect, "");
 fs.writeFileSync(checkpointFile, checkpoint);
 
-console.log("Corrected patch markers and retired stale streak/checkpoint celebration code.");
+const flashcardsFile = "src/app/(main)/flashcards/FlashcardsClient.tsx";
+let flashcards = fs.readFileSync(flashcardsFile, "utf8");
+const flashcardsConfettiImport = 'import confetti from "canvas-confetti";\n';
+const flashcardsConfettiBlock = '          confetti({\n            particleCount: 150,\n            spread: 80,\n            origin: { y: 0.5 },\n            colors: ["#10b981", "#3b82f6", "#f59e0b"]\n          });\n';
+if (!flashcards.includes(flashcardsConfettiImport)) throw new Error("Missing flashcards confetti import");
+if (!flashcards.includes(flashcardsConfettiBlock)) throw new Error("Missing flashcards confetti block");
+flashcards = flashcards.replace(flashcardsConfettiImport, "").replace(flashcardsConfettiBlock, "");
+fs.writeFileSync(flashcardsFile, flashcards);
+
+console.log("Corrected patch markers and retired stale celebration code.");
