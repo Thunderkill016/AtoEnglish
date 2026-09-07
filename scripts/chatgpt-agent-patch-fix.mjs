@@ -78,8 +78,9 @@ fs.writeFileSync(shadowingFile, shadowing);
 for (const retiredRoute of [
   "src/app/api/cron/daily-reminder/route.ts",
   "src/app/api/cron/weekly-summary/route.ts",
+  "src/app/api/push/send/route.ts",
 ]) {
-  if (!fs.existsSync(retiredRoute)) throw new Error(`Missing retired cron route: ${retiredRoute}`);
+  if (!fs.existsSync(retiredRoute)) throw new Error(`Missing retired route: ${retiredRoute}`);
   fs.unlinkSync(retiredRoute);
 }
 
