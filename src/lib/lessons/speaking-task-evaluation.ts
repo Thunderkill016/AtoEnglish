@@ -1,12 +1,26 @@
+import {
+  getSpeakingInteraction,
+  type SpeakingInteractionCriterion,
+  type SpeakingTaskCriterionId,
+} from "@/lib/lessons/speaking-interactions";
+
 export interface SpeakingTaskCriterionResult {
-  id: "greeting" | "identity" | "personal-info" | "interaction" | "closing";
+  id: SpeakingTaskCriterionId;
   labelVi: string;
   met: boolean;
+}
+
+export interface SpeakingTransferEvaluation {
+  criteria: SpeakingTaskCriterionResult[];
+  metCount: number;
+  total: number;
+  accomplished: boolean;
 }
 
 export interface SpeakingTaskEvaluation {
   unitId: string;
   criteria: SpeakingTaskCriterionResult[];
+  transfer?: SpeakingTransferEvaluation;
   metCount: number;
   total: number;
   accomplished: boolean;
@@ -22,62 +36,66 @@ const normalize = (transcript: string) =>
     .replace(/\s+/g, " ")
     .trim();
 
-function evaluateUnit1(transcript: string): SpeakingTaskEvaluation {
+const evaluateCriteria = (
+  criteria: SpeakingInteractionCriterion[],
+  transcript: string
+): SpeakingTaskCriterionResult[] => {
   const text = normalize(transcript);
-
-  const criteria: SpeakingTaskCriterionResult[] = [
-    {
-      id: "greeting",
-      labelVi: "Mở đầu bằng lời chào phù hợp.",
-      met: /\b(hi|hello|hey|good morning|good afternoon|good evening)\b/.test(text),
-    },
-    {
-      id: "identity",
-      labelVi: "Tự giới thiệu tên.",
-      met: /\bmy name is\b/.test(text) || /\bi(?:'m| am)\s+(?!from\b)[a-z]+\b/.test(text),
-    },
-    {
-      id: "personal-info",
-      labelVi: "Nói ít nhất một thông tin cá nhân đơn giản.",
-      met:
-        /\bi(?:'m| am) from\b/.test(text) ||
-        /\bi (?:live|work|study) (?:in|at)\b/.test(text) ||
-        /\bi(?:'m| am) (?:a|an)\s+[a-z]+\b/.test(text),
-    },
-    {
-      id: "interaction",
-      labelVi: "Hỏi người đối thoại ít nhất một câu đơn giản.",
-      met:
-        /\b(where are you from|what(?:'s| is) your name|how are you|and you|how about you|what about you)\b/.test(text) ||
-        /\b(?:where|what|how|do|are|can)\b[^?]{0,50}\b(?:you|your)\b\??/.test(text),
-    },
-    {
-      id: "closing",
-      labelVi: "Kết thúc cuộc gặp lịch sự.",
-      met: /\b(goodbye|bye|see you|see you later|have a nice day|nice meeting you)\b/.test(text),
-    },
-  ];
-
-  const metCount = criteria.filter((criterion) => criterion.met).length;
-
-  return {
-    unitId: "unit-1",
-    criteria,
-    metCount,
-    total: criteria.length,
-    accomplished: metCount === criteria.length,
-    evidenceKind: "practice-task-feedback",
-  };
-}
+  return criteria.map((criterion) => ({
+    id: criterion.id,
+    labelVi: criterion.labelVi,
+    met: criterion.patterns.some((pattern) => pattern.test(text)),
+  }));
+};
 
 /**
- * Returns task-accomplishment feedback only for units with an explicitly designed evaluator.
+ * Returns task-accomplishment feedback only for units with an explicitly authored interaction contract.
  * Undefined means the unit must continue using its existing practice feedback until a rubric is authored.
+ *
+ * `learnerTurns` preserves per-turn evidence. When a contract authors transfer criteria,
+ * the changed-context turn must pass on its own; guided evidence cannot substitute for it.
  */
 export function evaluateSpeakingTask(
   unitId: string,
-  transcript: string
+  transcript: string,
+  learnerTurns?: string[]
 ): SpeakingTaskEvaluation | undefined {
-  if (unitId === "unit-1") return evaluateUnit1(transcript);
-  return undefined;
+  const interaction = getSpeakingInteraction(unitId);
+  if (!interaction) return undefined;
+
+  const criteria = evaluateCriteria(interaction.criteria, transcript);
+  const baseMetCount = criteria.filter((criterion) => criterion.met).length;
+
+  const transferTurnIndex = interaction.turns.findIndex((turn) => turn.phase === "transfer");
+  const transferCriteria = interaction.transferCriteria;
+
+  let transfer: SpeakingTransferEvaluation | undefined;
+  if (transferCriteria && transferTurnIndex >= 0) {
+    const transferResults = evaluateCriteria(
+      transferCriteria,
+      learnerTurns?.[transferTurnIndex] ?? ""
+    );
+    const transferMetCount = transferResults.filter((criterion) => criterion.met).length;
+    transfer = {
+      criteria: transferResults,
+      metCount: transferMetCount,
+      total: transferResults.length,
+      accomplished: transferMetCount === transferResults.length,
+    };
+  }
+
+  const metCount = baseMetCount + (transfer?.metCount ?? 0);
+  const total = criteria.length + (transfer?.total ?? 0);
+  const accomplished =
+    baseMetCount === criteria.length && (transfer ? transfer.accomplished : true);
+
+  return {
+    unitId,
+    criteria,
+    transfer,
+    metCount,
+    total,
+    accomplished,
+    evidenceKind: "practice-task-feedback",
+  };
 }
