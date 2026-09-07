@@ -273,8 +273,8 @@ patchFile(unitTest, [
   ["one-star XP fixture", "    stars: \"1\",\n    xp: \"70\",\n", "    stars: \"1\",\n"],
   [
     "star contract test args",
-    "]) (\"derives $name and preserves the completeUnit action contract\", async ({ unit, score, stars, xp }) => {",
-    "]) (\"derives $name and preserves the completeUnit action contract\", async ({ unit, score, stars }) => {",
+    "])(\"derives $name and preserves the completeUnit action contract\", async ({ unit, score, stars, xp }) => {",
+    "])(\"derives $name and preserves the completeUnit action contract\", async ({ unit, score, stars }) => {",
   ],
   ["XP expectation", "  expect(quiz).toHaveAttribute(\"data-xp-to-earn\", xp);\n\n", "\n"],
 ]);
