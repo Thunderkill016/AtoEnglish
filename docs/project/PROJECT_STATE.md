@@ -5,7 +5,7 @@
 
 ## Current state
 
-AtoEnglish now has exactly **one active product direction**. All previous, parallel, experimental, inherited or alternative product directions are closed as sources of authority.
+AtoEnglish has exactly **one active product direction**. All previous, parallel, experimental, inherited or alternative product directions are closed as sources of authority.
 
 Existing features, curriculum, branches, historical plans, experiments and R&D remain evidence of what exists or what was tried. They do **not** authorize continuing those directions.
 
@@ -21,7 +21,33 @@ The current reference foundation is:
 - British Council — lesson planning and course-planning guidance;
 - official technical standards only where implementation requires them, such as W3C accessibility guidance and browser/platform documentation.
 
-This direction means the product must be shaped from real learner outcomes and official language-learning guidance first. Existing implementation is a substrate to inspect, keep, change or remove according to that direction; it is not a competing roadmap.
+This direction means the product is shaped from real learner outcomes and official language-learning guidance first. Existing implementation is a substrate to inspect, keep, change or remove according to that direction; it is not a competing roadmap.
+
+## Minimum active product surface
+
+Only the following areas are active product scope:
+
+1. curriculum and CEFR/action-oriented learning outcomes;
+2. lesson delivery for reading, listening, speaking, writing and interaction as required by those outcomes;
+3. practice and assessment that produce honest evidence of learner performance;
+4. progression/review needed to retain and reuse learned language, including SRS where it directly serves retention;
+5. authentication, learner-data integrity, accessibility, security and release reliability required to operate the learning product.
+
+Everything else must justify itself against one of these five areas. Existing code is not sufficient justification.
+
+## Explicitly closed / non-core scope
+
+The following are **not active product directions and must not create maintenance obligations or roadmap work** unless the owner explicitly reactivates them:
+
+- XP optimization, live XP effects and XP milestone systems;
+- streak celebrations, streak milestone overlays and streak-focused engagement work;
+- leagues, leaderboards, social competition and competitive ranking;
+- badges, achievement collections, confetti and decorative reward systems;
+- mandatory Job/Career lesson overlays or a separate career-English track;
+- feature work whose main purpose is engagement, retention mechanics or visual novelty rather than language learning;
+- speculative AI tutors/coaches, community/social systems or parallel learning modes not required by a validated learning outcome.
+
+Legacy database fields, migrations or code for these areas may remain temporarily when deletion would create unnecessary migration or compatibility risk. They are **frozen compatibility surface**, not active scope: do not extend them, redesign them or use their existence as a reason to create work. Remove them opportunistically when doing so is safe and reduces complexity.
 
 ## Direction lock
 
@@ -37,7 +63,7 @@ Do not create:
 - replacement product identities;
 - exploratory branches/issues whose purpose is to invent another direction.
 
-A task is valid only when it directly advances the single active direction above or fixes a concrete security, privacy, data-integrity, release or correctness blocker that prevents it.
+A task is valid only when it directly advances the minimum active product surface above or fixes a concrete security, privacy, data-integrity, release or correctness blocker that prevents it.
 
 If a proposed task does not clearly satisfy that rule, stop. Do not reinterpret ambiguity as permission to invent a new direction.
 
@@ -76,11 +102,12 @@ Do not silently re-enable the old GitHub Actions Vercel deployment experiment. T
 - The single active direction in this file is the only product-direction authority.
 - No historical roadmap/spec/agent backlog in Git history automatically becomes active work.
 - `main` code/migrations/tests are implementation truth; verified production facts are production truth.
-- New work requires an explicit current task and must remain inside the single active direction.
+- New work requires an explicit current task and must remain inside the minimum active product surface.
 - Security/privacy/data-integrity/release blockers may interrupt execution but may not redefine product direction.
+- Closed/non-core surfaces must default to deletion, freezing or non-extension rather than refinement.
 
 ## Active work
 
-There is no inherited product roadmap or parallel workstream. Work selection must stay inside the single active direction above.
+There is no inherited product roadmap or parallel workstream. Work selection must stay inside the single active direction and minimum active product surface above.
 
 When no explicit bounded task exists inside that direction, stop rather than manufacture one.
