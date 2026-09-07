@@ -19,9 +19,9 @@ If there is no active task or owner decision, do not invent maintenance, refacto
 
 ## Single-direction gate
 
-`docs/project/PROJECT_STATE.md` defines exactly one active product direction.
+`docs/project/PROJECT_STATE.md` defines exactly one active product direction and its minimum active product surface.
 
-Before doing any product work, verify that the requested change directly advances that direction. If it does not, stop.
+Before doing any product work, verify that the requested change directly advances that direction and minimum surface. If it does not, stop.
 
 Agents must not create, suggest, activate or maintain:
 
@@ -38,6 +38,19 @@ Do not treat ambiguity as permission to branch product strategy. Do not infer a 
 Only an explicit current owner statement that clearly replaces the existing direction may change product direction.
 
 Security, privacy, data-integrity, release and correctness fixes may interrupt execution when necessary, but they do not redefine the product direction.
+
+## Reduced-scope gate
+
+Features explicitly listed as closed/non-core in `docs/project/PROJECT_STATE.md` are frozen compatibility surface, not backlog.
+
+Agents must not create work to improve, redesign, expand, benchmark or revive those surfaces. In particular, do not create product work around XP, streak celebrations, leagues/leaderboards, badges/achievements, confetti/reward effects, mandatory Job/Career overlays, social competition or speculative engagement systems.
+
+When touching code that contains a closed/non-core surface:
+
+1. preserve it only when removal would create disproportionate compatibility, migration or correctness risk;
+2. do not add new dependencies or product behavior for it;
+3. prefer safe deletion or simplification when that reduces maintenance burden;
+4. never use legacy code existence as justification for new roadmap work.
 
 ## Scope discipline
 
