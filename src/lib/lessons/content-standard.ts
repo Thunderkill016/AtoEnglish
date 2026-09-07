@@ -7,10 +7,12 @@ import {
 /**
  * Chuẩn nội dung bài học hiện tại.
  *
- * Các ngưỡng số lượng bên dưới là legacy content-health checks; chúng KHÔNG tự chứng minh
- * một bài học đạt CEFR. CEFR alignment được khóa riêng bằng action contract truy vết về
- * Council of Europe và chỉ được mở rộng sang unit khác khi nội dung unit đó thực sự được
- * đối chiếu, không sinh descriptor hàng loạt bằng suy đoán.
+ * Các ngưỡng số lượng bên dưới chỉ là legacy content-health checks còn cần thiết để
+ * tránh bài học rỗng. Chúng KHÔNG tự chứng minh một bài học đạt CEFR.
+ *
+ * Chỉ giữ các gate trực tiếp phục vụ học ngôn ngữ. Các product-focus cũ như
+ * Job/Career, gamification hay engagement mechanics không được biến thành chuẩn
+ * bắt buộc của curriculum.
  */
 export const LESSON_CONTENT_STANDARD = {
   situationMinChars: 30,
@@ -18,9 +20,6 @@ export const LESSON_CONTENT_STANDARD = {
   learningOutcomesMax: 5,
   culturalNoteMinChars: 40,
   warmupGreetingsMin: 3,
-
-  vocabMin: 8,
-  vocabMax: 20,
 
   l1MinRatioByLevel: {
     A0: 0.5,
@@ -32,9 +31,7 @@ export const LESSON_CONTENT_STANDARD = {
 
   l1NoteMinChars: 15,
   fluencyDrillItemsMin: 5,
-  shadowingMin: 5,
   dialoguesMin: 2,
-  jobScenariosMin: 1,
   cumulativeReviewMin: 3,
   practiceTranslateMin: 3,
   listenAndChooseMin: 5,
@@ -60,7 +57,6 @@ export interface UnitLike {
   practiceTranslate?: unknown[];
   listenAndChoose?: unknown[];
   quiz?: unknown[];
-  jobScenarios?: unknown[];
 }
 
 export function l1CoverageRatio(unit: UnitLike): number {
@@ -125,11 +121,6 @@ export function validateLessonContentStandard(
   const dialoguesLen = unit.dialogues?.length ?? 0;
   if (dialoguesLen < s.dialoguesMin) {
     tag("dialogues", `dialogues phải ≥ ${s.dialoguesMin}`);
-  }
-
-  const jobLen = unit.jobScenarios?.length ?? 0;
-  if (jobLen < s.jobScenariosMin) {
-    tag("jobScenarios", `jobScenarios phải ≥ ${s.jobScenariosMin}`);
   }
 
   const minL1 = s.l1MinRatioByLevel[unit.level] ?? 0.5;
