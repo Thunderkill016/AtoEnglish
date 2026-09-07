@@ -75,16 +75,23 @@ shadowing = shadowing
   .replace(shadowingXpToast, shadowingNeutralToast);
 fs.writeFileSync(shadowingFile, shadowing);
 
-const dailyReminderFile = "src/app/api/cron/daily-reminder/route.ts";
-if (!fs.existsSync(dailyReminderFile)) throw new Error("Missing daily reminder cron route");
-fs.unlinkSync(dailyReminderFile);
+for (const retiredRoute of [
+  "src/app/api/cron/daily-reminder/route.ts",
+  "src/app/api/cron/weekly-summary/route.ts",
+]) {
+  if (!fs.existsSync(retiredRoute)) throw new Error(`Missing retired cron route: ${retiredRoute}`);
+  fs.unlinkSync(retiredRoute);
+}
 
 const vercelFile = "vercel.json";
 const vercel = JSON.parse(fs.readFileSync(vercelFile, "utf8"));
 if (!Array.isArray(vercel.crons)) throw new Error("Missing vercel crons array");
+const retiredCronPaths = new Set(["/api/cron/daily-reminder", "/api/cron/weekly-summary"]);
 const beforeCronCount = vercel.crons.length;
-vercel.crons = vercel.crons.filter((cron) => cron.path !== "/api/cron/daily-reminder");
-if (vercel.crons.length !== beforeCronCount - 1) throw new Error("Daily reminder cron entry not found exactly once");
+vercel.crons = vercel.crons.filter((cron) => !retiredCronPaths.has(cron.path));
+if (vercel.crons.length !== beforeCronCount - retiredCronPaths.size) {
+  throw new Error("Retired cron entries not found exactly once each");
+}
 fs.writeFileSync(vercelFile, `${JSON.stringify(vercel, null, 2)}\n`);
 
 console.log("Corrected patch markers and retired stale celebration/engagement code.");
