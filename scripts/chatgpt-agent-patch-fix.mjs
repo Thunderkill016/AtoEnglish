@@ -45,4 +45,19 @@ if (!flashcards.includes(flashcardsConfettiBlock)) throw new Error("Missing flas
 flashcards = flashcards.replace(flashcardsConfettiImport, "").replace(flashcardsConfettiBlock, "");
 fs.writeFileSync(flashcardsFile, flashcards);
 
+const roleplayFile = "src/app/(main)/speaking/ai-roleplay.tsx";
+let roleplay = fs.readFileSync(roleplayFile, "utf8");
+const roleplayConfettiImport = 'import confetti from "canvas-confetti";\n';
+const roleplayConfettiBlock = '  confetti({\n    particleCount: 100,\n    spread: 70,\n    origin: { y: 0.6 }\n  });\n';
+const roleplayXpToast = '  if (saveRes.success && saveRes.xpEarned) {\n    toast.success(`+${saveRes.xpEarned} XP — buổi hội thoại đã được lưu!`);\n  } else if (saveRes.success) {';
+const roleplayNeutralToast = '  if (saveRes.success && saveRes.xpEarned) {\n    toast.success("Buổi hội thoại đã được lưu.");\n  } else if (saveRes.success) {';
+if (!roleplay.includes(roleplayConfettiImport)) throw new Error("Missing roleplay confetti import");
+if (!roleplay.includes(roleplayConfettiBlock)) throw new Error("Missing roleplay confetti block");
+if (!roleplay.includes(roleplayXpToast)) throw new Error("Missing roleplay XP toast");
+roleplay = roleplay
+  .replace(roleplayConfettiImport, "")
+  .replace(roleplayConfettiBlock, "")
+  .replace(roleplayXpToast, roleplayNeutralToast);
+fs.writeFileSync(roleplayFile, roleplay);
+
 console.log("Corrected patch markers and retired stale celebration code.");
