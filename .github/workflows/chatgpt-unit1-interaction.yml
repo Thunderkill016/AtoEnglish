@@ -1,5 +1,6 @@
 name: ChatGPT Unit 1 Interaction
 
+# Temporary bounded runner for the Unit 1 interaction patch.
 on:
   push:
     branches:
