@@ -60,4 +60,19 @@ roleplay = roleplay
   .replace(roleplayXpToast, roleplayNeutralToast);
 fs.writeFileSync(roleplayFile, roleplay);
 
+const shadowingFile = "src/app/(main)/speaking/shadowing-practice.tsx";
+let shadowing = fs.readFileSync(shadowingFile, "utf8");
+const shadowingConfettiImport = 'import confetti from "canvas-confetti";\n';
+const shadowingConfettiBlock = '              confetti({\n                particleCount: 80,\n                spread: 60,\n                origin: { y: 0.7 }\n              });\n';
+const shadowingXpToast = '            if (saveRes.success && saveRes.xpEarned) {\n              toast.success(`+${saveRes.xpEarned} XP — tiếp tục luyện hàng ngày!`);\n            } else if (saveRes.success) {';
+const shadowingNeutralToast = '            if (saveRes.success && saveRes.xpEarned) {\n              toast.success("Buổi luyện nói đã được lưu.");\n            } else if (saveRes.success) {';
+if (!shadowing.includes(shadowingConfettiImport)) throw new Error("Missing shadowing confetti import");
+if (!shadowing.includes(shadowingConfettiBlock)) throw new Error("Missing shadowing confetti block");
+if (!shadowing.includes(shadowingXpToast)) throw new Error("Missing shadowing XP toast");
+shadowing = shadowing
+  .replace(shadowingConfettiImport, "")
+  .replace(shadowingConfettiBlock, "")
+  .replace(shadowingXpToast, shadowingNeutralToast);
+fs.writeFileSync(shadowingFile, shadowing);
+
 console.log("Corrected patch markers and retired stale celebration code.");
