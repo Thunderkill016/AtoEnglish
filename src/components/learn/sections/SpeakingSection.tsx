@@ -156,9 +156,9 @@ export default function SpeakingSection({
       return;
     }
 
-    if (SpeechRecognitionAPI === SpeechRecognitionFallback) {
-      SpeechRecognitionFallback.activeTranscript = expectedTranscript;
-    }
+    // Retain the expected transcript at call sites for scoring/test readability.
+    // The honest fallback no longer fabricates a transcript from it.
+    void expectedTranscript;
 
     const recognition = new SpeechRecognitionAPI();
     recognition.lang = "en-US";
@@ -314,6 +314,7 @@ export default function SpeakingSection({
   };
 
   const currentInteractionTurn = speakingInteraction?.turns[interactionIndex];
+  const canRevealHint = !speakingInteraction || Boolean(currentInteractionTurn?.hint);
 
   return (
     <motion.div
@@ -480,15 +481,17 @@ export default function SpeakingSection({
           <p className="text-foreground text-sm italic">&ldquo;{unit.speaking.level2Situation}&rdquo;</p>
         </div>
 
-        <div className="flex gap-2 mb-4">
-          <button
-            onClick={() => setShowHint((previous) => !previous)}
-            className="text-xs text-muted-foreground hover:text-foreground flex items-center gap-1 transition-colors"
-          >
-            <Lightbulb size={12} />
-            {showHint ? "Ẩn gợi ý" : "Xem gợi ý"}
-          </button>
-        </div>
+        {canRevealHint && (
+          <div className="flex gap-2 mb-4">
+            <button
+              onClick={() => setShowHint((previous) => !previous)}
+              className="text-xs text-muted-foreground hover:text-foreground flex items-center gap-1 transition-colors"
+            >
+              <Lightbulb size={12} />
+              {showHint ? "Ẩn gợi ý" : "Xem gợi ý"}
+            </button>
+          </div>
+        )}
 
         <AnimatePresence>
           {showHint && !speakingInteraction && (
