@@ -15,6 +15,8 @@ export async function useStreakFreeze() {
   return {
     success: false as const,
     error: "Streak Freeze đã được đóng khỏi phạm vi sản phẩm hiện tại.",
+    freezesRemaining: 0,
+    streak: 0,
   };
 }
 
