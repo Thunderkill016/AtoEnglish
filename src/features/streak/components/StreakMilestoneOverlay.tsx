@@ -1,18 +1,15 @@
 "use client";
 
-import type { StreakState } from "../utils/streakCalculator";
-
 interface StreakMilestoneOverlayProps {
-  state: StreakState;
+  state: unknown;
   onDismiss: () => void;
 }
 
 /**
  * Compatibility shell only.
- *
- * Streak milestone celebrations, reward overlays and confetti are outside the
- * active product surface. The component remains temporarily so the lesson
- * orchestrator can be simplified independently without a risky large-file edit.
+ * Streak milestone celebrations and reward overlays are outside the active
+ * product scope. Keep this null-rendering boundary until UnitTemplate drops
+ * its legacy import.
  */
 export default function StreakMilestoneOverlay({
   state,
