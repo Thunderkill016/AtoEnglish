@@ -6,14 +6,15 @@ import { getSpeakingInteraction } from "@/lib/lessons/speaking-interactions";
 describe("A0 English Life speaking interaction", () => {
   it("authors a changed-context transfer turn without a language hint", () => {
     const interaction = getSpeakingInteraction("unit-a0-1");
+    const transferTurn = interaction?.turns.at(-1);
 
     expect(interaction).toBeDefined();
     expect(interaction?.title).toBe("Episode 1 · Meet Alex");
-    expect(interaction?.turns.at(-1)).toMatchObject({
+    expect(transferTurn).toMatchObject({
       speaker: "Receptionist",
       phase: "transfer",
-      hint: undefined,
     });
+    expect(transferTurn).not.toHaveProperty("hint");
   });
 
   it("passes when the learner communicates every authored target", () => {
