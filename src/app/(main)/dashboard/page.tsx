@@ -125,18 +125,28 @@ export default async function DashboardPage() {
   return (
     <DashboardClient
       userName={userName}
+      currentStreak={0}
+      bestStreak={0}
+      lastActiveDate={null}
+      totalXp={0}
       userLevel={userLevel}
       completedUnits={completedUnits}
       dueCardsCount={dueCardsCount}
       currentUnitData={currentUnitData}
+      initialXpCurrent={0}
       dailyMissions={dailyMissions}
+      dailyXpGoal={0}
       wordOfDay={wordOfDay}
       completedUnitIds={completedUnitIds}
+      streakFreezeCount={0}
+      weeklyData={[]}
+      calendarData={[]}
       allUnits={UNITS.map((unit) => ({
         id: unit.id,
         title: unit.title,
         level: unit.level,
         route: unit.route,
+        xp: unit.xp,
       }))}
       recentSpeakingSessions={recentSpeakingSessions}
     />
