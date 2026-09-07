@@ -516,7 +516,17 @@ export default function SpeakingSection({
               return (
                 <div key={turn.alex} className="space-y-2">
                   <div className="max-w-[88%] rounded-2xl rounded-tl-md bg-muted/60 border border-border/60 px-4 py-3">
-                    <p className="text-[10px] font-black uppercase tracking-wider text-teal-400 mb-1">Alex</p>
+                    <div className="mb-1 flex items-center justify-between gap-3">
+                      <p className="text-[10px] font-black uppercase tracking-wider text-teal-400">Alex</p>
+                      <button
+                        type="button"
+                        onClick={() => playTTS(turn.alex)}
+                        aria-label={`Nghe Alex: ${turn.alex}`}
+                        className="inline-flex items-center gap-1 text-[10px] font-bold text-muted-foreground hover:text-foreground"
+                      >
+                        <Volume2 size={12} /> Nghe Alex
+                      </button>
+                    </div>
                     <p className="text-sm text-foreground">{turn.alex}</p>
                   </div>
                   {learnerText ? (
@@ -638,7 +648,7 @@ export default function SpeakingSection({
                   ? "Thử lại"
                   : "Bắt đầu nói"}
           </button>
-          {level2Transcript && (
+          {unit.unitId !== "unit-1" && level2Transcript && (
             <button
               onClick={() => setLevel2Done(true)}
               className="px-4 py-3 rounded-xl bg-muted hover:bg-muted/80 text-foreground font-semibold text-sm transition-colors"
